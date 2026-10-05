@@ -3,7 +3,7 @@
  *
  * Verifies:
  * 1. AI-Native quiz JSON has correct answers distributed across positions a/b/c/d.
- *    Max correct at any single position: ≤ 8 of 24 (≤ 33%).
+ *    Max correct at any single position: at most a third of the questions.
  * 2. shuffleArray produces different orderings with different seeds.
  * 3. Shared-course quiz files parse and contain exactly one correct option
  *    per question. Source answer positions may be uneven because the UI
@@ -47,14 +47,14 @@ function getCorrectPositionCounts(questions: QuizQuestion[]): number[] {
 describe("AI-Native quiz answer-position distribution", () => {
   const questions = loadQuiz("content/ai-native/quiz/questions.json");
 
-  it("has 24 active questions", () => {
-    expect(questions.length).toBe(24);
+  it("has 15 active questions", () => {
+    expect(questions.length).toBe(15);
   });
 
-  it("no correct-answer position holds more than 8 of 24 questions (≤ 33%)", () => {
+  it("no correct-answer position holds more than a third of the questions", () => {
     const counts = getCorrectPositionCounts(questions);
     const max = Math.max(...counts);
-    expect(max).toBeLessThanOrEqual(8);
+    expect(max).toBeLessThanOrEqual(Math.ceil(questions.length / 3));
   });
 
   it("every answer option id is one of a/b/c/d", () => {

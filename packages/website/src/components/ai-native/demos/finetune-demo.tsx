@@ -83,7 +83,7 @@ export function FineTuneDemo(): JSX.Element {
               className={cn(
                 "min-h-11 flex-1 basis-[180px] border px-3 py-2 text-left text-[12px] transition-colors",
                 isActive
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-foreground border-b-[3px] bg-sky-sheet text-foreground"
                   : "border-border bg-transparent text-foreground hover:border-foreground",
               )}
             >
@@ -91,7 +91,7 @@ export function FineTuneDemo(): JSX.Element {
                 className={cn(
                   "font-mono text-[12px] font-bold uppercase tracking-[0.12em]",
                   isActive
-                    ? "text-[var(--color-kupfer-light)]"
+                    ? "text-kupfer-dark"
                     : "text-muted-foreground",
                 )}
               >
@@ -163,14 +163,14 @@ export function FineTuneDemo(): JSX.Element {
             LoRA rank 16 · batch 32
           </div>
         </div>
-        <div className="dark-section grid grid-cols-3 gap-4 bg-[var(--color-dark-bg)] p-3.5">
+        <div className="grid grid-cols-3 gap-4 bg-sky-sheet p-3.5">
           {[
             ["Loss · simuliert", metrics.loss, "↓"],
             ["Trefferquote · simuliert", `${metrics.accuracy}%`, "↑"],
             ["Domänen-Score · simuliert", `${metrics.specificity}%`, "↑"],
           ].map(([label, val, dir]) => (
             <div key={label}>
-              <div className="font-mono text-[12px] tracking-[0.14em] text-[var(--color-dark-muted)]">
+              <div className="font-mono text-[12px] tracking-[0.14em] text-muted-foreground">
                 {label}
               </div>
               <div
@@ -178,7 +178,7 @@ export function FineTuneDemo(): JSX.Element {
                   "mt-1 font-mono text-[22px] font-bold tracking-[-0.03em] md:text-[28px]",
                   dir === "↑"
                     ? "text-brand-orange"
-                    : "text-[var(--color-dark-fg)]",
+                    : "text-foreground",
                 )}
               >
                 {val}

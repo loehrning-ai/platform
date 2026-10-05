@@ -53,8 +53,9 @@ export default function GlobalError({
           gap: "1.5rem",
           padding: "1.5rem",
           textAlign: "center",
-          backgroundColor: "#0d0b09",
-          color: "#f5f0e8",
+          // Paper, never a black ground: Kalkweiß with Druckschwarz text.
+          backgroundColor: "#f7f1e7",
+          color: "#121212",
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
         }}
@@ -64,7 +65,7 @@ export default function GlobalError({
             display: "block",
             height: "2px",
             width: "2.5rem",
-            backgroundColor: "#f97316",
+            backgroundColor: "#b73a15",
           }}
         />
         <h1
@@ -77,11 +78,11 @@ export default function GlobalError({
         >
           {copy.title}
         </h1>
-        <p style={{ margin: 0, maxWidth: "28rem", color: "#a89070" }}>
+        <p style={{ margin: 0, maxWidth: "28rem", color: "#4f4640" }}>
           {copy.body}
         </p>
         {digest && (
-          <p style={{ margin: 0, fontSize: "0.75rem", color: "#a89070" }}>
+          <p style={{ margin: 0, fontSize: "0.75rem", color: "#4f4640" }}>
             {copy.errorId}: {digest}
           </p>
         )}
@@ -89,15 +90,15 @@ export default function GlobalError({
           type="button"
           onClick={() => reset()}
           style={{
-            border: "1px solid #f97316",
+            border: "1px solid #b73a15",
             borderRadius: "0.625rem",
-            backgroundColor: "transparent",
-            color: "#f5f0e8",
+            backgroundColor: "#fffcf5",
+            color: "#121212",
             padding: "0.75rem 1.5rem",
             fontSize: "0.875rem",
             fontWeight: 600,
             cursor: "pointer",
-            boxShadow: "0 4px 14px rgba(0, 0, 0, 0.3)",
+            boxShadow: "0 1px 2px rgba(18, 18, 18, 0.06), 0 12px 32px rgba(18, 18, 18, 0.1)",
           }}
         >
           {copy.retry}

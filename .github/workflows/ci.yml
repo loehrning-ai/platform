@@ -155,7 +155,6 @@ jobs:
           # Keeping them in the general Chromium worker reproduced a renderer
           # deadlock after sustained route walking on two consecutive runs.
           - { project: chromium-ai-native-operator, shard: 1, total: 1, browsers: chromium }
-          - { project: chromium-claude-responsive, shard: 1, total: 1, browsers: chromium }
           - { project: mobile-chromium, shard: 1, total: 3, browsers: chromium }
           - { project: mobile-chromium, shard: 2, total: 3, browsers: chromium }
           - { project: mobile-chromium, shard: 3, total: 3, browsers: chromium }

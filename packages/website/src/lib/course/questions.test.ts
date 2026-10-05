@@ -21,9 +21,9 @@ describe("loadWorkshopQuestions", () => {
     }
   });
 
-  it("loads the EU AI Act questions (distinct loader, 27 questions)", async () => {
+  it("loads the EU AI Act questions (distinct loader, 20 questions)", async () => {
     const questions = await loadWorkshopQuestions("eu-ai-act-kurs");
-    expect(questions).toHaveLength(27);
+    expect(questions).toHaveLength(20);
     expect(questions.every((q) => q.answerOptions.length >= 3)).toBe(true);
   });
 
@@ -48,22 +48,23 @@ describe("loadWorkshopQuestions", () => {
     expect(english.map((question) => question.id)).toEqual(
       german.map((question) => question.id),
     );
-    expect(english[0]?.questionText).toContain("task exposure");
+    expect(english[0]?.questionText).toContain("Generative AI touches 60%");
     expect(english[0]?.questionText).not.toBe(german[0]?.questionText);
   });
 
-  it("loads the claude questions (19 questions, reusing the inline lesson Quiz content, )", async () => {
-    const questions = await loadWorkshopQuestions("claude", "en");
-    expect(questions).toHaveLength(19);
-    assertValidQuizQuestions(questions);
-    for (const q of questions) {
-      expect(q.explanation.trim().length).toBeGreaterThan(0);
-      expect(q.answerOptions.length).toBeGreaterThanOrEqual(3);
-    }
-    // English content: no German quiz chrome/explanations leaked in.
-    const allText = questions
-      .map((q) => q.questionText + q.explanation)
-      .join(" ");
-    expect(allText).not.toMatch(/\b(nicht|und|oder|der|die|das)\b/i);
+  it("loads the ai-native-operator questions in both locales with stable IDs", async () => {
+    const german = await loadWorkshopQuestions("ai-native-operator", "de");
+    const english = await loadWorkshopQuestions("ai-native-operator", "en");
+    expect(english.length).toBeGreaterThan(0);
+    assertValidQuizQuestions(english);
+    expect(english.map((question) => question.id)).toEqual(
+      german.map((question) => question.id),
+    );
+  });
+
+  it("rejects the removed Claude course instead of loading stale questions", async () => {
+    await expect(
+      loadWorkshopQuestions("claude" as unknown as CourseSlug),
+    ).rejects.toThrow(/not registered/);
   });
 });

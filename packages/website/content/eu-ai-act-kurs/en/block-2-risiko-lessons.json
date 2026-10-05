@@ -1,0 +1,434 @@
+{
+  "blockId": "block_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "risiko-2-1",
+      "blockId": "block_2",
+      "number": 3,
+      "title": "Six questions to find the risk class",
+      "subtitle": "Check top-down, including the Art. 6(3) exception",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "Risk class",
+        "Annex III",
+        "Art. 6(3)",
+        "Profiling"
+      ],
+      "concept": {
+        "body": "The Regulation classifies use cases, not tools: the same language model is minimal risk when taking minutes and high-risk when pre-sorting applications (Annex III point 4(a)). Check top-down and stop at the first hit:\n\n1. An AI system under Art. 3(1)?\n2. A prohibited practice under Art. 5? Then there is no compliance path.\n3. A safety component of an Annex I product with third-party assessment (Art. 6(1))?\n4. Used in an Annex III area (Art. 6(2))?\n5. The Art. 6(3) exception? Only for narrow auxiliary tasks with no material influence on the outcome. Profiling rules it out, and the provider documents it (Art. 6(4)).\n6. A transparency case under Art. 50? Otherwise minimal risk.\n\nArt. 50 can apply on top of high-risk.",
+        "takeaway": "Check per use case, top-down, and record the reasoning.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Classify four cases",
+        "instructions": "Answer the questions in order for each case. The result shows class, deadline and legal basis. Done after the fourth case.",
+        "props": {
+          "start": "ai",
+          "nodes": [
+            {
+              "id": "ai",
+              "question": "Does the system infer outputs such as predictions, content, recommendations or decisions from its inputs, with some degree of autonomy?",
+              "help": "Art. 3(1). A hard-coded spreadsheet formula is not an AI system.",
+              "options": [
+                {
+                  "label": "No",
+                  "result": "not-ai"
+                },
+                {
+                  "label": "Yes",
+                  "next": "art5"
+                }
+              ]
+            },
+            {
+              "id": "art5",
+              "question": "Does the use match a prohibited practice under Art. 5(1)?",
+              "help": "For example emotion recognition at work (point (f)), social scoring (point (c)) or biometric categorisation by sensitive traits (point (g)).",
+              "options": [
+                {
+                  "label": "Yes",
+                  "result": "prohibited"
+                },
+                {
+                  "label": "No",
+                  "next": "annex1"
+                }
+              ]
+            },
+            {
+              "id": "annex1",
+              "question": "Is the system a safety component of a product under Annex I that needs third-party conformity assessment, or such a product itself?",
+              "help": "For example machinery, medical devices, lifts (Art. 6(1)).",
+              "options": [
+                {
+                  "label": "Yes",
+                  "result": "high-annex1"
+                },
+                {
+                  "label": "No",
+                  "next": "annex3"
+                }
+              ]
+            },
+            {
+              "id": "annex3",
+              "question": "Is it used in one of the Annex III areas?",
+              "help": "Biometrics, critical infrastructure, education, employment, essential services such as creditworthiness, law enforcement, migration, justice and democratic processes.",
+              "options": [
+                {
+                  "label": "Yes",
+                  "next": "exception"
+                },
+                {
+                  "label": "No",
+                  "next": "art50"
+                }
+              ]
+            },
+            {
+              "id": "exception",
+              "question": "Art. 6(3): does the system only perform a narrow procedural, preparatory or improving task, without materially influencing the outcome and without profiling people?",
+              "options": [
+                {
+                  "label": "No, it influences the decision or profiles people",
+                  "result": "high-annex3"
+                },
+                {
+                  "label": "Yes, every condition is met",
+                  "result": "exception"
+                }
+              ]
+            },
+            {
+              "id": "art50",
+              "question": "Does a transparency case under Art. 50 apply?",
+              "help": "Direct interaction with people, generated audio, image, video or text content, emotion recognition or biometric categorisation, deepfakes.",
+              "options": [
+                {
+                  "label": "Yes",
+                  "result": "transparency"
+                },
+                {
+                  "label": "No",
+                  "result": "minimal"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "not-ai",
+              "tone": "neutral",
+              "title": "Not an AI system",
+              "body": "The AI Act does not apply. Check again when an update adds AI features.",
+              "source": "Art. 3(1) AI Act"
+            },
+            {
+              "id": "prohibited",
+              "tone": "bad",
+              "title": "Prohibited (Art. 5)",
+              "body": "Prohibited since 2 February 2025, with no transition period and no SME exemption. Consent of the people affected or works council approval does not cure it.",
+              "actions": [
+                "Stop the use",
+                "Get legal advice"
+              ],
+              "source": "Art. 5(1), Art. 99(3) AI Act"
+            },
+            {
+              "id": "high-annex1",
+              "tone": "warn",
+              "title": "High-risk via Annex I (Art. 6(1))",
+              "body": "Sectoral conformity assessment plus the requirements of Art. 8 to 15. Applies from 2 August 2028 (Regulation (EU) 2026/1744).",
+              "source": "Art. 6(1), Annex I AI Act"
+            },
+            {
+              "id": "high-annex3",
+              "tone": "warn",
+              "title": "High-risk under Annex III (Art. 6(2))",
+              "body": "Providers meet Art. 16 with Art. 9 to 15, deployers Art. 26. Applies from 2 December 2027 (Regulation (EU) 2026/1744). Art. 50 can apply on top.",
+              "source": "Art. 6(2), Annex III AI Act"
+            },
+            {
+              "id": "exception",
+              "tone": "neutral",
+              "title": "Not high-risk under Art. 6(3), with documentation",
+              "body": "The provider documents the assessment before placing the system on the market (Art. 6(4)) and registers it (Art. 49(2)). As a deployer you check the reasoning instead of trusting it blindly. Check Art. 50 anyway.",
+              "source": "Art. 6(3) and (4) AI Act"
+            },
+            {
+              "id": "transparency",
+              "tone": "neutral",
+              "title": "Transparency obligation under Art. 50",
+              "body": "From 2 August 2026: AI notice, machine-readable marking or disclosure, depending on case and role. No high-risk obligations.",
+              "source": "Art. 50 AI Act"
+            },
+            {
+              "id": "minimal",
+              "tone": "good",
+              "title": "Minimal risk",
+              "body": "No specific obligations from the Regulation. Art. 4 (AI literacy) applies anyway; Art. 95 covers voluntary codes of conduct.",
+              "source": "Art. 4, Art. 95 AI Act"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "ranking",
+              "text": "A tool pre-sorts incoming applications by a match score.",
+              "expected": "high-annex3",
+              "why": "Screening and filtering applications is Annex III point 4(a). A match score evaluates people, so the exception does not apply."
+            },
+            {
+              "id": "stress",
+              "text": "Webcam software is meant to detect how satisfied employees seem in team meetings, as input for feedback talks.",
+              "expected": "prohibited",
+              "why": "Emotion recognition in the workplace is prohibited under Art. 5(1)(f). The exception for medical or safety reasons does not apply here."
+            },
+            {
+              "id": "complete",
+              "text": "An AI module reads application documents and only reports whether all required documents are present. It neither evaluates nor ranks anyone.",
+              "expected": "exception",
+              "why": "A narrow procedural task without profiling: Art. 6(3) can apply, with documentation by the provider."
+            },
+            {
+              "id": "hours",
+              "text": "A chatbot answers questions about opening hours on the website.",
+              "expected": "transparency",
+              "why": "Direct interaction with people: AI notice under Art. 50(1)."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "risiko-2-1-c1",
+          "prompt": "A provider declares its application pre-sorting module not high-risk under Art. 6(3). The module profiles applicants. What applies?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The provider's declaration is enough",
+              "correct": false,
+              "feedback": "Market surveillance can review the classification, and profiling rules out the exception anyway."
+            },
+            {
+              "id": "b",
+              "text": "The exception applies if a human makes the final decision",
+              "correct": false,
+              "feedback": "A final human decision does not meet Art. 6(3) if the system materially shapes the selection."
+            },
+            {
+              "id": "c",
+              "text": "The exception does not apply: profiling rules it out",
+              "correct": true
+            }
+          ],
+          "explanation": "An Annex III system always counts as high-risk if it profiles natural persons (Art. 6(3), third subparagraph)."
+        },
+        {
+          "id": "risiko-2-1-c2",
+          "prompt": "Why do you check per use case instead of per tool?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Because the same tool can be minimal or high-risk depending on its purpose",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Because tools are not AI systems",
+              "correct": false,
+              "feedback": "Many tools are AI systems under Art. 3(1). The class still follows from the purpose."
+            },
+            {
+              "id": "c",
+              "text": "Because only use cases trigger fines",
+              "correct": false,
+              "feedback": "Fines attach to breached obligations. Which obligations apply follows from the purpose."
+            }
+          ],
+          "explanation": "Annex III describes areas of use. Whether a language model writes minutes or filters applications decides the class."
+        }
+      ]
+    },
+    {
+      "id": "risiko-2-2",
+      "blockId": "block_2",
+      "number": 4,
+      "title": "Ten cases for the risk pyramid",
+      "subtitle": "Classify typical uses in small and mid-sized firms",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Risk pyramid",
+        "Prohibited practices",
+        "High-risk system"
+      ],
+      "concept": {
+        "body": "The four tiers demand very different amounts:\n\n| Tier | Consequence |\n|---|---|\n| Prohibited (Art. 5) | switch off, since 2 February 2025 |\n| High-risk (Art. 6, Annex I and III) | providers under Art. 16, deployers under Art. 26 |\n| Transparency (Art. 50) | notice, marking or disclosure, from 2 August 2026 |\n| Minimal | no specific obligations, Art. 4 applies |\n\nTwo mistakes are costly. Classified too low, oversight, logs and documentation are missing once the obligations apply. Classified too high, effort is spent for nothing. The purpose decides: a chatbot for delivery times is a transparency case; a chatbot that pre-sorts applicants is high-risk under Annex III point 4 and needs the AI notice as well.",
+        "takeaway": "Assign each case to the highest tier that applies and check Art. 50 on top.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Fill the risk pyramid",
+        "instructions": "Assign each case to the highest tier that applies. Every placement is explained at once. Done when all ten cases are placed.",
+        "props": {
+          "layout": "pyramid",
+          "buckets": [
+            {
+              "id": "prohibited",
+              "label": "Prohibited",
+              "hint": "Art. 5: switch off"
+            },
+            {
+              "id": "high",
+              "label": "High-risk",
+              "hint": "Art. 6 with Annex I or III"
+            },
+            {
+              "id": "transparency",
+              "label": "Transparency",
+              "hint": "Art. 50: notice, marking, disclosure"
+            },
+            {
+              "id": "minimal",
+              "label": "Minimal",
+              "hint": "no specific duties, Art. 4 applies"
+            }
+          ],
+          "items": [
+            {
+              "id": "callcenter",
+              "text": "Software rates the mood of call centre staff",
+              "bucket": "prohibited",
+              "why": "Emotion recognition in the workplace: Art. 5(1)(f)."
+            },
+            {
+              "id": "lobby",
+              "text": "A reception camera sorts visitors by presumed religion or political opinion",
+              "bucket": "prohibited",
+              "why": "Biometric categorisation by sensitive traits: Art. 5(1)(g)."
+            },
+            {
+              "id": "cv",
+              "text": "Ranking applications by match score",
+              "bucket": "high",
+              "why": "Screening and filtering applications: Annex III point 4(a)."
+            },
+            {
+              "id": "credit",
+              "text": "Creditworthiness checks on consumers for instalment purchases",
+              "bucket": "high",
+              "why": "Creditworthiness of natural persons: Annex III point 5(b)."
+            },
+            {
+              "id": "press",
+              "text": "AI safety shut-off on a press, third-party conformity assessment",
+              "bucket": "high",
+              "why": "Safety component of an Annex I product: Art. 6(1)."
+            },
+            {
+              "id": "promotion",
+              "text": "Performance evaluation of staff for promotions",
+              "bucket": "high",
+              "why": "Decisions on promotion and performance evaluation: Annex III point 4(b)."
+            },
+            {
+              "id": "delivery",
+              "text": "Website chatbot answers questions about delivery times",
+              "bucket": "transparency",
+              "why": "Direct interaction: AI notice under Art. 50(1)."
+            },
+            {
+              "id": "deepfake",
+              "text": "Generated, deceptively real video of a real managing director for a campaign",
+              "bucket": "transparency",
+              "why": "Deepfake: disclosure by the deployer under Art. 50(4)."
+            },
+            {
+              "id": "spam",
+              "text": "Spam filter on the mail server",
+              "bucket": "minimal",
+              "why": "No prohibition, no annex, no Art. 50 case."
+            },
+            {
+              "id": "maintenance",
+              "text": "Predictive maintenance on machine sensor data",
+              "bucket": "minimal",
+              "why": "Machine data without personal data or a safety function: minimal."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "risiko-2-2-c1",
+          "prompt": "An HR chatbot holds pre-interviews and pre-sorts applicants. Which obligations come into play?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only Art. 50, because it is a chatbot",
+              "correct": false,
+              "feedback": "Being a chatbot does not change the purpose: pre-sorting is Annex III point 4."
+            },
+            {
+              "id": "b",
+              "text": "High-risk under Annex III point 4 plus the AI notice under Art. 50(1)",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Only high-risk; Art. 50 falls away",
+              "correct": false,
+              "feedback": "Art. 50 applies to high-risk systems too."
+            }
+          ],
+          "explanation": "High-risk and transparency are not mutually exclusive. The purpose sets the class; the interaction adds the notice."
+        },
+        {
+          "id": "risiko-2-2-c2",
+          "prompt": "What do you risk by classifying too low?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only more effort",
+              "correct": false,
+              "feedback": "More effort is the consequence of classifying too high."
+            },
+            {
+              "id": "b",
+              "text": "Nothing, as long as nobody complains",
+              "correct": false,
+              "feedback": "Market surveillance can check without a complaint."
+            },
+            {
+              "id": "c",
+              "text": "Missing oversight, logs and documentation once the obligations apply, and measures up to fines under Art. 99",
+              "correct": true
+            }
+          ],
+          "explanation": "Classifying too low leaves obligations unmet. Record purpose, role and the Art. 6 check in writing."
+        }
+      ]
+    }
+  ]
+}

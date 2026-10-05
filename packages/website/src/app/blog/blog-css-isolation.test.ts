@@ -102,6 +102,48 @@ describe("blog stylesheet isolation", () => {
     expect(declarations.get("outline-offset")).toBe("5px");
   });
 
+  it("keeps the article visual panel visible and bounded on narrow screens", () => {
+    let baseDisplayLine = 0;
+    let mobileMinHeightLine = 0;
+
+    indexRoot.walkRules((rule) => {
+      if (!rule.selectors.includes(".blog-root .row__art")) return;
+      rule.walkDecls("display", (declaration) => {
+        const line = declaration.source?.start?.line ?? 0;
+        if (declaration.value === "flex") baseDisplayLine = line;
+        expect(declaration.value).not.toBe("none");
+      });
+      rule.walkDecls("min-height", (declaration) => {
+        if (
+          declaration.value === "280px" &&
+          rule.parent?.type === "atrule" &&
+          rule.parent.name === "media" &&
+          rule.parent.params.replaceAll(" ", "") === "(max-width:900px)"
+        ) {
+          mobileMinHeightLine = declaration.source?.start?.line ?? 0;
+        }
+      });
+    });
+
+    expect(baseDisplayLine).toBeGreaterThan(0);
+    expect(mobileMinHeightLine).toBeGreaterThan(baseDisplayLine);
+  });
+
+  it("never hides an article preview sheet, earlier editions included", () => {
+    const hidden: string[] = [];
+    indexRoot.walkRules((rule) => {
+      if (!rule.selectors.some((selector) => /\.row__art\b/.test(selector))) {
+        return;
+      }
+      rule.walkDecls(/^(?:display|visibility)$/, (declaration) => {
+        if (/^(?:none|hidden)$/.test(declaration.value)) {
+          hidden.push(`${rule.selector} ${declaration.prop}`);
+        }
+      });
+    });
+    expect(hidden).toEqual([]);
+  });
+
   it("scopes every index rule under the blog boundary", () => {
     const unscoped: string[] = [];
     indexRoot.walkRules((rule) => {

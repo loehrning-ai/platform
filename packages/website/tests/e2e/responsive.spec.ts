@@ -18,7 +18,7 @@ import { settleFontsAndFrame } from "./fixtures/settle";
  *   5. Below `lg` the header is the compact companion bar: flush with the top
  *      edge of the viewport, exactly `--nav-h-compact` tall, and that is the
  *      offset `<main>` reserves, so content begins directly beneath it. From
- *      `lg` the same flat band is exactly `--nav-h` tall.
+ *      `lg` the inset studio pill returns and `--nav-h` reserves it instead.
  *
  * Assertions target GEOMETRY, roles and structural anchors (data-section, the
  * hamburger's aria-label, the wrapper class, the TOC landmark), never prose, so a
@@ -295,7 +295,7 @@ test.describe("responsive: navigation hamburger breakpoint", () => {
 });
 
 test.describe("responsive: compact companion top bar", () => {
-  test("is flush and exactly --nav-h-compact below lg, a flush --nav-h band from lg", async ({
+  test("is flush and exactly --nav-h-compact below lg, an inset pill from lg", async ({
     page,
   }) => {
     // Six measured widths on one loaded page. Nothing here depends on lazy
@@ -335,29 +335,26 @@ test.describe("responsive: compact companion top bar", () => {
       await setCssViewportWidth(page, cssWidth);
       const shell = await readShellGeometry(page);
 
-      // Werkzeichnung: from lg the header is the same flat band, flush with
-      // the top edge, full bleed, square, and exactly --nav-h tall, which is
-      // the offset <main> reserves.
       expect(
         shell.barTop,
-        `the desktop bar gained an outer inset at ${cssWidth}px`,
-      ).toBeCloseTo(0, 0);
+        `the studio pill lost its outer inset at ${cssWidth}px`,
+      ).toBeGreaterThan(0);
       expect(
         shell.mainOffset,
         `content starts at ${shell.mainOffset}px at ${cssWidth}px, expected --nav-h (${shell.desktopToken}px)`,
       ).toBeCloseTo(shell.desktopToken, 0);
       expect(
         shell.barBottom,
-        `bar is ${shell.barBottom}px tall at ${cssWidth}px, expected --nav-h (${shell.desktopToken}px)`,
-      ).toBeCloseTo(shell.desktopToken, 0);
+        `the pill overlaps the content offset at ${cssWidth}px`,
+      ).toBeLessThanOrEqual(shell.mainOffset + 0.5);
       expect(
         shell.barWidth,
-        `bar is not full bleed at ${cssWidth}px`,
-      ).toBeCloseTo(shell.cssViewportWidth, 0);
+        `the pill runs edge to edge at ${cssWidth}px`,
+      ).toBeLessThan(shell.cssViewportWidth);
       expect(
         shell.cornerRadius,
-        `the desktop bar must stay square at ${cssWidth}px`,
-      ).toBe("0px");
+        `the pill lost its rounding at ${cssWidth}px`,
+      ).not.toBe("0px");
     }
   });
 });

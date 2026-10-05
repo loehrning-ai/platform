@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { m } from "framer-motion";
 import {
   ArrowLeft,
+  CheckCircle2,
   Download,
   GraduationCap,
   Loader2,
@@ -32,6 +33,8 @@ import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { MotionProvider } from "@/components/motion-provider";
 import { trackCourseCompletion } from "@/lib/analytics/events";
+import { cn } from "@/lib/utils";
+import { APP_CARD, APP_GHOST } from "@/components/lesson-engine/app-ui";
 
 /**
  * Shared certificate screen for every free course (shared course architecture,
@@ -235,26 +238,25 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
 
   if (!eligible || !completion) {
     return (
-      <div className="min-h-[100svh] bg-background">
-        <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-14">
+      <div className="course-app-ground min-h-[100svh]">
+        <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
           <Link
             href={localizedCoursePath}
-            className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+            className={cn(APP_GHOST, "-ml-3 min-h-11")}
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
           </Link>
-          <section className="mt-5 border-t-2 border-foreground pt-5">
-            <GraduationCap
-              className="h-8 w-8 text-foreground"
-              aria-hidden="true"
-            />
-            <h1 className="mt-3 break-words text-fluid-h1 font-bold [overflow-wrap:anywhere]">
+          <section className={cn(APP_CARD, "mt-4 p-6 sm:p-8")}>
+            <span aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-2xl bg-lab-accent-soft text-lab-accent">
+              <GraduationCap className="h-7 w-7" />
+            </span>
+            <h1 className="mt-4 break-words text-fluid-h2 font-bold tracking-[-0.02em] [overflow-wrap:anywhere]">
               {config.certificateTitle}
             </h1>
             <p
               role="status"
-              className="mt-3 max-w-[58ch] text-sm leading-relaxed text-muted-foreground"
+              className="mt-3 max-w-[58ch] text-[15px] leading-relaxed text-muted-foreground"
             >
               {ownerKind === "unknown"
                 ? config.language === "en"
@@ -270,61 +272,83 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
     );
   }
   const { quizResult, completionMode, completionDate } = completion;
+  const previewName = name.trim();
 
   return (
-    <div className="min-h-[100svh] bg-background">
-      <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 sm:py-16">
+    <div className="course-app-ground min-h-[100svh]">
+      <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
         <MotionProvider>
           <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-8"
+            className="space-y-6"
           >
             <Link
               href={localizedCoursePath}
-              className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className={cn(APP_GHOST, "-ml-3 min-h-11")}
             >
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
             </Link>
 
-            {/* Certificate Preview */}
-            <div className="border border-foreground bg-card p-5 text-center sm:p-8">
-              <GraduationCap
-                className="mx-auto h-10 w-10 text-foreground"
-                aria-hidden="true"
-              />
-              <h1 className="mt-4 max-w-full break-words text-fluid-h2 font-bold [overflow-wrap:anywhere]">
-                {config.certificateTitle}
-              </h1>
-              <p className="mt-1 text-muted-foreground">
-                {config.certificateSubtitle}
-              </p>
-              <div className="mx-auto mt-6 h-0.5 w-20 bg-foreground" />
-              <p className="mt-6 font-mono text-sm text-muted-foreground">
-                {config.language === "en" ? "Completed on" : "Abgeschlossen am"}{" "}
-                {completionDate}
-              </p>
-              <p className="mt-1 font-mono text-sm text-muted-foreground">
-                {completionMode === "quiz"
-                  ? config.language === "en"
-                    ? `Score: ${Math.round(quizResult.score * 100)}%`
-                    : `Ergebnis: ${Math.round(quizResult.score * 100)}%`
-                  : PREVIEW_COMPLETION_LABEL[config.language][completionMode]}
-              </p>
-              <div className="mx-auto mt-6 h-px w-20 bg-hairline" />
-              <p className="mt-4 break-words text-xs text-muted [overflow-wrap:anywhere]">
-                loehrning.ai | {config.certificateReferenceLabel}
-              </p>
+            {/* Certificate preview: a sheet of paper on a brand-lit frame. */}
+            <div className="course-app-hero rounded-[32px] p-2.5 shadow-lab-lg sm:p-3.5">
+              <div
+                data-certificate-preview
+                className="relative overflow-hidden rounded-[24px] border border-lab-line bg-card px-5 py-8 text-center sm:px-10 sm:py-12"
+              >
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-3 rounded-[18px] border border-dashed border-lab-line"
+                />
+                <span
+                  aria-hidden="true"
+                  className="relative mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-lab-accent text-paper shadow-lab-lg ring-8 ring-lab-accent-soft"
+                >
+                  <GraduationCap className="h-8 w-8" />
+                </span>
+                <h1 className="relative mt-5 max-w-full break-words text-fluid-h2 font-bold tracking-[-0.02em] [overflow-wrap:anywhere]">
+                  {config.certificateTitle}
+                </h1>
+                <p className="relative mt-1 text-muted-foreground">
+                  {config.certificateSubtitle}
+                </p>
+                <p
+                  aria-hidden="true"
+                  className={cn(
+                    "relative mx-auto mt-6 max-w-[22ch] break-words border-b-2 border-lab-line pb-2 text-2xl font-semibold [overflow-wrap:anywhere]",
+                    previewName ? "text-foreground" : "text-muted",
+                  )}
+                >
+                  {previewName ||
+                    (config.language === "en" ? "Your name" : "Dein Name")}
+                </p>
+                <div className="relative mt-6 flex flex-wrap justify-center gap-2">
+                  <span className="inline-flex min-h-8 items-center rounded-full bg-paper px-3 text-sm font-medium text-muted-foreground ring-1 ring-lab-line">
+                    {config.language === "en" ? "Completed on" : "Abgeschlossen am"}{" "}
+                    {completionDate}
+                  </span>
+                  <span className="inline-flex min-h-8 items-center rounded-full bg-lab-good-soft px-3 text-sm font-semibold text-lab-good">
+                    {completionMode === "quiz"
+                      ? config.language === "en"
+                        ? `Score: ${Math.round(quizResult.score * 100)}%`
+                        : `Ergebnis: ${Math.round(quizResult.score * 100)}%`
+                      : PREVIEW_COMPLETION_LABEL[config.language][completionMode]}
+                  </span>
+                </div>
+                <p className="relative mt-6 break-words text-xs text-muted [overflow-wrap:anywhere]">
+                  loehrning.ai | {config.certificateReferenceLabel}
+                </p>
+              </div>
             </div>
 
             {/* Certificate form */}
-            <div className="space-y-4">
-              <h2 className="border-t-2 border-foreground pt-4 text-fluid-h3 font-bold">
+            <div className={cn(APP_CARD, "space-y-4 p-5 sm:p-7")}>
+              <h2 className="text-xl font-bold tracking-[-0.015em]">
                 {config.language === "en" ? "Add your name" : "Name eintragen"}
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-[15px] text-muted-foreground">
                 {config.language === "en"
                   ? "Your name goes only into the PDF, which your browser creates from your progress."
                   : "Dein Name steht nur in der PDF, die dein Browser aus deinem Lernstand erstellt."}
@@ -335,7 +359,7 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
                   <div className="relative">
                     <User
                       aria-hidden="true"
-                      className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                      className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
                     />
                     <input
                       ref={nameInputRef}
@@ -362,7 +386,7 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
                       }}
                       aria-invalid={!!errors.name}
                       aria-describedby={errors.name ? "error-name" : undefined}
-                      className={`w-full border bg-card py-3 pl-10 pr-4 text-sm text-foreground placeholder:text-muted focus-visible:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange ${errors.name ? "border-destructive" : "border-border"}`}
+                      className={`min-h-12 w-full rounded-full border bg-paper py-3 pl-11 pr-4 text-base text-foreground placeholder:text-muted focus-visible:border-lab-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent ${errors.name ? "border-destructive" : "border-border/70"}`}
                     />
                   </div>
                   {errors.name && (
@@ -380,17 +404,15 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
                   type="submit"
                   disabled={loading}
                   aria-busy={loading}
-                  className={`inline-flex min-h-11 max-w-full items-center gap-2 break-words px-5 py-3 text-left text-[0.9375rem] font-semibold transition-colors duration-[120ms] motion-reduce:transition-none sm:px-7 ${
+                  className={cn(
+                    "inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 break-words rounded-full px-6 py-3 text-center text-[15px] font-semibold transition-colors duration-[120ms] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 motion-reduce:transition-none sm:w-auto",
                     !loading
-                      ? "bg-brand-orange text-paper hover:bg-kupfer-dark"
-                      : "cursor-not-allowed bg-inset text-muted-foreground"
-                  }`}
+                      ? "bg-lab-accent text-paper shadow-lab-sm hover:bg-[#1f3a99]"
+                      : "cursor-not-allowed bg-inset text-muted-foreground",
+                  )}
                 >
                   {loading ? (
-                    <Loader2
-                      aria-hidden="true"
-                      className="h-4 w-4 animate-spin"
-                    />
+                    <Loader2 aria-hidden="true" className="h-4 w-4" />
                   ) : (
                     <Download aria-hidden="true" className="h-4 w-4" />
                   )}
@@ -414,8 +436,9 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
                 <m.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-sm text-brand-sand"
+                  className="inline-flex items-center gap-2 rounded-full bg-lab-good-soft px-4 py-2 text-sm font-semibold text-lab-good"
                 >
+                  <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                   {config.language === "en"
                     ? `${config.recordNoun.possessive} has been downloaded.`
                     : `${config.recordNoun.possessive} wurde heruntergeladen.`}

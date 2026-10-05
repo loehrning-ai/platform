@@ -10,7 +10,7 @@ import {
  * Landing (indexable) -> CTA into the /kurs hub, which now requires login
  * (exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS).
  * Real block ids come from KI_FUEHRERSCHEIN_CONFIG.blockIds
- * (src/lib/course/config.ts): block_1..block_5. The reader is `protected` in
+ * (src/lib/course/config.ts): block_1..block_4 (four lesson-engine modules). The reader is `protected` in
  * the crawl contract, so an anonymous visitor is redirected by
  * src/proxy.ts to /login?next=<path>&reason=auth-not-configured in the
  * provider-free suite before ever reaching the reader shell. These tests
@@ -49,7 +49,7 @@ test.describe("/ki-fuehrerschein landing", () => {
     ).toBeVisible();
     // Block titles come from the course-data single source; assert the first
     // one renders so a broken getBlocks() (empty list) is caught.
-    await expect(page.getByText("KI ist schon da").first()).toBeVisible();
+    await expect(page.getByText("Was darf rein?").first()).toBeVisible();
   });
 
   test("primary CTA leads to the login-gated course hub", async ({ page }) => {

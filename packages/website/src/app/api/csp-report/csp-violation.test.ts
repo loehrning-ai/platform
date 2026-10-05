@@ -283,7 +283,7 @@ describe("parseCspViolations", () => {
 
 describe("sampling", () => {
   it("never samples script violations", () => {
-    for (const path of ["/", "/login", "/konto", "/kurse/open-source/claude"]) {
+    for (const path of ["/", "/login", "/konto", "/kurse/open-source/data-science"]) {
       const scriptViolation = violation({ documentPath: path });
       expect(cspViolationSampleRate(scriptViolation)).toBe(1);
       expect(isSampledCspViolation(scriptViolation)).toBe(true);

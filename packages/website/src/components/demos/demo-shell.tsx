@@ -52,22 +52,17 @@ export function DemoShell({
     trackDemoOpen(demo.slug, origin);
   }, [demo.slug]);
 
-  // Light engines sit on a raised Bogen sheet with a 1px ink frame. A dark
-  // engine (a terminal, a node canvas) scopes the graphit tokens to its own
-  // frame only; the page band around it stays paper.
+  // Every engine, the console-like ones (a log, a node canvas) included, sits
+  // on the same raised Bogen sheet with a 1px ink frame. There is no graphit
+  // frame any more: the site has no black grounds.
   //
   // Below sm the frame flattens by one level so the engine's own boxes are
-  // the first box: a light engine keeps only its top ink rule (the notes
-  // section's 2px Kopflinie closes it, so a bottom rule would double) and
-  // uses the full column; a dark engine bleeds to the screen edges as a
-  // graphit band with the page gutter as its padding.
+  // the first box: the sheet keeps only its top ink rule (the notes section's
+  // 2px Kopflinie closes it, so a bottom rule would double) and uses the full
+  // column.
   return (
     <div
-      className={
-        demo.dark
-          ? "dark-section min-w-0 overflow-hidden border border-border max-sm:-mx-4 max-sm:border-x-0"
-          : "min-w-0 overflow-hidden border border-foreground bg-card max-sm:border-x-0 max-sm:border-b-0 max-sm:bg-transparent"
-      }
+      className="min-w-0 overflow-hidden border border-foreground bg-card max-sm:border-x-0 max-sm:border-b-0 max-sm:bg-transparent"
       data-demo-shell
     >
       {/* One header row: the instrument label on the left, the evidence
@@ -75,11 +70,7 @@ export function DemoShell({
           the explanation wraps onto its own full-width row below. Below sm
           the evidence line alone fills the row, so it fits one line. */}
       <div
-        className={
-          demo.dark
-            ? "flex min-h-11 flex-wrap items-center justify-between gap-x-4 border-b border-hairline px-4"
-            : "flex min-h-11 flex-wrap items-center justify-between gap-x-4 border-b border-hairline px-4 max-sm:px-0"
-        }
+        className="flex min-h-11 flex-wrap items-center justify-between gap-x-4 border-b border-hairline px-4 max-sm:px-0"
         data-demo-shell-header
       >
         <span className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground max-sm:hidden">
@@ -92,13 +83,7 @@ export function DemoShell({
           locale={locale}
         />
       </div>
-      <div
-        className={
-          demo.dark
-            ? "relative px-4 py-3 sm:p-3 lg:p-4"
-            : "relative px-0 py-3 sm:p-3 lg:p-4"
-        }
-      >
+      <div className="relative px-0 py-3 sm:p-3 lg:p-4">
         <DemoLocaleProvider locale={locale}>
           {Comp ? (
             <Comp />

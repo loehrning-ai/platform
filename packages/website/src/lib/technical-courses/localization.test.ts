@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CODEX_CONFIG } from "@/lib/codex/config";
+import { DATA_INFRASTRUCTURE_CONFIG } from "@/lib/data-infrastructure/config";
 import {
   TECHNICAL_COURSE_CANONICAL_IDS,
   createLocalizedTechnicalCourseConfig,
@@ -12,11 +12,11 @@ import {
   type TechnicalCourseContentIdentity,
 } from "./localization";
 
-const canonicalIds = TECHNICAL_COURSE_CANONICAL_IDS.codex;
-const enConfig = technicalCourseConfigForBundle("codex", "en", CODEX_CONFIG);
+const canonicalIds = TECHNICAL_COURSE_CANONICAL_IDS["data-infrastructure"];
+const enConfig = technicalCourseConfigForBundle("data-infrastructure", "en", DATA_INFRASTRUCTURE_CONFIG);
 const deConfig = createLocalizedTechnicalCourseConfig(enConfig, "de", {
-  title: "Codex-Kurs",
-  certificateTitle: "Teilnahmebestätigung: Codex-Kurs",
+  title: "Infrastruktur-Kurs",
+  certificateTitle: "Teilnahmebestätigung: Infrastruktur-Kurs",
   certificateSubtitle: "Lokal erstellt und nicht akkreditiert.",
   certificateModules: [
     "Grundlagen",
@@ -24,9 +24,9 @@ const deConfig = createLocalizedTechnicalCourseConfig(enConfig, "de", {
     "Ergebnisse prüfen",
     "Arbeitsabläufe skalieren",
   ],
-  certificateReferenceLabel: "Persönliche Teilnahmebestätigung: Codex",
-  quizPassMessage: "Der Codex-Kurs ist abgeschlossen.",
-  certificateFileStem: "Codex-Kurs",
+  certificateReferenceLabel: "Persönliche Teilnahmebestätigung: Infrastruktur",
+  quizPassMessage: "Der Infrastruktur-Kurs ist abgeschlossen.",
+  certificateFileStem: "Infrastruktur-Kurs",
   recordNoun: {
     label: "Teilnahmebestätigung",
     possessive: "Deine Teilnahmebestätigung",
@@ -35,9 +35,9 @@ const deConfig = createLocalizedTechnicalCourseConfig(enConfig, "de", {
 });
 
 function identity(
-  checkpointKeys: readonly string[] = ["L01::task-contract"],
-): TechnicalCourseContentIdentity<"codex"> {
-  return defineTechnicalCourseContentIdentity("codex", {
+  checkpointKeys: readonly string[] = ["mental-model::task-contract"],
+): TechnicalCourseContentIdentity<"data-infrastructure"> {
+  return defineTechnicalCourseContentIdentity("data-infrastructure", {
     unitIds: canonicalIds.unitIds,
     contentItemIds: canonicalIds.contentItemIds,
     progressKeys: canonicalIds.progressKeys,
@@ -55,10 +55,10 @@ function identity(
 type TestContent = { readonly marker: string };
 
 function englishBundle(
-  bundleIdentity: TechnicalCourseContentIdentity<"codex"> = identity(),
+  bundleIdentity: TechnicalCourseContentIdentity<"data-infrastructure"> = identity(),
 ) {
-  return defineTechnicalCourseLocaleBundle<"codex", "en", TestContent>({
-    courseSlug: "codex",
+  return defineTechnicalCourseLocaleBundle<"data-infrastructure", "en", TestContent>({
+    courseSlug: "data-infrastructure",
     locale: "en",
     config: enConfig,
     identity: bundleIdentity,
@@ -67,11 +67,11 @@ function englishBundle(
 }
 
 function germanBundle(
-  bundleIdentity: TechnicalCourseContentIdentity<"codex"> = identity(),
+  bundleIdentity: TechnicalCourseContentIdentity<"data-infrastructure"> = identity(),
   config = deConfig,
 ) {
-  return defineTechnicalCourseLocaleBundle<"codex", "de", TestContent>({
-    courseSlug: "codex",
+  return defineTechnicalCourseLocaleBundle<"data-infrastructure", "de", TestContent>({
+    courseSlug: "data-infrastructure",
     locale: "de",
     config,
     identity: bundleIdentity,
@@ -82,21 +82,21 @@ function germanBundle(
 describe("technical course locale bundles", () => {
   it("builds localized visible config without changing structural fields", () => {
     expect(deConfig).toMatchObject({
-      slug: "codex",
+      slug: "data-infrastructure",
       language: "de",
-      basePath: CODEX_CONFIG.basePath,
-      coursePath: CODEX_CONFIG.coursePath,
-      workshopQuizQuestionCount: CODEX_CONFIG.workshopQuizQuestionCount,
-      workshopQuizTimeLimitMinutes: CODEX_CONFIG.workshopQuizTimeLimitMinutes,
-      workshopQuizPassThreshold: CODEX_CONFIG.workshopQuizPassThreshold,
+      basePath: DATA_INFRASTRUCTURE_CONFIG.basePath,
+      coursePath: DATA_INFRASTRUCTURE_CONFIG.coursePath,
+      workshopQuizQuestionCount: DATA_INFRASTRUCTURE_CONFIG.workshopQuizQuestionCount,
+      workshopQuizTimeLimitMinutes: DATA_INFRASTRUCTURE_CONFIG.workshopQuizTimeLimitMinutes,
+      workshopQuizPassThreshold: DATA_INFRASTRUCTURE_CONFIG.workshopQuizPassThreshold,
     });
-    expect(deConfig.title).toBe("Codex-Kurs");
+    expect(deConfig.title).toBe("Infrastruktur-Kurs");
   });
 
   it("resolves only explicitly registered locales", () => {
     const en = englishBundle();
     const registry = createTechnicalCourseLocaleRegistry({
-      courseSlug: "codex",
+      courseSlug: "data-infrastructure",
       sourceLocale: "en",
       bundles: { en },
     });
@@ -109,24 +109,24 @@ describe("technical course locale bundles", () => {
 
   it("registers a complete bilingual pair only when identity matches", () => {
     const registry = createTechnicalCourseLocaleRegistry({
-      courseSlug: "codex",
+      courseSlug: "data-infrastructure",
       sourceLocale: "en",
       bundles: { en: englishBundle(), de: germanBundle() },
     });
 
     expect(registry.availableLocales).toEqual(["de", "en"]);
-    expect(registry.get("de").config.title).toBe("Codex-Kurs");
-    expect(registry.get("en").config.title).toBe("Codex Course");
+    expect(registry.get("de").config.title).toBe("Infrastruktur-Kurs");
+    expect(registry.get("en").config.title).toBe("Data Infrastructure");
   });
 
   it("rejects renamed checkpoint, section, question, or option identity", () => {
     expect(() =>
       createTechnicalCourseLocaleRegistry({
-        courseSlug: "codex",
+        courseSlug: "data-infrastructure",
         sourceLocale: "en",
         bundles: {
           en: englishBundle(),
-          de: germanBundle(identity(["L01::renamed-checkpoint"])),
+          de: germanBundle(identity(["mental-model::renamed-checkpoint"])),
         },
       }),
     ).toThrow(/changed machine identity/);
@@ -139,7 +139,7 @@ describe("technical course locale bundles", () => {
     };
     expect(() =>
       createTechnicalCourseLocaleRegistry({
-        courseSlug: "codex",
+        courseSlug: "data-infrastructure",
         sourceLocale: "en",
         bundles: {
           en: englishBundle(),
@@ -151,7 +151,7 @@ describe("technical course locale bundles", () => {
 
   it("rejects missing, renamed, or reordered canonical progress keys", () => {
     expect(() =>
-      defineTechnicalCourseContentIdentity("codex", {
+      defineTechnicalCourseContentIdentity("data-infrastructure", {
         unitIds: canonicalIds.unitIds,
         contentItemIds: canonicalIds.contentItemIds,
         progressKeys: canonicalIds.progressKeys.slice(1),
@@ -165,7 +165,7 @@ describe("technical course locale bundles", () => {
   it("requires a canonical source bundle and matching locale labels", () => {
     expect(() =>
       createTechnicalCourseLocaleRegistry({
-        courseSlug: "codex",
+        courseSlug: "data-infrastructure",
         sourceLocale: "en",
         bundles: { de: germanBundle() },
       }),
@@ -173,7 +173,7 @@ describe("technical course locale bundles", () => {
 
     expect(() =>
       defineTechnicalCourseLocaleBundle({
-        courseSlug: "codex",
+        courseSlug: "data-infrastructure",
         locale: "de",
         config: enConfig as never,
         identity: identity(),

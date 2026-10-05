@@ -14,7 +14,7 @@ import type { Locale } from "@/lib/i18n/locale";
 
 /**
  * Quiz — single-question, in-lesson multiple-choice check.
- * Ported from `codex/js/widgets.js:62` (Quiz). German copy.
+ * Ported from the open-source course widgets (Quiz). German copy.
  *
  *  - One correct answer; clicking reveals correct/wrong + explanation.
  *  - Keyboard A/B/C/D shortcuts when the widget body is focused (the JS
@@ -29,7 +29,7 @@ const LETTERS = ["A", "B", "C", "D", "E", "F"] as const;
  * Chrome-copy override: the button/status strings below
  * were hardcoded German literals with no override mechanism, which would
  * ship English quiz questions wrapped in German chrome for the (English)
- * Claude Course. Additive and default-preserving: every field defaults to
+ * English courses. Additive and default-preserving: every field defaults to
  * the original German literal, so the 3 existing native courses
  * (ki-fuehrerschein, eu-ai-act-kurs, ai-native) render byte-identical.
  */

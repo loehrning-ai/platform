@@ -16,8 +16,12 @@ const { runtime, requestLocale } = vi.hoisted(() => ({
     anthropicRetentionDays: null as number | null,
     gemini: false,
     geminiRetentionDays: null as number | null,
+    openai: false,
+    openaiRetentionDays: null as number | null,
     practiceModels: [] as (
-      "anthropic/claude-haiku-4.5" | "google/gemini-2.5-flash-lite"
+      | "anthropic/claude-haiku-4.5"
+      | "google/gemini-2.5-flash-lite"
+      | "openai/gpt-5-mini"
     )[],
     courseTerminal: false,
     cvEngineHosted: false,
@@ -71,6 +75,8 @@ beforeEach(() => {
     anthropicRetentionDays: null,
     gemini: false,
     geminiRetentionDays: null,
+    openai: false,
+    openaiRetentionDays: null,
     practiceModels: [],
     courseTerminal: false,
     cvEngineHosted: false,
@@ -220,6 +226,44 @@ describe("Datenschutz account-provider readiness copy", () => {
     expect(section.queryByText(/Modellanbieter deaktiviert/)).toBeNull();
   });
 
+  it("discloses an OpenAI-only model path in both languages only when configured", async () => {
+    const disabled = render(await DatenschutzPage());
+    const disabledSection = within(
+      aiSection(/KI-Lernfeedback und isolierte Kursausführung/),
+    );
+    expect(disabledSection.queryByText(/ist für das Modell GPT-5 mini/)).toBeNull();
+    expect(
+      disabledSection.getByText(/OpenAI API sind in\s+dieser Bereitstellung/),
+    ).toBeVisible();
+    disabled.unmount();
+
+    Object.assign(runtime, {
+      openai: true,
+      openaiRetentionDays: 30,
+      practiceModels: ["openai/gpt-5-mini"],
+    });
+    const german = render(await DatenschutzPage());
+    const section = within(
+      aiSection(/KI-Lernfeedback und isolierte Kursausführung/),
+    );
+    expect(
+      section.getByText(/OpenAI API \(OpenAI, USA\) ist für das Modell GPT-5 mini/),
+    ).toBeVisible();
+    expect(section.getByText(/Aufbewahrungsdauer beträgt 30 Tage/)).toBeVisible();
+    expect(screen.getByText(/KI-Antwort-Zwischenspeicher/)).toBeVisible();
+    expect(section.queryByText(/Modellanbieter deaktiviert/)).toBeNull();
+    german.unmount();
+
+    render(<EnglishPrivacyContent features={runtime} />);
+    const english = within(
+      aiSection(/AI learning feedback and isolated course execution/),
+    );
+    expect(
+      english.getByText(/OpenAI API \(OpenAI, USA\) is active for GPT-5 mini/),
+    ).toBeVisible();
+    expect(english.getByText(/retention period is\s+30 days/)).toBeVisible();
+  });
+
   it("discloses the enabled synthetic terminal boundary in both languages", async () => {
     runtime.courseTerminal = true;
     const german = render(await DatenschutzPage());
@@ -227,7 +271,7 @@ describe("Datenschutz account-provider readiness copy", () => {
       within(
         aiSection(/KI-Lernfeedback und isolierte Kursausführung/),
       ).getByText(
-        /Codex, Data Science, Data Engineering und Data Infrastructure/,
+        /Kursprojekte für Data Science, Data Engineering und Data Infrastructure/,
       ),
     ).toBeVisible();
     german.unmount();
@@ -237,9 +281,27 @@ describe("Datenschutz account-provider readiness copy", () => {
       within(
         aiSection(/AI learning feedback and isolated course execution/),
       ).getByText(
-        /Codex, Data Science, Data Engineering, and Data Infrastructure/,
+        /the Data Science, Data Engineering,\s+and Data Infrastructure course projects/,
       ),
     ).toBeVisible();
+  });
+
+  it("names no removed course project in either language or terminal state", async () => {
+    for (const courseTerminal of [true, false]) {
+      runtime.courseTerminal = courseTerminal;
+      const german = render(await DatenschutzPage());
+      expect(
+        aiSection(/KI-Lernfeedback und isolierte Kursausführung/).textContent,
+      ).not.toMatch(/Codex|Repository-Labor/);
+      german.unmount();
+
+      const english = render(<EnglishPrivacyContent features={runtime} />);
+      expect(
+        aiSection(/AI learning feedback and isolated course execution/)
+          .textContent,
+      ).not.toMatch(/Codex|repository lab/);
+      english.unmount();
+    }
   });
 });
 

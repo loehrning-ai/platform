@@ -182,48 +182,30 @@ describe("<AuthStatus>", () => {
     );
   });
 
-  it("keeps a stable 44px editorial ticket at every breakpoint", () => {
+  it("keeps a stable 44px cobalt pill at every breakpoint and never turns black", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
 
     const { rerender } = renderGerman(<AuthStatus mobile />);
     const mobileLink = screen.getByRole("link");
     expect(mobileLink.className).toContain("min-h-11");
-    // Wide enough for the longest label, "Anmelden", so resolving the
+    // Wide enough for the longest label, "ANMELDEN", so resolving the
     // session to "Konto" never changes the control's width.
-    expect(mobileLink.className).toContain("min-w-[7.25rem]");
-    // In the phone sheet the icon and word sit together in the middle of the
-    // full-width control, not at its two far ends.
-    expect(mobileLink).toHaveClass("justify-center");
-    expect(mobileLink.className).not.toContain("justify-between");
-    // A square secondary ink control: no cobalt fill, no pill, no lift.
-    expect(mobileLink.className).toContain("border-foreground");
-    expect(mobileLink.className).not.toMatch(
-      /bg-brand-|\brounded-|uppercase|-translate-y-/,
-    );
+    expect(mobileLink.className).toContain("min-w-[7.5rem]");
+    expect(mobileLink.className).toContain("bg-brand-cobalt");
+    expect(mobileLink.className).toContain("rounded-xl");
     expect(mobileLink.className).toContain("w-full");
+    // Hover lifts the pill; no state swaps the fill for ink.
+    expect(mobileLink.className).not.toMatch(
+      /bg-(?:foreground|black|graphit)\b/,
+    );
+    expect(mobileLink.className).toContain("motion-reduce:transform-none");
 
     rerender(<AuthStatus />);
     expect(screen.getByRole("link").className).toContain("min-h-11");
     expect(screen.getByRole("link").className).not.toContain("w-full");
-  });
-
-  it("renders a quiet text link for the phone menu sheet", () => {
-    mockCreateBrowserSupabaseClient.mockReturnValue(null);
-    const onNavigate = vi.fn();
-
-    renderGerman(<AuthStatus variant="quiet" onNavigate={onNavigate} />);
-    const link = screen.getByRole("link", { name: "Anmelden" });
-    expect(link).toHaveAttribute("href", "/login");
-    // A 44px target with no border, fill or icon: the Konto tab owns sign-in.
-    expect(link.className).toContain("min-h-11");
-    expect(link.className).toContain("min-w-11");
-    expect(link.className).not.toMatch(/\bborder\b|border-foreground|bg-brand-/);
-    expect(link.querySelector("svg")).toBeNull();
-    expect(link.className).toContain("focus-visible:inset-ring-brand-orange");
-    expect(link.className).toContain("motion-reduce:transition-none");
-
-    fireEvent.click(link);
-    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("link").className).toContain(
+      "@max-[44rem]/desktop-nav:min-w-11",
+    );
   });
 
   it("notifies the mobile navigation shell before following its link", () => {

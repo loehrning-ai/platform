@@ -254,7 +254,7 @@ async function main() {
         "..",
         "public",
         "fonts",
-        "loehrning-sans-regular-v1.woff2",
+        "figtree-regular-v1.woff2",
       ),
     );
     const runtimeFontPath =

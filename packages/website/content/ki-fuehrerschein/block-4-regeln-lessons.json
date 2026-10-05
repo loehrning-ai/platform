@@ -1,0 +1,406 @@
+{
+  "blockId": "block_4",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "regeln-4-1",
+      "blockId": "block_4",
+      "number": 7,
+      "title": "Darf ich das?",
+      "subtitle": "Die Freigabe-Entscheidung in wenigen Fragen",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Shadow AI",
+        "Freigabe",
+        "Artikel 4"
+      ],
+      "concept": {
+        "body": "Shadow AI heißt: KI-Nutzung für die Arbeit außerhalb der genehmigten Tools und Kontrollen. Dazu zählen das private Chatkonto, Browser-Erweiterungen, neue KI-Funktionen in längst gekaufter Software und eigene API-Schlüssel. Solchen Abläufen fehlen oft Vertrag, Berechtigungen, Aufbewahrungsregeln und ein Meldeweg.\n\nArtikel 4 der EU-KI-Verordnung ist seit dem 2. Februar 2025 anwendbar. Seit der Änderung durch Verordnung (EU) 2026/1744 müssen Anbieter und Betreiber Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz ihres Personals zu unterstützen, abgestimmt auf Kenntnisse, Einsatzkontext und betroffene Personen. Ein bestimmtes Kursformat oder Zertifikat schreibt der Artikel nicht vor.\n\nIm Alltag heißt das: Vor jeder neuen Nutzung prüfst du Tool, Zweck, Datenklasse und Freigabe. Ein Vorfall wird gemeldet, nicht gelöscht.",
+        "takeaway": "Erst Tool, Zweck, Datenklasse und Freigabe prüfen. Im Zweifel fragen, bei Vorfällen melden.",
+        "sources": [
+          {
+            "label": "Art. 4 KI-VO",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Verordnung (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Entscheide drei echte Situationen",
+        "instructions": "Geh für jeden Fall die Fragen durch. Am Ende siehst du, ob dein Ergebnis zum Fall passt und warum.",
+        "props": {
+          "start": "start",
+          "nodes": [
+            {
+              "id": "start",
+              "question": "Worum geht es?",
+              "options": [
+                {
+                  "label": "Ich will ein KI-Tool für eine Aufgabe nutzen.",
+                  "next": "tool"
+                },
+                {
+                  "label": "Daten sind schon in ein nicht freigegebenes Tool gelangt.",
+                  "result": "report"
+                }
+              ]
+            },
+            {
+              "id": "tool",
+              "question": "Ist das Tool in dieser Edition und Konfiguration freigegeben?",
+              "options": [
+                {
+                  "label": "Ja, es steht in der Freigabeliste.",
+                  "next": "purpose"
+                },
+                {
+                  "label": "Nein oder ich weiß es nicht.",
+                  "result": "ask"
+                }
+              ]
+            },
+            {
+              "id": "purpose",
+              "question": "Ist der Zweck für dieses Tool freigegeben?",
+              "options": [
+                {
+                  "label": "Ja.",
+                  "next": "class"
+                },
+                {
+                  "label": "Nein oder unklar.",
+                  "result": "ask"
+                }
+              ]
+            },
+            {
+              "id": "class",
+              "question": "Welche Datenklasse hat die Eingabe?",
+              "options": [
+                {
+                  "label": "Öffentlich oder intern",
+                  "next": "minimise"
+                },
+                {
+                  "label": "Vertraulich",
+                  "next": "confidential"
+                },
+                {
+                  "label": "Besonders geschützt oder Zugangsdaten",
+                  "result": "stop"
+                }
+              ]
+            },
+            {
+              "id": "confidential",
+              "question": "Ist das Tool ausdrücklich für vertrauliche Daten freigegeben?",
+              "options": [
+                {
+                  "label": "Ja.",
+                  "next": "minimise"
+                },
+                {
+                  "label": "Nein oder unklar.",
+                  "result": "ask"
+                }
+              ]
+            },
+            {
+              "id": "minimise",
+              "question": "Braucht der Zweck jede Angabe, die du eingeben willst?",
+              "options": [
+                {
+                  "label": "Ja, es ist nur Nötiges drin.",
+                  "result": "go"
+                },
+                {
+                  "label": "Nein, es ist mehr drin.",
+                  "result": "minimise"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "go",
+              "tone": "good",
+              "title": "Los, mit Prüfung",
+              "body": "Freigegebenes Tool, freigegebener Zweck, passende Datenklasse, nur nötige Angaben. Das Ergebnis prüfst du nach seiner Wirkung, bevor es weitergeht.",
+              "actions": [
+                "Prüftiefe wählen",
+                "Offene Punkte markieren"
+              ]
+            },
+            {
+              "id": "minimise",
+              "tone": "warn",
+              "title": "Erst minimieren",
+              "body": "Entferne oder ersetze Angaben, die der Zweck nicht braucht. Danach geht es weiter.",
+              "actions": [
+                "Namen, Kontaktdaten und Nummern schwärzen"
+              ]
+            },
+            {
+              "id": "ask",
+              "tone": "warn",
+              "title": "Nicht eingeben, Freigabe anfragen",
+              "body": "Ohne Freigabe für genau diese Kombination aus Tool, Zweck und Datenklasse gibst du nichts ein.",
+              "actions": [
+                "Freigabeweg oder zuständige Stelle fragen",
+                "Bis dahin ohne KI oder mit erfundenem Beispiel arbeiten"
+              ]
+            },
+            {
+              "id": "stop",
+              "tone": "bad",
+              "title": "Nicht in allgemeine Assistenten",
+              "body": "Besonders geschützte Daten gehören nur in ausdrücklich dafür genehmigte Fachverfahren, Zugangsdaten in keinen Prompt.",
+              "actions": [
+                "Genehmigtes Fachverfahren nutzen",
+                "Bei Unsicherheit den Datenschutz fragen"
+              ]
+            },
+            {
+              "id": "report",
+              "tone": "bad",
+              "title": "Sofort intern melden",
+              "body": "Melde den Vorfall über den internen Kanal. Sichere Zeitpunkt, Tool, Konto, Daten und Ausgabe, lösche keine Belege eigenmächtig. Ob eine Meldung an die Aufsichtsbehörde nötig ist, entscheidet der Verantwortliche nach DSGVO Art. 33; wenn ja, möglichst binnen 72 Stunden nach Kenntnis.",
+              "source": "DSGVO Art. 33"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "blog",
+              "text": "Du willst einen schon veröffentlichten Blogartikel mit dem freigegebenen Firmen-Assistenten kürzen. Tool und Zweck stehen in der Freigabeliste.",
+              "expected": "go",
+              "why": "Öffentliche Daten, freigegebenes Tool und Zweck: los, danach gegenlesen."
+            },
+            {
+              "id": "cv",
+              "text": "Du willst mit dem freigegebenen Firmen-Assistenten eine Bewerbung samt Lebenslauf zusammenfassen. Zusammenfassen ist als Zweck freigegeben.",
+              "expected": "stop",
+              "why": "Bewerbungsunterlagen sind besonders geschützt. Allgemeine Assistenten bleiben dafür gesperrt, auch bei freigegebenem Zweck."
+            },
+            {
+              "id": "leak",
+              "text": "Ein Kollege hat gestern eine Kundenliste in sein privates Chatkonto kopiert.",
+              "expected": "report",
+              "why": "Die Daten sind schon draußen. Jetzt zählt die interne Meldung, nicht das Löschen."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "regeln-4-1-c1",
+          "prompt": "Deine Office-Software bekommt per Update eine neue KI-Schreibfunktion. Darfst du sie sofort mit Kundendaten nutzen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, die Software ist ja schon gekauft.",
+              "correct": false,
+              "feedback": "Freigaben gelten für Funktionen und Konfigurationen, nicht für den Produktnamen."
+            },
+            {
+              "id": "b",
+              "text": "Erst, wenn die neue Funktion für Zweck und Datenklasse freigegeben ist.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ja, wenn sie standardmäßig eingeschaltet ist.",
+              "correct": false,
+              "feedback": "Eingeschaltet heißt nicht freigegeben. Die Voreinstellung trifft keine Entscheidung über Zweck und Datenklasse."
+            }
+          ],
+          "explanation": "Neue Funktionen in gekaufter Software sind ein häufiger Weg in Shadow AI. Bis zur Freigabe bleibt die Kombination gesperrt."
+        },
+        {
+          "id": "regeln-4-1-c2",
+          "prompt": "Was verlangt Artikel 4 der EU-KI-Verordnung in der geltenden Fassung?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ein Zertifikat für jede Person, die KI nutzt.",
+              "correct": false,
+              "feedback": "Artikel 4 schreibt kein Zertifikat vor."
+            },
+            {
+              "id": "b",
+              "text": "Dass Anbieter und Betreiber Maßnahmen ergreifen, die die KI-Kompetenz ihres Personals unterstützen, passend zu Kontext und Vorwissen.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Einen Pflichtkurs mit fester Stundenzahl.",
+              "correct": false,
+              "feedback": "Artikel 4 legt weder Format noch Stundenzahl fest."
+            }
+          ],
+          "explanation": "Artikel 4 ist seit dem 2. Februar 2025 anwendbar und schreibt weder Format noch Zertifikat vor. Die Teilnahmebestätigung dieses Kurses belegt nur den Abschluss dieses Kurses."
+        }
+      ]
+    },
+    {
+      "id": "regeln-4-2",
+      "blockId": "block_4",
+      "number": 8,
+      "title": "Deine Team-Richtlinie",
+      "subtitle": "Eine Seite, die im Alltag hilft",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "KI-Richtlinie",
+        "Freigabeliste",
+        "Meldekanal"
+      ],
+      "concept": {
+        "body": "Eine KI-Richtlinie hilft nur, wenn Beschäftigte sie im Alltag anwenden können. Für den Anfang reicht eine Seite mit sechs Bausteinen, wenn Freigabeliste und Verfahren separat gepflegt und verlinkt sind:\n\n1. **Geltung:** für wen und für welche Tools.\n2. **Freigaben:** welches Tool für welchen Zweck und welche Datenklasse.\n3. **Datenregeln:** Stufen, Minimierung, Zugangsdaten nie.\n4. **Prüfung:** Prüftiefe nach Wirkung, wer freigibt.\n5. **Vorfälle:** Meldekanal und was zu sichern ist.\n6. **Pflege:** wer verantwortlich ist und wann überprüft wird.\n\nFertig ist sie erst, wenn alle [Platzhalter] ersetzt sind und die zuständigen Stellen zugestimmt haben, je nach Organisation Datenschutz, Informationssicherheit und Betriebsrat. Sie ist ein Baustein für Maßnahmen nach Artikel 4, kein vollständiger Nachweis.",
+        "takeaway": "Eine Seite, sechs Bausteine, keine offenen Platzhalter: dann kann das Team damit arbeiten."
+      },
+      "exercise": {
+        "kind": "doc-builder",
+        "title": "Bau deine Richtlinie",
+        "instructions": "Fülle die Pflichtfelder aus. Die Vorschau zeigt die fertige Seite; lade sie als Markdown herunter oder kopiere sie.",
+        "props": {
+          "filename": "ki-richtlinie.md",
+          "template": "# KI-Nutzungsrichtlinie: {{org}}\n\nStand: [Datum] · Verantwortlich: {{owner}}\n\n## 1. Geltung\nGilt für {{scope}}, für alle KI-Funktionen, auch in bereits genutzter Software.\n\n## 2. Freigaben\n{{tools}}\n\nJede Kombination aus Tool, Zweck und Datenklasse, die hier nicht steht, bleibt gesperrt, bis sie freigegeben ist.\n\n## 3. Datenregeln\nVor jeder Eingabe: Datenklasse, Freigabe und Minimierung prüfen. Nur Angaben eingeben, die der Zweck braucht.\n\nNie eingeben:\n{{never}}\n\n## 4. Prüfung\n{{review}}. Rechtsaussagen, Finanzzahlen, Entscheidungen über Personen und Zusagen nach außen gibt immer die zuständige Person frei.\n\n## 5. Vorfälle\nSofort melden über: {{incident}}. Zeitpunkt, Tool, Konto, Daten und Ausgabe sichern, nichts eigenmächtig löschen.\n\n## 6. Pflege\nÜberprüfung {{cycle}} und sofort bei neuen Funktionen, Vertragsänderungen, Vorfällen oder Rechtsänderungen.\n\n[Zustimmung: Datenschutz, Informationssicherheit, gegebenenfalls Betriebsrat]\n",
+          "fields": [
+            {
+              "id": "org",
+              "label": "Organisation oder Team",
+              "type": "text",
+              "required": true,
+              "placeholder": "Vertrieb Musterfirma"
+            },
+            {
+              "id": "scope",
+              "label": "Gilt für",
+              "type": "text",
+              "required": true,
+              "placeholder": "alle Beschäftigten im Vertrieb"
+            },
+            {
+              "id": "tools",
+              "label": "Freigegebene Tools und Zwecke",
+              "type": "textarea",
+              "required": true,
+              "placeholder": "Firmen-Assistent: Entwürfe interner Texte, Stufe öffentlich und intern"
+            },
+            {
+              "id": "never",
+              "label": "Nie eingeben",
+              "type": "checkboxes",
+              "required": true,
+              "options": [
+                "Passwörter und Zugangsdaten",
+                "Gesundheitsdaten",
+                "Gehalts- und Personaldaten",
+                "Bewerbungsunterlagen",
+                "Unveröffentlichte Finanzzahlen"
+              ],
+              "default": [
+                "Passwörter und Zugangsdaten"
+              ]
+            },
+            {
+              "id": "review",
+              "label": "Prüfregel",
+              "type": "select",
+              "required": true,
+              "options": [
+                "Prüftiefe nach Wirkung: Gegenlesen, Quellenprüfung, Fachfreigabe",
+                "Alles, was nach außen geht, im Vier-Augen-Prinzip"
+              ]
+            },
+            {
+              "id": "incident",
+              "label": "Meldekanal für Vorfälle",
+              "type": "text",
+              "required": true,
+              "placeholder": "Ticket-Kategorie „KI-Vorfall“"
+            },
+            {
+              "id": "owner",
+              "label": "Verantwortlich für die Richtlinie",
+              "type": "text",
+              "required": true,
+              "placeholder": "Rolle, nicht nur Name"
+            },
+            {
+              "id": "cycle",
+              "label": "Überprüfung",
+              "type": "select",
+              "required": true,
+              "options": [
+                "alle sechs Monate",
+                "jährlich"
+              ]
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "regeln-4-2-c1",
+          "prompt": "Eure Richtlinie ist fertig formuliert, aber unter „Vorfälle“ steht noch [Meldekanal]. Ist sie freigabefähig?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, der Rest ist wichtiger.",
+              "correct": false,
+              "feedback": "Ohne Meldekanal weiß im Ernstfall niemand, wohin. Genau dieser Teil muss vollständig sein."
+            },
+            {
+              "id": "b",
+              "text": "Nein. Solange ein Platzhalter offen ist, weiß im Ernstfall niemand, wohin.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ja, wenn alle sie gelesen haben.",
+              "correct": false,
+              "feedback": "Lesen ersetzt nicht das Ausfüllen der Platzhalter und die Zustimmung der zuständigen Stellen."
+            }
+          ],
+          "explanation": "Freigabefähig ist eine Richtlinie erst, wenn alle Platzhalter ersetzt und die zuständigen Stellen eingebunden sind."
+        },
+        {
+          "id": "regeln-4-2-c2",
+          "prompt": "Was muss NICHT auf der einen Seite stehen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Der Meldekanal für Vorfälle.",
+              "correct": false,
+              "feedback": "Der Meldekanal gehört immer auf die Seite: Im Ernstfall sucht niemand in Anhängen."
+            },
+            {
+              "id": "b",
+              "text": "Jede einzelne Tool-Konfiguration, wenn die Freigabeliste separat gepflegt und verlinkt ist.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Wer die Richtlinie pflegt.",
+              "correct": false,
+              "feedback": "Ohne verantwortliche Person veraltet die Richtlinie. Pflege gehört immer hinein."
+            }
+          ],
+          "explanation": "Eine knappe Richtlinie reicht, wenn Freigabeliste und Verfahren separat gepflegt und eindeutig verlinkt sind. Meldekanal und Verantwortliche gehören immer hinein."
+        }
+      ]
+    }
+  ]
+}

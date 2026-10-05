@@ -1,48 +1,54 @@
 import { test, expect, type Page } from "@playwright/test";
 
 /**
- * The brand lockup is static: the Mennige square with a paper L and the
- * wordmark "loehrning.ai" in the site face. Nothing rotates, collapses or
- * slides on scroll (the Werkzeichnung direction bans rotations and the
- * scroll-driven collapse read as "OEHRNING.AI"), and the fixed-height header
- * keeps its geometry at every scroll position.
+ * The fixed-height header keeps its geometry while the brand lockup repeats
+ * the studio scroll transition: the square rotates, the duplicate wordmark L
+ * collapses, and the remaining letters close toward the mark.
+ *
+ * The wordmark shows from 360px, so desktop Chromium and the iPhone 13
+ * viewport (390px) both exercise the whole transition. Below 360px the
+ * compact bar shows the tile alone, which still rotates.
  */
 
 const HOME_LINK = 'nav a[href="/"]';
 const ICON_MARK = `${HOME_LINK} [data-logo-mark]`;
-const WORDMARK = `${HOME_LINK} [data-logo-wordmark]`;
+const LEADING_L = `${HOME_LINK} [data-logo-wordmark-leading-l]`;
+const WORDMARK_REMAINDER = `${HOME_LINK} [data-logo-wordmark-remainder]`;
 
-async function lockupGeometry(page: Page) {
-  return page.evaluate(
-    ([markSelector, wordmarkSelector]) => {
-      const square = document.querySelector(markSelector);
-      if (!square) throw new Error(`icon mark not found: ${markSelector}`);
-      const wordmark = document.querySelector(wordmarkSelector);
-      const brandRect = square.closest("a")?.getBoundingClientRect();
-      const wordmarkStyle = wordmark ? getComputedStyle(wordmark) : null;
-      const header = document.querySelector("[data-nav-header-row]");
+async function markGeometry(page: Page) {
+  return page.evaluate((sel) => {
+    const square = document.querySelector(sel);
+    if (!square) throw new Error(`icon mark not found: ${sel}`);
+    const inner = square.querySelector("span");
+    if (!inner) throw new Error("L span not found inside mark");
 
-      return {
-        squareTransform: getComputedStyle(square).transform,
-        squareX: square.getBoundingClientRect().x,
-        brandWidth: brandRect?.width ?? 0,
-        headerHeight: header?.getBoundingClientRect().height ?? 0,
-        wordmarkText: wordmark?.textContent ?? "",
-        wordmarkVisible: Boolean(
-          wordmark && wordmark.getBoundingClientRect().width > 0,
-        ),
-        wordmarkTransform: wordmarkStyle?.transform ?? "none",
-        wordmarkWeight: wordmarkStyle?.fontWeight ?? "",
-        wordmarkFamily: wordmarkStyle?.fontFamily ?? "",
-        wordmarkTransformText: wordmarkStyle?.textTransform ?? "",
-        wordmarkTracking: wordmarkStyle
-          ? Number.parseFloat(wordmarkStyle.letterSpacing) /
-            Number.parseFloat(wordmarkStyle.fontSize)
-          : 0,
-      };
-    },
-    [ICON_MARK, WORDMARK] as const,
-  );
+    const brand = square.closest("a");
+    const leadingL = brand?.querySelector<HTMLElement>(
+      "[data-logo-wordmark-leading-l]",
+    );
+    const remainder = brand?.querySelector<HTMLElement>(
+      "[data-logo-wordmark-remainder]",
+    );
+    if (!leadingL || !remainder) throw new Error("wordmark pieces not found");
+
+    const range = document.createRange();
+    range.selectNodeContents(inner.childNodes[0]);
+    const lRect = range.getBoundingClientRect();
+    const squareRect = square.getBoundingClientRect();
+    const brandRect = brand?.getBoundingClientRect();
+
+    return {
+      squareCenterX: squareRect.x + squareRect.width / 2,
+      squareRight: squareRect.right,
+      squareTransform: getComputedStyle(square).transform,
+      lCenterX: lRect.x + lRect.width / 2,
+      leadingLOpacity: Number.parseFloat(getComputedStyle(leadingL).opacity),
+      leadingLVisualWidth: leadingL.getBoundingClientRect().width,
+      leadingLLayoutWidth: leadingL.offsetWidth,
+      remainderX: remainder.getBoundingClientRect().x,
+      brandWidth: brandRect?.width ?? 0,
+    };
+  }, ICON_MARK);
 }
 
 async function scrollToAndSettle(page: Page, y: number) {
@@ -60,57 +66,107 @@ async function scrollToAndSettle(page: Page, y: number) {
       setTimeout(done, 250);
     });
   }, y);
-  return lockupGeometry(page);
+  return markGeometry(page);
 }
 
-test.describe("primary navigation brand lockup", () => {
-  for (const reducedMotion of ["no-preference", "reduce"] as const) {
-    test(`stays static while the page scrolls (reduced motion: ${reducedMotion})`, async ({
-      page,
-    }) => {
-      await page.emulateMedia({ reducedMotion });
-      await page.goto("/");
-      await page.waitForLoadState("domcontentloaded");
-      await expect(page.locator(ICON_MARK)).toBeVisible();
+test.describe("primary navigation logo mark", () => {
+  test.beforeEach(({ browserName }) => {
+    test.skip(
+      browserName === "webkit",
+      "Playwright WebKit does not update Framer useScroll values reliably.",
+    );
+  });
 
-      const initial = await scrollToAndSettle(page, 0);
-      for (const scrollY of [60, 130, 200, 0]) {
-        const settled = await scrollToAndSettle(page, scrollY);
-        expect(settled.squareTransform, `square at scrollY=${scrollY}`).toBe(
-          "none",
-        );
-        expect(
-          settled.wordmarkTransform,
-          `wordmark at scrollY=${scrollY}`,
-        ).toBe("none");
-        expect(
-          Math.abs(settled.brandWidth - initial.brandWidth),
-          `brand width at scrollY=${scrollY}`,
-        ).toBeLessThan(0.5);
-        expect(Math.abs(settled.squareX - initial.squareX)).toBeLessThan(0.5);
-        expect(settled.headerHeight).toBe(initial.headerHeight);
-        expect(settled.wordmarkText).toBe(initial.wordmarkText);
-      }
-    });
-  }
-
-  test("sets the wordmark in the site face, 700, sentence case", async ({
+  test("the square rotates and the duplicate L merges away without changing header geometry", async ({
     page,
   }) => {
-    test.skip(
-      (page.viewportSize()?.width ?? 0) < 360,
-      "Below 360px the compact bar shows the square alone.",
-    );
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
-    const lockup = await lockupGeometry(page);
+    await expect(page.locator(ICON_MARK)).toBeVisible();
+    await expect(page.locator(LEADING_L)).toBeVisible();
 
-    expect(lockup.wordmarkVisible).toBe(true);
-    expect(lockup.wordmarkText).toBe("loehrning.ai");
-    expect(lockup.wordmarkTransformText).toBe("none");
-    expect(Number(lockup.wordmarkWeight)).toBe(700);
-    expect(lockup.wordmarkFamily).not.toMatch(/Arial Black/i);
-    // Headline tracking never below -0.015em.
-    expect(lockup.wordmarkTracking).toBeGreaterThanOrEqual(-0.0151);
+    const initialHeaderHeight = await page
+      .locator("[data-nav-header-row]")
+      .evaluate((element) => element.getBoundingClientRect().height);
+    const initial = await scrollToAndSettle(page, 0);
+    let settled = initial;
+
+    for (const scrollY of [0, 60, 95, 130, 200]) {
+      settled = await scrollToAndSettle(page, scrollY);
+
+      expect(
+        Math.abs(settled.lCenterX - settled.squareCenterX),
+        `at scrollY=${scrollY}, L (centre ${settled.lCenterX.toFixed(1)}) should sit on the square's centre (${settled.squareCenterX.toFixed(1)})`,
+      ).toBeLessThan(3);
+      await expect(page.locator("[data-nav-header-row]")).toHaveCSS(
+        "height",
+        `${initialHeaderHeight}px`,
+      );
+    }
+
+    expect(initial.squareTransform).toBe("none");
+    expect(settled.squareTransform).not.toBe("none");
+    expect(initial.leadingLOpacity).toBeGreaterThan(0.95);
+    expect(settled.leadingLOpacity).toBeLessThan(0.05);
+    expect(initial.leadingLVisualWidth).toBeGreaterThan(10);
+    expect(settled.leadingLVisualWidth).toBeLessThan(1);
+    expect(settled.leadingLLayoutWidth).toBe(initial.leadingLLayoutWidth);
+    expect(Math.abs(settled.brandWidth - initial.brandWidth)).toBeLessThan(0.5);
+    expect(settled.remainderX - settled.squareRight).toBeLessThan(
+      initial.remainderX - initial.squareRight,
+    );
+  });
+
+  test("the lockup returns to its full resting state at the top", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.waitForLoadState("domcontentloaded");
+
+    await scrollToAndSettle(page, 200);
+    const settled = await scrollToAndSettle(page, 0);
+
+    expect(settled.squareTransform).toBe("none");
+    expect(settled.leadingLOpacity).toBeGreaterThan(0.95);
+    expect(settled.leadingLVisualWidth).toBeGreaterThan(10);
+  });
+
+  test("reduced motion keeps the complete current lockup static", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await page.waitForLoadState("domcontentloaded");
+    await expect(page.locator(ICON_MARK)).toBeVisible();
+    await expect(page.locator(LEADING_L)).toBeAttached();
+    await expect(page.locator(WORDMARK_REMAINDER)).toBeAttached();
+
+    const initial = await scrollToAndSettle(page, 0);
+    const settled = await scrollToAndSettle(page, 200);
+
+    expect(initial.squareTransform).toBe("none");
+    expect(settled.squareTransform).toBe("none");
+    expect(settled.leadingLOpacity).toBeGreaterThan(0.95);
+    expect(
+      Math.abs(settled.leadingLVisualWidth - initial.leadingLVisualWidth),
+    ).toBeLessThan(0.5);
+  });
+
+  test("@320 the compact bar shows the rotating tile alone and never overflows", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.goto("/");
+    await page.waitForLoadState("domcontentloaded");
+    await expect(page.locator(ICON_MARK)).toBeVisible();
+    await expect(
+      page.locator("[data-nav-header-row] [data-logo-wordmark]"),
+    ).toBeHidden();
+
+    const settled = await scrollToAndSettle(page, 200);
+    expect(settled.squareTransform).not.toBe("none");
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBe(320);
   });
 });

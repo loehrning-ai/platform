@@ -158,99 +158,6 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       data: "synthetic",
       note: "Aufgezeichnete KI-Läufe werden mit Datum und Modell nachgetragen.",
     },
-    decisionLab: {
-      kicker: "Entscheidung 01 · Rohdaten",
-      title: "1.866,5 Tonnen, 7,5 % weniger als 2024. Weiterschicken?",
-      prompt:
-        "Die KI meldet für 2025 Scope 1 und 2 von 1.866,5 t CO₂e, 7,5 % unter dem Vorjahr. Die Bank wartet. Was tust du?",
-      facts: [
-        "KI-Antwort 2025 (konstruiert): 1.866,5 t CO₂e",
-        "Vorjahr 2024: 2.017,5 t CO₂e",
-        "Ordner Werk Nord: 12 Dateien",
-      ],
-      decisionLegend: "Deine erste Entscheidung",
-      evidenceLegend: "Der stärkste Beleg",
-      choices: [
-        {
-          id: "check-coverage",
-          label:
-            "Erst je Standort eine Monatstabelle bauen und jede Rechnung einmal zählen, dann rechnen.",
-        },
-        {
-          id: "send-total",
-          label:
-            "Die Zahl schicken, weil sie nah am Vorjahr liegt und die KI ihre Summen zeigt.",
-        },
-        {
-          id: "ask-again",
-          label:
-            "Die KI bitten, noch einmal genauer zu rechnen, und die zweite Zahl schicken.",
-        },
-      ],
-      evidence: [
-        {
-          id: "files-not-months",
-          label:
-            "Zwölf Dateien belegen keine zwölf Monate: Rechnungen können doppelt, zweimonatig oder fremd sein.",
-        },
-        {
-          id: "close-to-last-year",
-          label:
-            "Die Zahl liegt nur 7,5 % unter dem Vorjahr, das ist ein normales Jahr.",
-        },
-        {
-          id: "shown-sums",
-          label: "Die KI hat jede Summe Schritt für Schritt gezeigt.",
-        },
-      ],
-      recommendedChoiceId: "check-coverage",
-      strongestEvidenceId: "files-not-months",
-      submitLabel: "Entscheidung prüfen",
-      resetLabel: "Neu entscheiden",
-      privacyNote:
-        "Läuft nur auf dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
-      resultLabel: "Auswertung der Entscheidung",
-      feedback: {
-        aligned: {
-          title: "Zwölf Dateien im Ordner decken nur elf Monate ab.",
-          body: "Der März steckt doppelt im Ordner, der Oktober fehlt, eine Rechnung gehört einem Gemeinschaftsunternehmen; die Monatstabelle zeigt das vor dem Summieren. Richtig sind 1.915,2 t standortbasiert.",
-        },
-        decisionOnly: {
-          title: "Der Schritt stimmt, aber dein Beleg trägt ihn nicht.",
-          body: "Eine Zahl nah am Vorjahr und gezeigte Summen belegen nicht, dass jede Rechnung einmal zählt. Der Beleg ist die Monatstabelle: 12 Dateien decken hier 11 Monate ab.",
-        },
-        evidenceOnly: {
-          title: "Dein Beleg spricht gegen deine Entscheidung.",
-          body: "Wenn zwölf Dateien keine zwölf Monate belegen, darf die Summe so nicht raus. Erst die Monatstabelle, dann die Zahl.",
-        },
-        unsupported: {
-          title: "Die Summe sieht plausibel aus und ist trotzdem falsch.",
-          body: "Sechs Fehler heben sich hier fast auf, deshalb weicht die Summe nur um 48,7 t von der richtigen ab. Der Vorjahresvergleich findet die doppelte Märzrechnung nicht.",
-        },
-        byChoice: {
-          "send-total": {
-            evidenceOnly: {
-              title: "Dein Beleg spricht gegen das Abschicken.",
-              body: "Zwölf Dateien decken elf Monate ab, eine Rechnung gehört einer anderen Firma, und die Summe stimmt nur zufällig fast. Richtig sind 1.915,2 t standortbasiert.",
-            },
-            unsupported: {
-              title: "Die Nähe zum Vorjahr belegt die Summe nicht.",
-              body: "Die Summe weicht nur um 48,7 t von der richtigen ab, weil sich Fehler aufheben. Im nächsten Jahr können sich dieselben Fehler addieren statt aufheben.",
-            },
-          },
-          "ask-again": {
-            evidenceOnly: {
-              title: "Eine zweite Rechnung ändert den Ordner nicht.",
-              body: "Die KI rechnet mit denselben Dateien noch einmal. Den fehlenden Oktober und die fremde Rechnung findest du mit der Monatstabelle.",
-            },
-            unsupported: {
-              title: "Genauer rechnen hilft hier nicht.",
-              body: "Die Fehler stecken in den Belegen: doppelter März, fehlender Oktober, fremde Rechnung. Eine zweite Summe über denselben Ordner zählt sie wieder mit.",
-            },
-          },
-        },
-      },
-    },
     steps: [
       {
         n: "01",
@@ -320,7 +227,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Welche Prüfungen brauchst du, bevor du eine Emissionszahl aus einem Rechnungsordner an Bank oder Kunden schickst?",
       dataLimitations: [
         "Die Emissionsfaktoren sind Lehrwerte, keine amtlichen Werte.",
-        "2024 stammt aus einer Zusammenfassung ohne Einzelrechnungen, mit gleicher Grenze und den Faktoren von 2024.",
+        "2024 (2.017,5 t) stammt aus einer Zusammenfassung ohne Einzelrechnungen, mit gleicher Grenze und den Faktoren von 2024.",
         "Ohne Produktionsmengen bleibt offen, ob weniger Verbrauch aus Effizienz oder aus weniger Produktion kommt.",
       ],
       resultChart: {
@@ -494,99 +401,6 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       data: "synthetic",
       note: "Recorded AI runs will be added with date and model.",
     },
-    decisionLab: {
-      kicker: "Decision 01 · Raw data",
-      title: "1,866.5 tonnes, 7.5% below 2024. Send it?",
-      prompt:
-        "The AI reports Scope 1 and 2 of 1,866.5 t CO₂e for 2025, 7.5% below last year. The bank is waiting. What do you do?",
-      facts: [
-        "AI answer 2025 (constructed): 1,866.5 t CO₂e",
-        "Last year 2024: 2,017.5 t CO₂e",
-        "Werk Nord folder: 12 files",
-      ],
-      decisionLegend: "Your first decision",
-      evidenceLegend: "The strongest evidence",
-      choices: [
-        {
-          id: "check-coverage",
-          label:
-            "Build a month grid per site and count each bill once, then calculate.",
-        },
-        {
-          id: "send-total",
-          label:
-            "Send it, because it is close to last year and the AI shows its sums.",
-        },
-        {
-          id: "ask-again",
-          label:
-            "Ask the AI to calculate more carefully and send the second number.",
-        },
-      ],
-      evidence: [
-        {
-          id: "files-not-months",
-          label:
-            "Twelve files do not prove twelve months: bills can be filed twice, span two months or belong to another company.",
-        },
-        {
-          id: "close-to-last-year",
-          label:
-            "The number is only 7.5% below last year, which is a normal year.",
-        },
-        {
-          id: "shown-sums",
-          label: "The AI showed every sum step by step.",
-        },
-      ],
-      recommendedChoiceId: "check-coverage",
-      strongestEvidenceId: "files-not-months",
-      submitLabel: "Check decision",
-      resetLabel: "Decide again",
-      privacyNote:
-        "Runs only on this page. Your selection and result are neither stored nor sent.",
-      resultLabel: "Decision feedback",
-      feedback: {
-        aligned: {
-          title: "The twelve files in the folder cover only eleven months.",
-          body: "March is in the folder twice, October is missing, one bill belongs to a joint venture; a month grid shows this before anyone adds up. The right total is 1,915.2 t location-based.",
-        },
-        decisionOnly: {
-          title: "The step is right, but your evidence does not support it.",
-          body: "A number close to last year and neatly shown sums do not prove each bill counts once. The evidence is the month grid: here 12 files cover 11 months.",
-        },
-        evidenceOnly: {
-          title: "Your evidence argues against your decision.",
-          body: "If twelve files do not prove twelve months, the total cannot go out yet. Month grid first, then the number.",
-        },
-        unsupported: {
-          title: "The total looks plausible and is still wrong.",
-          body: "Six errors almost cancel here, so the total is only 48.7 t off the right one. Comparing with last year does not find the duplicate March bill.",
-        },
-        byChoice: {
-          "send-total": {
-            evidenceOnly: {
-              title: "Your evidence argues against sending.",
-              body: "Twelve files cover eleven months, one bill belongs to another company, and the total is nearly right by accident. The right total is 1,915.2 t location-based.",
-            },
-            unsupported: {
-              title: "Being close to last year does not prove the total.",
-              body: "The total is only 48.7 t off the right one because errors cancel. Next year the same errors can add up instead of cancelling.",
-            },
-          },
-          "ask-again": {
-            evidenceOnly: {
-              title: "A second calculation does not change the folder.",
-              body: "The AI calculates again from the same files. The month grid finds the missing October and the other company's bill.",
-            },
-            unsupported: {
-              title: "Calculating more carefully does not help here.",
-              body: "The errors are in the documents: a March bill filed twice, a missing October, another company's bill. A second sum over the same folder counts them again.",
-            },
-          },
-        },
-      },
-    },
     steps: [
       {
         n: "01",
@@ -656,7 +470,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Which checks do you need before you send an emissions figure from a folder of bills to a bank or customer?",
       dataLimitations: [
         "The emission factors are teaching values, not official ones.",
-        "2024 comes from a summary without individual bills, with the same boundary and 2024 factors.",
+        "2024 (2,017.5 t) comes from a summary without individual bills, with the same boundary and 2024 factors.",
         "Without production volumes it stays open whether lower use came from efficiency or lower output.",
       ],
       resultChart: {

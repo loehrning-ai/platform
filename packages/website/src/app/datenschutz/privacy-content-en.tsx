@@ -240,7 +240,7 @@ export function EnglishPrivacyContent({
             id="ki"
             title="7. AI learning feedback and isolated course execution"
           >
-            {features.anthropic || features.gemini ? (
+            {features.anthropic || features.gemini || features.openai ? (
               <>
                 <p>
                   When a user expressly starts an interactive AI exercise, the
@@ -271,6 +271,17 @@ export function EnglishPrivacyContent({
                     the application does not read or prove Google billing-tier
                     status. Those technical markers do not by themselves
                     establish legal compliance.
+                  </p>
+                ) : null}
+                {features.openai ? (
+                  <p className="mt-2">
+                    OpenAI API (OpenAI, USA) is active for GPT-5 mini. Its
+                    configured retention period is{" "}
+                    {features.openaiRetentionDays} days. Each request asks the
+                    provider not to store the response for later retrieval.
+                    Activation requires a dated DPA review marker; that
+                    technical marker does not by itself establish legal
+                    compliance.
                   </p>
                 ) : null}
                 <p className="mt-2">
@@ -304,15 +315,16 @@ export function EnglishPrivacyContent({
               </>
             ) : (
               <p>
-                Anthropic Claude and Google Gemini API are disabled for AI
-                learning feedback in this deployment. Exercises use local or
-                rule-based feedback and send no input to these model providers.
+                Anthropic Claude, Google Gemini API, and OpenAI API are
+                disabled for AI learning feedback in this deployment. Exercises
+                use local or rule-based feedback and send no input to these
+                model providers.
               </p>
             )}
             {features.courseTerminal ? (
               <p className="mt-2">
-                When expressly started, the Codex, Data Science, Data
-                Engineering, and Data Infrastructure course projects can each
+                When expressly started, the Data Science, Data Engineering,
+                and Data Infrastructure course projects can each
                 transmit a fixed sequence of allowed command identifiers to
                 Vercel Sandbox. Browser-side analysis plans are structurally
                 checked only; they are not executable SQL and are not sent to
@@ -338,10 +350,8 @@ export function EnglishPrivacyContent({
             ) : (
               <p className="mt-2">
                 Real isolated course execution through Vercel Sandbox is
-                disabled in this deployment. The Codex repository lab explicitly
-                labels its separate browser fallback as a simulation. The three
-                data labs do not present simulated metrics as execution when no
-                real run exists.
+                disabled in this deployment. The three data labs do not present
+                simulated metrics as execution when no real run exists.
               </p>
             )}
           </LegalSection>
@@ -710,7 +720,7 @@ export function EnglishPrivacyContent({
                   </li>
                 </>
               ) : null}
-              {features.anthropic ? (
+              {features.anthropic || features.gemini || features.openai ? (
                 <li>
                   AI response cache: no more than one hour in the memory of a
                   server process, with no more than 500 entries per function.

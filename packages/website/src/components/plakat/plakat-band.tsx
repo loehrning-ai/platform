@@ -47,7 +47,7 @@ export type PlakatBandProps = {
 /**
  * The poster band (Werkzeichnung v2, SPEC §3.1): a full-width in-flow
  * section in one scene (`plakat-*`), with the scene's ground, ink and ring.
- * It supersedes the graphit CoverBand on workshops, courses, demos and the
+ * It supersedes the paper CoverBand on workshops, courses, demos and the
  * blog; CoverBand stays for the home fallback scene.
  *
  * Type budget: two or three sizes per band. The caps line (14px, 17px in

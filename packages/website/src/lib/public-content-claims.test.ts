@@ -36,8 +36,8 @@ function readPublicFiles(directory: string): string[] {
 describe("public learning content claim hygiene", () => {
   const reviewedFiles = [
     "ai-native/modul-4-lessons.json",
-    "eu-ai-act-kurs/block-6-praxis-lessons.json",
-    "ki-und-gesellschaft/block-3-ethik-lessons.json",
+    "eu-ai-act-kurs/block-5-umsetzen-lessons.json",
+    "ki-und-gesellschaft/block-3-fairness-lessons.json",
     "books/ki-arbeitsalltag/13_anhang.md",
     "books/ki-landschaft/01_eisberg.md",
     "books/ki-landschaft/02_methodik.md",

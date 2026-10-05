@@ -21,21 +21,21 @@ const COPY: Readonly<
   >
 > = {
   de: {
-    title: "KI und Gesellschaft: Arbeit, Deepfakes und Bias",
+    title: "KI und Gesellschaft: Jobzahlen, Fakes und Fairness prüfen",
     description:
-      "Kostenloser Kurs mit 3 Blöcken, 9 Lektionen und 46 Minuten Lernzeit. Ein Lernkonto ist erforderlich.",
-    graphName: "KI und Gesellschaft: Arbeit, Deepfakes und Bias",
+      "Kostenloser Kurs mit 3 Modulen, 8 Lektionen und 40 Minuten Lernzeit. Jede Lektion hat eine Übung. Ein Lernkonto ist erforderlich.",
+    graphName: "KI und Gesellschaft: Jobzahlen, Fakes und Fairness prüfen",
     graphDescription:
-      "Onlinekurs zur Einordnung von Arbeit, synthetischen Medien und Bias in datenbasierten Entscheidungen.",
+      "Onlinekurs mit Übungen: Jobschlagzeilen entschlüsseln, Herkunft von Videos prüfen, Detektorwerte nachrechnen und Fairness-Maße vergleichen.",
     audience: "Erwachsene ohne technische Vorkenntnisse",
   },
   en: {
-    title: "AI and Society: work, deepfakes, and bias",
+    title: "AI and Society: check jobs figures, fakes, and fairness",
     description:
-      "Free course with 3 blocks, 9 lessons, and 46 minutes of study. A learning account is required.",
-    graphName: "AI and Society: work, deepfakes, and bias",
+      "Free course with 3 modules, 8 lessons, and 40 minutes of study. Every lesson has an exercise. A learning account is required.",
+    graphName: "AI and Society: check jobs figures, fakes, and fairness",
     graphDescription:
-      "Online course on assessing work, synthetic media, and bias in data-supported decisions.",
+      "Hands-on online course: decode jobs headlines, trace the origin of videos, work out detector scores and compare fairness measures.",
     audience: "Adults without a technical background",
   },
 };
@@ -84,7 +84,7 @@ function courseGraph(locale: Locale) {
     hasCourseInstance: {
       "@type": "CourseInstance",
       courseMode: "online",
-      courseWorkload: "PT46M",
+      courseWorkload: "PT40M",
       inLanguage: locale,
     },
   };

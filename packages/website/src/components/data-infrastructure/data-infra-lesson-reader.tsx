@@ -255,7 +255,7 @@ export function DataInfraLessonReader({
             {nextHref && (
               <Link
                 href={nextHref}
-                className="ml-auto inline-flex min-h-11 max-w-full items-center border border-foreground bg-brand-orange px-4 text-[13px] font-semibold text-white [overflow-wrap:anywhere] transition-colors hover:bg-foreground"
+                className="ml-auto inline-flex min-h-11 max-w-full items-center border border-foreground bg-brand-orange px-4 text-[13px] font-semibold text-white [overflow-wrap:anywhere] transition-colors hover:bg-kupfer-dark"
               >
                 {copy.next}
               </Link>

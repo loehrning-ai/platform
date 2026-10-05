@@ -13,7 +13,7 @@ const GRADEABLE = new Set<GradeableKind>([
 ]);
 
 describe("canonical grade exercise resolution", () => {
-  it("resolves every published gradeable widget from reviewed server content", async () => {
+  it("resolves every published gradeable widget from reviewed server content (none since the engine port)", async () => {
     const lessons = await getAllLessons();
     let count = 0;
 
@@ -36,7 +36,10 @@ describe("canonical grade exercise resolution", () => {
       }
     }
 
-    expect(count).toBe(5);
+    // The lesson-engine course has no legacy gradeable widgets: its live
+    // exercises use the practice API with recorded fallbacks instead. The
+    // grade route therefore resolves nothing from published content.
+    expect(count).toBe(0);
   });
 
   it("rejects unknown or mismatched exercise identities", async () => {

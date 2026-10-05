@@ -1,0 +1,470 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-01-04",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "fair-3-1",
+      "blockId": "block_3",
+      "number": 6,
+      "title": "What an overall figure hides",
+      "subtitle": "Gender Shades: errors per group, not on average",
+      "durationMinutes": 4,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Gender Shades",
+        "Disaggregated evaluation",
+        "Intersectionality"
+      ],
+      "concept": {
+        "body": "In 2018 Joy Buolamwini and Timnit Gebru tested how commercial systems from IBM, Microsoft and Face++ classified binary gender from face images. This was gender classification, not identification of individuals.\n\nThe highest reported error rate for lighter-skinned men was **0.8%**; for darker-skinned women it was **up to 34.7%**, depending on the system. This only became visible because the study evaluated by skin type and gender separately.\n\nA single overall accuracy depends on who is in the test set. If a group is rare there, its error can stay almost invisible. What holds is the measured gap in the study design; cause and today's product performance must be checked separately.",
+        "takeaway": "Ask for error rates per group, not just an overall accuracy.",
+        "sources": [
+          {
+            "label": "Buolamwini & Gebru (2018): Gender Shades. PMLR 81",
+            "url": "https://proceedings.mlr.press/v81/buolamwini18a.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Hide an error rate in the average",
+        "instructions": "Change the make-up of a test set and watch the overall error rate. You are done when both tasks are complete.",
+        "props": {
+          "inputs": [
+            {
+              "id": "share",
+              "label": "Share of darker-skinned women in the test set",
+              "help": "The rest are lighter-skinned men.",
+              "type": "slider",
+              "min": 0,
+              "max": 0.5,
+              "step": 0.01,
+              "default": 0.25,
+              "format": "percent"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "overall",
+              "label": "Overall error rate of the test set",
+              "formula": "share * 0.347 + (1 - share) * 0.008",
+              "format": "percent",
+              "decimals": 1,
+              "emphasis": true
+            },
+            {
+              "id": "err_df",
+              "label": "Errors on darker-skinned women per 1,000 test images",
+              "formula": "1000 * share * 0.347",
+              "format": "int"
+            },
+            {
+              "id": "err_lm",
+              "label": "Errors on lighter-skinned men per 1,000 test images",
+              "formula": "1000 * (1 - share) * 0.008",
+              "format": "int"
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Error rate per group and overall",
+            "format": "percent",
+            "decimals": 1,
+            "bars": [
+              {
+                "label": "Lighter-skinned men",
+                "formula": "0.008",
+                "tone": "good"
+              },
+              {
+                "label": "Darker-skinned women",
+                "formula": "0.347",
+                "tone": "bad"
+              },
+              {
+                "label": "Overall",
+                "formula": "overall",
+                "tone": "accent"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "overall < 0.05",
+              "tone": "warn",
+              "title": "Looks fine, hides 34.7%",
+              "body": "The overall figure looks unremarkable because the affected group is rare in the test set."
+            },
+            {
+              "when": "true",
+              "tone": "neutral",
+              "title": "The gap becomes visible",
+              "body": "The more balanced the test set, the more clearly the overall figure shows the problem. Better still: report errors per group."
+            }
+          ],
+          "goals": [
+            {
+              "id": "rare",
+              "label": "Set a test set with at most 5% darker-skinned women",
+              "when": "share <= 0.05",
+              "insight": "Overall error about 2.5%: the figure looks fine. Yet of about 25 errors per 1,000 test images, about 17 hit the small group."
+            },
+            {
+              "id": "balanced",
+              "label": "Set a balanced test set (50%)",
+              "when": "share >= 0.5",
+              "insight": "Overall error about 17.8%. Only the per-group breakdown shows where the system fails."
+            }
+          ],
+          "note": "Simplified worked example with two groups and the extreme values reported in the study (0.8% and up to 34.7%). Not a single product."
+        }
+      },
+      "checks": [
+        {
+          "id": "fair-3-1-c1",
+          "prompt": "A vendor advertises “98% accuracy”. What do you ask first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "What are the error rates per relevant group, and who was in the test set?",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "How fast the system runs.",
+              "correct": false,
+              "feedback": "Speed says nothing about who bears the errors."
+            },
+            {
+              "id": "c",
+              "text": "Nothing, 98% is enough for any use.",
+              "correct": false,
+              "feedback": "An overall figure can hide a very high error rate in a small group."
+            }
+          ],
+          "explanation": "Overall accuracy depends on the make-up of the test set. Only per-group figures show who the errors hit."
+        },
+        {
+          "id": "fair-3-1-c2",
+          "prompt": "What did Gender Shades measure?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Error rates of commercial systems classifying binary gender from face images.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "How well face recognition identifies individuals.",
+              "correct": false,
+              "feedback": "The study tested gender classification, not identification."
+            },
+            {
+              "id": "c",
+              "text": "The cause of the errors in each vendor's training data.",
+              "correct": false,
+              "feedback": "Without access to the training data the study does not establish a cause for each vendor."
+            }
+          ],
+          "explanation": "What is established is the measured gap in the study design. Cause and current performance are separate questions."
+        }
+      ]
+    },
+    {
+      "id": "fair-3-2",
+      "blockId": "block_3",
+      "number": 7,
+      "title": "Two fairness measures, one trade-off",
+      "subtitle": "COMPAS and why not everything can be equal at once",
+      "durationMinutes": 6,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Error-rate parity",
+        "Calibration",
+        "Base rate"
+      ],
+      "concept": {
+        "body": "In 2016 ProPublica compared more than 7,000 COMPAS risk scores from Broward County, Florida, with later arrests. Black defendants who were not rearrested had more often been wrongly labelled high risk than white defendants. Northpointe countered that within each risk level the scores were similarly calibrated for both groups.\n\nBoth findings can hold at once. Chouldechova (2017) and Kleinberg, Mullainathan and Raghavan (2016) showed: when base rates differ between groups and prediction is imperfect, equal error rates and equal meaning of a flag generally cannot be achieved at the same time.\n\nWhich measure should count is not a technical question. People must decide it before deployment, justify it and document it.",
+        "takeaway": "Fairness is a choice between measures. Name which one applies and why.",
+        "sources": [
+          {
+            "label": "Angwin et al., ProPublica (2016): Machine Bias"
+          },
+          {
+            "label": "Chouldechova (2017): Fair prediction with disparate impact. Big Data 5(2)"
+          },
+          {
+            "label": "Kleinberg, Mullainathan & Raghavan (2016): Inherent Trade-Offs in the Fair Determination of Risk Scores"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "threshold-lab",
+        "title": "Move the threshold of a risk score",
+        "instructions": "Two synthetic groups with the same score distribution but different base rates. Complete both tasks and watch which metric drifts apart.",
+        "props": {
+          "groups": [
+            {
+              "id": "a",
+              "label": "Group A (base rate 50%)",
+              "baseRate": 0.5,
+              "n": 200
+            },
+            {
+              "id": "b",
+              "label": "Group B (base rate 30%)",
+              "baseRate": 0.3,
+              "n": 200
+            }
+          ],
+          "separation": 1.6,
+          "initialThreshold": 0.5,
+          "allowSplit": true,
+          "goals": [
+            {
+              "id": "low-fpr",
+              "label": "Shared threshold: false positive rate in group A at most 10%",
+              "when": "split == 0 && fpr_a <= 0.1",
+              "insight": "The false alarm rate is equal in both groups. But a flag is right less often in group B: its PPV is clearly below group A."
+            },
+            {
+              "id": "equal-ppv",
+              "label": "Separate thresholds: equal PPV, so a flag means the same in both groups",
+              "when": "split == 1 && abs(ppv_a - ppv_b) < 0.02",
+              "insight": "Now a flag means the same in both groups. In exchange, the false alarm and false negative rates drift apart. You cannot have both."
+            }
+          ],
+          "scoreLabel": "Risk score",
+          "positiveLabel": "actually rearrested",
+          "negativeLabel": "not rearrested",
+          "note": "Synthetic data, not the COMPAS dataset. Same score distribution per class; only the base rates differ."
+        }
+      },
+      "checks": [
+        {
+          "id": "fair-3-2-c1",
+          "prompt": "ProPublica and Northpointe reached opposite conclusions on COMPAS. Why can both be right?",
+          "options": [
+            {
+              "id": "a",
+              "text": "They measured different fairness criteria, which cannot all hold at once when base rates differ.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "One side made a calculation error.",
+              "correct": false,
+              "feedback": "The conflict follows from the mathematics, not from a calculation error."
+            },
+            {
+              "id": "c",
+              "text": "With more data the conflict disappears.",
+              "correct": false,
+              "feedback": "As long as base rates differ and predictions are imperfect, the trade-off remains."
+            }
+          ],
+          "explanation": "Error-rate parity and calibration are different goals. With unequal base rates you have to choose."
+        },
+        {
+          "id": "fair-3-2-c2",
+          "prompt": "Who decides which fairness measure applies to a deployment?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The accountable people before deployment, with reasons and documentation.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "The model itself during training.",
+              "correct": false,
+              "feedback": "A model optimises what it is given. Choosing the measure is a human value judgement."
+            },
+            {
+              "id": "c",
+              "text": "Nobody, because all measures say the same thing.",
+              "correct": false,
+              "feedback": "The measures capture different things and can conflict, as the lab shows."
+            }
+          ],
+          "explanation": "Which errors may hit whom is a normative decision. It belongs before deployment and in the documentation."
+        }
+      ]
+    },
+    {
+      "id": "fair-3-3",
+      "blockId": "block_3",
+      "number": 8,
+      "title": "Who is accountable for what?",
+      "subtitle": "Assign duties and know your own rights",
+      "durationMinutes": 5,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Provider and deployer",
+        "Automated decision",
+        "Right of access"
+      ],
+      "concept": {
+        "body": "“The AI decided” names neither an organisation nor a legal basis. Duties attach to role and action:\n\n- **Providers** develop a system and place it on the market. For high-risk systems they ensure, for example, data governance (Article 10) and logging capability (Article 12).\n- **Deployers** use it: they follow the instructions for use, assign oversight to competent people and keep logs (Article 26).\n- **Affected people** can request access under Article 15 GDPR, and for solely automated decisions with significant effects also information about the logic involved (Article 15(1)(h) GDPR).\n\nThe GDPR applies today. The high-risk obligations for stand-alone Annex III systems, such as in recruiting, apply from 2 December 2027 under Regulation (EU) 2026/1744. The [EU AI Act course](/en/eu-ai-act-kurs) covers the roles in detail.",
+        "takeaway": "For every automated decision ask: who provides, who deploys, who decides, and what may I request?",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689, Articles 10, 12, 26",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "GDPR Articles 15 and 22",
+            "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Assign eight duties and rights",
+        "instructions": "Read the invented case and file each duty or right under the role it attaches to. You are done when all eight are sorted.",
+        "props": {
+          "context": {
+            "label": "Case (invented)",
+            "text": "Muster GmbH buys a system from a software company that pre-sorts job applications. An HR officer decides on interviews. Applicant Alex is not invited and wants to know why."
+          },
+          "buckets": [
+            {
+              "id": "provider",
+              "label": "Software company (provider)"
+            },
+            {
+              "id": "deployer",
+              "label": "Muster GmbH (deployer)"
+            },
+            {
+              "id": "person",
+              "label": "Alex (affected person)"
+            }
+          ],
+          "items": [
+            {
+              "id": "data",
+              "bucket": "provider",
+              "text": "Examine training, validation and test data for possible biases (Article 10)",
+              "why": "Data governance is a requirement on the system that the provider ensures."
+            },
+            {
+              "id": "logging",
+              "bucket": "provider",
+              "text": "Make automatic logging technically possible (Article 12)",
+              "why": "The system must be able to produce logs. The provider builds that in."
+            },
+            {
+              "id": "instructions",
+              "bucket": "deployer",
+              "text": "Use the system in line with its instructions for use (Article 26(1))",
+              "why": "Whoever deploys follows the provider's instructions for use."
+            },
+            {
+              "id": "oversight",
+              "bucket": "deployer",
+              "text": "Assign oversight to people with the necessary competence and authority (Article 26(2))",
+              "why": "The deployer organises human oversight in operation."
+            },
+            {
+              "id": "logs",
+              "bucket": "deployer",
+              "text": "Keep automatically generated logs for at least six months as a rule (Article 26(6))",
+              "why": "The provider enables logs; the deployer keeps the logs under its control."
+            },
+            {
+              "id": "access",
+              "bucket": "person",
+              "text": "Request access to one's own personal data (Article 15 GDPR)",
+              "why": "The right of access applies today and is directed at the controller, here Muster GmbH."
+            },
+            {
+              "id": "human",
+              "bucket": "person",
+              "text": "Request human intervention if a decision was solely automated (Article 22(3) GDPR)",
+              "why": "Applies only to solely automated decisions with significant effects, in the exception cases under Article 22(2)(a) and (c). Here an HR officer decides, so this needs checking."
+            },
+            {
+              "id": "complaint",
+              "bucket": "person",
+              "text": "Lodge a complaint with the competent market surveillance authority (Article 85)",
+              "why": "Anyone who suspects a breach of the AI Act can lodge a complaint."
+            }
+          ],
+          "passRatio": 0
+        }
+      },
+      "checks": [
+        {
+          "id": "fair-3-3-c1",
+          "prompt": "A system pre-sorts applications and an HR officer decides. Does Article 22 GDPR apply automatically?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Not automatically: Article 22 covers solely automated decisions. How much the HR officer really reviews needs checking.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Yes, as soon as any AI is involved.",
+              "correct": false,
+              "feedback": "Article 22 requires a solely automated decision with significant effects."
+            },
+            {
+              "id": "c",
+              "text": "No, applications never fall under the GDPR.",
+              "correct": false,
+              "feedback": "Application data is personal data. The GDPR applies, for example the right of access under Article 15."
+            }
+          ],
+          "explanation": "What matters is whether a person actually decides or merely rubber-stamps."
+        },
+        {
+          "id": "fair-3-3-c2",
+          "prompt": "Who keeps the automatically generated logs of a high-risk system in operation?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The deployer, to the extent the logs are under its control (Article 26(6)).",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "The affected person.",
+              "correct": false,
+              "feedback": "Affected people have rights, not a retention duty."
+            },
+            {
+              "id": "c",
+              "text": "Nobody, logs are optional.",
+              "correct": false,
+              "feedback": "For high-risk systems, logging (Article 12) and retention (Article 26(6)) are mandatory once the rules apply."
+            }
+          ],
+          "explanation": "The provider makes logs possible; the deployer keeps them for at least six months as a rule."
+        }
+      ]
+    }
+  ]
+}

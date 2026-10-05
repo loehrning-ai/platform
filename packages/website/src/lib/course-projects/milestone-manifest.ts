@@ -79,42 +79,37 @@ function defineCourseMilestones(
 export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
   Object.freeze({
     "ki-fuehrerschein": defineCourseMilestones("ki-fuehrerschein", {
-      ground: authoredUnits("ki-fuehrerschein", ["block_1_lesson_"]),
-      build: authoredUnits("ki-fuehrerschein", ["block_2_lesson_"]),
-      run: authoredUnits("ki-fuehrerschein", ["block_3_lesson_"]),
-      verify: authoredUnits("ki-fuehrerschein", ["block_4_lesson_"]),
-      transfer: authoredUnits("ki-fuehrerschein", ["block_5_lesson_"]),
+      // Lesson-engine IDs (four modules): data, briefing, checking, rules.
+      ground: authoredUnits("ki-fuehrerschein", ["daten-"]),
+      build: authoredUnits("ki-fuehrerschein", ["briefen-"]),
+      run: ["pruefen-3-1"],
+      verify: ["pruefen-3-2"],
+      transfer: authoredUnits("ki-fuehrerschein", ["regeln-"]),
     }),
     "eu-ai-act-kurs": defineCourseMilestones("eu-ai-act-kurs", {
-      ground: authoredUnits("eu-ai-act-kurs", ["block_1_lesson_"]),
-      build: authoredUnits("eu-ai-act-kurs", ["block_2_lesson_"]),
-      run: authoredUnits("eu-ai-act-kurs", ["block_3_lesson_"]),
-      verify: authoredUnits("eu-ai-act-kurs", [
-        "block_4_lesson_",
-        "block_5_lesson_",
-      ]),
-      transfer: authoredUnits("eu-ai-act-kurs", ["block_6_lesson_"]),
+      // Lesson-engine IDs (five modules): scope, risk class, obligations,
+      // supervision, implementation.
+      ground: ["rolle-1-1", "zeitplan-1-2"],
+      build: ["risiko-2-1", "risiko-2-2"],
+      run: ["pflichten-3-1", "pflichten-3-2"],
+      verify: ["bussgeld-4-1", "aufsicht-4-2"],
+      transfer: ["fall-5-1", "plan-5-2"],
     }),
     "ai-native": defineCourseMilestones("ai-native", {
-      ground: authoredUnits("ai-native", ["modul_1_lesson_"]),
-      build: authoredUnits("ai-native", ["modul_2_lesson_"]),
-      run: authoredUnits("ai-native", ["modul_3_lesson_"]),
-      verify: [
-        "modul_4_lesson_1",
-        "modul_4_lesson_2",
-        "modul_4_lesson_3",
-        "modul_4_lesson_4",
-        "modul_4_lesson_5",
-        "modul_4_lesson_6",
-      ],
-      transfer: ["modul_4_lesson_7", "modul_4_lesson_8"],
+      // Lesson-engine IDs (four modules): measure, context, knowledge, workflow.
+      ground: authoredUnits("ai-native", ["messen-"]),
+      build: authoredUnits("ai-native", ["kontext-"]),
+      run: authoredUnits("ai-native", ["wissen-"]),
+      verify: ["workflow-4-1", "workflow-4-2"],
+      transfer: ["workflow-4-3"],
     }),
     "ki-und-gesellschaft": defineCourseMilestones("ki-und-gesellschaft", {
-      ground: authoredUnits("ki-und-gesellschaft", ["arbeit-"]),
-      build: ["deepfake-2-1", "deepfake-2-2"],
-      run: ["deepfake-2-3"],
-      verify: ["ethik-3-1", "ethik-3-2"],
-      transfer: ["ethik-3-3"],
+      // Lesson-engine IDs (three modules): jobs figures, fakes, fairness.
+      ground: authoredUnits("ki-und-gesellschaft", ["zahlen-"]),
+      build: ["fakes-2-1", "fakes-2-2"],
+      run: ["fakes-2-3"],
+      verify: ["fair-3-1", "fair-3-2"],
+      transfer: ["fair-3-3"],
     }),
     "data-engineering-fundamentals": defineCourseMilestones(
       "data-engineering-fundamentals",
@@ -139,20 +134,6 @@ export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
       run: ["batch-elt", "streaming", "cdc-lambda-kappa"],
       verify: ["idempotency", "sla-quality"],
       transfer: ["interview-playbook"],
-    }),
-    codex: defineCourseMilestones("codex", {
-      ground: ["L01", "L02", "L03"],
-      build: ["L04", "L05", "L06"],
-      run: ["L07", "L08", "L09"],
-      verify: ["L10", "L11"],
-      transfer: ["L12"],
-    }),
-    claude: defineCourseMilestones("claude", {
-      ground: ["mental-model", "anatomy", "context"],
-      build: ["claude-md", "iteration", "gdocs"],
-      run: ["agents", "reviews", "grounding"],
-      verify: ["team", "evals"],
-      transfer: ["safety"],
     }),
     "ai-native-operator": defineCourseMilestones("ai-native-operator", {
       ground: authoredUnits("ai-native-operator", ["mindset/"]),

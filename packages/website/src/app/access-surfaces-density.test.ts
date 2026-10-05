@@ -40,27 +40,35 @@ describe("account, login, and feedback visual contract", () => {
 
   it("uses compact page shells and 44px-or-larger controls", () => {
     expect(source("konto/page.tsx")).toContain('className="py-8 sm:py-12"');
-    expect(source("login/page.tsx")).toContain("py-8 sm:py-10");
+    // /login is a centred scene now: one column with fixed side gutters and
+    // a top inset that clears the pause toggle on phones.
+    expect(source("login/page.tsx")).toContain("px-4 pb-10 pt-16 sm:pt-20");
     expect(source("feedback/page.tsx")).toContain("pb-12 pt-8");
     expect(source("konto/page.tsx")).toContain("min-h-11");
     expect(source("login/login-form.tsx")).toMatch(/(?:min-h-11|h-12)/);
     expect(source("feedback/feedback-form.tsx")).toContain("min-h-12");
   });
 
-  it("puts the sign-in card before its explanation below lg only", () => {
+  it("centres the sign-in card in one column, form first at every width", () => {
     const login = source("login/page.tsx");
+    const css = readFileSync(join(__dirname, "login/login-scene.css"), "utf8");
 
-    // The card leads on phones through visual order alone: the DOM keeps the
-    // value panel first for readers, and the desktop grid puts the argument
-    // left of the form. The rewritten page expresses that as a pair of order
-    // utilities rather than a single order-first, so both halves are pinned.
-    expect(login).toContain(
-      '<div className="order-1 min-w-0 lg:order-2">{loginForm}</div>',
+    // The split grid is gone: one centred column, the card (heading and form)
+    // first and the account note under it, so the order is the DOM order and
+    // no order utility is needed to put the task first on phones.
+    expect(login).not.toContain("lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)]");
+    expect(login).not.toMatch(/\border-[12]\b|lg:order-/);
+    expect(login).toContain("max-w-[27rem]");
+    expect(login).toContain('<div className="login-card login-rise');
+    expect(login.indexOf("{loginForm}")).toBeLessThan(
+      login.indexOf("{loginAvailable ? accountValuePanel : publicAccessPanel}"),
     );
-    expect(login).toContain('<div className="order-2 min-w-0 lg:order-1">');
-    expect(login).toContain(
-      "lg:grid-cols-[minmax(0,1fr)_minmax(20rem,26rem)]",
-    );
+    // The card's depth is the owner-requested reference card and lives in
+    // the scoped stylesheet only; the controls stay flat (no hover lift) and
+    // never transition every property.
+    expect(css).toMatch(/\.login-card\s*\{[^}]*border-radius:\s*18px/s);
+    expect(css).not.toMatch(/:hover[^{]*\{[^}]*translate/s);
+    expect(css).not.toMatch(/transition:\s*all\b/);
   });
 
   it("turns the account section navigation into a swipeable tab strip below lg", () => {

@@ -419,9 +419,9 @@ export default function RechnungZuSapDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
-              background: scenario === "clean" ? DEMO.ink : DEMO.kalk,
+              background: scenario === "clean" ? DEMO.action : DEMO.kalk,
               color: scenario === "clean" ? DEMO.kalk : DEMO.ink,
-              border: `1px solid ${scenario === "clean" ? DEMO.ink : DEMO.leinen}`,
+              border: `1px solid ${scenario === "clean" ? DEMO.action : DEMO.leinen}`,
               cursor: "pointer",
             }}
           >
@@ -437,9 +437,9 @@ export default function RechnungZuSapDemo() {
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               fontWeight: 700,
-              background: scenario === "flagged" ? DEMO.ink : DEMO.kalk,
+              background: scenario === "flagged" ? DEMO.action : DEMO.kalk,
               color: scenario === "flagged" ? DEMO.kalk : DEMO.ink,
-              border: `1px solid ${scenario === "flagged" ? DEMO.ink : DEMO.leinen}`,
+              border: `1px solid ${scenario === "flagged" ? DEMO.action : DEMO.leinen}`,
               cursor: "pointer",
             }}
           >

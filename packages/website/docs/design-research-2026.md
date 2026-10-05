@@ -135,7 +135,7 @@ Every substantial result can expose three synchronized lenses:
 - **Process:** the learner's attempt and transformation;
 - **Evidence:** source, method, version, limits, test state, and export.
 
-The visual system remains Kalkweiß, Druckertinte, Kupfer, Loehrning Sans, Geist Mono, the editorial grid, and the landing globe. Distinction comes from the instrument, dataset, human author, and learner artifact. It does not come from unrelated course skins or more decorative motion.
+The visual system remains Kalkweiß, Druckertinte, Kupfer, Figtree, Geist Mono, the editorial grid, and the landing globe. Distinction comes from the instrument, dataset, human author, and learner artifact. It does not come from unrelated course skins or more decorative motion.
 
 ## Evidence-Informed Release Tests And Platform Policy
 

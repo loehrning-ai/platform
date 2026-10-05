@@ -9,7 +9,7 @@
 // legacy-bridging schema the way `lib/ai-native/progress.ts` did.
 //
 // Slug is "ai-native-operator", never "ai-native" — the native German
-// AI-Native Arbeitskurs already owns the bare "ai-native" slug
+// "Mit KI arbeiten" (formerly AI-Native Arbeitskurs) already owns the bare "ai-native" slug
 // (`src/lib/ai-native/`, `src/app/ai-native/`). The upstream source folder
 // is named `ai-native` (github.com/Mavengence/interactive-courses), which
 // is exactly why this collision risk exists; every id/route/type in this

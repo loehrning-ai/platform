@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("global font loading contract", () => {
-  it("preloads only the regular and bold above-the-fold brand faces", () => {
+  it("preloads only the regular and bold above-the-fold Figtree faces", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/app/layout.tsx"),
       "utf8",
@@ -13,21 +13,41 @@ describe("global font loading contract", () => {
       "utf8",
     );
 
-    expect(source).toContain(
-      'preload("/fonts/loehrning-sans-regular-v1.woff2"',
-    );
-    expect(source).toContain(
-      'preload("/fonts/loehrning-sans-bold-v1.woff2"',
-    );
+    expect(source).toContain('preload("/fonts/figtree-regular-v1.woff2"');
+    expect(source).toContain('preload("/fonts/figtree-bold-v1.woff2"');
     expect(source).not.toMatch(
-      /preload\("\/fonts\/loehrning-sans-(?:medium|semibold)/,
+      /preload\("\/fonts\/figtree-(?:medium|semibold|extrabold|black|italic)/,
     );
-    expect(globalStyles.match(/font-display:\s*optional/g)).toHaveLength(4);
-    for (const weight of ["regular", "medium", "semibold", "bold"]) {
-      expect(globalStyles).toContain(
-        `/fonts/loehrning-sans-${weight}-v1.woff2`,
-      );
+    expect(source).not.toMatch(/loehrning-sans-[a-z]+-v1\.woff2/);
+    expect(globalStyles.match(/font-display:\s*optional/g)).toHaveLength(7);
+    for (const face of [
+      "regular",
+      "medium",
+      "semibold",
+      "bold",
+      "extrabold",
+      "black",
+      "italic",
+    ]) {
+      const path = `/fonts/figtree-${face}-v1.woff2`;
+      expect(globalStyles).toContain(path);
+      expect(statSync(resolve(process.cwd(), "public", path.slice(1))).size)
+        .toBeLessThan(24 * 1024);
     }
+    expect(globalStyles).toMatch(
+      /--font-loehrning-sans:\s*"Figtree",\s*"Figtree Fallback";/,
+    );
+    expect(globalStyles).not.toContain("Loehrning Sans");
+  });
+
+  it("ships the Figtree licence next to the runtime faces", () => {
+    const licence = readFileSync(
+      resolve(process.cwd(), "public/fonts/figtree-OFL.txt"),
+      "utf8",
+    );
+
+    expect(licence).toContain("The Figtree Project Authors");
+    expect(licence).toContain("SIL OPEN FONT LICENSE Version 1.1");
   });
 
   it("bundles Geist Mono without putting it on the first-paint preload path", () => {
@@ -67,7 +87,9 @@ describe("global font loading contract", () => {
       "src/components/home/hero-network.tsx",
       "src/components/home/offering.tsx",
       "src/components/home/workflow.tsx",
-      "src/components/home/credibility-strip.tsx",
+      "src/components/home/count-up.tsx",
+      "src/components/home/pointer-depth.tsx",
+      "src/components/home/pointer-depth-classes.ts",
     ];
     const shellSource = shellFiles
       .map((file) => readFileSync(resolve(process.cwd(), file), "utf8"))
@@ -79,22 +101,19 @@ describe("global font loading contract", () => {
     expect(shellSource).not.toMatch(/\bfont-mono\b/);
   });
 
-  it("uses a bounded route subset instead of duplicating the full Bold face", () => {
+  it("sets the book catalog headings from the shared Figtree Bold file", () => {
     const catalogSource = readFileSync(
       resolve(process.cwd(), "src/app/buecher/page.tsx"),
       "utf8",
     );
-    const subsetPath = resolve(
-      process.cwd(),
-      "src/fonts/LoehrningSans-Bold-BookDisplay.woff2",
-    );
+    const boldPath = resolve(process.cwd(), "public/fonts/figtree-bold-v1.woff2");
 
     expect(catalogSource).toContain(
-      "LoehrningSans-Bold-BookDisplay.woff2",
+      'src: "../../../public/fonts/figtree-bold-v1.woff2"',
     );
-    expect(catalogSource).not.toContain(
-      'src: "../../fonts/LoehrningSans-Bold.woff2"',
-    );
-    expect(statSync(subsetPath).size).toBeLessThan(8 * 1024);
+    expect(catalogSource).not.toContain("LoehrningSans");
+    // The full static Bold instance stays small enough that the route needs
+    // no separate subset; a heavier file would bring the subset back.
+    expect(statSync(boldPath).size).toBeLessThan(20 * 1024);
   });
 });

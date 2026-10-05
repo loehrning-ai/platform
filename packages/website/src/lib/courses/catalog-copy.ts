@@ -45,11 +45,11 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   "ki-fuehrerschein": {
     title: "Everyday AI Literacy",
     eyebrow: "Step 01 · AI literacy",
-    tagline: "Define tasks, protect data, and check model output.",
+    tagline: "Classify data, brief checkably, catch errors.",
     description:
-      "You learn how generative AI answers, where it fails and which data you keep out. The course explains Article 4 of the AI Act in the version in force since 27 July 2026; at the end you create a certificate of participation locally.",
-    duration: "about 1 hr 40 min",
-    unitLabel: "units",
+      "Eight short hands-on lessons: classify and redact data, write checkable briefs, check AI drafts against sources and build a one-page team policy. The course briefly places Article 4 of the AI Act in the version in force since 27 July 2026; at the end you create a certificate of participation locally.",
+    duration: "about 45 min",
+    unitLabel: "modules",
     audience: "People who use AI in their day-to-day work",
     coverImageAlt:
       "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
@@ -57,11 +57,11 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   "ki-und-gesellschaft": {
     title: "AI and Society",
     eyebrow: "Step 02 · Society",
-    tagline: "Examine deepfakes, bias, and effects on work through examples.",
+    tagline: "Read jobs figures, check fakes, measure fairness.",
     description:
-      "Three units on the job market, deepfakes and bias. For every claim you see its source, who benefits from it and how certain the finding is.",
-    duration: "about 46 min",
-    unitLabel: "units",
+      "Eight short lessons, each with an exercise: decode jobs headlines, trace a viral video's origin, work out what a detector alert is worth, find the reporting route and see in a threshold lab why two fairness measures cannot both hold.",
+    duration: "about 40 min",
+    unitLabel: "modules",
     audience: "No technical background required",
     coverImageAlt:
       "Editorial collage of a Berlin public space with people, media images, and verification marks",
@@ -71,73 +71,28 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Step 03 · Regulation",
     tagline: "Classify a use case, determine roles, and map obligations.",
     description:
-      "You sort a use case into its class: prohibited, transparency-bound, general-purpose, high-risk, or none. Every statement with a deadline names its legal date and primary source. The course does not replace legal advice.",
-    duration: "about 1 hr 50 min",
-    unitLabel: "units",
+      "Ten short hands-on lessons: determine your role, check application dates against today, assign use cases to a risk class, generate your obligation list, work out the fine range and check an AI memo against the sources. Every statement with a deadline names its legal date and primary source. The course does not replace legal advice.",
+    duration: "about 1 hr",
+    unitLabel: "modules",
     audience: "Compliance, IT leadership, management",
     coverImageAlt:
       "Editorial illustration of an EU AI Act dossier with risk cards, roles, and a review path",
   },
   "ai-native": {
-    title: "AI-Native Work Course",
-    eyebrow: "Step 04 · Working method",
-    tagline: "Clarify intent, provide context, and check execution and output.",
+    title: "Working with AI",
+    eyebrow: "Step 04 · Your own work",
+    tagline: "Measure net time, limit permissions, check sources, safeguard workflows.",
     description:
-      "Four modules on repeatable workflows for research, documentation and automation. Every exercise names its tool, input, review step and stopping condition.",
-    duration: "about 5 hrs of lessons, 12 hrs with exercises",
+      "Nine short lessons with exercises, whatever the tool: measure whether AI pays off for a task, limit context and tool permissions against prompt injection, check cited answers and test a workflow with approval. You finish with a pilot plan for your own work.",
+    duration: "about 70 min",
     unitLabel: "modules",
     audience: "Employees, independent professionals, students",
     coverImageAlt:
       "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
   },
-  claude: {
-    title: "Claude Course",
-    eyebrow: "Technical course · Prompting",
-    tagline: "Use Claude with clear context, tools, and verification steps.",
-    description:
-      "Twelve lessons, each with a short exercise in Claude, cover prompt structure, context files, tool use, grounding, reviews, evaluation and collaboration.",
-    duration: "about 2 hrs",
-    unitLabel: "tracks",
-    audience: "Knowledge workers, developers, teams using Claude Code",
-    coverImageAlt: "Claude Course start page",
-    imageAlt: "Screenshot of the Claude Course",
-    lessonCountLabel: "12 lessons",
-    language: "English + German",
-    sourceFacts: [
-      "4 tracks",
-      "12 lessons",
-      "Interactive exercises",
-      "Native route in this source tree",
-    ],
-    integrationNote:
-      "Route, progress and completion ship in this source tree; deployment needs separate live verification. Originally an imported open-source course.",
-  },
-  codex: {
-    title: "Codex Course",
-    eyebrow: "Technical course · Coding agents",
-    tagline:
-      "Delegate coding tasks to Codex using specifications, tests, and review.",
-    description:
-      "Codex writes the code; you write the specification, acceptance criteria and review. Twelve lessons on sandbox boundaries, AGENTS.md, tool choice and parallel work, plus a capstone.",
-    duration: "about 2 hrs",
-    unitLabel: "lessons",
-    audience: "Developers working with AI coding tools",
-    coverImageAlt: "Codex Course start page",
-    imageAlt: "Screenshot of the Codex Course",
-    lessonCountLabel: "12 lessons and a capstone",
-    language: "English + German",
-    sourceFacts: [
-      "12 lessons",
-      "Capstone",
-      "Parallel workflows",
-      "Native route in this source tree",
-    ],
-    integrationNote:
-      "Route, progress and completion ship in this source tree; deployment needs separate live verification. Originally an imported open-source course.",
-  },
   "data-infrastructure": {
     title: "Data Infrastructure",
-    eyebrow: "Technical course · System design",
+    eyebrow: "Visual learning · System design",
     tagline: "Compare storage, streaming, and consistency decisions.",
     description:
       "Twelve lessons on CAP and PACELC, data models, file formats, lakehouse tables, streaming, CDC, idempotency and data SLAs. Simulations show at which load or failure a design stops holding.",
@@ -160,7 +115,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   },
   "data-engineering-fundamentals": {
     title: "Data Engineering Fundamentals",
-    eyebrow: "Technical course · Data engineering",
+    eyebrow: "Visual learning · Data engineering",
     tagline: "Design and safeguard a data pipeline from source to consumption.",
     description:
       "Twelve chapters on ingestion, streaming, storage, compute, orchestration, quality, discovery, serving and governance. In 17 simulations and a final case you see how an error causes damage further down.",
@@ -181,7 +136,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   },
   "data-science": {
     title: "Data Science Fundamentals",
-    eyebrow: "Technical course · Data science",
+    eyebrow: "Visual learning · Data science",
     tagline: "Evaluate models, spot misreadings, monitor production behavior.",
     description:
       "Twelve chapters on sampling, data cleaning, features, evaluation, interpretability, experiments, causality and drift. Thirty-seven simulations show where a good-looking metric misleads.",
@@ -202,7 +157,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   },
   "ai-native-operator": {
     title: "The AI-Native Operator",
-    eyebrow: "Technical course · Operating model",
+    eyebrow: "Visual learning · Operating model",
     tagline:
       "Organize AI-supported work with ownership, controls, and measurement.",
     description:

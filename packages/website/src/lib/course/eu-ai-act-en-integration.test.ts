@@ -12,7 +12,6 @@ import {
   hasAuditedCourseContentLocale,
   resolveFoundationCourseContentLocale,
 } from "./localization";
-import { localizeCourseWidgetProps } from "./widget-localization";
 
 const COURSE_SLUG = "eu-ai-act-kurs" as const;
 
@@ -33,13 +32,13 @@ describe("EU AI Act audited English runtime bundle", () => {
 
     expect(config.language).toBe("en");
     expect(config.title).toBe("EU AI Act Course");
-    expect(blocks).toHaveLength(6);
-    expect(lessons).toHaveLength(24);
-    expect(glossary).toHaveLength(23);
-    expect(syncQuestions).toHaveLength(27);
+    expect(blocks).toHaveLength(5);
+    expect(lessons).toHaveLength(10);
+    expect(glossary).toHaveLength(18);
+    expect(syncQuestions).toHaveLength(20);
     expect(asyncQuestions).toEqual(syncQuestions);
-    expect(blocks[0].title).toBe("Scope, roles, and application dates");
-    expect(lessons[0].title).toBe("Why the AI Act exists");
+    expect(blocks[0].title).toBe("Does it apply to me?");
+    expect(lessons[0].title).toBe("Your role decides your obligations");
   });
 
   it("preserves route, progress, lesson, question, answer, and certificate identity", () => {
@@ -89,62 +88,32 @@ describe("EU AI Act audited English runtime bundle", () => {
       ),
     );
 
-    const englishGlossaryWidget = enBlocks[0].lessons.at(-1)?.widgets?.find(
-      (widget) => widget.kind === "flashcards",
-    );
-    const germanGlossaryWidget = deBlocks[0].lessons.at(-1)?.widgets?.find(
-      (widget) => widget.kind === "flashcards",
-    );
-    expect(englishGlossaryWidget?.props?.lessonId).toBe(
-      germanGlossaryWidget?.props?.lessonId,
-    );
-    expect(englishGlossaryWidget?.props?.cpId).toBe(
-      germanGlossaryWidget?.props?.cpId,
-    );
+    // Engine lessons carry their exercise in `exercise`; the legacy widget
+    // list (and its glossary flashcard deck) stays empty in both locales.
+    for (const block of [...deBlocks, ...enBlocks]) {
+      for (const lesson of block.lessons) {
+        expect(lesson.widgets ?? []).toEqual([]);
+      }
+    }
   });
 
-  it("localizes EU exercise chrome without replacing authored legal cases", () => {
-    const blocks = getBlocks(COURSE_SLUG, "en");
-    const widgets = blocks.flatMap((block) =>
-      block.lessons.flatMap((lesson) => lesson.widgets ?? []),
+  it("authors English exercise props directly, with the same machine data as German", () => {
+    const de = getAllLessons(COURSE_SLUG, "de");
+    const en = getAllLessons(COURSE_SLUG, "en");
+    expect(en.map((lesson) => lesson.exercise?.kind)).toEqual(
+      de.map((lesson) => lesson.exercise?.kind),
     );
-    const riskPyramid = widgets.find((widget) => widget.kind === "risk-pyramid");
-    const reorder = widgets.find((widget) => widget.kind === "drag-reorder");
-    const failure = widgets.find((widget) => widget.kind === "failure-tagger");
-
-    expect(riskPyramid).toBeDefined();
-    expect(reorder).toBeDefined();
-    expect(failure).toBeDefined();
-
-    const riskProps = localizeCourseWidgetProps(riskPyramid!, "en");
-    expect(riskProps.nodes).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: "verboten",
-          label: "Prohibited practices",
-        }),
+    const timeline = en.find((lesson) => lesson.exercise?.kind === "timeline-check");
+    expect(timeline?.exercise?.props).toMatchObject({
+      milestones: expect.arrayContaining([
+        expect.objectContaining({ id: "annex3", date: "2027-12-02" }),
       ]),
-    );
-    expect(riskProps.copy).toMatchObject({ kindLabel: "Risk map" });
-
-    const reorderProps = localizeCourseWidgetProps(reorder!, "en");
-    expect(reorderProps.blocks).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: "hochrisiko",
-          label: "High-risk systems",
-        }),
-      ]),
-    );
-    expect(reorderProps.copy).toMatchObject({ checkLabel: "Check order" });
-
-    const authoredCases = failure!.props?.cases;
-    const authoredModes = failure!.props?.modes;
-    const failureProps = localizeCourseWidgetProps(failure!, "en");
-    expect(failureProps.cases).toEqual(authoredCases);
-    expect(failureProps.modes).toEqual(authoredModes);
-    expect(failureProps.copy).toMatchObject({
-      kindLabel: "Evaluation drill",
     });
+    // No legacy widget localization is applied to engine exercises.
+    const pyramid = en.find((lesson) => lesson.id === "risiko-2-2");
+    expect(pyramid?.exercise?.props).toMatchObject({ layout: "pyramid" });
+    expect(
+      (pyramid?.exercise?.props as { buckets: { label: string }[] }).buckets[0].label,
+    ).toBe("Prohibited");
   });
 });

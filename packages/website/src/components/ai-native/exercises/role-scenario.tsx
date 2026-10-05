@@ -290,8 +290,8 @@ function RoleScenarioBody({
                 className={cn(
                   "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
                   allAnswered
-                    ? "bg-brand-orange hover:bg-foreground hover:text-background"
-                    : "cursor-not-allowed bg-muted-foreground opacity-60",
+                    ? "bg-brand-orange hover:bg-kupfer-dark"
+                    : "cursor-not-allowed bg-track text-muted-foreground",
                 )}
               >
                 {text("Auswerten", "Evaluate")}

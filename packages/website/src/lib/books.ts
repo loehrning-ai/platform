@@ -157,7 +157,7 @@ export const allBooks: readonly Book[] = [
     accessPolicy: "open-reader",
     readerHref: "/buecher/ki-tools-selbststaendige",
     relatedResourceHref: "/ai-native",
-    relatedResourceLabel: "Zum AI-Native Arbeitskurs",
+    relatedResourceLabel: "Zum Kurs Mit KI arbeiten",
     description:
       "Welche Aufgabe gibst du an KI ab, welche behältst du? Eine Werkzeugkarte für kleine Arbeitskontexte: Aufgaben sortieren, Ergebnisse prüfen, wiederholbare Abläufe dokumentieren.",
     highlights: [

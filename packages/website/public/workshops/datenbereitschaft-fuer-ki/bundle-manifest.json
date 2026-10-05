@@ -136,8 +136,8 @@
     },
     {
       "path": "assets/plakat-cover.svg",
-      "sizeBytes": 1720,
-      "sha256": "a3fc0486063c650ce8e3a41104b125607147c94991190b8a487f575194203b7d"
+      "sizeBytes": 1979,
+      "sha256": "6073bc5b83ccad7fe70f6e3f70215436c73b668a772c365ca98d6ee8947295f9"
     },
     {
       "path": "assets/tim-loehr.jpg",
@@ -151,8 +151,8 @@
     },
     {
       "path": "card-preview.webp",
-      "sizeBytes": 29462,
-      "sha256": "cd0e9878a470b9c8625e15aabb0c403f15f08964e538fc04c4a6df8bc4ccd140"
+      "sizeBytes": 29836,
+      "sha256": "3481abcbca2f455d7d93abe06bdea465cdf804e405825bf97ffdf68ded38fc6e"
     },
     {
       "path": "data-readiness-kit.zip",

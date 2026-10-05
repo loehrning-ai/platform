@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { CountUp } from "@/components/home/count-up";
 import { CourseArtwork } from "@/components/home/course-artwork";
-import { PosterThumb } from "@/components/plakat/poster-thumb";
-import { coursePlakat } from "@/lib/plakat/palettes";
-import { HOME_CONTAINER } from "@/components/home/home-container";
-import { HomeSectionHead } from "@/components/home/home-section-head";
-import { ArrowGlyph } from "@/components/werk/arrow-glyph";
-import { BUTTON_CLASSES } from "@/components/werk/button-link";
 import { HOME_COPY, homeCourseCopy } from "@/components/home/home-copy";
+import { PointerDepthList } from "@/components/home/pointer-depth";
+import {
+  POINTER_DEPTH_CARD,
+  POINTER_DEPTH_LIGHT,
+} from "@/components/home/pointer-depth-classes";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -24,18 +25,42 @@ const TECHNICAL_COURSE_COUNT = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) === "deeper",
 ).length;
 
+const COURSE_TONES = [
+  "bg-brand-acid/42",
+  "bg-brand-peach/38",
+  "bg-brand-sky/42",
+  "bg-brand-pink/34",
+] as const;
+
+const COURSE_PLATES = [
+  "bg-brand-acid/55",
+  "bg-brand-pink/45",
+  "bg-brand-sky/55",
+  "bg-brand-peach/50",
+] as const;
+
+// Solid tones for the per-card hover bar and number badge, positionally keyed
+// to the same index COURSE_TONES uses. Each accent is its card tone's
+// complement (acid takes pink, peach takes sky, sky takes peach, pink takes
+// acid), so the badge never prints the card's own hue on itself. All four
+// stay in the light half of the palette because the badge prints foreground
+// ink on them.
+const COURSE_ACCENTS = [
+  "bg-brand-pink",
+  "bg-brand-sky",
+  "bg-brand-peach",
+  "bg-brand-acid",
+] as const;
+
 /**
- * Kurse: the four spine courses in their order, then the one path to the
- * full atlas.
- *
- * From lg the route reads left to right as four flat sheets: the course
- * poster (the Grundlagenpfad in Lemons, numbered 01 to 04; the poster's
- * numeral is the sheet's only number), the lesson count, the title, one
- * sentence and the duration. Below lg each course is one hairline row led by
- * a 56px crop of its poster, with the duration as its one meta line. The number is the only
- * numbering on the page: these four are a sequence. No tints, no shadows and
- * no hover lift: hover underlines the title and nudges the arrow; focus is
- * the global Mennige ring.
+ * Kurse: the four Grundlagenpfad courses as pastel cards in a 7/5, 5/7 bento
+ * from lg, two columns from md and one from phone width, then the one path to
+ * the full atlas. Every card leads with the course's people picture in a
+ * registration frame (course-artwork.tsx); on a phone the picture is a 72px
+ * crop at the row's left edge. The meta line is Mennige tief, which keeps
+ * 4.5:1 on every tint (Mennige itself drops to 4.3:1 on the peach card).
+ * Under a mouse the cards take hover depth (pointer-depth.tsx): a small tilt
+ * towards the pointer and a paper light that follows it.
  */
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].offering;
@@ -43,95 +68,109 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="kurse"
-      className="scroll-mt-24 bg-background pt-16 pb-12 max-lg:py-5 max-lg:pt-8 lg:pt-20"
+      aria-labelledby="kurse-heading"
+      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24"
       data-testid="kurse-section"
     >
-      <div className={HOME_CONTAINER}>
-        <HomeSectionHead
-          id="kurse-heading"
-          note={copy.routeSignal(SPINE_LESSON_COUNT)}
-          title={copy.headline}
-        />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-16 bottom-28 hidden size-32 -rotate-12 rounded-[2rem] border border-foreground/10 bg-brand-acid/40 xl:block"
+      />
+      <div className="relative mx-auto max-w-6xl px-6 md:px-12">
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-end lg:gap-16">
+          <h2
+            id="kurse-heading"
+            className="max-w-xl text-fluid-h2 font-bold tracking-[-0.035em] text-foreground max-lg:text-2xl max-lg:tracking-[-0.03em]"
+          >
+            {copy.headline}
+          </h2>
+          {/* The route's one fact, number first: the lesson count ticks up
+              once when it scrolls into view (count-up.tsx). */}
+          <p className="justify-self-start rounded-2xl border border-foreground/10 bg-brand-sky/45 px-4 py-3 text-sm leading-snug text-foreground shadow-card max-lg:hidden sm:px-5 sm:py-4 lg:justify-self-end">
+            <CountUp
+              value={SPINE_LESSON_COUNT}
+              text={copy.routeSignal(SPINE_LESSON_COUNT)}
+              digitsClassName="mr-0.5 font-ui-mono text-3xl font-bold leading-none text-kupfer-dark"
+            />
+          </p>
+        </div>
 
-        <ol
-          className="mt-10 grid grid-cols-4 gap-x-8 max-lg:mt-4 max-lg:grid-cols-1 max-lg:gap-0 max-lg:border-t max-lg:border-hairline"
+        <PointerDepthList
+          as="ol"
+          className="relative mt-8 grid gap-3 max-lg:mt-5 max-lg:gap-2 sm:gap-4 md:grid-cols-2 lg:mt-10 lg:grid-cols-12 lg:gap-6"
           data-testid="foundation-route"
           aria-label={copy.routeLabel}
         >
           {SPINE_HOME_COURSES.map((course, index) => {
             const courseCopy = homeCourseCopy(locale, course.slug);
-            const number = String(index + 1).padStart(2, "0");
-            const poster = coursePlakat(course.slug);
+            const wideCard = index === 0 || index === 3;
+            const tone = COURSE_TONES[index] ?? COURSE_TONES[0];
+            const accent = COURSE_ACCENTS[index] ?? COURSE_ACCENTS[0];
             return (
-              <li key={course.slug} className="min-w-0">
+              <li
+                key={course.slug}
+                className={wideCard ? "lg:col-span-7" : "lg:col-span-5"}
+              >
                 <Link
                   href={localizeHref(course.href, locale)}
-                  className="group flex h-full min-w-0 flex-col transition-colors duration-[120ms] motion-reduce:transition-none max-lg:grid max-lg:grid-cols-[3.5rem_minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-4 max-lg:border-b max-lg:border-hairline max-lg:py-2 max-lg:hover:bg-card-hover"
+                  className={`group relative grid h-full min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 max-sm:rounded-2xl ${tone} ${POINTER_DEPTH_CARD} shadow-card outline-none transition-[border-color,box-shadow,transform,translate] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:translate-none motion-reduce:transition-none sm:grid-cols-1 sm:grid-rows-[auto_1fr] sm:rounded-[1.75rem]`}
                   data-home-course-card
+                  data-depth-card
                 >
-                  {/* Below lg the wide poster steps out and a 56px portrait
-                      crop of the same Lemons poster, numeral included, leads
-                      the row. */}
-                  <span className="block max-lg:contents">
-                    <CourseArtwork slug={course.slug} />
-                    {poster ? (
-                      <PosterThumb
-                        plakat={poster.plakat}
-                        motif={poster.motif}
-                        numeral={poster.numeral ?? number}
-                        size="xs"
-                        className="w-14 lg:hidden"
-                      />
-                    ) : (
-                      <span className="text-sm font-semibold tabular-nums text-muted-foreground lg:hidden">
-                        {number}
-                      </span>
-                    )}
+                  <span aria-hidden="true" className={POINTER_DEPTH_LIGHT} />
+                  <span className="relative block">
+                    <CourseArtwork
+                      slug={course.slug}
+                      wide={wideCard}
+                      plateClassName={COURSE_PLATES[index] ?? COURSE_PLATES[0]}
+                      accentClassName={accent}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] transition-[rotate] duration-200 group-hover:-rotate-6 group-focus-visible:-rotate-6 motion-reduce:rotate-none motion-reduce:transition-none max-sm:left-2 max-sm:top-2 max-sm:size-8 max-sm:rounded-lg max-sm:text-xs max-sm:shadow-[2px_2px_0_var(--color-foreground)] ${accent}`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="absolute bottom-3 right-3 hidden rounded-full border border-foreground/10 bg-paper/90 px-3 py-1.5 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-card backdrop-blur-sm sm:inline-flex">
+                      {courseCopy.duration}
+                    </span>
                   </span>
 
-                  <span className="mt-4 flex min-w-0 flex-1 flex-col max-lg:mt-0">
-                    {/* Below lg: title first, then the duration as the one
-                        meta line. From lg: the lesson count above the
-                        title (the poster carries the number), the duration
-                        at the foot of the sheet. */}
-                    <span className="order-1 text-label text-muted-foreground tabular-nums max-lg:order-2 max-lg:mt-0.5 max-lg:text-caption max-lg:font-normal max-lg:leading-snug max-lg:tracking-normal">
-                      <span className="max-lg:hidden">
+                  <span className="relative grid min-w-0 grid-cols-1 gap-3 p-4 max-sm:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:p-5 md:p-6">
+                    <span className="min-w-0">
+                      <span className="block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-kupfer-dark max-sm:leading-tight sm:tracking-[0.1em]">
                         {course.totalLessons} {copy.lessonLabel}
                       </span>
-                      <span className="whitespace-nowrap lg:hidden">
+                      <span className="mt-1 block whitespace-nowrap font-ui-mono text-xs font-bold leading-relaxed tracking-[0.02em] text-muted-foreground max-sm:mt-0.5 max-sm:leading-tight sm:hidden">
                         {courseCopy.duration}
                       </span>
-                    </span>
-                    <span className="order-2 mt-1 text-fluid-h3 font-bold text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] group-hover:decoration-current motion-reduce:transition-none max-lg:order-1 max-lg:mt-0 max-lg:text-base max-lg:leading-snug max-lg:no-underline">
-                      {courseCopy.title}
-                    </span>
-                    <span className="order-3 mt-2 text-body text-muted-foreground text-pretty max-lg:hidden">
-                      {courseCopy.tagline}
-                    </span>
-                    <span className="order-4 mt-auto pt-4 max-lg:hidden">
-                      <span className="flex items-center justify-between gap-3 border-t border-hairline pt-3 text-caption text-muted-foreground tabular-nums">
-                        <span>{courseCopy.duration}</span>
-                        <ArrowGlyph className="text-foreground" />
+                      <span className="mt-2 block text-lg font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-kupfer-dark group-focus-visible:text-kupfer-dark max-sm:mt-0.5 max-sm:text-base sm:text-xl">
+                        {courseCopy.title}
+                      </span>
+                      <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-muted-foreground max-sm:hidden sm:mt-2">
+                        {courseCopy.tagline}
                       </span>
                     </span>
+                    <span className="hidden size-11 shrink-0 items-center justify-center self-end rounded-xl border border-foreground/15 bg-paper text-brand-cobalt shadow-card transition-[background-color,color,translate] duration-200 group-hover:translate-x-1 group-hover:bg-brand-cobalt group-hover:text-white group-focus-visible:translate-x-1 group-focus-visible:bg-brand-cobalt group-focus-visible:text-white motion-reduce:translate-none motion-reduce:transition-none sm:flex">
+                      <ArrowRight aria-hidden="true" size={18} />
+                    </span>
                   </span>
-                  <ArrowGlyph className="mr-1 text-foreground lg:hidden" />
                 </Link>
               </li>
             );
           })}
-        </ol>
+        </PointerDepthList>
 
-        <div className="mt-10 flex items-center justify-between gap-6 border-t border-hairline pt-4 max-lg:mt-3 max-lg:grid max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-4 max-lg:border-t-0 max-lg:pt-0">
-          <p className="text-body text-muted-foreground max-lg:text-caption max-lg:leading-snug">
+        <div className="mt-6 grid gap-3 rounded-2xl border border-foreground/10 bg-brand-acid/65 p-4 shadow-card max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:p-3 max-sm:grid-cols-1 max-sm:gap-1 max-sm:px-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6 sm:py-5 lg:mt-7">
+          <p className="text-sm leading-relaxed text-foreground">
             {copy.deeperSummary(TECHNICAL_COURSE_COUNT)}
           </p>
           <Link
             href={localizeHref("/kurse", locale)}
-            className={`${BUTTON_CLASSES.paper.text} shrink-0 text-[0.9375rem] max-lg:text-sm`}
+            className="inline-flex min-h-11 shrink-0 items-center gap-2 justify-self-start border-b border-kupfer-dark font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-kupfer-dark outline-none transition-[border-color,color] duration-150 hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:justify-self-end"
           >
             {copy.viewAllCourses}
-            <ArrowGlyph />
+            <ArrowRight aria-hidden="true" size={16} />
           </Link>
         </div>
       </div>

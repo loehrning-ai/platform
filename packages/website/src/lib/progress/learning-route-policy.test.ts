@@ -38,10 +38,10 @@ describe("isProgressUiRoute", () => {
     expect(isLearningOwnerRoute("/kurse/open-source/data-science/fund")).toBe(
       true,
     );
-    expect(isLearningOwnerRoute("/kurse/open-source/codex/kurs")).toBe(true);
-    expect(isLearningOwnerRoute("/en/kurse/open-source/codex/kurs")).toBe(true);
+    expect(isLearningOwnerRoute("/kurse/open-source/data-infrastructure/kurs")).toBe(true);
+    expect(isLearningOwnerRoute("/en/kurse/open-source/data-infrastructure/kurs")).toBe(true);
     expect(
-      isLearningOwnerRoute("/kurse/open-source/claude/kurs/zertifikat"),
+      isLearningOwnerRoute("/kurse/open-source/data-infrastructure/kurs/zertifikat"),
     ).toBe(true);
     expect(isLearningOwnerRoute("/konto/datenschutz")).toBe(true);
     expect(isLearningOwnerRoute("/blog/eu-ai-act-grundlagen")).toBe(false);
@@ -59,8 +59,7 @@ describe("isProgressUiRoute", () => {
     "/buecher/ki-landschaft/02_methodik",
     "/kurse/open-source",
     "/kurse/open-source/ai-native-operator",
-    "/kurse/open-source/claude",
-    "/kurse/open-source/codex/verifizierung",
+    "/kurse/open-source/data-science",
     "/kurse/open-source/data-infrastructure/verifizierung",
     "/en/kurse/open-source/data-infrastructure/verifizierung",
   ])("does not block the read-only public route %s", (pathname) => {
@@ -78,10 +77,10 @@ describe("isProgressRuntimeRoute", () => {
     "/ki-und-gesellschaft/kurs/quiz",
     "/kurse",
     "/kurse/open-source",
-    "/kurse/open-source/codex/verifizierung",
+    "/kurse/open-source/data-science/verifizierung",
     "/konto",
     "/konto/datenschutz",
-    "/en/kurse/open-source/codex/kurs",
+    "/en/kurse/open-source/data-infrastructure/kurs",
     "/en/konto",
   ])("reconciles account and progress state on %s", (pathname) => {
     expect(isProgressRuntimeRoute(pathname)).toBe(true);
@@ -114,7 +113,7 @@ describe("isProgressRuntimeRoute", () => {
       "/konto",
       "/konto/datenschutz",
       "/kurse",
-      "/kurse/open-source/claude/kurs/zertifikat",
+      "/kurse/open-source/data-infrastructure/kurs/zertifikat",
       "/en/kurse/open-source/data-science",
     ]) {
       if (isProgressUiRoute(pathname) || isLearningOwnerRoute(pathname)) {

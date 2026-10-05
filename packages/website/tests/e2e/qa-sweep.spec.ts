@@ -73,6 +73,25 @@ test.describe("QA sweep - retired commercial routes", () => {
   }
 });
 
+test.describe("QA sweep - removed courses", () => {
+  for (const [route, target] of [
+    ["/kurse/open-source/claude", "/kurse"],
+    ["/kurse/open-source/claude/kurs/mental-model", "/kurse"],
+    ["/kurse/open-source/codex", "/kurse"],
+    ["/kurse/open-source/codex/verifizierung", "/kurse"],
+    ["/en/kurse/open-source/claude", "/en/kurse"],
+    ["/en/kurse/open-source/codex/kurs/L01", "/en/kurse"],
+  ] as const) {
+    test(`${route} redirects permanently to the course hub`, async ({
+      request,
+    }) => {
+      const response = await request.get(route, { maxRedirects: 0 });
+      expect([301, 308]).toContain(response.status());
+      expect(new URL(response.headers()["location"] ?? "", "https://loehrning.ai").pathname).toBe(target);
+    });
+  }
+});
+
 test.describe("QA sweep - API and machine-readable resources", () => {
   test("/api/knowledge-graph.json exposes public graph only", async ({ request }) => {
     const response = await request.get("/api/knowledge-graph.json");

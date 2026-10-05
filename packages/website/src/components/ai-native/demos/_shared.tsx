@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode, JSX } from "react";
-import { cn } from "@/lib/utils";
 
 /**
  * Shared sub-components used across multiple demo ports (AI-native demo gallery implementation).
@@ -10,33 +9,14 @@ import { cn } from "@/lib/utils";
 
 /* ─── Window chrome (traffic lights + URL bar) ─────────────── */
 
-export function WindowBar({
-  title,
-  variant = "light",
-}: {
-  readonly title: string;
-  readonly variant?: "light" | "dark";
-}): JSX.Element {
+export function WindowBar({ title }: { readonly title: string }): JSX.Element {
+  // Light window chrome only: the site has no dark grounds.
   return (
-    <div
-      className={cn(
-        "flex items-center gap-3 border-b px-4 py-2.5",
-        variant === "dark"
-          ? "border-[var(--color-dark-border)] bg-[#161310]"
-          : "border-border bg-card/60",
-      )}
-    >
+    <div className="flex items-center gap-3 border-b border-border bg-card/60 px-4 py-2.5">
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#ef4444]" />
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-[#f59e0b]" />
       <span className="inline-block h-2.5 w-2.5 rounded-full bg-risk-green" />
-      <span
-        className={cn(
-          "ml-4 font-mono text-[12px] uppercase tracking-[0.14em]",
-          variant === "dark"
-            ? "text-[var(--color-dark-muted)]"
-            : "text-muted-foreground",
-        )}
-      >
+      <span className="ml-4 font-mono text-[12px] uppercase tracking-[0.14em] text-muted-foreground">
         {title}
       </span>
     </div>
@@ -57,7 +37,7 @@ export function ChatBubble({
   if (role === "user") {
     return (
       <div className="flex justify-end">
-        <div className="max-w-[78%] bg-foreground px-3.5 py-2.5 text-[14px] leading-[1.5] text-background">
+        <div className="max-w-[78%] bg-brand-cobalt px-3.5 py-2.5 text-[14px] leading-[1.5] text-paper">
           {children}
         </div>
       </div>

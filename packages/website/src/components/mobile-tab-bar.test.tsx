@@ -210,7 +210,7 @@ describe("mobile tab bar active state", () => {
   it("marks exactly one tab as the current page inside a course tree", async () => {
     await renderTabBar({
       locale: "de",
-      pathname: "/kurse/open-source/claude",
+      pathname: "/kurse/open-source/data-infrastructure",
     });
 
     const current = within(tabBar()).getAllByRole("link", { current: "page" });
@@ -256,7 +256,7 @@ describe("mobile tab bar active state", () => {
     ["/", "Start"],
     ["/en", "Home"],
     ["/kurse", "Lernen"],
-    ["/kurse/open-source/claude/kurs/mental-model", "Lernen"],
+    ["/kurse/open-source/data-infrastructure/kurs/mental-model", "Lernen"],
     ["/ki-fuehrerschein", "Lernen"],
     ["/ki-fuehrerschein/kurs", "Lernen"],
     ["/eu-ai-act-kurs", "Lernen"],

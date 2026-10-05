@@ -48,14 +48,17 @@ describe("Berliner Learning Instrument CSS contract", () => {
     expect(globalCss).toContain(":where(.grid.gap-px, .h-px, .w-px).bg-border");
   });
 
-  it("keeps dark structural boundaries distinct from dark passive tracks", () => {
-    expect(globalCss).toContain(
-      "--color-dark-border: rgba(242, 241, 238, 0.4)",
-    );
-    expect(globalCss).toContain(
-      "--color-dark-track: rgba(242, 241, 238, 0.16)",
-    );
-    expect(globalCss).toContain("--color-track: rgba(242, 241, 238, 0.16)");
+  it("keeps structural boundaries visible on the pastel grounds that replaced graphit", () => {
+    // The graphit band and its dark boundary/track tokens are retired (no
+    // black grounds). A control edge stays at 3:1 on the Himmel-Wash and the
+    // Himmel-Blatt, and the passive track stays quiet there.
+    expect(globalCss).not.toMatch(/--color-dark-(?:border|track)\s*:/);
+    const boundary = hexToken("border");
+    const track = hexToken("track");
+    for (const ground of [hexToken("sky-wash"), hexToken("sky-sheet")]) {
+      expect(contrast(boundary, ground)).toBeGreaterThanOrEqual(3);
+      expect(contrast(track, ground)).toBeLessThan(2);
+    }
   });
 
   it("sets shared overlines at 14px and marginal labels at a 12px minimum", () => {

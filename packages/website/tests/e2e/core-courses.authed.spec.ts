@@ -22,25 +22,25 @@ const CORE_ROUTES = [
     hub: "/ki-fuehrerschein/kurs",
     hubHeading: "KI-Führerschein",
     lesson: "/ki-fuehrerschein/kurs/block_1",
-    lessonHeading: "KI ist schon da",
+    lessonHeading: "Vier Stufen in einer Minute",
   },
   {
     hub: "/eu-ai-act-kurs/kurs",
     hubHeading: "EU AI Act Kurs",
     lesson: "/eu-ai-act-kurs/kurs/block_1",
-    lessonHeading: "Warum & Für wen",
+    lessonHeading: "Ihre Rolle bestimmt Ihre Pflichten",
   },
   {
     hub: "/ki-und-gesellschaft/kurs",
     hubHeading: "KI und Gesellschaft",
     lesson: "/ki-und-gesellschaft/kurs/block_1",
-    lessonHeading: "KI und Arbeit",
+    lessonHeading: "Jobschlagzeilen entschlüsseln",
   },
   {
     hub: "/ai-native/kurs",
-    hubHeading: "AI-Native Arbeitskurs: Kurs",
-    lesson: "/ai-native/kurs/modul_1/modul_1_lesson_1",
-    lessonHeading: "Der Moment, in dem du aufhörst, selbst zu schreiben.",
+    hubHeading: "Mit KI arbeiten",
+    lesson: "/ai-native/kurs/modul_1/messen-1-1",
+    lessonHeading: "Lohnt sich KI hier wirklich?",
   },
 ] as const;
 

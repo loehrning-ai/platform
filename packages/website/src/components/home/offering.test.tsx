@@ -43,36 +43,60 @@ describe("Offering section", () => {
   it("removes duplicated persona shortcuts and gives every route step owned artwork", () => {
     render(<Offering />);
     expect(screen.queryByTestId("persona-filter")).not.toBeInTheDocument();
-    // Every step owns its poster (SPEC §3.5): the Grundlagenpfad in Lemons,
-    // numbered 01 to 04, drawn as decorative inline SVG with no image request.
-    expect(document.querySelectorAll("img")).toHaveLength(0);
-    const posters = Array.from(
-      document.querySelectorAll("[data-course-artwork] svg[data-poster]"),
+    // Every step leads with its people picture (public/course-covers, the
+    // recoloured v4 set) in a registration frame; no poster art.
+    const images = Array.from(document.querySelectorAll("img"));
+    expect(images).toHaveLength(4);
+    const decodedSources = images.map((image) =>
+      decodeURIComponent(image.getAttribute("src") ?? ""),
     );
-    expect(posters).toHaveLength(4);
-    expect(posters.map((poster) => poster.getAttribute("data-poster-motif"))).toEqual([
-      "disc",
-      "pair",
-      "ring",
-      "steps",
-    ]);
-    for (const [index, poster] of posters.entries()) {
-      expect(poster).toHaveClass("plakat-lemons");
-      expect(poster).toHaveAttribute("aria-hidden", "true");
-      expect(poster).toHaveAttribute("focusable", "false");
-      expect(poster).toHaveAttribute("data-poster-format", "landscape");
-      expect(poster.querySelector("[data-poster-numeral-text]")?.textContent).toBe(
-        `0${index + 1}`,
-      );
+    for (const source of [
+      "/course-covers/ki-fuehrerschein-cover-v4.webp",
+      "/course-covers/ki-und-gesellschaft-cover-v4.webp",
+      "/course-covers/eu-ai-act-kurs-cover-v4.webp",
+      "/course-covers/ai-native-cover-v4.webp",
+    ]) {
+      expect(
+        decodedSources.some((candidate) => candidate.includes(source)),
+      ).toBe(true);
     }
+    for (const image of images) {
+      expect(image).toHaveAttribute("alt", "");
+      expect(image).toHaveAttribute("loading", "lazy");
+      expect(image).toHaveAttribute("decoding", "async");
+      expect(image).toHaveAttribute("fetchpriority", "low");
+      expect(image).toHaveAttribute("width", "1440");
+      expect(image).toHaveAttribute("height", "630");
+      expect(image.closest("[data-course-artwork]")).not.toBeNull();
+    }
+    expect(document.querySelector("[data-course-artwork] svg[data-poster]")).toBeNull();
     expect(
       screen.getByRole("list", { name: "Empfohlener Grundlagenpfad" }),
     ).toBeInTheDocument();
   });
 
-  it("routes technical depth through the single full-atlas action", () => {
+  it("frames each picture with registration layers that move only with motion allowed", () => {
+    const { container } = render(<Offering />);
+    const artworks = Array.from(container.querySelectorAll("[data-course-artwork]"));
+    expect(artworks).toHaveLength(4);
+    for (const artwork of artworks) {
+      // A thin cobalt registration frame and an inner paper hairline, both
+      // decorative, both offset on hover and focus, both still under
+      // reduced motion.
+      const layers = Array.from(artwork.querySelectorAll<HTMLElement>(":scope > span[aria-hidden='true']"));
+      expect(layers.length).toBeGreaterThanOrEqual(2);
+      const [frame, inner] = layers;
+      expect(frame).toHaveClass("border-[3px]", "group-hover:-translate-x-1", "motion-reduce:transform-none");
+      expect(inner).toHaveClass("border", "group-hover:-translate-x-[3px]", "motion-reduce:transform-none");
+      expect(artwork.querySelector("img")).toHaveClass("object-cover", "motion-reduce:transform-none");
+    }
+  });
+
+  it("routes visual learning through the single full-atlas action", () => {
     render(<Offering />);
-    expect(screen.getByText(/6 technische Kurse/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/4 Kurse zum visuellen Lernen über Daten und KI-Betrieb/),
+    ).toBeInTheDocument();
     const atlasLinks = screen.getAllByRole("link", {
       name: /Alle Kurse ansehen/,
     });
@@ -104,48 +128,41 @@ describe("Offering section", () => {
     );
   });
 
-  it("keeps phone rows to one colour and one meta line", () => {
+  it("keeps the phone cards to the lesson count, the duration and the title", () => {
     const { container } = render(<Offering />);
     // One colour, one weight: no two-tone headline at any width.
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading.querySelector("span")).toBeNull();
     expect(heading.className).not.toMatch(/text-(?:muted|brand)/);
-    // From lg the sheet names its lesson count (the poster numeral is the
-    // sheet's only number, SPEC D9); below lg that
-    // steps out and the duration is the row's one meta line, never wrapped,
-    // so no row orphans "Min.". No unit count: the catalog's units differ
-    // per course (Blöcke, Module).
+    // Every card names its lesson count; the duration prints once in the
+    // meta lines below sm and once on the picture from sm, never wrapped.
+    // No unit count: the catalog's units differ per course (Blöcke, Module).
     const counts = Array.from(
       container.querySelectorAll("[data-home-course-card] span"),
     ).filter((span) => /^\d+ Lektionen$/.test(span.textContent ?? ""));
     expect(counts).toHaveLength(4);
-    for (const count of counts) expect(count).toHaveClass("max-lg:hidden");
     const durations = container.querySelectorAll(
       "[data-home-course-card] .whitespace-nowrap",
     );
     expect(durations).toHaveLength(4);
-    for (const duration of durations) expect(duration).toHaveClass("lg:hidden");
+    for (const duration of durations) expect(duration).toHaveClass("sm:hidden");
     expect(container.textContent).not.toMatch(/\b(?:Blöcke|Module)\b/);
-    // The AI-Native duration agrees with /kurse (5 hours of lessons).
-    expect(container.textContent).toContain("ca. 5 Std. + Übungen");
+    // The AI-Native duration agrees with /kurse (nine lessons with exercises).
+    expect(container.textContent).toContain("ca. 70 Min.");
     expect(container.textContent).not.toContain("ca. 12 Std.");
   });
 
-  it("draws the route as flat sheets: no tints, shadows or lifts", () => {
+  it("draws the route as pastel cards on light grounds only", () => {
     const { container } = render(<Offering />);
     const html = container.innerHTML;
-    expect(html).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt)/);
-    expect(html).not.toMatch(/shadow-card|rounded-\[|hover:-translate/);
-    // The poster is a flat printed object: no frame, no filter, and the
-    // card itself carries no box.
-    const artworks = container.querySelectorAll("[data-course-artwork]");
-    expect(artworks).toHaveLength(4);
-    for (const artwork of artworks) {
-      expect(artwork.className).not.toMatch(/\bborder\b|grayscale|mix-blend|shadow/);
-    }
-    // No Mennige text on a tint: meta and durations are Schiefer on paper.
+    expect(html).toMatch(/bg-brand-(?:acid|sky|pink|peach)\//);
+    // Never a dark ground (the owner's rule), and small Mennige text only in
+    // its deeper tone, which keeps 4.5:1 on every tint.
+    expect(html).not.toMatch(
+      /\bbg-(?:graphit|black|foreground|ultramarin|neutral-9\d\d|zinc-9\d\d|stone-9\d\d)\b|\bdark-section\b/,
+    );
     for (const card of container.querySelectorAll("[data-home-course-card]")) {
-      expect(card.innerHTML).not.toMatch(/text-(?:brand-orange|kupfer)/);
+      expect(card.innerHTML).not.toMatch(/text-(?:brand-orange|kupfer)(?!-dark)\b/);
     }
   });
 });

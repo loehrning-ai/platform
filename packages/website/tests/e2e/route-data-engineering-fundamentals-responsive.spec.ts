@@ -171,8 +171,8 @@ test.describe("Data Engineering Fundamentals learning instrument", () => {
       };
     });
 
-    expect(instrument.background).toBe("rgb(243, 240, 233)");
-    expect(instrument.fontFamily).toMatch(/Loehrning Sans/i);
+    expect(instrument.background).toBe("rgb(247, 241, 231)");
+    expect(instrument.fontFamily).toMatch(/Figtree/i);
     expect(
       Number.parseFloat(instrument.panelRadius ?? "99"),
     ).toBeLessThanOrEqual(8);

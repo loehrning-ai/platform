@@ -170,10 +170,10 @@ export function RoiDemo(): JSX.Element {
         ))}
       </div>
 
-      {/* Headline KPIs — dark panel */}
-      <div className="dark-section grid grid-cols-2 gap-4 border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-5 py-5 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-5 md:px-6">
+      {/* Headline KPIs: a pastel Himmel-Blatt panel, never dark */}
+      <div className="grid grid-cols-2 gap-4 border-t-[3px] border-brand-orange bg-sky-sheet px-5 py-5 md:grid-cols-[1.5fr_1fr_1fr_1fr] md:gap-5 md:px-6">
         <div>
-          <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+          <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             {text(
               "Modellierter Netto-Wert · 3 Jahre",
               "Modelled net value · 3 years",
@@ -197,10 +197,10 @@ export function RoiDemo(): JSX.Element {
           ],
         ].map(([label, val]) => (
           <div key={label}>
-            <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--color-dark-muted)]">
+            <div className="font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {label}
             </div>
-            <div className="mt-1.5 font-mono text-[22px] font-bold text-[var(--color-dark-fg)] md:text-[26px]">
+            <div className="mt-1.5 font-mono text-[22px] font-bold text-foreground md:text-[26px]">
               {val}
             </div>
           </div>

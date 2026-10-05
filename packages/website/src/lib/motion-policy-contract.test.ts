@@ -57,22 +57,19 @@ describe("website motion policy", () => {
     expect(globalCss).toMatch(/scroll-behavior:\s*auto\s*!important/);
   });
 
-  it("gives the globe intrinsic neutral volume without a coloured hero wash", () => {
+  it("keeps the restored globe on the paper band, never a black or tinted hero", () => {
     const hero = read("components/home/hero.tsx");
     const band = read("components/home/phone-hero.css");
-    const network = read("components/home/hero-network.tsx");
 
-    // The hero is the flat graphit band at every width: no paper hero class,
-    // no grain, no tinted wash.
-    expect(hero).not.toContain("berlin-hero");
-    expect(hero).not.toContain("berlin-grain");
-    expect(band).toContain("--color-background: #141414;");
+    // The restored hero is the paper band with its grain at every width; the
+    // black graphit band and coloured washes stay out.
+    expect(hero).toContain("berlin-hero");
+    expect(band).toContain("var(--color-paper)");
+    expect(band).not.toContain("#141414");
     expect(band).not.toMatch(
       /169\s*,\s*221\s*,\s*252|203\s*,\s*188\s*,\s*255/,
     );
     expect(hero).not.toContain("bg-brand-peach/20");
-    expect(network).toContain('id="sphereVolume"');
-    expect(network).not.toContain('id="limbHalo"');
   });
 
   it("stops formerly ambient demos after one finite explanatory run", () => {
@@ -161,42 +158,56 @@ describe("website motion policy", () => {
     );
   });
 
-  it("bounds the phone horizon globe exception", () => {
-    const hero = read("components/home/hero.tsx");
+  it("bounds the restored phone globe exception", () => {
     const loader = read("components/home/phone-globe.tsx");
-    const renderer = read("components/werk/horizon-globe-renderer.ts");
     const css = read("components/home/phone-hero.css");
+
+    // The phone reuses the line globe as a lazy chunk, gated on width,
+    // motion, data and Save-Data, and loaded only when the browser is idle.
+    expect(loader).toContain('import("@/components/home/hero-network")');
+    expect(loader).toContain('export const LG_QUERY = "(min-width: 64rem)"');
+    expect(loader).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(loader).toContain('"(prefers-reduced-data: reduce)"');
+    expect(loader).toContain("saveData");
+    expect(loader).toContain("requestIdleCallback");
+    // Any opening animation is finite and only runs without a reduced-motion preference.
+    expect(css).toContain("prefers-reduced-motion: no-preference");
+    expect(css).not.toMatch(/\binfinite\b/);
+  });
+  it("bounds the /login dot-field continuous-motion exception", () => {
+    const scene = read("components/login/login-scene.tsx");
+    const field = read("components/login/dot-field.tsx");
+    const shapes = read("components/login/dot-field-shapes.ts");
+    const css = read("app/login/login-scene.css");
     const policy = readFileSync(
       join(SRC, "..", "docs/experience-system.md"),
       "utf8",
     );
 
-    // Its own namespace: the desktop attributes never describe the phone globe.
-    expect(hero).toContain('data-home-globe-motion="static"');
-    expect(renderer).not.toContain("data-hero-");
-    expect(loader).not.toContain("data-hero-");
-    // The renderer is a lazy chunk, gated on width, motion, data and Save-Data.
-    expect(hero).not.toContain("horizon-globe-renderer");
-    expect(loader).toContain('import("@/components/werk/horizon-globe-renderer")');
-    expect(loader).toContain('"(min-width: 64rem)"');
-    expect(loader).toContain('"(prefers-reduced-motion: reduce)"');
-    expect(loader).toContain('"(prefers-reduced-data: reduce)"');
-    expect(loader).toContain("saveData");
-    expect(loader).toContain("requestIdleCallback");
-    expect(loader).toContain("paused={globe.paused}");
-    expect(loader).toContain("export const LG_QUERY");
-    // Suspension, caps and the governor.
-    expect(renderer).toContain("IntersectionObserver");
-    expect(renderer).toContain('document.addEventListener("visibilitychange"');
-    expect(renderer).toContain('"pagehide"');
-    expect(renderer).toContain("SCROLL_HOLD_MS");
-    // Top tier: DPR capped at 2, drift at 30 fps, never above 60 fps while active.
-    expect(renderer).toContain("{ cap: 2, drift: 30, active: 60 }");
-    expect(renderer).not.toMatch(/active:\s*(?:[7-9]\d|1\d\d)/);
-    expect(renderer).toContain("frozen = true");
-    // The opening is finite and exists only without a reduced-motion preference.
+    // A lazy client chunk, never rendered on the server, and only loaded
+    // when motion is allowed.
+    expect(scene).toContain('import("@/components/login/dot-field")');
+    expect(scene).toContain("ssr: false");
+    expect(scene).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(scene).toContain("{motionAllowed ? <DotField paused={paused} /> : null}");
+    // A visible 44px pause toggle with a fixed name and a pressed state.
+    expect(scene).toContain("aria-pressed={paused}");
+    expect(scene).toContain("aria-controls={LOGIN_SCENE_LAYER_ID}");
+    expect(css).toMatch(/\.login-scene-toggle\s*\{[^}]*width:\s*2\.75rem;[^}]*height:\s*2\.75rem/s);
+    // The renderer checks the media query itself, pauses on a hidden
+    // document, and paces itself at about 30fps.
+    expect(field).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(field).toContain('document.addEventListener("visibilitychange", sync)');
+    expect(field).toContain('aria-hidden="true"');
+    expect(shapes).toContain("DOT_FIELD_FPS = 30");
+    expect(shapes).toContain("DOT_FIELD_MAX_DPR = 2");
+    // CSS hides the canvas under reduce too, and the card's rise is finite.
+    expect(css).toMatch(/prefers-reduced-motion:\s*reduce\)\s*\{\s*\.login-dot-field\s*\{\s*display:\s*none/s);
     expect(css).toContain("prefers-reduced-motion: no-preference");
     expect(css).not.toMatch(/\binfinite\b/);
-    expect(policy).toContain("Phone globe: narrow continuous-motion exception");
+    expect(policy).toContain("Login dot field: narrow continuous-motion exception");
+    expect(policy).toContain(
+      "A visible 44px pause toggle sits at the top right of the scene whenever the shapes move",
+    );
   });
 });

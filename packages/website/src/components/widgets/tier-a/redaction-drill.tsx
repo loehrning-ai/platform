@@ -381,7 +381,7 @@ export function RedactionDrillWidget({
                     ? "bg-brand-amber"
                     : submitted
                       ? "bg-risk-green"
-                      : "bg-foreground",
+                      : "bg-brand-cobalt",
                 )}
               >
                 {chrome.redactedTag}
@@ -424,7 +424,7 @@ export function RedactionDrillWidget({
         <span className="inline-flex items-center gap-1.5">
           <span
             aria-hidden="true"
-            className="inline-block bg-foreground px-1.5 font-mono text-xs font-bold uppercase text-white"
+            className="inline-block bg-brand-cobalt px-1.5 font-mono text-xs font-bold uppercase text-white"
           >
             {chrome.legendRedactedChip}
           </span>

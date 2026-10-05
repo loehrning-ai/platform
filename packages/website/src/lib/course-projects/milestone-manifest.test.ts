@@ -9,32 +9,32 @@ import { COURSE_PROJECT_STAGE_IDS } from "./types";
 
 const EXPECTED_STAGE_STARTS = {
   "ki-fuehrerschein": [
-    "block_1_lesson_1",
-    "block_2_lesson_1",
-    "block_3_lesson_1",
-    "block_4_lesson_1",
-    "block_5_lesson_1",
+    "daten-1-1",
+    "briefen-2-1",
+    "pruefen-3-1",
+    "pruefen-3-2",
+    "regeln-4-1",
   ],
   "eu-ai-act-kurs": [
-    "block_1_lesson_1",
-    "block_2_lesson_1",
-    "block_3_lesson_1",
-    "block_4_lesson_1",
-    "block_6_lesson_1",
+    "rolle-1-1",
+    "risiko-2-1",
+    "pflichten-3-1",
+    "bussgeld-4-1",
+    "fall-5-1",
   ],
   "ai-native": [
-    "modul_1_lesson_1",
-    "modul_2_lesson_1",
-    "modul_3_lesson_1",
-    "modul_4_lesson_1",
-    "modul_4_lesson_7",
+    "messen-1-1",
+    "kontext-2-1",
+    "wissen-3-1",
+    "workflow-4-1",
+    "workflow-4-3",
   ],
   "ki-und-gesellschaft": [
-    "arbeit-1-1",
-    "deepfake-2-1",
-    "deepfake-2-3",
-    "ethik-3-1",
-    "ethik-3-3",
+    "zahlen-1-1",
+    "fakes-2-1",
+    "fakes-2-3",
+    "fair-3-1",
+    "fair-3-3",
   ],
   "data-engineering-fundamentals": ["home", "ingest", "orch", "disc", "cap"],
   "data-science": ["fund", "feature", "eval", "causal", "deploy"],
@@ -45,8 +45,6 @@ const EXPECTED_STAGE_STARTS = {
     "idempotency",
     "interview-playbook",
   ],
-  codex: ["L01", "L04", "L07", "L10", "L12"],
-  claude: ["mental-model", "claude-md", "agents", "team", "safety"],
   "ai-native-operator": [
     "mindset/1",
     "engineering/1",
@@ -57,20 +55,18 @@ const EXPECTED_STAGE_STARTS = {
 } as const satisfies Readonly<Record<CourseSlug, readonly string[]>>;
 
 const EXPECTED_STAGE_COUNTS = {
-  "ki-fuehrerschein": [3, 3, 4, 4, 4],
-  "eu-ai-act-kurs": [4, 4, 4, 8, 4],
-  "ai-native": [5, 7, 7, 6, 2],
-  "ki-und-gesellschaft": [3, 2, 1, 2, 1],
+  "ki-fuehrerschein": [2, 2, 1, 1, 2],
+  "eu-ai-act-kurs": [2, 2, 2, 2, 2],
+  "ai-native": [2, 2, 2, 2, 1],
+  "ki-und-gesellschaft": [2, 2, 1, 2, 1],
   "data-engineering-fundamentals": [2, 4, 2, 3, 1],
   "data-science": [3, 2, 3, 2, 2],
   "data-infrastructure": [3, 3, 3, 2, 1],
-  codex: [3, 3, 3, 2, 1],
-  claude: [3, 3, 3, 2, 1],
   "ai-native-operator": [5, 10, 4, 16, 4],
 } as const satisfies Readonly<Record<CourseSlug, readonly number[]>>;
 
 describe("course project milestone manifest", () => {
-  it("covers all 177 canonical lessons exactly once in monotone stage order", () => {
+  it("covers every canonical lesson exactly once in monotone stage order", () => {
     let totalAssigned = 0;
 
     for (const courseSlug of COURSE_SLUGS) {
@@ -94,7 +90,13 @@ describe("course project milestone manifest", () => {
       totalAssigned += assigned.length;
     }
 
-    expect(totalAssigned).toBe(177);
+    expect(totalAssigned).toBe(
+      COURSE_SLUGS.reduce(
+        (sum, courseSlug) => sum + CANONICAL_LESSON_IDS[courseSlug].length,
+        0,
+      ),
+    );
+    expect(totalAssigned).toBeGreaterThan(100);
   });
 
   it("resolves every lesson from explicit membership independent of iteration order", () => {
@@ -116,10 +118,18 @@ describe("course project milestone manifest", () => {
   });
 
   it("fails closed for an unassigned insertion instead of shifting later lessons", () => {
-    const before = resolveCourseProjectMilestone("codex", "L12");
+    const before = resolveCourseProjectMilestone(
+      "data-infrastructure",
+      "interview-playbook",
+    );
     expect(
-      resolveCourseProjectMilestone("codex", "future-inserted-lesson"),
+      resolveCourseProjectMilestone(
+        "data-infrastructure",
+        "future-inserted-lesson",
+      ),
     ).toBeNull();
-    expect(resolveCourseProjectMilestone("codex", "L12")).toEqual(before);
+    expect(
+      resolveCourseProjectMilestone("data-infrastructure", "interview-playbook"),
+    ).toEqual(before);
   });
 });

@@ -308,7 +308,7 @@ function GermanPrivacyContent() {
             id="ki"
             title="7. KI-Lernfeedback und isolierte Kursausführung"
           >
-            {features.anthropic || features.gemini ? (
+            {features.anthropic || features.gemini || features.openai ? (
               <>
                 <p>
                   Bei ausdrücklich gestarteten interaktiven KI-Übungen werden
@@ -341,6 +341,17 @@ function GermanPrivacyContent() {
                     gesetzte Prüfbestätigung; die Anwendung liest oder beweist
                     den Google-Abrechnungsstatus nicht. Diese technischen Marker
                     sind für sich kein Nachweis rechtlicher Konformität.
+                  </p>
+                ) : null}
+                {features.openai ? (
+                  <p className="mt-2">
+                    OpenAI API (OpenAI, USA) ist für das Modell GPT-5 mini
+                    aktiv. Die konfigurierte Aufbewahrungsdauer beträgt{" "}
+                    {features.openaiRetentionDays} Tage. Jede Anfrage bittet
+                    den Anbieter, die Antwort nicht für einen späteren Abruf zu
+                    speichern. Die Aktivierung verlangt einen datierten
+                    DPA-Prüfmarker; dieser technische Marker ist für sich kein
+                    Nachweis rechtlicher Konformität.
                   </p>
                 ) : null}
                 <p className="mt-2">
@@ -378,16 +389,16 @@ function GermanPrivacyContent() {
               </>
             ) : (
               <p>
-                Anthropic Claude und Google Gemini API sind in dieser
-                Bereitstellung für KI-Lernfeedback deaktiviert. Übungen
+                Anthropic Claude, Google Gemini API und OpenAI API sind in
+                dieser Bereitstellung für KI-Lernfeedback deaktiviert. Übungen
                 verwenden lokales oder regelbasiertes Feedback und übertragen
                 keine Eingaben an diese Modellanbieter.
               </p>
             )}
             {features.courseTerminal ? (
               <p className="mt-2">
-                Die Kursprojekte für Codex, Data Science, Data Engineering und
-                Data Infrastructure können auf ausdrücklichen Start jeweils eine
+                Die Kursprojekte für Data Science, Data Engineering und Data
+                Infrastructure können auf ausdrücklichen Start jeweils eine
                 feste Folge erlaubter Befehlskennungen an Vercel Sandbox
                 übertragen. Browserseitige Analysepläne werden nur strukturell
                 geprüft; sie sind kein ausführbares SQL und werden nicht an die
@@ -415,10 +426,9 @@ function GermanPrivacyContent() {
             ) : (
               <p className="mt-2">
                 Die echte isolierte Kursausführung über Vercel Sandbox ist in
-                dieser Bereitstellung deaktiviert. Das Codex-Repository-Labor
-                weist die getrennte Browser-Simulation ausdrücklich als
-                Simulation aus. Die drei Datenlabore geben ohne echten Lauf
-                keine simulierten Kennzahlen als Ausführung aus.
+                dieser Bereitstellung deaktiviert. Die drei Datenlabore geben
+                ohne echten Lauf keine simulierten Kennzahlen als Ausführung
+                aus.
               </p>
             )}
           </LegalSection>
@@ -798,7 +808,7 @@ function GermanPrivacyContent() {
                   </li>
                 </>
               ) : null}
-              {features.anthropic ? (
+              {features.anthropic || features.gemini || features.openai ? (
                 <li>
                   KI-Antwort-Zwischenspeicher: höchstens eine Stunde im
                   Arbeitsspeicher eines Serverprozesses, maximal 500 Einträge je

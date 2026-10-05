@@ -10,7 +10,7 @@ import { BOLD_ADVANCES, BOLD_KERNING, UNITS_PER_EM } from "./type-metrics";
  * The component writes `--fit` inline from `fitEm()` (band titles add the
  * fallback-face headroom, `posterTitleFallbackStyle()`), so the longest word
  * always fits its column: "Geschäftsberichte" takes about 34px at 320 and
- * 43px at 390, every shorter title reaches the 50px poster size.
+ * 42px at 390, every shorter title reaches the 50px poster size.
  *
  * Widths come from `type-metrics.ts`, measured from the bold web font in
  * Chromium (scripts/plakat/build-type-metrics.mjs). Pure functions, no DOM:
@@ -128,11 +128,12 @@ export function posterTitleStyle(text: string): CSSProperties {
 /**
  * Extra headroom over `fitEm()` for a title that runs to its column edge on a
  * phone (the home hero, demo detail, /kurse). `font-display: optional` can
- * leave a first visit on the Arial-metric fallback face, which sets poster
- * words about 4.4% wider than Loehrning Sans (measured with Liberation Sans
- * Bold in Chromium); 5% keeps those titles inside their column.
+ * leave a first visit on the size-adjusted Arial-metric fallback face, which
+ * sets poster words up to about 4% wider than Figtree (measured with
+ * Liberation Sans Bold in Chromium; most long words set narrower); 4.5% keeps
+ * those titles inside their column.
  */
-export const POSTER_FALLBACK_HEADROOM = 1.05;
+export const POSTER_FALLBACK_HEADROOM = 1.045;
 
 /** `fitEm()` with the fallback headroom, rounded up to three decimals. */
 export function fallbackFitEm(text: string): number {

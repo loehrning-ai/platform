@@ -69,17 +69,17 @@ afterEach(cleanup);
 describe("<CompletionCertificateCta>", () => {
   it("exposes no certificate route while the learning owner is unresolved", () => {
     harness.eligible = true;
-    render(<CompletionCertificateCta courseSlug="codex" />);
+    render(<CompletionCertificateCta courseSlug="data-infrastructure" />);
 
     expect(
       document.querySelector(
-        'a[href="/kurse/open-source/codex/kurs/zertifikat"]',
+        'a[href="/kurse/open-source/data-infrastructure/kurs/zertifikat"]',
       ),
     ).toBeNull();
   });
 
   it("stays absent for an identified but ineligible learner", () => {
-    render(<CompletionCertificateCta courseSlug="codex" />);
+    render(<CompletionCertificateCta courseSlug="data-infrastructure" />);
     resolveOwner(false);
 
     expect(
@@ -91,16 +91,16 @@ describe("<CompletionCertificateCta>", () => {
 
   it.each([
     {
-      courseSlug: "codex",
+      courseSlug: "data-infrastructure",
       locale: undefined,
-      certificateHref: "/kurse/open-source/codex/kurs/zertifikat",
+      certificateHref: "/kurse/open-source/data-infrastructure/kurs/zertifikat",
       heading: "Deine Teilnahmebestätigung ist bereit.",
       link: "Teilnahmebestätigung öffnen",
     },
     {
-      courseSlug: "codex",
+      courseSlug: "data-science",
       locale: "en",
-      certificateHref: "/en/kurse/open-source/codex/kurs/zertifikat",
+      certificateHref: "/en/kurse/open-source/data-science/zertifikat",
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
       heading: "Your certificate of participation is ready.",
       link: "Open Certificate of participation",
@@ -135,7 +135,7 @@ describe("<CompletionCertificateCta>", () => {
   );
 
   it("removes a visible CTA immediately when the learning owner changes", () => {
-    render(<CompletionCertificateCta courseSlug="codex" locale="en" />);
+    render(<CompletionCertificateCta courseSlug="data-infrastructure" locale="en" />);
     resolveOwner(true);
     expect(
       screen.getByRole("link", {

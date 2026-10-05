@@ -19,14 +19,14 @@ export default async function Image() {
       ? {
           caps: "EU AI Act Course · Foundation course",
           title: "Map roles, risks, and duties.",
-          subtitle: "6 blocks, 24 lessons, about 1 hr 50 min.",
+          subtitle: "5 modules, 10 hands-on lessons, about 1 hr.",
           trailing: "/en/eu-ai-act-kurs",
           titleSize: 68,
         }
       : {
           caps: "EU AI Act Kurs · Grundlagenkurs",
           title: "Rollen, Risiken und Pflichten einordnen.",
-          subtitle: "6 Blöcke, 24 Lektionen, ca. 1 Std. 50 Min.",
+          subtitle: "5 Module, 10 Lektionen mit Übung, ca. 1 Std.",
           trailing: "/eu-ai-act-kurs",
           titleSize: 68,
         };

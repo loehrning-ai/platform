@@ -33,8 +33,6 @@ const CORE_ROUTE_CASES: readonly {
 const ROUTE_CASES = [...CORE_ROUTE_CASES, ...SUPPLEMENTAL_A11Y_ROUTE_CASES];
 
 const TECHNICAL_COURSE_ROUTES = [
-  "/kurse/open-source/claude",
-  "/kurse/open-source/codex",
   "/kurse/open-source/data-infrastructure",
   "/kurse/open-source/data-engineering-fundamentals",
   "/kurse/open-source/data-science",

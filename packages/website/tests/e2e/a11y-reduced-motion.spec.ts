@@ -27,7 +27,7 @@ test.describe.configure({ timeout: 60_000 });
 
 const CHAPTER = "/buecher/ki-landschaft/03_reifegrad_ueberblick";
 const HOMEPAGE_STATIC_REVEAL_ROOTS =
-  '[data-testid="kurse-section"], [data-testid="ressourcen-section"], [data-testid="platform-principles"]';
+  '[data-testid="kurse-section"], [data-testid="ressourcen-section"]';
 
 /** Effective opacity of the first `h1`: product of its own + ancestor opacity. */
 function firstH1Opacity(page: Page): Promise<number> {
@@ -122,8 +122,9 @@ async function expectReducedMotionHonored(
     expect(
       await staticRoots.count(),
       `${route}: expected all static homepage reveal sections`,
-    ).toBe(3);
-    for (let index = 0; index < 3; index += 1) {
+    ).toBe(2);
+    // Kurse and Ressourcen; the Ground rules strip was removed from home.
+    for (let index = 0; index < 2; index += 1) {
       const root = staticRoots.nth(index);
       await expect(
         root,

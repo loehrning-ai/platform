@@ -9,15 +9,12 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
-      /** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
-      capsLine: "Frei · zweisprachig · quelloffen",
-      // One sentence on phones (lead + "."), the full introduction from lg:
-      // lead + detail + "." + facts. Below lg the facts sit above the
-      // headline as the band's label instead.
+      // The introduction card: one sentence on phones (lead + "."), from lg
+      // lead + detail + "." and the facts as one tag line under it.
       introduction: {
         lead: "Freie Kurse, Praxisbeispiele und Workshops zu KI",
         detail: " mit Übungen und Quellen",
-        facts: "Frei, zweisprachig und quelloffen.",
+        facts: ["Ohne Paywall", "Deutsch und Englisch", "Quelloffen"],
       },
       primaryCta: "Lernroute wählen",
       globeToggle: "Globus anhalten",
@@ -46,7 +43,7 @@ export const HOME_COPY = {
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
-        `Dazu ${count} technische Kurse zu Prompting, Coding-Agenten und Daten.`,
+        `Dazu ${count} Kurse zum visuellen Lernen über Daten und KI-Betrieb.`,
       viewAllCourses: "Alle Kurse ansehen",
     },
     workflow: {
@@ -87,7 +84,7 @@ export const HOME_COPY = {
         },
       ],
       accountBody:
-        "Ein kostenloses Konto synchronisiert Fortschritt und Arbeitsbelege geräteübergreifend.",
+        "Kostenloses Konto: Fortschritt und Arbeitsbelege auf jedem Gerät.",
       accountCta: "Zum Konto",
     },
     companion: {
@@ -107,27 +104,6 @@ export const HOME_COPY = {
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} Kapitel · ${minutes} Min.`,
     },
-    credibility: {
-      headline: "Grundregeln",
-      principles: [
-        {
-          title: "Keine Paywall",
-          body: "Vier Kurse brauchen ein kostenloses Lernkonto.",
-        },
-        {
-          title: "Zwei vollständige Fassungen",
-          body: "Alle Kurse gibt es auf Deutsch und Englisch.",
-        },
-        {
-          title: "Quellen sind verlinkt",
-          body: "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
-        },
-        {
-          title: "Von Tim Löhr redigiert",
-          body: "Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
-        },
-      ],
-    },
   },
   en: {
     metadata: {
@@ -137,11 +113,10 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
-      capsLine: "Free · bilingual · open source",
       introduction: {
         lead: "Free courses, examples and workshops on AI",
         detail: " with exercises and sources",
-        facts: "Free, bilingual and open source.",
+        facts: ["No paywall", "German and English", "Open source"],
       },
       primaryCta: "Choose a learning route",
       globeToggle: "Pause the globe",
@@ -169,7 +144,7 @@ export const HOME_COPY = {
       routeLabel: "Recommended foundation path",
       lessonLabel: "lessons",
       deeperSummary: (count: number) =>
-        `Plus ${count} technical courses on prompting, coding agents and data.`,
+        `Plus ${count} visual-learning courses on data and AI operations.`,
       viewAllCourses: "View all courses",
     },
     workflow: {
@@ -209,7 +184,7 @@ export const HOME_COPY = {
         },
       ],
       accountBody:
-        "A free account syncs progress and work artifacts across devices.",
+        "Free account: progress and work artifacts on every device.",
       accountCta: "Go to account",
     },
     companion: {
@@ -229,27 +204,6 @@ export const HOME_COPY = {
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} chapters · ${minutes} min`,
     },
-    credibility: {
-      headline: "Ground rules",
-      principles: [
-        {
-          title: "No paywall",
-          body: "Four courses need a free learning account.",
-        },
-        {
-          title: "Two complete editions",
-          body: "Every course is available in German and English.",
-        },
-        {
-          title: "Sources are linked",
-          body: "Facts link to sources. Assumptions and simulations are labelled.",
-        },
-        {
-          title: "Edited by Tim Löhr",
-          body: "Revision date and known limits stay visible.",
-        },
-      ],
-    },
   },
 } as const satisfies Readonly<Record<Locale, object>>;
 
@@ -265,48 +219,45 @@ export const HOME_COURSE_COPY: Readonly<
   de: {
     "ki-fuehrerschein": {
       title: "KI-Führerschein",
-      tagline: "Aufgaben abgrenzen, Daten schützen und Antworten prüfen.",
-      duration: "ca. 1 Std. 40 Min.",
+      tagline: "Daten einstufen, prüfbar briefen, Fehler finden.",
+      duration: "ca. 45 Min.",
     },
     "ki-und-gesellschaft": {
       title: "KI und Gesellschaft",
-      tagline:
-        "Prüfe an Beispielen, was Deepfakes, Bias und KI für die Arbeit bedeuten.",
-      duration: "ca. 46 Min.",
+      tagline: "Jobzahlen lesen, Fakes prüfen, Fairness messen.",
+      duration: "ca. 40 Min.",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Kurs",
-      tagline: "Ordne deinen Anwendungsfall ein und leite Rolle und Pflichten ab.",
-      duration: "ca. 1 Std. 50 Min.",
+      tagline: "Rolle bestimmen, Risikoklasse einordnen, Pflichten ableiten.",
+      duration: "ca. 1 Std.",
     },
     "ai-native": {
-      title: "AI-Native Arbeitskurs",
-      tagline: "Gib der KI Absicht und Kontext, dann prüfe das Ergebnis.",
-      // /kurse states "ca. 5 Std. Lektionen, 12 Std. mit Übungen".
-      duration: "ca. 5 Std. + Übungen",
+      title: "Mit KI arbeiten",
+      tagline: "Miss den Nutzen, begrenze die Rechte, teste den Ablauf.",
+      duration: "ca. 70 Min.",
     },
   },
   en: {
     "ki-fuehrerschein": {
       title: "Everyday AI Literacy",
-      tagline: "Set task boundaries, protect data and verify responses.",
-      duration: "about 1 hr 40 min",
+      tagline: "Classify data, brief checkably, catch errors.",
+      duration: "about 45 min",
     },
     "ki-und-gesellschaft": {
       title: "AI and Society",
-      tagline: "Use examples to assess deepfakes, bias and effects on work.",
-      duration: "about 46 min",
+      tagline: "Read jobs figures, check fakes, measure fairness.",
+      duration: "about 40 min",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Course",
-      tagline: "Classify your use case, then derive your role and duties.",
-      duration: "about 1 hr 50 min",
+      tagline: "Determine your role, classify the use case, derive your duties.",
+      duration: "about 1 hr",
     },
     "ai-native": {
-      title: "AI-Native Work Course",
-      tagline: "Give the AI intent and context, then check the result.",
-      // /kurse states "about 5 hrs of lessons, 12 hrs with exercises".
-      duration: "about 5 hr + exercises",
+      title: "Working with AI",
+      tagline: "Measure the benefit, limit permissions, test the workflow.",
+      duration: "about 70 min",
     },
   },
 };

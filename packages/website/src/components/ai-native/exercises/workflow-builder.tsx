@@ -193,7 +193,7 @@ function WorkflowBuilderBody({
                 disabled={submitted}
                 className="flex min-h-11 items-start gap-2 border border-border bg-card/40 px-3 py-2 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)] disabled:opacity-60"
               >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-foreground text-brand-orange">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center border border-foreground bg-sky-sheet text-kupfer-dark">
                   {node.icon}
                 </span>
                 <div className="min-w-0 flex-1">
@@ -238,7 +238,7 @@ function WorkflowBuilderBody({
                           : "border-border bg-background",
                       )}
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center bg-foreground text-brand-orange text-[13px]">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center border border-foreground bg-sky-sheet text-kupfer-dark text-[13px]">
                         {node.icon}
                       </span>
                       <span className="font-mono text-xs tracking-[0.08em] text-muted-foreground">
@@ -346,8 +346,8 @@ function WorkflowBuilderBody({
             className={cn(
               "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors",
               chain.length === 0
-                ? "cursor-not-allowed bg-muted-foreground opacity-60"
-                : "bg-brand-orange hover:bg-foreground hover:text-background",
+                ? "cursor-not-allowed bg-track text-muted-foreground"
+                : "bg-brand-orange hover:bg-kupfer-dark",
             )}
           >
             {text("Workflow prüfen", "Evaluate workflow")}

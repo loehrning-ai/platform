@@ -4,7 +4,7 @@ import { COMPLETION_EVIDENCE_CUTOVER_CHECKPOINT_KEY } from "@/lib/progress/types
 /**
  * Data Engineering Fundamentals golden path: landing ->
  * chapter -> certificate -> QR verify, in one spec. Mirrors
- * route-codex.spec.ts / route-data-infrastructure.spec.ts's established
+ * route-data-infrastructure.spec.ts's established
  * pattern, with deliberate differences specific to this course's real
  * architecture:
  *   - no separate "kurs" hub route: the landing page itself

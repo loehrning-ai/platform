@@ -7,7 +7,7 @@ import { COURSE_PLAKAT } from "@/lib/plakat/palettes";
 import { CatalogOgCard, courseOgFonts } from "./course-og-card";
 
 export const alt =
-  "loehrning.ai course catalog: AI foundations, technical courses, and applied workshops in German and English";
+  "loehrning.ai course catalog: AI foundations, visual learning, and applied workshops in German and English";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -29,7 +29,7 @@ export default async function Image() {
       trailing={localizeHref("/kurse", locale)}
       posters={[
         COURSE_PLAKAT["ki-fuehrerschein"],
-        COURSE_PLAKAT.claude,
+        COURSE_PLAKAT["ai-native-operator"],
         COURSE_PLAKAT["data-science"],
         COURSE_PLAKAT["ki-und-gesellschaft"],
       ]}

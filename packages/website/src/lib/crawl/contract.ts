@@ -42,11 +42,9 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/einstieg",
   "/ki-check",
   "/kurse",
-  // The 6 formerly imported courses now own real static routes. The dormant
+  // The 4 formerly imported courses now own real static routes. The dormant
   // generic import route was removed when the pending catalog became empty;
   // a future import must add its route and crawl contract together.
-  "/kurse/open-source/claude",
-  "/kurse/open-source/codex",
   "/kurse/open-source/data-infrastructure",
   "/kurse/open-source/data-engineering-fundamentals",
   "/kurse/open-source/data-science",
@@ -99,33 +97,21 @@ const PUBLIC_NOINDEX_PATHS = [
   "/eu-ai-act-kurs/verifizierung",
   "/ai-native/verifizierung",
   "/ki-und-gesellschaft/verifizierung",
-  // Claude Course — added ahead of the routes themselves
-  // (stage 9) so contract-completeness.test.ts never goes red mid-plan.
-  "/kurse/open-source/claude/kurs/quiz",
-  "/kurse/open-source/claude/kurs/zertifikat",
-  "/kurse/open-source/claude/verifizierung",
-  // Codex Course — added ahead of the routes themselves so
-  // contract-completeness.test.ts never goes red mid-migration.
-  // No "/kurs/quiz" entry: codex has no separate gating quiz, it uses the
-  // generic all-lessons-completed "completion" eligibility path, so no such
-  // route is ever built.
-  "/kurse/open-source/codex/kurs/zertifikat",
-  "/kurse/open-source/codex/verifizierung",
   // Data Infrastructure course — added ahead of the
   // routes themselves (stage 10) so contract-completeness.test.ts never
   // goes red mid-plan. No "/kurs/quiz" entry: this course has no separate
-  // gating quiz either, it uses the same generic all-lessons-completed
-  // "completion" eligibility path as codex.
+  // gating quiz, it uses the generic all-lessons-completed "completion"
+  // eligibility path.
   "/kurse/open-source/data-infrastructure/kurs/zertifikat",
   "/kurse/open-source/data-infrastructure/verifizierung",
   // Data Engineering Fundamentals course (, corrected stage
-  // 10): unlike claude/codex/data-infrastructure, this course's Done
+  // 10): unlike data-infrastructure, this course's Done
   // Criteria puts all 12 chapters directly under
   // data-engineering-fundamentals/[chapterId] — no "/kurs" segment, since
   // source has no natural index-vs-reader split (its own "Overview" chapter
   // already plays that role, ported as chapterId "home"). No "/quiz" entry:
   // this course has no quiz mechanism in source at all, it uses the same
-  // generic all-lessons-completed "completion" eligibility path as codex/
+  // generic all-lessons-completed "completion" eligibility path as
   // data-infrastructure.
   "/kurse/open-source/data-engineering-fundamentals/zertifikat",
   "/kurse/open-source/data-engineering-fundamentals/verifizierung",
@@ -144,7 +130,7 @@ const PUBLIC_NOINDEX_PATHS = [
   // data-science (no "/kurs" segment): 9 modules x 39 lessons live directly
   // under the course root. Unlike those two, this course DOES have a real
   // quiz gate (9 module knowledge-checks pooled into one workshop quiz), so
-  // it gets its own "/quiz" entry, matching claude's precedent.
+  // it gets its own "/quiz" entry.
   "/kurse/open-source/ai-native-operator/quiz",
   "/kurse/open-source/ai-native-operator/zertifikat",
   "/kurse/open-source/ai-native-operator/verifizierung",
@@ -159,27 +145,27 @@ const PUBLIC_NOINDEX_PATHS = [
 // the SAME commit as the routes themselves, not as an afterthought once CI
 // already failed.
 //
-// Mirror the existing Claude Course entries as the template:
+// Mirror the existing Data Infrastructure entries as the template:
 //   - the course-reader tree (lesson pages, block index, etc.) goes in
 //     PUBLIC_ACCESS_PATHS below, as a "/:course/kurs" + "/:course/kurs/:path*"
-//     pair — see "/kurse/open-source/claude/kurs" +
-//     "/kurse/open-source/claude/kurs/:path*". Public learning content,
+//     pair — see "/kurse/open-source/data-infrastructure/kurs" +
+//     "/kurse/open-source/data-infrastructure/kurs/:path*". Public learning content,
 //     intentionally accessible without login, but deliberately NOT in the
 //     sitemap (courses are discovered via /kurse, not indexed lesson-by-lesson).
 //   - the workshop-quiz and certificate screens go in PUBLIC_NOINDEX_PATHS
 //     as exact (non-wildcard) entries — see
-//     "/kurse/open-source/claude/kurs/quiz" and
-//     "/kurse/open-source/claude/kurs/zertifikat". Crawlable so crawlers can
+//     "/kurse/open-source/ai-native-operator/quiz" and
+//     "/kurse/open-source/data-infrastructure/kurs/zertifikat". Crawlable so crawlers can
 //     SEE the noindex tag (never blocked via robots.txt), but never indexed:
 //     a quiz/certificate page has no content value for search or AI
 //     retrieval and the certificate route encodes a QR payload in the URL
 //     hash that must never end up in a search snippet.
 //   - the verification route (if the course issues a certificate) is also
-//     PUBLIC_NOINDEX_PATHS — see "/kurse/open-source/claude/verifizierung" —
+//     PUBLIC_NOINDEX_PATHS — see "/kurse/open-source/data-infrastructure/verifizierung" —
 //     for the same QR-payload-in-URL reason.
 // Any other bespoke top-level route a course plan builds (a glossary, a
 // demo gallery, ...) follows the same PUBLIC_ACCESS_PATHS pattern as
-// "/ai-native/glossar"/"/ai-native/demos" above: public, accessible, out of
+// "/ai-native/glossar" above: public, accessible, out of
 // the sitemap unless there is a specific reason to index it.
 //
 // Exception — the 4 native certified courses (ki-fuehrerschein,
@@ -190,17 +176,7 @@ const PUBLIC_NOINDEX_PATHS = [
 // /verifizierung stay public.
 
 const PUBLIC_ACCESS_PATHS = [
-  "/ai-native/demos",
-  "/ai-native/demos/:path*",
-  "/ai-native/fluency-test",
   "/ai-native/glossar",
-  "/ai-native/capstone-gallery",
-  // Claude Course — see the noindex entries above.
-  "/kurse/open-source/claude/kurs",
-  "/kurse/open-source/claude/kurs/:path*",
-  // Codex Course — see the noindex entries above.
-  "/kurse/open-source/codex/kurs",
-  "/kurse/open-source/codex/kurs/:path*",
   // Data Infrastructure course — see the noindex entries above.
   "/kurse/open-source/data-infrastructure/kurs",
   "/kurse/open-source/data-infrastructure/kurs/:path*",
@@ -355,6 +331,60 @@ const PROTECTED_PATHS = [
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [
+  // "Mit KI arbeiten" (ai-native) was rebuilt as nine tool-neutral lessons
+  // (2026-10-04). Its self-assessment, simulation gallery and capstone rules
+  // pages no longer serve the course; the simulations live on in /demos.
+  route(
+    "/ai-native/fluency-test",
+    "retired",
+    "The retired self-assessment resolves to the course landing.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/ai-native", status: 301 },
+  ),
+  route(
+    "/ai-native/capstone-gallery",
+    "retired",
+    "The retired capstone rules page resolves to the course landing.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/ai-native", status: 301 },
+  ),
+  route(
+    "/ai-native/demos",
+    "retired",
+    "The course simulation gallery merged into the demo gallery.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/demos", status: 301 },
+  ),
+  route(
+    "/ai-native/demos/:path*",
+    "retired",
+    "Course simulations merged into the demo gallery.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/demos", status: 301 },
+  ),
+  // The Claude and Codex courses were removed from the catalogue. Their
+  // landing pages, readers, quizzes, certificates and verification pages
+  // resolve to the course hub; the /en mirror resolves to /en/kurse.
+  ...(["claude", "codex"] as const).flatMap((slug) => [
+    route(
+      `/kurse/open-source/${slug}`,
+      "retired",
+      "A removed course landing now resolves to the course hub.",
+      {
+        auth: "redirect",
+        cache: "public-short",
+        redirectTo: "/kurse",
+        status: 301,
+      },
+    ),
+    route(
+      `/kurse/open-source/${slug}/:path*`,
+      "retired",
+      "Removed course lessons and records now resolve to the course hub.",
+      {
+        auth: "redirect",
+        cache: "public-short",
+        redirectTo: "/kurse",
+        status: 301,
+      },
+    ),
+  ]),
   route(
     "/wie-ki-funktioniert",
     "retired",

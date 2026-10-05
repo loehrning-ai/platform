@@ -398,7 +398,7 @@ export function FailureTaggerWidget({
               "inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] shadow-[3px_3px_0_0_var(--color-foreground)] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
               allPicked
                 ? "bg-brand-orange text-white hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_0_var(--color-foreground)]"
-                : "cursor-not-allowed bg-muted text-muted-foreground opacity-60 shadow-none",
+                : "cursor-not-allowed bg-track text-muted-foreground shadow-none",
             )}
           >
             {chrome.submitLabel}

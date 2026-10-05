@@ -1,6 +1,6 @@
 # Technical course translation contract
 
-This contract covers the six native technical courses under
+This contract covers the four native visual-learning courses under
 `/kurse/open-source/*`. Their current authored source is English. German must
 be added as a reviewed parallel bundle. German uses the existing unprefixed
 URLs; English uses the same paths under `/en`.
@@ -25,8 +25,6 @@ selection until both bundles resolve and pass the identity comparison.
 
 | Course | Reader model | Content routes | Assessment | Record | Verification |
 | --- | --- | --- | --- | --- | --- |
-| `claude` | flat under `/kurs` | `/kurs/{lessonId}` | `/kurs/quiz` | `/kurs/zertifikat` | `/verifizierung` |
-| `codex` | flat under `/kurs` | `/kurs/{lessonId}` | all lessons | `/kurs/zertifikat` | `/verifizierung` |
 | `data-infrastructure` | flat under `/kurs` | `/kurs/{lessonId}` | all lessons | `/kurs/zertifikat` | `/verifizierung` |
 | `data-engineering-fundamentals` | direct chapters | `/{chapterId}`, including `/home` | all chapters | `/zertifikat` | `/verifizierung` |
 | `data-science` | overview plus direct chapters | `home` is the root; numbered chapters use `/{chapterSlug}` | 12 numbered chapters | `/zertifikat` | `/verifizierung` |
@@ -41,8 +39,6 @@ copy.
 
 | Course | Canonical structure and loader | Reader surfaces to localize | Dynamic param contract |
 | --- | --- | --- | --- |
-| `claude` | `src/lib/claude-course/types.ts`, `data.ts`, `lessons/*`; config symbol `CLAUDE_CONFIG`; quiz at `content/claude/quiz/questions.json` | `src/components/imported-courses/claude/*` and Claude widgets under `src/components/widgets/claude/*` | 12 `{ lessonId }` values from `CLAUDE_LESSON_IDS` |
-| `codex` | `src/lib/codex/types.ts`, `data.ts`, `config.ts`, `lessons/*` | `src/components/codex/*`, including every bespoke lesson component | 12 `{ lessonId }` values from `CODEX_LESSON_IDS` |
 | `data-infrastructure` | `src/lib/data-infrastructure/types.ts`, `data.ts`, `config.ts`, `lessons/*` | `src/components/data-infrastructure/*`, including canvas fallbacks and widgets | 12 `{ lessonId }` values from `DATA_INFRA_LESSON_IDS` |
 | `data-engineering-fundamentals` | `src/lib/data-engineering-fundamentals/types.ts`, `content.ts`, `config.ts` | `src/components/data-engineering-fundamentals/*`, chapters, simulators, errors, and not-found | 12 `{ chapterId }` values from `DEF_CHAPTER_IDS`, including `home` |
 | `data-science` | `src/lib/data-science/types.ts`, `chapters.ts`, `config.ts` | `src/components/data-science/*`, chapter bodies, simulators, shell, and not-found | 12 `{ chapterSlug }` values from `DS_NUMBERED_CHAPTER_IDS`; `home` remains the root |
@@ -131,7 +127,7 @@ Apply the following sequence independently for each course.
 ## Minimal adapter shape
 
 ```ts
-const enIdentity = defineTechnicalCourseContentIdentity("codex", {
+const enIdentity = defineTechnicalCourseContentIdentity("data-infrastructure", {
   unitIds: enTracks.map((track) => track.id),
   contentItemIds: enLessons.map((lesson) => lesson.id),
   progressKeys: enLessons.map((lesson) => lesson.id),
@@ -146,7 +142,7 @@ const enIdentity = defineTechnicalCourseContentIdentity("codex", {
 });
 
 const registry = createTechnicalCourseLocaleRegistry({
-  courseSlug: "codex",
+  courseSlug: "data-infrastructure",
   sourceLocale: "en",
   bundles: { en: enBundle, de: deBundle },
 });

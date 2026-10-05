@@ -16,10 +16,12 @@ import {
   operatorLessonEvidenceCheckpointIds,
 } from "./completion";
 import { getAllLessons as getAllSpineLessons } from "@/lib/course/data";
+import {
+  engineLessonProgressStepIds,
+  isEngineLesson,
+} from "@/lib/lesson-engine/lesson";
 import { getAllLessons as getAllAiNativeLessons } from "@/lib/ai-native/data";
 import { getAllLessons as getAllOperatorLessons } from "@/lib/ai-native-operator/data";
-import { getAllClaudeLessons } from "@/lib/claude-course/data";
-import { getAllCodexLessons } from "@/lib/codex/data";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
 import type { CourseSlug } from "@/lib/course/types";
 import type {
@@ -79,21 +81,15 @@ function addCurrentLessonEvidence(
             ...lesson,
             sectionsRead: CANONICAL_SECTION_IDS[slug][lessonId] ?? [],
             quizScore:
-              slug === "claude" ||
-              slug === "codex" ||
               slug === "data-infrastructure" ||
               slug === "data-engineering-fundamentals" ||
-              slug === "data-science" ||
-              (slug === "ai-native" && lessonId === "modul_3_lesson_0")
+              slug === "data-science"
                 ? null
                 : 1,
             quizTotal:
-              slug === "claude" ||
-              slug === "codex" ||
               slug === "data-infrastructure" ||
               slug === "data-engineering-fundamentals" ||
-              slug === "data-science" ||
-              (slug === "ai-native" && lessonId === "modul_3_lesson_0")
+              slug === "data-science"
                 ? null
                 : 1,
           }
@@ -209,8 +205,6 @@ describe("canonical course completion", () => {
       "ki-und-gesellschaft": getAllSpineLessons("ki-und-gesellschaft"),
       "eu-ai-act-kurs": getAllSpineLessons("eu-ai-act-kurs"),
       "ai-native": await getAllAiNativeLessons(),
-      claude: await getAllClaudeLessons(),
-      codex: await getAllCodexLessons("en"),
       "data-infrastructure": await getAllDataInfraLessons(),
       "ai-native-operator": await getAllOperatorLessons(),
     } as const;
@@ -223,7 +217,11 @@ describe("canonical course completion", () => {
         CANONICAL_LESSON_IDS[slug],
       );
       for (const lesson of lessons) {
-        const authored = lesson.sections.map((section) => section.id);
+        // Lesson-engine lessons track their exercise step; legacy lessons
+        // track every authored section.
+        const authored = isEngineLesson(lesson)
+          ? [...engineLessonProgressStepIds(lesson.id)]
+          : lesson.sections.map((section) => section.id);
         expect(
           getCanonicalSectionIds(slug, lesson.id),
           `${slug}/${lesson.id}`,
@@ -247,18 +245,21 @@ describe("canonical course completion", () => {
 
   it("normalizes stale lesson and section keys while preserving canonical data and the historical ledger", () => {
     const progress = withLessons("ki-fuehrerschein", [
-      "block_1_lesson_1",
+      "daten-1-1",
       "retired-lesson",
+      // Pre-engine KI-Führerschein ID: retired with the lesson-engine port.
+      "block_1_lesson_1",
     ]);
     progress.courses["ki-fuehrerschein"] = {
       ...progress.courses["ki-fuehrerschein"]!,
       lessons: {
         ...progress.courses["ki-fuehrerschein"]!.lessons,
-        block_1_lesson_1: {
+        "daten-1-1": {
           ...completedLesson,
           sectionsRead: [
-            "block_1_lesson_1_section_1",
+            "daten-1-1_exercise",
             "stale-section",
+            "daten-1-1_exercise",
             "block_1_lesson_1_section_1",
           ],
         },
@@ -275,16 +276,31 @@ describe("canonical course completion", () => {
 
     expect(
       Object.keys(normalized.courses["ki-fuehrerschein"]!.lessons),
-    ).toEqual(["block_1_lesson_1"]);
+    ).toEqual(["daten-1-1"]);
     expect(
-      normalized.courses["ki-fuehrerschein"]!.lessons.block_1_lesson_1
+      normalized.courses["ki-fuehrerschein"]!.lessons["daten-1-1"]
         .sectionsRead,
-    ).toEqual(["block_1_lesson_1_section_1"]);
+    ).toEqual(["daten-1-1_exercise"]);
     expect(normalized.xp).toBe(777);
     expect(normalized.checkpoints).toEqual({ "historic::checkpoint": true });
     expect(normalized.badges).toEqual({
       "first-light": "2026-07-28T00:00:00.000Z",
     });
+  });
+
+  it("drops progress slices of the removed Claude and Codex courses", () => {
+    const progress = withLessons("data-science", []);
+    const retired = progress.courses["data-science"]!;
+    const withRetired = {
+      ...progress,
+      courses: { ...progress.courses, claude: retired, codex: retired },
+    } as UnifiedProgress;
+
+    const normalized = normalizeCanonicalProgress(withRetired);
+
+    expect(Object.keys(normalized.courses)).not.toContain("claude");
+    expect(Object.keys(normalized.courses)).not.toContain("codex");
+    expect(normalized.courses["data-science"]).toBeDefined();
   });
 
   it("ignores fabricated and stale lesson IDs", () => {
@@ -358,14 +374,19 @@ describe("canonical course completion", () => {
   });
 
   it("does not let a non-AI capstone bit or applied project bypass its quiz", () => {
-    const progress = withLessons("claude", CANONICAL_LESSON_IDS.claude);
-    progress.courses.claude = {
-      ...progress.courses.claude!,
+    const progress = withLessons(
+      "ai-native-operator",
+      CANONICAL_LESSON_IDS["ai-native-operator"],
+    );
+    progress.courses["ai-native-operator"] = {
+      ...progress.courses["ai-native-operator"]!,
       capstoneSubmitted: true,
     };
-    addCompletedProject(progress, "claude");
+    addCompletedProject(progress, "ai-native-operator");
 
-    expect(isCourseCompletionEarned(progress, "claude")).toBe(false);
+    expect(isCourseCompletionEarned(progress, "ai-native-operator")).toBe(
+      false,
+    );
   });
 
   it("does not present an unmarked post-cutover completion bit as evidence", () => {
@@ -386,8 +407,6 @@ describe("canonical course completion", () => {
 
   it("rejects unmarked completion bits for every migrated technical reader", () => {
     const cases = [
-      ["claude", CANONICAL_LESSON_IDS.claude[0]],
-      ["codex", CANONICAL_LESSON_IDS.codex[0]],
       ["data-infrastructure", CANONICAL_LESSON_IDS["data-infrastructure"][0]],
       ["ai-native-operator", "mindset/1"],
     ] as const;
@@ -440,8 +459,8 @@ describe("canonical course completion", () => {
     expect(completedCanonicalLessonCount(legacy, slug)).toBe(0);
   });
 
-  it("accepts section plus transfer proof for Claude, Codex, and Data Infrastructure", () => {
-    for (const slug of ["claude", "codex", "data-infrastructure"] as const) {
+  it("accepts section plus transfer proof for Data Infrastructure", () => {
+    for (const slug of ["data-infrastructure"] as const) {
       const lessonId = CANONICAL_LESSON_IDS[slug][0];
       const progress = withCurrentLessonEvidence(slug, [lessonId]);
       expect(
@@ -536,16 +555,10 @@ describe("canonical course completion", () => {
   });
 
   it("accepts the versioned checkpoint as transfer proof for zero-quiz evidence lessons", () => {
-    const aiNativeLessonId = "modul_3_lesson_0";
     const dataLessonId = CANONICAL_LESSON_IDS["data-science"][0];
-    const aiNative = withCurrentLessonEvidence("ai-native", [aiNativeLessonId]);
     const dataScience = withCurrentLessonEvidence("data-science", [
       dataLessonId,
     ]);
-
-    expect(
-      isLessonCompletionEvidenceBacked(aiNative, "ai-native", aiNativeLessonId),
-    ).toBe(true);
     expect(
       isLessonCompletionEvidenceBacked(
         dataScience,
@@ -553,5 +566,35 @@ describe("canonical course completion", () => {
         dataLessonId,
       ),
     ).toBe(true);
+  });
+
+  it("requires the exercise step and a perfect check score for AI-Native engine lessons", () => {
+    const lessonId = "messen-1-1";
+    expect(CANONICAL_SECTION_IDS["ai-native"][lessonId]).toEqual([
+      "messen-1-1_exercise",
+    ]);
+    const complete = withCurrentLessonEvidence("ai-native", [lessonId]);
+    expect(
+      isLessonCompletionEvidenceBacked(complete, "ai-native", lessonId),
+    ).toBe(true);
+    const slice = complete.courses["ai-native"]!;
+    const halfRight = {
+      ...complete,
+      courses: {
+        ...complete.courses,
+        "ai-native": {
+          ...slice,
+          lessons: {
+            ...slice.lessons,
+            [lessonId]: { ...slice.lessons[lessonId], quizScore: 0.5 },
+          },
+        },
+      },
+    };
+    expect(
+      isLessonCompletionEvidenceBacked(halfRight, "ai-native", lessonId),
+    ).toBe(false);
+    // The quizless pre-engine transfer lesson is retired.
+    expect(CANONICAL_LESSON_IDS["ai-native"]).not.toContain("modul_3_lesson_0");
   });
 });

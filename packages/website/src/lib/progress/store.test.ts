@@ -109,11 +109,11 @@ import {
   subscribeLearningOwner,
 } from "./browser-learning-storage";
 
-const KF_LESSON_1 = "block_1_lesson_1";
-const KF_LESSON_2 = "block_1_lesson_2";
-const KF_SECTION_1 = "block_1_lesson_1_section_1";
-const EU_LESSON_1 = "block_1_lesson_1";
-const AI_NATIVE_LESSON_1 = "modul_1_lesson_1";
+const KF_LESSON_1 = "daten-1-1";
+const KF_LESSON_2 = "daten-1-2";
+const KF_SECTION_1 = "daten-1-1_exercise";
+const EU_LESSON_1 = "rolle-1-1";
+const AI_NATIVE_LESSON_1 = "messen-1-1";
 
 function recordEvidenceBackedLessonCompletion(
   courseSlug: CourseSlug,
@@ -124,12 +124,9 @@ function recordEvidenceBackedLessonCompletion(
       markSectionRead(courseSlug, lessonId, sectionId);
     }
     const transferOnly =
-      courseSlug === "claude" ||
-      courseSlug === "codex" ||
       courseSlug === "data-infrastructure" ||
       courseSlug === "data-engineering-fundamentals" ||
-      courseSlug === "data-science" ||
-      (courseSlug === "ai-native" && lessonId === "modul_3_lesson_0");
+      courseSlug === "data-science";
     if (!transferOnly) saveLessonQuizScore(courseSlug, lessonId, 1, 1);
     completeCheckpoint(
       lessonId,
@@ -564,7 +561,8 @@ describe("unified progress store", () => {
       expect(getEarnedBadgeIds()).toEqual([]);
 
       recordEvidenceBackedLessonCompletion("ki-fuehrerschein", KF_LESSON_1);
-      expect(getXp()).toBe(XP.LESSON + XP.CHECKPOINT + 2 * XP.SECTION);
+      // A lesson-engine lesson tracks one step (its exercise).
+      expect(getXp()).toBe(XP.LESSON + XP.CHECKPOINT + XP.SECTION);
       expect(getTotalCompletedLessons()).toBe(1);
       expect(getEarnedBadgeIds()).toContain("first-light");
     });
@@ -572,9 +570,9 @@ describe("unified progress store", () => {
     it("ignores unknown imported-course slices when counting lesson badges", () => {
       // "totally-unregistered-course" and "another-unregistered-course"
       // stand in for slugs that were never real catalog members. None of
-      // the 6 originally-imported courses ("claude"/"codex"/
-      // "data-infrastructure"/"data-engineering-fundamentals"/
-      // "data-science"/"ai-native-operator") are used here any more: the
+      // the originally-imported courses ("data-infrastructure"/
+      // "data-engineering-fundamentals"/"data-science"/
+      // "ai-native-operator") are used here any more: the
       // migration registered and flipped every one of them to native
       // courses, so their slices ARE now counted — reusing any of them
       // here would break this test's premise. Purely-synthetic placeholder
@@ -780,10 +778,10 @@ describe("unified progress store", () => {
     });
 
     it("ignores the historical capstone writer outside AI-Native", () => {
-      markCapstoneSubmitted("codex");
+      markCapstoneSubmitted("data-infrastructure");
 
-      expect(isCapstoneSubmitted("codex")).toBe(false);
-      expect(getCourseSlice("codex").capstoneSubmitted).toBe(false);
+      expect(isCapstoneSubmitted("data-infrastructure")).toBe(false);
+      expect(getCourseSlice("data-infrastructure").capstoneSubmitted).toBe(false);
     });
 
     it("derives applied-project status without treating local evidence as certificate proof", () => {
@@ -854,21 +852,21 @@ describe("unified progress store", () => {
 
     //: the all-lessons-completed fallback used to resolve
     // totalLessons from COURSE_CATALOG only, so it was silently unreachable
-    // for any course outside the 4-course native spine. "codex" (12 lessons,
+    // for any course outside the 4-course native spine. "data-infrastructure" (12 lessons,
     // ALL_COURSE_CATALOG) exercises a slug outside that spine.
     it("resolves totalLessons from the unified catalog for a course outside the native spine", () => {
-      for (const lessonId of CANONICAL_LESSON_IDS.codex) {
-        recordEvidenceBackedLessonCompletion("codex", lessonId);
+      for (const lessonId of CANONICAL_LESSON_IDS["data-infrastructure"]) {
+        recordEvidenceBackedLessonCompletion("data-infrastructure", lessonId);
       }
-      expect(isWorkshopQuizPassed("codex")).toBe(false);
-      expect(isCertificateEligible("codex")).toBe(true);
+      expect(isWorkshopQuizPassed("data-infrastructure")).toBe(false);
+      expect(isCertificateEligible("data-infrastructure")).toBe(true);
     });
 
     it("stays ineligible below the full lesson count for a non-native-spine course", () => {
-      for (const lessonId of CANONICAL_LESSON_IDS.codex.slice(0, -1)) {
-        recordEvidenceBackedLessonCompletion("codex", lessonId);
+      for (const lessonId of CANONICAL_LESSON_IDS["data-infrastructure"].slice(0, -1)) {
+        recordEvidenceBackedLessonCompletion("data-infrastructure", lessonId);
       }
-      expect(isCertificateEligible("codex")).toBe(false);
+      expect(isCertificateEligible("data-infrastructure")).toBe(false);
     });
 
     //: data-infrastructure is still nativeStatus "pending"
@@ -1048,25 +1046,25 @@ describe("unified progress store", () => {
     });
 
     it("persists lesson proof atomically and survives a cache reload", () => {
-      const lessonId = CANONICAL_LESSON_IDS.claude[0];
-      for (const sectionId of CANONICAL_SECTION_IDS.claude[lessonId] ?? []) {
-        markSectionRead("claude", lessonId, sectionId);
+      const lessonId = CANONICAL_LESSON_IDS["data-infrastructure"][0];
+      for (const sectionId of CANONICAL_SECTION_IDS["data-infrastructure"][lessonId] ?? []) {
+        markSectionRead("data-infrastructure", lessonId, sectionId);
       }
 
-      expect(recordLessonCompletionEvidenceDurably("claude", lessonId)).toBe(
+      expect(recordLessonCompletionEvidenceDurably("data-infrastructure", lessonId)).toBe(
         true,
       );
-      expect(isEvidenceBackedLessonCompleted("claude", lessonId)).toBe(true);
+      expect(isEvidenceBackedLessonCompleted("data-infrastructure", lessonId)).toBe(true);
 
       __resetCacheForTests();
-      expect(isEvidenceBackedLessonCompleted("claude", lessonId)).toBe(true);
+      expect(isEvidenceBackedLessonCompleted("data-infrastructure", lessonId)).toBe(true);
     });
 
     it("returns false and leaves the new owner's UI incomplete when emit switches owner", () => {
-      const lessonId = CANONICAL_LESSON_IDS.claude[0];
+      const lessonId = CANONICAL_LESSON_IDS["data-infrastructure"][0];
       activateAccountProgress("account-a");
-      for (const sectionId of CANONICAL_SECTION_IDS.claude[lessonId] ?? []) {
-        markSectionRead("claude", lessonId, sectionId);
+      for (const sectionId of CANONICAL_SECTION_IDS["data-infrastructure"][lessonId] ?? []) {
+        markSectionRead("data-infrastructure", lessonId, sectionId);
       }
       let armed = false;
       let switched = false;
@@ -1075,7 +1073,7 @@ describe("unified progress store", () => {
         if (
           armed &&
           !switched &&
-          isLessonCompletionEvidenceBacked(snapshot, "claude", lessonId)
+          isLessonCompletionEvidenceBacked(snapshot, "data-infrastructure", lessonId)
         ) {
           switched = true;
           activateAccountProgress("account-b");
@@ -1085,13 +1083,13 @@ describe("unified progress store", () => {
         if (!armed) return;
         currentUiCompleted = isLessonCompletionEvidenceBacked(
           snapshot,
-          "claude",
+          "data-infrastructure",
           lessonId,
         );
       });
       armed = true;
 
-      expect(recordLessonCompletionEvidenceDurably("claude", lessonId)).toBe(
+      expect(recordLessonCompletionEvidenceDurably("data-infrastructure", lessonId)).toBe(
         false,
       );
       expect(getLearningOwnerContext()).toMatchObject({
@@ -1099,39 +1097,39 @@ describe("unified progress store", () => {
         accountId: "account-b",
       });
       expect(currentUiCompleted).toBe(false);
-      expect(isEvidenceBackedLessonCompleted("claude", lessonId)).toBe(false);
+      expect(isEvidenceBackedLessonCompleted("data-infrastructure", lessonId)).toBe(false);
 
       activateAccountProgress("account-a");
-      expect(isEvidenceBackedLessonCompleted("claude", lessonId)).toBe(true);
+      expect(isEvidenceBackedLessonCompleted("data-infrastructure", lessonId)).toBe(true);
       unsubscribeSwitch();
       unsubscribeUi();
     });
 
     it("does not cache, emit, or reload lesson completion when durable storage rejects it", () => {
-      const lessonId = CANONICAL_LESSON_IDS.claude[0];
+      const lessonId = CANONICAL_LESSON_IDS["data-infrastructure"][0];
       const setItem = vi
         .spyOn(window.localStorage, "setItem")
         .mockImplementation(() => {
           throw new DOMException("quota", "QuotaExceededError");
         });
-      for (const sectionId of CANONICAL_SECTION_IDS.claude[lessonId] ?? []) {
-        markSectionRead("claude", lessonId, sectionId);
+      for (const sectionId of CANONICAL_SECTION_IDS["data-infrastructure"][lessonId] ?? []) {
+        markSectionRead("data-infrastructure", lessonId, sectionId);
       }
       const subscriber = vi.fn();
       const unsubscribe = subscribe(subscriber);
       subscriber.mockClear();
 
-      expect(recordLessonCompletionEvidenceDurably("claude", lessonId)).toBe(
+      expect(recordLessonCompletionEvidenceDurably("data-infrastructure", lessonId)).toBe(
         false,
       );
-      expect(isLessonCompleted("claude", lessonId)).toBe(false);
-      expect(isEvidenceBackedLessonCompleted("claude", lessonId)).toBe(false);
+      expect(isLessonCompleted("data-infrastructure", lessonId)).toBe(false);
+      expect(isEvidenceBackedLessonCompleted("data-infrastructure", lessonId)).toBe(false);
       expect(subscriber).not.toHaveBeenCalled();
 
       setItem.mockRestore();
       __resetCacheForTests();
-      expect(isLessonCompleted("claude", lessonId)).toBe(false);
-      expect(isEvidenceBackedLessonCompleted("claude", lessonId)).toBe(false);
+      expect(isLessonCompleted("data-infrastructure", lessonId)).toBe(false);
+      expect(isEvidenceBackedLessonCompleted("data-infrastructure", lessonId)).toBe(false);
       unsubscribe();
     });
   });
@@ -1538,18 +1536,18 @@ describe("forward migration from legacy schemas (golden files)", () => {
     lastActivity: "2026-04-01T12:00:00.000Z",
   };
 
-  it("migrates a KI-Führerschein payload forward, preserving it", () => {
+  it("migrates a pre-engine KI-Führerschein payload forward, keeping the quiz and dropping retired lessons", () => {
     window.localStorage.setItem(
       `${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`,
       JSON.stringify(GOLDEN_KI_F),
     );
     __resetCacheForTests();
     const slice = getCourseSlice("ki-fuehrerschein");
-    expect(slice.lessons["block_1_lesson_1"].completed).toBe(true);
-    // Retired section IDs are not current authored progress and are removed at
-    // the v3 trust boundary. The canonical lesson completion, score, and course
-    // timestamps remain intact.
-    expect(slice.lessons["block_1_lesson_1"].sectionsRead).toEqual([]);
+    // KI-Führerschein moved to the lesson engine: the old block_N_lesson_M
+    // IDs are retired and removed at the trust boundary instead of failing
+    // it. The quiz result and course timestamps remain intact.
+    expect(slice.lessons["block_1_lesson_1"]).toBeUndefined();
+    expect(Object.keys(slice.lessons)).toEqual([]);
     expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     expect(slice.workshopQuiz.score).toBe(0.92);
     // startedAt is carried forward, not reset to "now".
@@ -1562,18 +1560,19 @@ describe("forward migration from legacy schemas (golden files)", () => {
     ).not.toBe(null);
   });
 
-  it("migrates an AI-Native payload forward, preserving exercises", () => {
+  it("migrates a pre-engine AI-Native payload forward, keeping course state and dropping retired lessons", () => {
     window.localStorage.setItem(
       LEGACY_AI_NATIVE_KEY,
       JSON.stringify(GOLDEN_AI_NATIVE),
     );
     __resetCacheForTests();
     const slice = getCourseSlice("ai-native");
-    expect(slice.lessons["modul_1_lesson_1"].completed).toBe(true);
+    // AI-Native moved to the lesson engine: modul_N_lesson_M IDs are retired
+    // and removed at the trust boundary instead of failing it.
+    expect(slice.lessons["modul_1_lesson_1"]).toBeUndefined();
+    expect(Object.keys(slice.lessons)).toEqual([]);
     expect(slice.capstoneSubmitted).toBe(true);
-    const ex = slice.lessons["modul_1_lesson_1"].exercisesCompleted["ex_fix"];
-    expect(ex.score).toBe(0.9);
-    expect(ex.attempts).toBe(2);
+    expect(slice.startedAt).toBe("2026-04-01T10:00:00.000Z");
     expect(window.localStorage.getItem(LEGACY_AI_NATIVE_KEY)).not.toBe(null);
   });
 
@@ -1592,7 +1591,9 @@ describe("forward migration from legacy schemas (golden files)", () => {
       "ai-native",
       "ki-fuehrerschein",
     ]);
-    expect(getTotalCompletedLessons()).toBe(2);
+    // Both golden files use retired lesson IDs.
+    expect(getTotalCompletedLessons()).toBe(0);
+    expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     // Unified payload persisted under the v2 key.
     expect(window.localStorage.getItem(UNIFIED_STORAGE_KEY)).not.toBe(null);
   });
@@ -1603,8 +1604,9 @@ describe("forward migration from legacy schemas (golden files)", () => {
       JSON.stringify(GOLDEN_KI_F),
     );
     __resetCacheForTests();
+    expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     expect(isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1")).toBe(
-      true,
+      false,
     );
   });
 
@@ -1641,8 +1643,9 @@ describe("forward migration from legacy schemas (golden files)", () => {
       JSON.stringify(GOLDEN_KI_F),
     );
     __resetCacheForTests();
-    expect(isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1")).toBe(
-      true,
+    expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
+    expect(getCourseSlice("ki-fuehrerschein").startedAt).toBe(
+      "2026-03-10T08:00:00.000Z",
     );
   });
 

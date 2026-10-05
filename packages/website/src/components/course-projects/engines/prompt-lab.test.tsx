@@ -85,75 +85,23 @@ function completeWorkflowSetup() {
   fireEvent.click(screen.getByLabelText(/Owner, fallback/));
 }
 
-function completeClaudeSetup() {
+function completeOperatorSetup() {
   fireEvent.change(screen.getByLabelText("Working context"), {
     target: {
       value:
-        "Synthetic museum sources A through C conflict on the exhibition date.",
+        "Synthetic support tickets require an improvement report with bounded roles.",
     },
   });
-  fireEvent.change(screen.getByLabelText("Prompt A · baseline"), {
+  fireEvent.change(screen.getByLabelText("Delegation instruction"), {
     target: {
       value:
-        "Create an exhibition outline. Output a table and do not invent claims.",
-    },
-  });
-  fireEvent.change(screen.getByLabelText("Prompt B · grounded"), {
-    target: {
-      value:
-        "Create the outline from source A-C, cite evidence, and refuse uncertain unsupported claims.",
+        "Create the report. Output claims with evidence and do not send externally.",
     },
   });
   fireEvent.click(screen.getByLabelText(/Human approval before/));
   fireEvent.click(screen.getByLabelText(/Testable stop condition/));
-  fireEvent.click(screen.getByLabelText(/Owner, fallback/));
+  fireEvent.click(screen.getByLabelText(/Critic intervention/));
   fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
-}
-
-function completeGroundingEvidence() {
-  fireEvent.change(screen.getByLabelText("Comparison verdict"), {
-    target: { value: "b-stronger" },
-  });
-  const sourceSelects = screen.getAllByLabelText(/Evidence status/);
-  const redlineSelects = screen.getAllByLabelText(/Redline/);
-  fireEvent.change(sourceSelects[0]!, { target: { value: "conflict" } });
-  fireEvent.change(redlineSelects[0]!, { target: { value: "qualify" } });
-  fireEvent.change(sourceSelects[1]!, { target: { value: "source-c" } });
-  fireEvent.change(redlineSelects[1]!, { target: { value: "retain" } });
-  fireEvent.change(sourceSelects[2]!, { target: { value: "gap" } });
-  fireEvent.change(redlineSelects[2]!, { target: { value: "remove" } });
-  fireEvent.change(screen.getByLabelText(/Response A · Factuality · Score/), {
-    target: { value: "2" },
-  });
-  fireEvent.change(screen.getByLabelText(/Response A · Completeness · Score/), {
-    target: { value: "2" },
-  });
-  fireEvent.change(
-    screen.getByLabelText(/Response A · Calibration\/uncertainty · Score/),
-    { target: { value: "1" } },
-  );
-  fireEvent.change(
-    screen.getByLabelText(/Response A · Format compliance · Score/),
-    {
-      target: { value: "3" },
-    },
-  );
-  fireEvent.change(screen.getByLabelText(/Response B · Factuality · Score/), {
-    target: { value: "3" },
-  });
-  fireEvent.change(screen.getByLabelText(/Response B · Completeness · Score/), {
-    target: { value: "3" },
-  });
-  fireEvent.change(
-    screen.getByLabelText(/Response B · Calibration\/uncertainty · Score/),
-    { target: { value: "4" } },
-  );
-  fireEvent.change(
-    screen.getByLabelText(/Response B · Format compliance · Score/),
-    {
-      target: { value: "4" },
-    },
-  );
 }
 
 afterEach(() => {
@@ -305,6 +253,47 @@ describe("PromptLab", () => {
           fields: expect.objectContaining({
             providerEvidence: "success",
             providerModel: "google/gemini-2.5-flash-lite",
+          }),
+        }),
+      ),
+    );
+  });
+
+  it("accepts an exactly identified OpenAI completion for the selected GPT-5 mini model", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      makeJsonResponse(200, {
+        mode: "complete",
+        text: "OpenAI provider evidence",
+        model: "openai/gpt-5-mini",
+        provider: "openai",
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const { onArtifactChange } = renderLab();
+    expect(
+      screen.getByRole("option", { name: "GPT-5 mini · OpenAI" }),
+    ).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Requested model"), {
+      target: { value: "openai/gpt-5-mini" },
+    });
+    completeWorkflowSetup();
+    fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
+
+    expect(
+      await screen.findByText("OpenAI provider evidence"),
+    ).toBeInTheDocument();
+    expect(
+      JSON.parse(String((fetchMock.mock.calls[0]?.[1] as RequestInit).body)),
+    ).toMatchObject({ model: "openai/gpt-5-mini" });
+    expect(
+      screen.getByText("openai · openai/gpt-5-mini"),
+    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(onArtifactChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            providerEvidence: "success",
+            providerModel: "openai/gpt-5-mini",
           }),
         }),
       ),
@@ -631,7 +620,7 @@ describe("PromptLab", () => {
     },
   );
 
-  it("retains Claude secondary-prompt readiness in bounded local-learning evidence", async () => {
+  it("records Operator local-learning evidence with its own receipt", async () => {
     vi.stubGlobal(
       "fetch",
       vi
@@ -642,10 +631,10 @@ describe("PromptLab", () => {
     );
     const onExecutionReceipt = vi.fn();
     const { onArtifactChange } = renderLab({
-      config: getCourseProjectConfig("claude"),
+      config: getCourseProjectConfig("ai-native-operator"),
       onExecutionReceipt,
     });
-    completeClaudeSetup();
+    completeOperatorSetup();
     fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
 
     await screen.findByText("Failure class: Authentication/access");
@@ -653,13 +642,13 @@ describe("PromptLab", () => {
       screen.getByRole("button", { name: "Run local learning check" }),
     );
 
-    const localReceipt = getCourseProjectLocalLearningReceipt("claude");
+    const localReceipt = getCourseProjectLocalLearningReceipt("ai-native-operator");
     expect(onExecutionReceipt).toHaveBeenCalledWith(localReceipt);
     await waitFor(() =>
       expect(onArtifactChange).toHaveBeenLastCalledWith(
         expect.objectContaining({
           fields: expect.objectContaining({
-            variant: "claude",
+            variant: "ai-native-operator",
             secondaryReady: true,
             learningReceipt: localReceipt,
             executionReceipt: null,
@@ -761,80 +750,28 @@ describe("PromptLab", () => {
     },
   );
 
-  it("keeps a successful primary Claude result visible when the grounded comparison fails", async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(
-        makeJsonResponse(200, {
-          mode: "complete",
-          text: "Preserved primary Claude answer",
-          model: "anthropic/claude-haiku-4.5",
-          provider: "anthropic",
-        }),
-      )
-      .mockResolvedValueOnce(
-        makeJsonResponse(200, {
-          mode: "complete",
-          text: "Grounded answer from the wrong provider",
-          model: "anthropic/claude-haiku-4.5",
-          provider: "google",
-        }),
-      );
-    vi.stubGlobal("fetch", fetchMock);
-    const { onVerified, onArtifactChange } = renderLab({
-      config: getCourseProjectConfig("claude"),
-    });
-    fireEvent.change(screen.getByLabelText("Working context"), {
-      target: {
-        value:
-          "Synthetic museum sources A through C conflict on the exhibition date.",
-      },
-    });
-    fireEvent.change(screen.getByLabelText("Prompt A · baseline"), {
-      target: {
-        value:
-          "Create an exhibition outline. Output a table and do not invent claims.",
-      },
-    });
-    fireEvent.change(screen.getByLabelText("Prompt B · grounded"), {
-      target: {
-        value:
-          "Create the outline from source A-C, cite evidence, and refuse uncertain unsupported claims.",
-      },
-    });
-    fireEvent.click(screen.getByLabelText(/Human approval before/));
-    fireEvent.click(screen.getByLabelText(/Testable stop condition/));
-    fireEvent.click(screen.getByLabelText(/Owner, fallback/));
-    fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
-    fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
-
-    expect(
-      await screen.findByText("Preserved primary Claude answer"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/first Claude response stays visible/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Failure class: Malformed response"),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByText(/Response B · real API response/i),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText("Grounded answer from the wrong provider"),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Verify project" }),
-    ).toBeDisabled();
-    expect(onVerified).not.toHaveBeenCalled();
-    expect(onArtifactChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        fields: expect.objectContaining({
-          providerEvidence: "none",
-          completionMode: "incomplete",
-        }),
+  it("sends one provider request without a source packet or comparison desk", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      makeJsonResponse(200, {
+        mode: "complete",
+        text: "Single provider answer",
+        model: "anthropic/claude-haiku-4.5",
+        provider: "anthropic",
       }),
     );
+    vi.stubGlobal("fetch", fetchMock);
+    renderLab({ config: getCourseProjectConfig("ai-native-operator") });
+    completeOperatorSetup();
+    fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
+
+    expect(await screen.findByText("Single provider answer")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const request = JSON.parse(
+      String((fetchMock.mock.calls[0]?.[1] as RequestInit | undefined)?.body),
+    ) as { prompt: string };
+    expect(request.prompt).not.toContain("<synthetic_source_packet>");
+    expect(screen.queryByLabelText(/Prompt B/)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText("Comparison verdict")).not.toBeInTheDocument();
   });
 
   it("does not trust legacy generic unavailability as policy evidence", () => {
@@ -902,106 +839,6 @@ describe("PromptLab", () => {
     expect(screen.queryByText(/Tagesbudget/)).not.toBeInTheDocument();
   });
 
-  it("renders and gates Claude's two real provider variants plus claim-evidence evaluation", async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(
-        makeJsonResponse(200, {
-          mode: "complete",
-          text: "Baseline answer",
-          model: "anthropic/claude-haiku-4.5",
-          provider: "anthropic",
-        }),
-      )
-      .mockResolvedValueOnce(
-        makeJsonResponse(200, {
-          mode: "complete",
-          text: "Grounded answer [Source A]",
-          model: "anthropic/claude-haiku-4.5",
-          provider: "anthropic",
-        }),
-      );
-    vi.stubGlobal("fetch", fetchMock);
-    const { onVerified, onArtifactChange } = renderLab({
-      config: getCourseProjectConfig("claude"),
-    });
-    completeClaudeSetup();
-    fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
-
-    await screen.findByText("Baseline answer");
-    expect(screen.getByText("Grounded answer [Source A]")).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
-    const firstRequest = JSON.parse(
-      String((fetchMock.mock.calls[0]?.[1] as RequestInit | undefined)?.body),
-    ) as { prompt: string };
-    const secondRequest = JSON.parse(
-      String((fetchMock.mock.calls[1]?.[1] as RequestInit | undefined)?.body),
-    ) as { prompt: string };
-    expect(firstRequest.prompt).toContain("<synthetic_source_packet>");
-    expect(secondRequest.prompt).toContain("<synthetic_source_packet>");
-    expect(firstRequest.prompt).toContain("Source C · Conservation log");
-    expect(secondRequest.prompt).toContain("Source C · Conservation log");
-    expect(
-      screen.getByRole("button", { name: "Verify project" }),
-    ).toBeDisabled();
-
-    fireEvent.change(screen.getByLabelText("Comparison verdict"), {
-      target: { value: "b-stronger" },
-    });
-    const sourceSelects = screen.getAllByLabelText(/Evidence status/);
-    const redlineSelects = screen.getAllByLabelText(/Redline/);
-    fireEvent.change(sourceSelects[0]!, { target: { value: "source-a" } });
-    fireEvent.change(redlineSelects[0]!, { target: { value: "retain" } });
-    expect(
-      screen.getByText(/conflicts with the source packet/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Verify project" }),
-    ).toBeDisabled();
-
-    completeGroundingEvidence();
-    fireEvent.change(screen.getByLabelText("Comparison verdict"), {
-      target: { value: "a-stronger" },
-    });
-    expect(
-      screen.getByText(/verdict must match the rubric totals/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Verify project" }),
-    ).toBeDisabled();
-    fireEvent.change(screen.getByLabelText("Comparison verdict"), {
-      target: { value: "b-stronger" },
-    });
-    expect(
-      screen.getByRole("button", { name: "Verify project" }),
-    ).toBeEnabled();
-    fireEvent.click(screen.getByRole("button", { name: "Verify project" }));
-    expect(onVerified).toHaveBeenCalledTimes(1);
-    expect(onVerified.mock.calls[0]?.[1]).toMatchObject({
-      fields: {
-        twoOutputEvidence: true,
-        comparisonDecision: "b-stronger",
-        claimReviewCode: 423153,
-        rubricScores: 22133344,
-      },
-    });
-    const serializedArtifact = JSON.stringify(onVerified.mock.calls[0]?.[1]);
-    expect(serializedArtifact).not.toContain("Baseline answer");
-    expect(serializedArtifact).not.toContain("Grounded answer");
-    expect(serializedArtifact).not.toContain("Synthetic museum");
-    expect(
-      Object.values(
-        (onVerified.mock.calls[0]?.[1] as CourseProjectArtifactState).fields,
-      ).every(
-        (value) =>
-          typeof value === "string" ||
-          typeof value === "number" ||
-          typeof value === "boolean",
-      ),
-    ).toBe(true);
-    expect(onArtifactChange).toHaveBeenCalled();
-  });
-
   it("renders the operator graph, budget, approvals, and intervention gate", async () => {
     vi.stubGlobal(
       "fetch",
@@ -1057,23 +894,22 @@ describe("PromptLab", () => {
 
   it("rehydrates evidence flags without restoring learner text or provider output", () => {
     renderLab({
-      config: getCourseProjectConfig("claude"),
+      config: getCourseProjectConfig("ai-native-operator"),
       initialArtifact: {
         version: 1,
         engineKind: "prompt",
         fields: {
-          variant: "claude",
+          variant: "ai-native-operator",
           privacyConfirmed: true,
           goalReady: true,
           contextReady: true,
           constraintsReady: true,
+          secondaryReady: true,
           approvalGate: true,
           stopCondition: true,
           handoffDefined: true,
-          twoOutputEvidence: true,
-          comparisonDecision: "b-stronger",
-          claimReviewCode: 423153,
-          rubricScores: 22133344,
+          budget: 4,
+          evaluation: "intervene",
           providerEvidence: "success",
           completionMode: "provider-success",
           providerModel: "anthropic/claude-haiku-4.5",
@@ -1081,8 +917,7 @@ describe("PromptLab", () => {
       },
     });
     expect(screen.getByLabelText("Working context")).toHaveValue("");
-    expect(screen.getByLabelText("Prompt A · baseline")).toHaveValue("");
-    expect(screen.getByLabelText("Prompt B · grounded")).toHaveValue("");
+    expect(screen.getByLabelText("Delegation instruction")).toHaveValue("");
     expect(
       screen.getByText(/Provider output is not stored/),
     ).toBeInTheDocument();

@@ -1,910 +1,315 @@
 {
   "moduleId": "modul_3",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-07",
-  "reviewCadence": "vendor",
-  "riskClass": "vendor",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
   "triggerEvents": [
-    "vendor-api-change",
-    "model-deprecation"
+    "major-conceptual-update",
+    "new-primary-study"
   ],
   "lessons": [
     {
-      "id": "modul_3_lesson_1",
-      "moduleId": "modul_3",
-      "number": 1,
-      "title": "Warum eine gepflegte Wissensbasis wichtig ist",
-      "subtitle": "Nachvollziehbare Wissenssuche für eine Person",
-      "durationMinutes": 8,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
-      "keyConcepts": [
-        "Externe Wissensbasis",
-        "BI",
-        "Retrieval"
-      ],
-      "widgets": [
-        {
-          "kind": "demo-observ",
-          "placement": "after-intro"
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_1_section_1",
-          "title": "Das Dokumentations-Paradox",
-          "readTimeMinutes": 2,
-          "content": "\"Wir hatten das besprochen. Ich finde den Beschluss nur nicht.\" Hier fehlt eine Aufzeichnung: Die Suche kostet Zeit, und die Entscheidung wartet.\n\nEin CRM oder Entscheidungsprotokoll hält Beschluss, Verantwortliche und Quellen fest. Einordnen, Konflikte klären und freigeben bleibt bei dir."
-        },
-        {
-          "id": "modul_3_lesson_1_section_2",
-          "title": "BI für eine Person",
-          "readTimeMinutes": 3,
-          "content": "Ein BI-System beantwortet der Controllerin definierte Fragen aus gepflegten Daten. Deine Notizen liegen verteilt, und du suchst von Hand. Ein Obsidian-Vault mit Smart Connections oder Copilot übernimmt diese Suche für eine Person.\n\nDu fragst: \"Welche Entscheidungen zu Kunde Y sind in den letzten 90 Tagen dokumentiert?\" Die Antwort muss Quellenpfade enthalten, und die prüfst du, bevor du ihr glaubst.\n\nMehr Notizen helfen erst, wenn Pflege, Metadaten, Herkunft und Suchqualität stimmen."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_1_q1",
-          "questionText": "Welche Funktion ergänzt KI-gestützte Suche in einer Wissensbasis?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Retrieval: Wissen schnell wiederfinden",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Speicher: mehr Notizen pro GB",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Synchronisation zwischen Geräten",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Schönere Formatierung",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Embeddings finden Notizen, die inhaltlich passen, auch ohne gleiche Wörter. Qualität, Kosten und Datenfluss hängen von Modell, Index und Konfiguration ab."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_0",
-      "moduleId": "modul_3",
-      "number": 0,
-      "title": "Setup-Walkthrough (Bonus)",
-      "subtitle": "Obsidian und fünf Kern-Plugins einrichten",
-      "durationMinutes": 25,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Obsidian",
-        "Templater",
-        "Dataview",
-        "Smart Connections",
-        "Copilot",
-        "Web Clipper"
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_0_section_1",
-          "title": "Obsidian installieren",
-          "readTimeMinutes": 3,
-          "content": "Kein Zeitlimit: Schließ jeden Schritt ab und prüfe ihn, bevor du weitermachst.\n\n**Schritt 1:** Lade die aktuelle Version für dein Betriebssystem von `obsidian.md`, prüfe die Quelle und installiere sie.\n\n**Schritt 2: Synchronisierung entscheiden.** Auch aus einem lokalen Vault können Daten das Gerät verlassen. Vor jedem Sync-Dienst prüfst du Verschlüsselung, Konten, Gerätezugriff, Wiederherstellung und die Freigabe deiner Organisation.\n\n**Schritt 3: Vault-Template importieren.**\n\nOption A: Leeren Übungs-Vault anlegen, `vault-template.zip` entpacken und den Inhalt hineinkopieren.\n\nOption B: Vorhandenen Vault sichern und nur die benötigten Verzeichnisse kopieren. Überschreibe keine Datei ohne Diff und Backup."
-        },
-        {
-          "id": "modul_3_lesson_0_section_2",
-          "title": "Die 5 Core-Plugins",
-          "readTimeMinutes": 8,
-          "content": "Ein Community-Plugin ist fremder Code mit Zugriff auf deinen Vault. Prüfe vorher Herausgeber, Repository, Version, Änderungsverlauf, Rechte, Datenfluss und Wartung. Aktiviere nur, was die Übung braucht, und notiere Version, Rechte und Rückbauweg.\n\n**Kurskonfiguration:**\n1. **Templater:** Vorlagenordner `_System/Templates`, JavaScript nur bei geprüftem Bedarf\n2. **Dataview:** JavaScript-Abfragen erst nach Codeprüfung\n3. **Smart Connections:** Embedding-Modell und Netzwerkzugriff prüfen\n4. **Obsidian Copilot:** Provider, Modell, Abrechnung, Aufbewahrung und Ablage des API-Keys prüfen\n5. **Note Companion:** optional, automatische Verschiebungen aus\n\nTeste jedes Plugin mit fiktiven Daten. Für Modelle, Preise und Menüs gilt die aktuelle Dokumentation."
-        },
-        {
-          "id": "modul_3_lesson_0_section_3",
-          "title": "Web Clipper + erste Daily-Note",
-          "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper im Browser:**\n1. Installiere die Erweiterung über die offizielle Clipper-Seite.\n2. Wähle den Übungs-Vault und `00 Inbox/` als Ziel.\n3. Lass den AI Interpreter vorerst aus. Er schickt Inhalte an einen Modellanbieter. Vor dem Einschalten prüfst du Provider, Schlüsselablage und Aufbewahrung.\n\nTeste mit einer unkritischen öffentlichen Seite und kontrolliere Titel, URL, Abrufdatum und Inhalt der neuen Notiz.\n\n**Erste Daily Note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nPrüfe danach:\n- Plugins und Versionen wie erwartet\n- Clipper speichert in den Übungsordner\n- Template erzeugt Dateinamen und Felder\n- Chatfunktionen nutzen nur die dokumentierte Konfiguration\n\nSchlägt ein Schritt fehl, hältst du dort an, behebst den Fehler und nimmst erst dann reale Daten."
-        }
-      ],
-      "quiz": []
-    },
-    {
-      "id": "modul_3_lesson_2",
-      "moduleId": "modul_3",
-      "number": 2,
-      "title": "PARA und MOC: eine einfache Wissensstruktur",
-      "subtitle": "Einen kleinen Übungs-Vault strukturieren",
-      "durationMinutes": 12,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
-      "keyConcepts": [
-        "PARA",
-        "MOC",
-        "Zettelkasten",
-        "Tagging-Politik"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-role-scenario",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_3_lesson_2_ex_1",
-            "lessonId": "modul_3_lesson_2",
-            "moduleId": "modul_3",
-            "title": "Wo platzierst du die Notiz?",
-            "scenario": "Wähle deine Rolle und ordne jede Notiz zu. Projects haben eine Deadline, Areas sind laufende Verantwortungen, Resources sind Nachschlagewerke, Archive ist Erledigtes.",
-            "roles": [
-              {
-                "id": "fuehrung",
-                "label": "Geschäftsführung / Unternehmer",
-                "description": "Leitet ein mittelständisches Unternehmen",
-                "scenarios": [
-                  {
-                    "id": "gf_s1",
-                    "question": "Notiz: Angebots-Exposé für Neukunde, Abgabe kommenden Freitag.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: hat klare Deadline",
-                        "correct": true,
-                        "explanation": "Deadline heißt Project. Nach der Entscheidung kommt die Notiz ins Archive."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: Vertrieb ist laufend",
-                        "correct": false,
-                        "explanation": "Vertrieb allgemein ist eine Area, dieses Angebot hat eine Deadline."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Angebots-Templates nachschlagen",
-                        "correct": false,
-                        "explanation": "Das gilt für die Vorlage, dieses Angebot ist ein Project."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: nach Abgabe",
-                        "correct": false,
-                        "explanation": "Erst nach der Abgabe. Heute ist es ein aktives Project."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "gf_s2",
-                    "question": "Notiz: Jahresgespräch-Framework für Mitarbeiter-Feedback.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: du hast ja Jahresgespräche",
-                        "correct": false,
-                        "explanation": "Jedes Gespräch ist ein Project, das Framework nutzt du wieder."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: laufende Führungsverantwortung",
-                        "correct": false,
-                        "explanation": "Nur wenn du es laufend weiterentwickelst. Sonst ist es eine Resource."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Nachschlagewerk für immer wiederkehrende Aufgaben",
-                        "correct": true,
-                        "explanation": "Frameworks, Templates und Checklisten sind Resources."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: war wichtig im April",
-                        "correct": false,
-                        "explanation": "Du brauchst es jede Woche, also gehört es nicht ins Archive."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "gf_s3",
-                    "question": "Notiz: Protokoll zur Bank-Verhandlung von 2023 (Kreditkonditionen abgelehnt).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: könnte noch kommen",
-                        "correct": false,
-                        "explanation": "Ohne aktive Deadline ist es kein Project."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: Finanzen ist laufend",
-                        "correct": false,
-                        "explanation": "Laufende Finanzen sind eine Area, das Protokoll von 2023 ist abgeschlossen."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: zur Vorbereitung der nächsten Verhandlung",
-                        "correct": false,
-                        "explanation": "Resources sind wiederverwendbare Vorlagen und Referenzen. Den abgeschlossenen Einzelfall legst du ins Archive und verlinkst ihn aus der nächsten Verhandlung."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: abgeschlossen, aber auffindbar",
-                        "correct": true,
-                        "explanation": "Abgeschlossen heißt Archive. Suche und Copilot finden die Notiz trotzdem."
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "vertrieb",
-                "label": "Vertrieb / Key Account",
-                "description": "Betreut Kunden-Accounts über Jahre",
-                "scenarios": [
-                  {
-                    "id": "vt_s1",
-                    "question": "Notiz: Kundengespräch vom 15. März, Bestellung für Juli zugesagt.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: Bestellung im Juli = Deadline",
-                        "correct": true,
-                        "explanation": "Deadline und Ergebnis sind klar. Im Juli geht die Notiz ins Archive."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: Kundenbeziehung XYZ",
-                        "correct": false,
-                        "explanation": "Die Beziehung ist eine Area, diese Zusage ein Project."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Gesprächsprotokoll-Vorlage",
-                        "correct": false,
-                        "explanation": "Das Protokoll gehört zur Kundenbeziehung, die Vorlage wäre eine Resource."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: schon passiert",
-                        "correct": false,
-                        "explanation": "Die Zusage ist noch nicht eingelöst."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vt_s2",
-                    "question": "Notiz: Kunden-Dossier für Kunde Alpha (ausdrücklich fiktiv; Produkt-Historie, Ansprechpartner, Kaufmuster).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: jeder Kunde ist ein Projekt",
-                        "correct": false,
-                        "explanation": "Eine laufende Beziehung ohne festes Ende ist eine Area."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas/Kunden/Kunde Alpha (fiktiv): laufende Beziehung",
-                        "correct": true,
-                        "explanation": "Die Kundenbeziehung hat keine Deadline und wächst mit jedem Kontakt."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Kundenliste",
-                        "correct": false,
-                        "explanation": "Eine Resource wäre ein allgemeiner Key-Account-Leitfaden."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: Kunde kauft ja schon",
-                        "correct": false,
-                        "explanation": "Aktive Kunden gehören in Areas."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vt_s3",
-                    "question": "Notiz: Einwandbehandlung-Katalog (50 typische Kunden-Einwände + beste Antworten).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: soll noch erweitert werden",
-                        "correct": false,
-                        "explanation": "Erweitern ist Pflege ohne Deadline."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: Vertriebsqualifikation laufend",
-                        "correct": false,
-                        "explanation": "Den Katalog schlägst du nur nach."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: zeit- und kundenunabhängig wiederverwendbar",
-                        "correct": true,
-                        "explanation": "Wiederverwendbare Nachschlagewerke sind Resources."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: alte Einwände tauchen selten auf",
-                        "correct": false,
-                        "explanation": "Du nutzt ihn aktiv, also gehört er nicht ins Archive."
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "hr",
-                "label": "HR / People",
-                "description": "Betreut Recruiting + Mitarbeiter-Entwicklung",
-                "scenarios": [
-                  {
-                    "id": "hr_s1",
-                    "question": "Notiz: Onboarding-Plan für neuen Werkstudenten, Start 1. Juni.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: Start 1. Juni ist Deadline",
-                        "correct": true,
-                        "explanation": "Ende und Ergebnis sind klar. Danach geht die Notiz ins Archive."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: Onboarding allgemein",
-                        "correct": false,
-                        "explanation": "Onboarding allgemein ist eine Area, dieses hier ein Project."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Onboarding-Template",
-                        "correct": false,
-                        "explanation": "Das gilt für das Template, dieses Onboarding ist ein Project."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: wird ja eh gelöscht",
-                        "correct": false,
-                        "explanation": "Es hat noch nicht begonnen."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s2",
-                    "question": "Notiz: Bewerbungen-Pool für Maschinenbauingenieur (laufend 5-10 offen).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: jede Einstellung ist Project",
-                        "correct": false,
-                        "explanation": "Eine einzelne Einstellung ja, der laufende Pool ist eine Area."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: Recruiting Engineering",
-                        "correct": true,
-                        "explanation": "Laufend ohne Endpunkt heißt Area, mit einem Project pro Einstellung."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Maschinenbau-JD-Template",
-                        "correct": false,
-                        "explanation": "Templates ja, aktuelle Bewerbungen nein."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: Bewerber-Pool schrumpft eh",
-                        "correct": false,
-                        "explanation": "Aktive Bewerbungen gehören nicht ins Archive."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s3",
-                    "question": "Notiz: Recherche zu 4-Tage-Woche-Modellen (du überlegst aktuell, einzuführen).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: Entscheidung bis Q3",
-                        "correct": true,
-                        "explanation": "Eine Entscheidung mit Zieldatum ist ein Project."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: laufend, ohne Entscheidung",
-                        "correct": false,
-                        "explanation": "Mit Deadline ist es ein Project, ohne Deadline eine Area."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: Nachschlagewerk Arbeitszeit-Modelle",
-                        "correct": false,
-                        "explanation": "Allgemeines Material wäre eine Resource, deine aktive Entscheidung ist ein Project."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: wurde mal diskutiert",
-                        "correct": false,
-                        "explanation": "Die Entscheidung läuft noch."
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_2_section_1",
-          "title": "PARA als vierteilige Ablagestruktur",
-          "readTimeMinutes": 2,
-          "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n- **Projects:** alles mit Endpunkt, etwa das fiktive Projekt \"Angebot Kunde Alpha abschließen\"\n- **Areas:** laufende Verantwortung ohne Endpunkt, etwa Vertrieb, Finanzen oder Team\n- **Resources:** Referenzmaterial wie Artikel, PDFs und Vorlagen\n- **Archive:** abgeschlossene Projekte und inaktive Ressourcen\n\nVerlangen Auffindbarkeit, Aufbewahrung oder Datenschutz etwas anderes, gehen sie PARA vor."
-        },
-        {
-          "id": "modul_3_lesson_2_section_2",
-          "title": "Das Skelett im Vault",
-          "readTimeMinutes": 3,
-          "content": "```\nvault-root/\n├── 00 Inbox/              ← neue Eingänge\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← Übersichtsnotiz\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nHast du das Template in Lektion 3.0 importiert, steht die Struktur schon.\n\n**Begrenzte Migrationsübung:**\n1. Inbox prüfen\n2. drei bis fünf aktive Projects übernehmen\n3. nur die jetzt nötigen Areas anlegen\n4. eine kleine, repräsentative Auswahl an Referenzen einsortieren\n5. Abgeschlossenes ins Archive verschieben\n\nAlles Weitere wartet, bis Suche, Links und Backup mit dieser Stichprobe funktionieren."
-        },
-        {
-          "id": "modul_3_lesson_2_section_3",
-          "title": "MOC: das Master-Notiz-Konzept",
-          "readTimeMinutes": 4,
-          "content": "**MOC = Map of Content.** Eine Master-Notiz pro Projekt dient als Status-Hub für alles andere.\n\nFiktive Struktur von `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Angebot Kunde Alpha (fiktiv)\n\n## Ziel\nEntwurf für drei fiktive Beispielmaschinen; Preis und Liefertermin sind ungeprüfte Platzhalter.\n\n## Status\n- [x] fiktive Anfrage erfasst\n- [ ] fachliche Angaben prüfen\n- [ ] Angebot intern freigeben\n\n## Beteiligte\n- Fiktiv-Rolle Alpha: Entscheidung\n- Fiktiv-Rolle Beta: Preisfreigabe\n\n## Offene Fragen\n- Preis, Lieferbarkeit und Rabatt bestätigt?\n```\n\nIn eine echte MOC kommen nur notwendige, freigegebene Daten mit passenden Zugriffsrechten."
-        },
-        {
-          "id": "modul_3_lesson_2_section_4",
-          "title": "Tagging-Politik",
-          "readTimeMinutes": 3,
-          "content": "Starte mit einem kleinen, dokumentierten Tag-Satz, zum Beispiel:\n- `#todo`: offene Aktion\n- `#entscheidung`: dokumentierte Entscheidung\n- `#warten-auf`: blockierte Aktion\n- `#idee`: ungeprüfter Vorschlag\n- `#followup`: erneut zu prüfender Punkt\n- `#archivieren`: Archivkandidat\n\nOrdner nutzt du für die grobe Ablage, MOCs für den Project-Kontext und Tags für die wenigen Zustände, die quer durch alles laufen. Personennamen und sensible Merkmale gehören nur mit Datenkonzept in einen Tag.\n\nBleib anfangs bei höchstens zehn Tags. Wächst der Satz, prüfst du Überschneidungen, schreibst die Bedeutungen auf und testest, ob deine Abfragen noch vorhersehbar antworten."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_2_q1",
-          "questionText": "Was bedeutet PARA?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Projects, Areas, Resources, Archive",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Plan, Action, Report, Audit",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Process, Analyze, Respond, Adjust",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Priority, Area, Research, Action",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Das Schema stammt von Tiago Forte."
-        },
-        {
-          "id": "modul_3_lesson_2_q2",
-          "questionText": "Was ist ein MOC?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Marketing Outreach Content für Kampagnen",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Map of Content: Übersichtsnotiz pro Projekt",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Module Orchestrator Config",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Multi-Object Collection",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Eine gepflegte Übersichtsnotiz bündelt Ziel, Status, nächste Aktion, Beteiligte und Links eines Projects."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_3",
-      "moduleId": "modul_3",
-      "number": 3,
-      "title": "Smart Connections + Copilot",
-      "subtitle": "Semantische Suche mit Quellenprüfung",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Smart Connections",
-        "Copilot for Obsidian",
-        "Embeddings"
-      ],
-      "widgets": [
-        {
-          "kind": "demo-chat-rag",
-          "placement": "after-intro"
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_3_section_1",
-          "title": "Smart Connections in Aktion",
-          "readTimeMinutes": 3,
-          "content": "Du legst eine neue, fiktive Notiz an: Mengenrabatt für Kunde Alpha, ja oder nein? Smart Connections schlägt ältere Rabattnotizen und eine aktuelle Richtlinie vor.\n\nEin Ähnlichkeitswert beweist nichts. Ob die aktuelle Freigaberegel diese Konditionen noch erlaubt, zeigt erst die Quellnotiz mit Datum und Kontext.\n\nSmart Connections arbeitet mit Embeddings, also Vektoren für semantische Ähnlichkeit. Modell, Ausführungsort, Netzwerkzugriff und Kosten stehen in deiner Plugin-Konfiguration."
-        },
-        {
-          "id": "modul_3_lesson_3_section_2",
-          "title": "Copilot als Suchoberfläche für den Vault",
-          "readTimeMinutes": 4,
-          "content": "Im isolierten Übungs-Vault fragst du Copilot: \"Welche fiktiven Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert? Nenne für jede Aussage Dateipfad und Datum.\"\n\nZurück kommt ein Suchentwurf, etwa zu Kunde Alpha, Beta und Gamma. Du öffnest jede verlinkte Notiz, prüfst den Kontext und suchst Lücken und Widersprüche.\n\nZweite Übungsfrage: \"Fasse die freigegebenen Übungsnotizen zu Kunde Alpha zusammen und markiere jede Aussage ohne Quelle.\"\n\nCopilot garantiert weder Tempo noch Faktentreue. Quellenlinks machen das Ergebnis prüfbar; prüfen musst du selbst."
-        },
-        {
-          "id": "modul_3_lesson_3_section_3",
-          "title": "Die richtigen Fragen stellen",
-          "readTimeMinutes": 3,
-          "content": "Copilot antwortet so gut, wie deine Frage und dein Index es erlauben. Drei Regeln helfen:\n\n**Konkret:** \"Welche Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert?\" statt \"Was denke ich über Preispolitik?\"\n\n**Zeitlich begrenzt:** ein Zeitraum wie \"Q1 2026\" oder \"seit März 2026\", wenn er zur Aufgabe passt.\n\n**Mit Quellen:** für jede Aussage Dateipfad, Datum und Textstelle.\n\nMiss Suchzeit, Anteil fehlender Quellen und Korrekturaufwand gegen deinen alten Ablauf. Werden die Werte nicht besser, schaltest du die Konfiguration wieder ab. Beide Werkzeuge sind Recherchehilfen; maßgeblich bleibt die Quellnotiz."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_3_q1",
-          "questionText": "Wie funktioniert Smart Connections technisch?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Cloud-basierte Keyword-Suche",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Embeddings: Vektoren, verglichen nach Bedeutung",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Full-Text-Search mit Elasticsearch",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "GraphRAG mit externem Vector-Store",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Smart Connections vergleicht Bedeutung, keine Stichwörter. Welches Modell rechnet und wohin deine Notizinhalte dabei gehen, steht in deiner aktuellen Konfiguration."
-        },
-        {
-          "id": "modul_3_lesson_3_q2",
-          "questionText": "Drei Prinzipien guter Copilot-Fragen?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Konkret, zeit-beschränkt, mit Quellenangabe",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Höflich, kurz, auf Englisch",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Abstrakt, offen, kreativ",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Technisch, detailliert, mit Code",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Konkrete, zeitlich begrenzte Fragen mit Quellenpflicht machen Treffer enger und prüfbar. Faktentreue garantieren sie nicht."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_4",
-      "moduleId": "modul_3",
-      "number": 4,
-      "title": "Obsidian Web Clipper",
-      "subtitle": "Vom Browser in eine geprüfte Vault-Notiz",
-      "durationMinutes": 8,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Obsidian Web Clipper",
-        "AI Interpreter"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-pii-spotter",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_3_lesson_4_ex_1",
-            "lessonId": "modul_3_lesson_4",
-            "moduleId": "modul_3",
-            "title": "PII aus dem Clipping entfernen, bevor es ins Vault wandert",
-            "scenario": "Alle Angaben sind erfundene Dummy-Daten. Markiere trotzdem jedes Token, das ein echtes Clipping nicht dauerhaft speichern dürfte: Namen, Mail, Telefon, interner Umsatz und Kundendaten.",
-            "text": "Fiktive Person schrieb gestern auf LinkedIn: Unsere Fiktivwerk GmbH hat 2.4 Mio Euro Umsatz Q1 gemacht, der Vertriebsleiter Fiktiver Kontakt berichtete von einem Deal mit Kunde Beta im Wert von 450000 Euro. Kontakt bei Fiktivwerk: demo.person@example.invalid oder +49-000-000000-DUMMY. Die Analyse: wir sollten in Q2 auch mit Kunde Gamma sprechen.",
-            "piiIndices": [
-              0,
-              1,
-              7,
-              8,
-              19,
-              20,
-              26,
-              27,
-              31,
-              35,
-              36,
-              38,
-              47,
-              48
-            ],
-            "passThreshold": 0.6
-          }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_4_section_1",
-          "title": "Die Browser-Tab-Realität",
-          "readTimeMinutes": 2,
-          "content": "Zähl deine offenen Tabs: Wie viele willst du später lesen, wie viele brauchst du als Referenz? Ein Tab hat keinen festen Ablageort, keine Metadaten und keinen Weg zurück.\n\nDer Ablauf: Web Clipper speichert den Artikel, der AI Interpreter schlägt Metadaten vor, Obsidian indexiert die Notiz. Die Zeit pro Artikel misst du selbst; der Kurs nennt bewusst keine Zahl."
-        },
-        {
-          "id": "modul_3_lesson_4_section_2",
-          "title": "Einen Clip mit AI Interpreter prüfen",
-          "readTimeMinutes": 3,
-          "content": "Nimm einen unkritischen öffentlichen Artikel und starte Web Clipper. Das Panel bietet Titel, Zielordner, Tags, Template und wahlweise eine Zusammenfassung an.\n\nPrüfe vor dem Speichern:\n- Titel, kanonische URL und Abrufdatum\n- Zielordner gegen die Ablageregel\n- Tags gegen den dokumentierten Tag-Satz\n- jede Aussage der Zusammenfassung gegen den Artikel\n- ob eingebettete persönliche oder vertrauliche Angaben entfernt sind\n\nMit aktivem AI Interpreter geht der Artikel an den konfigurierten Modellanbieter. Prüfe daher Provider, Modell, Schlüsselablage, Aufbewahrung und Kosten, und speichere jede Zusammenfassung mit ihrer Quelle."
-        },
-        {
-          "id": "modul_3_lesson_4_section_3",
-          "title": "Ein Kriterium für die Aufnahme",
-          "readTimeMinutes": 3,
-          "content": "Speichere einen Artikel, wenn er ein aktives Project betrifft, regelmäßig gebrauchtes Referenzmaterial liefert oder eine belegte, schwer ersetzbare Quelle ist. Duplikate, Artikel ohne absehbaren Zweck und unbelegte Behauptungen bleiben draußen.\n\nDer Test vor dem Speichern: \"Ich verwende diese Quelle für [Project oder Area], um [konkrete Frage] zu beantworten.\" Hält der Satz nicht, schließt du den Tab.\n\n**Übung:** Nimm höchstens drei offene Tabs. Speichere Quelle, Abrufdatum und Zweck, prüfe die erzeugten Felder und verarbeite die Notizen in der nächsten geplanten Inbox-Sitzung."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_4_q1",
-          "questionText": "Was macht der AI-Interpreter im Web Clipper?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Übersetzt den Artikel ins Deutsche",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Fasst zusammen, taggt und schlägt Ordner vor",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Blockiert Tracker und Werbung",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Konvertiert PDF zu Markdown",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Er schlägt vor dem Import Zusammenfassung, Tags und Ordner vor. Welcher Provider die Inhalte dafür sieht, steht in deiner Konfiguration."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_5",
+      "id": "wissen-3-1",
       "moduleId": "modul_3",
       "number": 5,
-      "title": "Täglicher Ablauf und präzise Prompts",
-      "subtitle": "Inbox-Pflege mit RCTFC und prüfbaren Ausgaben",
-      "durationMinutes": 12,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
+      "title": "Antworten mit Beleg",
+      "subtitle": "Mit Quellen heißt nicht fehlerfrei",
+      "durationMinutes": 7,
       "keyConcepts": [
-        "RCTFC",
-        "Structured Output",
-        "Few-shot",
-        "Chain-of-Thought"
+        "Retrieval",
+        "Zitat",
+        "Veraltete Notiz"
       ],
-      "widgets": [
-        {
-          "kind": "exercise-prompt-diff",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_3_lesson_5_ex_1",
-            "lessonId": "modul_3_lesson_5",
-            "moduleId": "modul_3",
-            "title": "Welcher Daily-Obsidian-Prompt ist prüfbar?",
-            "scenario": "Du willst die letzte Arbeitswoche aus dem Übungs-Vault für den Wochenbericht zusammenfassen. Welcher Prompt legt Quellen, Format und Grenzen fest?",
-            "candidates": [
-              {
-                "label": "Variante A: die Pauschale",
-                "prompt": "Fasse mir diese Woche zusammen.",
-                "critique": "Rolle, Zeitraum und Format fehlen. Copilot rät und liefert oft generische Stichpunkte oder mangels Kontext eine Absage.",
-                "rating": 1
-              },
-              {
-                "label": "Variante B: strukturiert, aber offen",
-                "prompt": "Basierend auf den Daily-Notes der letzten 7 Tage: Zusammenfassung der Kernentscheidungen und Blocker für Wochenbericht.",
-                "critique": "Zeitraum, Quelle und Ziel stehen drin. Ohne Format (Struktur, Wortlimit) und Rolle (für wen?) schwankt das Ergebnis stark.",
-                "rating": 3
-              },
-              {
-                "label": "Variante C: RCTFC + Structured Output",
-                "prompt": "Rolle: Chief of Staff, schreibt für die Geschäftsführung.\nKontext: Daily-Notes 2026-04-14 bis 2026-04-20 im Vault.\nTask: Wochenbericht erstellen.\n\nFormat: Markdown, 3 Abschnitte (1. Highlights, 3 Bullet Points je max 15 Wörter; 2. Blocker mit Lösungsvorschlag, max 3; 3. Nächste Woche, max 5 Zeilen).\n\nTabu: Adverbien wie erfolgreich, produktiv, fokussiert.\nQuelle: nur Fakten aus den Notes, keine Ergänzungen oder Meinungen.\nConstraint: Hat der Zeitraum keine Daten, sag das und erfinde nichts.",
-                "critique": "Der Brief legt RCTFC-Felder, Ausgabeschema, verbotene Wörter und eine Quellenregel fest. So lassen sich wiederholte Ergebnisse vergleichen und prüfen.",
-                "rating": 5
-              }
-            ]
+      "concept": {
+        "body": "Retrieval bedeutet: Das System sucht passende Dokumente und gibt sie dem Modell mit (Lewis et al. 2020). Antworten lassen sich dann gegen eine Quelle prüfen. Fehlerfrei werden sie dadurch nicht. Magesh et al. (2025) testeten juristische Recherche-Werkzeuge mit Retrieval: Sie erfanden oder verdrehten bei 17 bis 33 % der Anfragen etwas.\n\nDrei Fehler kommen immer wieder:\n\n1. **Falsch zitiert:** Die Quelle existiert, sagt aber etwas anderes.\n2. **Ohne Beleg:** Die Aussage steht in keiner Quelle, trägt aber ein Zitat.\n3. **Veraltet:** Die Quelle stimmte einmal, eine neuere widerspricht ihr.\n\nDarum braucht jede Notiz in deiner Wissensbasis ein Datum und eine verantwortliche Person, und jede Antwort zeigt, woher sie kommt.",
+        "takeaway": "Ein Zitat lädt zum Nachsehen ein. Es beweist nichts.",
+        "sources": [
+          {
+            "label": "Lewis et al. 2020, Retrieval-Augmented Generation",
+            "url": "https://arxiv.org/abs/2005.11401"
+          },
+          {
+            "label": "Magesh et al. 2025",
+            "url": "https://arxiv.org/abs/2405.20362"
           }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Prüfe eine zitierte KI-Antwort",
+        "instructions": "Beurteile jede markierte Aussage gegen die drei Notizen: belegt, widersprochen oder ohne Beleg. Achte auf das Datum. Auswerten zeigt den Schlüssel.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Notiz A: Rückgaben (Stand 03.02.2025, Vertrieb)",
+              "text": "Rückgaben ohne Angabe von Gründen sind innerhalb von 30 Tagen nach Lieferung möglich. Den Rückversand zahlt die Kundschaft."
+            },
+            {
+              "id": "B",
+              "label": "Notiz B: Rückgaben (Stand 01.09.2026, Vertrieb)",
+              "text": "Rückgaben ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung, gültig ab 01.09.2026. Ab 100 € Warenwert zahlen wir den Rückversand."
+            },
+            {
+              "id": "C",
+              "label": "Notiz C: Ersatzteile (Stand 12.06.2026, Service)",
+              "text": "Ersatzteile für Modell K2 liefern wir innerhalb von 5 Werktagen."
+            }
+          ],
+          "draftLabel": "KI-Antwort an einen Kollegen. Frage: Wie lange kann ein Kunde ein K2 ohne Angabe von Gründen zurückgeben, und wer zahlt den Rückversand?",
+          "draft": [
+            {
+              "text": "Laut Wissensbasis gilt: "
+            },
+            {
+              "text": "Rückgaben sind innerhalb von 30 Tagen nach Lieferung möglich [A]",
+              "claimId": "days"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Ab 100 € Warenwert zahlen wir den Rückversand [B]",
+              "claimId": "shipping"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Ein Ersatzteil ist innerhalb von 5 Werktagen da [C]",
+              "claimId": "parts"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "und defekte Geräte tauschen wir sofort vor Ort aus [C]",
+              "claimId": "swap"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "claims": [
+            {
+              "id": "days",
+              "verdict": "contradicted",
+              "sourceId": "B",
+              "evidence": "Rückgaben ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung",
+              "correction": "14 Tage nach Lieferung (Notiz B, Stand 01.09.2026)",
+              "why": "Notiz A deckt das Zitat, ist aber veraltet. Die neuere Notiz B ersetzt die Frist."
+            },
+            {
+              "id": "shipping",
+              "verdict": "supported",
+              "sourceId": "B",
+              "evidence": "Ab 100 € Warenwert zahlen wir den Rückversand.",
+              "why": "Steht so in der aktuellen Notiz."
+            },
+            {
+              "id": "parts",
+              "verdict": "supported",
+              "sourceId": "C",
+              "evidence": "Ersatzteile für Modell K2 liefern wir innerhalb von 5 Werktagen.",
+              "why": "Durch Notiz C gedeckt."
+            },
+            {
+              "id": "swap",
+              "verdict": "missing",
+              "why": "Keine Notiz erwähnt einen Austausch vor Ort. Das Zitat [C] täuscht einen Beleg nur vor."
+            }
+          ],
+          "passRatio": 0
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_3_lesson_5_section_1",
-          "title": "Ein begrenzter Pflegeablauf",
-          "readTimeMinutes": 3,
-          "content": "Ohne Pflege wird eine Wissensbasis wieder zum Dateihaufen. Dagegen hilft eine feste, begrenzte Sitzung in vier Schritten:\n\n1. **Inbox prüfen:** neue Einträge zählen; reale Daten nie ohne Freigabe automatisch weiterleiten.\n2. **Einordnen:** jedem Eintrag Project, Area, Resource oder Archive zuweisen; Unklares bleibt markiert in der Inbox.\n3. **MOCs aktualisieren:** Status, nächste Aktion und Quelllink der berührten Projects ergänzen.\n4. **Daily Note erstellen:** Prioritäten und offene Punkte aus geprüften Aufzeichnungen übernehmen.\n\nDas Zeitlimit richtet sich nach deinem Volumen. Notiere Rückstand und Fehlzuordnungen, denn eine leere Inbox beweist nichts, wenn Einträge falsch liegen."
-        },
-        {
-          "id": "modul_3_lesson_5_section_2",
-          "title": "RCTFC: das Prompt-Schema",
-          "readTimeMinutes": 3,
-          "content": "**RCTFC** heißt **Role, Context, Task, Format, Constraints.**\n\nOffene Anfrage:\n> \"Schreibe eine Absage-E-Mail an einen Kunden.\"\n\nStrukturierter Brief:\n- **Role:** Vertriebsmitarbeiter eines mittelständischen Maschinenbauunternehmens\n- **Context:** fiktiver Stammkunde Alpha; eine dokumentierte Anfrage kann nicht erfüllt werden\n- **Task:** internen Absageentwurf erstellen\n- **Format:** Betreff, Anrede, zwei Absätze, Signatur\n- **Constraints:** weniger als 120 Wörter, keine erfundenen Gründe oder Zusagen, eine Alternative nur als geprüfter Platzhalter\n\nJedes Feld nimmt dem Modell eine Entscheidung ab, die es sonst raten würde. Den Entwurf prüfst du trotzdem. Die Vorlage ist `P020-rctfc-template` in den Kursmaterialien."
-        },
-        {
-          "id": "modul_3_lesson_5_section_3",
-          "title": "Structured Output (JSON) + Few-shot + CoT",
-          "readTimeMinutes": 4,
-          "content": "**Strukturierte Ausgabe (JSON):** Verarbeitet eine Maschine die Antwort weiter, braucht sie ein festes Schema und eine technische Validierung.\n\n```\nAnalysiere dieses fiktive Meeting-Transkript. Gib strikt valides JSON zurück:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nNutze null für unbekannte Werte. Erfinde keine Angaben.\n```\n\nValidiere das Ergebnis gegen das Schema, bevor n8n oder Python es nutzen; ungültiges JSON geht in einen dokumentierten Fehlerpfad.\n\n**Few-shot:** Zwei oder drei repräsentative Beispiele zeigen dem Modell das Muster, beweisen aber keine Genauigkeit.\n\n**Prüfbare Zwischenergebnisse (CoT):** Bei komplexen Aufgaben verlangst du kurze Belege und Annahmen. Verborgene Gedankengänge forderst du nicht an, und bei einfachen Texten lässt du Zwischenschritte weg.\n\nOb sich Routine, Schema oder Beispiele lohnen, misst du an der jeweiligen Aufgabe."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_5_q1",
-          "questionText": "Was bedeutet RCTFC?",
-          "answerOptions": [
+          "id": "wissen-3-1-c1",
+          "prompt": "Eine KI-Antwort zitiert eine Notiz korrekt, aber eine neuere Notiz sagt etwas anderes. Welcher Fehler ist das?",
+          "options": [
             {
               "id": "a",
-              "text": "Role, Context, Task, Format, Constraints",
-              "isCorrect": true
+              "text": "Eine erfundene Aussage.",
+              "correct": false,
+              "feedback": "Die Aussage steht ja in einer Quelle. Das Problem ist deren Alter."
             },
             {
               "id": "b",
-              "text": "Read, Code, Test, Fix, Commit",
-              "isCorrect": false
+              "text": "Kein Fehler, die Antwort ist belegt.",
+              "correct": false,
+              "feedback": "Belegt durch eine überholte Notiz ist trotzdem falsch. Datum und Stand gehören zur Prüfung."
             },
             {
               "id": "c",
-              "text": "Research, Create, Test, Feedback, Close",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Request, Confirm, Transfer, Finalize, Complete",
-              "isCorrect": false
+              "text": "Eine veraltete Quelle.",
+              "correct": true
             }
           ],
-          "explanation": "Jedes der fünf Felder nimmt dem Modell eine Entscheidung ab, die es sonst aus allgemeinen Mustern raten würde."
+          "explanation": "Ohne Datum pro Notiz fällt dieser Fehler niemandem auf."
         },
         {
-          "id": "modul_3_lesson_5_q2",
-          "questionText": "Welche Anforderung ist bei einer komplexen Analyse angemessen?",
-          "answerOptions": [
+          "id": "wissen-3-1-c2",
+          "prompt": "Was zeigt die Studie von Magesh et al. über Recherche-Werkzeuge mit Retrieval?",
+          "options": [
             {
               "id": "a",
-              "text": "Bei jeder Aufgabe vollständige verborgene Gedankengänge verlangen",
-              "isCorrect": false
+              "text": "Auch mit Quellen bleiben Fehler häufig, darum prüfst du wichtige Zitate an der Quelle.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Kurze, prüfbare Belege und Annahmen anfordern",
-              "isCorrect": true
+              "text": "Retrieval beseitigt erfundene Antworten.",
+              "correct": false,
+              "feedback": "Die getesteten Werkzeuge erfanden oder verdrehten trotzdem bei 17 bis 33 % der Anfragen etwas."
             },
             {
               "id": "c",
-              "text": "Nur in einer API und nie in einer Benutzeroberfläche prüfen",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Die Methode an einen festen Modellnamen binden",
-              "isCorrect": false
+              "text": "Nur kostenlose Werkzeuge machen solche Fehler.",
+              "correct": false,
+              "feedback": "Getestet wurden kommerzielle Fachwerkzeuge. Der Preis schützt nicht vor Fehlern."
             }
           ],
-          "explanation": "Belege und Annahmen machen die Analyse prüfbar. Verborgene Gedankengänge brauchst du dafür nicht, und Qualität beweisen sie auch nicht."
+          "explanation": "Ein Zitat macht eine Antwort prüfbar, nicht richtig."
         }
       ]
     },
     {
-      "id": "modul_3_lesson_6",
+      "id": "wissen-3-2",
       "moduleId": "modul_3",
       "number": 6,
-      "title": "Claude + Obsidian via MCP",
-      "subtitle": "Erweiterte Vault-Integration",
-      "durationMinutes": 14,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
+      "title": "Dieselbe Frage, mit und ohne Notizen",
+      "subtitle": "Was Retrieval im Auftrag ändert",
+      "durationMinutes": 8,
       "keyConcepts": [
-        "obsidian-claude-code-mcp",
-        "WebSocket-Bridge"
+        "Retrieval",
+        "Quellenangabe",
+        "Widerspruch melden"
       ],
-      "widgets": [
-        {
-          "kind": "demo-workflow",
-          "placement": "after-intro"
+      "concept": {
+        "body": "Ohne Quellen antwortet ein Modell aus seinen Trainingsdaten. Es kennt deine Preise, Fristen und Zuständigkeiten nicht und füllt die Lücke mit Plausiblem. Mit Quellen kann es sich auf dein Material stützen, wenn der Auftrag drei Dinge verlangt:\n\n1. **Nur aus den Notizen antworten** und sonst sagen, dass etwas fehlt.\n2. **Jede Aussage mit Notiz-ID belegen**, damit du sie in Sekunden prüfst.\n3. **Widersprüche melden** und der neueren Notiz folgen, statt still eine zu wählen.\n\nUnten stellst du dieselbe Frage einmal ohne und einmal mit Notizen. Ist der Live-Modus verfügbar, antwortet ein echtes Modell. Sonst siehst du aufgezeichnete Beispiele mit genau den typischen Fehlern. Bewerte beide Antworten an denselben Kriterien.",
+        "takeaway": "Nur aus Quellen, jede Aussage belegt, Widersprüche gemeldet.",
+        "sources": [
+          {
+            "label": "Lewis et al. 2020, Retrieval-Augmented Generation",
+            "url": "https://arxiv.org/abs/2005.11401"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "live-prompt-ab",
+        "title": "Vergleiche zwei Antworten auf dieselbe Frage",
+        "instructions": "Führe beide Aufträge aus und markiere für jede Antwort, welche Kriterien sie erfüllt. Mit Auswerten bist du fertig.",
+        "props": {
+          "task": "Ziel: eine Antwort an einen Kollegen, die du in einer Minute gegen die Notizen prüfen kannst.",
+          "variants": [
+            {
+              "label": "Ohne Wissensbasis",
+              "prompt": "Ein Kunde fragt: Wie lange kann er ein K2 ohne Angabe von Gründen zurückgeben, und wer zahlt den Rückversand? Schreib eine kurze Antwort für meinen Kollegen.",
+              "recorded": "Für das Modell K2 gilt in der Regel ein Rückgaberecht von 30 Tagen. Den Rückversand zahlt üblicherweise der Kunde. Außerdem tauschen wir Geräte bei Problemen in der Regel direkt vor Ort aus."
+            },
+            {
+              "label": "Mit Notizen",
+              "prompt": "Beantworte die Frage nur mit den Notizen unten. Belege jede Aussage mit der Notiz-ID in eckigen Klammern. Wenn sich Notizen widersprechen, nenne den Widerspruch und folge der neueren. Wenn etwas fehlt, schreib \"Nicht in den Notizen\".\n\nFrage: Wie lange kann ein Kunde ein K2 ohne Angabe von Gründen zurückgeben, und wer zahlt den Rückversand?\n\n[A] Stand 03.02.2025: Rückgaben ohne Angabe von Gründen sind innerhalb von 30 Tagen nach Lieferung möglich. Den Rückversand zahlt die Kundschaft.\n[B] Stand 01.09.2026: Rückgaben ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung. Ab 100 € Warenwert zahlen wir den Rückversand.\n[C] Stand 12.06.2026: Ersatzteile für Modell K2 liefern wir innerhalb von 5 Werktagen.",
+              "recorded": "Rückgabe ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung [B]. Achtung: Notiz [A] nennt noch 30 Tage, ist aber älter (Stand 03.02.2025) und durch [B] ersetzt. Ab 100 € Warenwert zahlen wir den Rückversand [B]. Wer ihn darunter zahlt: Nicht in den Notizen."
+            }
+          ],
+          "rubric": [
+            {
+              "id": "short",
+              "label": "Kurz genug für eine Chatnachricht",
+              "expected": {
+                "a": true,
+                "b": true
+              }
+            },
+            {
+              "id": "cites",
+              "label": "Jede Aussage nennt eine Quelle",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "current",
+              "label": "Nennt die aktuelle Frist von 14 Tagen",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "conflict",
+              "label": "Meldet den Widerspruch zwischen alter und neuer Notiz",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "invent",
+              "label": "Erfindet nichts dazu",
+              "hint": "Steht jede Aussage in einer Notiz?",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            }
+          ],
+          "allowEdit": true
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_3_lesson_6_section_1",
-          "title": "Die dritte Verbindung",
-          "readTimeMinutes": 3,
-          "content": "Zwei Wege in den Vault kennst du: das Plugin in Obsidian und Copy-and-paste. Der dritte ist MCP, eine programmgesteuerte Schnittstelle. Damit darf Claude mehr, und du musst mehr prüfen.\n\nDie Kursreferenz `obsidian-claude-code-mcp` beschreibt eine WebSocket-Bridge. Prüfe vor dem Einsatz Repository, Version, Maintainer, Lizenz, Abhängigkeiten, Sicherheitsmeldungen und Kompatibilität.\n\nJe nach implementierten Tools liest, sucht, erstellt oder ändert der Server Notizen. Starte mit einer Kopie des Übungs-Vaults, nur lesend und nur mit einem Ordner."
-        },
-        {
-          "id": "modul_3_lesson_6_section_2",
-          "title": "Setup",
-          "readTimeMinutes": 4,
-          "content": "Im Kurs-Bundle liegt `install-obsidian-claude-code-mcp.sh`. Lies jedes Setup-Skript, bevor du es ausführst.\n\n**Vor der Ausführung:**\n1. Skript und festgelegte Abhängigkeitsversionen lesen\n2. Repository-URL und Commit prüfen\n3. Claude-Code-Konfiguration sichern\n4. expliziten Pfad zu einem kopierten Übungs-Vault festlegen\n5. Loopback-Bindung, Port und Authentifizierung der Bridge prüfen\n6. sicherstellen, dass das Skript vorhandene MCP-Einträge nicht überschreibt\n7. keine Secrets als Befehlsargumente übergeben\n\nDanach testest du Start und Stopp und dokumentierst geänderte Dateien, laufende Prozesse und den vollständigen Rückbau."
-        },
-        {
-          "id": "modul_3_lesson_6_section_3",
-          "title": "Erste Abfrage",
-          "readTimeMinutes": 4,
-          "content": "Der erste Test läuft schreibgeschützt im kopierten Übungs-Vault:\n\n> \"Liste die obersten Verzeichnisse und die Zahl der Markdown-Dateien pro Verzeichnis. Öffne keine Dateiinhalte und führe keine Schreibaktion aus.\"\n\nVergleiche die Ausgabe mit einer lokalen Dateiliste. Taucht ein nicht freigegebenes Verzeichnis auf, ist der Test gescheitert.\n\nDanach eine begrenzte Aufgabe:\n> \"Lies ausschließlich freigegebene MOCs in `10 Projects/` mit `status: aktiv`. Erstelle einen internen Statusentwurf mit Quellpfad und Datum für jede Aussage. Schreibe noch keine Datei.\"\n\nSchreiben darf Claude erst, wenn Quellen, Berechtigungen und Output geprüft sind, und dann nur in ein separates Ausgabeverzeichnis. Laufzeit und Korrekturaufwand misst du selbst."
-        },
-        {
-          "id": "modul_3_lesson_6_section_4",
-          "title": "Weitere Anwendungsfälle",
-          "readTimeMinutes": 3,
-          "content": "**Follow-up-Extraktion:**\n> \"Finde in freigegebenen Übungsnotizen alle offenen `#warten-auf`-Einträge. Erstelle interne Entwürfe und nenne pro Aussage die Quelldatei. Kein Versand.\"\n\n**Entscheidungsübersicht:**\n> \"Liste Übungsnotizen mit Tag `#entscheidung`. Nenne Datum, Thema, Entscheidung, Folgeaktion und Quelldatei. Markiere Widersprüche.\"\n\n**Fiktives Kundenprofil:**\n> \"Erstelle aus freigegebenen Übungsnotizen ein Profil für Kunde Alpha (fiktiv). Verwende keine echten Personen- oder Kontaktdaten.\"\n\nRichtiger werden deine Notizen durch MCP nicht. Berechtigungen, Datenminimierung, Quellenprüfung und schreibgeschützte Tests bleiben, und für Roadmaps und Integrationen gilt die aktuelle offizielle Dokumentation."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_6_q1",
-          "questionText": "Was macht MCP anders als Copilot-for-Obsidian?",
-          "answerOptions": [
+          "id": "wissen-3-2-c1",
+          "prompt": "Warum nennt die Antwort ohne Wissensbasis 30 Tage?",
+          "options": [
             {
               "id": "a",
-              "text": "MCP liefert Tools, Copilot ist eine Obsidian-Oberfläche",
-              "isCorrect": true
+              "text": "Weil Notiz A 30 Tage nennt.",
+              "correct": false,
+              "feedback": "Ohne Wissensbasis hat das Modell Notiz A nie gesehen. Die Zahl ist geraten und trifft zufällig die alte Regel."
             },
             {
               "id": "b",
-              "text": "MCP ist kostenpflichtig",
-              "isCorrect": false
+              "text": "Sie füllt die Lücke mit einem plausiblen Standardwert, weil sie deine Notizen nicht kennt.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "MCP nutzt immer GPT-4, Copilot immer Claude",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Sie sind identisch",
-              "isCorrect": false
+              "text": "Weil 30 Tage gesetzlich vorgeschrieben sind.",
+              "correct": false,
+              "feedback": "Keine Notiz nennt eine solche Pflicht, und die Antwort belegt sie nicht. Genau solche Behauptungen prüfst du."
             }
           ],
-          "explanation": "MCP ist eine Werkzeugschnittstelle für kompatible Clients. Transport und verfügbare Aktionen hängen vom jeweiligen Server ab."
+          "explanation": "Ohne Quellen klingt eine Antwort genauso sicher wie mit. Erst der Beleg macht den Unterschied sichtbar."
+        },
+        {
+          "id": "wissen-3-2-c2",
+          "prompt": "Welche Anweisung verhindert, dass das Modell still die alte Notiz nimmt?",
+          "options": [
+            {
+              "id": "a",
+              "text": "\"Antworte präzise.\"",
+              "correct": false,
+              "feedback": "Präzise kann auch präzise falsch sein. Das Modell braucht eine Regel für Widersprüche."
+            },
+            {
+              "id": "b",
+              "text": "\"Nutze nur die erste Notiz.\"",
+              "correct": false,
+              "feedback": "Die Reihenfolge sagt nichts über die Aktualität. Hier wäre die erste Notiz die veraltete."
+            },
+            {
+              "id": "c",
+              "text": "\"Wenn sich Notizen widersprechen, nenne den Widerspruch und folge der neueren.\"",
+              "correct": true
+            }
+          ],
+          "explanation": "Eine Regel für Widersprüche plus ein Datum pro Notiz macht veraltetes Wissen sichtbar."
         }
       ]
     }

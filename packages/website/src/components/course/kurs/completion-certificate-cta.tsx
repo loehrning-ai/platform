@@ -89,7 +89,7 @@ export function CompletionCertificateCta({
       </h2>
       <Link
         href={certificateHref}
-        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-foreground px-5 py-3 text-left text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+        className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-brand-cobalt px-5 py-3 text-left text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
       >
         {isGerman
           ? `${config.recordNoun.label} öffnen`

@@ -12,14 +12,14 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Loehrning Sans Bold from src/fonts, read on the Node runtime on the first
+// Figtree Bold from src/fonts, read on the Node runtime on the first
 // render, like the other share cards. The card reads the request locale, so
 // it renders per request; the font reaches the deployed function through
 // outputFileTracingIncludes in next.config.ts. The card is set in 700
 // throughout, so one face is enough.
 let boldFont: Promise<Buffer> | undefined;
 function loadBoldFont(): Promise<Buffer> {
-  boldFont ??= readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf"));
+  boldFont ??= readFile(join(process.cwd(), "src/fonts/Figtree-Bold.ttf"));
   return boldFont;
 }
 

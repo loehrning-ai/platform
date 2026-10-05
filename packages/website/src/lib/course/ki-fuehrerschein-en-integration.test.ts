@@ -32,13 +32,13 @@ describe("KI-Führerschein audited English runtime bundle", () => {
 
     expect(config.language).toBe("en");
     expect(config.title).toBe("Everyday AI Literacy");
-    expect(blocks).toHaveLength(5);
-    expect(lessons).toHaveLength(18);
-    expect(glossary).toHaveLength(42);
+    expect(blocks).toHaveLength(4);
+    expect(lessons).toHaveLength(8);
+    expect(glossary).toHaveLength(16);
     expect(syncQuestions).toHaveLength(20);
     expect(asyncQuestions).toEqual(syncQuestions);
-    expect(blocks[0].title).toBe("AI is already here");
-    expect(lessons[0].title).toBe("Recognize AI functions");
+    expect(blocks[0].title).toBe("What may go in?");
+    expect(lessons[0].title).toBe("Four levels in one minute");
     expect(syncQuestions[0].questionText).toMatch(/[A-Za-z]/);
   });
 

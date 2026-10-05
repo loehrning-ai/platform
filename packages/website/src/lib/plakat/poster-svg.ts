@@ -18,7 +18,7 @@ export interface PosterSvgOptions extends PosterCompositionOptions {
   /** Output size attributes. Default: the canvas size (the strip: 400 x 128). */
   readonly width?: number;
   readonly height?: number;
-  /** Numeral font stack; the file must embed or have access to Loehrning Sans. */
+  /** Numeral font stack; the file must embed or have access to Figtree. */
   readonly fontFamily?: string;
   /**
    * Add xmlns (default true). Leave it on for files and data URIs; inline
@@ -27,7 +27,7 @@ export interface PosterSvgOptions extends PosterCompositionOptions {
   readonly standalone?: boolean;
 }
 
-export const POSTER_FONT_FAMILY = "'Loehrning Sans', Arial, sans-serif";
+export const POSTER_FONT_FAMILY = "'Figtree', Arial, sans-serif";
 
 /** The hex value of each shape role in a scene. */
 export function roleHex(plakat: PlakatKey): Readonly<Record<ShapeRole, string>> {

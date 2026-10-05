@@ -47,19 +47,19 @@ import { GlossaryView, useGlossaryEyebrow } from "./glossary-view";
 
 const groups = [
   {
-    key: "claude" as const,
+    key: "kontext" as const,
     num: "01",
     label: "Claude",
     entries: [
       {
         term: "Prompt",
-        category: "claude" as const,
+        category: "kontext" as const,
         definition: "Eine Anweisung an das Sprachmodell.",
         related: [] as readonly string[],
       },
       {
         term: "Kontext-Fenster",
-        category: "claude" as const,
+        category: "kontext" as const,
         definition: "Das Token-Budget pro Anfrage.",
         // Related term is deliberately NOT another entry's term, so the term
         // "Prompt" appears exactly once (its own <dt>) in the browse view.
@@ -68,13 +68,13 @@ const groups = [
     ],
   },
   {
-    key: "regulatorik" as const,
+    key: "workflow" as const,
     num: "02",
     label: "Regulatorik",
     entries: [
       {
         term: "DSGVO",
-        category: "regulatorik" as const,
+        category: "workflow" as const,
         definition: "Europaeische Datenschutzgrundverordnung.",
         related: [] as readonly string[],
       },

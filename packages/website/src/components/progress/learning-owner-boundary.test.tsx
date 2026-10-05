@@ -151,7 +151,7 @@ describe("<LearningOwnerBoundary>", () => {
   });
 
   it("shows the same non-blocking choice on a visible English course URL", () => {
-    navigation.pathname = "/en/kurse/open-source/codex/kurs/L01";
+    navigation.pathname = "/en/kurse/open-source/data-infrastructure/kurs/mental-model";
 
     renderBoundary(<button type="button">Complete lesson</button>, "en");
 
@@ -163,9 +163,9 @@ describe("<LearningOwnerBoundary>", () => {
 
   it.each([
     "/ai-native/glossar",
-    "/ai-native/demos",
+    "/demos",
     "/buecher/ki-landschaft/03_reifegrad_ueberblick",
-    "/kurse/open-source/codex/verifizierung",
+    "/kurse/open-source/data-infrastructure/verifizierung",
   ])(
     "keeps the read-only public surface %s free of the ownership choice",
     (pathname) => {
@@ -189,7 +189,7 @@ describe("<LearningOwnerBoundary>", () => {
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
     expect(main).not.toHaveAttribute("inert");
 
-    navigation.pathname = "/en/kurse/open-source/codex/kurs/L01";
+    navigation.pathname = "/en/kurse/open-source/data-infrastructure/kurs/mental-model";
     rendered.rerender(boundaryTree(<button type="button">Content</button>));
     expect(screen.getByRole("region")).toBeVisible();
     expect(main).not.toHaveAttribute("inert");

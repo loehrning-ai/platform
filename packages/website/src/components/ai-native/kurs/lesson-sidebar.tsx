@@ -20,6 +20,7 @@ export interface AiNativeLessonNavItem {
   readonly lessonId: string;
   readonly lessonNumber: number;
   readonly title: string;
+  readonly durationMinutes?: number;
 }
 
 interface AiNativeLessonSidebarProps {

@@ -21,20 +21,20 @@ export type CoverBandProps = {
 };
 
 /**
- * The graphit variant of the cover band. Poster bands (PlakatBand in
+ * The paper variant of the cover band. Poster bands (PlakatBand in
  * src/components/plakat) replace it on workshops, courses, demos and the
- * blog; CoverBand stays for the home fallback scene (HOME_SCENE "graphit" in
- * src/lib/plakat/palettes.ts) and the AI-Native demos. New code uses
- * PlakatBand.
+ * blog; CoverBand stays for the home fallback scene (HOME_SCENE "paper" in
+ * src/lib/plakat/palettes.ts). New code uses PlakatBand.
  *
- * Graphit cover band, as on the workshop deck cover: a full-width in-flow
- * <section> (no viewport-width units, no negative margins) scoped with .dark-section, with
- * a static line globe on the right, cut off by the band edge. The globe is
- * aria-hidden, hidden below md, masked in from the left, and absolutely
- * positioned behind the text, so the heading stays the LCP element.
+ * Paper cover band, never graphit: a full-width in-flow <section> (no
+ * viewport-width units, no negative margins) on Bogen with a hairline below,
+ * and a static ink line globe on the right, cut off by the band edge, as on
+ * the old home hero. The globe is aria-hidden, hidden below md, masked in
+ * from the left, and absolutely positioned behind the text, so the heading
+ * stays the LCP element.
  *
- * Put the kicker, the h1 (text-display), an optional dark QuestionCard and
- * dark-tone ButtonLinks inside.
+ * Put the kicker, the h1 (text-display), an optional QuestionCard and
+ * paper-tone ButtonLinks inside.
  */
 export function CoverBand({
   children,
@@ -49,7 +49,10 @@ export function CoverBand({
     <section
       aria-labelledby={labelledBy}
       data-cover-band=""
-      className={cx("dark-section relative isolate overflow-hidden", className)}
+      className={cx(
+        "relative isolate overflow-hidden border-b border-hairline bg-paper text-foreground",
+        className,
+      )}
     >
       {globe ? (
         <div

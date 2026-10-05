@@ -187,7 +187,9 @@ describe("lesson mission persistence", () => {
         serializeLessonMissionState(
           {
             ...state,
-            executionReceipt: getCourseProjectLocalLearningReceipt("claude"),
+            executionReceipt: getCourseProjectLocalLearningReceipt(
+              "ai-native-operator",
+            ),
           },
           null,
         ),
@@ -366,8 +368,8 @@ describe("lesson mission persistence", () => {
   });
 
   it("uses a course-and-lesson-scoped encoded storage key", () => {
-    expect(getLessonMissionStorageKey("codex", "track/lesson 1")).toBe(
-      "loehrning:lesson-mission:v1:codex:track%2Flesson%201",
+    expect(getLessonMissionStorageKey("data-science", "track/lesson 1")).toBe(
+      "loehrning:lesson-mission:v1:data-science:track%2Flesson%201",
     );
   });
 });

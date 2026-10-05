@@ -9,9 +9,6 @@ describe("translated-content parity registry", () => {
     for (const path of [
       "/",
       "/ai-native",
-      "/ai-native/capstone-gallery",
-      "/ai-native/demos",
-      "/ai-native/fluency-test",
       "/ai-native/glossar",
       "/ai-native/verifizierung",
       "/blog",
@@ -51,8 +48,6 @@ describe("translated-content parity registry", () => {
       "/ki-und-gesellschaft",
       "/kurse",
       "/kurse/open-source/ai-native-operator",
-      "/kurse/open-source/claude",
-      "/kurse/open-source/codex",
       "/kurse/open-source/data-engineering-fundamentals",
       "/kurse/open-source/data-infrastructure",
       "/kurse/open-source/data-science",

@@ -60,7 +60,9 @@ items retain their original rights.
 
 ## SIL Open Font License 1.1
 
-Fonts under `packages/website/src/fonts/**` and the versioned runtime faces under `packages/website/public/fonts/**` are modified and renamed derivatives of Inter. They remain licensed under [LICENSES/OFL-1.1.txt](LICENSES/OFL-1.1.txt). The original Inter copyright belongs to The Inter Project Authors. The modified family names are `Loehrning Sans` and `Typing`; the modifications are not endorsed by the Inter authors.
+The versioned runtime faces under `packages/website/public/fonts/**` and the `Figtree-*.ttf` files under `packages/website/src/fonts/**` are Figtree, copyright 2022 The Figtree Project Authors. They are static weight instances of the upstream Figtree variable font, converted to WOFF2 or TrueType, and remain licensed under the SIL Open Font License 1.1; the licence text ships next to them as [packages/website/public/fonts/figtree-OFL.txt](packages/website/public/fonts/figtree-OFL.txt).
+
+The `Typing` faces under `packages/website/src/fonts/typing/**` are modified and renamed derivatives of Inter. They remain licensed under [LICENSES/OFL-1.1.txt](LICENSES/OFL-1.1.txt). The original Inter copyright belongs to The Inter Project Authors. The modified family name is `Typing`; the modifications are not endorsed by the Inter authors.
 
 ## Imported course material
 

@@ -1,361 +1,466 @@
 [
   {
-    "id": "an_w01",
+    "id": "an_q01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "RCTFC names five parts of a clear brief. What does the first R stand for?",
+    "questionText": "What counts towards the net time of an AI-assisted task?",
     "answerOptions": [
-      { "id": "a", "text": "Role. You give Claude a useful perspective, such as a sales lead.", "isCorrect": true },
-      { "id": "b", "text": "Research. Claude must search the internet first.", "isCorrect": false },
-      { "id": "c", "text": "Report. Claude must format every answer as a report.", "isCorrect": false },
-      { "id": "d", "text": "Review. You check the answer only at the end.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "Drafting, review and rework, compared with the baseline",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "Only the time until the model answers",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Only the time spent writing the brief",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "The team's perceived time saving",
+        "isCorrect": false
+      }
     ],
-    "explanation": "RCTFC stands for Role, Context, Task, Format and Constraints. The other fields define the work, output and boundaries.",
+    "explanation": "Net time counts everything the AI route costs and compares it with the same task without AI.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w02",
+    "id": "an_q02",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "What did the 2025 METR study with experienced developers show?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "They were 24% faster with AI.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "They were 19% slower with AI but believed they were faster.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "There was no measurable difference.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Only beginners benefited.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "They expected a 24% gain beforehand, estimated 20% afterwards, and measured 19% slower.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "an_q03",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "What is the central shift in module 1, From task to workflow?",
+    "questionText": "Which three axes does the course's triage use?",
     "answerOptions": [
-      { "id": "a", "text": "Replace every employee with AI.", "isCorrect": false },
-      { "id": "b", "text": "Move to orchestration: define work, delegate bounded steps, review results.", "isCorrect": true },
-      { "id": "c", "text": "Learn to write all code yourself.", "isCorrect": false },
-      { "id": "d", "text": "Use AI only for email and nothing else.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "Cost, duration, popularity",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Model size, price, provider",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Frequency, error cost, checkability",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Urgency, importance, effort",
+        "isCorrect": false
+      }
     ],
-    "explanation": "Orchestration means choosing suitable work, briefing it precisely, setting controls and checking output. Judgement and accountability stay with you.",
+    "explanation": "Frequent, cheap when wrong and quick to check: that is where you start.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w03",
+    "id": "an_q04",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "What stays your responsibility when Claude helps with execution?",
+    "questionText": "What does the jagged frontier from Dell'Acqua et al. (2023) mean?",
     "answerOptions": [
-      { "id": "a", "text": "Typing every line manually.", "isCorrect": false },
-      { "id": "b", "text": "Only correcting spelling.", "isCorrect": false },
-      { "id": "c", "text": "Judging whether the result fits and owning its use.", "isCorrect": true },
-      { "id": "d", "text": "Nothing. Claude takes every decision.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "AI improves evenly every year.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "AI never helps with creative tasks.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Only programming tasks lie outside.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Tasks that look similar can lie inside or outside a model's capabilities.",
+        "isCorrect": true
+      }
     ],
-    "explanation": "Delegating removes no accountability. The brief, the permissions, the factual and professional review and the decision to use the result stay with you.",
+    "explanation": "Inside the frontier AI helped markedly; just outside, participants were 19 percentage points less likely to be correct.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w04",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "Module 1 introduces three basic patterns for AI-supported work. Which set is correct?",
-    "answerOptions": [
-      { "id": "a", "text": "Drafting, analysis and research.", "isCorrect": true },
-      { "id": "b", "text": "Printing, saving and sending.", "isCorrect": false },
-      { "id": "c", "text": "Compiling, testing and deploying.", "isCorrect": false },
-      { "id": "d", "text": "Reading, writing and arithmetic.", "isCorrect": false }
-    ],
-    "explanation": "Drafting, analysing supplied material and researching defined questions each need fitting source and output checks.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w05",
+    "id": "an_q05",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "The AI-Native Fluency Test in module 1 uses five dimensions. Which list is correct?",
+    "questionText": "What belongs in persistent instructions?",
     "answerOptions": [
-      { "id": "a", "text": "Reading, writing, listening, speaking and arithmetic.", "isCorrect": false },
-      { "id": "b", "text": "Excel, Word, PowerPoint, Outlook and Teams.", "isCorrect": false },
-      { "id": "c", "text": "Marketing, sales, finance, HR and IT.", "isCorrect": false },
-      { "id": "d", "text": "Drafting, Delegation, Automation, Knowledge and Governance.", "isCorrect": true }
+      {
+        "id": "a",
+        "text": "Tone, output format and fixed boundaries",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "Today's customer email",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Login details for the customer portal",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Every company policy in full",
+        "isCorrect": false
+      }
     ],
-    "explanation": "The self-assessment covers these five dimensions in ten scenarios and is not a graded qualification.",
+    "explanation": "Persistent only for what applies to every task. Material comes per task, credentials never.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w06",
+    "id": "an_q06",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Why does an overloaded context hurt?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Models refuse long texts as a rule.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Information in the middle of long contexts is used less well.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "It changes the model's training data.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "It automatically makes answers shorter.",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Liu et al. (2024): information at the beginning or end is used best, in the middle markedly worse.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "an_q07",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "Which combination makes prompt injection especially dangerous?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Long emails, short replies, little time",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Many users, one model, one password",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Private data, untrusted content and a way out",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "A weak model and a tight budget",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "Without one of the three, an injected instruction can no longer leak data. That limits the damage; injection itself cannot be reliably prevented.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "an_q08",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "What limits the consequences of a prompt injection most reliably?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "A system-prompt line telling the model to ignore others' instructions",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A larger model",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "More examples in the brief",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Least privilege and approval for everything that leaves",
+        "isCorrect": true
+      }
+    ],
+    "explanation": "OWASP considers a fool-proof defence unresolved. So limit what can happen in the worst case.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "an_q09",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "An answer quotes note A correctly; note B is newer and contradicts it. What is right?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "Follow the newer note and flag the conflict",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "Use note A because it was cited",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Average both values",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Leave the question unanswered",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "A correct quote from a stale note is still wrong. Date and version are part of the check.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "an_q10",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "How does module 2 place Claude within a work process?",
+    "questionText": "What does a citation in an AI answer do?",
     "answerOptions": [
-      { "id": "a", "text": "As a search engine only.", "isCorrect": false },
-      { "id": "b", "text": "As a replacement for the whole team.", "isCorrect": false },
-      { "id": "c", "text": "As a configurable system with context, bounded tasks, permissions and review.", "isCorrect": true },
-      { "id": "d", "text": "As a chatbot used only for small talk.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "It proves the statement is true.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "It makes the statement checkable.",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "It prevents invented statements.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "It replaces human review.",
+        "isCorrect": false
+      }
     ],
-    "explanation": "Projects, Skills, plugins and MCP set context and access. You limit permissions, check output and decide.",
+    "explanation": "A citation invites you to look. Whether the source supports the statement is for you to check.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w07",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "What is a Claude Project with standing instructions used for?",
-    "answerOptions": [
-      { "id": "a", "text": "As a reusable workspace holding context, instructions and results for one topic.", "isCorrect": true },
-      { "id": "b", "text": "As a way to share your chats automatically with the whole team.", "isCorrect": false },
-      { "id": "c", "text": "As an automatic deletion of every conversation after 24 hours.", "isCorrect": false },
-      { "id": "d", "text": "As a plain file backup with no AI function.", "isCorrect": false }
-    ],
-    "explanation": "You no longer retype the same context for each task. Features and retention depend on the product version and account settings.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w08",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "Connectors can link Claude to services such as Gmail, Calendar and Drive. How is access commonly authorised?",
-    "answerOptions": [
-      { "id": "a", "text": "By giving Claude the email password in plain text.", "isCorrect": false },
-      { "id": "b", "text": "Through a physical USB drive.", "isCorrect": false },
-      { "id": "c", "text": "Connectors require no authorisation.", "isCorrect": false },
-      { "id": "d", "text": "Through OAuth, with defined rights and no shared password.", "isCorrect": true }
-    ],
-    "explanation": "OAuth grants scoped access without showing the application the password. Grant only the scopes you need; you can normally revoke them at the provider.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w09",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "What is a Skill in the Claude stack?",
-    "answerOptions": [
-      { "id": "a", "text": "A badge you get for finishing a course.", "isCorrect": false },
-      { "id": "b", "text": "A paid subscription upgrade.", "isCorrect": false },
-      { "id": "c", "text": "An Anthropic hardware component.", "isCorrect": false },
-      { "id": "d", "text": "A reusable instruction package for a recurring task, such as a SKILL.md.", "isCorrect": true }
-    ],
-    "explanation": "Its structure depends on the product. Check permissions and included files before use.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w10",
+    "id": "an_q11",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "What does MCP stand for?",
+    "questionText": "What did Magesh et al. (2025) find for legal research tools that use retrieval?",
     "answerOptions": [
-      { "id": "a", "text": "Manual Copy Protocol.", "isCorrect": false },
-      { "id": "b", "text": "Model Context Protocol, an open protocol for tools and data sources.", "isCorrect": true },
-      { "id": "c", "text": "Managed Cloud Platform.", "isCorrect": false },
-      { "id": "d", "text": "Multi-Channel Posting.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "No invented content any more",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Errors only in free tools",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Invented or distorted content in 17 to 33% of queries",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "Errors only in English-language queries",
+        "isCorrect": false
+      }
     ],
-    "explanation": "An MCP server gives a client tools or resources, which expands capability and risk. Review its code, transport, origin and permissions first.",
+    "explanation": "Retrieval reduces errors but does not remove them. You check important citations at the source.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w11",
+    "id": "an_q12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which project file can provide persistent instructions and conventions to Claude Code?",
+    "questionText": "What does automation bias describe?",
     "answerOptions": [
-      { "id": "a", "text": "README.txt in the downloads folder.", "isCorrect": false },
-      { "id": "b", "text": "A spreadsheet containing macros.", "isCorrect": false },
-      { "id": "c", "text": "CLAUDE.md, with maintained project context and conventions.", "isCorrect": true },
-      { "id": "d", "text": "The Windows Registry.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "Models favour certain groups.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "Automation is always faster.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "People distrust all automation.",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "People monitoring a mostly reliable system miss its rare errors.",
+        "isCorrect": true
+      }
     ],
-    "explanation": "Claude Code can load CLAUDE.md from the project hierarchy. Keep it concise, current and free of secrets.",
+    "explanation": "That is why approval needs fixed checks alongside it (Parasuraman and Manzey 2010).",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w12",
+    "id": "an_q13",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which Claude Code capability matters most for non-developers working with many local files?",
+    "questionText": "Which case belongs in the test of a new email workflow?",
     "answerOptions": [
-      { "id": "a", "text": "Controlled batch operations across many files, with permission and result checks.", "isCorrect": true },
-      { "id": "b", "text": "Playing music during work.", "isCorrect": false },
-      { "id": "c", "text": "Use by software developers only.", "isCorrect": false },
-      { "id": "d", "text": "Replacing the operating system.", "isCorrect": false }
+      {
+        "id": "a",
+        "text": "A booby-trapped email with a hidden instruction",
+        "isCorrect": true
+      },
+      {
+        "id": "b",
+        "text": "Only a typical customer request",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "Only emails that are sure to work",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "Real customer emails without approval",
+        "isCorrect": false
+      }
     ],
-    "explanation": "Before accepting, check target paths, planned changes and the diff.",
+    "explanation": "A test that cannot fail proves nothing. Prepared cases expose gaps without harm.",
     "version": 1,
     "active": true
   },
   {
-    "id": "an_w13",
+    "id": "an_q14",
+    "questionType": "single_choice",
+    "difficulty": "medium",
+    "questionText": "A cloud service is to process personal customer data on your behalf. What do you need first?",
+    "answerOptions": [
+      {
+        "id": "a",
+        "text": "The cheapest plan",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "A data processing agreement under GDPR Art. 28",
+        "isCorrect": true
+      },
+      {
+        "id": "c",
+        "text": "A local backup",
+        "isCorrect": false
+      },
+      {
+        "id": "d",
+        "text": "A model leaderboard",
+        "isCorrect": false
+      }
+    ],
+    "explanation": "First the contract, then the maths, then the test with your own cases.",
+    "version": 1,
+    "active": true
+  },
+  {
+    "id": "an_q15",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Why does module 3 introduce an external knowledge base?",
+    "questionText": "What makes a good stop criterion for a pilot?",
     "answerOptions": [
-      { "id": "a", "text": "Because you should stop using your own judgement.", "isCorrect": false },
-      { "id": "b", "text": "Because Obsidian deletes your memory.", "isCorrect": false },
-      { "id": "c", "text": "Because AI cannot work without one.", "isCorrect": false },
-      { "id": "d", "text": "Because scattered work knowledge is more usable in a maintained, searchable system.", "isCorrect": true }
+      {
+        "id": "a",
+        "text": "It stays flexible.",
+        "isCorrect": false
+      },
+      {
+        "id": "b",
+        "text": "It is set after the pilot.",
+        "isCorrect": false
+      },
+      {
+        "id": "c",
+        "text": "It is fixed in advance, measurable and dated.",
+        "isCorrect": true
+      },
+      {
+        "id": "d",
+        "text": "It follows the team's mood.",
+        "isCorrect": false
+      }
     ],
-    "explanation": "Obsidian and retrieval tools help search it but replace neither source verification nor ownership.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w14",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "What does the PARA model used in module 3 stand for?",
-    "answerOptions": [
-      { "id": "a", "text": "Plan, Act, Review, Adjust.", "isCorrect": false },
-      { "id": "b", "text": "People, Assets, Risks, Audits.", "isCorrect": false },
-      { "id": "c", "text": "Print, Archive, Read, Approve.", "isCorrect": false },
-      { "id": "d", "text": "Projects, Areas, Resources and Archives.", "isCorrect": true }
-    ],
-    "explanation": "Maps of Content can add navigation across those four folders without needing a complex note system.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w15",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "How can Smart Connections and Copilot make vault content searchable by meaning?",
-    "answerOptions": [
-      { "id": "a", "text": "Through embeddings, which turn text into numbers to find related passages.", "isCorrect": true },
-      { "id": "b", "text": "Only through exact word-for-word matching like Find.", "isCorrect": false },
-      { "id": "c", "text": "They cannot; the vault remains only a file collection.", "isCorrect": false },
-      { "id": "d", "text": "By printing and scanning the notes.", "isCorrect": false }
-    ],
-    "explanation": "That finds related meaning, not only identical words. Quality and data handling depend on model, index and configuration.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w16",
-    "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "What is the Obsidian Web Clipper used for?",
-    "answerOptions": [
-      { "id": "a", "text": "Editing video.", "isCorrect": false },
-      { "id": "b", "text": "Deleting images from the vault.", "isCorrect": false },
-      { "id": "c", "text": "Clearing browser history.", "isCorrect": false },
-      { "id": "d", "text": "Saving web pages to the vault, optionally via template or AI interpreter.", "isCorrect": true }
-    ],
-    "explanation": "The note keeps its source and capture date so you can check it later.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w17",
-    "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "Why does module 4 examine self-hosting n8n?",
-    "answerOptions": [
-      { "id": "a", "text": "Because self-hosting is always free.", "isCorrect": false },
-      { "id": "b", "text": "Because it can give more control over infrastructure and data flows.", "isCorrect": true },
-      { "id": "c", "text": "Because n8n does not work in the cloud.", "isCorrect": false },
-      { "id": "d", "text": "Because it never requires containers or system administration.", "isCorrect": false }
-    ],
-    "explanation": "It is no compliance shortcut: updates, access control, backups, logging, legal basis, contracts and processor arrangements still need review. This course is not legal advice.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w18",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "In the module 4 sandbox build from email triage to a review list, what sends an incoming message down the right branch?",
-    "answerOptions": [
-      { "id": "a", "text": "The printer driver.", "isCorrect": false },
-      { "id": "b", "text": "A random selection.", "isCorrect": false },
-      { "id": "c", "text": "A Switch node routing by the classification result.", "isCorrect": true },
-      { "id": "d", "text": "Every message is assigned manually before the workflow starts.", "isCorrect": false }
-    ],
-    "explanation": "The exercise uses an example email trigger, a classification model call and a Switch node. Production also needs tests, confidence handling, review queues and failure paths.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w19",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "When does module 4 present local AI with LM Studio as an option instead of a hosted model API?",
-    "answerOptions": [
-      { "id": "a", "text": "Always, because local models are necessarily better than Claude.", "isCorrect": false },
-      { "id": "b", "text": "Never; local models are prohibited in the course.", "isCorrect": false },
-      { "id": "c", "text": "Only for playing video.", "isCorrect": false },
-      { "id": "d", "text": "When documents must stay local and a suitable model and controls exist.", "isCorrect": true }
-    ],
-    "explanation": "LM Studio runs supported models locally and so avoids transfers to a hosted API. Access, model files, logs, device security, output quality and policy still need review.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w20",
-    "questionType": "single_choice",
-    "difficulty": "hard",
-    "questionText": "Module 4 separates providers and deployers under the EU AI Act. What is a deployer?",
-    "answerOptions": [
-      { "id": "a", "text": "A person who connects server hardware in a data centre.", "isCorrect": false },
-      { "id": "b", "text": "Anyone using an AI system under their own authority, except for purely personal use.", "isCorrect": true },
-      { "id": "c", "text": "Any end user, with no duties under any circumstances.", "isCorrect": false },
-      { "id": "d", "text": "An authority that prohibits AI.", "isCorrect": false }
-    ],
-    "explanation": "Which obligations apply depends on system, risk class, role and use.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w21",
-    "questionType": "single_choice",
-    "difficulty": "hard",
-    "questionText": "What does FRIA stand for in the EU AI Act section?",
-    "answerOptions": [
-      { "id": "a", "text": "Free Risk Insurance Agreement.", "isCorrect": false },
-      { "id": "b", "text": "Federal Reporting Information Act.", "isCorrect": false },
-      { "id": "c", "text": "Fundamental Rights Impact Assessment.", "isCorrect": true },
-      { "id": "d", "text": "Final Review Internal Audit.", "isCorrect": false }
-    ],
-    "explanation": "Article 27 of the EU AI Act requires it from specified deployers of certain high-risk systems, not for every AI system.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w22",
-    "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "What scope does the module 4 capstone brief set?",
-    "answerOptions": [
-      { "id": "a", "text": "Plan, document and test one bounded pilot workflow with approved data.", "isCorrect": true },
-      { "id": "b", "text": "Write a 100-page theoretical paper.", "isCorrect": false },
-      { "id": "c", "text": "Create a company ready for a stock-market listing.", "isCorrect": false },
-      { "id": "d", "text": "Submit nothing; the capstone has no criteria.", "isCorrect": false }
-    ],
-    "explanation": "Production follows only after the required controls and approvals, with scope set by time and risk. The rubric checks documentation, measurement, failure handling and controls, not a deployment date.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w23",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "How is a capstone assessed in the workflow course?",
-    "answerOptions": [
-      { "id": "a", "text": "An external jury assigns a German school grade from 1 to 6.", "isCorrect": false },
-      { "id": "b", "text": "Through a public vote on social media.", "isCorrect": false },
-      { "id": "c", "text": "There is no assessment scheme.", "isCorrect": false },
-      { "id": "d", "text": "Self-assessment against seven binary rubric criteria, without external review.", "isCorrect": true }
-    ],
-    "explanation": "You mark each criterion met or not met. Publishing in an example collection is a separate decision needing opt-in plus data-protection, confidentiality and security review.",
-    "version": 1,
-    "active": true
-  },
-  {
-    "id": "an_w24",
-    "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "What is the status of the capstone certificate of participation in the AI-Native Workflow Course?",
-    "answerOptions": [
-      { "id": "a", "text": "An officially recognised qualification from an external body.", "isCorrect": false },
-      { "id": "b", "text": "An automatic email after every completed lesson.", "isCorrect": false },
-      { "id": "c", "text": "A participation certificate generated in your browser from your own assessment.", "isCorrect": true },
-      { "id": "d", "text": "A paid add-on bought separately.", "isCorrect": false }
-    ],
-    "explanation": "No authority or independent examiner issues it. Its assessment state comes from your capstone rubric or the final quiz.",
+    "explanation": "Only a criterion fixed and measurable in advance stops you from measuring what you want to believe.",
     "version": 1,
     "active": true
   }

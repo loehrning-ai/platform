@@ -76,24 +76,33 @@ import {
   importProgress,
   buildProgressUrl,
 } from "./progress";
+import {
+  engineLessonProgressStepIds,
+  isEngineLesson,
+} from "@/lib/lesson-engine/lesson";
 
 const COURSE = "ki-fuehrerschein" as const;
+// KI-Führerschein runs on the lesson engine: one tracked step per lesson.
+const KF_L1 = "daten-1-1";
+const KF_L2 = "daten-1-2";
+const KF_S1 = "daten-1-1_exercise";
+const KF_S2 = "daten-1-2_exercise";
 const FIXED_TIMESTAMP = "2026-07-29T12:34:56.789Z";
 const SHARE_COURSES = [
   {
     courseSlug: "ki-fuehrerschein",
-    lessonId: "block_1_lesson_1",
-    sectionId: "block_1_lesson_1_section_1",
+    lessonId: "daten-1-1",
+    sectionId: "daten-1-1_exercise",
   },
   {
     courseSlug: "eu-ai-act-kurs",
-    lessonId: "block_2_lesson_3",
-    sectionId: "block_2_lesson_3_section_4",
+    lessonId: "risiko-2-2",
+    sectionId: "risiko-2-2_exercise",
   },
   {
     courseSlug: "ki-und-gesellschaft",
-    lessonId: "arbeit-1-1",
-    sectionId: "arbeit-1-1-s1",
+    lessonId: "zahlen-1-1",
+    sectionId: "zahlen-1-1_exercise",
   },
 ] as const;
 
@@ -227,56 +236,50 @@ describe("course progress facade", () => {
 
   describe("delegation to the unified store", () => {
     it("marks and reads a section, exposing read ids as a Set", () => {
-      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
+      markSectionRead(COURSE, KF_L1, KF_S1);
       expect(
-        isSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1"),
+        isSectionRead(COURSE, KF_L1, KF_S1),
       ).toBe(true);
       expect(
-        isSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_2"),
+        isSectionRead(COURSE, KF_L1, KF_S2),
       ).toBe(false);
-      const ids = getReadSectionIds(COURSE, "block_1_lesson_1");
+      const ids = getReadSectionIds(COURSE, KF_L1);
       expect(ids).toBeInstanceOf(Set);
-      expect(ids.has("block_1_lesson_1_section_1")).toBe(true);
+      expect(ids.has(KF_S1)).toBe(true);
     });
 
     it("keeps section/lesson state isolated per course slug", () => {
-      markLessonCompleted(COURSE, "block_1_lesson_1");
-      expect(isLessonCompleted(COURSE, "block_1_lesson_1")).toBe(true);
-      expect(isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_1")).toBe(
+      markLessonCompleted(COURSE, KF_L1);
+      expect(isLessonCompleted(COURSE, KF_L1)).toBe(true);
+      expect(isLessonCompleted("eu-ai-act-kurs", "rolle-1-1")).toBe(
         false,
       );
-      expect([...getCompletedLessonIds(COURSE)]).toEqual(["block_1_lesson_1"]);
+      expect([...getCompletedLessonIds(COURSE)]).toEqual([KF_L1]);
       expect(getCompletedLessonsCount(COURSE)).toBe(0);
 
-      recordCurrentLessonEvidence(COURSE, "block_1_lesson_1");
-      expect([...getCompletedLessonIds(COURSE)]).toEqual(["block_1_lesson_1"]);
+      recordCurrentLessonEvidence(COURSE, KF_L1);
+      expect([...getCompletedLessonIds(COURSE)]).toEqual([KF_L1]);
       expect(getCompletedLessonsCount(COURSE)).toBe(1);
     });
 
     it("stores and reads back a lesson quiz score", () => {
-      saveLessonQuizScore(COURSE, "block_1_lesson_1", 3, 4);
-      expect(getLessonQuizScore(COURSE, "block_1_lesson_1")).toEqual({
+      saveLessonQuizScore(COURSE, KF_L1, 3, 4);
+      expect(getLessonQuizScore(COURSE, KF_L1)).toEqual({
         score: 3,
         total: 4,
       });
     });
 
     it("computes block + overall progress from completed lessons", () => {
-      recordCurrentLessonEvidence(COURSE, "block_1_lesson_1");
+      recordCurrentLessonEvidence(COURSE, KF_L1);
       expect(
-        getBlockCompletedLessons(COURSE, [
-          "block_1_lesson_1",
-          "block_1_lesson_2",
-        ]),
+        getBlockCompletedLessons(COURSE, [KF_L1, KF_L2]),
       ).toBe(1);
-      expect(areAllBlockLessonsCompleted(COURSE, ["block_1_lesson_1"])).toBe(
+      expect(areAllBlockLessonsCompleted(COURSE, [KF_L1])).toBe(
         true,
       );
       expect(
-        areAllBlockLessonsCompleted(COURSE, [
-          "block_1_lesson_1",
-          "block_1_lesson_2",
-        ]),
+        areAllBlockLessonsCompleted(COURSE, [KF_L1, KF_L2]),
       ).toBe(false);
       // 1 of 4 lessons completed -> 25%
       expect(getOverallProgress(COURSE, 4)).toBe(25);
@@ -305,11 +308,11 @@ describe("course progress facade", () => {
 
   describe("getAllProgress", () => {
     it("projects the store slice down to the legacy lesson shape", () => {
-      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
-      markLessonCompleted(COURSE, "block_1_lesson_1");
+      markSectionRead(COURSE, KF_L1, KF_S1);
+      markLessonCompleted(COURSE, KF_L1);
       const all = getAllProgress(COURSE);
-      expect(all.lessons.block_1_lesson_1).toEqual({
-        sectionsRead: ["block_1_lesson_1_section_1"],
+      expect(all.lessons[KF_L1]).toEqual({
+        sectionsRead: [KF_S1],
         quizScore: null,
         quizTotal: null,
         completed: true,
@@ -332,13 +335,13 @@ describe("course progress facade", () => {
 
   describe("resetProgress", () => {
     it("clears a single course's progress", () => {
-      markLessonCompleted(COURSE, "block_1_lesson_1");
-      markLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2");
+      markLessonCompleted(COURSE, KF_L1);
+      markLessonCompleted("eu-ai-act-kurs", "zeitplan-1-2");
       resetProgress(COURSE);
-      expect(isLessonCompleted(COURSE, "block_1_lesson_1")).toBe(false);
+      expect(isLessonCompleted(COURSE, KF_L1)).toBe(false);
       expect(getAllProgress(COURSE).lessons).toEqual({});
       // other courses are untouched
-      expect(isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2")).toBe(
+      expect(isLessonCompleted("eu-ai-act-kurs", "zeitplan-1-2")).toBe(
         true,
       );
     });
@@ -352,7 +355,7 @@ describe("course progress facade", () => {
     });
 
     it("emits a URL-safe base64 string (no +, /, or = padding)", () => {
-      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
+      markSectionRead(COURSE, KF_L1, KF_S1);
       const encoded = serializeProgress(COURSE);
       expect(encoded).not.toBeNull();
       expect(encoded).not.toMatch(/[+/=]/);
@@ -441,8 +444,13 @@ describe("course progress facade", () => {
           CANONICAL_LESSON_IDS[courseSlug],
         );
         for (const lesson of authoredLessons) {
-          for (const section of lesson.sections) {
-            markSectionRead(courseSlug, lesson.id, section.id);
+          // Lesson-engine lessons track their exercise step, not the
+          // projected concept section.
+          const stepIds = isEngineLesson(lesson)
+            ? engineLessonProgressStepIds(lesson.id)
+            : lesson.sections.map((section) => section.id);
+          for (const sectionId of stepIds) {
+            markSectionRead(courseSlug, lesson.id, sectionId);
           }
         }
 
@@ -1001,7 +1009,7 @@ describe("course progress facade", () => {
     });
 
     it("appends the encoded progress to the base URL hash", () => {
-      markSectionRead(COURSE, "block_1_lesson_1", "block_1_lesson_1_section_1");
+      markSectionRead(COURSE, KF_L1, KF_S1);
       const encoded = serializeProgress(COURSE);
       const url = buildProgressUrl(COURSE, "https://x.test/kurs");
       expect(url).toBe(`https://x.test/kurs#progress=${encoded}`);

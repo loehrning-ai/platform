@@ -10,16 +10,22 @@ import {
 import { courseBadges, courseSections } from "./tracks";
 
 describe("course catalogue locale copy", () => {
-  it("keeps factual German copy for all six bilingual technical courses", () => {
+  it("keeps factual German copy for all four bilingual visual-learning courses", () => {
     const german = localizeCatalog(COURSE_CATALOG, "de");
     const technical = german.slice(4);
 
-    expect(technical).toHaveLength(6);
+    expect(technical).toHaveLength(4);
+    expect(technical.map((course) => course.slug)).toEqual([
+      "data-infrastructure",
+      "data-engineering-fundamentals",
+      "data-science",
+      "ai-native-operator",
+    ]);
     expect(technical[0]?.description).toContain("Zwölf Lektionen");
-    expect(technical[1]?.description).toContain("Zwölf Lektionen");
-    expect(technical[5]?.description).toContain("Neun Module");
+    expect(technical[1]?.description).toContain("Zwölf Kapitel");
+    expect(technical[3]?.description).toContain("Neun Module");
     expect(technical.map((course) => course.language)).toEqual(
-      Array(6).fill("Deutsch + Englisch"),
+      Array(4).fill("Deutsch + Englisch"),
     );
     expect(
       technical.flatMap((course) => course.sourceFacts ?? []),
@@ -37,20 +43,23 @@ describe("course catalogue locale copy", () => {
     ).toBe(true);
   });
 
-  it("translates all four foundation cards and all six technical summaries", () => {
+  it("translates all four foundation cards and all four visual-learning summaries", () => {
     const english = localizeCatalog(COURSE_CATALOG, "en");
 
     expect(english.slice(0, 4).map((course) => course.title)).toEqual([
       "Everyday AI Literacy",
       "AI and Society",
       "EU AI Act Course",
-      "AI-Native Work Course",
+      "Working with AI",
     ]);
-    expect(english).toHaveLength(10);
-    expect(english.find(({ slug }) => slug === "codex")).toMatchObject({
-      title: "Codex Course",
+    expect(english).toHaveLength(8);
+    expect(english.find(({ slug }) => slug === "data-infrastructure")).toMatchObject({
+      title: "Data Infrastructure",
+      eyebrow: "Visual learning · System design",
       language: "English + German",
     });
+    expect(english.map(({ slug }) => slug)).not.toContain("claude");
+    expect(english.map(({ slug }) => slug)).not.toContain("codex");
     expect(english.find(({ slug }) => slug === "data-science")?.description).toContain(
       "Thirty-seven simulations",
     );
@@ -72,7 +81,8 @@ describe("course catalogue locale copy", () => {
 
   it("provides localized section, badge, and page metadata copy", () => {
     expect(courseSections("en").spine.title).toBe("Foundation path");
-    expect(courseSections("de").deeper.title).toBe("Technikkurse");
+    expect(courseSections("de").deeper.title).toBe("Visuelles Lernen");
+    expect(courseSections("en").deeper.title).toBe("Visual learning");
     expect(
       courseBadges("ki-fuehrerschein", "en").map(({ label }) => label),
     ).toEqual(["DE + EN", "participation record"]);

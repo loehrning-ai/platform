@@ -9,7 +9,7 @@ import {
   meaningfulBrowserErrors,
 } from "./fixtures/console";
 
-const profile = getLessonMissionProfile("claude");
+const profile = getLessonMissionProfile("ai-native-operator");
 
 /** Focus alone passes even when the fixed shell obscures the result. */
 async function expectUnobscuredFocus(target: Locator): Promise<void> {
@@ -82,12 +82,14 @@ for (const locale of ["de", "en"] as const) {
         body: JSON.stringify({ code: "practice_disabled" }),
       });
     });
-    const route = `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`;
+    const route = `${locale === "en" ? "/en" : ""}/kurse/open-source/ai-native-operator/mindset/1`;
     await page.goto(route, { waitUntil: "load" });
     await page
       .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
       .waitFor({ state: "attached" });
-    const mission = page.locator('[data-lesson-mission="claude"]');
+    const mission = page.locator(
+      '[data-lesson-mission="ai-native-operator"]',
+    );
     const next = () =>
       mission.getByRole("button", {
         name: locale === "de" ? "Nächstes Signal" : "Next signal",
@@ -171,26 +173,18 @@ for (const locale of ["de", "en"] as const) {
         exact: true,
       })
       .fill(
-        "Synthetic museum sources A through C conflict on the exhibition date.",
-      );
-    await studio
-      .getByRole("textbox", {
-        name: locale === "de" ? "Prompt A · Baseline" : "Prompt A · baseline",
-        exact: true,
-      })
-      .fill(
-        "Create an exhibition outline. Output a table and do not invent claims.",
+        "A synthetic support team triages weekly tickets with an agent graph.",
       );
     await studio
       .getByRole("textbox", {
         name:
           locale === "de"
-            ? "Prompt B · quellengebunden"
-            : "Prompt B · grounded",
+            ? "Delegationsauftrag"
+            : "Delegation instruction",
         exact: true,
       })
       .fill(
-        "Create the outline from source A-C, cite evidence, and refuse uncertain unsupported claims.",
+        "Create a triage summary. Output a table and do not invent ticket facts.",
       );
     const checks = studio.getByRole("checkbox");
     await expect(checks).toHaveCount(4);
@@ -301,21 +295,17 @@ for (const locale of ["de", "en"] as const) {
         locale === "de" ? "Entscheidung oder Änderung" : "Decision or revision",
     });
     await expect(decision).toBeDisabled();
-    const sections = reference.getByRole("button", {
-      name:
-        locale === "de"
-          ? "Abschnitt als geprüft bestätigen"
-          : "Confirm section reviewed",
-      exact: true,
-    });
-    const sectionCount = await sections.count();
-    expect(sectionCount).toBeGreaterThan(0);
-    for (let index = 0; index < sectionCount; index += 1) {
-      await activate(page, sections.first());
-    }
+    // The lesson's transfer exercise is its applied proof; the checkpoint
+    // opens only after the reflection is written.
+    await reference
+      .getByRole("textbox", {
+        name: locale === "de" ? "Reflexion" : "Reflect",
+        exact: true,
+      })
+      .fill("Drafted the weekly ticket summary by hand.");
     await expect(decision).toBeEnabled();
     await decision.fill(
-      "I will compare each synthetic claim with its cited source before accepting it.",
+      "I will keep a human sign-off before any agent summary leaves the team.",
     );
     await activate(
       page,
@@ -333,18 +323,20 @@ for (const locale of ["de", "en"] as const) {
     });
     await expect(onward).toBeVisible();
     const onwardHref = await onward.getAttribute("href");
-    expect(onwardHref).toMatch(/\/claude\/kurs\/anatomy$/);
+    expect(onwardHref).toMatch(/\/ai-native-operator\/mindset\/2$/);
     await shot("reader-next-after-checkpoint");
 
     const receipt = await page.evaluate(() => {
       const raw = localStorage.getItem(
-        "loehrning:lesson-mission:v1:claude:mental-model",
+        "loehrning:lesson-mission:v1:ai-native-operator:mindset%2F1",
       );
       return raw
         ? (JSON.parse(raw) as { executionReceipt: string }).executionReceipt
         : null;
     });
-    expect(receipt).toBe(getCourseProjectLocalLearningReceipt("claude"));
+    expect(receipt).toBe(
+      getCourseProjectLocalLearningReceipt("ai-native-operator"),
+    );
     await activate(
       page,
       mission.getByRole("button", {
@@ -360,9 +352,9 @@ for (const locale of ["de", "en"] as const) {
     await activate(page, onward);
     await expect(page).toHaveURL((url) => url.pathname === onwardHref);
     const position = page.locator("[data-reader-focus-position]");
-    await expect(position.locator('[aria-hidden="true"]')).toHaveText("2 / 12");
+    await expect(position.locator('[aria-hidden="true"]')).toHaveText("2 / 39");
     await expect(position.locator(".sr-only")).toHaveText(
-      locale === "de" ? "Lektion 2 von 12" : "Lesson 2 of 12",
+      locale === "de" ? "Lektion 2 von 39" : "Lesson 2 of 39",
     );
 
     // The only expected error is the exact intercepted policy-disabled API.

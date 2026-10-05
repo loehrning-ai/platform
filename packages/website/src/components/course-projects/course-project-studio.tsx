@@ -86,10 +86,6 @@ const ENGINE_COMPONENTS: Readonly<
     () => import("./engines/prompt-lab"),
     { ssr: false, loading: EngineLoading },
   ),
-  repo: dynamic<CourseProjectEngineProps>(() => import("./engines/repo-lab"), {
-    ssr: false,
-    loading: EngineLoading,
-  }),
   data: dynamic<CourseProjectEngineProps>(() => import("./engines/data-lab"), {
     ssr: false,
     loading: EngineLoading,
@@ -114,7 +110,6 @@ const MEANINGFUL_ARTIFACT_FIELDS: Readonly<
     "budget",
     "evaluation",
   ],
-  repo: ["specReady"],
   data: ["failureInjected", "decision"],
   case: ["responses", "sources"],
 };
@@ -264,9 +259,7 @@ function CourseProjectCheckpointStudio({
   const checkpointId = `${config.id}:verified`;
   const expectedExecutionReceipt = getCourseProjectExecutionReceipt(courseSlug);
   const expectedLocalLearningReceipt =
-    courseSlug === "ai-native" ||
-    courseSlug === "claude" ||
-    courseSlug === "ai-native-operator"
+    courseSlug === "ai-native" || courseSlug === "ai-native-operator"
       ? getCourseProjectLocalLearningReceipt(courseSlug)
       : null;
   const [activated, setActivated] = useState(false);
@@ -1078,7 +1071,7 @@ function CourseProjectCheckpointStudio({
                   disabled={!currentStageUnlocked}
                   aria-controls={`${config.id}-workspace`}
                   aria-expanded={effectiveActivated}
-                  className="inline-flex min-h-11 shrink-0 items-center justify-center border-2 border-scene-line bg-scene-line px-5 py-3 text-[0.9375rem] font-semibold text-background underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-muted-foreground disabled:no-underline"
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center border-2 border-brand-cobalt bg-brand-cobalt px-5 py-3 text-[0.9375rem] font-semibold text-paper underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-track disabled:text-muted-foreground disabled:no-underline"
                 >
                   {copy.activate}
                 </button>

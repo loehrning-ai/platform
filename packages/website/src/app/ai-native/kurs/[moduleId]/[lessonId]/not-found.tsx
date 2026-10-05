@@ -7,9 +7,9 @@ export default async function LektionNotFound() {
   const locale = await getRequestLocale();
   const isEnglish = locale === "en";
   return (
-    <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
-      <div className="max-w-md text-center">
-        <p className="font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
+    <div className="course-app-ground flex min-h-[100svh] items-center justify-center px-4">
+      <div className="max-w-md rounded-[28px] border border-lab-line/80 bg-card p-6 text-center shadow-lab sm:p-8">
+        <p className="text-sm font-semibold text-lab-accent">
           404
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-[-0.03em]">
@@ -22,7 +22,7 @@ export default async function LektionNotFound() {
         </p>
         <Link
           href={localizeHref("/ai-native/kurs", locale)}
-          className="mt-6 inline-flex min-h-11 min-w-11 items-center justify-center gap-2 text-sm text-brand-orange transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          className="mt-6 inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-lab-accent px-5 text-sm font-semibold text-paper transition-colors hover:bg-[#1f3a99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2"
         >
           <ArrowLeft className="h-4 w-4" />
           {isEnglish ? "Back to course overview" : "Zur Kursübersicht"}

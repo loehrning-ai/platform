@@ -21,7 +21,8 @@ import {
   EXERCISE_KINDS,
   TIER_A_KINDS,
   PRACTICE_KINDS,
-  CLAUDE_KINDS,
+  LAB_KINDS,
+  isLabKind,
   ALL_WIDGET_KINDS,
   WIDGET_PLACEMENTS,
   WIDGET_COURSE_SLUGS,
@@ -29,7 +30,6 @@ import {
   isExerciseKind,
   isTierAKind,
   isPracticeKind,
-  isClaudeKind,
   isWidgetKind,
   isWidgetPlacement,
 } from "./types";
@@ -49,7 +49,6 @@ const GROUPS: readonly KindGroup[] = [
   { name: "exercise", kinds: EXERCISE_KINDS, guard: isExerciseKind },
   { name: "tier-a", kinds: TIER_A_KINDS, guard: isTierAKind },
   { name: "practice", kinds: PRACTICE_KINDS, guard: isPracticeKind },
-  { name: "claude", kinds: CLAUDE_KINDS, guard: isClaudeKind },
 ];
 
 const ALL_GUARDS: readonly KindGuard[] = [
@@ -57,7 +56,6 @@ const ALL_GUARDS: readonly KindGuard[] = [
   isExerciseKind,
   isTierAKind,
   isPracticeKind,
-  isClaudeKind,
   isWidgetKind,
   isWidgetPlacement,
 ];
@@ -142,33 +140,17 @@ describe("widgets/types: isWidgetPlacement", () => {
 });
 
 describe("widgets/types: isWidgetKind", () => {
-  it("accepts a representative kind from each of the five groups", () => {
+  it("accepts a representative kind from each of the four groups", () => {
     expect(isWidgetKind(DEMO_KINDS[0])).toBe(true);
     expect(isWidgetKind(EXERCISE_KINDS[0])).toBe(true);
     expect(isWidgetKind(TIER_A_KINDS[0])).toBe(true);
     expect(isWidgetKind(PRACTICE_KINDS[0])).toBe(true);
-    expect(isWidgetKind(CLAUDE_KINDS[0])).toBe(true);
   });
 
   it("rejects unknown strings and placement slots", () => {
     expect(isWidgetKind("not-a-widget")).toBe(false);
     expect(isWidgetKind("after-intro")).toBe(false); // a placement, not a kind
     expect(isWidgetKind("")).toBe(false);
-  });
-});
-
-describe("widgets/types: isClaudeKind", () => {
-  it("accepts every registered claude kind", () => {
-    for (const kind of CLAUDE_KINDS) {
-      expect(isClaudeKind(kind)).toBe(true);
-    }
-  });
-
-  it("rejects kinds from the other groups and unknown strings", () => {
-    expect(isClaudeKind("demo-roi")).toBe(false);
-    expect(isClaudeKind("quiz")).toBe(false);
-    expect(isClaudeKind("prompt-orrery")).toBe(false);
-    expect(isClaudeKind("prompt-sandbox-does-not-exist")).toBe(false);
   });
 });
 
@@ -179,15 +161,17 @@ describe("widgets/types: kind partition invariant", () => {
       ...EXERCISE_KINDS,
       ...TIER_A_KINDS,
       ...PRACTICE_KINDS,
-      ...CLAUDE_KINDS,
+      ...LAB_KINDS,
     ]);
     expect(ALL_WIDGET_KINDS).toHaveLength(
       DEMO_KINDS.length +
         EXERCISE_KINDS.length +
         TIER_A_KINDS.length +
         PRACTICE_KINDS.length +
-        CLAUDE_KINDS.length,
+        LAB_KINDS.length,
     );
+    expect(LAB_KINDS.every((kind) => isLabKind(kind))).toBe(true);
+    expect(isLabKind(DEMO_KINDS[0])).toBe(false);
   });
 
   it("contains no duplicate kind across the whole catalogue", () => {
@@ -221,9 +205,21 @@ describe("widgets/types: kind partition invariant", () => {
   });
 });
 
-describe("widgets/types: WIDGET_COURSE_SLUGS ( adds codex)", () => {
-  it("includes codex so a widget spec can declare it as its host course", () => {
-    expect([...WIDGET_COURSE_SLUGS]).toContain("codex");
+describe("widgets/types: WIDGET_COURSE_SLUGS (removed courses)", () => {
+  it("no longer lists the removed Claude and Codex courses", () => {
+    expect([...WIDGET_COURSE_SLUGS]).not.toContain("codex");
+    expect([...WIDGET_COURSE_SLUGS]).not.toContain("claude");
+  });
+
+  it("no longer registers the removed course-only widget kinds", () => {
+    for (const kind of [
+      "terminal-replay",
+      "diff-viewer",
+      "prompt-sandbox",
+      "claude-md-builder",
+    ]) {
+      expect(isWidgetKind(kind)).toBe(false);
+    }
   });
 });
 

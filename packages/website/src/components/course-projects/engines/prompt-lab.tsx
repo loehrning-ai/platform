@@ -6,7 +6,9 @@ import { focusMissionTarget } from "../focus-mission-target";
 import {
   DEFAULT_PRACTICE_MODEL_ID,
   PRACTICE_MODEL_IDS,
+  PRACTICE_PROVIDER_BY_MODEL,
   type PracticeModelId,
+  type PracticeProviderName,
 } from "@/app/api/ai-native/practice/types";
 import type {
   CourseProjectArtifactState,
@@ -29,26 +31,7 @@ import {
 } from "./engine-ui";
 
 type RunState = "idle" | "loading" | "success" | "error";
-type PromptVariant = "workflow" | "grounding" | "operator";
-type ComparisonDecision = "" | "a-stronger" | "b-stronger" | "equivalent";
-type ClaimEvidenceSource =
-  | ""
-  | "source-a"
-  | "source-b"
-  | "source-c"
-  | "conflict"
-  | "gap";
-type RedlineDecision = "" | "retain" | "qualify" | "remove";
-type ClaimReview = Readonly<{
-  source: ClaimEvidenceSource;
-  decision: RedlineDecision;
-}>;
-type RubricDimension = "factuality" | "completeness" | "calibration" | "format";
-type RubricScores = Readonly<Record<RubricDimension, number>>;
-type RubricComparison = Readonly<{
-  responseA: RubricScores;
-  responseB: RubricScores;
-}>;
+type PromptVariant = "workflow" | "operator";
 type ProviderFailureKind =
   | "policy-disabled"
   | "policy-not-ready"
@@ -77,7 +60,7 @@ type PracticeCompletePayload = {
 type ValidatedPracticeCompletion = {
   text: string;
   model: PracticeModelId;
-  provider: "anthropic" | "google";
+  provider: PracticeProviderName;
 };
 
 type ActiveProviderRequest = {
@@ -101,192 +84,6 @@ const QUOTA_FAILURE_ERRORS = new Set([
   "Das Provider-Budget ist ausgeschöpft.",
   "The provider budget is exhausted.",
 ]);
-const PROVIDER_BY_MODEL: Readonly<
-  Record<PracticeModelId, ValidatedPracticeCompletion["provider"]>
-> = {
-  "anthropic/claude-haiku-4.5": "anthropic",
-  "google/gemini-2.5-flash-lite": "google",
-};
-
-const COMPARISON_DECISIONS = new Set<ComparisonDecision>([
-  "a-stronger",
-  "b-stronger",
-  "equivalent",
-]);
-const CLAIM_SOURCE_CODES: Readonly<
-  Record<Exclude<ClaimEvidenceSource, "">, number>
-> = {
-  "source-a": 1,
-  "source-b": 2,
-  "source-c": 3,
-  conflict: 4,
-  gap: 5,
-};
-const CLAIM_SOURCES_BY_CODE: Readonly<Record<string, ClaimEvidenceSource>> = {
-  "1": "source-a",
-  "2": "source-b",
-  "3": "source-c",
-  "4": "conflict",
-  "5": "gap",
-};
-const REDLINE_CODES: Readonly<Record<Exclude<RedlineDecision, "">, number>> = {
-  retain: 1,
-  qualify: 2,
-  remove: 3,
-};
-const REDLINES_BY_CODE: Readonly<Record<string, RedlineDecision>> = {
-  "1": "retain",
-  "2": "qualify",
-  "3": "remove",
-};
-const RUBRIC_DIMENSIONS: readonly RubricDimension[] = [
-  "factuality",
-  "completeness",
-  "calibration",
-  "format",
-];
-const EMPTY_CLAIM_REVIEW: ClaimReview = { source: "", decision: "" };
-const EMPTY_RUBRIC: RubricScores = {
-  factuality: 0,
-  completeness: 0,
-  calibration: 0,
-  format: 0,
-};
-const EMPTY_RUBRIC_COMPARISON: RubricComparison = {
-  responseA: EMPTY_RUBRIC,
-  responseB: EMPTY_RUBRIC,
-};
-const EXPECTED_CLAIM_REVIEWS: readonly ClaimReview[] = [
-  { source: "conflict", decision: "qualify" },
-  { source: "source-c", decision: "retain" },
-  { source: "gap", decision: "remove" },
-];
-
-const GROUNDING_SOURCE_PACKET: Readonly<Record<"de" | "en", string>> = {
-  de: [
-    "Quelle A · Kuratorennotiz (Entwurf): Eröffnung für den 12. Oktober geplant; nicht freigegeben.",
-    "Quelle B · Raumreservierung: Galerie für den 19. Oktober reserviert; Eröffnungstermin ungeklärt.",
-    "Quelle C · Konservierungsprotokoll: Objekt 1986 in die Sammlung aufgenommen; Herkunft nicht dokumentiert.",
-  ].join("\n"),
-  en: [
-    "Source A · Curator note (draft): opening planned for 12 October; not approved.",
-    "Source B · Venue booking: gallery reserved for 19 October; opening date unresolved.",
-    "Source C · Conservation log: object entered the collection in 1986; origin not documented.",
-  ].join("\n"),
-};
-
-function parseComparisonDecision(value: unknown): ComparisonDecision {
-  return typeof value === "string" &&
-    COMPARISON_DECISIONS.has(value as ComparisonDecision)
-    ? (value as ComparisonDecision)
-    : "";
-}
-
-function parseClaimReview(value: unknown): readonly ClaimReview[] {
-  if (!Number.isSafeInteger(value)) {
-    return [EMPTY_CLAIM_REVIEW, EMPTY_CLAIM_REVIEW, EMPTY_CLAIM_REVIEW];
-  }
-  const encoded = String(value);
-  if (!/^[1-5][1-3][1-5][1-3][1-5][1-3]$/.test(encoded)) {
-    return [EMPTY_CLAIM_REVIEW, EMPTY_CLAIM_REVIEW, EMPTY_CLAIM_REVIEW];
-  }
-
-  const parsed = [0, 2, 4].map((offset): ClaimReview => {
-    const source = CLAIM_SOURCES_BY_CODE[encoded[offset] ?? ""] ?? "";
-    const decision = REDLINES_BY_CODE[encoded[offset + 1] ?? ""] ?? "";
-    return {
-      source,
-      decision,
-    };
-  });
-
-  return parsed.every((entry) => entry.source && entry.decision)
-    ? parsed
-    : [EMPTY_CLAIM_REVIEW, EMPTY_CLAIM_REVIEW, EMPTY_CLAIM_REVIEW];
-}
-
-function encodeClaimReviews(reviews: readonly ClaimReview[]): number {
-  if (
-    reviews.length !== 3 ||
-    reviews.some(({ source, decision }) => !source || !decision)
-  ) {
-    return 0;
-  }
-  return Number(
-    reviews
-      .map(
-        ({ source, decision }) =>
-          `${CLAIM_SOURCE_CODES[source as Exclude<ClaimEvidenceSource, "">]}${REDLINE_CODES[decision as Exclude<RedlineDecision, "">]}`,
-      )
-      .join(""),
-  );
-}
-
-function parseRubricScores(value: unknown): RubricComparison {
-  if (!Number.isSafeInteger(value)) return EMPTY_RUBRIC_COMPARISON;
-  const digits = String(value);
-  if (!/^[1-4]{8}$/.test(digits)) return EMPTY_RUBRIC_COMPARISON;
-  return {
-    responseA: {
-      factuality: Number(digits[0]),
-      completeness: Number(digits[1]),
-      calibration: Number(digits[2]),
-      format: Number(digits[3]),
-    },
-    responseB: {
-      factuality: Number(digits[4]),
-      completeness: Number(digits[5]),
-      calibration: Number(digits[6]),
-      format: Number(digits[7]),
-    },
-  };
-}
-
-function encodeRubricScores(scores: RubricComparison): number {
-  return Number(
-    (["responseA", "responseB"] as const)
-      .flatMap((response) =>
-        RUBRIC_DIMENSIONS.map((dimension) => scores[response][dimension]),
-      )
-      .join(""),
-  );
-}
-
-function rubricComparisonIsComplete(scores: RubricComparison): boolean {
-  return (["responseA", "responseB"] as const).every((response) =>
-    RUBRIC_DIMENSIONS.every((dimension) => {
-      const score = scores[response][dimension];
-      return Number.isSafeInteger(score) && score >= 1 && score <= 4;
-    }),
-  );
-}
-
-function comparisonMatchesRubric(
-  decision: ComparisonDecision,
-  scores: RubricComparison,
-): boolean {
-  if (!decision || !rubricComparisonIsComplete(scores)) return false;
-  const total = (response: keyof RubricComparison) =>
-    RUBRIC_DIMENSIONS.reduce(
-      (sum, dimension) => sum + scores[response][dimension],
-      0,
-    );
-  const responseATotal = total("responseA");
-  const responseBTotal = total("responseB");
-  return decision === "equivalent"
-    ? responseATotal === responseBTotal
-    : decision === "a-stronger"
-      ? responseATotal > responseBTotal
-      : responseBTotal > responseATotal;
-}
-
-function claimReviewsAreCorrect(reviews: readonly ClaimReview[]): boolean {
-  return EXPECTED_CLAIM_REVIEWS.every(
-    (expected, index) =>
-      reviews[index]?.source === expected.source &&
-      reviews[index]?.decision === expected.decision,
-  );
-}
 
 const GOAL_PATTERN =
   /\b(ziel|aufgabe|erstelle|entwirf|analysiere|prüfe|vergleiche|goal|task|create|draft|design|analy[sz]e|evaluate|compare)\b/i;
@@ -296,7 +93,7 @@ const CONSTRAINT_PATTERN =
 function expectedProviderForModel(
   model: PracticeModelId,
 ): ValidatedPracticeCompletion["provider"] {
-  return PROVIDER_BY_MODEL[model];
+  return PRACTICE_PROVIDER_BY_MODEL[model];
 }
 
 function validatePracticeCompletion(
@@ -486,20 +283,15 @@ export default function PromptLab({
 }: CourseProjectEngineProps) {
   const contextId = useId();
   const promptId = useId();
-  const secondaryPromptId = useId();
   const modelId = useId();
   const privacyId = useId();
   const requestEpoch = useRef(0);
   const activeRequest = useRef<ActiveProviderRequest | null>(null);
   const variant: PromptVariant =
-    config.courseSlug === "claude"
-      ? "grounding"
-      : config.courseSlug === "ai-native-operator"
-        ? "operator"
-        : "workflow";
+    config.courseSlug === "ai-native-operator" ? "operator" : "workflow";
   const executionReceipt = getCourseProjectExecutionReceipt(config.courseSlug);
   const localLearningReceipt = getCourseProjectLocalLearningReceipt(
-    config.courseSlug as "ai-native" | "claude" | "ai-native-operator",
+    config.courseSlug as "ai-native" | "ai-native-operator",
   );
   const initialFields =
     initialArtifact?.engineKind === "prompt" ? initialArtifact.fields : {};
@@ -524,11 +316,6 @@ export default function PromptLab({
   const initialDegradedCompletion = initialDegradedFailureKind !== null;
   const [context, setContext] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [secondaryPrompt, setSecondaryPrompt] = useState("");
-  const [restoredSecondaryReady, setRestoredSecondaryReady] = useState(
-    initialFields.secondaryReady === true ||
-      initialFields.twoOutputEvidence === true,
-  );
   const [restoredStructure, setRestoredStructure] = useState(
     initialFields.goalReady === true &&
       initialFields.contextReady === true &&
@@ -545,7 +332,6 @@ export default function PromptLab({
         : "idle",
   );
   const [providerOutput, setProviderOutput] = useState("");
-  const [secondaryProviderOutput, setSecondaryProviderOutput] = useState("");
   const [providerFailure, setProviderFailure] =
     useState<ProviderFailure | null>(
       initialDegradedFailureKind
@@ -584,22 +370,11 @@ export default function PromptLab({
       ? initialFields.evaluation
       : "",
   );
-  const [comparisonDecision, setComparisonDecision] =
-    useState<ComparisonDecision>(() =>
-      parseComparisonDecision(initialFields.comparisonDecision),
-    );
-  const [claimReviews, setClaimReviews] = useState<readonly ClaimReview[]>(() =>
-    parseClaimReview(initialFields.claimReviewCode),
-  );
-  const [rubricScores, setRubricScores] = useState<RubricComparison>(() =>
-    parseRubricScores(initialFields.rubricScores),
-  );
   const [verified, setVerified] = useState(false);
 
   const providerInputFingerprint = JSON.stringify({
     context,
     prompt,
-    secondaryPrompt: variant === "grounding" ? secondaryPrompt : null,
     selectedModel,
     locale,
     variant,
@@ -611,10 +386,7 @@ export default function PromptLab({
     locale === "de"
       ? {
           context: "Arbeitskontext",
-          contextHelp:
-            variant === "grounding"
-              ? "Zielgruppe und Zweck."
-              : "Fakten, Zielgruppe und Ausgangslage.",
+          contextHelp: "Fakten, Zielgruppe und Ausgangslage.",
           contextPlaceholder:
             "Beispiel: Ein internes Operations-Team braucht eine prüfbare Entscheidungsnotiz auf Basis synthetischer Vorfalldaten.",
           prompt: "Prompt-Auftrag",
@@ -662,8 +434,6 @@ export default function PromptLab({
             "Lokaler Lernlauf abgeschlossen · nur RUN-Lernsignal",
           operationalFailure:
             "Dieser Betriebsfehler ist keine Evidenz und zählt nicht für die Verifizierung.",
-          partialPrimary:
-            "Der Quellenvergleich ist fehlgeschlagen. Die erste Claude-Antwort bleibt sichtbar, ist aber keine vollständige Provider-Evidenz.",
           evidenceStructure: "Ziel, Kontext und Grenzen sind erkennbar",
           evidenceRunSuccess: "Echter Providerlauf erfolgreich",
           evidenceRunDegraded:
@@ -686,10 +456,7 @@ export default function PromptLab({
         }
       : {
           context: "Working context",
-          contextHelp:
-            variant === "grounding"
-              ? "Audience and purpose."
-              : "Facts, audience and starting point.",
+          contextHelp: "Facts, audience and starting point.",
           contextPlaceholder:
             "Example: An internal operations team needs an auditable decision memo based on synthetic incident data.",
           prompt: "Prompt instruction",
@@ -736,8 +503,6 @@ export default function PromptLab({
             "Local learning run complete · RUN learning signal only",
           operationalFailure:
             "This operational failure is not evidence and does not count toward verification.",
-          partialPrimary:
-            "The grounded comparison failed. The first Claude response stays visible but is not complete provider evidence.",
           evidenceStructure: "Goal, context, and constraints are identifiable",
           evidenceRunSuccess: "Real provider run succeeded",
           evidenceRunDegraded:
@@ -762,16 +527,7 @@ export default function PromptLab({
     locale === "de"
       ? {
           primaryPrompt:
-            variant === "grounding"
-              ? "Prompt A · Baseline"
-              : variant === "operator"
-                ? "Delegationsauftrag"
-                : "Workflow-Auftrag",
-          secondaryPrompt: "Prompt B · quellengebunden",
-          secondaryHelp:
-            "Gleicher Auftrag, aber mit Quellenbindung, sichtbarer Unsicherheit und Verweigerungsregel.",
-          secondaryPlaceholder:
-            "Erstelle dieselbe Ausstellungsskizze. Nutze nur Quelle A-C, ordne jeden Claim einer Quelle zu und verweigere unbelegte Aussagen sichtbar.",
+            variant === "operator" ? "Delegationsauftrag" : "Workflow-Auftrag",
           workflowControls:
             variant === "operator"
               ? "Agenten-Kontrollfläche"
@@ -799,21 +555,12 @@ export default function PromptLab({
             variant === "operator"
               ? "Agentengraph, Budget, Freigaben und Intervention belegt"
               : "Freigabe, Abbruch, Übergabe und Output-Rubrik belegt",
-          outputA: "Antwort A · echte API-Antwort",
-          outputB: "Antwort B · echte API-Antwort",
         }
       : {
           primaryPrompt:
-            variant === "grounding"
-              ? "Prompt A · baseline"
-              : variant === "operator"
-                ? "Delegation instruction"
-                : "Workflow instruction",
-          secondaryPrompt: "Prompt B · grounded",
-          secondaryHelp:
-            "Same task, now with source grounding, visible uncertainty, and refusal behavior.",
-          secondaryPlaceholder:
-            "Create the same exhibition outline. Use only sources A-C, map every claim to a source, and visibly refuse unsupported claims.",
+            variant === "operator"
+              ? "Delegation instruction"
+              : "Workflow instruction",
           workflowControls:
             variant === "operator"
               ? "Agent control plane"
@@ -839,145 +586,6 @@ export default function PromptLab({
             variant === "operator"
               ? "Agent graph, budget, approvals, and intervention evidenced"
               : "Approval, stop, handoff, and output rubric evidenced",
-          outputA: "Response A · real API response",
-          outputB: "Response B · real API response",
-        };
-
-  const groundingCopy =
-    locale === "de"
-      ? {
-          packetTitle: "Quellenpaket · an beide Läufe",
-          deskTitle: "Antwortvergleich und Redlining",
-          deskHelp:
-            "Bewerte beide API-Antworten. Gespeichert wird nur deine Auswahl, keine Antwort und kein Freitext.",
-          comparison: "Vergleichsurteil",
-          comparisonOptions: [
-            ["", "Urteil wählen"],
-            ["a-stronger", "Antwort A ist bei Quellenbindung stärker"],
-            ["b-stronger", "Antwort B ist bei Quellenbindung stärker"],
-            ["equivalent", "Kein wesentlicher Unterschied erkennbar"],
-          ],
-          claimsTitle: "Claim-Evidenz-Matrix",
-          claimsHelp:
-            "Ordne jeden Claim einer Quelle, einem Konflikt oder einer Beleglücke zu und entscheide die Redline.",
-          claims: [
-            "Claim 1 · Die Ausstellung eröffnet am 12. Oktober.",
-            "Claim 2 · Das Objekt kam 1986 in die Sammlung.",
-            "Claim 3 · Die Ausstellung senkt den Energieverbrauch um 40 %.",
-          ],
-          source: "Evidenzstatus",
-          sourceOptions: [
-            ["", "Evidenz wählen"],
-            ["source-a", "Quelle A"],
-            ["source-b", "Quelle B"],
-            ["source-c", "Quelle C"],
-            ["conflict", "Quellenkonflikt"],
-            ["gap", "Beleglücke"],
-          ],
-          decision: "Redline",
-          decisionOptions: [
-            ["", "Entscheidung wählen"],
-            ["retain", "Beibehalten"],
-            ["qualify", "Einschränken/Unsicherheit zeigen"],
-            ["remove", "Entfernen"],
-          ],
-          claimCorrect: "Zuordnung und Redline entsprechen dem Quellenpaket.",
-          claimIncorrect:
-            "Quellenstatus oder Redline widerspricht dem Quellenpaket.",
-          rubricTitle: "Vierdimensionale Vergleichsrubrik · Antwort A und B",
-          rubricHelp:
-            "Jede Dimension einzeln: 1 = fehlt oder unbelegt, 2 = wesentliche Lücken, 3 = weitgehend erfüllt, 4 = vollständig erfüllt.",
-          rubricDimensions: {
-            factuality: "Faktentreue",
-            completeness: "Vollständigkeit",
-            calibration: "Kalibrierung/Unsicherheit",
-            format: "Formatkonformität",
-          },
-          responseA: "Antwort A",
-          responseB: "Antwort B",
-          score: "Punktwert",
-          scoreOptions: [
-            [0, "Punktwert wählen"],
-            [1, "1 · fehlt oder unbelegt"],
-            [2, "2 · wesentliche Lücken"],
-            [3, "3 · weitgehend erfüllt"],
-            [4, "4 · vollständig erfüllt"],
-          ],
-          twoOutputs:
-            "Zwei echte Providerantworten zum selben Fall",
-          comparisonComplete: "Antwortvergleich entschieden",
-          claimsComplete:
-            "Alle drei Claims richtig zugeordnet und redigiert",
-          rubricComplete:
-            "Beide Antworten in allen vier Dimensionen bewertet",
-          comparisonMismatch:
-            "Das Vergleichsurteil muss zu den Rubriksummen passen.",
-        }
-      : {
-          packetTitle: "Source packet · sent to both runs",
-          deskTitle: "Response comparison and redlining",
-          deskHelp:
-            "Assess both API responses. Only your choices are stored, never responses or free text.",
-          comparison: "Comparison verdict",
-          comparisonOptions: [
-            ["", "Select a verdict"],
-            ["a-stronger", "Response A has stronger source discipline"],
-            ["b-stronger", "Response B has stronger source discipline"],
-            ["equivalent", "No material difference is visible"],
-          ],
-          claimsTitle: "Claim-evidence matrix",
-          claimsHelp:
-            "Map each claim to a source, a conflict or an evidence gap, then decide the redline.",
-          claims: [
-            "Claim 1 · The exhibition opens on 12 October.",
-            "Claim 2 · The object entered the collection in 1986.",
-            "Claim 3 · The exhibition cuts energy use by 40%.",
-          ],
-          source: "Evidence status",
-          sourceOptions: [
-            ["", "Select evidence"],
-            ["source-a", "Source A"],
-            ["source-b", "Source B"],
-            ["source-c", "Source C"],
-            ["conflict", "Source conflict"],
-            ["gap", "Evidence gap"],
-          ],
-          decision: "Redline",
-          decisionOptions: [
-            ["", "Select a decision"],
-            ["retain", "Retain"],
-            ["qualify", "Qualify/show uncertainty"],
-            ["remove", "Remove"],
-          ],
-          claimCorrect: "Mapping and redline match the source packet.",
-          claimIncorrect:
-            "Evidence status or redline conflicts with the source packet.",
-          rubricTitle: "Four-dimension comparison rubric · Responses A and B",
-          rubricHelp:
-            "Score each dimension on its own: 1 = absent or unsupported, 2 = material gaps, 3 = mostly met, 4 = fully met.",
-          rubricDimensions: {
-            factuality: "Factuality",
-            completeness: "Completeness",
-            calibration: "Calibration/uncertainty",
-            format: "Format compliance",
-          },
-          responseA: "Response A",
-          responseB: "Response B",
-          score: "Score",
-          scoreOptions: [
-            [0, "Select a score"],
-            [1, "1 · absent or unsupported"],
-            [2, "2 · material gaps"],
-            [3, "3 · mostly met"],
-            [4, "4 · fully met"],
-          ],
-          twoOutputs: "Two real provider responses for the same case",
-          comparisonComplete: "Response comparison decided",
-          claimsComplete: "All three claims correctly mapped and redlined",
-          rubricComplete:
-            "Both responses scored on all four dimensions",
-          comparisonMismatch:
-            "The verdict must match the rubric totals.",
         };
 
   const diagnostics = useMemo(
@@ -988,29 +596,8 @@ export default function PromptLab({
     }),
     [context, prompt],
   );
-  const secondaryReady =
-    variant !== "grounding" ||
-    restoredSecondaryReady ||
-    (secondaryPrompt.trim().length >= 36 &&
-      /source|quelle|evidence|beleg/i.test(secondaryPrompt) &&
-      /refus|verweig|uncertain|unsicher/i.test(secondaryPrompt));
   const controlsReady = approvalGate && stopCondition && handoffDefined;
   const providerEvidence = runState === "success";
-  const twoOutputEvidence =
-    variant !== "grounding" ||
-    (providerEvidence &&
-      ((providerOutput.trim().length > 0 &&
-        secondaryProviderOutput.trim().length > 0) ||
-        initialFields.twoOutputEvidence === true));
-  const comparisonReady =
-    variant !== "grounding" ||
-    comparisonMatchesRubric(comparisonDecision, rubricScores);
-  const claimReviewReady =
-    variant !== "grounding" || claimReviewsAreCorrect(claimReviews);
-  const rubricReady =
-    variant !== "grounding" || rubricComparisonIsComplete(rubricScores);
-  const groundingEvidenceReady =
-    twoOutputEvidence && comparisonReady && claimReviewReady && rubricReady;
   const degradedCompletionReady =
     runState === "error" &&
     providerFailure?.supportsDegradedCompletion === true &&
@@ -1021,20 +608,15 @@ export default function PromptLab({
     isCourseProjectLocalLearningFailureClass(providerFailure.kind);
   const completionOutcomeReady = providerEvidence || degradedCompletionReady;
   const expectedEvaluation = providerEvidence
-    ? variant === "grounding"
-      ? "grounding"
-      : variant === "operator"
-        ? "intervene"
-        : "workflow"
+    ? variant === "operator"
+      ? "intervene"
+      : "workflow"
     : degradedCompletionReady
       ? "stop"
       : "";
   const evaluationReady =
     evaluation === expectedEvaluation && evaluation !== "";
-  const missionReady =
-    secondaryReady &&
-    controlsReady &&
-    (variant === "grounding" ? groundingEvidenceReady : evaluationReady);
+  const missionReady = controlsReady && evaluationReady;
   const effectiveDiagnostics = restoredStructure
     ? { goal: true, context: true, constraints: true }
     : diagnostics;
@@ -1050,14 +632,12 @@ export default function PromptLab({
     privacyConfirmed &&
     context.trim().length > 0 &&
     prompt.trim().length > 0 &&
-    secondaryReady &&
     controlsReady &&
     requestLength <= 3_800;
   const canRunLocalLearning =
     localLearningAvailable &&
     privacyConfirmed &&
     structureReady &&
-    secondaryReady &&
     controlsReady;
   const artifact = useMemo<CourseProjectArtifactState>(
     () => ({
@@ -1069,22 +649,12 @@ export default function PromptLab({
         contextReady: effectiveDiagnostics.context,
         constraintsReady: effectiveDiagnostics.constraints,
         variant: String(config.courseSlug),
-        ...(variant !== "grounding" || localLearningCompleted
-          ? { secondaryReady }
-          : {}),
+        secondaryReady: true,
         approvalGate,
         stopCondition,
         handoffDefined,
         ...(variant === "operator" ? { budget } : {}),
-        ...(variant !== "grounding" ? { evaluation } : {}),
-        ...(variant === "grounding" && providerEvidence
-          ? {
-              twoOutputEvidence,
-              comparisonDecision,
-              claimReviewCode: encodeClaimReviews(claimReviews),
-              rubricScores: rubricReady ? encodeRubricScores(rubricScores) : 0,
-            }
-          : {}),
+        evaluation,
         providerEvidence: providerEvidence ? "success" : "none",
         executionReceipt: providerEvidence ? executionReceipt : null,
         ...(localLearningCompleted
@@ -1113,8 +683,6 @@ export default function PromptLab({
       evaluation,
       executionReceipt,
       handoffDefined,
-      claimReviews,
-      comparisonDecision,
       privacyConfirmed,
       providerEvidence,
       providerFailure?.kind,
@@ -1122,11 +690,7 @@ export default function PromptLab({
       localLearningCompleted,
       localLearningReceipt,
       selectedModel,
-      secondaryReady,
-      rubricReady,
-      rubricScores,
       stopCondition,
-      twoOutputEvidence,
       variant,
     ],
   );
@@ -1154,19 +718,11 @@ export default function PromptLab({
     abortProviderRequest();
     setRunState("idle");
     setProviderOutput("");
-    setSecondaryProviderOutput("");
     setProviderFailure(null);
     setProviderIdentity("");
     setDegradedCompletionAcknowledged(false);
     setLocalLearningCompleted(false);
     setEvaluation("");
-    setComparisonDecision("");
-    setClaimReviews([
-      EMPTY_CLAIM_REVIEW,
-      EMPTY_CLAIM_REVIEW,
-      EMPTY_CLAIM_REVIEW,
-    ]);
-    setRubricScores(EMPTY_RUBRIC_COMPARISON);
     setVerified(false);
   }
 
@@ -1175,13 +731,6 @@ export default function PromptLab({
     setDegradedCompletionAcknowledged(false);
     setLocalLearningCompleted(false);
     setEvaluation("");
-    setComparisonDecision("");
-    setClaimReviews([
-      EMPTY_CLAIM_REVIEW,
-      EMPTY_CLAIM_REVIEW,
-      EMPTY_CLAIM_REVIEW,
-    ]);
-    setRubricScores(EMPTY_RUBRIC_COMPARISON);
     setRunState("error");
   }
 
@@ -1201,18 +750,10 @@ export default function PromptLab({
 
     setRunState("loading");
     setProviderOutput("");
-    setSecondaryProviderOutput("");
     setProviderFailure(null);
     setDegradedCompletionAcknowledged(false);
     setLocalLearningCompleted(false);
     setEvaluation("");
-    setComparisonDecision("");
-    setClaimReviews([
-      EMPTY_CLAIM_REVIEW,
-      EMPTY_CLAIM_REVIEW,
-      EMPTY_CLAIM_REVIEW,
-    ]);
-    setRubricScores(EMPTY_RUBRIC_COMPARISON);
     setVerified(false);
 
     const assemble = (instruction: string) =>
@@ -1221,13 +762,6 @@ export default function PromptLab({
           ? "Antworte auf Deutsch."
           : "Respond in English. This explicit output-language requirement must be honored.",
         "<working_context>",
-        ...(variant === "grounding"
-          ? [
-              "<synthetic_source_packet>",
-              GROUNDING_SOURCE_PACKET[locale],
-              "</synthetic_source_packet>",
-            ]
-          : []),
         context.trim(),
         "</working_context>",
         "<instruction>",
@@ -1286,34 +820,6 @@ export default function PromptLab({
       setProviderIdentity(
         `${primaryCompletion.provider} · ${primaryCompletion.model}`,
       );
-      if (variant === "grounding") {
-        const secondary = await run(secondaryPrompt);
-        if (!requestIsCurrent()) return;
-        if (!secondary.response.ok) {
-          failProviderRun(
-            classifyProviderFailure(locale, {
-              status: secondary.response.status,
-              serverError: secondary.payload?.error,
-              serverCode: secondary.payload?.code,
-            }),
-          );
-          return;
-        }
-        const secondaryCompletion = validatePracticeCompletion(
-          secondary.payload,
-          selectedModel,
-        );
-        if (!secondaryCompletion) {
-          failProviderRun(
-            classifyProviderFailure(locale, {
-              status: secondary.response.status,
-              malformedResponse: true,
-            }),
-          );
-          return;
-        }
-        setSecondaryProviderOutput(secondaryCompletion.text);
-      }
       setRunState("success");
       setLocalLearningCompleted(false);
       onExecutionReceipt?.(executionReceipt);
@@ -1350,16 +856,6 @@ export default function PromptLab({
 
   return (
     <EngineFrame config={config} locale={locale}>
-      {variant === "grounding" ? (
-        <section className="mb-5 border-2 border-foreground bg-brand-orange/[0.08] p-4">
-          <h3 className="font-mono text-xs font-black uppercase tracking-[0.14em]">
-            {groundingCopy.packetTitle}
-          </h3>
-          <pre className="mt-3 whitespace-pre-wrap border-l-4 border-brand-orange pl-3 font-mono text-xs leading-relaxed">
-            {GROUNDING_SOURCE_PACKET[locale]}
-          </pre>
-        </section>
-      ) : null}
       <div className="grid min-w-0 gap-5 xl:grid-cols-[minmax(0,1.25fr)_minmax(17rem,0.75fr)]">
         <div className="min-w-0 space-y-4">
           <div>
@@ -1415,33 +911,6 @@ export default function PromptLab({
               {requestLength} / {locale === "de" ? "3.800" : "3,800"}
             </p>
           </div>
-          {variant === "grounding" ? (
-            <div>
-              <label htmlFor={secondaryPromptId} className="text-sm font-black">
-                {missionCopy.secondaryPrompt}
-              </label>
-              <p
-                id={`${secondaryPromptId}-help`}
-                className="mt-1 text-xs leading-relaxed text-muted-foreground"
-              >
-                {missionCopy.secondaryHelp}
-              </p>
-              <textarea
-                id={secondaryPromptId}
-                aria-describedby={`${secondaryPromptId}-help`}
-                className={`${LAB_INPUT} mt-2 min-h-40 resize-y font-mono`}
-                value={secondaryPrompt}
-                maxLength={220}
-                placeholder={missionCopy.secondaryPlaceholder}
-                onChange={(event) => {
-                  onMeaningfulInteraction?.();
-                  setSecondaryPrompt(event.target.value);
-                  setRestoredSecondaryReady(false);
-                  invalidateProviderEvidence();
-                }}
-              />
-            </div>
-          ) : null}
         </div>
 
         <aside className="min-w-0 border-2 border-foreground/20 bg-background p-4">
@@ -1467,8 +936,8 @@ export default function PromptLab({
           {missionCopy.workflowControls}
         </legend>
         {variant === "operator" ? (
-          <div className="mb-4 border-2 border-foreground bg-[#11100f] p-4 text-[#f8f5ee]">
-            <p className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+          <div className="mb-4 border-2 border-foreground bg-inset p-4 text-foreground">
+            <p className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
               {missionCopy.graph}
             </p>
             <label className="mt-4 block text-sm font-bold">
@@ -1568,6 +1037,7 @@ export default function PromptLab({
             <option value="google/gemini-2.5-flash-lite">
               Gemini 2.5 Flash-Lite · Google
             </option>
+            <option value="openai/gpt-5-mini">GPT-5 mini · OpenAI</option>
           </select>
         </div>
         <button
@@ -1583,79 +1053,40 @@ export default function PromptLab({
       <section
         aria-labelledby={`${config.id}-provider-output`}
         aria-busy={runState === "loading"}
-        className="mt-4 min-w-0 border-2 border-foreground bg-[#11100f] p-4 text-[#f8f5ee]"
+        className="mt-4 min-w-0 border-2 border-foreground bg-inset p-4 text-foreground"
       >
         <h3
           id={`${config.id}-provider-output`}
-          className="font-mono text-xs font-black uppercase tracking-[0.14em] text-[#ffb08a]"
+          className="font-mono text-xs font-black uppercase tracking-[0.14em] text-kupfer-dark"
         >
           {copy.providerTitle}
         </h3>
         <div aria-live="polite" className="mt-3 min-w-0">
           {runState === "success" ? (
             <>
-              <p className="text-xs font-bold text-emerald-300">
+              <p className="text-xs font-bold text-pass">
                 {copy.success}
               </p>
               {providerIdentity ? (
-                <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
+                <p className="mt-2 font-mono text-xs uppercase tracking-wide text-muted-foreground">
                   {providerIdentity}
                 </p>
               ) : null}
               {providerOutput ? (
-                variant === "grounding" ? (
-                  <div className="mt-3 grid min-w-0 gap-3 lg:grid-cols-2">
-                    {[
-                      [missionCopy.outputA, providerOutput],
-                      [missionCopy.outputB, secondaryProviderOutput],
-                    ].map(([label, output]) => (
-                      <div
-                        key={label}
-                        className="min-w-0 border border-[#f8f5ee]/25 p-3"
-                      >
-                        <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
-                          {label}
-                        </h4>
-                        <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-[#f8f5ee]">
-                          {output}
-                        </pre>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words border-l-2 border-emerald-500 pl-3 font-mono text-sm leading-relaxed text-[#f8f5ee]">
-                    {providerOutput}
-                  </pre>
-                )
+                <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words border-l-2 border-pass pl-3 font-mono text-sm leading-relaxed text-foreground">
+                  {providerOutput}
+                </pre>
               ) : (
-                <p className="mt-3 border-l-2 border-emerald-500 pl-3 text-sm leading-relaxed text-[#d7d0c4]">
+                <p className="mt-3 border-l-2 border-pass pl-3 text-sm leading-relaxed text-muted-foreground">
                   {copy.priorSuccess}
                 </p>
               )}
             </>
           ) : runState === "error" ? (
             <div className="space-y-4">
-              {providerOutput ? (
-                <div className="border border-amber-300/50 bg-amber-300/10 p-3">
-                  <p className="text-xs font-bold leading-relaxed text-amber-200">
-                    {copy.partialPrimary}
-                  </p>
-                  {providerIdentity ? (
-                    <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
-                      {providerIdentity}
-                    </p>
-                  ) : null}
-                  <h4 className="mt-3 font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
-                    {missionCopy.outputA}
-                  </h4>
-                  <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border-l-2 border-amber-300 pl-3 font-mono text-sm leading-relaxed text-[#f8f5ee]">
-                    {providerOutput}
-                  </pre>
-                </div>
-              ) : null}
               <div className="border-l-2 border-destructive pl-3">
                 {providerFailure ? (
-                  <p className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+                  <p className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
                     {copy.failureClass}:{" "}
                     {copy.failureClassLabels[providerFailure.kind]}
                   </p>
@@ -1668,12 +1099,12 @@ export default function PromptLab({
                 </p>
                 {providerFailure?.supportsDegradedCompletion ? (
                   <>
-                    <p className="mt-3 text-sm font-semibold leading-relaxed text-amber-200">
+                    <p className="mt-3 text-sm font-semibold leading-relaxed text-risk-yellow">
                       {copy.degradedNotice}
                     </p>
                     <button
                       type="button"
-                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-[#f8f5ee]/50 bg-[#11100f] text-[#f8f5ee] hover:border-[#ffb08a] hover:text-[#ffb08a]`}
+                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-border bg-inset text-foreground hover:border-kupfer-dark hover:text-kupfer-dark`}
                       disabled={degradedCompletionAcknowledged}
                       onClick={() => {
                         setLocalLearningCompleted(false);
@@ -1687,7 +1118,7 @@ export default function PromptLab({
                     </button>
                   </>
                 ) : (
-                  <p className="mt-3 text-sm font-semibold leading-relaxed text-[#f8f5ee]">
+                  <p className="mt-3 text-sm font-semibold leading-relaxed text-foreground">
                     {copy.operationalFailure}
                   </p>
                 )}
@@ -1702,17 +1133,17 @@ export default function PromptLab({
                         : copy.localLearningTitle
                     }
                     data-local-learning-feedback
-                    className="mt-4 border border-amber-300/50 bg-amber-300/10 p-3 outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2"
+                    className="mt-4 border border-risk-yellow/50 bg-amber-50 p-3 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
                   >
-                    <p className="font-mono text-xs font-black uppercase tracking-wide text-amber-200">
+                    <p className="font-mono text-xs font-black uppercase tracking-wide text-risk-yellow">
                       {copy.localLearningTitle}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-[#f8f5ee]">
+                    <p className="mt-2 text-sm leading-relaxed text-foreground">
                       {copy.localLearningNotice}
                     </p>
                     <button
                       type="button"
-                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-[#f8f5ee]/50 bg-[#11100f] text-[#f8f5ee] hover:border-[#ffb08a] hover:text-[#ffb08a]`}
+                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-border bg-inset text-foreground hover:border-kupfer-dark hover:text-kupfer-dark`}
                       disabled={!canRunLocalLearning || localLearningCompleted}
                       onClick={runLocalLearningCheck}
                     >
@@ -1725,222 +1156,13 @@ export default function PromptLab({
               </div>
             </div>
           ) : (
-            <p className="text-sm leading-relaxed text-[#d7d0c4]">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {runState === "loading" ? copy.running : copy.providerIdle}
             </p>
           )}
         </div>
       </section>
 
-      {variant === "grounding" ? (
-        <section
-          aria-labelledby={`${config.id}-evidence-desk`}
-          className="mt-5 min-w-0 border-2 border-foreground p-4 sm:p-5"
-        >
-          <h3
-            id={`${config.id}-evidence-desk`}
-            className="font-mono text-xs font-black uppercase tracking-[0.14em]"
-          >
-            {groundingCopy.deskTitle}
-          </h3>
-          <p className="mt-2 max-w-3xl text-xs leading-relaxed text-muted-foreground">
-            {groundingCopy.deskHelp}
-          </p>
-
-          <div className="mt-5 border-2 border-foreground/20 p-4">
-            <label
-              htmlFor={`${config.id}-comparison`}
-              className="text-sm font-black"
-            >
-              {groundingCopy.comparison}
-            </label>
-            <select
-              id={`${config.id}-comparison`}
-              className={`${LAB_INPUT} mt-2`}
-              value={comparisonDecision}
-              disabled={!twoOutputEvidence}
-              onChange={(event) => {
-                onMeaningfulInteraction?.();
-                setComparisonDecision(event.target.value as ComparisonDecision);
-                setVerified(false);
-              }}
-            >
-              {groundingCopy.comparisonOptions.map(([value, label]) => (
-                <option key={String(value)} value={String(value)}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            {comparisonDecision && rubricReady && !comparisonReady ? (
-              <p
-                role="status"
-                className="mt-2 text-xs font-bold text-destructive"
-              >
-                {groundingCopy.comparisonMismatch}
-              </p>
-            ) : null}
-          </div>
-
-          <fieldset className="mt-4 min-w-0 border-2 border-foreground/20 p-4">
-            <legend className="px-2 font-mono text-xs font-black uppercase tracking-[0.14em]">
-              {groundingCopy.claimsTitle}
-            </legend>
-            <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-              {groundingCopy.claimsHelp}
-            </p>
-            <div className="grid min-w-0 gap-3 xl:grid-cols-3">
-              {claimReviews.map((review, index) => {
-                const expected = EXPECTED_CLAIM_REVIEWS[index];
-                const answered = review.source !== "" && review.decision !== "";
-                const correct =
-                  answered &&
-                  review.source === expected?.source &&
-                  review.decision === expected?.decision;
-                return (
-                  <div
-                    key={groundingCopy.claims[index]}
-                    className="min-w-0 border-2 border-foreground/15 p-3"
-                  >
-                    <p className="min-h-12 text-sm font-bold leading-relaxed">
-                      {groundingCopy.claims[index]}
-                    </p>
-                    <label className="mt-3 block text-xs font-black">
-                      {groundingCopy.source}
-                      <select
-                        aria-label={`${groundingCopy.claims[index]} · ${groundingCopy.source}`}
-                        className={`${LAB_INPUT} mt-1`}
-                        value={review.source}
-                        disabled={!twoOutputEvidence}
-                        onChange={(event) => {
-                          onMeaningfulInteraction?.();
-                          setClaimReviews((current) =>
-                            current.map((entry, entryIndex) =>
-                              entryIndex === index
-                                ? {
-                                    ...entry,
-                                    source: event.target
-                                      .value as ClaimEvidenceSource,
-                                  }
-                                : entry,
-                            ),
-                          );
-                          setVerified(false);
-                        }}
-                      >
-                        {groundingCopy.sourceOptions.map(([value, label]) => (
-                          <option key={String(value)} value={String(value)}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    <label className="mt-3 block text-xs font-black">
-                      {groundingCopy.decision}
-                      <select
-                        aria-label={`${groundingCopy.claims[index]} · ${groundingCopy.decision}`}
-                        className={`${LAB_INPUT} mt-1`}
-                        value={review.decision}
-                        disabled={!twoOutputEvidence}
-                        onChange={(event) => {
-                          onMeaningfulInteraction?.();
-                          setClaimReviews((current) =>
-                            current.map((entry, entryIndex) =>
-                              entryIndex === index
-                                ? {
-                                    ...entry,
-                                    decision: event.target
-                                      .value as RedlineDecision,
-                                  }
-                                : entry,
-                            ),
-                          );
-                          setVerified(false);
-                        }}
-                      >
-                        {groundingCopy.decisionOptions.map(([value, label]) => (
-                          <option key={String(value)} value={String(value)}>
-                            {label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                    {answered ? (
-                      <p
-                        role="status"
-                        className={`mt-3 text-xs font-bold leading-relaxed ${
-                          correct ? "text-risk-green" : "text-destructive"
-                        }`}
-                      >
-                        {correct
-                          ? groundingCopy.claimCorrect
-                          : groundingCopy.claimIncorrect}
-                      </p>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
-          </fieldset>
-
-          <fieldset className="mt-4 min-w-0 border-2 border-foreground/20 p-4">
-            <legend className="px-2 font-mono text-xs font-black uppercase tracking-[0.14em]">
-              {groundingCopy.rubricTitle}
-            </legend>
-            <p className="mb-4 text-xs leading-relaxed text-muted-foreground">
-              {groundingCopy.rubricHelp}
-            </p>
-            <div className="grid min-w-0 gap-4 xl:grid-cols-2">
-              {(["responseA", "responseB"] as const).map((response) => (
-                <div
-                  key={response}
-                  className="min-w-0 border-2 border-foreground/15 p-3"
-                >
-                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-brand-orange-dark">
-                    {groundingCopy[response]}
-                  </h4>
-                  <div className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
-                    {RUBRIC_DIMENSIONS.map((dimension) => (
-                      <label
-                        key={dimension}
-                        className="min-w-0 border border-foreground/15 p-3 text-xs font-black"
-                      >
-                        {groundingCopy.rubricDimensions[dimension]}
-                        <span className="sr-only">
-                          {" "}
-                          · {groundingCopy[response]} · {groundingCopy.score}
-                        </span>
-                        <select
-                          aria-label={`${groundingCopy[response]} · ${groundingCopy.rubricDimensions[dimension]} · ${groundingCopy.score}`}
-                          className={`${LAB_INPUT} mt-2`}
-                          value={rubricScores[response][dimension]}
-                          disabled={!twoOutputEvidence}
-                          onChange={(event) => {
-                            onMeaningfulInteraction?.();
-                            setRubricScores((current) => ({
-                              ...current,
-                              [response]: {
-                                ...current[response],
-                                [dimension]: Number(event.target.value),
-                              },
-                            }));
-                            setVerified(false);
-                          }}
-                        >
-                          {groundingCopy.scoreOptions.map(([value, label]) => (
-                            <option key={String(value)} value={Number(value)}>
-                              {label}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </fieldset>
-        </section>
-      ) : (
         <fieldset className="mt-5 min-w-0 border-2 border-foreground/20 p-4">
           <legend className="px-2 font-mono text-xs font-black uppercase tracking-[0.14em]">
             {missionCopy.review}
@@ -1981,7 +1203,6 @@ export default function PromptLab({
             ))}
           </div>
         </fieldset>
-      )}
 
       <VerifyPanel
         locale={locale}
@@ -2015,26 +1236,9 @@ export default function PromptLab({
                   ? copy.evidenceRunDegraded
                   : copy.evidenceRunPending}
             </EvidenceItem>
-            {variant === "grounding" ? (
-              <>
-                <EvidenceItem complete={twoOutputEvidence}>
-                  {groundingCopy.twoOutputs}
-                </EvidenceItem>
-                <EvidenceItem complete={comparisonReady}>
-                  {groundingCopy.comparisonComplete}
-                </EvidenceItem>
-                <EvidenceItem complete={claimReviewReady}>
-                  {groundingCopy.claimsComplete}
-                </EvidenceItem>
-                <EvidenceItem complete={rubricReady}>
-                  {groundingCopy.rubricComplete}
-                </EvidenceItem>
-              </>
-            ) : (
               <EvidenceItem complete={missionReady}>
                 {missionCopy.missionEvidence}
               </EvidenceItem>
-            )}
           </>
         }
       />

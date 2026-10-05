@@ -3,11 +3,10 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const BLOCK_FILES = [
-  "block-1-entdeckung-lessons.json",
-  "block-2-datenschutz-lessons.json",
-  "block-3-anwendung-lessons.json",
-  "block-4-verifikation-lessons.json",
-  "block-5-richtlinie-lessons.json",
+  "block-1-daten-lessons.json",
+  "block-2-briefen-lessons.json",
+  "block-3-pruefen-lessons.json",
+  "block-4-regeln-lessons.json",
 ] as const;
 
 interface AnswerOption {
@@ -23,20 +22,22 @@ interface Question {
   explanation: string;
 }
 
+interface LessonCheck {
+  id: string;
+  prompt: string;
+  options: Array<{ id: string; text: string; correct: boolean; feedback?: string }>;
+  explanation: string;
+}
+
 interface LessonFile {
   lessons: Array<{
     id: string;
     title: string;
     subtitle: string;
     keyConcepts: string[];
-    sections: Array<{
-      id: string;
-      title: string;
-      content: string;
-      keyTakeaway: string;
-    }>;
-    quiz: Question[];
-    widgets?: unknown[];
+    concept: { body: string; takeaway?: string };
+    exercise: { kind: string; title: string; instructions: string; props: unknown };
+    checks: LessonCheck[];
   }>;
 }
 
@@ -100,18 +101,28 @@ function collectQuestionCopy(question: Question): string[] {
   return [question.questionText, question.explanation, correctOptions[0].text];
 }
 
+function collectCheckCopy(check: LessonCheck): string[] {
+  const correct = check.options.filter((option) => option.correct);
+  expect(correct, `${check.id} must have one correct answer`).toHaveLength(1);
+  return [
+    check.prompt,
+    check.explanation,
+    correct[0].text,
+    ...check.options.flatMap((option) => (option.feedback ? [option.feedback] : [])),
+  ];
+}
+
 function collectLessonCopy(file: LessonFile): string[] {
   return file.lessons.flatMap((lesson) => [
     lesson.title,
     lesson.subtitle,
     ...lesson.keyConcepts,
-    ...lesson.sections.flatMap((section) => [
-      section.title,
-      section.content,
-      section.keyTakeaway,
-    ]),
-    ...lesson.quiz.flatMap(collectQuestionCopy),
-    ...collectWidgetCopy(lesson.widgets ?? []),
+    lesson.concept.body,
+    lesson.concept.takeaway ?? "",
+    lesson.exercise.title,
+    lesson.exercise.instructions,
+    ...collectWidgetCopy(lesson.exercise.props),
+    ...lesson.checks.flatMap(collectCheckCopy),
   ]);
 }
 
@@ -131,24 +142,21 @@ describe("KI-Führerschein claim hygiene", () => {
 
       for (const [lessonIndex, lesson] of german.lessons.entries()) {
         const translation = english.lessons[lessonIndex];
-        expect(translation.sections.map((section) => section.id)).toEqual(
-          lesson.sections.map((section) => section.id),
-        );
-        expect(translation.quiz.map((question) => question.id)).toEqual(
-          lesson.quiz.map((question) => question.id),
+        expect(translation.exercise.kind).toBe(lesson.exercise.kind);
+        expect(translation.checks.map((check) => check.id)).toEqual(
+          lesson.checks.map((check) => check.id),
         );
 
-        for (const [questionIndex, question] of lesson.quiz.entries()) {
-          const translatedQuestion = translation.quiz[questionIndex];
+        for (const [checkIndex, check] of lesson.checks.entries()) {
           expect(
-            translatedQuestion.answerOptions.map((option) => ({
+            translation.checks[checkIndex].options.map((option) => ({
               id: option.id,
-              isCorrect: option.isCorrect,
+              correct: option.correct,
             })),
           ).toEqual(
-            question.answerOptions.map((option) => ({
+            check.options.map((option) => ({
               id: option.id,
-              isCorrect: option.isCorrect,
+              correct: option.correct,
             })),
           );
         }

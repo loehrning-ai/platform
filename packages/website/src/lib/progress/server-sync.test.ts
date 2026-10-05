@@ -103,13 +103,13 @@ function progress(over: Partial<UnifiedProgress> = {}): UnifiedProgress {
   };
 }
 
-const AI_NATIVE_LESSON = "modul_1_lesson_1";
-const AI_NATIVE_SECTION = "modul_1_lesson_1_section_1";
-const KF_LESSON = "block_1_lesson_1";
-const KF_SECTION = "block_1_lesson_1_section_1";
+const AI_NATIVE_LESSON = "messen-1-1";
+const AI_NATIVE_SECTION = "messen-1-1_exercise";
+const KF_LESSON = "daten-1-1";
+const KF_SECTION = "daten-1-1_exercise";
 const EU_LESSON = "block_1_lesson_1";
-const SOCIETY_LESSON = "arbeit-1-1";
-const SOCIETY_SECTION = "arbeit-1-1-s1";
+const SOCIETY_LESSON = "zahlen-1-1";
+const SOCIETY_SECTION = "zahlen-1-1_exercise";
 
 /** JSON round-trip clone (fixtures are JSON-safe: only primitives + null). */
 function clone<T>(value: T): T {
@@ -1113,10 +1113,10 @@ describe("mergeUnifiedProgress - lesson merge", () => {
 
 describe("mergeUnifiedProgress - exercise merge", () => {
   it("retains exact applied-project completion across device merge", () => {
-    const identity = getCourseProjectIdentity("claude");
+    const identity = getCourseProjectIdentity("ai-native-operator");
     const local = progress({
       courses: {
-        claude: slice({
+        "ai-native-operator": slice({
           lessons: {
             [identity.progressLessonId]: lesson({
               completed: false,
@@ -1128,7 +1128,7 @@ describe("mergeUnifiedProgress - exercise merge", () => {
     });
     const remote = progress({
       courses: {
-        claude: slice({
+        "ai-native-operator": slice({
           lessons: {
             [identity.progressLessonId]: lesson({
               completed: false,
@@ -1141,7 +1141,7 @@ describe("mergeUnifiedProgress - exercise merge", () => {
                   skipped: false,
                   summary: serializeCourseProjectProgress(
                     "Verified",
-                    verifiedCourseProjectArtifact("claude"),
+                    verifiedCourseProjectArtifact("ai-native-operator"),
                   ),
                 }),
               },
@@ -1153,7 +1153,7 @@ describe("mergeUnifiedProgress - exercise merge", () => {
 
     const merged = mergeUnifiedProgress(local, remote);
 
-    expect(hasAppliedProjectCompletion(merged, "claude")).toBe(true);
+    expect(hasAppliedProjectCompletion(merged, "ai-native-operator")).toBe(true);
   });
 
   it("merges a shared exercise: completed OR, score max, attempts max, completedAt latest, skipped OR", () => {

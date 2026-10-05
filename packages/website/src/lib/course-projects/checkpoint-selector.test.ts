@@ -10,35 +10,33 @@ import { COURSE_PROJECT_STAGE_IDS } from "./types";
 
 const EXPECTED_CHECKPOINT_LESSONS = {
   "ki-fuehrerschein": [
-    "block_1_lesson_1",
-    "block_2_lesson_1",
-    "block_3_lesson_1",
-    "block_4_lesson_1",
-    "block_5_lesson_1",
+    "daten-1-1",
+    "briefen-2-1",
+    "pruefen-3-1",
+    "pruefen-3-2",
+    "regeln-4-1",
   ],
   "ki-und-gesellschaft": [
-    "arbeit-1-1",
-    "deepfake-2-1",
-    "deepfake-2-3",
-    "ethik-3-1",
-    "ethik-3-3",
+    "zahlen-1-1",
+    "fakes-2-1",
+    "fakes-2-3",
+    "fair-3-1",
+    "fair-3-3",
   ],
   "eu-ai-act-kurs": [
-    "block_1_lesson_1",
-    "block_2_lesson_1",
-    "block_3_lesson_1",
-    "block_4_lesson_1",
-    "block_6_lesson_1",
+    "rolle-1-1",
+    "risiko-2-1",
+    "pflichten-3-1",
+    "bussgeld-4-1",
+    "fall-5-1",
   ],
   "ai-native": [
-    "modul_1_lesson_1",
-    "modul_2_lesson_1",
-    "modul_3_lesson_1",
-    "modul_4_lesson_1",
-    "modul_4_lesson_7",
+    "messen-1-1",
+    "kontext-2-1",
+    "wissen-3-1",
+    "workflow-4-1",
+    "workflow-4-3",
   ],
-  claude: ["mental-model", "claude-md", "agents", "team", "safety"],
-  codex: ["L01", "L04", "L07", "L10", "L12"],
   "data-infrastructure": [
     "mental-model",
     "storage-formats",
@@ -58,8 +56,8 @@ const EXPECTED_CHECKPOINT_LESSONS = {
 } as const satisfies Readonly<Record<CourseSlug, readonly string[]>>;
 
 describe("course project checkpoint selector", () => {
-  it("selects exactly five ordered stage-start checkpoints for all ten courses", () => {
-    expect(COURSE_SLUGS).toHaveLength(10);
+  it("selects exactly five ordered stage-start checkpoints for all eight courses", () => {
+    expect(COURSE_SLUGS).toHaveLength(8);
 
     for (const courseSlug of COURSE_SLUGS) {
       const checkpoints = selectCourseProjectCheckpoints(courseSlug);
@@ -92,7 +90,7 @@ describe("course project checkpoint selector", () => {
     }
   });
 
-  it("resolves only the fifty selected checkpoints and fails closed otherwise", () => {
+  it("resolves only the forty selected checkpoints and fails closed otherwise", () => {
     let selectedCount = 0;
 
     for (const courseSlug of COURSE_SLUGS) {
@@ -118,6 +116,6 @@ describe("course project checkpoint selector", () => {
       expect(isCourseProjectCheckpointLesson(courseSlug, "not-canonical")).toBe(false);
     }
 
-    expect(selectedCount).toBe(50);
+    expect(selectedCount).toBe(40);
   });
 });

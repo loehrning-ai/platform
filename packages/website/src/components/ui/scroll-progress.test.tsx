@@ -43,12 +43,12 @@ describe("<ScrollProgress>", () => {
     expect(
       container.querySelectorAll("[data-scroll-progress-fill]"),
     ).toHaveLength(1);
-    // Ink over the header, no Mennige: the logo square is the chrome's one
-    // red mark, and an unscrolled page draws no line at all.
+    // The old site's Mennige thread on a faint Mennige track. Never ink:
+    // the chrome carries no black marks.
     expect(
       container.querySelector('[data-scroll-progress-fill="top"]'),
-    ).toHaveClass("bg-foreground");
-    expect(thread?.innerHTML).not.toMatch(/brand-orange|mennige|kupfer/);
+    ).toHaveClass("bg-brand-orange");
+    expect(thread?.innerHTML).not.toMatch(/bg-foreground|bg-black|bg-graphit/);
   });
 
   it("keeps identical progress nodes across server render and hydration", async () => {

@@ -29,8 +29,8 @@ const POSTER_WIDTH = Math.round((POSTER_HEIGHT * 4) / 5);
 let fontData: Promise<{ bold: Buffer; regular: Buffer }> | undefined;
 export async function courseOgFonts() {
   fontData ??= Promise.all([
-    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf")),
-    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Regular.ttf")),
+    readFile(join(process.cwd(), "src/fonts/Figtree-Bold.ttf")),
+    readFile(join(process.cwd(), "src/fonts/Figtree-Regular.ttf")),
   ]).then(([bold, regular]) => ({ bold, regular }));
   const { bold, regular } = await fontData;
   return [

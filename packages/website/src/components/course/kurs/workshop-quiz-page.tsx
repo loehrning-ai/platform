@@ -13,11 +13,14 @@ import { m, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
+  Check,
   CheckCircle2,
   XCircle,
   Clock,
+  LockKeyhole,
   Trophy,
   RotateCcw,
+  X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 // Config comes from the JSON-free config module; the question JSON itself is
@@ -42,6 +45,14 @@ import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { MotionProvider } from "@/components/motion-provider";
 import { trackCourseCompletion } from "@/lib/analytics/events";
+import { ProgressRing } from "@/components/lesson-engine/progress-ring";
+import { CelebrationBurst } from "@/components/lesson-engine/celebration-burst";
+import {
+  APP_CARD,
+  APP_GHOST,
+  APP_PRIMARY,
+  APP_SECONDARY,
+} from "@/components/lesson-engine/app-ui";
 
 /**
  * Shared workshop-quiz screen for every free course (shared course architecture,
@@ -50,10 +61,9 @@ import { trackCourseCompletion } from "@/lib/analytics/events";
  */
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
-// The persistent root nav is at most 64px tall and has a 1px bottom border.
-// Keeping the quiz bar below that maximum avoids covered controls at every
-// scroll position while preserving its fixed, always-visible timer.
-const GLOBAL_NAV_OFFSET_PX = 65;
+// The quiz bar sits flush below the persistent root nav (--nav-h-compact
+// below lg, --nav-h from lg) so its timer stays visible at every scroll
+// position; its cap paints the band behind the translucent nav.
 const SLIDE = {
   enter: (dir: number) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
   center: { x: 0, opacity: 1 },
@@ -85,6 +95,12 @@ interface QuizCopy {
   readonly selectedIncorrect: string;
   readonly next: string;
   readonly result: string;
+  readonly passedTitle: string;
+  readonly failedTitle: string;
+  readonly statCorrect: string;
+  readonly statPassMark: string;
+  readonly statTime: string;
+  readonly answersLabel: string;
   readonly answerFeedback: (correct: boolean, explanation: string) => string;
   readonly completionFeedback: (
     score: number,
@@ -126,6 +142,12 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     selectedIncorrect: "Deine Auswahl ist falsch.",
     next: "Weiter",
     result: "Ergebnis",
+    passedTitle: "Bestanden",
+    failedTitle: "Noch nicht bestanden",
+    statCorrect: "Richtig",
+    statPassMark: "Bestehen ab",
+    statTime: "Zeit",
+    answersLabel: "Deine Antworten",
     answerFeedback: (correct, explanation) =>
       `${correct ? "Richtig." : "Nicht korrekt."} ${explanation}`,
     completionFeedback: (score, total, percentage) =>
@@ -163,6 +185,12 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     selectedIncorrect: "Your selection is incorrect.",
     next: "Next",
     result: "Result",
+    passedTitle: "Passed",
+    failedTitle: "Not passed yet",
+    statCorrect: "Correct",
+    statPassMark: "Pass mark",
+    statTime: "Time",
+    answersLabel: "Your answers",
     answerFeedback: (correct, explanation) =>
       `${correct ? "Correct." : "Not correct."} ${explanation}`,
     completionFeedback: (score, total, percentage) =>
@@ -594,18 +622,18 @@ export function WorkshopQuizPage({
 
   if (accessAllowed === false) {
     return (
-      <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
-        <div className="max-w-lg text-center">
-          <h1 className="text-fluid-h2 font-bold text-foreground">
+      <div className="course-app-ground flex min-h-[100svh] items-center justify-center px-4">
+        <div className={cn(APP_CARD, "max-w-lg p-6 text-center sm:p-8")}>
+          <span aria-hidden="true" className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-lab-accent-soft text-lab-accent">
+            <LockKeyhole className="h-6 w-6" />
+          </span>
+          <h1 className="mt-4 text-fluid-h2 font-bold tracking-[-0.02em] text-foreground">
             {copy.completeLessonsTitle}
           </h1>
           <p className="mt-3 text-muted-foreground">
             {copy.completeLessonsBody}
           </p>
-          <Link
-            href={localizedCoursePath}
-            className="mt-6 inline-flex min-h-11 items-center gap-2 border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
-          >
+          <Link href={localizedCoursePath} className={cn(APP_SECONDARY, "mt-6 min-h-11")}>
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {copy.backToCourse}
           </Link>
@@ -616,27 +644,24 @@ export function WorkshopQuizPage({
 
   if (sessionIsCurrent && loadError) {
     return (
-      <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
-        <div className="max-w-lg text-center">
-          <h1 className="text-fluid-h2 font-bold text-foreground">
+      <div className="course-app-ground flex min-h-[100svh] items-center justify-center px-4">
+        <div className={cn(APP_CARD, "max-w-lg p-6 text-center sm:p-8")}>
+          <h1 className="text-fluid-h2 font-bold tracking-[-0.02em] text-foreground">
             {copy.loadErrorTitle}
           </h1>
           <p role="alert" className="mt-3 text-muted-foreground">
             {copy.loadErrorBody}
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <button
               type="button"
               onClick={() => setLoadAttempt((attempt) => attempt + 1)}
-              className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+              className={cn(APP_PRIMARY, "min-h-11")}
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               {copy.retry}
             </button>
-            <Link
-              href={localizedCoursePath}
-              className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
+            <Link href={localizedCoursePath} className={cn(APP_GHOST, "min-h-11")}>
               <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               {copy.backToCourse}
             </Link>
@@ -648,7 +673,7 @@ export function WorkshopQuizPage({
 
   if (!sessionIsCurrent || questions.length === 0) {
     return (
-      <div className="flex min-h-[100svh] items-center justify-center bg-background">
+      <div className="course-app-ground flex min-h-[100svh] items-center justify-center">
         <h1 className="sr-only">{copy.title}</h1>
         <p role="status" aria-live="polite" className="text-muted-foreground">
           {copy.loading}
@@ -660,7 +685,7 @@ export function WorkshopQuizPage({
   if (finished) {
     if (resultSaveStatus === "pending") {
       return (
-        <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
+        <div className="course-app-ground flex min-h-[100svh] items-center justify-center px-4">
           <p role="status" aria-live="polite" className="text-muted-foreground">
             {copy.savingResult}
           </p>
@@ -670,30 +695,27 @@ export function WorkshopQuizPage({
 
     if (resultSaveStatus === "error") {
       return (
-        <div className="flex min-h-[100svh] items-center justify-center bg-background px-6">
-          <div className="max-w-lg text-center">
-            <h1 className="text-fluid-h2 font-bold text-foreground">
+        <div className="course-app-ground flex min-h-[100svh] items-center justify-center px-4">
+          <div className={cn(APP_CARD, "max-w-lg p-6 text-center sm:p-8")}>
+            <h1 className="text-fluid-h2 font-bold tracking-[-0.02em] text-foreground">
               {copy.saveErrorTitle}
             </h1>
             <p role="alert" className="mt-3 text-muted-foreground">
               {copy.saveErrorBody}
             </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
               <button
                 type="button"
                 onClick={() => {
                   setResultSaveStatus("pending");
                   setResultSaveAttempt((attempt) => attempt + 1);
                 }}
-                className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+                className={cn(APP_PRIMARY, "min-h-11")}
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 {copy.retrySave}
               </button>
-              <Link
-                href={localizedCoursePath}
-                className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
+              <Link href={localizedCoursePath} className={cn(APP_GHOST, "min-h-11")}>
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 {copy.backToCourse}
               </Link>
@@ -703,8 +725,11 @@ export function WorkshopQuizPage({
       );
     }
 
+    const usedSeconds = Math.max(0, timeLimitMinutes * 60 - timeLeft);
+    const usedLabel = `${Math.floor(usedSeconds / 60)}:${(usedSeconds % 60).toString().padStart(2, "0")}`;
+
     return (
-      <div className="min-h-[100svh] bg-background">
+      <div className="course-app-ground min-h-[100svh]">
         <h1 className="sr-only">{copy.title}</h1>
         <div
           role="status"
@@ -713,40 +738,87 @@ export function WorkshopQuizPage({
           className="sr-only"
           ref={feedbackRef}
         />
-        <div className="mx-auto max-w-2xl px-6 py-12">
+        <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12">
           <MotionProvider>
             <m.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
-              className="text-center"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.55, ease: EASE_OUT_EXPO }}
+              data-quiz-result={passed ? "passed" : "failed"}
+              className="course-app-hero relative overflow-hidden rounded-[28px] border border-lab-line/80 p-6 text-center shadow-lab-lg sm:p-10"
             >
-              <Trophy
-                aria-hidden="true"
-                className={cn(
-                  "mx-auto h-16 w-16",
-                  passed ? "text-brand-sand" : "text-muted-foreground",
-                )}
-              />
-              <div
-                ref={scoreRef}
-                tabIndex={-1}
-                className={cn(
-                  "mt-4 font-mono text-6xl font-bold outline-none focus-visible:ring-2 focus-visible:ring-brand-orange",
-                  passed ? "text-brand-sand" : "text-destructive",
-                )}
-              >
-                {pct}%
+              <p className={cn("inline-flex items-center gap-2 text-sm font-semibold", passed ? "text-lab-good" : "text-lab-accent")}>
+                <Trophy className="h-4 w-4" aria-hidden="true" />
+                {copy.result}
+              </p>
+              <div className="relative mx-auto mt-5 h-[168px] w-[168px]">
+                <ProgressRing
+                  fraction={total > 0 ? score / total : 0}
+                  size={168}
+                  stroke={14}
+                  drawIn
+                  tone={passed ? "good" : "accent"}
+                  label={copy.completionFeedback(score, total, pct)}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div
+                    ref={scoreRef}
+                    tabIndex={-1}
+                    className={cn(
+                      "rounded-2xl px-2 text-4xl font-bold tabular-nums tracking-[-0.03em] outline-none focus-visible:ring-2 focus-visible:ring-lab-accent",
+                      passed ? "text-lab-good" : "text-foreground",
+                    )}
+                  >
+                    {pct}%
+                  </div>
+                </div>
+                <CelebrationBurst play={passed} radius={150} />
               </div>
-              <p className="mt-2 text-xl font-semibold">
+              <p className="mt-5 text-2xl font-bold tracking-[-0.02em] text-foreground">
+                {passed ? copy.passedTitle : copy.failedTitle}
+              </p>
+              <p className="mt-1 text-sm font-semibold tabular-nums text-muted-foreground">
                 {copy.correctCount(score, total)}
               </p>
-              <p className="mt-2 text-muted-foreground">
+              <p className="mx-auto mt-2 max-w-[48ch] text-muted-foreground">
                 {passed
                   ? config.quizPassMessage
                   : copy.passRequired(Math.round(passThreshold * 100))}
               </p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+              <dl className="mt-6 grid grid-cols-3 gap-2 text-left">
+                <div className="min-w-0 rounded-[18px] bg-paper/85 px-3 py-3 ring-1 ring-lab-line/80">
+                  <dt className="truncate text-[12px] font-semibold text-muted-foreground">{copy.statCorrect}</dt>
+                  <dd className="mt-0.5 truncate text-lg font-bold tabular-nums text-foreground">{score}/{total}</dd>
+                </div>
+                <div className="min-w-0 rounded-[18px] bg-paper/85 px-3 py-3 ring-1 ring-lab-line/80">
+                  <dt className="truncate text-[12px] font-semibold text-muted-foreground">{copy.statPassMark}</dt>
+                  <dd className="mt-0.5 truncate text-lg font-bold tabular-nums text-foreground">{Math.round(passThreshold * 100)}%</dd>
+                </div>
+                <div className="min-w-0 rounded-[18px] bg-paper/85 px-3 py-3 ring-1 ring-lab-line/80">
+                  <dt className="truncate text-[12px] font-semibold text-muted-foreground">{copy.statTime}</dt>
+                  <dd className="mt-0.5 truncate text-lg font-bold tabular-nums text-foreground">{usedLabel}</dd>
+                </div>
+              </dl>
+              <ol aria-label={copy.answersLabel} className="mt-4 flex flex-wrap justify-center gap-1.5">
+                {questions.map((entry, index) => {
+                  const right = answers[index] === entry.answerOptions.find((option) => option.isCorrect)?.id;
+                  return (
+                    <li
+                      key={entry.id}
+                      className={cn(
+                        "flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-bold",
+                        right ? "bg-lab-good text-paper" : "bg-lab-bad-soft text-lab-bad",
+                      )}
+                    >
+                      <span aria-hidden="true">{index + 1}</span>
+                      <span className="sr-only">
+                        {copy.questionProgress(index + 1, total)}: {right ? copy.correct : copy.incorrect}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+              <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:justify-center">
                 {passed ? (
                   <Link
                     href={
@@ -757,7 +829,7 @@ export function WorkshopQuizPage({
                           )
                         : `${config.coursePath}/zertifikat`
                     }
-                    className="inline-flex min-h-11 items-center gap-2 bg-brand-orange px-6 py-3 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark motion-reduce:transition-none"
+                    className={cn(APP_PRIMARY, "min-h-11")}
                   >
                     {copy.downloadRecord(config.recordNoun.label)}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -766,16 +838,13 @@ export function WorkshopQuizPage({
                   <button
                     type="button"
                     onClick={() => window.location.reload()}
-                    className="inline-flex min-h-11 items-center gap-2 border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-card"
+                    className={cn(APP_PRIMARY, "min-h-11")}
                   >
                     <RotateCcw className="h-4 w-4" aria-hidden="true" />
                     {copy.retry}
                   </button>
                 )}
-                <Link
-                  href={localizedCoursePath}
-                  className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
+                <Link href={localizedCoursePath} className={cn(APP_SECONDARY, "min-h-11")}>
                   <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                   {copy.backToCourse}
                 </Link>
@@ -795,7 +864,7 @@ export function WorkshopQuizPage({
   // whose longest compound exceeds the column is cut off instead of wrapping —
   // visible only at phone widths, where the course shell leaves the least room.
   return (
-    <div className="min-h-[100svh] overflow-x-clip bg-background [overflow-wrap:anywhere]">
+    <div className="course-app-ground min-h-[100svh] overflow-x-clip [overflow-wrap:anywhere]">
       <h1 className="sr-only">{copy.title}</h1>
       <div
         role="status"
@@ -807,18 +876,15 @@ export function WorkshopQuizPage({
       {/* Header */}
       <header
         data-testid="workshop-quiz-header"
-        className="fixed left-0 z-40 w-full border-b border-border bg-background"
-        style={{ top: GLOBAL_NAV_OFFSET_PX }}
+        data-course-app-cap
+        className="course-app-frost fixed left-0 top-[var(--nav-h-compact)] z-40 w-full border-b border-lab-line/70 lg:top-[var(--nav-h)]"
       >
-        <div className="mx-auto grid min-h-14 max-w-3xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-2 sm:flex sm:h-14 sm:px-6 sm:py-0">
-          <Link
-            href={localizedCoursePath}
-            className="inline-flex min-h-11 min-w-0 items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+        <div className="mx-auto grid min-h-14 max-w-2xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-2 sm:flex sm:h-14 sm:px-6 sm:py-0">
+          <Link href={localizedCoursePath} className={cn(APP_GHOST, "min-h-11 min-w-0")}>
+            <X className="h-4 w-4" aria-hidden="true" />
             {copy.cancel}
           </Link>
-          <span className="order-3 col-span-2 min-w-0 break-words text-label text-foreground sm:order-none sm:col-span-1">
+          <span className="order-3 col-span-2 min-w-0 break-words text-center text-[15px] font-semibold text-foreground sm:order-none sm:col-span-1 sm:flex-1">
             {copy.title}
           </span>
           <span
@@ -826,8 +892,10 @@ export function WorkshopQuizPage({
             aria-live="off"
             aria-label={copy.timeRemaining(minutes, seconds)}
             className={cn(
-              "order-2 inline-flex shrink-0 items-center gap-1 font-mono text-sm font-bold sm:order-none",
-              timeLeft < 120 ? "text-destructive" : "text-muted-foreground",
+              "order-2 inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-bold tabular-nums ring-1 sm:order-none",
+              timeLeft < 120
+                ? "bg-lab-bad-soft text-lab-bad ring-lab-bad/30"
+                : "bg-paper text-foreground ring-lab-line",
             )}
           >
             <Clock className="h-3.5 w-3.5" aria-hidden="true" />
@@ -836,25 +904,41 @@ export function WorkshopQuizPage({
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl px-6 pb-12 pt-12">
-        {/* Progress */}
+      <div className="mx-auto max-w-2xl px-4 pb-[calc(var(--tabbar-band-h)+6rem)] pt-[6.75rem] sm:px-6 sm:pt-[5rem] lg:pb-12 lg:pt-[4.75rem]">
+        {/* Progress: one segment per question, coloured by the answer. */}
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-caption text-muted-foreground tabular-nums">
+          <span className="text-sm font-semibold text-muted-foreground tabular-nums">
             {copy.questionProgress(currentIndex + 1, total)}
           </span>
         </div>
         <div
-          className="mb-8 h-1 overflow-hidden bg-track"
+          className="mb-6 flex gap-1"
           role="progressbar"
           aria-valuenow={currentIndex + 1}
           aria-valuemin={1}
           aria-valuemax={total}
           aria-label={copy.questionProgress(currentIndex + 1, total)}
         >
-          <div
-            className="h-full bg-foreground transition-[width,background-color] duration-300 motion-reduce:transition-none"
-            style={{ width: `${((currentIndex + 1) / total) * 100}%` }}
-          />
+          {questions.map((entry, index) => {
+            const answer = answers[index];
+            const right = answer !== null && answer === entry.answerOptions.find((option) => option.isCorrect)?.id;
+            return (
+              <span
+                key={entry.id}
+                aria-hidden="true"
+                className={cn(
+                  "h-1.5 min-w-0 flex-1 rounded-full transition-[background-color] duration-300 motion-reduce:transition-none",
+                  answer !== null
+                    ? right
+                      ? "bg-lab-good"
+                      : "bg-lab-bad"
+                    : index === currentIndex
+                      ? "bg-lab-accent"
+                      : "bg-lab-line",
+                )}
+              />
+            );
+          })}
         </div>
 
         <MotionProvider>
@@ -867,31 +951,37 @@ export function WorkshopQuizPage({
               animate="center"
               exit="exit"
               transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
+              className={cn(APP_CARD, "rounded-[28px] p-5 sm:p-8")}
             >
               <h2
                 id={`workshop-quiz-question-${currentIndex}`}
                 ref={setQuestionHeadingRef}
                 tabIndex={-1}
-                className="mb-6 text-lg font-semibold leading-snug outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="mb-5 rounded-lg text-xl font-bold leading-snug tracking-[-0.015em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
               >
                 {question?.questionText}
               </h2>
               <div
                 role="radiogroup"
                 aria-labelledby={`workshop-quiz-question-${currentIndex}`}
-                className="space-y-2"
+                className="space-y-2.5"
               >
                 {shuffledOptions.map((option, optionIndex) => {
                   const isSelected = selectedId === option.id;
                   const isCorrect = option.isCorrect;
                   let optionClass =
-                    "border-border bg-card hover:border-foreground";
+                    "border-lab-line bg-paper hover:border-lab-accent/60 hover:bg-lab-accent-soft";
+                  let badgeClass = "bg-card text-muted-foreground ring-1 ring-lab-line";
                   if (showExplanation) {
-                    if (isCorrect)
-                      optionClass = "border-brand-sand bg-brand-sand/5";
-                    else if (isSelected)
-                      optionClass = "border-destructive/50 bg-destructive/5";
-                    else optionClass = "border-border bg-card opacity-50";
+                    if (isCorrect) {
+                      optionClass = "border-lab-good bg-lab-good-soft";
+                      badgeClass = "bg-lab-good text-paper";
+                    } else if (isSelected) {
+                      optionClass = "border-lab-bad/50 bg-lab-bad-soft";
+                      badgeClass = "bg-lab-bad text-paper";
+                    } else {
+                      optionClass = "border-lab-line bg-paper opacity-60";
+                    }
                   }
                   return (
                     <button
@@ -914,37 +1004,36 @@ export function WorkshopQuizPage({
                       onClick={() => handleSelect(option.id)}
                       disabled={showExplanation}
                       className={cn(
-                        "flex min-h-11 w-full items-center gap-3 border px-4 py-3 text-left text-sm transition-[background-color,border-color,color,opacity]",
+                        "flex min-h-14 w-full items-center gap-3 rounded-[18px] border px-4 py-3 text-left text-base leading-snug text-foreground outline-none transition-[background-color,border-color,color,opacity] duration-150 focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 motion-reduce:transition-none",
                         optionClass,
                       )}
                     >
                       {/* Letters follow the shown order, not the stored id,
                           so shuffled options still read A, B, C, D. */}
-                      <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">
-                        {String.fromCharCode(65 + optionIndex)}
+                      <span
+                        className={cn(
+                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold",
+                          badgeClass,
+                        )}
+                      >
+                        {showExplanation && isCorrect ? (
+                          <Check className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
+                        ) : showExplanation && isSelected ? (
+                          <X className="h-4 w-4" strokeWidth={3} aria-hidden="true" />
+                        ) : (
+                          String.fromCharCode(65 + optionIndex)
+                        )}
                       </span>
                       <span className="min-w-0 flex-1 break-words">
                         {option.text}
                       </span>
                       {showExplanation && isCorrect && (
-                        <>
-                          <span className="sr-only">{copy.correctAnswer}</span>
-                          <CheckCircle2
-                            className="h-4 w-4 shrink-0 text-brand-sand"
-                            aria-hidden="true"
-                          />
-                        </>
+                        <span className="sr-only">{copy.correctAnswer}</span>
                       )}
                       {showExplanation && isSelected && !isCorrect && (
-                        <>
-                          <span className="sr-only">
-                            {copy.selectedIncorrect}
-                          </span>
-                          <XCircle
-                            className="h-4 w-4 shrink-0 text-destructive"
-                            aria-hidden="true"
-                          />
-                        </>
+                        <span className="sr-only">
+                          {copy.selectedIncorrect}
+                        </span>
                       )}
                     </button>
                   );
@@ -957,39 +1046,49 @@ export function WorkshopQuizPage({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, ease: EASE_OUT_EXPO }}
                   className={cn(
-                    "mt-4 border bg-card px-4 py-3",
-                    isCorrectAnswer ? "border-pass" : "border-destructive",
+                    "mt-4 flex gap-3 rounded-[18px] px-4 py-3",
+                    isCorrectAnswer ? "bg-lab-good-soft" : "bg-lab-bad-soft",
                   )}
                 >
-                  <p className="text-label text-foreground">
-                    {isCorrectAnswer ? copy.correct : copy.incorrect}
-                  </p>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {question.explanation}
-                  </p>
-                </m.div>
-              )}
-
-              {showExplanation && (
-                <m.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="mt-5"
-                >
-                  <button
-                    ref={nextButtonRef}
-                    type="button"
-                    onClick={handleNext}
-                    className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
-                  >
-                    {currentIndex < total - 1 ? copy.next : copy.result}
-                    <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
+                  {isCorrectAnswer ? (
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-lab-good" aria-hidden="true" />
+                  ) : (
+                    <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-lab-bad" aria-hidden="true" />
+                  )}
+                  <div className="min-w-0">
+                    <p className={cn("font-semibold", isCorrectAnswer ? "text-lab-good" : "text-lab-bad")}>
+                      {isCorrectAnswer ? copy.correct : copy.incorrect}
+                    </p>
+                    <p className="mt-1 text-[15px] leading-relaxed text-foreground">
+                      {question.explanation}
+                    </p>
+                  </div>
                 </m.div>
               )}
             </m.div>
           </AnimatePresence>
+
+          {showExplanation && (
+            <m.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
+              data-quiz-action-bar
+              className="fixed inset-x-0 bottom-[var(--tabbar-band-h)] z-30 border-t border-lab-line/80 bg-paper/95 px-4 py-3 backdrop-blur-xl lg:static lg:mt-5 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none"
+            >
+              <div className="mx-auto flex max-w-2xl justify-end">
+                <button
+                  ref={nextButtonRef}
+                  type="button"
+                  onClick={handleNext}
+                  className={cn(APP_PRIMARY, "w-full min-h-11 sm:w-auto")}
+                >
+                  {currentIndex < total - 1 ? copy.next : copy.result}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+            </m.div>
+          )}
         </MotionProvider>
       </div>
     </div>

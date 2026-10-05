@@ -4,6 +4,7 @@ import type {
   AiNativeCourseMeta,
   ModuleId,
 } from "./types";
+import { projectEngineLesson } from "@/lib/lesson-engine/lesson";
 import { MODULE_IDS } from "./types";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -88,7 +89,11 @@ export async function getModuleLessons(
     );
   }
   const mod = await loader();
-  const lessons = (mod.default as { lessons: AiNativeLesson[] }).lessons;
+  // Lesson-engine lessons (docs/lesson-engine.md) get their legacy
+  // sections/quiz projection; legacy lessons pass through unchanged.
+  const lessons = (mod.default as { lessons: AiNativeLesson[] }).lessons.map(
+    projectEngineLesson,
+  );
   lessonCache.set(cacheKey, lessons);
   return lessons;
 }

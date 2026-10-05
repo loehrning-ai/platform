@@ -16,7 +16,7 @@
 // that produces new state.
 //
 // Deliberately independent of framer-motion's `useReducedMotion` (a
-// module-level singleton — see terminal-replay.test.tsx's own comment on why
+// module-level singleton — see the widget tests' own comments on why
 // that hook is unreliable to flip per-test): this hook reads
 // `window.matchMedia` directly, so each mounted instance observes the media
 // query fresh and is trivially mockable per-test.

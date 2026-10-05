@@ -36,28 +36,15 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
   },
   "ai-native": {
     audience: ["praktiker"],
-    level: "advanced",
+    level: "intermediate",
     stage: "anwenden",
-    evidenceMode: "self_attested",
+    evidenceMode: "source_backed",
   },
-  // Claude Course / Codex Course /
   // Data Infrastructure / Data Engineering Fundamentals
   // / Data Science: imported
   // courses flipped to nativeStatus "live", so they now need course-node
   // metadata like the 4 German courses above (their still-imported
   // siblings surface as `open_source_lab` nodes via `labNodes` instead).
-  claude: {
-    audience: ["praktiker", "technische-vertiefung"],
-    level: "advanced",
-    stage: "anwenden",
-    evidenceMode: "self_attested",
-  },
-  codex: {
-    audience: ["praktiker", "technische-vertiefung"],
-    level: "advanced",
-    stage: "anwenden",
-    evidenceMode: "self_attested",
-  },
   "data-infrastructure": {
     audience: ["praktiker", "technische-vertiefung"],
     level: "advanced",

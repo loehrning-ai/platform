@@ -102,8 +102,8 @@ vi.mock("next/dynamic", () => ({
           <span data-testid="hydrated-field">
             {String(
               initialArtifact?.fields.context ??
-                initialArtifact?.fields.workspace ??
                 initialArtifact?.fields.executionReceipt ??
+                initialArtifact?.fields.decision ??
                 "empty",
             )}
           </span>
@@ -289,7 +289,7 @@ describe("CourseProjectStudio", () => {
     expect(mockedSaveExerciseResult).not.toHaveBeenCalled();
 
     view.rerender(
-      <CourseProjectStudio courseSlug="codex" lessonId="L02" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="cap-pacelc" locale="en" />,
     );
     expect(view.container).toBeEmptyDOMElement();
   });
@@ -297,8 +297,8 @@ describe("CourseProjectStudio", () => {
   it("renders the active lesson's authored frame around the stable course probe", async () => {
     const { container } = render(
       <CourseProjectStudio
-        courseSlug="codex"
-        lessonId="L01"
+        courseSlug="data-infrastructure"
+        lessonId="mental-model"
         locale="en"
         lessonContext={{
           title: "A mental model for delegated work",
@@ -319,7 +319,7 @@ describe("CourseProjectStudio", () => {
       container.querySelector('h1, [role="heading"][aria-level="1"], h2, h3'),
     ).toHaveAttribute("aria-level", "1");
     expect(
-      screen.getByRole("heading", { level: 2, name: "The Repository Mission" }),
+      screen.getByRole("heading", { level: 2, name: "The Streaming Control Room" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Separate intent, execution, and verification."),
@@ -356,8 +356,8 @@ describe("CourseProjectStudio", () => {
   it("nests its lesson heading when a custom route already owns H1", async () => {
     render(
       <CourseProjectStudio
-        courseSlug="codex"
-        lessonId="L01"
+        courseSlug="data-infrastructure"
+        lessonId="mental-model"
         locale="en"
         missionHeadingLevel={2}
         lessonContext={{
@@ -379,7 +379,7 @@ describe("CourseProjectStudio", () => {
   it("does not activate or report project evidence while the learning owner is unknown", async () => {
     setUnknownLearningOwner();
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
 
     const open = await screen.findByRole("button", { name: "Open studio" });
@@ -440,7 +440,7 @@ describe("CourseProjectStudio", () => {
     const { container } = render(
       <CourseProjectStudio
         courseSlug="ki-und-gesellschaft"
-        lessonId="arbeit-1-1"
+        lessonId="zahlen-1-1"
         locale="de"
       />,
     );
@@ -492,23 +492,23 @@ describe("CourseProjectStudio", () => {
 
   it("activates the selected engine only after the learner clicks", async () => {
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
 
     expect(await screen.findByTestId("mock-project-engine")).toHaveTextContent(
-      "repo",
+      "data",
     );
     const workspace = screen.getByLabelText(
-      "Workspace active: The Repository Mission",
+      "Workspace active: The Streaming Control Room",
     );
     await waitFor(() => expect(workspace).toHaveFocus());
   });
 
   it("unmounts an active engine when navigation reaches a locked checkpoint", async () => {
     const view = render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
@@ -517,7 +517,7 @@ describe("CourseProjectStudio", () => {
     ).toBeInTheDocument();
 
     view.rerender(
-      <CourseProjectStudio courseSlug="codex" lessonId="L12" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="interview-playbook" locale="en" />,
     );
 
     expect(screen.queryByTestId("mock-project-engine")).not.toBeInTheDocument();
@@ -526,7 +526,7 @@ describe("CourseProjectStudio", () => {
 
   it("uses container-width auto-fit grids for stages and acceptance criteria", () => {
     const { container } = render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
 
     const autoFitGrids = Array.from(
@@ -551,12 +551,12 @@ describe("CourseProjectStudio", () => {
 
   it("does not count the engine's initial artifact emission as manipulation", async () => {
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
 
     await screen.findByRole("button", { name: /Commit prediction/ });
     fireEvent.click(
-      screen.getByRole("radio", { name: /smallest reproducing test/i }),
+      screen.getByRole("radio", { name: /End-to-end latency/i }),
     );
     fireEvent.click(screen.getByRole("button", { name: /Commit prediction/ }));
     fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
@@ -586,14 +586,14 @@ describe("CourseProjectStudio", () => {
 
   it("persists the verified artifact exercise only after all five stages", async () => {
     seedDraftWithCompletedMissions(
-      "claude",
-      getCourseLessonMissions("claude").map((mission) => mission.id),
+      "ai-native-operator",
+      getCourseLessonMissions("ai-native-operator").map((mission) => mission.id),
       null,
     );
     render(
       <CourseProjectStudio
-        courseSlug="claude"
-        lessonId="mental-model"
+        courseSlug="ai-native-operator"
+        lessonId="mindset/1"
         locale="en"
       />,
     );
@@ -611,10 +611,10 @@ describe("CourseProjectStudio", () => {
     fireEvent.click(screen.getByRole("button", { name: "Verify artifact" }));
 
     expect(mockedSaveExerciseResult).toHaveBeenCalledWith(
-      "claude",
-      "safety",
+      "ai-native-operator",
+      "measurement/4",
       expect.objectContaining({
-        exerciseId: "project-claude-evidence-lab",
+        exerciseId: "project-ai-native-operator-control-plane",
         kind: "course-project-prompt",
         completed: true,
         score: 1,
@@ -622,7 +622,7 @@ describe("CourseProjectStudio", () => {
         skipped: false,
         summary: expect.stringMatching(/^@cp1:/),
       }),
-      "project-claude-evidence-lab:verified",
+      "project-ai-native-operator-control-plane:verified",
     );
     const savedResult = mockedSaveExerciseResult.mock.calls[0]?.[2];
     const parsed = parseCourseProjectProgress(savedResult?.summary, "prompt");
@@ -638,8 +638,8 @@ describe("CourseProjectStudio", () => {
 
   it("does not award a checkpoint or show success after the exercise write changes owner", async () => {
     seedDraftWithCompletedMissions(
-      "claude",
-      getCourseLessonMissions("claude").map((mission) => mission.id),
+      "ai-native-operator",
+      getCourseLessonMissions("ai-native-operator").map((mission) => mission.id),
       null,
     );
     mockedSaveExerciseResult.mockImplementation(() => {
@@ -648,8 +648,8 @@ describe("CourseProjectStudio", () => {
     });
     render(
       <CourseProjectStudio
-        courseSlug="claude"
-        lessonId="mental-model"
+        courseSlug="ai-native-operator"
+        lessonId="mindset/1"
         locale="en"
       />,
     );
@@ -665,8 +665,8 @@ describe("CourseProjectStudio", () => {
 
   it("keeps verification incomplete when the progress write is not durable", async () => {
     seedDraftWithCompletedMissions(
-      "claude",
-      getCourseLessonMissions("claude").map((mission) => mission.id),
+      "ai-native-operator",
+      getCourseLessonMissions("ai-native-operator").map((mission) => mission.id),
       null,
     );
     mockedSaveExerciseResult.mockReturnValue({
@@ -675,8 +675,8 @@ describe("CourseProjectStudio", () => {
     });
     render(
       <CourseProjectStudio
-        courseSlug="claude"
-        lessonId="mental-model"
+        courseSlug="ai-native-operator"
+        lessonId="mindset/1"
         locale="en"
       />,
     );
@@ -696,8 +696,8 @@ describe("CourseProjectStudio", () => {
   it("rejects direct verification while the cumulative project stages are incomplete", () => {
     render(
       <CourseProjectStudio
-        courseSlug="claude"
-        lessonId="mental-model"
+        courseSlug="ai-native-operator"
+        lessonId="mindset/1"
         locale="en"
       />,
     );
@@ -715,14 +715,14 @@ describe("CourseProjectStudio", () => {
 
   it("rejects same-kind evidence that fails the course semantic gate", async () => {
     seedDraftWithCompletedMissions(
-      "claude",
-      getCourseLessonMissions("claude").map((mission) => mission.id),
+      "ai-native-operator",
+      getCourseLessonMissions("ai-native-operator").map((mission) => mission.id),
       null,
     );
     render(
       <CourseProjectStudio
-        courseSlug="claude"
-        lessonId="mental-model"
+        courseSlug="ai-native-operator"
+        lessonId="mindset/1"
         locale="en"
       />,
     );
@@ -751,35 +751,35 @@ describe("CourseProjectStudio", () => {
     });
     expect(await prepareAccountLearningStorage()).toBe(true);
     expect(activateAccountLearningOwner("account-a").kind).toBe("account");
-    const draftKey = getCourseProjectDraftStorageKey("codex");
+    const draftKey = getCourseProjectDraftStorageKey("data-infrastructure");
     seedDurablyCompletedMissions(
-      "codex",
-      getCourseLessonMissions("codex")
+      "data-infrastructure",
+      getCourseLessonMissions("data-infrastructure")
         .slice(0, 1)
         .map((mission) => mission.id),
     );
     setOwnedLocalLearningItem(
       draftKey,
       serializeCourseProjectDraft(
-        "codex",
-        getCourseLessonMissions("codex")
+        "data-infrastructure",
+        getCourseLessonMissions("data-infrastructure")
           .slice(0, 1)
           .map((mission) => mission.id),
         {
           version: 1,
-          engineKind: "repo",
-          fields: { workspace: "pipeline-quality" },
+          engineKind: "data",
+          fields: { decision: "isolate-replay-verify-slo" },
         },
         null,
       ),
     );
 
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
     fireEvent.click(await screen.findByRole("button", { name: "Open studio" }));
     expect(screen.getByTestId("hydrated-field")).toHaveTextContent(
-      "pipeline-quality",
+      "isolate-replay-verify-slo",
     );
 
     act(() => {
@@ -790,7 +790,7 @@ describe("CourseProjectStudio", () => {
         screen.queryByTestId("mock-project-engine"),
       ).not.toBeInTheDocument(),
     );
-    expect(document.body).not.toHaveTextContent("pipeline-quality");
+    expect(document.body).not.toHaveTextContent("isolate-replay-verify-slo");
     expect(getOwnedLocalLearningItem(draftKey)).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
@@ -798,39 +798,39 @@ describe("CourseProjectStudio", () => {
       "Initial synthetic artifact",
     );
     expect(getOwnedLocalLearningItem(draftKey)).not.toContain(
-      "pipeline-quality",
+      "isolate-replay-verify-slo",
     );
   });
 
   it("clears a mounted partial project when the course reset boundary changes", async () => {
-    const draftKey = getCourseProjectDraftStorageKey("codex");
+    const draftKey = getCourseProjectDraftStorageKey("data-infrastructure");
     seedDurablyCompletedMissions(
-      "codex",
-      getCourseLessonMissions("codex")
+      "data-infrastructure",
+      getCourseLessonMissions("data-infrastructure")
         .slice(0, 1)
         .map((mission) => mission.id),
     );
     window.localStorage.setItem(
       draftKey,
       serializeCourseProjectDraft(
-        "codex",
-        getCourseLessonMissions("codex")
+        "data-infrastructure",
+        getCourseLessonMissions("data-infrastructure")
           .slice(0, 1)
           .map((mission) => mission.id),
         {
           version: 1,
-          engineKind: "repo",
-          fields: { workspace: "pipeline-quality" },
+          engineKind: "data",
+          fields: { decision: "isolate-replay-verify-slo" },
         },
         null,
       ),
     );
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
     fireEvent.click(await screen.findByRole("button", { name: "Open studio" }));
     expect(screen.getByTestId("hydrated-field")).toHaveTextContent(
-      "pipeline-quality",
+      "isolate-replay-verify-slo",
     );
     expect(
       screen.getByRole("button", { name: /^Commit: complete/i }),
@@ -839,7 +839,7 @@ describe("CourseProjectStudio", () => {
     act(() => {
       progressListener?.({
         courses: {
-          codex: {
+          "data-infrastructure": {
             lessons: {},
             resetAt: "2026-08-13T12:30:00.000Z",
           },
@@ -852,9 +852,9 @@ describe("CourseProjectStudio", () => {
         screen.queryByTestId("mock-project-engine"),
       ).not.toBeInTheDocument(),
     );
-    expect(document.body).not.toHaveTextContent("pipeline-quality");
+    expect(document.body).not.toHaveTextContent("isolate-replay-verify-slo");
     expect(
-      screen.getByRole("radio", { name: /smallest reproducing test/i }),
+      screen.getByRole("radio", { name: /End-to-end latency/i }),
     ).not.toBeChecked();
     expect(window.localStorage.getItem(draftKey)).toBeNull();
   });
@@ -935,7 +935,7 @@ describe("CourseProjectStudio", () => {
 
   it("keeps unverified artifact edits in session without inflating persisted attempts", () => {
     render(
-      <CourseProjectStudio courseSlug="codex" lessonId="L01" locale="en" />,
+      <CourseProjectStudio courseSlug="data-infrastructure" lessonId="mental-model" locale="en" />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open studio" }));
@@ -948,24 +948,24 @@ describe("CourseProjectStudio", () => {
   });
 
   it("preserves earlier receipts and re-adds only the current receipt after reset and recompletion", async () => {
-    const missions = getCourseProjectCheckpointMissions("codex");
+    const missions = getCourseProjectCheckpointMissions("data-infrastructure");
     const first = missions[0]!;
     const second = missions[1]!;
-    const draftKey = getCourseProjectDraftStorageKey("codex");
-    seedDurablyCompletedMissions("codex", [first.id, second.id]);
+    const draftKey = getCourseProjectDraftStorageKey("data-infrastructure");
+    seedDurablyCompletedMissions("data-infrastructure", [first.id, second.id]);
     window.localStorage.setItem(
       draftKey,
       serializeCourseProjectDraft(
-        "codex",
+        "data-infrastructure",
         [first.id, second.id],
-        verifiedCourseProjectArtifact("codex"),
+        verifiedCourseProjectArtifact("data-infrastructure"),
         null,
       ),
     );
 
     const view = render(
       <CourseProjectStudio
-        courseSlug="codex"
+        courseSlug="data-infrastructure"
         lessonId={second.lessonId}
         locale="en"
       />,
@@ -991,7 +991,7 @@ describe("CourseProjectStudio", () => {
       expect(stored).not.toContain(`\"${second.lessonId}\"`);
     });
 
-    const missionProfile = getLessonMissionProfile("codex");
+    const missionProfile = getLessonMissionProfile("data-infrastructure");
     fireEvent.click(
       screen.getByRole("radio", {
         name: new RegExp(missionProfile.predictionChoices[0]!.label.en, "i"),
@@ -1057,7 +1057,7 @@ describe("CourseProjectStudio", () => {
     await waitFor(() => {
       expect(screen.getByText("Not due yet · passed once")).toBeInTheDocument();
       const missionRaw = getOwnedLocalLearningItem(
-        `loehrning:lesson-mission:v1:codex:${encodeURIComponent(second.lessonId)}`,
+        `loehrning:lesson-mission:v1:data-infrastructure:${encodeURIComponent(second.lessonId)}`,
       );
       expect(missionRaw).toContain('"retrievalSuccessLevel":1');
     });
@@ -1081,7 +1081,7 @@ describe("CourseProjectStudio", () => {
     view.unmount();
     render(
       <CourseProjectStudio
-        courseSlug="codex"
+        courseSlug="data-infrastructure"
         lessonId={second.lessonId}
         locale="en"
       />,
@@ -1093,16 +1093,16 @@ describe("CourseProjectStudio", () => {
   });
 
   it("does not restore a draft receipt after its durable mission was removed and draft revocation was denied", async () => {
-    const mission = getCourseLessonMissions("codex")[0]!;
-    const draftKey = getCourseProjectDraftStorageKey("codex");
+    const mission = getCourseLessonMissions("data-infrastructure")[0]!;
+    const draftKey = getCourseProjectDraftStorageKey("data-infrastructure");
     seedDraftWithCompletedMissions(
-      "codex",
+      "data-infrastructure",
       [mission.id],
-      verifiedCourseProjectArtifact("codex"),
+      verifiedCourseProjectArtifact("data-infrastructure"),
     );
     const view = render(
       <CourseProjectStudio
-        courseSlug="codex"
+        courseSlug="data-infrastructure"
         lessonId={mission.lessonId}
         locale="en"
       />,
@@ -1112,8 +1112,8 @@ describe("CourseProjectStudio", () => {
     await waitFor(() => {
       const stored = parseCourseProjectDraft(
         getOwnedLocalLearningItem(draftKey),
-        "codex",
-        "repo",
+        "data-infrastructure",
+        "data",
         null,
       );
       expect(stored?.completedMissionIds).toEqual([mission.id]);
@@ -1138,7 +1138,7 @@ describe("CourseProjectStudio", () => {
 
     render(
       <CourseProjectStudio
-        courseSlug="codex"
+        courseSlug="data-infrastructure"
         lessonId={mission.lessonId}
         locale="en"
       />,
@@ -1147,8 +1147,8 @@ describe("CourseProjectStudio", () => {
     await waitFor(() => {
       const restored = parseCourseProjectDraft(
         getOwnedLocalLearningItem(draftKey),
-        "codex",
-        "repo",
+        "data-infrastructure",
+        "data",
         null,
       );
       expect(restored?.completedMissionIds).toEqual([]);
@@ -1156,13 +1156,13 @@ describe("CourseProjectStudio", () => {
   });
 
   it("retains historical stage credit after a durable wrong due review", async () => {
-    const mission = getCourseLessonMissions("codex")[0]!;
-    const profile = getLessonMissionProfile("codex");
+    const mission = getCourseLessonMissions("data-infrastructure")[0]!;
+    const profile = getLessonMissionProfile("data-infrastructure");
     const incorrect = profile.retrieval.choices.find(
       (choice) => choice.id !== profile.retrieval.correctId,
     )!.id;
-    seedDraftWithCompletedMissions("codex", [mission.id], null);
-    const missionKey = getLessonMissionStorageKey("codex", mission.lessonId);
+    seedDraftWithCompletedMissions("data-infrastructure", [mission.id], null);
+    const missionKey = getLessonMissionStorageKey("data-infrastructure", mission.lessonId);
     const completed = parseLessonMissionState(
       getOwnedLocalLearningItem(missionKey),
       profile,
@@ -1188,7 +1188,7 @@ describe("CourseProjectStudio", () => {
 
     render(
       <CourseProjectStudio
-        courseSlug="codex"
+        courseSlug="data-infrastructure"
         lessonId={mission.lessonId}
         locale="en"
       />,
@@ -1196,9 +1196,9 @@ describe("CourseProjectStudio", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Open studio" }));
     await waitFor(() => {
       const restored = parseCourseProjectDraft(
-        getOwnedLocalLearningItem(getCourseProjectDraftStorageKey("codex")),
-        "codex",
-        "repo",
+        getOwnedLocalLearningItem(getCourseProjectDraftStorageKey("data-infrastructure")),
+        "data-infrastructure",
+        "data",
         null,
       );
       expect(restored?.completedMissionIds).toEqual([mission.id]);

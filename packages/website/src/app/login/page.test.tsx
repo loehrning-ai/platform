@@ -169,6 +169,19 @@ describe("login locale surface", () => {
 
   it("states what an account adds, and that local progress is imported only once on request", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
+    // The panel argues for an account only where one can be opened.
+    mocks.getAuthenticatedUser.mockResolvedValue({
+      configured: true,
+      user: null,
+      error: null,
+    });
+    mocks.getRuntimeFeatures.mockReturnValue({
+      account: true,
+      magicLink: true,
+      google: true,
+      github: false,
+      turnstileSiteKey: "1x00000000000000000000AA",
+    });
 
     render(await LoginPage({ searchParams: Promise.resolve({}) }));
 
@@ -187,18 +200,8 @@ describe("login locale surface", () => {
     expect(
       within(section).getByText("Connect your own AI"),
     ).toBeVisible();
-    expect(
-      within(section).getByText(/certificate of participation/),
-    ).toBeVisible();
-    expect(
-      within(section).getByText(/export, reset or delete your data/),
-    ).toBeVisible();
-    // Two of the three regions are gated behind readiness predicates on
-    // /konto, so the panel says they appear only once configured rather than
-    // promising a region that renders nothing.
-    expect(
-      within(section).getByText(/once they are set up here/),
-    ).toBeVisible();
+    // Titles only: the bodies and the fine print were cut to keep the page short.
+    expect(section).not.toHaveTextContent(/certificate of participation|once they are set up here/);
     // Anonymous progress is not merged automatically; /konto offers a one-time
     // import (import-progress-island.tsx), so the page has to say so BEFORE
     // sign-in rather than leave a learner to discover an empty dashboard after.
@@ -334,7 +337,7 @@ describe("login locale surface", () => {
 });
 
 describe("login layout branches", () => {
-  it("splits the available branch into argument and form, form first on mobile", async () => {
+  it("centres one column on the scene: the card with the form, then the account note", async () => {
     mocks.getAuthenticatedUser.mockResolvedValue({
       configured: true,
       user: null,
@@ -352,20 +355,28 @@ describe("login layout branches", () => {
       await LoginPage({ searchParams: Promise.resolve({}) }),
     );
 
+    // The dark scene wraps the column; its backdrop is decorative only.
+    const scene = container.querySelector("[data-login-scene]");
+    expect(scene).not.toBe(null);
+    expect(scene?.className).toContain("login-scene");
+    expect(
+      scene?.querySelector("[data-login-scene-backdrop]"),
+    ).toHaveAttribute("aria-hidden", "true");
+
     const layout = container.querySelector("[data-login-layout]");
-    expect(layout).toHaveAttribute("data-login-layout", "split");
-    // The form column is the first child in DOM order and only moves to the
-    // right on large screens, so a phone gets the task before the argument.
-    const columns = Array.from(layout?.children ?? []);
-    expect(columns).toHaveLength(2);
-    expect(columns[0]?.querySelector("[data-login-account-value]")).not.toBe(
-      null,
-    );
-    expect(columns[0]?.className).toContain("order-2");
-    expect(columns[1]?.querySelector("[data-testid='login-form-props']")).not.toBe(
-      null,
-    );
-    expect(columns[1]?.className).toContain("order-1");
+    expect(layout).toHaveAttribute("data-login-layout", "form");
+    // One column, no split grid and no visual reordering: the card holding
+    // the form comes first in DOM and on screen, the account note follows, so
+    // a phone gets the task before the argument.
+    expect(layout?.className).not.toMatch(/grid-cols|order-/);
+    const rows = Array.from(layout?.children ?? []);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.className).toContain("login-card");
+    expect(
+      rows[0]?.querySelector("[data-testid='login-form-props']"),
+    ).not.toBe(null);
+    expect(rows[0]?.querySelector("h1")).not.toBe(null);
+    expect(rows[1]).toHaveAttribute("data-login-account-value");
     // The public-access rail belongs to the dead-end branch only; when
     // sign-in works the form is the shortest path.
     expect(container.querySelector("[data-login-public-access]")).toBe(null);
@@ -418,11 +429,16 @@ describe("login layout branches", () => {
         await LoginPage({ searchParams: Promise.resolve({}) }),
       );
 
-      expect(container.querySelector("[data-login-layout]")).toHaveAttribute(
-        "data-login-layout",
-        "single",
-      );
+      const layout = container.querySelector("[data-login-layout]");
+      expect(layout).toHaveAttribute("data-login-layout", "status");
+      // Status and method note sit inside the card, the open surfaces under it.
+      const rows = Array.from(layout?.children ?? []);
+      expect(rows).toHaveLength(2);
+      expect(rows[0]?.querySelector("[data-login-status]")).not.toBe(null);
+      expect(rows[1]).toHaveAttribute("data-login-public-access");
       expect(screen.getByRole("heading", { level: 1, name: h1 })).toBeVisible();
+      // No sales pitch for an account that cannot be opened here.
+      expect(container.querySelector("[data-login-account-value]")).toBeNull();
 
       const status = container.querySelector("[data-login-status]");
       expect(status).toHaveAttribute("data-login-status", reason);
@@ -462,7 +478,7 @@ describe("login layout branches", () => {
 
     expect(container.querySelector("[data-login-layout]")).toHaveAttribute(
       "data-login-layout",
-      "split",
+      "form",
     );
     const form = screen.getByTestId("login-form-props");
     expect(form).toHaveAttribute("data-github-ready", "true");

@@ -222,9 +222,9 @@ export const HELP_COPY = {
       startCatalogLink: "Kursübersicht",
       startAfterCatalog: ".",
       accountAvailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Das Konto synchronisiert Fortschritt über deine Geräte.",
+        "Bücher, Praxisbeispiele, KI-Check und 4 Kursreader zum visuellen Lernen laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Das Konto synchronisiert Fortschritt über deine Geräte.",
       accountUnavailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Hier sind diese 4 Reader vorübergehend nicht erreichbar.",
+        "Bücher, Praxisbeispiele, KI-Check und 4 Kursreader zum visuellen Lernen laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Hier sind diese 4 Reader vorübergehend nicht erreichbar.",
       progressSynced:
         "Dein Fortschritt liegt im Browser und mit angemeldetem Lernkonto auch auf dem Server. Was den lokalen Stand löschen kann, steht unten unter „Einschränkungen“.",
       progressLocal:
@@ -321,9 +321,9 @@ export const HELP_COPY = {
       startCatalogLink: "course catalog",
       startAfterCatalog: ".",
       accountAvailable:
-        "Books, practical examples, the AI check and 6 technical courses need no account, the 4 foundation courses do. An account syncs progress across your devices.",
+        "Books, practical examples, the AI check and 4 visual-learning courses need no account, the 4 foundation courses do. An account syncs progress across your devices.",
       accountUnavailable:
-        "Books, practical examples, the AI check and 6 technical courses need no account, the 4 foundation courses do. Here those 4 are temporarily unavailable.",
+        "Books, practical examples, the AI check and 4 visual-learning courses need no account, the 4 foundation courses do. Here those 4 are temporarily unavailable.",
       progressSynced:
         "Progress is stored in your browser and, when signed in, on the server. Limitations below lists what can remove the local copy.",
       progressLocal:

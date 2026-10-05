@@ -30,34 +30,6 @@ interface ReaderCase extends CanonicalCourseCase {
 
 const READERS: readonly ReaderCase[] = [
   {
-    slug: "claude",
-    name: "Claude",
-    locale: "en",
-    route: "/en/kurse/open-source/claude/kurs/mental-model",
-    engine: "prompt",
-    surface: "workspace",
-    engineMarker: "Sensitive-data warning",
-    activateLabel: "Open studio",
-    collapseLabel: "Collapse lesson navigation",
-    expandLabel: "Expand lesson navigation",
-    openLabel: "Open lesson navigation",
-    closeLabel: "Close lesson navigation",
-  },
-  {
-    slug: "codex",
-    name: "Codex",
-    locale: "de",
-    route: "/kurse/open-source/codex/kurs/L01",
-    engine: "repo",
-    surface: "workspace",
-    engineMarker: "Befehlsterminal",
-    activateLabel: "Werkstatt öffnen",
-    collapseLabel: "Lektionsnavigation einklappen",
-    expandLabel: "Lektionsnavigation ausklappen",
-    openLabel: "Lektionsnavigation öffnen",
-    closeLabel: "Lektionsnavigation schließen",
-  },
-  {
     slug: "data-infrastructure",
     name: "Data Infrastructure",
     locale: "en",
@@ -140,7 +112,7 @@ const PROTECTED_READERS: readonly CanonicalCourseCase[] = [
     slug: "ai-native",
     name: "AI Native",
     locale: "de",
-    route: "/ai-native/kurs/modul_1/modul_1_lesson_1",
+    route: "/ai-native/kurs/modul_1/messen-1-1",
     engine: "prompt",
     surface: "protected-login",
   },
@@ -158,7 +130,18 @@ const CANONICAL_COURSES: readonly CanonicalCourseCase[] = [
   ...READERS,
   ...PROTECTED_READERS,
 ];
-const DEEP_INTERACTION_READERS = [READERS[0], READERS[1], READERS[2]] as const;
+function readerFor(slug: ReaderCase["slug"]): ReaderCase {
+  const reader = READERS.find((entry) => entry.slug === slug);
+  if (!reader) throw new Error(`No workspace reader for ${slug}`);
+  return reader;
+}
+const DATA_READER = readerFor("data-infrastructure");
+const PROMPT_READER = readerFor("ai-native-operator");
+const DEEP_INTERACTION_READERS = [
+  DATA_READER,
+  PROMPT_READER,
+  readerFor("data-engineering-fundamentals"),
+] as const;
 const CONTRACT_VIEWPORTS = [
   { width: 320, height: 760 },
   { width: 390, height: 844 },
@@ -377,7 +360,7 @@ test.describe("canonical course workspace", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
   });
 
-  test("the canonical matrix names all ten courses and every project engine", () => {
+  test("the canonical matrix names all eight courses and every project engine", () => {
     expect(CANONICAL_COURSES.map((course) => course.slug).sort()).toEqual(
       Object.keys(COURSE_PROJECT_IDENTITIES).sort(),
     );
@@ -388,7 +371,7 @@ test.describe("canonical course workspace", () => {
     }
     expect(
       [...new Set(CANONICAL_COURSES.map((course) => course.engine))].sort(),
-    ).toEqual(["case", "data", "prompt", "repo"]);
+    ).toEqual(["case", "data", "prompt"]);
   });
 
   for (const course of CANONICAL_COURSES) {
@@ -511,7 +494,7 @@ test.describe("canonical course workspace", () => {
   }) => {
     test.setTimeout(75_000);
     await page.setViewportSize({ width: 1440, height: 1000 });
-    const reader = READERS[0];
+    const reader = DATA_READER;
     const sidebar = page.locator("[data-lesson-shell-desktop-sidebar]");
 
     await gotoHydrated(page, reader.route, reader.locale);
@@ -523,7 +506,11 @@ test.describe("canonical course workspace", () => {
       )
       .toBe("collapsed");
 
-    await gotoHydrated(page, "/en/kurse/open-source/claude/kurs/anatomy", "en");
+    await gotoHydrated(
+      page,
+      "/en/kurse/open-source/data-infrastructure/kurs/cap-pacelc",
+      "en",
+    );
     await expect(sidebar).toHaveAttribute("data-collapsed", "true");
     await expect(
       page.getByRole("button", { name: reader.expandLabel }),
@@ -545,17 +532,17 @@ test.describe("canonical course workspace", () => {
       .toBe("expanded");
   });
 
-  test("opening the repository instrument does not count as manipulation; changing a control does", async ({
+  test("opening the prompt instrument does not count as manipulation; changing a control does", async ({
     page,
   }) => {
     test.setTimeout(90_000);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.addInitScript(() => window.localStorage.clear());
-    const reader = READERS[1];
+    const reader = PROMPT_READER;
     const failures = captureRuntimeFailures(page);
 
     await gotoHydrated(page, reader.route, reader.locale);
-    const mission = page.locator('[data-lesson-mission="codex"]');
+    const mission = page.locator('[data-lesson-mission="ai-native-operator"]');
     await expect(mission).toHaveCount(1);
 
     await mission.getByRole("radio").first().check();
@@ -577,28 +564,31 @@ test.describe("canonical course workspace", () => {
     ).toBeVisible();
     await expect(nextSignal).toHaveCount(0);
     await expect
-      .poll(() => lessonMissionState(page, "codex", "L01"))
+      .poll(() => lessonMissionState(page, "ai-native-operator", "mindset/1"))
       .toMatchObject({ workspaceOpened: true, manipulated: false });
 
     const studio = page.locator(
-      '[data-course-project][data-engine-kind="repo"]',
+      '[data-course-project][data-engine-kind="prompt"]',
     );
     await expect(
       studio.getByText(reader.engineMarker, { exact: false }).first(),
     ).toBeVisible({ timeout: 15_000 });
     const spec = studio.getByRole("textbox", {
-      name: "Editierbarer AGENTS.md-Auftrag",
+      name: "Delegationsauftrag",
+      exact: true,
     });
     const contract =
-      "Scope: src/retry.ts. Nicht-Ziel: API ändern. Akzeptanz: Retry-Test grün.";
+      "Erstelle eine Ticket-Übersicht als Tabelle. Keine erfundenen Fakten.";
     await spec.fill(contract);
 
     await expect(nextSignal).toBeVisible();
     await expect
-      .poll(() => lessonMissionState(page, "codex", "L01"))
+      .poll(() => lessonMissionState(page, "ai-native-operator", "mindset/1"))
       .toMatchObject({ workspaceOpened: true, manipulated: true });
     const persisted = await page.evaluate(() =>
-      window.localStorage.getItem("loehrning:lesson-mission:v1:codex:L01"),
+      window.localStorage.getItem(
+        "loehrning:lesson-mission:v1:ai-native-operator:mindset%2F1",
+      ),
     );
     expect(persisted).not.toContain(contract);
     expect(failures.consoleErrors, "mission circuit: console errors").toEqual(
@@ -613,7 +603,7 @@ test.describe("canonical course workspace", () => {
     test.setTimeout(90_000);
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.addInitScript(() => window.localStorage.clear());
-    const reader = READERS[1];
+    const reader = PROMPT_READER;
     const failures = captureRuntimeFailures(page);
 
     await gotoHydrated(page, reader.route, reader.locale);
@@ -690,7 +680,7 @@ test.describe("canonical course workspace", () => {
       )
       .toEqual(initialOverflow);
     await expect(page.locator("[data-course-workspace-inert]")).toHaveCount(0);
-    await expectNoDocumentOverflow(page, "Codex full-screen lifecycle");
+    await expectNoDocumentOverflow(page, "Operator full-screen lifecycle");
     expect(failures.consoleErrors, "full-screen: console errors").toEqual([]);
     expect(failures.pageErrors, "full-screen: page errors").toEqual([]);
   });
@@ -700,7 +690,7 @@ test.describe("canonical course workspace", () => {
   }) => {
     test.setTimeout(90_000);
     await page.setViewportSize({ width: 390, height: 844 });
-    const reader = READERS[1];
+    const reader = PROMPT_READER;
     const failures = captureRuntimeFailures(page);
 
     await gotoHydrated(page, reader.route, reader.locale);

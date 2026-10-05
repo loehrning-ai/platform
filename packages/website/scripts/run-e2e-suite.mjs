@@ -233,15 +233,6 @@ function publicSteps() {
       ],
     },
     {
-      label: "chromium-claude-responsive",
-      arguments: [
-        "test",
-        "--project=chromium-claude-responsive",
-        "--retries=0",
-        "--trace=retain-on-failure",
-      ],
-    },
-    {
       label: "mobile-chromium",
       arguments: [
         "test",

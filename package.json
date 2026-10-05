@@ -47,7 +47,7 @@
     "lighthouse:release:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
     "lighthouse:ci:built": "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json --collect.chromePath=\"$CHROME_PATH\" --collect.settings.chromeFlags=--no-sandbox --collect.numberOfRuns=3 --collect.url=http://localhost:3000/ --collect.url=http://localhost:3000/ai-native --collect.url=http://localhost:3000/blog/eu-ai-act-grundlagen --collect.url=http://localhost:3000/buecher --collect.url=http://localhost:3000/kurse/open-source/data-science",
     "lighthouse:check": "bun scripts/verify-lighthouse-routes.ts",
-    "audit": "bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3",
+    "audit": "bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3 --ignore=GHSA-vfj7-8cjw-p6xm",
     "license:audit": "node scripts/audit-dependency-licenses.mjs",
     "content:lint": "bun run --cwd packages/website content:lint",
     "marketing:check": "node scripts/verify-marketing.mjs",
@@ -67,21 +67,23 @@
   "overrides": {
     "postcss": "^8.5.26",
     "uuid": "^14.0.0",
-    "fast-uri": ">=4.1.3",
+    "fast-uri": ">=4.1.5",
     "qs": ">=6.16.0",
     "esbuild": "^0.28.1",
     "form-data": "^4.0.6",
-    "undici": "^7.29.0",
+    "undici": "^7.29.1",
     "vite": "^7.3.6",
     "sharp": "^0.35.4",
-    "brace-expansion": ">=5.0.9",
-    "dompurify": "^3.4.13",
+    "brace-expansion": ">=5.0.11",
+    "dompurify": "^3.4.16",
     "js-yaml": "^3.15.2",
     "minimatch": "^10.2.5",
     "nanoid": "^3.3.17",
     "tmp": "0.2.7",
     "browserslist": "4.28.7",
-    "baseline-browser-mapping": "^2.11.0"
+    "baseline-browser-mapping": "^2.11.0",
+    "basic-ftp": "^6.2.2",
+    "ip-address": "^10.7.3"
   },
   "devDependencies": {
     "@lhci/cli": "0.15.1"

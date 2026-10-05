@@ -191,8 +191,8 @@ export function VerificationPage({
     : null;
 
   return (
-    <div className="min-h-[100svh] bg-background">
-      <div className="mx-auto max-w-lg px-4 py-12 sm:px-6">
+    <div className="course-app-ground min-h-[100svh]">
+      <div className="mx-auto max-w-lg px-4 py-8 sm:px-6 sm:py-12">
         <MotionProvider>
           <m.div
             initial={{ opacity: 0, y: 16 }}
@@ -203,7 +203,7 @@ export function VerificationPage({
               href={
                 locale ? localizeHref(config.basePath, locale) : config.basePath
               }
-              className="mb-8 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="-ml-3 mb-6 inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-lab-accent-soft hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
             >
               <ArrowLeft className="h-4 w-4" />
               {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
@@ -222,27 +222,30 @@ export function VerificationPage({
             </h1>
 
             {data && (
-              <div className="border border-foreground bg-card p-5 text-center sm:p-8">
-                <CheckCircle2
-                  className="mx-auto h-10 w-10 text-pass"
+              <div className="relative overflow-hidden rounded-[28px] border border-lab-line/80 bg-card p-6 text-center shadow-lab-lg sm:p-8">
+                <span
                   aria-hidden="true"
-                />
-                <p className="mt-2 text-label text-pass">
+                  className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-lab-good-soft text-lab-good"
+                >
+                  <CheckCircle2 className="h-8 w-8" />
+                </span>
+                <p className="mt-2 text-sm font-semibold text-lab-good">
                   {config.language === "en"
                     ? "QR data read"
                     : "QR-Daten gelesen"}
                 </p>
-                <h2 className="mt-4 text-fluid-h2 font-bold">
+                {/* "Teilnahmebestätigung:" alone is wider than the card at
+                    320px; hyphenate, and break as a last resort. */}
+                <h2 className="mt-4 hyphens-auto break-words text-fluid-h2 font-bold">
                   {config.certificateTitle}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {config.certificateSubtitle}
                 </p>
-                <div className="mx-auto mt-6 h-0.5 w-16 bg-foreground" />
-                <p className="mt-6 break-words text-lg font-semibold [overflow-wrap:anywhere]">
+                <p className="mx-auto mt-6 max-w-[22ch] break-words border-b-2 border-lab-line pb-2 text-xl font-semibold [overflow-wrap:anywhere]">
                   {data.n}
                 </p>
-                <div className="mt-4 space-y-1 font-mono text-sm text-muted-foreground">
+                <div className="mt-4 space-y-1 text-sm tabular-nums text-muted-foreground">
                   <p>
                     {data.m === "quiz"
                       ? config.language === "en"
@@ -257,11 +260,10 @@ export function VerificationPage({
                     </p>
                   )}
                 </div>
-                <div className="mx-auto mt-6 h-px w-16 bg-hairline" />
-                <p className="mt-4 text-xs text-muted">
+                <p className="mt-6 text-xs text-muted">
                   loehrning.ai | {config.certificateReferenceLabel}
                 </p>
-                <p className="mt-4 border-t border-hairline pt-3 text-caption text-muted-foreground">
+                <p className="mt-4 rounded-[16px] bg-paper px-4 py-3 text-caption text-muted-foreground ring-1 ring-lab-line">
                   {config.language === "en" ? (
                     <>
                       {config.recordNoun.label}, generated locally. The QR data
@@ -280,7 +282,7 @@ export function VerificationPage({
             )}
 
             {invalidReason && (
-              <div className="border border-destructive bg-card p-5 text-center sm:p-8">
+              <div className="rounded-[28px] border border-destructive/40 bg-card p-6 text-center shadow-lab sm:p-8">
                 <XCircle
                   className="mx-auto h-10 w-10 text-destructive"
                   aria-hidden="true"

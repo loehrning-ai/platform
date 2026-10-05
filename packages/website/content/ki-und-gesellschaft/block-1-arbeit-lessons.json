@@ -1,23 +1,26 @@
 {
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2026-12-06",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-01-04",
+  "format": "lesson-engine/v1",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
-  "triggerEvents": ["major-conceptual-update"],
-  "blockLastVerified": "2026-08-09",
+  "triggerEvents": [
+    "major-conceptual-update",
+    "new-oecd-or-iab-release"
+  ],
   "lessons": [
     {
-      "id": "arbeit-1-1",
+      "id": "zahlen-1-1",
       "blockId": "block_1",
       "number": 1,
-      "title": "KI und Arbeit: Exposition ist keine Prognose",
-      "subtitle": "Was OECD- und IAB-Zahlen sagen und was nicht",
+      "title": "Jobschlagzeilen entschlüsseln",
+      "subtitle": "Exposition ist keine Prognose",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-06",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
@@ -25,346 +28,400 @@
         "Substituierbarkeitspotenzial",
         "Beschäftigungswirkung"
       ],
-      "sections": [
-        {
-          "id": "arbeit-1-1-s1",
-          "title": "Was eine Jobzahl misst",
-          "readTimeMinutes": 2,
-          "content": "Zahlen über bedrohte Jobs messen verschiedene Größen:\n\n1. Aufgabenexposition: Eine Technologie überschneidet sich mit Tätigkeiten eines Berufs.\n2. Technisches Substituierbarkeitspotenzial: Tätigkeiten könnten nach dem Stand der Technik automatisiert werden.\n3. Einsatz: Ein Betrieb führt die Technik ein und baut den Ablauf um.\n4. Beschäftigungswirkung: Arbeitszeit, Stellenzahl, Lohn oder Qualifikationsbedarf ändern sich.\n\nFrey und Osborne schätzten 2013 eine theoretische Automatisierungswahrscheinlichkeit für US-Berufe. Der OECD Employment Outlook 2023 berichtet mit anderen Daten und Methoden den Beschäftigungsanteil in Berufen mit hohem Automatisierungsrisiko in den untersuchten OECD-Ländern, ohne Prognose für Deutschland oder für Jobverluste.\n\nDas IAB berechnet auf Basis von BERUFENET, welcher Anteil der Kerntätigkeiten eines Berufs mit verfügbarer Technik prinzipiell vollautomatisch erledigt werden könnte, und betont: Substituierbarkeit heißt nicht, dass die Tätigkeit tatsächlich automatisiert wird.\n\nQuellen: OECD Employment Outlook 2023, Kapitel 3; IAB-Kurzbericht 5/2024 zur Neuberechnung 2022."
-        },
-        {
-          "id": "arbeit-1-1-s2",
-          "title": "Was „besser als Menschen“ heißt",
-          "readTimeMinutes": 2,
-          "content": "\"KI ist besser als Menschen\" sagt ohne Testbedingungen nichts. Prüfe:\n\n- Aufgabe: Sind Eingang, Ausgang und Qualitätsmaß klar definiert?\n- Daten: Passen die Testdaten zur realen Zielgruppe und zum späteren Einsatz?\n- Folgen: Was kostet ein Fehler, und wer prüft Grenzfälle?\n- Umgebung: Ist die Situation standardisiert oder wechselt sie physisch und sozial?\n\nEin Modell kann in einem begrenzten Bildklassifikationstest hohe Werte erreichen und im Klinikbetrieb ungeeignet sein. Ein Sprachmodell kann einen Entwurf beschleunigen und darin Angaben erfinden, ein Planungssystem alle Standardfälle bearbeiten und an einer seltenen Ausnahme scheitern.\n\nAuch wenn das System besser abschneidet, tragen Menschen und Organisationen die rechtliche Verantwortung, geben frei und wägen Interessen ab."
-        },
-        {
-          "id": "arbeit-1-1-s3",
-          "title": "Wenn eine Aufgabe automatisierbar wird",
-          "readTimeMinutes": 1,
-          "content": "Ein Beruf ist ein Bündel aus Aufgaben. Wird eine davon automatisierbar, kann der Betrieb Zeit sparen, mehr Fälle bearbeiten, Aufgaben neu verteilen, die Qualität erhöhen oder Stellen abbauen. Nachfrage, Kosten, Haftung, Mitbestimmung und neue Aufgaben wirken dabei mit.\n\nOb eine Radiologie-Software, die Auffälligkeiten in Bildern markiert, Arbeit spart oder zusätzliche Prüfung erzeugt, hängt von Treffer- und Fehlerraten, Patientenkollektiv, Integration und vorgeschriebener Kontrolle ab. Diagnose und Behandlung bleiben ärztliche Arbeit.\n\nFür deine Arbeit hilft eine Aufgabenanalyse mehr als jede Berufsprognose: Welche Schritte sind standardisiert, wo entstehen Fehler, welche Entscheidungen brauchen Fachwissen, Kontext oder Freigabe, und wo erzeugt das Werkzeug zusätzliche Kontrolle?"
+      "concept": {
+        "body": "Hinter „X % der Jobs“ stecken vier verschiedene Größen:\n\n| Größe | Frage |\n|---|---|\n| **Exposition** | Überschneidet sich eine Technik mit Tätigkeiten eines Berufs? |\n| **Technisches Potenzial** | Könnten Tätigkeiten mit heutiger Technik automatisiert werden? |\n| **Prognose** | Was erwartet ein Modell für künftige Stellen? |\n| **Gemessene Wirkung** | Was hat sich nach einer Einführung tatsächlich verändert? |\n\nFrey und Osborne schätzten 2013 theoretische Automatisierungswahrscheinlichkeiten für US-Berufe. Der OECD Employment Outlook 2023 berichtet Beschäftigungsanteile in Berufen mit hohem Automatisierungsrisiko, ohne Jobverluste für Deutschland vorherzusagen. Das IAB berechnet, welcher Anteil der Kerntätigkeiten technisch ersetzbar wäre, und betont: Substituierbarkeit heißt nicht, dass automatisiert wird.\n\nOb ein Betrieb einführt, hängt von Kosten, Haftung, Datenqualität, Nachkontrolle und Mitbestimmung ab.",
+        "takeaway": "Frag bei jeder Jobzahl zuerst: Welche der vier Größen wird hier gemessen?",
+        "sources": [
+          {
+            "label": "OECD Employment Outlook 2023, Kapitel 3"
+          },
+          {
+            "label": "IAB-Kurzbericht 5/2024"
+          },
+          {
+            "label": "Frey & Osborne (2013): The Future of Employment"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Sortiere acht Schlagzeilen",
+        "instructions": "Ordne jede erfundene Schlagzeile der Größe zu, die sie tatsächlich misst. Jede Zuordnung wird sofort erklärt. Fertig, wenn alle acht einsortiert sind.",
+        "props": {
+          "buckets": [
+            {
+              "id": "exposure",
+              "label": "Exposition",
+              "hint": "Überschneidung mit Tätigkeiten"
+            },
+            {
+              "id": "potential",
+              "label": "Technisches Potenzial",
+              "hint": "wäre automatisierbar"
+            },
+            {
+              "id": "forecast",
+              "label": "Prognose",
+              "hint": "Aussage über künftige Stellen"
+            },
+            {
+              "id": "measured",
+              "label": "Gemessene Wirkung",
+              "hint": "beobachtete Veränderung"
+            }
+          ],
+          "items": [
+            {
+              "id": "office",
+              "bucket": "exposure",
+              "text": "„Generative KI berührt 60 % der Bürotätigkeiten“",
+              "why": "„Berührt“ heißt Überschneidung. Ob Stellen wegfallen oder sich nur Abläufe ändern, sagt die Zahl nicht."
+            },
+            {
+              "id": "lawyers",
+              "bucket": "exposure",
+              "text": "„Sprachmodelle könnten 40 % der Arbeitszeit von Juristinnen betreffen“",
+              "why": "„Betreffen“ beschreibt Exposition. Betroffene Zeit kann auch zusätzliche Prüfung bedeuten."
+            },
+            {
+              "id": "factory",
+              "bucket": "potential",
+              "text": "„70 % der Kerntätigkeiten in Fertigungsberufen wären heute technisch ersetzbar“",
+              "why": "„Wären ersetzbar“ ist die IAB-Logik des Substituierbarkeitspotenzials: technisch möglich, nicht eingeführt."
+            },
+            {
+              "id": "bookkeeping",
+              "bucket": "potential",
+              "text": "„Die Hälfte der Buchungsschritte ließe sich mit marktreifer Software vollautomatisch erledigen“",
+              "why": "Marktreife Technik, Konjunktiv: Das misst Potenzial. Kosten, Datenqualität und Haftung entscheiden über den Einsatz."
+            },
+            {
+              "id": "third",
+              "bucket": "forecast",
+              "text": "„Jeder dritte Job verschwindet bis 2035“",
+              "why": "Eine Aussage über künftige Stellen ist eine Prognose. Prüfe, ob die Quelle das modelliert oder nur Exposition umdeutet."
+            },
+            {
+              "id": "millions",
+              "bucket": "forecast",
+              "text": "„KI kostet bis 2030 Millionen Arbeitsplätze“",
+              "why": "Jahreszahl plus Stellen: Prognose. Ohne Annahmen zu Einführung, Nachfrage und neuen Aufgaben ist sie nicht prüfbar."
+            },
+            {
+              "id": "callcenter",
+              "bucket": "measured",
+              "text": "„Nach Einführung des Chatbots baute Betrieb X 12 % der Callcenter-Stellen ab“",
+              "why": "Eine beobachtete Veränderung in einem Betrieb. Sie gilt für diesen Fall, nicht für eine Branche."
+            },
+            {
+              "id": "survey",
+              "bucket": "measured",
+              "text": "„Befragung: 15 % der Betriebe stellten wegen KI weniger ein“",
+              "why": "Selbstauskunft über eine bereits eingetretene Wirkung. Prüfe Stichprobe und Frageformulierung."
+            }
+          ],
+          "passRatio": 0
         }
-      ],
-      "quiz": [
+      },
+      "checks": [
         {
-          "id": "arbeit-1-1-q1",
-          "questionText": "Welche Aussage über Arbeitsmarktstudien zu KI und Automatisierung stimmt?",
-          "answerOptions": [
+          "id": "zahlen-1-1-c1",
+          "prompt": "Eine Studie meldet: „Hohe Exposition für Steuerfachangestellte.“ Was folgt daraus?",
+          "options": [
             {
               "id": "a",
-              "text": "Jede Expositionszahl ist eine direkte Prognose künftiger Stellenverluste",
-              "isCorrect": false
+              "text": "Viele ihrer Tätigkeiten überschneiden sich mit der Technik; über Stellen sagt das nichts.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Exposition, technisches Potenzial und Beschäftigungswirkung sind verschiedene Messgrößen",
-              "isCorrect": true
+              "text": "Der Beruf fällt in den nächsten Jahren weg.",
+              "correct": false,
+              "feedback": "Das wäre eine Prognose. Exposition misst nur Überschneidung mit Tätigkeiten."
             },
             {
               "id": "c",
-              "text": "Das IAB misst ausschließlich den bereits realisierten KI-Einsatz in Betrieben",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Der OECD Employment Outlook 2023 prognostiziert die Zahl deutscher Arbeitsloser durch KI",
-              "isCorrect": false
+              "text": "Betriebe haben die Technik bereits eingeführt.",
+              "correct": false,
+              "feedback": "Exposition sagt nichts über tatsächliche Einführung. Das wäre eine gemessene Wirkung."
             }
           ],
-          "explanation": "Exposition und Substituierbarkeit zeigen mögliche Überschneidungen. Einsatz und Stellenwirkung hängen zusätzlich von wirtschaftlichen, rechtlichen und organisatorischen Faktoren ab."
+          "explanation": "Exposition ist der Ausgangspunkt einer Analyse, kein Ergebnis über Arbeitsplätze."
         },
         {
-          "id": "arbeit-1-1-q2",
-          "questionText": "Was misst das IAB-Substituierbarkeitspotenzial auf Basis von BERUFENET?",
-          "answerOptions": [
+          "id": "zahlen-1-1-c2",
+          "prompt": "Was betont das IAB beim Substituierbarkeitspotenzial?",
+          "options": [
             {
               "id": "a",
-              "text": "Wie viele Beschäftigte bereits mit generativer KI arbeiten",
-              "isCorrect": false
+              "text": "Technisch ersetzbar heißt nicht, dass die Tätigkeit tatsächlich automatisiert wird.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Welche Berufe innerhalb eines Jahres verschwinden werden",
-              "isCorrect": false
+              "text": "Es ist eine Prognose für Jobverluste bis 2030.",
+              "correct": false,
+              "feedback": "Das IAB rechnet mit marktreifer Technik von heute und legt keine Jobprognose vor."
             },
             {
               "id": "c",
-              "text": "Welcher Anteil der Kerntätigkeiten technisch prinzipiell vollautomatisch erledigt werden könnte",
-              "isCorrect": true
-            },
-            {
-              "id": "d",
-              "text": "Welche Unternehmen gesetzlich zur Automatisierung verpflichtet sind",
-              "isCorrect": false
+              "text": "Es misst, wie viele Betriebe KI bereits nutzen.",
+              "correct": false,
+              "feedback": "Nutzung ist Einsatz. Das Potenzial beschreibt, was technisch möglich wäre."
             }
           ],
-          "explanation": "Gemessen wird technisches Potenzial. Tatsächlicher Einsatz, Wirtschaftlichkeit und künftige Stellenverluste stecken nicht in der Zahl."
-        },
-        {
-          "id": "arbeit-1-1-q3",
-          "questionText": "Was folgt aus einer automatisierbaren Teilaufgabe?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Der gesamte Beruf verschwindet im nächsten Planungshorizont",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Die Technik wird in jedem Betrieb wirtschaftlich eingesetzt",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Alle übrigen Aufgaben werden für Beschäftigte wertvoller",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Der Arbeitsablauf kann sich ändern; die Beschäftigungswirkung ist gesondert zu prüfen",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "Ob aus technischem Potenzial Zeitersparnis, zusätzliche Prüfung, mehr Fälle oder weniger Stellen werden, entscheidet der Einsatz im Betrieb."
+          "explanation": "Das Potenzial ist eine Momentaufnahme des technisch Möglichen. Einsatz und Beschäftigung hängen von weiteren Faktoren ab."
         }
       ]
     },
     {
-      "id": "arbeit-1-2",
+      "id": "zahlen-1-2",
       "blockId": "block_1",
       "number": 2,
-      "title": "KI als Assistenz: den Nutzen selbst messen",
-      "subtitle": "Wer prüft, wer gibt frei, welche Daten dürfen hinein",
-      "durationMinutes": 6,
+      "title": "Dein Aufgabenprofil",
+      "subtitle": "Aufgaben statt Berufe bewerten und den Nutzen selbst messen",
+      "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-06",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
-        "KI-Kompetenz",
-        "Assistenz-Workflow",
-        "Betriebsrat",
-        "BetrVG"
+        "Aufgabenbündel",
+        "Prüfaufwand",
+        "Mitbestimmung"
       ],
-      "sections": [
-        {
-          "id": "arbeit-1-2-s1",
-          "title": "Assistenz ohne Leistungsversprechen",
-          "readTimeMinutes": 2,
-          "content": "Ein Assistenz-Workflow gibt dem System einen begrenzten Schritt; Freigabe und Verantwortung bleiben bei einer benannten Person. Ob das Zeit spart, misst du im eigenen Prozess.\n\nDrei erfundene Beispiele:\n- Eine Pflegefachkraft lässt aus freigegebenen, datenschutzkonformen Stichpunkten einen Entwurf schreiben und prüft jede Angabe gegen die Dokumentation. Patientendaten gehören nur in ein dafür freigegebenes System.\n- Eine Buchhalterin lässt ungewöhnliche Einträge markieren. Die Markierung heißt: genauer prüfen. Einen Betrug oder Fehler belegt sie nicht.\n- Ein Kommunikationsteam erzeugt Bildentwürfe und prüft sie vor der Veröffentlichung auf Rechte, Sachbezug, Kennzeichnung und Freigabe.\n\nEin kontrollierter Test legt vorher Aufgabe, erlaubte Daten, Qualitätskriterien, Prüfer, Abbruchpunkt und Protokollierung fest. Erst seine Messdaten zeigen den Nutzen."
-        },
-        {
-          "id": "arbeit-1-2-s2",
-          "title": "Was KI-Kompetenz umfasst",
-          "readTimeMinutes": 2,
-          "content": "Wer einen KI-Entwurf freigibt, braucht fünf Fähigkeiten, und Programmieren gehört nicht dazu:\n\n1. Aufgabe beschreiben: Zweck, Kontext, Format und Grenzen nennen.\n2. Ausgabe prüfen: Behauptungen, Zahlen und Quellen gegen verlässliche Unterlagen halten.\n3. Risiko erkennen: Bei personenbezogenen Daten, vertraulichen Informationen oder folgenreichen Entscheidungen stoppen und die zuständige Stelle einbeziehen.\n4. Werkzeug einordnen: Freigabestatus, Datenverarbeitung, Grenzen und Versionsänderungen kennen.\n5. Arbeit dokumentieren: Eingaben, relevante Ausgaben, Änderungen und Freigaben festhalten, wenn der Prozess es verlangt.\n\nArt. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber seit der Änderung durch Verordnung (EU) 2026/1744, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihrer Mitarbeitenden und weiterer für sie handelnder Personen unterstützen. Ein garantiertes Kompetenzniveau je Person verlangt die Norm nicht."
-        },
-        {
-          "id": "arbeit-1-2-s3",
-          "title": "Wann der Betriebsrat mitbestimmt",
-          "readTimeMinutes": 2,
-          "content": "Ein Tool zählt, wie schnell eine Kollegin ihre Tickets schließt. Soweit keine gesetzliche oder tarifliche Regelung besteht, bestimmt der Betriebsrat nach § 87 Abs. 1 Nr. 6 BetrVG mit, wenn technische Einrichtungen eingeführt und angewendet werden, die Verhalten oder Leistung der Arbeitnehmer überwachen sollen.\n\nOb ein KI-System darunter fällt, entscheiden Funktion und Einsatz. Das Recht hat der Betriebsrat, nicht die einzelne beschäftigte Person.\n\nSprich im Betrieb diese Punkte an:\n- Zweck und unterstützte Entscheidung\n- erhobene, abgeleitete oder gespeicherte Beschäftigtendaten\n- wer die Auswertungen sieht und wie lange sie gespeichert bleiben\n- menschliche Kontrolle, Fehlerkorrektur und Beschwerdeweg\n- Schulung und verbindliche Nutzungsregeln\n\nEinigen sich Arbeitgeber und Betriebsrat in einer mitbestimmungspflichtigen Angelegenheit nicht, entscheidet nach § 87 Abs. 2 die Einigungsstelle. Ob dein System erfasst ist, klärt eine fachkundige arbeitsrechtliche Prüfung."
+      "concept": {
+        "body": "Ein Beruf ist ein Bündel aus Aufgaben. Das technische Potenzial ist eher hoch, wenn ein Schritt sich wiederholt, digitale Eingaben hat und klaren Regeln folgt, etwa Daten übertragen oder Vollständigkeit prüfen. Schwer wird Automatisierung bei wechselnder physischer Umgebung, seltenen Ausnahmen, Verantwortung für Sicherheit und Arbeit mit Menschen. „KI-sicher“ macht das keinen Beruf: Dokumentation und Planung ändern sich auch in Pflege und Handwerk.\n\nOb KI dir Zeit spart, zeigt kein Profil, sondern eine Messung: dieselbe Aufgabe mit und ohne Werkzeug, inklusive der Zeit für Prüfung und Korrektur.\n\nZählt ein Tool Leistung oder Verhalten, bestimmt der Betriebsrat nach § 87 Abs. 1 Nr. 6 BetrVG mit, soweit keine gesetzliche oder tarifliche Regelung besteht.",
+        "takeaway": "Exposition beschreibt Aufgaben. Den Nutzen misst du mit Prüfzeit, nicht mit einem Gefühl.",
+        "sources": [
+          {
+            "label": "IAB-Kurzbericht 5/2024"
+          },
+          {
+            "label": "§ 87 Abs. 1 Nr. 6 BetrVG",
+            "url": "https://www.gesetze-im-internet.de/betrvg/__87.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Bilde deine Arbeitswoche ab",
+        "instructions": "Verteile deine Wochenstunden auf drei Aufgabentypen und setze zwei Annahmen. Der Rechner zeigt dein Expositionsprofil und den Netto-Effekt deiner Annahmen. Fertig, wenn beide Aufgaben erledigt sind.",
+        "props": {
+          "inputs": [
+            {
+              "id": "rule",
+              "label": "Wiederholt, digital, regelbasiert",
+              "help": "z. B. Daten übertragen, Formulare prüfen, Standardtexte",
+              "type": "slider",
+              "min": 0,
+              "max": 40,
+              "step": 1,
+              "default": 0,
+              "format": "int",
+              "unit": "Std."
+            },
+            {
+              "id": "judge",
+              "label": "Digital, mit Urteil",
+              "help": "z. B. Analysen, Entwürfe, Beratung per Mail",
+              "type": "slider",
+              "min": 0,
+              "max": 40,
+              "step": 1,
+              "default": 0,
+              "format": "int",
+              "unit": "Std."
+            },
+            {
+              "id": "people",
+              "label": "Vor Ort, körperlich oder mit Menschen",
+              "help": "z. B. Pflege, Montage, Gespräche, Unterricht",
+              "type": "slider",
+              "min": 0,
+              "max": 40,
+              "step": 1,
+              "default": 0,
+              "format": "int",
+              "unit": "Std."
+            },
+            {
+              "id": "save",
+              "label": "Annahme: Zeitersparnis bei regelbasierten Schritten",
+              "type": "select",
+              "default": 0.3,
+              "options": [
+                {
+                  "value": 0.1,
+                  "label": "10 %"
+                },
+                {
+                  "value": 0.3,
+                  "label": "30 %"
+                },
+                {
+                  "value": 0.5,
+                  "label": "50 %"
+                }
+              ]
+            },
+            {
+              "id": "review",
+              "label": "Annahme: Prüfaufwand, gemessen an der Ersparnis",
+              "type": "select",
+              "default": 0.5,
+              "options": [
+                {
+                  "value": 0,
+                  "label": "keiner"
+                },
+                {
+                  "value": 0.5,
+                  "label": "die Hälfte"
+                },
+                {
+                  "value": 1,
+                  "label": "alles"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "total",
+              "label": "Erfasste Stunden",
+              "formula": "rule + judge + people",
+              "format": "int"
+            },
+            {
+              "id": "high",
+              "label": "Anteil mit hohem technischem Potenzial",
+              "formula": "rule / max(total, 1)",
+              "format": "percent",
+              "emphasis": true
+            },
+            {
+              "id": "net",
+              "label": "Netto-Stunden pro Woche nach deinen Annahmen",
+              "formula": "rule * save * (1 - review)",
+              "format": "number",
+              "decimals": 1,
+              "help": "Nur so gut wie deine Annahmen. Messen schlägt Schätzen."
+            }
+          ],
+          "chart": {
+            "kind": "stacked",
+            "title": "Deine Woche nach Aufgabentyp",
+            "format": "percent",
+            "bars": [
+              {
+                "label": "Hohes Potenzial",
+                "formula": "rule / max(total, 1)",
+                "tone": "warn"
+              },
+              {
+                "label": "Teilweise",
+                "formula": "judge / max(total, 1)",
+                "tone": "accent"
+              },
+              {
+                "label": "Gering",
+                "formula": "people / max(total, 1)",
+                "tone": "neutral"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "total == 0",
+              "tone": "neutral",
+              "title": "Trag deine Stunden ein"
+            },
+            {
+              "when": "high >= 0.5",
+              "tone": "warn",
+              "title": "Hohe Exposition, keine Prognose",
+              "body": "Viele Schritte wären technisch automatisierbar. Ob sich deine Stelle ändert, hängt von Einführung, Prüfaufwand und neuen Aufgaben ab."
+            },
+            {
+              "when": "high >= 0.2",
+              "tone": "neutral",
+              "title": "Gemischtes Profil",
+              "body": "Einzelne Schritte können sich ändern. Teste sie mit freigegebenen Werkzeugen und Testdaten."
+            },
+            {
+              "when": "true",
+              "tone": "good",
+              "title": "Geringe Exposition, nicht KI-sicher",
+              "body": "Auch hier ändern sich Dokumentation, Planung und Informationssuche."
+            }
+          ],
+          "goals": [
+            {
+              "id": "week",
+              "label": "Bilde eine Woche mit mindestens 20 Stunden ab",
+              "when": "total >= 20",
+              "insight": "Das ist dein Expositionsprofil. Es beschreibt Aufgaben, nicht die Zukunft deiner Stelle."
+            },
+            {
+              "id": "review-all",
+              "label": "Setze den Prüfaufwand auf „alles“",
+              "when": "review >= 1 && rule > 0",
+              "insight": "Dann bleibt netto nichts. Ob KI Zeit spart, zeigt erst eine Messung inklusive Prüfzeit."
+            }
+          ],
+          "note": "Grobe Einteilung nach den Merkmalen aus dem Konzept. Keine Berufsprognose; die Annahmen setzt du selbst."
         }
-      ],
-      "quiz": [
+      },
+      "checks": [
         {
-          "id": "arbeit-1-2-q1",
-          "questionText": "Woran erkennst du einen kontrollierten KI-Assistenz-Workflow?",
-          "answerOptions": [
+          "id": "zahlen-1-2-c1",
+          "prompt": "Welche Aufgabe hat eher hohes technisches Potenzial?",
+          "options": [
             {
               "id": "a",
-              "text": "Eine flüssige Ausgabe gilt ohne weitere Prüfung als richtig",
-              "isCorrect": false
+              "text": "Rechnungsdaten aus PDFs in eine Tabelle übertragen.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Aufgabe, erlaubte Daten, Prüfung und verantwortliche Freigabe sind vorab festgelegt",
-              "isCorrect": true
+              "text": "Einen Pflegeplan mit Angehörigen am Bett abstimmen.",
+              "correct": false,
+              "feedback": "Wechselnde Situation, Beziehung und Verantwortung machen Automatisierung schwer."
             },
             {
               "id": "c",
-              "text": "Personenbezogene Daten dürfen in jedes verfügbare System eingegeben werden",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Der Nutzen wird aus allgemeinen Herstellerangaben übernommen",
-              "isCorrect": false
+              "text": "Eine Baustelle mit unbekanntem Untergrund begutachten.",
+              "correct": false,
+              "feedback": "Wechselnde physische Umgebung und seltene Ausnahmen sprechen gegen hohes Potenzial."
             }
           ],
-          "explanation": "Begrenzte Aufgabe, geschützte Daten, Qualitätskriterien und verantwortliche Freigabe machen den Nutzen im eigenen Prozess messbar."
+          "explanation": "Wiederholt, digital und regelbasiert: Das sind die Merkmale hohen technischen Potenzials."
         },
         {
-          "id": "arbeit-1-2-q2",
-          "questionText": "Welche Fähigkeit gehört zur KI-Kompetenz, auch wenn du nie programmiert hast?",
-          "answerOptions": [
+          "id": "zahlen-1-2-c2",
+          "prompt": "Dein Team will wissen, ob ein KI-Werkzeug Zeit spart. Was ist der belastbarste Weg?",
+          "options": [
             {
               "id": "a",
-              "text": "Eigene KI-Modelle trainieren und kalibrieren",
-              "isCorrect": false
+              "text": "Dieselbe Aufgabe mit und ohne Werkzeug messen, Prüf- und Korrekturzeit eingeschlossen.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Python-Code für KI-Anwendungen schreiben",
-              "isCorrect": false
+              "text": "Die Zeitersparnis aus der Herstellerangabe übernehmen.",
+              "correct": false,
+              "feedback": "Herstellerangaben stammen aus anderen Abläufen und Daten. Deinen Prozess misst du selbst."
             },
             {
               "id": "c",
-              "text": "KI-Hardware konfigurieren und warten",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "KI-Ausgaben kritisch bewerten und Grenzen erkennen",
-              "isCorrect": true
+              "text": "Nach einer Woche fragen, wie es sich anfühlt.",
+              "correct": false,
+              "feedback": "Gefühlte Zeit unterschätzt oft die Prüfung. Eine Messung mit Referenz ist belastbarer."
             }
           ],
-          "explanation": "KI-Kompetenz heißt Ausgaben prüfen und Grenzen kennen. Programmieren ist keine Voraussetzung."
-        },
-        {
-          "id": "arbeit-1-2-q3",
-          "questionText": "Welche Norm kann bei einem KI-System greifen, das Verhalten oder Leistung von Beschäftigten überwachen soll?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Art. 4 KI-Verordnung (Maßnahmen zur Unterstützung von KI-Kompetenz)",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "§ 106 GewO (Weisungsrecht des Arbeitgebers)",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "DSGVO Art. 22 (automatisierte Einzelentscheidungen)",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "§ 87 Abs. 1 Nr. 6 BetrVG (Mitbestimmung bei technischen Überwachungseinrichtungen)",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "Die Norm erfasst technische Einrichtungen, die Verhalten oder Leistung überwachen sollen. Ob sie greift, entscheiden das konkrete System und sein Einsatz."
-        }
-      ]
-    },
-    {
-      "id": "arbeit-1-3",
-      "blockId": "block_1",
-      "number": 3,
-      "title": "Welche Aufgaben sich verändern können und was du selbst prüfst",
-      "subtitle": "Welche Tätigkeitsmerkmale zählen",
-      "durationMinutes": 5,
-      "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-06",
-      "reviewCadence": "quarterly",
-      "riskClass": "statistical",
-      "keyConcepts": ["Aufgabenanalyse", "Weiterbildung", "Qualifizierung"],
-      "sections": [
-        {
-          "id": "arbeit-1-3-s1",
-          "title": "Wo das technische Potenzial hoch ist",
-          "readTimeMinutes": 2,
-          "content": "Das technische Potenzial ist eher hoch, wenn sich ein Schritt täglich wiederholt, digitale Eingaben hat, klaren Regeln oder einem Qualitätsmaß folgt und in einer kaum wechselnden physischen Umgebung stattfindet. Beispiele sind strukturierte Daten übertragen, formale Vollständigkeit prüfen und Entwürfe nach Vorlage erstellen.\n\nDie Einführung bleibt trotzdem offen: Schlechte Daten, seltene Ausnahmen, Haftungsrisiken, Integrationskosten oder Nachkontrolle können den Nutzen schmälern. Umgekehrt kann Technik einzelne Schritte in fast jedem Beruf unterstützen.\n\nDas IAB ordnet Kerntätigkeiten im Beruf anhand marktreifer Technik ein und aktualisiert diese Momentaufnahme regelmäßig."
-        },
-        {
-          "id": "arbeit-1-3-s2",
-          "title": "Was Automatisierung schwer macht",
-          "readTimeMinutes": 1,
-          "content": "Automatisierung wird schwer, wenn eine Tätigkeit mehrere der folgenden Merkmale verbindet, etwa auf einer unbekannten Baustelle oder in der Pflege mit lückenhaften Informationen und Angehörigen im Zimmer:\n\n- wechselnde physische Umgebung und feinmotorische Arbeit\n- unvollständige Informationen und seltene Ausnahmen\n- unmittelbare Verantwortung für Sicherheit oder Grundrechte\n- Verhandlung mit mehreren Beteiligten\n- Beziehung, Vertrauen oder Kenntnis der Verhältnisse vor Ort\n\n\"KI-sicher\" wird ein Beruf dadurch nicht. Dokumentation, Planung und Informationssuche können sich auch in Pflege, Handwerk, Pädagogik und Beratung ändern, und Robotik kann physische Aufgaben langfristig verschieben. Schau deshalb auf einzelne Aufgaben."
-        },
-        {
-          "id": "arbeit-1-3-s3",
-          "title": "Was du selbst tun kannst",
-          "readTimeMinutes": 2,
-          "content": "1. Aufgaben inventarisieren: wiederkehrende Schritte, Fehlerfolgen, benötigte Daten und Freigaben aufschreiben.\n2. Sicher testen: nur freigegebene Werkzeuge und Testdaten ohne vertrauliche oder personenbezogene Inhalte nutzen und mit einer vorher festgelegten Referenz vergleichen.\n3. Beraten lassen: Die Bundesagentur für Arbeit bietet \"Berufsberatung im Erwerbsleben\" mit Informationen zu Weiterbildung und Förderung.\n4. Im Betrieb fragen: Führungskraft, Datenschutz, Informationssicherheit und, wo vorhanden, Betriebsrat.\n\nArt. 5 der KI-Verordnung verbietet seit 2. Februar 2025 bestimmte Praktiken, darunter, von Ausnahmen abgesehen, Emotionserkennung am Arbeitsplatz. Einstellungs- und Auswahlsysteme können unter Anhang III fallen; für eigenständige Anhang-III-Systeme gelten die Hochrisiko-Regeln nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. AGG, DSGVO und Arbeitsrecht können schon heute gelten.\n\nLäuft deine Bewerbung über so ein System, frag nach Zweck, Daten, Bedeutung der Ausgabe, menschlicher Beteiligung und Verantwortung."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "arbeit-1-3-q1",
-          "questionText": "Welche Aufgabe hat typischerweise das höhere technische Automatisierungspotenzial?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Eine Verhandlung mit mehreren Beteiligten in einem neuen Konflikt",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Eine Reparatur in einer unbekannten physischen Umgebung",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Eine wiederholte formale Vollständigkeitsprüfung strukturierter digitaler Daten",
-              "isCorrect": true
-            },
-            {
-              "id": "d",
-              "text": "Eine folgenschwere Einzelfallabwägung mit unvollständigen Informationen",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Wiederholte, digitale und klar prüfbare Schritte haben oft das höhere technische Potenzial. Ob ein Betrieb sie automatisiert, bleibt offen."
-        },
-        {
-          "id": "arbeit-1-3-q2",
-          "questionText": "Welches Angebot hat die Bundesagentur für Arbeit für Beschäftigte mit Weiterbildungsfragen?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Eine automatische Umschulung für jeden von KI betroffenen Beruf",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Berufsberatung im Erwerbsleben mit Informationen zu Weiterbildung und Förderung",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Eine Garantie auf Finanzierung jeder gewünschten Weiterbildung",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Eine verpflichtende Zertifizierung nach Art. 4 der KI-Verordnung",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Die Beratung informiert zu Weiterbildung und Förderung. Ob gefördert wird, hängt von dir, der Maßnahme und den geltenden Voraussetzungen ab."
-        },
-        {
-          "id": "arbeit-1-3-q3",
-          "questionText": "Welche Aussage zum EU AI Act am Arbeitsplatz stimmt?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Art. 5 verbietet jede Form von Recruiting-KI",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Alle Hochrisiko-Pflichten gelten bereits seit 2. Februar 2025",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Art. 5 hat mit dem Arbeitsplatz nichts zu tun",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken am Arbeitsplatz",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "Art. 5 verbietet genau bezeichnete Praktiken wie Emotionserkennung am Arbeitsplatz, von Ausnahmen abgesehen. Einstellungssysteme prüfst du gesondert nach Anhang III, AGG, DSGVO und Mitbestimmung."
+          "explanation": "Ein kontrollierter Vergleich mit Referenz zeigt den Nutzen. Prüfzeit gehört dazu."
         }
       ]
     }

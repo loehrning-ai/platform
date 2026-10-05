@@ -17,6 +17,11 @@ import {
   getWorkshopQuestionCount,
   getWorkshopPassThreshold,
 } from "./data";
+import { isEngineLesson, validateEngineLesson } from "@/lib/lesson-engine/lesson";
+import {
+  ENGINE_EXERCISE_CHECKPOINT_ID,
+  engineCheckpointLessonKey,
+} from "@/lib/lesson-engine/types";
 
 // ─── Engine union ──────────────────────────────────────
 
@@ -33,13 +38,11 @@ describe("course engine union (shared course architecture + 6)", () => {
     expect(isCourseRegistered("ai-native")).toBe(true);
   });
 
-  it("getRegisteredCourseSlugs returns all ten courses ( adds ai-native-operator)", () => {
+  it("getRegisteredCourseSlugs returns all eight courses", () => {
     const slugs = getRegisteredCourseSlugs();
     expect([...slugs].sort()).toEqual([
       "ai-native",
       "ai-native-operator",
-      "claude",
-      "codex",
       "data-engineering-fundamentals",
       "data-infrastructure",
       "data-science",
@@ -122,8 +125,8 @@ describe("CourseConfig copy fields (collapsed route components)", () => {
   );
 
   it("getBlocks returns the configured block count per course", () => {
-    expect(getBlocks("ki-fuehrerschein").length).toBe(5);
-    expect(getBlocks("eu-ai-act-kurs").length).toBe(6);
+    expect(getBlocks("ki-fuehrerschein").length).toBe(4);
+    expect(getBlocks("eu-ai-act-kurs").length).toBe(5);
   });
 });
 
@@ -132,7 +135,8 @@ describe("CourseConfig copy fields (collapsed route components)", () => {
 describe("getGlossaryTerms (shared course architecture)", () => {
   it("loads the previously-unwired KI-Führerschein glossary", () => {
     const terms = getGlossaryTerms("ki-fuehrerschein");
-    expect(terms.length).toBeGreaterThanOrEqual(40);
+    // Trimmed to the vocabulary the eight lesson-engine lessons use.
+    expect(terms.length).toBeGreaterThanOrEqual(15);
     expect(getGlossaryTermCount("ki-fuehrerschein")).toBe(terms.length);
     // Sorted by German term, immutable copy.
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term, "de"));
@@ -140,13 +144,14 @@ describe("getGlossaryTerms (shared course architecture)", () => {
   });
 
   it("filters by relatedBlocks when a blockId is given", () => {
-    const block4 = getGlossaryTerms("ki-fuehrerschein", "block_4");
-    expect(block4.length).toBeGreaterThan(0);
-    for (const t of block4) {
-      expect(t.relatedBlocks).toContain("block_4");
+    const block3 = getGlossaryTerms("ki-fuehrerschein", "block_3");
+    expect(block3.length).toBeGreaterThan(0);
+    for (const t of block3) {
+      expect(t.relatedBlocks).toContain("block_3");
     }
-    // Block 4 covers verification: hallucination + 3-step check must be present.
-    expect(block4.map((t) => t.term)).toContain("Halluzination");
+    // Module 3 covers checking output: hallucination and primary source.
+    expect(block3.map((t) => t.term)).toContain("Halluzination");
+    expect(block3.map((t) => t.term)).toContain("Primärquelle");
   });
 
   it("returns an empty list for courses without a glossary", () => {
@@ -165,71 +170,64 @@ describe("getGlossaryTerms (shared course architecture)", () => {
 
 // ─── In-lesson widgets (shared course architecture) ─────────────────────
 
-describe("KI-Führerschein in-lesson interactivity (shared course architecture)", () => {
-  it("appends a glossary flashcards deck to the last lesson of a block", () => {
-    const lessons = getBlockLessons("ki-fuehrerschein", "block_4");
-    const last = lessons[lessons.length - 1];
-    const deck = (last.widgets ?? []).find(
-      (w) => w.kind === "flashcards" && w.placement === "end",
-    );
-    expect(deck).toBeDefined();
-    const cards = deck?.props?.cards as ReadonlyArray<{ q: string; a: string }>;
-    expect(cards.length).toBeGreaterThan(0);
-    // Cards are derived from the glossary terms for that block.
-    expect(cards.map((c) => c.q)).toContain("Halluzination");
-    // Unique checkpoint id per block.
-    expect(deck?.props?.cpId).toBe("glossar-block_4");
-    expect(deck?.props?.lessonId).toBe(
-      "ki-fuehrerschein:block_4_lesson_4",
-    );
-  });
+describe("KI-Führerschein lesson-engine lessons", () => {
+  const EXPECTED_EXERCISES = {
+    "daten-1-1": "bucket-sort",
+    "daten-1-2": "pii-redactor",
+    "briefen-2-1": "live-prompt-ab",
+    "briefen-2-2": "bucket-sort",
+    "pruefen-3-1": "claim-checker",
+    "pruefen-3-2": "calculator",
+    "regeln-4-1": "decision-wizard",
+    "regeln-4-2": "doc-builder",
+  } as const;
 
-  it("only the last lesson of a block carries the glossary deck", () => {
-    const lessons = getBlockLessons("ki-fuehrerschein", "block_4");
-    for (const lesson of lessons.slice(0, -1)) {
-      const deck = (lesson.widgets ?? []).find(
-        (w) => w.kind === "flashcards" && w.placement === "end",
+  it("gives every lesson one concept, one registered exercise and two checks", () => {
+    for (const locale of ["de", "en"] as const) {
+      const lessons = getBlocks("ki-fuehrerschein", locale).flatMap(
+        (block) => block.lessons,
       );
-      expect(deck).toBeUndefined();
+      expect(lessons.map((lesson) => lesson.id)).toEqual(
+        Object.keys(EXPECTED_EXERCISES),
+      );
+      for (const lesson of lessons) {
+        expect(isEngineLesson(lesson), lesson.id).toBe(true);
+        expect(validateEngineLesson(lesson), lesson.id).toEqual([]);
+        expect(lesson.exercise?.kind).toBe(
+          EXPECTED_EXERCISES[lesson.id as keyof typeof EXPECTED_EXERCISES],
+        );
+      }
     }
   });
 
-  it("wires the FailureTagger into Block 4 (Verifikation)", () => {
-    const lessons = getBlockLessons("ki-fuehrerschein", "block_4");
-    const lesson = lessons.find((l) => l.id === "block_4_lesson_4");
-    const tagger = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "failure-tagger",
+  it("projects concept and checks onto sections/quiz for search and MCP readers", () => {
+    const [lesson] = getBlockLessons("ki-fuehrerschein", "block_1");
+    expect(lesson.sections).toHaveLength(1);
+    expect(lesson.sections[0]?.id).toBe("daten-1-1_concept");
+    expect(lesson.sections[0]?.content).toContain(lesson.concept?.body ?? "∅");
+    expect(lesson.quiz.map((question) => question.id)).toEqual(
+      lesson.checks?.map((check) => check.id),
     );
-    expect(tagger).toBeDefined();
-    expect(tagger?.props?.lessonId).toBe("block_4_lesson_4");
-    expect(String(tagger?.props?.scenario ?? "")).not.toMatch(/[—–]/);
+    expect(lesson.widgets).toEqual([]);
   });
 
-  it("wires a RedactionDrill into Block 2 (Datenschutz)", () => {
-    const lessons = getBlockLessons("ki-fuehrerschein", "block_2");
-    const lesson = lessons.find((l) => l.id === "block_2_lesson_3");
-    const drill = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "redaction-drill",
-    );
-    expect(drill).toBeDefined();
-    expect(drill?.props?.cpId).toBe("redaction-drill");
+  it("does not inject the legacy glossary flashcards into engine lessons", () => {
+    for (const block of getBlocks("ki-fuehrerschein")) {
+      for (const lesson of block.lessons) {
+        expect(
+          (lesson.widgets ?? []).some((widget) => widget.kind === "flashcards"),
+          lesson.id,
+        ).toBe(false);
+      }
+    }
   });
 
-  it("wires a Compare widget into Block 3 (Anwendung)", () => {
-    const lessons = getBlockLessons("ki-fuehrerschein", "block_3");
-    const lesson = lessons.find((l) => l.id === "block_3_lesson_1");
-    const compare = (lesson?.widgets ?? []).find((w) => w.kind === "compare");
-    expect(compare).toBeDefined();
-    // German copy, no em dashes, real umlauts.
-    const note = String(compare?.props?.note ?? "");
-    expect(note).not.toMatch(/[—–]/);
-    expect(String(compare?.props?.good ?? "")).toMatch(/[äöüß]/);
-  });
-
-  it("keeps the auto-injected glossary deck immutable across calls", () => {
-    const a = getBlockLessons("ki-fuehrerschein", "block_1");
-    const b = getBlockLessons("ki-fuehrerschein", "block_1");
-    expect(a[a.length - 1].widgets).toEqual(b[b.length - 1].widgets);
+  it("does not inject the deck into the EU AI Act engine lessons either", () => {
+    for (const block of getBlocks("eu-ai-act-kurs")) {
+      for (const lesson of block.lessons) {
+        expect(lesson.widgets ?? [], lesson.id).toEqual([]);
+      }
+    }
   });
 });
 
@@ -238,7 +236,8 @@ describe("KI-Führerschein in-lesson interactivity (shared course architecture)"
 describe("EU-AI-Act-Kurs glossary (shared course architecture)", () => {
   it("loads the new Risikostufen glossary tied to Verordnung (EU) 2024/1689", () => {
     const terms = getGlossaryTerms("eu-ai-act-kurs");
-    expect(terms.length).toBeGreaterThanOrEqual(20);
+    // Trimmed to the vocabulary the ten lesson-engine lessons use.
+    expect(terms.length).toBeGreaterThanOrEqual(15);
     expect(getGlossaryTermCount("eu-ai-act-kurs")).toBe(terms.length);
     // Sorted by German term (immutable copy).
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term, "de"));
@@ -288,42 +287,53 @@ describe("KI und Gesellschaft course (KI und Gesellschaft course review)", () =>
     expect(config.certificateModules.join(" ")).not.toMatch(/[—–]/);
   });
 
-  it("has three blocks with correct titles", () => {
+  it("has three modules with correct titles", () => {
     const blocks = getBlocks("ki-und-gesellschaft");
     expect(blocks.length).toBe(3);
-    expect(blocks[0].title).toBe("KI und Arbeit");
-    expect(blocks[1].title).toBe("Deepfakes erkennen");
-    expect(blocks[2].title).toBe("Ethik und Bias");
+    expect(blocks[0].title).toBe("Jobzahlen lesen");
+    expect(blocks[1].title).toBe("Fakes prüfen");
+    expect(blocks[2].title).toBe("Fairness messen");
+    expect(blocks.reduce((sum, block) => sum + block.durationMinutes, 0)).toBe(40);
   });
 
-  it("has 9 lessons total across the three blocks (3 per block)", () => {
+  it("has 8 lesson-engine lessons across the three modules (2/3/3)", () => {
     const b1 = getBlockLessons("ki-und-gesellschaft", "block_1");
     const b2 = getBlockLessons("ki-und-gesellschaft", "block_2");
     const b3 = getBlockLessons("ki-und-gesellschaft", "block_3");
-    expect(b1.length).toBe(3);
+    expect(b1.length).toBe(2);
     expect(b2.length).toBe(3);
     expect(b3.length).toBe(3);
+    for (const lesson of [...b1, ...b2, ...b3]) {
+      expect(lesson.exercise?.kind, lesson.id).toBeTruthy();
+      expect(lesson.checks, lesson.id).toHaveLength(2);
+      // The loader projects the concept into one section for search/MCP.
+      expect(lesson.sections.map((section) => section.id)).toEqual([
+        `${lesson.id}_concept`,
+      ]);
+      expect(lesson.widgets ?? []).toEqual([]);
+    }
   });
 
-  it("block 1 (Arbeit) lessons reference OECD and Bundesagentur", () => {
+  it("module 1 (Jobzahlen) cites OECD and IAB", () => {
     const lessons = getBlockLessons("ki-und-gesellschaft", "block_1");
     const allText = lessons
       .flatMap((l) => l.sections.map((s) => s.content))
       .join(" ");
     expect(allText).toMatch(/OECD/);
-    expect(allText).toMatch(/Bundesagentur/);
+    expect(allText).toMatch(/IAB/);
   });
 
-  it("block 2 (Deepfakes) lessons reference Art. 50 and WeVerify", () => {
+  it("module 2 (Fakes) teaches provenance tools and links Art. 50 to the EU AI Act course", () => {
     const lessons = getBlockLessons("ki-und-gesellschaft", "block_2");
     const allText = lessons
       .flatMap((l) => l.sections.map((s) => s.content))
       .join(" ");
     expect(allText).toMatch(/Art\. 50/);
-    expect(allText).toMatch(/weverify\.eu/i);
+    expect(allText).toMatch(/InVID\/WeVerify/);
+    expect(allText).toMatch(/Kurs EU AI Act/);
   });
 
-  it("block 3 (Ethik) lessons reference COMPAS and Buolamwini", () => {
+  it("module 3 (Fairness) references COMPAS and Buolamwini", () => {
     const lessons = getBlockLessons("ki-und-gesellschaft", "block_3");
     const allText = lessons
       .flatMap((l) => l.sections.map((s) => s.content))
@@ -358,71 +368,63 @@ describe("KI und Gesellschaft course (KI und Gesellschaft course review)", () =>
   });
 });
 
-describe("EU-AI-Act-Kurs in-lesson interactivity (shared course architecture)", () => {
-  it("wires the risk-pyramid diagram into the Risikoklassen summary lesson", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const lesson = lessons.find((l) => l.id === "block_2_lesson_4");
-    const pyramid = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "risk-pyramid",
-    );
-    expect(pyramid).toBeDefined();
-    expect(pyramid?.placement).toBe("after-intro");
-    expect(pyramid?.props?.lessonId).toBe("block_2_lesson_4");
-    expect(String(pyramid?.props?.title ?? "")).not.toMatch(/[—–]/);
+describe("EU AI Act lesson-engine lessons", () => {
+  const EXPECTED_EXERCISES = {
+    "rolle-1-1": "decision-wizard",
+    "zeitplan-1-2": "timeline-check",
+    "risiko-2-1": "decision-wizard",
+    "risiko-2-2": "bucket-sort",
+    "pflichten-3-1": "decision-wizard",
+    "pflichten-3-2": "bucket-sort",
+    "bussgeld-4-1": "calculator",
+    "aufsicht-4-2": "sequence-order",
+    "fall-5-1": "claim-checker",
+    "plan-5-2": "doc-builder",
+  } as const;
+
+  it("gives every lesson one concept, one registered exercise and two checks", () => {
+    for (const locale of ["de", "en"] as const) {
+      const lessons = getBlocks("eu-ai-act-kurs", locale).flatMap(
+        (block) => block.lessons,
+      );
+      expect(lessons.map((lesson) => lesson.id)).toEqual(
+        Object.keys(EXPECTED_EXERCISES),
+      );
+      for (const lesson of lessons) {
+        expect(isEngineLesson(lesson), lesson.id).toBe(true);
+        expect(validateEngineLesson(lesson), lesson.id).toEqual([]);
+        expect(lesson.exercise?.kind).toBe(
+          EXPECTED_EXERCISES[lesson.id as keyof typeof EXPECTED_EXERCISES],
+        );
+      }
+    }
   });
 
-  it("wires a DragReorder of the four risk tiers into block_2", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const lesson = lessons.find((l) => l.id === "block_2_lesson_4");
-    const reorder = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "drag-reorder",
+  it("projects concept and checks onto sections/quiz for search and MCP readers", () => {
+    const [lesson] = getBlockLessons("eu-ai-act-kurs", "block_2");
+    expect(lesson.id).toBe("risiko-2-1");
+    expect(lesson.sections).toHaveLength(1);
+    expect(lesson.sections[0]?.id).toBe("risiko-2-1_concept");
+    expect(lesson.quiz.map((question) => question.id)).toEqual(
+      lesson.checks?.map((check) => check.id),
     );
-    expect(reorder).toBeDefined();
-    expect(reorder?.props?.cpId).toBe("risikostufen-ordnen");
-    // German copy, no em dashes.
-    expect(String(reorder?.props?.prompt ?? "")).not.toMatch(/[—–]/);
-    expect(String(reorder?.props?.prompt ?? "")).toMatch(/[äöüß]/);
   });
 
-  it("appends the auto-injected glossary deck to the last block_2 lesson", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const last = lessons[lessons.length - 1];
-    const deck = (last.widgets ?? []).find(
-      (w) => w.kind === "flashcards" && w.placement === "end",
+  it("stacks the risk-tier sort as a pyramid from prohibited to minimal", () => {
+    const lesson = getBlockLessons("eu-ai-act-kurs", "block_2").find(
+      (entry) => entry.id === "risiko-2-2",
     );
-    expect(deck).toBeDefined();
-    expect(deck?.props?.cpId).toBe("glossar-block_2");
-    expect(deck?.props?.lessonId).toBe(
-      "eu-ai-act-kurs:block_2_lesson_4",
-    );
-    const cards = deck?.props?.cards as ReadonlyArray<{ q: string; a: string }>;
-    expect(cards.length).toBeGreaterThan(0);
-    expect(cards.map((c) => c.q)).toContain("Verbotene Praktiken");
-  });
-
-  it("wires a GPAI-Transparenz FailureTagger into block_4 (Art. 50)", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_4");
-    const lesson = lessons.find((l) => l.id === "block_4_lesson_4");
-    const tagger = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "failure-tagger",
-    );
-    expect(tagger).toBeDefined();
-    expect(tagger?.props?.lessonId).toBe("block_4_lesson_4");
-    expect(tagger?.props?.cpId).toBe("gpai-transparenz-tagger");
-    // Five authored cases, each mapping to one of the four FailureModeIds.
-    const cases = tagger?.props?.cases as ReadonlyArray<{ correct: string }>;
-    expect(cases.length).toBe(5);
-    const validIds = new Set([
-      "halluzination",
-      "verweigerung",
-      "formatdrift",
-      "themaverfehlung",
+    const props = lesson?.exercise?.props as {
+      layout: string;
+      buckets: { id: string }[];
+    };
+    expect(props.layout).toBe("pyramid");
+    expect(props.buckets.map((bucket) => bucket.id)).toEqual([
+      "prohibited",
+      "high",
+      "transparency",
+      "minimal",
     ]);
-    for (const c of cases) expect(validIds.has(c.correct)).toBe(true);
-    // German copy, no em dashes, real umlauts.
-    const scenario = String(tagger?.props?.scenario ?? "");
-    expect(scenario).not.toMatch(/[—–]/);
-    expect(scenario).toMatch(/[äöüß]/);
   });
 });
 
@@ -439,6 +441,14 @@ describe("shared widget checkpoint identity", () => {
     for (const courseSlug of courseSlugs) {
       for (const block of getBlocks(courseSlug)) {
         for (const lesson of block.lessons) {
+          // Engine lessons own exactly one exercise checkpoint, injected by
+          // the reader as "<course>:<lesson>" / "exercise".
+          if (isEngineLesson(lesson)) {
+            const key = `${engineCheckpointLessonKey(courseSlug, lesson.id)}::${ENGINE_EXERCISE_CHECKPOINT_ID}`;
+            const owner = `${courseSlug}/${block.id}/${lesson.id}/exercise`;
+            expect(owners.get(key), `checkpoint "${key}" is shared`).toBeUndefined();
+            owners.set(key, owner);
+          }
           for (const widget of lesson.widgets ?? []) {
             const lessonId = widget.props?.lessonId;
             const cpId = widget.props?.cpId;

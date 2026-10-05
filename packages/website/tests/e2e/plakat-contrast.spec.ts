@@ -55,8 +55,19 @@ interface Target {
 
 const BODY_SHARE = 0.04;
 const NUMERAL_SHARE = 0.25;
-/** /kurse keeps its H1 on paper (SPEC §3.4, §4); only its posters are scenes. */
-const PAPER_HERO_ROUTES = new Set<string>(["/kurse"]);
+/**
+ * Routes whose H1 sits on paper, with no poster band (docs/experience-system.md:
+ * the home hero is the line globe on paper, the workshop hub header is on
+ * paper, /kurse keeps its H1 on paper per SPEC §3.4, §4). Their posters, where
+ * they have any, are still scenes.
+ */
+const PAPER_HERO_ROUTES = new Set<string>(["/", "/workshops", "/kurse"]);
+/**
+ * Routes with no scene text to measure: home shows no band or poster at all,
+ * and the /kurse posters are text-free art. The check still runs there, so a
+ * band or a poster text added later is measured.
+ */
+const NO_SCENE_TEXT_ROUTES = new Set<string>(["/", "/kurse"]);
 
 test.describe("poster scenes keep text contrast over bands and posters", () => {
   test.skip(
@@ -114,7 +125,9 @@ test.describe("poster scenes keep text contrast over bands and posters", () => {
         targets.filter((target) => target.kind === "band").length,
         `${route} must render a poster band`,
       ).toBeGreaterThanOrEqual(PAPER_HERO_ROUTES.has(route) ? 0 : 1);
-      expect(targets.length, `${route} must render a band or a poster`).toBeGreaterThan(0);
+      if (!NO_SCENE_TEXT_ROUTES.has(route)) {
+        expect(targets.length, `${route} must render a band or a poster`).toBeGreaterThan(0);
+      }
 
       const boxes: TextBox[] = await page.evaluate(() => {
         const canvas = document.createElement("canvas");
@@ -269,7 +282,9 @@ svg text, svg tspan { fill: transparent !important; stroke: transparent !importa
         body: report.join("\n"),
         contentType: "text/plain",
       });
-      expect(report.length, `${route}: no text box was sampled`).toBeGreaterThan(0);
+      if (!NO_SCENE_TEXT_ROUTES.has(route)) {
+        expect(report.length, `${route}: no text box was sampled`).toBeGreaterThan(0);
+      }
       expect(failures, `${route} text below its contrast floor`).toEqual([]);
     });
   }

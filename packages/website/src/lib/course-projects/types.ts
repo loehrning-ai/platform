@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/locale";
 
 export type LocalizedProjectText = Readonly<Record<Locale, string>>;
 
-export type CourseProjectEngineKind = "prompt" | "repo" | "data" | "case";
+export type CourseProjectEngineKind = "prompt" | "data" | "case";
 
 export const COURSE_PROJECT_EXECUTION_RECEIPTS = {
   "ki-fuehrerschein": "case:ki-fuehrerschein:local-evaluation-v1",
@@ -13,8 +13,6 @@ export const COURSE_PROJECT_EXECUTION_RECEIPTS = {
   "data-engineering-fundamentals": "de-events-v1:node24",
   "data-science": "ds-leakage-v1:node24",
   "data-infrastructure": "di-partition-v1:node24",
-  codex: "repo:codex:pipeline-quality-v1",
-  claude: "prompt:claude:grounded-provider-pair-v1",
   "ai-native-operator": "prompt:ai-native-operator:provider-v1",
 } as const satisfies Readonly<Record<CourseSlug, string>>;
 
@@ -23,7 +21,6 @@ export type CourseProjectExecutionReceipt =
 
 export const COURSE_PROJECT_LOCAL_LEARNING_RECEIPTS = {
   "ai-native": "prompt:ai-native:local-learning-v1",
-  claude: "prompt:claude:local-learning-v1",
   "ai-native-operator": "prompt:ai-native-operator:local-learning-v1",
 } as const;
 
@@ -50,7 +47,7 @@ export type CourseProjectLearningReceipt =
   CourseProjectExecutionReceipt | CourseProjectLocalLearningReceipt;
 
 export function getCourseProjectLocalLearningReceipt(
-  courseSlug: "ai-native" | "claude" | "ai-native-operator",
+  courseSlug: "ai-native" | "ai-native-operator",
 ): CourseProjectLocalLearningReceipt {
   return COURSE_PROJECT_LOCAL_LEARNING_RECEIPTS[courseSlug];
 }
@@ -103,23 +100,10 @@ export function hasCourseProjectExecutionEvidence(
 
   if (artifact.engineKind === "prompt") {
     return (
-      (courseSlug === "ai-native" ||
-        courseSlug === "claude" ||
-        courseSlug === "ai-native-operator") &&
+      (courseSlug === "ai-native" || courseSlug === "ai-native-operator") &&
       artifact.fields.variant === courseSlug &&
       artifact.fields.providerEvidence === "success" &&
-      artifact.fields.completionMode === "provider-success" &&
-      (courseSlug !== "claude" || artifact.fields.twoOutputEvidence === true)
-    );
-  }
-
-  if (artifact.engineKind === "repo") {
-    return (
-      courseSlug === "codex" &&
-      artifact.fields.sandboxAttested === true &&
-      artifact.fields.attestationContract === "pipeline-quality-v1" &&
-      artifact.fields.workspace === "pipeline-quality" &&
-      artifact.fields.commandSequence === "canonical"
+      artifact.fields.completionMode === "provider-success"
     );
   }
 
@@ -157,9 +141,7 @@ export function hasCourseProjectLearningEvidence(
   if (
     !artifact ||
     artifact.engineKind !== "prompt" ||
-    (courseSlug !== "ai-native" &&
-      courseSlug !== "claude" &&
-      courseSlug !== "ai-native-operator")
+    (courseSlug !== "ai-native" && courseSlug !== "ai-native-operator")
   ) {
     return false;
   }
@@ -180,8 +162,7 @@ export function hasCourseProjectLearningEvidence(
     artifact.fields.constraintsReady === true &&
     artifact.fields.approvalGate === true &&
     artifact.fields.stopCondition === true &&
-    artifact.fields.handoffDefined === true &&
-    (courseSlug !== "claude" || artifact.fields.secondaryReady === true)
+    artifact.fields.handoffDefined === true
   );
 }
 

@@ -1,0 +1,477 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "pflichten-3-1",
+      "blockId": "block_3",
+      "number": 5,
+      "title": "Ihre Pflichtenliste aus Rolle und Klasse",
+      "subtitle": "Anbieter und Betreiber, Hochrisiko bis minimal, GPAI auf einer Karte",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "Art. 26",
+        "Art. 16",
+        "KI-Kompetenz",
+        "GPAI-Modell"
+      ],
+      "concept": {
+        "body": "Pflichten folgen aus zwei Fragen: Welche Rolle haben Sie, und welche Klasse hat der Anwendungsfall?\n\n**Für alle:** Seit dem 2. Februar 2025 treffen Anbieter und Betreiber nach Art. 4 Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals unterstützen, abgestimmt auf Kenntnisse, Einsatzkontext und Betroffene. Seit der Verordnung (EU) 2026/1744 müssen sie kein bestimmtes individuelles Niveau garantieren.\n\n**Hochrisiko-Anbieter** tragen die schwere Last: Risikomanagement, Daten-Governance, technische Dokumentation nach Anhang IV, Logging und Aufsicht im Design, Konformitätsbewertung, CE-Kennzeichnung, Registrierung.\n\n**Hochrisiko-Betreiber** erfüllen Art. 26. Eine Grundrechte-Folgenabschätzung (Art. 27) trifft nur öffentliche Stellen, private Erbringer öffentlicher Dienste sowie Kreditwürdigkeit und Versicherungstarife.\n\nWer ein GPAI-Modell nur einbaut, ist nicht dessen Anbieter, braucht aber dessen Unterlagen (Art. 53).",
+        "takeaway": "Rolle mal Klasse ergibt die Liste. Art. 4 steht auf jeder.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Verordnung (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Erzeugen Sie vier Pflichtenlisten",
+        "instructions": "Wählen Sie für jeden Fall Rolle und Klasse. Das Ergebnis ist die Pflichtenliste mit Artikeln, die Sie übernehmen können. Fertig nach dem vierten Fall.",
+        "props": {
+          "start": "role",
+          "nodes": [
+            {
+              "id": "role",
+              "question": "Welche Rolle haben Sie für dieses System?",
+              "options": [
+                {
+                  "label": "Betreiber: wir setzen es ein",
+                  "next": "d-class"
+                },
+                {
+                  "label": "Anbieter: wir bringen es unter eigenem Namen auf den Markt",
+                  "next": "p-class"
+                },
+                {
+                  "label": "Wir bauen ein GPAI-Modell eines anderen Anbieters per API in unser Produkt ein",
+                  "result": "gpai"
+                }
+              ]
+            },
+            {
+              "id": "d-class",
+              "question": "Welche Klasse hat der Anwendungsfall?",
+              "options": [
+                {
+                  "label": "Hochrisiko nach Anhang III",
+                  "next": "d-fria"
+                },
+                {
+                  "label": "Transparenzfall nach Art. 50",
+                  "result": "d-art50"
+                },
+                {
+                  "label": "Minimales Risiko",
+                  "result": "d-min"
+                },
+                {
+                  "label": "Verbotene Praktik",
+                  "result": "prohibited"
+                }
+              ]
+            },
+            {
+              "id": "d-fria",
+              "question": "Sind Sie eine Einrichtung des öffentlichen Rechts oder ein privater Erbringer öffentlicher Dienste, oder setzen Sie das System für Kreditwürdigkeit oder Lebens- und Krankenversicherungstarife ein (Anhang III Nr. 5 lit. b und c)?",
+              "options": [
+                {
+                  "label": "Ja",
+                  "result": "d-high-fria"
+                },
+                {
+                  "label": "Nein",
+                  "result": "d-high"
+                }
+              ]
+            },
+            {
+              "id": "p-class",
+              "question": "Welche Klasse hat der Anwendungsfall?",
+              "options": [
+                {
+                  "label": "Hochrisiko nach Anhang I oder III",
+                  "result": "p-high"
+                },
+                {
+                  "label": "Transparenzfall nach Art. 50",
+                  "result": "p-art50"
+                },
+                {
+                  "label": "Minimales Risiko",
+                  "result": "p-min"
+                },
+                {
+                  "label": "Verbotene Praktik",
+                  "result": "prohibited"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "d-high",
+              "tone": "warn",
+              "title": "Betreiber, Hochrisiko: Ihre Liste nach Art. 26",
+              "body": "Ab dem 2. Dezember 2027 für Anhang-III-Systeme. Bereiten Sie Verträge, Rollen und Logs bis dahin vor. Art. 4 gilt schon jetzt, Art. 50 je nach Fall zusätzlich.",
+              "actions": [
+                "Nutzung nach Gebrauchsanweisung (Abs. 1)",
+                "Menschliche Aufsicht durch kompetente, geschulte und befugte Personen (Abs. 2)",
+                "Eingabedaten unter Ihrer Kontrolle relevant und repräsentativ halten (Abs. 4)",
+                "Betrieb überwachen; bei Risiko Anbieter und Behörde informieren und aussetzen (Abs. 5)",
+                "Automatisch erzeugte Logs unter Ihrer Kontrolle mindestens sechs Monate aufbewahren (Abs. 6)",
+                "Arbeitnehmervertreter und Beschäftigte vor dem Einsatz am Arbeitsplatz informieren (Abs. 7)",
+                "Betroffene informieren, wenn das System über sie entscheidet oder dabei unterstützt (Abs. 11)"
+              ],
+              "source": "Art. 26 KI-VO"
+            },
+            {
+              "id": "d-high-fria",
+              "tone": "warn",
+              "title": "Betreiber, Hochrisiko, mit Grundrechte-Folgenabschätzung",
+              "body": "Wie die Liste nach Art. 26, dazu vor der ersten Verwendung eine Grundrechte-Folgenabschätzung nach Art. 27. Eine Datenschutz-Folgenabschätzung können Sie damit verbinden (Art. 27 Abs. 4).",
+              "actions": [
+                "Nutzung nach Gebrauchsanweisung (Abs. 1)",
+                "Menschliche Aufsicht durch kompetente, geschulte und befugte Personen (Abs. 2)",
+                "Eingabedaten unter Ihrer Kontrolle relevant und repräsentativ halten (Abs. 4)",
+                "Betrieb überwachen; bei Risiko Anbieter und Behörde informieren und aussetzen (Abs. 5)",
+                "Automatisch erzeugte Logs unter Ihrer Kontrolle mindestens sechs Monate aufbewahren (Abs. 6)",
+                "Arbeitnehmervertreter und Beschäftigte vor dem Einsatz am Arbeitsplatz informieren (Abs. 7)",
+                "Betroffene informieren, wenn das System über sie entscheidet oder dabei unterstützt (Abs. 11)",
+                "Grundrechte-Folgenabschätzung vor der ersten Verwendung (Art. 27)"
+              ],
+              "source": "Art. 26, Art. 27 KI-VO"
+            },
+            {
+              "id": "d-art50",
+              "tone": "neutral",
+              "title": "Betreiber, Transparenzfall",
+              "body": "Ab dem 2. August 2026. Hinweise müssen klar und unterscheidbar sein und spätestens bei der ersten Interaktion kommen (Art. 50 Abs. 5).",
+              "actions": [
+                "Deepfakes beim Veröffentlichen sichtbar offenlegen (Abs. 4)",
+                "KI-Texte zu Themen öffentlichen Interesses offenlegen, außer ein Mensch prüft sie und trägt redaktionelle Verantwortung (Abs. 4)",
+                "Betroffene über Emotionserkennung oder biometrische Kategorisierung informieren (Abs. 3)",
+                "Prüfen, ob der KI-Hinweis des Anbieters in Ihrer Integration ankommt (Abs. 1)",
+                "Art.-4-Maßnahmen dokumentieren"
+              ],
+              "source": "Art. 50 KI-VO"
+            },
+            {
+              "id": "d-min",
+              "tone": "good",
+              "title": "Betreiber, minimales Risiko",
+              "body": "Keine besonderen Pflichten aus der Verordnung außer Art. 4.",
+              "actions": [
+                "Art.-4-Maßnahmen rollen- und risikogerecht dokumentieren",
+                "System mit Begründung der Einstufung ins KI-Inventar eintragen",
+                "Nach wesentlichen Updates neu einstufen"
+              ],
+              "source": "Art. 4 KI-VO"
+            },
+            {
+              "id": "p-high",
+              "tone": "warn",
+              "title": "Anbieter, Hochrisiko: Ihre Liste nach Art. 16",
+              "body": "Ab dem 2. Dezember 2027 für Anhang III, ab dem 2. August 2028 für Anhang I. KMU dürfen die technische Dokumentation vereinfacht über ein Formular der Kommission bereitstellen (Art. 11 Abs. 1).",
+              "actions": [
+                "Risikomanagementsystem über den Lebenszyklus (Art. 9)",
+                "Daten-Governance für Trainings-, Validierungs- und Testdaten (Art. 10)",
+                "Technische Dokumentation nach Anhang IV, zehn Jahre aufbewahren (Art. 11, 18)",
+                "Automatische Protokollierung im Design (Art. 12)",
+                "Gebrauchsanweisung und menschliche Aufsicht im Design (Art. 13, 14)",
+                "Genauigkeit, Robustheit und Cybersicherheit (Art. 15)",
+                "Qualitätsmanagementsystem (Art. 17)",
+                "Konformitätsbewertung, EU-Konformitätserklärung, CE-Kennzeichnung (Art. 43, 47, 48)",
+                "Registrierung in der EU-Datenbank (Art. 49)",
+                "Beobachtung nach dem Inverkehrbringen und Meldung schwerwiegender Vorfälle (Art. 72, 73)"
+              ],
+              "source": "Art. 16 KI-VO"
+            },
+            {
+              "id": "p-art50",
+              "tone": "neutral",
+              "title": "Anbieter, Transparenzfall",
+              "body": "Ab dem 2. August 2026. Der freiwillige Code of Practice zur Transparenz KI-generierter Inhalte vom 10. Juni 2026 hilft bei der Umsetzung, ersetzt aber keine Prüfung.",
+              "actions": [
+                "Systeme zur direkten Interaktion so gestalten, dass Menschen die KI erkennen (Abs. 1)",
+                "Erzeugte Audio-, Bild-, Video- und Textinhalte maschinenlesbar markieren (Abs. 2)",
+                "Art.-4-Maßnahmen dokumentieren"
+              ],
+              "source": "Art. 50 KI-VO"
+            },
+            {
+              "id": "p-min",
+              "tone": "good",
+              "title": "Anbieter, minimales Risiko",
+              "body": "Keine besonderen Pflichten aus der Verordnung außer Art. 4.",
+              "actions": [
+                "Art.-4-Maßnahmen dokumentieren",
+                "Einstufung begründen und festhalten",
+                "Freiwillige Verhaltenskodizes nach Art. 95 prüfen"
+              ],
+              "source": "Art. 4, Art. 95 KI-VO"
+            },
+            {
+              "id": "prohibited",
+              "tone": "bad",
+              "title": "Verboten: keine Pflichtenliste",
+              "body": "Für verbotene Praktiken gibt es keinen Compliance-Pfad.",
+              "actions": [
+                "Einsatz stoppen",
+                "Rechtsberatung holen"
+              ],
+              "source": "Art. 5 KI-VO"
+            },
+            {
+              "id": "gpai",
+              "tone": "neutral",
+              "title": "GPAI-Modell eingebaut: was Ihr Modellanbieter liefern muss",
+              "body": "Seit dem 2. August 2025 trägt der Modellanbieter Art. 53: technische Dokumentation, Informationen für nachgelagerte Anbieter nach Anhang XII, eine Urheberrechtsstrategie und eine Zusammenfassung der Trainingsdaten. Für Ihr eigenes System sind Sie selbst Anbieter oder Betreiber: Klasse bestimmen und die Liste erneut durchgehen.",
+              "actions": [
+                "Informationen nach Anhang XII anfordern",
+                "Prüfen, ob der Anbieter den GPAI Code of Practice vom 10. Juli 2025 unterzeichnet hat: eine Zusage, kein Konformitätsnachweis",
+                "Bei Anbietern aus Drittländern den EU-Bevollmächtigten erfragen (Art. 54)"
+              ],
+              "source": "Art. 53, Art. 54 KI-VO"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "cv",
+              "text": "Ihre private GmbH setzt ein zugekauftes CV-Ranking ein.",
+              "expected": "d-high",
+              "why": "Betreiber eines Anhang-III-Systems. Private Arbeitgeber fallen nicht unter Art. 27."
+            },
+            {
+              "id": "bank",
+              "text": "Eine Bank prüft mit einem zugekauften System die Kreditwürdigkeit von Privatkunden.",
+              "expected": "d-high-fria",
+              "why": "Anhang III Nr. 5 lit. b: Art. 26 plus Grundrechte-Folgenabschätzung nach Art. 27."
+            },
+            {
+              "id": "bot",
+              "text": "Ein Softwarehaus verkauft einen eigenen Kundenservice-Chatbot unter eigener Marke.",
+              "expected": "p-art50",
+              "why": "Anbieter eines Systems zur direkten Interaktion: Art. 50 Abs. 1."
+            },
+            {
+              "id": "api",
+              "text": "Sie bauen das Sprachmodell eines großen Anbieters per API in Ihre Software ein und wollen wissen, was der Modellanbieter liefern muss.",
+              "expected": "gpai",
+              "why": "Art. 53 trifft den Modellanbieter. Sie brauchen seine Unterlagen für Ihre eigenen Pflichten."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "pflichten-3-1-c1",
+          "prompt": "Eine private GmbH setzt ein CV-Ranking ein (Anhang III Nr. 4). Braucht sie nach Art. 27 eine Grundrechte-Folgenabschätzung?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, jedes Hochrisiko-System braucht eine",
+              "correct": false,
+              "feedback": "Art. 27 nennt einen engen Adressatenkreis, nicht alle Betreiber."
+            },
+            {
+              "id": "b",
+              "text": "Ja, sobald ein Betriebsrat besteht",
+              "correct": false,
+              "feedback": "Mitbestimmung ist eine eigene Frage nach Betriebsverfassungsrecht. Art. 27 hängt am Adressatenkreis."
+            },
+            {
+              "id": "c",
+              "text": "Nein: Art. 27 erfasst öffentliche Stellen, private Erbringer öffentlicher Dienste und Anhang III Nr. 5 lit. b und c",
+              "correct": true
+            }
+          ],
+          "explanation": "Beschäftigungs-KI nach Anhang III Nr. 4 gehört nicht zum Adressatenkreis des Art. 27. Die Pflichten nach Art. 26 bleiben."
+        },
+        {
+          "id": "pflichten-3-1-c2",
+          "prompt": "Wie lange bewahrt ein Betreiber automatisch erzeugte Logs eines Hochrisiko-Systems unter seiner Kontrolle mindestens auf?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Zehn Jahre",
+              "correct": false,
+              "feedback": "Zehn Jahre gelten für die technische Dokumentation des Anbieters (Art. 18)."
+            },
+            {
+              "id": "b",
+              "text": "Sechs Monate, soweit anderes Recht nichts anderes vorsieht",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "30 Tage",
+              "correct": false,
+              "feedback": "Art. 26 Abs. 6 nennt mindestens sechs Monate."
+            }
+          ],
+          "explanation": "Art. 26 Abs. 6: mindestens sechs Monate, sofern Unions- oder nationales Recht, etwa zum Datenschutz, nichts anderes bestimmt."
+        }
+      ]
+    },
+    {
+      "id": "pflichten-3-2",
+      "blockId": "block_3",
+      "number": 6,
+      "title": "Welche Kennzeichnung fehlt?",
+      "subtitle": "Art. 50: wer markiert, wer offenlegt",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Art. 50",
+        "Deepfake",
+        "Wasserzeichen"
+      ],
+      "concept": {
+        "body": "Art. 50 gilt ab dem 2. August 2026 und verteilt vier Pflichten nach Technik und Rolle:\n\n- **Abs. 1 (Anbieter):** Systeme zur direkten Interaktion machen erkennbar, dass man mit KI spricht, außer es ist offensichtlich.\n- **Abs. 2 (Anbieter):** erzeugte Audio-, Bild-, Video- und Textinhalte maschinenlesbar markieren.\n- **Abs. 3 (Betreiber):** Betroffene über Emotionserkennung und biometrische Kategorisierung informieren.\n- **Abs. 4 (Betreiber):** Deepfakes offenlegen, ebenso KI-Texte zu Themen öffentlichen Interesses, außer ein Mensch prüft sie und trägt redaktionelle Verantwortung.\n\nHinweise kommen klar und spätestens bei der ersten Interaktion (Abs. 5). Die Markierung des Anbieters ersetzt Ihre Offenlegung nicht. Verstöße kosten bis 15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes (Art. 99 Abs. 4).",
+        "takeaway": "Markiert wird bei der Erzeugung, offengelegt beim Veröffentlichen.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Finden Sie den Kennzeichnungsfehler",
+        "instructions": "Ordnen Sie jeden der sieben Fälle dem Fehler zu, an dem die Transparenz scheitert. Jede Zuordnung wird sofort begründet. Fertig, wenn alle Fälle liegen.",
+        "props": {
+          "buckets": [
+            {
+              "id": "missing",
+              "label": "Hinweis fehlt",
+              "hint": "Pflicht greift, nichts offengelegt"
+            },
+            {
+              "id": "machine",
+              "label": "Nicht maschinenlesbar",
+              "hint": "nur für Menschen sichtbar (Abs. 2)"
+            },
+            {
+              "id": "over",
+              "label": "Pflicht greift nicht",
+              "hint": "gekennzeichnet ohne Tatbestand"
+            },
+            {
+              "id": "role",
+              "label": "Falsche Rolle",
+              "hint": "Pflicht beim falschen Akteur gesehen"
+            }
+          ],
+          "items": [
+            {
+              "id": "lisa",
+              "text": "Der Website-Chatbot begrüßt mit: Hallo, ich bin Lisa aus dem Serviceteam. Ein KI-Hinweis fehlt.",
+              "bucket": "missing",
+              "why": "Art. 50 Abs. 1: Menschen müssen erkennen, dass sie mit KI interagieren, sofern das nicht offensichtlich ist."
+            },
+            {
+              "id": "testimonial",
+              "text": "Ihre Agentur veröffentlicht ein generiertes Video, in dem eine reale Person täuschend echt ein Produkt lobt, ohne Hinweis.",
+              "bucket": "missing",
+              "why": "Deepfake: Der Betreiber legt nach Art. 50 Abs. 4 offen, dass der Inhalt künstlich erzeugt ist."
+            },
+            {
+              "id": "news",
+              "text": "Ein Verlag veröffentlicht KI-Texte zu Kommunalwahlen ohne menschliche Prüfung und ohne Hinweis.",
+              "bucket": "missing",
+              "why": "KI-Text zu Themen öffentlichen Interesses ohne redaktionelle Verantwortung: offenlegen nach Art. 50 Abs. 4."
+            },
+            {
+              "id": "footnote",
+              "text": "Ein Textgenerator vermerkt die KI-Herkunft nur als gut sichtbare Fußnote im PDF.",
+              "bucket": "machine",
+              "why": "Art. 50 Abs. 2 verlangt vom Anbieter eine maschinenlesbare Markierung; eine Fußnote für Menschen genügt nicht."
+            },
+            {
+              "id": "logo",
+              "text": "Ein Bildgenerator setzt nur ein sichtbares Logo ins Bild. Metadaten oder ein Wasserzeichen fehlen.",
+              "bucket": "machine",
+              "why": "Auch hier fehlt die maschinenlesbare Markierung nach Abs. 2. Eine bestimmte Technik schreibt die Verordnung nicht vor."
+            },
+            {
+              "id": "minutes",
+              "text": "Interne Meeting-Zusammenfassungen tragen einen großen Hinweis, als wären sie veröffentlicht.",
+              "bucket": "over",
+              "why": "Die Textpflicht nach Abs. 4 betrifft Veröffentlichungen zu Themen öffentlichen Interesses, keine interne Zusammenfassung. Die Markierung nach Abs. 2 ist Sache des Anbieters."
+            },
+            {
+              "id": "vendor",
+              "text": "Sie betreiben einen zugekauften Chatbot und gehen ungeprüft davon aus, nur der Hersteller sei für den Hinweis zuständig. Auf der Website erscheint keiner.",
+              "bucket": "role",
+              "why": "Abs. 1 verpflichtet den Anbieter. Als Betreiber prüfen Sie trotzdem, ob der gelieferte Hinweis in Ihrer Integration ankommt."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "pflichten-3-2-c1",
+          "prompt": "Ihre Agentur veröffentlicht ein KI-Video, das eine reale Person täuschend echt sprechen lässt. Wer muss offenlegen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nur der Anbieter des Videotools",
+              "correct": false,
+              "feedback": "Der Anbieter markiert maschinenlesbar nach Abs. 2. Die Offenlegung beim Veröffentlichen trifft den Betreiber."
+            },
+            {
+              "id": "b",
+              "text": "Niemand, wenn es Werbung ist",
+              "correct": false,
+              "feedback": "Werbung ist keine Ausnahme. Nur offensichtlich künstlerische, satirische oder fiktionale Werke bekommen eine angepasste Form."
+            },
+            {
+              "id": "c",
+              "text": "Die Agentur als Betreiber nach Art. 50 Abs. 4",
+              "correct": true
+            }
+          ],
+          "explanation": "Wer einen Deepfake veröffentlicht, legt offen, dass er künstlich erzeugt oder manipuliert ist (Art. 50 Abs. 4)."
+        },
+        {
+          "id": "pflichten-3-2-c2",
+          "prompt": "Reicht eine sichtbare Fußnote „KI-generiert“ für Art. 50 Abs. 2?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, jeder sichtbare Hinweis reicht",
+              "correct": false,
+              "feedback": "Abs. 2 verlangt ausdrücklich eine maschinenlesbare Markierung."
+            },
+            {
+              "id": "b",
+              "text": "Nein, Abs. 2 verlangt vom Anbieter eine maschinenlesbare Markierung",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ja, wenn die Fußnote auf jeder Seite steht",
+              "correct": false,
+              "feedback": "Auch eine Fußnote auf jeder Seite ist nur für Menschen lesbar."
+            }
+          ],
+          "explanation": "Die Markierung nach Abs. 2 muss maschinenlesbar und, soweit technisch machbar, wirksam, interoperabel, robust und zuverlässig sein."
+        }
+      ]
+    }
+  ]
+}

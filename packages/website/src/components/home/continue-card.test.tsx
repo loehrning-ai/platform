@@ -166,10 +166,9 @@ describe("ContinueCard", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("data-home-continue-card", "start");
     expect(link).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
-    // Two lines: the decision and the course on one, access and time on the
-    // other.
-    expect(link).toHaveTextContent("Erster Schritt: KI-Führerschein");
-    expect(link).toHaveTextContent("ca. 1 Std. 40 Min.");
+    expect(link).toHaveTextContent("Erster Schritt");
+    expect(link).toHaveTextContent("KI-Führerschein");
+    expect(link).toHaveTextContent("ca. 45 Min.");
     expect(link).toHaveTextContent("Lernkonto nötig");
     expect(link).toHaveAttribute("data-home-course-access", "account-required");
     expect(link.querySelector("[data-home-access-label]")).toHaveClass("shrink-0");
@@ -179,7 +178,7 @@ describe("ContinueCard", () => {
   it.each(["de", "en"] as const)("offers an open first task in provider-free %s", (locale) => {
     render(<ContinueCard locale={locale} courses={homeContinueCourses(locale, getCourseAccess(false))} />);
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
+    expect(link).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/data-infrastructure/kurs/mental-model`);
     expect(link).toHaveAttribute("data-home-course-access", "open");
     expect(link).toHaveTextContent(locale === "de" ? "Ohne Lernkonto" : "No account needed");
   });
@@ -192,7 +191,7 @@ describe("ContinueCard", () => {
     expect(link).toHaveAttribute("data-home-continue-card", "resume");
     expect(link).toHaveAttribute("data-home-course-access", "unavailable");
     expect(link).toHaveTextContent(locale === "de" ? "Hier nicht verfügbar" : "Unavailable here");
-    expect(link).toHaveTextContent(locale === "de" ? "5 von 24 Lektionen" : "5 of 24 lessons");
+    expect(link).toHaveTextContent(locale === "de" ? "5 von 10 Lektionen" : "5 of 10 lessons");
   });
 
   it("resumes the last course touched and states its lesson count", () => {
@@ -206,9 +205,9 @@ describe("ContinueCard", () => {
     expect(link).toHaveAttribute("href", "/eu-ai-act-kurs/kurs");
     expect(link).toHaveTextContent("Weiter bei");
     expect(link).toHaveTextContent("EU AI Act Kurs");
-    // The course carries 24 canonical lessons; the card states counted
+    // The course carries 10 canonical lessons; the card states counted
     // progress, never a percentage it cannot evidence.
-    expect(link).toHaveTextContent("5 von 24 Lektionen");
+    expect(link).toHaveTextContent("5 von 10 Lektionen");
   });
 
   it("keeps the resume link inside the requested locale", () => {
@@ -219,7 +218,7 @@ describe("ContinueCard", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveTextContent("Continue with");
     expect(link).toHaveTextContent("AI and Society");
-    expect(link).toHaveTextContent("3 of 9 lessons");
+    expect(link).toHaveTextContent("3 of 8 lessons");
     expect(link).toHaveTextContent("Account required");
     expect(link).toHaveAttribute("href", "/en/ki-und-gesellschaft/kurs");
   });
@@ -233,7 +232,7 @@ describe("ContinueCard", () => {
       storeMock.slices.clear();
       for (const listener of storeMock.listeners) listener();
     });
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/kurse/open-source/claude/kurs/mental-model");
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/mental-model");
     expect(screen.getByRole("link")).not.toHaveTextContent("5 von 24");
   });
 
@@ -253,7 +252,7 @@ describe("ContinueCard", () => {
 
   it("fills its reserved seat exactly, so resolving progress shifts nothing", () => {
     render(<ContinueCard courses={courses} />);
-    // The seat is a fixed 3.5rem box in the server HTML (continue-slot.tsx).
+    // The seat is a fixed 4.75rem box in the server HTML (continue-slot.tsx).
     // The card must fill it and never set a height of its own.
     const link = screen.getByRole("link");
     expect(link.className).toContain("h-full");
@@ -282,6 +281,6 @@ describe("homeContinueCourses", () => {
 
     expect(de.find((c) => c.slug === slug)?.title).toBe("KI-Führerschein");
     expect(en.find((c) => c.slug === slug)?.title).toBe("Everyday AI Literacy");
-    expect(en.find((c) => c.slug === slug)?.duration).toBe("about 1 hr 40 min");
+    expect(en.find((c) => c.slug === slug)?.duration).toBe("about 45 min");
   });
 });

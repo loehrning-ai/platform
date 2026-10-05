@@ -1,0 +1,440 @@
+{
+  "blockId": "block_5",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "fall-5-1",
+      "blockId": "block_5",
+      "number": 9,
+      "title": "Case: introducing a CV screening tool",
+      "subtitle": "Check an AI decision memo against the legal sources",
+      "durationMinutes": 8,
+      "keyConcepts": [
+        "CV screening",
+        "Annex III point 4",
+        "Fundamental rights impact assessment"
+      ],
+      "concept": {
+        "body": "Fictional case: XY GmbH, a machine builder with 200 staff, wants to use a purchased tool that ranks CVs by match score and prepares a shortlist. An AI assistant drafted the decision memo for management.\n\nCheck the memo the way a supervisory authority would. Watch for three mix-ups:\n\n- a final human decision taken for the Art. 6(3) exception,\n- public-body obligations applied to private deployers,\n- provider obligations placed on the deployer.\n\nAlongside the AI Act, German anti-discrimination law (AGG), Art. 22 GDPR for solely automated decisions and works council co-determination under section 87(1) no. 6 BetrVG, where a works council exists, still apply.",
+        "takeaway": "Every statement in the memo needs an article behind it, or it goes.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Regulation (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Check the decision memo",
+        "instructions": "Judge each underlined statement against the five sources as supported, contradicted or not in the sources, then evaluate. Company and tool are fictional.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Source A: Annex III point 4(a) AI Act (extract)",
+              "text": "AI systems intended to be used for the recruitment or selection of natural persons, in particular to place targeted job advertisements, to analyse and filter job applications, and to evaluate candidates."
+            },
+            {
+              "id": "B",
+              "label": "Source B: Art. 6(3) AI Act (shortened)",
+              "text": "An AI system referred to in Annex III shall not be considered high-risk where it does not pose a significant risk and does not materially influence the outcome of decision making. An AI system referred to in Annex III shall always be considered high-risk where it performs profiling of natural persons."
+            },
+            {
+              "id": "C",
+              "label": "Source C: Art. 26 AI Act (summarised)",
+              "text": "Para. 6: deployers keep automatically generated logs, to the extent they are under their control, for at least six months. Para. 7: deployers who are employers inform workers' representatives and the affected workers before putting the system into service at the workplace."
+            },
+            {
+              "id": "D",
+              "label": "Source D: Art. 27(1) AI Act (summarised)",
+              "text": "A fundamental rights impact assessment is carried out by bodies governed by public law, private entities providing public services, and deployers of systems under Annex III point 5(b) and (c)."
+            },
+            {
+              "id": "E",
+              "label": "Source E: Art. 16 AI Act and timeline (summarised)",
+              "text": "Providers of high-risk systems carry out the conformity assessment, draw up the EU declaration of conformity and affix the CE marking. Under Regulation (EU) 2026/1744 the high-risk rules for stand-alone Annex III systems apply from 2 December 2027."
+            }
+          ],
+          "draftLabel": "AI draft: decision memo for management",
+          "draft": [
+            {
+              "text": "The tool ranks CVs by match score and "
+            },
+            {
+              "text": "therefore falls under Annex III point 4(a)",
+              "claimId": "annex"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Because a human always makes the final decision, the Art. 6(3) exception applies",
+              "claimId": "exception"
+            },
+            {
+              "text": ". As deployer "
+            },
+            {
+              "text": "we keep the logs for at least six months",
+              "claimId": "logs"
+            },
+            {
+              "text": " and "
+            },
+            {
+              "text": "inform the works council and affected staff before use",
+              "claimId": "inform"
+            },
+            {
+              "text": ". In addition "
+            },
+            {
+              "text": "we carry out a fundamental rights impact assessment under Art. 27 before use",
+              "claimId": "fria"
+            },
+            {
+              "text": " and "
+            },
+            {
+              "text": "do the conformity assessment and CE marking ourselves",
+              "claimId": "ce"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "The provider guarantees that the tool is free of discrimination",
+              "claimId": "bias"
+            },
+            {
+              "text": ". The high-risk obligations "
+            },
+            {
+              "text": "apply from 2 December 2027",
+              "claimId": "date"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "claims": [
+            {
+              "id": "annex",
+              "verdict": "supported",
+              "sourceId": "A",
+              "evidence": "to analyse and filter job applications, and to evaluate candidates",
+              "why": "A match-score ranking analyses, filters and evaluates applications."
+            },
+            {
+              "id": "exception",
+              "verdict": "contradicted",
+              "sourceId": "B",
+              "evidence": "An AI system referred to in Annex III shall always be considered high-risk where it performs profiling of natural persons.",
+              "correction": "The exception does not apply: the match score evaluates people (profiling) and decides whom humans see at all.",
+              "why": "A final human decision is not the Art. 6(3) exception."
+            },
+            {
+              "id": "logs",
+              "verdict": "supported",
+              "sourceId": "C",
+              "evidence": "for at least six months",
+              "why": "Art. 26(6), to the extent the logs are under the deployer's control."
+            },
+            {
+              "id": "inform",
+              "verdict": "supported",
+              "sourceId": "C",
+              "evidence": "inform workers' representatives and the affected workers before putting the system into service at the workplace",
+              "why": "Art. 26(7). Co-determination rights under German labour law come on top."
+            },
+            {
+              "id": "fria",
+              "verdict": "contradicted",
+              "sourceId": "D",
+              "evidence": "A fundamental rights impact assessment is carried out by bodies governed by public law, private entities providing public services, and deployers of systems under Annex III point 5(b) and (c).",
+              "correction": "Art. 27 does not require a fundamental rights impact assessment here. Whether the GDPR requires a data protection impact assessment is a separate check.",
+              "why": "A private employer using Annex III point 4 is not an addressee."
+            },
+            {
+              "id": "ce",
+              "verdict": "contradicted",
+              "sourceId": "E",
+              "evidence": "Providers of high-risk systems carry out the conformity assessment, draw up the EU declaration of conformity and affix the CE marking.",
+              "correction": "That is a provider duty. XY GmbH checks documents, marking and instructions for use, as long as no role flip under Art. 25 occurs.",
+              "why": "Provider and deployer duties are mixed up."
+            },
+            {
+              "id": "bias",
+              "verdict": "missing",
+              "correction": "Delete it. Request bias tests and documents from the provider; anti-discrimination law applies regardless.",
+              "why": "No source supports such a guarantee."
+            },
+            {
+              "id": "date",
+              "verdict": "supported",
+              "sourceId": "E",
+              "evidence": "the high-risk rules for stand-alone Annex III systems apply from 2 December 2027",
+              "why": "The date follows from Regulation (EU) 2026/1744."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "fall-5-1-c1",
+          "prompt": "XY GmbH retrains the tool on its own data, substantially modifies it and markets it to partner firms under its own name. What changes?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nothing; it remains the deployer",
+              "correct": false,
+              "feedback": "Its own name and a substantial modification of a high-risk system trigger Art. 25."
+            },
+            {
+              "id": "b",
+              "text": "It becomes a distributor",
+              "correct": false,
+              "feedback": "Distributors pass a system on unchanged under someone else's name."
+            },
+            {
+              "id": "c",
+              "text": "It becomes the provider under Art. 25 and carries conformity assessment and technical documentation",
+              "correct": true
+            }
+          ],
+          "explanation": "With the role flip, the provider obligations under Art. 16 apply to it for this system."
+        },
+        {
+          "id": "fall-5-1-c2",
+          "prompt": "When do you also check Art. 22 GDPR?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Never; the AI Act displaces the GDPR",
+              "correct": false,
+              "feedback": "Art. 2(7) AI Act leaves the GDPR unaffected."
+            },
+            {
+              "id": "b",
+              "text": "When a solely automated decision with legal or similarly significant effects could be involved",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Only for health data",
+              "correct": false,
+              "feedback": "Art. 22 GDPR attaches to automated decisions, not to a data category."
+            }
+          ],
+          "explanation": "A merely formal click by a human does not reliably remove the 'solely automated' element. Check the exception and the safeguards."
+        }
+      ]
+    },
+    {
+      "id": "plan-5-2",
+      "blockId": "block_5",
+      "number": 10,
+      "title": "Your inventory entry and 30-day plan",
+      "subtitle": "Role, class, obligations and deadline in one document",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "AI inventory",
+        "30-day plan",
+        "Evidence"
+      ],
+      "concept": {
+        "body": "An inventory is your most important working tool: it shows which systems run, for what, in which role and with which class. The Regulation prescribes no format for deployers, and a spreadsheet alone does not prove compliance.\n\nUseful fields per system: name and version, function actually used, role, risk class with reasoning, obligations and deadline, owner, provider documents, next review trigger.\n\nThen a 30-day plan: find shadow AI through procurement, invoices and SSO approvals, classify every system, assign owners and deadlines to every gap, document Art. 4 measures.\n\nReclassify after substantial changes to system, purpose, provider or data, after incidents and after changes in law.",
+        "takeaway": "One entry per system, with reasoning and an owner, and a plan with deadlines.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "doc-builder",
+        "title": "Create your first inventory entry",
+        "instructions": "Fill in the required fields for one system from your work, for example the CV tool from the case. The preview shows the finished document; download it as Markdown or copy it.",
+        "props": {
+          "filename": "ai-inventory-entry.md",
+          "template": "# AI inventory: {{system}}\n\nProvider and version: {{vendor}}\nOwner: {{owner}}\n\n## Purpose and function actually used\n{{purpose}}\n\n## Role and risk class\nOur role: {{role}}\nRisk class: {{riskClass}}\n\nReasoning: {{reason}}\n\n## Obligations and deadline\n{{duties}}\n\nRelevant application date: {{deadline}}\n\n## 30-day plan\n{{plan}}\n\n## Next review trigger\n{{review}}\n\nWorking template, not legal advice. Legal basis: Regulation (EU) 2024/1689 as amended by Regulation (EU) 2026/1744.\n",
+          "fields": [
+            {
+              "id": "system",
+              "label": "System",
+              "type": "text",
+              "required": true,
+              "placeholder": "Applicant tracking with match score"
+            },
+            {
+              "id": "vendor",
+              "label": "Provider and version",
+              "type": "text",
+              "placeholder": "Example provider, version 3.2"
+            },
+            {
+              "id": "purpose",
+              "label": "Purpose and function used",
+              "type": "textarea",
+              "required": true,
+              "placeholder": "Ranks incoming applications by match score for shortlisting"
+            },
+            {
+              "id": "role",
+              "label": "Your role",
+              "type": "select",
+              "required": true,
+              "options": [
+                "Deployer",
+                "Provider",
+                "Importer",
+                "Distributor"
+              ]
+            },
+            {
+              "id": "riskClass",
+              "label": "Risk class",
+              "type": "select",
+              "required": true,
+              "options": [
+                "Prohibited (Art. 5): stop the use",
+                "High-risk under Annex III",
+                "High-risk under Annex I",
+                "Not high-risk under Art. 6(3), documented",
+                "Transparency case under Art. 50",
+                "Minimal risk",
+                "Not an AI system"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Reasoning for the class",
+              "type": "textarea",
+              "required": true,
+              "placeholder": "Analyses and evaluates applications (Annex III point 4(a)); profiling, so no exception"
+            },
+            {
+              "id": "duties",
+              "label": "Obligations",
+              "type": "checkboxes",
+              "required": true,
+              "options": [
+                "Art. 4 measures for all users",
+                "Use according to instructions (Art. 26(1))",
+                "Human oversight assigned (Art. 26(2))",
+                "Logs for at least six months (Art. 26(6))",
+                "Staff and representatives informed (Art. 26(7))",
+                "Fundamental rights impact assessment (Art. 27)",
+                "AI notice, marking or disclosure (Art. 50)",
+                "Provider documents requested"
+              ],
+              "default": [
+                "Art. 4 measures for all users"
+              ]
+            },
+            {
+              "id": "deadline",
+              "label": "Relevant application date",
+              "type": "select",
+              "required": true,
+              "options": [
+                "2 February 2025 (Art. 4, Art. 5)",
+                "2 August 2026 (Art. 50)",
+                "2 December 2027 (Annex III)",
+                "2 August 2028 (Annex I)"
+              ]
+            },
+            {
+              "id": "plan",
+              "label": "30-day plan",
+              "type": "checkboxes",
+              "options": [
+                "Week 1: find shadow AI through procurement, invoices and SSO approvals",
+                "Week 2: classify every system by role and class",
+                "Week 3: assign owners and deadlines to every gap",
+                "Week 4: document Art. 4 measures and request provider documents"
+              ]
+            },
+            {
+              "id": "owner",
+              "label": "Owner",
+              "type": "text",
+              "required": true,
+              "placeholder": "Role, not just a name"
+            },
+            {
+              "id": "review",
+              "label": "Next review trigger",
+              "type": "text",
+              "placeholder": "New version, change of purpose, incident or change in law"
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "plan-5-2-c1",
+          "prompt": "Does the AI Act prescribe a specific inventory format for deployers?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, a Commission spreadsheet template",
+              "correct": false,
+              "feedback": "No such mandatory template exists for deployers."
+            },
+            {
+              "id": "b",
+              "text": "No; what matters is that role, purpose, class and obligations are traceably documented",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Yes, a form for high-risk systems",
+              "correct": false,
+              "feedback": "Even for high-risk systems there is no mandatory form for private deployers. Providers register in the EU database under Art. 49."
+            }
+          ],
+          "explanation": "The inventory is a working tool for your evidence. Pick a tool in which ownership, access rights and changes stay manageable."
+        },
+        {
+          "id": "plan-5-2-c2",
+          "prompt": "When do you reclassify a system?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only once, at introduction",
+              "correct": false,
+              "feedback": "Updates, new purposes and changes in law can change the class."
+            },
+            {
+              "id": "b",
+              "text": "Only when an authority asks",
+              "correct": false,
+              "feedback": "By then it is too late. The classification must be right beforehand."
+            },
+            {
+              "id": "c",
+              "text": "After substantial changes to system, purpose, provider or data, after incidents and after changes in law",
+              "correct": true
+            }
+          ],
+          "explanation": "A substantial modification can end transition rules; a change of purpose can change the class or even the role."
+        }
+      ]
+    }
+  ]
+}

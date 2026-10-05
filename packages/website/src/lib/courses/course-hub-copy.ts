@@ -17,15 +17,15 @@ export function numberWord(locale: Locale, count: number): string {
 
 export const COURSE_HUB_COPY = {
   de: {
-    metadataTitle: "KI-Kurse: Grundlagen, Technik und Workshops",
+    metadataTitle: "KI-Kurse: Grundlagen, visuelles Lernen und Workshops",
     metadataDescription:
-      "Zehn Kurse auf Deutsch und Englisch, alle kostenlos, dazu Workshops und Lernbücher. Jeder Kurs nennt Dauer, Stufe und Kontopflicht, die Technikkurse ihren Quellstand auf GitHub.",
+      "Acht Kurse auf Deutsch und Englisch, alle kostenlos, dazu Workshops und Lernbücher. Jeder Kurs nennt Dauer, Stufe und Kontopflicht, die Kurse zum visuellen Lernen ihren Quellstand auf GitHub.",
     metadataImageAlt:
-      "loehrning.ai Kursübersicht mit Grundlagenpfad und Technikkursen",
+      "loehrning.ai Kursübersicht mit Grundlagenpfad und visuellem Lernen",
     kicker: (count: number) => `${count} Kurse · Deutsch und Englisch`,
     heading: "Kostenlose KI-Kurse für den Arbeitsalltag.",
     intro:
-      "Vier Grundlagenkurse für alle, die KI im Job nutzen, und sechs Technikkurse zu Prompting, Coding-Agenten und Daten.",
+      "Vier Grundlagenkurse für alle, die KI im Job nutzen, und vier Kurse zum visuellen Lernen über Daten und KI-Betrieb.",
     firstStep: "Unsicher, wo du stehst?",
     /** The same question on a phone under 430px, so it and the link share one line. */
     firstStepShort: "Unsicher?",
@@ -42,15 +42,15 @@ export const COURSE_HUB_COPY = {
     accessAction: "Lernkonto anlegen",
   },
   en: {
-    metadataTitle: "AI courses: foundations, technical practice, and workshops",
+    metadataTitle: "AI courses: foundations, visual learning, and workshops",
     metadataDescription:
-      "Ten free AI courses in English and German, plus workshops and learning books. Each course lists duration, level and whether you need an account.",
+      "Eight free AI courses in English and German, plus workshops and learning books. Each course lists duration, level and whether you need an account.",
     metadataImageAlt:
-      "loehrning.ai course catalogue with a foundation path and technical courses",
+      "loehrning.ai course catalogue with a foundation path and visual learning",
     kicker: (count: number) => `${count} courses · English and German`,
     heading: "Free AI courses for everyday work.",
     intro:
-      "Four foundation courses for anyone using AI at work, plus six technical courses on prompting, coding agents and data.",
+      "Four foundation courses for anyone using AI at work, plus four visual-learning courses on data and AI operations.",
     firstStep: "Unsure where you stand?",
     firstStepShort: "Unsure?",
     checkLabel: "Find out in five minutes",
@@ -82,15 +82,11 @@ export const COURSE_PROMISES: Readonly<
     "ki-fuehrerschein":
       "Du weißt, welche Daten ins KI-Tool dürfen, und prüfst Antworten vorm Weitergeben.",
     "ki-und-gesellschaft":
-      "Du prüfst die Daten hinter KI-Schlagzeilen und weißt, was bei Deepfake-Verdacht hilft.",
+      "Du entschlüsselst Jobschlagzeilen, prüfst ein virales Video und rechnest nach, was ein Detektoralarm wert ist.",
     "eu-ai-act-kurs":
       "Risikoklasse, Rolle, Pflichten und Fristen eines KI-Tools bestimmen.",
     "ai-native":
-      "Du baust ein Claude-Projekt und einen n8n-Ablauf mit Freigabe.",
-    claude:
-      "Du schreibst Prompts mit Kontext, Beispielen und Ausgabeformat und legst CLAUDE.md an.",
-    codex:
-      "Du beauftragst Codex mit AGENTS.md und Akzeptanzkriterien und prüfst den Pull Request.",
+      "Du misst, ob KI sich lohnt, und testest einen Ablauf mit Freigabe.",
     "data-infrastructure":
       "Du begründest Tabellenformat, Partitionierung und Streaming-Garantien im Design-Review.",
     "data-engineering-fundamentals":
@@ -104,15 +100,11 @@ export const COURSE_PROMISES: Readonly<
     "ki-fuehrerschein":
       "You know what data AI may see and check answers before sharing.",
     "ki-und-gesellschaft":
-      "You trace AI headlines to their data and handle suspected deepfakes.",
+      "You decode jobs headlines, verify a viral video and work out what a detector alert is worth.",
     "eu-ai-act-kurs":
       "Determine an AI tool's risk class, role, duties and deadlines.",
     "ai-native":
-      "You build a Claude project and an n8n workflow with sign-off.",
-    claude:
-      "You write prompts with context, examples and output format, plus a CLAUDE.md.",
-    codex:
-      "You brief Codex with AGENTS.md and acceptance criteria, then review its PR.",
+      "You measure whether AI pays off and test a workflow with sign-off.",
     "data-infrastructure":
       "You justify table format, partitioning and streaming guarantees in a design review.",
     "data-engineering-fundamentals":
@@ -141,11 +133,9 @@ export const COURSE_PROMISES_SHORT: Readonly<
 > = {
   de: {
     "ki-fuehrerschein": "Daten richtig einsetzen, KI-Antworten prüfen",
-    "ki-und-gesellschaft": "KI-Schlagzeilen und Deepfakes einordnen",
+    "ki-und-gesellschaft": "Jobzahlen, Fakes und Fairness prüfen",
     "eu-ai-act-kurs": "Risikoklasse, Rolle und Pflichten bestimmen",
-    "ai-native": "Claude-Projekt und n8n-Ablauf einrichten",
-    claude: "Prompts mit festem Format und CLAUDE.md",
-    codex: "Codex beauftragen, Pull Requests prüfen",
+    "ai-native": "Nutzen messen, Abläufe absichern",
     "data-infrastructure": "Design einer Datenplattform begründen",
     "data-engineering-fundamentals": "Pipelines zeichnen, Bruchstellen kennen",
     "data-science": "Kennzahlen und A/B-Tests hinterfragen",
@@ -153,11 +143,9 @@ export const COURSE_PROMISES_SHORT: Readonly<
   },
   en: {
     "ki-fuehrerschein": "Share data safely, check AI answers",
-    "ki-und-gesellschaft": "Read AI headlines and deepfakes critically",
+    "ki-und-gesellschaft": "Check jobs figures, fakes and fairness",
     "eu-ai-act-kurs": "Name risk class, role and duties",
-    "ai-native": "Set up a Claude project and an n8n workflow",
-    claude: "Prompts with a fixed format, plus CLAUDE.md",
-    codex: "Brief Codex, review its pull requests",
+    "ai-native": "Measure the payoff, safeguard workflows",
     "data-infrastructure": "Justify a data platform's design choices",
     "data-engineering-fundamentals": "Sketch pipelines, know where they break",
     "data-science": "Question metrics and A/B tests",
@@ -180,8 +168,8 @@ export function coursePromiseShort(
 export const COURSE_DURATIONS_SHORT: Readonly<
   Record<Locale, Readonly<Record<string, string>>>
 > = {
-  de: { "ai-native": "ca. 5 bis 12 Std." },
-  en: { "ai-native": "about 5 to 12 hrs" },
+  de: {},
+  en: {},
 };
 
 export function courseDurationShort(

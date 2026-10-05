@@ -19,8 +19,6 @@ import { generateStaticParams as kiFuehrerscheinBlockParams } from "@/app/ki-fue
 import { generateStaticParams as gesellschaftBlockParams } from "@/app/ki-und-gesellschaft/kurs/[blockId]/page";
 import { generateStaticParams as euAiActBlockParams } from "@/app/eu-ai-act-kurs/kurs/[blockId]/page";
 import { generateStaticParams as aiNativeLessonParams } from "@/app/ai-native/kurs/[moduleId]/[lessonId]/page";
-import { generateStaticParams as claudeLessonParams } from "@/app/kurse/open-source/claude/kurs/[lessonId]/page";
-import { generateStaticParams as codexLessonParams } from "@/app/kurse/open-source/codex/kurs/[lessonId]/page";
 import { generateStaticParams as dataInfrastructureLessonParams } from "@/app/kurse/open-source/data-infrastructure/kurs/[lessonId]/page";
 import { generateStaticParams as dataEngineeringChapterParams } from "@/app/kurse/open-source/data-engineering-fundamentals/[chapterId]/page";
 import { generateStaticParams as dataScienceChapterParams } from "@/app/kurse/open-source/data-science/[chapterSlug]/page";
@@ -145,16 +143,6 @@ describe("course resume routes", () => {
         `/ai-native/kurs/${moduleId}/${lessonId}`,
       );
     }
-    for (const { lessonId } of claudeLessonParams()) {
-      register(
-        "claude",
-        lessonId,
-        `/kurse/open-source/claude/kurs/${lessonId}`,
-      );
-    }
-    for (const { lessonId } of codexLessonParams()) {
-      register("codex", lessonId, `/kurse/open-source/codex/kurs/${lessonId}`);
-    }
     for (const { lessonId } of dataInfrastructureLessonParams()) {
       register(
         "data-infrastructure",
@@ -203,19 +191,22 @@ describe("course resume routes", () => {
         progress("ki-fuehrerschein", 1),
         "ki-fuehrerschein",
       ),
-    ).toBe("/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_2");
+    ).toBe("/ki-fuehrerschein/kurs/block_1#lesson=daten-1-2");
     expect(
       resolveCourseResumeHref(
         progress("ki-und-gesellschaft", 3),
         "ki-und-gesellschaft",
       ),
-    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=deepfake-2-1");
+    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=fakes-2-2");
   });
 
   it("routes one-page lessons and chapters directly", () => {
-    expect(resolveCourseResumeHref(progress("codex", 1), "codex")).toBe(
-      "/kurse/open-source/codex/kurs/L02",
-    );
+    expect(
+      resolveCourseResumeHref(
+        progress("data-infrastructure", 1),
+        "data-infrastructure",
+      ),
+    ).toBe("/kurse/open-source/data-infrastructure/kurs/cap-pacelc");
     expect(
       resolveCourseResumeHref(progress("data-science", 1), "data-science"),
     ).toBe("/kurse/open-source/data-science/explore");
@@ -232,7 +223,7 @@ describe("course resume routes", () => {
     const legacy = { ...withEvidence, checkpoints: {} };
 
     expect(resolveCourseResumeHref(legacy, "ki-fuehrerschein")).toBe(
-      "/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_1",
+      "/ki-fuehrerschein/kurs/block_1#lesson=daten-1-1",
     );
   });
 
@@ -258,30 +249,33 @@ describe("course resume routes", () => {
     ).toBe("/ki-fuehrerschein/kurs/zertifikat");
     expect(
       resolveCourseResumeHref(
-        progress("codex", CANONICAL_LESSON_IDS.codex.length),
-        "codex",
+        progress(
+          "data-infrastructure",
+          CANONICAL_LESSON_IDS["data-infrastructure"].length,
+        ),
+        "data-infrastructure",
       ),
-    ).toBe("/kurse/open-source/codex/kurs/zertifikat");
+    ).toBe("/kurse/open-source/data-infrastructure/kurs/zertifikat");
   });
 
   it("recognizes partial lesson state even before a lesson is completed", () => {
-    const state = progress("claude", 0);
-    state.courses.claude!.lessons["mental-model"] = {
+    const state = progress("data-infrastructure", 0);
+    state.courses["data-infrastructure"]!.lessons["mental-model"] = {
       ...COMPLETED_LESSON,
       completed: false,
-      sectionsRead: ["what-it-is"],
+      sectionsRead: ["s1"],
     };
-    expect(hasCourseStarted(state, "claude")).toBe(true);
-    expect(resolveCourseResumeHref(state, "claude")).toBe(
-      "/kurse/open-source/claude/kurs/mental-model",
+    expect(hasCourseStarted(state, "data-infrastructure")).toBe(true);
+    expect(resolveCourseResumeHref(state, "data-infrastructure")).toBe(
+      "/kurse/open-source/data-infrastructure/kurs/mental-model",
     );
-    expect(hasCourseStarted(null, "claude")).toBe(false);
+    expect(hasCourseStarted(null, "data-infrastructure")).toBe(false);
   });
 
   it("treats capstoneSubmitted as an AI-Native legacy signal only", () => {
-    const codex = progress("codex", 0);
-    codex.courses.codex = {
-      ...codex.courses.codex!,
+    const dataInfra = progress("data-infrastructure", 0);
+    dataInfra.courses["data-infrastructure"] = {
+      ...dataInfra.courses["data-infrastructure"]!,
       capstoneSubmitted: true,
     };
     const aiNative = progress("ai-native", 0);
@@ -290,7 +284,7 @@ describe("course resume routes", () => {
       capstoneSubmitted: true,
     };
 
-    expect(hasCourseStarted(codex, "codex")).toBe(false);
+    expect(hasCourseStarted(dataInfra, "data-infrastructure")).toBe(false);
     expect(hasCourseStarted(aiNative, "ai-native")).toBe(true);
   });
 });

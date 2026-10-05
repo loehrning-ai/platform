@@ -108,7 +108,7 @@ describe("open-with-your-ai prompt", () => {
     );
   });
 
-  it("keeps a workshop prompt from taking the decision labs off the learner", () => {
+  it("keeps a workshop prompt from taking the tasks off the learner", () => {
     const prompt = buildOpenWithYourAiPrompt({
       kind: "workshop",
       contextTitle: "KI-Prognosen einschätzen",
@@ -119,7 +119,7 @@ describe("open-with-your-ai prompt", () => {
       locale: "de",
     });
 
-    expect(prompt).toContain("Entscheidungsaufgaben nicht ab");
+    expect(prompt).toContain("Aufgaben nicht ab");
   });
 });
 
@@ -234,8 +234,8 @@ describe("<OpenWithYourAi>", () => {
 describe("open-with-your-ai addresses", () => {
   it("uses address shapes the MCP server actually parses", () => {
     const uris = [
-      lessonUri("ki-fuehrerschein", "block_1_lesson_1", "de"),
-      lessonUri("ki-fuehrerschein", "block_1_lesson_1", "en"),
+      lessonUri("ki-fuehrerschein", "daten-1-1", "de"),
+      lessonUri("ki-fuehrerschein", "daten-1-1", "en"),
       workshopUri("ki-prognosen-einschaetzen", "de"),
       bookUri("ki-landschaft", "01_eisberg", "en"),
     ];
@@ -247,7 +247,7 @@ describe("open-with-your-ai addresses", () => {
 
   it("addresses a lesson, a workshop and a chapter that exist in the registries", () => {
     expect(
-      findLesson("ki-fuehrerschein", "block_1_lesson_1", "de"),
+      findLesson("ki-fuehrerschein", "daten-1-1", "de"),
     ).toBeDefined();
     expect(workshopBySlug("ki-prognosen-einschaetzen", "de")).toBeDefined();
     expect(bookById("ki-landschaft")).toBeDefined();

@@ -65,7 +65,7 @@ const PUBLIC_ROUTES = [
   "/kurse",
   "/blog/eu-ai-act-grundlagen",
   "/en/impressum",
-  "/kurse/open-source/codex/verifizierung",
+  "/kurse/open-source/data-infrastructure/verifizierung",
 ] as const;
 
 function source(relativePath: string): string {
@@ -268,7 +268,7 @@ describe("LearningOwnerBoundary route gate", () => {
     ).not.toBeInTheDocument();
     expect(screen.queryByRole("region")).not.toBeInTheDocument();
 
-    navigation.pathname = "/en/kurse/open-source/codex/kurs/L01";
+    navigation.pathname = "/en/kurse/open-source/data-infrastructure/kurs/mental-model";
     rendered.rerender(tree(<button type="button">Content</button>, "en"));
     expect(screen.getByTestId("learning-owner-runtime")).toBeInTheDocument();
   });

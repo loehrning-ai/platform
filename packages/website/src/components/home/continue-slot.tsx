@@ -15,11 +15,6 @@ const ContinueCard = dynamic(
 
 /**
  * Reserved seat for the companion home's first decision, below `lg` only.
- * The page docks it in the phone hero band, directly under the primary
- * action. It has no surface of its own: it inherits the band's scene
- * (Butter on Ultramarin, or the graphit fallback) and its hairline, and its
- * full-bleed link takes an inset ring (phone-hero.css), so the ring never
- * lands outside the band.
  *
  * Three properties this shell exists to guarantee:
  *
@@ -28,9 +23,7 @@ const ContinueCard = dynamic(
  *    resolve; a server guess would be wrong for every returning learner.
  *  - The seat is exactly as tall as the card, in the server HTML. The card is
  *    `h-full` inside a fixed-height box, so the page geometry below it is
- *    final at first paint and resolving progress shifts nothing. The seat
- *    also carries the row's top hairline, so the band's structure is
- *    complete before the card arrives (it then fades in).
+ *    final at first paint and resolving progress shifts nothing.
  *  - The card stays out of the hydration critical path: this shell is the only
  *    part of the island in the initial client graph, and it defers the card to
  *    a chunk fetched after mount, the way UserProgressSync defers its storage
@@ -53,8 +46,11 @@ export function ContinueSlot({
   }, []);
 
   return (
-    <div data-home-continue-slot className="w-full lg:hidden">
-      <div className="box-content h-[3.5rem] border-t border-hairline">
+    <div
+      data-home-continue-slot
+      className="mx-auto w-full max-w-6xl px-6 pt-3 lg:hidden"
+    >
+      <div className="h-[4.75rem]">
         {mounted ? <ContinueCard locale={locale} courses={courses} /> : null}
       </div>
     </div>

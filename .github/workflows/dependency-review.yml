@@ -37,7 +37,14 @@ jobs:
           # GHSA-7pqw-9j4j-h8q3 (extract-zip arbitrary file write through
           # symlink entries) sits on the same package and path with no patched
           # release either, so it carries the same scoped exception.
-          bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3
+          # GHSA-vfj7-8cjw-p6xm (braces stack exhaustion on deeply nested
+          # patterns) is reached only through @next/eslint-plugin-next ->
+          # fast-glob -> micromatch, a lint-time devDependency that never
+          # ships and only expands the repository's own glob patterns.
+          # braces 3.0.3 is the latest published version and micromatch
+          # 4.0.8 requires it, so no upgrade clears it. Drop this flag once
+          # braces ships a fix.
+          bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3 --ignore=GHSA-vfj7-8cjw-p6xm
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: moderate

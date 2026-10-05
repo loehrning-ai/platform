@@ -29,123 +29,111 @@ import { getAiNativeTrustSignals } from "@/lib/ai-native/content";
 
 const COURSE_PATH = "/ai-native";
 
+const OPERATOR_PATH = "/kurse/open-source/ai-native-operator";
+
 const LANDING_COPY = {
   de: {
-    title: "AI-Native Arbeitskurs: Aufgaben mit Claude strukturieren",
+    title: "Mit KI arbeiten: messen, absichern, belegen",
     description:
-      "Kostenloser Arbeitskurs mit 4 Modulen und 27 Lektionen. Aufgaben abgrenzen, Kontext bereitstellen, Ergebnisse prüfen und wiederholbare Abläufe dokumentieren.",
+      "Kostenloser Kurs mit 4 Modulen und 9 Lektionen, je mit Übung. Netto-Zeit messen, Kontext und Werkzeugrechte begrenzen, zitierte Antworten prüfen und einen Ablauf mit Freigabe testen. Unabhängig vom Werkzeug.",
     home: "Start",
     courses: "Kurse",
-    courseName: "AI-Native Arbeitskurs",
+    courseName: "Mit KI arbeiten",
     graphDescription:
-      "Arbeitskurs zu klaren Aufgaben, prüfbaren Claude-Workflows, Wissensorganisation und kontrollierter Automatisierung.",
+      "Werkzeugunabhängiger Kurs zur eigenen Arbeit mit KI: Nutzen messen, Kontext und Rechte begrenzen, Quellen prüfen, Abläufe mit Freigabe absichern.",
     audience: "Berufstätige, Selbstständige und Studierende",
     teaches: [
-      "Aufgaben für KI-Unterstützung abgrenzen",
-      "Kontext und Prüfkriterien dokumentieren",
-      "wiederholbare Abläufe mit klaren Kontrollen entwerfen",
+      "Netto-Zeit einer KI-gestützten Aufgabe messen",
+      "Werkzeugrechte gegen Prompt-Injection begrenzen",
+      "zitierte KI-Antworten gegen Quellen prüfen",
+      "einen Ablauf mit Prüfungen, Fehlerpfad und Freigabe testen",
     ],
-    eyebrow: "AI-Native Arbeitskurs · kostenlos",
-    heading: "Routinearbeit mit Claude automatisieren.",
+    eyebrow: "Mit KI arbeiten · kostenlos",
+    heading: "Erst messen. Dann automatisieren.",
     intro:
-      "Für alle, die jede Woche dieselben Mails, Notizen und Berichte bearbeiten. Im Abschlussprojekt baust du ohne Programmieren einen Ablauf aus deiner Arbeit und legst fest, wie du ihn prüfst.",
-    start: "Mit Modul 1 beginnen",
-    workspace: "Kursstand öffnen",
+      "Für alle, die KI in der eigenen Arbeit einsetzen. Du misst, ob sich KI für eine Aufgabe lohnt, begrenzt, was ein Werkzeug sehen und tun darf, und testest einen Ablauf mit präparierten Fehlern, bis er hält. Jede Lektion: eine Idee mit Quelle, eine Übung, zwei Fragen.",
+    scopeLead: "Abgrenzung:",
+    scopeBefore: "Dieser Kurs betrifft deine eigene tägliche Arbeit. ",
+    scopeLink: "AI-Native Operator",
+    scopeAfter: " behandelt KI auf Ebene der ganzen Organisation.",
+    start: "Mit Lektion 1 beginnen",
+    workspace: "Kursübersicht öffnen",
     factsLabel: "Auf einen Blick",
-    progressLabel: "Fortschritt im AI-Native Arbeitskurs",
+    progressLabel: "Fortschritt in Mit KI arbeiten",
     lessonsLabel: "Lektionen",
     outcomesHeading: "Was du danach kannst",
     outcomes: [
-      { title: "Aufgaben mit Ziel, Kontext, Beispiel und Prüfkriterium beschreiben" },
-      { title: "Ein Claude-Projekt mit Anweisungen, Beispieldateien und Skills einrichten" },
-      { title: "Mails, Notizen und Ordner in einer Obsidian-Wissensbasis ablegen" },
-      { title: "Wiederkehrende Aufgaben für n8n prüfen und Kontrollen vorab festlegen" },
+      { title: "Messen, ob sich KI für eine Aufgabe netto lohnt, und die richtigen Aufgaben zuerst wählen" },
+      { title: "Dauerhaften Kontext schlank halten und Werkzeugrechte so vergeben, dass Prompt-Injection wenig anrichten kann" },
+      { title: "Zitierte Antworten gegen Quellen prüfen und veraltete Notizen erkennen" },
+      { title: "Einen Ablauf mit Prüfungen, Fehlerpfad und Freigabe testen und einen Pilot mit Stoppkriterium planen" },
     ],
     modulesHeading: "Module",
-    topicsLabel: "Themen im Modul",
-    resourcesHeading: "Außerdem im Kurs",
+    topicsLabel: "Lektionen im Modul",
+    resourcesHeading: "Außerdem",
     resources: [
-      {
-        href: "/ai-native/fluency-test",
-        label: "Fluency-Selbsttest",
-        output: "Ausgangsniveau",
-      },
-      {
-        href: "/ai-native/demos",
-        label: "Kurssimulationen",
-        output: "Kontrollierte Beispiele",
-      },
-      { href: "/ai-native/glossar", label: "Glossar", output: "70 Begriffe" },
-      {
-        href: "/ai-native/capstone-gallery",
-        label: "Regeln fürs Abschlussprojekt",
-        output: "Veröffentlichungsgrenze",
-      },
+      { href: "/ai-native/glossar", label: "Glossar", output: "16 Begriffe" },
+      { href: "/demos", label: "Praxisbeispiele", output: "Simulationen mit erfundenen Daten" },
+      { href: "/ki-fuehrerschein", label: "KI-Führerschein", output: "Empfohlener Einstieg" },
     ],
     boundarySummary: "Zugang, Nachweis und Herkunft",
     boundary: [
-      "Der Reader braucht ein kostenloses Lernkonto, ohne Zahlungsdaten.",
-      "Der lokale Teilnahmenachweis beruht auf gespeichertem Fortschritt und Selbstprüfung und ist keine externe Prüfung, Akkreditierung oder Konformitätsbestätigung.",
-      "Der KI-Führerschein wird empfohlen, ist aber keine Voraussetzung. Hinweise zu Werkzeugen können nach Anbieteränderungen veralten.",
+      "Der Kurs braucht ein kostenloses Lernkonto, ohne Zahlungsdaten.",
+      "Die Live-Übung nutzt ein echtes Modell, wenn der Live-Modus verfügbar ist. Sonst siehst du aufgezeichnete, als solche gekennzeichnete Beispiele.",
+      "Der Kurs erklärt keine einzelnen Produkte. Wie du Werkzeuge einrichtest, steht in deren Dokumentation; die Prinzipien hier gelten für jedes.",
+      "Die lokale Teilnahmebestätigung beruht auf gespeichertem Fortschritt und Selbstprüfung und ist keine externe Prüfung, Akkreditierung oder Konformitätsbestätigung.",
     ],
   },
   en: {
-    title: "AI-Native Workflow Course: structured work with Claude",
+    title: "Working with AI: measure, safeguard, cite",
     description:
-      "Free course with 4 modules and 27 lessons. Define bounded tasks, provide context, review outputs and document repeatable workflows.",
+      "Free course with 4 modules and 9 lessons, each with an exercise. Measure net time, limit context and tool permissions, check cited answers and test a workflow with approval. Whatever the tool.",
     home: "Home",
     courses: "Courses",
-    courseName: "AI-Native Workflow Course",
+    courseName: "Working with AI",
     graphDescription:
-      "A practical course on bounded tasks, reviewable Claude workflows, maintained knowledge and controlled automation.",
+      "A tool-neutral course on your own work with AI: measure the benefit, limit context and permissions, check sources, safeguard workflows with approval.",
     audience: "Professionals, independent workers and students",
     teaches: [
-      "define bounded tasks for AI assistance",
-      "document context and review criteria",
-      "design repeatable workflows with explicit controls",
+      "measure the net time of an AI-assisted task",
+      "limit tool permissions against prompt injection",
+      "check cited AI answers against sources",
+      "test a workflow with checks, a fallback path and approval",
     ],
-    eyebrow: "AI-Native Workflow Course · free",
-    heading: "Automate routine work with Claude.",
+    eyebrow: "Working with AI · free",
+    heading: "Measure first. Then automate.",
     intro:
-      "For people who handle the same emails, notes and reports every week. In the final project you build a workflow from your own work, without code, and decide how to check it.",
-    start: "Start with module 1",
-    workspace: "Open course progress",
+      "For anyone using AI in their own work. You measure whether AI pays off for a task, limit what a tool may see and do, and test a workflow with booby-trapped errors until it holds. Every lesson: one idea with a source, one exercise, two questions.",
+    scopeLead: "Scope:",
+    scopeBefore: "This course is about your own daily work. ",
+    scopeLink: "AI-Native Operator",
+    scopeAfter: " covers AI at the level of the whole organisation.",
+    start: "Start with lesson 1",
+    workspace: "Open course hub",
     factsLabel: "At a glance",
-    progressLabel: "AI-Native Workflow Course progress",
+    progressLabel: "Working with AI progress",
     lessonsLabel: "lessons",
     outcomesHeading: "What you can do afterwards",
     outcomes: [
-      { title: "Brief tasks with goal, context, example and review criterion" },
-      { title: "Set up a Claude project with instructions, sample files and skills" },
-      { title: "Keep emails, notes and folders in an Obsidian knowledge base" },
-      { title: "Check which recurring tasks suit n8n and set controls first" },
+      { title: "Measure whether AI pays off net for a task and pick the right tasks first" },
+      { title: "Keep persistent context lean and grant tool permissions so prompt injection can do little damage" },
+      { title: "Check cited answers against sources and spot stale notes" },
+      { title: "Test a workflow with checks, a fallback path and approval, and plan a pilot with a stop criterion" },
     ],
     modulesHeading: "Modules",
-    topicsLabel: "Topics in this module",
-    resourcesHeading: "Also in this course",
+    topicsLabel: "Lessons in this module",
+    resourcesHeading: "Also useful",
     resources: [
-      {
-        href: "/ai-native/fluency-test",
-        label: "Fluency self-assessment",
-        output: "Starting point",
-      },
-      {
-        href: "/ai-native/demos",
-        label: "Course simulations",
-        output: "Controlled examples",
-      },
-      { href: "/ai-native/glossar", label: "Glossary", output: "70 terms" },
-      {
-        href: "/ai-native/capstone-gallery",
-        label: "Capstone rules",
-        output: "Publication boundary",
-      },
+      { href: "/ai-native/glossar", label: "Glossary", output: "16 terms" },
+      { href: "/demos", label: "Practice examples", output: "Simulations with invented data" },
+      { href: "/ki-fuehrerschein", label: "Everyday AI Literacy", output: "Recommended first" },
     ],
     boundarySummary: "Access, record, and provenance",
     boundary: [
-      "The reader needs a free learning account, with no payment details.",
+      "The course needs a free learning account, with no payment details.",
+      "The live exercise uses a real model when live mode is available. Otherwise you see recorded examples, labelled as such.",
+      "The course does not teach individual products. How to set up a tool is in its documentation; the principles here apply to any of them.",
       "The local completion record rests on stored progress and self-review and is not an external examination, accreditation or compliance finding.",
-      "Everyday AI Literacy is recommended but not required. Tool-specific guidance can become outdated after provider changes.",
     ],
   },
 } as const satisfies Record<Locale, Record<string, unknown>>;
@@ -224,7 +212,7 @@ function buildCourseJsonLd(locale: Locale) {
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
-          courseWorkload: "PT12H",
+          courseWorkload: "PT1H8M",
           inLanguage: locale,
         },
       },
@@ -240,15 +228,16 @@ export default async function AiNativePage() {
   const copy = LANDING_COPY[locale];
   const meta = getCourseMeta(locale);
   const modules = getModules(locale);
-  // Reading time of the lessons alone; targetDurationHours adds the exercises.
-  const lessonHours = Math.max(
-    1,
+  // Lessons include their exercise, so the module minutes are the course time.
+  const courseMinutes =
     Math.round(
-      modules.reduce((sum, module) => sum + module.durationMinutes, 0) / 60,
-    ),
-  );
+      modules.reduce((sum, module) => sum + module.durationMinutes, 0) / 10,
+    ) * 10;
   const trustSignals = getAiNativeTrustSignals(locale);
-  const moduleOneHref = localizeHref("/ai-native/kurs/modul_1", locale);
+  const firstLessonHref = localizeHref(
+    "/ai-native/kurs/modul_1/messen-1-1",
+    locale,
+  );
 
   return (
     <>
@@ -260,7 +249,7 @@ export default async function AiNativePage() {
           intro={copy.intro}
           primaryAction={
             <Link
-              href={moduleOneHref}
+              href={firstLessonHref}
               prefetch={false}
               className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}
             >
@@ -280,8 +269,8 @@ export default async function AiNativePage() {
             `${meta.totalModules} ${locale === "de" ? "Module" : "modules"}`,
             `${meta.totalLessons} ${copy.lessonsLabel}`,
             locale === "de"
-              ? `ca. ${lessonHours} Std. Lesezeit, ca. ${meta.targetDurationHours} Std. mit Übungen`
-              : `About ${lessonHours} hrs of reading, about ${meta.targetDurationHours} hrs with exercises`,
+              ? `ca. ${courseMinutes} Min. mit Übungen`
+              : `About ${courseMinutes} min with exercises`,
           ]}
           factsLabel={copy.factsLabel}
           progress={
@@ -293,6 +282,24 @@ export default async function AiNativePage() {
             />
           }
         />
+
+        <p
+          data-course-scope
+          className="mt-8 max-w-[65ch] text-body leading-relaxed text-foreground"
+        >
+          <strong>{copy.scopeLead}</strong> {copy.scopeBefore}
+          <Link
+            href={localizeHref(OPERATOR_PATH, locale)}
+            prefetch={false}
+            // Vertical padding lifts the in-sentence link to the 44px target
+            // floor; the matching negative margin keeps the line box, so the
+            // paragraph's rhythm does not change.
+            className="-my-3 inline-block py-3 underline decoration-border underline-offset-4 hover:decoration-foreground"
+          >
+            {copy.scopeLink}
+          </Link>
+          {copy.scopeAfter}
+        </p>
 
         <CourseLandingSection title={copy.outcomesHeading}>
           <CourseOutcomeList items={copy.outcomes} />

@@ -262,7 +262,7 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
         </m.header>
 
         <m.section
-          className="dark-section grid min-w-0 border-b border-border md:grid-cols-[minmax(0,0.9fr)_minmax(20rem,1.1fr)]"
+          className="grid min-w-0 border-b border-border bg-sky-wash md:grid-cols-[minmax(0,0.9fr)_minmax(20rem,1.1fr)]"
           aria-label={ui.scorePlateLabel}
           data-score-plate
           {...reveal(1)}

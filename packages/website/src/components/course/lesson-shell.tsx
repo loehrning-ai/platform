@@ -37,8 +37,6 @@ const LESSON_COURSE_ROUTES: readonly (readonly [prefix: string, courseId: string
   ["/kurse/open-source/data-engineering-fundamentals", "data-engineering-fundamentals"],
   ["/kurse/open-source/data-infrastructure", "data-infrastructure"],
   ["/kurse/open-source/data-science", "data-science"],
-  ["/kurse/open-source/claude", "claude"],
-  ["/kurse/open-source/codex", "codex"],
   ["/ki-fuehrerschein", "ki-fuehrerschein"],
   ["/ki-und-gesellschaft", "ki-und-gesellschaft"],
   ["/eu-ai-act-kurs", "eu-ai-act-kurs"],
@@ -58,6 +56,12 @@ export function lessonScene(
   );
   return match ? coursePlakat(match[1])?.plakat : undefined;
 }
+
+const WERK_ICON_BUTTON =
+  "inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-transparent text-foreground outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+
+const APP_ICON_BUTTON =
+  "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-card text-foreground shadow-lab-sm ring-1 ring-lab-line outline-none transition-colors duration-150 hover:bg-lab-accent-soft focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper motion-reduce:transition-none";
 
 export const LESSON_SHELL_SIDEBAR_STORAGE_KEY =
   "loehrning:lesson-shell:sidebar:v1";
@@ -218,6 +222,18 @@ export interface LessonShellProps {
    * route; a route outside the course families stays Druckschwarz.
    */
   readonly courseId?: string;
+  /**
+   * Visual system. "werk" (default) is the Werkzeichnung reader of the
+   * technical courses. "app" is the course-app reader of the four
+   * Grundlagen courses: warm paper ground with soft brand light, a rounded
+   * outline rail, no scene-coloured headings and no Kopflinien.
+   */
+  readonly look?: "werk" | "app";
+  /**
+   * Sticky header at the top of the learning column (course-app only), for
+   * example the course header with lesson and course progress.
+   */
+  readonly header?: ReactNode;
 }
 
 export function LessonShell({
@@ -237,8 +253,12 @@ export function LessonShell({
   contentRef,
   readerFocus = true,
   courseId,
+  look = "werk",
+  header,
 }: LessonShellProps) {
-  const scene = lessonScene(usePathname(), courseId);
+  const app = look === "app";
+  const routeScene = lessonScene(usePathname(), courseId);
+  const scene = app ? undefined : routeScene;
   const shellRef = useRef<HTMLDivElement>(null);
   const lastNavOpenerRef = useRef<HTMLElement | null>(null);
   const previousNavOpenRef = useRef(navOpen);
@@ -370,8 +390,12 @@ export function LessonShell({
   return (
     <div
       ref={shellRef}
-      className="flex min-h-[calc(100svh-7rem)] min-w-0 max-w-full overflow-x-clip bg-background"
+      className={cx(
+        "flex min-h-[calc(100svh-7rem)] min-w-0 max-w-full overflow-x-clip",
+        app ? "course-app-ground" : "bg-background",
+      )}
       data-lesson-shell
+      data-lesson-look={look}
       data-content-mode={contentMode}
       data-reader={readerFocus ? "focus" : undefined}
       data-plakat-page={scene}
@@ -383,24 +407,45 @@ export function LessonShell({
         data-lesson-shell-navigation
         data-collapsed={desktopSidebarCollapsed ? "true" : "false"}
         className={cx(
-          "hidden shrink-0 self-start overflow-hidden border-r border-hairline bg-background lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
-          desktopSidebarCollapsed ? "lg:w-14" : "lg:w-60",
+          app
+            ? "hidden shrink-0 self-start overflow-hidden lg:sticky lg:top-[var(--nav-h)] lg:block lg:h-[calc(100svh-var(--nav-h))] lg:py-4 lg:pl-4"
+            : "hidden shrink-0 self-start overflow-hidden border-r border-hairline bg-background lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
+          app
+            ? desktopSidebarCollapsed
+              ? "lg:w-20"
+              : "lg:w-80"
+            : desktopSidebarCollapsed
+              ? "lg:w-14"
+              : "lg:w-60",
         )}
       >
-        <div className="flex h-full min-h-0 flex-col">
+        <div
+          className={cx(
+            "flex h-full min-h-0 flex-col",
+            app && "rounded-[28px] border border-lab-line/80 bg-paper/80 shadow-lab",
+          )}
+        >
           <div
             className={cx(
-              "relative flex min-h-14 shrink-0 items-center gap-2 border-b border-hairline p-2",
+              "relative flex min-h-14 shrink-0 items-center gap-2 p-2",
+              app ? "" : "border-b border-hairline",
               desktopSidebarCollapsed ? "justify-center" : "justify-between",
             )}
           >
             {desktopSidebarCollapsed ? (
-              <span
-                aria-hidden="true"
-                className="absolute left-0 h-8 w-0.5 bg-foreground"
-              />
+              app ? null : (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 h-8 w-0.5 bg-foreground"
+                />
+              )
             ) : (
-              <span className="min-w-0 break-words pl-1 text-label text-foreground">
+              <span
+                className={cx(
+                  "min-w-0 break-words pl-1",
+                  app ? "pl-2 text-[15px] font-bold text-foreground" : "text-label text-foreground",
+                )}
+              >
                 {navLabel}
               </span>
             )}
@@ -412,7 +457,7 @@ export function LessonShell({
               aria-label={
                 desktopSidebarCollapsed ? expandNavLabel : collapseNavLabel
               }
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-transparent text-foreground outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+              className={app ? APP_ICON_BUTTON : WERK_ICON_BUTTON}
             >
               {desktopSidebarCollapsed ? (
                 <PanelLeftOpen className="h-5 w-5" aria-hidden="true" />
@@ -427,7 +472,9 @@ export function LessonShell({
               "min-h-0 flex-1 overscroll-contain [scrollbar-gutter:stable]",
               desktopSidebarCollapsed
                 ? "overflow-hidden p-0"
-                : "overflow-y-auto p-3",
+                : app
+                  ? "overflow-y-auto px-2 pb-3"
+                  : "overflow-y-auto p-3",
             )}
           >
             {desktopSidebarCollapsed
@@ -442,7 +489,10 @@ export function LessonShell({
         <>
           <div
             data-sidebar-backdrop
-            className="fixed inset-0 z-[60] bg-foreground/40 lg:hidden"
+            className={cx(
+              "fixed inset-0 z-[60] lg:hidden",
+              app ? "bg-[#1b2440]/25" : "bg-sky-wash/80",
+            )}
             role="presentation"
             onClick={closeNav}
           />
@@ -462,10 +512,25 @@ export function LessonShell({
               // 0px fallback that keeps every max() valid, and overriding one on
               // :root moves every fixed shell surface together, which is how the
               // mobile shell suite drives an inset the emulator will not report.
-              className="fixed inset-y-0 left-0 z-[70] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain border-r border-hairline bg-background pb-[max(1rem,var(--safe-area-bottom))] pl-[max(1rem,var(--safe-area-left))] pr-3 pt-[max(0.75rem,var(--safe-area-top))] lg:hidden"
+              className={cx(
+                "fixed inset-y-0 left-0 z-[70] max-w-[calc(100vw-1rem)] overflow-y-auto overscroll-contain pb-[max(1rem,var(--safe-area-bottom))] pl-[max(1rem,var(--safe-area-left))] pr-3 pt-[max(0.75rem,var(--safe-area-top))] lg:hidden",
+                app
+                  ? "w-[22rem] rounded-r-[28px] bg-paper shadow-lab-lg"
+                  : "w-72 border-r border-hairline bg-background",
+              )}
             >
-              <div className="mb-3 flex min-h-14 items-center justify-between gap-3 border-b border-hairline pb-2">
-                <span className="min-w-0 break-words text-label text-foreground">
+              <div
+                className={cx(
+                  "mb-3 flex min-h-14 items-center justify-between gap-3 pb-2",
+                  app ? "" : "border-b border-hairline",
+                )}
+              >
+                <span
+                  className={cx(
+                    "min-w-0 break-words",
+                    app ? "pl-2 text-[15px] font-bold text-foreground" : "text-label text-foreground",
+                  )}
+                >
                   {navLabel}
                 </span>
                 <button
@@ -474,7 +539,7 @@ export function LessonShell({
                   aria-expanded="true"
                   aria-controls={navId}
                   aria-label={closeNavLabel}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-transparent text-foreground outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                  className={app ? APP_ICON_BUTTON : WERK_ICON_BUTTON}
                 >
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -490,6 +555,7 @@ export function LessonShell({
           drawer control, and a second control for the same drawer cost 48px
           of fixed chrome on every phone screen. */}
       <div className="min-w-0 max-w-full flex-1 overflow-x-clip px-4 pb-6 pt-4 sm:px-5 lg:px-6 lg:py-7 xl:px-8">
+        {app ? header : null}
         <div
           ref={contentRef}
           data-lesson-shell-content
@@ -500,7 +566,9 @@ export function LessonShell({
           // 11.26, Kobalt 7.15, Aubergine 12.57 on Kalkweiß); body, widgets
           // and callouts stay paper and ink. Druckschwarz without a scene.
           className={cx(
-            "mx-auto w-full min-w-0 overflow-x-clip lg:pt-2 [&>*]:min-w-0 [&_h1]:text-scene-line [&_[role=heading][aria-level='1']]:text-scene-line [&_.border-t-2.border-foreground]:border-scene-line",
+            app
+              ? "mx-auto w-full min-w-0 overflow-x-clip [&>*]:min-w-0"
+              : "mx-auto w-full min-w-0 overflow-x-clip lg:pt-2 [&>*]:min-w-0 [&_h1]:text-scene-line [&_[role=heading][aria-level='1']]:text-scene-line [&_.border-t-2.border-foreground]:border-scene-line",
             CONTENT_WIDTH_CLASS[contentMode],
           )}
         >
@@ -527,6 +595,7 @@ export function LessonShell({
           JavaScript, where the drawer cannot open anyway. */}
       {readerFocus ? (
         <ReaderFocusBar
+          tone={app ? "app" : "werk"}
           position={readerBar?.position}
           positionLabel={readerBar?.positionLabel}
           action={
@@ -551,7 +620,12 @@ export function LessonShell({
                 lastNavOpenerRef.current = event.currentTarget;
                 onNavOpenChange(true);
               }}
-              className="js-shell-only inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border text-foreground outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none"
+              className={cx(
+                "js-shell-only",
+                app
+                  ? APP_ICON_BUTTON
+                  : "inline-flex h-11 w-11 shrink-0 items-center justify-center border border-border text-foreground outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none",
+              )}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>

@@ -5,7 +5,7 @@ import { LessonMissionFrame } from "./lesson-mission-frame";
 
 describe("LessonMissionFrame", () => {
   it("renders the authored lesson focus and stable mission identity", () => {
-    const { frame } = bindLessonMission("codex", "L01", "en", {
+    const { frame } = bindLessonMission("data-infrastructure", "mental-model", "en", {
       title: "A mental model for delegated work",
       objective: "Separate intent, execution, and verification.",
       keyConcepts: ["Bounded autonomy", "Verification"],
@@ -27,11 +27,11 @@ describe("LessonMissionFrame", () => {
     ).toHaveTextContent("Bounded autonomy");
     expect(container.firstElementChild).toHaveAttribute(
       "data-lesson-mission-id",
-      "codex:L01:v1",
+      "data-infrastructure:mental-model:v1",
     );
     expect(container.firstElementChild).toHaveAttribute(
       "data-lesson-skill-id",
-      "codex:ground",
+      "data-infrastructure:ground",
     );
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });

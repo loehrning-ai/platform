@@ -317,9 +317,10 @@ export default function FineTunePlaygroundDemo() {
               style={{
                 minHeight: 44,
                 padding: "8px 10px",
-                background: active ? DEMO.ink : "transparent",
+                // Selected tab: IDEA Kobalt with Kalkweiß text, never ink.
+                background: active ? DEMO.action : "transparent",
                 color: active ? DEMO.kalk : DEMO.ink,
-                border: `1px solid ${active ? DEMO.ink : DEMO.leinen}`,
+                border: `1px solid ${active ? DEMO.action : DEMO.leinen}`,
                 fontSize: 12,
                 cursor: "pointer",
                 fontFamily: "inherit",
@@ -332,7 +333,7 @@ export default function FineTunePlaygroundDemo() {
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
+                  color: active ? "rgba(243,240,233,0.85)" : DEMO.schiefer,
                   fontWeight: 700,
                 }}
               >
@@ -534,8 +535,11 @@ export default function FineTunePlaygroundDemo() {
         </div>
         <div
           style={{
-            background: DEMO.ink,
-            color: DEMO.kalk,
+            // The metric strip: pastel Himmel-Blatt with ink figures, never
+            // a black band.
+            background: DEMO.band,
+            color: DEMO.ink,
+            borderTop: `2px solid ${DEMO.ink}`,
             padding: 12,
             display: "grid",
             gridTemplateColumns: "repeat(3, 1fr)",
@@ -556,7 +560,7 @@ export default function FineTunePlaygroundDemo() {
               <div
                 style={{
                   ...DEMO.label,
-                  color: "rgba(243,240,233,0.75)",
+                  color: "var(--color-muted-foreground)",
                 }}
               >
                 {l}
@@ -568,7 +572,7 @@ export default function FineTunePlaygroundDemo() {
                   fontWeight: 700,
                   letterSpacing: "-0.01em",
                   marginTop: 3,
-                  color: DEMO.kalk,
+                  color: DEMO.ink,
                 }}
               >
                 {v}

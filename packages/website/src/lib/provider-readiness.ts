@@ -3,6 +3,7 @@ import { isValidRateLimitHmacSecret } from "@/lib/security/rate-limit-secret.mjs
 import { configuredAdminUserId } from "@/lib/auth/admin-config";
 import {
   PRACTICE_MODEL_IDS,
+  PRACTICE_PROVIDER_BY_MODEL,
   type PracticeModelId,
 } from "@/app/api/ai-native/practice/types";
 
@@ -227,6 +228,46 @@ export function isGeminiRuntimeReady(): boolean {
   );
 }
 
+export function openaiRetentionDays(): number | null {
+  const raw = process.env.OPENAI_RETENTION_DAYS;
+  if (!raw?.trim()) return null;
+  const days = Number(raw);
+  return Number.isInteger(days) && days >= 0 && days <= 3650 ? days : null;
+}
+
+export const DEFAULT_OPENAI_PRACTICE_MODEL = "gpt-5-mini";
+/**
+ * The public id `openai/gpt-5-mini` names the model learners see. The
+ * deployment may pin a dated snapshot of that same model, never a different
+ * model family: another model needs its own reviewed public id. Mirrors
+ * OPENAI_PRACTICE_MODEL_PATTERN in scripts/validate-env.mjs.
+ */
+const OPENAI_PRACTICE_MODEL_PATTERN = /^gpt-5-mini(?:-\d{4}-\d{2}-\d{2})?$/;
+
+/**
+ * Pinned upstream model name for the OpenAI practice id. Unset or empty means
+ * the default; a malformed value returns null so readiness fails closed.
+ */
+export function openaiPracticeModel(): string | null {
+  const raw = process.env.OPENAI_PRACTICE_MODEL;
+  if (!raw) return DEFAULT_OPENAI_PRACTICE_MODEL;
+  return OPENAI_PRACTICE_MODEL_PATTERN.test(raw) ? raw : null;
+}
+
+/**
+ * OpenAI Platform API only (a server-side project key). A personal ChatGPT or
+ * Codex subscription cannot back this route and is never proxied.
+ */
+export function isOpenAIRuntimeReady(): boolean {
+  return Boolean(
+    process.env.OPENAI_API_KEY &&
+      isPastOrPresentIsoDate(process.env.OPENAI_DPA_CONFIRMED_AT) &&
+      openaiRetentionDays() !== null &&
+      openaiPracticeModel() !== null &&
+      hasCompleteSupabaseRuntimeConfig(),
+  );
+}
+
 export function isPracticeModelRuntimeReady(model: PracticeModelId): boolean {
   if (
     process.env.AI_NATIVE_PRACTICE_ENABLED !== "true" ||
@@ -236,9 +277,16 @@ export function isPracticeModelRuntimeReady(model: PracticeModelId): boolean {
   ) {
     return false;
   }
-  return model.startsWith("anthropic/")
-    ? isAnthropicRuntimeReady()
-    : isGeminiRuntimeReady();
+  switch (PRACTICE_PROVIDER_BY_MODEL[model]) {
+    case "anthropic":
+      return isAnthropicRuntimeReady();
+    case "google":
+      return isGeminiRuntimeReady();
+    case "openai":
+      return isOpenAIRuntimeReady();
+    default:
+      return false;
+  }
 }
 
 /**

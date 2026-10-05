@@ -1,41 +1,52 @@
 import { expect, test } from "@playwright/test";
+import {
+  HIGHLIGHT_BAND_HEIGHT_EM,
+  HIGHLIGHT_BAND_OFFSET_EM,
+} from "@/components/ui/highlighted-text";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
  * A highlight band behind a wrapped headline must never overlap the band on
  * the line above.
  *
- * The /buecher headline is set at the poster leading (0.92), well under the
- * font's content area (ascent + descent, ~1.2em). An inline background
- * therefore overlaps from one wrapped line to the next unless it is painted as
- * an explicitly sized and positioned stripe inside each line's box. This spec
- * used to guard that for one component, HighlightedText, by importing its two
- * em constants. The poster system retired the marker band (plain ink
- * headlines; the printed covers carry the colour), and the component went with
- * it, so the guard no longer depends on any one component: it reads the
- * painted geometry of every inline element in the headline from computed
- * style (background colour and each image layer's size, position, repeat,
- * origin and clip) and asserts that no band on a later line starts above the
- * bottom of a band on an earlier line.
+ * Headlines here are set at display leading (0.9 on the /workshops hub, the
+ * poster 0.92 on /buecher and the workshop pages), well under the font's
+ * content area (ascent + descent, ~1.2em). An inline background therefore
+ * overlaps from one wrapped line to the next unless it is painted as an
+ * explicitly sized and positioned stripe inside each line's box, which is
+ * what HighlightedText does (the sky band on the hub H1, the scene band on
+ * each workshop H1). The guard does not trust the component, though: it
+ * reads the painted geometry of every inline element in the headline from
+ * computed style (background colour and each image layer's size, position,
+ * repeat, origin and clip) and asserts that no band on a later line starts
+ * above the bottom of a band on an earlier line.
  *
  * So the check cannot pass just because the headline paints nothing, each
  * test also measures two probe headlines set beside the real one, with the
  * same classes, font and leading, forced to wrap. A band painted on the
- * content area must be reported as overlapping there; the sized stripe the
- * retired component used (0.75em at 0.1em) must not. That proves the detector
+ * content area must be reported as overlapping there; the sized stripe
+ * HighlightedText paints (its own two em constants, imported so the probe
+ * cannot drift from the implementation) must not. That proves the detector
  * against real font metrics and real wrapping on every route and viewport it
  * guards, which is the part a unit test cannot reach.
  */
 
-const ROUTES = ["/buecher", "/en/buecher"] as const;
+const ROUTES = [
+  "/buecher",
+  "/en/buecher",
+  "/workshops",
+  "/en/workshops",
+  "/workshops/esg-berichte-mit-ki",
+  "/en/workshops/ki-prognosen-einschaetzen",
+] as const;
 const VIEWPORTS = [
   { name: "mobile", width: 390, height: 844 },
   { name: "desktop", width: 1440, height: 900 },
 ] as const;
 
-/** The retired HighlightedText geometry, kept as the passing probe. */
-const STRIPE_HEIGHT_EM = 0.75;
-const STRIPE_OFFSET_EM = 0.1;
+/** HighlightedText's stripe geometry, the passing probe. */
+const STRIPE_HEIGHT_EM = HIGHLIGHT_BAND_HEIGHT_EM;
+const STRIPE_OFFSET_EM = HIGHLIGHT_BAND_OFFSET_EM;
 
 type ProbeKind = "content-area" | "sized-stripe";
 

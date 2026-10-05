@@ -61,55 +61,81 @@ describe("blog editorial design contract", () => {
     );
   });
 
-  it("styles the index on the Werkzeichnung paper system without risograph surfaces", () => {
+  it("uses light risograph surfaces without hiding the real article preview", () => {
+    expect(styles.index).toContain("--blog-acid");
+    expect(styles.index).toContain("--blog-lilac");
+    expect(styles.index).toContain("--blog-sky");
+    expect(styles.index).toContain("--blog-pink");
     expect(styles.index).not.toMatch(
-      /--blog-(?:acid|lilac|sky|pink|cobalt|teal)|brand-(?:acid|peach|sky|pink|cobalt|teal)/,
+      /(?:mast__meta|row__art|feed__note)[^{]*\{[^}]*background:\s*var\(--druckertinte\)/s,
     );
-    expect(styles.index).not.toMatch(/rotate\(/);
-    expect(styles.index).not.toMatch(/text-transform:\s*uppercase/);
-    expect(styles.index).not.toMatch(/font-style:\s*italic|--font-serif/);
-    // The Kopflinie takes the page's scene line (SPEC §3.7): Kobalt below
-    // the IDEA band, Druckschwarz where :has() is missing.
-    expect(styles.index).toMatch(
-      /\.blog-index__head\s*\{[^}]*border-top:\s*2px solid var\(--bi-line\)/s,
-    );
-    expect(styles.index).toMatch(
-      /--bi-line:\s*var\(--color-scene-line, #121212\)/,
-    );
-    expect(styles.index).toMatch(
-      /\.blog-index__container\s*\{[^}]*max-width:\s*75rem/s,
-    );
-    expect(styles.index).toMatch(
-      /\.blog-index__link\s*\{[^}]*min-height:\s*44px/s,
-    );
+    expect(styles.index).not.toMatch(/\.row__art\s*\{[^}]*display:\s*none/s);
   });
 });
 
-describe("blog index IDEA band (SPEC §2.3, §3.12)", () => {
-  it("sets the hero title with the poster-title values and the word fit", () => {
+describe("blog index risograph surfaces", () => {
+  const backgrounds = [
+    ...styles.index.matchAll(/background(?:-color)?:\s*([^;]+);/g),
+  ].map((match) => match[1]!.trim());
+
+  it("never paints a black or near-black surface", () => {
+    expect(backgrounds.length).toBeGreaterThan(0);
+    for (const value of backgrounds) {
+      expect(value).not.toMatch(
+        /--druckertinte|--bg-dark|--card-dark|--border-dark|graphit|--color-foreground|\bblack\b|#0{3,6}\b/i,
+      );
+      for (const hex of value.match(/#[0-9a-f]{6}\b/gi) ?? []) {
+        const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+        // Every fill is paper, a pastel or a brand ink: none darker than
+        // mid-grey.
+        expect(Math.max(r!, g!, b!), hex).toBeGreaterThan(128);
+      }
+    }
+  });
+
+  it("fills its surfaces from the paper and pastel tokens", () => {
+    const allowed =
+      /^(?:var\(--blog-(?:paper|acid|lilac|sky|pink|cobalt)\)|var\(--kupfer\)|color-mix\(in srgb, var\(--blog-paper\) \d+%, transparent\)|radial-gradient\([\s\S]*\))$/;
+    for (const value of backgrounds) {
+      expect(value).toMatch(allowed);
+    }
+  });
+
+  it("keeps the article sheets on 44px CTA targets with a Mennige focus ring", () => {
+    expect(styles.index).toMatch(/\.row__cta\s*\{[^}]*min-height:\s*44px/s);
     expect(styles.index).toMatch(
-      /\.blog-index__title\s*\{[^}]*font-size:\s*max\(2\.125rem,\s*min\(var\(--text-poster\),\s*calc\(100cqi \/ var\(--fit, 0\.01\)\)\)\)/s,
+      /\.row:focus-visible\s*\{[^}]*outline:\s*3px solid var\(--kupfer\)/s,
     );
+    expect(styles.index).not.toMatch(/outline:\s*(?:none|0)\b/);
     expect(styles.index).toMatch(
-      /\.blog-index__title\s*\{[^}]*letter-spacing:\s*var\(--text-poster--letter-spacing\)/s,
-    );
-    expect(styles.index).toMatch(
-      /\.blog-index__hero-inner\s*\{[^}]*container-type:\s*inline-size/s,
+      /\.evidence-card li\s*\{[^}]*min-height:\s*44px/s,
     );
   });
 
-  it("colours the band from the scene tokens only, with no muted tier", () => {
-    const hero = styles.index.match(/\.blog-root \.blog-index__hero\s*\{([^}]*)\}/s)?.[1] ?? "";
-    expect(hero).toMatch(/--bi-ink:\s*var\(--color-scene-ink\)/);
-    expect(hero).toMatch(/--bi-slate:\s*var\(--color-scene-ink\)/);
-    expect(hero).toMatch(/--bi-slate-light:\s*var\(--color-scene-ink\)/);
-    // No raw hex inside the band rules: the ground and ink come from
-    // .plakat-idea in globals.css.
-    for (const selector of ["__hero", "__title", "__lead"]) {
-      const body =
-        styles.index.match(new RegExp(`\\.blog-index${selector}\\s*\\{([^}]*)\\}`, "s"))?.[1] ?? "";
-      expect(body, selector).not.toMatch(/#[0-9a-f]{3,6}\b/i);
-    }
+  it("lifts and tilts the sheets on hover only when motion is allowed", () => {
+    const withoutMotionQueries = styles.index.replace(
+      /@media \(prefers-reduced-motion: no-preference\)\s*\{(?:[^{}]*\{[^}]*\})*\s*\}/g,
+      "",
+    );
+    expect(withoutMotionQueries).not.toMatch(
+      /:(?:hover|focus-visible)[^{]*\{[^}]*transform:/s,
+    );
+    expect(styles.index).toMatch(
+      /@media \(prefers-reduced-motion: reduce\)\s*\{[^@]*\.row[^{]*\{[^}]*transition:\s*none/s,
+    );
+  });
+
+  it("gives the earlier editions their own paper body and pink preview", () => {
+    expect(styles.index).toMatch(
+      /\.row--earlier \.row__body\s*\{[^}]*background:\s*var\(--blog-paper\)/s,
+    );
+    expect(styles.index).toMatch(
+      /\.row--earlier \.row__art\s*\{[^}]*background-color:\s*var\(--blog-pink\)/s,
+    );
+    // Mennige on pink is under 4.5:1: the emphasis keeps the ink there.
+    expect(styles.index).toMatch(
+      /\.row--earlier \.row__art-cap b\s*\{[^}]*color:\s*var\(--druckertinte\)/s,
+    );
   });
 });
 

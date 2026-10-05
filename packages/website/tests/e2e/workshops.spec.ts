@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 /**
  * ScrollToTop resets the scroll position once the app hydrates. A click on a
@@ -30,8 +31,10 @@ test.describe("workshop self-study journey", () => {
       /Geschäftsberichte/i,
     );
     await expect(page.locator("body")).not.toContainText("No paid service");
-    // Detail page (design-direction 7.2): the cover starts the primary
-    // material, the agenda is a Route, and nothing is hidden in accordions.
+    // Detail page: the cover starts the primary material and the agenda is a
+    // Route. The red line (agenda, core materials, case) stays visible; only
+    // optional materials, data limits and the audience details sit behind
+    // disclosures, which start collapsed.
     // The band is the workshop's poster (IDEA for W02) and still starts the deck.
     const cover = page.locator("[data-cover-band]");
     await expect(cover).toHaveAttribute("data-plakat", "idea");
@@ -41,7 +44,7 @@ test.describe("workshop self-study journey", () => {
     );
     await expect(page.getByRole("list", { name: "Ablauf" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 2, name: "Material", exact: true })).toBeVisible();
-    await expect(page.locator("main details")).toHaveCount(0);
+    await expect(page.locator("main details[open]")).toHaveCount(0);
   });
 
   test("serves the complete analyst kit as a ZIP", async ({ request }) => {
@@ -57,10 +60,15 @@ test.describe("workshop self-study journey", () => {
     expect(body.subarray(0, 2).toString("ascii")).toBe("PK");
   });
 
-  test("opens the third workshop guide and pairs its recorded-evidence deck", async ({ page }) => {
+  test("opens the third workshop guide and pairs its recorded-evidence deck", async ({ page, browserName }) => {
     const errors: string[] = [];
     const serviceRequests: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("pageerror", (error) => {
+      // Leaving the workshop page for the guide can cancel a Link's RSC
+      // prefetch, which WebKit reports as a page error (fixtures/console.ts).
+      if (browserName === "webkit" && isWebKitRscPrefetchCancellation(error.message)) return;
+      errors.push(error.message);
+    });
     page.on("console", (message) => {
       if (message.type() === "error") errors.push(message.text());
     });
@@ -71,18 +79,6 @@ test.describe("workshop self-study journey", () => {
     });
     await page.goto("/en/workshops/datenbereitschaft-fuer-ki");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/data.*ready for AI/i);
-    await page.getByRole("button", { name: "Check decision", exact: true }).click();
-    await expect(page.getByText("Select one decision before checking the result.", { exact: true })).toBeVisible();
-    await page.getByRole("radio", { name: "Use 100 euros and check what the fields mean first.", exact: true }).check();
-    await page.getByRole("radio", { name: "The ending balance already includes the change. Adding it again counts it twice.", exact: true }).check();
-    await page.getByRole("button", { name: "Check decision", exact: true }).click();
-    await expect(page.getByText("The change is already in the ending balance.", { exact: true })).toBeVisible();
-    // A correct answer offers a neutral reset; "Try again" is reserved for wrong answers.
-    await expect(page.getByRole("button", { name: "Reset", exact: true })).toBeFocused();
-    await page.keyboard.press("Enter");
-    await expect(page.getByRole("radio", { checked: true })).toHaveCount(0);
-    // Reset reshuffles the options, then focuses whichever decision now comes first.
-    await expect(page.locator("form fieldset").first().getByRole("radio").first()).toBeFocused();
     await page.goto("/workshops/datenbereitschaft-fuer-ki/guide.html");
     await page.getByText("Reveal the explanation", { exact: true }).click();
     await expect(page.locator("details").first()).toHaveAttribute("open", "");
@@ -175,10 +171,84 @@ test.describe("workshop self-study journey", () => {
     await expect(page).toHaveURL(/\/workshops\/geschaeftsberichte-mit-ki-lesen$/);
   });
 
+  test("keeps every poster numeral whole inside its frame from 320 to 1440px", async ({ page }) => {
+    // The glyphs' ink box (canvas metrics in the rendered face, whichever
+    // face loaded) mapped through the SVG's screen transform must sit inside
+    // every clipping ancestor: the nested poster viewport, the poster box and
+    // the band. A numeral cut at an edge reads as a bug, not as a bleed.
+    const routes = ["/workshops", "/workshops/esg-berichte-mit-ki", "/workshops/datenbereitschaft-fuer-ki"];
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of routes) {
+        await page.goto(route, { waitUntil: "load" });
+        await page.evaluate(() =>
+          Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 5_000))]),
+        );
+        const cut = await page.evaluate(() => {
+          const context = document.createElement("canvas").getContext("2d")!;
+          const found: string[] = [];
+          for (const text of document.querySelectorAll<SVGTextElement>("svg text")) {
+            if (text.getBoundingClientRect().width === 0) continue;
+            const style = getComputedStyle(text);
+            if (style.visibility === "hidden" || text.closest("[hidden]")) continue;
+            context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+            context.letterSpacing = style.letterSpacing;
+            const metrics = context.measureText(text.textContent ?? "");
+            const box = text.getBBox();
+            const baseline = (text.y.baseVal.length ? text.y.baseVal[0].value : 0) +
+              (text.dy.baseVal.length ? text.dy.baseVal[0].value : 0);
+            const matrix = text.getScreenCTM();
+            if (!matrix) continue;
+            const topLeft = new DOMPoint(box.x - metrics.actualBoundingBoxLeft, baseline - metrics.actualBoundingBoxAscent).matrixTransform(matrix);
+            const bottomRight = new DOMPoint(box.x + metrics.actualBoundingBoxRight, baseline + metrics.actualBoundingBoxDescent).matrixTransform(matrix);
+            let clip = { left: -Infinity, top: -Infinity, right: Infinity, bottom: Infinity };
+            for (let node = text.parentElement; node && node !== document.documentElement; node = node.parentElement) {
+              const nodeStyle = getComputedStyle(node);
+              let rect: { left: number; top: number; right: number; bottom: number } | null = null;
+              if (node instanceof SVGSVGElement && node.ownerSVGElement) {
+                if (node.getAttribute("overflow") === "visible") continue;
+                const parent = node.ownerSVGElement.getScreenCTM();
+                if (!parent) continue;
+                const a = new DOMPoint(node.x.baseVal.value, node.y.baseVal.value).matrixTransform(parent);
+                const b = new DOMPoint(node.x.baseVal.value + node.width.baseVal.value, node.y.baseVal.value + node.height.baseVal.value).matrixTransform(parent);
+                rect = { left: a.x, top: a.y, right: b.x, bottom: b.y };
+              } else if (nodeStyle.overflowX !== "visible" || nodeStyle.overflowY !== "visible") {
+                rect = node.getBoundingClientRect();
+              }
+              if (rect) {
+                clip = {
+                  left: Math.max(clip.left, rect.left),
+                  top: Math.max(clip.top, rect.top),
+                  right: Math.min(clip.right, rect.right),
+                  bottom: Math.min(clip.bottom, rect.bottom),
+                };
+              }
+            }
+            const over = Math.max(
+              clip.left - topLeft.x,
+              clip.top - topLeft.y,
+              bottomRight.x - clip.right,
+              bottomRight.y - clip.bottom,
+            );
+            if (over > 1) found.push(`"${text.textContent}" cut by ${over.toFixed(1)}px`);
+          }
+          return found;
+        });
+        expect(cut, `${route} at ${width}px`).toEqual([]);
+      }
+    }
+  });
+
   test("sets the four workshops as four posters in four palettes", async ({ page }) => {
     await openHub(page);
-    // The hub band takes the newest workshop's scene (Workshop 04, Autumn).
-    await expect(page.locator("[data-cover-band]")).toHaveAttribute("data-plakat", "autumn");
+    // The hub opens on a paper header (highlighted title, pastel geometry,
+    // catalogue card); the four posters are the rows.
+    await expect(page.locator("[data-cover-band]")).toHaveCount(0);
+    const hero = page.locator("[data-workshop-hero]");
+    await expect(hero).toBeVisible();
+    await expect(hero.locator("h1 span.box-decoration-clone")).toHaveText("mit Fall und Vorlage.");
+    await expect(hero.locator("[data-workshop-geometry]")).toHaveCount(2);
+    await expect(page.getByRole("complementary", { name: "Im Katalog" })).toBeVisible();
     const rows = page.getByTestId("workshop-row");
     await expect(rows).toHaveCount(4);
     // Each row shows its own poster; the four palettes are distinct and in
@@ -211,9 +281,11 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveAttribute("data-plakat", plakat);
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
-      // The question card sits on paper below the band, not inside it.
-      await expect(band.locator("[data-question-card]")).toHaveCount(0);
-      await expect(page.locator("[data-question-card]")).toHaveCount(1);
+      // No question card; the numbered red line (agenda, materials, case)
+      // sits on paper below the band.
+      await expect(page.locator("[data-question-card]")).toHaveCount(0);
+      await expect(band.locator("[data-workshop-redline]")).toHaveCount(0);
+      await expect(page.locator("[data-workshop-redline] li")).toHaveCount(3);
     }
     expect(bandGrounds.size).toBe(4);
   });

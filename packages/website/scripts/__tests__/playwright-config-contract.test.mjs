@@ -54,7 +54,6 @@ test("manual visual capture is isolated from every mandatory public project", ()
   for (const project of [
     "chromium",
     "chromium-ai-native-operator",
-    "chromium-claude-responsive",
     "mobile-chromium",
     "mobile-webkit",
   ]) {

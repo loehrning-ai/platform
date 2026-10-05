@@ -48,7 +48,7 @@ describe("course project draft", () => {
       parseCourseProjectDraft(
         encoded,
         "ki-fuehrerschein",
-        "repo",
+        "data",
         "2026-08-13T12:00:00.000Z",
       ),
     ).toBeNull();
@@ -60,19 +60,20 @@ describe("course project draft", () => {
   it("never stores or rehydrates an unknown free-form artifact field", () => {
     const sentinel = "private-free-form-learner-text";
     const encoded = serializeCourseProjectDraft(
-      "codex",
+      "data-infrastructure",
       [],
       {
         version: 1,
-        engineKind: "repo",
-        fields: { context: sentinel, specReady: true },
+        engineKind: "data",
+        fields: { context: sentinel, planValid: true },
       },
       null,
     );
     expect(encoded).not.toContain(sentinel);
     expect(
-      parseCourseProjectDraft(encoded, "codex", "repo", null)?.artifact,
-    ).toMatchObject({ fields: { specReady: true } });
+      parseCourseProjectDraft(encoded, "data-infrastructure", "data", null)
+        ?.artifact,
+    ).toMatchObject({ fields: { planValid: true } });
   });
 
   it("migrates version 2 artifacts but discards unprovable stage flags", () => {
@@ -82,7 +83,7 @@ describe("course project draft", () => {
       s: ["ground", "build"],
       a: null,
     });
-    expect(parseCourseProjectDraft(legacy, "codex", "repo", null)).toEqual({
+    expect(parseCourseProjectDraft(legacy, "data-infrastructure", "data", null)).toEqual({
       version: 4,
       resetAt: null,
       completedMissionIds: [],
@@ -91,8 +92,8 @@ describe("course project draft", () => {
     expect(
       parseCourseProjectDraft(
         JSON.stringify({ v: 2, r: null, s: ["ground", "run"], a: null }),
-        "codex",
-        "repo",
+        "data-infrastructure",
+        "data",
         null,
       ),
     ).toBeNull();
@@ -127,13 +128,15 @@ describe("course project draft", () => {
         null,
       ),
     ).toBeNull();
-    expect(getCourseProjectDraftStorageKey("codex")).toContain(":codex");
+    expect(getCourseProjectDraftStorageKey("data-infrastructure")).toContain(
+      ":data-infrastructure",
+    );
   });
 
   it("stores stable lesson IDs and invalidates positional or unknown revisions", () => {
-    const first = getCourseLessonMissions("codex")[0]!;
+    const first = getCourseLessonMissions("data-infrastructure")[0]!;
     const encoded = serializeCourseProjectDraft(
-      "codex",
+      "data-infrastructure",
       [first.id],
       null,
       null,
@@ -142,16 +145,16 @@ describe("course project draft", () => {
     expect(
       parseCourseProjectDraft(
         JSON.stringify({ v: 4, c: 2, r: null, m: [first.lessonId], a: null }),
-        "codex",
-        "repo",
+        "data-infrastructure",
+        "data",
         null,
       ),
     ).toBeNull();
     expect(
       parseCourseProjectDraft(
         JSON.stringify({ v: 3, r: null, m: [0], a: null }),
-        "codex",
-        "repo",
+        "data-infrastructure",
+        "data",
         null,
       ),
     ).toEqual({
@@ -168,8 +171,6 @@ describe("course project draft", () => {
       "eu-ai-act-kurs",
       "ai-native",
       "ki-und-gesellschaft",
-      "claude",
-      "codex",
       "data-infrastructure",
       "data-engineering-fundamentals",
       "data-science",

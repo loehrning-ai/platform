@@ -30,12 +30,11 @@ test.describe("QA visuals — homepage scroll capture", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
     // Section list matches the compact homepage composition: globe-led hero,
-    // course route, resource ledger, and public operating principles.
+    // course route and resource board.
     const sections: Array<[string, string]> = [
       ["hero", "[data-section='hero']"],
       ["courses", "[data-testid='kurse-section']"],
       ["resources", "[data-testid='ressourcen-section']"],
-      ["principles", "[data-testid='platform-principles']"],
     ];
 
     for (const [name, selector] of sections) {
@@ -75,8 +74,8 @@ const REVIEW_ROUTES = [
   ["foundation-ai-native", "/ai-native"],
   ["foundation-eu-ai-act", "/eu-ai-act-kurs"],
   ["foundation-reader", "/ki-fuehrerschein/kurs/block_1"],
-  ["technical-codex", "/kurse/open-source/codex"],
-  ["technical-codex-reader", "/en/kurse/open-source/codex/kurs/L01"],
+  ["technical-data-infrastructure", "/kurse/open-source/data-infrastructure"],
+  ["technical-data-infrastructure-reader", "/en/kurse/open-source/data-infrastructure/kurs/mental-model"],
   ["technical-data-science", "/kurse/open-source/data-science"],
   ["technical-data-science-reader", "/en/kurse/open-source/data-science/fund"],
   [
@@ -129,8 +128,16 @@ test.describe("QA visuals — representative route matrix", () => {
           page.getByRole("heading", { level: 1 }).first(),
         ).toBeVisible();
         if (route === "/" || route === "/en") {
+          // The desktop projection from lg, the phone window's server frame
+          // below it (reduced motion keeps it static).
           await expect(
-            page.locator("[data-hero-network-motion]").first(),
+            page
+              .locator(
+                viewport.width >= 1024
+                  ? "[data-hero-network-motion]"
+                  : "[data-home-globe-ssr]",
+              )
+              .first(),
           ).toBeAttached();
         }
         await page.evaluate(async () => document.fonts.ready);

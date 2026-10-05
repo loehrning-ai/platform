@@ -1,16 +1,15 @@
 // ─── AI-Native Operator Course config ────────────────
 //
-// Own module (mirroring `lib/codex/config.ts`/`lib/data-science/config.ts`)
+// Own module (mirroring `lib/data-science/config.ts`)
 // so the course-config object lives beside its own content module;
 // `lib/course/config.ts` imports and re-exports it into the shared
 // registry, so `getCourseConfig("ai-native-operator")` works exactly like
 // every other course.
 //
-// Unlike codex/data-infrastructure/data-engineering-fundamentals/
-// data-science, this course DOES have a real quiz gate: 9 module
-// knowledge-checks pooled into one 22-question final quiz (
-// stage 3), so it follows claude's quiz-gated `CourseConfig` shape rather
-// than generic "completion" fallback.
+// Unlike data-infrastructure/data-engineering-fundamentals/data-science,
+// this course DOES have a real quiz gate: 9 module knowledge-checks pooled
+// into one 22-question final quiz (stage 3), so it uses a quiz-gated
+// `CourseConfig` shape rather than the generic "completion" fallback.
 
 import type { CourseConfig } from "@/lib/course/types";
 import { createLocalizedTechnicalCourseConfig } from "@/lib/technical-courses/routes";

@@ -102,7 +102,7 @@ export async function settleWholePage(
       async ([factor, fontBudget, frameBudget, maxSteps, perStep]) => {
         // Frames per scroll step is per-caller because the specs this helper
         // replaced did not agree. The locale specs waited one frame per step;
-        // route-claude-responsive and route-ai-native-operator waited two, and
+        // the former responsive course specs and route-ai-native-operator waited two, and
         // standardising them all on one was measured to break the first click
         // after the walk on WebKit (4 of 5 runs). Each call site keeps the
         // cadence it had; only the bounding is new.

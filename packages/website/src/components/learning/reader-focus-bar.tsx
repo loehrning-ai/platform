@@ -64,23 +64,33 @@ export interface ReaderFocusBarProps {
   readonly children?: ReactNode;
   /** The next action. Omitted when a reader has nowhere further to go. */
   readonly action?: ReaderFocusBarAction;
+  /**
+   * "app" is the course-app bar of the Grundlagen lesson reader: frosted
+   * paper, a Kobalt pill action in sentence case. Same geometry as "werk".
+   */
+  readonly tone?: "werk" | "app";
 }
 
+const APP_ACTION_CLASS_NAME =
+  "inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-lab-accent px-5 text-[15px] font-semibold text-paper shadow-lab-sm outline-none transition-colors duration-150 hover:bg-[#1f3a99] focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper motion-reduce:transition-none";
+
 const ACTION_CLASS_NAME =
-  "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-kupfer-dark focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
 function ReaderFocusAction({
   action,
   reserveContextSpace,
+  tone,
 }: {
   readonly action: ReaderFocusBarAction;
   readonly reserveContextSpace: boolean;
+  readonly tone: "werk" | "app";
 }) {
   const arrow = <ArrowRight aria-hidden="true" className="size-4 shrink-0" />;
   // Reserve room for real position/contents controls, not an empty leading cell.
   // Long labels wrap within their allocation rather than hiding the action.
   const actionClassName = cn(
-    ACTION_CLASS_NAME,
+    tone === "app" ? APP_ACTION_CLASS_NAME : ACTION_CLASS_NAME,
     reserveContextSpace ? "max-w-[60%]" : "max-w-full",
   );
   const labelClassName = "min-w-0 whitespace-normal [overflow-wrap:anywhere]";
@@ -120,12 +130,20 @@ export function ReaderFocusBar({
   positionLabel,
   children,
   action,
+  tone = "werk",
 }: ReaderFocusBarProps) {
   const reserveContextSpace = position !== undefined || children != null;
+  const app = tone === "app";
   return (
     <div
       data-reader-focus-bar
-      className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background px-safe pb-safe lg:hidden"
+      data-reader-focus-tone={tone}
+      className={cn(
+        "no-print fixed inset-x-0 bottom-0 z-40 px-safe pb-safe lg:hidden",
+        app
+          ? "course-app-frost border-t border-lab-line/80"
+          : "border-t border-border bg-background",
+      )}
     >
       <div
         data-reader-focus-bar-row
@@ -140,7 +158,11 @@ export function ReaderFocusBar({
         ) : (
           <p
             data-reader-focus-position
-            className="min-w-0 flex-1 truncate font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground"
+            className={
+              app
+                ? "min-w-0 flex-1 truncate text-[14px] font-semibold tabular-nums text-muted-foreground"
+                : "min-w-0 flex-1 truncate font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground"
+            }
           >
             {positionLabel ? (
               <>
@@ -157,6 +179,7 @@ export function ReaderFocusBar({
           <ReaderFocusAction
             action={action}
             reserveContextSpace={reserveContextSpace}
+            tone={tone}
           />
         ) : null}
       </div>

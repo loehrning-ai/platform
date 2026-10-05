@@ -3,14 +3,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { splitTitle } from "@/app/workshops/workshop-title";
-import { WORKSHOP_PAGE_COPY } from "@/app/workshops/workshop-copy";
-import { HOME_COPY } from "@/components/home/home-copy";
 import { BOOK_PAGE_COPY } from "@/app/buecher/book-copy";
 import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
-import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
 import { demoName } from "@/lib/demos";
@@ -95,20 +92,14 @@ function literal(id: string, file: string, parts: readonly string[]): PosterTitl
 const COURSE_LITERALS = [
   { file: "src/app/ki-fuehrerschein/page.tsx", de: ["Welche Daten", "ins KI-Tool dürfen."], en: ["Which data may go", "into an AI tool."] },
   { file: "src/app/eu-ai-act-kurs/page.tsx", de: ["Rollen, Risiken und", "Pflichten einordnen."], en: ["Map roles, risks,", "and duties."] },
-  { file: "src/app/ki-und-gesellschaft/page.tsx", de: ["Arbeit, Deepfakes", "und Bias einordnen."], en: ["Assess work, deepfakes,", "and bias."] },
-  { file: "src/app/ai-native/page.tsx", de: ["Routinearbeit mit Claude automatisieren."], en: ["Automate routine work with Claude."] },
-  { file: "src/app/kurse/open-source/claude/page.tsx", de: ["Claude mit klarer Struktur einsetzen."], en: ["Use Claude with clear structure."] },
-  { file: "src/app/ai-native/capstone-gallery/page.tsx", de: ["Noch keine veröffentlichten Capstones."], en: ["No published capstones."] },
-] as const;
-
-const PAGE_LITERALS = [
-  { file: "src/app/blog/page.tsx", de: ["KI im Alltag, mit Quellen erklärt."], en: ["Everyday AI, explained with sources."] },
+  { file: "src/app/ki-und-gesellschaft/page.tsx", de: ["Zahlen, Fakes,", "Fairness prüfen."], en: ["Check numbers, fakes,", "and fairness."] },
+  { file: "src/app/ai-native/page.tsx", de: ["Erst messen. Dann automatisieren."], en: ["Measure first. Then automate."] },
 ] as const;
 
 /**
  * Every band H1 writes `posterTitleFallbackStyle()`: `font-display: optional`
- * can leave a first visit on the Arial-metric fallback face, about 4.4%
- * wider, and "Geschäftsberichte" then ran 5px into the gutter at 390.
+ * can leave a first visit on the Arial-metric fallback face, up to about 4%
+ * wider than Figtree, and a long word would then run into the gutter.
  */
 function withFallbackFit(surface: Surface): Surface {
   return {
@@ -129,23 +120,9 @@ const SURFACES: readonly Surface[] = ([
       })),
     ),
   },
-  {
-    name: "workshops hub band",
-    layout: "band-art",
-    files: ["src/app/workshops/workshops-content.tsx"],
-    titles: LOCALES.map((locale) => ({ id: `hub ${locale}`, text: WORKSHOP_PAGE_COPY[locale].catalog.hubHeading })),
-  },
-  {
-    name: "home hero band",
-    layout: "band-art",
-    files: ["src/components/home/hero.tsx", "src/components/home/phone-hero.css"],
-    // hero.tsx binds the first two parts ("KI verstehen.") with a no-break
-    // space and adds the fallback headroom, so that line never breaks.
-    titles: LOCALES.map((locale) => {
-      const text = noBreakFirstLine(HOME_COPY[locale].hero.headline);
-      return { id: `home ${locale}`, text, fit: fallbackFitEm(text) };
-    }),
-  },
+  // The workshops hub and the home hero are no poster titles any more: the
+  // owner asked for the old highlighted hub heading and the old paper hero
+  // with the line globe back.
   {
     name: "demos hub band",
     layout: "band",
@@ -164,12 +141,8 @@ const SURFACES: readonly Surface[] = ([
       })),
     ),
   },
-  {
-    name: "blog index band",
-    layout: "band",
-    files: ["src/app/blog/page.tsx", "src/app/blog/_styles/blog-index.css"],
-    titles: LOCALES.map((locale) => literal(`blog ${locale}`, PAGE_LITERALS[0].file, PAGE_LITERALS[0][locale])),
-  },
+  // The blog index is the old bold index again (the giant "Blog."), not a
+  // poster band.
   {
     name: "/kurse headline on paper",
     layout: "band",
@@ -205,7 +178,6 @@ const SURFACES: readonly Surface[] = ([
     files: ["src/components/course/technical-course-landing.tsx"],
     titles: [
       ...LOCALES.flatMap((locale) => [
-        { id: `codex ${locale}`, text: getCodexCourseCopy(locale).landing.title },
         { id: `ai-native-operator ${locale}`, text: getAiNativeOperatorCourseCopy(locale).landing.title },
         { id: `data-infrastructure ${locale}`, text: getDataInfraCourseCopy(locale).landing.title },
         {
@@ -224,7 +196,7 @@ const SURFACES: readonly Surface[] = ([
 
 describe("poster title metrics", () => {
   it("were measured from the bold web font on disk", () => {
-    const font = readFileSync(join(WEBSITE, "public/fonts/loehrning-sans-bold-v1.woff2"));
+    const font = readFileSync(join(WEBSITE, "public/fonts/figtree-bold-v1.woff2"));
     expect(
       createHash("sha256").update(font).digest("hex"),
       "the font changed: run node scripts/plakat/build-type-metrics.mjs",
@@ -233,13 +205,13 @@ describe("poster title metrics", () => {
 
   it("match the headline widths Chromium sets with -0.04em tracking", () => {
     // DOM widths of a span at 1000px, 700, letter-spacing -0.04em (Chromium
-    // 141, Loehrning Sans Bold), measured when the table was built.
+    // 141, Figtree Bold), measured when the table was built.
     const measured = {
-      "Geschäftsberichte": 7.732109375,
-      "Arbeitsabläufe": 6.176328125,
-      Workshops: 4.837265625,
-      "verstehen.": 4.501859375,
-      "anwenden.": 4.699578125,
+      "Geschäftsberichte": 7.842,
+      "Arbeitsabläufe": 6.219,
+      Workshops: 4.765,
+      "verstehen.": 4.426,
+      "anwenden.": 4.633,
     };
     for (const [word, em] of Object.entries(measured)) {
       expect(segmentEm(word), word).toBeCloseTo(em, 3);
@@ -306,9 +278,9 @@ describe("fitEm", () => {
 
   it("gives the spec's reference sizes (SPEC §4)", () => {
     const report = fitEm("Geschäftsberichte mit KI lesen");
-    // 36px at 320 and about 45px at 390: one line, never broken.
+    // About 36px at 320 and 44px at 390 in Figtree Bold: one line, never broken.
     expect(posterTitleSize(report, column("band-art", 320), 320)).toBeCloseTo(36, 0);
-    expect(posterTitleSize(report, column("band-art", 390), 390)).toBeCloseTo(45, 0);
+    expect(posterTitleSize(report, column("band-art", 390), 390)).toBeCloseTo(44, 0);
     // KI-Arbeitsabläufe breaks after the hyphen: 45px at 320.
     expect(longestSegment("KI-Arbeitsabläufe prüfen").segment).toBe("Arbeitsabläufe");
     expect(posterTitleSize(fitEm("KI-Arbeitsabläufe prüfen"), 288, 320)).toBeCloseTo(45, 0);
@@ -323,11 +295,8 @@ describe("the poster title registry", () => {
   it("covers every surface the spec sets in the poster size", () => {
     expect(SURFACES.map((surface) => surface.name)).toEqual([
       "workshop detail bands",
-      "workshops hub band",
-      "home hero band",
       "demos hub band",
       "demo detail bands",
-      "blog index band",
       "/kurse headline on paper",
       "paper page headlines",
       "course landing bands",

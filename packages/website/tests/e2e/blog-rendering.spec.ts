@@ -15,14 +15,14 @@ const LOCALES = [
     prefix: "",
     articleTitle: /EU AI Act/,
     indexIntro: /Artikel zum EU AI Act/,
-    indexKicker: /^Blog · \d+ Artikel$/,
+    indexIssue: /^\d+ Artikel$/,
   },
   {
     locale: "en",
     prefix: "/en",
     articleTitle: /The EU AI Act/,
     indexIntro: /Articles on the EU AI Act/,
-    indexKicker: /^Blog · \d+ articles?$/,
+    indexIssue: /^\d+ articles?$/,
   },
 ] as const;
 
@@ -32,9 +32,17 @@ for (const variant of LOCALES) {
   }) => {
     await page.goto(`${variant.prefix}/blog`);
     await expect(page.locator("html")).toHaveAttribute("lang", variant.locale);
-    await expect(page.locator("h1")).toBeVisible();
-    await expect(page.getByText(variant.indexKicker)).toBeVisible();
+    await expect(page.locator("h1")).toHaveText("Blog.");
+    // The risograph issue sheet names the newest number and the count.
+    const issue = page.locator('[data-risograph-sheet="issue"]');
+    await expect(issue).toBeVisible();
+    await expect(issue.locator("b")).toHaveText(variant.indexIssue);
+    await expect(issue).toContainText(/Nº \d{2}/);
     await expect(page.locator("main")).toContainText(variant.indexIntro);
+    // One featured sheet for the newest post, earlier posts below it.
+    await expect(
+      page.locator('[data-editorial-article="featured"]'),
+    ).toHaveCount(1);
     await expect(
       page
         .locator(`a[href="${variant.prefix}/blog/eu-ai-act-grundlagen"]`)

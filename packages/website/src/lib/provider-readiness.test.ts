@@ -17,7 +17,10 @@ import {
   isGithubOAuthRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
+  isOpenAIRuntimeReady,
   isPracticeModelRuntimeReady,
+  openaiPracticeModel,
+  openaiRetentionDays,
   practiceAllowedModels,
   practiceModelAllowlistDecision,
   turnstileSiteKey,
@@ -168,6 +171,76 @@ describe("provider runtime readiness", () => {
       vi.stubEnv("GEMINI_DPA_CONFIRMED_AT", "2026-07-01");
       vi.stubEnv("GEMINI_PAID_TIER_CONFIRMED_AT", "2026-07-01");
       vi.stubEnv("GEMINI_RETENTION_DAYS", "0");
+    }
+  });
+
+  it("activates OpenAI only with key, DPA, retention, pinned model, allowlist, quota, and Supabase gates", () => {
+    function configureOpenAI(): void {
+      configureCompleteRuntime();
+      vi.stubEnv("ANTHROPIC_API_KEY", "");
+      vi.stubEnv("AI_NATIVE_PRACTICE_ALLOWED_MODELS", "openai/gpt-5-mini");
+      vi.stubEnv("OPENAI_API_KEY", "obviously-fake-openai-key");
+      vi.stubEnv("OPENAI_DPA_CONFIRMED_AT", "2026-07-01");
+      vi.stubEnv("OPENAI_RETENTION_DAYS", "30");
+      vi.stubEnv("OPENAI_PRACTICE_MODEL", "");
+    }
+
+    configureOpenAI();
+    expect(openaiRetentionDays()).toBe(30);
+    expect(openaiPracticeModel()).toBe("gpt-5-mini");
+    expect(isOpenAIRuntimeReady()).toBe(true);
+    expect(isPracticeModelRuntimeReady("openai/gpt-5-mini")).toBe(true);
+    // The OpenAI gate never stands in for another provider's gate.
+    expect(isPracticeModelRuntimeReady("anthropic/claude-haiku-4.5")).toBe(
+      false,
+    );
+    expect(isPracticeModelRuntimeReady("google/gemini-2.5-flash-lite")).toBe(
+      false,
+    );
+
+    for (const missing of [
+      "OPENAI_API_KEY",
+      "OPENAI_DPA_CONFIRMED_AT",
+      "OPENAI_RETENTION_DAYS",
+      "SUPABASE_SERVICE_ROLE_KEY",
+      "RATE_LIMIT_HMAC_SECRET",
+      "AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET",
+      "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+    ]) {
+      vi.stubEnv(missing, "");
+      expect(
+        isPracticeModelRuntimeReady("openai/gpt-5-mini"),
+        missing,
+      ).toBe(false);
+      configureOpenAI();
+    }
+
+    vi.stubEnv("AI_NATIVE_PRACTICE_ENABLED", "false");
+    expect(isPracticeModelRuntimeReady("openai/gpt-5-mini")).toBe(false);
+
+    configureOpenAI();
+    vi.stubEnv("OPENAI_DPA_CONFIRMED_AT", "2999-01-01");
+    expect(isOpenAIRuntimeReady()).toBe(false);
+
+    configureOpenAI();
+    for (const retention of ["-1", "1.5", "3651", "unknown"]) {
+      vi.stubEnv("OPENAI_RETENTION_DAYS", retention);
+      expect(isOpenAIRuntimeReady(), retention).toBe(false);
+    }
+  });
+
+  it("pins OpenAI to gpt-5-mini or one of its dated snapshots", () => {
+    vi.stubEnv("OPENAI_PRACTICE_MODEL", "gpt-5-mini-2025-08-07");
+    expect(openaiPracticeModel()).toBe("gpt-5-mini-2025-08-07");
+    for (const other of [
+      "gpt-5",
+      "gpt-4o",
+      " gpt-5-mini",
+      "gpt-5-mini-latest",
+      "openai/gpt-5-mini",
+    ]) {
+      vi.stubEnv("OPENAI_PRACTICE_MODEL", other);
+      expect(openaiPracticeModel(), other).toBeNull();
     }
   });
 

@@ -35,9 +35,7 @@ describe("completion-evidence surface contract", () => {
 
   it("keeps lesson-level completion indicators on the shared evidence selector", () => {
     for (const relativePath of [
-      "components/ai-native/kurs/lesson-progress-ring.tsx",
       "components/progress/lesson-progress-ring.tsx",
-      "components/ai-native/kurs/lesson-reader.tsx",
     ]) {
       expect(source(relativePath), relativePath).toContain(
         "isEvidenceBackedLessonCompleted",

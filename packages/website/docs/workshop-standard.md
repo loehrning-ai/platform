@@ -41,7 +41,6 @@ Required components are marked R. Conditional ones (C) are added when the topic 
 | Component | Registry role | Phase | R/C | Job | Size |
 |---|---|---|---|---|---|
 | **Brief** | registry fields | before | R | Lets someone decide in 30 seconds whether this is for them | Detail-page hero and facts |
-| **Warm-up question** | `decisionLab` | before | R | One decision and its strongest evidence, before any teaching | 2 minutes |
 | **Deck and presenter view** | `deck`, `presenter` | during | R | Carries the session along the spine | 60 to 80 minutes, 18 to 30 scenes plus appendix |
 | **Demo** | `demo` | during | C | Shows one mechanism a slide cannot, final state visible on load | 10 minutes or less |
 | **Practice task** | `lab`, `exercise`, `case` | during | R | The learner does the method once on the case, with support | 12 to 25 minutes |
@@ -58,8 +57,6 @@ An optional **builder guide** (`builder`) for data teams is allowed. It never co
 Each bar is written so a person or a test can check it.
 
 **Brief.** Three or four outcomes, each starting from a verb you can observe (DE: ausrechnen, prüfen, erkennen, aufschreiben, begründen, vergleichen, festlegen, nennen, entscheiden; EN: work out, check, spot, write down, argue, compare, set, name, decide). No outcome uses verstehen, kennen, lernen, wissen, understand, know, learn, master. Needs are exact: app name and surface, plan, operating system, browser. Two to four items the workshop does not cover. No adjectives about the workshop itself (praxisnah, spannend, hands-on, kompakt). The catalogue `summary` stays at or under 160 characters; `duration` stays "~90 Minuten" / "~90 minutes"; `accessNote` is at most two sentences and is the one place access is stated.
-
-**Warm-up question.** The same situation as the deck's opening vote, repeated at the close. Three decisions and three pieces of evidence, each wrong option pointing at one named misconception. Feedback of 40 words or fewer. Nothing is stored or sent, and the page says so.
 
 **Deck.** Every scene carries `data-act`, `data-label`, `data-seconds`, `data-note`, `data-kind="main|appendix"`. The main path is at most the slot minus 15 percent. One new idea per scene, no text block over 25 words except quoted AI output. Every AI answer is labelled as recorded, with its date. A cut list frees at least 10 minutes without losing an outcome. A self-study mode shows the notes below each scene.
 
@@ -81,28 +78,27 @@ Each bar is written so a person or a test can check it.
 
 ## 5. The detail page
 
-The page opens with the workshop's poster band, then the brief on paper. Together they answer six questions: what problem (caps line, title, summary), where I start (one primary button for the `primary` material, one secondary button for a demo or lab, else "Material ansehen"), which question (the q-card with `question`), how long (`minutesLive`, `minutesSelfStudy`), what I need (the most limiting item from `needs`) and what I leave with (`outcome`). On a 390 by 664 phone the start button sits in the first screen and the decision lab starts within 1.7 screens.
+The page opens with the workshop's poster band, then the brief on paper. Together they answer six questions: what problem (caps line, title, summary), where I start (one primary button for the `primary` material, one secondary button for a demo or lab, else "Material ansehen"), which question (the q-card with `question`), how long (`minutesLive`, `minutesSelfStudy`), what I need (the most limiting item from `needs`) and what I leave with (`outcome`). On a 390 by 664 phone the start button sits in the first screen. The detail page carries no in-page exercise ("Ausprobieren") band: the deck's opening vote and the practice task do that work, so the materials follow the agenda directly.
 
 ### 5.1 The poster band and the brief
 
 - **One palette per workshop.** `WORKSHOP_PLAKAT` in `src/lib/plakat/palettes.ts` is the only mapping: 01 Lemons, 02 IDEA, 03 Bloom, 04 Autumn. The band, the hub poster, the social card, the deck cover and the static materials all read it. Four workshops, four palettes; a fifth workshop needs a new decision, never a second mapping.
 - **The band** (`PlakatBand`, scope `plakat-<key>`, and `data-plakat-page` on the page wrapper) holds only this, in order: on phones the back link, the caps line (`workshop.eyebrow`), the poster title (the title head at poster size through the fit rule, the subtitle inside the h1 at 17px), the summary at 17px and the scene buttons. The art is the workshop's poster with its numeral: the right column from lg, a strip after the buttons below lg (96px on phones, 160px from sm, 192px from md, so a tablet band still reads as a poster). Below 360px the poster step drops to 42px and the gaps tighten, so the start button stays above the tab bar at 320x568. Three type sizes at most. No q-card, meta line, chip, `text-caption` or `text-label` inside the band.
-- **The brief on paper.** The q-card (paper tone, Mennige bar) and the facts line (minutes, invented case, material language, free) open the agenda section, before its Kopflinie, so the order band, agenda, lab holds. The need and the outcome follow as a short list from sm; on phones the sections below carry them.
+- **The brief on paper.** The q-card (paper tone, Mennige bar) and the facts line (minutes, invented case, material language, free) open the agenda section, before its Kopflinie, so the order band, agenda, materials holds. The need and the outcome follow as a short list from sm; on phones the sections below carry them.
 - **Rost rules (Autumn, Workshop 04 today).** Creme on Rost is 4.80:1, just above AA, so inside an autumn scene all text is 17px or larger at weight 400 or more, there is no muted tier and no reduced opacity, hover underlines or inverts and never tints, and no q-card, status chip, badge, form field or progress bar sits in the band. A meaningful shape uses Ocker hell; Ocker is decoration only.
-- **Below the band** the Kopflinien and the tab marker take the scene's paper ink. Headings stay Druckschwarz. The result chart (`caseStudy.resultChart`, section 7 of the page) sits on Kalkweiß: bars from zero on one scale, the unchecked AI answer hatched, every value a direct label printed elsewhere in the workshop's copy.
+- **Below the band** the Kopflinien and the tab marker take the scene's paper ink. Headings stay Druckschwarz. The result chart (`caseStudy.resultChart`, section 6 of the page) sits on Kalkweiß: bars from zero on one scale, the unchecked AI answer hatched, every value a direct label printed elsewhere in the workshop's copy.
 
 Below the brief, in this order:
 
 1. **Danach kannst du / After this you can**: the `outcomes`, visible, not in an accordion.
 2. **Ablauf / Agenda**: one station per `agenda` item with its label, minutes and activity mark; a toggle between live and self-study where both exist.
-3. **Probier die erste Entscheidung / Try the first decision**: the decision lab, now after the agenda so it reads as a taste of act 1.
-4. **Material**: grouped by phase (Vor dem Workshop, Im Workshop, Danach). Each row shows role, label, a one-line purpose, minutes, format, language and size, "optional" where it applies, and an action. One row is marked "Hier starten".
-5. **Das brauchst du / Das brauchst du nicht**: `needs` and `notNeeded` in two columns.
-6. **Nicht Teil dieses Workshops**: `notCovered`.
-7. **Der Fall**: company, invented label, narrative, stat row, the result chart where the registry has one, decision question, what the data cannot answer, and the real case with source and dates if there is one.
-8. **Für wen**: `audience` plus the `notForYou` line.
-9. **Selbst moderieren** (only with a presenter view): how to open it, what to print.
-10. **Stand und Herkunft**: the `provenance` fields.
+3. **Material**: grouped by phase (Vor dem Workshop, Im Workshop, Danach). Each row shows role, label, a one-line purpose, minutes, format, language and size, "optional" where it applies, and an action. One row is marked "Hier starten".
+4. **Das brauchst du / Das brauchst du nicht**: `needs` and `notNeeded` in two columns.
+5. **Nicht Teil dieses Workshops**: `notCovered`.
+6. **Der Fall**: company, invented label, narrative, stat row, the result chart where the registry has one, decision question, what the data cannot answer, and the real case with source and dates if there is one.
+7. **Für wen**: `audience` plus the `notForYou` line.
+8. **Selbst moderieren** (only with a presenter view): how to open it, what to print.
+9. **Stand und Herkunft**: the `provenance` fields.
 
 The four collapsed "Referenz" accordions, the steps list with tool chips, and the count row ("6 Schritte", "3 Dateien") go away. Counts of steps and files say nothing about effort; minutes do.
 

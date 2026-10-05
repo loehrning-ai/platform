@@ -215,12 +215,13 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         minWidth: 0,
       }}
     >
-      {/* File bar: ink band with the file name as data; no product
-          colours or logo. Below sm it merges with the formula bar into one
-          light row ("Absatz-KW14-16.xlsx · F2 = Wachstum W/W"). */}
+      {/* File bar: a pastel Himmel-Blatt band with the file name as data in
+          ink, never a black band; no product colours or logo. Below sm it
+          merges with the formula bar into one light row
+          ("Absatz-KW14-16.xlsx · F2 = Wachstum W/W"). */}
       <div
         data-excel-file-bar
-        className="min-h-8 bg-[#0B0908] px-2.5 py-[7px] text-[12px] text-[#F3F0E9] max-sm:bg-[#F7F4ED] max-sm:py-1 max-sm:text-[13px] max-sm:text-[#0B0908]"
+        className="min-h-8 bg-sky-sheet px-2.5 py-[7px] text-[12px] text-[#0B0908] max-sm:bg-[#F7F4ED] max-sm:py-1 max-sm:text-[13px]"
         style={{
           display: "flex",
           alignItems: "center",

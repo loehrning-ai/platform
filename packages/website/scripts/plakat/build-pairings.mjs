@@ -164,7 +164,14 @@ const PAPER = {
   bogen: themeHex("--color-card"),
   beton: themeHex("--color-inset"),
 };
-const GRAPHIT = themeHex("--color-dark-bg");
+// The light grounds that replaced the retired graphit band (the site has no
+// black grounds): the footer's Pfirsich-Wash, the Himmel-Wash band and the
+// pastel Himmel-Blatt sheet.
+const LIGHT = {
+  peach: themeHex("--color-peach-wash"),
+  wash: themeHex("--color-sky-wash"),
+  sheet: themeHex("--color-sky-sheet"),
+};
 
 const RAW_TOKENS = [
   ["--color-ultramarin", "Ultramarin"],
@@ -191,7 +198,9 @@ const NAMES = new Map([
   [themeHex("--color-foreground"), "Druckschwarz"],
   [themeHex("--color-mennige"), "Mennige"],
   [themeHex("--color-kupfer-dark"), "Mennige tief"],
-  [GRAPHIT, "Graphit"],
+  [LIGHT.peach, "Pfirsich-Wash"],
+  [LIGHT.wash, "Himmel-Wash"],
+  [LIGHT.sheet, "Himmel-Blatt"],
   ...RAW_TOKENS.map(([token, name]) => [themeHex(token), name]),
 ]);
 
@@ -303,6 +312,8 @@ function sceneSection(key) {
     "--color-scene-mark": palette.mark,
     "--color-scene-accent-text": palette.accentText,
     "--color-scene-line": palette.ink,
+    "--color-scene-button": palette.button,
+    "--color-scene-button-text": palette.buttonText,
   };
   for (const [token, hex] of Object.entries(expected)) {
     if (value(token).hex !== hex) fail(`${context}: ${token} is ${value(token).hex}, palettes.ts says ${hex}`);
@@ -325,7 +336,9 @@ function sceneSection(key) {
   add("`--color-brand-orange`", value("--color-brand-orange"), ground, "Focus ring and accent text", { floor: 4.5 });
   add("`--color-kupfer`", value("--color-kupfer"), ground, "Accent text", { floor: 4.5 });
   add("`--color-kupfer-dark`", value("--color-kupfer-dark"), ground, "Accent text, pressed", { floor: 4.5 });
-  add("ground on ink", { hex: ground, note: "" }, ink, "Primary button label on an ink fill", { floor: 4.5 });
+  const button = value("--color-scene-button").hex;
+  add("button label on the fill", value("--color-scene-button-text"), button, "Primary button label (never an ink fill when the ink is dark)", { floor: 4.5 });
+  add("`--color-scene-button`", value("--color-scene-button"), ground, "Filled button against the ground", { floor: 3 });
   for (const token of ["--color-card-hover", "--color-inset"]) {
     const tint = value(token).hex;
     if (tint === ground) {
@@ -406,28 +419,34 @@ function sceneLineSection() {
   ].join("\n");
 }
 
-function graphitSection() {
-  const dark = rule(".dark-section");
-  const footer = rule(".dark-section.plakat-footer");
+function lightGroundsSection() {
   const rows = [];
   const add = (label, hex, use, limits) => {
-    const measured = contrast(hex, GRAPHIT);
-    const cell = limits.floor !== undefined ? `${limits.floor}` : `below ${limits.ceiling}`;
-    rows.push([label, swatch(hex), use, cell, ratio(measured), judge(measured, limits, `graphit ${label}`)]);
+    for (const [ground, groundName] of [[LIGHT.peach, "Pfirsich-Wash"], [LIGHT.wash, "Himmel-Wash"], [LIGHT.sheet, "Himmel-Blatt"]]) {
+      const measured = contrast(hex, ground);
+      const cell = limits.floor !== undefined ? `${limits.floor}` : `below ${limits.ceiling}`;
+      rows.push([groundName, label, swatch(hex), use, cell, ratio(measured), judge(measured, limits, `${groundName} ${label}`)]);
+    }
   };
-  add("`.dark-section` scene line", resolveColour(dark.get("--color-scene-line") ?? "", GRAPHIT), "Kopflinie in a graphit band", { floor: 4.5 });
-  add("`.dark-section` ring", resolveColour(dark.get("--color-brand-orange") ?? "", GRAPHIT), "Focus ring (footer included)", { floor: 3 });
-  add("footer `--color-foreground`", resolveColour(footer.get("--color-foreground") ?? "", GRAPHIT), "Footer text in Butter", { floor: 4.5 });
-  add("footer `--color-muted-foreground`", resolveColour(footer.get("--color-muted-foreground") ?? "", GRAPHIT), "Footer secondary text", { floor: 4.5 });
-  add("footer `--color-border`", resolveColour(footer.get("--color-border") ?? "", GRAPHIT), "Control edge (Butter at 40%)", { floor: 3 });
-  add("footer `--color-hairline`", resolveColour(footer.get("--color-hairline") ?? "", GRAPHIT), "Hairline (Butter at 16%)", { ceiling: 2 });
-  add("footer scene line", resolveColour(footer.get("--color-scene-line") ?? "", GRAPHIT), "Kopflinie in the footer", { floor: 4.5 });
+  add("`--color-foreground`", themeHex("--color-foreground"), "Text, wordmark", { floor: 4.5 });
+  add("`--color-muted-foreground`", themeHex("--color-muted-foreground"), "Links and secondary text", { floor: 4.5 });
+  add("`--color-muted`", themeHex("--color-muted"), "Captions", { floor: 4.5 });
+  add("`--color-kupfer-dark`", themeHex("--color-kupfer-dark"), "Kicker and column heads", { floor: 4.5 });
+  add("`--color-brand-orange`", themeHex("--color-brand-orange"), "Wordmark `.ai`, focus ring", { floor: 4.5 });
+  add("`--color-border`", themeHex("--color-border"), "Control edge", { floor: 3 });
+  const actionRows = [];
+  for (const [label, fill] of [["IDEA Kobalt", themeHex("--color-kobalt")], ["Kobalt (old site)", themeHex("--color-brand-cobalt")]]) {
+    const measured = contrast(themeHex("--color-paper"), fill);
+    actionRows.push([label, swatch(fill), "Filled action or selection, paper text", "4.5", ratio(measured), judge(measured, { floor: 4.5 }, `${label} action`)]);
+  }
   return [
-    "## Graphit bands",
+    "## Light grounds (no graphit)",
     "",
-    "`.dark-section` stays for the footer, the AI-Native demo engines and the home fallback. The footer adds `.plakat-footer` and sets its type in Butter.",
+    "The site has no black grounds. The graphit band (`.dark-section`, `--color-dark-*`) is retired: the footer is the Pfirsich-Wash (`--color-peach-wash`, brand-peach over Bogen), a tinted band or panel is the Himmel-Wash (`--color-sky-wash`), and a pastel sheet, a selected state or a former console head is the Himmel-Blatt (`--color-sky-sheet`). Code, logs and consoles are Beton. A filled action that is not the page's Mennige primary is Kobalt with paper text, never an ink fill; a filled scene button uses `--color-scene-button`, which is never a near-black ink (Bloom fills with Terrakotta tief, not Aubergine). The one documented exception is the owner-requested `/login` scene, scoped to `.login-scene` with its own AA ratios (see `experience-system.md`).",
     "",
-    table(["Pairing", "Colour", "Use", "Floor", "Ratio", "Result"], rows),
+    table(["Ground", "Pairing", "Colour", "Use", "Floor", "Ratio", "Result"], rows),
+    "",
+    table(["Fill", "Colour", "Use", "Floor", "Ratio", "Result"], actionRows),
   ].join("\n");
 }
 
@@ -477,11 +496,10 @@ function rejectedSection() {
     4.5,
     "No inset tint in autumn",
   );
-  const dark = rule(".dark-section");
-  const statusTones = STATUS_TOKENS.flatMap(([token]) => [themeHex(token), resolveColour(dark.get(token) ?? themeHex(token), GRAPHIT)]);
+  const statusTones = STATUS_TOKENS.map(([token]) => themeHex(token));
   const statusRatios = statusTones.map((hex) => contrast(hex, autumn.ground));
   rows.push([
-    "Paper and graphit status tones on Rost",
+    "Paper status tones on Rost",
     `${ratio(Math.min(...statusRatios))} to ${ratio(Math.max(...statusRatios))}`,
     "4.5",
     "No status UI, chip, badge or form in autumn; the scope maps every status token to the ink",
@@ -545,7 +563,7 @@ const markdown = [
   "",
   sceneLineSection(),
   "",
-  graphitSection(),
+  lightGroundsSection(),
   "",
   chartSection(),
   "",

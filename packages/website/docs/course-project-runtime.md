@@ -12,8 +12,6 @@ course records. The milestone is not server-signed evidence and is not a certifi
 | EU AI Act                     | Case lab         | Dated role, risk, obligation, and evidence file            |
 | AI-Native                     | Prompt lab       | One provider completion plus local control and handoff plan |
 | KI und Gesellschaft           | Case lab         | Provenance and stakeholder decision file                   |
-| Claude                        | Prompt lab       | Prompt comparison, output inspection, and evaluation       |
-| Codex                         | Repository lab   | Fixed server-seeded patch pipeline and inspected session diff |
 | Data Infrastructure           | Data lab         | Fixed-program incident metrics and recovery decision       |
 | Data Engineering Fundamentals | Data lab         | Fixed-program pipeline metrics and backfill decision       |
 | Data Science                  | Data lab         | Fixed-program experiment metrics and model-card decision   |
@@ -26,23 +24,9 @@ Course-specific copy, scenario, evidence, and criteria live in `src/lib/course-p
 
 - Case labs operate on resettable synthetic fixtures in the browser. They never claim to execute an
   operating-system shell, production database, or remote service.
-- The repository lab has two explicitly separate modes. Its default browser simulation changes only
-  in-browser exercise state, does not claim operating-system execution, and cannot verify or complete
-  the applied project. Its optional "isolated real run" calls `/api/course-workspace/terminal` with
-  one exact ten-step command-ID sequence. The route creates a fresh Vercel Sandbox Node 24 microVM
-  from the explicitly configured immutable `COURSE_TERMINAL_SANDBOX_IMAGE` digest, with
-  `networkPolicy: "deny-all"`, `persistent: false`, a 60-second lifetime, 10-second per-command
-  timeouts, and four server-seeded synthetic
-  files. It accepts no learner command text, arguments, repository, files, credentials, or network
-  destination. The request schema rejects subsets, reordered steps, and repetitions. The response
-  contains the real stdout, stderr, exit codes, and Git diff. Current-session project acceptance
-  unlocks only when the server
-  observes the expected baseline, failing pre-fix test, bounded fix, passing post-fix test, source
-  syntax check, clean `git diff --check`, one-file scoped diff, and untruncated canonical results.
-  The browser revalidates that session response before enabling local acceptance. Learning progress
-  stores only bounded fixed flags, never stdout, stderr, or diff. Those persisted flags are
-  client-validated learning evidence, not a durable server attestation. The VM is stopped in
-  `finally`.
+- No course uses a repository lab since the Codex course was removed. The terminal route still
+  accepts its retired ten-step `pipeline-quality` fixture; removing that server contract is a
+  separate change.
 - The three data workbenches use the isolated route with separate, exact two-command contracts. Each
   fresh Node 24 workspace receives one generated fixture program and two invariant tests. Data
   Science executes a 249-row leakage/peeking experiment and compares the registered +5 pp metric to
@@ -65,8 +49,8 @@ Course-specific copy, scenario, evidence, and criteria live in `src/lib/course-p
   allowlist, per-provider DPA/retention gates, and daily caller/global token quotas reserved
   together through a service-role-only database transaction. Authenticated practice and grading
   share one account namespace; anonymous grading remains pseudonymous-IP-bound. Supported reviewed
-  IDs are `anthropic/claude-haiku-4.5` and
-  `google/gemini-2.5-flash-lite`; each maps server-side to one pinned upstream model. The browser
+  IDs are `anthropic/claude-haiku-4.5`, `google/gemini-2.5-flash-lite`, and
+  `openai/gpt-5-mini`; each maps server-side to one pinned upstream model. The browser
   receives and sends no credential.
 
 ## Progress and assessment
@@ -99,9 +83,38 @@ browser. Before another provider is admitted, all of the following must exist:
 - usage-only audit records by default, with raw prompts and responses excluded;
 - live authenticated proof in the target environment.
 
+OpenAI (`openai/gpt-5-mini`) went through this gate in code: allowlist entry, server-only key,
+DPA and retention markers, shared quotas, timeout and status mapping, and usage-only logs. The
+terms review, the project spend limit, and live authenticated proof are still open and belong to
+the deployer before the id is added to `AI_NATIVE_PRACTICE_ALLOWED_MODELS`.
+
 These counters reserve estimated tokens or run counts. They do not measure price, currency, billed
 usage, provider account balance, or total spend; billing controls must be configured and verified at
 the provider separately.
+
+### OpenAI
+
+`openai/gpt-5-mini` calls the OpenAI Responses API (`POST https://api.openai.com/v1/responses`)
+with plain `fetch`, so it runs on the edge runtime like Gemini. It uses the same abort signal,
+15-second timeout, output caps (800 tokens for completions, 200 for word placement), status
+mapping, and quotas as the other providers. It sends `store: false` and minimal reasoning effort,
+never reads provider error bodies, and maps `usage.input_tokens`, `usage.output_tokens`, and
+`usage.input_tokens_details.cached_tokens` into the usage-only log. Output text comes from
+assistant `message` items with `output_text` parts; a refusal or empty answer is a malformed
+response, never invented text.
+
+The model is off unless all of these are set: `AI_NATIVE_PRACTICE_ENABLED=true`, the id in
+`AI_NATIVE_PRACTICE_ALLOWED_MODELS`, both daily token budgets, `OPENAI_API_KEY`, a past-dated
+`OPENAI_DPA_CONFIRMED_AT`, `OPENAI_RETENTION_DAYS`, and the complete Supabase configuration.
+`OPENAI_PRACTICE_MODEL` may pin a dated `gpt-5-mini-YYYY-MM-DD` snapshot; any other value fails
+closed, because a different model needs its own reviewed public id. The privacy notice lists
+OpenAI only when this gate passes.
+
+The key must come from a dedicated OpenAI Platform project for this site, with a monthly spend
+limit and alerts set in that project. A personal ChatGPT or Codex subscription is not an API
+credential: its terms cover the account holder's own use, there is no data-processing agreement
+for site visitors, and its token would sit on a shared server. The site never proxies such a
+login. Confirm the project's retention period and data-residency setting before setting the date.
 
 Gemini free-tier traffic is not admitted for learner free text because its data-use terms differ
 from paid service. `GEMINI_PAID_TIER_CONFIRMED_AT` is a deployer-supplied review marker only: the
@@ -119,12 +132,14 @@ Primary references:
 - Gemini REST text generation: <https://ai.google.dev/gemini-api/docs/generate-content/text-generation>
 - Gemini models: <https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash-lite>
 - Anthropic model IDs: <https://platform.claude.com/docs/en/about-claude/models/overview>
+- OpenAI Responses API: <https://platform.openai.com/docs/api-reference/responses>
+- OpenAI API data controls: <https://platform.openai.com/docs/guides/your-data>
 
 ## Exact live-proof boundary
 
 This implementation has local type, unit, route, SDK-shape, and environment-contract proof only.
 The tests inject fake provider clients, fake REST responses, and a fake Sandbox factory. They do not
-call Anthropic, Google, Vercel Sandbox, Supabase, or a deployed route.
+call Anthropic, Google, OpenAI, Vercel Sandbox, Supabase, or a deployed route.
 
 A live claim requires all of the following evidence from the target deployment, separately:
 

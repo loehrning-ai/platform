@@ -129,7 +129,7 @@ describe("root social image", () => {
     const config = readFileSync(resolve(process.cwd(), "next.config.ts"), "utf8");
     for (const routeKey of ["/opengraph-image", "/en/opengraph-image"]) {
       expect(config).toContain(
-        `"${routeKey}": ["./src/fonts/LoehrningSans-*.ttf"]`,
+        `"${routeKey}": ["./src/fonts/Figtree-*.ttf"]`,
       );
     }
   });

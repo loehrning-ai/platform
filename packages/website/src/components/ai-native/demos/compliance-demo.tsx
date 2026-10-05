@@ -206,7 +206,7 @@ function renderMaskMode(
     parts.push(
       <span
         key={`m${i}`}
-        className="bg-foreground px-1.5 py-0.5 font-mono text-[12px] font-bold text-background"
+        className="border border-foreground bg-sky-sheet px-1.5 py-0.5 font-mono text-[12px] font-bold text-foreground"
       >
         {maskLabel}
       </span>,
@@ -259,7 +259,7 @@ export function ComplianceDemo(): JSX.Element {
                 className={cn(
                   "inline-flex min-h-11 min-w-11 items-center justify-center border px-2.5 py-1 font-mono text-[12px] font-bold uppercase tracking-[0.1em] transition-colors",
                   active
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-foreground border-b-[3px] bg-sky-sheet text-foreground"
                     : "border-border text-foreground hover:border-foreground",
                 )}
                 aria-pressed={active}
@@ -307,7 +307,7 @@ export function ComplianceDemo(): JSX.Element {
               className={cn(
                 "min-h-11 px-3.5 py-1.5 font-mono text-[12px] font-bold uppercase tracking-[0.14em] transition-colors",
                 mode === m
-                  ? "bg-foreground text-background"
+                  ? "bg-sky-sheet text-foreground shadow-[inset_0_-3px_0_var(--color-foreground)]"
                   : "text-foreground hover:bg-card",
               )}
             >

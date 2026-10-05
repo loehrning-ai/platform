@@ -23,6 +23,7 @@ interface OpenWithYourAiRegionProps {
   readonly contextTitle: string;
   readonly resources: readonly OpenWithYourAiResource[];
   readonly locale: Locale;
+  readonly look?: "werk" | "app";
 }
 
 export function OpenWithYourAiRegion({
@@ -30,6 +31,7 @@ export function OpenWithYourAiRegion({
   contextTitle,
   resources,
   locale,
+  look,
 }: OpenWithYourAiRegionProps) {
   if (resources.length === 0) return null;
   if (!getAgentRuntimeFeatures().agentAccess) return null;
@@ -42,6 +44,7 @@ export function OpenWithYourAiRegion({
       serverUrl={absoluteUrl(MCP_ENDPOINT_PATH)}
       helpHref={localizeHref(AGENT_HELP_PATH, locale)}
       locale={locale}
+      look={look}
     />
   );
 }

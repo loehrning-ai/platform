@@ -320,7 +320,7 @@ describe("fetchUnifiedProgressForUser", () => {
   });
 
   it("upgrades pre-cutover server rows without changing schema v3 or awarding marker XP", async () => {
-    const lessonId = "modul_1_lesson_1";
+    const lessonId = "messen-1-1";
     table.rows.set(key(USER, "ai-native"), {
       user_id: USER,
       course_slug: "ai-native",
@@ -362,7 +362,7 @@ describe("fetchUnifiedProgressForUser", () => {
   });
 
   it("does not grandfather a raw completion on a post-cutover server row", async () => {
-    const lessonId = "modul_1_lesson_1";
+    const lessonId = "messen-1-1";
     table.rows.set(key(USER, "ai-native"), {
       user_id: USER,
       course_slug: "ai-native",
@@ -508,7 +508,7 @@ describe("fetchUnifiedProgressForUser", () => {
     });
   });
 
-  it("ignores a canonical course row containing fabricated lesson IDs without poisoning valid rows", async () => {
+  it("drops fabricated or retired lesson IDs from a stored row instead of rejecting the row or poisoning valid rows", async () => {
     table.rows.set(key(USER, "ai-native"), {
       user_id: USER,
       course_slug: "ai-native",
@@ -546,8 +546,59 @@ describe("fetchUnifiedProgressForUser", () => {
     );
     expect(fetched.ok).toBe(true);
     if (!fetched.ok) throw new Error("unreachable");
-    expect(fetched.result.progress?.courses["ai-native"]).toBeUndefined();
+    // Lesson IDs can be retired by a content port (KI-Führerschein moved to
+    // the lesson engine). The row keeps its quiz and timestamps; only the
+    // unknown lesson entry is dropped, so later syncs of the row succeed.
+    expect(fetched.result.progress?.courses["ai-native"]?.lessons).toEqual({});
     expect(fetched.result.progress?.courses["ki-fuehrerschein"]).toBeDefined();
+  });
+
+  it("keeps a passed quiz from a pre-engine KI-Führerschein row while dropping its retired lessons", async () => {
+    table.rows.set(key(USER, "ki-fuehrerschein"), {
+      user_id: USER,
+      course_slug: "ki-fuehrerschein",
+      progress: {
+        schemaVersion: 3,
+        slice: slice({
+          lessons: {
+            block_1_lesson_1: {
+              sectionsRead: ["block_1_lesson_1_section_1"],
+              quizScore: 1,
+              quizTotal: 2,
+              completed: true,
+              exercisesCompleted: {},
+            },
+            "daten-1-1": {
+              sectionsRead: ["daten-1-1_exercise", "block_1_lesson_1_section_2"],
+              quizScore: null,
+              quizTotal: null,
+              completed: false,
+              exercisesCompleted: {},
+            },
+          },
+          workshopQuiz: {
+            passed: true,
+            score: 0.9,
+            completedAt: "2026-05-01T00:00:00.000Z",
+          },
+        }),
+      },
+      created_at: "2026-01-02T00:00:00.000Z",
+      updated_at: "2026-01-02T00:00:00.000Z",
+    });
+
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
+    expect(fetched.ok).toBe(true);
+    if (!fetched.ok) throw new Error("unreachable");
+    const kf = fetched.result.progress?.courses["ki-fuehrerschein"];
+    expect(Object.keys(kf?.lessons ?? {})).toEqual(["daten-1-1"]);
+    expect(kf?.lessons["daten-1-1"]?.sectionsRead).toEqual([
+      "daten-1-1_exercise",
+    ]);
+    expect(kf?.workshopQuiz.passed).toBe(true);
   });
 
   it("returns a typed failure when the provider query rejects", async () => {
@@ -616,7 +667,7 @@ describe("upsertUnifiedProgressForUser", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_1: {
+              "messen-1-1": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -635,7 +686,7 @@ describe("upsertUnifiedProgressForUser", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_2: {
+              "messen-1-2": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -656,8 +707,8 @@ describe("upsertUnifiedProgressForUser", () => {
     const lessons =
       fetched.result.progress?.courses["ai-native"]?.lessons ?? {};
     expect(Object.keys(lessons).sort()).toEqual([
-      "modul_1_lesson_1",
-      "modul_1_lesson_2",
+      "messen-1-1",
+      "messen-1-2",
     ]);
   });
 
@@ -741,7 +792,7 @@ describe("upsertUnifiedProgressForUser", () => {
       const result = await upsertUnifiedProgressForUser(
         fakeSupabase(table, { insertError }),
         USER,
-        progress({ courses: { codex: slice() } }),
+        progress({ courses: { "data-infrastructure": slice() } }),
       );
 
       expect(result).toEqual({ ok: false, error: insertError });
@@ -753,7 +804,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const originalInsert = table.insert.bind(table);
     let raced = false;
     table.insert = (row) => {
-      if (!raced && row.course_slug === "codex") {
+      if (!raced && row.course_slug === "data-infrastructure") {
         raced = true;
         table.rows.set(key(row.user_id, row.course_slug), {
           ...row,
@@ -773,14 +824,14 @@ describe("upsertUnifiedProgressForUser", () => {
       USER,
       progress({
         courses: {
-          codex: slice({ capstoneSubmitted: true }),
+          "data-infrastructure": slice({ capstoneSubmitted: true }),
         },
       }),
     );
 
     expect(raced).toBe(true);
     expect(result.ok).toBe(true);
-    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
+    expect(table.selectOne(USER, "data-infrastructure")?.progress).toMatchObject({
       slice: { capstoneSubmitted: true },
     });
   });
@@ -793,11 +844,11 @@ describe("upsertUnifiedProgressForUser", () => {
         throwAfterCommittedInsertOnce: transportError,
       }),
       USER,
-      progress({ courses: { codex: slice({ capstoneSubmitted: true }) } }),
+      progress({ courses: { "data-infrastructure": slice({ capstoneSubmitted: true }) } }),
     );
 
     expect(result.ok).toBe(true);
-    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
+    expect(table.selectOne(USER, "data-infrastructure")?.progress).toMatchObject({
       slice: { capstoneSubmitted: true },
     });
   });
@@ -808,19 +859,19 @@ describe("upsertUnifiedProgressForUser", () => {
     await upsertUnifiedProgressForUser(
       fakeSupabase(table),
       USER,
-      progress({ courses: { codex: slice() } }),
+      progress({ courses: { "data-infrastructure": slice() } }),
     );
 
-    // Simulate a genuine optimistic-concurrency race: the "codex" row's
+    // Simulate a genuine optimistic-concurrency race: the "data-infrastructure" row's
     // updated_at moves between this test's read and write, every attempt,
     // via a monotonic counter (Date.now() can repeat within one tick, which
     // would coincidentally "resolve" the race instead of sustaining it).
-    const rowKey = key(USER, "codex");
+    const rowKey = key(USER, "data-infrastructure");
     const original = table.rows.get(rowKey)!;
     let raceCounter = 0;
     const staleUpdate = table.update.bind(table);
     table.update = (userId, courseSlug, expectedUpdatedAt, patch) => {
-      if (courseSlug === "codex") {
+      if (courseSlug === "data-infrastructure") {
         raceCounter += 1;
         table.rows.set(rowKey, {
           ...original,
@@ -833,7 +884,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const result = await upsertUnifiedProgressForUser(
       fakeSupabase(table),
       USER,
-      progress({ courses: { codex: slice({ capstoneSubmitted: true }) } }),
+      progress({ courses: { "data-infrastructure": slice({ capstoneSubmitted: true }) } }),
     );
     expect(result.ok).toBe(false);
     if (result.ok || !result.conflict) {
@@ -850,7 +901,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const result = await upsertUnifiedProgressForUser(
       rejectingRowReadSupabase(error),
       USER,
-      progress({ courses: { codex: slice() } }),
+      progress({ courses: { "data-infrastructure": slice() } }),
     );
 
     expect(result).toEqual({ ok: false, error });
@@ -900,10 +951,10 @@ describe("resetCourseProgressRow", () => {
     const del = await resetCourseProgressRow(
       fakeSupabase(table),
       USER,
-      "codex",
+      "data-infrastructure",
     );
     expect(del.ok).toBe(true);
-    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
+    expect(table.selectOne(USER, "data-infrastructure")?.progress).toMatchObject({
       schemaVersion: 3,
       reset: true,
     });
@@ -917,7 +968,7 @@ describe("resetCourseProgressRow", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_1: {
+              "messen-1-1": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -944,7 +995,7 @@ describe("resetCourseProgressRow", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_2: {
+              "messen-1-2": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -968,7 +1019,7 @@ describe("resetCourseProgressRow", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_3: {
+              "kontext-2-1": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -985,7 +1036,7 @@ describe("resetCourseProgressRow", () => {
     fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
     if (!fetched.ok) throw new Error("unreachable");
     expect(
-      fetched.result.progress?.courses["ai-native"]?.lessons.modul_1_lesson_3,
+      fetched.result.progress?.courses["ai-native"]?.lessons["kontext-2-1"],
     ).toBeDefined();
   });
 
@@ -995,7 +1046,7 @@ describe("resetCourseProgressRow", () => {
     const result = await resetCourseProgressRow(
       rejectingRowReadSupabase(error),
       USER,
-      "codex",
+      "data-infrastructure",
     );
 
     expect(result).toEqual({ ok: false, error });

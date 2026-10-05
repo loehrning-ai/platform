@@ -5,10 +5,6 @@ import {
   EU_AI_ACT_KURS_CONFIG,
   AI_NATIVE_CONFIG,
   KI_UND_GESELLSCHAFT_CONFIG,
-  CLAUDE_CONFIG,
-  CLAUDE_CONFIG_DE,
-  CODEX_CONFIG,
-  CODEX_CONFIG_DE,
   DATA_INFRASTRUCTURE_CONFIG,
   DATA_INFRASTRUCTURE_CONFIG_DE,
   DATA_ENGINEERING_FUNDAMENTALS_CONFIG,
@@ -32,13 +28,11 @@ import {
 const UNREGISTERED = "does-not-exist" as unknown as CourseSlug;
 
 describe("getRegisteredCourseSlugs", () => {
-  it("returns exactly the ten registered course slugs ( adds ai-native-operator)", () => {
+  it("returns exactly the eight registered course slugs", () => {
     const slugs = [...getRegisteredCourseSlugs()].sort();
     expect(slugs).toEqual([
       "ai-native",
       "ai-native-operator",
-      "claude",
-      "codex",
       "data-engineering-fundamentals",
       "data-infrastructure",
       "data-science",
@@ -55,8 +49,6 @@ describe("isCourseRegistered", () => {
     expect(isCourseRegistered("eu-ai-act-kurs")).toBe(true);
     expect(isCourseRegistered("ai-native")).toBe(true);
     expect(isCourseRegistered("ki-und-gesellschaft")).toBe(true);
-    expect(isCourseRegistered("claude")).toBe(true);
-    expect(isCourseRegistered("codex")).toBe(true);
     expect(isCourseRegistered("data-infrastructure")).toBe(true);
     expect(isCourseRegistered("data-engineering-fundamentals")).toBe(true);
     expect(isCourseRegistered("data-science")).toBe(true);
@@ -66,46 +58,10 @@ describe("isCourseRegistered", () => {
   it("is false for an unregistered slug", () => {
     expect(isCourseRegistered(UNREGISTERED)).toBe(false);
   });
-});
 
-describe("CLAUDE_CONFIG ", () => {
-  it("registers German as the unprefixed default and English under /en", () => {
-    expect(getCourseConfig("claude")).toBe(CLAUDE_CONFIG_DE);
-    expect(getCourseConfig("claude", "de")).toBe(CLAUDE_CONFIG_DE);
-    expect(getCourseConfig("claude", "en")).toBe(CLAUDE_CONFIG);
-    expect(CLAUDE_CONFIG_DE.language).toBe("de");
-    expect(CLAUDE_CONFIG.slug).toBe("claude");
-    expect(CLAUDE_CONFIG.language).toBe("en");
-    expect(CLAUDE_CONFIG.basePath).toBe("/kurse/open-source/claude");
-    expect(CLAUDE_CONFIG.coursePath).toBe("/kurse/open-source/claude/kurs");
-    expect(CLAUDE_CONFIG.blockIds).toEqual([]);
-  });
-
-  it("has a non-empty certificate file stem and no em/en dashes in its copy", () => {
-    expect(CLAUDE_CONFIG.certificateFileStem.length).toBeGreaterThan(0);
-    const copy = [
-      CLAUDE_CONFIG.title,
-      CLAUDE_CONFIG.certificateTitle,
-      CLAUDE_CONFIG.certificateSubtitle,
-      CLAUDE_CONFIG.certificateReferenceLabel,
-      CLAUDE_CONFIG.quizPassMessage,
-      ...CLAUDE_CONFIG.certificateModules,
-    ].join(" ");
-    expect([...copy].some((ch) => ch === "—" || ch === "–")).toBe(false);
-  });
-});
-
-describe("CODEX_CONFIG ", () => {
-  it("registers German as the unprefixed default and English under /en", () => {
-    expect(getCourseConfig("codex")).toBe(CODEX_CONFIG_DE);
-    expect(getCourseConfig("codex", "de")).toBe(CODEX_CONFIG_DE);
-    expect(getCourseConfig("codex", "en")).toBe(CODEX_CONFIG);
-    expect(CODEX_CONFIG_DE.language).toBe("de");
-    expect(CODEX_CONFIG.slug).toBe("codex");
-    expect(CODEX_CONFIG.language).toBe("en");
-    expect(CODEX_CONFIG.basePath).toBe("/kurse/open-source/codex");
-    expect(CODEX_CONFIG.coursePath).toBe("/kurse/open-source/codex/kurs");
-    expect(CODEX_CONFIG.blockIds).toEqual([]);
+  it("is false for the removed Claude and Codex courses", () => {
+    expect(isCourseRegistered("claude" as unknown as CourseSlug)).toBe(false);
+    expect(isCourseRegistered("codex" as unknown as CourseSlug)).toBe(false);
   });
 });
 
@@ -152,7 +108,7 @@ describe("DATA_ENGINEERING_FUNDAMENTALS_CONFIG ", () => {
     expect(DATA_ENGINEERING_FUNDAMENTALS_CONFIG.basePath).toBe(
       "/kurse/open-source/data-engineering-fundamentals",
     );
-    // Unlike codex/data-infrastructure, this course has no `/kurs`-nested
+    // Unlike data-infrastructure, this course has no `/kurs`-nested
     // route at all ( Done Criteria: chapters live directly
     // under `[chapterId]`) — coursePath must point at the real landing page,
     // not a route that 404s ( fix).
@@ -270,18 +226,17 @@ describe("getCourseConfig", () => {
 });
 
 describe("getCourseBlockIds", () => {
-  it("returns the five KI-Führerschein blocks", () => {
+  it("returns the four KI-Führerschein modules", () => {
     expect(getCourseBlockIds("ki-fuehrerschein")).toEqual([
       "block_1",
       "block_2",
       "block_3",
       "block_4",
-      "block_5",
     ]);
   });
 
   it("returns the six EU AI Act blocks", () => {
-    expect(getCourseBlockIds("eu-ai-act-kurs")).toHaveLength(6);
+    expect(getCourseBlockIds("eu-ai-act-kurs")).toHaveLength(5);
   });
 
   it("returns an empty block list for AI-Native (module-keyed lessons)", () => {
@@ -313,15 +268,15 @@ describe("workshop-quiz config queries", () => {
 
   it("reads the per-course question count", () => {
     expect(getWorkshopQuestionCount("ki-fuehrerschein")).toBe(20);
-    expect(getWorkshopQuestionCount("eu-ai-act-kurs")).toBe(27);
-    expect(getWorkshopQuestionCount("ai-native")).toBe(20);
+    expect(getWorkshopQuestionCount("eu-ai-act-kurs")).toBe(20);
+    expect(getWorkshopQuestionCount("ai-native")).toBe(15);
     expect(getWorkshopQuestionCount("ki-und-gesellschaft")).toBe(15);
   });
 
   it("reads the per-course time limit in minutes", () => {
     expect(getWorkshopTimeLimitMinutes("ki-fuehrerschein")).toBe(25);
-    expect(getWorkshopTimeLimitMinutes("eu-ai-act-kurs")).toBe(30);
-    expect(getWorkshopTimeLimitMinutes("ai-native")).toBe(25);
+    expect(getWorkshopTimeLimitMinutes("eu-ai-act-kurs")).toBe(25);
+    expect(getWorkshopTimeLimitMinutes("ai-native")).toBe(20);
     expect(getWorkshopTimeLimitMinutes("ki-und-gesellschaft")).toBe(20);
   });
 

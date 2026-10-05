@@ -234,7 +234,7 @@ export function ObservDemo(): JSX.Element {
                   className={cn(
                     "border p-3 text-left transition-colors",
                     active
-                      ? "border-brand-orange bg-foreground text-background"
+                      ? "border-brand-orange bg-sky-sheet text-foreground"
                       : "border-border bg-card/60 text-foreground hover:border-foreground",
                   )}
                 >
@@ -244,7 +244,7 @@ export function ObservDemo(): JSX.Element {
                   <div
                     className={cn(
                       "mt-0.5 font-mono text-xs uppercase tracking-[0.1em]",
-                      active ? "text-background/60" : "text-muted-foreground",
+                      active ? "text-foreground" : "text-muted-foreground",
                     )}
                   >
                     {a.model.toUpperCase()}
@@ -253,7 +253,7 @@ export function ObservDemo(): JSX.Element {
                     className={cn(
                       "mt-1.5 flex justify-between font-mono text-xs",
                       active
-                        ? "text-[var(--color-kupfer-light)]"
+                        ? "text-kupfer-dark"
                         : "text-muted-foreground",
                     )}
                   >
@@ -266,17 +266,17 @@ export function ObservDemo(): JSX.Element {
           </div>
         </div>
 
-        <div className="dark-section border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4">
+        <div className="border-t-[3px] border-brand-orange bg-sky-sheet p-4">
           <div className="mb-3 flex items-start justify-between">
             <div>
-              <div className="text-[15px] font-bold tracking-[-0.02em] text-[var(--color-dark-fg)]">
+              <div className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
                 {activeApp.name}
               </div>
-              <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
+              <div className="mt-0.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
                 Latenz · letzte 60 Min · tick {tick}
               </div>
             </div>
-            <span className="inline-flex items-center gap-1 self-start bg-brand-orange px-2 py-0.5 font-mono text-xs font-bold tracking-[0.14em] text-[var(--color-dark-bg)]">
+            <span className="inline-flex items-center gap-1 self-start bg-brand-orange px-2 py-0.5 font-mono text-xs font-bold tracking-[0.14em] text-paper">
               SIM
             </span>
           </div>
@@ -308,7 +308,7 @@ export function ObservDemo(): JSX.Element {
                 x2={W}
                 y1={H * g}
                 y2={H * g}
-                stroke="rgba(243,240,233,0.08)"
+                stroke="rgba(11,9,8,0.12)"
               />
             ))}
             <polyline
@@ -323,7 +323,7 @@ export function ObservDemo(): JSX.Element {
               strokeWidth="1.5"
             />
           </svg>
-          <div className="mt-3.5 grid grid-cols-2 gap-2.5 border-t border-[var(--color-dark-border)] pt-3 md:grid-cols-4">
+          <div className="mt-3.5 grid grid-cols-2 gap-2.5 border-t border-border pt-3 md:grid-cols-4">
             {[
               ["Calls", activeApp.calls.toLocaleString("de-DE")],
               ["Verbrauch", `€${activeApp.cost.toFixed(2)}`],
@@ -331,10 +331,10 @@ export function ObservDemo(): JSX.Element {
               ["Fehler", `${activeApp.errorPct}%`],
             ].map(([label, val]) => (
               <div key={label}>
-                <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-[var(--color-dark-muted)]">
+                <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   {label}
                 </div>
-                <div className="mt-0.5 font-mono text-[16px] font-bold text-[var(--color-dark-fg)] md:text-[18px]">
+                <div className="mt-0.5 font-mono text-[16px] font-bold text-foreground md:text-[18px]">
                   {val}
                 </div>
               </div>
@@ -348,7 +348,7 @@ export function ObservDemo(): JSX.Element {
         <div className="mb-2">
           <DemoOverline>Log-Stream</DemoOverline>
         </div>
-        <div className="dark-section max-h-[150px] overflow-y-auto bg-[var(--color-dark-bg)] px-3.5 py-3 font-mono text-xs leading-[1.7] text-[var(--color-dark-fg)]">
+        <div className="max-h-[150px] overflow-y-auto bg-inset px-3.5 py-3 font-mono text-xs leading-[1.7] text-foreground">
           {logLines.map(([t, lvl, tag, msg], i) => (
             <div key={i}>
               <span className="text-muted-foreground">{t.padStart(4)} </span>
@@ -356,7 +356,7 @@ export function ObservDemo(): JSX.Element {
                 [{lvl.toUpperCase().padEnd(5)}]
               </span>
               <span className="text-brand-orange"> {tag.padEnd(14)}</span>
-              <span className="text-[var(--color-dark-fg)]/85"> {msg}</span>
+              <span className="text-foreground"> {msg}</span>
             </div>
           ))}
         </div>

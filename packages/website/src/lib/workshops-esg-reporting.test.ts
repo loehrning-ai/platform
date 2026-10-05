@@ -49,26 +49,6 @@ describe("Workshop 04 registry copy (ESG reporting)", () => {
     for (const workshop of both) expect(JSON.stringify(workshop)).not.toMatch(/[–—]/);
   });
 
-  it("keeps the decision lab labels of the other workshops and exactly three facts", () => {
-    for (const locale of ["de", "en"] as const) {
-      const lab = ESG_REPORTING_WORKSHOP[locale].decisionLab;
-      const reference = DATA_READINESS_WORKSHOP[locale].decisionLab;
-      expect(lab.kicker).toMatch(locale === "de" ? /^Entscheidung 01 · / : /^Decision 01 · /);
-      for (const key of ["decisionLegend", "evidenceLegend", "submitLabel", "resetLabel", "privacyNote", "resultLabel"] as const) {
-        expect(lab[key], key).toBe(reference[key]);
-      }
-      expect(lab.facts).toHaveLength(3);
-      expect(lab.choices).toHaveLength(3);
-      expect(lab.evidence).toHaveLength(3);
-      expect(lab.choices.map((choice) => choice.id)).toContain(lab.recommendedChoiceId);
-      expect(lab.evidence.map((item) => item.id)).toContain(lab.strongestEvidenceId);
-      expect(JSON.stringify(lab)).not.toMatch(/localStorage|sessionStorage|cookie|upload/i);
-    }
-    expect(de.decisionLab.choices.map((choice) => choice.id)).toEqual(en.decisionLab.choices.map((choice) => choice.id));
-    expect(de.decisionLab.evidence.map((item) => item.id)).toEqual(en.decisionLab.evidence.map((item) => item.id));
-    expect(Object.keys(de.decisionLab.feedback.byChoice ?? {})).toEqual(Object.keys(en.decisionLab.feedback.byChoice ?? {}));
-  });
-
   it("has five to seven steps with the same numbering in both locales", () => {
     for (const workshop of both) {
       expect(workshop.steps.length).toBeGreaterThanOrEqual(5);

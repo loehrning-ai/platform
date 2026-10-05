@@ -25,7 +25,7 @@ describe("root layout locale", () => {
     // Poster scenes are fixed colour pairs; a browser dark mode must not
     // recolour form controls or scrollbars under them (meta color-scheme).
     expect(viewport.colorScheme).toBe("light");
-    expect(viewport.themeColor).toBe("#f3f0e9");
+    expect(viewport.themeColor).toBe("#f7f1e7");
   });
 
   it.each(["de", "en"] as const)(

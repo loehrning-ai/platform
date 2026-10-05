@@ -12,6 +12,12 @@ import {
 /**
  * lesson-layout.test.tsx (regression coverage)
  *
+ * Covers the section reader path (lessons without engine fields), driven
+ * through ki-und-gesellschaft and its canonical engine lesson ids now that
+ * every block course runs on the lesson engine. The lesson-engine
+ * dispatch is covered at the end of this file and in
+ * components/lesson-engine/lesson-flow.test.tsx.
+ *
  * Drives the REAL <LessonLayout /> orchestrator. It owns the active-lesson
  * state, the mobile drawer, and the "next lesson" SCROLL behaviour. Assertions
  * target that orchestration:
@@ -230,8 +236,8 @@ beforeEach(() => {
   }
   __resetCacheForTests();
   activateAnonymousProgress();
-  resetProgress("ki-fuehrerschein");
-  window.history.replaceState({}, "", "/ki-fuehrerschein/kurs/block_1");
+  resetProgress("ki-und-gesellschaft");
+  window.history.replaceState({}, "", "/ki-und-gesellschaft/kurs/block_1");
   scrollSpy = vi.fn();
   // jsdom does not implement scrollTo; install a spy so we can assert the call.
   Object.defineProperty(window, "scrollTo", {
@@ -265,7 +271,7 @@ function setReducedMotion(matches: boolean) {
 function renderLayout(lessons: readonly Lesson[] = LESSONS) {
   return render(
     <LessonLayout
-      courseSlug="ki-fuehrerschein"
+      courseSlug="ki-und-gesellschaft"
       lessons={lessons}
       blockTitle="Block 1"
     />,
@@ -324,7 +330,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/ki-fuehrerschein/kurs/block_1?source=resume#lesson=l2",
+      "/ki-und-gesellschaft/kurs/block_1?source=resume#lesson=l2",
     );
     const firstRender = renderLayout();
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -334,7 +340,7 @@ describe("<LessonLayout>", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
     );
-    expect(window.location.pathname).toBe("/ki-fuehrerschein/kurs/block_1");
+    expect(window.location.pathname).toBe("/ki-und-gesellschaft/kurs/block_1");
     expect(window.location.search).toBe("?source=resume");
     expect(window.location.hash).toBe("#lesson=l1");
 
@@ -349,7 +355,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/ki-fuehrerschein/kurs/block_1#lesson=l2",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=l2",
     );
     renderLayout();
 
@@ -360,7 +366,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/ki-fuehrerschein/kurs/block_1#lesson=l1",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=l1",
     );
     fireEvent(window, new HashChangeEvent("hashchange"));
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -372,7 +378,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/ki-fuehrerschein/kurs/block_1#lesson=%E0%A4%A",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=%E0%A4%A",
     );
     renderLayout();
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -382,7 +388,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/ki-fuehrerschein/kurs/block_1#lesson=not-in-this-block",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=not-in-this-block",
     );
     fireEvent(window, new HashChangeEvent("hashchange"));
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -431,15 +437,15 @@ describe("<LessonLayout>", () => {
   });
 
   it("the reader action advances a completed lesson through the bounded hash without completing the next lesson", () => {
-    const first = mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" });
-    const second = mkLesson({ id: "block_1_lesson_2", number: 2, title: "Zweite Lektion" });
+    const first = mkLesson({ id: "zahlen-1-1", number: 1, title: "Erste Lektion" });
+    const second = mkLesson({ id: "zahlen-1-2", number: 2, title: "Zweite Lektion" });
     const { container } = renderLayout([first, second]);
     const action = () => container.querySelector<HTMLElement>("[data-reader-focus-action]")!;
     const persistFixturePrerequisites = (lessonId: string) => act(() => {
-      for (const sectionId of CANONICAL_SECTION_IDS["ki-fuehrerschein"][lessonId]) {
-        markSectionRead("ki-fuehrerschein", lessonId, sectionId);
+      for (const sectionId of CANONICAL_SECTION_IDS["ki-und-gesellschaft"][lessonId]) {
+        markSectionRead("ki-und-gesellschaft", lessonId, sectionId);
       }
-      saveLessonQuizScore("ki-fuehrerschein", lessonId, 1, 1);
+      saveLessonQuizScore("ki-und-gesellschaft", lessonId, 1, 1);
     });
 
     expect(action()).toHaveTextContent("Aufgabe öffnen");
@@ -448,33 +454,27 @@ describe("<LessonLayout>", () => {
     expect(action()).toHaveTextContent("Weiter");
     fireEvent.click(action());
 
-    expect(window.location.hash).toBe("#lesson=block_1_lesson_2");
+    expect(window.location.hash).toBe("#lesson=zahlen-1-2");
     expect(screen.getByTestId("active-title")).toHaveTextContent("Zweite Lektion");
     expect(action()).toHaveTextContent("Aufgabe öffnen");
-    expect(isLessonCompleted("ki-fuehrerschein", second.id)).toBe(false);
+    expect(isLessonCompleted("ki-und-gesellschaft", second.id)).toBe(false);
     expect(container.querySelector("[data-reader-focus-position]")).toHaveTextContent("2 / 2");
 
     persistFixturePrerequisites(second.id);
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
     expect(action()).toHaveTextContent("Zum Kurs");
-    expect(action()).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
+    expect(action()).toHaveAttribute("href", "/ki-und-gesellschaft/kurs");
   });
 
   it("rejects completion writes until persisted section and quiz evidence exist", () => {
     const section: LessonSection = {
-      id: "block_1_lesson_1_section_1",
+      id: "zahlen-1-1_exercise",
       title: "Prüfabschnitt",
       readTimeMinutes: 2,
       content: "Prüfe den Fall.",
     };
-    const secondSection: LessonSection = {
-      id: "block_1_lesson_1_section_2",
-      title: "Transferabschnitt",
-      readTimeMinutes: 2,
-      content: "Übertrage die Entscheidung.",
-    };
     const question: LessonQuizQuestion = {
-      id: "block_1_lesson_1_question_1",
+      id: "zahlen-1-1-question_1",
       questionText: "Was gilt?",
       answerOptions: [
         { id: "a", text: "A", isCorrect: true },
@@ -484,42 +484,36 @@ describe("<LessonLayout>", () => {
     };
     const protectedLesson: Lesson = {
       ...mkLesson({
-        id: "block_1_lesson_1",
+        id: "zahlen-1-1",
         number: 1,
         title: "Geschützte Lektion",
       }),
-      sections: [section, secondSection],
+      sections: [section],
       quiz: [question],
     };
 
     renderLayout([protectedLesson]);
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       false,
     );
     expect(document.querySelector("[data-reader-focus-action]")).toHaveTextContent("Aufgabe öffnen");
 
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
-      false,
-    );
-
-    markSectionRead("ki-fuehrerschein", protectedLesson.id, secondSection.id);
-    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       false,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "finish-quiz" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       true,
     );
     expect(
       isCheckpointDone(
         protectedLesson.id,
-        lessonCompletionEvidenceCheckpointId("ki-fuehrerschein"),
+        lessonCompletionEvidenceCheckpointId("ki-und-gesellschaft"),
       ),
     ).toBe(true);
     expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
@@ -530,14 +524,14 @@ describe("<LessonLayout>", () => {
 
   it("invalidates foundation-course writes when ownership becomes unresolved", () => {
     const section: LessonSection = {
-      id: "block_1_lesson_1_section_1",
+      id: "zahlen-1-1_exercise",
       title: "Prüfabschnitt",
       readTimeMinutes: 2,
       content: "Prüfe den Fall.",
     };
     const protectedLesson: Lesson = {
       ...mkLesson({
-        id: "block_1_lesson_1",
+        id: "zahlen-1-1",
         number: 1,
         title: "Geschützte Lektion",
       }),
@@ -557,7 +551,7 @@ describe("<LessonLayout>", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("ki-fuehrerschein", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       false,
     );
     expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
@@ -567,19 +561,19 @@ describe("<LessonLayout>", () => {
 
   it("retains but does not present a legacy completion without the evidence checkpoint", () => {
     const section: LessonSection = {
-      id: "block_1_lesson_1_section_1",
+      id: "zahlen-1-1_exercise",
       title: "Prüfabschnitt",
       readTimeMinutes: 2,
       content: "Prüfe den Fall.",
     };
     const secondSection: LessonSection = {
-      id: "block_1_lesson_1_section_2",
+      id: "zahlen-1-1_concept",
       title: "Transferabschnitt",
       readTimeMinutes: 2,
       content: "Übertrage die Entscheidung.",
     };
     const question: LessonQuizQuestion = {
-      id: "block_1_lesson_1_q1",
+      id: "zahlen-1-1-q1",
       questionText: "Was gilt?",
       answerOptions: [
         { id: "a", text: "A", isCorrect: true },
@@ -589,7 +583,7 @@ describe("<LessonLayout>", () => {
     };
     const legacyLesson: Lesson = {
       ...mkLesson({
-        id: "block_1_lesson_1",
+        id: "zahlen-1-1",
         number: 1,
         title: "Frühere Lektion",
       }),
@@ -597,11 +591,11 @@ describe("<LessonLayout>", () => {
       quiz: [question],
     };
 
-    markSectionRead("ki-fuehrerschein", legacyLesson.id, section.id);
-    markSectionRead("ki-fuehrerschein", legacyLesson.id, secondSection.id);
-    saveLessonQuizScore("ki-fuehrerschein", legacyLesson.id, 1, 1);
-    markLessonCompleted("ki-fuehrerschein", legacyLesson.id);
-    expect(isLessonCompleted("ki-fuehrerschein", legacyLesson.id)).toBe(true);
+    markSectionRead("ki-und-gesellschaft", legacyLesson.id, section.id);
+    markSectionRead("ki-und-gesellschaft", legacyLesson.id, secondSection.id);
+    saveLessonQuizScore("ki-und-gesellschaft", legacyLesson.id, 1, 1);
+    markLessonCompleted("ki-und-gesellschaft", legacyLesson.id);
+    expect(isLessonCompleted("ki-und-gesellschaft", legacyLesson.id)).toBe(true);
 
     renderLayout([legacyLesson]);
 
@@ -611,7 +605,7 @@ describe("<LessonLayout>", () => {
     expect(
       isCheckpointDone(
         legacyLesson.id,
-        lessonCompletionEvidenceCheckpointId("ki-fuehrerschein"),
+        lessonCompletionEvidenceCheckpointId("ki-und-gesellschaft"),
       ),
     ).toBe(false);
   });
@@ -647,15 +641,15 @@ describe("<LessonLayout>", () => {
 
 describe("<LessonLayout> usage events", () => {
   const COMPLETABLE_LESSONS: readonly Lesson[] = [
-    mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" }),
-    mkLesson({ id: "block_1_lesson_2", number: 2, title: "Zweite Lektion" }),
+    mkLesson({ id: "zahlen-1-1", number: 1, title: "Erste Lektion" }),
+    mkLesson({ id: "zahlen-1-2", number: 2, title: "Zweite Lektion" }),
   ];
   const READABLE_LESSONS: readonly Lesson[] = [
     {
-      ...mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" }),
+      ...mkLesson({ id: "zahlen-1-1", number: 1, title: "Erste Lektion" }),
       sections: [
         {
-          id: "block_1_lesson_1_section_1",
+          id: "zahlen-1-1_exercise",
           title: "Prüfabschnitt",
           readTimeMinutes: 2,
           content: "Prüfe den Fall.",
@@ -681,7 +675,7 @@ describe("<LessonLayout> usage events", () => {
       activateAnonymousProgress();
     });
     expect(usageEvents.trackLessonReached.mock.calls).toEqual([
-      ["ki-fuehrerschein", "l01"],
+      ["ki-und-gesellschaft", "l01"],
     ]);
 
     fireEvent.click(
@@ -691,8 +685,8 @@ describe("<LessonLayout> usage events", () => {
       screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
     );
     expect(usageEvents.trackLessonReached.mock.calls).toEqual([
-      ["ki-fuehrerschein", "l01"],
-      ["ki-fuehrerschein", "l02"],
+      ["ki-und-gesellschaft", "l01"],
+      ["ki-und-gesellschaft", "l02"],
     ]);
   });
 
@@ -700,7 +694,7 @@ describe("<LessonLayout> usage events", () => {
     window.history.replaceState(
       {},
       "",
-      "/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_2",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=zahlen-1-2",
     );
     renderLayout(COMPLETABLE_LESSONS);
 
@@ -708,17 +702,19 @@ describe("<LessonLayout> usage events", () => {
       "Zweite Lektion",
     );
     expect(usageEvents.trackLessonReached.mock.calls).toEqual([
-      ["ki-fuehrerschein", "l02"],
+      ["ki-und-gesellschaft", "l02"],
     ]);
   });
 
   it("does not report a reached lesson for a statically routed course", () => {
-    const codexLessonId = CANONICAL_LESSON_IDS.codex[0];
+    const routedLessonId = CANONICAL_LESSON_IDS["data-infrastructure"][0];
     render(
       <LessonLayout
-        courseSlug="codex"
-        lessons={[mkLesson({ id: codexLessonId, number: 1, title: "Codex" })]}
-        blockTitle="Codex"
+        courseSlug="data-infrastructure"
+        lessons={[
+          mkLesson({ id: routedLessonId, number: 1, title: "Data Infrastructure" }),
+        ]}
+        blockTitle="Data Infrastructure"
       />,
     );
 
@@ -741,11 +737,11 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
 
     expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
-      ["ki-fuehrerschein", "l01"],
-      ["ki-fuehrerschein", "l02"],
+      ["ki-und-gesellschaft", "l01"],
+      ["ki-und-gesellschaft", "l02"],
     ]);
     expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
-      ["ki-fuehrerschein"],
+      ["ki-und-gesellschaft"],
     ]);
   });
 
@@ -767,7 +763,7 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
 
     expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
-      ["ki-fuehrerschein"],
+      ["ki-und-gesellschaft"],
     ]);
     expect(usageEvents.trackLessonCompleted).not.toHaveBeenCalled();
   });
@@ -784,7 +780,7 @@ describe("<LessonLayout> usage events", () => {
         ...READABLE_LESSONS[0]!,
         sections: [
           {
-            id: "block_1_lesson_1_section_2",
+            id: "zahlen-1-1_concept",
             title: "Zweiter Prüfabschnitt",
             readTimeMinutes: 2,
             content: "Prüfe den nächsten Fall.",
@@ -796,16 +792,16 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
 
     expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
-      ["ki-fuehrerschein"],
+      ["ki-und-gesellschaft"],
     ]);
   });
 
   it("does not report a start on completion when a section read was persisted earlier", () => {
     act(() => {
       markSectionRead(
-        "ki-fuehrerschein",
-        "block_1_lesson_1",
-        "block_1_lesson_1_section_1",
+        "ki-und-gesellschaft",
+        "zahlen-1-1",
+        "zahlen-1-1_exercise",
       );
     });
     vi.mocked(recordLessonCompletionEvidenceDurably).mockReturnValueOnce(true);
@@ -814,7 +810,7 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
 
     expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
-      ["ki-fuehrerschein", "l01"],
+      ["ki-und-gesellschaft", "l01"],
     ]);
     expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
   });
@@ -828,5 +824,39 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
 
     expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
+  });
+});
+
+describe("<LessonLayout> lesson-engine dispatch", () => {
+  it("renders lesson-engine lessons through LessonFlow instead of the section reader", async () => {
+    const { getBlockLessons } = await import("@/lib/course/data");
+    const lessons = getBlockLessons("ki-fuehrerschein", "block_1");
+    const onFollowing = "/ki-fuehrerschein/kurs/block_2#lesson=briefen-2-1";
+    render(
+      <LessonLayout
+        courseSlug="ki-fuehrerschein"
+        lessons={lessons}
+        blockTitle="Was darf rein?"
+        moduleLabel="Modul 1 · Was darf rein?"
+        courseLessonCount={8}
+        followingHref={onFollowing}
+        followingLabel="Weiter mit Modul 2: Gut briefen"
+      />,
+    );
+
+    expect(screen.queryByTestId("lesson-content")).toBeNull();
+    const flow = document.querySelector("[data-lesson-engine]");
+    expect(flow).toHaveAttribute("data-lesson-id", "daten-1-1");
+    expect(screen.getByRole("heading", { level: 1, name: lessons[0].title })).toBeInTheDocument();
+    expect(screen.getByText(/Modul 1 · Was darf rein\?/)).toBeInTheDocument();
+    expect(flow?.textContent).toMatch(/Lektion 1 von 8/);
+
+    fireEvent.click(screen.getByRole("button", { name: `Weiter: ${lessons[1].title}` }));
+    expect(window.location.hash).toBe("#lesson=daten-1-2");
+    expect(document.querySelector("[data-lesson-engine]")).toHaveAttribute("data-lesson-id", "daten-1-2");
+    expect(screen.getByRole("link", { name: /Weiter mit Modul 2: Gut briefen/ })).toHaveAttribute(
+      "href",
+      onFollowing,
+    );
   });
 });

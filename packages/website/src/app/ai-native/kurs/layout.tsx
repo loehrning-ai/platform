@@ -7,15 +7,15 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 const COPY = {
   de: {
-    title: "AI-Native Arbeitskurs: Aufgaben, Wissen und Automatisierung",
+    title: "Mit KI arbeiten: messen, absichern, belegen",
     description:
-      "Vier Module und 27 Lektionen zu klaren Aufgaben, Claude-Arbeitsumgebungen, gepflegtem Wissen und kontrollierter Automatisierung.",
+      "Vier Module und neun Lektionen mit Übung: Netto-Zeit messen, Kontext und Werkzeugrechte begrenzen, zitierte Antworten prüfen und einen Ablauf mit Freigabe testen.",
     audience: "Berufstätige, Selbstständige und Studierende",
   },
   en: {
-    title: "AI-Native Workflow Course: tasks, knowledge and automation",
+    title: "Working with AI: measure, safeguard, cite",
     description:
-      "Four modules and 27 lessons on bounded tasks, Claude workspaces, maintained knowledge and controlled automation.",
+      "Four modules and nine lessons with exercises: measure net time, limit context and tool permissions, check cited answers and test a workflow with approval.",
     audience: "Professionals, independent workers and students",
   },
 } as const satisfies Record<Locale, Record<string, string>>;
@@ -64,7 +64,7 @@ function courseGraph(locale: Locale) {
     hasCourseInstance: {
       "@type": "CourseInstance",
       courseMode: "online",
-      courseWorkload: "PT12H",
+      courseWorkload: "PT1H8M",
       inLanguage: locale,
     },
   };

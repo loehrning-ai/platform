@@ -12,7 +12,7 @@ import { getCourseAccess, type CourseAccess } from "@/lib/courses/access";
  * copy layer (10KB) and the per-course reader configs the canonical resume
  * resolver reaches for are all server-only modules; importing any of them from
  * a client component would ship them to every phone that opens the home page.
- * Ten small records in the payload are far cheaper than that, and the browser
+ * Eight small records in the payload are far cheaper than that, and the browser
  * then needs nothing but the progress store it already loads.
  *
  * Import this from a server component only — see continue-slot.tsx.

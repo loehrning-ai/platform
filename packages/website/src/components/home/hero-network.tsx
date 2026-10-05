@@ -3,80 +3,35 @@
 import { useEffect, useMemo, useRef, useCallback } from "react";
 import type { MotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
-import {
-  COUNTRY_POLYLINES_3D,
-  type CountryKey3D,
-} from "@/lib/country-polylines-3d";
 import { heroNetworkSteps, STEPS } from "@/components/home/hero-network-steps";
+import {
+  berlinComposition,
+  buildGrid,
+  COUNTRY_RINGS_3D,
+  createProjector,
+  cropFront,
+  GRID_LINES_3D,
+  CX,
+  CY,
+  initialShell,
+  KUPFER,
+  LC,
+  lerpLon,
+  paint,
+  PHONE_VIEW,
+  projectRings,
+  projectRingsClosed,
+  R,
+  sfEase,
+  STEP_COUNTRY,
+  WARM,
+  type Seg,
+} from "@/components/home/hero-network-geometry";
 import type { Locale } from "@/lib/i18n/locale";
-import { PLAKAT } from "@/lib/plakat/palettes";
-import { limbFade, rimDepth } from "@/components/werk/horizon-projection";
 
 // Re-exported for backward compatibility while the homepage parent loads this
-// heavy projection module only for desktop viewports.
+// heavy projection module only after hydration.
 export { STEPS };
-
-/** Maps STEPS index → country key. Aligned 1:1 with the STEPS array below. */
-const STEP_COUNTRY: readonly CountryKey3D[] = [
-  "BERLIN", // STEPS[0] Germany
-  "SAO_PAULO", // STEPS[1] Brazil
-  "BEIJING", // STEPS[2] China
-  "SAN_FRANCISCO", // STEPS[3] USA
-  "MUMBAI", // STEPS[4] India (EU AI Act extraterritorial reach)
-  "TOKYO", // STEPS[5] Japan
-];
-
-// ─── Constants ──────────────────────────────────────────────────────────────
-
-const R = 500;
-const CX = 320;
-const CY = 380;
-const DEG = Math.PI / 180;
-// The globe sits on the hero's graphit band: paper lines and the lightened
-// Mennige the band uses for accent text (#e07050, 5.79:1 on graphit), the
-// same pair as the phone horizon globe (werk/horizon-globe-frame.tsx).
-const KUPFER = "#e07050";
-const GRID_STEP = 7;
-const LC = "rgb(242,241,238)";
-const WARM = "rgb(242,241,238)";
-
-/**
- * Paint per home scene (SPEC §3.6). Lemons: a flat Mennige disc on the
- * Ultramarin band, an Ultramarin knockout graticule of 1.5 CSS px every 30
- * degrees, the countries as flat Butter shapes and the typing word in
- * Butter (4.96:1 on Mennige, display size). No gradient, glow, hatch or
- * limb: the disc edge is the limb. Graphit: the line globe of the fallback.
- */
-export type HeroGlobeScene = "lemons" | "graphit";
-
-type GlobePaint = {
-  /** Flat sphere fill, or null for the line globe. */
-  readonly disc: string | null;
-  readonly line: string;
-  readonly accent: string;
-  readonly gridStep: number;
-};
-
-const PAINT: Readonly<Record<HeroGlobeScene, GlobePaint>> = {
-  lemons: {
-    disc: PLAKAT.lemons.mid,
-    line: PLAKAT.lemons.ground,
-    accent: PLAKAT.lemons.ink,
-    gridStep: 30,
-  },
-  graphit: { disc: null, line: LC, accent: KUPFER, gridStep: GRID_STEP },
-};
-
-/** Knockout graticule width on the flat disc, CSS px. */
-const FLAT_GRID_WIDTH = 1.5;
-
-/** The flat disc's rim: the grid stops 3.5 of 1000 units (2 to 3 px) inside the limb. */
-const FLAT_RIM_Z = rimDepth(R, 3.5);
-const FLAT_RIM_R = R - 3.5;
-
-// ─── Locations (dramatic cross-globe panning) ───────────────────────────────
-// Step/journey data (Step type + STEPS constant) now lives in
-// ./hero-network-steps — imported above and re-exported for compatibility.
 
 // Restore the motion profile from the 10 August production build while keeping
 // the newer visibility and reduced-motion guards. Capping at 60 avoids doing
@@ -85,501 +40,83 @@ export const HERO_GLOBE_FPS = 60;
 export const HERO_GLOBE_STEP_SECONDS = 7;
 export const HERO_GLOBE_DWELL_RATIO = 0.78;
 export const HERO_GLOBE_START_DELAY_SECONDS = 2;
-const FRAME_INTERVAL_MS = 1000 / HERO_GLOBE_FPS;
+/**
+ * The phone globe's cap. It draws a cropped window at whole units, without
+ * the far side, the ink shadow or the glow, and half as often: a phone
+ * spends a fraction of the desktop's work on the same tour.
+ */
+export const HERO_GLOBE_COMPACT_FPS = 30;
 
-// ─── Math ───────────────────────────────────────────────────────────────────
-
-type Vec3 = readonly [number, number, number];
-type ProjectedPoint = Readonly<{ sx: number; sy: number; z: number }>;
-type Projector = (point: Vec3) => ProjectedPoint;
-
-function ll3d(lat: number, lon: number): Vec3 {
-  const la = lat * DEG,
-    lo = lon * DEG;
-  return [
-    Math.cos(la) * Math.cos(lo),
-    Math.sin(la),
-    Math.cos(la) * Math.sin(lo),
-  ];
-}
-/** Project (lat, lon) to screen, with the globe rotated so that
- *  (rLat, rLon) lands dead center on the front face (z ≈ 1). The -0.15 rad
- *  X tilt biases the city slightly above the equator-of-view so it sits
- *  comfortably alongside the typing word in the upper-right area. */
-function createProjector(rLon: number, rLat: number): Projector {
-  // Rotation angles are identical for every point in a frame. Cache their
-  // trigonometry once instead of repeating four trig calls for each of the
-  // roughly 7,500 grid and country projections.
-  const yaw = (rLon - 90) * DEG;
-  const pitch = rLat * DEG - 0.15;
-  const yawCos = Math.cos(yaw);
-  const yawSin = Math.sin(yaw);
-  const pitchCos = Math.cos(pitch);
-  const pitchSin = Math.sin(pitch);
-
-  return ([x, y, z]) => {
-    const rotatedX = x * yawCos + z * yawSin;
-    const yawZ = -x * yawSin + z * yawCos;
-    const rotatedY = y * pitchCos - yawZ * pitchSin;
-    const rotatedZ = y * pitchSin + yawZ * pitchCos;
-    return {
-      sx: CX + rotatedX * R,
-      sy: CY - rotatedY * R,
-      z: rotatedZ,
-    };
-  };
-}
-
-const COUNTRY_RINGS_3D = Object.fromEntries(
-  STEP_COUNTRY.map((key) => [
-    key,
-    COUNTRY_POLYLINES_3D[key].map((ring) =>
-      ring.map(([lat, lon]) => ll3d(lat, lon)),
-    ),
-  ]),
-) as unknown as Readonly<Record<CountryKey3D, readonly (readonly Vec3[])[]>>;
-
-type GridLines = readonly (readonly Vec3[])[];
-
-const gridLineCache = new Map<number, GridLines>();
-
-/** Parallels and meridians every `step` degrees, as unit vectors (memoized). */
-function gridLines(step: number): GridLines {
-  const hit = gridLineCache.get(step);
-  if (hit) return hit;
-  const lines: Vec3[][] = [];
-  // Parallels are centred on the equator, so a 30 degree step draws 0, 30
-  // and 60 degrees on both sides; a 7 degree step keeps its old -80 start.
-  const first = step === GRID_STEP ? -80 : -Math.floor(80 / step) * step;
-  for (let lat = first; lat <= 80; lat += step) {
-    const points: Vec3[] = [];
-    for (let lon = -180; lon <= 180; lon += 4) points.push(ll3d(lat, lon));
-    lines.push(points);
-  }
-  for (let lon = -180; lon < 180; lon += step) {
-    const points: Vec3[] = [];
-    for (let lat = -90; lat <= 90; lat += 4) points.push(ll3d(lat, lon));
-    lines.push(points);
-  }
-  gridLineCache.set(step, lines);
-  return lines;
-}
-
-function dp(sx: number, sy: number, z: number): number {
-  const ed = Math.sqrt((sx - CX) ** 2 + (sy - CY) ** 2) / R;
-  return (1 - Math.pow(Math.min(ed, 1), 1.6)) * Math.max(0, z);
-}
-function sfEase(t: number): number {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
-function lerpLon(a: number, b: number, t: number): number {
-  let d = b - a;
-  if (d > 180) d -= 360;
-  if (d < -180) d += 360;
-  return a + d * t;
-}
-
-// ─── Grid builder ───────────────────────────────────────────────────────────
-
-interface Seg {
-  d: string;
-  dp: number;
-  len?: number;
-  /** Stroke opacity of a flat-disc grid line (its limb fade). */
-  op?: number;
-}
-
-/** Project a set of [lat, lon] polylines onto the sphere at (rLon, rLat),
- *  emitting only front-facing (z > 0) sub-paths. Each Seg carries the
- *  cumulative screen-space length of its sub-path so callers can drive a
- *  stroke-dashoffset draw-in animation. Same trace pattern as buildGrid. */
-function projectRings(
-  rings: readonly (readonly Vec3[])[],
-  project: Projector,
-): Seg[] {
-  const out: Seg[] = [];
-  for (const ring of rings) {
-    let d = "",
-      live = false,
-      sumDp = 0,
-      n = 0,
-      len = 0,
-      lastSx = 0,
-      lastSy = 0;
-    for (const point of ring) {
-      const pt = project(point);
-      if (pt.z > 0) {
-        const c = `${pt.sx.toFixed(1)},${pt.sy.toFixed(1)}`;
-        if (live) {
-          d += ` L${c}`;
-          len += Math.hypot(pt.sx - lastSx, pt.sy - lastSy);
-        } else {
-          d += `M${c}`;
-        }
-        lastSx = pt.sx;
-        lastSy = pt.sy;
-        live = true;
-        sumDp += dp(pt.sx, pt.sy, pt.z);
-        n++;
-      } else if (live) {
-        out.push({ d, dp: n > 0 ? sumDp / n : 0, len });
-        d = "";
-        live = false;
-        sumDp = 0;
-        n = 0;
-        len = 0;
-      }
-    }
-    if (live) out.push({ d, dp: n > 0 ? sumDp / n : 0, len });
-  }
-  return out;
-}
-
-/** Project rings and produce ONE closed path per ring, with limb-arc
- *  closures wherever the boundary crosses the silhouette. Use this for
- *  FILLS (glow + hatch) — a flat `Z` chord across the disc would paint
- *  hatch into the back-of-globe area; an arc closure keeps the fill on
- *  the visible front of the country. Outlines should keep using
- *  `projectRings()` (strokes don't auto-close, so no chord problem). */
-function projectRingsClosed(
-  rings: readonly (readonly Vec3[])[],
-  project: Projector,
-): Seg[] {
-  const out: Seg[] = [];
-  for (const ring of rings) {
-    const pts = ring.map(project);
-    const n = pts.length;
-    if (n === 0) continue;
-
-    // Fast path 1: ring fully behind the limb — skip.
-    let anyFront = false,
-      anyBack = false;
-    for (const p of pts) {
-      if (p.z > 0) anyFront = true;
-      else anyBack = true;
-      if (anyFront && anyBack) break;
-    }
-    if (!anyFront) continue;
-
-    // Fast path 2: ring fully in front — single straight closed path.
-    if (!anyBack) {
-      let d = "",
-        sumDp = 0;
-      pts.forEach((p, i) => {
-        const c = `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
-        d += i === 0 ? `M${c}` : ` L${c}`;
-        sumDp += dp(p.sx, p.sy, p.z);
-      });
-      out.push({ d: d + " Z", dp: sumDp / n });
-      continue;
-    }
-
-    // Mixed — collect entry/exit limb crossings, then stitch arcs together
-    // walking the limb (shorter angular direction) between consecutive arcs.
-    interface Arc {
-      readonly entryAng: number;
-      readonly entrySx: number;
-      readonly entrySy: number;
-      readonly visIdx: readonly number[]; // indices into pts of visible vertices
-      readonly exitAng: number;
-      readonly exitSx: number;
-      readonly exitSy: number;
-    }
-    const arcs: Arc[] = [];
-    let inArc = false;
-    let curEntry: { ang: number; sx: number; sy: number } | null = null;
-    let curVis: number[] = [];
-
-    for (let i = 0; i < n; i++) {
-      const cur = pts[i];
-      const prev = pts[(i - 1 + n) % n];
-
-      // back → front: open a new arc
-      if (cur.z > 0 && prev.z <= 0) {
-        const t = -prev.z / (cur.z - prev.z); // (0, 1]
-        const sxRaw = prev.sx + (cur.sx - prev.sx) * t;
-        const syRaw = prev.sy + (cur.sy - prev.sy) * t;
-        const ang = Math.atan2(syRaw - CY, sxRaw - CX);
-        curEntry = {
-          ang,
-          sx: CX + R * Math.cos(ang),
-          sy: CY + R * Math.sin(ang),
-        };
-        curVis = [];
-        inArc = true;
-      }
-
-      if (cur.z > 0 && inArc) curVis.push(i);
-
-      // front → back: close the current arc with an exit limb crossing
-      if (cur.z <= 0 && prev.z > 0 && inArc && curEntry) {
-        const t = prev.z / (prev.z - cur.z); // (0, 1]
-        const sxRaw = prev.sx + (cur.sx - prev.sx) * t;
-        const syRaw = prev.sy + (cur.sy - prev.sy) * t;
-        const ang = Math.atan2(syRaw - CY, sxRaw - CX);
-        arcs.push({
-          entryAng: curEntry.ang,
-          entrySx: curEntry.sx,
-          entrySy: curEntry.sy,
-          visIdx: curVis,
-          exitAng: ang,
-          exitSx: CX + R * Math.cos(ang),
-          exitSy: CY + R * Math.sin(ang),
-        });
-        inArc = false;
-        curEntry = null;
-        curVis = [];
-      }
-    }
-    // If we ended mid-arc (started visible, never crossed back), drop it —
-    // shouldn't happen because we walk cyclically (i-1+n)%n catches the wrap.
-
-    if (arcs.length === 0) continue;
-
-    // Build one combined closed path:
-    //   arc[0] entry → visible verts → exit
-    //   limb arc → arc[1] entry → … → arc[last] exit
-    //   limb arc back to arc[0] entry (the implicit Z)
-    let d = "";
-    let sumDp = 0,
-      vcount = 0;
-    arcs.forEach((arc, ai) => {
-      // Move to arc entry (or line, if not the first arc)
-      const entryC = `${arc.entrySx.toFixed(1)},${arc.entrySy.toFixed(1)}`;
-      d += ai === 0 ? `M${entryC}` : ` L${entryC}`;
-      // Visible vertices
-      for (const i of arc.visIdx) {
-        const p = pts[i];
-        d += ` L${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
-        sumDp += dp(p.sx, p.sy, p.z);
-        vcount++;
-      }
-      // Arc exit
-      d += ` L${arc.exitSx.toFixed(1)},${arc.exitSy.toFixed(1)}`;
-
-      // Walk the limb to the NEXT arc's entry (or back to arc[0] for the last)
-      const nextArc = arcs[(ai + 1) % arcs.length];
-      let delta = nextArc.entryAng - arc.exitAng;
-      while (delta > Math.PI) delta -= 2 * Math.PI;
-      while (delta < -Math.PI) delta += 2 * Math.PI;
-      // ~5 px steps along the arc, minimum 2 steps
-      const arcLenPx = Math.abs(delta) * R;
-      const steps = Math.max(2, Math.ceil(arcLenPx / 5));
-      for (let s = 1; s < steps; s++) {
-        const a = arc.exitAng + delta * (s / steps);
-        d += ` L${(CX + R * Math.cos(a)).toFixed(1)},${(CY + R * Math.sin(a)).toFixed(1)}`;
-      }
-    });
-
-    out.push({ d: d + " Z", dp: vcount > 0 ? sumDp / vcount : 0 });
-  }
-  return out;
-}
-
-const BERLIN_LAT = 52.5;
-const BERLIN_LON = 13.4;
-
-function buildGrid(
-  project: Projector,
-  lines: GridLines = gridLines(GRID_STEP),
-): { front: Seg[]; back: Seg[] } {
-  const front: Seg[] = [],
-    back: Seg[] = [];
-  const trace = (points: readonly Vec3[]) => {
-    let pF = "",
-      pB = "",
-      lF = false,
-      lB = false,
-      sF = 0,
-      cF = 0,
-      sB = 0,
-      cB = 0;
-    for (const point of points) {
-      const p = project(point);
-      const c = `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
-      if (p.z > 0) {
-        if (!lF && pB) {
-          back.push({ d: pB, dp: cB > 0 ? sB / cB : 0 });
-          pB = "";
-          sB = 0;
-          cB = 0;
-        }
-        pF += lF ? ` L${c}` : `M${c}`;
-        lF = true;
-        lB = false;
-        sF += dp(p.sx, p.sy, p.z);
-        cF++;
-      } else {
-        if (!lB && pF) {
-          front.push({ d: pF, dp: cF > 0 ? sF / cF : 0 });
-          pF = "";
-          sF = 0;
-          cF = 0;
-        }
-        pB += lB ? ` L${c}` : `M${c}`;
-        lB = true;
-        lF = false;
-        sB += Math.abs(p.z);
-        cB++;
-      }
-    }
-    if (pF)
-      front.push({
-        d: pF,
-        dp: cF > 0 ? Math.round((sF / cF) * 10000) / 10000 : 0,
-      });
-    if (pB)
-      back.push({
-        d: pB,
-        dp: cB > 0 ? Math.round((sB / cB) * 10000) / 10000 : 0,
-      });
-  };
-  for (const line of lines) trace(line);
-  return { front, back };
-}
+/** Desktop framing: the upper-left of the sphere, the limb on the left. */
+const DESKTOP_VIEW_BOX = "-120 -20 660 620";
+const PHONE_VIEW_BOX = `${PHONE_VIEW.x} ${PHONE_VIEW.y} ${PHONE_VIEW.width} ${PHONE_VIEW.height}`;
 
 /**
- * The flat disc's knockout graticule: front-facing sub-paths only, each
- * ending on the rim circle a few units inside the limb. In an orthographic
- * view every great circle meets the limb tangentially, so a line drawn up to
- * the edge would run along it and cut steps into the disc's one contour. A
- * line whose peak depth is small would hug the silhouette a hair inside it,
- * so it fades out by that depth (werk/horizon-projection HORIZON_LIMB_FADE).
- * The disc edge stays one clean circle.
+ * The phone globe is drawn at about a third of the desktop scale, so its
+ * lines, outlines and typing word are thickened to read at the same CSS
+ * weight as on the desktop cover.
  */
-function buildFlatGrid(project: Projector, lines: GridLines): Seg[] {
-  const out: Seg[] = [];
-  const at = (p: ProjectedPoint) => `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
-  // Where the segment a (front) to b (back) meets the rim depth, pushed onto
-  // the rim circle.
-  const limb = (a: ProjectedPoint, b: ProjectedPoint) => {
-    const t = (a.z - FLAT_RIM_Z) / (a.z - b.z);
-    const x = a.sx + (b.sx - a.sx) * t - CX;
-    const y = a.sy + (b.sy - a.sy) * t - CY;
-    const h = Math.hypot(x, y) || 1;
-    return `${(CX + (x / h) * FLAT_RIM_R).toFixed(1)},${(CY + (y / h) * FLAT_RIM_R).toFixed(1)}`;
-  };
-  for (const line of lines) {
-    const points = line.map(project);
-    let peak = -1;
-    for (const p of points) if (p.z > peak) peak = p.z;
-    const op = limbFade(peak);
-    if (op <= 0) continue;
-    let d = "";
-    let live = false;
-    let prev: ProjectedPoint | null = null;
-    for (const p of points) {
-      if (p.z > FLAT_RIM_Z) {
-        if (live) d += ` L${at(p)}`;
-        else if (prev) d += `M${limb(p, prev)} L${at(p)}`;
-        else d += `M${at(p)}`;
-        live = true;
-      } else if (live && prev) {
-        d += ` L${limb(prev, p)}`;
-        live = false;
-      }
-      prev = p;
-    }
-    if (d) out.push({ d, dp: 0, op: Math.round(op * 1000) / 1000 });
-  }
-  return out;
-}
-
-// The complete animated projection is intentionally not serialized into the
-// document. This sparse frame uses the exact same Berlin projection and ink
-// values, so the real globe is visible in the first HTML paint without a
-// visually unrelated poster or a large SVG payload.
-const berlinProjector = createProjector(BERLIN_LON, BERLIN_LAT);
-
-/** The flat static frame shows Germany only: the first rings of the fill list. */
-const staticGermanyRings = projectRingsClosed(
-  COUNTRY_RINGS_3D.BERLIN,
-  berlinProjector,
-).length;
-
-type Shell = {
-  readonly grid: { readonly back: Seg[]; readonly front: Seg[] };
-  readonly country: Seg[];
-};
-
-const shellCache = new Map<HeroGlobeScene, Shell>();
-
-/**
- * The first-paint shell per scene. The line globe thins its dense grid and
- * outlines; the flat disc has few lines, so it draws the full graticule and
- * the country fills, and the live frame replaces it without a change.
- */
-function initialShell(scene: HeroGlobeScene): Shell {
-  const hit = shellCache.get(scene);
-  if (hit) return hit;
-  const paint = PAINT[scene];
-  let shell: Shell;
-  if (paint.disc) {
-    shell = {
-      grid: { back: [], front: buildFlatGrid(berlinProjector, gridLines(paint.gridStep)) },
-      country: projectRingsClosed(COUNTRY_RINGS_3D.BERLIN, berlinProjector),
-    };
-  } else {
-    const initialGrid = buildGrid(berlinProjector);
-    shell = {
-      grid: {
-        back: initialGrid.back.filter((_, index) => index % 8 === 0),
-        front: initialGrid.front.filter((_, index) => index % 8 === 0),
-      },
-      country: STEP_COUNTRY.flatMap((key) =>
-        projectRings(
-          COUNTRY_RINGS_3D[key].map((ring) =>
-            ring.filter(
-              (_, index) => index % 3 === 0 || index === ring.length - 1,
-            ),
-          ),
-          berlinProjector,
-        ),
-      ),
-    };
-  }
-  shellCache.set(scene, shell);
-  return shell;
-}
+export const COMPACT_STROKE = 2.4;
+const COMPACT_WORD_SIZE = 44;
+const WORD_SIZE = 30;
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
 interface HeroNetworkProps {
   locale?: Locale;
-  scrollProgress: MotionValue<number>;
+  scrollProgress?: MotionValue<number>;
   className?: string;
+  /** The static Berlin composition without the typing word (legacy phone mode). */
   mobile?: boolean;
+  /**
+   * The phone hero's live globe: the PHONE_VIEW window, thickened strokes,
+   * the larger typing word, no step dots, capped at HERO_GLOBE_COMPACT_FPS.
+   */
+  compact?: boolean;
   frozen?: MotionValue<number>;
   paused?: boolean;
   reducedMotion?: boolean;
+  /** Called once the first live frame is on screen (the phone takeover). */
+  onLive?: () => void;
+  /** Prefix for the SVG ids, unique per globe in the document. */
+  idPrefix?: string;
   /** Optional outputs — receive the current pan target each frame. */
   latOut?: MotionValue<number>;
   lonOut?: MotionValue<number>;
   /** Index of the city currently being displayed. Flips at 50% through transition. */
   stepIdxOut?: MotionValue<number>;
-  /** The home scene to paint in (SPEC D7). Defaults to the graphit line globe. */
-  scene?: HeroGlobeScene;
 }
 
 export function HeroNetwork({
   locale = "de",
   className,
   mobile,
+  compact = false,
   frozen,
   paused = false,
   reducedMotion = false,
+  onLive,
+  idPrefix = "hn",
   latOut,
   lonOut,
   stepIdxOut,
-  scene = "graphit",
 }: HeroNetworkProps) {
-  const paint = PAINT[scene];
-  const flat = paint.disc !== null;
   const localizedSteps = useMemo(() => heroNetworkSteps(locale), [locale]);
   // The parent reads matchMedia after hydration and passes a stable boolean.
   // Keep rendering tied to that explicit input; the animation effect performs
   // its own direct media-query guard before scheduling any work.
   const prefersReduced = reducedMotion;
+  const staticMode = prefersReduced || Boolean(mobile);
+  const stroke = compact ? COMPACT_STROKE : 1;
+  const wordSize = compact ? COMPACT_WORD_SIZE : WORD_SIZE;
+  const frameIntervalMs =
+    1000 / (compact ? HERO_GLOBE_COMPACT_FPS : HERO_GLOBE_FPS);
+  const ids = {
+    volume: `${idPrefix}-volume`,
+    clip: `${idPrefix}-clip`,
+    hatch: `${idPrefix}-hatch`,
+    glow: `${idPrefix}-glow`,
+  };
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
   const startRef = useRef(0);
@@ -589,6 +126,9 @@ export function HeroNetwork({
   // the animation clock continuous across pauses (no rotation "snap" on resume).
   const runningRef = useRef(false);
   const pausedAtRef = useRef(0);
+  const liveRef = useRef(false);
+  const onLiveRef = useRef(onLive);
+  onLiveRef.current = onLive;
 
   // Refs for direct DOM mutation
   const gridBackRef = useRef<SVGGElement>(null);
@@ -611,12 +151,13 @@ export function HeroNetwork({
     const now = performance.now();
     // The August production globe followed every 60 Hz animation frame. Keep
     // that smooth cadence, but cap high-refresh displays so they do not repeat
-    // the expensive projection more than sixty times per second. A one
-    // millisecond tolerance prevents a nominal 16.6 ms display interval from
-    // falling through to every second frame because of timer precision.
+    // the expensive projection more than sixty times per second (thirty on
+    // the phone). A one millisecond tolerance prevents a nominal 16.6 ms
+    // display interval from falling through to every second frame because of
+    // timer precision.
     if (
       lastFrameRef.current !== 0 &&
-      now - lastFrameRef.current < FRAME_INTERVAL_MS - 1
+      now - lastFrameRef.current < frameIntervalMs - 1
     ) {
       if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
       return;
@@ -637,8 +178,7 @@ export function HeroNetwork({
     const stepIdx =
       Math.floor(cycleT / HERO_GLOBE_STEP_SECONDS) % localizedSteps.length;
     const stepT =
-      (cycleT - stepIdx * HERO_GLOBE_STEP_SECONDS) /
-      HERO_GLOBE_STEP_SECONDS;
+      (cycleT - stepIdx * HERO_GLOBE_STEP_SECONDS) / HERO_GLOBE_STEP_SECONDS;
     const cur = localizedSteps[stepIdx];
     const next = localizedSteps[(stepIdx + 1) % localizedSteps.length];
     // Globe rotation centers — fall back to the city's coords if no override.
@@ -664,8 +204,7 @@ export function HeroNetwork({
     } else {
       isTransitioning = true;
       const transT = sfEase(
-        (stepT - HERO_GLOBE_DWELL_RATIO) /
-          (1 - HERO_GLOBE_DWELL_RATIO),
+        (stepT - HERO_GLOBE_DWELL_RATIO) / (1 - HERO_GLOBE_DWELL_RATIO),
       );
       targetLat = curRLat + (nextRLat - curRLat) * transT;
       targetLon = lerpLon(curRLon, nextRLon, transT);
@@ -679,19 +218,17 @@ export function HeroNetwork({
     // sidebar feels like it's leading the eye toward where the globe is going.
     const displayIdx =
       isTransitioning &&
-      (stepT - HERO_GLOBE_DWELL_RATIO) /
-        (1 - HERO_GLOBE_DWELL_RATIO) >
-        0.5
+      (stepT - HERO_GLOBE_DWELL_RATIO) / (1 - HERO_GLOBE_DWELL_RATIO) > 0.5
         ? (stepIdx + 1) % localizedSteps.length
         : stepIdx;
     stepIdxOut?.set(displayIdx);
 
     // ── Grid ────────────────────────────────────────────────────────────
     const project = createProjector(targetLon, targetLat);
-    // The flat disc hides the far side and draws one knockout line weight.
-    const grid = flat
-      ? { front: buildFlatGrid(project, gridLines(paint.gridStep)), back: [] }
-      : buildGrid(project, gridLines(paint.gridStep));
+    // The phone draws its window only, and no far side.
+    const grid = compact
+      ? { front: cropFront(GRID_LINES_3D, project, PHONE_VIEW), back: [] }
+      : buildGrid(project);
 
     // Back grid
     const gbEl = gridBackRef.current;
@@ -704,7 +241,7 @@ export function HeroNetwork({
           gbEl.appendChild(p);
         }
         p.setAttribute("d", s.d);
-        p.setAttribute("stroke", paint.line);
+        p.setAttribute("stroke", LC);
         p.setAttribute(
           "stroke-opacity",
           String((0.025 + s.dp * 0.035) * entrance),
@@ -714,12 +251,11 @@ export function HeroNetwork({
       });
     }
 
-    // Front grid shadow (drawn ink effect)
+    // Front grid shadow (drawn ink effect; the desktop cover only)
     const gfsEl = gridFrontShadowRef.current;
     if (gfsEl) {
-      const shadow = flat ? [] : grid.front;
-      while (gfsEl.children.length > shadow.length)
-        gfsEl.lastChild?.remove();
+      const shadow = compact ? [] : grid.front;
+      while (gfsEl.children.length > shadow.length) gfsEl.lastChild?.remove();
       shadow.forEach((s, i) => {
         let p = gfsEl.children[i] as SVGPathElement | undefined;
         if (!p) {
@@ -748,22 +284,16 @@ export function HeroNetwork({
           p = document.createElementNS("http://www.w3.org/2000/svg", "path");
           gfEl.appendChild(p);
         }
-        p.setAttribute("d", s.d);
-        p.setAttribute("fill", "none");
-        p.setAttribute("stroke", paint.line);
-        if (flat) {
-          p.setAttribute("stroke-width", String(FLAT_GRID_WIDTH));
-          p.setAttribute("stroke-opacity", String(s.op ?? 1));
-          p.setAttribute("vector-effect", "non-scaling-stroke");
-          return;
-        }
         const shimmer = 1 + Math.sin(t * 1.5 + i * 0.7) * 0.04;
-        const w = 0.45 + s.dp * 0.4;
+        const w = (0.45 + s.dp * 0.4) * stroke;
+        p.setAttribute("d", s.d);
+        p.setAttribute("stroke", LC);
         p.setAttribute(
           "stroke-opacity",
           String((0.06 + s.dp * 0.16) * entrance * shimmer),
         );
         p.setAttribute("stroke-width", String(w));
+        p.setAttribute("fill", "none");
       });
     }
 
@@ -776,24 +306,7 @@ export function HeroNetwork({
     //   - thicker but very transparent outline (barely-visible hairline)
     //   - hatch fill at low alpha (architectural blueprint wash)
     //   - depth-modulated opacity so countries near the limb dim toward 0
-    //   - global `entrance` ramp drives the page-load fade-in
-    //
-    // Meridian still uses a one-shot draw-in per beat (carrier wave through
-    // the active city only).
     // ──────────────────────────────────────────────────────────────────
-
-    // ── Country: 3 layered passes per segment — glow + hatch + outline.
-    // 1. Radial gradient glow underneath: country emits soft Kupfer light
-    //    from its centroid, fading to transparent at the edges (heat
-    //    signature feel, not a flat fill).
-    // 2. Hatch overlay on top of the glow at low opacity — adds blueprint
-    //    texture without competing with the glow. Pattern rotation drifts
-    //    slowly per-frame for a subtle moiré.
-    // 3. Outline drawn with a vertical Kupfer gradient (brighter top → dim
-    //    bottom) — sells "lit from above" depth.
-    //
-    // A subtle 4-second breathing pulse (±8%) on the global opacity keeps
-    // the countries feeling alive without ever calling attention to itself.
     const glowEl = countryGlowRef.current;
     const fillEl = countryFillRef.current;
     const cE = countryRef.current;
@@ -808,21 +321,21 @@ export function HeroNetwork({
       //                   when a country crosses the limb (no straight chord).
       const outlineSegs: Seg[] = [];
       const fillSegs: Seg[] = [];
-      // The flat disc shows one Butter country at a time: the one the
-      // typing word names. The line globe keeps all six.
-      const keys = flat ? [STEP_COUNTRY[displayIdx]] : STEP_COUNTRY;
-      for (const key of keys) {
+      for (const key of STEP_COUNTRY) {
         const rings = COUNTRY_RINGS_3D[key];
-        if (!flat) {
+        if (compact) {
+          for (const seg of cropFront(rings, project, PHONE_VIEW))
+            outlineSegs.push(seg);
+        } else {
           for (const seg of projectRings(rings, project)) outlineSegs.push(seg);
         }
         for (const seg of projectRingsClosed(rings, project))
           fillSegs.push(seg);
       }
-      // The flat disc: every country is one flat Butter shape, no glow.
-      const glowSegs = flat ? [] : fillSegs;
-      // 1. Radial glow — barely there, just a soft tint at the centroid.
-      //    Uses limb-arc closed paths so the glow stays on visible front only.
+      // 1. Radial glow — barely there, just a soft tint at the centroid
+      //    (the desktop cover only). Uses limb-arc closed paths so the glow
+      //    stays on visible front only.
+      const glowSegs = compact ? [] : fillSegs;
       while (glowEl.children.length > glowSegs.length)
         glowEl.lastChild?.remove();
       glowSegs.forEach((s, i) => {
@@ -832,8 +345,11 @@ export function HeroNetwork({
           glowEl.appendChild(p);
         }
         p.setAttribute("d", s.d);
-        p.setAttribute("fill", "url(#countryGlow)");
-        p.setAttribute("fill-opacity", String((0.03 + s.dp * 0.03) * entrance));
+        p.setAttribute("fill", `url(#${ids.glow})`);
+        p.setAttribute(
+          "fill-opacity",
+          String((0.03 + s.dp * 0.03) * entrance),
+        );
         p.setAttribute("stroke", "none");
       });
       // 2. Hatch overlay — uniform Kupfer alpha across the country.
@@ -847,8 +363,8 @@ export function HeroNetwork({
           fillEl.appendChild(fp);
         }
         fp.setAttribute("d", s.d);
-        fp.setAttribute("fill", flat ? paint.accent : "url(#countryHatch)");
-        fp.setAttribute("fill-opacity", String(flat ? 1 : 0.1 * entrance));
+        fp.setAttribute("fill", `url(#${ids.hatch})`);
+        fp.setAttribute("fill-opacity", String(0.1 * entrance));
         fp.setAttribute("stroke", "none");
       });
       // 3. Outline — solid Kupfer, uniform alpha (no top→bottom gradient).
@@ -866,7 +382,7 @@ export function HeroNetwork({
           "stroke-opacity",
           String((0.13 + s.dp * 0.05) * entrance),
         );
-        p.setAttribute("stroke-width", "2.0");
+        p.setAttribute("stroke-width", String(2 * stroke));
         p.setAttribute("stroke-linecap", "round");
         p.setAttribute("fill", "none");
       });
@@ -875,6 +391,10 @@ export function HeroNetwork({
     // Every live layer is populated at this point. The sparse initial frame
     // shares the same geometry, so removing it is a seamless detail upgrade.
     initialShellRef.current?.setAttribute("opacity", "0");
+    if (!liveRef.current) {
+      liveRef.current = true;
+      onLiveRef.current?.();
+    }
 
     // ── Text with typing cursor ─────────────────────────────────────────
     const textEl = textRef.current;
@@ -903,13 +423,10 @@ export function HeroNetwork({
         // Build displayed text
         const displayedWord = word.slice(0, Math.min(charsToShow, word.length));
 
-        // Overall text opacity for fade-out. The flat disc holds the word
-        // at one flat Butter (4.96:1 on Mennige); the line globe keeps its
-        // softer 0.85.
-        const holdOp = flat ? 1 : 0.85;
-        let textOp = holdOp;
+        // Overall text opacity for fade-out
+        let textOp = 0.85;
         if (dwellT >= holdEnd) {
-          textOp = holdOp * (1 - (dwellT - holdEnd) / (1 - holdEnd));
+          textOp = 0.85 * (1 - (dwellT - holdEnd) / (1 - holdEnd));
         } else if (dwellT < fadeInStart) {
           textOp = 0;
         }
@@ -925,10 +442,11 @@ export function HeroNetwork({
         cursorEl.textContent = cursorBlink ? "_" : "";
         cursorEl.setAttribute("opacity", String(textOp * entrance));
 
-        // Position cursor right after the text (text is at TX which is right of center)
         // Cursor follows the text — text is centered on CX (textAnchor="middle"),
-        // so the cursor sits at CX + textWidth/2.
-        const estimatedTextWidth = displayedWord.length * 16; // ~16 px per char at 30 px Geist Sans
+        // so the cursor sits at CX + textWidth/2. About 16 units per character
+        // at the 30-unit word size.
+        const estimatedTextWidth =
+          displayedWord.length * 16 * (wordSize / WORD_SIZE);
         const textWidth =
           word === "Demos" && displayedWord.length > 0
             ? textEl.getComputedTextLength()
@@ -941,8 +459,8 @@ export function HeroNetwork({
       }
     }
 
-    // Step dots (the line globe only; the flat disc sets on the foot)
-    const stepsEl = flat ? null : stepDotsRef.current;
+    // Step dots
+    const stepsEl = stepDotsRef.current;
     if (stepsEl) {
       for (let i = 0; i < stepsEl.children.length; i++) {
         const c = stepsEl.children[i] as SVGCircleElement;
@@ -958,7 +476,19 @@ export function HeroNetwork({
     // Self-schedule only while the loop is meant to be running (paused when the
     // hero scrolls off-screen / the tab is hidden — see the gating effect below).
     if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
-  }, [flat, frozen, latOut, localizedSteps, lonOut, paint, stepIdxOut]);
+  }, [
+    compact,
+    frameIntervalMs,
+    frozen,
+    ids.glow,
+    ids.hatch,
+    latOut,
+    localizedSteps,
+    lonOut,
+    stepIdxOut,
+    stroke,
+    wordSize,
+  ]);
 
   useEffect(() => {
     // The parent switches to the declarative static composition after
@@ -995,11 +525,7 @@ export function HeroNetwork({
     let onScreen = false;
     let sceneFrozen = (frozen?.get() ?? 0) > 0.5;
     const sync = () => {
-      if (
-        onScreen &&
-        !sceneFrozen &&
-        document.visibilityState === "visible"
-      )
+      if (onScreen && !sceneFrozen && document.visibilityState === "visible")
         play();
       else pause();
     };
@@ -1033,7 +559,7 @@ export function HeroNetwork({
   }, [animate, frozen, mobile, paused, prefersReduced]);
 
   useEffect(() => {
-    if (!prefersReduced && !mobile) return;
+    if (!staticMode) return;
 
     // Animated paths are inserted imperatively. React does not own those
     // children, so clear them when a breakpoint or motion preference switches
@@ -1049,51 +575,19 @@ export function HeroNetwork({
     ]) {
       layer.current?.replaceChildren();
     }
-  }, [mobile, prefersReduced]);
+  }, [staticMode]);
 
   // Static fallback (prefers-reduced-motion / mobile): a single canonical
   // composition centered on Berlin, with ALL 6 countries on the globe so the
-  // viewer sees the full set rather than just the home country. Memoized: the
-  // projection math is expensive and the inputs only change with the
-  // reduced-motion / mobile flags.
-  const staticGrid = useMemo(() => {
-    if (!prefersReduced && !mobile) return null;
-    return flat
-      ? { front: buildFlatGrid(berlinProjector, gridLines(paint.gridStep)), back: [] }
-      : buildGrid(berlinProjector, gridLines(paint.gridStep));
-  }, [prefersReduced, mobile, paint, flat]);
-  // Outlines: open per-arc paths (the line globe only).
-  const staticCountry = useMemo(
-    () =>
-      (prefersReduced || mobile) && !flat
-        ? STEP_COUNTRY.flatMap((key) =>
-            projectRings(COUNTRY_RINGS_3D[key], berlinProjector),
-          )
-        : null,
-    [prefersReduced, mobile, flat],
-  );
-  const shell = !staticGrid ? initialShell(scene) : null;
-  // On the flat disc the typing word sits on a Mennige halo (the stroke is
-  // painted under the fill), so no knockout grid line runs through a glyph.
-  const wordKnockout = paint.disc
-    ? {
-        stroke: paint.disc,
-        strokeWidth: 14,
-        strokeLinejoin: "round" as const,
-        paintOrder: "stroke",
-      }
-    : {};
+  // viewer sees the full set rather than just the home country. Computed
+  // once per module (hero-network-geometry.ts).
+  const composition = staticMode ? berlinComposition() : null;
+  // The phone globe mounts over its server frame (hero-globe-frame.tsx),
+  // which is its first paint and stays until the first live frame: it needs
+  // no sparse shell of its own.
+  const shell = composition || compact ? null : initialShell();
+  const hidden = composition ? "none" : undefined;
 
-  // Fills: closed paths with limb-arc closures (no chord across the disc).
-  const staticCountryFill = useMemo(
-    () =>
-      prefersReduced || mobile
-        ? STEP_COUNTRY.flatMap((key) =>
-            projectRingsClosed(COUNTRY_RINGS_3D[key], berlinProjector),
-          )
-        : null,
-    [prefersReduced, mobile],
-  );
   return (
     <div
       ref={containerRef}
@@ -1103,42 +597,37 @@ export function HeroNetwork({
       )}
       aria-hidden="true"
       data-hero-network-motion={
-        prefersReduced || mobile ? "static" : paused ? "paused" : "running"
+        staticMode ? "static" : paused ? "paused" : "running"
       }
     >
       <svg
-        // The flat disc fills its square box edge to edge; the line globe
-        // keeps its framing.
-        viewBox={flat ? `${CX - R} ${CY - R} ${2 * R} ${2 * R}` : "-120 -20 660 620"}
-        preserveAspectRatio={flat ? "xMinYMin meet" : undefined}
+        viewBox={compact ? PHONE_VIEW_BOX : DESKTOP_VIEW_BOX}
+        preserveAspectRatio={compact ? "xMidYMax slice" : undefined}
         fill="none"
         className="h-full w-full"
-        style={{ overflow: "visible" }}
+        style={{ overflow: compact ? "hidden" : "visible" }}
         shapeRendering="geometricPrecision"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {!flat ? (
-            <radialGradient id="sphereVolume" cx="38%" cy="30%" r="72%">
-              <stop offset="0%" stopColor={WARM} stopOpacity="0.012" />
-              <stop offset="58%" stopColor={WARM} stopOpacity="0.02" />
-              <stop offset="84%" stopColor={WARM} stopOpacity="0.055" />
-              <stop offset="100%" stopColor={WARM} stopOpacity="0.11" />
-            </radialGradient>
-          ) : null}
-          <clipPath id="gc">
+          <radialGradient id={ids.volume} cx="38%" cy="30%" r="72%">
+            <stop offset="0%" stopColor={WARM} stopOpacity="0.012" />
+            <stop offset="58%" stopColor={WARM} stopOpacity="0.02" />
+            <stop offset="84%" stopColor={WARM} stopOpacity="0.055" />
+            <stop offset="100%" stopColor={WARM} stopOpacity="0.11" />
+          </radialGradient>
+          <clipPath id={ids.clip}>
             <circle cx={CX} cy={CY} r={R} />
           </clipPath>
           {/* Diagonal hatching for the country interior — static blueprint
                texture. Thicker hairlines (0.85 px) so the lines actually
                read as scaffolding, not as a wash. */}
-          {!flat ? (
           <pattern
-            id="countryHatch"
+            id={ids.hatch}
             patternUnits="userSpaceOnUse"
             width="6"
             height="6"
-            patternTransform="rotate(45)"
+            patternTransform={compact ? "rotate(45) scale(2)" : "rotate(45)"}
           >
             <line
               x1="0"
@@ -1150,46 +639,34 @@ export function HeroNetwork({
               strokeWidth="0.85"
             />
           </pattern>
-          ) : null}
           {/* Radial inner-glow — soft Kupfer wash at the centroid (uniform
                radially: same opacity at top edge and bottom edge of the
                country). Whispers the country's presence behind the hatch. */}
-          {!flat ? (
-          <radialGradient id="countryGlow" cx="50%" cy="50%" r="58%">
+          <radialGradient id={ids.glow} cx="50%" cy="50%" r="58%">
             <stop offset="0%" stopColor={KUPFER} stopOpacity="0.55" />
             <stop offset="55%" stopColor={KUPFER} stopOpacity="0.22" />
             <stop offset="100%" stopColor={KUPFER} stopOpacity="0" />
           </radialGradient>
-          ) : null}
         </defs>
 
-        {paint.disc ? (
-          // The flat Mennige disc: one shape, its edge is the limb.
-          <circle
-            data-hero-globe-disc=""
-            cx={CX}
-            cy={CY}
-            r={R}
-            fill={paint.disc}
-          />
-        ) : (
-          <>
-            <circle cx={CX} cy={CY} r={R} fill="url(#sphereVolume)" />
-            {/* A warm-neutral silhouette gives the sphere volume without a
-                large coloured background wash or a paint-heavy blur filter. */}
-            <circle
-              cx={CX}
-              cy={CY}
-              r={R + 1}
-              stroke={WARM}
-              strokeOpacity={0.12}
-              strokeWidth={2.4}
-              fill="none"
-            />
-          </>
-        )}
+        <circle cx={CX} cy={CY} r={R} fill={`url(#${ids.volume})`} />
+        {/* A warm-neutral silhouette gives the sphere volume without a large
+            coloured background wash or a paint-heavy blur filter. */}
+        <circle
+          cx={CX}
+          cy={CY}
+          r={R + 1}
+          stroke={WARM}
+          strokeOpacity={0.12}
+          strokeWidth={2.4 * (compact ? 1.5 : 1)}
+          fill="none"
+        />
 
-        <g clipPath="url(#gc)" strokeLinecap="round" strokeLinejoin="round">
+        <g
+          clipPath={`url(#${ids.clip})`}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           {shell ? (
             <g
               ref={initialShellRef}
@@ -1201,73 +678,50 @@ export function HeroNetwork({
                   key={`ib${i}`}
                   d={s.d}
                   stroke={LC}
-                  strokeOpacity={
-                    Math.round((0.025 + s.dp * 0.035) * 1000) / 1000
-                  }
+                  strokeOpacity={paint(0.025 + s.dp * 0.035)}
                   strokeWidth={0.4}
                   fill="none"
                 />
               ))}
-              {shell.grid.front.map((s, i) =>
-                flat ? (
-                  <path
-                    key={`if${i}`}
-                    d={s.d}
-                    stroke={paint.line}
-                    strokeOpacity={s.op ?? 1}
-                    strokeWidth={FLAT_GRID_WIDTH}
-                    vectorEffect="non-scaling-stroke"
-                    fill="none"
-                  />
-                ) : (
-                  <path
-                    key={`if${i}`}
-                    d={s.d}
-                    stroke={LC}
-                    strokeOpacity={
-                      Math.round((0.06 + s.dp * 0.16) * 1000) / 1000
-                    }
-                    strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
-                    fill="none"
-                  />
-                ),
-              )}
-              {shell.country.map((s, i) =>
-                flat ? (
-                  <path key={`ic${i}`} d={s.d} fill={paint.accent} stroke="none" />
-                ) : (
-                  <path
-                    key={`ic${i}`}
-                    d={s.d}
-                    stroke={KUPFER}
-                    strokeOpacity={
-                      Math.round((0.13 + s.dp * 0.05) * 1000) / 1000
-                    }
-                    strokeWidth={2}
-                    fill="none"
-                  />
-                ),
-              )}
+              {shell.grid.front.map((s, i) => (
+                <path
+                  key={`if${i}`}
+                  d={s.d}
+                  stroke={LC}
+                  strokeOpacity={paint(0.06 + s.dp * 0.16)}
+                  strokeWidth={paint((0.45 + s.dp * 0.4) * stroke)}
+                  fill="none"
+                />
+              ))}
+              {shell.country.map((s, i) => (
+                <path
+                  key={`ic${i}`}
+                  d={s.d}
+                  stroke={KUPFER}
+                  strokeOpacity={paint(0.13 + s.dp * 0.05)}
+                  strokeWidth={2 * stroke}
+                  fill="none"
+                />
+              ))}
             </g>
           ) : null}
-          {/* The rAF-owned layers, each named by `data-hero-network-live`.
-               Only `grid-front` is drawn in every scene: the flat disc hides
-               the far side (grid-back stays empty) and draws no shadow, glow
-               or outline, so motion probes read `grid-front`. */}
+          {/* The rAF-owned layers, each named by `data-hero-network-live`
+               so motion probes can read them. The phone globe draws no far
+               side, shadow or glow, so its probes read `grid-front`. */}
           <g
             ref={gridBackRef}
             data-hero-network-live="grid-back"
-            display={staticGrid ? "none" : undefined}
+            display={hidden}
           />
           <g
             ref={gridFrontShadowRef}
             data-hero-network-live="grid-front-shadow"
-            display={staticGrid ? "none" : undefined}
+            display={hidden}
           />
           <g
             ref={gridFrontRef}
             data-hero-network-live="grid-front"
-            display={staticGrid ? "none" : undefined}
+            display={hidden}
           />
           {/* Country: 3 layered passes (paint order = z-stack)
                1. radial glow (light-emitting wash)
@@ -1276,113 +730,90 @@ export function HeroNetwork({
           <g
             ref={countryGlowRef}
             data-hero-network-live="country-glow"
-            display={staticGrid ? "none" : undefined}
+            display={hidden}
           />
           <g
             ref={countryFillRef}
             data-hero-network-live="country-fill"
-            display={staticGrid ? "none" : undefined}
+            display={hidden}
           />
           <g
             ref={countryRef}
             data-hero-network-live="country-outline"
-            display={staticGrid ? "none" : undefined}
+            display={hidden}
           />
 
           {/* Static fallback for prefers-reduced-motion */}
-          {staticGrid &&
-            staticGrid.back.map((s, i) => (
-              <path
-                key={`sb${i}`}
-                d={s.d}
-                stroke={LC}
-                strokeOpacity={Math.round((0.025 + s.dp * 0.035) * 1000) / 1000}
-                strokeWidth={0.4}
-                fill="none"
-              />
-            ))}
-          {staticGrid &&
-            staticGrid.front.map((s, i) =>
-              flat ? (
+          {composition
+            ? composition.grid.back.map((s, i) => (
                 <path
-                  key={`sf${i}`}
+                  key={`sb${i}`}
                   d={s.d}
-                  stroke={paint.line}
-                  strokeOpacity={s.op ?? 1}
-                  strokeWidth={FLAT_GRID_WIDTH}
-                  vectorEffect="non-scaling-stroke"
+                  stroke={LC}
+                  strokeOpacity={paint(0.025 + s.dp * 0.035)}
+                  strokeWidth={0.4}
                   fill="none"
                 />
-              ) : (
+              ))
+            : null}
+          {composition
+            ? composition.grid.front.map((s, i) => (
                 <path
                   key={`sf${i}`}
                   d={s.d}
                   stroke={LC}
-                  strokeOpacity={
-                    Math.round((0.06 + s.dp * 0.16) * 1000) / 1000
-                  }
-                  strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
+                  strokeOpacity={paint(0.06 + s.dp * 0.16)}
+                  strokeWidth={paint((0.45 + s.dp * 0.4) * stroke)}
                   fill="none"
                 />
-              ),
-            )}
-          {flat &&
-            staticCountryFill &&
-            staticCountryFill.slice(0, staticGermanyRings).map((s, i) => (
-              <path
-                key={`sff${i}`}
-                d={s.d}
-                fill={paint.accent}
-                stroke="none"
-              />
-            ))}
-          {!flat &&
-            staticCountryFill &&
-            staticCountryFill.map((s, i) => (
-              <path
-                key={`scg${i}`}
-                d={s.d}
-                fill="url(#countryGlow)"
-                fillOpacity={Math.round((0.03 + s.dp * 0.03) * 1000) / 1000}
-                stroke="none"
-              />
-            ))}
-          {!flat &&
-            staticCountryFill &&
-            staticCountryFill.map((s, i) => (
-              <path
-                key={`scf${i}`}
-                d={s.d}
-                fill="url(#countryHatch)"
-                fillOpacity={0.1}
-                stroke="none"
-              />
-            ))}
-          {staticCountry &&
-            staticCountry.map((s, i) => (
-              <path
-                key={`sc${i}`}
-                d={s.d}
-                stroke={KUPFER}
-                strokeOpacity={Math.round((0.13 + s.dp * 0.05) * 1000) / 1000}
-                strokeWidth={2.0}
-                fill="none"
-                strokeLinecap="round"
-              />
-            ))}
+              ))
+            : null}
+          {composition
+            ? composition.countryFill.map((s, i) => (
+                <path
+                  key={`scg${i}`}
+                  d={s.d}
+                  fill={`url(#${ids.glow})`}
+                  fillOpacity={paint(0.03 + s.dp * 0.03)}
+                  stroke="none"
+                />
+              ))
+            : null}
+          {composition
+            ? composition.countryFill.map((s, i) => (
+                <path
+                  key={`scf${i}`}
+                  d={s.d}
+                  fill={`url(#${ids.hatch})`}
+                  fillOpacity={0.1}
+                  stroke="none"
+                />
+              ))
+            : null}
+          {composition
+            ? composition.country.map((s, i) => (
+                <path
+                  key={`sc${i}`}
+                  d={s.d}
+                  stroke={KUPFER}
+                  strokeOpacity={paint(0.13 + s.dp * 0.05)}
+                  strokeWidth={2 * stroke}
+                  fill="none"
+                  strokeLinecap="round"
+                />
+              ))
+            : null}
         </g>
 
-        {!flat ? (
-          <circle
-            cx={CX}
-            cy={CY}
-            r={R}
-            stroke={LC}
-            strokeOpacity={0.04}
-            strokeWidth={0.3}
-            fill="none"
-          />
-        ) : null}
+        <circle
+          cx={CX}
+          cy={CY}
+          r={R}
+          stroke={LC}
+          strokeOpacity={0.04}
+          strokeWidth={0.3}
+          fill="none"
+        />
 
         {/* Typing word — placed just above the country shape so it reads as
             a label for the visible country, not a floating header. */}
@@ -1394,32 +825,30 @@ export function HeroNetwork({
               x={CX}
               y={CY - R * 0.45}
               fontFamily="var(--font-loehrning-sans), sans-serif"
-              fontSize="30"
+              fontSize={wordSize}
               fontWeight="600"
               letterSpacing="-0.02em"
-              fill={paint.accent}
+              fill={KUPFER}
               textAnchor="middle"
               opacity="0"
-              {...wordKnockout}
             />
             <text
               ref={cursorRef}
               x={CX + 110}
               y={CY - R * 0.45}
               fontFamily="ui-monospace, SFMono-Regular, monospace"
-              fontSize="30"
+              fontSize={wordSize}
               fontWeight="300"
-              fill={paint.accent}
+              fill={KUPFER}
               opacity="0"
-              {...wordKnockout}
             >
               _
             </text>
           </>
         )}
 
-        {/* Step dots (the line globe only) */}
-        {!mobile && !flat && (
+        {/* Step dots (the desktop cover only) */}
+        {!mobile && !compact && (
           <g ref={stepDotsRef} opacity="0.5">
             {localizedSteps.map((_, i) => (
               <circle

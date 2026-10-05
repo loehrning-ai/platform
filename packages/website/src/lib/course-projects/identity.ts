@@ -20,22 +20,22 @@ export interface CourseProjectIdentity {
 export const COURSE_PROJECT_IDENTITIES = {
   "ki-fuehrerschein": {
     id: "project-ki-fuehrerschein-redline",
-    progressLessonId: "block_5_lesson_4",
+    progressLessonId: "regeln-4-2",
     engineKind: "case",
   },
   "eu-ai-act-kurs": {
     id: "project-eu-ai-act-case-file",
-    progressLessonId: "block_6_lesson_4",
+    progressLessonId: "plan-5-2",
     engineKind: "case",
   },
   "ai-native": {
     id: "project-ai-native-workflow-control",
-    progressLessonId: "modul_4_lesson_8",
+    progressLessonId: "workflow-4-3",
     engineKind: "prompt",
   },
   "ki-und-gesellschaft": {
     id: "project-ki-gesellschaft-newsroom",
-    progressLessonId: "ethik-3-3",
+    progressLessonId: "fair-3-3",
     engineKind: "case",
   },
   "data-engineering-fundamentals": {
@@ -52,16 +52,6 @@ export const COURSE_PROJECT_IDENTITIES = {
     id: "project-data-infrastructure-incident",
     progressLessonId: "interview-playbook",
     engineKind: "data",
-  },
-  codex: {
-    id: "project-codex-repository-mission",
-    progressLessonId: "L12",
-    engineKind: "repo",
-  },
-  claude: {
-    id: "project-claude-evidence-lab",
-    progressLessonId: "safety",
-    engineKind: "prompt",
   },
   "ai-native-operator": {
     id: "project-ai-native-operator-control-plane",

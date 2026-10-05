@@ -4,183 +4,232 @@
     "definition": "Verordnung (EU) 2024/1689 mit harmonisierten Vorschriften für künstliche Intelligenz: weltweit der erste umfassende Rechtsrahmen für KI, in Kraft seit 1. August 2024, gestaffelt anwendbar bis 2028.",
     "english": "AI Act",
     "category": "regulatorik",
-    "relatedTerms": ["Risikobasierter Ansatz", "KI-System"],
-    "relatedBlocks": ["block_1"]
+    "relatedTerms": [
+      "Risikobasierter Ansatz",
+      "KI-System"
+    ],
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
     "term": "KI-System",
     "definition": "Maschinengestütztes System, das autonom arbeitet, sich nach der Einführung anpassen kann und aus Eingaben Ergebnisse wie Vorhersagen, Empfehlungen oder Entscheidungen ableitet (Art. 3 Nr. 1).",
     "english": "AI System",
     "category": "regulatorik",
-    "relatedTerms": ["GPAI-Modell", "Anbieter"],
-    "relatedBlocks": ["block_1"]
+    "relatedTerms": [
+      "GPAI-Modell",
+      "Anbieter"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
   },
   {
     "term": "Risikobasierter Ansatz",
     "definition": "Grundprinzip der Verordnung: Pflichten richten sich nach dem Risiko eines KI-Systems. Vier Stufen, verboten, hoch, begrenzt und minimal, bestimmen den Umfang der Auflagen.",
     "english": "Risk-Based Approach",
     "category": "regulatorik",
-    "relatedTerms": ["Risikopyramide", "KI-Verordnung"],
-    "relatedBlocks": ["block_1", "block_2"]
+    "relatedTerms": [
+      "Risikopyramide",
+      "KI-Verordnung"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
   },
   {
     "term": "Verbotene Praktiken",
     "definition": "Nach Art. 5 verbotene KI-Praktiken mit unannehmbarem Risiko, unter anderem Social Scoring durch Behörden, manipulatives Verhalten zum Schaden von Personen und ungezielte biometrische Massenüberwachung. Anwendbar seit 2. Februar 2025.",
     "english": "Prohibited Practices",
     "category": "regulatorik",
-    "relatedTerms": ["Risikopyramide", "Social Scoring"],
-    "relatedBlocks": ["block_2"]
+    "relatedTerms": [
+      "Risikopyramide",
+      "Social Scoring"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
   },
   {
     "term": "Hochrisiko-System",
     "definition": "KI-System mit erheblichem Risiko für Gesundheit, Sicherheit oder Grundrechte nach Art. 6 mit Anhang I oder Anhang III. Nach Verordnung (EU) 2026/1744 (in Kraft seit 27. Juli 2026) gelten die Regeln ab 2. Dezember 2027 für eigenständige Anhang-III-Systeme und ab 2. August 2028 für produktintegrierte Systeme.",
     "english": "High-Risk System",
     "category": "regulatorik",
-    "relatedTerms": ["Anhang III", "Konformitätsbewertung"],
-    "relatedBlocks": ["block_2", "block_3"]
+    "relatedTerms": [
+      "Anhang III",
+      "Konformitätsbewertung"
+    ],
+    "relatedBlocks": [
+      "block_2",
+      "block_3"
+    ]
   },
   {
     "term": "Anhang III",
     "definition": "Anhang III listet die Einsatzbereiche, in denen ein KI-System als hochriskant gilt: biometrische Identifizierung, kritische Infrastruktur, Bildung, Beschäftigung, Zugang zu Diensten, Strafverfolgung, Migration und Justiz.",
     "english": "Annex III",
     "category": "regulatorik",
-    "relatedTerms": ["Hochrisiko-System", "Anhang I"],
-    "relatedBlocks": ["block_2"]
+    "relatedTerms": [
+      "Hochrisiko-System",
+      "Anhang I"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
   },
   {
     "term": "Transparenzpflicht",
     "definition": "Pflichten für bestimmte KI mit begrenztem Risiko nach Art. 50: Menschen müssen erkennen können, dass sie mit KI interagieren, und KI-erzeugte oder manipulierte Inhalte wie Deepfakes und generierte Texte sind in den Fällen des Art. 50 Abs. 4 offenzulegen.",
     "english": "Transparency Obligation",
     "category": "regulatorik",
-    "relatedTerms": ["Wasserzeichen", "Deepfake"],
-    "relatedBlocks": ["block_2", "block_4"]
+    "relatedTerms": [
+      "Wasserzeichen",
+      "Deepfake"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "Minimales Risiko",
     "definition": "Unterste Stufe der Risikopyramide, etwa Spamfilter, KI in der Lagerverwaltung oder Empfehlungssysteme, ohne risikoklassenspezifische Pflichten. Art. 4 zur KI-Kompetenz gilt trotzdem seit 2. Februar 2025.",
     "english": "Minimal Risk",
     "category": "regulatorik",
-    "relatedTerms": ["Risikopyramide", "Verhaltenskodex"],
-    "relatedBlocks": ["block_2"]
+    "relatedTerms": [
+      "Risikopyramide",
+      "Verhaltenskodex"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
   },
   {
     "term": "Konformitätsbewertung",
     "definition": "Verfahren zum Nachweis, dass ein Hochrisiko-System die Anforderungen erfüllt. Ergebnis sind eine EU-Konformitätserklärung und in der Regel eine CE-Kennzeichnung vor dem Inverkehrbringen (Art. 43, 47, 48).",
     "english": "Conformity Assessment",
     "category": "regulatorik",
-    "relatedTerms": ["Hochrisiko-System", "CE-Kennzeichnung"],
-    "relatedBlocks": ["block_3"]
-  },
-  {
-    "term": "Risikomanagementsystem",
-    "definition": "Fortlaufender, dokumentierter Prozess über den gesamten Lebenszyklus eines Hochrisiko-Systems, der Risiken identifiziert, bewertet und mindert (Art. 9). Alle weiteren Hochrisiko-Pflichten bauen darauf auf.",
-    "english": "Risk Management System",
-    "category": "regulatorik",
-    "relatedTerms": ["Hochrisiko-System", "Technische Dokumentation"],
-    "relatedBlocks": ["block_3"]
+    "relatedTerms": [
+      "Hochrisiko-System",
+      "CE-Kennzeichnung"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "Menschliche Aufsicht",
     "definition": "Pflicht nach Art. 14: Hochrisiko-Systeme müssen so gestaltet sein, dass Menschen den Betrieb überwachen, Ausgaben verstehen, eingreifen und das System notfalls abschalten können.",
     "english": "Human Oversight",
     "category": "regulatorik",
-    "relatedTerms": ["Hochrisiko-System", "Risikomanagementsystem"],
-    "relatedBlocks": ["block_3"]
+    "relatedTerms": [
+      "Hochrisiko-System"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "GPAI-Modell",
     "definition": "KI-Modell mit allgemeinem Verwendungszweck (General-Purpose AI), das viele unterschiedliche Aufgaben erfüllt und sich in nachgelagerte Systeme integrieren lässt. Eigene Pflichten nach Art. 53 ff., anwendbar seit 2. August 2025.",
     "english": "General-Purpose AI Model",
     "category": "technik",
-    "relatedTerms": ["Systemisches Risiko", "GPAI Code of Practice"],
-    "relatedBlocks": ["block_4"]
-  },
-  {
-    "term": "Systemisches Risiko",
-    "definition": "Besonderes Risiko sehr leistungsfähiger GPAI-Modelle, vermutet ab mehr als 10^25 FLOP Trainings-Compute. Es bringt verschärfte Pflichten wie Modellbewertung und Vorfallmeldung (Art. 51, 55).",
-    "english": "Systemic Risk",
-    "category": "technik",
-    "relatedTerms": ["GPAI-Modell", "GPAI Code of Practice"],
-    "relatedBlocks": ["block_4"]
+    "relatedTerms": [
+      "GPAI Code of Practice"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "KI-Kompetenz",
     "definition": "Organisationspflicht nach Art. 4 in der Fassung der Verordnung (EU) 2026/1744: Anbieter und Betreiber ergreifen kontextgerechte Maßnahmen, um die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag befasster Personen zu unterstützen. Ein bestimmtes individuelles Niveau müssen sie nicht garantieren. Anwendbar seit 2. Februar 2025.",
     "english": "AI Literacy",
     "category": "regulatorik",
-    "relatedTerms": ["Betreiber", "Anbieter"],
-    "relatedBlocks": ["block_4"]
+    "relatedTerms": [
+      "Betreiber",
+      "Anbieter"
+    ],
+    "relatedBlocks": [
+      "block_1",
+      "block_3"
+    ]
   },
   {
     "term": "Wasserzeichen",
     "definition": "Maschinenlesbare Kennzeichnung KI-erzeugter Inhalte: Anbieter generativer KI markieren Ausgaben so, dass sie als künstlich erzeugt oder manipuliert erkennbar sind (Art. 50 Abs. 2).",
     "english": "Watermarking",
     "category": "technik",
-    "relatedTerms": ["Transparenzpflicht", "Deepfake"],
-    "relatedBlocks": ["block_4"]
+    "relatedTerms": [
+      "Transparenzpflicht",
+      "Deepfake"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "Deepfake",
     "definition": "Durch KI erzeugtes oder manipuliertes Bild-, Audio- oder Videomaterial, das echten Personen, Gegenständen oder Ereignissen ähnelt und fälschlich echt erscheinen könnte. Offenzulegen nach Art. 50 Abs. 4.",
     "english": "Deepfake",
     "category": "technik",
-    "relatedTerms": ["Wasserzeichen", "Transparenzpflicht"],
-    "relatedBlocks": ["block_4"]
+    "relatedTerms": [
+      "Wasserzeichen",
+      "Transparenzpflicht"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "Anbieter",
     "definition": "Natürliche oder juristische Person, die ein KI-System oder GPAI-Modell entwickelt oder entwickeln lässt und unter eigenem Namen in Verkehr bringt (Art. 3 Nr. 3).",
     "english": "Provider",
     "category": "regulatorik",
-    "relatedTerms": ["Betreiber", "KI-System"],
-    "relatedBlocks": ["block_5"]
+    "relatedTerms": [
+      "Betreiber",
+      "KI-System"
+    ],
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
     "term": "Betreiber",
     "definition": "Natürliche oder juristische Person, die ein KI-System in eigener Verantwortung verwendet, außer bei rein persönlicher, nicht beruflicher Tätigkeit (Art. 3 Nr. 4). KMU sind meist Betreiber, nicht Anbieter.",
     "english": "Deployer",
     "category": "regulatorik",
-    "relatedTerms": ["Anbieter", "KI-Kompetenz"],
-    "relatedBlocks": ["block_5"]
-  },
-  {
-    "term": "AI Office",
-    "definition": "Das Büro für Künstliche Intelligenz der Europäischen Kommission. Es beaufsichtigt GPAI-Modelle, koordiniert die Durchsetzung EU-weit und betreut den GPAI Code of Practice.",
-    "english": "AI Office",
-    "category": "regulatorik",
-    "relatedTerms": ["Marktüberwachungsbehörde", "GPAI Code of Practice"],
-    "relatedBlocks": ["block_5"]
+    "relatedTerms": [
+      "Anbieter",
+      "KI-Kompetenz"
+    ],
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
     "term": "Sanktionen",
     "definition": "Bußgelder bei Verstößen: bis zu 35 Mio EUR oder 7 Prozent des weltweiten Jahresumsatzes bei verbotenen Praktiken, niedrigere Stufen bei sonstigen Verstößen (Art. 99).",
     "english": "Penalties",
     "category": "regulatorik",
-    "relatedTerms": ["AI Office", "Marktüberwachungsbehörde"],
-    "relatedBlocks": ["block_5"]
-  },
-  {
-    "term": "Reallabor",
-    "definition": "Regulatorische Sandbox nach Art. 57 ff.: ein von einer Behörde begleiteter Rahmen, in dem innovative KI-Systeme vor der Markteinführung unter realen Bedingungen erprobt werden können.",
-    "english": "Regulatory Sandbox",
-    "category": "praxis",
-    "relatedTerms": ["AI Office", "Konformitätsbewertung"],
-    "relatedBlocks": ["block_5"]
-  },
-  {
-    "term": "DSGVO-Brücke",
-    "definition": "Praktische Verbindung zwischen DSGVO und KI-Verordnung. Wer Verzeichnis der Verarbeitungstätigkeiten und Datenschutz-Folgenabschätzungen pflegt, kann Teile davon für die KI-Governance wiederverwenden.",
-    "english": "GDPR Bridge",
-    "category": "praxis",
-    "relatedTerms": ["Betreiber", "Technische Dokumentation"],
-    "relatedBlocks": ["block_6"]
+    "relatedTerms": [
+      "Marktüberwachungsbehörde"
+    ],
+    "relatedBlocks": [
+      "block_4"
+    ]
   },
   {
     "term": "KI-Inventar",
     "definition": "Gepflegte Liste aller im Unternehmen eingesetzten KI-Systeme mit Zweck, Risikoklasse und Verantwortlichen. Erster Schritt eines Audits zur KI-Verordnung.",
     "english": "AI Inventory",
     "category": "praxis",
-    "relatedTerms": ["Risikobasierter Ansatz", "Betreiber"],
-    "relatedBlocks": ["block_6"]
+    "relatedTerms": [
+      "Risikobasierter Ansatz",
+      "Betreiber"
+    ],
+    "relatedBlocks": [
+      "block_5"
+    ]
   }
 ]

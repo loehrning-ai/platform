@@ -8,9 +8,8 @@ import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
  * Data Infrastructure golden path: home -> lesson ->
- * checkpoint -> certificate -> QR verify, in one spec. Mirrors
- * route-codex.spec.ts's established pattern: no quiz-route leg (this course
- * has no separate gating quiz either, it uses 's generic
+ * checkpoint -> certificate -> QR verify, in one spec. No quiz-route leg
+ * (this course has no separate gating quiz, it uses 's generic
  * all-lessons-completed "completion" eligibility path), and the
  * certificate/QR-verify seeds "all 12 lessons completed" with
  * m: "completion", s: null.

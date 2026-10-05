@@ -29,6 +29,10 @@ export interface WorkshopPageCopy {
     readonly hubKicker: (count: number) => string;
     /** The H1. Describes the format; not a slogan. */
     readonly hubHeading: string;
+    /** The tail of hubHeading set on the highlight band (HighlightedText). */
+    readonly hubHeadingHighlight: string;
+    /** Label of the tilted catalogue card beside the H1. */
+    readonly catalogueIndex: string;
     /** One-sentence lead at every width. */
     readonly hubLead: string;
     /** The band's one action: into the recommended first workshop. */
@@ -90,7 +94,7 @@ export interface WorkshopPageCopy {
     /** Phone back link in the cover kicker line. */
     readonly workshopsShort: string;
     /** Label above the q-card in the cover band. */
-    readonly questionLabel: string;
+    readonly redLineLabel: string;
     /** Secondary cover-band button that jumps to the material list. */
     readonly seeMaterials: string;
     /** Cover-band buttons, chosen by the role of the material they open. */
@@ -116,10 +120,6 @@ export interface WorkshopPageCopy {
     readonly agendaSource: { readonly deck: string; readonly plan: string };
     /** Station caption for an item that runs only with a group. */
     readonly liveOnly: string;
-    /** Extra caption line on the station the decision lab mirrors. */
-    readonly labStation: string;
-    /** Link under the agenda to the decision lab, naming the station when known. */
-    readonly tryBelow: (stationLabel?: string) => string;
     readonly activityLabels: Readonly<Record<WorkshopActivity, string>>;
     readonly optional: string;
     readonly materialHeading: string;
@@ -140,13 +140,15 @@ export interface WorkshopPageCopy {
     readonly syntheticCase: string;
     readonly realCompanyData: string;
     readonly realExplanation: (companyName: string, period: string) => string;
-    readonly openDecision: string;
     readonly limitations: string;
     readonly realWorldHeading: string;
     readonly source: string;
     readonly published: string;
     readonly reviewed: string;
     readonly forWhom: string;
+    readonly detailsHeading: string;
+    readonly detailsSummary: string;
+    readonly moreMaterials: (count: number) => string;
     readonly needsHeading: string;
     readonly notNeededHeading: string;
     readonly notCoveredHeading: string;
@@ -181,6 +183,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       hubKicker: (count) =>
         `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
       hubHeading: "Workshops mit Fall und Vorlage.",
+      hubHeadingHighlight: "mit Fall und Vorlage.",
+      catalogueIndex: "Im Katalog",
       hubLead:
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
@@ -236,7 +240,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       backAria: "Alle Workshops, zurück zur Übersicht",
       allWorkshops: "Alle Workshops",
       workshopsShort: "Workshops",
-      questionLabel: "Die Frage des Workshops",
+      redLineLabel: "Der Weg durch den Workshop",
       seeMaterials: "Material ansehen",
       primaryAction: {
         deck: "Deck öffnen",
@@ -271,11 +275,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         plan: "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
       },
       liveOnly: "nur live",
-      labStation: "Übung unten",
-      tryBelow: (stationLabel) =>
-        stationLabel
-          ? `„${stationLabel}“ unten ausprobieren`
-          : "Unten ausprobieren",
       activityLabels: {
         listen: "Zuhören",
         vote: "Abstimmen",
@@ -318,13 +317,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       realCompanyData: "Echte Unternehmensdaten",
       realExplanation: (companyName, period) =>
         `${companyName}, ${period}: öffentlich zugängliche Zahlen aus den Angaben des Unternehmens.`,
-      openDecision: "Die offene Entscheidung",
       limitations: "Was die Daten nicht beantworten",
       realWorldHeading: "Dieselbe Methode an echten Zahlen",
       source: "Quelle",
       published: "veröffentlicht",
       reviewed: "geprüft",
       forWhom: "Für wen",
+      detailsHeading: "Details",
+      detailsSummary: "Für wen, was du brauchst, was nicht dazugehört",
+      moreMaterials: (count) => `${count} optionale ${count === 1 ? "Datei" : "Dateien"}`,
       needsHeading: "Das brauchst du",
       notNeededHeading: "Das brauchst du nicht",
       notCoveredHeading: "Nicht Teil dieses Workshops",
@@ -360,6 +361,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       hubKicker: (count) =>
         `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
       hubHeading: "Workshops with a case and a template.",
+      hubHeadingHighlight: "with a case and a template.",
+      catalogueIndex: "In the catalogue",
       hubLead:
         "You work through an invented company's data and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
@@ -412,7 +415,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       backAria: "Back to all workshops",
       allWorkshops: "All workshops",
       workshopsShort: "Workshops",
-      questionLabel: "The workshop's question",
+      redLineLabel: "The path through the workshop",
       seeMaterials: "See materials",
       primaryAction: {
         deck: "Open the deck",
@@ -447,9 +450,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         plan: "Planned minutes, not yet measured with test readers.",
       },
       liveOnly: "live only",
-      labStation: "Exercise below",
-      tryBelow: (stationLabel) =>
-        stationLabel ? `Try “${stationLabel}” below` : "Try it below",
       activityLabels: {
         listen: "Listen",
         vote: "Vote",
@@ -492,13 +492,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       realCompanyData: "Real company data",
       realExplanation: (companyName, period) =>
         `${companyName}, ${period}: publicly available figures from the company's own disclosures.`,
-      openDecision: "Decision to make",
       limitations: "What the data cannot answer",
       realWorldHeading: "The same method on real figures",
       source: "Source",
       published: "published",
       reviewed: "reviewed",
       forWhom: "Who this is for",
+      detailsHeading: "Details",
+      detailsSummary: "Who it is for, what you need, what it leaves out",
+      moreMaterials: (count) => `${count} optional ${count === 1 ? "file" : "files"}`,
       needsHeading: "What you need",
       notNeededHeading: "What you don't need",
       notCoveredHeading: "Not part of this workshop",

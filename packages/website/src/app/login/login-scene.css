@@ -1,0 +1,277 @@
+/* /login scene: the one sanctioned dark ground on the site.
+ *
+ * The owner asked for this login background explicitly: a near-black page
+ * (#050505) with a static 14px dot grid, a vignette and a canvas of drifting
+ * dot-matrix shapes, with a rounded dark card rising in over it. Every other
+ * surface keeps the paper rule (docs/experience-system.md, "No black grounds";
+ * src/lib/dark-surface-contract.test.ts keeps this scope confined to /login).
+ *
+ * Like the poster scenes in globals.css, the scene redefines the theme tokens
+ * for everything inside it, so the form, the Turnstile status and the links
+ * keep their token utilities and land on AA-safe values here. Ratios are
+ * against the card (#2a2a2c top, #202021 bottom); the lower value is quoted.
+ */
+.login-scene {
+  --color-background: #1c1c1e; /* field and ring-offset ground */
+  --color-foreground: #f4f4f5; /* 13.03 */
+  --color-muted-foreground: #b4b4b8; /* 6.93 */
+  --color-muted: #b4b4b8;
+  --color-border: rgb(255 255 255 / 0.36); /* control edge, 3.27 */
+  --color-track: rgb(255 255 255 / 0.08); /* hairlines, decor */
+  --color-hairline: rgb(255 255 255 / 0.08);
+  --color-card: #2a2a2c;
+  --color-card-hover: #333336;
+  --color-inset: #1c1c1e;
+  --color-brand-orange: #14b8a6; /* teal: ring and accent text, 5.75 */
+  --color-kupfer: #14b8a6;
+  --color-kupfer-dark: #14b8a6;
+  --color-destructive: #fca5a5; /* 7.55 */
+  --login-accent: #14b8a6;
+  --login-ground: #050505;
+
+  position: relative;
+  isolation: isolate;
+  /* Clips the fixed backdrop to this section: it covers the viewport while
+     the section is on screen and never paints over the paper footer. */
+  clip-path: inset(0);
+  /* Full bleed from the top of <main>, under the fixed nav, to the footer.
+     The nav keeps its own paper sheet (see the rule at the end). */
+  margin-top: calc(var(--nav-h-compact) * -1);
+  padding-top: var(--nav-h-compact);
+  min-height: 100svh;
+  background-color: var(--login-ground);
+  color: var(--color-foreground);
+  color-scheme: dark;
+}
+
+@media (width >= 64rem) {
+  .login-scene {
+    margin-top: calc(var(--nav-h) * -1);
+    padding-top: var(--nav-h);
+  }
+}
+
+/* Static layer: the dot grid and the vignette, viewport-sized and fixed. A
+   grid dot sits at the viewport centre, as the canvas expects. */
+.login-scene-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--login-ground);
+  background-image:
+    radial-gradient(ellipse at center, transparent 45%, rgb(0 0 0 / 0.45) 100%),
+    radial-gradient(rgb(255 255 255 / 0.1) 1px, transparent 1.4px);
+  background-size:
+    100% 100%,
+    14px 14px;
+  background-position: center;
+  background-repeat: no-repeat, repeat;
+}
+
+/* The moving layer sits above the grid and the vignette, under the card. */
+.login-dot-field {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-dot-field {
+    display: none;
+  }
+}
+
+.login-scene-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Card */
+.login-card {
+  background-color: #252527;
+  background-image: linear-gradient(180deg, #2a2a2c, #202021);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 18px;
+  box-shadow:
+    0 24px 70px rgb(0 0 0 / 0.6),
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 0 100px rgb(130 165 235 / 0.07);
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 15px;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background-image: linear-gradient(180deg, #161616, #000);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.45);
+  color: #fff;
+}
+
+/* A quiet panel under the card (account note, public links). Its own ground
+   keeps the text AA over whatever shape drifts behind it. */
+.login-subpanel {
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 14px;
+  background-color: rgb(22 22 24 / 0.92);
+}
+
+/* The "or" divider: two hairlines around the label. */
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgb(255 255 255 / 0.08);
+}
+
+/* Controls
+   The reference look: a subtle white gradient, a hairline edge, a teal focus
+   ring. Flat: no lift on hover, only the gradient and the edge brighten. */
+.login-btn {
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 9px;
+  background-color: #38383a;
+  background-image: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.11),
+    rgb(255 255 255 / 0.05)
+  );
+  color: var(--color-foreground);
+  transition:
+    background-color 160ms var(--ease-fade),
+    border-color 160ms var(--ease-fade);
+}
+
+.login-btn:hover:not(:disabled) {
+  background-image: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.16),
+    rgb(255 255 255 / 0.08)
+  );
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+.login-btn:focus-visible,
+.login-input:focus-visible,
+.login-scene-toggle:focus-visible {
+  outline: 2px solid var(--login-accent);
+  outline-offset: 3px;
+}
+
+.login-input {
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background-color: rgb(0 0 0 / 0.28);
+  color: var(--color-foreground);
+  transition: border-color 160ms var(--ease-fade);
+}
+
+.login-input::placeholder {
+  color: #8f8f94;
+}
+
+.login-input:focus {
+  border-color: var(--login-accent);
+}
+
+/* Pause toggle */
+.login-scene-toggle {
+  position: absolute;
+  top: calc(var(--nav-h-compact) + 0.75rem);
+  right: 0.75rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 0.75rem;
+  background-color: rgb(22 22 24 / 0.8);
+  color: #c8c8cc;
+  cursor: pointer;
+  transition:
+    border-color 120ms var(--ease-fade),
+    color 120ms var(--ease-fade);
+}
+
+.login-scene-toggle:hover {
+  border-color: rgb(255 255 255 / 0.3);
+  color: #fff;
+}
+
+.login-scene-toggle svg {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+@media (width >= 64rem) {
+  .login-scene-toggle {
+    top: calc(var(--nav-h) + 1rem);
+    right: 1rem;
+  }
+}
+
+/* Rise: finite, first paint only
+   The card rises in once and its rows follow in a short stagger. Every
+   animation ends in the natural state, and none of it exists under reduced
+   motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .login-rise {
+    animation: login-rise 450ms var(--ease-deck) both;
+  }
+
+  .login-rise[data-rise="1"] {
+    animation-delay: 40ms;
+  }
+
+  .login-rise[data-rise="2"] {
+    animation-delay: 80ms;
+  }
+
+  .login-rise[data-rise="3"] {
+    animation-delay: 120ms;
+  }
+
+  .login-rise[data-rise="4"] {
+    animation-delay: 160ms;
+  }
+
+  .login-rise[data-rise="5"] {
+    animation-delay: 200ms;
+  }
+}
+
+@keyframes login-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* The nav keeps its paper: on this route its translucent sheet would turn
+   grey over the dark scene, so it becomes the opaque Kalkweiß it reads as
+   everywhere else. */
+body:has([data-login-scene]) [data-nav-header-row] {
+  background-color: var(--color-background);
+}

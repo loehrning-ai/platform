@@ -18,14 +18,15 @@ import {
  */
 
 const ROUTE = "/kurse";
-const CLAUDE_START = "/kurse/open-source/claude/kurs/mental-model";
+const OPEN_START = "/kurse/open-source/data-infrastructure/kurs/mental-model";
+const OPERATOR_START = "/kurse/open-source/ai-native-operator/mindset/1";
 
 // Native course tracks (h3 card headings) - source of truth: lib/courses/catalog.ts.
 const NATIVE_TRACKS = [
   "KI-Führerschein",
   "KI und Gesellschaft",
   "EU AI Act Kurs",
-  "AI-Native Arbeitskurs",
+  "Mit KI arbeiten",
 ] as const;
 
 test.describe("/kurse hub", () => {
@@ -91,7 +92,7 @@ test.describe("/kurse hub", () => {
     // route protection is covered separately in route-ki-fuehrerschein.spec.ts.
     const proof = page.getByTestId("next-proof");
     await expect(
-      proof.getByRole("heading", { name: "Claude-Kurs", exact: true }),
+      proof.getByRole("heading", { name: "Data Infrastructure", exact: true }),
     ).toBeVisible();
     await expect(
       proof.getByText("Offener Einstieg ohne Lernkonto", { exact: true }),
@@ -101,17 +102,19 @@ test.describe("/kurse hub", () => {
       proof.locator("[data-open-course-alternative]"),
     ).toHaveCount(0);
     const startCta = proof.getByRole("link", {
-      name: /^Kurs starten\s*:\s*Claude-Kurs$/,
+      name: /^Kurs starten\s*:\s*Data Infrastructure$/,
     });
     await expect(startCta).toBeVisible();
-    await expect(startCta).toHaveAttribute("href", CLAUDE_START);
+    await expect(startCta).toHaveAttribute("href", OPEN_START);
 
     await startCta.click();
     await expect(page).toHaveURL(
       (url) =>
-        url.pathname === CLAUDE_START && url.search === "" && url.hash === "",
+        url.pathname === OPEN_START && url.search === "" && url.hash === "",
     );
-    await expect(page.locator('[data-lesson-mission="claude"]')).toBeVisible();
+    await expect(
+      page.locator('[data-lesson-mission="data-infrastructure"]'),
+    ).toBeVisible();
   });
 
   test("learning goals retain their course and disclose its available actions", async ({
@@ -138,7 +141,7 @@ test.describe("/kurse hub", () => {
         goal: "start",
         course: "KI-Führerschein",
         href: "/ki-fuehrerschein",
-        alternative: { course: "Claude-Kurs", href: CLAUDE_START },
+        alternative: { course: "Data Infrastructure", href: OPEN_START },
       },
       {
         label: "Ich bewerte KI-Risiken",
@@ -153,9 +156,12 @@ test.describe("/kurse hub", () => {
       {
         label: "Ich baue mit KI",
         goal: "build",
-        course: "AI-Native Arbeitskurs",
+        course: "Mit KI arbeiten",
         href: "/ai-native",
-        alternative: { course: "Claude-Kurs", href: CLAUDE_START },
+        alternative: {
+          course: "The AI-Native Operator",
+          href: OPERATOR_START,
+        },
       },
       {
         label: "Ich arbeite mit Daten",
@@ -308,15 +314,15 @@ for (const phone of PHONES) {
       // lower).
       expect(metrics.nextAction?.top).toBeLessThan(phone.height);
     }
-    // The MIT attribution prints once, in the technical group head, and the
-    // rows leave it to lg.
-    expect(metrics.rowSources).toHaveLength(6);
+    // The MIT attribution prints once, in the visual-learning group head, and
+    // the rows leave it to lg.
+    expect(metrics.rowSources).toHaveLength(4);
     expect(new Set(metrics.rowSources)).toEqual(new Set(["none"]));
     expect(metrics.groupSource?.display).not.toBe("none");
     expect(metrics.groupSource?.height).toBeGreaterThanOrEqual(44);
     // The level chips run to the screen edge like the goal rail.
     expect(Math.round(metrics.levelChipsRight)).toBe(phone.width);
-    expect(metrics.rows).toHaveLength(10);
+    expect(metrics.rows).toHaveLength(8);
     for (const height of metrics.rows) {
       expect(height).toBeLessThanOrEqual(phone.maxRow);
     }
@@ -401,13 +407,13 @@ for (const phone of PHONES) {
   });
 }
 
-test("/kurse prints the source attribution on every technical row from lg", async ({
+test("/kurse prints the source attribution on every visual-learning row from lg", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
   const sources = page.locator("[data-course-source]");
-  await expect(sources).toHaveCount(6);
+  await expect(sources).toHaveCount(4);
   for (const source of await sources.all()) {
     await expect(source).toBeVisible();
   }
@@ -422,7 +428,7 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
 
     const atlas = page.getByTestId("learning-atlas");
     await expect(atlas).toBeVisible();
-    await expect(atlas.locator("[data-course-slug]")).toHaveCount(10);
+    await expect(atlas.locator("[data-course-slug]")).toHaveCount(8);
     // Workshops are linked once as the practical companion.
     await expect(
       page.locator("[data-kurse-workshops]").getByRole("link"),
@@ -430,10 +436,16 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
       "href",
       route.startsWith("/en/") ? "/en/workshops" : "/workshops",
     );
-    // The ledger brief's zero-image rule, restored. Cover thumbnails were
-    // tried and removed: the artwork crops to mush at the size a dense row
-    // allows, and the imported courses carry only site screenshots.
-    await expect(atlas.locator("img")).toHaveCount(0);
+    // Pictures only on the Grundlagenpfad rows: each course's people
+    // picture, cropped to its subject in the 4:5 thumb. The visual-learning courses keep
+    // their posters; their site screenshots never render in the ledger.
+    const pictures = atlas.locator('#lernpfad [data-course-thumb="picture"] img');
+    await expect(pictures).toHaveCount(4);
+    for (const picture of await pictures.all()) {
+      await expect(picture).toHaveAttribute("alt", "");
+      await expect(picture).toHaveAttribute("src", /cover-v4\.webp/);
+    }
+    await expect(atlas.locator("#tiefer-gehen img")).toHaveCount(0);
     await expect(
       page.getByRole("group", {
         name: route.startsWith("/en/")

@@ -11,6 +11,7 @@ import { getWorkshopPassThreshold } from "./config";
 import {
   CANONICAL_LESSON_IDS,
   CANONICAL_SECTION_IDS,
+  isLessonEngineCourse,
   LESSON_COMPLETION_EVIDENCE_VERSION,
   isLessonCompletionEvidenceBacked,
 } from "@/lib/courses/completion";
@@ -400,6 +401,8 @@ function validateCompletionEvidence(
       !lesson?.completed ||
       lesson.quizScore === null ||
       lesson.quizTotal === null ||
+      // Lesson-engine courses require both checks answered correctly.
+      (isLessonEngineCourse(courseSlug) && lesson.quizScore !== 1) ||
       !requiredSections.every((sectionId) =>
         lesson.sectionsRead.includes(sectionId),
       )

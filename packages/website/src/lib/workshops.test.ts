@@ -169,30 +169,6 @@ describe("workshops catalog", () => {
     }
   });
 
-  it("gives every workshop one bounded, internally consistent first decision", () => {
-    for (const workshop of WORKSHOPS) {
-      const lab = workshop.decisionLab;
-      expect(lab.facts).toHaveLength(3);
-      expect(lab.choices.length).toBeGreaterThanOrEqual(2);
-      expect(lab.evidence.length).toBeGreaterThanOrEqual(2);
-      expect(new Set(lab.choices.map(({ id }) => id)).size).toBe(
-        lab.choices.length,
-      );
-      expect(new Set(lab.evidence.map(({ id }) => id)).size).toBe(
-        lab.evidence.length,
-      );
-      expect(lab.choices.map(({ id }) => id)).toContain(
-        lab.recommendedChoiceId,
-      );
-      expect(lab.evidence.map(({ id }) => id)).toContain(
-        lab.strongestEvidenceId,
-      );
-      expect(JSON.stringify(lab)).not.toMatch(
-        /localStorage|sessionStorage|cookie|upload/i,
-      );
-    }
-  });
-
   it("states plainly whether each case study is fictional, with non-empty narrative and metrics", () => {
     for (const workshop of WORKSHOPS) {
       const { caseStudy } = workshop;
@@ -305,18 +281,6 @@ describe("workshops catalog", () => {
       );
       expect(Boolean(englishWorkshop?.realWorldCase)).toBe(
         Boolean(germanWorkshop.realWorldCase),
-      );
-      expect(englishWorkshop?.decisionLab.choices.map(({ id }) => id)).toEqual(
-        germanWorkshop.decisionLab.choices.map(({ id }) => id),
-      );
-      expect(englishWorkshop?.decisionLab.evidence.map(({ id }) => id)).toEqual(
-        germanWorkshop.decisionLab.evidence.map(({ id }) => id),
-      );
-      expect(englishWorkshop?.decisionLab.recommendedChoiceId).toBe(
-        germanWorkshop.decisionLab.recommendedChoiceId,
-      );
-      expect(englishWorkshop?.decisionLab.strongestEvidenceId).toBe(
-        germanWorkshop.decisionLab.strongestEvidenceId,
       );
     }
   });

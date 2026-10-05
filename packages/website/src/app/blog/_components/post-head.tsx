@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { getPostNumberLabel } from "@/lib/blog-metadata";
 
 /**
- * The one header every blog post opens with, in Loehrning Sans on paper
+ * The one header every blog post opens with, in Figtree on paper
  * (post-wz.css `.wz-hero*`): the series line ("Blog · Nº 01") on the page's
  * scene Kopflinie, the H1 in the scene line (Kobalt below the IDEA blog hub,
  * as a lesson H1 takes its track), the byline as one wrapping 14px line, then

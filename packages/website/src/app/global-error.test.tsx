@@ -87,8 +87,10 @@ describe("src/app/global-error.tsx", () => {
       "client-boundary-failure",
     );
     expect(screen.getByText("Fehler-ID: 3123456789")).toHaveStyle({
-      color: "#a89070",
+      color: "#4f4640",
     });
+    // Paper, never a black ground.
+    expect(document.body).toHaveStyle({ backgroundColor: "#f7f1e7" });
 
     consoleError.mockRestore();
   });

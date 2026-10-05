@@ -20,12 +20,8 @@ const PASSIVE_STATE_SURFACES = [
   "../components/data-engineering-fundamentals/def-course-not-found-state.tsx",
   "../components/data-science/ds-course-error-state.tsx",
   "../components/data-science/ds-course-not-found-state.tsx",
-  "kurse/open-source/codex/error.tsx",
-  "kurse/open-source/codex/not-found.tsx",
   "kurse/open-source/data-infrastructure/error.tsx",
   "kurse/open-source/data-infrastructure/not-found.tsx",
-  "kurse/open-source/claude/error.tsx",
-  "kurse/open-source/claude/not-found.tsx",
   "../components/course/kurs/completion-certificate-cta.tsx",
   "../components/course/kurs/certificate-page.tsx",
 ] as const;

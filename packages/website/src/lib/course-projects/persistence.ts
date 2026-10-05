@@ -28,13 +28,14 @@ const COMPACT_EXECUTION_RECEIPTS = Object.values(
 const COMPACT_LOCAL_LEARNING_RECEIPTS = Object.values(
   COURSE_PROJECT_LOCAL_LEARNING_RECEIPTS,
 );
+// Append only: stored artifacts encode the model as an index into this list.
 const COMPACT_PROVIDER_MODELS = [
   "anthropic/claude-haiku-4.5",
   "google/gemini-2.5-flash-lite",
+  "openai/gpt-5-mini",
 ] as const;
 const ENGINE_KINDS = new Set<CourseProjectEngineKind>([
   "prompt",
-  "repo",
   "data",
   "case",
 ]);
@@ -55,29 +56,12 @@ const FIELD_PRIORITY: Readonly<
     "approvalGate",
     "stopCondition",
     "handoffDefined",
-    "twoOutputEvidence",
-    "comparisonDecision",
-    "claimReviewCode",
-    "rubricScores",
     "evaluation",
     "providerEvidence",
     "completionMode",
     "providerFailureClass",
     "providerModel",
     "budget",
-  ],
-  repo: [
-    "stages",
-    "executionReceipt",
-    "specReady",
-    "sandboxAttested",
-    "attestationContract",
-    "workspace",
-    "commandSequence",
-    "baselineFailed",
-    "postfixPassed",
-    "checksPassed",
-    "diffScoped",
   ],
   data: [
     "stages",
@@ -107,7 +91,6 @@ const ALLOWED_FIELD_KEYS: Readonly<
   Record<CourseProjectEngineKind, ReadonlySet<string>>
 > = Object.freeze({
   prompt: new Set([...FIELD_PRIORITY.prompt, ARTIFACT_TRIMMED_FIELD]),
-  repo: new Set([...FIELD_PRIORITY.repo, ARTIFACT_TRIMMED_FIELD]),
   data: new Set([...FIELD_PRIORITY.data, ARTIFACT_TRIMMED_FIELD]),
   case: new Set([...FIELD_PRIORITY.case, ARTIFACT_TRIMMED_FIELD]),
 });
@@ -499,35 +482,14 @@ function hasExactStringSequence(
 
 const PROMPT_EVALUATIONS = {
   "ai-native": "workflow",
-  claude: "grounding",
   "ai-native-operator": "intervene",
 } as const satisfies Partial<Readonly<Record<CourseSlug, string>>>;
 
 const PROMPT_MODELS = new Set([
   "anthropic/claude-haiku-4.5",
   "google/gemini-2.5-flash-lite",
+  "openai/gpt-5-mini",
 ]);
-const CLAUDE_COMPARISON_DECISIONS = new Set([
-  "a-stronger",
-  "b-stronger",
-  "equivalent",
-]);
-const EXPECTED_CLAUDE_CLAIM_REVIEW_CODE = 423153;
-
-function rubricSupportsComparison(value: unknown, decision: string): boolean {
-  if (!Number.isSafeInteger(value) || !/^[1-4]{8}$/.test(String(value))) {
-    return false;
-  }
-  const scores = [...String(value)].map(Number);
-  const responseA = scores.slice(0, 4).reduce((sum, score) => sum + score, 0);
-  const responseB = scores.slice(4).reduce((sum, score) => sum + score, 0);
-  return decision === "equivalent"
-    ? responseA === responseB
-    : decision === "a-stronger"
-      ? responseA > responseB
-      : decision === "b-stronger" && responseB > responseA;
-}
-
 const DATA_VARIANTS = {
   "data-science": "experiment",
   "data-engineering-fundamentals": "pipeline",
@@ -654,35 +616,8 @@ function hasRequiredArtifactEvidence(
       return false;
     }
 
-    if (courseSlug === "claude") {
-      return (
-        fields.twoOutputEvidence === true &&
-        typeof fields.comparisonDecision === "string" &&
-        CLAUDE_COMPARISON_DECISIONS.has(fields.comparisonDecision) &&
-        fields.claimReviewCode === EXPECTED_CLAUDE_CLAIM_REVIEW_CODE &&
-        rubricSupportsComparison(fields.rubricScores, fields.comparisonDecision)
-      );
-    }
-
     return (
       fields.secondaryReady === true && fields.evaluation === expectedEvaluation
-    );
-  }
-
-  if (artifact.engineKind === "repo") {
-    return (
-      courseSlug === "codex" &&
-      fields.attestationContract === "pipeline-quality-v1" &&
-      fields.workspace === "pipeline-quality" &&
-      fields.commandSequence === "canonical" &&
-      fieldsAreTrue(fields, [
-        "specReady",
-        "sandboxAttested",
-        "baselineFailed",
-        "postfixPassed",
-        "checksPassed",
-        "diffScoped",
-      ])
     );
   }
 

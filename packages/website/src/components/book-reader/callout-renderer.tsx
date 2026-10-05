@@ -10,15 +10,17 @@ import { Children, type ReactNode } from "react";
  *
  * Usage: pass as `components={{ blockquote: CalloutRenderer }}` to ReactMarkdown.
  *
- * Label → colour mapping (book-library import E9):
- *   Tipp                → border-brand-orange  bg-orange-950/40
- *   Achtung             → border-amber-500     bg-amber-950/40
+ * Label → colour mapping. Every callout is a light sheet with ink text
+ * (never a dark block: the site has no black grounds); the left rule and a
+ * pastel wash carry the type:
+ *   Tipp                → border-brand-orange  bg-brand-peach/25
+ *   Achtung             → border-amber-600     bg-amber-50
  *   Rechtlicher Hinweis → border-[#C4431A]     bg-[#C4431A]/10   (Kupfer, not red)
- *   Das Wichtigste      → border-stone-400     bg-stone-900/60
- *   Jetzt bist du dran  → border-green-500     bg-green-950/40
- *   Prompt-Vorlage      → border-brand-sand    bg-stone-900/80 font-mono
- *   Begriff             → border-sky-400       bg-sky-950/40
- *   Navigation          → border-stone-600     bg-stone-900/40
+ *   Das Wichtigste      → border-foreground    bg-card
+ *   Jetzt bist du dran  → border-green-700     bg-brand-acid/30
+ *   Prompt-Vorlage      → border-brand-sand    bg-inset font-mono
+ *   Begriff             → border-sky-600       bg-brand-sky/30
+ *   Navigation          → border-stone-500     bg-card
  *   (fallback)          → border-border        bg-card/20
  */
 
@@ -35,12 +37,12 @@ const CALLOUT_STYLES: Record<
 > = {
   tipp: {
     border: "border-l-4 border-[var(--color-brand-orange)]",
-    bg: "bg-orange-950/40",
+    bg: "bg-brand-peach/25",
     icon: "💡",
   },
   achtung: {
-    border: "border-l-4 border-amber-500",
-    bg: "bg-amber-950/40",
+    border: "border-l-4 border-amber-600",
+    bg: "bg-amber-50",
     icon: "⚠️",
   },
   "rechtlicher hinweis": {
@@ -49,38 +51,38 @@ const CALLOUT_STYLES: Record<
     icon: "⚖️",
   },
   "das wichtigste": {
-    border: "border-l-4 border-stone-400",
-    bg: "bg-stone-900/60",
+    border: "border-l-4 border-foreground",
+    bg: "bg-card",
   },
   "jetzt bist du dran": {
-    border: "border-l-4 border-green-500",
-    bg: "bg-green-950/40",
+    border: "border-l-4 border-green-700",
+    bg: "bg-brand-acid/30",
     icon: "✏️",
   },
   "prompt-vorlage": {
     border: "border-l-4 border-[var(--color-brand-sand)]",
-    bg: "bg-stone-900/80",
+    bg: "bg-inset",
     mono: true,
   },
   begriff: {
-    border: "border-l-4 border-sky-400",
-    bg: "bg-sky-950/40",
+    border: "border-l-4 border-sky-600",
+    bg: "bg-brand-sky/30",
   },
   navigation: {
-    border: "border-l-4 border-stone-600",
-    bg: "bg-stone-900/40",
+    border: "border-l-4 border-stone-500",
+    bg: "bg-card",
   },
   hinweis: {
     border: "border-l-4 border-stone-500",
-    bg: "bg-stone-900/40",
+    bg: "bg-card",
   },
   note: {
     border: "border-l-4 border-stone-500",
-    bg: "bg-stone-900/40",
+    bg: "bg-card",
   },
   "kraft-prompt": {
     border: "border-l-4 border-[var(--color-brand-sand)]",
-    bg: "bg-stone-900/80",
+    bg: "bg-inset",
     mono: true,
   },
 };

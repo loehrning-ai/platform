@@ -19,14 +19,14 @@ export default async function Image() {
     locale === "en"
       ? {
           caps: "AI and Society · Foundation course",
-          title: "Work. Deepfakes. Bias.",
-          subtitle: "3 blocks, 9 lessons, 46 minutes.",
+          title: "Jobs figures. Fakes. Fairness.",
+          subtitle: "3 modules, 8 hands-on lessons, 40 minutes.",
           trailing: "/en/ki-und-gesellschaft",
         }
       : {
           caps: "KI und Gesellschaft · Grundlagenkurs",
-          title: "Arbeit. Deepfakes. Bias.",
-          subtitle: "3 Blöcke, 9 Lektionen, 46 Minuten.",
+          title: "Jobzahlen. Fakes. Fairness.",
+          subtitle: "3 Module, 8 Lektionen mit Übung, 40 Minuten.",
           trailing: "/ki-und-gesellschaft",
         };
 

@@ -1,912 +1,422 @@
 {
   "moduleId": "modul_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-07",
-  "reviewCadence": "vendor",
-  "riskClass": "vendor",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
   "triggerEvents": [
-    "vendor-api-change",
-    "model-deprecation"
+    "major-conceptual-update",
+    "new-primary-study"
   ],
   "lessons": [
     {
-      "id": "modul_1_lesson_1",
+      "id": "messen-1-1",
       "moduleId": "modul_1",
       "number": 1,
-      "title": "Wenn du nicht mehr bei null anfängst",
-      "subtitle": "Vom leeren Dokument zum Claude-Briefing",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Du hast die Werkzeuge schon und lernst, sie zu kombinieren.",
+      "title": "Lohnt sich KI hier wirklich?",
+      "subtitle": "Netto-Zeit statt Bauchgefühl",
+      "durationMinutes": 8,
       "keyConcepts": [
-        "Rolle",
-        "Kontext",
-        "Auftrag",
-        "Claude.ai",
-        "RCTFC"
+        "Netto-Zeit",
+        "Prüfaufwand",
+        "Baseline"
       ],
-      "widgets": [
-        {
-          "kind": "exercise-fix-prompt",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_1_ex_1",
-            "lessonId": "modul_1_lesson_1",
-            "moduleId": "modul_1",
-            "title": "Schreibe ein besseres Claude-Briefing",
-            "scenario": "Ein Kunde bittet per Mail um eine Lösung bis Freitag. Ergänze den schwachen Prompt unten um Rolle, Kontext, klaren Auftrag und ein konkretes Output-Format.",
-            "startingPrompt": "Schreib mir eine Mail zurück an den Kunden.",
-            "criteria": [
-              {
-                "id": "role",
-                "label": "Rolle benannt (z. B. Vertriebsassistent, Handwerksmeister, HR)",
-                "pattern": "rolle:"
-              },
-              {
-                "id": "context",
-                "label": "Kontext eingefügt (Kunde + Thema)",
-                "pattern": "kontext:"
-              },
-              {
-                "id": "task",
-                "label": "Auftrag explizit (Zusage / Rückfrage / Eskalation)",
-                "pattern": "auftrag:"
-              },
-              {
-                "id": "format",
-                "label": "Format-Spec (Wörter-Limit, Ton)",
-                "pattern": "(unter|max|ton):",
-                "regex": true
-              },
-              {
-                "id": "ask",
-                "label": "Mindestens eine offene Rückfrage an den Kunden",
-                "pattern": "(charge|nummer|anzahl|bitte)",
-                "regex": true
-              }
-            ],
-            "passThreshold": 0.6
+      "concept": {
+        "body": "Zwei kontrollierte Experimente, zwei gegensätzliche Ergebnisse:\n\n| Studie | Aufgabe | Mit KI |\n|---|---|---|\n| Noy und Zhang 2023, 453 Fachkräfte | berufliche Schreibaufgaben, z. B. Pressemitteilung | 40 % schneller, Qualität 18 % besser |\n| METR 2025, 16 erfahrene Entwickler | Aufgaben im eigenen, großen Code | 19 % langsamer |\n\nDie Entwickler der METR-Studie erwarteten vorher 24 % Zeitgewinn und schätzten ihn auch hinterher noch auf 20 %. **Gefühl und Messung lagen weit auseinander.**\n\nDer Unterschied liegt in der Aufgabe: Wie lange dauern Prüfen und Nacharbeiten? Darum misst du, bevor du entscheidest. Netto-Zeit ist Entwurf plus Prüfung plus Nacharbeit, verglichen mit derselben Aufgabe ohne KI.",
+        "takeaway": "Miss die Netto-Zeit: Entwurf, Prüfung und Nacharbeit gegen dieselbe Aufgabe ohne KI.",
+        "sources": [
+          {
+            "label": "Noy und Zhang 2023, Science",
+            "url": "https://doi.org/10.1126/science.adh2586"
+          },
+          {
+            "label": "METR 2025, Becker et al.",
+            "url": "https://arxiv.org/abs/2507.09089"
           }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Rechne eine deiner Aufgaben durch",
+        "instructions": "Setze die Regler auf eine Aufgabe aus deiner Woche und erfülle die drei Ziele. Du bist fertig, wenn alle drei einmal erreicht sind.",
+        "props": {
+          "inputs": [
+            {
+              "id": "base",
+              "label": "Ohne KI: Minuten pro Durchgang",
+              "type": "slider",
+              "min": 2,
+              "max": 120,
+              "step": 1,
+              "default": 20,
+              "format": "int"
+            },
+            {
+              "id": "draft",
+              "label": "Mit KI: Auftrag und Entwurf (Min.)",
+              "type": "slider",
+              "min": 0,
+              "max": 60,
+              "step": 1,
+              "default": 3,
+              "format": "int"
+            },
+            {
+              "id": "review",
+              "label": "Mit KI: Prüfen (Min.)",
+              "type": "slider",
+              "min": 0,
+              "max": 60,
+              "step": 1,
+              "default": 8,
+              "format": "int"
+            },
+            {
+              "id": "rework",
+              "label": "Anteil, der nachgearbeitet werden muss",
+              "type": "slider",
+              "min": 0,
+              "max": 1,
+              "step": 0.05,
+              "default": 0.3,
+              "format": "percent"
+            },
+            {
+              "id": "reworkMin",
+              "label": "Nacharbeit pro betroffenem Durchgang (Min.)",
+              "type": "slider",
+              "min": 0,
+              "max": 60,
+              "step": 1,
+              "default": 15,
+              "format": "int"
+            },
+            {
+              "id": "perWeek",
+              "label": "Durchgänge pro Woche",
+              "type": "slider",
+              "min": 1,
+              "max": 50,
+              "step": 1,
+              "default": 10,
+              "format": "int"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "withAi",
+              "label": "Mit KI pro Durchgang (Min.)",
+              "formula": "draft + review + rework * reworkMin",
+              "format": "number",
+              "decimals": 1
+            },
+            {
+              "id": "saved",
+              "label": "Gespart pro Durchgang (Min.)",
+              "formula": "base - withAi",
+              "format": "number",
+              "decimals": 1
+            },
+            {
+              "id": "weekly",
+              "label": "Netto pro Woche (Min.)",
+              "formula": "saved * perWeek",
+              "format": "int",
+              "emphasis": true,
+              "help": "Negativ heißt: mit KI langsamer."
+            },
+            {
+              "id": "checkShare",
+              "label": "Anteil Prüfen und Nacharbeit am KI-Aufwand",
+              "formula": "withAi > 0 ? (review + rework * reworkMin) / withAi : 0",
+              "format": "percent"
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Minuten pro Durchgang",
+            "format": "number",
+            "bars": [
+              {
+                "label": "Ohne KI",
+                "formula": "base",
+                "tone": "neutral"
+              },
+              {
+                "label": "Mit KI: Entwurf",
+                "formula": "draft",
+                "tone": "accent"
+              },
+              {
+                "label": "Mit KI: Prüfen",
+                "formula": "review",
+                "tone": "warn"
+              },
+              {
+                "label": "Mit KI: Nacharbeit im Mittel",
+                "formula": "rework * reworkMin",
+                "tone": "bad"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "weekly < 0",
+              "tone": "bad",
+              "title": "Mit KI langsamer",
+              "body": "Prüfen und Nacharbeit fressen den Gewinn. Behalte die Aufgabe oder verkleinere sie, bis die Prüfung schnell geht."
+            },
+            {
+              "when": "saved < base * 0.2",
+              "tone": "warn",
+              "title": "Kaum Gewinn",
+              "body": "Unter 20 % Ersparnis lohnt ein fester Ablauf selten. Vielleicht reicht eine Vorlage."
+            },
+            {
+              "when": "true",
+              "tone": "good",
+              "title": "Netto-Gewinn",
+              "body": "Bestätige die Zahl mit einer Woche echter Messung, bevor du den Ablauf festschreibst."
+            }
+          ],
+          "goals": [
+            {
+              "id": "slower",
+              "label": "Stelle eine Prüfzeit ein, bei der KI netto langsamer ist.",
+              "when": "weekly < 0",
+              "insight": "So endete die METR-Studie: Prüfen und Korrigieren kosteten mehr, als der Entwurf sparte."
+            },
+            {
+              "id": "forty",
+              "label": "Finde eine Einstellung mit mindestens 40 % Ersparnis pro Durchgang.",
+              "when": "saved >= base * 0.4",
+              "insight": "Das entspricht dem Effekt bei Noy und Zhang. Typisch für Texte, die du schnell prüfen kannst."
+            },
+            {
+              "id": "rework",
+              "label": "Senke die Nacharbeitsquote auf höchstens 10 %.",
+              "when": "rework <= 0.1",
+              "insight": "Weniger Nacharbeit wirkt bei jedem Durchgang. Ein besserer Auftrag oder eine Vorlage zahlt sich hier aus."
+            }
+          ],
+          "note": "Deine Zahlen, deine Annahmen. Miss eine Woche lang mit der Uhr, bevor du entscheidest."
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_1_lesson_1_section_1",
-          "title": "Die Kundenmail zweimal beantworten",
-          "readTimeMinutes": 2,
-          "content": "Der fiktive Kunde Alpha schreibt wegen einer verspäteten Lieferung. Beantworte die Mail zweimal, von Hand und mit Claude als Entwurfsschreiber, und miss jeweils Entwurfszeit, Faktenfehler, nötige Korrekturen und Ton.\n\nDie Claude-Fassung bleibt ein interner Entwurf, bis ein Mensch sie freigibt. Dein Vergleich zeigt, ob sich der Ablauf für diese Aufgabe lohnt; eine Zeitersparnis ist nicht versprochen."
-        },
-        {
-          "id": "modul_1_lesson_1_section_2",
-          "title": "Wann ein leeres Dokument der falsche Startpunkt ist",
-          "readTimeMinutes": 2,
-          "content": "Im leeren Dokument schreibst du jeden Satz selbst. Mit einem Claude-Entwurf beginnst du beim Briefing und bei der Prüfung.\n\nViele starten trotzdem bei null: aus Gewohnheit, weil sie genau wissen wollen, was im Text steht, oder weil Schreiben ein Kernstück ihrer Rolle ist. Das Briefing lohnt sich nur, wenn es den Aufwand senkt und Faktentreue und Ton hält."
-        },
-        {
-          "id": "modul_1_lesson_1_section_3",
-          "title": "Das dreiteilige Claude-Briefing",
-          "readTimeMinutes": 3,
-          "content": "\"Schreibe eine Antwort auf diese Kundenanfrage\" überlässt dem Modell jede Entscheidung, die dir gehört. Gib drei Vorgaben:\n\n**Rolle:** \"Du unterstützt den Vertrieb eines Maschinenbauunternehmens mit 80 Mitarbeitenden in Bayern. Verwende einen pragmatischen, direkten und sachlichen Ton.\"\n\n**Kontext:** die Kundenmail, wenn ihr Inhalt für das Werkzeug freigegeben ist.\n\n**Auftrag:** \"Erstelle einen Antwortentwurf. Bestätige Freitag als Ziel, frage aber nach Chargennummer und Anzahl der betroffenen Teile. Bleibe höflich und unter 150 Wörtern.\"\n\nKorrigiere vor dem Versand falsche Aussagen, ungedeckte Zusagen und Tonabweichungen, und miss Zeit und Korrekturaufwand."
-        },
-        {
-          "id": "modul_1_lesson_1_section_4",
-          "title": "Warum drei Vorgaben reichen",
-          "readTimeMinutes": 2,
-          "content": "Jede Vorgabe nimmt dem Modell einen Freiheitsgrad. Die **Rolle** legt Perspektive und Stil fest, damit der Entwurf nach Industrieunternehmen klingt statt nach Startup-Werbung, und der **Kontext** liefert nur freigegebene Fakten. Der **Auftrag** macht das Ergebnis prüfbar: unter 150 Wörter, eine Bestätigung, eine Rückfrage, ein festgelegter Ton.\n\nFehlt eine Vorgabe, wird der Text allgemein oder das Modell erfindet Annahmen; das ist ein Briefingfehler."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_1_q1",
-          "questionText": "Was sind die drei Elemente eines effektiven Prompts?",
-          "answerOptions": [
+          "id": "messen-1-1-c1",
+          "prompt": "Ein Team fühlt sich mit KI deutlich schneller. Was ist der nächste Schritt?",
+          "options": [
             {
               "id": "a",
-              "text": "Höflichkeit, Umfang, Schlussformel",
-              "isCorrect": false
+              "text": "Den Ablauf für alle festschreiben.",
+              "correct": false,
+              "feedback": "Gefühl ist kein Messwert. In der METR-Studie schätzten die Teilnehmer 20 % Gewinn und waren 19 % langsamer."
             },
             {
               "id": "b",
-              "text": "Rolle, Kontext, Auftrag",
-              "isCorrect": true
+              "text": "Eine Woche lang die Zeit mit und ohne KI messen, inklusive Prüfung und Nacharbeit.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "Frage, Beispiel, Aufforderung",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Einleitung, Hauptteil, Schluss",
-              "isCorrect": false
+              "text": "Das Team nach seiner Zufriedenheit fragen.",
+              "correct": false,
+              "feedback": "Zufriedenheit ist wertvoll, sagt aber nichts über die Zeit. Dafür brauchst du die Uhr."
             }
           ],
-          "explanation": "Rolle, Kontext und Auftrag legen fest, wer schreibt, auf welcher Grundlage und was entstehen soll. RCTFC ergänzt später Format und Einschränkungen."
+          "explanation": "Netto-Zeit misst du, indem du Entwurf, Prüfung und Nacharbeit addierst und mit der Baseline vergleichst."
         },
         {
-          "id": "modul_1_lesson_1_q2",
-          "questionText": "Wofür setzt du deine Zeit in einer KI-gestützten Rolle sinnvoll ein?",
-          "answerOptions": [
+          "id": "messen-1-1-c2",
+          "prompt": "Warum können beide Studien stimmen, obwohl die Ergebnisse gegensätzlich sind?",
+          "options": [
             {
               "id": "a",
-              "text": "Viel Zeit in Tipparbeit, wenig in Review",
-              "isCorrect": false
+              "text": "Eine der beiden Studien muss falsch gerechnet haben.",
+              "correct": false,
+              "feedback": "Beide sind kontrollierte Experimente. Der Unterschied liegt in Aufgabe und Prüfaufwand."
             },
             {
               "id": "b",
-              "text": "Aufgabe definieren, Modell briefen und Qualität prüfen",
-              "isCorrect": true
+              "text": "Die Aufgaben unterscheiden sich: Kurze Schreibaufgaben sind schnell geprüft, Änderungen in großem eigenem Code nicht.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "Claude Zeit geben, weniger selbst prüfen",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Alle Aufgaben an Claude delegieren ohne Review",
-              "isCorrect": false
+              "text": "Die Modelle sind zwischen 2023 und 2025 schlechter geworden.",
+              "correct": false,
+              "feedback": "Die METR-Studie nutzte damals aktuelle Werkzeuge. Entscheidend war, wie viel Prüfung und Korrektur die Aufgabe brauchte."
             }
           ],
-          "explanation": "Den Entwurf kannst du abgeben, wenn die Aufgabe dafür taugt. Urteil, Faktenprüfung und Freigabe bleiben bei dir."
+          "explanation": "Der Nutzen hängt an der Aufgabe. Darum misst du pro Aufgabe statt pauschal."
         }
       ]
     },
     {
-      "id": "modul_1_lesson_2",
+      "id": "messen-1-2",
       "moduleId": "modul_1",
       "number": 2,
-      "title": "Warum ich meine IDE heute anders nutze",
-      "subtitle": "Orchestrieren statt jeden Schritt selbst auszuführen",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
+      "title": "Welche Aufgaben zuerst?",
+      "subtitle": "Häufigkeit, Fehlerkosten, Prüfbarkeit",
+      "durationMinutes": 7,
       "keyConcepts": [
-        "Orchestrator",
-        "Ausführen",
-        "Urteilskraft",
-        "AI-native"
+        "Zackige Grenze",
+        "Fehlerkosten",
+        "Prüfbarkeit"
       ],
-      "widgets": [
-        {
-          "kind": "demo-chat-rag",
-          "placement": "after-intro"
-        },
-        {
-          "kind": "exercise-rctfc-checklist",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_2_ex_1",
-            "lessonId": "modul_1_lesson_2",
-            "moduleId": "modul_1",
-            "title": "RCTFC: dein erstes strukturiertes Briefing",
-            "scenario": "Du bist Vertriebsleiter und lässt Claude eine Angebots-Zusammenfassung schreiben. Fülle alle 5 RCTFC-Felder aus.",
-            "criteria": {
-              "role": {
-                "minChars": 15,
-                "hint": "Wer übernimmt die Aufgabe? (z. B. Vertriebsassistent im Maschinenbau)"
-              },
-              "context": {
-                "minChars": 40,
-                "hint": "Hintergrund zu Firma, Branche und Kundenbeziehung"
-              },
-              "task": {
-                "minChars": 20,
-                "hint": "Was soll entstehen? (Angebot / Zusammenfassung / Rückfrage)"
-              },
-              "format": {
-                "minChars": 15,
-                "hint": "Struktur, Länge, Output-Format (z. B. Markdown, max 200 Wörter, 3 Abschnitte)"
-              },
-              "constraints": {
-                "minChars": 15,
-                "hint": "Was ist tabu? (z. B. kein Hype-Sprech, kein direkter Preis)"
-              }
-            }
+      "concept": {
+        "body": "Dell'Acqua et al. (2023) gaben 758 Beraterinnen und Beratern realistische Aufgaben. Innerhalb der Fähigkeiten des Modells erledigten sie mit KI 12,2 % mehr Aufgaben, 25,1 % schneller und mit über 40 % höherer Qualität. Bei einer Aufgabe knapp außerhalb lagen sie mit KI um 19 Prozentpunkte seltener richtig. Die Grenze ist zackig: Von außen sieht man nicht, auf welcher Seite eine Aufgabe liegt.\n\nDrei Fragen sortieren deine Kandidaten:\n\n- **Häufigkeit:** Wie oft fällt die Aufgabe an? Seltenes lohnt keinen Ablauf.\n- **Fehlerkosten:** Was passiert, wenn ein Fehler durchrutscht?\n- **Prüfbarkeit:** Erkennst du einen Fehler auf einen Blick?\n\nHäufig, billig im Fehlerfall und schnell prüfbar: Dort fängst du an.",
+        "takeaway": "Beginne dort, wo Fehler billig sind und schnell auffallen.",
+        "sources": [
+          {
+            "label": "Dell'Acqua et al. 2023",
+            "url": "https://doi.org/10.2139/ssrn.4573321"
           }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_1_lesson_2_section_1",
-          "title": "Aus meinem Arbeitsalltag, anonymisiert",
-          "readTimeMinutes": 2,
-          "content": "Ich arbeite als Data Engineer bei einem großen US-Technologieunternehmen. Erfahrene Entwickler um mich herum lassen sich aus einer Spezifikation immer öfter eine erste Codefassung erzeugen. Repository prüfen, Output lesen, Tests fahren, Fehler korrigieren und freigeben machen sie selbst, in der IDE, die für Navigation, Debugging und Review offen bleibt.\n\nDie Verschiebung ist kleiner als der Hype behauptet: weniger Routinecode tippen, mehr Zeit für die Frage, was gebaut wird und ob es taugt. Das geht auch außerhalb der Softwareentwicklung, wenn die Aufgabe ein beschreibbares Ergebnis und einen verlässlichen Prüfpunkt hat."
-        },
-        {
-          "id": "modul_1_lesson_2_section_2",
-          "title": "Was \"orchestrieren statt ausführen\" heißt",
-          "readTimeMinutes": 3,
-          "content": "**Ausführen** heißt, du machst jeden Schritt selbst: tippen, formatieren, rechnen, Daten zwischen Werkzeugen tragen. **Orchestrieren** heißt, du **beschreibst das Ergebnis, das du brauchst**, gibst die zulässigen Eingaben, prüfst, was zurückkommt, und entscheidest über die finale Handlung.\n\nClaude erzeugt Output aus Anweisungen und Kontext. Es versteht keine Absicht, prüft nicht von selbst alle Fakten und trägt keine Verantwortung. Deshalb legst du Briefing, Daten und Prüfkriterien vorher fest und gibst nur begrenzte, prüfbare Schritte ab."
-        },
-        {
-          "id": "modul_1_lesson_2_section_3",
-          "title": "Was für deine Rolle anders wird",
-          "readTimeMinutes": 3,
-          "content": "Dieselbe Verschiebung gibt es in anderen Abteilungen:\n\n- **Vertrieb:** Claude schreibt den Angebotsentwurf, Preisstrategie und Zusagen bleiben bei dir.\n- **Finanzen:** Claude entwirft eine rein lesende SQL-Abfrage, du prüfst sie und liest die Zahlen.\n- **HR:** Claude entwirft die Stellenausschreibung, du prüfst Rechtliches, Fachliches und Organisatorisches.\n- **Operations:** Claude strukturiert die Prozessdaten, du entscheidest, was sich ändert.\n\nClaude kann Routineentwürfe übernehmen; Fachwissen, Urteil und Verantwortung bleiben bei dir."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_2_q1",
-          "questionText": "Welcher Anteil einer KI-gestützten Rolle lässt sich häufig reduzieren?",
-          "answerOptions": [
+        ]
+      },
+      "exercise": {
+        "kind": "triage-matrix",
+        "title": "Bewerte acht Aufgaben und füge eigene hinzu",
+        "instructions": "Bewerte jede Aufgabe auf den drei Achsen, gern auch bis zu drei eigene. Mit Auswerten siehst du Rangfolge, Matrix und die Referenz mit Begründung.",
+        "props": {
+          "items": [
             {
-              "id": "a",
-              "text": "Deine Fähigkeit, Entscheidungen zu treffen",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Routinemäßiges Tippen und die Erstellung erster Entwürfe",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Die Kundenbeziehungen",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Die fachliche Expertise",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Die Routine-Entwurfsarbeit kann sinken. Urteilskraft, Fachwissen und Kundenbeziehungen bleiben."
-        },
-        {
-          "id": "modul_1_lesson_2_q2",
-          "questionText": "Was unterscheidet Modelloutput von einem verantworteten Arbeitsergebnis?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Das Modell übernimmt die finale Freigabe",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Modelloutput braucht definierte Prüfung; Verantwortung und Freigabe bleiben bei Menschen und Organisation",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Das Modell prüft seine Aussagen automatisch gegen alle relevanten Quellen",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Das Modell darf verbindliche Zusagen ohne Freigabe abgeben",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Modelloutput wird erst durch aufgabenspezifische Prüfung, dokumentierte Freigabe und eine verantwortliche Person zum Arbeitsergebnis."
-        }
-      ]
-    },
-    {
-      "id": "modul_1_lesson_3",
-      "moduleId": "modul_1",
-      "number": 3,
-      "title": "Claude im Ablauf: du spezifizierst und prüfst",
-      "subtitle": "Drei Grundmuster für die Arbeit mit KI",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Claude Project",
-        "System-Prompt",
-        "Drafting",
-        "Analyse",
-        "Recherche"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-prompt-diff",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_3_ex_1",
-            "lessonId": "modul_1_lesson_3",
-            "moduleId": "modul_1",
-            "title": "Welcher Prompt gibt die klarste Richtung vor?",
-            "scenario": "Drei Kollegen lassen Claude einen Angebots-Entwurf für denselben Kunden und dieselbe Ausgangslage schreiben. Welcher Prompt reicht für eine nützliche Antwort?",
-            "candidates": [
-              {
-                "label": "Variante A: offene Anfrage",
-                "prompt": "Schreib mir ein Angebot für den Kunden, der heute angerufen hat.",
-                "critique": "Rolle, nutzbarer Kontext und Output-Anforderungen fehlen. Das Modell müsste Firma, Branche, Ton, Produkt und Konditionen raten.",
-                "rating": 1
+              "id": "faq",
+              "text": "Standardantwort auf eine häufige Kundenfrage",
+              "reference": {
+                "f": 3,
+                "c": 1,
+                "k": 3
               },
-              {
-                "label": "Variante B: der Mittelweg",
-                "prompt": "Als Vertriebsassistent im Maschinenbau: Entwirf für den fiktiven Kunden Alpha ein Angebot für 3 fiktive Beispielmaschinen Typ XR-200. Lieferung Dezember.",
-                "critique": "Rolle, Kontext und Auftrag sind da. Ohne Format (Länge, Abschnitte) und Grenzen (Ton, Preisspanne, Zahlungsziel) erfindet Claude Details oder bleibt vage.",
-                "rating": 3
+              "why": "Täglich, ein Fehler ist schnell korrigiert, und du siehst auf einen Blick, ob die Antwort passt."
+            },
+            {
+              "id": "minutes",
+              "text": "Protokoll aus Besprechungsnotizen",
+              "reference": {
+                "f": 2,
+                "c": 2,
+                "k": 2
               },
-              {
-                "label": "Variante C: strukturiertes Briefing",
-                "prompt": "Rolle: Vertriebsassistent im Maschinenbau. Kontext: ausdrücklich fiktiver Kunde Alpha, 12 Mitarbeitende, braucht 3 fiktive Beispielmaschinen XR-200; Ton pragmatisch, Du-Form. Auftrag: interner Angebots-Entwurf mit 3 Positionen; verwende Liefertermin, Zahlungsziel und Preis nur als Platzhalter und markiere sie zur Prüfung. Format: Markdown, max. 280 Wörter. Tabu: keine erfundenen Zusagen oder Marketing-Phrasen.",
-                "critique": "Das RCTFC-Briefing legt Rolle, Kontext, Auftrag, Format und Grenzen fest und zielt auf einen prüfbaren Entwurf ohne erfundene Konditionen.",
-                "rating": 5
-              }
-            ]
-          }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_1_lesson_3_section_1",
-          "title": "Entwurf, Analyse, Recherche",
-          "readTimeMinutes": 3,
-          "content": "**Muster 1: Entwurf.** Claude liefert V1 einer Mail, eines Berichts oder einer Präsentation, du machst daraus V2 und notierst Zeit und Korrekturaufwand.\n> \"Erstelle V1 von [Ergebnis] aus [freigegebenem Kontext]. Verwende [Ton]. Umfang: [Grenze].\"\n\n**Muster 2: Analyse.** Du ziehst aus Daten oder Text etwas Bestimmtes heraus. Wie du vorgehst, hängt von Umfang, Sensibilität und Prüfbedarf ab.\n> \"Hier ist [Eingabe]. Extrahiere [Felder] und fasse [Muster] zusammen. Format: [Tabelle, Liste oder Prosa]. Markiere Unsicherheit.\"\n\n**Muster 3: Recherche.** Du nutzt ein Werkzeug, das suchen kann, und öffnest die zitierten Primärquellen selbst.\n> \"Recherchiere [Thema] und beantworte [konkrete Fragen] mit [geforderten Quellentypen]. Gib [Struktur] mit Links und Veröffentlichungsdaten zurück.\"\n\nDie aufgabenspezifische Prüfung bleibt bei allen drei bei dir."
-        },
-        {
-          "id": "modul_1_lesson_3_section_2",
-          "title": "Kontext einmal schreiben",
-          "readTimeMinutes": 3,
-          "content": "Ein Claude Project hält stabilen, nicht vertraulichen Kontext und Kommunikationsregeln für wiederkehrende Aufgaben, damit du sie nicht jede Woche neu eintippst. Beispiel für ein Project \"Vertriebsentwürfe\":\n\n```\nIch arbeite im Vertrieb eines Maschinenbauunternehmens\nin Bayern mit 80 Mitarbeitenden und Kunden in Deutschland und Österreich.\nUnsere Produkte sind Spezialmaschinen für die Metallverarbeitung.\nTypische Preisspanne: 15.000 bis 200.000 Euro pro Maschine.\n\nRegeln für Kundenkommunikation:\n- Du-Form bei Stammkunden, Sie-Form bei Neukunden\n- Pragmatische, klare Sprache\n- Keine Buzzwords oder Werbeversprechen\n- Keine Zusagen zu Lieferung, Preis oder Vertrag ohne Freigabe\n```\n\nNur freigegebener Dauerkontext kommt hinein, nichts Sensibles oder Fallspezifisches. Die Anfrage bringt dann nur den Fall mit:\n> \"Anfrage eines Neukunden zu drei Maschinen Typ X. Erstelle einen Antwortentwurf und markiere fehlende kaufmännische Angaben.\""
-        },
-        {
-          "id": "modul_1_lesson_3_section_3",
-          "title": "Wie tief du nachbesserst",
-          "readTimeMinutes": 2,
-          "content": "V1 sitzt selten. Sag beim Nachbessern, wie viel sich ändern soll und warum:\n\n- **Eng**, einen Satz ändern: \"Entferne den zweiten Absatz. Formuliere den Ton eine Stufe direkter.\"\n- **Mittel**, die Struktur ändern: \"Ordne die Argumente neu und setze den stärksten Beleg an den Anfang.\"\n- **Tief**, neue Prämisse: \"V1 ist zu allgemein. Schreibe neu, mit direktem Ton und Fokus auf den Zeitaufwand des Kunden statt auf unsere Funktionen.\""
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_3_q1",
-          "questionText": "Welche drei Grundmuster stellt diese Lektion vor?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Automatisieren, Delegieren, Reviewen",
-              "isCorrect": false
+              "why": "Wöchentlich. Ein erfundener Beschluss oder eine falsche Frist richtet Schaden an, und du musst gegen deine Notizen prüfen."
             },
             {
-              "id": "b",
-              "text": "Entwurf, Analyse, Recherche",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Schreiben, Lesen, Übersetzen",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Erstellen, Prüfen, Verteilen",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Entwurf liefert die erste Textfassung, Analyse strukturiert vorhandenen Input, Recherche sammelt Belege aus Quellen."
-        },
-        {
-          "id": "modul_1_lesson_3_q2",
-          "questionText": "Warum ein wiederverwendbarer Project-Briefing statt wiederholter Kontext-Beschreibung?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Freigegebener wiederkehrender Kontext bleibt im Project verfügbar",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Claude kann nur eine Anweisung pro Session verarbeiten",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Jeder Kontext muss dauerhaft dokumentiert werden",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Projects speichern mehr Text als reguläre Chats",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Er spart die Wiederholung stabiler, freigegebener Angaben. Prüf ihn neu, wenn sich Rolle, Richtlinie oder Datengrenze ändert."
-        }
-      ]
-    },
-    {
-      "id": "modul_1_lesson_4",
-      "moduleId": "modul_1",
-      "number": 4,
-      "title": "Zehn Aufgaben als Kandidaten für KI-Unterstützung",
-      "subtitle": "Konkrete Anwendungsfälle mit Prompts",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Use-Case",
-        "Excel-Cleanup",
-        "SQL",
-        "Meeting-Nachbereitung",
-        "Normalisierung"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-role-scenario",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_4_ex_1",
-            "lessonId": "modul_1_lesson_4",
-            "moduleId": "modul_1",
-            "title": "Welche Aufgabe eignet sich in deiner Rolle für Unterstützung?",
-            "scenario": "Wähle deine Rolle und entscheide in drei Situationen zwischen begrenztem KI-Ablauf, Handarbeit und unkontrollierter Automatisierung.",
-            "roles": [
-              {
-                "id": "vertrieb",
-                "label": "Vertrieb / Account Management",
-                "description": "Außendienst, Innendienst, Vertriebsleitung",
-                "scenarios": [
-                  {
-                    "id": "vertrieb_s1",
-                    "question": "Ein Neukunde schickt um 16:40 fünf technische Fragen. Die Antwort soll heute raus, um 17:00 ist Feierabend.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Alles selbst tippen und bis 18:30 bleiben.",
-                        "correct": false,
-                        "explanation": "Bei heiklen Fragen legitim, aber so testest du nie einen strukturierten Entwurf."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Bis morgen warten, sauberes Arbeiten braucht Zeit.",
-                        "correct": false,
-                        "explanation": "Sinnvoll, wenn Fakten fehlen. Liegen sie vor, schafft ein geprüfter Entwurf die Frist."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Claude mit Rolle, freigegebener Mail, den fünf Fragen und 200 Wörtern briefen, prüfen, nach Freigabe senden.",
-                        "correct": true,
-                        "explanation": "Erste Fassung, technische Prüfung und Freigabe bleiben drei getrennte Schritte."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Template raussuchen und anpassen.",
-                        "correct": false,
-                        "explanation": "Hilft, bringt aber alte Formulierungen mit, die du am Fall prüfen musst."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vertrieb_s2",
-                    "question": "Um 15 Uhr: Übungsmeeting mit dem fiktiven Kunden Alpha. Drei Beispiel-Mails und die letzten Notizen sind vier Wochen alt.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "5 Minuten vorher ins CRM schauen und auf das Gedächtnis setzen.",
-                        "correct": false,
-                        "explanation": "Ein kurzer Blick übersieht offene Punkte."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Claude aus freigegebenen Mails und Notizen offene Punkte, Interessen und drei Fragen ziehen lassen, prüfen.",
-                        "correct": true,
-                        "explanation": "Das Analyse-Muster aus Lektion 3: strukturierte Extraktion aus einer begrenzten Quellensammlung."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Eine zuständige Person fragen, die den fiktiven Fall kennt.",
-                        "correct": false,
-                        "explanation": "Liefert Kontext, ersetzt aber keinen Blick in die Aufzeichnungen."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Meeting absagen, zu wenig Zeit zur Vorbereitung.",
-                        "correct": false,
-                        "explanation": "Drei Mails und ein paar Notizen lassen sich rechtzeitig vorbereiten."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vertrieb_s3",
-                    "question": "Für den Wochenabschluss brauchst du die Top 20 Kunden nach Umsatz aus der Datenbank. SQL kannst du nicht.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Das Controlling bitten, zwei Tage warten.",
-                        "correct": false,
-                        "explanation": "Jede Woche dieselbe Abhängigkeit. Eine geprüfte Abfrage verkürzt den ersten Schritt."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Die Auswertung in Excel nachbauen, 90 Minuten Klickarbeit.",
-                        "correct": false,
-                        "explanation": "Geht, aber Joins per Kopieren sind fehleranfällig, jede Woche neu."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Claude das Tabellenschema geben, nur lesende SQL anfordern, von einer qualifizierten Person vor Ausführung prüfen lassen.",
-                        "correct": true,
-                        "explanation": "Claude entwirft nur die Abfrage, ohne Datenbankzugriff. Ergebnis und Bedeutung prüfst du."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Diese Analyse lassen wir lieber sein.",
-                        "correct": false,
-                        "explanation": "Ohne die Top 20 fehlt der Vertriebssteuerung die Grundlage."
-                      }
-                    ]
-                  }
-                ]
+              "id": "contract",
+              "text": "Haftungsklausel in einem Kundenvertrag",
+              "reference": {
+                "f": 1,
+                "c": 3,
+                "k": 1
               },
-              {
-                "id": "hr",
-                "label": "HR / People / Geschäftsführung",
-                "description": "Recruiting, Mitarbeiter-Kommunikation, Personal-Entscheidungen",
-                "scenarios": [
-                  {
-                    "id": "hr_s1",
-                    "question": "Du brauchst heute eine Stellenanzeige: Werkstudent Maschinenbau, 20 Stunden pro Woche.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Die Anzeige von 2023 kopieren und das Datum ändern.",
-                        "correct": false,
-                        "explanation": "Veraltete Fakten und Sprache; die Anzeige muss ohnehin komplett geprüft werden."
-                      },
-                      {
-                        "id": "b",
-                        "label": "HR-Project mit freigegebenem Firmenkontext und Ton nutzen, Entwurf anfordern, jede Bedingung prüfen.",
-                        "correct": true,
-                        "explanation": "Gepflegter Kontext verkürzt das Briefing. Recht, Fachliches und Vertrag prüfst du trotzdem."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Eine HR-Agentur beauftragen und 3 Wochen warten.",
-                        "correct": false,
-                        "explanation": "Für einen ersten Entwurf brauchst du keine Agentur."
-                      },
-                      {
-                        "id": "d",
-                        "label": "ChatGPT ohne Kontext um eine Anzeige für Werkstudent Maschinenbau bitten.",
-                        "correct": false,
-                        "explanation": "Ohne Kontext kommt Einheitstext mit erfundenen Anforderungen."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s2",
-                    "question": "Rundmail an 80 Mitarbeitende: Homeoffice 2 Tage pro Woche ab Juni, ohne HR-Jargon.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "3 Stunden an der Formulierung feilen, dann Vorstand abstimmen lassen.",
-                        "correct": false,
-                        "explanation": "Sorgfalt braucht die Regelung; den Text kann ein geprüfter Entwurf liefern."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Claude mit HR-Rolle, freigegebenen Fakten, Gründen, 180 Wörtern und FAQ-Link briefen, dann abstimmen.",
-                        "correct": true,
-                        "explanation": "Spart Schreibarbeit. Entscheidung, Abstimmung und Verantwortung bleiben, wo sie waren."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Die Assistenz der Geschäftsführung um einen Entwurf bitten.",
-                        "correct": false,
-                        "explanation": "Legitim, verschiebt die Routinearbeit aber nur zu einer anderen Person."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Keine Mail, nur mündlich im Monatsmeeting ansagen.",
-                        "correct": false,
-                        "explanation": "Eine mündliche Ansage kann niemand nachlesen."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s3",
-                    "question": "Deine Vorgesetzte fragt: „Was haben wir im Januar zur Remote-Frage entschieden?“",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Sagen, dass du es nicht mehr weißt, und später in Mails suchen.",
-                        "correct": false,
-                        "explanation": "Die Antwort steht im Entscheidungsprotokoll; dort suchst du zuerst."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Notion, Ablage, Mail und CRM 20 Minuten von Hand durchsuchen.",
-                        "correct": false,
-                        "explanation": "Manchmal nötig, aber vier Ablagen machen es langsam und lückenhaft."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Das freigegebene Entscheidungs-Log über Claude oder Obsidian abfragen und die Quellnotiz nennen lassen.",
-                        "correct": true,
-                        "explanation": "Belastbar, wenn die Suche den maßgeblichen Eintrag nennt und du ihn öffnest."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Nachschauen versprechen und es dann vergessen.",
-                        "correct": false,
-                        "explanation": "Genau das soll ein Entscheidungs-Log verhindern."
-                      }
-                    ]
-                  }
-                ]
+              "why": "Selten, teuer im Fehlerfall und nur mit Fachwissen prüfbar. Kein Kandidat für einen Ablauf."
+            },
+            {
+              "id": "translate",
+              "text": "Interne Mail ins Englische übersetzen",
+              "reference": {
+                "f": 2,
+                "c": 1,
+                "k": 3
               },
-              {
-                "id": "operations",
-                "label": "Operations / Produktion / IT",
-                "description": "Prozess-Steuerung, Produktionsleitung, IT-Koordination",
-                "scenarios": [
-                  {
-                    "id": "ops_s1",
-                    "question": "Ein fiktiver ERP-Export hat 4.800 Zeilen mit uneinheitlichen Namen (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) und gemischten Datumsformaten.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Excel-Makro schreiben, 4 Stunden debuggen.",
-                        "correct": false,
-                        "explanation": "Lohnt sich erst mit getesteten Normalisierungsregeln für einen wiederkehrenden Ablauf."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Claude fiktive CSV und feste Regeln geben, Änderungsprotokoll anfordern, vor dem Ersetzen prüfen.",
-                        "correct": true,
-                        "explanation": "Begrenzt, umkehrbar, mit festem Prüfpunkt: ein guter Testfall."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Praktikant für zwei Tage abordnen.",
-                        "correct": false,
-                        "explanation": "Das dauert, lässt sich nicht reproduzieren und muss beim nächsten Export wiederholt werden."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Daten so lassen, das Dashboard verträgt das.",
-                        "correct": false,
-                        "explanation": "Jede Schreibweise wird eine eigene Zeile, keine Summe stimmt."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "ops_s2",
-                    "question": "Das Transkript eines 45-Minuten-Meetings der Produktionsleitung liegt vor. Die Action-Items kommen morgen ins Standup.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Alles selbst lesen und herausschreiben, 60 Minuten.",
-                        "correct": false,
-                        "explanation": "Lesen musst du ohnehin, eine Extraktion kann den ersten Durchlauf vorbereiten."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Claude Entscheidungen, Action-Items mit Verantwortlichen und Daten und offene Fragen tabellieren lassen, prüfen.",
-                        "correct": true,
-                        "explanation": "Strukturierte Extraktion, das Transkript bleibt maßgeblich."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Alle Teilnehmer um eigene Action-Items bitten.",
-                        "correct": false,
-                        "explanation": "Jeder schickt ein anderes Format, Entscheidungen zwischen Bereichen fehlen."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Nur die drei wichtigsten merken, den Rest ignorieren.",
-                        "correct": false,
-                        "explanation": "Nicht erfasste Aufgaben kommen später als Eskalation zurück."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "ops_s3",
-                    "question": "Die Geschäftsführung will einen Wochenstatus zu 5 Projekten: Highlights, Probleme, nächste Woche.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Jeden Freitag 90 Minuten blocken und neu schreiben.",
-                        "correct": false,
-                        "explanation": "Geht, aber ein Bericht mit fester Struktur passt zu einer geprüften Vorlage."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Freigegebene Aktivitätsliste geben, sachlichen Entwurf in drei Abschnitten anfordern, Unbelegtes streichen.",
-                        "correct": true,
-                        "explanation": "Die Struktur bleibt jede Woche gleich. Miss danach die Zeit, statt eine Einsparung anzunehmen."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Mit jedem Projekt-Lead telefonieren, dann zusammenfassen.",
-                        "correct": false,
-                        "explanation": "Telefoniere, wenn etwas zu entscheiden ist; Routinemeldungen sammelst du schriftlich und prüfst sie."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Der Geschäftsführung sagen, dass der Bericht diese Woche ausfällt.",
-                        "correct": false,
-                        "explanation": "Ein ausgefallener Bericht verdeckt Projektrisiken und kostet Glaubwürdigkeit."
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+              "why": "Wöchentlich, intern, und du liest das Ergebnis selbst gegen."
+            },
+            {
+              "id": "figures",
+              "text": "Monatszahlen für die Geschäftsführung zusammenfassen",
+              "reference": {
+                "f": 1,
+                "c": 3,
+                "k": 2
+              },
+              "why": "Monatlich, und falsche Zahlen fließen in Entscheidungen. Jede Zahl braucht einen Abgleich mit der Quelle."
+            },
+            {
+              "id": "tickets",
+              "text": "Eingehende Tickets einer Kategorie zuordnen",
+              "reference": {
+                "f": 3,
+                "c": 2,
+                "k": 3
+              },
+              "why": "Täglich und auf einen Blick prüfbar. Eine falsche Kategorie verzögert die Antwort, darum spürbare Fehlerkosten."
+            },
+            {
+              "id": "applicants",
+              "text": "Bewerbungen vorsortieren",
+              "reference": {
+                "f": 2,
+                "c": 3,
+                "k": 1
+              },
+              "why": "Fehler treffen Menschen und bleiben unsichtbar, weil du die Aussortierten nicht mehr siehst. Für solche Einsätze gelten zudem besondere Regeln, siehe EU-AI-Act-Kurs."
+            },
+            {
+              "id": "weekly",
+              "text": "Wochenbericht aus der Ticketliste",
+              "reference": {
+                "f": 2,
+                "c": 1,
+                "k": 2
+              },
+              "why": "Wöchentlich und intern, aber du musst die Zahlen gegen die Liste abgleichen."
+            }
+          ],
+          "pick": 3,
+          "score": "f * k * (4 - c)",
+          "note": "Die Formel ist bewusst einfach. Sie ersetzt keine Messung, sie entscheidet nur, was du zuerst misst."
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_1_lesson_4_section_1",
-          "title": "Aufgaben 1 bis 5",
-          "readTimeMinutes": 3,
-          "content": "**1. Mailentwurf aus Stichworten**\n> \"Fiktive Stichworte: Kunde Alpha, verspätete Lieferung, ungeprüfter Zieltermin, Rückfrage nach Chargennummer. Erstelle einen internen Mailentwurf und markiere jede Zusage zur Prüfung.\"\n\n**2. Meeting-Vorbereitung aus freigegebener Vorgeschichte**\n> \"Übungsmeeting mit Kunde Alpha um 15 Uhr. Gib mir aus diesen fiktiven Mails und Notizen offene Punkte, belegte Interessen und drei Fragen. Erfinde keine Motive.\"\n\n**3. Action-Items aus einem Meeting**\n> \"Extrahiere aus diesem freigegebenen oder fiktiven Transkript Entscheidungen, Action-Items mit Verantwortlichem und Datum sowie offene Fragen. Markiere Unsicherheit.\"\n\n**4. Recherche für eine Entscheidung**\n> \"Vergleiche Buchhaltungssysteme anhand aktueller offizieller Quellen. Trenne belegte Funktionen, aktuelle Preise und offene Vertrags- oder Datenschutzfragen.\"\n\n**5. Formularentwurf**\n> \"Fülle das Angebot-Template für eine fiktive Beispielmaschine an Kunde Alpha nur mit bestätigten Angaben. Setze für Preis, Zahlungsziel und Liefertermin Platzhalter und markiere sie zur Prüfung.\""
-        },
-        {
-          "id": "modul_1_lesson_4_section_2",
-          "title": "Aufgaben 6 bis 10",
-          "readTimeMinutes": 3,
-          "content": "**6. Daten-Säuberung in Excel**\n> \"Normalisiere diesen fiktiven CSV-Export mit uneinheitlichen Namen (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) und gemischten Datumsformaten nach den vorgegebenen Regeln. Protokolliere jede Änderung.\"\n\n**7. Präsentation aus Rohmaterial**\n> \"Erstelle aus diesen freigegebenen Notizen und drei Charts eine Struktur mit Quellenhinweisen und markiere unbelegte Aussagen.\"\n\n**8. SQL-Abfrage**\n> \"Schreibe ausschließlich lesende SQL für den Umsatz pro fiktivem Kunden im letzten Quartal in einer Testdatenbank und erkläre deine Annahmen.\"\n\n**9. Übersetzung und Lokalisierung**\n> \"Übersetze diesen fiktiven deutschen Kundenbrief ins Englische und markiere rechtlich oder kulturell unsichere Formulierungen zur Prüfung.\"\n\n**10. Status-Update**\n> \"Erstelle aus dieser freigegebenen Aktivitätsliste einen sachlichen Entwurf mit Highlights, Problemen, Unsicherheiten und nächsten Schritten.\""
-        },
-        {
-          "id": "modul_1_lesson_4_section_3",
-          "title": "Der größte Reibungspunkt",
-          "readTimeMinutes": 2,
-          "content": "Für einen begrenzten Test brauchst du weder ein KI-Programm noch ein Großprojekt. Bevor Daten fließen, kann deine Organisation eine Freigabe verlangen. Nimm eine Aufgabe mit risikoarmen oder fiktiven Daten, leg Eingabe, erwartetes Ergebnis und Prüfkriterien fest und erledige sie von Hand und mit Claude; vergleiche Zeit, Faktentreue und Korrekturaufwand.\n\nErweitere erst, wenn der Test Nutzen zeigt und die Datennutzung freigegeben ist."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_4_q1",
-          "questionText": "Was verhindert im Mittelstand häufig einen praktischen KI-Test?",
-          "answerOptions": [
+          "id": "messen-1-2-c1",
+          "prompt": "Was zeigt die Studie mit 758 Beratern über die Grenze der KI-Fähigkeiten?",
+          "options": [
             {
               "id": "a",
-              "text": "Die technische Komplexität jedes Werkzeugs",
-              "isCorrect": false
+              "text": "KI hilft bei allen Wissensaufgaben gleichmäßig.",
+              "correct": false,
+              "feedback": "Außerhalb der Grenze lagen die Teilnehmenden mit KI um 19 Prozentpunkte seltener richtig."
             },
             {
               "id": "b",
-              "text": "Jeden risikoarmen Versuch als Großprojekt behandeln",
-              "isCorrect": true
+              "text": "Sie verläuft zackig: Ähnlich wirkende Aufgaben können auf verschiedenen Seiten liegen.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "Fehlende Zeit für Training",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Hohe Kosten für AI-Tools",
-              "isCorrect": false
+              "text": "KI hilft nur Berufseinsteigern.",
+              "correct": false,
+              "feedback": "Die Studie fand Gewinne innerhalb der Grenze und Verluste außerhalb. Entscheidend ist die Aufgabe, nicht nur die Person."
             }
           ],
-          "explanation": "Ein risikoarmer, umkehrbarer Test braucht nur definierte Eingaben, Prüfkriterien und Freigaben."
+          "explanation": "Weil die Grenze von außen nicht sichtbar ist, beginnst du mit Aufgaben, deren Fehler du schnell erkennst."
         },
         {
-          "id": "modul_1_lesson_4_q2",
-          "questionText": "Wie schätzt du den Startaufwand eines einzelnen Anwendungsfalls belastbar ein?",
-          "answerOptions": [
+          "id": "messen-1-2-c2",
+          "prompt": "Welche Aufgabe gehört an den Anfang deiner Liste?",
+          "options": [
             {
               "id": "a",
-              "text": "Vorbereitung, Ausführung und Prüfung an der konkreten Aufgabe messen",
-              "isCorrect": true
+              "text": "Die monatliche Vorlage für die Geschäftsführung, weil dort am meisten Zeit steckt.",
+              "correct": false,
+              "feedback": "Selten und teuer im Fehlerfall: Ein Fehler wiegt schwer, und du lernst wenig dazu."
             },
             {
               "id": "b",
-              "text": "30 Minuten",
-              "isCorrect": false
+              "text": "Haftungsklauseln, weil sie anspruchsvoll sind.",
+              "correct": false,
+              "feedback": "Anspruchsvoll heißt schwer prüfbar und teuer im Fehlerfall. Genau dort automatisierst du zuletzt."
             },
             {
               "id": "c",
-              "text": "3 Stunden",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Ohne Messung pauschal drei Minuten annehmen",
-              "isCorrect": false
+              "text": "Tägliche Standardantworten, die du auf einen Blick prüfst.",
+              "correct": true
             }
           ],
-          "explanation": "Eine pauschale Drei-Minuten-Schätzung gibt es nicht. Miss Einrichtung, Ausführung und Prüfung am gewählten Anwendungsfall."
-        }
-      ]
-    },
-    {
-      "id": "modul_1_lesson_5",
-      "moduleId": "modul_1",
-      "number": 5,
-      "title": "AI-Native Fluency Test (Selbsteinschätzung)",
-      "subtitle": "10 Szenarien in 5 Dimensionen",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "SEMI-ANNUAL",
-      "keyConcepts": [
-        "Fluency",
-        "Drafting",
-        "Delegation",
-        "Automation",
-        "Knowledge",
-        "Governance"
-      ],
-      "widgets": [
-        {
-          "kind": "demo-maturity",
-          "placement": "after-intro"
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_1_lesson_5_section_1",
-          "title": "Die fünf Dimensionen",
-          "readTimeMinutes": 3,
-          "content": "Der Test bewertet dein Verhalten in fünf Dimensionen. Er ist ein Diagnosemodell, kein extern validierter Kompetenzstandard.\n\n1. **Drafting:** Entstehen erste Entwürfe geeigneter Aufgaben mit Claude?\n2. **Delegation:** Übergibst du ganze, begrenzte Aufgaben mit Kontext statt Textfragmenten?\n3. **Automation:** Laufen freigegebene Abläufe ohne deinen Klick pro Schritt?\n4. **Knowledge:** Fragst du eine freigegebene Wissensbasis ab und belegst jeden Eintrag?\n5. **Governance:** Klassifizierst du Daten und wendest die Regeln deiner Organisation an, DSGVO und EU AI Act eingeschlossen?\n\nJede Dimension hat fünf Stufen: 0 nie, 1 gelegentlich und unstrukturiert, 2 regelmäßig und bewusst, 3 Standard für geeignete Aufgaben, 4 konsistent mit definierten Kontrollen. Bewerte, was du heute tust, und halte es als Ausgangslage fest."
-        },
-        {
-          "id": "modul_1_lesson_5_section_2",
-          "title": "Der Test: Szenarien 1 bis 5",
-          "readTimeMinutes": 5,
-          "content": "Wähle pro Szenario, was du **heute tatsächlich tust**.\n\n**1 · Drafting:** Eine Kundenmail braucht heute eine Antwort.\n- A) Ich schreibe selbst im leeren Dokument\n- B) Entwurf aus ein paar Stichpunkten\n- C) Freigegebene Mail mit Rolle, Kontext, Auftrag und Grenzen, Entwurf geprüft\n- D) Gepflegter Skill mit Pflichtkontext und Review-Checkliste\n\n**2 · Delegation:** Du brauchst eine Stellenausschreibung.\n- A) Ich schreibe sie selbst\n- B) Anfrage ohne weitere Angaben\n- C) Rolle, Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vorgegeben\n- D) Gepflegtes Project mit Quellen und Freigabekriterien\n\n**3 · Automation:** Eine Website-Anfrage geht ein.\n- A) Ich übertrage sie von Hand ins CRM\n- B) Das Formular schreibt direkt ins CRM\n- C) Das Formular schreibt ins CRM, dazu entsteht ein Antwortentwurf zur Prüfung\n- D) Überwachter Ablauf mit Validierung, Review-Zuweisung und Audit-Protokoll\n\n**4 · Knowledge:** Jemand fragt nach einer Entscheidung aus dem Januar.\n- A) Aus dem Gedächtnis\n- B) Getrennte Suche in Mail, Notizen und Ablage\n- C) Gepflegte Wissensbasis, zitierten Eintrag geöffnet\n- D) Entscheidung, Quelle, Verantwortliche und spätere Änderungen in einem Abruf\n\n**5 · Governance:** Dürfen Kundendaten in ein KI-Werkzeug?\n- A) Weiß ich nicht\n- B) Ich gehe davon aus, dass die DSGVO es verbietet\n- C) Daten klassifizieren, freigegebenes Werkzeug und Bedingungen prüfen\n- D) Richtlinie, Werkzeugregister und Eskalationsweg anwenden\n\n_(Szenarien 6 bis 10 stehen im [Fluency-Test](/ai-native/fluency-test).)_"
-        },
-        {
-          "id": "modul_1_lesson_5_section_3",
-          "title": "Was dein Score dir sagt",
-          "readTimeMinutes": 2,
-          "content": "Jede Dimension hat zwei Szenarien; A zählt 0 und D 3 Punkte, zusammen also 0 bis 6.\n\n**Lesart pro Dimension:**\n- **0 bis 2:** wenig beobachtete Nutzung; such dir eine kontrollierte Übungsaufgabe\n- **3 bis 4:** regelmäßig, aber nicht bei allen geeigneten Aufgaben\n- **5 bis 6:** konsistente Nutzung der bewerteten Verhaltensweisen\n\nEinen Vergleichswert gibt es nicht, der Kurs hat keinen repräsentativen Durchschnitt erhoben. Wiederhole den Test nach den Modulen 2 bis 4 und vergleiche die Belege hinter jeder Antwort: abgeschlossene Abläufe, Quellenprüfungen, Freigaben, Governance-Kontrollen."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_5_q1",
-          "questionText": "Was sind die 5 Dimensionen der AI-Native Fluency?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Tippen, Lesen, Rechnen, Analysieren, Präsentieren",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Drafting, Delegation, Automation, Knowledge, Governance",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Input, Output, Qualität, Geschwindigkeit, Kosten",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Tools, Skills, Workflows, Daten, Ergebnisse",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Die fünf Dimensionen sind Drafting, Delegation, Automation, Knowledge und Governance."
-        },
-        {
-          "id": "modul_1_lesson_5_q2",
-          "questionText": "Welche Ausgangslage solltest du zur Messung deines Fortschritts verwenden?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Einen unbelegten Branchendurchschnitt",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Deinen eigenen Wert mit denselben Szenarien und Kriterien",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Den höchsten Wert eines anderen Teilnehmers",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Einen von Claude ohne Belege erzeugten Wert",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Miss deine eigene Ausgangslage und wiederhole dieselbe Einschätzung. Einen repräsentativen Durchschnitt hat dieser Kurs nicht."
+          "explanation": "Häufig, günstig im Fehlerfall, schnell prüfbar: Dort lernst du am schnellsten und riskierst am wenigsten."
         }
       ]
     }

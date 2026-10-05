@@ -171,9 +171,7 @@ describe("LessonProofCheckpoint", () => {
 const CHROME_FILES = [
   "lesson-shell.tsx",
   "lesson-proof-checkpoint.tsx",
-  "../codex/codex-lesson-reader.tsx",
   "../data-infrastructure/data-infra-lesson-reader.tsx",
-  "../imported-courses/claude/claude-lesson-reader.tsx",
   "../ai-native-operator/lesson-reader.tsx",
 ] as const;
 

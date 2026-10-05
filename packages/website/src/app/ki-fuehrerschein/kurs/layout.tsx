@@ -23,19 +23,19 @@ const COPY: Readonly<
   de: {
     title: "KI im Alltag verstehen: kostenloser KI-Kurs auf Deutsch",
     description:
-      "Kostenloser KI-Grundlagenkurs mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit. Ein Lernkonto ist erforderlich.",
+      "Kostenloser KI-Grundlagenkurs mit 4 Modulen, 8 Lektionen und ca. 45 Min. Lernzeit. Ein Lernkonto ist erforderlich.",
     graphName: "KI-Führerschein: Welche Daten ins KI-Tool dürfen",
     graphDescription:
-      "Online-Grundlagenkurs zur KI-Kompetenz mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit.",
+      "Online-Grundlagenkurs zur KI-Kompetenz mit 4 Modulen, 8 Lektionen und ca. 45 Min. Lernzeit.",
     audience: "Erwachsene ohne technische Vorkenntnisse",
   },
   en: {
     title: "Everyday AI Literacy: course reader",
     description:
-      "Foundation course with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study. A learning account is required.",
+      "Foundation course with 4 modules, 8 lessons, and about 45 minutes of study. A learning account is required.",
     graphName: "Everyday AI Literacy: which data may go into an AI tool",
     graphDescription:
-      "Online foundation course on practical AI literacy with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study.",
+      "Online foundation course on practical AI literacy with 4 modules, 8 lessons, and about 45 minutes of study.",
     audience: "Adults without a technical background",
   },
 };
@@ -84,7 +84,7 @@ function courseGraph(locale: Locale) {
     hasCourseInstance: {
       "@type": "CourseInstance",
       courseMode: "online",
-      courseWorkload: "PT1H40M",
+      courseWorkload: "PT45M",
       inLanguage: locale,
     },
   };

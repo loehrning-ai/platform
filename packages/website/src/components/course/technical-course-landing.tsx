@@ -7,12 +7,17 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
+import Image from "next/image";
 import { Kicker } from "@/components/werk";
 import { cx } from "@/components/werk/cx";
 import { CapsLine } from "@/components/plakat";
 import { coursePlakat, type CoursePlakat } from "@/lib/plakat/palettes";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { CoursePosterArt } from "./course-poster-art";
+import {
+  coursePeoplePicture,
+  type CoursePeoplePicture,
+} from "./course-people-picture";
 
 interface TechnicalCourseFrameProps {
   readonly children: ReactNode;
@@ -61,7 +66,9 @@ interface TechnicalCourseSectionHeadingProps {
  * Grundlagenpfad, IDEA and Bloom for the Technikkurse) with one caps line,
  * the poster title, a 17px lead and one primary action; below the band the
  * page is paper, and sections open with a 2px Kopflinie in the scene line.
- * Lists are hairline rows. No boxes, no offset shadows, no radius.
+ * Lists are hairline rows. No boxes, no offset shadows, no radius. The four
+ * Grundlagenpfad courses show their numeral and people picture in the band
+ * (HeaderPicture); the Technikkurse keep their poster art.
  */
 
 /**
@@ -289,6 +296,58 @@ function HeaderArtPhone({ scene }: { readonly scene: CoursePlakat }): JSX.Elemen
   );
 }
 
+/**
+ * The Grundlagenpfad band's picture (the four courses with a people
+ * picture): the course numeral and the picture in a Butter frame over a
+ * Mennige offset plate, the poster's two colours around the recoloured
+ * illustration. From lg the art is the band's right-hand grid column: the
+ * numeral stands at its top right at poster size and the 16:10 picture sits
+ * at its foot, both inside the 72rem track, so nothing is clipped. Below lg
+ * the picture follows the facts at the column's width in 16:9, and the
+ * numeral is a tab of band ground cut into its top-left corner (Butter on
+ * Ultramarin, 10.97:1). One element serves both layouts, so the page
+ * requests one picture. Decorative: the H1 names the course and the caps
+ * line its place in the path, so the art is aria-hidden and alt is empty.
+ */
+function HeaderPicture({
+  picture,
+  numeral,
+}: {
+  readonly picture: CoursePeoplePicture;
+  readonly numeral: string | null;
+}): JSX.Element {
+  return (
+    <div
+      aria-hidden="true"
+      data-course-picture-art=""
+      className="pointer-events-none relative mt-8 min-w-0 pb-2 pr-2 sm:mt-10 sm:max-w-xl sm:pb-3 sm:pr-3 lg:mt-0 lg:flex lg:max-w-none lg:flex-col lg:items-end lg:justify-between lg:gap-8"
+    >
+      {numeral ? (
+        <span
+          data-course-picture-numeral=""
+          data-poster-numeral-text=""
+          className="absolute left-0 top-0 z-10 block bg-scene-ground pb-2 pr-3 text-[3.5rem] font-bold leading-[0.8] tracking-[-0.065em] text-scene-ink tabular-nums sm:pb-3 sm:pr-4 sm:text-[5rem] lg:static lg:-mr-[0.04em] lg:bg-transparent lg:p-0 lg:text-[clamp(8rem,11cqw,11.5rem)]"
+        >
+          {numeral}
+        </span>
+      ) : null}
+      <span className="relative block w-full">
+        <span className="absolute inset-0 translate-x-2 translate-y-2 bg-scene-mid sm:translate-x-3 sm:translate-y-3" />
+        <span className="relative block aspect-[16/9] overflow-hidden border-[3px] border-scene-ink bg-background lg:aspect-[16/10] lg:border-4">
+          <Image
+            src={picture.src}
+            alt=""
+            fill
+            loading="eager"
+            sizes="(min-width: 1280px) 43rem, (min-width: 1024px) 39rem, (min-width: 640px) 46rem, 130vw"
+            className={cx("object-cover", picture.focus)}
+          />
+        </span>
+      </span>
+    </div>
+  );
+}
+
 export function TechnicalCourseHeader({
   courseId,
   eyebrow,
@@ -302,6 +361,11 @@ export function TechnicalCourseHeader({
   figure,
 }: TechnicalCourseHeaderProps): JSX.Element {
   const scene = courseId ? coursePlakat(courseId) : undefined;
+  // A Grundlagenpfad course shows its people picture in place of the
+  // poster shapes (HeaderPicture); every other scene keeps its poster.
+  const picture =
+    scene && courseId ? coursePeoplePicture(courseId) : undefined;
+  const poster = scene && !picture ? scene : undefined;
   // The band (SPEC §3.13). It picks up the page's scene through the
   // `[data-plakat-page] [data-plakat-band]` scope, spans the frame's three
   // tracks and puts its content back in the middle one. Type budget: the
@@ -317,11 +381,13 @@ export function TechnicalCourseHeader({
       data-technical-course-header
       data-plakat-band=""
     >
-      {scene ? <HeaderArt scene={scene} /> : null}
+      {poster ? <HeaderArt scene={poster} /> : null}
       <div
         className={cx(
           "col-start-2 min-w-0 pb-7 pt-6 sm:pb-10 sm:pt-10 lg:pb-14 lg:pt-14",
-          scene && BAND_ART_CLEARANCE,
+          poster && BAND_ART_CLEARANCE,
+          picture &&
+            "lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] lg:gap-x-12 xl:grid-cols-[minmax(0,1fr)_minmax(0,30rem)] xl:gap-x-16",
         )}
       >
         <div className="@container min-w-0">
@@ -384,8 +450,11 @@ export function TechnicalCourseHeader({
             ) : null}
           </aside>
         </div>
+        {picture ? (
+          <HeaderPicture picture={picture} numeral={scene?.numeral ?? null} />
+        ) : null}
       </div>
-      {scene ? <HeaderArtPhone scene={scene} /> : null}
+      {poster ? <HeaderArtPhone scene={poster} /> : null}
     </header>
   );
 }

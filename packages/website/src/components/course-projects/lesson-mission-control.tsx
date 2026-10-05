@@ -441,7 +441,7 @@ function ChoiceProbe({
               className={cn(
                 "min-h-14 min-w-0 border p-4 text-left outline-none transition-[border-color,background-color,color] duration-[120ms] motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background max-sm:min-h-12 max-sm:p-3",
                 selected
-                  ? "border-scene-line bg-scene-line text-background"
+                  ? "border-scene-line bg-sky-sheet text-foreground shadow-[inset_0_-3px_0_var(--color-scene-line)]"
                   : "border-border bg-background text-foreground hover:border-foreground hover:bg-card-hover max-sm:border-0 max-sm:border-b max-sm:border-hairline max-sm:bg-transparent",
                 locked && "cursor-not-allowed opacity-75",
               )}
@@ -994,7 +994,7 @@ export function LessonMissionControl({
     <button
       type="button"
       onClick={() => continueTo(nextStep)}
-      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none transition-colors duration-[120ms] hover:underline motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-brand-cobalt bg-brand-cobalt px-5 text-label text-paper underline-offset-4 outline-none transition-colors duration-[120ms] hover:underline motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {copy.continue}{" "}
       <span aria-hidden="true" className="ml-2">
@@ -1150,7 +1150,7 @@ export function LessonMissionControl({
                       className={cn(
                         "flex min-h-11 w-full min-w-0 items-center justify-center gap-2 border-b-[3px] px-2 py-1.5 text-center outline-none transition-[border-color,color,background-color] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                         selected
-                          ? "border-scene-line bg-scene-line text-background"
+                          ? "border-scene-line bg-sky-sheet text-foreground shadow-[inset_0_-3px_0_var(--color-scene-line)]"
                           : complete
                             ? "border-pass bg-card text-foreground"
                             : available
@@ -1245,7 +1245,7 @@ export function LessonMissionControl({
                         className={cn(
                           "relative flex min-h-12 min-w-0 cursor-pointer items-start gap-3 border p-3 sm:min-h-14 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background sm:p-4",
                           displayState.predictionId === entry.id
-                            ? "border-scene-line bg-scene-line text-background"
+                            ? "border-scene-line bg-sky-sheet text-foreground shadow-[inset_0_-3px_0_var(--color-scene-line)]"
                             : "border-border bg-background hover:border-foreground hover:bg-card-hover max-sm:border-0 max-sm:border-b max-sm:border-hairline max-sm:bg-transparent",
                           displayState.revealed && "cursor-default",
                         )}
@@ -1301,7 +1301,7 @@ export function LessonMissionControl({
                       }
                       aria-controls={signalId}
                       onClick={revealPrediction}
-                      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-brand-cobalt bg-brand-cobalt px-5 text-label text-paper underline-offset-4 outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       {copy.reveal}
                     </button>
@@ -1343,7 +1343,7 @@ export function LessonMissionControl({
                     }}
                     aria-controls={workspaceId}
                     aria-expanded={workspaceActive}
-                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-brand-cobalt bg-brand-cobalt px-5 text-label text-paper underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {workspaceActive ? copy.workspaceOpen : copy.openWorkspace}:{" "}
                     {profile.instrument[locale]}
@@ -1378,7 +1378,7 @@ export function LessonMissionControl({
                     onClick={onOpenWorkspace}
                     aria-controls={workspaceId}
                     aria-expanded={workspaceActive}
-                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-brand-cobalt bg-brand-cobalt px-5 text-label text-paper underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {copy.runInstrument}: {profile.instrument[locale]}
                   </button>
@@ -1458,7 +1458,7 @@ export function LessonMissionControl({
                       <button
                         type="submit"
                         disabled={!controlsEnabled || !retrievalRecallReady}
-                        className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-brand-cobalt bg-brand-cobalt px-5 text-label text-paper underline-offset-4 outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         {copy.retrievalRecallCommit}
                       </button>
@@ -1507,7 +1507,7 @@ export function LessonMissionControl({
                         <button
                           type="button"
                           onClick={beginRetrievalRepair}
-                          className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                          className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-brand-cobalt bg-brand-cobalt px-5 text-label text-paper underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         >
                           {copy.repairRetrieval}
                         </button>

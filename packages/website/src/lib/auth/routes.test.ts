@@ -11,7 +11,7 @@ describe("platform route access model", () => {
   it("treats course previews and verification readers as public", () => {
     for (const path of [
       "/kurse",
-      "/kurse/open-source/codex",
+      "/kurse/open-source/data-infrastructure",
       "/ki-fuehrerschein",
       "/eu-ai-act-kurs",
       "/ai-native",
@@ -26,7 +26,7 @@ describe("platform route access model", () => {
       "/.well-known/oauth-protected-resource",
       "/api/health",
       "/api/ai-native/grade-exercise",
-      "/imported-courses/screenshots/codex.jpg",
+      "/imported-courses/screenshots/data-infrastructure.jpg",
     ]) {
       expect(isPublicPlatformPath(path), path).toBe(true);
       expect(isProtectedPlatformPath(path), path).toBe(false);
@@ -35,12 +35,9 @@ describe("platform route access model", () => {
 
   it("treats non-certified educational content as public (optional-account policy D1: optional login)", () => {
     for (const path of [
-      "/kurse/open-source/codex/kurs",
-      "/kurse/open-source/codex/kurs/L01",
-      "/ai-native/demos",
-      "/ai-native/fluency-test",
+      "/kurse/open-source/data-infrastructure/kurs",
+      "/kurse/open-source/data-infrastructure/kurs/mental-model",
       "/ai-native/glossar",
-      "/ai-native/capstone-gallery",
       "/demos",
       "/demos/excel",
       "/buecher",
@@ -92,7 +89,7 @@ describe("platform route access model", () => {
     }
     for (const path of [
       "/ki-fuehrerschein",
-      "/kurse/open-source/codex/kurs",
+      "/kurse/open-source/data-infrastructure/kurs",
       "/konto",
       "/ai-native/kurs-vorschau",
     ]) {

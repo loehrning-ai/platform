@@ -1,0 +1,417 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "rolle-1-1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "Ihre Rolle bestimmt Ihre Pflichten",
+      "subtitle": "Anbieter, Betreiber, Einführer, Händler und der Rollenwechsel",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Anbieter",
+        "Betreiber",
+        "Rollenwechsel",
+        "Art. 25"
+      ],
+      "concept": {
+        "body": "Ihre Pflichten hängen an Ihrer Rolle, nicht am Tool. Art. 3 der Verordnung (EU) 2024/1689 unterscheidet:\n\n- **Anbieter (Nr. 3):** entwickelt ein KI-System oder lässt es entwickeln und bringt es unter eigenem Namen auf den Markt.\n- **Betreiber (Nr. 4):** verwendet ein KI-System in eigener Verantwortung beruflich. Hier starten die meisten Unternehmen.\n- **Einführer (Nr. 6) und Händler (Nr. 7):** bringen fremde Systeme in die EU oder verkaufen sie weiter.\n\nDie Rolle kippt nach Art. 25: Wer seinen Namen auf ein Hochrisiko-System setzt, es wesentlich verändert oder den Zweck eines Systems so ändert, dass es hochriskant wird, gilt dafür als Anbieter.\n\nRein private Nutzung ist ausgenommen (Art. 2 Abs. 10). Anbieter aus Drittländern sind erfasst, sobald die Ausgabe in der EU verwendet wird (Art. 2 Abs. 1 lit. c).",
+        "takeaway": "Erst die Rolle pro System klären, dann die Pflichten. Eigene Marke oder wesentliche Änderung machen Sie zum Anbieter.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Bestimmen Sie die Rolle in fünf Fällen",
+        "instructions": "Gehen Sie für jeden Fall die Fragen durch. Am Ende sehen Sie, ob Ihre Rolle zum Fall passt und warum. Fertig nach dem fünften Fall.",
+        "props": {
+          "start": "use",
+          "nodes": [
+            {
+              "id": "use",
+              "question": "Wofür wird das KI-System genutzt?",
+              "options": [
+                {
+                  "label": "Rein privat, von einer Privatperson",
+                  "result": "out"
+                },
+                {
+                  "label": "Beruflich oder für eine Organisation",
+                  "next": "brand"
+                }
+              ]
+            },
+            {
+              "id": "brand",
+              "question": "Wer hat das System entwickelt oder entwickeln lassen und bringt es unter eigenem Namen auf den Markt?",
+              "options": [
+                {
+                  "label": "Wir selbst",
+                  "result": "provider"
+                },
+                {
+                  "label": "Ein anderes Unternehmen",
+                  "next": "flip"
+                }
+              ]
+            },
+            {
+              "id": "flip",
+              "question": "Haben Sie an dem fremden System eines davon getan?",
+              "help": "Ihren Namen oder Ihre Marke auf ein Hochrisiko-System gesetzt, ein Hochrisiko-System wesentlich verändert oder den Zweck eines Systems so geändert, dass es hochriskant wird (Art. 25 Abs. 1).",
+              "options": [
+                {
+                  "label": "Ja, mindestens eines davon",
+                  "result": "flip"
+                },
+                {
+                  "label": "Nein, das System bleibt, wie geliefert",
+                  "next": "what"
+                }
+              ]
+            },
+            {
+              "id": "what",
+              "question": "Was machen Sie mit dem System?",
+              "options": [
+                {
+                  "label": "Wir setzen es in eigener Verantwortung ein",
+                  "result": "deployer"
+                },
+                {
+                  "label": "Wir bringen es als Erste in der EU auf den Markt; der Anbieter sitzt in einem Drittland",
+                  "result": "importer"
+                },
+                {
+                  "label": "Wir verkaufen es weiter; es ist in der EU schon auf dem Markt",
+                  "result": "distributor"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "out",
+              "tone": "neutral",
+              "title": "Nicht erfasst: rein private Nutzung",
+              "body": "Art. 2 Abs. 10 nimmt natürliche Personen aus, die KI ausschließlich privat nutzen. Schreibt dieselbe Person damit Kundenpost für ihren Arbeitgeber, ist der Arbeitgeber Betreiber.",
+              "source": "Art. 2 Abs. 10 KI-VO"
+            },
+            {
+              "id": "provider",
+              "tone": "warn",
+              "title": "Anbieter (Art. 3 Nr. 3)",
+              "body": "Sie tragen die Anbieterpflichten. Bei Hochrisiko sind das Art. 16 mit Konformitätsbewertung, technischer Dokumentation und Registrierung, bei Transparenzfällen der KI-Hinweis und die maschinenlesbare Markierung nach Art. 50 Abs. 1 und 2.",
+              "actions": [
+                "Risikoklasse bestimmen (Modul 2)",
+                "Pflichtenliste für Anbieter erzeugen (Modul 3)"
+              ],
+              "source": "Art. 3 Nr. 3, Art. 16 KI-VO"
+            },
+            {
+              "id": "flip",
+              "tone": "bad",
+              "title": "Rollenwechsel: Sie werden Anbieter (Art. 25)",
+              "body": "Für dieses System gelten Sie als Anbieter mit den Pflichten nach Art. 16. Der ursprüngliche Anbieter gilt dafür nicht mehr als Anbieter, muss Ihnen aber die nötigen Informationen geben und mit Ihnen zusammenarbeiten.",
+              "actions": [
+                "Änderung dokumentieren und gegen Art. 3 Nr. 23 prüfen",
+                "Unterlagen beim ursprünglichen Anbieter anfordern (Art. 25 Abs. 2)"
+              ],
+              "source": "Art. 25 KI-VO"
+            },
+            {
+              "id": "deployer",
+              "tone": "good",
+              "title": "Betreiber (Art. 3 Nr. 4)",
+              "body": "Der häufigste Fall im Mittelstand. Art. 4 (KI-Kompetenz) gilt für jedes System. Weitere Pflichten hängen an der Risikoklasse: bei Hochrisiko Art. 26, bei Deepfakes, Emotionserkennung oder biometrischer Kategorisierung Art. 50 Abs. 3 und 4.",
+              "actions": [
+                "Risikoklasse bestimmen (Modul 2)",
+                "Pflichtenliste für Betreiber erzeugen (Modul 3)"
+              ],
+              "source": "Art. 3 Nr. 4, Art. 26 KI-VO"
+            },
+            {
+              "id": "importer",
+              "tone": "warn",
+              "title": "Einführer (Art. 3 Nr. 6)",
+              "body": "Bevor Sie ein Hochrisiko-System auf den Markt bringen, prüfen Sie nach Art. 23, ob Konformitätsbewertung, technische Dokumentation, CE-Kennzeichnung mit Konformitätserklärung und ein Bevollmächtigter des Anbieters vorliegen.",
+              "source": "Art. 3 Nr. 6, Art. 23 KI-VO"
+            },
+            {
+              "id": "distributor",
+              "tone": "warn",
+              "title": "Händler (Art. 3 Nr. 7)",
+              "body": "Bevor Sie ein Hochrisiko-System bereitstellen, prüfen Sie nach Art. 24 CE-Kennzeichnung, EU-Konformitätserklärung und Gebrauchsanweisung. Setzen Sie Ihren Namen darauf, werden Sie Anbieter (Art. 25).",
+              "source": "Art. 3 Nr. 7, Art. 24 KI-VO"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "advisor",
+              "text": "Eine Steuerkanzlei nutzt einen zugekauften KI-Assistenten unverändert für Entwürfe von Mandantenbriefen.",
+              "expected": "deployer",
+              "why": "Fremdes System, eigene Verantwortung, keine Änderung: Betreiber."
+            },
+            {
+              "id": "machine",
+              "text": "Ein Maschinenbauer trainiert ein zugekauftes KI-Sicherheitsmodul (Hochrisiko nach Anhang I) mit eigenen Daten weiter, verändert es dabei wesentlich und verkauft die Anlage unter eigener Marke.",
+              "expected": "flip",
+              "why": "Wesentliche Änderung und eigene Marke an einem Hochrisiko-System: Rollenwechsel nach Art. 25."
+            },
+            {
+              "id": "import",
+              "text": "Eine HR-Beraterin bringt einen Bewerbungs-Bot eines US-Anbieters ohne EU-Sitz als Erste in der EU auf den Markt.",
+              "expected": "importer",
+              "why": "Erstes Inverkehrbringen eines Drittland-Systems in der EU: Einführerin."
+            },
+            {
+              "id": "vendor",
+              "text": "Ein Softwarehaus entwickelt einen Kundenservice-Chatbot und verkauft ihn unter eigenem Namen.",
+              "expected": "provider",
+              "why": "Eigene Entwicklung unter eigenem Namen: Anbieter."
+            },
+            {
+              "id": "holiday",
+              "text": "Ein Angestellter plant mit einem Chatbot privat seinen Urlaub.",
+              "expected": "out",
+              "why": "Rein private Nutzung ist ausgenommen (Art. 2 Abs. 10)."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "rolle-1-1-c1",
+          "prompt": "Ein Systemhaus vertreibt ein fremdes Hochrisiko-System unter eigener Marke. Welche Rolle hat es für dieses System?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Händler",
+              "correct": false,
+              "feedback": "Händler bleibt nur, wer ein System unverändert unter fremdem Namen weitergibt."
+            },
+            {
+              "id": "b",
+              "text": "Anbieter nach Art. 25",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Betreiber",
+              "correct": false,
+              "feedback": "Ein Betreiber setzt ein System selbst ein. Hier wird es unter eigener Marke vertrieben."
+            }
+          ],
+          "explanation": "Wer seinen Namen oder seine Marke auf ein Hochrisiko-System setzt, gilt dafür als Anbieter mit den Pflichten nach Art. 16."
+        },
+        {
+          "id": "rolle-1-1-c2",
+          "prompt": "Ein US-Anbieter ohne EU-Sitz liefert KI-Ausgaben, die ein Unternehmen in Bayern nutzt. Gilt die KI-Verordnung für den US-Anbieter?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, weil die Ausgabe in der EU verwendet wird (Art. 2 Abs. 1 lit. c)",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Nein, weil er außerhalb der EU sitzt",
+              "correct": false,
+              "feedback": "Der Sitz allein entscheidet nicht. Art. 2 Abs. 1 lit. c knüpft an die Verwendung der Ausgabe in der EU an."
+            },
+            {
+              "id": "c",
+              "text": "Nur, wenn seine Server in der EU stehen",
+              "correct": false,
+              "feedback": "Der Serverstandort ist kein Kriterium der Verordnung."
+            }
+          ],
+          "explanation": "Die Verordnung erfasst Anbieter und Betreiber aus Drittländern, sobald die Ausgabe ihres Systems in der EU verwendet wird. So lässt sie sich nicht durch einen Sitz außerhalb umgehen."
+        }
+      ]
+    },
+    {
+      "id": "zeitplan-1-2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "Was gilt heute, was kommt noch?",
+      "subtitle": "Der Zeitplan, abgeglichen mit dem heutigen Datum",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Stichtag",
+        "Art. 113",
+        "Verordnung (EU) 2026/1744"
+      ],
+      "concept": {
+        "body": "Die Verordnung (EU) 2024/1689 trat am 1. August 2024 in Kraft und gilt stufenweise (Art. 113). Die Verordnung (EU) 2026/1744, seit dem 27. Juli 2026 in Kraft, hat den Hochrisiko-Zeitplan verschoben.\n\n| Anwendbar ab | Was |\n|---|---|\n| 2. Februar 2025 | Art. 4 (KI-Kompetenz), Verbote nach Art. 5 |\n| 2. August 2025 | GPAI-Modelle, Governance, Sanktionsrahmen |\n| 2. August 2026 | die meisten übrigen Vorschriften, darunter Art. 50 |\n| 2. Dezember 2027 | Hochrisiko nach Art. 6 Abs. 2 und Anhang III |\n| 2. August 2028 | Hochrisiko nach Art. 6 Abs. 1 und Anhang I |\n\nEin Stichtag gilt pro Pflicht, nicht pro Unternehmen. Für Systeme, die vor einem Stichtag auf den Markt kamen, gelten Übergangsregeln; eine wesentliche Änderung kann sie beenden.",
+        "takeaway": "Pro Pflicht den Stichtag nachschlagen und mit heute vergleichen, nicht nach Gefühl planen.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Verordnung (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "timeline-check",
+        "title": "Prüfen Sie sechs Pflichten gegen heute",
+        "instructions": "Entscheiden Sie für jede Pflicht, ob sie heute schon gilt. Der Zeitstrahl rechnet mit dem heutigen Datum und zeigt nach jeder Antwort, seit wann oder ab wann sie gilt. Fertig, wenn alle sechs beantwortet sind.",
+        "props": {
+          "milestones": [
+            {
+              "id": "force",
+              "date": "2024-08-01",
+              "title": "Inkrafttreten der KI-Verordnung",
+              "body": "Die Pflichten gelten danach stufenweise.",
+              "source": "Art. 113 KI-VO"
+            },
+            {
+              "id": "literacy",
+              "date": "2025-02-02",
+              "title": "KI-Kompetenz (Art. 4) und Verbote (Art. 5)",
+              "source": "Art. 113 lit. a KI-VO"
+            },
+            {
+              "id": "gpai",
+              "date": "2025-08-02",
+              "title": "GPAI-Modelle, Governance, Sanktionsrahmen",
+              "source": "Art. 113 lit. b KI-VO"
+            },
+            {
+              "id": "omnibus",
+              "date": "2026-07-27",
+              "title": "Änderungsverordnung (EU) 2026/1744 in Kraft",
+              "body": "Ändert unter anderem Art. 4 und den Hochrisiko-Zeitplan.",
+              "source": "Verordnung (EU) 2026/1744"
+            },
+            {
+              "id": "general",
+              "date": "2026-08-02",
+              "title": "Die meisten übrigen Vorschriften, darunter Art. 50",
+              "body": "Nationale Aufsicht und Durchsetzung beginnen.",
+              "source": "Art. 113 KI-VO, Kommissions-FAQ"
+            },
+            {
+              "id": "annex3",
+              "date": "2027-12-02",
+              "title": "Hochrisiko: eigenständige Systeme nach Anhang III",
+              "source": "Verordnung (EU) 2026/1744"
+            },
+            {
+              "id": "annex1",
+              "date": "2028-08-02",
+              "title": "Hochrisiko: produktintegrierte Systeme nach Anhang I",
+              "source": "Verordnung (EU) 2026/1744"
+            }
+          ],
+          "questions": [
+            {
+              "id": "literacy",
+              "text": "Ihr Vertrieb nutzt ein KI-Tool. Sie müssen Maßnahmen zur KI-Kompetenz treffen (Art. 4).",
+              "milestone": "literacy",
+              "why": "Art. 4 ist seit dem 2. Februar 2025 anwendbar und gilt für alle Anbieter und Betreiber, unabhängig von der Risikoklasse."
+            },
+            {
+              "id": "emotion",
+              "text": "Software, die in Bewerbungsvideos Emotionen auswertet, ist verboten (Art. 5 Abs. 1 lit. f).",
+              "milestone": "literacy",
+              "why": "Die Verbote gelten seit dem 2. Februar 2025, ohne Übergangsfrist und ohne KMU-Ausnahme."
+            },
+            {
+              "id": "vendor-docs",
+              "text": "Der Anbieter Ihres Sprachmodells muss nachgelagerten Anbietern Informationen nach Anhang XII liefern (Art. 53).",
+              "milestone": "gpai",
+              "why": "Die Pflichten für GPAI-Modelle (Kapitel V) gelten seit dem 2. August 2025."
+            },
+            {
+              "id": "chatbot",
+              "text": "Ihr Website-Chatbot muss erkennbar machen, dass man mit einer KI spricht (Art. 50 Abs. 1).",
+              "milestone": "general",
+              "why": "Art. 50 gehört zu den Vorschriften, die ab dem 2. August 2026 gelten."
+            },
+            {
+              "id": "cv",
+              "text": "Für Ihr zugekauftes CV-Ranking gelten die Betreiberpflichten nach Art. 26.",
+              "milestone": "annex3",
+              "why": "CV-Ranking fällt unter Anhang III Nr. 4. Die Verordnung (EU) 2026/1744 hat diese Hochrisiko-Regeln auf den 2. Dezember 2027 gelegt."
+            },
+            {
+              "id": "machine",
+              "text": "Das KI-Sicherheitsbauteil Ihrer Maschine (Anhang I) braucht die Hochrisiko-Konformität.",
+              "milestone": "annex1",
+              "why": "Für produktintegrierte Systeme nach Art. 6 Abs. 1 und Anhang I gelten die Hochrisiko-Regeln ab dem 2. August 2028."
+            }
+          ],
+          "note": "Der Abgleich nutzt das heutige Datum auf Ihrem Gerät. Für Systeme, die vor einem Stichtag auf den Markt kamen, gelten eigene Übergangsregeln; eine wesentliche Änderung kann sie beenden."
+        }
+      },
+      "checks": [
+        {
+          "id": "zeitplan-1-2-c1",
+          "prompt": "Ab wann gelten die Betreiberpflichten nach Art. 26 für ein eigenständiges Hochrisiko-System nach Anhang III?",
+          "options": [
+            {
+              "id": "a",
+              "text": "2. August 2026",
+              "correct": false,
+              "feedback": "Das war der ursprüngliche Termin. Die Verordnung (EU) 2026/1744 hat die Hochrisiko-Regeln verschoben."
+            },
+            {
+              "id": "b",
+              "text": "2. Dezember 2027",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "2. August 2028",
+              "correct": false,
+              "feedback": "Das ist der Termin für produktintegrierte Systeme nach Anhang I."
+            }
+          ],
+          "explanation": "Die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 legt eigenständige Anhang-III-Systeme auf den 2. Dezember 2027 und produktintegrierte Anhang-I-Systeme auf den 2. August 2028."
+        },
+        {
+          "id": "zeitplan-1-2-c2",
+          "prompt": "Seit wann muss ein Unternehmen, das KI einsetzt, Maßnahmen zur KI-Kompetenz treffen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Seit dem 2. Februar 2025",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Ab dem 2. August 2026",
+              "correct": false,
+              "feedback": "Ab dann beginnt die nationale Aufsicht. Anwendbar ist Art. 4 schon seit Februar 2025."
+            },
+            {
+              "id": "c",
+              "text": "Erst wenn ein Hochrisiko-System im Einsatz ist",
+              "correct": false,
+              "feedback": "Art. 4 gilt für alle Anbieter und Betreiber, unabhängig von der Risikoklasse."
+            }
+          ],
+          "explanation": "Art. 4 ist nach Art. 113 lit. a seit dem 2. Februar 2025 anwendbar und gilt für jedes KI-System, das Anbieter oder Betreiber einsetzen."
+        }
+      ]
+    }
+  ]
+}

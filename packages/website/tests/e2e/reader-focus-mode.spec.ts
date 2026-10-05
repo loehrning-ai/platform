@@ -40,7 +40,7 @@ const CHAPTER_URL = "/buecher/ki-landschaft/01_eisberg";
  * against one of those. Block-specific header flow is covered in the server
  * component test; actual protected block geometry is not proven by this tier.
  */
-const LESSON_URL = "/kurse/open-source/claude/kurs/mental-model";
+const LESSON_URL = "/kurse/open-source/data-infrastructure/kurs/mental-model";
 const TAB_BAR = "[data-mobile-tab-bar]";
 const READER_BAR = "[data-reader-focus-bar]";
 const READER_BAR_ROW = "[data-reader-focus-bar-row]";

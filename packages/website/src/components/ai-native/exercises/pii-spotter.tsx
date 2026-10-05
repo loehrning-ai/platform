@@ -253,7 +253,7 @@ function PiiSpotterBody({
           <button
             type="button"
             onClick={handleSubmit}
-            className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground hover:text-background"
+            className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-kupfer-dark"
           >
             {copy(
               `Prüfen (${selected.size} markiert)`,

@@ -1,88 +1,145 @@
 {
   "_meta": {
-    "title": "AI-Native Workflow Course glossary",
-    "version": "1.0",
-    "last_updated": "2026-04-18"
+    "title": "Working with AI glossary",
+    "version": "2.0",
+    "last_updated": "2026-10-04"
   },
   "categories": {
-    "claude": "Claude and the Anthropic platform",
-    "obsidian": "Obsidian and knowledge management",
-    "automation": "n8n, workflows, MCP and APIs",
-    "mindset": "AI-native work and orchestration",
-    "regulatorik": "EU AI Act, GDPR, UWG and compliance",
-    "pedagogy": "Course concepts and the capstone",
-    "technik": "Technical foundations and formats"
+    "messen": "Measuring and choosing",
+    "kontext": "Context and tool permissions",
+    "wissen": "Knowledge and sources",
+    "workflow": "Workflows, approval and deployment"
   },
   "entries": [
-    {"term": "AI-native", "category": "mindset", "definition": "A way of working with AI tools as a fixed part of a defined process, while people keep judgement, review and accountability.", "related": ["Claude-Orchestrator", "Coworker-Mindset"]},
-    {"term": "Claude", "category": "claude", "definition": "Anthropic's family of AI models.", "related": ["Claude.ai", "Claude Code"]},
-    {"term": "Claude.ai", "category": "claude", "definition": "Anthropic's web interface for Claude, with Projects, Artifacts, connectors and memory depending on the plan.", "related": ["Project", "Artifact", "Connector", "Memory"]},
-    {"term": "Claude Code", "category": "claude", "definition": "An agentic coding tool with controlled access to files and development tools, able to use permitted Skills, plugins, MCP servers and subagents.", "related": ["Skill", "Plugin", "MCP", "CLAUDE.md"]},
-    {"term": "Project", "category": "claude", "definition": "A Claude.ai workspace that groups instructions, files and conversations for one area of work.", "related": ["System-Prompt", "Memory"]},
-    {"term": "Skill", "category": "claude", "definition": "A reusable instruction package for a recurring task, with guidance, permitted tools and resources.", "related": ["SKILL.md", "Plugin"]},
-    {"term": "Plugin", "category": "claude", "definition": "An installable package of Skills, MCP servers, hooks or subagents. Check its contents and permissions before you use it.", "related": ["Skill", "MCP"]},
-    {"term": "Connector", "category": "claude", "definition": "An authorised link between an AI interface and an external source.", "related": ["MCP"]},
-    {"term": "MCP", "category": "automation", "definition": "Model Context Protocol, an open protocol that connects AI applications to external tools and resources through defined interfaces.", "related": ["MCP-Server", "Connector"]},
-    {"term": "MCP-Server", "category": "automation", "definition": "A local or remote service that exposes tools or resources over MCP. Code, permissions, transport and operation decide its security.", "related": ["MCP"]},
-    {"term": "Artifact", "category": "claude", "definition": "A separate Claude.ai view for longer outputs such as documents, code or graphics.", "related": ["Design Skill"]},
-    {"term": "Design Skill", "category": "claude", "definition": "A frontend-design workflow from the course that settles layout and interaction before implementation.", "related": ["Artifact"]},
-    {"term": "Memory", "category": "claude", "definition": "Product features that keep selected context across workspaces or conversations.", "related": ["CLAUDE.md"]},
-    {"term": "CLAUDE.md", "category": "claude", "definition": "A Markdown file with project context, conventions and limits that Claude Code loads from the project hierarchy. Keep it current and free of secrets.", "related": ["Memory"]},
-    {"term": "Opus 4.7", "category": "claude", "definition": "A Claude model name used in the course; check availability and limits in the provider documentation.", "related": ["Sonnet 4.6", "Haiku 4.5"]},
-    {"term": "Sonnet 4.6", "category": "claude", "definition": "A Claude model name used in the course. Choose a model by task, required controls and latency.", "related": ["Opus 4.7", "Haiku 4.5"]},
-    {"term": "Haiku 4.5", "category": "claude", "definition": "A smaller Claude model named in the course, suited to bounded, high-volume tasks after your own tests.", "related": ["Opus 4.7", "Sonnet 4.6"]},
-    {"term": "PARA", "category": "obsidian", "definition": "Projects, Areas, Resources and Archives: Tiago Forte's method for sorting knowledge into four parts.", "related": ["MOC"]},
-    {"term": "MOC", "category": "obsidian", "definition": "Map of Content: an index note that links a project's material and can record its status.", "related": ["PARA"]},
-    {"term": "Zweites Gehirn", "category": "obsidian", "definition": "Second brain. A maintained external knowledge system; in this course, a searchable Obsidian vault.", "related": ["PARA", "Smart Connections"]},
-    {"term": "Inbox-Zero", "category": "obsidian", "definition": "Reviewing new notes at the end of a session and moving them out of the Obsidian inbox.", "related": []},
-    {"term": "Daily Note", "category": "obsidian", "definition": "A dated work note used as a scratchpad and link index. It need not be a diary.", "related": ["Templater"]},
-    {"term": "Templater", "category": "obsidian", "definition": "An Obsidian community plugin for creating and updating notes from templates.", "related": ["Daily Note"]},
-    {"term": "Dataview", "category": "obsidian", "definition": "An Obsidian community plugin for querying metadata and content across a vault.", "related": []},
-    {"term": "Smart Connections", "category": "obsidian", "definition": "An Obsidian plugin that can use embeddings to show related notes.", "related": ["Embeddings"]},
-    {"term": "Copilot for Obsidian", "category": "obsidian", "definition": "An Obsidian plugin for model-assisted chat and retrieval over vault content.", "related": ["Smart Connections"]},
-    {"term": "Obsidian Web Clipper", "category": "obsidian", "definition": "Obsidian's browser extension that saves web content to a vault, optionally with templates or AI interpretation.", "related": []},
-    {"term": "obsidian-claude-code-mcp", "category": "obsidian", "definition": "An MCP integration that gives Claude Code access to an Obsidian vault. Review its code, permissions and network access first.", "related": ["MCP", "Claude Code"]},
-    {"term": "Embeddings", "category": "technik", "definition": "Numerical representations for comparing the semantic similarity of items such as text passages.", "related": []},
-    {"term": "n8n", "category": "automation", "definition": "A source-available workflow-automation platform with a node-based visual editor and self-hosting options.", "related": ["Trigger", "Self-hosted"]},
-    {"term": "Trigger", "category": "automation", "definition": "The event that starts a workflow, such as a webhook, a schedule, polling or an application event.", "related": ["Action"]},
-    {"term": "Action", "category": "automation", "definition": "A workflow step that prepares or performs an operation such as an API request or database write. In production it needs permissions, approval and failure handling.", "related": ["Trigger"]},
-    {"term": "Workflow", "category": "automation", "definition": "A sequence of triggers, decisions and actions. In production it needs versioning, monitoring, access control and recovery.", "related": []},
-    {"term": "Webhook", "category": "automation", "definition": "An HTTP endpoint for events from another system. It needs authentication or signature checks, input validation and replay protection.", "related": []},
-    {"term": "Self-hosted", "category": "automation", "definition": "Software on infrastructure the organisation chooses. It can add control but alone proves neither security nor GDPR compliance.", "related": ["Hetzner"]},
-    {"term": "Hetzner", "category": "automation", "definition": "A German cloud host with data centres in several regions. Compliance depends on location, contract and configuration.", "related": ["Self-hosted"]},
-    {"term": "LM Studio", "category": "automation", "definition": "A desktop app that downloads and runs language models locally.", "related": ["Llama", "Ollama"]},
-    {"term": "Ollama", "category": "automation", "definition": "A tool that downloads models and runs them locally through the command line and a local API.", "related": ["LM Studio"]},
-    {"term": "Llama", "category": "automation", "definition": "Meta's family of language models. Licence and hardware needs differ by model.", "related": ["LM Studio"]},
-    {"term": "Local AI", "category": "automation", "definition": "Running a model on the organisation's own hardware instead of a hosted API. It saves some transfers but still needs access control, logging and maintenance.", "related": ["LM Studio"]},
-    {"term": "tl;dv", "category": "automation", "definition": "A meeting transcription and notes service. Check its hosting region and data processing terms before you use it.", "related": []},
-    {"term": "Perplexity", "category": "technik", "definition": "A search product that answers with linked sources.", "related": []},
-    {"term": "Claude-Orchestrator", "category": "mindset", "definition": "A course model: a person sets task and controls, Claude runs bounded steps, and the person reviews and owns the result.", "related": ["AI-native", "Coworker-Mindset"]},
-    {"term": "Coworker-Mindset", "category": "mindset", "definition": "Coworker mindset. An older course term for structured use: clear brief, relevant context, limited permissions, fixed review step.", "related": ["Claude-Orchestrator", "Memory"]},
-    {"term": "Drafting", "category": "mindset", "definition": "Course pattern: the model writes the first draft; a person edits and approves.", "related": ["Analyse", "Recherche"]},
-    {"term": "Analyse", "category": "mindset", "definition": "Analysis. Course pattern: the model returns set fields in a fixed format for review.", "related": ["Drafting", "Recherche"]},
-    {"term": "Recherche", "category": "mindset", "definition": "Research. Course pattern: the model sorts information by clear questions and names sources a person checks.", "related": ["Drafting", "Analyse"]},
-    {"term": "RCTFC", "category": "technik", "definition": "A briefing structure of Role, Context, Task, Format and Constraints, usable as a checklist.", "related": []},
-    {"term": "Chain-of-Thought", "category": "technik", "definition": "Asking a model for step-by-step reasoning. For review, ask for brief assumptions, evidence and a checkable rationale instead.", "related": ["RCTFC"]},
-    {"term": "Few-shot", "category": "technik", "definition": "A few examples before the actual input so the model follows their format or classification rule.", "related": ["RCTFC"]},
-    {"term": "Structured Output", "category": "technik", "definition": "Model output in a fixed schema such as JSON, CSV or Markdown, so it can be validated and processed.", "related": ["RCTFC"]},
-    {"term": "Prompt-Injection", "category": "regulatorik", "definition": "An attack in which untrusted input tries to override instructions or trigger unsafe tool use. Trust zones, minimal permissions, checked inputs and outputs, and approvals help.", "related": []},
-    {"term": "EU AI Act", "category": "regulatorik", "definition": "Regulation (EU) 2024/1689, the EU's rules for AI systems, applied in phases.", "related": ["Annex III", "Art. 4 AI-Literacy", "Provider", "Deployer"]},
-    {"term": "Annex III", "category": "regulatorik", "definition": "The EU AI Act annex listing use cases that can be high-risk, subject to its conditions and exceptions.", "related": ["EU AI Act", "Hochrisiko-System"]},
-    {"term": "Hochrisiko-System", "category": "regulatorik", "definition": "An AI system classified as high-risk under the EU AI Act, via Annex I or Annex III. Duties depend on system, role and use.", "related": ["Annex III", "FRIA"]},
-    {"term": "Provider", "category": "regulatorik", "definition": "Under the EU AI Act, a person or organisation that develops an AI system or general-purpose AI model, or has one developed, and places it on the market or puts it into service under its own name or trademark.", "related": ["Deployer", "Importer"]},
-    {"term": "Deployer", "category": "regulatorik", "definition": "Under the EU AI Act, a person or organisation using an AI system under its authority, except for personal non-professional use. In a company, the organisation is generally the deployer.", "related": ["Provider"]},
-    {"term": "Importer", "category": "regulatorik", "definition": "A person or organisation located in the EU that places an AI system bearing the name or trademark of a non-EU entity on the EU market.", "related": ["Provider", "Deployer"]},
-    {"term": "FRIA", "category": "regulatorik", "definition": "Fundamental Rights Impact Assessment. Article 27 of the EU AI Act requires it for specified deployers and qualifying high-risk uses.", "related": ["Hochrisiko-System"]},
-    {"term": "Art. 4 AI-Literacy", "category": "regulatorik", "definition": "Article 4 of the EU AI Act requires providers and deployers to take measures supporting AI literacy among staff and others handling AI systems for them, considering knowledge, experience, training, use context and affected people. No individual level must be guaranteed; this course can be one measure.", "related": ["EU AI Act"]},
-    {"term": "UWG", "category": "regulatorik", "definition": "Germany's Act Against Unfair Competition. Section 5 covers misleading commercial practices, including unsupported quantitative claims.", "related": []},
-    {"term": "DSGVO", "category": "regulatorik", "definition": "German abbreviation for the GDPR, which governs processing of personal data in the EU and EEA.", "related": ["Art. 28 AVV", "Art. 22"]},
-    {"term": "Art. 28 AVV", "category": "regulatorik", "definition": "A data processing agreement under GDPR Article 28 between a controller and a processor handling personal data on its behalf.", "related": ["DSGVO"]},
-    {"term": "Art. 22", "category": "regulatorik", "definition": "GDPR Article 22 covers certain decisions based solely on automated processing with legal or similarly significant effects, subject to its exceptions.", "related": ["DSGVO"]},
-    {"term": "GoBD", "category": "regulatorik", "definition": "German principles for keeping electronic accounting records. Retention periods depend on record type and current law.", "related": []},
-    {"term": "AZAV", "category": "regulatorik", "definition": "A German accreditation regulation for employment-support services, explained here as a term only.", "related": []},
-    {"term": "BAFA", "category": "regulatorik", "definition": "Germany's Federal Office for Economic Affairs and Export Control. This platform has no BAFA funding or booking arrangement.", "related": []},
-    {"term": "Capstone", "category": "pedagogy", "definition": "The course's final project: document and test one small workflow, then assess it against a rubric.", "related": []},
-    {"term": "KI-Führerschein", "category": "pedagogy", "definition": "The free predecessor course on Article 4 AI literacy, data classification and prompting basics. It does not replace an internal Article 4 process.", "related": ["Art. 4 AI-Literacy"]},
-    {"term": "Lernmaterialien", "category": "pedagogy", "definition": "Supporting material on vault structures, Skill patterns, prompt examples, n8n exercises, MCP guidance and CLAUDE.md starters.", "related": []}
+    {
+      "term": "Baseline",
+      "category": "messen",
+      "definition": "The time a task takes without AI, measured before the start. Without it there is no net effect.",
+      "related": [
+        "Net time",
+        "Stop criterion"
+      ]
+    },
+    {
+      "term": "Net time",
+      "category": "messen",
+      "definition": "Drafting plus review plus rework with AI, compared with the baseline.",
+      "related": [
+        "Baseline"
+      ]
+    },
+    {
+      "term": "Jagged frontier",
+      "category": "messen",
+      "definition": "The uneven boundary of what a model does well. Tasks that look similar can lie on different sides (Dell'Acqua et al. 2023).",
+      "related": [
+        "Triage"
+      ]
+    },
+    {
+      "term": "Triage",
+      "category": "messen",
+      "definition": "Sorting tasks by frequency, error cost and checkability to decide what to measure first.",
+      "related": [
+        "Jagged frontier"
+      ]
+    },
+    {
+      "term": "Persistent instructions",
+      "category": "kontext",
+      "definition": "Text that travels with every request, such as project instructions, memory or a system prompt.",
+      "related": [
+        "Context window"
+      ]
+    },
+    {
+      "term": "Context window",
+      "category": "kontext",
+      "definition": "The amount of text a model processes per request. Information in the middle of long contexts is used less well (Liu et al. 2024).",
+      "related": [
+        "Persistent instructions"
+      ]
+    },
+    {
+      "term": "Prompt injection",
+      "category": "kontext",
+      "definition": "Instructions hidden in emails, files or web pages that a model follows as if they came from you.",
+      "related": [
+        "Least privilege"
+      ]
+    },
+    {
+      "term": "Least privilege",
+      "category": "kontext",
+      "definition": "A tool gets only the permissions its task needs.",
+      "related": [
+        "Prompt injection",
+        "Approval"
+      ]
+    },
+    {
+      "term": "Retrieval",
+      "category": "wissen",
+      "definition": "The system looks up matching documents and passes them to the model so answers can be supported (Lewis et al. 2020).",
+      "related": [
+        "Citation"
+      ]
+    },
+    {
+      "term": "Citation",
+      "category": "wissen",
+      "definition": "A pointer to the source of a statement. It makes an answer checkable, not correct.",
+      "related": [
+        "Retrieval",
+        "Stale note"
+      ]
+    },
+    {
+      "term": "Stale note",
+      "category": "wissen",
+      "definition": "A source that was right once and has been replaced by a newer one. A date on every note makes it visible.",
+      "related": [
+        "Citation"
+      ]
+    },
+    {
+      "term": "Fallback path",
+      "category": "workflow",
+      "definition": "The route by which uncertain or faulty cases reach a person instead of being sent.",
+      "related": [
+        "Approval"
+      ]
+    },
+    {
+      "term": "Approval",
+      "category": "workflow",
+      "definition": "A person confirms a draft before it leaves the organisation.",
+      "related": [
+        "Automation bias",
+        "Fallback path"
+      ]
+    },
+    {
+      "term": "Automation bias",
+      "category": "workflow",
+      "definition": "The tendency to trust a mostly reliable system and miss its rare errors (Parasuraman and Manzey 2010).",
+      "related": [
+        "Approval"
+      ]
+    },
+    {
+      "term": "Data processing agreement",
+      "category": "workflow",
+      "definition": "A contract under GDPR Art. 28 when a provider processes personal data on your behalf.",
+      "related": []
+    },
+    {
+      "term": "Stop criterion",
+      "category": "workflow",
+      "definition": "A number or event fixed in advance at which a pilot ends.",
+      "related": [
+        "Baseline"
+      ]
+    }
   ]
 }

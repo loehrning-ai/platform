@@ -1,327 +1,197 @@
 [
   {
-    "term": "3-Schritt-Prüfung",
-    "definition": "First screen of any output before use: (1) Factually correct, so do facts, figures, dates and names hold? (2) Complete, or is a relevant aspect missing? (3) Appropriate in tone and free of discriminatory claims? Review depth and additional controls follow purpose and impact.",
-    "english": "3-Step Verification",
-    "category": "praxis",
-    "relatedTerms": ["Halluzination", "Human-in-the-Loop"],
-    "relatedBlocks": ["block_4"]
-  },
-  {
-    "term": "Anbieter",
-    "definition": "A natural or legal person that develops an AI system, or has one developed, and places it on the market under its own name (EU AI Act Art. 3(3)).",
-    "english": "Provider",
-    "category": "regulatorik",
-    "relatedTerms": ["Betreiber", "KI-System"],
-    "relatedBlocks": ["block_5"]
-  },
-  {
-    "term": "Attention-Mechanismus",
-    "definition": "Mechanism that computes weighted relationships between token representations and helps transformer models connect context. It establishes neither relevance nor understanding.",
-    "english": "Attention Mechanism",
-    "category": "technik",
-    "relatedTerms": ["Transformer", "Large Language Model (LLM)"]
-  },
-  {
     "term": "Auftragsverarbeitung (AVV)",
-    "definition": "A contract under GDPR Art. 28 when a controller engages a processor to process personal data. Whether it is required and enough depends on the roles and the processing.",
+    "definition": "Contract under GDPR Art. 28 when a service provider processes personal data on your behalf, for example an AI vendor for your company.",
     "english": "Data Processing Agreement (DPA)",
     "category": "regulatorik",
     "relatedTerms": [
-      "Datenschutz-Folgenabschätzung (DSFA)",
-      "Betroffenenrechte"
+      "Datenklassifizierung"
     ],
-    "relatedBlocks": ["block_2", "block_5"]
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
-    "term": "Betroffenenrechte",
-    "definition": "Rights of natural persons under the GDPR: access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction (Art. 18), objection (Art. 21). They apply to AI processing too.",
-    "english": "Data Subject Rights",
+    "term": "Besondere Kategorien personenbezogener Daten",
+    "definition": "Data under GDPR Art. 9, such as health, religious beliefs or trade union membership. Processing is allowed only under narrow conditions.",
+    "english": "Special Categories of Personal Data",
     "category": "regulatorik",
     "relatedTerms": [
-      "Auftragsverarbeitung (AVV)",
-      "Datenschutz-Folgenabschätzung (DSFA)"
+      "Datenklassifizierung"
+    ],
+    "relatedBlocks": [
+      "block_1"
     ]
   },
   {
     "term": "Betreiber",
-    "definition": "A natural or legal person, public authority, agency, or other body using an AI system under its authority; personal non-professional activity is excluded (EU AI Act Art. 3(4)).",
+    "definition": "Under the EU AI Act, whoever uses an AI system under their own authority in a professional context. A company using an AI assistant is usually a deployer.",
     "english": "Deployer",
     "category": "regulatorik",
-    "relatedTerms": ["Anbieter", "KI-System"],
-    "relatedBlocks": ["block_5"]
-  },
-  {
-    "term": "Bias",
-    "definition": "A systematic deviation that can come from data collection, labels, objectives, modeling, evaluation or deployment context. It can affect groups differently and is not automatically discrimination.",
-    "english": "Bias",
-    "category": "technik",
-    "relatedTerms": ["Trainingsdaten", "Halluzination"],
-    "relatedBlocks": ["block_4"]
-  },
-  {
-    "term": "Compliance-Mappe",
-    "definition": "EU AI Act records kept together: AI inventory, risk classifications, training records, usage policies and incident-response protocols. It does not replace a legal review.",
-    "english": "Compliance Documentation",
-    "category": "regulatorik",
-    "relatedTerms": ["KI-Kompetenz", "Konformitätsbewertung"],
-    "relatedBlocks": ["block_5"]
-  },
-  {
-    "term": "Computer Vision",
-    "definition": "The field of AI that processes images and video, for example in face recognition, quality control and autonomous driving.",
-    "english": "Computer Vision",
-    "category": "technik",
-    "relatedTerms": ["Deep Learning", "Neuronales Netz"]
-  },
-  {
-    "term": "Datenschutz-Folgenabschätzung (DSFA)",
-    "definition": "An assessment under GDPR Art. 35 when planned processing is likely to result in a high risk to the rights and freedoms of natural persons. AI can be a risk factor but does not trigger a DPIA automatically.",
-    "english": "Data Protection Impact Assessment (DPIA)",
-    "category": "regulatorik",
-    "relatedTerms": ["Auftragsverarbeitung (AVV)", "Betroffenenrechte"],
-    "relatedBlocks": ["block_2"]
-  },
-  {
-    "term": "Datenklassifizierung (4-Stufen-Modell)",
-    "definition": "An example model with four protection levels for company data. The organization sets labels, criteria and permitted workflows; the level alone approves no product.",
-    "english": "Data Classification",
-    "category": "praxis",
-    "relatedTerms": ["Auftragsverarbeitung (AVV)", "Shadow AI"],
-    "relatedBlocks": ["block_2"]
-  },
-  {
-    "term": "Deep Learning",
-    "definition": "A branch of machine learning that uses neural networks with many layers to recognize patterns in complex data such as images, speech and text.",
-    "english": "Deep Learning",
-    "category": "technik",
-    "relatedTerms": ["Neuronales Netz", "Maschinelles Lernen (ML)"]
-  },
-  {
-    "term": "Deepfake",
-    "definition": "AI-generated or manipulated image, audio or video content that resembles real people, objects, places or events and can falsely appear authentic. The legal definition depends on the framework.",
-    "english": "Deepfake",
-    "category": "technik",
-    "relatedTerms": ["Generative KI", "Bias"]
-  },
-  {
-    "term": "Fine-Tuning",
-    "definition": "Further training of a pretrained model on selected data or preferences to adjust its behavior for particular tasks or domains. Separate evaluations show whether it worked.",
-    "english": "Fine-Tuning",
-    "category": "technik",
-    "relatedTerms": ["Large Language Model (LLM)", "Trainingsdaten"]
-  },
-  {
-    "term": "Generative KI",
-    "definition": "AI systems that produce new content: text, images, audio, video, code. ChatGPT, DALL-E, Midjourney, Claude.",
-    "english": "Generative AI",
-    "category": "technik",
-    "relatedTerms": ["Large Language Model (LLM)", "Prompt"],
-    "relatedBlocks": ["block_1", "block_3"]
-  },
-  {
-    "term": "Halluzination",
-    "definition": "Plausible-looking output of a generative model that is unsupported, inconsistent or factually wrong. Language models do not check facts automatically.",
-    "english": "Hallucination",
-    "category": "technik",
-    "relatedTerms": ["3-Schritt-Prüfung", "Human-in-the-Loop"],
-    "relatedBlocks": ["block_4"]
-  },
-  {
-    "term": "Hochrisiko-KI-System",
-    "definition": "An AI system classified as high-risk under Art. 6 in conjunction with Annex I or III. Provider duties and deployer duties differ. Regulation (EU) 2026/1744, in force since 27 July 2026, sets 2 December 2027 for stand-alone Annex III systems and 2 August 2028 for systems integrated into products.",
-    "english": "High-Risk AI System",
-    "category": "regulatorik",
-    "relatedTerms": ["Konformitätsbewertung", "Human-in-the-Loop"]
-  },
-  {
-    "term": "Human-in-the-Loop",
-    "definition": "A design in which people hold defined monitoring, intervention or decision authority. Article 14 of the EU AI Act requires effective human oversight for high-risk systems; what a human final decision looks like depends on the use case.",
-    "english": "Human-in-the-Loop",
-    "category": "praxis",
-    "relatedTerms": ["3-Schritt-Prüfung", "Hochrisiko-KI-System"],
-    "relatedBlocks": ["block_4"]
-  },
-  {
-    "term": "Inferenz",
-    "definition": "The process in which a trained model turns an input into an output. Every ChatGPT answer is an inference.",
-    "english": "Inference",
-    "category": "technik",
-    "relatedTerms": ["Modell", "Token"]
-  },
-  {
-    "term": "KI-Kompetenz",
-    "definition": "Skills, knowledge and understanding that allow informed AI use and awareness of opportunities, risks and possible harm (EU AI Act Art. 3(56)). Article 4 requires context-specific measures supporting the development of this literacy.",
-    "english": "AI Literacy",
-    "category": "regulatorik",
-    "relatedTerms": ["KI-System", "Compliance-Mappe"],
-    "relatedBlocks": ["block_1", "block_5"]
-  },
-  {
-    "term": "KI-System",
-    "definition": "A machine-based system that turns inputs into outputs such as predictions, content, recommendations or decisions, and can work at varying levels of autonomy (EU AI Act Art. 3(1)).",
-    "english": "AI System",
-    "category": "regulatorik",
-    "relatedTerms": ["Anbieter", "Betreiber", "KI-Kompetenz"],
-    "relatedBlocks": ["block_1"]
-  },
-  {
-    "term": "Konformitätsbewertung",
-    "definition": "The procedure that checks whether a high-risk AI system meets the requirements that apply to it. Procedure and involvement of a notified body depend on the system and legal basis; CE marking follows only where the framework provides for it.",
-    "english": "Conformity Assessment",
-    "category": "regulatorik",
-    "relatedTerms": ["Hochrisiko-KI-System", "Compliance-Mappe"]
-  },
-  {
-    "term": "Künstliche Intelligenz (KI)",
-    "definition": "An umbrella term for machine-based systems that derive outputs such as predictions, content, recommendations or decisions from inputs. The exact definition follows the technical or legal context.",
-    "english": "Artificial Intelligence (AI)",
-    "category": "technik",
-    "relatedTerms": ["KI-System", "Maschinelles Lernen (ML)"],
-    "relatedBlocks": ["block_1"]
-  },
-  {
-    "term": "Large Language Model (LLM)",
-    "definition": "A large model trained on extensive data that models probabilities over token sequences. Some handle modalities beyond text; product name and model version are not the same.",
-    "english": "Large Language Model",
-    "category": "technik",
-    "relatedTerms": ["Token", "Transformer", "Halluzination"]
-  },
-  {
-    "term": "Maschinelles Lernen (ML)",
-    "definition": "The field of AI in which model parameters are adjusted from data and optimization objectives. Common categories include supervised, unsupervised, self-supervised and reinforcement learning.",
-    "english": "Machine Learning (ML)",
-    "category": "technik",
     "relatedTerms": [
-      "Deep Learning",
-      "Supervised Learning",
-      "Unsupervised Learning"
+      "KI-Kompetenz"
+    ],
+    "relatedBlocks": [
+      "block_4"
     ]
   },
   {
-    "term": "Modell",
-    "definition": "The trained result of a machine-learning process. It holds the learned parameters (weights) and is applied to new inputs.",
-    "english": "Model",
-    "category": "technik",
-    "relatedTerms": ["Parameter", "Fine-Tuning"]
+    "term": "Datenklassifizierung",
+    "definition": "Grading information by protection need; in the example model public, internal, confidential and specially protected. Your organization sets the levels.",
+    "english": "Data Classification",
+    "category": "praxis",
+    "relatedTerms": [
+      "Datenminimierung",
+      "Freigabe"
+    ],
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
-    "term": "Natural Language Processing (NLP)",
-    "definition": "The field of AI that processes natural language: translation, summarization, sentiment analysis, text generation.",
-    "english": "Natural Language Processing",
-    "category": "technik",
-    "relatedTerms": ["Large Language Model (LLM)", "Token"]
+    "term": "Datenminimierung",
+    "definition": "GDPR principle (Art. 5(1)(c)): process only as much personal data as the purpose needs.",
+    "english": "Data Minimisation",
+    "category": "regulatorik",
+    "relatedTerms": [
+      "Pseudonymisierung"
+    ],
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
-    "term": "Neuronales Netz",
-    "definition": "A computational model of layers of connected nodes, modeled on biological neurons and the basis of deep learning.",
-    "english": "Neural Network",
-    "category": "technik",
-    "relatedTerms": ["Deep Learning", "Parameter"]
+    "term": "Freigabe",
+    "definition": "Your organization's decision that a specific combination of tool, configuration, purpose and data class may be used.",
+    "english": "Approval",
+    "category": "praxis",
+    "relatedTerms": [
+      "Shadow AI",
+      "Datenklassifizierung"
+    ],
+    "relatedBlocks": [
+      "block_4"
+    ]
   },
   {
-    "term": "Overfitting",
-    "definition": "A model fits the peculiarities or noise of its training data too closely and generalizes worse to new data. Memorization is one possible form.",
-    "english": "Overfitting",
+    "term": "Halluzination",
+    "definition": "A convincingly worded but false or unsupported output of an AI model, such as an invented figure, source or responsibility.",
+    "english": "Hallucination",
     "category": "technik",
-    "relatedTerms": ["Trainingsdaten", "Parameter"]
+    "relatedTerms": [
+      "Primärquelle"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
-    "term": "Parameter",
-    "definition": "Values a model adjusts during training, such as weights and bias terms. Parameter count alone compares neither quality nor cost nor suitability.",
-    "english": "Parameters",
+    "term": "KI-Kompetenz",
+    "definition": "Under Art. 4 of the EU AI Act, applicable since 2 February 2025: providers and deployers take measures that support their staff's AI literacy, matched to context and prior knowledge. No format or certificate is prescribed.",
+    "english": "AI Literacy",
+    "category": "regulatorik",
+    "relatedTerms": [
+      "Betreiber"
+    ],
+    "relatedBlocks": [
+      "block_4"
+    ]
+  },
+  {
+    "term": "Large Language Model (LLM)",
+    "definition": "A language model trained on large amounts of text to produce likely continuations. It delivers wording, not checked facts.",
+    "english": "Large Language Model",
     "category": "technik",
-    "relatedTerms": ["Modell", "Fine-Tuning"]
+    "relatedTerms": [
+      "Halluzination",
+      "Prompt"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
+  },
+  {
+    "term": "Platzhalter",
+    "definition": "A marker such as [date] for a missing detail. Required in the brief, it makes gaps visible instead of filling them with invented details.",
+    "english": "Placeholder",
+    "category": "praxis",
+    "relatedTerms": [
+      "Prompt"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
+  },
+  {
+    "term": "Primärquelle",
+    "definition": "The document or system that records a fact, such as decision minutes, a contract or the accounts. A second model is not a primary source.",
+    "english": "Primary Source",
+    "category": "praxis",
+    "relatedTerms": [
+      "Halluzination"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
     "term": "Prompt",
-    "definition": "The input to a generative system, such as instruction, question, data and context. A clear prompt shapes the output and guarantees neither correctness nor quality.",
+    "definition": "An instruction to an AI model. Context, task, format and limits make the result checkable.",
     "english": "Prompt",
     "category": "praxis",
-    "relatedTerms": ["Prompt-Bibliothek", "RCTFC-Schema"],
-    "relatedBlocks": ["block_3"]
+    "relatedTerms": [
+      "Platzhalter"
+    ],
+    "relatedBlocks": [
+      "block_2"
+    ]
   },
   {
-    "term": "Prompt-Bibliothek",
-    "definition": "A versioned collection of prompt templates for recurring tasks, with purpose, permitted inputs, example outputs, review steps and evaluation results. Benefit and limits are measured in your own process.",
-    "english": "Prompt Library",
+    "term": "Prüftiefe",
+    "definition": "How thoroughly an AI output is checked. It follows the impact of an error, reversibility and audience.",
+    "english": "Review Depth",
     "category": "praxis",
-    "relatedTerms": ["Prompt", "RCTFC-Schema"],
-    "relatedBlocks": ["block_3"]
+    "relatedTerms": [
+      "Vier-Augen-Prinzip"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   },
   {
-    "term": "Prompt Injection",
-    "definition": "An attack or failure mode in which instructions inside user input or processed content push a model outside its intended behavior. OWASP lists Prompt Injection as LLM01 in its 2025 Top 10 for LLM applications.",
-    "english": "Prompt Injection",
-    "category": "technik",
-    "relatedTerms": ["Prompt", "Large Language Model (LLM)"]
-  },
-  {
-    "term": "RAG (Retrieval-Augmented Generation)",
-    "definition": "A pattern in which a generative model receives retrieved content as context. It can improve traceability and factual accuracy. It depends on retrieval, source quality and correct use, and it prevents no hallucinations.",
-    "english": "Retrieval-Augmented Generation",
-    "category": "technik",
-    "relatedTerms": ["Large Language Model (LLM)", "Halluzination"]
-  },
-  {
-    "term": "RCTFC-Schema",
-    "definition": "A course template with the fields Role, Context, Task, Format and Constraints. It makes requirements visible. Not every task needs every field, and the template guarantees no correct output.",
-    "english": "RCTFC Prompt Framework",
-    "category": "praxis",
-    "relatedTerms": ["Prompt", "Prompt-Bibliothek"],
-    "relatedBlocks": ["block_3"]
-  },
-  {
-    "term": "Reinforcement Learning",
-    "definition": "A type of machine learning in which an agent learns by trial and error, with reward for wanted and penalty for unwanted behavior. Used in robotics and game strategies, for example.",
-    "english": "Reinforcement Learning",
-    "category": "technik",
-    "relatedTerms": ["Maschinelles Lernen (ML)", "Supervised Learning"]
+    "term": "Pseudonymisierung",
+    "definition": "Replacing identifying details with codes while the mapping is kept separately (GDPR Art. 4(5)). Pseudonymised data stays personal data.",
+    "english": "Pseudonymisation",
+    "category": "regulatorik",
+    "relatedTerms": [
+      "Datenminimierung"
+    ],
+    "relatedBlocks": [
+      "block_1"
+    ]
   },
   {
     "term": "Shadow AI",
-    "definition": "Use of AI services or features outside the approved inventory and the intended controls, such as consumer offers, extensions, embedded features or local models.",
+    "definition": "AI use for work outside approved tools and controls, such as private chat accounts, browser extensions or new features in bought software.",
     "english": "Shadow AI",
     "category": "praxis",
     "relatedTerms": [
-      "Datenklassifizierung (4-Stufen-Modell)",
-      "Compliance-Mappe"
+      "Freigabe"
     ],
-    "relatedBlocks": ["block_2", "block_5"]
+    "relatedBlocks": [
+      "block_4"
+    ]
   },
   {
-    "term": "Supervised Learning",
-    "definition": "A type of machine learning that learns the mapping from input to output from labeled examples, as in spam filters, credit scoring and image recognition.",
-    "english": "Supervised Learning",
-    "category": "technik",
-    "relatedTerms": ["Maschinelles Lernen (ML)", "Unsupervised Learning"]
-  },
-  {
-    "term": "Token",
-    "definition": "The smallest unit an LLM processes, such as a word, part of a word or a punctuation mark. Models generate text token by token.",
-    "english": "Token",
-    "category": "technik",
-    "relatedTerms": ["Large Language Model (LLM)", "Inferenz"]
-  },
-  {
-    "term": "Trainingsdaten",
-    "definition": "The data used to adjust model parameters. Selection, quality, representativeness and documentation shape behavior; model, objective, evaluation and deployment context shape it too.",
-    "english": "Training Data",
-    "category": "technik",
-    "relatedTerms": ["Bias", "Overfitting"]
-  },
-  {
-    "term": "Transformer",
-    "definition": "A neural-network architecture presented in 2017 that uses attention and positional information. It underlies many current language models and allows highly parallel training; modern models differ in design.",
-    "english": "Transformer",
-    "category": "technik",
-    "relatedTerms": ["Attention-Mechanismus", "Large Language Model (LLM)"]
-  },
-  {
-    "term": "Unsupervised Learning",
-    "definition": "A type of machine learning without labeled data in which the model finds patterns and structures itself, as in customer segmentation, anomaly detection and clustering.",
-    "english": "Unsupervised Learning",
-    "category": "technik",
-    "relatedTerms": ["Maschinelles Lernen (ML)", "Supervised Learning"]
+    "term": "Vier-Augen-Prinzip",
+    "definition": "A second, responsible person reviews and signs off before a consequential result is used.",
+    "english": "Four-Eyes Principle",
+    "category": "praxis",
+    "relatedTerms": [
+      "Prüftiefe"
+    ],
+    "relatedBlocks": [
+      "block_3"
+    ]
   }
 ]

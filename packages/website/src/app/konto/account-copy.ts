@@ -106,7 +106,7 @@ export const ACCOUNT_COPY = {
     coursesHeading: "Meine Kurse",
     availableCoursesHeading: "Weitere Kurse",
     accountRequiredNote:
-      "Bei den vier Grundlagenkursen synchronisiert ein Konto Fortschritt und Abschluss geräteübergreifend. Die sechs Technikkurse gehen auch ohne Konto.",
+      "Bei den vier Grundlagenkursen synchronisiert ein Konto Fortschritt und Abschluss geräteübergreifend. Die vier Kurse zum visuellen Lernen gehen auch ohne Konto.",
     levelFilterLabel: "Niveau",
     allLevels: "Alle",
     sortLabel: "Sortierung",
@@ -196,7 +196,7 @@ export const ACCOUNT_COPY = {
     coursesHeading: "My courses",
     availableCoursesHeading: "Available courses",
     accountRequiredNote:
-      "For the four foundation courses, an account syncs progress and completion across devices. The six technical courses work without one.",
+      "For the four foundation courses, an account syncs progress and completion across devices. The four visual-learning courses work without one.",
     levelFilterLabel: "Level",
     allLevels: "All",
     sortLabel: "Sort",

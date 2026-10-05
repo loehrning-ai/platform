@@ -14,7 +14,7 @@ import { settleWholePage } from "./fixtures/settle";
 /**
  * AI-Native Operator Course golden path: home -> module
  * -> lesson -> checkpoint -> quiz -> certificate -> QR verify, in one spec.
- * Mirrors route-claude.spec.ts/route-codex.spec.ts's established pattern,
+ * Mirrors route-data-infrastructure.spec.ts's established pattern,
  * with two deliberate differences reflecting this course's own structure:
  *   - module+lesson nesting (no flat lesson-id scheme): routes are
  *     /kurse/open-source/ai-native-operator/[moduleId]/[lessonNum].

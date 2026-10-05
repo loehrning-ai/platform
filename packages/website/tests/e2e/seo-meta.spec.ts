@@ -137,4 +137,5 @@ test("seo: sitemap.xml lists key public routes and omits retired/private routes"
   expect(body).not.toMatch(/https:\/\/loehrning\.ai\/wie-ki-funktioniert/);
   expect(body).not.toMatch(/https:\/\/loehrning\.ai\/bekannte-grenzen/);
   expect(body).not.toMatch(/https:\/\/loehrning\.ai\/ueber-die-plattform/);
+  expect(body).not.toMatch(/\/kurse\/open-source\/(?:claude|codex)/);
 });

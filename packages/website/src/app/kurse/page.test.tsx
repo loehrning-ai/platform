@@ -21,7 +21,7 @@ vi.mock("./learning-atlas", () => ({
       data-testid="learning-atlas"
       data-locale={locale}
       data-foundation-access={access["ki-fuehrerschein"]}
-      data-public-access={access.claude}
+      data-public-access={access["data-infrastructure"]}
     />
   ),
 }));

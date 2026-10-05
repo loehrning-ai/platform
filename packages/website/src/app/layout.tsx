@@ -89,7 +89,7 @@ export const viewport: Viewport = {
   // report zero unless the viewport covers the whole screen. Zoom stays
   // unrestricted: no maximumScale, no userScalable.
   viewportFit: "cover",
-  themeColor: "#f3f0e9",
+  themeColor: "#f7f1e7",
   // The site has one light theme. Poster scenes are fixed colour pairs, so a
   // browser dark mode must not recolour form controls or scrollbars under
   // them. Matches `:root { color-scheme: light }` in globals.css.
@@ -109,12 +109,12 @@ export default async function RootLayout({
 }>) {
   const locale = await getRequestLocale();
   const globalCopy = GLOBAL_NAVIGATION_COPY[locale];
-  preload("/fonts/loehrning-sans-regular-v1.woff2", {
+  preload("/fonts/figtree-regular-v1.woff2", {
     as: "font",
     type: "font/woff2",
     crossOrigin: "anonymous",
   });
-  preload("/fonts/loehrning-sans-bold-v1.woff2", {
+  preload("/fonts/figtree-bold-v1.woff2", {
     as: "font",
     type: "font/woff2",
     crossOrigin: "anonymous",

@@ -5,17 +5,8 @@ import { describe, expect, it } from "vitest";
 
 const ACTIVE_WIDGET_FILES = [
   "interactive-diagram.tsx",
-  "claude/prompt-grader.tsx",
-  "claude/fill-blank.tsx",
-  "claude/prompt-library-shaper.tsx",
-  "claude/claude-md-builder.tsx",
-  "claude/socratic-tutor.tsx",
-  "claude/tokenizer.tsx",
-  "claude/agent-loop.tsx",
-  "claude/prompt-sandbox.tsx",
   "tier-a/flashcards.tsx",
   "tier-a/task-spec.tsx",
-  "tier-a/terminal-replay.tsx",
   "tier-a/slot-fill.tsx",
   "tier-a/plays.tsx",
   "tier-a/failure-tagger.tsx",
@@ -115,7 +106,7 @@ function undersizedControls(
 
 describe("active learning widget design contract", () => {
   it("covers the complete active widget audit set", () => {
-    expect(ACTIVE_WIDGET_FILES).toHaveLength(21);
+    expect(ACTIVE_WIDGET_FILES).toHaveLength(12);
   });
 
   it.each(ACTIVE_WIDGET_FILES)(
@@ -148,6 +139,5 @@ describe("active learning widget design contract", () => {
   it("keeps compact icon and inline-token controls at least 44px wide", () => {
     expect(source("tier-a/drag-reorder.tsx")).toContain("min-w-11");
     expect(source("tier-a/redaction-drill.tsx")).toContain("min-w-11");
-    expect(source("claude/claude-md-builder.tsx")).toContain("min-w-11");
   });
 });

@@ -3,9 +3,33 @@ import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
-import { WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
+import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
-import { phoneDescription, WorkshopDetailContent } from "./workshop-detail-content";
+import {
+  phoneDescription,
+  TITLE_HIGHLIGHT,
+  titleHighlight,
+  WorkshopDetailContent,
+} from "./workshop-detail-content";
+
+type Rgb = readonly [number, number, number];
+
+function rgb(hex: string): Rgb {
+  return [1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)) as unknown as Rgb;
+}
+
+function luminance(colour: Rgb): number {
+  const [r, g, b] = colour.map((value) => {
+    const c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(a: Rgb, b: Rgb): number {
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
 
 function follows(first: Element, second: Element): boolean {
   return Boolean(
@@ -20,7 +44,7 @@ function sectionOf(name: string | RegExp): HTMLElement {
 }
 
 describe("<WorkshopDetailContent>", () => {
-  it("puts the cover, the agenda, the decision lab and the materials in that order, with no collapsed reference block", () => {
+  it("puts the cover, the agenda and the materials in that order, with no exercise band, with only the reference folded away", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
@@ -35,26 +59,35 @@ describe("<WorkshopDetailContent>", () => {
     expect(caps?.textContent).toBe(workshop.eyebrow);
     expect(caps).toHaveTextContent("Workshop 01 · Prognosen");
     expect(within(cover as HTMLElement).getByText(workshop.summary)).toBeInTheDocument();
-    // The fixed question sits in the paper q-card at the top of the agenda,
-    // once per page; the facts and the need follow it there (SPEC D11).
+    // No question card anywhere: the agenda opens with the red line, three
+    // numbered jumps in page order, then the facts and the one outcome.
     const agenda = sectionOf("Ablauf");
-    const questionCards = container.querySelectorAll("[data-question-card]");
-    expect(questionCards).toHaveLength(1);
-    expect(questionCards[0]).toHaveAttribute("data-question-card", "paper");
-    expect(questionCards[0]).toHaveTextContent(workshop.question);
-    expect(agenda).toContainElement(questionCards[0] as HTMLElement);
+    expect(container.querySelectorAll("[data-question-card]")).toHaveLength(0);
+    expect(container).not.toHaveTextContent(workshop.question);
+    const redLine = screen.getByRole("navigation", { name: "Der Weg durch den Workshop" });
+    expect(agenda).toContainElement(redLine);
+    expect(within(redLine).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
+      ["1Ablauf", "#ablauf"],
+      ["2Material", "#material"],
+      ["3Der Fall", "#fall"],
+    ]);
+    for (const id of ["ablauf", "material", "fall"]) {
+      expect(container.querySelector(`#${id}`), id).not.toBeNull();
+    }
     expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
     expect(agenda).toHaveTextContent("Selbstlernen ca. 90 Min.");
-    expect(agenda).toHaveTextContent("Du nimmst mitGo/No-Go-Regel");
-    expect(agenda).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
+    expect(agenda).toHaveTextContent("Du nimmst mit: Go/No-Go-Regel");
+    expect(agenda).not.toHaveTextContent("Du brauchst");
     // The brief comes first in the agenda section, before its Kopflinie.
     expect(follows(agenda.querySelector("[data-workshop-brief]")!, agenda.querySelector("header")!)).toBe(true);
 
-    const lab = container.querySelector("[data-workshop-decision-lab]")!;
+    // No "Ausprobieren" exercise band between the agenda and the materials.
+    expect(container.querySelector("[data-workshop-decision-lab]")).toBeNull();
+    expect(container.querySelector("#workshop-lab")).toBeNull();
+    expect(container).not.toHaveTextContent("Ausprobieren");
     const materials = sectionOf("Material");
     expect(follows(cover!, agenda)).toBe(true);
-    expect(follows(agenda, lab)).toBe(true);
-    expect(follows(lab, materials)).toBe(true);
+    expect(follows(agenda, materials)).toBe(true);
 
     // The Route lists every agenda item with its minutes, as an ordered list.
     const route = within(agenda).getByRole("list", { name: "Ablauf" });
@@ -64,31 +97,21 @@ describe("<WorkshopDetailContent>", () => {
       expect(stations[index]).toHaveTextContent(item.label);
       expect(stations[index]).toHaveTextContent(`${item.minutes} Min.`);
     }
-    // The station the lab mirrors is marked, and the agenda links down to the lab.
-    expect(stations[0].querySelector("[data-lab-station]")).not.toBeNull();
-    expect(stations[0]).toHaveTextContent("Übung unten");
-    expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(1);
-    // It carries the inset "here" square and is the current step; the line
-    // runs dashed from it on, and no station is read out with a state word.
-    expect(stations[0]).toHaveAttribute("aria-current", "step");
-    expect(stations[0].querySelector("[data-route-here]")).not.toBeNull();
-    expect(route.querySelectorAll("[data-route-here]")).toHaveLength(1);
-    expect(route.querySelectorAll("[aria-current]")).toHaveLength(1);
-    expect(stations[0].querySelector("[data-route-line]")).toHaveAttribute(
-      "data-route-line",
-      "dashed",
-    );
-    expect(route).not.toHaveTextContent(/erledigt|aktuell|offen/);
-    const labLink = within(agenda).getByRole("link", {
-      name: `„${workshop.agenda[0].label}“ unten ausprobieren`,
-    });
-    expect(labLink).toHaveAttribute("href", "#workshop-lab");
-    expect(lab).toHaveAttribute("id", "workshop-lab");
-    expect(agenda).toHaveTextContent(
+    // No station is marked as the current one or read out with a state word.
+    expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(0);
+    expect(route.querySelectorAll("[data-route-here]")).toHaveLength(0);
+    expect(route.querySelectorAll("[aria-current]")).toHaveLength(0);
+    expect(route).not.toHaveTextContent(/Übung unten|erledigt|aktuell|offen/);
+    expect(agenda).not.toHaveTextContent(
       "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
     );
 
-    expect(container.querySelectorAll("details")).toHaveLength(0);
+    // The red line stays open; optional files, data limits and the reference
+    // lists wait behind closed disclosures.
+    const disclosures = container.querySelectorAll("details");
+    expect(disclosures.length).toBeGreaterThan(0);
+    for (const disclosure of disclosures) expect(disclosure).not.toHaveAttribute("open");
+    expect(follows(materials, sectionOf("Details"))).toBe(true);
     expect(screen.queryByText("Referenz")).toBeNull();
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
   });
@@ -104,7 +127,12 @@ describe("<WorkshopDetailContent>", () => {
       // The text reads as the full title, colon included; only the subtitle
       // moves to its own line.
       expect(h1.textContent).toBe(workshop.title);
-      expect(h1.firstChild?.textContent).toBe(head);
+      // The head is split only for the highlight band: the positioned lead,
+      // then the marked tail.
+      const lead = h1.firstElementChild;
+      const mark = h1.querySelector("span.box-decoration-clone");
+      expect(lead).toHaveClass("relative");
+      expect(`${lead?.textContent} ${mark?.textContent}`).toBe(head);
       expect(h1.querySelector("[data-title-subtitle]")?.textContent).toBe(subtitle);
       unmount();
     }
@@ -116,6 +144,48 @@ describe("<WorkshopDetailContent>", () => {
     expect(h1.querySelector("[data-title-subtitle]")).toBeNull();
   });
 
+  it("marks a short phrase at the end of the H1, never two full lines", () => {
+    expect(titleHighlight("ESG-Berichte mit KI")).toEqual({
+      lead: "ESG-Berichte",
+      highlight: "mit KI",
+    });
+    expect(titleHighlight("Sind deine Daten bereit für KI?")).toEqual({
+      lead: "Sind deine Daten bereit",
+      highlight: "für KI?",
+    });
+    expect(titleHighlight("Can AI predict the future?")).toEqual({
+      lead: "Can AI predict",
+      highlight: "the future?",
+    });
+    // A long last pair keeps only its last word on the band.
+    expect(titleHighlight("Kann KI die Zukunft vorhersagen?")).toEqual({
+      lead: "Kann KI die Zukunft",
+      highlight: "vorhersagen?",
+    });
+    expect(titleHighlight("Workshop Eins")).toEqual({
+      lead: "Workshop",
+      highlight: "Eins",
+    });
+    expect(titleHighlight("Workshop")).toEqual({ lead: "Workshop", highlight: "" });
+  });
+
+  it("keeps every scene's title band readable and visible", () => {
+    for (const key of PLAKAT_KEYS) {
+      const { ground, ink, mid } = PLAKAT[key];
+      const band = TITLE_HIGHLIGHT[key];
+      expect(band.colorVar).toBe("--color-scene-mid");
+      // The browser composites the colour-mix over the ground in sRGB.
+      const alpha = band.opacity / 100;
+      const painted = rgb(mid).map((value, channel) =>
+        Math.round(value * alpha + rgb(ground)[channel] * (1 - alpha)),
+      ) as unknown as Rgb;
+      // Display type (50px and up): the 3:1 floor, with margin.
+      expect(contrast(rgb(ink), painted), `${key} ink on its band`).toBeGreaterThanOrEqual(3.4);
+      // A band that matches the ground would mark nothing.
+      expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.35);
+    }
+  });
+
   it("aligns the case figures when a label wraps", () => {
     const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
     render(<WorkshopDetailContent workshop={workshop} locale="de" />);
@@ -123,7 +193,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(stats).toHaveClass("[&>div]:justify-between");
   });
 
-  it("promotes the case, audience, outcomes, needs and limits into visible sections", () => {
+  it("keeps the case visible and folds the limits, audience, outcomes, needs and scope away", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
@@ -131,14 +201,16 @@ describe("<WorkshopDetailContent>", () => {
 
     const caseSection = sectionOf("Der Fall");
     expect(caseSection).toHaveTextContent(workshop.caseStudy.narrative);
-    expect(caseSection).toHaveTextContent(workshop.caseStudy.decisionQuestion);
+    // The case states its situation; its open question is not shown.
+    expect(caseSection).not.toHaveTextContent(workshop.caseStudy.decisionQuestion);
+    expect(caseSection).not.toHaveTextContent("Die offene Entscheidung");
     const stats = caseSection.querySelector("dl");
     expect(stats).not.toBeNull();
     expect(within(stats as HTMLElement).getAllByRole("term")).toHaveLength(
       workshop.caseStudy.metrics.length,
     );
-    const gap = caseSection.querySelector('[data-callout="gap"]');
-    expect(gap).toHaveTextContent("Was die Daten nicht beantworten");
+    const gap = caseSection.querySelector("details")!;
+    expect(gap.querySelector("summary")).toHaveTextContent("Was die Daten nicht beantworten");
     for (const limitation of workshop.caseStudy.dataLimitations) {
       expect(gap).toHaveTextContent(limitation);
     }
@@ -152,7 +224,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(outcomes).not.toHaveTextContent("Du nimmst mit");
     expect(
       container.querySelector("[data-workshop-brief]"),
-    ).toHaveTextContent(`Du nimmst mit${workshop.outcome}`);
+    ).toHaveTextContent(`Du nimmst mit: ${workshop.outcome}`);
     // The invented case is named in the section caption only, not again under the narrative.
     expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
 
@@ -167,6 +239,12 @@ describe("<WorkshopDetailContent>", () => {
     for (const line of workshop.notCovered) {
       expect(notCovered).toHaveTextContent(line);
     }
+    // All four reference lists live in the one closed "Details" disclosure.
+    const details = sectionOf("Details");
+    for (const part of [audience, outcomes, needs, notCovered]) {
+      expect(details).toContainElement(part);
+    }
+    expect(details.querySelector("details")).not.toHaveAttribute("open");
 
     const provenance = container.querySelector(
       'footer[aria-label="Stand und Herkunft"]',
@@ -226,6 +304,14 @@ describe("<WorkshopDetailContent>", () => {
         // h1 at the band's body size.
         expect(h1).toHaveClass("poster-title", "text-scene-ink");
         expect(h1.style.getPropertyValue("--fit")).not.toBe("");
+        // The tail of the title sits on a marker band in the scene's mid
+        // colour; the words keep the scene ink (text-foreground in scope).
+        const mark = h1.querySelector("span.box-decoration-clone") as HTMLElement;
+        expect(mark).not.toBeNull();
+        expect(mark.style.backgroundImage).toContain("var(--color-scene-mid)");
+        expect(mark.style.backgroundSize).toBe("100% 0.75em");
+        expect(mark).toHaveClass("text-foreground");
+        expect(workshop.title.startsWith(`${h1.firstElementChild?.textContent} ${mark.textContent}`)).toBe(true);
         const subtitle = h1.querySelector("[data-title-subtitle]");
         if (subtitle) expect(subtitle).toHaveClass("text-[1.0625rem]", "tracking-normal");
         // Type budget: one caps line, the title and 17px body. No question
@@ -244,12 +330,16 @@ describe("<WorkshopDetailContent>", () => {
             expect(name, "a translucent colour in the band").not.toMatch(/(^|:)(text|decoration|border|bg|fill|stroke)-[\w-]+\/\d+$/);
           }
         }
-        // Scene buttons: the ink fill and the ink outline, never Mennige.
+        // Scene buttons: the scene's button pair and the ink outline, never
+        // Mennige, and never an ink fill: Bloom's Aubergine ink would read
+        // as a black button on the Sand poster.
         const [primary, secondary] = within(band)
           .getAllByRole("link")
           .filter((link) => !link.hasAttribute("data-cover-back"));
-        expect(primary).toHaveClass("bg-scene-ink", "text-scene-ground", "min-h-12");
+        expect(primary).toHaveClass("bg-scene-button", "text-scene-button-text", "min-h-12");
+        expect(primary).not.toHaveClass("bg-scene-ink");
         expect(secondary).toHaveClass("border-scene-ink", "text-scene-ink", "min-h-12");
+        expect(secondary.className).not.toMatch(/(^|\s)hover:bg-scene-ink(\s|$)/);
         // The poster: the lg art and the phone poster row (16:9, full
         // bleed), decorative, numbered.
         const posters = band.querySelectorAll("svg[data-poster]");
@@ -327,9 +417,10 @@ describe("<WorkshopDetailContent>", () => {
     expect(source).not.toMatch(/(?<!first-letter:)uppercase|font-black|font-mono/);
     expect(source).not.toMatch(/tracking-\[-0\.0[2-9]/);
     expect(source).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt|teal)/);
-    expect(source).not.toMatch(/<details/);
+    // Three disclosures only: optional files, data limits, the reference.
+    expect(source.match(/<details/g)).toHaveLength(3);
     expect(source).not.toMatch(/from "lucide-react"/);
-    // Stays a Server Component; only the material link and the lab hydrate.
+    // Stays a Server Component; only the material link hydrates.
     expect(source).not.toMatch(/^["']use client["']/m);
   });
 
@@ -390,7 +481,7 @@ describe("<WorkshopDetailContent>", () => {
 
   for (const locale of ["de", "en"] as const) {
     for (const workshop of getWorkshops(locale)) {
-      it(`${locale}/${workshop.slug}: lists every material once, grouped by phase, with one link per row`, () => {
+      it(`${locale}/${workshop.slug}: lists every material once in taught order, optional files folded, one link per row`, () => {
         render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
         const materialSection = sectionOf(locale === "de" ? "Material" : "Materials");
         const rows = materialSection.querySelectorAll("[data-material-row]");
@@ -406,18 +497,25 @@ describe("<WorkshopDetailContent>", () => {
           expect(link).toHaveAccessibleName(new RegExp(material.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
         }
 
-        // Phase groups appear in the order before, during, after.
-        const groupHeadings = within(materialSection)
-          .getAllByRole("heading", { level: 3 })
-          .map((heading) => heading.textContent);
-        const phaseLabel = {
-          de: { before: "Vor dem Workshop", during: "Im Workshop", after: "Danach" },
-          en: { before: "Before the workshop", during: "During the workshop", after: "Afterwards" },
-        }[locale];
-        const expected = (["before", "during", "after"] as const)
-          .filter((phase) => workshop.materials.some((material) => material.phase === phase))
-          .map((phase) => phaseLabel[phase]);
-        expect(groupHeadings).toEqual(expected);
+        // Core materials first, in taught order; optional files sit in one
+        // closed disclosure below them.
+        const order = ["before", "during", "after"] as const;
+        const taught = [...workshop.materials].sort(
+          (a, b) => order.indexOf(a.phase) - order.indexOf(b.phase),
+        );
+        const expectedOrder = [
+          ...taught.filter((material) => !material.optional),
+          ...taught.filter((material) => material.optional),
+        ].map((material) => material.href);
+        expect(hrefs).toEqual(expectedOrder);
+        const optional = workshop.materials.filter((material) => material.optional);
+        const folded = materialSection.querySelector("details");
+        if (optional.length === 0) {
+          expect(folded).toBeNull();
+        } else {
+          expect(folded).not.toHaveAttribute("open");
+          expect(folded!.querySelectorAll("[data-material-row]")).toHaveLength(optional.length);
+        }
 
         // Exactly one row says where to start.
         expect(

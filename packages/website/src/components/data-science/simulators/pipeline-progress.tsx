@@ -299,8 +299,9 @@ export function PipelineProgress() {
               fontFamily: "var(--font-mono)",
               fontSize: 12,
               lineHeight: 1.8,
-              color: "#D8D3CC",
-              background: "#17151C",
+              // A recessed Beton log with ink type, never a black terminal.
+              color: "var(--color-foreground)",
+              background: "var(--color-inset)",
               borderRadius: 8,
               border: "1px solid var(--hair)",
               padding: "14px 16px",
@@ -310,7 +311,7 @@ export function PipelineProgress() {
             }}
           >
             {logLines.length === 0 && (
-              <span style={{ color: "#A39E98" }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>
                 //{" "}
                 {text(
                   'Click "Run step" to execute',
@@ -324,17 +325,17 @@ export function PipelineProgress() {
                 key={i}
                 style={{
                   color: line.startsWith("✓")
-                    ? "#64E2B5"
+                    ? "var(--color-pass)"
                     : line.startsWith(">")
-                      ? "#D8D3CC"
-                      : "#9FE06B",
+                      ? "var(--color-foreground)"
+                      : "var(--color-risk-green)",
                 }}
               >
                 {line}
               </div>
             ))}
             {running && (
-              <span style={{ color: "#9FE06B", animation: "none" }}>▋</span>
+              <span style={{ color: "var(--color-risk-green)", animation: "none" }}>▋</span>
             )}
           </div>
           <div

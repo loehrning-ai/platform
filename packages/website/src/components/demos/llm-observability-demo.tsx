@@ -474,7 +474,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                     "max-sm:border-b max-sm:border-l-2 max-sm:border-b-[#E3DFD6] max-sm:bg-transparent max-sm:py-2.5 max-sm:pl-3 max-sm:pr-0",
                     "sm:border sm:p-3",
                     active
-                      ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-[#0B0908] sm:bg-[#0B0908] sm:text-[#F3F0E9]"
+                      ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-scene-line sm:bg-scene-line sm:text-[#F3F0E9]"
                       : "text-[#0B0908] max-sm:border-l-transparent sm:border-[#E3DFD6] sm:bg-[#F7F4ED]",
                   ].join(" ")}
                 >

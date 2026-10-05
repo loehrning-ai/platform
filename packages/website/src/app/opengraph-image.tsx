@@ -25,7 +25,7 @@ export const contentType = "image/png";
 
 /**
  * The root social card: the home scene as a poster (SPEC §3.15). Ultramarin
- * ground, the Butter headline in Loehrning Sans Bold, the flat Mennige globe
+ * ground, the Butter headline in Figtree Bold, the flat Mennige globe
  * of the home hero bleeding off the right and bottom edges, and the Kalkweiß
  * colophon strip with the header's L tile. Colours come from PLAKAT only.
  */
@@ -52,14 +52,14 @@ const COPY: Record<
   },
 };
 
-// Loehrning Sans Bold from src/fonts, read on the Node runtime on the first
+// Figtree Bold from src/fonts, read on the Node runtime on the first
 // render, like the other share cards. The card reads the request locale, so
 // it renders per request; the font reaches the deployed function through
 // outputFileTracingIncludes in next.config.ts. Only the one face is loaded:
 // the whole card is set in 700.
 let boldFont: Promise<Buffer> | undefined;
 function loadBoldFont(): Promise<Buffer> {
-  boldFont ??= readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf"));
+  boldFont ??= readFile(join(process.cwd(), "src/fonts/Figtree-Bold.ttf"));
   return boldFont;
 }
 

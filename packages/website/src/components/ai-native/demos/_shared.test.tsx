@@ -64,11 +64,10 @@ describe("<WindowBar>", () => {
     expect(title.className).not.toContain("text-[var(--color-dark-muted)]");
   });
 
-  it("switches to the dark-variant classes when variant is 'dark'", () => {
-    const { container } = render(<WindowBar title="dunkel.internal" variant="dark" />);
-    const title = screen.getByText("dunkel.internal");
-    expect(title.className).toContain("text-[var(--color-dark-muted)]");
-    expect(container.firstElementChild?.className).toContain("bg-[#161310]");
+  it("has no dark variant: the chrome is always a light bar", () => {
+    const { container } = render(<WindowBar title="vertragsarchiv.internal" />);
+    expect(container.firstElementChild?.className).toContain("bg-card/60");
+    expect(container.firstElementChild?.className).not.toMatch(/#161310|dark-bg|bg-foreground/);
   });
 });
 

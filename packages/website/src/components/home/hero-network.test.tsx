@@ -3,8 +3,8 @@
  *
  * HeroNetwork is a rotating-globe SVG whose heavy spherical-projection helpers
  * (buildGrid / projectRings / projectRingsClosed / createProjector / ll3d /
- * dp) are module-private, so they cannot be imported directly. They are
- * exercised end-to-end by the component's STATIC fallback render (mobile +
+ * dp) live in hero-network-geometry.ts (covered there) and are exercised
+ * end-to-end by the component's STATIC fallback render (mobile +
  * prefers-reduced-motion), which projects the real world-atlas country
  * polylines at Berlin and emits distinguishable SVG paths. The animated path
  * begins with a sparse declarative frame generated from the same geometry;
@@ -17,7 +17,10 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { motionValue } from "framer-motion";
+import { PHONE_VIEW } from "./hero-network-geometry";
 import {
+  COMPACT_STROKE,
+  HERO_GLOBE_COMPACT_FPS,
   HERO_GLOBE_DWELL_RATIO,
   HERO_GLOBE_FPS,
   HERO_GLOBE_START_DELAY_SECONDS,
@@ -103,7 +106,7 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // The mobile static composition now matches the desktop first frame.
     expect(
-      container.querySelectorAll('path[stroke="#e07050"]').length,
+      container.querySelectorAll('path[stroke="#C4431A"]').length,
     ).toBeGreaterThan(0);
     expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
     // Label + cursor are gated behind !mobile.
@@ -180,11 +183,11 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // projectRings emitted at least one front-facing country outline (Berlin).
     expect(
-      container.querySelectorAll('path[stroke="#e07050"]').length,
+      container.querySelectorAll('path[stroke="#C4431A"]').length,
     ).toBeGreaterThan(0);
     // projectRingsClosed emitted at least one closed hatch fill.
     expect(
-      container.querySelectorAll('path[fill="url(#countryHatch)"]').length,
+      container.querySelectorAll('path[fill="url(#hn-hatch)"]').length,
     ).toBeGreaterThan(0);
     // Label + cursor present; the cursor shows the underscore glyph.
     const texts = Array.from(container.querySelectorAll("text"));
@@ -197,29 +200,79 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
   });
 
-  it("paints the lemons scene as a flat Mennige disc: knockout graticule, one Butter country, no gradient", () => {
-    for (const props of [{ reducedMotion: true }, {}] as const) {
-      const { container, unmount } = render(
-        <HeroNetwork scrollProgress={motionValue(0)} scene="lemons" {...props} />,
-      );
-      const disc = container.querySelector("circle[data-hero-globe-disc]");
-      expect(disc).toHaveAttribute("fill", "#b73a15");
-      // SPEC §3.6: no sphere volume, glow, hatch or limb stroke.
-      expect(container.querySelector("radialGradient, pattern")).toBeNull();
-      expect(container.querySelector('[fill^="url("]')).toBeNull();
-      const lines = container.querySelectorAll('path[stroke="#152a79"]');
-      expect(lines.length).toBeGreaterThan(0);
-      for (const line of lines) {
-        expect(line).toHaveAttribute("stroke-width", "1.5");
-        expect(line).toHaveAttribute("vector-effect", "non-scaling-stroke");
-      }
-      // Germany alone, as a flat Butter shape; the typing word in Butter.
-      expect(container.querySelectorAll('path[fill="#fceeaf"]').length).toBeGreaterThan(0);
-      expect(container.querySelector('path[stroke="#e07050"]')).toBeNull();
-      for (const text of container.querySelectorAll("text")) {
-        expect(text).toHaveAttribute("fill", "#fceeaf");
-      }
-      unmount();
-    }
+  it("draws the paper line globe: ink graticule, Kupfer outlines and hatch, the sphere volume", () => {
+    const { container } = render(
+      <HeroNetwork scrollProgress={motionValue(0)} reducedMotion />,
+    );
+    expect(container.querySelector("#hn-volume")).not.toBeNull();
+    expect(
+      container.querySelectorAll('path[stroke="rgb(20,20,19)"]').length,
+    ).toBeGreaterThan(0);
+    // No flat poster disc and no poster paint.
+    expect(container.querySelector("[data-hero-globe-disc]")).toBeNull();
+    expect(container.innerHTML).not.toMatch(/#152a79|#fceeaf|#b73a15/i);
   });
+
+  it("prefixes every SVG id, so two globes in one document never collide", () => {
+    const { container } = render(
+      <>
+        <HeroNetwork scrollProgress={motionValue(0)} reducedMotion />
+        <HeroNetwork
+          scrollProgress={motionValue(0)}
+          reducedMotion
+          idPrefix="hp"
+        />
+      </>,
+    );
+    const ids = Array.from(container.querySelectorAll("[id]")).map(
+      (node) => node.id,
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids).toContain("hn-hatch");
+    expect(ids).toContain("hp-hatch");
+    expect(
+      container.querySelectorAll('path[fill="url(#hp-hatch)"]').length,
+    ).toBeGreaterThan(0);
+  });
+});
+
+describe("HeroNetwork compact (phone) mode", () => {
+  it("frames the phone window at the foot, with the larger word and no step dots", () => {
+    const { container } = render(<HeroNetwork compact idPrefix="hp" />);
+    const svg = container.querySelector("svg");
+    expect(svg).toHaveAttribute(
+      "viewBox",
+      `${PHONE_VIEW.x} ${PHONE_VIEW.y} ${PHONE_VIEW.width} ${PHONE_VIEW.height}`,
+    );
+    expect(svg).toHaveAttribute("preserveAspectRatio", "xMidYMax slice");
+    const word = container.querySelector("[data-hero-network-word]");
+    expect(word).toHaveAttribute("font-size", "44");
+    // Step dots are the desktop cover's only.
+    expect(container.querySelectorAll("circle[r='1.2']")).toHaveLength(0);
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "running",
+    );
+  });
+
+  it("mounts over its server frame without a sparse shell of its own", () => {
+    const { container } = render(<HeroNetwork compact paused />);
+    expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
+    expect(container.firstElementChild).toHaveAttribute(
+      "data-hero-network-motion",
+      "paused",
+    );
+  });
+
+  it("thickens the static phone strokes to the desktop's CSS weight", () => {
+    const { container } = render(<HeroNetwork compact reducedMotion />);
+    const outline = container.querySelector('path[stroke="#C4431A"]');
+    expect(outline).toHaveAttribute("stroke-width", String(2 * COMPACT_STROKE));
+  });
+
+  it("caps the phone tour at half the desktop frame rate", () => {
+    expect(HERO_GLOBE_COMPACT_FPS).toBe(30);
+    expect(HERO_GLOBE_COMPACT_FPS).toBeLessThan(HERO_GLOBE_FPS);
+  });
+
 });

@@ -3,8 +3,6 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const LANDINGS = [
-  "codex",
-  "claude",
   "data-infrastructure",
   "data-engineering-fundamentals",
   "ai-native-operator",
@@ -56,7 +54,6 @@ describe("technical course landing design contract", () => {
   );
 
   it("retains course-specific instruments and compact progress boundaries", () => {
-    expect(sourceFor("claude")).toMatch(/<HeroOrrery[\s\S]*<HeroTransform/);
     expect(sourceFor("data-infrastructure")).not.toContain("copy.stackRows");
     expect(sourceFor("data-infrastructure")).toMatch(
       /tracks\.map[\s\S]*trackLessons\.map[\s\S]*<TechnicalCourseTrackProgress/,
@@ -67,12 +64,6 @@ describe("technical course landing design contract", () => {
   });
 
   it("keeps every authored lesson, chapter, and module map wired to its canonical route helper", () => {
-    expect(sourceFor("codex")).toMatch(
-      /trackLessons\.map[\s\S]*technicalCourseHref\("codex"[\s\S]*lessonId: lesson\.id/,
-    );
-    expect(sourceFor("claude")).toMatch(
-      /trackLessons\.map[\s\S]*technicalCourseHref\("claude"[\s\S]*lessonId: lesson\.id/,
-    );
     expect(sourceFor("data-infrastructure")).toMatch(
       /trackLessons\.map[\s\S]*"data-infrastructure"[\s\S]*lessonId: lesson\.id/,
     );

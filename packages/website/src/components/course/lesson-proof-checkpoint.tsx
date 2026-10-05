@@ -220,7 +220,7 @@ export function LessonProofCheckpoint({
             type="submit"
             disabled={!canCommit}
             aria-busy={!progressReady || undefined}
-            className="inline-flex min-h-11 shrink-0 items-center justify-center border border-foreground bg-foreground px-5 text-[0.9375rem] font-semibold text-background outline-none transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:border-border disabled:bg-track disabled:text-muted-foreground"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center border border-brand-cobalt bg-brand-cobalt px-5 text-[0.9375rem] font-semibold text-paper outline-none transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:border-border disabled:bg-track disabled:text-muted-foreground"
           >
             {!progressReady ? copy.loading : copy.save}
           </button>

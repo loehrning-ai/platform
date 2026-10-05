@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { COURSE_SLUGS } from "./types";
 
 describe("COURSE_SLUGS ", () => {
-  it("widens to exactly the 10 confirmed course slugs", () => {
+  it("widens to exactly the 8 confirmed course slugs", () => {
     expect([...COURSE_SLUGS].sort()).toEqual(
       [
         "ki-fuehrerschein",
@@ -12,8 +12,6 @@ describe("COURSE_SLUGS ", () => {
         "data-engineering-fundamentals",
         "data-science",
         "data-infrastructure",
-        "codex",
-        "claude",
         "ai-native-operator",
       ].sort(),
     );

@@ -301,7 +301,7 @@ export function AiNativeOperatorLessonReader({
         )}
         <Link
           href={next.href}
-          className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border border-foreground bg-brand-orange px-4 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-foreground"
+          className="inline-flex min-h-11 max-w-full items-center gap-2 break-words border border-foreground bg-brand-orange px-4 py-2 text-[12px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-kupfer-dark"
         >
           {next.label}
           {nextIcon}

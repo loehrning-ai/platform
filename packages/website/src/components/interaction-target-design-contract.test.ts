@@ -7,29 +7,9 @@ const STANDALONE_FILES = [
   "ai-native/demos/chat-demo.tsx",
   "course-projects/course-project-studio.tsx",
   "course-projects/lesson-mission-control.tsx",
-  "widgets/claude/_run-console.tsx",
-  "widgets/claude/prompt-compare.tsx",
-  "widgets/claude/rewrite-arena.tsx",
   "widgets/tier-a/matrix-grid.tsx",
   "widgets/tier-a/self-rate.tsx",
-  "imported-courses/claude/hero-transform.tsx",
-  "imported-courses/claude/hero-orrery.tsx",
   "open-source/command-copy-button.tsx",
-] as const;
-
-const EXPECTED_CODEX_FILES = [
-  "codex/bespoke/l01-three-body-contract.tsx",
-  "codex/bespoke/l02-sandbox-box.tsx",
-  "codex/bespoke/l03-agents-crystal.tsx",
-  "codex/bespoke/l04-spec-surgeon.tsx",
-  "codex/bespoke/l05-scope-slider.tsx",
-  "codex/bespoke/l06-done-checklist.tsx",
-  "codex/bespoke/l07-pr-xray.tsx",
-  "codex/bespoke/l08-decision-branch.tsx",
-  "codex/bespoke/l09-toolbelt-builder.tsx",
-  "codex/bespoke/l10-git-graph-orchestrator.tsx",
-  "codex/bespoke/l11-pattern-cards-lab.tsx",
-  "codex/bespoke/l12-daily-loop.tsx",
 ] as const;
 
 const EXPECTED_DATA_INFRASTRUCTURE_FILES = [
@@ -69,16 +49,12 @@ function productionFiles(directory: string, prefix: string): string[] {
     .toSorted();
 }
 
-const CODEX_FILES = productionFiles("codex/bespoke", "codex/bespoke").filter(
-  (file) => /\/l\d{2}-/.test(file),
-);
 const DATA_INFRASTRUCTURE_FILES = productionFiles(
   "data-infrastructure/widgets",
   "data-infrastructure/widgets",
 );
 const AUDITED_FILES = [
   ...STANDALONE_FILES,
-  ...CODEX_FILES,
   ...DATA_INFRASTRUCTURE_FILES,
 ] as const;
 
@@ -140,18 +116,14 @@ function undersizedControls(file: string): string[] {
 }
 
 describe("learner interaction target design contract", () => {
-  it("derives the complete 12-lesson Codex control set", () => {
-    expect(CODEX_FILES).toEqual(EXPECTED_CODEX_FILES);
-  });
-
   it("derives the complete Data Infrastructure widget control set", () => {
     expect(DATA_INFRASTRUCTURE_FILES).toEqual(
       EXPECTED_DATA_INFRASTRUCTURE_FILES,
     );
   });
 
-  it("locks the bounded audit to all 35 production learner interaction files", () => {
-    expect(AUDITED_FILES).toHaveLength(35);
+  it("locks the bounded audit to all 18 production learner interaction files", () => {
+    expect(AUDITED_FILES).toHaveLength(18);
   });
 
   it.each(AUDITED_FILES)(
@@ -163,9 +135,7 @@ describe("learner interaction target design contract", () => {
 
   it("keeps compact independent controls at least 44px wide", () => {
     for (const file of [
-      "widgets/claude/_run-console.tsx",
       "widgets/tier-a/matrix-grid.tsx",
-      "imported-courses/claude/hero-transform.tsx",
     ]) {
       expect(readFileSync(join(__dirname, file), "utf8"), file).toContain(
         "min-w-11",

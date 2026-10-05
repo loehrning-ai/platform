@@ -19,13 +19,13 @@ export default async function Image() {
       ? {
           caps: "Everyday AI Literacy · Foundation course",
           title: "AI at work.",
-          subtitle: "5 blocks, 18 lessons, about 1 hr 40 min.",
+          subtitle: "4 modules, 8 hands-on lessons, about 45 min.",
           trailing: "/en/ki-fuehrerschein",
         }
       : {
           caps: "KI-Führerschein · Grundlagenkurs",
           title: "KI im Alltag.",
-          subtitle: "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min.",
+          subtitle: "4 Module, 8 Lektionen mit Übung, ca. 45 Min.",
           trailing: "/ki-fuehrerschein",
         };
 

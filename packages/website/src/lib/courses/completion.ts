@@ -1,7 +1,5 @@
 import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 import { getCourseConfig } from "@/lib/course/config";
-import { CLAUDE_LESSON_IDS } from "@/lib/claude-course/types";
-import { CODEX_LESSON_IDS } from "@/lib/codex/types";
 import { DATA_INFRA_LESSON_IDS } from "@/lib/data-infrastructure/types";
 import { DEF_CHAPTER_IDS } from "@/lib/data-engineering-fundamentals/types";
 import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
@@ -15,24 +13,72 @@ import {
   checkpointKey,
   legacyCompletionEvidenceCheckpointKey,
 } from "@/lib/progress/types";
+import { engineExerciseStepId } from "@/lib/lesson-engine/types";
 
-const numbered = (prefix: string, count: number): readonly string[] =>
-  Array.from({ length: count }, (_, index) => `${prefix}${index + 1}`);
-
-const KI_FUEHRERSCHEIN_LESSON_IDS = [3, 3, 4, 4, 4].flatMap((count, index) =>
-  numbered(`block_${index + 1}_lesson_`, count),
-);
-const EU_AI_ACT_LESSON_IDS = Array.from({ length: 6 }, (_, index) =>
-  numbered(`block_${index + 1}_lesson_`, 4),
-).flat();
+/**
+ * KI-Führerschein runs on the lesson engine (docs/lesson-engine.md): four
+ * modules, eight lessons. The pre-engine `block_N_lesson_M` IDs are retired;
+ * stored progress under them is dropped by `normalizeCanonicalProgress` (browser) and
+ * `dropRetiredLessonEntries` in server-store.ts (stored rows) instead of failing validation.
+ */
+const KI_FUEHRERSCHEIN_LESSON_IDS = [
+  "daten-1-1",
+  "daten-1-2",
+  "briefen-2-1",
+  "briefen-2-2",
+  "pruefen-3-1",
+  "pruefen-3-2",
+  "regeln-4-1",
+  "regeln-4-2",
+] as const;
+/**
+ * KI und Gesellschaft runs on the lesson engine: three modules, eight
+ * lessons. The pre-engine arbeit-/deepfake-/ethik- IDs are retired and
+ * dropped the same way as the KI-Führerschein ones.
+ */
+const KI_UND_GESELLSCHAFT_LESSON_IDS = [
+  "zahlen-1-1",
+  "zahlen-1-2",
+  "fakes-2-1",
+  "fakes-2-2",
+  "fakes-2-3",
+  "fair-3-1",
+  "fair-3-2",
+  "fair-3-3",
+] as const;
+/**
+ * EU AI Act Kurs runs on the lesson engine: five modules, ten lessons. The
+ * pre-engine `block_N_lesson_M` IDs are retired and dropped like the
+ * KI-Führerschein ones above.
+ */
+const EU_AI_ACT_LESSON_IDS = [
+  "rolle-1-1",
+  "zeitplan-1-2",
+  "risiko-2-1",
+  "risiko-2-2",
+  "pflichten-3-1",
+  "pflichten-3-2",
+  "bussgeld-4-1",
+  "aufsicht-4-2",
+  "fall-5-1",
+  "plan-5-2",
+] as const;
+/**
+ * AI-Native ("Mit KI arbeiten" / "Working with AI") runs on the lesson engine:
+ * four modules, nine lessons. The pre-engine `modul_N_lesson_M` IDs are
+ * retired and dropped like the KI-Führerschein ones.
+ */
 const AI_NATIVE_LESSON_IDS = [
-  ...numbered("modul_1_lesson_", 5),
-  ...numbered("modul_2_lesson_", 7),
-  "modul_3_lesson_1",
-  "modul_3_lesson_0",
-  ...numbered("modul_3_lesson_", 6).slice(1),
-  ...numbered("modul_4_lesson_", 8),
-];
+  "messen-1-1",
+  "messen-1-2",
+  "kontext-2-1",
+  "kontext-2-2",
+  "wissen-3-1",
+  "wissen-3-2",
+  "workflow-4-1",
+  "workflow-4-2",
+  "workflow-4-3",
+] as const;
 const OPERATOR_LESSON_IDS = OPERATOR_MODULE_IDS.flatMap((moduleId) =>
   Array.from({ length: OPERATOR_MODULE_LESSON_COUNTS[moduleId] }, (_, index) =>
     lessonProgressKey(moduleId, index + 1),
@@ -43,21 +89,9 @@ export const CANONICAL_LESSON_IDS: Readonly<
   Record<CourseSlug, readonly string[]>
 > = {
   "ki-fuehrerschein": KI_FUEHRERSCHEIN_LESSON_IDS,
-  "ki-und-gesellschaft": [
-    "arbeit-1-1",
-    "arbeit-1-2",
-    "arbeit-1-3",
-    "deepfake-2-1",
-    "deepfake-2-2",
-    "deepfake-2-3",
-    "ethik-3-1",
-    "ethik-3-2",
-    "ethik-3-3",
-  ],
+  "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_LESSON_IDS,
   "eu-ai-act-kurs": EU_AI_ACT_LESSON_IDS,
   "ai-native": AI_NATIVE_LESSON_IDS,
-  claude: CLAUDE_LESSON_IDS,
-  codex: CODEX_LESSON_IDS,
   "data-infrastructure": DATA_INFRA_LESSON_IDS,
   "data-engineering-fundamentals": DEF_CHAPTER_IDS,
   "data-science": DS_NUMBERED_CHAPTER_IDS,
@@ -74,15 +108,14 @@ const sequentialSectionIds = (
     (_, index) => `${lessonId}${separator}${index + 1}`,
   );
 
-function sectionsByCount(
+/** Lesson-engine courses track one step per lesson: the exercise. */
+function engineSteps(
   lessonIds: readonly string[],
-  counts: readonly number[],
-  separator?: string,
 ): Readonly<Record<string, readonly string[]>> {
   return Object.fromEntries(
-    lessonIds.map((lessonId, index) => [
+    lessonIds.map((lessonId) => [
       lessonId,
-      sequentialSectionIds(lessonId, counts[index] ?? 0, separator),
+      [engineExerciseStepId(lessonId)],
     ]),
   );
 }
@@ -98,50 +131,6 @@ function bareSequentialSectionsByCount(
     ]),
   );
 }
-
-const CLAUDE_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
-  "mental-model": [
-    "what-it-is",
-    "three-things",
-    "constitutional-ai",
-    "feel-it",
-    "failure-modes",
-  ],
-  anatomy: ["contracts-not-incantations", "six-parts", "xml-tags", "pro-moves"],
-  context: [
-    "context-is-the-product",
-    "meaning-in-space",
-    "window-as-budget",
-    "long-context-template",
-    "tokens-briefly",
-    "too-big-docs",
-  ],
-  "claude-md": [
-    "what-it-is",
-    "hierarchy",
-    "keep-in-leave-out",
-    "template",
-    "auto-memory",
-  ],
-  iteration: [
-    "the-loop",
-    "three-turn-loop",
-    "show-dont-tell",
-    "turn-2-vocabulary",
-  ],
-  gdocs: ["why-gdocs", "move-1-skeleton", "move-2-voice", "move-3-critique"],
-  agents: [
-    "agents-vs-chat",
-    "the-loop-explicit",
-    "four-guardrails",
-    "when-to-use",
-  ],
-  reviews: ["why-it-works", "review-template", "when-it-earns-its-keep"],
-  grounding: ["not-a-bug", "three-grounding-moves", "smell-test"],
-  team: ["why-share", "three-artifacts", "sharing-well", "rituals"],
-  evals: ["why-evals", "mvp-eval", "debugging", "llm-as-judge"],
-  safety: ["the-rule", "never-paste", "usually-fine", "prompt-injection"],
-};
 
 const DATA_INFRA_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
   "mental-model": sequentialSectionIds("", 6, "s"),
@@ -170,33 +159,10 @@ const DATA_INFRA_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
 export const CANONICAL_SECTION_IDS: Readonly<
   Record<CourseSlug, Readonly<Record<string, readonly string[]>>>
 > = {
-  "ki-fuehrerschein": sectionsByCount(
-    KI_FUEHRERSCHEIN_LESSON_IDS,
-    KI_FUEHRERSCHEIN_LESSON_IDS.map(() => 2),
-  ),
-  "ki-und-gesellschaft": sectionsByCount(
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"],
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"].map(() => 3),
-    "-s",
-  ),
-  "eu-ai-act-kurs": sectionsByCount(
-    EU_AI_ACT_LESSON_IDS,
-    EU_AI_ACT_LESSON_IDS.map((lessonId) =>
-      lessonId === "block_2_lesson_3" ? 4 : 3,
-    ),
-  ),
-  "ai-native": sectionsByCount(
-    AI_NATIVE_LESSON_IDS,
-    [
-      4, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 2, 3, 4, 3, 3, 3, 4, 4, 4, 3, 4, 4, 4,
-      3, 4,
-    ],
-  ),
-  claude: CLAUDE_SECTION_IDS,
-  codex: bareSequentialSectionsByCount(
-    CODEX_LESSON_IDS,
-    [6, 7, 6, 5, 6, 6, 6, 7, 6, 7, 8, 8],
-  ),
+  "ki-fuehrerschein": engineSteps(KI_FUEHRERSCHEIN_LESSON_IDS),
+  "ki-und-gesellschaft": engineSteps(KI_UND_GESELLSCHAFT_LESSON_IDS),
+  "eu-ai-act-kurs": engineSteps(EU_AI_ACT_LESSON_IDS),
+  "ai-native": engineSteps(AI_NATIVE_LESSON_IDS),
   "data-infrastructure": DATA_INFRA_SECTION_IDS,
   "data-engineering-fundamentals": Object.fromEntries(
     DEF_CHAPTER_IDS.map((lessonId) => [lessonId, []]),
@@ -223,23 +189,36 @@ export const EVIDENCE_GATED_COURSE_SLUGS = [
   "eu-ai-act-kurs",
   "ki-und-gesellschaft",
   "ai-native",
-  "claude",
-  "codex",
   "data-infrastructure",
   "data-engineering-fundamentals",
   "data-science",
   "ai-native-operator",
 ] as const satisfies readonly CourseSlug[];
 
+/**
+ * Courses whose lessons run on the lesson engine (docs/lesson-engine.md).
+ * Their lesson proof is "exercise step recorded" + "both checks answered
+ * correctly" (a perfect lesson quiz score). Add a slug here in the same change
+ * that ports its content and switches its CANONICAL_SECTION_IDS to
+ * `engineSteps(...)`.
+ */
+export const LESSON_ENGINE_COURSE_SLUGS = [
+  "ki-fuehrerschein",
+  "ki-und-gesellschaft",
+  "eu-ai-act-kurs",
+  "ai-native",
+] as const satisfies readonly CourseSlug[];
+
+export function isLessonEngineCourse(slug: CourseSlug): boolean {
+  return (LESSON_ENGINE_COURSE_SLUGS as readonly CourseSlug[]).includes(slug);
+}
+
 export type EvidenceGatedCourseSlug =
   (typeof EVIDENCE_GATED_COURSE_SLUGS)[number];
 
 export const LESSON_COMPLETION_EVIDENCE_VERSION = "lesson-proof-v1";
 
-const AI_NATIVE_TRANSFER_PROOF_LESSON_IDS = new Set(["modul_3_lesson_0"]);
 const TRANSFER_ONLY_COURSE_SLUGS = new Set<EvidenceGatedCourseSlug>([
-  "claude",
-  "codex",
   "data-infrastructure",
   "data-engineering-fundamentals",
   "data-science",
@@ -349,11 +328,11 @@ export function isLessonCompletionEvidenceBacked(
     return false;
   }
 
-  if (
-    TRANSFER_ONLY_COURSE_SLUGS.has(slug) ||
-    (slug === "ai-native" && AI_NATIVE_TRANSFER_PROOF_LESSON_IDS.has(lessonId))
-  ) {
+  if (TRANSFER_ONLY_COURSE_SLUGS.has(slug)) {
     return true;
+  }
+  if (isLessonEngineCourse(slug)) {
+    return lesson.quizScore === 1 && lesson.quizTotal !== null;
   }
   return lesson.quizScore !== null && lesson.quizTotal !== null;
 }

@@ -6,13 +6,10 @@
     "content/books/ki-arbeitsalltag": "du",
     "content/books/ki-landschaft": "du",
     "content/books/ki-tools-selbststaendige": "du",
-    "content/claude": "du",
     "content/eu-ai-act-kurs": "sie",
     "content/ki-fuehrerschein": "du",
     "content/ki-und-gesellschaft": "du",
     "src/lib/ai-native-operator": "du",
-    "src/lib/claude-course": "du",
-    "src/lib/codex": "du",
     "src/lib/data-infrastructure": "du"
   }
 }

@@ -188,60 +188,6 @@ export interface WorkshopRealWorldCase {
   readonly decisionQuestion: string;
 }
 
-export interface WorkshopDecisionOption {
-  readonly id: string;
-  readonly label: string;
-}
-
-export interface WorkshopDecisionFeedback {
-  readonly title: string;
-  readonly body: string;
-}
-
-/**
- * Feedback for one specific non-recommended decision. A wrong pick is
- * answered in terms of what the learner actually chose, so a message about
- * one distractor never appears after another was picked.
- */
-export interface WorkshopDecisionChoiceFeedback {
-  /** The learner picked this decision together with the strongest evidence. */
-  readonly evidenceOnly?: WorkshopDecisionFeedback;
-  /** The learner picked this decision with weaker evidence. */
-  readonly unsupported?: WorkshopDecisionFeedback;
-}
-
-/**
- * One bounded first decision rendered locally on the workshop detail page.
- * The component receives this copy-only configuration and never persists or
- * transmits a learner's selection.
- */
-export interface WorkshopDecisionLabConfig {
-  readonly kicker: string;
-  readonly title: string;
-  readonly prompt: string;
-  readonly facts: readonly string[];
-  readonly decisionLegend: string;
-  readonly evidenceLegend: string;
-  readonly choices: readonly WorkshopDecisionOption[];
-  readonly evidence: readonly WorkshopDecisionOption[];
-  readonly recommendedChoiceId: string;
-  readonly strongestEvidenceId: string;
-  readonly submitLabel: string;
-  readonly resetLabel: string;
-  readonly privacyNote: string;
-  readonly resultLabel: string;
-  readonly feedback: {
-    readonly aligned: WorkshopDecisionFeedback;
-    readonly decisionOnly: WorkshopDecisionFeedback;
-    readonly evidenceOnly: WorkshopDecisionFeedback;
-    readonly unsupported: WorkshopDecisionFeedback;
-    /** Optional overrides keyed by a non-recommended choice id. */
-    readonly byChoice?: Readonly<
-      Record<string, WorkshopDecisionChoiceFeedback>
-    >;
-  };
-}
-
 export interface Workshop {
   readonly slug: string;
   /** Two-digit catalogue number, fixed per workshop and never derived from array position. */
@@ -287,7 +233,6 @@ export interface Workshop {
   /** Two to four things this workshop does not teach. */
   readonly notCovered: readonly string[];
   readonly provenance: WorkshopProvenance;
-  readonly decisionLab: WorkshopDecisionLabConfig;
   readonly steps: readonly WorkshopStep[];
   readonly caseStudy: WorkshopCaseStudy;
   readonly realWorldCase?: WorkshopRealWorldCase;
@@ -399,72 +344,6 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       reviewedAt: "2026-09-26",
       data: "synthetic",
       note: "Alle Firmen und Zahlen sind erfunden. Der Workshop zeigt keine KI-Antworten.",
-    },
-    decisionLab: {
-      kicker: "Entscheidung 01 · Liefergrenze",
-      title: "1.050 Stück. Wer bekommt sie?",
-      prompt:
-        "Welche Regel darf jetzt laufen?",
-      facts: ["Anmeldungen 1.370", "Nachfrage p50 1.180", "Liefergrenze 1.050"],
-      decisionLegend: "Deine erste Entscheidung",
-      evidenceLegend: "Der stärkste Beleg",
-      choices: [
-        {
-          id: "controlled-allocation",
-          label:
-            "Proportional nach geschätzter Nachfrage zuteilen; Ausnahmen gibt eine Person frei.",
-        },
-        {
-          id: "raw-requests",
-          label:
-            "Nach den 1.370 Standortanmeldungen verteilen und automatisch ausführen.",
-        },
-        {
-          id: "equal-split",
-          label:
-            "Jeden Standort gleich bedienen, unabhängig von Größe und Nachfrage.",
-        },
-      ],
-      evidence: [
-        {
-          id: "constraint-and-error",
-          label:
-            "Die Liefergrenze liegt 130 Stück unter der geschätzten Nachfrage; das Modell weicht trotz Verbesserung noch 12 % ab.",
-        },
-        {
-          id: "accuracy-only",
-          label: "12 % Modellabweichung schlagen die Baseline mit 21 %.",
-        },
-        {
-          id: "request-gap",
-          label: "320 angeforderte Einheiten bleiben unbedient.",
-        },
-      ],
-      recommendedChoiceId: "controlled-allocation",
-      strongestEvidenceId: "constraint-and-error",
-      submitLabel: "Entscheidung prüfen",
-      resetLabel: "Neu entscheiden",
-      privacyNote:
-        "Läuft nur auf dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
-      resultLabel: "Auswertung der Entscheidung",
-      feedback: {
-        aligned: {
-          title: "Freigabe mit Tor",
-          body: "Bei dieser Knappheit, 1.050 Stück für 1.180 geschätzte Nachfrage, brauchst du eine Zuteilungsregel, die jede Person nachrechnen kann. Bei 12 % Restfehler gibt eine benannte Person jede Ausnahme frei.",
-        },
-        decisionOnly: {
-          title: "Richtige Richtung, zu schwacher Beleg",
-          body: "Dass das Modell besser ist als die Baseline, reicht für eine Automatik nicht. Deine Regel stützt sich auf zwei Zahlen: 130 Stück fehlen, und das Modell liegt noch 12 % daneben.",
-        },
-        evidenceOnly: {
-          title: "Der Beleg widerspricht der Freigabe",
-          body: "Du hast gesehen, dass 130 Stück fehlen und das Modell 12 % danebenliegt. Wer nach Anmeldungen oder zu gleichen Teilen verteilt, nutzt diese beiden Zahlen nicht.",
-        },
-        unsupported: {
-          title: "Noch nicht freigabefähig",
-          body: "Anmeldungen überschreiten die 1.050 lieferbaren Stück, gleiche Teile übergehen die geschätzte Nachfrage. Verteile nach der geschätzten Nachfrage und lass bei 12 % Restfehler eine benannte Person jede Ausnahme freigeben.",
-        },
-      },
     },
     steps: [
       {
@@ -717,74 +596,6 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       data: "synthetic-and-public",
       note: "Fall 2 nutzt nur Metas öffentliche Quartalsmitteilung; der Autor arbeitet als Data Engineer bei Meta.",
     },
-    decisionLab: {
-      kicker: "Entscheidung 01 · CRAFT",
-      title: "Mehr Nachfrage oder erst das Produkt reparieren?",
-      prompt:
-        "CRAFT erzielt 4,12 Mio. € Umsatz bei geringem Volumen, hat aber den zweiten Monat in Folge die meisten Qualitätsmängel. Der Vertrieb fordert mehr Q3-Marketingbudget. Was tust du zuerst?",
-      facts: [
-        "Umsatz 4,12 Mio. €",
-        "Einheiten 9.162",
-        "Meiste Mängel · 2 Monate in Folge",
-      ],
-      decisionLegend: "Deine erste Entscheidung",
-      evidenceLegend: "Der stärkste Beleg",
-      choices: [
-        {
-          id: "quality-gate",
-          label:
-            "Budgeterhöhung stoppen; Qualitätsursache prüfen und Nacharbeit bewerten.",
-        },
-        {
-          id: "increase-marketing",
-          label: "Q3-Marketing sofort erhöhen, weil der Umsatz stark ist.",
-        },
-        {
-          id: "discontinue-line",
-          label: "CRAFT sofort einstellen und das Budget umverteilen.",
-        },
-      ],
-      evidence: [
-        {
-          id: "repeated-defects",
-          label:
-            "CRAFT hat die meisten Qualitätsmängel im Sortiment, den zweiten Monat in Folge.",
-        },
-        {
-          id: "revenue-rank",
-          label: "CRAFT erzielt den zweithöchsten Umsatz der Produktlinien.",
-        },
-        {
-          id: "low-volume",
-          label: "CRAFT liegt beim Absatz nur auf Rang 6 von 7 liefernden Linien.",
-        },
-      ],
-      recommendedChoiceId: "quality-gate",
-      strongestEvidenceId: "repeated-defects",
-      submitLabel: "Entscheidung prüfen",
-      resetLabel: "Neu entscheiden",
-      privacyNote:
-        "Läuft nur auf dieser Seite. Auswahl und Ergebnis werden weder gespeichert noch gesendet.",
-      resultLabel: "Auswertung der Entscheidung",
-      feedback: {
-        aligned: {
-          title: "Qualität vor zusätzlicher Nachfrage",
-          body: "Mängel im zweiten Monat in Folge rechtfertigen den Budgetstopp. Für mehr Budget oder das Aus fehlen im Kit Stückkosten, Retouren je Linie und die Zuordnung des Marketings.",
-        },
-        decisionOnly: {
-          title: "Richtige Reihenfolge, falscher Hauptbeleg",
-          body: "Umsatz und Volumen beschreiben die Linie. Den Prüfauftrag begründen die Qualitätsmängel im zweiten Monat in Folge.",
-        },
-        evidenceOnly: {
-          title: "Der Beleg widerspricht der Entscheidung",
-          body: "Wiederholte Mängel sprechen gegen mehr Nachfrage, für ein sofortiges Aus reichen sie nicht. Prüf zuerst Ursache und Nacharbeit.",
-        },
-        unsupported: {
-          title: "Die Belege tragen diese Entscheidung nicht",
-          body: "Umsatz (Rang 2) und Absatz (Rang 6 von 7) sagen nichts über die Qualität. Fang mit den Mängeln an: CRAFT führt die Mängelliste den zweiten Monat an.",
-        },
-      },
-    },
     steps: [
       {
         n: "01",
@@ -1009,72 +820,6 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       reviewedAt: "2026-09-26",
       data: "synthetic",
       note: "All companies and figures are invented. The workshop shows no AI answers.",
-    },
-    decisionLab: {
-      kicker: "Decision 01 · Supply limit",
-      title: "1,050 units. Who gets them?",
-      prompt:
-        "Which rule may run now?",
-      facts: ["Requests 1,370", "Demand p50 1,180", "Supply limit 1,050"],
-      decisionLegend: "Your first decision",
-      evidenceLegend: "The strongest evidence",
-      choices: [
-        {
-          id: "controlled-allocation",
-          label:
-            "Allocate proportionally to estimated demand; send exceptions to a person.",
-        },
-        {
-          id: "raw-requests",
-          label:
-            "Allocate against the 1,370 site requests and run automatically.",
-        },
-        {
-          id: "equal-split",
-          label:
-            "Give every site the same amount regardless of size and demand.",
-        },
-      ],
-      evidence: [
-        {
-          id: "constraint-and-error",
-          label:
-            "Supply is 130 units below estimated demand, and the improved model still deviates by 12%.",
-        },
-        {
-          id: "accuracy-only",
-          label: "The model's 12% deviation beats the 21% baseline.",
-        },
-        {
-          id: "request-gap",
-          label: "320 requested units go unserved.",
-        },
-      ],
-      recommendedChoiceId: "controlled-allocation",
-      strongestEvidenceId: "constraint-and-error",
-      submitLabel: "Check decision",
-      resetLabel: "Decide again",
-      privacyNote:
-        "Runs only on this page. Your selection and result are neither stored nor sent.",
-      resultLabel: "Decision feedback",
-      feedback: {
-        aligned: {
-          title: "Release with a gate",
-          body: "With 1,050 units for an estimated demand of 1,180, you need an allocation rule anyone can recompute. At a 12% residual error, a named person approves every exception.",
-        },
-        decisionOnly: {
-          title: "Right direction, weak evidence",
-          body: "A model that beats the baseline is not enough to automate. Your rule rests on two numbers: 130 units are missing, and the model is still 12% off.",
-        },
-        evidenceOnly: {
-          title: "The evidence contradicts the release",
-          body: "You saw that 130 units are missing and the model is 12% off. Allocating by requests or in equal shares does not use either number.",
-        },
-        unsupported: {
-          title: "Not ready for release",
-          body: "Requests exceed the 1,050 units that can be supplied, and equal shares ignore estimated demand. Allocate by estimated demand and have a named person approve every exception at a 12% residual error.",
-        },
-      },
     },
     steps: [
       {
@@ -1326,71 +1071,6 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       reviewedAt: "2026-09-26",
       data: "synthetic-and-public",
       note: "Case 2 uses only Meta's public quarterly release; the author works as a data engineer at Meta.",
-    },
-    decisionLab: {
-      kicker: "Decision 01 · CRAFT",
-      title: "Create more demand or repair the product first?",
-      prompt:
-        "CRAFT generates €4.12m of revenue at low volume, but records the most quality defects for a second month. Sales wants more Q3 marketing budget. What do you do first?",
-      facts: ["Revenue €4.12m", "Units 9,162", "Most defects · 2 months running"],
-      decisionLegend: "Your first decision",
-      evidenceLegend: "The strongest evidence",
-      choices: [
-        {
-          id: "quality-gate",
-          label:
-            "Hold the budget increase; investigate the quality cause and assess rework.",
-        },
-        {
-          id: "increase-marketing",
-          label: "Increase Q3 marketing immediately because revenue is strong.",
-        },
-        {
-          id: "discontinue-line",
-          label: "Discontinue CRAFT immediately and reallocate its budget.",
-        },
-      ],
-      evidence: [
-        {
-          id: "repeated-defects",
-          label:
-            "CRAFT has the most quality defects in the range for the second month in succession.",
-        },
-        {
-          id: "revenue-rank",
-          label: "CRAFT generates the second-highest product-line revenue.",
-        },
-        {
-          id: "low-volume",
-          label:
-            "CRAFT ranks only sixth of seven shipping lines by unit volume.",
-        },
-      ],
-      recommendedChoiceId: "quality-gate",
-      strongestEvidenceId: "repeated-defects",
-      submitLabel: "Check decision",
-      resetLabel: "Decide again",
-      privacyNote:
-        "Runs only on this page. Your selection and result are neither stored nor sent.",
-      resultLabel: "Decision feedback",
-      feedback: {
-        aligned: {
-          title: "Quality before more demand",
-          body: "Defects in a second month in a row justify holding the budget. For more budget or closing the line, the kit lacks unit costs, returns per line and marketing attribution.",
-        },
-        decisionOnly: {
-          title: "Right sequence, wrong primary evidence",
-          body: "Revenue and volume describe the line. The defects in a second month in a row justify the investigation.",
-        },
-        evidenceOnly: {
-          title: "The evidence contradicts the decision",
-          body: "Repeated defects argue against creating more demand, and they do not yet prove the line should close. Investigate cause and rework first.",
-        },
-        unsupported: {
-          title: "The decision outruns the evidence",
-          body: "Revenue (rank 2) and volume (rank 6 of 7) say nothing about quality. Start with the defects: CRAFT tops the defect list for the second month.",
-        },
-      },
     },
     steps: [
       {

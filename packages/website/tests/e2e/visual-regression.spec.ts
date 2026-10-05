@@ -125,13 +125,12 @@ async function expectCompleteReviewedDesktopHeader(page: Page) {
       exact: true,
     }),
   ).toBeVisible();
-  // Open Source sits inside the Praxis disclosure, not in the top row.
   await expect(
     desktopNavigation.getByRole("link", {
       name: "Open Source",
       exact: true,
     }),
-  ).toHaveCount(0);
+  ).toBeVisible();
   await expect(
     desktopNavigation.getByRole("link", {
       name: "Über mich",

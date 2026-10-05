@@ -14,7 +14,6 @@ import {
   Chip,
   cx,
   Pictogram,
-  QuestionCard,
   Route,
   SectionHead,
   StatRow,
@@ -26,11 +25,16 @@ import {
   PosterArt,
   ResultChart,
 } from "@/components/plakat";
+import { HighlightedText } from "@/components/ui/highlighted-text";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
-import { PLAKAT, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
+import {
+  PLAKAT,
+  workshopPlakat,
+  type PlakatKey,
+  type WorkshopPlakat,
+} from "@/lib/plakat/palettes";
 import { materialLanguageLabel, WORKSHOP_PAGE_COPY } from "../workshop-copy";
 import { splitTitle } from "../workshop-title";
-import { WorkshopDecisionLab } from "./workshop-decision-lab";
 import { WorkshopMaterialLink } from "./workshop-material-link";
 
 interface Props {
@@ -65,20 +69,8 @@ const ROLE_PICTOGRAM: Readonly<Record<WorkshopMaterialRole, PictogramName>> = {
 
 const PHASE_ORDER: readonly WorkshopPhase[] = ["before", "during", "after"];
 
-/** Anchor of the decision lab band, linked from the agenda. */
-const LAB_ANCHOR = "workshop-lab";
-
-/**
- * Agenda station the decision lab mirrors, per workshop. Until the registry
- * carries this on decisionLab, the page keeps the mapping; a workshop without
- * an entry still gets the link under the Route, just no marked station.
- */
-const LAB_STATION: Readonly<Record<string, number>> = {
-  "ki-prognosen-einschaetzen": 0,
-  "geschaeftsberichte-mit-ki-lesen": 5,
-  "datenbereitschaft-fuer-ki": 1,
-  "esg-berichte-mit-ki": 1,
-};
+const AGENDA_ANCHOR = "ablauf";
+const CASE_ANCHOR = "fall";
 
 /**
  * A workshop without a registered poster still gets a scene, so the page
@@ -86,6 +78,52 @@ const LAB_STATION: Readonly<Record<string, number>> = {
  * workshop mapped.
  */
 const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
+
+/**
+ * The marker band behind the tail of the H1, per scene (HighlightedText: a
+ * 0.75em stripe, so the poster leading of 0.92 never lets two lines' bands
+ * touch). The words stay in the scene ink; the stripe is the scene's mid
+ * colour, strong enough to read as a band on the ground and never under 3:1
+ * against the ink (the title is display size):
+ * - lemons: Mennige, Butter on it 4.96.
+ * - idea: Himbeere at 35% over Kreide, Kobalt on it 4.38.
+ * - bloom: Terrakotta at 80% over Sand, Aubergine on it 5.03.
+ * - autumn: Ocker at 30% over Rost, Creme on it 3.43. Rost leaves little
+ *   room for a lighter wash (Creme is 4.80 on the plain ground), so the band
+ *   stays a tint and the 3:1 display floor keeps its margin.
+ */
+export const TITLE_HIGHLIGHT: Readonly<
+  Record<PlakatKey, { readonly colorVar: `--color-${string}`; readonly opacity: number }>
+> = {
+  lemons: { colorVar: "--color-scene-mid", opacity: 100 },
+  idea: { colorVar: "--color-scene-mid", opacity: 35 },
+  bloom: { colorVar: "--color-scene-mid", opacity: 80 },
+  autumn: { colorVar: "--color-scene-mid", opacity: 30 },
+};
+
+/** Longest two-word tail that still reads as a short marked phrase. */
+const HIGHLIGHT_PAIR_MAX = 12;
+
+/**
+ * The H1 split for its highlight: a short last pair goes on the band ("mit
+ * KI", "für KI?", "the future?"), otherwise only the last word
+ * ("vorhersagen?"), so the band marks a phrase and never fills two lines. A
+ * one-word title gets no band.
+ */
+export function titleHighlight(head: string): {
+  readonly lead: string;
+  readonly highlight: string;
+} {
+  const words = head.trim().split(/\s+/);
+  if (words.length < 2) return { lead: head, highlight: "" };
+  const pair = words.slice(-2).join(" ");
+  const count =
+    words.length >= 3 && pair.length <= HIGHLIGHT_PAIR_MAX ? 2 : 1;
+  return {
+    lead: words.slice(0, -count).join(" "),
+    highlight: words.slice(-count).join(" "),
+  };
+}
 
 /** Roles that make a sensible second cover button next to the primary one. */
 const SECONDARY_ROLES: readonly WorkshopMaterialRole[] = [
@@ -146,17 +184,6 @@ export function phoneDescription(text: string, short?: string): string {
   const comma = head.lastIndexOf(", ");
   const cut = comma > 30 ? comma : head.lastIndexOf(" ");
   return `${head.slice(0, cut).replace(/[\s,:;]+$/, "")} …`;
-}
-
-/** The single most limiting need, shown in the cover caption. */
-function limitingNeed(
-  workshop: Workshop,
-  copy: DetailCopy,
-): string | undefined {
-  const noAccount = workshop.notNeeded.some((item) =>
-    /KI-Konto|AI account/i.test(item),
-  );
-  return noAccount ? copy.browserOnly : workshop.needs[0];
 }
 
 function SquareList({
@@ -310,10 +337,8 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
     (material) =>
       material !== primary && SECONDARY_ROLES.includes(material.role),
   );
-  const need = limitingNeed(workshop, copy);
   const title = splitTitle(workshop.title);
-  // The leading minute facts, which the agenda caption repeats right below.
-  const minuteFacts = (workshop.minutesLive ? 1 : 0) + 1;
+  const heading = titleHighlight(title.head);
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
 
   const coverFacts = [
@@ -338,26 +363,21 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
     .filter(Boolean)
     .join(" · ");
   const agendaCaptionLine = sentenceStart(agendaCaption);
+  const redLine = [
+    { href: `#${AGENDA_ANCHOR}`, label: copy.agendaHeading },
+    { href: `#${MATERIAL_ANCHOR}`, label: copy.materialHeading },
+    { href: `#${CASE_ANCHOR}`, label: copy.caseHeading },
+  ];
   // Minutes on one line, activity and flags on the next, so a narrow station
   // never breaks mid-pair with a dangling separator.
-  const labStation = LAB_STATION[workshop.slug];
-  const labStationItem =
-    labStation === undefined ? undefined : workshop.agenda[labStation];
-  const stations = workshop.agenda.map((item, index) => {
+  const stations = workshop.agenda.map((item) => {
     const detail = [
       item.activity ? copy.activityLabels[item.activity] : null,
       item.mode === "live" ? copy.liveOnly : null,
       item.optional ? copy.optional : null,
     ].filter(Boolean);
-    const isLab = index === labStation;
     return {
-      label: isLab ? (
-        <span className="font-bold" data-lab-station="">
-          {item.label}
-        </span>
-      ) : (
-        item.label
-      ),
+      label: item.label,
       caption: (
         <>
           <span className="block tabular-nums">
@@ -366,22 +386,18 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           {detail.length > 0 ? (
             <span className="hidden sm:block">{detail.join(" · ")}</span>
           ) : null}
-          {isLab ? (
-            <span className="block font-semibold text-foreground">
-              {copy.labStation}
-            </span>
-          ) : null}
         </>
       ),
     };
   });
 
-  const phases = PHASE_ORDER.map((phase) => ({
-    phase,
-    materials: workshop.materials.filter(
-      (material) => material.phase === phase,
-    ),
-  })).filter((group) => group.materials.length > 0);
+  // One red line: the materials the outcomes need, in taught order, with the
+  // place to start first; optional files wait behind one disclosure.
+  const ordered = PHASE_ORDER.flatMap((phase) =>
+    workshop.materials.filter((material) => material.phase === phase),
+  );
+  const coreMaterials = ordered.filter((material) => !material.optional);
+  const optionalMaterials = ordered.filter((material) => material.optional);
   const hasPresenter = workshop.materials.some(
     (material) => material.role === "presenter",
   );
@@ -478,7 +494,19 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:mt-2 max-[359px]:[--text-poster:2.625rem] sm:mt-4"
           style={posterTitleFallbackStyle(title.head)}
         >
-          {title.head}
+          {/* Positioned, so a descender paints above the next line's band. */}
+          <span className="relative">{heading.lead}</span>
+          {heading.highlight ? (
+            <>
+              {" "}
+              <HighlightedText
+                colorVar={TITLE_HIGHLIGHT[scene.plakat].colorVar}
+                opacity={TITLE_HIGHLIGHT[scene.plakat].opacity}
+              >
+                {heading.highlight}
+              </HighlightedText>
+            </>
+          ) : null}
           {title.subtitle ? (
             <>
               {/* The colon stays visible, so the text, the accessible name
@@ -541,113 +569,72 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         className="pb-3 pt-6 sm:py-10 lg:pt-14"
       >
         <div className={CONTAINER}>
-          {/* What the band leaves out lands first on paper: the fixed
-              question with its Mennige bar, the facts and the need. From lg
-              the question and the facts sit side by side. */}
-          <div
-            data-workshop-brief=""
-            className="grid gap-3 sm:gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12"
+          {/* The red line: three numbered steps, each a jump to its section.
+              Phones stack number over label so a step never wraps mid-word
+              in a third of 390px. The facts line and the outcome sit under. */}
+          <nav
+            aria-label={copy.redLineLabel}
+            data-workshop-redline=""
           >
-            <QuestionCard
-              tone="paper"
-              label={copy.questionLabel}
-              question={workshop.question}
-              density="compact"
-              className="max-w-[42rem]"
-            />
-            <div className="min-w-0">
-              <p
-                data-workshop-facts=""
-                className="text-caption text-muted-foreground tabular-nums"
-              >
-                {/* Phones leave the minutes to the agenda caption right
-                    below; the line then starts with its first other fact. */}
-                {coverFacts.map((fact, index) => {
-                  const minutes = index < minuteFacts;
-                  const lead = index === minuteFacts;
-                  return (
-                    <span key={fact} className={minutes ? "max-sm:hidden" : undefined}>
-                      {index > 0 ? (
-                        <span className={lead ? "max-sm:hidden" : undefined}>{" · "}</span>
-                      ) : null}
-                      <span
-                        className={cx(
-                          "whitespace-nowrap",
-                          lead && "max-sm:inline-block max-sm:first-letter:uppercase",
-                        )}
-                      >
-                        {index === 0 ? sentenceStart(fact) : fact}
-                      </span>
-                    </span>
-                  );
-                })}
-              </p>
-              {/* Phones keep the brief to the question and one facts line:
-                  the needs and the outcome follow in full further down. */}
-              <dl className="mt-2 hidden grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-caption text-muted-foreground sm:grid">
-                {need ? (
-                  <div className="contents">
-                    <dt className="font-semibold text-foreground">
-                      {copy.needLabel}
-                    </dt>
-                    <dd>{need}</dd>
-                  </div>
-                ) : null}
-                <div className="contents">
-                  <dt className="font-semibold text-foreground">
-                    {copy.leaveWith}
-                  </dt>
-                  <dd>{workshop.outcome}</dd>
-                </div>
-              </dl>
-            </div>
+            <ol className="grid grid-cols-3 gap-2 sm:gap-3">
+              {redLine.map((step, index) => (
+                <li key={step.href} className="min-w-0">
+                  <a
+                    href={step.href}
+                    className="flex min-h-14 flex-col items-center justify-center gap-1 border-2 border-scene-line bg-background px-2 py-2 text-center text-[0.9375rem] font-bold leading-tight text-foreground transition-transform hover:-translate-y-0.5 sm:flex-row sm:justify-start sm:gap-3 sm:px-3 sm:text-left sm:text-body"
+                  >
+                    <StepNumber n={index + 1} />
+                    <span className="min-w-0">{step.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          <div data-workshop-brief="" className="mt-3 sm:mt-4">
+            <p
+              data-workshop-facts=""
+              className="text-caption text-muted-foreground tabular-nums"
+            >
+              {coverFacts.map((fact, index) => (
+                <span key={fact}>
+                  {index > 0 ? " · " : null}
+                  <span className="whitespace-nowrap">
+                    {index === 0 ? sentenceStart(fact) : fact}
+                  </span>
+                </span>
+              ))}
+            </p>
+            <p className="mt-1 max-w-[64ch] text-caption text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                {copy.leaveWith}:
+              </span>{" "}
+              {workshop.outcome}
+            </p>
           </div>
+          <div id={AGENDA_ANCHOR} className="scroll-mt-20" />
           <SectionHead
             className="mt-6 sm:mt-14"
             id="workshop-agenda-heading"
-            title={copy.agendaHeading}
+            title={<StepTitle n={1}>{copy.agendaHeading}</StepTitle>}
             caption={agendaCaptionLine || copy.minutes(agendaMinutes)}
             size="compact"
           />
-          {/* Phones: one scroll-snapped rail with label, minutes and the lab
-              marker per station; the activity line returns from sm, where the
+          {/* Phones: one scroll-snapped rail with label and minutes per
+              station; the activity line returns from sm, where the
               rail is the reviewed horizontal agenda. More than six stations
               keep the rail through tablet widths, where equal columns would
               wrap the labels into three or four lines. */}
           <Route
             stations={stations}
             mode="description"
-            here={labStation}
             label={copy.agendaHeading}
             locale={locale}
             layout="rail"
             railUntil={stations.length > 6 ? "lg" : "sm"}
             className="mt-4 sm:mt-6"
           />
-          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 sm:mt-4">
-            {copy.agendaSource[workshop.agendaSource] ? (
-              <p className="text-caption text-muted-foreground">
-                {copy.agendaSource[workshop.agendaSource]}
-              </p>
-            ) : null}
-            {/* On a phone the lab starts right below, so the jump link
-                stays a tablet and desktop aid. */}
-            <a
-              href={`#${LAB_ANCHOR}`}
-              className="inline-flex min-h-11 items-center gap-1.5 max-sm:hidden text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-            >
-              {copy.tryBelow(labStationItem?.label)}
-              <ArrowGlyph direction="down" className="size-3.5" />
-            </a>
-          </div>
         </div>
       </section>
-
-      <WorkshopDecisionLab
-        id={LAB_ANCHOR}
-        config={workshop.decisionLab}
-        locale={locale}
-      />
 
       <section
         id={MATERIAL_ANCHOR}
@@ -657,48 +644,59 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         <div className={CONTAINER}>
           <SectionHead
             id="workshop-materials-heading"
-            title={copy.materialHeading}
+            title={<StepTitle n={2}>{copy.materialHeading}</StepTitle>}
             size="compact"
           />
-          <div className="mt-3 grid gap-6 sm:mt-6 sm:gap-10">
-            {phases.map((group) => (
-              <div key={group.phase}>
-                <h3 className="text-label text-muted-foreground">
-                  {copy.phaseLabels[group.phase]}
-                </h3>
-                <ul className="mt-2 border-t border-hairline">
-                  {group.materials.map((material) => (
-                    <MaterialRow
-                      key={material.href}
-                      workshopSlug={workshop.slug}
-                      material={material}
-                      copy={copy}
-                      locale={locale}
-                    />
-                  ))}
-                </ul>
-                {/* A keyboard instruction: phones have no P key and open
-                    the presenter row above instead. */}
-                {group.phase === "during" && hasPresenter ? (
-                  <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
-                    <span className="font-semibold text-foreground">
-                      {copy.selfHostHeading}:
-                    </span>{" "}
-                    {copy.selfHostBody}
-                  </p>
-                ) : null}
-              </div>
+          <ul className="mt-3 border-t border-hairline sm:mt-6">
+            {coreMaterials.map((material) => (
+              <MaterialRow
+                key={material.href}
+                workshopSlug={workshop.slug}
+                material={material}
+                copy={copy}
+                locale={locale}
+              />
             ))}
-          </div>
+          </ul>
+          {optionalMaterials.length > 0 ? (
+            <details className="group mt-4 sm:mt-6">
+              <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                {copy.moreMaterials(optionalMaterials.length)}
+              </summary>
+              <ul className="mt-2 border-t border-hairline">
+                {optionalMaterials.map((material) => (
+                  <MaterialRow
+                    key={material.href}
+                    workshopSlug={workshop.slug}
+                    material={material}
+                    copy={copy}
+                    locale={locale}
+                  />
+                ))}
+              </ul>
+            </details>
+          ) : null}
+          {hasPresenter ? (
+            <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
+              <span className="font-semibold text-foreground">
+                {copy.selfHostHeading}:
+              </span>{" "}
+              {copy.selfHostBody}
+            </p>
+          ) : null}
         </div>
       </section>
 
-      <section aria-labelledby="workshop-case-heading" className={SECTION}>
+      <section
+        id={CASE_ANCHOR}
+        aria-labelledby="workshop-case-heading"
+        className={cx(SECTION, "scroll-mt-20")}
+      >
         <div className={CONTAINER}>
           <SectionHead
             size="compact"
             id="workshop-case-heading"
-            title={copy.caseHeading}
+            title={<StepTitle n={3}>{copy.caseHeading}</StepTitle>}
             caption={
               caseStudy.isFictional ? copy.syntheticCase : copy.realCompanyData
             }
@@ -720,24 +718,17 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                   {copy.realExplanation(caseStudy.companyName, caseStudy.period)}
                 </p>
               )}
-              <h4 className="mt-4 text-label text-muted-foreground sm:mt-6">
-                {copy.openDecision}
-              </h4>
-              <p className="mt-1 max-w-[64ch] text-[0.9375rem]/[1.5] font-semibold text-foreground text-pretty sm:text-body">
-                {caseStudy.decisionQuestion}
-              </p>
             </div>
-            <Callout
-              variant="gap"
-              title={copy.limitations}
-              className="self-start px-4 py-3 sm:px-5 sm:py-4"
-            >
-              <ul className="mt-1 grid gap-1.5 text-[0.875rem] leading-normal text-muted-foreground sm:gap-2 sm:text-[0.9375rem]">
+            <details className="self-start border-t border-hairline pt-3">
+              <summary className="inline-flex min-h-11 cursor-pointer items-center text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                {copy.limitations}
+              </summary>
+              <ul className="mt-2 grid gap-1.5 text-[0.875rem] leading-normal text-muted-foreground sm:gap-2 sm:text-[0.9375rem]">
                 {caseStudy.dataLimitations.map((limitation) => (
                   <li key={limitation}>{limitation}</li>
                 ))}
               </ul>
-            </Callout>
+            </details>
           </div>
           {/* justify-between keeps the values on one line when a label wraps. */}
           <StatRow
@@ -784,9 +775,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                   value: <StatValue>{metric.value}</StatValue>,
                 }))}
               />
-              <p className="mt-5 max-w-[64ch] text-[0.9375rem]/[1.5] font-semibold text-foreground text-pretty sm:mt-8 sm:text-body">
-                {realWorldCase.decisionQuestion}
-              </p>
               <p className="mt-3 max-w-[80ch] sm:mt-4 text-caption text-muted-foreground">
                 {copy.source}:{" "}
                 <a
@@ -818,8 +806,23 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
       </section>
 
-      <div className={cx(CONTAINER, SECTION)}>
-        <div className="grid gap-8 sm:gap-14 md:grid-cols-2 md:gap-12">
+      <section
+        aria-labelledby="workshop-details-heading"
+        className={cx(CONTAINER, SECTION)}
+      >
+        <details className="border-t-2 border-scene-line pt-3 sm:pt-4">
+          <summary className="flex min-h-11 cursor-pointer flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h2
+              id="workshop-details-heading"
+              className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
+            >
+              {copy.detailsHeading}
+            </h2>
+            <span className="text-caption text-muted-foreground">
+              {copy.detailsSummary}
+            </span>
+          </summary>
+          <div className="mt-6 grid gap-8 sm:gap-12 md:grid-cols-2 md:gap-12">
           <section aria-labelledby="workshop-audience-heading">
             <MinorHead id="workshop-audience-heading" title={copy.forWhom} />
             <SquareList items={workshop.audience} className="mt-3 sm:mt-6" />
@@ -831,11 +834,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             <MinorHead id="workshop-outcomes-heading" title={copy.outcomesHeading} />
             <SquareList items={workshop.outcomes} className="mt-3 sm:mt-6" />
           </section>
-        </div>
-      </div>
 
-      <div className={cx(CONTAINER, SECTION)}>
-        <div className="grid gap-8 sm:gap-14 md:grid-cols-2 md:gap-12">
           <section aria-labelledby="workshop-needs-heading">
             <MinorHead id="workshop-needs-heading" title={copy.needsHeading} />
             <SquareList items={workshop.needs} className="mt-3 sm:mt-6" />
@@ -864,8 +863,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               ))}
             </ul>
           </section>
-        </div>
-      </div>
+          </div>
+        </details>
+      </section>
 
       <footer
         aria-label={copy.provenanceHeading}
@@ -884,6 +884,34 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   );
 }
 
+/** The square step number of the red line: same square as the lists, filled with its digit. */
+function StepNumber({ n }: { readonly n: number }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="inline-flex size-8 shrink-0 items-center justify-center border-2 border-scene-line text-[0.9375rem] font-bold leading-none text-foreground tabular-nums"
+    >
+      {n}
+    </span>
+  );
+}
+
+/** A main section heading carrying its red-line step number. */
+function StepTitle({
+  n,
+  children,
+}: {
+  readonly n: number;
+  readonly children: ReactNode;
+}) {
+  return (
+    <span className="inline-flex items-center gap-3">
+      <StepNumber n={n} />
+      <span>{children}</span>
+    </span>
+  );
+}
+
 /**
  * Kopflinie head for the short two-column blocks (Für wen, Das brauchst du):
  * still an h2 in the outline, but set at h3 size so the page keeps a clear
@@ -898,12 +926,12 @@ function MinorHead({
 }) {
   return (
     <header className="border-t-2 border-scene-line pt-3 sm:pt-4">
-      <h2
+      <h3
         id={id}
-        className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
+        className="text-[1.0625rem]/[1.2] font-bold text-foreground"
       >
         {title}
-      </h2>
+      </h3>
     </header>
   );
 }

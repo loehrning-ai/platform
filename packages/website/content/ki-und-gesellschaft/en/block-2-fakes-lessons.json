@@ -1,0 +1,595 @@
+{
+  "blockId": "block_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-01-04",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "dsa-guidance-update",
+    "eu-ai-act-amendment"
+  ],
+  "lessons": [
+    {
+      "id": "fakes-2-1",
+      "blockId": "block_2",
+      "number": 3,
+      "title": "Provenance before looks",
+      "subtitle": "Verify a viral clip in five steps",
+      "durationMinutes": 6,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Reverse search",
+        "Content Credentials",
+        "Context check"
+      ],
+      "concept": {
+        "body": "Looks or sound prove neither authenticity nor forgery. Odd hands or lighting justify a second look but do not work as a checklist: generators change, and compression leaves similar traces. Often the material is genuine and simply placed in a false context.\n\nCheck in five steps instead:\n\n1. **Pin down the claim:** what supposedly happened, when and where?\n2. **Open the source:** find the earliest post and the full video.\n3. **Trace the origin:** reverse search (Google Lens, TinEye) or key frames (InVID/WeVerify).\n4. **Match the context:** date, place, weather, signs against independent sources.\n5. **Limit the result:** confirmed, refuted or open. “Not verified” is a valid result.\n\nContent Credentials can document editing steps. Their absence does not prove manipulation.",
+        "takeaway": "Do not ask “does it look real?” but “where does it come from, and does the context fit?”",
+        "sources": [
+          {
+            "label": "InVID/WeVerify plugin (weverify.eu)"
+          },
+          {
+            "label": "C2PA Content Credentials (c2pa.org)"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Check a viral post",
+        "instructions": "Judge each underlined claim against the three check results: supported, contradicted or missing. Then evaluate. The post, places and results are invented.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Reverse search (key frames)",
+              "text": "Earliest match: the same video, uploaded on 14 July 2021 by a local broadcaster. Title: Bridge collapse after heavy rain in Musterau."
+            },
+            {
+              "id": "B",
+              "label": "Metadata and Content Credentials",
+              "text": "No Content Credentials present. The metadata was stripped when the video was re-uploaded."
+            },
+            {
+              "id": "C",
+              "label": "Context: weather archive and local press",
+              "text": "Weather archive for Exampletown, yesterday: dry, 0 mm of rain. The local paper reports no damage to bridges."
+            }
+          ],
+          "draftLabel": "Viral post",
+          "draft": [
+            {
+              "text": "BREAKING: The video shows "
+            },
+            {
+              "text": "a bridge collapsing",
+              "claimId": "collapse"
+            },
+            {
+              "text": ", and it happened "
+            },
+            {
+              "text": "in Exampletown",
+              "claimId": "place"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "last night",
+              "claimId": "time"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "after the storm",
+              "claimId": "storm"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "An AI detector confirms: 92% real",
+              "claimId": "detector"
+            },
+            {
+              "text": ". Share!"
+            }
+          ],
+          "claims": [
+            {
+              "id": "collapse",
+              "verdict": "supported",
+              "sourceId": "A",
+              "evidence": "Bridge collapse after heavy rain in Musterau.",
+              "why": "The footage is genuine: a local broadcaster filmed the collapse. The framing is false."
+            },
+            {
+              "id": "place",
+              "verdict": "contradicted",
+              "sourceId": "A",
+              "evidence": "Bridge collapse after heavy rain in Musterau.",
+              "correction": "Musterau, not Exampletown",
+              "why": "The earliest match names a different place."
+            },
+            {
+              "id": "time",
+              "verdict": "contradicted",
+              "sourceId": "A",
+              "evidence": "uploaded on 14 July 2021",
+              "correction": "July 2021",
+              "why": "A video cannot have been made last night if it has been online since 2021."
+            },
+            {
+              "id": "storm",
+              "verdict": "contradicted",
+              "sourceId": "C",
+              "evidence": "yesterday: dry, 0 mm of rain",
+              "correction": "There was no storm there yesterday.",
+              "why": "The weather archive contradicts the claimed cause."
+            },
+            {
+              "id": "detector",
+              "verdict": "missing",
+              "correction": "Delete: a detector score is not evidence of origin.",
+              "why": "None of the checks supports this. And even a genuine video can be framed falsely, as here."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "fakes-2-1-c1",
+          "prompt": "A video has no Content Credentials. What follows?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nothing conclusive: you need to check origin and context in other ways.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "It has been manipulated.",
+              "correct": false,
+              "feedback": "Credentials are often missing, for example because platforms strip metadata. That proves no manipulation."
+            },
+            {
+              "id": "c",
+              "text": "It is genuine because there is no AI label.",
+              "correct": false,
+              "feedback": "Labels can be removed, and not every tool adds them. Their absence proves nothing."
+            }
+          ],
+          "explanation": "Missing provenance data is an open finding. Continue with the source, reverse search and context."
+        },
+        {
+          "id": "fakes-2-1-c2",
+          "prompt": "In the example the video is genuine but years old and from another place. What is the result?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Genuine footage in a false context: the claim is refuted.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "No problem, because the video is not AI-generated.",
+              "correct": false,
+              "feedback": "The claim about place and time is false. Deception does not need AI."
+            },
+            {
+              "id": "c",
+              "text": "A deepfake.",
+              "correct": false,
+              "feedback": "Nothing points to AI generation. The footage is real, only framed falsely."
+            }
+          ],
+          "explanation": "Check the claim, not only the footage. Many fakes are old recordings with a new caption."
+        }
+      ]
+    },
+    {
+      "id": "fakes-2-2",
+      "blockId": "block_2",
+      "number": 4,
+      "title": "What a detector score means",
+      "subtitle": "Base rate beats the percentage",
+      "durationMinutes": 5,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Base rate",
+        "False alarm rate",
+        "Positive predictive value"
+      ],
+      "concept": {
+        "body": "A detector reports “92% fake”. Whether the content really is fake depends on three numbers:\n\n- **Hit rate:** how many fakes does it catch?\n- **False alarm rate:** how many genuine items does it wrongly flag?\n- **Base rate:** how many of the checked items are fake at all?\n\nWhen fakes are rare, false alarms dominate, even with a good hit rate. That is Bayes' theorem.\n\nOn top of that, a detector's percentage is a model-dependent estimate, not automatically a calibrated probability for your case. It depends on training data, tested generators, compression and threshold. A negative result does not prove authenticity, a positive one does not prove manipulation. Anyone who wants to publish or accuse needs provenance, context and further evidence.",
+        "takeaway": "An alert is a hint. The base rate decides how much it is worth.",
+        "sources": [
+          {
+            "label": "Bayes' theorem (positive predictive value)"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Work out what an alert is worth",
+        "instructions": "Change the share of fakes, the hit rate and the false alarm rate. The calculator shows how many alerts per 1,000 checked items are right. You are done when both tasks are complete.",
+        "props": {
+          "inputs": [
+            {
+              "id": "prev",
+              "label": "Share of fakes among checked items",
+              "type": "slider",
+              "scale": "log",
+              "min": 0.001,
+              "max": 0.5,
+              "default": 0.1,
+              "format": "percent",
+              "decimals": 1
+            },
+            {
+              "id": "sens",
+              "label": "Hit rate on fakes",
+              "type": "slider",
+              "min": 0.5,
+              "max": 0.99,
+              "step": 0.01,
+              "default": 0.92,
+              "format": "percent"
+            },
+            {
+              "id": "fpr",
+              "label": "False alarms on genuine items",
+              "type": "slider",
+              "min": 0.01,
+              "max": 0.3,
+              "step": 0.01,
+              "default": 0.08,
+              "format": "percent"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "tp",
+              "label": "Correct alerts per 1,000",
+              "formula": "1000 * prev * sens",
+              "format": "int"
+            },
+            {
+              "id": "fp",
+              "label": "False alarms per 1,000",
+              "formula": "1000 * (1 - prev) * fpr",
+              "format": "int"
+            },
+            {
+              "id": "ppv",
+              "label": "Chance that an alert is right",
+              "formula": "tp / max(tp + fp, 0.000001)",
+              "format": "percent",
+              "emphasis": true
+            }
+          ],
+          "chart": {
+            "kind": "stacked",
+            "title": "All alerts per 1,000 checked items",
+            "format": "int",
+            "bars": [
+              {
+                "label": "Correct alerts",
+                "formula": "tp",
+                "tone": "good"
+              },
+              {
+                "label": "False alarms",
+                "formula": "fp",
+                "tone": "bad"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "ppv < 0.5",
+              "tone": "bad",
+              "title": "Most alerts are false alarms",
+              "body": "Trusting an alert here mostly means accusing genuine content."
+            },
+            {
+              "when": "ppv < 0.9",
+              "tone": "warn",
+              "title": "An alert is a hint, not proof",
+              "body": "Check provenance and context before you claim anything."
+            },
+            {
+              "when": "true",
+              "tone": "neutral",
+              "title": "High predictive value, still check",
+              "body": "You rarely know your real error rates and base rate this precisely."
+            }
+          ],
+          "goals": [
+            {
+              "id": "rare",
+              "label": "Set the share of fakes to 1% or less",
+              "when": "prev <= 0.01",
+              "insight": "With 1% fakes and the starting values, only about one alert in ten is right."
+            },
+            {
+              "id": "reliable",
+              "label": "Find a setting where an alert is right at least 90% of the time",
+              "when": "ppv >= 0.9",
+              "insight": "That takes many fakes in the pool or very few false alarms. In practice you rarely know either."
+            }
+          ],
+          "note": "Worked example with invented values, not vendor figures."
+        }
+      },
+      "checks": [
+        {
+          "id": "fakes-2-2-c1",
+          "prompt": "A detector catches 92% of fakes and flags 8% of genuine items. Only 1% of checked items are fake. Roughly how often is an alert right?",
+          "options": [
+            {
+              "id": "a",
+              "text": "About one alert in ten.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "92% of the time.",
+              "correct": false,
+              "feedback": "92% is the hit rate on fakes. When fakes are rare, false alarms dominate."
+            },
+            {
+              "id": "c",
+              "text": "99% of the time.",
+              "correct": false,
+              "feedback": "99% is the share of genuine items. The question is how often an alert is right."
+            }
+          ],
+          "explanation": "Per 1,000 items: about 9 correct alerts against about 79 false alarms. An alert is right only about 10% of the time."
+        },
+        {
+          "id": "fakes-2-2-c2",
+          "prompt": "A detector reports “real”. What can you conclude?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Little: the content may lie outside the test distribution or have been edited.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "The content is genuine and may be shared.",
+              "correct": false,
+              "feedback": "A negative result does not prove authenticity. Provenance and context are still missing."
+            },
+            {
+              "id": "c",
+              "text": "The content has been forensically examined.",
+              "correct": false,
+              "feedback": "An automated detector does not replace an expert forensic examination."
+            }
+          ],
+          "explanation": "Detectors are at most an additional hint, in both directions."
+        }
+      ]
+    },
+    {
+      "id": "fakes-2-3",
+      "blockId": "block_2",
+      "number": 5,
+      "title": "Where to report",
+      "subtitle": "Platform, police or image rights",
+      "durationMinutes": 4,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "DSA notice procedure",
+        "Right to one's own image",
+        "Preserving evidence"
+      ],
+      "concept": {
+        "body": "After a find: do not spread it, not even with a warning. Save the URL, account, time and a screenshot locally. Then pick the right route:\n\n| Situation | Route |\n|---|---|\n| Deceptive content on a platform | Notice under Article 16 DSA |\n| Fraud, extortion, threats, acute danger | Police: in Germany the online police station via polizei.de, emergency number if in danger |\n| Your image shared without consent | Section 22 KUG (German Art Copyright Act), check exceptions under Section 23 KUG |\n\nArticle 16 DSA requires hosting services to offer an easily accessible notice procedure. They must process notices in a timely, diligent, non-arbitrary and objective manner; they do not have to remove every item. Your voice alone is not protected by Section 22 KUG; personality rights and data protection law may apply instead.\n\nLabelling duties for deepfakes (Article 50 AI Act) are covered in the [EU AI Act course](/en/eu-ai-act-kurs).",
+        "takeaway": "Preserve, do not share, then report precisely: platform, police or image rights.",
+        "sources": [
+          {
+            "label": "Article 16 Regulation (EU) 2022/2065 (DSA)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2022/2065/oj"
+          },
+          {
+            "label": "Sections 22, 23 KUG",
+            "url": "https://www.gesetze-im-internet.de/kunsturhg/__22.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Find the reporting route for three cases",
+        "instructions": "Walk the decision tree once for each of the three invented cases. You are done when you have worked through all of them.",
+        "props": {
+          "start": "start",
+          "nodes": [
+            {
+              "id": "start",
+              "question": "What happened?",
+              "options": [
+                {
+                  "label": "Someone demands money or data under time pressure, for example with a cloned voice.",
+                  "result": "police"
+                },
+                {
+                  "label": "An image or video of a person was shared without consent.",
+                  "next": "harm"
+                },
+                {
+                  "label": "Content deceives about a person, an event or a statement.",
+                  "next": "where"
+                }
+              ]
+            },
+            {
+              "id": "harm",
+              "question": "Is the content sexualised, threatening or extortionate, or is someone in danger?",
+              "options": [
+                {
+                  "label": "Yes",
+                  "result": "police"
+                },
+                {
+                  "label": "No, it is about sharing without consent.",
+                  "result": "image"
+                }
+              ]
+            },
+            {
+              "id": "where",
+              "question": "Where is the content?",
+              "help": "Without a location you cannot report precisely.",
+              "options": [
+                {
+                  "label": "On a platform, such as a social network or video site.",
+                  "result": "platform"
+                },
+                {
+                  "label": "I only have a forwarded file with no link.",
+                  "result": "trace"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "police",
+              "tone": "bad",
+              "title": "Contact the police",
+              "body": "Possible fraud, extortion or threat. Do not pay, do not reply. Call the emergency number if someone is in acute danger.",
+              "actions": [
+                "Call back only on a number you already know",
+                "Save URL, account, time and a screenshot locally",
+                "File a report via the online police station (polizei.de in Germany)"
+              ],
+              "source": "polizei.de"
+            },
+            {
+              "id": "image",
+              "tone": "warn",
+              "title": "Assert image rights",
+              "body": "Under Section 22 KUG, images of a person may only be shared with consent. Exceptions under Section 23 KUG and the balancing of interests need checking. Report to the platform in parallel.",
+              "actions": [
+                "Save the locations",
+                "Ask the person to delete it or report it to the platform",
+                "Get media-law advice on your claims"
+              ],
+              "source": "Sections 22, 23 KUG"
+            },
+            {
+              "id": "platform",
+              "tone": "neutral",
+              "title": "Report to the platform",
+              "body": "Use the notice procedure under Article 16 DSA. Give the URL and the specific rule or legal breach. The platform must process and decide on the notice, but need not remove every item.",
+              "actions": [
+                "Do not share, not even with a warning",
+                "Inform the person concerned privately without forwarding the content"
+              ],
+              "source": "Article 16 Regulation (EU) 2022/2065"
+            },
+            {
+              "id": "trace",
+              "tone": "neutral",
+              "title": "Trace the origin first, do not forward",
+              "body": "Ask for the link and check source and context as in the provenance lesson. Only with a location can you report precisely.",
+              "actions": [
+                "Ask the sender for the original source",
+                "Do not forward the file"
+              ]
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "mayor",
+              "expected": "platform",
+              "text": "A friend sends you a link to a video on a video site in which your mayor supposedly admits to election fraud.",
+              "why": "Deceptive content on a platform: a notice under Article 16 DSA, with the URL."
+            },
+            {
+              "id": "voice",
+              "expected": "police",
+              "text": "Your father gets a call in your sister's voice: she needs EUR 3,000 right away.",
+              "why": "A demand for money under time pressure with a cloned voice: possible fraud, so the police."
+            },
+            {
+              "id": "photo",
+              "expected": "image",
+              "text": "A colleague posts a harmless, AI-altered photo of you in a public group without asking.",
+              "why": "Your image shared without consent, no danger: Section 22 KUG, plus a platform notice."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "fakes-2-3-c1",
+          "prompt": "What does Article 16 DSA require of hosting services?",
+          "options": [
+            {
+              "id": "a",
+              "text": "An easily accessible notice procedure and timely, diligent and objective processing of notices.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "To delete every reported item immediately.",
+              "correct": false,
+              "feedback": "Platforms must process notices and decide. There is no duty to remove every item."
+            },
+            {
+              "id": "c",
+              "text": "To forward every notice to the police.",
+              "correct": false,
+              "feedback": "Article 16 does not say that. For possible crimes you file a report yourself."
+            }
+          ],
+          "explanation": "Article 16 DSA governs the notice procedure, not its outcome."
+        },
+        {
+          "id": "fakes-2-3-c2",
+          "prompt": "You find a deepfake about a colleague. What do you do first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Save the location, do not share it, and tell her privately.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Share it in the team chat with a warning so everyone knows.",
+              "correct": false,
+              "feedback": "Even with a warning, you spread the content further."
+            },
+            {
+              "id": "c",
+              "text": "Publicly accuse whoever made it.",
+              "correct": false,
+              "feedback": "Without verified provenance you risk a false accusation."
+            }
+          ],
+          "explanation": "Preserve, do not spread, inform the person concerned. Then choose the right reporting route."
+        }
+      ]
+    }
+  ]
+}

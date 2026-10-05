@@ -7,27 +7,30 @@ import {
 } from "@/lib/courses/completion";
 import type { UnifiedProgress } from "@/lib/progress/types";
 
-const SOCIETY_BLOCK_BY_LESSON_PREFIX = Object.freeze({
-  arbeit: "block_1",
-  deepfake: "block_2",
-  ethik: "block_3",
-});
+/**
+ * Lesson-engine IDs in block courses end in "-<module>-<lesson>" (for example
+ * "daten-1-2" lives in block_1). See docs/lesson-engine.md.
+ */
+const ENGINE_LESSON_ID_SUFFIX = /-(\d+)-\d+$/;
+
+function engineBlockForLesson(lessonId: string): string | null {
+  const moduleNumber = ENGINE_LESSON_ID_SUFFIX.exec(lessonId)?.[1];
+  return moduleNumber ? `block_${moduleNumber}` : null;
+}
 
 function blockForGermanLesson(
   slug: CourseSlug,
   lessonId: string,
 ): string | null {
-  if (slug === "ki-und-gesellschaft") {
-    const prefix = lessonId.split("-", 1)[0];
+  if (
+    slug === "ki-fuehrerschein" ||
+    slug === "ki-und-gesellschaft" ||
+    slug === "eu-ai-act-kurs"
+  ) {
     return (
-      SOCIETY_BLOCK_BY_LESSON_PREFIX[
-        prefix as keyof typeof SOCIETY_BLOCK_BY_LESSON_PREFIX
-      ] ?? null
+      /^(block_\d+)_lesson_\d+$/.exec(lessonId)?.[1] ??
+      engineBlockForLesson(lessonId)
     );
-  }
-
-  if (slug === "ki-fuehrerschein" || slug === "eu-ai-act-kurs") {
-    return /^(block_\d+)_lesson_\d+$/.exec(lessonId)?.[1] ?? null;
   }
 
   return null;
@@ -38,8 +41,8 @@ function blockForGermanLesson(
  *
  * The three block-based German readers render several lessons at one URL, so
  * they use a validated fragment that LessonLayout resolves client-side. Every
- * other course has one lesson/chapter per route, except the German AI-Native
- * course whose lesson IDs already encode the containing module.
+ * other course has one lesson/chapter per route; AI-Native lesson IDs encode
+ * the containing module ("messen-1-2" lives at /ai-native/kurs/modul_1/...).
  */
 export function courseLessonHref(slug: CourseSlug, lessonId: string): string {
   const config = getCourseConfig(slug);
@@ -49,9 +52,10 @@ export function courseLessonHref(slug: CourseSlug, lessonId: string): string {
   }
 
   if (slug === "ai-native") {
-    const moduleId = /^(modul_\d+)_lesson_\d+$/.exec(lessonId)?.[1];
-    return moduleId
-      ? `${config.coursePath}/${moduleId}/${lessonId}`
+    // Engine IDs end in "-<module>-<lesson>" and live at /modul_<module>/<id>.
+    const moduleNumber = ENGINE_LESSON_ID_SUFFIX.exec(lessonId)?.[1];
+    return moduleNumber
+      ? `${config.coursePath}/modul_${moduleNumber}/${lessonId}`
       : config.coursePath;
   }
 

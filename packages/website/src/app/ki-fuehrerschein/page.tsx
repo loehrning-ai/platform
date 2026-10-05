@@ -68,16 +68,16 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     metadata: {
       title: "KI im Alltag verstehen: kostenloser KI-Kurs auf Deutsch",
       description:
-        "Kostenloser KI-Grundlagenkurs mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit. Für Erwachsene ohne Vorkenntnisse.",
+        "Kostenloser KI-Grundlagenkurs: 4 Module, 8 Lektionen mit Übung, ca. 45 Min. Lernzeit. Für Erwachsene ohne Vorkenntnisse.",
       openGraphTitle: "KI-Führerschein: Welche Daten ins KI-Tool dürfen",
       openGraphDescription:
-        "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Mit Lernkonto und lokal erzeugter Teilnahmebestätigung.",
+        "4 Module, 8 Lektionen mit Übung, ca. 45 Min. Mit Lernkonto und lokal erzeugter Teilnahmebestätigung.",
     },
     graph: {
       home: "Start",
       courseName: "KI-Führerschein: Welche Daten ins KI-Tool dürfen",
       description:
-        "Kostenloser Online-Grundlagenkurs zur KI-Kompetenz mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit.",
+        "Kostenloser Online-Grundlagenkurs zur KI-Kompetenz mit 4 Modulen, 8 Lektionen und ca. 45 Min. Lernzeit.",
       audience: "Erwachsene ohne technische Vorkenntnisse",
     },
     eyebrow: "KI-Führerschein · Grundlagenkurs",
@@ -87,17 +87,17 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       "Und wie du eine KI-Antwort prüfst, bevor sie weitergeht. Ohne technische Vorkenntnisse.",
     start: "Kostenlos mit Lernkonto starten",
     facts: [
-      "5 Blöcke, 18 Lektionen",
-      "ca. 1 Std. 40 Min. Lernzeit",
+      "4 Module, 8 Lektionen mit Übung",
+      "ca. 45 Min. Lernzeit",
       "Teilnahmebestätigung als PDF",
     ],
     factsLabel: "Auf einen Blick",
     outcomesHeading: "Was du danach kannst",
     outcomes: [
-      { title: "Daten in vier Stufen einordnen, bevor sie ins Tool gehen" },
-      { title: "Mails, Protokolle, Auswertungen und Berichte mit KI entwerfen" },
-      { title: "Eine KI-Antwort gegen die Quelle prüfen und Erfundenes erkennen" },
-      { title: "Festlegen, wer bei folgenreichen Ergebnissen entscheidet" },
+      { title: "In einer Minute entscheiden, welche Daten in welches Tool dürfen" },
+      { title: "Aufträge schreiben, deren Ergebnis du prüfen kannst" },
+      { title: "Fehler in einem KI-Entwurf gegen die Quellen finden" },
+      { title: "Eine einseitige Team-Richtlinie mitnehmen" },
     ],
     curriculumHeading: "Lehrplan",
     minutes: (count) => `${count} Min.`,
@@ -118,16 +118,16 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     metadata: {
       title: "Everyday AI Literacy: free foundation course",
       description:
-        "Free foundation course with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study. No technical background required.",
+        "Free foundation course: 4 modules, 8 hands-on lessons, about 45 minutes of study. No technical background required.",
       openGraphTitle: "Everyday AI Literacy: which data may go into an AI tool",
       openGraphDescription:
-        "5 blocks, 18 lessons, about 1 hour 40 minutes. Includes a learning account and a locally generated certificate of participation.",
+        "4 modules, 8 hands-on lessons, about 45 minutes. Includes a learning account and a locally generated certificate of participation.",
     },
     graph: {
       home: "Home",
       courseName: "Everyday AI Literacy: which data may go into an AI tool",
       description:
-        "Free online foundation course on practical AI literacy with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study.",
+        "Free online foundation course on practical AI literacy with 4 modules, 8 lessons, and about 45 minutes of study.",
       audience: "Adults without a technical background",
     },
     eyebrow: "Everyday AI Literacy · Foundation course",
@@ -137,17 +137,17 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       "And how to check an AI answer before you pass it on. No technical background needed.",
     start: "Start with a free learning account",
     facts: [
-      "5 blocks, 18 lessons",
-      "About 1 hr 40 min of study",
+      "4 modules, 8 hands-on lessons",
+      "About 45 min of study",
       "Completion record as a PDF",
     ],
     factsLabel: "At a glance",
     outcomesHeading: "What you can do afterwards",
     outcomes: [
-      { title: "Sort data into four levels before it enters a tool" },
-      { title: "Draft emails, minutes, analyses and reports with AI" },
-      { title: "Check an AI answer against its source and spot invented details" },
-      { title: "Decide who signs off on high-stakes results" },
+      { title: "Decide in a minute which data may go into which tool" },
+      { title: "Write briefs whose results you can check" },
+      { title: "Find the errors in an AI draft against its sources" },
+      { title: "Leave with a one-page team policy" },
     ],
     curriculumHeading: "Course plan",
     minutes: (count) => `${count} min`,
@@ -236,7 +236,7 @@ function courseGraph(locale: Locale) {
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
-          courseWorkload: "PT1H40M",
+          courseWorkload: "PT45M",
           inLanguage: locale,
         },
       },

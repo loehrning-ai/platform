@@ -27,7 +27,7 @@ import {
  * The demo title takes the fallback headroom (POSTER_FALLBACK_HEADROOM).
  * Titles such as "Vertragsassistent." are one long word that runs to the
  * column edge; on a first visit (font-display: optional) the Arial-metric
- * fallback face sets about 4.4% wider than Loehrning Sans and would be
+ * fallback face sets up to about 4% wider than Figtree and would be
  * clipped by the band. A wider system face still cannot clip: the H1 breaks
  * the word at the column edge (break-words).
  */
@@ -137,7 +137,8 @@ export function DemoDetailLayout({
 
         The engine sits on paper right below the band. It never
         server-renders (dynamic(..., {ssr:false})), so the band carries first
-        paint. A dark engine only turns its own frame graphit (DemoShell).
+        paint. Every engine, the console-like ones included, sits on the
+        same light sheet (DemoShell); nothing here is graphit.
       */}
       <div data-demo-detail-hero>
         <PlakatBand plakat="idea" contentClassName="pt-0 max-[359px]:-mb-4 sm:pt-6 lg:pb-12 lg:pt-8">

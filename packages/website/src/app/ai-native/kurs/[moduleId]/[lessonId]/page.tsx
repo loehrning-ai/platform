@@ -1,17 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Clock } from "lucide-react";
-import {
-  ClipHeading,
-  VoiceAnchor,
-  TierChip,
-} from "@/components/ai-native/primitives";
-import { AiNativeLessonReader } from "@/components/ai-native/kurs/lesson-reader";
+import { notFound, redirect } from "next/navigation";
 import { AiNativeLessonPageShell } from "@/components/ai-native/kurs/lesson-page-shell";
-import { CourseProjectStudio } from "@/components/course-projects/course-project-studio";
-import { LessonReference } from "@/components/course/lesson-reference";
-import { LessonProgressRing } from "@/components/ai-native/kurs/lesson-progress-ring";
 import {
   getModule,
   getModuleLessons,
@@ -23,11 +12,19 @@ import { SITE_URL } from "@/lib/seo/json-ld";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
-import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
+import { LessonFlow } from "@/components/lesson-engine/lesson-flow";
+import { isEngineLesson } from "@/lib/lesson-engine/lesson";
+
+// "Mit KI arbeiten" / "Working with AI" runs on the lesson engine
+// (docs/lesson-engine.md): every lesson renders through the shared LessonFlow
+// (concept, one exercise, two checks). Bookmarks to retired lesson ids in a
+// valid module land on the course hub instead of a 404.
 
 interface PageProps {
   params: Promise<{ moduleId: string; lessonId: string }>;
 }
+
+const COURSE_TITLE = { de: "Mit KI arbeiten", en: "Working with AI" } as const;
 
 export async function generateStaticParams() {
   const perModule = await Promise.all(
@@ -54,15 +51,14 @@ export async function generateMetadata({
       robots: { index: false, follow: false },
     };
   const lessonUrl = `${SITE_URL}${localizeHref(`/ai-native/kurs/${moduleId}/${lessonId}`, locale)}`;
-  const courseTitle =
-    locale === "en" ? "AI-Native Workflow Course" : "AI-Native Arbeitskurs";
+  const title = `${lesson.title} · ${COURSE_TITLE[locale === "en" ? "en" : "de"]}`;
   return {
-    title: `${lesson.title}: ${courseTitle}`,
+    title,
     description: lesson.subtitle,
     robots: { index: false, follow: true },
     alternates: { canonical: lessonUrl },
     openGraph: {
-      title: `${lesson.title}: ${courseTitle}`,
+      title,
       description: lesson.subtitle,
       url: lessonUrl,
       type: "article",
@@ -77,22 +73,17 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
     await getRequestLocale(),
   );
   const mod = getModule(moduleId as ModuleId, locale);
-  const lesson = await getLesson(moduleId as ModuleId, lessonId, locale);
-  if (!mod || !lesson) notFound();
+  if (!mod) notFound();
+  const lesson = await getLesson(mod.id, lessonId, locale);
+  if (!lesson || !isEngineLesson(lesson)) {
+    redirect(localizeHref("/ai-native/kurs", locale));
+  }
 
-  const lessons = await getModuleLessons(moduleId as ModuleId, locale);
-  const currentIdx = lessons.findIndex((l) => l.id === lesson.id);
-  const prevLesson = currentIdx > 0 ? lessons[currentIdx - 1] : null;
-  const nextLesson =
-    currentIdx < lessons.length - 1 ? lessons[currentIdx + 1] : null;
   const isEnglish = locale === "en";
   const navigationItems = (
     await Promise.all(
       getModules(locale).map(async (navigationModule) => {
-        const moduleLessons =
-          navigationModule.id === mod.id
-            ? lessons
-            : await getModuleLessons(navigationModule.id, locale);
+        const moduleLessons = await getModuleLessons(navigationModule.id, locale);
         return moduleLessons.map((navigationLesson) => ({
           moduleId: navigationModule.id,
           moduleNumber: navigationModule.number,
@@ -100,133 +91,39 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
           lessonId: navigationLesson.id,
           lessonNumber: navigationLesson.number,
           title: navigationLesson.title,
+          durationMinutes: navigationLesson.durationMinutes,
         }));
       }),
     )
   ).flat();
-  const isProjectCheckpoint = isCourseProjectCheckpointLesson(
-    "ai-native",
-    lesson.id,
+  const flatIndex = navigationItems.findIndex(
+    (item) => item.lessonId === lesson.id,
   );
+  const following = navigationItems[flatIndex + 1];
 
   return (
     <AiNativeLessonPageShell lessons={navigationItems} locale={locale} lessonId={lesson.id}>
-      <div className="min-w-0 py-10 md:py-12">
-        <div className="mx-auto max-w-[880px]">
-          {/* Breadcrumb */}
-          <nav
-            aria-label={isEnglish ? "Breadcrumb" : "Brotkrümelnavigation"}
-            className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground"
-          >
-            <Link
-              href={localizeHref("/ai-native", locale)}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              {isEnglish ? "Course" : "Kurs"}
-            </Link>
-            <span className="mx-2 opacity-40">/</span>
-            <Link
-              href={localizeHref(`/ai-native/kurs/${mod.id}`, locale)}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            >
-              {isEnglish ? "Module" : "Modul"} {mod.number}
-            </Link>
-            <span className="mx-2 opacity-40">/</span>
-            <span className="text-brand-orange">
-              {isEnglish ? "Lesson" : "Lektion"} {lesson.number}
-            </span>
-          </nav>
-
-          {/* Header */}
-          <header className="mt-10 border-b border-border pb-8">
-            <div className="flex flex-wrap items-start justify-between gap-5">
-              <div className="flex flex-wrap items-baseline gap-5">
-                <span
-                  className="font-mono font-bold leading-none tracking-[-0.02em] text-brand-orange"
-                  style={{ fontSize: "clamp(2.25rem, 4vw, 2.75rem)" }}
-                >
-                  § {lesson.number}
-                </span>
-                <div className="flex flex-wrap items-center gap-3">
-                  <TierChip tier="FREE" locale={locale} />
-                  <span className="font-mono text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                    <Clock size={11} className="mr-1 inline" />
-                    {lesson.durationMinutes} {isEnglish ? "min" : "Min."}
-                  </span>
-                </div>
-              </div>
-              <LessonProgressRing
-                lessonId={lesson.id}
-                totalSections={lesson.sections.length}
-              />
-            </div>
-            <ClipHeading
-              as="h1"
-              className="mt-5 break-words font-bold leading-[0.95] tracking-[-0.035em] text-foreground"
-              style={{ fontSize: "clamp(2rem, 4.5vw, 3rem)" }}
-            >
-              {lesson.title}
-            </ClipHeading>
-            <p className="mt-4 max-w-[640px] text-[18px] leading-[1.55] text-muted-foreground">
-              {lesson.subtitle}
-            </p>
-          </header>
-        </div>
-
-        {isProjectCheckpoint ? (
-          <div className="my-10">
-            <CourseProjectStudio
-              courseSlug="ai-native"
-              lessonId={lesson.id}
-              locale={locale}
-              missionHeadingLevel={2}
-              lessonContext={{
-                title: lesson.title,
-                objective: lesson.subtitle,
-                keyConcepts: lesson.keyConcepts,
-              }}
-            />
-          </div>
-        ) : null}
-
-        {/* Progressive-disclosure reader (client — sections + quiz + prev/next inside) */}
-        <LessonReference
-          key={lesson.id}
+      <div className="min-w-0 pb-8">
+        <LessonFlow
+          courseSlug="ai-native"
+          lesson={lesson}
+          position={{ index: flatIndex + 1, total: navigationItems.length }}
+          moduleLabel={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${mod.title}`}
           locale={locale}
-          title={lesson.title}
-          objective={lesson.subtitle}
-          headingLevel={2}
-        >
-          {/* Authored perspective remains available as supporting reference. */}
-          {mod.voiceAnchor ? (
-            <div className="mx-auto mb-8 max-w-[880px]">
-              <VoiceAnchor
-                author={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${isEnglish ? "course note" : "Kursnotiz"}`}
-              >
-                {mod.voiceAnchor}
-              </VoiceAnchor>
-            </div>
-          ) : null}
-          {lesson.voiceAnchor && lesson.voiceAnchor !== mod.voiceAnchor ? (
-            <div className="mx-auto mb-8 max-w-[880px]">
-              <VoiceAnchor
-                author={`${isEnglish ? "Lesson" : "Lektion"} ${lesson.number}`}
-              >
-                {lesson.voiceAnchor}
-              </VoiceAnchor>
-            </div>
-          ) : null}
-          <div className="mx-auto max-w-[1100px]">
-            <AiNativeLessonReader
-              module={mod}
-              lesson={lesson}
-              prevLesson={prevLesson ?? null}
-              nextLesson={nextLesson ?? null}
-              allModuleLessonIds={lessons.map((l) => l.id)}
-              locale={locale}
-            />
-          </div>
-        </LessonReference>
+          next={
+            following
+              ? {
+                  kind: "link",
+                  href: localizeHref(`/ai-native/kurs/${following.moduleId}/${following.lessonId}`, locale),
+                  label: `${isEnglish ? "Next" : "Weiter"}: ${following.title}`,
+                }
+              : {
+                  kind: "link",
+                  href: localizeHref("/ai-native/kurs/quiz", locale),
+                  label: isEnglish ? "Assessment" : "Zur Prüfung",
+                }
+          }
+        />
       </div>
     </AiNativeLessonPageShell>
   );

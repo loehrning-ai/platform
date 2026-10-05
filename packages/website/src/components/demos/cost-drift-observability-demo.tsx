@@ -350,9 +350,11 @@ export default function CostDriftObservabilityDemo() {
                   minHeight: 44,
                   textAlign: "left",
                   padding: "8px 10px",
-                  background: selApp === a.id ? DEMO.ink : DEMO.birke,
+                  // Selected = the IDEA scene line (Kobalt on the demo
+                  // pages) with Kalkweiß text, never a black fill.
+                  background: selApp === a.id ? "var(--color-scene-line)" : DEMO.birke,
                   color: selApp === a.id ? DEMO.kalk : DEMO.ink,
-                  border: `1px solid ${selApp === a.id ? DEMO.ink : DEMO.leinen}`,
+                  border: `1px solid ${selApp === a.id ? "var(--color-scene-line)" : DEMO.leinen}`,
                   cursor: "pointer",
                   fontFamily: "inherit",
                 }}
@@ -370,7 +372,7 @@ export default function CostDriftObservabilityDemo() {
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
                     color:
-                      selApp === a.id ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
+                      selApp === a.id ? DEMO.kalk : DEMO.schiefer,
                     marginTop: 2,
                   }}
                 >
@@ -383,7 +385,7 @@ export default function CostDriftObservabilityDemo() {
                     marginTop: 4,
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
-                    color: selApp === a.id ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
+                    color: selApp === a.id ? DEMO.kalk : DEMO.schiefer,
                   }}
                 >
                   <span>{formatEur(a.cost, locale, 0)}</span>
@@ -396,8 +398,11 @@ export default function CostDriftObservabilityDemo() {
 
         <div
           style={{
-            background: DEMO.ink,
-            color: DEMO.kalk,
+            // The chart sheet: pastel Himmel-Blatt with ink type and a
+            // Mennige line (4.9:1 on it), never a black pane.
+            background: "var(--color-sky-sheet)",
+            color: DEMO.ink,
+            borderTop: `2px solid ${DEMO.ink}`,
             padding: 14,
           }}
         >
@@ -421,7 +426,7 @@ export default function CostDriftObservabilityDemo() {
               <div
                 style={{
                   ...DEMO.label,
-                  color: "rgba(243,240,233,0.75)",
+                  color: "var(--color-muted-foreground)",
                   marginTop: 2,
                 }}
               >
@@ -446,8 +451,8 @@ export default function CostDriftObservabilityDemo() {
               style={{
                 ...DEMO.label,
                 padding: "3px 10px",
-                color: DEMO.kalk,
-                border: "1px solid rgba(243,240,233,0.4)",
+                color: DEMO.ink,
+                border: "1px solid var(--color-border)",
                 alignSelf: "flex-start",
                 display: "inline-flex",
                 alignItems: "center",
@@ -474,7 +479,7 @@ export default function CostDriftObservabilityDemo() {
                 x2={W}
                 y1={H * g}
                 y2={H * g}
-                stroke="rgba(243,240,233,0.08)"
+                stroke="rgba(11,9,8,0.12)"
               />
             ))}
             <polyline
@@ -494,7 +499,7 @@ export default function CostDriftObservabilityDemo() {
               gap: 10,
               marginTop: 12,
               paddingTop: 10,
-              borderTop: "1px solid rgba(243,240,233,0.12)",
+              borderTop: "1px solid var(--color-border)",
             }}
           >
             {(
@@ -520,7 +525,7 @@ export default function CostDriftObservabilityDemo() {
                 <div
                   style={{
                     ...DEMO.label,
-                    color: "rgba(243,240,233,0.75)",
+                    color: "var(--color-muted-foreground)",
                   }}
                 >
                   {l}
@@ -589,8 +594,10 @@ export default function CostDriftObservabilityDemo() {
           role="region"
           aria-label={text("Ereignisprotokoll", "Event log")}
           style={{
-            background: DEMO.ink,
-            color: DEMO.kalk,
+            // The log is a recessed Beton pane with ink type, never black.
+            background: "var(--color-inset)",
+            color: DEMO.ink,
+            borderTop: `2px solid ${DEMO.ink}`,
             padding: "10px 12px",
             fontFamily: DEMO.font.mono,
             fontSize: 12,
@@ -614,21 +621,21 @@ export default function CostDriftObservabilityDemo() {
                   "Abfrage: 'Kündigungsfrist Q3'",
                   "Query: 'Q3 cancellation period'",
                 ),
-                DEMO.statusGreen,
+                "var(--color-pass)",
               ],
               [
                 2,
                 "info",
                 "haiku·38ms",
                 text("Abfrage: 'Haftungsgrenze'", "Query: 'liability limit'"),
-                DEMO.statusGreen,
+                "var(--color-pass)",
               ],
               [
                 4,
                 "warn",
                 "opus·3.2s",
                 text("Wiederholung nach Timeout", "Retry after timeout"),
-                DEMO.statusAmber,
+                "var(--color-risk-yellow)",
               ],
               [
                 7,
@@ -638,36 +645,36 @@ export default function CostDriftObservabilityDemo() {
                   "Pipeline: Anfrage-Klassifikation",
                   "Pipeline: request classification",
                 ),
-                DEMO.statusGreen,
+                "var(--color-pass)",
               ],
               [
                 9,
                 "error",
                 "opus·0ms",
                 text("Ratenbegrenzung (org-1)", "Rate limit (org-1)"),
-                DEMO.statusRed,
+                "var(--color-destructive)",
               ],
               [
                 12,
                 "info",
                 "haiku·29ms",
                 text("Cache-Treffer", "Cache hit"),
-                DEMO.statusGreen,
+                "var(--color-pass)",
               ],
             ] as const
           ).map(([ageOffset, lvl, tag, msg, c], i) => (
             <div key={i}>
-              <span style={{ color: "rgba(243,240,233,0.62)" }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>
                 {`${ageOffset + tick}s`.padStart(4)}{" "}
               </span>
               <span style={{ color: c }}>
                 [{lvl.toUpperCase().padEnd(5)}]
               </span>
-              <span style={{ color: "var(--color-kupfer-light)" }}>
+              <span style={{ color: "var(--color-kupfer-dark)" }}>
                 {" "}
                 {tag.padEnd(14)}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.85)" }}> {msg}</span>
+              <span style={{ color: DEMO.ink }}> {msg}</span>
             </div>
           ))}
         </div>

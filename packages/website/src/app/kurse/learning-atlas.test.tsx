@@ -59,7 +59,7 @@ describe("LearningAtlas", () => {
     render(<LearningAtlas locale={locale} access={getCourseAccess(false)} />);
     const next = screen.getByTestId("next-proof");
     expect(within(next).getAllByRole("link")).toHaveLength(1);
-    expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
+    expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/data-infrastructure/kurs/mental-model`);
     expect(next).toHaveTextContent(locale === "de" ? "Offener Einstieg ohne Lernkonto" : "Open starting point without an account");
     expect(next.textContent).not.toContain("0/4");
     // The sheet says why it offers a course off the path, and the Route
@@ -86,7 +86,7 @@ describe("LearningAtlas", () => {
     expect(links[0]).toHaveAttribute("href", `${prefix}/ai-native`);
     expect(links[0]).toHaveTextContent(locale === "de" ? "Hier nicht verfügbar" : "Unavailable here");
     expect(links[1]).toHaveAttribute("data-open-course-alternative");
-    expect(links[1]).toHaveAttribute("href", `${prefix}/kurse/open-source/claude/kurs/mental-model`);
+    expect(links[1]).toHaveAttribute("href", `${prefix}/kurse/open-source/ai-native-operator/mindset/1`);
     expect(links[1]).toHaveTextContent(locale === "de" ? "Offene Alternative ohne Lernkonto" : "Open alternative without an account");
     expect(window.location.pathname + window.location.search + window.location.hash).toBe(url);
     expect(container.querySelector('[data-learning-goal="build"]')).toHaveAttribute("aria-pressed", "true");
@@ -110,7 +110,7 @@ describe("LearningAtlas", () => {
     );
     expect(rowAction).toHaveAccessibleName(
       locale === "de"
-        ? "Hier nicht verfügbar · Kursübersicht: AI-Native Arbeitskurs"
+        ? "Hier nicht verfügbar · Kursübersicht: Mit KI arbeiten"
         : /^Unavailable here · Course overview: /,
     );
     expect(row?.querySelector("[data-course-meta]")).toHaveTextContent(
@@ -165,7 +165,7 @@ describe("LearningAtlas", () => {
       storeMock.isCertificateEligible.mockReturnValue(false);
       storeMock.subscribe.mock.calls.at(-1)?.[0](storeMock.progressState.current);
     });
-    expect(within(screen.getByTestId("next-proof")).getByRole("link")).toHaveAttribute("href", "/kurse/open-source/claude/kurs/mental-model");
+    expect(within(screen.getByTestId("next-proof")).getByRole("link")).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/mental-model");
   });
 
   it("states the account requirement on configured English actions before the click", () => {
@@ -318,11 +318,11 @@ describe("LearningAtlas", () => {
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
 
-    // Exactly the six imported courses carry visible source attribution.
+    // Exactly the four imported courses carry visible source attribution.
     expect(container.querySelectorAll("[data-course-source]")).toHaveLength(
       COURSE_CATALOG.filter((course) => course.sourceHref).length,
     );
-    // Below lg the six rows share one repository and commit, so the group
+    // Below lg the four rows share one repository and commit, so the group
     // head prints the attribution once and each row's copy prints from lg.
     for (const source of container.querySelectorAll("[data-course-source]")) {
       expect(source).toHaveClass("max-lg:hidden");
@@ -339,15 +339,28 @@ describe("LearningAtlas", () => {
       "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101",
     );
     expect(groupSource).toHaveAccessibleName(
-      /^interactive-courses auf GitHub: Quellcode aller Technikkurse \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
+      /^interactive-courses auf GitHub: Quellcode aller Kurse zum visuellen Lernen \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
     );
 
-    // Back to the ledger brief's zero-image rule. A cover thumbnail was tried
-    // here and removed: the artwork is a wide illustration that crops to mush
-    // at the ~56px a dense row allows, and the six imported courses carry only
-    // site screenshots, which read as grey noise at that size. The art renders
-    // large on the home cards and the account catalog instead.
-    expect(container.querySelectorAll("img")).toHaveLength(0);
+    // Pictures only where a course has a people picture: the four
+    // Grundlagenpfad rows, cropped to their subject in the 4:5 thumb box.
+    // The four visual-learning courses keep their posters; their catalog screenshots
+    // read as grey noise at thumbnail size and never render here.
+    // (The next-course sheet may show the recommended course's picture
+    // as well.)
+    const images = Array.from(container.querySelectorAll("img"));
+    expect(
+      images.filter((image) => image.closest("#lernpfad") !== null),
+    ).toHaveLength(4);
+    expect(
+      document.getElementById("tiefer-gehen")?.querySelectorAll("img"),
+    ).toHaveLength(0);
+    for (const image of images) {
+      expect(decodeURIComponent(image.getAttribute("src") ?? "")).toMatch(
+        /\/course-covers\/[a-z-]+-cover-v4\.webp/,
+      );
+      expect(image).toHaveAttribute("alt", "");
+    }
     // No per-row disclosure at all. The facts it held are either on the row
     // (duration, source) or on the course's own landing page (description,
     // scope, structure, audience, badges).
@@ -355,39 +368,45 @@ describe("LearningAtlas", () => {
     expect(screen.queryByText("Fakten und Zugang")).toBeNull();
   });
 
-  it("puts colour only in poster thumbnails, grouped by track, with numerals only on the Grundlagenpfad", () => {
+  it("puts colour only in the thumbnails, grouped by track, with numerals only on the Grundlagenpfad", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const foundation = document.getElementById("lernpfad") as HTMLElement;
     const technical = document.getElementById("tiefer-gehen") as HTMLElement;
 
-    // Grundlagenpfad: four Lemons posters numbered 01 to 04.
-    const foundationPosters = Array.from(
-      foundation.querySelectorAll<SVGElement>("[data-poster-thumb] svg[data-poster]"),
+    // Grundlagenpfad: the four people pictures, numbered 01 to 04 on an
+    // Ultramarin tab, and no poster.
+    const foundationThumbs = Array.from(
+      foundation.querySelectorAll<HTMLElement>('[data-course-thumb="picture"]'),
     );
-    expect(foundationPosters.map((svg) => svg.dataset.poster)).toEqual([
-      "lemons",
-      "lemons",
-      "lemons",
-      "lemons",
-    ]);
+    expect(foundationThumbs).toHaveLength(4);
     expect(
-      foundationPosters.map((svg) => svg.querySelector("[data-poster-numeral-text]")?.textContent),
+      foundationThumbs.map(
+        (thumb) => thumb.querySelector("[data-course-thumb-numeral]")?.textContent,
+      ),
     ).toEqual(["01", "02", "03", "04"]);
+    for (const thumb of foundationThumbs) {
+      expect(thumb).toHaveAttribute("aria-hidden", "true");
+      expect(thumb).toHaveClass("aspect-[4/5]", "w-[4.5rem]", "sm:w-20", "lg:w-24");
+      expect(thumb.querySelector("img")).toHaveClass("object-cover");
+      expect(thumb.querySelector("[data-course-thumb-numeral]")).toHaveClass(
+        "bg-ultramarin",
+        "text-butter",
+      );
+    }
+    expect(foundation.querySelector("svg[data-poster]")).toBeNull();
 
-    // Technikkurse: IDEA ×3 then Bloom ×3, no numeral (D9).
+    // Visual learning: IDEA ×1 then Bloom ×3, no numeral (D9).
     const technicalPosters = Array.from(
       technical.querySelectorAll<SVGElement>("[data-poster-thumb] svg[data-poster]"),
     );
     expect(technicalPosters.map((svg) => svg.dataset.poster)).toEqual([
-      "idea",
-      "idea",
       "idea",
       "bloom",
       "bloom",
       "bloom",
     ]);
     expect(technical.querySelector("[data-poster-numeral-text]")).toBeNull();
-    // The colour change carries a label: each scene run inside Technikkurse
+    // The colour change carries a label: each scene run inside visual learning
     // is its own list named by a quiet subhead (SPEC §2.2). The Grundlagenpfad
     // holds one scene and gets none. Rows stay untinted (checked below).
     const runs = Array.from(technical.querySelectorAll<HTMLElement>("[data-scene-run]"));
@@ -395,29 +414,36 @@ describe("LearningAtlas", () => {
     expect(
       runs.map((run) => within(run).getByRole("list").getAttribute("aria-labelledby")),
     ).toEqual(["tiefer-gehen-idea", "tiefer-gehen-bloom"]);
-    expect(within(technical).getByRole("list", { name: "Prompting und Agenten" })).toBeInTheDocument();
+    expect(within(technical).getByRole("list", { name: "KI-Betrieb" })).toBeInTheDocument();
     expect(within(technical).getByRole("list", { name: "Daten" })).toBeInTheDocument();
     expect(foundation.querySelectorAll("[data-scene-run] ol[aria-labelledby]")).toHaveLength(0);
 
-    // "01" prints once on the page: the next-proof poster has no numeral.
+    // "01" prints once on the page: the next-proof thumb has no numeral.
     const numerals = Array.from(
-      container.querySelectorAll("[data-poster-numeral-text]"),
+      container.querySelectorAll("[data-poster-numeral-text], [data-course-thumb-numeral]"),
       (node) => node.textContent,
     );
     expect(numerals.filter((text) => text === "01")).toHaveLength(1);
     const next = screen.getByTestId("next-proof");
-    const nextThumb = next.querySelector("[data-poster-thumb]");
+    const nextThumb = next.querySelector("[data-poster-thumb], [data-course-thumb]");
     expect(nextThumb).toHaveAttribute("aria-hidden", "true");
     expect(nextThumb).toHaveClass("w-16");
-    expect(nextThumb?.querySelector("[data-poster-numeral-text]")).toBeNull();
+    expect(
+      nextThumb?.querySelector("[data-poster-numeral-text], [data-course-thumb-numeral]"),
+    ).toBeNull();
 
-    // Posters are decorative SVGs, never images or focus stops.
+    // Posters are decorative SVGs and pictures decorative images, never
+    // focus stops.
     for (const svg of container.querySelectorAll("svg[data-poster]")) {
       expect(svg).toHaveAttribute("aria-hidden", "true");
       expect(svg).toHaveAttribute("focusable", "false");
       expect(svg.closest("a, button")).toBeNull();
     }
-    expect(container.querySelectorAll("img")).toHaveLength(0);
+    for (const image of container.querySelectorAll("img")) {
+      expect(image).toHaveAttribute("alt", "");
+      expect(image.closest("[aria-hidden='true']")).not.toBeNull();
+      expect(image.closest("a, button")).toBeNull();
+    }
 
     // No row tints, coloured rules or palette fills on paper (SPEC §2.4).
     for (const row of container.querySelectorAll<HTMLElement>("[data-course-slug]")) {
@@ -427,15 +453,15 @@ describe("LearningAtlas", () => {
     }
   });
 
-  it("shows the declared relationship between foundation and technical courses", () => {
+  it("shows the declared relationship between foundation and visual-learning courses", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const foundation = document.getElementById("lernpfad") as HTMLElement;
     const technical = document.getElementById("tiefer-gehen") as HTMLElement;
 
     expect(within(foundation).getByText("Grundlagenpfad")).toBeInTheDocument();
-    expect(within(technical).getByText("Technikkurse")).toBeInTheDocument();
+    expect(within(technical).getByText("Visuelles Lernen")).toBeInTheDocument();
     expect(foundation.querySelectorAll("[data-course-slug]")).toHaveLength(4);
-    expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(6);
+    expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(4);
 
     // A readable ladder: the group head sits one step above the row titles
     // at every width (22px over 17px on phones, 26px over 20px from sm),
@@ -471,7 +497,7 @@ describe("LearningAtlas", () => {
     expect(
       within(screen.getByTestId("selected-path-sequence")).getByRole("heading", {
         level: 3,
-        name: "Dein Pfad · 4 Kurse: Ich baue mit KI",
+        name: "Dein Pfad · 2 Kurse: Ich baue mit KI",
       }),
     ).toBeInTheDocument();
     expect(
@@ -479,20 +505,18 @@ describe("LearningAtlas", () => {
     ).toHaveAttribute("aria-pressed", "true");
     const path = screen.getByTestId("selected-path-sequence");
     for (const title of [
-      "AI-Native Arbeitskurs",
-      "Claude-Kurs",
-      "Codex-Kurs",
+      "Mit KI arbeiten",
       "The AI-Native Operator",
     ]) {
       expect(within(path).getByText(title)).toBeInTheDocument();
     }
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Kurs starten · Lernkonto nötig: AI-Native Arbeitskurs",
+        name: "Kurs starten · Lernkonto nötig: Mit KI arbeiten",
       }),
-    ).toHaveAttribute("href", "/ai-native/kurs/modul_1");
+    ).toHaveAttribute("href", "/ai-native/kurs");
     expect(
-      container.querySelector('[data-course-slug="claude"]'),
+      container.querySelector('[data-course-slug="ai-native-operator"]'),
     ).toHaveAttribute("data-in-path", "true");
     expect(
       container.querySelector('[data-course-slug="ki-fuehrerschein"]'),
@@ -566,19 +590,19 @@ describe("LearningAtlas", () => {
     expect(container.querySelectorAll("[data-progress-fill]")).toHaveLength(0);
     expect(container.querySelectorAll('[role="progressbar"]')).toHaveLength(0);
 
-    const codex = container.querySelector<HTMLElement>(
-      '[data-course-slug="codex"]',
+    const dataInfra = container.querySelector<HTMLElement>(
+      '[data-course-slug="data-infrastructure"]',
     );
     expect(
-      codex?.querySelector('a[href*="github.com/Mavengence"]'),
+      dataInfra?.querySelector('a[href*="github.com/Mavengence"]'),
     ).not.toBeNull();
-    expect(codex).toHaveTextContent("#0e5dfd3");
+    expect(dataInfra).toHaveTextContent("#0e5dfd3");
   });
 
   it("links a course to its demo only where a demo actually exists", () => {
     const { container } = render(<LearningAtlas locale="de" access={getCourseAccess(true)} />);
 
-    // Twelve demos cover three of the ten courses. The other seven rows must
+    // Twelve demos cover three of the eight courses. The other five rows must
     // omit the teaser rather than borrow a demo from an unrelated course.
     const withTeaser = Array.from(
       container.querySelectorAll<HTMLElement>("[data-course-slug]"),
@@ -643,12 +667,12 @@ describe("LearningAtlas phone ledger", () => {
     const rows = Array.from(
       container.querySelectorAll<HTMLElement>("[data-course-slug]"),
     );
-    expect(rows).toHaveLength(10);
+    expect(rows).toHaveLength(8);
     for (const row of rows) {
       expect(row).not.toHaveClass("hidden");
       expect(row.dataset.courseLevel).toMatch(/^(?:einstieg|mittel|fortg)$/);
     }
-    expect(screen.getByText("10 von 10 Kursen")).toHaveAttribute(
+    expect(screen.getByText("8 von 8 Kursen")).toHaveAttribute(
       "aria-live",
       "polite",
     );
@@ -682,7 +706,7 @@ describe("LearningAtlas phone ledger", () => {
       "lg:block",
     );
     expect(document.getElementById("lernpfad")).not.toHaveClass("hidden");
-    expect(screen.getByText("2 von 10 Kursen")).toBeInTheDocument();
+    expect(screen.getByText("2 von 8 Kursen")).toBeInTheDocument();
     // The level is a phone view state, never a shareable URL state: only the
     // goal writes to the address bar.
     expect(window.location.search).toBe("");
@@ -717,9 +741,11 @@ describe("LearningAtlas phone ledger", () => {
       expect(meta).toHaveTextContent(course.duration);
       expect(meta?.querySelector("[class*='border']")).toBeNull();
 
-      // The poster thumbnail replaced the number column: it is the row's
-      // first element and out of the accessibility tree.
-      const thumb = row?.querySelector<HTMLElement>("[data-poster-thumb]");
+      // The thumbnail (picture or poster) replaced the number column: it is
+      // the row's first element and out of the accessibility tree.
+      const thumb = row?.querySelector<HTMLElement>(
+        "[data-poster-thumb], [data-course-thumb]",
+      );
       expect(thumb, course.slug).toHaveAttribute("aria-hidden", "true");
       expect(row?.querySelector("[aria-hidden='true']")).toBe(thumb);
       expect(row?.querySelector("[data-course-number]")).toBeNull();
@@ -727,12 +753,12 @@ describe("LearningAtlas phone ledger", () => {
   });
   it("keeps the full repository path and commit in the attribution's accessible name", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
-    const codex = container.querySelector<HTMLElement>(
-      '[data-course-slug="codex"]',
+    const dataInfra = container.querySelector<HTMLElement>(
+      '[data-course-slug="data-infrastructure"]',
     ) as HTMLElement;
 
-    const repository = within(codex).getByRole("link", {
-      name: "Mavengence/interactive-courses: Quellcode, Codex-Kurs",
+    const repository = within(dataInfra).getByRole("link", {
+      name: "Mavengence/interactive-courses: Quellcode, Data Infrastructure",
     });
     expect(repository).toHaveAttribute(
       "href",
@@ -742,7 +768,7 @@ describe("LearningAtlas phone ledger", () => {
     const owner = repository.querySelector(".sr-only.lg\\:not-sr-only");
     expect(owner).toHaveTextContent("Mavengence/");
 
-    const commit = within(codex).getByRole("link", { name: "Commit #0e5dfd3" });
+    const commit = within(dataInfra).getByRole("link", { name: "Commit #0e5dfd3" });
     expect(commit.querySelector(".sr-only.lg\\:not-sr-only")).toHaveTextContent(
       "Commit",
     );
@@ -777,9 +803,19 @@ describe("LearningAtlas phone ledger", () => {
       expect(button).toHaveClass("lg:-ml-px");
       expect(button.className).not.toMatch(/(?:^|\s)-m[lt]-px/);
     }
-    // The chosen goal is an ink fill.
-    expect(buttons[0]).toHaveClass("bg-foreground", "text-background");
-    expect(buttons[1]).not.toHaveClass("bg-foreground");
+    // The chosen goal is a Himmel fill with ink text inside an Ultramarin
+    // edge and bottom bar: a shape cue besides the colour, and never an ink
+    // (black) fill.
+    expect(buttons[0]).toHaveClass(
+      "bg-brand-sky",
+      "text-foreground",
+      "border-ultramarin",
+      "shadow-[inset_0_-3px_0_var(--color-ultramarin)]",
+    );
+    for (const button of buttons) {
+      expect(button.className).not.toMatch(/\bbg-(?:foreground|black|graphit)\b/);
+    }
+    expect(buttons[1]).not.toHaveClass("bg-brand-sky");
   });
 
   it("reveals a focused goal chip the rail cuts at the chip's own snap point", () => {
@@ -848,7 +884,7 @@ describe("LearningAtlas phone ledger", () => {
     expect(next).toHaveClass("p-4", "sm:p-6");
     const kicker = next.querySelector("p");
     const phoneDuration = kicker?.querySelector(":scope > .sm\\:hidden:not([aria-hidden])");
-    expect(phoneDuration).toHaveTextContent("ca. 1 Std. 40 Min.");
+    expect(phoneDuration).toHaveTextContent("ca. 45 Min.");
     expect(within(next).getAllByRole("link")[0]).toHaveClass(
       "w-full",
       "justify-between",
@@ -896,12 +932,11 @@ describe("LearningAtlas phone ledger", () => {
       }
     }
 
-    // The phone duration for the one long catalog label.
+    // Every catalog duration is short enough to print at every width now
+    // (the former long AI-Native label had a phone variant).
     const aiNative = container.querySelector('[data-course-slug="ai-native"] [data-course-level-label]');
-    expect(aiNative?.querySelector(".sm\\:hidden")).toHaveTextContent("ca. 5 bis 12 Std.");
-    expect(aiNative?.querySelector(".max-sm\\:hidden")).toHaveTextContent(
-      "ca. 5 Std. Lektionen, 12 Std. mit Übungen",
-    );
+    expect(aiNative).toHaveTextContent("ca. 70 Min.");
+    expect(aiNative?.querySelector(".sm\\:hidden")).toBeNull();
 
     // The level chips run to the screen edge like the goal rail.
     const levels = screen.getByRole("group", { name: "Kursstufe wählen" });
@@ -938,7 +973,7 @@ describe("LearningAtlas phone ledger", () => {
     ).toEqual(["All", "Entry", "Intermediate", "Advanced"]);
 
     fireEvent.click(within(chips).getByRole("button", { name: "Advanced" }));
-    expect(screen.getByText("3 of 10 courses")).toBeInTheDocument();
+    expect(screen.getByText("2 of 8 courses")).toBeInTheDocument();
   });
 
   it("gives every row one visible, addressable text-link action", () => {
@@ -969,11 +1004,14 @@ describe("LearningAtlas phone ledger", () => {
     ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(
       within(ledger).getByRole("link", {
-        name: "Kurs starten: Codex-Kurs",
+        name: "Kurs starten: Data Infrastructure",
       }),
-    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/L01");
+    ).toHaveAttribute(
+      "href",
+      "/kurse/open-source/data-infrastructure/kurs/mental-model",
+    );
   });
-  it("marks path courses with an ink square and keeps the marker text in the accessibility tree", () => {
+  it("marks path courses with a Kobalt square and keeps the marker text in the accessibility tree", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     const marked = Array.from(
@@ -986,10 +1024,10 @@ describe("LearningAtlas phone ledger", () => {
       const marker = within(row).getByText("Teil deines Pfads");
       expect(marker, row.dataset.courseSlug).toHaveClass("sr-only");
       expect(marker).not.toHaveClass("lg:not-sr-only");
-      // Ink square instead of an orange left edge, inline before the title
-      // now that the thumbnail holds the first column (SPEC §3.4).
+      // A Kobalt square instead of an orange left edge, inline before the
+      // title now that the thumbnail holds the first column (SPEC §3.4).
       const square = row.querySelector("[data-path-marker]");
-      expect(square).toHaveClass("bg-foreground", "size-2.5");
+      expect(square).toHaveClass("bg-brand-cobalt", "size-2.5");
       expect(square?.parentElement?.tagName).toBe("H4");
       expect(row.className).not.toMatch(/border-l-/);
     }

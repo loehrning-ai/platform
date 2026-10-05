@@ -11,8 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title:
       locale === "en"
-        ? "Read course-record data: AI-Native Workflow Course"
-        : "Teilnahmedaten lesen: AI-Native Arbeitskurs",
+        ? "Read course-record data: Working with AI"
+        : "Teilnahmedaten lesen: Mit KI arbeiten",
     description:
       locale === "en"
         ? "Read the course-record data contained in a QR link. The data is not a cryptographic signature or server-side verification."

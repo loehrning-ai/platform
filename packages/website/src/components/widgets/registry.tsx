@@ -137,16 +137,6 @@ const REGISTRY: Record<
       default: m.ObligationLayersDiagram as unknown as WidgetComponent,
     })),
 
-  // ─── Codex Course, two genuinely new Tier-A kinds ───
-  "terminal-replay": () =>
-    import("@/components/widgets/tier-a/terminal-replay").then((m) => ({
-      default: m.TerminalReplayWidget as unknown as WidgetComponent,
-    })),
-  "diff-viewer": () =>
-    import("@/components/widgets/tier-a/diff-viewer").then((m) => ({
-      default: m.DiffViewerWidget as unknown as WidgetComponent,
-    })),
-
   // ─── AI-Native Operator Course, three genuinely new Tier-A kinds ───
   "reflect-box": () =>
     import("@/components/widgets/tier-a/reflect-box").then((m) => ({
@@ -175,55 +165,54 @@ const REGISTRY: Record<
       default: m.SemanticSpaceWidget as unknown as WidgetComponent,
     })),
 
-  // ─── Claude Course, simulated-Claude widgets ───
-  // `CheckpointFooter` (claude/js/widgets.js) is deliberately NOT ported:
-  // confirmed via `grep -o "mountWidget([^)]*CheckpointFooter" claude/lessons/*.html`
-  // returning zero matches across all 12 source lessons, it is dead code in
-  // the pinned source (every lesson's "mark complete" affordance is instead
-  // driven by the individual widget checkpoints already wired below).
-  "prompt-sandbox": () =>
-    import("@/components/widgets/claude/prompt-sandbox").then((m) => ({
-      default: m.PromptSandboxWidget as unknown as WidgetComponent,
+  // ─── Lesson-engine lab widgets (docs/lesson-engine.md) ───
+  "bucket-sort": () =>
+    import("@/components/widgets/lab/bucket-sort").then((m) => ({
+      default: m.BucketSortWidget as unknown as WidgetComponent,
     })),
-  "prompt-compare": () =>
-    import("@/components/widgets/claude/prompt-compare").then((m) => ({
-      default: m.PromptCompareWidget as unknown as WidgetComponent,
+  "claim-checker": () =>
+    import("@/components/widgets/lab/claim-checker").then((m) => ({
+      default: m.ClaimCheckerWidget as unknown as WidgetComponent,
     })),
-  "prompt-grader": () =>
-    import("@/components/widgets/claude/prompt-grader").then((m) => ({
-      default: m.PromptGraderWidget as unknown as WidgetComponent,
+  calculator: () =>
+    import("@/components/widgets/lab/calculator").then((m) => ({
+      default: m.CalculatorWidget as unknown as WidgetComponent,
     })),
-  "rewrite-arena": () =>
-    import("@/components/widgets/claude/rewrite-arena").then((m) => ({
-      default: m.RewriteArenaWidget as unknown as WidgetComponent,
+  "threshold-lab": () =>
+    import("@/components/widgets/lab/threshold-lab").then((m) => ({
+      default: m.ThresholdLabWidget as unknown as WidgetComponent,
     })),
-  "fill-blank": () =>
-    import("@/components/widgets/claude/fill-blank").then((m) => ({
-      default: m.FillBlankWidget as unknown as WidgetComponent,
+  "decision-wizard": () =>
+    import("@/components/widgets/lab/decision-wizard").then((m) => ({
+      default: m.DecisionWizardWidget as unknown as WidgetComponent,
     })),
-  "prompt-diff": () =>
-    import("@/components/widgets/claude/prompt-diff").then((m) => ({
-      default: m.PromptDiffWidget as unknown as WidgetComponent,
+  "live-prompt-ab": () =>
+    import("@/components/widgets/lab/live-prompt-ab").then((m) => ({
+      default: m.LivePromptAbWidget as unknown as WidgetComponent,
     })),
-  "socratic-tutor": () =>
-    import("@/components/widgets/claude/socratic-tutor").then((m) => ({
-      default: m.SocraticTutorWidget as unknown as WidgetComponent,
+  "doc-builder": () =>
+    import("@/components/widgets/lab/doc-builder").then((m) => ({
+      default: m.DocBuilderWidget as unknown as WidgetComponent,
     })),
-  "agent-loop": () =>
-    import("@/components/widgets/claude/agent-loop").then((m) => ({
-      default: m.AgentLoopWidget as unknown as WidgetComponent,
+  "pii-redactor": () =>
+    import("@/components/widgets/lab/pii-redactor").then((m) => ({
+      default: m.PiiRedactorWidget as unknown as WidgetComponent,
     })),
-  tokenizer: () =>
-    import("@/components/widgets/claude/tokenizer").then((m) => ({
-      default: m.TokenizerWidget as unknown as WidgetComponent,
+  "timeline-check": () =>
+    import("@/components/widgets/lab/timeline-check").then((m) => ({
+      default: m.TimelineCheckWidget as unknown as WidgetComponent,
     })),
-  "claude-md-builder": () =>
-    import("@/components/widgets/claude/claude-md-builder").then((m) => ({
-      default: m.ClaudeMdBuilderWidget as unknown as WidgetComponent,
+  "sequence-order": () =>
+    import("@/components/widgets/lab/sequence-order").then((m) => ({
+      default: m.SequenceOrderWidget as unknown as WidgetComponent,
     })),
-  "prompt-library-shaper": () =>
-    import("@/components/widgets/claude/prompt-library-shaper").then((m) => ({
-      default: m.PromptLibraryShaperWidget as unknown as WidgetComponent,
+  "triage-matrix": () =>
+    import("@/components/widgets/lab/triage-matrix").then((m) => ({
+      default: m.TriageMatrixWidget as unknown as WidgetComponent,
+    })),
+  "scenario-run": () =>
+    import("@/components/widgets/lab/scenario-run").then((m) => ({
+      default: m.ScenarioRunWidget as unknown as WidgetComponent,
     })),
 } as const satisfies Record<
   WidgetKind,

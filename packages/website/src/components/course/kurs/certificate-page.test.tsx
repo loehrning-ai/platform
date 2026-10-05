@@ -137,10 +137,10 @@ describe("<CertificatePage>", () => {
   it("renders a useful certificate state while learning ownership is unresolved", () => {
     harness.owner = { kind: "unknown", generation: 2 };
 
-    render(<CertificatePage courseSlug="claude" locale="en" />);
+    render(<CertificatePage courseSlug="data-infrastructure" locale="en" />);
 
     expect(
-      screen.getByRole("heading", { name: "Claude Course" }),
+      screen.getByRole("heading", { name: "Data Infrastructure" }),
     ).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Choose Continue locally above",
@@ -160,7 +160,7 @@ describe("<CertificatePage>", () => {
       .spyOn(URL, "createObjectURL")
       .mockReturnValue("blob:certificate");
 
-    render(<CertificatePage courseSlug="claude" locale="en" />);
+    render(<CertificatePage courseSlug="data-infrastructure" locale="en" />);
 
     fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
       target: { value: "Account A Learner" },
@@ -197,7 +197,7 @@ describe("<CertificatePage>", () => {
       .mockImplementation(() => {});
     vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:certificate");
 
-    render(<CertificatePage courseSlug="claude" locale="en" />);
+    render(<CertificatePage courseSlug="data-infrastructure" locale="en" />);
     fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
       target: { value: "Learner" },
     });
@@ -220,14 +220,14 @@ describe("<CertificatePage>", () => {
 
     expect(click).not.toHaveBeenCalled();
     expect(harness.router.push).toHaveBeenCalledWith(
-      "/en/kurse/open-source/claude/kurs",
+      "/en/kurse/open-source/data-infrastructure/kurs",
     );
   });
 
   it.each([
     {
       name: "ignores a stale non-AI capstone bit",
-      courseSlug: "codex" as const,
+      courseSlug: "data-infrastructure" as const,
       capstoneSubmitted: true,
       projectCompleted: false,
       expectedMode: "completion",
@@ -303,7 +303,7 @@ describe("<CertificatePage> usage events", () => {
       .spyOn(HTMLAnchorElement.prototype, "click")
       .mockImplementation(() => {});
 
-    render(<CertificatePage courseSlug="claude" locale="en" />);
+    render(<CertificatePage courseSlug="data-infrastructure" locale="en" />);
     fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
       target: { value: "Distinctive Learner" },
     });
@@ -314,7 +314,7 @@ describe("<CertificatePage> usage events", () => {
     );
     expect(click).toHaveBeenCalledTimes(1);
     expect(harness.trackCourseCompletion).toHaveBeenCalledWith(
-      "claude",
+      "data-infrastructure",
       "record_downloaded",
     );
     expect(JSON.stringify(harness.trackCourseCompletion.mock.calls)).not.toContain(
@@ -325,7 +325,7 @@ describe("<CertificatePage> usage events", () => {
   it("does not report a download when the PDF cannot be generated", async () => {
     harness.generatePdf.mockRejectedValue(new Error("pdf failed"));
 
-    render(<CertificatePage courseSlug="claude" locale="en" />);
+    render(<CertificatePage courseSlug="data-infrastructure" locale="en" />);
     fireEvent.change(screen.getByRole("textbox", { name: "Full name" }), {
       target: { value: "Learner Name" },
     });

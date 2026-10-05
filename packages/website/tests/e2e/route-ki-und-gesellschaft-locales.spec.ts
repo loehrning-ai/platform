@@ -144,7 +144,7 @@ test.describe("KI und Gesellschaft DE/EN integration", () => {
         await expect(page).not.toHaveURL(/\/login/);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
-          locale === "en" ? "Assess work, deepfakes" : "Arbeit, Deepfakes",
+          locale === "en" ? "Check numbers, fakes" : "Zahlen, Fakes",
         );
         await expect(
           page

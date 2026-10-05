@@ -368,19 +368,22 @@ export function WorkflowDemo(): JSX.Element {
                   height={VB.nodeH}
                   fill="var(--color-brand-orange)"
                 />
+                {/* A pastel icon tile with an ink edge, never a black
+                    square; the glyph is Mennige tief (6.3:1 on it). */}
                 <rect
                   x="14"
                   y="16"
                   width="28"
                   height="28"
-                  fill="var(--color-foreground)"
+                  fill="var(--color-sky-sheet)"
+                  stroke="var(--color-foreground)"
                 />
                 <text
                   x="28"
                   y="36"
                   textAnchor="middle"
                   fontSize="18"
-                  fill="var(--color-brand-orange)"
+                  fill="var(--color-kupfer-dark)"
                   fontFamily="system-ui"
                   fontWeight="700"
                 >
@@ -532,9 +535,9 @@ export function WorkflowDemo(): JSX.Element {
 
             {/* Generated email */}
             <div className="relative flex min-h-[280px] flex-col border border-foreground bg-white">
-              <div className="flex flex-wrap items-center gap-2.5 bg-foreground px-3.5 py-2 font-mono text-[12px] font-bold tracking-[0.12em] text-background">
-                <span className="text-brand-orange">✉ Entwurf</span>
-                <span className="opacity-50">›</span>
+              <div className="flex flex-wrap items-center gap-2.5 border-b border-foreground bg-sky-sheet px-3.5 py-2 font-mono text-[12px] font-bold tracking-[0.12em] text-foreground">
+                <span className="text-kupfer-dark">✉ Entwurf</span>
+                <span className="text-muted-foreground">›</span>
                 <span>an: {pickEmailAddress(picked)}</span>
                 <span
                   className={cn(

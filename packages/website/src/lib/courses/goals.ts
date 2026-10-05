@@ -40,8 +40,8 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     {
       id: "build",
       label: "Ich baue mit KI",
-      summary: "Prompts, Coding-Agenten und KI-Abläufe im Team.",
-      courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
+      summary: "Wiederholbare KI-Abläufe und klare Zuständigkeiten im Team.",
+      courseSlugs: ["ai-native", "ai-native-operator"],
     },
     {
       id: "data",
@@ -76,8 +76,8 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     {
       id: "build",
       label: "I build with AI",
-      summary: "Prompts, coding agents and AI workflows in a team.",
-      courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
+      summary: "Repeatable AI workflows and clear ownership in a team.",
+      courseSlugs: ["ai-native", "ai-native-operator"],
     },
     {
       id: "data",

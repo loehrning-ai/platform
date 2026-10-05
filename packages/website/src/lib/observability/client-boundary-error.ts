@@ -23,8 +23,6 @@ export const CLIENT_BOUNDARY_IDS = [
   "data-engineering-chapter",
   "ai-native-exercise",
   "workshop-quiz",
-  "codex-course",
-  "claude-course",
   "data-infrastructure-course",
   "data-science-course",
   "data-science-chapter",

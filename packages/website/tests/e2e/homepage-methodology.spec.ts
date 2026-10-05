@@ -11,20 +11,23 @@ test.describe("Homepage learning-platform transparency", () => {
     await kurse.scrollIntoViewIfNeeded();
     await expect(kurse).toContainText("Vier Kurse");
     await expect(kurse).toContainText("KI-Führerschein");
-    // Each course row carries its server-rendered poster (PosterArt,
-    // landscape; SPEC §3.5), an inline SVG with no image request.
-    const posters = kurse.locator("[data-course-artwork] svg[data-poster]");
-    await expect(posters).toHaveCount(4);
-    // Below lg the course rows carry no artwork (course-artwork.tsx); from
-    // lg every poster shows.
-    const wide = (page.viewportSize()?.width ?? 1280) >= 1024;
-    for (const poster of await posters.all()) {
-      if (!wide) {
-        await expect(poster).toBeHidden();
-        continue;
-      }
-      await expect(poster).toBeVisible();
-      await expect(poster).toHaveAttribute("data-poster-format", "landscape");
+    // Each course card leads with its people picture (course-artwork.tsx)
+    // at every width: a 72px crop on a phone, the 16:7 plate from sm.
+    const courseImages = kurse.locator("[data-course-artwork] img");
+    await expect(courseImages).toHaveCount(4);
+    for (const image of await courseImages.all()) {
+      await expect(image).toHaveAttribute("src", /cover-v4\.webp/);
+      await image.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          image.evaluate(
+            (node) =>
+              node instanceof HTMLImageElement &&
+              node.complete &&
+              node.naturalWidth > 0,
+          ),
+        )
+        .toBe(true);
     }
     // ...and the supporting resources in their own Ressourcen section.
     const ressourcen = page.getByTestId("ressourcen-section");
@@ -38,17 +41,18 @@ test.describe("Homepage learning-platform transparency", () => {
 
   test("homepage explains the public/account boundary", async ({ page }) => {
     await page.goto("/");
-    const section = page.getByTestId("platform-principles");
+    // The Ground rules strip is gone; the boundary now lives where it acts:
+    // the resource board says its areas need no account, and the cobalt
+    // band under it names what the free account adds.
+    await expect(page.locator('[data-testid="platform-principles"]')).toHaveCount(0);
+    const section = page.getByTestId("ressourcen-section");
     await section.scrollIntoViewIfNeeded();
-    await expect(section).toContainText("Keine Paywall");
-    await expect(section).toContainText("Zwei vollständige Fassungen");
-    await expect(section).toContainText("Quellen sind verlinkt");
-    await expect(section).toContainText("Von Tim Löhr redigiert");
     await expect(section).toContainText(
-      "Vier Kurse brauchen ein kostenloses Lernkonto.",
+      "Kostenloses Konto: Fortschritt und Arbeitsbelege auf jedem Gerät.",
     );
-    await expect(section).toContainText(
-      "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
+    await expect(section.getByRole("link", { name: /Zum Konto/ })).toHaveAttribute(
+      "href",
+      "/konto",
     );
   });
 

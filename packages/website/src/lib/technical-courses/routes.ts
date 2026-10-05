@@ -2,16 +2,6 @@ import type { Metadata } from "next";
 import { CERTIFICATE_QR_VERSION } from "@/lib/course/certificate-constants";
 import type { CourseConfig, CourseSlug } from "@/lib/course/types";
 import {
-  CLAUDE_LESSON_IDS,
-  CLAUDE_TRACK_IDS,
-  type ClaudeLessonId,
-} from "@/lib/claude-course/types";
-import {
-  CODEX_LESSON_IDS,
-  CODEX_TRACK_IDS,
-  type LessonId as CodexLessonId,
-} from "@/lib/codex/types";
-import {
   DATA_INFRA_LESSON_IDS,
   DATA_INFRA_TRACK_IDS,
   type DataInfraLessonId,
@@ -40,8 +30,6 @@ import {
 import { ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
 export const TECHNICAL_COURSE_SLUGS = [
-  "claude",
-  "codex",
   "data-infrastructure",
   "data-engineering-fundamentals",
   "data-science",
@@ -83,8 +71,6 @@ export interface TechnicalCourseRouteContract<
 }
 
 const BASE_PATHS = {
-  claude: "/kurse/open-source/claude",
-  codex: "/kurse/open-source/codex",
   "data-infrastructure": "/kurse/open-source/data-infrastructure",
   "data-engineering-fundamentals":
     "/kurse/open-source/data-engineering-fundamentals",
@@ -96,26 +82,6 @@ const BASE_PATHS = {
 >;
 
 export const TECHNICAL_COURSE_ROUTES = {
-  claude: {
-    courseSlug: "claude",
-    basePath: BASE_PATHS.claude,
-    readerPath: `${BASE_PATHS.claude}/kurs`,
-    routeModel: "flat-reader",
-    assessment: "quiz",
-    quizPath: `${BASE_PATHS.claude}/kurs/quiz`,
-    certificatePath: `${BASE_PATHS.claude}/kurs/zertifikat`,
-    verificationPath: `${BASE_PATHS.claude}/verifizierung`,
-  },
-  codex: {
-    courseSlug: "codex",
-    basePath: BASE_PATHS.codex,
-    readerPath: `${BASE_PATHS.codex}/kurs`,
-    routeModel: "flat-reader",
-    assessment: "completion",
-    quizPath: null,
-    certificatePath: `${BASE_PATHS.codex}/kurs/zertifikat`,
-    verificationPath: `${BASE_PATHS.codex}/verifizierung`,
-  },
   "data-infrastructure": {
     courseSlug: "data-infrastructure",
     basePath: BASE_PATHS["data-infrastructure"],
@@ -172,16 +138,6 @@ const OPERATOR_PROGRESS_KEYS = OPERATOR_MODULE_IDS.flatMap((moduleId) =>
  * labels never belong here.
  */
 export const TECHNICAL_COURSE_CANONICAL_IDS = {
-  claude: {
-    unitIds: CLAUDE_TRACK_IDS,
-    contentItemIds: CLAUDE_LESSON_IDS,
-    progressKeys: CLAUDE_LESSON_IDS,
-  },
-  codex: {
-    unitIds: CODEX_TRACK_IDS,
-    contentItemIds: CODEX_LESSON_IDS,
-    progressKeys: CODEX_LESSON_IDS,
-  },
   "data-infrastructure": {
     unitIds: DATA_INFRA_TRACK_IDS,
     contentItemIds: DATA_INFRA_LESSON_IDS,
@@ -223,13 +179,6 @@ type SharedRouteTarget =
   | { readonly kind: "verification"; readonly hash?: CertificateHash };
 
 export interface TechnicalCourseRouteTargetMap {
-  readonly claude:
-    | SharedRouteTarget
-    | { readonly kind: "lesson"; readonly lessonId: ClaudeLessonId }
-    | { readonly kind: "quiz" };
-  readonly codex:
-    | SharedRouteTarget
-    | { readonly kind: "lesson"; readonly lessonId: CodexLessonId };
   readonly "data-infrastructure":
     | SharedRouteTarget
     | { readonly kind: "lesson"; readonly lessonId: DataInfraLessonId };
@@ -391,8 +340,6 @@ export function technicalCourseBaseHref(
 }
 
 export interface TechnicalCourseStaticParamsMap {
-  readonly claude: readonly { readonly lessonId: ClaudeLessonId }[];
-  readonly codex: readonly { readonly lessonId: CodexLessonId }[];
   readonly "data-infrastructure": readonly {
     readonly lessonId: DataInfraLessonId;
   }[];
@@ -414,12 +361,6 @@ export function getTechnicalCourseStaticParams<S extends TechnicalCourseSlug>(
 ): TechnicalCourseStaticParamsMap[S] {
   let params: readonly Readonly<Record<string, string>>[];
   switch (courseSlug) {
-    case "claude":
-      params = CLAUDE_LESSON_IDS.map((lessonId) => ({ lessonId }));
-      break;
-    case "codex":
-      params = CODEX_LESSON_IDS.map((lessonId) => ({ lessonId }));
-      break;
     case "data-infrastructure":
       params = DATA_INFRA_LESSON_IDS.map((lessonId) => ({ lessonId }));
       break;

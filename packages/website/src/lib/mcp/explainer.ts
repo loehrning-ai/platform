@@ -131,7 +131,7 @@ const COPY = {
 } as const;
 
 const RESOURCE_EXAMPLES = [
-  "lesson://ki-fuehrerschein/block_1_lesson_1",
+  "lesson://ki-fuehrerschein/daten-1-1",
   "workshop://ki-prognosen-einschaetzen",
   "book://ki-landschaft/01_eisberg?locale=en",
 ] as const;
@@ -146,7 +146,7 @@ export function escapeHtml(value: string): string {
 }
 
 const STYLES = `
-:root { color-scheme: light dark; }
+:root { color-scheme: light; }
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -200,15 +200,8 @@ nav a {
 }
 nav a:hover, nav a:focus-visible { background: #f5e8e2; }
 footer { margin-top: 2.5rem; font-size: 0.875rem; color: #655c54; }
-@media (prefers-color-scheme: dark) {
-  body { background: #242342; color: #f7f1e7; }
-  pre, .endpoint { background: rgba(247, 241, 231, 0.06); border-color: rgba(247, 241, 231, 0.4); }
-  .endpoint { border-color: #e07050; }
-  .label, footer { color: #d7d0e4; }
-  .note { background: rgba(224, 112, 80, 0.14); border-left-color: #e07050; }
-  nav a { border-color: #e07050; color: #e07050; }
-  nav a:hover, nav a:focus-visible { background: rgba(224, 112, 80, 0.14); }
-}
+/* Light only: the site has no dark grounds, so a reader in OS dark mode
+   gets the same paper page. */
 `;
 
 function clientSection(snippet: ClientSnippet): string {

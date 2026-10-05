@@ -62,20 +62,21 @@ export const COURSE_OUTCOMES: Partial<
   "ki-und-gesellschaft": [
     {
       id: "ki-und-arbeit-einordnen",
-      label: "KI und Arbeit einordnen",
-      description: "Behandelt Wirkungen von KI auf Arbeit und Gesellschaft.",
+      label: "Jobzahlen einordnen",
+      description:
+        "Behandelt Exposition, technisches Potenzial und Prognosen und wie man den Nutzen selbst misst.",
     },
     {
       id: "deepfakes-erkennen",
-      label: "Deepfakes erkennen",
+      label: "Fakes prüfen",
       description:
-        "Behandelt manipulierte Medien und typische Fälschungsmuster.",
+        "Behandelt Herkunftsprüfung, die Aussagekraft von Detektorwerten und Meldewege.",
     },
     {
       id: "bias-und-ethik",
-      label: "Bias und Ethik",
+      label: "Fairness messen",
       description:
-        "Behandelt Ursachen algorithmischer Verzerrung und ethische Grenzen.",
+        "Behandelt Fehlerraten je Gruppe, Zielkonflikte zwischen Fairness-Maßen und Verantwortlichkeiten.",
     },
   ],
   "eu-ai-act-kurs": [
@@ -99,69 +100,27 @@ export const COURSE_OUTCOMES: Partial<
   ],
   "ai-native": [
     {
-      id: "ai-native-arbeiten",
-      label: "AI-native arbeiten",
+      id: "ki-nutzen-messen",
+      label: "KI-Nutzen messen",
       description:
-        "Behandelt Intent, Kontext und systematische Output-Prüfung.",
+        "Behandelt Netto-Zeit, Baseline und die Auswahl geeigneter Aufgaben.",
     },
     {
-      id: "claude-stack-nutzen",
-      label: "Den Claude-Stack nutzen",
+      id: "kontext-und-rechte-begrenzen",
+      label: "Kontext und Rechte begrenzen",
       description:
-        "Behandelt Projects, Skills und MCP für wiederkehrende Aufgaben.",
+        "Behandelt schlanken Kontext, minimale Rechte und Prompt-Injection.",
     },
     {
-      id: "automatisierung-mit-governance",
-      label: "Automatisierung mit Governance",
+      id: "ablauf-mit-freigabe",
+      label: "Abläufe mit Freigabe bauen",
       description:
-        "Behandelt n8n-Automationen, Kontrollen und EU-AI-Act-Grenzen.",
+        "Behandelt belegte Antworten, Prüfungen, Fehlerpfade und Freigaben.",
     },
   ],
-  // English course: the labels/descriptions stay English
-  // to match the course's own content language (`CLAUDE_CONFIG.language`),
-  // unlike the four foundation-path outcome sets above.
-  claude: [
-    {
-      id: "structured-prompting",
-      label: "Structured prompting",
-      description:
-        "Covers role, context, task, constraints, examples, and output format.",
-    },
-    {
-      id: "context-engineering",
-      label: "Context engineering",
-      description:
-        "Covers grounding Claude in source data and structuring the context window.",
-    },
-    {
-      id: "safe-team-workflows",
-      label: "Safe team workflows",
-      description:
-        "Covers safe prompt and CLAUDE.md sharing, evaluations, and data boundaries.",
-    },
-  ],
-  // English course: same reasoning as claude above.
-  codex: [
-    {
-      id: "task-spec-authoring",
-      label: "Task spec authoring",
-      description:
-        "Covers goals, constraints, acceptance criteria, and non-goals for agent tasks.",
-    },
-    {
-      id: "agent-pr-review",
-      label: "Agent PR review",
-      description:
-        "Covers review checks for circular tests, scope creep, and agent-specific security gaps.",
-    },
-    {
-      id: "parallel-agent-workflows",
-      label: "Parallel agent workflows",
-      description:
-        "Covers task decomposition and conflict-aware parallel work across git worktrees.",
-    },
-  ],
-  // English course: same reasoning as claude/codex above.
+  // English course: the labels/descriptions stay English to match the
+  // course's own content language, unlike the four foundation-path outcome
+  // sets above.
   "data-engineering-fundamentals": [
     {
       id: "idempotent-pipeline-writes",
@@ -182,7 +141,7 @@ export const COURSE_OUTCOMES: Partial<
         "Covers downstream release through a quality signal after row-count, freshness, schema, and uniqueness checks.",
     },
   ],
-  // English course: same reasoning as claude/codex above.
+  // English course: same reasoning as above.
   "data-science": [
     {
       id: "metric-before-model",
@@ -203,7 +162,7 @@ export const COURSE_OUTCOMES: Partial<
         "Covers DAGs, confounders, mediators, colliders, and adjustment choices.",
     },
   ],
-  // English course: same reasoning as claude/codex above.
+  // English course: same reasoning as above.
   "data-infrastructure": [
     {
       id: "system-design-tradeoffs",
@@ -224,7 +183,7 @@ export const COURSE_OUTCOMES: Partial<
         "Covers a five-part system-design interview structure from clarification through trade-offs.",
     },
   ],
-  // English course: same reasoning as claude/codex above.
+  // English course: same reasoning as above.
   "ai-native-operator": [
     {
       id: "maturity-self-diagnosis",
@@ -301,53 +260,25 @@ const ENGLISH_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
       description:
         "Covers implementation planning and applicable deadlines through 2028.",
     },
-    "ai-native-arbeiten": {
-      label: "Work with AI systematically",
-      description: "Covers intent, context, and systematic output review.",
-    },
-    "claude-stack-nutzen": {
-      label: "Use the Claude tool stack",
-      description: "Covers Projects, Skills, and MCP for repeatable tasks.",
-    },
-    "automatisierung-mit-governance": {
-      label: "Automation with governance",
+    "ki-nutzen-messen": {
+      label: "Measure the benefit of AI",
       description:
-        "Covers n8n automation, controls, and EU AI Act boundaries.",
+        "Covers net time, baselines, and choosing suitable tasks.",
+    },
+    "kontext-und-rechte-begrenzen": {
+      label: "Limit context and permissions",
+      description:
+        "Covers lean context, least privilege, and prompt injection.",
+    },
+    "ablauf-mit-freigabe": {
+      label: "Build workflows with approval",
+      description:
+        "Covers sourced answers, checks, fallback paths, and approvals.",
     },
   };
 
 const GERMAN_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
   {
-    "structured-prompting": {
-      label: "Strukturiertes Prompting",
-      description:
-        "Behandelt Rolle, Kontext, Aufgabe, Grenzen, Beispiele und Ausgabeformat.",
-    },
-    "context-engineering": {
-      label: "Kontextgestaltung",
-      description:
-        "Behandelt Datengrundlage und bewusste Strukturierung des Kontextfensters.",
-    },
-    "safe-team-workflows": {
-      label: "Sichere Team-Workflows",
-      description:
-        "Behandelt sichere Freigabe von Prompts und CLAUDE.md-Dateien, Tests und Datengrenzen.",
-    },
-    "task-spec-authoring": {
-      label: "Aufgabenspezifikationen verfassen",
-      description:
-        "Behandelt Ziel, Grenzen, Akzeptanzkriterien und Nicht-Ziele für Coding-Agenten.",
-    },
-    "agent-pr-review": {
-      label: "Agenten-PRs prüfen",
-      description:
-        "Behandelt Prüfungen auf zirkuläre Tests, unnötigen Umfang und Sicherheitslücken.",
-    },
-    "parallel-agent-workflows": {
-      label: "Parallele Agenten-Workflows",
-      description:
-        "Behandelt Aufgabenteilung und konfliktarme parallele Arbeit in Git-Worktrees.",
-    },
     "idempotent-pipeline-writes": {
       label: "Idempotente Pipeline-Schreibvorgänge",
       description:

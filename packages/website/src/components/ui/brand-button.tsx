@@ -16,8 +16,12 @@ import type { ReactNode } from "react";
  *   "ghost"    — no border, flat text link style
  *
  * surface:
- *   "dark"  — light structural boundary on a dark surface
+ *   "dark"  — kept for callers inside a poster scene; renders like "light",
+ *             because the site has no dark grounds any more
  *   "light" — Schiefer structural boundary on Kalkweiß
+ *
+ * No state fills black: the primary deepens to Mennige tief on hover (paper
+ * text 7.14:1, white 7.7:1), the outline takes a Bogen tint.
  */
 
 interface BrandButtonProps {
@@ -69,21 +73,18 @@ export function BrandButton({
   const variants: Record<string, Record<string, string>> = {
     primary: {
       dark: cn(
-        // kupfer-dark (#A5370F) is NOT remapped on dark, so white-on-fill stays
-        // 6.66:1 (WCAG AA) even inside a .dark-section.
-        "border-[var(--color-kupfer-dark)] bg-[var(--color-kupfer-dark)] text-white",
-        "hover:border-foreground hover:bg-foreground hover:text-background",
+        "border-mennige bg-mennige text-white",
+        "hover:border-kupfer-dark hover:bg-kupfer-dark",
       ),
       light: cn(
         "border-brand-orange bg-brand-orange text-white",
-        "hover:border-foreground hover:bg-foreground hover:text-background",
+        "hover:border-kupfer-dark hover:bg-kupfer-dark",
       ),
     },
     outline: {
       dark: cn(
-        "bg-transparent text-foreground",
-        "border-[rgba(243,240,233,0.4)]",
-        "hover:border-foreground hover:bg-[rgba(243,240,233,0.08)]",
+        "border-border bg-background text-foreground",
+        "hover:border-foreground hover:bg-card",
       ),
       light: cn(
         "border-border bg-background text-foreground",

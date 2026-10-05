@@ -15,8 +15,7 @@
  * The manifest lists every downloadable file a workshop ships with absolute
  * URLs, so an agent can fetch them without knowing the site layout. Which
  * files a workshop has is decided by its own materials array, never counted
- * anywhere else. The on-page decision lab stays on the page: it is an
- * exercise a learner works through, not material to hand out.
+ * anywhere else.
  */
 
 import { isProtectedPlatformPath } from "@/lib/auth/routes";
