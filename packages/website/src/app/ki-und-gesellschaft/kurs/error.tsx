@@ -36,9 +36,9 @@ export default function KursError({
   }, [error]);
 
   return (
-    <div className="flex min-h-[100svh] items-center justify-center bg-background px-4 sm:px-6">
-      <div className="max-w-md text-center">
-        <p className="font-mono text-xs font-bold uppercase tracking-wider text-destructive">
+    <div className="course-app-ground flex min-h-[100svh] items-center justify-center px-4 sm:px-6">
+      <div className="max-w-md rounded-[28px] border border-lab-line/80 bg-card p-6 text-center shadow-lab sm:p-8">
+        <p className="text-sm font-semibold text-destructive">
           {copy.eyebrow}
         </p>
         <h1 className="mt-2 text-2xl font-bold tracking-[-0.03em]">
@@ -49,14 +49,14 @@ export default function KursError({
           <button
             type="button"
             onClick={reset}
-            className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 text-xs font-bold uppercase tracking-wide text-white transition-colors hover:bg-brand-orange/90"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-lab-accent px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-[#1f3a99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2"
           >
             <RotateCcw className="h-3.5 w-3.5" />
             {copy.retry}
           </button>
           <Link
             href={localizeHref("/ki-und-gesellschaft/kurs", locale)}
-            className="inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-lab-accent-soft hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
           >
             <ArrowLeft className="h-4 w-4" />
             {copy.back}

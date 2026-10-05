@@ -3,6 +3,7 @@
 import type { JSX, ReactNode } from "react";
 import { m } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useCalmMotion } from "./use-calm-motion";
 
 /**
  * Animated SVG progress ring. Finite tween to the new fraction; under
@@ -16,6 +17,8 @@ export function ProgressRing({
   children,
   className,
   tone = "accent",
+  drawIn = false,
+  trackClassName,
 }: {
   readonly fraction: number;
   readonly size?: number;
@@ -25,7 +28,12 @@ export function ProgressRing({
   readonly children?: ReactNode;
   readonly className?: string;
   readonly tone?: "accent" | "good";
+  /** Draw the arc from empty on mount (skipped under calm motion). */
+  readonly drawIn?: boolean;
+  /** Track colour override, e.g. on a tinted hero. */
+  readonly trackClassName?: string;
 }): JSX.Element {
+  const calm = useCalmMotion();
   const clamped = Math.min(1, Math.max(0, Number.isFinite(fraction) ? fraction : 0));
   const radius = size / 2 - stroke;
   const circumference = 2 * Math.PI * radius;
@@ -44,6 +52,7 @@ export function ProgressRing({
           fill="none"
           stroke="var(--color-lab-line)"
           strokeWidth={stroke}
+          className={trackClassName}
         />
         <m.circle
           cx={size / 2}
@@ -54,9 +63,9 @@ export function ProgressRing({
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
-          initial={false}
+          initial={drawIn && !calm ? { strokeDashoffset: circumference } : false}
           animate={{ strokeDashoffset: circumference * (1 - clamped) }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: drawIn ? 1.2 : 0.6, ease: [0.16, 1, 0.3, 1], delay: drawIn ? 0.2 : 0 }}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
         />
       </svg>

@@ -115,6 +115,80 @@ export function BlockPageShell({
     locale,
   );
 
+  const lessonOffset = blocks
+    .slice(0, blockIndex)
+    .reduce((sum, item) => sum + item.lessons.length, 0);
+  const courseLessonCount = blocks.reduce((sum, item) => sum + item.lessons.length, 0);
+  const followingLabel = nextBlock
+    ? engineCourse
+      ? locale === "de"
+        ? `Weiter mit Modul ${block.orderIndex + 2}: ${nextBlock.title}`
+        : `Continue with module ${block.orderIndex + 2}: ${nextBlock.title}`
+      : (locale === "de" ? "Nächster Block" : "Next block")
+    : (locale === "de" ? "Zur Prüfung" : "Assessment");
+  const aiResources = hasLessonBodies(courseSlug)
+    ? block.lessons.map((lesson) => ({
+        uri: lessonUri(courseSlug, lesson.id, locale),
+        title: lesson.title,
+      }))
+    : [];
+
+  if (engineCourse) {
+    // Course-app reader: the sticky course header inside the shell replaces
+    // the old subheader, and the outline lists the whole course.
+    let number = 0;
+    const outline = blocks.map((item) => ({
+      id: item.id,
+      number: item.orderIndex + 1,
+      title: item.title,
+      lessons: item.lessons.map((lesson) => {
+        number += 1;
+        return {
+          id: lesson.id,
+          number,
+          title: lesson.title,
+          durationMinutes: lesson.durationMinutes,
+          href:
+            item.id === block.id
+              ? undefined
+              : localizeHref(
+                  `${config.coursePath}/${item.id}#lesson=${encodeURIComponent(lesson.id)}`,
+                  locale,
+                ),
+        };
+      }),
+    }));
+    return (
+      <div className="course-app-ground min-h-[100svh]" data-course-reader={courseSlug}>
+        <OpenWithYourAiRegion
+          kind="lesson"
+          contextTitle={`${config.title}: ${block.title}`}
+          resources={aiResources}
+          locale={locale}
+          look="app"
+        />
+        <LessonLayout
+          courseSlug={courseSlug}
+          lessons={block.lessons}
+          blockTitle={block.title}
+          freshnessMeta={freshnessMeta}
+          locale={locale}
+          lessonOffset={lessonOffset}
+          courseLessonCount={courseLessonCount}
+          followingHref={localizeHref(followingHref, locale)}
+          moduleLabel={`${unitWord} ${block.orderIndex + 1} · ${block.title}`}
+          followingLabel={followingLabel}
+          courseApp={{
+            outline,
+            courseTitle: config.title,
+            hubHref: localizeHref(config.coursePath, locale),
+            moduleNumber: block.orderIndex + 1,
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[100svh] bg-background">
       {/* On phones this context stays in document flow; the lesson toolbar is

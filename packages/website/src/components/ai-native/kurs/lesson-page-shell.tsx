@@ -9,6 +9,12 @@ import {
 } from "./lesson-sidebar";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
+import {
+  CourseOutline,
+  type CourseOutlineLesson,
+  type CourseOutlineModule,
+} from "@/components/lesson-engine/course-outline";
+import { CourseLessonHeader } from "@/components/lesson-engine/course-lesson-header";
 
 interface AiNativeLessonPageShellProps {
   readonly children: ReactNode;
@@ -38,10 +44,40 @@ export function AiNativeLessonPageShell({
       label: next ? (isEnglish ? "Next" : "Weiter") :
         (isEnglish ? "Assessment" : "Zur Prüfung"),
     },
+    engineSteps: true,
+  });
+  const current = lessons[currentIndex];
+  const outline: CourseOutlineModule[] = [];
+  lessons.forEach((item, index) => {
+    let group = outline.find((entry) => entry.id === item.moduleId);
+    if (!group) {
+      group = { id: item.moduleId, number: item.moduleNumber, title: item.moduleTitle, lessons: [] };
+      outline.push(group);
+    }
+    (group.lessons as CourseOutlineLesson[]).push({
+      id: item.lessonId,
+      number: index + 1,
+      title: item.title,
+      durationMinutes: item.durationMinutes,
+      href: localizeHref(`/ai-native/kurs/${item.moduleId}/${item.lessonId}`, locale),
+    });
   });
 
   return (
     <LessonShell
+      look="app"
+      header={
+        <CourseLessonHeader
+          courseSlug="ai-native"
+          lessonId={lessonId}
+          courseLessonIds={lessons.map((item) => item.lessonId)}
+          backHref={localizeHref("/ai-native/kurs", locale)}
+          backLabel={isEnglish ? "Course overview" : "Zur Kursübersicht"}
+          title={isEnglish ? "Working with AI" : "Mit KI arbeiten"}
+          context={`${isEnglish ? "Module" : "Modul"} ${current?.moduleNumber ?? 1} · ${isEnglish ? "Lesson" : "Lektion"} ${currentIndex + 1} ${isEnglish ? "of" : "von"} ${lessons.length}`}
+          locale={locale}
+        />
+      }
       readerBar={reader.bar}
       contentRef={reader.contentRef}
       navOpen={navOpen}
@@ -55,10 +91,13 @@ export function AiNativeLessonPageShell({
       contentMode="stage"
       sidebar={<AiNativeLessonSidebar locale={locale} lessons={lessons} />}
       renderSidebar={(instance) => (
-        <AiNativeLessonSidebar
+        <CourseOutline
+          key={instance}
+          courseSlug="ai-native"
+          modules={outline}
+          activeLessonId={lessonId}
           locale={locale}
-          lessons={lessons}
-          idPrefix={`ai-native-nav-${instance}`}
+          label={isEnglish ? "Course navigation" : "Kursnavigation"}
         />
       )}
     >

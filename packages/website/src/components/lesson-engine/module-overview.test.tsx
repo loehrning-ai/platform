@@ -83,7 +83,9 @@ describe("KI-Führerschein module overview", () => {
       "href",
       "/ki-fuehrerschein/kurs/block_2#lesson=briefen-2-1",
     );
-    for (const link of screen.getAllByRole("link")) expect(link).toHaveClass("min-h-11");
+    for (const link of screen.getAllByRole("link")) {
+      expect(link.className).toMatch(/\bmin-h-1[12]\b/);
+    }
   });
 
   it("builds one-route-per-lesson links when lessonLinks is segment", () => {

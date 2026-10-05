@@ -148,9 +148,15 @@ export function LessonChecks({
             aria-labelledby={headingId}
             data-check-id={check.id}
             data-solved={current.solved ? "1" : "0"}
-            className="min-w-0 rounded-3xl border border-lab-line bg-card p-5 shadow-lab-sm sm:p-6"
+            className={cn(
+              "min-w-0 rounded-[24px] border bg-card p-5 shadow-lab transition-[border-color] duration-300 motion-reduce:transition-none sm:p-6",
+              current.solved ? "border-lab-good/40" : "border-lab-line/80",
+            )}
           >
-            <p className="text-label text-muted-foreground">
+            <p className="flex items-center gap-2 text-sm font-semibold text-lab-accent">
+              {current.solved ? (
+                <Check className="h-4 w-4 text-lab-good" aria-hidden="true" />
+              ) : null}
               {copy.checkLabel(index + 1, checks.length)}
             </p>
             <h3
@@ -176,7 +182,7 @@ export function LessonChecks({
                     animate={isRight ? { scale: [1, 1.02, 1] } : { scale: 1 }}
                     transition={{ duration: 0.35 }}
                     className={cn(
-                      "flex min-h-11 w-full items-start gap-3 rounded-2xl border px-4 py-3 text-left text-[15px] leading-snug transition-[background-color,border-color,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card",
+                      "flex min-h-12 w-full items-start gap-3 rounded-[18px] border px-4 py-3.5 text-left text-base leading-snug transition-[background-color,border-color,color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 focus-visible:ring-offset-card",
                       !wasPicked &&
                         !locked &&
                         "border-lab-line bg-paper text-foreground hover:border-lab-accent/60 hover:bg-lab-accent-soft",
@@ -188,7 +194,7 @@ export function LessonChecks({
                     <span
                       aria-hidden="true"
                       className={cn(
-                        "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
+                        "mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2",
                         isRight && "border-lab-good bg-lab-good text-paper",
                         isWrong && "border-lab-bad bg-lab-bad text-paper",
                         !wasPicked && "border-border",
@@ -212,7 +218,7 @@ export function LessonChecks({
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
                     className={cn(
-                      "mt-4 rounded-2xl px-4 py-3 text-[15px] leading-relaxed",
+                      "mt-4 rounded-[18px] px-4 py-3 text-[15px] leading-relaxed",
                       current.solved
                         ? "bg-lab-good-soft text-foreground"
                         : "bg-lab-bad-soft text-foreground",

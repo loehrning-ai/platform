@@ -29,6 +29,11 @@ interface CourseAssessmentCtaProps {
   readonly courseSlug: CourseSlug;
   readonly className?: string;
   readonly locale?: Locale;
+  /**
+   * "app" renders the course-app card used inside the Grundlagen course
+   * hubs; the default keeps the Werkzeichnung band for other readers.
+   */
+  readonly look?: "werk" | "app";
 }
 
 interface AssessmentProgress {
@@ -138,7 +143,9 @@ export function CourseAssessmentCta({
   courseSlug,
   className,
   locale,
+  look = "werk",
 }: CourseAssessmentCtaProps) {
+  const app = look === "app";
   const config = getCourseConfig(courseSlug, locale);
   const copy = ASSESSMENT_COPY[config.language];
   const totalLessons = CANONICAL_LESSON_IDS[courseSlug].length;
@@ -198,7 +205,9 @@ export function CourseAssessmentCta({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
         className={cn(
-          "mt-12 scroll-mt-24 border-t-2 border-foreground pt-5",
+          app
+            ? "course-app-hero relative scroll-mt-32 overflow-hidden rounded-[28px] border border-lab-line/80 p-5 shadow-lab sm:p-7"
+            : "mt-12 scroll-mt-24 border-t-2 border-foreground pt-5",
           className,
         )}
         aria-labelledby={headingId}
@@ -214,13 +223,27 @@ export function CourseAssessmentCta({
               : "locked"
         }
       >
-        <p className="text-label text-muted-foreground">
-          <Award size={12} className="mr-1.5 inline" aria-hidden="true" />
+        <p
+          className={
+            app
+              ? "inline-flex items-center gap-2 text-sm font-semibold text-lab-accent"
+              : "text-label text-muted-foreground"
+          }
+        >
+          <Award
+            size={app ? 16 : 12}
+            className={app ? undefined : "mr-1.5 inline"}
+            aria-hidden="true"
+          />
           {copy.eyebrow}
         </p>
         <h2
           id={headingId}
-          className="mt-2 text-fluid-h2 font-bold text-foreground"
+          className={
+            app
+              ? "mt-1 text-2xl font-bold leading-tight tracking-[-0.02em] text-foreground"
+              : "mt-2 text-fluid-h2 font-bold text-foreground"
+          }
         >
           {copy.heading(config.recordNoun.label)}
         </h2>
@@ -251,7 +274,11 @@ export function CourseAssessmentCta({
             <>
               <Link
                 href={quizHref}
-                className="inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-brand-cobalt px-5 py-3 text-left text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
+                className={
+                  app
+                    ? "inline-flex min-h-11 max-w-full items-center gap-2 break-words rounded-full bg-lab-accent px-6 py-3 text-left text-[0.9375rem] font-semibold text-paper shadow-lab-sm transition-colors duration-[120ms] hover:bg-[#1f3a99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 motion-reduce:transition-none"
+                    : "inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-brand-cobalt px-5 py-3 text-left text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
+                }
               >
                 <Trophy className="h-4 w-4" aria-hidden="true" />
                 {progress.quizPassed ? copy.retakeQuiz : copy.startQuiz}
@@ -260,7 +287,11 @@ export function CourseAssessmentCta({
               {progress.certificateEligible && (
                 <Link
                   href={certificateHref}
-                  className="inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
+                  className={
+                    app
+                      ? "inline-flex min-h-11 items-center gap-2 rounded-full border border-border/70 bg-card px-5 py-3 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-lab-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 motion-reduce:transition-none"
+                      : "inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
+                  }
                 >
                   <GraduationCap className="h-4 w-4" aria-hidden="true" />
                   {copy.downloadRecord(config.recordNoun.label)}
@@ -271,7 +302,11 @@ export function CourseAssessmentCta({
             <button
               type="button"
               disabled
-              className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-dashed border-border bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-muted-foreground"
+              className={
+                app
+                  ? "inline-flex min-h-11 cursor-not-allowed items-center gap-2 rounded-full bg-paper px-5 py-3 text-[0.9375rem] font-semibold text-muted-foreground ring-1 ring-lab-line"
+                  : "inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-dashed border-border bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-muted-foreground"
+              }
             >
               <LockKeyhole className="h-4 w-4" aria-hidden="true" />
               {copy.lockedLabel}

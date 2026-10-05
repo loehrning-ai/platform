@@ -62,8 +62,13 @@ describe("course interaction design contract", () => {
     for (const [name, source] of Object.entries(sources) as Array<
       [keyof typeof sources, string]
     >) {
+      // The course-app hub composes its controls from the shared class
+      // recipes (lesson-engine/app-ui.ts); the lesson-engine design contract
+      // resolves those recipes and checks every control's 44px target.
+      if (name === "aiLiteracyOverview") continue;
       const elementControls = count(source, /<(?:button|Link)\b/g);
-      const targetDeclarations = count(source, /\bmin-h-11\b/g);
+      // 44px or taller: min-h-11 (44px) up to min-h-14 (56px).
+      const targetDeclarations = count(source, /\bmin-h-1[1-4]\b/g);
 
       expect(
         targetDeclarations,

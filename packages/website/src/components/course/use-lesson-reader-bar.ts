@@ -10,6 +10,7 @@ import { useOwnerAwareProgressReadiness } from "./owner-aware-progress";
 import type { LessonShellReaderBar } from "./lesson-shell";
 import type { ReaderFocusBarAction } from "@/components/learning/reader-focus-bar";
 import { LESSON_MISSION_OPEN_TASK_EVENT } from "@/components/course-projects/focus-mission-target";
+import { useEngineLessonSteps } from "@/components/lesson-engine/use-engine-lesson-progress";
 
 interface LessonReaderBarOptions {
   readonly courseSlug: CourseSlug;
@@ -18,6 +19,12 @@ interface LessonReaderBarOptions {
   readonly total: number;
   readonly locale: Locale;
   readonly next: ReaderFocusBarAction;
+  /**
+   * Lesson-engine lessons: until the lesson is complete the bar leads to the
+   * next open step (exercise, then the two checks) instead of a generic
+   * "open task".
+   */
+  readonly engineSteps?: boolean;
 }
 
 /** Read-only navigation: existing owner-fenced proof remains the completion authority. */
@@ -28,7 +35,9 @@ export function useLessonReaderBar({
   total,
   locale,
   next,
+  engineSteps = false,
 }: LessonReaderBarOptions) {
+  const steps = useEngineLessonSteps(courseSlug, lessonId, engineSteps);
   const contentRef = useRef<HTMLDivElement>(null);
   const identity = `${courseSlug}:${lessonId}`;
   const [snapshot, setSnapshot] = useState<{
@@ -90,12 +99,41 @@ export function useLessonReaderBar({
     target.scrollIntoView({ block: "start", behavior: "instant" });
   }
 
+  function goToStep(sectionId: string) {
+    const content = contentRef.current;
+    if (!content || content.closest("[inert]")) return;
+    const section = content.querySelector<HTMLElement>(`#${sectionId}`);
+    if (!section) return;
+    const heading =
+      section.querySelector<HTMLElement>("h2:not(.sr-only)") ?? section;
+    if (!heading.hasAttribute("tabindex")) heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    section.scrollIntoView({ block: "start", behavior: "instant" });
+  }
+
+  const engineAction: ReaderFocusBarAction | null =
+    engineSteps && readiness.interactionReady && steps.hydrated && !completed
+      ? !steps.exerciseDone
+        ? {
+            kind: "button",
+            label: locale === "de" ? "Zur Übung" : "Try it",
+            onSelect: () => goToStep("lesson-exercise"),
+          }
+        : !steps.checksPassed
+          ? {
+              kind: "button",
+              label: locale === "de" ? "Zu den Fragen" : "To the questions",
+              onSelect: () => goToStep("lesson-checks"),
+            }
+          : null
+      : null;
+
   const bar: LessonShellReaderBar = {
     position: `${ordinal} / ${total}`,
     positionLabel: locale === "de"
       ? `Lektion ${ordinal} von ${total}`
       : `Lesson ${ordinal} of ${total}`,
-    next: completed ? next : {
+    next: completed ? next : engineAction ?? {
       kind: "button",
       label: locale === "de" ? "Aufgabe öffnen" : "Open task",
       onSelect: openTask,

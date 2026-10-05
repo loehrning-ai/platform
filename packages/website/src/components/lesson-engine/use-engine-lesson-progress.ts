@@ -170,3 +170,39 @@ export function useEngineLessonProgress(
     recordChecksPassed,
   };
 }
+
+/**
+ * Read-only view of one engine lesson's steps for course chrome (the sticky
+ * course header and the mobile action bar). It never writes: the reader's
+ * useEngineLessonProgress stays the only writer of steps and proofs.
+ */
+export function useEngineLessonSteps(
+  courseSlug: CourseSlug,
+  lessonId: string,
+  enabled = true,
+): Omit<EngineLessonProgressSnapshot, "ownerReady"> {
+  const [state, setState] = useState<{
+    readonly key: string;
+    readonly snapshot: ReturnType<typeof readSnapshot>;
+  } | null>(null);
+  const identity = `${courseSlug}:${lessonId}`;
+  useEffect(() => {
+    if (!enabled) return;
+    return subscribe(() => {
+        setState({
+          key: identity,
+          snapshot:
+            getLearningOwnerContext().kind !== "unknown"
+              ? readSnapshot(courseSlug, lessonId)
+              : { exerciseDone: false, checksPassed: false, completed: false },
+        });
+      });
+  }, [courseSlug, lessonId, identity, enabled]);
+  const hydrated = enabled && state?.key === identity;
+  return {
+    hydrated,
+    ...(hydrated && state
+      ? state.snapshot
+      : { exerciseDone: false, checksPassed: false, completed: false }),
+  };
+}

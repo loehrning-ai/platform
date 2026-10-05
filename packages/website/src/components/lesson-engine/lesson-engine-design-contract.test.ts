@@ -33,6 +33,16 @@ const LAB_WIDGETS = FILES.filter(
 const read = (file: string) => readFileSync(file, "utf8");
 const name = (file: string) => relative(ROOT, file);
 
+/** Exported class recipes of the course app (app-ui.ts). */
+const APP_RECIPES: ReadonlyMap<string, string> = new Map(
+  Array.from(
+    readFileSync(join(ROOT, "lesson-engine", "app-ui.ts"), "utf8").matchAll(
+      /export const (APP_[A-Z_]+) =\s*([\s\S]*?);\n/g,
+    ),
+    (match) => [match[1], match[2]] as [string, string],
+  ),
+);
+
 const CONTROL_TAGS = new Set(["button", "input", "select", "summary", "textarea", "a", "Link"]);
 const TARGET_SIZE =
   /\b(?:min-h-11|h-11|h-12|min-h-\[(?:4[4-9]|[5-9]\d|\d{3,})px\])(?![\w-])/;
@@ -41,7 +51,7 @@ const TARGET_SIZE =
 function undersizedControls(file: string): string[] {
   const contents = read(file);
   const source = ts.createSourceFile(file, contents, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-  const constants = new Map<string, string>();
+  const constants = new Map<string, string>(APP_RECIPES);
   const failures: string[] = [];
   const collect = (node: ts.Node) => {
     if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
@@ -61,12 +71,16 @@ function undersizedControls(file: string): string[] {
         );
         const className = attributes.find((attribute) => attribute.name.getText(source) === "className");
         let classes = className?.initializer?.getText(source) ?? "";
-        const expression =
-          className?.initializer && ts.isJsxExpression(className.initializer)
-            ? className.initializer.expression
-            : undefined;
-        if (expression && ts.isIdentifier(expression)) {
-          classes += constants.get(expression.text) ?? "";
+        // Class recipes referenced by name (local constants or the shared
+        // course-app recipes in app-ui.ts) count with their contents.
+        const expanded = new Set<string>();
+        for (let pass = 0; pass < 3; pass += 1) {
+          for (const [constant, value] of constants) {
+            if (!expanded.has(constant) && new RegExp(`\\b${constant}\\b`).test(classes)) {
+              expanded.add(constant);
+              classes += value;
+            }
+          }
         }
         // LabButton carries min-h-11 inside its own definition.
         if (!isHidden && !TARGET_SIZE.test(classes)) {

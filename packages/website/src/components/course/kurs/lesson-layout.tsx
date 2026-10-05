@@ -28,6 +28,11 @@ import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { getCourseReaderCopy } from "./course-ui-copy";
 import { LessonFlow } from "@/components/lesson-engine/lesson-flow";
+import {
+  CourseOutline,
+  type CourseOutlineModule,
+} from "@/components/lesson-engine/course-outline";
+import { CourseLessonHeader } from "@/components/lesson-engine/course-lesson-header";
 import { isEngineLesson } from "@/lib/lesson-engine/lesson";
 import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
 import {
@@ -109,6 +114,17 @@ interface LessonLayoutProps {
   readonly followingLabel?: string;
   /** Module label for lesson-engine lessons, e.g. "Modul 1 · Was darf rein?". */
   readonly moduleLabel?: string;
+  /**
+   * Course-app chrome for lesson-engine courses: the whole course as an
+   * outline (lessons of this route without href, other modules with href),
+   * the course title and the hub link for the sticky course header.
+   */
+  readonly courseApp?: {
+    readonly outline: readonly CourseOutlineModule[];
+    readonly courseTitle: string;
+    readonly hubHref: string;
+    readonly moduleNumber: number;
+  };
 }
 
 export function LessonLayout({
@@ -121,6 +137,7 @@ export function LessonLayout({
   followingHref,
   followingLabel,
   moduleLabel,
+  courseApp,
 }: LessonLayoutProps) {
   const copy = getCourseReaderCopy(locale);
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
@@ -320,6 +337,7 @@ export function LessonLayout({
       kind: "link", href: followingHref ?? localizeHref(`/${courseSlug}/kurs`, locale),
       label: followingLabel ?? (locale === "de" ? "Zum Kurs" : "Course hub"),
     },
+    engineSteps: activeLesson ? isEngineLesson(activeLesson) : false,
   });
 
   const handleEngineLessonCompleted = useCallback(() => {
@@ -359,9 +377,41 @@ export function LessonLayout({
     // Lesson-engine lessons: one scrolling flow (concept → exercise → two
     // checks). No section read buttons, no tabs, no project studio.
     const nextLesson = hasNextLesson ? lessons[activeLessonIndex + 1] : null;
+    const position = lessonOffset + activeLessonIndex + 1;
+    const appSidebar = courseApp
+      ? (instance: "desktop" | "mobile") => (
+          <CourseOutline
+            key={instance}
+            courseSlug={courseSlug}
+            modules={courseApp.outline}
+            activeLessonId={activeLessonId}
+            onSelectLesson={handleSelectLesson}
+            locale={locale}
+            label={copy.sidebar.navigation}
+          />
+        )
+      : undefined;
     return (
       <MotionProvider>
         <LessonShell
+          look={courseApp ? "app" : "werk"}
+          header={
+            courseApp ? (
+              <CourseLessonHeader
+                courseSlug={courseSlug}
+                lessonId={activeLessonId}
+                courseLessonIds={courseApp.outline.flatMap((module) =>
+                  module.lessons.map((lesson) => lesson.id),
+                )}
+                backHref={courseApp.hubHref}
+                backLabel={locale === "de" ? "Zur Kursübersicht" : "Course overview"}
+                title={courseApp.courseTitle}
+                context={`${locale === "de" ? "Modul" : "Module"} ${courseApp.moduleNumber} · ${copy.lesson.position(position, courseLessonCount)}`}
+                locale={locale}
+              />
+            ) : undefined
+          }
+          renderSidebar={appSidebar}
           readerBar={reader.bar}
           contentRef={reader.contentRef}
           navOpen={sidebarOpen}

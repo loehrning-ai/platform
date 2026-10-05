@@ -1134,3 +1134,39 @@
     linear-gradient(90deg, rgba(39, 71, 181, 0.06) 1px, transparent 1px);
   background-size: 24px 24px;
 }
+
+/* Course app ground: the in-course surfaces (hub, lesson reader, quiz,
+   certificate) sit on a warm white sheet with soft brand light in the
+   corners. Paper only, never a dark ground; every text token keeps its
+   contrast because the washes stay under 30% over Bogen. */
+.course-app-ground {
+  background-color: #fbf8f2;
+  background-image:
+    radial-gradient(60rem 28rem at 0% -8%, rgba(169, 221, 252, 0.42), transparent 62%),
+    radial-gradient(44rem 24rem at 100% 0%, rgba(255, 179, 138, 0.26), transparent 60%),
+    radial-gradient(40rem 30rem at 50% 110%, rgba(221, 244, 90, 0.14), transparent 65%);
+  background-repeat: no-repeat;
+}
+
+/* Hero sheet of the course hub and the result screens: a brand gradient
+   on Bogen with ink text (15:1 or more on every stop). */
+.course-app-hero {
+  background-color: #fffcf5;
+  background-image:
+    radial-gradient(120% 90% at 0% 0%, rgba(169, 221, 252, 0.55), transparent 55%),
+    radial-gradient(90% 80% at 100% 0%, rgba(255, 184, 200, 0.32), transparent 60%),
+    radial-gradient(90% 90% at 100% 100%, rgba(221, 244, 90, 0.3), transparent 60%);
+}
+
+/* Frosted sticky chrome (course header, bottom action bar). Solid Bogen
+   fallback where backdrop-filter is unsupported. */
+.course-app-frost {
+  background-color: rgba(255, 252, 245, 0.97);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .course-app-frost {
+    background-color: rgba(255, 252, 245, 0.82);
+    backdrop-filter: saturate(1.4) blur(16px);
+  }
+}

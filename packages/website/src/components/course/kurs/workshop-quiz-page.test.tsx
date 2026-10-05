@@ -92,13 +92,22 @@ vi.mock("framer-motion", async () => {
     "variants",
     "custom",
   ]);
-  const MotionDiv = forwardRef<HTMLElement, Record<string, unknown>>(
-    (props, ref) => {
+  const motionTag = (tag: string) =>
+    forwardRef<HTMLElement, Record<string, unknown>>((props, ref) => {
       const cleanProps: Record<string, unknown> = {};
       for (const key in props) {
         if (!DROP.has(key)) cleanProps[key] = props[key];
       }
-      return createElement("div", { ...cleanProps, ref });
+      return createElement(tag, { ...cleanProps, ref });
+    });
+  const tags = new Map<string, ReturnType<typeof motionTag>>();
+  const m = new Proxy(
+    {},
+    {
+      get: (_target, tag: string) => {
+        if (!tags.has(tag)) tags.set(tag, motionTag(tag));
+        return tags.get(tag);
+      },
     },
   );
   const AnimatePresence = ({ children }: { children?: unknown }) =>
@@ -106,8 +115,9 @@ vi.mock("framer-motion", async () => {
   const Provider = ({ children }: { children?: unknown }) =>
     createElement(Fragment, null, children as never);
   return {
-    m: { div: MotionDiv },
+    m,
     AnimatePresence,
+    useReducedMotion: () => true,
     MotionConfig: Provider,
     LazyMotion: Provider,
     domAnimation: {},

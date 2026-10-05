@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Copy } from "lucide-react";
+import { Check, ChevronDown, Copy } from "lucide-react";
 import type { Locale } from "@/lib/i18n/locale";
 import {
   buildOpenWithYourAiPrompt,
@@ -31,6 +31,8 @@ interface OpenWithYourAiProps {
   readonly serverUrl: string;
   readonly helpHref: string;
   readonly locale: Locale;
+  /** "app": a compact disclosure card for the Grundlagen course reader. */
+  readonly look?: "werk" | "app";
 }
 
 type CopyState = "idle" | "copied" | "failed";
@@ -42,6 +44,7 @@ export function OpenWithYourAi({
   serverUrl,
   helpHref,
   locale,
+  look = "werk",
 }: OpenWithYourAiProps) {
   const [copyState, setCopyState] = useState<CopyState>("idle");
   const copy = OPEN_WITH_YOUR_AI_COPY[locale];
@@ -62,6 +65,74 @@ export function OpenWithYourAi({
       setCopyState("failed");
     }
   };
+
+  if (look === "app") {
+    return (
+      <section
+        aria-label={copy.label}
+        data-open-with-your-ai={kind}
+        className="course-app-ground mx-auto w-full px-4 pt-4 sm:px-6 lg:px-8"
+      >
+        <details className="group mx-auto max-w-5xl rounded-[22px] border border-lab-line/80 bg-card/90 shadow-lab-sm">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center gap-3 rounded-[22px] px-4 py-2 text-[15px] font-semibold text-foreground outline-none focus-visible:ring-2 focus-visible:ring-lab-accent [&::-webkit-details-marker]:hidden">
+            <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-lab-accent-soft text-lab-accent">
+              <Copy size={15} />
+            </span>
+            <span className="min-w-0 flex-1 truncate">{kindCopy.heading}</span>
+            <ChevronDown aria-hidden="true" className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none" />
+          </summary>
+          <div className="px-4 pb-4">
+            <p className="max-w-[62ch] text-sm leading-6 text-muted-foreground">{kindCopy.body}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={copyPrompt}
+                className="inline-flex min-h-11 min-w-11 items-center gap-2 rounded-full bg-lab-accent px-5 text-sm font-semibold text-paper outline-none transition-colors duration-150 hover:bg-[#1f3a99] focus-visible:ring-2 focus-visible:ring-lab-accent focus-visible:ring-offset-2 motion-reduce:transition-none"
+              >
+                {copyState === "copied" ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+                {copy.copyAction}
+              </button>
+              <Link
+                href={helpHref}
+                prefetch={false}
+                className="inline-flex min-h-11 min-w-11 items-center rounded-full px-4 text-sm font-semibold text-lab-accent outline-none transition-colors duration-150 hover:bg-lab-accent-soft focus-visible:ring-2 focus-visible:ring-lab-accent motion-reduce:transition-none"
+              >
+                {copy.helpLink}
+              </Link>
+            </div>
+            <dl className="mt-3 grid gap-2 rounded-[16px] bg-paper p-3 text-sm ring-1 ring-lab-line">
+              <dt className="font-semibold text-muted-foreground">{copy.serverLabel}</dt>
+              <dd>
+                <code className="break-all font-mono text-xs text-foreground">{serverUrl}</code>
+              </dd>
+              <dt className="font-semibold text-muted-foreground">
+                {resources.length === 1 ? copy.addressLabel : copy.addressesLabel}
+              </dt>
+              <dd>
+                <ul className="grid gap-1">
+                  {resources.map((resource) => (
+                    <li key={resource.uri} className="min-w-0">
+                      <code className="break-all font-mono text-xs text-foreground">{resource.uri}</code>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </dl>
+            <p role="status" aria-live="polite" className={copyState === "idle" ? "sr-only" : "mt-2 text-sm text-muted-foreground"}>
+              {copyState === "copied" ? copy.copiedNotice : null}
+              {copyState === "failed" ? copy.copyFailedNotice : null}
+            </p>
+            {copyState === "failed" ? (
+              <div className="mt-2">
+                <p className="text-sm font-semibold text-muted-foreground">{copy.promptLabel}</p>
+                <pre className="mt-2 overflow-x-auto rounded-[14px] bg-inset p-3 font-mono text-xs leading-5 text-foreground">{prompt}</pre>
+              </div>
+            ) : null}
+          </div>
+        </details>
+      </section>
+    );
+  }
 
   return (
     <section

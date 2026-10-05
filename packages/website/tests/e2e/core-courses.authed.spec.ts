@@ -22,19 +22,19 @@ const CORE_ROUTES = [
     hub: "/ki-fuehrerschein/kurs",
     hubHeading: "KI-Führerschein",
     lesson: "/ki-fuehrerschein/kurs/block_1",
-    lessonHeading: "Was darf rein?",
+    lessonHeading: "Vier Stufen in einer Minute",
   },
   {
     hub: "/eu-ai-act-kurs/kurs",
     hubHeading: "EU AI Act Kurs",
     lesson: "/eu-ai-act-kurs/kurs/block_1",
-    lessonHeading: "Gilt das für mich?",
+    lessonHeading: "Ihre Rolle bestimmt Ihre Pflichten",
   },
   {
     hub: "/ki-und-gesellschaft/kurs",
     hubHeading: "KI und Gesellschaft",
     lesson: "/ki-und-gesellschaft/kurs/block_1",
-    lessonHeading: "Jobzahlen lesen",
+    lessonHeading: "Jobschlagzeilen entschlüsseln",
   },
   {
     hub: "/ai-native/kurs",

@@ -91,6 +91,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
           lessonId: navigationLesson.id,
           lessonNumber: navigationLesson.number,
           title: navigationLesson.title,
+          durationMinutes: navigationLesson.durationMinutes,
         }));
       }),
     )
@@ -102,7 +103,7 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
 
   return (
     <AiNativeLessonPageShell lessons={navigationItems} locale={locale} lessonId={lesson.id}>
-      <div className="min-w-0 py-8 md:py-10">
+      <div className="min-w-0 pb-8">
         <LessonFlow
           courseSlug="ai-native"
           lesson={lesson}

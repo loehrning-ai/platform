@@ -628,6 +628,42 @@ Build new widgets from `_lab.tsx` (`LabSurface`, `LabButton`, `LabLive`,
 `lesson-engine-design-contract.test.ts` picks up every file in
 `components/lesson-engine` and `components/widgets/lab` automatically.
 
+## Course app
+
+Every surface a learner sees inside the four Grundlagen courses (hub, lesson
+reader, outline, final quiz and result, certificate, verification, error
+states) shares one course-app system. It replaces the Werkzeichnung chrome
+there: no Kopflinien, no mono caps eyebrows, no hairline ledgers, no square
+boxes, no poster numerals and no scene-coloured headings.
+
+| Piece | Path |
+|---|---|
+| Class recipes (`APP_CARD`, `APP_PRIMARY`, `APP_SECONDARY`, `APP_GHOST`, `APP_PILL`, `APP_FOCUS`) | `src/components/lesson-engine/app-ui.ts` |
+| Grounds (`.course-app-ground`, `.course-app-hero`, `.course-app-frost`) | `src/app/globals.css` |
+| Sticky course header (lesson steps, course bar) | `course-lesson-header.tsx` |
+| Collapsible outline with progress dots | `course-outline.tsx` |
+| Three-step indicator (Verstehen, Ausprobieren, Prüfen) | `step-flow.tsx` |
+| Finite completion burst | `celebration-burst.tsx` |
+| Reduced motion and Save-Data switch | `use-calm-motion.ts` |
+| Contract | `course-app-design-contract.test.ts` |
+
+- `LessonShell` takes `look="app"` and a `header` slot. `LessonLayout` turns it
+  on when `BlockPageShell` passes `courseApp` (engine courses), and
+  `AiNativeLessonPageShell` always does. The default `look="werk"` keeps the
+  technical readers unchanged.
+- The header is sticky inside the learning column, in the 3rem band the
+  document already reserves (`--lesson-toolbar-h`). Its bar is course
+  completion, not scroll progress.
+- Mobile first: below `lg` the reader bar (`ReaderFocusBar tone="app"`) is the
+  thumb-reachable action. With `engineSteps` it leads to the next open step
+  ("Zur Übung", then "Zu den Fragen") and to the next lesson once the lesson
+  is complete. The final quiz pins its "Weiter" button above the tab bar.
+- The hub draws its learning path and the overall ring once, springs the module
+  cards in and celebrates a finished course. `useCalmMotion` renders all of
+  that in its final state under reduced motion or Save-Data.
+- Stats are real: lessons done, modules done, minutes left. There are no
+  streaks or points.
+
 ## Porting a block course (checklist)
 
 1. **Content**:
