@@ -390,7 +390,7 @@ export function LessonFlow({
           <p className="mb-4 max-w-[65ch] text-body text-muted-foreground">
             {lesson.exercise.instructions}
           </p>
-          <div className="lab-grid-paper -mx-1 rounded-[26px] border border-lab-line/80 bg-card p-2.5 shadow-lab-lg sm:mx-0 sm:p-6">
+          <div className="lab-wash-sky -mx-1 rounded-[26px] border border-lab-line/80 bg-card p-3 shadow-lab-lg sm:mx-0 sm:p-6">
             <LabEmbedContext.Provider value={embedValue}>
               <RenderWidget
                 kind={lesson.exercise.kind}
@@ -493,7 +493,7 @@ export function LessonFlow({
             {next ? (
               next.kind === "link" ? (
                 <Link href={next.href} data-lesson-next className={nextClass}>
-                  <span className="min-w-0 truncate">{next.label}</span>
+                  <span className="min-w-0 text-balance">{next.label}</span>
                   <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
                 </Link>
               ) : (
@@ -503,7 +503,7 @@ export function LessonFlow({
                   onClick={next.onSelect}
                   className={nextClass}
                 >
-                  <span className="min-w-0 truncate">{next.label}</span>
+                  <span className="min-w-0 text-balance">{next.label}</span>
                   <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
                 </button>
               )

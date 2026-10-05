@@ -61,10 +61,9 @@ import {
  */
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1] as const;
-// The persistent root nav is at most 64px tall and has a 1px bottom border.
-// Keeping the quiz bar below that maximum avoids covered controls at every
-// scroll position while preserving its fixed, always-visible timer.
-const GLOBAL_NAV_OFFSET_PX = 65;
+// The quiz bar sits flush below the persistent root nav (--nav-h-compact
+// below lg, --nav-h from lg) so its timer stays visible at every scroll
+// position; its cap paints the band behind the translucent nav.
 const SLIDE = {
   enter: (dir: number) => ({ x: dir > 0 ? 300 : -300, opacity: 0 }),
   center: { x: 0, opacity: 1 },
@@ -877,8 +876,8 @@ export function WorkshopQuizPage({
       {/* Header */}
       <header
         data-testid="workshop-quiz-header"
-        className="course-app-frost fixed left-0 z-40 w-full border-b border-lab-line/70"
-        style={{ top: GLOBAL_NAV_OFFSET_PX }}
+        data-course-app-cap
+        className="course-app-frost fixed left-0 top-[var(--nav-h-compact)] z-40 w-full border-b border-lab-line/70 lg:top-[var(--nav-h)]"
       >
         <div className="mx-auto grid min-h-14 max-w-2xl grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-2 sm:flex sm:h-14 sm:px-6 sm:py-0">
           <Link href={localizedCoursePath} className={cn(APP_GHOST, "min-h-11 min-w-0")}>
@@ -905,7 +904,7 @@ export function WorkshopQuizPage({
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl px-4 pb-[calc(var(--tabbar-band-h)+6rem)] pt-[7.5rem] sm:px-6 sm:pt-[5.5rem] lg:pb-12 lg:pt-[4.75rem]">
+      <div className="mx-auto max-w-2xl px-4 pb-[calc(var(--tabbar-band-h)+6rem)] pt-[6.75rem] sm:px-6 sm:pt-[5rem] lg:pb-12 lg:pt-[4.75rem]">
         {/* Progress: one segment per question, coloured by the answer. */}
         <div className="mb-2 flex items-center justify-between">
           <span className="text-sm font-semibold text-muted-foreground tabular-nums">

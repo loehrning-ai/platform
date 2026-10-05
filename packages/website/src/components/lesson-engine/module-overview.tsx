@@ -227,6 +227,21 @@ export function ModuleOverview({
     .filter((lesson) => !completed.has(lesson.id))
     .reduce((sum, lesson) => sum + lesson.durationMinutes, 0);
   const allDone = total > 0 && done === total;
+  // The hero path fills up to the current module's stop, plus the share of
+  // that module already done, so the line never runs ahead of the learner.
+  const currentModuleIndex = nextModule ? modules.indexOf(nextModule) : modules.length - 1;
+  const currentModuleShare =
+    nextModule && nextModule.lessons.length > 0
+      ? nextModule.lessons.filter((lesson) => completed.has(lesson.id)).length / nextModule.lessons.length
+      : 0;
+  const pathFraction =
+    modules.length > 1
+      ? allDone
+        ? 1
+        : Math.min(1, (currentModuleIndex + currentModuleShare) / (modules.length - 1))
+      : allDone
+        ? 1
+        : 0;
 
   return (
     <MotionProvider>
@@ -246,14 +261,14 @@ export function ModuleOverview({
                 transition={{ duration: 0.6, ease: APP_EASE }}
                 className="course-app-hero relative overflow-hidden rounded-[28px] border border-lab-line/80 p-5 shadow-lab-lg sm:p-7"
               >
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start justify-between gap-3 sm:gap-4">
                   <div className="min-w-0">
                     <p className={APP_EYEBROW}>{copy.eyebrow}</p>
-                    <h1 className="mt-1 break-words text-[2rem] font-bold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.5rem] lg:text-[2.25rem] xl:text-[2.5rem]">
+                    <h1 className="mt-1 text-balance break-words text-[1.75rem] font-bold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-[2.5rem] lg:text-[2.25rem] xl:text-[2.5rem]">
                       {config.title}
                     </h1>
                   </div>
-                  <span className="relative mt-1 inline-flex shrink-0">
+                  <span className="relative -mb-[18px] -ml-[18px] mt-1 inline-flex shrink-0 origin-top-right scale-[0.8] sm:mb-0 sm:ml-0 sm:scale-100">
                     <ProgressRing
                       fraction={total > 0 ? done / total : 0}
                       size={92}
@@ -287,13 +302,10 @@ export function ModuleOverview({
                   <div className="relative flex items-start justify-between">
                     <span aria-hidden="true" className="absolute left-[18px] right-[18px] top-[17px] h-1.5 overflow-hidden rounded-full bg-lab-line/80">
                       <m.span
-                        className="block h-full origin-left rounded-full bg-gradient-to-r from-lab-accent via-[#4b6be0] to-lab-good"
+                        className="block h-full origin-left rounded-full bg-gradient-to-r from-lab-good to-lab-accent"
                         initial={calm ? false : { scaleX: 0 }}
                         animate={{
-                          scaleX:
-                            modules.length > 1
-                              ? Math.min(1, (modulesDone + (nextLesson ? 0.5 : 0)) / (modules.length - 1))
-                              : 1,
+                          scaleX: pathFraction,
                         }}
                         transition={{ duration: 1.3, ease: APP_EASE, delay: 0.35 }}
                       />
@@ -367,12 +379,12 @@ export function ModuleOverview({
               >
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-lab-accent-soft"
+                  className="pointer-events-none absolute -right-14 -top-14 h-32 w-32 rounded-full bg-lab-accent-soft/70 sm:-right-10 sm:-top-10 sm:h-36 sm:w-36"
                 />
                 {nextLesson ? (
                   <div className="relative">
                     <p className={APP_EYEBROW}>{done > 0 ? copy.upNext : copy.upNextFirst}</p>
-                    <h2 id="course-hub-next-heading" className="mt-1 break-words text-xl font-bold leading-snug tracking-[-0.015em] text-foreground sm:text-2xl">
+                    <h2 id="course-hub-next-heading" className="mt-1 break-words pr-6 text-xl font-bold leading-snug tracking-[-0.015em] text-foreground sm:text-2xl">
                       {nextLesson.title}
                     </h2>
                     <div className="mt-2 flex flex-wrap items-center gap-2">
@@ -388,7 +400,7 @@ export function ModuleOverview({
                       href={lessonHref(nextLesson.moduleId, nextLesson.id)}
                       className={cn(APP_PRIMARY, "mt-5 w-full")}
                     >
-                      <span className="min-w-0 truncate">
+                      <span className="min-w-0 text-balance">
                         {done > 0 ? `${copy.continue}: ${nextLesson.title}` : copy.start}
                       </span>
                       <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />

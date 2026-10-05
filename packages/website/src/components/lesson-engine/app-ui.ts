@@ -22,7 +22,7 @@ export const APP_INSET = "rounded-[20px] bg-paper";
 
 /** Primary action: Kobalt pill, paper text (7.6:1). */
 export const APP_PRIMARY =
-  `inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-lab-accent px-6 text-[15px] font-semibold text-paper shadow-lab-sm transition-[background-color,transform] duration-150 hover:bg-[#1f3a99] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 ${APP_FOCUS}`;
+  `inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-lab-accent px-6 py-2.5 text-center text-[15px] font-semibold leading-snug text-paper shadow-lab-sm transition-[background-color,transform] duration-150 hover:bg-[#1f3a99] active:scale-[0.98] motion-reduce:transition-none motion-reduce:active:scale-100 ${APP_FOCUS}`;
 
 /** Secondary action: paper pill with a visible edge. */
 export const APP_SECONDARY =

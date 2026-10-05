@@ -268,7 +268,11 @@ describe("<WorkshopQuizPage>", () => {
     });
 
     const header = screen.getByTestId("workshop-quiz-header");
-    expect(header).toHaveStyle({ top: "65px" });
+    expect(header).toHaveClass(
+      "top-[var(--nav-h-compact)]",
+      "lg:top-[var(--nav-h)]",
+    );
+    expect(header).toHaveAttribute("data-course-app-cap");
     expect(header).toHaveClass("z-40");
     expect(header.firstElementChild).toHaveClass(
       "grid",

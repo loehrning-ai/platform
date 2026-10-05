@@ -1190,9 +1190,31 @@
   background-color: rgba(255, 252, 245, 0.97);
 }
 
+/* The lesson header sticks right below the translucent top bar. Its cap
+   paints the band behind that bar too, so lesson text never scrolls
+   visibly through the gaps around the floating desktop nav or through the
+   compact phone bar. */
+[data-course-lesson-header]::before,
+[data-course-app-cap]::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 100%;
+  height: var(--nav-h-compact);
+  background-color: #fbf8f2;
+  pointer-events: none;
+}
+
+@media (min-width: 64rem) {
+  [data-course-lesson-header]::before,
+  [data-course-app-cap]::before {
+    height: var(--nav-h);
+  }
+}
+
 @supports (backdrop-filter: blur(1px)) {
   .course-app-frost {
-    background-color: rgba(255, 252, 245, 0.82);
+    background-color: rgba(255, 252, 245, 0.96);
     backdrop-filter: saturate(1.4) blur(16px);
   }
 }
