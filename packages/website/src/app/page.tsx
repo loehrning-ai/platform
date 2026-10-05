@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/home/hero";
-import { ContinueSlot } from "@/components/home/continue-slot";
-import { homeContinueCourses } from "@/components/home/continue-courses";
 import { MobileRails } from "@/components/home/mobile-rails";
 import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
@@ -55,18 +53,13 @@ export default async function HomePage() {
   return (
     <>
       {/* 1. Hero — the promise, stated once, on paper. Below lg it holds the
-             seat for "where you left off" as its first row (reserved in the
-             server HTML, filled in the browser once the active learning
-             namespace is known), the promise, the primary action and a
-             window onto the line globe, whose first frame is computed here
-             on the server, with the one-time signal from Berlin over it. */}
+             promise, the primary action and a window onto the line globe,
+             whose first frame is computed here on the server, with the
+             one-time signal from Berlin over it. */}
       <HeroSection
         locale={locale}
         phoneGlobe={<HeroGlobeFrame />}
         phoneIntro={<HeroSignalFrame />}
-        continueSlot={
-          <ContinueSlot locale={locale} courses={homeContinueCourses(locale)} />
-        }
       />
 
       {/* 2. Kurse — the learning path + deeper labs */}

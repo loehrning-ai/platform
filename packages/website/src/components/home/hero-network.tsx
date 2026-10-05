@@ -47,6 +47,16 @@ export const HERO_GLOBE_START_DELAY_SECONDS = 2;
  */
 export const HERO_GLOBE_COMPACT_FPS = 30;
 
+/**
+ * Whether the typing word may show yet. The phone opens with the signal from
+ * Berlin alone: no word until the globe has made its first rotation away from
+ * Berlin, so the first word appears on the country it has turned to. The
+ * desktop cover has no opening to protect and types from the first beat.
+ */
+export function wordMayShow(compact: boolean, activeSeconds: number): boolean {
+  return !compact || activeSeconds >= HERO_GLOBE_STEP_SECONDS;
+}
+
 /** Desktop framing: the upper-left of the sphere, the limb on the left. */
 const DESKTOP_VIEW_BOX = "-120 -20 660 620";
 const PHONE_VIEW_BOX = `${PHONE_VIEW.x} ${PHONE_VIEW.y} ${PHONE_VIEW.width} ${PHONE_VIEW.height}`;
@@ -400,7 +410,12 @@ export function HeroNetwork({
     const textEl = textRef.current;
     const cursorEl = cursorRef.current;
     if (textEl && cursorEl) {
-      if (!isTransitioning && !isFrozen && activeT > 0) {
+      if (
+        !isTransitioning &&
+        !isFrozen &&
+        activeT > 0 &&
+        wordMayShow(compact, activeT)
+      ) {
         const dwellT = stepT / HERO_GLOBE_DWELL_RATIO;
         const word = cur.word;
         textEl.setAttribute("opacity", String(entrance));

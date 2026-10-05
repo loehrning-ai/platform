@@ -86,6 +86,11 @@ const nextConfig: NextConfig = {
     // Tree-shake lucide-react icon imports — without this, every page
     // that imports a Lucide icon pulls the full ~1000-icon barrel.
     optimizePackageImports: ["lucide-react"],
+    // Next 16.3.8 promotes prerendered route-handler responses (robots,
+    // sitemap, llms.txt, the knowledge graph) into .next/server/route-cache
+    // on their first request. Keep the production build output immutable at
+    // runtime so the build-freshness receipt still matches after serving.
+    isrFlushToDisk: false,
     // No `sri` here: Vercel stamps the deployment ID into the webpack runtime
     // chunk after the build, so build-time integrity hashes no longer match
     // and the browser blocks the chunk — killing hydration site-wide.

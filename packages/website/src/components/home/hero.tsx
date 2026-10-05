@@ -169,8 +169,6 @@ export type HeroSectionProps = {
    * rests invisible until phone-globe.tsx lets it play.
    */
   readonly phoneIntro?: ReactNode;
-  /** Below lg only: the continue seat, the band's first row. */
-  readonly continueSlot?: ReactNode;
 };
 
 /*
@@ -183,9 +181,8 @@ export type HeroSectionProps = {
  * pastel step cards at the foot.
  *
  * Below lg (phone-hero.css) the same section is laid out between the top bar
- * and the tab bar: the continue card, the two-line promise, the lead card,
- * the action, then a window onto the same line globe fills the rest of the
- * band. The wrappers that exist for the desktop grid are `display: contents`
+ * and the tab bar: the two-line promise, the lead card, the action, then a
+ * window onto the same line globe fills the rest of the band. The wrappers that exist for the desktop grid are `display: contents`
  * there, so every row is placed on one grid. Nothing about the layout is
  * decided in JavaScript.
  */
@@ -193,7 +190,6 @@ function HeroSectionContent({
   locale = "de",
   phoneGlobe,
   phoneIntro,
-  continueSlot,
 }: HeroSectionProps) {
   const copy = HOME_COPY[locale].hero;
   const headlineColors = [
@@ -277,13 +273,6 @@ function HeroSectionContent({
       `}</style>
 
       <div data-hero-body className="relative z-10 mx-auto w-full max-w-6xl">
-        {/* Below lg only (the slot is lg:hidden): the continue seat. It is
-            the band's first row on screen (grid-area: continue in
-            phone-hero.css), so it is first in the source too, and focus and
-            reading order run card, promise, action, pause control (WCAG
-            2.4.3). */}
-        {continueSlot}
-
         <div
           data-hero-grid
           className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[1fr_minmax(0,440px)] xl:grid-cols-[1fr_520px]"

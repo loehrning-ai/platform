@@ -27,6 +27,7 @@ import {
   HERO_GLOBE_STEP_SECONDS,
   HeroNetwork,
   STEPS,
+  wordMayShow,
 } from "./hero-network";
 
 describe("globe motion cadence", () => {
@@ -35,6 +36,24 @@ describe("globe motion cadence", () => {
     expect(HERO_GLOBE_STEP_SECONDS).toBe(7);
     expect(HERO_GLOBE_DWELL_RATIO).toBe(0.78);
     expect(HERO_GLOBE_START_DELAY_SECONDS).toBe(2);
+  });
+});
+
+describe("phone opening: no word before the first rotation", () => {
+  it("keeps the phone globe wordless until its first step has turned", () => {
+    expect(wordMayShow(true, 0.1)).toBe(false);
+    // Berlin's dwell and the rotation away from it both stay wordless.
+    expect(wordMayShow(true, HERO_GLOBE_STEP_SECONDS * HERO_GLOBE_DWELL_RATIO)).toBe(false);
+    expect(wordMayShow(true, HERO_GLOBE_STEP_SECONDS - 0.01)).toBe(false);
+  });
+
+  it("lets the phone word type once the first rotation is complete", () => {
+    expect(wordMayShow(true, HERO_GLOBE_STEP_SECONDS)).toBe(true);
+    expect(wordMayShow(true, HERO_GLOBE_STEP_SECONDS * 6 + 1)).toBe(true);
+  });
+
+  it("never delays the desktop cover's word", () => {
+    expect(wordMayShow(false, 0.1)).toBe(true);
   });
 });
 

@@ -89,11 +89,18 @@ test.describe("phone home globe", () => {
       timeout: 20_000,
     });
     await expect(slot).toHaveAttribute("data-home-globe-motion", "running");
-    // The live globe replaced the server frame and types its first word.
+    // The live globe replaced the server frame. It opens wordless: the signal
+    // has settled but the globe has not yet made its first rotation away from
+    // Berlin, so no word has been typed.
     await expect(slot.locator("[data-home-globe-ssr]")).toBeHidden();
+    expect(
+      (await slot.locator("[data-hero-network-word]").textContent()) ?? "",
+    ).toBe("");
+    // The first word is typed once that rotation is complete (about nine
+    // seconds in), on the country the globe has turned to.
     await expect
       .poll(() => slot.locator("[data-hero-network-word]").textContent(), {
-        timeout: 15_000,
+        timeout: 30_000,
       })
       .toMatch(/\S/);
 

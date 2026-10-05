@@ -8,10 +8,8 @@ import {
 /** Provider-free build contract; no authentication or provider responses are mocked. */
 const COPY = {
   de: {
-    open: "Ohne Lernkonto",
     recommendation: "Offener Einstieg ohne Lernkonto",
     recommendationShort: "Ohne Konto",
-    unavailable: "Hier nicht verfügbar",
     groupUnavailable: "hier nicht verfügbar",
     overviewAction: "Hier nicht verfügbar · Kursübersicht",
     alternative: "Offene Alternative ohne Lernkonto: Data Infrastructure",
@@ -19,10 +17,8 @@ const COPY = {
     openCourse: "Data Infrastructure",
   },
   en: {
-    open: "No account needed",
     recommendation: "Open starting point without an account",
     recommendationShort: "No account",
-    unavailable: "Unavailable here",
     groupUnavailable: "unavailable here",
     overviewAction: "Unavailable here · Course overview",
     alternative: "Open alternative without an account: Data Infrastructure",
@@ -118,39 +114,6 @@ for (const locale of ["de", "en"] as const) {
         test.setTimeout(90_000);
         await page.setViewportSize({ width, height: 844 });
         await page.addInitScript(() => localStorage.clear());
-      });
-
-      test("home discloses its first open task before the first tap", async ({
-        page,
-      }, testInfo) => {
-        const errors = collectBrowserErrors(page);
-        await openHydrated(page, prefix || "/");
-        const card = page.locator("[data-home-continue-card]");
-        await expect(card).toHaveAttribute("data-home-continue-card", "start");
-        await expect(card).toHaveAttribute("data-home-course-access", "open");
-        await expect(card).toHaveAttribute("href", lesson);
-        await expect(card).toContainText(copy.openCourse);
-        const disclosure = card.locator("[data-home-access-label]");
-        await expect(disclosure).toHaveText(copy.open);
-        // No scroll before these checks: the first decision must already fit.
-        await expectReadable(disclosure);
-        await expectTapTarget(card);
-        const cardBox = await card.boundingBox();
-        // The card fills its fixed 4.75rem seat (continue-slot.tsx).
-        expect(cardBox!.height).toBe(76);
-        await page.screenshot({
-          path: testInfo.outputPath("home-before-tap.png"),
-        });
-        await testInfo.attach("home-before-tap", {
-          path: testInfo.outputPath("home-before-tap.png"),
-          contentType: "image/png",
-        });
-        await card.tap();
-        await expectDestination(page, lesson);
-        await expect(
-          page.locator('[data-lesson-mission="data-infrastructure"]'),
-        ).toBeVisible();
-        expect(meaningfulBrowserErrors(errors)).toEqual([]);
       });
 
       test("the unchosen atlas default offers a disclosed open course", async ({

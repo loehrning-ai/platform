@@ -14,7 +14,6 @@
  * Phone layout: a single-column grid, the old paper hero's reading order
  * with the globe added at its foot.
  *
- *   continue   the companion seat (the acid "first step" card)
  *   title      the promise on two lines (h1, the LCP element; never animated)
  *   lead       one sentence on its paper card
  *   actions    the cobalt action, and the globe's pause control
@@ -31,9 +30,8 @@
 
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto minmax(15rem, 1fr);
+    grid-template-rows: auto auto auto minmax(15rem, 1fr);
     grid-template-areas:
-      "continue"
       "title"
       "lead"
       "actions"
@@ -49,13 +47,6 @@
   /* The desktop grid wrappers step aside so every row lands on the band's grid. */
   [data-section="hero"] :is([data-hero-body], [data-hero-grid], [data-hero-copy]) {
     display: contents;
-  }
-
-  [data-section="hero"] [data-home-continue-slot] {
-    grid-area: continue;
-    position: relative;
-    z-index: 4;
-    padding-inline: var(--hz-gutter);
   }
 
   [data-section="hero"] h1 {
@@ -212,8 +203,8 @@
 
 /* ---- opening: finite, first paint only ------------------------------------
  *
- * The server frame fades in once, and the pause control and the continue
- * card arrive with a short fade instead of popping in. Every animation ends
+ * The server frame fades in once, and the pause control arrives with a
+ * short fade instead of popping in. Every animation ends
  * in the frame's natural state (fill-mode backwards), so the resting frame
  * is exactly the reduced-motion and no-support frame. Under reduced motion
  * none of this exists.
@@ -225,10 +216,6 @@
 
   .phone-globe-toggle {
     animation: hz-fade 0.4s var(--ease-fade) backwards;
-  }
-
-  [data-home-continue-card] {
-    animation: hz-fade 0.2s var(--ease-fade) backwards;
   }
 }
 
