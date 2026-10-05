@@ -44,3 +44,6 @@ export const APP_EASE = [0.16, 1, 0.3, 1] as const;
 
 /** A spring for cards that settle into place (finite, no overshoot loop). */
 export const APP_SPRING = { type: "spring", stiffness: 260, damping: 26, mass: 0.9 } as const;
+
+/** Window event LessonFlow fires once the learner moved past "Verstehen". */
+export const CONCEPT_SEEN_EVENT = "lesson-engine:concept-seen";

@@ -1158,6 +1158,32 @@
     radial-gradient(90% 90% at 100% 100%, rgba(221, 244, 90, 0.3), transparent 60%);
 }
 
+/* Concept tables inside the course app: a soft rounded sheet with row
+   dividers instead of the hairline ledger grid. */
+.lesson-engine-concept table {
+  border: 1px solid var(--color-lab-line);
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background-color: #fffcf5;
+}
+
+.lesson-engine-concept thead {
+  background-color: var(--color-lab-accent-soft);
+}
+
+.lesson-engine-concept th,
+.lesson-engine-concept td {
+  border: 0;
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+}
+
+.lesson-engine-concept tbody tr + tr td {
+  border-top: 1px solid var(--color-lab-line);
+}
+
 /* Frosted sticky chrome (course header, bottom action bar). Solid Bogen
    fallback where backdrop-filter is unsupported. */
 .course-app-frost {

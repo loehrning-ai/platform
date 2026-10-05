@@ -10,7 +10,7 @@ import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage
 import type { Locale } from "@/lib/i18n/locale";
 import { cn } from "@/lib/utils";
 import { MotionProvider } from "@/components/motion-provider";
-import { APP_EASE, APP_FOCUS } from "./app-ui";
+import { APP_EASE, APP_FOCUS, CONCEPT_SEEN_EVENT } from "./app-ui";
 import { LESSON_ENGINE_COPY } from "./engine-copy";
 import { useEngineLessonSteps } from "./use-engine-lesson-progress";
 
@@ -75,9 +75,21 @@ export function CourseLessonHeader({
     [courseSlug, idsKey],
   );
 
+  const [conceptSeenFor, setConceptSeenFor] = useState<string | null>(null);
+  useEffect(() => {
+    const onSeen = (event: Event) => {
+      const detail = (event as CustomEvent<{ lessonId?: string }>).detail;
+      if (detail?.lessonId) setConceptSeenFor(detail.lessonId);
+    };
+    window.addEventListener(CONCEPT_SEEN_EVENT, onSeen);
+    return () => window.removeEventListener(CONCEPT_SEEN_EVENT, onSeen);
+  }, []);
+
   const total = courseLessonIds.length;
+  const conceptDone =
+    conceptSeenFor === lessonId || steps.exerciseDone || steps.checksPassed;
   const lessonSteps = [
-    { key: "concept", label: engineCopy.steps.concept, done: true },
+    { key: "concept", label: engineCopy.steps.concept, done: conceptDone },
     { key: "exercise", label: engineCopy.steps.exercise, done: steps.exerciseDone },
     { key: "checks", label: engineCopy.steps.checks, done: steps.checksPassed },
   ];

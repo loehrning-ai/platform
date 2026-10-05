@@ -35,8 +35,11 @@ export function StepFlow({
   readonly label: string;
   readonly stateLabel: { readonly done: string; readonly open: string };
 }): JSX.Element {
-  const doneCount = steps.filter((step) => step.done).length;
-  const fill = steps.length > 1 ? Math.max(0, doneCount - 1) / (steps.length - 1) : 0;
+  // The track fills up to the first open step: one done step reaches the
+  // middle stop, two reach the end.
+  const leadingDone = steps.findIndex((step) => !step.done);
+  const reached = leadingDone === -1 ? steps.length - 1 : leadingDone;
+  const fill = steps.length > 1 ? Math.min(1, reached / (steps.length - 1)) : 0;
   return (
     <nav aria-label={label} data-step-flow className="w-full">
       <ol className="relative grid grid-cols-3">

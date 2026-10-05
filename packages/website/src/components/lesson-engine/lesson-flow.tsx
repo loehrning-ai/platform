@@ -49,6 +49,7 @@ import {
   APP_SECONDARY,
 } from "./app-ui";
 import { useEngineLessonProgress } from "./use-engine-lesson-progress";
+import { CONCEPT_SEEN_EVENT } from "./app-ui";
 
 export type LessonFlowNext =
   | { readonly kind: "button"; readonly label: string; readonly onSelect: () => void }
@@ -226,10 +227,25 @@ export function LessonFlow({
   );
 
   const activeStep = useActiveStep();
+  // "Verstehen" counts once the learner has moved on to the exercise or the
+  // checks (or already has progress), so the rail visibly advances step by step.
+  const [conceptSeen, setConceptSeen] = useState(false);
+  const conceptDone =
+    conceptSeen ||
+    activeStep !== "concept" ||
+    progress.exerciseDone ||
+    progress.checksPassed;
+  useEffect(() => {
+    if (!conceptDone || conceptSeen) return;
+    setConceptSeen(true);
+    window.dispatchEvent(
+      new CustomEvent(CONCEPT_SEEN_EVENT, { detail: { lessonId: lesson.id } }),
+    );
+  }, [conceptDone, conceptSeen, lesson.id]);
   const stepsDone =
-    1 + Number(progress.exerciseDone) + Number(progress.checksPassed);
+    Number(conceptDone) + Number(progress.exerciseDone) + Number(progress.checksPassed);
   const steps = [
-    { key: "concept", label: copy.steps.concept, done: true, href: `#${SECTION_IDS.concept}`, icon: <BookOpen className="h-5 w-5" /> },
+    { key: "concept", label: copy.steps.concept, done: conceptDone, href: `#${SECTION_IDS.concept}`, icon: <BookOpen className="h-5 w-5" /> },
     { key: "exercise", label: copy.steps.exercise, done: progress.exerciseDone, href: `#${SECTION_IDS.exercise}`, icon: <FlaskConical className="h-5 w-5" /> },
     { key: "checks", label: copy.steps.checks, done: progress.checksPassed, href: `#${SECTION_IDS.checks}`, icon: <ListChecks className="h-5 w-5" /> },
   ] as const;
@@ -296,7 +312,7 @@ export function LessonFlow({
             id="lesson-concept-heading"
             icon={<BookOpen className="h-5 w-5" />}
             kicker={copy.conceptKicker}
-            done
+            done={conceptDone}
             doneLabel={copy.stepState.done}
           />
           <h2 id="lesson-concept-heading" className="sr-only">
