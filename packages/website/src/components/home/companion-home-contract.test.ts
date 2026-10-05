@@ -6,9 +6,8 @@ import { describe, expect, it } from "vitest";
  * The companion home is one document with two layouts, not two documents.
  *
  * The page opens with the paper hero at every width. Below `lg` it holds the
- * "continue" seat, the two-line promise, the primary action and a window
- * onto the line globe, then two horizontal rails and the pastel boards
- * follow; from `lg` it is the wide paper hero (the three-ink lockup left,
+ * two-line promise, the primary action and a window onto the line globe,
+ * then two horizontal rails and the pastel boards follow; from `lg` it is the wide paper hero (the three-ink lockup left,
  * the line globe behind the right half, the pastel step cards) and the page
  * is the wide layout. These assertions pin the two properties that make
  * that safe:
@@ -247,8 +246,6 @@ describe("companion home: the paper look, never a dark ground", () => {
     "workflow.tsx",
     "pointer-depth-classes.ts",
     "mobile-rails.tsx",
-    "continue-card.tsx",
-    "continue-slot.tsx",
     "offering.tsx",
     "course-artwork.tsx",
   ] as const;
@@ -262,7 +259,6 @@ describe("companion home: the paper look, never a dark ground", () => {
   it("gives every section below the hero a pastel wash or pastel cards", () => {
     expect(read("workflow.tsx")).toContain("bg-brand-peach/20");
     expect(read("mobile-rails.tsx")).toMatch(/bg-brand-(?:sky|acid|peach|pink)\//);
-    expect(read("continue-card.tsx")).toContain("bg-brand-acid/60");
     expect(read("offering.tsx")).toMatch(/bg-brand-(?:acid|peach|sky|pink)\/\d+/);
   });
 });
@@ -338,40 +334,9 @@ describe("companion home: measured layout hooks stay in a vertical stack", () =>
   });
 });
 
-describe("companion home: the continue island stays small", () => {
-  it("keeps the catalog and the resume resolver out of the client graph", () => {
-    for (const file of ["continue-slot.tsx", "continue-card.tsx"]) {
-      const source = read(file);
-      expect(source, `${file} must be a client module`).toContain(
-        '"use client"',
-      );
-      // The catalog is 31KB, its English copy layer 10KB, and the canonical
-      // resume resolver reaches every per-course reader config. Course facts
-      // arrive as props from the server instead (continue-courses.ts).
-      expect(source, `${file} imports the catalog`).not.toMatch(
-        /from "@\/lib\/courses\/catalog/,
-      );
-      expect(source, `${file} imports the resume resolver`).not.toMatch(
-        /from "@\/lib\/courses\/resume"/,
-      );
-      expect(source, `${file} imports a course config`).not.toMatch(
-        /from "@\/lib\/course\/config"/,
-      );
-    }
-  });
-
-  it("builds the course facts on the server and never marks them client", () => {
-    const source = read("continue-courses.ts");
-    expect(source).not.toContain('"use client"');
-    expect(source).toContain('from "@/lib/courses/catalog"');
-    expect(source).toContain("localizeHref");
-    expect(source).toContain("getCourseAccess()");
-  });
-
-  it("keeps readiness modules out of the home and atlas client graph", () => {
+describe("companion home: the atlas keeps readiness modules out of the client graph", () => {
+  it("keeps readiness modules out of the atlas client graph", () => {
     for (const file of [
-      "continue-card.tsx",
-      "continue-slot.tsx",
       "../../app/kurse/learning-atlas.tsx",
       "../../app/kurse/course-ledger-row.tsx",
     ]) {
@@ -384,28 +349,18 @@ describe("companion home: the continue island stays small", () => {
       }
     }
   });
-
-  it("defers the card and reserves its seat before it arrives", () => {
-    const slot = read("continue-slot.tsx");
-    expect(slot).toContain('{ ssr: false }');
-    expect(slot).toContain('className="h-[4.75rem]"');
-    expect(slot).toContain("lg:hidden");
-  });
 });
 
 describe("companion home: page order", () => {
-  it("seats the continue card in the hero and puts the rails after the course section", () => {
+  it("opens the phone band with the promise and puts the rails after the course section", () => {
     const page = readFileSync(
       join(__dirname, "..", "..", "app", "page.tsx"),
       "utf8",
     );
-    // The hero comes first; the continue seat is handed to it and opens the
-    // phone band as its first row, above the promise and the globe.
-    const hero = page.indexOf("<HeroSection");
-    const heroEnd = page.indexOf("/>", page.indexOf("continueSlot=", hero));
-    const seat = page.indexOf("<ContinueSlot");
-    expect(seat).toBeGreaterThan(hero);
-    expect(seat).toBeLessThan(heroEnd);
+    // No seat above the promise: the first row of the phone band is the
+    // headline, and the page hands the hero only the globe and its opening.
+    expect(page).not.toContain("ContinueSlot");
+    expect(page).not.toContain("continueSlot");
     expect(page).toContain("phoneGlobe={<HeroGlobeFrame />}");
     const order = [
       "<HeroSection",

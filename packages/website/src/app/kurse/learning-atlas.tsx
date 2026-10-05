@@ -752,13 +752,19 @@ export function LearningAtlas({
         {/* Level chips, phone only. They stick under the compact top bar while
             the ledger scrolls, on screens tall enough to spare the 53px; on a
             short phone the bar, the top bar and the tab bar together would
-            cover a third of the screen, so there it scrolls away. "alle" is
+            cover a third of the screen, so there it scrolls away. The test is
+            the physical screen height (max-device-height): the viewport
+            height changes while a phone's browser toolbar collapses, and a
+            query on it would pop this bar in and out under the top bar
+            mid-scroll. A landscape phone is always short, so it also scrolls
+            away there (520px sits far above any landscape phone viewport and
+            below any portrait one, so no toolbar change can cross it). "alle" is
             the server default and hydration never flips a row.
             js-shell-only: four inert buttons without scripting would be
             worse than the complete list. */}
         <div
           data-course-level-filter
-          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 mt-3 border-b border-hairline bg-background py-1 sm:mt-4 sm:py-2 lg:hidden [@media(max-height:700px)]:static"
+          className="js-shell-only sticky top-[var(--nav-h-compact)] z-30 mt-3 border-b border-hairline bg-background py-1 sm:mt-4 sm:py-2 lg:hidden [@media(max-device-height:700px),(orientation:landscape)_and_(max-height:520px)]:static"
         >
           <div
             role="group"

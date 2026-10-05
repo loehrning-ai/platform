@@ -88,15 +88,6 @@ export const HOME_COPY = {
       accountCta: "Zum Konto",
     },
     companion: {
-      resumeEyebrow: "Weiter bei",
-      startEyebrow: "Erster Schritt",
-      access: {
-        open: "Ohne Lernkonto",
-        "account-required": "Lernkonto nötig",
-        unavailable: "Hier nicht verfügbar",
-      },
-      lessonsDone: (done: number, total: number) =>
-        `${done} von ${total} Lektionen`,
       demosTitle: "Praxisbeispiele",
       demosRailLabel: "Praxisbeispiele zum Ausprobieren",
       booksTitle: "Lernbücher",
@@ -188,15 +179,6 @@ export const HOME_COPY = {
       accountCta: "Go to account",
     },
     companion: {
-      resumeEyebrow: "Continue with",
-      startEyebrow: "First step",
-      access: {
-        open: "No account needed",
-        "account-required": "Account required",
-        unavailable: "Unavailable here",
-      },
-      lessonsDone: (done: number, total: number) =>
-        `${done} of ${total} lessons`,
       demosTitle: "Applied examples",
       demosRailLabel: "Applied examples to try",
       booksTitle: "Learning books",

@@ -188,7 +188,7 @@ describe("<Nav />", () => {
     ).not.toHaveAttribute("aria-current");
   });
 
-  it("uses a copper rule for the current group and a translucent studio bar", () => {
+  it("uses a copper rule for the current group, an opaque phone bar and a translucent studio pill", () => {
     navigationMock.pathname = "/kurse";
     renderGerman();
 
@@ -197,14 +197,18 @@ describe("<Nav />", () => {
     expect(trigger.className).toContain("border-brand-orange");
     const row = document.querySelector("[data-nav-header-row]");
     // The studio pill is the desktop treatment only. Below lg the same row
-    // is the flush companion bar, so its rounding and its shadow are
-    // lg-scoped while the translucent paper surface stays global.
+    // is the flush companion bar: opaque paper, because a backdrop blur on a
+    // fixed bar flickers in iOS WebKit while content scrolls under it. The
+    // rounding, shadow, translucency and blur are lg-scoped.
     expect(row).toHaveClass(
+      "bg-background",
       "lg:rounded-2xl",
-      "bg-background/85",
+      "lg:bg-background/85",
       "lg:shadow-card",
-      "backdrop-blur-xl",
+      "lg:backdrop-blur-xl",
     );
+    expect(row?.className).not.toMatch(/(?<![:\w-])backdrop-blur/);
+    expect(row?.className).not.toMatch(/(?<![:\w-])bg-background\/\d+/);
     // Never a dark surface.
     expect(row?.className).not.toMatch(/bg-(?:foreground|black|graphit)\b/);
   });

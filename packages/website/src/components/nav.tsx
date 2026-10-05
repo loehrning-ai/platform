@@ -612,15 +612,16 @@ export function Nav() {
     // of the viewport and exactly --nav-h-compact tall, which is the offset
     // <main> reserves, so page content begins directly under it. From lg the
     // floating glass pill returns: an inset, rounded, softly shadowed studio
-    // bar inside the --nav-h band. Both shells are translucent paper, never
-    // a dark surface.
+    // bar inside the --nav-h band. Both shells are paper, never a dark
+    // surface: the flush bar is opaque (a backdrop blur on a fixed bar flickers
+    // in iOS WebKit while the page scrolls under it), the pill is translucent.
     <nav
       aria-label={copy.mainNavigation}
       className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2"
     >
       <div
         data-nav-header-row
-        className="mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background/85 px-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5 lg:h-12 lg:rounded-2xl lg:border-x lg:border-t lg:shadow-card"
+        className="mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background px-3 sm:px-5 lg:h-12 lg:rounded-2xl lg:border-x lg:border-t lg:bg-background/85 lg:shadow-card lg:backdrop-blur-xl lg:supports-[backdrop-filter]:bg-background/72"
       >
         <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 

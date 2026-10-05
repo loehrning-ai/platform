@@ -950,10 +950,14 @@ describe("LearningAtlas phone ledger", () => {
       screen.getByRole("heading", { level: 2, name: "Womit fängst du an?" }),
     ).toHaveClass("max-sm:sr-only");
 
-    // The level bar stops sticking on short phones.
-    expect(container.querySelector("[data-course-level-filter]")).toHaveClass(
-      "[@media(max-height:700px)]:static",
+    // The level bar stops sticking on short phones, decided by the physical
+    // screen height: the viewport height changes mid-scroll as the browser
+    // toolbar collapses, and the bar must not flip with it.
+    const levelBar = container.querySelector("[data-course-level-filter]");
+    expect(levelBar).toHaveClass(
+      "[@media(max-device-height:700px),(orientation:landscape)_and_(max-height:520px)]:static",
     );
+    expect(levelBar?.className).not.toContain("[@media(max-height:");
     // The ledger head's account link leaves the phone; the Konto tab and the
     // cost note carry it there.
     expect(
