@@ -234,7 +234,9 @@ export function VerificationPage({
                     ? "QR data read"
                     : "QR-Daten gelesen"}
                 </p>
-                <h2 className="mt-4 text-fluid-h2 font-bold">
+                {/* "Teilnahmebestätigung:" alone is wider than the card at
+                    320px; hyphenate, and break as a last resort. */}
+                <h2 className="mt-4 hyphens-auto break-words text-fluid-h2 font-bold">
                   {config.certificateTitle}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">

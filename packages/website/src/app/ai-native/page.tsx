@@ -291,7 +291,10 @@ export default async function AiNativePage() {
           <Link
             href={localizeHref(OPERATOR_PATH, locale)}
             prefetch={false}
-            className="underline decoration-border underline-offset-4 hover:decoration-foreground"
+            // Vertical padding lifts the in-sentence link to the 44px target
+            // floor; the matching negative margin keeps the line box, so the
+            // paragraph's rhythm does not change.
+            className="-my-3 inline-block py-3 underline decoration-border underline-offset-4 hover:decoration-foreground"
           >
             {copy.scopeLink}
           </Link>
