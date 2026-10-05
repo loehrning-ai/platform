@@ -92,6 +92,24 @@ Git metadata, generated output, caches, reports, credentials, authenticated
 storage state, local-only E2E files, and symbolic links. It intentionally
 rejects a root `.git` entry, so it is not a post-`git init` CI command.
 
+## Releasing to production (Vercel)
+
+Merging to `main` does not deploy: `packages/website/vercel.json` disables
+Git-triggered production builds, so production changes only through one
+deliberate step. After the merge, run it from the repository root with the
+`vercel` and `gh` CLIs signed in and the project linked (`vercel link`):
+
+```bash
+bun run deploy:production                  # dry run: checks every guard
+bun run deploy:production -- --wait --yes  # wait for green CI, then deploy
+```
+
+It deploys only the head of `main`, and only when every check-run on that
+exact commit is green (the `verify` aggregate included). It refuses a commit
+that already has a production deployment, watches the build to READY with a
+12-minute cancel guard, smoke-tests the production routes, and prints the
+rollback command. It never retries a build on its own.
+
 ## Optional provider activation
 
 Provider-free operation is the release default. A Supabase service-role key does not activate stored feedback. Before setting `FEEDBACK_ENABLED=true`, apply every local migration and enable Supabase Cron in the intended project. Migration `20260728235900_close_retention_and_legacy_data_gaps.sql` creates the canonical `beta-feedback-retention-daily` job at 03:29 UTC. Do not create a second retention job manually.
