@@ -67,7 +67,7 @@ const DE: OpenWithYourAiCopy = {
       promptOpening: (contextTitle) =>
         `Ich arbeite gerade einen Workshop auf loehrning.ai durch: ${contextTitle}.`,
       promptTask:
-        "Führe mich Schritt für Schritt durch den Ablauf. Nimm mir die Entscheidungsaufgaben nicht ab: Stell mir die Fragen und warte auf meine Antwort. Nutze nur die gelesenen Inhalte und erfinde nichts.",
+        "Führe mich Schritt für Schritt durch den Ablauf. Nimm mir die Aufgaben nicht ab: Stell mir die Fragen und warte auf meine Antwort. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
   },
   promptServerLine: (serverUrl) => `Server (HTTP): ${serverUrl}`,
@@ -109,7 +109,7 @@ const EN: OpenWithYourAiCopy = {
       promptOpening: (contextTitle) =>
         `I am working through a workshop on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Walk me through the steps one at a time. Do not settle the decision labs for me: ask me the questions and wait for my answer. Use only the content you read and invent nothing.",
+        "Walk me through the steps one at a time. Do not do the tasks for me: ask me the questions and wait for my answer. Use only the content you read and invent nothing.",
     },
   },
   promptServerLine: (serverUrl) => `Server (HTTP): ${serverUrl}`,

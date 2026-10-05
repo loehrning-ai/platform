@@ -570,7 +570,8 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       >
         <div className={CONTAINER}>
           {/* The red line: three numbered steps, each a jump to its section.
-              The facts line and the one outcome sit under it. */}
+              Phones stack number over label so a step never wraps mid-word
+              in a third of 390px. The facts line and the outcome sit under. */}
           <nav
             aria-label={copy.redLineLabel}
             data-workshop-redline=""
@@ -580,7 +581,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 <li key={step.href} className="min-w-0">
                   <a
                     href={step.href}
-                    className="flex min-h-14 items-center gap-3 border-2 border-scene-line bg-background px-3 py-2 text-[0.9375rem] font-bold leading-tight text-foreground transition-transform hover:-translate-y-0.5 sm:text-body"
+                    className="flex min-h-14 flex-col items-center justify-center gap-1 border-2 border-scene-line bg-background px-2 py-2 text-center text-[0.9375rem] font-bold leading-tight text-foreground transition-transform hover:-translate-y-0.5 sm:flex-row sm:justify-start sm:gap-3 sm:px-3 sm:text-left sm:text-body"
                   >
                     <StepNumber n={index + 1} />
                     <span className="min-w-0">{step.label}</span>

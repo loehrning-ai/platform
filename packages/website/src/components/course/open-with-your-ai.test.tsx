@@ -108,7 +108,7 @@ describe("open-with-your-ai prompt", () => {
     );
   });
 
-  it("keeps a workshop prompt from taking the decision labs off the learner", () => {
+  it("keeps a workshop prompt from taking the tasks off the learner", () => {
     const prompt = buildOpenWithYourAiPrompt({
       kind: "workshop",
       contextTitle: "KI-Prognosen einschätzen",
@@ -119,7 +119,7 @@ describe("open-with-your-ai prompt", () => {
       locale: "de",
     });
 
-    expect(prompt).toContain("Entscheidungsaufgaben nicht ab");
+    expect(prompt).toContain("Aufgaben nicht ab");
   });
 });
 
