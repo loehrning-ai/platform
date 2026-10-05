@@ -200,7 +200,7 @@ describe("EU AI Act lesson-engine content", () => {
   it("keeps the module order matched to the block ids in data.ts", () => {
     for (const { de, en } of pairs) {
       for (const lesson of [...de.lessons, ...en.lessons]) {
-        expect(lesson.blockId).toBe(de.blockId);
+        expect((lesson as { blockId?: string }).blockId).toBe(de.blockId);
         expect(lesson.id.endsWith(`-${de.blockId.replace("block_", "")}-${lesson.id.split("-").at(-1)}`)).toBe(true);
       }
     }
