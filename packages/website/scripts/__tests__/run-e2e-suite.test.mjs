@@ -78,17 +78,16 @@ async function assertProcessGone(pid, timeoutMs = 1_500) {
 
 test("public plan isolates Chromium engines and recycles WebKit processes", () => {
   const plan = buildE2ePlan("public");
-  assert.equal(plan.length, 4 + MOBILE_WEBKIT_SHARD_COUNT);
+  assert.equal(plan.length, 3 + MOBILE_WEBKIT_SHARD_COUNT);
   assert.deepEqual(
-    plan.slice(0, 4).map((step) => step.label),
+    plan.slice(0, 3).map((step) => step.label),
     [
       "chromium",
       "chromium-ai-native-operator",
-      "chromium-claude-responsive",
       "mobile-chromium",
     ],
   );
-  const webkit = plan.slice(4);
+  const webkit = plan.slice(3);
   assert.equal(new Set(webkit.map((step) => step.label)).size, webkit.length);
   assert.deepEqual(
     webkit.map((step) =>
@@ -106,7 +105,7 @@ test("public plan isolates Chromium engines and recycles WebKit processes", () =
 });
 
 test("public plan covers every desktop Chromium test exactly once", () => {
-  const desktopSteps = buildE2ePlan("public").slice(0, 3);
+  const desktopSteps = buildE2ePlan("public").slice(0, 2);
   const projectKeys = desktopSteps.map((step) => listKeys(step.arguments));
   for (const [index, keys] of projectKeys.entries()) {
     assert.ok(
@@ -121,7 +120,7 @@ test("public plan covers every desktop Chromium test exactly once", () => {
 
   // Mobile Chromium carries every public spec except the intentionally
   // desktop-only course-workspace matrix. Together they are the authoritative
-  // public inventory the three managed desktop projects must partition.
+  // public inventory the two managed desktop projects must partition.
   const reference = new Set([
     ...listKeys(["test", "--project=mobile-chromium", "--retries=0"]),
     ...listKeys([
@@ -140,7 +139,7 @@ test("real WebKit shard lists cover the complete project exactly once", () => {
   assert.equal(new Set(full).size, full.length);
 
   const shardIds = [];
-  const webkitSteps = buildE2ePlan("public").slice(4);
+  const webkitSteps = buildE2ePlan("public").slice(3);
   assert.equal(webkitSteps.length, MOBILE_WEBKIT_SHARD_COUNT);
   for (const step of webkitSteps) {
     const ids = listIds(step.arguments);
@@ -239,10 +238,10 @@ test("suite execution continues after a failed shard and returns failure", async
     stdio: "ignore",
   });
   assert.equal(status, 1);
-  assert.equal(invocations.length, 4 + MOBILE_WEBKIT_SHARD_COUNT);
+  assert.equal(invocations.length, 3 + MOBILE_WEBKIT_SHARD_COUNT);
   assert.equal(
     new Set(invocations.map((entry) => entry.label)).size,
-    4 + MOBILE_WEBKIT_SHARD_COUNT,
+    3 + MOBILE_WEBKIT_SHARD_COUNT,
   );
   assert.ok(invocations.every((entry) => entry.args.includes("--retries=0")));
 });
@@ -308,7 +307,7 @@ test("signals propagate as failure while a forced timeout is terminal", async ()
     stdio: "ignore",
   });
   assert.equal(signalled, 1);
-  assert.equal(signalInvocations, 4 + MOBILE_WEBKIT_SHARD_COUNT);
+  assert.equal(signalInvocations, 3 + MOBILE_WEBKIT_SHARD_COUNT);
 
   let timeoutInvocations = 0;
   const timedOut = await executeE2eSuite({

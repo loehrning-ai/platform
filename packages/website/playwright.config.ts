@@ -70,7 +70,6 @@ const MOCK_AUTH_PRELOAD = fileURLToPath(
 );
 const DESKTOP_CHROMIUM_ISOLATED_SPECS = [
   /route-ai-native-operator\.spec\.ts$/,
-  /route-claude-responsive\.spec\.ts$/,
 ] as const;
 const STORAGE_STATE = RUN_LIVE_AUTH
   ? validateLiveAuthStorageStatePath(process.env.E2E_AUTH_STORAGE_STATE)
@@ -304,11 +303,6 @@ export default defineConfig({
     {
       name: "chromium-ai-native-operator",
       testMatch: DESKTOP_CHROMIUM_ISOLATED_SPECS[0],
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "chromium-claude-responsive",
-      testMatch: DESKTOP_CHROMIUM_ISOLATED_SPECS[1],
       use: { ...devices["Desktop Chrome"] },
     },
     {
