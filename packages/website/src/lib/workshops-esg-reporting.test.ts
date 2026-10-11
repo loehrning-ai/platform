@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
 const slug = "esg-berichte-mit-ki";
@@ -11,22 +10,27 @@ const de = ESG_REPORTING_WORKSHOP.de;
 const en = ESG_REPORTING_WORKSHOP.en;
 const both = [de, en] as const;
 
-interface DataNumber {
-  readonly en: string;
-  readonly de: string;
-}
-// The dataset is build input and is not served: scripts/workshop04/data/w04-data.json at the repository root.
-const data = JSON.parse(readFileSync(resolve(process.cwd(), "..", "..", "scripts/workshop04/data/w04-data.json"), "utf8")) as {
-  numbers: Record<string, DataNumber>;
-  inputs: { ws: { printed: string; priorYearPrinted: string } };
-};
+const slides = readFileSync(resolve(root, "slides.html"), "utf8");
+// The kit zip stores its entries uncompressed, so its text can be read straight from the bytes.
+const kitText = readFileSync(resolve(root, "vardar-oak-esg-kit.zip")).toString("utf8");
 
-describe("Workshop 04 registry copy (ESG reporting)", () => {
+/** A printed number without its thousands separators, with "." as the decimal point. */
+function bare(token: string, locale: "de" | "en"): string {
+  return locale === "de" ? token.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : token.replace(/,(?=\d{3}\b)/g, "");
+}
+
+/** Every number the deck or the kit prints, normalized the same way (deck count-ups included). */
+const printed = new Set(
+  [...`${slides}\n${kitText}`.replace(/(\d),(?=\d{3}\b)/g, "$1").matchAll(/\d+(?:\.\d+)?/g)].map(([token]) => token),
+);
+
+describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
   it("identifies itself as workshop 04 with the fixed catalogue labels", () => {
     for (const workshop of both) {
       expect(workshop.slug).toBe(slug);
       expect(workshop.number).toBe("04");
-      expect(workshop.eyebrow).toBe(`Workshop 04 · ${workshop.topic}`);
+      expect(workshop.topic).toBe("ESG");
+      expect(workshop.eyebrow).toBe("Workshop 04 · ESG");
       expect(workshop.summary.length).toBeLessThanOrEqual(160);
       expect(workshop.accessNote.split(/(?<=\.)\s+/).length).toBeLessThanOrEqual(2);
       expect(workshop.outcomes.length).toBeGreaterThanOrEqual(3);
@@ -34,15 +38,19 @@ describe("Workshop 04 registry copy (ESG reporting)", () => {
       expect(workshop.notCovered.length).toBeGreaterThanOrEqual(2);
       expect(workshop.notCovered.length).toBeLessThanOrEqual(4);
       expect(workshop.provenance.data).toBe("synthetic");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-11");
       expect(workshop.caseStudy.isFictional).toBe(true);
-      // Nothing is recorded yet: the raw-folder answer is constructed, and the copy says so.
+      // The prompts were pre-run on Claude models; no live session is claimed yet.
+      expect(workshop.provenance.liveRunAt).toBeUndefined();
       expect(workshop.provenance.aiOutputsRecordedAt).toBeUndefined();
-      expect(workshop.accessNote).toMatch(/konstruiert|constructed/);
+      expect(workshop.provenance.note).toMatch(/Claude-Modellen|Claude models/);
+      expect(workshop.accessNote).toMatch(/Tim/);
     }
-    expect(de.duration).toBe("~90 Minuten");
-    expect(en.duration).toBe("~90 minutes");
+    expect(de.title).toBe("ESG-Anfragen bis Freitag beantworten");
+    expect(en.title).toBe("Answer ESG by Friday");
+    expect(de.duration).toBe("~60 Minuten");
+    expect(en.duration).toBe("~60 minutes");
     expect(de.format).not.toBe(en.format);
-    expect(en.question).toBe("What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?");
   });
 
   it("uses no en or em dashes anywhere", () => {
@@ -62,110 +70,74 @@ describe("Workshop 04 registry copy (ESG reporting)", () => {
     expect(de.caseStudy.dataLimitations).toHaveLength(en.caseStudy.dataLimitations.length);
   });
 
-  it("adds its agenda up to 77 minutes of deck plus 13 minutes of questions", () => {
+  it("follows the deck's 60-minute session with no extra question round", () => {
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
-      const acts = workshop.agenda.filter((item) => item.mode !== "live");
-      expect(acts.map((item) => item.minutes)).toEqual([4, 8, 16, 16, 16, 7, 10]);
-      expect(workshop.agenda.reduce((sum, item) => sum + item.minutes, 0)).toBe(90);
-      expect(workshop.minutesLive).toBe(90);
-      expect(workshop.materials[0]?.minutes).toBe(77);
+      expect(workshop.agenda.map((item) => item.minutes)).toEqual([6, 4, 8, 8, 6, 8, 8, 6, 6]);
+      expect(workshop.agenda.every((item) => item.mode === undefined)).toBe(true);
+      expect(workshop.minutesLive).toBe(60);
+      expect(workshop.materials[0]?.minutes).toBe(60);
     }
     expect(de.agenda).toHaveLength(en.agenda.length);
   });
 
-  it("lists the same English materials in both locales, and every file exists", () => {
+  it("lists the deck and the kit in both locales, and every file exists", () => {
     const frame = (workshop: typeof de) => workshop.materials.map(({ href, kind, language, role, phase, primary, optional, minutes }) => ({ href, kind, language, role, phase, primary, optional, minutes }));
     expect(frame(de)).toEqual(frame(en));
     expect(en.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length))).toEqual([
       "slides.html",
-      "presenter.html",
-      "demo.html",
-      "kellbrunn-esg-kit.zip",
-      "transfer.html",
-      "guide.html",
-      "field-card.html",
+      "vardar-oak-esg-kit.zip",
     ]);
     for (const workshop of both) {
       expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
       for (const material of workshop.materials) {
         expect(material.language).toBe("en");
-        expect(material.href.startsWith(`/workshops/${slug}/`)).toBe(true);
-        expect(material.href.endsWith("/")).toBe(false);
         expect(material.label).not.toMatch(/\(|\)|Englisch|English|öffnen|\bOpen\b/);
-        expect(material.description.trim()).not.toBe("");
         if (material.kind !== "html") expect(material.label).toMatch(/\.(?:zip|csv)$/);
-        expect(existsSync(resolve(publicRoot, material.href.slice(1).split("#")[0])), material.href).toBe(true);
+        expect(existsSync(resolve(publicRoot, material.href.slice(1))), material.href).toBe(true);
       }
     }
   });
 
   it("states the measured kit size", () => {
-    const size = statSync(resolve(root, "kellbrunn-esg-kit.zip")).size;
+    const size = statSync(resolve(root, "vardar-oak-esg-kit.zip")).size;
     for (const workshop of both) {
       const kit = workshop.materials.find((material) => material.kind === "zip");
-      expect(kit?.sizeLabel).toMatch(/^\d+(?:[.,]\d)? (?:KB|MB)$/);
       expect(kit?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
     }
   });
 
-  it("names the deck's scene count and act timings as the deck has them", () => {
-    const slides = readFileSync(resolve(root, "slides.html"), "utf8");
-    const main = [...slides.matchAll(/<section\b[^>]*>/g)].map(([tag]) => tag).filter((tag) => /data-kind="main"/.test(tag));
-    expect(de.materials[0]?.label).toBe(`Deck · ${main.length} Szenen`);
-    expect(en.materials[0]?.label).toBe(`Deck · ${main.length} scenes`);
-    const seconds = new Map<string, number>();
-    for (const tag of main) {
-      const act = /data-act="(\d+)"/.exec(tag)?.[1];
-      if (act !== undefined) seconds.set(act, (seconds.get(act) ?? 0) + Number(/data-seconds="(\d+)"/.exec(tag)?.[1] ?? 0));
-    }
-    const acts = en.agenda.filter((item) => item.mode !== "live");
-    expect(seconds.size).toBe(acts.length);
-    for (const [index, item] of acts.entries()) {
-      expect(Math.abs(item.minutes - (seconds.get(String(index)) ?? 0) / 60), item.label).toBeLessThanOrEqual(1);
-    }
+  it("names the deck's slide count", () => {
+    const count = [...slides.matchAll(/<section\b/g)].length;
+    expect(de.materials[0]?.label).toBe(`Deck · ${count} Folien`);
+    expect(en.materials[0]?.label).toBe(`Deck · ${count} slides`);
   });
 
-  it("uses only decimal figures that w04-data.json renders", () => {
-    const allowed = new Set<string>();
-    const bare = (value: string) => value.replace(/^[+−-]/, "").replace(/\s*(?:%|t|kWh|MWh|l|t\/Mio\. EUR)$/, "");
-    for (const entry of Object.values(data.numbers)) {
-      allowed.add(bare(entry.en));
-      allowed.add(bare(entry.de));
-    }
-    for (const printed of [data.inputs.ws.printed, data.inputs.ws.priorYearPrinted]) allowed.add(printed.replace(/ MWh$/, ""));
-    for (const workshop of both) {
-      // A chart bar's numeric value is checked against its printed display
-      // in "charts only figures the workshop prints" below.
+  it("prints only numbers the published deck or kit prints", () => {
+    for (const [locale, workshop] of [["de", de], ["en", en]] as const) {
       const text = JSON.stringify(workshop)
         .replace(/\/workshops\/[^"]+/g, "")
-        .replace(/"value":\d+(?:\.\d+)?/g, "");
-      for (const [token] of text.matchAll(/\d+(?:[.,]\d+)+/g)) {
-        expect(allowed.has(token), `${workshop.slug} ${token}`).toBe(true);
+        .replace(/"(?:minutes|minutesLive|minutesSelfStudy|value)":\d+/g, "")
+        .replace(/"(?:n|number|reviewedAt)":"[^"]*"/g, "")
+        .replace(/CO₂e|Workshop 04|START-HERE/g, "");
+      for (const [token] of text.matchAll(/\d+(?:[.,]\d+)*/g)) {
+        expect(printed.has(bare(token, locale)), `${locale} ${token}`).toBe(true);
       }
     }
   });
 
-  it("charts only figures the workshop prints elsewhere, with values equal to their display", () => {
-    for (const [locale, workshop] of [["de", de], ["en", en]] as const) {
-      const chart = workshop.caseStudy.resultChart;
-      expect(chart, locale).toBeDefined();
-      const { resultChart: _chart, ...caseStudy } = workshop.caseStudy;
-      // Every other string of the workshop: summary, description, lab and case.
-      const text = JSON.stringify({ ...workshop, caseStudy });
-      expect(chart!.bars.map((bar) => bar.kind)).toEqual(["reference", "answer", "correct"]);
-      for (const bar of chart!.bars) {
-        expect(text, `${locale} ${bar.display}`).toContain(bar.display);
-        const parsed = Number(
-          (locale === "de" ? bar.display.replace(/\./g, "").replace(",", ".") : bar.display.replace(/,/g, ""))
-            .replace(/\s*t$/, ""),
-        );
-        expect(bar.value, bar.display).toBe(parsed);
-        if (bar.note) {
-          for (const [figure] of bar.note.matchAll(/\d+(?:[.,]\d+)?\s?%/g)) expect(text).toContain(figure);
-        }
-      }
-      for (const [figure] of chart!.note.matchAll(/\d+(?:[.,]\d+)?\s?t\b/g)) expect(text).toContain(figure);
-    }
+  it("keeps the case facts the deck and kit show", () => {
+    expect(de.description).toContain("13 von 16");
+    expect(de.description).toContain("653,7 MWh");
+    expect(de.description).toContain("31. August 2026");
+    expect(de.description).toContain("320.000 kWh × 0,75 kg = 240 t CO₂e");
+    expect(en.description).toContain("13 of 16");
+    expect(en.description).toContain("653.7 MWh");
+    expect(en.description).toContain("31 August 2026");
+    expect(en.description).toContain("320,000 kWh × 0.75 kg = 240 t CO₂e");
+    expect(slides).toContain('data-count="653.7"');
+    expect(slides).toContain("Expired 31 Aug 2026");
+    expect(slides).toMatch(/data-count="13"[\s\S]*data-count="3"/);
+    expect(slides).toMatch(/data-count="9">0<\/span><small>filled from our files<\/small>/);
   });
 });

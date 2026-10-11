@@ -44,7 +44,12 @@ jobs:
           # braces 3.0.3 is the latest published version and micromatch
           # 4.0.8 requires it, so no upgrade clears it. Drop this flag once
           # braces ships a fix.
-          bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3 --ignore=GHSA-vfj7-8cjw-p6xm
+          # GHSA-rj75-hqrm-r3gf: @tailwindcss/typography pins postcss-selector-parser
+          # 6.0.10 exactly; it only parses this repo's own CSS at build time.
+          # GHSA-hp3w-g68c-fv3c: sprintf-js has no fixed release; it reaches the
+          # tree only through argparse at build time (gray-matter, lhci).
+          # Drop both flags once a fixed version is reachable.
+          bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3 --ignore=GHSA-vfj7-8cjw-p6xm --ignore=GHSA-rj75-hqrm-r3gf --ignore=GHSA-hp3w-g68c-fv3c
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: moderate

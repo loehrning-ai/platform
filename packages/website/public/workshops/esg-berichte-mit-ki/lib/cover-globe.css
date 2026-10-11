@@ -1,0 +1,17 @@
+.workshop-globe {
+  position: absolute;
+  top: 50%;
+  right: -260px;
+  z-index: 0;
+  width: 1280px;
+  opacity: 0.34;
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(-50%);
+}
+
+.workshop-globe img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

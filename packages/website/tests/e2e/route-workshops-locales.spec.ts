@@ -28,9 +28,9 @@ const WORKSHOP_ROUTES = [
   },
   {
     path: "/workshops/esg-berichte-mit-ki",
-    deHeading: "ESG-Berichte mit KI",
-    enHeading: "ESG reports with AI",
-    materialCount: 7,
+    deHeading: "ESG-Anfragen bis Freitag beantworten",
+    enHeading: "Answer ESG by Friday",
+    materialCount: 2,
   },
 ] as const;
 

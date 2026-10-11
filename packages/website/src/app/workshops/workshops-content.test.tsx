@@ -191,10 +191,11 @@ describe("<WorkshopsContent>", () => {
   it("shows the route of the workshops it names as a static five-station route", () => {
     render(<WorkshopsContent workshops={getWorkshops("de")} locale="de" />);
 
-    // Workshops 01 and 02 follow other stations (and 01 shows no AI answer),
-    // so the route names the workshops it describes.
+    // Workshops 01, 02 and 04 follow other stations (01 shows no AI answer,
+    // 04 is a presenter-led run of five prompts), so the route names the
+    // workshop it describes.
     const route = screen.getByRole("list", {
-      name: "So laufen die Workshops 03 und 04",
+      name: "So läuft Workshop 03",
     });
     expect(route).toHaveAttribute("data-route-mode", "description");
     expect(within(route).getAllByRole("listitem")).toHaveLength(5);
@@ -226,8 +227,8 @@ describe("<WorkshopsContent>", () => {
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
     // German amount: ASCII minus, euro sign on the same line.
     expect(within(rows[1]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
-    // Hyphenated words such as "Scope-1-und-2-Summe" are not amounts.
-    expect(within(rows[0]).getByText(/Scope-1-und-2-Summe/).tagName).toBe("P");
+    // Hyphenated words such as "ESG-Anfragen" are not amounts.
+    expect(within(rows[0]).getByText(/drei ESG-Anfragen auf einmal/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
@@ -235,7 +236,7 @@ describe("<WorkshopsContent>", () => {
     expect(screen.queryByRole("link", { name: /Workshop 04 beginnen/ })).toBeNull();
     // The team note names every workshop with a presenter view.
     expect(
-      screen.getByText(/^Workshops 03 und 04 haben eine Moderationsansicht/),
+      screen.getByText(/^Workshop 03 hat eine Moderationsansicht/),
     ).toBeInTheDocument();
   });
 
@@ -295,7 +296,7 @@ describe("<WorkshopsContent>", () => {
     // The phone meta line is a short duration line; the row the cover
     // button recommends says so.
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Neu · Live 90 Min. · Selbstlernen 80 Min.",
+      "Neu · Live 60 Min. · Selbstlernen 60 Min.",
     );
     expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -324,7 +325,7 @@ describe("<WorkshopsContent>", () => {
     // Phones skip the route (each workshop page shows its own agenda), so
     // the list follows the cover; from sm it is the reviewed row.
     const rail = screen.getByRole("group", {
-      name: "So laufen die Workshops 03 und 04",
+      name: "So läuft Workshop 03",
     });
     expect(rail).toHaveAttribute("tabindex", "0");
     expect(rail.closest("section")).toHaveClass("hidden", "sm:block");
@@ -333,8 +334,8 @@ describe("<WorkshopsContent>", () => {
     // instead of running into the arrow.
     const times = rows[0].querySelectorAll("[data-workshop-meta] > span.whitespace-nowrap");
     expect([...times].map((time) => time.textContent)).toEqual([
-      "Live 90 Min. ·",
-      "Selbstlernen 80 Min.",
+      "Live 60 Min. ·",
+      "Selbstlernen 60 Min.",
     ]);
     // The H1 is the old display head at the leading the highlight band is
     // built for (0.9): a 36px phone size, fluid from sm.
@@ -353,9 +354,9 @@ describe("<WorkshopsContent>", () => {
     const note = container.querySelector("[data-workshop-teams]")!;
     expect(note.tagName).toBe("P");
     expect(note).not.toHaveClass("border-t");
-    expect(note).toHaveTextContent(/^Mit deinem Team\. Workshops 03 und 04 haben/);
+    expect(note).toHaveTextContent(/^Mit deinem Team\. Workshop 03 hat/);
     expect(
-      screen.getByText(/Workshops 03 und 04 haben eine Moderationsansicht mit Notizen/),
+      screen.getByText(/Workshop 03 hat eine Moderationsansicht mit Notizen/),
     ).toBeInTheDocument();
     expect(screen.getByText(/Öffne das Deck und drück P\./)).toBeInTheDocument();
     // Phones have no P key: the keyboard hint shows from lg only.
@@ -441,7 +442,7 @@ describe("<WorkshopsContent>", () => {
       "01 Prognosen",
       "02 Geschäftsberichte",
       "03 Datenbereitschaft",
-      "04 ESG-Berichte",
+      "04 ESG",
     ]);
     for (const square of squares) {
       expect(square).toHaveClass("size-11", "focus-visible:outline-brand-orange");

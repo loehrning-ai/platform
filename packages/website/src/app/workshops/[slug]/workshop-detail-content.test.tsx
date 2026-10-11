@@ -358,9 +358,34 @@ describe("<WorkshopDetailContent>", () => {
     }
   }
 
-  it("charts the W04 result on paper with a hatched AI answer and direct labels", () => {
+  it("charts a case result on paper with a hatched AI answer and direct labels", () => {
+    // No published workshop carries chart data at the moment, so the chart is
+    // rendered from a fixture on the Workshop 04 page.
+    const chartFixture = {
+      de: {
+        unit: "t CO₂e",
+        basis: "Scope 1 und 2",
+        note: "Die KI-Summe weicht um 48,7 t ab.",
+        bars: [
+          { label: "Vorjahr", value: 2017.5, display: "2.017,5 t", kind: "reference" },
+          { label: "KI-Antwort", value: 1866.5, display: "1.866,5 t", note: "ungeprüft", kind: "answer" },
+          { label: "Geprüft", value: 1915.2, display: "1.915,2 t", kind: "correct" },
+        ],
+      },
+      en: {
+        unit: "t CO₂e",
+        basis: "Scope 1 and 2",
+        note: "The AI total is 48.7 t off.",
+        bars: [
+          { label: "Last year", value: 2017.5, display: "2,017.5 t", kind: "reference" },
+          { label: "AI answer", value: 1866.5, display: "1,866.5 t", note: "unchecked", kind: "answer" },
+          { label: "Checked", value: 1915.2, display: "1,915.2 t", kind: "correct" },
+        ],
+      },
+    } as const;
     for (const locale of ["de", "en"] as const) {
-      const workshop = getWorkshopBySlug("esg-berichte-mit-ki", locale)!;
+      const published = getWorkshopBySlug("esg-berichte-mit-ki", locale)!;
+      const workshop = { ...published, caseStudy: { ...published.caseStudy, resultChart: chartFixture[locale] } };
       const { container, unmount } = render(
         <WorkshopDetailContent workshop={workshop} locale={locale} />,
       );
@@ -395,10 +420,11 @@ describe("<WorkshopDetailContent>", () => {
       unmount();
     }
     // Workshops without chart data show none.
-    render(
-      <WorkshopDetailContent workshop={getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!} locale="de" />,
-    );
-    expect(document.querySelector("[data-result-chart]")).toBeNull();
+    for (const slug of ["ki-prognosen-einschaetzen", "esg-berichte-mit-ki"]) {
+      const { unmount } = render(<WorkshopDetailContent workshop={getWorkshopBySlug(slug, "de")!} locale="de" />);
+      expect(document.querySelector("[data-result-chart]"), slug).toBeNull();
+      unmount();
+    }
   });
 
   it("keeps one Mennige group: no orange rules, no mono eyebrows, no old risograph classes", () => {
