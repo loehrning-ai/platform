@@ -202,7 +202,7 @@ export interface Workshop {
   /** The longer intro: the case, the wrong answer and the fix, in a few sentences. */
   readonly description: string;
   readonly format: string;
-  /** Catalogue label, always "~90 Minuten" / "~90 minutes". The numbers below carry the detail. */
+  /** Catalogue label, "~<minutes> Minuten" / "~<minutes> minutes" from minutesLive (or minutesSelfStudy without a live session). The numbers below carry the detail. */
   readonly duration: string;
   /** Two sentences at most: `<access>. <data flow>.` The one place access is stated. */
   readonly accessNote: string;

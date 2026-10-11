@@ -4,31 +4,23 @@ import type { Workshop, WorkshopMaterial } from "./workshops";
 const base = "/workshops/esg-berichte-mit-ki";
 
 /**
- * Workshop 04. Every number in this copy comes from
- * scripts/workshop04/data/w04-data.json (repository root), built by
- * scripts/workshop04/build_dataset.py; the company, its bills and the factors
- * are invented teaching data. The agenda follows the deck's seven acts: the
- * act minutes 4.0 / 7.5 / 16.0 / 16.5 / 15.5 / 7.0 / 10.0 are rounded half to
- * even (4 / 8 / 16 / 16 / 16 / 7 / 10 = 77), plus 13 minutes of questions in a
- * live session. The raw-folder AI answer is constructed from documented
- * failure modes; no run has been recorded yet, so provenance carries no
- * aiOutputsRecordedAt.
+ * Workshop 04, "Answer ESG by Friday". The published deck and kit are written by
+ * scripts/workshop04/export-esg-passport.mjs (repository root); every number in this copy is
+ * printed in that deck or kit, and the company, its files and its certificates are invented.
+ * The agenda follows the deck's 13 slides and the session clock (6 / 4 / 8 / 8 / 6 / 8 / 8 /
+ * 6 / 6 = 60 minutes). The session is presenter-led: Tim runs the five prompts in Claude while
+ * the room watches; the kit lets a learner replay the same steps at home.
  */
 
-/** Size of kellbrunn-esg-kit.zip (92,968 bytes), in the page locale's number format. */
-const KIT_SIZE_LABEL = "91 KB";
+/** Size of vardar-oak-esg-kit.zip (22,960 bytes), in the page locale's number format. */
+const KIT_SIZE_LABEL = "22 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
 /** Shared href, kind, language, role and phase: both locales list the same files in the same order. */
 const MATERIALS: readonly MaterialFrame[] = [
-  { href: `${base}/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 77, primary: true },
-  { href: `${base}/presenter.html`, kind: "html", language: "en", role: "presenter", phase: "during", optional: true },
-  { href: `${base}/demo.html`, kind: "html", language: "en", role: "demo", phase: "during", minutes: 10, optional: true },
-  { href: `${base}/kellbrunn-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "during" },
-  { href: `${base}/transfer.html`, kind: "html", language: "en", role: "exercise", phase: "during" },
-  { href: `${base}/guide.html`, kind: "html", language: "en", role: "guide", phase: "after" },
-  { href: `${base}/field-card.html`, kind: "html", language: "en", role: "card", phase: "after" },
+  { href: `${base}/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 60, primary: true },
+  { href: `${base}/vardar-oak-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
 ];
 
 /** Label, description and, where the first sentence runs long on a phone, its short phone wording. */
@@ -47,486 +39,398 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
   de: {
     slug: "esg-berichte-mit-ki",
     number: "04",
-    topic: "ESG-Berichte",
-    title: "ESG-Berichte mit KI",
-    eyebrow: "Workshop 04 · ESG-Berichte",
+    topic: "ESG",
+    title: "ESG-Anfragen bis Freitag beantworten",
+    eyebrow: "Workshop 04 · ESG",
     summary:
-      "Du findest sechs Fehler in der plausiblen Scope-1-und-2-Summe einer KI.",
+      "Eine erfundene Möbelfirma bekommt drei ESG-Anfragen auf einmal. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
     description:
-      "Die erfundene Kellbrunn Präzisionsteile GmbH will wissen, wie hoch ihre Scope-1- und Scope-2-Emissionen 2025 waren und ob sie gegenüber 2024 gesunken sind. Eine aus dokumentierten Fehlerarten konstruierte KI-Antwort auf 22 Rechnungen und Exporte meldet 1.866,5 t CO₂e (7,5 % weniger) und liegt trotz sechs Fehlern nur 2,5 % neben der richtigen Zahl: doppelte Märzrechnung, fehlender Oktober, Rechnung eines Gemeinschaftsunternehmens, „1.240 MWh“ als 1.240 kWh gelesen, Gasfaktor auf falscher Basis, AdBlue als Diesel. Mit Belegtabelle, sechs Regeln und festen Faktoren ergeben sich 1.915,2 t standortbasiert (−5,1 %) und 1.893,2 t marktbasiert (−29,2 %). Vom standortbasierten Rückgang kommen 72,2 t vom Netzfaktor und 30,1 t aus geringerem Verbrauch, vom marktbasierten 744,0 t aus Herkunftsnachweisen für einen Standort.",
+      "Vardar Oak, ein erfundener Möbelhersteller aus Veles in Nordmazedonien, bekommt an einem Montag drei ESG-Anfragen: den Lieferantenfragebogen des größten Kunden, grüne Werbeaussagen des eigenen Marketings und das ESG-Formular der Bank. Tim beantwortet alle drei live in einem Claude-Projekt, mit fünf Prompts und drei Regeln: nur unsere Dateien, jede Antwort mit Quelle, NOT FOUND oder NEEDS CHECK statt einer Schätzung. Im Fragebogen sind 13 von 16 Zeilen beantwortet und 3 offen, denn 653,7 MWh Strom sind nur elf Monate und das FSC-Zertifikat ist am 31. August 2026 abgelaufen. Vier von sieben Werbeaussagen fallen durch. Für die Bank rechnet Claude die Solaranlage vor: 320.000 kWh × 0,75 kg = 240 t CO₂e im Jahr.",
     format: "Live-Workshop mit Deck",
-    duration: "~90 Minuten",
+    duration: "~60 Minuten",
     accessNote:
-      "Das Material ist englisch, die Rechnungen im Kit sind deutsche Belege. Die KI-Antwort auf den Rohordner ist konstruiert, keine Live-Abfrage.",
-    outcome: "Fünf-Felder-Blatt für eine eigene Rechnung",
+      "Das Material ist englisch, und live bedient Tim Claude, während du zuschaust. Zu Hause spielst du die fünf Schritte mit dem Kit nach, auf jedem Claude-Plan mit eingeschalteter Codeausführung und Dateierstellung, und die Dateien werden dabei an Claude übertragen.",
+    outcome: "Kit mit fünf Prompts und drei Regeln",
     audience: [
-      "Nachhaltigkeits-, Finanz- und Controlling-Teams, die Scope 1 und 2 liefern",
-      "Betriebs- und Energieverantwortliche, bei denen die Rechnungen liegen",
-      "Moderierende, die den Fall mit einer Gruppe durchgehen",
+      "Geschäftsführung und Verwaltung kleiner Firmen, bei denen ESG-Fragebögen landen",
+      "Vertrieb und Marketing, die grüne Aussagen über Produkte machen wollen",
+      "Finanzteams, die Banken ESG-Angaben zu Krediten liefern",
     ],
     notForYou:
-      "Nicht für dich, wenn du eine Scope-3-Bilanz oder eine Einführung in CSRD, ESRS oder VSME suchst.",
+      "Nicht für dich, wenn du einen vollständigen CSRD- oder VSME-Bericht erstellen oder eine Treibhausgasbilanz von Grund auf lernen willst.",
     question:
-      "Wie hoch waren unsere Scope-1- und Scope-2-Emissionen 2025, und sind sie gegenüber 2024 gesunken?",
+      "Wie beantworten wir drei ESG-Anfragen bis Freitag aus einem Satz Fakten, ohne etwas zu behaupten, das wir nicht belegen können?",
     outcomes: [
-      "Du findest in einer Monatstabelle doppelte, fehlende und zweimonatige Rechnungen.",
-      "Du schreibst eine vollständige Belegzeile mit Faktor und Faktorjahr.",
-      "Du rechnest Scope 2 standort- und marktbasiert und nennst, für welche Kilowattstunden ein Herkunftsnachweis gilt.",
-      "Du zerlegst die Vorjahresveränderung in Netzfaktor, Herkunftsnachweise und Verbrauch.",
+      "Du richtest ein Claude-Projekt mit eigenen Dateien und drei Regeln ein.",
+      "Du lässt Claude einen Fragebogen mit Quelle und Status je Zeile füllen.",
+      "Du lässt Claude zwei Zahlen nachrechnen und findest die offenen Antworten.",
+      "Du sortierst Werbeaussagen in rot, gelb und grün und schreibst belegbare Fassungen.",
     ],
     agenda: [
       {
-        label: "Die Frage und der Fall",
+        label: "Drei Anfragen an einem Montag",
+        minutes: 6,
+        activity: "listen",
+        description:
+          "Ein Kunde, das eigene Marketing und die Bank fragen nach ESG-Daten, mit Fristen von heute bis nächste Woche.",
+      },
+      {
+        label: "Warum das bei dir landet",
         minutes: 4,
         activity: "listen",
         description:
-          "Kellbrunn stellt die eine Frage, die bis zum Schluss bleibt.",
+          "Die CSRD gilt nur noch für sehr große Firmen, doch Kunden und Banken fragen weiter, und unbelegte grüne Aussagen sind in EU-Shops verboten.",
       },
       {
-        label: "Die falsche Antwort",
+        label: "Fall und Projekt",
+        minutes: 8,
+        activity: "do",
+        description:
+          "Vardar Oak hat 86 Beschäftigte und macht 41 % des Umsatzes mit einem Kunden; ein Claude-Projekt bekommt elf Dateien und drei Regeln.",
+      },
+      {
+        label: "Schritt 1: der Fragebogen",
+        minutes: 8,
+        activity: "do",
+        description:
+          "Claude füllt 16 Zeilen mit Antwort, Quelle und Status: 13 beantwortet, 3 mit NEEDS CHECK.",
+      },
+      {
+        label: "Schritt 2: nachprüfen",
+        minutes: 6,
+        activity: "do",
+        description:
+          "Claude zeigt die Rechnung hinter zwei Antworten: die Dezemberrechnung fehlt, das FSC-Zertifikat ist abgelaufen.",
+      },
+      {
+        label: "Schritt 3: Werbeaussagen",
         minutes: 8,
         activity: "vote",
         description:
-          "Die KI meldet aus 22 Belegen 1.866,5 t, 7,5 % weniger als 2024; du stimmst ab, ob das an die Bank geht.",
+          "Sieben Aussagen gegen die EU-Regeln: Du entscheidest mit, welche rot, gelb oder grün sind.",
       },
       {
-        label: "Warum sie falsch ist",
-        minutes: 16,
-        activity: "vote",
-        description:
-          "In drei Abstimmungen prüfst du Monate, Einheit und Grenze und siehst sechs Fehler, die sich bis auf 48,7 t aufheben.",
-      },
-      {
-        label: "Die Reparatur",
-        minutes: 16,
+        label: "Schritt 4: der ESG-Pass",
+        minutes: 8,
         activity: "do",
         description:
-          "Du füllst Belegzeilen, wählst die Quelle des Netzfaktors und rechnest beide Scope-2-Zahlen.",
+          "Claude schreibt alles Bekannte auf die elf Überschriften des VSME-Basismoduls und benennt die Lücken.",
       },
       {
-        label: "Neu fragen und nachrechnen",
-        minutes: 16,
+        label: "Schritt 5: die Bank",
+        minutes: 6,
         activity: "do",
         description:
-          "Zu zweit verfolgst du drei Zahlen bis zum Beleg und zerlegst den Rückgang.",
+          "Das Bankformular kommt aus dem ESG-Pass, mit der Rechnung für die Solaranlage.",
       },
       {
-        label: "Grenzen",
-        minutes: 7,
-        activity: "do",
-        description:
-          "Du sortierst fünf Aufträge an die KI in „rechnen“, „nachfragen“ und „ablehnen oder umschreiben“, etwa „Schreib, dass wir klimaneutral sind“.",
-      },
-      {
-        label: "Dein Fall",
-        minutes: 10,
-        activity: "write",
-        description:
-          "Du füllst fünf Felder für eine erfundene oder anonymisierte eigene Rechnung und stimmst erneut über die Antwort vom Anfang ab.",
-      },
-      {
-        label: "Fragen",
-        minutes: 13,
-        mode: "live",
+        label: "Was bleibt",
+        minutes: 6,
         activity: "listen",
         description:
-          "Fragen aus der Gruppe; der Anhang des Decks hat Folien dafür.",
+          "Einmal sammeln, oft antworten, nur behaupten, was du belegen kannst; das Kit nimmst du mit.",
       },
     ],
     agendaSource: "deck",
-    minutesLive: 90,
-    minutesSelfStudy: 80,
+    minutesLive: 60,
+    minutesSelfStudy: 60,
     needs: [
-      "Ein Browser, fürs Deck am besten ein großer Querformat-Bildschirm",
-      "Papier und Stift",
-      "Ein Taschenrechner oder das Handy",
-      "Optional ein KI-Konto für den Versuch im Lernbegleiter (20 Min.)",
+      "Live nur einen Bildschirm, auf dem du das Deck siehst",
+      "Zum Nachmachen die Claude-Desktop-App oder claude.ai, jeder Plan",
+      "In den Claude-Einstellungen eingeschaltet: Codeausführung und Dateierstellung",
+      "Zu Hause etwa 45 Minuten für die fünf Schritte",
     ],
     notNeeded: [
       "Programmierkenntnisse",
-      "Vorwissen über die Begriffe Scope 1 und 2 hinaus",
-      "Ein KI-Konto für Deck, Praxisbeispiel und Übungen",
+      "Einen API-Schlüssel",
+      "Vorwissen zu CSRD, VSME oder Treibhausgasbilanzen",
       "Eigene Firmendaten",
     ],
     notCovered: [
-      "Rechtsberatung und Wirtschaftsprüfung",
-      "Scope 3; ein Stahl-Beispiel steht im Anhang des Decks",
+      "Rechtsberatung und Prüfung eines echten Berichts",
+      "Eine vollständige Treibhausgasbilanz mit Scope 3",
+      "Amtliche Emissionsfaktoren; das Kit nutzt Lehrwerte",
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
+      reviewedAt: "2026-10-11",
       data: "synthetic",
-      note: "Aufgezeichnete KI-Läufe werden mit Datum und Modell nachgetragen.",
+      note: "Firma, Personen, Zahlen und Zertifikate sind erfunden. Die fünf Prompts liefen vor der Veröffentlichung mehrfach auf Claude-Modellen gegen das Kit.",
     },
     steps: [
       {
         n: "01",
-        title: "Eine Frage stellen",
+        title: "Das Projekt anlegen",
         description:
-          "Die Frage nach Scope 1 und 2 für 2025 und dem Vergleich mit 2024 bleibt den ganzen Workshop über gleich.",
-        tool: "Deck · Die Frage",
+          "Ein Claude-Projekt bekommt elf Firmendateien und drei Regeln: nur unsere Dateien, Quelle nennen, NOT FOUND oder NEEDS CHECK statt Schätzung.",
+        tool: "Schritt 0 · Claude-Projekt",
       },
       {
         n: "02",
-        title: "Die plausible falsche Antwort prüfen",
+        title: "Den Fragebogen füllen",
         description:
-          "Die konstruierte KI-Antwort meldet 1.866,5 t und liegt trotz sechs Fehlern nur 48,7 t neben der richtigen Zahl.",
-        tool: "Deck · Der Fehler",
+          "Claude füllt die 16 Fragen des Kunden mit Antwort, Quelle und Status: 13 beantwortet, 3 mit NEEDS CHECK.",
+        tool: "Prompt 1 · Excel-Datei",
       },
       {
         n: "03",
-        title: "Belegtabelle und Regeln aufschreiben",
+        title: "Zwei Zahlen nachprüfen",
         description:
-          "Du schreibst Belegzeilen mit zitierter Quelle, sechs Regeln und feste Faktoren; Scope 2 ergibt 1.444,0 t standortbasiert und 1.422,0 t marktbasiert.",
-        tool: "Deck · Die Reparatur",
+          "653,7 MWh Strom sind elf Monate, die Dezemberrechnung fehlt. Das FSC-Zertifikat galt 2025 für 78 % der Eiche und ist am 31. August 2026 abgelaufen.",
+        tool: "Prompt 2",
       },
       {
         n: "04",
-        title: "Drei Zahlen bis zum Beleg verfolgen",
+        title: "Werbeaussagen prüfen",
         description:
-          "Zu zweit verfolgst du drei Zahlen bis zur Rechnung: 72,2 t des Rückgangs kommen vom Netzfaktor, 30,1 t vom eigenen Verbrauch.",
-        tool: "Übung · Noch einmal fragen",
+          "Von sieben Aussagen sind vier rot, eine gelb und zwei grün, jede mit Quelle und einer Fassung, die sich heute belegen lässt.",
+        tool: "Prompt 3",
       },
       {
         n: "05",
-        title: "Rechnen, nachfragen, ablehnen",
+        title: "Den ESG-Pass schreiben",
         description:
-          "Du sortierst fünf Aufträge an die KI und siehst, was die Zahlen nicht belegen, etwa Kältemittel ohne Wartungsrechnung.",
-        tool: "Deck · Grenzen",
+          "Auf den elf Überschriften des VSME-Basismoduls sind 9 aus den Dateien gefüllt, 2 bleiben zu erheben: B4 und B5.",
+        tool: "Prompt 4 · Word-Datei",
       },
       {
         n: "06",
-        title: "Deine fünf Felder ausfüllen",
+        title: "Die Bank beantworten",
         description:
-          "Für eine erfundene oder anonymisierte eigene Rechnung füllst du Quelle, Zeitraum, Einheit, Bilanzgrenze und Faktor, neben jedem Feld das Beispiel aus Werk Süd.",
-        tool: "Transferblatt",
-      },
-      {
-        n: "07",
-        title: "Optional: die Fallen selbst schalten",
-        description:
-          "Du schaltest jede Falle einzeln ein und siehst, welche Belegzeile aus jeder Rechnung wird.",
-        tool: "Praxisbeispiel · etwa 10 Minuten",
+          "Das Formular kommt aus dem ESG-Pass: 320.000 kWh × 0,75 kg CO₂e pro kWh = 240 t CO₂e im Jahr.",
+        tool: "Prompt 5",
       },
     ],
     caseStudy: {
-      companyName: "Kellbrunn Präzisionsteile GmbH",
+      companyName: "Vardar Oak Furniture",
       isFictional: true,
-      location: "Erfundener Standort in Hessen",
-      sector: "Metallteile für Auto- und Maschinenbau",
-      period: "Geschäftsjahr 2025, Vergleich mit 2024",
+      location: "Erfundene Firma in Veles, Nordmazedonien",
+      sector: "Tische und Stühle aus massiver Eiche",
+      period: "Geschäftsjahr 2025, Anfragen im Oktober 2026",
       narrative:
-        "Kellbrunn hat zwei Werke und ein gemietetes Lager. Bank und ein Autohersteller fragen nach Scope 1 und 2 für 2025 samt Vorjahresvergleich; die Frage geht an einen Ordner mit 22 Belegen und an eine Belegtabelle mit sechs Regeln.",
+        "Vardar Oak verkauft 72 % in die EU und 41 % an einen Kunden, den Möbelhändler Hausfeld. Kunde, Marketing und Bank fragen in einer Woche nach denselben Fakten; die Antworten kommen aus elf Dateien, die so unordentlich sind wie echte.",
       metrics: [
-        { label: "Beschäftigte", value: "180" },
-        { label: "Belege 2025", value: "22" },
-        { label: "Abweichung der KI-Summe", value: "48,7 t" },
-        { label: "Netzfaktor-Anteil am standortbasierten Rückgang", value: "71 %" },
+        { label: "Beschäftigte", value: "86" },
+        { label: "Fragebogen", value: "13 von 16 beantwortet" },
+        { label: "Werbeaussagen", value: "4 von 7 rot" },
+        { label: "ESG-Pass", value: "9 von 11 Überschriften" },
       ],
       decisionQuestion:
-        "Welche Prüfungen brauchst du, bevor du eine Emissionszahl aus einem Rechnungsordner an Bank oder Kunden schickst?",
+        "Was darfst du einem Kunden, deiner Bank oder in einem Onlineshop behaupten, wenn deine Dateien es nur zum Teil belegen?",
       dataLimitations: [
-        "Die Emissionsfaktoren sind Lehrwerte, keine amtlichen Werte.",
-        "2024 (2.017,5 t) stammt aus einer Zusammenfassung ohne Einzelrechnungen, mit gleicher Grenze und den Faktoren von 2024.",
-        "Ohne Produktionsmengen bleibt offen, ob weniger Verbrauch aus Effizienz oder aus weniger Produktion kommt.",
+        "Die Stromrechnungen reichen von Januar bis November 2025; die fehlende Dezemberrechnung ist Absicht.",
+        "Der Netzfaktor von 0,75 kg CO₂e pro kWh ist ein Lehrwert, kein amtlicher Wert.",
+        "Die Solaranlage ist geplant; 320.000 kWh im Jahr sind eine Schätzung des Anbieters.",
       ],
-      resultChart: {
-        unit: "t CO₂e",
-        basis: "Scope 1 und 2",
-        note: "Trotz sechs Fehlern weicht die KI-Summe nur um 48,7 t ab.",
-        bars: [
-          { label: "Vorjahr 2024", value: 2017.5, display: "2.017,5 t", kind: "reference" },
-          {
-            label: "KI-Antwort 2025",
-            value: 1866.5,
-            display: "1.866,5 t",
-            note: "sechs Fehler, 7,5 % weniger",
-            kind: "answer",
-          },
-          {
-            label: "Belegtabelle 2025, standortbasiert",
-            value: 1915.2,
-            display: "1.915,2 t",
-            kind: "correct",
-          },
-        ],
-      },
     },
     materials: materials([
       [
-        "Deck · 20 Szenen",
-        "Für den Beamer. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
-      ],
-      [
-        "Moderationsansicht",
-        "Für die Person, die moderiert: Notizen, Abstimmungsfragen, Pflichtsätze und eine Uhr. Verbindet sich mit dem Deck, sobald du dort P drückst.",
-        "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr.",
-      ],
-      [
-        "Praxisbeispiel · 10 Min.",
-        "Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile, die daraus in der Belegtabelle wird.",
-        "Schalte jede Falle einzeln ein und sieh, was aus jeder Rechnung wird.",
+        "Deck · 13 Folien",
+        "Für den Beamer. Die Pfeiltaste nach rechts zeigt den nächsten Schritt einer Folie, nach links geht es zurück; jeder Prompt hat einen Kopierknopf.",
       ],
       [
         "ESG-Kit · .zip",
-        "Rechnungen als Text, Faktoren, leere und erwartete Belegtabelle, fünf Prompts und Vorlagen für Datenanfragen, als CSV und Markdown. START-HERE.md sagt, womit du anfängst.",
-        "Rechnungen, Faktoren, Belegtabellen und Prompts als CSV und Markdown.",
-      ],
-      [
-        "Transferblatt",
-        "Fünf Felder für eine eigene Rechnung, daneben das Beispiel aus Werk Süd. Zum Ausdrucken.",
-      ],
-      [
-        "Lernbegleiter",
-        "Der Workshop zum Nachlesen, mit Aufklappfragen, Wiederholung nach einer Woche und Glossar. Auch auf dem Smartphone.",
-        "Der Workshop zum Nachlesen, mit Glossar, auch auf dem Smartphone.",
-      ],
-      [
-        "Prüfkarte",
-        "Sieben Prüfungen auf einer A4-Seite, bevor du einer ESG-Zahl traust.",
+        "START-HERE.md mit Einrichtung und den fünf Prompts, die drei Regeln, elf Firmendateien und die drei Anfragen, als Markdown und CSV.",
+        "Einrichtung, fünf Prompts, elf Firmendateien und drei Anfragen.",
       ],
     ]),
   },
   en: {
     slug: "esg-berichte-mit-ki",
     number: "04",
-    topic: "ESG reporting",
-    title: "ESG reports with AI",
-    eyebrow: "Workshop 04 · ESG reporting",
+    topic: "ESG",
+    title: "Answer ESG by Friday",
+    eyebrow: "Workshop 04 · ESG",
     summary:
-      "You find six errors in an AI's plausible Scope 1 and 2 total.",
+      "An invented furniture maker gets three ESG requests at once. Claude answers all of them from the same files and names what is missing.",
     description:
-      "The invented company Kellbrunn Präzisionsteile GmbH wants to know its Scope 1 and 2 emissions for 2025 and whether they went down compared with 2024. An AI answer on 22 bills and exports, constructed from documented failure modes, reports 1,866.5 t CO₂e (7.5% lower) and is only 2.5% off despite six errors: a duplicate March bill, a missing October, a joint venture's bill, \"1.240 MWh\" read as 1,240 kWh, a gas factor on the wrong basis and AdBlue counted as diesel. With a ledger, six rules and pinned factors the answer is 1,915.2 t location-based (−5.1%) and 1,893.2 t market-based (−29.2%). Of the location-based decrease, 72.2 t comes from the grid factor and 30.1 t from lower use; of the market-based one, 744.0 t comes from guarantees of origin for one site.",
+      "Vardar Oak, an invented furniture maker in Veles, North Macedonia, gets three ESG requests on one Monday: its biggest customer's supplier questionnaire, green claims from its own marketing team and its bank's ESG form. Tim answers all three live in one Claude Project, with five prompts and three rules: only our files, cite the source, say NOT FOUND or NEEDS CHECK instead of guessing. The questionnaire comes back with 13 of 16 rows answered and 3 open, because 653.7 MWh of electricity is only eleven months and the FSC certificate expired on 31 August 2026. Four of seven marketing claims fail. For the bank, Claude shows the solar sum: 320,000 kWh × 0.75 kg = 240 t CO₂e a year.",
     format: "Live workshop with deck",
-    duration: "~90 minutes",
+    duration: "~60 minutes",
     accessNote:
-      "Materials are in English; the bills in the kit are German documents. The AI answer on the raw folder is constructed, not a live request.",
-    outcome: "Five-box sheet for one of your own bills",
+      "Materials are in English, and in the live session Tim drives Claude while you watch. At home you replay the five steps with the kit on any Claude plan with code execution and file creation switched on, and the files are transferred to Claude as you do.",
+    outcome: "Kit with five prompts and three rules",
     audience: [
-      "Sustainability, finance and controlling teams who report Scope 1 and 2",
-      "Operations and energy managers who hold the bills",
-      "Facilitators taking a group through the case",
+      "Owners and office staff of small firms who receive ESG questionnaires",
+      "Sales and marketing teams who want to make green product claims",
+      "Finance teams who give banks ESG information for loans",
     ],
     notForYou:
-      "Not for you if you want a Scope 3 inventory or a walk-through of CSRD, ESRS or VSME.",
+      "Not for you if you want to write a full CSRD or VSME report or learn greenhouse gas accounting from scratch.",
     question:
-      "What were our Scope 1 and 2 emissions in 2025, and did they go down compared with 2024?",
+      "How do we answer three ESG requests by Friday from one set of facts, without claiming anything we cannot prove?",
     outcomes: [
-      "Spot duplicate, missing and two-month bills in a month grid.",
-      "Write a complete ledger row, including the factor and its year.",
-      "Work out Scope 2 location- and market-based and name which kilowatt hours a guarantee of origin covers.",
-      "Split the change against last year into grid factor, guarantees of origin and use.",
+      "Set up a Claude Project with your own files and three rules.",
+      "Have Claude fill a questionnaire with a source and a status for every row.",
+      "Have Claude show the sums behind two numbers and list the open answers.",
+      "Sort marketing claims into red, amber and green and write versions you can prove.",
     ],
     agenda: [
       {
-        label: "The question and the case",
+        label: "Three requests on one Monday",
+        minutes: 6,
+        activity: "listen",
+        description:
+          "A customer, your own marketing team and the bank ask for ESG data, due between today and next week.",
+      },
+      {
+        label: "Why this lands on your desk",
         minutes: 4,
         activity: "listen",
         description:
-          "Kellbrunn asks the one question that stays to the end.",
+          "The CSRD now covers only very large firms, yet customers and banks keep asking, and unproven green claims are banned in EU shops.",
       },
       {
-        label: "The wrong answer",
+        label: "The case and the Project",
+        minutes: 8,
+        activity: "do",
+        description:
+          "Vardar Oak has 86 employees and makes 41% of its sales with one customer; a Claude Project gets eleven files and three rules.",
+      },
+      {
+        label: "Step 1: the questionnaire",
+        minutes: 8,
+        activity: "do",
+        description:
+          "Claude fills 16 rows with answer, source and status: 13 answered, 3 NEEDS CHECK.",
+      },
+      {
+        label: "Step 2: check",
+        minutes: 6,
+        activity: "do",
+        description:
+          "Claude shows the sums behind two answers: December's bill is missing and the FSC certificate has expired.",
+      },
+      {
+        label: "Step 3: green claims",
         minutes: 8,
         activity: "vote",
         description:
-          "The AI reports 1,866.5 t from 22 documents, 7.5% below 2024; you vote on whether it goes to the bank.",
+          "Seven claims against the EU rules: you help decide which are red, amber or green.",
       },
       {
-        label: "Why it is wrong",
-        minutes: 16,
-        activity: "vote",
-        description:
-          "In three votes you check months, unit and boundary and see six errors cancel down to 48.7 t.",
-      },
-      {
-        label: "The fix",
-        minutes: 16,
+        label: "Step 4: the ESG passport",
+        minutes: 8,
         activity: "do",
         description:
-          "You fill ledger rows, pick the grid factor's source and work out both Scope 2 numbers.",
+          "Claude puts everything known under the eleven headings of the VSME Basic module and names the gaps.",
       },
       {
-        label: "Ask again and trace it",
-        minutes: 16,
+        label: "Step 5: the bank",
+        minutes: 6,
         activity: "do",
         description:
-          "In pairs you trace three figures to their bills and split the decrease.",
+          "The bank form is answered from the ESG passport, with the sum for the solar plant.",
       },
       {
-        label: "Limits",
-        minutes: 7,
-        activity: "do",
-        description:
-          "You sort five requests to the AI into calculate, ask back, and refuse or rewrite, such as \"Write that we are climate-neutral\".",
-      },
-      {
-        label: "Your case",
-        minutes: 10,
-        activity: "write",
-        description:
-          "You fill five boxes for an invented or anonymised bill of your own and vote again on the opening answer.",
-      },
-      {
-        label: "Questions",
-        minutes: 13,
-        mode: "live",
+        label: "What to keep",
+        minutes: 6,
         activity: "listen",
         description:
-          "Questions from the group; the deck's appendix has slides for them.",
+          "Collect once, answer many, claim only what you can prove; you leave with the kit.",
       },
     ],
     agendaSource: "deck",
-    minutesLive: 90,
-    minutesSelfStudy: 80,
+    minutesLive: 60,
+    minutesSelfStudy: 60,
     needs: [
-      "A browser, ideally a large landscape screen for the deck",
-      "Paper and a pen",
-      "A calculator or a phone",
-      "Optionally an AI account for the learner-guide try (20 min)",
+      "Live, only a screen where you can see the deck",
+      "To replay it, the Claude desktop app or claude.ai, any plan",
+      "Switched on in Claude's settings: code execution and file creation",
+      "About 45 minutes at home for the five steps",
     ],
     notNeeded: [
       "Programming skills",
-      "Knowledge beyond the terms Scope 1 and 2",
-      "An AI account for the deck, demo and exercises",
+      "An API key",
+      "Prior knowledge of CSRD, VSME or greenhouse gas accounting",
       "Your own company data",
     ],
     notCovered: [
-      "Legal advice or an audit",
-      "Scope 3; one steel example is in the deck's appendix",
+      "Legal advice or an audit of a real report",
+      "A full greenhouse gas inventory with Scope 3",
+      "Official emission factors; the kit uses teaching values",
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
+      reviewedAt: "2026-10-11",
       data: "synthetic",
-      note: "Recorded AI runs will be added with date and model.",
+      note: "The company, people, numbers and certificates are invented. The five prompts were run against the kit several times on Claude models before publication.",
     },
     steps: [
       {
         n: "01",
-        title: "Ask one question",
+        title: "Set up the Project",
         description:
-          "The question about Scope 1 and 2 for 2025 against 2024 stays the same for the whole workshop.",
-        tool: "Deck · The question",
+          "A Claude Project gets eleven company files and three rules: only our files, cite the source, NOT FOUND or NEEDS CHECK instead of a guess.",
+        tool: "Step 0 · Claude Project",
       },
       {
         n: "02",
-        title: "Check the plausible wrong answer",
+        title: "Fill the questionnaire",
         description:
-          "The constructed AI answer reports 1,866.5 t and is only 48.7 t off despite six errors.",
-        tool: "Deck · The mistake",
+          "Claude fills the customer's 16 questions with answer, source and status: 13 answered, 3 NEEDS CHECK.",
+        tool: "Prompt 1 · Excel file",
       },
       {
         n: "03",
-        title: "Write down a ledger and rules",
+        title: "Check two numbers",
         description:
-          "You write ledger rows with quoted sources, six rules and pinned factors; Scope 2 comes to 1,444.0 t location-based and 1,422.0 t market-based.",
-        tool: "Deck · The fix",
+          "653.7 MWh of electricity is eleven months; December's bill is missing. The FSC certificate covered 78% of the oak in 2025 and expired on 31 August 2026.",
+        tool: "Prompt 2",
       },
       {
         n: "04",
-        title: "Trace three figures to the bill",
+        title: "Check the green claims",
         description:
-          "In pairs you trace three figures to their bills: 72.2 t of the decrease comes from the grid factor, 30.1 t from own use.",
-        tool: "Exercise · Ask again",
+          "Of seven claims, four are red, one amber and two green, each with its source and a version you can prove today.",
+        tool: "Prompt 3",
       },
       {
         n: "05",
-        title: "Calculate, ask back, refuse",
+        title: "Write the ESG passport",
         description:
-          "You sort five requests to the AI and see what the numbers do not support, such as refrigerants with no service invoice.",
-        tool: "Deck · Limits",
+          "Under the eleven headings of the VSME Basic module, 9 are filled from the files and 2 are still to collect: B4 and B5.",
+        tool: "Prompt 4 · Word file",
       },
       {
         n: "06",
-        title: "Fill your five boxes",
+        title: "Answer the bank",
         description:
-          "For an invented or anonymised bill of your own you fill source, period, unit, boundary and factor, with the Werk Süd example next to each box.",
-        tool: "Transfer sheet",
-      },
-      {
-        n: "07",
-        title: "Optional: switch the traps yourself",
-        description:
-          "You switch each trap on alone and see the ledger row each bill becomes.",
-        tool: "Interactive demo · about 10 minutes",
+          "The form comes from the ESG passport: 320,000 kWh × 0.75 kg CO₂e per kWh = 240 t CO₂e a year.",
+        tool: "Prompt 5",
       },
     ],
     caseStudy: {
-      companyName: "Kellbrunn Präzisionsteile GmbH",
+      companyName: "Vardar Oak Furniture",
       isFictional: true,
-      location: "Invented site in Hesse, Germany",
-      sector: "Metal parts for cars and machinery",
-      period: "Financial year 2025, compared with 2024",
+      location: "Invented company in Veles, North Macedonia",
+      sector: "Solid oak tables and chairs",
+      period: "Financial year 2025, requests in October 2026",
       narrative:
-        "Kellbrunn has two plants and a leased warehouse. The bank and a car maker ask for Scope 1 and 2 for 2025 against last year; the question goes to a folder of 22 documents and to a ledger with six rules.",
+        "Vardar Oak sells 72% to the EU and 41% to one customer, the furniture retailer Hausfeld. Customer, marketing and bank ask for the same facts in one week; the answers come from eleven files that are as messy as real ones.",
       metrics: [
-        { label: "Staff", value: "180" },
-        { label: "Documents 2025", value: "22" },
-        { label: "AI total off by", value: "48.7 t" },
-        { label: "Grid factor share of location-based decrease", value: "71%" },
+        { label: "Employees", value: "86" },
+        { label: "Questionnaire", value: "13 of 16 answered" },
+        { label: "Marketing claims", value: "4 of 7 red" },
+        { label: "ESG passport", value: "9 of 11 headings" },
       ],
       decisionQuestion:
-        "Which checks do you need before you send an emissions figure from a folder of bills to a bank or customer?",
+        "What may you tell a customer, your bank or an online shop when your files only partly prove it?",
       dataLimitations: [
-        "The emission factors are teaching values, not official ones.",
-        "2024 (2,017.5 t) comes from a summary without individual bills, with the same boundary and 2024 factors.",
-        "Without production volumes it stays open whether lower use came from efficiency or lower output.",
+        "The electricity bills run from January to November 2025; the missing December bill is deliberate.",
+        "The grid factor of 0.75 kg CO₂e per kWh is a teaching value, not an official one.",
+        "The solar plant is planned; 320,000 kWh a year is the supplier's estimate.",
       ],
-      resultChart: {
-        unit: "t CO₂e",
-        basis: "Scope 1 and 2",
-        note: "Despite six errors, the AI total is only 48.7 t off.",
-        bars: [
-          { label: "Last year 2024", value: 2017.5, display: "2,017.5 t", kind: "reference" },
-          {
-            label: "AI answer 2025",
-            value: 1866.5,
-            display: "1,866.5 t",
-            note: "six errors, 7.5% lower",
-            kind: "answer",
-          },
-          {
-            label: "Ledger 2025, location-based",
-            value: 1915.2,
-            display: "1,915.2 t",
-            kind: "correct",
-          },
-        ],
-      },
     },
     materials: materials([
       [
-        "Deck · 20 scenes",
-        "For the projector. Arrow keys move on; P opens the presenter view.",
-      ],
-      [
-        "Presenter view",
-        "For whoever presents: notes, room votes, must-say lines and a clock. Pairs with the deck when you press P there.",
-        "For whoever presents: notes, room votes and a clock.",
-      ],
-      [
-        "Interactive demo · 10 min",
-        "Switch each trap on alone, open every bill and see the ledger row it becomes.",
-        "Switch each trap on alone and see the ledger row each bill becomes.",
+        "Deck · 13 slides",
+        "For the projector. The right arrow key shows the next step of a slide and the left one goes back; every prompt has a copy button.",
       ],
       [
         "ESG kit · .zip",
-        "Every bill as text, factors, empty and expected ledgers, five prompts and data-request templates, as CSV and Markdown. START-HERE.md tells you where to begin.",
-        "Bills, factors, ledgers and prompts as CSV and Markdown files.",
-      ],
-      [
-        "Transfer sheet",
-        "Five boxes for your own bill, with the Werk Süd example beside each. For printing.",
-      ],
-      [
-        "Learner guide",
-        "The workshop to read at your own pace, with reveal questions, a one-week recall and a glossary. Works on a phone.",
-        "The workshop to read at your own pace, with a glossary, on a phone too.",
-      ],
-      [
-        "Field card",
-        "Seven checks on one A4 page before you trust an ESG number.",
+        "START-HERE.md with the setup and the five prompts, the three rules, eleven company files and the three requests, as Markdown and CSV.",
+        "Setup, five prompts, eleven company files and three requests.",
       ],
     ]),
   },

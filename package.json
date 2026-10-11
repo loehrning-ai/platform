@@ -36,7 +36,7 @@
     "test:workspace-contract": "node --test scripts/__tests__/verify-workspaces.test.mjs",
     "test:publication-clean": "node --test scripts/__tests__/verify-publication-clean.test.mjs",
     "test:course03-publication": "node --test scripts/__tests__/course03-publication.test.mjs scripts/__tests__/course03-builder-escaping.test.mjs",
-    "test:workshop04-publication": "node --test scripts/__tests__/workshop04-kit.test.mjs scripts/__tests__/workshop04-html-guards.test.mjs scripts/__tests__/sync-frame.test.mjs && python3 scripts/workshop04/build_dataset.py --check && node scripts/workshop04/build-deck.mjs --check && node scripts/workshop04/build-demo.mjs --check && node scripts/workshop04/build-pages.mjs --check && node scripts/workshop04/kit-archive.mjs --check",
+    "test:workshop04-publication": "node --test scripts/__tests__/workshop04-publication.test.mjs scripts/__tests__/sync-frame.test.mjs",
     "test:dependency-licenses": "node --test scripts/__tests__/audit-dependency-licenses.test.mjs",
     "test:dependency-snapshot": "bun test scripts/__tests__/submit-bun-dependency-snapshot.test.ts",
     "asset:record": "node scripts/scaffold-asset.mjs",

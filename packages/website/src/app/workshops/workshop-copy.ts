@@ -6,7 +6,7 @@ import type {
   WorkshopProvenance,
 } from "@/lib/workshops";
 
-/** One station of the route on the hub ("So laufen die Workshops 03 und 04"). */
+/** One station of the route on the hub ("So läuft Workshop 03"). */
 export interface WorkshopRouteStation {
   readonly label: string;
   readonly caption: string;
@@ -189,8 +189,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
-      routeHeading: "So laufen die Workshops 03 und 04",
-      routeCaption: "Je 90 Minuten live",
+      routeHeading: "So läuft Workshop 03",
+      routeCaption: "90 Minuten live",
       routeStations: [
         { label: "Die Frage", caption: "Ein Fall und eine Frage, die bis zum Schluss bleibt" },
         { label: "Die falsche Antwort", caption: "Eine Antwort, die plausibel klingt und nicht stimmt" },
@@ -210,6 +210,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       requirementShort: {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
+        "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Plan mit Dateierstellung",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
@@ -367,8 +368,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "You work through an invented company's data and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
-      routeHeading: "How Workshops 03 and 04 run",
-      routeCaption: "90 minutes live each",
+      routeHeading: "How Workshop 03 runs",
+      routeCaption: "90 minutes live",
       routeStations: [
         { label: "The question", caption: "One case and a question that stays to the end" },
         { label: "The wrong answer", caption: "An answer that sounds plausible and is wrong" },
@@ -388,6 +389,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       requirementShort: {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude desktop app and a Claude plan that includes Claude Code",
+        "esg-berichte-mit-ki": "To replay it, a Claude plan with file creation",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Self-paced about ${minutes} min`,

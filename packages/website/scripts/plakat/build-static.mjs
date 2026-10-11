@@ -12,8 +12,8 @@
  *   the --cover-* scene block (ground, ink, mid, and the scene's ink on paper
  *   for the Kopflinie) in
  *     public/workshops/<slug>/lib/tokens.css             every workshop
- *     public/workshops/esg-berichte-mit-ki/lib/w04-pages.css
- *     scripts/workshop04/demo.template.html              (then build-demo.mjs)
+ *                                                        (Workshop 04: also written by
+ *                                                        scripts/workshop04/export-esg-passport.mjs)
  *     scripts/course03/guide.html, builder/page/builder.html, demo/demo.html
  *                                                        (then course03/refresh-published.mjs)
  *     public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html
@@ -49,10 +49,6 @@ const COVER_BAND_WORKSHOPS = new Set(["ki-prognosen-einschaetzen"]);
 
 /** Extra files that carry the scene block, per workshop slug. */
 const SCENE_BLOCK_TARGETS = {
-  "esg-berichte-mit-ki": [
-    { file: join(PUBLIC_WORKSHOPS, "esg-berichte-mit-ki/lib/w04-pages.css"), kind: "css" },
-    { file: join(REPO, "scripts/workshop04/demo.template.html"), kind: "html" },
-  ],
   "datenbereitschaft-fuer-ki": [
     { file: join(REPO, "scripts/course03/guide.html"), kind: "html" },
     { file: join(REPO, "scripts/course03/builder/page/builder.html"), kind: "html" },
@@ -103,7 +99,6 @@ if (CHECK) {
   console.log(`Poster materials up to date (${outputs.size} files).`);
 } else {
   console.log(stale.length ? `Wrote ${stale.length} files:\n  ${stale.join("\n  ")}` : `Poster materials up to date (${outputs.size} files).`);
-  if (stale.some((file) => file.startsWith("scripts/workshop04/"))) console.log("Next: node scripts/workshop04/build-demo.mjs");
   if (stale.some((file) => file.includes("datenbereitschaft-fuer-ki") || file.startsWith("scripts/course03/"))) {
     console.log("Next: node scripts/course03/overrides.mjs capture && node scripts/course03/refresh-published.mjs");
   }

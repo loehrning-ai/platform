@@ -82,8 +82,10 @@ describe("workshops catalog", () => {
         expect(workshop.eyebrow).toBe(
           `Workshop ${workshop.number} · ${workshop.topic}`,
         );
+        // The catalogue label rounds nothing: it is the live length, or the self-study length.
+        const minutes = workshop.minutesLive ?? workshop.minutesSelfStudy;
         expect(workshop.duration).toBe(
-          locale === "de" ? "~90 Minuten" : "~90 minutes",
+          locale === "de" ? `~${minutes} Minuten` : `~${minutes} minutes`,
         );
         expect(workshop.format).toBe(formats[locale][index]);
         expect(workshop.outcome.trim().length).toBeGreaterThan(0);

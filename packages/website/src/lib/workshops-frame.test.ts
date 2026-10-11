@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-// The static materials of Workshops 01, 02 and 04 share one frame stylesheet
+// The static materials of Workshops 01 and 02 share one frame stylesheet
 // ("Werkzeichnung", the Workshop 03 deck language). Source of truth:
 // scripts/workshops/workshop-frame.css; each folder ships a byte-identical copy
 // in lib/ (node scripts/workshops/sync-frame.mjs). These checks keep the copies in
@@ -16,7 +16,6 @@ const frameSource = join(repoRoot, "scripts/workshops/workshop-frame.css");
 const FRAME_WORKSHOPS = [
   "ki-prognosen-einschaetzen",
   "geschaeftsberichte-mit-ki-lesen",
-  "esg-berichte-mit-ki",
 ] as const;
 
 /** Material pages that must link the frame (the W02 deck keeps its own deck.css). */
@@ -29,12 +28,6 @@ const FRAME_PAGES: Record<(typeof FRAME_WORKSHOPS)[number], string[]> = {
     "homework.html",
   ],
   "geschaeftsberichte-mit-ki-lesen": [],
-  "esg-berichte-mit-ki": [
-    "guide.html",
-    "demo.html",
-    "field-card.html",
-    "transfer.html",
-  ],
 };
 
 function textFiles(directory: string): string[] {
@@ -86,7 +79,6 @@ describe("workshop frame stylesheet", () => {
       ...FRAME_PAGES["ki-prognosen-einschaetzen"].map((page) =>
         join(publicWorkshops, "ki-prognosen-einschaetzen", page),
       ),
-      join(publicWorkshops, "esg-berichte-mit-ki/lib/w04-pages.js"),
       ...["guide.html", "demo.html", "builder.html"].map((page) =>
         join(publicWorkshops, "datenbereitschaft-fuer-ki", page),
       ),
