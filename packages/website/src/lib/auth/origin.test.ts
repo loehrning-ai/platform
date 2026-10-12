@@ -105,9 +105,35 @@ describe("trusted request origins", () => {
     ).toBeNull();
   });
 
-  it("preserves only an exact Vercel preview system hostname", () => {
+  it("does not trust a preview deployment origin without the explicit flag", () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv("VERCEL_URL", "platform-pr-42.vercel.app");
+
+    const url = new URL("https://platform-pr-42.vercel.app/auth/callback");
+    expect(trustedRequestOrigin(url)).toBeNull();
+    expect(redirectOriginForRequest(url).origin).toBe("https://loehrning.ai");
+
+    vi.stubEnv("AUTH_TRUST_PREVIEW_ORIGINS", "true");
+    expect(trustedRequestOrigin(url)).toBeNull();
+  });
+
+  it("never trusts a preview origin outside a preview runtime, even with the flag", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.stubEnv("AUTH_TRUST_PREVIEW_ORIGINS", "1");
+    vi.stubEnv("VERCEL_URL", "platform-pr-42.vercel.app");
+    expect(
+      trustedRequestOrigin(
+        new URL("https://platform-pr-42.vercel.app/auth/callback"),
+      ),
+    ).toBeNull();
+  });
+
+  it("preserves only an exact Vercel preview system hostname when opted in", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv("AUTH_TRUST_PREVIEW_ORIGINS", "1");
     vi.stubEnv("VERCEL_URL", "platform-pr-42.vercel.app");
 
     expect(

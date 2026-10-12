@@ -116,8 +116,16 @@ export const AUTH_COOKIE_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
  * Cookie options shared by every @supabase/ssr client. `secure` is gated to
  * production so auth cookies are HTTPS-only in the deployed app, while local
  * http dev (localhost) still sets them. `sameSite: "lax"` matches the library
- * default and is what makes login/logout CSRF-safe. httpOnly is intentionally
- * left at the library default (false) because the browser client reads the token.
+ * default and is what makes login/logout CSRF-safe.
+ *
+ * httpOnly is intentionally left at the library default (false). The browser
+ * Supabase client (createBrowserClient) reads the session from document.cookie
+ * to refresh tokens and to call the API as the signed-in user, and a script
+ * cannot set or read an HttpOnly cookie, so enabling it would log every user
+ * out client-side. Making it HttpOnly needs a server-only session design
+ * (refresh through the proxy, no browser-side session reads), which is a
+ * separate migration. The compensating control is XSS prevention: the enforced
+ * CSP plus the strict nonce policy rollout. Accepted trade-off, audit SEC-3.
  * `maxAge` states the bound; see `boundAuthCookieOptions` for why it is not
  * enough on its own.
  */

@@ -14,6 +14,10 @@ import {
 } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
+  IMAGE_METADATA_EXTENSIONS,
+  findImageMetadataIssue,
+} from "./image-metadata.mjs";
+import {
   BINARY_ASSET_EXTENSIONS,
   EXPORT_PROFILES,
   GENERIC_BASE64_RE,
@@ -1562,7 +1566,10 @@ async function walk(dir, { candidateOnly = false } = {}) {
       openedFile = await readStableRegularFile({
         rootDirectory: root,
         filePath: full,
-        readContents: !binaryAsset || inspectableZip,
+        readContents:
+          !binaryAsset ||
+          inspectableZip ||
+          (profile === "platform" && IMAGE_METADATA_EXTENSIONS.has(ext)),
         hashContents: binaryAsset && Boolean(manifestEntry),
         sampleContents: profile === "platform" && binaryAsset,
         maxBytes: inspectableZip
@@ -1592,6 +1599,18 @@ async function walk(dir, { candidateOnly = false } = {}) {
         assetPathsSeen.add(rel);
         if (magicFailure) {
           addFinding(rel, null, FAIL, magicFailure);
+        }
+        const metadataIssue =
+          !magicFailure && openedFile.bytes
+            ? findImageMetadataIssue(ext, openedFile.bytes)
+            : null;
+        if (metadataIssue) {
+          addFinding(
+            rel,
+            null,
+            FAIL,
+            `image carries personal or device metadata (${metadataIssue}); strip it losslessly before publishing`,
+          );
         }
         if (!manifestEntry) {
           addFinding(

@@ -1060,8 +1060,29 @@ describe("callback redirect-origin policy", () => {
     expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
   });
 
+  it("rejects a Vercel preview origin unless AUTH_TRUST_PREVIEW_ORIGINS=1", async () => {
+    vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv(
+      "VERCEL_URL",
+      "platform-git-security-loehrning-ai.vercel.app",
+    );
+
+    const response = await GET(
+      callbackRequest(
+        `https://platform-git-security-loehrning-ai.vercel.app/auth/callback?code=${VALID_CODE}&next=/konto`,
+      ),
+    );
+
+    expect(location(response).origin).toBe("https://loehrning.ai");
+    expect(location(response).searchParams.get("reason")).toBe(
+      "untrusted-origin",
+    );
+    expect(exchangeCodeForSessionMock).not.toHaveBeenCalled();
+  });
+
   it("preserves only the exact Vercel preview system hostname", async () => {
     vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv("AUTH_TRUST_PREVIEW_ORIGINS", "1");
     vi.stubEnv(
       "VERCEL_URL",
       "platform-git-security-loehrning-ai.vercel.app",
@@ -1080,6 +1101,7 @@ describe("callback redirect-origin policy", () => {
 
   it("rejects a Vercel preview hostname lookalike", async () => {
     vi.stubEnv("VERCEL_ENV", "preview");
+    vi.stubEnv("AUTH_TRUST_PREVIEW_ORIGINS", "1");
     vi.stubEnv(
       "VERCEL_URL",
       "platform-git-security-loehrning-ai.vercel.app",

@@ -464,8 +464,39 @@ export function trustedClientIp(req: Request): string {
   const vercelFor = req.headers.get("x-vercel-forwarded-for");
   const candidate = vercelFor?.split(",")[0]?.trim();
   return candidate && candidate.length <= 64 && /^[0-9a-f:.]+$/i.test(candidate)
-    ? candidate
+    ? normalizeClientIp(candidate)
     : "unknown";
+}
+
+/**
+ * IPv6 subscribers receive at least a /64, so keying on the full address lets
+ * one client mint 2^64 distinct buckets. Collapse IPv6 to its /64 prefix;
+ * IPv4 and IPv4-mapped IPv6 addresses stay per-address. Malformed input falls
+ * to the coarse `unknown` bucket.
+ */
+function normalizeClientIp(address: string): string {
+  if (!address.includes(":")) return address;
+
+  const mapped = /^(?:0{0,4}:){2,5}ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(
+    address,
+  );
+  if (mapped) return mapped[1]!;
+  if (address.includes(".")) return "unknown";
+
+  const halves = address.split("::");
+  if (halves.length > 2) return "unknown";
+  const head = halves[0] ? halves[0].split(":") : [];
+  const tail = halves.length === 2 && halves[1] ? halves[1].split(":") : [];
+  const missing = 8 - head.length - tail.length;
+  if (halves.length === 2 ? missing < 1 : missing !== 0) return "unknown";
+  const groups = [...head, ...Array<string>(Math.max(missing, 0)).fill("0"), ...tail];
+  if (groups.length !== 8 || !groups.every((g) => /^[0-9a-f]{1,4}$/i.test(g))) {
+    return "unknown";
+  }
+  const prefix = groups
+    .slice(0, 4)
+    .map((g) => g.toLowerCase().replace(/^0+(?=.)/, ""));
+  return `${prefix.join(":")}::/64`;
 }
 
 type RateLimitIdentityKind = "ip" | "user";
