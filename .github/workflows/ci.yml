@@ -119,6 +119,27 @@ jobs:
         run: |
           export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
           bun run lighthouse:ci:built
+      - name: TEMP trace capture (to be reverted)
+        if: always()
+        continue-on-error: true
+        run: |
+          export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
+          LH="$PWD/node_modules/.bun/lighthouse@12.6.1/node_modules/lighthouse/cli/index.js"
+          mkdir -p /tmp/traces
+          cd packages/website
+          node scripts/run-provider-free.mjs bun run start -- -p 3100 > /tmp/traces/server.log 2>&1 &
+          for i in $(seq 1 90); do curl -sf -o /dev/null http://localhost:3100/ && break; sleep 1; done
+          for p in home:/ ai:/ai-native; do for i in 1 2 3; do node scripts/tmp-trace.cjs "http://localhost:3100${p#*:}" "/tmp/traces/pw-${p%%:*}-$i.json" || true; done; done
+          for p in home:/ ai:/ai-native; do for i in 1 2; do node "$LH" "http://localhost:3100${p#*:}" --chrome-flags="--headless --no-sandbox" --only-categories=performance --save-assets --output=json --output-path="/tmp/traces/lh-${p%%:*}-$i.json" --quiet || true; done; done
+          ls -la /tmp/traces
+      - name: TEMP upload traces (to be reverted)
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: tmp-traces
+          path: /tmp/traces
+          retention-days: 1
       - name: Upload Lighthouse reports
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
