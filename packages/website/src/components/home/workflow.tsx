@@ -16,6 +16,7 @@ import {
   POINTER_DEPTH_LIGHT,
 } from "@/components/home/pointer-depth-classes";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { HOME_DEFERRED_SECTION } from "@/components/home/home-container";
 
 const RESOURCE_ICONS: readonly LucideIcon[] = [
   FileText,
@@ -66,7 +67,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 max-lg:py-6 md:py-20 lg:py-24"
+      className={`relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 max-lg:py-6 md:py-20 lg:py-24 ${HOME_DEFERRED_SECTION}`}
       data-testid="ressourcen-section"
     >
       <span

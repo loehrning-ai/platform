@@ -11,6 +11,7 @@ import {
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { HOME_DEFERRED_SECTION } from "@/components/home/home-container";
 
 const SPINE_HOME_COURSES = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) !== "deeper",
@@ -69,7 +70,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
     <section
       id="kurse"
       aria-labelledby="kurse-heading"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24"
+      className={`relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24 ${HOME_DEFERRED_SECTION}`}
       data-testid="kurse-section"
     >
       <span

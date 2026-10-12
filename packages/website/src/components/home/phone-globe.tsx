@@ -33,7 +33,8 @@ import type { HeroNetwork as HeroNetworkComponent } from "@/components/home/hero
  *
  * The opening and the tour together last longer than five seconds, so WCAG
  * 2.2.2 needs a pause control: a real button, shown while the window moves
- * (from the opening on, before the live globe has arrived), whose choice
+ * (from the opening on, before the live globe has arrived; for a remembered
+ * pause from the same moment, pressed), whose choice
  * is remembered in this browser.
  */
 
@@ -201,7 +202,8 @@ export function usePhoneGlobe(): PhoneGlobe {
   > | null>(null);
   const [paused, setPaused] = useState(false);
   const [clockStart, setClockStart] = useState<number | undefined>();
-  // True while this browser gets motion: the opening, then the live globe.
+  // True while this browser gets motion: from the opening (after load and
+  // idle) on, then the live globe.
   const [moving, setMoving] = useState(false);
 
   useEffect(() => {
@@ -220,8 +222,14 @@ export function usePhoneGlobe(): PhoneGlobe {
     // and gone idle: its sixty frames a second of SVG paint would otherwise
     // share a phone's processor with hydration.
     let openingStart: number | undefined;
+    // Set once the page has settled; from then on an eligible browser shows
+    // the pause control, which arrives with the first motion.
+    let settled = false;
     const cancelOpening = afterLoadAndIdle(() => {
-      if (disposed || pausedRef.current || !phoneGlobeEligible()) return;
+      settled = true;
+      if (disposed || !phoneGlobeEligible()) return;
+      setMoving(true);
+      if (pausedRef.current) return;
       slot.setAttribute(INTRO_ATTRIBUTE, "play");
       openingStart = performance.now();
     });
@@ -247,7 +255,7 @@ export function usePhoneGlobe(): PhoneGlobe {
     };
 
     const start = () => {
-      setMoving(true);
+      if (settled) setMoving(true);
       if (loading) return;
       loading = true;
       const load = () => {
