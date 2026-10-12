@@ -16,6 +16,7 @@
  */
 
 import type { Locale } from "./i18n/locale";
+import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
@@ -237,6 +238,12 @@ export interface Workshop {
   readonly caseStudy: WorkshopCaseStudy;
   readonly realWorldCase?: WorkshopRealWorldCase;
   readonly materials: readonly WorkshopMaterial[];
+  /**
+   * Optional kit block. A workshop with one gets the kit page at
+   * /workshops/<slug>/kit, and its kit card links there instead of to the zip.
+   * See src/lib/workshop-kit.ts.
+   */
+  readonly kit?: WorkshopKit;
 }
 
 const FORECAST_BASE_PATH = "/workshops/ki-prognosen-einschaetzen";
@@ -1109,6 +1116,24 @@ export function getWorkshopBySlug(
 
 export function getWorkshopSlugs(): readonly string[] {
   return WORKSHOPS.map((workshop) => workshop.slug);
+}
+
+/** Slugs of the workshops that have a kit page. */
+export function getWorkshopKitSlugs(): readonly string[] {
+  return WORKSHOPS.filter((workshop) => workshop.kit).map(
+    (workshop) => workshop.slug,
+  );
+}
+
+/** The kit material (role "kit", a download) of a workshop that has a kit block. */
+export function workshopKitMaterial(
+  workshop: Workshop,
+): WorkshopMaterial | undefined {
+  return workshop.kit
+    ? workshop.materials.find(
+        (material) => material.role === "kit" && material.kind === "zip",
+      )
+    : undefined;
 }
 
 /** The material a learner should open first. Every workshop marks exactly one. */

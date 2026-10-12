@@ -5,7 +5,7 @@ import { BLOG_POSTS } from "@/lib/blog-metadata";
 import { books } from "@/lib/books";
 import { getBookChapterList } from "@/lib/book-reader-content";
 import { demos } from "@/lib/demos";
-import { getWorkshopSlugs } from "@/lib/workshops";
+import { getWorkshopKitSlugs, getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT, getCrawlRoute, SITE_ORIGIN } from "@/lib/crawl/contract";
 import { SITE_CONTENT_DATE } from "@/lib/content-freshness";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
@@ -153,6 +153,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ? getWorkshopSlugs().map((slug) => makeEntry(`/workshops/${slug}`, 0.6, "monthly"))
     : [];
 
+  const workshopKitEntries: Entry[] = contractIncludesPattern("/workshops/:slug/kit")
+    ? getWorkshopKitSlugs().map((slug) => makeEntry(`/workshops/${slug}/kit`, 0.6, "monthly"))
+    : [];
+
   const blogPosts: Entry[] = contractIncludesPattern("/blog/:slug")
     ? discoverBlogPosts().map(({ slug, date }) => ({
         url: `${SITE}/blog/${slug}`,
@@ -172,6 +176,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...bookChapterEntries,
     ...demoEntries,
     ...workshopEntries,
+    ...workshopKitEntries,
     ...blogPosts,
     ...openSourceArtifactEntries,
   ]);

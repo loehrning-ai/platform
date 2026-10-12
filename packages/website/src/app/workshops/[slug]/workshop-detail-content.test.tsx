@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { localizeHref } from "@/lib/i18n/locale";
+import { workshopKitPath } from "@/lib/workshop-kit";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
 import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
@@ -518,9 +520,18 @@ describe("<WorkshopDetailContent>", () => {
         expect(links).toHaveLength(workshop.materials.length);
         const hrefs = links.map((link) => link.getAttribute("href"));
         expect(new Set(hrefs).size).toBe(workshop.materials.length);
+        // The kit card of a workshop with a kit block opens the kit page, not the zip.
+        const hrefOf = (material: (typeof workshop.materials)[number]) =>
+          workshop.kit && material.role === "kit"
+            ? localizeHref(workshopKitPath(workshop.slug), locale)
+            : material.href;
         for (const material of workshop.materials) {
-          const link = links.find((candidate) => candidate.getAttribute("href") === material.href)!;
-          expect(link).toHaveAttribute("hreflang", material.language);
+          const link = links.find((candidate) => candidate.getAttribute("href") === hrefOf(material))!;
+          if (hrefOf(material) === material.href) {
+            expect(link).toHaveAttribute("hreflang", material.language);
+          } else {
+            expect(link).not.toHaveAttribute("download");
+          }
           expect(link).toHaveAccessibleName(new RegExp(material.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
         }
 
@@ -533,7 +544,7 @@ describe("<WorkshopDetailContent>", () => {
         const expectedOrder = [
           ...taught.filter((material) => !material.optional),
           ...taught.filter((material) => material.optional),
-        ].map((material) => material.href);
+        ].map(hrefOf);
         expect(hrefs).toEqual(expectedOrder);
         const optional = workshop.materials.filter((material) => material.optional);
         const folded = materialSection.querySelector("details");
