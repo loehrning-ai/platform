@@ -1099,40 +1099,44 @@
       "redistribution": "Permitted with the OFL notices bundled beside the fonts"
     },
     {
-      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-400.woff2",
-      "sizeBytes": 141644,
-      "sha256": "3114b3c1543719e35fbcd79171995e87a5e8e6bb598e10c855e2525a89a28063",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Regular.woff2",
+      "sizeBytes": 61064,
+      "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
-      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-500.woff2",
-      "sizeBytes": 144292,
-      "sha256": "016640b5e194f4694a1ac1a00ac98a7cb389afed1bd3d307fe0c816291aa7ad4",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Medium.woff2",
+      "sizeBytes": 60948,
+      "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
-      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-600.woff2",
-      "sizeBytes": 144896,
-      "sha256": "be0f9efc556e7d576554004698acd1d0dc759340731d96fdd0b5aa7fdc7dd3ca",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-SemiBold.woff2",
+      "sizeBytes": 60860,
+      "sha256": "47338939923cdc67d4d95d0267efbf3d5f22d0beb171a56d90fd24ad6bee315f",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
-      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Static-700.woff2",
-      "sizeBytes": 144608,
-      "sha256": "81cdb156fd821407c6651739d6fe75c679ac9fba973bc3b934c2946494f789c8",
-      "owner": "The Inter Project Authors; modified and renamed by loehrning.ai",
-      "source": "Course Typing v2.1 statics, renamed Inter 4.001 derivatives, repackaged as woff2",
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Bold.woff2",
+      "sizeBytes": 60916,
+      "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2",
+      "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
+      "source": "Modified, renamed derivative of Inter (https://github.com/rsms/inter)",
       "license": "OFL-1.1",
-      "redistribution": "Permitted with the OFL notices bundled beside the fonts"
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/JetBrainsMono-var.woff2",

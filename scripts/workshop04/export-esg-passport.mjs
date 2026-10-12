@@ -63,15 +63,24 @@ export const PORTRAIT = "assets/tim-loehr.jpg";
 export const PORTRAIT_SHA256 = "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4";
 
 /**
- * Files this folder already publishes and the export keeps byte for byte: the inventoried
- * font statics with their licence notices, and the poster card (generated in this repository
- * by packages/website/scripts/plakat/build-cards.mjs).
+ * The deck's Typing faces, copied byte for byte from Workshop 01, where they are already
+ * inventoried. They are the woff2 builds of the same Typing 2.0 the course source sets, so the
+ * public deck keeps the source's line breaks (the 2.1 statics run wider and broke lines).
+ */
+export const FONT_SOURCE_RELATIVE = "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts";
+export const REUSED_FONTS = [
+  "assets/fonts/Typing-Regular.woff2",
+  "assets/fonts/Typing-Medium.woff2",
+  "assets/fonts/Typing-SemiBold.woff2",
+  "assets/fonts/Typing-Bold.woff2",
+];
+
+/**
+ * Files this folder already publishes and the export keeps byte for byte: the mono font with
+ * the licence notices, and the poster card (generated in this repository by
+ * packages/website/scripts/plakat/build-cards.mjs).
  */
 export const KEPT_FILES = [
-  "assets/fonts/Typing-Static-400.woff2",
-  "assets/fonts/Typing-Static-500.woff2",
-  "assets/fonts/Typing-Static-600.woff2",
-  "assets/fonts/Typing-Static-700.woff2",
   "assets/fonts/JetBrainsMono-var.woff2",
   "assets/fonts/OFL-1.1.txt",
   "assets/fonts/OFL-1.1-JetBrainsMono.txt",
@@ -108,7 +117,7 @@ export const KIT_SOURCE_FILES = [
 export const KIT_FILES = [...KIT_SOURCE_FILES];
 
 /** Every file the published folder holds, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...DECK_IMAGES, PORTRAIT, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
+export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...DECK_IMAGES, PORTRAIT, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
 
 /** "loehrning.ai × <partner>": the partner's name stays out of this public repository. */
 const CO_BRANDING = /loehrning\.ai × [A-Za-z0-9-]+/gi;
@@ -137,10 +146,10 @@ const PARTNER_EDITS = [
 /** Case names retired because they collided with real companies; none may come back. */
 const RETIRED_CASE_NAMES = /Trei Dealuri|Banca Nistru|Exempla|Energo Codru|Solar Codru|Vardar Oak|vardar-oak/i;
 const FONT_FILES = [
-  ["Typing-Regular.ttf", "Typing-Static-400.woff2"],
-  ["Typing-Medium.ttf", "Typing-Static-500.woff2"],
-  ["Typing-SemiBold.ttf", "Typing-Static-600.woff2"],
-  ["Typing-Bold.ttf", "Typing-Static-700.woff2"],
+  ["Typing-Regular.ttf", "Typing-Regular.woff2"],
+  ["Typing-Medium.ttf", "Typing-Medium.woff2"],
+  ["Typing-SemiBold.ttf", "Typing-SemiBold.woff2"],
+  ["Typing-Bold.ttf", "Typing-Bold.woff2"],
 ];
 
 /**
@@ -282,6 +291,9 @@ export async function exportWorkshop(source) {
     if (!existsSync(path.join(WORKSHOP_DIR, name))) throw new Error(`${WORKSHOP_RELATIVE}/${name} is missing; restore it from Git`);
     written.set(name, readSourceFile(WORKSHOP_DIR, name));
   }
+  for (const name of REUSED_FONTS) {
+    written.set(name, readSourceFile(path.join(REPO_ROOT, FONT_SOURCE_RELATIVE), path.basename(name)));
+  }
 
   const kitDir = path.join(source, KIT_NAME);
   checkKitFolder(kitDir);
@@ -330,6 +342,13 @@ export function manifestText(written) {
       throw new Error(`${entry.path} no longer matches its reviewed ASSET_MANIFEST.json row`);
     }
     assets.push({ ...entry, sizeBytes: bytes.length, sha256: sha256(bytes) });
+  }
+  for (const name of REUSED_FONTS) {
+    if (seen.has(name)) continue;
+    const reviewed = manifest.assets.find((entry) => entry.path === `${FONT_SOURCE_RELATIVE}/${path.basename(name)}`);
+    if (!reviewed || reviewed.sha256 !== sha256(written.get(name))) throw new Error(`${name}: no matching reviewed row under ${FONT_SOURCE_RELATIVE}`);
+    const at = assets.findIndex((entry) => entry.path === `${prefix}assets/fonts/JetBrainsMono-var.woff2`);
+    assets.splice(at === -1 ? assets.length : at, 0, { ...reviewed, path: `${prefix}${name}` });
   }
   for (const [name, source] of Object.entries(NEW_ROW_SOURCES)) {
     if (seen.has(name)) continue;
