@@ -230,7 +230,7 @@ describe("phone hero globe: live globe", () => {
     vi.useFakeTimers();
     installMatchMedia({});
     renderHero();
-    await advance(LIVE_GLOBE_DELAY_MS + 300);
+    await advance(LIVE_GLOBE_DELAY_MS + 600);
     vi.useRealTimers();
     expect(phoneMounts()).toHaveLength(1);
   });
@@ -295,7 +295,7 @@ describe("phone hero globe: live globe", () => {
     ).toHaveAttribute("data-home-globe-motion", "paused");
     await advance(LIVE_GLOBE_DELAY_MS - 100);
     expect(phoneMounts()).toHaveLength(0);
-    await advance(400);
+    await advance(600);
     vi.useRealTimers();
     expect(phoneMounts()[0]).toMatchObject({ paused: true, compact: true });
     // Without an opening the tour clock starts at its first frame.
@@ -371,11 +371,33 @@ describe("phone hero: the signal from Berlin", () => {
     expect(layer?.querySelector("text, a, button")).toBeNull();
   });
 
-  it("plays once below lg when motion is allowed, and settles when its stage ends", () => {
+  it("waits for the page to load and go idle, so it never shares hydration", async () => {
+    vi.useFakeTimers();
     installMatchMedia({});
     const { container } = renderWithIntro();
     const slot = slotOf(container);
+    // Hydration has committed, the opening has not started.
+    expect(slot).not.toHaveAttribute("data-home-intro");
+    await advance(300);
+    vi.useRealTimers();
     expect(slot).toHaveAttribute("data-home-intro", "play");
+  });
+
+  it("never starts when the visitor pauses before the page has settled", async () => {
+    vi.useFakeTimers();
+    installMatchMedia({});
+    const { container } = renderWithIntro();
+    fireEvent.click(screen.getByRole("button", { name: "Globus anhalten" }));
+    await advance(300);
+    vi.useRealTimers();
+    expect(slotOf(container)).not.toHaveAttribute("data-home-intro");
+  });
+
+  it("plays once below lg when motion is allowed, and settles when its stage ends", async () => {
+    installMatchMedia({});
+    const { container } = renderWithIntro();
+    const slot = slotOf(container);
+    await waitFor(() => expect(slot).toHaveAttribute("data-home-intro", "play"));
 
     // Another animation ending changes nothing; the stage ending settles it.
     const end = (animationName: string) => {
@@ -391,7 +413,8 @@ describe("phone hero: the signal from Berlin", () => {
     expect(slot).toHaveAttribute("data-home-intro", "done");
   });
 
-  it("never plays under reduced motion, reduced data, Save-Data, a remembered pause or on desktop", () => {
+  it("never plays under reduced motion, reduced data, Save-Data, a remembered pause or on desktop", async () => {
+    vi.useFakeTimers();
     for (const next of [
       { reducedMotion: true },
       { reducedData: true },
@@ -399,6 +422,7 @@ describe("phone hero: the signal from Berlin", () => {
     ]) {
       installMatchMedia(next);
       const { container, unmount } = renderWithIntro();
+      await advance(300);
       expect(slotOf(container)).not.toHaveAttribute("data-home-intro");
       unmount();
     }
@@ -406,6 +430,7 @@ describe("phone hero: the signal from Berlin", () => {
     installMatchMedia({});
     window.localStorage.setItem("loehrning:home-globe-paused", "1");
     const paused = renderWithIntro();
+    await advance(300);
     expect(slotOf(paused.container)).not.toHaveAttribute("data-home-intro");
     paused.unmount();
     window.localStorage.clear();
@@ -417,9 +442,11 @@ describe("phone hero: the signal from Berlin", () => {
     });
     try {
       const saver = renderWithIntro();
+      await advance(300);
       expect(slotOf(saver.container)).not.toHaveAttribute("data-home-intro");
       saver.unmount();
     } finally {
+      vi.useRealTimers();
       if (connection) Object.defineProperty(navigator, "connection", connection);
       else delete (navigator as { connection?: unknown }).connection;
     }
@@ -441,7 +468,9 @@ describe("phone hero: the signal from Berlin", () => {
     window.localStorage.clear();
     const second = renderWithIntro();
     const secondSlot = slotOf(second.container);
-    expect(secondSlot).toHaveAttribute("data-home-intro", "play");
+    await waitFor(() =>
+      expect(secondSlot).toHaveAttribute("data-home-intro", "play"),
+    );
     await act(async () => {
       changeEnv({ reducedMotion: true });
     });

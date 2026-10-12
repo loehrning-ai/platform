@@ -22,12 +22,14 @@ import type { HeroNetwork as HeroNetworkComponent } from "@/components/home/hero
  *  - never under prefers-reduced-motion, prefers-reduced-data or Save-Data:
  *    those visitors keep the static frame, get no pause control and download
  *    nothing;
- *  - once the opening has played (the signal from Berlin, about six
- *    seconds), or LIVE_GLOBE_DELAY_MS after the load event when it does not
- *    play, then at idle: the projection chunk, its first frame and its frame
- *    loop never compete with first paint, hydration or the load window. The
- *    live globe would only rest on Berlin under the opening anyway, so its
- *    tour clock counts from the opening's start (`clockStart`).
+ *  - the opening (the signal from Berlin, about six seconds) starts once
+ *    the page has loaded and gone idle; the live globe follows when it has
+ *    played, or LIVE_GLOBE_DELAY_MS after that point when it does not play,
+ *    then at idle: neither the opening's frames nor the projection chunk,
+ *    its first frame and its frame loop compete with first paint, hydration
+ *    or the load window. The live globe would only rest on Berlin under the
+ *    opening anyway, so its tour clock counts from the opening's start
+ *    (`clockStart`).
  *
  * The opening and the tour together last longer than five seconds, so WCAG
  * 2.2.2 needs a pause control: a real button, shown while the window moves
@@ -95,9 +97,8 @@ type IdleWindow = Window & {
 
 /**
  * The wait before the live globe when no opening plays (a remembered pause),
- * counted from the load event: about the opening's length (phone-hero.css
- * plays hz-signal-stage for 5.6s after 0.2s), so no visitor's load window
- * carries the projection chunk or its frames.
+ * counted from the moment the opening would start: about the opening's
+ * length (phone-hero.css plays hz-signal-stage for 5.6s after 0.2s).
  */
 export const LIVE_GLOBE_DELAY_MS = 6000;
 
@@ -116,15 +117,31 @@ function atIdle(callback: () => void): () => void {
 }
 
 /**
+ * Runs `callback` once the page has loaded and the browser is idle, so it
+ * never shares the main thread with hydration. Returns a cancel.
+ */
+function afterLoadAndIdle(callback: () => void): () => void {
+  let cancelIdle: (() => void) | null = null;
+  const onLoad = () => {
+    cancelIdle = atIdle(callback);
+  };
+  if (document.readyState === "complete") onLoad();
+  else window.addEventListener("load", onLoad, { once: true });
+  return () => {
+    window.removeEventListener("load", onLoad);
+    cancelIdle?.();
+  };
+}
+
+/**
  * Runs `callback` at idle once the opening on `slot` has ended, or
- * LIVE_GLOBE_DELAY_MS after the load event, whichever comes first.
- * Returns a cancel.
+ * LIVE_GLOBE_DELAY_MS after the page settled (load and idle, when the
+ * opening starts), whichever comes first. Returns a cancel.
  */
 function afterOpening(slot: HTMLElement, callback: () => void): () => void {
   let delayHandle = 0;
   let cancelIdle: (() => void) | null = null;
   const release = () => {
-    window.removeEventListener("load", onLoad);
     slot.removeEventListener("animationend", onStageEnd);
     window.clearTimeout(delayHandle);
   };
@@ -136,13 +153,12 @@ function afterOpening(slot: HTMLElement, callback: () => void): () => void {
   const onStageEnd = (event: AnimationEvent) => {
     if (event.animationName === STAGE_ANIMATION) proceed();
   };
-  const onLoad = () => {
-    delayHandle = window.setTimeout(proceed, LIVE_GLOBE_DELAY_MS);
-  };
   slot.addEventListener("animationend", onStageEnd);
-  if (document.readyState === "complete") onLoad();
-  else window.addEventListener("load", onLoad, { once: true });
+  const cancelSettle = afterLoadAndIdle(() => {
+    delayHandle = window.setTimeout(proceed, LIVE_GLOBE_DELAY_MS);
+  });
   return () => {
+    cancelSettle();
     release();
     cancelIdle?.();
   };
@@ -195,21 +211,25 @@ export function usePhoneGlobe(): PhoneGlobe {
     pausedRef.current = readPaused();
     setPaused(pausedRef.current);
 
+    let disposed = false;
+
     // The signal from Berlin (hero-signal-frame.tsx) plays once per page
     // view, for exactly the browsers that would get the moving globe and
     // have not paused it. Its resting state is invisible, so not playing it
-    // leaves the static frame untouched.
+    // leaves the static frame untouched. It starts once the page has loaded
+    // and gone idle: its sixty frames a second of SVG paint would otherwise
+    // share a phone's processor with hydration.
     let openingStart: number | undefined;
-    if (phoneGlobeEligible() && !pausedRef.current) {
+    const cancelOpening = afterLoadAndIdle(() => {
+      if (disposed || pausedRef.current || !phoneGlobeEligible()) return;
       slot.setAttribute(INTRO_ATTRIBUTE, "play");
       openingStart = performance.now();
-    }
+    });
     const endIntro = (event: AnimationEvent) => {
       if (event.animationName === STAGE_ANIMATION) endSignal(slot);
     };
     slot.addEventListener("animationend", endIntro);
 
-    let disposed = false;
     let loading = false;
     // Only the first start waits for the opening; a later one (back from
     // desktop, motion allowed again) is long past the load window.
@@ -266,6 +286,7 @@ export function usePhoneGlobe(): PhoneGlobe {
       disposed = true;
       for (const query of queries) query.removeEventListener?.("change", sync);
       slot.removeEventListener("animationend", endIntro);
+      cancelOpening();
       cancelWait?.();
     };
   }, []);
