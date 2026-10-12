@@ -40,7 +40,9 @@ function configuredLocalVerificationOrigin(): URL | null {
  * Preview origins are NOT trusted for the auth callback by default. A preview
  * deployment must not receive production auth codes unless the operator opts in
  * explicitly (for a preview wired to its own Supabase project and an exact
- * redirect allowlist). Set `AUTH_TRUST_PREVIEW_ORIGINS=1` on that deployment.
+ * redirect allowlist). Set `AUTH_TRUST_PREVIEW_ORIGINS=1` on that deployment;
+ * only the exact string "1" enables it ("true" and others are ignored). Set it
+ * in the Vercel Preview environment only, never Production.
  */
 const PREVIEW_TRUST_FLAG = "AUTH_TRUST_PREVIEW_ORIGINS";
 
