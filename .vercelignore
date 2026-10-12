@@ -92,6 +92,7 @@ coverage
 **/plans/
 **/discuss-*.md
 **/NOTES.md
+**/STATUS.md
 **/*.local.md
 docs/privacy/
 docs/operations/
