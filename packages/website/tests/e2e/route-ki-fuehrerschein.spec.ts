@@ -64,7 +64,9 @@ test.describe("/ki-fuehrerschein landing", () => {
     await startCta.click();
     // The course hub requires login; middleware redirects anonymous
     // visitors to /login with next= pointing back at the hub.
-    await page.waitForURL(/\/login/);
+    // `commit`, not `load`: only the URL is read, and WebKit can leave `load`
+    // pending on /login until the test times out.
+    await page.waitForURL(/\/login/, { waitUntil: "commit" });
     const url = new URL(page.url());
     expect(url.pathname, "CTA must land on /login for an anonymous visitor").toBe(
       "/login",

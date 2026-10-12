@@ -99,9 +99,18 @@ jobs:
   # structurally-valid E2E_PORT; server-log-privacy allocates its actual serve
   # port at runtime, so 3000 here is a valid placeholder, not a claim it will
   # match what that job serves on.
+  #
+  # On pull_request every Tier-2 job waits for the static job and is skipped when
+  # it fails, so one root cause (a type error, a lint error, a bad dependency
+  # bump) fails once in about 2 minutes instead of in every build job. A skipped
+  # job still turns the `verify` aggregate red, so no gate is weakened. A push to
+  # main keeps running every Tier-2 job even when static checks are red, so the
+  # commit that landed always gets its complete signal.
   # ---------------------------------------------------------------------------
   lighthouse:
     name: lighthouse
+    needs: [fast]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.fast.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -114,6 +123,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           playwright-browsers: chromium
+          next-build-cache: "true"
       - run: bun run --cwd packages/website verify:build
       - name: Blocking Lighthouse performance smoke
         run: |
@@ -131,6 +141,8 @@ jobs:
 
   e2e:
     name: e2e ${{ matrix.project }} ${{ matrix.shard }}/${{ matrix.total }}
+    needs: [fast]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.fast.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -172,6 +184,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           playwright-browsers: ${{ matrix.browsers }}
+          next-build-cache: "true"
       - run: bun run --cwd packages/website verify:build
       - name: Public browser gate
         run: >-
@@ -208,6 +221,8 @@ jobs:
 
   auth-scaffold:
     name: auth scaffold gate
+    needs: [fast]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.fast.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -220,6 +235,7 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           playwright-browsers: chromium
+          next-build-cache: "true"
       - run: bun run --cwd packages/website verify:build
       - name: Provider-free auth scaffold gate
         run: bun run test:e2e:auth-scaffold:built
@@ -230,6 +246,8 @@ jobs:
 
   konto-dom-mocked:
     name: konto DOM (mocked session)
+    needs: [fast]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.fast.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -255,6 +273,8 @@ jobs:
 
   server-log-privacy:
     name: server log privacy
+    needs: [fast]
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.fast.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
@@ -265,6 +285,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup
+        with:
+          next-build-cache: "true"
       - run: bun run --cwd packages/website verify:build
       - run: bun run --cwd packages/website test:server-log-privacy:built
 
