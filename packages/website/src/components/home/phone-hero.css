@@ -389,3 +389,12 @@
     transform: scale(1);
   }
 }
+
+/* TEMP EXPERIMENT (to be reverted): no window animations. */
+[data-home-globe] > svg,
+[data-home-globe] > svg * {
+  animation: none !important;
+}
+[data-home-globe] > [data-home-signals] {
+  display: none !important;
+}
