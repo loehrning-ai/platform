@@ -22,8 +22,12 @@ import type { HeroNetwork as HeroNetworkComponent } from "@/components/home/hero
  *  - never under prefers-reduced-motion, prefers-reduced-data or Save-Data:
  *    those visitors keep the static frame, get no pause control and download
  *    nothing;
- *  - after the load event plus an idle callback, so the projection chunk
- *    never competes with first paint or hydration.
+ *  - once the opening has played (the signal from Berlin, about six
+ *    seconds), or LIVE_GLOBE_DELAY_MS after the load event when it does not
+ *    play, then at idle: the projection chunk, its first frame and its frame
+ *    loop never compete with first paint, hydration or the load window. The
+ *    live globe would only rest on Berlin under the opening anyway, so its
+ *    tour clock counts from the opening's start (`clockStart`).
  *
  * The tour lasts longer than five seconds, so WCAG 2.2.2 needs a pause
  * control: a real button, shown only while the globe is live, whose choice
@@ -88,24 +92,58 @@ type IdleWindow = Window & {
   cancelIdleCallback?: (handle: number) => void;
 };
 
-/** Runs `callback` after the load event and an idle period. Returns a cancel. */
-function afterLoadAndIdle(callback: () => void): () => void {
+/**
+ * The wait before the live globe when no opening plays (a remembered pause),
+ * counted from the load event: about the opening's length (phone-hero.css
+ * plays hz-signal-stage for 5.6s after 0.2s), so no visitor's load window
+ * carries the projection chunk or its frames.
+ */
+export const LIVE_GLOBE_DELAY_MS = 6000;
+
+/** The opening's last animation; its end hands the stage to the live globe. */
+const STAGE_ANIMATION = "hz-signal-stage";
+
+/** Runs `callback` at the next idle period. Returns a cancel. */
+function atIdle(callback: () => void): () => void {
   const win = window as IdleWindow;
-  let idleHandle = 0;
-  let timeoutHandle = 0;
-  const schedule = () => {
-    if (win.requestIdleCallback) {
-      idleHandle = win.requestIdleCallback(callback, { timeout: 2500 });
-    } else {
-      timeoutHandle = window.setTimeout(callback, 200);
-    }
+  if (win.requestIdleCallback) {
+    const handle = win.requestIdleCallback(callback, { timeout: 2500 });
+    return () => win.cancelIdleCallback?.(handle);
+  }
+  const handle = window.setTimeout(callback, 200);
+  return () => window.clearTimeout(handle);
+}
+
+/**
+ * Runs `callback` at idle once the opening on `slot` has ended, or
+ * LIVE_GLOBE_DELAY_MS after the load event, whichever comes first.
+ * Returns a cancel.
+ */
+function afterOpening(slot: HTMLElement, callback: () => void): () => void {
+  let delayHandle = 0;
+  let cancelIdle: (() => void) | null = null;
+  const release = () => {
+    window.removeEventListener("load", onLoad);
+    slot.removeEventListener("animationend", onStageEnd);
+    window.clearTimeout(delayHandle);
   };
-  if (document.readyState === "complete") schedule();
-  else window.addEventListener("load", schedule, { once: true });
+  const proceed = () => {
+    if (cancelIdle) return;
+    release();
+    cancelIdle = atIdle(callback);
+  };
+  const onStageEnd = (event: AnimationEvent) => {
+    if (event.animationName === STAGE_ANIMATION) proceed();
+  };
+  const onLoad = () => {
+    delayHandle = window.setTimeout(proceed, LIVE_GLOBE_DELAY_MS);
+  };
+  slot.addEventListener("animationend", onStageEnd);
+  if (document.readyState === "complete") onLoad();
+  else window.addEventListener("load", onLoad, { once: true });
   return () => {
-    window.removeEventListener("load", schedule);
-    if (idleHandle) win.cancelIdleCallback?.(idleHandle);
-    if (timeoutHandle) window.clearTimeout(timeoutHandle);
+    release();
+    cancelIdle?.();
   };
 }
 
@@ -131,6 +169,11 @@ export type PhoneGlobe = {
   readonly togglePaused: () => void;
   /** Hand to the live globe: its first frame hides the server frame. */
   readonly onLive: () => void;
+  /**
+   * Hand to the live globe: when the opening played, the performance.now()
+   * it started, so the tour keeps the timing it would have had from there.
+   */
+  readonly clockStart: number | undefined;
 };
 
 export function usePhoneGlobe(): PhoneGlobe {
@@ -140,6 +183,7 @@ export function usePhoneGlobe(): PhoneGlobe {
     Parameters<typeof HeroNetworkComponent>[0]
   > | null>(null);
   const [paused, setPaused] = useState(false);
+  const [clockStart, setClockStart] = useState<number | undefined>();
 
   useEffect(() => {
     const slot = slotRef.current;
@@ -152,16 +196,21 @@ export function usePhoneGlobe(): PhoneGlobe {
     // view, for exactly the browsers that would get the moving globe and
     // have not paused it. Its resting state is invisible, so not playing it
     // leaves the static frame untouched.
+    let openingStart: number | undefined;
     if (phoneGlobeEligible() && !pausedRef.current) {
       slot.setAttribute(INTRO_ATTRIBUTE, "play");
+      openingStart = performance.now();
     }
     const endIntro = (event: AnimationEvent) => {
-      if (event.animationName === "hz-signal-stage") endSignal(slot);
+      if (event.animationName === STAGE_ANIMATION) endSignal(slot);
     };
     slot.addEventListener("animationend", endIntro);
 
     let disposed = false;
     let loading = false;
+    // Only the first start waits for the opening; a later one (back from
+    // desktop, motion allowed again) is long past the load window.
+    let opened = false;
     let cancelWait: (() => void) | null = null;
 
     const stop = () => {
@@ -176,20 +225,23 @@ export function usePhoneGlobe(): PhoneGlobe {
     const start = () => {
       if (loading) return;
       loading = true;
-      cancelWait = afterLoadAndIdle(() => {
+      const load = () => {
         cancelWait = null;
+        opened = true;
         void import("@/components/home/hero-network")
           .then(({ HeroNetwork }) => {
             loading = false;
             if (disposed || !phoneGlobeEligible()) return;
             // A component in state is stored through the updater form.
             setNetwork(() => HeroNetwork);
+            setClockStart(openingStart);
           })
           .catch(() => {
             // A failed chunk keeps the static frame; nothing else depends on it.
             loading = false;
           });
-      });
+      };
+      cancelWait = opened ? atIdle(load) : afterOpening(slot, load);
     };
 
     const sync = () => {
@@ -239,6 +291,7 @@ export function usePhoneGlobe(): PhoneGlobe {
     paused,
     togglePaused,
     onLive,
+    clockStart,
   };
 }
 

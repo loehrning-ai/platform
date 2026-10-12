@@ -40,6 +40,7 @@ vi.mock("@/components/home/hero-network", () => ({
 }));
 
 import { HeroSection } from "./hero";
+import { LIVE_GLOBE_DELAY_MS } from "./phone-globe";
 import { HeroGlobeFrame } from "./hero-globe-frame";
 import { HeroSignalFrame } from "./hero-signal-frame";
 
@@ -99,6 +100,23 @@ function renderHero(locale: "de" | "en" = "de") {
 
 function phoneMounts() {
   return network.mounts.filter((props) => props.compact === true);
+}
+
+/** The opening's stage animation ending on the globe window. */
+function endOpening(container: HTMLElement, animationName = "hz-signal-stage") {
+  const slot = container.querySelector("[data-home-globe]");
+  const event = new Event("animationend", { bubbles: true });
+  Object.defineProperty(event, "animationName", { value: animationName });
+  act(() => {
+    slot?.dispatchEvent(event);
+  });
+}
+
+/** Advances fake timers, letting the dynamic import settle in between. */
+async function advance(ms: number) {
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(ms);
+  });
 }
 
 beforeEach(() => {
@@ -183,10 +201,53 @@ describe("phone hero globe: live globe", () => {
     expect(phoneMounts()).toHaveLength(0);
   });
 
-  it("goes live after load and idle below lg, hides the frame, then offers a localized pause", async () => {
+  it("keeps the load window free: nothing loads while the opening plays", async () => {
+    vi.useFakeTimers();
+    installMatchMedia({});
+    const { container } = renderHero();
+    await advance(LIVE_GLOBE_DELAY_MS - 100);
+    expect(phoneMounts()).toHaveLength(0);
+    // Another animation ending is not the end of the opening.
+    endOpening(container, "hz-signal-ping");
+    await advance(50);
+    expect(phoneMounts()).toHaveLength(0);
+    expect(
+      container.querySelector("[data-home-globe]"),
+    ).toHaveAttribute("data-home-globe-motion", "static");
+    expect(screen.queryByRole("button", { name: "Globus anhalten" })).toBeNull();
+
+    // The opening's end hands the stage to the live globe, at idle.
+    endOpening(container);
+    await advance(300);
+    vi.useRealTimers();
+    expect(phoneMounts()).toHaveLength(1);
+  });
+
+  it("goes live after LIVE_GLOBE_DELAY_MS from load when the opening never ends", async () => {
+    vi.useFakeTimers();
+    installMatchMedia({});
+    renderHero();
+    await advance(LIVE_GLOBE_DELAY_MS + 300);
+    vi.useRealTimers();
+    expect(phoneMounts()).toHaveLength(1);
+  });
+
+  it("hands the live globe the opening's start for its tour clock", async () => {
+    installMatchMedia({});
+    const before = performance.now();
+    const { container } = renderHero();
+    endOpening(container);
+    await waitFor(() => expect(phoneMounts()).toHaveLength(1));
+    const { clockStart } = phoneMounts()[0] as { clockStart?: number };
+    expect(clockStart).toBeGreaterThanOrEqual(before);
+    expect(clockStart).toBeLessThanOrEqual(performance.now());
+  });
+
+  it("goes live once the opening has played below lg, hides the frame, then offers a localized pause", async () => {
     installMatchMedia({});
     const { container } = renderHero("en");
     const slot = container.querySelector("[data-home-globe]");
+    endOpening(container);
 
     const toggle = await screen.findByRole("button", {
       name: "Pause the globe",
@@ -220,14 +281,23 @@ describe("phone hero globe: live globe", () => {
   });
 
   it("starts paused when the visitor paused it before, and keeps the frame until a live frame", async () => {
+    vi.useFakeTimers();
     window.localStorage.setItem("loehrning:home-globe-paused", "1");
     installMatchMedia({});
     const { container } = renderHero();
+    // No opening plays for a remembered pause: the control arrives after
+    // the same wait from load.
+    await advance(LIVE_GLOBE_DELAY_MS - 100);
+    expect(phoneMounts()).toHaveLength(0);
+    await advance(400);
+    vi.useRealTimers();
     const toggle = await screen.findByRole("button", {
       name: "Globus anhalten",
     });
     expect(toggle).toHaveAttribute("aria-pressed", "true");
     expect(phoneMounts()[0]).toMatchObject({ paused: true, compact: true });
+    // Without an opening the tour clock starts at its first frame.
+    expect(phoneMounts()[0]?.clockStart).toBeUndefined();
     // A paused globe has drawn nothing: the server frame stays the globe.
     expect(
       container.querySelector("[data-home-globe]"),
@@ -237,6 +307,7 @@ describe("phone hero globe: live globe", () => {
   it("tears the live globe down when the viewport crosses into desktop or motion is reduced", async () => {
     installMatchMedia({});
     const { container, unmount } = renderHero();
+    endOpening(container);
     await screen.findByRole("button", { name: "Globus anhalten" });
     const slot = container.querySelector("[data-home-globe]");
 
@@ -247,6 +318,7 @@ describe("phone hero globe: live globe", () => {
     expect(slot).not.toHaveAttribute("data-home-globe-live");
     expect(document.querySelector("[data-home-globe-toggle]")).toBeNull();
 
+    // Back below lg, long after the load window: idle is the only wait.
     await act(async () => {
       changeEnv({});
     });
@@ -352,9 +424,14 @@ describe("phone hero: the signal from Berlin", () => {
   });
 
   it("settles at once when the visitor pauses or motion becomes reduced", async () => {
+    vi.useFakeTimers();
     installMatchMedia({});
     const { container } = renderWithIntro();
     const slot = slotOf(container);
+    // The opening is still playing when the delay from load runs out.
+    await advance(LIVE_GLOBE_DELAY_MS + 300);
+    vi.useRealTimers();
+    expect(slot).toHaveAttribute("data-home-intro", "play");
     fireEvent.click(await screen.findByRole("button", { name: "Globus anhalten" }));
     expect(slot).toHaveAttribute("data-home-intro", "done");
 
