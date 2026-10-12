@@ -487,8 +487,8 @@
     },
     {
       "path": "packages/website/public/ueber-mich/tim-loehr.jpg",
-      "sizeBytes": 127871,
-      "sha256": "bc40fd98819953ddfff54cec26ad4ef6d8564ed4c8c574873e4b59268aff1ddb",
+      "sizeBytes": 127813,
+      "sha256": "d5a5046e4e1bd01bd1386db771b7beee43cac0d550bb616f6defc81f419ea9a7",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Portr\u00e4tfoto, loehrning.ai",
       "license": "LicenseRef-Loehrning-Brand",

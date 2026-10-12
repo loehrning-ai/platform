@@ -532,6 +532,52 @@ describe("trustedClientIp", () => {
     );
   });
 
+  it.each([
+    ["2001:db8:abcd:12:1:2:3:4", "2001:db8:abcd:12::/64"],
+    ["2001:DB8:ABCD:0012:ffff:ffff:ffff:ffff", "2001:db8:abcd:12::/64"],
+    ["2001:db8:abcd:12::1", "2001:db8:abcd:12::/64"],
+    ["2001:db8::1", "2001:db8:0:0::/64"],
+    ["::1", "0:0:0:0::/64"],
+    ["::ffff:203.0.113.7", "203.0.113.7"],
+  ])("collapses IPv6 %s to its /64 prefix", (address, expected) => {
+    vi.stubEnv("VERCEL", "1");
+    expect(trustedClientIp(req({ "x-vercel-forwarded-for": address }))).toBe(
+      expected,
+    );
+  });
+
+  it("maps every address in one /64 to the same key", () => {
+    vi.stubEnv("VERCEL", "1");
+    const a = trustedClientIp(
+      req({ "x-vercel-forwarded-for": "2001:db8:1:2:aaaa::1" }),
+    );
+    const b = trustedClientIp(
+      req({ "x-vercel-forwarded-for": "2001:db8:1:2:bbbb:cccc:dddd:eeee" }),
+    );
+    const other = trustedClientIp(
+      req({ "x-vercel-forwarded-for": "2001:db8:1:3::1" }),
+    );
+    expect(a).toBe(b);
+    expect(other).not.toBe(a);
+  });
+
+  it.each(["1:2:3:4:5:6:7:8:9", "1::2::3", "2001:db8:::1", "1:2:3:4:5:6:7::8:9"])(
+    "sends malformed IPv6 %s to the coarse bucket",
+    (address) => {
+      vi.stubEnv("VERCEL", "1");
+      expect(trustedClientIp(req({ "x-vercel-forwarded-for": address }))).toBe(
+        "unknown",
+      );
+    },
+  );
+
+  it("leaves IPv4 addresses per-address", () => {
+    vi.stubEnv("VERCEL", "1");
+    expect(
+      trustedClientIp(req({ "x-vercel-forwarded-for": "198.51.100.9" })),
+    ).toBe("198.51.100.9");
+  });
+
   it("handles comma-separated x-vercel-forwarded-for (takes first)", () => {
     vi.stubEnv("VERCEL", "1");
     expect(
