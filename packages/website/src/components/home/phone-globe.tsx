@@ -29,8 +29,9 @@ import type { HeroNetwork as HeroNetworkComponent } from "@/components/home/hero
  *    live globe would only rest on Berlin under the opening anyway, so its
  *    tour clock counts from the opening's start (`clockStart`).
  *
- * The tour lasts longer than five seconds, so WCAG 2.2.2 needs a pause
- * control: a real button, shown only while the globe is live, whose choice
+ * The opening and the tour together last longer than five seconds, so WCAG
+ * 2.2.2 needs a pause control: a real button, shown while the window moves
+ * (from the opening on, before the live globe has arrived), whose choice
  * is remembered in this browser.
  */
 
@@ -163,7 +164,7 @@ export type PhoneGlobe = {
   readonly slotRef: React.RefObject<HTMLDivElement | null>;
   /** The live globe, once its chunk has arrived for an eligible browser. */
   readonly Network: typeof HeroNetworkComponent | null;
-  /** "static" while the server frame shows. */
+  /** "static" while the window does not move (no opening, no live globe). */
   readonly state: PhoneGlobeState;
   readonly paused: boolean;
   readonly togglePaused: () => void;
@@ -184,6 +185,8 @@ export function usePhoneGlobe(): PhoneGlobe {
   > | null>(null);
   const [paused, setPaused] = useState(false);
   const [clockStart, setClockStart] = useState<number | undefined>();
+  // True while this browser gets motion: the opening, then the live globe.
+  const [moving, setMoving] = useState(false);
 
   useEffect(() => {
     const slot = slotRef.current;
@@ -220,9 +223,11 @@ export function usePhoneGlobe(): PhoneGlobe {
       loading = false;
       slot.removeAttribute("data-home-globe-live");
       setNetwork(null);
+      setMoving(false);
     };
 
     const start = () => {
+      setMoving(true);
       if (loading) return;
       loading = true;
       const load = () => {
@@ -278,7 +283,7 @@ export function usePhoneGlobe(): PhoneGlobe {
     slotRef.current?.setAttribute("data-home-globe-live", "");
   }, []);
 
-  const state: PhoneGlobeState = Network
+  const state: PhoneGlobeState = moving
     ? paused
       ? "paused"
       : "running"
@@ -295,7 +300,7 @@ export function usePhoneGlobe(): PhoneGlobe {
   };
 }
 
-/** The phone globe's toggle; nothing while the static frame shows. */
+/** The phone globe's toggle; nothing while the window does not move. */
 export function PhoneGlobeToggle({
   globe,
   label,

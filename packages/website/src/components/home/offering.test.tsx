@@ -1,5 +1,22 @@
-import { describe, expect, it } from "vitest";
+import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+
+vi.mock("next/link", () => ({
+  default: ({
+    prefetch,
+    children,
+    ...props
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & {
+    readonly prefetch?: boolean;
+    readonly children?: ReactNode;
+  }) => (
+    <a {...props} data-prefetch={String(prefetch)}>
+      {children}
+    </a>
+  ),
+}));
+
 import { Offering } from "./offering";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
@@ -32,6 +49,15 @@ describe("Offering section", () => {
     for (const course of SPINE) {
       const link = screen.getByText(course.title).closest("a");
       expect(link).toHaveAttribute("href", course.href);
+    }
+  });
+
+  it("never prefetches its routes from the viewport during the page's load", () => {
+    const { container } = render(<Offering />);
+    const links = Array.from(container.querySelectorAll("a"));
+    expect(links.length).toBeGreaterThanOrEqual(5);
+    for (const link of links) {
+      expect(link).toHaveAttribute("data-prefetch", "false");
     }
   });
 

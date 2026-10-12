@@ -211,10 +211,13 @@ describe("phone hero globe: live globe", () => {
     endOpening(container, "hz-signal-ping");
     await advance(50);
     expect(phoneMounts()).toHaveLength(0);
+    // The window already moves (the opening), so its pause control is there.
     expect(
       container.querySelector("[data-home-globe]"),
-    ).toHaveAttribute("data-home-globe-motion", "static");
-    expect(screen.queryByRole("button", { name: "Globus anhalten" })).toBeNull();
+    ).toHaveAttribute("data-home-globe-motion", "running");
+    expect(
+      screen.getByRole("button", { name: "Globus anhalten" }),
+    ).toHaveAttribute("aria-pressed", "false");
 
     // The opening's end hands the stage to the live globe, at idle.
     endOpening(container);
@@ -243,16 +246,14 @@ describe("phone hero globe: live globe", () => {
     expect(clockStart).toBeLessThanOrEqual(performance.now());
   });
 
-  it("goes live once the opening has played below lg, hides the frame, then offers a localized pause", async () => {
+  it("goes live once the opening has played below lg, hides the frame, with a localized pause", async () => {
     installMatchMedia({});
     const { container } = renderHero("en");
     const slot = container.querySelector("[data-home-globe]");
     endOpening(container);
 
-    const toggle = await screen.findByRole("button", {
-      name: "Pause the globe",
-    });
-    expect(phoneMounts()).toHaveLength(1);
+    await waitFor(() => expect(phoneMounts()).toHaveLength(1));
+    const toggle = screen.getByRole("button", { name: "Pause the globe" });
     expect(slot).toHaveAttribute("data-home-globe-live", "");
     expect(slot).toHaveAttribute("data-home-globe-motion", "running");
     expect(toggle).toHaveAttribute("aria-pressed", "false");
@@ -285,16 +286,17 @@ describe("phone hero globe: live globe", () => {
     window.localStorage.setItem("loehrning:home-globe-paused", "1");
     installMatchMedia({});
     const { container } = renderHero();
-    // No opening plays for a remembered pause: the control arrives after
-    // the same wait from load.
+    // No opening plays for a remembered pause; the pressed control is there
+    // at once, and the live globe arrives after the same wait from load.
+    const toggle = screen.getByRole("button", { name: "Globus anhalten" });
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    expect(
+      container.querySelector("[data-home-globe]"),
+    ).toHaveAttribute("data-home-globe-motion", "paused");
     await advance(LIVE_GLOBE_DELAY_MS - 100);
     expect(phoneMounts()).toHaveLength(0);
     await advance(400);
     vi.useRealTimers();
-    const toggle = await screen.findByRole("button", {
-      name: "Globus anhalten",
-    });
-    expect(toggle).toHaveAttribute("aria-pressed", "true");
     expect(phoneMounts()[0]).toMatchObject({ paused: true, compact: true });
     // Without an opening the tour clock starts at its first frame.
     expect(phoneMounts()[0]?.clockStart).toBeUndefined();
@@ -308,7 +310,7 @@ describe("phone hero globe: live globe", () => {
     installMatchMedia({});
     const { container, unmount } = renderHero();
     endOpening(container);
-    await screen.findByRole("button", { name: "Globus anhalten" });
+    await waitFor(() => expect(phoneMounts()).toHaveLength(1));
     const slot = container.querySelector("[data-home-globe]");
 
     await act(async () => {
@@ -428,11 +430,12 @@ describe("phone hero: the signal from Berlin", () => {
     installMatchMedia({});
     const { container } = renderWithIntro();
     const slot = slotOf(container);
-    // The opening is still playing when the delay from load runs out.
-    await advance(LIVE_GLOBE_DELAY_MS + 300);
+    // The control is there while the opening plays, before any live globe.
+    await advance(1000);
     vi.useRealTimers();
+    expect(phoneMounts()).toHaveLength(0);
     expect(slot).toHaveAttribute("data-home-intro", "play");
-    fireEvent.click(await screen.findByRole("button", { name: "Globus anhalten" }));
+    fireEvent.click(screen.getByRole("button", { name: "Globus anhalten" }));
     expect(slot).toHaveAttribute("data-home-intro", "done");
 
     window.localStorage.clear();
