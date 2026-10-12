@@ -121,10 +121,37 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
         .replace(/"(?:n|number|reviewedAt)":"[^"]*"/g, "")
         // The kit size has its own test against the file on disk.
         .replace(/"sizeLabel":"[^"]*"/g, "")
+        // Kit segment weights are plain proportions; their printed form is the display string.
+        .replace(/"value":\d+(?:\.\d+)?/g, "")
         .replace(/CO₂e|Workshop 04|START-HERE/g, "");
       for (const [token] of text.matchAll(/\d+(?:[.,]\d+)*/g)) {
         expect(printed.has(bare(token, locale)), `${locale} ${token}`).toBe(true);
       }
+    }
+  });
+
+  it("describes the kit page with the numbers the kit prints, in both locales", () => {
+    for (const workshop of both) {
+      const kit = workshop.kit!;
+      expect(kit.fileName).toBe("valea-sturzilor-esg-kit.zip");
+      expect(kit.stats.map((stat) => stat.value)).toEqual(["13", "5", "3"]);
+      expect(kit.steps).toHaveLength(5);
+      expect(kit.rules).toHaveLength(3);
+      // Prompt 1: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND; prompt 2: 4 red, 1 amber, 2 green.
+      expect(kit.steps[0].segments?.map((segment) => segment.value)).toEqual([5, 1, 2]);
+      expect(kit.steps[1].segments?.map((segment) => segment.value)).toEqual([4, 1, 2]);
+      expect(kit.steps[3].segments?.map((segment) => segment.value)).toEqual([5, 4, 2]);
+      // The 11-month total and September make the year: 279.7 + 41.2 = 320.9 MWh.
+      const [months, september] = kit.steps[4].segments!.map((segment) => segment.value);
+      expect(Math.round((months + september) * 10) / 10).toBe(320.9);
+    }
+    expect(de.kit!.steps[2].line).toEqual({ text: "3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh)", result: "= 5,0 Jahre" });
+    expect(en.kit!.steps[2].line).toEqual({ text: "3,420,000 lei / (180,000 kWh × 3.80 lei/kWh)", result: "= 5.0 years" });
+    expect(de.kit!.steps[4].line?.result).toBe("= 320,9 MWh");
+    expect(en.kit!.steps[4].line?.result).toBe("= 320.9 MWh");
+    // The kit's own README states each of these.
+    for (const phrase of ["5 OK, 1 NEEDS CHECK, 2 NOT FOUND", "4 RED, 1 AMBER, 2 GREEN", "41.2 MWh", "305.1 MWh", "15.8 MWh"]) {
+      expect(kitText).toContain(phrase);
     }
   });
 

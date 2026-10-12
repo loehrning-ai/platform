@@ -7,7 +7,7 @@ import { getBookChapterList } from "@/lib/book-reader-content";
 import { demos } from "@/lib/demos";
 import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { OPEN_SOURCE_ARTIFACTS } from "@/lib/open-source/artifacts";
-import { getWorkshopSlugs } from "@/lib/workshops";
+import { getWorkshopKitSlugs, getWorkshopSlugs } from "@/lib/workshops";
 import { CRAWL_CONTRACT } from "@/lib/crawl/contract";
 import { hasEnglishContentParity } from "@/lib/i18n/content-parity";
 
@@ -43,7 +43,8 @@ describe("sitemap()", () => {
       books.length +
       publishedBookChapters.length +
       demos.length +
-      getWorkshopSlugs().length;
+      getWorkshopSlugs().length +
+      getWorkshopKitSlugs().length;
     const expectedStatic = CRAWL_CONTRACT.filter(
       (entry) => entry.includeInSitemap && !entry.pattern.includes(":"),
     ).length;
@@ -209,6 +210,10 @@ describe("sitemap()", () => {
     }
     for (const slug of getWorkshopSlugs()) {
       expect(urls).toContain(`https://loehrning.ai/workshops/${slug}`);
+    }
+    for (const slug of getWorkshopKitSlugs()) {
+      expect(urls).toContain(`https://loehrning.ai/workshops/${slug}/kit`);
+      expect(urls).toContain(`https://loehrning.ai/en/workshops/${slug}/kit`);
     }
   });
 

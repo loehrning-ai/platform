@@ -57,6 +57,7 @@ describe("translated-content parity registry", () => {
       "/open-source/tools/cv-engine",
       "/ueber-mich",
       "/workshops",
+      "/workshops/esg-berichte-mit-ki/kit",
       "/workshops/geschaeftsberichte-mit-ki-lesen",
       "/workshops/ki-prognosen-einschaetzen",
     ]) {
