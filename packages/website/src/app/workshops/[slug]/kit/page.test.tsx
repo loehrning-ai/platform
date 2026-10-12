@@ -66,6 +66,6 @@ describe("workshop kit page route", () => {
     const json = JSON.stringify(element);
     expect(json).toContain("https://loehrning.ai/en/workshops/esg-berichte-mit-ki/kit");
     expect(json).toContain("application/zip");
-    expect(json).toContain("/workshops/esg-berichte-mit-ki/valea-sturzilor-esg-kit.zip");
+    expect(json).toContain("/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip");
   });
 });

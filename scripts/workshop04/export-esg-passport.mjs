@@ -9,7 +9,7 @@
  * Text is rewritten in three reviewed places only:
  *   - the partner's co-branding leaves the deck: "loehrning.ai × <partner>" becomes
  *     "loehrning.ai", the partner's logo and its CSS are removed, the room's date lines name
- *     Moldova only, and the closing kit line points at the workshop page (PARTNER_EDITS, which
+ *     North Macedonia only, and the closing kit line points at the workshop page (PARTNER_EDITS, which
  *     also points the deck's three mentions of the private answer key at START-HERE.md);
  *   - the deck's fonts point at the woff2 statics already inventoried for this folder;
  *   - the deck's one image path into the kit folder points at the same photo in assets/proof/.
@@ -113,7 +113,7 @@ export const KIT_SOURCE_FILES = [
   "project-files/water_bills_2025.csv",
 ];
 
-/** Kit entries as published inside valea-sturzilor-esg-kit.zip. */
+/** Kit entries as published inside crvena-zemja-esg-kit.zip. */
 export const KIT_FILES = [...KIT_SOURCE_FILES];
 
 /** Every file the published folder holds, and nothing else. */
@@ -132,11 +132,11 @@ const PARTNER_EDITS = [
   [/^\[data-n="(?:01|17)"\] \.(?:cv|s17)-[a-z]+ \{ display: block; height: \d+px; width: auto; \}\n(?=(?:\[data-n="01"\] \.cv-x|\n|<\/style>))/gm, "", "partner logo CSS"],
   [/\n *<span class="cv-x">×<\/span>\n *<img src="\.\/assets\/[a-z]+\.png" alt="[A-Za-z]+" class="cv-[a-z]+" \/>/, "", "cover partner logo"],
   [/\n *<span>×<\/span>\n *<img src="\.\/assets\/[a-z]+\.png" alt="[A-Za-z]+" class="s17-[a-z]+" \/>/, "", "closing partner logo"],
-  [/Tim Löhr · [A-Za-z]+ Moldova · 16 October 2026 · 60 minutes/, "Tim Löhr · Moldova · 16 October 2026 · 60 minutes", "cover date line"],
-  [/Workshop 04 · [A-Za-z]+ Moldova · 16 October 2026/, "Workshop 04 · Moldova · 16 October 2026", "closing date line"],
-  [/content="Workshop 04 for [A-Za-z]+ Moldova: /, 'content="Workshop 04, held in Moldova: ', "page description"],
+  [/Tim Löhr · [A-Za-z]+ · 16 October 2026 · 60 minutes/, "Tim Löhr · North Macedonia · 16 October 2026 · 60 minutes", "cover date line"],
+  [/Workshop 04 · [A-Za-z]+ · 16 October 2026/, "Workshop 04 · North Macedonia · 16 October 2026", "closing date line"],
+  [/content="Workshop 04 for [A-Za-z]+: /, 'content="Workshop 04, held in North Macedonia: ', "page description"],
   [/<p class="s17-kitt">[A-Za-z]+ sends you the kit link today\.<\/p>/, '<p class="s17-kitt">Download the kit from the workshop page.</p>', "closing kit line"],
-  [/\.\/assets\/\.\.\/valea-sturzilor-esg-kit\/inbox\/4-september-invoice\.png/, "./assets/proof/september-invoice.png", "invoice photo path"],
+  [/\.\/assets\/\.\.\/crvena-zemja-esg-kit\/inbox\/4-september-invoice\.png/, "./assets/proof/september-invoice.png", "invoice photo path"],
   // The presenter's answer key stays private; the public kit carries the same expected results in START-HERE.md.
   [/<p class="t-label">Expected status \(answer key\)<\/p>/, '<p class="t-label">Expected status (START-HERE.md)</p>', "expected-status label"],
   [/<p class="t-src">answer key, step 4<br \/>/, '<p class="t-src">kit: START-HERE.md, step 4<br />', "step 4 source line"],
@@ -144,7 +144,7 @@ const PARTNER_EDITS = [
 ];
 
 /** Case names retired because they collided with real companies; none may come back. */
-const RETIRED_CASE_NAMES = /Trei Dealuri|Banca Nistru|Exempla|Energo Codru|Solar Codru|Vardar Oak|vardar-oak/i;
+const RETIRED_CASE_NAMES = /Trei Dealuri|Banca Nistru|Valea Sturzilor|valea-sturzilor|Exempla|Energo Codru|Solar Codru|Vardar Oak|vardar-oak/i;
 const FONT_FILES = [
   ["Typing-Regular.ttf", "Typing-Regular.woff2"],
   ["Typing-Medium.ttf", "Typing-Medium.woff2"],

@@ -59,12 +59,12 @@ test("no published file or kit entry names the client, a local path or presenter
   for (const [name, bytes] of kit()) {
     assert.doesNotThrow(() => assertClean(`${ZIP_NAME}/${name}`, bytes), name);
   }
-  // The deck keeps its own brand line, without a partner: one logo, no "×", Moldova only.
+  // The deck keeps its own brand line, without a partner: one logo, no "×", North Macedonia only.
   const slides = read("slides.html").toString("utf8");
   assert.match(slides, /<title>Answer ESG by Friday · loehrning\.ai<\/title>/);
   assert.match(read("lib/esg.js").toString("utf8"), /loehrning\.ai · Workshop 04/);
   assert.doesNotMatch(slides, /×<\/span>|\.png" alt="[A-Za-z]+" class="(?:cv|s17)-/);
-  assert.match(slides, /Tim Löhr · Moldova · 16 October 2026 · 60 minutes/);
+  assert.match(slides, /Tim Löhr · North Macedonia · 16 October 2026 · 60 minutes/);
   assert.match(slides, /Download the kit from the workshop page\./);
   assert.doesNotMatch(slides, /answer key/i);
 });

@@ -12,7 +12,7 @@ const both = [de, en] as const;
 
 const slides = readFileSync(resolve(root, "slides.html"), "utf8");
 // The kit zip stores its entries uncompressed, so its text can be read straight from the bytes.
-const kitText = readFileSync(resolve(root, "valea-sturzilor-esg-kit.zip")).toString("utf8");
+const kitText = readFileSync(resolve(root, "crvena-zemja-esg-kit.zip")).toString("utf8");
 
 /** A printed number without its thousands separators, with "." as the decimal point. */
 function bare(token: string, locale: "de" | "en"): string {
@@ -86,7 +86,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
     expect(frame(de)).toEqual(frame(en));
     expect(en.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length))).toEqual([
       "slides.html",
-      "valea-sturzilor-esg-kit.zip",
+      "crvena-zemja-esg-kit.zip",
     ]);
     for (const workshop of both) {
       expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
@@ -100,7 +100,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
   });
 
   it("states the measured kit size", () => {
-    const size = statSync(resolve(root, "valea-sturzilor-esg-kit.zip")).size;
+    const size = statSync(resolve(root, "crvena-zemja-esg-kit.zip")).size;
     for (const workshop of both) {
       const kit = workshop.materials.find((material) => material.kind === "zip");
       expect(kit?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
@@ -133,7 +133,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
   it("describes the kit page with the numbers the kit prints, in both locales", () => {
     for (const workshop of both) {
       const kit = workshop.kit!;
-      expect(kit.fileName).toBe("valea-sturzilor-esg-kit.zip");
+      expect(kit.fileName).toBe("crvena-zemja-esg-kit.zip");
       expect(kit.stats.map((stat) => stat.value)).toEqual(["13", "5", "3"]);
       expect(kit.steps).toHaveLength(5);
       expect(kit.rules).toHaveLength(3);
@@ -145,8 +145,8 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
       const [months, september] = kit.steps[4].segments!.map((segment) => segment.value);
       expect(Math.round((months + september) * 10) / 10).toBe(320.9);
     }
-    expect(de.kit!.steps[2].line).toEqual({ text: "3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh)", result: "= 5,0 Jahre" });
-    expect(en.kit!.steps[2].line).toEqual({ text: "3,420,000 lei / (180,000 kWh × 3.80 lei/kWh)", result: "= 5.0 years" });
+    expect(de.kit!.steps[2].line).toEqual({ text: "8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh)", result: "= 5,0 Jahre" });
+    expect(en.kit!.steps[2].line).toEqual({ text: "8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh)", result: "= 5.0 years" });
     expect(de.kit!.steps[4].line?.result).toBe("= 320,9 MWh");
     expect(en.kit!.steps[4].line?.result).toBe("= 320.9 MWh");
     // The kit's own README states each of these.
@@ -159,17 +159,17 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
     expect(de.description).toContain("5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND");
     expect(de.description).toContain("279,7 MWh");
     expect(de.description).toContain("31. August 2026");
-    expect(de.description).toContain("3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh) = 5,0 Jahre");
+    expect(de.description).toContain("8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre");
     expect(de.description).toContain("320,9 MWh");
     expect(en.description).toContain("5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND");
     expect(en.description).toContain("279.7 MWh");
     expect(en.description).toContain("31 August 2026");
-    expect(en.description).toContain("3,420,000 lei / (180,000 kWh × 3.80 lei/kWh) = 5.0 years");
+    expect(en.description).toContain("8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh) = 5.0 years");
     expect(en.description).toContain("320.9 MWh");
     expect(slides).toContain('<span class="sum-v">279.7</span>');
     expect(slides).toContain("31.08.2026");
     expect(slides).toContain('data-roll="320.9 MWh · 12 months"');
     expect(slides).toContain("5.0 years");
-    expect(kitText).toContain("F4 = 3,420,000 lei / (180,000 kWh x 3.80 lei/kWh) = 5.0 years");
+    expect(kitText).toContain("F4 = 8,550,000 MKD / (180,000 kWh x 9.50 MKD/kWh) = 5.0 years");
   });
 });
