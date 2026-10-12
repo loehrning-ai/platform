@@ -1,5 +1,6 @@
 import type { Locale } from "./i18n/locale";
 import type { Workshop, WorkshopMaterial } from "./workshops";
+import { ESG_REPORTING_KIT } from "./workshops-esg-reporting-kit";
 
 const base = "/workshops/esg-berichte-mit-ki";
 
@@ -234,6 +235,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Einrichtung, fünf Prompts, 13 Firmendateien, drei Anfragen, ein Foto.",
       ],
     ]),
+    kit: ESG_REPORTING_KIT.de,
   },
   en: {
     slug: "esg-berichte-mit-ki",
@@ -433,5 +435,6 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Setup, five prompts, 13 company files, three requests, one photo.",
       ],
     ]),
+    kit: ESG_REPORTING_KIT.en,
   },
 };

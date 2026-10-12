@@ -5,10 +5,10 @@
  * Writes, from src/lib/plakat (palettes.ts, motifs.ts, poster-svg.ts):
  *   public/workshops/<slug>/assets/plakat-cover.svg
  *     The workshop's portrait poster (400 x 500) with its numeral in outlines,
- *     for the deck cover slide and the Workshop 01 hub cover band.
- *   public/workshops/ki-prognosen-einschaetzen/assets/plakat-strip.svg
- *     The phone strip of the same poster (numeral left, motif right) that
- *     closes the Workshop 01 hub cover band below 901px.
+ *     for the deck cover slide.
+ *   public/workshops/<slug>/assets/plakat-strip.svg, only for a workshop in
+ *     COVER_BAND_WORKSHOPS: the phone strip of the same poster for a page
+ *     that opens with a cover band (none at present).
  *   the --cover-* scene block (ground, ink, mid, and the scene's ink on paper
  *   for the Kopflinie) in
  *     public/workshops/<slug>/lib/tokens.css             every workshop
@@ -45,7 +45,7 @@ const CHECK = process.argv.includes("--check");
  * Workshops whose static pages open with a cover band (.wf-cover in
  * lib/workshop-frame.css): they also get the phone strip poster.
  */
-const COVER_BAND_WORKSHOPS = new Set(["ki-prognosen-einschaetzen"]);
+const COVER_BAND_WORKSHOPS = new Set([]);
 
 /** Extra files that carry the scene block, per workshop slug. */
 const SCENE_BLOCK_TARGETS = {

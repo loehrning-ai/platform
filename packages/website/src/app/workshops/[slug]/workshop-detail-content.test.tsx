@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { localizeHref } from "@/lib/i18n/locale";
+import { workshopKitPath } from "@/lib/workshop-kit";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
 import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
@@ -255,21 +257,21 @@ describe("<WorkshopDetailContent>", () => {
     expect(provenance).toHaveTextContent(workshop.provenance.note);
   });
 
-  it("uses the primary material for the cover button and a demo or lab for the second", () => {
-    const w03 = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
-    const { unmount } = render(<WorkshopDetailContent workshop={w03} locale="de" />);
+  it("uses the primary material for the cover button and a lab or case for the second", () => {
+    const w01 = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
+    const { unmount } = render(<WorkshopDetailContent workshop={w01} locale="de" />);
     const cover = screen
       .getByRole("heading", { level: 1 })
       .closest("[data-cover-band]") as HTMLElement;
-    const deck = w03.materials.find((material) => material.primary)!;
-    const demo = w03.materials.find((material) => material.role === "demo")!;
-    expect(within(cover).getByRole("link", { name: "Deck öffnen" })).toHaveAttribute(
+    const lab = w01.materials.find((material) => material.primary)!;
+    const caseStudy = w01.materials.find((material) => material.role === "case")!;
+    expect(within(cover).getByRole("link", { name: "Labore öffnen" })).toHaveAttribute(
       "href",
-      deck.href,
+      lab.href,
     );
-    expect(within(cover).getByRole("link", { name: "Demo starten" })).toHaveAttribute(
+    expect(within(cover).getByRole("link", { name: "Fall öffnen" })).toHaveAttribute(
       "href",
-      demo.href,
+      caseStudy.href,
     );
     unmount();
 
@@ -489,19 +491,20 @@ describe("<WorkshopDetailContent>", () => {
     );
   });
 
-  it("offers the W01 dataset as a CSV download under its published name", () => {
+  it("offers at most two materials per workshop, the deck and the kit, and no optional files", () => {
     for (const locale of ["de", "en"] as const) {
-      const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", locale)!;
-      const { container, unmount } = render(
-        <WorkshopDetailContent workshop={workshop} locale={locale} />,
-      );
-      const link = container.querySelector(
-        'a[href="/workshops/ki-prognosen-einschaetzen/data/demand-weekly.csv"]',
-      );
-      expect(link).not.toBeNull();
-      expect(link).toHaveAttribute("download", "");
-      expect(link?.closest("li")).toHaveTextContent("CSV · 1");
-      unmount();
+      for (const workshop of getWorkshops(locale)) {
+        expect(workshop.materials.length, workshop.slug).toBeLessThanOrEqual(2);
+        expect(workshop.materials.filter((material) => material.optional), workshop.slug).toEqual([]);
+        // Workshop 01 has no slide deck: its labs and its case play that part.
+        const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "case"] : ["deck", "kit"];
+        for (const material of workshop.materials) expect(allowed, material.href).toContain(material.role);
+        const { container, unmount } = render(
+          <WorkshopDetailContent workshop={workshop} locale={locale} />,
+        );
+        expect(container.querySelector("#material details"), workshop.slug).toBeNull();
+        unmount();
+      }
     }
   });
 
@@ -517,9 +520,18 @@ describe("<WorkshopDetailContent>", () => {
         expect(links).toHaveLength(workshop.materials.length);
         const hrefs = links.map((link) => link.getAttribute("href"));
         expect(new Set(hrefs).size).toBe(workshop.materials.length);
+        // The kit card of a workshop with a kit block opens the kit page, not the zip.
+        const hrefOf = (material: (typeof workshop.materials)[number]) =>
+          workshop.kit && material.role === "kit"
+            ? localizeHref(workshopKitPath(workshop.slug), locale)
+            : material.href;
         for (const material of workshop.materials) {
-          const link = links.find((candidate) => candidate.getAttribute("href") === material.href)!;
-          expect(link).toHaveAttribute("hreflang", material.language);
+          const link = links.find((candidate) => candidate.getAttribute("href") === hrefOf(material))!;
+          if (hrefOf(material) === material.href) {
+            expect(link).toHaveAttribute("hreflang", material.language);
+          } else {
+            expect(link).not.toHaveAttribute("download");
+          }
           expect(link).toHaveAccessibleName(new RegExp(material.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
         }
 
@@ -532,7 +544,7 @@ describe("<WorkshopDetailContent>", () => {
         const expectedOrder = [
           ...taught.filter((material) => !material.optional),
           ...taught.filter((material) => material.optional),
-        ].map((material) => material.href);
+        ].map(hrefOf);
         expect(hrefs).toEqual(expectedOrder);
         const optional = workshop.materials.filter((material) => material.optional);
         const folded = materialSection.querySelector("details");

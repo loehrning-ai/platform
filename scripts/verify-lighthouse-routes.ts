@@ -12,7 +12,7 @@ import {
 } from "../packages/website/src/lib/crawl/contract";
 import { demos } from "../packages/website/src/lib/demos";
 import { OPEN_SOURCE_ARTIFACTS } from "../packages/website/src/lib/open-source/artifacts";
-import { getWorkshopSlugs } from "../packages/website/src/lib/workshops";
+import { getWorkshopKitSlugs, getWorkshopSlugs } from "../packages/website/src/lib/workshops";
 
 const REPOSITORY_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WEBSITE_ROOT = path.join(REPOSITORY_ROOT, "packages", "website");
@@ -205,6 +205,10 @@ export async function buildPublishedDynamicCandidates(): Promise<
     [
       "/workshops/:slug",
       getWorkshopSlugs().map((slug) => `/workshops/${slug}`),
+    ],
+    [
+      "/workshops/:slug/kit",
+      getWorkshopKitSlugs().map((slug) => `/workshops/${slug}/kit`),
     ],
     ["/buecher/:slug", books.map((book) => `/buecher/${book.id}`)],
     ["/demos/:slug", demos.map((demo) => `/demos/${demo.slug}`)],
