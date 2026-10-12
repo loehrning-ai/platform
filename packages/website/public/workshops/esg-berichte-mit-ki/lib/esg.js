@@ -129,9 +129,12 @@
     tick();
   }
 
+  // deck text placed into markup is escaped, so a < or & in authored copy can never become HTML
+  const esc = (text) => String(text).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
   function roll(el, instant) {
     if (!el.dataset.rollFrom) el.dataset.rollFrom = el.textContent;
-    el.innerHTML = `<span class="roll"><span>${el.dataset.rollFrom}</span><span>${el.dataset.roll}</span></span>`;
+    el.innerHTML = `<span class="roll"><span>${esc(el.dataset.rollFrom)}</span><span>${esc(el.dataset.roll)}</span></span>`;
     if (instant) { el.firstChild.classList.add('go'); return; }
     requestAnimationFrame(() => requestAnimationFrame(() => el.firstChild && el.firstChild.classList.add('go')));
   }
@@ -150,7 +153,7 @@
     let html = '', k = 0;
     for (let i = 0; i < width; i += 1) {
       const cb = b[i];
-      if (!/\d/.test(cb)) { html += cb === ' ' ? '' : `<span>${cb}</span>`; continue; }
+      if (!/\d/.test(cb)) { html += cb === ' ' ? '' : `<span>${esc(cb)}</span>`; continue; }
       const start = /\d/.test(a[i]) ? +a[i] : 0;
       const steps = ((+cb - start + 10) % 10) + 10 * Math.min(2, k);
       const col = [];
@@ -381,8 +384,8 @@
     chrome.innerHTML =
       `<div class="chrome__topbar"><span class="brand"><span class="markdot"></span>loehrning.ai · Workshop 04</span>` +
       `<span class="rail">${rail}</span></div><div class="chrome__topline"></div>` +
-      `<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>${slide.dataset.label || ''}</span>` +
-      (fict ? `<span class="chrome__fict">${fict}</span>` : '') +
+      `<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>${esc(slide.dataset.label || '')}</span>` +
+      (fict ? `<span class="chrome__fict">${esc(fict)}</span>` : '') +
       `<span class="page">${String(nOf(slide)).padStart(2, '0')} / ${String(total).padStart(2, '0')}</span></div>`;
     slide.prepend(chrome);
   });
