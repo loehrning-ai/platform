@@ -116,9 +116,9 @@ describe("<WorkshopsContent>", () => {
     const amount = within(w03).getByText("-€19,960");
     expect(amount.tagName).toBe("SPAN");
     expect(amount).toHaveClass("whitespace-nowrap", "tabular-nums");
-    // Seven material roles fold to four nouns plus a count, in a fixed order.
+    // Each workshop offers its deck and its kit, nothing else.
     expect(w03.querySelector("[data-workshop-roles]")?.textContent).toBe(
-      "Deck · Demo · Kit · Learner guide · 3 more",
+      "Deck · Kit",
     );
     expect(w03.textContent).not.toContain("For data teams");
     for (const item of w03.querySelectorAll("[data-workshop-roles] > span")) {
@@ -234,9 +234,10 @@ describe("<WorkshopsContent>", () => {
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
     ).toHaveAttribute("href", "/workshops/datenbereitschaft-fuer-ki");
     expect(screen.queryByRole("link", { name: /Workshop 04 beginnen/ })).toBeNull();
-    // The team note names every workshop with a presenter view.
+    // No workshop lists a presenter view as a material, so the team note
+    // points to the workshop page.
     expect(
-      screen.getByText(/^Workshop 03 hat eine Moderationsansicht/),
+      screen.getByText(/^Was du für eine Gruppe brauchst, steht auf der Workshop-Seite\./),
     ).toBeInTheDocument();
   });
 
@@ -344,7 +345,7 @@ describe("<WorkshopsContent>", () => {
     expect(h1).not.toHaveClass("poster-title");
   });
 
-  it("keeps the team note small and says how to open the presenter view", () => {
+  it("keeps the team note small and points to the workshop page", () => {
     const { container } = render(
       <WorkshopsContent workshops={getWorkshops("de")} locale="de" />,
     );
@@ -354,13 +355,11 @@ describe("<WorkshopsContent>", () => {
     const note = container.querySelector("[data-workshop-teams]")!;
     expect(note.tagName).toBe("P");
     expect(note).not.toHaveClass("border-t");
-    expect(note).toHaveTextContent(/^Mit deinem Team\. Workshop 03 hat/);
-    expect(
-      screen.getByText(/Workshop 03 hat eine Moderationsansicht mit Notizen/),
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Öffne das Deck und drück P\./)).toBeInTheDocument();
-    // Phones have no P key: the keyboard hint shows from lg only.
-    expect(note.querySelector("[data-workshop-key-hint]")).toHaveClass("max-lg:hidden");
+    expect(note).toHaveTextContent(
+      /^Mit deinem Team\. Was du für eine Gruppe brauchst, steht auf der Workshop-Seite\.$/,
+    );
+    // No presenter view is listed, so there is no keyboard hint either.
+    expect(note.querySelector("[data-workshop-key-hint]")).toBeNull();
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
     expect(screen.getByText("Workshops · 4 Fälle")).toBeInTheDocument();
     expect(

@@ -12,7 +12,7 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/ki-prognosen-einschaetzen",
     deHeading: "Kann KI die Zukunft vorhersagen?",
     enHeading: "Can AI predict the future?",
-    materialCount: 6,
+    materialCount: 2,
   },
   {
     path: "/workshops/geschaeftsberichte-mit-ki-lesen",
@@ -24,7 +24,7 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/datenbereitschaft-fuer-ki",
     deHeading: "Sind deine Daten bereit für KI?",
     enHeading: "Are your data ready for AI?",
-    materialCount: 7,
+    materialCount: 2,
   },
   {
     path: "/workshops/esg-berichte-mit-ki",

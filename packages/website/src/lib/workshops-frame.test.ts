@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-// The static materials of Workshops 01 and 02 share one frame stylesheet
+// The static materials of Workshop 01 use one frame stylesheet
 // ("Werkzeichnung", the Workshop 03 deck language). Source of truth:
 // scripts/workshops/workshop-frame.css; each folder ships a byte-identical copy
 // in lib/ (node scripts/workshops/sync-frame.mjs). These checks keep the copies in
@@ -13,21 +13,11 @@ const publicWorkshops = resolve(__dirname, "../../public/workshops");
 const frameSource = join(repoRoot, "scripts/workshops/workshop-frame.css");
 
 /** Folders restyled onto the frame. */
-const FRAME_WORKSHOPS = [
-  "ki-prognosen-einschaetzen",
-  "geschaeftsberichte-mit-ki-lesen",
-] as const;
+const FRAME_WORKSHOPS = ["ki-prognosen-einschaetzen"] as const;
 
-/** Material pages that must link the frame (the W02 deck keeps its own deck.css). */
+/** Material pages that must link the frame. */
 const FRAME_PAGES: Record<(typeof FRAME_WORKSHOPS)[number], string[]> = {
-  "ki-prognosen-einschaetzen": [
-    "hub.html",
-    "hands-on.html",
-    "case-study/index.html",
-    "field-card.html",
-    "homework.html",
-  ],
-  "geschaeftsberichte-mit-ki-lesen": [],
+  "ki-prognosen-einschaetzen": ["hands-on.html", "case-study/index.html"],
 };
 
 function textFiles(directory: string): string[] {
@@ -124,8 +114,8 @@ describe("restyled workshop materials keep the Werkzeichnung look", () => {
     text: readFileSync(file, "utf8"),
   });
 
-  it("covers the static materials of both workshops", () => {
-    expect(files.length).toBeGreaterThan(10);
+  it("covers the static materials of the framed workshop", () => {
+    expect(files.length).toBeGreaterThan(5);
   });
 
   it("has no offset (stamp) box-shadows", () => {

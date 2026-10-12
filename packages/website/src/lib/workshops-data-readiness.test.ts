@@ -10,40 +10,24 @@ const read = (name: string) => readFileSync(resolve(root, name), "utf8");
 const files = (directory = root): string[] => readdirSync(directory, { withFileTypes: true }).flatMap((entry) => entry.isDirectory() ? files(resolve(directory, entry.name)) : [resolve(directory, entry.name)]);
 
 describe("published Data Readiness workshop", () => {
-  it("is the third workshop in both locales and lists every learner-facing file, grouped by phase", () => {
+  it("is the third workshop in both locales and lists only the deck and the kit", () => {
     for (const locale of ["de", "en"] as const) {
       const workshop = getWorkshops(locale)[2];
       expect(workshop.slug).toBe("datenbereitschaft-fuer-ki");
       expect(workshop.number).toBe("03");
       const relative = workshop.materials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length));
-      expect(relative).toEqual([
-        "slides.html",
-        "presenter.html",
-        "demo.html",
-        "data-readiness-kit.zip",
-        "guide.html",
-        "data-readiness-kit/readiness-lab.html",
-        "builder.html",
-      ]);
-      expect(workshop.materials.map(({ role, phase }) => `${role}/${phase}`)).toEqual([
-        "deck/during",
-        "presenter/during",
-        "demo/during",
-        "kit/during",
-        "guide/after",
-        "lab/after",
-        "builder/after",
-      ]);
+      expect(relative).toEqual(["slides.html", "data-readiness-kit.zip"]);
+      expect(workshop.materials.map(({ role, phase }) => `${role}/${phase}`)).toEqual(["deck/during", "kit/during"]);
       expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
-      // Presenter view, demo, lab and builder guide are extras; the outcomes do not depend on them.
-      expect(workshop.materials.filter((material) => material.optional).map((material) => material.role)).toEqual(["presenter", "demo", "lab", "builder"]);
+      expect(workshop.materials.filter((material) => material.optional)).toEqual([]);
       expect(workshop.materials.every((material) => material.language === "en")).toBe(true);
       for (const material of workshop.materials) {
         expect(existsSync(resolve(root, material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length).split("#")[0])), material.href).toBe(true);
       }
-      // Every HTML page at the bundle root and the browser lab is a learner-facing material.
-      const pages = readdirSync(root).filter((name) => name.endsWith(".html"));
-      for (const page of pages) expect(relative, page).toContain(page);
+      // The presenter view, guide, demo and builder pages stay published only because the deck
+      // and the kit link to them; the workshop page offers just the deck and the kit.
+      const deck = read("slides.html") + read("lib/deck-stage.js");
+      expect(deck).toContain("presenter.html");
     }
   });
 
@@ -52,8 +36,8 @@ describe("published Data Readiness workshop", () => {
     const en = getWorkshops("en")[2];
     expect(de.accessNote).toContain("Material auf Englisch, Einführung auf Deutsch.");
     expect(en.accessNote).toContain("materials are in English, the live session is introduced in German.");
-    expect(en.accessNote).toMatch(/^The deck, learner guide and demo need only a browser;/);
-    expect(de.accessNote).toMatch(/^Für Deck, Lernbegleiter und Praxisbeispiel brauchst du nur einen Browser;/);
+    expect(en.accessNote).toMatch(/^The deck needs only a browser;/);
+    expect(de.accessNote).toMatch(/^Für das Deck brauchst du nur einen Browser;/);
     for (const workshop of [de, en]) expect(workshop.accessNote).toMatch(/August 2026/);
     expect(de.duration).toBe("~90 Minuten");
     expect(en.duration).toBe("~90 minutes");
@@ -61,21 +45,11 @@ describe("published Data Readiness workshop", () => {
     expect(en.materials[0]?.description).toMatch(/^For the projector\. .*P opens the presenter view/);
     expect(en.materials.map((material) => material.label)).toEqual([
       "Deck · 26 scenes",
-      "Presenter view",
-      "Interactive demo · 10 min",
       "Readiness kit · .zip",
-      "Learner guide",
-      "Browser lab · 12 min",
-      "Builder guide",
     ]);
     expect(de.materials.map((material) => material.label)).toEqual([
       "Deck · 26 Szenen",
-      "Moderationsansicht",
-      "Praxisbeispiel · 10 Min.",
       "Readiness-Kit · .zip",
-      "Lernbegleiter",
-      "Browserlabor · 12 Min.",
-      "Builder-Leitfaden",
     ]);
     expect(de.materials.find((material) => material.kind === "zip")?.sizeLabel).toBe("1,1 MB");
     expect(en.materials.find((material) => material.kind === "zip")?.sizeLabel).toBe("1.1 MB");
