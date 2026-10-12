@@ -1,23 +1,25 @@
 /**
- * Deterministic, stored ZIP for the Workshop 04 participant kit (vardar-oak-esg-kit.zip).
+ * Deterministic, stored ZIP for the Workshop 04 participant kit (valea-sturzilor-esg-kit.zip).
  *
  * Same approach as scripts/course03/kit-archive.mjs: stored entries (no compression, so the
  * bytes never depend on the zlib build), UTF-8 names, 0644 file modes, no extra fields, no
  * platform metadata and one fixed modification time for every entry. Every archive is checked
- * with the repository's ZIP inspection rules before it is returned, so only text entries pass.
+ * with the repository's ZIP inspection rules before it is returned: text entries, plus PNG
+ * photos (the invented invoice) that pass the inspector's chunk-by-chunk PNG check.
  */
 import path from "node:path";
 import { crc32 } from "../course03/kit-archive.mjs";
 import { inspectZipArchive } from "../../packages/website/scripts/open-source/zip-inspection.mjs";
 
-export const KIT_NAME = "vardar-oak-esg-kit";
+export const KIT_NAME = "valea-sturzilor-esg-kit";
 export const KIT_PREFIX = `${KIT_NAME}/`;
 export const ZIP_NAME = `${KIT_NAME}.zip`;
 /** The kit's release date, written as every entry's modification time. */
-export const KIT_RELEASE_DATE = "2026-10-11";
+export const KIT_RELEASE_DATE = "2026-10-12";
 
-/** Only plain text goes into the kit. */
-const KIT_EXTENSIONS = new Set([".csv", ".md"]);
+/** Plain text and one kind of image go into the kit. */
+const KIT_EXTENSIONS = new Set([".csv", ".md", ".txt", ".png"]);
+const INSPECTION = { label: ZIP_NAME, allowPngEntries: true };
 
 /** DOS time and date fields for an ISO date (YYYY-MM-DD) at 00:00:00. */
 export function dosDateTime(isoDate) {
@@ -62,7 +64,7 @@ function centralHeader(name, content, crc, offset, { time, date }) {
 
 /**
  * Build the stored ZIP from [pathInsideKit, Buffer] pairs, sorted by path. Every entry is
- * stored under vardar-oak-esg-kit/ and the archive is inspected before it is returned.
+ * stored under valea-sturzilor-esg-kit/ and the archive is inspected before it is returned.
  */
 export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
   const stamp = dosDateTime(isoDate);
@@ -73,7 +75,7 @@ export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
   let offset = 0;
   for (const [file, content] of sorted) {
     if (!Buffer.isBuffer(content)) throw new Error(`Kit archive entry is not a buffer: ${file}`);
-    if (!KIT_EXTENSIONS.has(path.posix.extname(file).toLowerCase())) throw new Error(`Kit entry is not CSV or Markdown: ${file}`);
+    if (!KIT_EXTENSIONS.has(path.posix.extname(file).toLowerCase())) throw new Error(`Kit entry is not CSV, Markdown, text or PNG: ${file}`);
     if (!/^[A-Za-z0-9._\-/]+$/.test(file) || file.split("/").includes("..")) throw new Error(`Kit entry name is not a plain relative path: ${file}`);
     if (seen.has(file)) throw new Error(`Duplicate kit entry: ${file}`);
     seen.add(file);
@@ -92,13 +94,13 @@ export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
   end.writeUInt32LE(directory.length, 12);
   end.writeUInt32LE(offset, 16);
   const archive = Buffer.concat([...locals, directory, end]);
-  inspectZipArchive(archive, { label: ZIP_NAME });
+  inspectZipArchive(archive, INSPECTION);
   return archive;
 }
 
 /** The archive's files as [pathInsideKit, Buffer] pairs, after the repository's ZIP inspection. */
 export function readKitArchive(archive) {
-  return inspectZipArchive(archive, { label: ZIP_NAME })
+  return inspectZipArchive(archive, INSPECTION)
     .filter((entry) => entry.kind === "file")
     .map((entry) => {
       if (!entry.path.startsWith(KIT_PREFIX)) throw new Error(`Kit entry outside ${KIT_PREFIX}: ${entry.path}`);

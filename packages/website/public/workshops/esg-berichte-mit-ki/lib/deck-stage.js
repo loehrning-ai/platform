@@ -6,7 +6,7 @@
  *      and posts {slideIndexChanged: N} to the parent window on nav.
  *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
  *  (c) press R to reset to slide 0 (with a tasteful keyboard hint).
- *  (d) bottom-center overlay showing slide count + hints, fades out on idle.
+ *  (d) bottom-right overlay (above the page number) showing slide count + hints; mouse only, fades out on idle.
  *  (e) auto-scaling — inner canvas is a fixed design size (default 1920×1080)
  *      scaled with `transform: scale()` to fit the viewport, letterboxed.
  *      Set the `noscale` attribute to render at authored size (1:1) — the
@@ -124,9 +124,9 @@
 
     .overlay {
       position: fixed;
-      left: 50%;
-      bottom: 22px;
-      transform: translate(-50%, 6px) scale(0.92);
+      right: 24px;
+      bottom: 84px;
+      transform: translate(0, 6px) scale(0.92);
       filter: blur(6px);
       display: flex;
       align-items: center;
@@ -141,14 +141,14 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 260ms ease, transform 260ms cubic-bezier(.2,.8,.2,1), filter 260ms ease;
-      transform-origin: center bottom;
+      transform-origin: right bottom;
       z-index: 2147483000;
       user-select: none;
     }
     .overlay[data-visible] {
       opacity: 1;
       pointer-events: auto;
-      transform: translate(-50%, 0) scale(1);
+      transform: translate(0, 0) scale(1);
       filter: blur(0);
     }
 
@@ -586,20 +586,21 @@
       }
 
       if (handled) {
+        // keyboard navigation is the presenter's clicker: keep the control pill off the projector
         e.preventDefault();
-        this._flashOverlay();
       }
     }
 
     _go(i, reason = 'api') {
       if (!this._slides.length) return;
       const clamped = Math.max(0, Math.min(this._slides.length - 1, i));
+      const quiet = reason === 'keyboard' || reason === 'key' || reason === 'api';
       if (clamped === this._index) {
-        this._flashOverlay();
+        if (!quiet) this._flashOverlay();
         return;
       }
       this._index = clamped;
-      this._applyIndex({ showOverlay: true, broadcast: true, reason });
+      this._applyIndex({ showOverlay: !quiet, broadcast: true, reason });
     }
 
     // Public API ------------------------------------------------------------

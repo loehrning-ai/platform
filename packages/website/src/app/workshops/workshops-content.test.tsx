@@ -228,7 +228,7 @@ describe("<WorkshopsContent>", () => {
     // German amount: ASCII minus, euro sign on the same line.
     expect(within(rows[1]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
     // Hyphenated words such as "ESG-Anfragen" are not amounts.
-    expect(within(rows[0]).getByText(/drei ESG-Anfragen auf einmal/).tagName).toBe("P");
+    expect(within(rows[0]).getByText(/drei ESG-Anfragen in einer Woche/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),

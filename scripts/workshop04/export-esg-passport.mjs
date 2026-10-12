@@ -7,10 +7,12 @@
  * loads) and the participant kit as a deterministic ZIP. Nothing else in the source folder
  * (course notes, presenter material, answer keys, build scripts) is ever read for publication.
  * Text is rewritten in three reviewed places only:
- *   - the co-branding "loehrning.ai × <partner>" becomes "loehrning.ai";
+ *   - the partner's co-branding leaves the deck: "loehrning.ai × <partner>" becomes
+ *     "loehrning.ai", the partner's logo and its CSS are removed, the room's date lines name
+ *     Moldova only, and the closing kit line points at the workshop page (PARTNER_EDITS, which
+ *     also points the deck's three mentions of the private answer key at START-HERE.md);
  *   - the deck's fonts point at the woff2 statics already inventoried for this folder;
- *   - the questionnaire ships as CSV (the publication guards refuse .xlsx), and the two lines
- *     that name its file say .csv.
+ *   - the deck's one image path into the kit folder points at the same photo in assets/proof/.
  * The export fails before writing anything if a client name or a local path survives.
  *
  * Usage (from the repository root):
@@ -23,7 +25,6 @@ import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, wr
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { buildKitArchive, KIT_NAME, ZIP_NAME } from "./kit-archive.mjs";
-import { questionnaireCsv } from "./questionnaire-csv.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
@@ -36,12 +37,25 @@ export const DECK_TEXT_FILES = [
   "slides.html",
   "lib/tokens.css",
   "lib/deck.css",
-  "lib/cover-globe.css",
   "lib/esg.css",
   "lib/deck-stage.js",
   "lib/esg.js",
+  "lib/geo.js",
+  "lib/globe.js",
   "assets/favicon.svg",
-  "assets/globe.svg",
+  "assets/lockup-horizontal.svg",
+  "assets/kit-qr.svg",
+];
+
+/**
+ * Deck images copied byte for byte: unedited Claude output from the rehearsal (the passport
+ * dashboard before and after the late invoice) and the invented invoice photo. PNGs only, and
+ * each must carry image chunks alone (no text or EXIF metadata).
+ */
+export const DECK_IMAGES = [
+  "assets/proof/dashboard-before.png",
+  "assets/proof/dashboard-after.png",
+  "assets/proof/september-invoice.png",
 ];
 
 /** The portrait the deck's host slide shows: the reviewed file already published with Workshop 02. */
@@ -67,36 +81,61 @@ export const KEPT_FILES = [
 /** The cover poster, generated from src/lib/plakat (packages/website/scripts/plakat/build-static.mjs). */
 export const POSTER = "assets/plakat-cover.svg";
 
-/** Kit files as they sit in the source kit folder. The .xlsx is published as CSV. */
+/** Kit files as they sit in the source kit folder, published unchanged inside the ZIP. */
 export const KIT_SOURCE_FILES = [
   "START-HERE.md",
   "project-instructions.md",
-  "inbox/1-customer-questionnaire.xlsx",
-  "inbox/2-website-claims.md",
-  "inbox/3-bank-esg-form.md",
-  "project-files/01-company-profile.md",
-  "project-files/02-people-2025.md",
-  "project-files/03-electricity-bills-2025.csv",
-  "project-files/04-fuel-log-2025.csv",
-  "project-files/05-waste-and-water-2025.md",
-  "project-files/06-policies.md",
-  "project-files/07-certificates.md",
-  "project-files/08-emission-factors.md",
-  "project-files/09-solar-quote.md",
-  "project-files/10-vsme-basic-headings.md",
-  "project-files/11-eu-green-claims-rules.md",
+  "inbox/1-nordvik-questionnaire.md",
+  "inbox/2-marketing-claims.md",
+  "inbox/3-bank-form.md",
+  "inbox/4-september-invoice.png",
+  "project-files/carbon_offsets_2025.txt",
+  "project-files/company_profile.md",
+  "project-files/energy_bills_2025.csv",
+  "project-files/energy_summary_2025_draft.txt",
+  "project-files/eu_green_claims_rules.md",
+  "project-files/health_safety_2025.txt",
+  "project-files/hr_headcount_2025.csv",
+  "project-files/organic_certificate_vineyard.txt",
+  "project-files/packaging_bottles.csv",
+  "project-files/policies_and_compliance.txt",
+  "project-files/solar_offer_2026.txt",
+  "project-files/vsme_basic_headings.md",
+  "project-files/water_bills_2025.csv",
 ];
-const QUESTIONNAIRE_XLSX = "inbox/1-customer-questionnaire.xlsx";
-const QUESTIONNAIRE_CSV = "inbox/1-customer-questionnaire.csv";
 
-/** Kit entries as published inside vardar-oak-esg-kit.zip. */
-export const KIT_FILES = KIT_SOURCE_FILES.map((name) => (name === QUESTIONNAIRE_XLSX ? QUESTIONNAIRE_CSV : name));
+/** Kit entries as published inside valea-sturzilor-esg-kit.zip. */
+export const KIT_FILES = [...KIT_SOURCE_FILES];
 
 /** Every file the published folder holds, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_TEXT_FILES, PORTRAIT, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
+export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...DECK_IMAGES, PORTRAIT, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
 
 /** "loehrning.ai × <partner>": the partner's name stays out of this public repository. */
-const CO_BRANDING = /loehrning\.ai × [A-Za-z0-9-]+/g;
+const CO_BRANDING = /loehrning\.ai × [A-Za-z0-9-]+/gi;
+
+/**
+ * Reviewed edits that take the partner out of slides.html, as [pattern, replacement, label].
+ * Patterns match the partner's markup by shape (class names and file names are matched with a
+ * wildcard), so the name itself never has to be written into this repository. Every pattern must
+ * match, so a change in the source stops the export instead of leaking.
+ */
+const PARTNER_EDITS = [
+  [/^\[data-n="(?:01|17)"\] \.(?:cv|s17)-[a-z]+ \{ display: block; height: \d+px; width: auto; \}\n(?=(?:\[data-n="01"\] \.cv-x|\n|<\/style>))/gm, "", "partner logo CSS"],
+  [/\n *<span class="cv-x">×<\/span>\n *<img src="\.\/assets\/[a-z]+\.png" alt="[A-Za-z]+" class="cv-[a-z]+" \/>/, "", "cover partner logo"],
+  [/\n *<span>×<\/span>\n *<img src="\.\/assets\/[a-z]+\.png" alt="[A-Za-z]+" class="s17-[a-z]+" \/>/, "", "closing partner logo"],
+  [/Tim Löhr · [A-Za-z]+ Moldova · 16 October 2026 · 60 minutes/, "Tim Löhr · Moldova · 16 October 2026 · 60 minutes", "cover date line"],
+  [/Workshop 04 · [A-Za-z]+ Moldova · 16 October 2026/, "Workshop 04 · Moldova · 16 October 2026", "closing date line"],
+  [/content="Workshop 04 for [A-Za-z]+ Moldova: /, 'content="Workshop 04, held in Moldova: ', "page description"],
+  [/<p class="s17-kitt">[A-Za-z]+ sends you the kit link today\.<\/p>/, '<p class="s17-kitt">Download the kit from the workshop page.</p>', "closing kit line"],
+  [/\.\/assets\/\.\.\/valea-sturzilor-esg-kit\/inbox\/4-september-invoice\.png/, "./assets/proof/september-invoice.png", "invoice photo path"],
+  // The presenter's answer key stays private; the public kit carries the same expected results in START-HERE.md.
+  [/<p class="t-label">Expected status \(answer key\)<\/p>/, '<p class="t-label">Expected status (START-HERE.md)</p>', "expected-status label"],
+  [/<p class="t-src">answer key, step 4<br \/>/, '<p class="t-src">kit: START-HERE.md, step 4<br />', "step 4 source line"],
+  [/one short line from the answer key under the tag/, "one short line from the expected results under the tag", "style comment"],
+];
+
+/** Case names retired because they collided with real companies; none may come back. */
+const RETIRED_CASE_NAMES = /Trei Dealuri|Banca Nistru|Exempla|Energo Codru|Solar Codru|Vardar Oak|vardar-oak/i;
 const FONT_FILES = [
   ["Typing-Regular.ttf", "Typing-Static-400.woff2"],
   ["Typing-Medium.ttf", "Typing-Static-500.woff2"],
@@ -132,7 +171,8 @@ export const mentionsClient = hashedWordGuard(CLIENT_NAME_SHA256, 9);
 export const FORBIDDEN = [
   [/loehrning\.ai ×/, "co-branding"],
   [/\/Users\/|\/home\/[a-z]/, "local path"],
-  [/facilitator|run-of-show|answer[ -]key|ground-truth|rescue\//i, "presenter-only material"],
+  [/facilitator|run-of-show|answer[ -]key|ground-truth|rescue\/|admin\//i, "presenter-only material"],
+  [RETIRED_CASE_NAMES, "retired case name"],
 ];
 
 export const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -147,7 +187,9 @@ function replaceExpected(text, from, to, label) {
 function deckText(name, text) {
   let out = text;
   if (name === "slides.html" || name === "lib/esg.js") out = replaceExpected(out, CO_BRANDING, "loehrning.ai", name);
-  if (name === "slides.html") out = replaceExpected(out, /1-customer-questionnaire\.xlsx/g, "1-customer-questionnaire.csv", name);
+  if (name === "slides.html") {
+    for (const [pattern, to, label] of PARTNER_EDITS) out = replaceExpected(out, pattern, to, `${name} (${label})`);
+  }
   if (name === "lib/tokens.css") {
     for (const [ttf, woff2] of FONT_FILES) {
       out = replaceExpected(out, `url('../assets/fonts/${ttf}') format('truetype')`, `url('../assets/fonts/${woff2}') format('woff2')`, name);
@@ -156,9 +198,21 @@ function deckText(name, text) {
   return out;
 }
 
-function kitText(name, text) {
-  if (name === "START-HERE.md") return replaceExpected(text, /1-customer-questionnaire\.xlsx/g, "1-customer-questionnaire.csv", name);
-  return text;
+/** PNG chunks a published image may carry: image data only. */
+const PNG_CHUNKS = new Set(["IHDR", "PLTE", "IDAT", "IEND", "tRNS", "sRGB", "gAMA", "pHYs"]);
+
+/** Fails unless `bytes` is a PNG made of allowlisted chunks only, ending at IEND. */
+export function assertPlainPng(name, bytes) {
+  const signature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  if (!bytes.subarray(0, 8).equals(signature)) throw new Error(`${name} is not a PNG`);
+  let cursor = 8;
+  while (cursor + 12 <= bytes.length) {
+    const type = bytes.subarray(cursor + 4, cursor + 8).toString("latin1");
+    if (!PNG_CHUNKS.has(type)) throw new Error(`${name} carries a ${type} chunk (metadata is not published)`);
+    cursor += 12 + bytes.readUInt32BE(cursor);
+    if (type === "IEND") break;
+  }
+  if (cursor !== bytes.length) throw new Error(`${name} does not end at its IEND chunk`);
 }
 
 /** Plain files only: a symlink or a folder where a file belongs stops the export. */
@@ -206,6 +260,11 @@ export async function exportWorkshop(source) {
   for (const name of DECK_TEXT_FILES) {
     written.set(name, Buffer.from(deckText(name, readSourceFile(source, name).toString("utf8"))));
   }
+  for (const name of DECK_IMAGES) {
+    const bytes = readSourceFile(source, name);
+    assertPlainPng(name, bytes);
+    written.set(name, bytes);
+  }
 
   const portrait = readSourceFile(source, PORTRAIT);
   if (sha256(portrait) !== PORTRAIT_SHA256) throw new Error("The host portrait is not the reviewed file");
@@ -228,8 +287,8 @@ export async function exportWorkshop(source) {
   checkKitFolder(kitDir);
   const kit = KIT_SOURCE_FILES.map((name) => {
     const bytes = readSourceFile(kitDir, name);
-    if (name === QUESTIONNAIRE_XLSX) return [QUESTIONNAIRE_CSV, Buffer.from(questionnaireCsv(bytes))];
-    return [name, Buffer.from(kitText(name, bytes.toString("utf8")))];
+    if (name.endsWith(".png")) assertPlainPng(name, bytes);
+    return [name, bytes];
   });
   for (const [name, bytes] of kit) assertClean(`${ZIP_NAME}/${name}`, bytes);
   written.set(ZIP_NAME, buildKitArchive(kit));
@@ -241,23 +300,30 @@ export async function exportWorkshop(source) {
 }
 
 /** Files whose manifest row follows the file; every other row must already match its bytes. */
-const GENERATED_ASSETS = new Set([ZIP_NAME, POSTER, "card-preview.webp"]);
+const GENERATED_ASSETS = new Set([ZIP_NAME, POSTER, "card-preview.webp", ...DECK_IMAGES]);
+
+/** The row a new binary gets when the manifest has none yet. */
+const NEW_ROW_SOURCES = {
+  [ZIP_NAME]: "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+  "assets/proof/dashboard-before.png": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+  "assets/proof/dashboard-after.png": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+  "assets/proof/september-invoice.png": "Original Answer ESG by Friday workshop material (photo of an invented invoice, rendered for Workshop 04), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+};
 
 /** ASSET_MANIFEST.json rows for this folder: generated rows refreshed, stale rows dropped, the kit added. */
 export function manifestText(written) {
   const manifestPath = path.join(REPO_ROOT, "ASSET_MANIFEST.json");
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
   const prefix = `${WORKSHOP_RELATIVE}/`;
-  const zipPath = `${prefix}${ZIP_NAME}`;
   const assets = [];
-  let zipSeen = false;
+  const seen = new Set();
   for (const entry of manifest.assets) {
     if (!entry.path.startsWith(prefix)) {
       assets.push(entry);
       continue;
     }
     const name = entry.path.slice(prefix.length);
-    if (name === ZIP_NAME) zipSeen = true;
+    seen.add(name);
     const bytes = written.get(name);
     if (!bytes) continue;
     if (!GENERATED_ASSETS.has(name) && (entry.sha256 !== sha256(bytes) || entry.sizeBytes !== bytes.length)) {
@@ -265,15 +331,16 @@ export function manifestText(written) {
     }
     assets.push({ ...entry, sizeBytes: bytes.length, sha256: sha256(bytes) });
   }
-  if (!zipSeen) {
-    const bytes = written.get(ZIP_NAME);
+  for (const [name, source] of Object.entries(NEW_ROW_SOURCES)) {
+    if (seen.has(name)) continue;
+    const bytes = written.get(name);
     const at = assets.findIndex((entry) => entry.path === `${prefix}card-preview.webp`);
     const row = {
-      path: zipPath,
+      path: `${prefix}${name}`,
       sizeBytes: bytes.length,
       sha256: sha256(bytes),
       owner: "Tim Löhr",
-      source: "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+      source,
       license: "LicenseRef-Loehrning-Brand",
       redistribution: "Included for loehrning.ai course operation; no standalone reuse rights granted",
     };
