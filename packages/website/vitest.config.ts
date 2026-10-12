@@ -21,10 +21,9 @@ export default defineConfig({
     // CI hosts. Four workers preserve isolation while preventing process storms.
     pool: "threads",
     maxWorkers: 4,
-    // Playwright specs live in tests/e2e (CI smoke) and tests/qa (manual QA
-    // harness - see /qa command). Both use @playwright/test's test runtime,
-    // not Vitest, so we keep them out of the unit-test run.
-    exclude: [...defaultExclude, "**/tests/e2e/**", "**/tests/qa/**"],
+    // Playwright specs live in tests/e2e and use @playwright/test's test
+    // runtime, not Vitest, so we keep them out of the unit-test run.
+    exclude: [...defaultExclude, "**/tests/e2e/**"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],

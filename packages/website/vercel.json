@@ -6,9 +6,7 @@
   "regions": ["dub1"],
   "git": {
     "deploymentEnabled": {
-      "main": false,
-      "fix/learning-mobile-release": false,
-      "fix/ci-browser-report-release": false
+      "main": false
     }
   }
 }
