@@ -4,12 +4,12 @@ import type { WorkshopKit } from "./workshop-kit";
 /**
  * The kit block of workshop 04 (the page /workshops/esg-berichte-mit-ki/kit).
  * Every figure below is printed in the published deck or in START-HERE.md of
- * valea-sturzilor-esg-kit.zip ("What good looks like"); workshops-esg-reporting.test.ts
+ * crvena-zemja-esg-kit.zip ("What good looks like"); workshops-esg-reporting.test.ts
  * checks that. The zip's path and size come from the workshop's kit material.
  */
 export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
-    fileName: "valea-sturzilor-esg-kit.zip",
+    fileName: "crvena-zemja-esg-kit.zip",
     title: "Das ESG-Kit",
     lead: "So spielst du die fünf Schritte des Workshops zu Hause nach: dieselben drei ESG-Anfragen, dieselben Dateien, dein eigenes Claude.",
     stats: [
@@ -42,7 +42,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Prompt 2",
         title: "Die Werbeaussagen",
-        input: "Sieben grüne Werbeaussagen des Marketings für Rumänien und Polen.",
+        input: "Sieben grüne Werbeaussagen des Marketings für Deutschland und Polen.",
         action: "Prüft jede Aussage gegen die Dateien und die EU-Regeln im Projekt.",
         output: "Eine Tabelle mit Ampel, Grund, Quelle und einer Fassung, die sich heute belegen lässt.",
         segments: [
@@ -55,11 +55,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Prompt 3",
         title: "Das Bankformular",
-        input: "Das Prüfformular der Banca Merișor für den Solarkredit, auf Rumänisch.",
-        action: "Füllt das Formular auf Rumänisch aus und rechnet die Amortisation in Code.",
+        input: "Das Prüfformular der Banka Povardarie für den Solarkredit, auf Mazedonisch (kyrillisch).",
+        action: "Füllt das Formular auf Mazedonisch aus und rechnet die Amortisation in Code.",
         output: "Das ausgefüllte Formular, jede Schätzung ist markiert.",
         line: {
-          text: "3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh)",
+          text: "8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh)",
           result: "= 5,0 Jahre",
         },
         note: "Der Solaranteil am Verbrauch bleibt vorläufig, solange der September fehlt.",
@@ -104,7 +104,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     ],
   },
   en: {
-    fileName: "valea-sturzilor-esg-kit.zip",
+    fileName: "crvena-zemja-esg-kit.zip",
     title: "The ESG kit",
     lead: "Replay the workshop's five steps at home: the same three ESG requests, the same files, your own Claude.",
     stats: [
@@ -137,7 +137,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Prompt 2",
         title: "The green claims",
-        input: "Seven green marketing claims for Romania and Poland.",
+        input: "Seven green marketing claims for Germany and Poland.",
         action: "Checks every claim against the files and the EU rules in the Project.",
         output: "A table with a light, the reason, the source and a version you can prove today.",
         segments: [
@@ -150,11 +150,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Prompt 3",
         title: "The bank form",
-        input: "Banca Merișor's screening form for the solar loan, in Romanian.",
-        action: "Fills the form in Romanian and works out the payback in code.",
+        input: "Banka Povardarie's screening form for the solar loan, in Macedonian.",
+        action: "Fills the form in Macedonian and works out the payback in code.",
         output: "The filled form, every estimate marked.",
         line: {
-          text: "3,420,000 lei / (180,000 kWh × 3.80 lei/kWh)",
+          text: "8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh)",
           result: "= 5.0 years",
         },
         note: "The solar share of consumption stays provisional while September is missing.",

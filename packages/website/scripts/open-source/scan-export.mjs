@@ -128,7 +128,7 @@ const FAIL_CLOSED_PLATFORM_ARCHIVE_EXTENSIONS = new Set(["7z", "gz", "tar"]);
  * invoice that participants attach in Claude.
  */
 const ZIP_ARCHIVES_WITH_PNG_ENTRIES = new Set([
-  "packages/website/public/workshops/esg-berichte-mit-ki/valea-sturzilor-esg-kit.zip",
+  "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
 ]);
 const FAIL_CLOSED_PLATFORM_CONTAINER_EXTENSIONS = new Set([
   "docx",

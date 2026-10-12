@@ -1,5 +1,5 @@
 /**
- * Deterministic, stored ZIP for the Workshop 04 participant kit (valea-sturzilor-esg-kit.zip).
+ * Deterministic, stored ZIP for the Workshop 04 participant kit (crvena-zemja-esg-kit.zip).
  *
  * Same approach as scripts/course03/kit-archive.mjs: stored entries (no compression, so the
  * bytes never depend on the zlib build), UTF-8 names, 0644 file modes, no extra fields, no
@@ -11,7 +11,7 @@ import path from "node:path";
 import { crc32 } from "../course03/kit-archive.mjs";
 import { inspectZipArchive } from "../../packages/website/scripts/open-source/zip-inspection.mjs";
 
-export const KIT_NAME = "valea-sturzilor-esg-kit";
+export const KIT_NAME = "crvena-zemja-esg-kit";
 export const KIT_PREFIX = `${KIT_NAME}/`;
 export const ZIP_NAME = `${KIT_NAME}.zip`;
 /** The kit's release date, written as every entry's modification time. */
@@ -64,7 +64,7 @@ function centralHeader(name, content, crc, offset, { time, date }) {
 
 /**
  * Build the stored ZIP from [pathInsideKit, Buffer] pairs, sorted by path. Every entry is
- * stored under valea-sturzilor-esg-kit/ and the archive is inspected before it is returned.
+ * stored under crvena-zemja-esg-kit/ and the archive is inspected before it is returned.
  */
 export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
   const stamp = dosDateTime(isoDate);

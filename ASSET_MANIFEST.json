@@ -1139,18 +1139,9 @@
       "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
     },
     {
-      "path": "packages/website/public/workshops/esg-berichte-mit-ki/valea-sturzilor-esg-kit.zip",
-      "sizeBytes": 821962,
-      "sha256": "7d53fdbc2001365d69c13ee04047735b163244498db991b8af0a57b65de4f520",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
-      "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
-    },
-    {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/proof/dashboard-before.png",
-      "sizeBytes": 510885,
-      "sha256": "8b706de55fbe687030bd6b8273aced980e96ce0224dd36a274a9bf630255b317",
+      "sizeBytes": 368599,
+      "sha256": "6b261c58d4a5d9452c314ecbbbb325e8244d2647239eba29baa860e0234ae622",
       "owner": "Tim L\u00f6hr",
       "source": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1158,8 +1149,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/proof/dashboard-after.png",
-      "sizeBytes": 517666,
-      "sha256": "73f31e8035b114a8147a1b9538423df0a37f9f690dbedbfd09379c928612e315",
+      "sizeBytes": 359594,
+      "sha256": "2775afd2eaeb0a96eb5910b5955c165c5da05e735d3538858a216057cdf08311",
       "owner": "Tim L\u00f6hr",
       "source": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1167,10 +1158,19 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/proof/september-invoice.png",
-      "sizeBytes": 798405,
-      "sha256": "6ac54281faabcaf3fac0e8b20fdec08a50f206d56159f2002a637582be53d156",
+      "sizeBytes": 866886,
+      "sha256": "62fdf800bef0b0736716d8581af6db63fa08d3dcec85769d6d9e4488c13cf727",
       "owner": "Tim L\u00f6hr",
       "source": "Original Answer ESG by Friday workshop material (photo of an invented invoice, rendered for Workshop 04), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+      "sizeBytes": 891029,
+      "sha256": "4f8362e326adb472a95d0ff7aabbb3d82fc35cd214a162289c3240f50ee52ce6",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
     },

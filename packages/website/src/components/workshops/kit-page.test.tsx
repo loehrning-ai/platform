@@ -78,7 +78,7 @@ describe("<KitPage>", () => {
         const link = downloads[0];
         expect(link).toHaveAttribute("href", `/workshops/${SLUG}/${kit.fileName}`);
         expect(link).toHaveAttribute("download");
-        expect(link).toHaveTextContent("803 KB");
+        expect(link).toHaveTextContent("870 KB");
         link.addEventListener("click", (event) => event.preventDefault());
         fireEvent.click(link);
         expect(trackMock).toHaveBeenCalledTimes(1);

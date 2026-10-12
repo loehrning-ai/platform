@@ -13,15 +13,15 @@ const base = "/workshops/esg-berichte-mit-ki";
  * the room watches; the kit lets a learner replay the same steps at home.
  */
 
-/** Size of valea-sturzilor-esg-kit.zip (821,962 bytes), in the page locale's number format. */
-const KIT_SIZE_LABEL = "803 KB";
+/** Size of crvena-zemja-esg-kit.zip (891,029 bytes), in the page locale's number format. */
+const KIT_SIZE_LABEL = "870 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
 /** Shared href, kind, language, role and phase: both locales list the same files in the same order. */
 const MATERIALS: readonly MaterialFrame[] = [
   { href: `${base}/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 60, primary: true },
-  { href: `${base}/valea-sturzilor-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
+  { href: `${base}/crvena-zemja-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
 ];
 
 /** Label, description and, where the first sentence runs long on a phone, its short phone wording. */
@@ -44,9 +44,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG-Anfragen bis Freitag beantworten",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Eine erfundene moldauische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
+      "Eine erfundene nordmazedonische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
     description:
-      "Vinăria Valea Sturzilor, eine erfundene Familienkellerei im Bezirk Hîncești in der Republik Moldau, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Rumänien und Polen und das Prüfformular der Bank für einen Solarkredit, auf Rumänisch. Tim beantwortet alle drei live in einem Claude-Projekt, mit fünf Prompts und drei Regeln: nur unsere Dateien, jede Antwort mit Quelle, NOT FOUND oder NEEDS CHECK statt einer Schätzung. Im Fragebogen sind 5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND, denn 279,7 MWh Strom sind nur elf Monate und das Bio-Zertifikat ist am 31. August 2026 abgelaufen. Vier von sieben Werbeaussagen fallen durch. Für die Bank rechnet Claude die Amortisation in Code: 3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh) = 5,0 Jahre. Dann kommt das Foto der fehlenden Septemberrechnung, und das Jahr hat 320,9 MWh.",
+      "Vinarija Crvena Zemja, eine erfundene Familienkellerei in der Gemeinde Kavadarci in Nordmazedonien, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Deutschland und Polen und das Prüfformular der Bank für einen Solarkredit, auf Mazedonisch. Tim beantwortet alle drei live in einem Claude-Projekt, mit fünf Prompts und drei Regeln: nur unsere Dateien, jede Antwort mit Quelle, NOT FOUND oder NEEDS CHECK statt einer Schätzung. Im Fragebogen sind 5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND, denn 279,7 MWh Strom sind nur elf Monate und das Bio-Zertifikat ist am 31. August 2026 abgelaufen. Vier von sieben Werbeaussagen fallen durch. Für die Bank rechnet Claude die Amortisation in Code: 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre. Dann kommt das Foto der fehlenden Septemberrechnung, und das Jahr hat 320,9 MWh.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
@@ -73,7 +73,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 8,
         activity: "listen",
         description:
-          "Von freiwilligen Berichten zum EU-Gesetz, warum die Fragen nach der Kürzung von 2026 bleiben und wie sie über Käufer, Banken und Regale bei Exporteuren in Moldau ankommen.",
+          "Von freiwilligen Berichten zum EU-Gesetz, warum die Fragen nach der Kürzung von 2026 bleiben und wie sie über Käufer, Banken und Regale bei Exporteuren in Nordmazedonien ankommen.",
       },
       {
         label: "Darf ich das, und wie Claude arbeitet",
@@ -87,7 +87,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 4,
         activity: "do",
         description:
-          "Vinăria Valea Sturzilor hat 42 Beschäftigte und exportiert 74 % des Umsatzes; ein Claude-Projekt bekommt 13 Dateien und drei Regeln.",
+          "Vinarija Crvena Zemja hat 42 Beschäftigte und exportiert 74 % des Umsatzes; ein Claude-Projekt bekommt 13 Dateien und drei Regeln.",
       },
       {
         label: "Schritt 1: der Fragebogen des Importeurs",
@@ -108,7 +108,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 7,
         activity: "do",
         description:
-          "Claude füllt ein rumänisches Prüfformular und rechnet die Amortisation der Solaranlage in Code: 5,0 Jahre.",
+          "Claude füllt ein mazedonisches Prüfformular und rechnet die Amortisation der Solaranlage in Code: 5,0 Jahre.",
       },
       {
         label: "Schritt 4: der ESG-Pass",
@@ -184,7 +184,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "04",
         title: "Das Bankformular füllen",
         description:
-          "Das Formular der Banca Merișor, auf Rumänisch: 3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh) = 5,0 Jahre, in Code gerechnet und als Schätzung markiert.",
+          "Das Formular der Banka Povardarie, auf Mazedonisch (kyrillisch): 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre, in Code gerechnet und als Schätzung markiert.",
         tool: "Prompt 3",
       },
       {
@@ -203,13 +203,13 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
     ],
     caseStudy: {
-      companyName: "Vinăria Valea Sturzilor SRL",
+      companyName: "Vinarija Crvena Zemja DOO",
       isFictional: true,
-      location: "Erfundene Firma im Bezirk Hîncești, Republik Moldau",
+      location: "Erfundene Firma in der Gemeinde Kavadarci, Nordmazedonien",
       sector: "Stillwein von 40 ha eigenen Weinbergen",
       period: "Geschäftsjahr 2025, Anfragen im Oktober 2026",
       narrative:
-        "Valea Sturzilor exportiert 74 % des Umsatzes, nach Rumänien, an den schwedischen Importeur Nordvik Vin AB und nach Polen. Importeur, Marketing und Bank fragen in einer Woche nach denselben Fakten; die Antworten kommen aus 13 Dateien, die so unordentlich sind wie echte.",
+        "Crvena Zemja exportiert 74 % des Umsatzes, nach Deutschland, an den schwedischen Importeur Nordvik Vin AB und nach Polen. Importeur, Marketing und Bank fragen in einer Woche nach denselben Fakten; die Antworten kommen aus 13 Dateien, die so unordentlich sind wie echte.",
       metrics: [
         { label: "Beschäftigte", value: "42" },
         { label: "Fragebogen", value: "5 von 8 OK" },
@@ -220,7 +220,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Was darfst du einem Importeur, deiner Bank oder in einem Regal behaupten, wenn deine Dateien es nur zum Teil belegen?",
       dataLimitations: [
         "Den Stromrechnungen 2025 fehlt der September; er kommt in Schritt 5 als Foto, mit Absicht.",
-        "Der Tarif von 3,80 Lei pro kWh ist erfunden, kein echter Preis.",
+        "Der Tarif von 9,50 MKD pro kWh ist erfunden, kein echter Preis.",
         "Die Solaranlage ist geplant; 180 MWh im Jahr sind eine Schätzung aus einem nicht unterschriebenen Angebot.",
       ],
     },
@@ -244,9 +244,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Answer ESG by Friday",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "An invented Moldovan winery gets three ESG requests in one week. Claude answers all of them from the same files and names what is missing.",
+      "An invented North Macedonian winery gets three ESG requests in one week. Claude answers all of them from the same files and names what is missing.",
     description:
-      "Vinăria Valea Sturzilor, an invented family winery in Hîncești district, Moldova, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Romania and Poland, and its bank's screening form for a solar loan, in Romanian. Tim answers all three live in one Claude Project, with five prompts and three rules: only our files, cite the source, say NOT FOUND or NEEDS CHECK instead of guessing. The questionnaire comes back with 5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND, because 279.7 MWh of electricity is only eleven months and the organic certificate expired on 31 August 2026. Four of seven claims fail. For the bank, Claude works out the payback in code: 3,420,000 lei / (180,000 kWh × 3.80 lei/kWh) = 5.0 years. Then a photo of the missing September invoice arrives, and the year has 320.9 MWh.",
+      "Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Germany and Poland, and its bank's screening form for a solar loan, in Macedonian. Tim answers all three live in one Claude Project, with five prompts and three rules: only our files, cite the source, say NOT FOUND or NEEDS CHECK instead of guessing. The questionnaire comes back with 5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND, because 279.7 MWh of electricity is only eleven months and the organic certificate expired on 31 August 2026. Four of seven claims fail. For the bank, Claude works out the payback in code: 8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh) = 5.0 years. Then a photo of the missing September invoice arrives, and the year has 320.9 MWh.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
@@ -273,7 +273,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 8,
         activity: "listen",
         description:
-          "From voluntary reports to EU law, why the questions stayed after the 2026 cut, and how they reach Moldovan exporters through buyers, banks and shelves.",
+          "From voluntary reports to EU law, why the questions stayed after the 2026 cut, and how they reach North Macedonian exporters through buyers, banks and shelves.",
       },
       {
         label: "Is it allowed, and how Claude works",
@@ -287,7 +287,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 4,
         activity: "do",
         description:
-          "Vinăria Valea Sturzilor has 42 employees and exports 74% of its revenue; a Claude Project gets 13 files and three rules.",
+          "Vinarija Crvena Zemja has 42 employees and exports 74% of its revenue; a Claude Project gets 13 files and three rules.",
       },
       {
         label: "Step 1: the importer's questionnaire",
@@ -308,7 +308,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 7,
         activity: "do",
         description:
-          "Claude fills a Romanian screening form and works out the solar payback in code: 5.0 years.",
+          "Claude fills a Macedonian screening form and works out the solar payback in code: 5.0 years.",
       },
       {
         label: "Step 4: the ESG passport",
@@ -384,7 +384,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "04",
         title: "Fill the bank form",
         description:
-          "Banca Merișor's form, in Romanian: 3,420,000 lei / (180,000 kWh × 3.80 lei/kWh) = 5.0 years, worked out in code and marked as an estimate.",
+          "Banka Povardarie's form, in Macedonian (Cyrillic): 8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh) = 5.0 years, worked out in code and marked as an estimate.",
         tool: "Prompt 3",
       },
       {
@@ -403,13 +403,13 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
     ],
     caseStudy: {
-      companyName: "Vinăria Valea Sturzilor SRL",
+      companyName: "Vinarija Crvena Zemja DOO",
       isFictional: true,
-      location: "Invented company in Hîncești district, Moldova",
+      location: "Invented company in Kavadarci municipality, North Macedonia",
       sector: "Still wine from 40 ha of its own vineyards",
       period: "Financial year 2025, requests in October 2026",
       narrative:
-        "Valea Sturzilor exports 74% of its revenue, to Romania, to the Swedish importer Nordvik Vin AB and to Poland. Importer, marketing and bank ask for the same facts in one week; the answers come from 13 files that are as messy as real ones.",
+        "Crvena Zemja exports 74% of its revenue, to Germany, to the Swedish importer Nordvik Vin AB and to Poland. Importer, marketing and bank ask for the same facts in one week; the answers come from 13 files that are as messy as real ones.",
       metrics: [
         { label: "Employees", value: "42" },
         { label: "Questionnaire", value: "5 of 8 OK" },
@@ -420,7 +420,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "What may you tell an importer, your bank or a shop shelf when your files only partly prove it?",
       dataLimitations: [
         "The 2025 electricity bills lack September; it arrives in step 5 as a photo, on purpose.",
-        "The tariff of 3.80 lei per kWh is invented, not a real price.",
+        "The tariff of 9.50 MKD per kWh is invented, not a real price.",
         "The solar plant is planned; 180 MWh a year is an estimate from an unsigned offer.",
       ],
     },
