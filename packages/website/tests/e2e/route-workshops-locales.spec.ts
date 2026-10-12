@@ -130,9 +130,14 @@ for (const width of [320, 390, 768, 1440] as const) {
           // A material may point at a section of a file (guide.html#section).
           const isMaterial = (href: string) =>
             /\.(?:html|zip|csv)$/.test(href.split("#")[0]);
+          // A workshop with a kit block lists its kit card as the kit page, not the zip.
+          const isKitPage = (href: string) =>
+            /^(?:\/en)?\/workshops\/[^/]+\/kit$/.test(href);
           const materialHrefs = internalHrefs.filter(isMaterial);
+          const kitPageHrefs = internalHrefs.filter(isKitPage);
           const pageHrefs = internalHrefs.filter((href) => !isMaterial(href));
           return {
+            kitPageHrefs,
             bodyWidth: document.body.scrollWidth,
             documentWidth: document.documentElement.scrollWidth,
             mainText: main?.textContent ?? "",
@@ -151,7 +156,10 @@ for (const width of [320, 390, 768, 1440] as const) {
         ).toBeLessThanOrEqual(width + 1);
         // The cover's start buttons point at materials that the list below
         // also carries, so count distinct files: each one listed once.
-        expect(new Set(state.materialHrefs).size).toBe(route.materialCount);
+        // A kit page counts as the kit material it stands for.
+        expect(
+          new Set([...state.materialHrefs, ...state.kitPageHrefs]).size,
+        ).toBe(route.materialCount);
         expect(
           state.materialHrefs.every(
             (href) =>
