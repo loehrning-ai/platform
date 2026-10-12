@@ -167,6 +167,22 @@ const ARCHIVE_TEXT_EXTENSIONS = new Set([
   "yml",
 ]);
 
+/**
+ * PNG chunks a publication archive may carry when a caller opts in with
+ * `allowPngEntries`: image data only, no text, EXIF or other metadata chunks.
+ */
+const PNG_SIGNATURE = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const PNG_ALLOWED_CHUNKS = new Set([
+  "IHDR",
+  "PLTE",
+  "IDAT",
+  "IEND",
+  "tRNS",
+  "sRGB",
+  "gAMA",
+  "pHYs",
+]);
+
 const NESTED_ARCHIVE_EXTENSION_RE =
   /\.(?:7z|bz2|gz|rar|tar|tgz|txz|xz|zip|zst)$/i;
 
@@ -439,6 +455,36 @@ function validateActiveContent(path, text, label) {
   }
 }
 
+/** Walks every chunk: IHDR first, IEND last at the final byte, CRCs valid, allowlisted chunks only. */
+function validatePngEntry(bytes, label) {
+  if (bytes.byteLength < 8 + 25 + 12 || !bytes.subarray(0, 8).equals(PNG_SIGNATURE)) {
+    fail(label, "PNG entry has no PNG signature");
+  }
+  let cursor = 8;
+  let first = true;
+  while (cursor < bytes.byteLength) {
+    assertBounds(bytes, cursor, 12, label, "PNG chunk header");
+    const length = bytes.readUInt32BE(cursor);
+    const type = bytes.subarray(cursor + 4, cursor + 8).toString("latin1");
+    assertBounds(bytes, cursor + 8, length + 4, label, `PNG ${type} chunk`);
+    if (!PNG_ALLOWED_CHUNKS.has(type)) {
+      fail(label, `PNG chunk ${JSON.stringify(type)} is not allowed in publication archives`);
+    }
+    if (first !== (type === "IHDR")) fail(label, "PNG entry must start with exactly one IHDR chunk");
+    const crc = bytes.readUInt32BE(cursor + 8 + length);
+    if (crc32(bytes.subarray(cursor + 4, cursor + 8 + length)) !== crc) {
+      fail(label, `PNG ${type} chunk CRC-32 is wrong`);
+    }
+    cursor += 12 + length;
+    first = false;
+    if (type === "IEND") {
+      if (cursor !== bytes.byteLength) fail(label, "PNG entry has bytes after IEND");
+      return;
+    }
+  }
+  fail(label, "PNG entry has no IEND chunk");
+}
+
 function hasNestedArchiveMagic(bytes) {
   if (
     bytes.byteLength >= 4 &&
@@ -567,9 +613,14 @@ function inflateEntry(compressed, entry, label) {
 /**
  * Fully validates and inflates a bounded, single-disk, non-ZIP64 ZIP archive.
  * It accepts only regular UTF-8 text files and directories. Returned buffers
- * are bounded by the exported per-entry and aggregate limits.
+ * are bounded by the exported per-entry and aggregate limits. With
+ * `allowPngEntries`, .png entries are also accepted when every chunk passes
+ * validatePngEntry; they are returned with `text: null`.
  */
-export function inspectZipArchive(input, { label = "ZIP archive" } = {}) {
+export function inspectZipArchive(
+  input,
+  { label = "ZIP archive", allowPngEntries = false } = {},
+) {
   const bytes = Buffer.isBuffer(input) ? input : Buffer.from(input);
   if (bytes.byteLength > MAX_ZIP_ARCHIVE_BYTES) {
     fail(label, "archive exceeds the compressed archive-size limit");
@@ -884,6 +935,11 @@ export function inspectZipArchive(input, { label = "ZIP archive" } = {}) {
       fail(entryLabel, "nested archives are forbidden");
     }
     const extension = extname(entry.path).slice(1).toLowerCase();
+    if (allowPngEntries && extension === "png") {
+      validatePngEntry(inflated, entryLabel);
+      inspected.push({ bytes: inflated, kind: "file", path: entry.path, text: null });
+      continue;
+    }
     if (!ARCHIVE_TEXT_EXTENSIONS.has(extension)) {
       fail(entryLabel, "entry is not a recognized text file");
     }

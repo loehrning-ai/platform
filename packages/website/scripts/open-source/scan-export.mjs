@@ -118,6 +118,14 @@ export const MAX_ASSET_MANIFEST_BYTES = 2 * 1024 * 1024;
 const DESCRIPTOR_READ_CHUNK_BYTES = 64 * 1024;
 const BINARY_SAMPLE_BYTES = 4 * 1024;
 const FAIL_CLOSED_PLATFORM_ARCHIVE_EXTENSIONS = new Set(["7z", "gz", "tar"]);
+/**
+ * Reviewed archives that may carry PNG entries (each one validated chunk by
+ * chunk by zip-inspection.mjs). Workshop 04's kit ships a photo of an invented
+ * invoice that participants attach in Claude.
+ */
+const ZIP_ARCHIVES_WITH_PNG_ENTRIES = new Set([
+  "packages/website/public/workshops/esg-berichte-mit-ki/valea-sturzilor-esg-kit.zip",
+]);
 const FAIL_CLOSED_PLATFORM_CONTAINER_EXTENSIONS = new Set([
   "docx",
   "pdf",
@@ -1644,6 +1652,7 @@ async function walk(dir, { candidateOnly = false } = {}) {
           try {
             const zipEntries = inspectZipArchive(openedFile.bytes, {
               label: rel,
+              allowPngEntries: ZIP_ARCHIVES_WITH_PNG_ENTRIES.has(rel),
             });
             for (const zipEntry of zipEntries) {
               if (zipEntry.kind !== "file" || zipEntry.text === null) continue;

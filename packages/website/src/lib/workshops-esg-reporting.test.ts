@@ -12,7 +12,7 @@ const both = [de, en] as const;
 
 const slides = readFileSync(resolve(root, "slides.html"), "utf8");
 // The kit zip stores its entries uncompressed, so its text can be read straight from the bytes.
-const kitText = readFileSync(resolve(root, "vardar-oak-esg-kit.zip")).toString("utf8");
+const kitText = readFileSync(resolve(root, "valea-sturzilor-esg-kit.zip")).toString("utf8");
 
 /** A printed number without its thousands separators, with "." as the decimal point. */
 function bare(token: string, locale: "de" | "en"): string {
@@ -38,7 +38,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
       expect(workshop.notCovered.length).toBeGreaterThanOrEqual(2);
       expect(workshop.notCovered.length).toBeLessThanOrEqual(4);
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-11");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-12");
       expect(workshop.caseStudy.isFictional).toBe(true);
       // The prompts were pre-run on Claude models; no live session is claimed yet.
       expect(workshop.provenance.liveRunAt).toBeUndefined();
@@ -73,7 +73,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
   it("follows the deck's 60-minute session with no extra question round", () => {
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
-      expect(workshop.agenda.map((item) => item.minutes)).toEqual([6, 4, 8, 8, 6, 8, 8, 6, 6]);
+      expect(workshop.agenda.map((item) => item.minutes)).toEqual([8, 4, 4, 8, 7, 7, 10, 6, 6]);
       expect(workshop.agenda.every((item) => item.mode === undefined)).toBe(true);
       expect(workshop.minutesLive).toBe(60);
       expect(workshop.materials[0]?.minutes).toBe(60);
@@ -86,7 +86,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
     expect(frame(de)).toEqual(frame(en));
     expect(en.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length))).toEqual([
       "slides.html",
-      "vardar-oak-esg-kit.zip",
+      "valea-sturzilor-esg-kit.zip",
     ]);
     for (const workshop of both) {
       expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
@@ -100,7 +100,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
   });
 
   it("states the measured kit size", () => {
-    const size = statSync(resolve(root, "vardar-oak-esg-kit.zip")).size;
+    const size = statSync(resolve(root, "valea-sturzilor-esg-kit.zip")).size;
     for (const workshop of both) {
       const kit = workshop.materials.find((material) => material.kind === "zip");
       expect(kit?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
@@ -119,6 +119,8 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
         .replace(/\/workshops\/[^"]+/g, "")
         .replace(/"(?:minutes|minutesLive|minutesSelfStudy|value)":\d+/g, "")
         .replace(/"(?:n|number|reviewedAt)":"[^"]*"/g, "")
+        // The kit size has its own test against the file on disk.
+        .replace(/"sizeLabel":"[^"]*"/g, "")
         .replace(/CO₂e|Workshop 04|START-HERE/g, "");
       for (const [token] of text.matchAll(/\d+(?:[.,]\d+)*/g)) {
         expect(printed.has(bare(token, locale)), `${locale} ${token}`).toBe(true);
@@ -127,17 +129,20 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
   });
 
   it("keeps the case facts the deck and kit show", () => {
-    expect(de.description).toContain("13 von 16");
-    expect(de.description).toContain("653,7 MWh");
+    expect(de.description).toContain("5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND");
+    expect(de.description).toContain("279,7 MWh");
     expect(de.description).toContain("31. August 2026");
-    expect(de.description).toContain("320.000 kWh × 0,75 kg = 240 t CO₂e");
-    expect(en.description).toContain("13 of 16");
-    expect(en.description).toContain("653.7 MWh");
+    expect(de.description).toContain("3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh) = 5,0 Jahre");
+    expect(de.description).toContain("320,9 MWh");
+    expect(en.description).toContain("5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND");
+    expect(en.description).toContain("279.7 MWh");
     expect(en.description).toContain("31 August 2026");
-    expect(en.description).toContain("320,000 kWh × 0.75 kg = 240 t CO₂e");
-    expect(slides).toContain('data-count="653.7"');
-    expect(slides).toContain("Expired 31 Aug 2026");
-    expect(slides).toMatch(/data-count="13"[\s\S]*data-count="3"/);
-    expect(slides).toMatch(/data-count="9">0<\/span><small>filled from our files<\/small>/);
+    expect(en.description).toContain("3,420,000 lei / (180,000 kWh × 3.80 lei/kWh) = 5.0 years");
+    expect(en.description).toContain("320.9 MWh");
+    expect(slides).toContain('<span class="sum-v">279.7</span>');
+    expect(slides).toContain("31.08.2026");
+    expect(slides).toContain('data-roll="320.9 MWh · 12 months"');
+    expect(slides).toContain("5.0 years");
+    expect(kitText).toContain("F4 = 3,420,000 lei / (180,000 kWh x 3.80 lei/kWh) = 5.0 years");
   });
 });

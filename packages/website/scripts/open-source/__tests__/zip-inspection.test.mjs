@@ -510,3 +510,58 @@ test("the published NORTHWIND kit is structurally valid and fully inspectable", 
     ),
   );
 });
+
+/** A minimal valid PNG: IHDR, one IDAT and IEND, plus optional extra chunks before IEND. */
+function png({ extra = [], badCrc = false, trailing = Buffer.alloc(0) } = {}) {
+  const chunk = (type, data) => {
+    const head = Buffer.alloc(8);
+    head.writeUInt32BE(data.length, 0);
+    head.write(type, 4, "latin1");
+    const crc = Buffer.alloc(4);
+    crc.writeUInt32BE(crc32(Buffer.concat([head.subarray(4), data])), 0);
+    return Buffer.concat([head, data, crc]);
+  };
+  const ihdr = Buffer.from([0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0, 0, 0]);
+  const idat = chunk("IDAT", deflateRawSync(Buffer.from([0, 0])));
+  if (badCrc) idat[idat.length - 1] ^= 0xff;
+  return Buffer.concat([
+    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    chunk("IHDR", ihdr),
+    idat,
+    ...extra.map(([type, data]) => chunk(type, Buffer.from(data))),
+    chunk("IEND", Buffer.alloc(0)),
+    trailing,
+  ]);
+}
+
+test("PNG entries pass only when the caller opts in and every chunk validates", () => {
+  const archive = (content) =>
+    buildZip([{ name: "kit/inbox/photo.png", content }]);
+  assert.throws(
+    () => inspectZipArchive(archive(png()), { label: "default.zip" }),
+    /not a recognized text file/,
+  );
+  const [entry] = inspectZipArchive(archive(png()), {
+    label: "png.zip",
+    allowPngEntries: true,
+  });
+  assert.equal(entry.path, "kit/inbox/photo.png");
+  assert.equal(entry.text, null);
+  const opted = { label: "png.zip", allowPngEntries: true };
+  assert.throws(
+    () => inspectZipArchive(archive(png({ extra: [["tEXt", "Author\0x"]] })), opted),
+    /PNG chunk "tEXt" is not allowed/,
+  );
+  assert.throws(
+    () => inspectZipArchive(archive(png({ badCrc: true })), opted),
+    /CRC-32 is wrong/,
+  );
+  assert.throws(
+    () => inspectZipArchive(archive(png({ trailing: Buffer.from("PK") })), opted),
+    /bytes after IEND/,
+  );
+  assert.throws(
+    () => inspectZipArchive(archive(Buffer.from("not a png at all, just text padding to length 64........")), opted),
+    /no PNG signature/,
+  );
+});

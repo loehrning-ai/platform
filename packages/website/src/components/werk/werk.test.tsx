@@ -327,7 +327,7 @@ describe("ButtonLink", () => {
         <ButtonLink href="/workshops/esg-berichte-mit-ki/slides.html" tone="scene">
           Deck öffnen
         </ButtonLink>
-        <ButtonLink href="/workshops/esg-berichte-mit-ki/vardar-oak-esg-kit.zip" tone="scene" variant="secondary">
+        <ButtonLink href="/workshops/esg-berichte-mit-ki/valea-sturzilor-esg-kit.zip" tone="scene" variant="secondary">
           Demo starten
         </ButtonLink>
       </div>,

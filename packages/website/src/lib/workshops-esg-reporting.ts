@@ -7,20 +7,20 @@ const base = "/workshops/esg-berichte-mit-ki";
  * Workshop 04, "Answer ESG by Friday". The published deck and kit are written by
  * scripts/workshop04/export-esg-passport.mjs (repository root); every number in this copy is
  * printed in that deck or kit, and the company, its files and its certificates are invented.
- * The agenda follows the deck's 13 slides and the session clock (6 / 4 / 8 / 8 / 6 / 8 / 8 /
+ * The agenda follows the deck's 17 slides and the session clock (8 / 4 / 4 / 8 / 7 / 7 / 10 /
  * 6 / 6 = 60 minutes). The session is presenter-led: Tim runs the five prompts in Claude while
  * the room watches; the kit lets a learner replay the same steps at home.
  */
 
-/** Size of vardar-oak-esg-kit.zip (22,960 bytes), in the page locale's number format. */
-const KIT_SIZE_LABEL = "22 KB";
+/** Size of valea-sturzilor-esg-kit.zip (821,962 bytes), in the page locale's number format. */
+const KIT_SIZE_LABEL = "803 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
 /** Shared href, kind, language, role and phase: both locales list the same files in the same order. */
 const MATERIALS: readonly MaterialFrame[] = [
   { href: `${base}/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 60, primary: true },
-  { href: `${base}/vardar-oak-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
+  { href: `${base}/valea-sturzilor-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
 ];
 
 /** Label, description and, where the first sentence runs long on a phone, its short phone wording. */
@@ -43,9 +43,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG-Anfragen bis Freitag beantworten",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Eine erfundene Möbelfirma bekommt drei ESG-Anfragen auf einmal. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
+      "Eine erfundene moldauische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
     description:
-      "Vardar Oak, ein erfundener Möbelhersteller aus Veles in Nordmazedonien, bekommt an einem Montag drei ESG-Anfragen: den Lieferantenfragebogen des größten Kunden, grüne Werbeaussagen des eigenen Marketings und das ESG-Formular der Bank. Tim beantwortet alle drei live in einem Claude-Projekt, mit fünf Prompts und drei Regeln: nur unsere Dateien, jede Antwort mit Quelle, NOT FOUND oder NEEDS CHECK statt einer Schätzung. Im Fragebogen sind 13 von 16 Zeilen beantwortet und 3 offen, denn 653,7 MWh Strom sind nur elf Monate und das FSC-Zertifikat ist am 31. August 2026 abgelaufen. Vier von sieben Werbeaussagen fallen durch. Für die Bank rechnet Claude die Solaranlage vor: 320.000 kWh × 0,75 kg = 240 t CO₂e im Jahr.",
+      "Vinăria Valea Sturzilor, eine erfundene Familienkellerei im Bezirk Hîncești in der Republik Moldau, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Rumänien und Polen und das Prüfformular der Bank für einen Solarkredit, auf Rumänisch. Tim beantwortet alle drei live in einem Claude-Projekt, mit fünf Prompts und drei Regeln: nur unsere Dateien, jede Antwort mit Quelle, NOT FOUND oder NEEDS CHECK statt einer Schätzung. Im Fragebogen sind 5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND, denn 279,7 MWh Strom sind nur elf Monate und das Bio-Zertifikat ist am 31. August 2026 abgelaufen. Vier von sieben Werbeaussagen fallen durch. Für die Bank rechnet Claude die Amortisation in Code: 3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh) = 5,0 Jahre. Dann kommt das Foto der fehlenden Septemberrechnung, und das Jahr hat 320,9 MWh.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
@@ -62,69 +62,69 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Wie beantworten wir drei ESG-Anfragen bis Freitag aus einem Satz Fakten, ohne etwas zu behaupten, das wir nicht belegen können?",
     outcomes: [
       "Du richtest ein Claude-Projekt mit eigenen Dateien und drei Regeln ein.",
-      "Du lässt Claude einen Fragebogen mit Quelle und Status je Zeile füllen.",
-      "Du lässt Claude zwei Zahlen nachrechnen und findest die offenen Antworten.",
+      "Du lässt Claude einen Fragebogen und ein Bankformular mit Quelle und Status je Antwort füllen.",
       "Du sortierst Werbeaussagen in rot, gelb und grün und schreibst belegbare Fassungen.",
+      "Du erkennst, welche Antworten sich mit einem nachgereichten Beleg ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
       {
-        label: "Drei Anfragen an einem Montag",
-        minutes: 6,
+        label: "Warum ESG bei dir landet",
+        minutes: 8,
         activity: "listen",
         description:
-          "Ein Kunde, das eigene Marketing und die Bank fragen nach ESG-Daten, mit Fristen von heute bis nächste Woche.",
+          "Von freiwilligen Berichten zum EU-Gesetz, warum die Fragen nach der Kürzung von 2026 bleiben und wie sie über Käufer, Banken und Regale bei Exporteuren in Moldau ankommen.",
       },
       {
-        label: "Warum das bei dir landet",
+        label: "Darf ich das, und wie Claude arbeitet",
         minutes: 4,
         activity: "listen",
         description:
-          "Die CSRD gilt nur noch für sehr große Firmen, doch Kunden und Banken fragen weiter, und unbelegte grüne Aussagen sind in EU-Shops verboten.",
+          "Zwei Regeln, die bei dir bleiben, und was in Claude läuft: das Projekt, Code, das Lesen von Fotos und die Dateien, die Claude schreibt.",
       },
       {
         label: "Fall und Projekt",
+        minutes: 4,
+        activity: "do",
+        description:
+          "Vinăria Valea Sturzilor hat 42 Beschäftigte und exportiert 74 % des Umsatzes; ein Claude-Projekt bekommt 13 Dateien und drei Regeln.",
+      },
+      {
+        label: "Schritt 1: der Fragebogen des Importeurs",
         minutes: 8,
         activity: "do",
         description:
-          "Vardar Oak hat 86 Beschäftigte und macht 41 % des Umsatzes mit einem Kunden; ein Claude-Projekt bekommt elf Dateien und drei Regeln.",
+          "Claude beantwortet acht Fragen mit Quelle und Status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND.",
       },
       {
-        label: "Schritt 1: der Fragebogen",
-        minutes: 8,
-        activity: "do",
-        description:
-          "Claude füllt 16 Zeilen mit Antwort, Quelle und Status: 13 beantwortet, 3 mit NEEDS CHECK.",
-      },
-      {
-        label: "Schritt 2: nachprüfen",
-        minutes: 6,
-        activity: "do",
-        description:
-          "Claude zeigt die Rechnung hinter zwei Antworten: die Dezemberrechnung fehlt, das FSC-Zertifikat ist abgelaufen.",
-      },
-      {
-        label: "Schritt 3: Werbeaussagen",
-        minutes: 8,
+        label: "Schritt 2: Werbeaussagen",
+        minutes: 7,
         activity: "vote",
         description:
           "Sieben Aussagen gegen die EU-Regeln: Du entscheidest mit, welche rot, gelb oder grün sind.",
       },
       {
-        label: "Schritt 4: der ESG-Pass",
-        minutes: 8,
+        label: "Schritt 3: das Bankformular",
+        minutes: 7,
         activity: "do",
         description:
-          "Claude schreibt alles Bekannte auf die elf Überschriften des VSME-Basismoduls und benennt die Lücken.",
+          "Claude füllt ein rumänisches Prüfformular und rechnet die Amortisation der Solaranlage in Code: 5,0 Jahre.",
       },
       {
-        label: "Schritt 5: die Bank",
+        label: "Schritt 4: der ESG-Pass",
+        minutes: 10,
+        activity: "do",
+        description:
+          "Claude schreibt alles Bekannte auf die elf Überschriften des VSME-Basismoduls, als Dashboard und als Word-Datei, und benennt die Lücken.",
+      },
+      {
+        label: "Schritt 5: die späte Rechnung",
         minutes: 6,
         activity: "do",
         description:
-          "Das Bankformular kommt aus dem ESG-Pass, mit der Rechnung für die Solaranlage.",
+          "Das Foto der Septemberrechnung kommt, und Claude aktualisiert jede Antwort, die am Strom hängt.",
       },
       {
-        label: "Was bleibt",
+        label: "Was bleibt, und deine Fragen",
         minutes: 6,
         activity: "listen",
         description:
@@ -148,90 +148,90 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     notCovered: [
       "Rechtsberatung und Prüfung eines echten Berichts",
-      "Eine vollständige Treibhausgasbilanz mit Scope 3",
-      "Amtliche Emissionsfaktoren; das Kit nutzt Lehrwerte",
+      "Eine vollständige Treibhausgasbilanz",
+      "Echte Stromtarife; das Kit rechnet mit einem erfundenen Tarif",
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-11",
+      reviewedAt: "2026-10-12",
       data: "synthetic",
-      note: "Firma, Personen, Zahlen und Zertifikate sind erfunden. Die fünf Prompts liefen vor der Veröffentlichung mehrfach auf Claude-Modellen gegen das Kit.",
+      note: "Firma, Personen, Zahlen, Zertifikate und das Rechnungsfoto sind erfunden. Die fünf Prompts liefen vor der Veröffentlichung mehrfach auf Claude-Modellen gegen das Kit.",
     },
     steps: [
       {
         n: "01",
         title: "Das Projekt anlegen",
         description:
-          "Ein Claude-Projekt bekommt elf Firmendateien und drei Regeln: nur unsere Dateien, Quelle nennen, NOT FOUND oder NEEDS CHECK statt Schätzung.",
+          "Ein Claude-Projekt bekommt 13 Firmendateien und drei Regeln: nur unsere Dateien, Quelle nennen, NOT FOUND oder NEEDS CHECK statt Schätzung.",
         tool: "Schritt 0 · Claude-Projekt",
       },
       {
         n: "02",
-        title: "Den Fragebogen füllen",
+        title: "Den Importeur beantworten",
         description:
-          "Claude füllt die 16 Fragen des Kunden mit Antwort, Quelle und Status: 13 beantwortet, 3 mit NEEDS CHECK.",
+          "Claude beantwortet die acht Fragen von Nordvik Vin AB mit Quelle und Status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND. 279,7 MWh sind elf Monate, der September fehlt.",
         tool: "Prompt 1 · Excel-Datei",
       },
       {
         n: "03",
-        title: "Zwei Zahlen nachprüfen",
+        title: "Werbeaussagen prüfen",
         description:
-          "653,7 MWh Strom sind elf Monate, die Dezemberrechnung fehlt. Das FSC-Zertifikat galt 2025 für 78 % der Eiche und ist am 31. August 2026 abgelaufen.",
+          "Von sieben Aussagen sind vier rot, eine gelb und zwei grün, jede mit Quelle und einer Fassung, die sich heute belegen lässt.",
         tool: "Prompt 2",
       },
       {
         n: "04",
-        title: "Werbeaussagen prüfen",
+        title: "Das Bankformular füllen",
         description:
-          "Von sieben Aussagen sind vier rot, eine gelb und zwei grün, jede mit Quelle und einer Fassung, die sich heute belegen lässt.",
+          "Das Formular der Banca Merișor, auf Rumänisch: 3.420.000 Lei / (180.000 kWh × 3,80 Lei/kWh) = 5,0 Jahre, in Code gerechnet und als Schätzung markiert.",
         tool: "Prompt 3",
       },
       {
         n: "05",
-        title: "Den ESG-Pass schreiben",
+        title: "Den ESG-Pass bauen",
         description:
-          "Auf den elf Überschriften des VSME-Basismoduls sind 9 aus den Dateien gefüllt, 2 bleiben zu erheben: B4 und B5.",
-        tool: "Prompt 4 · Word-Datei",
+          "Auf den elf Überschriften des VSME-Basismoduls sind etwa 5 OK, 4 teilweise belegt und 2 NOT FOUND: B4 und B5. Dazu ein klickbares Dashboard.",
+        tool: "Prompt 4 · Dashboard und Word-Datei",
       },
       {
         n: "06",
-        title: "Die Bank beantworten",
+        title: "Die späte Rechnung einarbeiten",
         description:
-          "Das Formular kommt aus dem ESG-Pass: 320.000 kWh × 0,75 kg CO₂e pro kWh = 240 t CO₂e im Jahr.",
-        tool: "Prompt 5",
+          "Das Foto der Septemberrechnung macht das Jahr zu 320,9 MWh, 15,8 MWh mehr als ein Schnitt aus elf Monaten, und der Solaranteil sinkt von 64 % auf 56 %.",
+        tool: "Prompt 5 · Foto",
       },
     ],
     caseStudy: {
-      companyName: "Vardar Oak Furniture",
+      companyName: "Vinăria Valea Sturzilor SRL",
       isFictional: true,
-      location: "Erfundene Firma in Veles, Nordmazedonien",
-      sector: "Tische und Stühle aus massiver Eiche",
+      location: "Erfundene Firma im Bezirk Hîncești, Republik Moldau",
+      sector: "Stillwein von 40 ha eigenen Weinbergen",
       period: "Geschäftsjahr 2025, Anfragen im Oktober 2026",
       narrative:
-        "Vardar Oak verkauft 72 % in die EU und 41 % an einen Kunden, den Möbelhändler Hausfeld. Kunde, Marketing und Bank fragen in einer Woche nach denselben Fakten; die Antworten kommen aus elf Dateien, die so unordentlich sind wie echte.",
+        "Valea Sturzilor exportiert 74 % des Umsatzes, nach Rumänien, an den schwedischen Importeur Nordvik Vin AB und nach Polen. Importeur, Marketing und Bank fragen in einer Woche nach denselben Fakten; die Antworten kommen aus 13 Dateien, die so unordentlich sind wie echte.",
       metrics: [
-        { label: "Beschäftigte", value: "86" },
-        { label: "Fragebogen", value: "13 von 16 beantwortet" },
+        { label: "Beschäftigte", value: "42" },
+        { label: "Fragebogen", value: "5 von 8 OK" },
         { label: "Werbeaussagen", value: "4 von 7 rot" },
-        { label: "ESG-Pass", value: "9 von 11 Überschriften" },
+        { label: "Amortisation", value: "5,0 Jahre" },
       ],
       decisionQuestion:
-        "Was darfst du einem Kunden, deiner Bank oder in einem Onlineshop behaupten, wenn deine Dateien es nur zum Teil belegen?",
+        "Was darfst du einem Importeur, deiner Bank oder in einem Regal behaupten, wenn deine Dateien es nur zum Teil belegen?",
       dataLimitations: [
-        "Die Stromrechnungen reichen von Januar bis November 2025; die fehlende Dezemberrechnung ist Absicht.",
-        "Der Netzfaktor von 0,75 kg CO₂e pro kWh ist ein Lehrwert, kein amtlicher Wert.",
-        "Die Solaranlage ist geplant; 320.000 kWh im Jahr sind eine Schätzung des Anbieters.",
+        "Den Stromrechnungen 2025 fehlt der September; er kommt in Schritt 5 als Foto, mit Absicht.",
+        "Der Tarif von 3,80 Lei pro kWh ist erfunden, kein echter Preis.",
+        "Die Solaranlage ist geplant; 180 MWh im Jahr sind eine Schätzung aus einem nicht unterschriebenen Angebot.",
       ],
     },
     materials: materials([
       [
-        "Deck · 13 Folien",
+        "Deck · 17 Folien",
         "Für den Beamer. Die Pfeiltaste nach rechts zeigt den nächsten Schritt einer Folie, nach links geht es zurück; jeder Prompt hat einen Kopierknopf.",
       ],
       [
         "ESG-Kit · .zip",
-        "START-HERE.md mit Einrichtung und den fünf Prompts, die drei Regeln, elf Firmendateien und die drei Anfragen, als Markdown und CSV.",
-        "Einrichtung, fünf Prompts, elf Firmendateien und drei Anfragen.",
+        "START-HERE.md mit Einrichtung und den fünf Prompts, die drei Regeln, 13 Firmendateien, die drei Anfragen und das Foto der späten Rechnung.",
+        "Einrichtung, fünf Prompts, 13 Firmendateien, drei Anfragen, ein Foto.",
       ],
     ]),
   },
@@ -242,9 +242,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Answer ESG by Friday",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "An invented furniture maker gets three ESG requests at once. Claude answers all of them from the same files and names what is missing.",
+      "An invented Moldovan winery gets three ESG requests in one week. Claude answers all of them from the same files and names what is missing.",
     description:
-      "Vardar Oak, an invented furniture maker in Veles, North Macedonia, gets three ESG requests on one Monday: its biggest customer's supplier questionnaire, green claims from its own marketing team and its bank's ESG form. Tim answers all three live in one Claude Project, with five prompts and three rules: only our files, cite the source, say NOT FOUND or NEEDS CHECK instead of guessing. The questionnaire comes back with 13 of 16 rows answered and 3 open, because 653.7 MWh of electricity is only eleven months and the FSC certificate expired on 31 August 2026. Four of seven marketing claims fail. For the bank, Claude shows the solar sum: 320,000 kWh × 0.75 kg = 240 t CO₂e a year.",
+      "Vinăria Valea Sturzilor, an invented family winery in Hîncești district, Moldova, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Romania and Poland, and its bank's screening form for a solar loan, in Romanian. Tim answers all three live in one Claude Project, with five prompts and three rules: only our files, cite the source, say NOT FOUND or NEEDS CHECK instead of guessing. The questionnaire comes back with 5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND, because 279.7 MWh of electricity is only eleven months and the organic certificate expired on 31 August 2026. Four of seven claims fail. For the bank, Claude works out the payback in code: 3,420,000 lei / (180,000 kWh × 3.80 lei/kWh) = 5.0 years. Then a photo of the missing September invoice arrives, and the year has 320.9 MWh.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
@@ -261,69 +261,69 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "How do we answer three ESG requests by Friday from one set of facts, without claiming anything we cannot prove?",
     outcomes: [
       "Set up a Claude Project with your own files and three rules.",
-      "Have Claude fill a questionnaire with a source and a status for every row.",
-      "Have Claude show the sums behind two numbers and list the open answers.",
+      "Have Claude fill a questionnaire and a bank form with a source and a status for every answer.",
       "Sort marketing claims into red, amber and green and write versions you can prove.",
+      "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
       {
-        label: "Three requests on one Monday",
-        minutes: 6,
+        label: "Why ESG lands on your desk",
+        minutes: 8,
         activity: "listen",
         description:
-          "A customer, your own marketing team and the bank ask for ESG data, due between today and next week.",
+          "From voluntary reports to EU law, why the questions stayed after the 2026 cut, and how they reach Moldovan exporters through buyers, banks and shelves.",
       },
       {
-        label: "Why this lands on your desk",
+        label: "Is it allowed, and how Claude works",
         minutes: 4,
         activity: "listen",
         description:
-          "The CSRD now covers only very large firms, yet customers and banks keep asking, and unproven green claims are banned in EU shops.",
+          "Two rules that stay with you, and what runs inside Claude: the Project, code, reading photos and the files Claude writes.",
       },
       {
         label: "The case and the Project",
+        minutes: 4,
+        activity: "do",
+        description:
+          "Vinăria Valea Sturzilor has 42 employees and exports 74% of its revenue; a Claude Project gets 13 files and three rules.",
+      },
+      {
+        label: "Step 1: the importer's questionnaire",
         minutes: 8,
         activity: "do",
         description:
-          "Vardar Oak has 86 employees and makes 41% of its sales with one customer; a Claude Project gets eleven files and three rules.",
+          "Claude answers eight questions with source and status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND.",
       },
       {
-        label: "Step 1: the questionnaire",
-        minutes: 8,
-        activity: "do",
-        description:
-          "Claude fills 16 rows with answer, source and status: 13 answered, 3 NEEDS CHECK.",
-      },
-      {
-        label: "Step 2: check",
-        minutes: 6,
-        activity: "do",
-        description:
-          "Claude shows the sums behind two answers: December's bill is missing and the FSC certificate has expired.",
-      },
-      {
-        label: "Step 3: green claims",
-        minutes: 8,
+        label: "Step 2: green claims",
+        minutes: 7,
         activity: "vote",
         description:
           "Seven claims against the EU rules: you help decide which are red, amber or green.",
       },
       {
-        label: "Step 4: the ESG passport",
-        minutes: 8,
+        label: "Step 3: the bank form",
+        minutes: 7,
         activity: "do",
         description:
-          "Claude puts everything known under the eleven headings of the VSME Basic module and names the gaps.",
+          "Claude fills a Romanian screening form and works out the solar payback in code: 5.0 years.",
       },
       {
-        label: "Step 5: the bank",
+        label: "Step 4: the ESG passport",
+        minutes: 10,
+        activity: "do",
+        description:
+          "Claude puts everything known under the eleven headings of the VSME Basic module, as a dashboard and a Word file, and names the gaps.",
+      },
+      {
+        label: "Step 5: the late invoice",
         minutes: 6,
         activity: "do",
         description:
-          "The bank form is answered from the ESG passport, with the sum for the solar plant.",
+          "A photo of the September invoice arrives, and Claude updates every answer that depends on electricity.",
       },
       {
-        label: "What to keep",
+        label: "What to keep, and your questions",
         minutes: 6,
         activity: "listen",
         description:
@@ -347,90 +347,90 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     notCovered: [
       "Legal advice or an audit of a real report",
-      "A full greenhouse gas inventory with Scope 3",
-      "Official emission factors; the kit uses teaching values",
+      "A full greenhouse gas inventory",
+      "Real electricity tariffs; the kit uses one invented tariff",
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-11",
+      reviewedAt: "2026-10-12",
       data: "synthetic",
-      note: "The company, people, numbers and certificates are invented. The five prompts were run against the kit several times on Claude models before publication.",
+      note: "The company, people, numbers, certificates and the invoice photo are invented. The five prompts were run against the kit several times on Claude models before publication.",
     },
     steps: [
       {
         n: "01",
         title: "Set up the Project",
         description:
-          "A Claude Project gets eleven company files and three rules: only our files, cite the source, NOT FOUND or NEEDS CHECK instead of a guess.",
+          "A Claude Project gets 13 company files and three rules: only our files, cite the source, NOT FOUND or NEEDS CHECK instead of a guess.",
         tool: "Step 0 · Claude Project",
       },
       {
         n: "02",
-        title: "Fill the questionnaire",
+        title: "Answer the importer",
         description:
-          "Claude fills the customer's 16 questions with answer, source and status: 13 answered, 3 NEEDS CHECK.",
+          "Claude answers Nordvik Vin AB's eight questions with source and status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND. 279.7 MWh is eleven months; September is missing.",
         tool: "Prompt 1 · Excel file",
       },
       {
         n: "03",
-        title: "Check two numbers",
+        title: "Check the green claims",
         description:
-          "653.7 MWh of electricity is eleven months; December's bill is missing. The FSC certificate covered 78% of the oak in 2025 and expired on 31 August 2026.",
+          "Of seven claims, four are red, one amber and two green, each with its source and a version you can prove today.",
         tool: "Prompt 2",
       },
       {
         n: "04",
-        title: "Check the green claims",
+        title: "Fill the bank form",
         description:
-          "Of seven claims, four are red, one amber and two green, each with its source and a version you can prove today.",
+          "Banca Merișor's form, in Romanian: 3,420,000 lei / (180,000 kWh × 3.80 lei/kWh) = 5.0 years, worked out in code and marked as an estimate.",
         tool: "Prompt 3",
       },
       {
         n: "05",
-        title: "Write the ESG passport",
+        title: "Build the ESG passport",
         description:
-          "Under the eleven headings of the VSME Basic module, 9 are filled from the files and 2 are still to collect: B4 and B5.",
-        tool: "Prompt 4 · Word file",
+          "Under the eleven headings of the VSME Basic module, about 5 are OK, 4 partial and 2 NOT FOUND: B4 and B5. It comes with a clickable dashboard.",
+        tool: "Prompt 4 · dashboard and Word file",
       },
       {
         n: "06",
-        title: "Answer the bank",
+        title: "Add the late invoice",
         description:
-          "The form comes from the ESG passport: 320,000 kWh × 0.75 kg CO₂e per kWh = 240 t CO₂e a year.",
-        tool: "Prompt 5",
+          "A photo of the September invoice makes the year 320.9 MWh, 15.8 MWh more than an 11-month average, and the solar share drops from 64% to 56%.",
+        tool: "Prompt 5 · photo",
       },
     ],
     caseStudy: {
-      companyName: "Vardar Oak Furniture",
+      companyName: "Vinăria Valea Sturzilor SRL",
       isFictional: true,
-      location: "Invented company in Veles, North Macedonia",
-      sector: "Solid oak tables and chairs",
+      location: "Invented company in Hîncești district, Moldova",
+      sector: "Still wine from 40 ha of its own vineyards",
       period: "Financial year 2025, requests in October 2026",
       narrative:
-        "Vardar Oak sells 72% to the EU and 41% to one customer, the furniture retailer Hausfeld. Customer, marketing and bank ask for the same facts in one week; the answers come from eleven files that are as messy as real ones.",
+        "Valea Sturzilor exports 74% of its revenue, to Romania, to the Swedish importer Nordvik Vin AB and to Poland. Importer, marketing and bank ask for the same facts in one week; the answers come from 13 files that are as messy as real ones.",
       metrics: [
-        { label: "Employees", value: "86" },
-        { label: "Questionnaire", value: "13 of 16 answered" },
+        { label: "Employees", value: "42" },
+        { label: "Questionnaire", value: "5 of 8 OK" },
         { label: "Marketing claims", value: "4 of 7 red" },
-        { label: "ESG passport", value: "9 of 11 headings" },
+        { label: "Payback", value: "5.0 years" },
       ],
       decisionQuestion:
-        "What may you tell a customer, your bank or an online shop when your files only partly prove it?",
+        "What may you tell an importer, your bank or a shop shelf when your files only partly prove it?",
       dataLimitations: [
-        "The electricity bills run from January to November 2025; the missing December bill is deliberate.",
-        "The grid factor of 0.75 kg CO₂e per kWh is a teaching value, not an official one.",
-        "The solar plant is planned; 320,000 kWh a year is the supplier's estimate.",
+        "The 2025 electricity bills lack September; it arrives in step 5 as a photo, on purpose.",
+        "The tariff of 3.80 lei per kWh is invented, not a real price.",
+        "The solar plant is planned; 180 MWh a year is an estimate from an unsigned offer.",
       ],
     },
     materials: materials([
       [
-        "Deck · 13 slides",
+        "Deck · 17 slides",
         "For the projector. The right arrow key shows the next step of a slide and the left one goes back; every prompt has a copy button.",
       ],
       [
         "ESG kit · .zip",
-        "START-HERE.md with the setup and the five prompts, the three rules, eleven company files and the three requests, as Markdown and CSV.",
-        "Setup, five prompts, eleven company files and three requests.",
+        "START-HERE.md with the setup and the five prompts, the three rules, 13 company files, the three requests and the photo of the late invoice.",
+        "Setup, five prompts, 13 company files, three requests, one photo.",
       ],
     ]),
   },

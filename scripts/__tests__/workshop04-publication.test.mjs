@@ -4,10 +4,9 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
-import { deflateRawSync } from "node:zlib";
-import { crc32 } from "../course03/kit-archive.mjs";
 import {
   assertClean,
+  assertPlainPng,
   FORBIDDEN,
   hashedWordGuard,
   KIT_FILES,
@@ -19,7 +18,6 @@ import {
   WORKSHOP_RELATIVE,
 } from "../workshop04/export-esg-passport.mjs";
 import { buildKitArchive, dosDateTime, KIT_RELEASE_DATE, readKitArchive, ZIP_NAME } from "../workshop04/kit-archive.mjs";
-import { questionnaireCsv } from "../workshop04/questionnaire-csv.mjs";
 
 const read = (name) => readFileSync(path.join(WORKSHOP_DIR, name));
 const kit = () => new Map(readKitArchive(read(ZIP_NAME)));
@@ -61,10 +59,14 @@ test("no published file or kit entry names the client, a local path or presenter
   for (const [name, bytes] of kit()) {
     assert.doesNotThrow(() => assertClean(`${ZIP_NAME}/${name}`, bytes), name);
   }
-  // The deck keeps its own brand line, without a partner.
+  // The deck keeps its own brand line, without a partner: one logo, no "×", Moldova only.
   const slides = read("slides.html").toString("utf8");
   assert.match(slides, /<title>Answer ESG by Friday · loehrning\.ai<\/title>/);
   assert.match(read("lib/esg.js").toString("utf8"), /loehrning\.ai · Workshop 04/);
+  assert.doesNotMatch(slides, /×<\/span>|\.png" alt="[A-Za-z]+" class="(?:cv|s17)-/);
+  assert.match(slides, /Tim Löhr · Moldova · 16 October 2026 · 60 minutes/);
+  assert.match(slides, /Download the kit from the workshop page\./);
+  assert.doesNotMatch(slides, /answer key/i);
 });
 
 test("the client-name guard finds a hashed word alone, inside a word and in any case", () => {
@@ -76,7 +78,8 @@ test("the client-name guard finds a hashed word alone, inside a word and in any 
   assert.equal(mentionsClient("loehrning.ai · Workshop 04"), false);
   assert.throws(() => assertClean("x.html", Buffer.from("<p>loehrning.ai × Partner</p>")), /co-branding/);
   assert.throws(() => assertClean("x.md", Buffer.from(["", "Users", "someone", "kit"].join("/"))), /local path/);
-  assert.ok(FORBIDDEN.length >= 3);
+  assert.throws(() => assertClean("x.md", Buffer.from("Vinăria Trei Dealuri")), /retired case name/);
+  assert.ok(FORBIDDEN.length >= 4);
 });
 
 test("the deck's five prompts are identical to the code blocks in the kit's START-HERE.md", () => {
@@ -94,78 +97,30 @@ test("the kit zip holds exactly the reviewed kit files and is rebuilt byte for b
   const { date, time } = dosDateTime(KIT_RELEASE_DATE);
   assert.equal(archive.readUInt16LE(10), time);
   assert.equal(archive.readUInt16LE(12), date);
-  // The questionnaire ships as CSV; the guide and the deck name that file.
-  assert.ok(!KIT_FILES.some((name) => name.endsWith(".xlsx")));
-  assert.match(kit().get("START-HERE.md").toString("utf8"), /Attach `inbox\/1-customer-questionnaire\.csv`/);
-  assert.match(read("slides.html").toString("utf8"), /Attach <b>1-customer-questionnaire\.csv<\/b>/);
-  const questionnaire = kit().get("inbox/1-customer-questionnaire.csv").toString("utf8").split("\n");
-  assert.equal(questionnaire[3], "#,Topic,Question,Answer,Source,Status");
-  assert.equal(questionnaire.filter((line) => /^\d+,/.test(line)).length, 16);
+  // The late invoice is a photo; the deck shows the same bytes.
+  const photo = kit().get("inbox/4-september-invoice.png");
+  assert.ok(photo.equals(read("assets/proof/september-invoice.png")));
+  assert.doesNotThrow(() => assertPlainPng("invoice", photo));
+  assert.match(kit().get("START-HERE.md").toString("utf8"), /Attach `inbox\/4-september-invoice\.png`/);
 });
 
-test("the kit archive refuses anything but plain text entries and duplicates", () => {
-  assert.throws(() => buildKitArchive([["x.pdf", Buffer.from("%PDF")]]), /not CSV or Markdown/);
+test("the kit archive refuses other file types, duplicates and PNGs with metadata", () => {
+  assert.throws(() => buildKitArchive([["x.pdf", Buffer.from("%PDF")]]), /not CSV, Markdown, text or PNG/);
   assert.throws(() => buildKitArchive([["a.md", Buffer.from("a")], ["a.md", Buffer.from("a")]]), /Duplicate/);
   assert.throws(() => buildKitArchive([["../a.md", Buffer.from("a")]]), /plain relative path/);
+  assert.throws(() => buildKitArchive([["x.png", Buffer.from("not a png")]]), /PNG/);
   const entries = [["b.md", Buffer.from("b\n")], ["a.csv", Buffer.from("a,b\n")]];
   assert.ok(buildKitArchive(entries).equals(buildKitArchive([...entries].reverse())));
-});
-
-/** A minimal .xlsx container (deflated entries) for the converter tests. */
-function xlsx(sheet, { sheets = 1 } = {}) {
-  const files = [
-    ["xl/workbook.xml", `<workbook><sheets>${'<sheet name="s"/>'.repeat(sheets)}</sheets></workbook>`],
-    ["xl/worksheets/sheet1.xml", `<worksheet><sheetData>${sheet}</sheetData></worksheet>`],
-  ];
-  const locals = [];
-  const central = [];
-  let offset = 0;
-  for (const [file, text] of files) {
-    const name = Buffer.from(file);
-    const raw = Buffer.from(text);
-    const data = deflateRawSync(raw);
-    const local = Buffer.alloc(30);
-    local.writeUInt32LE(0x04034b50, 0);
-    local.writeUInt16LE(8, 8);
-    local.writeUInt32LE(crc32(raw), 14);
-    local.writeUInt32LE(data.length, 18);
-    local.writeUInt32LE(raw.length, 22);
-    local.writeUInt16LE(name.length, 26);
-    const entry = Buffer.alloc(46);
-    entry.writeUInt32LE(0x02014b50, 0);
-    entry.writeUInt16LE(8, 10);
-    entry.writeUInt32LE(data.length, 20);
-    entry.writeUInt32LE(raw.length, 24);
-    entry.writeUInt16LE(name.length, 28);
-    entry.writeUInt32LE(offset, 42);
-    locals.push(local, name, data);
-    central.push(entry, name);
-    offset += local.length + name.length + data.length;
-  }
-  const directory = Buffer.concat(central);
-  const end = Buffer.alloc(22);
-  end.writeUInt32LE(0x06054b50, 0);
-  end.writeUInt16LE(files.length, 10);
-  end.writeUInt32LE(directory.length, 12);
-  end.writeUInt32LE(offset, 16);
-  return Buffer.concat([...locals, directory, end]);
-}
-
-test("the questionnaire converter keeps rows, blank rows and quoting, and refuses what it cannot read", () => {
-  const sheet =
-    '<row r="1"><c r="A1" t="inlineStr"><is><t>Title, with comma</t></is></c></row>' +
-    '<row r="3"><c r="A3" t="n"><v>1</v></c><c r="C3" t="inlineStr"><is><t>Say &quot;hi&quot; &amp; go</t></is></c></row>';
-  assert.equal(questionnaireCsv(xlsx(sheet)), '"Title, with comma",,,,,\n,,,,,\n1,,"Say ""hi"" & go",,,\n');
-  assert.throws(() => questionnaireCsv(xlsx('<row r="1"><c r="A1" t="s"><v>0</v></c></row>')), /cell type s/);
-  assert.throws(() => questionnaireCsv(xlsx('<row r="1"><c r="A1"><f>1+1</f><v>2</v></c></row>')), /formulas/);
-  assert.throws(() => questionnaireCsv(xlsx('<row r="1"><c r="G1" t="n"><v>1</v></c></row>')), /column G/);
-  assert.throws(() => questionnaireCsv(xlsx("", { sheets: 2 })), /exactly one sheet/);
+  const iend = Buffer.from([0, 0, 0, 0, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82]);
+  const text = Buffer.concat([Buffer.from([0, 0, 0, 1]), Buffer.from("tEXt"), Buffer.from("x"), Buffer.alloc(4)]);
+  const head = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  assert.throws(() => assertPlainPng("x.png", Buffer.concat([head, text, iend])), /tEXt chunk/);
 });
 
 test("every file the deck loads is published", () => {
   const slides = read("slides.html").toString("utf8");
   const refs = [...slides.matchAll(/(?:src|href)="\.\/([^"#]+)"/g)].map((match) => match[1]);
-  assert.ok(refs.length >= 8);
+  assert.ok(refs.length >= 10);
   const css = read("lib/tokens.css").toString("utf8");
   const fonts = [...css.matchAll(/url\('\.\.\/([^']+)'\)/g)].map((match) => match[1]);
   assert.equal(fonts.length, 5);
@@ -183,7 +138,7 @@ test("the ASSET_MANIFEST rows of this folder match the published binaries", () =
     assert.equal(row.sha256, createHash("sha256").update(bytes).digest("hex"), name);
     assert.equal(row.sizeBytes, bytes.length, name);
   }
-  for (const name of PUBLISHED_FILES.filter((file) => /\.(?:jpg|webp|woff2|zip)$/.test(file))) {
+  for (const name of PUBLISHED_FILES.filter((file) => /\.(?:jpg|png|webp|woff2|zip)$/.test(file))) {
     assert.ok(rows.some((row) => row.path === `${WORKSHOP_RELATIVE}/${name}`), `no row for ${name}`);
   }
 });
