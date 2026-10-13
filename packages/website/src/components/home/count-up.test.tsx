@@ -4,24 +4,30 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { COUNT_UP_DURATION_MS, CountUp } from "./count-up";
 
-type ObserverCallback = (entries: Array<{ isIntersecting: boolean }>) => void;
+type Entry = {
+  isIntersecting: boolean;
+  boundingClientRect: { top: number; height: number };
+  rootBounds: { height: number } | null;
+};
+type ObserverCallback = (entries: Entry[]) => void;
 
-let observers: Array<{ callback: ObserverCallback; disconnect: () => void }>;
+const VIEWPORT = 800;
+
+let observers: Array<{ callback: ObserverCallback; disconnected: boolean }>;
 let frames: Array<(now: number) => void>;
 let reducedMotion: boolean;
 
-function setTop(top: number, height = 30) {
-  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
-    top,
-    height,
-    bottom: top + height,
-    left: 0,
-    right: 100,
-    width: 100,
-    x: 0,
-    y: top,
-    toJSON: () => ({}),
-  } as DOMRect);
+/** The observer's report for a count whose top sits at `top`. */
+function report(top: number, height = 30, isIntersecting = false) {
+  act(() =>
+    observers[0]!.callback([
+      {
+        isIntersecting,
+        boundingClientRect: { top, height },
+        rootBounds: { height: VIEWPORT },
+      },
+    ]),
+  );
 }
 
 function digits(): HTMLElement {
@@ -44,12 +50,15 @@ beforeEach(() => {
     "IntersectionObserver",
     class {
       callback: ObserverCallback;
+      disconnected = false;
       constructor(callback: ObserverCallback) {
         this.callback = callback;
         observers.push(this);
       }
       observe() {}
-      disconnect() {}
+      disconnect() {
+        this.disconnected = true;
+      }
     },
   );
   vi.stubGlobal("requestAnimationFrame", (frame: (now: number) => void) => {
@@ -79,35 +88,57 @@ describe("CountUp", () => {
     const html = renderToString(<CountUp value={57} text="57 Lektionen" />);
     expect(html).toMatch(/data-count-up="57"[^>]*>57</);
 
-    setTop(0);
     render(<CountUp value={57} text="57 Lektionen" />);
     expect(screen.getByText("57 Lektionen")).toHaveClass("sr-only");
     expect(digits().parentElement).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("keeps the final value when the count is already on screen", () => {
-    setTop(100);
+  it("never reads layout while the page hydrates", () => {
+    const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect");
     render(<CountUp value={57} text="57 Lektionen" />);
+    report(5000);
+    expect(rect).not.toHaveBeenCalled();
+  });
+
+  it("keeps the final value when the count is already on screen", () => {
+    render(<CountUp value={57} text="57 Lektionen" />);
+    expect(observers).toHaveLength(1);
+    // Partly in view counts as on screen, as does scrolled past.
+    report(VIEWPORT - 10);
+    expect(observers[0]!.disconnected).toBe(true);
     expect(digits().textContent).toBe("57");
-    expect(observers).toHaveLength(0);
+    expect(frames).toHaveLength(0);
+  });
+
+  it("keeps the final value when the count is scrolled past or not laid out", () => {
+    const first = render(<CountUp value={57} text="57 Lektionen" />);
+    report(-400);
+    expect(observers[0]!.disconnected).toBe(true);
+    first.unmount();
+
+    observers = [];
+    render(<CountUp value={57} text="57 Lektionen" />);
+    report(5000, 0);
+    expect(observers[0]!.disconnected).toBe(true);
+    expect(digits().textContent).toBe("57");
   });
 
   it("keeps the final value under reduced motion", () => {
     reducedMotion = true;
-    setTop(5000);
     render(<CountUp value={57} text="57 Lektionen" />);
     expect(digits().textContent).toBe("57");
     expect(observers).toHaveLength(0);
   });
 
   it("counts up once, eased, when a below-fold count scrolls into view", () => {
-    setTop(5000);
     render(<CountUp value={57} text="57 Lektionen" />);
+    report(5000);
     // Off screen the final count stays: a jump past it never shows a zero.
     expect(digits().textContent).toBe("57");
-    expect(observers).toHaveLength(1);
+    expect(observers[0]!.disconnected).toBe(false);
 
-    act(() => observers[0]!.callback([{ isIntersecting: true }]));
+    report(400, 30, true);
+    expect(observers[0]!.disconnected).toBe(true);
     expect(digits().textContent).toBe("0");
     runFrames(COUNT_UP_DURATION_MS / 2);
     const midway = Number(digits().textContent);
@@ -120,10 +151,10 @@ describe("CountUp", () => {
   });
 
   it("restores the final value on unmount mid-count", () => {
-    setTop(5000);
     const { unmount } = render(<CountUp value={12} text="12 lessons" />);
     const node = digits();
-    act(() => observers[0]!.callback([{ isIntersecting: true }]));
+    report(5000);
+    report(400, 30, true);
     runFrames(COUNT_UP_DURATION_MS / 3);
     expect(Number(node.textContent)).toBeLessThan(12);
     unmount();

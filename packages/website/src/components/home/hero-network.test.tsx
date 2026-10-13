@@ -22,11 +22,13 @@ import {
   COMPACT_STROKE,
   HERO_GLOBE_COMPACT_FPS,
   HERO_GLOBE_DWELL_RATIO,
+  HERO_GLOBE_FIRST_REST_MS,
   HERO_GLOBE_FPS,
   HERO_GLOBE_START_DELAY_SECONDS,
   HERO_GLOBE_STEP_SECONDS,
   HeroNetwork,
   STEPS,
+  tourClockStart,
   wordMayShow,
 } from "./hero-network";
 
@@ -54,6 +56,29 @@ describe("phone opening: no word before the first rotation", () => {
 
   it("never delays the desktop cover's word", () => {
     expect(wordMayShow(false, 0.1)).toBe(true);
+  });
+});
+
+describe("tour clock after the phone opening", () => {
+  it("rests on Berlin for the start delay plus the first dwell", () => {
+    expect(HERO_GLOBE_FIRST_REST_MS).toBeCloseTo(
+      (HERO_GLOBE_START_DELAY_SECONDS +
+        HERO_GLOBE_STEP_SECONDS * HERO_GLOBE_DWELL_RATIO) *
+        1000,
+    );
+  });
+
+  it("counts from the opening while the tour would still rest on Berlin", () => {
+    // The live globe takes over as the opening ends, about six seconds in.
+    expect(tourClockStart(6000 + 1000, 1000)).toBe(1000);
+  });
+
+  it("starts at the first frame without an opening, or once that rest is over", () => {
+    expect(tourClockStart(7000)).toBe(7000);
+    expect(tourClockStart(1000 + HERO_GLOBE_FIRST_REST_MS, 1000)).toBe(
+      1000 + HERO_GLOBE_FIRST_REST_MS,
+    );
+    expect(tourClockStart(500, 1000)).toBe(500);
   });
 });
 

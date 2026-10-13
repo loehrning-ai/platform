@@ -40,6 +40,7 @@ vi.mock("@/components/home/hero-network", () => ({
 }));
 
 import { HeroSection } from "./hero";
+import { LIVE_GLOBE_DELAY_MS } from "./phone-globe";
 import { HeroGlobeFrame } from "./hero-globe-frame";
 import { HeroSignalFrame } from "./hero-signal-frame";
 
@@ -99,6 +100,23 @@ function renderHero(locale: "de" | "en" = "de") {
 
 function phoneMounts() {
   return network.mounts.filter((props) => props.compact === true);
+}
+
+/** The opening's stage animation ending on the globe window. */
+function endOpening(container: HTMLElement, animationName = "hz-signal-stage") {
+  const slot = container.querySelector("[data-home-globe]");
+  const event = new Event("animationend", { bubbles: true });
+  Object.defineProperty(event, "animationName", { value: animationName });
+  act(() => {
+    slot?.dispatchEvent(event);
+  });
+}
+
+/** Advances fake timers, letting the dynamic import settle in between. */
+async function advance(ms: number) {
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(ms);
+  });
 }
 
 beforeEach(() => {
@@ -183,15 +201,62 @@ describe("phone hero globe: live globe", () => {
     expect(phoneMounts()).toHaveLength(0);
   });
 
-  it("goes live after load and idle below lg, hides the frame, then offers a localized pause", async () => {
+  it("keeps the load window free: nothing loads while the opening plays", async () => {
+    vi.useFakeTimers();
+    installMatchMedia({});
+    const { container } = renderHero();
+    await advance(LIVE_GLOBE_DELAY_MS - 100);
+    expect(phoneMounts()).toHaveLength(0);
+    // Another animation ending is not the end of the opening.
+    endOpening(container, "hz-signal-ping");
+    await advance(50);
+    expect(phoneMounts()).toHaveLength(0);
+    // The window already moves (the opening), so its pause control is there.
+    expect(
+      container.querySelector("[data-home-globe]"),
+    ).toHaveAttribute("data-home-globe-motion", "running");
+    expect(
+      screen.getByRole("button", { name: "Globus anhalten" }),
+    ).toHaveAttribute("aria-pressed", "false");
+
+    // The opening's end hands the stage to the live globe, at idle.
+    endOpening(container);
+    await advance(300);
+    vi.useRealTimers();
+    expect(phoneMounts()).toHaveLength(1);
+  });
+
+  it("goes live after LIVE_GLOBE_DELAY_MS from load when the opening never ends", async () => {
+    vi.useFakeTimers();
+    installMatchMedia({});
+    renderHero();
+    await advance(LIVE_GLOBE_DELAY_MS + 600);
+    vi.useRealTimers();
+    expect(phoneMounts()).toHaveLength(1);
+  });
+
+  it("hands the live globe the opening's start for its tour clock", async () => {
+    installMatchMedia({});
+    const before = performance.now();
+    const { container } = renderHero();
+    endOpening(container);
+    await waitFor(() => expect(phoneMounts()).toHaveLength(1));
+    const { clockStart } = phoneMounts()[0] as { clockStart?: number };
+    expect(clockStart).toBeGreaterThanOrEqual(before);
+    expect(clockStart).toBeLessThanOrEqual(performance.now());
+  });
+
+  it("goes live once the opening has played below lg, hides the frame, with a localized pause", async () => {
     installMatchMedia({});
     const { container } = renderHero("en");
     const slot = container.querySelector("[data-home-globe]");
+    endOpening(container);
 
-    const toggle = await screen.findByRole("button", {
-      name: "Pause the globe",
-    });
+    await waitFor(() =>
+      expect(slot).toHaveAttribute("data-home-globe-live", ""),
+    );
     expect(phoneMounts()).toHaveLength(1);
+    const toggle = screen.getByRole("button", { name: "Pause the globe" });
     expect(slot).toHaveAttribute("data-home-globe-live", "");
     expect(slot).toHaveAttribute("data-home-globe-motion", "running");
     expect(toggle).toHaveAttribute("aria-pressed", "false");
@@ -220,14 +285,26 @@ describe("phone hero globe: live globe", () => {
   });
 
   it("starts paused when the visitor paused it before, and keeps the frame until a live frame", async () => {
+    vi.useFakeTimers();
     window.localStorage.setItem("loehrning:home-globe-paused", "1");
     installMatchMedia({});
     const { container } = renderHero();
-    const toggle = await screen.findByRole("button", {
-      name: "Globus anhalten",
-    });
+    // No opening plays for a remembered pause; the pressed control arrives
+    // when the page has settled, the live globe after the same wait.
+    expect(screen.queryByRole("button", { name: "Globus anhalten" })).toBeNull();
+    await advance(300);
+    const toggle = screen.getByRole("button", { name: "Globus anhalten" });
     expect(toggle).toHaveAttribute("aria-pressed", "true");
+    expect(
+      container.querySelector("[data-home-globe]"),
+    ).toHaveAttribute("data-home-globe-motion", "paused");
+    await advance(LIVE_GLOBE_DELAY_MS - 400);
+    expect(phoneMounts()).toHaveLength(0);
+    await advance(600);
+    vi.useRealTimers();
     expect(phoneMounts()[0]).toMatchObject({ paused: true, compact: true });
+    // Without an opening the tour clock starts at its first frame.
+    expect(phoneMounts()[0]?.clockStart).toBeUndefined();
     // A paused globe has drawn nothing: the server frame stays the globe.
     expect(
       container.querySelector("[data-home-globe]"),
@@ -237,7 +314,8 @@ describe("phone hero globe: live globe", () => {
   it("tears the live globe down when the viewport crosses into desktop or motion is reduced", async () => {
     installMatchMedia({});
     const { container, unmount } = renderHero();
-    await screen.findByRole("button", { name: "Globus anhalten" });
+    endOpening(container);
+    await waitFor(() => expect(phoneMounts()).toHaveLength(1));
     const slot = container.querySelector("[data-home-globe]");
 
     await act(async () => {
@@ -247,6 +325,7 @@ describe("phone hero globe: live globe", () => {
     expect(slot).not.toHaveAttribute("data-home-globe-live");
     expect(document.querySelector("[data-home-globe-toggle]")).toBeNull();
 
+    // Back below lg, long after the load window: idle is the only wait.
     await act(async () => {
       changeEnv({});
     });
@@ -297,11 +376,38 @@ describe("phone hero: the signal from Berlin", () => {
     expect(layer?.querySelector("text, a, button")).toBeNull();
   });
 
-  it("plays once below lg when motion is allowed, and settles when its stage ends", () => {
+  it("waits for the page to load and go idle, so it never shares hydration", async () => {
+    vi.useFakeTimers();
     installMatchMedia({});
     const { container } = renderWithIntro();
     const slot = slotOf(container);
+    // Hydration has committed, the opening has not started.
+    expect(slot).not.toHaveAttribute("data-home-intro");
+    await advance(300);
+    vi.useRealTimers();
     expect(slot).toHaveAttribute("data-home-intro", "play");
+  });
+
+  it("brings the pause control with the opening, not with hydration", async () => {
+    vi.useFakeTimers();
+    installMatchMedia({});
+    const { container } = renderWithIntro();
+    expect(screen.queryByRole("button", { name: "Globus anhalten" })).toBeNull();
+    expect(slotOf(container)).toHaveAttribute("data-home-globe-motion", "static");
+    await advance(300);
+    vi.useRealTimers();
+    expect(slotOf(container)).toHaveAttribute("data-home-intro", "play");
+    expect(slotOf(container)).toHaveAttribute("data-home-globe-motion", "running");
+    expect(
+      screen.getByRole("button", { name: "Globus anhalten" }),
+    ).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("plays once below lg when motion is allowed, and settles when its stage ends", async () => {
+    installMatchMedia({});
+    const { container } = renderWithIntro();
+    const slot = slotOf(container);
+    await waitFor(() => expect(slot).toHaveAttribute("data-home-intro", "play"));
 
     // Another animation ending changes nothing; the stage ending settles it.
     const end = (animationName: string) => {
@@ -317,7 +423,8 @@ describe("phone hero: the signal from Berlin", () => {
     expect(slot).toHaveAttribute("data-home-intro", "done");
   });
 
-  it("never plays under reduced motion, reduced data, Save-Data, a remembered pause or on desktop", () => {
+  it("never plays under reduced motion, reduced data, Save-Data, a remembered pause or on desktop", async () => {
+    vi.useFakeTimers();
     for (const next of [
       { reducedMotion: true },
       { reducedData: true },
@@ -325,6 +432,7 @@ describe("phone hero: the signal from Berlin", () => {
     ]) {
       installMatchMedia(next);
       const { container, unmount } = renderWithIntro();
+      await advance(300);
       expect(slotOf(container)).not.toHaveAttribute("data-home-intro");
       unmount();
     }
@@ -332,6 +440,7 @@ describe("phone hero: the signal from Berlin", () => {
     installMatchMedia({});
     window.localStorage.setItem("loehrning:home-globe-paused", "1");
     const paused = renderWithIntro();
+    await advance(300);
     expect(slotOf(paused.container)).not.toHaveAttribute("data-home-intro");
     paused.unmount();
     window.localStorage.clear();
@@ -343,25 +452,35 @@ describe("phone hero: the signal from Berlin", () => {
     });
     try {
       const saver = renderWithIntro();
+      await advance(300);
       expect(slotOf(saver.container)).not.toHaveAttribute("data-home-intro");
       saver.unmount();
     } finally {
+      vi.useRealTimers();
       if (connection) Object.defineProperty(navigator, "connection", connection);
       else delete (navigator as { connection?: unknown }).connection;
     }
   });
 
   it("settles at once when the visitor pauses or motion becomes reduced", async () => {
+    vi.useFakeTimers();
     installMatchMedia({});
     const { container } = renderWithIntro();
     const slot = slotOf(container);
-    fireEvent.click(await screen.findByRole("button", { name: "Globus anhalten" }));
+    // The control is there while the opening plays, before any live globe.
+    await advance(1000);
+    vi.useRealTimers();
+    expect(phoneMounts()).toHaveLength(0);
+    expect(slot).toHaveAttribute("data-home-intro", "play");
+    fireEvent.click(screen.getByRole("button", { name: "Globus anhalten" }));
     expect(slot).toHaveAttribute("data-home-intro", "done");
 
     window.localStorage.clear();
     const second = renderWithIntro();
     const secondSlot = slotOf(second.container);
-    expect(secondSlot).toHaveAttribute("data-home-intro", "play");
+    await waitFor(() =>
+      expect(secondSlot).toHaveAttribute("data-home-intro", "play"),
+    );
     await act(async () => {
       changeEnv({ reducedMotion: true });
     });

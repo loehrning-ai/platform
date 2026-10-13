@@ -84,6 +84,17 @@ describe("Ressourcen section (Workflow)", () => {
     });
   });
 
+  it("never prefetches the resource routes from the viewport", () => {
+    const { container } = render(<Workflow />);
+    const cards = Array.from(
+      container.querySelectorAll("[data-home-resource-card]"),
+    );
+    expect(cards.length).toBeGreaterThan(0);
+    for (const card of cards) {
+      expect(card).toHaveAttribute("data-prefetch", "false");
+    }
+  });
+
   it("stacks the account band on phones instead of squeezing the sentence", () => {
     render(<Workflow />);
     const band = screen.getByRole("link", { name: /Zum Konto/ }).parentElement;

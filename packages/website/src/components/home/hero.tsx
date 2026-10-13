@@ -402,6 +402,7 @@ function HeroSectionContent({
                 idPrefix="hp"
                 paused={phoneGlobeState.paused}
                 onLive={phoneGlobeState.onLive}
+                clockStart={phoneGlobeState.clockStart}
                 className="h-full w-full"
               />
             ) : null}

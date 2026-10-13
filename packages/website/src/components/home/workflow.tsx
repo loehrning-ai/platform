@@ -16,6 +16,7 @@ import {
   POINTER_DEPTH_LIGHT,
 } from "@/components/home/pointer-depth-classes";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { HOME_DEFERRED_SECTION } from "@/components/home/home-container";
 
 const RESOURCE_ICONS: readonly LucideIcon[] = [
   FileText,
@@ -66,7 +67,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   return (
     <section
       id="ressourcen"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 max-lg:py-6 md:py-20 lg:py-24"
+      className={`relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-brand-peach/20 py-12 max-lg:py-6 md:py-20 lg:py-24 ${HOME_DEFERRED_SECTION}`}
       data-testid="ressourcen-section"
     >
       <span
@@ -98,6 +99,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
               >
                 <Link
                   href={localizeHref(resource.href, locale)}
+                  prefetch={false}
                   className={`group relative grid h-full min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${RESOURCE_TONES[index] ?? RESOURCE_TONES[0]} ${POINTER_DEPTH_CARD} p-4 shadow-card outline-none transition-[border-color,box-shadow,transform,translate] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:translate-none motion-reduce:transition-none max-lg:min-h-[6.5rem] max-lg:rounded-2xl max-lg:p-3 md:p-5 lg:min-h-48 lg:rounded-[1.6rem] lg:p-6`}
                   data-home-resource-card
                   data-depth-card
