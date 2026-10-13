@@ -153,15 +153,6 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/website/public/course-covers/ai-native-cover-v2.webp",
-      "sizeBytes": 66776,
-      "sha256": "b7dad0c964f0dedc0aa4f62ed737d7d9d80380b11f1f03c43892b0dba028df68",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
       "path": "packages/website/public/course-covers/ai-native-cover-v3.webp",
       "sizeBytes": 70250,
       "sha256": "1aaee90eefed3c00feda568b4973434f74870cc9684dc35ecbf812a89d7ec2ac",
@@ -176,15 +167,6 @@
       "sha256": "1079397d762ba08cf1bd9c0711b0e98851521cf2ef90bb08f31e572305636fd7",
       "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork, recolored for this repository on 2026-09-28",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v2.webp",
-      "sizeBytes": 57516,
-      "sha256": "fdd8c36ea22b6ec80a44ae66e1e2d130566a742f1367c9591857413bc0521352",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
     },
@@ -207,15 +189,6 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
-      "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v2.webp",
-      "sizeBytes": 62804,
-      "sha256": "56fa80a887f73700853a390b154ee9cbca8827f4e4dbfbe879903afc175c5a78",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
       "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v3.webp",
       "sizeBytes": 77396,
       "sha256": "5b0b946261b63d424bd7c7511abade48d685f6db914ed28c2d6a25252a8fa376",
@@ -230,15 +203,6 @@
       "sha256": "51e221a2e17a43de6364bbb2d067f52724a8fbb4a9dc00a649d539c8a4a01adf",
       "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork, recolored for this repository on 2026-09-28",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v2.webp",
-      "sizeBytes": 78916,
-      "sha256": "619d83f8877f8bd1f5d4b70e0e8c7cdb12740ef12ed81a3457ba9ced2deeff40",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original loehrning.ai editorial course-cover atlas generated for this repository on 2026-08-08",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
     },
