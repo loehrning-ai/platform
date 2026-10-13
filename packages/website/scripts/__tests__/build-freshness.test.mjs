@@ -18,6 +18,7 @@ import { test } from "node:test";
 import { minimalVerificationEnvironment } from "../../../../scripts/environment-policy.mjs";
 import {
   BUILD_INPUT_SCOPES,
+  describeReceiptDifferences,
   buildReceiptEnvironment,
   CANONICAL_BUILD_EXECUTION_ENVIRONMENT,
   computeBuildState,
@@ -871,6 +872,89 @@ test("the composite build rejects an input changed and restored mid-build", () =
       /changed while Next was compiling/,
     );
     assert.equal(existsSync(receiptPath), false);
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
+test("a stale-receipt error names the differing fields without leaking values", () => {
+  const current = fixture();
+  try {
+    recordBuildReceipt({
+      ...current,
+      environment: { NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA" },
+    });
+    let message = "";
+    try {
+      verifyBuildReceipt({
+        ...current,
+        environment: { NEXT_PUBLIC_TURNSTILE_SITE_KEY: "2x00000000000000000000AB" },
+      });
+    } catch (error) {
+      message = error.message;
+    }
+    assert.match(message, /Stale production build/);
+    assert.match(message, /Differing receipt fields:/);
+    assert.match(message, /environmentDigest: [0-9a-f]{12} -> [0-9a-f]{12}/);
+    assert.doesNotMatch(message, /inputDigest:/);
+    assert.doesNotMatch(message, /buildId:/);
+    assert.doesNotMatch(message, /1x00000000000000000000AA|2x00000000000000000000AB/);
+  } finally {
+    rmSync(current.repositoryRoot, { recursive: true, force: true });
+  }
+});
+
+test("describeReceiptDifferences lists build id, counts, digests and toolchain keys", () => {
+  const recorded = {
+    buildId: "a",
+    fileCount: 1,
+    inputDigest: "0".repeat(64),
+    environmentDigest: "1".repeat(64),
+    toolchain: { nodeVersion: "24.1.0", bunRevision: "1.3.10" },
+  };
+  assert.deepEqual(describeReceiptDifferences(recorded, recorded), []);
+  assert.deepEqual(
+    describeReceiptDifferences(recorded, {
+      ...recorded,
+      buildId: "b",
+      fileCount: 2,
+      inputDigest: "2".repeat(64),
+      toolchain: { nodeVersion: "24.2.0", bunRevision: "1.3.10" },
+    }),
+    [
+      "buildId: a -> b",
+      "fileCount: 1 -> 2",
+      `inputDigest: ${"0".repeat(12)} -> ${"2".repeat(12)}`,
+      "toolchain.nodeVersion: 24.1.0 -> 24.2.0",
+    ],
+  );
+});
+
+test("the composite build keeps .next/cache so a restored CI cache is used", () => {
+  const current = fixture();
+  try {
+    const cacheFile = join(current.websiteRoot, ".next", "cache", "webpack", "entry.pack");
+    mkdirSync(join(current.websiteRoot, ".next", "cache", "webpack"), { recursive: true });
+    writeFileSync(cacheFile, "compiler cache\n");
+    runBuildAndRecord({
+      ...current,
+      environment: {},
+      command: process.execPath,
+      commandArguments: [
+        "-e",
+        [
+          `const fs = require("node:fs");`,
+          `if (fs.readFileSync(${JSON.stringify(cacheFile)}, "utf8") !== "compiler cache\\n") process.exit(21);`,
+          `fs.writeFileSync(${JSON.stringify(join(current.websiteRoot, ".next", "BUILD_ID"))}, "cached-build\\n");`,
+        ].join(""),
+      ],
+      stdio: "pipe",
+    });
+    assert.equal(readFileSync(cacheFile, "utf8"), "compiler cache\n");
+    assert.equal(
+      verifyBuildReceipt({ ...current, environment: {} }).buildId,
+      "cached-build",
+    );
   } finally {
     rmSync(current.repositoryRoot, { recursive: true, force: true });
   }

@@ -9,6 +9,14 @@ inputs:
     required: false
     default: ""
 
+  next-build-cache:
+    description: >-
+      "true" restores and saves packages/website/.next/cache (compiler caches
+      only). The build-freshness receipt excludes that directory and the build
+      script preserves it, so the receipt still covers every output file.
+    required: false
+    default: "false"
+
 runs:
   using: composite
   steps:
@@ -38,3 +46,14 @@ runs:
       if: inputs.playwright-browsers != ''
       shell: bash
       run: bun run --cwd packages/website playwright install --with-deps ${{ inputs.playwright-browsers }}
+
+    # Keyed on the lockfile plus the source, so a code change starts from the
+    # nearest lockfile-matching cache instead of a cold compile.
+    - name: Restore Next.js build cache
+      if: inputs.next-build-cache == 'true'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: packages/website/.next/cache
+        key: next-${{ runner.os }}-${{ hashFiles('bun.lock') }}-${{ hashFiles('packages/website/src/**', 'packages/website/next.config.ts') }}
+        restore-keys: |
+          next-${{ runner.os }}-${{ hashFiles('bun.lock') }}-
