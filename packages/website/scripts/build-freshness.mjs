@@ -879,8 +879,14 @@ function resetNextBuildDirectory(websiteRoot, nextDirectory) {
     // concurrently. Preserve that directory while removing every production
     // artifact: a route can move between prerendered and request-rendered output,
     // and a stale HTML/RSC file must never survive into a receipt-bearing build.
+    //
+    // `.next/cache` holds only content-keyed compiler caches (Webpack, SWC,
+    // image optimizer), never route output, and is already outside the artifact
+    // digest. CI restores it between runs, so wiping it here would make that
+    // cache useless. Only a real directory is kept; anything else is removed.
     for (const entry of readdirSync(nextDirectory, { withFileTypes: true })) {
       const entryPath = join(nextDirectory, entry.name);
+      if (entry.name === "cache" && entry.isDirectory()) continue;
       if (entry.name === "dev") {
         const developmentStat = lstatSync(entryPath);
         if (
@@ -1021,6 +1027,35 @@ function readReceipt(receiptPath, rootDirectory) {
   return receipt;
 }
 
+const SHORT_DIGEST_LENGTH = 12;
+
+function shortValue(value) {
+  const text = String(value);
+  return /^[0-9a-f]{64}$/.test(text) ? text.slice(0, SHORT_DIGEST_LENGTH) : text;
+}
+
+// Names every receipt field that no longer matches, as `field: recorded -> now`.
+// Digests are shortened and never contain secrets (private build credentials are
+// reduced to presence before they are hashed), so the list is safe in CI logs.
+export function describeReceiptDifferences(receipt, current) {
+  const differences = [];
+  const compare = (label, recorded, now) => {
+    if (recorded !== now) {
+      differences.push(`${label}: ${shortValue(recorded)} -> ${shortValue(now)}`);
+    }
+  };
+  compare("buildId", receipt.buildId, current.buildId);
+  compare("fileCount", receipt.fileCount, current.fileCount);
+  compare("inputDigest", receipt.inputDigest, current.inputDigest);
+  compare("environmentDigest", receipt.environmentDigest, current.environmentDigest);
+  const recorded = receipt.toolchain ?? {};
+  const now = current.toolchain ?? {};
+  for (const key of new Set([...Object.keys(recorded), ...Object.keys(now)])) {
+    compare(`toolchain.${key}`, recorded[key], now[key]);
+  }
+  return differences;
+}
+
 export function verifyBuildReceipt(options = {}) {
   const receiptOptions = withReceiptEnvironment(options);
   const websiteRoot = receiptOptions.websiteRoot ?? WEBSITE_ROOT;
@@ -1041,8 +1076,15 @@ export function verifyBuildReceipt(options = {}) {
     receipt.environmentDigest !== current.environmentDigest ||
     !sameToolchain(receipt.toolchain, currentToolchain)
   ) {
+    const differences = describeReceiptDifferences(receipt, {
+      buildId,
+      fileCount: current.fileCount,
+      inputDigest: current.inputDigest,
+      environmentDigest: current.environmentDigest,
+      toolchain: currentToolchain,
+    });
     throw new Error(
-      "Stale production build: source or build environment no longer matches .next. Run the non-:built command.",
+      `Stale production build: source or build environment no longer matches .next. Run the non-:built command.\nDiffering receipt fields:\n${differences.map((line) => `  - ${line}`).join("\n")}`,
     );
   }
   const artifact = computeArtifactState(receiptOptions);
@@ -1051,7 +1093,7 @@ export function verifyBuildReceipt(options = {}) {
     receipt.artifactDigest !== artifact.artifactDigest
   ) {
     throw new Error(
-      "Stale or modified production build artifact: .next no longer matches its receipt. Run the non-:built command.",
+      `Stale or modified production build artifact: .next no longer matches its receipt. Run the non-:built command.\nDiffering receipt fields:\n  - artifactFileCount: ${receipt.artifactFileCount} -> ${artifact.artifactFileCount}\n  - artifactDigest: ${shortValue(receipt.artifactDigest)} -> ${shortValue(artifact.artifactDigest)}`,
     );
   }
   return receipt;

@@ -5,6 +5,7 @@ import {
   ll3d,
   PHONE_VIEW,
 } from "@/components/home/hero-network-geometry";
+import { svgElement } from "@/components/home/static-svg";
 
 /**
  * The phone hero's opening: one signal from Berlin.
@@ -105,9 +106,47 @@ export function signalArcs(): readonly SignalArc[] {
   });
 }
 
-export function HeroSignalFrame() {
-  const arcs = signalArcs();
+/** The opening's inner markup: the ping, one group per arc, the origin. */
+export function signalMarkup(): string {
   const [ox, oy] = signalOrigin();
+  const ring = (className: string) =>
+    svgElement("circle", { class: className, cx: ox, cy: oy, r: 26 });
+  const arcs = signalArcs()
+    .map((arc, index) =>
+      svgElement(
+        "g",
+        { class: "sig-arc", style: `--sig-i:${index}` },
+        svgElement("path", { class: "sig-line", d: arc.d, pathLength: 1 }) +
+          svgElement("path", { class: "sig-comet", d: arc.d, pathLength: 1 }) +
+          svgElement("circle", {
+            class: "sig-land",
+            cx: arc.end[0],
+            cy: arc.end[1],
+            r: 10,
+          }) +
+          svgElement("circle", {
+            class: "sig-node",
+            cx: arc.end[0],
+            cy: arc.end[1],
+            r: 7,
+          }),
+      ),
+    )
+    .join("");
+  // The ping: two rings leave Berlin before the arcs do.
+  return (
+    ring("sig-ring") +
+    ring("sig-ring sig-ring-late") +
+    arcs +
+    svgElement("circle", { class: "sig-origin", cx: ox, cy: oy, r: 9 })
+  );
+}
+
+/**
+ * The opening's layer. Its content is static markup (static-svg.ts), so
+ * hydration never walks its arcs.
+ */
+export function HeroSignalFrame() {
   return (
     <svg
       data-home-signals=""
@@ -116,33 +155,7 @@ export function HeroSignalFrame() {
       fill="none"
       focusable="false"
       xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* The ping: two rings leave Berlin before the arcs do. */}
-      <circle className="sig-ring" cx={ox} cy={oy} r={26} />
-      <circle className="sig-ring sig-ring-late" cx={ox} cy={oy} r={26} />
-      {arcs.map((arc, index) => (
-        <g
-          key={arc.d}
-          className="sig-arc"
-          style={{ ["--sig-i" as string]: index }}
-        >
-          <path className="sig-line" d={arc.d} pathLength={1} />
-          <path className="sig-comet" d={arc.d} pathLength={1} />
-          <circle
-            className="sig-land"
-            cx={arc.end[0]}
-            cy={arc.end[1]}
-            r={10}
-          />
-          <circle
-            className="sig-node"
-            cx={arc.end[0]}
-            cy={arc.end[1]}
-            r={7}
-          />
-        </g>
-      ))}
-      <circle className="sig-origin" cx={ox} cy={oy} r={9} />
-    </svg>
+      dangerouslySetInnerHTML={{ __html: signalMarkup() }}
+    />
   );
 }

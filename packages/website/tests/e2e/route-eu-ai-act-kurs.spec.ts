@@ -74,8 +74,11 @@ test.describe("/eu-ai-act-kurs funnel (login-gated hub)", () => {
   }) => {
     await page.goto(LANDING, { waitUntil: "domcontentloaded" });
 
+    // Wait for the redirect to commit, not for the `load` event: the test only
+    // reads the URL, and WebKit can leave `load` pending on /login for the full
+    // test timeout even though the navigation already happened.
     await Promise.all([
-      page.waitForURL(/\/login/),
+      page.waitForURL(/\/login/, { waitUntil: "commit" }),
       page
         .getByRole("link", { name: START_CTA, exact: true })
         .first()

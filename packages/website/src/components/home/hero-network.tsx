@@ -48,6 +48,29 @@ export const HERO_GLOBE_START_DELAY_SECONDS = 2;
 export const HERO_GLOBE_COMPACT_FPS = 30;
 
 /**
+ * How long the tour rests on its first country (Berlin) before the first
+ * rotation: the start delay plus the first dwell.
+ */
+export const HERO_GLOBE_FIRST_REST_MS =
+  (HERO_GLOBE_START_DELAY_SECONDS +
+    HERO_GLOBE_STEP_SECONDS * HERO_GLOBE_DWELL_RATIO) *
+  1000;
+
+/**
+ * Where the tour's clock starts for a first frame drawn at `now`: at
+ * `clockStart` while the tour would still rest on Berlin from there, so a
+ * globe that takes over late keeps the timing it would have had; otherwise
+ * at the frame itself.
+ */
+export function tourClockStart(now: number, clockStart?: number): number {
+  return clockStart !== undefined &&
+    now >= clockStart &&
+    now - clockStart < HERO_GLOBE_FIRST_REST_MS
+    ? clockStart
+    : now;
+}
+
+/**
  * Whether the typing word may show yet. The phone opens with the signal from
  * Berlin alone: no word until the globe has made its first rotation away from
  * Berlin, so the first word appears on the country it has turned to. The
@@ -88,6 +111,12 @@ interface HeroNetworkProps {
   reducedMotion?: boolean;
   /** Called once the first live frame is on screen (the phone takeover). */
   onLive?: () => void;
+  /**
+   * The performance.now() the tour's clock counts from: the phone opening's
+   * start, so the globe that takes over after it keeps the opening's timing
+   * (tourClockStart).
+   */
+  clockStart?: number;
   /** Prefix for the SVG ids, unique per globe in the document. */
   idPrefix?: string;
   /** Optional outputs — receive the current pan target each frame. */
@@ -106,6 +135,7 @@ export function HeroNetwork({
   paused = false,
   reducedMotion = false,
   onLive,
+  clockStart,
   idPrefix = "hn",
   latOut,
   lonOut,
@@ -173,7 +203,7 @@ export function HeroNetwork({
       return;
     }
     lastFrameRef.current = now;
-    if (startRef.current === 0) startRef.current = now;
+    if (startRef.current === 0) startRef.current = tourClockStart(now, clockStart);
     const t = (now - startRef.current) / 1000;
 
     // The declarative first frame already establishes the sphere. The live
@@ -492,6 +522,7 @@ export function HeroNetwork({
     // hero scrolls off-screen / the tab is hidden — see the gating effect below).
     if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
   }, [
+    clockStart,
     compact,
     frameIntervalMs,
     frozen,

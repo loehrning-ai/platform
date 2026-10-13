@@ -13,10 +13,17 @@ updates:
     # updates only; security updates still arrive immediately.
     cooldown:
       default-days: 3
-    # Minor and patch updates arrive together in one pull request. Majors stay
-    # one pull request each, so every migration is reviewed on its own.
+    # Minor and patch updates arrive in two pull requests: the framework
+    # (next, react) on its own, so a Next or React bump is reviewed and rolled
+    # back without tooling noise, and everything else together. Majors stay one
+    # pull request each, so every migration is reviewed on its own. Groups are
+    # matched in order, so the framework group claims its packages first.
     groups:
-      bun-minor-and-patch:
+      bun-framework-minor-and-patch:
+        applies-to: version-updates
+        patterns: ["next", "react", "react-dom", "@types/react", "@types/react-dom", "eslint-config-next", "@next/*"]
+        update-types: [minor, patch]
+      bun-tooling-minor-and-patch:
         applies-to: version-updates
         patterns: ["*"]
         update-types: [minor, patch]
@@ -27,6 +34,18 @@ updates:
       # The rule also holds back a security update that would need the major;
       # `bun audit` in CI would still report such an advisory.
       - dependency-name: "@vitejs/plugin-react"
+        update-types: ["version-update:semver-major"]
+      # Sentry 11 removes or renames options this app uses (PR #107 fails the
+      # build). Vitest 5 and its coverage provider must move in one pull
+      # request and break the unit tests (PRs #105 and #106 each fail alone).
+      # Each needs a dedicated migration pull request; remove these rules with
+      # it. Like the rule above, they also hold back a security update that
+      # would need the major; `bun audit` in CI would still report it.
+      - dependency-name: "@sentry/nextjs"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@vitest/coverage-v8"
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions

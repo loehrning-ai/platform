@@ -11,6 +11,7 @@ import {
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { HOME_DEFERRED_SECTION } from "@/components/home/home-container";
 
 const SPINE_HOME_COURSES = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) !== "deeper",
@@ -69,7 +70,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
     <section
       id="kurse"
       aria-labelledby="kurse-heading"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24"
+      className={`relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24 ${HOME_DEFERRED_SECTION}`}
       data-testid="kurse-section"
     >
       <span
@@ -111,8 +112,13 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                 key={course.slug}
                 className={wideCard ? "lg:col-span-7" : "lg:col-span-5"}
               >
+                {/* No viewport prefetch, like every other homepage link: on a
+                    phone these cards sit just below the fold, and fetching
+                    and decoding three course routes would land in the
+                    page's hydration window. */}
                 <Link
                   href={localizeHref(course.href, locale)}
+                  prefetch={false}
                   className={`group relative grid h-full min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 max-sm:rounded-2xl ${tone} ${POINTER_DEPTH_CARD} shadow-card outline-none transition-[border-color,box-shadow,transform,translate] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:translate-none motion-reduce:transition-none sm:grid-cols-1 sm:grid-rows-[auto_1fr] sm:rounded-[1.75rem]`}
                   data-home-course-card
                   data-depth-card
@@ -167,6 +173,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
           </p>
           <Link
             href={localizeHref("/kurse", locale)}
+            prefetch={false}
             className="inline-flex min-h-11 shrink-0 items-center gap-2 justify-self-start border-b border-kupfer-dark font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-kupfer-dark outline-none transition-[border-color,color] duration-150 hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:justify-self-end"
           >
             {copy.viewAllCourses}

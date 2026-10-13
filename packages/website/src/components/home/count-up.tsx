@@ -13,8 +13,9 @@ export const COUNT_UP_DURATION_MS = 450;
  * restart from zero and tick up, so a jump past it (End key, anchor link, a
  * full-page capture) never leaves a stuck zero. Reduced motion, a
  * missing IntersectionObserver or a count already on screen keep the final
- * value. Assistive tech reads the full phrase once from a visually hidden copy;
- * the ticking digits are hidden from it.
+ * value. Where the count sits comes from the observer's first report, never
+ * from a layout read during hydration. Assistive tech reads the full phrase
+ * once from a visually hidden copy; the ticking digits are hidden from it.
  */
 export function CountUp({
   value,
@@ -37,12 +38,11 @@ export function CountUp({
     if (!host || !(digits instanceof Text)) return;
     if (typeof IntersectionObserver === "undefined") return;
     if (window.matchMedia?.(REDUCED_MOTION_QUERY).matches) return;
-    // On screen, scrolled past, or not laid out at this width: keep the
-    // final count as rendered.
-    const rect = host.getBoundingClientRect();
-    if (rect.height === 0 || rect.top < window.innerHeight) return;
 
     let frame = 0;
+    // Unknown until the observer's first report, which says where the count
+    // sits without forcing a layout while the page hydrates.
+    let belowFold: boolean | null = null;
     const finish = () => {
       cancelAnimationFrame(frame);
       digits.nodeValue = token;
@@ -50,7 +50,18 @@ export function CountUp({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (!entries.some((entry) => entry.isIntersecting)) return;
+        const entry = entries[entries.length - 1];
+        if (!entry) return;
+        if (belowFold === null) {
+          // On screen, scrolled past, or not laid out at this width: keep
+          // the final count as rendered.
+          const { top, height } = entry.boundingClientRect;
+          const viewport = entry.rootBounds?.height ?? window.innerHeight;
+          belowFold = !entry.isIntersecting && height > 0 && top >= viewport;
+          if (!belowFold) observer.disconnect();
+          return;
+        }
+        if (!entry.isIntersecting) return;
         observer.disconnect();
         digits.nodeValue = "0";
         const start = performance.now();
