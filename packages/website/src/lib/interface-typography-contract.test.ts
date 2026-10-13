@@ -6,7 +6,6 @@ const SRC = join(__dirname, "..");
 const BOUNDED_SVG_ANNOTATIONS = new Set([
   "components/data-infrastructure/widgets/backfill-dag.tsx",
   "components/data-infrastructure/widgets/cdc-flow.tsx",
-  "components/ki-readiness/radar-chart.tsx",
 ]);
 const SUB_TWELVE_SIZE =
   /\btext-\[(?:[0-9](?:\.\d+)?|1[01](?:\.\d+)?)px\]|\btext-\[0\.(?:[0-6]\d*|7[0-4]?)rem\]/;

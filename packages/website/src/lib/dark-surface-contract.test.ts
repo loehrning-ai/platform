@@ -32,7 +32,6 @@ const FORMERLY_DARK = [
   "components/demos/rag-vertragsassistent-demo.tsx",
   "components/demos/rag-vertragsassistent-first-frame.tsx",
   "components/ai-native/primitives.tsx",
-  "components/ai-native/debug-panel.tsx",
   "components/ai-native/demos/_shared.tsx",
   "components/ai-native/demos/agent-demo.tsx",
   "components/ai-native/demos/excel-demo.tsx",

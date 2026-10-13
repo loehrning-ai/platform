@@ -18,7 +18,6 @@ const SURFACES = [
   "app/buecher/buecher-content.tsx",
   "components/ui/brand-button.tsx",
   "components/ui/card.tsx",
-  "components/ui/section-header.tsx",
 ] as const;
 
 function source(relativePath: (typeof SURFACES)[number]): string {
