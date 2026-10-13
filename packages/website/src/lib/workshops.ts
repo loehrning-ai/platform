@@ -16,6 +16,7 @@
  */
 
 import type { Locale } from "./i18n/locale";
+import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
@@ -237,6 +238,12 @@ export interface Workshop {
   readonly caseStudy: WorkshopCaseStudy;
   readonly realWorldCase?: WorkshopRealWorldCase;
   readonly materials: readonly WorkshopMaterial[];
+  /**
+   * Optional kit block. A workshop with one gets the kit page at
+   * /workshops/<slug>/kit, and its kit card links there instead of to the zip.
+   * See src/lib/workshop-kit.ts.
+   */
+  readonly kit?: WorkshopKit;
 }
 
 const FORECAST_BASE_PATH = "/workshops/ki-prognosen-einschaetzen";
@@ -320,14 +327,13 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "Mit der Prüfkarte schreibst du in fünf Sätzen die Regel für eine eigene Prognose.",
+          "Du schreibst in fünf Sätzen die Regel für eine eigene Prognose.",
       },
     ],
     agendaSource: "plan",
     minutesSelfStudy: 90,
     needs: [
       "Ein Browser, für die Labore am besten am Desktop",
-      "Für die optionale Übung ein Tabellenprogramm wie Excel",
     ],
     notNeeded: [
       "Programmierkenntnisse",
@@ -376,17 +382,10 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       },
       {
         n: "05",
-        title: "Zwei Prognosen selbst rechnen",
-        description:
-          "Optional, 15 bis 45 Minuten: Du prognostizierst die letzten 14 von 104 Wochen naiv und geglättet und vergleichst mittleren Fehler und systematische Abweichung.",
-        tool: "Übung · optional",
-      },
-      {
-        n: "06",
         title: "Auf eine Prognose aus deiner Arbeit übertragen",
         description:
-          "Mit der A4-Prüfkarte schreibst du in fünf Sätzen die Regel für einen eigenen Fall.",
-        tool: "Prüfkarte",
+          "Du schreibst in fünf Sätzen die Regel für einen eigenen Fall.",
+        tool: "Dein Fall",
       },
     ],
     caseStudy: {
@@ -414,17 +413,6 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Übersicht",
-        href: `${FORECAST_BASE_PATH}/hub.html`,
-        kind: "html",
-        language: "en",
-        role: "hub",
-        phase: "before",
-        optional: true,
-        description:
-          "Die Startseite der Materialien mit Links zu allen Teilen; diese Seite ersetzt sie.",
-      },
-      {
         label: "Labore · 3 Simulationen",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
         kind: "html",
@@ -446,41 +434,6 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         minutes: 30,
         description:
           "Du verteilst 1.050 Stück und legst die täglichen Prüfungen fest.",
-      },
-      {
-        label: "Prüfkarte · 1 Seite",
-        href: `${FORECAST_BASE_PATH}/field-card.html`,
-        kind: "html",
-        language: "en",
-        role: "card",
-        phase: "after",
-        description:
-          "Eine A4-Seite zum Ausdrucken: Newsvendor-Regel, Sicherheitsbestand und fünf Prüfungen, bevor du einer Prognose traust.",
-        short: "A4-Seite zum Ausdrucken: Newsvendor-Regel und Sicherheitsbestand.",
-      },
-      {
-        label: "Übungsaufgabe",
-        href: `${FORECAST_BASE_PATH}/homework.html`,
-        kind: "html",
-        language: "en",
-        role: "exercise",
-        phase: "after",
-        minutes: 45,
-        optional: true,
-        description:
-          "Du rechnest zwei Prognosen und schreibst einen Satz zu den vier Zahlen. Mit Zusatzaufgabe dauert es 45 statt 15 Minuten.",
-      },
-      {
-        label: "Datensatz, 104 Wochen · .csv",
-        href: `${FORECAST_BASE_PATH}/data/demand-weekly.csv`,
-        kind: "csv",
-        language: "en",
-        role: "data",
-        phase: "after",
-        optional: true,
-        sizeLabel: "1,6 KB",
-        description:
-          "Die wöchentliche Nachfrage für die Übung (demand-weekly.csv). Öffnet in jedem Tabellenprogramm.",
       },
     ],
   },
@@ -796,14 +749,13 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "With the field card you write the rule for a forecast of your own in five sentences.",
+          "You write the rule for a forecast of your own in five sentences.",
       },
     ],
     agendaSource: "plan",
     minutesSelfStudy: 90,
     needs: [
       "A browser, ideally on a desktop for the labs",
-      "For the optional exercise, a spreadsheet such as Excel",
     ],
     notNeeded: [
       "Programming skills",
@@ -852,17 +804,10 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       },
       {
         n: "05",
-        title: "Calculate two forecasts yourself",
-        description:
-          "Optional, 15 to 45 minutes: you forecast the last 14 of 104 weeks naively and with smoothing and compare mean error and systematic bias.",
-        tool: "Exercise · optional",
-      },
-      {
-        n: "06",
         title: "Apply it to a forecast from your work",
         description:
-          "With the A4 field card you write the rule for a case of your own in five sentences.",
-        tool: "Field card",
+          "You write the rule for a case of your own in five sentences.",
+        tool: "Your case",
       },
     ],
     caseStudy: {
@@ -890,17 +835,6 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Overview",
-        href: `${FORECAST_BASE_PATH}/hub.html`,
-        kind: "html",
-        language: "en",
-        role: "hub",
-        phase: "before",
-        optional: true,
-        description:
-          "The start page of the materials with links to every part; this page replaces it.",
-      },
-      {
         label: "Labs · 3 simulations",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
         kind: "html",
@@ -922,41 +856,6 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         minutes: 30,
         description:
           "You allocate 1,050 units and set the daily checks.",
-      },
-      {
-        label: "Field card · 1 page",
-        href: `${FORECAST_BASE_PATH}/field-card.html`,
-        kind: "html",
-        language: "en",
-        role: "card",
-        phase: "after",
-        description:
-          "One printable A4 page: newsvendor rule, safety stock and five checks before you trust a forecast.",
-        short: "One printable A4 page with the newsvendor rule and safety stock.",
-      },
-      {
-        label: "Take-home",
-        href: `${FORECAST_BASE_PATH}/homework.html`,
-        kind: "html",
-        language: "en",
-        role: "exercise",
-        phase: "after",
-        minutes: 45,
-        optional: true,
-        description:
-          "You calculate two forecasts and write one sentence on the four numbers. The extra task takes it from 15 to 45 minutes.",
-      },
-      {
-        label: "Dataset, 104 weeks · .csv",
-        href: `${FORECAST_BASE_PATH}/data/demand-weekly.csv`,
-        kind: "csv",
-        language: "en",
-        role: "data",
-        phase: "after",
-        optional: true,
-        sizeLabel: "1.6 KB",
-        description:
-          "The weekly demand for the exercise (demand-weekly.csv). Opens in any spreadsheet.",
       },
     ],
   },
@@ -1217,6 +1116,24 @@ export function getWorkshopBySlug(
 
 export function getWorkshopSlugs(): readonly string[] {
   return WORKSHOPS.map((workshop) => workshop.slug);
+}
+
+/** Slugs of the workshops that have a kit page. */
+export function getWorkshopKitSlugs(): readonly string[] {
+  return WORKSHOPS.filter((workshop) => workshop.kit).map(
+    (workshop) => workshop.slug,
+  );
+}
+
+/** The kit material (role "kit", a download) of a workshop that has a kit block. */
+export function workshopKitMaterial(
+  workshop: Workshop,
+): WorkshopMaterial | undefined {
+  return workshop.kit
+    ? workshop.materials.find(
+        (material) => material.role === "kit" && material.kind === "zip",
+      )
+    : undefined;
 }
 
 /** The material a learner should open first. Every workshop marks exactly one. */

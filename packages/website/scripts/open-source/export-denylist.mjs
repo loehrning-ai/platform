@@ -101,6 +101,7 @@ export const PRIVATE_PATH_RULES = [
         "agent.md",
         "integration.md",
         "notes.md",
+        ["stat", "us.md"].join(""),
         ["to", "do.md"].join(""),
         ["todo", "s.md"].join(""),
       ].includes(basename.toLowerCase()),

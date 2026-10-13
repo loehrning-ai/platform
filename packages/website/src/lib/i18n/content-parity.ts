@@ -56,6 +56,8 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/workshops",
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
+  // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
+  "/workshops/esg-berichte-mit-ki/kit",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/workshops/ki-prognosen-einschaetzen",
 ]);

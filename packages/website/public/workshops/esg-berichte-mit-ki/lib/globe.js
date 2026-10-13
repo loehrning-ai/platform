@@ -3,8 +3,8 @@
  * <canvas data-globe data-lat="38" data-speed="9" data-arc="germany"></canvas>
  *
  * Orthographic projection on a 2D canvas, no dependencies. Land outlines come from
- * window.ESG_GEO (lib/geo.js). Moldova is filled in Mennige and pulses while it faces the
- * room. The globe only animates while its slide is active, and holds still on Moldova under
+ * window.ESG_GEO (lib/geo.js). North Macedonia is filled in Mennige and pulses while it faces the
+ * room. The globe only animates while its slide is active, and holds still on North Macedonia under
  * reduced motion.
  *
  * Attributes (all optional):
@@ -12,26 +12,26 @@
  *   data-cx/cy   globe centre as a share of the canvas width / height (0.5 / 0.5)
  *   data-r       radius as a share of the shorter canvas side (0.47)
  *   data-boost   extra spin in degrees per second when the slide becomes active, decaying (0)
- *   data-arc     "germany" or "eu": draw that arc from Moldova by itself on first activation
- *   data-home    start view in degrees east of Moldova (70); a larger value keeps Moldova in view longer
+ *   data-arc     "germany" or "eu": draw that arc from North Macedonia by itself on first activation
+ *   data-home    start view in degrees east of North Macedonia (70); a larger value keeps North Macedonia in view longer
  *
  * Script control (used by slide scripts): const g = ESGGlobe.get(canvas);
  *   g.settle({lon, lat, zoom, cx, cy, ms, short})  ease to a stop facing lon/lat (short: shortest way); zoom scales the radius,
  *                                    cx/cy move the centre (shares of the canvas)
- *   g.arc(to, {ms, delay, lift, labels: [[place, text], ...]})  draw an arc from Moldova
+ *   g.arc(to, {ms, delay, lift, labels: [[place, text], ...]})  draw an arc from North Macedonia
  *   g.still({lon, lat, zoom, cx, cy})  jump to a still view (no motion)
  *   g.reset()                       spin again from the start, no arcs
- * Places: 'moldova', 'chisinau', 'germany', 'eu' (Brussels), 'sweden' (Gothenburg) or [lon, lat].
+ * Places: 'macedonia', 'skopje', 'germany', 'eu' (Brussels), 'sweden' (Gothenburg) or [lon, lat].
  */
 (() => {
   const GEO = window.ESG_GEO;
   if (!GEO) return;
   const DEG = Math.PI / 180;
   const PLACES = {
-    moldova: [28.4, 47.2], chisinau: [28.86, 47.01], germany: [10.4, 51.2],
+    macedonia: [21.75, 41.6], skopje: [21.43, 42.0], germany: [10.4, 51.2],
     eu: [4.35, 50.85], brussels: [4.35, 50.85], sweden: [11.97, 57.71],
   };
-  const MOLDOVA = PLACES.moldova;
+  const MACEDONIA = PLACES.macedonia;
   const place = (p) => (Array.isArray(p) ? p : PLACES[p]);
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const css = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
@@ -109,8 +109,8 @@
     const card = css('--card', '#E5E4E2');
     const paper = css('--paper', '#F3F0E9');
 
-    const homeOff = parseFloat(ds.home || '70'); // start this many degrees east of Moldova (spins towards it)
-    const home = () => ({ lon: MOLDOVA[0] + homeOff, lat: lat00, zoom: 1, cx: fcx0, cy: fcy0 });
+    const homeOff = parseFloat(ds.home || '70'); // start this many degrees east of North Macedonia (spins towards it)
+    const home = () => ({ lon: MACEDONIA[0] + homeOff, lat: lat00, zoom: 1, cx: fcx0, cy: fcy0 });
     const view = home();
     let mode = 'spin';            // spin | settle | still
     let move = null;              // settle animation
@@ -159,19 +159,19 @@
         ctx.lineWidth = 1.6; ctx.strokeStyle = ink; ctx.globalAlpha = 0.55; ctx.stroke(); ctx.globalAlpha = 1;
       }
 
-      const facing = project(MOLDOVA)[2];
+      const facing = project(MACEDONIA)[2];
       if (highlightGermany) {
         for (const ring of GEO.germany) {
           if (visibleShare(ring, project) < 0.999) continue;
           trace(ctx, ring, project, true); ctx.strokeStyle = accent; ctx.lineWidth = 2.4; ctx.globalAlpha = 0.7; ctx.stroke(); ctx.globalAlpha = 1;
         }
       }
-      for (const ring of GEO.moldova) {
+      for (const ring of GEO.macedonia) {
         if (visibleShare(ring, project) < 0.999) continue;
         trace(ctx, ring, project, true); ctx.fillStyle = accent; ctx.fill();
       }
       if (facing > 0.2) {
-        const [mx, my] = project(MOLDOVA);
+        const [mx, my] = project(MACEDONIA);
         const phase = ((t / 1600) % 1);
         ctx.beginPath(); ctx.arc(mx, my, 10 + phase * 46, 0, Math.PI * 2);
         ctx.strokeStyle = accent; ctx.lineWidth = 3; ctx.globalAlpha = (1 - phase) * Math.min(1, facing * 2); ctx.stroke(); ctx.globalAlpha = 1;
@@ -233,7 +233,7 @@
         boostT0 = t;
         if (autoArc && !autoArcDone) {
           autoArcDone = true;
-          arcs = [{ path: greatCircle(MOLDOVA, place(autoArc), 48), t0: t, ms: 1400, lift: 0.12, labels: [] }];
+          arcs = [{ path: greatCircle(MACEDONIA, place(autoArc), 48), t0: t, ms: 1400, lift: 0.12, labels: [] }];
         }
       }
       wasActive = active;
@@ -243,7 +243,7 @@
     }
 
     const api = {
-      settle({ lon = MOLDOVA[0], lat = 44, zoom = 1, cx = fcx0, cy = fcy0, ms = 1800, short = false } = {}) {
+      settle({ lon = MACEDONIA[0], lat = 44, zoom = 1, cx = fcx0, cy = fcy0, ms = 1800, short = false } = {}) {
         if (reduce) { api.still({ lon, lat, zoom, cx, cy }); return; }
         // default: travel forward (the way it spins) at least 140 degrees, so the stop reads as a move;
         // short: take the shortest way round, so the stop lands quickly
@@ -254,26 +254,26 @@
           lat: view.lat, toLat: lat, from: { zoom: view.zoom, cx: view.cx, cy: view.cy }, to: { zoom, cx, cy } };
         mode = 'settle';
       },
-      still({ lon = MOLDOVA[0], lat = 44, zoom = 1, cx = fcx0, cy = fcy0 } = {}) {
+      still({ lon = MACEDONIA[0], lat = 44, zoom = 1, cx = fcx0, cy = fcy0 } = {}) {
         move = null; mode = 'still';
         Object.assign(view, { lon, lat, zoom, cx, cy });
       },
       arc(to, { ms = 1300, delay = 0, lift = 0.12, labels = [] } = {}) {
-        arcs.push({ path: greatCircle(MOLDOVA, place(to), 64), t0: performance.now() + delay, ms: reduce ? 0 : ms, lift, labels });
+        arcs.push({ path: greatCircle(MACEDONIA, place(to), 64), t0: performance.now() + delay, ms: reduce ? 0 : ms, lift, labels });
       },
       clearArcs() { arcs = []; },
       reset() {
         arcs = []; move = null; mode = 'spin';
         Object.assign(view, home());
         boostT0 = performance.now();
-        if (reduce) api.still({ lon: MOLDOVA[0] - 8, lat: lat00 });
+        if (reduce) api.still({ lon: MACEDONIA[0] - 8, lat: lat00 });
       },
     };
     controllers.set(canvas, api);
 
     size();
     window.addEventListener('resize', size);
-    if (reduce) { api.still({ lon: MOLDOVA[0] - 8, lat: lat00 }); }
+    if (reduce) { api.still({ lon: MACEDONIA[0] - 8, lat: lat00 }); }
     requestAnimationFrame(frame);
   }
 

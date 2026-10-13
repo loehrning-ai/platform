@@ -61,6 +61,9 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/demos/:slug",
   "/workshops",
   "/workshops/:slug",
+  // The kit page of a workshop with a kit block (a page, not a bundle file); it
+  // precedes the /workshops/:slug/:path* bundle pattern below.
+  "/workshops/:slug/kit",
   "/open-source",
   "/open-source/lizenzrichtlinie",
   "/open-source/:kind/:slug",

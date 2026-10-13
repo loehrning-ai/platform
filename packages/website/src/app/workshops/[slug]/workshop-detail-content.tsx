@@ -7,6 +7,8 @@ import type {
   WorkshopPhase,
 } from "@/lib/workshops";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { workshopKitPath } from "@/lib/workshop-kit";
+import { workshopKitMaterial } from "@/lib/workshops";
 import {
   ArrowGlyph,
   BUTTON_CLASSES,
@@ -211,18 +213,24 @@ function SquareList({
   );
 }
 
+const MATERIAL_LINK_CLASS =
+  "-mt-2.5 inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 [-webkit-tap-highlight-color:transparent] after:absolute after:inset-0 after:content-[''] group-hover:decoration-foreground max-sm:absolute max-sm:inset-0 max-sm:mt-0 max-sm:items-start max-sm:justify-end max-sm:pt-[0.9375rem] sm:min-w-0 sm:justify-start sm:self-start";
+
 function MaterialRow({
   workshopSlug,
   material,
   copy,
   locale,
+  pagePath,
 }: {
   readonly workshopSlug: string;
   readonly material: WorkshopMaterial;
   readonly copy: DetailCopy;
   readonly locale: Locale;
+  /** Set when the card opens a page about the material (the kit page) instead of the file itself. */
+  readonly pagePath?: string;
 }) {
-  const download = material.kind !== "html";
+  const download = material.kind !== "html" && !pagePath;
   const shortDescription = phoneDescription(
     material.description,
     material.short,
@@ -235,6 +243,23 @@ function MaterialRow({
       : null,
     material.optional ? copy.optional : null,
   ].filter((note): note is string => Boolean(note));
+
+  const actionContent = (
+    <>
+      <span className="max-sm:sr-only">
+        {pagePath
+          ? copy.kitPageAction
+          : download
+            ? copy.downloadAction
+            : copy.openAction}
+      </span>
+      <span className="sr-only">{`: ${material.label}, `}</span>
+      <span className="sr-only">
+        {`${copy.language}: ${materialLanguageLabel(locale, material.language)}`}
+      </span>
+      <ArrowGlyph direction={download ? "down" : "right"} />
+    </>
+  );
 
   return (
     <li
@@ -302,20 +327,21 @@ function MaterialRow({
         >
           <Chip className="tabular-nums">{materialMeta(material)}</Chip>
         </div>
-        <WorkshopMaterialLink
-          workshopSlug={workshopSlug}
-          material={material}
-          className="-mt-2.5 inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 [-webkit-tap-highlight-color:transparent] after:absolute after:inset-0 after:content-[''] group-hover:decoration-foreground max-sm:absolute max-sm:inset-0 max-sm:mt-0 max-sm:items-start max-sm:justify-end max-sm:pt-[0.9375rem] sm:min-w-0 sm:justify-start sm:self-start"
-        >
-          <span className="max-sm:sr-only">
-            {download ? copy.downloadAction : copy.openAction}
-          </span>
-          <span className="sr-only">{`: ${material.label}, `}</span>
-          <span className="sr-only">
-            {`${copy.language}: ${materialLanguageLabel(locale, material.language)}`}
-          </span>
-          <ArrowGlyph direction={download ? "down" : "right"} />
-        </WorkshopMaterialLink>
+        {pagePath ? (
+          // The kit card of a workshop with a kit page opens that page; the
+          // download (and its count) happens there.
+          <Link href={pagePath} className={MATERIAL_LINK_CLASS}>
+            {actionContent}
+          </Link>
+        ) : (
+          <WorkshopMaterialLink
+            workshopSlug={workshopSlug}
+            material={material}
+            className={MATERIAL_LINK_CLASS}
+          >
+            {actionContent}
+          </WorkshopMaterialLink>
+        )}
       </div>
     </li>
   );
@@ -333,10 +359,20 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   const primary =
     workshop.materials.find((material) => material.primary) ??
     workshop.materials[0];
-  const secondary = workshop.materials.find(
-    (material) =>
-      material !== primary && SECONDARY_ROLES.includes(material.role),
-  );
+  // A workshop with a kit block sends its kit card (and the second cover
+  // button) to the kit page instead of to the zip.
+  const kitMaterial = workshopKitMaterial(workshop);
+  const kitPath = kitMaterial
+    ? localizeHref(workshopKitPath(workshop.slug), locale)
+    : undefined;
+  const kitPagePath = (material: WorkshopMaterial) =>
+    material === kitMaterial ? kitPath : undefined;
+  const secondary = kitMaterial
+    ? undefined
+    : workshop.materials.find(
+        (material) =>
+          material !== primary && SECONDARY_ROLES.includes(material.role),
+      );
   const title = splitTitle(workshop.title);
   const heading = titleHighlight(title.head);
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
@@ -550,6 +586,14 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 direction={secondary.kind === "html" ? "right" : "down"}
               />
             </WorkshopMaterialLink>
+          ) : kitPath && kitMaterial !== primary ? (
+            <Link
+              href={kitPath}
+              className={cx(BUTTON_CLASSES.scene.secondary, PHONE_BUTTON)}
+            >
+              <span>{copy.kitPageAction}</span>
+              <ArrowGlyph direction="right" />
+            </Link>
           ) : (
             <a
               href={`#${MATERIAL_ANCHOR}`}
@@ -655,6 +699,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 material={material}
                 copy={copy}
                 locale={locale}
+                pagePath={kitPagePath(material)}
               />
             ))}
           </ul>
@@ -671,6 +716,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                     material={material}
                     copy={copy}
                     locale={locale}
+                    pagePath={kitPagePath(material)}
                   />
                 ))}
               </ul>

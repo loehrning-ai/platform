@@ -122,10 +122,10 @@ describe("Lighthouse route contract", () => {
     });
     expect(summary.configuredRoutes).toBeGreaterThan(25);
     expect(summary.staticRoutes).toBeGreaterThan(20);
-    // 6 dynamic public-indexable patterns: /blog/:slug, /buecher/:slug,
-    // /demos/:slug, /workshops/:slug,
+    // 7 dynamic public-indexable patterns: /blog/:slug, /buecher/:slug,
+    // /demos/:slug, /workshops/:slug, /workshops/:slug/kit,
     // /open-source/:kind/:slug, /buecher/:slug/:chapter.
-    expect(summary.dynamicPatterns).toBe(6);
+    expect(summary.dynamicPatterns).toBe(7);
   });
 
   it("fails when a static public page is omitted", async () => {

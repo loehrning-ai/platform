@@ -1222,3 +1222,44 @@
     backdrop-filter: saturate(1.4) blur(16px);
   }
 }
+
+/* ── Workshop kit page: the explainer's motion ───────────────────────────
+   Pure CSS, run when a step's panel mounts (the stepper keys the panel on the
+   selected step). Finite reveals of 250 to 450 ms, no loops. Inside
+   prefers-reduced-motion: no-preference, so under `reduce` everything is
+   simply there. */
+.kit-hatch {
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M-2 2l4-4M0 8l8-8M6 10l4-4' stroke='%23B73A15' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kit-rise {
+    animation: kit-rise 380ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  .kit-grow {
+    transform-origin: left center;
+    animation: kit-grow 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(120ms + var(--i, 0) * 45ms);
+  }
+}
+@keyframes kit-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes kit-grow {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
