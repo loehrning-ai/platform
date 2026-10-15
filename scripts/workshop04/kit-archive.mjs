@@ -1,11 +1,10 @@
 /**
- * Deterministic, stored ZIP for the Workshop 04 participant kit (crvena-zemja-esg-kit.zip).
+ * Deterministic stored-ZIP helper for Workshop 04 fixtures and source folders.
  *
- * Same approach as scripts/course03/kit-archive.mjs: stored entries (no compression, so the
- * bytes never depend on the zlib build), UTF-8 names, 0644 file modes, no extra fields, no
- * platform metadata and one fixed modification time for every entry. Every archive is checked
- * with the repository's ZIP inspection rules before it is returned: text entries, plus PNG
- * photos (the invented invoice) that pass the inspector's chunk-by-chunk PNG check.
+ * The site publication preserves the supplied compressed participant ZIP byte for byte. This
+ * helper remains for deterministic fixtures: stored entries, UTF-8 names, 0644 file modes, no
+ * extra fields, no platform metadata and one fixed modification time. Every archive is inspected
+ * before return, including PNG photos with chunk-by-chunk validation.
  */
 import path from "node:path";
 import { crc32 } from "../course03/kit-archive.mjs";
@@ -15,11 +14,11 @@ export const KIT_NAME = "crvena-zemja-esg-kit";
 export const KIT_PREFIX = `${KIT_NAME}/`;
 export const ZIP_NAME = `${KIT_NAME}.zip`;
 /** The kit's release date, written as every entry's modification time. */
-export const KIT_RELEASE_DATE = "2026-10-12";
+export const KIT_RELEASE_DATE = "2026-10-15";
 
 /** Plain text and one kind of image go into the kit. */
 const KIT_EXTENSIONS = new Set([".csv", ".md", ".txt", ".png"]);
-const INSPECTION = { label: ZIP_NAME, allowPngEntries: true };
+const INSPECTION = { label: ZIP_NAME, allowPngEntries: true, allowSafeUnixMetadata: true };
 
 /** DOS time and date fields for an ISO date (YYYY-MM-DD) at 00:00:00. */
 export function dosDateTime(isoDate) {

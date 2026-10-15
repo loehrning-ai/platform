@@ -130,6 +130,10 @@ const FAIL_CLOSED_PLATFORM_ARCHIVE_EXTENSIONS = new Set(["7z", "gz", "tar"]);
 const ZIP_ARCHIVES_WITH_PNG_ENTRIES = new Set([
   "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
 ]);
+/** Workshop 04's supplied compressed kit carries standard timestamp and Unix-id metadata. */
+const ZIP_ARCHIVES_WITH_SAFE_UNIX_METADATA = new Set([
+  "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+]);
 const FAIL_CLOSED_PLATFORM_CONTAINER_EXTENSIONS = new Set([
   "docx",
   "pdf",
@@ -1672,6 +1676,7 @@ async function walk(dir, { candidateOnly = false } = {}) {
             const zipEntries = inspectZipArchive(openedFile.bytes, {
               label: rel,
               allowPngEntries: ZIP_ARCHIVES_WITH_PNG_ENTRIES.has(rel),
+              allowSafeUnixMetadata: ZIP_ARCHIVES_WITH_SAFE_UNIX_METADATA.has(rel),
             });
             for (const zipEntry of zipEntries) {
               if (zipEntry.kind !== "file" || zipEntry.text === null) continue;

@@ -26,6 +26,10 @@ const actualKitPath = join(
   repositoryRoot,
   "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
 );
+const workshopKitPath = join(
+  repositoryRoot,
+  "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+);
 const FIXED_DOS_TIME = 0;
 const FIXED_DOS_DATE = 0x5821;
 
@@ -564,4 +568,18 @@ test("PNG entries pass only when the caller opts in and every chunk validates", 
     () => inspectZipArchive(archive(Buffer.from("not a png at all, just text padding to length 64........")), opted),
     /no PNG signature/,
   );
+});
+
+test("Workshop 04 permits only the reviewed timestamp and Unix-id ZIP metadata", async () => {
+  const archive = await readFile(workshopKitPath);
+  assert.throws(
+    () => inspectZipArchive(archive, { label: "workshop04.zip", allowPngEntries: true }),
+    /extra fields are forbidden/,
+  );
+  const entries = inspectZipArchive(archive, {
+    label: "workshop04.zip",
+    allowPngEntries: true,
+    allowSafeUnixMetadata: true,
+  });
+  assert.ok(entries.some((entry) => entry.path === "crvena-zemja-esg-kit/ANSWERS.md"));
 });

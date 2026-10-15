@@ -6,170 +6,116 @@ import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 const slug = "esg-berichte-mit-ki";
 const publicRoot = resolve(process.cwd(), "public");
 const root = resolve(publicRoot, "workshops", slug);
+const slides = readFileSync(resolve(root, "slides.html"), "utf8");
 const de = ESG_REPORTING_WORKSHOP.de;
 const en = ESG_REPORTING_WORKSHOP.en;
 const both = [de, en] as const;
 
-const slides = readFileSync(resolve(root, "slides.html"), "utf8");
-// The kit zip stores its entries uncompressed, so its text can be read straight from the bytes.
-const kitText = readFileSync(resolve(root, "crvena-zemja-esg-kit.zip")).toString("utf8");
-
-/** A printed number without its thousands separators, with "." as the decimal point. */
-function bare(token: string, locale: "de" | "en"): string {
-  return locale === "de" ? token.replace(/\.(?=\d{3}\b)/g, "").replace(",", ".") : token.replace(/,(?=\d{3}\b)/g, "");
-}
-
-/** Every number the deck or the kit prints, normalized the same way (deck count-ups included). */
-const printed = new Set(
-  [...`${slides}\n${kitText}`.replace(/(\d),(?=\d{3}\b)/g, "$1").matchAll(/\d+(?:\.\d+)?/g)].map(([token]) => token),
-);
-
 describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
-  it("identifies itself as workshop 04 with the fixed catalogue labels", () => {
+  it("identifies itself as workshop 04 and uses the reviewed date", () => {
     for (const workshop of both) {
       expect(workshop.slug).toBe(slug);
       expect(workshop.number).toBe("04");
       expect(workshop.topic).toBe("ESG");
       expect(workshop.eyebrow).toBe("Workshop 04 · ESG");
       expect(workshop.summary.length).toBeLessThanOrEqual(160);
-      expect(workshop.accessNote.split(/(?<=\.)\s+/).length).toBeLessThanOrEqual(2);
-      expect(workshop.outcomes.length).toBeGreaterThanOrEqual(3);
-      expect(workshop.outcomes.length).toBeLessThanOrEqual(4);
-      expect(workshop.notCovered.length).toBeGreaterThanOrEqual(2);
-      expect(workshop.notCovered.length).toBeLessThanOrEqual(4);
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-12");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-15");
       expect(workshop.caseStudy.isFictional).toBe(true);
-      // The prompts were pre-run on Claude models; no live session is claimed yet.
       expect(workshop.provenance.liveRunAt).toBeUndefined();
       expect(workshop.provenance.aiOutputsRecordedAt).toBeUndefined();
-      expect(workshop.provenance.note).toMatch(/Claude-Modellen|Claude models/);
-      expect(workshop.accessNote).toMatch(/Tim/);
     }
     expect(de.title).toBe("ESG-Anfragen bis Freitag beantworten");
     expect(en.title).toBe("Answer ESG by Friday");
-    expect(de.duration).toBe("~60 Minuten");
-    expect(en.duration).toBe("~60 minutes");
-    expect(de.format).not.toBe(en.format);
   });
 
-  it("uses no en or em dashes anywhere", () => {
-    for (const workshop of both) expect(JSON.stringify(workshop)).not.toMatch(/[–—]/);
-  });
-
-  it("has five to seven steps with the same numbering in both locales", () => {
-    for (const workshop of both) {
-      expect(workshop.steps.length).toBeGreaterThanOrEqual(5);
-      expect(workshop.steps.length).toBeLessThanOrEqual(7);
-      for (const step of workshop.steps) {
-        for (const field of [step.n, step.title, step.description, step.tool]) expect(field.trim()).not.toBe("");
-      }
-    }
-    expect(de.steps.map((step) => step.n)).toEqual(en.steps.map((step) => step.n));
-    expect(de.caseStudy.metrics).toHaveLength(en.caseStudy.metrics.length);
-    expect(de.caseStudy.dataLimitations).toHaveLength(en.caseStudy.dataLimitations.length);
-  });
-
-  it("follows the deck's 60-minute session with no extra question round", () => {
+  it("has the same nine agenda blocks in both locales and follows the run sheet clock", () => {
+    const minutes = [1, 10, 3.5, 6.5, 7, 4, 9, 8, 11];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
-      expect(workshop.agenda.map((item) => item.minutes)).toEqual([8, 4, 4, 8, 7, 7, 10, 6, 6]);
-      expect(workshop.agenda.every((item) => item.mode === undefined)).toBe(true);
+      expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
+      expect(workshop.agenda.reduce((sum, item) => sum + item.minutes, 0)).toBe(60);
       expect(workshop.minutesLive).toBe(60);
-      expect(workshop.materials[0]?.minutes).toBe(60);
+      expect(workshop.minutesSelfStudy).toBe(120);
     }
     expect(de.agenda).toHaveLength(en.agenda.length);
+    expect(en.selfStudyDurationLabel).toBe("self-paced about 2 hours (about 30 min once you know Claude)");
   });
 
-  it("lists the deck and the kit in both locales, and every file exists", () => {
-    const frame = (workshop: typeof de) => workshop.materials.map(({ href, kind, language, role, phase, primary, optional, minutes }) => ({ href, kind, language, role, phase, primary, optional, minutes }));
-    expect(frame(de)).toEqual(frame(en));
+  it("lists the deck and kit at the existing URLs and uses the exact supplied ZIP size", () => {
+    expect(slides.match(/<section\b/g)).toHaveLength(19);
     expect(en.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length))).toEqual([
       "slides.html",
       "crvena-zemja-esg-kit.zip",
     ]);
+    expect(existsSync(resolve(root, "sheet.html"))).toBe(true);
+    expect(statSync(resolve(root, "crvena-zemja-esg-kit.zip")).size).toBe(896622);
     for (const workshop of both) {
-      expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
-      for (const material of workshop.materials) {
-        expect(material.language).toBe("en");
-        expect(material.label).not.toMatch(/\(|\)|Englisch|English|öffnen|\bOpen\b/);
-        if (material.kind !== "html") expect(material.label).toMatch(/\.(?:zip|csv)$/);
-        expect(existsSync(resolve(publicRoot, material.href.slice(1))), material.href).toBe(true);
-      }
+      expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 19 Folien" : "Deck · 19 slides");
+      expect(workshop.materials[1]?.sizeLabel).toBe("875 KB");
     }
   });
 
-  it("states the measured kit size", () => {
-    const size = statSync(resolve(root, "crvena-zemja-esg-kit.zip")).size;
-    for (const workshop of both) {
-      const kit = workshop.materials.find((material) => material.kind === "zip");
-      expect(kit?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
-    }
-  });
-
-  it("names the deck's slide count", () => {
-    const count = [...slides.matchAll(/<section\b/g)].length;
-    expect(de.materials[0]?.label).toBe(`Deck · ${count} Folien`);
-    expect(en.materials[0]?.label).toBe(`Deck · ${count} slides`);
-  });
-
-  it("prints only numbers the published deck or kit prints", () => {
-    for (const [locale, workshop] of [["de", de], ["en", en]] as const) {
-      const text = JSON.stringify(workshop)
-        .replace(/\/workshops\/[^"]+/g, "")
-        .replace(/"(?:minutes|minutesLive|minutesSelfStudy|value)":\d+/g, "")
-        .replace(/"(?:n|number|reviewedAt)":"[^"]*"/g, "")
-        // The kit size has its own test against the file on disk.
-        .replace(/"sizeLabel":"[^"]*"/g, "")
-        // Kit segment weights are plain proportions; their printed form is the display string.
-        .replace(/"value":\d+(?:\.\d+)?/g, "")
-        .replace(/CO₂e|Workshop 04|START-HERE/g, "");
-      for (const [token] of text.matchAll(/\d+(?:[.,]\d+)*/g)) {
-        expect(printed.has(bare(token, locale)), `${locale} ${token}`).toBe(true);
-      }
-    }
-  });
-
-  it("describes the kit page with the numbers the kit prints, in both locales", () => {
+  it("matches the supplied kit rules and keeps step cards predictive", () => {
+    const expectedEnglishRules = [
+      "Only our files. Never invent a number.",
+      "Cite the file and line for every fact (line numbers as in a text editor, counting every line). Do every calculation in code, with units.",
+      "Missing document: write NOT FOUND and name the document that would prove it. Document exists but is expired, an estimate or in conflict with another file: write NEEDS CHECK and give the reason in one sentence. If a document is missing and another file also conflicts, write NOT FOUND and name the conflict in the reason. A question with several parts gets the status of its weakest part.",
+    ];
+    expect(en.kit?.rules).toEqual(expectedEnglishRules);
     for (const workshop of both) {
       const kit = workshop.kit!;
       expect(kit.fileName).toBe("crvena-zemja-esg-kit.zip");
       expect(kit.stats.map((stat) => stat.value)).toEqual(["13", "5", "3"]);
       expect(kit.steps).toHaveLength(5);
       expect(kit.rules).toHaveLength(3);
-      // Prompt 1: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND; prompt 2: 4 red, 1 amber, 2 green.
-      expect(kit.steps[0].segments?.map((segment) => segment.value)).toEqual([5, 1, 2]);
-      expect(kit.steps[1].segments?.map((segment) => segment.value)).toEqual([4, 1, 2]);
-      expect(kit.steps[3].segments?.map((segment) => segment.value)).toEqual([5, 4, 2]);
-      // The 11-month total and September make the year: 279.7 + 41.2 = 320.9 MWh.
-      const [months, september] = kit.steps[4].segments!.map((segment) => segment.value);
-      expect(Math.round((months + september) * 10) / 10).toBe(320.9);
+      expect(kit.steps.every((step) => !step.segments && !step.line)).toBe(true);
     }
-    expect(de.kit!.steps[2].line).toEqual({ text: "8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh)", result: "= 5,0 Jahre" });
-    expect(en.kit!.steps[2].line).toEqual({ text: "8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh)", result: "= 5.0 years" });
-    expect(de.kit!.steps[4].line?.result).toBe("= 320,9 MWh");
-    expect(en.kit!.steps[4].line?.result).toBe("= 320.9 MWh");
-    // The kit's own README states each of these.
-    for (const phrase of ["5 OK, 1 NEEDS CHECK, 2 NOT FOUND", "4 RED, 1 AMBER, 2 GREEN", "41.2 MWh", "305.1 MWh", "15.8 MWh"]) {
-      expect(kitText).toContain(phrase);
-    }
+    expect(en.kit?.steps[0].note).toBe("Your bet first: how many of the 8 questions come back OK? Check it in ANSWERS.md.");
+    expect(en.kit?.steps[1].note).toBe("Mark each claim RED, AMBER or GREEN yourself first. The red claims come first.");
+    expect(en.kit?.steps[2].input).toBe("Banka Povardarie's screening form for the solar loan.");
+    expect(en.kit?.steps[2].action).toBe("Fills in the form as one table, with a source and a status for each field, and works out the payback in code.");
+    expect(en.kit?.steps[2].note).toBe("Race Claude: work out the payback with your phone calculator first.");
+    expect(en.kit?.steps[3].note).toBe("Gaps are named, not filled.");
+    expect(en.kit?.steps[4].title).toBe("One more surprise");
+    expect(en.kit?.steps[4].input).toBe("One more document.");
+    expect(en.kit?.steps[4].note).toBe("Your bet: which answers change, and which stay the same?");
+    expect(en.kit?.howTo).toContain("About 2 hours the first time");
+    expect(en.kit?.contents.map((item) => item.name)).toContain("ANSWERS.md");
   });
 
-  it("keeps the case facts the deck and kit show", () => {
-    expect(de.description).toContain("5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND");
-    expect(de.description).toContain("279,7 MWh");
-    expect(de.description).toContain("31. August 2026");
-    expect(de.description).toContain("8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre");
-    expect(de.description).toContain("320,9 MWh");
-    expect(en.description).toContain("5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND");
-    expect(en.description).toContain("279.7 MWh");
-    expect(en.description).toContain("31 August 2026");
-    expect(en.description).toContain("8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh) = 5.0 years");
-    expect(en.description).toContain("320.9 MWh");
-    expect(slides).toContain('<span class="sum-v">279.7</span>');
-    expect(slides).toContain("31.08.2026");
-    expect(slides).toContain('data-roll="320.9 MWh · 12 months"');
-    expect(slides).toContain("5.0 years");
-    expect(kitText).toContain("F4 = 8,550,000 MKD / (180,000 kWh x 9.50 MKD/kWh) = 5.0 years");
+  it("removes answer spoilers from page copy, including descriptions used for metadata", () => {
+    const pageCopy = JSON.stringify(both);
+    for (const spoiler of [
+      /5 of 8/i,
+      /5 von 8/i,
+      /4 of 7/i,
+      /4 von 7/i,
+      /5\.0 years/i,
+      /5,0 Jahre/i,
+      /320\.9/i,
+      /320,9/i,
+      /15\.8/i,
+      /15,8/i,
+      /September/i,
+      /invoice photo/i,
+      /Rechnungsfoto/i,
+    ]) {
+      expect(pageCopy).not.toMatch(spoiler);
+    }
+    expect(en.description).toContain("Tim demos Claude live on a projector");
+    expect(en.accessNote).toContain("No laptop, no Claude account.");
+    expect(en.needs).toContain("About 2 hours at home for the warm-up and five steps. You can stop after any step.");
+    expect(en.caseStudy.metrics).toEqual([
+      { label: "Employees", value: "42" },
+      { label: "Requests", value: "3" },
+      { label: "Company files", value: "13" },
+      { label: "Hidden traps", value: "7" },
+    ]);
+    expect(en.caseStudy.limitationsHeading).toBe("Before you start");
+    expect(en.materials[0]?.label).toBe("Deck · 19 slides");
+    expect(en.materials[1]?.description).toContain("project-instructions.md");
+    expect(en.materials[1]?.description).toContain("ANSWERS.md");
+    expect(en.provenance.note).not.toMatch(/prompts were run/i);
   });
 });

@@ -380,6 +380,37 @@ function parseExtraFields(extra, label) {
   }
 }
 
+/** Allow only the timestamp and Unix uid/gid fields emitted by the reviewed Workshop 04 ZIP. */
+function hasSafeUnixMetadata(extra, label, location) {
+  const fields = [];
+  let offset = 0;
+  while (offset < extra.byteLength) {
+    const id = extra.readUInt16LE(offset);
+    const size = extra.readUInt16LE(offset + 2);
+    fields.push({ id, data: extra.subarray(offset + 4, offset + 4 + size) });
+    offset += 4 + size;
+  }
+  if (fields.length !== 2 || fields[0].id !== 0x5455 || fields[1].id !== 0x7875) return false;
+  const [timestamp, unixIds] = fields;
+  const timestampSize = location === "local" ? 9 : 5;
+  if (timestamp.data.byteLength !== timestampSize || timestamp.data[0] !== 3) return false;
+  if (
+    unixIds.data.byteLength !== 11 ||
+    unixIds.data[0] !== 1 ||
+    unixIds.data[1] !== 4 ||
+    unixIds.data[6] !== 4
+  ) return false;
+  return true;
+}
+
+function validateExtraFields(extra, label, location, allowSafeUnixMetadata) {
+  parseExtraFields(extra, label);
+  if (extra.byteLength === 0) return;
+  if (!allowSafeUnixMetadata || !hasSafeUnixMetadata(extra, label, location)) {
+    fail(label, `${location} extra fields are forbidden in publication archives`);
+  }
+}
+
 function classifyEntry({
   externalAttributes,
   madeBySystem,
@@ -619,7 +650,7 @@ function inflateEntry(compressed, entry, label) {
  */
 export function inspectZipArchive(
   input,
-  { label = "ZIP archive", allowPngEntries = false } = {},
+  { label = "ZIP archive", allowPngEntries = false, allowSafeUnixMetadata = false } = {},
 ) {
   const bytes = Buffer.isBuffer(input) ? input : Buffer.from(input);
   if (bytes.byteLength > MAX_ZIP_ARCHIVE_BYTES) {
@@ -762,10 +793,7 @@ export function inspectZipArchive(
       centralCursor + 46 + pathLength,
       centralCursor + 46 + pathLength + extraLength,
     );
-    parseExtraFields(centralExtra, entryLabel);
-    if (extraLength !== 0) {
-      fail(entryLabel, "extra fields are forbidden in publication archives");
-    }
+    validateExtraFields(centralExtra, entryLabel, "central", allowSafeUnixMetadata);
     const pathInfo = validatePath(pathBytes, flags, entryLabel);
     const pathLabel = `${label}!/${pathInfo.path}`;
     if (
@@ -881,10 +909,7 @@ export function inspectZipArchive(
       localCursor + 30 + localPathLength,
       localCursor + 30 + localVariableLength,
     );
-    parseExtraFields(localExtra, entryLabel);
-    if (localExtraLength !== 0) {
-      fail(entryLabel, "local extra fields are forbidden in publication archives");
-    }
+    validateExtraFields(localExtra, entryLabel, "local", allowSafeUnixMetadata);
     if (
       localVersionNeeded !== entry.versionNeeded ||
       localFlags !== entry.flags ||

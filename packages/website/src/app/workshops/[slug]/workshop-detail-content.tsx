@@ -379,7 +379,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
 
   const coverFacts = [
     workshop.minutesLive ? copy.minutesLive(workshop.minutesLive) : null,
-    copy.minutesSelfStudy(workshop.minutesSelfStudy),
+    workshop.selfStudyDurationLabel ?? copy.minutesSelfStudy(workshop.minutesSelfStudy),
     caseStudy.isFictional
       ? realWorldCase
         ? copy.coverFacts.publicFigures
@@ -394,7 +394,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   const agendaMinutes = workshop.minutesLive ?? workshop.minutesSelfStudy;
   const agendaCaption = [
     workshop.minutesLive ? copy.minutesLive(workshop.minutesLive) : null,
-    copy.minutesSelfStudy(workshop.minutesSelfStudy),
+    workshop.selfStudyDurationLabel ?? copy.minutesSelfStudy(workshop.minutesSelfStudy),
   ]
     .filter(Boolean)
     .join(" · ");
@@ -767,7 +767,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             </div>
             <details className="self-start border-t border-hairline pt-3">
               <summary className="inline-flex min-h-11 cursor-pointer items-center text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
-                {copy.limitations}
+                {caseStudy.limitationsHeading ?? copy.limitations}
               </summary>
               <ul className="mt-2 grid gap-1.5 text-[0.875rem] leading-normal text-muted-foreground sm:gap-2 sm:text-[0.9375rem]">
                 {caseStudy.dataLimitations.map((limitation) => (

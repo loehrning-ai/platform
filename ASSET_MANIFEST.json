@@ -1131,8 +1131,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-      "sizeBytes": 891029,
-      "sha256": "4f8362e326adb472a95d0ff7aabbb3d82fc35cd214a162289c3240f50ee52ce6",
+      "sizeBytes": 896622,
+      "sha256": "f12222fe14dfe6f2a8aaa0dc050283eca8bd6d9313b3b2c7176e8f5171dde3f2",
       "owner": "Tim L\u00f6hr",
       "source": "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
