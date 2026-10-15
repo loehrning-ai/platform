@@ -11,7 +11,7 @@ const de = ESG_REPORTING_WORKSHOP.de;
 const en = ESG_REPORTING_WORKSHOP.en;
 const both = [de, en] as const;
 
-describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
+describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
   it("identifies itself as workshop 04 and uses the reviewed date", () => {
     for (const workshop of both) {
       expect(workshop.slug).toBe(slug);
@@ -25,8 +25,8 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
       expect(workshop.provenance.liveRunAt).toBeUndefined();
       expect(workshop.provenance.aiOutputsRecordedAt).toBeUndefined();
     }
-    expect(de.title).toBe("ESG-Anfragen bis Freitag beantworten");
-    expect(en.title).toBe("Answer ESG by Friday");
+    expect(de.title).toBe("ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen");
+    expect(en.title).toBe("ESG Reporting with AI: From Raw Inputs to Clearer Insights");
   });
 
   it("has the same nine agenda blocks in both locales and follows the run sheet clock", () => {
@@ -39,7 +39,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
       expect(workshop.minutesSelfStudy).toBe(120);
     }
     expect(de.agenda).toHaveLength(en.agenda.length);
-    expect(en.selfStudyDurationLabel).toBe("self-paced about 2 hours (about 30 min once you know Claude)");
+    expect(en.selfStudyDurationLabel).toBe("about 2 hours the first time");
   });
 
   it("lists the deck and kit at the existing URLs and uses the exact supplied ZIP size", () => {
@@ -49,11 +49,21 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
       "crvena-zemja-esg-kit.zip",
     ]);
     expect(existsSync(resolve(root, "sheet.html"))).toBe(true);
+    expect(existsSync(resolve(root, "assets/brainster-logo.svg"))).toBe(true);
     expect(statSync(resolve(root, "crvena-zemja-esg-kit.zip")).size).toBe(896622);
     for (const workshop of both) {
       expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 19 Folien" : "Deck · 19 slides");
       expect(workshop.materials[1]?.sizeLabel).toBe("875 KB");
     }
+  });
+
+  it("uses the new cover, numbered cold open and human office-manager note", () => {
+    expect(slides).toContain("<title>ESG Reporting with AI: From Raw Inputs to Clearer Insights · loehrning.ai</title>");
+    expect(slides).toContain('data-n="02" data-label="Cold open"');
+    expect(slides).toContain('src="./assets/brainster-logo.svg" alt="Brainster"');
+    expect(slides).toContain("The EU law that sets sustainability reporting rules for large companies.");
+    expect(slides).toContain("Hi, I’ve put 279.7 MWh");
+    expect(slides).not.toContain("OK to send to bank.");
   });
 
   it("matches the supplied kit rules and keeps step cards predictive", () => {
@@ -104,7 +114,7 @@ describe("Workshop 04 registry copy (Answer ESG by Friday)", () => {
       expect(pageCopy).not.toMatch(spoiler);
     }
     expect(en.description).toContain("Tim demos Claude live on a projector");
-    expect(en.accessNote).toContain("No laptop, no Claude account.");
+    expect(en.accessNote).toContain("no laptop or Claude account needed.");
     expect(en.needs).toContain("About 2 hours at home for the warm-up and five steps. You can stop after any step.");
     expect(en.caseStudy.metrics).toEqual([
       { label: "Employees", value: "42" },

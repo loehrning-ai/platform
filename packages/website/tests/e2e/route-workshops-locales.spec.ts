@@ -28,8 +28,8 @@ const WORKSHOP_ROUTES = [
   },
   {
     path: "/workshops/esg-berichte-mit-ki",
-    deHeading: "ESG-Anfragen bis Freitag beantworten",
-    enHeading: "Answer ESG by Friday",
+    deHeading: "ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen",
+    enHeading: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
     materialCount: 2,
   },
 ] as const;

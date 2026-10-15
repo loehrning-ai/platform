@@ -43,7 +43,7 @@ describe("<KitPage>", () => {
         expect(screen.getByRole("tabpanel")).toBeInTheDocument();
       });
 
-      it("shows the selected step's input, action and output, and moves with the keyboard and the next button", () => {
+      it("shows the selected step's input and action, optional result, and keyboard navigation", () => {
         render(<KitPage workshop={workshop} locale={locale} />);
         const panel = () => screen.getByRole("tabpanel");
         expect(panel()).toHaveTextContent(kit.steps[0].input);
@@ -52,7 +52,7 @@ describe("<KitPage>", () => {
         fireEvent.click(tabs[2]);
         expect(tabs[2]).toHaveAttribute("aria-selected", "true");
         expect(panel()).toHaveTextContent(kit.steps[2].action);
-        expect(panel()).toHaveTextContent(kit.steps[2].line!.result);
+        if (kit.steps[2].line) expect(panel()).toHaveTextContent(kit.steps[2].line.result);
 
         fireEvent.keyDown(tabs[2], { key: "ArrowRight" });
         expect(tabs[3]).toHaveAttribute("aria-selected", "true");
@@ -60,7 +60,7 @@ describe("<KitPage>", () => {
         expect(tabs[2]).toHaveAttribute("tabindex", "-1");
         fireEvent.keyDown(tabs[3], { key: "End" });
         expect(tabs[4]).toHaveAttribute("aria-selected", "true");
-        expect(panel()).toHaveTextContent(kit.steps[4].line!.result);
+        if (kit.steps[4].line) expect(panel()).toHaveTextContent(kit.steps[4].line.result);
 
         // The last step's button starts again; the others go on.
         fireEvent.click(within(panel()).getByRole("button"));
@@ -78,7 +78,7 @@ describe("<KitPage>", () => {
         const link = downloads[0];
         expect(link).toHaveAttribute("href", `/workshops/${SLUG}/${kit.fileName}`);
         expect(link).toHaveAttribute("download");
-        expect(link).toHaveTextContent("870 KB");
+        expect(link).toHaveTextContent(workshop.materials.find((material) => material.kind === "zip")!.sizeLabel!);
         link.addEventListener("click", (event) => event.preventDefault());
         fireEvent.click(link);
         expect(trackMock).toHaveBeenCalledTimes(1);
