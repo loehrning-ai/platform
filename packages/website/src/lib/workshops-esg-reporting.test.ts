@@ -114,7 +114,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(pageCopy).not.toMatch(spoiler);
     }
     expect(en.description).toContain("Tim demos Claude live on a projector");
-    expect(en.accessNote).toContain("No laptop, no Claude account.");
+    expect(en.accessNote).toContain("no laptop or Claude account needed.");
     expect(en.needs).toContain("About 2 hours at home for the warm-up and five steps. You can stop after any step.");
     expect(en.caseStudy.metrics).toEqual([
       { label: "Employees", value: "42" },

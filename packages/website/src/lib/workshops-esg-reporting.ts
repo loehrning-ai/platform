@@ -49,7 +49,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
-      "Das gesamte Material ist auf Englisch. Live führt Tim Claude auf dem Beamer vor und der Raum spielt mit: Ihr sucht Fallen in den Dateien, tippt vor jeder Antwort auf das Ergebnis und stimmt über Werbeaussagen ab, mit Daumen, Karten, Papier oder dem Handy. Kein Laptop und kein Claude-Konto nötig. Zu Hause ist das Kit deine selbstgeführte Aufgabe: zehn Minuten Fallensuche, dann fünf Schritte mit jedem Claude-Plan einschließlich Free und ein Lösungsschlüssel zur Selbstkontrolle. Die Kit-Dateien werden in Claude hochgeladen; alle sind erfunden.",
+      "Das Material ist auf Englisch; Tim demonstriert Claude live am Beamer, während der Raum per Handy oder Papier mitspielt, vor jeder Antwort tippt und über die Werbeaussagen abstimmt; Laptop oder Claude-Konto sind nicht nötig. Zu Hause ist das Kit deine Aufgabe für etwa zwei Stunden beim ersten Mal: fünf Schritte und ein Lösungsschlüssel zur Selbstkontrolle, mit jedem Claude-Plan einschließlich Free; die erfundenen Dateien werden in Claude hochgeladen.",
     outcome: "Selbstgeführtes Kit mit Fallensuche, fünf Prompts und Lösungsschlüssel sowie einer Methode für den nächsten Fragebogen, grünen Claim oder Bankformular aus einem Ordner, mit Quelle und Status je Antwort",
     audience: [
       "Geschäftsführung und Verwaltung kleiner Firmen, bei denen ESG-Fragebögen landen",
@@ -178,7 +178,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       [
         "ESG-Kit · .zip",
         "START-HERE.md (Fallensuche zum Aufwärmen, Einrichtung, fünf Prompts), ANSWERS.md (Lösungsschlüssel: erst nach jedem Schritt öffnen), project-instructions.md (die drei Regeln), 13 Firmendateien, drei Anfragen und eine Überraschung für Schritt 5.",
-        "Aufwärmen, Einrichtung, fünf Prompts, Lösungsschlüssel, 13 Firmendateien, drei Anfragen, eine Überraschung.",
+        "Fünf Prompts, Antworten, 13 Dateien, drei Anfragen, Überraschung.",
       ],
     ]),
     kit: ESG_REPORTING_KIT.de,
@@ -196,7 +196,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
-      "All material is in English. Live, Tim runs Claude on the projector and the room plays along: you hunt traps in the files, bet on each result before Claude shows it, and vote on the marketing claims, with thumbs, cards, paper or your phone. No laptop, no Claude account. At home, the kit is your take-home assignment: a 10-minute trap hunt, then the five steps on any Claude plan, including Free, and an answer key to check yourself. The kit's files are uploaded to Claude; all of them are fictional.",
+      "Tim demos Claude live on the projector while the room plays along on a phone or paper, bets before each answer and votes on the claims; no laptop or Claude account needed. The kit is the take-home assignment: about 2 hours the first time, with five steps and an answer key, on any Claude plan including Free; its fictional files are uploaded to Claude.",
     outcome: "A self-guided kit (trap hunt, five prompts, answer key) and a method to answer your next questionnaire, green claim or bank form from one folder, with a source and a status for every answer.",
     audience: [
       "Owners and office staff of small firms who receive ESG questionnaires",
@@ -325,7 +325,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       [
         "ESG kit · .zip",
         "START-HERE.md (warm-up trap hunt, setup, five prompts), ANSWERS.md (the answer key: open it only after each step), project-instructions.md (the three rules), 13 project files, three requests and one surprise for step 5.",
-        "Warm-up, setup, five prompts, answer key, 13 company files, three requests, one surprise.",
+        "Five prompts, answer key, 13 files, three requests, one surprise.",
       ],
     ]),
     kit: ESG_REPORTING_KIT.en,

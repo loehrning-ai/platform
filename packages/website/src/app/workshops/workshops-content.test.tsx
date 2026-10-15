@@ -297,7 +297,7 @@ describe("<WorkshopsContent>", () => {
     // The phone meta line is a short duration line; the row the cover
     // button recommends says so.
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Neu · Live 60 Min. · Selbstlernen 60 Min.",
+      "Neu · Live 60 Min. · Selbstlernen 120 Min.",
     );
     expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -310,13 +310,14 @@ describe("<WorkshopsContent>", () => {
     expect(rows[3].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Selbstlernen \d+ Min\.$/,
     );
-    // The series sets single titles (no subtitle after a colon): the row
-    // heading is the whole title, with no part hidden on a phone.
+    // The phone row shows the title head visually and keeps its subtitle in
+    // the accessible name; the full title appears from the tablet breakpoint.
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
     const heading = within(rows[0]).getByRole("heading", { level: 3 });
     expect(heading).toHaveAccessibleName(w04.title);
-    expect(w04.title).not.toContain(":");
-    expect(heading.querySelector(".sr-only")).toBeNull();
+    expect(heading.querySelector(".sr-only")).toHaveTextContent(
+      ": Von Rohdaten zu klareren Erkenntnissen",
+    );
 
     // One one-sentence lead at every width; no second lede from sm.
     const lead = screen.getByText(/^Du rechnest oder prüfst an den Daten/);
@@ -336,7 +337,7 @@ describe("<WorkshopsContent>", () => {
     const times = rows[0].querySelectorAll("[data-workshop-meta] > span.whitespace-nowrap");
     expect([...times].map((time) => time.textContent)).toEqual([
       "Live 60 Min. ·",
-      "Selbstlernen 60 Min.",
+      "Selbstlernen 120 Min.",
     ]);
     // The H1 is the old display head at the leading the highlight band is
     // built for (0.9): a 36px phone size, fluid from sm.

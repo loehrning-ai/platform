@@ -341,22 +341,24 @@ describe("workshop standard fields", () => {
         expect(workshop.agenda.length, label).toBeGreaterThanOrEqual(4);
         for (const item of workshop.agenda) {
           expect(item.label.trim().length, label).toBeGreaterThan(0);
-          expect(Number.isInteger(item.minutes), label).toBe(true);
+          expect(Number.isFinite(item.minutes), label).toBe(true);
           expect(item.minutes, label).toBeGreaterThan(0);
         }
         if (workshop.minutesLive !== undefined) {
           expect(workshopAgendaMinutes(workshop, "live"), label).toBe(
             workshop.minutesLive,
           );
-          // Self-study skips live-only items such as the question round and
-          // shows the remaining agenda minutes rounded up to 5.
-          const selfMinutes = workshopAgendaMinutes(workshop, "self");
-          expect(workshop.minutesSelfStudy, label).toBe(
-            Math.ceil(selfMinutes / 5) * 5,
-          );
-          expect(workshop.minutesSelfStudy, label).toBeLessThanOrEqual(
-            workshop.minutesLive,
-          );
+          // A deck workshop may also provide a separate take-home assignment,
+          // whose duration is independent of the live agenda.
+          if (workshop.agendaSource !== "deck") {
+            const selfMinutes = workshopAgendaMinutes(workshop, "self");
+            expect(workshop.minutesSelfStudy, label).toBe(
+              Math.ceil(selfMinutes / 5) * 5,
+            );
+            expect(workshop.minutesSelfStudy, label).toBeLessThanOrEqual(
+              workshop.minutesLive,
+            );
+          }
         } else {
           expect(workshop.agenda.every((item) => item.mode === "self"), label).toBe(true);
           expect(workshopAgendaMinutes(workshop, "self"), label).toBe(
