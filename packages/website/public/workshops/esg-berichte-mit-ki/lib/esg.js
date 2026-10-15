@@ -15,7 +15,9 @@
  * Stagger: children of [data-stagger] get --i = 0, 1, 2 ... for staggered delays.
  * Session clock: a slide with data-clock-start starts it on arrival, data-clock-stop stops it on
  * leaving it forward; any [data-clock] shows the running minutes and seconds. The clock lives in
- * localStorage, so a reload keeps it. ESG.clockMs() and ESG.clockStarted() read it.
+ * localStorage, so a reload keeps it. ESG.clockMs() and ESG.clockStarted() read it. A slide with
+ * data-clock-reset (the cover) clears it on arrival; a run older than 90 minutes restarts on the start slide.
+ * Page numbers in the footer are positions (01 / NN), not data-n.
  *
  * Events on document (detail.n is the slide's data-n, or its 1-based position):
  *   esg:enter {slide, n, index, step, steps, backward}   after the slide is set to its entry state
@@ -251,7 +253,12 @@
       }
       setTimeout(() => reset(old), 60);
     }
-    if (slide.hasAttribute('data-clock-start') && !clock.running && !back) {
+    // the cover (data-clock-reset) clears the clock on any arrival, so a rehearsal can never leak into the session
+    if (slide.hasAttribute('data-clock-reset')) {
+      clock.start = 0; clock.total = 0; clock.running = false; saveClock();
+    }
+    // a clock still running after 90 minutes (the ceiling slide 16 accepts) is a leftover: start a fresh run
+    if (slide.hasAttribute('data-clock-start') && !back && (!clock.running || clockMs() > 90 * 60000)) {
       clock.start = Date.now(); clock.total = 0; clock.running = true; saveClock();
     }
     current = slide;
@@ -350,6 +357,7 @@
     const btn = card.querySelector('.pc-copy');
     const body = card.querySelector('.pc-body');
     if (!btn || !body) return;
+    const label = btn.textContent;
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       try {
@@ -359,12 +367,14 @@
       } catch {
         btn.textContent = 'Select and copy';
       }
-      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('done'); }, 1600);
     });
   });
 
   /* ── chrome: brand, red-thread rail and page number on every slide ─────── */
-  const total = parseInt(deck.dataset.total || '', 10) || slides.length;
+  // page numbers come from the slide's position, so inserting or removing a slide renumbers the deck;
+  // data-n stays the slide's stable ID for CSS and hooks
+  const total = slides.length;
   slides.forEach((slide) => {
     if (slide.hasAttribute('data-no-chrome')) return;
     const at = parseInt(slide.dataset.thread || '0', 10);
@@ -386,7 +396,7 @@
       `<span class="rail">${rail}</span></div><div class="chrome__topline"></div>` +
       `<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>${esc(slide.dataset.label || '')}</span>` +
       (fict ? `<span class="chrome__fict">${esc(fict)}</span>` : '') +
-      `<span class="page">${String(nOf(slide)).padStart(2, '0')} / ${String(total).padStart(2, '0')}</span></div>`;
+      `<span class="page">${String(slides.indexOf(slide) + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}</span></div>`;
     slide.prepend(chrome);
   });
 

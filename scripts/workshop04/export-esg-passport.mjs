@@ -4,27 +4,21 @@
  * packages/website/public/workshops/esg-berichte-mit-ki/.
  *
  * Only allowlisted files leave the source: the deck (slides.html, its lib/ and the assets it
- * loads) and the participant kit as a deterministic ZIP. Nothing else in the source folder
- * (course notes, presenter material, answer keys, build scripts) is ever read for publication.
- * Text is rewritten in three reviewed places only:
- *   - the partner's co-branding leaves the deck: "loehrning.ai × <partner>" becomes
- *     "loehrning.ai", the partner's logo and its CSS are removed, the room's date lines name
- *     North Macedonia only, and the closing kit line points at the workshop page (PARTNER_EDITS, which
- *     also points the deck's three mentions of the private answer key at START-HERE.md);
- *   - the deck's fonts point at the woff2 statics already inventoried for this folder;
- *   - the deck's one image path into the kit folder points at the same photo in assets/proof/.
- * The export fails before writing anything if a client name or a local path survives.
+ * loads), the phone game sheet and the participant kit as a reviewed ZIP. Trainer notes, PDFs and
+ * build scripts are never copied. A site-ready package keeps its compressed ZIP byte for byte and
+ * gets the reviewed padded slide-counter format; source-built decks receive the partner/font/path
+ * edits below. The export fails before writing anything if a client name or local path survives.
  *
  * Usage (from the repository root):
- *   node scripts/workshop04/export-esg-passport.mjs <course-source-directory>
- *   node scripts/workshop04/export-esg-passport.mjs <course-source-directory> --check
+ *   node scripts/workshop04/export-esg-passport.mjs <site-ready-workshop-folder>
+ *   node scripts/workshop04/export-esg-passport.mjs <site-ready-workshop-folder> --check
  * --check writes nothing and exits 1 when the published folder differs from a fresh export.
  */
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { buildKitArchive, KIT_NAME, ZIP_NAME } from "./kit-archive.mjs";
+import { buildKitArchive, KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
@@ -35,6 +29,7 @@ export const WORKSHOP_DIR = path.join(REPO_ROOT, WORKSHOP_RELATIVE);
 /** Deck text files copied from the source, in the order the deck loads them. */
 export const DECK_TEXT_FILES = [
   "slides.html",
+  "sheet.html",
   "lib/tokens.css",
   "lib/deck.css",
   "lib/esg.css",
@@ -93,6 +88,7 @@ export const POSTER = "assets/plakat-cover.svg";
 /** Kit files as they sit in the source kit folder, published unchanged inside the ZIP. */
 export const KIT_SOURCE_FILES = [
   "START-HERE.md",
+  "ANSWERS.md",
   "project-instructions.md",
   "inbox/1-nordvik-questionnaire.md",
   "inbox/2-marketing-claims.md",
@@ -137,7 +133,7 @@ const PARTNER_EDITS = [
   [/content="Workshop 04 for [A-Za-z]+: /, 'content="Workshop 04, held in North Macedonia: ', "page description"],
   [/<p class="s17-kitt">[A-Za-z]+ sends you the kit link today\.<\/p>/, '<p class="s17-kitt">Download the kit from the workshop page.</p>', "closing kit line"],
   [/\.\/assets\/\.\.\/crvena-zemja-esg-kit\/inbox\/4-september-invoice\.png/, "./assets/proof/september-invoice.png", "invoice photo path"],
-  // The presenter's answer key stays private; the public kit carries the same expected results in START-HERE.md.
+  // The published deck links participants to the kit rather than trainer-only working notes.
   [/<p class="t-label">Expected status \(answer key\)<\/p>/, '<p class="t-label">Expected status (START-HERE.md)</p>', "expected-status label"],
   [/<p class="t-src">answer key, step 4<br \/>/, '<p class="t-src">kit: START-HERE.md, step 4<br />', "step 4 source line"],
   [/one short line from the answer key under the tag/, "one short line from the expected results under the tag", "style comment"],
@@ -180,7 +176,7 @@ export const mentionsClient = hashedWordGuard(CLIENT_NAME_SHA256, 9);
 export const FORBIDDEN = [
   [/loehrning\.ai ×/, "co-branding"],
   [/\/Users\/|\/home\/[a-z]/, "local path"],
-  [/facilitator|run-of-show|answer[ -]key|ground-truth|rescue\/|admin\//i, "presenter-only material"],
+  [/facilitator|run-of-show|ground-truth|rescue\/|admin\//i, "presenter-only material"],
   [RETIRED_CASE_NAMES, "retired case name"],
 ];
 
@@ -205,6 +201,35 @@ function deckText(name, text) {
     }
   }
   return out;
+}
+
+/** Keep the published deck counter readable and padded across single- and double-digit slides. */
+function preparedDeckText(name, text) {
+  if (name !== "lib/deck-stage.js") return text;
+  let out = replaceExpected(
+    text,
+    '.count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }',
+    '.count .sep { color: rgba(255,255,255,0.45); margin: 0; font-weight: 400; }',
+    `${name} (counter spacing)`,
+  );
+  out = replaceExpected(
+    out,
+    '<span class="count" aria-live="polite"><span class="current">1</span><span class="sep">/</span><span class="total">1</span></span>',
+    '<span class="count" aria-live="polite"><span class="current">01</span><span class="sep"> / </span><span class="total">01</span></span>',
+    `${name} (counter format)`,
+  );
+  out = replaceExpected(
+    out,
+    'this._totalEl.textContent = String(this._slides.length || 1);',
+    'this._totalEl.textContent = pad2(this._slides.length || 1);',
+    `${name} (total format)`,
+  );
+  return replaceExpected(
+    out,
+    'this._countEl.textContent = String(curr + 1);',
+    'this._countEl.textContent = pad2(curr + 1);',
+    `${name} (current format)`,
+  );
 }
 
 /** PNG chunks a published image may carry: image data only. */
@@ -263,11 +288,13 @@ export function assertClean(name, bytes) {
 /** Builds the full published folder in memory: Map<publishedPath, Buffer>. */
 export async function exportWorkshop(source) {
   if (!source || !existsSync(path.join(source, "slides.html"))) {
-    throw new Error("Usage: node scripts/workshop04/export-esg-passport.mjs <course-source-directory> [--check]");
+    throw new Error("Usage: node scripts/workshop04/export-esg-passport.mjs <site-ready-workshop-folder> [--check]");
   }
   const written = new Map();
+  const prebuiltPackage = existsSync(path.join(source, "sheet.html")) && existsSync(path.join(source, ZIP_NAME));
   for (const name of DECK_TEXT_FILES) {
-    written.set(name, Buffer.from(deckText(name, readSourceFile(source, name).toString("utf8"))));
+    const text = readSourceFile(source, name).toString("utf8");
+    written.set(name, Buffer.from(prebuiltPackage ? preparedDeckText(name, text) : deckText(name, text)));
   }
   for (const name of DECK_IMAGES) {
     const bytes = readSourceFile(source, name);
@@ -295,15 +322,27 @@ export async function exportWorkshop(source) {
     written.set(name, readSourceFile(path.join(REPO_ROOT, FONT_SOURCE_RELATIVE), path.basename(name)));
   }
 
-  const kitDir = path.join(source, KIT_NAME);
-  checkKitFolder(kitDir);
-  const kit = KIT_SOURCE_FILES.map((name) => {
-    const bytes = readSourceFile(kitDir, name);
-    if (name.endsWith(".png")) assertPlainPng(name, bytes);
-    return [name, bytes];
-  });
-  for (const [name, bytes] of kit) assertClean(`${ZIP_NAME}/${name}`, bytes);
-  written.set(ZIP_NAME, buildKitArchive(kit));
+  const suppliedArchive = path.join(source, ZIP_NAME);
+  if (existsSync(suppliedArchive)) {
+    const archive = readSourceFile(source, ZIP_NAME);
+    const entries = readKitArchive(archive);
+    const names = entries.map(([name]) => name).sort();
+    if (JSON.stringify(names) !== JSON.stringify([...KIT_FILES].sort())) {
+      throw new Error(`${ZIP_NAME} differs from the reviewed kit file list`);
+    }
+    for (const [name, bytes] of entries) assertClean(`${ZIP_NAME}/${name}`, bytes);
+    written.set(ZIP_NAME, archive);
+  } else {
+    const kitDir = path.join(source, KIT_NAME);
+    checkKitFolder(kitDir);
+    const kit = KIT_SOURCE_FILES.map((name) => {
+      const bytes = readSourceFile(kitDir, name);
+      if (name.endsWith(".png")) assertPlainPng(name, bytes);
+      return [name, bytes];
+    });
+    for (const [name, bytes] of kit) assertClean(`${ZIP_NAME}/${name}`, bytes);
+    written.set(ZIP_NAME, buildKitArchive(kit));
+  }
 
   for (const [name, bytes] of written) assertClean(name, bytes);
   const names = [...written.keys()].sort();

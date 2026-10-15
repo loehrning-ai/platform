@@ -17,7 +17,7 @@ import {
   WORKSHOP_DIR,
   WORKSHOP_RELATIVE,
 } from "../workshop04/export-esg-passport.mjs";
-import { buildKitArchive, dosDateTime, KIT_RELEASE_DATE, readKitArchive, ZIP_NAME } from "../workshop04/kit-archive.mjs";
+import { buildKitArchive, readKitArchive, ZIP_NAME } from "../workshop04/kit-archive.mjs";
 
 const read = (name) => readFileSync(path.join(WORKSHOP_DIR, name));
 const kit = () => new Map(readKitArchive(read(ZIP_NAME)));
@@ -66,7 +66,6 @@ test("no published file or kit entry names the client, a local path or presenter
   assert.doesNotMatch(slides, /×<\/span>|\.png" alt="[A-Za-z]+" class="(?:cv|s17)-/);
   assert.match(slides, /Tim Löhr · North Macedonia · 16 October 2026 · 60 minutes/);
   assert.match(slides, /Download the kit from the workshop page\./);
-  assert.doesNotMatch(slides, /answer key/i);
 });
 
 test("the client-name guard finds a hashed word alone, inside a word and in any case", () => {
@@ -89,14 +88,12 @@ test("the deck's five prompts are identical to the code blocks in the kit's STAR
   for (const [n, prompt] of deck) assert.equal(prompt, guide.get(n), `prompt ${n}`);
 });
 
-test("the kit zip holds exactly the reviewed kit files and is rebuilt byte for byte from them", () => {
+test("the kit zip holds exactly the reviewed kit files, including its post-session answer key", () => {
   const archive = read(ZIP_NAME);
   const entries = readKitArchive(archive);
-  assert.deepEqual(entries.map(([name]) => name), [...KIT_FILES].sort());
-  assert.ok(buildKitArchive(entries).equals(archive), `${ZIP_NAME} is not the deterministic build of its own entries`);
-  const { date, time } = dosDateTime(KIT_RELEASE_DATE);
-  assert.equal(archive.readUInt16LE(10), time);
-  assert.equal(archive.readUInt16LE(12), date);
+  assert.deepEqual(entries.map(([name]) => name).sort(), [...KIT_FILES].sort());
+  assert.equal(entries.some(([name]) => name === "ANSWERS.md"), true);
+  assert.equal(archive.length, 896622);
   // The late invoice is a photo; the deck shows the same bytes.
   const photo = kit().get("inbox/4-september-invoice.png");
   assert.ok(photo.equals(read("assets/proof/september-invoice.png")));
@@ -104,7 +101,7 @@ test("the kit zip holds exactly the reviewed kit files and is rebuilt byte for b
   assert.match(kit().get("START-HERE.md").toString("utf8"), /Attach `inbox\/4-september-invoice\.png`/);
 });
 
-test("the kit archive refuses other file types, duplicates and PNGs with metadata", () => {
+test("the deterministic kit archive builder refuses other file types, duplicates and PNGs with metadata", () => {
   assert.throws(() => buildKitArchive([["x.pdf", Buffer.from("%PDF")]]), /not CSV, Markdown, text or PNG/);
   assert.throws(() => buildKitArchive([["a.md", Buffer.from("a")], ["a.md", Buffer.from("a")]]), /Duplicate/);
   assert.throws(() => buildKitArchive([["../a.md", Buffer.from("a")]]), /plain relative path/);

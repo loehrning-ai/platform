@@ -112,6 +112,8 @@ export interface WorkshopCaseStudy {
   readonly decisionQuestion: string;
   /** What the underlying data structurally cannot answer, stated plainly. */
   readonly dataLimitations: readonly string[];
+  /** Optional workshop-specific heading for the expandable case note. */
+  readonly limitationsHeading?: string;
   /**
    * The case result as bars on paper (Werkzeichnung v2, SPEC §3.11): the
    * reference value, the unchecked AI answer and the checked answer on one
@@ -227,6 +229,8 @@ export interface Workshop {
   readonly minutesLive?: number;
   /** Minutes alone. Shown with "ca." / "about" because it is not yet measured with test readers. */
   readonly minutesSelfStudy: number;
+  /** Optional page wording when a minute count would obscure the useful duration. */
+  readonly selfStudyDurationLabel?: string;
   /** Exact requirements, one item each. */
   readonly needs: readonly string[];
   /** What a learner might expect to need but does not. */

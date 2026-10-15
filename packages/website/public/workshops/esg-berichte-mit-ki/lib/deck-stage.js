@@ -5,7 +5,8 @@
  *  (a) speaker notes — reads <script type="application/json" id="speaker-notes">
  *      and posts {slideIndexChanged: N} to the parent window on nav.
  *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
- *  (c) press R to reset to slide 0 (with a tasteful keyboard hint).
+ *  (c) press Shift+R to reset to slide 0 (with a tasteful keyboard hint); a bare R does
+ *      nothing, so a stray key press can never send a live talk back to the cover.
  *  (d) bottom-right overlay (above the page number) showing slide count + hints; mouse only, fades out on idle.
  *  (e) auto-scaling — inner canvas is a fixed design size (default 1920×1080)
  *      scaled with `transform: scale()` to fit the viewport, letterboxed.
@@ -210,7 +211,7 @@
       text-align: center;
       font-size: 12px;
     }
-    .count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }
+    .count .sep { color: rgba(255,255,255,0.45); margin: 0; font-weight: 400; }
     .count .total { color: rgba(255,255,255,0.55); }
 
     .divider {
@@ -365,12 +366,12 @@
         <button class="btn prev" type="button" aria-label="Previous slide" title="Previous (←)">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
         </button>
-        <span class="count" aria-live="polite"><span class="current">1</span><span class="sep">/</span><span class="total">1</span></span>
+        <span class="count" aria-live="polite"><span class="current">01</span><span class="sep"> / </span><span class="total">01</span></span>
         <button class="btn next" type="button" aria-label="Next slide" title="Next (→)">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
         </button>
         <span class="divider"></span>
-        <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (R)">Reset<span class="kbd">R</span></button>
+        <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (Shift+R)">Reset<span class="kbd">Shift R</span></button>
       `;
 
       overlay.querySelector('.prev').addEventListener('click', () => this._go(this._index - 1, 'click'));
@@ -445,7 +446,7 @@
         slide.setAttribute('data-deck-slide', String(i));
       });
 
-      if (this._totalEl) this._totalEl.textContent = String(this._slides.length || 1);
+      if (this._totalEl) this._totalEl.textContent = pad2(this._slides.length || 1);
       if (this._index >= this._slides.length) this._index = Math.max(0, this._slides.length - 1);
     }
 
@@ -486,7 +487,7 @@
         if (i === curr) s.setAttribute('data-deck-active', '');
         else s.removeAttribute('data-deck-active');
       });
-      if (this._countEl) this._countEl.textContent = String(curr + 1);
+      if (this._countEl) this._countEl.textContent = pad2(curr + 1);
       this._persistIndex();
 
       if (broadcast) {
@@ -575,7 +576,7 @@
         this._go(0, 'keyboard');
       } else if (key === 'End') {
         this._go(this._slides.length - 1, 'keyboard');
-      } else if (key === 'r' || key === 'R') {
+      } else if ((key === 'r' || key === 'R') && e.shiftKey) {
         this._go(0, 'keyboard');
       } else if (/^[0-9]$/.test(key)) {
         // 1..9 jump to that slide; 0 jumps to 10.

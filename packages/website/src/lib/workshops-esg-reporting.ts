@@ -8,13 +8,12 @@ const base = "/workshops/esg-berichte-mit-ki";
  * Workshop 04, "Answer ESG by Friday". The published deck and kit are written by
  * scripts/workshop04/export-esg-passport.mjs (repository root); every number in this copy is
  * printed in that deck or kit, and the company, its files and its certificates are invented.
- * The agenda follows the deck's 17 slides and the session clock (8 / 4 / 4 / 8 / 7 / 7 / 10 /
- * 6 / 6 = 60 minutes). The session is presenter-led: Tim runs the five prompts in Claude while
- * the room watches; the kit lets a learner replay the same steps at home.
+ * The agenda follows the deck's 19 slides and the 16 October run sheet. Tim demos Claude while
+ * the room plays; the kit is the take-home assignment.
  */
 
-/** Size of crvena-zemja-esg-kit.zip (891,029 bytes), in the page locale's number format. */
-const KIT_SIZE_LABEL = "870 KB";
+/** Size of crvena-zemja-esg-kit.zip (896,622 bytes), rounded down to the displayed KB. */
+const KIT_SIZE_LABEL = "875 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -46,12 +45,12 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     summary:
       "Eine erfundene nordmazedonische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
     description:
-      "Vinarija Crvena Zemja, eine erfundene Familienkellerei in der Gemeinde Kavadarci in Nordmazedonien, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Deutschland und Polen und das Prüfformular der Bank für einen Solarkredit, auf Mazedonisch. Tim beantwortet alle drei live in einem Claude-Projekt, mit fünf Prompts und drei Regeln: nur unsere Dateien, jede Antwort mit Quelle, NOT FOUND oder NEEDS CHECK statt einer Schätzung. Im Fragebogen sind 5 Antworten OK, 1 NEEDS CHECK und 2 NOT FOUND, denn 279,7 MWh Strom sind nur elf Monate und das Bio-Zertifikat ist am 31. August 2026 abgelaufen. Vier von sieben Werbeaussagen fallen durch. Für die Bank rechnet Claude die Amortisation in Code: 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre. Dann kommt das Foto der fehlenden Septemberrechnung, und das Jahr hat 320,9 MWh.",
+      "Vinarija Crvena Zemja, eine erfundene Familienkellerei in der Gemeinde Kavadarci in Nordmazedonien, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Deutschland und Polen und das Prüfformular der Bank für einen Solarkredit. Tim demonstriert Claude live auf dem Beamer, während der Raum auf Papier oder dem Handy mitspielt: Die Gruppe sucht Fallen in den Dateien, tippt vor jeder Antwort auf das Ergebnis und stimmt über die Werbeaussagen ab. Zu Hause ist das Kit die selbstgeführte Aufgabe mit einer zehnminütigen Fallensuche, fünf Schritten und einem Lösungsschlüssel zur eigenen Kontrolle.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
-      "Das Material ist englisch, und live bedient Tim Claude, während du zuschaust. Zu Hause spielst du die fünf Schritte mit dem Kit nach, auf jedem Claude-Plan mit eingeschalteter Codeausführung und Dateierstellung, und die Dateien werden dabei an Claude übertragen.",
-    outcome: "Kit mit fünf Prompts und drei Regeln",
+      "Das gesamte Material ist auf Englisch. Live führt Tim Claude auf dem Beamer vor und der Raum spielt mit: Ihr sucht Fallen in den Dateien, tippt vor jeder Antwort auf das Ergebnis und stimmt über Werbeaussagen ab, mit Daumen, Karten, Papier oder dem Handy. Kein Laptop und kein Claude-Konto nötig. Zu Hause ist das Kit deine selbstgeführte Aufgabe: zehn Minuten Fallensuche, dann fünf Schritte mit jedem Claude-Plan einschließlich Free und ein Lösungsschlüssel zur Selbstkontrolle. Die Kit-Dateien werden in Claude hochgeladen; alle sind erfunden.",
+    outcome: "Selbstgeführtes Kit mit Fallensuche, fünf Prompts und Lösungsschlüssel sowie einer Methode für den nächsten Fragebogen, grünen Claim oder Bankformular aus einem Ordner, mit Quelle und Status je Antwort",
     audience: [
       "Geschäftsführung und Verwaltung kleiner Firmen, bei denen ESG-Fragebögen landen",
       "Vertrieb und Marketing, die grüne Aussagen über Produkte machen wollen",
@@ -68,78 +67,25 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Du erkennst, welche Antworten sich mit einem nachgereichten Beleg ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
-      {
-        label: "Warum ESG bei dir landet",
-        minutes: 8,
-        activity: "listen",
-        description:
-          "Von freiwilligen Berichten zum EU-Gesetz, warum die Fragen nach der Kürzung von 2026 bleiben und wie sie über Käufer, Banken und Regale bei Exporteuren in Nordmazedonien ankommen.",
-      },
-      {
-        label: "Darf ich das, und wie Claude arbeitet",
-        minutes: 4,
-        activity: "listen",
-        description:
-          "Zwei Regeln, die bei dir bleiben, und was in Claude läuft: das Projekt, Code, das Lesen von Fotos und die Dateien, die Claude schreibt.",
-      },
-      {
-        label: "Fall und Projekt",
-        minutes: 4,
-        activity: "do",
-        description:
-          "Vinarija Crvena Zemja hat 42 Beschäftigte und exportiert 74 % des Umsatzes; ein Claude-Projekt bekommt 13 Dateien und drei Regeln.",
-      },
-      {
-        label: "Schritt 1: der Fragebogen des Importeurs",
-        minutes: 8,
-        activity: "do",
-        description:
-          "Claude beantwortet acht Fragen mit Quelle und Status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND.",
-      },
-      {
-        label: "Schritt 2: Werbeaussagen",
-        minutes: 7,
-        activity: "vote",
-        description:
-          "Sieben Aussagen gegen die EU-Regeln: Du entscheidest mit, welche rot, gelb oder grün sind.",
-      },
-      {
-        label: "Schritt 3: das Bankformular",
-        minutes: 7,
-        activity: "do",
-        description:
-          "Claude füllt ein mazedonisches Prüfformular und rechnet die Amortisation der Solaranlage in Code: 5,0 Jahre.",
-      },
-      {
-        label: "Schritt 4: der ESG-Pass",
-        minutes: 10,
-        activity: "do",
-        description:
-          "Claude schreibt alles Bekannte auf die elf Überschriften des VSME-Basismoduls, als Dashboard und als Word-Datei, und benennt die Lücken.",
-      },
-      {
-        label: "Schritt 5: die späte Rechnung",
-        minutes: 6,
-        activity: "do",
-        description:
-          "Das Foto der Septemberrechnung kommt, und Claude aktualisiert jede Antwort, die am Strom hängt.",
-      },
-      {
-        label: "Was bleibt, und deine Fragen",
-        minutes: 6,
-        activity: "listen",
-        description:
-          "Einmal sammeln, oft antworten, nur behaupten, was du belegen kannst; das Kit nimmst du mit.",
-      },
+      { label: "Kaltstart: Daumen hoch oder runter", minutes: 1, activity: "vote", description: "Würdest du diese Antwort an die Bank schicken?" },
+      { label: "Hände, Vermutungen und Setup", minutes: 10, activity: "do", description: "Warum die Anfrage hier landet, der Fall und das Claude-Projekt." },
+      { label: "Fallensuche", minutes: 3.5, activity: "do", description: "In Paaren Fallen in den Dateien finden und eine saubere Datei erkennen." },
+      { label: "Tipp: der Fragebogen", minutes: 6.5, activity: "vote", description: "Erst tippen, wie viele Antworten belegt sind, dann Claude prüfen." },
+      { label: "Abstimmung: die grünen Claims", minutes: 7, activity: "vote", description: "Die Gruppe ordnet sieben Claims Rot, Gelb oder Grün zu." },
+      { label: "Wettrennen: das Bankformular", minutes: 4, activity: "do", description: "Die Amortisation zuerst selbst mit dem Handy ausrechnen." },
+      { label: "Tipp: der ESG-Pass", minutes: 9, activity: "do", description: "Vor der Auswertung tippen, welche Belege fehlen und wie lange Claude braucht." },
+      { label: "Tipp und Prüfung: die Überraschung", minutes: 8, activity: "vote", description: "Vorhersagen, was sich mit dem neuen Dokument ändert, dann den Beleg prüfen." },
+      { label: "Exit-Ticket und Abschluss", minutes: 11, activity: "write", description: "Die Methode in drei Karten zusammenfassen und einen eigenen nächsten Schritt festhalten." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
-    minutesSelfStudy: 60,
+    minutesSelfStudy: 120,
+    selfStudyDurationLabel: "Selbstlernen etwa 2 Stunden (etwa 30 Minuten, sobald du Claude kennst)",
     needs: [
-      "Live nur einen Bildschirm, auf dem du das Deck siehst",
+      "Live: nichts zu installieren. Ein Stift oder dein Handy für die Abstimmungen.",
       "Zum Nachmachen die Claude-Desktop-App oder claude.ai, jeder Plan",
-      "In den Claude-Einstellungen eingeschaltet: Codeausführung und Dateierstellung",
-      "Zu Hause etwa 45 Minuten für die fünf Schritte",
+      "Zu Hause: Codeausführung und Dateierstellung in Claude eingeschaltet (Settings > Capabilities; standardmäßig an)",
+      "Zu Hause etwa 2 Stunden für die Fallensuche und fünf Schritte. Du kannst nach jedem Schritt aufhören.",
     ],
     notNeeded: [
       "Programmierkenntnisse",
@@ -154,9 +100,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-12",
+      reviewedAt: "2026-10-15",
       data: "synthetic",
-      note: "Firma, Personen, Zahlen, Zertifikate und das Rechnungsfoto sind erfunden. Die fünf Prompts liefen vor der Veröffentlichung mehrfach auf Claude-Modellen gegen das Kit.",
+      note: "Firma, Personen, Zahlen, Zertifikate und Dokumente sind erfunden.",
     },
     steps: [
       {
@@ -170,21 +116,21 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "Den Importeur beantworten",
         description:
-          "Claude beantwortet die acht Fragen von Nordvik Vin AB mit Quelle und Status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND. 279,7 MWh sind elf Monate, der September fehlt.",
+          "Claude beantwortet die acht Fragen von Nordvik Vin AB mit Quelle und Status. Prüfe jede Antwort gegen die Dateien.",
         tool: "Prompt 1 · Excel-Datei",
       },
       {
         n: "03",
         title: "Werbeaussagen prüfen",
         description:
-          "Von sieben Aussagen sind vier rot, eine gelb und zwei grün, jede mit Quelle und einer Fassung, die sich heute belegen lässt.",
+          "Prüfe sieben Aussagen gegen die Dateien und finde für jede eine belegbare Fassung.",
         tool: "Prompt 2",
       },
       {
         n: "04",
         title: "Das Bankformular füllen",
         description:
-          "Das Formular der Banka Povardarie, auf Mazedonisch (kyrillisch): 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre, in Code gerechnet und als Schätzung markiert.",
+          "Das englische Formular der Banka Povardarie als eine Tabelle ausfüllen, mit Quelle und Status je Feld, und die Amortisation in Code berechnen.",
         tool: "Prompt 3",
       },
       {
@@ -196,10 +142,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "06",
-        title: "Die späte Rechnung einarbeiten",
+        title: "Eine Überraschung einarbeiten",
         description:
-          "Das Foto der Septemberrechnung macht das Jahr zu 320,9 MWh, 15,8 MWh mehr als ein Schnitt aus elf Monaten, und der Solaranteil sinkt von 64 % auf 56 %.",
-        tool: "Prompt 5 · Foto",
+          "Prüfe, welche Antworten das neue Dokument ändert und welche gleich bleiben.",
+        tool: "Prompt 5",
       },
     ],
     caseStudy: {
@@ -212,27 +158,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Crvena Zemja exportiert 74 % des Umsatzes, nach Deutschland, an den schwedischen Importeur Nordvik Vin AB und nach Polen. Importeur, Marketing und Bank fragen in einer Woche nach denselben Fakten; die Antworten kommen aus 13 Dateien, die so unordentlich sind wie echte.",
       metrics: [
         { label: "Beschäftigte", value: "42" },
-        { label: "Fragebogen", value: "5 von 8 OK" },
-        { label: "Werbeaussagen", value: "4 von 7 rot" },
-        { label: "Amortisation", value: "5,0 Jahre" },
+        { label: "Anfragen", value: "3" },
+        { label: "Firmendateien", value: "13" },
+        { label: "Versteckte Fallen", value: "7" },
       ],
       decisionQuestion:
         "Was darfst du einem Importeur, deiner Bank oder in einem Regal behaupten, wenn deine Dateien es nur zum Teil belegen?",
+      limitationsHeading: "Bevor du startest",
       dataLimitations: [
-        "Den Stromrechnungen 2025 fehlt der September; er kommt in Schritt 5 als Foto, mit Absicht.",
+        "Sieben Fallen und eine saubere Datei sind in den 13 Dateien versteckt. Finde sie, bevor Claude es tut.",
         "Der Tarif von 9,50 MKD pro kWh ist erfunden, kein echter Preis.",
-        "Die Solaranlage ist geplant; 180 MWh im Jahr sind eine Schätzung aus einem nicht unterschriebenen Angebot.",
       ],
     },
     materials: materials([
       [
-        "Deck · 17 Folien",
+        "Deck · 19 Folien",
         "Für den Beamer. Die Pfeiltaste nach rechts zeigt den nächsten Schritt einer Folie, nach links geht es zurück; jeder Prompt hat einen Kopierknopf.",
       ],
       [
         "ESG-Kit · .zip",
-        "START-HERE.md mit Einrichtung und den fünf Prompts, die drei Regeln, 13 Firmendateien, die drei Anfragen und das Foto der späten Rechnung.",
-        "Einrichtung, fünf Prompts, 13 Firmendateien, drei Anfragen, ein Foto.",
+        "START-HERE.md (Fallensuche zum Aufwärmen, Einrichtung, fünf Prompts), ANSWERS.md (Lösungsschlüssel: erst nach jedem Schritt öffnen), project-instructions.md (die drei Regeln), 13 Firmendateien, drei Anfragen und eine Überraschung für Schritt 5.",
+        "Aufwärmen, Einrichtung, fünf Prompts, Lösungsschlüssel, 13 Firmendateien, drei Anfragen, eine Überraschung.",
       ],
     ]),
     kit: ESG_REPORTING_KIT.de,
@@ -246,12 +192,12 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     summary:
       "An invented North Macedonian winery gets three ESG requests in one week. Claude answers all of them from the same files and names what is missing.",
     description:
-      "Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Germany and Poland, and its bank's screening form for a solar loan, in Macedonian. Tim answers all three live in one Claude Project, with five prompts and three rules: only our files, cite the source, say NOT FOUND or NEEDS CHECK instead of guessing. The questionnaire comes back with 5 answers OK, 1 NEEDS CHECK and 2 NOT FOUND, because 279.7 MWh of electricity is only eleven months and the organic certificate expired on 31 August 2026. Four of seven claims fail. For the bank, Claude works out the payback in code: 8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh) = 5.0 years. Then a photo of the missing September invoice arrives, and the year has 320.9 MWh.",
+      "Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Germany and Poland, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room plays along on paper or phones: the group hunts traps in the files, bets on each result before Claude shows it, and votes on the marketing claims. At home, the kit is a self-guided assignment with a 10-minute trap hunt, five steps and an answer key for checking your work.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
-      "Materials are in English, and in the live session Tim drives Claude while you watch. At home you replay the five steps with the kit on any Claude plan with code execution and file creation switched on, and the files are transferred to Claude as you do.",
-    outcome: "Kit with five prompts and three rules",
+      "All material is in English. Live, Tim runs Claude on the projector and the room plays along: you hunt traps in the files, bet on each result before Claude shows it, and vote on the marketing claims, with thumbs, cards, paper or your phone. No laptop, no Claude account. At home, the kit is your take-home assignment: a 10-minute trap hunt, then the five steps on any Claude plan, including Free, and an answer key to check yourself. The kit's files are uploaded to Claude; all of them are fictional.",
+    outcome: "A self-guided kit (trap hunt, five prompts, answer key) and a method to answer your next questionnaire, green claim or bank form from one folder, with a source and a status for every answer.",
     audience: [
       "Owners and office staff of small firms who receive ESG questionnaires",
       "Sales and marketing teams who want to make green product claims",
@@ -268,78 +214,25 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
-      {
-        label: "Why ESG lands on your desk",
-        minutes: 8,
-        activity: "listen",
-        description:
-          "From voluntary reports to EU law, why the questions stayed after the 2026 cut, and how they reach North Macedonian exporters through buyers, banks and shelves.",
-      },
-      {
-        label: "Is it allowed, and how Claude works",
-        minutes: 4,
-        activity: "listen",
-        description:
-          "Two rules that stay with you, and what runs inside Claude: the Project, code, reading photos and the files Claude writes.",
-      },
-      {
-        label: "The case and the Project",
-        minutes: 4,
-        activity: "do",
-        description:
-          "Vinarija Crvena Zemja has 42 employees and exports 74% of its revenue; a Claude Project gets 13 files and three rules.",
-      },
-      {
-        label: "Step 1: the importer's questionnaire",
-        minutes: 8,
-        activity: "do",
-        description:
-          "Claude answers eight questions with source and status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND.",
-      },
-      {
-        label: "Step 2: green claims",
-        minutes: 7,
-        activity: "vote",
-        description:
-          "Seven claims against the EU rules: you help decide which are red, amber or green.",
-      },
-      {
-        label: "Step 3: the bank form",
-        minutes: 7,
-        activity: "do",
-        description:
-          "Claude fills a Macedonian screening form and works out the solar payback in code: 5.0 years.",
-      },
-      {
-        label: "Step 4: the ESG passport",
-        minutes: 10,
-        activity: "do",
-        description:
-          "Claude puts everything known under the eleven headings of the VSME Basic module, as a dashboard and a Word file, and names the gaps.",
-      },
-      {
-        label: "Step 5: the late invoice",
-        minutes: 6,
-        activity: "do",
-        description:
-          "A photo of the September invoice arrives, and Claude updates every answer that depends on electricity.",
-      },
-      {
-        label: "What to keep, and your questions",
-        minutes: 6,
-        activity: "listen",
-        description:
-          "Collect once, answer many, claim only what you can prove; you leave with the kit.",
-      },
+      { label: "Cold open: thumbs", minutes: 1, activity: "vote", description: "Would you send this answer to the bank?" },
+      { label: "Hands, guesses and setup", minutes: 10, activity: "do", description: "Why the request lands here, the case and the Claude Project." },
+      { label: "Trap hunt", minutes: 3.5, activity: "do", description: "Find traps in the files in pairs and identify one clean file." },
+      { label: "Bet: the questionnaire", minutes: 6.5, activity: "vote", description: "Predict how many answers are supported, then check Claude's work." },
+      { label: "Vote: the green claims", minutes: 7, activity: "vote", description: "Classify seven claims as RED, AMBER or GREEN." },
+      { label: "Race: the bank form", minutes: 4, activity: "do", description: "Work out the payback with your phone calculator first." },
+      { label: "Bet: the ESG passport", minutes: 9, activity: "do", description: "Predict which evidence is missing and how long Claude will take." },
+      { label: "Bet and audit: one more surprise", minutes: 8, activity: "vote", description: "Predict what changes with the new document, then check it." },
+      { label: "Exit ticket and close", minutes: 11, activity: "write", description: "Summarize the method on three cards and name your next step." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
-    minutesSelfStudy: 60,
+    minutesSelfStudy: 120,
+    selfStudyDurationLabel: "self-paced about 2 hours (about 30 min once you know Claude)",
     needs: [
-      "Live, only a screen where you can see the deck",
+      "Live: nothing to install. A pen, or your phone for the votes.",
       "To replay it, the Claude desktop app or claude.ai, any plan",
-      "Switched on in Claude's settings: code execution and file creation",
-      "About 45 minutes at home for the five steps",
+      "At home: code execution and file creation switched on in Claude (Settings > Capabilities; on by default)",
+      "About 2 hours at home for the warm-up and five steps. You can stop after any step.",
     ],
     notNeeded: [
       "Programming skills",
@@ -354,9 +247,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-12",
+      reviewedAt: "2026-10-15",
       data: "synthetic",
-      note: "The company, people, numbers, certificates and the invoice photo are invented. The five prompts were run against the kit several times on Claude models before publication.",
+      note: "The company, people, numbers, certificates and documents are invented.",
     },
     steps: [
       {
@@ -370,21 +263,21 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "Answer the importer",
         description:
-          "Claude answers Nordvik Vin AB's eight questions with source and status: 5 OK, 1 NEEDS CHECK, 2 NOT FOUND. 279.7 MWh is eleven months; September is missing.",
+          "Claude answers Nordvik Vin AB's eight questions with source and status. Check each answer against the files.",
         tool: "Prompt 1 · Excel file",
       },
       {
         n: "03",
         title: "Check the green claims",
         description:
-          "Of seven claims, four are red, one amber and two green, each with its source and a version you can prove today.",
+          "Check seven claims against the files and find a version you can prove today.",
         tool: "Prompt 2",
       },
       {
         n: "04",
         title: "Fill the bank form",
         description:
-          "Banka Povardarie's form, in Macedonian (Cyrillic): 8,550,000 MKD / (180,000 kWh × 9.50 MKD/kWh) = 5.0 years, worked out in code and marked as an estimate.",
+          "Fill in Banka Povardarie's English form as one table, with a source and status for each field, and work out the payback in code.",
         tool: "Prompt 3",
       },
       {
@@ -396,10 +289,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "06",
-        title: "Add the late invoice",
+        title: "Add one more surprise",
         description:
-          "A photo of the September invoice makes the year 320.9 MWh, 15.8 MWh more than an 11-month average, and the solar share drops from 64% to 56%.",
-        tool: "Prompt 5 · photo",
+          "Check which answers change with the new document and which stay the same.",
+        tool: "Prompt 5",
       },
     ],
     caseStudy: {
@@ -412,27 +305,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Crvena Zemja exports 74% of its revenue, to Germany, to the Swedish importer Nordvik Vin AB and to Poland. Importer, marketing and bank ask for the same facts in one week; the answers come from 13 files that are as messy as real ones.",
       metrics: [
         { label: "Employees", value: "42" },
-        { label: "Questionnaire", value: "5 of 8 OK" },
-        { label: "Marketing claims", value: "4 of 7 red" },
-        { label: "Payback", value: "5.0 years" },
+        { label: "Requests", value: "3" },
+        { label: "Company files", value: "13" },
+        { label: "Hidden traps", value: "7" },
       ],
       decisionQuestion:
         "What may you tell an importer, your bank or a shop shelf when your files only partly prove it?",
+      limitationsHeading: "Before you start",
       dataLimitations: [
-        "The 2025 electricity bills lack September; it arrives in step 5 as a photo, on purpose.",
+        "Seven traps and one clean file are hidden in the 13 files. Find them before Claude does.",
         "The tariff of 9.50 MKD per kWh is invented, not a real price.",
-        "The solar plant is planned; 180 MWh a year is an estimate from an unsigned offer.",
       ],
     },
     materials: materials([
       [
-        "Deck · 17 slides",
+        "Deck · 19 slides",
         "For the projector. The right arrow key shows the next step of a slide and the left one goes back; every prompt has a copy button.",
       ],
       [
         "ESG kit · .zip",
-        "START-HERE.md with the setup and the five prompts, the three rules, 13 company files, the three requests and the photo of the late invoice.",
-        "Setup, five prompts, 13 company files, three requests, one photo.",
+        "START-HERE.md (warm-up trap hunt, setup, five prompts), ANSWERS.md (the answer key: open it only after each step), project-instructions.md (the three rules), 13 project files, three requests and one surprise for step 5.",
+        "Warm-up, setup, five prompts, answer key, 13 company files, three requests, one surprise.",
       ],
     ]),
     kit: ESG_REPORTING_KIT.en,
