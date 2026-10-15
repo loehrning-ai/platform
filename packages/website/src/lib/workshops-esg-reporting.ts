@@ -5,7 +5,7 @@ import { ESG_REPORTING_KIT } from "./workshops-esg-reporting-kit";
 const base = "/workshops/esg-berichte-mit-ki";
 
 /**
- * Workshop 04, "Answer ESG by Friday". The published deck and kit are written by
+ * Workshop 04, "ESG Reporting with AI: From Raw Inputs to Clearer Insights". The published deck and kit are written by
  * scripts/workshop04/export-esg-passport.mjs (repository root); every number in this copy is
  * printed in that deck or kit, and the company, its files and its certificates are invented.
  * The agenda follows the deck's 19 slides and the 16 October run sheet. Tim demos Claude while
@@ -40,7 +40,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "esg-berichte-mit-ki",
     number: "04",
     topic: "ESG",
-    title: "ESG-Anfragen bis Freitag beantworten",
+    title: "ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen",
     eyebrow: "Workshop 04 · ESG",
     summary:
       "Eine erfundene nordmazedonische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
@@ -187,7 +187,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "esg-berichte-mit-ki",
     number: "04",
     topic: "ESG",
-    title: "Answer ESG by Friday",
+    title: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
     eyebrow: "Workshop 04 · ESG",
     summary:
       "An invented North Macedonian winery gets three ESG requests in one week. Claude answers all of them from the same files and names what is missing.",

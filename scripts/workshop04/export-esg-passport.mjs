@@ -39,6 +39,7 @@ export const DECK_TEXT_FILES = [
   "lib/globe.js",
   "assets/favicon.svg",
   "assets/lockup-horizontal.svg",
+  "assets/brainster-logo.svg",
   "assets/kit-qr.svg",
 ];
 
@@ -279,7 +280,12 @@ function checkKitFolder(kitDir) {
 export function assertClean(name, bytes) {
   if (!/\.(?:css|csv|html|js|md|svg|txt)$/.test(name)) return;
   const text = bytes.toString("utf8");
-  if (mentionsClient(text)) throw new Error(`client name in ${name}`);
+  // Brainster is now an expressly requested workshop partner. Permit only its
+  // accessible logo label and asset reference; keep the hashed client guard elsewhere.
+  const clientCheckText = text
+    .replace(/\balt="Brainster"/g, "")
+    .replaceAll("assets/brainster-logo.svg", "");
+  if (mentionsClient(clientCheckText)) throw new Error(`client name in ${name}`);
   for (const [pattern, label] of FORBIDDEN) {
     if (pattern.test(text)) throw new Error(`${label} in ${name}`);
   }

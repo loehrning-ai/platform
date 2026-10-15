@@ -1045,6 +1045,15 @@
       "redistribution": "Permitted with the OFL notices bundled beside the fonts"
     },
     {
+      "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/brainster-logo.svg",
+      "sizeBytes": 6235,
+      "sha256": "fcc86454757a140f3760fb5f4451486fedbb9f3cd76b6b56f4bb7e66e7d2dc0e",
+      "owner": "Brainster",
+      "source": "https://www.brainster.co/images/brainster-logo.svg",
+      "license": "LicenseRef-BRAINSTER-Brand",
+      "redistribution": "Included to identify the workshop partner at the owner's request; no standalone reuse rights granted"
+    },
+    {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/assets/fonts/Typing-Regular.woff2",
       "sizeBytes": 61064,
       "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
