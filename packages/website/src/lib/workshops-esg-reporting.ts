@@ -80,7 +80,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 120,
-    selfStudyDurationLabel: "Selbstlernen etwa 2 Stunden (etwa 30 Minuten, sobald du Claude kennst)",
+    selfStudyDurationLabel: "Beim ersten Mal etwa 2 Stunden",
     needs: [
       "Live: nichts zu installieren. Ein Stift oder dein Handy für die Abstimmungen.",
       "Zum Nachmachen die Claude-Desktop-App oder claude.ai, jeder Plan",
@@ -227,7 +227,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 120,
-    selfStudyDurationLabel: "self-paced about 2 hours (about 30 min once you know Claude)",
+    selfStudyDurationLabel: "about 2 hours the first time",
     needs: [
       "Live: nothing to install. A pen, or your phone for the votes.",
       "To replay it, the Claude desktop app or claude.ai, any plan",

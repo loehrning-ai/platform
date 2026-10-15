@@ -39,7 +39,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.minutesSelfStudy).toBe(120);
     }
     expect(de.agenda).toHaveLength(en.agenda.length);
-    expect(en.selfStudyDurationLabel).toBe("self-paced about 2 hours (about 30 min once you know Claude)");
+    expect(en.selfStudyDurationLabel).toBe("about 2 hours the first time");
   });
 
   it("lists the deck and kit at the existing URLs and uses the exact supplied ZIP size", () => {
