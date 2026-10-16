@@ -112,9 +112,10 @@ jobs:
     needs: [fast]
     if: ${{ !cancelled() && (github.event_name != 'pull_request' || needs.fast.result == 'success') }}
     # Total blocking time is noisy on a shared runner: it was the only red job in 12 of the last 31
-    # failed runs, including a bump that touches no app code. On a pull request it reports but does
-    # not block; the push to main (the commit that actually lands) still gates on it.
-    continue-on-error: ${{ github.event_name == 'pull_request' }}
+    # failed runs, and it failed on main for code that had passed. It always reports and never
+    # blocks, neither a pull request nor the push to main (whose green is the deploy signal).
+    # The deterministic part, the route contract, stays blocking in `fast` (lighthouse:check).
+    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -129,7 +130,7 @@ jobs:
           playwright-browsers: chromium
           next-build-cache: "true"
       - run: bun run --cwd packages/website verify:build
-      - name: Lighthouse performance smoke (advisory on pull requests)
+      - name: Lighthouse performance smoke (advisory)
         run: |
           export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
           bun run lighthouse:ci:built
