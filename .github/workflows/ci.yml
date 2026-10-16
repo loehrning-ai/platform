@@ -136,7 +136,7 @@ jobs:
           bun run lighthouse:ci:built
       - name: Upload Lighthouse reports
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: lighthouse-reports
           path: .lighthouseci/
@@ -213,7 +213,7 @@ jobs:
           PLAYWRIGHT_OUTPUT_DIR: test-results/${{ matrix.project }}-${{ matrix.shard }}
       - name: Upload blob report
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: blob-${{ matrix.project }}-${{ matrix.shard }}
           path: packages/website/blob-report/${{ matrix.project }}-${{ matrix.shard }}/
@@ -221,7 +221,7 @@ jobs:
           retention-days: 7
       - name: Upload failure artifacts
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: failures-${{ matrix.project }}-${{ matrix.shard }}
           path: packages/website/test-results/
@@ -311,7 +311,7 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup
       - name: Download blob reports
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           path: packages/website/all-blob-reports
           pattern: blob-*
@@ -321,7 +321,7 @@ jobs:
         run: node scripts/run-playwright.mjs merge-reports --reporter=html all-blob-reports
       - name: Upload merged report
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: browser-report
           path: packages/website/playwright-report/
