@@ -28,6 +28,10 @@ updates:
         patterns: ["*"]
         update-types: [minor, patch]
     ignore:
+      # Major updates are migrations, not routine bumps: they arrive when the maintainers start one, not as a
+      # weekly pull request that fails the build (#130 framer-motion 14, #131 @types/node 26).
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
       # @vitejs/plugin-react 6 requires vite 8, and the workspace pins vite 7
       # through the root package.json overrides. The major update (PR #69)
       # breaks Vitest. Remove this rule together with the vite 8 migration.

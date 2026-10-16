@@ -103,6 +103,14 @@ green `verify` or `dependency-review` comes from the edited checks, not from
 the ones on `main`. Review such a diff by hand before merging. `CodeQL` runs
 from GitHub's configuration, so a pull request cannot change it.
 
+Two kinds of job are advisory on a pull request and blocking on the push to `main`: `lighthouse`
+(total blocking time is noisy on a shared runner) and the `mobile-chromium` and `mobile-webkit`
+e2e shards (60 s navigation timeouts that pass on the next run). They set `continue-on-error` only
+when the event is a pull request, so a failure is still visible on the checks tab but does not turn
+`verify` red. The desktop `chromium` shards, `unit`, `fast` (including the public-leak scan) and
+the privacy and auth gates block on every event. When `verify` fails, its log names each gate that
+did not succeed.
+
 No matrix job is required on its own; `verify` stands for all of them. It
 declares `if: always()` and fails when any dependency did not succeed. That
 `always()` is load-bearing — a required job that is _skipped_ is treated as
