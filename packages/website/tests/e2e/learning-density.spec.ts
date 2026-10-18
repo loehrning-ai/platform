@@ -35,7 +35,7 @@ const WORKSHOP_ROUTES = [
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
-  "/workshops/audit-vorbereitung-mit-ki",
+  "/workshops/ki-im-unternehmen-sicher-nutzen",
 ] as const;
 
 async function openLearningRoute(page: Page, route: string): Promise<void> {
@@ -226,15 +226,15 @@ test.describe("learning density and value contract", () => {
     });
   }
 
-  // The workshop detail page follows workshop-standard 4.1 and
-  // design-direction 7.2: the cover answers what the workshop is about and
-  // where to start, a compact agenda follows, and the materials come right
-  // after it. There is no exercise band between agenda and materials. What
-  // stays pinned: the cover's start action is inside the first viewport,
-  // nothing but the agenda sits between the cover and the materials, and no
-  // decision lab renders.
+  // The workshop detail page follows workshop-standard section 5: the cover
+  // answers what the workshop is about and where to start, and the brief on
+  // paper follows it (one facts line, the outcomes, the one need). There is no
+  // agenda section, no red-line jump nav and no exercise band. What stays
+  // pinned: the cover's start action is inside the first viewport, the brief is
+  // the first section after the cover, the case follows, and no decision lab
+  // renders. A material list exists only where the band cannot reach a file.
   for (const route of WORKSHOP_ROUTES) {
-    test(`${route} keeps its start action in the first viewport and the materials right after the agenda`, async ({
+    test(`${route} keeps its start action in the first viewport and the brief right after the cover`, async ({
       page,
     }) => {
       await openLearningRoute(page, route);
@@ -242,19 +242,23 @@ test.describe("learning density and value contract", () => {
       await expectFullyInFirstViewportBand(page, start, `${route} start action`);
 
       await expect(page.locator("[data-workshop-decision-lab]")).toHaveCount(0);
-      const materials = page.locator("section#material");
-      await expect(materials, `${route} materials must render`).toBeVisible();
-      const order = await materials.evaluate((element) => {
-        const agenda = element.previousElementSibling;
-        return {
-          agendaHasRoute: Boolean(agenda?.querySelector("ol[data-route-mode]")),
-          coverBeforeAgenda: Boolean(
-            agenda?.previousElementSibling?.matches("[data-cover-band]"),
+      await expect(page.locator("[data-workshop-redline], #ablauf, ol[data-route-mode]")).toHaveCount(0);
+      const brief = page.locator("[data-workshop-brief]");
+      await expect(brief, `${route} brief must render`).toBeVisible();
+      const order = await brief.evaluate((element) => ({
+        coverBeforeBrief: Boolean(element.previousElementSibling?.matches("[data-cover-band]")),
+        outcomes: element.querySelectorAll("ul li").length,
+        needs: element.querySelectorAll("[data-workshop-need]").length,
+        caseAfter: Boolean(
+          [...document.querySelectorAll("article > section")].some(
+            (section) => section.id === "fall" && Boolean(element.compareDocumentPosition(section) & Node.DOCUMENT_POSITION_FOLLOWING),
           ),
-        };
-      });
-      expect(order.agendaHasRoute, `${route} agenda precedes the materials`).toBe(true);
-      expect(order.coverBeforeAgenda, `${route} cover precedes the agenda`).toBe(true);
+        ),
+      }));
+      expect(order.coverBeforeBrief, `${route} cover precedes the brief`).toBe(true);
+      expect(order.outcomes, `${route} outcomes are visible`).toBeGreaterThanOrEqual(3);
+      expect(order.needs, `${route} names its one need`).toBe(1);
+      expect(order.caseAfter, `${route} case follows the brief`).toBe(true);
     });
   }
 });

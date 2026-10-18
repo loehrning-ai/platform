@@ -129,7 +129,6 @@ const FAIL_CLOSED_PLATFORM_ARCHIVE_EXTENSIONS = new Set(["7z", "gz", "tar"]);
  */
 const ZIP_ARCHIVES_WITH_PNG_ENTRIES = new Set([
   "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-  "packages/website/public/workshops/audit-vorbereitung-mit-ki/termin-health-audit-kit.zip",
 ]);
 /** Workshop 04's supplied compressed kit carries standard timestamp and Unix-id metadata. */
 const ZIP_ARCHIVES_WITH_SAFE_UNIX_METADATA = new Set([

@@ -1,12 +1,6 @@
 {
   "version": 1,
   "cards": {
-    "audit-vorbereitung-mit-ki": {
-      "input": "614f5f395102ad9b5f664e63d1699565db6079dd8ec6418672ca250c6fa41c00",
-      "output": "567303661aac0aa9d59b6dee22b36f82c4b860512d666fc7c121e2cfd3efb46e",
-      "width": 1200,
-      "height": 630
-    },
     "datenbereitschaft-fuer-ki": {
       "input": "7cbc2f6cdeebbf2957916d88809bb7cedae745c8cf3130944cf0c50e467fad58",
       "output": "3481abcbca2f455d7d93abe06bdea465cdf804e405825bf97ffdf68ded38fc6e",
@@ -22,6 +16,12 @@
     "geschaeftsberichte-mit-ki-lesen": {
       "input": "95fc8e71f923b653cbc484002527a35a7cf3c908b0f19e8a416807ab5d0d1820",
       "output": "4accb95dcc124d320e05c414e008e96d445250b0a1930f1f86bd77d3972252f4",
+      "width": 1200,
+      "height": 630
+    },
+    "ki-im-unternehmen-sicher-nutzen": {
+      "input": "1449ea9c01d80b38d6d915ce723fc9d420435f81ddbc0dcaa9e373901759bdbf",
+      "output": "3ecf39d25a38a6bc77bd2fdc198b017768625a7196c82571fb830da9de4995bd",
       "width": 1200,
       "height": 630
     },

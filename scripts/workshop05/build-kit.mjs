@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Builds the participant kit of Workshop 05 ("Audit Preparation with AI") from scripts/workshop05/kit/
- * into packages/website/public/workshops/audit-vorbereitung-mit-ki/termin-health-audit-kit.zip.
+ * Builds the participant kit of Workshop 05 ("Where Your Data Goes: Using Claude at Work") from scripts/workshop05/kit/
+ * into packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip.
  *
  * The ZIP is deterministic: stored entries, UTF-8 names, 0644 file modes, no extra fields, one
  * fixed modification time. Every archive passes the repository's ZIP inspection before it is written.
@@ -18,8 +18,8 @@ import { inspectZipArchive } from "../../packages/website/scripts/open-source/zi
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(HERE, "../..");
-export const SLUG = "audit-vorbereitung-mit-ki";
-export const KIT_NAME = "termin-health-audit-kit";
+export const SLUG = "ki-im-unternehmen-sicher-nutzen";
+export const KIT_NAME = "ai-at-work-kit";
 export const KIT_PREFIX = `${KIT_NAME}/`;
 export const ZIP_NAME = `${KIT_NAME}.zip`;
 export const KIT_RELEASE_DATE = "2026-11-13";
@@ -31,26 +31,13 @@ export const KIT_FILES = [
   "START-HERE.md",
   "ANSWERS.md",
   "project-instructions.md",
-  "inbox/1-rheinland-document-request.md",
-  "inbox/2-trust-page-claims.md",
-  "inbox/3-erasure-request.md",
-  "inbox/4-nordgrid-invoice.png",
-  "project-files/access_review_2026.csv",
-  "project-files/ai_acceptable_use_policy.md",
-  "project-files/ai_hosting_note.txt",
-  "project-files/audit_topics_reference.md",
-  "project-files/backup_restore_test_2026.txt",
-  "project-files/company_profile.md",
-  "project-files/data_inventory.csv",
-  "project-files/incident_log_2026.csv",
-  "project-files/pentest_summary_2025.txt",
-  "project-files/retention_and_erasure_policy.md",
-  "project-files/supplier_register.csv",
-  "project-files/support_tickets_sample.csv",
-  "project-files/training_records_2026.csv",
+  "customer-email.md",
+  "company-notes.md",
+  "scenes.md",
+  "facts.md",
 ];
 
-const INSPECTION = { label: ZIP_NAME, allowPngEntries: true, allowSafeUnixMetadata: true };
+const INSPECTION = { label: ZIP_NAME, allowSafeUnixMetadata: true };
 
 function dosDateTime(isoDate) {
   const [year, month, day] = isoDate.split("-").map(Number);

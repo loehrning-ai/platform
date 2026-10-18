@@ -11,6 +11,8 @@ import { test, expect, type Page } from "@playwright/test";
  */
 
 const HOME_LINK = 'nav a[href="/"]';
+// Framer useScroll is not wired before the app hydrates, so wait for the marker (as workshops.spec.ts openHub does).
+const HYDRATED = '[data-app-hydration-marker="true"][data-hydrated="true"]';
 const ICON_MARK = `${HOME_LINK} [data-logo-mark]`;
 const LEADING_L = `${HOME_LINK} [data-logo-wordmark-leading-l]`;
 const WORDMARK_REMAINDER = `${HOME_LINK} [data-logo-wordmark-remainder]`;
@@ -82,6 +84,7 @@ test.describe("primary navigation logo mark", () => {
   }) => {
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
+    await page.locator(HYDRATED).waitFor({ state: "attached" });
     await expect(page.locator(ICON_MARK)).toBeVisible();
     await expect(page.locator(LEADING_L)).toBeVisible();
 
@@ -122,6 +125,7 @@ test.describe("primary navigation logo mark", () => {
   }) => {
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
+    await page.locator(HYDRATED).waitFor({ state: "attached" });
 
     await scrollToAndSettle(page, 200);
     const settled = await scrollToAndSettle(page, 0);
@@ -137,6 +141,7 @@ test.describe("primary navigation logo mark", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
+    await page.locator(HYDRATED).waitFor({ state: "attached" });
     await expect(page.locator(ICON_MARK)).toBeVisible();
     await expect(page.locator(LEADING_L)).toBeAttached();
     await expect(page.locator(WORDMARK_REMAINDER)).toBeAttached();
@@ -158,6 +163,7 @@ test.describe("primary navigation logo mark", () => {
     await page.setViewportSize({ width: 320, height: 568 });
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
+    await page.locator(HYDRATED).waitFor({ state: "attached" });
     await expect(page.locator(ICON_MARK)).toBeVisible();
     await expect(
       page.locator("[data-nav-header-row] [data-logo-wordmark]"),

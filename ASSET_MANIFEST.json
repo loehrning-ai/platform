@@ -1175,7 +1175,7 @@
       "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/brainster-logo.svg",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/brainster-logo.svg",
       "sizeBytes": 6235,
       "sha256": "fcc86454757a140f3760fb5f4451486fedbb9f3cd76b6b56f4bb7e66e7d2dc0e",
       "owner": "Brainster",
@@ -1184,7 +1184,7 @@
       "redistribution": "Included to identify the workshop partner at the owner's request; no standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/fonts/JetBrainsMono-var.woff2",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/fonts/JetBrainsMono-var.woff2",
       "sizeBytes": 31340,
       "sha256": "2c32b9b3ee358c119e210f6f5195f9bd34894d78a785ff2e95d60e718e400af4",
       "owner": "The JetBrains Mono Project Authors",
@@ -1193,7 +1193,7 @@
       "redistribution": "Permitted with the OFL notices bundled beside the fonts"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/fonts/Typing-Bold.woff2",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/fonts/Typing-Bold.woff2",
       "sizeBytes": 60916,
       "sha256": "ca6dba1056629a9e0ff4fa578306666581a1ec56e48799538ae203e69ed745d2",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -1203,7 +1203,7 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/fonts/Typing-Medium.woff2",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/fonts/Typing-Medium.woff2",
       "sizeBytes": 60948,
       "sha256": "c67df698a4065d33f11a931c37b424d9653da9ad62217ec8de3b5a3cac01d2f3",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -1213,7 +1213,7 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/fonts/Typing-Regular.woff2",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/fonts/Typing-Regular.woff2",
       "sizeBytes": 61064,
       "sha256": "53682db1ecfdd18db0af16fcb234a01e4b834ba6914d85806747bb011a59533c",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -1223,7 +1223,7 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/fonts/Typing-SemiBold.woff2",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/fonts/Typing-SemiBold.woff2",
       "sizeBytes": 60860,
       "sha256": "47338939923cdc67d4d95d0267efbf3d5f22d0beb171a56d90fd24ad6bee315f",
       "owner": "Rasmus Andersson and The Inter Project Authors; modified and renamed by loehrning.ai",
@@ -1233,7 +1233,7 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/tim-loehr.jpg",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/tim-loehr.jpg",
       "sizeBytes": 112101,
       "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4",
       "owner": "Tim L\u00f6hr",
@@ -1242,43 +1242,25 @@
       "redistribution": "Personenbezogenes Bild; keine Weiterverwendung ausserhalb dieses Repositories"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/proof/nordgrid-invoice.png",
-      "sizeBytes": 655740,
-      "sha256": "1a29b5dc57c3d245e9411fd7a8cb621ab98d94fb99a091eaf722db9413914478",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip",
+      "sizeBytes": 14581,
+      "sha256": "34850b4a73a752cb5cdca000c989e2d9e4b613b26a5dabe28dc6cb74bb4a010f",
       "owner": "Tim L\u00f6hr",
-      "source": "Original Audit Preparation with AI workshop material (rendered photo of an invented invoice from an invented supplier, generated for Workshop 05), owner-authorized loehrning.ai publication",
+      "source": "Original Where Your Data Goes workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
     },
     {
-      "path": "scripts/workshop05/kit/inbox/4-nordgrid-invoice.png",
-      "sizeBytes": 655740,
-      "sha256": "1a29b5dc57c3d245e9411fd7a8cb621ab98d94fb99a091eaf722db9413914478",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original Audit Preparation with AI workshop material (rendered photo of an invented invoice from an invented supplier, generated for Workshop 05), kit source file, owner-authorized loehrning.ai publication",
-      "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
-    },
-    {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/termin-health-audit-kit.zip",
-      "sizeBytes": 706369,
-      "sha256": "b9d3e47df30f7fa775763803562d713586332263dbbf4696289089e25ffdd428",
-      "owner": "Tim L\u00f6hr",
-      "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
-      "license": "LicenseRef-Loehrning-Brand",
-      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
-    },
-    {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/card-preview.webp",
-      "sha256": "567303661aac0aa9d59b6dee22b36f82c4b860512d666fc7c121e2cfd3efb46e",
-      "sizeBytes": 27946,
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/card-preview.webp",
+      "sha256": "3ecf39d25a38a6bc77bd2fdc198b017768625a7196c82571fb830da9de4995bd",
+      "sizeBytes": 26940,
       "owner": "Tim L\u00f6hr",
       "source": "generated by scripts/plakat/build-cards.mjs from src/lib/plakat",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/assets/plakat-cover.svg",
+      "path": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/assets/plakat-cover.svg",
       "sha256": "57b540e01c7fb0ff0dec3aa60a4c816bce83d78393fe8455194129604c11d17f",
       "sizeBytes": 1677,
       "owner": "Tim L\u00f6hr",

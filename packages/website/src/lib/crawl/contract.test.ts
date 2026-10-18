@@ -132,6 +132,25 @@ describe("crawl contract", () => {
     );
   });
 
+  // Workshop 05 changed its slug before release; the preview link and the first QR must not 404,
+  // and the released slug stays an ordinary public workshop page.
+  it.each([
+    "/workshops/audit-vorbereitung-mit-ki",
+    "/workshops/audit-vorbereitung-mit-ki/kit",
+    "/workshops/audit-vorbereitung-mit-ki/slides.html",
+  ])("redirects the first Workshop 05 slug %s to the released page", (from) => {
+    const entry = getCrawlRoute(from);
+    expect(entry.routeClass).toBe("retired");
+    expect(entry.redirectTo).toBe("/workshops/ki-im-unternehmen-sicher-nutzen");
+    expect(entry.status).toBe(301);
+    for (const live of [
+      "/workshops/ki-im-unternehmen-sicher-nutzen",
+      "/workshops/ki-im-unternehmen-sicher-nutzen/kit",
+    ]) {
+      expect(getCrawlRoute(live).routeClass).not.toBe("retired");
+    }
+  });
+
   it("keeps retired blog slugs ahead of the broad blog pattern", () => {
     const retired = getCrawlRoute("/blog/digify");
     expect(retired.routeClass).toBe("retired");

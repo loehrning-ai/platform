@@ -1,6 +1,6 @@
 # Workshop standard
 
-How every loehrning.ai workshop is built, what it publishes, and when it is done. It applies to Workshops 01 to 04 and to every new one. The registry in `src/lib/workshops.ts` carries the fields named here, and `src/lib/workshops.test.ts` enforces the parts a test can check.
+How every loehrning.ai workshop is built, what it publishes, and when it is done. It applies to Workshops 01 to 05 and to every new one. The registry in `src/lib/workshops.ts` carries the fields named here, and `src/lib/workshops.test.ts` enforces the parts a test can check.
 
 Visual design follows the Werkzeichnung direction taken from the Workshop 03 deck (paper, ink, one Mennige accent, hairlines), with the poster layer on top: each workshop has its own poster palette (section 5.1, `docs/experience-system.md`). Copy follows the voice rules enforced by `bun run content:lint` (du-form, concrete nouns, no staged contrasts, no dashes). This document covers structure only.
 
@@ -78,29 +78,32 @@ Each bar is written so a person or a test can check it.
 
 ## 5. The detail page
 
-The page opens with the workshop's poster band, then the brief on paper. Together they answer six questions: what problem (caps line, title, summary), where I start (one primary button for the `primary` material, one secondary button for a demo or lab, else "Material ansehen"), which question (the q-card with `question`), how long (`minutesLive`, `minutesSelfStudy`), what I need (the most limiting item from `needs`) and what I leave with (`outcome`). On a 390 by 664 phone the start button sits in the first screen. The detail page carries no in-page exercise ("Ausprobieren") band: the deck's opening vote and the practice task do that work, so the materials follow the agenda directly.
+The page is lean on purpose: students read a phone screen, and the owner's rule is that text everywhere is too much. It opens with the workshop's poster band, then the brief on paper. Together they answer six questions: what problem (caps line, title, summary), where I start (one primary button for the `primary` material, one second button), which question (the case, further down), how long (`minutesLive`, `minutesSelfStudy`), what I need (`needs[0]`, one line) and what I leave with (the `outcomes`). On a 390 by 664 phone the start button sits in the first screen. The detail page carries no in-page exercise ("Ausprobieren") band: the deck's opening vote and the practice task do that work.
+
+**The agenda is not on the page.** There is no "Ablauf" section, no route rail, no red-line jump nav and no number badge on any heading. `agenda`, `agendaSource` and the minutes stay in the registry: tests check them (the sum, the 15-minute rule, the deck's seconds) and the machine surfaces (`src/lib/machine-surfaces/workshops.ts`, the MCP workshop tool) publish them. The hub's "So läuft jeder Workshop" spine is a different thing and stays.
 
 ### 5.1 The poster band and the brief
 
 - **One palette per workshop.** `WORKSHOP_PLAKAT` in `src/lib/plakat/palettes.ts` is the only mapping: 01 Lemons, 02 IDEA, 03 Bloom, 04 Autumn, 05 Sage (Salbei, Tanne, Bernstein, taken from the soft deck look of Workshop 05; motif "ledger"). The band, the hub poster, the social card, the deck cover and the static materials all read it. Five workshops, five palettes; a sixth workshop needs a new decision, never a second mapping.
 - **The band** (`PlakatBand`, scope `plakat-<key>`, and `data-plakat-page` on the page wrapper) holds only this, in order: on phones the back link, the caps line (`workshop.eyebrow`), the poster title (the title head at poster size through the fit rule, the subtitle inside the h1 at 17px), the summary at 17px and the scene buttons. The art is the workshop's poster with its numeral: the right column from lg, a strip after the buttons below lg (96px on phones, 160px from sm, 192px from md, so a tablet band still reads as a poster). Below 360px the poster step drops to 42px and the gaps tighten, so the start button stays above the tab bar at 320x568. Three type sizes at most. No q-card, meta line, chip, `text-caption` or `text-label` inside the band.
-- **The brief on paper.** The q-card (paper tone, Mennige bar) and the facts line (minutes, invented case, material language, free) open the agenda section, before its Kopflinie, so the order band, agenda, materials holds. The need and the outcome follow as a short list from sm; on phones the sections below carry them.
+- **A hero scene of its own.** A workshop may replace the poster motif in the band with a scene of its own (`HERO_MOTION`, keyed by slug, in `src/components/plakat/hero-motion.tsx`; Workshop 05 has "the gate"; the rules are in `docs/experience-system.md`, "Workshop hero scene"). The rules: pure CSS and inline SVG, no JavaScript, `aria-hidden`; the base styles are the finished static frame; every keyframe sits inside `prefers-reduced-motion: no-preference`; only transform, opacity and `stroke-dashoffset` move; the H1 is never animated (it is the LCP element). The hub thumb, the social card and the deck cover keep the palette motif.
+- **The marked word.** The tail of the H1 sits on the marker band (`HighlightedText`). `HEADLINE_MARK` in `workshop-detail-content.tsx` moves the band to one chosen word per locale (Workshop 05: "Data" / "Daten"); the words after it follow unmarked.
+- **The brief on paper** follows the band as the first section. It holds the facts line (minutes live, minutes alone, invented case, material language on the German page, free), the outcomes as a visible list and one line "Du brauchst / You need" taken from `needs[0]`. There is no "Du nimmst mit" line on the detail page: `outcome` stays in the registry for the hub row.
 - **Rost rules (Autumn, Workshop 04 today).** Creme on Rost is 4.80:1, just above AA, so inside an autumn scene all text is 17px or larger at weight 400 or more, there is no muted tier and no reduced opacity, hover underlines or inverts and never tints, and no q-card, status chip, badge, form field or progress bar sits in the band. A meaningful shape uses Ocker hell; Ocker is decoration only.
-- **Below the band** the Kopflinien and the tab marker take the scene's paper ink. Headings stay Druckschwarz. The result chart (`caseStudy.resultChart`, section 6 of the page) sits on Kalkweiß: bars from zero on one scale, the unchecked AI answer hatched, every value a direct label printed elsewhere in the workshop's copy.
+- **Below the band** the Kopflinien and the tab marker take the scene's paper ink. Headings stay Druckschwarz. The result chart (`caseStudy.resultChart`) sits on Kalkweiß: bars from zero on one scale, the unchecked AI answer hatched, every value a direct label printed elsewhere in the workshop's copy.
 
-Below the brief, in this order:
+After the brief, in this order (the page shows no numbers):
 
-1. **Danach kannst du / After this you can**: the `outcomes`, visible, not in an accordion.
-2. **Ablauf / Agenda**: one station per `agenda` item with its label, minutes and activity mark; a toggle between live and self-study where both exist.
-3. **Material**: grouped by phase (Vor dem Workshop, Im Workshop, Danach). Each row shows role, label, a one-line purpose, minutes, format, language and size, "optional" where it applies, and an action. One row is marked "Hier starten".
-4. **Das brauchst du / Das brauchst du nicht**: `needs` and `notNeeded` in two columns.
-5. **Nicht Teil dieses Workshops**: `notCovered`.
-6. **Der Fall**: company, invented label, narrative, stat row, the result chart where the registry has one, decision question, what the data cannot answer, and the real case with source and dates if there is one.
-7. **Für wen**: `audience` plus the `notForYou` line.
-8. **Selbst moderieren** (only with a presenter view): how to open it, what to print.
-9. **Stand und Herkunft**: the `provenance` fields.
+1. **Material**, only when a file is left over that the two band buttons do not reach (an optional file, or more files than the two buttons carry; today Workshops 02 and 03, whose kit zip has no kit page). Grouped by phase, each row with role, label, a one-line purpose, minutes, format, language and size, "optional" where it applies and an action; one row is marked "Hier starten". A workshop whose band reaches every file (a primary file plus a lab, a case or a kit page) shows no list, and the band's second button never points at a list that is not there.
+2. **Der Fall**: the company, "Erfundener Fall" (or "Echte Unternehmensdaten"), sector and period on one line; the narrative; the one `question` with the Mennige bar; the result chart where the registry has one; the real case with source and dates if there is one. The case metrics and `dataLimitations` are not here; they sit in the accordion.
+3. **Mehr Details** (one closed accordion): who it is for and the `notForYou` line; what you need (all `needs`), what you don't need and the `accessNote`; what the workshop does not cover; the case figures, `dataLimitations` and the provenance note.
+4. **One provenance line** in the footer: author, when it was checked, when AI answers were recorded and when it last ran live (only where set), and the kind of data.
 
-The four collapsed "Referenz" accordions, the steps list with tool chips, and the count row ("6 Schritte", "3 Dateien") go away. Counts of steps and files say nothing about effort; minutes do.
+The four collapsed "Referenz" accordions, the steps list with tool chips, the metrics row on the open page and the count row ("6 Schritte", "3 Dateien") are gone. Counts of steps and files say nothing about effort; minutes do. `steps` stays in the registry for the machine surfaces and the kit.
+
+### 5.2 The kit page
+
+`/workshops/<slug>/kit` is lean too: the kit's numbers (files, missions, rules), a short motion explainer (a stepper over the kit's steps) and one big download button. The three rules for the Project and the file list wait behind closed disclosures. No numbered headings. The rules shown are the lines of `project-instructions.md`, word for word; a test compares them.
 
 ## 6. The hub
 
@@ -130,6 +133,7 @@ A workshop is done when all of these hold:
 13. German page and English mirror match; the material language is stated when it differs from the page.
 14. Cover, hub row, detail page and deck state the same times.
 15. The copy passes `bun run content:lint` and has no em or en dashes.
+16. The detail page shows no agenda, no red-line nav and no numbered heading; its start button is in the first screen at 390 by 664 and at 320 by 568; there is no horizontal scroll at 320px.
 
 ## 8. Adding a workshop
 

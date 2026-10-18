@@ -31,10 +31,11 @@ test.describe("workshop self-study journey", () => {
       /Geschäftsberichte/i,
     );
     await expect(page.locator("body")).not.toContainText("No paid service");
-    // Detail page: the cover starts the primary material and the agenda is a
-    // Route. The red line (agenda, core materials, case) stays visible; only
-    // optional materials, data limits and the audience details sit behind
-    // disclosures, which start collapsed.
+    // Detail page: the cover starts the primary material. There is no agenda
+    // section and no numbered red line; the outcomes, the case and (for W02,
+    // whose kit zip is not on the band) the material list stay visible. The
+    // audience, needs, scope and case figures sit behind one disclosure,
+    // which starts collapsed.
     // The band is the workshop's poster (IDEA for W02) and still starts the deck.
     const cover = page.locator("[data-cover-band]");
     await expect(cover).toHaveAttribute("data-plakat", "idea");
@@ -42,8 +43,12 @@ test.describe("workshop self-study journey", () => {
       "href",
       "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
     );
-    await expect(page.getByRole("list", { name: "Ablauf" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
+    await expect(page.getByRole("list", { name: "Ablauf" })).toHaveCount(0);
+    await expect(page.locator("[data-workshop-redline]")).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 2, name: "Nach dem Workshop" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 2, name: "Material", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 2, name: "Der Fall" })).toBeVisible();
     await expect(page.locator("main details[open]")).toHaveCount(0);
   });
 
@@ -176,7 +181,13 @@ test.describe("workshop self-study journey", () => {
     // face loaded) mapped through the SVG's screen transform must sit inside
     // every clipping ancestor: the nested poster viewport, the poster box and
     // the band. A numeral cut at an edge reads as a bug, not as a bleed.
-    const routes = ["/workshops", "/workshops/esg-berichte-mit-ki", "/workshops/datenbereitschaft-fuer-ki"];
+    // Workshop 05 carries its hero scene (the gate), whose pale "05" is SVG text too.
+    const routes = [
+      "/workshops",
+      "/workshops/esg-berichte-mit-ki",
+      "/workshops/datenbereitschaft-fuer-ki",
+      "/workshops/ki-im-unternehmen-sicher-nutzen",
+    ];
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       for (const route of routes) {
@@ -273,7 +284,7 @@ test.describe("workshop self-study journey", () => {
       "geschaeftsberichte-mit-ki-lesen": "idea",
       "datenbereitschaft-fuer-ki": "bloom",
       "esg-berichte-mit-ki": "autumn",
-      "audit-vorbereitung-mit-ki": "sage",
+      "ki-im-unternehmen-sicher-nutzen": "sage",
     } as const;
     const bandGrounds = new Set<string>();
     for (const [slug, plakat] of Object.entries(expected)) {
@@ -282,11 +293,13 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveAttribute("data-plakat", plakat);
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
-      // No question card; the numbered red line (agenda, materials, case)
-      // sits on paper below the band.
+      // No question card in the band, no agenda and no numbered red line on
+      // the page; the one question sits in the case on paper below the band.
       await expect(page.locator("[data-question-card]")).toHaveCount(0);
-      await expect(band.locator("[data-workshop-redline]")).toHaveCount(0);
-      await expect(page.locator("[data-workshop-redline] li")).toHaveCount(3);
+      await expect(band.locator("[data-case-question]")).toHaveCount(0);
+      await expect(page.locator("[data-workshop-redline], #ablauf")).toHaveCount(0);
+      await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
+      await expect(page.locator("[data-case-question]")).toHaveCount(1);
     }
     expect(bandGrounds.size).toBe(5);
   });

@@ -67,7 +67,7 @@ describe("<WorkshopsContent>", () => {
     const audit = getWorkshops("en").find((w) => w.number === "05");
     const esg = getWorkshops("en").find((w) => w.number === "04");
     expect(rows.map((row) => row.id)).toEqual([
-      "workshop-audit-vorbereitung-mit-ki",
+      "workshop-ki-im-unternehmen-sicher-nutzen",
       "workshop-esg-berichte-mit-ki",
       "workshop-datenbereitschaft-fuer-ki",
       "workshop-geschaeftsberichte-mit-ki-lesen",
@@ -173,7 +173,7 @@ describe("<WorkshopsContent>", () => {
       ["02", "Business reports", "#workshop-geschaeftsberichte-mit-ki-lesen"],
       ["03", "Data readiness", "#workshop-datenbereitschaft-fuer-ki"],
       ["04", esg?.topic, "#workshop-esg-berichte-mit-ki"],
-      ["05", audit?.topic, "#workshop-audit-vorbereitung-mit-ki"],
+      ["05", audit?.topic, "#workshop-ki-im-unternehmen-sicher-nutzen"],
     ];
     expect(jumps).toEqual([
       ...index.map(([number, topic, href]) => [`${number} ${topic}`, href]),
@@ -234,10 +234,10 @@ describe("<WorkshopsContent>", () => {
     expect(within(rows[2]).queryByText("Neu")).toBeNull();
     // German amount: ASCII minus, euro sign on the same line.
     expect(within(rows[2]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
-    // Hyphenated words such as "ESG-Anfragen" and "Audit-Anfragen" are not amounts.
+    // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
     expect(within(rows[1]).getByText(/drei ESG-Anfragen in einer Woche/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
-    expect(within(rows[0]).getByText(/drei Audit-Anfragen in einer Woche/).tagName).toBe("P");
+    expect(within(rows[0]).getByText(/Du prüfst dein Claude-Konto/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
@@ -306,7 +306,7 @@ describe("<WorkshopsContent>", () => {
     // The phone meta line is a short duration line; the row the cover
     // button recommends says so.
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Neu · Live 60 Min. · Selbstlernen 120 Min.",
+      "Neu · Live 90 Min. · Selbstlernen 75 Min.",
     );
     expect(rows[2].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -326,7 +326,7 @@ describe("<WorkshopsContent>", () => {
     const heading = within(rows[0]).getByRole("heading", { level: 3 });
     expect(heading).toHaveAccessibleName(w05.title);
     expect(heading.querySelector(".sr-only")).toHaveTextContent(
-      ": Belege ordnen und Lücken finden",
+      ": Claude im Arbeitsalltag",
     );
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
     const esgHeading = within(rows[1]).getByRole("heading", { level: 3 });
@@ -352,8 +352,8 @@ describe("<WorkshopsContent>", () => {
     // instead of running into the arrow.
     const times = rows[0].querySelectorAll("[data-workshop-meta] > span.whitespace-nowrap");
     expect([...times].map((time) => time.textContent)).toEqual([
-      "Live 60 Min. ·",
-      "Selbstlernen 120 Min.",
+      "Live 90 Min. ·",
+      "Selbstlernen 75 Min.",
     ]);
     // The H1 is the old display head at the leading the highlight band is
     // built for (0.9): a 36px phone size, fluid from sm.
@@ -459,7 +459,7 @@ describe("<WorkshopsContent>", () => {
       "02 Geschäftsberichte",
       "03 Datenbereitschaft",
       "04 ESG",
-      "05 Audit",
+      "05 KI im Alltag",
     ]);
     for (const square of squares) {
       expect(square).toHaveClass("size-11", "focus-visible:outline-brand-orange");
@@ -470,7 +470,7 @@ describe("<WorkshopsContent>", () => {
       "#workshop-geschaeftsberichte-mit-ki-lesen",
       "#workshop-datenbereitschaft-fuer-ki",
       "#workshop-esg-berichte-mit-ki",
-      "#workshop-audit-vorbereitung-mit-ki",
+      "#workshop-ki-im-unternehmen-sicher-nutzen",
     ]);
     expect(bars[0]).toHaveClass("w-full", "bg-brand-pink/70", "min-h-11");
     expect(bars[3]).toHaveClass("w-[64%]", "bg-brand-acid/80");

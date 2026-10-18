@@ -1,0 +1,1141 @@
+/*
+ * Hero motion: the animated scene in a poster band (docs/experience-system.md,
+ * "Hero scenes"). Today one scene, "the gate" of Workshop 05
+ * (hero-gate-scene.tsx).
+ *
+ * Contract, checked by hero-motion.test.tsx:
+ * - The base styles are the finished still frame: three lamps lit, one card
+ *   in the cloud, one past the ring with its names covered, one near the
+ *   laptop. That is what reduced motion, print and a browser without CSS
+ *   animation show.
+ * - Every animation, transition and keyframe sits inside
+ *   `@media (prefers-reduced-motion: no-preference)`; the `reduce` block only
+ *   makes sure nothing moves.
+ * - Only transform, opacity and stroke-dashoffset move. No filter, no blur,
+ *   no gradient, no layout property. `will-change` stays on the three cards.
+ * - Colours are scene tokens (var(--color-scene-*), --color-paper); no hex.
+ * - Decorative: the SVG is aria-hidden, nothing in it takes focus or events.
+ *
+ * The story is one 9 second loop in three beats (public text passes, names
+ * are covered, a key is turned back). Keyframe percentages are seconds / 9.
+ * `--hm-lx/--hm-ly` is the lane from the laptop to the cloud, so one set of
+ * keyframes plays in the portrait column (flow down) and the phone row (flow
+ * right).
+ */
+
+.hm-root {
+  overflow: visible;
+  --hm-ink: var(--color-scene-ink);
+  --hm-mid: var(--color-scene-mid);
+  --hm-ground: var(--color-scene-ground);
+  --hm-paper: var(--color-paper);
+  --hm-stop: var(--color-scene-accent-text);
+}
+
+/* The lane and its axes, per layout: lane, shake axis, scan axis, orbit centre. */
+.hm-root[data-hero-variant="portrait"] {
+  --hm-lx: 0px;
+  --hm-ly: 300px;
+  --hm-sx: 5px;
+  --hm-sy: 0px;
+  --hm-ax: 0px;
+  --hm-ay: 20px;
+  --hm-ox: 200px;
+  --hm-oy: 438px;
+}
+
+.hm-root[data-hero-variant="landscape"] {
+  --hm-lx: 444px;
+  --hm-ly: 0px;
+  --hm-sx: 0px;
+  --hm-sy: 5px;
+  --hm-ax: 18px;
+  --hm-ay: 0px;
+  --hm-ox: 562px;
+  --hm-oy: 202px;
+}
+
+/* ─── Base: the still frame ─────────────────────────────────────────────── */
+
+.hm-spot {
+  fill: var(--hm-paper);
+  fill-opacity: 0.075;
+}
+
+.hm-numeral {
+  fill: var(--hm-paper);
+  opacity: 0.55;
+  font-family: var(--font-sans);
+  font-variant-numeric: normal;
+}
+
+.hm-warm-disc {
+  fill: var(--hm-mid);
+  fill-opacity: 0.12;
+}
+
+.hm-orbit-ring {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 2 10;
+  opacity: 0.4;
+}
+
+.hm-orbit-ring-far {
+  stroke-dasharray: 1 13;
+  opacity: 0.28;
+}
+
+.hm-spoke {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+  opacity: 0;
+}
+
+.hm-node {
+  fill: var(--hm-ink);
+  stroke: var(--hm-ground);
+  stroke-width: 3;
+}
+
+.hm-node-far {
+  opacity: 0.5;
+}
+
+.hm-dust-dot {
+  fill: var(--hm-ink);
+  opacity: 0.35;
+}
+
+.hm-pipe {
+  fill: none;
+  stroke: var(--hm-paper);
+  stroke-width: 16;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.hm-route {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 2 10;
+}
+
+.hm-ring {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+.hm-ring-back {
+  stroke-width: 7;
+  opacity: 0.55;
+}
+
+.hm-ring-front {
+  stroke-width: 10;
+}
+
+.hm-wash {
+  fill: var(--hm-mid);
+  opacity: 0;
+}
+
+.hm-pulse {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.5;
+  opacity: 0;
+}
+
+.hm-scan {
+  opacity: 0;
+}
+
+.hm-scan-glow {
+  fill: none;
+  stroke: var(--hm-mid);
+  stroke-width: 12;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.hm-scan-line {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hm-shield {
+  fill: var(--hm-stop);
+  opacity: 0;
+}
+
+.hm-speed {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0.32;
+}
+
+.hm-card {
+  fill: var(--hm-mid);
+  stroke: var(--hm-ink);
+  stroke-width: 2.6;
+}
+
+.hm-glyph {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hm-glyph-fill {
+  fill: var(--hm-ink);
+}
+
+.hm-glyph-ring {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+}
+
+.hm-cover-bar {
+  fill: var(--hm-ink);
+}
+
+/* The still frame: one card has landed (it sinks into the cloud), one is past
+   the ring with its names covered, one has just left the laptop. */
+.hm-p1 {
+  transform: translate(calc(var(--hm-lx) * 0.9), calc(var(--hm-ly) * 0.9));
+}
+
+.hm-p2 {
+  transform: translate(calc(var(--hm-lx) * 0.72), calc(var(--hm-ly) * 0.72));
+}
+
+.hm-p3 {
+  transform: translate(calc(var(--hm-lx) * 0.17), calc(var(--hm-ly) * 0.17));
+}
+
+.hm-wire {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.hm-housing {
+  fill: var(--hm-paper);
+  stroke: var(--hm-ink);
+  stroke-width: 3.5;
+}
+
+.hm-lamp-well {
+  fill: var(--hm-ground);
+  stroke: var(--hm-ink);
+  stroke-width: 2.2;
+}
+
+.hm-halo {
+  fill-opacity: 0.2;
+}
+
+.hm-halo-wide {
+  fill-opacity: 0.1;
+}
+
+.hm-lamp-go .hm-halo {
+  fill: var(--hm-paper);
+}
+
+.hm-disc-go {
+  fill: var(--hm-ink);
+}
+
+.hm-lamp-check .hm-halo,
+.hm-disc-check {
+  fill: var(--hm-mid);
+}
+
+.hm-lamp-stop .hm-halo,
+.hm-disc-stop {
+  fill: var(--hm-stop);
+}
+
+.hm-disc-check {
+  stroke: var(--hm-ink);
+  stroke-width: 2.2;
+}
+
+.hm-lamp-glyph {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hm-lamp-glyph-paper {
+  stroke: var(--hm-paper);
+}
+
+.hm-lamp-glyph-ink {
+  stroke: var(--hm-ink);
+}
+
+.hm-cloud-shape {
+  fill: var(--hm-paper);
+  stroke: var(--hm-ink);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.hm-cloud-line {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.3;
+}
+
+.hm-ripple {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.4;
+  opacity: 0;
+}
+
+.hm-screen {
+  fill: var(--hm-paper);
+  stroke: var(--hm-ink);
+  stroke-width: 4;
+}
+
+.hm-flash {
+  fill: var(--hm-mid);
+  opacity: 0;
+}
+
+.hm-typing {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.hm-cursor {
+  fill: none;
+  stroke: var(--hm-mid);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.hm-base {
+  fill: var(--hm-ink);
+}
+
+/* ─── Motion: only when the visitor has not asked for less ──────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hm-root {
+    --hm-ease: cubic-bezier(0.22, 0.9, 0.3, 1);
+    --hm-snap: cubic-bezier(0.2, 0.9, 0.25, 1.15);
+    --hm-go: 0.9s;
+  }
+
+  /* Everything that moves is moved by its own box, never by the layout. */
+  .hm-in,
+  .hm-breathe,
+  .hm-cloud,
+  .hm-packet,
+  .hm-lamp,
+  .hm-cover,
+  .hm-shield,
+  .hm-pulse,
+  .hm-scan,
+  .hm-ripple,
+  .hm-typing,
+  .hm-node,
+  .hm-warm,
+  .hm-dust {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* The intro, once: each part settles into the still frame. */
+  .hm-in-rise {
+    animation: hm-rise 0.7s var(--hm-ease) both;
+  }
+
+  .hm-in-pop {
+    animation: hm-pop 0.6s var(--hm-snap) 0.35s both;
+  }
+
+  .hm-in-late {
+    animation-delay: 0.6s;
+  }
+
+  .hm-in-cloud {
+    animation-delay: 0.5s;
+    transform-origin: 50% 100%;
+  }
+
+  .hm-in-disc {
+    animation: hm-grow 1.1s var(--hm-ease) both;
+  }
+
+  .hm-in-fade {
+    animation: hm-fade 0.8s ease-out 0.3s both;
+  }
+
+  .hm-in-draw {
+    animation: hm-draw 1s var(--hm-ease) 0.15s both;
+  }
+
+  .hm-in-draw-late {
+    animation-delay: 0.4s;
+  }
+
+  /* Ambient, never tied to the story. */
+  .hm-route {
+    animation: hm-flow 1.6s linear infinite;
+  }
+
+  .hm-breathe {
+    animation: hm-breathe 9s ease-in-out infinite;
+  }
+
+  .hm-orbit {
+    animation: hm-orbit 90s linear infinite;
+    transform-origin: var(--hm-ox) var(--hm-oy);
+    transform-box: view-box;
+  }
+
+  .hm-orbit-far {
+    animation-duration: 150s;
+    animation-direction: reverse;
+  }
+
+  .hm-dust-a {
+    animation: hm-drift 13s ease-in-out infinite;
+  }
+
+  .hm-dust-b {
+    animation: hm-drift 17s ease-in-out -6s infinite;
+  }
+
+  .hm-cursor {
+    animation: hm-blink 1s steps(2, jump-none) infinite;
+  }
+
+  /* The story: one 9 second loop, after the intro has settled. */
+  .hm-p1,
+  .hm-p2,
+  .hm-p3 {
+    will-change: transform;
+  }
+
+  .hm-p1 {
+    animation: hm-p1 9s linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-p2 {
+    animation: hm-p2 9s linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-p3 {
+    animation: hm-p3 9s linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-cover {
+    transform-origin: left center;
+    animation: hm-cover 9s linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-lamp-go {
+    animation: hm-lamp-go 9s var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-lamp-check {
+    animation: hm-lamp-check 9s var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-lamp-stop {
+    animation: hm-lamp-stop 9s var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-wash {
+    animation: hm-wash 9s ease-in-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-scan {
+    animation: hm-scan 9s ease-in-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-shield {
+    animation: hm-shield 9s var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-pulse {
+    animation: hm-pulse 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-cloud {
+    animation: hm-cloud 9s var(--hm-ease) var(--hm-go) infinite backwards;
+    transform-origin: 50% 100%;
+  }
+
+  .hm-ripple-1 {
+    animation: hm-ripple 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-ripple-2 {
+    animation: hm-ripple 9s ease-out calc(var(--hm-go) + 0.22s) infinite backwards;
+  }
+
+  .hm-warm {
+    animation: hm-warm 9s ease-in-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-spoke-a {
+    animation: hm-spoke-a 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-spoke-b {
+    animation: hm-spoke-b 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-node-a {
+    animation: hm-node-a 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-node-b {
+    animation: hm-node-b 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-flash {
+    animation: hm-flash 9s ease-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-typing {
+    transform-origin: left center;
+    animation: hm-typing 9s var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-typing-2 {
+    animation-delay: calc(var(--hm-go) + 0.1s);
+  }
+
+  .hm-typing-3 {
+    animation-delay: calc(var(--hm-go) + 0.2s);
+  }
+
+  /* Pointer and keyboard: the far layer drifts a few pixels and the lamps
+     glow wider while the band is hovered or holds focus. Touch has no hover
+     and keeps the plain loop. */
+  .hm-far {
+    transition: transform 0.9s var(--hm-ease);
+  }
+
+  .hm-halo,
+  .hm-spot,
+  .hm-warm-disc {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.7s var(--hm-ease);
+  }
+
+  .hm-root {
+    transform-origin: 50% 55%;
+    transition: transform 1s var(--hm-ease);
+  }
+
+  [data-cover-band]:is(:hover, :focus-within) .hm-root {
+    transform: perspective(1100px) rotateY(-6deg) rotateX(2.5deg);
+  }
+
+  [data-cover-band]:is(:hover, :focus-within) .hm-far {
+    transform: translate(-8px, 5px);
+  }
+
+  [data-cover-band]:is(:hover, :focus-within) .hm-halo {
+    transform: scale(1.3);
+  }
+
+  [data-cover-band]:is(:hover, :focus-within) .hm-spot {
+    transform: scale(1.05);
+  }
+
+  [data-cover-band]:is(:hover, :focus-within) .hm-warm-disc {
+    transform: scale(1.1);
+  }
+
+  /* A phone this small has no room for the detail that costs the most paint. */
+  @media (width < 22.5rem) {
+    .hm-ripple,
+    .hm-cursor,
+    .hm-dust {
+      display: none;
+    }
+  }
+
+  @keyframes hm-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hm-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hm-grow {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hm-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes hm-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes hm-flow {
+    to {
+      stroke-dashoffset: -48;
+    }
+  }
+
+  @keyframes hm-breathe {
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes hm-orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes hm-drift {
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-26px);
+    }
+  }
+
+  @keyframes hm-blink {
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* Card 1, public text: out of the laptop, straight through the ring, into the cloud. */
+  @keyframes hm-p1 {
+    0%,
+    5% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.02), calc(var(--hm-ly) * 0.02)) scale(0.6);
+    }
+    8.3% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.06), calc(var(--hm-ly) * 0.06)) scale(1);
+      animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
+    }
+    17.2% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.5), calc(var(--hm-ly) * 0.5)) scale(1);
+      animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+    }
+    28.3% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.9), calc(var(--hm-ly) * 0.9)) scale(1);
+      animation-timing-function: ease-in;
+    }
+    31.7%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.98), calc(var(--hm-ly) * 0.98)) scale(0.55);
+    }
+  }
+
+  /* Card 2, names: slows at the ring, is read, comes out with its names covered. */
+  @keyframes hm-p2 {
+    0%,
+    34.4% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.02), calc(var(--hm-ly) * 0.02)) scale(0.6);
+    }
+    37.8% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.06), calc(var(--hm-ly) * 0.06)) scale(1);
+      animation-timing-function: cubic-bezier(0.55, 0, 0.35, 1);
+    }
+    51.7% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.5), calc(var(--hm-ly) * 0.5)) scale(1);
+    }
+    57.2% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.5), calc(var(--hm-ly) * 0.5)) scale(1);
+      animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+    66.7% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.9), calc(var(--hm-ly) * 0.9)) scale(1);
+      animation-timing-function: ease-in;
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.98), calc(var(--hm-ly) * 0.98)) scale(0.55);
+    }
+  }
+
+  /* The three bars that cover the names, drawn from the left while the card is in the ring. */
+  @keyframes hm-cover {
+    0%,
+    52.2% {
+      transform: scaleX(0);
+    }
+    56.8% {
+      transform: scaleX(1);
+    }
+    69%,
+    70% {
+      transform: scaleX(1);
+    }
+    70.1%,
+    100% {
+      transform: scaleX(0);
+    }
+  }
+
+  /* Card 3, a key: stopped at the ring, shakes, is turned back. */
+  @keyframes hm-p3 {
+    0%,
+    71.7% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.02), calc(var(--hm-ly) * 0.02)) scale(0.6);
+    }
+    75% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.06), calc(var(--hm-ly) * 0.06)) scale(1);
+      animation-timing-function: cubic-bezier(0.5, 0, 0.7, 1);
+    }
+    85% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.355), calc(var(--hm-ly) * 0.355)) scale(1);
+      animation-timing-function: linear;
+    }
+    86.4% {
+      transform: translate(calc(var(--hm-lx) * 0.355 + var(--hm-sx)), calc(var(--hm-ly) * 0.355 + var(--hm-sy))) scale(1);
+    }
+    87.7% {
+      transform: translate(calc(var(--hm-lx) * 0.355 - var(--hm-sx)), calc(var(--hm-ly) * 0.355 - var(--hm-sy))) scale(1);
+    }
+    89% {
+      transform: translate(calc(var(--hm-lx) * 0.355 + var(--hm-sx) * 0.7), calc(var(--hm-ly) * 0.355 + var(--hm-sy) * 0.7)) scale(1);
+    }
+    90.2% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.355), calc(var(--hm-ly) * 0.355)) scale(1);
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    96.4%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.1), calc(var(--hm-ly) * 0.1)) scale(0.8);
+    }
+  }
+
+  /* The lamps: green while public text passes, amber while names are read, red for the key. */
+  @keyframes hm-lamp-go {
+    0%,
+    10.5% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    13.5%,
+    27% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    30%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes hm-lamp-check {
+    0%,
+    45% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    48.5%,
+    58.5% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    61%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes hm-lamp-stop {
+    0%,
+    80.5% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    83%,
+    95% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    97.8%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  /* Inside the ring: an amber wash and a scanning line while names are read. */
+  @keyframes hm-wash {
+    0%,
+    47% {
+      opacity: 0;
+    }
+    50%,
+    56.5% {
+      opacity: 0.45;
+    }
+    60%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes hm-scan {
+    0%,
+    48.5% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-ax) * -1), calc(var(--hm-ay) * -1));
+    }
+    50% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-ax) * -1), calc(var(--hm-ay) * -1));
+    }
+    53.5% {
+      opacity: 1;
+      transform: translate(var(--hm-ax), var(--hm-ay));
+    }
+    57% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-ax) * -1), calc(var(--hm-ay) * -1));
+    }
+    58.5%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-ax) * -1), calc(var(--hm-ay) * -1));
+    }
+  }
+
+  /* The red shield closes across the ring before the key arrives, then opens. */
+  @keyframes hm-shield {
+    0%,
+    81.5% {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    85% {
+      opacity: 0.92;
+      transform: scale(1);
+    }
+    91% {
+      opacity: 0.92;
+      transform: scale(1);
+    }
+    95.5%,
+    100% {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+  }
+
+  /* A ring pulse each time a card is let through. */
+  @keyframes hm-pulse {
+    0%,
+    17% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    17.2% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    26%,
+    57% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+    57.2% {
+      opacity: 0.7;
+      transform: scale(1);
+    }
+    66%,
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  /* The cloud takes a card in: a small bump and ripples where it lands. */
+  @keyframes hm-cloud {
+    0%,
+    31%,
+    38%,
+    69%,
+    76%,
+    100% {
+      transform: scale(1);
+    }
+    33.5%,
+    71.5% {
+      transform: scale(1.045);
+    }
+  }
+
+  @keyframes hm-ripple {
+    0%,
+    31.6% {
+      opacity: 0;
+      transform: scale(0.45);
+    }
+    31.7% {
+      opacity: 0.7;
+      transform: scale(0.45);
+    }
+    41%,
+    69.9% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+    70% {
+      opacity: 0.7;
+      transform: scale(0.45);
+    }
+    79.5%,
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  @keyframes hm-warm {
+    0%,
+    30%,
+    42%,
+    68%,
+    80%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    34%,
+    72% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
+
+  /* A station of the orbit answers each landing. */
+  @keyframes hm-node-a {
+    0%,
+    33%,
+    42%,
+    100% {
+      transform: scale(1);
+    }
+    37% {
+      transform: scale(2);
+    }
+  }
+
+  @keyframes hm-node-b {
+    0%,
+    71%,
+    80%,
+    100% {
+      transform: scale(1);
+    }
+    75% {
+      transform: scale(2);
+    }
+  }
+
+  /* A spoke is drawn from the cloud to the station that answers a landing, then fades. */
+  @keyframes hm-spoke-a {
+    0%,
+    31.7% {
+      opacity: 0;
+      stroke-dashoffset: 1;
+    }
+    32% {
+      opacity: 0.8;
+      stroke-dashoffset: 1;
+    }
+    37% {
+      opacity: 0.8;
+      stroke-dashoffset: 0;
+    }
+    46%,
+    100% {
+      opacity: 0;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes hm-spoke-b {
+    0%,
+    70% {
+      opacity: 0;
+      stroke-dashoffset: 1;
+    }
+    70.3% {
+      opacity: 0.8;
+      stroke-dashoffset: 1;
+    }
+    75.5% {
+      opacity: 0.8;
+      stroke-dashoffset: 0;
+    }
+    84%,
+    100% {
+      opacity: 0;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  /* The laptop: the screen flashes as a card leaves, the prompt retypes before the next. */
+  @keyframes hm-flash {
+    0%,
+    4% {
+      opacity: 0;
+    }
+    5.5% {
+      opacity: 0.55;
+    }
+    11%,
+    33.5% {
+      opacity: 0;
+    }
+    35% {
+      opacity: 0.55;
+    }
+    41%,
+    71% {
+      opacity: 0;
+    }
+    72.5% {
+      opacity: 0.55;
+    }
+    78%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes hm-typing {
+    0% {
+      transform: scaleX(0);
+    }
+    4.5%,
+    14% {
+      transform: scaleX(1);
+    }
+    16%,
+    33% {
+      transform: scaleX(0);
+    }
+    38%,
+    48% {
+      transform: scaleX(1);
+    }
+    50%,
+    66% {
+      transform: scaleX(0);
+    }
+    71.5%,
+    81% {
+      transform: scaleX(1);
+    }
+    83%,
+    100% {
+      transform: scaleX(0);
+    }
+  }
+}
+
+/* A visitor who asked for less motion gets the still frame and nothing else. */
+@media (prefers-reduced-motion: reduce) {
+  .hm-root,
+  .hm-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

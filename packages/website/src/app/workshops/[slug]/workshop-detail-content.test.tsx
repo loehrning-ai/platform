@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { localizeHref } from "@/lib/i18n/locale";
 import { workshopKitPath } from "@/lib/workshop-kit";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
+import { heroMotionScene } from "@/components/plakat/hero-motion";
 import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 import {
@@ -46,7 +47,7 @@ function sectionOf(name: string | RegExp): HTMLElement {
 }
 
 describe("<WorkshopDetailContent>", () => {
-  it("puts the cover, the agenda and the materials in that order, with no exercise band, with only the reference folded away", () => {
+  it("puts the cover, the brief, the case and the details in that order, with no agenda, no red line and no numbered headings", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
@@ -61,59 +62,56 @@ describe("<WorkshopDetailContent>", () => {
     expect(caps?.textContent).toBe(workshop.eyebrow);
     expect(caps).toHaveTextContent("Workshop 01 · Prognosen");
     expect(within(cover as HTMLElement).getByText(workshop.summary)).toBeInTheDocument();
-    // No question card anywhere: the agenda opens with the red line, three
-    // numbered jumps in page order, then the facts and the one outcome.
-    const agenda = sectionOf("Ablauf");
-    expect(container.querySelectorAll("[data-question-card]")).toHaveLength(0);
-    expect(container).not.toHaveTextContent(workshop.question);
-    const redLine = screen.getByRole("navigation", { name: "Der Weg durch den Workshop" });
-    expect(agenda).toContainElement(redLine);
-    expect(within(redLine).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
-      ["1Ablauf", "#ablauf"],
-      ["2Material", "#material"],
-      ["3Der Fall", "#fall"],
-    ]);
-    for (const id of ["ablauf", "material", "fall"]) {
-      expect(container.querySelector(`#${id}`), id).not.toBeNull();
-    }
-    expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
-    expect(agenda).toHaveTextContent("Selbstlernen ca. 90 Min.");
-    expect(agenda).toHaveTextContent("Du nimmst mit: Go/No-Go-Regel");
-    expect(agenda).not.toHaveTextContent("Du brauchst");
-    // The brief comes first in the agenda section, before its Kopflinie.
-    expect(follows(agenda.querySelector("[data-workshop-brief]")!, agenda.querySelector("header")!)).toBe(true);
 
-    // No "Ausprobieren" exercise band between the agenda and the materials.
+    // The agenda is gone from the page: no "Ablauf" section, no route rail, no
+    // red-line jump nav, no numbered badge on any heading. It stays in the
+    // registry for tests and machine surfaces.
+    expect(screen.queryByRole("heading", { name: "Ablauf" })).toBeNull();
+    expect(screen.queryByRole("list", { name: "Ablauf" })).toBeNull();
+    expect(screen.queryByRole("navigation", { name: "Der Weg durch den Workshop" })).toBeNull();
+    expect(container.querySelector("[data-workshop-redline], ol[data-route-mode], #ablauf")).toBeNull();
+    for (const heading of container.querySelectorAll("h2, h3")) {
+      expect(heading.textContent, "a numbered heading").not.toMatch(/^\d/);
+    }
+    for (const item of workshop.agenda) expect(container).not.toHaveTextContent(item.label);
+
+    // The brief on paper: one facts line, the outcomes (visible), the one need.
+    const brief = container.querySelector("[data-workshop-brief]") as HTMLElement;
+    expect(follows(cover!, brief)).toBe(true);
+    expect(brief.querySelector("[data-workshop-facts]")).toHaveTextContent("Selbstlernen ca. 90 Min.");
+    expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
+    const outcomes = sectionOf("Nach dem Workshop");
+    expect(outcomes).toBe(brief);
+    for (const line of workshop.outcomes) expect(brief).toHaveTextContent(line);
+    expect(brief.querySelector("[data-workshop-need]")).toHaveTextContent(`Du brauchst: ${workshop.needs[0]}`);
+    expect(container).not.toHaveTextContent("Du nimmst mit");
+    expect(brief.closest("details")).toBeNull();
+
+    // No "Ausprobieren" exercise band, no question card, no metrics row.
     expect(container.querySelector("[data-workshop-decision-lab]")).toBeNull();
     expect(container.querySelector("#workshop-lab")).toBeNull();
     expect(container).not.toHaveTextContent("Ausprobieren");
-    const materials = sectionOf("Material");
-    expect(follows(cover!, agenda)).toBe(true);
-    expect(follows(agenda, materials)).toBe(true);
+    expect(container.querySelectorAll("[data-question-card]")).toHaveLength(0);
 
-    // The Route lists every agenda item with its minutes, as an ordered list.
-    const route = within(agenda).getByRole("list", { name: "Ablauf" });
-    const stations = within(route).getAllByRole("listitem");
-    expect(stations).toHaveLength(workshop.agenda.length);
-    for (const [index, item] of workshop.agenda.entries()) {
-      expect(stations[index]).toHaveTextContent(item.label);
-      expect(stations[index]).toHaveTextContent(`${item.minutes} Min.`);
-    }
-    // No station is marked as the current one or read out with a state word.
-    expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(0);
-    expect(route.querySelectorAll("[data-route-here]")).toHaveLength(0);
-    expect(route.querySelectorAll("[aria-current]")).toHaveLength(0);
-    expect(route).not.toHaveTextContent(/Übung unten|erledigt|aktuell|offen/);
-    expect(agenda).not.toHaveTextContent(
-      "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
-    );
+    // The case follows the brief; the question sits in it once, with its bar.
+    const caseSection = sectionOf("Der Fall");
+    expect(follows(brief, caseSection)).toBe(true);
+    expect(caseSection.querySelectorAll("[data-case-question]")).toHaveLength(1);
+    expect(caseSection.querySelector("[data-case-question]")).toHaveTextContent(workshop.question);
+    expect(caseSection.querySelector("[data-case-question] span[aria-hidden='true']")).toHaveClass("bg-mennige");
+    expect(container.textContent?.split(workshop.question)).toHaveLength(2);
+    expect(caseSection.querySelector("dl")).toBeNull();
 
-    // The red line stays open; optional files, data limits and the reference
-    // lists wait behind closed disclosures.
+    // Workshop 01's two band buttons reach both of its files: no material list.
+    expect(container.querySelector("#material, [data-material-row]")).toBeNull();
+
+    // Only the optional files and the reference wait behind closed disclosures.
     const disclosures = container.querySelectorAll("details");
-    expect(disclosures.length).toBeGreaterThan(0);
+    expect(disclosures).toHaveLength(1);
     for (const disclosure of disclosures) expect(disclosure).not.toHaveAttribute("open");
-    expect(follows(materials, sectionOf("Details"))).toBe(true);
+    const details = sectionOf("Mehr Details");
+    expect(follows(caseSection, details)).toBe(true);
+    expect(container.querySelector('footer[aria-label="Stand und Herkunft"]')).not.toBeNull();
     expect(screen.queryByText("Referenz")).toBeNull();
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
   });
@@ -171,6 +169,49 @@ describe("<WorkshopDetailContent>", () => {
     expect(titleHighlight("Workshop")).toEqual({ lead: "Workshop", highlight: "" });
   });
 
+  it("marks one chosen word and sets the rest after it", () => {
+    expect(titleHighlight("Where Your Data Goes", "Data")).toEqual({
+      lead: "Where Your",
+      highlight: "Data",
+      tail: "Goes",
+    });
+    expect(titleHighlight("Wohin deine Daten gehen", "Daten")).toEqual({
+      lead: "Wohin deine",
+      highlight: "Daten",
+      tail: "gehen",
+    });
+    // A mark at the end has no tail; a mark that is not in the title falls back to the tail rule.
+    expect(titleHighlight("ESG-Berichte mit KI", "KI")).toEqual({
+      lead: "ESG-Berichte mit",
+      highlight: "KI",
+    });
+    expect(titleHighlight("ESG-Berichte mit KI", "Daten")).toEqual({
+      lead: "ESG-Berichte",
+      highlight: "mit KI",
+    });
+  });
+
+  it("lands the Workshop 05 band on the word Data, in both locales, and keeps the full title as the heading", () => {
+    for (const [locale, mark, lead, tail] of [
+      ["en", "Data", "Where Your", "Goes"],
+      ["de", "Daten", "Wohin deine", "gehen"],
+    ] as const) {
+      const workshop = getWorkshopBySlug("ki-im-unternehmen-sicher-nutzen", locale)!;
+      const { unmount } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
+      const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
+      expect(h1.textContent).toBe(workshop.title);
+      expect(h1.firstElementChild).toHaveClass("relative");
+      expect(h1.firstElementChild).toHaveTextContent(lead);
+      const marks = h1.querySelectorAll("span.box-decoration-clone");
+      expect(marks).toHaveLength(1);
+      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark}$`));
+      expect(marks[0].nextSibling?.textContent).toBe(` ${tail}`);
+      // The words are never animated: no motion class or inline animation on the heading.
+      expect(h1.outerHTML).not.toMatch(/animate-|animation|motion-/);
+      unmount();
+    }
+  });
+
   it("keeps every scene's title band readable and visible", () => {
     for (const key of PLAKAT_KEYS) {
       const { ground, ink, mid } = PLAKAT[key];
@@ -191,49 +232,41 @@ describe("<WorkshopDetailContent>", () => {
   it("aligns the case figures when a label wraps", () => {
     const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
     render(<WorkshopDetailContent workshop={workshop} locale="de" />);
-    const stats = sectionOf("Der Fall").querySelector("dl");
+    const stats = sectionOf("Mehr Details").querySelector("dl");
     expect(stats).toHaveClass("[&>div]:justify-between");
   });
 
-  it("keeps the case visible and folds the limits, audience, outcomes, needs and scope away", () => {
+  it("keeps the case short and visible and folds the audience, needs, scope, figures and limits into one accordion", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
     );
 
     const caseSection = sectionOf("Der Fall");
+    expect(caseSection).toHaveTextContent(workshop.caseStudy.companyName);
     expect(caseSection).toHaveTextContent(workshop.caseStudy.narrative);
-    // The case states its situation; its open question is not shown.
+    // The invented case is named once, in the caption line under the company.
+    expect(caseSection).toHaveTextContent(
+      ["Erfundener Fall", workshop.caseStudy.sector, workshop.caseStudy.period].join(" · "),
+    );
+    expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
+    expect(container.querySelector("[data-workshop-facts]")).not.toHaveTextContent("erfundener Fall");
+    // The open decision question and the figures are not on the open page.
     expect(caseSection).not.toHaveTextContent(workshop.caseStudy.decisionQuestion);
     expect(caseSection).not.toHaveTextContent("Die offene Entscheidung");
-    const stats = caseSection.querySelector("dl");
-    expect(stats).not.toBeNull();
-    expect(within(stats as HTMLElement).getAllByRole("term")).toHaveLength(
-      workshop.caseStudy.metrics.length,
-    );
-    const gap = caseSection.querySelector("details")!;
-    expect(gap.querySelector("summary")).toHaveTextContent("Was die Daten nicht beantworten");
-    for (const limitation of workshop.caseStudy.dataLimitations) {
-      expect(gap).toHaveTextContent(limitation);
-    }
+    expect(caseSection.querySelector("dl, details")).toBeNull();
+    expect(caseSection.querySelector("[data-case-question]")).toHaveTextContent(workshop.question);
 
+    const details = sectionOf("Mehr Details");
+    expect(details.querySelector("details")).not.toHaveAttribute("open");
     const audience = sectionOf("Für wen");
     for (const line of workshop.audience) expect(audience).toHaveTextContent(line);
     expect(audience).toHaveTextContent(workshop.notForYou);
-    const outcomes = sectionOf("Nach dem Workshop");
-    for (const line of workshop.outcomes) expect(outcomes).toHaveTextContent(line);
-    // "Du nimmst mit" is said once, in the brief under the band.
-    expect(outcomes).not.toHaveTextContent("Du nimmst mit");
-    expect(
-      container.querySelector("[data-workshop-brief]"),
-    ).toHaveTextContent(`Du nimmst mit: ${workshop.outcome}`);
-    // The invented case is named in the section caption only, not again under the narrative.
-    expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
-
-    const needs = sectionOf("Das brauchst du");
-    for (const line of [...workshop.needs, ...workshop.notNeeded]) {
-      expect(needs).toHaveTextContent(line);
-    }
+    // What you need is said once, in the line under the outcomes; the accordion lists what you do not need.
+    const needs = sectionOf("Das brauchst du nicht");
+    for (const line of workshop.notNeeded) expect(needs).toHaveTextContent(line);
+    expect(within(details).queryByRole("heading", { name: "Das brauchst du" })).toBeNull();
+    expect(container.querySelectorAll("[data-workshop-need]")).toHaveLength(1);
     expect(needs.querySelector('[data-callout="boundary"]')).toHaveTextContent(
       workshop.accessNote,
     );
@@ -241,20 +274,35 @@ describe("<WorkshopDetailContent>", () => {
     for (const line of workshop.notCovered) {
       expect(notCovered).toHaveTextContent(line);
     }
-    // All four reference lists live in the one closed "Details" disclosure.
-    const details = sectionOf("Details");
-    for (const part of [audience, outcomes, needs, notCovered]) {
+    // The case figures, the limits and the provenance note sit in the same accordion.
+    const facts = sectionOf(workshop.caseStudy.limitationsHeading ?? "Was die Daten nicht beantworten");
+    const stats = facts.querySelector("dl");
+    expect(stats).not.toBeNull();
+    expect(within(stats as HTMLElement).getAllByRole("term")).toHaveLength(
+      workshop.caseStudy.metrics.length,
+    );
+    for (const limitation of workshop.caseStudy.dataLimitations) {
+      expect(facts).toHaveTextContent(limitation);
+    }
+    expect(facts).toHaveTextContent(workshop.provenance.note);
+    for (const part of [audience, needs, notCovered, facts]) {
       expect(details).toContainElement(part);
     }
-    expect(details.querySelector("details")).not.toHaveAttribute("open");
+    // The outcomes are not in the accordion.
+    expect(details).not.toContainElement(sectionOf("Nach dem Workshop"));
 
+    // One slim provenance line: who, when it was checked, the kind of data.
     const provenance = container.querySelector(
       'footer[aria-label="Stand und Herkunft"]',
     );
-    expect(provenance).toHaveTextContent("Von Tim Löhr");
+    expect(provenance).toHaveTextContent("Tim Löhr");
+    expect(provenance).toHaveTextContent("geprüft 26. September 2026");
     expect(provenance).toHaveTextContent("KI-Antworten aufgezeichnet August 2026");
     expect(provenance).toHaveTextContent("live gehalten 25. September 2026");
-    expect(provenance).toHaveTextContent(workshop.provenance.note);
+    // The invented data is named once, in the caption line of the case; the footer does not repeat it.
+    expect(provenance).not.toHaveTextContent("erfundene Daten");
+    expect(provenance).not.toHaveTextContent(workshop.provenance.note);
+    expect(provenance?.querySelectorAll("p")).toHaveLength(1);
   });
 
   it("uses the primary material for the cover button and a lab or case for the second", () => {
@@ -344,15 +392,24 @@ describe("<WorkshopDetailContent>", () => {
         expect(secondary.className).not.toMatch(/(^|\s)hover:bg-scene-ink(\s|$)/);
         // The poster: the lg art and the phone poster row (16:9, full
         // bleed), decorative, numbered.
-        const posters = band.querySelectorAll("svg[data-poster]");
-        expect([...posters].map((poster) => poster.getAttribute("data-poster-format"))).toEqual([
-          "portrait",
-          "landscape",
-        ]);
+        // A workshop with a hero scene (components/plakat/hero-motion.tsx)
+        // shows it in both slots instead of the poster motif.
+        const hero = heroMotionScene(workshop.slug);
+        const posters = band.querySelectorAll(hero ? "svg[data-hero-motion]" : "svg[data-poster]");
+        expect(
+          [...posters].map((poster) => poster.getAttribute(hero ? "data-hero-variant" : "data-poster-format")),
+        ).toEqual(["portrait", "landscape"]);
+        expect(band.querySelectorAll(hero ? "svg[data-poster]" : "svg[data-hero-motion]")).toHaveLength(0);
         expect(band.querySelector("[data-plakat-art-phone]")).toHaveClass("aspect-[16/9]", "lg:hidden");
         for (const poster of posters) {
           expect(poster).toHaveAttribute("aria-hidden", "true");
-          expect(poster.querySelector("[data-poster-numeral-text]")).toHaveTextContent(workshop.number);
+          expect(poster).toHaveAttribute("focusable", "false");
+          if (hero) {
+            expect(poster).toHaveAttribute("data-hero-motion", hero);
+            expect(poster.querySelector("text")).toHaveTextContent(workshop.number);
+          } else {
+            expect(poster.querySelector("[data-poster-numeral-text]")).toHaveTextContent(workshop.number);
+          }
         }
         expectNoMennigeInScene(container);
         expectCapsInsideScene(container);
@@ -445,8 +502,8 @@ describe("<WorkshopDetailContent>", () => {
     expect(source).not.toMatch(/(?<!first-letter:)uppercase|font-black|font-mono/);
     expect(source).not.toMatch(/tracking-\[-0\.0[2-9]/);
     expect(source).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt|teal)/);
-    // Three disclosures only: optional files, data limits, the reference.
-    expect(source.match(/<details/g)).toHaveLength(3);
+    // Two disclosures only: optional files and the one "More details" accordion.
+    expect(source.match(/<details/g)).toHaveLength(2);
     expect(source).not.toMatch(/from "lucide-react"/);
     // Stays a Server Component; only the material link hydrates.
     expect(source).not.toMatch(/^["']use client["']/m);
@@ -508,10 +565,45 @@ describe("<WorkshopDetailContent>", () => {
     }
   });
 
+  // Which workshops list their files below the band: only those with a file
+  // that neither band button reaches (Workshops 02 and 03 hand their kit zip
+  // over from the list; 01, 04 and 05 reach everything from the band).
+  const LISTS_MATERIALS: Readonly<Record<string, boolean>> = {
+    "ki-prognosen-einschaetzen": false,
+    "geschaeftsberichte-mit-ki-lesen": true,
+    "datenbereitschaft-fuer-ki": true,
+    "esg-berichte-mit-ki": false,
+    "ki-im-unternehmen-sicher-nutzen": false,
+  };
+
   for (const locale of ["de", "en"] as const) {
     for (const workshop of getWorkshops(locale)) {
-      it(`${locale}/${workshop.slug}: lists every material once in taught order, optional files folded, one link per row`, () => {
-        render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
+      it(`${locale}/${workshop.slug}: lists its materials only when the band cannot reach them, in taught order, optional files folded, one link per row`, () => {
+        const { container } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
+        const hrefOf = (material: (typeof workshop.materials)[number]) =>
+          workshop.kit && material.role === "kit"
+            ? localizeHref(workshopKitPath(workshop.slug), locale)
+            : material.href;
+        const band = container.querySelector("[data-cover-band]") as HTMLElement;
+        const bandHrefs = new Set(
+          within(band)
+            .getAllByRole("link")
+            .filter((link) => !link.hasAttribute("data-cover-back"))
+            .map((link) => link.getAttribute("href")),
+        );
+        // The primary file is always on the band.
+        expect(bandHrefs.has(hrefOf(workshop.materials.find((material) => material.primary)!))).toBe(true);
+        const leftOver = workshop.materials.filter((material) => !bandHrefs.has(hrefOf(material)));
+        expect(LISTS_MATERIALS[workshop.slug], workshop.slug).toBe(leftOver.length > 0);
+
+        if (leftOver.length === 0) {
+          expect(container.querySelector("#material, [data-material-row]")).toBeNull();
+          expect(screen.queryByRole("heading", { name: locale === "de" ? "Material" : "Materials" })).toBeNull();
+          // The band's second button never promises a list that is not there.
+          expect(within(band).queryByRole("link", { name: locale === "de" ? "Material ansehen" : "See materials" })).toBeNull();
+          return;
+        }
+
         const materialSection = sectionOf(locale === "de" ? "Material" : "Materials");
         const rows = materialSection.querySelectorAll("[data-material-row]");
         expect(rows).toHaveLength(workshop.materials.length);
@@ -520,11 +612,6 @@ describe("<WorkshopDetailContent>", () => {
         expect(links).toHaveLength(workshop.materials.length);
         const hrefs = links.map((link) => link.getAttribute("href"));
         expect(new Set(hrefs).size).toBe(workshop.materials.length);
-        // The kit card of a workshop with a kit block opens the kit page, not the zip.
-        const hrefOf = (material: (typeof workshop.materials)[number]) =>
-          workshop.kit && material.role === "kit"
-            ? localizeHref(workshopKitPath(workshop.slug), locale)
-            : material.href;
         for (const material of workshop.materials) {
           const link = links.find((candidate) => candidate.getAttribute("href") === hrefOf(material))!;
           if (hrefOf(material) === material.href) {
@@ -681,13 +768,13 @@ describe("phoneDescription", () => {
   });
 
   it("gives phones the short text and keeps the full one from sm", () => {
-    const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
     );
     const deck = container.querySelector('[data-material-role="deck"]')!;
     const short = deck.querySelector("[data-material-short]")!;
-    expect(short).toHaveTextContent("Für den Beamer.");
+    expect(short).toHaveTextContent("Die Folien führen durch Firma, Kit, Prompts und Fall 2 mit Meta.");
     expect(short).toHaveClass("sm:hidden");
     expect(short.nextElementSibling).toHaveClass("hidden", "sm:block");
     expect(deck).toHaveClass("has-[a:active]:bg-card-hover", "grid-cols-[1.5rem_minmax(0,1fr)]");

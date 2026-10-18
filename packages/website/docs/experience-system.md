@@ -33,7 +33,7 @@ The visual language has two layers.
 - Deck pictograms (`src/components/werk/pictogram.tsx`) are the one icon family on learning surfaces.
 - Exactly one global top scroll-progress thread.
 
-Shared primitives live in `src/components/werk/` (Kicker, SectionHead, CoverBand, GlobeLines, Route, QuestionCard, MaterialList, StatRow, Callout, ButtonLink, Chip, Pictogram). The poster primitives live in `src/components/plakat/` (PlakatBand, PosterArt, PosterThumb, PosterCover, CapsLine, CornerDots, Halftone, ResultChart), their pure geometry and palettes in `src/lib/plakat/`.
+Shared primitives live in `src/components/werk/` (Kicker, SectionHead, CoverBand, GlobeLines, Route, QuestionCard, MaterialList, StatRow, Callout, ButtonLink, Chip, Pictogram). The poster primitives live in `src/components/plakat/` (PlakatBand, PosterArt, PosterThumb, PosterCover, CapsLine, CornerDots, Halftone, ResultChart, and `hero-motion` for a workshop's animated band scene), their pure geometry and palettes in `src/lib/plakat/`.
 
 ### Poster layer
 
@@ -183,7 +183,7 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - Learner-triggered state transitions take 120–200ms; finite structural reveals take 250–450ms.
 - Animate transforms and opacity. Do not use `transition: all`.
 - One region may carry meaningful motion at a time.
-- Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. Two narrow exceptions are defined below: the homepage globe (the desktop projection from 1024px, the phone horizon globe below it, never both) and the `/login` dot field, which the owner requested as that page's background.
+- Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. Three narrow exceptions are defined below: the homepage globe (the desktop projection from 1024px, the phone horizon globe below it, never both), the `/login` dot field, which the owner requested as that page's background, and the Workshop 05 hero scene in its poster band.
 - Every gesture and animated comparison has a keyboard, tap, and static reduced-motion equivalent.
 - Homepage boards (course route, resources): under a mouse a card tilts at most 4 degrees towards the pointer and a soft paper light follows it, behind the text. Touch and pen get no tilt; reduced motion holds the cards flat. The route's lesson count ticks up once (450ms) when it first scrolls into view; the server renders the final number, and a count already on screen never restarts.
 
@@ -225,6 +225,22 @@ The exception has these enforced boundaries:
 - **It is cheap.** Each shape is rasterized onto the dot grid once and then moves as a rigid body. Frames are paced at about 30fps, the backing store is capped at DPR 2, and nothing is scheduled while the document is hidden or the scene is paused. The scene clock only advances on drawn frames, so motion resumes without a jump.
 - **A visible 44px pause toggle sits at the top right of the scene whenever the shapes move** (WCAG 2.2.2, because the drift lasts longer than five seconds): a real button with a fixed localized name ("Hintergrundbewegung anhalten" / "Pause background motion"), `aria-pressed` for its state, `aria-controls` naming the backdrop, a visible teal focus ring, and a choice remembered in this browser.
 - **The card's entrance is finite.** It rises in once (450ms, its rows staggered by 40ms) under `prefers-reduced-motion: no-preference` only, and ends in its natural state.
+
+### Workshop hero scene: narrow continuous-motion exception
+
+The workshop detail page may replace its band's poster motif with an animated scene of its own. Today that is Workshop 05, "the gate" (`src/components/plakat/hero-motion.tsx`, scene in `hero-gate-scene.tsx`, styles in `hero-motion.css`). A prompt leaves a laptop as a message card and reaches a ring with three lamps. Public text passes (green), a card with names stops, is read and passes with its names covered (amber), a card with a key is turned back (red). Past the ring the cards land in a cloud, and four stations circle it: stored in one place, processed in several. The scene draws no word but the pale sequence number, so it can never say more than the page does. `HERO_MOTION` maps a workshop slug to a scene; only Workshop 05 is mapped, and every other workshop, the hub thumb, the social card and the deck cover keep the poster motif.
+
+It is a scene in the art slots of `PlakatBand` (the lg column, 400 x 500, and the phone row, 640 x 360 at 16:9), not a poster, so the poster rules that forbid UI-like motifs and strokes do not apply to it. The poster file contract still does: no hex, no gradient, no filter, no blur, no client directive. The soft glow is stepped flat discs.
+
+The exception has these enforced boundaries (`hero-motion.test.tsx` reads the CSS and the markup):
+
+- **Server-rendered SVG and CSS, zero JavaScript, no dependency.** The SVG carries no id, no `<defs>`, no `<use>` and nothing focusable. It is `aria-hidden`. The title stays the h1 and is never animated (it is the LCP element). Both layouts reserve their box by viewBox, so nothing shifts.
+- **The base styles are the finished still frame**: three lamps lit with their glyphs (check, dash, cross, so the meaning never rests on colour), one card in the cloud, one past the ring with its names covered, one just out of the laptop, no ripples. Reduced motion, print and a browser without CSS animation show that frame.
+- **Every keyframe, animation and transition sits inside `@media (prefers-reduced-motion: no-preference)`.** A `reduce` block also sets `animation: none` and `transition: none` on the scene. Below 360px the ripples, the cursor and the dust are removed.
+- **Only `transform`, `opacity` and `stroke-dashoffset` move**; the hover reaction transitions `transform` only. `will-change: transform` sits on the three cards and nowhere else. About 35 nodes carry an animation, most of them one group each.
+- **The story is a 9 second loop** after a 0.9 second intro that assembles the scene once. Its fastest change is a screen flash once per 3 seconds and a 1 Hz cursor, so nothing flashes more than three times a second. The slower ambient parts (the dashed lane, the spotlight, the orbit, the dust) never tie to the story.
+- **Pointer and keyboard**: while the band is hovered or holds focus, the scene tilts a few degrees, the far layer drifts and the lamp halos widen, in CSS only. Touch gets the plain loop.
+- **No on-page pause control.** The visitor's reduced-motion setting is the only way to stop the loop, as in the Workshop 05 spec; this is weaker than the homepage globe and the login field, which carry a 44px pause toggle. If WCAG 2.2.2 is to be met on the page itself, the toggle needs a client island or a CSS-only checkbox in the band; that is an open decision for the owner.
 
 ### Gallery previews: why there are no live miniatures
 

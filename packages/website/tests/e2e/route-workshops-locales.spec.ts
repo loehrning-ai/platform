@@ -1,42 +1,55 @@
 import { expect, test } from "@playwright/test";
 import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
+/**
+ * materialCount: distinct files the page links to (the band buttons and the
+ * material list together; a kit page counts as its kit).
+ * listedMaterials: rows of the material list. A workshop lists its files only
+ * when a band button cannot reach one: Workshops 02 and 03 hand their kit zip
+ * over from the list, the others reach everything from the band.
+ */
 const WORKSHOP_ROUTES = [
   {
     path: "/workshops",
     deHeading: "Workshops mit Fall und Vorlage",
     enHeading: "Workshops with a case and a template",
     materialCount: 0,
+    listedMaterials: 0,
   },
   {
     path: "/workshops/ki-prognosen-einschaetzen",
     deHeading: "Kann KI die Zukunft vorhersagen?",
     enHeading: "Can AI predict the future?",
     materialCount: 2,
+    listedMaterials: 0,
   },
   {
     path: "/workshops/geschaeftsberichte-mit-ki-lesen",
     deHeading: "Geschäftsberichte mit KI lesen",
     enHeading: "Read business reports with AI",
     materialCount: 2,
+    listedMaterials: 2,
   },
   {
     path: "/workshops/datenbereitschaft-fuer-ki",
     deHeading: "Sind deine Daten bereit für KI?",
     enHeading: "Are your data ready for AI?",
     materialCount: 2,
+    listedMaterials: 2,
   },
   {
     path: "/workshops/esg-berichte-mit-ki",
     deHeading: "ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen",
     enHeading: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
     materialCount: 2,
+    listedMaterials: 0,
   },
   {
-    path: "/workshops/audit-vorbereitung-mit-ki",
-    deHeading: "Audit-Vorbereitung mit KI: Belege ordnen und Lücken finden",
-    enHeading: "Audit Preparation with AI: Organize Evidence and Find Gaps",
+    path: "/workshops/ki-im-unternehmen-sicher-nutzen",
+    deHeading: "Wohin deine Daten gehen: Claude im Arbeitsalltag",
+    enHeading: "Where Your Data Goes: Using Claude at Work",
     materialCount: 2,
+    listedMaterials: 0,
   },
 ] as const;
 
@@ -161,8 +174,8 @@ for (const width of [320, 390, 768, 1440] as const) {
           `${localizedPath} document overflow`,
         ).toBeLessThanOrEqual(width + 1);
         // The cover's start buttons point at materials that the list below
-        // also carries, so count distinct files: each one listed once.
-        // A kit page counts as the kit material it stands for.
+        // (where there is one) also carries, so count distinct files: each one
+        // once. A kit page counts as the kit material it stands for.
         expect(
           new Set([...state.materialHrefs, ...state.kitPageHrefs]).size,
         ).toBe(route.materialCount);
@@ -186,11 +199,9 @@ for (const width of [320, 390, 768, 1440] as const) {
             "href",
             `https://loehrning.ai${localizedPath}`,
           );
-          if (route.materialCount > 0) {
-            await expect(page.getByText("Language: English")).toHaveCount(
-              route.materialCount,
-            );
-          }
+          await expect(page.getByText("Language: English")).toHaveCount(
+            route.listedMaterials,
+          );
         } else {
           expect(state.pageHrefs.every((href) => !href.startsWith("/en"))).toBe(
             true,
@@ -200,7 +211,7 @@ for (const width of [320, 390, 768, 1440] as const) {
           if (route.materialCount > 0) {
             expect(state.mainText).toMatch(GERMAN_INTERFACE_TOKENS);
             await expect(page.getByText("Sprache: Englisch")).toHaveCount(
-              route.materialCount,
+              route.listedMaterials,
             );
           }
         }
@@ -211,3 +222,17 @@ for (const width of [320, 390, 768, 1440] as const) {
     }
   });
 }
+
+// Workshop 05 changed its slug before release: the first preview link, its kit page and the
+// first QR code must reach the released page, in German and in English.
+test("the first Workshop 05 slug redirects to the released page", async ({ request }) => {
+  for (const [from, to] of [
+    ["/workshops/audit-vorbereitung-mit-ki", "/workshops/ki-im-unternehmen-sicher-nutzen"],
+    ["/workshops/audit-vorbereitung-mit-ki/kit", "/workshops/ki-im-unternehmen-sicher-nutzen"],
+    ["/en/workshops/audit-vorbereitung-mit-ki", "/en/workshops/ki-im-unternehmen-sicher-nutzen"],
+  ] as const) {
+    const response = await request.get(from, { maxRedirects: 0 });
+    expect(response.status(), from).toBe(301);
+    expect(new URL(response.headers().location, "http://localhost").pathname, from).toBe(to);
+  }
+});
