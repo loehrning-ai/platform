@@ -133,7 +133,7 @@ test.describe("workshop self-study journey", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openHub(page);
     const rows = page.getByTestId("workshop-row");
-    await expect(rows).toHaveCount(4);
+    await expect(rows).toHaveCount(5);
 
     // A phone row is a list line, not a card: tile, duration, title and one
     // "you leave with" sentence. 140px leaves room for the wider fallback

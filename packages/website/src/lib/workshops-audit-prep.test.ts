@@ -13,14 +13,19 @@ const de = AUDIT_PREP_WORKSHOP.de;
 const en = AUDIT_PREP_WORKSHOP.en;
 const both = [de, en] as const;
 
+const ENTITIES: Record<string, string> = {
+  "&lt;": "<",
+  "&gt;": ">",
+  "&amp;": "&",
+  "&quot;": '"',
+  "&#39;": "'",
+};
+// Single pass: tags are split out, entities decoded once (no double unescape).
 const unescape = (html: string) =>
   html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+    .split(/<[^>]*>/)
+    .join("")
+    .replace(/&(?:lt|gt|amp|quot|#39);/g, (entity) => ENTITIES[entity] ?? entity);
 
 /** The fenced prompt blocks of START-HERE.md, in file order. */
 function startHerePrompts(): string[] {
