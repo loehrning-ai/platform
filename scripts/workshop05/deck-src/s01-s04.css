@@ -104,9 +104,9 @@
 .s3-cap { font-size: 30px; line-height: 1.22; margin-top: 18px; font-weight: 500; max-width: 440px; }
 .s3-card .src { margin-top: auto; }
 .s3-src { left: 96px; top: 768px; width: 1728px; }
-.s3-byo { left: 96px; top: 876px; width: 1728px; font-size: 48px; line-height: 1.2; font-weight: 500; letter-spacing: -.02em; }
+.s3-byo { left: 96px; top: 850px; width: 1728px; font-size: 48px; line-height: 1.2; font-weight: 500; letter-spacing: -.02em; }
 .s3-byo b { color: var(--accent); font-weight: 700; }
-.s3-byo .src { font-size: 24px; letter-spacing: 0; }
+.s3-byo .src { display: block; margin-top: 10px; font-size: 24px; letter-spacing: 0; }
 .s3-hand { left: 96px; top: 858px; width: 1728px; }
 .s3-ask { font-size: 34px; font-weight: 500; letter-spacing: -.012em; margin-bottom: 18px; }
 .s3-opts { display: flex; gap: 16px; }

@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "..", "packages", "website", "public", "workshops", "ki-im-unternehmen-sicher-nutzen", "slides.html"))
 RANGES = ["s01-s04", "s05-s08", "s09-s12", "s13-end"]
 STOPS = ["ACCOUNT", "PLACE", "PASTE", "LAW", "PAGE"]
-FOOTER = "Invented data. Checked 18 Oct 2026."
+FOOTER = "Case invented. Facts checked 18 Oct 2026."
 MAIN = 12
 
 
