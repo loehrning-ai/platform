@@ -164,7 +164,7 @@ test.describe("workshop self-study journey", () => {
     const first = await rows.first().boundingBox();
     expect(first!.y).toBeLessThan(664);
     // Tapping the row body (not the arrow) opens the workshop.
-    const outcome = rows.nth(2).locator("[data-workshop-output]");
+    const outcome = rows.nth(3).locator("[data-workshop-output]");
     await outcome.scrollIntoViewIfNeeded();
     const spot = await outcome.boundingBox();
     await page.mouse.click(spot!.x + 20, spot!.y + spot!.height / 2);
