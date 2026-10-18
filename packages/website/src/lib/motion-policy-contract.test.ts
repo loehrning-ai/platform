@@ -58,21 +58,32 @@ describe("website motion policy", () => {
   });
 
   it("gives the globe intrinsic neutral volume without a coloured hero wash", () => {
+    const globalCss = read("app/globals.css");
     const hero = read("components/home/hero.tsx");
     const band = read("components/home/phone-hero.css");
     const network = read("components/home/hero-network.tsx");
+    const frame = read("components/home/hero-globe-frame.tsx");
+    const heroRule = globalCss.match(/\.berlin-hero\s*\{[^}]*\}/s)?.[0] ?? "";
 
-    // The hero is the flat graphit band at every width: no paper hero class,
-    // no grain, no tinted wash.
-    expect(hero).not.toContain("berlin-hero");
-    expect(hero).not.toContain("berlin-grain");
-    expect(band).toContain("--color-background: #141414;");
+    // The hero is the paper hero at every width: paper ground, no tinted
+    // wash, and the phone band never recolours it (no graphit band).
+    expect(hero).toContain("berlin-hero");
+    expect(heroRule).toContain("background: var(--color-paper)");
+    expect(heroRule).not.toMatch(
+      /169\s*,\s*221\s*,\s*252|203\s*,\s*188\s*,\s*255/,
+    );
+    expect(band).not.toMatch(/--color-background\s*:/);
+    expect(band).not.toMatch(/background[^;]*#(?:000|111|141414|1a1a1a)\b/i);
     expect(band).not.toMatch(
       /169\s*,\s*221\s*,\s*252|203\s*,\s*188\s*,\s*255/,
     );
     expect(hero).not.toContain("bg-brand-peach/20");
-    expect(network).toContain('id="sphereVolume"');
-    expect(network).not.toContain('id="limbHalo"');
+    // Volume comes from one warm-neutral radial gradient, on the live globe
+    // and on the phone's server frame alike; no limb halo.
+    expect(network).toContain("<radialGradient id={ids.volume}");
+    expect(frame).toContain("<radialGradient id={`${ID}-volume`}");
+    expect(network).not.toContain("limbHalo");
+    expect(frame).not.toContain("limbHalo");
   });
 
   it("stops formerly ambient demos after one finite explanatory run", () => {
@@ -154,46 +165,51 @@ describe("website motion policy", () => {
       "Homepage globe: narrow continuous-motion exception",
     );
     expect(policy).toContain(
-      "The projection module and SVG tree are not loaded or rendered on mobile",
+      "The desktop composition is not rendered below lg",
     );
     expect(policy).toContain(
       "A visible 44px pause control sits beside the primary action whenever the globe moves",
     );
   });
 
-  it("bounds the phone horizon globe exception", () => {
+  it("bounds the phone globe exception", () => {
     const hero = read("components/home/hero.tsx");
     const loader = read("components/home/phone-globe.tsx");
-    const renderer = read("components/werk/horizon-globe-renderer.ts");
+    const frame = read("components/home/hero-globe-frame.tsx");
+    const network = read("components/home/hero-network.tsx");
     const css = read("components/home/phone-hero.css");
     const policy = readFileSync(
       join(SRC, "..", "docs/experience-system.md"),
       "utf8",
     );
 
-    // Its own namespace: the desktop attributes never describe the phone globe.
-    expect(hero).toContain('data-home-globe-motion="static"');
-    expect(renderer).not.toContain("data-hero-");
-    expect(loader).not.toContain("data-hero-");
-    // The renderer is a lazy chunk, gated on width, motion, data and Save-Data.
-    expect(hero).not.toContain("horizon-globe-renderer");
-    expect(loader).toContain('import("@/components/werk/horizon-globe-renderer")');
-    expect(loader).toContain('"(min-width: 64rem)"');
+    // Its own slot and state namespace, decorative and never focusable.
+    expect(hero).toContain("data-home-globe-motion={phoneGlobeState.state}");
+    expect(hero).toMatch(/id="home-phone-globe"[\s\S]{0,200}aria-hidden="true"/);
+    // The first frame is server-rendered SVG, and the whole globe for every
+    // visitor who does not get motion.
+    expect(frame).not.toContain('"use client"');
+    expect(frame).toContain("data-home-globe-ssr");
+    // The projection is a lazy chunk, gated on width, motion, data and
+    // Save-Data, requested only after load plus an idle callback.
+    expect(hero).not.toMatch(/^import[^;]*from "@\/components\/home\/hero-network";/m);
+    expect(loader).toContain('import("@/components/home/hero-network")');
+    expect(loader).toContain('export const LG_QUERY = "(min-width: 64rem)"');
     expect(loader).toContain('"(prefers-reduced-motion: reduce)"');
     expect(loader).toContain('"(prefers-reduced-data: reduce)"');
     expect(loader).toContain("saveData");
     expect(loader).toContain("requestIdleCallback");
-    expect(loader).toContain("paused={globe.paused}");
-    expect(loader).toContain("export const LG_QUERY");
-    // Suspension, caps and the governor.
-    expect(renderer).toContain("IntersectionObserver");
-    expect(renderer).toContain('document.addEventListener("visibilitychange"');
-    expect(renderer).toContain('"pagehide"');
-    expect(renderer).toContain("SCROLL_HOLD_MS");
-    // Top tier: DPR capped at 2, drift at 30 fps, never above 60 fps while active.
-    expect(renderer).toContain("{ cap: 2, drift: 30, active: 60 }");
-    expect(renderer).not.toMatch(/active:\s*(?:[7-9]\d|1\d\d)/);
-    expect(renderer).toContain("frozen = true");
+    // A pause control exists exactly while the globe moves.
+    expect(loader).toContain('if (globe.state === "static") return null;');
+    expect(hero).toContain("paused={phoneGlobeState.paused}");
+    // The compact globe runs at half the desktop cap and suspends off screen
+    // and in hidden documents (the shared gating effect).
+    expect(network).toContain("HERO_GLOBE_COMPACT_FPS = 30");
+    expect(network).toContain(
+      "1000 / (compact ? HERO_GLOBE_COMPACT_FPS : HERO_GLOBE_FPS)",
+    );
+    expect(network).toContain("IntersectionObserver");
+    expect(network).toContain('document.addEventListener("visibilitychange"');
     // The opening is finite and exists only without a reduced-motion preference.
     expect(css).toContain("prefers-reduced-motion: no-preference");
     expect(css).not.toMatch(/\binfinite\b/);

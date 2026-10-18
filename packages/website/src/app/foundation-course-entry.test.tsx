@@ -102,7 +102,15 @@ describe("foundation course entry contract", () => {
       expect(progressSlot?.className).toContain("empty:hidden");
       expect(frame?.querySelector('[role="progressbar"]')).toBeNull();
       expect(frame?.querySelector("details")).not.toBeNull();
-      expect(frame?.querySelector("img")).toBeNull();
+      // The only picture is the course's people illustration in the band
+      // (public/course-covers): decorative, hidden from assistive tech and
+      // never a second call to action.
+      const pictures = Array.from(frame?.querySelectorAll("img") ?? []);
+      expect(pictures).toHaveLength(1);
+      expect(pictures[0]).toHaveAttribute("alt", "");
+      expect(pictures[0]?.getAttribute("src")).toContain("course-covers");
+      expect(pictures[0]?.closest('[aria-hidden="true"]')).not.toBeNull();
+      expect(pictures[0]?.closest("a")).toBeNull();
 
       for (const link of frame?.querySelectorAll("a") ?? []) {
         expect(link.getAttribute("href")).toMatch(/^\/en\//);
