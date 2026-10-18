@@ -239,10 +239,10 @@ test.describe("workshop self-study journey", () => {
     }
   });
 
-  test("sets the four workshops as four posters in four palettes", async ({ page }) => {
+  test("sets the five workshops as five posters in five palettes", async ({ page }) => {
     await openHub(page);
     // The hub opens on a paper header (highlighted title, pastel geometry,
-    // catalogue card); the four posters are the rows.
+    // catalogue card); the five posters are the rows.
     await expect(page.locator("[data-cover-band]")).toHaveCount(0);
     const hero = page.locator("[data-workshop-hero]");
     await expect(hero).toBeVisible();
@@ -250,13 +250,13 @@ test.describe("workshop self-study journey", () => {
     await expect(hero.locator("[data-workshop-geometry]")).toHaveCount(2);
     await expect(page.getByRole("complementary", { name: "Im Katalog" })).toBeVisible();
     const rows = page.getByTestId("workshop-row");
-    await expect(rows).toHaveCount(4);
-    // Each row shows its own poster; the four palettes are distinct and in
+    await expect(rows).toHaveCount(5);
+    // Each row shows its own poster; the five palettes are distinct and in
     // the newest-first order of the list.
     const palettes = await rows.evaluateAll((elements) =>
       elements.map((row) => row.querySelector("svg[data-poster]")?.getAttribute("data-poster")),
     );
-    expect(palettes).toEqual(["autumn", "bloom", "idea", "lemons"]);
+    expect(palettes).toEqual(["sage", "autumn", "bloom", "idea", "lemons"]);
     // The poster grounds really differ on screen: one computed fill per row.
     const grounds = await rows.evaluateAll((elements) =>
       elements.map((row) => {
@@ -264,7 +264,7 @@ test.describe("workshop self-study journey", () => {
         return ground ? getComputedStyle(ground).fill : null;
       }),
     );
-    expect(new Set(grounds).size).toBe(4);
+    expect(new Set(grounds).size).toBe(5);
     expect(grounds).not.toContain(null);
 
     // Each workshop page opens with the band in its own scene.
@@ -273,6 +273,7 @@ test.describe("workshop self-study journey", () => {
       "geschaeftsberichte-mit-ki-lesen": "idea",
       "datenbereitschaft-fuer-ki": "bloom",
       "esg-berichte-mit-ki": "autumn",
+      "audit-vorbereitung-mit-ki": "sage",
     } as const;
     const bandGrounds = new Set<string>();
     for (const [slug, plakat] of Object.entries(expected)) {
@@ -287,6 +288,6 @@ test.describe("workshop self-study journey", () => {
       await expect(band.locator("[data-workshop-redline]")).toHaveCount(0);
       await expect(page.locator("[data-workshop-redline] li")).toHaveCount(3);
     }
-    expect(bandGrounds.size).toBe(4);
+    expect(bandGrounds.size).toBe(5);
   });
 });

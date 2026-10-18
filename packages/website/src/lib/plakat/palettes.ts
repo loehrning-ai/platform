@@ -2,8 +2,9 @@
  * The poster palettes ("Plakat"), the single TypeScript source for SVG
  * posters, OG images, social cards, deck covers and static generators.
  *
- * Four scenes of three colours each (ground, ink, mid), sampled from the four
- * reference posters: Lemons, IDEA, Bloom and Autumn. The CSS twin is the
+ * Five scenes of three colours each (ground, ink, mid): four sampled from the
+ * reference posters (Lemons, IDEA, Bloom and Autumn) and Sage, taken from the
+ * soft look of the Workshop 05 deck. The CSS twin is the
  * `.plakat-*` scopes and the `@theme static` block in `src/app/globals.css`;
  * `palettes.test.ts` keeps both equal, and `docs/plakat-pairings.md` lists
  * every pairing with its contrast ratio.
@@ -105,12 +106,26 @@ export const PLAKAT = {
     cornerDots: false,
     chartAccent: "#9b5e07", // Ocker tief, 4.68 on Kalkweiß only; hatch mandatory
   },
+  sage: {
+    ground: "#dce6d4", // Salbei
+    ink: "#1f4a38", // Tanne, 7.79 on Salbei
+    mid: "#d9a441", // Bernstein, 1.75: shapes only
+    mark: "#1f4a38", // the ink: Bernstein is too light for a meaningful mark
+    accentText: "#97300f", // Mennige tief, 5.94 on Salbei
+    button: "#1f4a38", // Tanne fill, a clear green (luminance 0.055)
+    buttonText: "#fffcf5", // Bogen label, 9.78
+    line: "#1f4a38", // 8.92 on Kalkweiß
+    numWeight: 700,
+    numRole: "ink",
+    cornerDots: false,
+    chartAccent: "#97300f", // Mennige tief, 6.81 on Kalkweiß; hatch mandatory
+  },
 } as const satisfies Record<string, PlakatPalette>;
 
 export type PlakatKey = keyof typeof PLAKAT;
 
 /** The scenes in the series order the owner sent the reference posters in. */
-export const PLAKAT_KEYS = ["lemons", "idea", "bloom", "autumn"] as const satisfies readonly PlakatKey[];
+export const PLAKAT_KEYS = ["lemons", "idea", "bloom", "autumn", "sage"] as const satisfies readonly PlakatKey[];
 
 /**
  * Poster motifs. Geometry lives in `src/lib/plakat/motifs.ts`; ids only here,
@@ -122,6 +137,7 @@ export const MOTIF_IDS = [
   "pie",
   "dome",
   "leaves",
+  "ledger",
   // Grundlagenpfad
   "disc",
   "pair",
@@ -145,8 +161,8 @@ export interface WorkshopPlakat {
 }
 
 /**
- * Locked (Werkzeichnung v2, decision D3): one palette per workshop, four
- * workshops, four palettes, in the series order. The deck, the social card,
+ * Locked (Werkzeichnung v2, decision D3): one palette per workshop, five
+ * workshops, five palettes, in the series order. The deck, the social card,
  * the OG image and the static materials read this map and no other.
  */
 export const WORKSHOP_PLAKAT = {
@@ -154,12 +170,13 @@ export const WORKSHOP_PLAKAT = {
   "geschaeftsberichte-mit-ki-lesen": { plakat: "idea", motif: "pie" },
   "datenbereitschaft-fuer-ki": { plakat: "bloom", motif: "dome" },
   "esg-berichte-mit-ki": { plakat: "autumn", motif: "leaves" },
+  "audit-vorbereitung-mit-ki": { plakat: "sage", motif: "ledger" },
 } as const satisfies Record<string, WorkshopPlakat>;
 
 export type WorkshopPlakatSlug = keyof typeof WORKSHOP_PLAKAT;
 
 /** A poster numeral exists only where a sequence exists (Grundlagenpfad 01 to 04). */
-export type PlakatNumeral = "01" | "02" | "03" | "04";
+export type PlakatNumeral = "01" | "02" | "03" | "04" | "05";
 
 export interface CoursePlakat {
   readonly plakat: PlakatKey;

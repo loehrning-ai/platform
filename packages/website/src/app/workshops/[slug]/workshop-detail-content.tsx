@@ -93,6 +93,8 @@ const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
  * - autumn: Ocker at 30% over Rost, Creme on it 3.43. Rost leaves little
  *   room for a lighter wash (Creme is 4.80 on the plain ground), so the band
  *   stays a tint and the 3:1 display floor keeps its margin.
+ * - sage: Bernstein at 100% over Salbei (1.75 against the ground, a visible
+ *   band), Tanne on it 4.46.
  */
 export const TITLE_HIGHLIGHT: Readonly<
   Record<PlakatKey, { readonly colorVar: `--color-${string}`; readonly opacity: number }>
@@ -101,6 +103,7 @@ export const TITLE_HIGHLIGHT: Readonly<
   idea: { colorVar: "--color-scene-mid", opacity: 35 },
   bloom: { colorVar: "--color-scene-mid", opacity: 80 },
   autumn: { colorVar: "--color-scene-mid", opacity: 30 },
+  sage: { colorVar: "--color-scene-mid", opacity: 100 },
 };
 
 /** Longest two-word tail that still reads as a short marked phrase. */

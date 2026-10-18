@@ -3,7 +3,7 @@
  * build-pairings.mjs
  *
  * Writes docs/plakat-pairings.md, the pairing registry of the poster layer:
- * every colour pairing the four Plakat scenes allow, and the ones they
+ * every colour pairing the five Plakat scenes allow, and the ones they
  * forbid, each with its WCAG 2.x contrast ratio. Values are read from
  * src/app/globals.css (the scopes and tokens the browser gets) and
  * src/lib/plakat/palettes.ts (the TypeScript twin used by SVG, OG and static
@@ -189,6 +189,9 @@ const RAW_TOKENS = [
   ["--color-ocker", "Ocker"],
   ["--color-ocker-hell", "Ocker hell"],
   ["--color-ocker-tief", "Ocker tief"],
+  ["--color-salbei", "Salbei"],
+  ["--color-tanne", "Tanne"],
+  ["--color-bernstein", "Bernstein"],
 ];
 
 const NAMES = new Map([
@@ -204,7 +207,7 @@ const NAMES = new Map([
   ...RAW_TOKENS.map(([token, name]) => [themeHex(token), name]),
 ]);
 
-const SCENE_NAMES = { lemons: "Lemons", idea: "IDEA", bloom: "Bloom", autumn: "Autumn" };
+const SCENE_NAMES = { lemons: "Lemons", idea: "IDEA", bloom: "Bloom", autumn: "Autumn", sage: "Sage" };
 
 const failures = [];
 
@@ -275,7 +278,7 @@ function rawPaletteSection() {
   return [
     "## Raw palette on paper",
     "",
-    "The fifteen `@theme static` tokens against the three paper grounds. \"Text on\" lists the grounds where the colour reaches 4.5:1, \"Large or non-text only on\" the grounds where it reaches 3:1 but not 4.5:1. A colour with neither is a scene colour and never sits on paper as text.",
+    "The eighteen `@theme static` tokens against the three paper grounds. \"Text on\" lists the grounds where the colour reaches 4.5:1, \"Large or non-text only on\" the grounds where it reaches 3:1 but not 4.5:1. A colour with neither is a scene colour and never sits on paper as text.",
     "",
     table(
       ["Token", "Name", "Hex", "Kalkweiß", "Bogen", "Beton", "Text on", "Large or non-text only on"],

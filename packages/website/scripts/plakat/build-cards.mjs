@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Social cards of the four workshops (Werkzeichnung v2, SPEC §3.15):
+ * Social cards of the five workshops (Werkzeichnung v2, SPEC §3.15):
  * public/workshops/<slug>/card-preview.webp at 1200 x 630.
  *
  *   left   the scene ground with the caps line (the workshop's eyebrow), the

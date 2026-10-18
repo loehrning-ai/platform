@@ -54,6 +54,9 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/open-source/tools/cv-engine",
   "/ueber-mich",
   "/workshops",
+  "/workshops/audit-vorbereitung-mit-ki",
+  // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
+  "/workshops/audit-vorbereitung-mit-ki/kit",
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
   // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).

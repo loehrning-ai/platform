@@ -32,6 +32,12 @@ const WORKSHOP_ROUTES = [
     enHeading: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
     materialCount: 2,
   },
+  {
+    path: "/workshops/audit-vorbereitung-mit-ki",
+    deHeading: "Audit-Vorbereitung mit KI: Belege ordnen und Lücken finden",
+    enHeading: "Audit Preparation with AI: Organize Evidence and Find Gaps",
+    materialCount: 2,
+  },
 ] as const;
 
 const GERMAN_INTERFACE_TOKENS =

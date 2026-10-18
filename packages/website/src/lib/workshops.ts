@@ -18,10 +18,11 @@
 import type { Locale } from "./i18n/locale";
 import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
+import { AUDIT_PREP_WORKSHOP } from "./workshops-audit-prep";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
-/** Two-digit catalogue number. "04" is reserved for the ESG workshop. */
-export type WorkshopNumber = "01" | "02" | "03" | "04";
+/** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
+export type WorkshopNumber = "01" | "02" | "03" | "04" | "05";
 
 /** When a learner uses a material: before, during or after the session. */
 export type WorkshopPhase = "before" | "during" | "after";
@@ -1100,8 +1101,18 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 export const WORKSHOPS_BY_LOCALE: Readonly<
   Record<Locale, readonly Workshop[]>
 > = {
-  de: [...WORKSHOPS_DE, DATA_READINESS_WORKSHOP.de, ESG_REPORTING_WORKSHOP.de],
-  en: [...WORKSHOPS_EN, DATA_READINESS_WORKSHOP.en, ESG_REPORTING_WORKSHOP.en],
+  de: [
+    ...WORKSHOPS_DE,
+    DATA_READINESS_WORKSHOP.de,
+    ESG_REPORTING_WORKSHOP.de,
+    AUDIT_PREP_WORKSHOP.de,
+  ],
+  en: [
+    ...WORKSHOPS_EN,
+    DATA_READINESS_WORKSHOP.en,
+    ESG_REPORTING_WORKSHOP.en,
+    AUDIT_PREP_WORKSHOP.en,
+  ],
 };
 
 /** German remains the canonical catalog for machine endpoints and legacy imports. */

@@ -1,0 +1,10 @@
+Fictional training data. Every company, person and document is invented.
+Triage model hosting. Written by the Head of Engineering on 2026-04-09. Not updated since.
+
+Purpose: sort incoming support tickets into urgent, normal and billing.
+Model: open-weights instruction model, 8 billion parameters, downloaded from a public model hub in March 2026. Name, version and licence: not recorded. Not fine-tuned.
+Host: rented GPU server at Nordgrid Cloud AB. The sales page says "EU data centre". Paid monthly by company card.
+Access: SSH keys of 3 engineers. The API port accepts calls from the office network only.
+Logs: the inference server writes every prompt and every answer to a log file for debugging. The file is never rotated or deleted.
+Updates: installed by hand, last on 2026-04-09.
+Data protection impact assessment: not done.

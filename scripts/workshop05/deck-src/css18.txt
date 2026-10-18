@@ -1,0 +1,33 @@
+<style data-slide="18">
+/* Exit ticket, before the close. Three statements are on screen from arrival; the room holds up a card for
+   each, and each press stamps one answer (no answer shows before its press). */
+[data-n="18"] .x21-kick { position: absolute; left: var(--mx); top: 122px; }
+[data-n="18"] .x21-title { position: absolute; left: var(--mx); right: var(--mx); top: 172px; }
+[data-n="18"] .x21-list { position: absolute; left: var(--mx); right: var(--mx); top: 318px; margin: 0; padding: 0; list-style: none; --stagger: 80ms; }
+[data-n="18"] .x21-row { display: grid; grid-template-columns: 92px 1fr 620px; align-items: center; column-gap: 32px; height: 216px;
+  border-top: 1.5px solid var(--line); }
+[data-n="18"] .x21-row:last-child { border-bottom: 1.5px solid var(--line); }
+[data-n="18"] .x21-n { font-family: var(--mono); font-size: 64px; font-weight: 600; line-height: 1; color: var(--mennige); }
+[data-n="18"] .x21-q { margin: 0; font-size: 48px; line-height: 1.12; letter-spacing: -0.024em; font-weight: 600; color: var(--ink); text-wrap: balance; }
+[data-n="18"] .x21-a, [data-n="18"] .x21-slot { grid-column: 3; grid-row: 1; }
+[data-n="18"] .x21-a { position: relative; justify-self: start; }
+/* the empty answer slot (dashed, as on slides 5 and 16) until the press that stamps the answer into it */
+[data-n="18"] .x21-slot { justify-self: start; display: grid; place-items: center; width: 300px; height: 72px; border: 2px dashed var(--line-strong); border-radius: 999px;
+  font-family: var(--mono); font-style: normal; font-size: 36px; font-weight: 700; color: var(--muted); transition: opacity 160ms var(--ease-out); }
+[data-n="18"] .x21-a.on ~ .x21-slot { opacity: 0; }
+/* the answer stamps in like the status tags on the hands-on slides, at the size of the cards in the room */
+[data-n="18"] .x21-a[data-at] { opacity: 0; transform: scale(1.14) rotate(-2deg); transform-origin: 0 50%;
+  transition: opacity 180ms var(--ease-out), transform 240ms var(--ease-out); }
+[data-n="18"] .x21-a[data-at].on { opacity: 1; transform: none; }
+[data-n="18"] .x21-tag { display: inline-flex; align-items: center; justify-content: center; gap: 14px; box-sizing: border-box; width: 300px; height: 72px; padding: 0 20px; border: 1.5px solid currentColor; border-radius: 999px; font-family: var(--mono);
+  font-size: 36px; font-weight: 600; line-height: 1.15; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+[data-n="18"] .x21-tag.ok { color: var(--ok-fg); background: var(--ok-bg); }
+[data-n="18"] .x21-tag.ok::before { content: ''; width: 16px; height: 16px; border-radius: 999px; background: currentColor; }
+[data-n="18"] .x21-tag.chk { color: var(--warn-fg); background: var(--warn-bg); }
+[data-n="18"] .x21-tag.nf { color: var(--gap-fg); background: var(--gap-bg); }
+[data-n="18"] .x21-plus { position: absolute; left: 0; top: calc(100% + 14px); font-size: 30px; line-height: 1.25; letter-spacing: -0.008em; font-weight: 600;
+  color: var(--ink); white-space: nowrap; }
+@media print {
+  [data-n="18"] .x21-slot { display: none !important; }
+}
+</style>

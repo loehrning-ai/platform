@@ -213,6 +213,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
         "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Plan mit Dateierstellung",
+        "audit-vorbereitung-mit-ki": "Zum Nachmachen Claude mit Dateierstellung, jeder Plan",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
@@ -393,6 +394,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude desktop app and a Claude plan that includes Claude Code",
         "esg-berichte-mit-ki": "To replay it, a Claude plan with file creation",
+        "audit-vorbereitung-mit-ki": "To replay it, Claude with file creation, any plan",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Self-paced about ${minutes} min`,

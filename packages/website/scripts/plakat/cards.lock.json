@@ -1,6 +1,12 @@
 {
   "version": 1,
   "cards": {
+    "audit-vorbereitung-mit-ki": {
+      "input": "614f5f395102ad9b5f664e63d1699565db6079dd8ec6418672ca250c6fa41c00",
+      "output": "567303661aac0aa9d59b6dee22b36f82c4b860512d666fc7c121e2cfd3efb46e",
+      "width": 1200,
+      "height": 630
+    },
     "datenbereitschaft-fuer-ki": {
       "input": "7cbc2f6cdeebbf2957916d88809bb7cedae745c8cf3130944cf0c50e467fad58",
       "output": "3481abcbca2f455d7d93abe06bdea465cdf804e405825bf97ffdf68ded38fc6e",

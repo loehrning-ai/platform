@@ -1,0 +1,6 @@
+# Fictional training data. Every company, person and document is invented. Security and privacy incident log 2026, exported on 2026-11-02. Customer contracts require notice within 48 hours of detection when a customer's patient data is involved.
+id,detected,type,description,patient_data,customer_told,root_cause,corrective_action,status
+INC-01,2026-02-03,phishing,phishing mail reported by support and blocked,no,not needed,user reported,mail filter rule added,closed
+INC-02,2026-03-19,lost laptop,encrypted laptop lost on a train,no,not needed,carelessness,none needed (disk encrypted),closed
+INC-03,2026-05-04,wrong recipient,weekly export with 212 patient records sent to the wrong clinic,yes,2026-05-11,manual export step,,closed
+INC-04,2026-08-03,suspicious login,login to adm-04 after the owner left the company,unknown,not decided,not investigated,,open

@@ -1,0 +1,271 @@
+<script src="./lib/geo.js"></script>
+<script src="./lib/globe.js"></script>
+<script src="./lib/audit.js"></script>
+<script data-slide="01">
+(() => {
+const N = 1;
+const slide = document.querySelector('deck-stage > section[data-n="01"]');
+const canvas = slide.querySelector('canvas[data-globe]');
+const globe = window.ESGGlobe && window.ESGGlobe.get(canvas);
+// Europe turned to the front and zoomed in; the globe moves right so its edge stays clear of the text
+const FRONT = { lon: 17, lat: 45, zoom: 2.4, cx: 0.765, cy: 0.52 };
+const ARC = { lift: 0.35, labels: [['macedonia', 'North Macedonia', 'right'], ['eu', 'EU', 'left']] };
+
+DECK.on(N, {
+  state(step, d) {
+    if (!globe) return;
+    if (step === 0) { globe.reset(); return; }
+    globe.clearArcs();
+    if (d.instant) {
+      globe.still(FRONT);
+      globe.arc('eu', { ...ARC, ms: 0 });
+    } else {
+      globe.settle({ ...FRONT, ms: 900, short: true });
+      globe.arc('eu', { ...ARC, ms: 560, delay: 300 });
+    }
+  },
+});
+})();
+</script>
+<script data-slide="05">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="05"]');
+const st = Array.from(slide.querySelectorAll('.s05-st'));
+let shakeT = 0;
+// the thread lights its stations as it runs: 1 at press 1, up to 3 at press 2, the log at press 3, where the proof is missing
+DECK.on(5, {
+  state(step, d) {
+    const lit = step === 0 ? 0 : step === 1 ? 1 : step === 2 ? 3 : 4;
+    st.forEach((el, i) => el.classList.toggle('lit', i < lit));
+    st[4].classList.toggle('hole', step >= 3);
+    // the pulse is the auditor's finger: it follows the thread and stops where the proof should be
+    const pulse = slide.querySelector('.s05-pulse');
+    pulse.style.left = (step <= 1 ? 307 : step === 2 ? 1031 : 1393) + 'px';
+    // the break lands with the dashed line (it fades in at about 300 ms, the stamp pops at 560 ms)
+    clearTimeout(shakeT);
+    if (step === 3 && !d.instant && !DECK.reduce) shakeT = setTimeout(() => { st[4].classList.remove('shake'); void st[4].offsetWidth; st[4].classList.add('shake'); }, 520);
+  },
+});
+})();
+</script>
+<script data-slide="08">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="08"]');
+// each rule card arrives from the gutter beside the instructions (it never flies across text),
+// while its line lights up in the instructions on the right
+function liftOut(r) {
+  if (DECK.reduce) return;
+  const card = slide.querySelector(`.s10-rule[data-r="${r}"]`);
+  card.animate([
+    { transform: 'translateX(64px)', opacity: 0 },
+    { transform: 'none', opacity: 1 },
+  ], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+}
+DECK.on(8, {
+  state(step, d) {
+    if (!d.instant && !d.backward && step >= 1 && step <= 3) liftOut(step);
+  },
+});
+})();
+</script>
+<script data-slide="09">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="09"]');
+const box = slide.querySelector('.x19-cd');
+const num = slide.querySelector('.x19-cd-n');
+const fill = slide.querySelector('.x19-cd-fill');
+const cap = slide.querySelector('.x19-cd-l');
+const CAP0 = cap.textContent;
+const TOTAL = 180000;
+let t0 = 0, raf = 0;
+// the 3:00 bar waits at full length; press 1 ("Go") starts it. It is the slide's own timer, separate from the session clock.
+const text = (ms) => { const s = Math.ceil(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+function paint(left) {
+  num.textContent = text(left);
+  fill.style.width = (left / TOTAL * 100).toFixed(2) + '%';
+  box.classList.toggle('low', left <= 60000);
+  cap.textContent = left <= 0 ? 'Pens down. No changes after this.' : left <= 60000 ? 'One minute left.' : 'Pairs mark Trap or Clean on each card.';
+}
+function stop() { cancelAnimationFrame(raf); raf = 0; }
+function reset() { stop(); num.textContent = '3:00'; fill.style.width = ''; box.classList.remove('low'); cap.textContent = CAP0; }
+function tick() {
+  const left = Math.max(0, TOTAL - (performance.now() - t0));
+  paint(left);
+  if (left > 0) raf = requestAnimationFrame(tick);
+}
+DECK.on(9, {
+  state(step, d) {
+    stop();
+    if (step === 0) { reset(); return; }
+    if (d.instant) { paint(0); return; }
+    t0 = performance.now();
+    tick();
+  },
+  leave: stop,
+});
+})();
+</script>
+<script data-slide="10">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="10"]');
+const flow = slide.querySelector('.flow8');
+let timers = [];
+const clear = () => { timers.forEach(clearTimeout); timers = []; };
+const set = (...c) => { flow.classList.remove('t1', 't2', 't3', 'ev'); c.forEach((x) => flow.classList.add(x)); };
+// press 1: each bet item flies from the live box to its row of the table, so the list is shown once
+function listToTable() {
+  if (DECK.reduce) return;
+  const sc = slide.getBoundingClientRect().width / slide.offsetWidth || 1;
+  const rows = Array.from(slide.querySelectorAll('.tb .tr'));
+  slide.querySelectorAll('.qs li').forEach((li) => {
+    const code = li.querySelector('b').textContent.trim();
+    const k = rows.findIndex((r) => r.querySelector('b').textContent.trim() === code);
+    if (k < 0) return;
+    const a = li.getBoundingClientRect(), b = rows[k].getBoundingClientRect();
+    rows[k].animate([
+      { transform: `translate(${(a.left - b.left) / sc}px, ${(a.top - b.top) / sc}px)`, opacity: 0 },
+      { opacity: 1, offset: .25 },
+      { transform: 'none', opacity: 1 },
+    ], { duration: 700, delay: Math.min(k * 60, 420), easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' });
+  });
+}
+DECK.on(10, {
+  state(step, d) {
+    clear();
+    if (step === 1 && !d.instant && !d.backward) listToTable();
+    if (step < 4) { set(); return; }
+    if (step === 4 && !d.instant && !d.backward && !DECK.reduce) {
+      // the pulse: Attempt 1, then the Fix, then Attempt 2; the failed run turns into evidence
+      set('t1');
+      timers.push(setTimeout(() => set('t1', 't2'), 400), setTimeout(() => set('t1', 't2', 't3'), 800), setTimeout(() => set('t1', 't2', 't3', 'ev'), 1300));
+      return;
+    }
+    set('t1', 't2', 't3', 'ev');
+  },
+  leave: clear,
+});
+})();
+</script>
+<script data-slide="11">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="11"]');
+const rw = slide.querySelector('.rw-new');
+const full = rw.dataset.full;
+let timer = 0;
+// press 3: the strike draws across claim 1 first, then the safe rewrite types in beside it
+DECK.on(11, {
+  state(step, d) {
+    clearInterval(timer); clearTimeout(timer);
+    rw.textContent = full;
+    if (step < 3 || d.instant || d.backward || DECK.reduce) return;
+    rw.textContent = '';
+    timer = setTimeout(() => {
+      const t0 = performance.now(), ms = 700;
+      timer = setInterval(() => {
+        const n = Math.min(full.length, Math.round(full.length * (performance.now() - t0) / ms));
+        rw.textContent = full.slice(0, n);
+        if (n >= full.length) clearInterval(timer);
+      }, 30);
+    }, 450);
+  },
+  leave() { clearInterval(timer); clearTimeout(timer); rw.textContent = full; },
+});
+})();
+</script>
+<script data-slide="12">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="12"]');
+const board = slide.querySelector('.s12-board');
+const cards = Array.from(board.querySelectorAll('.s12-card'));
+const heads = Array.from(board.querySelectorAll('.s12-lh'));
+const qs = Array.from(slide.querySelectorAll('.s12-qc'));
+const COL = { go: 1, cf: 2, so: 3 };
+const PRESS = { go: 1, cf: 2, so: 3 };
+const HIT = [[], ['Data'], ['Data', 'Place'], ['Data'], []];
+const lab = cards.find((c) => c.dataset.i === '5');
+let timer = 0;
+// Where every card sits at a step. Sorted cards go to their lane; the rest of the pile packs into the columns no lane has claimed yet.
+function layout(step) {
+  const claimed = Object.keys(PRESS).filter((l) => step >= PRESS[l]);
+  const free = [1, 2, 3].filter((c) => !claimed.some((l) => COL[l] === c));
+  const out = new Map(), n = {};
+  let k = 0;
+  cards.forEach((card) => {
+    const lane = card.dataset.lane;
+    if (step >= PRESS[lane]) { n[lane] = n[lane] || 0; out.set(card, { c: COL[lane], r: 2 + n[lane]++, sorted: true }); }
+    else { out.set(card, { c: free[k % free.length], r: 2 + Math.floor(k / free.length), sorted: false }); k++; }
+  });
+  return out;
+}
+function apply(step, animate) {
+  const sc = slide.getBoundingClientRect().width / slide.offsetWidth || 1;
+  const first = cards.map((c) => c.getBoundingClientRect());
+  const map = layout(step);
+  cards.forEach((card) => {
+    const p = map.get(card);
+    card.style.gridColumn = String(p.c);
+    card.style.gridRow = String(p.r);
+    card.classList.toggle('sorted', p.sorted);
+  });
+  heads.forEach((h) => h.classList.toggle('on', step >= PRESS[h.dataset.lane]));
+  qs.forEach((q) => q.classList.toggle('hit', HIT[step].includes(q.dataset.q)));
+  if (!animate || DECK.reduce) return;
+  cards.forEach((card, i) => {
+    const b = card.getBoundingClientRect();
+    const dx = (first[i].left - b.left) / sc, dy = (first[i].top - b.top) / sc;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+    card.style.zIndex = '5';
+    const a = card.animate([
+      { transform: `translate(${dx}px, ${dy}px)` },
+      { transform: `translate(${dx * .5}px, ${dy * .5 - 18}px) scale(1.03)`, offset: .5 },
+      { transform: 'none' },
+    ], { duration: 700, delay: Math.min(i * 50, 250), easing: 'cubic-bezier(.65,0,.35,1)', fill: 'backwards' });
+    a.onfinish = () => { card.style.zIndex = ''; };
+  });
+}
+DECK.on(12, {
+  state(step, d) {
+    clearTimeout(timer);
+    apply(step, !d.instant);
+    // the patient lab-result PDF shakes once, then the stamp lands
+    if (step < 3) lab.classList.remove('stamped');
+    else if (d.instant || d.backward || DECK.reduce) lab.classList.add('stamped');
+    else timer = setTimeout(() => {
+      lab.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-12px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(-6px)' }, { transform: 'none' }], { duration: 360, easing: 'ease-in-out' });
+      lab.classList.add('stamped');
+    }, 750);
+  },
+  leave() { clearTimeout(timer); },
+});
+})();
+</script>
+<script data-slide="19">
+(() => {
+const slide = document.querySelector('deck-stage > section[data-n="19"]');
+const canvas = slide.querySelector('canvas[data-globe]');
+const globe = window.ESGGlobe && window.ESGGlobe.get(canvas);
+// arrival: ease to a stop on North Macedonia and hold (no spin competing with the headline)
+const HOLD = { lon: 27, lat: 36, zoom: 1, cx: 0.9, cy: 0.5 };
+// press 3: the cover's end view, Europe in front, North Macedonia to the EU, both labelled
+const FRONT = { lon: 27, lat: 32, zoom: 1.25, cx: 0.85, cy: 0.5 };
+const ARC = { lift: 0.15, labels: [['macedonia', 'N. Macedonia', 'right'], ['eu', 'EU', 'left']] };
+DECK.on(19, {
+  state(step, d) {
+    if (!globe) return;
+    globe.clearArcs();
+    if (step < 3) {
+      if (d.reset) { globe.reset(); return; }
+      if (d.instant && !d.backward) { globe.reset(); globe.settle({ ...HOLD, ms: 900, short: true }); return; }
+      if (d.instant) { globe.still(HOLD); return; }
+      globe.settle({ ...HOLD, ms: 700, short: true });
+      return;
+    }
+    if (d.instant || d.backward) { globe.still(FRONT); globe.arc('eu', { ...ARC, ms: 0 }); return; }
+    globe.settle({ ...FRONT, ms: 900, short: true });
+    globe.arc('eu', { ...ARC, ms: 600, delay: 300 });
+  },
+});
+})();
+</script>
+</body>
+</html>

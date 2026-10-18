@@ -1,0 +1,444 @@
+<!-- 09 · spot the trap (the session clock starts here; no answers on this slide, Steps 1 and 2 reveal them) -->
+<section class="slide" data-n="09" data-label="Spot the trap" data-thread="0" data-steps="1" data-clock-start
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="t-label k x19-kick rise auto" style="--delay:60ms">Your turn · 3 minutes · in pairs</p>
+  <p class="clock x19-clock rise auto" style="--delay:200ms"><i class="live-dot"></i>session <b data-clock>0:00</b></p>
+  <h2 class="t-h2 x19-title"><span class="lift auto" style="--delay:120ms"><span>Spot the trap before Claude does</span></span></h2>
+  <p class="x19-inst rise auto" style="--delay:240ms">Five of the seven traps are on these cards. One card is clean. Mark each card as trap or clean.</p>
+
+  <div class="x19-grid" data-stagger>
+    <article class="x19-card rise auto" style="--delay:200ms">
+      <p class="x19-tab"><b>1</b><span>data_inventory.csv</span></p>
+      <p class="x19-ln">company_profile.md:<br>“all production data in the EU”<br>data_inventory.csv:<br>exports bucket, health, us-central1</p>
+      <p class="x19-tick"><span><i></i>Trap</span><span><i></i>Clean</span></p>
+    </article>
+    <article class="x19-card rise auto" style="--delay:200ms">
+      <p class="x19-tab"><b>2</b><span>supplier_register.csv</span></p>
+      <p class="x19-ln">Nordgrid Cloud AB, GPU server<br>data shared: health<br>DPA: pending · transfer: none</p>
+      <p class="x19-tick"><span><i></i>Trap</span><span><i></i>Clean</span></p>
+    </article>
+    <article class="x19-card rise auto" style="--delay:200ms">
+      <p class="x19-tab"><b>3</b><span>pentest_summary_2025.txt</span></p>
+      <p class="x19-ln">Report date: 2025-02-28<br>Out of scope: back office,<br>exports, any AI component</p>
+      <p class="x19-tick"><span><i></i>Trap</span><span><i></i>Clean</span></p>
+    </article>
+    <article class="x19-card rise auto" style="--delay:200ms">
+      <p class="x19-tab"><b>4</b><span>access_review_2026.csv</span></p>
+      <p class="x19-ln">adm-04 left 2026-06-30<br>last login 2026-08-02, keep<br>adm-06: MFA no, keep</p>
+      <p class="x19-tick"><span><i></i>Trap</span><span><i></i>Clean</span></p>
+    </article>
+    <article class="x19-card rise auto" style="--delay:200ms">
+      <p class="x19-tab"><b>5</b><span>incident_log_2026.csv</span></p>
+      <p class="x19-ln">INC-03 detected 2026-05-04<br>customer told 2026-05-11<br>Contract: within 48 hours</p>
+      <p class="x19-tick"><span><i></i>Trap</span><span><i></i>Clean</span></p>
+    </article>
+    <article class="x19-card rise auto" style="--delay:200ms">
+      <p class="x19-tab"><b>6</b><span>backup_restore_test_2026.txt</span></p>
+      <p class="x19-ln">First restore attempt failed.<br>Cause fixed, change CH-0412.<br>Second attempt: 3 h 10 min<br>(target 4 h)</p>
+      <p class="x19-tick"><span><i></i>Trap</span><span><i></i>Clean</span></p>
+    </article>
+  </div>
+
+  <p class="x19-cheat rise auto" style="--delay:560ms"><span><b>DPA</b> = signed contract with a supplier.</span><span><b>MFA</b> = password plus a second proof.</span><span><b>Pen test</b> = outside hacker test.</span><span><b>Out of scope</b> = not tested.</span></p>
+
+  <div class="x19-cd rise auto" style="--delay:600ms">
+    <p class="x19-cd-t"><span class="x19-cd-n">3:00</span><span class="x19-cd-trk"><i class="x19-cd-fill grow-x auto" style="--delay:600ms"></i></span></p>
+    <p class="x19-cd-l t-small">Starts on Go. Keep your sheet: Claude reads the same files next.</p>
+  </div>
+  <p class="x19-pts" data-at="1">Points: <b>2</b> per trap found before Claude. <b>Plus 1</b> for the clean card.<br><b>Minus 1</b> if you call the clean card a trap.</p>
+</section>
+
+<!-- 10 · step 1: the document request -->
+<section class="slide hs" data-n="10" data-label="Step 1 · Document request" data-thread="1" data-steps="5" data-step="0"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="hs-day rise auto" style="--delay:80ms"><b>Step 1 · Monday</b><span>Rheinland Praxisverbund AG · a customer audit in 20 days</span></p>
+  <p class="clock hs-clock rise auto" style="--delay:200ms"><i class="live-dot"></i>session <b data-clock>0:00</b></p>
+  <h2 class="t-h2 hs-title"><span class="lift auto" style="--delay:160ms"><span>The document request</span></span></h2>
+
+  <p class="hs-attach rise auto" style="--delay:420ms">new chat · attach <b>inbox/1-rheinland-document-request.md</b></p>
+  <div class="hs-cardwrap">
+    <div class="prompt-card hs-card wipe auto" style="--delay:520ms">
+      <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 1</span><button class="pc-copy" type="button">Copy</button></div>
+      <p class="prompt pc-body">Answer the audit document request in the attached file.
+Return one table with exactly one row per item, D1 to D8: # | Request | Answer | Source | Status (COVERED, WEAK or GAP).
+Count in code before you give any share or total. Give the security share and the AI share separately.
+After the table, at most 3 short lines: the counts and one caution.</p>
+    </div>
+  </div>
+
+  <div class="hs-live">
+    <svg class="hs-frame" viewBox="0 0 678 640" preserveAspectRatio="none" aria-hidden="true"><rect class="draw auto" style="--delay:250ms" x="1.5" y="1.5" width="675" height="637" rx="20" pathLength="1"/></svg>
+    <p class="t-label hs-live-l rise auto" style="--delay:400ms"><i class="live-dot"></i>Live in Claude</p>
+    <div class="hs-big rise auto" style="--delay:300ms">
+      <p class="hs-big-l">session clock</p>
+      <p class="hs-big-t"><span data-clock>0:00</span></p>
+    </div>
+    <div class="hs-watch rise auto" style="--delay:550ms">
+      <p class="t-label k">Before Claude answers</p>
+      <p class="hs-watch-t">Your bet: how many of these 8 come back COVERED?</p>
+      <ol class="qs"><li><b>D1</b>Systems</li><li><b>D5</b>Training</li><li><b>D2</b>Processors</li><li><b>D6</b>Incidents</li><li><b>D3</b>AI tools</li><li><b>D7</b>Admin accounts</li><li><b>D4</b>Security test</li><li><b>D8</b>Restore test</li></ol>
+    </div>
+  </div>
+
+  <div class="res">
+    <ul class="tb" data-stagger>
+      <li class="tr" data-at="1"><b>D1</b><span>Systems and countries</span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><b>D2</b><span>Processors</span><em class="st nf">GAP</em></li>
+      <li class="tr" data-at="1"><b>D3</b><span>AI tools</span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><b>D4</b><span>Security test</span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><b>D5</b><span>Training share</span><em class="st ok">COVERED</em></li>
+      <li class="tr" data-at="1"><b>D6</b><span>Incidents</span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><b>D7</b><span>Admin accounts</span><em class="st ok">COVERED</em></li>
+      <li class="tr" data-at="1"><b>D8</b><span>Restore test</span><em class="st ok">COVERED</em></li>
+    </ul>
+
+    <div class="pn" data-at="1" data-to="1">
+      <p class="t-label">Answer key · the statuses the files prove</p>
+      <div class="tally">
+        <div class="tl"><b class="t-num tl-n" data-count="3">0</b><span class="st ok">covered</span></div>
+        <div class="tl"><b class="t-num tl-n" data-count="4">0</b><span class="st chk">weak</span></div>
+        <div class="tl"><b class="t-num tl-n" data-count="1">0</b><span class="st nf">gap</span></div>
+      </div>
+      <p class="pn-note">Two of the three COVERED answers carry bad news: the file proves that we fail a rule, so each comes with an action.</p>
+      <p class="t-src pn-src">kit: ANSWERS.md, Step 1</p>
+    </div>
+
+    <div class="pn" data-at="2" data-to="2">
+      <p class="t-label">D5 · Training share · covered, plus an action</p>
+      <div class="bars">
+        <p class="bar-l">Security training<span>26 of 31</span></p>
+        <div class="trk"><i class="grow-x" style="--p:83.9"></i><b class="goal"></b></div>
+        <p class="bar-l">AI use training<span>19 of 31</span></p>
+        <div class="trk"><i class="grow-x" style="--p:61.3"></i><b class="goal"></b></div>
+      </div>
+      <p class="pn-note"><b>83.9% and 61.3%</b> against the customer's 95%. That is 30 of 31 people: 4 more in security, 11 more in AI use.</p>
+    </div>
+
+    <div class="pn p3" data-at="3" data-to="3">
+      <p class="t-label">D6 and D7 · the proof is bad news</p>
+
+      <div class="d6">
+        <h4>D6 · told after 7 days<span class="d-src">incident_log_2026.csv</span></h4>
+        <div class="d6-plot">
+          <div class="d6-row r1"><i class="d6-bar grow-x" style="--delay:150ms"><span>48 h rule</span></i></div>
+          <div class="d6-row r2"><i class="d6-bar late grow-x" style="--delay:300ms"><span>168 h actual</span></i></div>
+          <p class="d6-pin rise" style="--delay:500ms"><b>INC-03</b>212 patient records, wrong clinic<span aria-hidden="true">▼</span></p>
+          <svg class="d6-svg" viewBox="0 0 988 190" aria-hidden="true">
+            <line class="draw" pathLength="1" style="--delay:0ms" x1="1.5" y1="4" x2="1.5" y2="126"/>
+            <line class="draw dash" pathLength="1" style="--delay:150ms" x1="269" y1="4" x2="269" y2="126"/>
+            <line class="draw" pathLength="1" style="--delay:300ms" x1="940" y1="4" x2="940" y2="126"/>
+            <line class="draw ax" pathLength="1" style="--delay:100ms" x1="0" y1="112" x2="940" y2="112"/>
+          </svg>
+          <p class="d6-tk" style="left:0"><b>0 h</b></p>
+          <p class="d6-tk" style="left:269px;transform:translateX(-50%)"><b>48 h</b></p>
+          <p class="d6-tk" style="left:940px;transform:translateX(-50%)"><b>168 h</b></p>
+          <p class="d6-ev rise" style="left:0;--delay:350ms">detected 2026-05-04</p>
+          <p class="d6-ev rise" style="right:48px;--delay:450ms">customer told 2026-05-11</p>
+        </div>
+        <p class="d6-note">INC-03: the fix column is empty. INC-04: open 102 days.</p>
+      </div>
+
+      <div class="d7">
+        <h4>D7 · admin accounts<span class="d-src">access_review_2026.csv</span></h4>
+        <div class="sq" data-stagger><i class="pop"></i><i class="pop"></i><i class="pop"></i><i class="pop lv"></i><i class="pop"></i><i class="pop no"></i><i class="pop lv"></i><i class="pop"></i><i class="pop"></i></div>
+        <p class="sq-id"><span>adm-01</span><span>adm-02</span><span>adm-03</span><span>adm-04</span><span>adm-05</span><span>adm-06</span><span>adm-07</span><span>adm-08</span><span>adm-09</span></p>
+        <p class="d7-note"><b>8 of 9</b> have MFA. <b>adm-06</b> has none.<br>adm-04 and adm-07 <b>left the company</b> and both still logged in.</p>
+        <p class="d7-key"><span><i class="k1"></i>MFA on</span><span><i class="k2"></i>no MFA</span><span><i class="k3"></i>left, kept access</span></p>
+      </div>
+    </div>
+
+    <div class="pn p4" data-at="4" data-to="5">
+      <p class="t-label">D8 · the clean file · covered</p>
+      <div class="d8 flow8">
+        <div class="fc c1"><b>Attempt 1</b><span>failed</span><em>a service account had no read access</em><i class="ev-tag" aria-hidden="true">evidence</i></div>
+        <svg class="fa a1" viewBox="0 0 59 24" aria-hidden="true"><path pathLength="1" d="M2 12 H55 M44 3 L56 12 L44 21" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+        <div class="fc c2"><b>Fix</b><span>change&nbsp;CH-0412</span><em>access fixed and logged</em></div>
+        <svg class="fa a2" viewBox="0 0 59 24" aria-hidden="true"><path pathLength="1" d="M2 12 H55 M44 3 L56 12 L44 21" fill="none" stroke="currentColor" stroke-width="4"/></svg>
+        <div class="fc c3"><b>Attempt 2</b><span>3&nbsp;h&nbsp;10&nbsp;min</span><em>target 4&nbsp;h, data matched</em></div>
+      </div>
+      <p class="pn-note">A failed first attempt that is explained, fixed and retested is evidence, not a problem.</p>
+      <div class="d8-time">
+        <p class="d8-tl"><b>Restore time</b><span>backup_restore_test_2026.txt</span></p>
+        <div class="d8-trk"><i class="grow-x" style="--delay:350ms"><span>3&nbsp;h&nbsp;10&nbsp;min</span></i><b class="d8-goal"><span>4&nbsp;h target</span></b></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="band" data-at="5"><span class="t-label">Traps in this step</span><span class="bt">Claude finds the two traps your cards hid: five tickets with <b>patient names</b> in the Claude workspace (D3) and the <b>training shares</b> (D5).</span></p>
+</section>
+
+<!-- 11 · step 2: the Trust page claims -->
+<section class="slide hs" data-n="11" data-label="Step 2 · Trust page" data-thread="2" data-steps="3" data-step="0"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="hs-day rise auto" style="--delay:80ms"><b>Step 2 · Tuesday</b><span>Sales wants these on the website and in a hospital tender</span></p>
+  <p class="clock hs-clock rise auto" style="--delay:200ms"><i class="live-dot"></i>session <b data-clock>0:00</b></p>
+  <h2 class="t-h2 hs-title"><span class="lift auto" style="--delay:160ms"><span>Seven claims. Which ones can we keep?</span></span></h2>
+
+  <div class="res" style="top:290px;height:690px">
+    <ol class="cl">
+      <li class="cr"><b>1</b><span><span class="sk">Patient data <span class="mk">never leaves the EU<i class="ul r grow-x" data-at="1"></i></span>.<i class="strike grow-x" data-at="3"></i></span></span><em class="st nf" data-at="1" style="--delay:300ms">red</em><i class="slot">?</i>
+        <p class="rw1" data-at="3" style="--delay:250ms"><b>Safe rewrite</b> <span class="rw-new" data-full="Our production database and lab-PDF bucket are in Frankfurt, Germany.">Our production database and lab-PDF bucket are in Frankfurt, Germany.</span></p></li>
+      <li class="cr"><b>2</b><span>Termin Health is <span class="mk">ISO 27001 certified<i class="ul r grow-x" data-at="1"></i></span>.</span><em class="st nf" data-at="1" style="--delay:300ms">red</em><i class="slot">?</i></li>
+      <li class="cr"><b>3</b><span>Our ticket-sorting AI runs in an <span class="mk">EU data centre<i class="ul a grow-x" data-at="2"></i></span>, so patient data stays in Europe.</span><em class="st amber" data-at="2" style="--delay:300ms">amber</em><i class="slot">?</i></li>
+      <li class="cr"><b>4</b><span>We do not train or fine-tune <span class="mk">any model<i class="ul a grow-x" data-at="2"></i></span> on patient data.</span><em class="st amber" data-at="2" style="--delay:300ms">amber</em><i class="slot">?</i></li>
+      <li class="cr"><b>5</b><span><span class="mk">All our staff<i class="ul r grow-x" data-at="1"></i></span> are trained in data protection and in AI use.</span><em class="st nf" data-at="1" style="--delay:300ms">red</em><i class="slot">?</i></li>
+      <li class="cr"><b>6</b><span><span class="mk">Every admin<i class="ul r grow-x" data-at="1"></i></span> account is protected with multi-factor authentication.</span><em class="st nf" data-at="1" style="--delay:300ms">red</em><i class="slot">?</i></li>
+      <li class="cr"><b>7</b><span>We back up daily, encrypt the backups and test a restore twice a year.</span><em class="st amber" data-at="2" style="--delay:300ms">amber</em><i class="slot">?</i><i class="ul-row k grow-x" data-at="2"></i></li>
+    </ol>
+
+    <div class="rp">
+      <div class="prompt-card hs-card small">
+        <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 2</span><button class="pc-copy" type="button">Copy</button></div>
+        <p class="prompt pc-body">Check the seven claims in the attached file against our files and audit_topics_reference.md.
+Return a table, red claims first, then by claim number: Claim | RED, AMBER or GREEN | Reason | Source | Safe rewrite (a sentence the files prove today, no future wording, or NONE). One sentence per cell.</p>
+      </div>
+      <p class="vote" data-at="0" data-to="0">Cards up for each claim.<span>60 seconds with your neighbour, then a revote on the most split claim. Attach inbox/2-trust-page-claims.md.</span></p>
+      <div class="blk" data-at="1">
+        <p class="t-label"><i class="kd"></i>Answer key · red: the files say no</p>
+        <ul class="lines">
+          <li><b>1</b><span>The exports bucket sits in us-central1.</span></li>
+          <li><b>2</b><span>No certificate. Stage 1 is Feb 2027.</span></li>
+          <li><b>5</b><span>26 of 31 and 19 of 31 are trained.</span></li>
+          <li><b>6</b><span>8 of 9 admin accounts use MFA.</span></li>
+        </ul>
+      </div>
+      <div class="blk" data-at="2">
+        <p class="t-label"><i class="kd am"></i>Amber: not fully proven</p>
+        <ul class="lines">
+          <li><b>3</b><span>Only a sales page says it is in the EU.</span></li>
+          <li><b>4</b><span>The files prove one model, as of April.</span></li>
+          <li><b>7</b><span>Tests cover the database and PDFs. Exports and triage log: no backup file.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · Data, Place, Paper -->
+<section class="slide" data-n="12" data-label="Data, Place, Paper" data-thread="2" data-steps="4"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="t-label k kick rise auto" style="--delay:60ms">Before you upload · 3 minutes</p>
+  <h2 class="t-h2 ttl"><span class="lift auto" style="--delay:120ms"><span>Where may this file go?</span></span></h2>
+
+  <div class="s12-q">
+    <div class="s12-qc rise auto" data-q="Data" style="--delay:260ms"><p class="t-label">Data</p><h3>What is in the file?</h3><p>Public, secret, personal or health data.</p></div>
+    <div class="s12-qc rise auto" data-q="Place" style="--delay:320ms"><p class="t-label">Place</p><h3>Where does the tool run?</h3><p>Country, operator, logs, who logs in.</p></div>
+    <div class="s12-qc rise auto" data-q="Paper" style="--delay:380ms"><p class="t-label">Paper</p><h3>What allows it?</h3><p>Contract, training terms, your policy.</p></div>
+  </div>
+  <p class="s12-rule rise auto" style="--delay:440ms">Sort the six files on your sheet: <b>GO</b> (upload as it is), <b>CLEAN FIRST</b> (remove the personal data) or <b>STAY OUT</b>.<br>Sort alone, then compare with a neighbour.</p>
+
+  <div class="s12-board">
+    <div class="s12-lh" data-lane="go"><span class="st lane go">go</span><span>upload as it is</span></div>
+    <div class="s12-lh" data-lane="cf"><span class="st lane cf">clean first</span><span>remove personal data</span></div>
+    <div class="s12-lh" data-lane="so"><span class="st lane so">stay out</span><span>no AI tool</span></div>
+    <div class="s12-card rise auto" data-i="1" data-lane="go" style="--delay:300ms"><p class="s12-r1"><b>1</b><span class="s12-fn">audit_topics_reference.md</span><em class="s12-tg">Data</em></p><p class="s12-sub">Public texts and our summary</p></div>
+    <div class="s12-card rise auto" data-i="2" data-lane="go" style="--delay:350ms"><p class="s12-r1"><b>2</b><span class="s12-fn">data_inventory.csv</span><em class="s12-tg">Data</em></p><p class="s12-sub">System names and countries</p></div>
+    <div class="s12-card rise auto" data-i="3" data-lane="cf" style="--delay:400ms"><p class="s12-r1"><b>3</b><span class="s12-fn">training_records_2026.csv</span><em class="s12-tg">Data</em></p><p class="s12-sub">A real HR export, with names</p></div>
+    <div class="s12-card rise auto" data-i="4" data-lane="cf" style="--delay:450ms"><p class="s12-r1"><b>4</b><span class="s12-fn">support_tickets_sample.csv</span><em class="s12-tg">Data</em></p><p class="s12-sub">Ticket excerpts with patient details</p></div>
+    <div class="s12-card rise auto" data-i="5" data-lane="so" style="--delay:500ms"><p class="s12-r1"><b>5</b><span class="s12-fn">patient lab-result PDF</span><em class="s12-tg">Data</em></p><p class="s12-sub">Sent to prove PDFs are stored safely</p><i class="s12-stamp" aria-hidden="true">no</i></div>
+    <div class="s12-card rise auto" data-i="6" data-lane="cf" style="--delay:550ms"><p class="s12-r1"><b>6</b><span class="s12-fn">cloud console screenshot</span><em class="s12-tg">Place</em></p><p class="s12-sub">Bucket names, regions, project ID</p></div>
+  </div>
+
+  <p class="s12-why" data-at="1" data-to="1"><span><b>Data passes.</b> Public text, and system names and countries. Nothing personal, nothing secret.</span></p>
+  <p class="s12-why" data-at="2" data-to="2"><span><b>Data fails</b> in 3 and 4: names and health details. <b>Place</b> in 6: bucket names and project ID reveal where your data is stored.</span></p>
+  <p class="s12-why" data-at="3" data-to="3"><span><b>Data fails</b> in 5: a real patient's file is health data, and it proves nothing about a control. Ask for the access log instead.</span></p>
+  <p class="s12-end" data-at="4"><span>A DPA (a signed supplier contract) answers <b>Paper</b> only. <b>Data</b> and <b>Place</b> still decide.</span></p>
+</section>
+
+<style data-slide="09">
+/* Spot the trap, before Step 1. Six kit files as cards (the same six, in the same order, as on page 1 of the game sheet); the room
+   marks trap or clean before Claude answers. The cards look alike on purpose: no colour, size or spacing hints at an answer.
+   The cards arrive 80 ms apart. Below them: a cheat strip for the four words a first-timer cannot judge the cards without,
+   and a 3:00 bar. The bar waits at full length and starts draining at press 1 ("Go"), which also shows the points rule.
+   The session clock starts on arrival, so the hunt counts in the hands-on minutes. */
+[data-n="09"] .x19-kick { position: absolute; left: var(--mx); top: 122px; }
+[data-n="09"] .x19-clock { position: absolute; right: var(--mx); top: 126px; z-index: 2; }
+[data-n="09"] .x19-clock [data-clock] { min-width: 5.4ch; }
+[data-n="09"] .x19-title { position: absolute; left: var(--mx); right: var(--mx); top: 172px; }
+[data-n="09"] .x19-inst { position: absolute; left: var(--mx); top: 266px; margin: 0; font-size: 34px; line-height: 1.25; letter-spacing: -.015em;
+  font-weight: 600; color: var(--ink); }
+
+[data-n="09"] .x19-grid { position: absolute; left: var(--mx); right: var(--mx); top: 328px; display: grid; grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 232px; gap: 14px 28px; --stagger: 80ms; }
+[data-n="09"] .x19-card { position: relative; display: flex; flex-direction: column; margin: 0; border: 1.5px solid var(--line); border-radius: var(--r-card); background: var(--surface); box-shadow: var(--shadow-1); overflow: hidden; }
+[data-n="09"] .x19-tab { display: flex; align-items: stretch; flex: 0 0 auto; height: 54px; margin: 0; background: var(--tint); border-bottom: 1.5px solid var(--line); }
+[data-n="09"] .x19-tab b { display: grid; place-items: center; flex: 0 0 auto; width: 54px; background: var(--accent-tint); color: var(--accent-deep); border-right: 1.5px solid var(--line);
+  font-family: var(--mono); font-size: 30px; font-weight: 700; }
+[data-n="09"] .x19-tab span { display: flex; align-items: center; padding: 0 18px; font-family: var(--mono); font-size: 24px; font-weight: 600;
+  color: var(--ink); white-space: nowrap; }
+/* the file text itself, as it reads in a text editor */
+[data-n="09"] .x19-ln { margin: 0; padding: 8px 22px 0; font-family: var(--mono); font-size: 24px; line-height: 1.2; letter-spacing: -.01em; color: var(--ink); white-space: nowrap; }
+[data-n="09"] .x19-ln .nw { white-space: nowrap; }
+/* the two boxes of the game sheet, so card N on the screen is card N on paper */
+[data-n="09"] .x19-tick { display: flex; gap: 32px; margin: auto 0 0; padding: 0 22px 12px; font-family: var(--mono); font-size: 24px; font-weight: 600;
+  letter-spacing: .06em; color: var(--grey-3); }
+[data-n="09"] .x19-tick span { display: inline-flex; align-items: center; gap: 12px; }
+[data-n="09"] .x19-tick i { width: 26px; height: 26px; border: 1.5px solid var(--grey-3); border-radius: 8px; background: var(--surface); }
+
+/* cheat strip: four words, plain meaning */
+[data-n="09"] .x19-cheat { position: absolute; left: var(--mx); right: var(--mx); top: 822px; margin: 0; display: flex; justify-content: space-between; align-items: center;
+  height: 52px; padding: 0 22px; background: var(--tint); border-radius: var(--r-panel); font-size: 24px; line-height: 1.2; letter-spacing: -.005em; color: var(--ink); }
+[data-n="09"] .x19-cheat span { white-space: nowrap; }
+[data-n="09"] .x19-cheat b { font-weight: 700; }
+[data-n="09"] .x19-cheat span + span { padding-left: 22px; border-left: 2px solid var(--line-strong); }
+
+/* the 3:00 bar */
+[data-n="09"] .x19-cd { position: absolute; left: var(--mx); top: 892px; width: 1728px; transition: opacity var(--t-m) var(--ease-out), transform var(--t-m) var(--ease-out), width 400ms var(--ease-io); }
+[data-n="09"][data-step="1"] .x19-cd { width: 700px; }
+[data-n="09"] .x19-cd-t { display: flex; align-items: center; gap: 24px; margin: 0; }
+[data-n="09"] .x19-cd-n { flex: 0 0 auto; min-width: 3.4ch; font-family: var(--mono); font-size: 52px; line-height: 1; font-weight: 700; letter-spacing: -.04em; color: var(--ink); font-variant-numeric: tabular-nums; }
+[data-n="09"] .x19-cd-trk { position: relative; flex: 1 1 auto; height: 10px; background: var(--tint); border-radius: 999px; }
+[data-n="09"] .x19-cd-fill { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: rgba(91, 82, 74, .3); border-radius: 999px; }
+[data-n="09"] .x19-cd.low .x19-cd-fill { background: var(--accent); }
+[data-n="09"] .x19-cd-l { margin: 8px 0 0; font-size: 24px; color: var(--grey-3); white-space: nowrap; }
+[data-n="09"] .x19-pts { position: absolute; left: 836px; right: var(--mx); top: 896px; margin: 0; padding: 2px 0 2px 24px; border-left: 3px solid var(--accent);
+  font-size: 28px; line-height: 1.3; letter-spacing: -.01em; font-weight: 600; color: var(--ink); }
+[data-n="09"] .x19-pts b { color: var(--mennige); font-weight: 700; }
+</style>
+
+<style data-slide="10b">
+/* Step 1 panels. D6 and D7 sit on the file that proves them; D8 walks Attempt 1, Fix, Attempt 2. */
+.hs[data-n="10"] .p3 h4 { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin: 0; font-size: 34px; letter-spacing: -.02em; font-weight: 600; color: var(--ink); }
+.hs[data-n="10"] .p3 .d-src { font-family: var(--mono); font-size: 24px; font-weight: 500; letter-spacing: 0; color: var(--grey-3); }
+.hs[data-n="10"] .d6 { position: absolute; left: 0; right: 0; top: 46px; }
+.hs[data-n="10"] .d6-plot { position: relative; width: 988px; height: 190px; margin-top: 8px; }
+.hs[data-n="10"] .d6-row { position: absolute; left: 0; width: 940px; height: 40px; background: var(--tint); border-radius: 999px; }
+.hs[data-n="10"] .d6-row.r1 { top: 6px; }
+.hs[data-n="10"] .d6-row.r2 { top: 56px; }
+.hs[data-n="10"] .d6-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 269px; background: #CFC4B3; border-radius: 999px; transform-origin: 0 50%; }
+.hs[data-n="10"] .d6-bar.late { width: 940px; background: var(--accent); }
+.hs[data-n="10"] .d6-bar span { position: absolute; left: 16px; top: 0; line-height: 40px; font-family: var(--mono); font-style: normal; font-size: 24px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.hs[data-n="10"] .d6-bar.late span { color: #fff; }
+.hs[data-n="10"] .d6-pin { position: absolute; right: 56px; top: 3px; margin: 0; display: flex; align-items: center; gap: 14px; height: 40px; z-index: 2; font-family: var(--mono); font-size: 24px; color: var(--ink); white-space: nowrap; }
+.hs[data-n="10"] .d6-pin b { padding: 2px 14px; background: var(--surface); color: var(--ink); border: 1.5px solid var(--line-strong); border-radius: 999px; box-shadow: var(--shadow-1); font-weight: 700; }
+.hs[data-n="10"] .d6-pin span { position: absolute; right: -24px; top: 36px; font-size: 24px; line-height: 1; color: var(--mennige); }
+.hs[data-n="10"] .d6-svg { position: absolute; left: 0; top: 0; width: 988px; height: 190px; overflow: visible; }
+.hs[data-n="10"] .d6-svg line { stroke: var(--ink-soft); stroke-width: 2; }
+.hs[data-n="10"] .d6-svg line.dash { stroke: var(--mennige); }
+.hs[data-n="10"] .d6-tk { position: absolute; top: 120px; margin: 0; font-family: var(--mono); font-size: 24px; color: var(--ink); white-space: nowrap; }
+.hs[data-n="10"] .d6-ev { position: absolute; top: 154px; margin: 0; font-family: var(--mono); font-size: 24px; color: var(--grey-3); white-space: nowrap; }
+.hs[data-n="10"] .d6-note { margin: 4px 0 0; font-size: 30px; line-height: 1.28; color: var(--ink); white-space: nowrap; }
+
+.hs[data-n="10"] .d7 { position: absolute; left: 0; right: 0; top: 372px; }
+.hs[data-n="10"] .d7 .sq { display: grid; grid-template-columns: repeat(9, 100px); gap: 11px; margin: 12px 0 0; }
+.hs[data-n="10"] .d7 .sq i { display: block; aspect-ratio: auto; height: 60px; }
+.hs[data-n="10"] .sq-id { display: grid; grid-template-columns: repeat(9, 100px); gap: 11px; margin: 4px 0 0; font-family: var(--mono); font-size: 24px; color: var(--grey-3); }
+.hs[data-n="10"] .sq-id span { white-space: nowrap; }
+.hs[data-n="10"] .d7-note { margin: 14px 0 0; font-size: 30px; line-height: 1.28; color: var(--ink); }
+.hs[data-n="10"] .d7-note b { font-weight: 700; }
+.hs[data-n="10"] .d7-key { display: flex; gap: 36px; margin: 12px 0 0; font-family: var(--mono); font-size: 24px; color: var(--grey-3); }
+.hs[data-n="10"] .d7-key span { display: inline-flex; align-items: center; gap: 12px; white-space: nowrap; }
+.hs[data-n="10"] .d7-key i { display: block; width: 26px; height: 26px; }
+.hs[data-n="10"] .d7-key .k1 { background: var(--ink-soft); border-radius: 8px; }
+.hs[data-n="10"] .d7-key .k2 { background: var(--surface); border: 2px solid var(--accent); border-radius: 8px; }
+.hs[data-n="10"] .d7-key .k3 { background: repeating-linear-gradient(45deg, var(--mennige) 0 3px, var(--paper) 3px 8px); border: 2px solid var(--accent); border-radius: 8px; }
+
+/* D8: three cards on one row, the arrows draw between them */
+.hs[data-n="10"] .d8 { display: grid; grid-template-columns: 1fr 59px 1fr 59px 1fr; align-items: stretch; margin-top: 30px; }
+.hs[data-n="10"] .d8 .fc { position: relative; padding: 22px 18px 24px; border: 1.5px solid var(--line); border-radius: var(--r-card); background: var(--surface); box-shadow: var(--shadow-1); opacity: 0; transform: translateY(24px);
+  transition: opacity var(--t-m) var(--ease-out), transform var(--t-m) var(--ease-out), border-color 300ms linear, background-color 300ms linear; }
+.hs[data-n="10"] .d8 .fc b { display: block; font-family: var(--mono); font-size: 24px; font-weight: 700; letter-spacing: .06em; color: var(--grey-3); }
+.hs[data-n="10"] .d8 .fc span { display: block; margin-top: 12px; font-size: 32px; line-height: 1.15; letter-spacing: -.015em; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.hs[data-n="10"] .d8 .fc em { display: block; margin-top: 12px; font-style: normal; font-size: 26px; line-height: 1.25; color: var(--grey-3); }
+.hs[data-n="10"] .d8 .fc.c1 { border-color: var(--accent-soft); background: var(--accent-tint); }
+.hs[data-n="10"] .d8.ev .fc.c1 { border-color: var(--line); background: var(--surface); }
+.hs[data-n="10"] .d8.t1 .c1, .hs[data-n="10"] .d8.t2 .c2, .hs[data-n="10"] .d8.t3 .c3 { opacity: 1; transform: none; }
+.hs[data-n="10"] .d8 .ev-tag { position: absolute; right: 14px; top: 62px; padding: 2px 12px; background: var(--ok-bg); color: var(--ok-fg); border: 1.5px solid rgba(31, 90, 67, .3); border-radius: 999px; font-family: var(--mono); font-style: normal; font-size: 24px; font-weight: 700; letter-spacing: .02em; text-transform: none; line-height: 1.2;
+  opacity: 0; transform: translateY(-6px); transition: opacity var(--t-s) var(--ease-out), transform var(--t-m) var(--ease-out); }
+.hs[data-n="10"] .d8.ev .ev-tag { opacity: 1; transform: none; }
+.hs[data-n="10"] .d8 .fa { align-self: center; justify-self: center; width: 59px; height: 24px; color: var(--ink-soft); overflow: visible; }
+.hs[data-n="10"] .d8 .fa path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 420ms var(--ease-io); }
+.hs[data-n="10"] .d8.t2 .a1 path, .hs[data-n="10"] .d8.t3 .a2 path { stroke-dashoffset: 0; }
+.hs[data-n="10"] .p4 .pn-note { margin-top: 28px; }
+.hs[data-n="10"] .d8-tl { display: flex; align-items: baseline; gap: 20px; margin: 0 0 8px; font-size: 30px; color: var(--ink); }
+.hs[data-n="10"] .d8-tl b { font-weight: 700; }
+.hs[data-n="10"] .d8-tl span { font-family: var(--mono); font-size: 24px; color: var(--grey-3); }
+.hs[data-n="10"] .d8-trk { position: relative; width: 940px; height: 36px; background: var(--tint); border-radius: 999px; }
+.hs[data-n="10"] .d8-trk i { position: absolute; left: 0; top: 0; bottom: 0; width: 745px; background: #CFC4B3; border-radius: 999px; transform-origin: 0 50%; }
+.hs[data-n="10"] .d8-trk i span { position: absolute; left: 20px; top: 0; line-height: 36px; font-family: var(--mono); font-style: normal; font-size: 24px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.hs[data-n="10"] .d8-goal { position: absolute; right: -1px; top: -6px; bottom: -6px; width: 2px; border-radius: 2px; background: var(--accent); }
+.hs[data-n="10"] .d8-goal span { position: absolute; right: 12px; top: -34px; font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--mennige); white-space: nowrap; }
+.hs[data-n="10"] .d8-time { margin-top: 62px; }
+</style>
+
+<style data-slide="11b">
+/* Step 2. Underlines name the words that fail; the answer blocks stack under a prompt card that stays. */
+.hs[data-n="11"] .cl { width: 1000px; }
+.hs[data-n="11"] .cr { position: relative; grid-template-columns: 56px 1fr 150px; height: 86px; transition: transform var(--t-m) var(--ease-out); }
+.hs[data-n="11"] .cr > span { padding-right: 8px; }
+.hs[data-n="11"] .cr .st, .hs[data-n="11"] .cr .slot { grid-column: 3; }
+.hs[data-n="11"] .cr .st { font-size: 24px; }
+.hs[data-n="11"] .cr .slot { width: 112px; }
+.hs[data-n="11"] .mk { position: relative; display: inline; white-space: nowrap; }
+.hs[data-n="11"] .ul { position: absolute; left: 0; right: 0; bottom: -6px; height: 3px; transform-origin: 0 50%; }
+.hs[data-n="11"] .ul.r { background: rgba(183, 58, 21, .6); border-radius: 3px; }
+.hs[data-n="11"] .ul.a { background: repeating-linear-gradient(90deg, rgba(122, 78, 6, .65) 0 12px, transparent 12px 20px); border-radius: 3px; }
+.hs[data-n="11"] .ul-row { position: absolute; left: 70px; right: 164px; bottom: 3px; height: 3px; border-radius: 3px; background: rgba(31, 90, 67, .4); transform-origin: 0 50%; }
+.hs[data-n="11"] .sk { position: relative; display: inline; transition: color 300ms linear; }
+.hs[data-n="11"] .strike { position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; border-radius: 2px; background: var(--ink-soft); transform-origin: 0 50%; }
+.hs[data-n="11"][data-step="3"] .cr:first-child .sk { color: var(--grey-3); }
+.hs[data-n="11"] .rw1 { position: absolute; left: 70px; right: 0; top: 80px; margin: 0; padding: 8px 16px 10px; background: var(--accent-tint); border-radius: 12px; font-size: 28px; line-height: 1.25; letter-spacing: -.01em; font-weight: 600; color: var(--ink); }
+.hs[data-n="11"] .rw1 b { font-family: var(--mono); font-size: 24px; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-right: 6px; }
+.hs[data-n="11"][data-step="3"] .cr:not(:first-child) { transform: translateY(76px); }
+.hs[data-n="11"] .rp { left: 1060px; display: block; }
+.hs[data-n="11"] .rp .hs-card { margin: 0; }
+.hs[data-n="11"] .rp .pc-body { overflow: hidden; max-height: 460px; transition: max-height var(--t-m) var(--ease-io), padding var(--t-m) var(--ease-io); }
+.hs[data-n="11"]:not([data-step="0"]) .rp .pc-body { max-height: 0; padding-top: 0; padding-bottom: 0; }
+.hs[data-n="11"] .rp .hs-card .pc-head { padding: 10px 22px; }
+.hs[data-n="11"] .vote { position: absolute; left: 0; right: 0; top: 460px; margin: 0; }
+.hs[data-n="11"] .blk { margin-top: 12px; }
+.hs[data-n="11"] .blk:not(.on) { visibility: hidden; }
+.hs[data-n="11"] .blk .t-label { margin: 0 0 6px; font-size: 24px; display: flex; align-items: center; gap: 12px; }
+.hs[data-n="11"] .blk .kd { flex: 0 0 auto; width: 16px; height: 16px; border-radius: 999px; background: var(--gap-fg); }
+.hs[data-n="11"] .blk .kd.am { background: var(--warn-fg); }
+.hs[data-n="11"] .blk .kd.ok { background: var(--ok-fg); }
+.hs[data-n="11"] .blk[data-at="1"] .t-label { color: var(--gap-fg); }
+.hs[data-n="11"] .blk[data-at="2"] .t-label { color: var(--warn-fg); }
+.hs[data-n="11"] .blk[data-at="3"] .t-label { color: var(--ok-fg); }
+.hs[data-n="11"] .rp .lines li { padding: 7px 0; font-size: 28px; line-height: 1.25; grid-template-columns: 52px 1fr; }
+.hs[data-n="11"] .rp .lines li > span { white-space: nowrap; }
+</style>
+
+<style data-slide="12b">
+/* Where may this file go? Six cards on a board of three columns. Each press sends the matching cards to their lane. */
+[data-n="12"] .s12-q { top: 262px; gap: 24px; }
+[data-n="12"] .s12-qc { height: 146px; padding: 12px 28px 14px; transition: opacity var(--t-m) var(--ease-out), transform var(--t-m) var(--ease-out), border-color 300ms linear; }
+[data-n="12"] .s12-qc h3 { margin-top: 4px; }
+[data-n="12"] .s12-qc p { margin-top: 6px; font-size: 26px; line-height: 1.2; }
+[data-n="12"] .s12-qc p.t-label { margin-top: 0; font-size: 24px; }
+[data-n="12"] .s12-qc.hit { border-color: var(--accent); }
+[data-n="12"] .s12-rule { top: 424px; font-size: 28px; line-height: 1.3; }
+[data-n="12"] .s12-board { position: absolute; left: var(--mx); right: var(--mx); top: 508px; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 44px repeat(3, 100px); gap: 8px 24px; }
+[data-n="12"] .s12-lh { grid-row: 1; display: flex; align-items: center; gap: 16px; opacity: 0; transition: opacity var(--t-m) var(--ease-out); font-size: 26px; color: var(--grey-3); white-space: nowrap; }
+[data-n="12"] .s12-lh[data-lane="go"] { grid-column: 1; }
+[data-n="12"] .s12-lh[data-lane="cf"] { grid-column: 2; }
+[data-n="12"] .s12-lh[data-lane="so"] { grid-column: 3; }
+[data-n="12"] .s12-lh.on { opacity: 1; }
+[data-n="12"] .s12-lh .lane { font-size: 24px; padding: 2px 10px; }
+[data-n="12"] .s12-lh .lane.go { color: var(--ok-fg); border-color: rgba(31, 90, 67, .3); background: var(--ok-bg); }
+[data-n="12"] .s12-lh .lane.go::before { content: ''; width: 12px; height: 12px; border-radius: 999px; background: currentColor; }
+[data-n="12"] .s12-lh .lane.cf { color: var(--warn-fg); background: var(--warn-bg); border-color: var(--line-strong); }
+[data-n="12"] .s12-lh .lane.so { color: var(--gap-fg); background: var(--gap-bg); border-color: var(--accent-soft); }
+[data-n="12"] .s12-card { position: relative; padding: 10px 18px 10px; border: 1.5px solid var(--line); border-radius: var(--r-panel); background: var(--surface); box-shadow: var(--shadow-1); z-index: 1;
+  transition: opacity var(--t-m) var(--ease-out), transform var(--t-m) var(--ease-out), border-color 300ms linear, background-color 300ms linear;
+  transition-delay: min(var(--delay-max), calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger))), min(var(--delay-max), calc(var(--delay, 0ms) + var(--i, 0) * var(--stagger))), 0ms, 0ms; }
+[data-n="12"] .s12-r1 { display: flex; align-items: baseline; gap: 12px; margin: 0; white-space: nowrap; }
+[data-n="12"] .s12-r1 b { font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--mennige); }
+[data-n="12"] .s12-fn { flex: 1 1 auto; min-width: 0; font-family: var(--mono); font-size: 24px; line-height: 1.3; font-weight: 600; letter-spacing: -.02em; color: var(--ink); }
+[data-n="12"] .s12-tg { flex: 0 0 auto; margin-left: auto; font-style: normal; font-family: var(--mono); font-size: 24px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 0 14px; border: 1.5px solid rgba(42, 37, 33, .16); border-radius: 999px; background: var(--surface); color: var(--ink); opacity: 0; transition: opacity var(--t-s) var(--ease-out); }
+[data-n="12"] .s12-sub { margin: 4px 0 0; font-size: 26px; line-height: 1.2; letter-spacing: -.01em; color: var(--grey-3); white-space: nowrap; }
+[data-n="12"] .s12-card.sorted .s12-tg { opacity: 1; }
+[data-n="12"] .s12-card.sorted[data-lane="go"] { border-color: rgba(31, 90, 67, .3); background: var(--ok-bg); }
+[data-n="12"] .s12-card.sorted[data-lane="go"] .s12-tg { color: var(--ok-fg); }
+[data-n="12"] .s12-card.sorted[data-lane="cf"] { border-color: var(--warn-fg); background: var(--warn-bg); }
+[data-n="12"] .s12-card.sorted[data-lane="cf"] .s12-tg { color: var(--warn-fg); }
+[data-n="12"] .s12-card.sorted[data-lane="so"] { border-color: var(--accent); background: var(--gap-bg); }
+[data-n="12"] .s12-card.sorted[data-lane="so"] .s12-fn, [data-n="12"] .s12-card.sorted[data-lane="so"] .s12-r1 b { color: var(--gap-fg); }
+[data-n="12"] .s12-card.sorted[data-lane="so"] .s12-sub { color: var(--muted); }
+[data-n="12"] .s12-card.sorted[data-lane="so"] .s12-tg { color: var(--gap-fg); }
+[data-n="12"] .s12-stamp { position: absolute; right: 16px; bottom: 8px; z-index: 2; padding: 0 14px; background: var(--surface); color: var(--gap-fg); border: 1.5px solid var(--accent-soft); border-radius: 999px; font-family: var(--mono); font-style: normal; font-size: 24px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  opacity: 0; transform: scale(2.2); transform-origin: 100% 100%; transition: opacity 120ms linear, transform var(--t-s) var(--ease-back); }
+[data-n="12"] .s12-card.stamped .s12-stamp { opacity: 1; transform: none; }
+[data-n="12"] .s12-why { position: absolute; left: var(--mx); right: var(--mx); bottom: 92px; height: 96px; margin: 0; padding: 0 0 0 28px; display: flex; align-items: center; border-left: 3px solid var(--accent); font-size: 30px; line-height: 1.25; letter-spacing: -.01em; color: var(--ink); }
+[data-n="12"] .s12-why b { font-weight: 700; color: var(--accent); }
+</style>

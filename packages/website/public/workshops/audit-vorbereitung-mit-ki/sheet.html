@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="description" content="Game sheet for Audit Preparation with AI: Organize Evidence and Find Gaps. Spot the trap, bet before Claude answers, and take home your Monday folder.">
+<title>Audit Game Sheet</title>
+<style>
+/* Audit Preparation with AI: participants' game sheet.
+   One file, no external resources. Prints to 2 A4 pages (page 1: the game, page 2: your Monday folder).
+   On a phone it is one tappable page; answers stay on the phone only (browser storage). */
+:root {
+  color-scheme: light;
+  --ink: #2A2521;
+  --muted: #6B625A;
+  --faint: #8a8178;
+  --line: #D6CCBB;
+  --hair: #E7E0D4;
+  --paper: #ffffff;
+  --cream: #fffbf3;
+  --desk: #F7F4EE;
+  --wine: #B73A15;
+  --wine-ink: #97300F;
+  --wine-soft: #FBE9E2;
+  --ok: #1F5A43;
+  --ok-soft: #E3F0E8;
+  --chk: #7A4E06;
+  --chk-soft: #FBEFD5;
+  --nf: #9A2F10;
+  --nf-soft: #FBE9E2;
+  --part: #39589a;
+  --part-soft: #e8eef9;
+  --sun: #f3c13a;
+  --sun-soft: #fff6d8;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Liberation Sans", sans-serif;
+  --mono: Menlo, Consolas, "SF Mono", "Liberation Mono", "DejaVu Sans Mono", monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; font-size: 16px; }
+body { margin: 0; background: var(--desk); color: var(--ink); font-family: var(--sans); font-size: 1rem; line-height: 1.45; }
+h1, h2, h3, p, ol, ul, figure { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+legend { padding: 0; }
+code, .mono { font-family: var(--mono); }
+a { color: var(--wine-ink); }
+button { font: inherit; }
+.sr, .sep {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.nw { white-space: nowrap; }
+
+/* ── sheet ─────────────────────────────────────────────── */
+main { max-width: 1040px; margin: 0 auto; padding: 16px 16px 112px; }
+.page {
+  background: var(--paper); border-radius: 20px; padding: 20px 16px 16px; margin: 0 0 22px;
+  box-shadow: 0 1px 2px rgba(40, 25, 10, .06), 0 10px 30px rgba(60, 40, 20, .08);
+}
+.page-body { display: flex; flex-direction: column; gap: 18px; }
+.kicker {
+  font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--wine);
+}
+h1 { font-size: 2.15rem; line-height: 1.02; letter-spacing: -.025em; font-weight: 700; margin-top: 4px; }
+h1 em { display: block; font-style: normal; font-weight: 600; font-size: .52em; letter-spacing: -.01em; color: var(--wine); margin-top: 6px; }
+h2 { font-size: 1.15rem; line-height: 1.2; font-weight: 800; letter-spacing: -.01em; }
+.who { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: .85rem; font-weight: 600; color: var(--muted); }
+.who input {
+  flex: 1; min-width: 0; min-height: 44px; border: 0; border-bottom: 2px solid var(--line); border-radius: 0;
+  background: transparent; font: inherit; font-size: 1.05rem; color: var(--ink); padding: 4px 2px;
+}
+.who input:focus { outline: none; border-bottom-color: var(--wine); }
+.foot {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; margin-top: 16px; padding-top: 10px;
+  border-top: 1px solid var(--hair); font-size: .75rem; color: var(--faint);
+}
+
+/* ── page 1: brief ─────────────────────────────────────── */
+.brief { border-left: 4px solid var(--wine); padding: 2px 0 2px 12px; }
+.brief-main { font-size: 1.12rem; font-weight: 750; line-height: 1.3; }
+.brief-meta { display: flex; flex-wrap: wrap; gap: 6px 8px; margin-top: 8px; font-size: .8rem; color: var(--muted); }
+.brief-meta span { background: var(--desk); border-radius: 999px; padding: 3px 10px; }
+.brief-meta .pts { background: var(--sun-soft); color: var(--ink); font-weight: 650; }
+
+/* ── page 1: trap cards ────────────────────────────────── */
+.cards { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.card {
+  position: relative; display: flex; flex-direction: column; background: var(--cream);
+  border: 1.5px solid var(--line); border-radius: 16px; padding: 0 12px 12px;
+}
+.card::after { /* folded corner */
+  content: ""; position: absolute; top: -1.5px; right: -1.5px; width: 18px; height: 18px;
+  background: linear-gradient(225deg, var(--paper) 50%, var(--hair) 50%);
+  border-left: 1.5px solid var(--line); border-bottom: 1.5px solid var(--line); border-bottom-left-radius: 5px;
+}
+.num {
+  position: absolute; top: -9px; left: -9px; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--wine); color: #fff; font-weight: 800; font-size: .95rem;
+  box-shadow: 0 0 0 3px var(--paper);
+}
+.file {
+  display: block; padding: 10px 20px 8px 22px; margin: 0 -12px 10px; border-bottom: 1.5px dashed var(--line);
+  font-family: var(--mono); font-size: .78rem; font-weight: 700; color: var(--wine-ink); line-height: 1.3;
+}
+.snip { font-family: var(--mono); font-size: .86rem; line-height: 1.4; color: var(--ink); flex: 1; }
+.snip .ln { display: block; }
+.snip .ln + .ln { margin-top: 3px; }
+.strip { display: flex; gap: 3px; margin-top: 8px; }
+.strip li {
+  flex: 1; text-align: center; font-size: .68rem; line-height: 1; padding: 6px 0;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 3px; color: var(--muted);
+}
+.why { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: .78rem; color: var(--faint); }
+.why input {
+  flex: 1; min-width: 0; min-height: 44px; border: 0; border-bottom: 1.5px dotted var(--line); background: transparent;
+  font: inherit; font-size: .95rem; color: var(--ink); padding: 2px;
+}
+.why input:focus { outline: none; border-bottom-color: var(--wine); }
+.mark { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 10px; }
+
+/* custom choice controls: native radio/checkbox, visually replaced */
+.opt { position: relative; display: block; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.opt input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+.opt > span {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 6px 10px;
+  border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper); font-weight: 700; font-size: .95rem;
+  transition: background-color .12s, border-color .12s, color .12s;
+}
+.opt input:focus-visible + span { outline: 3px solid var(--sun); outline-offset: 2px; }
+.box {
+  position: relative; flex: none; width: 18px; height: 18px; border: 2px solid currentColor; border-radius: 4px; color: var(--muted);
+}
+.opt input:checked + span .box::after {
+  content: ""; position: absolute; left: 4px; top: 0; width: 5px; height: 10px;
+  border: solid currentColor; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg);
+}
+.tick.trap input:checked + span { background: var(--nf-soft); border-color: var(--nf); color: var(--nf); }
+.tick.clean input:checked + span { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.opt input:checked + span .box { color: inherit; }
+.ico { width: 18px; height: 18px; flex: none; }
+
+/* ── page 1: bet slip ──────────────────────────────────── */
+.slip {
+  position: relative; border: 1.5px dashed var(--wine); border-radius: 16px; padding: 16px 12px 12px; background: var(--paper);
+}
+.slip-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.slip-head h2 {
+  display: inline-block; transform: rotate(-2deg); border: 1.5px solid var(--wine); color: var(--wine); border-radius: 10px;
+  padding: 1px 8px; font-size: 1rem; letter-spacing: .06em; text-transform: uppercase;
+}
+.slip-rule { font-weight: 700; font-size: .9rem; }
+.votekey { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; font-size: .74rem; color: var(--muted); }
+.votekey b { border-radius: 999px; padding: 2px 8px; font-weight: 700; }
+.votekey .g { background: var(--ok-soft); color: var(--ok); }
+.votekey .a { background: var(--chk-soft); color: var(--chk); }
+.votekey .r { background: var(--nf-soft); color: var(--nf); }
+.bets { margin-top: 10px; }
+.bet { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; padding: 12px 0; border-top: 1px solid var(--hair); }
+.bet:first-child { border-top: 0; }
+.day {
+  display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--wine); background: var(--wine-soft); border-radius: 999px; padding: 2px 9px;
+}
+.bet-q strong { display: block; font-size: 1.08rem; line-height: 1.25; margin-top: 5px; }
+.bet-q small { display: block; font-size: .78rem; color: var(--muted); line-height: 1.35; margin-top: 3px; }
+.bet-q small.mono { font-family: var(--mono); font-size: .76rem; color: var(--ink); }
+
+.nums { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.nums .opt > span { border-radius: 999px; font-size: 1.05rem; min-height: 48px; padding: 0; }
+.nums .opt input:checked + span, .pick .opt input:checked + span { background: var(--wine); border-color: var(--wine); color: #fff; }
+
+.claims { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.claim { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.claim legend { float: left; font-size: .9rem; font-weight: 600; line-height: 1.25; }
+.claim legend b { display: inline-grid; place-items: center; width: 1.45em; height: 1.45em; margin-right: 6px; border-radius: 50%; background: var(--desk); font-size: .85em; }
+.rags { display: flex; gap: 6px; }
+.rag > span { width: 48px; min-height: 44px; padding: 0; font-size: .95rem; }
+.rag.r > span { border-color: #e2a39e; color: var(--nf); }
+.rag.a > span { border-color: #e3c08a; color: var(--chk); }
+.rag.g > span { border-color: #9fcdb3; color: var(--ok); }
+.rag.r input:checked + span { background: var(--nf); border-color: var(--nf); color: #fff; }
+.rag.a input:checked + span { background: var(--chk); border-color: var(--chk); color: #fff; }
+.rag.g input:checked + span { background: var(--ok); border-color: var(--ok); color: #fff; }
+
+.years { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.years input {
+  width: 7.5rem; min-height: 48px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--paper);
+  font: inherit; font-size: 1.3rem; text-align: center; color: var(--ink);
+}
+.years input:focus { outline: 3px solid var(--sun); outline-offset: 2px; }
+.years-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.race { font-size: .8rem; color: var(--muted); line-height: 1.35; }
+.race .mono { display: block; color: var(--ink); font-size: .78rem; }
+.pick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.pick.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.two .pick .opt > span { white-space: nowrap; padding-left: 6px; padding-right: 6px; gap: 6px; }
+.lang { margin-top: 8px; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.lang b { color: var(--ink); }
+
+/* ── page 1: score ─────────────────────────────────────── */
+.score { border-radius: 14px; background: var(--paper); color: var(--ink); border: 1.5px solid var(--line); box-shadow: 0 1px 2px rgba(40,30,20,.06), 0 8px 24px rgba(40,30,20,.06); padding: 14px 12px 12px; }
+.score h2 { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--wine); }
+.score-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin-top: 8px; }
+.score-grid li { display: grid; grid-template-columns: minmax(0, 1fr) 76px; align-items: center; gap: 10px; border-top: 1px solid var(--hair); padding-top: 6px; }
+.score-grid li:first-child { border-top: 0; padding-top: 0; }
+.sl { display: block; font-weight: 700; font-size: .92rem; }
+.sh { display: block; font-size: .72rem; color: var(--muted); line-height: 1.3; }
+.score input, .score output {
+  width: 100%; min-height: 44px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff;
+  color: var(--ink); font: inherit; font-weight: 800; font-size: 1.15rem; text-align: center; padding: 0;
+}
+.score output { display: grid; place-items: center; background: var(--sun-soft); border-color: #e6d29a; }
+.score input:focus { outline: 3px solid var(--sun); outline-offset: 1px; }
+.score .tot .sl { color: var(--ink); font-size: 1.05rem; }
+
+/* ── page 2 ────────────────────────────────────────────── */
+.motto { margin-top: 8px; font-size: 1.05rem; font-weight: 650; color: var(--wine); }
+.p2-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.folder {
+  position: relative; margin-top: 18px; background: var(--sun-soft); border: 1.5px solid #e6d29a;
+  border-radius: 0 14px 14px 14px; padding: 14px 14px 12px;
+}
+.folder-tab {
+  position: absolute; left: -1.5px; top: -24px; height: 24px; padding: 4px 16px 0; border: 1.5px solid #e6d29a; border-bottom: 0;
+  border-radius: 10px 10px 0 0; background: var(--sun-soft); font-size: .72rem; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--chk);
+}
+.folder-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; }
+.hint { font-size: .8rem; color: var(--muted); }
+.check { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px 18px; margin-top: 8px; }
+.check .opt > span {
+  justify-content: flex-start; align-items: flex-start; text-align: left; min-height: 44px; padding: 8px 4px;
+  border: 0; border-bottom: 1px dashed #e6d29a; border-radius: 0; background: transparent; font-weight: 400; font-size: .92rem; line-height: 1.3;
+}
+.check .box { margin-top: 1px; color: var(--chk); background: var(--paper); }
+.check b { font-weight: 750; }
+.check em { font-style: normal; color: var(--muted); }
+.check .opt input:checked + span { color: var(--ink); }
+.privacy { margin-top: 10px; font-size: .8rem; color: var(--muted); }
+.privacy b { color: var(--ink); }
+
+.panel h2 { margin-bottom: 8px; }
+.rules li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; padding: 6px 0; border-top: 1px solid var(--hair); font-size: .93rem; line-height: 1.35; }
+.rules li:first-child { border-top: 0; padding-top: 0; }
+.rules .n {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: var(--wine); color: #fff;
+  font-weight: 850; font-size: 1.05rem;
+}
+.rules .people { display: block; margin-top: 6px; font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; }
+.stat li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 10px; align-items: start; padding: 6px 0; border-top: 1px solid var(--hair); font-size: .9rem; line-height: 1.35; }
+.stat li:first-child { border-top: 0; padding-top: 0; }
+.pill {
+  display: inline-block; justify-self: start; border-radius: 6px; padding: 3px 7px; font-size: .74rem; font-weight: 800;
+  letter-spacing: .03em; white-space: nowrap; border: 1.5px solid currentColor;
+}
+.pill.ok { color: var(--ok); background: var(--ok-soft); }
+.pill.chk { color: var(--chk); background: var(--chk-soft); }
+.pill.nf { color: var(--nf); background: var(--nf-soft); }
+.pill.part { color: var(--part); background: var(--part-soft); }
+.weak { margin-top: 8px; font-weight: 750; font-size: .92rem; }
+.claimkey { margin-top: 6px; font-size: .8rem; color: var(--muted); line-height: 1.4; }
+.green { grid-column: 1 / -1; border-top: 1px solid var(--hair); padding-top: 10px; }
+.green .claimkey { margin-top: 0; }
+.claimkey b.g { color: var(--ok); } .claimkey b.a { color: var(--chk); } .claimkey b.r { color: var(--nf); }
+
+.prompt { border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 12px 12px; background: var(--paper); }
+.prompt-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.setup { margin-top: 6px; font-size: .82rem; color: var(--muted); line-height: 1.4; }
+.setup b { color: var(--ink); }
+.prompt pre {
+  margin: 10px 0 0; padding: 12px; border-radius: 10px; background: #f7f4ef; border: 1px solid var(--hair);
+  font-family: var(--mono); font-size: .8rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink);
+}
+.prompt pre mark { background: var(--sun-soft); color: var(--wine-ink); font-weight: 700; border-radius: 3px; padding: 0 2px; }
+.copy {
+  flex: none; min-height: 44px; padding: 6px 14px; border: 1.5px solid var(--wine); border-radius: 999px; background: var(--paper);
+  color: var(--wine); font-weight: 700; font-size: .85rem; cursor: pointer;
+}
+.copy:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+
+.plan { display: grid; gap: 6px; border-left: 4px solid var(--sun); padding: 2px 0 2px 12px; }
+.plan h2 { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--chk); }
+.plan p { font-size: .95rem; line-height: 1.5; }
+.plan label { font-weight: 700; }
+.plan input {
+  width: 100%; max-width: 22rem; min-height: 44px; border: 0; border-bottom: 2px solid var(--line); border-radius: 0; background: transparent;
+  font: inherit; color: var(--ink); padding: 2px; vertical-align: baseline;
+}
+.plan input::placeholder { color: var(--faint); font-style: italic; }
+.plan input:focus { outline: none; border-bottom-color: var(--wine); }
+.endrow { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.sign { border-radius: 14px; background: var(--wine-soft); padding: 14px 14px 12px; }
+.sign .big { font-size: 1.25rem; font-weight: 850; line-height: 1.2; color: var(--wine-ink); letter-spacing: -.01em; }
+.sign p { font-size: .85rem; color: var(--muted); margin-top: 4px; }
+.sigline { display: grid; grid-template-columns: minmax(0, 1fr) 34%; gap: 14px; margin-top: 18px; }
+.sigline span { display: block; border-top: 1.5px solid var(--line); padding-top: 3px; font-size: .72rem; color: var(--muted); }
+.sigline span::before { content: "\00d7"; float: left; margin: -24px 0 0 0; font-size: 1.1rem; color: var(--wine); font-weight: 700; }
+.sigline span:last-child::before { content: none; }
+.kit { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; border: 1.5px solid var(--line); border-radius: 16px; box-shadow: 0 1px 2px rgba(40,30,20,.06); padding: 14px; }
+.kit .lbl { font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--wine); }
+.kit a { display: block; margin-top: 4px; font-family: var(--mono); font-size: .86rem; font-weight: 700; line-height: 1.35; }
+.kit p { font-size: .8rem; color: var(--muted); margin-top: 6px; line-height: 1.35; }
+.qr { width: 96px; height: 96px; background: #fff; }
+.qr svg { display: block; width: 100%; height: 100%; }
+
+.tools { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.tools button {
+  min-height: 44px; padding: 6px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--paper);
+  color: var(--ink); font-weight: 650; font-size: .88rem; cursor: pointer;
+}
+.tools button:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+.saved { font-size: .78rem; color: var(--faint); align-self: center; }
+
+/* ── phone vote card ───────────────────────────────────── */
+.vote {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(255, 255, 255, .96);
+  border-top: 1px solid var(--line); box-shadow: 0 -6px 18px rgba(40, 25, 10, .08);
+}
+.vote-l { font-size: .72rem; font-weight: 700; color: var(--muted); line-height: 1.15; width: 58px; flex: none; }
+.vote button {
+  flex: 1; min-height: 48px; border: 0; border-radius: 12px; color: #fff; font-weight: 850; font-size: .9rem;
+  letter-spacing: .04em; cursor: pointer;
+}
+.vote button:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; }
+.vote .vr { background: var(--nf); } .vote .va { background: var(--chk); } .vote .vg { background: var(--ok); }
+.votecard {
+  position: fixed; inset: 0; z-index: 30; display: none; place-content: center; text-align: center; color: #fff;
+  padding: 24px; cursor: pointer;
+}
+.votecard.on { display: grid; }
+.votecard .c1 { font-size: clamp(3.5rem, 22vw, 9rem); font-weight: 900; letter-spacing: .02em; line-height: 1; }
+.votecard .c2 { font-size: clamp(1.3rem, 7vw, 2.6rem); font-weight: 800; margin-top: 12px; }
+.votecard .c3 { font-size: .9rem; opacity: .85; margin-top: 28px; }
+
+/* ── wider screens: the sheet layout ───────────────────── */
+@media (min-width: 640px) {
+  main { padding: 28px 24px 120px; }
+  .page { padding: 30px 30px 22px; }
+  .p1-top { display: grid; grid-template-columns: minmax(0, 1fr) 260px; align-items: end; gap: 20px; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bet { grid-template-columns: 210px minmax(0, 1fr); align-items: center; gap: 16px; }
+  .nums { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+  .pick { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .pick.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .score-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 14px; }
+  .score-grid li, .score-grid li:first-child { border-top: 0; padding-top: 0; }
+  .p2-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .folder, .plan { grid-column: 1 / -1; }
+  .check { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .prompt { grid-column: 1 / -1; }
+  .endrow { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+@media (min-width: 960px) {
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .bet.s2 { grid-template-columns: minmax(0, 1fr); }
+  .bet.s2 .bet-q { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .bet.s2 .bet-q strong, .bet.s2 .bet-q small { margin-top: 0; }
+  .claims { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .two { grid-template-columns: minmax(0, 4fr) minmax(0, 3fr); gap: 10px; }
+  .two .pick { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .two .pick.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .claim { grid-template-columns: minmax(0, 1fr); align-content: space-between; gap: 6px; height: 100%; }
+  .claim legend { font-size: .76rem; }
+  .rags { gap: 3px; }
+  .rag { flex: 1; }
+  .rag > span { width: auto; min-height: 40px; }
+  .score-grid { grid-template-columns: repeat(9, minmax(0, 1fr)); }
+  .score-grid li, .score-grid li:first-child { grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; align-items: end; gap: 6px; }
+  .sl { font-size: .85rem; }
+  .sh { font-size: .68rem; }
+}
+@media (min-width: 1100px) {
+  .vote { display: none; }
+  main { padding-bottom: 40px; }
+}
+@media (hover: hover) {
+  .opt:hover > span { border-color: var(--faint); }
+  .check .opt:hover > span { background: rgba(255, 255, 255, .5); }
+  .copy:hover, .tools button:hover { background: var(--desk); }
+}
+@media (prefers-reduced-motion: reduce) { .opt > span { transition: none; } }
+
+/* ── print: exactly two A4 pages ───────────────────────── */
+@page { size: A4 portrait; margin: 8mm; }
+@media print {
+  html { font-size: 9pt; }
+  html, body { background: #fff; }
+  body { line-height: 1.3; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  main { max-width: none; margin: 0; padding: 0; }
+  .page {
+    width: 194mm; height: 281mm; margin: 0; padding: 0; border-radius: 0; box-shadow: none; overflow: hidden;
+    display: flex; flex-direction: column; break-after: page; page-break-after: always; break-inside: avoid;
+  }
+  .page:last-of-type { break-after: auto; page-break-after: auto; }
+  .page-body { flex: 1; gap: 3mm; }
+  .foot { margin-top: auto; padding-top: 1.6mm; font-size: 6.8pt; }
+  .noprint, .vote, .votecard { display: none !important; }
+  a { color: var(--wine-ink); text-decoration: none; }
+
+  .kicker { font-size: 7pt; }
+  h1 { font-size: 25pt; margin-top: .6mm; }
+  h1 em { display: inline; font-size: 13pt; margin: 0 0 0 2.5mm; }
+  h2 { font-size: 10.5pt; }
+  .p1-top { display: grid; grid-template-columns: minmax(0, 1fr) 60mm; align-items: end; gap: 6mm; }
+  .who { margin: 0 0 1mm; font-size: 7.5pt; }
+  .who input { min-height: 0; height: 6mm; font-size: 9pt; border-bottom-width: 1.2px; }
+
+  .brief { border-left-width: 1.2mm; padding: .2mm 0 .2mm 3mm; }
+  .brief-main { font-size: 10.5pt; }
+  .brief-meta { margin-top: 1.2mm; gap: 1.6mm; font-size: 7.3pt; }
+  .brief-meta span { padding: .4mm 2.4mm; }
+
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4mm 4mm; padding: 1.4mm 0 0 1.4mm; }
+  .card { border-width: 1px; border-radius: 3mm; padding: 0 2.6mm 2.4mm; }
+  .card::after { width: 4mm; height: 4mm; top: -1px; right: -1px; border-width: 1px; }
+  .num { width: 6.2mm; height: 6.2mm; top: -2.2mm; left: -2.2mm; font-size: 9pt; box-shadow: 0 0 0 .7mm #fff; }
+  .file { padding: 1.7mm 4mm 1.5mm 4.4mm; margin: 0 -2.6mm 1.8mm; font-size: 7.2pt; border-bottom-width: 1px; }
+  .snip { font-size: 8pt; line-height: 1.32; }
+  .snip .ln + .ln { margin-top: .5mm; }
+  .strip { gap: .5mm; margin-top: 1.6mm; }
+  .strip li { font-size: 6.3pt; padding: 1.1mm 0; border-radius: .6mm; }
+  .why { margin-top: 1.6mm; font-size: 7pt; gap: 1.5mm; }
+  .why input { min-height: 0; height: 4.6mm; font-size: 8pt; }
+  .mark { gap: 2mm; margin-top: 1.8mm; }
+  .opt > span { min-height: 0; border-width: 1px; border-radius: 1.6mm; font-size: 8.4pt; transition: none; }
+  .mark .opt > span { height: 6.6mm; gap: 1.6mm; }
+  .box { width: 3.4mm; height: 3.4mm; border-width: 1.2px; border-radius: .7mm; }
+  .opt input:checked + span .box::after { left: .8mm; top: -.1mm; width: 1mm; height: 2mm; border-width: 0 1.5px 1.5px 0; }
+  .ico { width: 3.4mm; height: 3.4mm; }
+
+  .slip { border-width: 1.4px; border-radius: 3.5mm; padding: 2.6mm 3.4mm 1.4mm; }
+  .slip-head h2 { font-size: 8.5pt; border-width: 1.4px; border-radius: 1.2mm; padding: .2mm 2mm; }
+  .slip-rule { font-size: 8.3pt; }
+  .votekey { flex-basis: auto; margin: 0 0 0 auto; gap: 1.2mm; font-size: 6.6pt; }
+  .votekey b { padding: .3mm 1.8mm; }
+  .bets { margin-top: 1mm; }
+  .bet { grid-template-columns: 50mm minmax(0, 1fr); align-items: center; gap: 4mm; padding: 1.5mm 0; }
+  .bet.s2 { grid-template-columns: minmax(0, 1fr); gap: 1.4mm; }
+  .bet.s2 .bet-q { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6mm 3mm; }
+  .bet.s2 .bet-q strong, .bet.s2 .bet-q small { margin-top: 0; }
+  .day { font-size: 6.3pt; padding: .2mm 2mm; }
+  .bet-q strong { font-size: 9.6pt; margin-top: .7mm; }
+  .bet-q small { font-size: 7pt; margin-top: .4mm; }
+  .bet-q small.mono { font-size: 6.7pt; }
+  .nums { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 2mm; justify-items: center; }
+  .nums .opt > span { width: 7.6mm; height: 7.6mm; min-height: 0; font-size: 9.5pt; }
+  .claims { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2.6mm; }
+  .claim { grid-template-columns: minmax(0, 1fr); gap: 1.2mm; align-content: space-between; height: 100%; }
+  .claim legend { font-size: 7.2pt; line-height: 1.2; font-weight: 600; }
+  .claim legend b { width: 3.6mm; height: 3.6mm; margin-right: .8mm; font-size: 6.4pt; }
+  .rags { gap: .9mm; }
+  .rag { flex: 1; }
+  .rag > span { width: auto; height: 5.6mm; font-size: 7.5pt; }
+  .years { gap: 2mm; font-size: 9pt; }
+  .years-row { gap: 4mm; flex-wrap: nowrap; }
+  .race { font-size: 7.2pt; }
+  .race .mono { font-size: 7.4pt; }
+  .years input { width: 22mm; height: 7mm; min-height: 0; font-size: 10pt; border-width: 1px; border-radius: 1.6mm; }
+  .pick, .pick.three { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2mm; }
+  .pick .opt > span { height: 6.6mm; justify-content: flex-start; padding: 0 2.4mm; gap: 1.8mm; }
+  .two { grid-template-columns: minmax(0, 76fr) minmax(0, 62fr); gap: 2mm; }
+  .two .pick, .two .pick.three { gap: 1.6mm; }
+  .two .pick.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .two .pick:not(.three) { grid-template-columns: minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr); }
+  .two .pick .opt > span { padding: 0 1.2mm; gap: 1.2mm; font-size: 8pt; white-space: nowrap; }
+  .bet.s1 { grid-template-columns: minmax(0, 1fr); gap: 1.4mm; }
+  .bet.s1 .bet-q { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6mm 3mm; }
+  .bet.s1 .bet-q strong, .bet.s1 .bet-q small { margin-top: 0; }
+  .bet.s1 .nums { grid-template-columns: repeat(9, 7.6mm); justify-content: space-between; padding: 0 6mm; }
+  .lang { margin-top: 1.4mm; font-size: 7.5pt; }
+
+  .score { border-radius: 3mm; padding: 2.2mm 3mm 2.6mm; background: #fff; color: var(--ink); border: 1.2px solid var(--line); }
+  .score h2 { font-size: 7pt; color: var(--wine); }
+  .sh { color: var(--muted); }
+  .score input { border-color: var(--line); }
+  .score .tot .sl { color: var(--ink); }
+  .score-grid { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 2mm; margin-top: 1.2mm; }
+  .score-grid li, .score-grid li:first-child { grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; gap: 1mm; border: 0; padding: 0; align-items: end; }
+  .score-grid li > label { align-self: start; }
+  .sl { font-size: 7.6pt; line-height: 1.15; }
+  .sh { font-size: 6.2pt; line-height: 1.2; }
+  .score input, .score output { height: 7.5mm; min-height: 0; border-width: 1px; border-radius: 1.4mm; font-size: 11pt; }
+  .score .tot .sl { font-size: 8.4pt; }
+  .score output { border-color: #e6d29a; }
+
+  .motto { margin-top: 1mm; font-size: 10.5pt; }
+  .p2-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5.4mm 6mm; }
+  .folder { grid-column: 1 / -1; margin-top: 5.2mm; border-width: 1px; border-radius: 0 3mm 3mm 3mm; padding: 2.8mm 3.4mm 2.4mm; }
+  .folder-tab { top: -5.2mm; height: 5.2mm; padding: 1mm 4mm 0; font-size: 6.8pt; border-width: 1px; border-radius: 2.2mm 2.2mm 0 0; left: -1px; }
+  .hint { font-size: 7.6pt; }
+  .check { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 6mm; margin-top: 1.2mm; }
+  .check .opt > span { min-height: 0; padding: 1.25mm .5mm; font-size: 8.4pt; line-height: 1.25; gap: 2mm; border-bottom-width: 1px; }
+  .privacy { margin-top: 1.8mm; font-size: 7.4pt; }
+  .panel h2 { margin-bottom: 1.6mm; }
+  .rules li { grid-template-columns: 7mm minmax(0, 1fr); gap: 2mm; padding: 1.7mm 0; font-size: 8.6pt; line-height: 1.3; }
+  .rules .n { width: 6mm; height: 6mm; border-radius: 1.4mm; font-size: 9.5pt; }
+  .rules .people { margin-top: 1.2mm; font-size: 7.4pt; }
+  .stat li { grid-template-columns: 22mm minmax(0, 1fr); gap: 2.4mm; padding: 1.6mm 0; font-size: 8.4pt; line-height: 1.3; }
+  .pill { font-size: 6.6pt; padding: .4mm 1.5mm; border-width: 1px; border-radius: 1mm; }
+  .weak { margin-top: 1.4mm; font-size: 8.4pt; }
+  .claimkey { margin-top: 1mm; font-size: 7.3pt; }
+  .green { padding-top: 2mm; margin-top: -2mm; }
+  .green .claimkey { font-size: 7.8pt; line-height: 1.38; }
+  .prompt { grid-column: 1 / -1; border-width: 1px; border-radius: 3mm; padding: 2.6mm 3.4mm 3mm; }
+  .setup { margin-top: 1mm; font-size: 7.5pt; }
+  .prompt pre { margin-top: 1.8mm; padding: 2.2mm 2.8mm; font-size: 7.6pt; line-height: 1.42; border-radius: 2mm; }
+  .plan { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 3mm; border-left-width: 1.2mm; padding: .6mm 0 .6mm 3mm; }
+  .plan h2 { flex: none; font-size: 7pt; }
+  .plan p { font-size: 8.8pt; line-height: 1.4; }
+  .plan input { width: 52mm; min-height: 0; height: 5.4mm; border-bottom-width: 1px; font-size: 8.8pt; }
+  .plan input::placeholder { color: transparent; }
+  .endrow { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 5mm; }
+  .sign { border-radius: 3mm; padding: 3mm 3.4mm 2.6mm; }
+  .sign .big { font-size: 12.5pt; }
+  .sign p { font-size: 7.6pt; margin-top: .8mm; }
+  .sigline { margin-top: 6.5mm; gap: 4mm; }
+  .sigline span { font-size: 6.6pt; padding-top: .6mm; border-top-width: 1px; }
+  .sigline span::before { margin-top: -5.2mm; font-size: 10pt; }
+  .kit { border-width: 1.2px; border-radius: 3mm; padding: 3mm 3.4mm; gap: 3.4mm; }
+  .kit .lbl { font-size: 7.4pt; }
+  .kit a { font-size: 8.1pt; margin-top: .8mm; overflow-wrap: normal; word-break: normal; }
+  .kit p { font-size: 7.2pt; margin-top: 1.2mm; }
+  .qr { width: 23mm; height: 23mm; }
+}
+
+/* ── sort lanes (Data, Place, Paper) ───────────────────── */
+.sorts .rag > span { width: auto; min-width: 44px; padding: 0 8px; font-size: .82rem; }
+.sorts .claim legend { font-family: var(--mono); font-size: .8rem; word-break: break-word; }
+.lanekey { font-size: .74rem; color: var(--muted); margin-top: 6px; line-height: 1.35; }
+.lanekey b { color: var(--ink); }
+@media print { .sorts .rag > span { min-width: 0; padding: 0 1.4mm; font-size: 6.8pt; } .sorts .claim legend { font-size: 6.6pt; } .lanekey { font-size: 6.8pt; margin-top: 1mm; } }
+
+/* print fit: this sheet carries one more bet and a longer checklist than the ESG sheet, so the A4 pages run a little tighter */
+@media print {
+  html { font-size: 8pt; }
+  .page-body { gap: 2.4mm; }
+  h1 { font-size: 22pt; }
+  .snip { font-size: 7.2pt; line-height: 1.25; }
+  .file { padding: 1.2mm 4mm 1mm 4.4mm; margin-bottom: 1.2mm; font-size: 6.8pt; }
+  .card { padding-bottom: 1.8mm; }
+  .why { margin-top: 1mm; }
+  .why input { height: 3.8mm; }
+  .mark { margin-top: 1.2mm; }
+  .mark .opt > span { height: 5.4mm; }
+  .cards { gap: 3.4mm 4mm; }
+  .bet { padding: 1mm 0; gap: 1.4mm; }
+  .bet-q strong { font-size: 8.8pt; margin-top: .4mm; }
+  .bet-q small { font-size: 6.6pt; margin-top: .2mm; }
+  .slip { padding-top: 2.4mm; padding-bottom: 1.4mm; }
+  .nums .opt > span { width: 6.6mm; height: 6.6mm; }
+  .pick .opt > span { height: 5.6mm; }
+  .score-grid { gap: 1.4mm; }
+  .score input, .score output { height: 6.4mm; }
+  .folder { padding: 2mm 3mm 1.6mm; }
+  .check .opt > span { padding: .8mm .5mm; font-size: 7.6pt; }
+  .p2-grid { gap: 3.4mm 6mm; }
+  .prompt pre { font-size: 7pt; padding: 1.6mm 2.4mm; }
+  .setup { font-size: 7pt; }
+  .sign .big { font-size: 11pt; }
+  .sigline { margin-top: 4.5mm; }
+  .brief-meta { margin-top: .6mm; font-size: 6.8pt; }
+  .brief-main { font-size: 9.6pt; }
+  .p1-top { align-items: end; }
+  .slip { padding: 2mm 3mm 1mm; }
+  .votekey { margin-top: .4mm; }
+  .bet { padding: .7mm 0; }
+  .cards { gap: 2.6mm 4mm; }
+  .card { padding-bottom: 1.2mm; }
+  .score { padding: 1.6mm 3mm 1.8mm; }
+  .score-grid { margin-top: .6mm; }
+  .why input { height: 3.2mm; }
+  .mark .opt > span { height: 5mm; }
+}
+/* sort row: two columns, one file per line, the three lanes at the right; file names never break mid-word */
+.sorts .claim legend { word-break: normal; overflow-wrap: normal; }
+@media (min-width: 960px) {
+  .sorts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 22px; }
+  .sorts .claim { grid-template-columns: minmax(0, 1fr) auto; align-items: center; align-content: center; height: auto; gap: 8px; }
+  .sorts .claim legend { font-size: .8rem; }
+  .sorts .rags { gap: 6px; }
+  .sorts .rag { flex: none; }
+  .sorts .rag > span { width: auto; min-width: 48px; min-height: 40px; padding: 0 8px; }
+}
+@media print {
+  .sorts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2mm 7mm; }
+  .sorts .claim { grid-template-columns: minmax(0, 1fr) auto; align-items: center; align-content: center; height: auto; gap: 2mm; }
+  .sorts .claim legend { font-size: 7.5pt; }
+  .sorts .rags { gap: 1.2mm; }
+  .sorts .rag { flex: none; }
+  .sorts .rag > span { min-width: 9mm; height: 5mm; padding: 0 1.6mm; font-size: 7.5pt; }
+  /* smallest print text: 7.5pt (10px) */
+  .kicker, .file, .snip, .day, .bet-q small, .bet-q small.mono, .votekey, .sh, .why, .brief-meta, .lanekey,
+  .folder-tab, .pill, .privacy, .setup, .kit .lbl, .claim legend, .sigline span { font-size: 7.5pt; }
+  .foot { font-size: 7.5pt; }
+  .page-body { gap: 2mm; }
+  .cards { gap: 2.2mm 4mm; }
+  .bet { padding: .5mm 0; }
+  .mark .opt > span { height: 4.8mm; }
+  .bet:not(.s1):not(.s2) { grid-template-columns: 58mm minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<main id="sheet">
+
+<!-- ═════════════════ PAGE 1 · THE GAME ═════════════════ -->
+<section class="page p1" aria-labelledby="p1-title">
+ <div class="page-body">
+  <header class="p1-top">
+    <div>
+      <p class="kicker">Audit Preparation with AI · your game sheet</p>
+      <h1 id="p1-title">Spot the trap <em>before Claude does</em></h1>
+    </div>
+    <label class="who"><span>Name or team</span><input type="text" name="who" autocomplete="off" maxlength="40"></label>
+  </header>
+
+  <div class="brief">
+    <p class="brief-main">Five of the seven traps are on these cards, and one card is clean. Mark each card as trap or clean.</p>
+    <p class="brief-meta">
+      <span>Today is Friday 13 November 2026. Audit: 3 December. Pairs, 3 minutes.</span>
+      <span class="pts">2 points for each trap you find before Claude, plus 1 for the clean card, minus 1 if you call the clean card a trap.</span>
+    </p>
+  </div>
+
+  <ol class="cards" aria-label="Six file cards">
+    <li class="card">
+      <span class="num" aria-hidden="true">1</span>
+      <span class="file">data_<wbr>inventory.csv</span>
+      <p class="snip"><span class="ln">company_profile.md: “all production data in the EU”</span><span class="ln">data_inventory.csv: exports bucket, health, us-central1</span></p>
+      <label class="why"><span>Why?</span><input type="text" name="why1" autocomplete="off"></label>
+      <fieldset class="mark"><legend class="sr">Card 1, data_inventory.csv</legend>
+        <label class="opt tick trap"><input type="radio" name="card1" value="trap"><span><i class="box"></i>Trap</span></label>
+        <label class="opt tick clean"><input type="radio" name="card1" value="clean"><span><i class="box"></i>Clean</span></label>
+      </fieldset>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">2</span>
+      <span class="file">supplier_<wbr>register.csv</span>
+      <p class="snip"><span class="ln">Nordgrid Cloud AB, GPU server</span><span class="ln">data shared: health</span><span class="ln">DPA: pending · transfer: none</span></p>
+      <label class="why"><span>Why?</span><input type="text" name="why2" autocomplete="off"></label>
+      <fieldset class="mark"><legend class="sr">Card 2, supplier_register.csv</legend>
+        <label class="opt tick trap"><input type="radio" name="card2" value="trap"><span><i class="box"></i>Trap</span></label>
+        <label class="opt tick clean"><input type="radio" name="card2" value="clean"><span><i class="box"></i>Clean</span></label>
+      </fieldset>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">3</span>
+      <span class="file">pentest_<wbr>summary_<wbr>2025.txt</span>
+      <p class="snip"><span class="ln">Report date: 2025-02-28</span><span class="ln">Out of scope: back office, exports, any AI component</span></p>
+      <label class="why"><span>Why?</span><input type="text" name="why3" autocomplete="off"></label>
+      <fieldset class="mark"><legend class="sr">Card 3, pentest_summary_2025.txt</legend>
+        <label class="opt tick trap"><input type="radio" name="card3" value="trap"><span><i class="box"></i>Trap</span></label>
+        <label class="opt tick clean"><input type="radio" name="card3" value="clean"><span><i class="box"></i>Clean</span></label>
+      </fieldset>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">4</span>
+      <span class="file">access_<wbr>review_<wbr>2026.csv</span>
+      <p class="snip"><span class="ln">adm-04 left 2026-06-30, last login 2026-08-02, keep</span><span class="ln">adm-06: MFA no, keep</span></p>
+      <label class="why"><span>Why?</span><input type="text" name="why4" autocomplete="off"></label>
+      <fieldset class="mark"><legend class="sr">Card 4, access_review_2026.csv</legend>
+        <label class="opt tick trap"><input type="radio" name="card4" value="trap"><span><i class="box"></i>Trap</span></label>
+        <label class="opt tick clean"><input type="radio" name="card4" value="clean"><span><i class="box"></i>Clean</span></label>
+      </fieldset>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">5</span>
+      <span class="file">incident_<wbr>log_<wbr>2026.csv</span>
+      <p class="snip"><span class="ln">INC-03 detected 2026-05-04, customer told 2026-05-11</span><span class="ln">Contract: within 48 hours</span></p>
+      <label class="why"><span>Why?</span><input type="text" name="why5" autocomplete="off"></label>
+      <fieldset class="mark"><legend class="sr">Card 5, incident_log_2026.csv</legend>
+        <label class="opt tick trap"><input type="radio" name="card5" value="trap"><span><i class="box"></i>Trap</span></label>
+        <label class="opt tick clean"><input type="radio" name="card5" value="clean"><span><i class="box"></i>Clean</span></label>
+      </fieldset>
+    </li>
+    <li class="card">
+      <span class="num" aria-hidden="true">6</span>
+      <span class="file">backup_<wbr>restore_test_<wbr>2026.txt</span>
+      <p class="snip"><span class="ln">First restore attempt failed. Cause fixed, change CH-0412.</span><span class="ln">Second attempt: 3 h 10 min (target 4 h)</span></p>
+      <label class="why"><span>Why?</span><input type="text" name="why6" autocomplete="off"></label>
+      <fieldset class="mark"><legend class="sr">Card 6, backup_restore_test_2026.txt</legend>
+        <label class="opt tick trap"><input type="radio" name="card6" value="trap"><span><i class="box"></i>Trap</span></label>
+        <label class="opt tick clean"><input type="radio" name="card6" value="clean"><span><i class="box"></i>Clean</span></label>
+      </fieldset>
+    </li>
+  </ol>
+
+  <section class="slip" aria-labelledby="slip-h">
+    <div class="slip-head">
+      <h2 id="slip-h">Bet slip</h2>
+      <p class="slip-rule">Bet before Claude answers. No edits after.</p>
+      <p class="votekey" aria-label="How to vote"><b class="g">GREEN up = COVERED</b><b class="a">AMBER sideways = WEAK</b><b class="r">RED down = GAP</b></p>
+    </div>
+    <ol class="bets">
+      <li class="bet s1">
+        <div class="bet-q"><span class="day">Step 1 · Monday</span><strong>How many of the 8 come back COVERED?</strong><small>D1 systems · D2 processors · D3 AI tools · D4 security test · D5 training · D6 incidents · D7 admin accounts · D8 restore test</small></div>
+        <fieldset class="nums"><legend class="sr">Step 1: how many of the 8 items come back COVERED?</legend>
+          <label class="opt"><input type="radio" name="s1" value="0"><span>0</span></label>
+          <label class="opt"><input type="radio" name="s1" value="1"><span>1</span></label>
+          <label class="opt"><input type="radio" name="s1" value="2"><span>2</span></label>
+          <label class="opt"><input type="radio" name="s1" value="3"><span>3</span></label>
+          <label class="opt"><input type="radio" name="s1" value="4"><span>4</span></label>
+          <label class="opt"><input type="radio" name="s1" value="5"><span>5</span></label>
+          <label class="opt"><input type="radio" name="s1" value="6"><span>6</span></label>
+          <label class="opt"><input type="radio" name="s1" value="7"><span>7</span></label>
+          <label class="opt"><input type="radio" name="s1" value="8"><span>8</span></label>
+        </fieldset>
+      </li>
+      <li class="bet s2">
+        <div class="bet-q"><span class="day">Step 2 · Tuesday</span><strong>Are the 7 claims red, amber or green?</strong><small>RED = the files say no. AMBER = not fully proven. GREEN = a file proves every word.</small></div>
+        <div class="claims">
+          <fieldset class="claim"><legend><b>1</b>Patient data never leaves the EU</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c1" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c1" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c1" value="G"><span>G</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>2</b>ISO 27001 certified</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c2" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c2" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c2" value="G"><span>G</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>3</b>AI in an EU data centre</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c3" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c3" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c3" value="G"><span>G</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>4</b>No training on patient data</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c4" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c4" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c4" value="G"><span>G</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>5</b>All staff trained</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c5" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c5" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c5" value="G"><span>G</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>6</b>Every admin account has MFA</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c6" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c6" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c6" value="G"><span>G</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>7</b>Daily encrypted backups, tested twice a year</legend>
+            <span class="rags"><label class="opt rag r"><input type="radio" name="c7" value="R"><span>R</span></label><label class="opt rag a"><input type="radio" name="c7" value="A"><span>A</span></label><label class="opt rag g"><input type="radio" name="c7" value="G"><span>G</span></label></span>
+          </fieldset>
+        </div>
+      </li>
+      <li class="bet s2">
+        <div class="bet-q"><span class="day">Before you upload</span><strong>Where may each file go?</strong><small>Sort alone, then compare with a neighbour. Ask Data, Place, Paper. GO = upload as it is (green). CLEAN = remove the personal data first (amber). OUT = no AI tool (red).</small></div>
+        <div class="claims sorts">
+          <fieldset class="claim"><legend><b>1</b>audit_<wbr>topics_<wbr>reference.md</legend>
+            <span class="rags"><label class="opt rag g"><input type="radio" name="l1" value="go"><span>GO</span></label><label class="opt rag a"><input type="radio" name="l1" value="clean"><span>CLEAN</span></label><label class="opt rag r"><input type="radio" name="l1" value="out"><span>OUT</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>2</b>data_<wbr>inventory.csv</legend>
+            <span class="rags"><label class="opt rag g"><input type="radio" name="l2" value="go"><span>GO</span></label><label class="opt rag a"><input type="radio" name="l2" value="clean"><span>CLEAN</span></label><label class="opt rag r"><input type="radio" name="l2" value="out"><span>OUT</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>3</b>training_<wbr>records_<wbr>2026.csv (real HR export)</legend>
+            <span class="rags"><label class="opt rag g"><input type="radio" name="l3" value="go"><span>GO</span></label><label class="opt rag a"><input type="radio" name="l3" value="clean"><span>CLEAN</span></label><label class="opt rag r"><input type="radio" name="l3" value="out"><span>OUT</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>4</b>support_<wbr>tickets_<wbr>sample.csv</legend>
+            <span class="rags"><label class="opt rag g"><input type="radio" name="l4" value="go"><span>GO</span></label><label class="opt rag a"><input type="radio" name="l4" value="clean"><span>CLEAN</span></label><label class="opt rag r"><input type="radio" name="l4" value="out"><span>OUT</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>5</b>a patient's lab-result PDF</legend>
+            <span class="rags"><label class="opt rag g"><input type="radio" name="l5" value="go"><span>GO</span></label><label class="opt rag a"><input type="radio" name="l5" value="clean"><span>CLEAN</span></label><label class="opt rag r"><input type="radio" name="l5" value="out"><span>OUT</span></label></span>
+          </fieldset>
+          <fieldset class="claim"><legend><b>6</b>a cloud console screenshot</legend>
+            <span class="rags"><label class="opt rag g"><input type="radio" name="l6" value="go"><span>GO</span></label><label class="opt rag a"><input type="radio" name="l6" value="clean"><span>CLEAN</span></label><label class="opt rag r"><input type="radio" name="l6" value="out"><span>OUT</span></label></span>
+          </fieldset>
+        </div>
+      </li>
+      <li class="bet">
+        <div class="bet-q"><span class="day">Step 3 · Wednesday</span><strong>Where will the thread break?</strong><small>Patient P-48213 asked for erasure. Mark one place. 2 points for 4, 5 or 6 (no proof), 1 for 1, 2 or 3 (weak).</small></div>
+        <fieldset class="pick"><legend class="sr">Step 3: where will the thread break?</legend>
+          <label class="opt"><input type="radio" name="s3" value="1"><span><i class="box"></i>1 Database</span></label>
+          <label class="opt"><input type="radio" name="s3" value="2"><span><i class="box"></i>2 Lab PDFs</span></label>
+          <label class="opt"><input type="radio" name="s3" value="3"><span><i class="box"></i>3 Helpdesk</span></label>
+          <label class="opt"><input type="radio" name="s3" value="4"><span><i class="box"></i>4 Exports bucket</span></label>
+          <label class="opt"><input type="radio" name="s3" value="5"><span><i class="box"></i>5 Claude workspace</span></label>
+          <label class="opt"><input type="radio" name="s3" value="6"><span><i class="box"></i>6 Triage model log</span></label>
+          <label class="opt"><input type="radio" name="s3" value="7"><span><i class="box"></i>7 Backups</span></label>
+        </fieldset>
+      </li>
+      <li class="bet">
+        <div class="bet-q"><span class="day">Step 4 · Thursday</span><strong>How many of the 12 are COVERED?</strong><small>Also guess Claude's time for the passport table. 8 means 8 or more.</small></div>
+        <div class="two">
+        <fieldset class="nums"><legend class="sr">Step 4, 1 point: how many of the 12 topics come back COVERED?</legend>
+          <label class="opt"><input type="radio" name="s4" value="0"><span>0</span></label>
+          <label class="opt"><input type="radio" name="s4" value="1"><span>1</span></label>
+          <label class="opt"><input type="radio" name="s4" value="2"><span>2</span></label>
+          <label class="opt"><input type="radio" name="s4" value="3"><span>3</span></label>
+          <label class="opt"><input type="radio" name="s4" value="4"><span>4</span></label>
+          <label class="opt"><input type="radio" name="s4" value="5"><span>5</span></label>
+          <label class="opt"><input type="radio" name="s4" value="6"><span>6</span></label>
+          <label class="opt"><input type="radio" name="s4" value="7"><span>7</span></label>
+          <label class="opt"><input type="radio" name="s4" value="8"><span>8</span></label>
+        </fieldset>
+        <fieldset class="pick three"><legend class="sr">Step 4, 2 points: how long will Claude need for the passport table?</legend>
+          <label class="opt"><input type="radio" name="s4t" value="u2"><span><i class="box"></i>&lt;&#8202;2 min</span></label>
+          <label class="opt"><input type="radio" name="s4t" value="2to4"><span><i class="box"></i>2 to 4 min</span></label>
+          <label class="opt"><input type="radio" name="s4t" value="o4"><span><i class="box"></i>&gt;&#8202;4 min</span></label>
+        </fieldset>
+        </div>
+      </li>
+      <li class="bet">
+        <div class="bet-q"><span class="day">Step 5 · Friday</span><strong>Will the invoice change a status?</strong><small>Thumb up = a status changes. Down = only a reason. 2 points.</small></div>
+        <fieldset class="pick three"><legend class="sr">Step 5: does the invoice change a status, or only a reason?</legend>
+          <label class="opt"><input type="radio" name="s5" value="status"><span><i class="box"></i>a status</span></label>
+          <label class="opt"><input type="radio" name="s5" value="reason"><span><i class="box"></i>a reason</span></label>
+          <label class="opt"><input type="radio" name="s5" value="none"><span><i class="box"></i>nothing</span></label>
+        </fieldset>
+      </li>
+    </ol>
+  </section>
+
+  <section class="score" aria-labelledby="score-h">
+    <h2 id="score-h">Your score</h2>
+    <ul class="score-grid">
+      <li><label for="p0"><span class="sl">Spot the trap</span><span class="sh">2 per trap, +1 clean, −1 false alarm</span></label><input id="p0" class="pts" name="p0" type="text" inputmode="text" autocomplete="off"></li>
+      <li><label for="p1"><span class="sl">Step 1</span><span class="sh">exact: 2, off by 1: 1</span></label><input id="p1" class="pts" name="p1" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li><label for="p2"><span class="sl">Step 2</span><span class="sh">1 per right colour</span></label><input id="p2" class="pts" name="p2" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li><label for="p3"><span class="sl">Sort</span><span class="sh">1 per right lane</span></label><input id="p3" class="pts" name="p3" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li><label for="p4"><span class="sl">Step 3</span><span class="sh">gap place: 2 · weak: 1</span></label><input id="p4" class="pts" name="p4" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li><label for="p5"><span class="sl">Step 4</span><span class="sh">topics: 1 · time: 2</span></label><input id="p5" class="pts" name="p5" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li><label for="p6"><span class="sl">Step 5</span><span class="sh">right: 2</span></label><input id="p6" class="pts" name="p6" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li><label for="p7"><span class="sl">Exit ticket</span><span class="sh">1 per right card</span></label><input id="p7" class="pts" name="p7" type="text" inputmode="numeric" autocomplete="off"></li>
+      <li class="tot"><span><span class="sl">Total</span><span class="sh">highest score wins</span></span><output id="total" aria-live="polite" aria-label="Total"></output></li>
+    </ul>
+  </section>
+ </div>
+  <footer class="foot">
+    <span>Fictional training data. Every company, person and document is invented.</span>
+    <span>Keep this sheet. Page 2 is for your own company.</span>
+  </footer>
+</section>
+
+<!-- ═════════════════ PAGE 2 · YOUR MONDAY ═════════════════ -->
+<section class="page p2" aria-labelledby="p2-title">
+ <div class="page-body">
+  <header>
+    <p class="kicker">Take it home</p>
+    <h1 id="p2-title">Your Monday folder</h1>
+    <p class="motto">Collect your evidence once, then use it for every audit.</p>
+  </header>
+
+  <div class="p2-grid">
+    <section class="folder" aria-labelledby="folder-h">
+      <span class="folder-tab" aria-hidden="true">Monday</span>
+      <div class="folder-head">
+        <h2 id="folder-h">The folder checklist</h2>
+        <p class="hint">Tick what you can find in 10 minutes. Circle the 3 you will collect first.</p>
+      </div>
+      <ul class="check">
+        <li><label class="opt"><input type="checkbox" name="f0"><span><i class="box"></i><span><b>Company profile:</b> what you do, which systems hold which data</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f1"><span><i class="box"></i><span><b>Data inventory:</b> system, data, owner, country, review date</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f2"><span><i class="box"></i><span><b>Supplier list</b> with the signed contract date and transfer mechanism</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f3"><span><i class="box"></i><span><b>Policies,</b> each with owner, approval date and next review</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f4"><span><i class="box"></i><span><b>Every AI tool:</b> model, version, licence, who runs it, country, logs <em>(five facts)</em></span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f5"><span><i class="box"></i><span><b>Which data class</b> may go into which AI tool <em>(Data, Place, Paper)</em></span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f6"><span><i class="box"></i><span><b>Training records</b> by employee ID, not by name</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f7"><span><i class="box"></i><span><b>Last security test:</b> date, scope, open findings</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f8"><span><i class="box"></i><span><b>Last access review:</b> leavers removed, MFA on admin accounts</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f9"><span><i class="box"></i><span><b>Incident log:</b> detection date, date the customer was told, cause, fix</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f10"><span><i class="box"></i><span><b>Last backup restore test,</b> with its result</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f11"><span><i class="box"></i><span><b>Deletion procedure:</b> every place with personal data, AI tools and logs included</span></span></label></li>
+        <li><label class="opt"><input type="checkbox" name="f12"><span><i class="box"></i><span><b>A DPIA</b> for any AI tool that handles health or other sensitive data</span></span></label></li>
+      </ul>
+      <p class="privacy"><b>Personal data: IDs only, no names.</b> Never upload real patient or employee files. Before you upload company files, switch off model training in Settings &gt; Privacy, and ask your manager first.</p>
+    </section>
+
+    <section class="panel rules" aria-labelledby="rules-h">
+      <h2 id="rules-h">The 3 rules</h2>
+      <ol>
+        <li><span class="n">1</span><span><b>Only our files.</b> Never invent a fact, a date or a number.</span></li>
+        <li><span class="n">2</span><span><b>Cite the file and the row</b> (or the quoted words) for every fact. Never cite line numbers. Do every count and date calculation in code.</span></li>
+        <li><span class="n">3</span><span><b>Give every answer a status</b> (below) and name the document that would close each gap.<span class="people">The full wording is rule 3 in project-instructions.md in the kit.</span></span></li>
+      </ol>
+    </section>
+
+    <section class="panel stat" aria-labelledby="stat-h">
+      <h2 id="stat-h">What the status means</h2>
+      <ul>
+        <li><span class="pill ok">COVERED</span><span>A current file answers the request in full, even when the answer is bad news; then add an action.</span></li>
+        <li><span class="pill chk">WEAK</span><span>A file answers, but it is old, has an empty or “not recorded” cell, or disagrees with another file; say which.</span></li>
+        <li><span class="pill nf">GAP</span><span>No file answers it, or the file only says “pending”, “none” or “not done”; name the document that would close it.</span></li>
+      </ul>
+      <p class="weak">Several parts: the part that is missing or old sets the status; name it. A named owner or approver counts as signed.</p>
+    </section>
+
+    <section class="green" aria-label="Data, Place, Paper">
+      <p class="claimkey"><b>Before every upload, ask three things.</b> <b>Data:</b> what is in the file? <b>Place:</b> which country, who runs the machine, what do the logs keep, who can log in? <b>Paper:</b> which contract and which company rule allow it? Open weights is not a location: write down the model, version, licence, host, country, logs and access of every AI tool. Claims: <b class="g">GREEN</b> = a file proves every word · <b class="a">AMBER</b> = not fully proven · <b class="r">RED</b> = the files say no.</p>
+    </section>
+
+    <section class="prompt" aria-labelledby="prompt-h">
+      <div class="prompt-head">
+        <h2 id="prompt-h">Your prompt for the next audit request</h2>
+        <button type="button" class="copy noprint" data-copy="tpl">Copy</button>
+      </div>
+      <p class="setup"><b>Once:</b> make a new Project in Claude, paste the kit's project instructions with today's date, the audit date and your company name, and add your cleaned folder. <b>Then:</b> start a new chat inside the Project, attach the request, replace the part in brackets and send:</p>
+      <pre id="tpl">Answer the audit request from <mark>[customer or auditor name]</mark> in the attached file.
+Return one table with exactly one row per item: # | Request | Answer | Source | Status (COVERED, WEAK or GAP).
+Count in code before you give any share or total.
+Then list every GAP and WEAK with the document that would close it.</pre>
+      <p class="lang"><b>Your files can be in Macedonian.</b> Then add this to the prompt: “Answer in English. Keep file names and quotes in the original.”</p>
+    </section>
+
+    <section class="plan" aria-labelledby="plan-h">
+      <h2 id="plan-h">My plan</h2>
+      <p><label for="plan-when">Next customer or auditor to ask us:</label> <input id="plan-when" name="plan" type="text" autocomplete="off" placeholder="name the customer or auditor"> <span>We'll answer it from our one folder.</span></p>
+    </section>
+
+    <div class="endrow">
+      <section class="sign" aria-labelledby="sign-h">
+        <h2 id="sign-h" class="big">Check and sign every answer</h2>
+        <p>Claude prepares the answers. A person checks them and decides. Neither Claude nor this kit certifies anything.</p>
+        <div class="sigline" aria-hidden="true"><span>Checked and signed</span><span>Date</span></div>
+      </section>
+      <section class="kit" aria-labelledby="kit-h">
+        <div>
+          <h2 id="kit-h" class="lbl">Download the kit:</h2>
+          <a href="https://loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit"><span class="nw">https://loehrning.ai/</span><wbr><span class="nw">en/workshops/</span><wbr><span class="nw">audit-vorbereitung-mit-ki/kit</span></a>
+          <p>Do the same case alone: the trap hunt, Data, Place, Paper and five steps, about 2 hours the first time. You can stop after any step. Any Claude plan works, Free too. Open the answer key only after each step.</p>
+        </div>
+        <figure class="qr" aria-label="QR code for the kit link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges" role="img" aria-label="QR code: https://loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit"><rect width="41" height="41" fill="#fff"/><path stroke="#1a1a1a" d="M2 2.5h7m1 0h1m1 0h2m1 0h2m4 0h5m2 0h1m3 0h7m-37 1h1m5 0h1m2 0h1m1 0h1m2 0h5m1 0h4m1 0h2m1 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m1 0h6m1 0h3m3 0h2m1 0h1m1 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m1 0h4m2 0h2m2 0h7m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h1m1 0h3m3 0h1m3 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h1m1 0h5m1 0h3m1 0h1m3 0h1m3 0h1m1 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-25 1h1m3 0h2m1 0h1m2 0h3m1 0h1m-27 1h1m1 0h1m3 0h2m1 0h1m4 0h1m2 0h1m1 0h4m3 0h1m1 0h1m2 0h1m2 0h1m1 0h1m-36 1h2m5 0h5m1 0h1m5 0h3m4 0h2m1 0h2m1 0h1m1 0h2m-37 1h1m2 0h5m2 0h3m2 0h1m1 0h2m1 0h1m2 0h1m3 0h1m3 0h1m2 0h1m1 0h1m-37 1h2m1 0h1m1 0h1m2 0h2m1 0h1m6 0h3m1 0h1m3 0h1m1 0h1m2 0h3m-31 1h4m2 0h1m1 0h1m1 0h1m1 0h2m6 0h2m1 0h1m1 0h1m1 0h2m4 0h1m-37 1h3m4 0h4m2 0h4m1 0h6m1 0h1m1 0h2m1 0h2m1 0h1m2 0h1m-35 1h1m1 0h4m3 0h1m1 0h8m2 0h2m2 0h2m1 0h1m2 0h2m1 0h1m-37 1h1m1 0h3m2 0h2m1 0h2m3 0h2m1 0h1m2 0h1m1 0h2m1 0h8m2 0h1m-37 1h4m2 0h1m1 0h1m1 0h1m2 0h7m1 0h1m2 0h1m3 0h4m3 0h2m-37 1h2m2 0h1m2 0h1m1 0h1m2 0h3m1 0h1m1 0h1m5 0h2m1 0h1m2 0h2m3 0h2m-37 1h2m2 0h4m5 0h2m1 0h2m1 0h1m2 0h1m1 0h1m2 0h2m3 0h2m2 0h1m-37 1h1m4 0h1m1 0h1m3 0h2m1 0h3m1 0h1m4 0h2m3 0h4m1 0h1m-31 1h1m2 0h3m1 0h1m1 0h2m5 0h1m4 0h1m2 0h2m1 0h2m1 0h1m1 0h1m-36 1h1m1 0h1m1 0h2m3 0h1m3 0h1m1 0h3m1 0h2m2 0h3m1 0h2m1 0h1m5 0h1m-37 1h1m2 0h1m2 0h2m3 0h1m1 0h3m3 0h1m1 0h3m2 0h3m4 0h2m1 0h1m-36 1h2m1 0h1m3 0h1m4 0h2m1 0h2m1 0h2m1 0h1m1 0h1m1 0h2m1 0h1m1 0h3m2 0h1m-37 1h4m1 0h6m1 0h2m3 0h1m2 0h5m2 0h1m2 0h1m4 0h2m-33 1h2m2 0h1m1 0h1m3 0h1m5 0h3m4 0h2m1 0h2m1 0h1m2 0h1m-37 1h7m1 0h4m2 0h2m1 0h1m2 0h1m1 0h6m2 0h3m1 0h1m1 0h1m-35 1h2m3 0h1m1 0h1m2 0h2m5 0h2m1 0h1m3 0h1m2 0h1m1 0h1m1 0h1m1 0h2m-37 1h2m3 0h4m1 0h4m1 0h2m3 0h1m2 0h2m3 0h6m-26 1h1m3 0h1m2 0h1m3 0h7m1 0h2m3 0h1m2 0h2m-37 1h7m1 0h2m1 0h3m1 0h6m2 0h1m1 0h2m1 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m2 0h2m5 0h1m1 0h1m2 0h1m1 0h2m1 0h3m3 0h1m2 0h2m-37 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h5m2 0h1m2 0h1m2 0h6m-33 1h1m1 0h3m1 0h1m6 0h2m1 0h3m6 0h2m2 0h1m2 0h1m1 0h3m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h1m5 0h4m2 0h6m1 0h1m1 0h2m1 0h3m-37 1h1m5 0h1m2 0h1m2 0h1m1 0h3m1 0h1m3 0h1m1 0h1m1 0h1m1 0h3m1 0h2m-34 1h7m1 0h3m3 0h1m4 0h2m2 0h2m1 0h1m1 0h1m1 0h2m4 0h1"/></svg>
+        </figure>
+      </section>
+    </div>
+  </div>
+
+  <div class="tools noprint">
+    <button type="button" data-act="print">Print (2 pages)</button>
+    <button type="button" data-act="clear">Clear my answers</button>
+    <span class="saved" id="saved">Your answers stay on this device only.</span>
+  </div>
+ </div>
+  <footer class="foot">
+    <span>Audit Preparation with AI · Workshop 05 · North Macedonia · November 2026</span>
+    <span>Tim Löhr · loehrning.ai</span>
+  </footer>
+</section>
+</main>
+
+<nav class="vote noprint" aria-label="Vote card">
+  <span class="vote-l">Vote card: tap to hold up</span>
+  <button type="button" class="vr" data-vote="r">RED</button>
+  <button type="button" class="va" data-vote="a">AMBER</button>
+  <button type="button" class="vg" data-vote="g">GREEN</button>
+</nav>
+<div class="votecard noprint" id="votecard" role="dialog" aria-modal="true" aria-label="Vote card" tabindex="-1">
+  <div><p class="c1" id="vc1"></p><p class="c2" id="vc2"></p><p class="c3">Tap anywhere to close</p></div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const KEY = 'audit-game-sheet-v1';
+  const sheet = document.getElementById('sheet');
+  const fields = () => Array.from(sheet.querySelectorAll('input[name]'));
+  const savedNote = document.getElementById('saved');
+
+  // per-viewer convenience only: the sheet works the same without storage
+  function read() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; }
+  }
+  function write(data) {
+    try { localStorage.setItem(KEY, JSON.stringify(data)); return true; } catch (e) { return false; }
+  }
+  function collect() {
+    const data = {};
+    fields().forEach((el) => {
+      if (el.type === 'radio') { if (el.checked) data[el.name] = el.value; }
+      else if (el.type === 'checkbox') { if (el.checked) data[el.name] = 1; }
+      else if (el.value.trim() !== '') data[el.name] = el.value;
+    });
+    return data;
+  }
+  function restore() {
+    const data = read();
+    fields().forEach((el) => {
+      if (!(el.name in data)) return;
+      if (el.type === 'radio') el.checked = data[el.name] === el.value;
+      else if (el.type === 'checkbox') el.checked = !!data[el.name];
+      else el.value = String(data[el.name]);
+    });
+  }
+
+  const total = document.getElementById('total');
+  function sum() {
+    let any = false, s = 0;
+    sheet.querySelectorAll('input.pts').forEach((el) => {
+      const raw = el.value.trim().replace(/−/g, '-').replace(',', '.');
+      if (raw === '') return;
+      const v = parseFloat(raw);
+      if (!isNaN(v)) { any = true; s += v; }
+    });
+    total.textContent = any ? String(Math.round(s * 10) / 10) : '';
+  }
+
+  restore();
+  sum();
+  const onEdit = () => {
+    const ok = write(collect());
+    if (savedNote && !ok) savedNote.textContent = 'This browser cannot save. Keep the page open.';
+    sum();
+  };
+  sheet.addEventListener('input', onEdit);
+  sheet.addEventListener('change', onEdit);
+
+  // tools
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.act === 'print') window.print();
+    if (b.dataset.act === 'clear') {
+      if (!window.confirm('Clear all your answers on this sheet?')) return;
+      fields().forEach((el) => { if (el.type === 'radio' || el.type === 'checkbox') el.checked = false; else el.value = ''; });
+      try { localStorage.removeItem(KEY); } catch (err) { /* nothing stored */ }
+      sum();
+    }
+    if (b.dataset.copy) {
+      const src = document.getElementById(b.dataset.copy);
+      const text = src ? src.textContent : '';
+      const done = () => { const t = b.textContent; b.textContent = 'Copied'; setTimeout(() => { b.textContent = t; }, 1600); };
+      const fallback = () => {
+        const range = document.createRange(); range.selectNodeContents(src);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+        b.textContent = 'Selected: copy it';
+        setTimeout(() => { b.textContent = 'Copy'; }, 2400);
+      };
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback);
+      else fallback();
+    }
+  });
+
+  // vote card: a full-screen colour to hold up
+  const card = document.getElementById('votecard');
+  const VOTES = {
+    r: ['RED', 'GAP', '#b3261e'],
+    a: ['AMBER', 'WEAK', '#c77c00'],
+    g: ['GREEN', 'COVERED', '#1b7448']
+  };
+  let opener = null;
+  function openVote(k, btn) {
+    const v = VOTES[k]; if (!v) return;
+    document.getElementById('vc1').textContent = v[0];
+    document.getElementById('vc2').textContent = v[1];
+    card.style.background = v[2];
+    card.classList.add('on');
+    opener = btn; card.focus();
+  }
+  function closeVote() { card.classList.remove('on'); if (opener) opener.focus(); }
+  document.querySelectorAll('[data-vote]').forEach((btn) => btn.addEventListener('click', () => openVote(btn.dataset.vote, btn)));
+  card.addEventListener('click', closeVote);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && card.classList.contains('on')) closeVote(); });
+})();
+</script>
+</body>
+</html>

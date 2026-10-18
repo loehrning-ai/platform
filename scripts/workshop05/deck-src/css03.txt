@@ -1,0 +1,60 @@
+<style data-slide="03">
+[data-n="03"] .hp-photo { position: absolute; left: 0; top: 0; bottom: 0; width: 760px; margin: 0; overflow: hidden; background: var(--card); }
+[data-n="03"] .hp-img { position: absolute; inset: 0; --delay: 100ms; transition-duration: 800ms; }
+/* cropped 56px on the left: the bridge's orange pillar would compete with the Mennige accents */
+[data-n="03"] .hp-img img { display: block; width: calc(100% + 56px); margin-left: -56px; height: 100%; object-fit: cover; object-position: 50% 35%;
+  transform: scale(1.08); transition: transform 900ms var(--ease-out) 100ms; }
+[data-n="03"][data-deck-active] .hp-img img { transform: none; }
+[data-n="03"] .hp-scan { position: absolute; left: 0; right: 0; top: 0; height: 12px; background: var(--mennige);
+  transform: translateY(1080px); opacity: 1; transition: transform 800ms var(--ease-io) 100ms, opacity 250ms var(--ease-out) 600ms; }
+[data-n="03"][data-deck-active] .hp-scan { transform: translateY(-12px); opacity: 0; }
+
+[data-n="03"] .chrome__topbar, [data-n="03"] .chrome__topline, [data-n="03"] .chrome__footer { left: 856px; }
+
+[data-n="03"] .rail { display: none; }
+[data-n="03"] .hp-body { position: absolute; left: 856px; right: var(--mx); top: 96px; bottom: 96px; z-index: 2;
+  display: flex; flex-direction: column; justify-content: center; }
+[data-n="03"] .hp-name { margin: 26px 0 0; font-size: 150px; line-height: .92; letter-spacing: -.044em; font-weight: 600; }
+[data-n="03"] .hp-line { margin-top: 40px; max-width: 900px; color: var(--grey-3); }
+[data-n="03"] .hp-msc { margin: 34px 0 0; display: flex; align-items: baseline; gap: 22px; font-size: 30px; line-height: 1.3; }
+[data-n="03"] .hp-msc b { font-weight: 700; letter-spacing: -.01em; }
+[data-n="03"] .hp-msc span { font-family: var(--mono); font-size: 24px; color: var(--grey-3); }
+
+[data-n="03"] .hp-career { position: relative; margin-top: 96px; height: 214px; }
+[data-n="03"] .hp-track { position: absolute; left: 0; width: 748px; top: 13px; height: 2px; border-radius: 999px; background: var(--line-strong); display: block; }
+[data-n="03"] .hp-fill { position: absolute; left: 0; width: 748px; top: 11px; height: 6px; border-radius: 999px; background: var(--ink-soft); display: block;
+  transform: scaleX(0); transform-origin: 0 50%; transition: transform 700ms var(--ease-io); }
+[data-n="03"] .hp-node { position: absolute; left: var(--x); top: 0; width: 240px; }
+/* hollow stops wait on the grey track; each fills when the line reaches it */
+[data-n="03"] .hp-dot { display: block; width: 28px; height: 28px; border-radius: 999px; background: var(--paper); border: 2px solid var(--grey-2);
+  transition: transform 420ms var(--ease-back), background 200ms var(--ease-out), border-color 200ms var(--ease-out);
+  transition-delay: var(--d); transform: scale(.72); }
+[data-n="03"] .hp-lab { margin-top: 26px; position: relative; }
+/* the four names wait in grey from arrival (no empty stops); each inks when the line reaches it */
+[data-n="03"] .hp-lab b { display: block; font-size: 44px; line-height: 1; letter-spacing: -.028em; font-weight: 600; color: var(--grey-2);
+  transition: color 300ms var(--ease-out) var(--d); }
+[data-n="03"] .hp-lab span { display: block; margin-top: 14px; font-family: var(--mono); font-size: 24px; color: var(--grey-3); white-space: nowrap;
+  opacity: 0; transform: translateY(12px); transition: opacity 400ms var(--ease-out) calc(var(--d) + 40ms), transform 400ms var(--ease-out) calc(var(--d) + 40ms); }
+[data-n="03"] .hp-lab span.on { opacity: 1; transform: none; }
+[data-n="03"]:not([data-step="0"]) .hp-n1 .hp-lab b, [data-n="03"]:not([data-step="0"]) .hp-n2 .hp-lab b,
+[data-n="03"][data-step="2"] .hp-n3 .hp-lab b { color: var(--ink); }
+[data-n="03"][data-step="2"] .hp-own .hp-lab b { color: var(--mennige); }
+/* the NOW bracket sits under loehrning.ai only: true whether or not the Meta role is current */
+[data-n="03"] .hp-now { position: absolute; left: 720px; top: 158px; width: 220px; height: 16px; --delay: 600ms;
+  border: 2px solid var(--mennige); border-top: 0; border-radius: 0 0 10px 10px; }
+[data-n="03"] .hp-now span { position: absolute; left: 0; top: 28px; font-family: var(--mono); font-size: 24px; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--mennige); line-height: 1; }
+
+/* step 1: the line reaches Red Bull; step 2: it runs to loehrning.ai */
+[data-n="03"][data-step="1"] .hp-fill { transform: scaleX(.34); }
+[data-n="03"][data-step="2"] .hp-fill { transform: scaleX(1); }
+[data-n="03"]:not([data-step="0"]) .hp-n1 .hp-dot, [data-n="03"]:not([data-step="0"]) .hp-n2 .hp-dot,
+[data-n="03"][data-step="2"] .hp-n3 .hp-dot { background: var(--ink-soft); border-color: var(--ink-soft); }
+[data-n="03"][data-step="2"] .hp-own .hp-dot { background: var(--mennige); border-color: var(--mennige); }
+[data-n="03"]:not([data-step="0"]) .hp-n1 .hp-dot, [data-n="03"]:not([data-step="0"]) .hp-n2 .hp-dot,
+[data-n="03"][data-step="2"] .hp-n3 .hp-dot, [data-n="03"][data-step="2"] .hp-own .hp-dot { transform: none; }
+/* the three words of the fill line are marked as the career line passes: dated and signed at the first press, in one place at the second */
+[data-n="03"] .hp-k { background: linear-gradient(var(--mennige), var(--mennige)) 0 100% / 0 6px no-repeat; padding-bottom: 2px;
+  transition: background-size 420ms var(--ease-out) var(--kd, 0ms), color 300ms var(--ease-out) var(--kd, 0ms); }
+[data-n="03"]:not([data-step="0"]) .hp-ka, [data-n="03"]:not([data-step="0"]) .hp-kb, [data-n="03"][data-step="2"] .hp-kc { background-size: 100% 6px; color: var(--ink); }
+</style>

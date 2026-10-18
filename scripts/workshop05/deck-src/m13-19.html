@@ -1,0 +1,367 @@
+<!-- 13 · step 3: trace one record -->
+<section class="slide hs" data-n="13" data-label="Step 3 · Trace" data-thread="3" data-steps="4" data-step="0"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="hs-day rise auto" style="--delay:80ms"><b>Step 3 · Wednesday</b><span>The auditor picks one erasure request and follows it</span></p>
+  <p class="clock hs-clock rise auto" style="--delay:200ms"><i class="live-dot"></i>session <b data-clock>0:00</b></p>
+  <h2 class="t-h2 hs-title"><span class="lift auto" style="--delay:160ms"><span>The erasure request</span></span></h2>
+
+  <p class="hs-attach rise auto" style="--delay:420ms">new chat · attach <b>inbox/3-erasure-request.md</b></p>
+  <div class="hs-cardwrap">
+    <div class="prompt-card hs-card small wipe auto" style="--delay:520ms">
+      <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 3</span><button class="pc-copy" type="button">Copy</button></div>
+      <p class="prompt pc-body">Trace patient P-48213 through our files for the attached erasure request.
+Start with Yes or No, then one sentence why: was the confirmation of 21 September true?
+Then one table, at most 10 rows, only places that hold or could hold P-48213's data (from the inventory, supplier list and retention policy): Place | What data | Country or region as written | Proof of deletion | Source | Status (COVERED, WEAK or GAP). Mark the surest place.
+Status answers: do our files prove this place was cleaned? A policy names the place but no deletion record: WEAK. No policy and no record: GAP, "not recorded". Write "could hold" unless a file row shows it holds data.
+Calculate in code: the days from the request to the confirmation, and the date the last backup copy expires (deletion date + 35 days; assume production was deleted on 21 September).</p>
+    </div>
+  </div>
+
+  <div class="hs-live">
+    <svg class="hs-frame" viewBox="0 0 678 640" preserveAspectRatio="none" aria-hidden="true"><rect class="draw auto" style="--delay:250ms" x="1.5" y="1.5" width="675" height="637" rx="20" pathLength="1"/></svg>
+    <p class="t-label hs-live-l rise auto" style="--delay:400ms"><i class="live-dot"></i>The request</p>
+    <div class="hs-big rise auto" style="--delay:300ms;top:84px">
+      <p class="hs-watch-s" style="margin:0">2 September: the clinic asks.<br>21 September: “All data of patient P-48213 has been deleted.”</p>
+    </div>
+    <div class="hs-watch rise auto" style="--delay:550ms">
+      <p class="t-label k">Before Claude answers</p>
+      <p class="hs-watch-t">Your bet: where will the thread break? Mark one place on your sheet.</p>
+      <ul class="pl"><li><b>1</b>Database</li><li><b>2</b>Lab PDFs</li><li><b>3</b>Helpdesk</li><li><b>4</b>Exports bucket</li><li><b>5</b>Claude workspace</li><li><b>6</b>Triage model log</li><li><b>7</b>Backups</li></ul>
+    </div>
+  </div>
+
+  <div class="res">
+    <ul class="tb" data-stagger>
+      <li class="tr" data-at="1"><span>Production database<small>europe-west3 · Frankfurt, Germany</small></span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><span>Lab-PDF bucket<small>europe-west3 · Frankfurt, Germany</small></span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><span>Helpdesk, ticket T-2286<small>vendor · EU</small></span><em class="st chk">WEAK</em></li>
+      <li class="tr" data-at="1"><span>Support exports bucket<small>us-central1 · USA · bucket = cloud folder</small></span><em class="st nf">GAP</em></li>
+      <li class="tr" data-at="1"><span>Claude workspace<small>region not recorded</small></span><em class="st nf">GAP</em></li>
+      <li class="tr" data-at="1"><span>Triage model log<small>“EU” claimed, not proven</small></span><em class="st nf">GAP</em></li>
+      <li class="tr" data-at="1"><span>Backups, 35 days<small>europe-west3 · Frankfurt, Germany</small></span><em class="st chk">WEAK</em></li>
+    </ul>
+
+    <div class="pn" data-at="1" data-to="1">
+      <p class="t-label">Answer key · seven places</p>
+      <div class="tally">
+        <div class="tl"><b class="t-num tl-n" data-count="0">0</b><span class="st ok">covered</span></div>
+        <div class="tl"><b class="t-num tl-n" data-count="4">0</b><span class="st chk">weak</span></div>
+        <div class="tl"><b class="t-num tl-n" data-count="3">0</b><span class="st nf">gap</span></div>
+      </div>
+      <p class="pn-note">Most rooms name the database and the exports bucket. Few name the AI tools.</p>
+      <p class="t-src pn-src">kit: ANSWERS.md, Step 3</p>
+    </div>
+
+    <div class="pn" data-at="2" data-to="2">
+      <p class="t-label">Where P-48213 could still be · the policy lists three places and adds backups</p>
+      <div class="map">
+        <div class="map-c"><b>P-48213</b><span>2026-09-02</span></div>
+        <svg class="map-svg" viewBox="0 0 968 400" aria-hidden="true"><path class="draw ok" pathLength="1" style="--i:0" d="M190 200 C 310 200, 310 24, 440 24"/><path class="draw ok" pathLength="1" style="--i:1" d="M150 200 C 330 200, 330 82, 440 82"/><path class="draw ok" pathLength="1" style="--i:2" d="M150 200 C 330 200, 330 140, 440 140"/><path class="draw gap" pathLength="1" style="--i:3" d="M150 200 C 330 200, 330 198, 440 198"/><path class="draw gap" pathLength="1" style="--i:4" d="M150 200 C 330 200, 330 256, 440 256"/><path class="draw gap" pathLength="1" style="--i:5" d="M150 200 C 330 200, 330 314, 440 314"/><path class="draw ok" pathLength="1" style="--i:6" d="M150 200 C 330 200, 330 372, 440 372"/></svg>
+        <ul class="mns" data-stagger><li class="mn ok" style="top:0px;--i:0"><span>Production database</span><em class="st chk">in policy</em></li><li class="mn ok" style="top:58px;--i:1"><span>Lab-PDF bucket</span><em class="st chk">in policy</em></li><li class="mn ok" style="top:116px;--i:2"><span>Helpdesk, T-2286</span><em class="st chk">in policy</em></li><li class="mn gap" style="top:174px;--i:3"><span>Exports bucket · USA</span><em class="st nf">no proof</em></li><li class="mn gap" style="top:232px;--i:4"><span>Claude workspace</span><em class="st nf">no proof</em></li><li class="mn gap" style="top:290px;--i:5"><span>Triage model log</span><em class="st nf">no proof</em></li><li class="mn ok" style="top:348px;--i:6"><span>Backups, 35 days</span><em class="st chk">in policy</em></li></ul>
+      </div>
+      <p class="pn-note"><b>An AI tool is a place where data lives.</b> It belongs in the inventory and in the deletion scope.</p>
+    </div>
+
+    <div class="pn" data-at="3" data-to="3">
+      <p class="t-label">In code</p>
+      <div class="calc">
+        <div><b>19 days</b><span>from the request to the confirmation. The 30-day rule is met.</span></div>
+        <div><b>26 Oct</b><span>the latest day the last backup copy could have expired.</span></div>
+      </div>
+    </div>
+
+    <div class="pn" data-at="4">
+      <p class="t-label">One sentence</p>
+      <div class="verdict">
+        <p class="t-label">Was the confirmation of 21 September true?</p>
+        <p><span>No.</span> The deadline was met. The sentence “all data has been deleted” was not true.</p>
+      </div>
+      <p class="pn-note">Three places were never in the policy: the exports, the Claude workspace and the model's log.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · step 4: the passport -->
+<section class="slide hs" data-n="14" data-label="Step 4 · Passport" data-thread="4" data-steps="5" data-step="0"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="hs-day rise auto" style="--delay:80ms"><b>Step 4 · Thursday</b><span>One passport from all three requests</span></p>
+  <p class="clock hs-clock rise auto" style="--delay:200ms"><i class="live-dot"></i>session <b data-clock>0:00</b></p>
+  <h2 class="t-h2 hs-title"><span class="lift auto" style="--delay:160ms"><span>The Audit Readiness Passport</span></span></h2>
+
+  <p class="hs-attach rise auto" style="--delay:420ms">new chat · attach the three inbox files <b>1, 2 and 3</b> again</p>
+  <div class="hs-cardwrap wide">
+    <div class="prompt-card hs-card tight wipe auto" style="--delay:520ms">
+      <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 4</span><button class="pc-copy" type="button">Copy</button></div>
+      <p class="prompt pc-body">The three attached files are this week's requests.
+Build our Audit Readiness Passport as one table in the chat, one row per audit topic A1 to A12 from audit_topics_reference.md: # | Topic | What we have | Source | Status | Weak or missing part, and the document that would close it | Answers (IDs: D1 to D8, C1 to C7, E).
+After the table, count the statuses in code.</p>
+    </div>
+  </div>
+  <div class="bet">
+    <div><p class="t-label k">Bet 1</p><p>How many of the 12 topics come back COVERED?</p></div>
+    <div><p class="t-label k">Bet 2</p><p>Claude's time: under 3, 3 to 6 or over 6 minutes?</p></div>
+  </div>
+
+  <div class="res">
+    <div class="tiles" data-stagger>
+      <div class="tile w" data-at="1"><b>A1</b><span>Inventory</span><em class="st chk">weak</em></div>
+      <div class="tile w" data-at="1"><b>A2</b><span>PII handling</span><em class="st chk">weak</em></div>
+      <div class="tile g" data-at="1"><b>A3</b><span>Processors</span><em class="st nf">gap</em></div>
+      <div class="tile g" data-at="1"><b>A4</b><span>Data location</span><em class="st nf">gap</em></div>
+      <div class="tile" data-at="1"><b>A5</b><span>Access and MFA</span><em class="st ok">covered</em></div>
+      <div class="tile g" data-at="1"><b>A6</b><span>Logging</span><em class="st nf">gap</em></div>
+      <div class="tile w" data-at="1"><b>A7</b><span>Encryption</span><em class="st chk">weak</em></div>
+      <div class="tile" data-at="1"><b>A8</b><span>Backup</span><em class="st ok">covered</em></div>
+      <div class="tile w" data-at="1"><b>A9</b><span>Incidents</span><em class="st chk">weak</em></div>
+      <div class="tile g" data-at="1"><b>A10</b><span>Training</span><em class="st nf">gap</em></div>
+      <div class="tile w" data-at="1"><b>A11</b><span>Testing</span><em class="st chk">weak</em></div>
+      <div class="tile g" data-at="1"><b>A12</b><span>AI tools</span><em class="st nf">gap</em></div>
+    </div>
+
+    <div class="rp">
+      <div data-at="1" data-to="1" style="position:absolute;inset:0">
+        <p class="t-label">Answer key · twelve topics</p>
+        <div class="sum">
+          <div class="tl"><b class="t-num tl-n" data-count="2">0</b><span class="st ok">covered</span></div>
+          <div class="tl"><b class="t-num tl-n" data-count="5">0</b><span class="st chk">weak</span></div>
+          <div class="tl"><b class="t-num tl-n" data-count="5">0</b><span class="st nf">gap</span></div>
+        </div>
+        <p class="pn-note" style="font-size:30px">Each gap names its document. The weakest part decides, so a missing DPA, DPIA, mechanism or procedure makes the topic a GAP.</p>
+      </div>
+      <div data-at="2" data-to="2" style="position:absolute;inset:0">
+        <p class="t-label">Bonus chart: training share against the 95% rule</p>
+        <div class="bars">
+          <p class="bar-l">Security<span>83.9%</span></p>
+          <div class="trk"><i class="grow-x" style="--p:83.9"></i><b class="goal"></b></div>
+          <p class="bar-l">AI use<span>61.3%</span></p>
+          <div class="trk"><i class="grow-x" style="--p:61.3"></i><b class="goal"></b></div>
+                  </div>
+      </div>
+      <div data-at="3" data-to="3" style="position:absolute;inset:0">
+        <p class="t-label">The lights: seven claims (Step 2)</p>
+        <div class="lights">
+          <div><i></i><b>1</b></div><div><i></i><b>2</b></div><div><i class="a"></i><b>3</b></div><div><i class="a"></i><b>4</b></div><div><i></i><b>5</b></div><div><i></i><b>6</b></div><div><i class="a"></i><b>7</b></div>
+        </div>
+        <p class="pn-note" style="font-size:30px">4 red, 3 amber, 0 green. Claim 3 changes colour in Step 5.</p>
+      </div>
+      <div data-at="4" data-to="4" style="position:absolute;inset:0">
+        <p class="t-label">The closing list: documents that close the gaps</p>
+        <ul class="todo">
+          <li>Signed DPA with Nordgrid<em>A3</em></li>
+          <li>Logging procedure and review record<em>A6</em></li>
+          <li>Model record: name, version, licence<em>A12</em></li>
+          <li>DPIA (written risk check) for the triage model<em>A12</em></li>
+          <li>A 2026 pen test that covers the AI parts<em>A11</em></li>
+          <li>Signed confidentiality terms<em>A10</em></li>
+        </ul>
+      </div>
+      <div class="aud" data-at="5">
+        <p class="t-label">Volunteer · you are the Head of Operations</p>
+        <p>“Show me the contract with the company that runs your triage model.”<span>Answer from the files: name the gap, the owner and the date.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 · step 5: the invoice -->
+<section class="slide hs" data-n="15" data-label="Step 5 · Invoice" data-thread="5" data-steps="5" data-step="0" data-clock-stop
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="hs-day rise auto" style="--delay:80ms"><b>Step 5 · Friday</b><span>A phone photo nobody filed</span></p>
+  <p class="clock hs-clock rise auto" style="--delay:200ms"><i class="live-dot"></i>session <b data-clock>0:00</b></p>
+  <h2 class="t-h2 hs-title"><span class="lift auto" style="--delay:160ms"><span>The Nordgrid invoice</span></span></h2>
+
+  <figure class="inv rise auto" style="--delay:300ms">
+    <img src="./assets/proof/nordgrid-invoice.png" alt="A phone photo of an invoice from Nordgrid Cloud AB for the server llm-triage-01, data centre US-East (Ashburn, Virginia, USA), total EUR 414.00" />
+    <i class="hl1" data-at="1"></i><i class="hl2" data-at="1"></i>
+  </figure>
+
+  <p class="hs-attach rise auto" style="--delay:420ms;left:660px">same chat as Step 4 · attach <b>inbox/4-nordgrid-invoice.png</b></p>
+  <div class="hs-cardwrap">
+    <div class="prompt-card hs-card tight wipe auto" style="--delay:520ms">
+      <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 5</span><button class="pc-copy" type="button">Copy</button></div>
+      <p class="prompt pc-body">I attached an invoice from Nordgrid Cloud AB. Read it first. Cite the file name and the field label for each value; for the data centre use the data-centre field, not the company address.
+Then recheck every answer from this week that depends on where the triage model runs.
+Also say how many days the triage server has existed (from the creation date on the invoice to today, 13 November 2026), and what that means for the AI policy sentence that the model runs in our EU environment.
+Return a table with these rows only: D1 to D3, claims 1 and 3, the triage log in the erasure trace, A1, A4, A12: Where | Before (value and status) | Now (value and status) | Why.</p>
+    </div>
+  </div>
+  <div class="bet">
+    <p class="t-label k">Before Claude answers</p>
+    <p>Thumbs: will the invoice change the status of an answer, or only its reason?</p>
+  </div>
+
+  <div class="res">
+    <div class="rc">
+      <div data-at="1" data-to="1" style="position:absolute;inset:0">
+        <p class="t-label" style="margin:0 0 18px">Answer key · what the photo says</p>
+        <ul class="read">
+          <li><b>Supplier</b><span>Nordgrid Cloud AB</span></li>
+          <li><b>Server</b><span>llm-triage-01, EUR 389.00; total EUR 414.00</span></li>
+          <li><b>Data centre</b><span class="hot" data-type>US-East (Ashburn, Virginia, USA)</span></li>
+          <li><b>Created</b><span class="hot" data-type>2026-03-27</span></li>
+          <li><b>Contract</b><span>No separate data processing agreement</span></li>
+        </ul>
+      </div>
+      <div data-at="2" data-to="2" style="position:absolute;inset:0">
+        <p class="t-label" style="margin:0">In code: 27 March to 13 November</p>
+        <p class="days"><b class="t-num" data-odo="231">0</b><span>days the triage server<br>has existed</span></p>
+        <p class="strike"><q>The model runs in our EU environment, so the data does not leave the EU.</q><span class="t-src">ai_acceptable_use_policy.md</span></p>
+      </div>
+      <div data-at="3" data-to="4" style="position:absolute;inset:0">
+        <ul class="cmp" data-stagger>
+          <li class="hd"><span>Where</span><span>Before</span><span></span><span>Now</span></li>
+          <li><span>D1 Systems and countries</span><em class="st chk">weak</em><span class="arr">→</span><em class="st chk">weak</em></li>
+          <li><span>D2 Processors</span><em class="st nf">gap</em><span class="arr">→</span><em class="st nf">gap</em></li>
+          <li><span>D3 AI tools</span><em class="st chk">weak</em><span class="arr">→</span><em class="st chk">weak</em></li>
+          <li><span>Claim 1 · never leaves the EU</span><em class="st nf">red</em><span class="arr">→</span><em class="st nf">red</em></li>
+          <li class="chg"><span>Claim 3 · AI in an EU data centre</span><em class="st amber">amber</em><span class="arr">→</span><em class="st nf">red</em></li>
+          <li><span>Trace · triage model log</span><em class="st nf">gap</em><span class="arr">→</span><em class="st nf">gap</em></li>
+          <li><span>A1 Inventory</span><em class="st chk">weak</em><span class="arr">→</span><em class="st chk">weak</em></li>
+          <li><span>A4 Data location</span><em class="st nf">gap</em><span class="arr">→</span><em class="st nf">gap</em></li>
+          <li><span>A12 AI tools and hosting</span><em class="st nf">gap</em><span class="arr">→</span><em class="st nf">gap</em></li>
+        </ul>
+      </div>
+      <p class="res-s" data-at="4" data-to="4">One status changes, eight stay. <span>No answer got better.</span></p>
+      <div data-at="5" style="position:absolute;inset:0">
+        <p class="t-label" style="margin:0 0 18px">What the company does next</p>
+        <ol class="fix">
+          <li><div>Move the server to an EU region, or sign a transfer mechanism and a DPA.<span> Stop sending patient data to it until then.</span></div></li>
+          <li><div>Correct the inventory, the AI policy and the records of processing.</div></li>
+          <li><div>Do the DPIA. Write model, version, licence, host, country, logs and access in one record.</div></li>
+          <li><div>Set a retention rule for the model's log and delete what it holds.</div></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 · back to minute one -->
+<section class="slide" data-n="16" data-label="Would you send it now?" data-thread="6" data-steps="1"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="t-label k x20-kick rise auto" style="--delay:60ms">Back to minute one</p>
+  <div class="x20-move">
+    <figure class="x20-note">
+      <div class="x20-paper">
+        <p class="x20-q"><span class="x20-oq">“</span>Hi, I’ve written<br><span class="x20-s">‘all patient data stays<br>in the EU’</span> in the audit<br>answers. That’s what the<br>profile says. Can you<br>check it before I send it?”</p>
+      </div>
+      <i class="x20-curl" aria-hidden="true"></i>
+      <i class="x20-tape" aria-hidden="true"></i>
+    </figure>
+    <p class="t-src x20-src">Her note. company_profile.md says: “all production data in the EU”</p>
+  </div>
+
+  <div class="x20-real" data-at="1">
+    <h3>Where patient data sits today</h3>
+    <div class="x20-pl"><span class="st ok">EU</span><p>Database, PDFs, backups, helpdesk<span>data_inventory.csv<br>supplier_register.csv</span></p></div>
+    <div class="x20-pl"><span class="st nf">USA</span><p>Exports bucket, triage server<span>data_inventory.csv · the Nordgrid invoice</span></p></div>
+    <div class="x20-pl"><span class="st chk">UNKNOWN</span><p>Claude workspace: region not recorded<span>supplier_register.csv, Anthropic row</span></p></div>
+  </div>
+  <h2 class="t-h2 x20-ask" data-at="1" style="--delay:300ms;font-size:64px"><span>Would you send it now?</span></h2>
+</section>
+
+<!-- 17 · five facts for every AI tool -->
+<section class="slide" data-n="17" data-label="Five facts" data-thread="6" data-steps="5"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="t-label k kick rise auto" style="--delay:60ms">What went wrong, in one list</p>
+  <h2 class="t-h2 ttl"><span class="lift auto" style="--delay:120ms"><span>Five facts for every AI tool</span></span></h2>
+
+  <div class="s17f-aside rise auto" style="--delay:260ms">
+    <p class="t-label">Open weights</p>
+    <p class="s17f-big">is not<br>a <span>location.</span></p>
+    <p>You can download the model. You still have to write down where it runs.</p>
+  </div>
+
+  <ol class="s17f-list" style="top:300px">
+    <li class="s17f-r" data-at="1"><b class="s17f-n">1</b><div><h3>Model, version, licence</h3><p>hosting note: “not recorded”</p></div><em class="st nf">missing</em></li>
+    <li class="s17f-r" data-at="2"><b class="s17f-n">2</b><div><h3>Who runs the machine</h3><p>Nordgrid Cloud AB, a rented GPU server</p></div><em class="st ok">recorded</em></li>
+    <li class="s17f-r" data-at="3"><b class="s17f-n">3</b><div><h3>Which country</h3><p>sales page: EU · invoice: US-East</p></div><em class="st nf">wrong</em></li>
+    <li class="s17f-r" data-at="4"><b class="s17f-n">4</b><div><h3>What the logs keep</h3><p>every prompt and answer, never deleted</p></div><em class="st chk">recorded, risky</em></li>
+    <li class="s17f-r" data-at="5"><b class="s17f-n">5</b><div><h3>Who can log in</h3><p>3 engineers by SSH key (admin login key), office only</p></div><em class="st ok">recorded</em></li>
+  </ol>
+  <p class="s17f-end" data-at="5"><span>Write the five facts down <b>before</b> the first prompt. For a hosted assistant, ask the vendor for the contract and the region.</span></p>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-n="18" data-label="Exit ticket" data-thread="6" data-steps="3"
+  data-fiction="Fictional training data. Every company, person and document is invented.">
+  <p class="t-label k x21-kick rise auto" style="--delay:60ms">60 seconds · cards up · 1 point per right card</p>
+  <h2 class="t-h2 x21-title"><span class="lift auto" style="--delay:120ms"><span>Which status?</span></span></h2>
+  <ol class="x21-list" data-stagger>
+    <li class="x21-row rise auto" style="--delay:240ms">
+      <b class="x21-n">1</b>
+      <p class="x21-q">A pen test report dated 14&nbsp;months before the audit.</p>
+      <div class="x21-a" data-at="1"><span class="x21-tag chk">Weak</span></div>
+      <i class="x21-slot" aria-hidden="true">?</i>
+    </li>
+    <li class="x21-row rise auto" style="--delay:240ms">
+      <b class="x21-n">2</b>
+      <p class="x21-q">No contract with the AI host exists.</p>
+      <div class="x21-a" data-at="2"><span class="x21-tag nf">Gap</span><span class="x21-plus">and name the document that would prove it</span></div>
+      <i class="x21-slot" aria-hidden="true">?</i>
+    </li>
+    <li class="x21-row rise auto" style="--delay:240ms">
+      <b class="x21-n">3</b>
+      <p class="x21-q">The records show that 61% finished the training. The rule says 95%.</p>
+      <div class="x21-a" data-at="3"><span class="x21-tag ok">Covered</span><span class="x21-plus">plus an action</span></div>
+      <i class="x21-slot" aria-hidden="true">?</i>
+    </li>
+  </ol>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-n="19" data-label="Close" data-no-chrome data-thread="6" data-steps="3">
+  <div class="s17-globe" aria-hidden="true"><canvas data-globe data-lat="36" data-speed="8" data-cx="0.9" data-cy="0.5" data-r="0.54"></canvas></div>
+
+  <h2 class="s17-title">
+    <span class="lift auto" style="--delay:80ms"><span>Find the gap</span></span>
+    <span class="lift auto" style="--delay:200ms"><span>before the</span></span>
+    <span class="lift auto" style="--delay:320ms"><span>auditor <span class="s17-prove">does<i class="grow-x auto" style="--delay:560ms"></i></span>.</span></span>
+  </h2>
+  <p class="t-src s17-date rise auto" style="--delay:500ms">Workshop 05 · North Macedonia · November 2026</p>
+
+  <p class="t-label s17-slab">Termin Health · 12 topics after Step 5</p>
+  <div class="s17-strip" aria-hidden="true">
+    <div class="s17-cell w" style="--h:1;--i:0;--r:11"><i></i><span>A1</span></div>
+    <div class="s17-cell w" style="--h:1;--i:1;--r:10"><i></i><span>A2</span></div>
+    <div class="s17-cell w" style="--h:1;--i:2;--r:9"><i></i><span>A3</span></div>
+    <div class="s17-cell w" style="--h:1;--i:3;--r:8"><i></i><span>A4</span></div>
+    <div class="s17-cell" style="--h:1;--i:4;--r:7"><i></i><span>A5</span></div>
+    <div class="s17-cell g" style="--h:1;--i:5;--r:6"><i></i><span>A6</span></div>
+    <div class="s17-cell w" style="--h:1;--i:6;--r:5"><i></i><span>A7</span></div>
+    <div class="s17-cell" style="--h:1;--i:7;--r:4"><i></i><span>A8</span></div>
+    <div class="s17-cell w" style="--h:1;--i:8;--r:3"><i></i><span>A9</span></div>
+    <div class="s17-cell w" style="--h:1;--i:9;--r:2"><i></i><span>A10</span></div>
+    <div class="s17-cell w" style="--h:1;--i:10;--r:1"><i></i><span>A11</span></div>
+    <div class="s17-cell w" style="--h:1;--i:11;--r:0"><i></i><span>A12</span></div>
+  </div>
+  <p class="t-src s17-ssrc">2 covered · 9 weak · 1 gap</p>
+
+  <div class="s17-folder">
+    <svg viewBox="0 0 200 160" aria-hidden="true"><path class="bk" d="M16 14h58l16 20h94a12 12 0 0 1 12 12v100H4V26a12 12 0 0 1 12-12z"/><rect class="fr" x="4" y="56" width="192" height="100" rx="14"/><rect class="sep" x="146" y="72" width="34" height="14" rx="7"/></svg>
+  </div>
+  <div class="s17-monday">
+    <p class="t-label">Monday: find these in 10 minutes</p>
+    <ul>
+      <li style="--i:0">a signed contract, with a date</li>
+      <li style="--i:1">the five facts of one AI tool</li>
+      <li style="--i:2">a test or review under 12 months old</li>
+    </ul>
+    <p class="s17-mnote" style="--i:3">The first one you cannot find is your first gap. The full list is on page 2 of your sheet.</p>
+  </div>
+
+  <div class="s17-kit">
+    <p class="t-label">Replay it at your desk</p>
+    <p class="s17-kitt">Download the kit from the workshop page.</p>
+    <p class="t-src s17-url">loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit</p>
+  </div>
+  <p class="s17-handle">Tim Löhr · loehrning.ai</p>
+  <figure class="s17-qr">
+    <img src="./assets/kit-qr.svg" alt="QR code: loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit" />
+    <figcaption>Scan: the hands-on kit</figcaption>
+  </figure>
+  <p class="s17-ask">Questions?</p>
+  <div class="s17-logos">
+    <img src="./assets/lockup-horizontal.svg" alt="loehrning.ai" class="s17-lockup" />
+  </div>
+</section>
+</deck-stage>

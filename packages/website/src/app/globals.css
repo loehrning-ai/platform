@@ -296,10 +296,10 @@
   --tabbar-band-h: calc(var(--tabbar-h) + var(--safe-area-bottom));
 }
 
-/* Poster layer ("Plakat"): four scenes of three colours each, sampled from
-   the reference posters. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
+/* Poster layer ("Plakat"): five scenes of three colours each, four sampled from
+   the reference posters and Sage from the Workshop 05 deck. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
    Kobalt, Himbeere), Bloom (Sand, Aubergine, Terrakotta), Autumn (Rost,
-   Creme, Ocker). Mennige stays the one red: the lemons mid is Mennige.
+   Creme, Ocker), Sage (Salbei, Tanne, Bernstein). Mennige stays the one red: the lemons mid is Mennige.
    `static` keeps every value in the compiled :root even before a utility
    uses it, because CSS files outside this entry (phone-hero.css,
    blog-index.css) and inline SVG styles read them through var(), which
@@ -323,6 +323,9 @@
   --color-ocker: #e4a057; /* Autumn mid, decoration only: 2.78 on Rost */
   --color-ocker-hell: #ebb16a; /* Autumn meaningful mark or giant numeral: 3.24 on Rost */
   --color-ocker-tief: #9b5e07; /* ochre at text size on Kalkweiß (4.62) and Bogen only */
+  --color-salbei: #dce6d4; /* Sage ground (Workshop 05), the soft green of the audit deck */
+  --color-tanne: #1f4a38; /* Sage ink, 7.79 on Salbei, 8.92 on Kalkweiß */
+  --color-bernstein: #d9a441; /* Sage mid, decoration only: 1.75 on Salbei */
 
   /* Scene roles with their paper defaults. A .plakat-* scope redefines them,
      so one component reads correctly on paper and in every scene. Never use
@@ -371,6 +374,9 @@
   }
   :root:has([data-plakat-page="autumn"]) {
     --color-scene-line: #944d44;
+  }
+  :root:has([data-plakat-page="sage"]) {
+    --color-scene-line: #1f4a38;
   }
 
   html {
@@ -706,6 +712,36 @@
     --color-scene-line: #f0e1ca;
     --color-scene-button: #f0e1ca; /* Creme fill, Rost label 4.80 */
     --color-scene-button-text: #944d44;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Sage (Workshop 05): Tanne on Salbei, 7.79. Bernstein is decoration only
+     (1.75), so a meaningful mark takes the ink. The status tones keep their
+     paper values: 5.94 to 7.08 on Salbei. */
+  .plakat-sage,
+  [data-plakat-page="sage"] [data-plakat-band] {
+    --color-background: #dce6d4;
+    --color-foreground: #1f4a38; /* 7.79 */
+    --color-muted-foreground: #1f4a38;
+    --color-muted: #1f4a38;
+    --color-border: #1f4a38;
+    --color-track: #aebfa5; /* 1.51, decor */
+    --color-hairline: #aebfa5;
+    --color-card: #dce6d4;
+    --color-card-hover: #cfdcc6; /* Tanne on it 7.02 */
+    --color-inset: #d3dfca; /* 7.25 */
+    --color-brand-orange: #1f4a38;
+    --color-kupfer: #1f4a38;
+    --color-kupfer-dark: #1f4a38;
+    --color-scene-ground: #dce6d4;
+    --color-scene-ink: #1f4a38;
+    --color-scene-mid: #d9a441; /* 1.75, shapes only */
+    --color-scene-mark: #1f4a38;
+    --color-scene-accent-text: #97300f; /* Mennige tief, 5.94 */
+    --color-scene-line: #1f4a38;
+    --color-scene-button: #1f4a38; /* Tanne fill, Bogen label 9.78; a clear green, luminance 0.055 */
+    --color-scene-button-text: #fffcf5;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }

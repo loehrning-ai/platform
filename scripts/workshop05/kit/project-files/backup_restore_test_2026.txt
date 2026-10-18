@@ -1,0 +1,7 @@
+Fictional training data. Every company, person and document is invented.
+Restore test report, 2026-08-18. Performed by Operations. Approved by the Head of Operations on 2026-08-19.
+Scope: production database and lab-PDF bucket, both in europe-west3.
+Backups: daily, encrypted at rest, kept for 35 days. Backup used: 2026-08-17 02:00.
+First attempt failed because a service account lacked read access. Access fixed and logged as change CH-0412.
+Second attempt succeeded. Recovery time 3 h 10 min (target 4 h). Data compared with production: no differences.
+Schedule: every six months. Previous test: 2026-02-17, passed. Next test: 2027-02-16.

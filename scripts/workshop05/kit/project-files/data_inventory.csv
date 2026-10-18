@@ -1,0 +1,10 @@
+# Fictional training data. Every company, person and document is invented. Data inventory, owner: Head of Operations, last full review 2026-09-30.
+asset,data,category,location,owner,last_reviewed
+termin-db (Cloud SQL),appointments and patient contact data,health,europe-west3,Head of Operations,2026-09-30
+termin-lab-pdfs (bucket),lab-result PDFs,health,europe-west3,Head of Operations,2026-09-30
+termin-support-exports (bucket),weekly helpdesk exports with ticket excerpts,health,us-central1,Support lead,2026-09-30
+Deskwise helpdesk,support tickets,health (excerpts),EU (vendor),Support lead,2026-09-30
+Claude Team workspace,drafts and summaries of support tickets,none by policy,vendor cloud,Support lead,2026-09-30
+triage model server,ticket triage prompts and answers,health,EU (per hosting note),Head of Engineering,2026-09-30
+finance system,invoices and payroll,business and staff,europe-west3,CFO,2026-09-30
+backups (Cloud Storage),daily database and PDF backups,health,europe-west3,Head of Operations,2026-09-30

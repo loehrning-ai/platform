@@ -64,8 +64,10 @@ describe("<WorkshopsContent>", () => {
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
 
     const rows = screen.getAllByTestId("workshop-row");
+    const audit = getWorkshops("en").find((w) => w.number === "05");
     const esg = getWorkshops("en").find((w) => w.number === "04");
     expect(rows.map((row) => row.id)).toEqual([
+      "workshop-audit-vorbereitung-mit-ki",
       "workshop-esg-berichte-mit-ki",
       "workshop-datenbereitschaft-fuer-ki",
       "workshop-geschaeftsberichte-mit-ki-lesen",
@@ -76,6 +78,7 @@ describe("<WorkshopsContent>", () => {
         (row) => within(row).getByRole("heading", { level: 3 }).textContent,
       ),
     ).toEqual([
+      audit?.title,
       esg?.title,
       "Are your data ready for AI?",
       "Read business reports with AI",
@@ -84,13 +87,14 @@ describe("<WorkshopsContent>", () => {
     expect(
       rows.map((row) => row.querySelector("[data-workshop-output]")?.textContent),
     ).toEqual([
+      audit?.outcome,
       esg?.outcome,
       "Five-box template",
       "Metrics skill + dashboard",
       "Go/no-go rule",
     ]);
 
-    const [, w03, w02, w01] = rows;
+    const [, , w03, w02, w01] = rows;
     expect(
       within(w03).getByText("Workshop 03 · Live 90 min · Self-paced about 75 min"),
     ).toBeInTheDocument();
@@ -160,7 +164,7 @@ describe("<WorkshopsContent>", () => {
     const catalogue = screen.getByRole("complementary", {
       name: "In the catalogue",
     });
-    expect(catalogue.querySelector("strong")).toHaveTextContent("04");
+    expect(catalogue.querySelector("strong")).toHaveTextContent("05");
     const jumps = within(catalogue)
       .getAllByRole("link")
       .map((link) => [link.textContent, link.getAttribute("href")]);
@@ -169,6 +173,7 @@ describe("<WorkshopsContent>", () => {
       ["02", "Business reports", "#workshop-geschaeftsberichte-mit-ki-lesen"],
       ["03", "Data readiness", "#workshop-datenbereitschaft-fuer-ki"],
       ["04", esg?.topic, "#workshop-esg-berichte-mit-ki"],
+      ["05", audit?.topic, "#workshop-audit-vorbereitung-mit-ki"],
     ];
     expect(jumps).toEqual([
       ...index.map(([number, topic, href]) => [`${number} ${topic}`, href]),
@@ -207,10 +212,11 @@ describe("<WorkshopsContent>", () => {
     ).toHaveAttribute("data-callout", "boundary");
   });
 
-  it("marks workshop 04 as new and lists it first, while the button keeps 03", () => {
+  it("marks workshop 05 as new and lists it first, while the button keeps 03", () => {
     const workshops = getWorkshops("de");
 
     expect(orderWorkshopsForHub(workshops).map((w) => w.number)).toEqual([
+      "05",
       "04",
       "03",
       "02",
@@ -218,22 +224,25 @@ describe("<WorkshopsContent>", () => {
     ]);
     render(<WorkshopsContent workshops={workshops} locale="de" />);
     const rows = screen.getAllByTestId("workshop-row");
-    expect(rows).toHaveLength(4);
+    expect(rows).toHaveLength(5);
     // Desktop carries the "Neu" chip; the phone row says it in its meta line.
     const newMarks = within(rows[0]).getAllByText("Neu");
     expect(newMarks).toHaveLength(2);
     expect(newMarks[0].closest("[data-workshop-meta]")).not.toBeNull();
     expect(newMarks[1]).toHaveAttribute("data-chip", "meta");
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
+    expect(within(rows[2]).queryByText("Neu")).toBeNull();
     // German amount: ASCII minus, euro sign on the same line.
-    expect(within(rows[1]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
-    // Hyphenated words such as "ESG-Anfragen" are not amounts.
-    expect(within(rows[0]).getByText(/drei ESG-Anfragen in einer Woche/).tagName).toBe("P");
+    expect(within(rows[2]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
+    // Hyphenated words such as "ESG-Anfragen" and "Audit-Anfragen" are not amounts.
+    expect(within(rows[1]).getByText(/drei ESG-Anfragen in einer Woche/).tagName).toBe("P");
+    expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
+    expect(within(rows[0]).getByText(/drei Audit-Anfragen in einer Woche/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
     ).toHaveAttribute("href", "/workshops/datenbereitschaft-fuer-ki");
-    expect(screen.queryByRole("link", { name: /Workshop 04 beginnen/ })).toBeNull();
+    expect(screen.queryByRole("link", { name: /Workshop 0[45] beginnen/ })).toBeNull();
     // No workshop lists a presenter view as a material, so the team note
     // points to the workshop page.
     expect(
@@ -299,23 +308,30 @@ describe("<WorkshopsContent>", () => {
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
       "Neu · Live 60 Min. · Selbstlernen 120 Min.",
     );
-    expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
+    expect(rows[2].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
     );
-    for (const row of [rows[0], rows[2], rows[3]]) {
+    for (const row of [rows[0], rows[1], rows[3], rows[4]]) {
       expect(row.querySelector("[data-workshop-meta]")).not.toHaveTextContent(
         "Einstieg",
       );
     }
-    expect(rows[3].querySelector("[data-workshop-meta]")).toHaveTextContent(
+    expect(rows[1].querySelector("[data-workshop-meta]")).not.toHaveTextContent("Neu");
+    expect(rows[4].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Selbstlernen \d+ Min\.$/,
     );
     // The phone row shows the title head visually and keeps its subtitle in
     // the accessible name; the full title appears from the tablet breakpoint.
-    const w04 = getWorkshops("de").find((w) => w.number === "04")!;
+    const w05 = getWorkshops("de").find((w) => w.number === "05")!;
     const heading = within(rows[0]).getByRole("heading", { level: 3 });
-    expect(heading).toHaveAccessibleName(w04.title);
+    expect(heading).toHaveAccessibleName(w05.title);
     expect(heading.querySelector(".sr-only")).toHaveTextContent(
+      ": Belege ordnen und Lücken finden",
+    );
+    const w04 = getWorkshops("de").find((w) => w.number === "04")!;
+    const esgHeading = within(rows[1]).getByRole("heading", { level: 3 });
+    expect(esgHeading).toHaveAccessibleName(w04.title);
+    expect(esgHeading.querySelector(".sr-only")).toHaveTextContent(
       ": Von Rohdaten zu klareren Erkenntnissen",
     );
 
@@ -362,7 +378,7 @@ describe("<WorkshopsContent>", () => {
     // No presenter view is listed, so there is no keyboard hint either.
     expect(note.querySelector("[data-workshop-key-hint]")).toBeNull();
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
-    expect(screen.getByText("Workshops · 4 Fälle")).toBeInTheDocument();
+    expect(screen.getByText("Workshops · 5 Fälle")).toBeInTheDocument();
     expect(
       screen.getAllByText(/kostenlos/).map((node) => node.textContent),
     ).toEqual(["Alle Materialien kostenlos, ohne Anmeldung"]);
@@ -407,7 +423,7 @@ describe("<WorkshopsContent>", () => {
 
     // The kicker and the H1 with its tail on the sky band; the lead is
     // positioned so a descender paints above the next line's band.
-    expect(within(hero).getByText("Workshops · 4 Fälle")).toHaveClass(
+    expect(within(hero).getByText("Workshops · 5 Fälle")).toHaveClass(
       "font-mono",
       "uppercase",
       "text-brand-orange",
@@ -432,7 +448,7 @@ describe("<WorkshopsContent>", () => {
       "translate-x-3",
       "translate-y-3",
     );
-    expect(card.querySelector("strong")).toHaveTextContent(/^04$/);
+    expect(card.querySelector("strong")).toHaveTextContent(/^05$/);
     // Phones: four numbered 44px squares, one per workshop; from sm the
     // topic bars, widest first.
     const chips = card.querySelector("[data-workshop-catalogue-chips]") as HTMLElement;
@@ -443,6 +459,7 @@ describe("<WorkshopsContent>", () => {
       "02 Geschäftsberichte",
       "03 Datenbereitschaft",
       "04 ESG",
+      "05 Audit",
     ]);
     for (const square of squares) {
       expect(square).toHaveClass("size-11", "focus-visible:outline-brand-orange");
@@ -453,9 +470,11 @@ describe("<WorkshopsContent>", () => {
       "#workshop-geschaeftsberichte-mit-ki-lesen",
       "#workshop-datenbereitschaft-fuer-ki",
       "#workshop-esg-berichte-mit-ki",
+      "#workshop-audit-vorbereitung-mit-ki",
     ]);
     expect(bars[0]).toHaveClass("w-full", "bg-brand-pink/70", "min-h-11");
     expect(bars[3]).toHaveClass("w-[64%]", "bg-brand-acid/80");
+    expect(bars[4]).toHaveClass("w-[52%]");
     expect(bars[0].closest("ol")).toHaveClass("hidden", "sm:block");
   });
 
@@ -492,11 +511,11 @@ describe("<WorkshopsContent>", () => {
     }
     expect(container.querySelectorAll("img")).toHaveLength(0);
 
-    // From md: four posters, one per row, in four distinct palettes, each
+    // From md: five posters, one per row, in five distinct palettes, each
     // with its own numeral; all decorative.
     const covers = container.querySelectorAll("[data-workshop-mini-cover]");
-    expect(covers).toHaveLength(4);
-    const numbers = ["04", "03", "02", "01"];
+    expect(covers).toHaveLength(5);
+    const numbers = ["05", "04", "03", "02", "01"];
     const slugs = [...rows].map((row) => row.id.replace(/^workshop-/, ""));
     const palettes = [...covers].map((cover, position) => {
       expect(cover).toHaveAttribute("aria-hidden", "true");
@@ -509,12 +528,12 @@ describe("<WorkshopsContent>", () => {
       expect(poster).toHaveClass(`plakat-${WORKSHOP_PLAKAT[slug].plakat}`);
       return poster.getAttribute("data-poster");
     });
-    expect(new Set(palettes).size).toBe(4);
-    expect(palettes).toEqual(["autumn", "bloom", "idea", "lemons"]);
+    expect(new Set(palettes).size).toBe(5);
+    expect(palettes).toEqual(["sage", "autumn", "bloom", "idea", "lemons"]);
 
     // Phones: an 80x100 poster thumb in the same palette replaces the cover.
     const tiles = container.querySelectorAll("[data-workshop-tile]");
-    expect(tiles).toHaveLength(4);
+    expect(tiles).toHaveLength(5);
     for (const [position, tile] of [...tiles].entries()) {
       expect(tile).toHaveAttribute("aria-hidden", "true");
       expect(tile).toHaveClass("md:hidden");
