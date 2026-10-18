@@ -31,24 +31,29 @@ test.describe("workshop self-study journey", () => {
       /Geschäftsberichte/i,
     );
     await expect(page.locator("body")).not.toContainText("No paid service");
-    // Detail page: the cover starts the primary material. There is no agenda
-    // section and no numbered red line; the outcomes, the case and (for W02,
-    // whose kit zip is not on the band) the material list stay visible. The
-    // audience, needs, scope and case figures sit behind one disclosure,
-    // which starts collapsed.
-    // The band is the workshop's poster (IDEA for W02) and still starts the deck.
+    // Detail page: the band is the workshop's poster (IDEA for W02) and holds
+    // no buttons; the stage right under it carries the two action cards: the
+    // deck and the kit zip. There is no agenda section, no numbered red line,
+    // no outcomes list and no visible case section. The material list, the
+    // audience, needs, scope, the case and its figures sit behind one
+    // disclosure, which starts collapsed.
     const cover = page.locator("[data-cover-band]");
     await expect(cover).toHaveAttribute("data-plakat", "idea");
-    await expect(cover.getByRole("link", { name: "Deck öffnen" })).toHaveAttribute(
+    await expect(cover.locator("a:not([data-cover-back])")).toHaveCount(0);
+    const stage = page.locator("[data-workshop-stage]");
+    await expect(stage.getByRole("link", { name: /^Folien ansehen/ })).toHaveAttribute(
       "href",
       "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
     );
+    const kit = stage.getByRole("link", { name: /^Kit herunterladen/ });
+    await expect(kit).toHaveAttribute("href", /northwind-analyst-kit\.zip$/);
+    await expect(kit).toHaveAttribute("download", "");
     await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
     await expect(page.getByRole("list", { name: "Ablauf" })).toHaveCount(0);
     await expect(page.locator("[data-workshop-redline]")).toHaveCount(0);
-    await expect(page.getByRole("heading", { level: 2, name: "Nach dem Workshop" })).toBeVisible();
-    await expect(page.getByRole("heading", { level: 2, name: "Material", exact: true })).toBeVisible();
-    await expect(page.getByRole("heading", { level: 2, name: "Der Fall" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Nach dem Workshop" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 2, name: "Der Fall" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 2, name: "Mehr Details" })).toBeVisible();
     await expect(page.locator("main details[open]")).toHaveCount(0);
   });
 
@@ -181,7 +186,7 @@ test.describe("workshop self-study journey", () => {
     // face loaded) mapped through the SVG's screen transform must sit inside
     // every clipping ancestor: the nested poster viewport, the poster box and
     // the band. A numeral cut at an edge reads as a bug, not as a bleed.
-    // Workshop 05 carries its hero scene (the gate), whose pale "05" is SVG text too.
+    // Workshop 05's gate scene sits on the stage and holds no text; every band shows its poster numeral.
     const routes = [
       "/workshops",
       "/workshops/esg-berichte-mit-ki",
@@ -294,7 +299,7 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
       // No question card in the band, no agenda and no numbered red line on
-      // the page; the one question sits in the case on paper below the band.
+      // the page; the one question sits in the case inside "More details".
       await expect(page.locator("[data-question-card]")).toHaveCount(0);
       await expect(band.locator("[data-case-question]")).toHaveCount(0);
       await expect(page.locator("[data-workshop-redline], #ablauf")).toHaveCount(0);

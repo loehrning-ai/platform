@@ -1,131 +1,70 @@
 import type { ReactNode } from "react";
+import "./hero-gate.css";
 
 /**
- * "The gate": the hero scene of Workshop 05 (where your data goes).
+ * "The gate": the scene of Workshop 05 (where your data goes).
  *
  * A prompt leaves a laptop as a small message card, reaches a ring with three
  * lamps and the lamp decides. Public text passes (green). A card with names
  * stops, is read and passes with its names covered (amber). A card with a key
- * is turned back (red). Past the ring the cards land in a cloud, and four
- * stations circle it: the vendor says chats are stored in one place and may
- * be processed in several. The scene says that in shapes only; no word is
- * drawn, so it can never state more than the page does.
+ * is turned back (red). Past the ring the cards land in a cloud, and stations
+ * circle it: the vendor says chats are stored in one place and may be
+ * processed in several. The scene says that in shapes only; no word is drawn,
+ * so it can never state more than the page does.
  *
  * Pure SVG with class names, no id, no gradient, no filter, no script. Every
- * colour is a scene token (hero-motion.css maps the classes). The base styles
- * are the finished still frame; hero-motion.css plays the story over them
- * under `prefers-reduced-motion: no-preference` only.
- *
- * Two layouts share one set of keyframes. The flow axis is "u" (from the
- * laptop to the cloud) and the cross axis is "v": portrait flows down
- * (viewBox 400 x 500, the lg column), landscape flows right (viewBox 640 x
- * 360, the phone row). `at(u, v)` places a point in either.
+ * colour is a scene token (hero-gate.css maps the classes). The base styles
+ * are the finished still frame; hero-gate.css plays the story over them under
+ * `prefers-reduced-motion: no-preference` only. One viewBox (600 x 500), one
+ * layout: the flow runs left to right along y = 300, from the laptop through
+ * the ring to the cloud. The scene contract is in docs/experience-system.md,
+ * "Workshop stage and scenes".
  */
-
-export type GateVariant = "portrait" | "landscape";
 
 type Point = readonly [x: number, y: number];
 
-interface GateLayout {
-  readonly width: number;
-  readonly height: number;
-  readonly flow: "down" | "right";
-  /** Centre of a card at the start of the lane (hidden behind the laptop). */
-  readonly start: Point;
-  /** Length of the lane from the start to the landing point. */
-  readonly lane: number;
-  /** Distance of the ring plane from the start (half the lane). */
-  readonly ringU: number;
-  /** Ring radius along the flow (thin) and across it (wide). */
-  readonly ringA: number;
-  readonly ringB: number;
-  /** Cross offset of the lamp housing from the lane. */
-  readonly lampV: number;
-  /** Laptop: centre of the screen on the cross axis is the start; top-left of the screen box. */
-  readonly screen: { readonly x: number; readonly y: number };
-  readonly cloud: { readonly centre: Point; readonly scale: number };
-  readonly orbit: { readonly inner: number; readonly outer: number };
-  readonly numeral: { readonly x: number; readonly y: number; readonly size: number };
-  readonly spot: readonly number[];
-  readonly warm: readonly number[];
-}
-
-const LAYOUTS: Readonly<Record<GateVariant, GateLayout>> = {
-  portrait: {
-    width: 400,
-    height: 500,
-    flow: "down",
-    start: [200, 106],
-    lane: 300,
-    ringU: 150,
-    ringA: 24,
-    ringB: 76,
-    lampV: 122,
-    screen: { x: 138, y: 38 },
-    cloud: { centre: [200, 438], scale: 1 },
-    orbit: { inner: 116, outer: 172 },
-    numeral: { x: -10, y: 322, size: 330 },
-    spot: [210, 184, 158, 132, 106, 80],
-    warm: [150, 112, 76],
-  },
-  landscape: {
-    width: 640,
-    height: 360,
-    flow: "right",
-    start: [96, 198],
-    lane: 444,
-    ringU: 222,
-    ringA: 22,
-    ringB: 72,
-    lampV: -112,
-    screen: { x: 38, y: 158 },
-    cloud: { centre: [562, 202], scale: 0.9 },
-    orbit: { inner: 104, outer: 156 },
-    numeral: { x: 150, y: 330, size: 300 },
-    spot: [250, 222, 194, 166, 138, 110],
-    warm: [140, 106, 72],
-  },
-};
+/** Centre of a card at the start of the lane (hidden behind the laptop). */
+const START: Point = [118, 300];
+/** Length of the lane from the start to the landing point. */
+const LANE = 352;
+/** Distance of the ring plane from the start (half the lane). */
+const RING_U = 176;
+/** Ring radius along the flow (thin) and across it (wide). */
+const RING_A = 26;
+const RING_B = 96;
+/** The lamp housing sits above the ring. */
+const LAMP_DY = -150;
+const SCREEN = { x: 58, y: 261, w: 120, h: 78 } as const;
+const CLOUD: Point = [470, 300];
+const ORBIT = { inner: 86, outer: 116 } as const;
+const SPOT = [200, 172, 144, 116, 90, 66] as const;
+const WARM = [118, 90, 62] as const;
+const DUST: readonly (readonly [number, number, number])[] = [
+  [76, 96, 2.6],
+  [188, 118, 2.2],
+  [420, 84, 2.8],
+  [540, 134, 2.2],
+  [86, 424, 2.4],
+  [250, 446, 2.8],
+  [404, 436, 2.2],
+  [534, 418, 2.6],
+];
 
 const round = (value: number): number => Math.round(value * 10) / 10;
 
-function at(layout: GateLayout, u: number, v: number): Point {
-  const [x, y] = layout.start;
-  return layout.flow === "down" ? [round(x + v), round(y + u)] : [round(x + u), round(y + v)];
-}
-
-/** The two halves of the ring: the entry half sits behind a card, the exit half in front. */
-function ringArcs(layout: GateLayout): { readonly back: string; readonly front: string } {
-  const [cx, cy] = at(layout, layout.ringU, 0);
-  const { ringA: a, ringB: b } = layout;
-  if (layout.flow === "down") {
-    return {
-      back: `M${cx - b} ${cy}A${b} ${a} 0 0 1 ${cx + b} ${cy}`,
-      front: `M${cx - b} ${cy}A${b} ${a} 0 0 0 ${cx + b} ${cy}`,
-    };
-  }
-  return {
-    back: `M${cx} ${cy - b}A${a} ${b} 0 0 0 ${cx} ${cy + b}`,
-    front: `M${cx} ${cy - b}A${a} ${b} 0 0 1 ${cx} ${cy + b}`,
-  };
-}
-
 const CLOUD_PATH = "M-54 34A26 26 0 0 1-60-17A34 34 0 0 1 0-30A40 40 0 0 1 60-12A26 26 0 0 1 54 34Z";
 
-function Packet({ kind, layout, className }: { readonly kind: "public" | "names" | "key"; readonly layout: GateLayout; readonly className: string }): ReactNode {
-  const [x, y] = layout.start;
-  const down = layout.flow === "down";
+function Packet({ kind, className }: { readonly kind: "public" | "names" | "key"; readonly className: string }): ReactNode {
+  const [x, y] = START;
   // Speed lines trail behind the card, against the flow.
   const lines = [-9, 0, 9].map((v, index) => {
     const length = index === 1 ? 30 : 18;
-    const from = down ? [v, -24] : [-24, v];
-    const to = down ? [v, -24 - length] : [-24 - length, v];
-    return <path key={v} d={`M${from[0]} ${from[1]}L${to[0]} ${to[1]}`} className="hm-speed" />;
+    return <path key={v} d={`M-24 ${v}L${-24 - length} ${v}`} className="hm-speed" />;
   });
   return (
     <g transform={`translate(${x} ${y})`}>
       <g className={`hm-packet ${className}`}>
-        <g transform="scale(1.18)">
+        <g transform="scale(1.5)">
           {lines}
           <rect x="-22" y="-17" width="44" height="34" rx="8" className="hm-card" />
           {kind === "public" ? <path d="M-13-8H13M-13 0H5M-13 8H13" className="hm-glyph" /> : null}
@@ -158,7 +97,6 @@ function Lamp({ kind, x, y, r }: { readonly kind: "go" | "check" | "stop"; reado
     <g transform={`translate(${x} ${y})`}>
       <circle r={r} className="hm-lamp-well" />
       <g className={`hm-lamp hm-lamp-${kind}`}>
-        <circle r={r * 2.3} className="hm-halo hm-halo-wide" />
         <circle r={r * 1.6} className="hm-halo" />
         {kind === "go" ? (
           <>
@@ -188,173 +126,120 @@ function orbitPoint(centre: Point, radius: number, degrees: number): Point {
   return [round(centre[0] + radius * Math.cos(angle)), round(centre[1] + radius * Math.sin(angle))];
 }
 
-export function GateScene({ variant, numeral }: { readonly variant: GateVariant; readonly numeral?: string }): ReactNode {
-  const layout = LAYOUTS[variant];
-  const down = layout.flow === "down";
-  const [startX, startY] = layout.start;
-  const [ringX, ringY] = at(layout, layout.ringU, 0);
-  const [endX, endY] = at(layout, layout.lane, 0);
-  const arcs = ringArcs(layout);
-  const rx = down ? layout.ringB : layout.ringA;
-  const ry = down ? layout.ringA : layout.ringB;
-  const [cloudX, cloudY] = layout.cloud.centre;
-  const lampR = down ? 10.5 : 11;
-  const lampGap = down ? 29 : 32;
-  const [housingX, housingY] = at(layout, layout.ringU, layout.lampV);
-  const housingW = down ? 36 : lampGap * 2 + lampR * 2 + 20;
-  const housingH = down ? lampGap * 2 + lampR * 2 + 20 : 38;
-  const lampCentres: readonly Point[] = [-1, 0, 1].map((step) =>
-    down ? [housingX, round(housingY + step * lampGap)] : [round(housingX + step * lampGap), housingY],
-  );
-  const wireFrom = down ? [ringX + layout.ringB, ringY] : [ringX, ringY + (layout.lampV < 0 ? -layout.ringB : layout.ringB)];
-  const wireTo = down ? [housingX - housingW / 2, housingY] : [housingX, housingY + (layout.lampV < 0 ? housingH / 2 : -housingH / 2)];
-  const innerOrbit = layout.orbit.inner;
-  const outerOrbit = layout.orbit.outer;
+export function GateScene(): ReactNode {
+  const ringX = START[0] + RING_U;
+  const ringY = START[1];
+  const endX = START[0] + LANE;
+  const endY = START[1];
+  const [cloudX, cloudY] = CLOUD;
+  const lampR = 11;
+  const lampGap = 32;
+  const housingX = ringX;
+  const housingY = ringY + LAMP_DY;
+  const housingW = lampGap * 2 + lampR * 2 + 20;
+  const housingH = 38;
+  const lampXs = [-1, 0, 1].map((step) => round(housingX + step * lampGap));
   const nodes: readonly { readonly p: Point; readonly c: string }[] = [
-    { p: orbitPoint(layout.cloud.centre, innerOrbit, down ? 205 : 235), c: "hm-node hm-node-a" },
-    { p: orbitPoint(layout.cloud.centre, innerOrbit, down ? 262 : 292), c: "hm-node hm-node-b" },
-    { p: orbitPoint(layout.cloud.centre, innerOrbit, down ? 318 : 338), c: "hm-node" },
-    { p: orbitPoint(layout.cloud.centre, innerOrbit, down ? 155 : 190), c: "hm-node" },
-    { p: orbitPoint(layout.cloud.centre, outerOrbit, down ? 232 : 262), c: "hm-node hm-node-far" },
-    { p: orbitPoint(layout.cloud.centre, outerOrbit, down ? 300 : 322), c: "hm-node hm-node-far" },
+    { p: orbitPoint(CLOUD, ORBIT.inner, 235), c: "hm-node" },
+    { p: orbitPoint(CLOUD, ORBIT.inner, 292), c: "hm-node" },
+    { p: orbitPoint(CLOUD, ORBIT.inner, 338), c: "hm-node" },
+    { p: orbitPoint(CLOUD, ORBIT.outer, 262), c: "hm-node hm-node-far" },
+    { p: orbitPoint(CLOUD, ORBIT.outer, 322), c: "hm-node hm-node-far" },
   ];
-  const dust: readonly (readonly [number, number, number])[] = down
-    ? [[48, 150, 2.6], [352, 120, 2.2], [62, 300, 3], [338, 360, 2.4], [88, 224, 2], [318, 238, 2.8]]
-    : [[236, 72, 2.4], [420, 70, 2.8], [380, 260, 2.2], [210, 270, 2.6], [510, 56, 2], [600, 300, 2.4]];
-  const screenW = 124;
-  const screenH = 80;
-  const barX = layout.screen.x + 17;
-  const barY = layout.screen.y + 20;
+  const barX = SCREEN.x + 17;
+  const barY = SCREEN.y + 20;
 
   return (
     <svg
       aria-hidden="true"
       focusable="false"
       data-hero-motion="gate"
-      data-hero-variant={variant}
-      viewBox={`0 0 ${layout.width} ${layout.height}`}
+      viewBox="0 0 600 500"
       preserveAspectRatio="xMidYMid meet"
-      className="hm-root hm-gate block size-full"
+      className="hm-root block size-full"
     >
-      {/* Far layer: the spotlight, the pale numeral, the warm glow behind the cloud, the orbit and the dust. */}
-      <g className="hm-far">
-        <g className="hm-in hm-in-disc">
-          <g className="hm-breathe">
-            {layout.spot.map((radius) => (
-              <circle key={radius} cx={ringX} cy={ringY} r={radius} className="hm-spot" />
-            ))}
-          </g>
+      {/* Far layer: the spotlight, the warm glow behind the cloud, the orbit and the dust. */}
+      <g className="hm-layer hm-layer-far">
+        <g>
+          {SPOT.map((radius) => (
+            <circle key={radius} cx={ringX} cy={ringY} r={radius} className="hm-spot" />
+          ))}
         </g>
-        {numeral ? (
-          <text x={layout.numeral.x} y={layout.numeral.y} fontSize={layout.numeral.size} fontWeight={700} letterSpacing="-0.065em" className="hm-numeral">
-            {numeral}
-          </text>
-        ) : null}
-        <g className="hm-warm">
-          {layout.warm.map((radius) => (
+        <g>
+          {WARM.map((radius) => (
             <circle key={radius} cx={cloudX} cy={cloudY} r={radius} className="hm-warm-disc" />
           ))}
         </g>
         <g className="hm-orbit">
-          <path d={`M${cloudX} ${cloudY}L${nodes[0].p[0]} ${nodes[0].p[1]}`} pathLength={1} className="hm-spoke hm-spoke-a" />
-          <path d={`M${cloudX} ${cloudY}L${nodes[1].p[0]} ${nodes[1].p[1]}`} pathLength={1} className="hm-spoke hm-spoke-b" />
-          <circle cx={cloudX} cy={cloudY} r={innerOrbit} className="hm-orbit-ring" />
-          {nodes.slice(0, 4).map(({ p, c }, index) => (
-            <circle key={index} cx={p[0]} cy={p[1]} r={5.5} className={c} />
+          <circle cx={cloudX} cy={cloudY} r={ORBIT.inner} className="hm-orbit-ring" />
+          <circle cx={cloudX} cy={cloudY} r={ORBIT.outer} className="hm-orbit-ring hm-orbit-ring-far" />
+          {nodes.map(({ p, c }, index) => (
+            <circle key={index} cx={p[0]} cy={p[1]} r={index < 3 ? 5.5 : 4} className={c} />
           ))}
         </g>
-        <g className="hm-orbit hm-orbit-far">
-          <circle cx={cloudX} cy={cloudY} r={outerOrbit} className="hm-orbit-ring hm-orbit-ring-far" />
-          {nodes.slice(4).map(({ p, c }, index) => (
-            <circle key={index} cx={p[0]} cy={p[1]} r={4} className={c} />
-          ))}
-        </g>
-        <g className="hm-dust hm-dust-a">
-          {dust.slice(0, 3).map(([x, y, r]) => (
-            <circle key={`${x}-${y}`} cx={x} cy={y} r={r} className="hm-dust-dot" />
-          ))}
-        </g>
-        <g className="hm-dust hm-dust-b">
-          {dust.slice(3).map(([x, y, r]) => (
+        <g className="hm-dust">
+          {DUST.map(([x, y, r]) => (
             <circle key={`${x}-${y}`} cx={x} cy={y} r={r} className="hm-dust-dot" />
           ))}
         </g>
       </g>
 
-      {/* The lane: a faint pipe under a dashed line that flows towards the cloud. */}
-      <g className="hm-in hm-in-fade">
-        <path d={`M${startX} ${startY}L${endX} ${endY}`} className="hm-pipe" />
-        <path d={`M${startX} ${startY}L${endX} ${endY}`} className="hm-route" />
+      {/* Mid layer: the lane, the ring and its lamps, the cloud, the laptop. */}
+      <g className="hm-layer hm-layer-mid">
+        <path d={`M${START[0]} ${START[1]}L${endX} ${endY}`} className="hm-pipe" />
+        <path d={`M${START[0]} ${START[1]}L${endX} ${endY}`} className="hm-route" />
+
+        {/* The ring, entry half behind the cards; what the gate shows inside it. */}
+        <path d={`M${ringX} ${ringY - RING_B}A${RING_A} ${RING_B} 0 0 0 ${ringX} ${ringY + RING_B}`} className="hm-ring hm-ring-back" />
+        <g className="hm-scan">
+          <path d={`M${ringX} ${ringY - RING_B + 10}V${ringY + RING_B - 10}`} className="hm-scan-glow" />
+          <path d={`M${ringX} ${ringY - RING_B + 10}V${ringY + RING_B - 10}`} className="hm-scan-line" />
+        </g>
       </g>
 
-      {/* The ring, entry half behind the cards; what the gate shows inside it. */}
-      <path d={arcs.back} pathLength={1} className="hm-ring hm-ring-back hm-in-draw" />
-      <ellipse cx={ringX} cy={ringY} rx={rx - 8} ry={ry - 4} className="hm-wash" />
-      <ellipse cx={ringX} cy={ringY} rx={rx} ry={ry} className="hm-pulse" />
-      <g className="hm-scan">
-        <path
-          d={down ? `M${ringX - rx + 10} ${ringY}H${ringX + rx - 10}` : `M${ringX} ${ringY - ry + 10}V${ringY + ry - 10}`}
-          className="hm-scan-glow"
-        />
-        <path
-          d={down ? `M${ringX - rx + 10} ${ringY}H${ringX + rx - 10}` : `M${ringX} ${ringY - ry + 10}V${ringY + ry - 10}`}
-          className="hm-scan-line"
-        />
+      {/* Near layer: three message cards (public text, names, a key). */}
+      <g className="hm-layer hm-layer-near">
+        <Packet kind="public" className="hm-p1" />
+        <Packet kind="names" className="hm-p2" />
+        <Packet kind="key" className="hm-p3" />
       </g>
-      <ellipse cx={ringX} cy={ringY} rx={rx - 6} ry={ry - 3} className="hm-shield" />
-
-      {/* Three message cards: public text, names, a key. */}
-      <Packet kind="public" layout={layout} className="hm-p1" />
-      <Packet kind="names" layout={layout} className="hm-p2" />
-      <Packet kind="key" layout={layout} className="hm-p3" />
 
       {/* The ring, exit half in front of the cards. */}
-      <path d={arcs.front} pathLength={1} className="hm-ring hm-ring-front hm-in-draw hm-in-draw-late" />
+      <path d={`M${ringX} ${ringY - RING_B}A${RING_A} ${RING_B} 0 0 1 ${ringX} ${ringY + RING_B}`} className="hm-ring hm-ring-front" />
 
       {/* The lamps: green, amber, red, with a wire to the ring. */}
-      <g className="hm-in hm-in-pop hm-in-late">
-        <path d={`M${wireFrom[0]} ${wireFrom[1]}L${wireTo[0]} ${wireTo[1]}`} className="hm-wire" />
+      <g>
+        <path d={`M${ringX} ${ringY - RING_B}L${housingX} ${housingY + housingH / 2}`} className="hm-wire" />
         <rect
           x={round(housingX - housingW / 2)}
           y={round(housingY - housingH / 2)}
           width={housingW}
           height={housingH}
-          rx={housingW > housingH ? housingH / 2 : housingW / 2}
+          rx={housingH / 2}
           className="hm-housing"
         />
-        <Lamp kind="go" x={lampCentres[0][0]} y={lampCentres[0][1]} r={lampR} />
-        <Lamp kind="check" x={lampCentres[1][0]} y={lampCentres[1][1]} r={lampR} />
-        <Lamp kind="stop" x={lampCentres[2][0]} y={lampCentres[2][1]} r={lampR} />
+        <Lamp kind="go" x={lampXs[0]} y={housingY} r={lampR} />
+        <Lamp kind="check" x={lampXs[1]} y={housingY} r={lampR} />
+        <Lamp kind="stop" x={lampXs[2]} y={housingY} r={lampR} />
       </g>
 
-      {/* The cloud, with ripples where a card lands. */}
-      <g className="hm-in hm-in-pop hm-in-cloud">
-        <g className="hm-cloud">
-          <g transform={`translate(${cloudX} ${cloudY}) scale(${layout.cloud.scale})`}>
-            <path d={CLOUD_PATH} className="hm-cloud-shape" />
-            <path d="M-34 6A22 22 0 0 1-8 -12" className="hm-cloud-line" />
-          </g>
+      {/* The cloud, with a ripple ring where a card lands. */}
+      <g className="hm-cloud">
+        <g transform={`translate(${cloudX} ${cloudY})`}>
+          <path d={CLOUD_PATH} className="hm-cloud-shape" />
+          <path d="M-34 6A22 22 0 0 1-8 -12" className="hm-cloud-line" />
         </g>
       </g>
-      <ellipse cx={endX} cy={endY} rx={down ? 62 : 16} ry={down ? 16 : 62} className="hm-ripple hm-ripple-1" />
-      <ellipse cx={endX} cy={endY} rx={down ? 62 : 16} ry={down ? 16 : 62} className="hm-ripple hm-ripple-2" />
 
       {/* The laptop the cards come out of. */}
-      <g className="hm-in hm-in-rise">
-        <rect x={layout.screen.x} y={layout.screen.y} width={screenW} height={screenH} rx="9" className="hm-screen" />
-        <rect x={layout.screen.x + 6} y={layout.screen.y + 6} width={screenW - 12} height={screenH - 12} rx="4" className="hm-flash" />
-        <path d={`M${barX} ${barY}H${barX + 74}`} className="hm-typing hm-typing-1" />
-        <path d={`M${barX} ${barY + 16}H${barX + 52}`} className="hm-typing hm-typing-2" />
-        <path d={`M${barX} ${barY + 32}H${barX + 64}`} className="hm-typing hm-typing-3" />
-        <path d={`M${barX + 72} ${barY + 28}V${barY + 38}`} className="hm-cursor" />
-        <rect
-          x={layout.screen.x - 22}
-          y={layout.screen.y + screenH - 2}
-          width={screenW + 44}
-          height="10"
-          rx="5"
-          className="hm-base"
-        />
+      <g>
+        <rect x={SCREEN.x} y={SCREEN.y} width={SCREEN.w} height={SCREEN.h} rx="9" className="hm-screen" />
+        <g className="hm-typing">
+          <path d={`M${barX} ${barY}H${barX + 70}`} className="hm-typing-line" />
+          <path d={`M${barX} ${barY + 16}H${barX + 50}`} className="hm-typing-line" />
+          <path d={`M${barX} ${barY + 32}H${barX + 60}`} className="hm-typing-line" />
+        </g>
+        <rect x={SCREEN.x - 10} y={SCREEN.y + SCREEN.h - 2} width={SCREEN.w + 20} height="10" rx="5" className="hm-base" />
       </g>
     </svg>
   );

@@ -92,19 +92,27 @@ export interface WorkshopPageCopy {
     readonly allWorkshops: string;
     /** Phone back link in the cover kicker line. */
     readonly workshopsShort: string;
-    /** Secondary cover-band button that jumps to the material list. */
-    readonly seeMaterials: string;
-    /** Cover-band buttons, chosen by the role of the material they open. */
-    readonly primaryAction: Readonly<Record<WorkshopMaterialRole, string>>;
+    /** The stage under the band: two action cards (slides or lab, kit or case) and the pause control. */
+    readonly stage: {
+      /** sr-only h2 of the stage. */
+      readonly heading: string;
+      /** Titles of the four action cards. */
+      readonly slides: string;
+      readonly lab: string;
+      readonly kit: string;
+      readonly case: string;
+      /** CSS-only pause control (WCAG 2.2.2): label while motion plays, and while it is stopped. */
+      readonly pauseOff: string;
+      readonly pauseOn: string;
+    };
     /** Caption facts in the cover band. */
     readonly coverFacts: {
       readonly publicFigures: string;
       readonly materialsInEnglish: string;
       readonly free: string;
     };
-    /** "Du brauchst" before the limiting need (needs[0]) under the outcomes. */
+    /** Heading of the needs list in "Mehr Details". */
     readonly needLabel: string;
-    readonly outcomesHeading: string;
     readonly minutes: (minutes: number) => string;
     readonly minutesLive: (minutes: number) => string;
     readonly minutesSelfStudy: (minutes: number) => string;
@@ -229,20 +237,14 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       backAria: "Alle Workshops, zurück zur Übersicht",
       allWorkshops: "Alle Workshops",
       workshopsShort: "Workshops",
-      seeMaterials: "Material ansehen",
-      primaryAction: {
-        deck: "Deck öffnen",
-        presenter: "Moderationsansicht öffnen",
-        demo: "Demo starten",
-        guide: "Lernbegleiter lesen",
-        lab: "Labore öffnen",
-        case: "Fall öffnen",
-        card: "Prüfkarte öffnen",
-        exercise: "Übung öffnen",
+      stage: {
+        heading: "Starten",
+        slides: "Folien ansehen",
+        lab: "Labor öffnen",
         kit: "Kit herunterladen",
-        data: "Datensatz herunterladen",
-        hub: "Übersicht öffnen",
-        builder: "Leitfaden öffnen",
+        case: "Fall ansehen",
+        pauseOff: "Bewegung anhalten",
+        pauseOn: "Bewegung starten",
       },
       coverFacts: {
         publicFigures: "erfundener Fall und öffentliche Zahlen",
@@ -250,7 +252,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         free: "kostenlos, ohne Anmeldung",
       },
       needLabel: "Du brauchst",
-      outcomesHeading: "Nach dem Workshop",
       minutes: (minutes) => `${minutes} Min.`,
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
@@ -388,20 +389,14 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       backAria: "Back to all workshops",
       allWorkshops: "All workshops",
       workshopsShort: "Workshops",
-      seeMaterials: "See materials",
-      primaryAction: {
-        deck: "Open the deck",
-        presenter: "Open the presenter view",
-        demo: "Start the demo",
-        guide: "Read the learner guide",
-        lab: "Open the labs",
-        case: "Open the case",
-        card: "Open the field card",
-        exercise: "Open the exercise",
+      stage: {
+        heading: "Start",
+        slides: "View the slides",
+        lab: "Open the lab",
         kit: "Download the kit",
-        data: "Download the dataset",
-        hub: "Open the overview",
-        builder: "Open the guide",
+        case: "See the case",
+        pauseOff: "Stop motion",
+        pauseOn: "Start motion",
       },
       coverFacts: {
         publicFigures: "invented case plus public figures",
@@ -409,7 +404,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         free: "free, no sign-up",
       },
       needLabel: "You need",
-      outcomesHeading: "After this you can",
       minutes: (minutes) => `${minutes} min`,
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `self-paced about ${minutes} min`,

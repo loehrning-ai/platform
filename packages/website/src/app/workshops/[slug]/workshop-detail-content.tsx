@@ -9,14 +9,13 @@ import type {
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { workshopKitPath } from "@/lib/workshop-kit";
 import { workshopKitMaterial } from "@/lib/workshops";
+import { materialMeta, workshopStage } from "@/lib/workshop-stage";
 import {
   ArrowGlyph,
-  BUTTON_CLASSES,
   Callout,
   Chip,
   cx,
   Pictogram,
-  SectionHead,
   StatRow,
   type PictogramName,
 } from "@/components/werk";
@@ -26,8 +25,7 @@ import {
   PosterArt,
   ResultChart,
 } from "@/components/plakat";
-// Not in the plakat barrel: its stylesheet belongs to the workshop pages only.
-import { heroMotionArt } from "@/components/plakat/hero-motion";
+import { WorkshopStage } from "@/components/workshops/workshop-stage";
 import { HighlightedText } from "@/components/ui/highlighted-text";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import {
@@ -48,10 +46,7 @@ interface Props {
 type DetailCopy = (typeof WORKSHOP_PAGE_COPY)[Locale]["detail"];
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
-/** Phones: a tighter inset, so both band buttons share one row from 360px. */
-const PHONE_BUTTON = "max-sm:gap-1.5 max-sm:px-3";
 // Phones get a tighter rhythm; sm hands back the reviewed spacing.
-const SECTION = "pt-10 sm:pt-20";
 const MATERIAL_ANCHOR = "material";
 
 /** One pictogram family on the page: every material role maps to a deck glyph. */
@@ -157,13 +152,6 @@ export function titleHighlight(
   };
 }
 
-/** Roles that make a sensible second cover button next to the primary one. */
-const SECONDARY_ROLES: readonly WorkshopMaterialRole[] = [
-  "demo",
-  "lab",
-  "case",
-];
-
 function formatDate(value: string, locale: Locale): string {
   // Provenance dates may be a month ("2026-08") or a day ("2026-09-25").
   const monthOnly = /^\d{4}-\d{2}$/.test(value);
@@ -183,13 +171,6 @@ function keepAmountsTogether(text: string): string {
 /** Caption lines join facts that start lowercase mid-line; the line itself starts upper case. */
 function sentenceStart(text: string): string {
   return text.charAt(0).toLocaleUpperCase() + text.slice(1);
-}
-
-/** "HTML · EN", "ZIP · 1,1 MB", "CSV · 1,6 KB": format and size as data. */
-function materialMeta(material: WorkshopMaterial): string {
-  const parts = [material.kind.toUpperCase()];
-  parts.push(material.sizeLabel ?? material.language.toUpperCase());
-  return parts.join(" · ");
 }
 
 /** Characters that fit two phone lines at 14px on a 320px screen. */
@@ -377,37 +358,6 @@ function MaterialRow({
   );
 }
 
-/**
- * The art of a band. A workshop with its own hero scene (`HERO_MOTION` in
- * components/plakat/hero-motion.tsx, keyed by slug) shows it; every other
- * workshop shows its poster motif. Both come as the lg column (portrait) and
- * the phone row (landscape).
- */
-function bandArt(workshop: Workshop, scene: WorkshopPlakat) {
-  const hero = heroMotionArt(workshop.slug, workshop.number);
-  if (hero) return hero;
-  return {
-    art: (
-      <PosterArt
-        plakat={scene.plakat}
-        motif={scene.motif}
-        numeral={workshop.number}
-        format="portrait"
-        cornerDots={false}
-      />
-    ),
-    artPhone: (
-      <PosterArt
-        plakat={scene.plakat}
-        motif={scene.motif}
-        numeral={workshop.number}
-        format="landscape"
-        cornerDots={false}
-      />
-    ),
-  };
-}
-
 export function WorkshopDetailContent({ workshop, locale }: Props) {
   const copy = WORKSHOP_PAGE_COPY[locale].detail;
   const { caseStudy, realWorldCase, provenance } = workshop;
@@ -417,38 +367,28 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   const allMaterialsEnglish = workshop.materials.every(
     (material) => material.language === "en",
   );
-  const primary =
-    workshop.materials.find((material) => material.primary) ??
-    workshop.materials[0];
-  // A workshop with a kit block sends its kit card (and the second cover
-  // button) to the kit page instead of to the zip.
+  // A workshop with a kit block sends its kit row (in the material list, if
+  // it shows one) to the kit page instead of to the zip.
   const kitMaterial = workshopKitMaterial(workshop);
   const kitPath = kitMaterial
     ? localizeHref(workshopKitPath(workshop.slug), locale)
     : undefined;
   const kitPagePath = (material: WorkshopMaterial) =>
     material === kitMaterial ? kitPath : undefined;
-  const secondary = kitMaterial
-    ? undefined
-    : workshop.materials.find(
-        (material) =>
-          material !== primary && SECONDARY_ROLES.includes(material.role),
-      );
   const title = splitTitle(workshop.title);
   const heading = titleHighlight(title.head, HEADLINE_MARK[workshop.slug]?.[locale]);
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
-  const art = bandArt(workshop, scene);
 
-  // The two band buttons reach the primary file and one more (a lab, a case
-  // or the kit page). A material list is only worth its space when some file
-  // is left over, or when the second button is the jump to that list.
-  const reachedByBand = new Set<WorkshopMaterial>(
-    [primary, secondary, kitPath && kitMaterial !== primary ? kitMaterial : undefined].filter(
-      (material): material is WorkshopMaterial => Boolean(material),
+  // The stage's two cards reach the first two materials. A material list in
+  // "More details" is only worth its place when some file is left over.
+  const stage = workshopStage(workshop, locale);
+  const reachedByStage = new Set<WorkshopMaterial>(
+    [stage.a?.material, stage.b?.material].filter((material): material is WorkshopMaterial =>
+      Boolean(material),
     ),
   );
   const showMaterials = workshop.materials.some(
-    (material) => !reachedByBand.has(material),
+    (material) => !reachedByStage.has(material),
   );
 
   const coverFacts = [
@@ -493,7 +433,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   return (
     <article
       data-plakat-page={scene.plakat}
-      className="bg-background pb-16 sm:pb-24"
+      className="bg-background pb-28 sm:pb-24"
     >
       {/* Phones carry the back link at the top of the band instead, so the
           band starts right under the compact header. */}
@@ -523,15 +463,33 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         // a phone band reads as the poster, not as a page of type with a
         // scrap of art in the corner.
         artPhoneLayout="poster"
-        className="[&>[data-plakat-art-phone]]:mt-4"
+        // Phones: an 8:3 poster row, so the title, the summary and the top of
+        // the first action card share the first screen (390 x 664).
+        className="[&>[data-plakat-art-phone]]:mt-4 max-sm:[&>[data-plakat-art-phone]]:mt-3 max-sm:[&>[data-plakat-art-phone]]:aspect-[8/3]"
         // IDEA marks the band's own corners, as on the reference poster; the
         // art inside then carries no dots of its own. Phones start the
         // content at the same 20px on every band: the back link sits clear
         // of the dots, so the band rhythm does not change per workshop.
         cornerDots={PLAKAT[scene.plakat].cornerDots}
-        contentClassName="max-sm:pt-5"
-        art={art.art}
-        artPhone={art.artPhone}
+        contentClassName="max-sm:pt-5 lg:py-10"
+        art={
+          <PosterArt
+            plakat={scene.plakat}
+            motif={scene.motif}
+            numeral={workshop.number}
+            format="portrait"
+            cornerDots={false}
+          />
+        }
+        artPhone={
+          <PosterArt
+            plakat={scene.plakat}
+            motif={scene.motif}
+            numeral={workshop.number}
+            format="landscape"
+            cornerDots={false}
+          />
+        }
       >
         {/* Phones carry the back link inside the band; from sm the paper bar
             above the band holds it. */}
@@ -587,262 +545,46 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty max-[359px]:mt-3 sm:mt-5 lg:max-w-[46ch]">
           {keepAmountsTogether(workshop.summary)}
         </p>
-        {/* Below 360px both buttons span the column in one even stack. */}
-        <div className="mt-5 flex flex-wrap items-center gap-2 max-[359px]:mt-4 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>*]:w-full max-[359px]:[&>*]:justify-between sm:mt-8 sm:gap-3">
-          {primary ? (
-            <WorkshopMaterialLink
-              workshopSlug={workshop.slug}
-              material={primary}
-              className={cx(BUTTON_CLASSES.scene.primary, PHONE_BUTTON)}
-            >
-              <span>{copy.primaryAction[primary.role]}</span>
-              <ArrowGlyph
-                direction={primary.kind === "html" ? "right" : "down"}
-              />
-            </WorkshopMaterialLink>
-          ) : null}
-          {secondary ? (
-            <WorkshopMaterialLink
-              workshopSlug={workshop.slug}
-              material={secondary}
-              className={cx(BUTTON_CLASSES.scene.secondary, PHONE_BUTTON)}
-            >
-              <span>{copy.primaryAction[secondary.role]}</span>
-              <ArrowGlyph
-                direction={secondary.kind === "html" ? "right" : "down"}
-              />
-            </WorkshopMaterialLink>
-          ) : kitPath && kitMaterial !== primary ? (
-            <Link
-              href={kitPath}
-              className={cx(BUTTON_CLASSES.scene.secondary, PHONE_BUTTON)}
-            >
-              <span>{copy.kitPageAction}</span>
-              <ArrowGlyph direction="right" />
-            </Link>
-          ) : showMaterials ? (
-            <a
-              href={`#${MATERIAL_ANCHOR}`}
-              // A jump to the list below: a phone reaches it by scrolling,
-              // so the band keeps its one start button there.
-              className={cx(BUTTON_CLASSES.scene.secondary, "max-sm:hidden")}
-            >
-              <span>{copy.seeMaterials}</span>
-              <ArrowGlyph direction="down" />
-            </a>
-          ) : null}
-        </div>
       </PlakatBand>
 
-      {/* The brief on paper: one facts line, what you can do after, and the
-          one thing you need. Nothing else stands between the band and the
-          case. */}
-      <section
-        aria-labelledby="workshop-outcomes-heading"
-        data-workshop-brief=""
-        className="pb-3 pt-6 sm:py-10 lg:pt-14"
-      >
-        <div className={CONTAINER}>
-          <p
-            data-workshop-facts=""
-            className="text-caption text-muted-foreground tabular-nums"
-          >
-            {coverFacts.map((fact, index) => (
-              <span key={fact}>
-                {index > 0 ? " · " : null}
-                <span className="whitespace-nowrap">
-                  {index === 0 ? sentenceStart(fact) : fact}
-                </span>
-              </span>
-            ))}
-          </p>
-          <SectionHead
-            className="mt-4 sm:mt-6"
-            id="workshop-outcomes-heading"
-            title={copy.outcomesHeading}
-            size="compact"
-          />
-          <SquareList items={workshop.outcomes} className="mt-3 sm:mt-6" />
-          <p
-            data-workshop-need=""
-            className="mt-4 max-w-[64ch] text-[0.9375rem]/[1.5] text-foreground text-pretty sm:mt-6 sm:text-body"
-          >
-            <span className="font-semibold">{copy.needLabel}:</span>{" "}
-            {workshop.needs[0]}
-          </p>
-        </div>
-      </section>
+      <WorkshopStage workshop={workshop} locale={locale} plakat={scene.plakat} />
 
-      {showMaterials ? (
-        <section
-          id={MATERIAL_ANCHOR}
-          aria-labelledby="workshop-materials-heading"
-          className={cx(SECTION, "scroll-mt-20")}
+      {/* The one facts line. Everything else waits in "More details". */}
+      <div className={CONTAINER}>
+        <p
+          data-workshop-facts=""
+          className="pt-6 text-caption text-muted-foreground tabular-nums"
         >
-          <div className={CONTAINER}>
-            <SectionHead
-              id="workshop-materials-heading"
-              title={copy.materialHeading}
-              size="compact"
-            />
-            <ul className="mt-3 border-t border-hairline sm:mt-6">
-              {coreMaterials.map((material) => (
-                <MaterialRow
-                  key={material.href}
-                  workshopSlug={workshop.slug}
-                  material={material}
-                  copy={copy}
-                  locale={locale}
-                  pagePath={kitPagePath(material)}
-                />
-              ))}
-            </ul>
-            {optionalMaterials.length > 0 ? (
-              <details className="group mt-4 sm:mt-6">
-                <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
-                  {copy.moreMaterials(optionalMaterials.length)}
-                </summary>
-                <ul className="mt-2 border-t border-hairline">
-                  {optionalMaterials.map((material) => (
-                    <MaterialRow
-                      key={material.href}
-                      workshopSlug={workshop.slug}
-                      material={material}
-                      copy={copy}
-                      locale={locale}
-                      pagePath={kitPagePath(material)}
-                    />
-                  ))}
-                </ul>
-              </details>
-            ) : null}
-            {hasPresenter ? (
-              <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
-                <span className="font-semibold text-foreground">
-                  {copy.selfHostHeading}:
-                </span>{" "}
-                {copy.selfHostBody}
-              </p>
-            ) : null}
-          </div>
-        </section>
-      ) : null}
-
-      <section
-        id={CASE_ANCHOR}
-        aria-labelledby="workshop-case-heading"
-        className={cx(SECTION, "scroll-mt-20")}
-      >
-        <div className={CONTAINER}>
-          <SectionHead
-            size="compact"
-            id="workshop-case-heading"
-            title={copy.caseHeading}
-          />
-          <div className="mt-4 sm:mt-8">
-            <h3 className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3">
-              {caseStudy.companyName}
-            </h3>
-            <p className="mt-1 text-caption text-muted-foreground">
-              {[
-                caseStudy.isFictional ? copy.syntheticCase : copy.realCompanyData,
-                caseStudy.sector,
-                caseStudy.period,
-              ].join(" · ")}
-            </p>
-            <p className="mt-2 max-w-[64ch] text-[0.9375rem]/[1.55] text-foreground text-pretty sm:mt-4 sm:text-body">
-              {caseStudy.narrative}
-            </p>
-            {/* The one question of the workshop, with the Mennige bar. */}
-            <div
-              data-case-question=""
-              className="mt-4 grid max-w-[64ch] grid-cols-[0.25rem_minmax(0,1fr)] gap-4 sm:mt-6"
-            >
-              <span aria-hidden="true" className="bg-mennige" />
-              <p className="text-[1.0625rem]/[1.4] font-semibold text-foreground text-pretty sm:text-[1.25rem]/[1.35]">
-                {workshop.question}
-              </p>
-            </div>
-            {caseStudy.isFictional ? null : (
-              <p className="mt-3 max-w-[64ch] text-caption text-muted-foreground">
-                {copy.realExplanation(caseStudy.companyName, caseStudy.period)}
-              </p>
-            )}
-          </div>
-
-          {caseStudy.resultChart ? (
-            <ResultChart
-              plakat={scene.plakat}
-              className="mt-10 max-w-[56rem] sm:mt-14"
-              chart={{
-                heading: copy.resultChartHeading,
-                caption: copy.resultChartCaption(
-                  caseStudy.resultChart.unit,
-                  caseStudy.resultChart.basis,
-                  caseStudy.isFictional,
-                ),
-                note: caseStudy.resultChart.note,
-                unit: caseStudy.resultChart.unit,
-                bars: caseStudy.resultChart.bars,
-              }}
-            />
-          ) : null}
-
-          {realWorldCase ? (
-            <div className="mt-8 border-t border-hairline pt-5 sm:mt-14 sm:pt-8">
-              <h3 className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3">
-                {copy.realWorldHeading}
-              </h3>
-              <p className="mt-1 text-caption text-muted-foreground">
-                {realWorldCase.companyName}
-              </p>
-              <p className="mt-2 max-w-[64ch] text-[0.9375rem]/[1.55] text-foreground text-pretty sm:mt-4 sm:text-body">
-                {realWorldCase.narrative}
-              </p>
-              <StatRow
-                className="mt-5 gap-y-4 sm:mt-8 sm:gap-y-6 [&>div]:justify-between"
-                stats={realWorldCase.metrics.map((metric) => ({
-                  label: metric.label,
-                  value: <StatValue>{metric.value}</StatValue>,
-                }))}
-              />
-              <p className="mt-3 max-w-[80ch] sm:mt-4 text-caption text-muted-foreground">
-                {copy.source}:{" "}
-                <a
-                  href={realWorldCase.sourceHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center gap-1 font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
-                >
-                  {realWorldCase.source}
-                  <ArrowGlyph direction="external" className="size-3.5" />
-                  <span className="sr-only">
-                    {locale === "de"
-                      ? " (öffnet neues Fenster)"
-                      : " (opens in a new window)"}
-                  </span>
-                </a>{" "}
-                · {copy.published}{" "}
-                <time dateTime={realWorldCase.sourcePublishedAt}>
-                  {formatDate(realWorldCase.sourcePublishedAt, locale)}
-                </time>{" "}
-                · {copy.reviewed}{" "}
-                <time dateTime={realWorldCase.sourceReviewedAt}>
-                  {formatDate(realWorldCase.sourceReviewedAt, locale)}
-                </time>
-                . {realWorldCase.sourceLimitation}
-              </p>
-            </div>
-          ) : null}
-        </div>
-      </section>
+          {coverFacts.map((fact, index) => (
+            <span key={fact}>
+              {index > 0 ? " · " : null}
+              <span className="whitespace-nowrap">
+                {index === 0 ? sentenceStart(fact) : fact}
+              </span>
+            </span>
+          ))}
+        </p>
+      </div>
 
       <section
         aria-labelledby="workshop-details-heading"
-        className={cx(CONTAINER, SECTION)}
+        className={cx(CONTAINER, "pt-6 sm:pt-8")}
       >
-        <details className="border-t-2 border-scene-line pt-3 sm:pt-4">
+        <details className="group/details border-t-2 border-scene-line pt-3 sm:pt-4">
           <summary className="flex min-h-11 cursor-pointer flex-wrap items-baseline gap-x-4 gap-y-1">
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
+              className="size-4 shrink-0 self-center transition-transform duration-[120ms] group-open/details:rotate-90"
+            >
+              <path d="M7 3l7 7-7 7" />
+            </svg>
             <h2
               id="workshop-details-heading"
               className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
@@ -854,15 +596,59 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             </span>
           </summary>
           <div className="mt-6 grid gap-8 sm:gap-12 md:grid-cols-2 md:gap-12">
-            <section aria-labelledby="workshop-audience-heading">
-              <MinorHead id="workshop-audience-heading" title={copy.forWhom} />
-              <SquareList items={workshop.audience} className="mt-3 sm:mt-6" />
-              <p className="mt-3 max-w-[60ch] sm:mt-5 text-caption text-muted-foreground">
-                {workshop.notForYou}
-              </p>
+            {showMaterials ? (
+              <section
+                id={MATERIAL_ANCHOR}
+                aria-labelledby="workshop-materials-heading"
+                className="md:col-span-2"
+              >
+                <MinorHead id="workshop-materials-heading" title={copy.materialHeading} />
+                <ul className="mt-3 sm:mt-6">
+                  {coreMaterials.map((material) => (
+                    <MaterialRow
+                      key={material.href}
+                      workshopSlug={workshop.slug}
+                      material={material}
+                      copy={copy}
+                      locale={locale}
+                      pagePath={kitPagePath(material)}
+                    />
+                  ))}
+                </ul>
+                {optionalMaterials.length > 0 ? (
+                  <details className="group mt-4 sm:mt-6">
+                    <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                      {copy.moreMaterials(optionalMaterials.length)}
+                    </summary>
+                    <ul className="mt-2 border-t border-hairline">
+                      {optionalMaterials.map((material) => (
+                        <MaterialRow
+                          key={material.href}
+                          workshopSlug={workshop.slug}
+                          material={material}
+                          copy={copy}
+                          locale={locale}
+                          pagePath={kitPagePath(material)}
+                        />
+                      ))}
+                    </ul>
+                  </details>
+                ) : null}
+                {hasPresenter ? (
+                  <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
+                    <span className="font-semibold text-foreground">
+                      {copy.selfHostHeading}:
+                    </span>{" "}
+                    {copy.selfHostBody}
+                  </p>
+                ) : null}
+              </section>
+            ) : null}
+            <section aria-labelledby="workshop-needs-heading">
+              <MinorHead id="workshop-needs-heading" title={copy.needLabel} />
+              <SquareList items={workshop.needs} className="mt-3 sm:mt-6" />
             </section>
             <section aria-labelledby="workshop-not-needed-heading">
-              {/* What you need is said once, in the line under the outcomes. */}
               <MinorHead id="workshop-not-needed-heading" title={copy.notNeededHeading} />
               <ul className="mt-3 grid gap-1.5 text-[0.9375rem] leading-normal text-muted-foreground sm:mt-6">
                 {workshop.notNeeded.map((item) => (
@@ -872,6 +658,13 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               <Callout variant="boundary" className="mt-4 max-w-[64ch] sm:mt-6">
                 {workshop.accessNote}
               </Callout>
+            </section>
+            <section aria-labelledby="workshop-audience-heading">
+              <MinorHead id="workshop-audience-heading" title={copy.forWhom} />
+              <SquareList items={workshop.audience} className="mt-3 sm:mt-6" />
+              <p className="mt-3 max-w-[60ch] sm:mt-5 text-caption text-muted-foreground">
+                {workshop.notForYou}
+              </p>
             </section>
             <section aria-labelledby="workshop-not-covered-heading">
               <MinorHead id="workshop-not-covered-heading" title={copy.notCoveredHeading} />
@@ -886,7 +679,109 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 ))}
               </ul>
             </section>
-            <section aria-labelledby="workshop-case-facts-heading">
+            <section
+              id={CASE_ANCHOR}
+              aria-labelledby="workshop-case-heading"
+              className="md:col-span-2"
+            >
+              <MinorHead id="workshop-case-heading" title={copy.caseHeading} />
+              <div className="mt-3 sm:mt-6">
+                <p className="text-[1.125rem]/[1.2] font-bold text-foreground">
+                  {caseStudy.companyName}
+                </p>
+                <p className="mt-1 text-caption text-muted-foreground">
+                  {[
+                    caseStudy.isFictional ? copy.syntheticCase : copy.realCompanyData,
+                    caseStudy.sector,
+                    caseStudy.period,
+                  ].join(" · ")}
+                </p>
+                <p className="mt-2 max-w-[64ch] text-[0.9375rem]/[1.55] text-foreground text-pretty sm:mt-3 sm:text-body">
+                  {caseStudy.narrative}
+                </p>
+                {/* The one question of the workshop, with the Mennige bar. */}
+                <div
+                  data-case-question=""
+                  className="mt-4 grid max-w-[64ch] grid-cols-[0.25rem_minmax(0,1fr)] gap-4 sm:mt-6"
+                >
+                  <span aria-hidden="true" className="bg-mennige" />
+                  <p className="text-[1.0625rem]/[1.4] font-semibold text-foreground text-pretty sm:text-[1.25rem]/[1.35]">
+                    {workshop.question}
+                  </p>
+                </div>
+                {caseStudy.isFictional ? null : (
+                  <p className="mt-3 max-w-[64ch] text-caption text-muted-foreground">
+                    {copy.realExplanation(caseStudy.companyName, caseStudy.period)}
+                  </p>
+                )}
+              </div>
+
+              {caseStudy.resultChart ? (
+                <ResultChart
+                  plakat={scene.plakat}
+                  className="mt-8 max-w-[56rem] sm:mt-10"
+                  chart={{
+                    heading: copy.resultChartHeading,
+                    caption: copy.resultChartCaption(
+                      caseStudy.resultChart.unit,
+                      caseStudy.resultChart.basis,
+                      caseStudy.isFictional,
+                    ),
+                    note: caseStudy.resultChart.note,
+                    unit: caseStudy.resultChart.unit,
+                    bars: caseStudy.resultChart.bars,
+                  }}
+                />
+              ) : null}
+
+              {realWorldCase ? (
+                <div className="mt-8 border-t border-hairline pt-5 sm:mt-10 sm:pt-6">
+                  <h4 className="text-[1.0625rem]/[1.2] font-bold text-foreground">
+                    {copy.realWorldHeading}
+                  </h4>
+                  <p className="mt-1 text-caption text-muted-foreground">
+                    {realWorldCase.companyName}
+                  </p>
+                  <p className="mt-2 max-w-[64ch] text-[0.9375rem]/[1.55] text-foreground text-pretty sm:mt-3 sm:text-body">
+                    {realWorldCase.narrative}
+                  </p>
+                  <StatRow
+                    className="mt-5 gap-y-4 sm:mt-6 sm:gap-y-6 [&>div]:justify-between"
+                    stats={realWorldCase.metrics.map((metric) => ({
+                      label: metric.label,
+                      value: <StatValue>{metric.value}</StatValue>,
+                    }))}
+                  />
+                  <p className="mt-3 max-w-[80ch] sm:mt-4 text-caption text-muted-foreground">
+                    {copy.source}:{" "}
+                    <a
+                      href={realWorldCase.sourceHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-11 items-center gap-1 font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+                    >
+                      {realWorldCase.source}
+                      <ArrowGlyph direction="external" className="size-3.5" />
+                      <span className="sr-only">
+                        {locale === "de"
+                          ? " (öffnet neues Fenster)"
+                          : " (opens in a new window)"}
+                      </span>
+                    </a>{" "}
+                    · {copy.published}{" "}
+                    <time dateTime={realWorldCase.sourcePublishedAt}>
+                      {formatDate(realWorldCase.sourcePublishedAt, locale)}
+                    </time>{" "}
+                    · {copy.reviewed}{" "}
+                    <time dateTime={realWorldCase.sourceReviewedAt}>
+                      {formatDate(realWorldCase.sourceReviewedAt, locale)}
+                    </time>
+                    . {realWorldCase.sourceLimitation}
+                  </p>
+                </div>
+              ) : null}
+            </section>
+            <section aria-labelledby="workshop-case-facts-heading" className="md:col-span-2">
               <MinorHead
                 id="workshop-case-facts-heading"
                 title={caseStudy.limitationsHeading ?? copy.limitations}
@@ -914,7 +809,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
 
       <footer
         aria-label={copy.provenanceHeading}
-        className={cx(CONTAINER, "pt-10 sm:pt-20")}
+        className={cx(CONTAINER, "pt-4 sm:pt-8")}
       >
         <p className="border-t border-hairline pt-5 text-caption text-muted-foreground tabular-nums">
           {provenanceFacts.join(" · ")}

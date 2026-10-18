@@ -1,71 +1,80 @@
 import type { ReactNode } from "react";
-import { GateScene, type GateVariant } from "./hero-gate-scene";
-import "./hero-motion.css";
+import { ConeScene } from "./hero-cone-scene";
+import { GateScene } from "./hero-gate-scene";
+import { MendScene } from "./hero-mend-scene";
+import { TraceScene } from "./hero-trace-scene";
+import { WeaveScene } from "./hero-weave-scene";
 
 /**
- * Hero motion: an animated scene in the poster band of one workshop, in place
- * of its poster motif. A server component with no script: SVG and CSS only
- * (hero-motion.css holds the still frame and the keyframes).
+ * The scene registry of the workshop stage: one animated scene per workshop,
+ * shown beside the two action cards under the band
+ * (src/components/workshops/workshop-stage.tsx). A server component tree with
+ * no script: SVG and CSS only. The band itself always keeps the poster motif;
+ * the hub thumb, the social card and the deck cover too, so a scene never has
+ * to fit those.
  *
- * Add a scene by writing its SVG next to `hero-gate-scene.tsx`, naming it in
- * `HERO_SCENES` and mapping the workshop slug in `HERO_MOTION`. Only the
- * workshops listed in `HERO_MOTION` get one; every other workshop keeps its
- * poster. The hub thumb, the social card and the deck cover always keep the
- * poster motif, so a scene never has to fit those.
+ * Add a scene (docs/workshop-standard.md, "Adding a workshop"):
+ * 1. Write `hero-<key>-scene.tsx` (a named export `<Key>Scene(): ReactNode`
+ *    with no props) and `hero-<key>.css` (imported by the component) next to
+ *    `hero-gate-scene.tsx`.
+ * 2. Add the key to `HeroSceneKey`, import the component and add one line to
+ *    `HERO_SCENES`.
+ * 3. Map the workshop slug to the key in `HERO_MOTION`.
+ * Until step 2 is done, the stage of that workshop shows its cards across the
+ * full width, so the page is never broken in between.
  *
- * Rules every scene keeps (docs/experience-system.md, "Hero scenes"): the
- * title stays the h1 and is never animated, the scene is aria-hidden and
- * takes no focus, the base styles are the finished still frame, every
- * animation lives under `prefers-reduced-motion: no-preference`, and only
- * transform, opacity and stroke-dashoffset move.
+ * Rules every scene keeps (docs/experience-system.md, "Workshop stage and
+ * scenes"): one 600 x 500 viewBox, aria-hidden and no focus, no text, the base
+ * styles are the finished still frame, every animation lives under
+ * `prefers-reduced-motion: no-preference`, and only transform, opacity and
+ * stroke-dashoffset move.
  */
 
-export type HeroMotionScene = "gate";
+export type HeroSceneKey = "cone" | "trace" | "mend" | "weave" | "gate";
 
-export type HeroMotionVariant = GateVariant;
-
-const HERO_SCENES: Readonly<
-  Record<HeroMotionScene, (variant: HeroMotionVariant, numeral: string | undefined) => ReactNode>
-> = {
-  gate: (variant, numeral) => <GateScene variant={variant} {...(numeral ? { numeral } : {})} />,
+/**
+ * Scene key to component. A new workshop adds one import and one line here.
+ */
+const HERO_SCENES: Readonly<Partial<Record<HeroSceneKey, () => ReactNode>>> = {
+  cone: ConeScene,
+  trace: TraceScene,
+  mend: MendScene,
+  weave: WeaveScene,
+  gate: GateScene,
 };
 
-/** Workshop slug to scene. Workshop 05 tells the story of its own page: where a prompt goes. */
-export const HERO_MOTION: Readonly<Record<string, HeroMotionScene>> = {
+/** Workshop slug to scene key. All five workshops have one; unwired keys render nothing yet. */
+export const HERO_MOTION: Readonly<Record<string, HeroSceneKey>> = {
+  "ki-prognosen-einschaetzen": "cone",
+  "geschaeftsberichte-mit-ki-lesen": "trace",
+  "datenbereitschaft-fuer-ki": "mend",
+  "esg-berichte-mit-ki": "weave",
+  // Workshop 05 tells the story of its own page: where a prompt goes.
   "ki-im-unternehmen-sicher-nutzen": "gate",
 };
 
-/** The scene of a workshop, or undefined for a workshop that keeps its poster. */
-export function heroMotionScene(slug: string): HeroMotionScene | undefined {
+/** The scene key of a workshop, or undefined for a slug without one. */
+export function heroMotionScene(slug: string): HeroSceneKey | undefined {
   return Object.hasOwn(HERO_MOTION, slug) ? HERO_MOTION[slug] : undefined;
 }
 
-export type HeroMotionProps = {
-  readonly scene: HeroMotionScene;
-  /** portrait: the lg band column (400 x 500). landscape: the phone row (16:9). */
-  readonly variant: HeroMotionVariant;
-  /** The workshop's sequence number ("05"), drawn as a pale figure behind the scene. */
-  readonly numeral?: string;
-};
-
-export function HeroMotion({ scene, variant, numeral }: HeroMotionProps): ReactNode {
-  return HERO_SCENES[scene](variant, numeral);
+/** True once the scene of this key is wired into `HERO_SCENES`. */
+export function isHeroSceneWired(scene: HeroSceneKey): boolean {
+  return Object.hasOwn(HERO_SCENES, scene);
 }
 
-/**
- * The two art slots of a band for a workshop with a hero scene: `art` for the
- * lg column and `artPhone` for the row below lg. Undefined when the workshop
- * has none, so the caller falls back to its poster.
- */
-export function heroMotionArt(
-  slug: string,
-  numeral?: string,
-): { readonly art: ReactNode; readonly artPhone: ReactNode } | undefined {
+export type HeroMotionProps = {
+  readonly scene: HeroSceneKey;
+};
+
+/** One scene by key, or null while it is not wired yet. */
+export function HeroMotion({ scene }: HeroMotionProps): ReactNode {
+  const component = HERO_SCENES[scene];
+  return component ? component() : null;
+}
+
+/** The scene of a workshop, ready to render, or null (no scene, or not wired yet). */
+export function renderHeroScene(slug: string): ReactNode {
   const scene = heroMotionScene(slug);
-  if (!scene) return undefined;
-  const figure = numeral ? { numeral } : {};
-  return {
-    art: <HeroMotion scene={scene} variant="portrait" {...figure} />,
-    artPhone: <HeroMotion scene={scene} variant="landscape" {...figure} />,
-  };
+  return scene && isHeroSceneWired(scene) ? <HeroMotion scene={scene} /> : null;
 }

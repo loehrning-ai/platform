@@ -4,19 +4,21 @@ import { render } from "@testing-library/react";
 import postcss, { type AtRule, type Container, type Declaration, type Rule } from "postcss";
 import { describe, expect, it } from "vitest";
 import { WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
-import { HERO_MOTION, HeroMotion, heroMotionArt, heroMotionScene } from "./hero-motion";
+import { GateScene } from "./hero-gate-scene";
+import { HERO_MOTION, HeroMotion, heroMotionScene, isHeroSceneWired, renderHeroScene } from "./hero-motion";
 
 const DIR = __dirname;
 const SLUG = "ki-im-unternehmen-sicher-nutzen";
 const SOURCES = ["hero-motion.tsx", "hero-gate-scene.tsx"] as const;
-const CSS = readFileSync(join(DIR, "hero-motion.css"), "utf8");
+const CSS = readFileSync(join(DIR, "hero-gate.css"), "utf8");
 const ROOT = postcss.parse(CSS);
 const RULES_ONLY = CSS.replace(/\/\*[\s\S]*?\*\//g, "");
 
 const NO_PREFERENCE = "prefers-reduced-motion: no-preference";
 const REDUCE = "prefers-reduced-motion: reduce";
-/** The only properties a keyframe may move (docs/experience-system.md, "Hero scenes"). */
+/** The only properties a keyframe may move (docs/experience-system.md, "Workshop stage and scenes"). */
 const MOVING = new Set(["transform", "opacity", "stroke-dashoffset", "animation-timing-function"]);
+const SCENE_KEYS = ["cone", "trace", "mend", "weave", "gate"];
 
 function inside(node: Container | undefined, media: string): boolean {
   for (let parent = node; parent; parent = parent.parent as Container | undefined) {
@@ -45,89 +47,106 @@ function rules(match: (rule: Rule) => boolean): Rule[] {
   return found;
 }
 
-function renderBoth() {
-  const art = heroMotionArt(SLUG, "05");
-  expect(art).toBeDefined();
-  return render(
-    <div>
-      <div data-slot="art">{art!.art}</div>
-      <div data-slot="art-phone">{art!.artPhone}</div>
-    </div>,
-  );
+function animatedSelectors(): string[] {
+  const names = new Set<string>();
+  rules((rule) => inside(rule, NO_PREFERENCE)).forEach((rule) => {
+    if (rule.nodes?.some((node) => node.type === "decl" && node.prop === "animation")) {
+      for (const selector of rule.selectors) names.add(selector.trim());
+    }
+  });
+  return [...names];
 }
 
 describe("hero motion registry", () => {
-  it("wires only Workshop 05, and only to a workshop that has a poster scene", () => {
-    expect(Object.keys(HERO_MOTION)).toEqual([SLUG]);
-    expect(heroMotionScene(SLUG)).toBe("gate");
+  it("maps all five workshops to one scene key each, and each slug to a workshop that has a poster", () => {
+    expect(Object.keys(HERO_MOTION).sort()).toEqual(Object.keys(WORKSHOP_PLAKAT).sort());
+    expect(Object.values(HERO_MOTION).sort()).toEqual([...SCENE_KEYS].sort());
     for (const slug of Object.keys(WORKSHOP_PLAKAT)) {
-      if (slug !== SLUG) {
-        expect(heroMotionScene(slug), slug).toBeUndefined();
-        expect(heroMotionArt(slug, "01"), slug).toBeUndefined();
-      }
+      expect(heroMotionScene(slug), slug).toBe(HERO_MOTION[slug]);
     }
-    for (const slug of Object.keys(HERO_MOTION)) expect(Object.keys(WORKSHOP_PLAKAT)).toContain(slug);
+    expect(heroMotionScene(SLUG)).toBe("gate");
     expect(heroMotionScene("constructor")).toBeUndefined();
+    expect(heroMotionScene("not-a-workshop")).toBeUndefined();
+  });
+
+  it("renders a wired scene into the stage and nothing for a scene that is not wired yet", () => {
+    expect(isHeroSceneWired("gate")).toBe(true);
+    const { container } = render(<div>{renderHeroScene(SLUG)}</div>);
+    expect(container.querySelectorAll("svg[data-hero-motion='gate']")).toHaveLength(1);
+    // Every wired scene renders; every unwired one renders nothing and is not claimed by the stage.
+    for (const key of SCENE_KEYS as ("cone" | "trace" | "mend" | "weave" | "gate")[]) {
+      const view = render(<div>{<HeroMotion scene={key} />}</div>);
+      const svgs = view.container.querySelectorAll(`svg[data-hero-motion='${key}']`);
+      expect(svgs.length, key).toBe(isHeroSceneWired(key) ? 1 : 0);
+      view.unmount();
+    }
+    for (const [slug, key] of Object.entries(HERO_MOTION)) {
+      expect(renderHeroScene(slug) !== null, slug).toBe(isHeroSceneWired(key));
+    }
+    expect(renderHeroScene("not-a-workshop")).toBeNull();
+  });
+
+  it("no longer draws a scene into the band: no variant, no numeral parameter", () => {
+    const source = readFileSync(join(DIR, "hero-motion.tsx"), "utf8");
+    expect(source).not.toMatch(/heroMotionArt|HeroMotionVariant|variant|numeral/);
   });
 });
 
 describe("the gate scene", () => {
-  it("renders the lg column and the phone row, decorative and inert", () => {
-    const { container } = renderBoth();
-    const svgs = [...container.querySelectorAll("svg")];
-    expect(svgs.map((svg) => svg.getAttribute("data-hero-variant"))).toEqual(["portrait", "landscape"]);
-    expect(svgs.map((svg) => svg.getAttribute("viewBox"))).toEqual(["0 0 400 500", "0 0 640 360"]);
-    for (const svg of svgs) {
-      expect(svg).toHaveAttribute("aria-hidden", "true");
-      expect(svg).toHaveAttribute("focusable", "false");
-      expect(svg).toHaveAttribute("data-hero-motion", "gate");
-      expect(svg).toHaveClass("hm-root", "size-full");
-      // Nothing to focus, click or announce, and nothing that needs an id:
-      // both instances sit in one document.
-      expect(svg.querySelectorAll("a, button, input, select, textarea, [tabindex], title, desc, script, foreignObject, use, image")).toHaveLength(0);
-      expect(svg.querySelectorAll("[id], [href], [onclick], [style]")).toHaveLength(0);
-      expect(svg.querySelectorAll("defs, linearGradient, radialGradient, filter, clipPath, mask, pattern")).toHaveLength(0);
-      expect(svg.querySelector("text")).toHaveTextContent("05");
+  it("is one decorative, inert 600 x 500 canvas without text, ids or defs", () => {
+    const { container } = render(<GateScene />);
+    const svg = container.querySelector("svg")!;
+    expect(svg).toHaveAttribute("viewBox", "0 0 600 500");
+    expect(svg).toHaveAttribute("preserveAspectRatio", "xMidYMid meet");
+    expect(svg).toHaveAttribute("aria-hidden", "true");
+    expect(svg).toHaveAttribute("focusable", "false");
+    expect(svg).toHaveAttribute("data-hero-motion", "gate");
+    expect(svg).not.toHaveAttribute("data-hero-variant");
+    expect(svg).toHaveClass("hm-root", "block", "size-full");
+    expect(svg.querySelectorAll("a, button, input, select, textarea, [tabindex], title, desc, script, foreignObject, use, image, text")).toHaveLength(0);
+    expect(svg.querySelectorAll("[id], [href], [onclick], [style]")).toHaveLength(0);
+    expect(svg.querySelectorAll("defs, linearGradient, radialGradient, filter, clipPath, mask, pattern")).toHaveLength(0);
+  });
+
+  it("tells the story with three cards, three lamps and the ring", () => {
+    const { container } = render(<GateScene />);
+    const svg = container.querySelector("svg")!;
+    expect(svg.querySelectorAll(".hm-packet")).toHaveLength(3);
+    expect(svg.querySelectorAll(".hm-p1, .hm-p2, .hm-p3")).toHaveLength(3);
+    // The names card carries the bars that cover its names; the lamps each
+    // carry a glyph, so the meaning never rests on colour alone.
+    expect(svg.querySelectorAll(".hm-p2 .hm-cover-bar")).toHaveLength(3);
+    for (const lamp of svg.querySelectorAll(".hm-lamp")) {
+      expect(lamp.querySelectorAll("path.hm-lamp-glyph"), lamp.getAttribute("class") ?? "").toHaveLength(1);
     }
+    expect(svg.querySelectorAll(".hm-lamp-go, .hm-lamp-check, .hm-lamp-stop")).toHaveLength(3);
+    expect(svg.querySelectorAll(".hm-ring-back, .hm-ring-front")).toHaveLength(2);
+    expect(svg.querySelectorAll(".hm-cloud-shape")).toHaveLength(1);
+    expect(svg.querySelectorAll(".hm-orbit-ring")).toHaveLength(2);
   });
 
-  it("draws no figure when no numeral is passed", () => {
-    const { container } = render(<HeroMotion scene="gate" variant="portrait" />);
-    expect(container.querySelector("text")).toBeNull();
-  });
-
-  it("tells the story with three cards, three lamps and the ring, the same parts in both layouts", () => {
-    const { container } = renderBoth();
-    for (const svg of container.querySelectorAll("svg")) {
-      expect(svg.querySelectorAll(".hm-packet")).toHaveLength(3);
-      expect(svg.querySelectorAll(".hm-p1, .hm-p2, .hm-p3")).toHaveLength(3);
-      // The names card carries the bars that cover its names; the lamps each
-      // carry a glyph, so the meaning never rests on colour alone.
-      expect(svg.querySelectorAll(".hm-p2 .hm-cover-bar")).toHaveLength(3);
-      for (const lamp of svg.querySelectorAll(".hm-lamp")) {
-        expect(lamp.querySelectorAll("path.hm-lamp-glyph"), lamp.getAttribute("class") ?? "").toHaveLength(1);
-      }
-      expect(svg.querySelectorAll(".hm-lamp-go, .hm-lamp-check, .hm-lamp-stop")).toHaveLength(3);
-      expect(svg.querySelectorAll(".hm-ring-back, .hm-ring-front")).toHaveLength(2);
-      expect(svg.querySelectorAll(".hm-cloud-shape")).toHaveLength(1);
-      expect(svg.querySelectorAll(".hm-orbit-ring")).toHaveLength(2);
-      // The scene draws no word but the figure.
-      expect([...svg.querySelectorAll("text")].map((text) => text.textContent)).toEqual(["05"]);
-    }
-  });
-
-  it("keeps every part inside its canvas, so nothing shifts the layout", () => {
-    const { container } = renderBoth();
-    for (const svg of container.querySelectorAll("svg")) {
-      const [, , width, height] = (svg.getAttribute("viewBox") ?? "").split(" ").map(Number);
-      for (const shape of svg.querySelectorAll(".hm-screen, .hm-housing, .hm-base")) {
-        const x = Number(shape.getAttribute("x"));
-        const y = Number(shape.getAttribute("y"));
-        expect(x, shape.getAttribute("class") ?? "").toBeGreaterThanOrEqual(0);
-        expect(y).toBeGreaterThanOrEqual(0);
-        expect(x + Number(shape.getAttribute("width") ?? 0)).toBeLessThanOrEqual(width);
-        expect(y + Number(shape.getAttribute("height") ?? 0)).toBeLessThanOrEqual(height);
-      }
+  it("lays the flow out left to right on the one canvas: laptop, ring, cloud, lamps above the ring", () => {
+    const { container } = render(<GateScene />);
+    const svg = container.querySelector("svg")!;
+    const x = (selector: string) => Number(svg.querySelector(selector)!.getAttribute("x"));
+    const screen = x(".hm-screen");
+    const housing = x(".hm-housing") + Number(svg.querySelector(".hm-housing")!.getAttribute("width")) / 2;
+    const ring = svg.querySelector(".hm-scan-line")!.getAttribute("d")!;
+    const ringX = Number(/^M(\d+(?:\.\d+)?)/.exec(ring)![1]);
+    const cloud = /translate\((\d+(?:\.\d+)?)/.exec(svg.querySelector(".hm-cloud > g")!.getAttribute("transform")!)!;
+    expect(screen).toBeLessThan(ringX);
+    expect(ringX).toBeLessThan(Number(cloud[1]));
+    // The lamp housing is centred on the ring and sits above it.
+    expect(housing).toBeCloseTo(ringX, 0);
+    expect(Number(svg.querySelector(".hm-housing")!.getAttribute("y"))).toBeLessThan(250);
+    // Every solid part sits inside the canvas, so nothing shifts the layout.
+    for (const shape of svg.querySelectorAll(".hm-screen, .hm-housing, .hm-base")) {
+      const left = Number(shape.getAttribute("x"));
+      const top = Number(shape.getAttribute("y"));
+      expect(left, shape.getAttribute("class") ?? "").toBeGreaterThanOrEqual(40);
+      expect(top).toBeGreaterThanOrEqual(40);
+      expect(left + Number(shape.getAttribute("width"))).toBeLessThanOrEqual(560);
+      expect(top + Number(shape.getAttribute("height"))).toBeLessThanOrEqual(460);
     }
   });
 });
@@ -148,14 +167,14 @@ describe("hero-motion source contract", () => {
       const imports = [...readFileSync(join(DIR, file), "utf8").matchAll(/^import .* from "([^"]+)";/gm)].map((match) => match[1]);
       for (const specifier of imports) expect(specifier, file).toMatch(/^(?:react|\.\/hero-[a-z-]+)$/);
     }
-    expect(readFileSync(join(DIR, "hero-motion.tsx"), "utf8")).toContain('import "./hero-motion.css";');
+    expect(readFileSync(join(DIR, "hero-gate-scene.tsx"), "utf8")).toContain('import "./hero-gate.css";');
   });
 });
 
-describe("hero-motion.css", () => {
+describe("hero-gate.css", () => {
   it("keeps every animation, transition and keyframe under no-preference", () => {
     const moving = declarations((declaration) => /^(?:animation|transition)/.test(declaration.prop));
-    expect(moving.length).toBeGreaterThan(20);
+    expect(moving.length).toBeGreaterThan(12);
     for (const declaration of moving) {
       const allowed = inside(declaration.parent as Container, NO_PREFERENCE) || inside(declaration.parent as Container, REDUCE);
       expect(allowed, `${declaration.parent && "selector" in declaration.parent ? (declaration.parent as Rule).selector : ""} { ${declaration.prop} }`).toBe(true);
@@ -164,7 +183,7 @@ describe("hero-motion.css", () => {
     ROOT.walkAtRules("keyframes", (rule) => {
       keyframes.push(rule);
     });
-    expect(keyframes.length).toBeGreaterThan(20);
+    expect(keyframes.length).toBeGreaterThan(12);
     for (const rule of keyframes) expect(inside(rule.parent as Container, NO_PREFERENCE), rule.params).toBe(true);
   });
 
@@ -228,8 +247,8 @@ describe("hero-motion.css", () => {
       return value;
     });
     expect(new Set(rest).size).toBe(3);
-    // Ripples, the shield, the scan and the wash only exist in the story.
-    for (const selector of [".hm-ripple", ".hm-shield", ".hm-scan", ".hm-wash", ".hm-pulse", ".hm-spoke"]) {
+    // The scan only exists in the story.
+    for (const selector of [".hm-scan"]) {
       let opacity = "";
       for (const rule of base(selector)) {
         rule.walkDecls("opacity", (declaration) => {
@@ -240,26 +259,41 @@ describe("hero-motion.css", () => {
     }
   });
 
-  it("starts the story after the intro and runs one 9 second loop with a shared clock", () => {
+  it("runs the story on the stage clock: one loop of --ws-t (9 seconds) after the intro", () => {
     const loops = declarations((declaration) => declaration.prop === "animation" && declaration.value.includes("var(--hm-go)"));
-    expect(loops.length).toBeGreaterThanOrEqual(15);
+    expect(loops.length).toBeGreaterThanOrEqual(10);
     for (const declaration of loops) {
-      expect(declaration.value, declaration.value).toMatch(/\b9s\b.*\binfinite\b.*\bbackwards\b/);
+      expect(declaration.value, declaration.value).toMatch(/var\(--hm-t\).*\binfinite\b.*\bbackwards\b/);
     }
+    expect(CSS).toMatch(/--hm-t:\s*var\(--ws-t,\s*9s\)/);
   });
 
-  it("switches the lane per layout and hides the costly detail on the narrowest phones", () => {
-    expect(CSS).toMatch(/\[data-hero-variant="portrait"\][^{]*\{[^}]*--hm-ly:\s*300px/s);
-    expect(CSS).toMatch(/\[data-hero-variant="landscape"\][^{]*\{[^}]*--hm-lx:\s*444px/s);
-    expect(CSS).toMatch(/@media \(width < 22\.5rem\)[^{]*\{[^}]*\.hm-ripple[^}]*\.hm-cursor[^}]*display:\s*none/s);
+  it("animates at most 16 elements, in three layers that settle 0.2 to 0.4 s apart", () => {
+    const selectors = animatedSelectors();
+    expect(selectors.length).toBeLessThanOrEqual(16);
+    expect(selectors).toEqual(expect.arrayContaining([".hm-layer-far", ".hm-layer-mid", ".hm-layer-near"]));
+    // The same elements in the markup: no animated class appears more often than the contract allows.
+    const { container } = render(<GateScene />);
+    const animated = [...container.querySelectorAll("svg *")].filter((node) =>
+      selectors.some((selector) => node.matches(selector)),
+    );
+    expect(animated.length).toBeLessThanOrEqual(16);
+    const delays = declarations((d) => d.prop === "animation" && /hm-(?:grow|rise|fade)/.test(d.value)).map((d) => d.value);
+    expect(delays).toHaveLength(3);
   });
 
-  it("reacts to the pointer with CSS only, scoped to the band", () => {
-    const hover = rules((rule) => rule.selector.includes(":hover"));
-    expect(hover.length).toBeGreaterThanOrEqual(3);
-    for (const rule of hover) {
-      expect(rule.selector).toMatch(/^\[data-cover-band\]:is\(:hover, :focus-within\) \.hm-/);
-      rule.walkDecls((declaration) => expect(declaration.prop).toBe("transform"));
-    }
+  it("stays inside the scene budget: 12 KB of CSS, and an SVG under 20 KB", () => {
+    expect(Buffer.byteLength(CSS)).toBeLessThanOrEqual(12 * 1024);
+    const { container } = render(<GateScene />);
+    expect(Buffer.byteLength(container.innerHTML)).toBeLessThanOrEqual(20 * 1024);
+  });
+
+  it("has one lane, no per-layout blocks and no figure rule", () => {
+    expect(CSS).toMatch(/--hm-lx:\s*352px/);
+    expect(CSS).not.toMatch(/data-hero-variant|hm-numeral/);
+  });
+
+  it("leaves the pointer reaction to the stage: no band selector, no hover rule of its own", () => {
+    expect(rules((rule) => rule.selector.includes(":hover") || rule.selector.includes("data-cover-band"))).toEqual([]);
   });
 });

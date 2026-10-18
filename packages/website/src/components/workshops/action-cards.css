@@ -1,0 +1,644 @@
+/*
+ * The two action cards under a workshop band (action-cards.tsx). Prefix `ac-`.
+ *
+ * Contract, checked by action-cards.test.tsx:
+ * - Hard edges (no radius), a 2px scene-line border. Card A sits on the
+ *   scene ground in the scene ink; card B is inverted. Colours are scene
+ *   tokens only; the one accent is `--color-scene-mid`, on shapes.
+ * - The base styles are the finished still frame (chips in the box, the
+ *   forecast drawn, the bars up). Every animation and transition sits inside
+ *   `@media (prefers-reduced-motion: no-preference)`.
+ * - Only transform (translate, rotate, scale), opacity and stroke-dashoffset
+ *   move. No filter, blur, gradient or layout property. `will-change:
+ *   transform` only on the top slide frame and the download arrow.
+ * - The stage's pause control (workshop-stage.css) returns everything here
+ *   to the still frame.
+ */
+
+.ac-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  /* The focus ring sits outside the card, on the page, so it takes the page's
+     scene line (set on the unscoped list), not the card's own. */
+  --ac-ring: var(--color-scene-line);
+}
+
+.ac-list > li {
+  display: flex;
+  min-width: 0;
+}
+
+.ac-card {
+  --ac-fg: var(--color-scene-ink);
+  --ac-bg: var(--color-scene-ground);
+  --ac-mid: var(--color-scene-mid);
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.875rem;
+  width: 100%;
+  min-height: 7rem;
+  padding: 0.625rem;
+  border: 2px solid var(--color-scene-line);
+  border-radius: 0;
+  background-color: var(--ac-bg);
+  color: var(--ac-fg);
+}
+
+.ac-card.ac-card-b {
+  --ac-fg: var(--color-scene-ground);
+  --ac-bg: var(--color-scene-ink);
+  border-color: var(--color-scene-ink);
+}
+
+/* ─── Picture ───────────────────────────────────────────────────────────── */
+
+.ac-pic {
+  position: relative;
+  width: 7rem;
+  aspect-ratio: 1;
+  overflow: hidden;
+  container-type: size;
+}
+
+.ac-pic-inner {
+  position: absolute;
+  inset: 0;
+}
+
+.ac-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ac-shape {
+  fill: var(--ac-bg);
+  stroke: var(--ac-fg);
+  stroke-width: 2.5;
+  stroke-linejoin: miter;
+}
+
+.ac-hair {
+  fill: none;
+  stroke: var(--ac-fg);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.ac-line {
+  fill: none;
+  stroke: var(--ac-fg);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ac-dot {
+  fill: var(--ac-mid);
+  stroke: var(--ac-fg);
+  stroke-width: 1.6;
+}
+
+.ac-dot-fg {
+  fill: var(--ac-fg);
+}
+
+.ac-dust circle {
+  fill: var(--ac-fg);
+  opacity: 0.35;
+}
+
+/* Slides: three portrait frames, fanned. */
+.ac-frame {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 56cqh;
+  height: 74cqh;
+  border: 2px solid var(--ac-fg);
+  background-color: var(--color-paper);
+  transform-origin: 50% 115%;
+}
+
+.ac-frame-l {
+  transform: rotate(-8deg);
+}
+
+.ac-frame-r {
+  transform: rotate(8deg);
+}
+
+.ac-frame-top {
+  display: flex;
+  flex-direction: column;
+  gap: 2cqh;
+  padding: 3cqh 3cqh 2.5cqh;
+  background-color: var(--color-paper);
+}
+
+.ac-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.ac-progress {
+  display: block;
+  height: 3cqh;
+  background-color: var(--ac-mid);
+  opacity: 0.35;
+}
+
+.ac-progress-bar {
+  display: block;
+  height: 100%;
+  background-color: var(--ac-mid);
+  transform-origin: left center;
+  transform: scaleX(0.6);
+}
+
+/* Kit */
+.ac-flap {
+  fill: var(--ac-mid);
+  stroke: var(--ac-fg);
+  stroke-width: 2.5;
+  stroke-linejoin: miter;
+  transform-box: fill-box;
+  transform-origin: left bottom;
+}
+
+.ac-teeth {
+  fill: none;
+  stroke: var(--ac-fg);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 4;
+}
+
+.ac-tab {
+  fill: var(--ac-mid);
+  stroke: var(--ac-fg);
+  stroke-width: 1.6;
+}
+
+.ac-arrow {
+  fill: none;
+  stroke: var(--ac-fg);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Lab */
+.ac-forecast {
+  fill: none;
+  stroke: var(--ac-mid);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.ac-knob {
+  fill: var(--ac-mid);
+  stroke: var(--ac-fg);
+  stroke-width: 2;
+}
+
+/* Case */
+.ac-bar {
+  stroke: var(--ac-fg);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.ac-bar-fg {
+  fill: var(--ac-fg);
+}
+
+.ac-bar-mid {
+  fill: var(--ac-mid);
+}
+
+.ac-marker {
+  fill: var(--ac-mid);
+  stroke: var(--ac-fg);
+  stroke-width: 1.6;
+}
+
+/* ─── Text ──────────────────────────────────────────────────────────────── */
+
+.ac-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ac-link {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The whole card is the hit area. */
+.ac-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.ac-link:focus-visible {
+  outline: none;
+}
+
+.ac-card:has(.ac-link:focus-visible) {
+  outline: 3px solid var(--ac-ring);
+  outline-offset: 2px;
+}
+
+.ac-title {
+  font-size: 1.375rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.ac-card:hover .ac-title,
+.ac-card:has(.ac-link:focus-visible) .ac-title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.ac-meta {
+  margin-top: 0.125rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.ac-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.ac-go {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.ac-secondary {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 0.125rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.ac-secondary:focus-visible {
+  outline: 3px solid var(--ac-fg);
+  outline-offset: 2px;
+}
+
+/* ─── Tablet and up: the picture goes on top ────────────────────────────── */
+
+@media (min-width: 40rem) {
+  .ac-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .ac-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    height: 100%;
+    min-height: 20rem;
+    padding: 1rem;
+  }
+
+  .ac-pic {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .ac-body {
+    flex: none;
+  }
+}
+
+@media (min-width: 64rem) {
+  .ac-card {
+    min-height: 22rem;
+  }
+}
+
+/* ─── Motion: only when the visitor has not asked for less ──────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .ac-card {
+    --ac-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ac-t: 6s;
+  }
+
+  .ac-frame,
+  .ac-flap,
+  .ac-arrow-hover,
+  .ac-knob,
+  .ac-bar {
+    transition: transform 240ms var(--ac-ease);
+  }
+
+  .ac-frame-top,
+  .ac-arrow {
+    will-change: transform;
+  }
+
+  /* Slides: a calm fan, the top slide floats, the progress bar fills. */
+  .ac-frame-l {
+    animation: ac-fan-l var(--ac-t) ease-in-out infinite;
+  }
+
+  .ac-frame-r {
+    animation: ac-fan-r var(--ac-t) ease-in-out infinite;
+  }
+
+  .ac-frame-top {
+    animation: ac-float var(--ac-t) ease-in-out infinite;
+  }
+
+  .ac-progress-bar {
+    animation: ac-progress var(--ac-t) var(--ac-ease) infinite;
+  }
+
+  /* Kit: files drop into the box one after the other, the arrow bobs. */
+  .ac-chip {
+    transform-box: fill-box;
+    animation: ac-drop var(--ac-t) var(--ac-ease) calc(var(--ac-i, 0) * 0.18s) infinite backwards;
+  }
+
+  .ac-arrow {
+    transform-box: fill-box;
+    animation: ac-bob var(--ac-t) ease-in-out infinite;
+  }
+
+  /* Lab: the forecast line draws, the knob slides. */
+  .ac-forecast {
+    animation: ac-draw var(--ac-t) ease-in-out infinite;
+  }
+
+  .ac-knob {
+    transform-box: fill-box;
+    animation: ac-knob var(--ac-t) ease-in-out infinite;
+  }
+
+  /* Case: three bars rise in turn, the marker walks across their tops. */
+  .ac-bar {
+    animation: ac-bar var(--ac-t) var(--ac-ease) calc(var(--ac-i, 0) * 0.16s) infinite backwards;
+  }
+
+  .ac-marker {
+    transform-box: fill-box;
+    animation: ac-marker var(--ac-t) ease-in-out infinite;
+  }
+
+  .ac-dust {
+    animation: ac-dust 9s ease-in-out infinite;
+  }
+
+  /* Hover and keyboard focus: the same story, stronger. */
+  .ac-card:has(.ac-link:focus-visible) .ac-frame-l {
+    transform: translateX(-18px) rotate(-14deg);
+  }
+
+  .ac-card:has(.ac-link:focus-visible) .ac-frame-r {
+    transform: translateX(18px) rotate(14deg);
+  }
+
+  .ac-card:has(.ac-link:focus-visible) .ac-flap {
+    transform: rotate(-12deg);
+  }
+
+  .ac-card:has(.ac-link:focus-visible) .ac-chip {
+    animation-duration: 3s;
+  }
+
+  .ac-card:has(.ac-link:focus-visible) .ac-arrow-hover {
+    transform: translateY(4px);
+  }
+
+  .ac-card:has(.ac-link:focus-visible) .ac-knob {
+    transform: translateX(26px);
+  }
+
+  .ac-card:has(.ac-link:focus-visible) .ac-bar {
+    transform: scaleY(1.18);
+  }
+
+  @media (hover: hover) {
+    .ac-card:hover .ac-frame-l {
+      transform: translateX(-18px) rotate(-14deg);
+    }
+
+    .ac-card:hover .ac-frame-r {
+      transform: translateX(18px) rotate(14deg);
+    }
+
+    .ac-card:hover .ac-flap {
+      transform: rotate(-12deg);
+    }
+
+    .ac-card:hover .ac-chip {
+      animation-duration: 3s;
+    }
+
+    .ac-card:hover .ac-arrow-hover {
+      transform: translateY(4px);
+    }
+
+    .ac-card:hover .ac-knob {
+      transform: translateX(26px);
+    }
+
+    .ac-card:hover .ac-bar {
+      transform: scaleY(1.18);
+    }
+  }
+
+  @keyframes ac-fan-l {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    50% {
+      rotate: -2deg;
+    }
+  }
+
+  @keyframes ac-fan-r {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    50% {
+      rotate: 2deg;
+    }
+  }
+
+  @keyframes ac-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+
+  @keyframes ac-progress {
+    0%,
+    8% {
+      transform: scaleX(0.15);
+    }
+    55%,
+    100% {
+      transform: scaleX(0.6);
+    }
+  }
+
+  @keyframes ac-drop {
+    0% {
+      translate: 0 -40px;
+      opacity: 0;
+    }
+    14% {
+      translate: 0 2px;
+      opacity: 1;
+    }
+    19%,
+    88% {
+      translate: 0 0;
+      opacity: 1;
+    }
+    100% {
+      translate: 0 0;
+      opacity: 0;
+    }
+  }
+
+  @keyframes ac-bob {
+    0%,
+    50%,
+    100% {
+      transform: translateY(0);
+    }
+    25%,
+    75% {
+      transform: translateY(6px);
+    }
+  }
+
+  @keyframes ac-draw {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 1;
+    }
+    44%,
+    88% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+    96% {
+      stroke-dashoffset: 0;
+      opacity: 0;
+    }
+    100% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+  }
+
+  @keyframes ac-knob {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    30% {
+      translate: 22px 0;
+    }
+    70% {
+      translate: -22px 0;
+    }
+  }
+
+  @keyframes ac-bar {
+    0% {
+      scale: 1 0.25;
+    }
+    22%,
+    92% {
+      scale: 1 1;
+    }
+    100% {
+      scale: 1 0.25;
+    }
+  }
+
+  @keyframes ac-marker {
+    0%,
+    100% {
+      translate: -28px 24px;
+    }
+    36% {
+      translate: 0 0;
+    }
+    68% {
+      translate: 28px 14px;
+    }
+  }
+
+  @keyframes ac-dust {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -5px;
+    }
+  }
+}
+
+/* A visitor who asked for less motion gets the still frame and nothing else. */
+@media (prefers-reduced-motion: reduce) {
+  .ac-card,
+  .ac-card * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

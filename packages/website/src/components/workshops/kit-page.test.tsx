@@ -22,16 +22,14 @@ describe("<KitPage>", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("shows the moving hero scene of Workshop 05 and the plain poster of the ESG workshop", () => {
-    const scene = getWorkshopBySlug("ki-im-unternehmen-sicher-nutzen", "en")!;
-    const { container, unmount } = render(<KitPage workshop={scene} locale="en" />);
-    expect(container.querySelectorAll("svg[data-hero-motion]").length).toBeGreaterThan(0);
-    expect(container.querySelectorAll("svg[data-poster]")).toHaveLength(0);
-    unmount();
-    const esg = getWorkshopBySlug("esg-berichte-mit-ki", "en")!;
-    const plain = render(<KitPage workshop={esg} locale="en" />);
-    expect(plain.container.querySelectorAll("svg[data-hero-motion]")).toHaveLength(0);
-    expect(plain.container.querySelectorAll("svg[data-poster]").length).toBeGreaterThan(0);
+  it("keeps the plain poster in the band for both kit workshops, with no motion scene", () => {
+    for (const slug of SLUGS) {
+      const workshop = getWorkshopBySlug(slug, "en")!;
+      const { container, unmount } = render(<KitPage workshop={workshop} locale="en" />);
+      expect(container.querySelectorAll("svg[data-hero-motion]")).toHaveLength(0);
+      expect(container.querySelectorAll("svg[data-poster]").length).toBeGreaterThan(0);
+      unmount();
+    }
   });
 
   for (const slug of SLUGS) {

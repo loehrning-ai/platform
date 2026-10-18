@@ -2,11 +2,11 @@ import { expect, test } from "@playwright/test";
 import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 /**
- * materialCount: distinct files the page links to (the band buttons and the
- * material list together; a kit page counts as its kit).
+ * materialCount: distinct files the page links to (the two action cards of the
+ * stage and any material list together; the kit page of a workshop with one
+ * counts once more, next to its zip).
  * listedMaterials: rows of the material list. A workshop lists its files only
- * when a band button cannot reach one: Workshops 02 and 03 hand their kit zip
- * over from the list, the others reach everything from the band.
+ * when the two cards cannot reach one; all five reach everything from the stage.
  */
 const WORKSHOP_ROUTES = [
   {
@@ -28,27 +28,27 @@ const WORKSHOP_ROUTES = [
     deHeading: "Geschäftsberichte mit KI lesen",
     enHeading: "Read business reports with AI",
     materialCount: 2,
-    listedMaterials: 2,
+    listedMaterials: 0,
   },
   {
     path: "/workshops/datenbereitschaft-fuer-ki",
     deHeading: "Sind deine Daten bereit für KI?",
     enHeading: "Are your data ready for AI?",
     materialCount: 2,
-    listedMaterials: 2,
+    listedMaterials: 0,
   },
   {
     path: "/workshops/esg-berichte-mit-ki",
     deHeading: "ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen",
     enHeading: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
-    materialCount: 2,
+    materialCount: 3,
     listedMaterials: 0,
   },
   {
     path: "/workshops/ki-im-unternehmen-sicher-nutzen",
     deHeading: "Wohin deine Daten gehen: Claude im Arbeitsalltag",
     enHeading: "Where Your Data Goes: Using Claude at Work",
-    materialCount: 2,
+    materialCount: 3,
     listedMaterials: 0,
   },
 ] as const;
@@ -173,9 +173,9 @@ for (const width of [320, 390, 768, 1440] as const) {
           state.documentWidth,
           `${localizedPath} document overflow`,
         ).toBeLessThanOrEqual(width + 1);
-        // The cover's start buttons point at materials that the list below
+        // The stage's cards point at materials that a list in the accordion
         // (where there is one) also carries, so count distinct files: each one
-        // once. A kit page counts as the kit material it stands for.
+        // once. A kit page counts next to its zip.
         expect(
           new Set([...state.materialHrefs, ...state.kitPageHrefs]).size,
         ).toBe(route.materialCount);

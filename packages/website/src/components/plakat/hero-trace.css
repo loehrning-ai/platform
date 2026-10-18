@@ -1,0 +1,216 @@
+/*
+ * Hero scene "the trace" (Workshop 02). Base styles = the finished still
+ * frame (bars up, dots on their tops, last thread walked back, bar 3 Himbeere
+ * with a cross). Every animation sits under no-preference; only transform,
+ * opacity and stroke-dashoffset move. 9s loop: scan, lift and travel, trace
+ * back and flag, rest. Keyframe percentages are seconds / 9; dot paths are
+ * sampled from the thread curves.
+ */
+.ht-root {
+  overflow: visible;
+  --ht-ink: var(--color-scene-ink);
+  --ht-mid: var(--color-scene-mid);
+  --ht-ground: var(--color-scene-ground);
+  --ht-paper: var(--color-paper);
+}
+.ht-disc { fill: var(--ht-mid); fill-opacity: 0.07; }
+.ht-dust-dot { fill: var(--ht-ink); opacity: 0.35; }
+.ht-axis { fill: none; stroke: var(--ht-ink); stroke-width: 2.5; stroke-linecap: round; }
+.ht-guide { fill: none; stroke: var(--ht-ink); stroke-width: 1; stroke-dasharray: 2 8; stroke-linecap: round; opacity: 0.4; }
+.ht-bar-rect { fill: var(--ht-ink); }
+.ht-bar-flag { fill: var(--ht-mid); }
+.ht-page { fill: var(--ht-paper); stroke: var(--ht-ink); stroke-width: 2.5; stroke-linejoin: miter; }
+.ht-page-back { fill: var(--ht-ground); }
+.ht-peek { fill: none; stroke: var(--ht-ink); stroke-width: 6; stroke-linecap: round; opacity: 0.3; }
+.ht-head { fill: none; stroke: var(--ht-ink); stroke-width: 10; stroke-linecap: round; }
+.ht-label { fill: none; stroke: var(--ht-ink); stroke-width: 7; stroke-linecap: round; opacity: 0.28; }
+.ht-label-on { opacity: 0.9; }
+.ht-cell { fill: var(--ht-ink); opacity: 0.28; }
+.ht-cell-on { opacity: 1; }
+.ht-cell-flag { fill: var(--ht-mid); }
+.ht-thread { fill: none; stroke: var(--ht-ink); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 9; }
+.ht-trace { fill: none; stroke: var(--ht-mid); stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.ht-band { fill: var(--ht-ink); fill-opacity: 0.08; }
+.ht-scan-ring { fill: none; stroke: var(--ht-ink); stroke-width: 2.5; }
+.ht-dot { fill: var(--ht-ink); stroke: var(--ht-ground); stroke-width: 3; }
+.ht-back { fill: var(--ht-ground); stroke: var(--ht-mid); stroke-width: 3.5; }
+.ht-ring { fill: none; stroke: var(--ht-mid); stroke-width: 2.5; }
+.ht-cross-disc { fill: var(--ht-mid); stroke: var(--ht-ground); stroke-width: 3; }
+.ht-cross-glyph { fill: none; stroke: var(--ht-paper); stroke-width: 3; stroke-linecap: round; }
+/* The still frame has no sweep. */
+.ht-scan { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .ht-pages, .ht-far, .ht-threads, .ht-scan, .ht-bar, .ht-bar-flag, .ht-cell-flag, .ht-dot, .ht-back, .ht-ring, .ht-cross, .ht-trace {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .ht-bar { transform-origin: 50% 100%; }
+  .ht-pages { animation: ht-rise 0.9s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+  .ht-far { animation: ht-drift 27s ease-in-out infinite; }
+  .ht-threads { animation: ht-threads 9s linear infinite; }
+  .ht-scan { animation: ht-scan 9s linear infinite; }
+  .ht-bar-1 { animation: ht-bar1 9s linear infinite; }
+  .ht-bar-2 { animation: ht-bar2 9s linear infinite; }
+  .ht-bar-3 { animation: ht-bar3 9s linear infinite; }
+  .ht-dot-1 { animation: ht-fly1 9s linear infinite; }
+  .ht-dot-2 { animation: ht-fly2 9s linear infinite; }
+  .ht-dot-3 { animation: ht-fly3 9s linear infinite; }
+  .ht-trace { animation: ht-trace 9s linear infinite; }
+  .ht-back { animation: ht-back 9s linear infinite; }
+  .ht-bar-flag { animation: ht-flag 9s linear infinite; }
+  .ht-cell-flag { animation: ht-flag 9s linear infinite; }
+  .ht-ring { animation: ht-ring 9s linear infinite; }
+  .ht-cross { animation: ht-cross 9s linear infinite; }
+  @keyframes ht-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes ht-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-9px, 6px); }
+  }
+  @keyframes ht-threads {
+    0% { opacity: 0 }
+    8.889% { opacity: 0; animation-timing-function: ease }
+    14.444% { opacity: 1 }
+    93.333% { opacity: 1; animation-timing-function: ease }
+    98.889% { opacity: 0 }
+    100% { opacity: 0 }
+  }
+  @keyframes ht-scan {
+    0% { opacity: 0; transform: translateY(0) }
+    5.556% { opacity: 0; transform: translateY(0); animation-timing-function: ease }
+    8.889% { opacity: 1; transform: translateY(0); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1) }
+    32.222% { opacity: 1; transform: translateY(210px); animation-timing-function: ease }
+    35.556% { opacity: 0; transform: translateY(210px) }
+    100% { opacity: 0; transform: translateY(210px) }
+  }
+  @keyframes ht-bar1 {
+    0% { opacity: 0; transform: scaleY(0) }
+    25.556% { opacity: 1; transform: scaleY(0); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.15) }
+    33.333% { opacity: 1; transform: scaleY(1) }
+    93.333% { opacity: 1; transform: scaleY(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: scaleY(1) }
+    100% { opacity: 0; transform: scaleY(0) }
+  }
+  @keyframes ht-bar2 {
+    0% { opacity: 0; transform: scaleY(0) }
+    36.667% { opacity: 1; transform: scaleY(0); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.15) }
+    44.444% { opacity: 1; transform: scaleY(1) }
+    93.333% { opacity: 1; transform: scaleY(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: scaleY(1) }
+    100% { opacity: 0; transform: scaleY(0) }
+  }
+  @keyframes ht-bar3 {
+    0% { opacity: 0; transform: scaleY(0) }
+    46.667% { opacity: 1; transform: scaleY(0); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.15) }
+    54.444% { opacity: 1; transform: scaleY(1) }
+    93.333% { opacity: 1; transform: scaleY(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: scaleY(1) }
+    100% { opacity: 0; transform: scaleY(0) }
+  }
+  @keyframes ht-fly1 {
+    0% { opacity: 0; transform: translate(-160px, -44px) scale(0.3) }
+    11.0% { opacity: 0; transform: translate(-160px, -44px) scale(0.3); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    13.889% { opacity: 1; transform: translate(-160px, -44px) scale(1); animation-timing-function: linear }
+    14.444% { opacity: 1; transform: translate(-160px, -44px) scale(1); animation-timing-function: linear }
+    16.111% { transform: translate(-157px, -44px) scale(1) }
+    18.889% { transform: translate(-136.3px, -41.4px) scale(1) }
+    21.667% { transform: translate(-80px, -22px) scale(1) }
+    24.444% { transform: translate(-23.7px, -2.6px) scale(1) }
+    27.222% { transform: translate(-3px, 0px) scale(1) }
+    30.0% { transform: translate(0px, 0px) scale(1) }
+    93.333% { opacity: 1; transform: translate(0px, 0px) scale(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: translate(0px, 0px) scale(1) }
+    100% { opacity: 0; transform: translate(-160px, -44px) scale(0.3) }
+  }
+  @keyframes ht-fly2 {
+    0% { opacity: 0; transform: translate(-212px, 1px) scale(0.3) }
+    21.0% { opacity: 0; transform: translate(-212px, 1px) scale(0.3); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    23.889% { opacity: 1; transform: translate(-212px, 1px) scale(1); animation-timing-function: linear }
+    24.444% { opacity: 1; transform: translate(-212px, 1px) scale(1); animation-timing-function: linear }
+    27.222% { transform: translate(-208.1px, 1px) scale(1) }
+    30.0% { transform: translate(-180.6px, 0.9px) scale(1) }
+    32.778% { transform: translate(-106px, 0.5px) scale(1) }
+    35.556% { transform: translate(-31.4px, 0.1px) scale(1) }
+    38.333% { transform: translate(-3.9px, 0px) scale(1) }
+    41.111% { transform: translate(0px, 0px) scale(1) }
+    93.333% { opacity: 1; transform: translate(0px, 0px) scale(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: translate(0px, 0px) scale(1) }
+    100% { opacity: 0; transform: translate(-212px, 1px) scale(0.3) }
+  }
+  @keyframes ht-fly3 {
+    0% { opacity: 0; transform: translate(-264px, 21px) scale(0.3) }
+    27.667% { opacity: 0; transform: translate(-264px, 21px) scale(0.3); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    30.556% { opacity: 1; transform: translate(-264px, 21px) scale(1); animation-timing-function: linear }
+    31.111% { opacity: 1; transform: translate(-264px, 21px) scale(1); animation-timing-function: linear }
+    34.259% { transform: translate(-259.1px, 21px) scale(1) }
+    37.407% { transform: translate(-224.9px, 19.8px) scale(1) }
+    40.556% { transform: translate(-132px, 10.5px) scale(1) }
+    43.704% { transform: translate(-39.1px, 1.2px) scale(1) }
+    46.852% { transform: translate(-4.9px, 0px) scale(1) }
+    50.0% { transform: translate(0px, 0px) scale(1) }
+    93.333% { opacity: 1; transform: translate(0px, 0px) scale(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: translate(0px, 0px) scale(1) }
+    100% { opacity: 0; transform: translate(-264px, 21px) scale(0.3) }
+  }
+  @keyframes ht-back {
+    0% { opacity: 0; transform: translate(264px, -21px) scale(0.3) }
+    58.778% { opacity: 0; transform: translate(264px, -21px) scale(0.3); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    61.667% { opacity: 1; transform: translate(264px, -21px) scale(1); animation-timing-function: linear }
+    62.0% { opacity: 1; transform: translate(264px, -21px) scale(1); animation-timing-function: linear }
+    62.778% { transform: translate(259.1px, -21px) scale(1) }
+    65.556% { transform: translate(224.9px, -19.8px) scale(1) }
+    68.333% { transform: translate(132px, -10.5px) scale(1) }
+    71.111% { transform: translate(39.1px, -1.2px) scale(1) }
+    73.889% { transform: translate(4.9px, 0px) scale(1) }
+    76.667% { transform: translate(0px, 0px) scale(1) }
+    93.333% { opacity: 1; transform: translate(0px, 0px) scale(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: translate(0px, 0px) scale(1) }
+    100% { opacity: 0; transform: translate(264px, -21px) scale(0.3) }
+  }
+  @keyframes ht-trace {
+    0% { stroke-dashoffset: 1; opacity: 1 }
+    60.0% { stroke-dashoffset: 1; opacity: 1; animation-timing-function: linear }
+    62.778% { stroke-dashoffset: 0.983; opacity: 1 }
+    65.556% { stroke-dashoffset: 0.853; opacity: 1 }
+    68.333% { stroke-dashoffset: 0.5; opacity: 1 }
+    71.111% { stroke-dashoffset: 0.147; opacity: 1 }
+    73.889% { stroke-dashoffset: 0.017; opacity: 1 }
+    76.667% { stroke-dashoffset: 0.0; opacity: 1 }
+    93.333% { stroke-dashoffset: 0; opacity: 1; animation-timing-function: ease }
+    98.889% { stroke-dashoffset: 0; opacity: 0 }
+    100% { stroke-dashoffset: 1; opacity: 0 }
+  }
+  @keyframes ht-flag {
+    0% { opacity: 0; transform: scaleX(0.2) }
+    76.667% { opacity: 0; transform: scaleX(0.2); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1) }
+    81.667% { opacity: 1; transform: scaleX(1) }
+    93.333% { opacity: 1; transform: scaleX(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: scaleX(1) }
+    100% { opacity: 0; transform: scaleX(0.2) }
+  }
+  @keyframes ht-ring {
+    0% { opacity: 0; transform: scale(0.4) }
+    76.667% { opacity: 0; transform: scale(0.4); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1) }
+    81.111% { opacity: 1; transform: scale(1.35); animation-timing-function: ease }
+    85.556% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.4) }
+  }
+  @keyframes ht-cross {
+    0% { opacity: 0; transform: scale(0) }
+    80.0% { opacity: 0; transform: scale(0); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.4) }
+    85.0% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease }
+    98.889% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0) }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ht-root, .ht-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

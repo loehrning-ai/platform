@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { WorkshopMaterialLink } from "@/app/workshops/[slug]/workshop-material-link";
 import { CapsLine, PlakatBand, PosterArt } from "@/components/plakat";
-import { heroMotionArt } from "@/components/plakat/hero-motion";
 import { ArrowGlyph, Callout, Pictogram, SectionHead, cx } from "@/components/werk";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { PLAKAT, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
@@ -55,8 +54,6 @@ export function KitPage({ workshop, locale }: Props) {
 
   const copy = KIT_PAGE_COPY[locale];
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
-  // A workshop with a hero scene shows the same moving scene as its detail page.
-  const hero = heroMotionArt(workshop.slug, workshop.number);
   const detailPath = localizeHref(`/workshops/${workshop.slug}`, locale);
   const sizeLabel = material.sizeLabel ?? "";
 
@@ -101,26 +98,22 @@ export function KitPage({ workshop, locale }: Props) {
         cornerDots={PLAKAT[scene.plakat].cornerDots}
         contentClassName="max-sm:pt-5"
         art={
-          hero?.art ?? (
-            <PosterArt
-              plakat={scene.plakat}
-              motif={scene.motif}
-              numeral={workshop.number}
-              format="portrait"
-              cornerDots={false}
-            />
-          )
+          <PosterArt
+            plakat={scene.plakat}
+            motif={scene.motif}
+            numeral={workshop.number}
+            format="portrait"
+            cornerDots={false}
+          />
         }
         artPhone={
-          hero?.artPhone ?? (
-            <PosterArt
-              plakat={scene.plakat}
-              motif={scene.motif}
-              numeral={workshop.number}
-              format="landscape"
-              cornerDots={false}
-            />
-          )
+          <PosterArt
+            plakat={scene.plakat}
+            motif={scene.motif}
+            numeral={workshop.number}
+            format="landscape"
+            cornerDots={false}
+          />
         }
       >
         <Link

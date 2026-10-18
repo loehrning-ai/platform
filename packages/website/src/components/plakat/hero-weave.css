@@ -1,0 +1,319 @@
+/*
+ * Hero scene "the weave": Workshop 04 (hero-weave-scene.tsx). Three requests
+ * are answered from the same eight facts; the one fact that is missing stays
+ * an empty slot and the answer names the gap.
+ *
+ * Contract (docs/experience-system.md, "Workshop stage and scenes"):
+ * - The base styles are the finished still frame: three threads drawn, three
+ *   sheets out, the slot dashed with its dash. That is what reduced motion,
+ *   print and the pause control show.
+ * - Every animation and keyframe sits inside
+ *   `@media (prefers-reduced-motion: no-preference)`. Only transform,
+ *   opacity and stroke-dashoffset move. No filter, gradient or layout
+ *   property.
+ * - Colours are scene tokens (var(--color-scene-*), --color-paper); no hex.
+ * - Decorative: the SVG is aria-hidden and takes no focus.
+ *
+ * One loop, `--ws-t` (9s). Keyframe percentages are seconds / 9.
+ *   Act 1, 0 to 1.1s    requests slide in, the fact grid assembles.
+ *   Act 2, 1.6 to 4.6s  threads draw through the tiles they need; the tiles
+ *                       light as a thread passes. Thread 3 ends at the slot.
+ *   Act 3, 4.2 to 7.6s  sheets leave on the right. The dash appears in the
+ *                       slot and sheet 3 leaves with a gap row (one soft pulse).
+ *   Rest, 7.6 to 8.5s   the finished frame holds, then 0.5s of fade.
+ * Depth: far discs and dust (24s drift), mid threads and tiles, near requests
+ * and sheets, each layer starting a little after the last.
+ */
+
+.hw-root {
+  overflow: visible;
+  --hw-ink: var(--color-scene-ink);
+  --hw-mid: var(--color-scene-mid);
+  --hw-ground: var(--color-scene-ground);
+  --hw-paper: var(--color-paper);
+}
+
+/* ─── Base: the still frame ─────────────────────────────────────────────── */
+
+.hw-root .hw-disc {
+  fill: var(--hw-paper);
+  fill-opacity: 0.075;
+}
+
+.hw-root .hw-dot {
+  fill: var(--hw-ink);
+  fill-opacity: 0.45;
+}
+
+.hw-root .hw-thread {
+  fill: none;
+  stroke: var(--hw-ink);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hw-root .hw-tile,
+.hw-root .hw-frame {
+  fill: var(--hw-ground);
+  stroke: var(--hw-ink);
+  stroke-width: 2.5;
+  stroke-linejoin: miter;
+}
+
+.hw-root .hw-fine {
+  fill: none;
+  stroke: var(--hw-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hw-root .hw-solid {
+  fill: var(--hw-ink);
+  stroke: none;
+}
+
+.hw-root .hw-slot {
+  fill: none;
+  stroke: var(--hw-ink);
+  stroke-width: 1.6;
+  stroke-dasharray: 6 8;
+  stroke-linecap: round;
+}
+
+.hw-root .hw-lit {
+  opacity: 0;
+}
+
+.hw-root .hw-lit-fill {
+  fill: var(--hw-ink);
+  fill-opacity: 0.32;
+}
+
+.hw-root .hw-lit-ring {
+  fill: none;
+  stroke: var(--hw-ink);
+  stroke-width: 2.2;
+}
+
+.hw-root .hw-gap-line {
+  fill: none;
+  stroke: var(--hw-mid);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 8;
+  stroke-linecap: round;
+}
+
+.hw-root .hw-dash-glyph {
+  fill: none;
+  stroke: var(--hw-mid);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+.hw-root .hw-gap-row {
+  fill: none;
+  stroke: var(--hw-ink);
+  stroke-width: 1.6;
+  stroke-dasharray: 4 4;
+}
+
+/* ─── Motion: only when the visitor has not asked for less ──────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hw-root {
+    --hw-ease: cubic-bezier(0.65, 0, 0.35, 1);
+    --hw-t: var(--ws-t, 9s);
+  }
+
+  /* Everything that moves is moved by its own box, never by the layout. */
+  .hw-root .hw-request,
+  .hw-root .hw-tiles,
+  .hw-root .hw-gap,
+  .hw-root .hw-sheet,
+  .hw-root .hw-far,
+  .hw-root .hw-dust {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .hw-root .hw-request,
+  .hw-root .hw-tiles,
+  .hw-root .hw-gap,
+  .hw-root .hw-sheet,
+  .hw-root .hw-lit {
+    animation-duration: var(--hw-t);
+    animation-timing-function: var(--hw-ease);
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+
+  .hw-root .hw-thread {
+    stroke-dasharray: 1 2;
+    animation-duration: var(--hw-t);
+    animation-timing-function: var(--hw-ease);
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+  }
+
+  .hw-root .hw-request[data-request="1"] { animation-name: hw-req-1; }
+  .hw-root .hw-request[data-request="2"] { animation-name: hw-req-2; }
+  .hw-root .hw-request[data-request="3"] { animation-name: hw-req-3; }
+  .hw-root .hw-tiles { animation-name: hw-tiles; }
+  .hw-root .hw-thread-1 { animation-name: hw-thread-1; }
+  .hw-root .hw-thread-2 { animation-name: hw-thread-2; }
+  .hw-root .hw-thread-3 { animation-name: hw-thread-3; }
+  .hw-root .hw-lit-1 { animation-name: hw-lit-1; }
+  .hw-root .hw-lit-2 { animation-name: hw-lit-2; }
+  .hw-root .hw-lit-3 { animation-name: hw-lit-3; }
+  .hw-root .hw-gap { animation-name: hw-gap; }
+  .hw-root .hw-sheet-1 { animation-name: hw-sheet-1; }
+  .hw-root .hw-sheet-2 { animation-name: hw-sheet-2; }
+  .hw-root .hw-sheet-3 { animation-name: hw-sheet-3; }
+
+  /* Far layer: slow and independent of the story. */
+  .hw-root .hw-far {
+    animation: hw-far 26s ease-in-out infinite alternate;
+  }
+
+  .hw-root .hw-dust {
+    animation: hw-dust 21s ease-in-out infinite alternate;
+  }
+
+  @keyframes hw-far {
+    from { transform: translate(-10px, 6px) scale(0.98); }
+    to { transform: translate(10px, -6px) scale(1.03); }
+  }
+
+  @keyframes hw-dust {
+    from { transform: translate(8px, 4px); }
+    to { transform: translate(-8px, -6px); }
+  }
+
+  @keyframes hw-req-1 {
+    0% { opacity: 0; transform: translateX(-48px); }
+    7.78% { opacity: 1; transform: translateX(0px); }
+    93.33% { opacity: 1; transform: translateX(0px); }
+    100% { opacity: 0; transform: translateX(-30px); }
+  }
+
+  @keyframes hw-req-2 {
+    0% { opacity: 0; transform: translateX(-48px); }
+    1.33% { opacity: 0; transform: translateX(-48px); }
+    9.11% { opacity: 1; transform: translateX(0px); }
+    93.33% { opacity: 1; transform: translateX(0px); }
+    100% { opacity: 0; transform: translateX(-30px); }
+  }
+
+  @keyframes hw-req-3 {
+    0% { opacity: 0; transform: translateX(-48px); }
+    2.67% { opacity: 0; transform: translateX(-48px); }
+    10.44% { opacity: 1; transform: translateX(0px); }
+    93.33% { opacity: 1; transform: translateX(0px); }
+    100% { opacity: 0; transform: translateX(-30px); }
+  }
+
+  @keyframes hw-tiles {
+    0% { opacity: 0; transform: scale(0.94); }
+    3.33% { opacity: 0; transform: scale(0.94); }
+    12.22% { opacity: 1; transform: scale(1); }
+    94.44% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1); }
+  }
+
+  @keyframes hw-thread-1 {
+    0% { opacity: 0; stroke-dashoffset: 1; }
+    17.78% { opacity: 0; stroke-dashoffset: 1; }
+    18.89% { opacity: 1; stroke-dashoffset: 1; }
+    42.22% { opacity: 1; stroke-dashoffset: 0; }
+    94.44% { opacity: 1; stroke-dashoffset: 0; }
+    100% { opacity: 0; stroke-dashoffset: 0; }
+  }
+
+  @keyframes hw-thread-2 {
+    0% { opacity: 0; stroke-dashoffset: 1; }
+    22.22% { opacity: 0; stroke-dashoffset: 1; }
+    23.33% { opacity: 1; stroke-dashoffset: 1; }
+    46.67% { opacity: 1; stroke-dashoffset: 0; }
+    94.44% { opacity: 1; stroke-dashoffset: 0; }
+    100% { opacity: 0; stroke-dashoffset: 0; }
+  }
+
+  @keyframes hw-thread-3 {
+    0% { opacity: 0; stroke-dashoffset: 1; }
+    26.67% { opacity: 0; stroke-dashoffset: 1; }
+    27.78% { opacity: 1; stroke-dashoffset: 1; }
+    44.44% { opacity: 1; stroke-dashoffset: 0; }
+    94.44% { opacity: 1; stroke-dashoffset: 0; }
+    100% { opacity: 0; stroke-dashoffset: 0; }
+  }
+
+  @keyframes hw-lit-1 {
+    0% { opacity: 0; }
+    24.44% { opacity: 0; }
+    30% { opacity: 1; }
+    40% { opacity: 1; }
+    47% { opacity: 0; }
+  }
+
+  @keyframes hw-lit-2 {
+    0% { opacity: 0; }
+    28.89% { opacity: 0; }
+    34.4% { opacity: 1; }
+    44.4% { opacity: 1; }
+    51.5% { opacity: 0; }
+  }
+
+  @keyframes hw-lit-3 {
+    0% { opacity: 0; }
+    32.22% { opacity: 0; }
+    38% { opacity: 1; }
+    48% { opacity: 1; }
+    55% { opacity: 0; }
+  }
+
+  @keyframes hw-gap {
+    0% { opacity: 0; }
+    45.56% { opacity: 0; }
+    52.22% { opacity: 1; }
+    94.44% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes hw-sheet-1 {
+    0% { opacity: 0; transform: translateX(-56px); }
+    46.67% { opacity: 0; transform: translateX(-56px); }
+    57.78% { opacity: 1; transform: translateX(0px); }
+    94.44% { opacity: 1; transform: translateX(0px); }
+    100% { opacity: 0; transform: translateX(20px); }
+  }
+
+  @keyframes hw-sheet-2 {
+    0% { opacity: 0; transform: translateX(-56px); }
+    48.89% { opacity: 0; transform: translateX(-56px); }
+    60% { opacity: 1; transform: translateX(0px); }
+    94.44% { opacity: 1; transform: translateX(0px); }
+    100% { opacity: 0; transform: translateX(20px); }
+  }
+
+  @keyframes hw-sheet-3 {
+    0% { opacity: 0; transform: translateX(-56px) scale(1); }
+    58.89% { opacity: 0; transform: translateX(-56px) scale(1); }
+    70% { opacity: 1; transform: translateX(0px) scale(1); }
+    76.67% { opacity: 1; transform: translateX(0px) scale(1); }
+    80.56% { opacity: 1; transform: translateX(0px) scale(1.07); }
+    84.44% { opacity: 1; transform: translateX(0px) scale(1); }
+    94.44% { opacity: 1; transform: translateX(0px) scale(1); }
+    100% { opacity: 0; transform: translateX(20px) scale(1); }
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hw-root,
+  .hw-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
