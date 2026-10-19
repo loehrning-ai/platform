@@ -940,12 +940,9 @@
     else if (button !== nodes.nextReveal) focusNextReveal();
   }
 
-  const RESET_KEY_CONFIRM_MS = 1500;
-  let resetKeyArmedAt = 0;
-
   // Keys mirror the deck: → and PageDown are one press forward, ← and PageUp one press back (a clicker's
-  // keys), Space/Shift+Space the same when no button has focus, Esc leaves an appendix, and R twice
-  // within 1.5 s sends the deck to the cover, exactly as on the deck. Reset scene stays on its button.
+  // keys), Space/Shift+Space the same when no button has focus, Esc leaves an appendix, and Shift+R
+  // sends the deck to the cover, exactly as on the deck (a bare R does nothing). Reset scene stays on its button.
   // A keyboard-focused button keeps its own Space/Enter activation.
   function onKey(event) {
     if (isInput(event.target) || event.metaKey || event.ctrlKey || event.altKey) return;
@@ -972,7 +969,7 @@
     else if (event.key === "Escape" && appendixReturnAvailable()) command = "appendix-return";
     else if ((event.key === " " || event.key === "Spacebar") && event.shiftKey) command = "fragment-previous";
     else if (event.key === " " || event.key === "Spacebar" || event.key === "Enter") command = "fragment-next";
-    else if (isReset && !event.shiftKey) command = "reset-key";
+    else if (isReset && event.shiftKey) command = "reset-key";
     if (!command) return;
     event.preventDefault();
     if (event.repeat) return;
@@ -981,19 +978,11 @@
       return;
     }
     if (command === "reset-key") {
-      const now = performance.now();
-      if (resetKeyArmedAt && now - resetKeyArmedAt <= RESET_KEY_CONFIRM_MS) {
-        resetKeyArmedAt = 0;
-        send({ command: "full-reset" });
-        showToast("Deck sent back to the cover.");
-        announce("Deck sent back to the cover.");
-      } else {
-        resetKeyArmedAt = now;
-        showToast("Press R again to send the deck back to the cover.", RESET_KEY_CONFIRM_MS);
-      }
+      send({ command: "full-reset" });
+      showToast("Deck sent back to the cover.");
+      announce("Deck sent back to the cover.");
       return;
     }
-    resetKeyArmedAt = 0;
     send({ command });
   }
 
