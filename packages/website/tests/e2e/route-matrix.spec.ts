@@ -60,6 +60,7 @@ const PUBLIC_ROUTES = [
   "/login",
   "/impressum",
   "/datenschutz",
+  "/bot",
   "/ueber-mich",
   // Note: /foerdermittel is 410 Gone (deleted by public-content transition) — not tested as 200
 ] as const;

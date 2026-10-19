@@ -7,6 +7,7 @@ const ROUTES = [
   "/ueber-mich",
   "/impressum",
   "/datenschutz",
+  "/bot",
 ] as const;
 
 const SOCIAL_METADATA_ROUTES = [

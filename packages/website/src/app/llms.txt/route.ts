@@ -47,6 +47,7 @@ const PUBLIC_PAGES: readonly PublicPage[] = [
     en: `Profile: ${TIM_ENTITY.displayName}`,
   },
   { path: "/hilfe", de: "Hilfe", en: "Help" },
+  { path: "/bot", de: "loehrningBot", en: "loehrningBot" },
   { path: "/impressum", de: "Impressum", en: "Legal notice" },
   { path: "/datenschutz", de: "Datenschutz", en: "Privacy" },
 ];
