@@ -1,77 +1,29 @@
-# EU-KI-Verordnung: Rollen und Pflichten präzise prüfen
+# Was seit Februar 2025 gilt
 
-Die Verordnung (EU) 2024/1689 ist seit 1. August 2024 in Kraft und wird gestaffelt anwendbar. Geprüft wurde dieses Kapitel am 9. August 2026; es berücksichtigt die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744. Für eine echte Entscheidung liest du den [aktuellen Text auf EUR-Lex](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689) und den [offiziellen EU-Zeitplan](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai), nicht dieses Kapitel.
+Seit dem 2. Februar 2025 gilt Artikel 4 der KI-Verordnung (EU) 2024/1689. Die Änderungsverordnung (EU) 2026/1744, seit dem 27. Juli 2026 in Kraft, hat die Pflicht neu gefasst: Anbieter und Betreiber ergreifen Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer Personen unterstützen, die in ihrem Auftrag mit diesen Systemen arbeiten. Davor lautete sie, ein ausreichendes Maß an KI-Kompetenz sicherzustellen. Betreiber ist, wer ein KI-System im Beruf unter eigener Verantwortung einsetzt, also auch eine kleine Firma mit einem Chatbot oder einem Übersetzungswerkzeug.
 
-## Erst System, Zweck und Rolle klären
+Dieses Kapitel gibt keine Rechtsberatung. Es nennt, was die EU-Kommission auf ihren eigenen Seiten schreibt, Stand 19. Oktober 2026. Für eine echte Entscheidung liest du den [Text auf EUR-Lex](https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689) und den [Zeitplan der Kommission](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai).
 
-Ein Produktname beantwortet keine Rechtsfrage. Dokumentiere:
+## Die Fristen im Überblick
 
-- welche Funktion tatsächlich aktiv ist
-- welchen vorgesehenen Zweck der Anbieter nennt
-- wie deine Organisation sie verwendet
-- ob du Anbieter, Betreiber oder ein anderer Akteur bist
-- welche Personen, Daten und Folgeentscheidungen betroffen sind
+Die Verordnung trat am 1. August 2024 in Kraft und wird in Stufen anwendbar. Am 2. Februar 2025 kamen die Verbote und die Pflicht zur KI-Kompetenz, am 2. August 2025 die Regeln für KI-Modelle mit allgemeinem Verwendungszweck. Seit dem 2. August 2026 gilt die Verordnung allgemein, mit Ausnahmen.
 
-Die Rolle entscheidet über die Pflichten. Ein Betreiber erbt nicht die Konformitätsbewertung des Anbieters. Und wer wesentlich verändert, unter eigenem Namen betreibt oder den Zweck ändert, kann nach Art. 25 selbst zum Anbieter werden.
+::figure{id="C12"}
 
-## Anwendung in Stufen
+Zu diesen Ausnahmen gehören die Hochrisiko-Systeme. Die am 27. Juli 2026 in Kraft getretene Änderungsverordnung (EU) 2026/1744, von der Kommission KI-Omnibus genannt, schiebt die Frist für eigenständige Hochrisiko-Systeme nach Anhang III auf den 2. Dezember 2027 und für Systeme in regulierten Produkten nach Anhang I auf den 2. August 2028. Seit Februar 2025 sind außerdem bestimmte Praktiken verboten, etwa die Emotionserkennung am Arbeitsplatz.
 
-| Datum            | Ausgewählte Anwendungspunkte                                                                               |
-| ---------------- | ---------------------------------------------------------------------------------------------------------- |
-| 2. Februar 2025  | Kapitel I, Art. 4 und die Verbote des Art. 5                                                               |
-| 2. August 2025   | unter anderem Governance-, Sanktions- und GPAI-Regeln nach den Übergangsvorschriften                       |
-| 2. August 2026   | weitere allgemeine Regeln, darunter Art. 50, soweit keine besondere Übergangsregel greift                  |
-| 2. Dezember 2027 | aktueller offizieller EU-Zeitplan für Hochrisiko-Systeme nach Anhang III                                   |
-| 2. August 2028   | aktueller offizieller EU-Zeitplan für in regulierte Produkte eingebettete Hochrisiko-Systeme nach Anhang I |
+## Was Artikel 4 verlangt
 
-Die Verordnung (EU) 2026/1744 wurde am 24. Juli 2026 im Amtsblatt veröffentlicht und trat am 27. Juli 2026 in Kraft. Geändert hat sie unter anderem Artikel 4, die Hochrisiko-Zeitpunkte und einzelne Übergangsregeln.
+Artikel 4 verlangt Maßnahmen, aber kein bestimmtes Ergebnis. Nach den Antworten der Kommission braucht es keine Teilnahmebestätigung, keine vorgeschriebene Schulung, keine Beauftragte für KI und keine Mindeststundenzahl, und niemand muss das Wissen einzelner Beschäftigter messen. Intern festzuhalten, was du getan hast, ist erlaubt, vorgeschrieben ist es nicht.
 
-## Art. 4: KI-Kompetenz ist kontextabhängig
+Die Pflicht erfasst auch Personen, die im Auftrag arbeiten, etwa Dienstleister. Kommission und Mitgliedstaaten sollen vor allem kleinere Firmen unterstützen, die nationalen Behörden setzen die Regeln ab August 2026 durch. Die [Fragen und Antworten zur KI-Kompetenz](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) sind kurz und lesenswert.
 
-Anbieter und Betreiber müssen Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz ihres Personals und anderer Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene Personen oder Personengruppen. Ein bestimmtes individuelles Kompetenzniveau schuldet niemand.
+Für eine kleine Firma ist eine Seite ein sinnvoller Anfang, auf der steht, wer was können muss und was dafür geschehen ist. Nur die Gebrauchsanweisung zu lesen, hält die Kommission in vielen Fällen für unwirksam. Auch ein kostenloser Kurs wie der [KI-Führerschein](/ki-fuehrerschein) kann eine Maßnahme sein. Er ist aber kein vorgeschriebener Nachweis und belegt für sich allein nicht, dass du Artikel 4 für einen bestimmten Einsatz erfüllt hast.
 
-Die [Q&A der Europäischen Kommission](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) stellt klar:
+## Drei Blöcke statt eines Projekts
 
-- kein einheitliches Pflichttraining für alle Rollen
-- keine vorgeschriebene Zertifizierung
-- kein vorgeschriebener „KI-Beauftragter“
-- keine pauschale Mindeststundenzahl
+Wichtig ist, dass du KI auch dort findest, wo niemand sie so nennt. Eine Übersetzungsfunktion, ein Vorschlag im Mailprogramm oder eine Vorauswahl im Bewerbermanagement kann ein KI-System sein, auch wenn auf der Verpackung etwas anderes steht. Gerade das Personalwesen lohnt einen zweiten Blick, weil Anhang III der Verordnung Systeme für Einstellung und Beschäftigung ausdrücklich aufführt.
 
-Für einen riskanten Use Case reicht eine Allgemeinschulung oft nicht. Umgekehrt braucht nicht jede Person denselben juristischen und technischen Tiefgang. Dokumentiere Rolle, Bedarf, Maßnahme und Wirksamkeitsprüfung.
+Für den Anfang brauchst du kein Projekt. Plane drei Tage ein, an denen du nacheinander drei Fragen beantwortest, und hole dir für jede Frage die Leute dazu, die das System täglich benutzen und am besten wissen, wo es hakt. Welche KI läuft in deiner Firma schon, auch als Funktion in Programmen, die längst im Einsatz sind? Wofür wird sie verwendet, mit welchen Daten, und wen betrifft das Ergebnis? Wer braucht was, um damit sicher zu arbeiten, und was ist dafür bisher geschehen?
 
-## Verbote, Hochrisiko und Transparenz nicht vermischen
-
-### Art. 5
-
-Art. 5 verbietet genau definierte Praktiken, darunter bestimmte manipulative oder ausnutzende Systeme, bestimmtes Social Scoring, bestimmte biometrische Kategorisierung, grundsätzlich Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen sowie weitere dort beschriebene Fälle. Lies den Wortlaut samt Ausnahmen. Eine Schlagwortliste reicht nicht.
-
-### Art. 6 mit Anhang I und III
-
-Hochrisiko folgt aus der gesetzlichen Klassifizierung und dem vorgesehenen Zweck, nicht aus dem Bauchgefühl. Anhang III nennt unter anderem bestimmte Systeme in Beschäftigung, Bildung, wesentlichen Diensten, Strafverfolgung, Migration und Justiz. Art. 6 Abs. 3 enthält für Anhang-III-Systeme eine eng zu prüfende Ausnahme; Profiling natürlicher Personen bleibt dabei besonders behandelt.
-
-Anbieter- und Betreiberpflichten unterscheiden sich. Betreiber von Hochrisiko-Systemen prüfen insbesondere Art. 26: Gebrauchsanweisung, Aufsicht, kontrollierte Eingabedaten, Monitoring, Reaktion auf Risiken oder Vorfälle, Logs, Beschäftigteninformation und use-case-abhängige Information Betroffener.
-
-### Art. 50
-
-Art. 50 zwingt niemanden, jeden KI-Text zu kennzeichnen. Die Pflichten unterscheiden sich nach Akteur und System.
-
-- Anbieter bestimmter interaktiver Systeme informieren über die Interaktion mit KI, sofern dies nicht offensichtlich ist.
-- Anbieter generativer Systeme sorgen für maschinenlesbare Markierung bestimmter Ausgaben.
-- Betreiber von Emotionserkennung oder biometrischer Kategorisierung informieren Betroffene unter den gesetzlichen Voraussetzungen.
-- Betreiber von Deepfakes und bestimmten Texten von öffentlichem Interesse haben eigene Offenlegungspflichten und Ausnahmen.
-
-## Parallel geltendes Recht
-
-DSGVO, Geheimnisschutz, Urheberrecht, Arbeits- und Mitbestimmungsrecht, Gleichbehandlung und Sektorregeln warten nicht auf eine AI-Act-Hochrisikoklasse. Eine AI-Act-Einstufung ersetzt keine dieser Prüfungen.
-
-## Starter-Checkliste
-
-1. System, Version, Funktion, Zweck, Nutzer und Betroffene inventarisieren.
-2. Rolle jedes Akteurs begründen.
-3. Art. 5, Art. 6 mit Anhängen und Art. 50 getrennt prüfen.
-4. Anwendungsdatum der konkreten Pflicht kontrollieren.
-5. Datenfluss, Verträge, Sicherheit und Parallelrecht prüfen.
-6. Rollen- und risikogerechte Art.-4-Maßnahmen festlegen.
-7. Freigabe, Aufsicht, Logs, Eskalation, Vorfälle und Review dokumentieren.
-
-Der kostenlose Kurs auf `/ki-fuehrerschein` kann eine Lernmaßnahme sein. Sein Abschluss ist keine gesetzlich vorgeschriebene Zertifizierung und beweist für sich genommen nicht, dass Art. 4 für einen konkreten Use Case erfüllt ist.
+> **Was du tun kannst:** Lege dir ein Dokument mit drei Spalten an: System, Zweck und Daten, Maßnahme je Rolle. Fülle es in drei Blöcken. Halte ein Datum fest. Prüfe danach bei jedem System, ob eine Frist aus Anhang III oder ein Verbot es berühren könnte, und lies in dem Fall den Wortlaut.

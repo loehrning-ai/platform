@@ -24,9 +24,9 @@ import {
 const BOOKS = [
   {
     slug: "ki-landschaft",
-    title: "KI im deutschen Mittelstand",
-    chapterCount: 10,
-    firstChapter: { slug: "01_eisberg", title: "Das Eisberg-Problem" },
+    title: "Von außen gesehen",
+    chapterCount: 8,
+    firstChapter: { slug: "01_eisberg", title: "Die Zahl, die nicht stimmt" },
   },
 ] as const;
 

@@ -11,6 +11,9 @@
 import { promises as fs } from "fs";
 import path from "path";
 import type { Locale } from "@/lib/i18n/locale";
+import { loadBookFigures, FigureLoadError, FIXTURE_FIGURE_IDS } from "@/lib/book-figures";
+import { figureKey, listDirectives, replaceDirectives, type Directive } from "@/lib/book-directives";
+import { hasToken, resolveToken, resolveTokens, TokenError } from "@/lib/figures";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -131,6 +134,77 @@ function computeReadingTime(markdown: string): number {
   return Math.max(1, Math.floor(words / 200));
 }
 
+// ── Figure tokens and directives ─────────────────────────────────────────────
+
+/** Splits a ticker ref "c4.weighted_share.range" into figure id, key and field. */
+export function parseTickerRef(ref: string): { figure: string; key: string; field?: string } | null {
+  const m = /^([a-z0-9][a-z0-9_-]*)\.([A-Za-z0-9_]+)(?:\.(value|num|lo|hi|range|n))?$/.exec(ref.trim());
+  return m ? { figure: m[1] as string, key: m[2] as string, field: m[3] } : null;
+}
+
+/**
+ * Resolves {{figure.key}} number tokens from the book's figure JSON and checks
+ * that every ::figure and ::ticker line points at something that exists. A
+ * typo fails the build here, never prints a placeholder on a page.
+ */
+async function resolveChapterFigures(
+  bookSlug: string,
+  chapterSlug: string,
+  locale: Locale,
+  markdown: string,
+): Promise<string> {
+  if (!/\{\{|^::[a-z]/m.test(markdown)) return markdown;
+  const figures = await loadBookFigures(bookSlug);
+  let resolved: string;
+  try {
+    resolved = resolveTokens(markdown, figures.lookup, locale);
+  } catch (error) {
+    if (error instanceof TokenError) throw new TokenError(`${bookSlug}/${chapterSlug}: ${error.message}`);
+    throw error;
+  }
+  if (hasToken(resolved)) {
+    const left = /\{\{[^}]*\}\}/.exec(resolved)?.[0] ?? "";
+    throw new TokenError(`${bookSlug}/${chapterSlug}: cannot read the token ${left}. Write {{figure.key}}.`);
+  }
+  for (const directive of listDirectives(resolved)) {
+    if (directive.name === "figure") {
+      const id = figureKey(directive.attrs["id"] as string);
+      if (!figures.specs.has(id) && !FIXTURE_FIGURE_IDS.includes(id)) {
+        throw new FigureLoadError(`${bookSlug}/${chapterSlug}: ${directive.source} has no figure. Known: ${[...figures.specs.keys(), ...FIXTURE_FIGURE_IDS].join(", ")}`);
+      }
+    } else if (directive.name === "ticker") {
+      const ref = parseTickerRef(directive.attrs["ref"] as string);
+      const spec = ref ? figures.specs.get(ref.figure.toLowerCase()) : undefined;
+      if (!ref || !spec) throw new FigureLoadError(`${bookSlug}/${chapterSlug}: ${directive.source}: ref must be figure.key of a known figure`);
+      resolveToken(spec, ref.key, "value", undefined, locale);
+    }
+  }
+  return resolved;
+}
+
+/**
+ * The chapter as plain Markdown for readers that cannot show a figure (agent
+ * tools, text PDF): a figure line becomes its title and caption, a ticker line
+ * its number and tail.
+ */
+export async function plainChapterMarkdown(bookSlug: string, rawMarkdown: string, locale: Locale): Promise<string> {
+  if (!/^::[a-z]/m.test(rawMarkdown)) return rawMarkdown;
+  const figures = await loadBookFigures(bookSlug);
+  const describe = (d: Directive): string | null => {
+    if (d.name === "figure") {
+      const spec = figures.specs.get(figureKey(d.attrs["id"] as string));
+      return spec ? `*Abbildung: ${spec.title}. ${spec.caption}*` : null;
+    }
+    if (d.name === "ticker") {
+      const ref = parseTickerRef(d.attrs["ref"] as string);
+      const spec = ref ? figures.specs.get(ref.figure.toLowerCase()) : undefined;
+      return ref && spec ? `**${resolveToken(spec, ref.key, "value", undefined, locale)}** ${d.attrs["tail"] as string}` : null;
+    }
+    return null;
+  };
+  return replaceDirectives(rawMarkdown, describe);
+}
+
 // ── Chapter loader ───────────────────────────────────────────────────────────
 
 export async function loadBookChapter(
@@ -163,10 +237,11 @@ export async function loadBookChapter(
   // inside later code fences stay out of reach of the 10-line guard.
   const lines = fileContents.split("\n");
   const h1Index = lines.findIndex((line) => /^#\s+/.test(line));
-  const rawMarkdown =
+  const withoutH1 =
     h1Index >= 0 && h1Index < 10
       ? [...lines.slice(0, h1Index), ...lines.slice(h1Index + 1)].join("\n")
       : fileContents;
+  const rawMarkdown = await resolveChapterFigures(bookSlug, chapterSlug, locale, withoutH1);
   const headings = extractHeadings(rawMarkdown);
   const readingTimeMinutes = computeReadingTime(rawMarkdown);
 

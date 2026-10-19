@@ -1,0 +1,36 @@
+{
+  "steps": [
+    {
+      "id": "roh",
+      "title": "Roh gerechnet",
+      "readout": "{{c4.raw_share}}",
+      "readoutLabel": "alle erreichbaren Websites, n = {{c4.raw_share.n}}",
+      "body": "Die einfachste Rechnung: Auf {{c4.raw_share}} der erreichbaren Firmenwebsites steht das Wort KI. Gemessen wird, ob das Wort im Text der Startseite vorkommt, nicht, ob die Firma KI nutzt.",
+      "alt": "Ein Balken: roh {{c4.raw_share}}."
+    },
+    {
+      "id": "geteilt",
+      "title": "Geteilte Adressen entfernt",
+      "readout": "{{c4.own_share}}",
+      "readoutLabel": "nur eigene Adresse, n = {{c4.own_share.n}}",
+      "body": "Auf {{c4.shared_sites}} Websites teilen sich mehrere Firmen eine Adresse. Dort steht KI deutlich öfter. Möglich, dass dahinter Portale stecken, die der falschen Firma zugeordnet wurden. Ohne diese Websites bleiben {{c4.own_share}}.",
+      "alt": "Zwei Balken: roh {{c4.raw_share}}, nur eigene Adresse {{c4.own_share}}."
+    },
+    {
+      "id": "gewichtet",
+      "title": "Nach Bundesland gewichtet",
+      "readout": "{{c4.weighted_share}}",
+      "readoutLabel": "gewichtet, Intervall {{c4.weighted_share.range}}, n = {{c4.weighted_share.n}}",
+      "body": "Unsere Stichprobe ist keine Zufallsauswahl: Bayern stellt {{c4.bayern_sample_share}} der Stichprobe, aber nur {{c4.bayern_units_share}} der Unternehmen in Deutschland. Gewichten wir jedes Bundesland nach seinem Anteil an den Unternehmen, bleiben {{c4.weighted_share}}.",
+      "alt": "Drei Balken: roh {{c4.raw_share}}, eigene Adresse {{c4.own_share}}, gewichtet {{c4.weighted_share}}."
+    },
+    {
+      "id": "nochmal",
+      "title": "Dieselben Seiten, zweimal gemessen",
+      "readout": "{{c4.rescan_first}} und {{c4.rescan_second}}",
+      "readoutLabel": "dieselben {{c4.rescan_first.n}} Websites, {{c4.rescan_days}} Tage später",
+      "body": "{{c4.rescan_first.n}} Websites haben wir ein zweites Mal gelesen, im Mittel {{c4.rescan_days}} Tage später. Beim ersten Scan stand KI auf {{c4.rescan_first}}, beim zweiten auf {{c4.rescan_second}}. {{c4.rescan_lost_hits}} von {{c4.rescan_first_hits}} Treffern waren weg. Schon die Messmethode verschiebt die Zahl um den Faktor {{c4.rescan_ratio}}.",
+      "alt": "Fünf Balken: roh {{c4.raw_share}}, eigene Adresse {{c4.own_share}}, gewichtet {{c4.weighted_share}}. Daneben dieselben {{c4.rescan_first.n}} Websites: erster Scan {{c4.rescan_first}}, zweiter Scan {{c4.rescan_second}}."
+    }
+  ]
+}

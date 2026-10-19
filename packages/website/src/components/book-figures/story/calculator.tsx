@@ -107,6 +107,7 @@ function buildSpec(inputs: CalculatorInputs, result: CalculatorResult): FigureSp
     data: {
       fmt,
       orientation: "horizontal",
+      legend: { total: "Zeitwert und Unterschied", down: "Kosten" },
       items: [
         { id: "value", label: "Zeitwert pro Monat", kind: "total", value: Math.round(result.timeValue) },
         { id: "tool", label: "Werkzeugkosten", kind: "delta", value: inputs.tool === 0 ? 0 : -inputs.tool },

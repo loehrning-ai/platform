@@ -18,9 +18,9 @@ interface WaterfallStoryProps {
 /**
  * Thin band across the viewport: the step card on it is the active one. On a
  * phone the stage covers the top, so the band sits in the text area below it
- * (80 percent down); beside the stage it is the middle of the screen.
+ * (about 68 percent down); beside the stage it is the middle of the screen.
  */
-const BAND_PHONE = "-80% 0px -18% 0px";
+const BAND_PHONE = "-68% 0px -30% 0px";
 const BAND_WIDE = "-50% 0px -49% 0px";
 /** One structural reveal between two steps, inside the 250 to 450 ms the motion policy allows. */
 const STEP_MS = 400;
@@ -69,7 +69,7 @@ export function WaterfallStory({ spec, steps, provisional, csvHref }: WaterfallS
       if (!card) return;
       // Put the card where the observer band reads it: centred beside the stage, or in the text area below it.
       const rect = card.getBoundingClientRect();
-      const wanted = wide ? (window.innerHeight - rect.height) / 2 : window.innerHeight * 0.7;
+      const wanted = wide ? (window.innerHeight - rect.height) / 2 : window.innerHeight * 0.67;
       window.scrollBy({ top: rect.top - wanted, behavior: "auto" });
     },
     [wide],

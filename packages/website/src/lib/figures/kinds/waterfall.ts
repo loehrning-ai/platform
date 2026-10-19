@@ -41,6 +41,15 @@ export function waterfallBars(data: WaterfallData): { bars: Bar[]; slots: number
   return { bars, slots: slot };
 }
 
+/**
+ * A stepped waterfall shows what is still to come as a dashed outline at the
+ * final size ("kommt noch"), so the empty part of the chart reads as a plan
+ * and not as a bug. The outline fades as the bar grows; at progress 1 it is gone.
+ */
+function ghostOpacity(ctx: Ctx<WaterfallData>, f: number): number {
+  return ctx.spec.steps && ctx.spec.steps.length > 0 ? Math.max(0, 1 - f) * 0.9 : 0;
+}
+
 export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
   const { data, width, pal, spec, p } = ctx;
   const { bars, slots } = waterfallBars(data);
@@ -52,6 +61,7 @@ export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
   const horizontal = orient === "horizontal" || (orient === "auto" && width < 520);
   const nodes: SvgNode[] = [];
   const o = op(frameReveal(p));
+  let anyGhost = false;
 
   const fillFor = (b: Bar): { fill: string; stroke?: string; strokeWidth?: number } =>
     b.kind === "total"
@@ -65,7 +75,8 @@ export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
   let axisBottom: number;
   if (horizontal) {
     const valueW = Math.max(...bars.map((b) => textWidth(valueText(b), FS.value, 600))) + 12;
-    const rowH = 48;
+    // A stepped chart is pinned on a phone and must leave room for the step text: tighter rows there.
+    const rowH = spec.steps && spec.steps.length > 0 ? 38 : 48;
     // The row label sits above its bar: leave a line below the tick labels for the first one.
     const head = 16;
     const plot = { x: M, y: 26, w: width - M * 2 - valueW, h: slots * rowH + head };
@@ -80,6 +91,16 @@ export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
       if (b.gapBefore) {
         const gy = bandPlot.y + (b.slot - 0.25) * axis.band.step;
         nodes.push(el("line", { key: `gap${b.id}`, x1: M, y1: gy, x2: width - M, y2: gy, stroke: pal.edge, strokeWidth: 1, strokeDasharray: "2 3", opacity: o }));
+      }
+      const ghost = ghostOpacity(ctx, f);
+      if (ghost > 0.01) {
+        anyGhost = true;
+        nodes.push(
+          el("g", { key: `ghost${b.id}`, "data-ghost": b.id, opacity: op(ghost) },
+            text(M, r.y - 6, fitEllipsis(b.label, width - M * 2, FS.label), { fill: pal.mutedLight }),
+            el("rect", { x: r.x, y: r.y, width: Math.max(r.w, 1.5), height: r.h, fill: pal.inset, stroke: pal.edge, strokeWidth: 1.5, strokeDasharray: "4 3" }),
+          ),
+        );
       }
       nodes.push(
         el("g", { key: b.id, "data-id": b.id, opacity: op(dim(ctx, b.id)) },
@@ -111,6 +132,16 @@ export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
         const gx = plot.x + (b.slot - 0.25) * axis.band.step;
         nodes.push(el("line", { key: `gap${b.id}`, x1: gx, y1: plot.y - 8, x2: gx, y2: plot.y + plot.h + 4, stroke: pal.edge, strokeWidth: 1, strokeDasharray: "2 3", opacity: o }));
       }
+      const ghost = ghostOpacity(ctx, f);
+      if (ghost > 0.01) {
+        anyGhost = true;
+        nodes.push(
+          el("g", { key: `ghost${b.id}`, "data-ghost": b.id, opacity: op(ghost) },
+            el("rect", { x: r.x, y: r.y, width: r.w, height: Math.max(r.h, 1.5), fill: pal.inset, stroke: pal.edge, strokeWidth: 1.5, strokeDasharray: "4 3" }),
+            textLines(cx, plot.y + plot.h + 18, lines, 14, { size: FS.small, fill: pal.mutedLight, anchor: "middle" }),
+          ),
+        );
+      }
       nodes.push(
         el("g", { key: b.id, "data-id": b.id, opacity: op(dim(ctx, b.id)) },
           el("rect", { x: r.x, y: r.y, width: r.w, height: Math.max(r.h, 1.5), ...st, transform: axis.grow(f, start) }),
@@ -131,12 +162,19 @@ export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
 
   const swatch = (fill: string, stroke?: string) => (x: number, y: number) =>
     el("rect", { x: x - 7, y: y - 6, width: 14, height: 12, fill, stroke, strokeWidth: stroke ? 2 : undefined });
-  const legendItems: LegendItem[] = [{ label: "Messwert", marker: swatch(pal.ink) }];
+  const words = data.legend ?? {};
+  const legendItems: LegendItem[] = [{ label: words.total ?? "Messwert", marker: swatch(pal.ink) }];
   if (bars.some((b) => b.kind === "delta" && b.value < 0)) {
-    legendItems.push({ label: "Rückgang", marker: swatch(pal.accent) });
+    legendItems.push({ label: words.down ?? "Rückgang", marker: swatch(pal.accent) });
   }
   if (bars.some((b) => b.kind === "delta" && b.value > 0)) {
-    legendItems.push({ label: "Anstieg", marker: swatch(pal.card, pal.ink) });
+    legendItems.push({ label: words.up ?? "Anstieg", marker: swatch(pal.card, pal.ink) });
+  }
+  if (anyGhost) {
+    legendItems.push({
+      label: "kommt noch",
+      marker: (x, y) => el("rect", { x: x - 7, y: y - 6, width: 14, height: 12, fill: pal.inset, stroke: pal.edge, strokeWidth: 1.5, strokeDasharray: "3 2" }),
+    });
   }
   const legend = flowLegend(legendItems, M, width - M, axisBottom + 18, pal.muted, o);
   nodes.push(...legend.nodes);

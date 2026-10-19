@@ -92,9 +92,10 @@ describe("server markup is the finished figure (no JS)", () => {
     expect(ticker.querySelector(".bf-ticker-number")?.textContent).toContain("4,0");
   });
 
-  it("the waffle table lists the chips with their firm counts", () => {
+  it("the waffle table lists the three groups of the nested readings", () => {
     const rows = [...html(ALL.waffle).querySelectorAll("tbody tr")].map((r) => r.textContent ?? "");
-    expect(rows.some((r) => r.includes("Beleg: Chatbot oder Tool") && r.includes("149"))).toBe(true);
+    expect(rows.some((r) => r.includes("enge Lesart") && r.includes("25"))).toBe(true);
+    expect(rows.some((r) => r.includes("nur weite Lesart") && r.includes("39"))).toBe(true);
   });
 });
 
@@ -237,14 +238,16 @@ describe("client islands", () => {
     expect(hits().slice(-2).map((b) => b.dataset["hit"]).sort()).toEqual(["SL", "ST"]);
   });
 
-  it("waffle: a chip relights the dots and its sentence names the firms", () => {
+  it("waffle: a reading relights the dots (narrow 25, broad 64) and its sentence says the number depends on the reading", () => {
     render(<WaffleFigure spec={WAFFLE_SAGEN_ZEIGEN} chips={WAFFLE_CHIPS} />);
-    const accent = () => document.querySelectorAll('svg circle[fill="#b73a15"]').length;
-    const before = accent();
-    fireEvent.click(screen.getByRole("button", { name: "KI-Stelle" }));
-    expect(accent()).toBeLessThan(before);
-    expect(document.querySelector(".bf-detail")?.textContent).toContain("KI-Stelle: 5 von 100 (54 Firmen)");
-    expect(document.querySelectorAll("svg circle")).toHaveLength(100 + 3 /* legend markers */);
+    const accent = () => document.querySelectorAll('svg circle[data-group][fill="#b73a15"]').length;
+    fireEvent.click(screen.getByRole("button", { name: "Weite Lesart" }));
+    expect(accent()).toBe(64);
+    fireEvent.click(screen.getByRole("button", { name: "Enge Lesart" }));
+    expect(accent()).toBe(25);
+    expect(document.querySelector(".bf-detail")?.textContent).toContain("Enge Lesart: 25 von 100");
+    expect(document.querySelector(".bf-detail")?.textContent).toContain("hängt davon ab, was man konkret nennt");
+    expect(document.querySelectorAll("svg circle")).toHaveLength(100 + 2 /* legend markers */);
   });
 
   it("lorenz: the range input moves the mark and aria-valuetext says why", () => {

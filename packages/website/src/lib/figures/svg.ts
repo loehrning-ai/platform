@@ -157,6 +157,30 @@ export function wrapText(
   return lines.map((line) => fitEllipsis(line, maxWidth, size, weight));
 }
 
+/**
+ * A row label that never ends in an ellipsis when it can be broken instead: one
+ * line if it fits, else two lines split at a space or after a hyphen (the split
+ * with the most even halves that both fit), else wrapText as the last resort.
+ */
+export function labelLines(label: string, maxWidth: number, size: number, weight = 400): string[] {
+  if (textWidth(label, size, weight) <= maxWidth) return [label];
+  let best: string[] | null = null;
+  let bestGap = Number.POSITIVE_INFINITY;
+  for (let i = 1; i < label.length - 1; i += 1) {
+    const ch = label[i];
+    if (ch !== " " && ch !== "-") continue;
+    const first = (ch === " " ? label.slice(0, i) : label.slice(0, i + 1)).trimEnd();
+    const second = label.slice(i + 1).trimStart();
+    const w1 = textWidth(first, size, weight);
+    const w2 = textWidth(second, size, weight);
+    if (w1 <= maxWidth && w2 <= maxWidth && Math.abs(w1 - w2) < bestGap) {
+      best = [first, second];
+      bestGap = Math.abs(w1 - w2);
+    }
+  }
+  return best ?? wrapText(label, maxWidth, size, 2, weight);
+}
+
 /** Cut one line to a width with an ellipsis. */
 export function fitEllipsis(
   content: string,
@@ -250,7 +274,7 @@ export function frame({ ctx, height, children }: FrameProps): ReactElement {
       style: opts.intrinsic ? undefined : { display: "block", width: "100%", height: "auto", fontVariantNumeric: "tabular-nums" },
     } as Attrs,
     el("title", { id: `${idBase}-title` }, spec.title),
-    el("desc", { id: `${idBase}-desc` }, spec.alt),
+    el("desc", { id: `${idBase}-desc` }, spec.annotation ? `${spec.alt} Hinweis in der Abbildung: ${spec.annotation.text}` : spec.alt),
     el("defs", {}, hatchPattern(hatchId, pal)),
     opts.theme === "print"
       ? el("rect", { x: 0, y: 0, width, height, fill: pal.paper })
@@ -290,6 +314,17 @@ export function flowLegend(
     if (x > left && x + w - 18 > right) {
       x = left;
       y += rowH;
+    }
+    const avail = right - left - mw - 8;
+    if (textWidth(item.label, FS.small) > avail) {
+      // A label wider than the row wraps onto more lines; a clipped label hides what the number means.
+      const lines = wrapText(item.label, avail, FS.small, 3);
+      nodes.push(
+        el("g", { opacity }, item.marker(x + mw / 2, y), textLines(x + mw + 8, y + 4, lines, 15, { size: FS.small, fill })),
+      );
+      y += (lines.length - 1) * 15;
+      x = right + 1;
+      continue;
     }
     nodes.push(
       el("g", { opacity }, item.marker(x + mw / 2, y), text(x + mw + 8, y + 4, item.label, { size: FS.small, fill })),

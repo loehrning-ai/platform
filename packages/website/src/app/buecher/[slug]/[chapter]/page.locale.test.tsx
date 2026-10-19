@@ -54,28 +54,28 @@ describe("published book chapter locale routing", () => {
   it("keeps one locale-independent set of stable static identities", async () => {
     const params = await generateStaticParams();
 
-    expect(params).toHaveLength(10);
-    expect(new Set(params.map(({ chapter }) => chapter)).size).toBe(10);
+    expect(params).toHaveLength(8);
+    expect(new Set(params.map(({ chapter }) => chapter)).size).toBe(8);
     expect(params[0]).toEqual({
       slug: "ki-landschaft",
       chapter: "01_eisberg",
     });
     expect(params.at(-1)).toEqual({
       slug: "ki-landschaft",
-      chapter: "10_anhang",
+      chapter: "08_methodik",
     });
   });
 
   it.each([
     [
       "de",
-      "Das Eisberg-Problem · KI im deutschen Mittelstand",
+      "Die Zahl, die nicht stimmt · Von außen gesehen",
       "/buecher/ki-landschaft/01_eisberg",
       "de_DE",
     ],
     [
       "en",
-      "The iceberg problem · AI in German SMEs",
+      "The number that does not add up · Seen from the outside",
       "/en/buecher/ki-landschaft/01_eisberg",
       "en_GB",
     ],
@@ -110,20 +110,20 @@ describe("published book chapter locale routing", () => {
 
     const reader = screen.getByTestId("chapter-reader");
     expect(reader).toHaveAttribute("data-locale", "en");
-    expect(reader).toHaveAttribute("data-book-title", "AI in German SMEs");
+    expect(reader).toHaveAttribute("data-book-title", "Seen from the outside");
     expect(reader).toHaveAttribute(
       "data-related-label",
       "Open the EU AI Act course",
     );
     expect(reader).toHaveAttribute(
       "data-next-title",
-      "Method without spurious precision",
+      "Saying and showing",
     );
-    expect(reader).toHaveAttribute("data-chapter-count", "10");
+    expect(reader).toHaveAttribute("data-chapter-count", "8");
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "The iceberg problem",
+        name: "The number that does not add up",
       }),
     ).toBeVisible();
     expect(screen.queryByTestId("resource-context")).not.toBeInTheDocument();

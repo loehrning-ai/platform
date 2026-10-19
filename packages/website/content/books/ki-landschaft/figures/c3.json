@@ -1,0 +1,133 @@
+{
+  "id": "c3",
+  "kind": "waffle",
+  "title": "Sagen und zeigen",
+  "alt": "Von 100 Firmenseiten, die KI erwähnen, zeigen nach enger Lesart 25 etwas Konkretes (Chatbot, Verfahren des maschinellen Lernens, KI-Stelle, KI-Regeln) und nach weiter Lesart 64 (jede benannte KI-Funktion, jedes KI-Produkt oder -Angebot). Bei 36 steht nur das Wort.",
+  "caption": "Von den gelesenen Startseiten, die KI erwähnen (64 von 269), zeigen nach enger Lesart 25 % etwas Konkretes (Intervall 13 bis 42 %), nach weiter Lesart 64 % (Intervall 43 bis 79 %). Beide Lesarten sind Setzungen; die Zahl hängt davon ab, was man konkret nennt.",
+  "n": 64,
+  "nNote": "64 von 269 gelesenen Startseiten (Stichprobe aus 25.581 Seiten mit eigener Adresse) erwähnen KI",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Gelesen wurden 269 Startseiten, beurteilt hat ein KI-Assistent, die Gegenprüfung durch den Autor steht aus. Die Intervalle sind breit, weil nur 64 Seiten KI erwähnen. Gezeigt wird, was auf der Startseite steht, nicht, was die Firma tut.",
+  "steps": [
+    {
+      "id": "alle",
+      "label": "100 Seiten, die KI erwähnen",
+      "reveal": [
+        "says"
+      ]
+    },
+    {
+      "id": "eng",
+      "label": "Enge Lesart: 25 zeigen etwas Konkretes",
+      "reveal": [
+        "narrow"
+      ],
+      "focus": [
+        "narrow"
+      ]
+    },
+    {
+      "id": "weit",
+      "label": "Weite Lesart: 64 zeigen etwas Konkretes",
+      "reveal": [
+        "broad"
+      ],
+      "focus": [
+        "broad",
+        "narrow"
+      ]
+    }
+  ],
+  "data": {
+    "total": 100,
+    "columns": 10,
+    "headline": "25 oder 64 von 100",
+    "groups": [
+      {
+        "id": "narrow",
+        "label": "Enge Lesart: Chatbot, Verfahren des maschinellen Lernens, KI-Stelle oder KI-Regeln",
+        "dots": 25,
+        "tone": "accent"
+      },
+      {
+        "id": "broad",
+        "label": "Nur in weiter Lesart: benannte KI-Funktion, KI-Produkt oder -Angebot",
+        "dots": 39,
+        "tone": "ink"
+      },
+      {
+        "id": "says",
+        "label": "Sagt nur KI, zeigt nichts Konkretes",
+        "dots": 36,
+        "tone": "ring"
+      }
+    ],
+    "restLabel": "nicht eingeordnet"
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "values": {
+      "read_narrow": {
+        "value": 25,
+        "lo": 13,
+        "hi": 42,
+        "n": 64,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "read_broad": {
+        "value": 64,
+        "lo": 43,
+        "hi": 79,
+        "n": 64,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "read_sample": {
+        "value": 269,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "read_mentions": {
+        "value": 64,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "regex_hits": {
+        "value": 1112,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "trace_precision": {
+        "value": 28,
+        "lo": 12,
+        "hi": 63,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "trace_recall": {
+        "value": 25,
+        "lo": 11,
+        "hi": 52,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

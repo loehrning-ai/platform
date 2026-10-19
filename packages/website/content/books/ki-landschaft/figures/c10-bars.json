@@ -1,0 +1,55 @@
+{
+  "id": "c10-bars",
+  "kind": "bars",
+  "title": "Stellen je Arbeitgeber",
+  "alt": "Anteil der Arbeitgeber nach Zahl ihrer KI-Stellen. 67 Prozent haben genau eine, wenige haben zehn und mehr.",
+  "caption": "Anteil von 2.561 Arbeitgebern nach Zahl ihrer verschiedenen KI-Stellen.",
+  "n": 2561,
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland aus drei Portalen (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, gesehen 28.02. bis 16.06.2026",
+  "asOf": "2026-10-18",
+  "limitation": "Suchbegriff-Stichprobe, siehe Konzentrationsdiagramm.",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "b1",
+        "label": "genau 1 Stelle",
+        "value": 67
+      },
+      {
+        "id": "b2",
+        "label": "2 Stellen",
+        "value": 15.8
+      },
+      {
+        "id": "b3",
+        "label": "3 Stellen",
+        "value": 6.8
+      },
+      {
+        "id": "b4",
+        "label": "4 Stellen",
+        "value": 2.9
+      },
+      {
+        "id": "b5",
+        "label": "5 bis 9 Stellen",
+        "value": 5
+      },
+      {
+        "id": "b10",
+        "label": "10 und mehr",
+        "value": 2.5
+      }
+    ],
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19"
+  }
+}

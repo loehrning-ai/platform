@@ -59,22 +59,20 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/buecher/ki-landschaft | KI im deutschen Mittelstand | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | src/lib/books.ts + content/books/ki-landschaft/ | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft | Von außen gesehen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | src/lib/books.ts + content/books/ki-landschaft/ | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
-### Buchkapitel (10)
+### Buchkapitel (8)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/buecher/ki-landschaft/01_eisberg | Das Eisberg-Problem | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/01_eisberg.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/02_methodik | Methodik ohne Scheingenauigkeit | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/02_methodik.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/03_reifegrad_ueberblick | Evidenzbasierte Selbstprüfung | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/03_reifegrad_ueberblick.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/04_bundesland | Regionale Rahmenbedingungen | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/04_bundesland.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/05_branchen | Branchenmuster als Hypothesen | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/05_branchen.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/06_eu_ki_verordnung | EU-KI-Verordnung und Artikel 4 | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/06_eu_ki_verordnung.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/07_schnellstart | Schnellstart in sieben Schritten | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/07_schnellstart.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/08_fahrplan | Fahrplan für die nächsten Monate | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/08_fahrplan.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/09_ausblick | Ausblick | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/09_ausblick.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/10_anhang | Anhang | Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfass… | content/books/ki-landschaft/10_anhang.md | catalog lastReviewed 2026-09-05 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/01_eisberg | Die Zahl, die nicht stimmt | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/01_eisberg.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/02_sagen_zeigen | Sagen und zeigen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/02_sagen_zeigen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/03_zweimal_gemessen | Dieselbe Firma, zweimal gemessen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/03_zweimal_gemessen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/04_branche_land | Branche schlägt Land | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/04_branche_land.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/05_reden_einstellen | Reden und Einstellen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/05_reden_einstellen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/06_eu_ki_verordnung | Was seit Februar 2025 gilt | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/06_eu_ki_verordnung.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/07_pilot | Dein erster Pilot | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/07_pilot.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/08_methodik | Methode und Grenzen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/08_methodik.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
 ### Demo-Detailseiten (12)
 

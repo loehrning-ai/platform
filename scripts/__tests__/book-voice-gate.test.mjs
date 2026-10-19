@@ -174,3 +174,11 @@ test("CLI exits 0 on a clean root and 1 on slop, and prints JSON on request", ()
     rmSync(bad, { recursive: true, force: true });
   }
 });
+
+test("figure and ticker directives are not prose: they count as no sentence and trigger no closer", () => {
+  const body = "Ein Satz mit genug Wörtern, damit er als Satz zählt und nicht als Marker.\n\n::figure{id=\"C3\"}\n\nNoch ein Satz, der danach folgt und ganz normal weitergeht.\n";
+  const withMarker = lintChapter(body, "marker.md");
+  const without = lintChapter(body.replace('::figure{id="C3"}\n\n', ""), "marker.md");
+  assert.equal(withMarker.stats.sentences, without.stats.sentences);
+  assert.equal(withMarker.findings.some((f) => f.rule === "closer"), false);
+});

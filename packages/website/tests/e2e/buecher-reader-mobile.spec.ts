@@ -22,24 +22,34 @@ import { test, expect, type Locator } from "@playwright/test";
 
 const MOBILE = { width: 390, height: 844 } as const;
 
-// Real middle chapters read from content/books/ki-landschaft/manifest.json:
-// each has both a previous and next neighbour and contains a GFM table.
+// Real chapters read from content/books/ki-landschaft/manifest.json. Two middle chapters have a
+// previous and a next neighbour; the appendix is the one chapter with GFM tables and is the last.
 const CHAPTERS = [
   {
     book: "ki-landschaft",
-    slug: "03_reifegrad_ueberblick",
-    title: "Evidenzbasierte Selbstprüfung",
-    next: "04_bundesland",
+    slug: "03_zweimal_gemessen",
+    title: "Dieselbe Firma, zweimal gemessen",
+    next: "04_branche_land" as string | null,
     hasCallouts: false,
+    hasTable: false,
   },
   {
     book: "ki-landschaft",
     slug: "06_eu_ki_verordnung",
-    title: "EU-KI-Verordnung und Artikel 4",
-    next: "07_schnellstart",
-    hasCallouts: false,
+    title: "Was seit Februar 2025 gilt",
+    next: "07_pilot" as string | null,
+    hasCallouts: true,
+    hasTable: false,
   },
-] as const;
+  {
+    book: "ki-landschaft",
+    slug: "08_methodik",
+    title: "Methode und Grenzen",
+    next: null as string | null,
+    hasCallouts: false,
+    hasTable: true,
+  },
+];
 
 // overflow-x:clip hides a page-level x-scrollbar, so element geometry (not
 // scrollWidth alone) is the honest signal that a block leaks past the column.
@@ -81,7 +91,7 @@ for (const ch of CHAPTERS) {
 
       // Body copy: first top-level prose paragraph ("> p" excludes callout text,
       // which can be smaller mono). Must render at a legible size.
-      const paragraph = article.locator("> p").first();
+      const paragraph = article.locator("p").first();
       await expect(paragraph).toBeVisible();
       const fontPx = await paragraph.evaluate((el) =>
         parseFloat(getComputedStyle(el).fontSize),
@@ -115,7 +125,7 @@ for (const ch of CHAPTERS) {
       // never scrolls horizontally while the table scrolls in place.
       const tables = article.getByRole("table");
       const tableCount = await tables.count();
-      expect(tableCount, "expected at least one GFM table").toBeGreaterThan(0);
+      if (ch.hasTable) expect(tableCount, "expected at least one GFM table").toBeGreaterThan(0);
       for (let i = 0; i < tableCount; i++) {
         const t = tables.nth(i);
         const inScroller = await t.evaluate((el) => {
@@ -153,13 +163,19 @@ for (const ch of CHAPTERS) {
       const prev = page.getByRole("link", { name: /Vorheriges Kapitel/ });
       const next = page.getByRole("link", { name: /Nächstes Kapitel/ });
       await expect(prev).toBeVisible();
-      await expect(next).toBeVisible();
-      await expect(next).toHaveAttribute("href", `/buecher/${ch.book}/${ch.next}`);
+      if (ch.next) {
+        await expect(next).toBeVisible();
+        await expect(next).toHaveAttribute("href", `/buecher/${ch.book}/${ch.next}`);
+      } else {
+        await expect(next).toHaveCount(0);
+      }
 
-      for (const [link, label] of [
-        [prev, "prev"],
-        [next, "next"],
-      ] as const) {
+      for (const [link, label] of ch.next
+        ? ([
+            [prev, "prev"],
+            [next, "next"],
+          ] as const)
+        : ([[prev, "prev"]] as const)) {
         const box = await link.boundingBox();
         expect(box, `${label} nav box`).not.toBeNull();
         if (box) {
@@ -177,7 +193,7 @@ test.describe("reader mobile · shared chrome", () => {
   test("collapses the desktop TOC and follows 'next' to the next chapter", async ({
     page,
   }) => {
-    const first = CHAPTERS[0];
+    const first = CHAPTERS[0] as (typeof CHAPTERS)[0] & { next: string };
     await page.goto(`/buecher/${first.book}/${first.slug}`, {
       waitUntil: "domcontentloaded",
     });

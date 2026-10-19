@@ -10,6 +10,10 @@ import {
   getChapterNeighbours,
 } from "@/lib/book-reader-content";
 import { ChapterReader } from "@/components/book-reader/chapter-reader";
+import { renderChapterSegments } from "@/components/book-reader/chapter-markdown";
+import { DirectiveError, hasDirectives } from "@/lib/book-directives";
+import { FigureLoadError } from "@/lib/book-figures";
+import { TokenError } from "@/lib/figures";
 import { OpenWithYourAiRegion } from "@/components/course/open-with-your-ai-region";
 import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
 import { bookUri } from "@/lib/mcp/uris";
@@ -121,10 +125,30 @@ export default async function ChapterPage({ params }: Params) {
       loadBookChapter(slug, chapter, locale),
       getChapterNeighbours(slug, chapter, locale),
       getBookChapterList(slug, locale),
-    ]).catch(() => notFound());
+    ]).catch((error: unknown) => {
+      // A broken token, directive or figure file is an authoring error: fail the build, never a quiet 404.
+      if (
+        error instanceof TokenError ||
+        error instanceof FigureLoadError ||
+        error instanceof DirectiveError
+      ) {
+        throw error;
+      }
+      return notFound();
+    });
 
   const [loaded, neighbours, allChapters] = readerContent;
   const display = getBookDisplay(book, locale);
+
+  // Figures: cut the chapter at its figure lines and build the islands. The
+  // builders (and with them every island chunk) are imported only here, so a
+  // chapter without figures ships none of that code.
+  const segments = hasDirectives(loaded.rawMarkdown)
+    ? renderChapterSegments({ rawMarkdown: loaded.rawMarkdown, locale })
+    : undefined;
+  const figureBlocks = segments?.some((segment) => segment.kind === "directive")
+    ? await (await import("@/components/book-reader/figures/build-blocks")).buildChapterFigureBlocks(book.id, locale, segments)
+    : undefined;
 
   return (
     <>
@@ -139,6 +163,8 @@ export default async function ChapterPage({ params }: Params) {
         locale={locale}
         bookTitle={display.title}
         relatedResourceLabel={display.relatedResourceLabel}
+        segments={segments}
+        figureBlocks={figureBlocks}
       />
       <OpenWithYourAiRegion
         kind="chapter"

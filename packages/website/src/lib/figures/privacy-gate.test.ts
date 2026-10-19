@@ -132,8 +132,8 @@ export const GATE_CONFIG = {
     "c13": "^[a-z0-9][a-z0-9_-]{0,40}$",
     "c14": "^[a-z_]+__[a-z_]+$",
     "c2": "^[a-z0-9][a-z0-9_-]{0,40}$",
-    "c3": "^(tool|ml|other|says)$",
-    "c3-evidence": "^(tool|ml|job|gov)$",
+    "c3": "^(narrow|broad|says)$",
+    "c3-evidence": "^(tool|ml)$",
     "c4": "^(raw|shared|own|weighted|weighted_total|scan1|scan2|scan2_total)$",
     "c5": "^q[1-5]$",
     "c6": "^wz\\d\\d$",
@@ -485,6 +485,20 @@ export const GATE_CONFIG = {
     "figures",
     "kRule"
   ],
+  "metaKeys": [
+    "methodVersion",
+    "frozenOn",
+    "values",
+    "aliases"
+  ],
+  "metaValueKeys": [
+    "value",
+    "ref",
+    "lo",
+    "hi",
+    "n",
+    "fmt"
+  ],
   "pointLabelPatterns": {
     "c8": "^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß .()-]{1,40}$"
   },
@@ -507,7 +521,8 @@ export const GATE_CONFIG = {
     "limitation",
     "steps",
     "data",
-    "seed"
+    "seed",
+    "meta"
   ]
 } as const;
 /* GATE_CONFIG_END */
@@ -526,6 +541,8 @@ const CFG = GATE_CONFIG as unknown as {
   stepKeys: string[];
   fmtKeys: string[];
   kindKeys: Record<string, Record<string, string[]>>;
+  metaKeys: string[];
+  metaValueKeys: string[];
   manifestKeys: string[];
   manifestFigureKeys: string[];
   figureIdPatterns: Record<string, string>;
@@ -560,6 +577,35 @@ export function gateFigure(fileName: string, spec: unknown): GateFinding[] {
   if (!isObject(spec)) return [{ path: "spec", reason: "not an object" }];
   for (const k of Object.keys(spec)) if (!CFG.topKeys.includes(k)) bad(k, "key not in the FigureSpec allowlist");
   for (const k of REQUIRED_TOP) if (!(k in spec)) bad(k, "required key missing");
+  const meta = spec["meta"];
+  if (meta !== undefined) {
+    if (!isObject(meta)) bad("meta", "meta must be an object");
+    else {
+      for (const k of Object.keys(meta)) if (!CFG.metaKeys.includes(k)) bad(`meta.${k}`, "key not in the meta allowlist");
+      const values = meta["values"] ?? {};
+      if (!isObject(values)) bad("meta.values", "values must be an object");
+      else {
+        for (const [name, entry] of Object.entries(values)) {
+          if (!new RegExp(CFG.genericId).test(name.toLowerCase())) bad(`meta.values.${name}`, "token name not in the allowed pattern");
+          if (!isObject(entry)) {
+            bad(`meta.values.${name}`, "entry must be an object");
+            continue;
+          }
+          for (const k of Object.keys(entry)) if (!CFG.metaValueKeys.includes(k)) bad(`meta.values.${name}.${k}`, "key not in the allowlist");
+          const entryFmt = entry["fmt"];
+          if (isObject(entryFmt)) for (const k of Object.keys(entryFmt)) if (!CFG.fmtKeys.includes(k)) bad(`meta.values.${name}.fmt.${k}`, "key not in the allowlist");
+        }
+      }
+      const aliases = meta["aliases"] ?? {};
+      if (!isObject(aliases)) bad("meta.aliases", "aliases must be an object");
+      else {
+        for (const [alias, target] of Object.entries(aliases)) {
+          const re = new RegExp(CFG.genericId);
+          if (!re.test(alias.toLowerCase()) || typeof target !== "string" || !re.test(target.toLowerCase())) bad(`meta.aliases.${alias}`, "alias or target not in the allowed pattern");
+        }
+      }
+    }
+  }
   const id = String(spec["id"] ?? "");
   const kind = String(spec["kind"] ?? "");
   if (!(id in CFG.figureIdPatterns)) bad("id", "figure id not in the allowlist");

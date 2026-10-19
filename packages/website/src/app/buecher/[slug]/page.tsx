@@ -10,6 +10,8 @@ import {
   getBookChapterList,
   loadBookManifest,
 } from "@/lib/book-reader-content";
+import { BookCoverHero } from "@/components/book-reader/cover-hero";
+import { loadBookFigures } from "@/lib/book-figures";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -103,6 +105,8 @@ export default async function BookOverviewPage({ params }: Params) {
     getBookChapterList(slug, locale),
   ]).catch(() => notFound());
 
+  // The data book opens with its headline number (figure C4); books without figures show no hero.
+  const headlineFigure = (await loadBookFigures(slug)).lookup("c4");
   const { account: accountEnabled } = getRuntimeFeatures();
   const copy = BOOK_PAGE_COPY[locale];
   const display = {
@@ -222,6 +226,8 @@ export default async function BookOverviewPage({ params }: Params) {
             <p className="mt-3 max-w-3xl break-words text-sm leading-relaxed text-muted-foreground sm:text-base">
               {display.description}
             </p>
+
+            {headlineFigure ? <BookCoverHero spec={headlineFigure} inline /> : null}
 
             <dl className="mt-5 grid min-w-0 grid-cols-2 border-l border-t border-border lg:grid-cols-5">
               {[

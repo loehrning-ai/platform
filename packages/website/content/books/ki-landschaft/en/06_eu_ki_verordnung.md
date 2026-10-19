@@ -1,77 +1,29 @@
-# EU AI Act: assess roles and obligations precisely
+# What has applied since February 2025
 
-Regulation (EU) 2024/1689 has been in force since 1 August 2024 and becomes applicable in stages. This chapter was reviewed on 9 August 2026; it accounts for the regulation that entered into force on 27 July 2026, Regulation (EU) 2026/1744. For a real decision you read the [current text on EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689) and the [official EU timetable](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai), not this chapter.
+Since 2 February 2025, Article 4 of the AI Regulation (EU) 2024/1689 has applied. The amending regulation (EU) 2026/1744, in force since 27 July 2026, reworded the duty: providers and deployers take measures that support the development of AI literacy among their staff and other people who work with these systems on their behalf. Before, it required them to ensure a sufficient level of AI literacy. A deployer is anyone who uses an AI system in a professional setting under their own responsibility, so also a small firm with a chatbot or a translation tool.
 
-## Establish the system, purpose, and role first
+This chapter gives no legal advice. It reports what the European Commission writes on its own pages, as of 19 October 2026. For a real decision, read the [text on EUR-Lex](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689) and the [timeline of the Commission](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai).
 
-A product name answers no legal question. Document:
+## The deadlines at a glance
 
-- which function is actually active
-- the intended purpose the provider states
-- how your organization uses it
-- whether you are a provider, deployer, or another operator
-- which people, data, and subsequent decisions are affected
+The regulation entered into force on 1 August 2024 and becomes applicable in stages. On 2 February 2025 the prohibitions and the duty on AI literacy arrived, on 2 August 2025 the rules for general-purpose AI models. Since 2 August 2026 the regulation applies generally, with exceptions.
 
-The role decides the obligations. A deployer does not inherit the provider's conformity assessment. And whoever modifies a system substantially, runs it under their own name, or changes its purpose can become a provider under Art. 25.
+::figure{id="C12"}
 
-## Application in stages
+These exceptions include the high-risk systems. The amending regulation that entered into force on 27 July 2026, (EU) 2026/1744, which the Commission calls the AI Omnibus, moves the deadline for stand-alone high-risk systems under Annex III to 2 December 2027 and for systems in regulated products under Annex I to 2 August 2028. Since February 2025, certain practices have also been banned, such as emotion recognition in the workplace.
 
-| Date            | Selected points of application                                                                      |
-| --------------- | --------------------------------------------------------------------------------------------------- |
-| 2 February 2025 | Chapter I, Art. 4, and the prohibitions in Art. 5                                                   |
-| 2 August 2025   | among other provisions, the governance, penalties, and GPAI rules under the transitional provisions |
-| 2 August 2026   | further general rules, including Art. 50, unless a specific transitional rule applies               |
-| 2 December 2027 | current official EU timetable for high-risk systems under Annex III                                 |
-| 2 August 2028   | current official EU timetable for high-risk systems embedded in regulated products under Annex I    |
+## What Article 4 requires
 
-Regulation (EU) 2026/1744 appeared in the Official Journal on 24 July 2026 and entered into force on 27 July 2026. It changed Article 4, the high-risk dates, and individual transitional rules, among other things.
+Article 4 requires measures, but no particular result. According to the Commission's answers, no attendance confirmation, no prescribed training, no AI officer and no minimum number of hours is needed, and nobody has to measure what individual employees know. Keeping an internal record of what you did is allowed, it is not required.
 
-## Art. 4: AI literacy depends on context
+The duty also covers people who work on assignment, such as service providers. The Commission and the member states are meant to support mainly smaller firms, while the national authorities enforce the rules from August 2026. The [questions and answers on AI literacy](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) are short and worth reading.
 
-Providers and deployers must take measures to support AI literacy among their staff and other people who deal with the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, the context of use, and the people or groups affected all count. Nobody owes a particular individual level of competence.
+For a small firm, a sensible start is one page that says who needs to know what and what has been done about it. Just reading the instructions for use is, in many cases, ineffective in the Commission's view. A free course such as the [KI-Führerschein](/ki-fuehrerschein) can also be one measure. It is not a prescribed proof and does not by itself show that you have met Article 4 for a particular use.
 
-The [European Commission Q&A](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) makes that clear:
+## Three blocks instead of a project
 
-- no uniform mandatory training for every role
-- no prescribed credential
-- no prescribed "AI officer"
-- no blanket minimum number of hours
+What matters is that you find AI even where nobody calls it that. A translation function, a suggestion in the mail program or a pre-selection in applicant management can be an AI system, whatever the packaging says. HR deserves a second look especially, because Annex III of the regulation expressly lists systems for recruitment and employment.
 
-General training often falls short for a risky use case. The other way round, not every person needs the same legal and technical depth. Document the role, the need, the measure, and the effectiveness review.
+To begin with you need no project. Set aside three days in which you answer three questions one after the other, and bring in for each question the people who use the system every day and know best where it falls short. Which AI is already running in your firm, also as a function in programs that have long been in use? What is it used for, with what data, and whom does the result affect? Who needs what to work with it safely, and what has been done about it so far?
 
-## Do not conflate prohibitions, high risk, and transparency
-
-### Art. 5
-
-Art. 5 prohibits precisely defined practices, among them certain manipulative or exploitative systems, certain social scoring, certain biometric categorization, in principle emotion recognition in workplaces and educational institutions, and further cases described there. Read the wording together with its exceptions. A list of buzzwords will not do.
-
-### Art. 6 with Annexes I and III
-
-High risk follows from the statutory classification and the intended purpose, not from a gut feeling. Annex III names, among others, certain systems in employment, education, essential services, law enforcement, migration, and justice. Art. 6(3) holds an exception for Annex III systems that has to be read narrowly; profiling of natural persons keeps its special treatment there.
-
-Provider and deployer obligations differ. Deployers of high-risk systems check Art. 26 above all: instructions for use, oversight, controlled input data, monitoring, response to risks or incidents, logs, information for employees, and use-case-dependent information for affected people.
-
-### Art. 50
-
-Art. 50 forces nobody to label every AI text. The obligations differ by actor and system.
-
-- Providers of certain interactive systems inform people that they are interacting with AI, unless this is obvious.
-- Providers of generative systems ensure machine-readable marking of certain outputs.
-- Deployers of emotion recognition or biometric categorization inform affected people under the conditions set by law.
-- Deployers of deepfakes and certain texts on matters of public interest carry their own disclosure obligations and exceptions.
-
-## Other applicable law
-
-The GDPR, trade-secret protection, copyright, labor and co-determination law, equal treatment, and sector rules do not wait for an AI Act high-risk class. An AI Act classification replaces none of these reviews.
-
-## Starter checklist
-
-1. Inventory the system, version, function, purpose, users, and affected people.
-2. Substantiate the role of each operator.
-3. Assess Art. 5, Art. 6 with its annexes, and Art. 50 separately.
-4. Check the application date of the specific obligation.
-5. Assess the data flow, contracts, security, and other applicable law.
-6. Define Art. 4 measures that fit the roles and the risks.
-7. Document approval, oversight, logs, escalation, incidents, and review.
-
-The free course at `/ki-fuehrerschein` can be one learning measure. Completing it is not a credential required by law and does not on its own prove that Art. 4 is met for a concrete use case.
+> **What you can do:** Create a document with three columns: system, purpose and data, measure per role. Fill it in three blocks. Note a date. Afterwards check for each system whether a deadline from Annex III or a prohibition could touch it, and in that case read the wording.

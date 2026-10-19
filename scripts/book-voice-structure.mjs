@@ -135,7 +135,8 @@ export function parse(text) {
       headings.push([no, stripped]);
       continue;
     }
-    if (stripped.startsWith("|")) {
+    if (stripped.startsWith("|") || stripped.startsWith("::")) {
+      // Table rows and figure or ticker directives (::figure{id="C3"}) are not prose.
       flush();
       markNext("other");
       continue;

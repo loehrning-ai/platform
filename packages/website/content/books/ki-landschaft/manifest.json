@@ -1,74 +1,54 @@
 {
   "bookSlug": "ki-landschaft",
-  "title": "KI im deutschen Mittelstand",
+  "title": "Von außen gesehen",
   "owner": "editorial:books",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2026-12-06",
+  "lastReviewed": "2026-10-19",
+  "nextReview": "2027-01-19",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
   "publicationStatus": "published",
-  "publicationReason": "Editorial review and public-release approval are recorded for the HTML reader and authenticated PDF.",
-  "adaptationNote": "Die offene Ausgabe entfernt Beratungsmarkt-Preisgestaltung, private Unternehmensdaten, proprietäre Scores und daraus abgeleitete Rankings. Sie nutzt stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen.",
+  "publicationReason": "Neuausgabe vom Oktober 2026 mit Aggregaten aus einer eigenen Auswertung von Firmenwebsites. Redaktionelle Freigabe durch den Herausgeber vor dem Merge.",
+  "adaptationNote": "Die Ausgabe zeigt nur Aggregate aus einer eigenen Auswertung von Firmenwebsites: jede Zahl mit mindestens 5 Treffern, ohne Firmennamen, Adressen, Preise, Scores und Ranglisten einzelner Firmen. Sie gilt für Firmen mit auffindbarer Website, die Rohdaten bleiben privat.",
   "chapters": [
     {
       "slug": "01_eisberg",
-      "title": "Das Eisberg-Problem",
+      "title": "Die Zahl, die nicht stimmt",
       "sourceFile": "01_eisberg.md"
     },
     {
-      "slug": "02_methodik",
-      "title": "Methodik ohne Scheingenauigkeit",
-      "sourceFile": "02_methodik.md"
+      "slug": "02_sagen_zeigen",
+      "title": "Sagen und zeigen",
+      "sourceFile": "02_sagen_zeigen.md"
     },
     {
-      "slug": "03_reifegrad_ueberblick",
-      "title": "Evidenzbasierte Selbstprüfung",
-      "sourceFile": "03_reifegrad_ueberblick.md"
+      "slug": "03_zweimal_gemessen",
+      "title": "Dieselbe Firma, zweimal gemessen",
+      "sourceFile": "03_zweimal_gemessen.md"
     },
     {
-      "slug": "04_bundesland",
-      "title": "Regionale Rahmenbedingungen",
-      "sourceFile": "04_bundesland.md"
+      "slug": "04_branche_land",
+      "title": "Branche schlägt Land",
+      "sourceFile": "04_branche_land.md"
     },
     {
-      "slug": "05_branchen",
-      "title": "Branchenmuster als Hypothesen",
-      "sourceFile": "05_branchen.md"
+      "slug": "05_reden_einstellen",
+      "title": "Reden und Einstellen",
+      "sourceFile": "05_reden_einstellen.md"
     },
     {
       "slug": "06_eu_ki_verordnung",
-      "title": "EU-KI-Verordnung und Artikel 4",
+      "title": "Was seit Februar 2025 gilt",
       "sourceFile": "06_eu_ki_verordnung.md"
     },
     {
-      "slug": "07_schnellstart",
-      "title": "Schnellstart in sieben Schritten",
-      "sourceFile": "07_schnellstart.md"
+      "slug": "07_pilot",
+      "title": "Dein erster Pilot",
+      "sourceFile": "07_pilot.md"
     },
     {
-      "slug": "08_fahrplan",
-      "title": "Fahrplan für die nächsten Monate",
-      "sourceFile": "08_fahrplan.md"
-    },
-    {
-      "slug": "09_ausblick",
-      "title": "Ausblick",
-      "sourceFile": "09_ausblick.md"
-    },
-    {
-      "slug": "10_anhang",
-      "title": "Anhang",
-      "sourceFile": "10_anhang.md"
-    }
-  ],
-  "droppedChapters": [
-    {
-      "sourceFile": "06_beratungsmarkt.md",
-      "reason": "commercial-price-positioning"
-    },
-    {
-      "sourceFile": "07_beratungskosten.md",
-      "reason": "commercial-price-positioning"
+      "slug": "08_methodik",
+      "title": "Methode und Grenzen",
+      "sourceFile": "08_methodik.md"
     }
   ]
 }

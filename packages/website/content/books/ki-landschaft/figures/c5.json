@@ -1,0 +1,91 @@
+{
+  "id": "c5",
+  "kind": "bars",
+  "title": "Wer mehr schreibt, sagt öfter KI",
+  "alt": "Der Anteil der Firmenseiten mit KI-Wort steigt mit der Textmenge der Seite: vom kürzesten Fünftel mit 0,2 % bis zum längsten Fünftel mit 11,6 %.",
+  "caption": "Oberstes zu unterstem Fünftel: 62-fach (Intervall 35 bis 166). Mediane der Textlänge: 920, 3.210, 5.780, 9.860, 20.610 Zeichen.",
+  "n": 21404,
+  "nNote": "21.404 Seiten mit eigener Adresse und gelesenem Text",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Eine größere Seite hat mehr Platz für das Wort. Mehr Text heißt nicht mehr KI. 4.177 Seiten ohne gelesenen Text sind nicht enthalten.",
+  "data": {
+    "orientation": "vertical",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "q1",
+        "label": "kürzestes Fünftel",
+        "value": 0.19,
+        "lo": 0.09,
+        "hi": 0.37,
+        "n": 4281
+      },
+      {
+        "id": "q2",
+        "label": "2. Fünftel",
+        "value": 1.03,
+        "lo": 0.77,
+        "hi": 1.38,
+        "n": 4283
+      },
+      {
+        "id": "q3",
+        "label": "3. Fünftel",
+        "value": 1.94,
+        "lo": 1.57,
+        "hi": 2.4,
+        "n": 4278
+      },
+      {
+        "id": "q4",
+        "label": "4. Fünftel",
+        "value": 4.3,
+        "lo": 3.73,
+        "hi": 4.95,
+        "n": 4281
+      },
+      {
+        "id": "q5",
+        "label": "längstes Fünftel",
+        "value": 11.56,
+        "lo": 10.64,
+        "hi": 12.56,
+        "n": 4281
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "values": {
+      "ratio": {
+        "value": 62,
+        "lo": 35,
+        "hi": 166,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "q1_hits": {
+        "value": 8,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "no_text_rate": {
+        "value": 7.1,
+        "n": 4177,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

@@ -104,6 +104,17 @@
 
 /* --------------------------------------------------------------- controls */
 
+.bf-figure {
+  /* Anchors and focus scrolling stop below the sticky site header. */
+  scroll-margin-top: 6rem;
+}
+
+.bf-lad-hint {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--bf-muted, inherit);
+}
+
 .bf-chips {
   display: flex;
   flex-wrap: wrap;
@@ -155,7 +166,7 @@
 .bf-select:focus-visible,
 .bf-range:focus-visible,
 .bf-summary:focus-visible {
-  outline: 3px solid var(--bf-ink);
+  outline: 2px solid var(--bf-ink);
   outline-offset: 2px;
 }
 
@@ -380,13 +391,15 @@
   cursor: default;
 }
 
-.bf-details {
+.bf-lad-details {
   display: grid;
+  /* One shrinkable track: the stacked details must wrap inside the figure, never set its width. */
+  grid-template-columns: minmax(0, 1fr);
   margin-top: 0.75rem;
 }
 
 /* Every panel shares one grid cell, so the block keeps the height of the tallest. */
-.bf-detail {
+.bf-lad-detail {
   grid-area: 1 / 1;
   visibility: hidden;
   padding: 0.75rem 1rem;
@@ -394,17 +407,17 @@
   background: var(--bf-sheet);
 }
 
-.bf-detail[data-open="true"] {
+.bf-lad-detail[data-open="true"] {
   visibility: visible;
 }
 
-.bf-detail-title {
+.bf-lad-detail-title {
   margin: 0 0 0.5rem;
   font-size: 1rem;
   font-weight: 700;
 }
 
-.bf-dl {
+.bf-lad-dl {
   display: grid;
   gap: 8px;
   margin: 0;
@@ -412,23 +425,23 @@
   line-height: 1.45;
 }
 
-.bf-dl dt {
+.bf-lad-dl dt {
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: var(--bf-muted);
 }
 
-.bf-dl dd {
+.bf-lad-dl dd {
   margin: 0;
 }
 
 @media (scripting: none), print {
-  .bf-details {
+  .bf-lad-details {
     gap: 12px;
   }
 
-  .bf-detail {
+  .bf-lad-detail {
     grid-area: auto;
     visibility: visible;
   }
@@ -495,7 +508,7 @@
   justify-content: center;
   gap: 0;
   min-width: 0;
-  padding: 2px 8px;
+  padding: 2px 8px 5px;
   font-size: 0.8125rem;
   line-height: 1.15;
   text-align: left;
@@ -523,6 +536,64 @@
 .bf-wf-step[data-active="true"] {
   border-top: 2px solid var(--bf-ink);
   padding-top: 23px;
+}
+
+/*
+ * Phone: the pinned stage may not swallow the screen, or the step text sits
+ * under it. Count and number share a row, the buttons shrink to numbers
+ * (their names stay in aria-label), and the text below stays readable.
+ */
+@media (max-width: 1023px) {
+  .bf-wf-stage {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+    padding: 4px 0 8px;
+  }
+
+  .bf-wf-readout {
+    display: contents;
+  }
+
+  .bf-wf-num {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .bf-wf-count {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    text-align: right;
+  }
+
+  .bf-wf-numlabel {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 1.3em;
+  }
+
+  .bf-wf-chart,
+  .bf-wf-nav {
+    grid-column: 1 / -1;
+  }
+
+  .bf-wf-nav {
+    margin-top: 4px;
+  }
+
+  .bf-wf-nav .bf-chip {
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .bf-wf-nav .bf-chip-label {
+    display: none;
+  }
+
+  .bf-wf-nav .bf-chip-num {
+    font-size: 1rem;
+  }
 }
 
 .bf-wf-heading {
@@ -557,11 +628,37 @@
     border-bottom: 0;
   }
 
+  /* The pinned stage must fit the screen with its readout and step buttons: the chart gives way, centred. */
+  .bf-wf-chart svg {
+    max-height: calc(100svh - var(--nav-h, 64px) - 17rem);
+  }
+
   .bf-wf-step {
     display: flex;
     flex-direction: column;
     justify-content: center;
     min-height: 70svh;
+    border-top: 0;
+  }
+
+  .bf-wf-step[data-active="true"] {
+    border-top: 0;
+    padding-top: 24px;
+  }
+
+  /* A short bar over the kicker marks the active step; a full-width rule floated far above the centred text. */
+  .bf-wf-step .bf-kicker::before {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-bottom: 0.75rem;
+    background: var(--bf-hair);
+    transition: background-color 120ms ease-out;
+  }
+
+  .bf-wf-step[data-active="true"] .bf-kicker::before {
+    background: var(--bf-ink);
   }
 }
 

@@ -16,13 +16,13 @@ import {
  * from the lib's extractHeadings (which transliterates), so the two slug
  * schemes diverge - hence deriving ids at runtime. Reader is open (no login).
  *
- * Chapter ki-landschaft/03_reifegrad_ueberblick ("Evidenzbasierte Selbstprüfung")
+ * Chapter ki-landschaft/03_zweimal_gemessen ("Dieselbe Firma, zweimal gemessen")
  * contains multiple h2/h3 headings, including umlaut ones, and no code fences.
  */
 
 const SLUG = "ki-landschaft";
-const CHAPTER = "03_reifegrad_ueberblick";
-const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung";
+const CHAPTER = "03_zweimal_gemessen";
+const CHAPTER_TITLE = "Dieselbe Firma, zweimal gemessen";
 const READER_PATH = `/buecher/${SLUG}/${CHAPTER}`;
 
 /** Heading ids the reader actually rendered (rehype-slug/github-slugger). */

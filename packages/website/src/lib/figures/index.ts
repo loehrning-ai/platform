@@ -27,5 +27,7 @@ export { figureTable, figureCsv } from "./data.ts";
 export type { FigureTable, Cell } from "./data.ts";
 export { parseFigureSpec, findPrivacyFindings, FigureSpecError } from "./validate.ts";
 export type { PrivacyFinding } from "./validate.ts";
+export { quantityFor, resolveToken, resolveTokens, resolveTokensDeep, tokenKeys, hasToken, TokenError, TOKEN_PATTERN } from "./tokens.ts";
+export type { Quantity, SpecLookup, TokenLocale } from "./tokens.ts";
 export { TILE_LAYOUT } from "./kinds/tilemap.ts";
 export type { TilePlace } from "./kinds/tilemap.ts";

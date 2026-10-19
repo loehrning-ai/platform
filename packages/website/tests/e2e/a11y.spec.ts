@@ -30,7 +30,7 @@ const ROUTES = [
   "/kurse/open-source/data-engineering-fundamentals",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/buecher/ki-landschaft",
-  "/buecher/ki-landschaft/02_methodik",
+  "/buecher/ki-landschaft/02_sagen_zeigen",
   "/ai-native",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",

@@ -68,15 +68,16 @@ export function SurveyLadder({ spec, details, provisional, csvHref }: SurveyLadd
         <div className="bf-ladder-svg" onClick={pick}>
           <FigureSvg spec={spec} progress={progress} highlight={selected !== "overview" ? selected : undefined} layout="pair" />
         </div>
+        <p className="bf-lad-hint">Tippe auf eine Quelle, um Wortlaut und Basis zu sehen.</p>
         <StepChips label="Quelle wählen" chips={chips} selected={selected === "overview" ? null : selected} onSelect={(id) => setSelected((current) => (current === id ? "overview" : id))} />
         <p className="bf-visually-hidden" role="status">
           {details.find((detail) => detail.id === selected)?.title}: Wortlaut und Basis stehen unter den Schaltflächen.
         </p>
-        <div className="bf-details">
+        <div className="bf-lad-details">
           {details.map((detail) => (
-            <section key={detail.id} className="bf-detail" data-open={detail.id === selected ? "true" : undefined}>
-              <p className="bf-detail-title">{detail.title}</p>
-              <dl className="bf-dl">
+            <section key={detail.id} className="bf-lad-detail" data-open={detail.id === selected ? "true" : undefined}>
+              <p className="bf-lad-detail-title">{detail.title}</p>
+              <dl className="bf-lad-dl">
                 <div>
                   <dt>Frage</dt>
                   <dd>{detail.wording}</dd>

@@ -31,13 +31,13 @@ describe("book detail locale metadata and UI", () => {
     [
       "de",
       "/buecher/ki-landschaft",
-      "KI im deutschen Mittelstand · Lernbuch",
+      "Von außen gesehen · Lernbuch",
       "de_DE",
     ],
     [
       "en",
       "/en/buecher/ki-landschaft",
-      "AI in German SMEs · Learning book",
+      "Seen from the outside · Learning book",
       "en_GB",
     ],
   ] as const)(
@@ -60,7 +60,7 @@ describe("book detail locale metadata and UI", () => {
     const { container } = render(await BookOverviewPage(props));
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "AI in German SMEs" }),
+      screen.getByRole("heading", { level: 1, name: "Seen from the outside" }),
     ).toBeVisible();
     expect(screen.getByText("Material language")).toBeVisible();
     expect(screen.getAllByText("English").length).toBeGreaterThan(0);
@@ -70,14 +70,14 @@ describe("book detail locale metadata and UI", () => {
       name: "Table of contents",
     });
     const chapterLinks = within(contents).getAllByRole("link");
-    expect(chapterLinks).toHaveLength(10);
+    expect(chapterLinks).toHaveLength(8);
     expect(chapterLinks[0]).toHaveAttribute(
       "href",
       "/en/buecher/ki-landschaft/01_eisberg",
     );
     expect(chapterLinks[0]).toHaveAttribute("hreflang", "en");
     expect(chapterLinks[0]).toHaveAttribute("lang", "en");
-    expect(chapterLinks[0]).toHaveTextContent("The iceberg problem");
+    expect(chapterLinks[0]).toHaveTextContent("The number that does not add up");
     expect(chapterLinks[0]).toHaveClass("min-h-16");
 
     expect(screen.getByRole("link", { name: "Back to books" })).toHaveAttribute(
@@ -94,14 +94,14 @@ describe("book detail locale metadata and UI", () => {
     ) as { "@graph": Array<Record<string, unknown>> };
     const book = jsonLd["@graph"].find((node) => node["@type"] === "Book");
     expect(book).toMatchObject({
-      name: "AI in German SMEs",
+      name: "Seen from the outside",
       inLanguage: "en-GB",
       url: "https://loehrning.ai/en/buecher/ki-landschaft",
     });
     expect(book).toMatchObject({
       hasPart: expect.arrayContaining([
         expect.objectContaining({
-          name: "The iceberg problem",
+          name: "The number that does not add up",
           inLanguage: "en-GB",
           url: "https://loehrning.ai/en/buecher/ki-landschaft/01_eisberg",
         }),

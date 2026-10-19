@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, BookOpen, Clock } from "lucide-react";
 import type { Book } from "@/lib/books";
@@ -8,7 +9,12 @@ import type {
   BookChapterMeta,
 } from "@/lib/book-reader-content";
 import { ReaderFocusBar } from "@/components/learning/reader-focus-bar";
-import { renderChapterMarkdownHtml } from "./chapter-markdown";
+import { hasDirectives } from "@/lib/book-directives";
+import {
+  renderChapterMarkdownHtml,
+  renderChapterSegments,
+  type ChapterSegment,
+} from "./chapter-markdown";
 import { ChapterReaderClient, ChapterTocLinks } from "./chapter-reader-client";
 import { ChapterTocSheet } from "./chapter-toc-sheet";
 
@@ -20,7 +26,27 @@ interface ChapterReaderProps {
   readonly locale: Locale;
   readonly bookTitle: string;
   readonly relatedResourceLabel: string;
+  /**
+   * The chapter cut at its figure lines (see renderChapterSegments). Omit it
+   * and the reader cuts the chapter itself when it holds a figure line.
+   */
+  readonly segments?: readonly ChapterSegment[];
+  /** The figure for each directive segment, same index as `segments`. Built by the page so the islands load only on chapters that use them. */
+  readonly figureBlocks?: readonly (ReactNode | null)[];
 }
+
+/**
+ * Prose colours are bound to the theme CSS variables, NOT the fixed
+ * `prose-invert` (which forced light text and produced a 1.3:1
+ * light-on-light body on the default Kalkweiss page - release hardening). The
+ * vars flip with `prefers-color-scheme`, so body text is the
+ * AAA-tuned muted-foreground (#4f4640 ~7:1 on light) in light mode
+ * and the light token in dark mode. Tailwind darkMode is "class"
+ * here, so `dark:prose-invert` would never fire under the media-query
+ * theme; the var binding is the theme-aware fix.
+ */
+const PROSE_CLASS =
+  "prose prose-stone min-w-0 [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-captions:var(--color-muted-foreground)] prose-headings:break-words prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-a:break-words prose-a:text-brand-orange prose-a:no-underline hover:prose-a:underline prose-code:break-words prose-code:rounded prose-code:bg-card/60 prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.85em] prose-pre:max-w-full prose-pre:overflow-x-auto prose-pre:border prose-pre:border-hairline prose-pre:bg-inset prose-pre:text-foreground prose-table:text-sm";
 
 const READER_COPY = {
   de: {
@@ -98,31 +124,59 @@ export function ChapterReader({
   locale,
   bookTitle,
   relatedResourceLabel,
+  segments: givenSegments,
+  figureBlocks,
 }: ChapterReaderProps) {
   const copy = READER_COPY[locale];
   const chapterIndex = allChapters.findIndex(
     (candidate) => candidate.slug === chapter.meta.slug,
   );
   const chapterNumber = chapterIndex + 1;
-  const chapterHtml = renderChapterMarkdownHtml({
-    rawMarkdown: chapter.rawMarkdown,
-    locale,
-  });
-  const content = (
-    <article
-      aria-label={chapter.meta.title}
-      // Prose colours are bound to the theme CSS variables, NOT the fixed
-      // `prose-invert` (which forced light text and produced a 1.3:1
-      // light-on-light body on the default Kalkweiss page - release hardening). The
-      // vars flip with `prefers-color-scheme`, so body text is the
-      // AAA-tuned muted-foreground (#4f4640 ~7:1 on light) in light mode
-      // and the light token in dark mode. Tailwind darkMode is "class"
-      // here, so `dark:prose-invert` would never fire under the media-query
-      // theme; the var binding is the theme-aware fix.
-      className="prose prose-stone min-w-0 max-w-[70ch] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-captions:var(--color-muted-foreground)] prose-headings:break-words prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-a:break-words prose-a:text-brand-orange prose-a:no-underline hover:prose-a:underline prose-code:break-words prose-code:rounded prose-code:bg-card/60 prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.85em] prose-pre:max-w-full prose-pre:overflow-x-auto prose-pre:border prose-pre:border-hairline prose-pre:bg-inset prose-pre:text-foreground prose-table:text-sm"
-      dangerouslySetInnerHTML={{ __html: chapterHtml }}
-    />
-  );
+  const segments =
+    givenSegments ??
+    (hasDirectives(chapter.rawMarkdown)
+      ? renderChapterSegments({ rawMarkdown: chapter.rawMarkdown, locale })
+      : null);
+  const hasFigures = Boolean(segments?.some((segment) => segment.kind === "directive"));
+  // A chapter with figures is a column of 68ch text runs and figures that break out to 1120px.
+  // The article stays the one landmark; each text run is an opaque payload, each figure an island.
+  const content =
+    hasFigures && segments ? (
+      <article
+        aria-label={chapter.meta.title}
+        data-book-figures="true"
+        className="min-w-0"
+      >
+        {segments.map((segment, index) =>
+          segment.kind === "html" ? (
+            <div
+              key={index}
+              className={`${PROSE_CLASS} mx-auto max-w-[68ch]`}
+              dangerouslySetInnerHTML={{ __html: segment.html }}
+            />
+          ) : (
+            <div
+              key={index}
+              data-book-figure={segment.directive.name}
+              className="mx-auto my-8 w-full min-w-0 max-w-[1120px] sm:my-10"
+            >
+              {figureBlocks?.[index] ?? null}
+            </div>
+          ),
+        )}
+      </article>
+    ) : (
+      <article
+        aria-label={chapter.meta.title}
+        className={`${PROSE_CLASS} max-w-[70ch]`}
+        dangerouslySetInnerHTML={{
+          __html: renderChapterMarkdownHtml({
+            rawMarkdown: chapter.rawMarkdown,
+            locale,
+          }),
+        }}
+      />
+    );
 
   const bookHref = localizeHref(`/buecher/${book.id}`, locale);
   const nextChapterHref = neighbours.next
@@ -149,7 +203,7 @@ export function ChapterReader({
   return (
     <div
       data-reader="focus"
-      className="mx-auto min-w-0 max-w-6xl px-4 pb-12 pt-5 sm:px-6 sm:pt-7"
+      className={`mx-auto min-w-0 px-4 pb-12 pt-5 sm:px-6 sm:pt-7 ${hasFigures ? "max-w-[1424px]" : "max-w-6xl"}`}
     >
       <nav
         aria-label={copy.breadcrumbAria}
@@ -176,7 +230,7 @@ export function ChapterReader({
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_224px]">
         <div className="min-w-0">
-          <header className="mb-6 border-l-[3px] border-brand-orange pl-4">
+          <header className={`mb-6 border-l-[3px] border-brand-orange pl-4 ${hasFigures ? "mx-auto max-w-[68ch]" : ""}`}>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
               {copy.chapterPosition(chapterNumber, allChapters.length)}
             </p>

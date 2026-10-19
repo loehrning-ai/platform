@@ -10,6 +10,7 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { parseDirective, type Directive } from "@/lib/book-directives";
 import {
   CalloutRenderer,
   resolveCalloutStyle,
@@ -72,7 +73,7 @@ export function ChapterMarkdownReactTree({
         },
         table: ({ children }) => (
           <div
-            className="max-w-full overflow-x-auto overscroll-x-contain focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange"
+            className={TABLE_WRAP_CLASS}
             data-horizontal-scroll
             tabIndex={0}
             role="group"
@@ -87,6 +88,10 @@ export function ChapterMarkdownReactTree({
     </ReactMarkdown>
   );
 }
+
+/** The scroll wrapper of a table: narrow first columns break between words, never inside a word. */
+const TABLE_WRAP_CLASS =
+  "max-w-full overflow-x-auto overscroll-x-contain [&_td]:[hyphens:manual] [&_td]:[overflow-wrap:normal] [&_th]:[hyphens:manual] [&_th]:[overflow-wrap:normal] [&_td:first-child]:min-w-[8rem] [&_th:first-child]:min-w-[8rem] focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange";
 
 function textContent(node: RootContent | ElementContent): string {
   if (node.type === "text") return node.value;
@@ -153,9 +158,7 @@ function transformElement(element: Element, locale: Locale): Element {
       type: "element",
       tagName: "div",
       properties: {
-        className: classNames(
-          "max-w-full overflow-x-auto overscroll-x-contain focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange",
-        ),
+        className: classNames(TABLE_WRAP_CLASS),
         dataHorizontalScroll: "true",
         tabIndex: 0,
         role: "group",
@@ -182,10 +185,13 @@ function transformElement(element: Element, locale: Locale): Element {
       tagName: "div",
       properties: {
         className: classNames(
-          `not-prose my-4 rounded-r px-4 py-3 ${style.border} ${style.bg} ${style.mono ? "font-mono text-xs" : ""}`,
+          style.endBox
+            ? `not-prose mt-10 mb-4 ${style.border} ${style.bg} px-5 py-4`
+            : `not-prose my-4 rounded-r px-4 py-3 ${style.border} ${style.bg} ${style.mono ? "font-mono text-xs" : ""}`,
         ),
         role: "note",
         ariaLabel: label ?? undefined,
+        dataEndbox: style.endBox ? "true" : undefined,
       },
       children: [
         {
@@ -262,4 +268,59 @@ export function renderChapterMarkdownHtml({
     .use(rehypeStringify);
 
   return String(processor.processSync(rawMarkdown));
+}
+
+/** One piece of a chapter: a run of rendered Markdown, or a directive line that stands for a figure. */
+export type ChapterSegment =
+  | { readonly kind: "html"; readonly html: string }
+  | { readonly kind: "directive"; readonly directive: Directive };
+
+function directiveOf(node: RootContent): Directive | null {
+  if (node.type !== "element" || node.tagName !== "p") return null;
+  const text = textContent(node).trim();
+  return text.startsWith("::") ? parseDirective(text) : null;
+}
+
+/**
+ * Renders a chapter as a list of segments. The Markdown is parsed and
+ * transformed once (heading ids stay unique across the whole chapter), then
+ * cut at the directive paragraphs; each run of nodes between two directives
+ * becomes one opaque HTML string. The reader renders the HTML segments as
+ * opaque payloads and places a figure island for every directive, so React
+ * still never walks the Markdown descendants.
+ */
+export function renderChapterSegments({
+  rawMarkdown,
+  locale,
+}: ChapterMarkdownProps): ChapterSegment[] {
+  const processor = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeSlug)
+    .use(rehypeAutolink, { behavior: "wrap" })
+    .use(() => (tree) => transformBookTree(tree as Root, locale));
+  const tree = processor.runSync(processor.parse(rawMarkdown)) as Root;
+  const stringifier = unified().use(rehypeStringify);
+
+  const segments: ChapterSegment[] = [];
+  let run: RootContent[] = [];
+  const flush = (): void => {
+    const meaningful = run.filter((node) => node.type !== "text" || node.value.trim() !== "");
+    if (meaningful.length > 0) {
+      segments.push({ kind: "html", html: String(stringifier.stringify({ type: "root", children: meaningful })) });
+    }
+    run = [];
+  };
+  for (const node of tree.children) {
+    const directive = directiveOf(node);
+    if (directive) {
+      flush();
+      segments.push({ kind: "directive", directive });
+    } else {
+      run.push(node);
+    }
+  }
+  flush();
+  return segments;
 }

@@ -61,7 +61,7 @@ export function BarsIsland({
       <FigureCanvas
         spec={shown}
         items={items}
-        summary={HINT.row}
+        summary={spec.data.orientation === "vertical" ? HINT.bar : HINT.row}
         layoutKey={order}
         groupLabel="Einzelne Balken"
       />

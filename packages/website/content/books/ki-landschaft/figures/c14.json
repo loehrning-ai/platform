@@ -1,0 +1,389 @@
+{
+  "id": "c14",
+  "kind": "dotplot",
+  "title": "Wo steht mein Betrieb?",
+  "alt": "Nachschlagetabelle: Anteil der Firmenseiten mit KI-Wort in 8 Branchengruppen und 4 Regionen. Felder mit weniger als 5 Treffern zeigen den Hinweis zu wenige Daten.",
+  "caption": "Roher Anteil mit 95-Prozent-Intervall, 17.034 Firmen mit eigener Adresse, bekannter Branche und bekanntem Land. 5 von 32 Feldern haben weniger als 5 Treffer.",
+  "n": 17034,
+  "nNote": "Firmen mit eigener Adresse, Branche und Land bekannt",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Gemessen wird, was auf der Website steht, nicht, was der Betrieb einsetzt. Die Branche ist aus Stichwörtern abgeleitet. Regionen: Nord (SH, HH, HB, NI), Ost (BE, BB, MV, SN, ST, TH), West (NW, HE, RP, SL), Süd (BY, BW). Roh, nicht gewichtet. Es fließt nichts aus dem Browser ab.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "sort": "none",
+    "items": [
+      {
+        "id": "it_medien__nord",
+        "label": "IT und Medien, Nord",
+        "value": 18.03,
+        "lo": 10.38,
+        "hi": 29.47,
+        "n": 61
+      },
+      {
+        "id": "it_medien__ost",
+        "label": "IT und Medien, Ost",
+        "value": 8.11,
+        "lo": 3.77,
+        "hi": 16.58,
+        "n": 74
+      },
+      {
+        "id": "it_medien__west",
+        "label": "IT und Medien, West",
+        "value": 9.85,
+        "lo": 5.85,
+        "hi": 16.12,
+        "n": 132
+      },
+      {
+        "id": "it_medien__sued",
+        "label": "IT und Medien, Süd",
+        "value": 13.11,
+        "lo": 8.97,
+        "hi": 18.77,
+        "n": 183
+      },
+      {
+        "id": "it_medien__alle",
+        "label": "IT und Medien, alle Regionen",
+        "value": 12,
+        "lo": 9.31,
+        "hi": 15.33,
+        "n": 450
+      },
+      {
+        "id": "beratung__nord",
+        "label": "Beratung und Marketing, Nord",
+        "value": 10,
+        "lo": 5.81,
+        "hi": 16.67,
+        "n": 120
+      },
+      {
+        "id": "beratung__ost",
+        "label": "Beratung und Marketing, Ost",
+        "value": null,
+        "n": 80
+      },
+      {
+        "id": "beratung__west",
+        "label": "Beratung und Marketing, West",
+        "value": 8.36,
+        "lo": 5.68,
+        "hi": 12.14,
+        "n": 287
+      },
+      {
+        "id": "beratung__sued",
+        "label": "Beratung und Marketing, Süd",
+        "value": 7.08,
+        "lo": 4.76,
+        "hi": 10.4,
+        "n": 325
+      },
+      {
+        "id": "beratung__alle",
+        "label": "Beratung und Marketing, alle Regionen",
+        "value": 7.64,
+        "lo": 6,
+        "hi": 9.67,
+        "n": 812
+      },
+      {
+        "id": "finanzen_immo__nord",
+        "label": "Finanzen und Immobilien, Nord",
+        "value": 3.8,
+        "lo": 2.42,
+        "hi": 5.92,
+        "n": 474
+      },
+      {
+        "id": "finanzen_immo__ost",
+        "label": "Finanzen und Immobilien, Ost",
+        "value": 3.07,
+        "lo": 1.9,
+        "hi": 4.92,
+        "n": 522
+      },
+      {
+        "id": "finanzen_immo__west",
+        "label": "Finanzen und Immobilien, West",
+        "value": 3.98,
+        "lo": 2.95,
+        "hi": 5.36,
+        "n": 1030
+      },
+      {
+        "id": "finanzen_immo__sued",
+        "label": "Finanzen und Immobilien, Süd",
+        "value": 4.55,
+        "lo": 3.55,
+        "hi": 5.81,
+        "n": 1320
+      },
+      {
+        "id": "finanzen_immo__alle",
+        "label": "Finanzen und Immobilien, alle Regionen",
+        "value": 4.03,
+        "lo": 3.42,
+        "hi": 4.76,
+        "n": 3346
+      },
+      {
+        "id": "handel__nord",
+        "label": "Handel, Nord",
+        "value": 3.16,
+        "lo": 1.61,
+        "hi": 6.11,
+        "n": 253
+      },
+      {
+        "id": "handel__ost",
+        "label": "Handel, Ost",
+        "value": 2.14,
+        "lo": 0.99,
+        "hi": 4.6,
+        "n": 280
+      },
+      {
+        "id": "handel__west",
+        "label": "Handel, West",
+        "value": 4.44,
+        "lo": 2.98,
+        "hi": 6.57,
+        "n": 518
+      },
+      {
+        "id": "handel__sued",
+        "label": "Handel, Süd",
+        "value": 2.43,
+        "lo": 1.52,
+        "hi": 3.85,
+        "n": 701
+      },
+      {
+        "id": "handel__alle",
+        "label": "Handel, alle Regionen",
+        "value": 3.08,
+        "lo": 2.37,
+        "hi": 4,
+        "n": 1752
+      },
+      {
+        "id": "bau__nord",
+        "label": "Bau, Nord",
+        "value": 1.83,
+        "lo": 0.97,
+        "hi": 3.44,
+        "n": 492
+      },
+      {
+        "id": "bau__ost",
+        "label": "Bau, Ost",
+        "value": 1.24,
+        "lo": 0.63,
+        "hi": 2.44,
+        "n": 643
+      },
+      {
+        "id": "bau__west",
+        "label": "Bau, West",
+        "value": 1.25,
+        "lo": 0.73,
+        "hi": 2.12,
+        "n": 1041
+      },
+      {
+        "id": "bau__sued",
+        "label": "Bau, Süd",
+        "value": 1.54,
+        "lo": 1.05,
+        "hi": 2.24,
+        "n": 1691
+      },
+      {
+        "id": "bau__alle",
+        "label": "Bau, alle Regionen",
+        "value": 1.45,
+        "lo": 1.12,
+        "hi": 1.88,
+        "n": 3867
+      },
+      {
+        "id": "industrie__nord",
+        "label": "Industrie und Herstellung, Nord",
+        "value": null,
+        "n": 181
+      },
+      {
+        "id": "industrie__ost",
+        "label": "Industrie und Herstellung, Ost",
+        "value": 3.12,
+        "lo": 1.52,
+        "hi": 6.31,
+        "n": 224
+      },
+      {
+        "id": "industrie__west",
+        "label": "Industrie und Herstellung, West",
+        "value": 1.8,
+        "lo": 0.95,
+        "hi": 3.39,
+        "n": 499
+      },
+      {
+        "id": "industrie__sued",
+        "label": "Industrie und Herstellung, Süd",
+        "value": 2.45,
+        "lo": 1.56,
+        "hi": 3.84,
+        "n": 734
+      },
+      {
+        "id": "industrie__alle",
+        "label": "Industrie und Herstellung, alle Regionen",
+        "value": 2.26,
+        "lo": 1.64,
+        "hi": 3.1,
+        "n": 1638
+      },
+      {
+        "id": "technik__nord",
+        "label": "Ingenieure und Forschung, Nord",
+        "value": 0,
+        "lo": 0,
+        "hi": 10.43,
+        "n": 33
+      },
+      {
+        "id": "technik__ost",
+        "label": "Ingenieure und Forschung, Ost",
+        "value": null,
+        "n": 64
+      },
+      {
+        "id": "technik__west",
+        "label": "Ingenieure und Forschung, West",
+        "value": null,
+        "n": 72
+      },
+      {
+        "id": "technik__sued",
+        "label": "Ingenieure und Forschung, Süd",
+        "value": null,
+        "n": 120
+      },
+      {
+        "id": "technik__alle",
+        "label": "Ingenieure und Forschung, alle Regionen",
+        "value": 2.77,
+        "lo": 1.41,
+        "hi": 5.37,
+        "n": 289
+      },
+      {
+        "id": "dienste__nord",
+        "label": "Übrige Dienste, Verkehr, Gastgewerbe, Gesundheit, Bildung, Nord",
+        "value": 2.67,
+        "lo": 1.74,
+        "hi": 4.09,
+        "n": 748
+      },
+      {
+        "id": "dienste__ost",
+        "label": "Übrige Dienste, Verkehr, Gastgewerbe, Gesundheit, Bildung, Ost",
+        "value": 2.85,
+        "lo": 1.91,
+        "hi": 4.24,
+        "n": 807
+      },
+      {
+        "id": "dienste__west",
+        "label": "Übrige Dienste, Verkehr, Gastgewerbe, Gesundheit, Bildung, West",
+        "value": 3.48,
+        "lo": 2.67,
+        "hi": 4.52,
+        "n": 1524
+      },
+      {
+        "id": "dienste__sued",
+        "label": "Übrige Dienste, Verkehr, Gastgewerbe, Gesundheit, Bildung, Süd",
+        "value": 2.72,
+        "lo": 2.06,
+        "hi": 3.58,
+        "n": 1801
+      },
+      {
+        "id": "dienste__alle",
+        "label": "Übrige Dienste, Verkehr, Gastgewerbe, Gesundheit, Bildung, alle Regionen",
+        "value": 2.97,
+        "lo": 2.53,
+        "hi": 3.49,
+        "n": 4880
+      },
+      {
+        "id": "alle__nord",
+        "label": "Alle Branchen, Nord",
+        "value": 3.43,
+        "lo": 2.77,
+        "hi": 4.24,
+        "n": 2362
+      },
+      {
+        "id": "alle__ost",
+        "label": "Alle Branchen, Ost",
+        "value": 2.64,
+        "lo": 2.09,
+        "hi": 3.31,
+        "n": 2694
+      },
+      {
+        "id": "alle__west",
+        "label": "Alle Branchen, West",
+        "value": 3.49,
+        "lo": 3.02,
+        "hi": 4.03,
+        "n": 5103
+      },
+      {
+        "id": "alle__sued",
+        "label": "Alle Branchen, Süd",
+        "value": 3.21,
+        "lo": 2.82,
+        "hi": 3.66,
+        "n": 6875
+      },
+      {
+        "id": "alle__alle",
+        "label": "Alle Branchen, alle Regionen",
+        "value": 3.23,
+        "lo": 2.98,
+        "hi": 3.51,
+        "n": 17034
+      }
+    ],
+    "reference": {
+      "value": 3.23,
+      "label": "Alle: 3,2 %"
+    }
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "values": {
+      "known_rate": {
+        "value": 3.2,
+        "n": 17044,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

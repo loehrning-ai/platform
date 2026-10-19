@@ -10,6 +10,8 @@ export interface DataTableSpec {
   readonly table: FigureTable;
   /** File name stem of the CSV download. */
   readonly fileStem: string;
+  /** Link to the CSV file of the plotted numbers (public/books/...). Without it the CSV is a data link. */
+  readonly href?: string;
 }
 
 interface FigureFrameProps {
@@ -95,7 +97,7 @@ export function DataAndLimits({
           <a
             key={item.fileStem}
             className="bf-csv"
-            href={csvDataUri(tableToCsv(item.table))}
+            href={item.href ?? csvDataUri(tableToCsv(item.table))}
             download={`${item.fileStem}.csv`}
           >
             {several ? `CSV: ${item.title}` : "Daten als CSV laden"}

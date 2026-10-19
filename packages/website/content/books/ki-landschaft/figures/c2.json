@@ -1,0 +1,32 @@
+{
+  "id": "c2",
+  "kind": "iceberg",
+  "title": "Der Eisberg der KI-Exposition",
+  "alt": "Ein Eisberg. Über der Wasserlinie steht 2,2 Prozent der Lohnsumme, der sichtbare KI-Einsatz in Technikberufen. Der gesamte modellierte Wert liegt bei 11,7 Prozent. Der größte Teil liegt unter der Wasserlinie.",
+  "caption": "Sichtbar ist wenig. Was Modelle technisch könnten, ist gut fünfmal so groß. Beides ist eine Modellrechnung für die USA.",
+  "n": 151000000,
+  "nNote": "151 Mio. simulierte Beschäftigte, keine Stichprobe",
+  "source": "Chopra et al., The Iceberg Index, arXiv:2510.25137",
+  "asOf": "2026-10-19",
+  "limitation": "Modellierte technische Exposition für den US-Arbeitsmarkt, gemessen als Anteil an der Lohnsumme. Das Modell sagt nichts über Deutschland, nichts über Entlassungen und nichts über den Zeitpunkt.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "visible": {
+      "value": 2.2,
+      "label": "Sichtbar: Technikberufe"
+    },
+    "total": {
+      "value": 11.7,
+      "label": "Modelliert, auch Verwaltung und Finanzen"
+    },
+    "waterlineLabel": "Wasserlinie",
+    "hiddenLabel": "Noch nicht sichtbar (Differenz)"
+  },
+  "meta": {
+    "methodVersion": "v1-published-sources",
+    "frozenOn": "2026-10-19"
+  }
+}

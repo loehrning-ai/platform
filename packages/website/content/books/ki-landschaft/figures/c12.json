@@ -1,0 +1,112 @@
+{
+  "id": "c12",
+  "kind": "timeline",
+  "title": "Was seit Februar 2025 gilt: die KI-Verordnung in Stufen",
+  "alt": "Zeitleiste der KI-Verordnung. 1. August 2024 Inkrafttreten. 2. Februar 2025 Verbote und KI-Kompetenz. 2. August 2025 Regeln für KI-Modelle mit allgemeinem Verwendungszweck. 2. August 2026 die Verordnung gilt allgemein, mit Ausnahmen. 2. Dezember 2027 eigenständige Hochrisiko-Systeme nach Anhang III. 2. August 2028 Hochrisiko-Systeme in regulierten Produkten nach Anhang I.",
+  "caption": "Die Pflicht zur KI-Kompetenz (Artikel 4) gilt seit Februar 2025. Die späteren Stufen betreffen vor allem Anbieter von Hochrisiko-Systemen.",
+  "n": 0,
+  "source": "Verordnung (EU) 2024/1689, Artikel 113, geändert durch die Verordnung (EU) 2026/1744; Seiten der EU-Kommission",
+  "asOf": "2026-10-19",
+  "limitation": "Stand Oktober 2026, nach den Seiten der EU-Kommission. Das ist keine Rechtsberatung; für eine Entscheidung zählt der Wortlaut im Amtsblatt.",
+  "steps": [
+    {
+      "id": "s1",
+      "label": "2024",
+      "reveal": [
+        "e1"
+      ],
+      "focus": [
+        "e1"
+      ]
+    },
+    {
+      "id": "s2",
+      "label": "Feb. 2025",
+      "reveal": [
+        "e2"
+      ],
+      "focus": [
+        "e2"
+      ]
+    },
+    {
+      "id": "s3",
+      "label": "Aug. 2025",
+      "reveal": [
+        "e3"
+      ],
+      "focus": [
+        "e3"
+      ]
+    },
+    {
+      "id": "s4",
+      "label": "ab Aug. 2026",
+      "reveal": [
+        "e4",
+        "e5",
+        "e6"
+      ],
+      "focus": [
+        "e4",
+        "e5",
+        "e6"
+      ]
+    }
+  ],
+  "data": {
+    "events": [
+      {
+        "id": "e1",
+        "date": "2024-08-01",
+        "label": "Die KI-Verordnung tritt in Kraft",
+        "tag": "Start",
+        "status": "gilt"
+      },
+      {
+        "id": "e2",
+        "date": "2025-02-02",
+        "label": "Verbote und KI-Kompetenz",
+        "detail": "Anbieter und Betreiber ergreifen Maßnahmen für KI-Kompetenz ihres Personals. Die Pflicht wurde am 27. Juli 2026 neu gefasst.",
+        "tag": "Artikel 4",
+        "status": "gilt"
+      },
+      {
+        "id": "e3",
+        "date": "2025-08-02",
+        "label": "Regeln für KI-Modelle mit allgemeinem Verwendungszweck",
+        "detail": "Dazu Aufsichtsbehörden und Sanktionsregeln.",
+        "tag": "Modelle",
+        "status": "gilt"
+      },
+      {
+        "id": "e4",
+        "date": "2026-08-02",
+        "label": "Die Verordnung gilt allgemein",
+        "detail": "Die Behörden setzen die Regeln durch. Hochrisiko-Systeme nach Anhang III folgen erst am 2. Dezember 2027.",
+        "tag": "Allgemein",
+        "status": "gilt"
+      },
+      {
+        "id": "e5",
+        "date": "2027-12-02",
+        "label": "Eigenständige Hochrisiko-Systeme nach Anhang III",
+        "detail": "Verschoben durch die Änderungsverordnung (EU) 2026/1744, in Kraft seit dem 27. Juli 2026.",
+        "tag": "Anhang III",
+        "status": "kommt"
+      },
+      {
+        "id": "e6",
+        "date": "2028-08-02",
+        "label": "Hochrisiko-Systeme in regulierten Produkten nach Anhang I",
+        "detail": "Ebenfalls verschoben durch (EU) 2026/1744.",
+        "tag": "Anhang I",
+        "status": "kommt"
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-published-sources",
+    "frozenOn": "2026-10-19"
+  }
+}

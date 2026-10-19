@@ -19,9 +19,9 @@ import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 const LIBRARY = "/buecher";
 const BOOK = "ki-landschaft";
 const OVERVIEW = `/buecher/${BOOK}`;
-const CHAPTER = "03_reifegrad_ueberblick";
+const CHAPTER = "04_branche_land";
 const CHAPTER_URL = `/buecher/${BOOK}/${CHAPTER}`;
-const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung"; // manifest.json (stable)
+const CHAPTER_TITLE = "Branche schlägt Land"; // manifest.json (stable)
 
 /**
  * Every WCAG-tagged violation blocks. Callers poll this to a settled verdict so a

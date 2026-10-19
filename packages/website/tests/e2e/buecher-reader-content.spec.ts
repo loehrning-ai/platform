@@ -11,14 +11,14 @@ import {
  * assert STRUCTURE and stable strings (roles, manifest titles, encoding), never
  * exact prose, so the in-flight content refresh stays green while a real
  * regression (dropped table, broken umlaut encoding, missing reading time) fails.
- * Deep-dive target ki-landschaft / 03_reifegrad_ueberblick ships a real GFM
+ * Deep-dive target ki-landschaft / 08_methodik ships a real GFM
  * table, `##` section headings, and an umlaut-bearing manifest title.
  */
 
 const BOOK = "ki-landschaft";
-const CHAPTER = "03_reifegrad_ueberblick";
+const CHAPTER = "08_methodik";
 const CHAPTER_URL = `/buecher/${BOOK}/${CHAPTER}`;
-const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung"; // manifest.json title
+const CHAPTER_TITLE = "Methode und Grenzen"; // manifest.json title
 
 test.describe("book chapter reader content fidelity", () => {
   test("loads without login and shows a real heading outline", async ({ page }) => {
@@ -132,10 +132,10 @@ test.describe("book chapter reader content fidelity", () => {
     expect(prose).not.toContain("�");
     expect(prose).not.toMatch(/Ã[¤¶¼]/);
 
-    // Stable umlaut string from the manifest title also renders as a heading.
+    // A stable word of the manifest title also renders as a heading.
     const title = page.getByRole("heading", { level: 1 });
     await expect(title).toHaveCount(1);
-    await expect(title).toContainText("Selbstprüfung");
+    await expect(title).toContainText("Grenzen");
   });
 });
 
@@ -144,7 +144,7 @@ test.describe("book overview reading time", () => {
     await page.goto(`/buecher/${BOOK}`, { waitUntil: "domcontentloaded" });
 
     // Overview h1 is the book title (books.ts, stable) ...
-    await expect(page.getByRole("heading", { level: 1 })).toContainText("Mittelstand");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("außen");
     // ... and the header meta shows the reading time as "ca. <N> Min."
     await expect(page.getByText(/ca\.\s*\d+\s*Min\./).first()).toBeVisible();
   });

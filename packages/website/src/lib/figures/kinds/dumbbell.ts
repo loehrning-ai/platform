@@ -4,7 +4,7 @@ import { tickStrings } from "../axes.ts";
 import { formatValue } from "../format.ts";
 import { logExtent, logTicks, niceTicks, scaleLinear, scaleLog, type LinearScale } from "../math.ts";
 import {
-  FS, dim, el, fitEllipsis, flowLegend, frame, isEmphasised, op, scaleAbout, text, textLines, textWidth, translate,
+  FS, dim, el, fitEllipsis, flowLegend, frame, isEmphasised, labelLines, op, scaleAbout, text, textLines, textWidth, translate,
   type Ctx, type SvgNode,
 } from "../svg.ts";
 import { frameReveal, reveal } from "../timing.ts";
@@ -97,7 +97,7 @@ export function renderDumbbell(ctx: Ctx<DumbbellData>): ReactElement {
         // Two short lines stand in for a suppressed value.
         rows.some((r) => r.a === null || r.b === null) ? textWidth("weniger", FS.small, 600) : 0,
       ) + 10;
-  const gutter = compact ? 0 : Math.min(width * 0.3, 170);
+  const gutter = compact ? 0 : Math.min(width * 0.32, 200);
 
   const legendItems = [
     { label: data.aLabel, marker: (x: number, y: number) => el("circle", { cx: x, cy: y, r: 5.5, fill: pal.accent }) },
@@ -121,10 +121,19 @@ export function renderDumbbell(ctx: Ctx<DumbbellData>): ReactElement {
   const o = op(frameReveal(p));
   const nodes: SvgNode[] = [...legend.nodes];
 
+  // Thin crowded tick labels (log axis: 200, 500, 1.000 sit a few pixels apart): keep a label only if it clears the last kept one.
+  let lastKept = Number.NEGATIVE_INFINITY;
+  const keep = ticks.map((t, i) => {
+    const x = sx(t);
+    const need = textWidth(labels[i] ?? "", FS.small, 400) + 10;
+    if (x - lastKept < need) return false;
+    lastKept = x;
+    return true;
+  });
   ticks.forEach((t, i) => {
     nodes.push(
       el("line", { key: `g${t}`, x1: sx(t), y1: plot.y - 4, x2: sx(t), y2: plot.y + plot.h, stroke: pal.track, strokeWidth: 1, opacity: o }),
-      text(sx(t), plot.y - 10, labels[i] ?? "", { size: FS.small, fill: pal.mutedLight, anchor: i === ticks.length - 1 ? "end" : "middle", opacity: o }),
+      text(sx(t), plot.y - 10, keep[i] ? (labels[i] ?? "") : "", { size: FS.small, fill: pal.mutedLight, anchor: i === ticks.length - 1 ? "end" : "middle", opacity: o }),
     );
   });
   if (!compact) {
@@ -151,7 +160,11 @@ export function renderDumbbell(ctx: Ctx<DumbbellData>): ReactElement {
     const slide = bx !== null && ax !== null ? (1 - f) * (ax - bx) : 0;
     nodes.push(
       el("g", { key: row.id, "data-id": row.id, opacity: op(dim(ctx, row.id)) },
-        text(M, labelY, fitEllipsis(row.label, compact ? width - M * 2 - compactValuesWidth(row, data) - 10 : gutter - 6, FS.label), { fill: pal.ink, weight: emphasis ? 700 : 400, opacity: op(f) }),
+        ...(compact
+          ? [fitEllipsis(row.label, width - M * 2 - compactValuesWidth(row, data) - 10, FS.label)]
+          : labelLines(row.label, gutter - 6, FS.label)
+        ).map((line, k, all) =>
+          text(M, all.length === 1 ? labelY : labelY + (k === 0 ? -6 : 6), line, { fill: pal.ink, weight: emphasis ? 700 : 400, opacity: op(f), extra: { key: `l${k}` } })),
         ax !== null && bx !== null
           ? el("line", { x1: Math.min(ax, bx), y1: cy, x2: Math.max(ax, bx), y2: cy, stroke: pal.edge, strokeWidth: 3, transform: scaleAbout(f, 1, ax, 0), opacity: op(Math.min(1, f * 2)) })
           : null,

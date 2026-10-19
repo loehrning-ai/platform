@@ -43,7 +43,7 @@ export function FigureShell({ spec, title, provisional, csvHref, className, ownI
       <p className="bf-figure-title">{title ?? spec.title}</p>
       {provisional ? (
         <p className="bf-provisional" data-provisional="true">
-          Vorläufige Werte: Diese Abbildung läuft noch auf Testdaten und wird vor der Veröffentlichung ersetzt.
+          Vorläufige Werte: Diese Abbildung ist noch nicht endgültig. Zahlen und Termine werden vor der Veröffentlichung geprüft und können sich ändern.
         </p>
       ) : null}
       {children}

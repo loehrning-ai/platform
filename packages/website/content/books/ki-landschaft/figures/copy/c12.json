@@ -1,0 +1,24 @@
+{
+  "steps": [
+    {
+      "id": "s1",
+      "label": "2024",
+      "text": "Am 1. August 2024 trat die Verordnung in Kraft. Die meisten Pflichten kamen erst später."
+    },
+    {
+      "id": "s2",
+      "label": "Feb. 2025",
+      "text": "Seit dem 2. Februar 2025 gelten die Verbote und die Pflicht zur KI-Kompetenz (Artikel 4). Sie trifft jede Firma, die KI-Systeme einsetzt, auch kleine. Seit dem 27. Juli 2026 ist sie neu gefasst: Maßnahmen, die die Entwicklung der KI-Kompetenz unterstützen."
+    },
+    {
+      "id": "s3",
+      "label": "Aug. 2025",
+      "text": "Seit dem 2. August 2025 gelten die Regeln für KI-Modelle mit allgemeinem Verwendungszweck. Sie richten sich vor allem an deren Anbieter."
+    },
+    {
+      "id": "s4",
+      "label": "ab Aug. 2026",
+      "text": "Seit dem 2. August 2026 gilt die Verordnung allgemein. Hochrisiko-Systeme nach Anhang III folgen am 2. Dezember 2027, Systeme in regulierten Produkten nach Anhang I am 2. August 2028."
+    }
+  ]
+}

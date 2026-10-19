@@ -105,23 +105,23 @@ interface BookPageCopy {
 
 const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
   "ki-landschaft": {
-    title: "AI in German SMEs",
-    subtitle: "Data, structures, opportunities",
-    edition: "Working edition 2026",
+    title: "Seen from the outside",
+    subtitle: "What 25,581 company websites reveal about AI in Germany",
+    edition: "October 2026 edition",
     audience: "Professionals working with AI",
-    resourceType: "HTML reading edition",
+    resourceType: "HTML reading edition with interactive figures",
     accessLabel: "Free online reader",
     statusLabel: "Reader available",
     relatedResourceLabel: "Open the EU AI Act course",
     description:
-      "Why the data foundation matters more than the choice of tool, how a team records its starting point without a score, and how to read a benchmark without overstating it.",
+      "Why shares of AI use range from 20 to 57 percent depending on the survey, what the word AI on a company website proves and what it does not, how industry, region and job ads relate, and what has applied to your business since February 2025. The statements apply to this sample, not to Germany.",
     highlights: [
-      "Qualitative assessment without a proprietary score",
-      "Five areas of work for digital and AI readiness",
-      "Interpretation of benchmarks, sectors, and limitations",
+      "One number, several measurements: why AI shares differ so widely",
+      "Saying and showing: what the word AI on company websites proves",
+      "Industry, region and jobs compared, with intervals and limits",
     ],
     adaptationNote:
-      "This edition leaves out consulting prices, private company data, proprietary scores and rankings built on them. It uses traceable self-assessments and linked primary sources.",
+      "The edition shows only aggregates from an own analysis of company websites: every number rests on at least 5 hits, with no company names, addresses, prices, scores or rankings of individual firms. It applies to firms with a findable website, and the raw data stays private.",
   },
   "ki-arbeitsalltag": {
     title: "AI at Work",
@@ -172,6 +172,12 @@ const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
     "Leitlinien der Europäischen Kommission zur KI-Kompetenz",
   "AI-Native course content": "Kursinhalte von Mit KI arbeiten",
   "Tool-selection editorial notes": "Redaktionelle Notizen zur Werkzeugauswahl",
+  "Own analysis of company websites (aggregates, at least 5 hits per cell)":
+    "Eigene Auswertung von Firmenwebsites (Aggregate, mindestens 5 Treffer je Zelle)",
+  "Published surveys by KfW, Destatis, ifo and Bitkom, each with date and base":
+    "Veröffentlichte Erhebungen von KfW, Destatis, ifo und Bitkom, jeweils mit Datum und Basis",
+  "Regulation (EU) 2024/1689 and the pages of the European Commission":
+    "Verordnung (EU) 2024/1689 und die Seiten der Europäischen Kommission",
 };
 
 export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
@@ -394,7 +400,7 @@ export function getBookDisplay(
     highlights: book.highlights,
     adaptationNote:
       book.id === "ki-landschaft"
-        ? "Diese Fassung lässt Beratungspreise, private Unternehmensdaten, proprietäre Scores und die Rankings daraus weg. Sie arbeitet mit nachvollziehbaren Selbstprüfungen und verlinkten Primärquellen."
+        ? "Die Ausgabe zeigt nur Aggregate aus einer eigenen Auswertung von Firmenwebsites: jede Zahl mit mindestens 5 Treffern, ohne Firmennamen, Adressen, Preise, Scores und Ranglisten einzelner Firmen. Sie gilt für Firmen mit auffindbarer Website, die Rohdaten bleiben privat."
         : "",
   };
 }

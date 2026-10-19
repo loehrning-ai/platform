@@ -154,7 +154,7 @@ describe("C4 waterfall story", () => {
     expect(FakeObserver.instances).toHaveLength(1);
     const observer = FakeObserver.instances[0]!;
     expect(observer.targets).toHaveLength(4);
-    expect(observer.options?.rootMargin).toBe("-80% 0px -18% 0px");
+    expect(observer.options?.rootMargin).toBe("-68% 0px -30% 0px");
     const cards = observer.targets;
     act(() => observer.callback([{ target: cards[2], isIntersecting: true }]));
     expect(container.querySelector(".bf-wf")).toHaveAttribute("data-step", "2");
@@ -284,7 +284,7 @@ describe("C1 survey ladder", () => {
 
   it("shows the wording of the chosen source and only that panel", () => {
     const { container } = render(<SurveyLadder spec={C1_LADDER} details={C1_DETAILS} />);
-    const open = () => [...container.querySelectorAll(".bf-detail[data-open='true']")];
+    const open = () => [...container.querySelectorAll(".bf-lad-detail[data-open='true']")];
     expect(open()).toHaveLength(1);
     expect(open()[0]).toHaveTextContent("20 bis 57 Prozent");
     fireEvent.click(screen.getByRole("button", { name: /^Destatis, 26\s%/ }));
@@ -298,7 +298,7 @@ describe("C1 survey ladder", () => {
   it("picks a source from a click on the figure itself", () => {
     const { container } = render(<SurveyLadder spec={C1_LADDER} details={C1_DETAILS} />);
     fireEvent.click(container.querySelector(".bf-svg--wide [data-id='bitkom'] circle")!);
-    expect(container.querySelector(".bf-detail[data-open='true']")).toHaveTextContent("Inwieweit setzt Ihr Unternehmen KI ein");
+    expect(container.querySelector(".bf-lad-detail[data-open='true']")).toHaveTextContent("Inwieweit setzt Ihr Unternehmen KI ein");
   });
 
   it("keeps our own 4,0 % on a separate axis labelled as another measure", () => {

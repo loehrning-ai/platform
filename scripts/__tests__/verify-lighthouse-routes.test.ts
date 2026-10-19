@@ -218,7 +218,7 @@ describe("Lighthouse route contract", () => {
       "/kurse/open-source/data-engineering-fundamentals",
       "/blog/eu-ai-act-grundlagen",
       "/buecher/ki-landschaft",
-      "/buecher/ki-landschaft/02_methodik",
+      "/buecher/ki-landschaft/02_sagen_zeigen",
       "/demos/prompt-scanner",
       "/workshops/geschaeftsberichte-mit-ki-lesen",
     ]) {

@@ -11,6 +11,8 @@
  */
 
 .bf {
+  /* Anchors and focus scrolling stop below the sticky site header. */
+  scroll-margin-top: 6rem;
   --bf-ink: var(--color-foreground, #121212);
   --bf-paper: var(--color-background, #f7f1e7);
   --bf-card: var(--color-card, #fffcf5);
@@ -131,6 +133,24 @@
   height: 0.5rem;
   margin-right: 0.5rem;
   background: var(--bf-accent);
+}
+
+/* Four or more choices on a phone: a tidy two-column grid instead of a ragged stack of full-width rows. */
+@media (max-width: 36rem) {
+  .bf-seg:has(.bf-btn:nth-child(4)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .bf-seg:has(.bf-btn:nth-child(4)) .bf-btn {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .bf-seg:has(.bf-btn:nth-child(4)) .bf-btn:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
 }
 
 /* ----------------------------------------------------------------- stage */

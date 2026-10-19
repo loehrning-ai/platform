@@ -51,20 +51,19 @@ export const WAFFLE_SAGEN_ZEIGEN: FigureSpecOf<"waffle"> = {
   data: {
     total: 100,
     columns: 10,
-    headline: "21 von 100",
+    headline: "25 oder 64 von 100",
     groups: [
-      { id: "zeigt", label: "zeigen etwas Konkretes", dots: 21, tone: "accent" },
-      { id: "sagt", label: "sagen es nur", dots: 79, tone: "ring" },
+      { id: "narrow", label: "enge Lesart", dots: 25, tone: "accent" },
+      { id: "broad", label: "nur weite Lesart", dots: 39, tone: "ink" },
+      { id: "says", label: "sagen es nur", dots: 36, tone: "ring" },
     ],
   },
 };
 
-/** Evidence types overlap, so each chip is its own share of the 100 (Mehrfachnennung). */
+/** Two nested readings of "konkret": the broad one contains the narrow one. */
 export const WAFFLE_CHIPS: readonly WaffleChip[] = [
-  { id: "chatbot", label: "Chatbot oder Tool", dots: 13, hits: 149 },
-  { id: "ml", label: "ML-Hinweis", dots: 9, hits: 97 },
-  { id: "stelle", label: "KI-Stelle", dots: 5, hits: 54 },
-  { id: "regeln", label: "Regeln, AI Act", dots: 1, hits: 12 },
+  { id: "narrow", label: "Enge Lesart", dots: 25 },
+  { id: "broad", label: "Weite Lesart", dots: 64 },
 ];
 
 /* ------------------------------------------------------------------- bars */

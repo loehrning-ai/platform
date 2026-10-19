@@ -13,7 +13,7 @@ const SOCIAL_METADATA_ROUTES = [
   "/",
   "/blog",
   "/buecher/ki-landschaft",
-  "/buecher/ki-landschaft/02_methodik",
+  "/buecher/ki-landschaft/02_sagen_zeigen",
   "/open-source/lizenzrichtlinie",
   "/neuigkeiten",
   "/hilfe",

@@ -1,49 +1,42 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatDecimal, SUPPRESSED_LABEL, type FigureSpecOf } from "@/lib/figures";
+import type { FigureSpecOf } from "@/lib/figures";
 import { Controls, Segmented } from "./controls";
 import { FigureCanvas } from "./figure-canvas";
 import type { WaffleChip } from "./types";
 
 const ALL = "alle";
 
-/** Firms behind a chip: a number from 5 up, or the suppression label. */
-function firms(hits: number): string {
-  return hits >= 1 && hits <= 4 ? `${SUPPRESSED_LABEL} Firmen` : `${formatDecimal(hits, 0)} Firmen`;
-}
-
 /**
- * The spec for one chip. Evidence types overlap, so a chip is its own share
- * of the 100: its dots in the accent, the rest of the "shows something" dots
- * in ink, the "only says" dots as rings.
+ * The spec for one chip. A chip is one reading of the question: its dots in the
+ * accent, every other dot as a ring. The readings are nested (the broad one
+ * contains the narrow one), so a chip is simply its own share of the 100.
  */
 export function chipSpec(
   base: FigureSpecOf<"waffle">,
   chip: WaffleChip,
 ): FigureSpecOf<"waffle"> {
-  const shows = base.data.groups.find((g) => g.tone === "accent");
-  const rest = base.data.groups.filter((g) => g.tone !== "accent");
-  const showsDots = shows?.dots ?? 0;
-  const own = Math.min(chip.dots, showsDots);
+  const total = base.data.total;
+  const own = Math.min(chip.dots, total);
+  const rest = base.data.groups.find((g) => g.tone === "ring");
   return {
     ...base,
-    alt: `100 Punkte stehen für 100 Firmen, die KI auf ihre Website schreiben. ${own} gefüllte Punkte zeigen: ${chip.label}. ${showsDots - own} dunkle Punkte zeigen einen anderen Beleg, die Ringe sagen es nur.`,
+    alt: `100 Punkte stehen für 100 Firmenseiten, die KI erwähnen. ${own} gefüllte Punkte zeigen etwas Konkretes (${chip.label.toLowerCase()}). Die übrigen ${total - own} Ringe zeigen in dieser Lesart nichts Konkretes.`,
     data: {
       ...base.data,
-      headline: `${own} von ${base.data.total}`,
+      headline: `${own} von ${total}`,
       groups: [
-        { id: chip.id, label: chip.label, dots: own, tone: "accent" },
-        ...(showsDots - own > 0
-          ? [{ id: "anderer-beleg", label: "anderer Beleg", dots: showsDots - own, tone: "ink" as const }]
+        { id: chip.id, label: `${chip.label}: zeigt etwas Konkretes`, dots: own, tone: "accent" },
+        ...(total - own > 0
+          ? [{ id: rest?.id ?? "rest", label: `${chip.label}: zeigt nichts Konkretes`, dots: total - own, tone: "ring" as const }]
           : []),
-        ...rest,
       ],
     },
   };
 }
 
-/** C3: 100 dots; chips light the share that shows one kind of evidence. */
+/** C3: 100 dots; the chips switch between the narrow and the broad reading of "konkret". */
 export function WaffleIsland({
   spec,
   chips,
@@ -56,16 +49,16 @@ export function WaffleIsland({
   const shown = useMemo(() => (chip ? chipSpec(spec, chip) : spec), [spec, chip]);
   const total = spec.data.total;
   const summary = chip
-    ? `${chip.label}: ${Math.min(chip.dots, spec.data.groups.find((g) => g.tone === "accent")?.dots ?? 0)} von ${total} (${firms(chip.hits)}). Belege überlappen: Eine Firma kann mehrere zeigen.`
-    : `${spec.data.headline ?? ""} zeigen mindestens einen konkreten Beleg. Wähle einen Belegtyp, um seinen Anteil zu sehen.`;
+    ? `${chip.label}: ${Math.min(chip.dots, total)} von ${total}. Die Zahl hängt davon ab, was man konkret nennt.`
+    : `${spec.data.headline ?? ""} zeigen etwas Konkretes, je nach Lesart. Wähle eine Lesart, um ihren Anteil zu sehen.`;
   const options = [
-    { value: ALL, label: "Alle Belege" },
+    { value: ALL, label: "Beide Lesarten" },
     ...chips.map((c) => ({ value: c.id, label: c.label })),
   ];
   return (
     <>
       <Controls>
-        <Segmented label="Belegtyp" value={chipId} options={options} onChange={setChipId} />
+        <Segmented label="Lesart" value={chipId} options={options} onChange={setChipId} />
       </Controls>
       <FigureCanvas spec={shown} summary={summary} layoutKey={chipId} />
     </>

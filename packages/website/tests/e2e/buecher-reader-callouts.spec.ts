@@ -31,9 +31,13 @@ import {
  */
 
 const SHOWCASE = "/buecher/ki-landschaft/01_eisberg";
-const SHOWCASE_H1 = "Das Eisberg-Problem";
-// Five unlabelled example-prompt blockquotes under ### sub-headings.
-const FALLBACK = "/buecher/ki-landschaft/07_schnellstart";
+const SHOWCASE_H1 = "Die Zahl, die nicht stimmt";
+const END_BOX = "Was du tun kannst";
+// Chapters 2 and 4 close with a renamed box instead of the end box (it read as a template).
+const RENAMED = [
+  ["/buecher/ki-landschaft/02_sagen_zeigen", "Jetzt bist du dran"],
+  ["/buecher/ki-landschaft/04_branche_land", "Tipp"],
+] as const;
 
 test.describe("book reader callouts", () => {
   test("chapter loads open, shows the manifest title, logs no console error", async ({
@@ -56,32 +60,25 @@ test.describe("book reader callouts", () => {
     ).toEqual([]);
   });
 
-  test("a Hinweis callout renders as a distinctly labelled, styled note", async ({
+  test("the chapter end box renders as a distinctly labelled, styled note", async ({
     page,
   }) => {
     await page.goto(SHOWCASE, { waitUntil: "domcontentloaded" });
 
-    const note = page.getByRole("note", { name: "Hinweis", exact: true }).first();
+    const note = page.getByRole("note", { name: END_BOX, exact: true }).first();
     await expect(note).toBeVisible();
     const className = await note.getAttribute("class");
     expect(className, "Hinweis callout must be styled").toBeTruthy();
   });
 
-  test("unlabelled example-prompt blockquotes fall back to bare rendering, not a note", async ({
-    page,
-  }) => {
-    const response = await page.goto(FALLBACK, { waitUntil: "domcontentloaded" });
-    expect(response?.status(), `status for ${FALLBACK}`).toBe(200);
-
-    // Five distinct unlabelled quotes, none carry a bold label, so none
-    // should ever receive the note role. Scoped to the article to skip the
-    // page-level ResourceContextBanner note.
-    const fallbacks = page.locator("article blockquote");
-    await expect(fallbacks).toHaveCount(5);
-    for (let i = 0; i < 5; i++) {
-      await expect(fallbacks.nth(i)).not.toHaveAttribute("role", "note");
-    }
-  });
+  for (const [path, label] of RENAMED) {
+    test(`${path} closes with a "${label}" note instead of the end box`, async ({ page }) => {
+      const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+      expect(response?.status(), `status for ${path}`).toBe(200);
+      await expect(page.getByRole("note", { name: label, exact: true })).toBeVisible();
+      await expect(page.getByRole("note", { name: END_BOX, exact: true })).toHaveCount(0);
+    });
+  }
 });
 
 test.describe("book reader callouts mobile", () => {
@@ -92,7 +89,7 @@ test.describe("book reader callouts mobile", () => {
     await page.goto(SHOWCASE, { waitUntil: "domcontentloaded" });
 
     await expect(
-      page.getByRole("note", { name: "Hinweis", exact: true }).first(),
+      page.getByRole("note", { name: END_BOX, exact: true }).first(),
     ).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

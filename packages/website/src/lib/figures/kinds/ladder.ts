@@ -12,6 +12,9 @@ import type { ReactElement } from "react";
 
 const M = 16;
 
+/** Text of a dimmed rung stays at 0.92: the accent label on the inset panel and the muted grey both keep 4.5:1. */
+const textOpacity = (markDim: number): number => (markDim < 1 ? 0.92 : 1);
+
 export function renderLadder(ctx: Ctx<LadderData>): ReactElement {
   const { data, width, pal, spec, p } = ctx;
   const top = Math.max(100, ...data.rungs.map((r) => r.value), 0);
@@ -43,18 +46,21 @@ export function renderLadder(ctx: Ctx<LadderData>): ReactElement {
     const slide = (1 - f) * (trackX - dotX);
     // A published 54,5 must not read "55": a rung with a fractional value keeps one decimal.
     const valueStr = formatValue(Number.isInteger(r.value) ? data.fmt : { ...data.fmt, digits: Math.max(data.fmt.digits ?? 0, 1) }, r.value);
+    // Only the marks dim for an unselected rung; the words keep their contrast (text at 0.4 was unreadable on a phone).
+    const markDim = dim(ctx, r.id);
+    const textF = f * textOpacity(markDim);
     nodes.push(
-      el("g", { key: r.id, "data-id": r.id, opacity: op(dim(ctx, r.id)) },
-        text(M, head, r.year ? `${r.label} (${r.year})` : r.label, { size: FS.value, weight: emphasis ? 700 : 600, fill: pal.ink, opacity: op(f) }),
-        text(width - M, head, valueStr, { size: FS.strong, weight: 700, fill: pal.ink, anchor: "end", opacity: op(f) }),
-        el("line", { x1: trackX, y1: trackY, x2: trackX + trackW, y2: trackY, stroke: pal.track, strokeWidth: 4, strokeLinecap: "butt", opacity: o }),
+      el("g", { key: r.id, "data-id": r.id },
+        text(M, head, r.year ? `${r.label} (${r.year})` : r.label, { size: FS.value, weight: emphasis ? 700 : 600, fill: pal.ink, opacity: op(textF) }),
+        text(width - M, head, valueStr, { size: FS.strong, weight: 700, fill: pal.ink, anchor: "end", opacity: op(textF) }),
+        el("line", { x1: trackX, y1: trackY, x2: trackX + trackW, y2: trackY, stroke: pal.track, strokeWidth: 4, strokeLinecap: "butt", opacity: op(markDim * (o ?? 1)) }),
         r.from !== undefined
-          ? el("g", { opacity: op(f) },
+          ? el("g", { opacity: op(f * markDim) },
               el("line", { x1: sx(r.from), y1: trackY, x2: dotX, y2: trackY, stroke: pal.edge, strokeWidth: 2 }),
               el("circle", { cx: sx(r.from), cy: trackY, r: 6, fill: pal.card, stroke: pal.ink, strokeWidth: 2 }))
           : null,
-        el("circle", { cx: dotX, cy: trackY, r: emphasis ? 9 : 7.5, fill: pal.accent, stroke: pal.card, strokeWidth: 1.5, transform: translate(slide, 0), opacity: op(Math.min(1, f * 2)) }),
-        textLines(M, trackY + 26, defLines, 15, { size: FS.small, fill: pal.muted, opacity: op(f) }),
+        el("circle", { cx: dotX, cy: trackY, r: emphasis ? 9 : 7.5, fill: pal.accent, stroke: pal.card, strokeWidth: 1.5, transform: translate(slide, 0), opacity: op(Math.min(1, f * 2) * markDim) }),
+        textLines(M, trackY + 26, defLines, 15, { size: FS.small, fill: pal.muted, opacity: op(textF) }),
       ),
     );
     y = trackY + 26 + (defLines.length - 1) * 15 + 22;
@@ -69,6 +75,8 @@ export function renderLadder(ctx: Ctx<LadderData>): ReactElement {
     const sOurs = scaleLinear([0, ours.axisMax], [trackX, trackX + trackW]);
     const f = reveal(spec, p, ours.id, data.rungs.length, data.rungs.length + 1);
     const noteLines = wrapText(ours.note, width - M * 2, FS.small, 3);
+    const oursDim = dim(ctx, ours.id);
+    const oursText = f * textOpacity(oursDim);
     const blockTop = y;
     const tag = y + 22;
     const head = tag + 20;
@@ -78,20 +86,20 @@ export function renderLadder(ctx: Ctx<LadderData>): ReactElement {
     const noteY = trackY + 48;
     const blockH = noteY + noteLines.length * 15 - blockTop + 8;
     nodes.push(
-      el("g", { key: ours.id, "data-id": ours.id, opacity: op(dim(ctx, ours.id)) },
+      el("g", { key: ours.id, "data-id": ours.id },
         el("rect", { x: 0, y: blockTop, width, height: blockH, fill: pal.inset, opacity: op(f) }),
-        text(M, tag, "Anderes Maß, eigene Achse", { size: FS.small, weight: 700, fill: pal.accent, opacity: op(f) }),
-        text(M, head, ours.label, { size: FS.value, weight: 600, fill: pal.ink, opacity: op(f) }),
-        text(width - M, head, formatValue(fmt, ours.value), { size: FS.strong, weight: 700, fill: pal.ink, anchor: "end", opacity: op(f) }),
-        text(width - M, interval, `Intervall ${formatInterval(fmt, ours.lo, ours.hi)}`, { size: FS.small, fill: pal.muted, anchor: "end", opacity: op(f) }),
-        el("line", { x1: trackX, y1: trackY, x2: trackX + trackW, y2: trackY, stroke: pal.edge, strokeWidth: 4, opacity: op(f) }),
-        el("line", { x1: sOurs(ours.lo), y1: trackY, x2: sOurs(ours.hi), y2: trackY, stroke: pal.ink, strokeWidth: 2, opacity: op(f) }),
-        el("rect", { x: cx - 7, y: trackY - 7, width: 14, height: 14, fill: pal.ink, stroke: pal.card, strokeWidth: 1.5, opacity: op(f) }),
+        text(M, tag, "Anderes Maß, eigene Achse", { size: FS.small, weight: 700, fill: pal.accent, opacity: op(oursText) }),
+        text(M, head, ours.label, { size: FS.value, weight: 600, fill: pal.ink, opacity: op(oursText) }),
+        text(width - M, head, formatValue(fmt, ours.value), { size: FS.strong, weight: 700, fill: pal.ink, anchor: "end", opacity: op(oursText) }),
+        text(width - M, interval, `Intervall ${formatInterval(fmt, ours.lo, ours.hi)}`, { size: FS.small, fill: pal.muted, anchor: "end", opacity: op(oursText) }),
+        el("line", { x1: trackX, y1: trackY, x2: trackX + trackW, y2: trackY, stroke: pal.edge, strokeWidth: 4, opacity: op(f * oursDim) }),
+        el("line", { x1: sOurs(ours.lo), y1: trackY, x2: sOurs(ours.hi), y2: trackY, stroke: pal.ink, strokeWidth: 2, opacity: op(f * oursDim) }),
+        el("rect", { x: cx - 7, y: trackY - 7, width: 14, height: 14, fill: pal.ink, stroke: pal.card, strokeWidth: 1.5, opacity: op(f * oursDim) }),
         ...oursTicks.flatMap((t, i): SvgNode[] => [
           el("line", { key: `o${t}`, x1: sOurs(t), y1: trackY - 5, x2: sOurs(t), y2: trackY + 5, stroke: pal.edge, strokeWidth: 1, opacity: op(f) }),
           text(sOurs(t), trackY + 20, i === oursTicks.length - 1 ? formatValue({ ...fmt, digits: 0 }, t) : formatBare({ ...fmt, digits: 0 }, t), { size: FS.small, fill: pal.mutedLight, anchor: i === oursTicks.length - 1 ? "end" : "middle", opacity: op(f) }),
         ]),
-        textLines(M, noteY, noteLines, 15, { size: FS.small, fill: pal.muted, opacity: op(f) }),
+        textLines(M, noteY, noteLines, 15, { size: FS.small, fill: pal.muted, opacity: op(oursText) }),
       ),
     );
     y = blockTop + blockH;

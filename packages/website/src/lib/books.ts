@@ -9,7 +9,7 @@
  * must match the slug used in `content/books/<slug>/manifest.json`.
  *
  * Chapter counts / reading times (book-library import — updated after real import):
- * - ki-landschaft:           10 chapters (06+07 dropped), ~12.600 words → 63 min
+ * - ki-landschaft:           8 chapters (7 + method appendix), ~4.650 words → 24 min
  * - ki-arbeitsalltag:        14 chapters (incl. 00_intro), ~14.550 words → 73 min
  * - ki-tools-selbststaendige: 13 chapters (14_nachwort dropped), ~35.000 words → 175 min
  */
@@ -52,16 +52,16 @@ export interface Book {
 export const allBooks: readonly Book[] = [
   {
     id: "ki-landschaft",
-    title: "KI im deutschen Mittelstand",
-    subtitle: "Daten, Strukturen, Chancen",
+    title: "Von außen gesehen",
+    subtitle: "Was 25.581 Firmenwebsites über KI in Deutschland verraten",
     author: "Tim Löhr",
-    edition: "Arbeitsfassung 2026",
+    edition: "Ausgabe Oktober 2026",
     language: "de",
     audience: "Alle mit beruflichem KI-Bezug",
-    chapters: 10,
-    pageCount: 95,
-    readingTimeMinutes: 63,
-    resourceType: "HTML-Lesefassung",
+    chapters: 8,
+    pageCount: 34,
+    readingTimeMinutes: 24,
+    resourceType: "HTML-Lesefassung mit interaktiven Abbildungen",
     accessLabel: "kostenlos · jetzt lesen",
     statusLabel: "Lesefassung online",
     accessPolicy: "open-reader",
@@ -69,11 +69,11 @@ export const allBooks: readonly Book[] = [
     relatedResourceHref: "/eu-ai-act-kurs",
     relatedResourceLabel: "EU AI Act Kurs öffnen",
     description:
-      "Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfasst und wie du einen Benchmark liest, ohne ihn zu überdehnen.",
+      "Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite belegt und was nicht, wie Branche, Region und Stellenanzeigen zusammenhängen und was seit Februar 2025 für deinen Betrieb gilt. Die Aussagen gelten für diese Stichprobe, nicht für Deutschland.",
     highlights: [
-      "Qualitative Selbstprüfung ohne proprietären Score",
-      "Fünf Arbeitsfelder für digitale und KI-bezogene Reife",
-      "Benchmarks, Branchen und ihre Grenzen, eingeordnet",
+      "Eine Zahl, mehrere Messungen: warum KI-Anteile so weit auseinanderliegen",
+      "Sagen und zeigen: was das Wort KI auf Firmenwebsites belegt",
+      "Branche, Region und Stellen im Vergleich, mit Intervallen und Grenzen",
     ],
     pdfPath: "/api/buecher/ki-landschaft/download.pdf",
     pages: [
@@ -82,18 +82,18 @@ export const allBooks: readonly Book[] = [
       "/book-covers/ki-landschaft-2026-3.png",
     ],
     sourceOwner: "editorial:books",
-    lastReviewed: "2026-09-05",
-    nextReview: "2026-12-06",
+    lastReviewed: "2026-10-19",
+    nextReview: "2027-01-19",
     sourceInputs: [
-      "Public primary sources cited in the book",
-      "Qualitative AI-readiness frameworks",
-      "Editorial review of the learning-platform edition",
+      "Own analysis of company websites (aggregates, at least 5 hits per cell)",
+      "Published surveys by KfW, Destatis, ifo and Bitkom, each with date and base",
+      "Regulation (EU) 2024/1689 and the pages of the European Commission",
     ],
     licensePolicy:
       "Kostenlos online lesbar; PDF-Download nach Login verfügbar.",
     publicationStatus: "published",
     publicationReason:
-      "Editorial review and public-release approval are recorded for the HTML reader and authenticated PDF.",
+      "Neuausgabe vom Oktober 2026 mit Aggregaten aus einer eigenen Auswertung von Firmenwebsites. Redaktionelle Freigabe durch den Herausgeber vor dem Merge.",
   },
   {
     id: "ki-arbeitsalltag",

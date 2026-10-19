@@ -139,7 +139,7 @@ describe("book-reader-content: imported chapter bodies", () => {
       loadBookManifest("ki-landschaft", "en"),
     ]);
 
-    expect(englishManifest.title).toBe("AI in German SMEs");
+    expect(englishManifest.title).toBe("Seen from the outside");
     expect(englishManifest.chapters.map(({ slug }) => slug)).toEqual(
       germanManifest.chapters.map(({ slug }) => slug),
     );
@@ -152,13 +152,9 @@ describe("book-reader-content: imported chapter bodies", () => {
       "01_eisberg",
       "en",
     );
-    expect(chapter.meta.title).toBe("The iceberg problem");
-    expect(chapter.rawMarkdown).toContain(
-      "This book presents a verifiable method",
-    );
-    expect(chapter.rawMarkdown).not.toContain(
-      "Dieses Buch vermittelt eine prüfbare Arbeitsweise",
-    );
+    expect(chapter.meta.title).toBe("The number that does not add up");
+    expect(chapter.rawMarkdown).toContain("Ask around in autumn 2026");
+    expect(chapter.rawMarkdown).not.toContain("Wer sich im Herbst 2026");
   });
 
   it("fails closed when the requested language bundle is absent", async () => {

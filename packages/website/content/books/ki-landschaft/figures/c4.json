@@ -1,0 +1,290 @@
+{
+  "id": "c4",
+  "kind": "waterfall",
+  "title": "Eine Zahl, mehrere Messungen",
+  "alt": "Der Anteil der Firmenseiten mit dem Wort KI fällt von 8,2 % (alle erreichbaren Seiten) auf 4,3 %, wenn geteilte Adressen entfernt werden, und auf 3,8 % nach Gewichtung nach Land. Bei 840 Seiten, die zweimal gemessen wurden, sinkt er von 10,6 % auf 6,3 %.",
+  "caption": "Gleiche Frage, andere Messung: 8,2 % roh, 4,3 % mit eigener Adresse, 3,8 % gewichtet. Zweimal gemessen: 10,6 % und 6,3 % (16 Tage Abstand).",
+  "n": 37429,
+  "nNote": "37.429 / 25.581 / 24.944 / 840",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Die beiden Durchgänge lasen die Seiten auf unterschiedlichen Wegen, die doppelt gemessenen Seiten sind keine Zufallsauswahl. Geteilte Adressen gelten als mögliche Falschzuordnung (in einer Prüfung gehörte etwa jede dritte zur Firma). Der Faktor gilt nicht für die Gesamtzahl.",
+  "steps": [
+    {
+      "id": "roh",
+      "label": "Der Rohwert",
+      "reveal": [
+        "raw"
+      ],
+      "focus": [
+        "raw"
+      ]
+    },
+    {
+      "id": "geteilt",
+      "label": "Geteilte Adressen",
+      "reveal": [
+        "shared",
+        "own"
+      ],
+      "focus": [
+        "shared"
+      ]
+    },
+    {
+      "id": "gewichtet",
+      "label": "Nach Land gewichtet",
+      "reveal": [
+        "weighted",
+        "weighted_total"
+      ],
+      "focus": [
+        "weighted_total"
+      ]
+    },
+    {
+      "id": "nochmal",
+      "label": "Dieselben Firmen, zweimal gemessen",
+      "reveal": [
+        "scan1",
+        "scan2",
+        "scan2_total"
+      ],
+      "focus": [
+        "scan2"
+      ]
+    }
+  ],
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "raw",
+        "label": "Alle erreichbaren Seiten, roh",
+        "kind": "total",
+        "value": 8.2,
+        "n": 37429
+      },
+      {
+        "id": "shared",
+        "label": "Geteilte Adressen entfernt",
+        "kind": "delta",
+        "value": -3.9
+      },
+      {
+        "id": "own",
+        "label": "Nur eigene Adresse",
+        "kind": "total",
+        "value": 4.3,
+        "n": 25581
+      },
+      {
+        "id": "weighted",
+        "label": "Nach Land gewichtet",
+        "kind": "delta",
+        "value": -0.5
+      },
+      {
+        "id": "weighted_total",
+        "label": "Gewichteter Wert",
+        "kind": "total",
+        "value": 3.8,
+        "n": 24944
+      },
+      {
+        "id": "scan1",
+        "label": "Erste Messung",
+        "kind": "total",
+        "value": 10.6,
+        "gapBefore": true,
+        "n": 840
+      },
+      {
+        "id": "scan2",
+        "label": "Zweite Messung",
+        "kind": "delta",
+        "value": -4.3
+      },
+      {
+        "id": "scan2_total",
+        "label": "Danach",
+        "kind": "total",
+        "value": 6.3
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "aliases": {
+      "raw_share": "raw",
+      "shared_delta": "shared",
+      "own_share": "own",
+      "weighted_delta": "weighted",
+      "rescan_first": "scan1",
+      "rescan_delta": "scan2",
+      "rescan_second": "scan2_total"
+    },
+    "values": {
+      "weighted_share": {
+        "ref": "weighted_total",
+        "lo": 3.55,
+        "hi": 4.07
+      },
+      "shared_hosts_share": {
+        "value": 31.7,
+        "n": 37429,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "shared_sites": {
+        "value": 11848,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_lost": {
+        "value": 46,
+        "lo": 36,
+        "hi": 56,
+        "n": 89,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "rescan_lost_hits": {
+        "value": 41,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_first_hits": {
+        "value": 89,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_ratio": {
+        "value": 1.68,
+        "lo": 1.4,
+        "hi": 2.09,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "rescan_days": {
+        "value": 16,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "bayern_sample_share": {
+        "value": 41,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "bayern_units_share": {
+        "value": 18.3,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "bayern_pool_share": {
+        "value": 13.9,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "weighted_pool": {
+        "value": 3.96,
+        "lo": 3.68,
+        "hi": 4.25,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "audit_pairs": {
+        "value": 180,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "audit_own": {
+        "value": 55,
+        "lo": 45,
+        "hi": 65,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "audit_undecided": {
+        "value": 31,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "audit_shared": {
+        "value": 30,
+        "lo": 18,
+        "hi": 43,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "label_sample": {
+        "value": 269,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "label_rate": {
+        "value": 4.2,
+        "lo": 2.7,
+        "hi": 6.6,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "regex_precision": {
+        "value": 53,
+        "lo": 43,
+        "hi": 63,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "regex_recall": {
+        "value": 55,
+        "lo": 34,
+        "hi": 80,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

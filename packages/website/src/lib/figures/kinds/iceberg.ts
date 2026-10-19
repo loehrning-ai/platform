@@ -20,7 +20,7 @@ export function renderIceberg(ctx: Ctx<IcebergData>): ReactElement {
   const { data, width, pal, spec, p } = ctx;
   const rand = mulberry32(ctx.seed);
   const jit = (amount: number) => (rand() - 0.5) * 2 * amount;
-  const totalH = ctx.compact ? 300 : 340;
+  const totalH = ctx.compact ? 380 : 340;
   const fraction = Math.min(1, data.visible.value / data.total.value);
   const aboveH = totalH * fraction;
   const belowH = totalH - aboveH;
@@ -62,7 +62,7 @@ export function renderIceberg(ctx: Ctx<IcebergData>): ReactElement {
   const waterLines = wrapText(data.waterlineLabel, labelW, FS.small, 3, 700);
   const totalLines = wrapText(data.total.label, bracketX - M - 130, FS.small, 4);
   const nodes: SvgNode[] = [
-    el("rect", { x: 0, y: yw, width, height: belowH + 24, fill: pal.inset, opacity: op(fLine) }),
+    el("rect", { x: 0, y: yw, width, height: bottom + 14 + Math.max(1, totalLines.length) * 15 - yw, fill: pal.inset, opacity: op(fLine) }),
     el("g", { transform: translate(0, (1 - fBody) * 36), opacity: op(fBody) },
       el("path", { d: poly(body), fill: pal.accent, stroke: pal.ink, strokeWidth: 1.5, strokeLinejoin: "round" }),
     ),

@@ -23,14 +23,12 @@ export interface TickerSpec {
   readonly limitation: string;
 }
 
-/** One chip of the waffle. Evidence types overlap, so each chip is its own share of the 100. */
+/** One chip of the waffle: a reading of the question, lit as its own share of the 100 dots. */
 export interface WaffleChip {
   readonly id: string;
   readonly label: string;
   /** Dots of 100. Not a firm count. */
   readonly dots: number;
-  /** Firms behind the chip. Must be 0 or at least 5. */
-  readonly hits: number;
 }
 
 /** East or West as a group, for the Länder tile map. Raw shares, not adjusted. */

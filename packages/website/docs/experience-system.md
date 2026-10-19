@@ -185,6 +185,7 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - One region may carry meaningful motion at a time.
 - Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. Two narrow exceptions are defined below: the homepage globe (the desktop projection from 1024px, the phone horizon globe below it, never both) and the `/login` dot field, which the owner requested as that page's background.
 - Every gesture and animated comparison has a keyboard, tap, and static reduced-motion equivalent.
+- The data book (`/buecher/ki-landschaft`) adds two documented scroll-linked exceptions, C2 and C4, and a one-shot cover settle. They are the only scroll-linked motion on the site; see "Data book" below.
 - Homepage boards (course route, resources): under a mouse a card tilts at most 4 degrees towards the pointer and a soft paper light follows it, behind the text. Touch and pen get no tilt; reduced motion holds the cards flat. The route's lesson count ticks up once (450ms) when it first scrolls into view; the server renders the final number, and a count already on screen never restarts.
 
 ### Homepage globe: narrow continuous-motion exception
@@ -225,6 +226,28 @@ The exception has these enforced boundaries:
 - **It is cheap.** Each shape is rasterized onto the dot grid once and then moves as a rigid body. Frames are paced at about 30fps, the backing store is capped at DPR 2, and nothing is scheduled while the document is hidden or the scene is paused. The scene clock only advances on drawn frames, so motion resumes without a jump.
 - **A visible 44px pause toggle sits at the top right of the scene whenever the shapes move** (WCAG 2.2.2, because the drift lasts longer than five seconds): a real button with a fixed localized name ("Hintergrundbewegung anhalten" / "Pause background motion"), `aria-pressed` for its state, `aria-controls` naming the backdrop, a visible teal focus ring, and a choice remembered in this browser.
 - **The card's entrance is finite.** It rises in once (450ms, its rows staggered by 40ms) under `prefers-reduced-motion: no-preference` only, and ends in its natural state.
+
+### Data book: two scroll-linked exceptions and a one-shot cover
+
+The data book ("Von außen gesehen", `/buecher/ki-landschaft`) is the one place where scroll position drives a figure, because two of its figures are an argument that unfolds in order and a still frame would drop the order. Everything else in the book follows the rules above: figures are learner-triggered (120 to 200 ms) or a finite reveal (250 to 450 ms), transform and opacity only, and one moving region at a time. Each figure is a pure function of `progress` (`renderFigure(spec, progress)` in `src/lib/figures`); scroll, a button, autoplay, reduced motion and print only choose the number. Reduced motion, no JavaScript and print call it with 1.
+
+**C2, the iceberg: scroll scrub.** Where the browser supports `animation-timeline: view()`, CSS moves the parts of the iceberg with the scroll position while the stage is in view; elsewhere one IntersectionObserver plays the same keyframes once. No scroll listener, no layout property, only transform and opacity. Reduced motion and no JS show the finished iceberg. The figure states in text what it shows ("Sichtbar sind 2,2 Prozent ...") so the scrub carries nothing that is not also written.
+
+**C4, the waterfall: sticky stage.** One sticky stage (from 1024px beside the text, on a phone above it) with four step cards of at least 70svh. One IntersectionObserver sets `data-step`; the chart draws `stepProgress(spec, step)` and tweens between steps in 400 ms. The same steps are real buttons (`aria-pressed`, `aria-label` "Schritt n"), so the keyboard has the whole path. Under reduced motion, without JS and on screens shorter than 700px every step is stacked as its own static figure, decided in CSS only so hydration never changes the layout. The stage must fit the screen with its readout and buttons (`max-height` on the chart). Steps that come later are drawn as dashed outlines ("kommt noch") so the empty part of the chart reads as a plan.
+
+**Cover hero: one settle.** The 100 dots of the book page settle once (760 ms, staggered), the marked ones turn to the accent, and the headline number lands (480 ms). CSS only, inside `prefers-reduced-motion: no-preference`, no loop, no script; the base style is the finished cover. The number and the count of marked dots are read from the C4 figure data.
+
+The boundaries are enforced by tests: `src/components/book-reader/chapter-figures.test.tsx` (the cover CSS animates only inside the no-preference query, never loops, moves no layout property), `src/components/book-figures/story/story-contract.test.ts` and `story-islands.test.tsx` (steps, buttons, finished state at progress 1), and `src/lib/motion-policy-contract.test.ts` (no catch-all transition). A figure that needs a third scroll-linked effect needs a new entry here first.
+
+### Data book: data policy
+
+The book shows aggregates and nothing else. These rules are tests, not intentions:
+
+- **Aggregates only, k = 5.** A count of 1 to 4 is never stored; the value is `null` and the figure prints "weniger als 5" (hatched). No firm names, domains, URLs, addresses, e-mails, phone numbers, prices or per-site rows, and no ranking of named firms. Kreise and Länder are places, not firms; the Kreis funnel names only the few places that leave the chance band and offers no ranked list.
+- **One source for numbers.** `content/books/ki-landschaft/figures/<id>.json` (a FigureSpec plus `meta`: `methodVersion`, `frozenOn`, token `values` and `aliases`). The chart, the prose tokens (`{{c4.weighted_share}}`, resolved at build time; an unknown token fails the build), the CSV files in `public/books/ki-landschaft/data/` (`bun run book:data`, checked byte for byte by `src/lib/book-figures.test.ts`) and the PDF figures (`scripts/render-figures.mjs`) all read these files. List the tokens with `bun run book:tokens`.
+- **Every file passes the privacy gate** before the reader sees it: `parseFigureSpec` and `findPrivacyFindings` at load time (a failing file stops the build), the schema-and-denylist mirror in `src/lib/figures/privacy-gate.test.ts` over the figures folder, and the private `privacy_gate.py` (database hash check) before a file is copied in. The repository never holds a database copy, a per-site flag or a URL list.
+- **Honest labels.** A figure whose `meta.methodVersion` starts with `v0` (the export before the one-method rescan) shows "Vorläufige Daten" until the final export replaces it. Every figure carries n, source, date and limits next to the chart ("Daten & Grenzen"), and the table of the plotted numbers is part of the page.
+- **No scores, no rankings.** The old 0 to 100 score is gone. The book measures one thing, "das Wort KI steht auf der Website", for firms with a findable website, and says that it is not adoption.
 
 ### Gallery previews: why there are no live miniatures
 

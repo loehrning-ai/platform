@@ -2,40 +2,14 @@ import { expect, test, type Page } from "@playwright/test";
 import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 const CHAPTERS = [
-  ["01_eisberg", "Das Eisberg-Problem", "The iceberg problem"],
-  [
-    "02_methodik",
-    "Methodik ohne Scheingenauigkeit",
-    "Method without spurious precision",
-  ],
-  [
-    "03_reifegrad_ueberblick",
-    "Evidenzbasierte Selbstprüfung",
-    "Evidence-based self-assessment",
-  ],
-  ["04_bundesland", "Regionale Rahmenbedingungen", "Regional conditions"],
-  [
-    "05_branchen",
-    "Branchenmuster als Hypothesen",
-    "Sector patterns as hypotheses",
-  ],
-  [
-    "06_eu_ki_verordnung",
-    "EU-KI-Verordnung und Artikel 4",
-    "The EU AI Act and Article 4",
-  ],
-  [
-    "07_schnellstart",
-    "Schnellstart in sieben Schritten",
-    "A seven-step quick start",
-  ],
-  [
-    "08_fahrplan",
-    "Fahrplan für die nächsten Monate",
-    "Roadmap for the coming months",
-  ],
-  ["09_ausblick", "Ausblick", "Outlook"],
-  ["10_anhang", "Anhang", "Appendix"],
+  ["01_eisberg", "Die Zahl, die nicht stimmt", "The number that does not add up"],
+  ["02_sagen_zeigen", "Sagen und zeigen", "Saying and showing"],
+  ["03_zweimal_gemessen", "Dieselbe Firma, zweimal gemessen", "The same firm, measured twice"],
+  ["04_branche_land", "Branche schlägt Land", "Industry beats state"],
+  ["05_reden_einstellen", "Reden und Einstellen", "Talking and hiring"],
+  ["06_eu_ki_verordnung", "Was seit Februar 2025 gilt", "What has applied since February 2025"],
+  ["07_pilot", "Dein erster Pilot", "Your first pilot"],
+  ["08_methodik", "Methode und Grenzen", "Method and limits"],
 ] as const;
 
 const OVERVIEW_ROUTES = [
@@ -46,8 +20,8 @@ const OVERVIEW_ROUTES = [
   },
   {
     path: "/buecher/ki-landschaft",
-    deHeading: "KI im deutschen Mittelstand",
-    enHeading: "AI in German SMEs",
+    deHeading: "Von außen gesehen",
+    enHeading: "Seen from the outside",
   },
 ] as const;
 
@@ -193,7 +167,7 @@ for (const width of [320, 390, 768, 1440] as const) {
             name: locale === "de" ? "Inhaltsverzeichnis" : "Table of contents",
           });
           const chapterLinks = contents.getByRole("link");
-          await expect(chapterLinks).toHaveCount(10);
+          await expect(chapterLinks).toHaveCount(8);
           await expect(chapterLinks.first()).toHaveAttribute(
             "hreflang",
             locale,
@@ -212,8 +186,8 @@ for (const width of [320, 390, 768, 1440] as const) {
         } else {
           const previewName =
             locale === "de"
-              ? "Vorschau von „KI im deutschen Mittelstand“ öffnen"
-              : "Open the cover preview for “AI in German SMEs”";
+              ? "Vorschau von „Von außen gesehen“ öffnen"
+              : "Open the cover preview for “Seen from the outside”";
           await page.getByRole("button", { name: previewName }).click();
           await expect(page.getByRole("dialog")).toBeVisible();
           await page
@@ -263,14 +237,14 @@ for (const width of [320, 390, 768, 1440] as const) {
 
       const firstPath = localized("/buecher/ki-landschaft/01_eisberg", locale);
       const secondPath = localized(
-        "/buecher/ki-landschaft/02_methodik",
+        "/buecher/ki-landschaft/02_sagen_zeigen",
         locale,
       );
       await page.goto(firstPath, { waitUntil: "domcontentloaded" });
       await assertReaderReady(page, "01_eisberg");
       await page.keyboard.press("ArrowRight");
       await expect(page).toHaveURL(new RegExp(`${secondPath}$`));
-      await assertReaderReady(page, "02_methodik");
+      await assertReaderReady(page, "02_sagen_zeigen");
       await page.keyboard.press("ArrowLeft");
       await expect(page).toHaveURL(new RegExp(`${firstPath}$`));
       await assertReaderReady(page, "01_eisberg");
@@ -289,14 +263,11 @@ test.describe("published book chapters without JavaScript", () => {
     }) => {
       const basePath = "/buecher/ki-landschaft/01_eisberg";
       const path = localized(basePath, locale);
-      const title = locale === "de" ? "Das Eisberg-Problem" : "The iceberg problem";
-      // Copy lock updated: the chapter now opens on the debate itself rather
-      // than describing where the debate points.
+      const title = locale === "de" ? "Die Zahl, die nicht stimmt" : "The number that does not add up";
       const bodyText =
         locale === "de"
-          ? "Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle."
-          : "The loud AI debate is about software development and new models.";
-      const linkName = locale === "de" ? "EU AI Act Kurs" : "EU AI Act course";
+          ? "Wer sich im Herbst 2026 umhört, bekommt Antworten zwischen 20 und 57 Prozent"
+          : "Ask around in autumn 2026 and you get answers between 20 and 57 percent";
       const tableLabel =
         locale === "de"
           ? "Tabelle, horizontal scrollbar"
@@ -311,16 +282,19 @@ test.describe("published book chapters without JavaScript", () => {
       const article = page.getByRole("article", { name: title });
       await expect(article).toBeVisible();
       await expect(article).toContainText(bodyText);
-      await expect(article.getByRole("link", { name: linkName })).toHaveAttribute(
-        "href",
-        localized("/eu-ai-act-kurs", locale),
-      );
-      const tableRegion = article.getByRole("group", { name: tableLabel });
-      await expect(tableRegion.getByRole("table")).toContainText(
-        locale === "de" ? "Sichtbare Exposition" : "Visible exposure",
-      );
+      // The source links stay real links, and the figures are in the server markup as finished charts.
+      await expect(article.getByRole("link", { name: "KfW" }).first()).toHaveAttribute("href", /kfw\.de/);
+      await expect(article.locator("figure svg title").first()).toBeAttached();
       await expect(page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]')).toHaveCount(0);
       await assertLocaleMetadata(page, basePath, locale);
+      // The method appendix holds the tables: readable without JavaScript.
+      const appendixPath = localized("/buecher/ki-landschaft/08_methodik", locale);
+      const appendix = await page.goto(appendixPath, { waitUntil: "domcontentloaded" });
+      expect(appendix?.status(), appendixPath).toBe(200);
+      const tableRegion = page.getByRole("group", { name: tableLabel }).first();
+      await expect(tableRegion.getByRole("table")).toContainText(
+        locale === "de" ? "Grundgesamtheit" : "Population",
+      );
     });
   }
 });

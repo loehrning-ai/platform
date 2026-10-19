@@ -265,18 +265,18 @@ export const C12_TIMELINE: FigureSpecOf<"timeline"> = {
   id: "c12-ai-act",
   kind: "timeline",
   title: "Was seit Februar 2025 gilt: die KI-Verordnung in Stufen",
-  alt: "Zeitleiste der KI-Verordnung. 1. August 2024 Inkrafttreten. 2. Februar 2025 Verbote und KI-Kompetenz. 2. August 2025 Regeln für KI-Modelle mit allgemeinem Verwendungszweck. 2. August 2026 die meisten übrigen Pflichten, Stand offen. 2. August 2027 Hochrisiko-Systeme in regulierten Produkten.",
+  alt: "Zeitleiste der KI-Verordnung. 1. August 2024 Inkrafttreten. 2. Februar 2025 Verbote und KI-Kompetenz. 2. August 2025 Regeln für KI-Modelle mit allgemeinem Verwendungszweck. 2. August 2026 die Verordnung gilt allgemein, mit Ausnahmen. 2. Dezember 2027 eigenständige Hochrisiko-Systeme nach Anhang III. 2. August 2028 Hochrisiko-Systeme in regulierten Produkten nach Anhang I.",
   caption: "Die Pflicht zur KI-Kompetenz (Artikel 4) gilt seit Februar 2025. Die späteren Stufen betreffen vor allem Anbieter von Hochrisiko-Systemen.",
   n: 0,
   source: "Verordnung (EU) 2024/1689, Artikel 113",
   asOf: "2026-10-18",
   limitation:
-    "Vorläufige Daten, vor der Veröffentlichung am Originaltext geprüft. Ob einzelne Fristen durch den Digital Omnibus verschoben werden, ist offen. Das ist keine Rechtsberatung.",
+    "Die Termine folgen dem Text des Kapitels und sind vor der Veröffentlichung am Originaltext zu prüfen. Das ist keine Rechtsberatung.",
   steps: [
     { id: "s1", label: "2024", reveal: ["e1"], focus: ["e1"] },
     { id: "s2", label: "Feb. 2025", reveal: ["e2"], focus: ["e2"] },
     { id: "s3", label: "Aug. 2025", reveal: ["e3"], focus: ["e3"] },
-    { id: "s4", label: "ab Aug. 2026", reveal: ["e4", "e5"], focus: ["e4", "e5"] },
+    { id: "s4", label: "ab Aug. 2026", reveal: ["e4", "e5", "e6"], focus: ["e4", "e5", "e6"] },
   ],
   data: {
     events: [
@@ -300,15 +300,24 @@ export const C12_TIMELINE: FigureSpecOf<"timeline"> = {
       {
         id: "e4",
         date: "2026-08-02",
-        label: "Die meisten übrigen Pflichten, auch für Hochrisiko-Systeme nach Anhang III",
-        detail: "Termin laut Verordnung. Eine Verschiebung für Hochrisiko-Systeme wird diskutiert. Wir prüfen den Stand am Originaltext.",
-        tag: "Hochrisiko",
-        status: "offen",
+        label: "Die Verordnung gilt allgemein, mit Ausnahmen",
+        detail: "Die Behörden setzen die Regeln durch. Für Hochrisiko-Systeme gelten spätere Fristen.",
+        tag: "Allgemein",
+        status: "gilt",
       },
       {
         id: "e5",
-        date: "2027-08-02",
-        label: "Hochrisiko-Systeme in regulierten Produkten",
+        date: "2027-12-02",
+        label: "Eigenständige Hochrisiko-Systeme nach Anhang III",
+        detail: "Verschoben durch die Änderungsverordnung (EU) 2026/1744.",
+        tag: "Anhang III",
+        status: "kommt",
+      },
+      {
+        id: "e6",
+        date: "2028-08-02",
+        label: "Hochrisiko-Systeme in regulierten Produkten nach Anhang I",
+        detail: "Ebenfalls verschoben durch (EU) 2026/1744.",
         tag: "Anhang I",
         status: "kommt",
       },
@@ -320,7 +329,7 @@ export const C12_STEP_TEXTS: readonly TimelineStepText[] = [
   { id: "s1", label: "2024", text: "Am 1. August 2024 trat die Verordnung in Kraft. Die meisten Pflichten kamen erst später." },
   { id: "s2", label: "Feb. 2025", text: "Seit dem 2. Februar 2025 gelten die Verbote und die Pflicht zur KI-Kompetenz. Sie trifft jede Firma, die KI-Systeme einsetzt, auch kleine." },
   { id: "s3", label: "Aug. 2025", text: "Seit dem 2. August 2025 gelten die Regeln für KI-Modelle mit allgemeinem Verwendungszweck. Sie richten sich vor allem an deren Anbieter." },
-  { id: "s4", label: "ab Aug. 2026", text: "Für den 2. August 2026 sieht die Verordnung die meisten übrigen Pflichten vor, für Produkte ein Jahr später. Ob und wie sich Fristen verschieben, ist noch offen." },
+  { id: "s4", label: "ab Aug. 2026", text: "Seit dem 2. August 2026 gilt die Verordnung allgemein. Eigenständige Hochrisiko-Systeme folgen am 2. Dezember 2027, Systeme in regulierten Produkten am 2. August 2028." },
 ];
 
 /* ------------------------------------------------------------------ C14 */

@@ -43,6 +43,40 @@ export interface FigureStep {
   readonly focus?: readonly string[];
 }
 
+/**
+ * What the export adds to a frozen spec (written by the analysis step, read by
+ * the reader). `values` and `aliases` are the number tokens of the prose:
+ * `{{c4.weighted_share}}` resolves from here. A value with `ref` takes its
+ * number from the element of that id, so a restated number cannot drift from
+ * the chart.
+ */
+export interface FigureMetaValue {
+  readonly value?: number;
+  /** Element id whose number this value restates. */
+  readonly ref?: string;
+  readonly lo?: number;
+  readonly hi?: number;
+  readonly n?: number;
+  readonly fmt?: NumFmt;
+}
+
+export interface FigureExportMeta {
+  /** "v0-pre-rescan" until the one-method rescan replaces the aggregates. */
+  readonly methodVersion?: string;
+  /** ISO date of the frozen export. */
+  readonly frozenOn?: string;
+  readonly values?: Readonly<Record<string, FigureMetaValue>>;
+  /** Readable token name to element id: `raw_share` -> `raw`. */
+  readonly aliases?: Readonly<Record<string, string>>;
+}
+
+/** One note on the single most telling mark of a figure. */
+export interface FigureAnnotation {
+  /** Element id (data-id) the note points at. */
+  readonly id: string;
+  readonly text: string;
+}
+
 export interface FigureBase {
   readonly id: string;
   /** Short title, also the accessible name of the SVG. */
@@ -61,6 +95,9 @@ export interface FigureBase {
   readonly steps?: readonly FigureStep[];
   /** Seed for jitter; defaults to a hash of the id. */
   readonly seed?: number;
+  readonly meta?: FigureExportMeta;
+  /** Drawn at progress 1 as a direct label with a leader to the marked element. */
+  readonly annotation?: FigureAnnotation;
 }
 
 /* ---------------------------------------------------------------- waffle */
@@ -221,6 +258,8 @@ export interface WaterfallData {
   readonly items: readonly WaterfallItem[];
   readonly fmt: NumFmt;
   readonly orientation?: "auto" | "vertical" | "horizontal";
+  /** Legend words that replace the defaults (Messwert, Rückgang, Anstieg), for figures that do not show measurements. */
+  readonly legend?: { readonly total?: string; readonly down?: string; readonly up?: string };
 }
 
 /* ---------------------------------------------------------------- ladder */

@@ -12,7 +12,7 @@ import {
  * no "Nächstes Kapitel"), the "Kapitel X / Y" position indicator, and the
  * ArrowLeft/ArrowRight window key bindings. Locators use ARIA roles/labels +
  * the stable chapter slugs from content/books/ki-landschaft/manifest.json (the
- * only book in the published catalog, src/lib/books.ts — 10 chapters, enough
+ * only book in the published catalog, src/lib/books.ts — 8 chapters, enough
  * to exercise first/mid/last boundary behaviour), so a prose refresh stays
  * green while a broken neighbour link or missing boundary fails. The chapter
  * is exposed through one h1 and a named article.
@@ -22,11 +22,11 @@ const SLUG = "ki-landschaft";
 
 // Real chapters (order is load-bearing for prev/next neighbour computation).
 const FIRST = { slug: "01_eisberg" } as const;
-const MID = { slug: "03_reifegrad_ueberblick", title: "Evidenzbasierte Selbstprüfung" } as const;
-const MID_PREV = { slug: "02_methodik" } as const;
-const MID_NEXT = { slug: "04_bundesland", title: "Regionale Rahmenbedingungen" } as const;
-const LAST = { slug: "10_anhang" } as const;
-const LAST_PREV = { slug: "09_ausblick" } as const;
+const MID = { slug: "03_zweimal_gemessen", title: "Dieselbe Firma, zweimal gemessen" } as const;
+const MID_PREV = { slug: "02_sagen_zeigen" } as const;
+const MID_NEXT = { slug: "04_branche_land", title: "Branche schlägt Land" } as const;
+const LAST = { slug: "08_methodik" } as const;
+const LAST_PREV = { slug: "07_pilot" } as const;
 
 const chapterPath = (slug: string) => `/buecher/${SLUG}/${slug}`;
 const chapterUrl = (slug: string) => new RegExp(`/buecher/${SLUG}/${slug}$`);

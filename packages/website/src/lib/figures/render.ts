@@ -5,6 +5,7 @@
  */
 
 import type { ReactElement } from "react";
+import { withAnnotation } from "./annotation.ts";
 import { clamp, hashSeed } from "./math.ts";
 import { PALETTES } from "./palette.ts";
 import { makeFocus, type Ctx } from "./svg.ts";
@@ -49,22 +50,33 @@ function context<D>(spec: FigureSpec, data: D, progress: number, options: Render
   };
 }
 
+/** Draws a kind and adds the figure's annotation, when it has one. */
+function finish<D>(
+  draw: (ctx: Ctx<D>) => ReactElement,
+  spec: FigureSpec & { readonly data: D },
+  progress: number,
+  options: RenderOptions,
+): ReactElement {
+  const ctx = context(spec, spec.data, progress, options);
+  return withAnnotation(draw(ctx), ctx as Ctx<unknown>, spec.annotation);
+}
+
 export function renderFigure(
   spec: FigureSpec,
   progress = 1,
   options: RenderOptions = {},
 ): ReactElement {
   switch (spec.kind) {
-    case "waffle": return renderWaffle(context(spec, spec.data, progress, options));
-    case "bars": return renderBars(context(spec, spec.data, progress, options));
-    case "dotplot": return renderDotplot(context(spec, spec.data, progress, options));
-    case "tilemap": return renderTilemap(context(spec, spec.data, progress, options));
-    case "funnel": return renderFunnel(context(spec, spec.data, progress, options));
-    case "dumbbell": return renderDumbbell(context(spec, spec.data, progress, options));
-    case "lorenz": return renderLorenz(context(spec, spec.data, progress, options));
-    case "waterfall": return renderWaterfall(context(spec, spec.data, progress, options));
-    case "ladder": return renderLadder(context(spec, spec.data, progress, options));
-    case "timeline": return renderTimeline(context(spec, spec.data, progress, options));
-    case "iceberg": return renderIceberg(context(spec, spec.data, progress, options));
+    case "waffle": return finish(renderWaffle, spec, progress, options);
+    case "bars": return finish(renderBars, spec, progress, options);
+    case "dotplot": return finish(renderDotplot, spec, progress, options);
+    case "tilemap": return finish(renderTilemap, spec, progress, options);
+    case "funnel": return finish(renderFunnel, spec, progress, options);
+    case "dumbbell": return finish(renderDumbbell, spec, progress, options);
+    case "lorenz": return finish(renderLorenz, spec, progress, options);
+    case "waterfall": return finish(renderWaterfall, spec, progress, options);
+    case "ladder": return finish(renderLadder, spec, progress, options);
+    case "timeline": return finish(renderTimeline, spec, progress, options);
+    case "iceberg": return finish(renderIceberg, spec, progress, options);
   }
 }

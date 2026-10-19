@@ -1,0 +1,52 @@
+{
+  "details": [
+    {
+      "id": "overview",
+      "title": "20 bis 57 Prozent, je nachdem, wer fragt",
+      "wording": "Derselbe Verband, dieselbe Größenschwelle, zwei Fragen: Bitkom meldet 41 Prozent, wenn es nach genutzten Technologien fragt (Januar bis Februar 2026, n = 604), und 57 Prozent, wenn es zwischen Einsatz, Plan und Diskussion unterscheidet (Juli bis August 2026, n = 603).",
+      "base": "Vier Basen: Mittelstand ab dem kleinsten Betrieb (KfW), Firmen ab 10 (Destatis), Firmen der Konjunkturumfrage (ifo), Firmen ab 20 Beschäftigten (Bitkom).",
+      "sample": "Alle vier Umfragen sind Befragungen, keine Messung auf der Website.",
+      "limits": "Wer eine einzelne Zahl nennt, sollte dazu sagen, gemessen womit."
+    },
+    {
+      "id": "kfw",
+      "title": "KfW: 20 Prozent",
+      "wording": "Haben Sie in Ihrem Unternehmen in den Jahren 2022 bis 2024 Anwendungen von Künstlicher Intelligenz genutzt? Vorher steht eine Definition mit Beispielen wie Texterkennung und Bots.",
+      "base": "Mittelstand, auch Firmen unter 5 Beschäftigten. Hochgerechnet auf knapp 780.000 Firmen. Der Fünfjahresvergleich (2016 bis 2018: 4 Prozent) misst ein anderes Zeitfenster.",
+      "sample": "Gut 5.200 Antworten aus dem KfW-Mittelstandspanel.",
+      "limits": "Das Dreijahresfenster zählt jeden, der irgendwann KI genutzt hat. Wie der Mittelstand abgegrenzt ist, nennen die beiden Papiere nicht."
+    },
+    {
+      "id": "destatis",
+      "title": "Destatis: 26 Prozent",
+      "wording": "Nutzt Ihr Unternehmen eine der folgenden Technologien der künstlichen Intelligenz? Acht Technologien, jeweils ja oder nein. Der Wert zählt Firmen mit mindestens einem Ja.",
+      "base": "Firmen ab 10 Beschäftigten in ausgewählten Wirtschaftsbereichen, ohne Landwirtschaft, Finanzsektor und viele Dienstleister. Nach Größe: 10 bis 49 Beschäftigte 23 Prozent, ab 250 Beschäftigte 57 Prozent.",
+      "sample": "Geplante Stichprobe 20.000 Firmen, Rücklauf 24,6 Prozent, freiwillig, online.",
+      "limits": "2025 wechselte die Zähleinheit. Der Anstieg von 20 auf 26 Prozent ist deshalb kein sauberer Trend."
+    },
+    {
+      "id": "ifo",
+      "title": "ifo: 54,5 Prozent",
+      "wording": "Gefragt wird, ob KI im Unternehmen bereits genutzt wird, ihre Nutzung geplant ist, diskutiert wird oder kein Thema ist. Eine Definition von KI gibt es nicht. Wortlaut von 2024; ob 2026 identisch gefragt wurde, ist nicht veröffentlicht.",
+      "base": "Firmen der ifo Konjunkturumfrage aus Industrie, Dienstleistungen, Handel und Bauhauptgewerbe. Mai 2025: 40,9 Prozent.",
+      "sample": "Für 2026 nicht veröffentlicht. 2024 haben rund 6.000 Firmen geantwortet.",
+      "limits": "Wer KI selbst definiert, zählt auch ChatGPT mit. Stichprobe und Gewichtung stehen nicht auf der Ergebnisseite."
+    },
+    {
+      "id": "bitkom",
+      "title": "Bitkom: 57 Prozent",
+      "wording": "Inwieweit setzt Ihr Unternehmen KI ein bzw. plant oder diskutiert den Einsatz? Antworten: Einsatz, geplant oder diskutiert, kein Thema.",
+      "base": "Firmen ab 20 Beschäftigten, gewichtet nach der Umsatzsteuerstatistik. 2025: 36 Prozent, 2024: 20 Prozent.",
+      "sample": "n = 603, Telefoninterviews, befragt wurde die Person, die für KI oder Digitalisierung zuständig ist. Fehlerspanne rund 4 Prozentpunkte.",
+      "limits": "Im Auftrag eines Branchenverbands. Wer Pläne und Diskussion auf derselben Skala sieht, liest Einsatz weiter oder enger."
+    },
+    {
+      "id": "ours",
+      "title": "Unser Maß: {{c4.weighted_share.num}} Prozent",
+      "wording": "Keine Frage an Menschen: Die Startseite wird gelesen und gezählt, ob das Wort KI oder künstliche Intelligenz im Text steht.",
+      "base": "Firmen, denen per Suche eine Website zugeordnet wurde, nur Seiten mit eigener Adresse, gewichtet nach dem Anteil der Länder im Unternehmensregister 2024.",
+      "sample": "{{c4.weighted_share.n}} Websites, Intervall {{c4.weighted_share.range}}. Scan März bis Mai 2026.",
+      "limits": "Ein Wort auf der Website ist kein Einsatz. Firmen ohne Website fehlen, kleine Firmen sind kaum sichtbar."
+    }
+  ]
+}

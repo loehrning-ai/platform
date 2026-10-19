@@ -56,6 +56,33 @@ function fmt(data: Json, path: string): void {
   need(isObject(data["fmt"]) && ["percent", "number", "decimal"].includes(String((data["fmt"] as Json)["style"])), `${path}.fmt.style`, "must be percent, number or decimal");
 }
 
+function validateMeta(meta: unknown): void {
+  need(isObject(meta), "spec.meta", "must be an object");
+  const m = meta as Json;
+  if (m["values"] !== undefined) {
+    need(isObject(m["values"]), "spec.meta.values", "must be an object");
+    for (const [key, entry] of Object.entries(m["values"] as Json)) {
+      const path = `spec.meta.values.${key}`;
+      need(/^[a-z0-9][a-z0-9_]*$/.test(key), path, "token names use lower-case letters, digits and _");
+      need(isObject(entry), path, "must be an object");
+      const e = entry as Json;
+      need(e["ref"] !== undefined || typeof e["value"] === "number", path, "needs a value or a ref");
+      for (const field of ["value", "lo", "hi", "n"]) {
+        if (e[field] !== undefined) need(typeof e[field] === "number" && Number.isFinite(e[field]), `${path}.${field}`, "must be a finite number");
+      }
+      if (e["ref"] !== undefined) need(typeof e["ref"] === "string" && e["ref"] !== "", `${path}.ref`, "must be an element id");
+      if (e["fmt"] !== undefined) fmt(e, path);
+    }
+  }
+  if (m["aliases"] !== undefined) {
+    need(isObject(m["aliases"]), "spec.meta.aliases", "must be an object");
+    for (const [key, target] of Object.entries(m["aliases"] as Json)) {
+      need(/^[a-z0-9][a-z0-9_]*$/.test(key), `spec.meta.aliases.${key}`, "token names use lower-case letters, digits and _");
+      need(typeof target === "string" && target !== "", `spec.meta.aliases.${key}`, "must be an element id");
+    }
+  }
+}
+
 export function parseFigureSpec(raw: unknown): FigureSpec {
   need(isObject(raw), "spec", "must be an object");
   for (const key of ["id", "title", "alt", "caption", "source", "asOf", "limitation"]) nonEmpty(raw, key, "spec");
@@ -70,6 +97,13 @@ export function parseFigureSpec(raw: unknown): FigureSpec {
   if (raw["steps"] !== undefined) {
     need(Array.isArray(raw["steps"]), "spec.steps", "must be an array");
     itemsWithId(raw["steps"] as unknown[], "spec.steps");
+  }
+
+  if (raw["meta"] !== undefined) validateMeta(raw["meta"]);
+  if (raw["annotation"] !== undefined) {
+    need(isObject(raw["annotation"]), "spec.annotation", "must be an object");
+    nonEmpty(raw["annotation"] as Json, "id", "spec.annotation");
+    nonEmpty(raw["annotation"] as Json, "text", "spec.annotation");
   }
 
   switch (kind) {

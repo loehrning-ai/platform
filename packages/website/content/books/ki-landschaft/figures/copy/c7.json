@@ -1,0 +1,6 @@
+{
+  "regions": [
+    { "id": "ost", "label": "Osten (5 Länder)", "ref": "east_share" },
+    { "id": "west", "label": "Westen (10 Länder)", "ref": "west_share" }
+  ]
+}
