@@ -77,6 +77,9 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/hilfe/eigene-ki",
   "/impressum",
   "/datenschutz",
+  // The public explainer for the research scanner (User-Agent loehrningBot):
+  // site owners follow the link in the bot's User-Agent to this page.
+  "/bot",
 ] as const;
 
 const PUBLIC_NOINDEX_PATHS = [
