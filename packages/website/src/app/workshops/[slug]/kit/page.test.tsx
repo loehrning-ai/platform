@@ -23,7 +23,7 @@ describe("workshop kit page route", () => {
   });
 
   it("prerenders only the workshops that have a kit block and 404s every other slug", async () => {
-    expect(await generateStaticParams()).toEqual([{ slug: "esg-berichte-mit-ki" }]);
+    expect(await generateStaticParams()).toEqual([{ slug: "esg-berichte-mit-ki" }, { slug: "ki-im-unternehmen-sicher-nutzen" }]);
     expect(dynamicParams).toBe(false);
     getRequestLocaleMock.mockResolvedValue("de");
     await expect(
@@ -52,6 +52,23 @@ describe("workshop kit page route", () => {
     }
     expect(metadata.robots).toMatchObject({ index: true, follow: true });
     expect(metadata.openGraph).toMatchObject({ url: `https://loehrning.ai${canonical}` });
+  });
+
+  it("renders the audit workshop kit through the same route, in both locales", async () => {
+    const auditProps = { params: Promise.resolve({ slug: "ki-im-unternehmen-sicher-nutzen" }) };
+    for (const [locale, canonical] of [
+      ["de", "/workshops/ki-im-unternehmen-sicher-nutzen/kit"],
+      ["en", "/en/workshops/ki-im-unternehmen-sicher-nutzen/kit"],
+    ] as const) {
+      getRequestLocaleMock.mockResolvedValue(locale);
+      const metadata = await generateMetadata(auditProps);
+      expect(metadata.alternates).toMatchObject({ canonical });
+      expect(metadata.robots).toMatchObject({ index: true, follow: true });
+      const json = JSON.stringify(await WorkshopKitPage(auditProps));
+      expect(json).toContain(`https://loehrning.ai${canonical}`);
+      expect(json).toContain("application/zip");
+      expect(json).toContain("/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip");
+    }
   });
 
   it("returns the not-found title for an unknown slug", async () => {

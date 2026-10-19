@@ -18,10 +18,11 @@
 import type { Locale } from "./i18n/locale";
 import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
+import { AI_AT_WORK_WORKSHOP } from "./workshops-ai-at-work";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
-/** Two-digit catalogue number. "04" is reserved for the ESG workshop. */
-export type WorkshopNumber = "01" | "02" | "03" | "04";
+/** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
+export type WorkshopNumber = "01" | "02" | "03" | "04" | "05";
 
 /** When a learner uses a material: before, during or after the session. */
 export type WorkshopPhase = "before" | "during" | "after";
@@ -191,6 +192,13 @@ export interface WorkshopRealWorldCase {
   readonly decisionQuestion: string;
 }
 
+export interface WorkshopStageExplainer {
+  readonly heading: string;
+  readonly body: string;
+  /** Two or three short plain facts ("7 Textdateien"), no sentences. */
+  readonly facts?: readonly string[];
+}
+
 export interface Workshop {
   readonly slug: string;
   /** Two-digit catalogue number, fixed per workshop and never derived from array position. */
@@ -211,6 +219,13 @@ export interface Workshop {
   readonly accessNote: string;
   /** The artefact the learner leaves with, as a short label ("Du nimmst mit"). */
   readonly outcome: string;
+  /**
+   * The always-visible block under the stage cards: what the kit (or, for a
+   * workshop without a kit zip, the lab) is and what you do with it.
+   * Heading as a question, two short sentences (about 35 words), and two or
+   * three plain facts. Rendered by components/workshops/stage-explainer.tsx.
+   */
+  readonly stageExplainer: WorkshopStageExplainer;
   readonly audience: readonly string[];
   /** One sentence naming who should pick another workshop, and why. */
   readonly notForYou: string;
@@ -261,14 +276,20 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Kann KI die Zukunft vorhersagen?",
     eyebrow: "Workshop 01 · Prognosen",
     summary:
-      "In Browser-Laboren rechnest du aus, was eine falsche Prognose kostet und wann eine Person freigeben muss.",
+      "Du rechnest aus, was eine falsche Prognose kostet und wann ein Mensch freigeben muss.",
     description:
       "Du prüfst, ob ein Modell den Wert vom selben Wochentag der Vorwoche schlägt, und legst aus den Kosten von zu viel und zu wenig Kapazität den Puffer fest. Dann bestimmst du, woran du eine danebenliegende Prognose erkennst und wer freigibt. Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
     accessNote:
-      "Alles läuft im Browser.",
+      "Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
     outcome: "Go/No-Go-Regel",
+    stageExplainer: {
+      heading: "Was ist das Labor?",
+      body:
+        "Im Browser rechnest du drei kleine Simulationen durch: Kapazität, Puffer und ein Nachfrageschock. Danach verteilst du im Launch‑Fall 1.050 Stück. Kein Konto nötig.",
+      facts: ["3 Simulationen", "1 Fall", "ca. 90 Min. allein"],
+    },
     audience: [
       "Disponentinnen und Planer, die nach Prognosen Mengen festlegen",
       "Führungskräfte, die eine Prognose verantworten, aber nicht rechnen",
@@ -456,6 +477,12 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     accessNote:
       "Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
     outcome: "Kennzahlen-Skill + Dashboard",
+    stageExplainer: {
+      heading: "Was ist das Kit?",
+      body:
+        "Eine Zip mit Rohdaten und Monatsberichten der erfundenen Firma NORTHWIND, einem halb fertigen Skill und einer Dashboard-Vorlage. Du öffnest sie in der Claude-Desktop-App und machst die fünf Prompts nach.",
+      facts: ["Nur Textdateien", "5 Prompts", "ca. 90 Min. allein"],
+    },
     audience: [
       "Controllerinnen und Controller mit Monats- oder Quartalsberichten",
       "Finance-Teams, die jeden Monatsbericht gleich lesen wollen",
@@ -611,7 +638,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sector: "Elektronikfertigung",
       period: "September 2023",
       narrative:
-        "Das Familienunternehmen hat rund 850 Beschäftigte und acht Produktlinien, sieben davon liefern aus. Die neueste und teuerste ist CRAFT: zwei Espressomaschinen und eine Mühle für 199 € bis 699 €. CRAFT macht bei Absatzrang 6 von 7 den zweithöchsten Umsatz.",
+        "Das Familienunternehmen hat rund 850 Beschäftigte und sieben liefernde Produktlinien. Die neueste ist CRAFT, zwei Espressomaschinen und eine Mühle für 199 € bis 699 €: Absatzrang 6 von 7, zweithöchster Umsatz.",
       metrics: [
         { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
@@ -634,7 +661,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sourcePublishedAt: "2026-07-29",
       sourceReviewedAt: "2026-08-26",
       sourceLimitation:
-        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Der freie Cashflow ist eine ergänzende Non-GAAP-Kennzahl; die Quelle belegt Werte, nicht die Investitionsentscheidung.",
+        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Freier Cashflow ist eine Non-GAAP-Kennzahl. Die Quelle belegt Werte, nicht die Investitionsentscheidung.",
       narrative:
         "Fast der gesamte operative Cashflow floss in Infrastruktur. Du definierst sechs Kennzahlen, liest das Quartal aus und lässt Claude ein Dashboard ohne Vorlage entwerfen.",
       metrics: [
@@ -683,14 +710,20 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Can AI predict the future?",
     eyebrow: "Workshop 01 · Forecasts",
     summary:
-      "In browser labs you work out what a wrong forecast costs and when a person must approve.",
+      "You work out what a wrong forecast costs and when a person must approve.",
     description:
       "You check whether a model beats the value from the same weekday a week earlier, and set the buffer from the cost of too much and too little capacity. Then you decide how you spot a forecast going wrong and who approves. The labs price in US dollars; the launch case counts units.",
     format: "Self-study kit",
     duration: "~90 minutes",
     accessNote:
-      "Everything runs in the browser.",
+      "The labs price in US dollars; the launch case counts units.",
     outcome: "Go/no-go rule",
+    stageExplainer: {
+      heading: "What is the lab?",
+      body:
+        "In your browser you run three small simulations: capacity, buffers and a demand shock. Then you hand out 1,050 units in the launch case. No account needed.",
+      facts: ["3 simulations", "1 case", "about 90 min alone"],
+    },
     audience: [
       "Planners who set quantities from forecasts",
       "Managers who own a forecast but do not calculate it",
@@ -878,6 +911,12 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     accessNote:
       "Use only the invented kit: Claude may transfer files to Anthropic.",
     outcome: "Metrics skill + dashboard",
+    stageExplainer: {
+      heading: "What is the kit?",
+      body:
+        "A zip with raw data and monthly reports of the invented company NORTHWIND, a half-finished skill and a dashboard template. You open it in the Claude desktop app and follow the five prompts.",
+      facts: ["Text files only", "5 prompts", "about 90 min alone"],
+    },
     audience: [
       "Controllers who work with monthly or quarterly reports",
       "Finance teams who want to read every monthly report alike",
@@ -1033,7 +1072,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sector: "Electronics manufacturing",
       period: "September 2023",
       narrative:
-        "The family business has about 850 employees and eight product lines, seven of them shipping. The newest and most expensive is CRAFT: two espresso machines and a grinder priced €199 to €699. CRAFT ranks sixth of seven by units but second by revenue.",
+        "The family business has about 850 employees and seven shipping product lines. The newest is CRAFT, two espresso machines and a grinder priced €199 to €699: sixth of seven by units, second by revenue.",
       metrics: [
         { label: "Total revenue", value: "€21.69m" },
         { label: "Total units", value: "139,056" },
@@ -1056,7 +1095,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sourcePublishedAt: "2026-07-29",
       sourceReviewedAt: "2026-08-26",
       sourceLimitation:
-        "Company release with unaudited quarterly figures. Free cash flow is a supplemental non-GAAP measure; the source supports the figures, not the investment decision.",
+        "Company release with unaudited quarterly figures. Free cash flow is a non-GAAP measure. The source supports the figures, not the investment decision.",
       narrative:
         "Almost all operating cash flow went into infrastructure. You define six metrics, extract the quarter and have Claude design a dashboard without a template.",
       metrics: [
@@ -1100,8 +1139,18 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 export const WORKSHOPS_BY_LOCALE: Readonly<
   Record<Locale, readonly Workshop[]>
 > = {
-  de: [...WORKSHOPS_DE, DATA_READINESS_WORKSHOP.de, ESG_REPORTING_WORKSHOP.de],
-  en: [...WORKSHOPS_EN, DATA_READINESS_WORKSHOP.en, ESG_REPORTING_WORKSHOP.en],
+  de: [
+    ...WORKSHOPS_DE,
+    DATA_READINESS_WORKSHOP.de,
+    ESG_REPORTING_WORKSHOP.de,
+    AI_AT_WORK_WORKSHOP.de,
+  ],
+  en: [
+    ...WORKSHOPS_EN,
+    DATA_READINESS_WORKSHOP.en,
+    ESG_REPORTING_WORKSHOP.en,
+    AI_AT_WORK_WORKSHOP.en,
+  ],
 };
 
 /** German remains the canonical catalog for machine endpoints and legacy imports. */

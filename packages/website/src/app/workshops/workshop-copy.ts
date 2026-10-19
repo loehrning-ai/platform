@@ -1,16 +1,9 @@
 import type { Locale } from "@/lib/i18n/locale";
 import type {
-  WorkshopActivity,
   WorkshopMaterialRole,
   WorkshopPhase,
   WorkshopProvenance,
 } from "@/lib/workshops";
-
-/** One station of the route on the hub ("So läuft Workshop 03"). */
-export interface WorkshopRouteStation {
-  readonly label: string;
-  readonly caption: string;
-}
 
 export interface WorkshopPageCopy {
   readonly metadata: {
@@ -39,10 +32,6 @@ export interface WorkshopPageCopy {
     readonly hubStart: (number: string) => string;
     /** Line next to the cover-band button. */
     readonly hubAccess: string;
-    readonly routeHeading: string;
-    readonly routeCaption: string;
-    /** Five stations, the spine of the workshops the heading names. Static: a description, not progress. */
-    readonly routeStations: readonly WorkshopRouteStation[];
     readonly listHeading: string;
     /** Right-hand note of the list head: says how the list is ordered. */
     readonly listCaption: string;
@@ -91,36 +80,34 @@ export interface WorkshopPageCopy {
     readonly navigation: string;
     readonly backAria: string;
     readonly allWorkshops: string;
-    /** Phone back link in the cover kicker line. */
-    readonly workshopsShort: string;
-    /** Label above the q-card in the cover band. */
-    readonly redLineLabel: string;
-    /** Secondary cover-band button that jumps to the material list. */
-    readonly seeMaterials: string;
-    /** Cover-band buttons, chosen by the role of the material they open. */
-    readonly primaryAction: Readonly<Record<WorkshopMaterialRole, string>>;
+    /** The stage under the band: two action cards (slides or lab, kit or case) and the pause control. */
+    readonly stage: {
+      /** sr-only h2 of the stage. */
+      readonly heading: string;
+      /** Titles of the four action cards. */
+      readonly slides: string;
+      readonly lab: string;
+      readonly kit: string;
+      readonly case: string;
+      /** CSS-only pause control (WCAG 2.2.2): label while motion plays, and while it is stopped. */
+      readonly pauseOff: string;
+      readonly pauseOn: string;
+      /** The control's one stable accessible name: checked means paused. */
+      readonly pauseLabel: string;
+    };
     /** Caption facts in the cover band. */
     readonly coverFacts: {
-      readonly fictionalCase: string;
       readonly publicFigures: string;
       readonly materialsInEnglish: string;
       readonly free: string;
     };
-    /** "Du brauchst" in the cover caption, followed by the limiting need. */
+    /** Heading of the needs list in "Mehr Details". */
     readonly needLabel: string;
-    /** Limiting need when the workshop runs without any AI account. */
-    readonly browserOnly: string;
-    readonly outcomesHeading: string;
-    readonly leaveWith: string;
-    readonly agendaHeading: string;
     readonly minutes: (minutes: number) => string;
     readonly minutesLive: (minutes: number) => string;
     readonly minutesSelfStudy: (minutes: number) => string;
-    /** Caption on where the agenda minutes come from. */
-    readonly agendaSource: { readonly deck: string; readonly plan: string };
-    /** Station caption for an item that runs only with a group. */
-    readonly liveOnly: string;
-    readonly activityLabels: Readonly<Record<WorkshopActivity, string>>;
+    /** The one time fact of a self-study-only workshop: nothing is "alone" without a live option. */
+    readonly minutesAbout: (minutes: number) => string;
     readonly optional: string;
     readonly materialHeading: string;
     readonly phaseLabels: Readonly<Record<WorkshopPhase, string>>;
@@ -142,25 +129,22 @@ export interface WorkshopPageCopy {
     readonly syntheticCase: string;
     readonly realCompanyData: string;
     readonly realExplanation: (companyName: string, period: string) => string;
+    /** Heading of the case facts in "Details" when the case has no heading of its own. */
     readonly limitations: string;
     readonly realWorldHeading: string;
     readonly source: string;
     readonly published: string;
     readonly reviewed: string;
     readonly forWhom: string;
-    readonly detailsHeading: string;
-    readonly detailsSummary: string;
-    readonly moreMaterials: (count: number) => string;
-    readonly needsHeading: string;
+    /** One plain line in the provenance line when the workshop's own note does not say it. */
+    readonly inventedNote: string;
     readonly notNeededHeading: string;
     readonly notCoveredHeading: string;
     readonly provenanceHeading: string;
     readonly provenanceLabels: {
-      readonly author: string;
       readonly reviewedAt: string;
       readonly aiOutputsRecordedAt: string;
       readonly liveRunAt: string;
-      readonly data: string;
     };
     readonly provenanceData: Readonly<Record<WorkshopProvenance["data"], string>>;
   };
@@ -191,15 +175,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
-      routeHeading: "So läuft Workshop 03",
-      routeCaption: "90 Minuten live",
-      routeStations: [
-        { label: "Die Frage", caption: "Ein Fall und eine Frage, die bis zum Schluss bleibt" },
-        { label: "Die falsche Antwort", caption: "Eine Antwort, die plausibel klingt und nicht stimmt" },
-        { label: "Warum sie falsch ist", caption: "Was in den Daten niemand festgelegt hat" },
-        { label: "Die Reparatur", caption: "Was die Antwort richtig macht" },
-        { label: "Deine Vorlage", caption: "Eine Seite für deinen eigenen Fall" },
-      ],
       listHeading: "Workshops",
       listCaption: "Neueste zuerst",
       workshopNumber: (number) => `Workshop ${number}`,
@@ -213,6 +188,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
         "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Plan mit Dateierstellung",
+        "ki-im-unternehmen-sicher-nutzen": "Zum Nachmachen ein Claude-Konto, jeder Plan",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
@@ -242,48 +218,26 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       navigation: "Workshopnavigation",
       backAria: "Alle Workshops, zurück zur Übersicht",
       allWorkshops: "Alle Workshops",
-      workshopsShort: "Workshops",
-      redLineLabel: "Der Weg durch den Workshop",
-      seeMaterials: "Material ansehen",
-      primaryAction: {
-        deck: "Deck öffnen",
-        presenter: "Moderationsansicht öffnen",
-        demo: "Demo starten",
-        guide: "Lernbegleiter lesen",
-        lab: "Labore öffnen",
-        case: "Fall öffnen",
-        card: "Prüfkarte öffnen",
-        exercise: "Übung öffnen",
+      stage: {
+        heading: "Starten",
+        slides: "Folien ansehen",
+        lab: "Labor öffnen",
         kit: "Kit herunterladen",
-        data: "Datensatz herunterladen",
-        hub: "Übersicht öffnen",
-        builder: "Leitfaden öffnen",
+        case: "Fall ansehen",
+        pauseOff: "Bewegung anhalten",
+        pauseOn: "Bewegung starten",
+        pauseLabel: "Bewegung pausieren",
       },
       coverFacts: {
-        fictionalCase: "erfundener Fall",
-        publicFigures: "erfundener Fall und öffentliche Zahlen",
+        publicFigures: "erfundene Firma, dazu öffentliche Zahlen",
         materialsInEnglish: "Material auf Englisch",
         free: "kostenlos, ohne Anmeldung",
       },
       needLabel: "Du brauchst",
-      browserOnly: "einen Browser, kein KI-Konto",
-      outcomesHeading: "Nach dem Workshop",
-      leaveWith: "Du nimmst mit",
-      agendaHeading: "Ablauf",
       minutes: (minutes) => `${minutes} Min.`,
       minutesLive: (minutes) => `Live ${minutes} Min.`,
-      minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
-      agendaSource: {
-        deck: "",
-        plan: "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
-      },
-      liveOnly: "nur live",
-      activityLabels: {
-        listen: "Zuhören",
-        vote: "Abstimmen",
-        do: "Mitmachen",
-        write: "Schreiben",
-      },
+      minutesSelfStudy: (minutes) => `Allein ca. ${minutes} Min.`,
+      minutesAbout: (minutes) => `Ca. ${minutes} Min.`,
       optional: "optional",
       materialHeading: "Material",
       phaseLabels: {
@@ -327,23 +281,18 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       published: "veröffentlicht",
       reviewed: "geprüft",
       forWhom: "Für wen",
-      detailsHeading: "Details",
-      detailsSummary: "Für wen, was du brauchst, was nicht dazugehört",
-      moreMaterials: (count) => `${count} optionale ${count === 1 ? "Datei" : "Dateien"}`,
-      needsHeading: "Das brauchst du",
+      inventedNote: "Alle Firmen und Zahlen sind erfunden.",
       notNeededHeading: "Das brauchst du nicht",
       notCoveredHeading: "Nicht Teil dieses Workshops",
       provenanceHeading: "Stand und Herkunft",
       provenanceLabels: {
-        author: "Von",
-        reviewedAt: "zuletzt geprüft",
+        reviewedAt: "geprüft",
         aiOutputsRecordedAt: "KI-Antworten aufgezeichnet",
         liveRunAt: "live gehalten",
-        data: "Daten",
       },
       provenanceData: {
-        synthetic: "erfunden",
-        "synthetic-and-public": "erfunden, dazu öffentliche Zahlen mit Quelle",
+        synthetic: "erfundene Daten",
+        "synthetic-and-public": "öffentliche Zahlen mit Quelle",
       },
     },
   },
@@ -371,15 +320,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "You work through an invented company's data and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
-      routeHeading: "How Workshop 03 runs",
-      routeCaption: "90 minutes live",
-      routeStations: [
-        { label: "The question", caption: "One case and a question that stays to the end" },
-        { label: "The wrong answer", caption: "An answer that sounds plausible and is wrong" },
-        { label: "Why it is wrong", caption: "What nobody defined in the data" },
-        { label: "The fix", caption: "What makes the answer right" },
-        { label: "Your template", caption: "One page for your own case" },
-      ],
       listHeading: "Workshops",
       listCaption: "Newest first",
       workshopNumber: (number) => `Workshop ${number}`,
@@ -393,6 +333,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude desktop app and a Claude plan that includes Claude Code",
         "esg-berichte-mit-ki": "To replay it, a Claude plan with file creation",
+        "ki-im-unternehmen-sicher-nutzen": "To replay it, a Claude account on any plan",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Self-paced about ${minutes} min`,
@@ -419,48 +360,26 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       navigation: "Workshop navigation",
       backAria: "Back to all workshops",
       allWorkshops: "All workshops",
-      workshopsShort: "Workshops",
-      redLineLabel: "The path through the workshop",
-      seeMaterials: "See materials",
-      primaryAction: {
-        deck: "Open the deck",
-        presenter: "Open the presenter view",
-        demo: "Start the demo",
-        guide: "Read the learner guide",
-        lab: "Open the labs",
-        case: "Open the case",
-        card: "Open the field card",
-        exercise: "Open the exercise",
+      stage: {
+        heading: "Start",
+        slides: "View the slides",
+        lab: "Open the lab",
         kit: "Download the kit",
-        data: "Download the dataset",
-        hub: "Open the overview",
-        builder: "Open the guide",
+        case: "See the case",
+        pauseOff: "Stop motion",
+        pauseOn: "Start motion",
+        pauseLabel: "Pause motion",
       },
       coverFacts: {
-        fictionalCase: "invented case",
-        publicFigures: "invented case plus public figures",
+        publicFigures: "invented company, plus public figures",
         materialsInEnglish: "materials in English",
         free: "free, no sign-up",
       },
       needLabel: "You need",
-      browserOnly: "a browser, no AI account",
-      outcomesHeading: "After this you can",
-      leaveWith: "You leave with",
-      agendaHeading: "Agenda",
       minutes: (minutes) => `${minutes} min`,
       minutesLive: (minutes) => `Live ${minutes} min`,
-      minutesSelfStudy: (minutes) => `self-paced about ${minutes} min`,
-      agendaSource: {
-        deck: "",
-        plan: "Planned minutes, not yet measured with test readers.",
-      },
-      liveOnly: "live only",
-      activityLabels: {
-        listen: "Listen",
-        vote: "Vote",
-        do: "Do",
-        write: "Write",
-      },
+      minutesSelfStudy: (minutes) => `solo about ${minutes} min`,
+      minutesAbout: (minutes) => `About ${minutes} min`,
       optional: "optional",
       materialHeading: "Materials",
       phaseLabels: {
@@ -504,23 +423,18 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       published: "published",
       reviewed: "reviewed",
       forWhom: "Who this is for",
-      detailsHeading: "Details",
-      detailsSummary: "Who it is for, what you need, what it leaves out",
-      moreMaterials: (count) => `${count} optional ${count === 1 ? "file" : "files"}`,
-      needsHeading: "What you need",
+      inventedNote: "All companies and figures are invented.",
       notNeededHeading: "What you don't need",
       notCoveredHeading: "Not part of this workshop",
       provenanceHeading: "Provenance",
       provenanceLabels: {
-        author: "By",
-        reviewedAt: "last reviewed",
+        reviewedAt: "checked",
         aiOutputsRecordedAt: "AI answers recorded",
         liveRunAt: "run live",
-        data: "Data",
       },
       provenanceData: {
-        synthetic: "invented",
-        "synthetic-and-public": "invented, plus public figures with source",
+        synthetic: "invented data",
+        "synthetic-and-public": "public figures with source",
       },
     },
   },

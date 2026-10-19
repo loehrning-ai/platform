@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Static poster materials of the four workshops (Werkzeichnung v2, SPEC §3.15).
+ * Static poster materials of the five workshops (Werkzeichnung v2, SPEC §3.15).
  *
  * Writes, from src/lib/plakat (palettes.ts, motifs.ts, poster-svg.ts):
  *   public/workshops/<slug>/assets/plakat-cover.svg

@@ -11,14 +11,21 @@ import {
 // jsdom does not implement layout, so getClientRects() cannot verify real
 // non-overlap the way a Playwright spec can -- this asserts the geometry
 // invariant that makes overlap impossible regardless of exact rendering:
-// the band's offset + height must stay within one line-height stride.
+// the band's height must stay under one line-height stride (the offset only
+// moves every line's band by the same amount).
 const CONSUMER_LINE_HEIGHT_EM = 0.9;
 
 describe("<HighlightedText>", () => {
-  it("keeps the band's offset + height within one line-height stride", () => {
-    expect(
-      HIGHLIGHT_BAND_OFFSET_EM + HIGHLIGHT_BAND_HEIGHT_EM,
-    ).toBeLessThanOrEqual(CONSUMER_LINE_HEIGHT_EM);
+  it("keeps the band's height under one line-height stride", () => {
+    expect(HIGHLIGHT_BAND_HEIGHT_EM).toBeLessThan(CONSUMER_LINE_HEIGHT_EM);
+  });
+
+  it("covers Figtree's capitals and the baseline, so letters never hang below the band", () => {
+    // Figtree: ascent 0.95em, capital height 0.70em above the baseline.
+    const baseline = 0.95;
+    const capTop = baseline - 0.7;
+    expect(HIGHLIGHT_BAND_OFFSET_EM).toBeLessThan(capTop);
+    expect(HIGHLIGHT_BAND_OFFSET_EM + HIGHLIGHT_BAND_HEIGHT_EM).toBeGreaterThan(baseline);
   });
 
   it("paints the band as a sized/positioned background-image, not the content-area background", () => {

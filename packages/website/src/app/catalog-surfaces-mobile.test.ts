@@ -125,10 +125,10 @@ describe("catalog surfaces below lg", () => {
     expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("<Link"));
     // The fixed question lives on the workshop page, not on a hub row.
     expect(row).not.toContain("data-workshop-question");
-    // A phone row is an 80px poster thumb beside the text; md returns the
+    // A phone row is a 104px poster thumb beside the text; md returns the
     // sheet with the poster cover at 14rem, 18rem from lg (SPEC §3.3).
     expect(row).toContain(
-      "grid-cols-[5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4",
+      "grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4",
     );
     expect(row).toContain(
       "md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]",
@@ -142,13 +142,8 @@ describe("catalog surfaces below lg", () => {
     // The list is the index: the band carries no anchor row at any width.
     expect(workshops).not.toContain("data-workshop-index");
     expect(workshops).toContain('className="pt-5 sm:pt-16"');
-    expect(workshops).toContain('layout="rail"');
-    // The route section starts at sm and follows the list, so the posters
-    // follow the cover at every width.
-    expect(workshops).toContain('className="hidden pt-16 sm:block"');
-    expect(workshops.indexOf('aria-labelledby="workshop-list-heading"')).toBeLessThan(
-      workshops.indexOf('aria-labelledby="workshop-route-heading"'),
-    );
+    // No route rail: the posters follow the cover at every width.
+    expect(workshops).not.toContain("workshop-route-heading");
     expect(workshops).toContain('"pb-10 pt-4 sm:pb-24 sm:pt-12"');
   });
 

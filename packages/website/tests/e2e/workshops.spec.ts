@@ -31,20 +31,30 @@ test.describe("workshop self-study journey", () => {
       /Geschäftsberichte/i,
     );
     await expect(page.locator("body")).not.toContainText("No paid service");
-    // Detail page: the cover starts the primary material and the agenda is a
-    // Route. The red line (agenda, core materials, case) stays visible; only
-    // optional materials, data limits and the audience details sit behind
-    // disclosures, which start collapsed.
-    // The band is the workshop's poster (IDEA for W02) and still starts the deck.
+    // Detail page: the band is the workshop's poster (IDEA for W02) and holds
+    // no buttons; the stage right under it carries the two action cards: the
+    // deck and the kit zip. There is no agenda section, no numbered red line,
+    // no outcomes list and no visible case section. The material list, the
+    // audience, needs, scope, the case and its figures sit behind one
+    // disclosure, which starts collapsed.
     const cover = page.locator("[data-cover-band]");
     await expect(cover).toHaveAttribute("data-plakat", "idea");
-    await expect(cover.getByRole("link", { name: "Deck öffnen" })).toHaveAttribute(
+    await expect(cover.locator("a:not([data-cover-back])")).toHaveCount(0);
+    const stage = page.locator("[data-workshop-stage]");
+    await expect(stage.getByRole("link", { name: /^Folien ansehen/ })).toHaveAttribute(
       "href",
       "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
     );
-    await expect(page.getByRole("list", { name: "Ablauf" })).toBeVisible();
-    await expect(page.getByRole("heading", { level: 2, name: "Material", exact: true })).toBeVisible();
-    await expect(page.locator("main details[open]")).toHaveCount(0);
+    const kit = stage.getByRole("link", { name: /^Kit herunterladen/ });
+    await expect(kit).toHaveAttribute("href", /northwind-analyst-kit\.zip$/);
+    await expect(kit).toHaveAttribute("download", "");
+    await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
+    await expect(page.getByRole("list", { name: "Ablauf" })).toHaveCount(0);
+    await expect(page.locator("[data-workshop-redline]")).toHaveCount(0);
+    await expect(page.getByRole("heading", { name: "Nach dem Workshop" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 2, name: "Der Fall" })).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 2, name: "Was ist das Kit?" })).toBeVisible();
+    await expect(page.locator("main details, main summary")).toHaveCount(0);
   });
 
   test("serves the complete analyst kit as a ZIP", async ({ request }) => {
@@ -133,15 +143,16 @@ test.describe("workshop self-study journey", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openHub(page);
     const rows = page.getByTestId("workshop-row");
-    await expect(rows).toHaveCount(4);
+    await expect(rows).toHaveCount(5);
 
-    // A phone row is a list line, not a card: tile, duration, title and one
-    // "you leave with" sentence. 140px leaves room for the wider fallback
-    // face; the brand face measures 97 to 117px.
+    // A phone row is a list line, not a card: the poster tile (104px wide, 4:5,
+    // so 130px tall), duration, title and one "you leave with" sentence. The
+    // brand face measures 163px with the row's 16px padding; 190px leaves room
+    // for the wider fallback face and stays far under a card.
     for (const row of await rows.all()) {
       const box = await row.boundingBox();
       expect(box, "row bounds").not.toBeNull();
-      expect(box!.height).toBeLessThan(140);
+      expect(box!.height).toBeLessThan(190);
       await expect(row.locator("[data-workshop-question]")).toHaveCount(0);
       await expect(row.locator("h3 + p")).toBeHidden();
       await expect(row.locator("[data-workshop-tile]")).toBeVisible();
@@ -158,13 +169,13 @@ test.describe("workshop self-study journey", () => {
       expect(facts!.x).toBeLessThanOrEqual(heading!.x + 1);
       expect(facts!.width).toBeGreaterThanOrEqual(heading!.width);
     }
-    // No route rail between cover and list on a phone.
-    await expect(page.locator("#workshop-route-heading")).toBeHidden();
+    // No route rail between cover and list.
+    await expect(page.locator("#workshop-route-heading")).toHaveCount(0);
     // The first workshop starts inside the first screen.
     const first = await rows.first().boundingBox();
     expect(first!.y).toBeLessThan(664);
     // Tapping the row body (not the arrow) opens the workshop.
-    const outcome = rows.nth(2).locator("[data-workshop-output]");
+    const outcome = rows.nth(3).locator("[data-workshop-output]");
     await outcome.scrollIntoViewIfNeeded();
     const spot = await outcome.boundingBox();
     await page.mouse.click(spot!.x + 20, spot!.y + spot!.height / 2);
@@ -176,7 +187,13 @@ test.describe("workshop self-study journey", () => {
     // face loaded) mapped through the SVG's screen transform must sit inside
     // every clipping ancestor: the nested poster viewport, the poster box and
     // the band. A numeral cut at an edge reads as a bug, not as a bleed.
-    const routes = ["/workshops", "/workshops/esg-berichte-mit-ki", "/workshops/datenbereitschaft-fuer-ki"];
+    // Workshop 05's gate scene sits on the stage and holds no text; every band shows its poster numeral.
+    const routes = [
+      "/workshops",
+      "/workshops/esg-berichte-mit-ki",
+      "/workshops/datenbereitschaft-fuer-ki",
+      "/workshops/ki-im-unternehmen-sicher-nutzen",
+    ];
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       for (const route of routes) {
@@ -239,10 +256,10 @@ test.describe("workshop self-study journey", () => {
     }
   });
 
-  test("sets the four workshops as four posters in four palettes", async ({ page }) => {
+  test("sets the five workshops as five posters in five palettes", async ({ page }) => {
     await openHub(page);
     // The hub opens on a paper header (highlighted title, pastel geometry,
-    // catalogue card); the four posters are the rows.
+    // catalogue card); the five posters are the rows.
     await expect(page.locator("[data-cover-band]")).toHaveCount(0);
     const hero = page.locator("[data-workshop-hero]");
     await expect(hero).toBeVisible();
@@ -250,13 +267,13 @@ test.describe("workshop self-study journey", () => {
     await expect(hero.locator("[data-workshop-geometry]")).toHaveCount(2);
     await expect(page.getByRole("complementary", { name: "Im Katalog" })).toBeVisible();
     const rows = page.getByTestId("workshop-row");
-    await expect(rows).toHaveCount(4);
-    // Each row shows its own poster; the four palettes are distinct and in
+    await expect(rows).toHaveCount(5);
+    // Each row shows its own poster; the five palettes are distinct and in
     // the newest-first order of the list.
     const palettes = await rows.evaluateAll((elements) =>
       elements.map((row) => row.querySelector("svg[data-poster]")?.getAttribute("data-poster")),
     );
-    expect(palettes).toEqual(["autumn", "bloom", "idea", "lemons"]);
+    expect(palettes).toEqual(["sage", "autumn", "bloom", "idea", "lemons"]);
     // The poster grounds really differ on screen: one computed fill per row.
     const grounds = await rows.evaluateAll((elements) =>
       elements.map((row) => {
@@ -264,7 +281,7 @@ test.describe("workshop self-study journey", () => {
         return ground ? getComputedStyle(ground).fill : null;
       }),
     );
-    expect(new Set(grounds).size).toBe(4);
+    expect(new Set(grounds).size).toBe(5);
     expect(grounds).not.toContain(null);
 
     // Each workshop page opens with the band in its own scene.
@@ -273,6 +290,7 @@ test.describe("workshop self-study journey", () => {
       "geschaeftsberichte-mit-ki-lesen": "idea",
       "datenbereitschaft-fuer-ki": "bloom",
       "esg-berichte-mit-ki": "autumn",
+      "ki-im-unternehmen-sicher-nutzen": "sage",
     } as const;
     const bandGrounds = new Set<string>();
     for (const [slug, plakat] of Object.entries(expected)) {
@@ -281,12 +299,14 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveAttribute("data-plakat", plakat);
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
-      // No question card; the numbered red line (agenda, materials, case)
-      // sits on paper below the band.
+      // No question card in the band, no agenda and no numbered red line on
+      // the page; the case section is gone with the accordion.
       await expect(page.locator("[data-question-card]")).toHaveCount(0);
-      await expect(band.locator("[data-workshop-redline]")).toHaveCount(0);
-      await expect(page.locator("[data-workshop-redline] li")).toHaveCount(3);
+      await expect(band.locator("[data-case-question]")).toHaveCount(0);
+      await expect(page.locator("[data-workshop-redline], #ablauf")).toHaveCount(0);
+      await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
+      await expect(page.locator("[data-case-question]")).toHaveCount(0);
     }
-    expect(bandGrounds.size).toBe(4);
+    expect(bandGrounds.size).toBe(5);
   });
 });

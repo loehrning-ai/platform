@@ -1,0 +1,98 @@
+/*
+ * The motion of a workshop kit page (kit-page.tsx, kit-stepper.tsx). Prefix
+ * `kit-`. It reuses the language of the stage's action cards: a 2px lift
+ * under a mouse, an arrow that draws when a step opens, the
+ * kit's own chips dropping into the zip box beside the download button, and
+ * a bobbing download arrow.
+ *
+ * Rules (docs/experience-system.md): the base styles are the finished frame,
+ * every animation and transition sits inside
+ * `prefers-reduced-motion: no-preference`, and only transform, opacity,
+ * clip-path and stroke-dashoffset move. The kit picture is the action card's
+ * picture (action-pictures.tsx, action-cards.css) on the download card's own
+ * colours.
+ */
+
+/* The chips picture next to the download button. It carries its own colours
+   (the page's ink on the card, Mennige for the one accent) and a 16:10 box,
+   so the whole 256 x 160 drawing shows. */
+.kit-chips-pic {
+  --ac-fg: var(--color-foreground);
+  --ac-bg: var(--color-card);
+  --ac-mid: var(--color-mennige);
+  --ac-t: 7s;
+  --ac-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  flex: none;
+  width: 5.5rem;
+}
+
+.kit-chips-pic .ac-pic {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+
+@media (min-width: 40rem) {
+  .kit-chips-pic {
+    width: 10rem;
+  }
+}
+
+/* A step card is a card you can point at: it lifts 2px under a mouse. */
+@media (prefers-reduced-motion: no-preference) {
+  .kit-lift {
+    transition:
+      transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 200ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .kit-lift:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-mennige);
+    }
+  }
+
+  /* The arrows between In, Claude and Out draw themselves in turn when a
+     step opens (the stepper re-mounts the panel per step). */
+  .kit-draw {
+    animation: kit-draw 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(240ms + var(--i, 0) * 90ms);
+  }
+
+  .kit-draw[data-arrow="down"] {
+    animation-name: kit-draw-down;
+  }
+
+  /* The download arrow breathes: 4px down and back, slow. */
+  .kit-bob {
+    animation: kit-bob 2.4s ease-in-out infinite;
+  }
+
+  @keyframes kit-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes kit-draw-down {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes kit-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(4px);
+    }
+  }
+}

@@ -1,0 +1,658 @@
+/*
+ * "The gate", the scene of Workshop 05 (hero-gate-scene.tsx). Prefix `hm-`,
+ * every selector under `.hm-root`. Contract (docs/experience-system.md,
+ * "Workshop stage and scenes"; hero-motion.test.tsx reads this file):
+ * - One 600 x 500 frame; the base styles are the finished still frame (lamps
+ *   lit, one card in the cloud, one past the ring with its names covered, one
+ *   near the laptop).
+ * - Every animation, transition and keyframe sits inside `no-preference`.
+ * - Only transform, opacity and stroke-dashoffset move; at most 16 animated
+ *   elements; `will-change` only on the three cards; tokens only, no hex.
+ * - A 0.9 s intro (three layers), then one loop of `--ws-t` (9 s, keyframe
+ *   percentages are seconds / 9). `--hm-lx` is the lane from laptop to cloud.
+ */
+
+.hm-root {
+  overflow: visible;
+  --hm-ink: var(--color-scene-ink);
+  --hm-mid: var(--color-scene-mid);
+  --hm-ground: var(--color-scene-ground);
+  --hm-paper: var(--color-paper);
+  --hm-stop: var(--color-scene-accent-text);
+  /* The lane, the shake, the scan and the orbit centre. */
+  --hm-lx: 352px;
+  --hm-sy: 5px;
+  --hm-ax: 20px;
+  --hm-ox: 470px;
+  --hm-oy: 300px;
+}
+
+.hm-spot {
+  fill: var(--hm-paper);
+  fill-opacity: 0.075;
+}
+
+.hm-warm-disc {
+  fill: var(--hm-mid);
+  fill-opacity: 0.12;
+}
+
+.hm-orbit-ring {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 2 10;
+  opacity: 0.4;
+}
+
+.hm-orbit-ring-far {
+  stroke-dasharray: 1 13;
+  opacity: 0.28;
+}
+
+.hm-node {
+  fill: var(--hm-ink);
+  stroke: var(--hm-ground);
+  stroke-width: 3;
+}
+
+.hm-node-far {
+  opacity: 0.5;
+}
+
+.hm-dust-dot {
+  fill: var(--hm-ink);
+  opacity: 0.35;
+}
+
+.hm-pipe {
+  fill: none;
+  stroke: var(--hm-paper);
+  stroke-width: 16;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.hm-route {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 2 10;
+}
+
+.hm-ring {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-linecap: round;
+}
+
+.hm-ring-back {
+  stroke-width: 7;
+  opacity: 0.55;
+}
+
+.hm-ring-front {
+  stroke-width: 10;
+}
+
+.hm-scan {
+  opacity: 0;
+}
+
+.hm-scan-glow {
+  fill: none;
+  stroke: var(--hm-mid);
+  stroke-width: 12;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.hm-scan-line {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hm-speed {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  opacity: 0.32;
+}
+
+.hm-card {
+  fill: var(--hm-mid);
+  stroke: var(--hm-ink);
+  stroke-width: 2.6;
+}
+
+.hm-glyph {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hm-glyph-fill {
+  fill: var(--hm-ink);
+}
+
+.hm-glyph-ring {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+}
+
+.hm-cover-bar {
+  fill: var(--hm-ink);
+}
+
+.hm-p1 {
+  transform: translate(calc(var(--hm-lx) * 0.9), 0);
+}
+
+.hm-p2 {
+  transform: translate(calc(var(--hm-lx) * 0.72), 0);
+}
+
+.hm-p3 {
+  transform: translate(calc(var(--hm-lx) * 0.17), 0);
+}
+
+.hm-wire {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+.hm-housing {
+  fill: var(--hm-paper);
+  stroke: var(--hm-ink);
+  stroke-width: 3.5;
+}
+
+.hm-lamp-well {
+  fill: var(--hm-ground);
+  stroke: var(--hm-ink);
+  stroke-width: 2.2;
+}
+
+.hm-halo {
+  fill-opacity: 0.2;
+}
+
+.hm-lamp-go .hm-halo {
+  fill: var(--hm-paper);
+}
+
+.hm-disc-go {
+  fill: var(--hm-ink);
+}
+
+.hm-lamp-check .hm-halo,
+.hm-disc-check {
+  fill: var(--hm-mid);
+}
+
+.hm-lamp-stop .hm-halo,
+.hm-disc-stop {
+  fill: var(--hm-stop);
+}
+
+.hm-disc-check {
+  stroke: var(--hm-ink);
+  stroke-width: 2.2;
+}
+
+.hm-lamp-glyph {
+  fill: none;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hm-lamp-glyph-paper {
+  stroke: var(--hm-paper);
+}
+
+.hm-lamp-glyph-ink {
+  stroke: var(--hm-ink);
+}
+
+.hm-cloud-shape {
+  fill: var(--hm-paper);
+  stroke: var(--hm-ink);
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+
+.hm-cloud-line {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0.3;
+}
+
+.hm-screen {
+  fill: var(--hm-paper);
+  stroke: var(--hm-ink);
+  stroke-width: 4;
+}
+
+.hm-typing-line {
+  fill: none;
+  stroke: var(--hm-ink);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.hm-base {
+  fill: var(--hm-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hm-root {
+    --hm-ease: cubic-bezier(0.65, 0, 0.35, 1);
+    --hm-settle: cubic-bezier(0.22, 0.9, 0.3, 1);
+    --hm-go: 0.9s;
+    --hm-t: var(--ws-t, 9s);
+  }
+
+  .hm-layer,
+  .hm-packet,
+  .hm-lamp,
+  .hm-cover,
+  .hm-scan,
+  .hm-cloud,
+  .hm-typing,
+  .hm-dust {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .hm-layer-far {
+    animation: hm-grow 0.9s var(--hm-settle) both;
+  }
+
+  .hm-layer-mid {
+    animation: hm-rise 0.7s var(--hm-settle) 0.3s both;
+  }
+
+  .hm-layer-near {
+    animation: hm-fade 0.5s ease-out 0.6s both;
+  }
+
+  .hm-route {
+    animation: hm-flow 1.6s linear infinite;
+  }
+
+  .hm-orbit {
+    animation: hm-orbit 90s linear infinite;
+    transform-origin: var(--hm-ox) var(--hm-oy);
+    transform-box: view-box;
+  }
+
+  .hm-dust {
+    animation: hm-drift 13s ease-in-out infinite;
+  }
+
+  .hm-p1,
+  .hm-p2,
+  .hm-p3 {
+    will-change: transform;
+  }
+
+  .hm-p1 {
+    animation: hm-p1 var(--hm-t) linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-p2 {
+    animation: hm-p2 var(--hm-t) linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-p3 {
+    animation: hm-p3 var(--hm-t) linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-cover {
+    transform-origin: left center;
+    animation: hm-cover var(--hm-t) linear var(--hm-go) infinite backwards;
+  }
+
+  .hm-lamp-go {
+    animation: hm-lamp-go var(--hm-t) var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-lamp-check {
+    animation: hm-lamp-check var(--hm-t) var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-lamp-stop {
+    animation: hm-lamp-stop var(--hm-t) var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  .hm-scan {
+    animation: hm-scan var(--hm-t) ease-in-out var(--hm-go) infinite backwards;
+  }
+
+  .hm-cloud {
+    animation: hm-cloud var(--hm-t) var(--hm-ease) var(--hm-go) infinite backwards;
+    transform-origin: 50% 100%;
+  }
+
+  .hm-typing {
+    transform-origin: left center;
+    animation: hm-typing var(--hm-t) var(--hm-ease) var(--hm-go) infinite backwards;
+  }
+
+  @keyframes hm-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hm-grow {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes hm-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes hm-flow {
+    to {
+      stroke-dashoffset: -48;
+    }
+  }
+
+  @keyframes hm-orbit {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+
+
+  @keyframes hm-drift {
+    0%,
+    100% {
+      opacity: 0.2;
+      transform: translateY(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-26px);
+    }
+  }
+
+  @keyframes hm-p1 {
+    0%,
+    5% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.02), 0) scale(0.6);
+    }
+    8.3% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.06), 0) scale(1);
+      animation-timing-function: cubic-bezier(0.55, 0, 0.45, 1);
+    }
+    17.2% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.5), 0) scale(1);
+      animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+    }
+    28.3% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.9), 0) scale(1);
+      animation-timing-function: ease-in;
+    }
+    31.7%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.98), 0) scale(0.55);
+    }
+  }
+
+  @keyframes hm-p2 {
+    0%,
+    34.4% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.02), 0) scale(0.6);
+    }
+    37.8% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.06), 0) scale(1);
+      animation-timing-function: cubic-bezier(0.55, 0, 0.35, 1);
+    }
+    51.7% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.5), 0) scale(1);
+    }
+    57.2% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.5), 0) scale(1);
+      animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    }
+    66.7% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.9), 0) scale(1);
+      animation-timing-function: ease-in;
+    }
+    70%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.98), 0) scale(0.55);
+    }
+  }
+
+  @keyframes hm-cover {
+    0%,
+    52.2% {
+      transform: scaleX(0);
+    }
+    56.8% {
+      transform: scaleX(1);
+    }
+    69%,
+    70% {
+      transform: scaleX(1);
+    }
+    70.1%,
+    100% {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes hm-p3 {
+    0%,
+    71.7% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.02), 0) scale(0.6);
+    }
+    75% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.06), 0) scale(1);
+      animation-timing-function: cubic-bezier(0.5, 0, 0.7, 1);
+    }
+    85% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.355), 0) scale(1);
+      animation-timing-function: linear;
+    }
+    86.4% {
+      transform: translate(calc(var(--hm-lx) * 0.355), var(--hm-sy)) scale(1);
+    }
+    87.7% {
+      transform: translate(calc(var(--hm-lx) * 0.355), calc(var(--hm-sy) * -1)) scale(1);
+    }
+    89% {
+      transform: translate(calc(var(--hm-lx) * 0.355), calc(var(--hm-sy) * 0.7)) scale(1);
+    }
+    90.2% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-lx) * 0.355), 0) scale(1);
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    96.4%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-lx) * 0.1), 0) scale(0.8);
+    }
+  }
+
+  @keyframes hm-lamp-go {
+    0%,
+    10.5% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    13.5%,
+    27% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    30%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes hm-lamp-check {
+    0%,
+    45% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    48.5%,
+    58.5% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    61%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes hm-lamp-stop {
+    0%,
+    80.5% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    83%,
+    95% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    97.8%,
+    100% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+
+  @keyframes hm-scan {
+    0%,
+    48.5% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-ax) * -1), 0);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-ax) * -1), 0);
+    }
+    53.5% {
+      opacity: 1;
+      transform: translate(var(--hm-ax), 0);
+    }
+    57% {
+      opacity: 1;
+      transform: translate(calc(var(--hm-ax) * -1), 0);
+    }
+    58.5%,
+    100% {
+      opacity: 0;
+      transform: translate(calc(var(--hm-ax) * -1), 0);
+    }
+  }
+
+  @keyframes hm-cloud {
+    0%,
+    31%,
+    38%,
+    69%,
+    76%,
+    100% {
+      transform: scale(1);
+    }
+    33.5%,
+    71.5% {
+      transform: scale(1.045);
+    }
+  }
+
+  @keyframes hm-typing {
+    0% {
+      transform: scaleX(0);
+    }
+    4.5%,
+    14% {
+      transform: scaleX(1);
+    }
+    16%,
+    33% {
+      transform: scaleX(0);
+    }
+    38%,
+    48% {
+      transform: scaleX(1);
+    }
+    50%,
+    66% {
+      transform: scaleX(0);
+    }
+    71.5%,
+    81% {
+      transform: scaleX(1);
+    }
+    83%,
+    100% {
+      transform: scaleX(0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-root,
+  .hm-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

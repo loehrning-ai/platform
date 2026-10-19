@@ -148,7 +148,8 @@ const LOCKUP_FONT_STACK =
  * Reduced motion keeps the complete lockup static.
  *
  * Below 360px the compact bar shows the tile alone; the language pill and the
- * menu button need the rest of the row.
+ * menu button need the rest of the row. From 360 to 379px the wordmark is
+ * 16.5px, so its last letter never runs under the pill.
  */
 function LogoWordmark({
   scrollY,
@@ -180,7 +181,7 @@ function LogoWordmark({
       <m.span
         data-logo-mark
         aria-hidden="true"
-        className="mr-3 flex size-[38px] shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange"
+        className="mr-2.5 flex size-[38px] shrink-0 min-[380px]:mr-3 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange"
         style={{ rotate: prefersReducedMotion ? 0 : iconRotate }}
       >
         <span
@@ -195,7 +196,7 @@ function LogoWordmark({
         data-logo-wordmark
         aria-hidden="true"
         translate="no"
-        className="hidden whitespace-nowrap text-[19px] uppercase leading-none text-foreground min-[360px]:flex min-[390px]:text-[22px]"
+        className="hidden whitespace-nowrap text-[16.5px] uppercase leading-none text-foreground min-[360px]:flex min-[380px]:text-[19px] min-[390px]:text-[20px] min-[430px]:text-[22px]"
         style={{
           letterSpacing: "-0.035em",
           fontFamily: LOCKUP_FONT_STACK,
