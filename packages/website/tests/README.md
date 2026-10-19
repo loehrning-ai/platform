@@ -4,26 +4,34 @@ Playwright suites live in `tests/e2e/` and are configured in
 `playwright.config.ts`. All commands run from this package
 (`packages/website`); the same commands exist at the repository root and
 delegate here. Commands ending in `:built` are internal reuse commands that
-are valid only after `bun run verify` has produced a receipt-bound,
-provider-free build in the same workspace. A plain `bun run build` uses the
+are valid only after a build made in the same workspace with the same
+environment (`bun run ci:browser` does it) has produced a receipt-bound,
+provider-free build. A plain `bun run build` uses the
 current environment and does not establish provider-free reuse. Built gates
 recheck the receipt after execution and fail if source, toolchain, or immutable
 build output changed while the gate was running.
 
 ## Tiers
 
-- **Public (default PR tier):** desktop Chromium plus an iPhone 13 viewport in
+- **Smoke (the pull-request and `main` gate):** the specs named in
+  `tests/e2e/smoke.list`, run on desktop Chromium and the iPhone 13 Chromium
+  viewport with one retry. Run with `bun run ci:browser` from the repository
+  root (builds once, then runs the privacy probe and the smoke). Add a spec by
+  adding a line; keep known-flaky specs out. A test titled `@quarantine` is
+  skipped by the nightly run and deleted if still tagged after 14 days.
+- **Public (full suite, nightly):** desktop Chromium plus an iPhone 13 viewport in
   Chromium and WebKit (`chromium`, `mobile-chromium`, `mobile-webkit`
   projects). Covers the public route matrix, open-source routes, and
-  structural accessibility. Run with `bun run test:e2e` (full default graph,
-  builds first) or `bun run test:e2e:public` (public-route subset).
+  structural accessibility. The nightly workflow runs every Chromium spec and
+  the smoke list on WebKit. Run locally with `bun run test:e2e` (full default
+  graph, builds first) or `bun run test:e2e:public` (public-route subset).
   `bun run test:e2e:dev` runs against the dev server instead of a production
-  build.
-- **Auth scaffold (provider-free):** the `auth-scaffold` project writes a
+  build. Set `E2E_FAIL_ON_FLAKY=1` to count a pass-on-retry as a failure.
+- **Auth scaffold (provider-free, local only):** the `auth-scaffold` project writes a
   deterministic mock cookie and proves storage-state wiring plus fail-closed
   signed-out behavior for `*.authed.spec.ts` files. It is not live login
   proof. Run with `bun run test:e2e:auth-scaffold`.
-- **Konto DOM, mocked session (runs in CI):** the `konto-dom-mocked` project
+- **Konto DOM, mocked session (runs nightly):** the `konto-dom-mocked` project
   builds with three fictional-but-well-formed public Supabase variables and
   serves the endpoints the server calls during SSR from an in-process preload
   (`tests/e2e/fixtures/mock-auth-backend.cjs`), so the signed-in `/konto` DOM
@@ -64,8 +72,8 @@ fixed redaction marker is absent, or if the separately validated structured
 API log is lost.
 
 `bun run test:server-log-privacy:built` reuses `.next` and is valid only after
-`bun run verify` has produced a receipt-matching provider-free build from the
-same checkout. The preload is test-only, does not add or remove process
+`bun run ci:browser` (or `bun run verify:legacy`) has produced a
+receipt-matching provider-free build from the same checkout. The preload is test-only, does not add or remove process
 listeners, and is activated only inside the probe subprocess.
 
 ## Test selectors

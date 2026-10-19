@@ -1,0 +1,14 @@
+route-matrix.spec.ts
+a11y.spec.ts
+a11y-structure.spec.ts
+a11y-target-size.spec.ts
+seo-meta.spec.ts
+edge-states.spec.ts
+legal.spec.ts
+qa-sweep.spec.ts
+responsive.spec.ts
+mobile-shell.spec.ts
+route-workshops-locales.spec.ts
+plakat-contrast.spec.ts
+route-home-locales.spec.ts
+route-kurse-hub.spec.ts

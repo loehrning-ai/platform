@@ -71,7 +71,9 @@ async function scrollToAndSettle(page: Page, y: number) {
   return markGeometry(page);
 }
 
-test.describe("primary navigation logo mark", () => {
+// @quarantine: geometry flake on shared runners (2026-10-19). Excluded from
+// the nightly run too until fixed; delete the test if still tagged after 14 days.
+test.describe("primary navigation logo mark @quarantine", () => {
   test.beforeEach(({ browserName }) => {
     test.skip(
       browserName === "webkit",

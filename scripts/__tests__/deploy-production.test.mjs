@@ -2,18 +2,21 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   deploymentRequestBody,
+  describeNightly,
   evaluateCheckRuns,
+  evaluateNightlyRun,
   findLiveDeploymentForSha,
   parseArguments,
   readLinkedProject,
 } from "../deploy-production.mjs";
 
 const SHA = "a".repeat(40);
-const run = (name, status = "completed", conclusion = "success", head_sha = SHA) => ({
+const run = (name, status = "completed", conclusion = "success", head_sha = SHA, extra = {}) => ({
   name,
   status,
   conclusion,
   head_sha,
+  ...extra,
 });
 
 test("parseArguments defaults to a dry run of the head of main", () => {
@@ -22,6 +25,8 @@ test("parseArguments defaults to a dry run of the head of main", () => {
   assert.equal(options.wait, false);
   assert.equal(options.sha, null);
   assert.equal(options.smoke, true);
+  assert.equal(options.requireNightly, false);
+  assert.equal(options.waitTimeoutMin, 30);
 });
 
 test("parseArguments accepts the documented flags", () => {
@@ -31,6 +36,7 @@ test("parseArguments accepts the documented flags", () => {
     "--wait",
     "--yes",
     "--no-smoke",
+    "--require-nightly",
     "--deploy-timeout-min",
     "20",
     "--base-url",
@@ -39,6 +45,7 @@ test("parseArguments accepts the documented flags", () => {
   assert.equal(options.sha, SHA);
   assert.equal(options.wait && options.yes, true);
   assert.equal(options.smoke, false);
+  assert.equal(options.requireNightly, true);
   assert.equal(options.deployTimeoutMin, 20);
   assert.equal(options.baseUrl, "https://example.test");
 });
@@ -51,60 +58,118 @@ test("parseArguments rejects malformed input instead of guessing", () => {
   assert.throws(() => parseArguments(["--force"]), /Unknown argument/);
 });
 
-test("evaluateCheckRuns is ready only when everything is green and verify is present", () => {
-  const green = evaluateCheckRuns(
-    [run("verify"), run("lighthouse"), run("voice report", "completed", "skipped")],
-    SHA,
-  );
-  assert.equal(green.ready, true);
-  assert.deepEqual([green.pending, green.failed], [[], []]);
+test("evaluateCheckRuns is ready when verify alone is green", () => {
+  const verdict = evaluateCheckRuns([run("verify")], SHA);
+  assert.equal(verdict.ready, true);
+  assert.deepEqual([verdict.pending, verdict.failed, verdict.informational], [[], [], []]);
 });
 
-test("evaluateCheckRuns reports pending checks and waits for the aggregate", () => {
-  const verdict = evaluateCheckRuns(
-    [run("lighthouse", "in_progress", null), run("unit tests")],
-    SHA,
-  );
-  assert.equal(verdict.ready, false);
-  assert.ok(verdict.pending.includes("lighthouse"));
-  assert.ok(verdict.pending.some((name) => name.startsWith("verify")));
-});
-
-test("evaluateCheckRuns refuses red, cancelled and unexpectedly skipped checks", () => {
-  const verdict = evaluateCheckRuns(
-    [
-      run("verify", "completed", "failure"),
-      run("e2e chromium 1/6", "completed", "cancelled"),
-      run("lighthouse", "completed", "skipped"),
-    ],
-    SHA,
-  );
-  assert.equal(verdict.ready, false);
-  assert.equal(verdict.failed.length, 3);
-});
-
-test("evaluateCheckRuns ignores the dependency-snapshot jobs but not a real gate", () => {
+test("evaluateCheckRuns never lets another check refuse a release", () => {
   const verdict = evaluateCheckRuns(
     [
       run("verify"),
-      run("generate", "completed", "cancelled"),
-      run("submit", "completed", "skipped"),
+      run("lighthouse", "completed", "failure"),
+      run("Analyze (python)", "completed", "cancelled"),
+      run("generate", "completed", "skipped"),
+      run("foo", "in_progress", null),
+      run("unit tests"),
     ],
     SHA,
   );
   assert.equal(verdict.ready, true);
-  const blocked = evaluateCheckRuns(
-    [run("verify"), run("Analyze (python)", "completed", "cancelled")],
-    SHA,
-  );
-  assert.equal(blocked.ready, false);
-  assert.match(blocked.failed[0], /Analyze \(python\)/);
+  assert.deepEqual(verdict.pending, []);
+  assert.deepEqual(verdict.failed, []);
+  assert.deepEqual(verdict.informational, [
+    "lighthouse (failure)",
+    "Analyze (python) (cancelled)",
+    "generate (skipped)",
+    "foo (in_progress)",
+  ]);
 });
 
-test("evaluateCheckRuns rejects a check-run that belongs to another commit", () => {
+test("evaluateCheckRuns waits for verify and names it when it is not reported yet", () => {
+  const verdict = evaluateCheckRuns([run("unit tests", "in_progress", null)], SHA);
+  assert.equal(verdict.ready, false);
+  assert.deepEqual(verdict.pending, ["verify (not reported yet)"]);
+  assert.deepEqual(verdict.failed, []);
+  assert.deepEqual(verdict.informational, ["unit tests (in_progress)"]);
+});
+
+test("evaluateCheckRuns treats a verify that is still running as pending, not failed", () => {
+  for (const status of ["queued", "in_progress"]) {
+    const verdict = evaluateCheckRuns([run("verify", status, null)], SHA);
+    assert.equal(verdict.ready, false, status);
+    assert.deepEqual(verdict.pending, ["verify"], status);
+    assert.deepEqual(verdict.failed, [], status);
+  }
+});
+
+test("evaluateCheckRuns refuses a verify that did not succeed", () => {
+  for (const conclusion of ["failure", "cancelled", "skipped", "neutral", "timed_out"]) {
+    const verdict = evaluateCheckRuns([run("verify", "completed", conclusion)], SHA);
+    assert.equal(verdict.ready, false, conclusion);
+    assert.deepEqual(verdict.failed, [`verify (${conclusion})`], conclusion);
+    assert.deepEqual(verdict.pending, [], conclusion);
+  }
+});
+
+test("evaluateCheckRuns rejects a verify that belongs to another commit", () => {
   const verdict = evaluateCheckRuns([run("verify", "completed", "success", "b".repeat(40))], SHA);
   assert.equal(verdict.ready, false);
-  assert.match(verdict.failed[0], /another commit/);
+  assert.deepEqual(verdict.failed, ["verify (belongs to another commit)"]);
+});
+
+test("evaluateCheckRuns ignores a verify check-run created by another app", () => {
+  const impostor = run("verify", "completed", "success", SHA, { app: { slug: "some-other-app" } });
+  const alone = evaluateCheckRuns([impostor], SHA);
+  assert.equal(alone.ready, false);
+  assert.deepEqual(alone.pending, ["verify (not reported yet)"]);
+  const real = run("verify", "completed", "success", SHA, { app: { slug: "github-actions" } });
+  assert.equal(evaluateCheckRuns([impostor, real], SHA).ready, true);
+});
+
+test("evaluateCheckRuns resolves a re-run to the newest verify", () => {
+  const old = run("verify", "completed", "failure", SHA, { id: 1 });
+  const rerun = run("verify", "completed", "success", SHA, { id: 2 });
+  for (const runs of [[old, rerun], [rerun, old]]) {
+    const verdict = evaluateCheckRuns(runs, SHA);
+    assert.equal(verdict.ready, true);
+    assert.deepEqual(verdict.informational, []);
+  }
+  const newestRed = evaluateCheckRuns(
+    [rerun, run("verify", "completed", "failure", SHA, { id: 3 })],
+    SHA,
+  );
+  assert.equal(newestRed.ready, false);
+  assert.deepEqual(newestRed.failed, ["verify (failure)"]);
+});
+
+test("evaluateNightlyRun accepts only a completed success on this exact commit", () => {
+  const nightly = (extra = {}) => ({
+    status: "completed",
+    conclusion: "success",
+    headSha: SHA,
+    ...extra,
+  });
+  assert.equal(evaluateNightlyRun(nightly(), SHA).ok, true);
+  assert.equal(evaluateNightlyRun(nightly({ conclusion: "failure" }), SHA).ok, false);
+  assert.match(evaluateNightlyRun(nightly({ conclusion: "failure" }), SHA).reason, /ended failure/);
+  assert.match(evaluateNightlyRun(null, SHA).reason, /no Nightly run/);
+  assert.match(evaluateNightlyRun(nightly({ headSha: "b".repeat(40) }), SHA).reason, /older commit/);
+  const running = evaluateNightlyRun(nightly({ status: "in_progress", conclusion: "" }), SHA);
+  assert.equal(running.ok, false);
+  assert.match(running.reason, /in_progress/);
+});
+
+test("describeNightly prints one line and never throws on a missing run", () => {
+  const now = Date.parse("2026-10-20T12:00:00Z");
+  const base = { status: "completed", conclusion: "success", headSha: SHA, createdAt: "2026-10-20T02:30:00Z" };
+  assert.equal(describeNightly(base, SHA, now), "Nightly: success 10h ago, this commit");
+  assert.equal(
+    describeNightly({ ...base, conclusion: "failure", headSha: "b".repeat(40), createdAt: "2026-10-16T12:00:00Z" }, SHA, now),
+    "Nightly: failure 4d ago, an older commit",
+  );
+  assert.equal(describeNightly(null, SHA, now), "Nightly: unknown");
 });
 
 test("findLiveDeploymentForSha ignores failed builds and other commits", () => {

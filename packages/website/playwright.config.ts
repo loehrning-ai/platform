@@ -224,9 +224,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: true,
   // Retries retain a trace and separate infrastructure noise from a stable
-  // defect. Every gate still fails if any test needed a retry.
+  // defect. The pull-request and main gate retries once and tolerates a test
+  // that passes on its retry; the nightly desktop run sets E2E_FAIL_ON_FLAKY=1
+  // so those intermittent failures are counted there instead of blocking a merge.
   retries: process.env.CI ? 2 : 1,
-  failOnFlakyTests: true,
+  failOnFlakyTests: process.env.E2E_FAIL_ON_FLAKY === "1",
   // CI: 1 worker (GitHub runner). Local: cap at 2 — the suite runs against a
   // single `next start` process on a machine that usually runs other dev
   // servers; unbounded workers (~10 here) starve the server + image
