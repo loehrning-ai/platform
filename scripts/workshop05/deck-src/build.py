@@ -10,7 +10,7 @@ Runtime (not inlined): lib/tokens.css, lib/deck.css, lib/motion.css, lib/deck-st
 
 Placeholders in a partial are replaced per slide:
   <!--@amb-->    ambient backdrop         <!--@route-->  route bar, from the section's data-route="0..4"
-  <!--@foot-->   footer with the page number
+  <!--@foot-->   footer with the page number only (no cover footer: the cover has no page counter)
 """
 import json
 import os
@@ -22,7 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.normpath(os.path.join(HERE, "..", "..", "..", "packages", "website", "public", "workshops", "ki-im-unternehmen-sicher-nutzen", "slides.html"))
 RANGES = ["s01-s04", "s05-s08", "s09-s12", "s13-end"]
 STOPS = ["ACCOUNT", "PLACE", "PASTE", "LAW", "PAGE"]
-FOOTER = "Case invented. Facts checked 18 Oct 2026."
+BACK_HREF = "/workshops/ki-im-unternehmen-sicher-nutzen"
 MAIN = 12
 
 
@@ -51,13 +51,15 @@ def decorate(section: str) -> str:
     else:
         pager = '<b>%s</b> / appendix' % n
     amb = '<div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>'
-    foot = '<footer class="foot"><span>%s</span><span class="pg">%s</span></footer>' % (FOOTER, pager)
+    foot = '<footer class="foot"><span class="pg">%s</span></footer>' % pager
     if route is not None:
         stops = "".join('<span class="route-stop">%s</span>' % s for s in STOPS)
         rt = ('<nav class="route" data-stop="%s" aria-label="Route: account, place, paste, law, page">'
               '<div class="route-stops">%s</div><i class="route-track"></i><i class="route-dot"></i></nav>') % (route, stops)
     else:
         rt = ""
+    if n == "01":
+        foot = ""
     section = section.replace("<!--@amb-->", amb).replace("<!--@foot-->", foot).replace("<!--@route-->", rt)
     return section
 
@@ -100,17 +102,18 @@ def main() -> None:
 </head>
 <body>
 %s
+<a class="deck-back" href="%s" aria-label="Back to the workshop page">← Workshop</a>
 
 <!-- speaker notes, one per slide in deck order (deck-stage.js reads them when <deck-stage> connects, so they stay above it).
-     The deck has no presenter view: a notes renderer gets {slideIndexChanged: N} by postMessage. -->
+     Presenter view: press P (lib/presenter.js). Lines in a note: Time, Say, Students, Cue, Remember. -->
 <script type="application/json" id="speaker-notes">
 %s
 </script>
 
 <deck-stage width="1920" height="1080" data-total="%d">
-""" % ("\n".join(c for c in css if c.strip()), read("sprite.html"), json.dumps(notes, indent=0, ensure_ascii=False), len(sections))
+""" % ("\n".join(c for c in css if c.strip()), read("sprite.html"), BACK_HREF, json.dumps(notes, indent=0, ensure_ascii=False), len(sections))
 
-    tail_scripts = ['<script src="./lib/geo.js"></script>', '<script src="./lib/globe.js"></script>', '<script src="./lib/motion.js"></script>']
+    tail_scripts = ['<script src="./lib/geo.js"></script>', '<script src="./lib/globe.js"></script>', '<script src="./lib/motion.js"></script>', '<script src="./lib/presenter.js"></script>']
     for name, code in zip(["shared"] + RANGES, js):
         if code.strip():
             # a slide script needs the engine; without it the slide simply stays static

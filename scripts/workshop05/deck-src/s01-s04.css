@@ -4,7 +4,7 @@
 .s1 .amb i:nth-child(2) { background: radial-gradient(closest-side, rgba(217, 164, 65, .32), rgba(217, 164, 65, 0)); }
 .s1 .amb i:nth-child(3) { background: radial-gradient(closest-side, rgba(31, 74, 56, .12), rgba(31, 74, 56, 0)); }
 .s1 .foot, .s1 .foot b { color: var(--tanne); }
-.s1-logos { left: 96px; top: 62px; display: flex; align-items: center; gap: 28px; }
+.s1-logos { left: 96px; top: 84px; display: flex; align-items: center; gap: 28px; }
 .s1-lock { height: 58px; width: auto; display: block; }
 .s1-brain { height: 32px; width: auto; display: block; filter: brightness(0); opacity: .78; }
 .s1-x { font: 400 34px/1 var(--mono); color: var(--tanne); opacity: .55; }
@@ -17,49 +17,16 @@
 .motion .s1[data-deck-active] .s1-h1 .em::after { animation: s1-ul .8s var(--ease) 1.7s both; }
 .s1-sub { left: 96px; top: 826px; font: 500 44px/1.15 var(--sans); letter-spacing: -.015em; color: var(--ink-2); --d: 700ms; }
 .s1-meta { left: 96px; top: 912px; font: 500 28px/1 var(--mono); letter-spacing: .01em; color: var(--tanne); --d: 800ms; }
-.s1-scene { left: 1040px; top: 36px; width: 780px; height: 975px; --d: 22; }
-.hg { width: 100%; height: 100%; display: block; overflow: visible; }
-
-/* the gate scene: resting style is the final frame (all three lamps lit, packets parked) */
-.hg-pk { transform: translate(calc(var(--lane-x, 0px) * var(--k)), calc(var(--lane-y, 300px) * var(--k))); }
-.hg-p1 { --k: 1; } .hg-p2 { --k: .66; } .hg-p3 { --k: .06; }
-.hg-cover { transform-box: fill-box; transform-origin: left center; }
-.hg-lamp { transform-box: fill-box; transform-origin: center; }
-.hg-rip { opacity: 0; transform-box: fill-box; transform-origin: center; }
-.hg-post, .hg-laptop, .hg-cloud { transform-box: fill-box; }
-.hg-cursor { opacity: 1; }
-
-@keyframes hg-flow { to { stroke-dashoffset: -48; } }
-@keyframes hg-blink { 50% { opacity: 0; } }
-@keyframes hg-pop { from { opacity: 0; scale: .88; } }
-@keyframes hg-grow { from { scale: 1 0; } }
-@keyframes hg-fade { from { opacity: 0; } }
-@keyframes hg-p1 { 0%, 3.3% { opacity: 0; --k: 0; } 5% { opacity: 1; --k: 0; } 15.6% { opacity: 1; --k: .5; } 28.9% { opacity: 1; --k: 1; } 32%, 100% { opacity: 0; --k: 1; } }
-@keyframes hg-p2 { 0%, 33.3% { opacity: 0; --k: 0; } 36.7% { opacity: 1; --k: 0; } 48.9%, 55.6% { opacity: 1; --k: .5; } 65.6% { opacity: 1; --k: 1; } 68.9%, 100% { opacity: 0; --k: 1; } }
-@keyframes hg-p3 { 0%, 68.9% { opacity: 0; --k: 0; } 71.1% { opacity: 1; --k: 0; } 82.2%, 87.8% { opacity: 1; --k: .5; } 95.6% { opacity: 1; --k: .1; } 96.7%, 100% { opacity: 0; --k: .1; } }
-@keyframes hg-cov { 0%, 50% { transform: scaleX(0); } 54.4%, 100% { transform: scaleX(1); } }
-@keyframes hg-shk { 0%, 82.2% { translate: 0 0; } 83.3% { translate: 5px 0; } 85% { translate: -5px 0; } 86.7% { translate: 5px 0; } 88%, 100% { translate: 0 0; } }
-@keyframes hg-lg { 0%, 15.5% { opacity: 0; scale: 1.5; } 16.5% { opacity: 1; scale: 1.25; } 19%, 37.8% { opacity: 1; scale: 1; } 39%, 100% { opacity: 0; scale: 1; } }
-@keyframes hg-la { 0%, 48.8% { opacity: 0; scale: 1.5; } 49.9% { opacity: 1; scale: 1.25; } 52%, 66.7% { opacity: 1; scale: 1; } 68%, 100% { opacity: 0; scale: 1; } }
-@keyframes hg-lr { 0%, 82.1% { opacity: 0; scale: 1.5; } 83.2% { opacity: 1; scale: 1.25; } 86%, 95.6% { opacity: 1; scale: 1; } 97.8%, 100% { opacity: 0; scale: 1; } }
-@keyframes hg-rip { 0%, 28.5% { opacity: 0; scale: .6; } 28.6% { opacity: .5; scale: .6; } 37% { opacity: 0; scale: 1.6; } 65.1% { opacity: 0; scale: .6; } 65.2% { opacity: .5; scale: .6; } 74%, 100% { opacity: 0; scale: 1.6; } }
-
-.motion .s1[data-deck-active] .hg-route { animation: hg-flow 1.6s linear infinite; }
-.motion .s1[data-deck-active] .hg-cursor { animation: hg-blink 1s steps(2) infinite; }
-.motion .s1[data-deck-active] .hg-laptop { transform-origin: 50% 100%; animation: hg-pop .4s var(--ease) .1s both; }
-.motion .s1[data-deck-active] .hg-post { transform-origin: 50% 100%; animation: hg-grow .5s var(--ease) .2s both; }
-.motion .s1[data-deck-active] .hg-gate > rect, .motion .s1[data-deck-active] .hg-lamps > circle { animation: hg-fade .6s var(--ease) .6s both; }
-.motion .s1[data-deck-active] .hg-cloud > path { transform-origin: 50% 100%; animation: hg-pop .4s var(--ease) .4s both; }
-.motion .s1[data-deck-active] .hg-p1 { animation: hg-p1 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-p2 { animation: hg-p2 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-p3 { animation: hg-p3 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-cover { animation: hg-cov 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-shk { animation: hg-shk 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-lg { animation: hg-lg 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-la { animation: hg-la 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-lr { animation: hg-lr 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-r1 { animation: hg-rip 9s linear .9s infinite backwards; }
-.motion .s1[data-deck-active] .hg-r2 { animation: hg-rip 9s linear 1.3s infinite backwards; }
+/* the globe panel: a live globe right of a hard edge, so no motion ever reaches the title column or the 05 */
+.s1-globe { position: absolute; inset: 0; z-index: 1; clip-path: inset(0 0 0 1008px); opacity: 0; transform: scale(.94); transform-origin: 90% 50%; pointer-events: none;
+  transition: opacity .7s var(--ease), transform .9s var(--ease); }
+.s1[data-deck-active] .s1-globe { opacity: 1; transform: none; }
+.s1-globe canvas { display: block; width: 100%; height: 100%; }
+.s1-edge { position: absolute; left: 1006px; top: 0; bottom: 0; width: 3px; background: var(--tanne); z-index: 2; transform: scaleY(0); transform-origin: 50% 0; transition: transform .6s var(--ease); }
+.s1[data-deck-active] .s1-edge { transform: none; }
+/* the numeral lives in the title column, right of the logos, and the edge keeps every moving thing out of it */
+.s1-num { left: 740px; top: 44px; width: 250px; text-align: right; font: 700 204px/.8 var(--sans); letter-spacing: -.06em; color: var(--tanne); z-index: 3; }
+.s1 .foot { display: none; }
 
 /* ═══ S2 the email ═══ */
 .s2-kick { left: 96px; top: 98px; --i: 0; }

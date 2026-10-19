@@ -68,6 +68,13 @@ Each bar is written so a person or a test can check it.
 
 **Learner guide.** Sections mirror the acts; each runs question, short answer, a reveal prompt for retrieval, one key point. Every term is in the glossary. Works on a 390-pixel screen.
 
+**Deck chrome (every deck, every workshop).**
+- **Cover.** A cover in the Workshop 04 globe family: a live globe in a panel behind a hard edge on the right, the title column on the left, the big workshop numeral inside the title column. Each workshop gets its own variation on its own story (Workshop 04: North Macedonia turning to the EU; Workshop 05: a prompt travelling from Skopje to the US cloud). Nothing that moves may reach the numeral: the hard edge and the layout keep it clear, never opacity. The cover reads in 3 seconds, loads offline (no CDN) and has a still final frame under `prefers-reduced-motion`.
+- **Reset and arrows.** Same as Workshop 04: the arrow keys, Space and PageUp/PageDown walk build steps and slides; Shift+R (and the Reset button of the stage pill) goes back to slide 1. A bare R does nothing, so a stray key never sends a live talk back to the cover (in Workshop 05 R is also a vote key). A deck with votes clears them on reset.
+- **Presenter view.** Press P: a second window shows the notes of the current slide (time, what to say, what students do, cue, the one thing not to forget), the step, the next slide, a slide timer against the plan and a session timer, and can drive the deck. Every slide, appendix included, has notes in `#speaker-notes`.
+- **Back button.** `<a class="deck-back" href="/workshops/<slug>" aria-label="Back to the workshop page">← Workshop</a>`: fixed top-left at 16px, 44px high, mono 16px weight 600, paper fill, 2px ink border, no radius; hover and focus-visible show a 4px Mennige block shadow and move it by (-2px, -2px); z-index above the stage; hidden in print and in presenter previews; fades after 2.5 s without mouse movement and returns on mouse move or focus. Audits ignore it because it sits outside `<deck-stage>`.
+- **No footer sentence.** Slides carry the page counter only. Say that the case is invented on the slide that introduces it, not in a footer.
+
 **Field card.** Prints on one A4 page at 100 percent. Five to eight blocks, each with a rule, a Do line, a Don't line and a number. Nothing that is not in the deck.
 
 **Kit.** `START-HERE.md` says what to open first in five lines or fewer. Every file the deck names exists under that name. Data is invented and licensed. Opens without installing anything. Contains expected outputs. Only text files (the public scanner refuses PDF, XLSX, DOCX and PPTX). The size appears on the detail page (`sizeLabel`).

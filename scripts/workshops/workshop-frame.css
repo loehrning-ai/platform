@@ -264,3 +264,8 @@ a.wf-card:hover{border-color:var(--wf-ink)}
 @media print{.wf-skip,.wf-strip,.wf-foot{display:none!important}.wf-cover{background:#fff;color:var(--wf-ink)}.wf-cover__art,.wf-cover__strip{display:none}
   .wf-cover .wf-h1,.wf-cover .wf-kicker,.wf-cover .wf-lead,.wf-cover .wf-meta{color:var(--wf-ink)}
   .wf-cover .wf-qcard{background:#fff;color:var(--wf-ink);border-color:var(--wf-ink)}}
+
+/* Normal web pages (Workshop 01 lab and case; the button itself is lib/deck-back.css): it stays on screen (no idle fade) and the strip leaves room for it:
+   on wide screens the brand starts right of it, on narrow screens it gets its own band above the strip. */
+body:has(> .deck-back) .wf-strip{padding-left:max(168px,var(--wf-gutter),calc((100% - var(--wf-max)) / 2 + var(--wf-gutter)))}
+@media (max-width:900px){body:has(> .deck-back) .wf-strip{padding-left:var(--wf-gutter);padding-top:68px}}

@@ -5,8 +5,10 @@
  *  (a) speaker notes — reads <script type="application/json" id="speaker-notes">
  *      and posts {slideIndexChanged: N} to the parent window on nav.
  *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
- *  (c) press R twice (within 1.5 s) to reset to slide 0; the first press
- *      shows "Press R again to reset", so a stray key never loses your place.
+ *  (c) press Shift+R to reset to slide 0, the same as every other workshop deck; a bare R does
+ *      nothing, so a stray key press can never send a live talk back to the cover.
+ *  (c2) P or Shift+P opens the presenter view (presenter.html): notes, current and next slide, a clock. It
+ *      follows the deck over a BroadcastChannel and sends the same keys back.
  *  (d) bottom-center overlay showing slide count + hints, fades out on idle.
  *  (e) auto-scaling — inner canvas is a fixed design size (default 1920×1080)
  *      scaled with `transform: scale()` to fit the viewport, letterboxed.
@@ -54,7 +56,6 @@
   const DESIGN_H_DEFAULT = 1080;
   const STORAGE_PREFIX = 'deck-stage:slide:';
   const OVERLAY_HIDE_MS = 1800;
-  const RESET_CONFIRM_MS = 1500;
   const PORTRAIT_KEY = 'deck-stage:portrait-hint-dismissed';
   // Workshop page in the visitor's language: same rule as the strip on the other workshop materials
   // (German when arriving from /workshops/..., English after any /en/... page, else the session's choice).
@@ -80,6 +81,68 @@
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 
   const pad2 = (n) => String(n).padStart(2, '0');
+
+  // Workshop page this deck belongs to (the back button's target) and the presenter-view link.
+  const WORKSHOP_SLUG = 'geschaeftsberichte-mit-ki-lesen';
+  const BACK_IDLE_MS = 2500;
+  // ?preview=N renders slide N alone, without chrome: the presenter view embeds the deck this way.
+  const PREVIEW = (() => {
+    try {
+      const v = new URLSearchParams(location.search).get('preview');
+      return v === null ? null : Math.max(0, parseInt(v, 10) || 0);
+    } catch (e) { return null; }
+  })();
+  if (PREVIEW !== null) document.documentElement.setAttribute('data-deck-preview', '');
+  const CHANNEL_NAME = 'deck-presenter:' + location.pathname.replace(/[^/]*$/, '');
+  const PRESENTER_KEYS = new Set(['ArrowRight', 'ArrowLeft', 'PageDown', 'PageUp', ' ', 'Home', 'End', 'R', 'r']);
+
+  // Back-to-workshop button (a.deck-back in slides.html): same design on every deck. It fades out
+  // after BACK_IDLE_MS without mouse movement, like the deck toolbar, and returns on move or focus.
+  const BACK_CSS = `/* deck-back: the same back-to-workshop button on every deck, console and lab page (W01 to W05). */
+.deck-back{position:fixed;top:16px;left:16px;z-index:2147483600;box-sizing:border-box;display:inline-flex;align-items:center;height:44px;padding:0 14px;
+  font:600 16px/1 var(--mono,"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace);letter-spacing:0;text-transform:none;white-space:nowrap;text-decoration:none;
+  color:#121212;background:#F3F0E9;border:2px solid #121212;border-radius:0;
+  transition:opacity 300ms ease,box-shadow 120ms ease,transform 120ms ease}
+.deck-back:hover,.deck-back:focus-visible{position:fixed;z-index:2147483600;color:#121212;background:#F3F0E9;box-shadow:4px 4px 0 #B73A15;transform:translate(-2px,-2px);outline:none}
+.deck-back[data-idle]{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.deck-back{transition:none}}
+@media print{.deck-back{display:none!important}}
+html[data-deck-preview] .deck-back{display:none!important}
+/* The running header's lockup sits under the button (x 96, y 34): it steps aside while the button shows. */
+.chrome__topbar .brand{transition:opacity 300ms ease}
+html:not([data-deck-back-idle]) .chrome__topbar .brand{opacity:0}
+html[data-deck-preview] .chrome__topbar .brand{opacity:1}
+@media print{.chrome__topbar .brand{opacity:1!important}}`;
+  (function installBackButton() {
+    const style = document.createElement('style');
+    style.id = 'deck-back-style';
+    style.textContent = BACK_CSS;
+    document.head.appendChild(style);
+    if (PREVIEW !== null) return;
+    const wire = () => {
+      const a = document.querySelector('a.deck-back');
+      if (!a) { document.documentElement.setAttribute('data-deck-back-idle', ''); return; }
+      let timer = null;
+      const root = document.documentElement;
+      const wake = () => {
+        a.removeAttribute('data-idle');
+        root.removeAttribute('data-deck-back-idle');
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          if (a.matches(':hover, :focus-within')) return;
+          a.setAttribute('data-idle', '');
+          root.setAttribute('data-deck-back-idle', '');
+        }, BACK_IDLE_MS);
+      };
+      window.addEventListener('mousemove', wake, { passive: true });
+      window.addEventListener('pointerdown', wake, { passive: true });
+      a.addEventListener('focus', wake);
+      a.addEventListener('mouseleave', wake);
+      wake();
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire, { once: true });
+    else wire();
+  })();
   const COVER_STRIP_W = 1056; // the cover's colophon strip width on the 1920 canvas (slides.html #cover)
 
   const stylesheet = `
@@ -258,6 +321,11 @@
        @page size is set from the width/height attributes via the inline
        <style id="deck-stage-print-page"> that connectedCallback injects
        into <head> (the @page at-rule has no effect inside shadow DOM). */
+    /* ?preview=N (presenter view thumbnails): no chrome at all. */
+    :host([data-preview]) .overlay,
+    :host([data-preview]) .tapzones,
+    :host([data-preview]) .portrait { display: none !important; }
+
     @media print {
       :host {
         position: static;
@@ -292,29 +360,8 @@
         break-after: auto;
         page-break-after: auto;
       }
-      .overlay, .tapzones, .toast, .portrait { display: none !important; }
+      .overlay, .tapzones, .portrait { display: none !important; }
     }
-
-    /* Reset confirmation toast: first R press arms, second resets. */
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 72px;
-      transform: translateX(-50%);
-      padding: 10px 16px;
-      background: #121212;
-      color: #f2f1ee;
-      font-family: "Typing", system-ui, sans-serif;
-      font-size: 15px;
-      font-weight: 500;
-      letter-spacing: 0.01em;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 200ms ease;
-      z-index: 2147483000;
-      white-space: nowrap;
-    }
-    .toast[data-visible] { opacity: 1; }
 
     /* Portrait hint: a 16:9 deck on a phone held upright is tiny. */
     .portrait {
@@ -347,7 +394,7 @@
       .portrait:not([hidden]) { display: flex; }
     }
     @media (prefers-reduced-motion: reduce) {
-      .overlay, .toast, .btn { transition: none; }
+      .overlay, .btn { transition: none; }
     }
   `;
 
@@ -383,6 +430,13 @@
       this._render();
       this._loadNotes();
       this._syncPrintPageRule();
+      if (PREVIEW !== null) {
+        this.setAttribute('data-preview', '');
+        window.addEventListener('resize', this._onResize);
+        window.addEventListener('message', (ev) => this._onPreviewMessage(ev));
+        return;
+      }
+      this._initPresenterBridge();
       window.addEventListener('keydown', this._onKey);
       window.addEventListener('resize', this._onResize);
       window.addEventListener('mousemove', this._onMouseMove, { passive: true });
@@ -395,7 +449,7 @@
       window.removeEventListener('mousemove', this._onMouseMove);
       if (this._hideTimer) clearTimeout(this._hideTimer);
       if (this._mouseIdleTimer) clearTimeout(this._mouseIdleTimer);
-      if (this._resetTimer) clearTimeout(this._resetTimer);
+      if (this._channel) { this._channel.close(); this._channel = null; }
     }
 
     attributeChangedCallback() {
@@ -457,17 +511,15 @@
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
         </button>
         <span class="divider"></span>
-        <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (press R twice)">Reset<span class="kbd">R</span></button>
+        <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (Shift+R)">Reset<span class="kbd">Shift R</span></button>
+        <span class="divider"></span>
+        <button class="btn reset presenter" type="button" aria-label="Open presenter view" title="Presenter view (P)">Presenter<span class="kbd">P</span></button>
       `;
 
       overlay.querySelector('.prev').addEventListener('click', () => this._go(this._index - 1, 'click'));
       overlay.querySelector('.next').addEventListener('click', () => this._go(this._index + 1, 'click'));
       overlay.querySelector('.reset').addEventListener('click', () => this._go(0, 'click'));
-
-      const toast = document.createElement('div');
-      toast.className = 'toast export-hidden';
-      toast.setAttribute('role', 'status');
-      toast.setAttribute('aria-live', 'polite');
+      overlay.querySelector('.presenter').addEventListener('click', () => this.openPresenter());
 
       const portrait = document.createElement('div');
       portrait.className = 'portrait export-hidden';
@@ -483,8 +535,7 @@
         try { sessionStorage.setItem(PORTRAIT_KEY, '1'); } catch (err) { /* ignore */ }
       });
 
-      this._root.append(style, stage, tapzones, overlay, toast, portrait);
-      this._toast = toast;
+      this._root.append(style, stage, tapzones, overlay, portrait);
       this._canvas = canvas;
       this._slot = slot;
       this._overlay = overlay;
@@ -569,6 +620,7 @@
     }
 
     _restoreIndex() {
+      if (PREVIEW !== null) { this._index = Math.min(PREVIEW, Math.max(0, this._slides.length - 1)); return; }
       try {
         const raw = localStorage.getItem(this._storageKey);
         if (raw != null) {
@@ -581,6 +633,7 @@
     }
 
     _persistIndex() {
+      if (PREVIEW !== null) return;
       try { localStorage.setItem(this._storageKey, String(this._index)); }
       catch (e) { /* ignore */ }
     }
@@ -626,6 +679,7 @@
           bubbles: true,
           composed: true,
         }));
+        this._postState(reason);
       }
 
       this._prevIndex = curr;
@@ -691,7 +745,6 @@
       // Space/Enter on a focused button or link belongs to that control.
       const origin = (e.composedPath && e.composedPath()[0]) || t;
       if ((key === ' ' || key === 'Spacebar' || key === 'Enter') && origin && /^(BUTTON|A)$/.test(origin.tagName)) return;
-      if (key !== 'r' && key !== 'R') this._disarmReset();
       let handled = true;
 
       if (key === 'ArrowRight' || key === 'PageDown' || key === ' ' || key === 'Spacebar') {
@@ -702,13 +755,10 @@
         this._go(0, 'keyboard');
       } else if (key === 'End') {
         this._go(this._slides.length - 1, 'keyboard');
-      } else if (key === 'r' || key === 'R') {
-        if (this._resetArmed) {
-          this._disarmReset();
-          this._go(0, 'keyboard');
-        } else {
-          this._armReset();
-        }
+      } else if ((key === 'r' || key === 'R') && e.shiftKey) {
+        this._go(0, 'keyboard');
+      } else if (key === 'p' || key === 'P') {
+        this.openPresenter();
       } else if (/^[0-9]$/.test(key)) {
         // 1..9 jump to that slide; 0 jumps to 10.
         const n = key === '0' ? 9 : parseInt(key, 10) - 1;
@@ -719,27 +769,8 @@
 
       if (handled) {
         e.preventDefault();
-        this._flashOverlay();
-      }
-    }
-
-    _armReset() {
-      this._resetArmed = true;
-      if (this._toast) {
-        this._toast.textContent = 'Press R again to reset';
-        this._toast.setAttribute('data-visible', '');
-      }
-      if (this._resetTimer) clearTimeout(this._resetTimer);
-      this._resetTimer = setTimeout(() => this._disarmReset(), RESET_CONFIRM_MS);
-    }
-
-    _disarmReset() {
-      if (!this._resetArmed) return;
-      this._resetArmed = false;
-      if (this._resetTimer) { clearTimeout(this._resetTimer); this._resetTimer = null; }
-      if (this._toast) {
-        this._toast.removeAttribute('data-visible');
-        this._toast.textContent = '';
+        // keys sent from the presenter view stay off the projector's toolbar
+        if (!e._fromPresenter) this._flashOverlay();
       }
     }
 
@@ -752,6 +783,52 @@
       }
       this._index = clamped;
       this._applyIndex({ showOverlay: true, broadcast: true, reason });
+    }
+
+    // Presenter view ---------------------------------------------------------
+
+    /** Opens (or focuses) the presenter view: notes, the next slide and a clock for the speaker. */
+    openPresenter() {
+      if (PREVIEW !== null) return;
+      const w = window.open('./presenter.html', 'deck-presenter-' + WORKSHOP_SLUG, 'width=1180,height=820');
+      if (w) { try { w.focus(); } catch (e) { /* ignore */ } }
+      this._postState('presenter');
+    }
+
+    _initPresenterBridge() {
+      if (typeof BroadcastChannel === 'undefined') return;
+      this._channel = new BroadcastChannel(CHANNEL_NAME);
+      this._channel.onmessage = (ev) => {
+        const m = ev.data || {};
+        if (m.from !== 'presenter') return;
+        if (m.type === 'hello') this._postState('hello');
+        else if (m.type === 'goto' && Number.isInteger(m.index)) this._go(m.index, 'api');
+        else if (m.type === 'key' && PRESENTER_KEYS.has(m.key)) {
+          // the same keys the projector listens to, so build steps and Shift+R behave identically
+          const evt = new KeyboardEvent('keydown', { key: m.key, shiftKey: !!m.shiftKey, bubbles: true, cancelable: true });
+          evt._fromPresenter = true;
+          document.body.dispatchEvent(evt);
+        }
+      };
+    }
+
+    _postState(reason) {
+      if (!this._channel || !this._slides.length) return;
+      const slide = this._slides[this._index];
+      if (!slide) return;
+      this._channel.postMessage({
+        from: 'deck', type: 'state', reason,
+        index: this._index, total: this._slides.length,
+        label: slide.getAttribute('data-label') || '', section: slide.getAttribute('data-section') || '',
+        step: parseInt(slide.getAttribute('data-step') || '0', 10) || 0,
+        steps: parseInt(slide.getAttribute('data-steps') || '0', 10) || 0,
+      });
+    }
+
+    _onPreviewMessage(ev) {
+      if (ev.origin !== location.origin) return;
+      const m = ev.data;
+      if (m && m.deckPreview === true && Number.isInteger(m.index)) this._go(m.index, 'api');
     }
 
     // Public API ------------------------------------------------------------

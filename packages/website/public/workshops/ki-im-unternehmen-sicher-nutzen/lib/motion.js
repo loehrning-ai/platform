@@ -8,6 +8,7 @@
  * Tally:   [data-tally="id:option"] buttons count +1 on click or on their data-key, -1 on Alt-click, Backspace undoes the last.
  *          [data-bar="id:option"] scales to its share, [data-val="id:option"] shows the count. Counts live in one object.
  * Route:   .route[data-stop] on a slide: the dot slides from the previous stop to this one.
+ * Reset:   Shift+R (or the stage's Reset pill) goes to slide 1 like Workshop 04 and clears the votes. A bare R does nothing, except a vote key.
  * Helpers: DECK.spring, DECK.flip, DECK.type, DECK.reduce, DECK.scaleOf.
  */
 (() => {
@@ -116,6 +117,8 @@
     const onButton = t && t.tagName === 'BUTTON' && t !== mouseBtn;
     if ((e.key === ' ' || e.key === 'Enter') && onButton) { e.stopImmediatePropagation(); return; }
     if (e.key === 'Backspace') { undo(); e.preventDefault(); return; }
+    // Shift+R: the deck goes back to the cover (deck-stage.js); a new room starts with empty votes
+    if (e.shiftKey && (e.key === 'R' || e.key === 'r')) { clearTally(); return; }
     if (e.key.length === 1 && !e.shiftKey && /[a-z]/i.test(e.key)) {
       const b = liveButton(current, e.key.toLowerCase());
       if (b) { bump(b.dataset.tally, 1, b); e.preventDefault(); e.stopImmediatePropagation(); }
@@ -149,6 +152,12 @@
     });
   }
 
+  // the stage's own Reset pill resets the votes too, like Shift+R
+  if (sr) {
+    const rb = sr.querySelector('.reset');
+    if (rb) rb.addEventListener('click', clearTally);
+  }
+
   /* ── tally ─────────────────────────────────────────────────────────────── */
   const T = Object.create(null);
   const hist = [];
@@ -179,6 +188,12 @@
     if (!quiet) hist.push([key, d]);
     paintTally(key.split(':')[0]);
     if (el && !reduce) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  }
+  function clearTally() {
+    const ids = new Set(Object.keys(T).map((k) => k.split(':')[0]));
+    Object.keys(T).forEach((k) => { T[k] = 0; });
+    hist.length = 0;
+    ids.forEach(paintTally);
   }
   function undo() {
     const last = hist.pop();
