@@ -192,6 +192,13 @@ export interface WorkshopRealWorldCase {
   readonly decisionQuestion: string;
 }
 
+export interface WorkshopStageExplainer {
+  readonly heading: string;
+  readonly body: string;
+  /** Two or three short plain facts ("7 Textdateien"), no sentences. */
+  readonly facts?: readonly string[];
+}
+
 export interface Workshop {
   readonly slug: string;
   /** Two-digit catalogue number, fixed per workshop and never derived from array position. */
@@ -212,6 +219,13 @@ export interface Workshop {
   readonly accessNote: string;
   /** The artefact the learner leaves with, as a short label ("Du nimmst mit"). */
   readonly outcome: string;
+  /**
+   * The always-visible block under the stage cards: what the kit (or, for a
+   * workshop without a kit zip, the lab) is and what you do with it.
+   * Heading as a question, two short sentences (about 35 words), and two or
+   * three plain facts. Rendered by components/workshops/stage-explainer.tsx.
+   */
+  readonly stageExplainer: WorkshopStageExplainer;
   readonly audience: readonly string[];
   /** One sentence naming who should pick another workshop, and why. */
   readonly notForYou: string;
@@ -270,6 +284,12 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     accessNote:
       "Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
     outcome: "Go/No-Go-Regel",
+    stageExplainer: {
+      heading: "Was ist das Labor?",
+      body:
+        "Im Browser rechnest du drei kleine Simulationen durch: Kapazität, Puffer und ein Nachfrageschock. Danach verteilst du im Launch‑Fall 1.050 Stück. Kein Konto nötig.",
+      facts: ["3 Simulationen", "1 Fall", "ca. 90 Min. allein"],
+    },
     audience: [
       "Disponentinnen und Planer, die nach Prognosen Mengen festlegen",
       "Führungskräfte, die eine Prognose verantworten, aber nicht rechnen",
@@ -457,6 +477,12 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     accessNote:
       "Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
     outcome: "Kennzahlen-Skill + Dashboard",
+    stageExplainer: {
+      heading: "Was ist das Kit?",
+      body:
+        "Eine Zip mit Rohdaten und Monatsberichten der erfundenen Firma NORTHWIND, einem halb fertigen Skill und einer Dashboard-Vorlage. Du öffnest sie in der Claude-Desktop-App und machst die fünf Prompts nach.",
+      facts: ["Nur Textdateien", "5 Prompts", "ca. 90 Min. allein"],
+    },
     audience: [
       "Controllerinnen und Controller mit Monats- oder Quartalsberichten",
       "Finance-Teams, die jeden Monatsbericht gleich lesen wollen",
@@ -692,6 +718,12 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     accessNote:
       "The labs price in US dollars; the launch case counts units.",
     outcome: "Go/no-go rule",
+    stageExplainer: {
+      heading: "What is the lab?",
+      body:
+        "In your browser you run three small simulations: capacity, buffers and a demand shock. Then you hand out 1,050 units in the launch case. No account needed.",
+      facts: ["3 simulations", "1 case", "about 90 min alone"],
+    },
     audience: [
       "Planners who set quantities from forecasts",
       "Managers who own a forecast but do not calculate it",
@@ -879,6 +911,12 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     accessNote:
       "Use only the invented kit: Claude may transfer files to Anthropic.",
     outcome: "Metrics skill + dashboard",
+    stageExplainer: {
+      heading: "What is the kit?",
+      body:
+        "A zip with raw data and monthly reports of the invented company NORTHWIND, a half-finished skill and a dashboard template. You open it in the Claude desktop app and follow the five prompts.",
+      facts: ["Text files only", "5 prompts", "about 90 min alone"],
+    },
     audience: [
       "Controllers who work with monthly or quarterly reports",
       "Finance teams who want to read every monthly report alike",

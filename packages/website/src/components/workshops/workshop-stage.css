@@ -161,12 +161,16 @@
   border-color: transparent transparent transparent currentColor;
 }
 
-.ws-pause:hover {
-  color: var(--color-scene-ground);
+/* Hover (fine pointer only) and press bring in the anti colour as the disc's
+   border, never a swap or a shade of the ink: the icon keeps its contrast. */
+@media (hover: hover) and (pointer: fine) {
+  .ws-pause:hover::before {
+    border-color: var(--color-scene-anti-a);
+  }
 }
 
-.ws-pause:hover::before {
-  background-color: var(--color-scene-ink);
+.ws-pause:active::before {
+  border-color: var(--color-scene-anti-a);
 }
 
 /* Stopped: every animation and transition on the stage ends, and each part

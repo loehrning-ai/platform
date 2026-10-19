@@ -23,6 +23,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       "Zu jedem Fakt Datei und Zeile nennen (Zeilennummern wie im Texteditor, jede Zeile zählt). Jede Rechnung in Code mit Einheiten.",
       "Fehlt ein Dokument: NOT FOUND und nenne das Dokument, das den Beleg liefern würde. Gibt es das Dokument, aber es ist abgelaufen, eine Schätzung oder im Konflikt mit einer anderen Datei: NEEDS CHECK und begründe es in einem Satz. Fehlt ein Dokument und eine andere Datei widerspricht ebenfalls, schreibe NOT FOUND und nenne den Konflikt in der Begründung. Bei mehreren Teilfragen gilt der Status des schwächsten Teils.",
     ],
+    rulesShort: [
+      "Nur unsere Dateien. Keine erfundene Zahl.",
+      "Zu jedem Fakt Datei und Zeile nennen. Jede Rechnung in Code, mit Einheiten.",
+      "Fehlt ein Beleg: NOT FOUND. Abgelaufen, geschätzt oder im Konflikt: NEEDS CHECK. Der schwächste Teil entscheidet.",
+    ],
     stepsHeading: "Die Prompts",
     steps: [
       {
@@ -73,7 +78,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     fictionalNote:
       "Alles im Kit ist erfunden, nur die zitierten Gesetze und Regeln sind echt.",
     contents: [
-      { name: "START-HERE.md", description: "Fallensuche zum Aufwärmen, Einrichtung, fünf Prompts zum Kopieren (plus Lite-Prompt für den Free-Plan), eine Vorhersage vor jedem Schritt und eine Vorlage für die eigene Firma" },
+      { name: "START-HERE.md", description: "Fallensuche, Einrichtung und fünf Prompts zum Kopieren." },
       { name: "ANSWERS.md", description: "Der Lösungsschlüssel. Erst nach jedem Schritt öffnen." },
       { name: "project-instructions.md", description: "Das Datum und die drei Regeln für Claude" },
       { name: "project-files/", description: "13 Firmendateien, ein bisschen unordentlich wie echte" },
@@ -94,6 +99,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       "Only our files. Never invent a number.",
       "Cite the file and line for every fact (line numbers as in a text editor, counting every line). Do every calculation in code, with units.",
       "Missing document: write NOT FOUND and name the document that would prove it. Document exists but is expired, an estimate or in conflict with another file: write NEEDS CHECK and give the reason in one sentence. If a document is missing and another file also conflicts, write NOT FOUND and name the conflict in the reason. A question with several parts gets the status of its weakest part.",
+    ],
+    rulesShort: [
+      "Only our files. Never invent a number.",
+      "Name file and line for every fact. Every calculation in code, with units.",
+      "No proof: NOT FOUND. Expired, estimated or conflicting: NEEDS CHECK. The weakest part decides.",
     ],
     stepsHeading: "The prompts",
     steps: [
@@ -145,7 +155,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     fictionalNote:
       "Everything in the kit is invented; only the laws and rules quoted are real.",
     contents: [
-      { name: "START-HERE.md", description: "Warm-up trap hunt, setup, five prompts to copy (plus a lite prompt for the Free plan), a prediction before each step, and a template for your own company" },
+      { name: "START-HERE.md", description: "Trap hunt, setup and five prompts to copy." },
       { name: "ANSWERS.md", description: "The answer key. Open it only after each step." },
       { name: "project-instructions.md", description: "The date and the three rules for Claude" },
       { name: "project-files/", description: "13 company files, a little messy like real ones" },

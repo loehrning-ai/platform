@@ -252,8 +252,10 @@ describe("action-cards.css", () => {
     expect(CSS).toMatch(/\.ac-link \{[^}]*min-height:\s*2\.75rem/s);
     expect(CSS).toMatch(/\.ac-secondary \{[^}]*min-height:\s*2\.75rem/s);
     expect(CSS).toMatch(/\.ac-link::after \{[^}]*position:\s*absolute;[^}]*inset:\s*0/s);
-    // The fixed Mennige, not `--color-brand-orange`: the scene tokens swap that one to the scene ink.
-    expect(CSS).toMatch(/outline:\s*3px solid var\(--color-mennige\);\s*outline-offset:\s*2px/);
+    // Focus: one Druckschwarz ring around card and anti-colour block, 6px out. Never the
+    // anti colour itself (that is the block inside the ring) and never `--color-brand-orange`
+    // (the scene tokens swap that one to the scene ink).
+    expect(CSS).toMatch(/li:has\(\.ac-link:focus-visible\) \{\s*outline:\s*3px solid var\(--color-lab-ink\);\s*outline-offset:\s*6px/);
   });
 
   it("reads at 4.5:1 or more in every scene, on card A and on the inverted card B", () => {

@@ -290,7 +290,7 @@ describe("<WorkshopsContent>", () => {
       );
       expect(links[0].querySelector("span")).toHaveClass("max-md:sr-only");
       expect(links[0].parentElement).not.toHaveClass("grid");
-      expect(row).toHaveClass("relative", "has-[a:active]:bg-card-hover");
+      expect(row).toHaveClass("relative", "has-[a:active]:outline-mennige");
       expect(row.querySelector("h3")).toHaveClass("pr-8");
       expect(
         row.querySelector("[data-workshop-meta] > span:last-child"),

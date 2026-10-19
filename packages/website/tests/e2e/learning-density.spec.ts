@@ -228,7 +228,7 @@ test.describe("learning density and value contract", () => {
 
   // The workshop detail page follows workshop-standard section 5: the band is
   // the poster, the stage under it holds the two action cards (and the scene),
-  // then comes one facts line and the closed "More details" accordion. There is
+  // then comes the always-visible kit explainer (nothing collapses). There is
   // no agenda section, no red-line jump nav, no exercise band, no outcomes
   // list and no visible case section. What stays pinned: the first action card
   // starts inside the first screen (a phone shows at least 56px of it), the
@@ -253,14 +253,14 @@ test.describe("learning density and value contract", () => {
       const order = await stage.evaluate((element) => ({
         bandBeforeStage: Boolean(element.previousElementSibling?.matches("[data-cover-band]")),
         cards: element.querySelectorAll("[data-action-card]").length,
-        factsAfter: Boolean(element.nextElementSibling?.querySelector("[data-workshop-facts]")),
+        explainerAfter: Boolean(element.nextElementSibling?.matches("[data-stage-explainer]")),
         visibleCaseSection: Boolean(
           [...document.querySelectorAll("article > section")].some((section) => section.id === "fall"),
         ),
       }));
       expect(order.bandBeforeStage, `${route} band precedes the stage`).toBe(true);
       expect(order.cards, `${route} has two action cards`).toBe(2);
-      expect(order.factsAfter, `${route} facts line follows the stage`).toBe(true);
+      expect(order.explainerAfter, `${route} kit explainer follows the stage`).toBe(true);
       expect(order.visibleCaseSection, `${route} has no visible case section`).toBe(false);
     });
   }

@@ -25,6 +25,11 @@ export const AI_AT_WORK_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       "Nenne nach jeder Antwort die Datei, aus der sie stammt. Bewerte Einfügungen und Aussagen mit einer Ampel: GREEN öffentlich, jedes Werkzeug; AMBER nur im Firmenwerkzeug, Namen und Zahlen entfernt, eine Person prüft; RED nicht ohne schriftliches Okay.",
       "Einfache Wörter, kurze Sätze. Schreibe nie „compliant“ oder „certified“. Ende mit einer Sache, die eine Person vor dem Senden prüfen muss.",
     ],
+    rulesShort: [
+      "Nur die Dateien im Projekt. Steht es nicht darin: NOT IN FILES. Nie raten.",
+      "Nach jeder Antwort die Quelldatei nennen. Jede Einfügung bekommt eine Ampel: GREEN, AMBER oder RED.",
+      "Einfache Wörter, kurze Sätze. Zum Schluss: was eine Person vor dem Senden prüft.",
+    ],
     stepsHeading: "Die Schritte",
     steps: [
       {
@@ -78,6 +83,11 @@ export const AI_AT_WORK_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       "Use only the files in this project. If the files do not say it, write NOT IN FILES. Never guess.",
       "After every answer, name the file it comes from. Rate pastes and claims with a light. GREEN: public, fine on any tool. AMBER: only on the company tool, names and numbers removed, a named person must check. RED: not without a written okay.",
       "Plain English, short sentences. Never write \"compliant\" or \"certified\". End with one thing a person must check before it is sent.",
+    ],
+    rulesShort: [
+      "Only the files in the project. Not in them: NOT IN FILES. Never guess.",
+      "Name the source file after every answer. Every paste gets a light: GREEN, AMBER or RED.",
+      "Plain words, short sentences. End with what a person must check before sending.",
     ],
     stepsHeading: "The steps",
     steps: [

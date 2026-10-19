@@ -17,12 +17,13 @@
  *   arrow, one line of meta); both cards share one grid, one picture box and
  *   one left inset, so their titles sit on the same x and their arrows on the
  *   same height.
- * - A mouse lifts the card 2px over a solid 4px offset block (a pseudo
+ * - The offset block is the card's anti colour (--color-scene-anti-a/-b,
+ *   globals.css), never the card's own colour. A mouse lifts the card 2px over a solid 4px offset block (a pseudo
  *   element on the list item, never a box-shadow), nudges the arrow 4px and
  *   speeds the picture up. Keyboard focus does the same and draws one 3px
- *   Mennige ring (the fixed `--color-mennige`: the scene tokens swap
- *   `--color-brand-orange` to the scene ink, which is pale on a dark card). A
- *   press (touch or mouse) sinks the card 1px and collapses the offset block.
+ *   Druckschwarz ring around card and block. A press (touch or mouse) shows
+ *   the block 3px and underlines the title. Hover rules sit in
+ *   `(hover: hover) and (pointer: fine)`, so a tap never sticks.
  * - Role, not page: card A (slides, lab) is always the outlined card, card B
  *   (the kit download, the case) is always the filled one, on every workshop.
  * - On load the two cards settle in (opacity, 8px), card A at 0 s and card B
@@ -33,13 +34,12 @@
 .ac-list {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 0.625rem;
+  /* 14px between the cards: a thumb lands on one card, and the focus ring
+     (6px out) never touches the next one. */
+  gap: 0.875rem;
   list-style: none;
   margin: 0;
   padding: 0;
-  /* The focus ring sits outside the card, on the page, so it takes the page's
-     scene line (set on the unscoped list), not the card's own. */
-  --ac-ring: var(--color-scene-line);
 }
 
 .ac-list > li {
@@ -48,13 +48,24 @@
   min-width: 0;
 }
 
+/* The anti colour of each card (globals.css, "Anti colors"): never the card's
+   own colour, so the offset block reads as a second layer and not as the
+   box smeared. Card A and card B have their own, per plakat. */
+.ac-list > li[data-slot="a"] {
+  --ac-anti: var(--color-scene-anti-a);
+}
+
+.ac-list > li[data-slot="b"] {
+  --ac-anti: var(--color-scene-anti-b);
+}
+
 /* The offset block behind a card: solid, same size, hidden under the card
    until a mouse lifts the card (see the hover rules). */
 .ac-list > li::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: var(--ac-ring);
+  background-color: var(--ac-anti, var(--color-mennige));
   pointer-events: none;
 }
 
@@ -308,9 +319,13 @@
   outline: none;
 }
 
-.ac-card:has(.ac-link:focus-visible) {
-  outline: 3px solid var(--color-mennige);
-  outline-offset: 2px;
+/* Keyboard focus: the anti-colour block shows (see below) and one 3px
+   Druckschwarz ring runs around card and block, 6px out, on the page
+   (16:1 on Kalkweiß). The ring is never the anti colour, because that is
+   the block it encloses. */
+.ac-list > li:has(.ac-link:focus-visible) {
+  outline: 3px solid var(--color-lab-ink);
+  outline-offset: 6px;
 }
 
 .ac-title {
@@ -321,11 +336,18 @@
   text-wrap: balance;
 }
 
-.ac-card:hover .ac-title,
 .ac-card:has(.ac-link:focus-visible) .ac-title {
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ac-card:hover .ac-title {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
 }
 
 /* The arrow sits on the title row, right: the card's own action. */
@@ -387,6 +409,13 @@
 .ac-secondary:focus-visible {
   outline: 3px solid var(--ac-fg);
   outline-offset: 2px;
+  text-decoration-color: var(--ac-anti);
+  text-decoration-thickness: 3px;
+}
+
+.ac-secondary:active {
+  text-decoration-color: var(--ac-anti);
+  text-decoration-thickness: 3px;
 }
 
 /* Narrow phones: a smaller picture and tighter meta, so a kit card with its
@@ -495,6 +524,52 @@
   .ac-title {
     font-size: 1.375rem;
   }
+}
+
+/* ─── States: lift, anti-colour block, press ─────────────────────────────
+   Not motion: with reduced motion they still change, only without the
+   240ms ease (the transition sits in the motion block below). A mouse
+   (hover on a fine pointer only, so a tap never leaves a card stuck) and
+   keyboard focus lift the card 2px over the 4px block in the card's anti
+   colour; a press (finger or click) answers on its own: the block shows
+   3px and the title underlines. Later than the hover rules, so it wins
+   while the pointer is down. */
+
+.ac-list > li:has(.ac-link:focus-visible)::before {
+  transform: translate(4px, 4px);
+}
+
+.ac-list > li:has(.ac-link:focus-visible) .ac-card {
+  transform: translate(-2px, -2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ac-list > li:hover::before {
+    transform: translate(4px, 4px);
+  }
+
+  .ac-list > li:hover .ac-card {
+    transform: translate(-2px, -2px);
+  }
+
+  .ac-secondary:hover {
+    text-decoration-color: var(--ac-anti);
+    text-decoration-thickness: 3px;
+  }
+}
+
+.ac-list > li:active .ac-card {
+  transform: translate(-1px, -1px);
+}
+
+.ac-list > li:active::before {
+  transform: translate(3px, 3px);
+}
+
+.ac-list > li:active .ac-title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
 }
 
 /* ─── Motion: only when the visitor has not asked for less ──────────────── */
@@ -618,14 +693,6 @@
 
   /* Keyboard focus lifts the card exactly like a mouse does, and the arrow
      leans into its direction. */
-  .ac-list > li:has(.ac-link:focus-visible)::before {
-    transform: translate(4px, 4px);
-  }
-
-  .ac-list > li:has(.ac-link:focus-visible) .ac-card {
-    transform: translate(-2px, -2px);
-  }
-
   .ac-card:has(.ac-link:focus-visible) .ac-go {
     transform: translateX(4px);
   }
@@ -637,14 +704,6 @@
   /* A mouse: the card lifts 2px over a solid 4px offset block, the arrow
      leans into its direction, the picture runs 1.5 times as fast. */
   @media (hover: hover) and (pointer: fine) {
-    .ac-list > li:hover::before {
-      transform: translate(4px, 4px);
-    }
-
-    .ac-list > li:hover .ac-card {
-      transform: translate(-2px, -2px);
-    }
-
     .ac-card:hover .ac-go {
       transform: translateX(4px);
     }
@@ -680,17 +739,6 @@
     .ac-card:hover .ac-bar {
       transform: scaleY(1.18);
     }
-  }
-
-  /* A press (a thumb or a click) sinks the card and collapses the offset
-     block, so every tap has a visible answer. Later than the hover rules, so
-     it wins while the pointer is down. */
-  .ac-list > li:active .ac-card {
-    transform: translate(1px, 1px);
-  }
-
-  .ac-list > li:active::before {
-    transform: translate(0, 0);
   }
 
   @keyframes ac-enter {

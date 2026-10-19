@@ -51,19 +51,20 @@ describe("<KitPage>", () => {
           expect(screen.getByRole("tabpanel")).toBeInTheDocument();
         });
 
-        it("is lean: no numbered headings, the rules and the file list folded, the download open", () => {
+        it("is lean: no numbered headings, the rules and the file list short and open, nothing collapsed", () => {
           const { container } = render(<KitPage workshop={workshop} locale={locale} />);
           for (const heading of container.querySelectorAll("h2, h3")) {
             expect(heading.textContent, "a numbered heading").not.toMatch(/^\d/);
           }
-          // Two closed disclosures hold the rules and the file list; nothing else is folded.
-          const folded = [...container.querySelectorAll("details")];
-          expect(folded).toHaveLength(2);
-          for (const disclosure of folded) expect(disclosure).not.toHaveAttribute("open");
+          // Nothing collapses: the rules (one short line each) and the file list are always visible.
+          expect(container.querySelectorAll("details, summary, [aria-expanded]")).toHaveLength(0);
           const rules = container.querySelector("[data-kit-rules]") as HTMLElement;
-          for (const rule of kit.rules) expect(rules).toHaveTextContent(rule);
+          const shown = kit.rulesShort ?? kit.rules;
+          expect(shown).toHaveLength(kit.rules.length);
+          for (const rule of shown) expect(rules).toHaveTextContent(rule);
           expect(rules.querySelectorAll("ol > li")).toHaveLength(kit.rules.length);
-          expect(container.querySelector("[data-kit-contents]")).toHaveTextContent(kit.contents[0].name);
+          const contents = container.querySelector("[data-kit-contents]") as HTMLElement;
+          for (const item of kit.contents) expect(contents).toHaveTextContent(item.name);
           // The stats come before the explainer, the explainer before the download.
           const stats = container.querySelector("[data-kit-stat]") as HTMLElement;
           const stepper = container.querySelector("[data-kit-stepper]") as HTMLElement;

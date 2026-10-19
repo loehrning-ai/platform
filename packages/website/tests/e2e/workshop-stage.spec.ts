@@ -16,8 +16,8 @@ const WORKSHOPS = [
 ] as const;
 
 const LOCALES = [
-  { prefix: "", index: 0, outcomes: "Nach dem Workshop", caseName: "Der Fall", more: "Mehr Details" },
-  { prefix: "/en", index: 1, outcomes: "After this you can", caseName: "The case", more: "More details" },
+  { prefix: "", index: 0, outcomes: "Nach dem Workshop", caseName: "Der Fall", more: "Mehr Details", explainer: /^Was ist das (Kit|Labor)\?$/ },
+  { prefix: "/en", index: 1, outcomes: "After this you can", caseName: "The case", more: "More details", explainer: /^What is the (kit|lab)\?$/ },
 ] as const;
 
 async function open(page: Page, route: string): Promise<void> {
@@ -40,7 +40,7 @@ async function animationName(locator: Locator): Promise<string> {
 test.describe("workshop stage anatomy", () => {
   for (const locale of LOCALES) {
     for (const workshop of WORKSHOPS) {
-      test(`${locale.prefix || "/de"}/${workshop.slug}: band, stage with two cards, facts line, one closed accordion`, async ({ page }) => {
+      test(`${locale.prefix || "/de"}/${workshop.slug}: band, stage with two cards, the kit explainer, nothing collapsible`, async ({ page }) => {
         await open(page, `${locale.prefix}/workshops/${workshop.slug}`);
 
         const band = page.locator("[data-cover-band]");
@@ -85,14 +85,21 @@ test.describe("workshop stage anatomy", () => {
           }
         }
 
-        // The removed sections stay removed; the case lives in the closed accordion.
+        // The removed sections stay removed; nothing on the page collapses.
         await expect(page.getByRole("heading", { name: locale.outcomes })).toHaveCount(0);
         await expect(page.getByRole("heading", { level: 2, name: locale.caseName })).toHaveCount(0);
         await expect(page.locator("[data-workshop-brief], [data-workshop-need]")).toHaveCount(0);
-        await expect(page.getByRole("heading", { level: 2, name: locale.more })).toBeVisible();
-        await expect(page.locator("main details[open]")).toHaveCount(0);
-        await expect(page.locator("details #fall, #fall")).toHaveCount(1);
-        await expect(page.locator("[data-workshop-facts]")).toBeVisible();
+        await expect(page.getByText(locale.more, { exact: true })).toHaveCount(0);
+        await expect(page.locator("main details, main summary, main [aria-expanded]")).toHaveCount(0);
+        await expect(page.locator("#fall")).toHaveCount(0);
+        // The explainer sits right under the stage: a question heading, a body, a row of facts.
+        const explainer = page.locator("[data-stage-explainer]");
+        await expect(explainer).toBeVisible();
+        await expect(explainer.getByRole("heading", { level: 2, name: locale.explainer })).toBeVisible();
+        await expect(explainer.locator("p")).not.toBeEmpty();
+        await expect(explainer.locator("[data-workshop-facts] li")).not.toHaveCount(0);
+        const explainerBox = (await explainer.boundingBox())!;
+        expect(explainerBox.y).toBeGreaterThanOrEqual(stageBox.y + stageBox.height - 1);
       });
     }
   }
@@ -248,15 +255,18 @@ test.describe("workshop stage motion and pause", () => {
     await expect(input).not.toBeChecked();
   });
 
-  test("a keyboard focus on a card draws one 3px ring around the whole card", async ({ page }) => {
+  test("a keyboard focus on a card draws one 3px Druckschwarz ring around card and anti-colour block", async ({ page }) => {
     await open(page, "/workshops/esg-berichte-mit-ki");
     const link = page.locator("[data-action-card] a.ac-link").first();
     await link.focus();
-    const ring = await page.locator("[data-action-card]").first().evaluate((element) => {
+    const ring = await page.locator(".ac-list > li").first().evaluate((element) => {
       const style = getComputedStyle(element);
-      return { width: style.outlineWidth, offset: style.outlineOffset, style: style.outlineStyle };
+      return { width: style.outlineWidth, offset: style.outlineOffset, style: style.outlineStyle, colour: style.outlineColor };
     });
-    expect(ring).toEqual({ width: "3px", offset: "2px", style: "solid" });
+    expect(ring).toEqual({ width: "3px", offset: "6px", style: "solid", colour: "rgb(18, 18, 18)" });
+    // The block behind the card shows in the card's anti colour (Rost card A: Druckschwarz is card A, Mennige is card B).
+    const anti = await page.locator(".ac-list > li").nth(1).evaluate((element) => getComputedStyle(element, "::before").backgroundColor);
+    expect(anti).toBe("rgb(183, 58, 21)");
   });
 
   test("under reduced motion nothing animates and the pause control is hidden", async ({ browser }) => {

@@ -347,7 +347,7 @@ function HubHero({
                     <a
                       href={`#workshop-${workshop.slug}`}
                       className={cx(
-                        "flex size-11 items-center justify-center font-mono text-[0.8125rem] font-bold text-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                        "flex size-11 items-center justify-center font-mono text-[0.8125rem] font-bold text-foreground active:outline active:outline-[3px] active:outline-offset-[-3px] active:outline-mennige focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                         INDEX_WASHES[position % INDEX_WASHES.length],
                       )}
                     >
@@ -365,7 +365,7 @@ function HubHero({
                     <a
                       href={`#workshop-${workshop.slug}`}
                       className={cx(
-                        "flex min-h-11 items-center gap-3 px-3 font-mono text-[0.8125rem] font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                        "flex min-h-11 items-center gap-3 px-3 font-mono text-[0.8125rem] font-bold text-foreground underline-offset-4 hover:underline hover:decoration-mennige hover:decoration-2 active:underline active:decoration-mennige active:decoration-2 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                         INDEX_WASHES[position % INDEX_WASHES.length],
                         INDEX_WIDTHS[position % INDEX_WIDTHS.length],
                       )}
@@ -423,7 +423,7 @@ function WorkshopRow({
       aria-labelledby={headingId}
       // The link's ::after makes the whole row clickable, so keyboard focus
       // rings the whole row too. Without :has() the link keeps its own ring.
-      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]"
+      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:outline has-[a:active]:outline-[3px] has-[a:active]:outline-mennige has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]"
     >
       <figure className="min-w-0">
         {/* Each row shows its workshop's own poster, in its own palette, on
@@ -510,7 +510,7 @@ function WorkshopRow({
             heading's text and accessible name. */}
         <h3
           id={headingId}
-          className="mt-0.5 max-w-[28ch] pr-8 text-[1.0625rem] font-bold leading-[1.2] tracking-[-0.01em] text-foreground text-balance decoration-2 underline-offset-4 group-hover:underline md:mt-2 md:text-[1.75rem]"
+          className="mt-0.5 max-w-[28ch] pr-8 text-[1.0625rem] font-bold leading-[1.2] tracking-[-0.01em] text-foreground text-balance decoration-2 underline-offset-4 group-hover:underline group-hover:decoration-mennige md:mt-2 md:text-[1.75rem]"
         >
           {title.head}
           {title.subtitle ? (
@@ -578,7 +578,7 @@ function WorkshopRow({
           // Starts with the visible label (WCAG 2.5.3). An sr-only span would
           // be blockified inside inline-flex and put a space before the colon.
           aria-label={`${copy.viewWorkshop}: ${workshop.title}`}
-          className="inline-flex min-h-11 min-w-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] [-webkit-tap-highlight-color:transparent] after:absolute after:inset-0 hover:decoration-foreground group-hover:decoration-foreground motion-reduce:transition-none supports-[selector(:has(*))]:focus-visible:outline-none max-md:absolute max-md:inset-0 max-md:items-start max-md:justify-end max-md:px-4 max-md:pt-[2.375rem] sm:max-md:px-6 md:mt-4"
+          className="inline-flex min-h-11 min-w-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] [-webkit-tap-highlight-color:transparent] after:absolute after:inset-0 hover:decoration-mennige hover:decoration-2 group-hover:decoration-mennige group-hover:decoration-2 active:decoration-mennige active:decoration-2 motion-reduce:transition-none supports-[selector(:has(*))]:focus-visible:outline-none max-md:absolute max-md:inset-0 max-md:items-start max-md:justify-end max-md:px-4 max-md:pt-[2.375rem] sm:max-md:px-6 md:mt-4"
         >
           <span className="max-md:sr-only">{copy.viewWorkshop}</span>
           <ArrowGlyph />

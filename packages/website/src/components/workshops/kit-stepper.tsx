@@ -219,7 +219,7 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
                 "flex min-h-14 flex-col items-center justify-center gap-1 border-2 px-1 py-2 text-center transition-colors duration-[120ms] motion-reduce:transition-none sm:min-h-[4.5rem] sm:items-start sm:px-4 sm:text-left",
                 active
                   ? "border-foreground bg-card shadow-[inset_0_4px_0_0_var(--color-mennige)] pt-3"
-                  : "border-hairline bg-transparent hover:border-foreground hover:bg-card-hover",
+                  : "border-hairline bg-transparent hover:border-mennige active:border-mennige",
               )}
             >
               <span
@@ -326,7 +326,7 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
           <button
             type="button"
             onClick={() => select(last ? 0 : selected + 1, false)}
-            className="group inline-flex min-h-11 items-center gap-2 border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none max-sm:w-full max-sm:justify-between"
+            className="group inline-flex min-h-11 items-center gap-2 border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-transform duration-[120ms] motion-reduce:transition-none anti-btn [--anti:var(--color-mennige)] max-sm:w-full max-sm:justify-between"
           >
             <span>{last ? labels.restart : labels.next[selected]}</span>
             <ArrowGlyph direction="right" />

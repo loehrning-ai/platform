@@ -25,6 +25,12 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     accessNote:
       "Die Einführung im Deck ist auf Deutsch.",
     outcome: "Fünf-Felder-Vorlage",
+    stageExplainer: {
+      heading: "Was ist das Kit?",
+      body:
+        "Eine Zip mit der Fragekarte zum Ausdrucken, Testfällen und Vorlagen für Definitionen, dazu Dateien für Datenteams. Du füllst die fünf Felder der Karte für eine eigene, erfundene Frage aus.",
+      facts: ["Nur Textdateien", "5 Felder", "ca. 75 Min. allein"],
+    },
     audience: [
       "Analystinnen und Controller, die Zahlen aus KI-Antworten weitergeben",
       "Teams, die festlegen, welche Daten eine KI lesen darf",
@@ -224,6 +230,12 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     accessNote:
       "The introduction in the deck is in German.",
     outcome: "Five-box template",
+    stageExplainer: {
+      heading: "What is the kit?",
+      body:
+        "A zip with the question card to print, test cases and templates for definitions, plus files for data teams. You fill in the five boxes of the card for a question of your own, invented for the exercise.",
+      facts: ["Text files only", "5 boxes", "about 75 min alone"],
+    },
     audience: [
       "Analysts and controllers who pass on figures from AI answers",
       "Teams that decide which data an AI may read",

@@ -48,7 +48,7 @@ function Card({
   secondary,
 }: CardProps): ReactNode {
   return (
-    <li>
+    <li data-slot={slot}>
       <div
         data-action-card={kind}
         className={cx("ac-card", slot === "b" && "ac-card-b", plakatClass(plakat))}

@@ -53,8 +53,8 @@ test.describe("workshop self-study journey", () => {
     await expect(page.locator("[data-workshop-redline]")).toHaveCount(0);
     await expect(page.getByRole("heading", { name: "Nach dem Workshop" })).toHaveCount(0);
     await expect(page.getByRole("heading", { level: 2, name: "Der Fall" })).toHaveCount(0);
-    await expect(page.getByRole("heading", { level: 2, name: "Mehr Details" })).toBeVisible();
-    await expect(page.locator("main details[open]")).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 2, name: "Was ist das Kit?" })).toBeVisible();
+    await expect(page.locator("main details, main summary")).toHaveCount(0);
   });
 
   test("serves the complete analyst kit as a ZIP", async ({ request }) => {
@@ -300,12 +300,12 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
       // No question card in the band, no agenda and no numbered red line on
-      // the page; the one question sits in the case inside "More details".
+      // the page; the case section is gone with the accordion.
       await expect(page.locator("[data-question-card]")).toHaveCount(0);
       await expect(band.locator("[data-case-question]")).toHaveCount(0);
       await expect(page.locator("[data-workshop-redline], #ablauf")).toHaveCount(0);
       await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
-      await expect(page.locator("[data-case-question]")).toHaveCount(1);
+      await expect(page.locator("[data-case-question]")).toHaveCount(0);
     }
     expect(bandGrounds.size).toBe(5);
   });

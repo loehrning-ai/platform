@@ -136,9 +136,8 @@ export interface WorkshopPageCopy {
     readonly published: string;
     readonly reviewed: string;
     readonly forWhom: string;
-    readonly detailsHeading: string;
-    readonly detailsSummary: string;
-    readonly moreMaterials: (count: number) => string;
+    /** One plain line in the provenance line when the workshop's own note does not say it. */
+    readonly inventedNote: string;
     readonly notNeededHeading: string;
     readonly notCoveredHeading: string;
     readonly provenanceHeading: string;
@@ -282,9 +281,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       published: "veröffentlicht",
       reviewed: "geprüft",
       forWhom: "Für wen",
-      detailsHeading: "Mehr Details",
-      detailsSummary: "Für wen, Grenzen, Herkunft",
-      moreMaterials: (count) => `${count} optionale ${count === 1 ? "Datei" : "Dateien"}`,
+      inventedNote: "Alle Firmen und Zahlen sind erfunden.",
       notNeededHeading: "Das brauchst du nicht",
       notCoveredHeading: "Nicht Teil dieses Workshops",
       provenanceHeading: "Stand und Herkunft",
@@ -426,9 +423,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       published: "published",
       reviewed: "reviewed",
       forWhom: "Who this is for",
-      detailsHeading: "More details",
-      detailsSummary: "Who it is for, limits, provenance",
-      moreMaterials: (count) => `${count} optional ${count === 1 ? "file" : "files"}`,
+      inventedNote: "All companies and figures are invented.",
       notNeededHeading: "What you don't need",
       notCoveredHeading: "Not part of this workshop",
       provenanceHeading: "Provenance",

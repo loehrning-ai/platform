@@ -19,8 +19,7 @@ interface Props {
 }
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
-// A closed disclosure leaves no empty strip: every section starts 32px (48px
-// from sm) under the one before it.
+// Every section starts 32px (48px from sm) under the one before it.
 const SECTION = "pt-8 sm:pt-12";
 const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
 
@@ -45,8 +44,8 @@ function BackGlyph() {
 /**
  * The kit page of a workshop: what the kit does (a short stepper over its
  * steps) and one big download. Lean on purpose: the three rules and the file
- * list wait behind closed disclosures, so the page is numbers, a motion
- * explainer and the button. Generic: it renders whatever `workshop.kit`
+ * list are short and always open (nothing collapses), so the page is numbers, a
+ * motion explainer and the button. Generic: it renders whatever `workshop.kit`
  * holds, so the next workshop adds a kit block and no page code. The zip's
  * path and size come from the workshop's kit material, and the download goes
  * through WorkshopMaterialLink, so it is counted like every other material
@@ -86,7 +85,7 @@ export function KitPage({ workshop, locale }: Props) {
           <Link
             href={detailPath}
             aria-label={copy.backAria(workshop.title)}
-            className="inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground focus-visible:outline-offset-[-3px]"
+            className="inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-mennige hover:decoration-2 active:decoration-mennige active:decoration-2 focus-visible:outline-offset-[-3px]"
           >
             <BackGlyph />
             {copy.backToWorkshop}
@@ -127,7 +126,7 @@ export function KitPage({ workshop, locale }: Props) {
         <Link
           href={detailPath}
           aria-label={copy.backAria(workshop.title)}
-          className="-my-2.5 inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
+          className="-my-2.5 inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] active:decoration-[var(--color-scene-anti-a)] sm:hidden"
         >
           <BackGlyph />
           {copy.backToWorkshop}
@@ -149,7 +148,7 @@ export function KitPage({ workshop, locale }: Props) {
         <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6">
           <a
             href="#download"
-            className="group inline-flex min-h-[3.25rem] items-center justify-between gap-2 border-2 border-scene-button bg-scene-button px-6 text-[1.0625rem] font-semibold text-scene-button-text transition-colors duration-[120ms] hover:border-scene-ink hover:bg-transparent hover:text-scene-ink motion-reduce:transition-none max-sm:w-full"
+            className="group inline-flex min-h-[3.25rem] items-center justify-between gap-2 border-2 border-scene-button bg-scene-button px-6 text-[1.0625rem] font-semibold text-scene-button-text transition-transform duration-[120ms] anti-btn motion-reduce:transition-none max-sm:w-full"
           >
             <span>{copy.toDownload}</span>
             <ArrowGlyph direction="down" className="kit-bob" />
@@ -188,17 +187,15 @@ export function KitPage({ workshop, locale }: Props) {
 
       <section aria-labelledby="kit-rules-heading" className={SECTION}>
         <div className={CONTAINER}>
-          <details data-kit-rules="" className="group border-t-2 border-scene-line pt-3 sm:pt-4">
-            <summary className="flex min-h-14 cursor-pointer flex-wrap items-center gap-x-4 gap-y-1 after:ml-auto after:inline-grid after:size-9 after:place-items-center after:border-2 after:border-foreground after:font-mono after:text-[1.25rem] after:font-bold after:leading-none after:content-['+'] group-open:after:rotate-45">
-              <h2
-                id="kit-rules-heading"
-                className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
-              >
-                {kit.rulesHeading}
-              </h2>
-            </summary>
+          <div data-kit-rules="" className="border-t-2 border-scene-line pt-3 sm:pt-4">
+            <h2
+              id="kit-rules-heading"
+              className="text-[1.125rem]/[1.2] font-bold text-foreground text-balance sm:text-fluid-h3"
+            >
+              {kit.rulesHeading}
+            </h2>
             <ol className="mt-4 grid gap-3 sm:mt-6 md:grid-cols-3 md:gap-5">
-              {kit.rules.map((rule, index) => (
+              {(kit.rulesShort ?? kit.rules).map((rule, index) => (
                 <li
                   key={rule}
                   className="flex gap-4 border border-hairline bg-card p-4 sm:p-5"
@@ -213,7 +210,7 @@ export function KitPage({ workshop, locale }: Props) {
                 </li>
               ))}
             </ol>
-          </details>
+          </div>
         </div>
       </section>
 
@@ -263,7 +260,7 @@ export function KitPage({ workshop, locale }: Props) {
             <WorkshopMaterialLink
               workshopSlug={workshop.slug}
               material={material}
-              className="group flex min-h-[4.5rem] w-full items-center justify-between gap-4 bg-mennige px-6 py-4 text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark focus-visible:outline-offset-4 motion-reduce:transition-none sm:min-h-24 sm:px-8"
+              className="group flex min-h-[4.5rem] w-full items-center justify-between gap-4 bg-mennige px-6 py-4 text-paper transition-transform duration-[120ms] anti-btn [--anti:var(--color-lab-ink)] motion-reduce:transition-none sm:min-h-24 sm:px-8"
             >
               <span className="text-[1.25rem] font-bold leading-tight sm:text-[1.5rem]">
                 {copy.downloadAction}
@@ -271,10 +268,10 @@ export function KitPage({ workshop, locale }: Props) {
               <ArrowGlyph direction="down" className="kit-bob size-8 sm:size-10" />
             </WorkshopMaterialLink>
 
-            <details data-kit-contents="" className="group min-w-0 border-t border-hairline pt-3 lg:col-span-2">
-              <summary className="flex min-h-14 w-full cursor-pointer items-center justify-between gap-3 font-mono text-[0.875rem] font-semibold uppercase tracking-[0.04em] text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground after:inline-grid after:size-9 after:place-items-center after:border-2 after:border-foreground after:text-[1rem] after:font-bold after:leading-none after:content-['+'] group-open:after:rotate-45">
+            <div data-kit-contents="" className="min-w-0 border-t border-hairline pt-4 lg:col-span-2">
+              <h3 className="font-mono text-[0.875rem] font-semibold uppercase tracking-[0.04em] text-foreground">
                 {copy.insideHeading}
-              </summary>
+              </h3>
               <ul className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-2">
                 {kit.contents.map((item) => (
                   <li key={item.name} className="min-w-0">
@@ -287,7 +284,7 @@ export function KitPage({ workshop, locale }: Props) {
                   </li>
                 ))}
               </ul>
-            </details>
+            </div>
           </div>
         </div>
       </section>

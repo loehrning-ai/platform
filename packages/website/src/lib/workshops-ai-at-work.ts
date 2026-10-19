@@ -53,6 +53,12 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     accessNote:
       "Du prüfst dein eigenes Claude-Konto oder schaust der Nachbarin zu. In Claude gehen nur erfundene Dateien, nie Firmendaten.",
     outcome: "Eine Seite: drei wahre Sätze für einen Kunden, drei Regeln für dein Team",
+    stageExplainer: {
+      heading: "Was ist das Kit?",
+      body:
+        "Eine Zip mit sieben Textdateien: fünf Aufgaben, Antworten und erfundene Daten. Du machst die Aufgaben in deinem eigenen Claude-Konto und schreibst am Ende eine Seite für einen Kunden.",
+      facts: ["7 Textdateien", "5 Aufgaben", "ca. 75 Min. allein"],
+    },
     audience: [
       "Mitarbeitende in Firmen mit 50 bis 500 Beschäftigten",
       "Teamleitungen, die gefragt werden: „Wie nutzt ihr KI mit unseren Daten?“",
@@ -103,7 +109,7 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-10-18",
       data: "synthetic",
-      note: "Quellen der echten Zahlen: Bitkom 2025, Microsoft 2024.",
+      note: "Quellen der echten Zahlen: Bitkom 2025, Microsoft 2024. Anbieter- und Gesetzeszeilen sind echt, Stand 18. Oktober 2026. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -191,6 +197,12 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     accessNote:
       "You check your own Claude account or watch your neighbour. Only invented files go into Claude, never company data.",
     outcome: "One page: three true sentences for a customer, three rules for your team",
+    stageExplainer: {
+      heading: "What is the kit?",
+      body:
+        "A zip with seven text files: five tasks, answers and invented data. You do the tasks in your own Claude account and write one page for a customer at the end.",
+      facts: ["7 text files", "5 tasks", "about 75 min alone"],
+    },
     audience: [
       "Staff at companies with 50 to 500 employees",
       "Team leads who are asked \"how do you use AI with our data?\"",
@@ -241,7 +253,7 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-10-18",
       data: "synthetic",
-      note: "Sources of the real figures: Bitkom 2025, Microsoft 2024.",
+      note: "Sources of the real figures: Bitkom 2025, Microsoft 2024. Vendor and law lines are real, as of 18 October 2026. Not legal advice.",
     },
     steps: [
       {

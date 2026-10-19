@@ -51,6 +51,12 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     accessNote:
       "Live reicht ein Handy oder Papier. Zu Hause gehen nur die erfundenen Dateien in Claude.",
     outcome: "Eine Methode für Fragebogen, grünen Claim und Bankformular, mit Quelle und Status je Antwort",
+    stageExplainer: {
+      heading: "Was ist das Kit?",
+      body:
+        "Eine Zip mit 13 erfundenen Firmendateien, drei Anfragen und fünf Prompts. Du legst sie in ein Claude-Projekt und prüfst jede Antwort gegen die Dateien. Beim ersten Mal etwa 2 Stunden.",
+      facts: ["13 Dateien", "5 Prompts", "ca. 2 Std. allein"],
+    },
     audience: [
       "Geschäftsführung und Verwaltung kleiner Firmen, bei denen ESG-Fragebögen landen",
       "Vertrieb und Marketing, die grüne Aussagen über Produkte machen wollen",
@@ -100,7 +106,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-10-15",
       data: "synthetic",
-      note: "Auch Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt.",
+      note: "Auch Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -196,6 +202,12 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     accessNote:
       "Live, a phone or paper is enough. At home, only the invented files go into Claude.",
     outcome: "A method for the questionnaire, green claim and bank form, with a source and status for every answer",
+    stageExplainer: {
+      heading: "What is the kit?",
+      body:
+        "A zip with 13 invented company files, three requests and five prompts. You put them into a Claude Project and check every answer against the files. About 2 hours the first time.",
+      facts: ["13 files", "5 prompts", "about 2 h alone"],
+    },
     audience: [
       "Owners and office staff of small firms who receive ESG questionnaires",
       "Sales and marketing teams who want to make green product claims",
@@ -245,7 +257,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       author: "Tim Löhr",
       reviewedAt: "2026-10-15",
       data: "synthetic",
-      note: "Certificates and documents are invented too; the laws and rules cited are real.",
+      note: "Certificates and documents are invented too; the laws and rules cited are real. Not legal advice.",
     },
     steps: [
       {
