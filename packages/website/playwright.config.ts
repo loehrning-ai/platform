@@ -276,16 +276,6 @@ export default defineConfig({
   // tolerance, so Linux CI verifies the same reviewed pixels as local macOS.
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   projects: [
-    // --- Provider-free auth scaffold (regression coverage) ------------------
-    // This writes a deterministic mock cookie and proves storage-state wiring
-    // plus fail-closed signed-out behavior. It is not live authentication
-    // proof. It is deliberately not a dependency of chromium/mobile.
-    {
-      name: "auth-scaffold-setup",
-      testMatch: /auth\.setup\.ts$/,
-      use: { ...devices["Desktop Chrome"] },
-    },
-
     // Default PR tier: desktop Chromium plus the same iPhone 13 viewport in
     // Chromium and WebKit. Keeping viewport and engine explicit prevents a
     // native WebKit crash from being misreported as a responsive-layout bug.
@@ -343,15 +333,6 @@ export default defineConfig({
           },
         ]
       : []),
-
-    // Provider-free auth scaffold. Protected-route assertions that require a
-    // server-validated session stay explicitly skipped in this project.
-    {
-      name: "auth-scaffold",
-      testMatch: /\.authed\.spec\.ts$/,
-      use: { ...devices["Desktop Chrome"], storageState: STATIC_STORAGE_STATE },
-      dependencies: ["auth-scaffold-setup"],
-    },
 
     // Live authentication is opt-in and fail-closed. The command validates all
     // nine dedicated test variables before Playwright starts; auth.setup.ts

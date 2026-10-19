@@ -34,8 +34,7 @@ The root workspace list is an explicit security and ownership boundary. Do not r
 Run `bun run test:e2e` when changing routes, navigation, responsive layout,
 accessibility behavior, or interactive flows. Direct production E2E commands
 build first. Do not invoke an internal `*:built` command unless a build with the
-same environment was just made in the same workspace (`bun run ci:browser` does). Provider-free auth coverage is
-`bun run test:e2e:auth-scaffold`; it is not live login proof. The isolated live
+same environment was just made in the same workspace (`bun run ci:browser` does). The isolated live
 provider contract is documented in
 [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
 The E2E tiers and their commands are summarized in

@@ -46,8 +46,7 @@ video lanes are deliberately empty release state, not placeholders.
 - Media policy: `MEDIA_POLICY.md`.
 - Data-driven browser admission coverage:
   `packages/website/tests/e2e/route-open-source.spec.ts`.
-- Lighthouse representatives: `lighthouserc.json`, checked by
-  `scripts/verify-lighthouse-routes.ts`.
+- Lighthouse representatives: `lighthouserc.json`.
 - Records staged before their source commit exists:
   `packages/website/src/lib/open-source/pending/`. This is not a
   second catalog and never becomes one. A module there is imported by nothing
@@ -451,9 +450,8 @@ JSON-LD, and page inventory. After adding an entry:
 3. Add one real detail URL from every non-empty artifact kind to
    `lighthouserc.json`. The first published tool, project, or video must become
    the representative for that lane. Do not add a future or placeholder URL.
-4. Run `bun run lighthouse:check`. This is the deterministic route contract;
-   it is not a substitute for `bun run lighthouse:local`. Pull-request CI no
-   longer runs it, so run it yourself.
+4. Run `bun run lighthouse:local` to measure the new route. No script checks
+   `lighthouserc.json` against the registry, so confirm the URL by hand.
 5. Do not hand-edit sitemap totals. Unit tests derive their expected count from
    `OPEN_SOURCE_ARTIFACTS`.
 
@@ -470,16 +468,11 @@ Run from the repository root:
 ```bash
 bun run scan:public
 bun run artifact-assets:check
-bun run lighthouse:check
-bun run verify:legacy
-bun run test:e2e:public:built
+bun run ci
 bun run lighthouse:local
 ```
 
-`bun run verify:legacy` (the full pre-release chain; pull-request CI runs the
-shorter `bun run ci`) builds before the `:built` browser command reuses that exact
-output. Use `bun run test:e2e:public` instead when no verified current build
-exists. A release also requires the separate legal launch gate documented in
+`bun run ci` is the same gate pull requests run. A release also requires the separate legal launch gate documented in
 `README.md`.
 
 For a tool or project, manually verify every documented install, usage, and

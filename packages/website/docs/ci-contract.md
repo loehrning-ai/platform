@@ -144,12 +144,10 @@ layout, and route contracts remain runnable without provider credentials.
 
 | Tier                     | Command                               | Credential/network contract                                                                                                                                  | What it proves                                                                                                                                             |
 | ------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Provider-free scaffold   | `bun run test:e2e:auth-scaffold`      | No credentials and no Supabase request.                                                                                                                      | Mock storage-state wiring, browser auth affordance where public config exists, and fail-closed signed-out routes. It is not live-auth proof.               |
 | Live session integration | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project, a public Turnstile test site key, and makes a live password-grant request. | Server-validated session handling, protected account pages, and authenticated client round-trips. It bypasses the magic-link/Turnstile/PKCE login journey. |
 
-The auth-scaffold project is not part of pull-request CI; its green state must
-never be described as successful live authentication. The live tier is
-fail-closed and is not part of credential-free CI. It requires all nine variables below:
+The live tier is fail-closed and is not part of credential-free CI; the nightly
+`konto-dom-mocked` project is DOM coverage, never authentication proof. The live tier requires all nine variables below:
 
 ```text
 SIMPLIFIED_SUPABASE_TEST_URL
@@ -192,10 +190,9 @@ reported as proof of the production login flow.
 
 ## Release gate: Lighthouse measurements
 
-`bun run lighthouse:check` is a fast contract on `lighthouserc.json`: it
-validates route coverage and catalog drift without launching a browser. It runs
-inside `bun run verify:release`, not in pull-request CI, and it does not produce
-or claim performance results.
+`lighthouserc.json` is the route inventory and has no separate checker: keep its
+entries canonical, indexable and unique by hand. The measurement runs inside
+`bun run verify:release`, not in pull-request CI.
 
 The complete release command runs the actual Lighthouse measurement from the
 repository root:
@@ -221,8 +218,9 @@ its job summary without failing the run.
 `bun run verify:release` first runs an unwrapped strict preflight against the
 supplied provider environment. This prevents the provider-free verification
 wrapper from hiding partial or unattested production configuration. It then
-runs deterministic verification, the full Lighthouse gate, and browser gates
-against one provider-free build receipt, then finishes
+runs `ci:static` and `ci:unit`, then the full Lighthouse gate, the server-log
+privacy probe, the browser smoke list and the launch gate against one
+provider-free build receipt, then finishes
 by compiling the supplied provider configuration with
 `RELEASE_VALIDATION=1`; it explicitly removes `SENTRY_AUTH_TOKEN`,
 `SENTRY_ORG`, and `SENTRY_PROJECT`, so this local proof cannot upload source

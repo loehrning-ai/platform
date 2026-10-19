@@ -392,45 +392,56 @@ describe("Supply-chain install contract", () => {
   });
 
   it("installs browsers with the workspace-locked Playwright CLI", async () => {
-    const [ciWorkflow, ciSetupAction, contributing, testDocs] =
+    const [ciWorkflow, nightlyWorkflow, ciSetupAction, contributing, testDocs] =
       await Promise.all([
         repositoryFile(".github/workflows/ci.yml"),
+        repositoryFile(".github/workflows/nightly.yml"),
         repositoryFile(".github/actions/setup/action.yml"),
         repositoryFile("CONTRIBUTING.md"),
         repositoryFile("packages/website/tests/README.md"),
       ]);
-    const files = [ciWorkflow, ciSetupAction, contributing, testDocs];
+    const files = [
+      ciWorkflow,
+      nightlyWorkflow,
+      ciSetupAction,
+      contributing,
+      testDocs,
+    ];
 
     // Browsers install through the composite action so a shard pulls only the
-    // engine it runs. The workspace-locked CLI is still the only entry point,
-    // and both engines must still be requested somewhere in the job graph.
+    // engine it runs. The workspace-locked CLI is still the only entry point;
+    // pull requests request Chromium and the nightly workflow adds WebKit.
     expect(ciSetupAction).toContain(
       "bun run --cwd packages/website playwright install --with-deps ${{ inputs.playwright-browsers }}",
     );
     expect(ciWorkflow).toContain("browsers: chromium");
-    expect(ciWorkflow).toContain("browsers: webkit");
+    expect(nightlyWorkflow).toContain("browsers: webkit");
     for (const contents of files) {
       expect(contents).not.toContain("bunx playwright");
     }
   });
 
   it("keeps PR dependency enforcement unprivileged and audits the full Bun lock", async () => {
-    const workflow = await repositoryFile(
-      ".github/workflows/dependency-review.yml",
-    );
+    const [workflow, rootManifest] = await Promise.all([
+      repositoryFile(".github/workflows/dependency-review.yml"),
+      repositoryFile("package.json"),
+    ]);
+    const { scripts } = JSON.parse(rootManifest) as {
+      readonly scripts: Readonly<Record<string, string>>;
+    };
 
     expect(workflow).toContain("on:\n  pull_request:");
     expect(workflow).not.toContain("pull_request_target:");
     expect(workflow).toMatch(/permissions:\s*\n\s*contents: read/);
-    expect(workflow).toContain(
-      "bun install --frozen-lockfile --ignore-scripts",
-    );
-    // The audit must still run on every pull request. It may carry --ignore
+    expect(workflow).toContain("actions/dependency-review-action@");
+    // The live audit runs nightly through `ci:hygiene`. It may carry --ignore
     // for advisories with no published fix, but only for specific GHSA ids:
     // --audit-level or a bare skip would silently stop gating everything else.
-    expect(workflow).toMatch(/\n\s*bun audit(\s+--ignore=GHSA-[\w-]+)*\s*\n/);
-    expect(workflow).not.toMatch(/bun audit[^\n]*--audit-level/);
-    expect(workflow).toContain("actions/dependency-review-action@");
+    expect(scripts.audit).toMatch(/^bun audit(\s+--ignore=GHSA-[\w-]+)*$/);
+    expect(scripts.audit).not.toContain("--audit-level");
+    expect(await repositoryFile("scripts/ci.mjs")).toContain(
+      'root("audit", "audit")',
+    );
   });
 
   it("isolates the write token from checkout, Bun, and repository scripts", async () => {
