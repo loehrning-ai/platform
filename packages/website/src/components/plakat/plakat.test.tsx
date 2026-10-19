@@ -502,7 +502,7 @@ describe("PosterThumb and PosterCover", () => {
     for (const index of [0, 2, 3]) expect(thumbs[index]?.className).not.toContain("after:border");
   });
 
-  it("gives the four workshops four distinct scenes", () => {
+  it("gives the five workshops five distinct scenes", () => {
     const { container } = render(
       <>
         {Object.values(WORKSHOP_PLAKAT).map((entry, index) => (
@@ -511,7 +511,7 @@ describe("PosterThumb and PosterCover", () => {
       </>,
     );
     const scenes = [...container.querySelectorAll("svg[data-poster]")].map((svg) => svg.getAttribute("data-poster"));
-    expect(new Set(scenes).size).toBe(4);
+    expect(new Set(scenes).size).toBe(5);
   });
 });
 

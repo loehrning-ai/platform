@@ -35,6 +35,7 @@ const WORKSHOP_ROUTES = [
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
+  "/workshops/ki-im-unternehmen-sicher-nutzen",
 ] as const;
 
 async function openLearningRoute(page: Page, route: string): Promise<void> {
@@ -225,35 +226,42 @@ test.describe("learning density and value contract", () => {
     });
   }
 
-  // The workshop detail page follows workshop-standard 4.1 and
-  // design-direction 7.2: the cover answers what the workshop is about and
-  // where to start, a compact agenda follows, and the materials come right
-  // after it. There is no exercise band between agenda and materials. What
-  // stays pinned: the cover's start action is inside the first viewport,
-  // nothing but the agenda sits between the cover and the materials, and no
-  // decision lab renders.
+  // The workshop detail page follows workshop-standard section 5: the band is
+  // the poster, the stage under it holds the two action cards (and the scene),
+  // then comes the always-visible kit explainer (nothing collapses). There is
+  // no agenda section, no red-line jump nav, no exercise band, no outcomes
+  // list and no visible case section. What stays pinned: the first action card
+  // starts inside the first screen (a phone shows at least 56px of it), the
+  // stage is the first section after the band, and no decision lab renders.
   for (const route of WORKSHOP_ROUTES) {
-    test(`${route} keeps its start action in the first viewport and the materials right after the agenda`, async ({
+    test(`${route} keeps its first action card in the first screen and the stage right after the band`, async ({
       page,
     }) => {
+      await page.setViewportSize({ width: 390, height: 664 });
       await openLearningRoute(page, route);
-      const start = page.locator("[data-cover-band] a:not([data-cover-back])").first();
-      await expectFullyInFirstViewportBand(page, start, `${route} start action`);
+      const card = page.locator("[data-workshop-stage] [data-action-card]").first();
+      await expect(card).toBeVisible();
+      const bounds = await card.boundingBox();
+      expect(bounds, `${route} card A bounds`).not.toBeNull();
+      expect(bounds!.y + 56, `${route} shows 56px of card A in 390 x 664`).toBeLessThanOrEqual(664);
 
       await expect(page.locator("[data-workshop-decision-lab]")).toHaveCount(0);
-      const materials = page.locator("section#material");
-      await expect(materials, `${route} materials must render`).toBeVisible();
-      const order = await materials.evaluate((element) => {
-        const agenda = element.previousElementSibling;
-        return {
-          agendaHasRoute: Boolean(agenda?.querySelector("ol[data-route-mode]")),
-          coverBeforeAgenda: Boolean(
-            agenda?.previousElementSibling?.matches("[data-cover-band]"),
-          ),
-        };
-      });
-      expect(order.agendaHasRoute, `${route} agenda precedes the materials`).toBe(true);
-      expect(order.coverBeforeAgenda, `${route} cover precedes the agenda`).toBe(true);
+      await expect(page.locator("[data-workshop-redline], #ablauf, ol[data-route-mode]")).toHaveCount(0);
+      await expect(page.locator("[data-workshop-brief], [data-workshop-need], #workshop-outcomes-heading")).toHaveCount(0);
+      const stage = page.locator("[data-workshop-stage]");
+      await expect(stage, `${route} stage must render`).toBeVisible();
+      const order = await stage.evaluate((element) => ({
+        bandBeforeStage: Boolean(element.previousElementSibling?.matches("[data-cover-band]")),
+        cards: element.querySelectorAll("[data-action-card]").length,
+        explainerAfter: Boolean(element.nextElementSibling?.matches("[data-stage-explainer]")),
+        visibleCaseSection: Boolean(
+          [...document.querySelectorAll("article > section")].some((section) => section.id === "fall"),
+        ),
+      }));
+      expect(order.bandBeforeStage, `${route} band precedes the stage`).toBe(true);
+      expect(order.cards, `${route} has two action cards`).toBe(2);
+      expect(order.explainerAfter, `${route} kit explainer follows the stage`).toBe(true);
+      expect(order.visibleCaseSection, `${route} has no visible case section`).toBe(false);
     });
   }
 });

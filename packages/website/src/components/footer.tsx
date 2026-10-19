@@ -210,7 +210,10 @@ export async function Footer() {
     // the content, bleed off the left and right screen edges (the band's
     // overflow clips them; never cut flat at its top), and only appear where
     // the page gutter is wide enough to hold them clear of any text.
-    <footer className="relative isolate overflow-hidden border-t border-border/40 bg-peach-wash text-foreground">
+    // Below lg the body reserves the fixed tab bar's band under the footer;
+    // the shadow paints that band in the footer's own colour, so the page
+    // ends on one colour instead of a beige seam.
+    <footer className="relative isolate overflow-hidden border-t border-border/40 bg-peach-wash text-foreground max-lg:shadow-[0_var(--tabbar-band-h)_0_0_var(--color-peach-wash)]">
       <span
         aria-hidden="true"
         data-footer-shape=""

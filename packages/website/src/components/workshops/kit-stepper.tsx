@@ -21,7 +21,6 @@ export interface KitStepperLabels {
   readonly restart: string;
   /** "Weiter: <title>", already resolved per step, same order as `steps`. */
   readonly next: readonly string[];
-  readonly stepOf: readonly string[];
 }
 
 interface Props {
@@ -100,7 +99,7 @@ function Legend({ segments }: { readonly segments: readonly WorkshopKitSegment[]
           <span className="font-mono text-[0.9375rem] font-bold tabular-nums">
             {segment.display ?? segment.value}
           </span>
-          <span className="font-mono text-caption uppercase tracking-[0.08em] text-muted-foreground">
+          <span className="font-mono text-[0.875rem] uppercase tracking-[0.05em] text-muted-foreground">
             {segment.label}
           </span>
         </li>
@@ -123,7 +122,7 @@ function FlowCard({
   return (
     <div
       className={cx(
-        "kit-rise min-w-0 bg-card p-4 sm:p-5",
+        "kit-rise kit-lift min-w-0 bg-card p-4 sm:p-5",
         emphasis
           ? "border-2 border-foreground border-t-4 border-t-mennige"
           : "border border-hairline",
@@ -132,7 +131,7 @@ function FlowCard({
     >
       <p
         className={cx(
-          "font-mono text-caption font-semibold uppercase tracking-[0.12em]",
+          "font-mono text-[0.875rem] font-semibold uppercase tracking-[0.06em]",
           emphasis ? "text-kupfer-dark" : "text-muted-foreground",
         )}
       >
@@ -147,11 +146,12 @@ function Connector({ index }: { readonly index: number }) {
   return (
     <span
       aria-hidden="true"
-      className="kit-rise flex items-center justify-center text-foreground max-md:h-6"
+      className="flex items-center justify-center text-foreground max-md:h-6"
       style={{ ["--i" as string]: index }}
     >
-      <ArrowGlyph direction="down" className="size-5 md:hidden" />
-      <ArrowGlyph direction="right" className="hidden size-5 md:block" />
+      {/* Each arrow draws itself after the card before it (kit-motion.css). */}
+      <ArrowGlyph direction="down" className="kit-draw size-5 md:hidden" />
+      <ArrowGlyph direction="right" className="kit-draw hidden size-5 md:block" />
     </span>
   );
 }
@@ -216,10 +216,10 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
               onKeyDown={(event) => onKeyDown(event, index)}
               data-kit-tab=""
               className={cx(
-                "flex min-h-14 flex-col items-center justify-center gap-0.5 border-2 px-1 py-2 text-center transition-colors duration-[120ms] motion-reduce:transition-none sm:min-h-[4.5rem] sm:items-start sm:px-4 sm:text-left",
+                "flex min-h-14 flex-col items-center justify-center gap-1 border-2 px-1 py-2 text-center transition-colors duration-[120ms] motion-reduce:transition-none sm:min-h-[4.5rem] sm:items-start sm:px-4 sm:text-left",
                 active
                   ? "border-foreground bg-card shadow-[inset_0_4px_0_0_var(--color-mennige)] pt-3"
-                  : "border-hairline bg-transparent hover:border-foreground hover:bg-card-hover",
+                  : "border-hairline bg-transparent hover:border-mennige active:border-mennige",
               )}
             >
               <span
@@ -230,7 +230,18 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
               >
                 {index + 1}
               </span>
-              <span className="hidden text-label leading-tight text-foreground sm:block">{item.title}</span>
+              {/* A phone shows the step's name under its number, two lines at
+                  most, so no tab is a bare digit. */}
+              <span
+                className={cx(
+                  "line-clamp-2 w-full break-words text-[0.8125rem] font-semibold leading-tight text-foreground [hyphens:auto] sm:block sm:text-label",
+                  // Four or more tabs are too narrow for a name on a phone;
+                  // the panel's own heading names the step there.
+                  steps.length > 3 && "max-sm:hidden",
+                )}
+              >
+                {item.title}
+              </span>
             </button>
           );
         })}
@@ -246,10 +257,9 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
         className="mt-4 border-t-2 border-foreground pt-5 focus-visible:outline-offset-4 sm:mt-6 sm:pt-6"
       >
         <div className="kit-rise flex flex-wrap items-baseline gap-x-4 gap-y-1" style={{ ["--i" as string]: 0 }}>
-          <p className="font-mono text-caption font-semibold uppercase tracking-[0.12em] text-kupfer-dark">
+          <p className="font-mono text-[0.875rem] font-semibold uppercase tracking-[0.06em] text-kupfer-dark">
             {step.tag}
           </p>
-          <p className="font-mono text-caption text-muted-foreground tabular-nums">{labels.stepOf[selected]}</p>
         </div>
         <h3 className="kit-rise mt-1 text-fluid-h3 font-bold text-foreground" style={{ ["--i" as string]: 0 }}>
           {step.title}
@@ -269,7 +279,7 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
             {step.file ? (
               <span className="mt-3 flex items-center gap-2">
                 <span className="sr-only">{labels.fileLabel}:</span>
-                <Chip className="h-auto min-h-7 max-w-full break-all py-1 font-mono text-[0.8125rem]">
+                <Chip className="h-auto min-h-7 max-w-full break-all py-1 font-mono text-[0.875rem]">
                   {step.file}
                 </Chip>
               </span>
@@ -279,7 +289,7 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
 
         {step.segments || step.line || step.note ? (
           <div className="mt-5 border border-hairline bg-card p-4 sm:mt-6 sm:p-6" data-kit-result="">
-            <p className="font-mono text-caption font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="font-mono text-[0.875rem] font-semibold uppercase tracking-[0.06em] text-muted-foreground">
               {labels.resultLabel}
             </p>
             {step.segments ? (
@@ -316,7 +326,7 @@ export function KitStepper({ steps, labels, idPrefix }: Props) {
           <button
             type="button"
             onClick={() => select(last ? 0 : selected + 1, false)}
-            className="group inline-flex min-h-11 items-center gap-2 border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none max-sm:w-full max-sm:justify-between"
+            className="group inline-flex min-h-11 items-center gap-2 border border-foreground px-5 text-[0.9375rem] font-semibold text-foreground transition-transform duration-[120ms] motion-reduce:transition-none anti-btn [--anti:var(--color-mennige)] max-sm:w-full max-sm:justify-between"
           >
             <span>{last ? labels.restart : labels.next[selected]}</span>
             <ArrowGlyph direction="right" />

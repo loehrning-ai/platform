@@ -34,11 +34,9 @@ describe("published Data Readiness workshop", () => {
   it("states the delivery language and tells one storyline with the unchanged numbers in both locales", () => {
     const de = getWorkshops("de")[2];
     const en = getWorkshops("en")[2];
-    expect(de.accessNote).toContain("Material auf Englisch, Einführung auf Deutsch.");
-    expect(en.accessNote).toContain("materials are in English, the live session is introduced in German.");
-    expect(en.accessNote).toMatch(/^The deck needs only a browser;/);
-    expect(de.accessNote).toMatch(/^Für das Deck brauchst du nur einen Browser;/);
-    for (const workshop of [de, en]) expect(workshop.accessNote).toMatch(/August 2026/);
+    expect(de.accessNote).toBe("Die Einführung im Deck ist auf Deutsch.");
+    expect(en.accessNote).toBe("The introduction in the deck is in German.");
+    for (const workshop of [de, en]) expect(workshop.provenance.aiOutputsRecordedAt).toBe("2026-08");
     expect(de.duration).toBe("~90 Minuten");
     expect(en.duration).toBe("~90 minutes");
     expect(de.materials[0]?.description).toMatch(/^Für den Beamer\. .*P öffnet die Moderationsansicht/);

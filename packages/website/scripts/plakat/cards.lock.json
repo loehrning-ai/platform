@@ -3,25 +3,31 @@
   "cards": {
     "datenbereitschaft-fuer-ki": {
       "input": "7cbc2f6cdeebbf2957916d88809bb7cedae745c8cf3130944cf0c50e467fad58",
-      "output": "3481abcbca2f455d7d93abe06bdea465cdf804e405825bf97ffdf68ded38fc6e",
+      "output": "3a6842dbd665f1f82de92174f16a48ea9658acd0e714dbd9f57c35903e962a5e",
       "width": 1200,
       "height": 630
     },
     "esg-berichte-mit-ki": {
-      "input": "7a2846df2403e886f5c06b751325cf428f470e6e409abc3d2a66d5aefbced9d7",
-      "output": "5a1cbe566f2141088a0c47998fc2c3393692e87f3916cd39321703ff66f7049a",
+      "input": "ef98e587410becb52ec5da706ee7f21f47f607255eb214015e9fff9732707bf7",
+      "output": "95d4b6de24784b6b59caaaa92d93b1e4906d3681f4df848a1da196e92ec6f950",
       "width": 1200,
       "height": 630
     },
     "geschaeftsberichte-mit-ki-lesen": {
       "input": "95fc8e71f923b653cbc484002527a35a7cf3c908b0f19e8a416807ab5d0d1820",
-      "output": "4accb95dcc124d320e05c414e008e96d445250b0a1930f1f86bd77d3972252f4",
+      "output": "a30ea36d5f49804330f3143c5877299bb140e942b1495946607c354626b5cd6a",
+      "width": 1200,
+      "height": 630
+    },
+    "ki-im-unternehmen-sicher-nutzen": {
+      "input": "016472118552c59abc860106045e27f942bd5f4d5fab87bc68311a10c7496b13",
+      "output": "d0d704cbc6ba15b75e4854f1b6382afea523f64724c178c847d69fa1d7cc0586",
       "width": 1200,
       "height": 630
     },
     "ki-prognosen-einschaetzen": {
       "input": "9603701c3d61e7a1ce5ee67fff787dbb08f09365b9c60897fdf551d4f4e4eac0",
-      "output": "5b8b5f47788c47c8213aa56b37d89b1fd792f418a47ee2991692d3ab9ed2eac8",
+      "output": "f4b65e886df2ed1c32116c3b1f1af8f80f926a9ed9ec1bcfbdac400f51fb56e4",
       "width": 1200,
       "height": 630
     }

@@ -1,0 +1,305 @@
+/*
+ * The stage under a workshop band (workshop-stage.tsx). Prefix `ws-`.
+ *
+ * Layout (docs/workshop-standard.md, "The stage"):
+ * - phone: card A, card B (96px rows), then the scene (4:3). The pause
+ *   control is a 44px icon button inside the scene's top-right corner (a 36px
+ *   translucent disc), so it costs no row and sits where every scene is
+ *   empty. Band, cards and the top of the scene share the first phone
+ *   screen; the band is kept short so about 190px of the scene show above
+ *   the tab bar.
+ * - tablet (40rem to lg): the two cards in one column beside the scene (4:3),
+ *   the cards as tall as the scene.
+ * - lg: cards left (7fr, side by side, picture on top), scene right (5fr,
+ *   4:3), the cards as tall as the scene.
+ * A workshop without a scene yet (`data-stage-scene="none"`) shows the cards
+ * across the full width, and the pause control gets its own slim row.
+ *
+ * The scenes draw on a 600 x 500 viewBox (6:5). The box is 4:3, so the art
+ * is scaled up by 1.111 (a `slice` fit, as a plain `scale`): it fills the box
+ * and loses 25 units at the top and the bottom, where every scene is empty.
+ * `--ws-fit` and `--ws-origin` are that scale and its origin; a scene whose
+ * art needs another crop on a phone sets them in the block of
+ * `[data-workshop-scene]` rules below (phone only).
+ *
+ * `--ws-t` is the length of a scene's story loop; the scenes' keyframe
+ * percentages are seconds divided by it (9 seconds). The cards run on the
+ * same clock.
+ *
+ * The pause control is a CSS-only checkbox (WCAG 2.2.2): checked, nothing on
+ * the stage animates or transitions, so every scene and card shows its
+ * finished still frame.
+ */
+
+.ws-stage {
+  --ws-t: 9s;
+}
+
+.ws-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "cards"
+    "scene";
+  gap: 0.5rem;
+}
+
+.ws-cards {
+  grid-area: cards;
+  min-width: 0;
+}
+
+.ws-scene {
+  grid-area: scene;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border: 2px solid var(--color-scene-line);
+  border-radius: 0;
+  background-color: var(--color-scene-ground);
+  /* Off screen, nothing of the scene is painted or animated (no script). The
+     4:3 aspect ratio gives the box its height; the intrinsic size only
+     remembers the last painted size, so there is no jump while scrolling. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 0;
+}
+
+.ws-scene > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* 6:5 art in a 4:3 box: fill it (4/3 divided by 6/5). */
+  scale: var(--ws-fit, 1.1111);
+  transform-origin: var(--ws-origin, 50% 50%);
+}
+
+/* A quiet icon button in the top-right corner of the scene (no label, the box
+   has a stable accessible name), so it never takes a row and its width never
+   changes. The hit area is 44px; the visible disc is 36px and translucent, so
+   it never reads as a white block in a dark scene. Every scene keeps that
+   corner free. */
+.ws-pause {
+  grid-area: scene;
+  position: relative;
+  z-index: 2;
+  justify-self: end;
+  align-self: start;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--color-scene-ink);
+  cursor: pointer;
+}
+
+.ws-pause::before {
+  content: "";
+  position: absolute;
+  inset: 0.25rem;
+  z-index: -1;
+  background-color: color-mix(in oklab, var(--color-scene-ground) 72%, transparent);
+  border: 2px solid var(--color-scene-line);
+}
+
+.ws-pause-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  opacity: 0;
+}
+
+.ws-pause:has(.ws-pause-input:focus-visible) {
+  outline: 3px solid var(--color-brand-orange);
+  outline-offset: 2px;
+}
+
+/* Two bars while motion plays, a triangle while it is stopped. */
+.ws-pause-icon {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-inline: 0.3125rem solid currentColor;
+}
+
+.ws-pause-off,
+.ws-pause-on {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ws-pause-on {
+  display: none;
+}
+
+.ws-pause:has(.ws-pause-input:checked) .ws-pause-off {
+  display: none;
+}
+
+.ws-pause:has(.ws-pause-input:checked) .ws-pause-on {
+  display: inline;
+}
+
+.ws-pause:has(.ws-pause-input:checked) .ws-pause-icon {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0.4375rem 0 0.4375rem 0.75rem;
+  border-color: transparent transparent transparent currentColor;
+}
+
+/* Hover (fine pointer only) and press bring in the anti colour as the disc's
+   border, never a swap or a shade of the ink: the icon keeps its contrast. */
+@media (hover: hover) and (pointer: fine) {
+  .ws-pause:hover::before {
+    border-color: var(--color-scene-anti-a);
+  }
+}
+
+.ws-pause:active::before {
+  border-color: var(--color-scene-anti-a);
+}
+
+/* Stopped: every animation and transition on the stage ends, and each part
+   shows its finished still frame. */
+.ws-stage:has(.ws-pause-input:checked) :is(*, *::before, *::after) {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* No scene wired yet: the cards take the full width, the pause gets a row. */
+.ws-stage[data-stage-scene="none"] .ws-grid {
+  grid-template-areas:
+    "cards"
+    "pause";
+}
+
+.ws-stage[data-stage-scene="none"] .ws-pause {
+  grid-area: pause;
+  margin: 0;
+  width: auto;
+  padding-inline: 0.75rem;
+  justify-self: end;
+  align-self: auto;
+}
+
+.ws-stage[data-stage-scene="none"] .ws-pause::before {
+  inset: 0;
+  background-color: var(--color-scene-ground);
+}
+
+.ws-stage[data-stage-scene="none"] :is(.ws-pause-off, .ws-pause-on) {
+  position: static;
+  width: auto;
+  height: auto;
+  clip-path: none;
+}
+
+@media (min-width: 40rem) {
+  .ws-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-areas: "cards scene";
+    gap: 0.75rem;
+  }
+
+  .ws-cards,
+  .ws-cards > .ac-list {
+    height: 100%;
+  }
+
+  .ws-stage[data-stage-scene="none"] .ws-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "cards"
+      "pause";
+  }
+}
+
+@media (min-width: 64rem) {
+  .ws-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: 1.5rem;
+  }
+
+  /* 12px from the frame, not touching it. */
+  .ws-pause {
+    margin: 0.25rem;
+  }
+
+  .ws-stage[data-stage-scene="none"] .ws-grid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.75rem;
+  }
+
+  /* Cards alone on a wide stage: a lower picture, so they never tower. */
+  .ws-stage[data-stage-scene="none"] .ac-card {
+    min-height: 0;
+  }
+
+  .ws-stage[data-stage-scene="none"] .ac-pic {
+    flex: none;
+    aspect-ratio: 21 / 9;
+  }
+}
+
+/* Phone crops per scene (--ws-fit is the scale, --ws-origin its anchor).
+   Added only where a scene's art leaves its payoff outside the 4:3 box. */
+@media (max-width: 39.99rem) {
+  .ws-scene[data-workshop-scene="cone"] {
+    --ws-fit: 1.02;
+    --ws-origin: 34% 50%;
+  }
+}
+
+/* Under reduced motion nothing moves, so there is nothing to pause. */
+@media (prefers-reduced-motion: reduce) {
+  .ws-pause {
+    display: none;
+  }
+}
+
+/* The scene swells a hair while a mouse is over the stage: a plain 2D scale,
+   so thin lines stay sharp. Touch and keyboard focus keep the plain loop. */
+@media (prefers-reduced-motion: no-preference) {
+  .ws-scene > svg {
+    transition: transform 1s cubic-bezier(0.22, 0.9, 0.3, 1);
+  }
+
+  /* The stage composes itself: the two cards settle at 0 s and 0.12 s
+     (action-cards.css), the scene follows at 0.3 s, and the pause control with
+     it, so it stays in the scene's corner. Opacity and 8px only. */
+  .ws-scene,
+  .ws-pause {
+    animation: ws-enter 520ms cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s backwards;
+  }
+
+  @keyframes ws-enter {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .ws-stage:hover .ws-scene > svg {
+      transform: scale(1.02);
+    }
+  }
+}

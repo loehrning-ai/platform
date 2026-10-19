@@ -8,7 +8,7 @@ Ratios use the WCAG 2.x relative-luminance formula. Floors: 4.5 for text; 3 for 
 
 ## Raw palette on paper
 
-The fifteen `@theme static` tokens against the three paper grounds. "Text on" lists the grounds where the colour reaches 4.5:1, "Large or non-text only on" the grounds where it reaches 3:1 but not 4.5:1. A colour with neither is a scene colour and never sits on paper as text.
+The eighteen `@theme static` tokens against the three paper grounds. "Text on" lists the grounds where the colour reaches 4.5:1, "Large or non-text only on" the grounds where it reaches 3:1 but not 4.5:1. A colour with neither is a scene colour and never sits on paper as text.
 
 | Token | Name | Hex | Kalkweiß | Bogen | Beton | Text on | Large or non-text only on |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -27,6 +27,9 @@ The fifteen `@theme static` tokens against the three paper grounds. "Text on" li
 | `--color-ocker` | Ocker | `#e4a057` | 1.97 | 2.17 | 1.77 | none | none |
 | `--color-ocker-hell` | Ocker hell | `#ebb16a` | 1.69 | 1.86 | 1.52 | none | none |
 | `--color-ocker-tief` | Ocker tief | `#9b5e07` | 4.68 | 5.13 | 4.19 | Kalkweiß, Bogen | Beton |
+| `--color-salbei` | Salbei | `#dce6d4` | 1.15 | 1.26 | 1.03 | none | none |
+| `--color-tanne` | Tanne | `#1f4a38` | 8.92 | 9.78 | 8.00 | Kalkweiß, Bogen, Beton | none |
+| `--color-bernstein` | Bernstein | `#d9a441` | 2.00 | 2.20 | 1.80 | none | none |
 
 ## Scenes
 
@@ -164,6 +167,39 @@ Ground Rost `#944d44`, ink Creme `#f0e1ca`, mid Ocker `#e4a057`. Numeral weight 
 | poster numeral | Creme `#f0e1ca` | Numeral at 400, display size only | 3 | 4.80 | pass |
 | ink over mid | Creme `#f0e1ca` on Ocker `#e4a057` | Numeral or type crossing a mid shape | 3 | 1.73 | keyline and 0.12em clearance |
 
+### Sage (`.plakat-sage`)
+
+Ground Salbei `#dce6d4`, ink Tanne `#1f4a38`, mid Bernstein `#d9a441`. Numeral weight 700.
+
+| Pairing | Colour | Use | Floor | Ratio | Result |
+| --- | --- | --- | --- | --- | --- |
+| `--color-foreground` | Tanne `#1f4a38` | Text, caps line, links | 4.5 | 7.79 | pass |
+| `--color-muted-foreground` | Tanne `#1f4a38` | Secondary text (no muted tier: the ink) | 4.5 | 7.79 | pass |
+| `--color-muted` | Tanne `#1f4a38` | Captions (no muted tier: the ink) | 4.5 | 7.79 | pass |
+| `--color-border` | Tanne `#1f4a38` | Control edge | 3 | 7.79 | pass |
+| `--color-brand-orange` | Tanne `#1f4a38` | Focus ring and accent text | 4.5 | 7.79 | pass |
+| `--color-kupfer` | Tanne `#1f4a38` | Accent text | 4.5 | 7.79 | pass |
+| `--color-kupfer-dark` | Tanne `#1f4a38` | Accent text, pressed | 4.5 | 7.79 | pass |
+| button label on the fill | Bogen `#fffcf5` | Primary button label (never an ink fill when the ink is dark) | 4.5 | 9.78 | pass |
+| `--color-scene-button` | Tanne `#1f4a38` | Filled button against the ground | 3 | 7.79 | pass |
+| ink on `--color-card-hover` | Tanne `#1f4a38` on `#cfdcc6` | Hover tint | 4.5 | 7.02 | pass |
+| ink on `--color-inset` | Tanne `#1f4a38` on `#d3dfca` | Recessed well | 4.5 | 7.25 | pass |
+| `--color-hairline` | `#aebfa5` | Hairline between rows | below 2 | 1.51 | pass (decor) |
+| `--color-track` | `#aebfa5` | Passive track | below 2 | 1.51 | pass (decor) |
+| `--color-pass` | `#205b46` (paper value) | Pass state text | 4.5 | 6.16 | pass |
+| `--color-destructive` | `#991b1b` (paper value) | Destructive text | 4.5 | 6.46 | pass |
+| `--color-risk-red` | `#991b1b` (paper value) | Risk red text | 4.5 | 6.46 | pass |
+| `--color-risk-yellow` | `#713f12` (paper value) | Risk yellow text | 4.5 | 6.74 | pass |
+| `--color-risk-green` | `#14532d` (paper value) | Risk green text | 4.5 | 7.08 | pass |
+| `--color-brand-sand` | `#604b36` (paper value) | Brand sand text | 4.5 | 6.38 | pass |
+| `--color-brand-amber` | `#78350f` (paper value) | Brand amber text | 4.5 | 7.05 | pass |
+| `--color-scene-mid` | Bernstein `#d9a441` | Decorative shapes, never text | none | 1.75 | decor |
+| `--color-scene-mark` | Tanne `#1f4a38` | A shape that carries meaning | 3 | 7.79 | pass |
+| `--color-scene-accent-text` | Mennige tief `#97300f` | Text in the mid hue | 4.5 | 5.94 | pass |
+| `--color-scene-line` | Tanne `#1f4a38` | Kopflinie inside the band | 4.5 | 7.79 | pass |
+| poster numeral | Tanne `#1f4a38` | Numeral at 700, display size only | 3 | 7.79 | pass |
+| ink over mid | Tanne `#1f4a38` on Bernstein `#d9a441` | Numeral or type crossing a mid shape | 3 | 4.46 | pass (display) |
+
 Autumn carries the Rost rules: text 17px or larger at weight 400 or more, no muted tier, no reduced opacity, no hover tint, and no question card, status chip, badge, form field, progress bar, `text-caption`, `text-label` or `text-xs` inside the scope.
 
 ## Paper below a band: the page scene line
@@ -177,6 +213,7 @@ Autumn carries the Rost rules: text 17px or larger at weight 400 or more, no mut
 | `idea` | Kobalt `#2e4d90` | 7.24 | 7.94 | 6.50 | pass |
 | `bloom` | Aubergine `#3b1f45` | 12.73 | 13.96 | 11.42 | pass |
 | `autumn` | Rost `#944d44` | 5.49 | 6.02 | 4.93 | pass |
+| `sage` | Tanne `#1f4a38` | 8.92 | 9.78 | 8.00 | pass |
 
 ## Light grounds (no graphit)
 
@@ -218,6 +255,7 @@ A result chart sits on Kalkweiß, never Beton. Series 1 is the scene line, serie
 | IDEA | Kobalt `#2e4d90` 7.24 | Himbeere tief `#b6386f` 4.94 | 23.7 / 1.47 | 7.6 / 1.07 | 18.4 / 1.75 | 28.5 / 1.40 | hatch plus direct labels |
 | Bloom | Aubergine `#3b1f45` 12.73 | Terrakotta tief `#964305` 6.03 | 24.2 / 2.11 | 21.0 / 1.81 | 25.1 / 2.30 | 22.8 / 2.06 | direct labels |
 | Autumn | Rost `#944d44` 5.49 | Ocker tief `#9b5e07` 4.68 | 7.9 / 1.17 | 8.0 / 1.19 | 6.9 / 1.17 | 3.6 / 1.16 | hatch plus direct labels |
+| Sage | Tanne `#1f4a38` 8.92 | Mennige tief `#97300f` 6.81 | 20.4 / 1.31 | 5.3 / 1.00 | 13.1 / 1.54 | 25.6 / 1.31 | hatch plus direct labels |
 
 ## Rejected pairings
 

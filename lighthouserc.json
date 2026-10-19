@@ -23,6 +23,8 @@
         "http://localhost:3000/workshops/geschaeftsberichte-mit-ki-lesen",
         "http://localhost:3000/workshops/esg-berichte-mit-ki",
         "http://localhost:3000/workshops/esg-berichte-mit-ki/kit",
+        "http://localhost:3000/workshops/ki-im-unternehmen-sicher-nutzen",
+        "http://localhost:3000/workshops/ki-im-unternehmen-sicher-nutzen/kit",
         "http://localhost:3000/buecher",
         "http://localhost:3000/buecher/ki-landschaft",
         "http://localhost:3000/buecher/ki-landschaft/02_methodik",
