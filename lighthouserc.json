@@ -36,7 +36,8 @@
         "http://localhost:3000/hilfe",
         "http://localhost:3000/hilfe/eigene-ki",
         "http://localhost:3000/impressum",
-        "http://localhost:3000/datenschutz"
+        "http://localhost:3000/datenschutz",
+        "http://localhost:3000/bot"
       ],
       "numberOfRuns": 3
     },
