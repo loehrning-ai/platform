@@ -3,9 +3,8 @@
 /**
  * Invoke the Playwright CLI resolved from this workspace's lockfile.
  *
- * CI shards call Playwright directly rather than through `run-e2e-suite.mjs`,
- * because a GitHub matrix already provides the process isolation that the
- * in-process shard loop was emulating. Resolving the CLI through `createRequire`
+ * CI shards call Playwright directly rather than through an in-process suite runner,
+ * because a GitHub matrix already provides process isolation. Resolving the CLI through `createRequire`
  * (rather than `npx playwright`) keeps the runner pinned to the version in
  * `bun.lock` — `npx playwright` resolves a different package that has no `test`
  * command at all.

@@ -394,12 +394,6 @@ try {
 const packageJson = JSON.parse(
   readFileSync(join(here, "..", "..", "package.json"), "utf8"),
 );
-assert.match(
-  packageJson.scripts.verify,
-  /^node scripts\/run-provider-free\.mjs bun run verify:internal$/,
-  "the complete workspace verification command must cross the minimal environment boundary",
-);
-assert.ok(packageJson.scripts["verify:internal"]);
 assert.equal(
   packageJson.scripts.typegen,
   "node scripts/run-provider-free.mjs env __NEXT_NODE_NATIVE_TS_LOADER_ENABLED=true bun run next typegen --webpack",
@@ -407,7 +401,7 @@ assert.equal(
 );
 assert.equal(packageJson.scripts.pretypecheck, "bun run typegen");
 assert.equal(packageJson.scripts["pretypecheck:test"], "bun run typegen");
-for (const scriptName of ["test:e2e", "test:e2e:built", "test:e2e:dev"]) {
+for (const scriptName of ["test:e2e", "test:e2e:dev"]) {
   assert.match(
     packageJson.scripts[scriptName],
     /node scripts\/run-provider-free\.mjs/,
@@ -430,16 +424,6 @@ for (const name of ["ci", "ci:static", "ci:unit", "ci:browser", "ci:hygiene"]) {
     `${name} must cross the minimal environment boundary`,
   );
 }
-assert.equal(
-  rootPackageJson.scripts["verify:legacy"],
-  "node packages/website/scripts/run-provider-free.mjs bun run verify:internal",
-);
-assert.ok(rootPackageJson.scripts["verify:internal"]);
-assert.match(
-  readFileSync(join(here, "..", "..", "..", "..", "scripts", "verify-release.mjs"), "utf8"),
-  /args: \["run", "verify:legacy"\]/,
-  "the release runner keeps the long chain whose build carries no E2E variables",
-);
 const releaseRunner = readFileSync(
   join(here, "..", "..", "..", "..", "scripts", "verify-release.mjs"),
   "utf8",
@@ -448,14 +432,14 @@ assert.match(releaseRunner, /RELEASE_VALIDATION: "1"/);
 assert.match(releaseRunner, /NEXT_TELEMETRY_DISABLED: "1"/);
 assert.ok(
   releaseRunner.indexOf('"provider environment preflight"') <
-    releaseRunner.indexOf('"deterministic repository verification"'),
+    releaseRunner.indexOf('"static checks"'),
   "release verification must validate the supplied provider environment before any provider-free wrapper can clear it",
 );
 assert.ok(
-  releaseRunner.indexOf('"deterministic repository verification"') <
+  releaseRunner.indexOf('"static checks"') <
     releaseRunner.indexOf('"full Lighthouse performance gate"') &&
     releaseRunner.indexOf('"full Lighthouse performance gate"') <
-      releaseRunner.indexOf('"public browser gate"'),
+      releaseRunner.indexOf('"browser smoke"'),
   "release verification must measure the complete verified build before browser journey gates",
 );
 assert.ok(
@@ -464,8 +448,9 @@ assert.ok(
   "release verification must finish with the configured provider build",
 );
 assert.ok(
-  releaseRunner.includes('"provider-free authentication scaffold"'),
-  "release verification must exercise the credential-free auth boundary",
+  releaseRunner.indexOf('"provider-free production build"') <
+    releaseRunner.indexOf('"full Lighthouse performance gate"'),
+  "release verification must pin one provider-free build receipt before measuring it",
 );
 for (const name of ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"]) {
   assert.match(
@@ -479,25 +464,18 @@ assert.match(
   /node scripts\/run-provider-free\.mjs node scripts\/run-built-gate\.mjs/,
   "the launch browser gate must run its server under the provider-free runtime",
 );
-const e2eSuiteRunner = readFileSync(
-  join(here, "..", "run-e2e-suite.mjs"),
-  "utf8",
-);
 assert.match(
-  e2eSuiteRunner,
-  /"--grep",\s*"@launch-gate",\s*"--project=chromium",\s*"--retries=0",\s*"--trace=retain-on-failure"/,
+  packageJson.scripts["test:e2e:release:built"],
+  /--grep @launch-gate --project=chromium --retries=0 --trace=retain-on-failure/,
   "the launch browser gate must select tagged tests across the complete suite",
 );
 assert.doesNotMatch(
-  e2eSuiteRunner,
+  packageJson.scripts["test:e2e:release:built"],
   /launch-gate\.spec\.ts/,
   "the launch browser gate may not hardcode one test file",
 );
 for (const scriptName of [
   "test:server-log-privacy:built",
-  "test:e2e:built",
-  "test:e2e:public:built",
-  "test:e2e:auth-scaffold:built",
   "test:e2e:release:built",
 ]) {
   assert.match(
@@ -519,20 +497,10 @@ assert.match(
   /spawn\([\s\S]*postflightReceipt\s*=\s*verify\(\);[\s\S]*isDeepStrictEqual\(preflightReceipt,\s*postflightReceipt\)/,
 );
 assert.match(
-  packageJson.scripts["test:e2e:public:built"],
-  /E2E_GLOBAL_TIMEOUT=\$\{E2E_GLOBAL_TIMEOUT:-4200000\}/,
-  "the complete local public matrix must inherit an explicit timeout or use the same 70-minute bound as CI",
+  packageJson.scripts["test:e2e:release:built"],
+  /E2E_GLOBAL_TIMEOUT=\$\{E2E_GLOBAL_TIMEOUT:-600000\}/,
+  "test:e2e:release:built must use the bounded ten-minute focused-gate budget",
 );
-for (const scriptName of [
-  "test:e2e:auth-scaffold:built",
-  "test:e2e:release:built",
-]) {
-  assert.match(
-    packageJson.scripts[scriptName],
-    /E2E_GLOBAL_TIMEOUT=\$\{E2E_GLOBAL_TIMEOUT:-600000\}/,
-    `${scriptName} must use the bounded ten-minute focused-gate budget`,
-  );
-}
 assert.equal(
   packageJson.scripts["test:e2e:authenticated-live:built"],
   "node scripts/run-live-auth-e2e.mjs --built",
