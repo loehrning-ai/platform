@@ -133,11 +133,6 @@ function keepAmountsTogether(text: string): string {
   return text.replace(/(\d) (?=[€$£])/g, "$1\u00a0");
 }
 
-/** Caption lines join facts that start lowercase mid-line; the line itself starts upper case. */
-function sentenceStart(text: string): string {
-  return text.charAt(0).toLocaleUpperCase() + text.slice(1);
-}
-
 /** A band lede longer than this, with a second sentence, shows only its first sentence. */
 const BAND_LEDE_MAX = 110;
 
