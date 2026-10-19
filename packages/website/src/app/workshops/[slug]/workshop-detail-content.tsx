@@ -29,7 +29,6 @@ import { WorkshopStage } from "@/components/workshops/workshop-stage";
 import { HighlightedText } from "@/components/ui/highlighted-text";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import {
-  PLAKAT,
   workshopPlakat,
   type PlakatKey,
   type WorkshopPlakat,
@@ -83,21 +82,32 @@ const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
  * colour, strong enough to read as a band on the ground and never under 3:1
  * against the ink (the title is display size):
  * - lemons: Mennige, Butter on it 4.96.
- * - idea: Himbeere at 35% over Kreide, Kobalt on it 4.38.
+ * - idea: Himbeere at 85% over Kreide (3.04 on the ground), Druckschwarz
+ *   (`--color-lab-ink`) on it 5.13: a pale wash behind Kobalt vanished (1.54
+ *   on the ground), and light words on a dark band end on Kreide wherever a
+ *   line's box is taller than its band (Bogen on Kreide is 1.17).
  * - bloom: Terrakotta at 80% over Sand, Aubergine on it 5.03.
- * - autumn: Ocker at 30% over Rost, Creme on it 3.43. Rost leaves little
- *   room for a lighter wash (Creme is 4.80 on the plain ground), so the band
- *   stays a tint and the 3:1 display floor keeps its margin.
+ * - autumn: Ocker at full strength (2.78 on Rost), Druckschwarz (`--color-lab-ink`, a fixed value the scene never overrides) on it 9.0: a
+ *   30% wash was 1.40 on the ground and read as brown on brown. Rost leaves no
+ *   room for a lighter wash behind Creme, so the band turns the pair round.
  * - sage: Bernstein at 100% over Salbei (1.75 against the ground, a visible
  *   band), Tanne on it 4.46.
  */
 export const TITLE_HIGHLIGHT: Readonly<
-  Record<PlakatKey, { readonly colorVar: `--color-${string}`; readonly opacity: number }>
+  Record<
+    PlakatKey,
+    {
+      readonly colorVar: `--color-${string}`;
+      readonly opacity: number;
+      /** The words on the band; the scene ink when left out. */
+      readonly textColorVar?: `--color-${string}`;
+    }
+  >
 > = {
   lemons: { colorVar: "--color-scene-mid", opacity: 100 },
-  idea: { colorVar: "--color-scene-mid", opacity: 35 },
+  idea: { colorVar: "--color-scene-mid", opacity: 85, textColorVar: "--color-lab-ink" },
   bloom: { colorVar: "--color-scene-mid", opacity: 80 },
-  autumn: { colorVar: "--color-scene-mid", opacity: 30 },
+  autumn: { colorVar: "--color-scene-mid", opacity: 100, textColorVar: "--color-lab-ink" },
   sage: { colorVar: "--color-scene-mid", opacity: 100 },
 };
 
@@ -112,7 +122,7 @@ const HIGHLIGHT_PAIR_MAX = 12;
 const HEADLINE_MARK: Readonly<
   Record<string, Readonly<Partial<Record<Locale, string>>>>
 > = {
-  "ki-im-unternehmen-sicher-nutzen": { de: "Daten", en: "Data" },
+  "ki-im-unternehmen-sicher-nutzen": { de: "Daten?", en: "data" },
 };
 
 /**
@@ -171,6 +181,22 @@ function keepAmountsTogether(text: string): string {
 /** Caption lines join facts that start lowercase mid-line; the line itself starts upper case. */
 function sentenceStart(text: string): string {
   return text.charAt(0).toLocaleUpperCase() + text.slice(1);
+}
+
+/** A band lede longer than this, with a second sentence, shows only its first sentence. */
+const BAND_LEDE_MAX = 110;
+
+/**
+ * The band's one lede. A summary of one short sentence is shown whole; a
+ * longer one with a second sentence is cut after the first, so the band
+ * stays two or three lines on a phone and the actions stay on the first
+ * screen. The full summary stays in the registry, the hub row and the meta
+ * description.
+ */
+export function bandLede(summary: string): string {
+  if (summary.length <= BAND_LEDE_MAX) return summary;
+  const first = summary.split(/(?<=[.!?])\s+(?=\p{Lu})/u)[0] ?? summary;
+  return first.length >= 40 ? first : summary;
 }
 
 /** Characters that fit two phone lines at 14px on a 320px screen. */
@@ -391,9 +417,25 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
     (material) => !reachedByStage.has(material),
   );
 
+  // Real figures and "invented, plus public figures" are named in the facts
+  // line below; a purely invented case is named in the case section.
+  const dataOriginStated = caseStudy.isFictional ? Boolean(realWorldCase) : true;
+  // A time the stage cards already show is not repeated in the facts line.
+  const stageMinutes = new Set(
+    [stage.a?.meta, stage.b?.meta].flatMap((meta) => meta?.match(/\d+(?= [Mm]in\b)/g) ?? []),
+  );
+  const unlessOnCard = (fact: string): string | null => {
+    const shown = fact.match(/\d+/)?.[0];
+    return shown && stageMinutes.has(shown) && /\d+ [Mm]in\b/.test(fact) ? null : fact;
+  };
   const coverFacts = [
-    workshop.minutesLive ? copy.minutesLive(workshop.minutesLive) : null,
-    workshop.selfStudyDurationLabel ?? copy.minutesSelfStudy(workshop.minutesSelfStudy),
+    workshop.minutesLive ? unlessOnCard(copy.minutesLive(workshop.minutesLive)) : null,
+    unlessOnCard(
+      workshop.selfStudyDurationLabel ??
+        (workshop.minutesLive
+          ? copy.minutesSelfStudy(workshop.minutesSelfStudy)
+          : copy.minutesAbout(workshop.minutesSelfStudy)),
+    ),
     // An invented case is named once, in the caption line of the case section.
     caseStudy.isFictional
       ? realWorldCase
@@ -424,16 +466,18 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
     provenance.aiOutputsRecordedAt
       ? `${copy.provenanceLabels.aiOutputsRecordedAt} ${formatDate(provenance.aiOutputsRecordedAt, locale)}`
       : null,
-    provenance.liveRunAt
-      ? `${copy.provenanceLabels.liveRunAt} ${formatDate(provenance.liveRunAt, locale)}`
-      : null,
-    provenance.data === "synthetic" ? null : copy.provenanceData[provenance.data],
+    // The facts line states the origin of the data once; the footer repeats
+    // it only when the facts line does not (an invented case without public
+    // figures has no data fact there).
+    provenance.data === "synthetic" || dataOriginStated
+      ? null
+      : copy.provenanceData[provenance.data],
   ].filter((fact): fact is string => Boolean(fact));
 
   return (
     <article
       data-plakat-page={scene.plakat}
-      className="bg-background pb-28 sm:pb-24"
+      className="bg-background pb-10 sm:pb-16"
     >
       {/* Phones carry the back link at the top of the band instead, so the
           band starts right under the compact header. */}
@@ -447,7 +491,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             aria-label={copy.backAria}
             // The bar is exactly as tall as the link, between the sticky
             // header and the cover band, so the ring is drawn inside it.
-            className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground focus-visible:outline-offset-[-3px]"
+            className="inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground focus-visible:outline-offset-[-3px]"
           >
             <BackGlyph />
             {copy.allWorkshops}
@@ -458,20 +502,21 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       <PlakatBand
         plakat={scene.plakat}
         labelledBy="workshop-title"
-        // Below lg the poster is a full-bleed 16:9 row after the actions:
-        // the numeral and the motif at full column width (219px at 390), so
-        // a phone band reads as the poster, not as a page of type with a
-        // scrap of art in the corner.
-        artPhoneLayout="poster"
-        // Phones: an 8:3 poster row, so the title, the summary and the top of
-        // the first action card share the first screen (390 x 664).
-        className="[&>[data-plakat-art-phone]]:mt-4 max-sm:[&>[data-plakat-art-phone]]:mt-3 max-sm:[&>[data-plakat-art-phone]]:aspect-[8/3]"
-        // IDEA marks the band's own corners, as on the reference poster; the
-        // art inside then carries no dots of its own. Phones start the
-        // content at the same 20px on every band: the back link sits clear
-        // of the dots, so the band rhythm does not change per workshop.
-        cornerDots={PLAKAT[scene.plakat].cornerDots}
-        contentClassName="max-sm:pt-5 lg:py-10"
+        // Below lg the poster is a strip after the lede: the numeral flush
+        // left on the text column's edge, the motif's window against the
+        // bottom-right corner, bleeding off the band's right and bottom
+        // edges. 96px on a phone, 112px from sm, so the cards and the top of
+        // the scene share the first phone screen. From lg the poster is the
+        // right art column and the band is at least 19rem high, so the stage
+        // starts at the same y on every workshop.
+        artPhoneLayout="strip"
+        className="[&>[data-plakat-art-phone]]:mt-4 max-sm:[&>[data-plakat-art-phone]]:mt-1.5 max-sm:[&>[data-plakat-art-phone]]:h-[4.75rem] sm:[&>[data-plakat-art-phone]]:h-28 lg:min-h-[19rem]"
+        // The IDEA poster's registration dots belong to the hub and the demos
+        // band; on a workshop page they read as stray marks beside the back
+        // link, so no workshop band carries them and every band starts at the
+        // same 8px on a phone.
+        cornerDots={false}
+        contentClassName="max-sm:pt-2 lg:py-8"
         art={
           <PosterArt
             plakat={scene.plakat}
@@ -486,7 +531,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             plakat={scene.plakat}
             motif={scene.motif}
             numeral={workshop.number}
-            format="landscape"
+            format="strip"
             cornerDots={false}
           />
         }
@@ -497,19 +542,22 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           href={localizeHref("/workshops", locale)}
           aria-label={copy.backAria}
           data-cover-back=""
-          className="-my-2 inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
+          className="-my-2.5 inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
         >
           <BackGlyph />
-          {copy.workshopsShort}
+          {copy.allWorkshops}
         </Link>
         {/* CapsLine keeps each " · " part whole with its separator, so a
             narrow phone never opens a line with a dot. */}
-        <CapsLine className="mt-3 max-[359px]:mt-2 sm:mt-0">{workshop.eyebrow}</CapsLine>
+        {/* From 340px the eyebrow stays one line: 12px and +0.1em below 380px. */}
+        <CapsLine className="mt-2 max-[379px]:text-[0.75rem]! max-[379px]:tracking-[0.1em]! sm:mt-0">
+          {workshop.eyebrow}
+        </CapsLine>
         <h1
           id="workshop-title"
           // Below 360px the poster step scales with the width (42px, as 50px
           // at 390), so the start button stays above the tab bar at 320x568.
-          className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:mt-2 max-[359px]:[--text-poster:2.625rem] sm:mt-4"
+          className="poster-title mt-2 max-w-[16ch] text-scene-ink min-[380px]:max-sm:[--text-poster:2.5rem] max-[379px]:[--text-poster:min(2.5rem,10vw)] sm:mt-4 sm:max-w-[24ch] sm:[--text-poster:3.5rem] lg:max-w-none lg:[--text-poster:4.5rem]"
           style={posterTitleFallbackStyle(title.head)}
         >
           {/* Positioned, so a descender paints above the next line's band. */}
@@ -520,7 +568,14 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               <HighlightedText
                 colorVar={TITLE_HIGHLIGHT[scene.plakat].colorVar}
                 opacity={TITLE_HIGHLIGHT[scene.plakat].opacity}
-                className="title-mark"
+                {...(TITLE_HIGHLIGHT[scene.plakat].textColorVar
+                  ? { textColorVar: TITLE_HIGHLIGHT[scene.plakat].textColorVar }
+                  : {})}
+                // The band keeps its padding on the first and the last line
+                // only (slice), inside the text column: it never hangs out
+                // past the left edge or the screen edge, and a gap of the
+                // padding plus one space separates it from the word before.
+                className="title-mark box-decoration-slice px-[0.12em]"
               >
                 {heading.highlight}
               </HighlightedText>
@@ -542,8 +597,8 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             </>
           ) : null}
         </h1>
-        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty max-[359px]:mt-3 sm:mt-5 lg:max-w-[46ch]">
-          {keepAmountsTogether(workshop.summary)}
+        <p className="mt-2.5 max-w-[40ch] text-body text-scene-ink text-balance max-sm:leading-[1.4] sm:mt-4 lg:mt-5 lg:max-w-[52ch] lg:text-[1.1875rem]">
+          {keepAmountsTogether(bandLede(workshop.summary))}
         </p>
       </PlakatBand>
 
@@ -551,19 +606,11 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
 
       {/* The one facts line. Everything else waits in "More details". */}
       <div className={CONTAINER}>
-        <p
+        <FactList
           data-workshop-facts=""
-          className="pt-6 text-caption text-muted-foreground tabular-nums"
-        >
-          {coverFacts.map((fact, index) => (
-            <span key={fact}>
-              {index > 0 ? " · " : null}
-              <span className="whitespace-nowrap">
-                {index === 0 ? sentenceStart(fact) : fact}
-              </span>
-            </span>
-          ))}
-        </p>
+          className="pt-6 text-[0.9375rem]/[1.45] text-foreground lg:text-[1rem]"
+          items={coverFacts.map((fact, index) => (index === 0 ? sentenceStart(fact) : fact))}
+        />
       </div>
 
       <section
@@ -571,7 +618,20 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         className={cx(CONTAINER, "pt-6 sm:pt-8")}
       >
         <details className="group/details border-t-2 border-scene-line pt-3 sm:pt-4">
-          <summary className="flex min-h-11 cursor-pointer flex-wrap items-baseline gap-x-4 gap-y-1">
+          {/* One crisp row: the title and, on a phone, its hint under it, with
+              the chevron on the right edge. The row is 56px or more. */}
+          <summary className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-1 sm:gap-6">
+            <span className="flex min-w-0 flex-col sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-4">
+              <h2
+                id="workshop-details-heading"
+                className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
+              >
+                {copy.detailsHeading}
+              </h2>
+              <span className="mt-0.5 text-[0.875rem]/[1.4] text-foreground/80 sm:mt-0">
+                {copy.detailsSummary}
+              </span>
+            </span>
             <svg
               aria-hidden="true"
               focusable="false"
@@ -581,19 +641,10 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               strokeWidth="2"
               strokeLinecap="square"
               strokeLinejoin="miter"
-              className="size-4 shrink-0 self-center transition-transform duration-[120ms] group-open/details:rotate-90"
+              className="size-6 shrink-0 transition-transform duration-[120ms] group-open/details:rotate-90"
             >
               <path d="M7 3l7 7-7 7" />
             </svg>
-            <h2
-              id="workshop-details-heading"
-              className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
-            >
-              {copy.detailsHeading}
-            </h2>
-            <span className="text-caption text-muted-foreground">
-              {copy.detailsSummary}
-            </span>
           </summary>
           <div className="mt-6 grid gap-8 sm:gap-12 md:grid-cols-2 md:gap-12">
             {showMaterials ? (
@@ -811,11 +862,50 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         aria-label={copy.provenanceHeading}
         className={cx(CONTAINER, "pt-4 sm:pt-8")}
       >
-        <p className="border-t border-hairline pt-5 text-caption text-muted-foreground tabular-nums">
-          {provenanceFacts.join(" · ")}
-        </p>
+        <div className="border-t border-hairline pt-5">
+          <FactList
+            className="text-[0.875rem]/[1.5] text-foreground/90"
+            items={provenanceFacts}
+          />
+        </div>
       </footer>
     </article>
+  );
+}
+
+/**
+ * Facts as separate items that wrap as whole units, each behind a small
+ * square (the page's one bullet), so no line ever starts or ends with a
+ * stranded dot and a fact never breaks in the middle on a phone. The list
+ * semantics tell a screen reader how many facts there are.
+ */
+function FactList({
+  items,
+  className,
+  ...rest
+}: {
+  readonly items: readonly string[];
+  readonly className?: string;
+  readonly "data-workshop-facts"?: string;
+}) {
+  return (
+    <ul
+      {...rest}
+      className={cx(
+        "flex list-none flex-wrap gap-x-5 gap-y-1.5 p-0 tabular-nums",
+        className,
+      )}
+    >
+      {items.map((item) => (
+        <li key={item} className="inline-flex items-baseline gap-2">
+          <span
+            aria-hidden="true"
+            className="size-1.5 shrink-0 -translate-y-px bg-foreground/70"
+          />
+          <span className="text-pretty">{item}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 

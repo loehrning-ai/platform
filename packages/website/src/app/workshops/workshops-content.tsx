@@ -13,7 +13,6 @@ import {
   Chip,
   cx,
   Kicker,
-  Route,
   SectionHead,
 } from "@/components/werk";
 import { PosterCover, PosterThumb } from "@/components/plakat";
@@ -208,42 +207,6 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         </div>
       </section>
 
-      {/* The route follows the list, so the posters come right after the
-          band. Phones skip it: every workshop page opens with its own
-          agenda. */}
-      <section
-        aria-labelledby="workshop-route-heading"
-        className="hidden pt-16 sm:block"
-      >
-        <div className={CONTAINER}>
-          <SectionHead
-            id="workshop-route-heading"
-            title={copy.routeHeading}
-            caption={copy.routeCaption}
-            size="compact"
-          />
-          {/* Phones: the five station names on one scroll-snapped rail, no
-              captions. From sm the captions return at 14px so the five
-              columns do not wrap into ragged one-word lines; the route is
-              capped so it reads as deliberate. */}
-          <Route
-            stations={copy.routeStations.map((station) => ({
-              label: station.label,
-              caption: (
-                <span className="hidden text-[0.875rem] leading-snug text-pretty sm:block">
-                  {station.caption}
-                </span>
-              ),
-            }))}
-            mode="description"
-            label={copy.routeHeading}
-            locale={locale}
-            layout="rail"
-            className="mt-4 max-w-[60rem] sm:mt-8"
-          />
-        </div>
-      </section>
-
       <div className={cx(CONTAINER, "pb-10 pt-4 sm:pb-24 sm:pt-12")}>
         <Callout variant="boundary" className="max-w-[64ch]">
           {copy.boundary}
@@ -316,7 +279,7 @@ function HubHero({
       />
       <div className={cx(CONTAINER, "relative grid gap-5 sm:gap-8 md:grid-cols-12 md:items-center lg:gap-10")}>
         <header className="relative min-w-0 py-1 sm:py-3 md:col-span-7 lg:col-span-8 lg:py-8">
-          <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+          <p className="flex items-center gap-3 font-mono text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-brand-orange">
             <span className="size-3 shrink-0 bg-brand-teal" aria-hidden="true" />
             {copy.hubKicker(workshops.length)}
           </p>
@@ -365,7 +328,7 @@ function HubHero({
           />
           <div className="relative bg-paper p-4 shadow-card ring-1 ring-foreground/30 sm:p-6">
             <div className="flex items-baseline justify-between gap-4 border-b border-foreground pb-3 sm:pb-4">
-              <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+              <span className="font-mono text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-brand-orange">
                 {copy.catalogueIndex}
               </span>
               <strong className="text-3xl font-bold leading-none tracking-[-0.07em] text-foreground tabular-nums sm:text-4xl">
@@ -384,7 +347,7 @@ function HubHero({
                     <a
                       href={`#workshop-${workshop.slug}`}
                       className={cx(
-                        "flex size-11 items-center justify-center font-mono text-xs font-bold text-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                        "flex size-11 items-center justify-center font-mono text-[0.8125rem] font-bold text-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                         INDEX_WASHES[position % INDEX_WASHES.length],
                       )}
                     >
@@ -402,7 +365,7 @@ function HubHero({
                     <a
                       href={`#workshop-${workshop.slug}`}
                       className={cx(
-                        "flex min-h-11 items-center gap-3 px-3 font-mono text-xs font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                        "flex min-h-11 items-center gap-3 px-3 font-mono text-[0.8125rem] font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                         INDEX_WASHES[position % INDEX_WASHES.length],
                         INDEX_WIDTHS[position % INDEX_WIDTHS.length],
                       )}
@@ -447,7 +410,7 @@ function WorkshopRow({
   const title = splitTitle(workshop.title);
   const poster = workshopPlakat(workshop.slug) ?? FALLBACK_POSTER;
 
-  // Below md a row is a list line, not a card: an 80px poster thumb with the
+  // Below md a row is a list line, not a card: a 104px poster thumb with the
   // number, a duration line, the title head and one flowing "you leave with"
   // sentence, with an arrow top right. The summary, the need, the
   // materials and the live date live on the workshop page. The row bleeds
@@ -460,13 +423,19 @@ function WorkshopRow({
       aria-labelledby={headingId}
       // The link's ::after makes the whole row clickable, so keyboard focus
       // rings the whole row too. Without :has() the link keeps its own ring.
-      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]"
+      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[6.5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]"
     >
       <figure className="min-w-0">
         {/* Each row shows its workshop's own poster, in its own palette, on
             the paper list: an 80px thumb on a phone, the cover from md. Both
             are decorative; the row's heading names the workshop. */}
-        <div aria-hidden="true" data-workshop-tile="" className="md:hidden">
+        {/* 104px on a phone (the poster is the row's picture), and it lifts a
+            touch when the row is pointed at or focused. */}
+        <div
+          aria-hidden="true"
+          data-workshop-tile=""
+          className="transition-transform duration-300 ease-out motion-reduce:transition-none md:hidden [&>span]:w-[6.5rem] [@media(hover:hover)]:group-hover:-translate-y-[0.25rem] group-has-[a:focus-visible]:-translate-y-[0.25rem]"
+        >
           <PosterThumb
             plakat={poster.plakat}
             motif={poster.motif}
@@ -477,7 +446,7 @@ function WorkshopRow({
         <div
           aria-hidden="true"
           data-workshop-mini-cover=""
-          className="hidden md:block"
+          className="hidden transition-transform duration-300 ease-out motion-reduce:transition-none md:block [@media(hover:hover)]:group-hover:-translate-y-[0.25rem] group-has-[a:focus-visible]:-translate-y-[0.25rem]"
         >
           <PosterCover
             plakat={poster.plakat}

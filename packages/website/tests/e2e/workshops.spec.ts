@@ -145,13 +145,14 @@ test.describe("workshop self-study journey", () => {
     const rows = page.getByTestId("workshop-row");
     await expect(rows).toHaveCount(5);
 
-    // A phone row is a list line, not a card: tile, duration, title and one
-    // "you leave with" sentence. 140px leaves room for the wider fallback
-    // face; the brand face measures 97 to 117px.
+    // A phone row is a list line, not a card: the poster tile (104px wide, 4:5,
+    // so 130px tall), duration, title and one "you leave with" sentence. The
+    // brand face measures 163px with the row's 16px padding; 190px leaves room
+    // for the wider fallback face and stays far under a card.
     for (const row of await rows.all()) {
       const box = await row.boundingBox();
       expect(box, "row bounds").not.toBeNull();
-      expect(box!.height).toBeLessThan(140);
+      expect(box!.height).toBeLessThan(190);
       await expect(row.locator("[data-workshop-question]")).toHaveCount(0);
       await expect(row.locator("h3 + p")).toBeHidden();
       await expect(row.locator("[data-workshop-tile]")).toBeVisible();
@@ -168,8 +169,8 @@ test.describe("workshop self-study journey", () => {
       expect(facts!.x).toBeLessThanOrEqual(heading!.x + 1);
       expect(facts!.width).toBeGreaterThanOrEqual(heading!.width);
     }
-    // No route rail between cover and list on a phone.
-    await expect(page.locator("#workshop-route-heading")).toBeHidden();
+    // No route rail between cover and list.
+    await expect(page.locator("#workshop-route-heading")).toHaveCount(0);
     // The first workshop starts inside the first screen.
     const first = await rows.first().boundingBox();
     expect(first!.y).toBeLessThan(664);

@@ -172,10 +172,10 @@ describe("hero-mend.css", () => {
     }
   });
 
-  it("runs one 9 second loop on a shared clock with a 3 act story", () => {
+  it("runs one 11 second loop on a shared clock with a 3 act story", () => {
     const loops = declarations((d) => d.prop === "animation" && d.value.includes("var(--hd-go)"));
     expect(loops.length).toBeGreaterThanOrEqual(12);
-    for (const declaration of loops) expect(declaration.value).toMatch(/\b9s\b.*\binfinite\b.*\bbackwards\b/);
+    for (const declaration of loops) expect(declaration.value).toMatch(/\b11s\b.*\binfinite\b.*\bbackwards\b/);
   });
 
   it("reacts to the pointer with transform only", () => {

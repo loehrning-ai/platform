@@ -262,13 +262,13 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Kann KI die Zukunft vorhersagen?",
     eyebrow: "Workshop 01 · Prognosen",
     summary:
-      "In Browser-Laboren rechnest du aus, was eine falsche Prognose kostet und wann eine Person freigeben muss.",
+      "Du rechnest aus, was eine falsche Prognose kostet und wann ein Mensch freigeben muss.",
     description:
       "Du prüfst, ob ein Modell den Wert vom selben Wochentag der Vorwoche schlägt, und legst aus den Kosten von zu viel und zu wenig Kapazität den Puffer fest. Dann bestimmst du, woran du eine danebenliegende Prognose erkennst und wer freigibt. Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
     accessNote:
-      "Alles läuft im Browser.",
+      "Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
     outcome: "Go/No-Go-Regel",
     audience: [
       "Disponentinnen und Planer, die nach Prognosen Mengen festlegen",
@@ -612,7 +612,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sector: "Elektronikfertigung",
       period: "September 2023",
       narrative:
-        "Das Familienunternehmen hat rund 850 Beschäftigte und acht Produktlinien, sieben davon liefern aus. Die neueste und teuerste ist CRAFT: zwei Espressomaschinen und eine Mühle für 199 € bis 699 €. CRAFT macht bei Absatzrang 6 von 7 den zweithöchsten Umsatz.",
+        "Das Familienunternehmen hat rund 850 Beschäftigte und sieben liefernde Produktlinien. Die neueste ist CRAFT, zwei Espressomaschinen und eine Mühle für 199 € bis 699 €: Absatzrang 6 von 7, zweithöchster Umsatz.",
       metrics: [
         { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
@@ -635,7 +635,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sourcePublishedAt: "2026-07-29",
       sourceReviewedAt: "2026-08-26",
       sourceLimitation:
-        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Der freie Cashflow ist eine ergänzende Non-GAAP-Kennzahl; die Quelle belegt Werte, nicht die Investitionsentscheidung.",
+        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Freier Cashflow ist eine Non-GAAP-Kennzahl. Die Quelle belegt Werte, nicht die Investitionsentscheidung.",
       narrative:
         "Fast der gesamte operative Cashflow floss in Infrastruktur. Du definierst sechs Kennzahlen, liest das Quartal aus und lässt Claude ein Dashboard ohne Vorlage entwerfen.",
       metrics: [
@@ -684,13 +684,13 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Can AI predict the future?",
     eyebrow: "Workshop 01 · Forecasts",
     summary:
-      "In browser labs you work out what a wrong forecast costs and when a person must approve.",
+      "You work out what a wrong forecast costs and when a person must approve.",
     description:
       "You check whether a model beats the value from the same weekday a week earlier, and set the buffer from the cost of too much and too little capacity. Then you decide how you spot a forecast going wrong and who approves. The labs price in US dollars; the launch case counts units.",
     format: "Self-study kit",
     duration: "~90 minutes",
     accessNote:
-      "Everything runs in the browser.",
+      "The labs price in US dollars; the launch case counts units.",
     outcome: "Go/no-go rule",
     audience: [
       "Planners who set quantities from forecasts",
@@ -1034,7 +1034,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sector: "Electronics manufacturing",
       period: "September 2023",
       narrative:
-        "The family business has about 850 employees and eight product lines, seven of them shipping. The newest and most expensive is CRAFT: two espresso machines and a grinder priced €199 to €699. CRAFT ranks sixth of seven by units but second by revenue.",
+        "The family business has about 850 employees and seven shipping product lines. The newest is CRAFT, two espresso machines and a grinder priced €199 to €699: sixth of seven by units, second by revenue.",
       metrics: [
         { label: "Total revenue", value: "€21.69m" },
         { label: "Total units", value: "139,056" },
@@ -1057,7 +1057,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sourcePublishedAt: "2026-07-29",
       sourceReviewedAt: "2026-08-26",
       sourceLimitation:
-        "Company release with unaudited quarterly figures. Free cash flow is a supplemental non-GAAP measure; the source supports the figures, not the investment decision.",
+        "Company release with unaudited quarterly figures. Free cash flow is a non-GAAP measure. The source supports the figures, not the investment decision.",
       narrative:
         "Almost all operating cash flow went into infrastructure. You define six metrics, extract the quarter and have Claude design a dashboard without a template.",
       metrics: [

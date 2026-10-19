@@ -27,7 +27,12 @@ interface CardProps {
   /** Spoken after the title, e.g. ": Prognosen, ZIP, 1,1 MB". */
   readonly spoken: string;
   readonly download: boolean;
-  readonly secondary?: { readonly href: string; readonly label: string };
+  readonly secondary?: {
+    readonly href: string;
+    readonly label: string;
+    /** Spoken after the label, e.g. ": Prognosen". */
+    readonly spoken: string;
+  };
 }
 
 function Card({
@@ -50,20 +55,25 @@ function Card({
       >
         <ActionPicture kind={kind} slug={workshop.slug} />
         <div className="ac-body">
-          <WorkshopMaterialLink
-            workshopSlug={workshop.slug}
-            material={material}
-            className="ac-link"
-          >
-            <span className="ac-title">{title}</span>
-            <span className="sr-only">{spoken}</span>
-          </WorkshopMaterialLink>
-          <p className="ac-meta">{meta}</p>
-          <div className="ac-foot">
+          <div className="ac-head">
+            <WorkshopMaterialLink
+              workshopSlug={workshop.slug}
+              material={material}
+              className="ac-link"
+            >
+              <span className="ac-title">{title}</span>
+              <span className="sr-only">{spoken}</span>
+            </WorkshopMaterialLink>
             <ArrowGlyph direction={download ? "down" : "right"} className="ac-go" />
+          </div>
+          <div className="ac-sub">
+            <p className="ac-meta">{meta}</p>
             {secondary ? (
               <Link href={secondary.href} className="ac-secondary">
                 {secondary.label}
+                {/* The topic gives the link its context in a list of links. */}
+                <span className="sr-only">{secondary.spoken}</span>
+                <ArrowGlyph direction="right" className="ac-secondary-go" />
               </Link>
             ) : null}
           </div>
@@ -77,8 +87,8 @@ function Card({
  * The two big actions of a workshop page, right under the band: card A opens
  * the slides (or the lab for a workshop without a deck), card B downloads the
  * kit (or opens the case). Each is one real link with a stretched hit area;
- * a workshop with a kit page also gets one small secondary link to it.
- * Server component, zero script: the pictures move in CSS only
+ * a workshop with a kit page also gets one small secondary link to it (a 44px
+ * target named with the workshop's topic). Server component, zero script: the pictures move in CSS only
  * (action-cards.css), and the stage's pause control stops them
  * (docs/workshop-standard.md, "The stage").
  */
@@ -114,7 +124,13 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
           spoken={`: ${topic}${stage.b.fileFacts ?? ""}`}
           download={stage.b.download}
           {...(stage.b.kitPageHref
-            ? { secondary: { href: stage.b.kitPageHref, label: copy.kitPageAction } }
+            ? {
+                secondary: {
+                  href: stage.b.kitPageHref,
+                  label: copy.kitPageAction,
+                  spoken: `: ${topic}`,
+                },
+              }
             : {})}
         />
       ) : null}

@@ -124,58 +124,73 @@ export function MendScene(): ReactNode {
         </g>
       </g>
 
-      {/* Mid layer: the table, the funnel lines and the baseline with the zone below it. */}
-      <g className="hd-in hd-in-table">
-        <rect x="76" y={BASELINE_Y} width="448" height="90" className="hd-zone" />
-        {COLUMN_INDEXES.map((column) => (
-          <path key={column} d={`M${columnCentre(column)} ${PACKET_Y - 12}L${BAR_CX} ${BASELINE_Y - 4}`} className="hd-funnel" />
-        ))}
-        {ROW_INDEXES.flatMap((row) =>
-          COLUMN_INDEXES.filter((column) => !(column === BROKEN_COLUMN && row === GAP_ROW)).map((column) => (
-            <Cell key={`${column}-${row}`} column={column} row={row} />
-          )),
-        )}
-        {/* The gap: a dashed empty cell with a cross. Gone in the finished frame. */}
-        <g className="hd-gap">
-          <rect x={gapX} y={gapY} width={CELL_W} height={CELL_H} rx="4" className="hd-gap-box" />
-          <path d={`M${gapCx - 6} ${gapCy - 6}l12 12M${gapCx + 6} ${gapCy - 6}l-12 12`} className="hd-cross" />
+      {/* Mid layer: the table and the funnel lines. */}
+      <g className="hd-layer-mid">
+        <g className="hd-in hd-in-table">
+          {COLUMN_INDEXES.map((column) => (
+            <path
+              key={column}
+              d={`M${columnCentre(column)} ${PACKET_Y - 12}L${BAR_CX} ${BASELINE_Y - 4}`}
+              className="hd-funnel"
+            />
+          ))}
+          {ROW_INDEXES.flatMap((row) =>
+            COLUMN_INDEXES.filter((column) => !(column === BROKEN_COLUMN && row === GAP_ROW)).map((column) => (
+              <Cell key={`${column}-${row}`} column={column} row={row} />
+            )),
+          )}
+          {/* The gap: a dashed empty cell with a cross. Gone in the finished frame. */}
+          <g className="hd-gap">
+            <rect x={gapX} y={gapY} width={CELL_W} height={CELL_H} rx="4" className="hd-gap-box" />
+            <path d={`M${gapCx - 6} ${gapCy - 6}l12 12M${gapCx + 6} ${gapCy - 6}l-12 12`} className="hd-cross" />
+          </g>
+          {/* The clean cell that closes it, with a ripple. */}
+          <g className="hd-clean">
+            <rect x={gapX} y={gapY} width={CELL_W} height={CELL_H} rx="4" className="hd-clean-box" />
+            <path d={valuePath(BROKEN_COLUMN, GAP_ROW)} className="hd-clean-value" />
+          </g>
+          <rect x={gapX} y={gapY} width={CELL_W} height={CELL_H} rx="4" className="hd-ripple" />
+          {/* The doubled row: a dashed copy slid half a cell aside. Merged in the finished frame. */}
+          <g className="hd-ghost">
+            <rect x={brokenX} y={brokenY} width={CELL_W} height={CELL_H} rx="4" className="hd-ghost-box" />
+            <path d={valuePath(BROKEN_COLUMN, BROKEN_ROW)} className="hd-ghost-value" />
+          </g>
+          {/* The scanner: a frame that walks the columns. */}
+          <rect
+            x={cellX(0) - 6}
+            y={TABLE_Y - 8}
+            width={CELL_W + 12}
+            height={4 * CELL_H + 3 * GAP_Y + 16}
+            rx="6"
+            className="hd-scan"
+          />
         </g>
-        {/* The clean cell that closes it, with a ripple. */}
-        <g className="hd-clean">
-          <rect x={gapX} y={gapY} width={CELL_W} height={CELL_H} rx="4" className="hd-clean-box" />
-          <path d={valuePath(BROKEN_COLUMN, GAP_ROW)} className="hd-clean-value" />
-        </g>
-        <rect x={gapX} y={gapY} width={CELL_W} height={CELL_H} rx="4" className="hd-ripple" />
-        {/* The doubled row: a dashed copy slid half a cell aside. Merged in the finished frame. */}
-        <g className="hd-ghost">
-          <rect x={brokenX} y={brokenY} width={CELL_W} height={CELL_H} rx="4" className="hd-ghost-box" />
-          <path d={valuePath(BROKEN_COLUMN, BROKEN_ROW)} className="hd-ghost-value" />
-        </g>
-        {/* The scanner: a frame that walks the columns. */}
-        <rect x={cellX(0) - 6} y={TABLE_Y - 8} width={CELL_W + 12} height={4 * CELL_H + 3 * GAP_Y + 16} rx="6" className="hd-scan" />
       </g>
 
-      {/* Near layer: the baseline, the result bars, the badges and the packets. */}
-      <g className="hd-in hd-in-bar">
-        <path d={`M76 ${BASELINE_Y}H524`} className="hd-baseline" />
-        <rect x={BAR_X} y={BASELINE_Y - BAR_H} width={BAR_W} height={BAR_H} className="hd-bar hd-bar-wrong" />
-        <rect x={BAR_X} y={BASELINE_Y - BAR_H} width={BAR_W} height={BAR_H} className="hd-bar hd-bar-right" />
-        <g transform={`translate(${BAR_X - 48} ${BASELINE_Y + 36})`}>
-          <g className="hd-badge hd-minus">
-            <circle r="15" className="hd-badge-disc" />
-            <path d="M-7 0H7" className="hd-badge-glyph" />
+      {/* Near layer: the baseline with the zone below it, the result bars, the badges and the packets. */}
+      <g className="hd-layer-near">
+        <g className="hd-in hd-in-bar">
+          <rect x="76" y={BASELINE_Y} width="448" height="90" className="hd-zone" />
+          <path d={`M76 ${BASELINE_Y}H524`} className="hd-baseline" />
+          <rect x={BAR_X} y={BASELINE_Y - BAR_H} width={BAR_W} height={BAR_H} className="hd-bar hd-bar-wrong" />
+          <rect x={BAR_X} y={BASELINE_Y - BAR_H} width={BAR_W} height={BAR_H} className="hd-bar hd-bar-right" />
+          <g transform={`translate(${BAR_X - 48} ${BASELINE_Y + 36})`}>
+            <g className="hd-badge hd-minus">
+              <circle r="19" className="hd-badge-disc" />
+              <path d="M-9 0H9" className="hd-badge-glyph" />
+            </g>
+          </g>
+          <g transform={`translate(${BAR_X - 48} ${BASELINE_Y - 36})`}>
+            <g className="hd-badge hd-plus">
+              <circle r="19" className="hd-badge-disc hd-badge-disc-mid" />
+              <path d="M-9 0H9M0 -9V9" className="hd-badge-glyph" />
+            </g>
           </g>
         </g>
-        <g transform={`translate(${BAR_X - 48} ${BASELINE_Y - 36})`}>
-          <g className="hd-badge hd-plus">
-            <circle r="15" className="hd-badge-disc hd-badge-disc-mid" />
-            <path d="M-7 0H7M0 -7V7" className="hd-badge-glyph" />
-          </g>
-        </g>
+        {COLUMN_INDEXES.map((column) => (
+          <Packet key={column} column={column} />
+        ))}
       </g>
-      {COLUMN_INDEXES.map((column) => (
-        <Packet key={column} column={column} />
-      ))}
     </svg>
   );
 }

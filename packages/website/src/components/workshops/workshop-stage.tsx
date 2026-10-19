@@ -17,13 +17,15 @@ interface Props {
 /**
  * The stage under a workshop's poster band: two big animated action cards
  * (slides or lab, kit or case) and that workshop's own motion scene beside
- * them, with one pause control (docs/workshop-standard.md, "The stage").
+ * them, with one pause control in the scene's top-right corner
+ * (docs/workshop-standard.md, "The stage").
  *
  * Server component, zero script. The scene registry is `HERO_SCENES` in
  * components/plakat/hero-motion.tsx; a workshop whose scene is not wired yet
  * shows the cards across the full width, so the page is never broken.
- * Pause is a CSS-only checkbox (WCAG 2.2.2): checked, every animation and
- * transition on the stage returns to its finished still frame. Under
+ * Pause is a CSS-only checkbox with role "switch" (WCAG 2.2.2): on, every
+ * animation and transition on the stage returns to its finished still frame,
+ * the same frame reduced motion shows. Under
  * `prefers-reduced-motion: reduce` nothing moves and the control is hidden.
  */
 export function WorkshopStage({ workshop, locale, plakat }: Props): ReactNode {
@@ -46,11 +48,22 @@ export function WorkshopStage({ workshop, locale, plakat }: Props): ReactNode {
           <div className="ws-cards">
             <ActionCards workshop={workshop} locale={locale} plakat={plakat} />
           </div>
+          {/* One stable accessible name, so "checked" always means "paused";
+              the two visible labels only show what a tap will do. */}
           <label className="ws-pause" data-stage-pause="">
-            <input type="checkbox" className="ws-pause-input" />
+            <input
+              type="checkbox"
+              role="switch"
+              className="ws-pause-input"
+              aria-label={copy.pauseLabel}
+            />
             <span aria-hidden="true" className="ws-pause-icon" />
-            <span className="ws-pause-off">{copy.pauseOff}</span>
-            <span className="ws-pause-on">{copy.pauseOn}</span>
+            <span aria-hidden="true" className="ws-pause-off">
+              {copy.pauseOff}
+            </span>
+            <span aria-hidden="true" className="ws-pause-on">
+              {copy.pauseOn}
+            </span>
           </label>
           {scene ? (
             <div

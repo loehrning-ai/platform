@@ -3,12 +3,15 @@ import { WorkshopMaterialLink } from "@/app/workshops/[slug]/workshop-material-l
 import { CapsLine, PlakatBand, PosterArt } from "@/components/plakat";
 import { ArrowGlyph, Callout, Pictogram, SectionHead, cx } from "@/components/werk";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { PLAKAT, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
+import { plakatClass, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import type { Workshop } from "@/lib/workshops";
 import { workshopKitMaterial } from "@/lib/workshops";
+import { ActionPicture } from "./action-pictures";
 import { KIT_PAGE_COPY } from "./kit-copy";
 import { KitStepper, type KitStepperLabels } from "./kit-stepper";
+import "./action-cards.css";
+import "./kit-motion.css";
 
 interface Props {
   readonly workshop: Workshop;
@@ -16,7 +19,9 @@ interface Props {
 }
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
-const SECTION = "pt-10 sm:pt-20";
+// A closed disclosure leaves no empty strip: every section starts 32px (48px
+// from sm) under the one before it.
+const SECTION = "pt-8 sm:pt-12";
 const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
 
 function BackGlyph() {
@@ -68,7 +73,6 @@ export function KitPage({ workshop, locale }: Props) {
     next: kit.steps.map((_, index) =>
       copy.nextPrompt(kit.steps[(index + 1) % kit.steps.length].title),
     ),
-    stepOf: kit.steps.map((_, index) => copy.stepOf(index + 1, kit.steps.length)),
   };
 
   return (
@@ -82,7 +86,7 @@ export function KitPage({ workshop, locale }: Props) {
           <Link
             href={detailPath}
             aria-label={copy.backAria(workshop.title)}
-            className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground focus-visible:outline-offset-[-3px]"
+            className="inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground focus-visible:outline-offset-[-3px]"
           >
             <BackGlyph />
             {copy.backToWorkshop}
@@ -93,10 +97,14 @@ export function KitPage({ workshop, locale }: Props) {
       <PlakatBand
         plakat={scene.plakat}
         labelledBy="kit-title"
-        artPhoneLayout="poster"
-        className="[&>[data-plakat-art-phone]]:mt-4"
-        cornerDots={PLAKAT[scene.plakat].cornerDots}
-        contentClassName="max-sm:pt-5"
+        artPhoneLayout="strip"
+        // The same strip as the detail page (the numeral flush left, the motif
+        // bleeding off the bottom right), 88px on a phone, with 24px of air
+        // between the button above it and the numeral.
+        className="[&>[data-plakat-art-phone]]:mt-4 max-sm:[&>[data-plakat-art-phone]]:mt-4 max-sm:[&>[data-plakat-art-phone]]:h-[4.75rem] sm:[&>[data-plakat-art-phone]]:h-28 lg:min-h-[19rem]"
+        // No corner dots on a workshop page (see the detail page).
+        cornerDots={false}
+        contentClassName="max-sm:pt-2"
         art={
           <PosterArt
             plakat={scene.plakat}
@@ -111,7 +119,7 @@ export function KitPage({ workshop, locale }: Props) {
             plakat={scene.plakat}
             motif={scene.motif}
             numeral={workshop.number}
-            format="landscape"
+            format="strip"
             cornerDots={false}
           />
         }
@@ -119,29 +127,32 @@ export function KitPage({ workshop, locale }: Props) {
         <Link
           href={detailPath}
           aria-label={copy.backAria(workshop.title)}
-          className="-my-2 inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
+          className="-my-2.5 inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
         >
           <BackGlyph />
           {copy.backToWorkshop}
         </Link>
-        <CapsLine className="mt-3 sm:mt-0">{`${workshop.eyebrow} · ${copy.kitKicker}`}</CapsLine>
+        <CapsLine className="mt-2 max-[379px]:text-[0.75rem]! max-[379px]:tracking-[0.1em]! sm:mt-0">
+          {`${workshop.eyebrow} · ${copy.kitKicker}`}
+        </CapsLine>
         <h1
           id="kit-title"
-          className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:[--text-poster:2.625rem] sm:mt-4"
+          className="poster-title mt-2 max-w-[16ch] text-scene-ink min-[380px]:max-sm:[--text-poster:2.5rem] max-[379px]:[--text-poster:min(2.5rem,10vw)] sm:mt-4"
           style={posterTitleFallbackStyle(kit.title)}
         >
           {kit.title}
         </h1>
-        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty sm:mt-5 lg:max-w-[46ch]">
+        <p className="mt-2.5 max-w-[40ch] text-body text-scene-ink text-balance max-sm:leading-[1.4] sm:mt-5 lg:max-w-[52ch]">
           {kit.lead}
         </p>
-        <div className="mt-5 flex flex-wrap items-center gap-3 sm:mt-8">
+        {/* A phone gets the one strong target in the band: full width, 52px. */}
+        <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-6">
           <a
             href="#download"
-            className="group inline-flex min-h-12 items-center gap-2 border-2 border-scene-ink px-5 text-[1.0625rem] font-semibold text-scene-ink transition-colors duration-[120ms] hover:border-scene-button hover:bg-scene-button hover:text-scene-button-text motion-reduce:transition-none"
+            className="group inline-flex min-h-[3.25rem] items-center justify-between gap-2 border-2 border-scene-button bg-scene-button px-6 text-[1.0625rem] font-semibold text-scene-button-text transition-colors duration-[120ms] hover:border-scene-ink hover:bg-transparent hover:text-scene-ink motion-reduce:transition-none max-sm:w-full"
           >
             <span>{copy.toDownload}</span>
-            <ArrowGlyph direction="down" />
+            <ArrowGlyph direction="down" className="kit-bob" />
           </a>
         </div>
       </PlakatBand>
@@ -178,14 +189,13 @@ export function KitPage({ workshop, locale }: Props) {
       <section aria-labelledby="kit-rules-heading" className={SECTION}>
         <div className={CONTAINER}>
           <details data-kit-rules="" className="group border-t-2 border-scene-line pt-3 sm:pt-4">
-            <summary className="flex min-h-11 cursor-pointer flex-wrap items-baseline gap-x-4 gap-y-1 after:ml-auto after:inline-grid after:size-9 after:place-items-center after:border-2 after:border-foreground after:font-mono after:text-[1.25rem] after:font-bold after:leading-none after:content-['+'] group-open:after:rotate-45">
+            <summary className="flex min-h-14 cursor-pointer flex-wrap items-center gap-x-4 gap-y-1 after:ml-auto after:inline-grid after:size-9 after:place-items-center after:border-2 after:border-foreground after:font-mono after:text-[1.25rem] after:font-bold after:leading-none after:content-['+'] group-open:after:rotate-45">
               <h2
                 id="kit-rules-heading"
                 className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
               >
                 {kit.rulesHeading}
               </h2>
-              <span className="text-caption text-muted-foreground">{copy.setupHeading}</span>
             </summary>
             <ol className="mt-4 grid gap-3 sm:mt-6 md:grid-cols-3 md:gap-5">
               {kit.rules.map((rule, index) => (
@@ -219,26 +229,35 @@ export function KitPage({ workshop, locale }: Props) {
         </div>
       </section>
 
-      <section id="download" aria-labelledby="kit-download-heading" className={cx(SECTION, "scroll-mt-20")}>
+      <section id="download" aria-label={copy.downloadHeading} className={cx(SECTION, "scroll-mt-20")}>
         <div className={CONTAINER}>
-          <SectionHead id="kit-download-heading" title={copy.downloadHeading} size="compact" />
           <div
             data-kit-download=""
-            className="mt-4 grid gap-6 border-2 border-foreground bg-card p-5 sm:mt-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-center lg:gap-x-12"
+            className="grid gap-6 border-2 border-foreground bg-card p-5 sm:p-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-center lg:gap-x-12"
           >
-            <div className="min-w-0">
-              <p className="flex items-center gap-3">
-                <Pictogram name="download" strokeWidth={2} className="size-8 shrink-0 text-foreground" />
-                <span
-                  data-kit-filename=""
-                  className="min-w-0 break-all font-mono text-[0.8125rem] font-bold text-foreground min-[400px]:text-[0.9375rem] sm:text-[1.375rem]"
-                >
-                  {kit.fileName}
-                </span>
-              </p>
-              <p className="mt-2 font-mono text-caption uppercase tracking-[0.08em] text-muted-foreground tabular-nums">
-                {copy.downloadMeta(sizeLabel)} · {copy.freeNote}
-              </p>
+            <div className="flex min-w-0 items-center gap-4 sm:gap-6">
+              {/* The kit's own four files drop into the zip box (the stage's
+                  kit picture), so the download is shown, not only named. */}
+              <div aria-hidden="true" className={cx("kit-chips-pic", plakatClass(scene.plakat))}>
+                <ActionPicture kind="kit" slug={workshop.slug} />
+              </div>
+              <div className="min-w-0">
+                <p className="flex items-center gap-3">
+                  <Pictogram name="download" strokeWidth={2} className="size-8 shrink-0 text-foreground max-sm:hidden" />
+                  <span
+                    data-kit-filename=""
+                    className="min-w-0 break-all font-mono text-[0.8125rem] font-bold text-foreground min-[400px]:text-[0.9375rem] sm:text-[1.375rem]"
+                  >
+                    {kit.fileName}
+                  </span>
+                </p>
+                {/* The size is the one new fact here; "free" is said once, on its own line. */}
+                <p className="mt-2 font-mono text-[0.875rem]/[1.45] uppercase tracking-[0.03em] text-foreground/80 tabular-nums">
+                  <span className="block sm:inline">{sizeLabel}</span>
+                  <span className="hidden sm:inline"> · </span>
+                  <span className="block sm:inline">{copy.freeNote}</span>
+                </p>
+              </div>
             </div>
 
             <WorkshopMaterialLink
@@ -248,15 +267,12 @@ export function KitPage({ workshop, locale }: Props) {
             >
               <span className="text-[1.25rem] font-bold leading-tight sm:text-[1.5rem]">
                 {copy.downloadAction}
-                <span className="mt-1 block font-mono text-caption font-medium uppercase tracking-[0.08em] tabular-nums">
-                  {copy.downloadMeta(sizeLabel)}
-                </span>
               </span>
-              <ArrowGlyph direction="down" className="size-8 sm:size-10" />
+              <ArrowGlyph direction="down" className="kit-bob size-8 sm:size-10" />
             </WorkshopMaterialLink>
 
             <details data-kit-contents="" className="group min-w-0 border-t border-hairline pt-3 lg:col-span-2">
-              <summary className="inline-flex min-h-11 cursor-pointer items-center gap-3 font-mono text-caption font-semibold uppercase tracking-[0.12em] text-muted-foreground underline decoration-border underline-offset-4 hover:decoration-foreground after:inline-grid after:size-7 after:place-items-center after:border-2 after:border-foreground after:text-[1rem] after:font-bold after:leading-none after:content-['+'] group-open:after:rotate-45">
+              <summary className="flex min-h-14 w-full cursor-pointer items-center justify-between gap-3 font-mono text-[0.875rem] font-semibold uppercase tracking-[0.04em] text-foreground/80 underline decoration-border underline-offset-4 hover:decoration-foreground after:inline-grid after:size-9 after:place-items-center after:border-2 after:border-foreground after:text-[1rem] after:font-bold after:leading-none after:content-['+'] group-open:after:rotate-45">
                 {copy.insideHeading}
               </summary>
               <ul className="mt-3 grid gap-x-8 gap-y-3 sm:grid-cols-2">

@@ -41,25 +41,25 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
   de: {
     slug: "ki-im-unternehmen-sicher-nutzen",
     number: "05",
-    topic: "KI im Alltag",
-    title: "Wohin deine Daten gehen: Claude im Arbeitsalltag",
-    eyebrow: "Workshop 05 · KI im Alltag",
+    topic: "KI im Unternehmen",
+    title: "Wohin gehen deine Daten?",
+    eyebrow: "Workshop 05 · KI im Unternehmen",
     summary:
-      "Ein Kunde fragt, wohin seine Daten gehen. Du prüfst dein Claude-Konto, sortierst Einfügungen, siehst den EU AI Act in vier Kästen und schreibst eine Seite.",
+      "Ein Kunde fragt nach seinen Daten. Du prüfst dein Konto, sortierst Einfügungen und schreibst eine Seite.",
     description:
       "Vardar Works, eine erfundene Support-Firma in Skopje, bekommt am Montag eine Mail ihres größten Kunden: Welche KI-Werkzeuge nutzt ihr mit unseren Daten, und wo liegen sie? Der Raum stimmt über die drei Entwurfssätze des Chefs ab, prüft das eigene Claude-Konto, sortiert Einfügungen in Grün, Gelb und Rot, ordnet fünf KI-Nutzungen den vier Kästen des EU AI Act zu und schreibt eine Seite für den Kunden. Zu Hause spielt das Kit alles in fünf Aufgaben mit deinem eigenen Claude nach.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Mit einem Claude-Konto auf jedem Plan, auch Free, machst du die Prüfungen selbst; der Bildschirm einer Sitznachbarin oder eines Sitznachbarn reicht auch. In Claude gehen nur das erfundene Kit und die Prompts, nie Firmendaten.",
+      "Du prüfst dein eigenes Claude-Konto oder schaust der Nachbarin zu. In Claude gehen nur erfundene Dateien, nie Firmendaten.",
     outcome: "Eine Seite: drei wahre Sätze für einen Kunden, drei Regeln für dein Team",
     audience: [
-      "Mitarbeitende in Support, Projekten, Betrieb, Finanzen und Personal in Firmen mit 50 bis 500 Beschäftigten",
+      "Mitarbeitende in Firmen mit 50 bis 500 Beschäftigten",
       "Teamleitungen, die gefragt werden: „Wie nutzt ihr KI mit unseren Daten?“",
       "Junior-Kräfte in IT und Marketing bei Firmen, die deutsche oder EU-Kunden bedienen",
     ],
     notForYou:
-      "Nicht für dich, wenn du Rechtsberatung zur DSGVO oder zum AI Act brauchst oder Claude als Admin für eine ganze Firma einrichten willst.",
+      "Nicht für dich, wenn du Rechtsberatung brauchst oder Claude für eine ganze Firma einrichtest.",
     question:
       "Was können wir unserem Kunden bis Freitag wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
     outcomes: [
@@ -84,27 +84,26 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agendaSource: "deck",
     minutesLive: 90,
     minutesSelfStudy: 75,
-    selfStudyDurationLabel: "Beim ersten Mal etwa 75 Minuten",
-    needs: [
-      "Live: ein Handy für die Abstimmungen. Für die drei Konto-Prüfungen claude.ai im Browser oder die Claude-Desktop-App mit jedem Plan, auch Free",
-      "Zu Hause: dasselbe, etwa 75 Minuten und das Kit",
+        needs: [
+      "Live: ein Handy für die Abstimmungen und claude.ai oder die Claude-Desktop-App, jeder Plan",
+      "Zu Hause: dasselbe und das Kit",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Einen API-Schlüssel",
       "Vorwissen zur DSGVO oder zum AI Act",
-      "Firmendaten, alles in der Sitzung ist erfunden",
+      "Firmendaten",
     ],
     notCovered: [
-      "Rechtsberatung oder die Aussage, dass eine Firma compliant oder zertifiziert ist",
-      "Die Wahl zwischen KI-Anbietern; die Fakten gelten für Claude, die Fragen passen zu jedem Werkzeug",
+      "Rechtsberatung oder ein Gütesiegel für deine Firma",
+      "Ein Vergleich von KI-Anbietern; die Fakten gelten für Claude",
       "Die Admin-Einrichtung eines Team- oder Enterprise-Kontos",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-10-18",
       data: "synthetic",
-      note: "Firma, Personen, Zahlen und die Umfrage sind erfunden. Die Zeilen zu Anbieter und Gesetz sind echt, Stand 18. Oktober 2026; die Zahlen von Bitkom 2025 und Microsoft 2024 nennen Jahr und Quelle.",
+      note: "Quellen der echten Zahlen: Bitkom 2025, Microsoft 2024.",
     },
     steps: [
       {
@@ -181,24 +180,24 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "ki-im-unternehmen-sicher-nutzen",
     number: "05",
     topic: "AI at work",
-    title: "Where Your Data Goes: Using Claude at Work",
+    title: "Where does your data go?",
     eyebrow: "Workshop 05 · AI at work",
     summary:
-      "A customer asks where its data goes. Check your own Claude account, sort what people paste, see the EU AI Act in four boxes and write one page.",
+      "A customer asks about their data. You check your account, sort pastes and write one page.",
     description:
       "Vardar Works, an invented support firm in Skopje, gets an email on Monday from its biggest customer: which AI tools do you use with our data, and where is it stored? The room votes on the boss's three draft sentences, checks its own Claude account, sorts what people paste into green, amber and red, places five AI uses in the four boxes of the EU AI Act and writes one page for the customer. At home, the kit replays all of it in five missions with your own Claude.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
-      "A Claude account on any plan, Free included, lets you do the checks yourself; a neighbour's screen works too. Only the invented kit and prompts go into Claude, never company data.",
+      "You check your own Claude account or watch your neighbour. Only invented files go into Claude, never company data.",
     outcome: "One page: three true sentences for a customer, three rules for your team",
     audience: [
-      "Support, project, operations, finance and HR staff in firms of 50 to 500 people",
+      "Staff at companies with 50 to 500 employees",
       "Team leads who are asked \"how do you use AI with our data?\"",
       "Junior IT and marketing staff at firms that serve German or EU customers",
     ],
     notForYou:
-      "Not for you if you need legal advice on the GDPR or the AI Act, or want to set up Claude for a whole company as its admin.",
+      "Not for you if you need legal advice or want to set up Claude for a whole company.",
     question:
       "What can we truthfully tell our customer by Friday about where their data goes when we use AI?",
     outcomes: [
@@ -223,27 +222,26 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agendaSource: "deck",
     minutesLive: 90,
     minutesSelfStudy: 75,
-    selfStudyDurationLabel: "about 75 minutes the first time",
-    needs: [
-      "Live: a phone for the votes. For the three account checks, claude.ai in a browser or the Claude Desktop app on any plan, Free included",
-      "At home: the same, about 75 minutes and the kit",
+        needs: [
+      "Live: a phone for the votes, and claude.ai or the Claude desktop app, any plan",
+      "At home: the same, plus the kit",
     ],
     notNeeded: [
       "Coding skills",
       "An API key",
       "Knowledge of the GDPR or the AI Act",
-      "Company data, everything in the session is invented",
+      "Company data",
     ],
     notCovered: [
-      "Legal advice, or any statement that a company is compliant or certified",
-      "Choosing between AI vendors; the facts are for Claude and the questions fit any tool",
+      "Legal advice or a seal of approval for your company",
+      "A comparison of AI providers; the facts hold for Claude",
       "Admin setup of a Team or Enterprise account",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-10-18",
       data: "synthetic",
-      note: "Company, people, numbers and the survey are invented. Vendor and law lines are real, dated 18 October 2026; Bitkom 2025 and Microsoft 2024 figures are named with year and source.",
+      note: "Sources of the real figures: Bitkom 2025, Microsoft 2024.",
     },
     steps: [
       {

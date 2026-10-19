@@ -87,20 +87,20 @@ describe("Workshop 05 registry copy (Where Your Data Goes)", () => {
       expect(workshop.needs).toHaveLength(2);
       expect(workshop.duration).toBe(workshop === de ? "~90 Minuten" : "~90 minutes");
     }
-    expect(de.topic).toBe("KI im Alltag");
+    expect(de.topic).toBe("KI im Unternehmen");
     expect(en.topic).toBe("AI at work");
-    expect(de.eyebrow).toBe("Workshop 05 · KI im Alltag");
+    expect(de.eyebrow).toBe("Workshop 05 · KI im Unternehmen");
     expect(en.eyebrow).toBe("Workshop 05 · AI at work");
-    expect(de.title).toBe("Wohin deine Daten gehen: Claude im Arbeitsalltag");
-    expect(en.title).toBe("Where Your Data Goes: Using Claude at Work");
+    expect(de.title).toBe("Wohin gehen deine Daten?");
+    expect(en.title).toBe("Where does your data go?");
     expect(en.question).toBe(
       "What can we truthfully tell our customer by Friday about where their data goes when we use AI?",
     );
     expect(de.question).toBe(
       "Was können wir unserem Kunden bis Freitag wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
     );
-    expect(en.selfStudyDurationLabel).toBe("about 75 minutes the first time");
-    expect(de.selfStudyDurationLabel).toBe("Beim ersten Mal etwa 75 Minuten");
+    expect(en.selfStudyDurationLabel).toBeUndefined();
+    expect(de.selfStudyDurationLabel).toBeUndefined();
   });
 
   it("has the same twelve agenda blocks in both locales, adds up to 90 and never lets 15 minutes pass with only listening", () => {
@@ -200,7 +200,7 @@ describe("Workshop 05 registry copy (Where Your Data Goes)", () => {
     for (const workshop of both) {
       const kit = workshop.kit!;
       expect(kit.fileName).toBe("ai-at-work-kit.zip");
-      expect(kit.stats.map((stat) => stat.value)).toEqual(["7", "5", "3"]);
+      expect(kit.stats.map((stat) => stat.value)).toEqual(["7", "3", "3"]);
       expect(kit.steps).toHaveLength(3);
       expect(kit.rules).toHaveLength(3);
       expect(kit.steps.every((step) => !step.segments && !step.line)).toBe(true);
@@ -261,11 +261,12 @@ describe("Workshop 05 registry copy (Where Your Data Goes)", () => {
     for (const text of strings.filter((line) => /compliant|certified|zertifiziert/i.test(line))) {
       expect(text, text).toMatch(/Never write|Schreibe nie|any statement|die Aussage/);
     }
-    expect(en.notCovered[0]).toBe("Legal advice, or any statement that a company is compliant or certified");
-    expect(en.kit?.fictionalNote).toContain("not legal advice");
-    expect(de.kit?.fictionalNote).toContain("keine Rechtsberatung");
-    expect(en.provenance.note).toContain("Vendor and law lines are real, dated 18 October 2026");
-    expect(de.provenance.note).toContain("Stand 18. Oktober 2026");
+    expect(en.notCovered[0]).toBe("Legal advice or a seal of approval for your company");
+    expect(en.kit?.fictionalNote).toMatch(/not legal advice/i);
+    expect(de.kit?.fictionalNote).toMatch(/keine Rechtsberatung/i);
+    expect(en.caseStudy.dataLimitations.join(" ")).toContain("dated 18 October 2026");
+    expect(de.caseStudy.dataLimitations.join(" ")).toContain("Stand 18. Oktober 2026");
+    expect(en.provenance.note).toContain("Bitkom 2025");
   });
 
   it("states the limits plainly and names no earlier case company", () => {

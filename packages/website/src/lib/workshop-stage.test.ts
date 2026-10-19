@@ -55,6 +55,24 @@ describe("workshopStage", () => {
     }
   }
 
+  it("gives every deck card minutes, never just the page language, and a lab or case card its time alone", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        const stage = workshopStage(workshop, locale);
+        const unit = locale === "de" ? "Min." : "min";
+        if (stage.a?.kind === "slides") {
+          expect(stage.a.meta, `${locale}/${workshop.slug}`).toMatch(new RegExp(`^Deck · (?:ca\\. |about )?\\d+ ${unit.replace(".", "\\.")}$`));
+        } else if (stage.a) {
+          // The title already says "lab": the meta is the time alone.
+          expect(stage.a.meta).toMatch(new RegExp(`^\\d+ ${unit.replace(".", "\\.")}$`));
+        }
+        if (stage.b?.kind === "case") {
+          expect(stage.b.meta).toMatch(new RegExp(`^\\d+ ${unit.replace(".", "\\.")}$`));
+        }
+      }
+    }
+  });
+
   it("formats a material as format and size, falling back to the language for a page", () => {
     const [w05] = getWorkshops("de").filter((workshop) => workshop.slug === "ki-im-unternehmen-sicher-nutzen");
     expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 14 KB");

@@ -11,19 +11,19 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "crvena-zemja-esg-kit.zip",
     title: "Das ESG-Kit",
-    lead: "So spielst du die fünf Schritte des Workshops zu Hause nach: dieselben drei ESG-Anfragen, dieselben Dateien, dein eigenes Claude.",
+    lead: "Dieselben drei ESG-Anfragen, dieselben Dateien, dein eigenes Claude.",
     stats: [
       { value: "13", label: "Dateien" },
       { value: "5", label: "Prompts" },
       { value: "3", label: "Regeln" },
     ],
-    rulesHeading: "Die drei Regeln im Projekt",
+    rulesHeading: "Regeln",
     rules: [
       "Nur unsere Dateien. Keine erfundene Zahl.",
       "Zu jedem Fakt Datei und Zeile nennen (Zeilennummern wie im Texteditor, jede Zeile zählt). Jede Rechnung in Code mit Einheiten.",
       "Fehlt ein Dokument: NOT FOUND und nenne das Dokument, das den Beleg liefern würde. Gibt es das Dokument, aber es ist abgelaufen, eine Schätzung oder im Konflikt mit einer anderen Datei: NEEDS CHECK und begründe es in einem Satz. Fehlt ein Dokument und eine andere Datei widerspricht ebenfalls, schreibe NOT FOUND und nenne den Konflikt in der Begründung. Bei mehreren Teilfragen gilt der Status des schwächsten Teils.",
     ],
-    stepsHeading: "Fünf Prompts, fünf Ergebnisse",
+    stepsHeading: "Die Prompts",
     steps: [
       {
         tag: "Prompt 1",
@@ -32,7 +32,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         action: "Zählt die Strommonate in Code und beantwortet jede Frage mit Quelle und Status.",
         output: "Eine Tabelle mit einer Zeile je Frage, dazu eine Excel-Datei.",
         file: "nordvik-answers.xlsx",
-        note: "Dein Tipp zuerst: Wie viele der 8 Fragen kommen mit OK zurück? Prüfe es in ANSWERS.md.",
+        note: "Wie viele der 8 Fragen kommen mit OK zurück? Rate zuerst, dann prüfe es in ANSWERS.md.",
       },
       {
         tag: "Prompt 2",
@@ -61,7 +61,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
       {
         tag: "Prompt 5",
-        title: "Eine weitere Überraschung",
+        title: "Die Überraschung",
         input: "Ein weiteres Dokument.",
         action: "Liest das neue Dokument, prüft jede davon betroffene Antwort erneut und aktualisiert Dashboard und Word-Datei.",
         output: "Eine Tabelle mit Wo, vorher, jetzt und warum.",
@@ -69,9 +69,9 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Du brauchst Claude (claude.ai oder die Desktop-App, jeder Plan einschließlich Free) mit eingeschalteter Codeausführung und Dateierstellung. Die Dateien werden dabei an Claude übertragen. Beim ersten Mal etwa 2 Stunden, nach etwas Übung mit Claude etwa 30 Minuten. Du kannst nach jedem Schritt aufhören und an einem anderen Tag weitermachen.",
+      "Du brauchst Claude mit Codeausführung und Dateierstellung, jeder Plan. Beim ersten Mal etwa 2 Stunden, danach 30 Minuten.",
     fictionalNote:
-      "Alles darin ist erfunden: die Firma, die Personen, die Zahlen und die Dokumente. Echt sind nur die zitierten Gesetze und Regeln.",
+      "Alles im Kit ist erfunden, nur die zitierten Gesetze und Regeln sind echt.",
     contents: [
       { name: "START-HERE.md", description: "Fallensuche zum Aufwärmen, Einrichtung, fünf Prompts zum Kopieren (plus Lite-Prompt für den Free-Plan), eine Vorhersage vor jedem Schritt und eine Vorlage für die eigene Firma" },
       { name: "ANSWERS.md", description: "Der Lösungsschlüssel. Erst nach jedem Schritt öffnen." },
@@ -83,19 +83,19 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "crvena-zemja-esg-kit.zip",
     title: "The ESG kit",
-    lead: "Replay the workshop's five steps at home: the same three ESG requests, the same files, your own Claude.",
+    lead: "The same three ESG requests, the same files, your own Claude.",
     stats: [
       { value: "13", label: "files" },
       { value: "5", label: "prompts" },
       { value: "3", label: "rules" },
     ],
-    rulesHeading: "The three rules in the Project",
+    rulesHeading: "Rules",
     rules: [
       "Only our files. Never invent a number.",
       "Cite the file and line for every fact (line numbers as in a text editor, counting every line). Do every calculation in code, with units.",
       "Missing document: write NOT FOUND and name the document that would prove it. Document exists but is expired, an estimate or in conflict with another file: write NEEDS CHECK and give the reason in one sentence. If a document is missing and another file also conflicts, write NOT FOUND and name the conflict in the reason. A question with several parts gets the status of its weakest part.",
     ],
-    stepsHeading: "Five prompts, five results",
+    stepsHeading: "The prompts",
     steps: [
       {
         tag: "Prompt 1",
@@ -104,7 +104,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         action: "Counts the electricity months in code and answers every question with a source and a status.",
         output: "A table with one row per question, plus an Excel file.",
         file: "nordvik-answers.xlsx",
-        note: "Your bet first: how many of the 8 questions come back OK? Check it in ANSWERS.md.",
+        note: "How many of the 8 questions come back OK? Guess first, then check ANSWERS.md.",
       },
       {
         tag: "Prompt 2",
@@ -133,7 +133,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
       {
         tag: "Prompt 5",
-        title: "One more surprise",
+        title: "The surprise",
         input: "One more document.",
         action: "Reads the new document, rechecks every answer it affects, and updates the dashboard and the Word file.",
         output: "A table with where, before, now and why.",
@@ -141,9 +141,9 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "You need Claude (claude.ai or the desktop app, any plan, including Free) with code execution and file creation switched on. The files are transferred to Claude as you work. About 2 hours the first time, about 30 minutes once you know Claude. You can stop after any step and continue another day.",
+      "You need Claude with code execution and file creation, any plan. About 2 hours the first time, 30 minutes after that.",
     fictionalNote:
-      "Everything in it is invented: the company, the people, the numbers and the documents. Only the laws and rules quoted are real.",
+      "Everything in the kit is invented; only the laws and rules quoted are real.",
     contents: [
       { name: "START-HERE.md", description: "Warm-up trap hunt, setup, five prompts to copy (plus a lite prompt for the Free plan), a prediction before each step, and a template for your own company" },
       { name: "ANSWERS.md", description: "The answer key. Open it only after each step." },

@@ -133,8 +133,8 @@ export function TraceScene(): ReactNode {
 
         {/* Threads from the page to the bars, dotted. */}
         <g className="ht-threads">
-          {THREADS.map((d) => (
-            <path key={d} d={d} className="ht-thread" />
+          {THREADS.map((d, index) => (
+            <path key={d} d={d} className={`ht-thread ht-thread-${index + 1}`} />
           ))}
         </g>
         <path d={THREAD_BACK} pathLength={1} className="ht-trace" />

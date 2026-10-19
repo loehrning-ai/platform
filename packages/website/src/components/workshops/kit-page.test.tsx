@@ -114,7 +114,10 @@ describe("<KitPage>", () => {
           const link = downloads[0];
           expect(link).toHaveAttribute("href", `/workshops/${slug}/${kit.fileName}`);
           expect(link).toHaveAttribute("download");
-          expect(link).toHaveTextContent(workshop.materials.find((material) => material.kind === "zip")!.sizeLabel!);
+          const sizeLabel = workshop.materials.find((material) => material.kind === "zip")!.sizeLabel!;
+          // The size sits once, in the card caption beside the button, not inside the button.
+          expect(link).not.toHaveTextContent(sizeLabel);
+          expect(document.querySelector("[data-kit-download]")).toHaveTextContent(sizeLabel);
           link.addEventListener("click", (event) => event.preventDefault());
           fireEvent.click(link);
           expect(trackMock).toHaveBeenCalledTimes(1);
@@ -153,7 +156,7 @@ describe("<KitPage>", () => {
         workshop.kit!.steps.map((step, index) => `${index + 1}${step.title}`),
       );
       expect(screen.getByRole("heading", { name: workshop.kit!.stepsHeading })).toBeInTheDocument();
-      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["7", "5", "3"]);
+      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["7", "3", "3"]);
       expect(document.querySelectorAll("[data-kit-rules] ol > li")).toHaveLength(3);
       unmount();
     }

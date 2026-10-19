@@ -25,8 +25,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.provenance.liveRunAt).toBeUndefined();
       expect(workshop.provenance.aiOutputsRecordedAt).toBeUndefined();
     }
-    expect(de.title).toBe("ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen");
-    expect(en.title).toBe("ESG Reporting with AI: From Raw Inputs to Clearer Insights");
+    expect(de.title).toBe("ESG-Berichte mit KI");
+    expect(en.title).toBe("ESG reports with AI");
   });
 
   it("has the same nine agenda blocks in both locales and follows the run sheet clock", () => {
@@ -39,7 +39,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.minutesSelfStudy).toBe(120);
     }
     expect(de.agenda).toHaveLength(en.agenda.length);
-    expect(en.selfStudyDurationLabel).toBe("about 2 hours the first time");
+    expect(en.selfStudyDurationLabel).toBe("solo about 2 h");
   });
 
   it("lists the deck and kit at the existing URLs and uses the exact supplied ZIP size", () => {
@@ -81,13 +81,13 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(kit.rules).toHaveLength(3);
       expect(kit.steps.every((step) => !step.segments && !step.line)).toBe(true);
     }
-    expect(en.kit?.steps[0].note).toBe("Your bet first: how many of the 8 questions come back OK? Check it in ANSWERS.md.");
+    expect(en.kit?.steps[0].note).toBe("How many of the 8 questions come back OK? Guess first, then check ANSWERS.md.");
     expect(en.kit?.steps[1].note).toBe("Mark each claim RED, AMBER or GREEN yourself first. The red claims come first.");
     expect(en.kit?.steps[2].input).toBe("Banka Povardarie's screening form for the solar loan.");
     expect(en.kit?.steps[2].action).toBe("Fills in the form as one table, with a source and a status for each field, and works out the payback in code.");
     expect(en.kit?.steps[2].note).toBe("Race Claude: work out the payback with your phone calculator first.");
     expect(en.kit?.steps[3].note).toBe("Gaps are named, not filled.");
-    expect(en.kit?.steps[4].title).toBe("One more surprise");
+    expect(en.kit?.steps[4].title).toBe("The surprise");
     expect(en.kit?.steps[4].input).toBe("One more document.");
     expect(en.kit?.steps[4].note).toBe("Your bet: which answers change, and which stay the same?");
     expect(en.kit?.howTo).toContain("About 2 hours the first time");
@@ -114,8 +114,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(pageCopy).not.toMatch(spoiler);
     }
     expect(en.description).toContain("Tim demos Claude live on a projector");
-    expect(en.accessNote).toContain("no laptop or Claude account needed.");
-    expect(en.needs).toContain("About 2 hours at home for the warm-up and five steps. You can stop after any step.");
+    expect(en.accessNote).toContain("a phone or paper is enough");
+    expect(en.kit?.howTo).toContain("About 2 hours the first time");
     expect(en.caseStudy.metrics).toEqual([
       { label: "Employees", value: "42" },
       { label: "Requests", value: "3" },

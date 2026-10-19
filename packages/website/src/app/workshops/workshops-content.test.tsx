@@ -193,18 +193,12 @@ describe("<WorkshopsContent>", () => {
     ).toBe(true);
   });
 
-  it("shows the route of the workshops it names as a static five-station route", () => {
+  it("shows no route rail: the five stations described one workshop, and every workshop page shows its own agenda", () => {
     render(<WorkshopsContent workshops={getWorkshops("de")} locale="de" />);
 
-    // Workshops 01, 02 and 04 follow other stations (01 shows no AI answer,
-    // 04 is a presenter-led run of five prompts), so the route names the
-    // workshop it describes.
-    const route = screen.getByRole("list", {
-      name: "So läuft Workshop 03",
-    });
-    expect(route).toHaveAttribute("data-route-mode", "description");
-    expect(within(route).getAllByRole("listitem")).toHaveLength(5);
-    expect(route.querySelector("[aria-current]")).toBeNull();
+    expect(screen.queryByRole("list", { name: /So läuft Workshop/ })).toBeNull();
+    expect(screen.queryByRole("group", { name: /So läuft Workshop/ })).toBeNull();
+    expect(document.querySelector("#workshop-route-heading")).toBeNull();
     expect(
       screen
         .getByText(/Gezeigte KI-Antworten sind aufgezeichnet oder für die Übung konstruiert/)
@@ -235,9 +229,9 @@ describe("<WorkshopsContent>", () => {
     // German amount: ASCII minus, euro sign on the same line.
     expect(within(rows[2]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
-    expect(within(rows[1]).getByText(/drei ESG-Anfragen in einer Woche/).tagName).toBe("P");
+    expect(within(rows[1]).getByText(/Drei ESG-Anfragen an eine Kellerei/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
-    expect(within(rows[0]).getByText(/Du prüfst dein Claude-Konto/).tagName).toBe("P");
+    expect(within(rows[0]).getByText(/Du prüfst dein Konto/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
@@ -258,7 +252,7 @@ describe("<WorkshopsContent>", () => {
       // Poster thumb column plus text column below md, the poster cover
       // beside the text from md.
       expect(row).toHaveClass(
-        "grid-cols-[5rem_minmax(0,1fr)]",
+        "grid-cols-[6.5rem_minmax(0,1fr)]",
         "md:grid-cols-[14rem_minmax(0,1fr)]",
         "lg:grid-cols-[18rem_minmax(0,1fr)]",
         "py-4",
@@ -325,28 +319,19 @@ describe("<WorkshopsContent>", () => {
     const w05 = getWorkshops("de").find((w) => w.number === "05")!;
     const heading = within(rows[0]).getByRole("heading", { level: 3 });
     expect(heading).toHaveAccessibleName(w05.title);
-    expect(heading.querySelector(".sr-only")).toHaveTextContent(
-      ": Claude im Arbeitsalltag",
-    );
+    expect(heading.querySelector(".sr-only")).toBeNull();
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
     const esgHeading = within(rows[1]).getByRole("heading", { level: 3 });
     expect(esgHeading).toHaveAccessibleName(w04.title);
-    expect(esgHeading.querySelector(".sr-only")).toHaveTextContent(
-      ": Von Rohdaten zu klareren Erkenntnissen",
-    );
+    expect(esgHeading.querySelector(".sr-only")).toBeNull();
 
     // One one-sentence lead at every width; no second lede from sm.
     const lead = screen.getByText(/^Du rechnest oder prüfst an den Daten/);
     expect(lead).not.toHaveClass("sm:hidden");
     expect(lead).not.toHaveClass("hidden");
     expect(screen.queryByText(/^Jeder Workshop dreht sich/)).toBeNull();
-    // Phones skip the route (each workshop page shows its own agenda), so
-    // the list follows the cover; from sm it is the reviewed row.
-    const rail = screen.getByRole("group", {
-      name: "So läuft Workshop 03",
-    });
-    expect(rail).toHaveAttribute("tabindex", "0");
-    expect(rail.closest("section")).toHaveClass("hidden", "sm:block");
+    // No route rail on any width: the list follows the cover.
+    expect(document.querySelector("#workshop-route-heading")).toBeNull();
     // Each time on a phone meta line stays whole and keeps its separator,
     // with a break opportunity between the times: at 320px the pair wraps
     // instead of running into the arrow.
@@ -459,7 +444,7 @@ describe("<WorkshopsContent>", () => {
       "02 Geschäftsberichte",
       "03 Datenbereitschaft",
       "04 ESG",
-      "05 KI im Alltag",
+      "05 KI im Unternehmen",
     ]);
     for (const square of squares) {
       expect(square).toHaveClass("size-11", "focus-visible:outline-brand-orange");

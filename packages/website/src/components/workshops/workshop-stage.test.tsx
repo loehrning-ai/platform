@@ -76,7 +76,13 @@ describe("<WorkshopStage>", () => {
         expect(label.querySelector(".ws-pause-on")).toHaveTextContent(copy.pauseOn);
         expect(label.querySelector(".ws-pause-icon")).toHaveAttribute("aria-hidden", "true");
         // The control is reachable by name, and toggles without script.
-        expect(screen.getByRole("checkbox", { name: new RegExp(copy.pauseOff) })).toBe(input);
+        // One stable accessible name, so "checked" always means "paused"; the
+        // two visible labels only show what a tap will do and are hidden from AT.
+        // role "switch": a screen reader says on or off, and "on" means paused.
+        expect(input).toHaveAttribute("role", "switch");
+        expect(screen.getByRole("switch", { name: copy.pauseLabel })).toBe(input);
+        expect(label.querySelector(".ws-pause-off")).toHaveAttribute("aria-hidden", "true");
+        expect(label.querySelector(".ws-pause-on")).toHaveAttribute("aria-hidden", "true");
         fireEvent.click(input);
         expect(input.checked).toBe(true);
         expect(container.querySelectorAll("button, [onclick]")).toHaveLength(0);
@@ -97,23 +103,35 @@ describe("workshop-stage.css", () => {
     expect(CSS).toMatch(/\.ws-stage \{\s*--ws-t:\s*9s;/);
   });
 
-  it("stacks card A, card B and the scene (6:5), with the pause pill inside the scene cell, on a phone", () => {
+  it("stacks card A, card B and the scene (4:3) on a phone, with the pause button inside the scene's top-right corner", () => {
     expect(CSS).toMatch(/\.ws-grid \{[^}]*grid-template-areas:\s*"cards"\s*"scene"\s*;/s);
-    expect(CSS).toMatch(/\.ws-pause \{[^}]*grid-area:\s*scene/s);
+    // The pause button shares the scene's grid cell, in its top-right corner (where every scene is
+    // empty), above the scene; its visible disc is translucent.
+    expect(CSS).toMatch(/\.ws-pause \{[^}]*grid-area:\s*scene[^}]*z-index:\s*2[^}]*justify-self:\s*end[^}]*align-self:\s*start/s);
+    expect(CSS).toMatch(/\.ws-pause::before \{[^}]*color-mix\(in oklab, var\(--color-scene-ground\) 72%, transparent\)/s);
+    expect(CSS).toMatch(/\.ws-scene \{[^}]*content-visibility:\s*auto/s);
+    // The aspect ratio gives the box its height; the intrinsic size never contradicts it.
+    expect(CSS).toMatch(/\.ws-scene \{[^}]*contain-intrinsic-size:\s*auto 0/s);
     expect(CSS).toMatch(/\.ws-pause \{[^}]*min-height:\s*2\.75rem/s);
-    expect(CSS).toMatch(/\.ws-scene \{[^}]*aspect-ratio:\s*6 \/ 5/s);
+    expect(CSS).toMatch(/\.ws-pause \{[^}]*width:\s*2\.75rem/s);
+    expect(CSS).toMatch(/\.ws-scene \{[^}]*aspect-ratio:\s*4 \/ 3/s);
     expect(CSS).toMatch(/\.ws-scene \{[^}]*border:\s*2px solid var\(--color-scene-line\)/s);
     expect(CSS).toMatch(/\.ws-scene \{[^}]*border-radius:\s*0/s);
     expect(CSS).toMatch(/\.ws-scene \{[^}]*overflow:\s*hidden/s);
   });
 
-  it("goes to 2:1 on a tablet and to cards left, scene right at card height from lg", () => {
-    expect(media("min-width: 40rem").toString()).toMatch(/aspect-ratio:\s*2 \/ 1/);
+  it("fills the 4:3 box with the 6:5 art by a plain scale of 4/3 over 6/5, so nothing is letterboxed", () => {
+    expect(CSS).toMatch(/\.ws-scene > svg \{[^}]*scale:\s*var\(--ws-fit, 1\.1111\)/s);
+  });
+
+  it("puts the cards in a column beside a 4:3 scene from 40rem and cards left, scene right at 7fr and 5fr from lg", () => {
+    const tablet = media("min-width: 40rem").toString();
+    expect(tablet).toMatch(/grid-template-columns:\s*minmax\(0, 5fr\) minmax\(0, 6fr\)/);
+    expect(tablet).toMatch(/grid-template-areas:\s*"cards scene"\s*;/);
     const lg = media("min-width: 64rem").toString();
     expect(lg).toMatch(/grid-template-columns:\s*minmax\(0, 7fr\) minmax\(0, 5fr\)/);
-    expect(lg).toMatch(/grid-template-areas:\s*"cards scene"\s*;/);
-    expect(lg).toMatch(/align-self:\s*stretch/);
-    expect(lg).toMatch(/min-height:\s*22rem/);
+    // The scene keeps its 4:3 box at every width, so the cards (height 100%) follow it.
+    expect(media("min-width: 64rem").toString()).not.toMatch(/aspect-ratio:\s*auto/);
   });
 
   it("gives a workshop without a scene the full width, so the page is never broken", () => {
@@ -147,12 +165,15 @@ describe("workshop-stage.css", () => {
     expect(reduce).toMatch(/\.ws-pause \{\s*display:\s*none/);
   });
 
-  it("tilts the scene by three degrees at most, and only when motion is allowed", () => {
+  it("swells the scene by a plain 2D scale under a mouse only, and only when motion is allowed", () => {
     const motion = media("prefers-reduced-motion: no-preference");
     const text = motion.toString();
-    expect(text).toMatch(/\.ws-stage:is\(:hover, :focus-within\) \.ws-scene > svg/);
-    for (const [, degrees] of text.matchAll(/rotate[XY]\((-?[\d.]+)deg\)/g)) {
-      expect(Math.abs(Number(degrees))).toBeLessThanOrEqual(3);
+    expect(text).toMatch(/@media \(hover: hover\) and \(pointer: fine\)/);
+    expect(text).toMatch(/\.ws-stage:hover \.ws-scene > svg/);
+    // No perspective, no 3D tilt, and no reaction to keyboard focus.
+    expect(text).not.toMatch(/perspective|rotate[XY]|:focus-within/);
+    for (const [, factor] of text.matchAll(/scale\((-?[\d.]+)\)/g)) {
+      expect(Number(factor)).toBeLessThanOrEqual(1.03);
     }
     // Transitions and transforms outside that block do not exist (but the pause rule that switches them off).
     let outside = 0;
@@ -165,7 +186,7 @@ describe("workshop-stage.css", () => {
       }
       // The pause rule only ever switches motion off.
       if (!ok && declaration.value.startsWith("none")) return;
-      if (!ok && /^(?:animation|transition|transform)/.test(declaration.prop)) outside += 1;
+      if (!ok && /^(?:animation|transition|transform)(?!-origin|-box)/.test(declaration.prop)) outside += 1;
     });
     expect(outside).toBe(0);
   });

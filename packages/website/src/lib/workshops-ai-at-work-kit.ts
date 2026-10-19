@@ -13,19 +13,19 @@ export const AI_AT_WORK_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "ai-at-work-kit.zip",
     title: "Das Claude-Daten-Kit",
-    lead: "Spiele den Workshop in deinem eigenen Claude-Konto nach: Prompt senden, Einstellungen prüfen, Einfügungen bewerten und eine Seite schreiben.",
+    lead: "Drei Schritte in deinem Claude-Konto, am Ende eine Seite.",
     stats: [
       { value: "7", label: "Dateien" },
-      { value: "5", label: "Aufgaben" },
+      { value: "3", label: "Schritte" },
       { value: "3", label: "Regeln" },
     ],
-    rulesHeading: "Die drei Regeln im Projekt",
+    rulesHeading: "Regeln",
     rules: [
       "Nur die Dateien in diesem Projekt. Steht es nicht darin, schreibe NOT IN FILES. Nie raten.",
       "Nenne nach jeder Antwort die Datei, aus der sie stammt. Bewerte Einfügungen und Aussagen mit einer Ampel: GREEN öffentlich, jedes Werkzeug; AMBER nur im Firmenwerkzeug, Namen und Zahlen entfernt, eine Person prüft; RED nicht ohne schriftliches Okay.",
       "Einfache Wörter, kurze Sätze. Schreibe nie „compliant“ oder „certified“. Ende mit einer Sache, die eine Person vor dem Senden prüfen muss.",
     ],
-    stepsHeading: "Drei Schritte, fünf Aufgaben",
+    stepsHeading: "Die Schritte",
     steps: [
       {
         tag: "Schritt 1",
@@ -51,9 +51,9 @@ export const AI_AT_WORK_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Du brauchst claude.ai oder die Claude-Desktop-App mit jedem Plan, auch Free, und etwa 75 Minuten. Nur das erfundene Kit geht in Claude.",
+      "Du brauchst claude.ai oder die Claude-Desktop-App, jeder Plan, und etwa 75 Minuten.",
     fictionalNote:
-      "Alles im Kit ist erfunden; die Zeilen zu Anbieter und Gesetz sind echt, Stand 18. Oktober 2026, und keine Rechtsberatung.",
+      "Alles im Kit ist erfunden; Anbieter- und Gesetzeszeilen sind echt, Stand 18. Oktober 2026. Keine Rechtsberatung.",
     contents: [
       { name: "START-HERE.md", description: "Fünf Aufgaben mit Prompts." },
       { name: "ANSWERS.md", description: "So sieht gut aus." },
@@ -67,19 +67,19 @@ export const AI_AT_WORK_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "ai-at-work-kit.zip",
     title: "The Claude data kit",
-    lead: "Replay the workshop in your own Claude account: send one prompt, check your settings, rate what people paste and write one page.",
+    lead: "Three steps in your own Claude account, one page at the end.",
     stats: [
       { value: "7", label: "files" },
-      { value: "5", label: "missions" },
+      { value: "3", label: "steps" },
       { value: "3", label: "rules" },
     ],
-    rulesHeading: "The three rules in the Project",
+    rulesHeading: "Rules",
     rules: [
       "Use only the files in this project. If the files do not say it, write NOT IN FILES. Never guess.",
       "After every answer, name the file it comes from. Rate pastes and claims with a light. GREEN: public, fine on any tool. AMBER: only on the company tool, names and numbers removed, a named person must check. RED: not without a written okay.",
       "Plain English, short sentences. Never write \"compliant\" or \"certified\". End with one thing a person must check before it is sent.",
     ],
-    stepsHeading: "Three steps, five missions",
+    stepsHeading: "The steps",
     steps: [
       {
         tag: "Step 1",
@@ -105,9 +105,9 @@ export const AI_AT_WORK_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "You need claude.ai or the Claude Desktop app on any plan, Free included, and about 75 minutes. Only the invented kit goes into Claude.",
+      "You need claude.ai or the Claude desktop app, any plan, and about 75 minutes.",
     fictionalNote:
-      "Everything in the kit is invented; the vendor and law lines are real, dated 18 October 2026, and not legal advice.",
+      "Everything in the kit is invented; vendor and law lines are real, as of 18 October 2026. Not legal advice.",
     contents: [
       { name: "START-HERE.md", description: "Five missions with prompts." },
       { name: "ANSWERS.md", description: "What good looks like." },

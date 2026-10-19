@@ -17,13 +17,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Sind deine Daten bereit für KI?",
     eyebrow: "Workshop 03 · Datenbereitschaft",
     summary:
-      "Eine KI meldet für April −19.960 € MRR-Endbestand. Du findest den Fehler und baust die Daten so um, dass die Zahl stimmt.",
+      "Eine KI meldet −19.960 € MRR für April. Du findest den Fehler und machst die Zahl richtig.",
     description:
       "Die erfundene Firma FOLDLINE fragt nach dem MRR-Endbestand (monatlich wiederkehrender Umsatz) pro Monat im letzten abgeschlossenen Quartal. Auf sieben Exporttabellen antwortet die KI mit −19.960 / 9.775 / 42.565, weil sie die Veränderungen addiert und Bestand mit Veränderung verwechselt. Mit freigegebenen Sichten, schriftlicher Kennzahl-Definition (semantische Schicht), reinen Leserechten und Tests stimmt die Antwort mit der Datenbank überein: 334.675 / 344.450 / 387.015. Zum Schluss prüfst du die Grenzen des Aufbaus und schreibst deine eigene Frage in fünf Felder.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Für das Deck brauchst du nur einen Browser; Material auf Englisch, Einführung auf Deutsch. Die KI-Antworten sind Aufzeichnungen vom August 2026.",
+      "Die Einführung im Deck ist auf Deutsch.",
     outcome: "Fünf-Felder-Vorlage",
     audience: [
       "Analystinnen und Controller, die Zahlen aus KI-Antworten weitergeben",
@@ -121,7 +121,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       aiOutputsRecordedAt: "2026-08",
       liveRunAt: "2026-09-25",
       data: "synthetic",
-      note: "Live gehalten mit Brainster. Die Datenbankergebnisse stammen aus einem Lauf des Workshop-Kits auf PostgreSQL 16.",
+      note: "Die Datenbankergebnisse stammen aus einem Lauf des Workshop-Kits auf PostgreSQL 16.",
     },
     steps: [
       {
@@ -167,7 +167,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Abo-Software für Geschäftskunden",
       period: "Q2 2026, eingefrorener Übungsstand",
       narrative:
-        "Dieselbe Frage läuft einmal gegen die Rohexporte und einmal gegen freigegebene Sichten mit schriftlicher Definition. KI-Antworten sind aufgezeichnet, Datenbankprüfungen laufen fest.",
+        "Dieselbe Frage läuft einmal gegen die Rohexporte und einmal gegen freigegebene Sichten mit schriftlicher Definition.",
       metrics: [
         { label: "Erfundene Konten", value: "144" },
         { label: "Exportierte Tabellen", value: "7" },
@@ -216,13 +216,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Are your data ready for AI?",
     eyebrow: "Workshop 03 · Data readiness",
     summary:
-      "An AI reports April ending MRR as −€19,960. You find the mistake and restructure the data so the number is right.",
+      "An AI reports April MRR as −€19,960. You find the mistake and make the number right.",
     description:
       "The invented company FOLDLINE asks: \"Show ending MRR by month for the last complete quarter\" (MRR is monthly recurring revenue). On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it adds up the changes and mixes up a balance with a change. With approved views, a written metric definition (the semantic layer), read-only access and tests, the answer matches the database: 334,675 / 344,450 / 387,015. Finally you test the setup's limits and write your own question into five boxes.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
-      "The deck needs only a browser; materials are in English, the live session is introduced in German. The AI answers are recordings from August 2026.",
+      "The introduction in the deck is in German.",
     outcome: "Five-box template",
     audience: [
       "Analysts and controllers who pass on figures from AI answers",
@@ -319,7 +319,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       aiOutputsRecordedAt: "2026-08",
       liveRunAt: "2026-09-25",
       data: "synthetic",
-      note: "Run live with Brainster. The database results come from a run of the workshop kit on PostgreSQL 16.",
+      note: "The database results come from a run of the workshop kit on PostgreSQL 16.",
     },
     steps: [
       {
@@ -365,7 +365,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Business subscription software",
       period: "Q2 2026, frozen teaching snapshot",
       narrative:
-        "The same question runs once against raw exports and once against approved views with a written definition. AI answers are recorded; database checks are fixed.",
+        "The same question runs once against raw exports and once against approved views with a written definition.",
       metrics: [
         { label: "Invented accounts", value: "144" },
         { label: "Export tables", value: "7" },

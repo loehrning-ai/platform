@@ -23,6 +23,14 @@ const LOCALES = [
 async function open(page: Page, route: string): Promise<void> {
   await page.goto(route, { waitUntil: "load" });
   await expect(page.locator("[data-workshop-stage]")).toBeVisible();
+  // The stage composes itself on load (cards at 0 s and 0.12 s, scene at 0.3 s,
+  // each 8px and opacity). Geometry is measured on the settled frame.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .filter((animation) => animation instanceof CSSAnimation && ["ac-enter", "ws-enter"].includes(animation.animationName))
+      .every((animation) => animation.playState === "finished"),
+  );
 }
 
 async function animationName(locator: Locator): Promise<string> {
@@ -111,13 +119,86 @@ test.describe("workshop stage on a phone", () => {
       for (const rect of cards) {
         expect(rect.x).toBeGreaterThanOrEqual(15);
         expect(rect.right).toBeLessThanOrEqual(375);
-        // A horizontal phone card: a 112px picture beside the text.
-        expect(rect.height).toBeGreaterThanOrEqual(112);
+        // A compact horizontal phone card: an 80 to 92px picture beside the text.
+        expect(rect.height).toBeGreaterThanOrEqual(96);
+        expect(rect.height).toBeLessThanOrEqual(140);
       }
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
     });
   }
+});
+
+// The fixed phone tab bar is 56px high: both action cards end above it, and the
+// first screen carries the start of the scene.
+test.describe("workshop stage first screen", () => {
+  const PHONES = [
+    { width: 360, height: 780 },
+    { width: 390, height: 844 },
+    { width: 430, height: 932 },
+  ] as const;
+
+  for (const phone of PHONES) {
+    for (const workshop of WORKSHOPS) {
+      for (const locale of LOCALES) {
+        test(`${phone.width}x${phone.height} ${locale.prefix || "/de"}/${workshop.slug}: both cards end above the tab bar`, async ({ browser }) => {
+          const context = await browser.newContext({ viewport: phone, isMobile: true, hasTouch: true });
+          const page = await context.newPage();
+          await open(page, `${locale.prefix}/workshops/${workshop.slug}`);
+          const cards = await page
+            .locator("[data-workshop-stage] [data-action-card]")
+            .evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().bottom));
+          expect(Math.max(...cards)).toBeLessThanOrEqual(phone.height - 56);
+          // The scene starts right under the cards (not far below the fold).
+          const scene = (await page.locator("[data-workshop-scene]").boundingBox())!;
+          expect(scene.y).toBeLessThan(phone.height + 40);
+          await context.close();
+        });
+      }
+    }
+  }
+
+  for (const workshop of WORKSHOPS) {
+    test(`1440x900 ${workshop.slug}: the cards and the whole scene are on the first screen`, async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+      const page = await context.newPage();
+      await open(page, `/workshops/${workshop.slug}`);
+      const boxes = await page
+        .locator("[data-workshop-stage] [data-action-card], [data-workshop-scene]")
+        .evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().bottom));
+      expect(Math.max(...boxes)).toBeLessThanOrEqual(900);
+      await context.close();
+    });
+  }
+
+  test("the pause control sits in the scene's top-right corner, inside the frame, and is a switch with one stable name", async ({ browser }) => {
+    for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+      const context = await browser.newContext({ viewport });
+      const page = await context.newPage();
+      await open(page, "/workshops/esg-berichte-mit-ki");
+      const scene = (await page.locator("[data-workshop-scene]").boundingBox())!;
+      const pause = (await page.locator("label.ws-pause").boundingBox())!;
+      // Top right, inset from the frame's 2px border, and a 44px target.
+      expect(pause.y, `pause top at ${viewport.width}`).toBeGreaterThanOrEqual(scene.y);
+      expect(pause.y + pause.height, `pause bottom at ${viewport.width}`).toBeLessThanOrEqual(scene.y + scene.height / 2);
+      expect(pause.x + pause.width, `pause right at ${viewport.width}`).toBeLessThanOrEqual(scene.x + scene.width);
+      expect(pause.x, `pause left at ${viewport.width}`).toBeGreaterThan(scene.x + scene.width / 2);
+      expect(pause.width).toBeGreaterThanOrEqual(44);
+      expect(pause.height).toBeGreaterThanOrEqual(44);
+      await expect(page.getByRole("switch", { name: "Bewegung pausieren" })).toBeAttached();
+      await context.close();
+    }
+  });
+
+  test("at 360 the wordmark ends before the language pill", async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 360, height: 780 }, isMobile: true, hasTouch: true });
+    const page = await context.newPage();
+    await open(page, "/workshops/ki-prognosen-einschaetzen");
+    const mark = (await page.locator("[data-logo-wordmark-remainder]:visible").first().boundingBox())!;
+    const pill = (await page.locator("[data-language-switch]:visible").first().boundingBox())!;
+    expect(mark.x + mark.width + 4).toBeLessThanOrEqual(pill.x);
+    await context.close();
+  });
 });
 
 test.describe("workshop stage motion and pause", () => {
@@ -197,9 +278,15 @@ test.describe("workshop stage motion and pause", () => {
       const box = (await scene.boundingBox())!;
       const svg = (await scene.locator("svg").boundingBox())!;
       expect(box.width, `scene width at ${width}`).toBeGreaterThan(300);
-      expect(svg.width).toBeLessThanOrEqual(box.width + 1);
-      expect(svg.height).toBeLessThanOrEqual(box.height + 1);
-      if (width >= 1024) expect(box.height).toBeGreaterThanOrEqual(352);
+      // The 6:5 art is scaled to fill the 4:3 box (workshop-stage.css, --ws-fit):
+      // it covers the frame with no empty strip, and the crop stays under 15%
+      // (the box clips the overflow, so it never reaches the page width).
+      expect(svg.width, `art covers the frame at ${width}`).toBeGreaterThanOrEqual(box.width - 4 - 1);
+      expect(svg.height, `art covers the frame at ${width}`).toBeGreaterThanOrEqual(box.height - 4 - 1);
+      expect(svg.width, `art crop at ${width}`).toBeLessThanOrEqual(box.width * 1.15);
+      expect(svg.height, `art crop at ${width}`).toBeLessThanOrEqual(box.height * 1.15);
+      // Never squashed below 4:3: 297px at 1024, 410px at 1440.
+      if (width >= 1024) expect(box.height).toBeGreaterThanOrEqual(box.width * 0.74);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow, `horizontal overflow at ${width}`).toBeLessThanOrEqual(0);
     }

@@ -40,17 +40,17 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "esg-berichte-mit-ki",
     number: "04",
     topic: "ESG",
-    title: "ESG-Berichterstattung mit KI: Von Rohdaten zu klareren Erkenntnissen",
+    title: "ESG-Berichte mit KI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Eine erfundene nordmazedonische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.",
+      "Drei ESG-Anfragen an eine Kellerei. Claude beantwortet sie aus denselben Dateien und sagt, was fehlt.",
     description:
-      "Vinarija Crvena Zemja, eine erfundene Familienkellerei in der Gemeinde Kavadarci in Nordmazedonien, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Deutschland und Polen und das Prüfformular der Bank für einen Solarkredit. Tim demonstriert Claude live auf dem Beamer, während der Raum auf Papier oder dem Handy mitspielt: Die Gruppe sucht Fallen in den Dateien, tippt vor jeder Antwort auf das Ergebnis und stimmt über die Werbeaussagen ab. Zu Hause ist das Kit die selbstgeführte Aufgabe mit einer zehnminütigen Fallensuche, fünf Schritten und einem Lösungsschlüssel zur eigenen Kontrolle.",
+      "Vinarija Crvena Zemja, eine erfundene Familienkellerei in der Gemeinde Kavadarci in Nordmazedonien, bekommt in einer Woche drei ESG-Anfragen: den Lieferantenfragebogen ihres schwedischen Importeurs, sieben grüne Werbeaussagen des eigenen Marketings für Deutschland und Polen und das Prüfformular der Bank für einen Solarkredit. Tim demonstriert Claude live auf dem Beamer, während der Raum auf Papier oder dem Handy mitspielt: Die Gruppe sucht Fallen in den Dateien, tippt vor jeder Antwort auf das Ergebnis und stimmt über die Werbeaussagen ab.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
-      "Das Material ist auf Englisch; Tim demonstriert Claude live am Beamer, während der Raum per Handy oder Papier mitspielt, vor jeder Antwort tippt und über die Werbeaussagen abstimmt; Laptop oder Claude-Konto sind nicht nötig. Zu Hause ist das Kit deine Aufgabe für etwa zwei Stunden beim ersten Mal: fünf Schritte und ein Lösungsschlüssel zur Selbstkontrolle, mit jedem Claude-Plan einschließlich Free; die erfundenen Dateien werden in Claude hochgeladen.",
-    outcome: "Selbstgeführtes Kit mit Fallensuche, fünf Prompts und Lösungsschlüssel sowie einer Methode für den nächsten Fragebogen, grünen Claim oder Bankformular aus einem Ordner, mit Quelle und Status je Antwort",
+      "Live reicht ein Handy oder Papier. Zu Hause gehen nur die erfundenen Dateien in Claude.",
+    outcome: "Eine Methode für Fragebogen, grünen Claim und Bankformular, mit Quelle und Status je Antwort",
     audience: [
       "Geschäftsführung und Verwaltung kleiner Firmen, bei denen ESG-Fragebögen landen",
       "Vertrieb und Marketing, die grüne Aussagen über Produkte machen wollen",
@@ -80,29 +80,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 120,
-    selfStudyDurationLabel: "Beim ersten Mal etwa 2 Stunden",
+    selfStudyDurationLabel: "Allein ca. 2 Std.",
     needs: [
-      "Live: nichts zu installieren. Ein Stift oder dein Handy für die Abstimmungen.",
-      "Zum Nachmachen die Claude-Desktop-App oder claude.ai, jeder Plan",
-      "Zu Hause: Codeausführung und Dateierstellung in Claude eingeschaltet (Settings > Capabilities; standardmäßig an)",
-      "Zu Hause etwa 2 Stunden für die Fallensuche und fünf Schritte. Du kannst nach jedem Schritt aufhören.",
+      "Live: nichts zu installieren, ein Stift oder dein Handy für die Abstimmungen",
+      "Zu Hause: Claude (App oder claude.ai, jeder Plan) mit Codeausführung und Dateierstellung (Settings > Capabilities, standardmäßig an)",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Einen API-Schlüssel",
-      "Vorwissen zu CSRD, VSME oder Treibhausgasbilanzen",
+      "Vorwissen zu CSRD oder VSME",
       "Eigene Firmendaten",
     ],
     notCovered: [
       "Rechtsberatung und Prüfung eines echten Berichts",
       "Eine vollständige Treibhausgasbilanz",
-      "Echte Stromtarife; das Kit rechnet mit einem erfundenen Tarif",
+      "Echte Stromtarife",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-10-15",
       data: "synthetic",
-      note: "Firma, Personen, Zahlen, Zertifikate und Dokumente sind erfunden.",
+      note: "Auch Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt.",
     },
     steps: [
       {
@@ -166,8 +164,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Was darfst du einem Importeur, deiner Bank oder in einem Regal behaupten, wenn deine Dateien es nur zum Teil belegen?",
       limitationsHeading: "Bevor du startest",
       dataLimitations: [
-        "Sieben Fallen und eine saubere Datei sind in den 13 Dateien versteckt. Finde sie, bevor Claude es tut.",
-        "Der Tarif von 9,50 MKD pro kWh ist erfunden, kein echter Preis.",
+        "Sieben Fallen stecken in den Dateien. Finde sie vor Claude.",
+        "Der Tarif von 9,50 MKD pro kWh ist erfunden.",
       ],
     },
     materials: materials([
@@ -187,17 +185,17 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "esg-berichte-mit-ki",
     number: "04",
     topic: "ESG",
-    title: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
+    title: "ESG reports with AI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "An invented North Macedonian winery gets three ESG requests in one week. Claude answers all of them from the same files and names what is missing.",
+      "Three ESG requests to one winery. Claude answers from the same files and says what is missing.",
     description:
-      "Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Germany and Poland, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room plays along on paper or phones: the group hunts traps in the files, bets on each result before Claude shows it, and votes on the marketing claims. At home, the kit is a self-guided assignment with a 10-minute trap hunt, five steps and an answer key for checking your work.",
+      "Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, gets three ESG requests in one week: a supplier questionnaire from its Swedish importer, seven green claims from its own marketing team for Germany and Poland, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room plays along on paper or phones: the group hunts traps in the files, bets on each result before Claude shows it, and votes on the marketing claims.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
-      "Tim demos Claude live on the projector while the room plays along on a phone or paper, bets before each answer and votes on the claims; no laptop or Claude account needed. The kit is the take-home assignment: about 2 hours the first time, with five steps and an answer key, on any Claude plan including Free; its fictional files are uploaded to Claude.",
-    outcome: "A self-guided kit (trap hunt, five prompts, answer key) and a method to answer your next questionnaire, green claim or bank form from one folder, with a source and a status for every answer.",
+      "Live, a phone or paper is enough. At home, only the invented files go into Claude.",
+    outcome: "A method for the questionnaire, green claim and bank form, with a source and status for every answer",
     audience: [
       "Owners and office staff of small firms who receive ESG questionnaires",
       "Sales and marketing teams who want to make green product claims",
@@ -227,29 +225,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 120,
-    selfStudyDurationLabel: "about 2 hours the first time",
+    selfStudyDurationLabel: "solo about 2 h",
     needs: [
-      "Live: nothing to install. A pen, or your phone for the votes.",
-      "To replay it, the Claude desktop app or claude.ai, any plan",
-      "At home: code execution and file creation switched on in Claude (Settings > Capabilities; on by default)",
-      "About 2 hours at home for the warm-up and five steps. You can stop after any step.",
+      "Live: nothing to install, a pen or your phone for the votes",
+      "At home: Claude (app or claude.ai, any plan) with code execution and file creation on (Settings > Capabilities, on by default)",
     ],
     notNeeded: [
       "Programming skills",
       "An API key",
-      "Prior knowledge of CSRD, VSME or greenhouse gas accounting",
+      "Prior knowledge of CSRD or VSME",
       "Your own company data",
     ],
     notCovered: [
       "Legal advice or an audit of a real report",
       "A full greenhouse gas inventory",
-      "Real electricity tariffs; the kit uses one invented tariff",
+      "Real electricity tariffs",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-10-15",
       data: "synthetic",
-      note: "The company, people, numbers, certificates and documents are invented.",
+      note: "Certificates and documents are invented too; the laws and rules cited are real.",
     },
     steps: [
       {
@@ -313,8 +309,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "What may you tell an importer, your bank or a shop shelf when your files only partly prove it?",
       limitationsHeading: "Before you start",
       dataLimitations: [
-        "Seven traps and one clean file are hidden in the 13 files. Find them before Claude does.",
-        "The tariff of 9.50 MKD per kWh is invented, not a real price.",
+        "Seven traps are hidden in the files. Find them before Claude does.",
+        "The tariff of 9.50 MKD per kWh is invented.",
       ],
     },
     materials: materials([

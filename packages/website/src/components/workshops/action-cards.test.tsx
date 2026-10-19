@@ -104,7 +104,8 @@ describe("<ActionCards>", () => {
         if (stage.b!.kitPageHref) {
           expect(links).toHaveLength(2);
           expect(links[1]).toHaveAttribute("href", stage.b!.kitPageHref);
-          expect(links[1]).toHaveAccessibleName(copy.kitPageAction);
+          // The workshop's topic gives the link its context in a list of links.
+          expect(links[1]).toHaveAccessibleName(`${copy.kitPageAction}: ${workshop.topic}`);
           expect(links[1]).toHaveClass("ac-secondary");
           expect(links[1]).not.toHaveAttribute("download");
           expect(within(cards[0] as HTMLElement).getAllByRole("link")).toHaveLength(1);
@@ -160,6 +161,16 @@ describe("<ActionCards>", () => {
     const kit = render(<ActionCards workshop={w02} locale="en" plakat="idea" />);
     expect(kit.container.querySelectorAll(".ac-pic-kit .ac-chip")).toHaveLength(4);
     expect(kit.container.querySelectorAll(".ac-pic-kit .ac-flap, .ac-pic-kit .ac-box, .ac-pic-kit .ac-arrow")).toHaveLength(3);
+    // Each kit card carries the workshop's own chips, so no two look alike.
+    const faces = new Set<string>();
+    for (const entry of getWorkshops("en")) {
+      if (!workshopStage(entry, "en").b?.download) continue;
+      const card = render(<ActionCards workshop={entry} locale="en" plakat="idea" />);
+      expect(card.container.querySelectorAll(".ac-pic-kit .ac-chip")).toHaveLength(4);
+      faces.add(card.container.querySelector(".ac-pic-kit .ac-chips")!.innerHTML);
+      card.unmount();
+    }
+    expect(faces.size).toBeGreaterThanOrEqual(4);
     for (const svg of kit.container.querySelectorAll("svg.ac-svg")) {
       expect(svg).toHaveAttribute("viewBox", "0 0 256 160");
       expect(svg).toHaveAttribute("aria-hidden", "true");
@@ -241,7 +252,8 @@ describe("action-cards.css", () => {
     expect(CSS).toMatch(/\.ac-link \{[^}]*min-height:\s*2\.75rem/s);
     expect(CSS).toMatch(/\.ac-secondary \{[^}]*min-height:\s*2\.75rem/s);
     expect(CSS).toMatch(/\.ac-link::after \{[^}]*position:\s*absolute;[^}]*inset:\s*0/s);
-    expect(CSS).toMatch(/outline:\s*3px solid var\(--ac-ring\);\s*outline-offset:\s*2px/);
+    // The fixed Mennige, not `--color-brand-orange`: the scene tokens swap that one to the scene ink.
+    expect(CSS).toMatch(/outline:\s*3px solid var\(--color-mennige\);\s*outline-offset:\s*2px/);
   });
 
   it("reads at 4.5:1 or more in every scene, on card A and on the inverted card B", () => {
@@ -260,3 +272,62 @@ describe("action-cards.css", () => {
     }
   });
 });
+
+describe("action-cards.css layout", () => {
+  it("is a compact 96px row on a phone: an 80px picture left, the title row with its arrow, meta and the secondary link on one row", () => {
+    expect(CSS).toMatch(/\.ac-card \{[^}]*grid-template-columns:\s*5rem minmax\(0, 1fr\)/s);
+    expect(CSS).toMatch(/\.ac-pic \{[^}]*width:\s*5rem/s);
+    expect(CSS).toMatch(/\.ac-head \{[^}]*justify-content:\s*space-between/s);
+    expect(CSS).toMatch(/\.ac-sub \{[^}]*flex-wrap:\s*wrap/s);
+    expect(CSS).not.toMatch(/\.ac-foot/);
+    // The 44px secondary target overlaps the title row, so the card stays a row.
+    expect(CSS).toMatch(/\.ac-secondary \{[^}]*margin-block:\s*-0\.9375rem/s);
+  });
+
+  it("stands the rows in one column from 40rem (beside the scene) and puts the picture on top, two cards across, only from 64rem", () => {
+    let tablet = "";
+    let desktop = "";
+    ROOT.walkAtRules("media", (rule) => {
+      if (rule.params.includes("min-width: 40rem")) tablet = rule.toString();
+      if (rule.params.includes("min-width: 64rem")) desktop = rule.toString();
+    });
+    expect(tablet).toMatch(/grid-auto-rows:\s*1fr/);
+    expect(tablet).not.toMatch(/grid-template-columns:\s*repeat\(2/);
+    expect(tablet).not.toMatch(/flex-direction:\s*column/);
+    expect(desktop).toMatch(/grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+    expect(desktop).toMatch(/\.ac-card \{[^}]*flex-direction:\s*column/s);
+  });
+
+  it("lifts a card 2px over a solid 4px offset block for a mouse only, with no box-shadow", () => {
+    expect(CSS).toMatch(/@media \(hover: hover\) and \(pointer: fine\)/);
+    expect(CSS).toMatch(/\.ac-list > li:hover \.ac-card \{\s*transform:\s*translate\(-2px, -2px\)/);
+    expect(CSS).toMatch(/\.ac-list > li:hover::before \{\s*transform:\s*translate\(4px, 4px\)/);
+    expect(CSS).toMatch(/\.ac-card:hover \.ac-go \{\s*transform:\s*translateX\(4px\)/);
+  });
+
+  it("runs the card pictures on the stage's story clock", () => {
+    expect(CSS).toMatch(/--ac-t:\s*var\(--ws-t, 6s\)/);
+  });
+
+  it("never lets the case bars collapse to a stub: they fade out whole, and the marker fades with them", () => {
+    const bar = ROOT.nodes
+      .flatMap((node) => (node.type === "atrule" ? (node as AtRule).nodes ?? [] : []))
+      .find((node) => node.type === "atrule" && (node as AtRule).params === "ac-bar") as AtRule;
+    expect(bar.toString()).not.toMatch(/scale:\s*1 0\.25/);
+    expect(bar.toString()).toMatch(/opacity:\s*0/);
+    const marker = ROOT.nodes
+      .flatMap((node) => (node.type === "atrule" ? (node as AtRule).nodes ?? [] : []))
+      .find((node) => node.type === "atrule" && (node as AtRule).params === "ac-marker") as AtRule;
+    expect(marker.toString()).toMatch(/opacity:\s*0/);
+  });
+
+  it("holds the kit chips in the box until the last 5 percent, so the frame is never half empty", () => {
+    const keyframes = ROOT.nodes
+      .flatMap((node) => (node.type === "atrule" ? (node as AtRule).nodes ?? [] : []))
+      .concat(ROOT.nodes)
+      .find((node) => node.type === "atrule" && (node as AtRule).params === "ac-drop") as AtRule;
+    expect(keyframes).toBeDefined();
+    expect(keyframes.toString()).toMatch(/19%,\s*95% \{\s*translate:\s*0 0;\s*opacity:\s*1;/);
+  });
+});
+

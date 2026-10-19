@@ -23,7 +23,7 @@ export interface WorkshopStageCardA {
   readonly material: WorkshopMaterial;
   readonly href: string;
   readonly minutes?: number;
-  /** "Deck · 60 Min." or "Labor · 45 Min.": role and time, never a slide count. */
+  /** "Deck · 60 Min." or "45 Min." for a lab: time, never a slide count. */
   readonly meta: string;
 }
 
@@ -33,7 +33,7 @@ export interface WorkshopStageCardB {
   readonly href: string;
   /** True for a file (the kit zip): the link carries a bare `download` attribute. */
   readonly download: boolean;
-  /** "ZIP · 1,1 MB" for a file, "Fall · 30 Min." for a case. */
+  /** "ZIP · 1,1 MB" for a file, "30 Min." for a case. */
   readonly meta: string;
   /** Set when the workshop has a kit page: the one small secondary link. */
   readonly kitPageHref?: string;
@@ -55,8 +55,23 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
   const copy = WORKSHOP_PAGE_COPY[locale].detail;
   const primary = primaryWorkshopMaterial(workshop) ?? workshop.materials[0];
 
+  // A deck without its own minutes (a self-paced workshop) shows the
+  // workshop's own length, marked as approximate when it is the self-study
+  // time. Never the page language: "Deck · EN" says nothing about effort.
+  const approx = locale === "de" ? "ca." : "about";
+  const minutesOf = (material: WorkshopMaterial): string | undefined => {
+    if (material.minutes) return copy.minutes(material.minutes);
+    if (material.role !== "deck") return undefined;
+    if (workshop.minutesLive) return copy.minutes(workshop.minutesLive);
+    return `${approx} ${copy.minutes(workshop.minutesSelfStudy)}`;
+  };
   const timeOrLanguage = (material: WorkshopMaterial): string =>
-    material.minutes ? copy.minutes(material.minutes) : material.language.toUpperCase();
+    minutesOf(material) ?? material.language.toUpperCase();
+  // The title already names a lab or a case, so its meta line is the time alone.
+  const metaOf = (material: WorkshopMaterial): string =>
+    material.role === "deck"
+      ? [copy.roleLabels[material.role], timeOrLanguage(material)].join(" · ")
+      : timeOrLanguage(material);
 
   const a: WorkshopStageCardA | undefined = primary
     ? {
@@ -64,7 +79,7 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
         material: primary,
         href: primary.href,
         ...(primary.minutes ? { minutes: primary.minutes } : {}),
-        meta: [copy.roleLabels[primary.role], timeOrLanguage(primary)].join(" · "),
+        meta: metaOf(primary),
       }
     : undefined;
 
@@ -93,7 +108,7 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
       material: second,
       href: second.href,
       download: second.kind !== "html",
-      meta: [copy.roleLabels[second.role], timeOrLanguage(second)].join(" · "),
+      meta: metaOf(second),
     };
   }
 

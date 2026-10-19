@@ -6,9 +6,10 @@ import { localizeHref } from "@/lib/i18n/locale";
 import { workshopKitPath } from "@/lib/workshop-kit";
 import { getWorkshopBySlug, getWorkshops, type Workshop } from "@/lib/workshops";
 import { workshopStage } from "@/lib/workshop-stage";
-import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
+import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT, type PlakatKey } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 import {
+  bandLede,
   phoneDescription,
   TITLE_HIGHLIGHT,
   titleHighlight,
@@ -96,8 +97,8 @@ describe("<WorkshopDetailContent>", () => {
     // The facts line sits on paper under the stage, with no heading of its own.
     const facts = container.querySelector("[data-workshop-facts]") as HTMLElement;
     expect(follows(stage, facts)).toBe(true);
-    expect(facts).toHaveTextContent("Selbstlernen ca. 90 Min.");
-    expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
+    expect(facts).toHaveTextContent("Ca. 90 Min.");
+    expect(cover).not.toHaveTextContent("Ca. 90 Min.");
     expect(facts.closest("details")).toBeNull();
 
     // Both of Workshop 01's files are reached by the two cards: no material list.
@@ -136,7 +137,7 @@ describe("<WorkshopDetailContent>", () => {
       // The head is split only for the highlight band: the positioned lead,
       // then the marked tail.
       const lead = h1.firstElementChild;
-      const mark = h1.querySelector("span.box-decoration-clone");
+      const mark = h1.querySelector("span.title-mark");
       expect(lead).toHaveClass("relative");
       expect(`${lead?.textContent} ${mark?.textContent}`).toBe(head);
       expect(h1.querySelector("[data-title-subtitle]")?.textContent).toBe(subtitle);
@@ -199,8 +200,8 @@ describe("<WorkshopDetailContent>", () => {
 
   it("lands the Workshop 05 band on the word Data, in both locales, and keeps the full title as the heading", () => {
     for (const [locale, mark, lead, tail] of [
-      ["en", "Data", "Where Your", "Goes"],
-      ["de", "Daten", "Wohin deine", "gehen"],
+      ["en", "data", "Where does your", " go?"],
+      ["de", "Daten?", "Wohin gehen deine", ""],
     ] as const) {
       const workshop = getWorkshopBySlug("ki-im-unternehmen-sicher-nutzen", locale)!;
       const { unmount } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
@@ -208,10 +209,10 @@ describe("<WorkshopDetailContent>", () => {
       expect(h1.textContent).toBe(workshop.title);
       expect(h1.firstElementChild).toHaveClass("relative");
       expect(h1.firstElementChild).toHaveTextContent(lead);
-      const marks = h1.querySelectorAll("span.box-decoration-clone");
+      const marks = h1.querySelectorAll("span.title-mark");
       expect(marks).toHaveLength(1);
-      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark}$`));
-      expect(marks[0].nextSibling?.textContent).toBe(` ${tail}`);
+      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark.replace("?", "\\?")}$`));
+      expect(marks[0].nextSibling?.textContent ?? "").toBe(tail);
       // The words are never animated: no motion class or inline animation on the heading.
       expect(h1.outerHTML).not.toMatch(/animate-|animation|motion-/);
       unmount();
@@ -219,19 +220,34 @@ describe("<WorkshopDetailContent>", () => {
   });
 
   it("keeps every scene's title band readable and visible", () => {
+    // The tokens a band may use, as the hex values the browser resolves them to.
+    const hexOf = (key: PlakatKey, token: string): string => {
+      const palette = PLAKAT[key];
+      const table: Record<string, string> = {
+        "--color-scene-mid": palette.mid,
+        "--color-scene-accent-text": palette.accentText,
+        "--color-scene-ink": palette.ink,
+        "--color-paper": "#fffcf5",
+        "--color-lab-ink": "#121212",
+      };
+      expect(table[token], `${key}: ${token}`).toBeDefined();
+      return table[token];
+    };
     for (const key of PLAKAT_KEYS) {
-      const { ground, ink, mid } = PLAKAT[key];
+      const { ground } = PLAKAT[key];
       const band = TITLE_HIGHLIGHT[key];
-      expect(band.colorVar).toBe("--color-scene-mid");
       // The browser composites the colour-mix over the ground in sRGB.
       const alpha = band.opacity / 100;
-      const painted = rgb(mid).map((value, channel) =>
+      const markHex = hexOf(key, band.colorVar);
+      const painted = rgb(markHex).map((value, channel) =>
         Math.round(value * alpha + rgb(ground)[channel] * (1 - alpha)),
       ) as unknown as Rgb;
-      // Display type (50px and up): the 3:1 floor, with margin.
-      expect(contrast(rgb(ink), painted), `${key} ink on its band`).toBeGreaterThanOrEqual(3.4);
-      // A band that matches the ground would mark nothing.
-      expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.35);
+      const text = rgb(hexOf(key, band.textColorVar ?? "--color-scene-ink"));
+      // Display type (40px and up): the words on the band keep 4.4:1 or more.
+      expect(contrast(text, painted), `${key} words on their band`).toBeGreaterThanOrEqual(4.4);
+      // The band is a visible mark on its ground: 1.6:1 or more (a wash that
+      // matched the ground marked nothing; idea 35% and autumn 30% were 1.54 and 1.40).
+      expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.6);
     }
   });
 
@@ -304,11 +320,11 @@ describe("<WorkshopDetailContent>", () => {
     expect(provenance).toHaveTextContent("Tim Löhr");
     expect(provenance).toHaveTextContent("geprüft 26. September 2026");
     expect(provenance).toHaveTextContent("KI-Antworten aufgezeichnet August 2026");
-    expect(provenance).toHaveTextContent("live gehalten 25. September 2026");
+    expect(provenance).not.toHaveTextContent("live gehalten");
     // The invented data is named once, in the caption line of the case; the footer does not repeat it.
     expect(provenance).not.toHaveTextContent("erfundene Daten");
     expect(provenance).not.toHaveTextContent(workshop.provenance.note);
-    expect(provenance?.querySelectorAll("p")).toHaveLength(1);
+    expect(provenance?.querySelectorAll("ul")).toHaveLength(1);
   });
 
   it("puts the first material on card A and the lab or the case on card B, and no buttons in the band", () => {
@@ -357,12 +373,15 @@ describe("<WorkshopDetailContent>", () => {
         // h1 at the band's body size.
         expect(h1).toHaveClass("poster-title", "text-scene-ink");
         expect(h1.style.getPropertyValue("--fit")).not.toBe("");
-        // The tail of the title sits on a marker band in the scene's mid
-        // colour; the words keep the scene ink (text-foreground in scope).
-        const mark = h1.querySelector("span.box-decoration-clone") as HTMLElement;
+        // The tail of the title sits on a marker band (TITLE_HIGHLIGHT); its
+        // padding is pulled back by an equal negative margin and never repeats
+        // on a wrapped line, so the words keep the text column's edge.
+        const mark = h1.querySelector("span.title-mark") as HTMLElement;
         expect(mark).not.toBeNull();
-        expect(mark.style.backgroundImage).toContain("var(--color-scene-mid)");
-        expect(mark.style.backgroundSize).toBe("100% 0.75em");
+        expect(mark.style.backgroundImage).toContain(`var(${TITLE_HIGHLIGHT[scene].colorVar})`);
+        expect(mark).toHaveClass("box-decoration-slice", "px-[0.12em]");
+        expect(mark).not.toHaveClass("-mx-[0.1em]");
+        expect(mark.style.backgroundSize).toBe("100% 0.84em");
         expect(mark).toHaveClass("text-foreground");
         expect(workshop.title.startsWith(`${h1.firstElementChild?.textContent} ${mark.textContent}`)).toBe(true);
         const subtitle = h1.querySelector("[data-title-subtitle]");
@@ -388,14 +407,14 @@ describe("<WorkshopDetailContent>", () => {
         expect(
           within(band).queryAllByRole("link").filter((link) => !link.hasAttribute("data-cover-back")),
         ).toHaveLength(0);
-        // The poster: the lg art and the phone poster row (21:9 on a phone,
-        // 16:9 from sm, full bleed), decorative, numbered. Every workshop,
+        // The poster: the lg art and the phone poster strip (numeral flush
+        // left, motif bleeding off the bottom right), decorative, numbered. Every workshop,
         // Workshop 05 included, shows its poster motif here: a motion scene
         // lives on the stage, never in the band.
         const posters = [...band.querySelectorAll("svg[data-poster]")];
-        expect(posters.map((poster) => poster.getAttribute("data-poster-format"))).toEqual(["portrait", "landscape"]);
+        expect(posters.map((poster) => poster.getAttribute("data-poster-format"))).toEqual(["portrait", "strip"]);
         expect(band.querySelectorAll("svg[data-hero-motion]")).toHaveLength(0);
-        expect(band.querySelector("[data-plakat-art-phone]")).toHaveClass("aspect-[16/9]", "lg:hidden");
+        expect(band.querySelector("[data-plakat-art-phone]")).toHaveClass("lg:hidden");
         for (const poster of posters) {
           expect(poster).toHaveAttribute("aria-hidden", "true");
           expect(poster).toHaveAttribute("focusable", "false");
@@ -730,8 +749,10 @@ describe("<WorkshopDetailContent>", () => {
     const back = screen.getAllByRole("link", {
       name: "Alle Workshops, zurück zur Übersicht",
     });
+    // One label and one size at every width.
     expect(back[0]).toHaveTextContent("Alle Workshops");
-    expect(back[1]).toHaveTextContent("Workshops");
+    expect(back[1]).toHaveTextContent("Alle Workshops");
+    for (const link of back) expect(link).toHaveClass("text-[0.875rem]", "font-bold");
     // The bar is exactly as tall as the link, so its ring is drawn inside.
     expect(back[0]).toHaveClass("min-h-11", "focus-visible:outline-offset-[-3px]");
     expect(back).toHaveLength(2);
@@ -855,5 +876,88 @@ describe("phoneDescription", () => {
       "[-webkit-tap-highlight-color:transparent]",
     );
     expect(deck.querySelector("h4")).toHaveClass("max-sm:pr-8");
+  });
+});
+
+describe("the band lede", () => {
+  it("keeps a short summary whole and cuts a long one after its first sentence", () => {
+    const short = "In Browser-Laboren rechnest du aus, was eine falsche Prognose kostet.";
+    expect(bandLede(short)).toBe(short);
+    const long =
+      "Eine erfundene nordmazedonische Weinkellerei bekommt drei ESG-Anfragen in einer Woche. Claude beantwortet alle aus denselben Dateien und benennt, was fehlt.";
+    expect(bandLede(long)).toBe(
+      "Eine erfundene nordmazedonische Weinkellerei bekommt drei ESG-Anfragen in einer Woche.",
+    );
+  });
+
+  it("never leaves a band lede over the catalogue summary limit", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        const lede = bandLede(workshop.summary);
+        expect(lede.length, `${locale}/${workshop.slug}`).toBeLessThanOrEqual(150);
+        expect(workshop.summary.startsWith(lede)).toBe(true);
+        expect(lede).toMatch(/[.!?]$/);
+      }
+    }
+  });
+});
+
+describe("the compact band and the facts", () => {
+  it("keeps the phone band short: a 4.75rem poster strip with the numeral flush left, a 2.5rem headline", () => {
+    const workshop = getWorkshopBySlug("esg-berichte-mit-ki", "de")!;
+    const { container } = render(<WorkshopDetailContent workshop={workshop} locale="de" />);
+    const band = container.querySelector("[data-cover-band]") as HTMLElement;
+    expect(band.className).toContain("max-sm:[&>[data-plakat-art-phone]]:h-[4.75rem]");
+    expect(band.className).toContain("sm:[&>[data-plakat-art-phone]]:h-28");
+    // The stage starts at the same y on every workshop from lg.
+    expect(band.className).toContain("lg:min-h-[19rem]");
+    expect(band.querySelector("[data-plakat-art-phone]")).toHaveAttribute("data-plakat-art-phone-layout", "strip");
+    expect(band.querySelector("[data-plakat-art-phone] svg")).toHaveAttribute("data-poster-format", "strip");
+    const h1 = band.querySelector("h1") as HTMLElement;
+    expect(h1.className).toContain("min-[380px]:max-sm:[--text-poster:2.5rem]");
+    // Below 380px the headline scales with the width, so all three phone widths give the same lines.
+    expect(h1.className).toContain("max-[379px]:[--text-poster:min(2.5rem,10vw)]");
+    expect(h1.className).toContain("lg:[--text-poster:4.5rem]");
+  });
+
+  it("never jumps a heading level on the page", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        const { container, unmount } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
+        const levels = [...container.querySelectorAll("h1, h2, h3, h4")].map((heading) => Number(heading.tagName[1]));
+        expect(levels[0], `${locale}/${workshop.slug}`).toBe(1);
+        for (let at = 1; at < levels.length; at += 1) {
+          expect(levels[at] - levels[at - 1], `${locale}/${workshop.slug}: ${levels.join("")}`).toBeLessThanOrEqual(1);
+        }
+        unmount();
+      }
+    }
+  });
+
+  it("sets the facts as separate items behind a square, so no line starts or ends with a dot", () => {
+    const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
+    const { container } = render(<WorkshopDetailContent workshop={workshop} locale="de" />);
+    const facts = container.querySelector("[data-workshop-facts]") as HTMLElement;
+    expect(facts.tagName).toBe("UL");
+    const items = [...facts.querySelectorAll(":scope > li")];
+    expect(items.length).toBeGreaterThan(2);
+    // Each fact is one unit that wraps as a whole; the marker is a square, never a dot.
+    for (const item of items) {
+      expect(item).toHaveClass("inline-flex");
+      expect(item.querySelector("[aria-hidden='true']")).toHaveClass("bg-foreground/70");
+    }
+    expect(facts.textContent).not.toMatch(/·/);
+    // The facts line is body size or larger, in full ink.
+    expect(facts).toHaveClass("text-foreground");
+    expect(facts.className).toMatch(/text-\[0\.9375rem\]/);
+  });
+
+  it("names where the data comes from once: in the facts line, and in the footer only when the facts line does not", () => {
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
+    const { container } = render(<WorkshopDetailContent workshop={workshop} locale="de" />);
+    const facts = container.querySelector("[data-workshop-facts]") as HTMLElement;
+    const footer = container.querySelector('footer[aria-label="Stand und Herkunft"]') as HTMLElement;
+    expect(facts).toHaveTextContent("rfundene Firma, dazu öffentliche Zahlen");
+    expect(footer).not.toHaveTextContent(/erfunden|öffentliche Zahlen|Daten/);
   });
 });
