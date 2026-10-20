@@ -74,9 +74,9 @@ function fakeWindow(root: HTMLElement, innerHeight = 844): FakeWin {
   };
 }
 
-function mount() {
+function mount(strip?: { fits: boolean; ratio: number | null; controlPx: number }) {
   const { container } = render(
-    <ChapterStage id="t" label="Test" steps={STEPS} source={SOURCE}>
+    <ChapterStage id="t" label="Test" steps={STEPS} source={SOURCE} strip={strip}>
       <svg />
     </ChapterStage>,
   );
@@ -162,6 +162,46 @@ describe("startStage", () => {
     pause.dispatchEvent(new Event("change"));
     // The controller listens to the input's change event through the same schedule.
     expect(getStageState(root)).toMatchObject({ mode: "static", progress: 1 });
+    stop();
+  });
+
+  it("reads the middle of the window under the header when the pin stands beside the text column (wide screens)", () => {
+    const { root } = mount();
+    const fake = fakeWindow(root, 900);
+    // From lg the pin is the right column, stuck 80px from the top and as tall as the window below it.
+    const pin = root.querySelector<HTMLElement>("[data-cs-pin]")!;
+    pin.getBoundingClientRect = () => ({ top: 80, bottom: 884, height: 804, left: 700, right: 1300, width: 600 }) as DOMRect;
+    for (const el of Array.from(root.querySelectorAll<HTMLElement>(".cs-step"))) {
+      const base = el.getBoundingClientRect();
+      el.getBoundingClientRect = () => ({ ...base, left: 100, right: 600, width: 500 }) as DOMRect;
+    }
+    (fake.win as unknown as { getComputedStyle: () => { top: string } }).getComputedStyle = () => ({ top: "80px" });
+    const stop = startStage(root, fake.win);
+    root.querySelector<HTMLElement>("[data-cs='next']")!.click();
+    // Step 1 centres at 1400; the reading line is 80 + (900 - 80) / 2 = 490, not under the pin's bottom.
+    expect((fake.scrollBy.mock.calls[0]![0] as { top: number }).top).toBe(1400 - 490);
+    stop();
+  });
+
+  it("keeps a stage whose figure does not fit the phone strip static below lg, and scrubs it from lg", () => {
+    const { root } = mount({ fits: false, ratio: 0.98, controlPx: 50 });
+    expect(root).toHaveAttribute("data-strip", "inline");
+    const fake = fakeWindow(root);
+    fake.setMedia("(max-width: 1023px)", true);
+    const stop = startStage(root, fake.win);
+    expect(getStageState(root)).toMatchObject({ mode: "static", progress: 1 });
+    fake.setMedia("(max-width: 1023px)", false);
+    expect(getStageState(root).mode).toBe("scrub");
+    stop();
+  });
+
+  it("ignores the narrow-screen rule for a stage that fits the strip", () => {
+    const { root } = mount({ fits: true, ratio: 0.44, controlPx: 0 });
+    expect(root).not.toHaveAttribute("data-strip");
+    const fake = fakeWindow(root);
+    fake.setMedia("(max-width: 1023px)", true);
+    const stop = startStage(root, fake.win);
+    expect(getStageState(root).mode).toBe("scrub");
     stop();
   });
 

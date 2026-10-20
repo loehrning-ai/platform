@@ -7,7 +7,8 @@
  * It listens to scroll only while the stage is near the viewport, throttles to
  * animation frames, writes nothing when the state did not change, and never
  * touches anything outside the stage element. Static mode (reduced motion, a
- * short screen, the chapter pause switch) writes the finished state once.
+ * short screen, the chapter pause switch, an inline stage below lg) writes the
+ * finished state once.
  */
 
 import {
@@ -23,6 +24,8 @@ import {
 
 const REDUCED = "(prefers-reduced-motion: reduce)";
 const SHORT = "(max-height: 559px)";
+/** Below lg a stage whose figure does not fit the strip is inline (data-strip="inline", chapter-stage.css). */
+const NARROW = "(max-width: 1023px)";
 
 export function startStage(root: HTMLElement, win: Window & typeof globalThis = window): () => void {
   const doc = root.ownerDocument;
@@ -37,18 +40,47 @@ export function startStage(root: HTMLElement, win: Window & typeof globalThis = 
   const media = (query: string): MediaQueryList | null => (typeof win.matchMedia === "function" ? win.matchMedia(query) : null);
   const reduce = media(REDUCED);
   const short = media(SHORT);
+  const narrow = root.dataset["strip"] === "inline" ? media(NARROW) : null;
 
   let current: StageState | null = null;
   let frame = 0;
   let listening = false;
 
-  const isStatic = (): boolean => Boolean(reduce?.matches || short?.matches || pause?.checked);
+  const isStatic = (): boolean => Boolean(reduce?.matches || short?.matches || narrow?.matches || pause?.checked);
+
+  const stuckTopOf = (el: HTMLElement): number => {
+    const top = typeof win.getComputedStyle === "function" ? Number.parseFloat(win.getComputedStyle(el).top) : Number.NaN;
+    return Number.isFinite(top) ? top : Number.NaN;
+  };
+
+  /** The bottom of the text window: the reader bar's top below lg, else the bottom of the window. */
+  const windowBottom = (): number => {
+    const bar = doc.querySelector("[data-reader-focus-bar]");
+    return bar && bar.getBoundingClientRect().height > 0 ? bar.getBoundingClientRect().top : win.innerHeight;
+  };
+
+  /** Wide screens pin the picture beside the text column, not above it (chapter-stage.css). */
+  const pinBeside = (): boolean => {
+    const first = stepEls[0];
+    if (!pin || !first) return false;
+    const p = pin.getBoundingClientRect();
+    const s = first.getBoundingClientRect();
+    return p.width > 0 && s.width > 0 && (p.left >= s.right - 1 || p.right <= s.left + 1);
+  };
+
+  /** Beside the text the reading line is the middle of the window under the header (the pin's sticky top). */
+  const besideLine = (): number => {
+    const top = pin ? stuckTopOf(pin) : Number.NaN;
+    const from = Number.isFinite(top) ? top : 0;
+    const bottom = windowBottom();
+    return from + Math.max(0, bottom - from) / 2;
+  };
 
   const readingLine = (): number => {
     if (!pin) return win.innerHeight * 0.55;
+    if (pinBeside()) return besideLine();
     const pinBottom = pin.getBoundingClientRect().bottom;
-    const bar = doc.querySelector("[data-reader-focus-bar]");
-    const usable = bar && bar.getBoundingClientRect().height > 0 ? bar.getBoundingClientRect().top : win.innerHeight;
+    const usable = windowBottom();
     return pinBottom + Math.max(0, usable - pinBottom) / 2;
   };
 
@@ -58,11 +90,11 @@ export function startStage(root: HTMLElement, win: Window & typeof globalThis = 
    */
   const settledLine = (): number => {
     if (!pin) return readingLine();
-    const stuckTop = typeof win.getComputedStyle === "function" ? Number.parseFloat(win.getComputedStyle(pin).top) : Number.NaN;
+    if (pinBeside()) return besideLine();
+    const stuckTop = stuckTopOf(pin);
     const top = Number.isFinite(stuckTop) ? stuckTop : 0;
     const pinBottom = Number.isFinite(stuckTop) ? Math.min(pin.getBoundingClientRect().bottom, top + pin.offsetHeight) : pin.getBoundingClientRect().bottom;
-    const bar = doc.querySelector("[data-reader-focus-bar]");
-    const usable = bar && bar.getBoundingClientRect().height > 0 ? bar.getBoundingClientRect().top : win.innerHeight;
+    const usable = windowBottom();
     return pinBottom + Math.max(0, usable - pinBottom) / 2;
   };
 
@@ -143,6 +175,7 @@ export function startStage(root: HTMLElement, win: Window & typeof globalThis = 
   root.addEventListener("click", onClick);
   reduce?.addEventListener("change", schedule);
   short?.addEventListener("change", schedule);
+  narrow?.addEventListener("change", schedule);
   pause?.addEventListener("change", schedule);
   update();
 
@@ -153,6 +186,7 @@ export function startStage(root: HTMLElement, win: Window & typeof globalThis = 
     root.removeEventListener("click", onClick);
     reduce?.removeEventListener("change", schedule);
     short?.removeEventListener("change", schedule);
+    narrow?.removeEventListener("change", schedule);
     pause?.removeEventListener("change", schedule);
   };
 }

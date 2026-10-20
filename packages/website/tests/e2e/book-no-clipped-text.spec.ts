@@ -4,7 +4,7 @@ import { chapterPath } from "./fixtures/book";
 /**
  * Regression of the clipped stage numeral: "46 %" (chapter 1) lost its "%" beside the figure because the
  * numeral was fitted by a character count, not by the width of its box. Every step of the stage must hold
- * its numeral and its claim whole inside the head box, at a phone width and beside the figure.
+ * its numerals and its claim whole inside their boxes, at a phone width and beside the figure.
  * (The full sweep over all chapters, widths and steps is a scratch detector, not part of the smoke list.)
  */
 
@@ -14,20 +14,31 @@ const VIEWPORTS = [
   { width: 1440, height: 900 },
 ] as const;
 
+/**
+ * Each numeral and claim must sit whole inside its own box: the pinned numeral inside the head box (beside the
+ * figure; hidden below lg), the step numeral and the claim inside their step card (every width).
+ */
 async function overflowOfHeads(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const out: string[] = [];
     const stage = document.querySelector("[data-chapter-stage]")!;
-    const heads = stage.querySelector<HTMLElement>(".cs-heads")!;
-    const box = heads.getBoundingClientRect();
-    const pad = parseFloat(getComputedStyle(heads).paddingRight) || 0;
-    for (const el of Array.from(stage.querySelectorAll<HTMLElement>("[data-cs-numeral], [data-cs-claim]"))) {
+    const targets = Array.from(stage.querySelectorAll<HTMLElement>("[data-cs-numeral], .cs-step-numeral, [data-cs-claim]"));
+    for (const el of targets) {
       if (getComputedStyle(el.parentElement!).visibility === "hidden") continue;
+      const own = el.getBoundingClientRect();
+      if (own.width === 0 && own.height === 0) continue;
+      const holder = el.closest<HTMLElement>(".cs-heads, .cs-card")!;
+      const box = holder.getBoundingClientRect();
+      const pad = parseFloat(getComputedStyle(holder).paddingRight) || 0;
       const range = document.createRange();
       range.selectNodeContents(el);
+      // A numeral is set at line-height 0.88: its font's content area reaches below the line box, its ink (digits
+      // and "%", no descenders) does not. Its bottom is the line box; a claim's bottom is its text.
+      const numeral = !el.hasAttribute("data-cs-claim");
       for (const r of Array.from(range.getClientRects())) {
+        const bottom = numeral ? own.bottom : r.bottom;
         if (r.right > box.right - pad + 1) out.push(`${el.textContent} right +${Math.round(r.right - (box.right - pad))}px`);
-        if (r.bottom > box.bottom + 1) out.push(`${el.textContent} bottom +${Math.round(r.bottom - box.bottom)}px`);
+        if (bottom > box.bottom + 1) out.push(`${el.textContent} bottom +${Math.round(bottom - box.bottom)}px`);
       }
     }
     return out;

@@ -47,6 +47,42 @@ describe("ChapterStage markup", () => {
     expect(screen.getByTestId("enhancer")).toHaveAttribute("data-stage-runtime", "h01");
   });
 
+  it("puts the words of a step in its card (claim, sentence, unit line) and only the numeral in the pin", () => {
+    const { container } = stage();
+    const pin = container.querySelector<HTMLElement>(".cs-pin")!;
+    expect(pin.querySelector("[data-cs-numeral]")).not.toBeNull();
+    expect(pin).not.toHaveTextContent("Wer viel schreibt, schreibt KI");
+    expect(pin).not.toHaveTextContent("1 Quadrat = 21 Startseiten");
+    const card = container.querySelector<HTMLElement>(".cs-step[data-step-index='0'] .cs-card")!;
+    expect(card.querySelector("[data-cs-claim]")).toHaveTextContent("Wer viel schreibt, schreibt KI");
+    expect(card.querySelector("[data-cs-unit]")).toHaveTextContent("1 Quadrat = 21 Startseiten");
+    // The third step has no unit line: its card has none either.
+    expect(container.querySelector(".cs-step[data-step-index='2'] [data-cs-unit]")).toBeNull();
+  });
+
+  it("hands the strip its figure's measure, and marks a figure that does not fit the strip as inline", () => {
+    const fits = render(
+      <ChapterStage id="a" label="A" steps={STEPS} source={SOURCE} strip={{ fits: true, ratio: 0.441, controlPx: 46 }}>
+        <svg />
+      </ChapterStage>,
+    ).container.querySelector<HTMLElement>("[data-chapter-stage]")!;
+    expect(fits).not.toHaveAttribute("data-strip");
+    expect(fits.style.getPropertyValue("--cs-fig-ratio")).toBe("0.441");
+    expect(fits.style.getPropertyValue("--cs-fig-control")).toBe("46px");
+    const inline = render(
+      <ChapterStage id="b" label="B" steps={STEPS} source={SOURCE} strip={{ fits: false, ratio: 0.976, controlPx: 50 }}>
+        <svg />
+      </ChapterStage>,
+    ).container.querySelector<HTMLElement>("[data-chapter-stage]")!;
+    expect(inline).toHaveAttribute("data-strip", "inline");
+    const field = render(
+      <ChapterStage id="c" label="C" steps={STEPS} source={SOURCE} strip={{ fits: true, ratio: null, controlPx: 0 }}>
+        <svg />
+      </ChapterStage>,
+    ).container.querySelector<HTMLElement>("[data-chapter-stage]")!;
+    expect(field.style.getPropertyValue("--cs-fig-ratio")).toBe("");
+  });
+
   it("states every step as text: Schritt n von N, the numeral, the claim and the one-sentence card", () => {
     const { container } = stage();
     const items = container.querySelectorAll<HTMLElement>(".cs-step");
@@ -74,7 +110,7 @@ describe("ChapterStage markup", () => {
     expect(container.querySelector(".cs-ctl")).toHaveAttribute("role", "group");
   });
 
-  it("prints one head per step with its numeral and claim, shown by data-step in CSS", () => {
+  it("prints one head per step with its numeral, shown by data-step in CSS", () => {
     const { container } = stage();
     const heads = container.querySelectorAll(".cs-head");
     expect(heads).toHaveLength(3);
@@ -95,12 +131,27 @@ describe("ChapterStage markup", () => {
 describe("chapter-stage.css contract", () => {
   const css = readFileSync(join(__dirname, "chapter-stage.css"), "utf8");
 
-  it("pins a 58svh stage on a phone (one variable shared with the step blocks) and 60svh on wide screens, with step blocks that fill the gap above the reader bar on a phone and 70svh wide", () => {
-    expect(css).toMatch(/--cs-pin-h:\s*58svh/);
+  it("pins a strip of at most 44 % minus header and reader bar below lg (no taller than its figure needs), one variable shared with the step blocks, which fill the text window above the reader bar", () => {
+    expect(css).toMatch(/--cs-bar:\s*calc\(3\.25rem \+ 2px \+ env\(safe-area-inset-bottom, 0px\)\)/);
+    expect(css).toMatch(/--cs-pin-h:\s*min\(\s*clamp\(12rem, calc\(44svh - var\(--cs-top\) - var\(--cs-bar\)\), 20rem\),\s*calc\(min\(100cqw, 34rem\) \* var\(--cs-fig-ratio, 9\) \+ var\(--cs-fig-control, 0px\) \+ 4px\)\s*\)/);
+    expect(css).toMatch(/\.cs\s*\{[^}]*container-type:\s*inline-size/);
     expect(css).toMatch(/\.cs-pin\s*\{[^}]*height:\s*var\(--cs-pin-h\)/);
-    expect(css).toMatch(/\.cs-pin\s*\{[^}]*height:\s*60svh/);
-    expect(css).toMatch(/\.cs-step\s*\{[^}]*min-height:\s*max\(10rem, calc\(100svh/);
-    expect(css).toMatch(/\.cs-step\s*\{[^}]*min-height:\s*70svh/);
+    expect(css).toMatch(/\.cs-pin\s*\{[^}]*background:\s*var\(--cs-paper\)/);
+    expect(css).toMatch(/\.cs-pin\s*\{[^}]*border-block:\s*2px solid var\(--cs-ink\)/);
+    expect(css).toMatch(/\.cs-step\s*\{[^}]*min-height:\s*max\(10rem, calc\(100svh - var\(--cs-top\) - var\(--cs-pin-h\) - var\(--cs-bar\)\)\)/);
+  });
+
+  it("stands the pin beside a 62ch text column from lg, never taller than the window under the header", () => {
+    const wide = css.slice(css.indexOf("@media (min-width: 1024px)"));
+    expect(wide).toMatch(/--cs-pin-h:\s*calc\(100svh - var\(--cs-top\) - 1rem\)/);
+    expect(wide).toMatch(/grid-template-areas:\s*"steps pin"\s*"source source"/);
+    expect(wide).toMatch(/\.cs-steps\s*\{[^}]*max-width:\s*62ch/);
+    expect(wide).toMatch(/\.cs-step\s*\{[^}]*min-height:\s*70svh/);
+    expect(wide).toMatch(/\.cs-step:last-child\s*\{[^}]*min-height:\s*var\(--cs-pin-h\)/);
+  });
+
+  it("stands a stage inline below lg when its figure does not fit the strip", () => {
+    expect(css).toMatch(/@media \(max-width: 1023px\) \{\s*\.cs\[data-strip="inline"\] \.cs-pin \{[^}]*position:\s*static/);
   });
 
   it("decides the static layout in CSS only: reduced motion, no script, short screens, print and the pause switch", () => {
@@ -153,17 +204,15 @@ describe("the stage numeral keeps its whole string inside its box (the clipped \
     expect(card.style.getPropertyValue("--cs-em")).toBe(String(numeralEm("62x")));
   });
 
-  it("sizes the numeral by the width of its own box (cqw / em) in the pinned layout, and by the height too beside the figure", () => {
+  it("sizes the pinned numeral by the width of its own box (cqw / em) and by the window height", () => {
     expect(css).toMatch(/\.cs-heads\s*\{[^}]*container-type:\s*inline-size/);
-    expect(css).toMatch(/--n:\s*min\(min\(24\.6vw, 96px\), calc\(100cqw \/ var\(--cs-em, 3\)\)\)/);
-    expect(css).toMatch(/--n:\s*min\(clamp\(132px, 21\.9vw, 280px\), calc\(100cqw \/ var\(--cs-em, 3\)\), 46cqh\)/);
-    expect(css).toMatch(/\.cs-heads\s*\{[^}]*container-type:\s*size/);
+    expect(css).toMatch(/--n:\s*min\(clamp\(88px, 9vw, 160px\), 12svh, calc\(100cqw \/ var\(--cs-em, 3\)\)\)/);
     expect(css).toMatch(/\.cs-numeral\s*\{\s*font-size:\s*var\(--n\)/);
   });
 
-  it("fits the claim to the box (never wider than it) and the static numeral to its card", () => {
-    expect(css).toMatch(/\.cs-claim\s*\{[^}]*max-width:\s*min\(22ch, 100%\)/);
-    expect(css).toMatch(/\.cs-claim\s*\{[^}]*font-size:\s*max\(1\.125rem, min\(2\.75rem, 9\.5cqw/);
+  it("fits the card numeral to its card: 56px in the phone card, 64px in the static layout", () => {
+    expect(css).toMatch(/\.cs-step-numeral\s*\{[^}]*font-size:\s*min\(3\.5rem, calc\(100cqw \/ var\(--cs-em, 3\)\)\)/);
+    expect(css).toMatch(/\.cs-card\s*\{[^}]*container-type:\s*inline-size/);
     expect(css.match(/\.cs-step-numeral\s*\{\s*font-size:\s*min\(4rem, calc\(100cqw \/ var\(--cs-em, 3\)\)\)/g)?.length ?? 0).toBeGreaterThanOrEqual(2);
   });
 });

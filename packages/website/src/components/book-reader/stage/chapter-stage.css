@@ -7,8 +7,12 @@
  *   as text with its numeral, the figure once at its finished frame) is decided
  *   in CSS only, for reduced motion, no script, short screens, print and the
  *   chapter pause switch, so hydration never changes the layout.
- * - One giant numeral per screen, 132px at 390 and up to 280px beside the text.
- *   Claim 26px / 44px, step card 17px / 19px, unit line and labels 13px / 14px.
+ * - The pin is the picture, the step card the words. Below lg the pin is a strip
+ *   of at most 44 % of the screen (the text window keeps 56 %) with the figure
+ *   only, and the card carries numeral (56px), claim, sentence and unit line.
+ *   From lg the pin stands beside a 62ch text column with the numeral (88px to
+ *   160px) over the figure. Claim 20px / 28px, step card 17px / 19px, unit line
+ *   and labels 13px.
  *   Figtree everywhere; mono only inside the figure's numerals and ticks.
  * - Kalkweiss ground, Druckschwarz ink, Mennige only for the finding. No radius,
  *   no gradient, no shadow. Hover, focus and press use the anti colours: an ink
@@ -24,11 +28,20 @@
   --cs-hair: var(--color-hairline, #d4cec5);
   --cs-muted: var(--color-muted-foreground, #4f4640);
   --cs-top: var(--nav-h-compact, 3rem);
-  /* The pinned stage's height on a phone: the figure and the claim get most of the screen, the step sentence the
-     rest above the reader bar. One variable so the pin, the step blocks and the scroll margins agree. */
-  --cs-pin-h: 58svh;
+  /* The reader bar below lg (insight-focus-bar.css): its row, its 2px rule and the device inset. */
+  --cs-bar: calc(3.25rem + 2px + env(safe-area-inset-bottom, 0px));
+  /* The pinned stage's height below lg: at most 44 % of the screen minus the header and the reader bar, so
+     the text window under it is always 56 % of the screen or more (12rem to 20rem), and never taller than the
+     figure's smallest layout needs at the strip's width (--cs-fig-ratio and --cs-fig-control from strip-fit.ts;
+     the figure is at most 34rem wide in the strip, hero.css). One variable so the pin, the step blocks and the
+     scroll margins agree. */
+  --cs-pin-h: min(
+    clamp(12rem, calc(44svh - var(--cs-top) - var(--cs-bar)), 20rem),
+    calc(min(100cqw, 34rem) * var(--cs-fig-ratio, 9) + var(--cs-fig-control, 0px) + 4px)
+  );
 
   position: relative;
+  container-type: inline-size;
   margin: 0 0 2.5rem;
   color: var(--cs-ink);
   scroll-margin-top: calc(var(--cs-top) + 1rem);
@@ -42,39 +55,46 @@
   }
 }
 
+/* The compact pin (below lg) holds the figure and its own control, nothing else: the numeral, the claim and
+   the unit line are the step card in the text window (the same card as the static layout). A solid ground and
+   a 2px rule on both edges, so the text scrolls under it, never shows through, and the reader sees where the
+   pin ends. */
 .cs-pin {
   position: sticky;
   top: var(--cs-top);
   z-index: 2;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-areas: "view";
   height: var(--cs-pin-h);
-  min-height: 24rem;
   background: var(--cs-paper);
   border-block: 2px solid var(--cs-ink);
 }
 
+/* Below lg the numeral is the card's (.cs-step-numeral). */
+@media (max-width: 1023px) {
+  .cs-pin > .cs-heads {
+    display: none;
+  }
+}
+
 /* ---------------------------------------------------------------- heads */
 
+/* The heads of all steps share one grid cell, so the cell is as tall as the tallest one and the stage never
+   changes height when the step changes (no layout shift when the script takes over). Only the active one is
+   visible. data-step is the only thing the shell writes while scrubbing. */
 .cs-heads {
+  grid-area: heads;
   position: relative;
-  flex: none;
-  padding: 0.75rem 1rem 0;
+  display: grid;
+  padding: 0.75rem 0 0.5rem;
   /* The numeral fits the width of this box (cqw), so its whole string stays inside it. */
   container-type: inline-size;
   container-name: cs-heads;
 }
 
-/* The heads and the unit texts of all steps share one grid cell, so the cell is as tall as the tallest one and
-   the stage never changes height when the step changes (no layout shift when the script takes over). Only the
-   active one is visible. data-step is the only thing the shell writes while scrubbing. */
-.cs-heads,
-.cs-unit {
-  display: grid;
-}
-
-.cs-head,
-.cs-unit-text {
+.cs-head {
   display: block;
   grid-area: 1 / 1;
   visibility: hidden;
@@ -86,15 +106,6 @@
 .cs[data-step="3"] .cs-head[data-for="3"],
 .cs[data-step="4"] .cs-head[data-for="4"],
 .cs[data-step="5"] .cs-head[data-for="5"] {
-  visibility: visible;
-}
-
-.cs[data-step="0"] .cs-unit-text[data-for="0"],
-.cs[data-step="1"] .cs-unit-text[data-for="1"],
-.cs[data-step="2"] .cs-unit-text[data-for="2"],
-.cs[data-step="3"] .cs-unit-text[data-for="3"],
-.cs[data-step="4"] .cs-unit-text[data-for="4"],
-.cs[data-step="5"] .cs-unit-text[data-for="5"] {
   visibility: visible;
 }
 
@@ -110,32 +121,21 @@
 }
 
 /* --cs-em is the numeral's width in em (set per numeral): the size is the wanted one, or less when the string
-   would not fit its box. The unit sign counts, so "46 %" never loses its "%". */
+   would not fit its box. The unit sign counts, so "46 %" never loses its "%". The pinned numeral is a wide
+   screen's (below lg the numeral is the card's, .cs-step-numeral). */
 .cs-head {
-  /* The numeral's size (--n) is set on the head so the claim can read it. */
-  --n: min(min(24.6vw, 96px), calc(100cqw / var(--cs-em, 3)));
+  --n: min(clamp(88px, 9vw, 160px), 12svh, calc(100cqw / var(--cs-em, 3)));
 }
 
 .cs-numeral {
   font-size: var(--n);
 }
 
-.cs-claim {
-  max-width: min(22ch, 100%);
-  overflow-wrap: break-word;
-  margin: 0.25rem 0 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-  text-wrap: balance;
-}
-
 /* ----------------------------------------------------------------- view */
 
 .cs-view {
+  grid-area: view;
   position: relative;
-  flex: 1 1 0;
   min-height: 0;
   overflow: hidden;
 }
@@ -144,29 +144,20 @@
   max-height: 100%;
 }
 
-.cs-unit {
-  flex: none;
-  margin: 0;
-  padding: 0.25rem 1rem;
-  font-size: 0.8125rem;
-  line-height: 1.3;
-  color: var(--cs-muted);
-}
-
 /* ------------------------------------------------------------- controls */
 
 .cs-ctl {
-  flex: none;
+  grid-area: ctl;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 0.5rem;
-  padding: 0.25rem 1rem 0.5rem;
+  padding: 0.25rem 0 0.5rem;
 }
 
 @media (max-width: 1023px) {
   /* The reader bar below lg is the step control (insight-focus-bar.tsx presses these buttons), so the
-     pinned stage keeps its whole height for the numeral, the claim and the figure. */
+     pinned strip keeps its whole height for the figure. */
   .cs-ctl {
     display: none;
   }
@@ -242,34 +233,15 @@
   list-style: none;
 }
 
-/* A step block is as tall as the gap between the pin and the reader bar (which is where the reading line
-   sits), so at load the first card is already centred on the line: the first screen shows the data and its
-   sentence, and one swipe of a block's height moves one step. Wide screens keep their own height below. */
+/* A step block is as tall as the text window between the pin and the reader bar (where the reading line
+   sits), so a card centred by Weiter starts at the top of that window, and one swipe of a block's height
+   moves one step. Wide screens keep their own height below. */
 .cs-step {
   display: flex;
   align-items: center;
-  min-height: max(10rem, calc(100svh - var(--cs-top) - var(--cs-pin-h) - var(--tabbar-h, 3.5rem) - env(safe-area-inset-bottom, 0px)));
+  min-height: max(10rem, calc(100svh - var(--cs-top) - var(--cs-pin-h) - var(--cs-bar)));
   padding: 0 1rem;
   scroll-margin-top: calc(var(--cs-top) + var(--cs-pin-h));
-}
-
-@media (max-width: 1023px) {
-  /* The card sits directly under the stage rule (no dead band above it), and the reader bar already says
-     "Schritt n von N", so the label stays for assistive technology only. */
-  .cs-step {
-    align-items: flex-start;
-    padding-top: 0.75rem;
-  }
-
-  .cs-card-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
 }
 
 .cs-card {
@@ -292,11 +264,59 @@
   line-height: 1.45;
 }
 
-/* Static-only parts of a step: its own numeral and claim. */
-.cs-step-numeral,
-.cs-step-claim,
-.cs-step-unit {
+/* The card is the words of a step: the claim as its headline, the sentence, the unit line; its own numeral only
+   where the pin shows none (below lg and the static layout). */
+.cs-step-numeral {
   display: none;
+}
+
+.cs-step-unit {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--cs-muted);
+}
+
+.cs-step-claim {
+  max-width: 26ch;
+  margin: 0 0 0.375rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+@media (max-width: 1023px) {
+  /* The card sits directly under the pin's rule (no dead band, no second rule above it), and the reader bar
+     already says "Schritt n von N", so the label stays for assistive technology only. */
+  .cs-step {
+    display: block;
+    padding-top: 1rem;
+  }
+
+  .cs-card {
+    padding-top: 0;
+    border-top: 0;
+    /* The box the card's numeral must fit. */
+    container-type: inline-size;
+  }
+
+  .cs-step-numeral {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: min(3.5rem, calc(100cqw / var(--cs-em, 3)));
+  }
+
+  .cs-card-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 .cs-source {
@@ -304,75 +324,61 @@
 }
 
 /* --------------------------------------------------------- wide screens
- * The same stage, wider: the pin splits into numeral and claim on the left and
- * the figure on the right (the figure bleeds to the right edge of the column);
- * the step cards still scroll past below it, so one reading line serves both.
+ * Classic scrollytelling: the step cards are a text column on the left
+ * (62ch at most), the picture (numeral, figure, Zurück and Weiter) is pinned
+ * beside it, never taller than the window under the header. The
+ * reading line is the middle of that window (stage-controller.ts).
  */
 
 @media (min-width: 1024px) {
   .cs {
     --cs-top: calc(var(--nav-h, 4rem) + 1rem);
+    --cs-pin-h: calc(100svh - var(--cs-top) - 1rem);
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
+    grid-template-areas:
+      "steps pin"
+      "source source";
+    column-gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: start;
   }
 
   .cs-pin {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-    grid-template-rows: minmax(0, 1fr) auto auto;
+    grid-area: pin;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      "heads view"
-      "unit view"
-      "ctl ctl";
-    column-gap: 2rem;
-    height: 60svh;
+      "heads"
+      "view"
+      "ctl";
+    column-gap: 0;
     border-block: 0;
     border-top: 2px solid var(--cs-ink);
   }
 
-  .cs-heads {
-    grid-area: heads;
-    padding: 0.75rem 0 0;
-    overflow: hidden;
-  }
-
-  .cs-view {
-    grid-area: view;
-    align-self: stretch;
-  }
-
-  .cs-unit {
-    grid-area: unit;
-    align-self: end;
-  }
-
-  .cs-ctl {
-    grid-area: ctl;
-  }
-
-  .cs-heads {
-    /* A size container: the numeral and the claim fit the box the grid leaves them in both directions, so
-       neither is clipped by the overflow rule above, whatever the window's height. */
-    container-type: size;
-  }
-
-  .cs-head {
-    --n: min(clamp(132px, 21.9vw, 280px), calc(100cqw / var(--cs-em, 3)), 46cqh);
-  }
-
-  /* Claim: the wanted size, or less when four lines of it would not fit under the numeral. */
-  .cs-claim {
-    font-size: max(1.125rem, min(2.75rem, 9.5cqw, calc((100cqh - 1.5rem - var(--n) * 0.88) / 4.6)));
-    max-width: min(18ch, 100%);
-  }
-
-  .cs-unit,
-  .cs-ctl {
-    padding-inline: 0;
+  .cs-steps {
+    grid-area: steps;
+    max-width: 62ch;
   }
 
   .cs-step {
     min-height: 70svh;
     padding: 0;
-    scroll-margin-top: calc(var(--cs-top) + 60svh);
+    scroll-margin-top: var(--cs-top);
+  }
+
+  /* The last card centred on the reading line still has the whole pin beside it: the column ends where the
+     pin ends, so the pin never slides under the header while its last step is read. */
+  .cs-step:last-child {
+    min-height: var(--cs-pin-h);
+  }
+
+  .cs-step-claim {
+    max-width: 22ch;
+    margin-bottom: 0.625rem;
+    font-size: 1.75rem;
+    line-height: 1.15;
   }
 
   .cs-card-text {
@@ -380,7 +386,40 @@
   }
 
   .cs-source {
+    grid-area: source;
     padding: 0;
+  }
+}
+
+/* ---------------------------------------------------------- inline stage
+ * A figure that cannot keep 11px labels in the strip (strip-fit.ts, server
+ * markup data-strip="inline") is not pinned below lg: the figure stands once at
+ * its natural size and every step card (already numeral, claim, sentence and
+ * unit line below lg) follows it, as in the static layout.
+ */
+
+@media (max-width: 1023px) {
+  .cs[data-strip="inline"] .cs-pin {
+    position: static;
+    display: block;
+    height: auto;
+    border-bottom: 0;
+  }
+
+  .cs[data-strip="inline"] .cs-view {
+    min-height: 14rem;
+    overflow: visible;
+  }
+
+  .cs[data-strip="inline"] .cs-step {
+    min-height: 0;
+    padding-block: 1.25rem 0;
+    scroll-margin-top: 1rem;
+  }
+
+  .cs[data-strip="inline"] .cs-card {
+    padding-top: 0.625rem;
+    border-top: 2px solid var(--cs-ink);
   }
 }
 
@@ -397,6 +436,7 @@
 
   .cs-pin {
     position: static;
+    display: block;
     height: auto;
     min-height: 0;
     border-bottom: 0;
@@ -450,6 +490,8 @@
 
   .cs-card {
     margin-top: 0.75rem;
+    padding-top: 0.625rem;
+    border-top: 2px solid var(--cs-ink);
   }
 }
 
@@ -459,6 +501,7 @@
 
 .cs-chapter:has(.cs-pause-input:checked) .cs-pin {
   position: static;
+  display: block;
   height: auto;
   min-height: 0;
   border-bottom: 0;
@@ -510,6 +553,8 @@
 
 .cs-chapter:has(.cs-pause-input:checked) .cs-card {
   margin-top: 0.75rem;
+  padding-top: 0.625rem;
+  border-top: 2px solid var(--cs-ink);
 }
 
 /* ------------------------------------------------------- the pause switch

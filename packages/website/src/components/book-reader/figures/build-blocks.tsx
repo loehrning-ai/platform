@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { sourceLineFieldsOf } from "@/components/book-figures/shared/source-line";
 import type { ChapterSegment } from "@/components/book-reader/chapter-markdown";
 import { ChapterStage } from "@/components/book-reader/stage/chapter-stage";
+import { stripFit } from "@/components/book-reader/stage/strip-fit";
 import { stageCopyProblems, type StageStepCopy } from "@/components/book-reader/stage/stage-protocol";
 import { Explorer } from "@/components/book-reader/explorer/explorer";
 import { figureKey, type Directive } from "@/lib/book-directives";
@@ -77,6 +78,7 @@ function buildStage(figures: BookFigures, locale: Locale, directive: Directive):
       source={sourceLineFieldsOf(spec)}
       locale={locale === "en" ? "en" : "de"}
       csv={[{ href: `${ctx.dataBase}/${spec.id}.csv`, label: "Daten als CSV", fileName: `${spec.id}.csv` }]}
+      strip={stripFit(spec)}
     >
       {island}
     </ChapterStage>
