@@ -19,8 +19,7 @@ inventory. It covers every static, public, indexable page plus at least one
 published representative for every dynamic public route pattern. This includes
 the homepage and learning entry points, course and book readers, editorial and
 open-source pages, interactive demos, informational pages, and legal pages.
-`bun run lighthouse:check` fails on missing, duplicate, stale, non-canonical,
-or non-indexable entries. The documentation deliberately does not copy the
+No script validates the list; keep entries canonical, indexable and unique by hand. The documentation deliberately does not copy the
 route list, preventing a second inventory from drifting.
 
 ## Assertions (`assert.assertions`)
@@ -63,7 +62,7 @@ missing or stale receipt.
 The nightly run measures `/`, `/ai-native`, the published
 blog article, `/buecher`, and the data-science course overview three times each,
 spanning the main rendering modes. Pull requests do not run Lighthouse. The
-release runner uses `lighthouse:release:built` after deterministic verification;
+release runner uses `lighthouse:release:built` after the static, unit and build steps;
 it rejects a changed build receipt and covers every configured route three
 times using the median result before the browser journey gates.
 

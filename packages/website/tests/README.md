@@ -23,14 +23,10 @@ build output changed while the gate was running.
   Chromium and WebKit (`chromium`, `mobile-chromium`, `mobile-webkit`
   projects). Covers the public route matrix, open-source routes, and
   structural accessibility. The nightly workflow runs every Chromium spec and
-  the smoke list on WebKit. Run locally with `bun run test:e2e` (full default
-  graph, builds first) or `bun run test:e2e:public` (public-route subset).
+  the smoke list on WebKit. Run locally with `bun run test:e2e` (desktop and phone Chromium, builds
+  first); narrow it with `bun run --cwd packages/website e2e:shard:built test <spec>` after a build.
   `bun run test:e2e:dev` runs against the dev server instead of a production
   build. Set `E2E_FAIL_ON_FLAKY=1` to count a pass-on-retry as a failure.
-- **Auth scaffold (provider-free, local only):** the `auth-scaffold` project writes a
-  deterministic mock cookie and proves storage-state wiring plus fail-closed
-  signed-out behavior for `*.authed.spec.ts` files. It is not live login
-  proof. Run with `bun run test:e2e:auth-scaffold`.
 - **Konto DOM, mocked session (runs nightly):** the `konto-dom-mocked` project
   builds with three fictional-but-well-formed public Supabase variables and
   serves the endpoints the server calls during SSR from an in-process preload
@@ -72,7 +68,7 @@ fixed redaction marker is absent, or if the separately validated structured
 API log is lost.
 
 `bun run test:server-log-privacy:built` reuses `.next` and is valid only after
-`bun run ci:browser` (or `bun run verify:legacy`) has produced a
+`bun run ci:browser` has produced a
 receipt-matching provider-free build from the same checkout. The preload is test-only, does not add or remove process
 listeners, and is activated only inside the probe subprocess.
 
