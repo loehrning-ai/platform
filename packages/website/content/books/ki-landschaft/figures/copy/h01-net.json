@@ -1,0 +1,42 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "roh",
+        "label": "Ohne Textkontrolle",
+        "text": "{{h01-net.nodes}} Merkmale. Jede Linie: mindestens doppelt so oft zusammen wie Zufall.",
+        "numeral": "{{h01-net.edges_raw}}",
+        "claim": "So viele Verbindungen zeigt das Netz ohne Textkontrolle.",
+        "unit": "1 Punkt = 1 Merkmal, 1 Linie = mindestens doppelt so oft zusammen",
+        "variant": "s1"
+      },
+      {
+        "id": "drei",
+        "label": "Drei Textstufen",
+        "text": "Vergleicht man nur Seiten mit ähnlich viel Text, in drei Stufen, bleiben {{h01-net.edges_s3}} Verbindungen.",
+        "numeral": "{{h01-net.edges_s3}}",
+        "claim": "Schon drei Textstufen lassen viele Linien fallen.",
+        "unit": "1 Punkt = 1 Merkmal, 1 Linie = mindestens doppelt so oft zusammen",
+        "variant": "s3"
+      },
+      {
+        "id": "zehn",
+        "label": "Zehn Textstufen",
+        "text": "Bei zehn Stufen bleiben {{h01-net.edges_s10}} Verbindungen, bei 50 und 100 Stufen {{h01-net.edges_s50}} und {{h01-net.edges_s100}}.",
+        "numeral": "{{h01-net.edges_s10}}",
+        "claim": "Bei zehn Textstufen halbiert sich das Netz.",
+        "unit": "1 Punkt = 1 Merkmal, 1 Linie = mindestens doppelt so oft zusammen",
+        "variant": "s10"
+      },
+      {
+        "id": "ki",
+        "label": "Woran KI hängt",
+        "text": "Das Wort KI bleibt vor allem mit Digitalisierung ({{h01-net.or_digitalisierung}}), Cyber ({{h01-net.or_cyber_phishing}}) und NIS2 ({{h01-net.or_nis2_esg_lksg}}) verbunden.",
+        "numeral": "{{h01-net.or_digitalisierung}}",
+        "claim": "An KI hängen vor allem Digitalisierung, Cyber und NIS2.",
+        "unit": "1 Punkt = 1 Merkmal, 1 Linie = mindestens doppelt so oft zusammen",
+        "variant": "s10"
+      }
+    ]
+  }
+}

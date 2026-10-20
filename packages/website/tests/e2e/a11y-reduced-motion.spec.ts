@@ -4,6 +4,7 @@ import {
   formatBrowserErrors,
   meaningfulBrowserErrors,
 } from "./fixtures/console";
+import { chapterPath, chapters } from "./fixtures/book";
 import { revealSweepDeadline, sweepReveals } from "./fixtures/settle";
 
 /**
@@ -25,7 +26,7 @@ import { revealSweepDeadline, sweepReveals } from "./fixtures/settle";
 test.use({ contextOptions: { reducedMotion: "reduce" } });
 test.describe.configure({ timeout: 60_000 });
 
-const CHAPTER = "/buecher/ki-landschaft/04_branche_land";
+const CHAPTER = chapterPath(chapters()[1]!.slug);
 const HOMEPAGE_STATIC_REVEAL_ROOTS =
   '[data-testid="kurse-section"], [data-testid="ressourcen-section"]';
 
@@ -314,6 +315,6 @@ test.describe("reduced-motion content visibility", () => {
   });
 
   test("book chapter reader renders fully visible", async ({ page }) => {
-    await expectReducedMotionHonored(page, CHAPTER, /Branche schlägt Land/);
+    await expectReducedMotionHonored(page, CHAPTER, new RegExp(chapters()[1]!.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   });
 });

@@ -1,0 +1,174 @@
+{
+  "id": "h05-dots",
+  "kind": "waffle",
+  "title": "Bei 41 von 89 fehlt das KI-Wort im zweiten Scan",
+  "alt": "Dieselben 840 Websites wurden im Abstand von etwa 16 Tagen zweimal gescannt. Im ersten Scan hatten 89 das Wort KI, im zweiten fehlt es bei 41 von ihnen. Nur 5 Websites kamen im zweiten Scan hinzu.",
+  "caption": "840 Websites zweimal gescannt. KI-Wort im ersten Scan 10,6 %, im zweiten 6,3 % (Verhältnis 1,68, Intervall 1,40 bis 2,09). 41 von 89 verloren (46 %, Intervall 36 bis 56 %).",
+  "n": 89,
+  "nNote": "840 Websites in beiden Scans, 89 mit KI-Wort im ersten",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-19",
+  "limitation": "Im ersten Scan war bei 97,5 Prozent der Seiten (819 von 840) kein Seitentext gespeichert, im zweiten bei keiner; die Treffer wurden beim Abruf erkannt. Welche Kamera näher an der Wahrheit liegt, wissen wir nicht. Die Auswahl der 840 Websites ist keine Zufallsauswahl, zwischen den Scans liegen bis zu 26 Tage.",
+  "sourceLine": "n = 840 Websites, zweimal gescannt · 16 Tage Abstand im Median · Erster Scan: bei 97,5 % der Seiten (819 von 840) kein Seitentext gespeichert, Treffer beim Abruf erkannt · Grenze: Auswahl nicht zufällig; welche Kamera stimmt, ist offen · Wird vom Rescan geprüft.",
+  "steps": [
+    {
+      "id": "alle",
+      "label": "89 Treffer im ersten Scan",
+      "reveal": [
+        "kept",
+        "lost"
+      ]
+    },
+    {
+      "id": "weg",
+      "label": "41 fehlen im zweiten Scan",
+      "focus": [
+        "lost"
+      ]
+    },
+    {
+      "id": "anteil",
+      "label": "Fast jeder zweite Treffer",
+      "focus": [
+        "lost"
+      ]
+    }
+  ],
+  "data": {
+    "total": 89,
+    "columns": 10,
+    "headline": "41 von 89",
+    "groups": [
+      {
+        "id": "kept",
+        "label": "Wieder gefunden",
+        "dots": 48,
+        "tone": "ink"
+      },
+      {
+        "id": "lost",
+        "label": "Im zweiten Scan weg",
+        "dots": 41,
+        "tone": "accent"
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 89,
+    "base": "Firmenwebsites mit eigener Adresse, die zweimal gescannt wurden",
+    "window": "2026-03-16 bis 2026-04-12",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+    "hero": "H05",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "pairs": {
+        "value": 840.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "first_hits": {
+        "value": 89.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "lost_hits": {
+        "value": 41.0,
+        "n": 89,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "kept_hits": {
+        "value": 48.0,
+        "n": 89,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_lost": {
+        "value": 46.0674,
+        "lo": 36.0895,
+        "hi": 56.3707,
+        "n": 89,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "rescan_first": {
+        "value": 10.5952,
+        "n": 840,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rescan_second": {
+        "value": 6.30952,
+        "n": 840,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rescan_ratio": {
+        "value": 1.67925,
+        "lo": 1.39651,
+        "hi": 2.09308,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "rescan_days": {
+        "value": 16.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "new_hits": {
+        "value": 5.0,
+        "n": 751,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "new_share": {
+        "value": 0.665779,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "mcnemar_p": {
+        "value": 4e-08,
+        "fmt": {
+          "style": "decimal",
+          "digits": 8
+        }
+      },
+      "text_missing_first": {
+        "value": 97.5,
+        "lo": 96.2084,
+        "hi": 98.3591,
+        "n": 840,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

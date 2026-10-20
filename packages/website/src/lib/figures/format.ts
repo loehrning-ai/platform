@@ -16,17 +16,20 @@ function roundHalfAwayFromZero(v: number, digits: number): number {
 }
 
 /** 25581 -> "25.581", 4.04 -> "4,0". Four-digit numbers get the separator too. */
-export function formatDecimal(value: number, digits = 0, signed = false): string {
+export function formatDecimal(value: number, digits = 0, signed = false, lang: "de" | "en" = "de"): string {
   if (!Number.isFinite(value)) return "";
   const rounded = roundHalfAwayFromZero(value, digits);
   const abs = Math.abs(rounded).toFixed(digits);
   const [intPart = "0", frac] = abs.split(".");
-  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  const body = frac === undefined ? grouped : `${grouped},${frac}`;
+  const en = lang === "en";
+  const grouped = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, en ? "," : ".");
+  const body = frac === undefined ? grouped : `${grouped}${en ? "." : ","}${frac}`;
   if (rounded < 0) return `${MINUS}${body}`;
   if (signed && rounded > 0) return `+${body}`;
   return body;
 }
+
+export type NumLang = "de" | "en";
 
 function digitsOf(fmt: NumFmt): number {
   if (fmt.digits !== undefined) return fmt.digits;
@@ -43,19 +46,20 @@ export function formatValue(
   fmt: NumFmt,
   value: number | null,
   signed = false,
+  lang: NumLang = "de",
 ): string {
-  if (value === null) return SUPPRESSED_LABEL;
-  return `${formatDecimal(value, digitsOf(fmt), signed)}${unitSuffix(fmt)}`;
+  if (value === null) return lang === "en" ? "fewer than 5" : SUPPRESSED_LABEL;
+  return `${formatDecimal(value, digitsOf(fmt), signed, lang)}${unitSuffix(fmt)}`;
 }
 
 /** Just the number, without unit. */
-export function formatBare(fmt: NumFmt, value: number): string {
-  return formatDecimal(value, digitsOf(fmt));
+export function formatBare(fmt: NumFmt, value: number, lang: NumLang = "de"): string {
+  return formatDecimal(value, digitsOf(fmt), false, lang);
 }
 
 /** "3,7 bis 4,2 %" */
-export function formatInterval(fmt: NumFmt, lo: number, hi: number): string {
-  return `${formatBare(fmt, lo)} bis ${formatBare(fmt, hi)}${unitSuffix(fmt)}`;
+export function formatInterval(fmt: NumFmt, lo: number, hi: number, lang: NumLang = "de"): string {
+  return `${formatBare(fmt, lo, lang)} ${lang === "en" ? "to" : "bis"} ${formatBare(fmt, hi, lang)}${unitSuffix(fmt)}`;
 }
 
 /** "3,7 bis 4,2" without unit, for tight places. */

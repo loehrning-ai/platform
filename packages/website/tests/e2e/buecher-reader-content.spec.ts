@@ -5,23 +5,26 @@ import {
   meaningfulBrowserErrors,
 } from "./fixtures/console";
 
+import { BOOK, BOOK_PATH, chapters, chaptersMatching } from "./fixtures/book";
+
 /**
  * Book reader content fidelity (regression coverage). The open, login-free HTML
  * reader renders chapter Markdown (remark-gfm + rehype-slug) into prose. Tests
  * assert STRUCTURE and stable strings (roles, manifest titles, encoding), never
- * exact prose, so the in-flight content refresh stays green while a real
- * regression (dropped table, broken umlaut encoding, missing reading time) fails.
- * Deep-dive target ki-landschaft / 08_methodik ships a real GFM
- * table, `##` section headings, and an umlaut-bearing manifest title.
+ * exact prose, so a content refresh stays green while a real regression
+ * (dropped table, broken umlaut encoding, a second h1) fails. The chapter under
+ * test is the first one of the manifest whose source holds a GFM table (the
+ * sources page of the insight spine), else the last chapter.
  */
 
-const BOOK = "ki-landschaft";
-const CHAPTER = "08_methodik";
-const CHAPTER_URL = `/buecher/${BOOK}/${CHAPTER}`;
-const CHAPTER_TITLE = "Methode und Grenzen"; // manifest.json title
+const TABLE_CHAPTER = chaptersMatching(/^\|.+\|\s*$/m)[0];
+const CHAPTER_META = (TABLE_CHAPTER ?? chapters()[chapters().length - 1]) as { slug: string; title: string };
+const CHAPTER = CHAPTER_META.slug;
+const CHAPTER_URL = `${BOOK_PATH}/${CHAPTER}`;
+const CHAPTER_TITLE = CHAPTER_META.title; // manifest.json title
 
 test.describe("book chapter reader content fidelity", () => {
-  test("loads without login and shows a real heading outline", async ({ page }) => {
+  test("loads without login and shows its title as the one h1", async ({ page }) => {
     const errors = collectBrowserErrors(page);
     const res = await page.goto(CHAPTER_URL, { waitUntil: "domcontentloaded" });
 
@@ -33,10 +36,9 @@ test.describe("book chapter reader content fidelity", () => {
     await expect(h1).toHaveCount(1);
     await expect(h1).toContainText(CHAPTER_TITLE);
 
-    // Body renders `##` section headings -> a real outline, not a wall of text.
-    expect(
-      await page.getByRole("heading", { level: 2 }).count(),
-    ).toBeGreaterThanOrEqual(1);
+    // The insight chapters are short: the band, one h1, and nothing that hides content.
+    await expect(page.locator("[data-cover-band]")).toContainText(/Kapitel \d+ von \d+/);
+    await expect(page.locator("main details, main summary")).toHaveCount(0);
 
     const noise = meaningfulBrowserErrors(errors);
     expect(
@@ -46,6 +48,7 @@ test.describe("book chapter reader content fidelity", () => {
   });
 
   test("renders GFM tables as real, non-clipped <table> elements", async ({ page }) => {
+    test.skip(!TABLE_CHAPTER, "no chapter of the manifest holds a GFM table yet");
     // The ArrowRight ownership check below exercises a client key handler.
     // Wait for the production client island instead of focusing server HTML
     // that hydration may replace between focus and keyup.
@@ -108,14 +111,13 @@ test.describe("book chapter reader content fidelity", () => {
     ).toBeNull();
   });
 
-  test("shows the lib-computed reading time on the chapter", async ({ page }) => {
+  test("states the chapter number and the visible chapter list instead of a reading time", async ({ page }) => {
     await page.goto(CHAPTER_URL, { waitUntil: "domcontentloaded" });
-
-    // chapter-reader header: "Lesezeit: ca. <N> Minute(n)", N = computeReadingTime
-    // (Math.floor(words/200), min 1) -> an integer.
-    await expect(
-      page.getByText(/Lesezeit:\s*ca\.\s*\d+\s*Minute(?:n)?/).first(),
-    ).toBeVisible();
+    await expect(page.getByText(/Lesezeit/)).toHaveCount(0);
+    const list = page.getByRole("navigation", { name: "Alle Kapitel des Buchs" });
+    await expect(list).toBeVisible();
+    await expect(list.getByRole("listitem")).toHaveCount(chapters().length);
+    await expect(list.locator('a[aria-current="page"]')).toHaveCount(1);
   });
 
   test("renders German umlauts correctly in prose (no mojibake)", async ({ page }) => {
@@ -132,20 +134,17 @@ test.describe("book chapter reader content fidelity", () => {
     expect(prose).not.toContain("�");
     expect(prose).not.toMatch(/Ã[¤¶¼]/);
 
-    // A stable word of the manifest title also renders as a heading.
+    // The manifest title renders as the one heading.
     const title = page.getByRole("heading", { level: 1 });
     await expect(title).toHaveCount(1);
-    await expect(title).toContainText("Grenzen");
+    await expect(title).toContainText(CHAPTER_TITLE);
   });
 });
 
-test.describe("book overview reading time", () => {
-  test("lists the book reading time as a Min. value", async ({ page }) => {
-    await page.goto(`/buecher/${BOOK}`, { waitUntil: "domcontentloaded" });
-
-    // Overview h1 is the book title (books.ts, stable) ...
+test.describe("book cover", () => {
+  test("keeps the book title on the cover and lists every chapter without a reading time", async ({ page }) => {
+    await page.goto(BOOK_PATH, { waitUntil: "domcontentloaded" });
     await expect(page.getByRole("heading", { level: 1 })).toContainText("außen");
-    // ... and the header meta shows the reading time as "ca. <N> Min."
-    await expect(page.getByText(/ca\.\s*\d+\s*Min\./).first()).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Alle Kapitel des Buchs" }).getByRole("listitem")).toHaveCount(chapters().length);
   });
 });

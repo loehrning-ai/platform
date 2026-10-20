@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { formatDateDe, formatDecimal, type FigureTable } from "@/lib/figures";
+import type { FigureTable } from "@/lib/figures";
 import { columnDigits, csvDataUri, formatCell, tableToCsv } from "./csv";
+import { SourceLine, sourceLineFieldsOf } from "../shared/source-line";
 import type { FigureMeta } from "./types";
 import "./book-figures.css";
 
@@ -23,16 +24,11 @@ interface FigureFrameProps {
   readonly children: ReactNode;
 }
 
-function nLine(meta: FigureMeta): string {
-  const n = `n = ${formatDecimal(meta.n, 0)}`;
-  return meta.nNote ? `${n} (${meta.nNote})` : n;
-}
-
 function DataTableView({ item, label }: { readonly item: DataTableSpec; readonly label: string }) {
   const { table } = item;
   const digits = columnDigits(table);
   return (
-    <div className="bf-table-wrap" role="region" aria-label={label} tabIndex={0}>
+    <div className="bf-table-wrap" role="region" aria-label={label}>
       <table className="bf-table">
         <caption className="bf-sr">{label}</caption>
         <thead>
@@ -61,10 +57,12 @@ function DataTableView({ item, label }: { readonly item: DataTableSpec; readonly
 }
 
 /**
- * "Daten & Grenzen": what the figure rests on, what it cannot say, and the
- * exact plotted numbers as a table and as CSV. Server markup, no script.
+ * What a figure rests on, printed and never hidden: the plotted numbers as a
+ * table for assistive technology (visually hidden, not focusable, so a
+ * sighted keyboard never lands on nothing) and one visible source line with
+ * the CSV link. Server markup, no script.
  */
-export function DataAndLimits({
+export function SourceAndTables({
   meta,
   tables,
 }: {
@@ -73,42 +71,25 @@ export function DataAndLimits({
 }) {
   const several = tables.length > 1;
   return (
-    <details className="bf-data" data-bf-data={meta.id}>
-      <summary>{"Daten & Grenzen"}</summary>
-      <dl className="bf-dl">
-        <dt>Stichprobe</dt>
-        <dd>{nLine(meta)}</dd>
-        <dt>Quelle</dt>
-        <dd>{meta.source}</dd>
-        <dt>Stand</dt>
-        <dd>{formatDateDe(meta.asOf)}</dd>
-        <dt>Grenzen</dt>
-        <dd>{meta.limitation}</dd>
-      </dl>
-      {tables.map((item) => (
-        <DataTableView
-          key={item.fileStem}
-          item={item}
-          label={`Zahlen der Abbildung: ${item.title}`}
-        />
-      ))}
-      <p>
+    <div className="bf-source-block" data-bf-source={meta.id}>
+      <div className="bf-sr">
         {tables.map((item) => (
-          <a
-            key={item.fileStem}
-            className="bf-csv"
-            href={item.href ?? csvDataUri(tableToCsv(item.table))}
-            download={`${item.fileStem}.csv`}
-          >
-            {several ? `CSV: ${item.title}` : "Daten als CSV laden"}
-          </a>
+          <DataTableView key={item.fileStem} item={item} label={`Zahlen der Abbildung: ${item.title}`} />
         ))}
-      </p>
-    </details>
+      </div>
+      <SourceLine
+        fields={sourceLineFieldsOf(meta)}
+        csv={tables.map((item) => ({
+          href: item.href ?? csvDataUri(tableToCsv(item.table)),
+          label: several ? `CSV: ${item.title}` : "Daten als CSV",
+          fileName: `${item.fileStem}.csv`,
+        }))}
+      />
+    </div>
   );
 }
 
-/** Figure, caption and "Daten & Grenzen" around an interactive stage (the children). */
+/** Figure, caption and the visible source line around an interactive stage (the children). */
 export function FigureFrame({ meta, kind, tables, provisional = false, children }: FigureFrameProps) {
   return (
     <figure className="bf" data-bf-kind={kind} data-bf-id={meta.id}>
@@ -118,7 +99,7 @@ export function FigureFrame({ meta, kind, tables, provisional = false, children 
         {meta.caption ? <span className="bf-caption">{meta.caption}</span> : null}
       </figcaption>
       {children}
-      <DataAndLimits meta={meta} tables={tables} />
+      <SourceAndTables meta={meta} tables={tables} />
     </figure>
   );
 }

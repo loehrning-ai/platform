@@ -25,10 +25,18 @@ type MarkdownNode = Root | RootContent;
 
 const BOOK_ROOT = "content/books/ki-landschaft";
 
+/** Manifest strings that are translated copy: titles, notes, the band claims and the cover texts. Numerals and ids must stay equal. */
 const MANIFEST_COPY_KEYS = new Set([
   "adaptationNote",
   "publicationReason",
   "title",
+  "claim",
+  "numeral",
+  "headlineTail",
+  "sourceLine",
+  "label",
+  "heading",
+  "text",
 ]);
 
 /** German terms that may stay in the English text (proper names and quoted sources). */
@@ -158,8 +166,13 @@ function collectTokens(markdown: string): string[] {
   return markdown.match(TOKEN_PATTERN) ?? [];
 }
 
+/** The words of a ticker directive (tail="...") are translated copy, the rest of the line must match. */
 function collectDirectives(markdown: string): string[] {
-  return markdown.match(DIRECTIVE_PATTERN) ?? [];
+  return (markdown.match(DIRECTIVE_PATTERN) ?? []).map((line) => line.replace(/tail="[^"]*"/u, 'tail=""'));
+}
+
+function collectTickerTails(markdown: string): string[] {
+  return [...markdown.matchAll(/^::ticker\{[^{}\n]*?tail="([^"]*)"/gmu)].map((m) => m[1] ?? "");
 }
 
 function maskManifestCopy(value: JsonValue, key?: string): JsonValue {
@@ -235,6 +248,20 @@ describe("English source bundle of the data book matches the German original", (
     expect(germanLeaks(manifestCopy, [])).toEqual([]);
   });
 
+  it("keeps the number tokens of every band, cover fact and cover text equal in both languages", () => {
+    const tokensOf = (value: JsonValue, key?: string, out: string[] = []): string[] => {
+      if (typeof value === "string") {
+        if (key && MANIFEST_COPY_KEYS.has(key)) out.push(...(value.match(TOKEN_PATTERN) ?? []), "|");
+      } else if (Array.isArray(value)) {
+        value.forEach((child) => tokensOf(child, undefined, out));
+      } else if (value !== null && typeof value === "object") {
+        Object.entries(value).forEach(([k, child]) => tokensOf(child, k, out));
+      }
+      return out;
+    };
+    expect(tokensOf(loadJson(`${BOOK_ROOT}/en/manifest.json`))).toEqual(tokensOf(loadJson(`${BOOK_ROOT}/manifest.json`)));
+  });
+
   for (const filename of CHAPTER_FILES) {
     it(`${filename} preserves Markdown structure, headings, tables, links, figure markers, tokens, and numerics`, () => {
       const sourceText = read(`${BOOK_ROOT}/${filename}`);
@@ -271,6 +298,7 @@ describe("English source bundle of the data book matches the German original", (
       expect(
         germanLeaks(translation, GERMAN_TERM_ALLOWLIST[filename] ?? []),
       ).toEqual([]);
+      expect(germanLeaks(collectTickerTails(translation).join("\n"), [])).toEqual([]);
       expect(translation).not.toMatch(/[—–]/u);
     });
   }

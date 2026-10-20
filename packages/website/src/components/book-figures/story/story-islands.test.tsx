@@ -202,8 +202,10 @@ describe("C4 waterfall story", () => {
   it("always has the finished chart in the data table and says it is provisional on request", () => {
     render(<WaterfallStory spec={C4_HEADLINE} steps={C4_STEPS} provisional />);
     expect(screen.getByText(/Vorläufige Werte/)).toBeInTheDocument();
-    expect(screen.getByText("Daten & Grenzen")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "CSV herunterladen" })).toHaveAttribute("download");
+    expect(screen.queryByText("Daten & Grenzen")).toBeNull();
+    expect(document.querySelector("details, summary")).toBeNull();
+    expect(screen.getByRole("link", { name: "Daten als CSV" })).toHaveAttribute("download");
+    expect(document.querySelector("[data-source-line]")?.textContent).toContain("Grenze:");
   });
 });
 

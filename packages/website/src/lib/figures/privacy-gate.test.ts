@@ -139,7 +139,41 @@ export const GATE_CONFIG = {
     "c6": "^wz\\d\\d$",
     "c7": "^(BB|BE|BW|BY|HB|HE|HH|MV|NI|NW|RP|SH|SL|SN|ST|TH)$",
     "c8": "^k\\d{3}$",
-    "c9": "^(text|tech|industry|size|state|legal|all)$"
+    "c9": "^(text|tech|industry|size|state|legal|all)$",
+    "h01-bars": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h01-dose": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h01-field": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h01-friends": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h01-net": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h02-blocks": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h02-gap": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h02-gap-portal": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h02-ladder": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h03-drift": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h03-strip": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h04-dumbbell": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h04-field": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h04-forest": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h05-dots": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h05-ladder": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h05-waterfall": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h06-region": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h06-slope": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h07-curve": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h07-field": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h08-auc": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h08-field": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h08-php": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h09-field": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h10-or": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h10-tiles": "^(BB|BE|BW|BY|HB|HE|HH|MV|NI|NW|RP|SH|SL|SN|ST|TH|ost4)$",
+    "h11-field": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "h12-null": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "rand-kap2": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "rand-kap3": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "rand-kap4": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "rand-kap5": "^[a-z0-9][a-z0-9_-]{0,40}$",
+    "rand-kap7": "^[a-z0-9][a-z0-9_-]{0,40}$"
   },
   "fmtKeys": [
     "style",
@@ -166,6 +200,40 @@ export const GATE_CONFIG = {
         "lo",
         "hi",
         "n"
+      ]
+    },
+    "blocks": {
+      "data": [
+        "claim",
+        "total",
+        "blocks",
+        "unit",
+        "bins",
+        "finding",
+        "variants",
+        "defaultVariant"
+      ]
+    },
+    "curve": {
+      "data": [
+        "claim",
+        "points",
+        "fmt",
+        "min",
+        "max",
+        "defaultVariant",
+        "frozenLabel",
+        "panel"
+      ],
+      "points": [
+        "id",
+        "label",
+        "value",
+        "lo",
+        "hi",
+        "n",
+        "hits",
+        "frozen"
       ]
     },
     "dotplot": {
@@ -195,13 +263,20 @@ export const GATE_CONFIG = {
         "fmt",
         "scale",
         "reference",
-        "sort"
+        "sort",
+        "variants"
       ],
       "rows": [
         "id",
         "label",
         "a",
         "b"
+      ]
+    },
+    "field": {
+      "data": [
+        "classes",
+        "scenes"
       ]
     },
     "funnel": {
@@ -242,6 +317,7 @@ export const GATE_CONFIG = {
         "rungs",
         "fmt",
         "axisMax",
+        "groundLabel",
         "ours"
       ],
       "ours": [
@@ -259,6 +335,9 @@ export const GATE_CONFIG = {
         "label",
         "value",
         "from",
+        "lo",
+        "hi",
+        "n",
         "definition",
         "year"
       ]
@@ -276,19 +355,89 @@ export const GATE_CONFIG = {
         "label"
       ]
     },
+    "network": {
+      "data": [
+        "claim",
+        "nodes",
+        "modules",
+        "variants",
+        "defaultVariant",
+        "baseline",
+        "neighbours",
+        "edgeWord"
+      ]
+    },
+    "nulldist": {
+      "data": [
+        "claim",
+        "fmt",
+        "draws",
+        "observed",
+        "variants",
+        "defaultVariant",
+        "words",
+        "focusWord"
+      ]
+    },
+    "slope": {
+      "data": [
+        "claim",
+        "items",
+        "top",
+        "splits",
+        "defaultVariant",
+        "pooled",
+        "chance",
+        "aLabel",
+        "bLabel",
+        "fmt"
+      ]
+    },
+    "strip": {
+      "data": [
+        "claim",
+        "rows",
+        "layers",
+        "fmt",
+        "scale",
+        "min",
+        "max",
+        "reference",
+        "variants",
+        "defaultVariant",
+        "finding"
+      ],
+      "rows": [
+        "id",
+        "label",
+        "marks"
+      ]
+    },
     "tilemap": {
       "data": [
         "tiles",
         "fmt",
         "emphasis",
-        "max"
+        "max",
+        "groups"
+      ],
+      "groups": [
+        "id",
+        "label",
+        "tiles",
+        "value",
+        "lo",
+        "hi",
+        "n",
+        "core"
       ],
       "tiles": [
         "id",
         "value",
         "lo",
         "hi",
-        "n"
+        "n",
+        "core"
       ]
     },
     "timeline": {
@@ -483,13 +632,22 @@ export const GATE_CONFIG = {
     "weights",
     "inputs",
     "figures",
-    "kRule"
+    "kRule",
+    "retires"
   ],
   "metaKeys": [
     "methodVersion",
     "frozenOn",
     "values",
-    "aliases"
+    "aliases",
+    "n",
+    "base",
+    "window",
+    "source",
+    "hero",
+    "attribution",
+    "rescan",
+    "rescanNote"
   ],
   "metaValueKeys": [
     "value",
@@ -501,6 +659,437 @@ export const GATE_CONFIG = {
   ],
   "pointLabelPatterns": {
     "c8": "^[A-ZÄÖÜ][A-Za-zÄÖÜäöüß .()-]{1,40}$"
+  },
+  "schema": {
+    "blocks": {
+      "bins": [
+        {
+          "id": "id",
+          "label": "lab"
+        }
+      ],
+      "blocks": "num",
+      "claim": {
+        "$words": 12
+      },
+      "defaultVariant": "id",
+      "finding": "id",
+      "total": "cnt",
+      "unit": "unit",
+      "variants": [
+        {
+          "counts": {
+            "$map": "cnt"
+          },
+          "id": "id",
+          "label": "lab"
+        }
+      ]
+    },
+    "curve": {
+      "claim": {
+        "$words": 12
+      },
+      "defaultVariant": "id",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "frozenLabel": "str",
+      "max": "num",
+      "min": "num",
+      "panel": {
+        "fmt": {
+          "digits": "num",
+          "style": "str",
+          "unit": "str"
+        },
+        "rows": [
+          {
+            "id": "id",
+            "label": "lab",
+            "value": "num"
+          }
+        ],
+        "title": "str"
+      },
+      "points": [
+        {
+          "frozen": "bool",
+          "hi": "num",
+          "hits": "cntnull",
+          "id": "id",
+          "label": "lab",
+          "lo": "num",
+          "n": "num",
+          "value": "numnull"
+        }
+      ]
+    },
+    "dumbbell": {
+      "aLabel": "str",
+      "bLabel": "str",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "reference": {
+        "label": "str",
+        "value": "num"
+      },
+      "rows": [
+        {
+          "a": "numnull",
+          "b": "numnull",
+          "id": "id",
+          "label": "lab"
+        }
+      ],
+      "scale": "str",
+      "sort": "str",
+      "variants": [
+        {
+          "id": "id",
+          "label": "lab",
+          "rows": [
+            {
+              "a": "numnull",
+              "b": "numnull",
+              "id": "id"
+            }
+          ]
+        }
+      ]
+    },
+    "field": {
+      "classes": [
+        {
+          "id": "id",
+          "label": "lab",
+          "tone": "str"
+        }
+      ],
+      "scenes": [
+        {
+          "adjacent": "bool",
+          "base": "cnt",
+          "bins": [
+            {
+              "cell": [
+                "num"
+              ],
+              "id": "id",
+              "label": "lab",
+              "segments": [
+                {
+                  "cls": "id",
+                  "count": "cnt",
+                  "partial": "bool"
+                }
+              ]
+            }
+          ],
+          "claim": {
+            "$words": 12
+          },
+          "cols": "num",
+          "enter": "str",
+          "id": "id",
+          "joint": "bool",
+          "labelClasses": [
+            "id"
+          ],
+          "layout": "str",
+          "numeral": {
+            "fmt": {
+              "digits": "num",
+              "style": "str",
+              "unit": "str"
+            },
+            "suffix": "str",
+            "value": "num"
+          },
+          "perRow": "num",
+          "population": "str",
+          "squares": "num",
+          "unit": "unit",
+          "variantLabel": "str",
+          "variantOf": "id",
+          "weight": "num"
+        }
+      ]
+    },
+    "ladder": {
+      "axisMax": "num",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "groundLabel": "str",
+      "ours": {
+        "axisMax": "num",
+        "fmt": {
+          "digits": "num",
+          "style": "str",
+          "unit": "str"
+        },
+        "hi": "num",
+        "id": "id",
+        "label": "lab",
+        "lo": "num",
+        "note": "str",
+        "value": "num"
+      },
+      "rungs": [
+        {
+          "definition": "str",
+          "from": "num",
+          "hi": "num",
+          "id": "id",
+          "label": "lab",
+          "lo": "num",
+          "n": "num",
+          "value": "num",
+          "year": "str"
+        }
+      ]
+    },
+    "network": {
+      "baseline": "id",
+      "claim": {
+        "$words": 12
+      },
+      "defaultVariant": "id",
+      "edgeWord": "str",
+      "modules": [
+        {
+          "id": "id",
+          "label": "lab"
+        }
+      ],
+      "neighbours": [
+        {
+          "hi": "num",
+          "lo": "num",
+          "node": "id",
+          "odds": "num"
+        }
+      ],
+      "nodes": [
+        {
+          "id": "id",
+          "ki": "bool",
+          "label": "lab",
+          "module": "id",
+          "x": "num",
+          "y": "num"
+        }
+      ],
+      "variants": [
+        {
+          "edges": [
+            [
+              "num"
+            ]
+          ],
+          "id": "id",
+          "label": "lab",
+          "modularity": "num",
+          "share": "num"
+        }
+      ]
+    },
+    "nulldist": {
+      "claim": {
+        "$words": 12
+      },
+      "defaultVariant": "id",
+      "draws": "num",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "focusWord": "id",
+      "observed": {
+        "hi": "num",
+        "label": "str",
+        "lo": "num",
+        "value": "num"
+      },
+      "variants": [
+        {
+          "band": {
+            "hi": "num",
+            "lo": "num"
+          },
+          "bins": [
+            {
+              "draws": "num",
+              "hi": "num",
+              "lo": "num"
+            }
+          ],
+          "id": "id",
+          "label": "lab",
+          "n": "num"
+        }
+      ],
+      "words": [
+        {
+          "hi": "num",
+          "id": "id",
+          "label": "lab",
+          "lo": "num",
+          "ratio": "num"
+        }
+      ]
+    },
+    "slope": {
+      "aLabel": "str",
+      "bLabel": "str",
+      "chance": {
+        "hi": "num",
+        "lo": "num",
+        "mean": "num"
+      },
+      "claim": {
+        "$words": 12
+      },
+      "defaultVariant": "id",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "items": "num",
+      "pooled": {
+        "a": "num",
+        "b": "num",
+        "hi": "num",
+        "lo": "num"
+      },
+      "splits": [
+        {
+          "id": "id",
+          "label": "lab",
+          "rankB": [
+            "num"
+          ],
+          "top": {
+            "a": "num",
+            "b": "num",
+            "hi": "num",
+            "lo": "num"
+          }
+        }
+      ],
+      "top": "num"
+    },
+    "strip": {
+      "claim": {
+        "$words": 12
+      },
+      "defaultVariant": "id",
+      "finding": "id",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "layers": [
+        {
+          "id": "id",
+          "label": "lab",
+          "shape": "str",
+          "tone": "str"
+        }
+      ],
+      "max": "num",
+      "min": "num",
+      "reference": {
+        "label": "str",
+        "value": "num"
+      },
+      "rows": [
+        {
+          "id": "id",
+          "label": "lab",
+          "marks": [
+            {
+              "by": {
+                "$map": {
+                  "hi": "num",
+                  "hits": "cntnull",
+                  "lo": "num",
+                  "n": "num",
+                  "value": "numnull"
+                }
+              },
+              "hi": "num",
+              "hits": "cntnull",
+              "layer": "id",
+              "lo": "num",
+              "n": "num",
+              "value": "numnull"
+            }
+          ]
+        }
+      ],
+      "scale": "str",
+      "variants": [
+        {
+          "id": "id",
+          "label": "lab"
+        }
+      ]
+    },
+    "tilemap": {
+      "emphasis": "str",
+      "fmt": {
+        "digits": "num",
+        "style": "str",
+        "unit": "str"
+      },
+      "groups": [
+        {
+          "core": {
+            "hi": "num",
+            "lo": "num",
+            "n": "num",
+            "value": "numnull"
+          },
+          "hi": "num",
+          "id": "id",
+          "label": "lab",
+          "lo": "num",
+          "n": "num",
+          "tiles": [
+            "iso"
+          ],
+          "value": "numnull"
+        }
+      ],
+      "max": "num",
+      "tiles": [
+        {
+          "core": {
+            "hi": "num",
+            "lo": "num",
+            "n": "num",
+            "value": "numnull"
+          },
+          "hi": "num",
+          "id": "iso",
+          "lo": "num",
+          "n": "num",
+          "value": "numnull"
+        }
+      ]
+    }
   },
   "stepKeys": [
     "id",
@@ -519,10 +1108,133 @@ export const GATE_CONFIG = {
     "source",
     "asOf",
     "limitation",
+    "sourceLine",
     "steps",
     "data",
     "seed",
-    "meta"
+    "meta",
+    "annotation"
+  ],
+  "vendorAllow": [
+    "ChatGPT",
+    "GPT",
+    "OpenAI",
+    "Copilot",
+    "Claude",
+    "Anthropic",
+    "Gemini",
+    "Microsoft",
+    "Azure",
+    "AWS",
+    "Amazon",
+    "Google",
+    "Cloudflare",
+    "WordPress",
+    "Apache",
+    "nginx",
+    "TYPO3",
+    "WooCommerce",
+    "Matomo",
+    "YouTube",
+    "Facebook",
+    "Instagram",
+    "LinkedIn",
+    "Xing",
+    "TikTok",
+    "Pinterest",
+    "Kununu",
+    "Twitter",
+    "X",
+    "Borlabs",
+    "Complianz",
+    "Cookiebot",
+    "Usercentrics",
+    "reCAPTCHA",
+    "Tag Manager",
+    "Maps",
+    "Wix",
+    "Shopify",
+    "Strato",
+    "IONOS",
+    "Let's Encrypt",
+    "Sectigo",
+    "DigiCert",
+    "GoDaddy",
+    "Telekom",
+    "Databricks",
+    "Snowflake",
+    "SAP",
+    "Power BI",
+    "Mistral",
+    "DeepL",
+    "Aleph Alpha",
+    "STACKIT",
+    "OVH",
+    "Hetzner",
+    "Scaleway",
+    "Perplexity",
+    "Llama",
+    "Meta",
+    "Hugging Face",
+    "LangChain",
+    "Cursor",
+    "Vercel",
+    "Netlify",
+    "Webflow",
+    "Joomla",
+    "Drupal",
+    "Contao",
+    "Shopware",
+    "OXID",
+    "React",
+    "Angular",
+    "HubSpot",
+    "Calendly",
+    "PayPal",
+    "Segment",
+    "Magento",
+    "OneTrust",
+    "Vimeo",
+    "Turnstile",
+    "CloudFront",
+    "Indeed",
+    "Glassdoor",
+    "Canonical",
+    "Impressum",
+    "Datenschutz",
+    "Karriere",
+    "Newsletter",
+    "Konfigurator",
+    "Generative KI",
+    "KI",
+    "LLM",
+    "RAG",
+    "LangChain",
+    "Künstliche Intelligenz",
+    "Machine Learning",
+    "Data Scientist",
+    "Agenten",
+    "Prompting",
+    "Souveränität",
+    "Sachsen",
+    "Hellenic",
+    "Asseco",
+    "SwissSign",
+    "Actalis",
+    "D-Trust",
+    "EUNETIC",
+    "Apache",
+    "Plesk",
+    "LiteSpeed",
+    "IIS",
+    "PHP",
+    "HSTS",
+    "DMARC",
+    "SPF",
+    "NIS2",
+    "DSGVO",
+    "ESG",
+    "LkSG"
   ]
 } as const;
 /* GATE_CONFIG_END */

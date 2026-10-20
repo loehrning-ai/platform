@@ -107,6 +107,54 @@ function elements(spec: FigureSpec): Element[] {
       add("visible", { value: spec.data.visible.value });
       add("total", { value: spec.data.total.value });
       break;
+    case "network": {
+      const counts = spec.data.variants.map((v) => v.edges.length);
+      spec.data.variants.forEach((v, i) => add(v.id, { value: counts[i] ?? 0, fmt: COUNT_FMT }));
+      for (const nb of spec.data.neighbours ?? []) add(nb.node, { value: nb.odds, lo: nb.lo, hi: nb.hi, fmt: { style: "decimal", digits: 1 } });
+      break;
+    }
+    case "blocks": {
+      const dv = spec.data.variants.find((v) => v.id === spec.data.defaultVariant) ?? spec.data.variants[0];
+      for (const b of spec.data.bins) add(b.id, { value: dv?.counts[b.id] ?? 0, n: spec.data.total, fmt: COUNT_FMT });
+      for (const v of spec.data.variants) {
+        for (const b of spec.data.bins) add(`${v.id}_${b.id}`, { value: v.counts[b.id] ?? 0, n: spec.data.total, fmt: COUNT_FMT });
+      }
+      break;
+    }
+    case "strip":
+      for (const row of spec.data.rows) {
+        for (const mark of row.marks) {
+          add(`${row.id}_${mark.layer}`, { value: mark.value ?? 0, lo: mark.lo, hi: mark.hi, n: mark.n }, mark.value === null);
+          for (const [vid, q] of Object.entries(mark.by ?? {})) {
+            add(`${row.id}_${mark.layer}_${vid}`, { value: q.value ?? 0, lo: q.lo, hi: q.hi, n: q.n }, q.value === null);
+          }
+        }
+      }
+      break;
+    case "curve":
+      for (const q of spec.data.points) add(q.id, { value: q.value ?? 0, lo: q.lo, hi: q.hi, n: q.n }, q.value === null);
+      for (const r of spec.data.panel?.rows ?? []) add(r.id, { value: r.value, fmt: spec.data.panel?.fmt });
+      break;
+    case "slope": {
+      const ratio: NumFmt = spec.data.fmt;
+      add("pooled_a", { value: spec.data.pooled.a, fmt: ratio });
+      add("pooled_b", { value: spec.data.pooled.b, lo: spec.data.pooled.lo, hi: spec.data.pooled.hi, fmt: ratio });
+      for (const s of spec.data.splits) add(s.id, { value: s.top.b, lo: s.top.lo, hi: s.top.hi, fmt: ratio });
+      break;
+    }
+    case "nulldist":
+      add("observed", { value: spec.data.observed.value, lo: spec.data.observed.lo, hi: spec.data.observed.hi });
+      for (const w of spec.data.words) add(w.id, { value: w.ratio, lo: w.lo, hi: w.hi, fmt: { style: "decimal", digits: 1 } });
+      for (const v of spec.data.variants) add(`band_${v.id}`, { value: v.band.hi, lo: v.band.lo, hi: v.band.hi, n: v.n });
+      break;
+    case "field":
+      for (const scene of spec.data.scenes) {
+        if (scene.numeral) add(scene.id, { value: scene.numeral.value, fmt: scene.numeral.fmt });
+        const byClass = new Map<string, number>();
+        for (const bin of scene.bins) for (const seg of bin.segments) byClass.set(seg.cls, (byClass.get(seg.cls) ?? 0) + seg.count);
+        for (const [cls, count] of byClass) add(`${scene.id}_${cls}`, { value: count, n: scene.base, fmt: COUNT_FMT });
+      }
+      break;
     case "lorenz":
       if (spec.data.gini !== undefined) add("gini", { value: spec.data.gini, fmt: { style: "decimal", digits: 2 } });
       break;

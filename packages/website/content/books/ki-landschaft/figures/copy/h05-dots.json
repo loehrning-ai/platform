@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "alle",
+        "label": "Treffer im ersten Scan",
+        "text": "Im ersten Scan stand KI auf {{h05-dots.first_hits}} von {{h05-dots.pairs}} Startseiten, jeder Punkt eine.",
+        "numeral": "{{h05-dots.first_hits}}",
+        "claim": "So viele Startseiten sagten KI im ersten Scan.",
+        "unit": "1 Punkt = 1 Startseite mit KI-Wort im ersten Scan."
+      },
+      {
+        "id": "weg",
+        "label": "Im zweiten Scan fehlen sie",
+        "text": "Bei {{h05-dots.lost_hits}} davon fehlte das Wort im zweiten Scan, {{h05-dots.rescan_days}} Tage später, mit anderem Abrufweg.",
+        "numeral": "{{h05-dots.lost_hits}}",
+        "claim": "Bei so vielen fehlt das Wort beim zweiten Mal.",
+        "unit": "1 Punkt = 1 Startseite mit KI-Wort im ersten Scan."
+      },
+      {
+        "id": "anteil",
+        "label": "Fast jeder zweite Treffer fehlt",
+        "text": "Fast jeder zweite Treffer, Intervall {{h05-dots.rescan_lost.range}}. Neu kamen nur {{h05-dots.new_hits}} hinzu. Das kann an der Messung liegen, nicht an den Seiten.",
+        "numeral": "{{h05-dots.rescan_lost}}",
+        "claim": "Bei {{h05-dots.lost_hits}} von {{h05-dots.first_hits}} fehlt das KI-Wort im zweiten Scan.",
+        "unit": "1 Punkt = 1 Startseite mit KI-Wort im ersten Scan."
+      }
+    ]
+  }
+}

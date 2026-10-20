@@ -51,7 +51,7 @@ export function group(attrs: Attrs, children: readonly SvgNode[]): ReactElement 
 
 export interface TextOptions {
   readonly size?: number;
-  readonly weight?: 400 | 500 | 600 | 700;
+  readonly weight?: 400 | 500 | 600 | 700 | 800;
   readonly anchor?: "start" | "middle" | "end";
   readonly fill?: string;
   readonly opacity?: number;
@@ -179,6 +179,34 @@ export function labelLines(label: string, maxWidth: number, size: number, weight
     }
   }
   return best ?? wrapText(label, maxWidth, size, 2, weight);
+}
+
+/**
+ * Wraps a label into whole-word lines that all fit `maxWidth`, never cutting a word with an
+ * ellipsis: when a word is too wide the type shrinks (half a pixel at a time) down to `minSize`.
+ */
+export function labelLinesFit(
+  label: string,
+  maxWidth: number,
+  size: number,
+  weight = 400,
+  minSize = FS.small,
+): { readonly lines: string[]; readonly size: number } {
+  const words = label.split(/\s+/).filter(Boolean);
+  let s = size;
+  while (s > minSize && words.some((w) => textWidth(w, s, weight) > maxWidth)) s -= 0.5;
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (!current || textWidth(candidate, s, weight) <= maxWidth) current = candidate;
+    else {
+      lines.push(current);
+      current = word;
+    }
+  }
+  if (current) lines.push(current);
+  return { lines, size: s };
 }
 
 /** Cut one line to a width with an ellipsis. */

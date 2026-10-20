@@ -1,0 +1,401 @@
+{
+  "id": "h10-tiles",
+  "kind": "tilemap",
+  "title": "Bayerns Vorsprung verschwindet im gleichartigen Kern",
+  "alt": "Kachelkarte der 16 Länder mit dem Anteil der Firmen, deren Website KI erwähnt. Bei allen Firmen führt Bayern (5,2 gegen 3,6 Prozent im Rest). Im gleichartigen Kern der Stichprobe (15.871 Firmen) liegen Bayern und der Rest gleichauf (3,4 gegen 3,2 Prozent). Vier Länder im Osten sind zusammengefasst.",
+  "caption": "Anteil der Firmen mit KI-Wort auf der Startseite, alle Firmen und gleichartiger Kern. Bayern gegen Rest: Chancenverhältnis 1,25 (1,10 bis 1,43) bei allen, 0,98 (0,81 bis 1,19) im Kern.",
+  "n": 24942,
+  "nNote": "24.942 Firmen mit Land, davon 15.881 im Kern",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Land aus dem Handelsregister",
+  "asOf": "2026-10-19",
+  "limitation": "Der Vorsprung sitzt in 4.403 Firmen, die auf einem Weg gefunden wurden und zu 94 Prozent aus Bayern stammen. Bayern stellt 41 Prozent der Stichprobe und 14 Prozent des Register-Pools. Länder mit weniger als 5 Treffern sind zusammengefasst oder nicht gezeigt. Die Zuordnung von Firma zu Website ist nur zur Hälfte geprüft.",
+  "sourceLine": "n = 24.942 Firmen mit Land · Scan 2026-03 bis 05 · Grenze: Auswahl der Stichprobe; Länder unter 5 Treffern zusammengefasst · Wird mit geprüften Websites neu gerechnet.",
+  "steps": [
+    {
+      "id": "alle",
+      "label": "Alle Firmen"
+    },
+    {
+      "id": "kern",
+      "label": "Nur gleichartige Firmen"
+    },
+    {
+      "id": "ost",
+      "label": "Der Osten bleibt"
+    }
+  ],
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "emphasis": "ost",
+    "tiles": [
+      {
+        "id": "BW",
+        "value": 3.49819,
+        "lo": 2.84479,
+        "hi": 4.29503,
+        "n": 2487,
+        "core": {
+          "value": 2.89487,
+          "lo": 2.24108,
+          "hi": 3.73211,
+          "n": 1969
+        }
+      },
+      {
+        "id": "BY",
+        "value": 5.18293,
+        "lo": 4.76871,
+        "hi": 5.631,
+        "n": 10168,
+        "core": {
+          "value": 3.44907,
+          "lo": 2.94647,
+          "hi": 4.03383,
+          "n": 4349
+        }
+      },
+      {
+        "id": "BE",
+        "value": 4.71807,
+        "lo": 3.4967,
+        "hi": 6.33803,
+        "n": 869,
+        "core": {
+          "value": 3.96601,
+          "lo": 2.75798,
+          "hi": 5.6723,
+          "n": 706
+        }
+      },
+      {
+        "id": "BB",
+        "value": 3.80435,
+        "lo": 2.64501,
+        "hi": 5.44342,
+        "n": 736,
+        "core": {
+          "value": 3.37621,
+          "lo": 2.21867,
+          "hi": 5.10612,
+          "n": 622
+        }
+      },
+      {
+        "id": "HB",
+        "value": 3.48259,
+        "lo": 1.697,
+        "hi": 7.01295,
+        "n": 201,
+        "core": {
+          "value": 3.3557,
+          "lo": 1.44169,
+          "hi": 7.61448,
+          "n": 149
+        }
+      },
+      {
+        "id": "HH",
+        "value": 5.89651,
+        "lo": 4.4887,
+        "hi": 7.71021,
+        "n": 831,
+        "core": {
+          "value": 5.625,
+          "lo": 4.09045,
+          "hi": 7.6891,
+          "n": 640
+        }
+      },
+      {
+        "id": "HE",
+        "value": 4.99662,
+        "lo": 3.99874,
+        "hi": 6.22737,
+        "n": 1481,
+        "core": {
+          "value": 3.95221,
+          "lo": 2.94724,
+          "hi": 5.28121,
+          "n": 1088
+        }
+      },
+      {
+        "id": "MV",
+        "value": null,
+        "n": 278,
+        "core": {
+          "value": null,
+          "n": 218
+        }
+      },
+      {
+        "id": "NI",
+        "value": 2.55958,
+        "lo": 1.78796,
+        "hi": 3.65181,
+        "n": 1133,
+        "core": {
+          "value": 2.00211,
+          "lo": 1.28541,
+          "hi": 3.10583,
+          "n": 949
+        }
+      },
+      {
+        "id": "NW",
+        "value": 3.84918,
+        "lo": 3.28394,
+        "hi": 4.50716,
+        "n": 3819,
+        "core": {
+          "value": 3.5906,
+          "lo": 2.98009,
+          "hi": 4.32062,
+          "n": 2980
+        }
+      },
+      {
+        "id": "RP",
+        "value": 2.93454,
+        "lo": 2.01034,
+        "hi": 4.26511,
+        "n": 886,
+        "core": {
+          "value": 2.99296,
+          "lo": 1.8769,
+          "hi": 4.7406,
+          "n": 568
+        }
+      },
+      {
+        "id": "SL",
+        "value": null,
+        "n": 233,
+        "core": {
+          "value": null,
+          "n": 174
+        }
+      },
+      {
+        "id": "SN",
+        "value": null,
+        "n": 547,
+        "core": {
+          "value": null,
+          "n": 432
+        }
+      },
+      {
+        "id": "ST",
+        "value": null,
+        "n": 287,
+        "core": {
+          "value": null,
+          "n": 218
+        }
+      },
+      {
+        "id": "SH",
+        "value": 3.16344,
+        "lo": 2.01022,
+        "hi": 4.94486,
+        "n": 569,
+        "core": {
+          "value": 3.25866,
+          "lo": 2.01559,
+          "hi": 5.22746,
+          "n": 491
+        }
+      },
+      {
+        "id": "TH",
+        "value": null,
+        "n": 417,
+        "core": {
+          "value": null,
+          "n": 318
+        }
+      }
+    ],
+    "max": 7,
+    "groups": [
+      {
+        "id": "ost4",
+        "label": "Vier Länder im Osten",
+        "tiles": [
+          "MV",
+          "SN",
+          "ST",
+          "TH"
+        ],
+        "value": 1.63506,
+        "lo": 1.10992,
+        "hi": 2.40262,
+        "n": 1529,
+        "core": {
+          "value": 1.51771,
+          "lo": 0.96214,
+          "hi": 2.38634,
+          "n": 1186
+        }
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 24942,
+    "base": "Firmen mit eigener Domain und Land aus dem Register; Kern = per Suche gefunden, Registerzweck vorhanden",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Land aus dem Handelsregister",
+    "hero": "H10",
+    "attribution": "firm-level, pending verified rescan",
+    "rescan": "strengthens",
+    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "values": {
+      "firms_land": {
+        "value": 24942.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "core_firms": {
+        "value": 15881.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "bayern_or_all": {
+        "value": 1.25316,
+        "lo": 1.09924,
+        "hi": 1.42862,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "bayern_or_core": {
+        "value": 0.980688,
+        "lo": 0.805456,
+        "hi": 1.19404,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "bayern_or_purpose": {
+        "value": 1.09478,
+        "lo": 0.914558,
+        "hi": 1.31051,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "bayern_rate_all": {
+        "value": 5.18293,
+        "n": 10168,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rest_rate_all": {
+        "value": 3.62123,
+        "n": 14774,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "bayern_rate_core": {
+        "value": 3.44907,
+        "n": 4349,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rest_rate_core": {
+        "value": 3.21125,
+        "n": 11522,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "lead_firms": {
+        "value": 4403.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "lead_bayern_share": {
+        "value": 94.3448,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "lead_rate": {
+        "value": 6.97252,
+        "n": 4403,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "bayern_sample_share": {
+        "value": 41.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "bayern_pool_share": {
+        "value": 14.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "weighted_unweighted": {
+        "value": 4.25754,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "weighted_land": {
+        "value": 3.80465,
+        "lo": 3.30877,
+        "hi": 4.22277,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "weighted_kreis": {
+        "value": 3.78228,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "east4_hits": {
+        "value": 25.0,
+        "n": 1529,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

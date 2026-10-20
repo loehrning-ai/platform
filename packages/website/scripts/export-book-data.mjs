@@ -18,12 +18,33 @@
  *   node scripts/export-book-data.mjs --check         write nothing; exit 1 when a file is stale or missing
  */
 
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { figureCsv } from "../src/lib/figures/data.ts";
 import { findPrivacyFindings, parseFigureSpec } from "../src/lib/figures/validate.ts";
+
+/** Reads a file once; a missing file is null. No exists-then-read race (CodeQL js/file-system-race). */
+function readOrNull(path) {
+  try {
+    return readFileSync(path, "utf8");
+  } catch (error) {
+    if (error && error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+/** Lists a directory once; a missing directory is an empty list. */
+function listOrEmpty(path) {
+  try {
+    return readdirSync(path);
+  } catch (error) {
+    if (error && error.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -42,7 +63,7 @@ function parseArgs(argv) {
 /** The CSV files a book's figures produce: [{ name, content }]. Throws on a spec that fails validation. */
 export function buildBookData(book, root = ROOT) {
   const dir = join(root, "content", "books", book, "figures");
-  const names = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".json")).sort() : [];
+  const names = listOrEmpty(dir).filter((f) => f.endsWith(".json")).sort();
   const files = [];
   for (const name of names) {
     const spec = parseFigureSpec(JSON.parse(readFileSync(join(dir, name), "utf8")));
@@ -73,7 +94,7 @@ function main() {
   const stale = [];
   for (const file of files) {
     const target = join(out, file.name);
-    const current = existsSync(target) ? readFileSync(target, "utf8") : null;
+    const current = readOrNull(target);
     if (current === file.content) continue;
     stale.push(file.name);
     if (!args.check) {

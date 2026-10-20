@@ -1,0 +1,59 @@
+{
+  "id": "h02-gap-portal",
+  "kind": "bars",
+  "title": "Der Anteil ohne KI-Wort im Titel hängt am Portal",
+  "alt": "Anteil der Anzeigen mit LLM oder generativer KI im Text, deren Titel kein KI-Wort trägt: insgesamt, auf LinkedIn und auf Indeed.",
+  "caption": "Anteil ohne KI-Wort im Titel, mit 95-%-Intervall (Bootstrap über Arbeitgeber).",
+  "n": 4840,
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+  "asOf": "2026-10-19",
+  "limitation": "Zwei Portale mit verschiedenem Titelstil; das Verhältnis der Portale ist vom Scraper bestimmt.",
+  "sourceLine": "n = 4.840 Anzeigen · 28.02. bis 16.06.2026 · Grenze: Portalmix vom Scraper gewählt",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 0
+    },
+    "items": [
+      {
+        "id": "all",
+        "label": "Beide Portale",
+        "value": 45.103,
+        "lo": 42.777,
+        "hi": 47.554,
+        "n": 4840
+      },
+      {
+        "id": "indeed",
+        "label": "Indeed",
+        "value": 54.358,
+        "lo": 51.283,
+        "hi": 57.398,
+        "n": 2180
+      },
+      {
+        "id": "linkedin",
+        "label": "LinkedIn",
+        "value": 37.533,
+        "lo": 34.611,
+        "hi": 40.478,
+        "n": 2659
+      }
+    ],
+    "max": 100,
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4840,
+    "base": "verschiedene Stellen mit LLM oder GenAI im Text, Deutschland",
+    "window": "2026-02-28 bis 2026-06-16",
+    "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+    "hero": "H02",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht."
+  }
+}

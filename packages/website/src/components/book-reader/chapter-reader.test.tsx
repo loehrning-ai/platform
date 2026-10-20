@@ -39,10 +39,11 @@ vi.mock("./chapter-reader-client", () => ({
 
 import { ChapterReader } from "./chapter-reader";
 
+// A book on the plain reader layout. The insight layout (band, stage) has its own file.
 const BOOK = {
-  id: "ki-landschaft",
+  id: "ki-arbeitsalltag",
   relatedResourceHref: "/eu-ai-act-kurs",
-  pdfPath: "/api/buecher/ki-landschaft/download.pdf",
+  pdfPath: "/api/buecher/ki-arbeitsalltag/download.pdf",
 } as Book;
 
 const CHAPTER: LoadedChapter = {
@@ -87,7 +88,7 @@ describe("ChapterReader locale-aware server shell", () => {
     expect(readerClientMocks.runtime).toHaveBeenCalledOnce();
     expect(readerClientMocks.runtime.mock.calls[0]?.[0]).toEqual(
       expect.objectContaining({
-        bookId: "ki-landschaft",
+        bookId: "ki-arbeitsalltag",
         chapterSlug: "01_eisberg",
         locale: "en",
       }),
@@ -103,17 +104,18 @@ describe("ChapterReader locale-aware server shell", () => {
     expect(article).toHaveClass("max-w-[70ch]");
     expect(runtime).toHaveAttribute(
       "data-book-reader-runtime",
-      "ki-landschaft:01_eisberg",
+      "ki-arbeitsalltag:01_eisberg",
     );
     expect(
       article.compareDocumentPosition(runtime) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
-    // The contents list renders twice: the desktop sidebar at lg and the
-    // sheet in the compact reader bar below it.
+    // The heading list renders once, in the desktop sidebar at lg. Below lg the
+    // contents are the visible chapter list; nothing opens and closes.
     const tocLists = screen.getAllByTestId("toc-links");
-    expect(tocLists).toHaveLength(2);
+    expect(tocLists).toHaveLength(1);
     expect(tocLists[0]).toBeVisible();
+    expect(document.querySelector("details, summary")).toBeNull();
     expect(screen.getByRole("link", { name: "Course" })).toHaveAttribute(
       "href",
       "/en/eu-ai-act-kurs",
@@ -220,7 +222,7 @@ describe("ChapterReader focus mode and compact reader bar", () => {
     ).toHaveClass("hidden", "lg:block");
   });
 
-  it("states the position, offers the contents sheet and falls back to the overview on the last chapter", () => {
+  it("states the position, keeps the contents visible and falls back to the overview on the last chapter", () => {
     render(
       <ChapterReader
         book={BOOK}
@@ -242,21 +244,12 @@ describe("ChapterReader focus mode and compact reader bar", () => {
     );
     expect(within(bar!).getByText("Chapter 1 of 1")).toHaveClass("sr-only");
 
-    const sheet = bar!.querySelector<HTMLDetailsElement>(
-      "[data-chapter-toc-sheet]",
-    );
-    expect(sheet).not.toBeNull();
-    expect(sheet!.open).toBe(false);
-    expect(sheet!.querySelector("summary")).toHaveTextContent("Contents");
-    expect(within(sheet!).getByText("In this chapter")).toBeInTheDocument();
+    // No contents sheet: the bar holds the position and the action, the chapters are a visible list.
+    expect(bar!.querySelector("details, summary, [data-chapter-toc-sheet]")).toBeNull();
+    const list = screen.getByRole("navigation", { name: "All chapters of the book" });
+    expect(within(list).getByRole("link", { name: /The iceberg problem/ })).toHaveAttribute("aria-current", "page");
     expect(
-      within(sheet!).getByRole("navigation", { name: "Chapter contents" }),
-    ).toContainElement(within(sheet!).getByTestId("toc-links"));
-    expect(
-      within(sheet!).getByRole("link", { name: "All chapters" }),
-    ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
-    expect(
-      within(sheet!).getByText(
+      screen.getByText(
         "The reader is the maintained edition; after signing in, download the German PDF from the book overview.",
       ),
     ).toBeInTheDocument();
@@ -265,7 +258,7 @@ describe("ChapterReader focus mode and compact reader bar", () => {
       name: "Chapter overview",
     });
     expect(overview).toHaveTextContent("Overview");
-    expect(overview).toHaveAttribute("href", "/en/buecher/ki-landschaft");
+    expect(overview).toHaveAttribute("href", "/en/buecher/ki-arbeitsalltag");
     expect(overview).toHaveClass("min-h-11");
   });
 
@@ -285,11 +278,10 @@ describe("ChapterReader focus mode and compact reader bar", () => {
     const bar = document.querySelector<HTMLElement>("[data-reader-focus-bar]");
     expect(within(bar!).getByText("1 / 2")).toBeInTheDocument();
     expect(within(bar!).getByText("Kapitel 1 von 2")).toHaveClass("sr-only");
-    expect(bar!.querySelector("summary")).toHaveTextContent("Inhalt");
 
     const next = within(bar!).getByRole("link", { name: "Weiter: Method" });
     expect(next).toHaveTextContent("Weiter");
-    expect(next).toHaveAttribute("href", "/buecher/ki-landschaft/02_methodik");
+    expect(next).toHaveAttribute("href", "/buecher/ki-arbeitsalltag/02_methodik");
     expect(
       within(bar!).queryByRole("link", { name: "Kapitelübersicht" }),
     ).toBeNull();
@@ -297,6 +289,6 @@ describe("ChapterReader focus mode and compact reader bar", () => {
     // The chapter navigation keeps its own, richer next link untouched.
     expect(
       screen.getByRole("link", { name: "Nächstes Kapitel: Method" }),
-    ).toHaveAttribute("href", "/buecher/ki-landschaft/02_methodik");
+    ).toHaveAttribute("href", "/buecher/ki-arbeitsalltag/02_methodik");
   });
 });

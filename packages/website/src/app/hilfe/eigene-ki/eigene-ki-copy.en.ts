@@ -135,7 +135,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
     examples: [
       { uri: "lesson://ki-fuehrerschein/daten-1-1", label: "A lesson" },
       { uri: "workshop://ki-prognosen-einschaetzen", label: "A workshop" },
-      { uri: "book://ki-landschaft/01_eisberg", label: "A book chapter" },
+      { uri: "book://ki-landschaft/01_zweimal_gemessen", label: "A book chapter" },
     ],
     localeNote: "Append ?locale=en for English; otherwise you get German.",
     islandNote:

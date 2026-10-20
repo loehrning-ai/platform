@@ -15,6 +15,7 @@ import { DirectiveError, hasDirectives } from "@/lib/book-directives";
 import { FigureLoadError } from "@/lib/book-figures";
 import { TokenError } from "@/lib/figures";
 import { OpenWithYourAiRegion } from "@/components/course/open-with-your-ai-region";
+import { isInsightBook } from "@/lib/book-experience";
 import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
 import { bookUri } from "@/lib/mcp/uris";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
@@ -152,7 +153,8 @@ export default async function ChapterPage({ params }: Params) {
 
   return (
     <>
-      {locale === "de" ? (
+      {/* An insight book is a data book: no course-funnel banner above it. */}
+      {locale === "de" && !isInsightBook(book.id) ? (
         <ResourceContextBanner nodeId={`book:${book.id}`} />
       ) : null}
       <ChapterReader

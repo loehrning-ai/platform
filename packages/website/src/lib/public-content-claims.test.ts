@@ -39,14 +39,15 @@ describe("public learning content claim hygiene", () => {
     "eu-ai-act-kurs/block-5-umsetzen-lessons.json",
     "ki-und-gesellschaft/block-3-fairness-lessons.json",
     "books/ki-arbeitsalltag/13_anhang.md",
-    "books/ki-landschaft/01_eisberg.md",
-    "books/ki-landschaft/02_sagen_zeigen.md",
-    "books/ki-landschaft/03_zweimal_gemessen.md",
-    "books/ki-landschaft/04_branche_land.md",
-    "books/ki-landschaft/05_reden_einstellen.md",
-    "books/ki-landschaft/06_eu_ki_verordnung.md",
-    "books/ki-landschaft/07_pilot.md",
-    "books/ki-landschaft/08_methodik.md",
+    "books/ki-landschaft/01_zweimal_gemessen.md",
+    "books/ki-landschaft/02_textmenge.md",
+    "books/ki-landschaft/03_schaufenster.md",
+    "books/ki-landschaft/04_stellen_namen.md",
+    "books/ki-landschaft/05_land.md",
+    "books/ki-landschaft/06_stimmen.md",
+    "books/ki-landschaft/07_schluessel.md",
+    "books/ki-landschaft/08_dein_zug.md",
+    "books/ki-landschaft/09_quellen.md",
   ];
 
   const reviewedFreelancerBookFiles = [

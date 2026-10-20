@@ -1,0 +1,729 @@
+{
+  "id": "h03-strip",
+  "kind": "strip",
+  "title": "Der Name im Schaufenster steht nicht in der Anzeige",
+  "alt": "Fünf Namen aus der KI-Welt, vier Textsorten. Auf Startseiten von KI-Beratern führt ChatGPT mit 27,8 %. Bei Arbeitgebern mit KI-Stelle nennt mindestens eine Anzeige zu 16,3 % Claude oder Anthropic. Auf 21.402 Firmenwebsites steht jeder dieser Namen auf weniger als 0,4 von 100 Seiten.",
+  "caption": "Anteil der Dokumente mit dem Namen, logarithmische Achse. Firmenwebsites: ChatGPT 0,37 % (80 Seiten), Claude 0,10 bis 0,12 %. Nur Dokumente mit KI-Wort: Berater 28,1 % gegen Firmen 3,8 % bei ChatGPT.",
+  "n": 21402,
+  "nNote": "980 Berater-Startseiten / 2.474 Arbeitgeber / 1.691 Feed-Meldungen / 21.402 Firmenwebsites",
+  "source": "Eigene Auswertung der Startseiten von KI-Beratern (Suchmaschinen-Stichprobe) im Vergleich mit Firmenwebsites; Stellenanzeigen von 2.474 Arbeitgebern; kuratierter Tech-Feed",
+  "asOf": "2026-10-19",
+  "limitation": "Nennung ist kein Einsatz. Die vier Textsorten sind verschieden ausgewählt: Berater und Feed handeln von KI, Firmenwebsites nicht. Gelesen wird die Rangfolge der Namen innerhalb einer Ebene, nicht der Abstand zwischen den Ebenen. Auf Firmenwebsites ist ein Teil der Claude-Treffer ein Vorname.",
+  "sourceLine": "n = 21.402 Firmenwebsites, 980 Berater, 2.474 Arbeitgeber · Scan 2026-03 bis 06 · Grenze: Nennung, nicht Einsatz; Rangfolge je Ebene lesen · Wird vom Rescan geprüft.",
+  "steps": [
+    {
+      "id": "berater",
+      "label": "Berater",
+      "focus": [
+        "chatgpt"
+      ]
+    },
+    {
+      "id": "arbeitgeber",
+      "label": "Arbeitgeber"
+    },
+    {
+      "id": "feed",
+      "label": "Feed"
+    },
+    {
+      "id": "firmen",
+      "label": "Firmenwebsites",
+      "focus": [
+        "chatgpt"
+      ]
+    }
+  ],
+  "data": {
+    "claim": "Berater führen ChatGPT, Arbeitgeber Claude.",
+    "rows": [
+      {
+        "id": "chatgpt",
+        "label": "ChatGPT / GPT",
+        "marks": [
+          {
+            "layer": "con",
+            "value": 27.7551,
+            "lo": 25.0425,
+            "hi": 30.6414,
+            "n": 980,
+            "hits": 272,
+            "by": {
+              "ki": {
+                "value": 28.0992,
+                "lo": 25.3584,
+                "hi": 31.0131,
+                "n": 968,
+                "hits": 272
+              }
+            }
+          },
+          {
+            "layer": "jobs",
+            "value": 4.48666,
+            "lo": 3.73907,
+            "hi": 5.37538,
+            "n": 2474,
+            "hits": 111
+          },
+          {
+            "layer": "news",
+            "value": 4.37611,
+            "lo": 3.50014,
+            "hi": 5.45891,
+            "n": 1691,
+            "hits": 74
+          },
+          {
+            "layer": "firms",
+            "value": 0.373797,
+            "lo": 0.300468,
+            "hi": 0.464938,
+            "n": 21402,
+            "hits": 80,
+            "by": {
+              "ki": {
+                "value": 3.78947,
+                "lo": 2.74961,
+                "hi": 5.20156,
+                "n": 950,
+                "hits": 36
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "openai",
+        "label": "OpenAI",
+        "marks": [
+          {
+            "layer": "con",
+            "value": 12.551,
+            "lo": 10.6219,
+            "hi": 14.7726,
+            "n": 980,
+            "hits": 123,
+            "by": {
+              "ki": {
+                "value": 12.7066,
+                "lo": 10.7549,
+                "hi": 14.9532,
+                "n": 968,
+                "hits": 123
+              }
+            }
+          },
+          {
+            "layer": "jobs",
+            "value": 11.6411,
+            "lo": 10.4363,
+            "hi": 12.9648,
+            "n": 2474,
+            "hits": 288
+          },
+          {
+            "layer": "news",
+            "value": 6.26848,
+            "lo": 5.20933,
+            "hi": 7.52588,
+            "n": 1691,
+            "hits": 106
+          },
+          {
+            "layer": "firms",
+            "value": 0.149519,
+            "lo": 0.105935,
+            "hi": 0.210995,
+            "n": 21402,
+            "hits": 32,
+            "by": {
+              "ki": {
+                "value": 1.89474,
+                "lo": 1.20181,
+                "hi": 2.97515,
+                "n": 950,
+                "hits": 18
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "copilot",
+        "label": "Copilot",
+        "marks": [
+          {
+            "layer": "con",
+            "value": 10.9184,
+            "lo": 9.11621,
+            "hi": 13.0257,
+            "n": 980,
+            "hits": 107,
+            "by": {
+              "ki": {
+                "value": 11.0537,
+                "lo": 9.23026,
+                "hi": 13.1851,
+                "n": 968,
+                "hits": 107
+              }
+            }
+          },
+          {
+            "layer": "jobs",
+            "value": 10.1051,
+            "lo": 8.97859,
+            "hi": 11.3553,
+            "n": 2474,
+            "hits": 250
+          },
+          {
+            "layer": "news",
+            "value": 1.59669,
+            "lo": 1.09963,
+            "hi": 2.31317,
+            "n": 1691,
+            "hits": 27
+          },
+          {
+            "layer": "firms",
+            "value": 0.149519,
+            "lo": 0.105935,
+            "hi": 0.210995,
+            "n": 21402,
+            "hits": 32,
+            "by": {
+              "ki": {
+                "value": 2.73684,
+                "lo": 1.87442,
+                "hi": 3.97997,
+                "n": 950,
+                "hits": 26
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "claude",
+        "label": "Claude / Anthropic",
+        "marks": [
+          {
+            "layer": "con",
+            "value": 8.36735,
+            "lo": 6.79203,
+            "hi": 10.2678,
+            "n": 980,
+            "hits": 82,
+            "by": {
+              "ki": {
+                "value": 8.47107,
+                "lo": 6.87687,
+                "hi": 10.3936,
+                "n": 968,
+                "hits": 82
+              }
+            }
+          },
+          {
+            "layer": "jobs",
+            "value": 16.3298,
+            "lo": 14.9257,
+            "hi": 17.8384,
+            "n": 2474,
+            "hits": 404
+          },
+          {
+            "layer": "news",
+            "value": 8.81135,
+            "lo": 7.55196,
+            "hi": 10.2575,
+            "n": 1691,
+            "hits": 149
+          },
+          {
+            "layer": "firms",
+            "value": 0.0981217,
+            "lo": 0.0641889,
+            "hi": 0.149966,
+            "n": 21402,
+            "hits": 21,
+            "by": {
+              "ki": {
+                "value": 1.26316,
+                "lo": 0.724027,
+                "hi": 2.19486,
+                "n": 950,
+                "hits": 12
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "gemini",
+        "label": "Gemini",
+        "marks": [
+          {
+            "layer": "con",
+            "value": 8.26531,
+            "lo": 6.69993,
+            "hi": 10.1566,
+            "n": 980,
+            "hits": 81,
+            "by": {
+              "ki": {
+                "value": 8.36777,
+                "lo": 6.78362,
+                "hi": 10.2811,
+                "n": 968,
+                "hits": 81
+              }
+            }
+          },
+          {
+            "layer": "jobs",
+            "value": 4.24414,
+            "lo": 3.51814,
+            "hi": 5.11202,
+            "n": 2474,
+            "hits": 105
+          },
+          {
+            "layer": "news",
+            "value": 2.01064,
+            "lo": 1.44236,
+            "hi": 2.79648,
+            "n": 1691,
+            "hits": 34
+          },
+          {
+            "layer": "firms",
+            "value": 0.0654144,
+            "lo": 0.0389711,
+            "hi": 0.109781,
+            "n": 21402,
+            "hits": 14,
+            "by": {
+              "ki": {
+                "value": 0.947368,
+                "lo": 0.499197,
+                "hi": 1.79066,
+                "n": 950,
+                "hits": 9
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "con",
+        "label": "KI-Berater, Startseite",
+        "shape": "ring",
+        "tone": "ink"
+      },
+      {
+        "id": "jobs",
+        "label": "Arbeitgeber mit KI-Stelle",
+        "shape": "diamond",
+        "tone": "ink"
+      },
+      {
+        "id": "news",
+        "label": "Tech-Feed",
+        "shape": "square",
+        "tone": "grey"
+      },
+      {
+        "id": "firms",
+        "label": "Firmenwebsites",
+        "shape": "square",
+        "tone": "accent"
+      }
+    ],
+    "fmt": {
+      "style": "percent",
+      "digits": 2
+    },
+    "scale": "log",
+    "min": 0.03,
+    "max": 60,
+    "variants": [
+      {
+        "id": "base",
+        "label": "Alle Dokumente"
+      },
+      {
+        "id": "ki",
+        "label": "Nur Wörter, die KI erwähnen"
+      }
+    ],
+    "defaultVariant": "base",
+    "finding": "firms"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21402,
+    "base": "vier Textsorten, dieselbe Wortliste; Firmenwebsites mit eigener Domain und Text",
+    "window": "2026-03 bis 2026-06",
+    "source": "Eigene Auswertung der Startseiten von KI-Beratern (Suchmaschinen-Stichprobe) im Vergleich mit Firmenwebsites; Stellenanzeigen von 2.474 Arbeitgebern; kuratierter Tech-Feed",
+    "hero": "H03",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "jobs_employers": {
+        "value": 2474.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "consult_pages": {
+        "value": 980.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "firm_pages": {
+        "value": 21402.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "feed_items": {
+        "value": 1691.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "chatgpt_con": {
+        "value": 27.7551,
+        "lo": 25.0425,
+        "hi": 30.6414,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "chatgpt_jobs": {
+        "value": 4.48666,
+        "lo": 3.73907,
+        "hi": 5.37538,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "chatgpt_news": {
+        "value": 4.37611,
+        "lo": 3.50014,
+        "hi": 5.45891,
+        "n": 1691,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "chatgpt_firms": {
+        "value": 0.373797,
+        "lo": 0.300468,
+        "hi": 0.464938,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "openai_con": {
+        "value": 12.551,
+        "lo": 10.6219,
+        "hi": 14.7726,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "openai_jobs": {
+        "value": 11.6411,
+        "lo": 10.4363,
+        "hi": 12.9648,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "openai_news": {
+        "value": 6.26848,
+        "lo": 5.20933,
+        "hi": 7.52588,
+        "n": 1691,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "openai_firms": {
+        "value": 0.149519,
+        "lo": 0.105935,
+        "hi": 0.210995,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "copilot_con": {
+        "value": 10.9184,
+        "lo": 9.11621,
+        "hi": 13.0257,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "copilot_jobs": {
+        "value": 10.1051,
+        "lo": 8.97859,
+        "hi": 11.3553,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "copilot_news": {
+        "value": 1.59669,
+        "lo": 1.09963,
+        "hi": 2.31317,
+        "n": 1691,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "copilot_firms": {
+        "value": 0.149519,
+        "lo": 0.105935,
+        "hi": 0.210995,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "claude_con": {
+        "value": 8.36735,
+        "lo": 6.79203,
+        "hi": 10.2678,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "claude_jobs": {
+        "value": 16.3298,
+        "lo": 14.9257,
+        "hi": 17.8384,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "claude_news": {
+        "value": 8.81135,
+        "lo": 7.55196,
+        "hi": 10.2575,
+        "n": 1691,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gemini_con": {
+        "value": 8.26531,
+        "lo": 6.69993,
+        "hi": 10.1566,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gemini_jobs": {
+        "value": 4.24414,
+        "lo": 3.51814,
+        "hi": 5.11202,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gemini_news": {
+        "value": 2.01064,
+        "lo": 1.44236,
+        "hi": 2.79648,
+        "n": 1691,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gemini_firms": {
+        "value": 0.0654144,
+        "lo": 0.0389711,
+        "hi": 0.109781,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "claude_firms": {
+        "value": 0.0981217,
+        "lo": 0.0641889,
+        "hi": 0.149966,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "claude_firms_upper": {
+        "value": 0.121484,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "claude_firms_anthropic": {
+        "value": 0.0513971,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "claude_firms_hits": {
+        "value": 21.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "claude_firms_hits_upper": {
+        "value": 26.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "claude_firms_hits_anthropic": {
+        "value": 11.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "chatgpt_con_ki": {
+        "value": 28.0992,
+        "lo": 25.3584,
+        "hi": 31.0131,
+        "n": 968,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "chatgpt_con_ki_hits": {
+        "value": 272.0,
+        "n": 968,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "chatgpt_firms_ki": {
+        "value": 3.78947,
+        "lo": 2.74961,
+        "hi": 5.20156,
+        "n": 950,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "chatgpt_firms_ki_hits": {
+        "value": 36.0,
+        "n": 950,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "chatgpt_ratio_ki": {
+        "value": 7.41506,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ki_share_consult": {
+        "value": 98.7755,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ki_share_firms": {
+        "value": 4.43884,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "claude_single_ad_employers": {
+        "value": 13.5329,
+        "n": 1670,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gpt_broad_employers": {
+        "value": 7.27567,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "claude_employers_hits": {
+        "value": 404.0,
+        "n": 2474,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

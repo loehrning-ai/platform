@@ -1,0 +1,33 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "ziehungen",
+        "label": "Zufall: viele Ziehungen",
+        "text": "Gleich große Firmen mit gleich langer Startseite, {{h12-null.draws}}-mal zufällig gezogen, schreiben zu {{h12-null.null_lo}} bis {{h12-null.null_hi}} KI.",
+        "numeral": "{{h12-null.draws}}",
+        "claim": "{{h12-null.draws}} Zufallsversuche, so breit streut Zufall.",
+        "unit": "Jedes Quadrat ist ein Zufallsversuch, {{h12-null.draws}} insgesamt.",
+        "variant": "n205"
+      },
+      {
+        "id": "beobachtet",
+        "label": "Beobachtet im Lobbyregister",
+        "text": "Die {{h12-null.register_firms}} Register-Firmen kommen auf {{h12-null.ki_observed}} ({{h12-null.ki_observed.range}}), erwartet waren {{h12-null.ki_expected}}.",
+        "numeral": "{{h12-null.ki_observed}}",
+        "claim": "Das Lobbyregister landet rechts vom Zufallsband.",
+        "unit": "Jedes Quadrat ist ein Zufallsversuch, {{h12-null.draws}} insgesamt.",
+        "variant": "n205"
+      },
+      {
+        "id": "worte",
+        "label": "Vier andere Wörter",
+        "text": "Faktor gegenüber Zufall: Cloud {{h12-null.ratio_cloud}}, Digitalisierung {{h12-null.ratio_digitalisierung}}, Nachhaltigkeit {{h12-null.ratio_nachhaltigkeit}}, Cyber {{h12-null.ratio_cyber}}.",
+        "numeral": "{{h12-null.ki_ratio}}x",
+        "claim": "KI liegt beim Faktor im Bereich der anderen Neuheitswörter, Cyber liegt höher.",
+        "unit": "Jedes Quadrat ist ein Zufallsversuch, {{h12-null.draws}} insgesamt. Zuordnung von Firma zu Website ungeprüft, wird mit geprüften Websites neu gerechnet.",
+        "variant": "n205"
+      }
+    ]
+  }
+}

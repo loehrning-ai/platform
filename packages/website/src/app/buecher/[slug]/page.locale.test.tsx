@@ -22,6 +22,13 @@ const props = {
   params: Promise.resolve({ slug: "ki-landschaft" }),
 };
 
+// The chapters come from the English manifest on disk, so the content refresh cannot desync this test.
+const EN_CHAPTERS = (
+  JSON.parse(readFileSync(resolve(process.cwd(), "content/books/ki-landschaft/en/manifest.json"), "utf-8")) as {
+    chapters: { slug: string; title: string }[];
+  }
+).chapters;
+
 describe("book detail locale metadata and UI", () => {
   beforeEach(() => {
     getRequestLocaleMock.mockReset();
@@ -62,23 +69,24 @@ describe("book detail locale metadata and UI", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "Seen from the outside" }),
     ).toBeVisible();
-    expect(screen.getByText("Material language")).toBeVisible();
-    expect(screen.getAllByText("English").length).toBeGreaterThan(0);
-    expect(screen.getByText(/by Tim Löhr/)).toBeVisible();
+    expect(screen.getByText(/Tim Löhr/)).toBeVisible();
+    // The cover page is the insight layout: the poster band, the stage and a visible chapter list.
+    expect(container.querySelector("[data-cover-band]")).not.toBeNull();
+    expect(container.querySelector("[data-book-stage]")).not.toBeNull();
+    expect(container.querySelector("details, summary")).toBeNull();
 
     const contents = screen.getByRole("navigation", {
-      name: "Table of contents",
+      name: "All chapters of the book",
     });
     const chapterLinks = within(contents).getAllByRole("link");
-    expect(chapterLinks).toHaveLength(8);
+    expect(chapterLinks).toHaveLength(EN_CHAPTERS.length);
     expect(chapterLinks[0]).toHaveAttribute(
       "href",
-      "/en/buecher/ki-landschaft/01_eisberg",
+      `/en/buecher/ki-landschaft/${EN_CHAPTERS[0]!.slug}`,
     );
     expect(chapterLinks[0]).toHaveAttribute("hreflang", "en");
     expect(chapterLinks[0]).toHaveAttribute("lang", "en");
-    expect(chapterLinks[0]).toHaveTextContent("The number that does not add up");
-    expect(chapterLinks[0]).toHaveClass("min-h-16");
+    expect(chapterLinks[0]).toHaveTextContent(EN_CHAPTERS[0]!.title);
 
     expect(screen.getByRole("link", { name: "Back to books" })).toHaveAttribute(
       "href",
@@ -101,9 +109,9 @@ describe("book detail locale metadata and UI", () => {
     expect(book).toMatchObject({
       hasPart: expect.arrayContaining([
         expect.objectContaining({
-          name: "The number that does not add up",
+          name: EN_CHAPTERS[0]!.title,
           inLanguage: "en-GB",
-          url: "https://loehrning.ai/en/buecher/ki-landschaft/01_eisberg",
+          url: `https://loehrning.ai/en/buecher/ki-landschaft/${EN_CHAPTERS[0]!.slug}`,
         }),
       ]),
     });

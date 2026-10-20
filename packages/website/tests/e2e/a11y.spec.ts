@@ -8,6 +8,7 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
 import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
+import { chapterPath, chapters } from "./fixtures/book";
 
 const OPEN_SOURCE_DETAIL_ROUTES = OPEN_SOURCE_ARTIFACTS.map(
   (artifact) => artifact.href,
@@ -30,7 +31,7 @@ const ROUTES = [
   "/kurse/open-source/data-engineering-fundamentals",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/buecher/ki-landschaft",
-  "/buecher/ki-landschaft/02_sagen_zeigen",
+  chapterPath(chapters()[1]!.slug),
   "/ai-native",
   "/ki-fuehrerschein",
   "/eu-ai-act-kurs",

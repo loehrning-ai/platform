@@ -5,6 +5,7 @@
  */
 
 import { SUPPRESSED_LABEL } from "./format.ts";
+import { blocksPerBin } from "./kinds/blocks.ts";
 import { waterfallBars } from "./kinds/waterfall.ts";
 import type { FigureSpec } from "./types.ts";
 
@@ -92,6 +93,87 @@ export function figureTable(spec: FigureSpec): FigureTable {
           .sort((a, b) => a.date.localeCompare(b.date))
           .map((e) => [e.date, e.label, e.status, e.tag ?? null]),
       };
+    case "network": {
+      const { nodes, variants } = spec.data;
+      const key = (a: number, b: number): string => `${Math.min(a, b)}:${Math.max(a, b)}`;
+      const rows = new Map<string, { a: number; b: number; odds: number | null }>();
+      for (const v of variants) {
+        for (const e of v.edges) {
+          const k = key(e[0], e[1]);
+          const known = rows.get(k);
+          rows.set(k, { a: Math.min(e[0], e[1]), b: Math.max(e[0], e[1]), odds: known?.odds ?? e[2] ?? null });
+        }
+      }
+      const sets = variants.map((v) => new Set(v.edges.map((e) => key(e[0], e[1]))));
+      return {
+        columns: ["Merkmal A", "Merkmal B", "Odds-Ratio", ...variants.map((v) => `in: ${v.label}`)],
+        rows: [...rows.entries()].map(([k, r]) => [
+          nodes[r.a]?.label ?? "", nodes[r.b]?.label ?? "", r.odds, ...sets.map((set) => (set.has(k) ? 1 : 0)),
+        ] as Cell[]),
+      };
+    }
+    case "blocks": {
+      const { bins, variants } = spec.data;
+      const perVariant = variants.map((v) => blocksPerBin(spec.data, v));
+      return {
+        columns: ["Behälter", ...variants.map((v) => `${v.label}: ${spec.data.unit.split("|").pop() ?? ""}`), ...variants.map((v) => `${v.label}: Blöcke`)],
+        rows: bins.map((b, i) => [
+          b.label, ...variants.map((v) => v.counts[b.id] ?? 0), ...perVariant.map((per) => per[i] ?? 0),
+        ] as Cell[]),
+      };
+    }
+    case "strip": {
+      const rows: Cell[][] = [];
+      const variants = spec.data.variants ?? [{ id: "", label: "" }];
+      for (const row of spec.data.rows) {
+        for (const mark of row.marks) {
+          const layer = spec.data.layers.find((l) => l.id === mark.layer);
+          for (const v of variants) {
+            const q = (v.id ? mark.by?.[v.id] : undefined) ?? mark;
+            rows.push([row.label, layer?.label ?? mark.layer, v.label || null, q.value, q.lo ?? null, q.hi ?? null, q.n ?? null, flag(q.value)]);
+          }
+        }
+      }
+      return { columns: ["Zeile", "Ebene", "Lesart", "Wert", "Untergrenze", "Obergrenze", "n", "Hinweis"], rows };
+    }
+    case "curve":
+      return {
+        columns: ["Klasse", "Wert", "Untergrenze", "Obergrenze", "n", "Hinweis"],
+        rows: [
+          ...spec.data.points.map((q) => [q.label, q.value, q.lo ?? null, q.hi ?? null, q.n ?? null, q.frozen ? (spec.data.frozenLabel ?? "eingefroren") : flag(q.value)] as Cell[]),
+          ...(spec.data.panel ? spec.data.panel.rows.map((r) => [`${spec.data.panel?.title ?? ""}: ${r.label}`, r.value, null, null, null, ""] as Cell[]) : []),
+        ],
+      };
+    case "slope":
+      return {
+        columns: ["Teilung", spec.data.aLabel, spec.data.bLabel, "Untergrenze B", "Obergrenze B"],
+        rows: [
+          ["alle Teilungen", spec.data.pooled.a, spec.data.pooled.b, spec.data.pooled.lo ?? null, spec.data.pooled.hi ?? null] as Cell[],
+          ...spec.data.splits.map((s) => [s.label, s.top.a, s.top.b, s.top.lo ?? null, s.top.hi ?? null] as Cell[]),
+        ],
+      };
+    case "nulldist":
+      return {
+        columns: ["Teil", "Bezeichnung", "von", "bis", "Wert"],
+        rows: [
+          ...spec.data.variants.flatMap((v) => v.bins.map((b) => ["Ziehungen", v.label, b.lo, b.hi, b.draws] as Cell[])),
+          ...spec.data.variants.map((v) => ["Zufallsband", v.label, v.band.lo, v.band.hi, null] as Cell[]),
+          ["Beobachtet", spec.data.observed.label, spec.data.observed.lo ?? null, spec.data.observed.hi ?? null, spec.data.observed.value] as Cell[],
+          ...spec.data.words.map((w) => ["Verhältnis", w.label, w.lo ?? null, w.hi ?? null, w.ratio] as Cell[]),
+        ],
+      };
+    case "field": {
+      const rows: Cell[][] = [];
+      const label = new Map(spec.data.classes.map((c) => [c.id, c.label]));
+      for (const scene of spec.data.scenes) {
+        for (const bin of scene.bins) {
+          for (const seg of bin.segments) {
+            rows.push([scene.id, bin.label ?? bin.id, label.get(seg.cls) ?? seg.cls, seg.count, scene.base]);
+          }
+        }
+      }
+      return { columns: ["Szene", "Bereich", "Klasse", "Anzahl", "von"], rows };
+    }
     case "iceberg":
       return {
         columns: ["Maß", "Wert"],

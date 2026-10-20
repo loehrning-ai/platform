@@ -1,0 +1,9 @@
+Gruppe,Wert,Untergrenze,Obergrenze,n,Hinweis
+Bundesland,0.045,-0.6557,0.7193,24758,
+Wirtschaftskraft und Dichte,1.544,0.631,2.2242,24758,
+Beschäftigung IKT und Hochtechnologie,0.9565,0.1369,1.6904,24758,
+Breitband,0.2262,-0.1955,0.63,24758,
+Anteil Start-up-Rechtsform,0.5034,-0.0107,1.0266,24758,
+Anteil IT-Namen,0.9262,0.1675,1.4706,24758,
+Entfernung zur Metropole,1.4054,0.4922,2.0315,24758,
+Alle Regionsdaten zusammen,1.4192,0.2525,2.4177,24758,

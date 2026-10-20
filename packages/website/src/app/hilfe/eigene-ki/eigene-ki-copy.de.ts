@@ -138,7 +138,7 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
         label: "Eine Lektion",
       },
       { uri: "workshop://ki-prognosen-einschaetzen", label: "Ein Workshop" },
-      { uri: "book://ki-landschaft/01_eisberg", label: "Ein Buchkapitel" },
+      { uri: "book://ki-landschaft/01_zweimal_gemessen", label: "Ein Buchkapitel" },
     ],
     localeNote: "Mit ?locale=en kommt der englische Text, sonst der deutsche.",
     islandNote:

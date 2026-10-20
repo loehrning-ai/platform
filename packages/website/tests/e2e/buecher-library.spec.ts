@@ -35,7 +35,7 @@ const BOOKS = [
     title: "Von außen gesehen",
     subtitle: "Was 25.581 Firmenwebsites über KI in Deutschland verraten",
     audience: "Alle mit beruflichem KI-Bezug",
-    chapters: "8 Kapitel · ca. 34 Seiten",
+    chapters: "9 Kapitel · ca. 32 Seiten",
     resourceType: "HTML-Lesefassung mit interaktiven Abbildungen",
     materialLanguage: "Deutsch",
   },

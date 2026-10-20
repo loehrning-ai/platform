@@ -25,7 +25,9 @@ describe("every figure the reader can place", () => {
     const { container } = render(<>{renderDirective(ctx, figure(id))}</>);
     const root = container.querySelector("figure");
     expect(root, id).not.toBeNull();
-    expect(container.innerHTML).toContain("Daten &amp; Grenzen");
+    expect(container.innerHTML).not.toContain("Daten &amp; Grenzen");
+    expect(container.querySelector("details, summary")).toBeNull();
+    expect(container.querySelector("[data-source-line]"), `${id}: visible source line`).not.toBeNull();
     expect(container.querySelector("script")).toBeNull();
     expect(container.innerHTML).not.toMatch(/\son[a-z]+=/i);
     // The finished figure is in the server markup: an svg with a title and a description.
@@ -144,8 +146,10 @@ describe.each(["de", "en"] as const)("every chapter of the data book (%s)", (loc
       const chapter = await loadBookChapter(BOOK, meta.slug, locale);
       expect(chapter.rawMarkdown, meta.slug).not.toMatch(/\{\{[^}]*\}\}/);
       const segments = renderChapterSegments({ rawMarkdown: chapter.rawMarkdown, locale });
+      // A figure is placeable through its own builder (the v0 islands) or, for the insight spine, through the generic hero island.
+      const figures = await loadBookFigures(BOOK);
       for (const id of figureIdsOf(chapter.rawMarkdown)) {
-        expect(PLACEABLE_FIGURES, `${meta.slug}: ${id}`).toContain(id);
+        expect([...PLACEABLE_FIGURES, ...figures.specs.keys()], `${meta.slug}: ${id}`).toContain(id);
       }
       const blocks = await buildChapterFigureBlocks(BOOK, locale, segments);
       expect(blocks).toHaveLength(segments.length);

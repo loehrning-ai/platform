@@ -23,9 +23,11 @@ function bookCsvFiles(): { name: string; content: string }[] {
 describe("the figure files of the data book", () => {
   it("load, validate and pass the engine's privacy gate", async () => {
     const figures = await loadBookFigures(BOOK);
-    expect([...figures.specs.keys()].sort()).toEqual(
-      ["c1", "c10", "c10-bars", "c11", "c12", "c14", "c2", "c3", "c3-evidence", "c4", "c5", "c6", "c7", "c8", "c9"].sort(),
-    );
+    // The insight spine (figures-mapping-v1.json) plus the v0 files that stay on disk until
+    // `build_v1.py --publish --retire` moves them to figures/_retired-v0/ (their islands are still registered).
+    const mapping = JSON.parse(readFileSync(join(FIGURES, "..", "figures-mapping-v1.json"), "utf8")) as { v1: Record<string, unknown> };
+    const legacy = ["c1", "c10", "c10-bars", "c11", "c12", "c14", "c2", "c4", "c5", "c6", "c7", "c8", "c9"];
+    expect([...figures.specs.keys()].sort()).toEqual([...new Set([...Object.keys(mapping.v1), ...legacy])].sort());
     for (const spec of figures.specs.values()) {
       expect(findPrivacyFindings(spec)).toEqual([]);
     }

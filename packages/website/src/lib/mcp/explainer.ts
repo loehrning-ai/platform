@@ -133,7 +133,7 @@ const COPY = {
 const RESOURCE_EXAMPLES = [
   "lesson://ki-fuehrerschein/daten-1-1",
   "workshop://ki-prognosen-einschaetzen",
-  "book://ki-landschaft/01_eisberg?locale=en",
+  "book://ki-landschaft/01_zweimal_gemessen?locale=en",
 ] as const;
 
 export function escapeHtml(value: string): string {

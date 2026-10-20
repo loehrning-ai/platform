@@ -100,7 +100,7 @@ describe("source hygiene of the islands", () => {
     expect(rule(".bf-btn")).toMatch(/min-height:\s*2\.75rem/);
     expect(rule(".bf-btn")).toMatch(/min-width:\s*2\.75rem/);
     expect(rule(".bf-csv")).toMatch(/min-height:\s*2\.75rem/);
-    expect(rule(".bf-data > summary")).toMatch(/min-height:\s*2\.75rem/);
+    expect(read("../shared/source-line.css")).toMatch(/\.bf-sourceline-csv\s*\{[^}]*min-height:\s*2\.75rem/);
     expect(rule(".bf-range")).toMatch(/height:\s*2\.75rem/);
   });
 

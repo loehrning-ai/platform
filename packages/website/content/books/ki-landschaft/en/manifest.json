@@ -8,47 +8,99 @@
   "riskClass": "statistical",
   "publicationStatus": "published",
   "publicationReason": "New edition of 19 October 2026 with aggregates from an own analysis of company websites. Editorial approval by the publisher before the merge.",
-  "adaptationNote": "The edition shows only aggregates from an own analysis of company websites: every number rests on at least 5 hits, with no company names, addresses, prices, scores or rankings of individual firms. It applies to firms with a findable website, and the raw data stays private.",
+  "adaptationNote": "The edition shows only aggregates from own analyses of company websites, job ads and press releases: every number rests on at least 5 hits, with no company names, addresses, prices, scores or rankings of individual firms. It applies to firms with a findable website, and the raw data stays private.",
+  "landing": {
+    "headlineRef": "h05-waterfall.weighted_share",
+    "headlineTail": "of the homepages of firms with their own domain write the word AI.",
+    "sourceLine": "95% interval {{h05-waterfall.weighted_share.range}}. Only {{h05-waterfall.audit_own}} of the firm-to-website matches were right. Will be recomputed with verified websites.",
+    "facts": [
+      { "value": "{{h05-waterfall.base_sites}}", "label": "firms with their own domain" },
+      { "value": "{{h02-blocks.raw_ads}}", "label": "job ads" },
+      { "value": "{{h11-field.releases}}", "label": "press releases" }
+    ],
+    "explainer": {
+      "heading": "What to expect",
+      "text": "Findings from company websites, job ads and press releases, each with its sample, period and limit. You read them in eight short chapters and can work out for yourself, at the end, where you stand."
+    },
+    "explorerChapter": "08_dein_zug"
+  },
   "chapters": [
     {
-      "slug": "01_eisberg",
-      "title": "The number that does not add up",
-      "sourceFile": "01_eisberg.md"
+      "slug": "01_zweimal_gemessen",
+      "title": "Two measurements, two pictures",
+      "sourceFile": "01_zweimal_gemessen.md",
+      "band": {
+        "numeral": "{{h05-dots.rescan_lost}}",
+        "claim": "Almost every second AI hit is missing in the second measurement, which read the text differently."
+      }
     },
     {
-      "slug": "02_sagen_zeigen",
-      "title": "Saying and showing",
-      "sourceFile": "02_sagen_zeigen.md"
+      "slug": "02_textmenge",
+      "title": "Who writes a lot writes AI",
+      "sourceFile": "02_textmenge.md",
+      "band": {
+        "numeral": "{{h01-bars.ratio}}x",
+        "claim": "That many times more often long homepages say AI than short ones."
+      }
     },
     {
-      "slug": "03_zweimal_gemessen",
-      "title": "The same firm, measured twice",
-      "sourceFile": "03_zweimal_gemessen.md"
+      "slug": "03_schaufenster",
+      "title": "In the shop window",
+      "sourceFile": "03_schaufenster.md",
+      "band": {
+        "numeral": "{{h04-forest.sov_ki_share}}",
+        "claim": "Who writes sovereignty often says AI too, with GDPR not."
+      }
     },
     {
-      "slug": "04_branche_land",
-      "title": "Industry beats state",
-      "sourceFile": "04_branche_land.md"
+      "slug": "04_stellen_namen",
+      "title": "Jobs and names",
+      "sourceFile": "04_stellen_namen.md",
+      "band": {
+        "numeral": "{{h02-blocks.tech_low}} to {{h02-blocks.tech_high}}",
+        "claim": "of 100 ads on AI and data are technical jobs."
+      }
     },
     {
-      "slug": "05_reden_einstellen",
-      "title": "Talking and hiring",
-      "sourceFile": "05_reden_einstellen.md"
+      "slug": "05_land",
+      "title": "The country is not a league table",
+      "sourceFile": "05_land.md",
+      "band": {
+        "numeral": "{{h06-slope.top_b}}x",
+        "claim": "The top districts of the first half sit at the average in the second."
+      }
     },
     {
-      "slug": "06_eu_ki_verordnung",
-      "title": "What has applied since February 2025",
-      "sourceFile": "06_eu_ki_verordnung.md"
+      "slug": "06_stimmen",
+      "title": "Who else is talking",
+      "sourceFile": "06_stimmen.md",
+      "band": {
+        "numeral": "{{h12-null.ki_ratio}}x",
+        "claim": "That many times more often register firms write AI than comparable firms."
+      }
     },
     {
-      "slug": "07_pilot",
-      "title": "Your first pilot",
-      "sourceFile": "07_pilot.md"
+      "slug": "07_schluessel",
+      "title": "Who holds the key",
+      "sourceFile": "07_schluessel.md",
+      "band": {
+        "numeral": "{{h09-field.cert_eu_strict}}",
+        "claim": "of certificates come from a European-run issuer."
+      }
     },
     {
-      "slug": "08_methodik",
-      "title": "Method and limits",
-      "sourceFile": "08_methodik.md"
+      "slug": "08_dein_zug",
+      "title": "Your move",
+      "sourceFile": "08_dein_zug.md",
+      "band": {
+        "numeral": "{{h05-waterfall.weighted_share}}",
+        "claim": "of homepages write AI. Work out where you stand."
+      }
+    },
+    {
+      "slug": "09_quellen",
+      "title": "Sources, status, limits",
+      "sourceFile": "09_quellen.md"
     }
   ]
 }

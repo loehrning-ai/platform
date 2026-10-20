@@ -1,0 +1,71 @@
+Teil,Bezeichnung,von,bis,Wert
+Ziehungen,205 Firmen,2.5,3,1
+Ziehungen,205 Firmen,3,3.5,8
+Ziehungen,205 Firmen,3.5,4,12
+Ziehungen,205 Firmen,4,4.5,48
+Ziehungen,205 Firmen,4.5,5,70
+Ziehungen,205 Firmen,5,5.5,113
+Ziehungen,205 Firmen,5.5,6,202
+Ziehungen,205 Firmen,6,6.5,255
+Ziehungen,205 Firmen,6.5,7,359
+Ziehungen,205 Firmen,7,7.5,424
+Ziehungen,205 Firmen,7.5,8,460
+Ziehungen,205 Firmen,8,8.5,508
+Ziehungen,205 Firmen,8.5,9,513
+Ziehungen,205 Firmen,9,9.5,464
+Ziehungen,205 Firmen,9.5,10,391
+Ziehungen,205 Firmen,10,10.5,351
+Ziehungen,205 Firmen,10.5,11,265
+Ziehungen,205 Firmen,11,11.5,195
+Ziehungen,205 Firmen,11.5,12,129
+Ziehungen,205 Firmen,12,12.5,94
+Ziehungen,205 Firmen,12.5,13,55
+Ziehungen,205 Firmen,13,13.5,27
+Ziehungen,205 Firmen,13.5,14,25
+Ziehungen,205 Firmen,14,14.5,15
+Ziehungen,205 Firmen,14.5,15,7
+Ziehungen,205 Firmen,15,15.5,6
+Ziehungen,205 Firmen,15.5,16,2
+Ziehungen,205 Firmen,16,16.5,1
+Ziehungen,100 Firmen,1,2,6
+Ziehungen,100 Firmen,2,3,27
+Ziehungen,100 Firmen,3,4,68
+Ziehungen,100 Firmen,4,5,191
+Ziehungen,100 Firmen,5,6,364
+Ziehungen,100 Firmen,6,7,572
+Ziehungen,100 Firmen,7,8,695
+Ziehungen,100 Firmen,8,9,773
+Ziehungen,100 Firmen,9,10,686
+Ziehungen,100 Firmen,10,11,582
+Ziehungen,100 Firmen,12,13,393
+Ziehungen,100 Firmen,13,14,287
+Ziehungen,100 Firmen,14,15,177
+Ziehungen,100 Firmen,15,16,93
+Ziehungen,100 Firmen,16,17,54
+Ziehungen,100 Firmen,17,18,15
+Ziehungen,100 Firmen,18,19,10
+Ziehungen,100 Firmen,19,20,5
+Ziehungen,100 Firmen,20,21,1
+Ziehungen,100 Firmen,21,22,1
+Ziehungen,50 Firmen,0,2,72
+Ziehungen,50 Firmen,2,4,330
+Ziehungen,50 Firmen,4,6,709
+Ziehungen,50 Firmen,6,8,1002
+Ziehungen,50 Firmen,8,10,1031
+Ziehungen,50 Firmen,10,12,812
+Ziehungen,50 Firmen,12,14,547
+Ziehungen,50 Firmen,16,18,294
+Ziehungen,50 Firmen,18,20,123
+Ziehungen,50 Firmen,20,22,48
+Ziehungen,50 Firmen,22,24,21
+Ziehungen,50 Firmen,24,26,10
+Ziehungen,50 Firmen,26,28,1
+Zufallsband,205 Firmen,4.88,12.68,
+Zufallsband,100 Firmen,4.4,15.38,
+Zufallsband,50 Firmen,2.33,18.6,
+Beobachtet,Register-Firmen,11.3,21.2,15.6
+Verhältnis,KI,1.266,2.393,1.804
+Verhältnis,Digitalisierung,0.977,2.308,1.621
+Verhältnis,Cloud,1.095,2.821,1.899
+Verhältnis,Nachhaltigkeit,1.367,1.806,1.587
+Verhältnis,Cyber,1.723,4.979,3.2

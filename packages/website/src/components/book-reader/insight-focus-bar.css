@@ -1,0 +1,151 @@
+/*
+ * The reader bar of an insight chapter below lg (insight-focus-bar.tsx). It takes
+ * the band the tab bar leaves behind (--tabbar-h plus the device inset), so a
+ * book page never shifts when the bar changes its content. Kalkweiss ground,
+ * Druckschwarz ink and rule, Mennige for the one primary action. No radius, no
+ * shadow, no gradient, Figtree only. Hover (fine pointers) turns an ink button
+ * Mennige and the Mennige one Druckschwarz; press sinks 1px and flips to the
+ * other anti colour; focus is a fixed 3px ring that never matches the fill.
+ */
+
+.ifb {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  padding-inline: env(safe-area-inset-left, 0) env(safe-area-inset-right, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  border-top: 2px solid var(--color-foreground, #121212);
+  background: var(--color-background, #f3f0e9);
+  color: var(--color-foreground, #121212);
+}
+
+@media (min-width: 1024px) {
+  .ifb {
+    display: none;
+  }
+}
+
+.ifb-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  height: var(--tabbar-h, 3.5rem);
+  padding: 0 0.75rem;
+}
+
+.ifb-count {
+  margin: 0;
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Chapter mode: the label sits left, the one action right (the row has two cells). */
+.ifb-row:has(.ifb-count--start) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.ifb-count--start {
+  text-align: left;
+}
+
+.ifb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 3rem;
+  min-width: 3rem;
+  padding: 0 0.875rem;
+  border: 2px solid var(--color-foreground, #121212);
+  border-radius: 0;
+  background: var(--color-background, #f3f0e9);
+  color: var(--color-foreground, #121212);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ifb-btn--primary {
+  border-color: var(--color-brand-orange, #b73a15);
+  background: var(--color-brand-orange, #b73a15);
+  color: var(--color-background, #f3f0e9);
+}
+
+.ifb-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+.ifb-btn:focus-visible {
+  outline: 3px solid var(--color-brand-orange, #b73a15);
+  outline-offset: 2px;
+}
+
+.ifb-btn--primary:focus-visible {
+  outline-color: var(--color-foreground, #121212);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ifb-btn:not([aria-disabled="true"]):hover {
+    border-color: var(--color-brand-orange, #b73a15);
+    background: var(--color-brand-orange, #b73a15);
+    color: var(--color-background, #f3f0e9);
+  }
+
+  .ifb-btn--primary:hover {
+    border-color: var(--color-foreground, #121212);
+    background: var(--color-foreground, #121212);
+  }
+}
+
+.ifb-btn:not([aria-disabled="true"]):active {
+  border-color: var(--color-foreground, #121212);
+  background: var(--color-foreground, #121212);
+  color: var(--color-background, #f3f0e9);
+  transform: translateY(1px);
+}
+
+.ifb-btn--primary:active {
+  background: var(--color-background, #f3f0e9) !important;
+  color: var(--color-foreground, #121212) !important;
+}
+
+.ifb-btn[aria-disabled="true"] {
+  /* Disabled is the same outlined button, solid, at 40 % (never a dashed box: it reads as a bug). */
+  opacity: 0.4;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ifb-btn:active {
+    transform: none;
+  }
+}
+
+/* A narrow phone keeps the three cells on one line: Back is its arrow only (its accessible name stays the sentence). */
+.ifb-btn-label {
+  display: none;
+}
+
+@media (min-width: 430px) {
+  .ifb-btn-label {
+    display: inline;
+  }
+}
+
+.ifb-row .ifb-btn--primary {
+  padding-inline: 0.75rem;
+  font-size: 0.9375rem;
+}

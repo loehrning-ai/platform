@@ -1,0 +1,371 @@
+{
+  "id": "h07-curve",
+  "kind": "curve",
+  "title": "Je neuer das jüngste Datum, desto öfter steht KI da",
+  "alt": "Von 21.402 Startseiten zeigen 4.574 ein ausdrückliches Datum. Bei gleicher Textmenge schreiben Seiten, deren jüngstes Datum aus 2026 stammt, zu 10,8 Prozent KI, Seiten mit einem Datum bis 2022 zu 2,0 Prozent, etwa 5-mal so oft. 25 Prozent der datierten Seiten zeigen als jüngstes Datum 2023 oder früher.",
+  "caption": "Anteil mit KI-Wort nach dem Jahr des jüngsten Datums, bei gleicher Textmenge, mit 95-%-Band. 2026 gegenüber bis 2022: Faktor 5,3 (Intervall 3,5 bis 10,2), Chancenverhältnis 6,2 (3,6 bis 10,8).",
+  "n": 4574,
+  "nNote": "4.574 datierte Startseiten von 21.402",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan April 2026, Textkamera)",
+  "asOf": "2026-10-19",
+  "limitation": "Nur etwa jede fünfte Seite zeigt ein Datum. 2026 heißt Januar bis Anfang April. Rund ein Fünftel der jüngsten Daten steht neben Gründung, Stand oder Copyright: Das ist Frische, kein Beweis für Vernachlässigung. Das Copyright-Jahr taugt nicht als Uhr (das Intervall schließt 1 ein).",
+  "sourceLine": "n = 4.574 datierte Startseiten · Scan 2026-04 · Grenze: Frische, nicht Vernachlässigung; nur 21 Prozent zeigen ein Datum · Wird vom Rescan geprüft.",
+  "data": {
+    "claim": "Je jünger das Datum, desto öfter KI.",
+    "points": [
+      {
+        "id": "y2020",
+        "label": "bis 2020",
+        "value": 1.83264,
+        "lo": 0.68379,
+        "hi": 3.02488,
+        "n": 621,
+        "frozen": true
+      },
+      {
+        "id": "y2022",
+        "label": "2021 bis 2022",
+        "value": 2.33955,
+        "lo": 0.81232,
+        "hi": 4.47223,
+        "n": 296,
+        "frozen": true
+      },
+      {
+        "id": "y2023",
+        "label": "2023",
+        "value": 3.19496,
+        "lo": 1.09459,
+        "hi": 5.89149,
+        "n": 224,
+        "frozen": true
+      },
+      {
+        "id": "y2024",
+        "label": "2024",
+        "value": 4.614,
+        "lo": 2.51009,
+        "hi": 7.15646,
+        "n": 342
+      },
+      {
+        "id": "y2025",
+        "label": "2025",
+        "value": 7.33826,
+        "lo": 5.57203,
+        "hi": 9.23248,
+        "n": 740
+      },
+      {
+        "id": "y2026",
+        "label": "2026",
+        "value": 10.80038,
+        "lo": 9.82726,
+        "hi": 11.86611,
+        "n": 2351
+      }
+    ],
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "min": 0,
+    "max": 14,
+    "defaultVariant": "y2026",
+    "frozenLabel": "Jede vierte datierte Seite: 2023 oder früher",
+    "panel": {
+      "title": "Zum Vergleich: Chancenverhältnis 2026 gegen bis 2022",
+      "fmt": {
+        "style": "decimal",
+        "digits": 1
+      },
+      "rows": [
+        {
+          "id": "ki",
+          "label": "KI",
+          "value": 6.2327
+        },
+        {
+          "id": "digitalisierung",
+          "label": "Digitalisierung",
+          "value": 2.0883
+        },
+        {
+          "id": "nachhaltig",
+          "label": "nachhaltig",
+          "value": 1.6548
+        },
+        {
+          "id": "loesung",
+          "label": "Lösung",
+          "value": 1.0338
+        },
+        {
+          "id": "qualitaet",
+          "label": "Qualität",
+          "value": 0.9139
+        }
+      ]
+    }
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4574,
+    "base": "Startseiten mit eigener Domain, Text und ausdrücklichem Datum im Haupttext",
+    "window": "2026-04-01 bis 2026-04-09",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan April 2026, Textkamera)",
+    "hero": "H07",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "pages_dated": {
+        "value": 4574.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "pages_all": {
+        "value": 21402.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dated_share": {
+        "value": 21.3718,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "rate_y2020": {
+        "value": 1.83264,
+        "lo": 0.683789,
+        "hi": 3.02488,
+        "n": 621,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "raw_y2020": {
+        "value": 1.28824,
+        "lo": 0.65418,
+        "hi": 2.52128,
+        "n": 621,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_y2022": {
+        "value": 2.33955,
+        "lo": 0.812315,
+        "hi": 4.47223,
+        "n": 296,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "raw_y2022": {
+        "value": 2.02703,
+        "lo": 0.932223,
+        "hi": 4.3511,
+        "n": 296,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_y2023": {
+        "value": 3.19496,
+        "lo": 1.09459,
+        "hi": 5.89149,
+        "n": 224,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "raw_y2023": {
+        "value": 2.67857,
+        "lo": 1.23325,
+        "hi": 5.71965,
+        "n": 224,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_y2024": {
+        "value": 4.614,
+        "lo": 2.51009,
+        "hi": 7.15646,
+        "n": 342,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "raw_y2024": {
+        "value": 4.38596,
+        "lo": 2.67567,
+        "hi": 7.10962,
+        "n": 342,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_y2025": {
+        "value": 7.33826,
+        "lo": 5.57203,
+        "hi": 9.23248,
+        "n": 740,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "raw_y2025": {
+        "value": 6.89189,
+        "lo": 5.28051,
+        "hi": 8.94854,
+        "n": 740,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_y2026": {
+        "value": 10.8004,
+        "lo": 9.82726,
+        "hi": 11.8661,
+        "n": 2351,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "raw_y2026": {
+        "value": 12.2076,
+        "lo": 10.9455,
+        "hi": 13.5929,
+        "n": 2351,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_until_2022": {
+        "value": 2.02122,
+        "lo": 1.04438,
+        "hi": 3.02597,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rate_ratio": {
+        "value": 5.343,
+        "lo": 3.46816,
+        "hi": 10.232,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "odds_ratio": {
+        "value": 6.23272,
+        "lo": 3.60297,
+        "hi": 10.7819,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "stale_share": {
+        "value": 24.9453,
+        "lo": 23.7127,
+        "hi": 26.22,
+        "n": 4574,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "stale_pages": {
+        "value": 1141.0,
+        "n": 4574,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "hits_oldest": {
+        "value": 14.0,
+        "n": 917,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "pages_oldest": {
+        "value": 917.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "hits_2026": {
+        "value": 287.0,
+        "n": 2351,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "or_digitalisierung": {
+        "value": 2.08831,
+        "lo": 1.41228,
+        "hi": 3.08792,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_nachhaltig": {
+        "value": 1.65484,
+        "lo": 1.34719,
+        "hi": 2.03274,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_loesung": {
+        "value": 1.03376,
+        "lo": 0.868324,
+        "hi": 1.23071,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_qualitaet": {
+        "value": 0.913918,
+        "lo": 0.770139,
+        "hi": 1.08454,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

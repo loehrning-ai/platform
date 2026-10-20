@@ -9,6 +9,7 @@
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
   "asOf": "2026-10-18",
   "limitation": "Gelesen wurden 269 Startseiten, beurteilt hat ein KI-Assistent, die Gegenprüfung durch den Autor steht aus. Die Intervalle sind breit, weil nur 64 Seiten KI erwähnen. Gezeigt wird, was auf der Startseite steht, nicht, was die Firma tut.",
+  "sourceLine": "n = 269 gelesene Startseiten, davon 64 mit KI-Wort · Scan 2026-03 bis 05 · Grenze: Auswahl und Urteil eines KI-Assistenten, Gegenprüfung steht aus",
   "steps": [
     {
       "id": "alle",
@@ -128,6 +129,14 @@
           "digits": 0
         }
       }
-    }
+    },
+    "n": 64,
+    "base": "Firmenwebsites, die das Wort KI erwähnen; 269 Startseiten von Hand gelesen",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+    "hero": "C3",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
   }
 }

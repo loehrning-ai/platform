@@ -1,0 +1,620 @@
+{
+  "id": "h09-field",
+  "kind": "field",
+  "title": "Der Schlüsselbund ist amerikanisch",
+  "alt": "Fünf Messungen, ein Bild. Von 4.819 Zertifikaten stellt eine europäisch geführte Stelle 0,6 von 100 aus, eine US-geführte 97,8. 55,2 von 100 Seiten laden einen Google-Dienst. Wer einen KI-Anbieter nennt, nennt überwiegend einen amerikanischen. In Stellentiteln nennen 415 Arbeitgeber eine US-Plattform und 6 eine europäische. Von 362 KI-Beratungen mit Partnerliste nennt jede fünfte Microsoft.",
+  "caption": "Fünf Basen: 4.819 Zertifikate, 4.168 Websites mit gelesenem Kopf, 96 KI-Seiten mit Anbieter-Nennung, 421 Plattform-Nennungen in Titeln, 362 Beratungen. Jede Sprosse hat ihre eigene Basis und ihre eigene Zählweise.",
+  "n": 4819,
+  "nNote": "4.819 / 4.168 / 96 / 421 / 362",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Stellenanzeigen (LinkedIn, Indeed, Glassdoor) und Startseiten von KI-Beratern",
+  "asOf": "2026-10-19",
+  "limitation": "Die Wörterlisten der US- und der europäischen Anbieter sind verschieden groß, die Zahlen sind Untergrenzen, kein Marktanteil. Der Sitz eines Anbieters ist nicht der Ort des Servers. Das Zertifikat wählt meist der Hoster. Die Messungen laufen an Teilmengen (19 Prozent der Basis, 75 Prozent Bayern), ein Scan.",
+  "sourceLine": "n je Sprosse eigen: 4.819 Zertifikate · Scan 2026-03 bis 05, Stellen bis 06-16 · Grenze: Sitz des Anbieters, nicht Ort des Servers; Teilmengen · Wird vom Rescan geprüft.",
+  "steps": [
+    {
+      "id": "zertifikate",
+      "label": "Zertifikate"
+    },
+    {
+      "id": "dienste",
+      "label": "Dienste"
+    },
+    {
+      "id": "ki-anbieter",
+      "label": "KI-Anbieter"
+    },
+    {
+      "id": "stellen",
+      "label": "Stellentitel"
+    },
+    {
+      "id": "partner",
+      "label": "Partner"
+    }
+  ],
+  "data": {
+    "classes": [
+      {
+        "id": "us",
+        "label": "US-geführt",
+        "tone": "ink"
+      },
+      {
+        "id": "eu",
+        "label": "europäisch geführt",
+        "tone": "accent"
+      },
+      {
+        "id": "rest",
+        "label": "andere oder unklar",
+        "tone": "leinen"
+      }
+    ],
+    "scenes": [
+      {
+        "id": "zertifikate",
+        "population": "Zertifikat|Zertifikate",
+        "base": 4819,
+        "squares": 1000,
+        "unit": "Zertifikat|Zertifikate",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 4713
+              },
+              {
+                "cls": "eu",
+                "count": 27,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 79
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 0.560282,
+          "fmt": {
+            "style": "percent",
+            "digits": 1
+          }
+        },
+        "claim": "Europäisch geführt: 0,6 von 100."
+      },
+      {
+        "id": "zertifikate-breit",
+        "population": "Zertifikat|Zertifikate",
+        "base": 4819,
+        "squares": 1000,
+        "unit": "Zertifikat|Zertifikate",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 4713
+              },
+              {
+                "cls": "eu",
+                "count": 88,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 18
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 1.82611,
+          "fmt": {
+            "style": "percent",
+            "digits": 1
+          }
+        },
+        "claim": "Mit europäischem Firmensitz: 1,8 von 100.",
+        "variantOf": "zertifikate",
+        "variantLabel": "Auch Firmensitz in Europa"
+      },
+      {
+        "id": "dienste",
+        "population": "Website|Websites",
+        "base": 4168,
+        "squares": 1000,
+        "unit": "Website|Websites",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 2268
+              },
+              {
+                "cls": "eu",
+                "count": 605
+              },
+              {
+                "cls": "rest",
+                "count": 1295
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 54.4146,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Mehr als die Hälfte lädt einen US-Dienst."
+      },
+      {
+        "id": "dienste-breit",
+        "population": "Website|Websites",
+        "base": 4168,
+        "squares": 1000,
+        "unit": "Website|Websites",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 2618
+              },
+              {
+                "cls": "eu",
+                "count": 400
+              },
+              {
+                "cls": "rest",
+                "count": 1150
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 62.8119,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Mehr als die Hälfte lädt einen US-Dienst.",
+        "variantOf": "dienste",
+        "variantLabel": "Breite Zählweise"
+      },
+      {
+        "id": "ki-anbieter",
+        "population": "Seite|Seiten",
+        "base": 96,
+        "squares": 96,
+        "unit": "Seite|Seiten",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 77
+              },
+              {
+                "cls": "rest",
+                "count": 19
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 80.2083,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Wer einen KI-Anbieter nennt, nennt meist einen amerikanischen."
+      },
+      {
+        "id": "stellen",
+        "population": "Nennung|Nennungen",
+        "base": 421,
+        "squares": 421,
+        "unit": "Nennung|Nennungen",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 415
+              },
+              {
+                "cls": "eu",
+                "count": 6
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 98.5748,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Fast alle Nennungen sind amerikanisch."
+      },
+      {
+        "id": "partner",
+        "population": "Beratung|Beratungen",
+        "base": 362,
+        "squares": 362,
+        "unit": "Beratung|Beratungen",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "us",
+                "count": 142
+              },
+              {
+                "cls": "eu",
+                "count": 8
+              },
+              {
+                "cls": "rest",
+                "count": 212
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 39.2265,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Jede fünfte nennt Microsoft."
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4819,
+    "base": "fünf Teilmengen mit je eigener Basis (Zertifikate, Seiten, KI-Seiten, Stellentitel, Partnerlisten)",
+    "window": "2026-03 bis 2026-06",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Stellenanzeigen (LinkedIn, Indeed, Glassdoor) und Startseiten von KI-Beratern",
+    "hero": "H09",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "cert_n": {
+        "value": 4819.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "cert_us_hq": {
+        "value": 75.5136,
+        "lo": 74.2795,
+        "hi": 76.7071,
+        "n": 4819,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "cert_sectigo": {
+        "value": 22.2868,
+        "n": 4819,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "cert_us_run": {
+        "value": 97.8004,
+        "lo": 97.3466,
+        "hi": 98.178,
+        "n": 4819,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "cert_letsencrypt": {
+        "value": 54.7416,
+        "lo": 53.3331,
+        "hi": 56.1427,
+        "n": 4819,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "cert_eu_strict": {
+        "value": 0.560282,
+        "lo": 0.385351,
+        "hi": 0.813975,
+        "n": 4819,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "cert_eu_incl": {
+        "value": 1.82611,
+        "lo": 1.48464,
+        "hi": 2.24431,
+        "n": 4819,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "cert_eu_strict_hits": {
+        "value": 27.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "cert_bayern": {
+        "value": 72.0066,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "services_n": {
+        "value": 4168.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "services_google": {
+        "value": 55.1823,
+        "lo": 53.6685,
+        "hi": 56.6867,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "services_us_strict": {
+        "value": 54.4146,
+        "lo": 52.8992,
+        "hi": 55.9219,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "services_us_broad": {
+        "value": 62.8119,
+        "lo": 61.3334,
+        "hi": 64.2668,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "services_eu_nocms": {
+        "value": 36.1324,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ai_pages": {
+        "value": 972.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_us_pages": {
+        "value": 77.0,
+        "n": 972,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_named_pages": {
+        "value": 81.0,
+        "n": 972,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_named_share": {
+        "value": 8.33333,
+        "n": 972,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ai_none_share": {
+        "value": 91.6667,
+        "n": 972,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ai_us_share_broad": {
+        "value": 80.2083,
+        "lo": 71.1446,
+        "hi": 86.9474,
+        "n": 96,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ai_named_broad": {
+        "value": 96.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_not_us_broad": {
+        "value": 19.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_us_share_strict_floor": {
+        "value": 90.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "jobs_postings": {
+        "value": 58813.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "jobs_employers": {
+        "value": 15059.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "jobs_us_employers": {
+        "value": 415.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "jobs_eu_employers": {
+        "value": 6.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "jobs_azure_employers": {
+        "value": 160.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "jobs_aws_employers": {
+        "value": 72.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "jobs_azure_per_aws": {
+        "value": 2.22222,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "partner_n": {
+        "value": 362.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "partner_us": {
+        "value": 39.2265,
+        "lo": 34.3351,
+        "hi": 44.3442,
+        "n": 362,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "partner_microsoft": {
+        "value": 21.2707,
+        "lo": 17.3681,
+        "hi": 25.7767,
+        "n": 362,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "partner_eu_cloud": {
+        "value": 3.03867,
+        "n": 362,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "partner_eu_ai": {
+        "value": 3.03867,
+        "n": 362,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "partner_eu_cloud_hits": {
+        "value": 11.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "partner_eu_ai_hits": {
+        "value": 11.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

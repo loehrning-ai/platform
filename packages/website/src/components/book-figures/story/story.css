@@ -164,8 +164,7 @@
 .bf-chip:focus-visible,
 .bf-button:focus-visible,
 .bf-select:focus-visible,
-.bf-range:focus-visible,
-.bf-summary:focus-visible {
+.bf-range:focus-visible {
   outline: 2px solid var(--bf-ink);
   outline-offset: 2px;
 }
@@ -320,37 +319,6 @@
   margin-top: 0.75rem;
   font-size: 0.875rem;
   line-height: 1.45;
-}
-
-.bf-source {
-  font-size: 0.8125rem;
-  color: var(--bf-muted-light);
-}
-
-.bf-data {
-  margin-top: 0.5rem;
-  border-top: 1px solid var(--bf-hair);
-}
-
-.bf-summary {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.bf-data-body {
-  display: grid;
-  gap: 12px;
-  padding-bottom: 12px;
-}
-
-.bf-limit {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.5;
 }
 
 .bf-table-wrap {

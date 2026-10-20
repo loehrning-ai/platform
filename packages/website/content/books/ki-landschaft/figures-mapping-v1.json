@@ -1,0 +1,249 @@
+{
+  "schema": "figures-mapping/1",
+  "methodVersion": "v1-lab-2026-10-19",
+  "asOf": "2026-10-19",
+  "v0": {
+    "c1": {
+      "status": "retired",
+      "note": "Umfragen-Leiter: nicht unsere Daten (INSIGHT-SPEC 0.1)"
+    },
+    "c2": {
+      "status": "retired",
+      "note": "Eisberg: nicht unsere Daten (INSIGHT-SPEC 0.1)"
+    },
+    "c3": {
+      "status": "kept",
+      "note": "Kapitel 3, unverändert (Lesung von 269 Startseiten)"
+    },
+    "c3-evidence": {
+      "status": "kept",
+      "note": "Kapitel 3, unverändert"
+    },
+    "c4": {
+      "status": "replaced",
+      "note": "h05-waterfall (8,2 bis 3,8), h05-dots (89 Punkte), h05-ladder (zweite Kamera)"
+    },
+    "c5": {
+      "status": "replaced",
+      "note": "h01-bars (fünf Fünftel), h01-dose (Regler Textmenge)"
+    },
+    "c6": {
+      "status": "retired",
+      "note": "Branche als Dotplot: Explorer (Branche x Textmenge) trägt die Branche; H01 bis H10 brauchen sie nicht"
+    },
+    "c7": {
+      "status": "replaced",
+      "note": "h10-tiles (Länder, alle und Kern), h10-or (Bayern, Osten)"
+    },
+    "c8": {
+      "status": "replaced",
+      "note": "h06-slope (Kreis-Lotterie), h06-region (Regionsdaten)"
+    },
+    "c9": {
+      "status": "replaced",
+      "note": "h01-dose und h01-friends (Textmenge, Merkmale)"
+    },
+    "c10": {
+      "status": "replaced",
+      "note": "h02-blocks (Stellenzählung); Lorenz-Kurve entfällt (als Text in Kapitel 4)"
+    },
+    "c10-bars": {
+      "status": "retired",
+      "note": "Randnotiz in Kapitel 4, als Text"
+    },
+    "c11": {
+      "status": "retired",
+      "note": "Stellen je Million: Randnotiz in Kapitel 4, als Text"
+    },
+    "c12": {
+      "status": "retired",
+      "note": "EU-KI-Verordnung als Kapitel entfällt (Art. 4 steht im Explorer-Kapitel als Absatz)"
+    },
+    "c14": {
+      "status": "replaced",
+      "note": "explorer.json (Modell statt Tabelle)"
+    }
+  },
+  "v1": {
+    "c3-evidence": {
+      "hero": "C3",
+      "chapter": 3,
+      "kind": "bars"
+    },
+    "c3": {
+      "hero": "C3",
+      "chapter": 3,
+      "kind": "waffle"
+    },
+    "h01-bars": {
+      "hero": "H01",
+      "chapter": 2,
+      "kind": "bars"
+    },
+    "h01-dose": {
+      "hero": "H01",
+      "chapter": 2,
+      "kind": "strip"
+    },
+    "h01-field": {
+      "hero": "H01",
+      "chapter": 2,
+      "kind": "field"
+    },
+    "h01-friends": {
+      "hero": "H01",
+      "chapter": 2,
+      "kind": "strip"
+    },
+    "h01-net": {
+      "hero": "H01",
+      "chapter": 2,
+      "kind": "network"
+    },
+    "h02-blocks": {
+      "hero": "H02",
+      "chapter": 4,
+      "kind": "blocks"
+    },
+    "h02-gap-portal": {
+      "hero": "H02",
+      "chapter": 4,
+      "kind": "bars"
+    },
+    "h02-gap": {
+      "hero": "H02",
+      "chapter": 4,
+      "kind": "waffle"
+    },
+    "h02-ladder": {
+      "hero": "H02",
+      "chapter": 4,
+      "kind": "dumbbell"
+    },
+    "h03-drift": {
+      "hero": "H03",
+      "chapter": 4,
+      "kind": "curve"
+    },
+    "h03-strip": {
+      "hero": "H03",
+      "chapter": 4,
+      "kind": "strip"
+    },
+    "h04-dumbbell": {
+      "hero": "H04",
+      "chapter": 3,
+      "kind": "dumbbell"
+    },
+    "h04-field": {
+      "hero": "H04",
+      "chapter": 3,
+      "kind": "field"
+    },
+    "h04-forest": {
+      "hero": "H04",
+      "chapter": 3,
+      "kind": "strip"
+    },
+    "h05-dots": {
+      "hero": "H05",
+      "chapter": 1,
+      "kind": "waffle"
+    },
+    "h05-ladder": {
+      "hero": "H05",
+      "chapter": 1,
+      "kind": "ladder"
+    },
+    "h05-waterfall": {
+      "hero": "H05",
+      "chapter": 1,
+      "kind": "waterfall"
+    },
+    "h06-region": {
+      "hero": "H06",
+      "chapter": 5,
+      "kind": "bars"
+    },
+    "h06-slope": {
+      "hero": "H06",
+      "chapter": 5,
+      "kind": "slope"
+    },
+    "h07-curve": {
+      "hero": "H07",
+      "chapter": 3,
+      "kind": "curve"
+    },
+    "h07-field": {
+      "hero": "H07",
+      "chapter": 3,
+      "kind": "field"
+    },
+    "h08-auc": {
+      "hero": "H08",
+      "chapter": 7,
+      "kind": "bars"
+    },
+    "h08-field": {
+      "hero": "H08",
+      "chapter": 7,
+      "kind": "field"
+    },
+    "h08-php": {
+      "hero": "H08",
+      "chapter": 7,
+      "kind": "bars"
+    },
+    "h09-field": {
+      "hero": "H09",
+      "chapter": 7,
+      "kind": "field"
+    },
+    "h10-or": {
+      "hero": "H10",
+      "chapter": 5,
+      "kind": "strip"
+    },
+    "h10-tiles": {
+      "hero": "H10",
+      "chapter": 5,
+      "kind": "tilemap"
+    },
+    "h11-field": {
+      "hero": "H11",
+      "chapter": 6,
+      "kind": "field"
+    },
+    "h12-null": {
+      "hero": "H12",
+      "chapter": 6,
+      "kind": "nulldist"
+    },
+    "rand-kap2": {
+      "hero": "M2",
+      "chapter": 2,
+      "kind": "bars"
+    },
+    "rand-kap3": {
+      "hero": "M3",
+      "chapter": 3,
+      "kind": "bars"
+    },
+    "rand-kap4": {
+      "hero": "M4",
+      "chapter": 4,
+      "kind": "bars"
+    },
+    "rand-kap5": {
+      "hero": "M5",
+      "chapter": 5,
+      "kind": "bars"
+    },
+    "rand-kap7": {
+      "hero": "M7",
+      "chapter": 7,
+      "kind": "bars"
+    }
+  }
+}

@@ -8,6 +8,7 @@
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
   "asOf": "2026-10-18",
   "limitation": "Textmuster im Quelltext. Ein Chat-Widget sagt nicht, ob KI dahintersteckt. Gegen gelesene Startseiten trafen die Muster in 28 % der Fälle und fanden 25 % der Seiten mit konkretem Gebrauch.",
+  "sourceLine": "n = 1.112 Seiten mit KI-Wort · Scan 2026-03 bis 05 · Grenze: Hinweise aus Signalen, ungeprüft",
   "data": {
     "orientation": "horizontal",
     "fmt": {
@@ -36,6 +37,14 @@
   },
   "meta": {
     "methodVersion": "v1-scan-2026-03-05",
-    "frozenOn": "2026-10-19"
+    "frozenOn": "2026-10-19",
+    "n": 1112,
+    "base": "Firmenwebsites, die das Wort KI erwähnen; 269 Startseiten von Hand gelesen",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+    "hero": "C3",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
   }
 }

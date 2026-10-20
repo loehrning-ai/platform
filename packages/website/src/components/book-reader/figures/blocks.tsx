@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import {
   BarsFigure,
   DotplotFigure,
+  FigureFrame,
   DumbbellFigure,
   FunnelFigure,
   LorenzFigure,
@@ -13,6 +14,7 @@ import {
   type TickerSpec,
   type WaffleChip,
 } from "@/components/book-figures/basic";
+import { HeroFigure } from "@/components/book-figures/hero";
 import {
   AiActTimeline,
   Calculator,
@@ -288,12 +290,39 @@ function ticker(ctx: BlockContext, directive: Directive): ReactNode {
   return <TickerFigure spec={spec} provisional={tag(figure)} />;
 }
 
+/**
+ * A figure of the insight spine has no dedicated builder: the generic hero
+ * island draws it from its JSON. Inside the pinned stage (attrs.stage) it draws
+ * bare, because the shell prints numeral, claim, unit line and source line, and
+ * attrs.variants lists the detent id per step ("s1,s3,,s10"; an empty entry
+ * keeps the reader's choice). Outside a stage it sits in the figure frame with
+ * caption, visible source line, the data table and the CSV link.
+ */
+function heroIsland(ctx: BlockContext, directive: Directive, id: string): ReactNode {
+  const found = ctx.figures.specs.get(id);
+  if (!found) throw new FigureLoadError(`${ctx.bookSlug}: figure "${id}" has no JSON in content/books/${ctx.bookSlug}/figures`);
+  const inStage = directive.attrs["stage"] === "true";
+  const listed = directive.attrs["variants"];
+  const stepVariants = inStage && listed ? listed.split(",").map((entry) => (entry.trim() === "" ? undefined : entry.trim())) : undefined;
+  const island = <HeroFigure spec={found} bare={inStage} stepVariants={stepVariants} lang={ctx.locale} />;
+  if (inStage) return island;
+  const tables: DataTableSpec[] = [{ title: found.title, table: figureTable(found), fileStem: found.id, href: `${ctx.dataBase}/${found.id}.csv` }];
+  return (
+    <FigureFrame meta={found} kind={found.kind} tables={tables}>
+      {island}
+    </FigureFrame>
+  );
+}
+
 /** Renders the node for one directive of a chapter. */
 export function renderDirective(ctx: BlockContext, directive: Directive): ReactNode {
   if (directive.name === "ticker") return ticker(ctx, directive);
   const id = figureKey(directive.attrs["id"] as string);
   const build = BUILDERS[id];
-  if (!build) throw new FigureLoadError(`${ctx.bookSlug}: no island for ::figure{id="${directive.attrs["id"]}"}. Known: ${PLACEABLE_FIGURES.join(", ")}`);
+  if (!build) {
+    if (ctx.figures.specs.has(id)) return heroIsland(ctx, directive, id);
+    throw new FigureLoadError(`${ctx.bookSlug}: no island for ::figure{id="${directive.attrs["id"]}"}. Known: ${[...PLACEABLE_FIGURES, ...ctx.figures.specs.keys()].join(", ")}`);
+  }
   return build(ctx);
 }
 

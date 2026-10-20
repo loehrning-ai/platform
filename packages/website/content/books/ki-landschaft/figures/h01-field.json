@@ -1,0 +1,145 @@
+{
+  "id": "h01-field",
+  "kind": "field",
+  "title": "Das längste Fünftel schreibt 62-mal so oft KI",
+  "alt": "Das Feld teilt 21.404 Startseiten nach der Länge ihres Textes in fünf gleich große Fünftel. Im kürzesten Fünftel steht das Wort KI auf 8 Seiten, im längsten auf 495.",
+  "caption": "21.404 Startseiten nach Textlänge in fünf Fünftel; KI-Wort je Fünftel: 8, 44, 83, 184, 495.",
+  "n": 21404,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Eine längere Seite hat mehr Platz für das Wort. Zusammenhang, keine Ursache.",
+  "sourceLine": "n = 21.404 Startseiten · Scan 2026-03 bis 05 · Grenze: Zusammenhang, keine Ursache · Wird vom Rescan geprüft.",
+  "steps": [
+    {
+      "id": "fuenftel",
+      "label": "Fünf Fünftel nach Textlänge"
+    }
+  ],
+  "data": {
+    "classes": [
+      {
+        "id": "ki",
+        "label": "KI-Wort",
+        "tone": "accent"
+      },
+      {
+        "id": "rest",
+        "label": "ohne KI-Wort",
+        "tone": "leinen"
+      }
+    ],
+    "scenes": [
+      {
+        "id": "fuenftel",
+        "population": "Startseite|Startseiten",
+        "base": 21404,
+        "squares": 1000,
+        "unit": "Startseite|Startseiten",
+        "layout": "bins",
+        "perRow": 5,
+        "adjacent": true,
+        "bins": [
+          {
+            "id": "q1",
+            "label": "kürzestes Fünftel",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 8,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 4273
+              }
+            ]
+          },
+          {
+            "id": "q2",
+            "label": "2. Fünftel",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 44,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 4239
+              }
+            ]
+          },
+          {
+            "id": "q3",
+            "label": "3. Fünftel",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 83,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 4195
+              }
+            ]
+          },
+          {
+            "id": "q4",
+            "label": "4. Fünftel",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 184,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 4097
+              }
+            ]
+          },
+          {
+            "id": "q5",
+            "label": "längstes Fünftel",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 495,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 3786
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 61.875,
+          "fmt": {
+            "style": "number",
+            "digits": 0
+          },
+          "suffix": "x"
+        },
+        "claim": "Das längste Fünftel schreibt 62-mal so oft KI.",
+        "labelClasses": [
+          "ki"
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21404,
+    "base": "Startseiten mit eigener Domain und gelesenem Text, nach Textlänge in fünf gleich große Gruppen",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "H01",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
+  }
+}

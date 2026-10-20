@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { chapterPath, chapters } from "./fixtures/book";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
@@ -13,19 +14,21 @@ import { settleFontsAndFrame } from "./fixtures/settle";
  *   2. The compact reader bar takes the band the tab bar leaves: fixed to the
  *      bottom edge, exactly `--tabbar-h` tall, at the tab bar's stacking level,
  *      matching the band the document reserves.
- *   3. The chapter contents open as a sheet above that bar, with 44px targets,
- *      and close again once a heading is chosen. The desktop TOC landmark stays
- *      hidden below lg, as responsive.spec.ts already requires.
+ *   3. The chapter contents are never a sheet that opens and closes: the bar
+ *      holds the position and the next action, and the chapters are one visible
+ *      list on the page with 44px targets. The heading sidebar of the plain
+ *      reader stays hidden below lg, as responsive.spec.ts already requires.
  *   4. The lesson shell adds no sticky toolbar under the compact top bar: the
  *      reader bar is the one drawer control, so phones keep 105px of chrome.
- *   5. At desktop widths nothing changes: no reader bar, the sidebar TOC.
+ *   5. At desktop widths there is no reader bar; the chapter list stays visible.
  *
  * Assertions target GEOMETRY, roles and the stable `data-reader-focus-bar` /
- * `data-chapter-toc-sheet` anchors. The one copy assertion is the bar's next
+ * `data-chapter-list` anchors. The one copy assertion is the bar's next
  * link, whose visible label is the point of the control.
  */
 
-const CHAPTER_URL = "/buecher/ki-landschaft/01_eisberg";
+const CHAPTER_URL = chapterPath(chapters()[0]!.slug);
+const SECOND_CHAPTER_URL = chapterPath(chapters()[1]!.slug);
 /** Block ids are underscored (`BLOCK_IDS` in src/lib/course/types.ts). */
 /**
  * Every block-page route sits under a gated prefix. All three are listed in
@@ -44,7 +47,6 @@ const LESSON_URL = "/kurse/open-source/data-infrastructure/kurs/mental-model";
 const TAB_BAR = "[data-mobile-tab-bar]";
 const READER_BAR = "[data-reader-focus-bar]";
 const READER_BAR_ROW = "[data-reader-focus-bar-row]";
-const SHEET_PANEL = "[data-chapter-toc-sheet-panel]";
 const LESSON_TOOLBAR = "[data-lesson-shell-mobile-toolbar]";
 /** `--tabbar-h` in globals.css: 3.5rem. */
 const TAB_BAR_HEIGHT = 56;
@@ -56,6 +58,20 @@ async function openAt(page: Page, url: string, width: number): Promise<void> {
   await page.setViewportSize({ width, height: 844 });
   await page.goto(url, { waitUntil: "domcontentloaded" });
   await settleFontsAndFrame(page);
+}
+
+/**
+ * While a hero stage is in view the bar is the step control; past the last stage it is the chapter bar
+ * ("Kapitel 1 von 9" and the next chapter). Scroll to the end of the chapter and wait for that state.
+ */
+async function toChapterBar(page: Page): Promise<void> {
+  // The stage script starts when the browser is idle; the bar answers to it, so scroll only after it has taken over.
+  await expect(page.locator("[data-chapter-stage]").first()).toHaveAttribute("data-mode", "scrub", { timeout: 15_000 });
+  await expect(async () => {
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect(page.locator(READER_BAR)).toHaveAttribute("data-bar-mode", "chapter", { timeout: 1_000 });
+    await expect(page.locator(READER_BAR).getByRole("link")).toBeVisible({ timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
 }
 
 async function expectTargetSize(
@@ -135,64 +151,45 @@ test.describe("reader focus mode: chapter reader below lg", () => {
     );
   });
 
-  test("states the position and opens the contents as a sheet above the bar", async ({
+  test("states the position and keeps the contents visible on the page, no sheet", async ({
     page,
   }) => {
     await openAt(page, CHAPTER_URL, 390);
     const bar = page.locator(READER_BAR);
+    await toChapterBar(page);
 
-    await expect(bar.getByText(/^1 \/ \d+$/)).toBeVisible();
+    await expect(bar.getByText(new RegExp(`^Kapitel 1 von ${chapters().length}$`))).toBeVisible();
     await expect(
       page.getByRole("complementary", { name: "Kapitelinhalt" }),
     ).toBeHidden();
 
-    const summary = bar.locator("summary");
-    await expect(summary).toBeVisible();
-    await expectTargetSize(summary, "contents trigger");
-    await expect(bar.locator(SHEET_PANEL)).toBeHidden();
-
-    await summary.click();
-    const toc = bar.getByRole("navigation", { name: "Kapitelinhalt" });
-    await expect(toc).toBeVisible();
-
-    const [panelBox, barBox] = await Promise.all([
-      bar.locator(SHEET_PANEL).boundingBox(),
-      bar.boundingBox(),
-    ]);
-    expect(panelBox).not.toBeNull();
-    expect(barBox).not.toBeNull();
-    // Opens upward from the bar and stays inside the viewport.
-    expect(panelBox!.y + panelBox!.height).toBeLessThanOrEqual(barBox!.y + 1);
-    expect(panelBox!.y).toBeGreaterThanOrEqual(0);
-
-    const links = toc.getByRole("link");
+    // Nothing opens and closes: no summary in the bar, no sheet anywhere.
+    await expect(bar.locator("summary, details, [data-chapter-toc-sheet]")).toHaveCount(0);
+    const list = page.locator("[data-chapter-list]");
+    await expect(list).toBeVisible();
+    const links = list.getByRole("link");
     const count = await links.count();
-    expect(count, "contents entries").toBeGreaterThan(1);
+    expect(count, "chapters in the visible list").toBe(chapters().length);
     for (let index = 0; index < count; index += 1) {
-      await expectTargetSize(links.nth(index), `contents entry #${index + 1}`);
+      await links.nth(index).scrollIntoViewIfNeeded();
+      await expectTargetSize(links.nth(index), `chapter list entry #${index + 1}`);
     }
-
-    // Choosing a heading scrolls the page and the sheet gets out of the way.
-    await links.last().click();
-    await expect(toc).toBeHidden();
-    await expect(summary).toBeVisible();
   });
 
   test("the next action leads to the next chapter, where the bar returns", async ({
     page,
   }) => {
     await openAt(page, CHAPTER_URL, 390);
+    await toChapterBar(page);
     const next = page
       .locator(READER_BAR)
-      .getByRole("link", { name: /^Weiter/ });
+      .getByRole("link", { name: /^Nächstes Kapitel/ });
 
     await expect(next).toBeVisible();
     await expectTargetSize(next, "next chapter action");
 
     await next.click();
-    await expect(page).toHaveURL(
-      /\/buecher\/ki-landschaft\/(?!01_eisberg)[^/?#]+$/,
-    );
+    await expect(page).toHaveURL(new RegExp(`${SECOND_CHAPTER_URL}$`));
     await expect(page.locator(READER_BAR)).toBeVisible();
     await expect(page.locator(TAB_BAR)).toBeHidden();
   });
@@ -309,7 +306,7 @@ test.describe("reader focus mode: desktop unchanged", () => {
       ).toBeVisible();
     });
   }
-  test("at 1280 the reader bar is absent and the sidebar TOC remains", async ({
+  test("at 1280 the reader bar is absent, there is no heading sidebar and the chapter list stays visible", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -318,8 +315,7 @@ test.describe("reader focus mode: desktop unchanged", () => {
 
     await expect(page.locator(READER_BAR)).toBeHidden();
     await expect(page.locator(TAB_BAR)).toBeHidden();
-    await expect(
-      page.getByRole("complementary", { name: "Kapitelinhalt" }),
-    ).toBeVisible();
+    await expect(page.getByRole("complementary", { name: "Kapitelinhalt" })).toHaveCount(0);
+    await expect(page.locator("[data-chapter-list]")).toBeVisible();
   });
 });

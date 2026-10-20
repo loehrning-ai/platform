@@ -33,7 +33,7 @@ describe("<LanguageSwitch />", () => {
     for (const link of within(group).getAllByRole("link")) {
       expect(link.className).toContain("min-h-11");
       expect(link.className).toContain("min-w-11");
-      expect(link.className).toContain("text-xs");
+      expect(link.className).toContain("text-sm");
       expect(link.className).not.toContain("rounded-full");
       // `ring-inset` is banned here: with the --color-inset theme token
       // Tailwind v4 also compiles it to a Beton ring colour that overrides

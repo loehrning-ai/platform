@@ -69,13 +69,28 @@ export function makeBarAxis(
   };
 }
 
-/** Tick strings; the unit is written once, on the last tick. */
+/** Digits a tick needs to be written exactly (at most 3). */
+function digitsFor(t: number): number {
+  for (let d = 0; d < 3; d += 1) {
+    if (Math.abs(Math.round(t * 10 ** d) / 10 ** d - t) < 1e-9) return d;
+  }
+  return 3;
+}
+
+/**
+ * Tick strings; the unit is written once, on the last tick. When the format's
+ * own digits would round a tick to a wrong value (0,02 written as 0,0 on a log
+ * axis), each tick gets the digits it needs instead.
+ */
 export function tickStrings(fmt: NumFmt, ticks: readonly number[]): string[] {
   const whole = ticks.every((t) => Number.isInteger(t));
   const tickFmt: NumFmt = whole ? { ...fmt, digits: 0 } : fmt;
-  return ticks.map((t, i) =>
-    i === ticks.length - 1 ? formatValue(tickFmt, t) : formatBare(tickFmt, t),
-  );
+  const base = tickFmt.digits ?? 0;
+  const exact = ticks.every((t) => digitsFor(t) <= base);
+  return ticks.map((t, i) => {
+    const f: NumFmt = exact ? tickFmt : { ...tickFmt, digits: digitsFor(t) };
+    return i === ticks.length - 1 ? formatValue(f, t) : formatBare(f, t);
+  });
 }
 
 /**

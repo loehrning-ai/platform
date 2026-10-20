@@ -1,0 +1,508 @@
+{
+  "id": "h04-dumbbell",
+  "kind": "dumbbell",
+  "title": "Berater schreiben es, Firmen kaum",
+  "alt": "Anteil der Startseiten mit dem Begriff: bei KI-Beratern 25,4 Prozent mit dem EU AI Act, bei 21.402 Firmenwebsites 0,04 Prozent. Bei der DSGVO ist der Abstand klein (33,3 gegen 6,7 Prozent).",
+  "caption": "Anteil der Startseiten mit dem Begriff, logarithmische Achse. Berater (Kreis) gegen Firmen (Quadrat). Mit dem Schalter gleiche Basis zählen nur Startseiten, die das Wort KI führen: der Abstand schrumpft auf das 4- bis 27-Fache.",
+  "n": 21402,
+  "nNote": "980 Berater-Startseiten / 21.402 Firmenwebsites; gleiche Basis: 969 / 972 mit dem Wort KI",
+  "source": "Eigene Auswertung der Startseiten von KI-Beratern (Suchmaschinen-Stichprobe) und von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Startseiten sind nicht die Nachfrage der Kundschaft. Berater sind auf KI ausgewählt (99 Prozent führen das Wort) und schreiben zu 30 Prozent auf Englisch. Die Muster wurden nicht von Hand geprüft. Treffer unter 5 werden nicht gezeigt.",
+  "sourceLine": "n = 980 Berater, 21.402 Firmen · Scan 2026-03 bis 05 · Grenze: Berater sind auf KI ausgewählt · Wird vom Rescan geprüft.",
+  "data": {
+    "rows": [
+      {
+        "id": "ai_act",
+        "label": "EU AI Act",
+        "a": 25.40816,
+        "b": 0.04205
+      },
+      {
+        "id": "agent",
+        "label": "KI-Agenten",
+        "a": 30.61224,
+        "b": 0.33174
+      },
+      {
+        "id": "genai",
+        "label": "Generative KI",
+        "a": 29.08163,
+        "b": 0.21493
+      },
+      {
+        "id": "sov",
+        "label": "Digitale Souveränität",
+        "a": 6.12245,
+        "b": 0.18223
+      },
+      {
+        "id": "dsgvo",
+        "label": "DSGVO",
+        "a": 33.26531,
+        "b": 6.69096
+      }
+    ],
+    "aLabel": "KI-Berater",
+    "bLabel": "Firmen",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "scale": "log",
+    "sort": "none",
+    "variants": [
+      {
+        "id": "same_base",
+        "label": "Gleiche Basis: nur Seiten mit dem Wort KI",
+        "rows": [
+          {
+            "id": "ai_act",
+            "a": 25.72314,
+            "b": 0.94737
+          },
+          {
+            "id": "agent",
+            "a": 30.99174,
+            "b": 7.47368
+          },
+          {
+            "id": "genai",
+            "a": 29.44215,
+            "b": 4.84211
+          },
+          {
+            "id": "sov",
+            "a": 6.08875,
+            "b": 2.98354
+          },
+          {
+            "id": "dsgvo",
+            "a": 33.33333,
+            "b": 11.7284
+          }
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21402,
+    "base": "Startseiten von KI-Beratern und Firmenwebsites mit eigener Domain und Text",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung der Startseiten von KI-Beratern (Suchmaschinen-Stichprobe) und von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "H04",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "ai_act_consult": {
+        "value": 25.4082,
+        "lo": 22.7821,
+        "hi": 28.2262,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ai_act_consult_hits": {
+        "value": 249.0,
+        "n": 980,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_act_firms": {
+        "value": 0.0420521,
+        "lo": 0.0221257,
+        "hi": 0.07991,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "ai_act_firms_hits": {
+        "value": 9.0,
+        "n": 21402,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_act_consult_ki": {
+        "value": 25.7231,
+        "lo": 23.0692,
+        "hi": 28.569,
+        "n": 968,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ai_act_firms_ki": {
+        "value": 0.947368,
+        "lo": 0.499197,
+        "hi": 1.79066,
+        "n": 950,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ai_act_ratio_ki": {
+        "value": 27.1522,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_act_ratio_raw": {
+        "value": 604.206,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "agent_consult": {
+        "value": 30.6122,
+        "lo": 27.807,
+        "hi": 33.5689,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "agent_consult_hits": {
+        "value": 300.0,
+        "n": 980,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "agent_firms": {
+        "value": 0.331745,
+        "lo": 0.263113,
+        "hi": 0.418204,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "agent_firms_hits": {
+        "value": 71.0,
+        "n": 21402,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "agent_consult_ki": {
+        "value": 30.9917,
+        "lo": 28.1583,
+        "hi": 33.9754,
+        "n": 968,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "agent_firms_ki": {
+        "value": 7.47368,
+        "lo": 5.96734,
+        "hi": 9.32258,
+        "n": 950,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "agent_ratio_ki": {
+        "value": 4.14678,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "agent_ratio_raw": {
+        "value": 92.2765,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "genai_consult": {
+        "value": 29.0816,
+        "lo": 26.3243,
+        "hi": 32.0023,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "genai_consult_hits": {
+        "value": 285.0,
+        "n": 980,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "genai_firms": {
+        "value": 0.214933,
+        "lo": 0.161187,
+        "hi": 0.286548,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "genai_firms_hits": {
+        "value": 46.0,
+        "n": 21402,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "genai_consult_ki": {
+        "value": 29.4421,
+        "lo": 26.6567,
+        "hi": 32.3902,
+        "n": 968,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "genai_firms_ki": {
+        "value": 4.84211,
+        "lo": 3.64964,
+        "hi": 6.39832,
+        "n": 950,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "genai_ratio_ki": {
+        "value": 6.08044,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "genai_ratio_raw": {
+        "value": 135.305,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "sov_consult": {
+        "value": 6.122,
+        "lo": 4.786,
+        "hi": 7.802,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "sov_consult_hits": {
+        "value": 60.0,
+        "n": 980,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "sov_firms": {
+        "value": 0.182226,
+        "lo": 0.133337,
+        "hi": 0.248996,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "sov_firms_hits": {
+        "value": 39.0,
+        "n": 21402,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "sov_consult_ki": {
+        "value": 6.08875,
+        "lo": 4.74953,
+        "hi": 7.77477,
+        "n": 969,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "sov_firms_ki": {
+        "value": 2.98354,
+        "lo": 2.08523,
+        "hi": 4.25202,
+        "n": 972,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "sov_ratio_ki": {
+        "value": 2.04078,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "sov_ratio_raw": {
+        "value": 33.5981,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dsgvo_consult": {
+        "value": 33.2653,
+        "lo": 30.3857,
+        "hi": 36.2756,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "dsgvo_consult_hits": {
+        "value": 326.0,
+        "n": 980,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dsgvo_firms": {
+        "value": 6.69096,
+        "lo": 6.36391,
+        "hi": 7.03356,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "dsgvo_firms_hits": {
+        "value": 1432.0,
+        "n": 21402,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dsgvo_consult_ki": {
+        "value": 33.3333,
+        "lo": 30.4361,
+        "hi": 36.3622,
+        "n": 969,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "dsgvo_firms_ki": {
+        "value": 11.7284,
+        "lo": 9.85463,
+        "hi": 13.9035,
+        "n": 972,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "dsgvo_ratio_ki": {
+        "value": 2.84211,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dsgvo_ratio_raw": {
+        "value": 4.97168,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "consult_pages": {
+        "value": 980.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "firm_pages": {
+        "value": 21402.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "consult_ki_pages": {
+        "value": 969.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "firm_ki_pages": {
+        "value": 972.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "consult_ki_share": {
+        "value": 98.8776,
+        "n": 980,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "sov_std": {
+        "value": 0.348,
+        "lo": 0.249,
+        "hi": 0.461,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "sov_raw": {
+        "value": 0.182,
+        "lo": 0.133,
+        "hi": 0.249,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      }
+    }
+  }
+}

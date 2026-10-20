@@ -8,7 +8,12 @@
  * `figure` places the interactive figure of that id (the JSON in
  * content/books/<book>/figures, the island in components/book-reader/figures).
  * `ticker` is the big number that opens a chapter; `ref` is a number token
- * without the braces. Values sit in double quotes and hold no double quote.
+ * without the braces. `stage` places the chapter's hero figure in the pinned
+ * stage (one per chapter): the figure is the same one `figure` would place,
+ * its steps come from `stage.steps` in figures/copy/<id>.json (one sentence
+ * each). `explorer` places the placement instrument "Wo stehe ich?"; it needs
+ * no attributes and reads content/books/<book>/explorer.json.
+ * Values sit in double quotes and hold no double quote.
  * Number tokens ({{c4.raw_share}}) are resolved before the directive is read,
  * so a ticker tail may use them.
  *
@@ -36,6 +41,8 @@ export class DirectiveError extends Error {
 const REQUIRED: Readonly<Record<string, readonly string[]>> = {
   figure: ["id"],
   ticker: ["ref", "tail"],
+  stage: ["id"],
+  explorer: [],
 };
 
 /** Parses one trimmed line; null when it is not a directive. Throws for a malformed known directive. */
@@ -84,10 +91,10 @@ export function listDirectives(markdown: string): Directive[] {
   return out;
 }
 
-/** The figure ids a chapter points at, lower case, in order of appearance. */
+/** The figure ids a chapter points at (`figure` and `stage` lines), lower case, in order of appearance. */
 export function figureIdsOf(markdown: string): string[] {
   return listDirectives(markdown)
-    .filter((d) => d.name === "figure")
+    .filter((d) => d.name === "figure" || d.name === "stage")
     .map((d) => figureKey(d.attrs["id"] as string));
 }
 

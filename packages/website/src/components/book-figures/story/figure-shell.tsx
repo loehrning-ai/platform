@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { figureCsv, figureTable, formatDateDe, formatDecimal, NBSP, type Cell, type FigureSpec } from "@/lib/figures";
+import { figureCsv, figureTable, formatDecimal, type Cell, type FigureSpec } from "@/lib/figures";
+import { SourceLine, sourceLineFieldsOf } from "../shared/source-line";
 import "./story.css";
 
 interface FigureShellProps {
@@ -25,19 +26,17 @@ function cellText(cell: Cell): string {
   return cell;
 }
 
-function sourceLine(spec: FigureSpec, ownInput?: boolean): string {
-  if (ownInput) return `Quelle: ${spec.source}.`;
-  const n = spec.n > 0 ? ` n${NBSP}=${NBSP}${spec.nNote ?? formatDecimal(spec.n, 0)}.` : "";
-  return `Quelle: ${spec.source}. Stand ${formatDateDe(spec.asOf)}.${n}`;
-}
-
 /**
- * Figure frame shared by the story islands: title, the figure itself, caption
- * with source line and sample size, and the "Daten & Grenzen" disclosure with
- * the plotted numbers and what the figure cannot say. A server component.
+ * Figure frame shared by the story islands: title, the figure itself, caption,
+ * and one visible source line (n, date, limit, rescan note, CSV link). Nothing
+ * collapses. The plotted numbers stay in a visually hidden table for assistive
+ * technology. A server component.
  */
 export function FigureShell({ spec, title, provisional, csvHref, className, ownInput, children }: FigureShellProps) {
   const table = figureTable(spec);
+  const fields = sourceLineFieldsOf(spec);
+  // A figure built from the reader's own input has no sample: print the source and the limit only.
+  const line = ownInput ? { ...fields, sourceLine: fields.sourceLine ?? `Quelle: ${spec.source} · Grenze: ${spec.limitation.replace(/[.!?]$/, "")}` } : fields;
   return (
     <figure className={`bf-figure${className ? ` ${className}` : ""}`} data-figure-id={spec.id}>
       <p className="bf-figure-title">{title ?? spec.title}</p>
@@ -49,50 +48,42 @@ export function FigureShell({ spec, title, provisional, csvHref, className, ownI
       {children}
       <figcaption className="bf-caption">
         <span className="bf-caption-text">{spec.caption}</span>
-        <span className="bf-source">{sourceLine(spec, ownInput)}</span>
       </figcaption>
-      <details className="bf-data">
-        <summary className="bf-summary">Daten &amp; Grenzen</summary>
-        <div className="bf-data-body">
-          <p className="bf-limit">
-            <strong>Was die Abbildung nicht sagt.</strong> {spec.limitation}
-          </p>
-          <div className="bf-table-wrap" data-horizontal-scroll>
-            <table className="bf-table">
-              <caption className="bf-visually-hidden">Die gezeichneten Zahlen von {spec.title}</caption>
-              <thead>
-                <tr>
-                  {table.columns.map((column) => (
-                    <th key={column} scope="col">
-                      {column}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {table.rows.map((row, i) => (
-                  <tr key={`${spec.id}-${i}`}>
-                    {row.map((cell, j) => (
-                      <td key={j} data-numeric={typeof cell === "number" ? "true" : undefined}>
-                        {cellText(cell)}
-                      </td>
-                    ))}
-                  </tr>
+      <div className="bf-visually-hidden">
+        <table className="bf-table">
+          <caption>Die gezeichneten Zahlen von {spec.title}</caption>
+          <thead>
+            <tr>
+              {table.columns.map((column) => (
+                <th key={column} scope="col">
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row, i) => (
+              <tr key={`${spec.id}-${i}`}>
+                {row.map((cell, j) => (
+                  <td key={j} data-numeric={typeof cell === "number" ? "true" : undefined}>
+                    {cellText(cell)}
+                  </td>
                 ))}
-              </tbody>
-            </table>
-          </div>
-          {csvHref ? (
-            <a className="bf-button bf-csv" href={csvHref} download>
-              CSV herunterladen
-            </a>
-          ) : (
-            <a className="bf-button bf-csv" href={`data:text/csv;charset=utf-8,${encodeURIComponent(figureCsv(spec))}`} download={`${spec.id}.csv`}>
-              CSV herunterladen
-            </a>
-          )}
-        </div>
-      </details>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <SourceLine
+        fields={line}
+        csv={[
+          {
+            href: csvHref ?? `data:text/csv;charset=utf-8,${encodeURIComponent(figureCsv(spec))}`,
+            label: "Daten als CSV",
+            fileName: `${spec.id}.csv`,
+          },
+        ]}
+      />
     </figure>
   );
 }

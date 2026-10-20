@@ -149,12 +149,12 @@ describe("book-reader-content: imported chapter bodies", () => {
 
     const chapter = await loadBookChapter(
       "ki-landschaft",
-      "01_eisberg",
+      "01_zweimal_gemessen",
       "en",
     );
-    expect(chapter.meta.title).toBe("The number that does not add up");
-    expect(chapter.rawMarkdown).toContain("Ask around in autumn 2026");
-    expect(chapter.rawMarkdown).not.toContain("Wer sich im Herbst 2026");
+    expect(chapter.meta.title).toBe("Two measurements, two pictures");
+    expect(chapter.rawMarkdown).toContain("company websites twice. On 46% of the AI hits");
+    expect(chapter.rawMarkdown).not.toContain("In meiner Erinnerung");
   });
 
   it("fails closed when the requested language bundle is absent", async () => {

@@ -1,16 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import { chapters, chaptersMatching, firstTableHeader, proseSnippet } from "./fixtures/book";
 import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
-const CHAPTERS = [
-  ["01_eisberg", "Die Zahl, die nicht stimmt", "The number that does not add up"],
-  ["02_sagen_zeigen", "Sagen und zeigen", "Saying and showing"],
-  ["03_zweimal_gemessen", "Dieselbe Firma, zweimal gemessen", "The same firm, measured twice"],
-  ["04_branche_land", "Branche schlägt Land", "Industry beats state"],
-  ["05_reden_einstellen", "Reden und Einstellen", "Talking and hiring"],
-  ["06_eu_ki_verordnung", "Was seit Februar 2025 gilt", "What has applied since February 2025"],
-  ["07_pilot", "Dein erster Pilot", "Your first pilot"],
-  ["08_methodik", "Methode und Grenzen", "Method and limits"],
-] as const;
+// Chapters per locale, read from the manifests on disk (the English mirror may trail the German edition).
+const chaptersFor = (locale: "de" | "en") => chapters(locale);
 
 const OVERVIEW_ROUTES = [
   {
@@ -164,25 +157,20 @@ for (const width of [320, 390, 768, 1440] as const) {
 
         if (route.path === "/buecher/ki-landschaft") {
           const contents = page.getByRole("navigation", {
-            name: locale === "de" ? "Inhaltsverzeichnis" : "Table of contents",
+            name: locale === "de" ? "Alle Kapitel des Buchs" : "All chapters of the book",
           });
           const chapterLinks = contents.getByRole("link");
-          await expect(chapterLinks).toHaveCount(8);
+          await expect(chapterLinks).toHaveCount(chaptersFor(locale).length);
           await expect(chapterLinks.first()).toHaveAttribute(
             "hreflang",
             locale,
           );
           await expect(chapterLinks.first()).toHaveAttribute(
             "href",
-            localized("/buecher/ki-landschaft/01_eisberg", locale),
+            localized(`/buecher/ki-landschaft/${chaptersFor(locale)[0]!.slug}`, locale),
           );
-          await expect(
-            page
-              .getByText(locale === "de" ? "Deutsch" : "English", {
-                exact: true,
-              })
-              .first(),
-          ).toBeVisible();
+          // The cover is the insight cover: nothing collapses.
+          await expect(page.locator("main details, main summary")).toHaveCount(0);
         } else {
           const previewName =
             locale === "de"
@@ -201,7 +189,7 @@ for (const width of [320, 390, 768, 1440] as const) {
         await assertGeometry(page, path, width);
       }
 
-      for (const [slug, germanTitle, englishTitle] of CHAPTERS) {
+      for (const { slug, title: chapterTitle } of chaptersFor(locale)) {
         const basePath = `/buecher/ki-landschaft/${slug}`;
         const path = localized(basePath, locale);
         const response = await page.goto(path, {
@@ -214,7 +202,7 @@ for (const width of [320, 390, 768, 1440] as const) {
         await expect(
           page.getByRole("heading", {
             level: 1,
-            name: locale === "de" ? germanTitle : englishTitle,
+            name: chapterTitle,
           }),
         ).toBeVisible();
         await assertReaderReady(page, slug);
@@ -235,19 +223,18 @@ for (const width of [320, 390, 768, 1440] as const) {
         }
       }
 
-      const firstPath = localized("/buecher/ki-landschaft/01_eisberg", locale);
-      const secondPath = localized(
-        "/buecher/ki-landschaft/02_sagen_zeigen",
-        locale,
-      );
+      const firstChapter = chaptersFor(locale)[0]!;
+      const secondChapter = chaptersFor(locale)[1]!;
+      const firstPath = localized(`/buecher/ki-landschaft/${firstChapter.slug}`, locale);
+      const secondPath = localized(`/buecher/ki-landschaft/${secondChapter.slug}`, locale);
       await page.goto(firstPath, { waitUntil: "domcontentloaded" });
-      await assertReaderReady(page, "01_eisberg");
+      await assertReaderReady(page, firstChapter.slug);
       await page.keyboard.press("ArrowRight");
       await expect(page).toHaveURL(new RegExp(`${secondPath}$`));
-      await assertReaderReady(page, "02_sagen_zeigen");
+      await assertReaderReady(page, secondChapter.slug);
       await page.keyboard.press("ArrowLeft");
       await expect(page).toHaveURL(new RegExp(`${firstPath}$`));
-      await assertReaderReady(page, "01_eisberg");
+      await assertReaderReady(page, firstChapter.slug);
     }
 
     expect(errors).toEqual([]);
@@ -258,20 +245,13 @@ test.describe("published book chapters without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
   for (const locale of ["de", "en"] as const) {
-    test(`keeps the complete ${locale} chapter body and navigation available`, async ({
+    test(`keeps the complete ${locale} chapter body, the band, the figures and the navigation available`, async ({
       page,
     }) => {
-      const basePath = "/buecher/ki-landschaft/01_eisberg";
+      const first = chaptersFor(locale)[0]!;
+      const basePath = `/buecher/ki-landschaft/${first.slug}`;
       const path = localized(basePath, locale);
-      const title = locale === "de" ? "Die Zahl, die nicht stimmt" : "The number that does not add up";
-      const bodyText =
-        locale === "de"
-          ? "Wer sich im Herbst 2026 umhört, bekommt Antworten zwischen 20 und 57 Prozent"
-          : "Ask around in autumn 2026 and you get answers between 20 and 57 percent";
-      const tableLabel =
-        locale === "de"
-          ? "Tabelle, horizontal scrollbar"
-          : "Table, horizontally scrollable";
+      const snippet = proseSnippet(first.slug, locale);
 
       const response = await page.goto(path, {
         waitUntil: "domcontentloaded",
@@ -279,22 +259,33 @@ test.describe("published book chapters without JavaScript", () => {
 
       expect(response?.status(), path).toBe(200);
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
-      const article = page.getByRole("article", { name: title });
+      const article = page.getByRole("article", { name: first.title });
       await expect(article).toBeVisible();
-      await expect(article).toContainText(bodyText);
-      // The source links stay real links, and the figures are in the server markup as finished charts.
-      await expect(article.getByRole("link", { name: "KfW" }).first()).toHaveAttribute("href", /kfw\.de/);
-      await expect(article.locator("figure svg title").first()).toBeAttached();
+      if (snippet) await expect(article).toContainText(snippet);
+      // The band and the chapter list are server markup; nothing needs script to be read.
+      await expect(page.locator("[data-cover-band]")).toBeVisible();
+      await expect(page.locator("[data-chapter-list]")).toBeVisible();
+      // Every figure is in the server markup as a finished chart with its visible source line.
+      for (const figure of await page.locator("main figure").all()) {
+        await expect(figure.locator("svg title").first()).toBeAttached();
+        await expect(figure.locator("[data-source-line]")).toBeVisible();
+      }
       await expect(page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]')).toHaveCount(0);
       await assertLocaleMetadata(page, basePath, locale);
-      // The method appendix holds the tables: readable without JavaScript.
-      const appendixPath = localized("/buecher/ki-landschaft/08_methodik", locale);
-      const appendix = await page.goto(appendixPath, { waitUntil: "domcontentloaded" });
-      expect(appendix?.status(), appendixPath).toBe(200);
-      const tableRegion = page.getByRole("group", { name: tableLabel }).first();
-      await expect(tableRegion.getByRole("table")).toContainText(
-        locale === "de" ? "Grundgesamtheit" : "Population",
-      );
+      // A chapter with a table keeps it readable without JavaScript.
+      const table = chaptersMatching(/^\|.+\|\s*$/m).find((c) => chaptersFor(locale).some((l) => l.slug === c.slug));
+      const header = table ? firstTableHeader(table.slug, locale) : null;
+      if (table && header) {
+        const tablePath = localized(`/buecher/ki-landschaft/${table.slug}`, locale);
+        const tableResponse = await page.goto(tablePath, { waitUntil: "domcontentloaded" });
+        expect(tableResponse?.status(), tablePath).toBe(200);
+        const region = page
+          .getByRole("group", {
+            name: locale === "de" ? "Tabelle, horizontal scrollbar" : "Table, horizontally scrollable",
+          })
+          .first();
+        await expect(region.getByRole("table")).toContainText(header);
+      }
     });
   }
 });

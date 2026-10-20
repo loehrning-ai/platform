@@ -5,56 +5,10 @@
  */
 
 import { FIGURE_KINDS, type FigureKind, type FigureSpec } from "./types.ts";
+import { validateHero } from "./validate-hero.ts";
+import { COUNT_KEYS, FigureSpecError, arrayOf, fmt, isObject, itemsWithId, need, nonEmpty, numOrNull, type Json } from "./validate-core.ts";
 
-export class FigureSpecError extends Error {
-  readonly path: string;
-  constructor(path: string, message: string) {
-    super(`${path}: ${message}`);
-    this.name = "FigureSpecError";
-    this.path = path;
-  }
-}
-
-type Json = Record<string, unknown>;
-
-const isObject = (v: unknown): v is Json =>
-  typeof v === "object" && v !== null && !Array.isArray(v);
-
-const COUNT_KEYS = new Set(["n", "hits", "count", "dots_of_firms"]);
-
-function need(cond: boolean, path: string, message: string): asserts cond {
-  if (!cond) throw new FigureSpecError(path, message);
-}
-
-function nonEmpty(obj: Json, key: string, path: string): void {
-  need(typeof obj[key] === "string" && (obj[key] as string).trim() !== "", `${path}.${key}`, "must be a non-empty string");
-}
-
-function arrayOf(obj: Json, key: string, path: string): unknown[] {
-  const v = obj[key];
-  need(Array.isArray(v) && v.length > 0, `${path}.${key}`, "must be a non-empty array");
-  return v as unknown[];
-}
-
-function itemsWithId(list: unknown[], path: string): void {
-  const seen = new Set<string>();
-  list.forEach((item, i) => {
-    need(isObject(item), `${path}[${i}]`, "must be an object");
-    const id = (item as Json)["id"];
-    need(typeof id === "string" && id !== "", `${path}[${i}].id`, "must be a non-empty string");
-    need(!seen.has(id as string), `${path}[${i}].id`, `duplicate id ${String(id)}`);
-    seen.add(id as string);
-  });
-}
-
-function numOrNull(item: Json, key: string, path: string): void {
-  const v = item[key];
-  need(v === null || (typeof v === "number" && Number.isFinite(v)), `${path}.${key}`, "must be a finite number or null");
-}
-
-function fmt(data: Json, path: string): void {
-  need(isObject(data["fmt"]) && ["percent", "number", "decimal"].includes(String((data["fmt"] as Json)["style"])), `${path}.fmt.style`, "must be percent, number or decimal");
-}
+export { FigureSpecError };
 
 function validateMeta(meta: unknown): void {
   need(isObject(meta), "spec.meta", "must be an object");
@@ -197,6 +151,15 @@ export function parseFigureSpec(raw: unknown): FigureSpec {
       });
       break;
     }
+    case "network":
+    case "blocks":
+    case "strip":
+    case "curve":
+    case "slope":
+    case "nulldist":
+    case "field":
+      validateHero(kind, data);
+      break;
     case "iceberg": {
       fmt(data, "data");
       for (const key of ["visible", "total"]) {

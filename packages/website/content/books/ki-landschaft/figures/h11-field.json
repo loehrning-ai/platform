@@ -1,0 +1,430 @@
+{
+  "id": "h11-field",
+  "kind": "field",
+  "title": "Polizeimeldungen: KI kommt fast nicht vor",
+  "alt": "Ein Feld aus 1.034 Quadraten steht für 51.716 Pressemeldungen von Polizei und Feuerwehr (27.02. bis 10.08.2026). In 1.973 Meldungen geht es um Betrug, in 605 um Betrug am Telefon, in 200 um Internet-Betrug. Ein KI-Wort steht in höchstens 38, das ist weniger als ein Quadrat und 0,073 % aller Meldungen.",
+  "caption": "51.716 Pressemeldungen, 1.973 über Betrug, 605 am Telefon, 200 im Internet, KI in höchstens 38 (0,073 %, Intervall 0,054 bis 0,101 %).",
+  "n": 51716,
+  "source": "Eigene Auswertung von Polizei- und Feuerwehr-Pressemeldungen, 27.02. bis 10.08.2026",
+  "asOf": "2026-10-19",
+  "limitation": "Meldungen sind, was die Polizei veröffentlicht, keine Kriminalstatistik. Unter den Treffern steht ein Kürzel einer Dienststelle und eine Ankündigung zu einem Aktionstag, 38 ist deshalb eine Obergrenze. Gezählt wird, der Text bleibt im Rechner.",
+  "sourceLine": "n = 51.716 Meldungen von 494 Dienststellen · 27.02. bis 10.08.2026 · Grenze: Obergrenze, kein Kriminalitätsmaß",
+  "steps": [
+    {
+      "id": "alle",
+      "label": "Alle Meldungen"
+    },
+    {
+      "id": "betrug",
+      "label": "Betrug"
+    },
+    {
+      "id": "telefon",
+      "label": "Telefon und Internet"
+    },
+    {
+      "id": "ki",
+      "label": "KI"
+    }
+  ],
+  "data": {
+    "classes": [
+      {
+        "id": "dim",
+        "label": "übrige Meldungen",
+        "tone": "leinen"
+      },
+      {
+        "id": "fraud",
+        "label": "Betrug",
+        "tone": "ink"
+      },
+      {
+        "id": "phone",
+        "label": "Telefon",
+        "tone": "ink"
+      },
+      {
+        "id": "online",
+        "label": "Internet",
+        "tone": "ghost"
+      },
+      {
+        "id": "ai",
+        "label": "KI",
+        "tone": "accent"
+      }
+    ],
+    "scenes": [
+      {
+        "id": "alle",
+        "population": "Pressemeldungen",
+        "base": 51716,
+        "squares": 1034,
+        "unit": "Meldung|Meldungen",
+        "layout": "grid",
+        "cols": 28,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "dim",
+                "count": 51716
+              }
+            ]
+          }
+        ],
+        "joint": true,
+        "numeral": {
+          "value": 51716,
+          "fmt": {
+            "style": "number",
+            "digits": 0
+          }
+        },
+        "claim": "Jede Meldung ein Quadrat.",
+        "enter": "none"
+      },
+      {
+        "id": "betrug",
+        "population": "Pressemeldungen",
+        "base": 51716,
+        "squares": 1034,
+        "unit": "Meldung|Meldungen",
+        "layout": "grid",
+        "cols": 28,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "dim",
+                "count": 49683
+              },
+              {
+                "cls": "fraud",
+                "count": 1217
+              },
+              {
+                "cls": "dim",
+                "count": 39
+              },
+              {
+                "cls": "fraud",
+                "count": 739
+              },
+              {
+                "cls": "dim",
+                "count": 21
+              },
+              {
+                "cls": "fraud",
+                "count": 17
+              }
+            ]
+          }
+        ],
+        "joint": true,
+        "numeral": {
+          "value": 1973,
+          "fmt": {
+            "style": "number",
+            "digits": 0
+          }
+        },
+        "claim": "Betrug steht in jeder zwanzigsten."
+      },
+      {
+        "id": "telefon",
+        "population": "Pressemeldungen",
+        "base": 51716,
+        "squares": 1034,
+        "unit": "Meldung|Meldungen",
+        "layout": "grid",
+        "cols": 28,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "dim",
+                "count": 49683
+              },
+              {
+                "cls": "fraud",
+                "count": 1217
+              },
+              {
+                "cls": "online",
+                "count": 32
+              },
+              {
+                "cls": "phone",
+                "count": 589
+              },
+              {
+                "cls": "online",
+                "count": 144
+              },
+              {
+                "cls": "phone",
+                "count": 13
+              },
+              {
+                "cls": "dim",
+                "count": 21
+              },
+              {
+                "cls": "fraud",
+                "count": 10
+              },
+              {
+                "cls": "online",
+                "count": 7
+              }
+            ]
+          }
+        ],
+        "joint": true,
+        "numeral": {
+          "value": 605,
+          "fmt": {
+            "style": "number",
+            "digits": 0
+          }
+        },
+        "claim": "Telefon vorn, Internet dahinter."
+      },
+      {
+        "id": "ki",
+        "population": "Pressemeldungen",
+        "base": 51716,
+        "squares": 1034,
+        "unit": "Meldung|Meldungen",
+        "layout": "grid",
+        "cols": 28,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "dim",
+                "count": 49683
+              },
+              {
+                "cls": "fraud",
+                "count": 1217
+              },
+              {
+                "cls": "online",
+                "count": 32
+              },
+              {
+                "cls": "phone",
+                "count": 589
+              },
+              {
+                "cls": "online",
+                "count": 144
+              },
+              {
+                "cls": "phone",
+                "count": 13
+              },
+              {
+                "cls": "ai",
+                "count": 38,
+                "partial": true
+              }
+            ]
+          }
+        ],
+        "joint": true,
+        "numeral": {
+          "value": 38,
+          "fmt": {
+            "style": "number",
+            "digits": 0
+          }
+        },
+        "claim": "KI steht in höchstens 38."
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 51716,
+    "base": "Pressemeldungen von Polizei und Feuerwehr, 494 Dienststellen, 86 % aus vier Ländern",
+    "window": "2026-02-27 bis 2026-08-10",
+    "source": "Eigene Auswertung von Polizei- und Feuerwehr-Pressemeldungen, 27.02. bis 10.08.2026",
+    "hero": "H11",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "releases": {
+        "value": 51716.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "agencies": {
+        "value": 494.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_hits": {
+        "value": 38.0,
+        "n": 51716,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_share": {
+        "value": 0.0734782,
+        "lo": 0.0535408,
+        "hi": 0.100832,
+        "n": 51716,
+        "fmt": {
+          "style": "percent",
+          "digits": 3
+        }
+      },
+      "ai_share_cluster": {
+        "value": 0.0734782,
+        "lo": 0.046713,
+        "hi": 0.102519,
+        "n": 51716,
+        "fmt": {
+          "style": "percent",
+          "digits": 3
+        }
+      },
+      "fraud_hits": {
+        "value": 1973.0,
+        "n": 51716,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "fraud_share": {
+        "value": 3.81507,
+        "lo": 3.65337,
+        "hi": 3.98363,
+        "n": 51716,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ai_in_fraud_hits": {
+        "value": 17.0,
+        "n": 1973,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_in_fraud": {
+        "value": 0.861632,
+        "lo": 0.538653,
+        "hi": 1.37559,
+        "n": 1973,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "phone_hits": {
+        "value": 605.0,
+        "n": 51716,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "online_hits": {
+        "value": 200.0,
+        "n": 51716,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "phone_to_online": {
+        "value": 3.025,
+        "lo": 2.43257,
+        "hi": 3.91985,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "phone_to_online_min": {
+        "value": 1.13841,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "trend_odds_month": {
+        "value": 0.855501,
+        "lo": 0.67185,
+        "hi": 1.08935,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "naive_ki_hits": {
+        "value": 203.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "naive_ki_city_code": {
+        "value": 150.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "naive_factor": {
+        "value": 5.34211,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "days": {
+        "value": 115.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "squares": {
+        "value": 1034.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ai_squares": {
+        "value": 0.759765,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      }
+    }
+  }
+}

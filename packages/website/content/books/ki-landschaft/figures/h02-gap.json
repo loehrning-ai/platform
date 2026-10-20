@@ -1,0 +1,97 @@
+{
+  "id": "h02-gap",
+  "kind": "waffle",
+  "title": "Vier von zehn Anzeigen mit LLM im Text haben kein KI-Wort im Titel",
+  "alt": "Von 100 Stellenanzeigen, die LLM, generative KI, ChatGPT, RAG oder LangChain nennen, tragen 45 kein KI-Wort im Titel.",
+  "caption": "4.840 verschiedene Anzeigen von 2.189 Arbeitgebern nennen LLM oder generative KI im Text. 45,1 % (Intervall 42,8 bis 47,6 %) haben im Titel kein KI-Wort.",
+  "n": 4840,
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+  "asOf": "2026-10-19",
+  "limitation": "Die Anzeige nennt die Technik, sie verlangt sie nicht. Der Anteil hängt am Portal: LinkedIn und Indeed schreiben Titel verschieden. Gesucht wurde mit 18 Daten- und KI-Begriffen, das ist kein Querschnitt aller Stellen.",
+  "sourceLine": "n = 4.840 Anzeigen mit LLM oder GenAI im Text · 28.02. bis 16.06.2026 · Grenze: nennen, nicht verlangen; je Portal 37 bis 54",
+  "data": {
+    "total": 100,
+    "columns": 10,
+    "headline": "45 von 100",
+    "groups": [
+      {
+        "id": "no_ai_title",
+        "label": "Kein KI-Wort im Titel",
+        "dots": 45,
+        "tone": "ring"
+      },
+      {
+        "id": "ai_title",
+        "label": "KI-Wort im Titel",
+        "dots": 55,
+        "tone": "accent"
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4840,
+    "base": "verschiedene Stellen (Firma und Titel) mit Anzeigentext, Deutschland",
+    "window": "2026-02-28 bis 2026-06-16",
+    "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+    "hero": "H02",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "ads": {
+        "value": 4840.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "employers": {
+        "value": 2189.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "no_ai_title": {
+        "value": 45.1033,
+        "lo": 42.7774,
+        "hi": 47.5536,
+        "n": 4840,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "no_ai_title_hits": {
+        "value": 2183.0,
+        "n": 4840,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "no_ai_title_indeed": {
+        "value": 54.3578,
+        "lo": 51.2834,
+        "hi": 57.3983,
+        "n": 2180,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "no_ai_title_linkedin": {
+        "value": 37.5329,
+        "lo": 34.6108,
+        "hi": 40.4783,
+        "n": 2659,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

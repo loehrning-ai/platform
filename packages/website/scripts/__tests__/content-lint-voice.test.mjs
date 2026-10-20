@@ -403,7 +403,7 @@ test("file discovery is deterministic and never picks up test fixtures", () => {
   assert.ok(real.every((relFile) => !relFile.includes("__tests__") && !relFile.includes("fixtures")));
   assert.ok(real.every((relFile) => !relFile.endsWith(".test.ts")));
   assert.ok(real.includes("src/lib/workshops.ts"));
-  assert.ok(real.includes("content/books/ki-landschaft/en/01_eisberg.md"));
+  assert.ok(real.includes("content/books/ki-landschaft/en/01_zweimal_gemessen.md"));
 });
 
 test("path classification maps every surface and language", () => {
@@ -411,8 +411,8 @@ test("path classification maps every surface and language", () => {
     ["content/ki-fuehrerschein/block-1-entdeckung-lessons.json", "content/ki-fuehrerschein", "de"],
     ["content/ki-fuehrerschein/en/quiz/questions.json", "content/ki-fuehrerschein/en", "en"],
     ["content/ai-native-operator/quiz/questions.json", "content/ai-native-operator/en", "en"],
-    ["content/books/ki-landschaft/01_eisberg.md", "content/books/ki-landschaft", "de"],
-    ["content/books/ki-landschaft/en/01_eisberg.md", "content/books/ki-landschaft/en", "en"],
+    ["content/books/ki-landschaft/01_zweimal_gemessen.md", "content/books/ki-landschaft", "de"],
+    ["content/books/ki-landschaft/en/01_zweimal_gemessen.md", "content/books/ki-landschaft/en", "en"],
     ["content/changelog.en.md", "content/changelog/en", "en"],
     ["src/lib/data-infrastructure/lessons/mental-model.ts", "src/lib/data-infrastructure", "en"],
     ["src/lib/data-infrastructure/lessons/de/mental-model.ts", "src/lib/data-infrastructure/de", "de"],

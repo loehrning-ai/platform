@@ -1,0 +1,171 @@
+{
+  "id": "h04-field",
+  "kind": "field",
+  "title": "Wer Souveränität schreibt, schreibt auch KI",
+  "alt": "39 von 21.402 Startseiten schreiben digitale Souveränität. 29 davon sagen auch KI. Von 1.432 Seiten mit DSGVO sagen 114 KI.",
+  "caption": "Zoom auf die 39 Seiten mit Souveränität: 29 sagen auch KI (74 Prozent), sonst 4,4 Prozent.",
+  "n": 21402,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Die 39 Seiten sind zum Teil IT- und Cloud-Anbieter; die Wörterliste ist ungeprüft. Zusammenhang, keine Ursache.",
+  "sourceLine": "n = 21.402 Startseiten, davon 39 mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele IT-Anbieter · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet.",
+  "steps": [
+    {
+      "id": "alle",
+      "label": "Alle Startseiten"
+    },
+    {
+      "id": "zoom",
+      "label": "Zoom auf 39"
+    },
+    {
+      "id": "dsgvo",
+      "label": "Zum Vergleich: DSGVO"
+    }
+  ],
+  "data": {
+    "classes": [
+      {
+        "id": "page",
+        "label": "Startseiten",
+        "tone": "ink"
+      },
+      {
+        "id": "sov",
+        "label": "Souveränität",
+        "tone": "accent"
+      },
+      {
+        "id": "ki",
+        "label": "sagt auch KI",
+        "tone": "accent"
+      },
+      {
+        "id": "noki",
+        "label": "ohne KI-Wort",
+        "tone": "ghost"
+      },
+      {
+        "id": "kihit",
+        "label": "mit KI-Wort",
+        "tone": "accent"
+      },
+      {
+        "id": "kirest",
+        "label": "ohne KI-Wort im Rest",
+        "tone": "leinen"
+      }
+    ],
+    "scenes": [
+      {
+        "id": "alle",
+        "population": "Startseite|Startseiten",
+        "base": 21402,
+        "squares": 1000,
+        "unit": "Startseite|Startseiten",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "page",
+                "count": 21363
+              },
+              {
+                "cls": "sov",
+                "count": 39,
+                "partial": true
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 0.1822,
+          "fmt": {
+            "style": "percent",
+            "digits": 2
+          }
+        },
+        "claim": "Digitale Souveränität: 39 Seiten."
+      },
+      {
+        "id": "zoom",
+        "population": "Seite mit Souveränität|Seiten mit Souveränität",
+        "base": 39,
+        "squares": 39,
+        "unit": "Seite|Seiten",
+        "layout": "grid",
+        "cols": 13,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 29
+              },
+              {
+                "cls": "noki",
+                "count": 10
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 74.359,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "29 von 39 sagen auch KI."
+      },
+      {
+        "id": "dsgvo",
+        "population": "Seite mit DSGVO|Seiten mit DSGVO",
+        "base": 1432,
+        "squares": 1000,
+        "unit": "Seite|Seiten",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "kihit",
+                "count": 114
+              },
+              {
+                "cls": "kirest",
+                "count": 1318
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 7.9609,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Bei DSGVO kaum mehr als sonst."
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21402,
+    "base": "Firmenwebsites mit eigener Domain und Text",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "H04",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
+  }
+}

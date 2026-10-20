@@ -23,12 +23,27 @@ export interface TocHeading {
   readonly level: 2 | 3;
 }
 
+/**
+ * The band of an insight chapter (docs: book chapter anatomy): the hero number,
+ * the one-line claim and nothing else. Both strings may hold number tokens
+ * ({{h01.ratio}}); the loader resolves them from the frozen figure JSON, so a
+ * number on the band cannot drift from the chart.
+ */
+export interface ChapterBand {
+  /** The hero number as printed, for example "62x" or "35 bis 49". */
+  readonly numeral: string;
+  /** One line, the finding. */
+  readonly claim: string;
+}
+
 export interface BookChapterMeta {
   readonly slug: string;
   readonly title: string;
   readonly description?: string;
   readonly sourceFile: string;
   readonly readingTimeMinutes?: number;
+  /** Optional: the band of an insight chapter. Chapters without it get a title-only band. */
+  readonly band?: ChapterBand;
 }
 
 export interface DroppedChapter {
@@ -36,10 +51,31 @@ export interface DroppedChapter {
   readonly reason: string;
 }
 
+/**
+ * What the cover page of an insight book needs beyond the chapter list. All
+ * strings may hold number tokens ({{h05.n}}); the loader resolves them from the
+ * frozen figure JSON, so the cover cannot print a number the chart does not hold.
+ */
+export interface BookLanding {
+  /** Number token without braces, for the share the cover field shows. Default "c4.weighted_share". */
+  readonly headlineRef?: string;
+  /** Text after the headline number ("der Firmen mit auffindbarer Website schreiben KI auf ihre Startseite."). */
+  readonly headlineTail?: string;
+  /** One visible source line under the headline number (a caveat that must sit next to the claim, never in a drawer). */
+  readonly sourceLine?: string;
+  /** The three facts under the stage: value and label, for example "25.581" and "Firmen mit eigener Domain". */
+  readonly facts?: readonly { readonly value: string; readonly label: string }[];
+  /** Heading and two sentences of the visible explainer. */
+  readonly explainer?: { readonly heading: string; readonly text: string };
+  /** Chapter slug that holds the explorer "Wo stehe ich?" (the secondary link of the stage). Default "08_dein_zug". */
+  readonly explorerChapter?: string;
+}
+
 export interface BookManifest {
   readonly bookSlug: string;
   readonly title: string;
   readonly adaptationNote?: string;
+  readonly landing?: BookLanding;
   readonly chapters: readonly BookChapterMeta[];
   readonly droppedChapters?: readonly DroppedChapter[];
 }
@@ -167,7 +203,7 @@ async function resolveChapterFigures(
     throw new TokenError(`${bookSlug}/${chapterSlug}: cannot read the token ${left}. Write {{figure.key}}.`);
   }
   for (const directive of listDirectives(resolved)) {
-    if (directive.name === "figure") {
+    if (directive.name === "figure" || directive.name === "stage") {
       const id = figureKey(directive.attrs["id"] as string);
       if (!figures.specs.has(id) && !FIXTURE_FIGURE_IDS.includes(id)) {
         throw new FigureLoadError(`${bookSlug}/${chapterSlug}: ${directive.source} has no figure. Known: ${[...figures.specs.keys(), ...FIXTURE_FIGURE_IDS].join(", ")}`);
@@ -182,6 +218,29 @@ async function resolveChapterFigures(
   return resolved;
 }
 
+/** Resolves the number tokens of a manifest band against the frozen figure JSON. Undefined stays undefined. */
+async function resolveChapterBand(
+  bookSlug: string,
+  chapterSlug: string,
+  locale: Locale,
+  band: ChapterBand | undefined,
+): Promise<ChapterBand | undefined> {
+  if (!band) return undefined;
+  if (typeof band.numeral !== "string" || typeof band.claim !== "string" || band.numeral.trim() === "" || band.claim.trim() === "") {
+    throw new Error(`${bookSlug}/${chapterSlug}: band needs a numeral and a claim, both text.`);
+  }
+  const figures = await loadBookFigures(bookSlug);
+  try {
+    return {
+      numeral: resolveTokens(band.numeral, figures.lookup, locale),
+      claim: resolveTokens(band.claim, figures.lookup, locale),
+    };
+  } catch (error) {
+    if (error instanceof TokenError) throw new TokenError(`${bookSlug}/${chapterSlug} band: ${error.message}`);
+    throw error;
+  }
+}
+
 /**
  * The chapter as plain Markdown for readers that cannot show a figure (agent
  * tools, text PDF): a figure line becomes its title and caption, a ticker line
@@ -191,10 +250,11 @@ export async function plainChapterMarkdown(bookSlug: string, rawMarkdown: string
   if (!/^::[a-z]/m.test(rawMarkdown)) return rawMarkdown;
   const figures = await loadBookFigures(bookSlug);
   const describe = (d: Directive): string | null => {
-    if (d.name === "figure") {
+    if (d.name === "figure" || d.name === "stage") {
       const spec = figures.specs.get(figureKey(d.attrs["id"] as string));
       return spec ? `*Abbildung: ${spec.title}. ${spec.caption}*` : null;
     }
+    if (d.name === "explorer") return "*Werkzeug: Wo stehe ich? Die Schätzung rechnet der Browser, online unter dem Kapitel.*";
     if (d.name === "ticker") {
       const ref = parseTickerRef(d.attrs["ref"] as string);
       const spec = ref ? figures.specs.get(ref.figure.toLowerCase()) : undefined;
@@ -244,9 +304,10 @@ export async function loadBookChapter(
   const rawMarkdown = await resolveChapterFigures(bookSlug, chapterSlug, locale, withoutH1);
   const headings = extractHeadings(rawMarkdown);
   const readingTimeMinutes = computeReadingTime(rawMarkdown);
+  const band = await resolveChapterBand(bookSlug, chapterSlug, locale, meta.band);
 
   return {
-    meta: { ...meta, readingTimeMinutes },
+    meta: { ...meta, readingTimeMinutes, band },
     rawMarkdown,
     headings,
     readingTimeMinutes,
@@ -271,4 +332,60 @@ export async function getChapterNeighbours(
     prev: idx > 0 ? (chapters[idx - 1] ?? null) : null,
     next: idx >= 0 && idx < chapters.length - 1 ? (chapters[idx + 1] ?? null) : null,
   };
+}
+
+// ── Cover page content (tokens resolved) ─────────────────────────────────────
+
+export interface ResolvedLanding {
+  readonly headlineRef: string;
+  readonly headlineTail: string | null;
+  readonly sourceLine: string | null;
+  readonly facts: readonly { readonly value: string; readonly label: string }[];
+  readonly explainer: { readonly heading: string; readonly text: string } | null;
+  readonly explorerChapter: string;
+}
+
+export const DEFAULT_HEADLINE_REF = "c4.weighted_share";
+export const DEFAULT_EXPLORER_CHAPTER = "08_dein_zug";
+
+/** The landing block of a manifest with every number token resolved from the frozen figure JSON. */
+export async function resolveLanding(
+  bookSlug: string,
+  manifest: BookManifest,
+  locale: Locale,
+): Promise<ResolvedLanding> {
+  const landing = manifest.landing;
+  const figures = await loadBookFigures(bookSlug);
+  const fill = (text: string, where: string): string => {
+    try {
+      return resolveTokens(text, figures.lookup, locale);
+    } catch (error) {
+      if (error instanceof TokenError) throw new TokenError(`${bookSlug} landing ${where}: ${error.message}`);
+      throw error;
+    }
+  };
+  return {
+    headlineRef: landing?.headlineRef ?? DEFAULT_HEADLINE_REF,
+    headlineTail: landing?.headlineTail ? fill(landing.headlineTail, "headlineTail") : null,
+    sourceLine: landing?.sourceLine ? fill(landing.sourceLine, "sourceLine") : null,
+    facts: (landing?.facts ?? []).map((fact, i) => ({
+      value: fill(fact.value, `facts[${i}].value`),
+      label: fill(fact.label, `facts[${i}].label`),
+    })),
+    explainer: landing?.explainer
+      ? { heading: fill(landing.explainer.heading, "explainer.heading"), text: fill(landing.explainer.text, "explainer.text") }
+      : null,
+    explorerChapter: landing?.explorerChapter ?? DEFAULT_EXPLORER_CHAPTER,
+  };
+}
+
+/** The chapter list with the band numbers resolved, for the cover's contents list. */
+export async function getBookChapterListResolved(
+  bookSlug: string,
+  locale: Locale,
+): Promise<BookChapterMeta[]> {
+  const chapters = await getBookChapterList(bookSlug, locale);
+  return Promise.all(
+    chapters.map(async (chapter) => ({ ...chapter, band: await resolveChapterBand(bookSlug, chapter.slug, locale, chapter.band) })),
+  );
 }

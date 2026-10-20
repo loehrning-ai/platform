@@ -8,10 +8,13 @@ import { BookOpen, ChevronRight, Lock } from "lucide-react";
 import { books, getBookById, getBookCover } from "@/lib/books";
 import {
   getBookChapterList,
+  getBookChapterListResolved,
   loadBookManifest,
+  resolveLanding,
 } from "@/lib/book-reader-content";
-import { BookCoverHero } from "@/components/book-reader/cover-hero";
+import { BookLanding } from "@/components/book-reader/book-landing";
 import { loadBookFigures } from "@/lib/book-figures";
+import { isInsightBook } from "@/lib/book-experience";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -105,8 +108,7 @@ export default async function BookOverviewPage({ params }: Params) {
     getBookChapterList(slug, locale),
   ]).catch(() => notFound());
 
-  // The data book opens with its headline number (figure C4); books without figures show no hero.
-  const headlineFigure = (await loadBookFigures(slug)).lookup("c4");
+  const insight = isInsightBook(book.id);
   const { account: accountEnabled } = getRuntimeFeatures();
   const copy = BOOK_PAGE_COPY[locale];
   const display = {
@@ -175,6 +177,60 @@ export default async function BookOverviewPage({ params }: Params) {
     ],
   };
 
+  const adaptationAside = display.adaptationNote ? (
+    <aside className="mt-6 grid min-w-0 gap-2 border-l-[3px] border-brand-orange bg-card/30 px-4 py-3 text-sm sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-4">
+      <strong className="text-xs font-bold tracking-[0.02em] text-brand-orange">{copy.detail.adaptationLabel}</strong>
+      <p className="min-w-0 break-words leading-relaxed text-muted-foreground">{display.adaptationNote}</p>
+    </aside>
+  ) : null;
+
+  const companionLinks = (
+    <section className="mt-8 grid min-w-0 gap-4 border-t border-border pt-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+      <div className="min-w-0">
+        <p className="text-xs font-bold tracking-[0.02em] text-muted-foreground">{copy.detail.companionPrefix}</p>
+        <Link
+          href={relatedHref}
+          className="mt-1 inline-flex min-h-11 max-w-full items-center break-words text-base font-bold text-brand-orange underline-offset-4 hover:underline"
+        >
+          {display.relatedResourceLabel}
+        </Link>
+      </div>
+      <Link
+        href={catalogHref}
+        className="inline-flex min-h-11 w-fit max-w-full items-center gap-2 border border-border bg-card px-4 py-2 text-sm font-bold text-muted-foreground transition-colors hover:border-brand-orange hover:text-brand-orange"
+      >
+        <BookOpen size={14} aria-hidden="true" />
+        {copy.detail.backToCatalog}
+      </Link>
+    </section>
+  );
+
+  if (insight) {
+    const [landing, resolvedChapters] = await Promise.all([
+      resolveLanding(slug, manifest, locale),
+      getBookChapterListResolved(slug, locale),
+    ]);
+    const headlineId = /^([a-z0-9][a-z0-9_-]*)\./i.exec(landing.headlineRef)?.[1]?.toLowerCase();
+    const headline = headlineId ? (await loadBookFigures(slug)).lookup(headlineId) : undefined;
+    return (
+      <>
+        <JsonLd data={graph} id="book-detail-jsonld" />
+        <BookLanding
+          book={book}
+          display={display}
+          chapters={resolvedChapters}
+          landing={landing}
+          headline={headline}
+          locale={locale}
+          pdfHref={pdfLoginHref && accountEnabled ? pdfLoginHref : null}
+        >
+          {adaptationAside}
+          {companionLinks}
+        </BookLanding>
+      </>
+    );
+  }
+
   return (
     <>
       <JsonLd data={graph} id="book-detail-jsonld" />
@@ -226,8 +282,6 @@ export default async function BookOverviewPage({ params }: Params) {
             <p className="mt-3 max-w-3xl break-words text-sm leading-relaxed text-muted-foreground sm:text-base">
               {display.description}
             </p>
-
-            {headlineFigure ? <BookCoverHero spec={headlineFigure} inline /> : null}
 
             <dl className="mt-5 grid min-w-0 grid-cols-2 border-l border-t border-border lg:grid-cols-5">
               {[

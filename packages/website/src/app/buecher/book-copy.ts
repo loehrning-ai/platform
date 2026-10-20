@@ -114,14 +114,14 @@ const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
     statusLabel: "Reader available",
     relatedResourceLabel: "Open the EU AI Act course",
     description:
-      "Why shares of AI use range from 20 to 57 percent depending on the survey, what the word AI on a company website proves and what it does not, how industry, region and job ads relate, and what has applied to your business since February 2025. The statements apply to this sample, not to Germany.",
+      "Findings from company websites, job ads and press releases: why almost every second AI hit is missing the word on the second scan, what text length explains, how many ads with an AI word in the title are technical job ads, why every regional ranking is half chance and who owns the key ring of a website. The statements apply to firms with a findable website, not to Germany.",
     highlights: [
-      "One number, several measurements: why AI shares differ so widely",
-      "Saying and showing: what the word AI on company websites proves",
-      "Industry, region and jobs compared, with intervals and limits",
+      "Measured twice: why almost every second AI hit is missing the word on the second scan",
+      "From text length to the key ring: findings from websites, jobs and press releases",
+      "A tool that works out in your browser where you stand, with interval and limit",
     ],
     adaptationNote:
-      "The edition shows only aggregates from an own analysis of company websites: every number rests on at least 5 hits, with no company names, addresses, prices, scores or rankings of individual firms. It applies to firms with a findable website, and the raw data stays private.",
+      "The edition shows only aggregates from own analyses of company websites, job ads and press releases: every number rests on at least 5 hits, with no company names, addresses, prices, scores or rankings of individual firms. It applies to firms with a findable website, and the raw data stays private.",
   },
   "ki-arbeitsalltag": {
     title: "AI at Work",
@@ -174,8 +174,10 @@ const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
   "Tool-selection editorial notes": "Redaktionelle Notizen zur Werkzeugauswahl",
   "Own analysis of company websites (aggregates, at least 5 hits per cell)":
     "Eigene Auswertung von Firmenwebsites (Aggregate, mindestens 5 Treffer je Zelle)",
-  "Published surveys by KfW, Destatis, ifo and Bitkom, each with date and base":
-    "Veröffentlichte Erhebungen von KfW, Destatis, ifo und Bitkom, jeweils mit Datum und Basis",
+  "Own analysis of job ads and press releases (aggregates, at least 5 hits per cell)":
+    "Eigene Auswertung von Stellenanzeigen und Pressemeldungen (Aggregate, mindestens 5 Treffer je Zelle)",
+  "Business register 2024 of the Federal Statistical Office (weights by state) and published surveys by KfW and Bitkom":
+    "Unternehmensregister 2024 des Statistischen Bundesamts (Gewichte nach Land) und veröffentlichte Umfragen von KfW und Bitkom",
   "Regulation (EU) 2024/1689 and the pages of the European Commission":
     "Verordnung (EU) 2024/1689 und die Seiten der Europäischen Kommission",
 };
@@ -400,7 +402,7 @@ export function getBookDisplay(
     highlights: book.highlights,
     adaptationNote:
       book.id === "ki-landschaft"
-        ? "Die Ausgabe zeigt nur Aggregate aus einer eigenen Auswertung von Firmenwebsites: jede Zahl mit mindestens 5 Treffern, ohne Firmennamen, Adressen, Preise, Scores und Ranglisten einzelner Firmen. Sie gilt für Firmen mit auffindbarer Website, die Rohdaten bleiben privat."
+        ? "Die Ausgabe zeigt nur Aggregate aus eigenen Auswertungen von Firmenwebsites, Stellenanzeigen und Pressemeldungen: jede Zahl mit mindestens 5 Treffern, ohne Firmennamen, Adressen, Preise, Scores und Ranglisten einzelner Firmen. Sie gilt für Firmen mit auffindbarer Website, die Rohdaten bleiben privat."
         : "",
   };
 }

@@ -24,6 +24,19 @@ describe("parseDirective", () => {
     expect(d?.attrs).toEqual({ ref: "c4.weighted_share", tail: "der Firmen mit Website, die KI schreiben." });
   });
 
+  it("reads the stage and explorer lines of the insight chapters", () => {
+    expect(parseDirective('::stage{id="H01"}')).toEqual({ name: "stage", attrs: { id: "H01" }, source: '::stage{id="H01"}' });
+    expect(parseDirective("::explorer{}")).toEqual({ name: "explorer", attrs: {}, source: "::explorer{}" });
+    expect(() => parseDirective("::stage{}")).toThrow(/needs id/);
+  });
+
+  it("counts a stage line as a figure of the chapter and lists the explorer as a directive", () => {
+    const md = ['::stage{id="H01"}', "", '::figure{id="C3"}', "", "::explorer{}"].join("\n");
+    expect(figureIdsOf(md)).toEqual(["h01", "c3"]);
+    expect(listDirectives(md).map((d) => d.name)).toEqual(["stage", "figure", "explorer"]);
+    expect(hasDirectives("::explorer{}")).toBe(true);
+  });
+
   it("ignores ordinary lines", () => {
     expect(parseDirective("Ein Satz mit :: und {braces}.")).toBeNull();
     expect(parseDirective("::: nicht dies")).toBeNull();

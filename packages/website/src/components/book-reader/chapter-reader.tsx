@@ -15,8 +15,12 @@ import {
   renderChapterSegments,
   type ChapterSegment,
 } from "./chapter-markdown";
+import { isInsightBook } from "@/lib/book-experience";
+import { ChapterBand } from "./chapter-band";
+import { ChapterList } from "./chapter-list";
+import { ChapterPauseSwitch } from "./chapter-pause-switch";
 import { ChapterReaderClient, ChapterTocLinks } from "./chapter-reader-client";
-import { ChapterTocSheet } from "./chapter-toc-sheet";
+import { InsightFocusBar } from "./insight-focus-bar";
 
 interface ChapterReaderProps {
   readonly book: Book;
@@ -46,7 +50,7 @@ interface ChapterReaderProps {
  * theme; the var binding is the theme-aware fix.
  */
 const PROSE_CLASS =
-  "prose prose-stone min-w-0 [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-captions:var(--color-muted-foreground)] prose-headings:break-words prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-a:break-words prose-a:text-brand-orange prose-a:no-underline hover:prose-a:underline prose-code:break-words prose-code:rounded prose-code:bg-card/60 prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.85em] prose-pre:max-w-full prose-pre:overflow-x-auto prose-pre:border prose-pre:border-hairline prose-pre:bg-inset prose-pre:text-foreground prose-table:text-sm";
+  "prose prose-stone min-w-0 [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-captions:var(--color-muted-foreground)] prose-headings:break-words prose-headings:font-bold prose-headings:tracking-tight prose-p:leading-relaxed prose-a:break-words prose-a:text-brand-orange prose-a:no-underline prose-a:py-[0.85rem] hover:prose-a:underline [&_:is(h2,h3,h4)>a]:block [&_:is(h2,h3,h4)>a]:min-h-11 [&_:is(h2,h3,h4)>a]:py-2 [&_:is(h2,h3,h4)>a]:text-foreground prose-code:break-words prose-code:rounded prose-code:bg-card/60 prose-code:px-1 prose-code:py-0.5 prose-code:text-[0.85em] prose-pre:max-w-full prose-pre:overflow-x-auto prose-pre:border prose-pre:border-hairline prose-pre:bg-inset prose-pre:text-foreground prose-table:text-sm";
 
 const READER_COPY = {
   de: {
@@ -76,7 +80,6 @@ const READER_COPY = {
     // the sentence assistive technology reads instead.
     barPosition: (chapter: number, total: number) =>
       `Kapitel ${chapter} von ${total}`,
-    tocSheet: "Inhalt",
     overviewShort: "Übersicht",
   },
   en: {
@@ -104,10 +107,23 @@ const READER_COPY = {
     allChapters: "All chapters",
     barPosition: (chapter: number, total: number) =>
       `Chapter ${chapter} of ${total}`,
-    tocSheet: "Contents",
     overviewShort: "Overview",
   },
 } as const;
+
+/** Moves the first hero stage or explorer (and its built figure) to the front of the chapter. Other figures keep their place. */
+function hoistFirstStage(
+  segments: readonly ChapterSegment[],
+  blocks: readonly (ReactNode | null)[] | undefined,
+): { readonly segments: readonly ChapterSegment[]; readonly blocks: readonly (ReactNode | null)[] | undefined } {
+  const at = segments.findIndex((segment) => segment.kind === "directive" && (segment.directive.name === "stage" || segment.directive.name === "explorer"));
+  if (at <= 0) return { segments, blocks };
+  const order = [at, ...segments.map((_, i) => i).filter((i) => i !== at)];
+  return {
+    segments: order.map((i) => segments[i] as ChapterSegment),
+    blocks: blocks ? order.map((i) => blocks[i] ?? null) : undefined,
+  };
+}
 
 /**
  * Server Component shell for the book chapter reader. The markdown body
@@ -132,12 +148,19 @@ export function ChapterReader({
     (candidate) => candidate.slug === chapter.meta.slug,
   );
   const chapterNumber = chapterIndex + 1;
-  const segments =
+  const insight = isInsightBook(book.id);
+  const cut =
     givenSegments ??
     (hasDirectives(chapter.rawMarkdown)
       ? renderChapterSegments({ rawMarkdown: chapter.rawMarkdown, locale })
       : null);
+  // Insight chapters open with the stage (or the explorer): the first one moves ahead of the text that introduces it,
+  // so the first screen after the band is the data, not a paragraph (the intro reads right below it).
+  const hoisted = insight && cut ? hoistFirstStage(cut, figureBlocks) : null;
+  const segments = hoisted ? hoisted.segments : cut;
+  const blocks = hoisted ? hoisted.blocks : figureBlocks;
   const hasFigures = Boolean(segments?.some((segment) => segment.kind === "directive"));
+  const hasStage = Boolean(segments?.some((segment) => segment.kind === "directive" && segment.directive.name === "stage"));
   // A chapter with figures is a column of 68ch text runs and figures that break out to 1120px.
   // The article stays the one landmark; each text run is an opaque payload, each figure an island.
   const content =
@@ -158,9 +181,9 @@ export function ChapterReader({
             <div
               key={index}
               data-book-figure={segment.directive.name}
-              className="mx-auto my-8 w-full min-w-0 max-w-[1120px] sm:my-10"
+              className="mx-auto my-8 w-full min-w-0 max-w-[1120px] first:mt-0 sm:my-10 sm:first:mt-0"
             >
-              {figureBlocks?.[index] ?? null}
+              {blocks?.[index] ?? null}
             </div>
           ),
         )}
@@ -168,7 +191,7 @@ export function ChapterReader({
     ) : (
       <article
         aria-label={chapter.meta.title}
-        className={`${PROSE_CLASS} max-w-[70ch]`}
+        className={`${PROSE_CLASS} max-w-[70ch]${insight ? " mx-auto" : ""}`}
         dangerouslySetInnerHTML={{
           __html: renderChapterMarkdownHtml({
             rawMarkdown: chapter.rawMarkdown,
@@ -182,19 +205,186 @@ export function ChapterReader({
   const nextChapterHref = neighbours.next
     ? localizeHref(`/buecher/${book.id}/${neighbours.next.slug}`, locale)
     : null;
-  const tocFooter = (
-    <div className="mt-4 border-t border-border pt-3">
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        {book.pdfPath ? copy.pdfAvailable : copy.pdfUnavailable}
-      </p>
+
+  const breadcrumb = (
+    <nav
+      aria-label={copy.breadcrumbAria}
+      className="no-print mb-4 flex min-w-0 flex-wrap items-center gap-x-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
+    >
+      <Link
+        href={localizeHref("/buecher", locale)}
+        className="inline-flex min-h-11 items-center break-words hover:text-brand-orange"
+      >
+        {copy.books}
+      </Link>
+      <span aria-hidden="true">/</span>
       <Link
         href={bookHref}
-        className="mt-2 inline-flex min-h-11 items-center text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground underline-offset-4 hover:text-brand-orange"
+        className="inline-flex min-h-11 min-w-0 items-center break-words hover:text-brand-orange"
       >
-        {copy.allChapters}
+        {bookTitle}
+      </Link>
+      <span aria-hidden="true">/</span>
+      <span className="min-w-0 break-words text-foreground">{chapter.meta.title}</span>
+    </nav>
+  );
+
+  // Insight chapters, sm and up: one short line in Figtree, the way back to the book. On phones the band's caps line is that link.
+  const insightTopRow = (
+    <div className="no-print mx-auto hidden max-w-[75rem] items-center justify-between gap-3 px-4 sm:flex sm:px-6">
+      <nav aria-label={copy.breadcrumbAria} className="min-w-0">
+        <Link
+          href={bookHref}
+          className="inline-flex min-h-12 min-w-12 max-w-full items-center gap-1.5 text-[0.9375rem] font-semibold text-foreground underline-offset-4 hover:text-brand-orange hover:underline"
+        >
+          <ArrowLeft size={16} aria-hidden="true" className="shrink-0" />
+          <span className="truncate">{bookTitle}</span>
+        </Link>
+      </nav>
+    </div>
+  );
+
+  const chapterNavigation = (
+    <nav
+      aria-label={copy.chapterNavigationAria}
+      className="no-print mt-10 grid min-w-0 grid-cols-2 items-center gap-3 border-t border-border pt-5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
+    >
+      {neighbours.prev ? (
+        <Link
+          href={localizeHref(`/buecher/${book.id}/${neighbours.prev.slug}`, locale)}
+          className="flex min-h-11 min-w-0 max-w-full items-center justify-self-start border border-border/50 bg-card/20 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
+          aria-label={copy.previousChapter(neighbours.prev.title)}
+        >
+          <ArrowLeft size={14} aria-hidden="true" />
+          <span className="hidden min-w-0 break-words md:block">{neighbours.prev.title}</span>
+          <span className="md:hidden">{copy.previousShort}</span>
+        </Link>
+      ) : (
+        <Link
+          href={bookHref}
+          className="flex min-h-11 min-w-0 max-w-full items-center justify-self-start text-sm text-muted-foreground hover:text-brand-orange"
+        >
+          <ArrowLeft size={14} aria-hidden="true" />
+          <span className="break-words">{copy.contents}</span>
+        </Link>
+      )}
+
+      <span className="hidden font-mono text-xs text-muted-foreground sm:block" aria-hidden="true">
+        ← → {copy.keyboardHint}
+      </span>
+
+      {neighbours.next && nextChapterHref ? (
+        <Link
+          href={nextChapterHref}
+          className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end border border-border/50 bg-card/20 px-3 py-2 text-right text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
+          aria-label={copy.nextChapter(neighbours.next.title)}
+        >
+          <span className="hidden min-w-0 break-words md:block">{neighbours.next.title}</span>
+          <span className="md:hidden">{copy.nextShort}</span>
+          <ArrowRight size={14} aria-hidden="true" />
+        </Link>
+      ) : (
+        <Link
+          href={bookHref}
+          className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end text-right text-sm text-muted-foreground hover:text-brand-orange"
+        >
+          <span className="break-words">{copy.chapterOverview}</span>
+          <ArrowRight size={14} aria-hidden="true" />
+        </Link>
+      )}
+    </nav>
+  );
+
+  const relatedCourse = (
+    <div className="no-print mt-5 flex justify-center border-t border-border pt-3">
+      <Link
+        href={localizeHref(book.relatedResourceHref, locale)}
+        className="inline-flex min-h-11 items-center text-center text-sm text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline"
+      >
+        {copy.relatedCourse(relatedResourceLabel)}
       </Link>
     </div>
   );
+
+  // The compact reader bar below lg: position and the next chapter. The contents are a visible
+  // list on the page (insight books) or the sidebar (lg), never a sheet that opens and closes.
+  const focusBar = (
+    <ReaderFocusBar
+      position={`${chapterNumber} / ${allChapters.length}`}
+      positionLabel={copy.barPosition(chapterNumber, allChapters.length)}
+      action={
+        neighbours.next && nextChapterHref
+          ? {
+              kind: "link",
+              label: copy.nextShort,
+              href: nextChapterHref,
+              ariaLabel: `${copy.nextShort}: ${neighbours.next.title}`,
+            }
+          : {
+              kind: "link",
+              label: copy.overviewShort,
+              href: bookHref,
+              ariaLabel: copy.chapterOverview,
+            }
+      }
+    />
+  );
+
+  const insightFocusBar = (
+    <InsightFocusBar
+      locale={locale}
+      chapterNumber={chapterNumber}
+      chapterTotal={allChapters.length}
+      next={
+        neighbours.next && nextChapterHref
+          ? { href: nextChapterHref, ariaLabel: `${copy.nextChapter(neighbours.next.title)}`, isOverview: false }
+          : { href: bookHref, ariaLabel: copy.chapterOverview, isOverview: true }
+      }
+    />
+  );
+
+  // Keep the only reader runtime boundary after all server-owned markup.
+  // A hostless client boundary before the grid could advance React's
+  // hydration cursor into the grid during concurrent streamed retries.
+  const runtime = (
+    <ChapterReaderClient
+      bookId={book.id}
+      chapterSlug={chapter.meta.slug}
+      neighbours={neighbours}
+      locale={locale}
+    />
+  );
+
+  // Insight chapter (docs/experience-system.md, "Book motion exception"): band, pinned hero
+  // stage, short text, "Was du tun kannst", visible source line, visible chapter list.
+  if (insight) {
+    return (
+      <div data-reader="focus" data-insight-chapter="" className="cs-chapter min-w-0 pb-12">
+        {insightTopRow}
+        <ChapterBand
+          number={chapterNumber}
+          total={allChapters.length}
+          title={chapter.meta.title}
+          band={chapter.meta.band}
+          locale={locale}
+          headingId="chapter-title"
+          backHref={bookHref}
+          bookTitle={bookTitle}
+          pause={hasStage ? <ChapterPauseSwitch locale={locale} id="chapter-pause" /> : null}
+        />
+        <div className={`mx-auto min-w-0 max-w-[1424px] px-4 sm:px-6 ${hasStage ? "pt-0 sm:pt-2" : "pt-10 sm:pt-12"}`}>
+          {content}
+          <div className="mx-auto max-w-[68ch]">
+            {chapterNavigation}
+            <ChapterList bookId={book.id} chapters={allChapters} currentSlug={chapter.meta.slug} locale={locale} />
+            {relatedCourse}
+          </div>
+        </div>
+        {insightFocusBar}
+        {runtime}
+      </div>
+    );
+  }
 
   // Reader focus mode (docs/experience-system.md, "Reader focus mode"): the
   // attribute sits on the wrapper this route owns inside <main>, rendered on
@@ -205,28 +395,7 @@ export function ChapterReader({
       data-reader="focus"
       className={`mx-auto min-w-0 px-4 pb-12 pt-5 sm:px-6 sm:pt-7 ${hasFigures ? "max-w-[1424px]" : "max-w-6xl"}`}
     >
-      <nav
-        aria-label={copy.breadcrumbAria}
-        className="no-print mb-4 flex min-w-0 flex-wrap items-center gap-x-2 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
-      >
-        <Link
-          href={localizeHref("/buecher", locale)}
-          className="inline-flex min-h-11 items-center break-words hover:text-brand-orange"
-        >
-          {copy.books}
-        </Link>
-        <span aria-hidden="true">/</span>
-        <Link
-          href={localizeHref(`/buecher/${book.id}`, locale)}
-          className="inline-flex min-h-11 min-w-0 items-center break-words hover:text-brand-orange"
-        >
-          {bookTitle}
-        </Link>
-        <span aria-hidden="true">/</span>
-        <span className="min-w-0 break-words text-foreground">
-          {chapter.meta.title}
-        </span>
-      </nav>
+      {breadcrumb}
 
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1fr)_224px]">
         <div className="min-w-0">
@@ -240,9 +409,7 @@ export function ChapterReader({
             <div className="mt-3 flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-muted-foreground">
               <span className="flex min-w-0 items-center gap-1.5">
                 <Clock className="h-4 w-4" aria-hidden="true" />
-                <span className="break-words">
-                  {copy.readingTime(chapter.readingTimeMinutes)}
-                </span>
+                <span className="break-words">{copy.readingTime(chapter.readingTimeMinutes)}</span>
               </span>
               <span className="hidden sm:block" aria-hidden="true">
                 ·
@@ -255,82 +422,13 @@ export function ChapterReader({
           </header>
 
           {content}
-
-          <nav
-            aria-label={copy.chapterNavigationAria}
-            className="no-print mt-10 grid min-w-0 grid-cols-2 items-center gap-3 border-t border-border pt-5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]"
-          >
-            {neighbours.prev ? (
-              <Link
-                href={localizeHref(
-                  `/buecher/${book.id}/${neighbours.prev.slug}`,
-                  locale,
-                )}
-                className="flex min-h-11 min-w-0 max-w-full items-center justify-self-start border border-border/50 bg-card/20 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
-                aria-label={copy.previousChapter(neighbours.prev.title)}
-              >
-                <ArrowLeft size={14} aria-hidden="true" />
-                <span className="hidden min-w-0 break-words md:block">
-                  {neighbours.prev.title}
-                </span>
-                <span className="md:hidden">{copy.previousShort}</span>
-              </Link>
-            ) : (
-              <Link
-                href={bookHref}
-                className="flex min-h-11 min-w-0 max-w-full items-center justify-self-start text-sm text-muted-foreground hover:text-brand-orange"
-              >
-                <ArrowLeft size={14} aria-hidden="true" />
-                <span className="break-words">{copy.contents}</span>
-              </Link>
-            )}
-
-            <span
-              className="hidden font-mono text-xs text-muted-foreground sm:block"
-              aria-hidden="true"
-            >
-              ← → {copy.keyboardHint}
-            </span>
-
-            {neighbours.next && nextChapterHref ? (
-              <Link
-                href={nextChapterHref}
-                className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end border border-border/50 bg-card/20 px-3 py-2 text-right text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
-                aria-label={copy.nextChapter(neighbours.next.title)}
-              >
-                <span className="hidden min-w-0 break-words md:block">
-                  {neighbours.next.title}
-                </span>
-                <span className="md:hidden">{copy.nextShort}</span>
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
-            ) : (
-              <Link
-                href={bookHref}
-                className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end text-right text-sm text-muted-foreground hover:text-brand-orange"
-              >
-                <span className="break-words">{copy.chapterOverview}</span>
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
-            )}
-          </nav>
-
-          <div className="no-print mt-5 flex justify-center border-t border-border pt-3">
-            <Link
-              href={localizeHref(book.relatedResourceHref, locale)}
-              className="inline-flex min-h-11 items-center text-center text-sm text-muted-foreground underline-offset-4 hover:text-brand-orange hover:underline"
-            >
-              {copy.relatedCourse(relatedResourceLabel)}
-            </Link>
-          </div>
+          {chapterNavigation}
+          <ChapterList bookId={book.id} chapters={allChapters} currentSlug={chapter.meta.slug} locale={locale} />
+          {relatedCourse}
         </div>
 
         <div className="no-print hidden lg:block">
-          <div
-            role="complementary"
-            aria-label={copy.tocRegion}
-            className="sticky top-24"
-          >
+          <div role="complementary" aria-label={copy.tocRegion} className="sticky top-24">
             <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
               {copy.tocHeading}
             </p>
@@ -353,47 +451,8 @@ export function ChapterReader({
         </div>
       </div>
 
-      {/* Compact reader bar below lg: position, the contents as a sheet, and
-          the next chapter. The desktop sidebar above stays the TOC at lg; this
-          is the same list rendered once more for the phone, the way the site
-          navigation renders twice. */}
-      <ReaderFocusBar
-        position={`${chapterNumber} / ${allChapters.length}`}
-        positionLabel={copy.barPosition(chapterNumber, allChapters.length)}
-        action={
-          neighbours.next && nextChapterHref
-            ? {
-                kind: "link",
-                label: copy.nextShort,
-                href: nextChapterHref,
-                ariaLabel: `${copy.nextShort}: ${neighbours.next.title}`,
-              }
-            : {
-                kind: "link",
-                label: copy.overviewShort,
-                href: bookHref,
-                ariaLabel: copy.chapterOverview,
-              }
-        }
-      >
-        <ChapterTocSheet
-          summaryLabel={copy.tocSheet}
-          heading={copy.tocHeading}
-          navLabel={copy.tocRegion}
-          headings={chapter.headings}
-        >
-          {tocFooter}
-        </ChapterTocSheet>
-      </ReaderFocusBar>
-      {/* Keep the only reader runtime boundary after all server-owned markup.
-          A hostless client boundary before the grid could advance React's
-          hydration cursor into the grid during concurrent streamed retries. */}
-      <ChapterReaderClient
-        bookId={book.id}
-        chapterSlug={chapter.meta.slug}
-        neighbours={neighbours}
-        locale={locale}
-      />
+      {focusBar}
+      {runtime}
     </div>
   );
 }

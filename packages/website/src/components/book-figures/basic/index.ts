@@ -8,7 +8,7 @@ export {
   TilemapFigure,
   WaffleFigure,
 } from "./figures";
-export { FigureFrame, DataAndLimits } from "./figure-frame";
+export { FigureFrame, SourceAndTables } from "./figure-frame";
 export type { DataTableSpec } from "./figure-frame";
 export { FigureCanvas } from "./figure-canvas";
 export type {

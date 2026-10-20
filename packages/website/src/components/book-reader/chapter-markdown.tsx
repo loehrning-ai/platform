@@ -11,6 +11,7 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { parseDirective, type Directive } from "@/lib/book-directives";
+import "./chapter-markdown.css";
 import {
   CalloutRenderer,
   resolveCalloutStyle,
@@ -154,6 +155,7 @@ function transformElement(element: Element, locale: Locale): Element {
 
   if (element.tagName === "table") {
     removeTableFormattingWhitespace(element);
+    labelTableCells(element);
     return {
       type: "element",
       tagName: "div",
@@ -209,6 +211,25 @@ function transformElement(element: Element, locale: Locale): Element {
   }
 
   return element;
+}
+
+/** A table of four or more columns stacks into cards on phones (chapter-markdown.css): each cell carries its column name. */
+const STACK_FROM_COLUMNS = 4;
+
+function labelTableCells(table: Element): void {
+  const elements = (node: Element): Element[] => node.children.filter((c): c is Element => c.type === "element");
+  const head = elements(table).find((child) => child.tagName === "thead");
+  const body = elements(table).find((child) => child.tagName === "tbody");
+  const headRow = head ? elements(head).find((row) => row.tagName === "tr") : undefined;
+  if (!headRow || !body) return;
+  const labels = elements(headRow).map((cell) => textContent(cell).trim());
+  if (labels.length < STACK_FROM_COLUMNS) return;
+  for (const row of elements(body)) {
+    elements(row).forEach((cell, index) => {
+      if (cell.tagName === "td" && labels[index] && textContent(cell).trim() !== "") cell.properties = { ...cell.properties, dataLabel: labels[index] };
+    });
+  }
+  table.properties = { ...table.properties, className: ["md-stack"] };
 }
 
 function removeTableFormattingWhitespace(element: Element): void {

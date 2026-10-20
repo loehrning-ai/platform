@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "alle",
+        "label": "Hits in the first scan",
+        "text": "In the first scan AI stood on {{h05-dots.first_hits}} of {{h05-dots.pairs}} homepages, each dot one.",
+        "numeral": "{{h05-dots.first_hits}}",
+        "claim": "That many homepages said AI in the first scan.",
+        "unit": "1 dot = 1 homepage with the word AI in the first scan."
+      },
+      {
+        "id": "weg",
+        "label": "Missing in the second scan",
+        "text": "{{h05-dots.lost_hits}} of them lost the word in the second scan, {{h05-dots.rescan_days}} days later, by another route.",
+        "numeral": "{{h05-dots.lost_hits}}",
+        "claim": "That many lose the word the second time.",
+        "unit": "1 dot = 1 homepage with the word AI in the first scan."
+      },
+      {
+        "id": "anteil",
+        "label": "Almost every second one",
+        "text": "Almost every second hit, interval {{h05-dots.rescan_lost.range}}. Only {{h05-dots.new_hits}} were new. This may be the measurement, not the pages.",
+        "numeral": "{{h05-dots.rescan_lost}}",
+        "claim": "{{h05-dots.lost_hits}} of {{h05-dots.first_hits}} lose the AI word the second time.",
+        "unit": "1 dot = 1 homepage with the word AI in the first scan."
+      }
+    ]
+  }
+}

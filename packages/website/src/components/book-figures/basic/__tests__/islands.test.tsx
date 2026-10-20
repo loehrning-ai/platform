@@ -45,7 +45,7 @@ function html(node: React.ReactElement): Document {
 }
 
 describe("server markup is the finished figure (no JS)", () => {
-  it.each(Object.entries(ALL))("%s: figure, both variants, data block, CSV and table", (_name, node) => {
+  it.each(Object.entries(ALL))("%s: figure, both variants, source line, CSV and table", (_name, node) => {
     const doc = html(node);
     const figure = doc.querySelector("figure.bf");
     expect(figure).not.toBeNull();
@@ -63,16 +63,22 @@ describe("server markup is the finished figure (no JS)", () => {
       const ids = [...doc.querySelectorAll("[id]")].map((e) => e.id);
       expect(new Set(ids).size).toBe(ids.length);
     }
-    const details = doc.querySelector("details.bf-data");
-    expect(details?.querySelector("summary")?.textContent).toBe("Daten & Grenzen");
-    const dd = [...(details?.querySelectorAll("dt") ?? [])].map((d) => d.textContent);
-    expect(dd).toEqual(["Stichprobe", "Quelle", "Stand", "Grenzen"]);
-    expect(details?.textContent).toMatch(/n = [\d.]+/);
-    expect(details?.textContent).toMatch(/\d{2}\.\d{2}\.2026/);
-    const csv = details?.querySelector<HTMLAnchorElement>("a.bf-csv");
+    // nothing collapses: no disclosure widget anywhere in the figure
+    expect(doc.querySelector("details, summary")).toBeNull();
+    expect(doc.body.textContent).not.toContain("Daten & Grenzen");
+    // one visible source line: n, the date and the limit, then a plain CSV link
+    const line = doc.querySelector<HTMLElement>("p.bf-sourceline");
+    expect(line, "source line").not.toBeNull();
+    expect(line?.textContent).toMatch(/n = [\d.]+/);
+    expect(line?.textContent).toMatch(/Stand \d{2}\.\d{2}\.2026/);
+    expect(line?.textContent).toContain("Grenze:");
+    const csv = line?.querySelector<HTMLAnchorElement>("a.bf-csv");
     expect(csv?.getAttribute("href")).toMatch(/^data:text\/csv;charset=utf-8,/);
     expect(csv?.hasAttribute("download")).toBe(true);
-    expect(details?.querySelector("table")).not.toBeNull();
+    // the plotted numbers stay as a table for assistive technology (visually hidden, never focusable)
+    const hidden = doc.querySelector(".bf-source-block > .bf-sr");
+    expect(hidden?.querySelector("table")).not.toBeNull();
+    expect(hidden?.querySelector("[tabindex]")).toBeNull();
     // nothing interactive is live before hydration
     expect(doc.querySelector(".bf-hit")).toBeNull();
     for (const c of doc.querySelectorAll(".bf-controls")) expect(c.getAttribute("data-ready")).toBe("false");
@@ -240,14 +246,14 @@ describe("client islands", () => {
 
   it("waffle: a reading relights the dots (narrow 25, broad 64) and its sentence says the number depends on the reading", () => {
     render(<WaffleFigure spec={WAFFLE_SAGEN_ZEIGEN} chips={WAFFLE_CHIPS} />);
-    const accent = () => document.querySelectorAll('svg circle[data-group][fill="#b73a15"]').length;
+    const accent = () => document.querySelectorAll('svg rect[data-group][fill="#b73a15"]').length;
     fireEvent.click(screen.getByRole("button", { name: "Weite Lesart" }));
     expect(accent()).toBe(64);
     fireEvent.click(screen.getByRole("button", { name: "Enge Lesart" }));
     expect(accent()).toBe(25);
     expect(document.querySelector(".bf-detail")?.textContent).toContain("Enge Lesart: 25 von 100");
     expect(document.querySelector(".bf-detail")?.textContent).toContain("hängt davon ab, was man konkret nennt");
-    expect(document.querySelectorAll("svg circle")).toHaveLength(100 + 2 /* legend markers */);
+    expect(document.querySelectorAll("svg rect[data-group]")).toHaveLength(100);
   });
 
   it("lorenz: the range input moves the mark and aria-valuetext says why", () => {

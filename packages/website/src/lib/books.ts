@@ -9,7 +9,7 @@
  * must match the slug used in `content/books/<slug>/manifest.json`.
  *
  * Chapter counts / reading times (book-library import — updated after real import):
- * - ki-landschaft:           8 chapters (7 + method appendix), ~4.650 words → 24 min
+ * - ki-landschaft:           9 chapters (8 insight chapters + sources page), ~4.800 words → 24 min
  * - ki-arbeitsalltag:        14 chapters (incl. 00_intro), ~14.550 words → 73 min
  * - ki-tools-selbststaendige: 13 chapters (14_nachwort dropped), ~35.000 words → 175 min
  */
@@ -58,8 +58,8 @@ export const allBooks: readonly Book[] = [
     edition: "Ausgabe Oktober 2026",
     language: "de",
     audience: "Alle mit beruflichem KI-Bezug",
-    chapters: 8,
-    pageCount: 34,
+    chapters: 9,
+    pageCount: 32,
     readingTimeMinutes: 24,
     resourceType: "HTML-Lesefassung mit interaktiven Abbildungen",
     accessLabel: "kostenlos · jetzt lesen",
@@ -69,11 +69,11 @@ export const allBooks: readonly Book[] = [
     relatedResourceHref: "/eu-ai-act-kurs",
     relatedResourceLabel: "EU AI Act Kurs öffnen",
     description:
-      "Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite belegt und was nicht, wie Branche, Region und Stellenanzeigen zusammenhängen und was seit Februar 2025 für deinen Betrieb gilt. Die Aussagen gelten für diese Stichprobe, nicht für Deutschland.",
+      "Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das Wort im zweiten Scan fehlt, was die Textmenge erklärt, wie viele Anzeigen mit KI-Wort im Titel technische Stellenanzeigen sind, warum jede Regionsrangliste zur Hälfte Zufall ist und wem der Schlüsselbund einer Website gehört. Die Aussagen gelten für Firmen mit auffindbarer Website, nicht für Deutschland.",
     highlights: [
-      "Eine Zahl, mehrere Messungen: warum KI-Anteile so weit auseinanderliegen",
-      "Sagen und zeigen: was das Wort KI auf Firmenwebsites belegt",
-      "Branche, Region und Stellen im Vergleich, mit Intervallen und Grenzen",
+      "Zwei Messungen, zwei Bilder: warum bei fast jedem zweiten KI-Treffer das Wort im zweiten Scan fehlt",
+      "Von der Textmenge bis zum Schlüsselbund: Befunde aus Websites, Stellen und Pressemeldungen",
+      "Ein Werkzeug, das in deinem Browser rechnet, wo du stehst, mit Intervall und Grenze",
     ],
     pdfPath: "/api/buecher/ki-landschaft/download.pdf",
     pages: [
@@ -86,8 +86,9 @@ export const allBooks: readonly Book[] = [
     nextReview: "2027-01-19",
     sourceInputs: [
       "Own analysis of company websites (aggregates, at least 5 hits per cell)",
-      "Published surveys by KfW, Destatis, ifo and Bitkom, each with date and base",
-      "Regulation (EU) 2024/1689 and the pages of the European Commission",
+      "Own analysis of job ads and press releases (aggregates, at least 5 hits per cell)",
+      "Business register 2024 of the Federal Statistical Office (weights by state) and published surveys by KfW and Bitkom",
+      "Regulation (EU) 2024/1689, amending Regulation (EU) 2026/1744 (CELEX 32026R1744) and the pages of the European Commission",
     ],
     licensePolicy:
       "Kostenlos online lesbar; PDF-Download nach Login verfügbar.",

@@ -109,8 +109,8 @@
     },
     {
       "path": "packages/website/public/book-covers/ki-landschaft-2026-2.png",
-      "sizeBytes": 77817,
-      "sha256": "2376a4d863604a3471d4d889d10e92e9106786fc11302321a67899e9bb4da1bc",
+      "sizeBytes": 74853,
+      "sha256": "2f40024e6f86b1507c0943925251e4b36df73cf54067eb8f1c16358c238e74b3",
       "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",
@@ -118,8 +118,8 @@
     },
     {
       "path": "packages/website/public/book-covers/ki-landschaft-2026-3.png",
-      "sizeBytes": 51014,
-      "sha256": "ded1b06ccfb9a67bf954e52fa89ddfa8a05c8a72b1b61607315de53a03464a24",
+      "sizeBytes": 57568,
+      "sha256": "59d045aae9c0413352b2757150447e2a9659f89a2612f8bfb70ba2737156a6e4",
       "owner": "Tim L\u00f6hr",
       "source": "Authored loehrning.ai book cover",
       "license": "LicenseRef-Loehrning-Editorial",

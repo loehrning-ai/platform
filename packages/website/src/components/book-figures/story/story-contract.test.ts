@@ -84,7 +84,7 @@ describe("story.css motion contract", () => {
     expect(css).toMatch(/\.bf-chip,\s*\.bf-button\s*\{[^}]*min-height:\s*44px/);
     expect(css).toMatch(/\.bf-select\s*\{[^}]*min-height:\s*44px/);
     expect(css).toMatch(/\.bf-range\s*\{[^}]*height:\s*44px/);
-    expect(css).toMatch(/\.bf-summary\s*\{[^}]*min-height:\s*44px/);
+    expect(css).not.toMatch(/\.bf-summary|\.bf-data\b/);
     for (const [, rem] of css.matchAll(/font-size:\s*([\d.]+)rem/g)) expect(Number(rem)).toBeGreaterThanOrEqual(0.75);
     for (const [, px] of css.matchAll(/font-size:\s*(\d+)px/g)) expect(Number(px)).toBeGreaterThanOrEqual(12);
   });

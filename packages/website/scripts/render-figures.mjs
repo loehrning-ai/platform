@@ -20,13 +20,34 @@
  *   node scripts/render-figures.mjs --check               write nothing; exit 1 when a file is stale
  */
 
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { figureCsv } from "../src/lib/figures/data.ts";
 import { renderStandaloneSvg } from "../src/lib/figures/export.ts";
 import { findPrivacyFindings, parseFigureSpec } from "../src/lib/figures/validate.ts";
+
+/** Reads a file once; a missing file is null. No exists-then-read race (CodeQL js/file-system-race). */
+function readOrNull(path) {
+  try {
+    return readFileSync(path, "utf8");
+  } catch (error) {
+    if (error && error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+/** Lists a directory once; a missing directory is an empty list. */
+function listOrEmpty(path) {
+  try {
+    return readdirSync(path);
+  } catch (error) {
+    if (error && error.code === "ENOENT") return [];
+    throw error;
+  }
+}
+
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_DIR = join(ROOT, "content", "books", "ki-landschaft", "figures");
@@ -51,7 +72,7 @@ function parseArgs(argv) {
 export function buildFigureFiles(inDir, width = 640, withCsv = false) {
   const files = [];
   const problems = [];
-  const names = existsSync(inDir) ? readdirSync(inDir).filter((f) => f.endsWith(".json")).sort() : [];
+  const names = listOrEmpty(inDir).filter((f) => f.endsWith(".json")).sort();
   for (const name of names) {
     try {
       const spec = parseFigureSpec(JSON.parse(readFileSync(join(inDir, name), "utf8")));
@@ -81,7 +102,7 @@ function main() {
   const stale = [];
   for (const file of files) {
     const target = join(args.out, file.name);
-    const current = existsSync(target) ? readFileSync(target, "utf8") : null;
+    const current = readOrNull(target);
     if (current === file.content) continue;
     stale.push(file.name);
     if (!args.check) {

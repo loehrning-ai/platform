@@ -86,24 +86,39 @@ describe("book publication manifests", () => {
     );
     const book = allBooks.find((entry) => entry.id === "ki-landschaft");
     const chapterSlugs = [
-      "01_eisberg",
-      "02_sagen_zeigen",
-      "03_zweimal_gemessen",
-      "04_branche_land",
-      "05_reden_einstellen",
-      "06_eu_ki_verordnung",
-      "07_pilot",
-      "08_methodik",
+      "01_zweimal_gemessen",
+      "02_textmenge",
+      "03_schaufenster",
+      "04_stellen_namen",
+      "05_land",
+      "06_stimmen",
+      "07_schluessel",
+      "08_dein_zug",
+      "09_quellen",
     ];
+    // Figures each chapter places, in reading order: ::stage and ::figure lines, lower case.
     const figuresPerChapter: Record<string, string[]> = {
-      "01_eisberg": ["C1", "C2"],
-      "02_sagen_zeigen": ["C3"],
-      "03_zweimal_gemessen": ["C4", "C5"],
-      "04_branche_land": ["C6", "C7", "C8", "C9"],
-      "05_reden_einstellen": ["C10", "C11"],
-      "06_eu_ki_verordnung": ["C12"],
-      "07_pilot": ["C13", "C14"],
-      "08_methodik": [],
+      "01_zweimal_gemessen": ["h05-dots", "h05-waterfall", "h05-ladder"],
+      "02_textmenge": ["h01-field", "h01-net", "h01-dose", "h01-friends"],
+      "03_schaufenster": ["c3", "c3-evidence", "h04-dumbbell", "h04-field", "h07-curve"],
+      "04_stellen_namen": ["h02-blocks", "h02-gap", "h02-ladder", "h03-strip", "h03-drift"],
+      "05_land": ["h06-slope", "h06-region", "h10-tiles", "h10-or"],
+      "06_stimmen": ["h12-null", "h11-field"],
+      "07_schluessel": ["h09-field", "h08-field"],
+      "08_dein_zug": [],
+      "09_quellen": [],
+    };
+    // One pinned hero stage per insight chapter (the explorer stands in for it in chapter 8).
+    const stagePerChapter: Record<string, string | null> = {
+      "01_zweimal_gemessen": "h05-dots",
+      "02_textmenge": "h01-net",
+      "03_schaufenster": "h04-field",
+      "04_stellen_namen": "h02-blocks",
+      "05_land": "h06-slope",
+      "06_stimmen": "h12-null",
+      "07_schluessel": "h08-field",
+      "08_dein_zug": null,
+      "09_quellen": null,
     };
 
     function readChapter(language: "de" | "en", slug: string): string {
@@ -123,7 +138,7 @@ describe("book publication manifests", () => {
       return (prose.match(/\w[\w.,/%’'-]*/gu) ?? []).length;
     }
 
-    it("pins title, subtitle, chapter list and the seven chapters plus method appendix", () => {
+    it("pins title, subtitle, chapter list and the eight insight chapters plus the sources page", () => {
       expect(book?.title).toBe("Von außen gesehen");
       expect(book?.subtitle).toMatch(
         /^Was [\d.]+ Firmenwebsites über KI in Deutschland verraten$/u,
@@ -168,8 +183,8 @@ describe("book publication manifests", () => {
         .map((slug) => wordCount(readChapter("de", slug)))
         .reduce((sum, count) => sum + count, 0);
 
-      expect(words).toBeGreaterThanOrEqual(4500);
-      expect(words).toBeLessThanOrEqual(5500);
+      expect(words).toBeGreaterThanOrEqual(4000);
+      expect(words).toBeLessThanOrEqual(5000);
       expect(
         Math.abs((book?.readingTimeMinutes ?? 0) - words / 200),
       ).toBeLessThanOrEqual(3);
@@ -187,27 +202,63 @@ describe("book publication manifests", () => {
       }
     });
 
-    it("places the planned figures; the action box stays where the advice is concrete (chapters 1, 6, 7), other chapters vary or fold it", () => {
+    it("places the planned figures and one hero stage per insight chapter; every chapter but the sources page ends in the visible action box", () => {
       for (const slug of chapterSlugs) {
         for (const language of ["de", "en"] as const) {
           const text = readChapter(language, slug);
-          const figures = [...text.matchAll(/^::figure\{id="(C\d+)"\}$/gmu)].map(
+          const figures = [...text.matchAll(/^::(?:figure|stage)\{id="([a-z0-9-]+)"\}$/gmu)].map(
             (match) => match[1],
           );
-          expect(figures).toEqual(figuresPerChapter[slug]);
+          expect(figures, `${language} ${slug}`).toEqual(figuresPerChapter[slug]);
+
+          const stages = [...text.matchAll(/^::stage\{id="([a-z0-9-]+)"\}$/gmu)].map((match) => match[1]);
+          expect(stages, `${language} ${slug} stages`).toEqual(
+            stagePerChapter[slug] === null ? [] : [stagePerChapter[slug]],
+          );
 
           const box =
             language === "de"
               ? /^> \*\*Was du tun kannst:\*\*/mu
               : /^> \*\*What you can do:\*\*/mu;
-          // Not every chapter ends in the same box (it read as a template): 1, 6 and 7 keep it,
-          // 2 ("Jetzt bist du dran") and 4 ("Tipp") rename it, 3 and 5 fold the advice into the last paragraph.
-          if (["01_eisberg", "06_eu_ki_verordnung", "07_pilot"].includes(slug)) {
-            expect(text).toMatch(box);
-          } else {
+          if (slug === "09_quellen") {
             expect(text).not.toMatch(box);
+          } else {
+            expect(text).toMatch(box);
           }
+          // The explorer sits in chapter 8 only.
+          expect(/^::explorer\{\}$/mu.test(text), `${language} ${slug} explorer`).toBe(slug === "08_dein_zug");
         }
+      }
+    });
+
+    it("keeps the action box between 40 and 60 words", () => {
+      for (const slug of chapterSlugs.filter((s) => s !== "09_quellen")) {
+        const text = readChapter("de", slug);
+        const box = text.split("\n").find((line) => line.startsWith("> **Was du tun kannst:**")) ?? "";
+        const words = wordCount(box.replace("> **Was du tun kannst:**", ""));
+        expect(words, slug).toBeGreaterThanOrEqual(40);
+        expect(words, slug).toBeLessThanOrEqual(60);
+      }
+    });
+
+    it("carries a band (numeral and claim) on every insight chapter and a cover block", () => {
+      for (const language of ["de", "en"] as const) {
+        const manifest = JSON.parse(
+          readFileSync(
+            language === "de" ? resolve(directory, "manifest.json") : resolve(directory, "en", "manifest.json"),
+            "utf8",
+          ),
+        ) as BookManifest & {
+          landing?: { facts?: unknown[]; explainer?: unknown };
+          chapters: Array<{ slug: string; band?: { numeral: string; claim: string } }>;
+        };
+        for (const chapter of manifest.chapters) {
+          if (chapter.slug === "09_quellen") continue;
+          expect(chapter.band?.numeral.trim(), `${language} ${chapter.slug} numeral`).toBeTruthy();
+          expect(chapter.band?.claim.trim(), `${language} ${chapter.slug} claim`).toBeTruthy();
+        }
+        expect(manifest.landing?.facts).toHaveLength(3);
+        expect(manifest.landing?.explainer).toBeTruthy();
       }
     });
   });

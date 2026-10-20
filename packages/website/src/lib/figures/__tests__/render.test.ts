@@ -148,13 +148,13 @@ describe.each(ALL_FIXTURES.map((spec) => [spec.id, spec] as const))("%s", (_id, 
 describe("waffle", () => {
   it("draws every dot once, in group style", () => {
     const doc = parse(render(WAFFLE, 1));
-    const dots = Array.from(doc.querySelectorAll("circle[data-group]"));
+    const dots = Array.from(doc.querySelectorAll("rect[data-group]"));
     expect(dots).toHaveLength(100);
     const by = (g: string) => dots.filter((d) => d.getAttribute("data-group") === g).length;
     expect(by("shows")).toBe(21);
     expect(by("says")).toBe(70);
     expect(by("rest")).toBe(9);
-    expect(doc.querySelectorAll('circle[data-group="shows"][fill="#b73a15"]')).toHaveLength(21);
+    expect(doc.querySelectorAll('rect[data-group="shows"][fill="#b73a15"]')).toHaveLength(21);
   });
 
   it("settles dots from stable offsets", () => {
@@ -165,8 +165,8 @@ describe("waffle", () => {
 
   it("separates groups by fill and outline, not by colour alone", () => {
     const doc = parse(render(WAFFLE, 1));
-    expect(doc.querySelector('circle[data-group="says"]')?.getAttribute("fill")).toBe("none");
-    expect(doc.querySelector('circle[data-group="says"]')?.getAttribute("stroke")).toBeTruthy();
+    expect(doc.querySelector('rect[data-group="says"]')?.getAttribute("fill")).toBe("none");
+    expect(doc.querySelector('rect[data-group="says"]')?.getAttribute("stroke")).toBeTruthy();
   });
 
   it("states the counts in the legend", () => {

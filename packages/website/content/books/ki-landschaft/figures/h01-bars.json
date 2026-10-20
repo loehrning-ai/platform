@@ -1,0 +1,192 @@
+{
+  "id": "h01-bars",
+  "kind": "bars",
+  "title": "Wer mehr schreibt, sagt öfter KI",
+  "alt": "Der Anteil der Firmenseiten mit KI-Wort steigt mit der Textmenge der Seite: vom kürzesten Fünftel mit 0,19 % bis zum längsten Fünftel mit 11,6 %.",
+  "caption": "Oberstes zu unterstem Fünftel: 62-fach (Intervall 35 bis 166). Mediane der Textlänge: 921, 3.206, 5.780, 9.865, 20.610 Zeichen.",
+  "n": 21404,
+  "nNote": "21.404 Seiten mit eigener Adresse und gelesenem Text",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Eine größere Seite hat mehr Platz für das Wort. Mehr Text heißt nicht mehr KI. 4.177 Seiten ohne gelesenen Text sind nicht enthalten.",
+  "sourceLine": "n = 21.404 Startseiten mit eigener Domain und Text · Scan 2026-03 bis 05 · Grenze: Zusammenhang, keine Ursache · Wird vom Rescan geprüft.",
+  "data": {
+    "orientation": "vertical",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "q1",
+        "label": "kürzestes Fünftel",
+        "value": 0.18687,
+        "lo": 0.09472,
+        "hi": 0.36834,
+        "n": 4281
+      },
+      {
+        "id": "q2",
+        "label": "2. Fünftel",
+        "value": 1.02732,
+        "lo": 0.76618,
+        "hi": 1.37623,
+        "n": 4283
+      },
+      {
+        "id": "q3",
+        "label": "3. Fünftel",
+        "value": 1.94016,
+        "lo": 1.56789,
+        "hi": 2.39867,
+        "n": 4278
+      },
+      {
+        "id": "q4",
+        "label": "4. Fünftel",
+        "value": 4.29806,
+        "lo": 3.73038,
+        "hi": 4.94769,
+        "n": 4281
+      },
+      {
+        "id": "q5",
+        "label": "längstes Fünftel",
+        "value": 11.56272,
+        "lo": 10.63907,
+        "hi": 12.55529,
+        "n": 4281
+      }
+    ],
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21404,
+    "base": "Startseiten mit eigener Domain und gelesenem Text, nach Textlänge in fünf gleich große Gruppen",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "H01",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "ratio": {
+        "value": 61.875,
+        "lo": 34.7324,
+        "hi": 166.333,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "pages": {
+        "value": 21404.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "no_text_sites": {
+        "value": 4177.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "no_text_rate": {
+        "value": 7.13431,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "text_rate": {
+        "value": 3.80303,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "hits_q1": {
+        "value": 8.0,
+        "n": 4281,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "median_q1": {
+        "value": 921.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "hits_q2": {
+        "value": 44.0,
+        "n": 4283,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "median_q2": {
+        "value": 3206.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "hits_q3": {
+        "value": 83.0,
+        "n": 4278,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "median_q3": {
+        "value": 5779.5,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "hits_q4": {
+        "value": 184.0,
+        "n": 4281,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "median_q4": {
+        "value": 9865.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "hits_q5": {
+        "value": 495.0,
+        "n": 4281,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "median_q5": {
+        "value": 20610.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    },
+    "aliases": {
+      "ratio_x": "q5"
+    }
+  }
+}

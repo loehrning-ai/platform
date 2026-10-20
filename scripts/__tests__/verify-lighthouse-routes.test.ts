@@ -218,12 +218,14 @@ describe("Lighthouse route contract", () => {
       "/kurse/open-source/data-engineering-fundamentals",
       "/blog/eu-ai-act-grundlagen",
       "/buecher/ki-landschaft",
-      "/buecher/ki-landschaft/02_sagen_zeigen",
       "/demos/prompt-scanner",
       "/workshops/geschaeftsberichte-mit-ki-lesen",
     ]) {
       expect(axeSources).toContain(JSON.stringify(route));
     }
+    // The book chapter representative follows the manifest (the second chapter), not a slug typed into a spec.
+    expect(mainA11y).toContain("chapterPath(chapters()[1]!.slug)");
+    expect(readerA11y).toContain("chapters()[1]!.slug");
     expect(mainA11y).toContain("...OPEN_SOURCE_DETAIL_ROUTES");
   });
 });

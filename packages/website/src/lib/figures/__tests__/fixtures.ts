@@ -4,6 +4,7 @@
  */
 
 import type { FigureSpec } from "../types.ts";
+import { HERO_FIXTURES } from "./fixtures-hero.ts";
 
 const base = (id: string, title: string) => ({
   id,
@@ -215,6 +216,7 @@ export const ICEBERG: FigureSpec = {
 
 export const ALL_FIXTURES: readonly FigureSpec[] = [
   WAFFLE, BARS_H, BARS_V, DOTPLOT, TILEMAP, FUNNEL, DUMBBELL, LORENZ, WATERFALL, LADDER, TIMELINE, ICEBERG,
+  ...HERO_FIXTURES,
 ];
 
 /** A copy of a fixture with some data fields replaced; for tests that bend one input. */

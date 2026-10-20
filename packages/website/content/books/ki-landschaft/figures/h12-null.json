@@ -1,0 +1,633 @@
+{
+  "id": "h12-null",
+  "kind": "nulldist",
+  "title": "Lobbyregister: KI-Wort, beobachtet und erwartet",
+  "alt": "205 Firmen im Lobbyregister des Bundes sagen zu 15,6 % KI auf der Startseite. Gleich große Firmen mit gleich langer Startseite sagen es zu 8,7 %. In 5.000 Zufallsziehungen aus diesen Vergleichsfirmen kommt der beobachtete Wert in 3 Ziehungen vor oder darüber. Der Abstand liegt bei Cloud bei 1,9, bei Cyber bei 3,2.",
+  "caption": "Beobachtet 15,6 % (Intervall 11,3 bis 21,2 %), erwartet 8,7 %, das 1,8-Fache. Chancenverhältnis nach Mantel-Haenszel 2,0 (1,36 bis 3,01).",
+  "n": 205,
+  "nNote": "205 Firmen im Register, 21.402 Startseiten mit Text insgesamt",
+  "source": "Eigene Auswertung von Firmenwebsites und dem Lobbyregister des Bundes (Abgleich über die Adresse der Website)",
+  "asOf": "2026-10-19",
+  "limitation": "Zusammenhang, keine Ursache. Eingetragen heißt: Interessenvertretung zu irgendeinem Thema. Die Zuordnung von Website zu Firma ist nicht geprüft. Die Größe ist nur an den Vertretungsberechtigten gemessen. Bei einer Aufteilung nach Branche und Land wird das Ergebnis instabil und wird nicht gezeigt.",
+  "sourceLine": "Quelle: 205 Register-Firmen von 21.402 Startseiten, März bis Mai 2026. Zuordnung nicht geprüft, wird neu gerechnet.",
+  "steps": [
+    {
+      "id": "ziehungen",
+      "label": "Zufall: 5.000 Ziehungen"
+    },
+    {
+      "id": "beobachtet",
+      "label": "Beobachtet: 15,6 %"
+    },
+    {
+      "id": "worte",
+      "label": "Vier andere Wörter"
+    }
+  ],
+  "data": {
+    "claim": "Register-Firmen schreiben 1,8-mal so oft KI, Cloud 1,9, Cyber 3,2.",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "draws": 5000,
+    "observed": {
+      "value": 15.6,
+      "lo": 11.3,
+      "hi": 21.2,
+      "label": "Register-Firmen"
+    },
+    "variants": [
+      {
+        "id": "n205",
+        "label": "205 Firmen",
+        "n": 205,
+        "bins": [
+          {
+            "lo": 2.5,
+            "hi": 3.0,
+            "draws": 1
+          },
+          {
+            "lo": 3.0,
+            "hi": 3.5,
+            "draws": 8
+          },
+          {
+            "lo": 3.5,
+            "hi": 4.0,
+            "draws": 12
+          },
+          {
+            "lo": 4.0,
+            "hi": 4.5,
+            "draws": 48
+          },
+          {
+            "lo": 4.5,
+            "hi": 5.0,
+            "draws": 70
+          },
+          {
+            "lo": 5.0,
+            "hi": 5.5,
+            "draws": 113
+          },
+          {
+            "lo": 5.5,
+            "hi": 6.0,
+            "draws": 202
+          },
+          {
+            "lo": 6.0,
+            "hi": 6.5,
+            "draws": 255
+          },
+          {
+            "lo": 6.5,
+            "hi": 7.0,
+            "draws": 359
+          },
+          {
+            "lo": 7.0,
+            "hi": 7.5,
+            "draws": 424
+          },
+          {
+            "lo": 7.5,
+            "hi": 8.0,
+            "draws": 460
+          },
+          {
+            "lo": 8.0,
+            "hi": 8.5,
+            "draws": 508
+          },
+          {
+            "lo": 8.5,
+            "hi": 9.0,
+            "draws": 513
+          },
+          {
+            "lo": 9.0,
+            "hi": 9.5,
+            "draws": 464
+          },
+          {
+            "lo": 9.5,
+            "hi": 10.0,
+            "draws": 391
+          },
+          {
+            "lo": 10.0,
+            "hi": 10.5,
+            "draws": 351
+          },
+          {
+            "lo": 10.5,
+            "hi": 11.0,
+            "draws": 265
+          },
+          {
+            "lo": 11.0,
+            "hi": 11.5,
+            "draws": 195
+          },
+          {
+            "lo": 11.5,
+            "hi": 12.0,
+            "draws": 129
+          },
+          {
+            "lo": 12.0,
+            "hi": 12.5,
+            "draws": 94
+          },
+          {
+            "lo": 12.5,
+            "hi": 13.0,
+            "draws": 55
+          },
+          {
+            "lo": 13.0,
+            "hi": 13.5,
+            "draws": 27
+          },
+          {
+            "lo": 13.5,
+            "hi": 14.0,
+            "draws": 25
+          },
+          {
+            "lo": 14.0,
+            "hi": 14.5,
+            "draws": 15
+          },
+          {
+            "lo": 14.5,
+            "hi": 15.0,
+            "draws": 7
+          },
+          {
+            "lo": 15.0,
+            "hi": 15.5,
+            "draws": 6
+          },
+          {
+            "lo": 15.5,
+            "hi": 16.0,
+            "draws": 2
+          },
+          {
+            "lo": 16.0,
+            "hi": 16.5,
+            "draws": 1
+          }
+        ],
+        "band": {
+          "lo": 4.88,
+          "hi": 12.68
+        }
+      },
+      {
+        "id": "n100",
+        "label": "100 Firmen",
+        "n": 91,
+        "bins": [
+          {
+            "lo": 1.0,
+            "hi": 2.0,
+            "draws": 6
+          },
+          {
+            "lo": 2.0,
+            "hi": 3.0,
+            "draws": 27
+          },
+          {
+            "lo": 3.0,
+            "hi": 4.0,
+            "draws": 68
+          },
+          {
+            "lo": 4.0,
+            "hi": 5.0,
+            "draws": 191
+          },
+          {
+            "lo": 5.0,
+            "hi": 6.0,
+            "draws": 364
+          },
+          {
+            "lo": 6.0,
+            "hi": 7.0,
+            "draws": 572
+          },
+          {
+            "lo": 7.0,
+            "hi": 8.0,
+            "draws": 695
+          },
+          {
+            "lo": 8.0,
+            "hi": 9.0,
+            "draws": 773
+          },
+          {
+            "lo": 9.0,
+            "hi": 10.0,
+            "draws": 686
+          },
+          {
+            "lo": 10.0,
+            "hi": 11.0,
+            "draws": 582
+          },
+          {
+            "lo": 12.0,
+            "hi": 13.0,
+            "draws": 393
+          },
+          {
+            "lo": 13.0,
+            "hi": 14.0,
+            "draws": 287
+          },
+          {
+            "lo": 14.0,
+            "hi": 15.0,
+            "draws": 177
+          },
+          {
+            "lo": 15.0,
+            "hi": 16.0,
+            "draws": 93
+          },
+          {
+            "lo": 16.0,
+            "hi": 17.0,
+            "draws": 54
+          },
+          {
+            "lo": 17.0,
+            "hi": 18.0,
+            "draws": 15
+          },
+          {
+            "lo": 18.0,
+            "hi": 19.0,
+            "draws": 10
+          },
+          {
+            "lo": 19.0,
+            "hi": 20.0,
+            "draws": 5
+          },
+          {
+            "lo": 20.0,
+            "hi": 21.0,
+            "draws": 1
+          },
+          {
+            "lo": 21.0,
+            "hi": 22.0,
+            "draws": 1
+          }
+        ],
+        "band": {
+          "lo": 4.4,
+          "hi": 15.38
+        }
+      },
+      {
+        "id": "n50",
+        "label": "50 Firmen",
+        "n": 43,
+        "bins": [
+          {
+            "lo": 0.0,
+            "hi": 2.0,
+            "draws": 72
+          },
+          {
+            "lo": 2.0,
+            "hi": 4.0,
+            "draws": 330
+          },
+          {
+            "lo": 4.0,
+            "hi": 6.0,
+            "draws": 709
+          },
+          {
+            "lo": 6.0,
+            "hi": 8.0,
+            "draws": 1002
+          },
+          {
+            "lo": 8.0,
+            "hi": 10.0,
+            "draws": 1031
+          },
+          {
+            "lo": 10.0,
+            "hi": 12.0,
+            "draws": 812
+          },
+          {
+            "lo": 12.0,
+            "hi": 14.0,
+            "draws": 547
+          },
+          {
+            "lo": 16.0,
+            "hi": 18.0,
+            "draws": 294
+          },
+          {
+            "lo": 18.0,
+            "hi": 20.0,
+            "draws": 123
+          },
+          {
+            "lo": 20.0,
+            "hi": 22.0,
+            "draws": 48
+          },
+          {
+            "lo": 22.0,
+            "hi": 24.0,
+            "draws": 21
+          },
+          {
+            "lo": 24.0,
+            "hi": 26.0,
+            "draws": 10
+          },
+          {
+            "lo": 26.0,
+            "hi": 28.0,
+            "draws": 1
+          }
+        ],
+        "band": {
+          "lo": 2.33,
+          "hi": 18.6
+        }
+      }
+    ],
+    "defaultVariant": "n205",
+    "words": [
+      {
+        "id": "ki",
+        "label": "KI",
+        "ratio": 1.804,
+        "lo": 1.266,
+        "hi": 2.393
+      },
+      {
+        "id": "digitalisierung",
+        "label": "Digitalisierung",
+        "ratio": 1.621,
+        "lo": 0.977,
+        "hi": 2.308
+      },
+      {
+        "id": "cloud",
+        "label": "Cloud",
+        "ratio": 1.899,
+        "lo": 1.095,
+        "hi": 2.821
+      },
+      {
+        "id": "nachhaltigkeit",
+        "label": "Nachhaltigkeit",
+        "ratio": 1.587,
+        "lo": 1.367,
+        "hi": 1.806
+      },
+      {
+        "id": "cyber",
+        "label": "Cyber",
+        "ratio": 3.2,
+        "lo": 1.723,
+        "hi": 4.979
+      }
+    ],
+    "focusWord": "ki"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 205,
+    "base": "Startseiten mit eigener Domain und Text, Abgleich mit dem Lobbyregister über die Website-Adresse",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites und dem Lobbyregister des Bundes (Abgleich über die Adresse der Website)",
+    "hero": "H12",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "register_firms": {
+        "value": 205.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "firms_text": {
+        "value": 21402.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ki_hits": {
+        "value": 32.0,
+        "n": 205,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ki_observed": {
+        "value": 15.6098,
+        "lo": 11.2793,
+        "hi": 21.2054,
+        "n": 205,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ki_expected": {
+        "value": 8.65196,
+        "lo": 4.87805,
+        "hi": 12.6829,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ki_other": {
+        "value": 4.3308,
+        "n": 21197,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ki_ratio": {
+        "value": 1.80419,
+        "lo": 1.26551,
+        "hi": 2.3932,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "mh_or": {
+        "value": 2.01878,
+        "lo": 1.35537,
+        "hi": 3.0069,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "null_lo": {
+        "value": 4.87805,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "null_hi": {
+        "value": 12.6829,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "draws": {
+        "value": 5000.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "draws_at_or_above": {
+        "value": 3.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ratio_ki": {
+        "value": 1.80419,
+        "lo": 1.26551,
+        "hi": 2.3932,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ratio_digitalisierung": {
+        "value": 1.62135,
+        "lo": 0.976714,
+        "hi": 2.30801,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ratio_cloud": {
+        "value": 1.8988,
+        "lo": 1.0951,
+        "hi": 2.8215,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ratio_nachhaltigkeit": {
+        "value": 1.58694,
+        "lo": 1.36719,
+        "hi": 1.80615,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ratio_cyber": {
+        "value": 3.20025,
+        "lo": 1.72295,
+        "hi": 4.97858,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "share_registered_1": {
+        "value": 0.464636,
+        "n": 3874,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "share_registered_10": {
+        "value": 3.42784,
+        "n": 3880,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "registered_10_firms": {
+        "value": 133.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "neither_share": {
+        "value": 94.7528,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "width_n100_lo": {
+        "value": 4.3956,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "width_n100_hi": {
+        "value": 15.3846,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "width_n50_lo": {
+        "value": 2.32558,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "width_n50_hi": {
+        "value": 18.6047,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

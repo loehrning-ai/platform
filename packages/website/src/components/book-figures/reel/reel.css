@@ -1,0 +1,133 @@
+/*
+ * Reel stage. Flat Kalkweiss ground, Druckschwarz ink, one Mennige accent:
+ * no radius, gradient, shadow, blur or transition. The text layer is absolutely
+ * positioned inside a fixed-size stage; every value comes from the frame.
+ */
+
+.reel-stage {
+  position: relative;
+  overflow: hidden;
+  background: #f3f0e9;
+  color: #121212;
+  font-family: Figtree, Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+}
+
+.reel-stage .reel-svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.reel-stage .rt {
+  position: absolute;
+  margin: 0;
+  white-space: pre;
+  transform-origin: left bottom;
+  letter-spacing: 0;
+}
+
+.reel-stage .rt-numeral,
+.reel-stage .rt-title,
+.reel-stage .rt-take {
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------- player */
+
+.reel-player {
+  position: relative;
+  width: 100%;
+  background: #f3f0e9;
+  color: #121212;
+  --reel-accent: #b73a15;
+  --reel-ink: #121212;
+  --reel-paper: #f3f0e9;
+}
+
+.reel-player .reel-poster svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.reel-player .reel-live {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.reel-player .reel-live .reel-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: left top;
+}
+
+.reel-player .reel-live canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+}
+
+/* Pause switch: 44 px, ink on paper, anti colour (a Mennige block) on hover, focus and press. */
+.reel-switch {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--reel-ink);
+  border-radius: 0;
+  background: var(--reel-paper);
+  color: var(--reel-ink);
+  font: 700 14px/1 Figtree, Inter, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+  isolation: isolate;
+}
+
+.reel-switch::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--reel-accent);
+  transform: translate(0, 0);
+}
+
+.reel-switch svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .reel-switch:hover::before {
+    transform: translate(4px, 4px);
+  }
+  .reel-switch:hover {
+    transform: translate(-2px, -2px);
+  }
+}
+
+.reel-switch:active {
+  transform: translate(0, 1px);
+}
+
+.reel-switch:active::before {
+  transform: translate(0, 0);
+}
+
+.reel-switch:focus-visible {
+  outline: 3px solid var(--reel-accent);
+  outline-offset: 3px;
+}

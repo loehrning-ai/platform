@@ -297,79 +297,22 @@
   color: var(--bf-muted);
 }
 
-/* ------------------------------------------------------- data and limits */
+/* ------------------------------------------------- source line and tables */
 
-.bf-data {
-  margin-top: 1rem;
-  border-top: 1px solid var(--bf-line);
-}
-
-.bf-data > summary {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 2.75rem;
-  font-size: 0.9375rem;
-  font-weight: 700;
-  list-style: none;
-  cursor: pointer;
-}
-
-.bf-data > summary::-webkit-details-marker {
-  display: none;
-}
-
-.bf-data > summary::before {
-  content: "";
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid currentcolor;
-  border-bottom: 2px solid currentcolor;
-  transform: rotate(-45deg);
-}
-
-.bf-data[open] > summary::before {
-  transform: rotate(45deg);
-}
-
-.bf-data > summary:focus-visible {
-  outline: 2px solid var(--bf-ink);
-  outline-offset: 2px;
-}
-
-.bf-dl {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.375rem 1rem;
-  margin: 0 0 0.75rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.bf-dl dt {
-  font-weight: 700;
-}
-
-.bf-dl dd {
-  margin: 0;
-}
-
-@media (max-width: 30rem) {
-  .bf-dl {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .bf-dl dd {
-    margin-bottom: 0.5rem;
-  }
-}
+/* The plotted numbers sit in a visually hidden table (assistive technology);
+   the visible part is the one source line of shared/source-line.css. */
 
 .bf-table-wrap {
   max-height: 20rem;
   overflow: auto;
   margin-bottom: 0.5rem;
   border: 1px solid var(--bf-line);
+}
+
+/* The hidden copy of the plotted numbers is not a scroll region: nothing to scroll, nothing to focus. */
+.bf-sr .bf-table-wrap {
+  max-height: none;
+  overflow: visible;
 }
 
 .bf-table-wrap:focus-visible {
@@ -436,10 +379,6 @@
   .bf-controls,
   .bf-hits,
   .bf-detail {
-    display: none;
-  }
-
-  .bf-data {
     display: none;
   }
 }

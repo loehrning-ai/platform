@@ -1,0 +1,280 @@
+{
+  "id": "h05-ladder",
+  "kind": "ladder",
+  "title": "Was die zweite Kamera wiederfindet",
+  "alt": "Dieselben Websites, zwei Kameras. WordPress findet die zweite Kamera zu 90 Prozent wieder, Borlabs zu 94, den Tag Manager nur zu 3 Prozent.",
+  "caption": "865 Websites, von zwei Abrufwegen gelesen. Anteil der Seiten, auf denen die erste Kamera eine Technik fand und die zweite sie wiederfindet, mit 95-%-Intervall.",
+  "n": 865,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-19",
+  "limitation": "Zwei Abrufwege, nicht zwei Wahrheiten: Welche Kamera näher liegt, wissen wir nicht. Bei Cookiebot (72 Seiten) und Usercentrics (82) findet die zweite Kamera weniger als 5 Seiten wieder, die Zahl wird nicht gezeigt. Nur 16 Prozent der Basis tragen Anbieterfragen, die Prüfungen laufen in Bayern und NRW.",
+  "sourceLine": "n = 865 Websites, zwei Kameras · 16.03. bis 12.04.2026 · Grenze: welche Kamera stimmt, ist offen · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 0
+    },
+    "axisMax": 100,
+    "rungs": [
+      {
+        "id": "borlabs",
+        "label": "Borlabs (Cookie-Hinweis)",
+        "value": 93.75,
+        "from": 100,
+        "lo": 85.002,
+        "hi": 97.543,
+        "n": 64,
+        "definition": "Von 64 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 60."
+      },
+      {
+        "id": "wordpress",
+        "label": "WordPress",
+        "value": 90.476,
+        "from": 100,
+        "lo": 86.22,
+        "hi": 93.516,
+        "n": 252,
+        "definition": "Von 252 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 228."
+      },
+      {
+        "id": "complianz",
+        "label": "Complianz (Cookie-Hinweis)",
+        "value": 69.565,
+        "from": 100,
+        "lo": 49.134,
+        "hi": 84.396,
+        "n": 23,
+        "definition": "Von 23 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 16."
+      },
+      {
+        "id": "recaptcha",
+        "label": "reCAPTCHA",
+        "value": 45.399,
+        "from": 100,
+        "lo": 37.949,
+        "hi": 53.06,
+        "n": 163,
+        "definition": "Von 163 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 74."
+      },
+      {
+        "id": "maps",
+        "label": "Google Maps",
+        "value": 26.667,
+        "from": 100,
+        "lo": 18.624,
+        "hi": 36.62,
+        "n": 90,
+        "definition": "Von 90 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 24."
+      },
+      {
+        "id": "google_res",
+        "label": "Google-Ressourcen (Schriften, Karten)",
+        "value": 20.0,
+        "from": 100,
+        "lo": 15.43,
+        "hi": 25.516,
+        "n": 240,
+        "definition": "Von 240 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 48."
+      },
+      {
+        "id": "gtm",
+        "label": "Tag Manager",
+        "value": 3.342,
+        "from": 100,
+        "lo": 1.963,
+        "hi": 5.633,
+        "n": 389,
+        "definition": "Von 389 Seiten, auf denen die erste Kamera es fand, findet die zweite es bei 13."
+      }
+    ],
+    "groundLabel": "Zweiter Scan"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 865,
+    "base": "Firmenwebsites mit eigener Adresse, von beiden Abrufwegen gelesen",
+    "window": "2026-03-16 bis 2026-04-12",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+    "hero": "H05",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "pairs": {
+        "value": 865.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "borlabs_refound": {
+        "value": 93.75,
+        "lo": 85.002,
+        "hi": 97.543,
+        "n": 64,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "wordpress_refound": {
+        "value": 90.476,
+        "lo": 86.22,
+        "hi": 93.516,
+        "n": 252,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "complianz_refound": {
+        "value": 69.565,
+        "lo": 49.134,
+        "hi": 84.396,
+        "n": 23,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "recaptcha_refound": {
+        "value": 45.399,
+        "lo": 37.949,
+        "hi": 53.06,
+        "n": 163,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "maps_refound": {
+        "value": 26.667,
+        "lo": 18.624,
+        "hi": 36.62,
+        "n": 90,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "google_res_refound": {
+        "value": 20.0,
+        "lo": 15.43,
+        "hi": 25.516,
+        "n": 240,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "gtm_refound": {
+        "value": 3.342,
+        "lo": 1.963,
+        "hi": 5.633,
+        "n": 389,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "cookiebot_n": {
+        "value": 72.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "usercentrics_n": {
+        "value": 82.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "floor_hits": {
+        "value": 5.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "measured_n": {
+        "value": 4168.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "base_n": {
+        "value": 25579.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "measured_share": {
+        "value": 16.2946,
+        "n": 25579,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "dns_measured_n": {
+        "value": 5126.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dns_measured_share": {
+        "value": 20.0399,
+        "n": 25579,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "score_measured": {
+        "value": 42.3239,
+        "lo": 41.853,
+        "hi": 42.8035,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "score_not_measured": {
+        "value": 17.9415,
+        "lo": 17.8159,
+        "hi": 18.0704,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "score_r2": {
+        "value": 0.381922,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "measured_bayern_nrw": {
+        "value": 82.3254,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "measured_bayern": {
+        "value": 72.025,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

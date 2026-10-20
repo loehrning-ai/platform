@@ -1,0 +1,189 @@
+{
+  "id": "h06-region",
+  "kind": "bars",
+  "title": "Region erklärt wenig: alle Regionsdaten bringen 1,4 AUC-Punkte",
+  "alt": "Wie viel Trennschärfe (AUC) kommt zu einem Modell aus Branche, Größe, Rechtsform und Messkamera hinzu, wenn man regionale Daten ergänzt, geprüft an Kreisen, die das Modell nie gesehen hat. Alle Regionsdaten zusammen: 1,4 Punkte.",
+  "caption": "Gewinn an Trennschärfe in AUC-Punkten gegenüber der Basis (0,665), Leave-Kreis-out, 95-%-Intervall über Kreise.",
+  "n": 24758,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026) mit Regionaldaten (Eurostat, Register, OpenAlex)",
+  "asOf": "2026-10-19",
+  "limitation": "AUC ist für kleine Gruppen stumpf: Bundesland +0,0 widerspricht der Ostlücke nicht. Vorhersage ist nicht Ursache. Der Kreis kommt aus der Postleitzahl.",
+  "sourceLine": "n = 24.758 Firmen in 394 Kreisen · Scan 2026-03 bis 05 · Grenze: Vorhersage, keine Ursache; AUC ist stumpf für kleine Gruppen · Wird mit geprüften Websites neu gerechnet.",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "decimal",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "land",
+        "label": "Bundesland",
+        "value": 0.045,
+        "lo": -0.6557,
+        "hi": 0.7193,
+        "n": 24758
+      },
+      {
+        "id": "wealth",
+        "label": "Wirtschaftskraft und Dichte",
+        "value": 1.544,
+        "lo": 0.631,
+        "hi": 2.2242,
+        "n": 24758
+      },
+      {
+        "id": "ict",
+        "label": "Beschäftigung IKT und Hochtechnologie",
+        "value": 0.9565,
+        "lo": 0.1369,
+        "hi": 1.6904,
+        "n": 24758
+      },
+      {
+        "id": "bb",
+        "label": "Breitband",
+        "value": 0.2262,
+        "lo": -0.1955,
+        "hi": 0.63,
+        "n": 24758
+      },
+      {
+        "id": "ug",
+        "label": "Anteil Start-up-Rechtsform",
+        "value": 0.5034,
+        "lo": -0.0107,
+        "hi": 1.0266,
+        "n": 24758
+      },
+      {
+        "id": "it",
+        "label": "Anteil IT-Namen",
+        "value": 0.9262,
+        "lo": 0.1675,
+        "hi": 1.4706,
+        "n": 24758
+      },
+      {
+        "id": "dist",
+        "label": "Entfernung zur Metropole",
+        "value": 1.4054,
+        "lo": 0.4922,
+        "hi": 2.0315,
+        "n": 24758
+      },
+      {
+        "id": "all",
+        "label": "Alle Regionsdaten zusammen",
+        "value": 1.4192,
+        "lo": 0.2525,
+        "hi": 2.4177,
+        "n": 24758
+      }
+    ],
+    "baseline": 0,
+    "baselineLabel": "Basis",
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 24758,
+    "base": "Firmen mit eigener Domain in 394 Kreisen, Leave-Kreis-out-Kreuzvalidierung",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026) mit Regionaldaten (Eurostat, Register, OpenAlex)",
+    "hero": "H06",
+    "attribution": "firm-level, pending verified rescan",
+    "rescan": "may change",
+    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "values": {
+      "base_auc": {
+        "value": 0.664807,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "gain_land": {
+        "value": 0.045,
+        "lo": -0.6557,
+        "hi": 0.7193,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_wealth": {
+        "value": 1.544,
+        "lo": 0.631,
+        "hi": 2.2242,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_ict": {
+        "value": 0.9565,
+        "lo": 0.1369,
+        "hi": 1.6904,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_bb": {
+        "value": 0.2262,
+        "lo": -0.1955,
+        "hi": 0.63,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_ug": {
+        "value": 0.5034,
+        "lo": -0.0107,
+        "hi": 1.0266,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_it": {
+        "value": 0.9262,
+        "lo": 0.1675,
+        "hi": 1.4706,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_dist": {
+        "value": 1.4054,
+        "lo": 0.4922,
+        "hi": 2.0315,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "gain_all": {
+        "value": 1.4192,
+        "lo": 0.2525,
+        "hi": 2.4177,
+        "n": 24758,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

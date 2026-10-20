@@ -21,6 +21,13 @@ import { renderTilemap } from "./kinds/tilemap.ts";
 import { renderTimeline } from "./kinds/timeline.ts";
 import { renderWaffle } from "./kinds/waffle.ts";
 import { renderWaterfall } from "./kinds/waterfall.ts";
+import { renderBlocks } from "./kinds/blocks.ts";
+import { renderCurve } from "./kinds/curve.ts";
+import { renderField } from "./kinds/field.ts";
+import { renderNetwork } from "./kinds/network.ts";
+import { renderNulldist } from "./kinds/nulldist.ts";
+import { renderSlope } from "./kinds/slope.ts";
+import { renderStrip } from "./kinds/strip.ts";
 
 export const DEFAULT_WIDTH = 560;
 export const MIN_WIDTH = 280;
@@ -78,5 +85,12 @@ export function renderFigure(
     case "ladder": return finish(renderLadder, spec, progress, options);
     case "timeline": return finish(renderTimeline, spec, progress, options);
     case "iceberg": return finish(renderIceberg, spec, progress, options);
+    case "network": return finish(renderNetwork, spec, progress, options);
+    case "blocks": return finish(renderBlocks, spec, progress, options);
+    case "strip": return finish(renderStrip, spec, progress, options);
+    case "curve": return finish(renderCurve, spec, progress, options);
+    case "slope": return finish(renderSlope, spec, progress, options);
+    case "nulldist": return finish(renderNulldist, spec, progress, options);
+    case "field": return finish(renderField, spec, progress, options);
   }
 }

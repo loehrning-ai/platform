@@ -124,7 +124,7 @@ export function renderWaterfall(ctx: Ctx<WaterfallData>): ReactElement {
       const f = reveal(spec, p, b.id, i, bars.length);
       const st = fillFor(b);
       const start = b.kind === "total" ? 0 : b.v0;
-      const lines = wrapText(b.label, axis.band.step + 6, FS.small, 4);
+      const lines = wrapText(b.label, axis.band.step - 6, FS.small, 4);
       maxLines = Math.max(maxLines, lines.length);
       const cx = r.x + r.w / 2;
       const next = bars[i + 1];
