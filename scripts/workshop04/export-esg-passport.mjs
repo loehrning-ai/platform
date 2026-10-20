@@ -15,7 +15,18 @@
  * --check writes nothing and exits 1 when the published folder differs from a fresh export.
  */
 import { createHash } from "node:crypto";
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import {
+  closeSync,
+  constants,
+  existsSync,
+  fstatSync,
+  mkdirSync,
+  openSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { buildKitArchive, KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
@@ -268,9 +279,20 @@ export function assertPlainPng(name, bytes) {
 /** Plain files only: a symlink or a folder where a file belongs stops the export. */
 function readSourceFile(root, name) {
   const file = path.join(root, ...name.split("/"));
-  const stat = lstatSync(file);
-  if (!stat.isFile()) throw new Error(`Not a regular file: ${name}`);
-  return readFileSync(file);
+  // Open once without following a symlink, then check and read that same handle.
+  let fd;
+  try {
+    fd = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW);
+  } catch (error) {
+    if (error?.code === "ELOOP") throw new Error(`Not a regular file: ${name}`);
+    throw error;
+  }
+  try {
+    if (!fstatSync(fd).isFile()) throw new Error(`Not a regular file: ${name}`);
+    return readFileSync(fd);
+  } finally {
+    closeSync(fd);
+  }
 }
 
 /** Every file below `dir`, as sorted forward-slash paths. */
