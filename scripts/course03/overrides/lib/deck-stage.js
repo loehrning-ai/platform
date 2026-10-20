@@ -10,8 +10,9 @@
   const TOOLBAR_ZONE_PX = 140;
   const TOOLBAR_HIDE_MS = 2000;
   const TOOLBAR_TOUCH_MS = 4000;
-  // A full reset sends the room back to the cover, so it takes a deliberate second R (WCAG 2.1.4).
-  const RESET_CONFIRM_MS = 1500;
+  // Back-to-workshop button (a.deck-back in slides.html): same design on every deck. It fades out after
+  // BACK_IDLE_MS without mouse movement, as the toolbar does, and returns on mouse move or focus.
+  const BACK_IDLE_MS = 2500;
   // One Back gesture stays inside the deck and asks for a second one.
   const BACK_CONFIRM_MS = 3000;
   const SWIPE_MIN_PX = 48;
@@ -28,6 +29,53 @@
   // Future step elements stay hidden until the step engine (lib/deck-runtime.js) is ready. Without
   // JavaScript this never runs, so nothing is hidden and the final meaning stays on the page.
   document.documentElement.dataset.story = "pending";
+
+  // Back-to-workshop button styles and idle fade (the anchor itself is in slides.html).
+  const BACK_CSS = `/* deck-back: the same back-to-workshop button on every deck, console and lab page (W01 to W05). */
+.deck-back{position:fixed;top:16px;left:16px;z-index:2147483600;box-sizing:border-box;display:inline-flex;align-items:center;height:44px;padding:0 14px;
+  font:600 16px/1 var(--mono,"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace);letter-spacing:0;text-transform:none;white-space:nowrap;text-decoration:none;
+  color:#121212;background:#F3F0E9;border:2px solid #121212;border-radius:0;
+  transition:opacity 300ms ease,box-shadow 120ms ease,transform 120ms ease}
+.deck-back:hover,.deck-back:focus-visible{position:fixed;z-index:2147483600;color:#121212;background:#F3F0E9;box-shadow:4px 4px 0 #B73A15;transform:translate(-2px,-2px);outline:none}
+.deck-back[data-idle]{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.deck-back{transition:none}}
+@media print{.deck-back{display:none!important}}
+html[data-deck-preview] .deck-back{display:none!important}
+html[data-deck-export] .deck-back{display:none!important}
+/* The running header brand (mark and "Data Readiness for AI", x 96) sits under the button: it steps aside while the button shows. */
+.story-chrome .story-chrome__brand{transition:opacity 300ms ease}
+html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chrome__brand{opacity:0!important}
+@media print{.story-chrome .story-chrome__brand{opacity:1!important}}`;
+  (function installBackButton() {
+    if (new URLSearchParams(window.location.search).get("export") === "final") document.documentElement.setAttribute("data-deck-export", "");
+    const style = document.createElement("style");
+    style.id = "deck-back-style";
+    style.textContent = BACK_CSS;
+    document.head.appendChild(style);
+    const wire = () => {
+      const link = document.querySelector("a.deck-back");
+      const root = document.documentElement;
+      if (!link) { root.setAttribute("data-deck-back-idle", ""); return; }
+      let timer = null;
+      const wake = () => {
+        link.removeAttribute("data-idle");
+        root.removeAttribute("data-deck-back-idle");
+        if (timer) window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          if (link.matches(":hover, :focus-within")) return;
+          link.setAttribute("data-idle", "");
+          root.setAttribute("data-deck-back-idle", "");
+        }, BACK_IDLE_MS);
+      };
+      window.addEventListener("mousemove", wake, { passive: true });
+      window.addEventListener("pointerdown", wake, { passive: true });
+      link.addEventListener("focus", wake);
+      link.addEventListener("mouseleave", wake);
+      wake();
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", wire, { once: true });
+    else wire();
+  })();
 
   function readStorage(storage, key) {
     try {
@@ -405,8 +453,6 @@
       this._rendered = false;
       this._hideTimer = null;
       this._noticeTimer = null;
-      this._resetArmedAt = 0;
-      this._resetTimer = null;
       this._backArmedAt = 0;
       this._ignoreNextHash = false;
       this._guarded = false;
@@ -469,7 +515,6 @@
       window.visualViewport?.removeEventListener("resize", this._boundZoom);
       if (this._hideTimer) window.clearTimeout(this._hideTimer);
       if (this._noticeTimer) window.clearTimeout(this._noticeTimer);
-      if (this._resetTimer) window.clearTimeout(this._resetTimer);
     }
 
     _render() {
@@ -508,6 +553,9 @@
         </button>
         <button class="control presenter" type="button" aria-label="Open presenter view" title="Presenter view (P)">
           <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M10 16h80v52H10zM50 68v14M30 86h40"/></svg>
+        </button>
+        <button class="control reset" type="button" aria-label="Reset to the cover" title="Reset to the cover (Shift+R)">
+          <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M22 52a30 30 0 1 0 9-21M20 14v20h20"/></svg>
         </button>
         <button class="control fullscreen" type="button" aria-label="Enter fullscreen" title="Enter fullscreen">
           <svg viewBox="0 0 100 100" aria-hidden="true"><path d="${GLYPH_ENTER_FULLSCREEN}"/></svg>
@@ -559,6 +607,7 @@
       this._bindControl(".next", () => this.fragment(1));
       this._bindControl(".return", () => this.returnFromAppendix());
       this._bindControl(".presenter", () => this.openPresenter());
+      this._bindControl(".reset", () => this.fullReset());
       this._bindControl(".fullscreen", () => this.toggleFullscreen());
     }
 
@@ -1006,50 +1055,29 @@
     _onKey(event) {
       if (event.metaKey || event.ctrlKey || event.altKey || this._isTypingTarget(event.target)) return;
       const key = event.key;
-      const isReset = key === "r" || key === "R";
+      // Shift+R resets to the cover, the same on every workshop deck; a bare R does nothing, so a stray key
+      // never sends the room back.
+      const isReset = (key === "r" || key === "R") && event.shiftKey;
+      const bareReset = (key === "r" || key === "R") && !event.shiftKey;
+      if (bareReset) return;
       const inAppendix = this.currentSlide?.dataset.kind === "appendix";
       const bound = key === "ArrowRight" || key === "ArrowLeft" || isReset || key === "p" || key === "P"
-        || (key === "Escape" && (inAppendix || this._resetArmedAt));
+        || (key === "Escape" && inAppendix);
       if (!bound) return;
       event.preventDefault();
       // A held key auto-repeats; only the first keydown is a press, so a long press never skips a vote.
       if (event.repeat) return;
-      if (!isReset) this._disarmReset();
       // Five keys (README contract): ArrowRight is the next press, ArrowLeft the previous press
-      // (a scene is left only once its steps are used up, and entered at its final step), R twice
-      // within 1.5 s resets the whole deck, P opens the presenter console and Escape leaves an appendix.
+      // (a scene is left only once its steps are used up, and entered at its final step), Shift+R
+      // resets the whole deck, P opens the presenter console and Escape leaves an appendix.
       // Space, Enter, Home, End, F, PageUp and PageDown are deliberately unbound (spec E12).
       if (key === "ArrowRight") this.fragment(1);
       else if (key === "ArrowLeft") this.fragment(-1);
-      else if (isReset) this._resetKey();
+      else if (isReset) this.fullReset();
       else if (key === "p" || key === "P") this.openPresenter();
       else if (key === "Escape" && inAppendix) this.returnFromAppendix();
       if (key === "ArrowRight" || key === "ArrowLeft") this._armBackGuard();
       this._releaseToolbarFocus();
-    }
-
-    // One R arms the reset and says how to confirm; a second R inside the window resets. Any other key
-    // (or waiting) cancels, so a stray R never sends the room back to the cover.
-    _resetKey() {
-      const now = performance.now();
-      if (this._resetArmedAt && now - this._resetArmedAt <= RESET_CONFIRM_MS) {
-        this._disarmReset();
-        this._hideNotice();
-        this.fullReset();
-        return;
-      }
-      this._resetArmedAt = now;
-      if (this._resetTimer) window.clearTimeout(this._resetTimer);
-      this._resetTimer = window.setTimeout(() => this._disarmReset(), RESET_CONFIRM_MS);
-      this._showNotice("Press R again to go back to the cover", RESET_CONFIRM_MS);
-    }
-
-    _disarmReset() {
-      if (!this._resetArmedAt) return;
-      this._resetArmedAt = 0;
-      if (this._resetTimer) window.clearTimeout(this._resetTimer);
-      this._resetTimer = null;
-      this._hideNotice();
     }
 
     // Back guard: after the first local press, one extra history entry sits in front of the deck. A

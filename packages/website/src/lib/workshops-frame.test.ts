@@ -119,7 +119,10 @@ describe("restyled workshop materials keep the Werkzeichnung look", () => {
   });
 
   it("has no offset (stamp) box-shadows", () => {
+    // lib/deck-back.css is the one exception: the back-to-workshop button shared by every deck and lab
+    // (Workshops 01 to 05) has a specified 4px Mennige hover offset.
     const offenders = files
+      .filter((file) => !file.endsWith("/lib/deck-back.css"))
       .map(read)
       .flatMap(({ name, text }) =>
         [
