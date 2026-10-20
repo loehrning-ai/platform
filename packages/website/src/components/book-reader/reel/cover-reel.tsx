@@ -101,7 +101,8 @@ export function CoverReel({
 
     const mountHandle = async (): Promise<void> => {
       if (!engine) return;
-      const rect = box.getBoundingClientRect();
+      // The box's own border is outside the canvas and the text host: they fill the padding box.
+      const rect = { width: box.clientWidth, height: box.clientHeight };
       const dpr = cappedDpr(window.devicePixelRatio || 1, navigator.hardwareConcurrency);
       canvas.width = Math.round(rect.width * dpr);
       canvas.height = Math.round(rect.height * dpr);
@@ -134,7 +135,7 @@ export function CoverReel({
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
         if (!handle || cancelled) return;
-        const rect = box.getBoundingClientRect();
+        const rect = { width: box.clientWidth, height: box.clientHeight };
         const format = rect.width >= rect.height * 1.2 ? "wide" : "tall";
         if (format === mountedFormat && Math.abs(rect.width - mountedWidth) < 8) return;
         handle.destroy();

@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useId, type ChangeEvent } from "react";
+import { memo, useId, type ChangeEvent, type CSSProperties } from "react";
 import { controlKindOf, controlLabelOf, detentsOf, type FigureSpec } from "@/lib/figures";
 
 interface VariantControlProps {
@@ -8,6 +8,16 @@ interface VariantControlProps {
   /** Detent id in force. */
   readonly value: string;
   readonly onChange: (id: string) => void;
+}
+
+/** More stops than this cannot all carry a label under a phone-wide range without running into each other. */
+const MAX_LABELLED_TICKS = 6;
+
+/** Sparse row: the two ends and the stop the range stands on (unless it sits next to an end, where it would collide). */
+function shownTick(i: number, current: number, count: number): boolean {
+  if (i === 0 || i === count - 1) return true;
+  const gap = Math.ceil(count * 0.2);
+  return i === current && current > gap - 1 && current < count - gap;
 }
 
 /**
@@ -60,6 +70,7 @@ export const VariantControl = memo(function VariantControl({ spec, value, onChan
   }
 
   const current = detents[index];
+  const sparse = detents.length > MAX_LABELLED_TICKS;
   return (
     <div className="hv" data-hv="range">
       <label className="hv-legend" htmlFor={`${name}-range`}>
@@ -82,12 +93,22 @@ export const VariantControl = memo(function VariantControl({ spec, value, onChan
           if (next) onChange(next.id);
         }}
       />
-      <ol className="hv-ticks" aria-hidden="true">
-        {detents.map((d) => (
-          <li key={d.id} className="hv-tick" data-on={d.id === value}>
-            {d.label}
-          </li>
-        ))}
+      <ol className="hv-ticks" aria-hidden="true" data-sparse={sparse ? "true" : undefined}>
+        {detents.map((d, i) => {
+          if (sparse && !shownTick(i, index, detents.length)) return null;
+          // A sparse row positions each label under its stop: the first starts at the left end, the last ends at the right end.
+          const at = detents.length > 1 ? (i / (detents.length - 1)) * 100 : 0;
+          return (
+            <li
+              key={d.id}
+              className="hv-tick"
+              data-on={d.id === value}
+              style={sparse ? ({ left: `${at}%`, transform: `translateX(-${at}%)` } as CSSProperties) : undefined}
+            >
+              {d.label}
+            </li>
+          );
+        })}
       </ol>
     </div>
   );

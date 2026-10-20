@@ -173,7 +173,7 @@ export function FeldLive({ spec, progress, stage, focusClass, onScene, onHover, 
               x={l.x}
               y={l.y}
               textAnchor={l.anchor}
-              fontSize={l.role === "value" ? 14 : 13}
+              fontSize={l.size ?? (l.role === "value" ? 14 : 13)}
               fontWeight={l.role === "value" ? 700 : 600}
               data-t={l.role}
             >

@@ -153,7 +153,7 @@ export function renderField(ctx: Ctx<FieldData>): ReactElement {
   // Direct labels of the bins, once the scene is formed.
   const labelOpacity = op(settleIn(p, model.starts[info.index] ?? 0, (model.starts[info.index] ?? 0) + 0.12 + 0.3 * ((model.starts[info.index + 1] ?? 1) - (model.starts[info.index] ?? 0))));
   const labelNodes: SvgNode[] = settled.labels.map((l, i) =>
-    roleText(l.role, l.x, l.y + top, l.text, { size: l.role === "value" ? FS.value : FS.label, weight: l.role === "value" ? 700 : 600, fill: pal.ink, anchor: l.anchor, extra: { key: `l${i}` } }),
+    roleText(l.role, l.x, l.y + top, l.text, { size: l.size ?? (l.role === "value" ? FS.value : FS.label), weight: l.role === "value" ? 700 : 600, fill: pal.ink, anchor: l.anchor, extra: { key: `l${i}` } }),
   );
   if (labelNodes.length > 0) nodes.push(el("g", { "data-layer": "labels", opacity: info.settled ? labelOpacity : 0 }, ...labelNodes));
 

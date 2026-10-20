@@ -227,4 +227,12 @@ describe("cover-reel.css contract", () => {
     const outside = css.replace(/@media \(hover: hover\) and \(pointer: fine\) \{[\s\S]*?\n\}\n/g, "");
     expect(outside).not.toMatch(/:hover/);
   });
+
+  it("keeps the box at the film's exact aspect and cuts it by width, never by a height cap (the clipped source line)", () => {
+    // The film is scaled by the box's width; a max-height on the box cut the unit and source lines on tablets.
+    expect(css).not.toMatch(/\.cr-box\s*\{[^}]*max-height/);
+    expect(css).toMatch(/\.cr-box\s*\{[^}]*aspect-ratio:\s*540 \/ 768/);
+    expect(css).toMatch(/@media \(min-width: 640px\)\s*\{\s*\.cr\s*\{\s*width:\s*min\(100%, max\(22rem, 46\.4svh\)\)/);
+    expect(css).toMatch(/@media \(min-width: 1024px\)\s*\{[^}]*\.cr\s*\{\s*width:\s*min\(100%, max\(40rem, 128svh\)\)/);
+  });
 });

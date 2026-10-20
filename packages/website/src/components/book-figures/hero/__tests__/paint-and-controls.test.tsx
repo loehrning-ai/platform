@@ -131,6 +131,24 @@ describe("VariantControl", () => {
     expect(onChange).toHaveBeenCalledWith("y2026");
   });
 
+  it("many stops label only the two ends (and the current stop away from them), each under its own stop, so no label runs into the next", () => {
+    const points = Array.from({ length: 18 }, (_v, i) => ({ id: `d${i}`, label: `${String(i + 1).padStart(2, "0")}.03.`, value: 5, n: 100 }));
+    const spec = { ...CURVE, kind: "curve", data: { ...(CURVE.data as object), points, defaultVariant: "d9" } } as unknown as typeof CURVE;
+    const { container, rerender } = render(<VariantControl spec={spec} value="d9" onChange={() => undefined} />);
+    const ticks = () => Array.from(container.querySelectorAll<HTMLElement>(".hv-tick")).map((t) => t.textContent);
+    expect(container.querySelector(".hv-ticks")).toHaveAttribute("data-sparse", "true");
+    expect(ticks()).toEqual(["01.03.", "10.03.", "18.03."]);
+    const first = container.querySelector<HTMLElement>(".hv-tick")!;
+    expect(first.style.left).toBe("0%");
+    expect(first.style.transform).toBe("translateX(-0%)");
+    rerender(<VariantControl spec={spec} value="d1" onChange={() => undefined} />);
+    expect(ticks()).toEqual(["01.03.", "18.03."]);
+    // Few stops stay a plain row with every label.
+    rerender(<VariantControl spec={CURVE} value="y2024" onChange={() => undefined} />);
+    expect(container.querySelector(".hv-ticks")).not.toHaveAttribute("data-sparse");
+    expect(ticks()).toHaveLength(5);
+  });
+
   it("a network with two detents is a segmented choice; the split of the slope is a button", () => {
     const { rerender } = render(<VariantControl spec={NETWORK} value="gleich" onChange={() => undefined} />);
     expect(screen.getAllByRole("radio")).toHaveLength(2);

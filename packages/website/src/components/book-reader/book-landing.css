@@ -288,3 +288,14 @@
     line-height: 1;
   }
 }
+
+/* The narrowest phones (320): the poster's numeral, claim (up to four lines) and unit line must all fit the reel box. */
+@media (max-width: 359px) {
+  .bl-numeral {
+    font-size: min(30vw, 132px);
+  }
+
+  .bl-claim {
+    font-size: 1.375rem;
+  }
+}

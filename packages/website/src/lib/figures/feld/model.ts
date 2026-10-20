@@ -14,7 +14,7 @@
  */
 
 import { formatDecimal } from "../format.ts";
-import { fitEllipsis, labelLines, textWidth } from "../svg.ts";
+import { labelLines, textWidth } from "../svg.ts";
 import { FIELD_MAX_SQUARES } from "../limits.ts";
 import { clamp } from "../math.ts";
 import { allocateSquares, unitLine } from "../units.ts";
@@ -46,6 +46,8 @@ export interface SceneLabel {
   readonly anchor: "start" | "middle" | "end";
   /** Class the label belongs to (index into the model's classes), or -1. */
   readonly cls: number;
+  /** Font size when the label was shrunk so its longest word fits the bin's column; the default of its role otherwise. */
+  readonly size?: number;
 }
 
 export interface SceneModel {
@@ -207,7 +209,11 @@ function layoutBins(
   const binW = (view.width - gapX * (perRow - 1)) / perRow;
   // Largest cell that lets every bin of a row stack inside its column and the rows fit the height.
   // Two label lines first; when the squares would drop below 8 units, one line; then smaller squares.
-  const names = bins.map((b) => (b.label ? labelLines(b.label, binW - 2, 13, 600).slice(0, 2) : []));
+  // Label type: 13, or smaller (down to 10) when the longest word of a label is wider than its column, so a
+  // word is never cut ("kürzes…") nor runs into the next column.
+  const longestWord = Math.max(0, ...bins.flatMap((b) => (b.label ?? "").split(/\s+/).map((w) => textWidth(w, 1, 600))));
+  const labelSize = longestWord > 0 ? Math.max(10, Math.min(13, Math.floor(((binW - 2) / longestWord) * 2) / 2)) : 13;
+  const names = bins.map((b) => (b.label ? labelLines(b.label, binW - 2, labelSize, 600).slice(0, 2) : []));
   const nameLines = Math.max(1, ...names.map((q) => q.length));
   const full = 16 * nameLines + 22;
   const attempts: ReadonlyArray<readonly [number, number]> = hasLabels
@@ -271,14 +277,17 @@ function layoutBins(
     const top = bin.segments.reduce((best, q) => (q.count > best.count ? q : best), bin.segments[0] ?? { cls: "", count: 0 });
     const clsName = classes.findIndex((c) => c.id === top.cls);
     const lines = names[b] ?? [];
-    const widest = Math.max(0, ...lines.map((l) => textWidth(l, 13, 600)));
+    const widest = Math.max(0, ...lines.map((l) => textWidth(l, labelSize, 600)));
     const half = Math.max(widest, textWidth(formatDecimal(total, 0), 14, 700)) / 2;
     const lx = Math.min(Math.max(cx, half + 1), view.width - half - 1);
     if (labelH >= full) {
-      lines.forEach((text, q) => labels.push({ x: lx, y: base + 18 + 15 * q, text, role: "label", anchor: "middle", cls: clsName }));
+      lines.forEach((text, q) => labels.push({ x: lx, y: base + 18 + 15 * q, text, role: "label", anchor: "middle", cls: clsName, size: labelSize }));
       labels.push({ x: lx, y: base + 18 + 15 * (lines.length - 1) + 17, text: formatDecimal(total, 0), role: "value", anchor: "middle", cls: clsName });
     } else {
-      labels.push({ x: lx, y: base + 16, text: fitEllipsis(bin.label ?? "", binW, 13, 600), role: "label", anchor: "middle", cls: clsName });
+      // One line only (the squares leave no room for two): its first line, shrunk to the column, never an ellipsis.
+      const whole = lines[0] ?? bin.label ?? "";
+      const one = Math.max(9, Math.min(labelSize, Math.floor(((binW - 2) / Math.max(0.1, textWidth(whole, 1, 600))) * 2) / 2));
+      labels.push({ x: lx, y: base + 16, text: whole, role: "label", anchor: "middle", cls: clsName, size: one });
     }
   });
   return { x, y, side, labels, fits: side >= MIN_SIDE - 1 };

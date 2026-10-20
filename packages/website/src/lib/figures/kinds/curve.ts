@@ -62,7 +62,13 @@ export function renderCurve(ctx: Ctx<CurveData>): ReactElement {
   const nodes: SvgNode[] = [...head.nodes];
 
   const panelRows = data.panel?.rows.length ?? 0;
-  const below = 44 + 22 + (data.panel ? 22 + panelRows * 26 : 0) + 12;
+  // A panel row is one line (label, bar, value). When the label and the value leave the bar less than 56 units
+  // on this width, the row takes two lines (label above, bar and value below) instead of running off the figure.
+  const panelLabelW = data.panel ? Math.max(...data.panel.rows.map((r) => textWidth(r.label, FS.label, 600))) + 10 : 0;
+  const panelValueW = data.panel ? Math.max(...data.panel.rows.map((r) => textWidth(formatValue(data.panel!.fmt, r.value), FS.value, 700))) + 10 : 0;
+  const panelStacked = data.panel !== undefined && width - HM * 2 - panelLabelW - panelValueW < 56;
+  const panelRowH = panelStacked ? 44 : 26;
+  const below = 44 + 22 + (data.panel ? 22 + panelRows * panelRowH : 0) + 12;
   const plot = { x: HM + 28, y: head.bottom + 12, w: width - HM * 2 - 28 - 6, h: flexible(ctx, head.bottom + 12, below, compact ? 210 : 270, 110) };
   const top = Math.max(data.max ?? 0, ...points.map((q) => q.hi ?? q.value ?? 0));
   const ticks = niceTicks(Math.min(0, data.min ?? 0), top, 4);
@@ -72,7 +78,13 @@ export function renderCurve(ctx: Ctx<CurveData>): ReactElement {
   const inset = Math.min(18, step / 2);
   const xs = (i: number): number => plot.x + inset + (i * (plot.w - inset * 2)) / Math.max(1, points.length - 1);
   const o = op(frameReveal(p));
-  const labelNames = points.map((q) => labelLines(q.label, step - 4, FS.small));
+  // Class names under the axis. When the names are wider than their column even on two lines (a date axis of
+  // 18 points on a phone), only every k-th is written, counted back from the last, so none is cut or overprinted.
+  const names = points.map((q) => labelLines(q.label, step - 4, FS.small));
+  const widest = Math.max(0, ...points.map((q) => textWidth(q.label, FS.small)));
+  const uncut = names.every((q) => q.every((l) => !l.endsWith("…") && textWidth(l, FS.small) <= step - 4));
+  const every = uncut ? 1 : Math.max(2, Math.ceil((widest + 8) / Math.max(1, step)));
+  const labelNames = names.map((q, i) => ((points.length - 1 - i) % every === 0 ? (every > 1 ? [points[i]?.label ?? ""] : q) : []));
   const extraLines = Math.max(1, ...labelNames.map((q) => q.length)) - 1;
 
   // Gridlines and value ticks.
@@ -155,21 +167,20 @@ export function renderCurve(ctx: Ctx<CurveData>): ReactElement {
   if (data.panel) {
     const rows = data.panel.rows;
     const peak = Math.max(...rows.map((r) => r.value));
-    const rowH = 26;
-    const labelW = Math.max(...rows.map((r) => textWidth(r.label, FS.label, 600))) + 10;
-    const valueW = Math.max(...rows.map((r) => textWidth(formatValue(data.panel!.fmt, r.value), FS.value, 700))) + 10;
-    const barX = HM + labelW;
-    const barW = Math.max(40, width - HM - valueW - barX);
+    const rowH = panelRowH;
+    const barX = panelStacked ? HM : HM + panelLabelW;
+    const barW = Math.max(24, width - HM - panelValueW - barX);
     nodes.push(roleText("label", HM, bottom + 14, data.panel.title, { size: FS.label, weight: 700, fill: pal.ink, opacity: op(settleIn(p, 0.85, 1)) }));
     bottom += 22;
     rows.forEach((r, i) => {
       const y = bottom + i * rowH;
       const w = (r.value / peak) * barW;
       const t = settleIn(p, 0.86 + i * 0.02, 0.98);
+      const by = panelStacked ? y + 20 : y;
       nodes.push(
         roleText("label", HM, y + 16, r.label, { size: FS.label, fill: pal.ink, opacity: op(t) }),
-        el("rect", { key: `pb${r.id}`, "data-id": r.id, x: barX, y: y + 4, width: w, height: 14, fill: flip(ctx, r.id, i === 0 ? pal.accent : pal.ink), opacity: p < 0.86 ? 0 : op(dim(ctx, r.id)) }),
-        roleText("value", barX + w + 6, y + 16, formatValue(data.panel!.fmt, r.value), { size: FS.value, weight: 700, fill: pal.ink, opacity: op(t) }),
+        el("rect", { key: `pb${r.id}`, "data-id": r.id, x: barX, y: by + 4, width: w, height: 14, fill: flip(ctx, r.id, i === 0 ? pal.accent : pal.ink), opacity: p < 0.86 ? 0 : op(dim(ctx, r.id)) }),
+        roleText("value", barX + w + 6, by + 16, formatValue(data.panel!.fmt, r.value), { size: FS.value, weight: 700, fill: pal.ink, opacity: op(t) }),
       );
     });
     bottom += rows.length * rowH;

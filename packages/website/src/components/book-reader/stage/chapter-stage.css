@@ -60,6 +60,9 @@
   position: relative;
   flex: none;
   padding: 0.75rem 1rem 0;
+  /* The numeral fits the width of this box (cqw), so its whole string stays inside it. */
+  container-type: inline-size;
+  container-name: cs-heads;
 }
 
 /* The heads and the unit texts of all steps share one grid cell, so the cell is as tall as the tallest one and
@@ -106,12 +109,20 @@
   white-space: nowrap;
 }
 
+/* --cs-em is the numeral's width in em (set per numeral): the size is the wanted one, or less when the string
+   would not fit its box. The unit sign counts, so "46 %" never loses its "%". */
+.cs-head {
+  /* The numeral's size (--n) is set on the head so the claim can read it. */
+  --n: min(min(24.6vw, 96px), calc(100cqw / var(--cs-em, 3)));
+}
+
 .cs-numeral {
-  font-size: calc(min(24.6vw, 96px) * var(--cs-fit-m, 1));
+  font-size: var(--n);
 }
 
 .cs-claim {
-  max-width: 22ch;
+  max-width: min(22ch, 100%);
+  overflow-wrap: break-word;
   margin: 0.25rem 0 0;
   font-size: 1.25rem;
   font-weight: 700;
@@ -337,13 +348,20 @@
     grid-area: ctl;
   }
 
-  .cs-numeral {
-    font-size: calc(clamp(132px, 21.9vw, 280px) * var(--cs-fit-d, 1));
+  .cs-heads {
+    /* A size container: the numeral and the claim fit the box the grid leaves them in both directions, so
+       neither is clipped by the overflow rule above, whatever the window's height. */
+    container-type: size;
   }
 
+  .cs-head {
+    --n: min(clamp(132px, 21.9vw, 280px), calc(100cqw / var(--cs-em, 3)), 46cqh);
+  }
+
+  /* Claim: the wanted size, or less when four lines of it would not fit under the numeral. */
   .cs-claim {
-    font-size: 2.75rem;
-    max-width: 18ch;
+    font-size: max(1.125rem, min(2.75rem, 9.5cqw, calc((100cqh - 1.5rem - var(--n) * 0.88) / 4.6)));
+    max-width: min(18ch, 100%);
   }
 
   .cs-unit,
@@ -407,8 +425,13 @@
     display: block;
   }
 
+  /* The card is the box the numeral must fit (static layout only: the card is a block here). */
+  .cs-card {
+    container-type: inline-size;
+  }
+
   .cs-step-numeral {
-    font-size: 4rem;
+    font-size: min(4rem, calc(100cqw / var(--cs-em, 3)));
   }
 
   .cs-step-claim {
@@ -463,8 +486,12 @@
   display: block;
 }
 
+.cs-chapter:has(.cs-pause-input:checked) .cs-card {
+  container-type: inline-size;
+}
+
 .cs-chapter:has(.cs-pause-input:checked) .cs-step-numeral {
-  font-size: 4rem;
+  font-size: min(4rem, calc(100cqw / var(--cs-em, 3)));
 }
 
 .cs-chapter:has(.cs-pause-input:checked) .cs-step-claim {

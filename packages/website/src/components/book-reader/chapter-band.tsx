@@ -59,7 +59,7 @@ export function ChapterBand({
       plakat="lemons"
       labelledBy={headingId}
       contentClassName="max-sm:pt-4 lg:py-10"
-      art={art ? <PosterNumeral value={art} plakat="lemons" format="band" /> : undefined}
+      art={art ? <PosterNumeral value={art} plakat="lemons" format="band" fit /> : undefined}
     >
       {pause}
       {backHref ? (

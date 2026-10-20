@@ -149,3 +149,18 @@
   padding-inline: 0.75rem;
   font-size: 0.9375rem;
 }
+
+/* The narrowest phones (320): the step count has about 70px between Back and "Nächstes Kapitel", so it wraps onto two
+   lines at a smaller size instead of running under the button. */
+@media (max-width: 359px) {
+  .ifb-count:not(.ifb-count--start) {
+    font-size: 0.8125rem;
+    line-height: 1.1;
+    white-space: normal;
+    text-wrap: balance;
+  }
+
+  .ifb-row .ifb-btn--primary {
+    padding-inline: 0.5rem;
+  }
+}

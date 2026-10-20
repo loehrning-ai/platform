@@ -19,19 +19,35 @@
 
   position: relative;
   display: grid;
+  /* The film is scaled by the box's width, so the box must keep the film's aspect: on a tablet and wider it is
+     never cut by a height cap but made narrower instead (the 540 x 768 phone film within 66svh, the 16:9 film
+     within 72svh). A phone keeps the full width (a short phone window scrolls instead). */
+  width: auto;
   min-width: 0;
+  margin-inline: auto;
   color: var(--cr-ink);
   background: var(--cr-paper);
 }
 
-/* The box: 540 x 711 of the 540 x 960 film on phones (the last line the film draws ends at 711), 16:9 wide.
-   With the band above, the box, the two-line caveat and the pinned start button all fit the 844px first screen. */
+@media (min-width: 640px) {
+  .cr {
+    width: min(100%, max(22rem, 46.4svh));
+  }
+}
+
+@media (min-width: 1024px) {
+  .cr {
+    width: min(100%, max(40rem, 128svh));
+  }
+}
+
+/* The box: 540 x 768 of the 540 x 960 film on phones (its source line may run to three lines and ends at 755,
+   plus the border), 16:9 wide (everything ends at 491 of 540). The film is scaled by the width, so the aspect is exact. */
 .cr-box {
   position: relative;
   overflow: hidden;
   width: 100%;
-  aspect-ratio: 540 / 711;
-  max-height: 66svh;
+  aspect-ratio: 540 / 768;
   min-width: 0;
   background: var(--cr-paper);
   border-block: 2px solid var(--cr-ink);
@@ -40,7 +56,6 @@
 @media (min-width: 1024px) {
   .cr-box {
     aspect-ratio: 16 / 9;
-    max-height: 72svh;
     border: 2px solid var(--cr-ink);
   }
 }

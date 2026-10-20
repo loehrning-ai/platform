@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { textWidth } from "@/lib/figures/svg";
 import { SourceLine, type SourceLineFields } from "@/components/book-figures/shared/source-line";
 import { StageEnhancer } from "./stage-enhancer";
 import type { StageStepCopy } from "./stage-protocol";
@@ -60,16 +61,16 @@ export function stepAnchor(id: string, index: number): string {
 }
 
 /**
- * How much of the giant numeral size a numeral of this length keeps, so a long
- * one ("35 bis 49") still fits its column: the phone column holds about 4,6
- * characters at 132px, the wide column about 3,4 at 280px. Short numerals keep
- * the full size.
+ * Width of a numeral in em (an estimate with a safety margin). The stylesheet divides the width of the box the
+ * numeral sits in by this, so the whole string, unit sign included ("46 %"), always fits its box: the numeral is
+ * scaled down, never clipped and never wrapped.
  */
-export function numeralFit(numeral: string): { readonly phone: number; readonly wide: number } {
-  const length = Math.max(1, numeral.replace(/\s/g, "").length);
-  const fit = (chars: number): number => Math.round(Math.min(1, chars / length) * 100) / 100;
-  return { phone: fit(4.6), wide: fit(3.4) };
+export function numeralEm(numeral: string): number {
+  const letterSpacing = -0.045 * [...numeral].length;
+  return Math.round((textWidth(numeral, 1, 700) + letterSpacing) * 1.06 * 100) / 100;
 }
+
+const emStyle = (numeral: string): CSSProperties => ({ "--cs-em": numeralEm(numeral) }) as CSSProperties;
 
 export function ChapterStage({ id, label, steps, children, source, csv, locale = "de" }: ChapterStageProps) {
   const COPY = COPY_BY_LOCALE[locale];
@@ -89,13 +90,9 @@ export function ChapterStage({ id, label, steps, children, source, csv, locale =
         <div className="cs-pin" data-cs-pin>
           <div className="cs-heads">
             {steps.map((step, i) => (
-              <div key={step.id} className="cs-head" data-for={i}>
+              <div key={step.id} className="cs-head" data-for={i} style={step.numeral ? emStyle(step.numeral) : undefined}>
                 {step.numeral ? (
-                  <p
-                    className="cs-numeral"
-                    data-cs-numeral
-                    style={{ "--cs-fit-m": numeralFit(step.numeral).phone, "--cs-fit-d": numeralFit(step.numeral).wide } as CSSProperties}
-                  >
+                  <p className="cs-numeral" data-cs-numeral>
                     {step.numeral}
                   </p>
                 ) : null}
@@ -140,7 +137,7 @@ export function ChapterStage({ id, label, steps, children, source, csv, locale =
             <li key={step.id} id={stepAnchor(id, i)} className="cs-step" data-step-index={i}>
               <div className="cs-card">
                 <p className="cs-card-label">{COPY.step(i + 1, total)}</p>
-                {step.numeral ? <p className="cs-step-numeral">{step.numeral}</p> : null}
+                {step.numeral ? <p className="cs-step-numeral" style={emStyle(step.numeral)}>{step.numeral}</p> : null}
                 {step.claim ? <p className="cs-step-claim">{step.claim}</p> : null}
                 <p className="cs-card-text">{step.text}</p>
                 {step.unit ? <p className="cs-step-unit">{step.unit}</p> : null}

@@ -312,6 +312,21 @@
   color: var(--hs-muted);
 }
 
+/* Many stops: each label sits under its own stop, only the ends and the current one are written. */
+.hv-ticks[data-sparse="true"] {
+  position: relative;
+  display: block;
+  height: 1.3em;
+}
+
+.hv-ticks[data-sparse="true"] .hv-tick {
+  position: absolute;
+  top: 0;
+  flex: none;
+  text-align: start;
+  white-space: nowrap;
+}
+
 .hv-tick[data-on="true"] {
   font-weight: 700;
   color: var(--hs-ink);
