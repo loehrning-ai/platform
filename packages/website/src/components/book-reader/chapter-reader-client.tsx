@@ -151,14 +151,26 @@ export function ChapterReaderClient({
   // against the pre-hydration layout and drifts once fonts/prose settle
   // (visible on WebKit/iOS, regression coverage mobile finding), so we re-scroll
   // to the anchor explicitly after mount.
+  // The owner can resolve after the reader has started (sign-in state loads late). Once the reader has
+  // touched, clicked, typed or wheeled, a late restore would yank them away, so it is skipped.
   useEffect(() => {
+    let interacted = false;
+    const markInteracted = () => {
+      interacted = true;
+    };
+    const events = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
+    for (const name of events) window.addEventListener(name, markInteracted, { passive: true, once: true });
     ownerGenerationRef.current = getLearningOwnerContext().generation;
     restoreFragmentOrProgress(bookId, chapterSlug);
-    return subscribeLearningOwner((owner) => {
+    const unsubscribe = subscribeLearningOwner((owner) => {
       clearTimeout(scrollTimer.current);
       ownerGenerationRef.current = owner.generation;
-      restoreFragmentOrProgress(bookId, chapterSlug);
+      if (!interacted) restoreFragmentOrProgress(bookId, chapterSlug);
     });
+    return () => {
+      for (const name of events) window.removeEventListener(name, markInteracted);
+      unsubscribe();
+    };
   }, [bookId, chapterSlug]);
 
   // Save scroll position on scroll (debounced 500ms)

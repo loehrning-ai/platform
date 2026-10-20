@@ -135,6 +135,27 @@ describe("ChapterReaderClient fragment restoration", () => {
     expect(readerMocks.scrollTo).not.toHaveBeenCalled();
   });
 
+  it("does not move a reader who already clicked when the owner resolves late", () => {
+    renderReader();
+    expect(readerMocks.scrollTo).toHaveBeenCalledTimes(1);
+
+    fireEvent.pointerDown(window);
+    act(() => {
+      readerMocks.ownerListener?.({ kind: "anonymous", generation: 2 });
+    });
+
+    expect(readerMocks.scrollTo).toHaveBeenCalledTimes(1);
+  });
+
+  it("restores again on a late owner while the reader has not interacted", () => {
+    renderReader();
+    act(() => {
+      readerMocks.ownerListener?.({ kind: "anonymous", generation: 2 });
+    });
+
+    expect(readerMocks.scrollTo).toHaveBeenCalledTimes(2);
+  });
+
   it("handles malformed percent encoding and falls back to stored progress", () => {
     window.history.replaceState(
       {},
