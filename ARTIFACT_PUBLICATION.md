@@ -452,7 +452,8 @@ JSON-LD, and page inventory. After adding an entry:
    `lighthouserc.json`. The first published tool, project, or video must become
    the representative for that lane. Do not add a future or placeholder URL.
 4. Run `bun run lighthouse:check`. This is the deterministic route contract;
-   it is not a substitute for `bun run lighthouse:local`.
+   it is not a substitute for `bun run lighthouse:local`. Pull-request CI no
+   longer runs it, so run it yourself.
 5. Do not hand-edit sitemap totals. Unit tests derive their expected count from
    `OPEN_SOURCE_ARTIFACTS`.
 
@@ -470,12 +471,13 @@ Run from the repository root:
 bun run scan:public
 bun run artifact-assets:check
 bun run lighthouse:check
-bun run verify
+bun run verify:legacy
 bun run test:e2e:public:built
 bun run lighthouse:local
 ```
 
-`bun run verify` builds before the `:built` browser command reuses that exact
+`bun run verify:legacy` (the full pre-release chain; pull-request CI runs the
+shorter `bun run ci`) builds before the `:built` browser command reuses that exact
 output. Use `bun run test:e2e:public` instead when no verified current build
 exists. A release also requires the separate legal launch gate documented in
 `README.md`.

@@ -30,7 +30,10 @@ const steps = [
   },
   {
     label: "deterministic repository verification",
-    args: ["run", "verify"],
+    // The pre-simplification chain: its build carries no E2E_* variables, which
+    // the later receipt checks in this script rely on. Replaced with a plain
+    // build plus the browser smoke when the old chain is removed.
+    args: ["run", "verify:legacy"],
     captureProviderFreeReceipt: true,
   },
   {

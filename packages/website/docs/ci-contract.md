@@ -2,130 +2,143 @@
 
 The repository root defines the authoritative command contract. Continuous integration must execute the same commands a contributor can run locally and must never deploy or require production credentials.
 
-## Required blocking gates
+## Pipeline
 
-| Gate                        | Root command                                                            | Purpose                                                                                                                                                                                                                                                                                          |
-| --------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Public-tree scan            | `bun run scan:public`                                                   | Blocks secrets, private paths, unlicensed binaries, stale paths, and manifest drift in scanner-visible files. Known generated directories are deliberately pruned.                                                                                                                               |
-| Post-clean publication tree | `bun run publication:check`                                             | Final pre-`git init` packaging gate. After dependencies and build reports are removed, blocks Git metadata, secrets, symlinks, generated/cache/report directories, authenticated storage state, and local-only excluded E2E specs. It intentionally cannot run after a root `.git` entry exists. |
-| Dependency licenses         | `bun run license:audit`                                                 | Requires license metadata or a bundled license file for every installed package/version, blocks unreviewed strong-copyleft, source-available, and conditional identifiers, and reports exact reviewed package/version exceptions for distribution review.                                        |
-| Lighthouse route contract   | `bun run lighthouse:check`                                              | Proves that every static public-indexable page and one published representative per dynamic public pattern are present in `lighthouserc.json`; rejects duplicate, stale, non-indexable, and non-canonical URLs.                                                                                  |
-| Content validation          | `bun run content:lint`                                                  | Validates registries, dates, links, and content invariants.                                                                                                                                                                                                                                      |
-| Environment contract        | `bun run --cwd packages/website test:env-contract`                      | Proves that partial, insecure, or unattested optional-provider configuration fails gated builds.                                                                                                                                                                                                 |
-| Type safety                 | `bun run typecheck` and `bun run --cwd packages/website typecheck:test` | Compiles production code and the separate strict test configuration without emitting files.                                                                                                                                                                                                      |
-| Static analysis             | `bun run lint`                                                          | Runs ESLint across the application.                                                                                                                                                                                                                                                              |
-| Unit tests and coverage     | `bun run --cwd packages/website test:coverage`                          | Runs the complete Vitest suite with blocking line, branch, function, and statement coverage floors.                                                                                                                                                                                              |
-| Production build            | `bun run verify`                                                        | Runs production compilation and static generation inside the provider-free verification wrapper. A plain `bun run build` intentionally validates the current environment and is not provider-free release evidence.                                                                              |
-| Server-log privacy          | `bun run --cwd packages/website test:server-log-privacy`                | Builds and starts the production Next.js Node runtime, then proves synthetic uncaught-error and primitive-rejection canaries are replaced by the fixed redaction marker while validated structured API logging remains available.                                                                |
+One workflow blocks, one runs overnight, two inform. The scripts a job calls are
+the scripts a contributor runs: `scripts/ci.mjs` owns the step lists, and the
+root `ci*` commands run it inside the provider-free environment scrubber.
 
-The root workflow and Vercel must install with
-`bun install --frozen-lockfile --ignore-scripts`. Root `bunfig.toml` enforces
-the same lifecycle-script denial for ordinary Bun installs. Required Sharp,
-esbuild, Sentry CLI, and Playwright binaries resolve from packages pinned in
-`bun.lock`, including their relevant optional platform packages; no dependency
-install script is part of the build contract. No workflow has a deployment
-step; Vercel builds deployments through its Git integration, outside these
-workflows.
+| Workflow file                | Name                      | Runs on                                   | Role                                                                  |
+| ---------------------------- | ------------------------- | ----------------------------------------- | --------------------------------------------------------------------- |
+| `ci.yml`                     | Verify                    | pull requests, push to `main`             | The only blocking gate. Its `verify` check is the release signal.     |
+| `nightly.yml`                | Nightly                   | 02:30 UTC, manual dispatch                | Everything that left the pull-request path. Never blocks a merge.     |
+| `dependency-review.yml`      | Dependency Review         | pull requests                             | GitHub's dependency-graph diff. Informational for deploys.            |
+| `dependency-submission.yml`  | Bun Dependency Submission | `bun.lock` or `package.json` change on `main`, weekly | Feeds the dependency graph. Ignored by deploys. |
+
+CodeQL runs as GitHub's default setup (a repository setting, no workflow file)
+and is informational. No workflow deploys: merging to `main` ships nothing, and
+production changes only through `bun run deploy:production`. Vercel builds pull
+request previews itself.
+
+## The blocking gate (`ci.yml`)
+
+Three jobs start together; there is no `needs` between them and no path filter.
+The shared bootstrap (Node, checksum-verified Bun,
+`bun install --frozen-lockfile --ignore-scripts`, optional Playwright browser)
+is the composite action at `.github/actions/setup`.
+
+| Job       | Check name       | Command            | What it proves                                                                                                                                                                                                                              |
+| --------- | ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, and that `git diff --exit-code` finds no regenerated file. |
+| `unit`    | `unit tests`     | `bun run ci:unit`    | The complete Vitest suite. Coverage floors run nightly.                                                                                                                                                                                      |
+| `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium and the iPhone 13 Chromium viewport.                                                                                           |
+| `verify`  | `verify`         | inline shell       | Aggregation only. Red unless each of the three results is exactly `success`; failure, cancelled and skipped are all red.                                                                                                                    |
+
+`verify` declares `if: always()`. That is load-bearing: a job that is skipped
+when a dependency fails would not be a red check. It is the only job called
+`verify` in any workflow.
+
+The smoke list is `packages/website/tests/e2e/smoke.list`, one spec per line.
+It is curated from the specs that caught real regressions (route matrix, axe and
+target size, SEO, legal, edge states, phone shell, workshop and home locales, the
+plakat contrast, the courses hub). Adding a spec is a one-line diff. A spec
+whose title carries `@quarantine` is skipped by the nightly run and is deleted
+if still tagged after 14 days; no known-flaky spec belongs in the list. Retries
+are set to one on this path, and a test that passes on its retry does not fail
+the run (`E2E_FAIL_ON_FLAKY` stays unset); the nightly desktop run sets it to
+`1` so those tests are counted there.
+
+If the `browser` job's 90th-percentile duration stays above about 10 minutes,
+split it into two shards in `ci.yml`; do not re-add whole browser projects.
+
+A pull request runs its own copy of `ci.yml`. When it edits `.github/`, the
+scripts the workflows call, the lockfile, a `package.json`, `bunfig.toml`,
+`vercel.json` or the security configuration, a green `verify` comes from the
+edited checks, not from the ones on `main`. Review such a diff by hand before
+merging.
+
+### Release signal
+
+`scripts/deploy-production.mjs` reads exactly one check: the `verify` check-run
+created by GitHub Actions on the head of `main`, completed and successful. Every
+other check-run (CodeQL, dependency graph, nightly, anything added later) is
+printed as "Not blocking" and cannot refuse a release. There is no override
+flag. After a re-run the newest `verify` decides.
+
+`main` has no branch protection today, so no check name is configured in
+repository settings. If protection is added, require `verify` and nothing else.
+
+For a risky release (CSP, fonts, layout primitives, a workshop launch), run the
+full matrix on the exact commit first:
+
+```bash
+gh workflow run nightly.yml --ref main
+bun run deploy:production -- --require-nightly --wait --yes
+```
+
+`--require-nightly` refuses unless the newest completed `Nightly` run is green
+on that commit. Without the flag the script prints the last nightly result as an
+information line.
+
+## Nightly (`nightly.yml`)
+
+Runs at 02:30 UTC and on `workflow_dispatch` (input `suite`: `all`, `webkit` or
+`lighthouse`). It never blocks a merge. Jobs: the full desktop Chromium, phone
+Chromium and AI-native operator browser suites (sharded, one build each), a
+mobile WebKit run of the smoke list, the mocked-session `/konto` DOM suite,
+advisory Lighthouse (scores in the job summary), coverage with the Vitest
+floors, and `bun run ci:hygiene` (live `bun audit`, licence audit, and the
+self-tests of publication and tooling scripts). The `report` job opens one issue
+labelled `nightly-red` when any job fails, comments on it while it stays red,
+and closes it when a full run is green again. An unread issue means the demoted
+coverage is effectively off, so read it.
+
+## Token permissions
 
 Every workflow in `.github/workflows/` sets its default token to
 `contents: read`. Two jobs hold more, each granted at the job level only:
 
-| Workflow                   | Job            | Token permissions                     | Why                                                                                                                                                                                                              |
-| -------------------------- | -------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ci.yml`                   | `voice-report` | `contents: read`, `pull-requests: write` | Upserts the advisory voice-report comment. It runs only on pull requests, comments only for same-repository heads (a fork pull request gets a read-only token), and edits only a comment `github-actions[bot]` wrote. |
-| `dependency-submission.yml` | `submit`       | `contents: write`, `actions: read`    | Submits the Bun dependency snapshot to the dependency graph. It runs only on `main`, downloads the snapshot that the read-only `generate` job built, and neither checks out the tree nor runs repository code.   |
+| Workflow                    | Job      | Token permissions                        | Why                                                                                                                                                                                                           |
+| --------------------------- | -------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `nightly.yml`               | `report` | `issues: write`                          | Opens, comments on and closes the single `nightly-red` issue with the preinstalled `gh`. It has no checkout and runs no repository code; it runs only on `main`.                                              |
+| `dependency-submission.yml` | `submit` | `contents: write`, `actions: read`       | Submits the Bun dependency snapshot to the dependency graph. It runs only on `main`, downloads the snapshot that the read-only `generate` job built, and neither checks out the tree nor runs repository code. |
 
-Every other job, including all of `dependency-review.yml`, runs with
-`contents: read` alone.
+Every other job runs with `contents: read` alone. Only GitHub-owned actions
+(`actions/*`), pinned to a full commit SHA, may be used; write a step in shell
+instead of adding a third-party action.
+
+## Local equivalents
+
+| Command             | Runs                                                                 |
+| ------------------- | -------------------------------------------------------------------- |
+| `bun run ci`        | `static` and `unit` in parallel, then `browser`. `bun run verify` is the same command. |
+| `bun run ci:static` | The `static` job. Afterwards `git status --short` shows any drift CI would reject. |
+| `bun run ci:unit`   | The `unit` job.                                                      |
+| `bun run ci:browser`| The `browser` job. Needs `bunx playwright install chromium` once; honours `E2E_PORT` when 3000 is taken. |
+| `bun run ci:hygiene`| The nightly audits and tool self-tests.                              |
+
+The root workflow and Vercel install with
+`bun install --frozen-lockfile --ignore-scripts`. Root `bunfig.toml` enforces
+the same lifecycle-script denial for ordinary Bun installs. Required Sharp,
+esbuild, Sentry CLI, and Playwright binaries resolve from packages pinned in
+`bun.lock`; no dependency install script is part of the build contract.
 
 ## Browser gates
 
 Every public root command named `test:e2e*` that does not end in `:built` builds
 before starting the local production server. This prevents a stale `.next`
 directory from being reported as current proof. Commands ending in `:built` are
-internal reuse commands: run
-them only after `bun run verify` has produced the build in the same workspace.
-Each long-running built gate verifies source, toolchain, and artifact integrity
-both before and after execution, preventing a mixed-revision success.
-`verify:public` uses these internal commands after the blocking verify gate,
-avoiding a redundant build without weakening freshness.
+internal reuse commands: run them only after a build made in the same workspace
+with the same environment. Each long-running built gate verifies source,
+toolchain, and artifact integrity both before and after execution, preventing a
+mixed-revision success. `ci:browser` builds with `E2E_SERVER_MODE=production` and
+`E2E_PORT` in the environment of every step, because the build receipt hashes
+that environment and the CSP drops `upgrade-insecure-requests` only for a build
+proven to be loopback HTTP.
 
-## CI job graph
-
-Verify runs as a parallel job graph rather than one serial job. The shared
-bootstrap (Node, checksum-verified Bun, `bun install --frozen-lockfile
---ignore-scripts`, and optional Playwright browsers) lives in the composite
-action at `.github/actions/setup`.
-
-| Job                   | Command                                                        | Needs a build |
-| --------------------- | -------------------------------------------------------------- | ------------- |
-| `fast`                | `bun run verify:static`                                        | no            |
-| `unit`                | `bun run --cwd packages/website verify:unit`                   | no            |
-| `lighthouse`          | `bun run lighthouse:ci:built`                                  | yes           |
-| `e2e` (17-way matrix) | `bun run --cwd packages/website e2e:shard:built`               | yes           |
-| `auth-scaffold`       | `bun run test:e2e:auth-scaffold:built`                         | yes           |
-| `konto-dom-mocked`    | `bun run --cwd packages/website test:e2e:konto-dom-mocked` (builds its own public-config-only bundle) | yes           |
-| `server-log-privacy`  | `bun run --cwd packages/website test:server-log-privacy:built` | yes           |
-| `merge-reports`       | merges the `e2e` blob reports into one HTML report              | no            |
-| `voice-report`        | `bun run --cwd packages/website content:voice-report -- --markdown --baseline origin/main` (pull requests only, advisory PR comment, not in `verify`) | no            |
-| `verify`              | aggregation only                                               | no            |
-
-Each build-dependent job builds for itself: `konto-dom-mocked` builds its own
-public-config-only bundle, and every other one runs
-`bun run --cwd packages/website verify:build`. The build is deliberately
-**not** passed between jobs as an artifact: the build-freshness receipt
-re-hashes the artifact digest, the input digest, and the captured toolchain, so
-a transported `.next` must land byte-identical on an identically-imaged runner
-or every `:built` gate fails preflight. Rebuilding costs runner-minutes, which
-are free on a public repository, and buys a gate that cannot fail for transport
-reasons.
-
-### Required status checks
-
-Branch-protection ruleset 19653327 on `main` requires three status checks:
-
-| Check               | Source                                                                                    |
-| ------------------- | ----------------------------------------------------------------------------------------- |
-| `verify`            | The aggregate job in `ci.yml`, described below.                                           |
-| `dependency-review` | The `dependency-review` job in `dependency-review.yml`: frozen install, `bun audit` and GitHub's dependency-review action. |
-| `CodeQL`            | GitHub's default code-scanning setup. It has no workflow file in this repository.        |
-
-The ruleset also requires the branch to be up to date with `main` before a
-merge, allows squash merges only, and blocks a merge on new code-scanning
-alerts at its configured severity threshold. It requires no approving review
-and no code-owner review. The ruleset lives in the repository settings, not in
-this tree; this section records it and changes only when the ruleset does.
-
-A pull request runs its own copy of `ci.yml` and `dependency-review.yml`. When
-it edits those files, the scripts they call, `.github/`, the lockfile, a
-`package.json`, `bunfig.toml`, `vercel.json` or the security configuration, a
-green `verify` or `dependency-review` comes from the edited checks, not from
-the ones on `main`. Review such a diff by hand before merging. `CodeQL` runs
-from GitHub's configuration, so a pull request cannot change it.
-
-`lighthouse` is advisory everywhere (total blocking time is noisy on a shared runner and failed
-`main` for code that had passed): it always reports and never turns `verify` red. The
-`mobile-chromium` and `mobile-webkit` e2e shards (60 s navigation timeouts that pass on the next
-run) are advisory on a pull request and blocking on the push to `main`. They set `continue-on-error`
-only when the event is a pull request, so a failure is still visible on the checks tab but does not
-turn `verify` red. The desktop `chromium` shards, `unit`, `fast` (including the public-leak scan) and
-the privacy and auth gates block on every event. When `verify` fails, its log names each gate that
-did not succeed.
-
-No matrix job is required on its own; `verify` stands for all of them. It
-declares `if: always()` and fails when any dependency did not succeed. That
-`always()` is load-bearing — a required job that is _skipped_ is treated as
-passing by branch protection. `voice-report` is advisory and is not among
-`verify`'s dependencies.
-
-The public browser gate is sharded across the matrix instead of looping shards
-inside one process. `scripts/run-e2e-suite.mjs` retains the serial loop for
-local runs, where process isolation is not otherwise available.
-
-The explicitly named
-`bun run --cwd packages/website test:e2e:dev` command is development
-diagnostics only. Anonymous learning, accessibility, responsive layout, and
-route contracts remain runnable without provider credentials.
+The explicitly named `bun run --cwd packages/website test:e2e:dev` command is
+development diagnostics only. Anonymous learning, accessibility, responsive
+layout, and route contracts remain runnable without provider credentials.
 
 ### Authentication proof tiers
 
@@ -134,9 +147,9 @@ route contracts remain runnable without provider credentials.
 | Provider-free scaffold   | `bun run test:e2e:auth-scaffold`      | No credentials and no Supabase request.                                                                                                                      | Mock storage-state wiring, browser auth affordance where public config exists, and fail-closed signed-out routes. It is not live-auth proof.               |
 | Live session integration | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project, a public Turnstile test site key, and makes a live password-grant request. | Server-validated session handling, protected account pages, and authenticated client round-trips. It bypasses the magic-link/Turnstile/PKCE login journey. |
 
-CI runs `test:e2e:auth-scaffold:built`; its green state must never be described
-as successful live authentication. The live tier is fail-closed and is not part
-of credential-free pull-request CI. It requires all nine variables below:
+The auth-scaffold project is not part of pull-request CI; its green state must
+never be described as successful live authentication. The live tier is
+fail-closed and is not part of credential-free CI. It requires all nine variables below:
 
 ```text
 SIMPLIFIED_SUPABASE_TEST_URL
@@ -179,9 +192,10 @@ reported as proof of the production login flow.
 
 ## Release gate: Lighthouse measurements
 
-`bun run lighthouse:check` is a fast blocking CI contract. It validates route
-coverage and catalog drift without launching a browser. It does not produce or
-claim performance results.
+`bun run lighthouse:check` is a fast contract on `lighthouserc.json`: it
+validates route coverage and catalog drift without launching a browser. It runs
+inside `bun run verify:release`, not in pull-request CI, and it does not produce
+or claim performance results.
 
 The complete release command runs the actual Lighthouse measurement from the
 repository root:
@@ -197,10 +211,10 @@ passes only when the command completes for every URL in `lighthouserc.json`,
 the perfect-score accessibility assertion passes, and every warning-level
 budget or score regression is reviewed. Reports are written only to
 `.lighthouseci/reports`; they are local release evidence and remain excluded
-from the public tree. The complete 35-route, three-run measurement remains
-outside ordinary CI because performance scores vary with runner load and
-Chromium conditions. Ordinary CI retains its five-route, three-run smoke; route
-coverage itself is deterministic and blocking there.
+from the public tree. The complete 35-route, three-run measurement stays out of
+CI because performance scores vary with runner load and Chromium conditions.
+The nightly run measures five routes three times each and reports the scores in
+its job summary without failing the run.
 
 ## Release validation
 

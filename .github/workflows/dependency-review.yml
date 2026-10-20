@@ -9,9 +9,10 @@ permissions:
 # GitHub does not parse bun.lock for pull-request dependency snapshots, and a
 # privileged pull_request_target submission would still lose write permission
 # on Dependabot PRs while expanding the attack surface for fork data. Keep this
-# workflow unprivileged. The frozen install plus Bun's full-lock audit is the
-# blocking transitive vulnerability gate; GitHub Dependency Review supplements
-# it with the dependency-graph diff GitHub can recognize.
+# workflow unprivileged. It reviews the dependency-graph diff GitHub can
+# recognise and nothing else; the live `bun audit` runs nightly (nightly.yml,
+# `bun run ci:hygiene`), because its result changes with the advisory database,
+# not with the pull request. Informational for deploys: only `verify` gates.
 concurrency:
   group: dependency-review-${{ github.ref }}
   cancel-in-progress: true
@@ -24,32 +25,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Install checksum-verified Bun
-        run: bash .github/scripts/install-verified-bun.sh
-      - name: Validate and audit the complete Bun dependency tree
-        run: |
-          bun install --frozen-lockfile --ignore-scripts
-          # GHSA-jmr9-qjv8-65gv (extract-zip symlink traversal) is reached
-          # only through @lhci/cli -> lighthouse -> puppeteer-core, a
-          # devDependency that never ships. extract-zip 2.0.1 is the latest
-          # published version and @lhci/cli 0.15.1 is the latest release, so
-          # no upgrade clears it. Drop this flag once either ships a fix.
-          # GHSA-7pqw-9j4j-h8q3 (extract-zip arbitrary file write through
-          # symlink entries) sits on the same package and path with no patched
-          # release either, so it carries the same scoped exception.
-          # GHSA-vfj7-8cjw-p6xm (braces stack exhaustion on deeply nested
-          # patterns) is reached only through @next/eslint-plugin-next ->
-          # fast-glob -> micromatch, a lint-time devDependency that never
-          # ships and only expands the repository's own glob patterns.
-          # braces 3.0.3 is the latest published version and micromatch
-          # 4.0.8 requires it, so no upgrade clears it. Drop this flag once
-          # braces ships a fix.
-          # GHSA-rj75-hqrm-r3gf: @tailwindcss/typography pins postcss-selector-parser
-          # 6.0.10 exactly; it only parses this repo's own CSS at build time.
-          # GHSA-hp3w-g68c-fv3c: sprintf-js has no fixed release; it reaches the
-          # tree only through argparse at build time (gray-matter, lhci).
-          # Drop both flags once a fixed version is reachable.
-          bun audit --ignore=GHSA-jmr9-qjv8-65gv --ignore=GHSA-7pqw-9j4j-h8q3 --ignore=GHSA-vfj7-8cjw-p6xm --ignore=GHSA-rj75-hqrm-r3gf --ignore=GHSA-hp3w-g68c-fv3c
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
         with:
           fail-on-severity: moderate

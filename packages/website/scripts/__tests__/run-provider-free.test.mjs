@@ -334,8 +334,8 @@ assert.equal(
 );
 assert.equal(
   serverEnvironmentProbe.failOnFlakyTests,
-  true,
-  "every Playwright gate must reject tests that pass only on retry",
+  false,
+  "the pull-request and main gate tolerates a test that passes on its retry",
 );
 
 const ciConfigProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
@@ -344,11 +344,17 @@ const ciConfigProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
   env: minimalVerificationEnvironment({
     ...process.env,
     CI: "1",
+    E2E_FAIL_ON_FLAKY: "1",
     E2E_GLOBAL_TIMEOUT: "60000",
     E2E_PORT: "3398",
   }),
 });
 assert.equal(ciConfigProbeResult.status, 0, ciConfigProbeResult.stderr);
+assert.equal(
+  JSON.parse(ciConfigProbeResult.stdout).failOnFlakyTests,
+  true,
+  "the nightly desktop run (E2E_FAIL_ON_FLAKY=1) must reject tests that pass only on retry",
+);
 assert.equal(
   JSON.parse(ciConfigProbeResult.stdout).globalTimeout,
   60_000,
@@ -416,11 +422,24 @@ assert.equal(
   rootPackageJson.scripts["verify:release"],
   "node scripts/verify-release.mjs",
 );
+assert.equal(rootPackageJson.scripts.verify, "bun run ci");
+for (const name of ["ci", "ci:static", "ci:unit", "ci:browser", "ci:hygiene"]) {
+  assert.match(
+    rootPackageJson.scripts[name],
+    /^node packages\/website\/scripts\/run-provider-free\.mjs node scripts\/ci\.mjs /,
+    `${name} must cross the minimal environment boundary`,
+  );
+}
 assert.equal(
-  rootPackageJson.scripts.verify,
+  rootPackageJson.scripts["verify:legacy"],
   "node packages/website/scripts/run-provider-free.mjs bun run verify:internal",
 );
 assert.ok(rootPackageJson.scripts["verify:internal"]);
+assert.match(
+  readFileSync(join(here, "..", "..", "..", "..", "scripts", "verify-release.mjs"), "utf8"),
+  /args: \["run", "verify:legacy"\]/,
+  "the release runner keeps the long chain whose build carries no E2E variables",
+);
 const releaseRunner = readFileSync(
   join(here, "..", "..", "..", "..", "scripts", "verify-release.mjs"),
   "utf8",
@@ -602,27 +621,11 @@ assert.match(
   /Total: 3 tests in 1 file/,
   "the release selector must discover the complete non-empty launch gate",
 );
-const ciWorkflow = readFileSync(
-  join(here, "..", "..", "..", "..", ".github", "workflows", "ci.yml"),
-  "utf8",
-);
-// The public browser gate runs as a sharded matrix, so each shard owns a
-// distinct artifact directory keyed by project and shard. That keeps the
-// original guarantee — no gate can overwrite or be mistaken for another's
-// output — and additionally makes every blob report independently mergeable.
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
-);
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/auth-scaffold/,
-);
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_OUTPUT_DIR: test-results\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
-);
-assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
+const workflowText = (file) =>
+  readFileSync(
+    join(here, "..", "..", "..", "..", ".github", "workflows", file),
+    "utf8",
+  );
 // next.config.ts resolves headers() once, at build time, and bakes the
 // result into the build output — `next start` serves it as-is and never
 // re-evaluates next.config.ts's env reads. Every job that builds and then
@@ -643,14 +646,15 @@ assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
 // root cause of hydration-marker timeouts across unrelated specs on every
 // route under mobile-webkit, not a set of individual page bugs.
 const jobsNeedingLoopbackVerification = [
-  "lighthouse:",
-  "e2e:",
-  "auth-scaffold:",
-  "server-log-privacy:",
+  ["ci.yml", "browser:", "run: bun run ci:browser"],
+  ["nightly.yml", "browser:", "run: bun run --cwd packages/website verify:build"],
+  ["nightly.yml", "webkit:", "run: bun run --cwd packages/website verify:build"],
+  ["nightly.yml", "lighthouse:", "run: bun run --cwd packages/website verify:build"],
 ];
-for (const jobHeader of jobsNeedingLoopbackVerification) {
+for (const [file, jobHeader, buildCommand] of jobsNeedingLoopbackVerification) {
+  const ciWorkflow = workflowText(file);
   const jobStart = ciWorkflow.indexOf(`\n  ${jobHeader}\n`);
-  assert.ok(jobStart >= 0, `expected a top-level ${jobHeader} job in ci.yml`);
+  assert.ok(jobStart >= 0, `expected a top-level ${jobHeader} job in ${file}`);
   // A real next job line is exactly 2-space indented (`  name:`), never more
   // — every step/key inside a job is indented 4+ spaces. Matching "\n  " with
   // no length bound also matches those deeper lines (e.g. "\n    name:"
@@ -674,12 +678,11 @@ for (const jobHeader of jobsNeedingLoopbackVerification) {
   assert.match(
     preSteps,
     /env:\s*\n\s*E2E_SERVER_MODE: production\s*\n\s*E2E_PORT: "3000"/,
-    `${jobHeader} must set E2E_SERVER_MODE/E2E_PORT at job level, before steps:, so build and serve/test steps cannot disagree:\n${preSteps}`,
+    `${file} ${jobHeader} must set E2E_SERVER_MODE/E2E_PORT at job level, before steps:, so build and serve/test steps cannot disagree:\n${preSteps}`,
   );
-  assert.match(
-    jobBlock,
-    /run: bun run --cwd packages\/website verify:build\s*\n/,
-    `${jobHeader} must still build via verify:build:\n${jobBlock.slice(0, 400)}`,
+  assert.ok(
+    jobBlock.includes(`${buildCommand}\n`),
+    `${file} ${jobHeader} must still build through ${buildCommand}:\n${jobBlock.slice(0, 400)}`,
   );
 }
 const serverLogPrivacyRunner = readFileSync(

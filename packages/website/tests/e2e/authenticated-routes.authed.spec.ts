@@ -175,7 +175,7 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
 //
 //   auth-scaffold      provider-free build, always signed out. Skips this
 //                      block; runs the signed-out block above.
-//   konto-dom-mocked   runs in ordinary CI. The build carries only public
+//   konto-dom-mocked   runs in the nightly workflow. The build carries only public
 //                      Supabase config, and the endpoints the server calls
 //                      during SSR are served by an in-process preload
 //                      (tests/e2e/fixtures/mock-auth-backend.cjs). The mock
