@@ -137,7 +137,7 @@ describe("Explorer, controls", () => {
       expect(screen.getByLabelText(chip as string)).toBeChecked();
       expect(screen.getByText(example as string, { selector: "p" })).toBeVisible();
       const text = document.querySelector(".ex-numeral-n")!.textContent ?? "";
-      shares.push(Number(text.replace("<", "").replace(",", ".")));
+      shares.push(Number(text.replaceAll("<", "").replaceAll(",", ".")));
     });
     expect(shares[4]!).toBeGreaterThan(shares[0]!);
     expect(screen.getByText("von 100")).toBeInTheDocument();
