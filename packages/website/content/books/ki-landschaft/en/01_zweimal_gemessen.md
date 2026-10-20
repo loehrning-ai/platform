@@ -26,6 +26,6 @@ My earlier score for firms showed the same. I dropped it. It went closely with h
 
 ::figure{id="h05-ladder"}
 
-In parallel a rescan is running, a fresh pass over all pages that checks every website against its legal notice. Its recalculation replaces the numbers of this edition, as far as they depend on websites, and until then they stand as of October 2026.
+Since then a rescan has run, a fresh pass over {{h05-waterfall.rescan_sites}} websites that checks every website against its legal notice. Of these, {{h05-waterfall.rescan_read}} were reachable, and on {{h05-waterfall.rescan_match}} of them the legal notice names the firm, that is {{h05-waterfall.rescan_match_share}}. On {{h05-waterfall.rescan_no_match}} it does not match, on {{h05-waterfall.rescan_unclear}} it stays open. With the websites the rescan could read, without those whose legal notice names another firm, I recalculated the districts, the states and the estimator in chapter 8. All other numbers of this edition, including those at the start of this chapter, still stand as of October 2026.
 
 > **What you can do:** Of every AI number, ask three things: what it was measured with, on how many cases and when. That goes for mine too. Write the three details next to the number before you pass it on, and take the number only as an example if one is missing. In your own organisation too, measure twice before you believe a number.

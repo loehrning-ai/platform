@@ -1,7 +1,7 @@
 {
  "schema": "quellen/1",
- "asOf": "2026-10-19",
- "methodVersion": "v1-lab-2026-10-19",
+ "asOf": "2026-10-20",
+ "methodVersion": "v1-lab-2026-10-19; firm-level v2-notwrong-2026-10-20",
  "rows": [
   {
    "figure": "h05-dots",
@@ -12,7 +12,7 @@
    "window": "2026-03-16 bis 2026-04-12",
    "attribution": "website-level",
    "rescan": "strengthens",
-   "sourceLine": "n = 840 Websites, zweimal gescannt · 16 Tage Abstand im Median · Grenze: Auswahl nicht zufällig; welche Kamera stimmt, ist offen · Wird vom Rescan geprüft."
+   "sourceLine": "n = 840 Websites, zweimal gescannt · 16 Tage Abstand im Median · Erster Scan: bei 97,5 % der Seiten (819 von 840) kein Seitentext gespeichert, Treffer beim Abruf erkannt · Grenze: Auswahl nicht zufällig; welche Kamera stimmt, ist offen · Wird vom Rescan geprüft."
   },
   {
    "figure": "h05-ladder",
@@ -23,7 +23,7 @@
    "window": "2026-03-16 bis 2026-04-12",
    "attribution": "website-level",
    "rescan": "strengthens",
-   "sourceLine": "n = 865 Websites, zwei Kameras · 16.03. bis 12.04.2026 · Grenze: welche Kamera stimmt, ist offen · Wird vom Rescan geprüft."
+   "sourceLine": "n = 865 Websites, zwei Kameras · 16.03. bis 12.04.2026 · Grenze: welche Kamera stimmt, ist offen · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet."
   },
   {
    "figure": "h05-waterfall",
@@ -78,7 +78,7 @@
    "window": "2026-03 bis 2026-05",
    "attribution": "website-level",
    "rescan": "strengthens",
-   "sourceLine": "n = 21.402 Startseiten · Scan 2026-03 bis 05 · Grenze: Zusammenhang; Fußzeilen fehlen · Wird vom Rescan geprüft."
+   "sourceLine": "n = 21.402 Startseiten · Scan 2026-03 bis 05 · Grenze: Zusammenhang; Fußzeilen fehlen · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet."
   },
   {
    "figure": "h01-net",
@@ -144,7 +144,7 @@
    "window": "2026-03 bis 2026-05",
    "attribution": "website-level",
    "rescan": "strengthens",
-   "sourceLine": "n = 21.402 Startseiten, davon 39 mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele IT-Anbieter · Wird vom Rescan geprüft."
+   "sourceLine": "n = 21.402 Startseiten, davon 39 mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele IT-Anbieter · Ohne Websites, deren Impressum eine andere Firma nennt, dasselbe Muster."
   },
   {
    "figure": "h04-forest",
@@ -155,7 +155,7 @@
    "window": "2026-03 bis 2026-05",
    "attribution": "website-level",
    "rescan": "strengthens",
-   "sourceLine": "n = 39 Seiten mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele Seiten von IT-Anbietern · Wird vom Rescan geprüft."
+   "sourceLine": "n = 39 Seiten mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele Seiten von IT-Anbietern · Ohne Websites, deren Impressum eine andere Firma nennt, dasselbe Muster."
   },
   {
    "figure": "h07-curve",
@@ -271,56 +271,56 @@
    "figure": "h06-region",
    "chapter": 5,
    "hero": "H06",
-   "n": 24758,
+   "n": 20535,
    "base": "Firmen mit eigener Domain in 394 Kreisen, Leave-Kreis-out-Kreuzvalidierung",
    "window": "2026-03 bis 2026-05",
-   "attribution": "firm-level, pending verified rescan",
+   "attribution": "firm-level, rescan-read sites without known mismatches",
    "rescan": "may change",
-   "sourceLine": "n = 24.758 Firmen in 394 Kreisen · Scan 2026-03 bis 05 · Grenze: Vorhersage, keine Ursache; AUC ist stumpf für kleine Gruppen · Wird mit geprüften Websites neu gerechnet."
+   "sourceLine": "n = 20.535 Firmen in 394 Kreisen · Scan 2026-03 bis 05 · Grenze: Vorhersage, keine Ursache; AUC ist stumpf für kleine Gruppen · Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt."
   },
   {
    "figure": "h06-slope",
    "chapter": 5,
    "hero": "H06",
-   "n": 16564,
+   "n": 12146,
    "base": "Firmen mit eigener Domain in Kreisen mit mindestens 60 Firmen, Kreis aus der Postleitzahl",
    "window": "2026-03 bis 2026-05",
-   "attribution": "firm-level, pending verified rescan",
+   "attribution": "firm-level, rescan-read sites without known mismatches",
    "rescan": "may change",
-   "sourceLine": "n = 16.564 Firmen in 118 Kreisen · Scan 2026-03 bis 05 · Grenze: Zufallshälften; Kreis aus Postleitzahl · Wird mit geprüften Websites neu gerechnet."
+   "sourceLine": "n = 12.146 Firmen in 89 Kreisen · Scan 2026-03 bis 05 · Grenze: Zufallshälften; Kreis aus Postleitzahl · Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt."
   },
   {
    "figure": "h10-or",
    "chapter": 5,
    "hero": "H10",
-   "n": 24942,
+   "n": 20687,
    "base": "Firmen mit eigener Domain und Land aus dem Register",
    "window": "2026-03 bis 2026-05",
-   "attribution": "firm-level, pending verified rescan",
+   "attribution": "firm-level, rescan-read sites without known mismatches",
    "rescan": "strengthens",
-   "sourceLine": "n = 40 Treffer im Osten, Textkamera · Scan 2026-03 bis 05 · Grenze: wenige Treffer; Sichtbarkeit, nicht Nutzung · Wird mit geprüften Websites neu gerechnet."
+   "sourceLine": "n = 23 Treffer im Osten, Textkamera · Scan 2026-03 bis 05 · Grenze: wenige Treffer; Sichtbarkeit, nicht Nutzung · Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt."
   },
   {
    "figure": "h10-tiles",
    "chapter": 5,
    "hero": "H10",
-   "n": 24942,
+   "n": 20687,
    "base": "Firmen mit eigener Domain und Land aus dem Register; Kern = per Suche gefunden, Registerzweck vorhanden",
    "window": "2026-03 bis 2026-05",
-   "attribution": "firm-level, pending verified rescan",
+   "attribution": "firm-level, rescan-read sites without known mismatches",
    "rescan": "strengthens",
-   "sourceLine": "n = 24.942 Firmen mit Land · Scan 2026-03 bis 05 · Grenze: Auswahl der Stichprobe; Länder unter 5 Treffern zusammengefasst · Wird mit geprüften Websites neu gerechnet."
+   "sourceLine": "n = 20.687 Firmen mit Land · Scan 2026-03 bis 05 · Grenze: Auswahl der Stichprobe; Länder unter 5 Treffern zusammengefasst · Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt."
   },
   {
    "figure": "rand-kap5",
    "chapter": 5,
    "hero": "M5",
-   "n": 1062,
+   "n": 802,
    "base": "Startseiten mit KI-Wort, Kreis aus der Postleitzahl",
    "window": "2026-03 bis 2026-05",
-   "attribution": "firm-level, pending verified rescan",
+   "attribution": "firm-level, rescan-read sites without known mismatches",
    "rescan": "may change",
-   "sourceLine": "n = 1.062 · 2026-03 bis 2026-05 · Grenze: kein regionaler Unterschied nachweisbar"
+   "sourceLine": "n = 802 · 2026-03 bis 2026-05 · Grenze: kein regionaler Unterschied nachweisbar"
   },
   {
    "figure": "h11-field",

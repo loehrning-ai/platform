@@ -2,13 +2,13 @@
   "id": "h10-or",
   "kind": "strip",
   "title": "Bayern: Vorsprung weg. Osten: Lücke bleibt",
-  "alt": "Chancenverhältnis, mit dem eine Firma KI auf der Startseite schreibt. Bayern gegen den Rest: 1,25 bei allen Firmen, 0,98 im gleichartigen Kern. Vier Länder im Osten ohne Brandenburg: 0,33 bei gleicher Textmenge, Brandenburg allein 0,92.",
+  "alt": "Chancenverhältnis, mit dem eine Firma KI auf der Startseite schreibt. Bayern gegen den Rest: 1,29 bei allen Firmen, 0,98 im gleichartigen Kern. Vier Länder im Osten ohne Brandenburg: 0,26 bei gleicher Textmenge, Brandenburg allein 0,80.",
   "caption": "Chancenverhältnis mit 95-%-Intervall, logarithmische Achse; 1 heißt kein Unterschied. Bayern in drei Lesarten; der Osten bei gleicher Textmenge (10 Stufen) und zusätzlich bei gleicher Branche.",
-  "n": 24942,
+  "n": 20687,
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera für den Osten",
-  "asOf": "2026-10-19",
-  "limitation": "Im Osten stehen 40 Treffer auf der Textkamera; die Lücke tragen vier kleine Länder, Brandenburg zeigt keine. Nach Branche, Größe und Wirtschaftskraft schrumpft sie (0,76 mit Wohlstand und Dichte, Intervall schließt 1 ein). Ein Wort auf der Website ist Sichtbarkeit, nicht Nutzung.",
-  "sourceLine": "n = 40 Treffer im Osten, Textkamera · Scan 2026-03 bis 05 · Grenze: wenige Treffer; Sichtbarkeit, nicht Nutzung · Wird mit geprüften Websites neu gerechnet.",
+  "asOf": "2026-10-20",
+  "limitation": "Im Osten stehen 23 Treffer auf der Textkamera. Mit Wirtschaftskraft und Dichte liegt das Chancenverhältnis bei 0,66 (Intervall 0,44 bis 0,98). Ein Wort auf der Website ist Sichtbarkeit, nicht Nutzung. Gezählt sind nur Websites, die der Rescan gelesen hat, ohne die, deren Impressum eine andere Firma nennt.",
+  "sourceLine": "n = 23 Treffer im Osten, Textkamera · Scan 2026-03 bis 05 · Grenze: wenige Treffer; Sichtbarkeit, nicht Nutzung · Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt.",
   "data": {
     "claim": "Bayerns Vorsprung weg, die Ostlücke bleibt.",
     "rows": [
@@ -18,24 +18,24 @@
         "marks": [
           {
             "layer": "alle",
-            "value": 1.25316,
-            "lo": 1.09924,
-            "hi": 1.42862,
-            "n": 10168
+            "value": 1.29066,
+            "lo": 1.10942,
+            "hi": 1.50151,
+            "n": 8478
           },
           {
             "layer": "kern",
-            "value": 0.98069,
-            "lo": 0.80546,
-            "hi": 1.19404,
-            "n": 4349
+            "value": 0.98411,
+            "lo": 0.78006,
+            "hi": 1.24154,
+            "n": 3697
           },
           {
             "layer": "zweck",
-            "value": 1.09478,
-            "lo": 0.91456,
-            "hi": 1.31051,
-            "n": 4978
+            "value": 1.11001,
+            "lo": 0.89897,
+            "hi": 1.3706,
+            "n": 4212
           }
         ]
       },
@@ -45,17 +45,17 @@
         "marks": [
           {
             "layer": "text",
-            "value": 0.53625,
-            "lo": 0.38602,
-            "hi": 0.74495,
-            "n": 1969
+            "value": 0.44199,
+            "lo": 0.28853,
+            "hi": 0.67707,
+            "n": 1607
           },
           {
             "layer": "branche",
-            "value": 0.65337,
-            "lo": 0.46744,
-            "hi": 0.91325,
-            "n": 1969
+            "value": 0.59481,
+            "lo": 0.38632,
+            "hi": 0.91582,
+            "n": 1607
           }
         ]
       },
@@ -65,17 +65,17 @@
         "marks": [
           {
             "layer": "text",
-            "value": 0.32698,
-            "lo": 0.19675,
-            "hi": 0.54341,
-            "n": 1293
+            "value": 0.25562,
+            "lo": 0.13031,
+            "hi": 0.50145,
+            "n": 1070
           },
           {
             "layer": "branche",
-            "value": 0.4098,
-            "lo": 0.24503,
-            "hi": 0.68537,
-            "n": 1293
+            "value": 0.34058,
+            "lo": 0.172,
+            "hi": 0.67441,
+            "n": 1070
           }
         ]
       },
@@ -85,17 +85,17 @@
         "marks": [
           {
             "layer": "text",
-            "value": 0.92145,
-            "lo": 0.60209,
-            "hi": 1.4102,
-            "n": 676
+            "value": 0.79775,
+            "lo": 0.4625,
+            "hi": 1.376,
+            "n": 537
           },
           {
             "layer": "branche",
-            "value": 1.06096,
-            "lo": 0.6862,
-            "hi": 1.64038,
-            "n": 676
+            "value": 1.06224,
+            "lo": 0.61016,
+            "hi": 1.84928,
+            "n": 537
           }
         ]
       }
@@ -146,113 +146,113 @@
     "finding": "text"
   },
   "meta": {
-    "methodVersion": "v1-lab-2026-10-19",
-    "frozenOn": "2026-10-19",
-    "n": 24942,
+    "methodVersion": "v2-notwrong-2026-10-20",
+    "frozenOn": "2026-10-20",
+    "n": 20687,
     "base": "Firmen mit eigener Domain und Land aus dem Register",
     "window": "2026-03 bis 2026-05",
     "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera für den Osten",
     "hero": "H10",
-    "attribution": "firm-level, pending verified rescan",
+    "attribution": "firm-level, rescan-read sites without known mismatches",
     "rescan": "strengthens",
-    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "rescanNote": "Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt.",
     "values": {
       "or_east5_text": {
-        "value": 0.536247,
-        "lo": 0.386016,
-        "hi": 0.744947,
-        "n": 1969,
+        "value": 0.441992,
+        "lo": 0.288534,
+        "hi": 0.677069,
+        "n": 1607,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "or_east5_ind": {
-        "value": 0.653367,
-        "lo": 0.467439,
-        "hi": 0.91325,
-        "n": 1969,
+        "value": 0.59481,
+        "lo": 0.386319,
+        "hi": 0.915822,
+        "n": 1607,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "or_east4_text": {
-        "value": 0.326984,
-        "lo": 0.196755,
-        "hi": 0.543411,
-        "n": 1293,
+        "value": 0.255624,
+        "lo": 0.130309,
+        "hi": 0.501452,
+        "n": 1070,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "or_east4_ind": {
-        "value": 0.4098,
-        "lo": 0.245029,
-        "hi": 0.685372,
-        "n": 1293,
+        "value": 0.340584,
+        "lo": 0.171997,
+        "hi": 0.674414,
+        "n": 1070,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "or_bb_text": {
-        "value": 0.92145,
-        "lo": 0.602092,
-        "hi": 1.4102,
-        "n": 676,
+        "value": 0.797748,
+        "lo": 0.462502,
+        "hi": 1.376,
+        "n": 537,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "or_bb_ind": {
-        "value": 1.06096,
-        "lo": 0.686204,
-        "hi": 1.64038,
-        "n": 676,
+        "value": 1.06224,
+        "lo": 0.610165,
+        "hi": 1.84928,
+        "n": 537,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "east_or_adjusted": {
-        "value": 0.638885,
-        "lo": 0.433383,
-        "hi": 0.941833,
-        "n": 2262,
+        "value": 0.539595,
+        "lo": 0.379105,
+        "hi": 0.768029,
+        "n": 1858,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "east_or_wealth": {
-        "value": 0.76352,
-        "lo": 0.493915,
-        "hi": 1.18029,
+        "value": 0.657455,
+        "lo": 0.441537,
+        "hi": 0.978962,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "east_or_kreistyp": {
-        "value": 0.730742,
+        "value": 0.635536,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "east_hits": {
-        "value": 53.0,
-        "n": 2262,
+        "value": 33.0,
+        "n": 1858,
         "fmt": {
           "style": "number",
           "digits": 0
         }
       },
       "east_perm_rank": {
-        "value": 38.0,
+        "value": 20.0,
         "fmt": {
           "style": "number",
           "digits": 0
@@ -266,7 +266,7 @@
         }
       },
       "east_perm_p": {
-        "value": 0.012654,
+        "value": 0.00666001,
         "fmt": {
           "style": "decimal",
           "digits": 3

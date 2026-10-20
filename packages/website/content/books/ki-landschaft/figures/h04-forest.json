@@ -9,7 +9,7 @@
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
   "asOf": "2026-10-19",
   "limitation": "Die 39 Seiten sind zum Teil IT- und Cloud-Anbieter. Zusammenhang, keine Ursache. Das Chancenverhältnis kontrolliert die Textlänge (Mantel-Haenszel-ähnlich über ein Modell).",
-  "sourceLine": "n = 39 Seiten mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele Seiten von IT-Anbietern · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet.",
+  "sourceLine": "n = 39 Seiten mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele Seiten von IT-Anbietern · Ohne Websites, deren Impressum eine andere Firma nennt, dasselbe Muster.",
   "data": {
     "claim": "Souveränität geht mit KI, DSGVO nicht.",
     "rows": [

@@ -1,7 +1,7 @@
 {
   "outcome": "the word AI on the homepage",
-  "sourceLine": "Source: {n} GmbH homepages, March to May 2026. An estimate, not the cover figure. Only about 55 % of matches are right.",
-  "rescanNote": "Being recalculated with checked websites.",
+  "sourceLine": "Source: {n} GmbH homepages read by the rescan, March to May 2026. An estimate, not the cover figure.",
+  "rescanNote": "Without websites whose legal notice names another firm.",
   "factors": {
     "branche": {
       "label": "Industry",

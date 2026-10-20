@@ -192,6 +192,58 @@
           "style": "percent",
           "digits": 0
         }
+      },
+      "rescan_sites": {
+        "value": 25581.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_read": {
+        "value": 23410.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_match": {
+        "value": 8907.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_no_match": {
+        "value": 2206.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_unclear": {
+        "value": 12236.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_base": {
+        "value": 21204.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rescan_match_share": {
+        "value": 38.0478,
+        "lo": 37.4279,
+        "hi": 38.6717,
+        "n": 23410,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
       }
     },
     "aliases": {
