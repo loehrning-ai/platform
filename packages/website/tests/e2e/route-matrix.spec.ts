@@ -16,7 +16,7 @@
  * Route contract: /foerdermittel is 410 Gone (deleted by public-content transition).
  */
 
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 
 // ---------------------------------------------------------------------------
 // Public routes: expect 200, no login redirect
@@ -60,9 +60,22 @@ const PUBLIC_ROUTES = [
   "/login",
   "/impressum",
   "/datenschutz",
+  "/bot",
   "/ueber-mich",
   // Note: /foerdermittel is 410 Gone (deleted by public-content transition) — not tested as 200
 ] as const;
+
+// These checks assert status, redirect and console cleanliness, not image
+// delivery. The production server re-encodes every `_next/image` request
+// (isrFlushToDisk is off, so nothing is cached), and a cold 1920px AVIF cover
+// takes 10-30 s on a shared CI core. Waiting for `load` made course landing
+// pages time out on that, not on anything these tests check. Wait for the
+// document, then give the load event a bounded chance to surface late errors.
+async function gotoDocument(page: Page, route: string) {
+  const response = await page.goto(route, { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("load", { timeout: 5_000 }).catch(() => {});
+  return response;
+}
 
 test.describe("public routes return 200", () => {
   for (const route of PUBLIC_ROUTES) {
@@ -72,7 +85,7 @@ test.describe("public routes return 200", () => {
         if (message.type() === "error") browserErrors.push(message.text());
       });
       page.on("pageerror", (error) => browserErrors.push(error.message));
-      const response = await page.goto(route, { waitUntil: "load" });
+      const response = await gotoDocument(page, route);
       expect(
         response?.status(),
         `Expected 200 for ${route}`,
@@ -98,7 +111,7 @@ test.describe("public routes return 200", () => {
 // ---------------------------------------------------------------------------
 
 test("blog post is accessible without auth", async ({ page }) => {
-  const response = await page.goto("/blog/eu-ai-act-grundlagen");
+  const response = await gotoDocument(page, "/blog/eu-ai-act-grundlagen");
   expect(response?.status()).toBe(200);
   expect(page.url()).not.toContain("/login");
 });
@@ -108,7 +121,7 @@ test("blog post is accessible without auth", async ({ page }) => {
 // ---------------------------------------------------------------------------
 
 test("ki-und-gesellschaft landing is public", async ({ page }) => {
-  const response = await page.goto("/ki-und-gesellschaft");
+  const response = await gotoDocument(page, "/ki-und-gesellschaft");
   expect(response?.status()).toBe(200);
   expect(page.url()).not.toContain("/login");
 });

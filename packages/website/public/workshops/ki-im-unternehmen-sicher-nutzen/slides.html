@@ -1,0 +1,1652 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Where Your Data Goes: Using Claude at Work · loehrning.ai</title>
+<meta name="description" content="A customer asks where its data goes. Check your own Claude account, sort what people paste, see the EU AI Act in four boxes and write one page." />
+<link rel="icon" href="./assets/favicon.svg" />
+<link rel="stylesheet" href="./lib/tokens.css" />
+<link rel="stylesheet" href="./lib/deck.css" />
+<link rel="stylesheet" href="./lib/motion.css" />
+<style data-part="shared and slides">
+/* Shared deck styles: tokens, chrome (route bar, footer), cards, votes, prompt cards, lights. Every size is at least 24px. */
+:root {
+  --tanne: #1F4A38; --salbei: #DCE6D4; --salbei-2: #EAF1E4; --bernstein: #D9A441; --amber-tint: #FBEFD5;
+  --mennige-tint: #FBE9E2; --bogen: #F7F4EE; --ink-2: #4A423B;
+  --sh: 0 1px 2px rgba(40, 30, 20, .06), 0 16px 40px rgba(40, 30, 20, .08);
+  --sh-up: 0 2px 4px rgba(40, 30, 20, .08), 0 24px 56px rgba(40, 30, 20, .14);
+}
+deck-stage { font-family: var(--sans); }
+.slide { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 28px; line-height: 1.4;
+  transition: background-color .7s var(--ease), color .7s var(--ease); }
+.slide.dark-v, .slide[data-s="3"].s6 { }
+:where(.slide) :where(h1, h2, h3, p) { margin: 0; }
+.slide > .layer { position: absolute; z-index: 2; }
+.slide button { font-family: inherit; }
+.ic { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.lt { width: 64px; height: 64px; display: block; flex: none; }
+
+/* ── chrome ─────────────────────────────────────────────────────────────── */
+.foot { position: absolute; left: 96px; right: 96px; bottom: 30px; z-index: 6; display: flex; justify-content: flex-end; gap: 40px;
+  font: 500 24px/1 var(--mono); letter-spacing: .01em; color: var(--muted); }
+.foot b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.route { position: absolute; left: 96px; top: 34px; width: 1010px; height: 64px; z-index: 6; }
+.route-stops { display: flex; justify-content: space-between; }
+.route-stop { position: relative; font: 600 24px/1 var(--mono); letter-spacing: .1em; color: var(--muted); padding-bottom: 20px; transition: color .4s var(--ease); }
+.route-stop::after { content: ""; position: absolute; left: 50%; bottom: 3px; width: 3px; height: 12px; margin-left: -1.5px; border-radius: 2px; background: var(--line-strong); }
+.route-stop.done { color: var(--tanne); }
+.route-stop.done::after { background: var(--tanne); }
+.route-stop.now { color: var(--ink); }
+.route-stop.now::after { background: var(--tanne); }
+@keyframes stop-pulse { 50% { scale: 1.3; } }
+.route-stop.pulse { animation: stop-pulse .3s var(--ease); }
+.route-track { position: absolute; left: 0; right: 0; bottom: 8px; height: 3px; border-radius: 2px; background: var(--line-strong); }
+.route-dot { position: absolute; left: 0; bottom: -2px; width: 24px; height: 24px; border-radius: 50%; background: var(--bernstein);
+  border: 3px solid var(--tanne); transform: translateX(var(--x, 0px)); transition: transform .6s var(--ease); }
+
+/* ── type ───────────────────────────────────────────────────────────────── */
+.kick { font: 600 24px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.kick.t { color: var(--tanne); }
+.h2 { font-weight: 600; font-size: 80px; line-height: 1.02; letter-spacing: -.032em; }
+.h2 em, .em { font-style: normal; color: var(--accent); }
+.lede { font-size: 40px; line-height: 1.25; font-weight: 500; letter-spacing: -.015em; }
+.mono { font-family: var(--mono); }
+.muted { color: var(--muted); }
+.src { font: 500 24px/1.35 var(--mono); color: var(--muted); }
+span.src + span.src { margin-left: .5em; }
+
+/* ── cards, pills, buttons ─────────────────────────────────────────────── */
+.card { background: var(--surface); border: 1.5px solid var(--line); border-radius: 28px; box-shadow: var(--sh); }
+.pill { display: inline-flex; align-items: center; gap: 12px; font: 600 24px/1 var(--mono); letter-spacing: .06em; padding: 14px 22px; border-radius: 999px;
+  background: var(--tint); border: 1.5px solid var(--line); color: var(--ink); white-space: nowrap; }
+.pill.g { background: var(--salbei-2); border-color: #BFD1B5; color: var(--tanne); }
+.pill.a { background: var(--amber-tint); border-color: #E9CB8C; color: #6B4506; }
+.pill.r { background: var(--mennige-tint); border-color: #EBB9A6; color: var(--mennige-tief); }
+
+.vote { appearance: none; -webkit-appearance: none; display: inline-flex; align-items: center; gap: 14px; height: 68px; padding: 0 12px 0 26px; border-radius: 999px;
+  border: 2px solid var(--line-strong); background: var(--surface); color: var(--ink); font: 600 26px/1 var(--mono); letter-spacing: .04em; cursor: pointer;
+  box-shadow: 0 2px 0 rgba(40, 30, 20, .06); transition: background-color .2s, border-color .2s, box-shadow .2s, translate .2s; }
+.vote b { font-weight: 700; min-width: 52px; height: 48px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px; background: var(--tint); font-variant-numeric: tabular-nums; }
+.vote:hover { border-color: var(--tanne); translate: 0 -2px; box-shadow: 0 6px 0 rgba(40, 30, 20, .06); }
+.vote:active { translate: 0 1px; box-shadow: none; }
+.vote.has { border-color: var(--tanne); background: var(--salbei-2); }
+.vote.has b { background: var(--tanne); color: var(--bogen); }
+.vote kbd { font: 600 24px/1 var(--mono); opacity: .55; }
+
+.vbar { position: relative; height: 28px; border-radius: 999px; background: var(--tint); overflow: hidden; }
+.vbar i { position: absolute; inset: 0; border-radius: 999px; background: var(--tanne); }
+
+/* prompt card: quotable text with a copy button */
+.pcard { border-radius: 26px; background: var(--surface); border: 1.5px solid var(--line); box-shadow: var(--sh); overflow: hidden; }
+.pc-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px 14px 26px; background: var(--mennige-tint); border-bottom: 1.5px solid var(--line); }
+.pc-tag { font: 600 24px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); }
+.pc-copy { margin-left: auto; appearance: none; font: 700 24px/1 var(--mono); letter-spacing: .02em; color: var(--accent); background: transparent;
+  border: 2px solid var(--accent); border-radius: 999px; padding: 12px 22px; cursor: pointer; transition: background-color .16s, color .16s; }
+.pc-copy:hover, .pc-copy.done { background: var(--accent); color: #fff; }
+.pc-body { margin: 0; padding: 22px 28px 26px; font: 500 30px/1.45 var(--sans); letter-spacing: -.005em; }
+.pc-body .pc-s { display: block; }
+.pc-body .pc-s + .pc-s { margin-top: 10px; }
+
+/* the stamp */
+.stamp { display: inline-block; border: 5px solid var(--mennige-tief); color: var(--mennige-tief); border-radius: 12px; padding: 12px 22px 10px;
+  font: 700 28px/1.1 var(--mono); letter-spacing: .06em; text-transform: uppercase; background: rgba(255, 255, 255, .6); rotate: -8deg; }
+@keyframes thud { from { scale: 1.7; opacity: 0; } 55% { opacity: 1; } }
+.motion .stamp.step { transition: none; }
+.motion .stamp.step.is-in { animation: thud .26s var(--ease) both; }
+
+/* the grey "?" badge */
+.qbadge { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--tint); border: 2px dashed var(--line-strong);
+  font: 700 36px/1 var(--mono); color: var(--muted); flex: none; }
+
+/* explicit z order helper */
+.z3 { z-index: 3; } .z4 { z-index: 4; }
+
+/* ── back to the workshop page (same on every workshop deck) ───────────── */
+.deck-back { position: fixed; top: 16px; left: 16px; z-index: 1000; box-sizing: border-box; display: inline-flex; align-items: center; height: 44px; padding: 0 14px;
+  font: 600 16px/1 var(--mono, 'JetBrains Mono', ui-monospace, monospace); letter-spacing: 0; text-decoration: none; white-space: nowrap;
+  color: #121212; background: #F3F0E9; border: 2px solid #121212; border-radius: 0;
+  transition: opacity .3s ease, transform .15s ease, box-shadow .15s ease; }
+.deck-back:hover, .deck-back:focus-visible { box-shadow: 4px 4px 0 #B73A15; transform: translate(-2px, -2px); outline: none; }
+.deck-back.is-idle:not(:hover):not(:focus-visible) { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .deck-back { transition: none; } }
+@media print { .deck-back { display: none !important; } }
+.presenter-preview .deck-back, html[data-preview] .deck-back { display: none !important; }
+
+/* ═══ S1 cover ═══ */
+.s1 { background: var(--salbei); color: var(--tanne); }
+.s1 .amb i:nth-child(1) { background: radial-gradient(closest-side, rgba(255, 255, 255, .62), rgba(255, 255, 255, 0)); }
+.s1 .amb i:nth-child(2) { background: radial-gradient(closest-side, rgba(217, 164, 65, .32), rgba(217, 164, 65, 0)); }
+.s1 .amb i:nth-child(3) { background: radial-gradient(closest-side, rgba(31, 74, 56, .12), rgba(31, 74, 56, 0)); }
+.s1 .foot, .s1 .foot b { color: var(--tanne); }
+.s1-logos { left: 96px; top: 84px; display: flex; align-items: center; gap: 28px; }
+.s1-lock { height: 58px; width: auto; display: block; }
+.s1-brain { height: 32px; width: auto; display: block; filter: brightness(0); opacity: .78; }
+.s1-x { font: 400 34px/1 var(--mono); color: var(--tanne); opacity: .55; }
+.s1-caps { left: 96px; top: 262px; }
+.s1-h1 { left: 96px; top: 312px; width: 940px; font-weight: 600; font-size: 162px; line-height: .98; letter-spacing: -.048em; color: var(--tanne); --d: 380ms; }
+.s1-h1 .w { position: relative; }
+.s1-h1 .em { color: var(--accent); }
+.s1-h1 .em::after { content: ""; position: absolute; left: .03em; right: .03em; bottom: .07em; height: .075em; border-radius: 99px; background: var(--accent); transform-origin: left; }
+@keyframes s1-ul { from { transform: scaleX(0); } }
+.motion .s1[data-deck-active] .s1-h1 .em::after { animation: s1-ul .8s var(--ease) 1.7s both; }
+.s1-sub { left: 96px; top: 826px; font: 500 44px/1.15 var(--sans); letter-spacing: -.015em; color: var(--ink-2); --d: 700ms; }
+.s1-meta { left: 96px; top: 912px; font: 500 28px/1 var(--mono); letter-spacing: .01em; color: var(--tanne); --d: 800ms; }
+/* the globe panel: a live globe right of a hard edge, so no motion ever reaches the title column or the 05 */
+.s1-globe { position: absolute; inset: 0; z-index: 1; clip-path: inset(0 0 0 1008px); opacity: 0; transform: scale(.94); transform-origin: 90% 50%; pointer-events: none;
+  transition: opacity .7s var(--ease), transform .9s var(--ease); }
+.s1[data-deck-active] .s1-globe { opacity: 1; transform: none; }
+.s1-globe canvas { display: block; width: 100%; height: 100%; }
+.s1-edge { position: absolute; left: 1006px; top: 0; bottom: 0; width: 3px; background: var(--tanne); z-index: 2; transform: scaleY(0); transform-origin: 50% 0; transition: transform .6s var(--ease); }
+.s1[data-deck-active] .s1-edge { transform: none; }
+/* the numeral lives in the title column, right of the logos, and the edge keeps every moving thing out of it */
+.s1-num { left: 740px; top: 44px; width: 250px; text-align: right; font: 700 204px/.8 var(--sans); letter-spacing: -.06em; color: var(--tanne); z-index: 3; }
+.s1 .foot { display: none; }
+
+/* ═══ S2 the email ═══ */
+.s2-kick { left: 96px; top: 98px; --i: 0; }
+.s2-mail { left: 96px; top: 146px; width: 790px; height: 474px; padding: 34px 46px; rotate: -1deg; z-index: 3; }
+.s2-mh { display: flex; align-items: center; gap: 12px; font: 600 24px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 64px; }
+.s2-mb p { font-size: 42px; line-height: 1.22; font-weight: 500; letter-spacing: -.018em; margin: 0 0 14px; white-space: nowrap; }
+.s2-mb p.s2-ty-cont { margin-bottom: 0; }
+.s2-sign { position: absolute; left: 46px; bottom: 36px; font: 500 28px/1 var(--mono); color: var(--muted); }
+.s2-stamp { position: absolute; right: 40px; top: 26px; }
+@keyframes s2-drop { from { opacity: 0; translate: 0 -54px; } }
+@keyframes s2-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.motion .s2[data-deck-active] .s2-mail { animation: s2-drop .45s var(--ease) .1s both; }
+.motion .s2[data-deck-active] .s2-ty { animation: s2-type var(--dur) steps(24) var(--dl) both; }
+.s2-ty:nth-child(1) { --dl: .7s; --dur: .65s; } .s2-ty:nth-child(2) { --dl: 1.35s; --dur: .6s; } .s2-ty:nth-child(3) { --dl: 2s; --dur: .45s; } .s2-ty:nth-child(4) { --dl: 2.45s; --dur: .55s; }
+.motion .s2[data-deck-active] .s2-stamp { animation: thud .26s var(--ease) 3.2s both; }
+.motion .s2[data-deck-active] .s2-sign { animation: arr .5s var(--soft) 3s both; }
+.s2-notes { left: 96px; top: 656px; width: 790px; height: 340px; padding: 26px 36px; background: var(--amber-tint); border: 1.5px solid #E9CB8C; border-radius: 28px; box-shadow: var(--sh); rotate: .5deg; }
+.s2-notes ul { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 18px; }
+.s2-notes li { display: flex; align-items: flex-start; gap: 16px; font-size: 31px; line-height: 1.25; }
+.s2-notes .ic { font-size: 36px; margin-top: 2px; color: #6B4506; }
+.s2-ask { left: 944px; top: 128px; width: 880px; font-size: 40px; }
+.s2-draft { left: 944px; top: 262px; width: 880px; height: 734px; padding: 30px 32px; }
+.s2-row { position: relative; display: grid; grid-template-columns: 56px 1fr 64px; column-gap: 20px; row-gap: 18px; align-items: center; padding: 26px 0 28px; border-top: 1.5px solid var(--line); }
+.s2-draft .kick { margin-bottom: 8px; }
+.s2-row::before { content: ""; position: absolute; inset: 10px -18px 8px; border-radius: 24px; background: var(--mennige-tint); transform: scaleX(0); transform-origin: left; transition: transform .55s var(--ease); z-index: -1; }
+.s2[data-s="1"] .s2-row[data-r="1"]::before, .s2[data-s="2"] .s2-row[data-r="2"]::before, .s2[data-s="3"] .s2-row[data-r="3"]::before { transform: scaleX(1); }
+.s2-num { width: 56px; height: 56px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font: 700 28px/1 var(--mono); }
+.s2-sent { font-size: 40px; font-weight: 500; line-height: 1.12; letter-spacing: -.015em; }
+.s2-votes { grid-column: 1 / -1; display: flex; gap: 14px; }
+.s2-votes .vote { flex: 1; font-size: 24px; padding: 0 10px 0 20px; height: 62px; justify-content: space-between; }
+.s2-votes .vote b { height: 44px; }
+
+/* ═══ S3 reality ═══ */
+.s3-h { left: 96px; top: 112px; width: 1728px; }
+.s3-h2 { left: 96px; top: 198px; }
+.s3-rings { left: 96px; top: 322px; width: 1728px; display: flex; gap: 40px; }
+.s3-card { flex: 1; height: 430px; padding: 26px 24px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.s3-ringbox { position: relative; width: 262px; height: 262px; flex: none; }
+.s3-ringbox svg { width: 100%; height: 100%; display: block; }
+.s3-num { position: absolute; inset: 0; display: grid; place-items: center; font: 600 92px/1 var(--mono); letter-spacing: -.04em; }
+.s3-one { font: 600 68px/1 var(--sans); letter-spacing: -.03em; }
+.s3-cap { font-size: 30px; line-height: 1.22; margin-top: 18px; font-weight: 500; max-width: 440px; }
+.s3-card .src { margin-top: auto; }
+.s3-src { left: 96px; top: 768px; width: 1728px; }
+.s3-byo { left: 96px; top: 850px; width: 1728px; font-size: 48px; line-height: 1.2; font-weight: 500; letter-spacing: -.02em; }
+.s3-byo b { color: var(--accent); font-weight: 700; }
+.s3-byo .src { display: block; margin-top: 10px; font-size: 24px; letter-spacing: 0; }
+.s3-hand { left: 96px; top: 858px; width: 1728px; }
+.s3-ask { font-size: 34px; font-weight: 500; letter-spacing: -.012em; margin-bottom: 18px; }
+.s3-opts { display: flex; gap: 16px; }
+.s3-opts .vote { min-width: 250px; justify-content: space-between; }
+
+/* ═══ S4 send one prompt ═══ */
+.s4-h { left: 96px; top: 112px; }
+.s4-ui { left: 96px; top: 232px; width: 1728px; height: 250px; }
+.s4-win { position: absolute; left: 0; top: 0; width: 914px; height: 250px; display: grid; grid-template-columns: 230px 1fr; overflow: hidden; border-radius: 26px; }
+.s4-side { background: var(--tint); padding: 22px; display: flex; flex-direction: column; gap: 16px; border-right: 1.5px solid var(--line); }
+.s4-new { display: flex; align-items: center; gap: 12px; height: 56px; padding: 0 16px; border-radius: 16px; background: var(--surface); border: 1.5px solid var(--line-strong); font: 600 24px/1 var(--sans); transition: background-color .3s, border-color .3s; }
+.s4-side i { height: 16px; border-radius: 8px; background: var(--line-strong); opacity: .75; }
+.s4-side i:nth-of-type(1) { width: 82%; margin-top: 8px; } .s4-side i:nth-of-type(2) { width: 62%; } .s4-side i:nth-of-type(3) { width: 72%; }
+.s4-main { position: relative; background: #fff; }
+.s4-bub { position: absolute; right: 26px; top: 24px; width: 360px; padding: 18px 20px; border-radius: 22px; background: var(--mennige-tint); display: grid; gap: 10px; }
+.s4-bub i { height: 12px; border-radius: 6px; background: var(--accent-soft); } .s4-bub i:last-child { width: 62%; }
+.s4-input { position: absolute; left: 22px; right: 22px; bottom: 22px; height: 76px; border-radius: 24px; border: 2px solid var(--line-strong); background: #fff; display: flex; align-items: center; padding: 0 10px 0 24px; gap: 18px; }
+.s4-paste { flex: 1; display: grid; gap: 9px; opacity: 0; } .s4-paste i { height: 10px; border-radius: 5px; background: var(--ink-soft); opacity: .45; } .s4-paste i:last-child { width: 58%; }
+.s4-enter { width: 56px; height: 56px; border-radius: 50%; background: var(--tanne); color: var(--bogen); display: grid; place-items: center; font-size: 30px; flex: none; }
+.s4-cursor { position: absolute; left: 0; top: 0; width: 28px; height: 32px; z-index: 6; opacity: 0; transform: translate(760px, 40px); }
+.s4-ripple { position: absolute; left: 90px; top: 38px; width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--tanne); opacity: 0; z-index: 5; }
+.s4-lane { position: absolute; left: 890px; top: 189px; width: 590px; height: 0; border-top: 3px dashed var(--line-strong); }
+.s4-dot { position: absolute; left: 837px; top: 175px; width: 30px; height: 30px; border-radius: 50%; background: var(--bernstein); border: 3px solid var(--tanne); opacity: 0; z-index: 4; }
+.s4-cloud { position: absolute; left: 1440px; top: 70px; width: 230px; height: 230px; color: var(--tanne); stroke-width: 1.1; }
+
+/* resting style = after the animation: bubble sent, dot gone, cloud calm */
+@keyframes s4-cursor { 0% { opacity: 0; transform: translate(780px, 30px); } 8% { opacity: 1; transform: translate(700px, 60px); } 30% { transform: translate(110px, 54px) scale(1); } 34% { transform: translate(110px, 54px) scale(.86); } 38% { transform: translate(110px, 54px) scale(1); } 60% { transform: translate(540px, 182px); } 68% { transform: translate(540px, 182px); } 88% { transform: translate(850px, 194px) scale(1); } 91% { transform: translate(850px, 194px) scale(.86); } 94% { transform: translate(850px, 194px) scale(1); opacity: 1; } 100% { transform: translate(872px, 226px); opacity: 0; } }
+@keyframes s4-ripple { 0% { opacity: .8; scale: .4; } 100% { opacity: 0; scale: 1.5; } }
+@keyframes s4-newchat { from { background: var(--surface); } to { background: var(--salbei-2); border-color: var(--tanne); } }
+@keyframes s4-paste { from { opacity: 0; } to { opacity: 1; } }
+@keyframes s4-clear { to { opacity: 0; } }
+@keyframes s4-press { 50% { scale: .92; } }
+@keyframes s4-bub { from { opacity: 0; translate: 0 26px; } }
+@keyframes s4-dot { 0% { opacity: 1; transform: translateX(0); } 80% { opacity: 1; } 100% { opacity: 0; transform: translateX(640px); } }
+@keyframes s4-lane { 0% { opacity: 1; clip-path: inset(0 100% 0 0); } 100% { opacity: 1; clip-path: inset(0 0 0 0); } }
+@keyframes s4-ping { 0% { scale: 1; } 40% { scale: 1.1; } 100% { scale: 1; } }
+.motion .s4[data-deck-active] .s4-cursor { animation: s4-cursor 3.4s var(--ease) .6s both; }
+.motion .s4[data-deck-active] .s4-ripple { animation: s4-ripple .5s ease-out 1.65s both; }
+.motion .s4[data-deck-active] .s4-new { animation: s4-newchat .3s var(--ease) 1.65s both; }
+.motion .s4[data-deck-active] .s4-paste { animation: s4-paste .3s var(--ease) 2.75s both, s4-clear .2s var(--ease) 3.65s forwards; }
+.motion .s4[data-deck-active] .s4-enter { animation: s4-press .16s var(--ease) 3.55s; }
+.motion .s4[data-deck-active] .s4-bub { animation: s4-bub .45s var(--spring) 3.7s both; }
+.motion .s4[data-deck-active] .s4-dot { animation: s4-dot .5s ease-in 3.65s both; }
+.motion .s4[data-deck-active] .s4-lane { animation: s4-lane .5s ease-in 3.65s both; }
+.motion .s4[data-deck-active] .s4-cloud { animation: s4-ping .5s var(--ease) 4.15s; }
+
+.s4-prompt { left: 96px; top: 514px; width: 914px; }
+.nb { white-space: nowrap; }
+.s4-cloudlbl { position: absolute; left: 1405px; top: 258px; width: 300px; white-space: nowrap; text-align: center; font: 600 24px/1.2 var(--mono); letter-spacing: .04em; color: var(--tanne); }
+@keyframes s4-lbl { from { opacity: 0; translate: 0 8px; } }
+.motion .s4[data-deck-active] .s4-cloudlbl { animation: s4-lbl .4s var(--ease) 4.1s both; }
+.s4-chip { left: 1060px; top: 566px; width: 764px; white-space: normal; line-height: 1.3; letter-spacing: .02em; font-size: 24px; text-transform: none; text-wrap: balance; text-align: center; background: var(--amber-tint); border-color: #E9CB8C; color: #6B4506; }
+.s4-paper { left: 1060px; top: 690px; width: 764px; height: 104px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; font-size: 29px; font-weight: 500; background-image: repeating-linear-gradient(transparent 0 41px, rgba(40, 30, 20, .05) 41px 43px); }
+.s4-blank { display: inline-flex; width: 64px; height: 38px; border-bottom: 3px solid var(--ink); margin-left: 6px; vertical-align: -6px; align-items: flex-end; justify-content: center; color: var(--tanne); font-size: 40px; }
+.s4-blank svg { stroke-width: 2.6; transition: opacity .3s var(--ease), scale .4s var(--spring); }
+.motion .s4-blank:not(.done) svg { opacity: 0; scale: .4; }
+.s4-checks { left: 96px; top: 852px; width: 1728px; height: 140px; display: flex; gap: 36px; }
+.s4-check { flex: 1; display: flex; align-items: center; gap: 22px; padding: 0 26px 0 24px; transition: background-color .5s var(--ease), border-color .5s var(--ease); }
+.s4-check.done { background: var(--salbei-2); border-color: #BFD1B5; }
+.s4-cn { width: 62px; height: 62px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font: 700 30px/1 var(--mono); flex: none; }
+.s4-check .kick { margin-bottom: 8px; }
+.s4-cd { font-size: 28px; line-height: 1.22; font-weight: 500; }
+.s4-tick { width: 54px; height: 54px; flex: none; margin-left: auto; fill: none; stroke: var(--tanne); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.s4-tick circle { fill: var(--salbei); }
+.s4-tick path { stroke-dasharray: 24; stroke-dashoffset: 0; transition: stroke-dashoffset .45s var(--ease) .1s; }
+.motion .s4-check:not(.done) .s4-tick path { stroke-dashoffset: 24; }
+.motion .s4-check:not(.done) .s4-tick { opacity: .45; }
+
+/* ═══ S5 two rulebooks ═══ */
+.s5-h { left: 96px; top: 112px; }
+.s5-seg { left: 96px; top: 216px; width: 804px; height: 78px; display: flex; padding: 7px; border-radius: 999px; background: var(--tint); border: 1.5px solid var(--line-strong); z-index: 5; }
+.s5-thumb { position: absolute; left: 7px; top: 7px; width: 300px; height: 64px; border-radius: 999px; background: var(--tanne); box-shadow: 0 6px 16px rgba(31, 74, 56, .28);
+  transition: translate .32s cubic-bezier(.3, 1.4, .5, 1), width .32s cubic-bezier(.3, 1.4, .5, 1); }
+.s5[data-plan="1"] .s5-thumb { translate: 300px 0; width: 220px; }
+.s5[data-plan="2"] .s5-thumb { translate: 520px 0; width: 260px; }
+.s5-opt { position: relative; z-index: 1; appearance: none; border: 0; background: transparent; height: 64px; border-radius: 999px; cursor: pointer;
+  font: 600 30px/1 var(--sans); letter-spacing: -.01em; color: var(--ink-2); transition: color .25s var(--ease); }
+.s5-opt[data-plan="0"] { width: 300px; } .s5-opt[data-plan="1"] { width: 220px; } .s5-opt[data-plan="2"] { width: 260px; }
+.s5[data-plan="0"] .s5-opt[data-plan="0"], .s5[data-plan="1"] .s5-opt[data-plan="1"], .s5[data-plan="2"] .s5-opt[data-plan="2"] { color: var(--bogen); }
+
+.s5-stage { left: 96px; top: 306px; width: 1728px; height: 612px; }
+.s5-svg { position: absolute; left: 0; top: 0; width: 1728px; height: 612px; overflow: visible; }
+.s5-l { stroke: var(--line-strong); transition: stroke .5s var(--ease); }
+.s5[data-plan="0"] .s5-l1 { stroke: var(--bernstein); }
+.s5[data-plan="1"] .s5-l1, .s5[data-plan="2"] .s5-l1 { stroke-dasharray: 3 13; }
+.s5[data-plan="0"] .s5-l2 { stroke-dasharray: 3 13; }
+.s5[data-plan="1"] .s5-l2, .s5[data-plan="2"] .s5-l2 { stroke: var(--tanne); }
+.s5-l3 { stroke: var(--tanne); }
+.s5[data-plan="0"] .s5-l4 { stroke: var(--bernstein); }
+.s5[data-plan="1"] .s5-l4, .s5[data-plan="2"] .s5-l4 { stroke: var(--tanne); }
+.s5-route { stroke-dashoffset: 0; }
+@keyframes s5-flow { to { stroke-dashoffset: -28; } }
+.motion .s5[data-deck-active] .s5-route { animation: s5-flow 1s linear infinite; }
+
+/* packets travel along the route with offset-path */
+.s5-pk { position: absolute; left: 0; top: 0; width: 44px; height: 34px; border-radius: 9px; background: var(--bernstein); border: 2.5px solid var(--tanne); z-index: 3;
+  offset-rotate: 0deg; opacity: 0; box-shadow: 0 5px 12px rgba(40, 30, 20, .16); }
+.s5-pk::after { content: ""; position: absolute; left: 8px; right: 8px; top: 7px; height: 4px; border-radius: 2px; background: var(--tanne); box-shadow: 0 8px 0 var(--tanne); }
+.s5-pk.m1, .s5-pk.m2, .s5-pk.m3 { offset-path: path("M356 250H648"); }
+.s5-pk.t1 { offset-path: path("M936 274C1016 274 1020 72 1100 72"); }
+.s5-pk.k1 { offset-path: path("M936 274C1016 274 1020 384 1100 384"); }
+@keyframes s5-main { 0% { offset-distance: 0%; opacity: 0; } 10% { opacity: 1; } 88% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+@keyframes s5-keep { 0%, 4% { offset-distance: 0%; opacity: 0; } 14% { opacity: 1; } 88% { offset-distance: 100%; opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+@keyframes s5-t0 { 0%, 2% { offset-distance: 0%; opacity: 0; } 5% { opacity: 1; } 24% { offset-distance: 100%; opacity: 1; } 26%, 50% { offset-distance: 100%; opacity: 0; } 51% { offset-distance: 0%; opacity: 0; } 54% { opacity: 1; } 66% { offset-distance: 46%; opacity: 1; } 70%, 100% { offset-distance: 46%; opacity: 0; } }
+@keyframes s5-tlock { 0%, 4% { offset-distance: 0%; opacity: 0; } 9% { opacity: 1; } 44% { offset-distance: 45%; opacity: 1; } 52% { offset-distance: 37%; opacity: 1; } 68%, 100% { offset-distance: 24%; opacity: 0; } }
+.motion .s5[data-deck-active] .s5-pk.m1 { animation: s5-main 2.4s linear infinite; }
+.motion .s5[data-deck-active] .s5-pk.m2 { animation: s5-main 2.4s linear -.8s infinite; }
+.motion .s5[data-deck-active] .s5-pk.m3 { animation: s5-main 2.4s linear -1.6s infinite; }
+.motion .s5[data-deck-active] .s5-pk.k1 { animation: s5-keep 2.4s linear 1.4s infinite; }
+.motion .s5[data-deck-active][data-plan="0"] .s5-pk.t1 { animation: s5-t0 9.6s linear 1.4s infinite; }
+.motion .s5[data-deck-active][data-plan="1"] .s5-pk.t1, .motion .s5[data-deck-active][data-plan="2"] .s5-pk.t1 { animation: s5-tlock 4.8s linear 1.4s infinite; }
+
+/* the gate on the training route: your switch, or a lock */
+.s5-gate { position: absolute; left: 965px; top: 145px; width: 100px; height: 56px; z-index: 4; }
+.s5-sw { position: absolute; left: 6px; top: 4px; width: 88px; height: 48px; border-radius: 999px; background: #8FA397; box-shadow: 0 4px 10px rgba(40, 30, 20, .2); transition: opacity .35s var(--ease); }
+.s5-sw i { position: absolute; left: 4px; top: 6px; width: 36px; height: 36px; border-radius: 50%; background: var(--bogen); transform: translateX(22px); }
+.s5-lockw { position: absolute; left: 22px; top: 0; width: 56px; height: 56px; padding: 11px; border-radius: 50%; background: #fff; border: 2.5px solid var(--tanne); color: var(--tanne); stroke-width: 2; opacity: 0; transition: opacity .35s var(--ease); box-shadow: 0 4px 10px rgba(40, 30, 20, .16); }
+.s5[data-plan="1"] .s5-sw, .s5[data-plan="2"] .s5-sw { opacity: 0; }
+.s5[data-plan="1"] .s5-lockw, .s5[data-plan="2"] .s5-lockw { opacity: 1; }
+@keyframes s5-swbg { 0%, 44% { background: var(--tanne); } 50%, 94% { background: #B9AE9E; } 100% { background: var(--tanne); } }
+@keyframes s5-swth { 0%, 44% { transform: translateX(44px); } 50%, 94% { transform: translateX(0); } 100% { transform: translateX(44px); } }
+@keyframes s5-shake { 0%, 44% { translate: 0 0; } 47% { translate: 5px 0; } 50% { translate: -5px 0; } 53% { translate: 4px 0; } 56%, 100% { translate: 0 0; } }
+.motion .s5[data-deck-active][data-plan="0"] .s5-sw { animation: s5-swbg 9.6s steps(1, end) 1.4s infinite; }
+.motion .s5[data-deck-active][data-plan="0"] .s5-sw i { animation: s5-swth 9.6s cubic-bezier(.3, 1.4, .5, 1) 1.4s infinite; }
+.motion .s5[data-deck-active][data-plan="1"] .s5-lockw, .motion .s5[data-deck-active][data-plan="2"] .s5-lockw { animation: s5-shake 4.8s linear 1.4s infinite; }
+
+/* the four labels along the route */
+.s5-card { position: absolute; left: 1100px; width: 628px; height: 144px; padding: 0 26px; display: flex; align-items: center; gap: 22px; z-index: 2; transition: background-color .5s var(--ease), border-color .5s var(--ease); }
+.motion [data-deck-active] .s5-card { animation: arr .7s var(--soft) both; animation-delay: calc(var(--row, 0) * 90ms + 300ms); }
+.s5-ico { position: relative; width: 66px; height: 66px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; flex: none; font-size: 34px; color: var(--tanne); }
+.s5-card .kick { margin-bottom: 10px; }
+.s5-cell { display: grid; font-size: 29px; line-height: 1.2; font-weight: 500; letter-spacing: -.01em; text-wrap: balance; }
+.s5-cell > span { grid-area: 1 / 1; opacity: 0; translate: 0 8px; transition: opacity .15s var(--soft), translate .15s var(--soft); }
+.s5[data-plan="0"] .s5-cell > [data-p="0"], .s5[data-plan="1"] .s5-cell > [data-p="1"], .s5[data-plan="2"] .s5-cell > [data-p="2"] {
+  opacity: 1; translate: 0 0; transition: opacity .3s var(--soft) calc(var(--row, 0) * 60ms + 120ms), translate .3s var(--soft) calc(var(--row, 0) * 60ms + 120ms); }
+.s5-eye svg { grid-area: 1 / 1; position: absolute; transition: opacity .3s var(--ease), scale .45s var(--spring); }
+.s5-eye-off { opacity: 1; } .s5-eye-on { opacity: 0; scale: 1 .1; }
+.s5[data-plan="1"] .s5-eye-off, .s5[data-plan="2"] .s5-eye-off { opacity: 0; }
+.s5[data-plan="1"] .s5-eye-on, .s5[data-plan="2"] .s5-eye-on { opacity: 1; scale: 1 1; transition-delay: .15s; }
+.s5-audit { position: absolute; right: 22px; top: calc(50% - 26px); padding: 14px 20px; background: var(--tanne); border-color: var(--tanne); color: var(--bogen); opacity: 0; translate: 0 -34px; transition: opacity .25s var(--ease), translate .55s var(--spring) .35s; z-index: 3; }
+.s5[data-plan="2"] .s5-audit { opacity: 1; translate: 0 0; }
+.s5-card:nth-of-type(2) .s5-cell { padding-right: 168px; }
+.s5-contract { background: var(--amber-tint); border-color: #E9CB8C; }
+.s5[data-plan="1"] .s5-contract, .s5[data-plan="2"] .s5-contract { background: var(--salbei-2); border-color: #BFD1B5; }
+
+.s5-anna, .s5-del { left: 96px; top: 704px; width: 1000px; height: 204px; padding: 18px 30px; }
+.s5-anna { display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+.s5-q { font-size: 34px; line-height: 1.2; font-weight: 500; letter-spacing: -.012em; }
+.s5-votes { display: flex; gap: 16px; }
+.s5-votes .vote { min-width: 250px; justify-content: space-between; }
+.s5-del { display: flex; align-items: center; gap: 28px; }
+.s5-del .s5-q { flex: 1; }
+.s5-demo { position: relative; width: 430px; height: 140px; flex: none; }
+.s5-row { position: absolute; left: 0; top: 10px; width: 430px; height: 64px; border-radius: 16px; background: #fff; border: 2px solid var(--line-strong); display: flex; align-items: center; justify-content: space-between; padding: 0 16px 0 22px; font-size: 28px; font-weight: 500; transform-origin: top; }
+.s5-dots { font-size: 34px; opacity: 0; color: var(--ink-2); }
+.s5-menu { position: absolute; right: 6px; top: 84px; padding: 10px 24px; border-radius: 12px; background: #fff; border: 2px solid var(--mennige-tief); color: var(--mennige-tief); font: 600 26px/1.1 var(--sans); box-shadow: var(--sh); opacity: 0; }
+.s5-cur { position: absolute; left: 0; top: 0; width: 28px; height: 32px; z-index: 3; opacity: 0; transform: translate(60px, 120px); }
+@keyframes s5-d-cur { 0% { opacity: 0; transform: translate(40px, 126px); } 10% { opacity: 1; } 30% { transform: translate(210px, 44px); } 46% { transform: translate(210px, 44px); } 62% { transform: translate(396px, 40px) scale(1); } 66% { transform: translate(396px, 40px) scale(.86); } 70% { transform: translate(396px, 40px) scale(1); } 86% { transform: translate(372px, 104px) scale(1); } 90% { transform: translate(372px, 104px) scale(.86); } 94% { transform: translate(372px, 104px) scale(1); opacity: 1; } 100% { transform: translate(380px, 118px); opacity: 0; } }
+@keyframes s5-d-row { 0%, 28% { background: #fff; } 32%, 88% { background: var(--amber-tint); } 93% { opacity: 1; scale: 1 1; } 100% { opacity: 0; scale: 1 .2; background: var(--amber-tint); } }
+@keyframes s5-d-dots { 0%, 30% { opacity: 0; } 36%, 100% { opacity: 1; } }
+@keyframes s5-d-menu { 0%, 66% { opacity: 0; translate: 0 -8px; } 72%, 90% { opacity: 1; translate: 0 0; } 100% { opacity: 0; translate: 0 0; } }
+.motion .s5-del.is-in .s5-cur { animation: s5-d-cur 3.8s var(--ease) .4s both; }
+.motion .s5-del.is-in .s5-row { animation: s5-d-row 3.8s var(--ease) .4s both; }
+.motion .s5-del.is-in .s5-dots { animation: s5-d-dots 3.8s var(--ease) .4s both; }
+.motion .s5-del.is-in .s5-menu { animation: s5-d-menu 3.8s var(--ease) .4s both; }
+.s5-src { left: 96px; top: 934px; }
+
+/* ═══ S6 where it lives ═══ */
+.s6 { transition: background-color .8s var(--ease), color .8s var(--ease); }
+.s6[data-s="3"] { --paper: #3A322C; --surface: #453C35; --tint: #4F453D; --ink: #F7F4EE; --ink-2: #E6DDD1; --ink-soft: #D9CFC3; --muted: #D3C8BB; --line: rgba(247, 244, 238, .16); --line-strong: rgba(247, 244, 238, .32); --accent: #F08A63; --accent-soft: #F2C6B6; --tanne: #BFD8C5; --salbei-2: #3F5546; --amber-tint: #55462C; --mennige-tint: #5A3A2D; }
+.s6[data-s="3"] .amb i:nth-child(1) { background: radial-gradient(closest-side, rgba(70, 110, 85, .45), rgba(70, 110, 85, 0)); }
+.s6[data-s="3"] .amb::after { opacity: .25; }
+.s6-h { left: 96px; top: 112px; }
+.s6-art { left: 96px; top: 322px; width: 1004px; height: 600px; }
+.s6-svg { position: absolute; left: 0; top: 0; width: 1004px; height: 600px; overflow: visible; }
+.s6-border { stroke-dashoffset: 0; }
+@keyframes s6-dash { to { stroke-dashoffset: -28; } }
+.motion .s6[data-deck-active] .s6-border { animation: s6-dash 1s linear infinite; }
+.s6-pkt { position: absolute; left: 724px; top: 282px; width: 62px; height: 46px; border-radius: 11px; background: var(--bernstein); border: 3px solid var(--tanne); box-shadow: 0 6px 14px rgba(40, 30, 20, .18); }
+.s6-pkt::after { content: ""; position: absolute; left: 10px; right: 10px; top: 10px; height: 5px; border-radius: 3px; background: var(--tanne); box-shadow: 0 10px 0 var(--tanne); }
+@keyframes s6-slide { from { transform: translate(-424px, -118px); } 60% { transform: translate(14px, 4px); } to { transform: translate(0, 0); } }
+.motion .s6-pkt.is-in { animation: s6-slide 1.3s cubic-bezier(.4, 0, .2, 1) both; }
+.s6-drawer { position: absolute; left: 0; top: 352px; width: 420px; height: 282px; padding: 18px 20px; border-radius: 24px; background: var(--amber-tint); border: 2px solid #E9CB8C; }
+.s6-dl { display: flex; align-items: center; gap: 10px; font: 600 24px/1 var(--mono); color: #6B4506; margin-bottom: 14px; }
+.s6-files { display: grid; grid-template-columns: repeat(8, 44px); gap: 5px; }
+.s6-files i { position: relative; display: block; width: 44px; height: 36px; border-radius: 5px 11px 5px 5px; background: #fff; border: 2px solid #D6CCBB; transition: background-color .3s var(--ease) calc(var(--i) * 20ms), border-color .3s var(--ease) calc(var(--i) * 20ms); }
+.s6-files i::after { content: ""; position: absolute; left: 8px; right: 8px; top: 12px; height: 3px; border-radius: 2px; background: #D6CCBB; box-shadow: 0 7px 0 #D6CCBB; }
+.s6-files.reach i { background: var(--amber-tint); border-color: var(--bernstein); }
+@keyframes s6-fly { 0% { translate: 0 0; opacity: 1; scale: 1; } 20% { translate: 0 -34px; opacity: 1; } 82% { opacity: 1; } 100% { translate: var(--tx, 0px) var(--ty, -120px); opacity: 0; scale: .6; } }
+.s6-files i.rd.fly { z-index: 4; background: var(--bernstein); border-color: var(--tanne); box-shadow: 0 4px 10px rgba(40, 30, 20, .2); animation: s6-fly 1.15s cubic-bezier(.5, 0, .4, 1) calc(var(--i) * 20ms) forwards; }
+.s6-files i.rd.fly::after { background: var(--tanne); box-shadow: 0 7px 0 var(--tanne); }
+@keyframes s6-hit { 40% { scale: 1.22; } }
+.motion .s6-pkt.hit { animation: s6-hit .5s var(--spring); }
+.s6-files i.rd.gone { opacity: 0; }
+.s6-predict { left: 1160px; top: 140px; width: 664px; padding: 28px 34px 32px; }
+.s6-pq { font-size: 36px; line-height: 1.2; font-weight: 500; letter-spacing: -.015em; margin: 14px 0 22px; }
+.s6-opts { display: grid; gap: 12px; }
+.s6-opts .vote { height: 72px; justify-content: space-between; font-size: 24px; padding-left: 22px; transition: opacity .4s var(--ease), background-color .2s, border-color .2s, box-shadow .4s; }
+.s6[data-s="2"] .s6-opts .vote:not(.s6-right) { opacity: .4; }
+.s6[data-s="2"] .s6-right { border-color: var(--tanne); background: var(--salbei-2); box-shadow: 0 0 0 6px rgba(31, 74, 56, .16); }
+.s6-cap { left: 1160px; top: 640px; width: 664px; font-size: 40px; line-height: 1.2; font-weight: 500; letter-spacing: -.02em; }
+.s6-cap b { display: block; margin-top: 10px; font-weight: 600; color: var(--accent); }
+.s6-globe { left: 860px; top: 304px; width: 964px; height: 676px; border-radius: 38px; background: #F3F0E9; box-shadow: var(--sh-up); overflow: hidden; }
+.s6-globe canvas { width: 100%; height: 100%; display: block; }
+.s6-side { left: 96px; top: 322px; width: 700px; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+.s6-side .pill { white-space: normal; line-height: 1.3; letter-spacing: .03em; background: var(--surface); font-size: 28px; padding: 18px 30px; }
+.s6-p1 { font-size: 30px; padding: 20px 30px; }
+.s6-fill { font-size: 40px; line-height: 1.25; font-weight: 500; letter-spacing: -.015em; margin: 18px 0 26px; }
+.s6-blank { display: block; width: 360px; height: 1em; border-bottom: 3px solid currentColor; }
+.s6-side .src { max-width: 700px; }
+
+/* ═══ S7 right account, right data ═══ */
+.s7-kick { left: 96px; top: 114px; }
+.s7-rules { left: 96px; top: 154px; width: 1728px; display: flex; gap: 32px; }
+.s7-rule { flex: 1; display: flex; align-items: flex-start; gap: 20px; padding: 20px 26px; min-height: 172px; }
+.s7-rule .lt { width: 60px; height: 60px; }
+.s7-rule .kick { margin-bottom: 8px; }
+.s7-rule p:last-child { font-size: 28px; line-height: 1.25; font-weight: 500; }
+.s7-rule.g { background: var(--salbei-2); border-color: #BFD1B5; }
+.s7-rule.a { background: var(--amber-tint); border-color: #E9CB8C; }
+.s7-rule.r { background: var(--mennige-tint); border-color: #EBB9A6; }
+.s7-chat { left: 96px; top: 352px; width: 1040px; height: 410px; }
+.s7-chat.dragging { z-index: 8; }
+.s7-head { display: flex; align-items: center; gap: 22px; height: 98px; padding: 0 30px; border-bottom: 1.5px solid var(--line); }
+.s7-no { color: var(--ink); font-weight: 700; }
+.s7-acct { margin-left: 6px; font-size: 30px; padding: 14px 26px; letter-spacing: .08em; }
+.s7-acct.company { background: var(--salbei-2); border-color: #BFD1B5; color: var(--tanne); }
+.s7-acct.personal { background: var(--amber-tint); border-color: #E9CB8C; color: #6B4506; }
+.s7-timer { margin-left: auto; width: 68px; height: 68px; }
+.timer.paused .timer-fg { animation-play-state: paused; }
+.s7-hint { position: absolute; left: 0; right: 0; top: 190px; text-align: center; font-size: 36px; font-weight: 500; color: var(--muted); }
+.s7-deck { position: relative; height: 310px; }
+.s7-card { position: absolute; inset: 24px 30px 26px; display: flex; align-items: center; padding: 26px 36px; border-radius: 26px; background: var(--paper); border: 2px solid var(--line-strong);
+  font-size: 41px; line-height: 1.22; font-weight: 500; letter-spacing: -.015em; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; opacity: 0; pointer-events: none; box-shadow: var(--sh); }
+.s7-card.is-cur { opacity: 1; pointer-events: auto; }
+.s7-card.drag { cursor: grabbing; box-shadow: var(--sh-up); z-index: 5; }
+.s7-card.ghost { scale: .55; opacity: .55; transition: scale .3s var(--ease), opacity .3s var(--ease); }
+@keyframes s7-drop { from { opacity: 0; translate: 0 -62px; } 62% { translate: 0 6px; opacity: 1; } to { translate: 0 0; } }
+.motion .s7-card.drop { animation: s7-drop .4s var(--ease) both; }
+.s7-lamps { left: 1196px; top: 352px; width: 628px; display: flex; justify-content: space-between; }
+.s7-lamp { position: relative; appearance: none; border: 0; background: none; padding: 0; width: 188px; height: 188px; cursor: pointer; }
+.s7-lamp::after { content: attr(aria-label); position: absolute; left: 0; right: 0; top: 204px; text-align: center; font: 600 24px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.s7-front { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 4px solid var(--line-strong); font: 700 64px/1 var(--mono); color: var(--ink-2);
+  box-shadow: var(--sh); transition: transform .35s var(--ease), opacity .2s var(--ease), border-color .2s, scale .25s var(--spring); }
+.s7-lamp:hover .s7-front { border-color: var(--tanne); }
+.s7-lamp.hot .s7-front { border-color: var(--tanne); scale: 1.08; background: var(--salbei-2); }
+.s7-lit { position: absolute; inset: 0; width: 188px; height: 188px; opacity: 0; transform: perspective(520px) rotateX(90deg); filter: drop-shadow(0 8px 16px rgba(40, 30, 20, .22)); }
+.s7-lamp b { position: absolute; right: -8px; bottom: -4px; min-width: 56px; height: 56px; padding: 0 14px; border-radius: 999px; display: grid; place-items: center; background: var(--ink); color: var(--bogen); font: 700 28px/1 var(--mono); border: 4px solid var(--paper); transition: opacity .2s, scale .2s var(--spring); }
+.s7-lamp:not(.has) b { opacity: .38; }
+.s7-lamps.revealed .s7-front { transform: perspective(520px) rotateX(-90deg); opacity: 0; }
+.s7-lamps.revealed .s7-lit { opacity: 1; transform: perspective(520px) rotateX(0); transition: transform .26s var(--ease) calc(var(--li, 0) * 80ms), opacity .1s calc(var(--li, 0) * 80ms); }
+.s7-lamps.revealed .s7-lamp:not(.win) .s7-lit { opacity: .3; }
+@keyframes s7-win { 0% { scale: 1; } 40% { scale: 1.2; } 100% { scale: 1; } }
+.motion .s7-lamps.revealed .s7-lamp.win .s7-lit { animation: s7-win .6s var(--spring) .38s; }
+.s7-lamp:nth-child(1) { --li: 0; } .s7-lamp:nth-child(2) { --li: 1; } .s7-lamp:nth-child(3) { --li: 2; }
+.s7-reason { left: 1196px; top: 612px; width: 628px; min-height: 120px; font-size: 36px; line-height: 1.22; font-weight: 600; letter-spacing: -.015em; }
+.s7-reason b { display: block; font: 600 24px/1 var(--mono); letter-spacing: .12em; margin-bottom: 10px; }
+.s7-reason[data-light="g"] { color: var(--tanne); } .s7-reason[data-light="a"] { color: #7A4E06; } .s7-reason[data-light="r"] { color: var(--mennige-tief); }
+.s7-score { left: 96px; top: 796px; display: flex; gap: 18px; }
+.s7-score i { width: 60px; height: 60px; border-radius: 50%; border: 3px dashed var(--line-strong); display: grid; place-items: center; }
+.s7-score i .lt { width: 60px; height: 60px; animation: none; }
+.s7-score i.on { border: 0; }
+@keyframes s7-dot { from { scale: .3; opacity: 0; } }
+.motion .s7-score i.on .lt { animation: s7-dot .4s var(--spring); }
+.s7-close { left: 96px; top: 890px; font-size: 54px; font-weight: 600; letter-spacing: -.025em; color: var(--accent); }
+
+/* ═══ S8 clean it by hand ═══ */
+.s8-h { left: 96px; top: 112px; width: 1728px; }
+.s8-do { left: 96px; top: 226px; width: 1728px; font-size: 36px; line-height: 1.25; font-weight: 500; letter-spacing: -.015em; color: var(--ink-2); }
+.s8-do b { font: 600 24px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-right: 18px; vertical-align: .12em; }
+.s8-mail { left: 96px; top: 330px; width: 1010px; padding: 34px 44px 44px; }
+.s8-mh { display: flex; align-items: center; gap: 12px; font: 600 24px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 38px; }
+.s8-body { font-size: 46px; line-height: 1.5; font-weight: 500; letter-spacing: -.012em; }
+.s8-body + .s8-body { margin-top: 14px; }
+.pii { color: var(--mennige-tief); background: var(--mennige-tint); padding: 2px 10px; margin: 0 -2px; border-radius: 12px; font-weight: 600; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: color .25s var(--ease), background-color .3s var(--ease); }
+.s8[data-s="1"] .pii { color: transparent; background: repeating-linear-gradient(135deg, #E3DACB 0 8px, #EFE8DB 8px 16px); }
+.s8-chips { left: 1160px; top: 346px; width: 664px; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.s8-slot { display: grid; place-items: center; height: 88px; border-radius: 999px; border: 3px dashed var(--line-strong); position: relative; }
+.s8-slot > * { grid-area: 1 / 1; }
+.s8-ghost { font: 600 28px/1 var(--mono); letter-spacing: .06em; color: #C9BEAC; transition: opacity .3s var(--ease); }
+.s8[data-s="1"] .s8-ghost { opacity: 0; }
+.s8-chip { font-size: 28px; padding: 0; width: 100%; height: 100%; justify-content: center; border-width: 3px; background: var(--mennige-tint); border-color: #EBB9A6; color: var(--mennige-tief); }
+.motion .s8:not([data-s="1"]) .s8-chip { opacity: 0; scale: .6; }
+.s8-chip { transition: opacity .3s var(--ease), scale .35s var(--spring); }
+.s8-slot:nth-child(2) .s8-chip { transition-delay: .12s; } .s8-slot:nth-child(3) .s8-chip { transition-delay: .24s; } .s8-slot:nth-child(4) .s8-chip { transition-delay: .36s; }
+.s8-prompt { left: 1160px; top: 566px; width: 664px; }
+.s8[data-s="1"] .s8-slot { border-color: transparent; transition: border-color .3s var(--ease); }
+
+/* ═══ S9 the EU AI Act in four boxes ═══ */
+.s9-h { left: 96px; top: 112px; }
+.s9-banner { left: 1100px; top: 106px; width: 724px; height: 112px; display: flex; align-items: center; gap: 18px; padding: 0 26px; background: var(--salbei-2); border-color: #BFD1B5; }
+.s9-banner .ic { font-size: 46px; color: var(--tanne); }
+.s9-banner p { font-size: 27px; line-height: 1.22; font-weight: 500; }
+.s9-tl { left: 96px; top: 214px; width: 1728px; height: 96px; transition: clip-path 1.1s var(--ease); }
+.motion .s9[data-s="0"] .s9-tl { clip-path: inset(0 100% 0 0); }
+.motion .s9[data-s="1"] .s9-tl { clip-path: inset(0 80% 0 0); }
+.motion .s9[data-s="2"] .s9-tl { clip-path: inset(0 53% 0 0); }
+.motion .s9[data-s="3"] .s9-tl { clip-path: inset(0 26% 0 0); }
+.s9-boxes { left: 96px; top: 324px; width: 1728px; height: 384px; }
+.s9-ghost { position: absolute; left: calc(var(--bx) * 440px); top: 0; width: 408px; height: 384px; border-radius: 28px; border: 3px dashed var(--line-strong); }
+.s9-box { position: absolute; left: calc(var(--bx) * 440px); top: 0; width: 408px; height: 384px; border-radius: 28px; border: 2px solid; display: flex; flex-direction: column; box-shadow: var(--sh); overflow: hidden; }
+.motion .s9-box.step { transition: opacity .5s var(--soft), translate .85s var(--spring); }
+.motion .s9-box.step:not(.is-in) { translate: 0 64px; }
+.s9-box header { display: flex; align-items: center; gap: 16px; padding: 22px 24px 10px; }
+.s9-box header .ic { font-size: 46px; flex: none; }
+.s9-tag { font: 700 30px/1.1 var(--mono); letter-spacing: .02em; }
+.s9-date { font: 500 24px/1.3 var(--mono); color: var(--ink-2); }
+.s9-zone { flex: 1; padding: 6px 18px 18px; display: flex; flex-direction: column; gap: 12px; color: var(--ink); }
+.s9-box[data-b="banned"] { background: var(--mennige-tint); border-color: #EBB9A6; color: var(--mennige-tief); }
+.s9-box[data-b="tell"] { background: var(--amber-tint); border-color: #E9CB8C; color: #6B4506; }
+.s9-box[data-b="high"] { background: #fff; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent), var(--sh); color: var(--accent); }
+.s9-box[data-b="every"] { background: var(--salbei-2); border-color: #BFD1B5; color: var(--tanne); }
+@keyframes s9-hit { 40% { scale: 1.035; } }
+.motion .s9-box.hit { animation: s9-hit .5s var(--spring); }
+.s9-guess { left: 96px; top: 764px; width: 1728px; height: 120px; display: flex; align-items: center; gap: 36px; padding: 0 30px; }
+.s9-gq { width: 540px; font-size: 34px; line-height: 1.2; font-weight: 500; letter-spacing: -.012em; flex: none; }
+.s9-gopts { display: flex; gap: 14px; flex: 1; justify-content: flex-end; }
+.s9-gopts .vote { font-size: 24px; height: 68px; padding: 0 8px 0 20px; }
+.motion .s9-guess.step.is-gone { transition-duration: .15s; }
+.motion .s9-tray.step.is-in { transition-delay: .2s; }
+.s9-tray { left: 96px; top: 772px; width: 1728px; height: 108px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+.s9-slot { display: block; height: 108px; border-radius: 22px; border: 3px dashed transparent; }
+.s9-slot:empty { border-color: var(--line-strong); }
+.s9-use { appearance: none; display: block; width: 100%; height: 100%; text-align: left; font-family: var(--sans); color: var(--ink); background: #fff; border: 2px solid var(--line-strong); border-radius: 20px; padding: 14px 18px; cursor: pointer; box-shadow: var(--sh); transition: translate .2s var(--ease), box-shadow .2s var(--ease), border-color .2s; }
+.s9-use:hover { translate: 0 -4px; border-color: var(--tanne); box-shadow: var(--sh-up); }
+.s9-ut { display: block; font-size: 25px; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; }
+.s9-ur { display: none; font-size: 24px; line-height: 1.25; font-weight: 500; color: var(--ink-2); margin-top: 8px; }
+.s9-use.placed { height: auto; cursor: default; box-shadow: none; padding: 12px 16px; border-color: currentColor; }
+.s9-use.placed:hover { translate: 0 0; }
+.s9-use.placed .s9-ur { display: block; }
+.s9-box[data-b="banned"] .s9-use.placed { border-color: #EBB9A6; } .s9-box[data-b="tell"] .s9-use.placed { border-color: #E9CB8C; }
+.s9-box[data-b="high"] .s9-use.placed { border-color: #EBB9A6; } .s9-box[data-b="every"] .s9-use.placed { border-color: #BFD1B5; }
+.s9-close { left: 96px; top: 784px; font-size: 56px; font-weight: 600; letter-spacing: -.026em; color: var(--accent); }
+.s9-ask { left: 96px; top: 722px; color: var(--tanne); }
+.s9-eu { left: 96px; top: 924px; width: 1728px; display: flex; gap: 48px; }
+.s9-eu .src { flex: 1; }
+
+/* ═══ S10 ask in writing ═══ */
+.s10-h { left: 96px; top: 112px; width: 1728px; }
+.s10-box { left: 96px; top: 252px; width: 1150px; height: 690px; padding: 28px 32px; }
+.s10-box .kick { display: flex; align-items: center; gap: 12px; }
+.s10-pick { margin-left: auto; color: var(--ink-2); letter-spacing: .04em; text-transform: none; font-weight: 600; }
+.s10-ghost { position: absolute; left: 32px; right: 32px; top: calc(75px + var(--k) * 194px); height: 172px; border-radius: 24px; border: 3px dashed var(--line-strong); }
+.s10-q { appearance: none; position: relative; z-index: 1; display: flex; align-items: center; gap: 20px; width: 100%; margin-top: 22px; padding: 0 26px 0 24px; min-height: 172px; border-radius: 24px; background: var(--paper); border: 2px solid var(--line-strong); text-align: left; cursor: pointer; font-family: var(--sans); color: var(--ink);
+  transition: background-color .25s var(--ease), border-color .25s var(--ease), opacity .5s var(--soft), translate .6s var(--soft); }
+.s10-q:hover { border-color: var(--tanne); }
+.motion .s10-q.step[data-from="left"]:not(.is-in) { translate: -80px 0; }
+.s10-env { font-size: 58px; color: var(--tanne); }
+.s10-n { width: 48px; height: 48px; border-radius: 50%; background: var(--ink); color: #fff; font: 700 26px/1 var(--mono); display: grid; place-items: center; flex: none; }
+.s10-t { font-size: 33px; line-height: 1.2; font-weight: 500; letter-spacing: -.012em; flex: 1; }
+.s10-q b { min-width: 60px; height: 52px; border-radius: 999px; padding: 0 14px; display: grid; place-items: center; background: var(--tint); font: 700 26px/1 var(--mono); flex: none; }
+.s10-q.has { border-color: var(--tanne); background: var(--salbei-2); }
+.s10-q.has b { background: var(--tanne); color: var(--bogen); }
+.s10-side { left: 1320px; top: 252px; width: 504px; display: flex; flex-direction: column; gap: 30px; }
+.s10-send { appearance: none; height: 92px; border-radius: 999px; background: var(--accent); color: #fff; border: 0; font: 700 30px/1 var(--mono); letter-spacing: .01em; cursor: pointer; box-shadow: 0 8px 0 var(--accent-deep), var(--sh); transition: translate .15s var(--ease), box-shadow .15s var(--ease), background-color .2s; }
+.s10-send:hover { translate: 0 -2px; box-shadow: 0 10px 0 var(--accent-deep), var(--sh-up); }
+.s10-send:active { translate: 0 6px; box-shadow: 0 2px 0 var(--accent-deep); }
+.s10-send.done { background: var(--tanne); box-shadow: 0 8px 0 #143327, var(--sh); }
+.s10-stamp { align-self: flex-start; margin-left: 30px; rotate: -6deg; font-size: 26px; }
+.s10-gap { border: 3px dashed var(--line-strong); border-radius: 28px; padding: 24px 28px 26px; }
+.s10-gap .kick { color: var(--muted); line-height: 1.35; margin-bottom: 14px; text-transform: none; letter-spacing: .04em; }
+.s10-gap ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.s10-gap li { font-size: 30px; font-weight: 500; line-height: 1.2; padding-left: 28px; position: relative; }
+.s10-gap li::before { content: ""; position: absolute; left: 0; top: .5em; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); }
+.s10-plane { position: absolute; left: 1290px; top: 830px; opacity: 0; width: 96px; height: 96px; z-index: 6; fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+@keyframes s10-fly { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 12% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(560px, -150px) rotate(-14deg); } }
+.motion .s10-plane.is-in { animation: s10-fly 1.5s cubic-bezier(.5, 0, .7, .6) .45s both; }
+
+/* ═══ S11 your page ═══ */
+.s11-h { left: 96px; top: 112px; }
+.s11-sheet { left: 96px; top: 238px; width: 1040px; height: 736px; filter: drop-shadow(0 18px 30px rgba(40, 30, 20, .12)); }
+.s11-outline { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.s11-outline rect { stroke-dasharray: 100; stroke-dashoffset: 0; }
+@keyframes s11-draw { from { stroke-dashoffset: 100; } }
+@keyframes s11-fill { from { fill-opacity: 0; } }
+.motion .s11[data-deck-active] .s11-outline rect { animation: s11-draw .9s var(--ease) both, s11-fill .5s var(--ease) .55s both; }
+.s11-lines { position: absolute; inset: 0; padding: 58px 62px; display: flex; flex-direction: column; gap: 46px; }
+.s11-l { display: flex; gap: 22px; font-size: 36px; line-height: 1.36; font-weight: 500; letter-spacing: -.01em; }
+.s11-l b { flex: none; width: 48px; height: 48px; margin-top: 4px; border-radius: 50%; background: var(--ink); color: #fff; display: grid; place-items: center; font: 700 26px/1 var(--mono); }
+.s11-l span { text-wrap: balance; }
+.s11-bl { display: inline-block; width: 136px; height: 1em; border-bottom: 3px solid var(--ink); vertical-align: -3px; }
+.s11-bl.s { width: 112px; }
+.s11-bl::after { content: ""; display: inline-block; width: 3px; height: .9em; margin-left: 6px; background: var(--accent); opacity: 0; vertical-align: -.1em; }
+.s11:is([data-s="1"], [data-s="2"], [data-s="3"]) .s11-bl::after { opacity: 1; animation: caret 1s steps(2) infinite; }
+.s11-ex { position: absolute; left: 62px; right: 62px; bottom: 44px; }
+.s11-ex span { display: inline-block; padding: 14px 24px; border-radius: 18px; background: var(--mennige-tint); color: var(--mennige-tief); font-size: 28px; line-height: 1.3; font-weight: 500; }
+.s11-ex { transition: opacity .6s var(--ease); }
+.s11:is([data-s="1"], [data-s="2"], [data-s="3"]) .s11-ex { opacity: 0; }
+.s11-rules { display: flex; gap: 34px; margin: 6px 0 0 70px; font-size: 34px; font-weight: 600; }
+@keyframes s11-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.motion .s11[data-deck-active] .s11-l, .motion .s11[data-deck-active] .s11-rules { animation: s11-type .9s steps(30) calc(var(--i) * .55s + 1.1s) both; }
+.motion .s11[data-deck-active] .s11-ex { animation: arr .6s var(--soft) 1.9s both; }
+.s11-clock { left: 1230px; top: 252px; width: 594px; display: flex; flex-direction: column; align-items: center; gap: 36px; }
+.s11-ring { position: relative; width: 390px; height: 390px; }
+.s11-timer { width: 100%; height: 100%; display: block; }
+.s11-time { position: absolute; inset: 0; display: grid; place-items: center; font: 600 100px/1 var(--mono); letter-spacing: -.045em; font-variant-numeric: tabular-nums; }
+.s11-phases { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+.s11-phases .pill { justify-content: center; font-size: 26px; padding: 18px 24px; opacity: .5; transition: opacity .3s var(--ease), background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); }
+.s11-phases .pill.on { opacity: 1; background: var(--tanne); border-color: var(--tanne); color: var(--bogen); }
+
+/* ═══ S12 the end vote ═══ */
+.s12-h { left: 96px; top: 112px; }
+.s12-rows { left: 96px; top: 222px; width: 1728px; display: flex; flex-direction: column; gap: 16px; }
+.s12-row { position: relative; display: flex; align-items: center; gap: 26px; height: 236px; padding: 0 30px; }
+.s12-main { flex: 1; min-width: 0; }
+.s12-sent { font-size: 38px; font-weight: 600; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 22px; }
+.s12-bars { display: grid; grid-template-columns: 90px 1fr; gap: 9px 14px; align-items: center; margin-bottom: 16px; }
+.s12-bl { font: 600 24px/1 var(--mono); color: var(--muted); letter-spacing: .08em; }
+.s12-seg { display: flex; height: 24px; border-radius: 999px; background: var(--tint); overflow: hidden; }
+.s12-seg i[data-bar] { display: block; height: 100%; transform: none; flex: var(--share, 0) 1 0; min-width: 0; transition: flex-grow .45s var(--ease); }
+.s12-seg i:nth-child(1) { background: var(--tanne); } .s12-seg i:nth-child(2) { background: var(--accent); } .s12-seg i:nth-child(3) { background: #B9AE9E; }
+.s12-then { opacity: .7; }
+.motion [data-deck-active] .s12-then { animation: s12-l .8s var(--soft) calc(var(--i, 0) * 120ms + .4s) both; }
+.motion [data-deck-active] .s12-now, .motion [data-deck-active] .s12-votes { animation: s12-r .8s var(--soft) calc(var(--i, 0) * 120ms + .5s) both; }
+@keyframes s12-l { from { opacity: 0; translate: -70px 0; } }
+@keyframes s12-r { from { opacity: 0; translate: 70px 0; } }
+.s12-votes { display: flex; gap: 14px; }
+.s12-votes .vote { flex: 1; font-size: 24px; height: 62px; padding: 0 10px 0 18px; justify-content: space-between; }
+.s12-votes .vote::before { content: ""; width: 14px; height: 14px; border-radius: 50%; flex: none; margin-right: -4px; }
+.s12-votes .vote:nth-child(1)::before { background: var(--tanne); } .s12-votes .vote:nth-child(2)::before { background: var(--accent); } .s12-votes .vote:nth-child(3)::before { background: #B9AE9E; }
+.s12-votes .vote span { flex: 1; text-align: left; }
+.s12-votes .vote b { height: 44px; }
+.s12-slot { width: 470px; flex: none; display: grid; place-items: center; }
+.s12-slot > * { grid-area: 1 / 1; }
+.s12-q { width: 108px; height: 108px; font-size: 60px; }
+.s12-stamp { width: 470px; border: 5px solid var(--mennige-tief); color: var(--mennige-tief); border-radius: 14px; padding: 14px 22px; font-size: 28px; line-height: 1.22; font-weight: 500; rotate: -4deg; background: rgba(255, 255, 255, .7); }
+.s12-stamp b { display: block; font-size: 31px; line-height: 1.15; font-weight: 700; margin-bottom: 4px; }
+.s12-stamp.half { border-color: #7A4E06; color: #7A4E06; }
+.motion .s12-stamp.step { transition: none; }
+.motion .s12-stamp.step.is-in { animation: thud .26s var(--ease) both; }
+.s12-final { left: 96px; top: 226px; width: 1060px; height: 740px; }
+.s12-sheet { position: relative; width: 1060px; height: 740px; filter: drop-shadow(0 18px 30px rgba(40, 30, 20, .12)); }
+.s12-outline { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.s12-outline rect { stroke-dasharray: 100; stroke-dashoffset: 0; }
+.motion .s12-final.is-in .s12-outline rect { animation: s11-draw .9s var(--ease) both, s11-fill .5s var(--ease) .55s both; }
+.s12-page { position: absolute; inset: 0; padding: 46px 58px; display: flex; flex-direction: column; gap: 26px; }
+.s12-pl { display: flex; gap: 20px; font-size: 32px; line-height: 1.3; font-weight: 500; letter-spacing: -.008em; }
+.s12-pl b { flex: none; width: 46px; height: 46px; margin-top: 3px; border-radius: 50%; background: var(--tanne); color: #fff; display: grid; place-items: center; font: 700 26px/1 var(--mono); }
+.s12-rl { display: grid; gap: 18px; margin-top: 10px; padding-top: 28px; border-top: 2px solid var(--line); }
+.s12-rl p { display: flex; align-items: center; gap: 18px; font-size: 30px; line-height: 1.25; font-weight: 500; }
+.s12-rl .lt { width: 46px; height: 46px; }
+.s12-rl b { font-weight: 700; margin-right: 8px; }
+.motion .s12-final.is-in .s12-k, .motion .s12-final.is-in .s12-pl, .motion .s12-final.is-in .s12-rl p { animation: s11-type .8s steps(26) calc(var(--j) * .3s + .9s) both; }
+.s12-end { left: 1196px; top: 226px; width: 628px; height: 740px; display: flex; flex-direction: column; }
+.s12-mon { font-size: 52px; font-weight: 600; letter-spacing: -.025em; margin-bottom: 40px; }
+.s12-mon .s11-bl { width: 240px; border-bottom-color: var(--accent); }
+.s12-qr { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 34px 28px 36px; }
+.s12-qr img { display: block; width: 330px; height: 330px; border-radius: 16px; }
+.s12-qr > div { text-align: center; }
+.s12-url { font: 600 24px/1.4 var(--mono); letter-spacing: -.01em; margin-top: 8px; }
+.s12-url span { display: block; }
+.s12-by { margin-top: auto; font: 600 30px/1 var(--mono); color: var(--tanne); }
+
+/* ═══ appendix ═══ */
+.sa-kick { left: 96px; top: 74px; }
+.sa-h { left: 96px; top: 108px; }
+.sa1-table { left: 96px; top: 238px; width: 1728px; padding: 16px 44px 22px; }
+.sa1-head, .sa1-row { display: grid; grid-template-columns: 1fr 260px 260px; align-items: center; }
+.sa1-head { font: 700 26px/1 var(--mono); letter-spacing: .1em; color: var(--muted); height: 64px; border-bottom: 2px solid var(--line-strong); }
+.sa1-head span:nth-child(n+2), .sa1-row > :nth-child(n+2) { justify-self: center; }
+.sa1-row { height: 78px; border-bottom: 1.5px solid var(--line); font-size: 34px; font-weight: 500; letter-spacing: -.01em; }
+.sa1-row .lt { width: 48px; height: 48px; }
+.sa1-no { display: block; width: 30px; height: 5px; border-radius: 3px; background: var(--line-strong); }
+.sa1-row b { font: 700 28px/1 var(--mono); color: var(--tanne); letter-spacing: .06em; }
+.sa1-last { border-bottom: 0; }
+.sa1-src { left: 96px; top: 914px; width: 1728px; }
+.sa2-cards { left: 96px; top: 262px; width: 1728px; display: flex; gap: 36px; }
+.sa2-card { flex: 1; min-height: 520px; padding: 40px 38px; }
+.sa2-ico { width: 104px; height: 104px; border-radius: 50%; background: var(--tint); display: grid; place-items: center; font-size: 54px; color: var(--tanne); margin-bottom: 30px; }
+.sa2-card h3 { font-size: 52px; font-weight: 600; letter-spacing: -.025em; margin-bottom: 18px; }
+.sa2-card p { font-size: 33px; line-height: 1.32; font-weight: 500; color: var(--ink-2); }
+
+/* Appendix polish (A1, A2). Loaded after the other partials, so these rules win at equal specificity. */
+/* A1: the feature names stay on the slide, each press pops one row of marks in */
+.motion .sa1-row .step:not(.is-in) { translate: 0 0; scale: .35; }
+.motion .sa1-row .step { transition: opacity .35s var(--soft), scale .5s var(--spring); }
+.sa1-no { background: var(--muted); opacity: .55; }
+.sa1-row b { font-size: 32px; }
+/* A2: fill the slide, bigger text at the back of a room */
+.sa2-cards { top: 270px; }
+.sa2-card { min-height: 640px; padding: 46px 42px; }
+.sa2-ico { width: 120px; height: 120px; font-size: 62px; margin-bottom: 40px; }
+.sa2-card h3 { font-size: 58px; margin-bottom: 22px; }
+.sa2-card p { font-size: 36px; line-height: 1.32; }
+
+/* S11: the two phases still to come must stay readable from the back of the room */
+.s11-phases .pill:not(.on) { opacity: .85; color: var(--ink-2); }
+
+</style>
+<script src="./lib/deck-stage.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- traffic lights: glyph plus colour, never colour alone -->
+    <symbol id="lt-g" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1F4A38"/><path d="M6.8 12.4l3.6 3.6 6.8-7" fill="none" stroke="#F7F4EE" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="lt-a" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.2" fill="#D9A441" stroke="#1F4A38" stroke-width="2"/><path d="M7.4 12h9.2" stroke="#1F4A38" stroke-width="2.8" stroke-linecap="round"/></symbol>
+    <symbol id="lt-r" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#97300F"/><path d="M8.2 8.2l7.6 7.6M15.8 8.2l-7.6 7.6" stroke="#F7F4EE" stroke-width="2.6" stroke-linecap="round"/></symbol>
+    <!-- line icons, 24 grid -->
+    <symbol id="i-laptop" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="11" rx="2"/><path d="M2 19.5h20"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.5 18.5h10.6a4 4 0 0 0 .6-7.95 5.6 5.6 0 0 0-10.7-1.3A4.7 4.7 0 0 0 6.5 18.5z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.4h2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.2" cy="9" r="2.4"/><path d="M17.5 14c2.4.2 3.9 1.9 3.9 4.6"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-5 4v-4H4z"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><path d="M3 3l18 18"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.2 2"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2.5h8l5 5v14H6z"/><path d="M14 2.5v5h5M9 12.5h7M9 16.5h7"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6h6.2l2 2.2H21V19H3z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.2"/><path d="M3.5 7.5L12 13.5l8.5-6"/></symbol>
+    <symbol id="i-plane" viewBox="0 0 24 24"><path d="M3 11.5L21 3l-8.5 18-2.3-7.7z"/><path d="M10.2 13.3L21 3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.6l4.6 4.6L19 7.6"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6-4.5-4.2 6.1-.8z"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></symbol>
+    <symbol id="i-ghost" viewBox="0 0 24 24"><path d="M5.5 21V10.5a6.5 6.5 0 0 1 13 0V21l-3.2-2.2L12 21l-3.3-2.2z"/><circle cx="9.7" cy="10.5" r=".9"/><circle cx="14.3" cy="10.5" r=".9"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6 8h12v3.5a6 6 0 0 1-12 0z"/><path d="M12 17.5V21"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 12.5l9 5 9-5M3 16.5l9 5 9-5"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l1-4.5L16.5 4 20 7.5 8.5 19z"/><path d="M14.5 6l3.5 3.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8l7.5 3v5.7c0 4.6-3.2 8.4-7.5 9.7-4.3-1.3-7.5-5.1-7.5-9.7V5.8z"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 21c0-4.2 3.4-7.2 7.5-7.2s7.5 3 7.5 7.2"/></symbol>
+  </defs>
+</svg>
+
+<a class="deck-back" href="/workshops/ki-im-unternehmen-sicher-nutzen" aria-label="Back to the workshop page">← Workshop</a>
+
+<!-- speaker notes, one per slide in deck order (deck-stage.js reads them when <deck-stage> connects, so they stay above it).
+     Presenter view: press P (lib/presenter.js). Lines in a note: Time, Say, Students, Cue, Remember. -->
+<script type="application/json" id="speaker-notes">
+[
+"01 · Cover\nTime: 1 min\nSay: \"Good morning. Today we follow one customer email and find out where your data goes when you use AI at work.\"\nStudents: Sit down, settle. Two people answer one question: where does your prompt go after you press Enter?\nCue: Nothing to click. The globe settles and a prompt travels from a laptop in Skopje to the US cloud, on a loop. Shift+R resets the deck, P opens this view.\nRemember: Take two answers and do not answer them. Quiet room? Ask a pair, not a person.",
+"02 · The email\nTime: 4 min\nSay: \"On Monday the biggest customer asks which AI tools we use and where its data goes. The boss drafts three sentences. Not all of them are true.\"\nStudents: Vote on each sentence: TRUE, NOT TRUE or NOT SURE (keys T, F, U). Hands up if the buttons do not work.\nCue: The email types itself, then the stamp lands. Right arrow once per sentence. Backspace undoes the last click.\nRemember: Stay neutral, never reveal the answers. Sentence 2 is the one students defend: let them. The counts come back on slide 12.",
+"03 · What really happens\nTime: 3 min\nSay: \"Most people already use AI at work and few firms have rules. This is a survey of 604 German firms, not all firms. We have no number for North Macedonia.\"\nStudents: Hand up: used AI for work or study this week? Personal account, company account, both? Count with the buttons.\nCue: Rings fill and the numbers count up. Right arrow: the 78 percent line. Right arrow again: the show of hands.\nRemember: Say survey of 604 German firms, never all firms. One in four is 8 percent widespread plus 17 percent single cases; another 17 percent suspect it.",
+"04 · Send one prompt\nTime: 9 min\nSay: \"Send this prompt in your own Claude. Then check three things: your plan, the training switch, and whether the chat is on your phone. Look, do not change anything.\"\nStudents: Everyone sends the prompt and fills the line: Plan, Switch, Chat on phone. Pairs are fine. Labels may differ; not found is a fine answer.\nCue: The sketch shows New chat, paste, Enter, and the prompt leaving for the cloud. Right arrow ticks one check card each. Copy copies the prompt.\nRemember: Never open organization settings on a work login. A free sign-up with a personal email is fine. If fewer than half are logged in, share your own screen.",
+"05 · Two rulebooks\nTime: 8 min\nSay: \"Same prompt, different rulebook. On a personal plan, training is your setting. On Team and Enterprise it is not on by default, and the company gets an admin view.\"\nStudents: Finger vote on Anna: 1 personal, 2 company. Then everyone deletes the practice chat: hover, three dots, Delete.\nCue: Right arrow walks the plans: Free, Pro, Max, then Team, then Enterprise. Click a segment to jump. Right arrow three: the Anna question. Right arrow four: delete the practice chat.\nRemember: Never state the default of the training switch: the vendor page does not say. For Team teach no retention number. Only the practice chat is deleted.",
+"06 · Where it lives\nTime: 7 min\nSay: \"The app is a window. Your chats live in your cloud account. With Cowork you connect a folder. In cloud sessions, the files Claude opens are processed on Anthropic's servers. Stored in the US, processed in several places.\"\nStudents: Predict by tally (A, B, C), then everyone writes: the vendor says my chats are stored in ____.\nCue: Right arrow one: a prompt lands in your cloud account. Two: the folder, files fly up. Three: the slide turns dark and the globe shows where chats are stored.\nRemember: What Desktop and Cowork send is our reading of the vendor pages: say check the vendor page. Say the page offers no EU-only option, never that there is none. EU regions exist on Amazon Bedrock and Google Cloud, which is the partner's hosting and contract.",
+"07 · Right account, right data, right customer\nTime: 9 min\nSay: \"Six people, six pastes. Green, amber or red? Decide on paper first. Yellow is a to-do list, not a permission.\"\nStudents: Decide six times on paper; the room scores itself. Vote with the lamps (keys G, A, R) or drag the card onto a lamp. 20 seconds per paste.\nCue: Two presses per paste: first the card and the 20 second ring, then the lamps flip and the reason types. Twelve presses in all. Scene 4 teaches the Desktop point, scene 6 sets up the EU AI Act.\nRemember: Out of time? Do four scenes, not six. Enterprise does not turn red into green.",
+"08 · Clean it by hand\nTime: 5 min\nSay: \"If you paste it to clean it, you already pasted it. So clean it by hand, before you paste.\"\nStudents: Type the four placeholders into a notes app (3 minutes). Optionally run the prompt (2 minutes).\nCue: One press: the four details lift out of the email into their placeholders and the prompt card slides up.\nRemember: No real data in the room. Put real details back only in your own mail tool. If time is short, you demo it.",
+"09 · The EU AI Act in four boxes\nTime: 9 min\nSay: \"Four boxes, three dates. Two boxes bind you today. The third starts 2 December 2027. A normal chat assistant is not high-risk, but GDPR still applies.\"\nStudents: Guess first by tally (A to D): where does a mood score sit? Then place the five uses by finger vote.\nCue: The timeline builds one press at a time. Press 4 shows the guess, press 5 the five uses; then one press, or a click on a card, flies a use into its box. Last press: the closing line.\nRemember: No fines on slides. Say check your role (provider or deployer). Outside the EU say can be covered, never are covered. Reading staff emotions at work is banned. Short on time: three uses, not five.",
+"10 · Ask in writing\nTime: 4 min\nSay: \"This is the limits act. These are the things the vendor pages do not say. So ask in writing, and re-read the vendor page on the day you send.\"\nStudents: In pairs pick the two questions your team needs most. Click a question to count a vote; Copy copies the email.\nCue: Right arrow once per question; each slides into the outbox. The last press adds the stamp and sends the plane.\nRemember: Say what we do not know: the Team retention period, EU storage for the chat apps, what Desktop sends exactly.",
+"11 · Your page\nTime: 11 min\nSay: \"Three sentences, three rules, on one page. Your own team, or Vardar Works if you have no job yet.\"\nStudents: Write 6 minutes on paper or notes. Swap 3 minutes: your neighbour marks one line unclear. Read your Never rule aloud, 1 minute. 1 minute slack.\nCue: Right arrow one fades the example and starts the 6 minute ring. Two: swap. Three: read your Never rule aloud.\nRemember: Write from 1 December where a line is not true yet. Every amber gets an owner and a date.",
+"12 · The end vote\nTime: 5 min\nSay: \"Back to Friday. Would you send it now? Now we can send three sentences that are true.\"\nStudents: Vote again, then everyone writes one Monday step: Monday I will ____.\nCue: The three sentences return with Friday's votes on the left and the new vote on the right. Right arrow once per stamp. Four: the one page assembles itself. Five: the Monday step and the kit QR.\nRemember: Stamp 2 changes the most votes. The QR leads to the kit page with the zip.",
+"A1 · Team vs Enterprise (appendix)\nTime: 0 min, only if asked\nSay: \"Both have single sign-on and admin controls. Enterprise adds SCIM, audit logs, the Compliance API and a delete timer. Neither uses chats for training by default.\"\nStudents: Nothing. Listen.\nCue: Right arrow reveals one row at a time.\nRemember: No prices and no seat numbers: they change, so re-read the live page.",
+"A2 · If asked (appendix)\nTime: 0 min, only if asked\nSay: \"Memory is on by default for personal plans; on Team and Enterprise an owner makes it available and each member turns it on. Connectors use your own permissions. Incognito chats are not saved to history or memory; on personal plans they are not used to improve Claude, on Team and Enterprise they still follow the org's retention.\"\nStudents: Nothing. Listen.\nCue: Static page.\nRemember: If you are not sure, say check your own account."
+]
+</script>
+
+<deck-stage width="1920" height="1080" data-total="14">
+<section class="slide s1" id="cover" data-n="01" data-label="Cover" data-act="0" data-kind="main" data-seconds="60" data-steps="0"
+  data-note="Ask the room one thing: where does your prompt go after you press Enter? Take two answers and do not answer.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="s1-globe" aria-hidden="true"><canvas data-globe data-lat="38" data-speed="8" data-boost="140" data-home="92" data-cx="0.835" data-cy="0.5" data-r="0.54"></canvas></div>
+  <i class="s1-edge" aria-hidden="true"></i>
+  <p class="layer s1-num" aria-hidden="true" data-decor>05</p>
+  <div class="layer s1-logos arr" style="--i:0">
+    <img src="./assets/lockup-horizontal.svg" alt="loehrning.ai" class="s1-lock" />
+    <span class="s1-x" aria-hidden="true">×</span>
+    <img src="./assets/brainster-logo.svg" alt="Brainster" class="s1-brain" />
+  </div>
+  <p class="layer kick t s1-caps arr" style="--i:2">Workshop 05 · AI at work</p>
+  <h1 class="layer s1-h1 kin" data-split aria-label="Where does your data go?"><span class="w">Where</span> <span class="w">does</span><br><span class="w">your</span> <span class="w em">data</span><br><span class="w">go?</span></h1>
+  <p class="layer s1-sub arr" style="--i:11">Using Claude at work, in plain English</p>
+  <p class="layer s1-meta arr" style="--i:13">Tim Löhr · November 2026 · 90 minutes</p>
+</section>
+<section class="slide s2" id="email" data-n="02" data-label="The email" data-act="1" data-kind="main" data-seconds="240" data-steps="3"
+  data-note="Stay neutral and never reveal the answers. Sentence 2 is the one students will defend: let them.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="layer kick s2-kick arr" style="--i:0">Monday, 9:12 · Vardar Works (invented)</p>
+
+  <article class="layer card s2-mail depth" style="--d:10">
+    <p class="s2-mh"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><span>Inbox · 1 new</span></p>
+    <div class="s2-mb">
+      <p class="s2-ty s2-ty-cont">Before we renew: which AI tools</p>
+      <p class="s2-ty">do you use with our data?</p>
+      <p class="s2-ty">Where is it stored?</p>
+      <p class="s2-ty">Is it used for training?</p>
+    </div>
+    <p class="s2-sign">Lena Keller, Tannwald Haustechnik</p>
+    <span class="stamp s2-stamp">Answer by Friday</span>
+  </article>
+
+  <aside class="layer s2-notes">
+    <p class="kick t">IT notes</p>
+    <ul>
+      <li class="arr" style="--i:3"><svg class="ic" aria-hidden="true"><use href="#i-users"/></svg><span>Claude Team, 25 seats.</span></li>
+      <li class="arr" style="--i:4"><svg class="ic" aria-hidden="true"><use href="#i-laptop"/></svg><span>Claude Desktop on 9 laptops.</span></li>
+      <li class="arr" style="--i:5"><svg class="ic" aria-hidden="true"><use href="#i-phone"/></svg><span>Some agents use a free chatbot on their phones.</span></li>
+      <li class="arr" style="--i:6"><svg class="ic" aria-hidden="true"><use href="#i-chat"/></svg><span>A vendor rep said: "Data stays in Europe."</span></li>
+    </ul>
+  </aside>
+
+  <p class="layer lede s2-ask arr" style="--i:5">Hands up for each sentence:<br>true, not true, not sure?</p>
+  <div class="layer card s2-draft arr" style="--i:4">
+    <p class="kick t">The boss drafts</p>
+    <div class="s2-row" data-r="1">
+      <span class="s2-num">1</span><p class="s2-sent">We use only the company Claude plan.</p><span class="qbadge" aria-label="not yet checked">?</span>
+      <div class="s2-votes step" data-step="1" data-from="none">
+        <button class="vote" type="button" data-tally="d1:t" data-key="t"><span>TRUE</span><b data-n>0</b></button>
+        <button class="vote" type="button" data-tally="d1:f" data-key="f"><span>NOT TRUE</span><b data-n>0</b></button>
+        <button class="vote" type="button" data-tally="d1:u" data-key="u"><span>NOT SURE</span><b data-n>0</b></button>
+      </div>
+    </div>
+    <div class="s2-row" data-r="2">
+      <span class="s2-num">2</span><p class="s2-sent">All your data stays in the EU.</p><span class="qbadge" aria-label="not yet checked">?</span>
+      <div class="s2-votes step" data-step="2" data-from="none">
+        <button class="vote" type="button" data-tally="d2:t" data-key="t"><span>TRUE</span><b data-n>0</b></button>
+        <button class="vote" type="button" data-tally="d2:f" data-key="f"><span>NOT TRUE</span><b data-n>0</b></button>
+        <button class="vote" type="button" data-tally="d2:u" data-key="u"><span>NOT SURE</span><b data-n>0</b></button>
+      </div>
+    </div>
+    <div class="s2-row" data-r="3">
+      <span class="s2-num">3</span><p class="s2-sent">Claude is never trained on our chats.</p><span class="qbadge" aria-label="not yet checked">?</span>
+      <div class="s2-votes step" data-step="3" data-from="none">
+        <button class="vote" type="button" data-tally="d3:t" data-key="t"><span>TRUE</span><b data-n>0</b></button>
+        <button class="vote" type="button" data-tally="d3:f" data-key="f"><span>NOT TRUE</span><b data-n>0</b></button>
+        <button class="vote" type="button" data-tally="d3:u" data-key="u"><span>NOT SURE</span><b data-n>0</b></button>
+      </div>
+    </div>
+  </div>
+  <footer class="foot"><span class="pg"><b>02</b> / 12</span></footer>
+</section>
+<section class="slide s3" id="reality" data-n="03" data-label="What really happens" data-act="2" data-kind="main" data-seconds="180" data-steps="2"
+  data-note="Say survey of 604 German firms, never all firms. One in four is 8 percent widespread plus 17 percent single cases; another 17 percent suspect it.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <h2 class="layer h2 s3-h arr">Most people already use AI at work.</h2>
+  <p class="layer h2 em s3-h2 arr" style="--i:2">Few firms have rules.</p>
+
+  <div class="layer s3-rings">
+    <article class="card s3-card arr" style="--i:2">
+      <div class="s3-ringbox">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="ring-bg" cx="100" cy="100" r="84" stroke-width="18"/><circle class="ring-fg" cx="100" cy="100" r="84" stroke-width="18" pathLength="100" style="--v:25;stroke:var(--accent);--i:0"/></svg>
+        <span class="s3-num s3-one">1 in 4</span>
+      </div>
+      <p class="s3-cap">firms where staff use private AI tools for work</p>
+    </article>
+    <article class="card s3-card arr" style="--i:3">
+      <div class="s3-ringbox">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="ring-bg" cx="100" cy="100" r="84" stroke-width="18"/><circle class="ring-fg" cx="100" cy="100" r="84" stroke-width="18" pathLength="100" style="--v:36;stroke:var(--tanne);--i:1"/></svg>
+        <span class="s3-num cnt" style="--to:36;--unit:'%';--i:1"></span>
+      </div>
+      <p class="s3-cap">of firms with 100 to 499 staff provide a tool</p>
+    </article>
+    <article class="card s3-card arr" style="--i:4">
+      <div class="s3-ringbox">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="ring-bg" cx="100" cy="100" r="84" stroke-width="18"/><circle class="ring-fg" cx="100" cy="100" r="84" stroke-width="18" pathLength="100" style="--v:23;stroke:var(--bernstein);--i:2"/></svg>
+        <span class="s3-num cnt" style="--to:23;--unit:'%';--i:2"></span>
+      </div>
+      <p class="s3-cap">of firms have rules for AI tools</p>
+    </article>
+  </div>
+
+  <p class="layer s3-src"><span class="src">Bitkom Research, 604 German firms with 20+ staff, 21 Oct 2025.</span> <span class="src">No figure for North Macedonia in our sources.</span></p>
+  <p class="layer s3-byo step" data-step="1" data-until="1" data-nojs="off"><b>78%</b> of AI users bring their own tools. Only <b>39%</b> were trained. <span class="src">(Microsoft and LinkedIn, 31,000 people, 8 May 2024)</span></p>
+  <div class="layer s3-hand step" data-step="2" data-until="2">
+    <p class="s3-ask">Used AI for work or study this week? Personal account, company account, both?</p>
+    <div class="s3-opts">
+      <button class="vote" type="button" data-tally="use:p" data-key="p"><span>PERSONAL</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="use:c" data-key="c"><span>COMPANY</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="use:b" data-key="b"><span>BOTH</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="use:n" data-key="n"><span>NONE</span><b data-n>0</b></button>
+    </div>
+  </div>
+  <footer class="foot"><span class="pg"><b>03</b> / 12</span></footer>
+</section>
+<section class="slide s4" id="send" data-n="04" data-label="Send one prompt" data-act="2" data-kind="main" data-seconds="540" data-steps="3" data-route="0"
+  data-note="Look, never change. Never open organization settings on a work login. A free sign-up with a personal email is fine and pairs are fine. With fewer than half logged in, share your own screen.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="0" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s4-h arr">Send one prompt. Check three things.</h2>
+
+  <div class="layer s4-ui" aria-hidden="true">
+    <div class="s4-win card">
+      <div class="s4-side"><span class="s4-new"><svg class="ic"><use href="#i-pencil"/></svg>New chat</span><i></i><i></i><i></i></div>
+      <div class="s4-main">
+        <div class="s4-bub"><i></i><i></i></div>
+        <div class="s4-input"><span class="s4-paste"><i></i><i></i></span><b class="s4-enter"><svg class="ic"><use href="#i-up"/></svg></b></div>
+      </div>
+    </div>
+    <svg class="s4-cursor" viewBox="0 0 28 32"><path d="M3 2l20 12-9 2-4 9z" fill="#2A2521" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/></svg>
+    <i class="s4-ripple"></i>
+    <i class="s4-lane"></i>
+    <i class="s4-dot"></i>
+    <svg class="s4-cloud ic"><use href="#i-cloud"/></svg>
+    <span class="s4-cloudlbl">Your cloud account</span>
+  </div>
+
+  <div class="layer pcard s4-prompt arr" style="--i:3">
+    <div class="pc-head"><svg class="ic" width="30" height="30" aria-hidden="true"><use href="#i-chat"/></svg><span class="pc-tag">Your prompt</span><button class="pc-copy" type="button" data-copy>Copy</button></div>
+    <p class="prompt pc-body"><span class="pc-s">Write a short, polite reply in English, under 80 words.</span> <span class="pc-s">The customer, Mara Beispiel (invented), wrote: "My order <span class="nb">TH-1042</span> arrived two days late and the box was damaged. Can I get a refund?"</span></p>
+  </div>
+
+  <p class="layer pill s4-chip arr" style="--i:5">Labels may differ slightly. "Not found" is a fine answer.</p>
+  <p class="layer card s4-paper arr" style="--i:6">
+    <span>Plan <i class="s4-blank" data-b="1"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i></span>
+    <span>Switch <i class="s4-blank" data-b="2"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i></span>
+    <span>Chat on phone <i class="s4-blank" data-b="3"><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg></i></span>
+  </p>
+
+  <div class="layer s4-checks">
+    <article class="card s4-check arr" style="--i:4" data-c="1"><span class="s4-cn">1</span><div><p class="kick t">Plan</p><p class="s4-cd">Click your name or initials, lower left.</p></div><svg class="s4-tick" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M6.8 12.4l3.6 3.6 6.8-7"/></svg></article>
+    <article class="card s4-check arr" style="--i:5" data-c="2"><span class="s4-cn">2</span><div><p class="kick t">Switch</p><p class="s4-cd">Settings, then Privacy. Look, do not change.</p></div><svg class="s4-tick" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M6.8 12.4l3.6 3.6 6.8-7"/></svg></article>
+    <article class="card s4-check arr" style="--i:6" data-c="3"><span class="s4-cn">3</span><div><p class="kick t">Chat</p><p class="s4-cd">Open it on your phone.</p></div><svg class="s4-tick" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11"/><path d="M6.8 12.4l3.6 3.6 6.8-7"/></svg></article>
+  </div>
+  <footer class="foot"><span class="pg"><b>04</b> / 12</span></footer>
+</section>
+<section class="slide s5" id="rulebooks" data-n="05" data-label="Two rulebooks" data-act="2" data-kind="main" data-seconds="480" data-steps="4" data-route="0" data-plan="0"
+  data-note="Never state the default of the switch: the page does not say. For Team say no fixed period stated and teach no number. No admin tools is derived from the plan pages; if asked about work-email linking, say check yours. Only the practice chat is deleted.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="0" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s5-h arr">Same prompt. Different rulebook.</h2>
+  <div class="layer s5-seg arr" style="--i:2" role="tablist" aria-label="Claude plan">
+    <i class="s5-thumb"></i>
+    <button class="s5-opt" type="button" role="tab" data-plan="0">Free, Pro, Max</button>
+    <button class="s5-opt" type="button" role="tab" data-plan="1">Team</button>
+    <button class="s5-opt" type="button" role="tab" data-plan="2">Enterprise</button>
+  </div>
+
+  <div class="layer s5-stage depth" style="--d:10">
+    <svg class="s5-svg" viewBox="0 0 1728 612" aria-hidden="true" focusable="false">
+      <path class="s5-l s5-l1" d="M936 274C1016 274 1020 72 1100 72" fill="none" stroke-width="4" stroke-linecap="round"/>
+      <path class="s5-l s5-l2" d="M936 274C1016 274 1020 228 1100 228" fill="none" stroke-width="4" stroke-linecap="round"/>
+      <path class="s5-l s5-l3" d="M936 274C1016 274 1020 384 1100 384" fill="none" stroke-width="4" stroke-linecap="round"/>
+      <path class="s5-l s5-l4" d="M936 274C1016 274 1020 540 1100 540" fill="none" stroke-width="4" stroke-linecap="round"/>
+      <path class="s5-route" d="M356 250H648" fill="none" stroke="#1F4A38" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 12"/>
+      <g class="s5-cloud" transform="translate(0 -56)">
+        <path d="M704 420a58 58 0 0 1-14-114 92 92 0 0 1 170-30 66 66 0 0 1 60 144z" fill="#fff" stroke="#1F4A38" stroke-width="4" stroke-linejoin="round"/>
+        <text x="818" y="372" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="24" font-weight="600" fill="#1F4A38">Cloud account</text>
+      </g>
+      <g class="s5-laptop" transform="translate(0 -56)">
+        <rect x="30" y="206" width="300" height="190" rx="18" fill="#fff" stroke="#1F4A38" stroke-width="4"/>
+        <path d="M8 414H352" stroke="#1F4A38" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="56" cy="230" r="5" fill="#E7E0D4"/><circle cx="74" cy="230" r="5" fill="#E7E0D4"/><circle cx="92" cy="230" r="5" fill="#E7E0D4"/>
+        <text x="52" y="285" font-family="JetBrains Mono, monospace" font-size="24" font-weight="600" fill="#1F4A38" letter-spacing=".5">Claude Desktop</text>
+        <rect x="52" y="312" width="190" height="9" rx="4.5" fill="#E7E0D4"/><rect x="52" y="332" width="130" height="9" rx="4.5" fill="#E7E0D4"/>
+        <rect x="52" y="356" width="246" height="22" rx="11" fill="#fff" stroke="#D6CCBB" stroke-width="2"/>
+      </g>
+    </svg>
+
+    <i class="s5-pk m1"></i><i class="s5-pk m2"></i><i class="s5-pk m3"></i>
+    <i class="s5-pk t1"></i><i class="s5-pk k1"></i>
+
+    <div class="s5-gate" aria-hidden="true">
+      <span class="s5-sw"><i></i></span>
+      <svg class="ic s5-lockw"><use href="#i-lock"/></svg>
+    </div>
+
+    <article class="card s5-card" style="top:0px;--row:0">
+      <span class="s5-ico"><svg class="ic"><use href="#i-chip"/></svg></span>
+      <div><p class="kick t">Used for training?</p>
+        <p class="s5-cell"><span data-p="0">Your setting: Help Improve our AI models</span><span data-p="1">Not by default. Feedback is an exception</span><span data-p="2">Not by default. Feedback is an exception</span></p></div>
+    </article>
+    <article class="card s5-card" style="top:156px;--row:1">
+      <span class="s5-ico s5-eye"><svg class="ic s5-eye-off"><use href="#i-eye-off"/></svg><svg class="ic s5-eye-on"><use href="#i-eye"/></svg></span>
+      <div><p class="kick t">Your company's view</p>
+        <p class="s5-cell"><span data-p="0">No admin tools for your company</span><span data-p="1">Owners manage members and settings</span><span data-p="2">Adds audit logs, Compliance API, SCIM</span></p></div>
+      <span class="pill s5-audit">AUDIT LOG</span>
+    </article>
+    <article class="card s5-card" style="top:312px;--row:2">
+      <span class="s5-ico"><svg class="ic"><use href="#i-clock"/></svg></span>
+      <div><p class="kick t">How long kept?</p>
+        <p class="s5-cell"><span data-p="0">Deleted: purged in 30 days. Training on: up to 5 years, de-identified</span><span data-p="1">Saved: no fixed period stated. Deleted: 30 days</span><span data-p="2">Owner sets a delete timer, minimum 30 days</span></p></div>
+    </article>
+    <article class="card s5-card s5-contract" style="top:468px;--row:3">
+      <span class="s5-ico"><svg class="ic"><use href="#i-doc"/></svg></span>
+      <div><p class="kick t">Contract</p>
+        <p class="s5-cell"><span data-p="0">Consumer Terms</span><span data-p="1">Commercial Terms</span><span data-p="2">Commercial Terms</span></p></div>
+    </article>
+  </div>
+
+  <div class="layer card s5-anna step" data-step="3" data-until="3" data-nojs="off">
+    <p class="s5-q">Anna uses her own Pro account for customer emails. Whose rulebook applies?</p>
+    <div class="s5-votes">
+      <button class="vote" type="button" data-tally="anna:p" data-key="p"><span>1 PERSONAL</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="anna:c" data-key="c"><span>2 COMPANY</span><b data-n>0</b></button>
+    </div>
+  </div>
+  <div class="layer card s5-del step" data-step="4" data-until="4">
+    <p class="s5-q">Now delete your practice chat: hover, three dots, Delete.</p>
+    <div class="s5-demo" aria-hidden="true">
+      <div class="s5-row"><span>Practice chat</span><svg class="ic s5-dots"><use href="#i-dots"/></svg></div>
+      <span class="s5-menu">Delete</span>
+      <svg class="s5-cur" viewBox="0 0 28 32"><path d="M3 2l20 12-9 2-4 9z" fill="#2A2521" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/></svg>
+    </div>
+  </div>
+  <p class="layer src s5-src">Anthropic pages, 1 Jul to 18 Aug 2026. Read the live page.</p>
+  <footer class="foot"><span class="pg"><b>05</b> / 12</span></footer>
+</section>
+<section class="slide s6" id="place" data-n="06" data-label="Where it lives" data-act="2" data-kind="main" data-seconds="420" data-steps="3" data-route="1"
+  data-note="What Desktop sends is our reading of the vendor pages: say check the vendor page. Say the page offers no EU-only option, never that there is no EU option.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="1" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s6-h arr">Stored in the US.<br>Processed in several places.</h2>
+
+  <div class="layer s6-art step depth" style="--d:12" data-step="0" data-until="2" data-from="none">
+    <svg class="s6-svg" viewBox="0 0 1004 600" aria-hidden="true" focusable="false">
+      <text x="210" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="24" font-weight="600" fill="#6B625A" letter-spacing="1.5">YOUR LAPTOP</text>
+      <text x="756" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="24" font-weight="600" fill="#6B625A" letter-spacing="1.5">VENDOR CLOUD</text>
+      <rect x="0" y="50" width="420" height="262" rx="22" fill="#fff" stroke="#1F4A38" stroke-width="5"/>
+      <path d="M-24 334H444" stroke="#1F4A38" stroke-width="6" stroke-linecap="round"/>
+      <rect x="26" y="76" width="368" height="210" rx="12" fill="#F7F4EE" stroke="#E7E0D4" stroke-width="2"/>
+      <text x="48" y="118" font-family="JetBrains Mono, monospace" font-size="24" font-weight="600" fill="#1F4A38">Claude Desktop</text>
+      <rect x="48" y="146" width="230" height="10" rx="5" fill="#E7E0D4"/><rect x="48" y="170" width="170" height="10" rx="5" fill="#E7E0D4"/>
+      <rect x="48" y="226" width="324" height="34" rx="17" fill="#fff" stroke="#D6CCBB" stroke-width="2"/>
+      <path class="s6-border" d="M520 40V590" stroke="#1F4A38" stroke-width="4" stroke-linecap="round" stroke-dasharray="14 14" fill="none"/>
+      <g transform="translate(-60 14)">
+        <path d="M704 420a58 58 0 0 1-14-114 92 92 0 0 1 170-30 66 66 0 0 1 60 144z" fill="#fff" stroke="#1F4A38" stroke-width="5" stroke-linejoin="round"/>
+        <text x="818" y="378" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="24" font-weight="600" fill="#1F4A38">Your account</text>
+      </g>
+    </svg>
+    <i class="s6-pkt step" data-step="1" data-from="none"></i>
+    <div class="s6-drawer">
+      <p class="s6-dl"><svg class="ic" aria-hidden="true"><use href="#i-folder"/></svg>Documents</p>
+      <div class="s6-files" data-stagger aria-hidden="true"><i></i><i></i><i></i><i class="rd"></i><i></i><i></i><i></i><i class="rd"></i><i></i><i class="rd"></i><i></i><i></i><i></i><i></i><i class="rd"></i><i></i><i></i><i></i><i class="rd"></i><i></i><i></i><i></i><i class="rd"></i><i></i><i></i><i></i><i></i><i class="rd"></i><i></i><i></i><i></i><i class="rd"></i><i></i><i></i><i class="rd"></i><i></i><i></i><i></i><i class="rd"></i><i></i></div>
+    </div>
+  </div>
+
+  <div class="layer card s6-predict step" data-step="0" data-until="2" data-from="none">
+    <p class="kick t">Predict first</p>
+    <p class="s6-pq">I connect my Documents folder. Which files leave the laptop?</p>
+    <div class="s6-opts">
+      <button class="vote" type="button" data-tally="pred:a" data-key="a"><span>A none</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="pred:b" data-key="b"><span>B the one I ask about</span><b data-n>0</b></button>
+      <button class="vote s6-right" type="button" data-tally="pred:c" data-key="c"><span>C any file Claude reads in it</span><b data-n>0</b></button>
+    </div>
+  </div>
+  <p class="layer s6-cap step" data-step="1" data-until="1" data-nojs="off">The app is a window. Your chats live in your cloud account.</p>
+  <p class="layer s6-cap step" data-step="2" data-until="2">With Cowork you connect a folder. <b>In cloud sessions, files Claude opens are processed on Anthropic's servers.</b></p>
+
+  <div class="layer s6-globe step depth" style="--d:-14" data-step="3" data-until="3" data-from="none" data-nojs="off"><canvas data-globe data-lat="40" data-speed="7" data-cx="0.5" data-cy="0.5" data-r="0.46"></canvas></div>
+  <div class="layer s6-side step" data-step="3" data-until="3" data-from="left" data-nojs="off">
+    <span class="pill s6-p1"><svg class="ic" aria-hidden="true"><use href="#i-cloud"/></svg>Stored: US</span>
+    <span class="pill s6-p2"><svg class="ic" aria-hidden="true"><use href="#i-chip"/></svg><span>Processing may run in:<br>US · Europe · Asia · Australia</span></span>
+    <p class="s6-fill">The vendor says my chats are stored in <span class="s6-blank"></span></p>
+    <p class="src">Anthropic, "Where are your servers located", 15 Jun 2026: no EU-only option offered.</p>
+    <p class="src">Cloud partners such as Amazon Bedrock and Google Cloud let you pick the region. That is their hosting, not the Claude apps.</p>
+  </div>
+  <footer class="foot"><span class="pg"><b>06</b> / 12</span></footer>
+</section>
+<section class="slide s7" id="paste" data-n="07" data-label="Right account, right data, right customer" data-act="3" data-kind="main" data-seconds="540" data-steps="12" data-route="2"
+  data-note="Say yellow is a to-do list at the first amber. Scene 4 teaches the Desktop point; scene 6 sets up the EU AI Act box on slide 9.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="2" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer kick s7-kick arr">Right account, right data, right customer</h2>
+  <div class="layer s7-rules">
+    <div class="card s7-rule g arr" style="--i:1"><svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg><div><p class="kick t">GREEN</p><p>Public. Any tool.</p></div></div>
+    <div class="card s7-rule a arr" style="--i:2"><svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-a"/></svg><div><p class="kick t">AMBER</p><p>Company tool, names out. A to-do list, not a permission.</p></div></div>
+    <div class="card s7-rule r arr" style="--i:3"><svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-r"/></svg><div><p class="kick t">RED</p><p>Secrets anywhere. Customer data on a personal account.</p></div></div>
+  </div>
+
+  <div class="layer card s7-chat arr" style="--i:4">
+    <div class="s7-head">
+      <span class="kick">Paste <b class="s7-no">1</b> of 6</span>
+      <span class="pill s7-acct">PERSONAL</span>
+      <svg class="timer s7-timer" viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="42" stroke-width="10"/><circle class="timer-fg" cx="50" cy="50" r="42" stroke-width="10" pathLength="100" stroke="#B73A15"/></svg>
+    </div>
+    <p class="s7-hint step" data-step="0" data-until="0" data-nojs="off">Six pastes. Which light?</p>
+    <div class="s7-deck" data-drag>
+      <article class="s7-card is-cur" data-k="1" data-light="r" data-acct="PERSONAL" data-why="Customer data on a personal account."><p>Ana, free chatbot on her phone. Pastes a customer's complaint email with name, order number and address.</p></article>
+      <article class="s7-card" data-k="2" data-light="g" data-acct="PERSONAL" data-why="It is already public."><p>Stefan, free chatbot. Pastes the public text of the company website to shorten it for LinkedIn.</p></article>
+      <article class="s7-card" data-k="3" data-light="a" data-acct="COMPANY" data-why="Right tool. Names out, check the customer's contract."><p>Elena, company Claude Team. Pastes a customer call transcript with names, a price and a delay.</p></article>
+      <article class="s7-card" data-k="4" data-light="r" data-acct="COMPANY" data-why="One cleaned folder could become AMBER."><p>Petar, Claude Desktop with Cowork. Connects his whole Documents folder, which holds customer contracts under NDA.</p></article>
+      <article class="s7-card" data-k="5" data-light="r" data-acct="PERSONAL" data-why="A key is a secret. Treat it as leaked and change it."><p>Marko, personal Pro. Pastes a customer's code with a hard-coded API key to find a bug.</p></article>
+      <article class="s7-card" data-k="6" data-light="a" data-acct="COMPANY" data-why="Names out, ask HR. Ranking people is high-risk from 2 Dec 2027."><p>Jovana, company Claude Team. Pastes three CVs with salary asks: who is best?</p></article>
+    </div>
+  </div>
+
+  <div class="layer s7-lamps arr" style="--i:5">
+    <button class="s7-lamp" type="button" data-light="g" data-tally="s7k1:g" data-key="g" aria-label="Green"><span class="s7-front">G</span><svg class="lt s7-lit" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg><b data-n>0</b></button>
+    <button class="s7-lamp" type="button" data-light="a" data-tally="s7k1:a" data-key="a" aria-label="Amber"><span class="s7-front">A</span><svg class="lt s7-lit" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-a"/></svg><b data-n>0</b></button>
+    <button class="s7-lamp" type="button" data-light="r" data-tally="s7k1:r" data-key="r" aria-label="Red"><span class="s7-front">R</span><svg class="lt s7-lit" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-r"/></svg><b data-n>0</b></button>
+  </div>
+  <p class="layer s7-reason"></p>
+  <div class="layer s7-score" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <p class="layer s7-close step" data-step="12">Enterprise does not turn red into green.</p>
+  <footer class="foot"><span class="pg"><b>07</b> / 12</span></footer>
+</section>
+<section class="slide s8" id="clean" data-n="08" data-label="Clean it by hand" data-act="4" data-kind="main" data-seconds="300" data-steps="1" data-route="2"
+  data-note="Put real details back only in your own mail tool. No real data in the room. If time is short, Tim demos it.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="2" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s8-h arr">If you paste it to clean it, you already pasted it.</h2>
+  <p class="layer s8-do arr" style="--i:1"><b>Your turn</b>Copy this email into a notes app. Type the four placeholders over the details.</p>
+  <article class="layer card s8-mail arr" style="--i:2">
+    <p class="s8-mh"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg><span>Complaint email · invented</span></p>
+    <p class="s8-body">Hello, my order <mark class="pii" data-k="order">TH-1042</mark> never arrived. My name is <mark class="pii" data-k="customer">Mara Beispiel</mark>, I live at <mark class="pii" data-k="address">Beispielweg 7, 99999 Musterstadt</mark>.</p>
+    <p class="s8-body">Please write to <mark class="pii" data-k="email">mara.beispiel@example.com</mark>. This is the second time.</p>
+  </article>
+  <div class="layer s8-chips">
+    <span class="s8-slot" data-k="customer"><span class="s8-ghost" aria-hidden="true">[CUSTOMER]</span><span class="pill s8-chip">[CUSTOMER]</span></span>
+    <span class="s8-slot" data-k="order"><span class="s8-ghost" aria-hidden="true">[ORDER]</span><span class="pill s8-chip">[ORDER]</span></span>
+    <span class="s8-slot" data-k="address"><span class="s8-ghost" aria-hidden="true">[ADDRESS]</span><span class="pill s8-chip">[ADDRESS]</span></span>
+    <span class="s8-slot" data-k="email"><span class="s8-ghost" aria-hidden="true">[EMAIL]</span><span class="pill s8-chip">[EMAIL]</span></span>
+  </div>
+  <div class="layer pcard s8-prompt step" data-step="1">
+    <div class="pc-head"><svg class="ic" width="30" height="30" aria-hidden="true"><use href="#i-chat"/></svg><span class="pc-tag">Then ask Claude</span><button class="pc-copy" type="button" data-copy>Copy</button></div>
+    <p class="prompt pc-body"><span class="pc-s">Write a calm reply under 90 words. Keep the placeholders. Do not invent details. End with one question I should check.</span></p>
+  </div>
+  <footer class="foot"><span class="pg"><b>08</b> / 12</span></footer>
+</section>
+<section class="slide s9" id="law" data-n="09" data-label="The EU AI Act in four boxes" data-act="4" data-kind="main" data-seconds="540" data-steps="11" data-route="3"
+  data-note="No fines on slides. A chatbot makes you provider or deployer case by case, so say check your role. Outside the EU say can be covered, never are covered. Article 4 was replaced by Regulation (EU) 2026/1744, in force 27 July 2026: say take measures, not a guaranteed level.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="3" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s9-h arr">Four boxes, three dates.</h2>
+  <div class="layer card s9-banner step" data-step="1" data-from="right">
+    <svg class="ic" aria-hidden="true"><use href="#i-users"/></svg>
+    <p>AI skills for staff: a duty since 2 Feb 2025. Today it reads: take measures. No certificate needed.</p>
+  </div>
+
+  <div class="layer s9-tl" aria-hidden="true">
+    <svg viewBox="0 0 1728 96" width="1728" height="96" focusable="false">
+      <path d="M0 78H1728" stroke="#1F4A38" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <circle cx="204" cy="78" r="13" fill="#97300F" stroke="#F7F4EE" stroke-width="4"/>
+      <circle cx="644" cy="78" r="13" fill="#D9A441" stroke="#1F4A38" stroke-width="4"/>
+      <circle cx="1084" cy="78" r="13" fill="#B73A15" stroke="#F7F4EE" stroke-width="4"/>
+      <circle cx="1524" cy="78" r="13" fill="#DCE6D4" stroke="#1F4A38" stroke-width="4"/>
+      <g class="s9-pin step" data-step="3" data-from="top">
+        <path d="M728 40V66" stroke="#1F4A38" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="728" cy="78" r="15" fill="#F7F4EE" stroke="#1F4A38" stroke-width="6"/>
+        <rect x="616" y="0" width="224" height="38" rx="19" fill="#1F4A38"/>
+        <text x="728" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="24" font-weight="700" fill="#F7F4EE" letter-spacing=".5">Now: Nov 2026</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="layer s9-boxes depth" style="--d:7">
+    <i class="s9-ghost" style="--bx:0"></i><i class="s9-ghost" style="--bx:1"></i><i class="s9-ghost" style="--bx:2"></i><i class="s9-ghost" style="--bx:3"></i>
+    <article class="s9-box step" data-step="1" data-b="banned" style="--bx:0">
+      <header><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg><div><p class="s9-tag">BANNED</p><p class="s9-date">since 2 Feb 2025</p></div></header>
+      <div class="s9-zone"></div>
+    </article>
+    <article class="s9-box step" data-step="2" data-b="tell" style="--bx:1">
+      <header><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg><div><p class="s9-tag">TELL PEOPLE</p><p class="s9-date">since 2 Aug 2026</p></div></header>
+      <div class="s9-zone"></div>
+    </article>
+    <article class="s9-box step" data-step="3" data-b="high" style="--bx:2">
+      <header><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg><div><p class="s9-tag">HIGH-RISK</p><p class="s9-date">from 2 Dec 2027</p></div></header>
+      <div class="s9-zone"></div>
+    </article>
+    <article class="s9-box step" data-step="4" data-b="every" style="--bx:3">
+      <header><svg class="ic" aria-hidden="true"><use href="#i-check"/></svg><div><p class="s9-tag">EVERYDAY</p><p class="s9-date">&nbsp;</p></div></header>
+      <div class="s9-zone"></div>
+    </article>
+  </div>
+
+  <div class="layer card s9-guess step" data-step="4" data-until="4" data-nojs="off">
+    <p class="s9-gq">Where does a mood score for call-centre staff sit?</p>
+    <div class="s9-gopts">
+      <button class="vote" type="button" data-tally="guess:a" data-key="a"><span>A BANNED</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="guess:b" data-key="b"><span>B TELL PEOPLE</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="guess:c" data-key="c"><span>C HIGH-RISK</span><b data-n>0</b></button>
+      <button class="vote" type="button" data-tally="guess:d" data-key="d"><span>D EVERYDAY</span><b data-n>0</b></button>
+    </div>
+  </div>
+
+  <p class="layer kick s9-ask step" data-step="5" data-until="10" data-from="bottom">Which box? Show 1 to 4 fingers, left to right.</p>
+  <div class="layer s9-tray step" data-step="5" data-until="10" data-from="bottom">
+    <span class="s9-slot"><button class="s9-use" type="button" data-u="1" data-to="every" data-reason="A normal chat assistant is not high-risk. GDPR still applies."><span class="s9-ut">Meeting summary for the team</span><span class="s9-ur"></span></button></span>
+    <span class="s9-slot"><button class="s9-use" type="button" data-u="2" data-to="tell" data-reason="Say it is AI. Check your role."><span class="s9-ut">Support chatbot talking to German customers</span><span class="s9-ur"></span></button></span>
+    <span class="s9-slot"><button class="s9-use" type="button" data-u="3" data-to="tell" data-reason="Label deepfakes."><span class="s9-ut">AI video of your CEO on the website</span><span class="s9-ur"></span></button></span>
+    <span class="s9-slot"><button class="s9-use" type="button" data-u="4" data-to="high" data-reason="From 2 Dec 2027, moved from Aug 2026."><span class="s9-ut">Ranking 40 CVs with AI</span><span class="s9-ur"></span></button></span>
+    <span class="s9-slot"><button class="s9-use" type="button" data-u="5" data-to="banned" data-reason="Banned at work since 2 Feb 2025."><span class="s9-ut">Mood score of call-centre agents from audio</span><span class="s9-ur"></span></button></span>
+  </div>
+  <p class="layer s9-close step" data-step="11">Two boxes bind you today. The third starts 2 Dec 2027.</p>
+  <div class="layer s9-eu">
+    <p class="src">Outside the EU? You can be covered when the AI's output is used in the EU.</p>
+    <p class="src">Not legal advice. No certificate makes a company compliant.</p>
+  </div>
+  <footer class="foot"><span class="pg"><b>09</b> / 12</span></footer>
+</section>
+<section class="slide s10" id="ask" data-n="10" data-label="Ask in writing" data-act="5" data-kind="main" data-seconds="240" data-steps="4" data-route="4"
+  data-note="This is the limits act: say what we do not know. Re-read the vendor page on the day you send.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="4" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s10-h arr">What the pages do not say: ask in writing.</h2>
+  <div class="layer card s10-box arr" style="--i:2">
+    <p class="kick t"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>Outbox<span class="s10-pick">Pairs: tap the 2 you need most</span></p>
+    <i class="s10-ghost" style="--k:0"></i><i class="s10-ghost" style="--k:1"></i><i class="s10-ghost" style="--k:2"></i>
+    <button class="s10-q step" type="button" data-step="1" data-from="left" data-tally="ask:1"><svg class="ic s10-env" aria-hidden="true"><use href="#i-mail"/></svg><span class="s10-n">1</span><span class="s10-t">Where is our chat data stored and processed?</span><b data-n>0</b></button>
+    <button class="s10-q step" type="button" data-step="2" data-from="left" data-tally="ask:2"><svg class="ic s10-env" aria-hidden="true"><use href="#i-mail"/></svg><span class="s10-n">2</span><span class="s10-t">Which contract applies to our plan? Does it include a data processing agreement?</span><b data-n>0</b></button>
+    <button class="s10-q step" type="button" data-step="3" data-from="left" data-tally="ask:3"><svg class="ic s10-env" aria-hidden="true"><use href="#i-mail"/></svg><span class="s10-n">3</span><span class="s10-t">How long are our chats kept, and who can delete them?</span><b data-n>0</b></button>
+  </div>
+  <div class="layer s10-side">
+    <button class="s10-send arr" style="--i:3" type="button" data-copy data-copy-text="Hello,&#10;&#10;we use Claude at work. Please answer in writing:&#10;&#10;1 Where is our chat data stored and processed?&#10;2 Which contract applies to our plan? Does it include a data processing agreement?&#10;3 How long are our chats kept, and who can delete them?&#10;&#10;Thank you">Copy the email</button>
+    <span class="stamp s10-stamp step" data-step="4" data-from="none">Checked 18 Oct 2026</span>
+    <div class="s10-gap arr" style="--i:4">
+      <p class="kick">Not in the pages we read on 18 Oct 2026:</p>
+      <ul><li>Team retention period</li><li>EU storage for chat apps</li><li>What Desktop sends exactly</li></ul>
+    </div>
+  </div>
+  <svg class="s10-plane step" data-step="4" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plane"/></svg>
+  <footer class="foot"><span class="pg"><b>10</b> / 12</span></footer>
+</section>
+<section class="slide s11" id="page" data-n="11" data-label="Your page" data-act="6" data-kind="main" data-seconds="660" data-steps="3" data-route="4"
+  data-note="Write from 1 December where a line is not true yet. Every amber gets an owner and a date.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="4" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s11-h arr">Your page: three sentences, three rules.</h2>
+  <div class="layer s11-sheet">
+    <svg class="s11-outline" viewBox="0 0 1040 736" preserveAspectRatio="none" aria-hidden="true"><rect x="3" y="3" width="1034" height="730" rx="18" pathLength="100" fill="#fff" stroke="#1F4A38" stroke-width="4"/></svg>
+    <div class="s11-lines">
+      <p class="s11-l" style="--i:0"><b>1</b><span>We use <i class="s11-bl"></i> for work. Customer data goes only there.</span></p>
+      <p class="s11-l" style="--i:1"><b>2</b><span>The vendor says data is stored in <i class="s11-bl"></i> (date). We will ask about <i class="s11-bl"></i>.</span></p>
+      <p class="s11-l" style="--i:2"><b>3</b><span>Not used for training: <i class="s11-bl"></i>. Our rule for personal accounts: <i class="s11-bl"></i>.</span></p>
+      <p class="s11-rules" style="--i:3"><span>Allowed <i class="s11-bl s"></i></span><span>Ask first <i class="s11-bl s"></i></span><span>Never <i class="s11-bl s"></i></span></p>
+    </div>
+    <p class="s11-ex"><span>Our work tool is Claude Team, 25 seats. From 1 December customer data goes only there.</span></p>
+  </div>
+  <div class="layer s11-clock">
+    <div class="s11-ring">
+      <svg class="timer s11-timer" viewBox="0 0 100 100" aria-hidden="true"><circle class="ring-bg" cx="50" cy="50" r="44" stroke-width="7"/><circle class="timer-fg" cx="50" cy="50" r="44" stroke-width="7" pathLength="100" stroke="#B73A15"/></svg>
+      <span class="s11-time">6:00</span>
+    </div>
+    <div class="s11-phases">
+      <span class="pill" data-ph="1">WRITE 6 MIN</span>
+      <span class="pill" data-ph="2">SWAP 3 MIN</span>
+      <span class="pill" data-ph="3">READ YOUR NEVER 1 MIN</span>
+    </div>
+  </div>
+  <footer class="foot"><span class="pg"><b>11</b> / 12</span></footer>
+</section>
+<section class="slide s12" id="end" data-n="12" data-label="The end vote" data-act="6" data-kind="main" data-seconds="300" data-steps="5" data-route="4"
+  data-note="Stamp 2 is the one that changes the most votes.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <nav class="route" data-stop="4" aria-label="Route: account, place, paste, law, page"><div class="route-stops"><span class="route-stop">ACCOUNT</span><span class="route-stop">PLACE</span><span class="route-stop">PASTE</span><span class="route-stop">LAW</span><span class="route-stop">PAGE</span></div><i class="route-track"></i><i class="route-dot"></i></nav>
+  <h2 class="layer h2 s12-h arr">Back to Friday. Would you send it now?</h2>
+
+  <div class="layer s12-rows step" data-step="0" data-until="3" data-from="none" data-nojs="off">
+    <article class="card s12-row" data-r="1" style="--i:0">
+      <span class="s2-num">1</span>
+      <div class="s12-main">
+        <p class="s12-sent">We use only the company Claude plan.</p>
+        <div class="s12-bars">
+          <span class="s12-bl">THEN</span><div class="s12-seg s12-then"><i data-bar="d1:t"></i><i data-bar="d1:f"></i><i data-bar="d1:u"></i></div>
+          <span class="s12-bl">NOW</span><div class="s12-seg s12-now"><i data-bar="e1:t"></i><i data-bar="e1:f"></i><i data-bar="e1:u"></i></div>
+        </div>
+        <div class="s12-votes">
+          <button class="vote" type="button" data-tally="e1:t"><span>TRUE</span><b data-n>0</b></button>
+          <button class="vote" type="button" data-tally="e1:f"><span>NOT TRUE</span><b data-n>0</b></button>
+          <button class="vote" type="button" data-tally="e1:u"><span>NOT SURE</span><b data-n>0</b></button>
+        </div>
+      </div>
+      <div class="s12-slot"><span class="qbadge s12-q step" data-step="0" data-until="0" data-from="none" aria-label="not yet checked">?</span><p class="s12-stamp step" data-step="1" data-until="3" data-from="none"><b>1 Not true.</b> Some agents use a free chatbot on their phones.</p></div>
+    </article>
+    <article class="card s12-row" data-r="2" style="--i:1">
+      <span class="s2-num">2</span>
+      <div class="s12-main">
+        <p class="s12-sent">All your data stays in the EU.</p>
+        <div class="s12-bars">
+          <span class="s12-bl">THEN</span><div class="s12-seg s12-then"><i data-bar="d2:t"></i><i data-bar="d2:f"></i><i data-bar="d2:u"></i></div>
+          <span class="s12-bl">NOW</span><div class="s12-seg s12-now"><i data-bar="e2:t"></i><i data-bar="e2:f"></i><i data-bar="e2:u"></i></div>
+        </div>
+        <div class="s12-votes">
+          <button class="vote" type="button" data-tally="e2:t"><span>TRUE</span><b data-n>0</b></button>
+          <button class="vote" type="button" data-tally="e2:f"><span>NOT TRUE</span><b data-n>0</b></button>
+          <button class="vote" type="button" data-tally="e2:u"><span>NOT SURE</span><b data-n>0</b></button>
+        </div>
+      </div>
+      <div class="s12-slot"><span class="qbadge s12-q step" data-step="0" data-until="1" data-from="none" aria-label="not yet checked">?</span><p class="s12-stamp step" data-step="2" data-until="3" data-from="none"><b>2 Not true as written.</b> The vendor's page says stored in the US.</p></div>
+    </article>
+    <article class="card s12-row" data-r="3" style="--i:2">
+      <span class="s2-num">3</span>
+      <div class="s12-main">
+        <p class="s12-sent">Claude is never trained on our chats.</p>
+        <div class="s12-bars">
+          <span class="s12-bl">THEN</span><div class="s12-seg s12-then"><i data-bar="d3:t"></i><i data-bar="d3:f"></i><i data-bar="d3:u"></i></div>
+          <span class="s12-bl">NOW</span><div class="s12-seg s12-now"><i data-bar="e3:t"></i><i data-bar="e3:f"></i><i data-bar="e3:u"></i></div>
+        </div>
+        <div class="s12-votes">
+          <button class="vote" type="button" data-tally="e3:t"><span>TRUE</span><b data-n>0</b></button>
+          <button class="vote" type="button" data-tally="e3:f"><span>NOT TRUE</span><b data-n>0</b></button>
+          <button class="vote" type="button" data-tally="e3:u"><span>NOT SURE</span><b data-n>0</b></button>
+        </div>
+      </div>
+      <div class="s12-slot"><span class="qbadge s12-q step" data-step="0" data-until="2" data-from="none" aria-label="not yet checked">?</span><p class="s12-stamp half step" data-step="3" data-until="3" data-from="none"><b>3 Half true.</b> Team chats: not by default. Personal accounts: a setting.</p></div>
+    </article>
+  </div>
+
+  <div class="layer s12-final step" data-step="4" data-until="5" data-from="none">
+    <div class="s12-sheet">
+      <svg class="s12-outline" viewBox="0 0 1060 740" preserveAspectRatio="none" aria-hidden="true"><rect x="3" y="3" width="1054" height="734" rx="18" pathLength="100" fill="#fff" stroke="#1F4A38" stroke-width="4"/></svg>
+      <div class="s12-page">
+        <p class="kick t s12-k" style="--j:0">One page · AI at work</p>
+        <p class="s12-pl" style="--j:1"><b class="ok">1</b><span>Our work tool is Claude Team. From 1 December customer data goes only there.</span></p>
+        <p class="s12-pl" style="--j:2"><b class="ok">2</b><span>Anthropic says chats are stored in the US. We asked in writing.</span></p>
+        <p class="s12-pl" style="--j:3"><b class="ok">3</b><span>Team chats are not used for training by default. Personal accounts have a setting.</span></p>
+        <div class="s12-rl">
+          <p style="--j:4"><svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg><span><b>Allowed</b> public text, Team chats with names out</span></p>
+          <p style="--j:5"><svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-a"/></svg><span><b>Ask first</b> customer contracts, CVs</span></p>
+          <p style="--j:6"><svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-r"/></svg><span><b>Never</b> keys, customer data on a personal account</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="layer s12-end step" data-step="5" data-until="5" data-from="right">
+    <p class="s12-mon">Monday I will <i class="s11-bl"></i>.</p>
+    <div class="card s12-qr"><img src="./assets/kit-qr.svg" alt="QR code to the kit page" width="330" height="330" /><div><p class="kick t">Get the kit</p><p class="s12-url"><span>loehrning.ai/workshops/</span><span>ki-im-unternehmen-sicher-nutzen/kit</span></p></div></div>
+    <p class="s12-by">Tim Löhr · loehrning.ai</p>
+  </div>
+  <footer class="foot"><span class="pg"><b>12</b> / 12</span></footer>
+</section>
+<section class="slide sa1" id="appendix-plans" data-n="A1" data-label="Team vs Enterprise" data-act="6" data-kind="appendix" data-seconds="0" data-steps="7"
+  data-note="Appendix, use only if asked. No prices and no seat numbers: they change, so re-read the live page.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="layer kick sa-kick arr">Appendix · only if asked</p>
+  <h2 class="layer h2 sa-h arr" style="--i:1">Team vs Enterprise</h2>
+  <div class="layer card sa1-table arr" style="--i:2">
+    <div class="sa1-head"><span></span><span>TEAM</span><span>ENTERPRISE</span></div>
+    <div class="sa1-row"><span>Single sign-on</span><svg class="lt step" data-step="1" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg><svg class="lt step" data-step="1" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg></div>
+    <div class="sa1-row"><span>Admin controls</span><svg class="lt step" data-step="2" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg><svg class="lt step" data-step="2" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg></div>
+    <div class="sa1-row"><span>SCIM</span><i class="sa1-no step" data-step="3" data-from="none" aria-label="not included"></i><svg class="lt step" data-step="3" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg></div>
+    <div class="sa1-row"><span>Audit logs</span><i class="sa1-no step" data-step="4" data-from="none" aria-label="not included"></i><svg class="lt step" data-step="4" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg></div>
+    <div class="sa1-row"><span>Compliance API</span><i class="sa1-no step" data-step="5" data-from="none" aria-label="not included"></i><svg class="lt step" data-step="5" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg></div>
+    <div class="sa1-row"><span>Delete timer, minimum 30 days</span><i class="sa1-no step" data-step="6" data-from="none" aria-label="not included"></i><svg class="lt step" data-step="6" data-from="none" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-g"/></svg></div>
+    <div class="sa1-row sa1-last"><span>Used for training by default</span><b class="step" data-step="7" data-from="none">NO</b><b class="step" data-step="7" data-from="none">NO</b></div>
+  </div>
+  <div class="layer sa1-src">
+    <p class="src">claude.com/pricing as read 18 Oct 2026 (no page date); Enterprise help page 1 Sep 2026.</p>
+    <p class="src">No prices, no seat numbers: re-read live.</p>
+  </div>
+  <footer class="foot"><span class="pg"><b>A1</b> / appendix</span></footer>
+</section>
+<section class="slide sa2" id="appendix-asked" data-n="A2" data-label="If asked" data-act="6" data-kind="appendix" data-seconds="0" data-steps="0"
+  data-note="Appendix, use only if asked. Three short answers: memory, connectors, incognito.">
+  <div class="amb" aria-hidden="true"><i></i><i></i><i></i></div>
+  <p class="layer kick sa-kick arr">Appendix · only if asked</p>
+  <h2 class="layer h2 sa-h arr" style="--i:1">If asked</h2>
+  <div class="layer sa2-cards">
+    <article class="card sa2-card arr" style="--i:2"><span class="sa2-ico"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg></span><h3>Memory</h3><p>Free, Pro, Max: on by default. Team, Enterprise: an owner makes it available, then each member turns it on. Owners cannot read members' memories.</p></article>
+    <article class="card sa2-card arr" style="--i:3"><span class="sa2-ico"><svg class="ic" aria-hidden="true"><use href="#i-plug"/></svg></span><h3>Connectors</h3><p>Claude uses your own permissions in the connected service. Owners choose which are on.</p></article>
+    <article class="card sa2-card arr" style="--i:4"><span class="sa2-ico"><svg class="ic" aria-hidden="true"><use href="#i-ghost"/></svg></span><h3>Incognito</h3><p>Ghost icon. Not saved to history or memory. Personal plans: also not used to improve Claude. Team, Enterprise: still in exports, org retention applies.</p></article>
+  </div>
+  <footer class="foot"><span class="pg"><b>A2</b> / appendix</span></footer>
+</section>
+</deck-stage>
+<script src="./lib/geo.js"></script>
+<script src="./lib/globe.js"></script>
+<script src="./lib/motion.js"></script>
+<script src="./lib/presenter.js"></script>
+<script data-part="shared">
+if (window.DECK) {
+// Back button: fades after 2.5 s without mouse movement (the deck hides its own chrome the same way), returns on mouse move or focus.
+const back = document.querySelector('.deck-back');
+if (back) {
+  let idle = 0;
+  const wake = () => { back.classList.remove('is-idle'); clearTimeout(idle); idle = setTimeout(() => back.classList.add('is-idle'), 2500); };
+  window.addEventListener('mousemove', wake, { passive: true });
+  back.addEventListener('focus', wake);
+  wake();
+}
+}
+</script>
+<script data-part="s01-s04">
+if (window.DECK) {
+// S4: each step ticks one check card and fills its blank on the paper line
+DECK.on('04', {
+  state(step, d) {
+    d.slide.querySelectorAll('[data-c]').forEach((c) => c.classList.toggle('done', Number(c.dataset.c) <= step));
+    d.slide.querySelectorAll('[data-b]').forEach((b) => b.classList.toggle('done', Number(b.dataset.b) <= step));
+  },
+});
+
+// S1: the cover globe. A prompt leaves the laptop in Skopje and lands in the US cloud, on a loop; the globe settles with both ends inside the panel.
+(() => {
+  const slide = document.querySelector('.s1');
+  const canvas = slide.querySelector('canvas[data-globe]');
+  const globe = window.ESGGlobe && window.ESGGlobe.get(canvas);
+  if (!globe) return;
+  const VIEW = { lon: -8, lat: 36, zoom: 1 };
+  const STORED = [-77, 39];
+  const LABELS = [['skopje', 'your laptop', 'left'], [STORED, 'the cloud']];
+  let t1 = 0, t2 = 0, loop = 0;
+  const stop = () => { clearTimeout(t1); clearTimeout(t2); clearInterval(loop); };
+  const send = (ms) => { globe.clearArcs(); globe.arc(STORED, { ms, lift: 0.2, labels: LABELS }); };
+  DECK.on('01', {
+    state(step, d) {
+      stop();
+      globe.clearArcs();
+      if (DECK.reduce || d.instant && d.backward) { globe.still(VIEW); globe.arc(STORED, { ms: 0, labels: LABELS }); return; }
+      globe.reset();
+      t1 = setTimeout(() => globe.settle({ ...VIEW, ms: 1700, short: true }), 700);
+      t2 = setTimeout(() => { send(1500); loop = setInterval(() => send(1500), 7000); }, 2500);
+    },
+    leave() { stop(); },
+  });
+})();
+}
+</script>
+<script data-part="s05-s08">
+if (window.DECK) {
+// S5: the plan switch. Steps 0 to 2 walk the three plans; a click on a segment jumps to it.
+(() => {
+  const slide = document.querySelector('.s5');
+  const setPlan = (p) => {
+    slide.dataset.plan = String(p);
+    slide.querySelectorAll('.s5-opt').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.plan === String(p))));
+  };
+  slide.querySelectorAll('.s5-opt').forEach((b) => b.addEventListener('click', () => setPlan(b.dataset.plan)));
+  DECK.on('05', { state(step) { if (step <= 2) setPlan(step); } });
+})();
+
+// S6: step 2 sends the folder (a wave of reach, then the files that are read fly to the cloud); step 3 is the globe.
+(() => {
+  const slide = document.querySelector('.s6');
+  const files = slide.querySelector('.s6-files');
+  const read = Array.from(files.querySelectorAll('.rd'));
+  const canvas = slide.querySelector('canvas[data-globe]');
+  const globe = window.ESGGlobe && window.ESGGlobe.get(canvas);
+  const VIEW = { lon: -32, lat: 40, zoom: 1.04 };
+  const STORED = [-77, 39];
+  const LABELS = [['skopje', 'your laptop'], [STORED, 'stored: US', 'left']];
+  let timer = 0, timer2 = 0;
+  const pkt = slide.querySelector('.s6-pkt');
+
+  function aim() {
+    const sc = DECK.scaleOf(slide);
+    const cloud = slide.querySelector('.s6-pkt').getBoundingClientRect();
+    const cx = cloud.left + cloud.width / 2, cy = cloud.top + cloud.height / 2;
+    read.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--tx', ((cx - (r.left + r.width / 2)) / sc).toFixed(1) + 'px');
+      el.style.setProperty('--ty', ((cy - (r.top + r.height / 2)) / sc).toFixed(1) + 'px');
+    });
+  }
+
+  DECK.on('06', {
+    state(step, d) {
+      clearTimeout(timer); clearTimeout(timer2);
+      pkt.classList.remove('hit');
+      const sent = step >= 2;
+      files.classList.toggle('reach', sent);
+      read.forEach((el) => el.classList.remove('fly', 'gone'));
+      if (sent) {
+        aim();
+        if (d.instant || DECK.reduce) read.forEach((el) => el.classList.add('gone'));
+        else {
+          timer = setTimeout(() => read.forEach((el) => el.classList.add('fly')), 900);
+          timer2 = setTimeout(() => pkt.classList.add('hit'), 2300);
+        }
+      }
+      if (!globe) return;
+      globe.clearArcs();
+      if (step < 3) { globe.reset(); return; }
+      if (d.instant) { globe.still(VIEW); globe.arc(STORED, { ms: 0, labels: LABELS }); return; }
+      globe.settle({ ...VIEW, ms: 1300, short: true });
+      globe.arc(STORED, { ms: 1100, delay: 1250, lift: 0.18, labels: LABELS });
+    },
+    leave() { clearTimeout(timer); clearTimeout(timer2); },
+  });
+})();
+
+// S7: six pastes, two presses each (the paste, then the reveal). Drag the card onto a lamp or tap a lamp to count a vote.
+(() => {
+  const slide = document.querySelector('.s7');
+  const cards = Array.from(slide.querySelectorAll('.s7-card'));
+  const lampBox = slide.querySelector('.s7-lamps');
+  const lamps = Array.from(lampBox.querySelectorAll('.s7-lamp'));
+  const reason = slide.querySelector('.s7-reason');
+  const acct = slide.querySelector('.s7-acct');
+  const no = slide.querySelector('.s7-no');
+  const timer = slide.querySelector('.s7-timer');
+  const dots = Array.from(slide.querySelectorAll('.s7-score i'));
+  const deckBox = slide.querySelector('.s7-deck');
+  const NAME = { g: 'GREEN', a: 'AMBER', r: 'RED' };
+  let scene = 0, revealed = false;
+
+  function paint(step, d) {
+    const prevScene = scene;
+    const prevRevealed = revealed;
+    scene = Math.ceil(step / 2);
+    revealed = step > 0 && step % 2 === 0;
+    cards.forEach((c, i) => { c.classList.toggle('is-cur', scene === 0 ? i === 0 && !document.documentElement.classList.contains('deck-js') : i + 1 === scene); c.classList.remove('ghost'); });
+    const card = cards[Math.max(0, scene - 1)];
+    {
+      const first = Math.max(1, scene);
+      no.textContent = String(first);
+      acct.textContent = card.dataset.acct;
+      acct.className = 'pill s7-acct ' + card.dataset.acct.toLowerCase();
+      lamps.forEach((l) => { l.dataset.tally = 's7k' + first + ':' + l.dataset.light; });
+      DECK.tally.paint('s7k' + first);
+    }
+    const win = scene > 0 && revealed ? card.dataset.light : null;
+    lampBox.classList.toggle('revealed', !!win);
+    lamps.forEach((l) => l.classList.toggle('win', l.dataset.light === win));
+    reason.dataset.light = win || '';
+    if (win) {
+      reason.innerHTML = '<b>' + NAME[win] + '</b><span></span>';
+      DECK.type(reason.querySelector('span'), card.dataset.why, 16);
+    } else {
+      reason.textContent = '';
+    }
+    dots.forEach((dot, i) => {
+      const done = i + 1 < scene || (i + 1 === scene && revealed);
+      dot.classList.toggle('on', done);
+      dot.innerHTML = done ? '<svg class="lt" viewBox="0 0 24 24" aria-hidden="true"><use href="#lt-' + cards[i].dataset.light + '"/></svg>' : '';
+    });
+    timer.classList.toggle('paused', revealed);
+    if (scene === 0 || d.instant) timer.classList.remove('run');
+    else if (!revealed && (scene !== prevScene || prevRevealed)) { timer.classList.remove('run'); void timer.getBoundingClientRect(); timer.classList.add('run'); }
+    if (!d.instant && !d.backward && !revealed && scene > 0 && scene !== prevScene) {
+      card.classList.remove('drop'); void card.offsetWidth; card.classList.add('drop');
+    }
+  }
+  DECK.on('07', { state: paint });
+
+  // drag with spring physics: the card follows the pointer, a lamp under it takes the vote, the card springs home
+  const lampAt = (card, x, y) => {
+    card.style.pointerEvents = 'none';
+    const el = document.elementFromPoint(x, y);
+    card.style.pointerEvents = '';
+    return el ? el.closest('.s7-lamp') : null;
+  };
+  deckBox.addEventListener('pointerdown', (e) => {
+    const card = e.target.closest('.s7-card.is-cur');
+    if (!card || revealed || scene === 0) return;
+    const sc = DECK.scaleOf(slide);
+    const sx = e.clientX, sy = e.clientY;
+    const sp = card._sp || (card._sp = DECK.spring(card));
+    card.setPointerCapture(e.pointerId);
+    card.classList.add('drag');
+    slide.querySelector('.s7-chat').classList.add('dragging');
+    const hot = (x, y) => { const l = lampAt(card, x, y); lamps.forEach((o) => o.classList.toggle('hot', o === l)); return l; };
+    const move = (ev) => { sp.to((ev.clientX - sx) / sc, (ev.clientY - sy) / sc, 520, 34); hot(ev.clientX, ev.clientY); };
+    const up = (ev) => {
+      card.removeEventListener('pointermove', move);
+      card.removeEventListener('pointerup', up);
+      card.removeEventListener('pointercancel', up);
+      card.classList.remove('drag');
+      setTimeout(() => slide.querySelector('.s7-chat').classList.remove('dragging'), 900);
+      const lamp = hot(ev.clientX, ev.clientY);
+      lamps.forEach((o) => o.classList.remove('hot'));
+      if (lamp) {
+        DECK.tally.bump(lamp.dataset.tally, 1, lamp);
+        const c = card.getBoundingClientRect(), l = lamp.getBoundingClientRect();
+        const homeX = (c.left + c.width / 2) / 1 - sp.x * sc, homeY = (c.top + c.height / 2) - sp.y * sc;
+        sp.to(((l.left + l.width / 2) - homeX) / sc, ((l.top + l.height / 2) - homeY) / sc, 320, 26);
+        card.classList.add('ghost');
+        setTimeout(() => { card.classList.remove('ghost'); sp.to(0, 0, 150, 11); }, 420);
+      } else {
+        sp.to(0, 0, 150, 11);
+      }
+    };
+    card.addEventListener('pointermove', move);
+    card.addEventListener('pointerup', up);
+    card.addEventListener('pointercancel', up);
+  });
+})();
+
+// S8: on the step the four details lift out of the email and fly into their placeholders.
+(() => {
+  const slide = document.querySelector('.s8');
+  const chips = Array.from(slide.querySelectorAll('.s8-slot'));
+  DECK.on('08', {
+    state(step, d) {
+      if (step !== 1 || d.instant || d.backward || DECK.reduce) return;
+      const sc = DECK.scaleOf(slide);
+      chips.forEach((slot, i) => {
+        const chip = slot.querySelector('.s8-chip');
+        const span = slide.querySelector('.pii[data-k="' + slot.dataset.k + '"]').getBoundingClientRect();
+        const to = chip.getBoundingClientRect();
+        const dx = (span.left - to.left) / sc, dy = (span.top - to.top) / sc;
+        chip.animate([
+          { transformOrigin: '0 0', transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + Math.min(1, span.width / to.width) + ',' + Math.min(1, span.height / to.height) + ')', opacity: 0 },
+          { opacity: 1, offset: 0.25 },
+          { transformOrigin: '0 0', transform: 'none', opacity: 1 },
+        ], { duration: 760, delay: 120 + i * 130, easing: 'cubic-bezier(.65,0,.3,1)', fill: 'backwards' });
+      });
+    },
+  });
+})();
+}
+</script>
+<script data-part="s09-s12">
+if (window.DECK) {
+// S9: the timeline builds with the steps; from step 5 each press (or a click on a card) flies one use into its box.
+(() => {
+  const slide = document.querySelector('.s9');
+  const uses = Array.from(slide.querySelectorAll('.s9-use'));
+  const slots = uses.map((u) => u.parentElement);
+  const clicked = new Set();
+  const timers = new Map();
+  const zoneOf = (u) => slide.querySelector('.s9-box[data-b="' + u.dataset.to + '"] .s9-zone');
+  const reasonOf = (u) => u.querySelector('.s9-ur');
+
+  function place(u, animate) {
+    if (u.classList.contains('placed')) return;
+    const box = zoneOf(u).closest('.s9-box');
+    const settle = () => { zoneOf(u).appendChild(u); u.classList.add('placed'); };
+    const reason = reasonOf(u);
+    clearTimeout(timers.get(u));
+    if (animate && !DECK.reduce) {
+      reason.textContent = '';
+      DECK.flip(u, settle, { ms: 640 });
+      timers.set(u, setTimeout(() => {
+        box.classList.remove('hit'); void box.offsetWidth; box.classList.add('hit');
+        DECK.type(reason, u.dataset.reason, 14);
+      }, 580));
+    } else {
+      settle();
+      reason.textContent = u.dataset.reason;
+    }
+  }
+  function unplace(u) {
+    clearTimeout(timers.get(u));
+    if (!u.classList.contains('placed')) return;
+    slots[uses.indexOf(u)].appendChild(u);
+    u.classList.remove('placed');
+    reasonOf(u).textContent = '';
+  }
+  uses.forEach((u, i) => u.addEventListener('click', () => { clicked.add(i); place(u, true); }));
+  DECK.on('09', {
+    state(step, d) {
+      if (d.reset) clicked.clear();
+      uses.forEach((u, i) => {
+        const want = i + 1 <= step - 5 || clicked.has(i);
+        if (want) place(u, !d.instant && !d.backward && i + 1 === step - 5); else unplace(u);
+      });
+    },
+  });
+})();
+
+// S11: each step starts one countdown (write 6, swap 3, read 1); the ring and the digits run from the same clock.
+(() => {
+  const slide = document.querySelector('.s11');
+  const timer = slide.querySelector('.s11-timer');
+  const time = slide.querySelector('.s11-time');
+  const phases = Array.from(slide.querySelectorAll('[data-ph]'));
+  const SECONDS = [360, 360, 180, 60];
+  let tick = 0;
+  const text = (ms) => { const s = Math.ceil(ms / 1000); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+  DECK.on('11', {
+    state(step, d) {
+      clearInterval(tick);
+      const total = SECONDS[step] * 1000;
+      phases.forEach((p) => p.classList.toggle('on', Number(p.dataset.ph) === step));
+      timer.classList.remove('run');
+      timer.style.setProperty('--dur', SECONDS[step] + 's');
+      time.textContent = text(total);
+      if (step === 0 || d.instant) return;
+      void timer.getBoundingClientRect();
+      timer.classList.add('run');
+      const t0 = performance.now();
+      tick = setInterval(() => {
+        const left = Math.max(0, total - (performance.now() - t0));
+        time.textContent = text(left);
+        if (left <= 0) clearInterval(tick);
+      }, 250);
+    },
+    leave() { clearInterval(tick); },
+  });
+})();
+}
+</script>
+</body>
+</html>

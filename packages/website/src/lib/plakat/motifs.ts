@@ -187,6 +187,17 @@ const PORTRAIT_MOTIFS = {
     ...leafAt("mid", { cx: 196, cy: 402, rot: -30, len: 290, wid: 250, seed: 4 }),
     ...leafAt("ink", { cx: 334, cy: 338, rot: 16, len: 276, wid: 258, seed: 1 }),
   ],
+  // W05 Audit-Vorbereitung (sage): a ledger. A tall mid sheet cut by the right
+  // and bottom edges, three ink rows across it that run off the left of the
+  // sheet, and one ink stamp square above them. Starts below y 230 so the
+  // numeral zone stays clear.
+  ledger: () => [
+    shape("mid", rect(196, 232, 260, 300)),
+    shape("ink", rect(60, 300, 340, 18)),
+    shape("ink", rect(60, 346, 340, 18)),
+    shape("ink", rect(60, 392, 250, 18)),
+    shape("ink", rect(60, 448, 56, 56)),
+  ],
   // Grundlagenpfad (lemons), numerals 01 to 04.
   disc: () => [shape("mid", circle(300, 392, 168)), shape("ink", circle(118, 300, 40))],
   pair: () => [shape("ink", circle(176, 402, 118)), shape("mid", circle(330, 402, 118))],
@@ -380,6 +391,7 @@ const STRIP_WINDOWS: Record<MotifId, readonly [top: number, bottom: number]> = {
   pie: [228, 440],
   dome: [196, 500],
   leaves: [168, 380],
+  ledger: [220, 500],
   disc: [212, 500],
   pair: [272, 500],
   ring: [243, 500],

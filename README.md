@@ -30,30 +30,18 @@ A clean production build uses only repository-local and system fonts. It does no
 ## Quality gates
 
 ```bash
-bun run scan:public
-bun run test:scanner
-bun run audit
-bun run license:audit
-bun run content:lint
-bun run typecheck
-bun run lint
-bun run test
-bun run build
+bun run ci
 ```
 
-`bun run verify` runs the complete repository gate, including the public-tree scanner, dependency audit, content checks, repository-contract tests, and every allowlisted workspace's verification command. `bun run verify:public` adds the desktop and mobile public-route browser smoke suite:
+`bun run ci` (also `bun run verify`) is the same gate pull requests and `main` must pass, in the same order: `static` (types, lint, the public-tree scanner, content and route checks) and `unit` (the Vitest suite) in parallel, then `browser` (one production build, the server-log privacy probe, and a curated browser smoke on desktop and phone Chromium). Run one part with `bun run ci:static`, `bun run ci:unit` or `bun run ci:browser`; the browser part needs `bunx playwright install chromium` once. A red GitHub job is reproduced by running the script of the same name. The broader checks (full browser suites, Safari, Lighthouse, coverage, dependency and licence audits) run in the `Nightly` workflow and locally with `bun run ci:hygiene`; see [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
 
-```bash
-bun run verify:public
-```
+`bun run test:e2e` builds, then runs every desktop and phone Chromium spec. Direct
+production-browser commands build first, preventing stale `.next` output from
+counting as proof. Commands ending in `:built` are internal reuse commands for
+composite verification after a build made in the same workspace with the same
+environment (`bun run ci:browser`).
 
-Direct production-browser commands build first, preventing stale `.next`
-output from counting as proof. Commands ending in `:built` are internal reuse
-commands for CI and composite verification after `bun run verify` has built the
-same workspace.
-
-`bun run test:e2e:auth-scaffold` is credential-free scaffold coverage. It does
-not prove live login. The separate `bun run test:e2e:authenticated-live` gate
+The `bun run test:e2e:authenticated-live` gate
 fails unless a dedicated Supabase test project supplies the exact nine-variable
 contract documented in
 [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
@@ -62,8 +50,8 @@ server-validated session, not the magic-link, Turnstile, and PKCE login journey.
 
 `bun run verify:release` first validates the supplied provider environment in
 strict release mode, before any provider-free wrapper can clear it. It then runs
-deterministic verification, the full 35-route/three-run Lighthouse gate, and
-the browser gates against one provider-free build receipt. It finally compiles
+static and unit verification, the full 35-route/three-run Lighthouse gate, and
+the browser smoke, server-log privacy and launch gates against one provider-free build receipt. It finally compiles
 the supplied runtime provider configuration in strict mode with
 Sentry's complete source-map upload group explicitly removed. This final local
 compile cannot upload source maps. The browser gates do not prove live provider
@@ -104,8 +92,12 @@ bun run deploy:production                  # dry run: checks every guard
 bun run deploy:production -- --wait --yes  # wait for green CI, then deploy
 ```
 
-It deploys only the head of `main`, and only when every check-run on that
-exact commit is green (the `verify` aggregate included). It refuses a commit
+It deploys only the head of `main`, and only when the `verify` check-run on that
+exact commit is green; every other check (CodeQL, dependency graph, the nightly
+run) is shown as "Not blocking" and cannot stop a release. Before a risky
+release (CSP, fonts, layout primitives, a workshop launch), run the full matrix
+on the commit with `gh workflow run nightly.yml --ref main` and add
+`--require-nightly` to the deploy command. It refuses a commit
 that already has a production deployment, watches the build to READY with a
 12-minute cancel guard, smoke-tests the production routes, and prints the
 rollback command. It never retries a build on its own.
@@ -144,7 +136,7 @@ packages/
     tests/e2e/     Playwright browser tests
 scripts/           Root verification, release, and packaging gates
 LICENSES/          License texts referenced by LICENSE_POLICY.md
-.github/           CI workflows and issue templates
+.github/           CI workflows (Verify, Nightly) and issue templates
 ```
 
 The repository is deliberately a one-workspace monorepo. Future standalone learning modules or tools can be added under `packages/` after they pass the licensing, secret-scan, build, and browser-proof gates documented in [ARCHITECTURE.md](ARCHITECTURE.md). The exact registry, commit-pinning, asset, discovery, and browser admission sequence is [ARTIFACT_PUBLICATION.md](ARTIFACT_PUBLICATION.md).

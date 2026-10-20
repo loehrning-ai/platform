@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (24)
+### Static pages (25)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -47,6 +47,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/hilfe/eigene-ki | src/app/hilfe/eigene-ki/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/impressum | src/app/impressum/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/datenschutz | src/app/datenschutz/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/bot | src/app/bot/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 
 ### Blog posts (2)
 
@@ -221,6 +222,8 @@ _None._
 
 | Pattern | Explanation |
 | --- | --- |
+| `/workshops/audit-vorbereitung-mit-ki` | The first slug of Workshop 05 resolves to the released workshop page. |
+| `/workshops/audit-vorbereitung-mit-ki/:path*` | Files and pages under the first slug of Workshop 05 resolve to the released workshop page. |
 | `/ai-native/fluency-test` | The retired self-assessment resolves to the course landing. |
 | `/ai-native/capstone-gallery` | The retired capstone rules page resolves to the course landing. |
 | `/ai-native/demos` | The course simulation gallery merged into the demo gallery. |

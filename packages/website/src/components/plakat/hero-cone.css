@@ -1,0 +1,512 @@
+/*
+ * Hero scene "the cone": Workshop 01, forecasts (hero-cone-scene.tsx).
+ *
+ * Contract (docs/experience-system.md, "Workshop stage and scenes"), checked
+ * by hero-cone-scene.test.tsx:
+ * - The base styles are the finished still frame: the history line, the nine
+ *   forecasts with the outer eight dimmed, the band, the signed path with the
+ *   person's stamp on it and the real outcome in Mennige, landed inside the
+ *   cone but off the middle path.
+ * - Every animation, transition and keyframe sits inside
+ *   `@media (prefers-reduced-motion: no-preference)`. Only transform, opacity
+ *   and stroke-dashoffset move. No filter, gradient, blur or hex colour.
+ * - One loop of --ws-t (9s fallback). Keyframe percentages are seconds / 9:
+ *   0 to 1.5s the past draws, 1.8 to 3.6s the cone grows, 3.2 to 3.7s the
+ *   band opens, 4 to 5.1s the cone narrows, 5.1 to 6.2s the person signs,
+ *   6.3 to 7.6s the real outcome draws, 7.6 to 8.1s it lands, then a rest and
+ *   a short fade before the loop restarts.
+ */
+
+.hc-root {
+  overflow: visible;
+  --hc-ink: var(--color-scene-ink);
+  --hc-mid: var(--color-scene-mid);
+  --hc-ground: var(--color-scene-ground);
+  --hc-paper: var(--color-paper);
+}
+
+/* ─── Base: the still frame ─────────────────────────────────────────────── */
+
+.hc-disc {
+  fill: var(--hc-paper);
+  fill-opacity: 0.075;
+}
+
+.hc-dust-dot {
+  fill: var(--hc-ink);
+  opacity: 0.35;
+}
+
+.hc-now-line {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 1;
+  stroke-dasharray: 2 8;
+  stroke-linecap: round;
+  opacity: 0.4;
+}
+
+.hc-band-wash {
+  fill: var(--hc-paper);
+  fill-opacity: 0.12;
+}
+
+.hc-band-line {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 1.4;
+  stroke-linejoin: miter;
+}
+
+.hc-path {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 6 8;
+}
+
+.hc-wedge {
+  fill: var(--hc-paper);
+  fill-opacity: 0.11;
+  stroke: none;
+}
+
+.hc-tip {
+  fill: var(--hc-ink);
+}
+
+.hc-cone-out,
+.hc-cone-in {
+  opacity: 0.25;
+}
+
+.hc-signed {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+
+.hc-history {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 3.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+.hc-now-dot {
+  fill: var(--hc-ink);
+  stroke: var(--hc-ground);
+  stroke-width: 3;
+}
+
+.hc-now-ring {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 1.6;
+  opacity: 0;
+}
+
+.hc-seal {
+  fill: none;
+  stroke: var(--hc-ink);
+  stroke-width: 1.6;
+  opacity: 0;
+}
+
+.hc-stamp-body {
+  fill: var(--hc-ink);
+  stroke: var(--hc-ground);
+  stroke-width: 3;
+}
+
+.hc-stamp-glyph {
+  fill: var(--hc-ground);
+}
+
+.hc-outcome-halo {
+  fill: none;
+  stroke: var(--hc-ground);
+  stroke-width: 11;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+.hc-outcome {
+  fill: none;
+  stroke: var(--hc-mid);
+  stroke-width: 5.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+
+.hc-end-dot {
+  fill: var(--hc-mid);
+  stroke: var(--hc-ink);
+  stroke-width: 2.6;
+}
+
+/* ─── Motion: only when the visitor has not asked for less ──────────────── */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hc-root {
+    --hc-ease: cubic-bezier(0.65, 0, 0.35, 1);
+    --hc-snap: cubic-bezier(0.2, 0.9, 0.25, 1.15);
+    --hc-t: var(--ws-t, 9s);
+  }
+
+  .hc-story,
+  .hc-far,
+  .hc-dust,
+  .hc-cone,
+  .hc-band,
+  .hc-now,
+  .hc-seal,
+  .hc-stamp,
+  .hc-end {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* Far layer: ambient, never tied to the story. */
+  .hc-far {
+    animation: hc-breathe 18s ease-in-out infinite;
+  }
+
+  .hc-dust {
+    animation: hc-drift 24s ease-in-out infinite;
+  }
+
+  /* The story: one loop, every layer starts a little after the last. */
+  .hc-story {
+    animation: hc-story var(--hc-t) linear infinite;
+    transition: transform 400ms var(--hc-ease);
+  }
+
+  .hc-history {
+    animation: hc-history var(--hc-t) var(--hc-ease) infinite;
+  }
+
+  .hc-now {
+    animation: hc-now var(--hc-t) var(--hc-snap) infinite;
+  }
+
+  .hc-now-ring {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hc-ring var(--hc-t) ease-out infinite;
+  }
+
+  .hc-cone {
+    transform-box: view-box;
+    transform-origin: 230px 250px;
+  }
+
+  .hc-cone-kept {
+    animation: hc-grow-kept var(--hc-t) var(--hc-ease) infinite;
+  }
+
+  .hc-cone-in {
+    animation: hc-grow-in var(--hc-t) var(--hc-ease) infinite;
+  }
+
+  .hc-cone-out {
+    animation: hc-grow-out var(--hc-t) var(--hc-ease) infinite;
+  }
+
+  .hc-band {
+    animation: hc-band var(--hc-t) var(--hc-ease) infinite;
+  }
+
+  .hc-signed {
+    animation: hc-signed var(--hc-t) ease-out infinite;
+  }
+
+  .hc-stamp {
+    animation: hc-hop var(--hc-t) infinite;
+  }
+
+  .hc-seal {
+    animation: hc-seal var(--hc-t) ease-out infinite;
+  }
+
+  .hc-outcome-halo,
+  .hc-outcome {
+    animation: hc-outcome var(--hc-t) var(--hc-ease) infinite;
+  }
+
+  .hc-end {
+    animation: hc-end var(--hc-t) var(--hc-snap) infinite;
+  }
+
+  /* The stage reacts: the story drifts a few pixels against the far layer. */
+  .ws-stage:is(:hover, :focus-within) .hc-root .hc-story {
+    transform: translate(5px, -3px);
+  }
+
+  @keyframes hc-breathe {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.045);
+    }
+  }
+
+  @keyframes hc-drift {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(-8px, 5px);
+    }
+  }
+
+  @keyframes hc-story {
+    0%,
+    94.4% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes hc-history {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    1% {
+      stroke-dashoffset: 1;
+      opacity: 1;
+    }
+    16.7%,
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-now {
+    0%,
+    15% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    19% {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+    23%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-ring {
+    0%,
+    17% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    18% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+    29% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+    38% {
+      transform: scale(1);
+      opacity: 0;
+    }
+    39% {
+      opacity: 0.55;
+    }
+    50% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(2.6);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hc-grow-kept {
+    0%,
+    20% {
+      transform: scaleX(0.02);
+      opacity: 0;
+    }
+    35.5%,
+    100% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-grow-in {
+    0%,
+    22.2% {
+      transform: scaleX(0.02);
+      opacity: 0;
+    }
+    37.8% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    56.7%,
+    100% {
+      transform: scaleX(1);
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes hc-grow-out {
+    0%,
+    24.4% {
+      transform: scaleX(0.02);
+      opacity: 0;
+    }
+    40% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    44.4% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    51.1%,
+    100% {
+      transform: scaleX(1);
+      opacity: 0.25;
+    }
+  }
+
+  @keyframes hc-band {
+    0%,
+    35.5% {
+      transform: scaleY(0);
+      opacity: 0;
+    }
+    42%,
+    100% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-signed {
+    0%,
+    64% {
+      opacity: 0;
+    }
+    69%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-hop {
+    0%,
+    56.6% {
+      transform: translate(-84px, -62px) scale(1);
+      opacity: 0;
+    }
+    58% {
+      opacity: 1;
+    }
+    61% {
+      transform: translate(-42px, -100px) scale(1);
+      animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6);
+    }
+    64.4% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    65.6% {
+      transform: translate(0, 0) scale(1.2, 0.8);
+    }
+    68%,
+    100% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-seal {
+    0%,
+    64.4% {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    65% {
+      transform: scale(0.9);
+      opacity: 0.9;
+    }
+    74%,
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hc-outcome {
+    0%,
+    69.5% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    70% {
+      stroke-dashoffset: 1;
+      opacity: 1;
+    }
+    84.4%,
+    100% {
+      stroke-dashoffset: 0;
+      opacity: 1;
+    }
+  }
+
+  @keyframes hc-end {
+    0%,
+    83.5% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    87% {
+      transform: scale(1.35);
+      opacity: 1;
+    }
+    90%,
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+/* A visitor who asked for less motion gets the still frame and nothing else. */
+@media (prefers-reduced-motion: reduce) {
+  .hc-root,
+  .hc-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

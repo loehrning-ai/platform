@@ -3,11 +3,11 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import matter from "gray-matter";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // Contracts for the repository's GitHub automation: Dependabot's release
-// cooldown and grouping, the voice-report comment upsert, and the CI contract
-// document that describes required checks and token permissions.
+// cooldown and grouping, the shape of the Verify and Nightly workflows, and the
+// CI contract document that describes the release signal and token permissions.
 
 const repoRoot = fileURLToPath(new URL("../../../../../", import.meta.url));
 
@@ -34,6 +34,7 @@ type Job = {
   readonly name?: string;
   readonly if?: string;
   readonly needs?: readonly string[];
+  readonly "continue-on-error"?: unknown;
   readonly permissions?: Permissions;
   readonly steps?: readonly Step[];
 };
@@ -148,140 +149,70 @@ describe("Dependabot configuration", () => {
   });
 });
 
-describe("voice-report job", () => {
+describe("workflow shape", () => {
   const ci = workflow("ci.yml");
-  const job = ci.jobs["voice-report"];
-  const upsert = job.steps?.find((step) => step.name === "Upsert the pull-request comment");
-  const script = upsert?.with?.script ?? "";
-  const marker = "<!-- voice-report -->";
 
-  it("holds pull-requests: write only in this job and only on same-repository pull requests", () => {
-    expect(ci.permissions).toEqual({ contents: "read" });
-    expect(job.permissions).toEqual({ contents: "read", "pull-requests": "write" });
-    expect(job.if).toBe("github.event_name == 'pull_request'");
-    expect(upsert?.uses).toMatch(/^actions\/github-script@[0-9a-f]{40}$/);
-    expect(upsert?.if).toContain(
-      "github.event.pull_request.head.repo.full_name == github.repository",
-    );
-    for (const [id, other] of Object.entries(ci.jobs)) {
-      if (id === "voice-report") continue;
-      for (const [scope, access] of Object.entries(other.permissions ?? {})) {
-        expect(["read", "none"], `${id} ${scope}`).toContain(access);
+  it("keeps verify as the only aggregate and the only job with that name", () => {
+    expect(Object.keys(ci.jobs).sort()).toEqual(["browser", "static", "unit", "verify"]);
+    expect(ci.jobs.verify.name).toBe("verify");
+    expect(ci.jobs.verify.if).toBe("${{ always() }}");
+    expect([...(ci.jobs.verify.needs ?? [])].sort()).toEqual(["browser", "static", "unit"]);
+    for (const file of workflowFiles) {
+      for (const [id, job] of Object.entries(workflow(file).jobs)) {
+        if (file === "ci.yml" && id === "verify") continue;
+        expect(id, `${file} ${id}`).not.toMatch(/^verify/);
+        expect(job.name ?? "", `${file} ${id}`).not.toMatch(/^verify/);
       }
     }
   });
 
-  type Comment = {
-    readonly id: number;
-    readonly body?: string;
-    readonly user?: { readonly login?: string; readonly type?: string } | null;
-  };
-
-  const AsyncFunction = Object.getPrototypeOf(async () => undefined).constructor as new (
-    ...parameters: string[]
-  ) => (...arguments_: unknown[]) => Promise<unknown>;
-
-  async function runUpsert(comments: readonly Comment[]) {
-    const listComments = vi.fn();
-    const updateComment = vi.fn(async () => ({}));
-    const createComment = vi.fn(async () => ({}));
-    const github = {
-      paginate: vi.fn(async (method: unknown, parameters: unknown) => {
-        expect(method).toBe(listComments);
-        expect(parameters).toMatchObject({ owner: "o", repo: "r", issue_number: 7 });
-        return comments;
-      }),
-      rest: { issues: { listComments, updateComment, createComment } },
-    };
-    const context = { repo: { owner: "o", repo: "r" }, payload: { pull_request: { number: 7 } } };
-    const requireStub = (id: string) => {
-      if (id !== "node:fs/promises") throw new Error(`unexpected require(${id})`);
-      return { readFile: async () => "Report" };
-    };
-    await new AsyncFunction("require", "github", "context", script)(requireStub, github, context);
-    return { updateComment, createComment };
-  }
-
-  const bot = { login: "github-actions[bot]", type: "Bot" };
-  const spoof = (id: number, user: Comment["user"]): Comment => ({
-    id,
-    body: `${marker}\nnot the report`,
-    user,
-  });
-
-  it("creates its own comment instead of overwriting a marker comment from anyone else", async () => {
-    for (const user of [
-      { login: "mallory", type: "User" },
-      { login: "github-actions[bot]", type: "User" },
-      { login: "dependabot[bot]", type: "Bot" },
-      null,
-    ]) {
-      const { updateComment, createComment } = await runUpsert([spoof(1, user)]);
-      expect(updateComment, JSON.stringify(user)).not.toHaveBeenCalled();
-      expect(createComment).toHaveBeenCalledOnce();
-      expect(createComment).toHaveBeenCalledWith({
-        owner: "o",
-        repo: "r",
-        issue_number: 7,
-        body: `${marker}\nReport`,
-      });
+  it("lets no gate hide a failure", () => {
+    for (const [id, job] of Object.entries(ci.jobs)) {
+      expect(job["continue-on-error"], id).toBeUndefined();
+    }
+    for (const id of ["static", "unit", "browser"]) {
+      // Only verify may be conditional; a skipped gate would count as red there.
+      expect(ci.jobs[id].if, id).toBeUndefined();
+      expect(ci.jobs[id].needs, id).toBeUndefined();
     }
   });
 
-  it("updates the comment github-actions[bot] wrote, even after a spoofed one", async () => {
-    const { updateComment, createComment } = await runUpsert([
-      spoof(1, { login: "mallory", type: "User" }),
-      { id: 2, body: "an unrelated bot comment", user: bot },
-      { id: 3, body: `${marker}\nold report`, user: bot },
-    ]);
-    expect(createComment).not.toHaveBeenCalled();
-    expect(updateComment).toHaveBeenCalledExactlyOnceWith({
-      owner: "o",
-      repo: "r",
-      comment_id: 3,
-      body: `${marker}\nReport`,
-    });
+  it("uses only GitHub-owned actions pinned to a full commit SHA", () => {
+    const files = [
+      ...workflowFiles.map((file) => `.github/workflows/${file}`),
+      ".github/actions/setup/action.yml",
+    ];
+    for (const file of files) {
+      const uses = [...repositoryFile(file).matchAll(/^\s*(?:-\s+)?uses:\s*(\S+)/gm)].map(
+        (match) => match[1],
+      );
+      expect(uses.length, file).toBeGreaterThan(0);
+      for (const reference of uses) {
+        if (reference.startsWith("./")) continue;
+        expect(reference, `${file} ${reference}`).toMatch(/^actions\/[\w-]+@[0-9a-f]{40}$/);
+      }
+    }
   });
 });
 
 describe("docs/ci-contract.md", () => {
   const doc = repositoryFile("packages/website/docs/ci-contract.md");
 
-  function section(heading: string): string {
-    const start = doc.indexOf(`\n${heading}\n`);
-    expect(start, heading).toBeGreaterThanOrEqual(0);
-    const level = heading.split(" ")[0];
-    const rest = doc.slice(start + heading.length + 2);
-    const next = rest.search(new RegExp(`\\n#{2,${level.length}} `));
-    return next === -1 ? rest : rest.slice(0, next);
-  }
-
-  it("names every check the ruleset requires, and each check has a source", () => {
-    expect(doc).not.toMatch(/only required status check/i);
-    const required = section("### Required status checks");
-    for (const check of ["verify", "dependency-review", "CodeQL"]) {
-      expect(required).toMatch(new RegExp(`\\|\\s*\`${check}\`\\s*\\|`));
-    }
+  it("documents the release signal and does not claim a ruleset the repository lacks", () => {
+    expect(doc).toMatch(/`verify` check-run/);
+    expect(doc).toMatch(/no branch protection/i);
     expect(workflow("ci.yml").jobs.verify.name).toBe("verify");
-    const review = workflow("dependency-review.yml").jobs["dependency-review"];
-    expect(review).toBeDefined();
-    // Without a name the check context is the job id, which the ruleset names.
-    expect(review.name).toBeUndefined();
     // CodeQL runs as GitHub's default setup, not from a workflow here.
     expect(workflowFiles.filter((file) => /codeql/i.test(file))).toEqual([]);
   });
 
-  it("lists every Verify job, and verify depends on every job but the advisory report", () => {
-    const ci = workflow("ci.yml");
-    const graph = section("## CI job graph");
-    for (const id of Object.keys(ci.jobs)) {
-      expect(graph, id).toMatch(new RegExp(`\\n\\|\\s*\`${id}\``));
+  it("lists every Verify job and every workflow file", () => {
+    for (const id of Object.keys(workflow("ci.yml").jobs)) {
+      expect(doc, id).toMatch(new RegExp(`\\n\\|\\s*\`${id}\``));
     }
-    expect([...(ci.jobs.verify.needs ?? [])].sort()).toEqual(
-      Object.keys(ci.jobs)
-        .filter((id) => id !== "verify" && id !== "voice-report")
-        .sort(),
-    );
+    for (const file of workflowFiles) {
+      expect(doc, file).toContain(`\`${file}\``);
+    }
   });
 
   it("states every elevated token permission exactly as the workflows grant it", () => {

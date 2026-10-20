@@ -224,9 +224,11 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: true,
   // Retries retain a trace and separate infrastructure noise from a stable
-  // defect. Every gate still fails if any test needed a retry.
+  // defect. The pull-request and main gate retries once and tolerates a test
+  // that passes on its retry; the nightly desktop run sets E2E_FAIL_ON_FLAKY=1
+  // so those intermittent failures are counted there instead of blocking a merge.
   retries: process.env.CI ? 2 : 1,
-  failOnFlakyTests: true,
+  failOnFlakyTests: process.env.E2E_FAIL_ON_FLAKY === "1",
   // CI: 1 worker (GitHub runner). Local: cap at 2 — the suite runs against a
   // single `next start` process on a machine that usually runs other dev
   // servers; unbounded workers (~10 here) starve the server + image
@@ -274,16 +276,6 @@ export default defineConfig({
   // tolerance, so Linux CI verifies the same reviewed pixels as local macOS.
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   projects: [
-    // --- Provider-free auth scaffold (regression coverage) ------------------
-    // This writes a deterministic mock cookie and proves storage-state wiring
-    // plus fail-closed signed-out behavior. It is not live authentication
-    // proof. It is deliberately not a dependency of chromium/mobile.
-    {
-      name: "auth-scaffold-setup",
-      testMatch: /auth\.setup\.ts$/,
-      use: { ...devices["Desktop Chrome"] },
-    },
-
     // Default PR tier: desktop Chromium plus the same iPhone 13 viewport in
     // Chromium and WebKit. Keeping viewport and engine explicit prevents a
     // native WebKit crash from being misreported as a responsive-layout bug.
@@ -341,15 +333,6 @@ export default defineConfig({
           },
         ]
       : []),
-
-    // Provider-free auth scaffold. Protected-route assertions that require a
-    // server-validated session stay explicitly skipped in this project.
-    {
-      name: "auth-scaffold",
-      testMatch: /\.authed\.spec\.ts$/,
-      use: { ...devices["Desktop Chrome"], storageState: STATIC_STORAGE_STATE },
-      dependencies: ["auth-scaffold-setup"],
-    },
 
     // Live authentication is opt-in and fail-closed. The command validates all
     // nine dedicated test variables before Playwright starts; auth.setup.ts

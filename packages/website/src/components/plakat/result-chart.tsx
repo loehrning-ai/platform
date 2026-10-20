@@ -37,6 +37,7 @@ const SOLID: Readonly<Record<PlakatKey, string>> = {
   idea: "bg-kobalt",
   bloom: "bg-aubergine",
   autumn: "bg-rost",
+  sage: "bg-tanne",
 };
 
 /**
@@ -51,6 +52,7 @@ const ANSWER: Readonly<Record<PlakatKey, string>> = {
   idea: "border-2 border-himbeere-tief bg-[repeating-linear-gradient(135deg,var(--color-himbeere-tief)_0_2px,transparent_2px_6px)]",
   bloom: "border-2 border-terrakotta-tief bg-[repeating-linear-gradient(135deg,var(--color-terrakotta-tief)_0_2px,transparent_2px_6px)]",
   autumn: "border-2 border-rost bg-[repeating-linear-gradient(135deg,var(--color-rost)_0_2px,transparent_2px_6px)]",
+  sage: "border-2 border-kupfer-dark bg-[repeating-linear-gradient(135deg,var(--color-kupfer-dark)_0_2px,transparent_2px_6px)]",
 };
 
 /** Note text in the chart accent, on Kalkweiß only (4.62 to 5.95:1; never on Beton). */
@@ -59,6 +61,7 @@ const NOTE: Readonly<Record<PlakatKey, string>> = {
   idea: "text-himbeere-tief",
   bloom: "text-terrakotta-tief",
   autumn: "text-ocker-tief",
+  sage: "text-kupfer-dark",
 };
 
 /**

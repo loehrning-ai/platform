@@ -77,6 +77,9 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/hilfe/eigene-ki",
   "/impressum",
   "/datenschutz",
+  // The public explainer for the research scanner (User-Agent loehrningBot):
+  // site owners follow the link in the bot's User-Agent to this page.
+  "/bot",
 ] as const;
 
 const PUBLIC_NOINDEX_PATHS = [
@@ -334,6 +337,30 @@ const PROTECTED_PATHS = [
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [
+  // Workshop 05 was first built as "audit-vorbereitung-mit-ki" and renamed before
+  // its release. The old preview link and the first QR code resolve to the final page.
+  route(
+    "/workshops/audit-vorbereitung-mit-ki",
+    "retired",
+    "The first slug of Workshop 05 resolves to the released workshop page.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/workshops/ki-im-unternehmen-sicher-nutzen",
+      status: 301,
+    },
+  ),
+  route(
+    "/workshops/audit-vorbereitung-mit-ki/:path*",
+    "retired",
+    "Files and pages under the first slug of Workshop 05 resolve to the released workshop page.",
+    {
+      auth: "redirect",
+      cache: "public-short",
+      redirectTo: "/workshops/ki-im-unternehmen-sicher-nutzen",
+      status: 301,
+    },
+  ),
   // "Mit KI arbeiten" (ai-native) was rebuilt as nine tool-neutral lessons
   // (2026-10-04). Its self-assessment, simulation gallery and capstone rules
   // pages no longer serve the course; the simulations live on in /demos.

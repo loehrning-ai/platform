@@ -15,7 +15,18 @@
  * --check writes nothing and exits 1 when the published folder differs from a fresh export.
  */
 import { createHash } from "node:crypto";
-import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import {
+  closeSync,
+  constants,
+  existsSync,
+  fstatSync,
+  mkdirSync,
+  openSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { buildKitArchive, KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
@@ -42,6 +53,21 @@ export const DECK_TEXT_FILES = [
   "assets/brainster-logo.svg",
   "assets/kit-qr.svg",
 ];
+
+/**
+ * Repository-authored deck changes. The course source (outside this repository) does not carry them, so the
+ * export re-applies full copies from scripts/workshop04/overlay/ after its own transforms:
+ *  - slides.html and lib/deck-stage.js: the back-to-workshop button, Shift+R and P keys, the presenter hook and the
+ *    speaker notes in the Time/Say/Students/Cue/Remember format. OVERLAY_ORIGINAL pins the export output each copy
+ *    was made against; if the source changed underneath, the export stops so both versions can be reconciled by hand.
+ *  - presenter.html, lib/presenter.js, lib/presenter.css: the presenter view, repository-authored (no original).
+ */
+export const OVERLAY_DIR = path.join(HERE, "overlay");
+export const OVERLAY_ORIGINAL = {
+  "slides.html": "7a7365a5566d2b69688cca1d57a8afa72838413dd7c99b8c9020a17a16ad90d1",
+  "lib/deck-stage.js": "69597c2ca285211609b06f8881fcb1cbbd6997a9cca28a2d44e1315a03568199",
+};
+export const OVERLAY_NEW_FILES = ["presenter.html", "lib/presenter.css", "lib/presenter.js"];
 
 /**
  * Deck images copied byte for byte: unedited Claude output from the rehearsal (the passport
@@ -114,7 +140,7 @@ export const KIT_SOURCE_FILES = [
 export const KIT_FILES = [...KIT_SOURCE_FILES];
 
 /** Every file the published folder holds, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...DECK_IMAGES, PORTRAIT, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
+export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...OVERLAY_NEW_FILES, ...DECK_IMAGES, PORTRAIT, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
 
 /** "loehrning.ai × <partner>": the partner's name stays out of this public repository. */
 const CO_BRANDING = /loehrning\.ai × [A-Za-z0-9-]+/gi;
@@ -253,9 +279,20 @@ export function assertPlainPng(name, bytes) {
 /** Plain files only: a symlink or a folder where a file belongs stops the export. */
 function readSourceFile(root, name) {
   const file = path.join(root, ...name.split("/"));
-  const stat = lstatSync(file);
-  if (!stat.isFile()) throw new Error(`Not a regular file: ${name}`);
-  return readFileSync(file);
+  // Open once without following a symlink, then check and read that same handle.
+  let fd;
+  try {
+    fd = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW);
+  } catch (error) {
+    if (error?.code === "ELOOP") throw new Error(`Not a regular file: ${name}`);
+    throw error;
+  }
+  try {
+    if (!fstatSync(fd).isFile()) throw new Error(`Not a regular file: ${name}`);
+    return readFileSync(fd);
+  } finally {
+    closeSync(fd);
+  }
 }
 
 /** Every file below `dir`, as sorted forward-slash paths. */
@@ -349,6 +386,17 @@ export async function exportWorkshop(source) {
     for (const [name, bytes] of kit) assertClean(`${ZIP_NAME}/${name}`, bytes);
     written.set(ZIP_NAME, buildKitArchive(kit));
   }
+
+  for (const [name, original] of Object.entries(OVERLAY_ORIGINAL)) {
+    const overlay = readSourceFile(OVERLAY_DIR, name);
+    const exported = written.get(name);
+    if (!exported) throw new Error(`Overlay for ${name}, which this export does not write`);
+    if (sha256(exported) !== original && !exported.equals(overlay)) {
+      throw new Error(`The course source changed ${name} since its overlay was made. Reconcile scripts/workshop04/overlay/${name} by hand, then update OVERLAY_ORIGINAL.`);
+    }
+    written.set(name, overlay);
+  }
+  for (const name of OVERLAY_NEW_FILES) written.set(name, readSourceFile(OVERLAY_DIR, name));
 
   for (const [name, bytes] of written) assertClean(name, bytes);
   const names = [...written.keys()].sort();

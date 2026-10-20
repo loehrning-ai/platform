@@ -1,0 +1,467 @@
+/*
+ * Hero scene "the mend" (Workshop 03), drawn by hero-mend-scene.tsx. Base
+ * styles are the finished still frame; the story plays over them only under
+ * no-preference. Only transform, opacity and stroke-dashoffset move. One 11 s
+ * loop, keyframe percentages = seconds / 11: act 1 (0 to 3.5) packets fall,
+ * the bar drops below the baseline; act 2 (4.6 to 6.1) the copy merges, a
+ * clean cell snaps in; act 3 (6 to 11) the bar rises, rests 3 s, reset.
+ */
+
+.hd-root {
+  overflow: hidden;
+  contain: paint;
+  --hd-ink: var(--color-scene-ink);
+  --hd-mid: var(--color-scene-mid);
+  --hd-ground: var(--color-scene-ground);
+  --hd-paper: var(--color-paper);
+  --hd-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.hd-disc {
+  fill: var(--hd-paper);
+  fill-opacity: 0.1;
+}
+
+.hd-dust {
+  fill: var(--hd-ink);
+  fill-opacity: 0.32;
+}
+
+.hd-zone {
+  fill: var(--hd-ink);
+  fill-opacity: 0.07;
+}
+
+.hd-funnel {
+  fill: none;
+  stroke: var(--hd-ink);
+  stroke-width: 1;
+  stroke-opacity: 0.55;
+  stroke-dasharray: 6 8;
+  stroke-linecap: round;
+}
+
+.hd-cell {
+  fill: var(--hd-paper);
+  fill-opacity: 0.6;
+  stroke: var(--hd-ink);
+  stroke-width: 1.6;
+}
+
+.hd-value,
+.hd-clean-value,
+.hd-ghost-value {
+  fill: none;
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hd-clean-box {
+  fill: var(--hd-mid);
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+}
+
+.hd-gap-box,
+.hd-ghost-box {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-dasharray: 6 8;
+  stroke-linecap: round;
+}
+
+.hd-gap-box {
+  stroke: var(--hd-ink);
+}
+
+.hd-ghost-box {
+  stroke: var(--hd-mid);
+  fill: var(--hd-ground);
+  fill-opacity: 0.85;
+}
+
+.hd-ghost-value {
+  stroke: var(--hd-mid);
+}
+
+.hd-cross {
+  fill: none;
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hd-ripple {
+  fill: none;
+  stroke: var(--hd-mid);
+  stroke-width: 2.5;
+  opacity: 0;
+}
+
+.hd-scan {
+  fill: none;
+  stroke: var(--hd-mid);
+  stroke-width: 2.5;
+  opacity: 0;
+}
+
+.hd-baseline {
+  fill: none;
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hd-bar {
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+  stroke-linejoin: miter;
+}
+
+.hd-bar-wrong {
+  fill: var(--hd-ink);
+  fill-opacity: 0.8;
+  opacity: 0;
+}
+
+.hd-bar-right {
+  transform: scaleY(1.1);
+  fill: var(--hd-mid);
+}
+
+.hd-badge-disc {
+  fill: var(--hd-ground);
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+}
+
+.hd-badge-disc-mid {
+  fill: var(--hd-mid);
+}
+
+.hd-badge-glyph {
+  fill: none;
+  stroke: var(--hd-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.hd-minus {
+  opacity: 0;
+}
+
+.hd-gap,
+.hd-ghost {
+  opacity: 0;
+}
+
+.hd-pk {
+  opacity: 0;
+}
+
+.hd-dot {
+  fill: var(--hd-ink);
+}
+
+.hd-dot-double {
+  fill: var(--hd-mid);
+  stroke: var(--hd-ink);
+  stroke-width: 1.6;
+}
+
+.hd-speed {
+  fill: none;
+  stroke: var(--hd-ink);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-opacity: 0.6;
+}
+
+/* Parts scale and rotate about their own centre; bars about the baseline. */
+.hd-gap,
+.hd-clean,
+.hd-ghost,
+.hd-ripple,
+.hd-badge,
+.hd-pk,
+.hd-scan,
+.hd-in {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.hd-bar {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+/* Narrowest phones: drop fine detail. */
+@media (width < 22.5rem) {
+  .hd-root .hd-funnel,
+  .hd-root .hd-speed,
+  .hd-root .hd-dust {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hd-root {
+    --hd-go: 0.9s;
+  }
+
+  .hd-in-table {
+    animation: hd-rise 0.9s var(--hd-ease) backwards;
+  }
+
+  .hd-in-bar {
+    animation: hd-rise 0.8s var(--hd-ease) 0.2s backwards;
+  }
+
+  .hd-far {
+    animation: hd-drift 26s ease-in-out infinite alternate;
+  }
+
+  @media (width < 40rem) {
+    .hd-far { animation: none; }
+  }
+
+  .hd-scan {
+    animation: hd-scan 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-pk {
+    will-change: transform;
+  }
+
+  .hd-pk-0 {
+    animation: hd-drop-0 11s var(--hd-ease) calc(var(--hd-go) + 0.5s) infinite backwards;
+  }
+
+  .hd-pk-1 {
+    animation: hd-drop-1 11s var(--hd-ease) calc(var(--hd-go) + 1.2s) infinite backwards;
+  }
+
+  .hd-pk-2 {
+    animation: hd-drop-2 11s var(--hd-ease) calc(var(--hd-go) + 1.9s) infinite backwards;
+  }
+
+  .hd-pk-3 {
+    animation: hd-drop-3 11s var(--hd-ease) calc(var(--hd-go) + 2.6s) infinite backwards;
+  }
+
+  .hd-bar-wrong {
+    animation: hd-bar-wrong 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-bar-right {
+    animation: hd-bar-right 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-minus {
+    animation: hd-minus 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-plus {
+    animation: hd-plus 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-ghost {
+    animation: hd-ghost 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-gap {
+    animation: hd-gap 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-clean {
+    animation: hd-clean 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  .hd-ripple {
+    animation: hd-ripple 11s var(--hd-ease) var(--hd-go) infinite backwards;
+  }
+
+  /* Mouse parallax: one wrapper per depth layer, no keyframe clash. */
+  .hd-layer-far,
+  .hd-layer-mid,
+  .hd-layer-near {
+    transition: transform 600ms var(--hd-ease);
+  }
+
+  .hd-root:hover .hd-layer-far {
+    transform: translate(-9px, -6px);
+  }
+
+  .hd-root:hover .hd-layer-mid {
+    transform: translate(-3px, -2px);
+  }
+
+  .hd-root:hover .hd-layer-near {
+    transform: translate(4px, 3px);
+  }
+
+  @keyframes hd-rise {
+    from {
+      transform: translateY(14px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes hd-drift {
+    from {
+      transform: translate(0, 0);
+    }
+    to {
+      transform: translate(-14px, 10px);
+    }
+  }
+
+  @keyframes hd-scan {
+    0% { transform: translateX(0px); opacity: 0; }
+    2.27% { transform: translateX(0px); opacity: 1; }
+    7.02% { transform: translateX(0px); opacity: 1;  }
+    9.14% { transform: translateX(112px); opacity: 1; }
+    13.38% { transform: translateX(112px); opacity: 1;  }
+    15.51% { transform: translateX(224px); opacity: 1; }
+    19.74% { transform: translateX(224px); opacity: 1;  }
+    21.87% { transform: translateX(336px); opacity: 1; }
+    25.76% { transform: translateX(336px); opacity: 1; }
+    27.88% { transform: translateX(336px); opacity: 0; }
+    41.82% { transform: translateX(224px); opacity: 0; }
+    43.63% { transform: translateX(224px); opacity: 1; }
+    52.72% { transform: translateX(224px); opacity: 1; }
+    55.46% { transform: translateX(224px); opacity: 0; }
+    100% { transform: translateX(0px); opacity: 0; }
+  }
+
+  @keyframes hd-drop-0 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    0.91% { transform: translate(0, 0) scale(1); opacity: 1; animation-timing-function: cubic-bezier(.55, 0, .8, .45); }
+    7.27% { transform: translate(168px, 112px) scale(0.55); opacity: 0; }
+    100% { transform: translate(168px, 112px) scale(0.55); opacity: 0; }
+  }
+
+  @keyframes hd-drop-1 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    0.91% { transform: translate(0, 0) scale(1); opacity: 1; animation-timing-function: cubic-bezier(.55, 0, .8, .45); }
+    7.27% { transform: translate(56px, 112px) scale(0.55); opacity: 0; }
+    100% { transform: translate(56px, 112px) scale(0.55); opacity: 0; }
+  }
+
+  @keyframes hd-drop-2 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    0.91% { transform: translate(0, 0) scale(1); opacity: 1; animation-timing-function: cubic-bezier(.55, 0, .8, .45); }
+    7.27% { transform: translate(-56px, 112px) scale(0.55); opacity: 0; }
+    100% { transform: translate(-56px, 112px) scale(0.55); opacity: 0; }
+  }
+
+  @keyframes hd-drop-3 {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    0.91% { transform: translate(0, 0) scale(1); opacity: 1; animation-timing-function: cubic-bezier(.55, 0, .8, .45); }
+    7.27% { transform: translate(-168px, 112px) scale(0.55); opacity: 0; }
+    100% { transform: translate(-168px, 112px) scale(0.55); opacity: 0; }
+  }
+
+  @keyframes hd-bar-wrong {
+    0% { transform: scaleY(0); opacity: 0; }
+    9.49% { transform: scaleY(0); opacity: 1;  }
+    10.20% { transform: scaleY(0.22); opacity: 1; }
+    11.97% { transform: scaleY(0.18); opacity: 1;  }
+    16.56% { transform: scaleY(0.2); opacity: 1; }
+    18.33% { transform: scaleY(0.4); opacity: 1; }
+    22.93% { transform: scaleY(0.38); opacity: 1; animation-timing-function: cubic-bezier(.5, 0, .2, 1.1); }
+    27.17% { transform: scaleY(-0.92); opacity: 1;  }
+    30.49% { transform: scaleY(-0.78); opacity: 1; }
+    32.23% { transform: scaleY(-0.86); opacity: 1;  }
+    38.34% { transform: scaleY(-0.82); opacity: 1; }
+    50.91% { transform: scaleY(-0.82); opacity: 1;  }
+    55.46% { transform: scaleY(0); opacity: 1; }
+    55.64% { transform: scaleY(0); opacity: 0; }
+    100% { transform: scaleY(0); opacity: 0; }
+  }
+
+  @keyframes hd-bar-right {
+    0% { transform: scaleY(0); opacity: 0; }
+    54.09% { transform: scaleY(0); opacity: 1; animation-timing-function: cubic-bezier(.3, 0, .2, 1.15); }
+    61.36% { transform: scaleY(1.16); opacity: 1;  }
+    63.64% { transform: scaleY(1.1); opacity: 1; }
+    89.76% { transform: scaleY(1.1); opacity: 1;  }
+    97.14% { transform: scaleY(0.9); opacity: 0; }
+    100% { transform: scaleY(0); opacity: 0; }
+  }
+
+  @keyframes hd-minus {
+    0% { transform: scale(0.5); opacity: 0; }
+    25.76% { transform: scale(0.5); opacity: 0;  }
+    28.75% { transform: scale(1.12); opacity: 1; }
+    32.23% { transform: scale(1); opacity: 1; }
+    50.46% { transform: scale(1); opacity: 1;  }
+    54.09% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(0.5); opacity: 0; }
+  }
+
+  @keyframes hd-plus {
+    0% { transform: scale(0.5); opacity: 0; }
+    59.55% { transform: scale(0.5); opacity: 0;  }
+    63.18% { transform: scale(1.14); opacity: 1; }
+    65.45% { transform: scale(1); opacity: 1; }
+    89.76% { transform: scale(1); opacity: 1;  }
+    97.14% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(0.5); opacity: 0; }
+  }
+
+  @keyframes hd-ghost {
+    0% { transform: translate(8px, 8px) scale(1); opacity: 1; }
+    14.44% { transform: translate(8px, 8px) scale(1); opacity: 1; }
+    15.86% { transform: translate(11px, 11px) scale(1); opacity: 1; }
+    17.28% { transform: translate(8px, 8px) scale(1); opacity: 1; }
+    44.54% { transform: translate(8px, 8px) scale(1); opacity: 1;  }
+    49.55% { transform: translate(0px, 0px) scale(1); opacity: 1; }
+    50.46% { transform: translate(0px, 0px) scale(1.08); opacity: 1;  }
+    52.27% { transform: translate(0px, 0px) scale(1.0); opacity: 0; }
+    89.76% { transform: translate(8px, 8px) scale(1); opacity: 0;  }
+    100% { transform: translate(8px, 8px) scale(1); opacity: 1; }
+  }
+
+  @keyframes hd-gap {
+    0% { transform: scale(1); opacity: 1; }
+    14.44% { transform: scale(1); opacity: 1;  }
+    15.86% { transform: scale(1.05); opacity: 1; }
+    17.98% { transform: scale(1); opacity: 1; }
+    45.46% { transform: scale(1); opacity: 1;  }
+    48.18% { transform: scale(0.85); opacity: 0; }
+    89.76% { transform: scale(0.85); opacity: 0;  }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes hd-clean {
+    0% { transform: scale(0.5); opacity: 0; }
+    47.27% { transform: scale(0.5); opacity: 0; animation-timing-function: cubic-bezier(.3, 0, .2, 1.4); }
+    50.91% { transform: scale(1.12); opacity: 1;  }
+    53.18% { transform: scale(1); opacity: 1; }
+    89.76% { transform: scale(1); opacity: 1;  }
+    97.14% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(0.5); opacity: 0; }
+  }
+
+  @keyframes hd-ripple {
+    0% { transform: scale(1); opacity: 0; }
+    50.00% { transform: scale(1); opacity: 0; }
+    50.91% { transform: scale(1); opacity: 0.7; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+    58.18% { transform: scale(1.35); opacity: 0; }
+    100% { transform: scale(1.35); opacity: 0; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hd-root,
+  .hd-root :is(*, *::before, *::after) {
+    animation: none !important;
+    transition: none !important;
+  }
+}

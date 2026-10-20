@@ -40,6 +40,7 @@ const ROUTES = [
   "/ai-native/verifizierung",
   "/impressum",
   "/datenschutz",
+  "/bot",
   ...OPEN_SOURCE_DETAIL_ROUTES,
 ];
 

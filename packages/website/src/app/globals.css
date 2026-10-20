@@ -296,10 +296,10 @@
   --tabbar-band-h: calc(var(--tabbar-h) + var(--safe-area-bottom));
 }
 
-/* Poster layer ("Plakat"): four scenes of three colours each, sampled from
-   the reference posters. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
+/* Poster layer ("Plakat"): five scenes of three colours each, four sampled from
+   the reference posters and Sage from the Workshop 05 deck. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
    Kobalt, Himbeere), Bloom (Sand, Aubergine, Terrakotta), Autumn (Rost,
-   Creme, Ocker). Mennige stays the one red: the lemons mid is Mennige.
+   Creme, Ocker), Sage (Salbei, Tanne, Bernstein). Mennige stays the one red: the lemons mid is Mennige.
    `static` keeps every value in the compiled :root even before a utility
    uses it, because CSS files outside this entry (phone-hero.css,
    blog-index.css) and inline SVG styles read them through var(), which
@@ -323,6 +323,9 @@
   --color-ocker: #e4a057; /* Autumn mid, decoration only: 2.78 on Rost */
   --color-ocker-hell: #ebb16a; /* Autumn meaningful mark or giant numeral: 3.24 on Rost */
   --color-ocker-tief: #9b5e07; /* ochre at text size on Kalkweiß (4.62) and Bogen only */
+  --color-salbei: #dce6d4; /* Sage ground (Workshop 05), the soft green of the audit deck */
+  --color-tanne: #1f4a38; /* Sage ink, 7.79 on Salbei, 8.92 on Kalkweiß */
+  --color-bernstein: #d9a441; /* Sage mid, decoration only: 1.75 on Salbei */
 
   /* Scene roles with their paper defaults. A .plakat-* scope redefines them,
      so one component reads correctly on paper and in every scene. Never use
@@ -360,17 +363,50 @@
      bar sits in the root layout, outside the page tree, hence :root:has() on
      the route's own [data-plakat-page] wrapper. Without :has() support the
      line stays Druckschwarz. */
+  /* Anti colours: what a state change (hover, press, focus offset) brings in
+     on top of a stage card. Per plakat, one for card A (the outlined card on
+     the scene ground) and one for card B (the filled card on the scene ink).
+     Rule (anti-colors.test.ts): never the card's own colour; a palette
+     accent (--color-scene-mid) or a brand colour (Mennige #b73a15,
+     Druckschwarz #121212); at least 3:1 luminance contrast against the card
+     or at least 60 degrees of hue apart. Contrast against the card (page
+     Kalkweiß #f3f0e9 in brackets):
+       lemons A Ultramarin -> Mennige 2.21, blue vs orange 146 deg (5.08)
+       lemons B Butter     -> Mennige 4.96 (5.08)
+       idea   A Kreide     -> Himbeere 3.67 (3.87)
+       idea   B Kobalt     -> Himbeere 1.85, 114 deg apart (3.87)
+       bloom  A Sand       -> Mennige 3.94 (5.08)
+       bloom  B Aubergine  -> Terrakotta 4.24 (2.96)
+       autumn A Rost       -> Druckschwarz 3.04 (16.46)
+       autumn B Creme      -> Mennige 4.50 (5.08)
+       sage   A Salbei     -> Mennige 4.49, red vs green 80 deg (5.08)
+       sage   B Tanne      -> Bernstein 4.46 (1.98)
+     Defined twice, like --color-scene-line: on the page root (so a list item
+     outside the .plakat scope sees it) and in the .plakat scope. */
   :root:has([data-plakat-page="lemons"]) {
     --color-scene-line: #152a79;
+    --color-scene-anti-a: #b73a15;
+    --color-scene-anti-b: #b73a15;
   }
   :root:has([data-plakat-page="idea"]) {
     --color-scene-line: #2e4d90;
+    --color-scene-anti-a: #c94a7f;
+    --color-scene-anti-b: #c94a7f;
   }
   :root:has([data-plakat-page="bloom"]) {
     --color-scene-line: #3b1f45;
+    --color-scene-anti-a: #b73a15;
+    --color-scene-anti-b: #d1733d;
   }
   :root:has([data-plakat-page="autumn"]) {
     --color-scene-line: #944d44;
+    --color-scene-anti-a: #121212;
+    --color-scene-anti-b: #b73a15;
+  }
+  :root:has([data-plakat-page="sage"]) {
+    --color-scene-line: #1f4a38;
+    --color-scene-anti-a: #b73a15;
+    --color-scene-anti-b: #d9a441;
   }
 
   html {
@@ -607,6 +643,8 @@
     --color-scene-line: #fceeaf;
     --color-scene-button: #fceeaf; /* Butter fill, Ultramarin label 10.97 */
     --color-scene-button-text: #152a79;
+    --color-scene-anti-a: #b73a15; /* see the anti-colour table above */
+    --color-scene-anti-b: #b73a15;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -635,6 +673,8 @@
     --color-scene-line: #2e4d90;
     --color-scene-button: #2e4d90; /* Kobalt fill, Kreide label 6.78 */
     --color-scene-button-text: #ecebdd;
+    --color-scene-anti-a: #c94a7f; /* see the anti-colour table above */
+    --color-scene-anti-b: #c94a7f;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -665,6 +705,8 @@
        with a Bogen label (6.61), 4.61 against the Sand ground. */
     --color-scene-button: #964305;
     --color-scene-button-text: #fffcf5;
+    --color-scene-anti-a: #b73a15; /* see the anti-colour table above */
+    --color-scene-anti-b: #d1733d;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -706,8 +748,95 @@
     --color-scene-line: #f0e1ca;
     --color-scene-button: #f0e1ca; /* Creme fill, Rost label 4.80 */
     --color-scene-button-text: #944d44;
+    --color-scene-anti-a: #121212; /* see the anti-colour table above */
+    --color-scene-anti-b: #b73a15;
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+
+  /* Sage (Workshop 05): Tanne on Salbei, 7.79. Bernstein is decoration only
+     (1.75), so a meaningful mark takes the ink. The status tones keep their
+     paper values: 5.94 to 7.08 on Salbei. */
+  .plakat-sage,
+  [data-plakat-page="sage"] [data-plakat-band] {
+    --color-background: #dce6d4;
+    --color-foreground: #1f4a38; /* 7.79 */
+    --color-muted-foreground: #1f4a38;
+    --color-muted: #1f4a38;
+    --color-border: #1f4a38;
+    --color-track: #aebfa5; /* 1.51, decor */
+    --color-hairline: #aebfa5;
+    --color-card: #dce6d4;
+    --color-card-hover: #cfdcc6; /* Tanne on it 7.02 */
+    --color-inset: #d3dfca; /* 7.25 */
+    --color-brand-orange: #1f4a38;
+    --color-kupfer: #1f4a38;
+    --color-kupfer-dark: #1f4a38;
+    --color-scene-ground: #dce6d4;
+    --color-scene-ink: #1f4a38;
+    --color-scene-mid: #d9a441; /* 1.75, shapes only */
+    --color-scene-mark: #1f4a38;
+    --color-scene-accent-text: #97300f; /* Mennige tief, 5.94 */
+    --color-scene-line: #1f4a38;
+    --color-scene-button: #1f4a38; /* Tanne fill, Bogen label 9.78; a clear green, luminance 0.055 */
+    --color-scene-button-text: #fffcf5;
+    --color-scene-anti-a: #b73a15; /* see the anti-colour table above */
+    --color-scene-anti-b: #d9a441;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* A text link whose state change brings in the anti colour: a thick
+     Mennige underline (5.08:1 on Kalkweiß) on hover, press and focus, never a
+     darker shade of the link's own colour. Hover only for a fine pointer, so
+     a tap never leaves it stuck; a press answers on its own. */
+  .anti-link {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--color-border);
+    text-underline-offset: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .anti-link:active,
+  .anti-link:focus-visible {
+    text-decoration-color: var(--color-mennige);
+    text-decoration-thickness: 3px;
+  }
+  .anti-link:focus-visible {
+    outline: 3px solid var(--color-mennige);
+    outline-offset: 3px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .anti-link:hover {
+      text-decoration-color: var(--color-mennige);
+      text-decoration-thickness: 3px;
+    }
+  }
+
+  /* A button whose state change brings in the anti colour as a solid 4px
+     offset block (--anti, Mennige or Druckschwarz, set by the button): it
+     lifts 2px on hover (fine pointer only) and on focus, and a press shows
+     3px. The block is a box-shadow here, switched without a transition; the
+     lift is a transform. Focus adds a 3px Druckschwarz ring 6px out. */
+  .anti-btn {
+    --anti: var(--color-scene-anti-a);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .anti-btn:focus-visible {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--anti);
+    outline: 3px solid var(--color-lab-ink);
+    outline-offset: 6px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .anti-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--anti);
+    }
+  }
+  .anti-btn:active {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--anti);
   }
 
   /* Werkzeichnung helpers. Tailwind recipes live in src/components/werk. */

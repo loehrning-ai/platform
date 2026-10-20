@@ -1,9 +1,11 @@
 # Performance Budgets
 
 `lighthouserc.json` at the repository root is the repeatable Lighthouse budget
-configuration for this package. GitHub Actions runs a five-route, one-run smoke
-against the already verified production build. `bun run verify:release`
-enforces the full 35-route, three-run measurement against that release build.
+configuration for this package. The nightly workflow measures five routes three
+times each against a fresh production build and reports the scores in its job
+summary; it is advisory and never blocks a merge or a deploy. `bun run
+verify:release` enforces the full 35-route, three-run measurement against that
+release build.
 
 ## Routes audited (`collect.url`)
 
@@ -17,8 +19,7 @@ inventory. It covers every static, public, indexable page plus at least one
 published representative for every dynamic public route pattern. This includes
 the homepage and learning entry points, course and book readers, editorial and
 open-source pages, interactive demos, informational pages, and legal pages.
-`bun run lighthouse:check` fails on missing, duplicate, stale, non-canonical,
-or non-indexable entries. The documentation deliberately does not copy the
+No script validates the list; keep entries canonical, indexable and unique by hand. The documentation deliberately does not copy the
 route list, preventing a second inventory from drifting.
 
 ## Assertions (`assert.assertions`)
@@ -58,10 +59,10 @@ the provider-free production server and runs LHCI from the repository root.
 The `lighthouse:local:built` variant is internal reuse only and rejects a
 missing or stale receipt.
 
-Ordinary CI reuses that verified receipt and measures `/`, `/ai-native`, the published
-blog article, `/buecher`, and the data-science course overview once each. This
-keeps pull-request latency bounded while spanning the main rendering modes. The
-release runner uses `lighthouse:release:built` after deterministic verification;
+The nightly run measures `/`, `/ai-native`, the published
+blog article, `/buecher`, and the data-science course overview three times each,
+spanning the main rendering modes. Pull requests do not run Lighthouse. The
+release runner uses `lighthouse:release:built` after the static, unit and build steps;
 it rejects a changed build receipt and covers every configured route three
 times using the median result before the browser journey gates.
 

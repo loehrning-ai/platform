@@ -8,9 +8,9 @@
  * release checks, written down once:
  *
  *   1. the commit is the current head of `main` on GitHub;
- *   2. every check-run on that exact commit is completed and successful
- *      (the `verify` aggregate must be among them; `voice report` may be
- *      skipped);
+ *   2. the `verify` check-run on that exact commit is completed and
+ *      successful; every other check-run (CodeQL, dependency graph, anything
+ *      added later) is informational and can never refuse a release;
  *   3. no non-failed deployment already exists for the commit (observe it
  *      instead of paying for a second build);
  *   4. one deployment is created from that commit, watched to READY with a
@@ -23,6 +23,11 @@
  *   bun run deploy:production -- --wait       dry run, waiting for CI to finish
  *   bun run deploy:production -- --wait --yes wait for green CI, then deploy
  *   bun run deploy:production -- --sha <sha> --yes
+ *   bun run deploy:production -- --require-nightly --wait --yes
+ *                                             also demand a green `Nightly`
+ *                                             run on this exact commit (start
+ *                                             one: gh workflow run nightly.yml
+ *                                             --ref main)
  *   bun run deploy:production -- --observe <deployment id>
  *
  * The Vercel project and team are read from the `vercel link` file
@@ -44,17 +49,16 @@ const DEPLOYMENT_ID_PATTERN = /^dpl_[A-Za-z0-9]+$/;
 const POLL_CHECKS_MS = 30_000;
 const POLL_DEPLOYMENT_MS = 10_000;
 const DEFAULT_DEPLOY_TIMEOUT_MIN = 12;
-const DEFAULT_WAIT_TIMEOUT_MIN = 60;
-/** Check-runs that may legitimately finish as "skipped". */
-const SKIPPABLE_CHECKS = new Set(["voice report"]);
+const DEFAULT_WAIT_TIMEOUT_MIN = 30;
 /**
- * Check-runs that report on GitHub's dependency graph, not on the build that
- * would ship (the dependency-snapshot workflow). A cancelled or skipped run
- * of one of these says nothing about the commit, so it never blocks a release.
+ * The aggregate check whose success is the release signal, and the only check
+ * that can refuse a release. Its name is part of the CI contract: `ci.yml`
+ * keeps a job called exactly this.
  */
-const NON_RELEASE_CHECKS = new Set(["generate", "submit"]);
-/** The aggregate check whose success is the release signal. */
 const RELEASE_CHECK = "verify";
+/** Only a check-run created by GitHub Actions may count as the release signal. */
+const RELEASE_CHECK_APP = "github-actions";
+const NIGHTLY_WORKFLOW = "nightly.yml";
 const SMOKE_ROUTES = [
   "/",
   "/en",
@@ -76,6 +80,7 @@ export function parseArguments(argv) {
     wait: false,
     yes: false,
     smoke: true,
+    requireNightly: false,
     deployTimeoutMin: DEFAULT_DEPLOY_TIMEOUT_MIN,
     waitTimeoutMin: DEFAULT_WAIT_TIMEOUT_MIN,
     baseUrl: "https://loehrning.ai",
@@ -95,6 +100,7 @@ export function parseArguments(argv) {
     else if (flag === "--wait") options.wait = true;
     else if (flag === "--yes") options.yes = true;
     else if (flag === "--no-smoke") options.smoke = false;
+    else if (flag === "--require-nightly") options.requireNightly = true;
     else if (flag === "--deploy-timeout-min") options.deployTimeoutMin = Number(value());
     else if (flag === "--wait-timeout-min") options.waitTimeoutMin = Number(value());
     else if (flag === "--base-url") options.baseUrl = value().replace(/\/+$/, "");
@@ -119,40 +125,80 @@ export function parseArguments(argv) {
 }
 
 /**
- * Classify the check-runs of one commit. `ready` is true only when every
- * check-run is completed and successful (or an allowed skip) and the release
- * aggregate is present and successful.
+ * Classify the check-runs of one commit. `verify` is the only gate: it must be
+ * reported by GitHub Actions for this exact commit, completed, and successful.
+ * Every other check-run is returned as `informational` and never affects
+ * `ready`. After a re-run several `verify` check-runs exist; the newest (highest
+ * id) decides and the superseded ones are dropped.
  */
 export function evaluateCheckRuns(checkRuns, sha) {
+  const candidates = checkRuns.filter(
+    (run) =>
+      run.name === RELEASE_CHECK &&
+      (run.app == null || run.app.slug === RELEASE_CHECK_APP),
+  );
+  const release = candidates.reduce(
+    (newest, run) =>
+      newest === null || (run.id ?? 0) >= (newest.id ?? 0) ? run : newest,
+    null,
+  );
   const pending = [];
   const failed = [];
-  for (const run of checkRuns) {
-    if (NON_RELEASE_CHECKS.has(run.name)) continue;
-    if (run.head_sha !== undefined && run.head_sha !== sha) {
-      failed.push(`${run.name} (belongs to another commit)`);
-      continue;
-    }
-    if (run.status !== "completed") {
-      pending.push(run.name);
-      continue;
-    }
-    const acceptable =
-      run.conclusion === "success" ||
-      (run.conclusion === "skipped" && SKIPPABLE_CHECKS.has(run.name));
-    if (!acceptable) failed.push(`${run.name} (${run.conclusion})`);
+  if (release === null) {
+    pending.push(`${RELEASE_CHECK} (not reported yet)`);
+  } else if (release.head_sha !== undefined && release.head_sha !== sha) {
+    failed.push(`${RELEASE_CHECK} (belongs to another commit)`);
+  } else if (release.status !== "completed") {
+    pending.push(RELEASE_CHECK);
+  } else if (release.conclusion !== "success") {
+    failed.push(`${RELEASE_CHECK} (${release.conclusion})`);
   }
-  const release = checkRuns.find((run) => run.name === RELEASE_CHECK);
-  const releaseGreen =
-    release !== undefined &&
-    release.status === "completed" &&
-    release.conclusion === "success";
-  if (release === undefined) pending.push(`${RELEASE_CHECK} (not reported yet)`);
+  const superseded = new Set(candidates.filter((run) => run !== release));
+  const informational = checkRuns
+    .filter((run) => run !== release && !superseded.has(run))
+    .filter((run) => run.status !== "completed" || run.conclusion !== "success")
+    .map(
+      (run) =>
+        `${run.name} (${run.status === "completed" ? run.conclusion : run.status})`,
+    );
   return {
-    ready: pending.length === 0 && failed.length === 0 && releaseGreen,
+    ready: pending.length === 0 && failed.length === 0,
     pending,
     failed,
+    informational,
     total: checkRuns.length,
   };
+}
+
+/**
+ * Decide whether a `Nightly` workflow run proves this exact commit. `run` is
+ * the newest completed run of nightly.yml on main (or null when none exists).
+ */
+export function evaluateNightlyRun(run, sha) {
+  if (!run) return { ok: false, reason: "no Nightly run has completed yet" };
+  if (run.status !== undefined && run.status !== "completed") {
+    return { ok: false, reason: `the latest Nightly run is ${run.status}` };
+  }
+  if (run.headSha !== sha) {
+    return { ok: false, reason: "the latest Nightly run belongs to an older commit" };
+  }
+  if (run.conclusion !== "success") {
+    return { ok: false, reason: `the Nightly run on this commit ended ${run.conclusion}` };
+  }
+  return { ok: true, reason: "the Nightly run on this commit succeeded" };
+}
+
+/** One human line about the newest Nightly run, for the information output. */
+export function describeNightly(run, sha, now = Date.now()) {
+  if (!run) return "Nightly: unknown";
+  const hours = Math.max(0, Math.round((now - Date.parse(run.createdAt)) / 3_600_000));
+  const age = Number.isFinite(hours)
+    ? hours < 48
+      ? `${hours}h ago`
+      : `${Math.round(hours / 24)}d ago`
+    : "age unknown";
+  const outcome = run.status === "completed" ? run.conclusion : run.status;
+  return `Nightly: ${outcome} ${age}, ${run.headSha === sha ? "this commit" : "an older commit"}`;
 }
 
 /** The deployment of this commit that must be observed instead of rebuilt. */
@@ -235,15 +281,27 @@ function checkRunsFor(sha) {
     .map((line) => JSON.parse(line));
 }
 
+/** Newest run of nightly.yml on main, or null when none exists or gh fails. */
+function latestNightlyRun({ completedOnly }) {
+  const args = [
+    "run",
+    "list",
+    `--workflow=${NIGHTLY_WORKFLOW}`,
+    "--branch=main",
+    "--limit=1",
+    "--json=status,conclusion,headSha,createdAt,url",
+  ];
+  if (completedOnly) args.push("--status=completed");
+  return JSON.parse(run("gh", args))[0] ?? null;
+}
+
 async function waitForChecks(sha, options) {
   const deadline = Date.now() + options.waitTimeoutMin * 60_000;
   for (;;) {
     const verdict = evaluateCheckRuns(checkRunsFor(sha), sha);
     if (verdict.failed.length > 0 || verdict.ready || !options.wait) return verdict;
     if (Date.now() > deadline) return verdict;
-    log(
-      `  waiting: ${verdict.pending.length} of ${verdict.total} checks still running`,
-    );
+    log("  waiting for verify");
     await sleep(POLL_CHECKS_MS);
   }
 }
@@ -317,6 +375,9 @@ async function main() {
 
   const verdict = await waitForChecks(sha, options);
   log(`Checks: ${verdict.total} reported`);
+  if (verdict.informational.length > 0) {
+    log(`Not blocking: ${verdict.informational.join(", ")}`);
+  }
   if (verdict.failed.length > 0) {
     throw new Error(`Failing checks:\n  - ${verdict.failed.join("\n  - ")}`);
   }
@@ -325,7 +386,23 @@ async function main() {
       `Checks are not finished (${verdict.pending.join(", ")}). Re-run with --wait to wait for them.`,
     );
   }
-  log("Checks: all green");
+  log("Checks: verify is green");
+
+  try {
+    log(describeNightly(latestNightlyRun({ completedOnly: false }), sha));
+  } catch {
+    log("Nightly: unknown");
+  }
+  if (options.requireNightly) {
+    const latest = latestNightlyRun({ completedOnly: true });
+    const nightly = evaluateNightlyRun(latest, sha);
+    if (!nightly.ok) {
+      throw new Error(
+        `--require-nightly: ${nightly.reason}${latest?.url ? ` (${latest.url})` : ""}. Start one with: gh workflow run ${NIGHTLY_WORKFLOW} --ref main, wait for it, then re-run this command.`,
+      );
+    }
+    log(`Nightly: ${nightly.reason}`);
+  }
 
   const inventory = vercelApi(
     project,

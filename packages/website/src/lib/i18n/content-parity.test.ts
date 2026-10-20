@@ -12,6 +12,7 @@ describe("translated-content parity registry", () => {
       "/ai-native/glossar",
       "/ai-native/verifizierung",
       "/blog",
+      "/bot",
       "/blog/eu-ai-act-grundlagen",
       "/buecher",
       "/buecher/ki-landschaft",

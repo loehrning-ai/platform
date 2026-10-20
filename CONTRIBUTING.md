@@ -15,22 +15,26 @@ Install with the locked toolchain and run the repository gate:
 
 ```bash
 bun install --frozen-lockfile --ignore-scripts
-bun run --cwd packages/website playwright install chromium webkit
-bun run verify:workspace-contract
-bun run verify
+bun run --cwd packages/website playwright install chromium
+bun run ci
 ```
 
+`bun run ci` runs exactly what a pull request runs on GitHub: `static` and
+`unit` in parallel, then `browser`. When a GitHub job is red, run the script of
+the same name (`bun run ci:static`, `ci:unit` or `ci:browser`). WebKit runs
+nightly only; install it (`playwright install webkit`) when you work on a
+Safari-specific bug.
+
 On a minimal Linux or CI image, install browser system dependencies with
-`bun run --cwd packages/website playwright install --with-deps chromium webkit`
+`bun run --cwd packages/website playwright install --with-deps chromium`
 instead.
 
 The root workspace list is an explicit security and ownership boundary. Do not replace it with `packages/*`. Every listed package must provide a non-empty `scripts.verify` command that runs without production credentials. The root runner validates all paths before executing any workspace command.
 
 Run `bun run test:e2e` when changing routes, navigation, responsive layout,
 accessibility behavior, or interactive flows. Direct production E2E commands
-build first. Do not invoke an internal `*:built` command unless `bun run verify`
-has just built the same workspace. Provider-free auth coverage is
-`bun run test:e2e:auth-scaffold`; it is not live login proof. The isolated live
+build first. Do not invoke an internal `*:built` command unless a build with the
+same environment was just made in the same workspace (`bun run ci:browser` does). The isolated live
 provider contract is documented in
 [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
 The E2E tiers and their commands are summarized in

@@ -23,6 +23,8 @@
         "http://localhost:3000/workshops/geschaeftsberichte-mit-ki-lesen",
         "http://localhost:3000/workshops/esg-berichte-mit-ki",
         "http://localhost:3000/workshops/esg-berichte-mit-ki/kit",
+        "http://localhost:3000/workshops/ki-im-unternehmen-sicher-nutzen",
+        "http://localhost:3000/workshops/ki-im-unternehmen-sicher-nutzen/kit",
         "http://localhost:3000/buecher",
         "http://localhost:3000/buecher/ki-landschaft",
         "http://localhost:3000/buecher/ki-landschaft/02_textmenge",
@@ -38,7 +40,8 @@
         "http://localhost:3000/hilfe",
         "http://localhost:3000/hilfe/eigene-ki",
         "http://localhost:3000/impressum",
-        "http://localhost:3000/datenschutz"
+        "http://localhost:3000/datenschutz",
+        "http://localhost:3000/bot"
       ],
       "numberOfRuns": 3
     },

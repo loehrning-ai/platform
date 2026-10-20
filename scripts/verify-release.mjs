@@ -8,11 +8,27 @@ import {
   configuredApplicationEnvironment,
   providerFreeVerificationEnvironment,
 } from "./environment-policy.mjs";
+import { smokeArguments } from "./ci.mjs";
 import { verifyBuildReceipt } from "../packages/website/scripts/build-freshness.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const strictVerificationEnvironment = {
   ...providerFreeVerificationEnvironment(process.env),
+  NEXT_TELEMETRY_DISABLED: "1",
+  RELEASE_VALIDATION: "1",
+};
+// The build receipt hashes the loopback origin derived from E2E_SERVER_MODE and
+// E2E_PORT, so the build and every gate after it must see the same two values
+// (as `bun run ci:browser` does). The static and unit steps run without them.
+const browserSource = {
+  ...process.env,
+  E2E_SERVER_MODE: "production",
+  E2E_PORT: process.env.E2E_PORT ?? "3000",
+};
+const browserVerificationEnvironment = {
+  ...providerFreeVerificationEnvironment(browserSource),
+  E2E_SERVER_MODE: browserSource.E2E_SERVER_MODE,
+  E2E_PORT: browserSource.E2E_PORT,
   NEXT_TELEMETRY_DISABLED: "1",
   RELEASE_VALIDATION: "1",
 };
@@ -29,28 +45,41 @@ const steps = [
     configuredEnvironment: true,
   },
   {
-    label: "deterministic repository verification",
-    args: ["run", "verify"],
+    label: "static checks",
+    args: ["run", "ci:static"],
+  },
+  {
+    label: "unit tests",
+    args: ["run", "ci:unit"],
+  },
+  {
+    label: "provider-free production build",
+    args: ["run", "--cwd", "packages/website", "build"],
+    browserEnvironment: true,
     captureProviderFreeReceipt: true,
   },
   {
     label: "full Lighthouse performance gate",
     args: ["run", "lighthouse:release:built"],
+    browserEnvironment: true,
     verifyProviderFreeReceipt: true,
   },
   {
-    label: "public browser gate",
-    args: ["run", "test:e2e:public:built"],
+    label: "server-log privacy probe",
+    args: ["run", "--cwd", "packages/website", "test:server-log-privacy:built"],
+    browserEnvironment: true,
     verifyProviderFreeReceipt: true,
   },
   {
-    label: "provider-free authentication scaffold",
-    args: ["run", "test:e2e:auth-scaffold:built"],
+    label: "browser smoke",
+    args: ["run", "--cwd", "packages/website", "e2e:shard:built", ...smokeArguments()],
+    browserEnvironment: true,
     verifyProviderFreeReceipt: true,
   },
   {
     label: "launch browser gate",
     args: ["run", "test:e2e:release:built"],
+    browserEnvironment: true,
     verifyProviderFreeReceipt: true,
   },
   {
@@ -72,7 +101,9 @@ for (const step of steps) {
   const environment = {
     ...(step.configuredEnvironment
       ? strictConfiguredEnvironment
-      : strictVerificationEnvironment),
+      : step.browserEnvironment
+        ? browserVerificationEnvironment
+        : strictVerificationEnvironment),
   };
   for (const name of step.removeEnvironment ?? []) {
     delete environment[name];

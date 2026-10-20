@@ -3,6 +3,9 @@ name: Bun Dependency Submission
 on:
   push:
     branches: [main]
+    paths:
+      - bun.lock
+      - "**/package.json"
   workflow_dispatch:
   schedule:
     - cron: "17 4 * * 1"

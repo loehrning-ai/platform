@@ -86,6 +86,12 @@ export interface WorkshopKit {
   /** Heading of the rules block, e.g. "Die drei Regeln". */
   readonly rulesHeading: string;
   readonly rules: readonly string[];
+  /**
+   * The same rules in one short line each, for the kit page (a phone reads
+   * three short lines at a glance). `rules` keeps the exact wording of the
+   * kit's project-instructions.md for tests and machine endpoints.
+   */
+  readonly rulesShort?: readonly string[];
   /** Heading of the explainer, e.g. "Fünf Prompts, ein Ergebnis nach dem anderen". */
   readonly stepsHeading: string;
   readonly steps: readonly WorkshopKitStep[];

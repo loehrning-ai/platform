@@ -334,8 +334,8 @@ assert.equal(
 );
 assert.equal(
   serverEnvironmentProbe.failOnFlakyTests,
-  true,
-  "every Playwright gate must reject tests that pass only on retry",
+  false,
+  "the pull-request and main gate tolerates a test that passes on its retry",
 );
 
 const ciConfigProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
@@ -344,11 +344,17 @@ const ciConfigProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
   env: minimalVerificationEnvironment({
     ...process.env,
     CI: "1",
+    E2E_FAIL_ON_FLAKY: "1",
     E2E_GLOBAL_TIMEOUT: "60000",
     E2E_PORT: "3398",
   }),
 });
 assert.equal(ciConfigProbeResult.status, 0, ciConfigProbeResult.stderr);
+assert.equal(
+  JSON.parse(ciConfigProbeResult.stdout).failOnFlakyTests,
+  true,
+  "the nightly desktop run (E2E_FAIL_ON_FLAKY=1) must reject tests that pass only on retry",
+);
 assert.equal(
   JSON.parse(ciConfigProbeResult.stdout).globalTimeout,
   60_000,
@@ -388,12 +394,6 @@ try {
 const packageJson = JSON.parse(
   readFileSync(join(here, "..", "..", "package.json"), "utf8"),
 );
-assert.match(
-  packageJson.scripts.verify,
-  /^node scripts\/run-provider-free\.mjs bun run verify:internal$/,
-  "the complete workspace verification command must cross the minimal environment boundary",
-);
-assert.ok(packageJson.scripts["verify:internal"]);
 assert.equal(
   packageJson.scripts.typegen,
   "node scripts/run-provider-free.mjs env __NEXT_NODE_NATIVE_TS_LOADER_ENABLED=true bun run next typegen --webpack",
@@ -401,7 +401,7 @@ assert.equal(
 );
 assert.equal(packageJson.scripts.pretypecheck, "bun run typegen");
 assert.equal(packageJson.scripts["pretypecheck:test"], "bun run typegen");
-for (const scriptName of ["test:e2e", "test:e2e:built", "test:e2e:dev"]) {
+for (const scriptName of ["test:e2e", "test:e2e:dev"]) {
   assert.match(
     packageJson.scripts[scriptName],
     /node scripts\/run-provider-free\.mjs/,
@@ -416,11 +416,14 @@ assert.equal(
   rootPackageJson.scripts["verify:release"],
   "node scripts/verify-release.mjs",
 );
-assert.equal(
-  rootPackageJson.scripts.verify,
-  "node packages/website/scripts/run-provider-free.mjs bun run verify:internal",
-);
-assert.ok(rootPackageJson.scripts["verify:internal"]);
+assert.equal(rootPackageJson.scripts.verify, "bun run ci");
+for (const name of ["ci", "ci:static", "ci:unit", "ci:browser", "ci:hygiene"]) {
+  assert.match(
+    rootPackageJson.scripts[name],
+    /^node packages\/website\/scripts\/run-provider-free\.mjs node scripts\/ci\.mjs /,
+    `${name} must cross the minimal environment boundary`,
+  );
+}
 const releaseRunner = readFileSync(
   join(here, "..", "..", "..", "..", "scripts", "verify-release.mjs"),
   "utf8",
@@ -429,14 +432,14 @@ assert.match(releaseRunner, /RELEASE_VALIDATION: "1"/);
 assert.match(releaseRunner, /NEXT_TELEMETRY_DISABLED: "1"/);
 assert.ok(
   releaseRunner.indexOf('"provider environment preflight"') <
-    releaseRunner.indexOf('"deterministic repository verification"'),
+    releaseRunner.indexOf('"static checks"'),
   "release verification must validate the supplied provider environment before any provider-free wrapper can clear it",
 );
 assert.ok(
-  releaseRunner.indexOf('"deterministic repository verification"') <
+  releaseRunner.indexOf('"static checks"') <
     releaseRunner.indexOf('"full Lighthouse performance gate"') &&
     releaseRunner.indexOf('"full Lighthouse performance gate"') <
-      releaseRunner.indexOf('"public browser gate"'),
+      releaseRunner.indexOf('"browser smoke"'),
   "release verification must measure the complete verified build before browser journey gates",
 );
 assert.ok(
@@ -445,8 +448,9 @@ assert.ok(
   "release verification must finish with the configured provider build",
 );
 assert.ok(
-  releaseRunner.includes('"provider-free authentication scaffold"'),
-  "release verification must exercise the credential-free auth boundary",
+  releaseRunner.indexOf('"provider-free production build"') <
+    releaseRunner.indexOf('"full Lighthouse performance gate"'),
+  "release verification must pin one provider-free build receipt before measuring it",
 );
 for (const name of ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"]) {
   assert.match(
@@ -460,25 +464,18 @@ assert.match(
   /node scripts\/run-provider-free\.mjs node scripts\/run-built-gate\.mjs/,
   "the launch browser gate must run its server under the provider-free runtime",
 );
-const e2eSuiteRunner = readFileSync(
-  join(here, "..", "run-e2e-suite.mjs"),
-  "utf8",
-);
 assert.match(
-  e2eSuiteRunner,
-  /"--grep",\s*"@launch-gate",\s*"--project=chromium",\s*"--retries=0",\s*"--trace=retain-on-failure"/,
+  packageJson.scripts["test:e2e:release:built"],
+  /--grep @launch-gate --project=chromium --retries=0 --trace=retain-on-failure/,
   "the launch browser gate must select tagged tests across the complete suite",
 );
 assert.doesNotMatch(
-  e2eSuiteRunner,
+  packageJson.scripts["test:e2e:release:built"],
   /launch-gate\.spec\.ts/,
   "the launch browser gate may not hardcode one test file",
 );
 for (const scriptName of [
   "test:server-log-privacy:built",
-  "test:e2e:built",
-  "test:e2e:public:built",
-  "test:e2e:auth-scaffold:built",
   "test:e2e:release:built",
 ]) {
   assert.match(
@@ -500,20 +497,10 @@ assert.match(
   /spawn\([\s\S]*postflightReceipt\s*=\s*verify\(\);[\s\S]*isDeepStrictEqual\(preflightReceipt,\s*postflightReceipt\)/,
 );
 assert.match(
-  packageJson.scripts["test:e2e:public:built"],
-  /E2E_GLOBAL_TIMEOUT=\$\{E2E_GLOBAL_TIMEOUT:-4200000\}/,
-  "the complete local public matrix must inherit an explicit timeout or use the same 70-minute bound as CI",
+  packageJson.scripts["test:e2e:release:built"],
+  /E2E_GLOBAL_TIMEOUT=\$\{E2E_GLOBAL_TIMEOUT:-600000\}/,
+  "test:e2e:release:built must use the bounded ten-minute focused-gate budget",
 );
-for (const scriptName of [
-  "test:e2e:auth-scaffold:built",
-  "test:e2e:release:built",
-]) {
-  assert.match(
-    packageJson.scripts[scriptName],
-    /E2E_GLOBAL_TIMEOUT=\$\{E2E_GLOBAL_TIMEOUT:-600000\}/,
-    `${scriptName} must use the bounded ten-minute focused-gate budget`,
-  );
-}
 assert.equal(
   packageJson.scripts["test:e2e:authenticated-live:built"],
   "node scripts/run-live-auth-e2e.mjs --built",
@@ -602,27 +589,11 @@ assert.match(
   /Total: 3 tests in 1 file/,
   "the release selector must discover the complete non-empty launch gate",
 );
-const ciWorkflow = readFileSync(
-  join(here, "..", "..", "..", "..", ".github", "workflows", "ci.yml"),
-  "utf8",
-);
-// The public browser gate runs as a sharded matrix, so each shard owns a
-// distinct artifact directory keyed by project and shard. That keeps the
-// original guarantee — no gate can overwrite or be mistaken for another's
-// output — and additionally makes every blob report independently mergeable.
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
-);
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_BLOB_OUTPUT_DIR: blob-report\/auth-scaffold/,
-);
-assert.match(
-  ciWorkflow,
-  /PLAYWRIGHT_OUTPUT_DIR: test-results\/\$\{\{ matrix\.project \}\}-\$\{\{ matrix\.shard \}\}/,
-);
-assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
+const workflowText = (file) =>
+  readFileSync(
+    join(here, "..", "..", "..", "..", ".github", "workflows", file),
+    "utf8",
+  );
 // next.config.ts resolves headers() once, at build time, and bakes the
 // result into the build output — `next start` serves it as-is and never
 // re-evaluates next.config.ts's env reads. Every job that builds and then
@@ -643,14 +614,15 @@ assert.match(ciWorkflow, /PLAYWRIGHT_OUTPUT_DIR: test-results\/auth-scaffold/);
 // root cause of hydration-marker timeouts across unrelated specs on every
 // route under mobile-webkit, not a set of individual page bugs.
 const jobsNeedingLoopbackVerification = [
-  "lighthouse:",
-  "e2e:",
-  "auth-scaffold:",
-  "server-log-privacy:",
+  ["ci.yml", "browser:", "run: bun run ci:browser"],
+  ["nightly.yml", "browser:", "run: bun run --cwd packages/website verify:build"],
+  ["nightly.yml", "webkit:", "run: bun run --cwd packages/website verify:build"],
+  ["nightly.yml", "lighthouse:", "run: bun run --cwd packages/website verify:build"],
 ];
-for (const jobHeader of jobsNeedingLoopbackVerification) {
+for (const [file, jobHeader, buildCommand] of jobsNeedingLoopbackVerification) {
+  const ciWorkflow = workflowText(file);
   const jobStart = ciWorkflow.indexOf(`\n  ${jobHeader}\n`);
-  assert.ok(jobStart >= 0, `expected a top-level ${jobHeader} job in ci.yml`);
+  assert.ok(jobStart >= 0, `expected a top-level ${jobHeader} job in ${file}`);
   // A real next job line is exactly 2-space indented (`  name:`), never more
   // — every step/key inside a job is indented 4+ spaces. Matching "\n  " with
   // no length bound also matches those deeper lines (e.g. "\n    name:"
@@ -674,12 +646,11 @@ for (const jobHeader of jobsNeedingLoopbackVerification) {
   assert.match(
     preSteps,
     /env:\s*\n\s*E2E_SERVER_MODE: production\s*\n\s*E2E_PORT: "3000"/,
-    `${jobHeader} must set E2E_SERVER_MODE/E2E_PORT at job level, before steps:, so build and serve/test steps cannot disagree:\n${preSteps}`,
+    `${file} ${jobHeader} must set E2E_SERVER_MODE/E2E_PORT at job level, before steps:, so build and serve/test steps cannot disagree:\n${preSteps}`,
   );
-  assert.match(
-    jobBlock,
-    /run: bun run --cwd packages\/website verify:build\s*\n/,
-    `${jobHeader} must still build via verify:build:\n${jobBlock.slice(0, 400)}`,
+  assert.ok(
+    jobBlock.includes(`${buildCommand}\n`),
+    `${file} ${jobHeader} must still build through ${buildCommand}:\n${jobBlock.slice(0, 400)}`,
   );
 }
 const serverLogPrivacyRunner = readFileSync(
