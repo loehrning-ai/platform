@@ -6,7 +6,7 @@ The interval widens when there are only a few comparable firms, and the calculat
 
 ::explorer{}
 
-In my data, text volume is more strongly associated with the AI word than industry or state. Industry and state also depend on the matching of firm to website, which held in only {{h05-waterfall.audit_own}} of the cases checked, and so read with caution until the checked websites have recalculated them. Size counts authorised representatives, not employees. It describes what is visible on a homepage, not your use.
+In my data, text volume is more strongly associated with the AI word than industry or state. The estimator is calculated only with websites the rescan read, without those whose legal notice names another firm. For many of them the legal notice leaves open whether it belongs to the firm, so read industry and state with caution. Size counts authorised representatives, not employees. It describes what is visible on a homepage, not your use.
 
 ## What has applied since February 2025
 

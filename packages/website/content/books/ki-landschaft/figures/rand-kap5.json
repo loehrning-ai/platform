@@ -2,13 +2,13 @@
   "id": "rand-kap5",
   "kind": "bars",
   "title": "Konkretes zeigen alle Regionen gleich oft",
-  "alt": "Konkretes zeigen alle Regionen gleich oft. KI-Seiten, die etwas Konkretes zeigen: 21,6 %.",
-  "caption": "Randnotiz: KI-Seiten, die etwas Konkretes zeigen 21,6 % (n = 1.062).",
-  "n": 1062,
+  "alt": "Konkretes zeigen alle Regionen gleich oft. KI-Seiten, die etwas Konkretes zeigen: 21,2 %.",
+  "caption": "Randnotiz: KI-Seiten, die etwas Konkretes zeigen 21,2 % (n = 802).",
+  "n": 802,
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026) und Stellenanzeigen mit Standort Deutschland",
-  "asOf": "2026-10-19",
+  "asOf": "2026-10-20",
   "limitation": "Konkretes heißt: Chatbot, Werkzeug, Verfahren oder Stelle auf der Startseite. Bei den Stellen erklärt die Zahl der Anzeigen je Land den größten Teil der Unterschiede.",
-  "sourceLine": "n = 1.062 · 2026-03 bis 2026-05 · Grenze: kein regionaler Unterschied nachweisbar",
+  "sourceLine": "n = 802 · 2026-03 bis 2026-05 · Grenze: kein regionaler Unterschied nachweisbar",
   "data": {
     "orientation": "horizontal",
     "fmt": {
@@ -19,54 +19,54 @@
       {
         "id": "konkret",
         "label": "KI-Seiten, die etwas Konkretes zeigen",
-        "value": 21.56309,
-        "lo": 19.19443,
-        "hi": 24.13673,
-        "n": 1062
+        "value": 21.19701,
+        "lo": 18.50909,
+        "hi": 24.15954,
+        "n": 802
       }
     ],
     "max": 100,
     "sort": "none"
   },
   "meta": {
-    "methodVersion": "v1-lab-2026-10-19",
-    "frozenOn": "2026-10-19",
-    "n": 1062,
+    "methodVersion": "v2-notwrong-2026-10-20",
+    "frozenOn": "2026-10-20",
+    "n": 802,
     "base": "Startseiten mit KI-Wort, Kreis aus der Postleitzahl",
     "window": "2026-03 bis 2026-05",
     "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026) und Stellenanzeigen mit Standort Deutschland",
     "hero": "M5",
-    "attribution": "firm-level, pending verified rescan",
+    "attribution": "firm-level, rescan-read sites without known mismatches",
     "rescan": "may change",
-    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "rescanNote": "Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt.",
     "values": {
       "concrete_pages": {
-        "value": 229.0,
-        "n": 1062,
+        "value": 170.0,
+        "n": 802,
         "fmt": {
           "style": "number",
           "digits": 0
         }
       },
       "concrete_share": {
-        "value": 21.5631,
-        "lo": 19.1944,
-        "hi": 24.1367,
-        "n": 1062,
+        "value": 21.197,
+        "lo": 18.5091,
+        "hi": 24.1595,
+        "n": 802,
         "fmt": {
           "style": "percent",
           "digits": 0
         }
       },
       "concrete_p_urban": {
-        "value": 0.429793,
+        "value": 0.119274,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "concrete_p_east_west": {
-        "value": 0.674722,
+        "value": 0.657562,
         "fmt": {
           "style": "decimal",
           "digits": 2

@@ -257,7 +257,7 @@ describe("squares add up (population, classes, largest remainder)", () => {
     expect(g.cls[2]).toBe(d.h03.cond.firm.k);
   });
 
-  it("H06: 118 squares, ten Mennige; the takeaway keeps those ten", () => {
+  it("H06: one square per Kreis, ten Mennige; the takeaway keeps those ten", () => {
     const k = tally("kreise-pour");
     expect(k.active).toBe(d.h06.kreise);
     expect(k.cls[2]).toBe(d.h06.top);

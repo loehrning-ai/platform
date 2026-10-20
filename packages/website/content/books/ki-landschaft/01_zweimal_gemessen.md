@@ -26,6 +26,6 @@ Mein früherer Punktwert für Firmen hat dasselbe gezeigt. Ich habe ihn gestrich
 
 ::figure{id="h05-ladder"}
 
-Parallel läuft ein Rescan, ein erneuter Durchgang über alle Seiten, der jede Website gegen ihr Impressum prüft. Seine Neuberechnung ersetzt die Zahlen dieser Ausgabe, soweit sie an Websites hängen, und bis dahin gelten sie mit Stand Oktober 2026.
+Inzwischen ist ein Rescan gelaufen, ein erneuter Durchgang über {{h05-waterfall.rescan_sites}} Websites, der jede Website gegen ihr Impressum prüft. Erreichbar waren {{h05-waterfall.rescan_read}}, und bei {{h05-waterfall.rescan_match}} davon nennt das Impressum die Firma, das sind {{h05-waterfall.rescan_match_share}}. Bei {{h05-waterfall.rescan_no_match}} passt es nicht, bei {{h05-waterfall.rescan_unclear}} bleibt es offen. Mit den Websites, die der Rescan lesen konnte, ohne die, deren Impressum eine andere Firma nennt, habe ich die Kreise, die Länder und den Schätzer in Kapitel 8 neu gerechnet. Alle anderen Zahlen dieser Ausgabe, auch die vom Anfang dieses Kapitels, gelten weiter mit Stand Oktober 2026.
 
 > **Was du tun kannst:** Frag bei jeder KI-Zahl nach drei Dingen: womit gemessen wurde, an wie vielen Fällen und wann. Das gilt auch für meine. Schreib die drei Angaben neben die Zahl, bevor du sie weitergibst, und nimm die Zahl nur als Beispiel, wenn eine fehlt. Miss auch im eigenen Haus zweimal, bevor du einer Zahl glaubst.

@@ -36,7 +36,8 @@ describe("the figure files of the data book", () => {
   it("carry the method version of this edition and are no longer flagged as provisional", async () => {
     const figures = await loadBookFigures(BOOK);
     for (const spec of figures.specs.values()) {
-      expect(spec.meta?.methodVersion).toMatch(/^v1-/);
+      // v1 = the October lab freeze; v2 = the firm-level figures recomputed on websites whose legal notice names the firm (rescan October 2026).
+      expect(spec.meta?.methodVersion).toMatch(/^v[12]-/);
       expect(spec.meta?.frozenOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(isPreRescan(spec)).toBe(false);
     }

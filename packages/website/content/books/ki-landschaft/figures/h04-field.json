@@ -8,7 +8,7 @@
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
   "asOf": "2026-10-19",
   "limitation": "Die 39 Seiten sind zum Teil IT- und Cloud-Anbieter; die Wörterliste ist ungeprüft. Zusammenhang, keine Ursache.",
-  "sourceLine": "n = 21.402 Startseiten, davon 39 mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele IT-Anbieter · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet.",
+  "sourceLine": "n = 21.402 Startseiten, davon 39 mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele IT-Anbieter · Ohne Websites, deren Impressum eine andere Firma nennt, dasselbe Muster.",
   "steps": [
     {
       "id": "alle",

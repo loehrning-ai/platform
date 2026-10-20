@@ -2,14 +2,14 @@
   "id": "h10-tiles",
   "kind": "tilemap",
   "title": "Bayerns Vorsprung verschwindet im gleichartigen Kern",
-  "alt": "Kachelkarte der 16 Länder mit dem Anteil der Firmen, deren Website KI erwähnt. Bei allen Firmen führt Bayern (5,2 gegen 3,6 Prozent im Rest). Im gleichartigen Kern der Stichprobe (15.871 Firmen) liegen Bayern und der Rest gleichauf (3,4 gegen 3,2 Prozent). Vier Länder im Osten sind zusammengefasst.",
-  "caption": "Anteil der Firmen mit KI-Wort auf der Startseite, alle Firmen und gleichartiger Kern. Bayern gegen Rest: Chancenverhältnis 1,25 (1,10 bis 1,43) bei allen, 0,98 (0,81 bis 1,19) im Kern.",
-  "n": 24942,
-  "nNote": "24.942 Firmen mit Land, davon 15.881 im Kern",
+  "alt": "Kachelkarte der 16 Länder mit dem Anteil der Firmen, deren Website KI erwähnt. Bei allen Firmen liegt Bayern über dem Rest (4,9 gegen 3,2 Prozent). Im gleichartigen Kern der Stichprobe (13.150 Firmen) liegen Bayern und der Rest gleichauf (3,0 gegen 2,7 Prozent). Vier Länder im Osten sind zusammengefasst.",
+  "caption": "Anteil der Firmen mit KI-Wort auf der Startseite, alle Firmen und gleichartiger Kern. Bayern gegen Rest: Chancenverhältnis 1,29 (1,11 bis 1,50) bei allen, 0,98 (0,78 bis 1,24) im Kern.",
+  "n": 20687,
+  "nNote": "20.687 Firmen mit Land, davon 13.150 im Kern",
   "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Land aus dem Handelsregister",
-  "asOf": "2026-10-19",
-  "limitation": "Der Vorsprung sitzt in 4.403 Firmen, die auf einem Weg gefunden wurden und zu 94 Prozent aus Bayern stammen. Bayern stellt 41 Prozent der Stichprobe und 14 Prozent des Register-Pools. Länder mit weniger als 5 Treffern sind zusammengefasst oder nicht gezeigt. Die Zuordnung von Firma zu Website ist nur zur Hälfte geprüft.",
-  "sourceLine": "n = 24.942 Firmen mit Land · Scan 2026-03 bis 05 · Grenze: Auswahl der Stichprobe; Länder unter 5 Treffern zusammengefasst · Wird mit geprüften Websites neu gerechnet.",
+  "asOf": "2026-10-20",
+  "limitation": "Der Vorsprung sitzt in 3.746 Firmen, die auf einem Weg gefunden wurden und zu 94 Prozent aus Bayern stammen. Bayern stellt 41 Prozent der Stichprobe und 14 Prozent des Register-Pools. Länder mit weniger als 5 Treffern sind zusammengefasst oder nicht gezeigt. Gezählt sind nur Websites, die der Rescan gelesen hat, ohne die, deren Impressum eine andere Firma nennt.",
+  "sourceLine": "n = 20.687 Firmen mit Land · Scan 2026-03 bis 05 · Grenze: Auswahl der Stichprobe; Länder unter 5 Treffern zusammengefasst · Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt.",
   "steps": [
     {
       "id": "alle",
@@ -33,190 +33,188 @@
     "tiles": [
       {
         "id": "BW",
-        "value": 3.49819,
-        "lo": 2.84479,
-        "hi": 4.29503,
-        "n": 2487,
+        "value": 3.37838,
+        "lo": 2.68265,
+        "hi": 4.24666,
+        "n": 2072,
         "core": {
-          "value": 2.89487,
-          "lo": 2.24108,
-          "hi": 3.73211,
-          "n": 1969
+          "value": 2.63319,
+          "lo": 1.96072,
+          "hi": 3.52799,
+          "n": 1633
         }
       },
       {
         "id": "BY",
-        "value": 5.18293,
-        "lo": 4.76871,
-        "hi": 5.631,
-        "n": 10168,
+        "value": 4.85964,
+        "lo": 4.42202,
+        "hi": 5.33815,
+        "n": 8478,
         "core": {
-          "value": 3.44907,
-          "lo": 2.94647,
-          "hi": 4.03383,
-          "n": 4349
+          "value": 2.97539,
+          "lo": 2.47461,
+          "hi": 3.57379,
+          "n": 3697
         }
       },
       {
         "id": "BE",
-        "value": 4.71807,
-        "lo": 3.4967,
-        "hi": 6.33803,
-        "n": 869,
+        "value": 4.46043,
+        "lo": 3.15988,
+        "hi": 6.26165,
+        "n": 695,
         "core": {
-          "value": 3.96601,
-          "lo": 2.75798,
-          "hi": 5.6723,
-          "n": 706
+          "value": 3.76344,
+          "lo": 2.47448,
+          "hi": 5.68469,
+          "n": 558
         }
       },
       {
         "id": "BB",
-        "value": 3.80435,
-        "lo": 2.64501,
-        "hi": 5.44342,
-        "n": 736,
+        "value": 2.91096,
+        "lo": 1.82526,
+        "hi": 4.61213,
+        "n": 584,
         "core": {
-          "value": 3.37621,
-          "lo": 2.21867,
-          "hi": 5.10612,
-          "n": 622
+          "value": 2.05339,
+          "lo": 1.1191,
+          "hi": 3.73819,
+          "n": 487
         }
       },
       {
         "id": "HB",
-        "value": 3.48259,
-        "lo": 1.697,
-        "hi": 7.01295,
-        "n": 201,
+        "value": 3.0303,
+        "lo": 1.30115,
+        "hi": 6.89683,
+        "n": 165,
         "core": {
-          "value": 3.3557,
-          "lo": 1.44169,
-          "hi": 7.61448,
-          "n": 149
+          "value": null,
+          "n": 120
         }
       },
       {
         "id": "HH",
-        "value": 5.89651,
-        "lo": 4.4887,
-        "hi": 7.71021,
-        "n": 831,
+        "value": 5.17751,
+        "lo": 3.74606,
+        "hi": 7.11553,
+        "n": 676,
         "core": {
-          "value": 5.625,
-          "lo": 4.09045,
-          "hi": 7.6891,
-          "n": 640
+          "value": 4.81696,
+          "lo": 3.28373,
+          "hi": 7.01415,
+          "n": 519
         }
       },
       {
         "id": "HE",
-        "value": 4.99662,
-        "lo": 3.99874,
-        "hi": 6.22737,
-        "n": 1481,
+        "value": 4.73083,
+        "lo": 3.67732,
+        "hi": 6.06716,
+        "n": 1226,
         "core": {
-          "value": 3.95221,
-          "lo": 2.94724,
-          "hi": 5.28121,
-          "n": 1088
+          "value": 3.233,
+          "lo": 2.2603,
+          "hi": 4.60457,
+          "n": 897
         }
       },
       {
         "id": "MV",
         "value": null,
-        "n": 278,
+        "n": 238,
         "core": {
           "value": null,
-          "n": 218
+          "n": 187
         }
       },
       {
         "id": "NI",
-        "value": 2.55958,
-        "lo": 1.78796,
-        "hi": 3.65181,
-        "n": 1133,
+        "value": 2.36559,
+        "lo": 1.5673,
+        "hi": 3.55579,
+        "n": 930,
         "core": {
-          "value": 2.00211,
-          "lo": 1.28541,
-          "hi": 3.10583,
-          "n": 949
+          "value": 1.68394,
+          "lo": 0.98669,
+          "hi": 2.85966,
+          "n": 772
         }
       },
       {
         "id": "NW",
-        "value": 3.84918,
-        "lo": 3.28394,
-        "hi": 4.50716,
-        "n": 3819,
+        "value": 3.27147,
+        "lo": 2.70729,
+        "hi": 3.94845,
+        "n": 3179,
         "core": {
-          "value": 3.5906,
-          "lo": 2.98009,
-          "hi": 4.32062,
-          "n": 2980
+          "value": 2.84322,
+          "lo": 2.25657,
+          "hi": 3.5768,
+          "n": 2462
         }
       },
       {
         "id": "RP",
-        "value": 2.93454,
-        "lo": 2.01034,
-        "hi": 4.26511,
-        "n": 886,
+        "value": 2.00267,
+        "lo": 1.21733,
+        "hi": 3.27785,
+        "n": 749,
         "core": {
-          "value": 2.99296,
-          "lo": 1.8769,
-          "hi": 4.7406,
-          "n": 568
+          "value": 2.11416,
+          "lo": 1.15234,
+          "hi": 3.84756,
+          "n": 473
         }
       },
       {
         "id": "SL",
         "value": null,
-        "n": 233,
+        "n": 194,
         "core": {
           "value": null,
-          "n": 174
+          "n": 143
         }
       },
       {
         "id": "SN",
         "value": null,
-        "n": 547,
+        "n": 456,
         "core": {
           "value": null,
-          "n": 432
+          "n": 352
         }
       },
       {
         "id": "ST",
         "value": null,
-        "n": 287,
+        "n": 236,
         "core": {
           "value": null,
-          "n": 218
+          "n": 182
         }
       },
       {
         "id": "SH",
-        "value": 3.16344,
-        "lo": 2.01022,
-        "hi": 4.94486,
-        "n": 569,
+        "value": 3.0303,
+        "lo": 1.8135,
+        "hi": 5.02178,
+        "n": 462,
         "core": {
-          "value": 3.25866,
-          "lo": 2.01559,
-          "hi": 5.22746,
-          "n": 491
+          "value": 3.30789,
+          "lo": 1.94314,
+          "hi": 5.57663,
+          "n": 393
         }
       },
       {
         "id": "TH",
         "value": null,
-        "n": 417,
+        "n": 347,
         "core": {
           "value": null,
-          "n": 318
+          "n": 265
         }
       }
     ],
@@ -231,121 +229,121 @@
           "ST",
           "TH"
         ],
-        "value": 1.63506,
-        "lo": 1.10992,
-        "hi": 2.40262,
-        "n": 1529,
+        "value": 1.25294,
+        "lo": 0.77268,
+        "hi": 2.02561,
+        "n": 1277,
         "core": {
-          "value": 1.51771,
-          "lo": 0.96214,
-          "hi": 2.38634,
-          "n": 1186
+          "value": 1.11562,
+          "lo": 0.62406,
+          "hi": 1.98662,
+          "n": 986
         }
       }
     ]
   },
   "meta": {
-    "methodVersion": "v1-lab-2026-10-19",
-    "frozenOn": "2026-10-19",
-    "n": 24942,
+    "methodVersion": "v2-notwrong-2026-10-20",
+    "frozenOn": "2026-10-20",
+    "n": 20687,
     "base": "Firmen mit eigener Domain und Land aus dem Register; Kern = per Suche gefunden, Registerzweck vorhanden",
     "window": "2026-03 bis 2026-05",
     "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Land aus dem Handelsregister",
     "hero": "H10",
-    "attribution": "firm-level, pending verified rescan",
+    "attribution": "firm-level, rescan-read sites without known mismatches",
     "rescan": "strengthens",
-    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "rescanNote": "Nur vom Rescan gelesene Websites, ohne die, deren Impressum eine andere Firma nennt.",
     "values": {
       "firms_land": {
-        "value": 24942.0,
+        "value": 20687.0,
         "fmt": {
           "style": "number",
           "digits": 0
         }
       },
       "core_firms": {
-        "value": 15881.0,
+        "value": 13150.0,
         "fmt": {
           "style": "number",
           "digits": 0
         }
       },
       "bayern_or_all": {
-        "value": 1.25316,
-        "lo": 1.09924,
-        "hi": 1.42862,
+        "value": 1.29066,
+        "lo": 1.10942,
+        "hi": 1.50151,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "bayern_or_core": {
-        "value": 0.980688,
-        "lo": 0.805456,
-        "hi": 1.19404,
+        "value": 0.984111,
+        "lo": 0.780059,
+        "hi": 1.24154,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "bayern_or_purpose": {
-        "value": 1.09478,
-        "lo": 0.914558,
-        "hi": 1.31051,
+        "value": 1.11001,
+        "lo": 0.898967,
+        "hi": 1.3706,
         "fmt": {
           "style": "decimal",
           "digits": 2
         }
       },
       "bayern_rate_all": {
-        "value": 5.18293,
-        "n": 10168,
+        "value": 4.85964,
+        "n": 8478,
         "fmt": {
           "style": "percent",
           "digits": 1
         }
       },
       "rest_rate_all": {
-        "value": 3.62123,
-        "n": 14774,
+        "value": 3.19436,
+        "n": 12209,
         "fmt": {
           "style": "percent",
           "digits": 1
         }
       },
       "bayern_rate_core": {
-        "value": 3.44907,
-        "n": 4349,
+        "value": 2.97539,
+        "n": 3697,
         "fmt": {
           "style": "percent",
           "digits": 1
         }
       },
       "rest_rate_core": {
-        "value": 3.21125,
-        "n": 11522,
+        "value": 2.65805,
+        "n": 9443,
         "fmt": {
           "style": "percent",
           "digits": 1
         }
       },
       "lead_firms": {
-        "value": 4403.0,
+        "value": 3746.0,
         "fmt": {
           "style": "number",
           "digits": 0
         }
       },
       "lead_bayern_share": {
-        "value": 94.3448,
+        "value": 94.394,
         "fmt": {
           "style": "percent",
           "digits": 0
         }
       },
       "lead_rate": {
-        "value": 6.97252,
-        "n": 4403,
+        "value": 6.67379,
+        "n": 3746,
         "fmt": {
           "style": "percent",
           "digits": 1
@@ -366,31 +364,31 @@
         }
       },
       "weighted_unweighted": {
-        "value": 4.25754,
+        "value": 3.87664,
         "fmt": {
           "style": "percent",
           "digits": 2
         }
       },
       "weighted_land": {
-        "value": 3.80465,
-        "lo": 3.30877,
-        "hi": 4.22277,
+        "value": 3.42622,
+        "lo": 2.96039,
+        "hi": 3.84568,
         "fmt": {
           "style": "percent",
           "digits": 1
         }
       },
       "weighted_kreis": {
-        "value": 3.78228,
+        "value": 3.43835,
         "fmt": {
           "style": "percent",
           "digits": 2
         }
       },
       "east4_hits": {
-        "value": 25.0,
-        "n": 1529,
+        "value": 16.0,
+        "n": 1277,
         "fmt": {
           "style": "number",
           "digits": 0
