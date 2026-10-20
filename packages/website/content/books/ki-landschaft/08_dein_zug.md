@@ -6,7 +6,7 @@ Das Intervall wird breiter, wenn es nur wenige vergleichbare Firmen gibt, und ge
 
 ::explorer{}
 
-In meinen Daten hängt die Textmenge stärker mit dem KI-Wort zusammen als Branche oder Land. Branche und Land hängen außerdem an der Zuordnung von Firma zu Website, die nur bei {{h05-waterfall.audit_own}} der geprüften Fälle stimmte, und lesen sich deshalb mit Vorsicht, bis die geprüften Websites sie neu gerechnet haben. Die Größe zählt Vertretungsberechtigte, nicht Beschäftigte. Er beschreibt, was auf einer Startseite sichtbar ist, nicht deinen Einsatz.
+In meinen Daten hängt die Textmenge stärker mit dem KI-Wort zusammen als Branche oder Land. Gerechnet ist der Schätzer nur mit Websites, die der Rescan gelesen hat, ohne die, deren Impressum eine andere Firma nennt. Bei vielen davon lässt das Impressum offen, ob es zur Firma gehört, deshalb lies Branche und Land mit Vorsicht. Die Größe zählt Vertretungsberechtigte, nicht Beschäftigte. Er beschreibt, was auf einer Startseite sichtbar ist, nicht deinen Einsatz.
 
 ## Was seit Februar 2025 gilt
 

@@ -215,9 +215,9 @@ export function buildCopy(data: ReelData, layout: ReelLayout): TextItem[] {
     small("s-consult", "source", ["{{h03.consult.n:int}} Berater-Startseiten, {{h03.consult.window:ymRange}}.", "Berater sind auf KI ausgewählt."], 16.55, 1.5),
     small("s-firms", "source", ["{{h03.firm.n:int}} Firmen-Startseiten, {{h03.firm.window:ymRange}}.", "Andere Auswahl: Quote nicht direkt", "vergleichbar."], 18.5, 1.05),
     small("s-cond", "source", ["Nur mit KI-Wort: {{h03.cond.consult.k:int}} von {{h03.cond.consult.n:int}} Beratern,", "{{h03.cond.firm.k:int}} von {{h03.cond.firm.n:int}} Firmen.", "Firmenebene: wird vom Rescan geprüft."], 20.0, 1.0),
-    small("s-kreise", "source", ["{{h06.kreise:int}} Kreise mit mindestens {{h06.minFirms:int}} Firmen,", "{{h06.firms:int}} Firmen, zufällig halbiert.", "Wird mit geprüften Websites neu gerechnet."], 21.45, 2.9),
+    small("s-kreise", "source", ["{{h06.kreise:int}} Kreise mit mindestens {{h06.minFirms:int}} Firmen,", "{{h06.firms:int}} Firmen, zufällig halbiert.", "Ohne nachweislich falsche Zuordnungen."], 21.45, 2.9),
     small("s-take", "source", ["{{book.heroes:int}} Befunde zu {{book.firms:int}} Firmen", "mit eigener Domain."], 25.2, 1.95, "ink"),
-    small("s-end", "source", ["Etwa {{book.urlMatchPct:pct0}} der Firma-Website-Paare stimmen", "({{book.urlMatchLoPct:int}} bis {{book.urlMatchHiPct:pct0}}). Stand {{book.asOf:ym}}, Rescan geplant."], 28.3, 0.95),
+    small("s-end", "source", ["In einer Prüfung stimmten {{book.urlMatchPct:pct0}} der Paare", "({{book.urlMatchLoPct:int}} bis {{book.urlMatchHiPct:pct0}}). Stand {{book.asOf:ym}}, vor dem Rescan."], 28.3, 0.95),
   );
 
   /* ---- direct labels (positions in the virtual field region) */

@@ -220,7 +220,7 @@ describe("Explorer, English", () => {
       for (const level of factor.levels) expect(`${level.label} ${level.example ?? ""} ${level.pooledNote ?? ""}`).not.toMatch(STOP);
     }
     expect(en.sourceLine).not.toMatch(/\{n\}|\{draws\}/);
-    expect(en.sourceLine).toContain("12,468");
+    expect(en.sourceLine).toContain("10,291");
     expect(() => localizeModel(model, { ...(overlay as object), factors: {} }, "en")).toThrow(/missing/);
   });
 
@@ -233,7 +233,7 @@ describe("Explorer, English", () => {
     expect(screen.getByRole("heading", { name: "Where do I stand?" })).toBeInTheDocument();
     expect(container.querySelector(".ex-numeral-of")).toHaveTextContent("of 100");
     expect(live()).toHaveTextContent(/^About \d+\.\d of 100 GmbH homepages like yours mention AI, probably /);
-    expect(container.querySelector("[data-explorer-caveat]")).toHaveTextContent(/^Basis: [\d,]+ firms\. Being recalculated with checked websites\.$/);
+    expect(container.querySelector("[data-explorer-caveat]")).toHaveTextContent(/^Basis: [\d,]+ firms\. Without websites whose legal notice names another firm\.$/);
     expect(container.querySelector("form")).toHaveAttribute("aria-label", "Your details");
     expect(container.querySelector(".ex-unit")).toHaveTextContent("1 square = 0.1 %, model estimate");
     expect(container.querySelector("svg.ex-field")?.getAttribute("aria-label")).toMatch(/^Field of 1,000 squares/);
