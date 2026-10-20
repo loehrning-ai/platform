@@ -276,5 +276,6 @@ host. `docs/hosted-tools.md` carries the full argument and the alternative.
 bun run verify
 ```
 
-runs page-inventory check, env-contract tests, typecheck, lint, unit tests and
-the production build. `docs/ci-contract.md` documents the CI equivalents.
+runs the same static checks, unit tests, production build and browser smoke
+that CI runs (it is an alias of `bun run ci`). `docs/ci-contract.md` documents
+the pipeline and the release signal.
