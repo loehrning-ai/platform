@@ -1,0 +1,617 @@
+{
+  "id": "h08-field",
+  "kind": "field",
+  "title": "Die Sicherheit steckt im Server, nicht in der Firma",
+  "alt": "Von 4.168 Websites mit gespeicherten Headern senden 53,7 Prozent keinen von sechs Schutz-Headern; auf Apache sind es 67, hinter Cloudflare 24 Prozent. 350 Websites melden dieselbe Server-Versionszeile, 309 davon erzwingen DMARC (88,3 %). Sie liefern 30,3 Prozent aller erzwungenen Richtlinien.",
+  "caption": "Header nach Server-Plattform, 4.168 Websites. Gleiche Versionszeile: 350 Websites (8,4 %), davon erzwingen 309 DMARC (88,3 %) gegen 18,6 % der übrigen.",
+  "n": 4168,
+  "nNote": "4.168 Websites mit Headern, 1.019 erzwungene Richtlinien",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan 16.03. bis 04.05.2026, Antwort-Header und DNS), Teilmenge mit gespeicherten Headern",
+  "asOf": "2026-10-19",
+  "limitation": "Zusammenhang: Die Plattform ist eine Entscheidung der Firma oder ihrer Agentur. Dass ein Hoster Voreinstellungen setzt, ist eine Schlussfolgerung, kein Beweis. Versionen zeigen nur Server, die sie zeigen. Die Teilmenge ist 16 Prozent der Basis und zu 71 Prozent aus Bayern.",
+  "sourceLine": "Quelle: 4.168 Websites, gescannt März bis Mai 2026. Firma-zu-Website-Zuordnung nur etwa zur Hälfte richtig, wird neu gerechnet.",
+  "steps": [
+    {
+      "id": "plattform",
+      "label": "Header nach Plattform"
+    },
+    {
+      "id": "banner",
+      "label": "Dieselbe Versionszeile"
+    },
+    {
+      "id": "dmarc",
+      "label": "Streng gesetzte DMARC-Regeln"
+    }
+  ],
+  "data": {
+    "classes": [
+      {
+        "id": "zero",
+        "label": "keiner der sechs Header",
+        "tone": "accent"
+      },
+      {
+        "id": "some",
+        "label": "ein bis zwei",
+        "tone": "ink"
+      },
+      {
+        "id": "many",
+        "label": "drei oder mehr",
+        "tone": "leinen"
+      },
+      {
+        "id": "same",
+        "label": "gleiche Versionszeile",
+        "tone": "accent"
+      },
+      {
+        "id": "other",
+        "label": "übrige",
+        "tone": "leinen"
+      }
+    ],
+    "scenes": [
+      {
+        "id": "plattform",
+        "population": "Website|Websites",
+        "base": 4168,
+        "squares": 1000,
+        "unit": "Website|Websites",
+        "layout": "bins",
+        "perRow": 5,
+        "bins": [
+          {
+            "id": "apache",
+            "label": "Apache",
+            "segments": [
+              {
+                "cls": "zero",
+                "count": 1469
+              },
+              {
+                "cls": "some",
+                "count": 442
+              },
+              {
+                "cls": "many",
+                "count": 273
+              }
+            ]
+          },
+          {
+            "id": "nginx",
+            "label": "nginx",
+            "segments": [
+              {
+                "cls": "zero",
+                "count": 493
+              },
+              {
+                "cls": "some",
+                "count": 283
+              },
+              {
+                "cls": "many",
+                "count": 250
+              }
+            ]
+          },
+          {
+            "id": "cloudflare",
+            "label": "Cloudflare",
+            "segments": [
+              {
+                "cls": "zero",
+                "count": 66
+              },
+              {
+                "cls": "some",
+                "count": 89
+              },
+              {
+                "cls": "many",
+                "count": 118
+              }
+            ]
+          },
+          {
+            "id": "baukasten",
+            "label": "Baukasten und Hoster",
+            "segments": [
+              {
+                "cls": "zero",
+                "count": 65
+              },
+              {
+                "cls": "some",
+                "count": 174
+              },
+              {
+                "cls": "many",
+                "count": 26
+              }
+            ]
+          },
+          {
+            "id": "sonst",
+            "label": "Sonstige oder ohne Angabe",
+            "segments": [
+              {
+                "cls": "zero",
+                "count": 147
+              },
+              {
+                "cls": "some",
+                "count": 103
+              },
+              {
+                "cls": "many",
+                "count": 170
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 53.7428,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Auf Apache fehlen fast zwei Drittel, hinter Cloudflare ein Viertel.",
+        "labelClasses": [
+          "zero"
+        ]
+      },
+      {
+        "id": "banner",
+        "population": "Website|Websites",
+        "base": 4168,
+        "squares": 1000,
+        "unit": "Website|Websites",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "other",
+                "count": 3818
+              },
+              {
+                "cls": "same",
+                "count": 350
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 8.3973,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Dieselbe Versionszeile: acht von hundert."
+      },
+      {
+        "id": "dmarc",
+        "population": "Richtlinie|Richtlinien",
+        "base": 1019,
+        "squares": 1000,
+        "unit": "Richtlinie|Richtlinien",
+        "layout": "grid",
+        "cols": 40,
+        "bins": [
+          {
+            "id": "alle",
+            "segments": [
+              {
+                "cls": "other",
+                "count": 710
+              },
+              {
+                "cls": "same",
+                "count": 309
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 30.3238,
+          "fmt": {
+            "style": "percent",
+            "digits": 0
+          }
+        },
+        "claim": "Dreißig von hundert erzwungenen Richtlinien."
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4168,
+    "base": "Websites mit eigener Domain und gespeicherten Antwort-Headern (16 Prozent der Basis, 71 Prozent Bayern)",
+    "window": "2026-03-16 bis 2026-05-04",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan 16.03. bis 04.05.2026, Antwort-Header und DNS), Teilmenge mit gespeicherten Headern",
+    "hero": "H08",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "zero_apache": {
+        "value": 67.2619,
+        "lo": 65.265,
+        "hi": 69.1982,
+        "n": 2184,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "n_apache": {
+        "value": 2184.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "mean_headers_apache": {
+        "value": 0.78022,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "hsts_apache": {
+        "value": 13.9194,
+        "lo": 12.5309,
+        "hi": 15.4346,
+        "n": 2184,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "zero_nginx": {
+        "value": 48.0507,
+        "lo": 45.0065,
+        "hi": 51.1094,
+        "n": 1026,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "n_nginx": {
+        "value": 1026.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "mean_headers_nginx": {
+        "value": 1.35478,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "hsts_nginx": {
+        "value": 35.1852,
+        "lo": 32.3233,
+        "hi": 38.1576,
+        "n": 1026,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "zero_cloudflare": {
+        "value": 24.1758,
+        "lo": 19.4779,
+        "hi": 29.5904,
+        "n": 273,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "n_cloudflare": {
+        "value": 273.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "mean_headers_cloudflare": {
+        "value": 2.09158,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "hsts_cloudflare": {
+        "value": 58.6081,
+        "lo": 52.6854,
+        "hi": 64.2918,
+        "n": 273,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "zero_baukasten": {
+        "value": 24.5283,
+        "lo": 19.7362,
+        "hi": 30.0483,
+        "n": 265,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "n_baukasten": {
+        "value": 265.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "mean_headers_baukasten": {
+        "value": 1.54717,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "hsts_baukasten": {
+        "value": 70.9434,
+        "lo": 65.2086,
+        "hi": 76.0797,
+        "n": 265,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "zero_sonst": {
+        "value": 35.0,
+        "lo": 30.593,
+        "hi": 39.6789,
+        "n": 420,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "n_sonst": {
+        "value": 420.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "mean_headers_sonst": {
+        "value": 2.08571,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "hsts_sonst": {
+        "value": 50.7143,
+        "lo": 45.9481,
+        "hi": 55.4675,
+        "n": 420,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "firms_headers": {
+        "value": 4168.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "base_share": {
+        "value": 16.2946,
+        "n": 25579,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "bayern_share": {
+        "value": 71.1852,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "zero_all": {
+        "value": 53.7428,
+        "lo": 52.2263,
+        "hi": 55.2524,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "three_plus": {
+        "value": 20.0816,
+        "lo": 18.8931,
+        "hi": 21.3251,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "banner_sites": {
+        "value": 350.0,
+        "n": 4168,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "banner_share": {
+        "value": 8.39731,
+        "lo": 7.59313,
+        "hi": 9.27811,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "banner_enforced": {
+        "value": 88.2857,
+        "lo": 84.4935,
+        "hi": 91.2466,
+        "n": 350,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "banner_enforced_hits": {
+        "value": 309.0,
+        "n": 350,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "other_enforced": {
+        "value": 18.5961,
+        "n": 3818,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "enforced_all": {
+        "value": 1019.0,
+        "n": 4168,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "enforced_share_banner": {
+        "value": 30.3238,
+        "lo": 27.5798,
+        "hi": 33.2157,
+        "n": 1019,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "banner_spf": {
+        "value": 36.2857,
+        "n": 350,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "banner_reject": {
+        "value": 84.0,
+        "n": 350,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "banner_bayern": {
+        "value": 67.7143,
+        "n": 350,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "auc_platform": {
+        "value": 0.724037,
+        "lo": 0.706192,
+        "hi": 0.742285,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "auc_firm": {
+        "value": 0.574542,
+        "lo": 0.555457,
+        "hi": 0.594811,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "auc_both": {
+        "value": 0.747774,
+        "lo": 0.730861,
+        "hi": 0.76414,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "phi_mail_x_headers": {
+        "value": 0.0417838,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "php_sites": {
+        "value": 809.0,
+        "n": 4168,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "php_share": {
+        "value": 19.4098,
+        "lo": 18.2375,
+        "hi": 20.6385,
+        "n": 4168,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "php_eol": {
+        "value": 47.8368,
+        "lo": 44.4129,
+        "hi": 51.2812,
+        "n": 809,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "php_years_past": {
+        "value": 3.36756,
+        "lo": 2.37372,
+        "hi": 4.34497,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

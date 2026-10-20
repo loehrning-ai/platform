@@ -1,0 +1,102 @@
+{
+  "id": "rand-kap5",
+  "kind": "bars",
+  "title": "Konkretes zeigen alle Regionen gleich oft",
+  "alt": "Konkretes zeigen alle Regionen gleich oft. KI-Seiten, die etwas Konkretes zeigen: 21,6 %.",
+  "caption": "Randnotiz: KI-Seiten, die etwas Konkretes zeigen 21,6 % (n = 1.062).",
+  "n": 1062,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026) und Stellenanzeigen mit Standort Deutschland",
+  "asOf": "2026-10-19",
+  "limitation": "Konkretes heißt: Chatbot, Werkzeug, Verfahren oder Stelle auf der Startseite. Bei den Stellen erklärt die Zahl der Anzeigen je Land den größten Teil der Unterschiede.",
+  "sourceLine": "n = 1.062 · 2026-03 bis 2026-05 · Grenze: kein regionaler Unterschied nachweisbar",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "konkret",
+        "label": "KI-Seiten, die etwas Konkretes zeigen",
+        "value": 21.56309,
+        "lo": 19.19443,
+        "hi": 24.13673,
+        "n": 1062
+      }
+    ],
+    "max": 100,
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 1062,
+    "base": "Startseiten mit KI-Wort, Kreis aus der Postleitzahl",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026) und Stellenanzeigen mit Standort Deutschland",
+    "hero": "M5",
+    "attribution": "firm-level, pending verified rescan",
+    "rescan": "may change",
+    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "values": {
+      "concrete_pages": {
+        "value": 229.0,
+        "n": 1062,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "concrete_share": {
+        "value": 21.5631,
+        "lo": 19.1944,
+        "hi": 24.1367,
+        "n": 1062,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "concrete_p_urban": {
+        "value": 0.429793,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "concrete_p_east_west": {
+        "value": 0.674722,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "volume_share_all": {
+        "value": 77.0663,
+        "lo": 72.087,
+        "hi": 88.2859,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "volume_share_big": {
+        "value": 93.0465,
+        "lo": 84.7916,
+        "hi": 98.1648,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "lands_big": {
+        "value": 11.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

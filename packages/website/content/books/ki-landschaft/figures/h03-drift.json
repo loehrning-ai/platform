@@ -1,0 +1,366 @@
+{
+  "id": "h03-drift",
+  "kind": "curve",
+  "title": "Claude wandert in die Stellenanzeigen",
+  "alt": "In 5.344 KI-Stellenanzeigen der Wochen 02.03. bis 16.06.2026 steigt der Anteil der Anzeigen, die Claude oder Anthropic nennen, von 8,5 % auf 13,1 %. Begriffe wie LLM, RAG und Prompting bleiben flach.",
+  "caption": "Wochenanteil der KI-Stellen mit Claude oder Anthropic mit 95-%-Intervall. Chance je Woche 1,039 (1,015 bis 1,062). Bei den übrigen Daten-Stellen steigt der Anteil von 1,8 auf 3,8 %: ein allgemeiner Trend der Technik-Anzeigen.",
+  "n": 5344,
+  "nNote": "5.344 KI-Stellen von 2.474 Arbeitgebern, 25.016 übrige Daten-Stellen",
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+  "asOf": "2026-10-19",
+  "limitation": "15 Wochen mit einer Lücke vom 23. bis 29. März, keine Prognose. Der Anstieg zeigt sich auch bei den übrigen Daten-Stellen. Stichwortsuche, Namen von Personen sind nicht ausgeschlossen. Zwei Portale, Suchbegriff-Stichprobe.",
+  "sourceLine": "n = 5.344 KI-Stellen, 2.474 Arbeitgeber · 02.03. bis 16.06.2026 · Grenze: Anstieg gilt auch für übrige Daten-Stellen",
+  "data": {
+    "claim": "Claude steigt, das übrige Vokabular steht still.",
+    "points": [
+      {
+        "id": "w01",
+        "label": "02.03.",
+        "value": 7.91506,
+        "lo": 5.88787,
+        "hi": 10.5619,
+        "n": 518
+      },
+      {
+        "id": "w02",
+        "label": "09.03.",
+        "value": 8.47145,
+        "lo": 6.41113,
+        "hi": 11.1153,
+        "n": 543
+      },
+      {
+        "id": "w03",
+        "label": "16.03.",
+        "value": 9.42408,
+        "lo": 6.88495,
+        "hi": 12.7712,
+        "n": 382
+      },
+      {
+        "id": "w04",
+        "label": "30.03.",
+        "value": 8.14815,
+        "lo": 4.61051,
+        "hi": 14.0018,
+        "n": 135
+      },
+      {
+        "id": "w05",
+        "label": "06.04.",
+        "value": 9.39227,
+        "lo": 6.79906,
+        "hi": 12.8383,
+        "n": 362
+      },
+      {
+        "id": "w06",
+        "label": "13.04.",
+        "value": 9.52381,
+        "lo": 7.01737,
+        "hi": 12.8022,
+        "n": 399
+      },
+      {
+        "id": "w07",
+        "label": "20.04.",
+        "value": 11.413,
+        "lo": 8.55527,
+        "hi": 15.0681,
+        "n": 368
+      },
+      {
+        "id": "w08",
+        "label": "27.04.",
+        "value": 11.3514,
+        "lo": 8.5084,
+        "hi": 14.9886,
+        "n": 370
+      },
+      {
+        "id": "w09",
+        "label": "04.05.",
+        "value": 11.2094,
+        "lo": 8.2764,
+        "hi": 15.0118,
+        "n": 339
+      },
+      {
+        "id": "w10",
+        "label": "11.05.",
+        "value": 10.0279,
+        "lo": 7.33153,
+        "hi": 13.5706,
+        "n": 359
+      },
+      {
+        "id": "w11",
+        "label": "18.05.",
+        "value": 10.9524,
+        "lo": 8.31214,
+        "hi": 14.3005,
+        "n": 420
+      },
+      {
+        "id": "w12",
+        "label": "25.05.",
+        "value": 11.7438,
+        "lo": 8.48551,
+        "hi": 16.0339,
+        "n": 281
+      },
+      {
+        "id": "w13",
+        "label": "01.06.",
+        "value": 15.736,
+        "lo": 12.4734,
+        "hi": 19.6604,
+        "n": 394
+      },
+      {
+        "id": "w14",
+        "label": "08.06.",
+        "value": 12.4661,
+        "lo": 9.47752,
+        "hi": 16.2282,
+        "n": 369
+      },
+      {
+        "id": "w15",
+        "label": "15.06.",
+        "value": 9.52381,
+        "lo": 5.25557,
+        "hi": 16.6493,
+        "n": 105
+      }
+    ],
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "min": 0,
+    "max": 22,
+    "defaultVariant": "w15",
+    "panel": {
+      "title": "Zum Vergleich: erste und letzte drei Wochen",
+      "fmt": {
+        "style": "percent",
+        "digits": 1
+      },
+      "rows": [
+        {
+          "id": "ai_first",
+          "label": "KI-Stellen, erste drei Wochen",
+          "value": 8.52
+        },
+        {
+          "id": "ai_last",
+          "label": "KI-Stellen, letzte drei Wochen",
+          "value": 13.14
+        },
+        {
+          "id": "other_first",
+          "label": "Übrige Daten-Stellen, erste drei Wochen",
+          "value": 1.84
+        },
+        {
+          "id": "other_last",
+          "label": "Übrige Daten-Stellen, letzte drei Wochen",
+          "value": 3.8
+        }
+      ]
+    }
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 5344,
+    "base": "verschiedene Stellen (Arbeitgeber und Titel), Titel mit KI-Wort, LinkedIn und Indeed",
+    "window": "2026-03-02 bis 2026-06-16",
+    "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+    "hero": "H03",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "ads": {
+        "value": 5344.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "employers": {
+        "value": 2474.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "claude_first": {
+        "value": 8.52391,
+        "n": 1443,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "claude_last": {
+        "value": 13.1393,
+        "n": 1134,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "odds_week": {
+        "value": 1.03867,
+        "lo": 1.01546,
+        "hi": 1.0624,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "odds_week_one_per_employer": {
+        "value": 1.05348,
+        "lo": 1.02686,
+        "hi": 1.0808,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "other_first": {
+        "value": 1.83984,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "other_last": {
+        "value": 3.80038,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "other_odds_week": {
+        "value": 1.06549,
+        "lo": 1.04409,
+        "hi": 1.08733,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "employer_share": {
+        "value": 16.3298,
+        "lo": 14.9257,
+        "hi": 17.8384,
+        "n": 2474,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "models_first": {
+        "value": 3.42843,
+        "n": 7992,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "models_last": {
+        "value": 6.13412,
+        "n": 6472,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "models_odds_month": {
+        "value": 1.24825,
+        "lo": 1.17555,
+        "hi": 1.32546,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "agentic_linkedin_odds_month": {
+        "value": 1.19876,
+        "lo": 1.12994,
+        "hi": 1.27177,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "coding_linkedin_odds_month": {
+        "value": 1.23184,
+        "lo": 1.11568,
+        "hi": 1.3601,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "agentic_indeed_odds_month": {
+        "value": 1.02037,
+        "lo": 0.954559,
+        "hi": 1.09071,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "odds_week_llm": {
+        "value": 1.00459,
+        "lo": 0.989983,
+        "hi": 1.01942,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "odds_week_rag": {
+        "value": 1.00576,
+        "lo": 0.987681,
+        "hi": 1.02416,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "odds_week_prompt": {
+        "value": 0.99989,
+        "lo": 0.980633,
+        "hi": 1.01953,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "odds_week_openai": {
+        "value": 1.00041,
+        "lo": 0.976785,
+        "hi": 1.02461,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "odds_week_genai": {
+        "value": 0.991767,
+        "lo": 0.975958,
+        "hi": 1.00783,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      }
+    }
+  }
+}

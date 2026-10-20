@@ -1,0 +1,384 @@
+/*
+ * Book figures (basic islands). The finished figure is plain server markup:
+ * nothing here hides it, and nothing here animates. Movement is written by
+ * the figure engine as transform and opacity attributes; the only motion
+ * triggers are one-shot reveals and learner input, both in script and both
+ * off under prefers-reduced-motion.
+ *
+ * Layout: mobile first at 390px. The stage is a size container: below 35rem
+ * the phone variant of the SVG shows, from 35rem the wide one. Both are in
+ * the server HTML so the first paint needs no script and cannot shift.
+ */
+
+.bf {
+  /* Anchors and focus scrolling stop below the sticky site header. */
+  scroll-margin-top: 6rem;
+  --bf-ink: var(--color-foreground, #121212);
+  --bf-paper: var(--color-background, #f7f1e7);
+  --bf-card: var(--color-card, #fffcf5);
+  --bf-edge: var(--color-border, #827970);
+  --bf-line: var(--color-hairline, #d4cec5);
+  --bf-muted: var(--color-muted-foreground, #4f4640);
+  --bf-inset: var(--color-inset, #ece5d8);
+  --bf-accent: var(--color-brand-orange, #b73a15);
+
+  margin: 2rem 0;
+  max-width: 100%;
+  color: var(--bf-ink);
+}
+
+/* ------------------------------------------------------------------ head */
+
+.bf-head {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.bf-title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.bf-caption {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--bf-muted);
+}
+
+.bf-flag {
+  justify-self: start;
+  padding: 0.125rem 0.5rem;
+  border: 1px dashed var(--bf-edge);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--bf-muted);
+}
+
+/* -------------------------------------------------------------- controls */
+
+.bf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  min-height: 2.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Reserved before the island runs, so the controls cannot shift the page. */
+.bf-controls[data-ready="false"],
+.bf-detail[data-ready="false"] {
+  visibility: hidden;
+}
+
+@media (scripting: none) {
+  .bf-controls,
+  .bf-detail {
+    display: none;
+  }
+}
+
+.bf-control-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.bf-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.bf-btn {
+  appearance: none;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  margin: 0 -1.5px -1.5px 0;
+  padding: 0 0.875rem;
+  border: 1.5px solid var(--bf-edge);
+  border-radius: 0;
+  background: transparent;
+  color: var(--bf-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.bf-btn:hover {
+  background: var(--bf-card);
+}
+
+.bf-btn:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: 2px solid var(--bf-ink);
+  outline-offset: 2px;
+}
+
+/* Pressed: heavier frame, bold text and a square mark. Never colour alone. */
+.bf-btn[aria-pressed="true"] {
+  position: relative;
+  border: 2px solid var(--bf-ink);
+  background: var(--bf-inset);
+  font-weight: 700;
+}
+
+.bf-btn[aria-pressed="true"]::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.5rem;
+  background: var(--bf-accent);
+}
+
+/* Four or more choices on a phone: a tidy two-column grid instead of a ragged stack of full-width rows. */
+@media (max-width: 36rem) {
+  .bf-seg:has(.bf-btn:nth-child(4)) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .bf-seg:has(.bf-btn:nth-child(4)) .bf-btn {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .bf-seg:has(.bf-btn:nth-child(4)) .bf-btn:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ----------------------------------------------------------------- stage */
+
+.bf-stage {
+  position: relative;
+  container-type: inline-size;
+  container-name: bf-stage;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.bf-variant[data-bf-variant="wide"] {
+  display: none;
+}
+
+@container bf-stage (min-width: 35rem) {
+  .bf-variant[data-bf-variant="compact"] {
+    display: none;
+  }
+
+  .bf-variant[data-bf-variant="wide"] {
+    display: block;
+  }
+}
+
+.bf-variant svg {
+  overflow: visible;
+}
+
+.bf-hits {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bf-hit {
+  appearance: none;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bf-hit:focus-visible {
+  outline: 2px solid var(--bf-ink);
+  outline-offset: 2px;
+}
+
+.bf-hit[aria-pressed="true"] {
+  outline: 1.5px dashed var(--bf-ink);
+  outline-offset: 1px;
+}
+
+.bf-detail {
+  min-height: 4.5rem;
+  margin: 0.5rem 0 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--bf-edge);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Wide screens fit the line in two rows; the phone reserve of three rows would leave an empty rule. */
+@media (min-width: 36rem) {
+  .bf-detail {
+    min-height: 3.25rem;
+  }
+}
+
+.bf-more {
+  margin-top: 0.75rem;
+}
+
+/* ---------------------------------------------------------------- slider */
+
+.bf-slider {
+  flex: 1 1 100%;
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.bf-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.bf-slider output {
+  min-width: 4.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.bf-range {
+  flex: 1;
+  height: 2.75rem;
+  margin: 0;
+  background: transparent;
+  accent-color: var(--bf-ink);
+  cursor: pointer;
+}
+
+.bf-range:focus-visible {
+  outline: 2px solid var(--bf-ink);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- ticker */
+
+.bf-ticker-number {
+  display: inline-grid;
+  font-size: clamp(3.5rem, 18vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--bf-accent);
+}
+
+.bf-ticker-number > * {
+  grid-area: 1 / 1;
+}
+
+.bf-ticker-sizer {
+  visibility: hidden;
+}
+
+.bf-ticker-tail {
+  max-width: 34rem;
+  margin: 0.5rem 0 0;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+
+.bf-ticker-meta {
+  margin: 0.5rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--bf-muted);
+}
+
+/* ------------------------------------------------- source line and tables */
+
+/* The plotted numbers sit in a visually hidden table (assistive technology);
+   the visible part is the one source line of shared/source-line.css. */
+
+.bf-table-wrap {
+  max-height: 20rem;
+  overflow: auto;
+  margin-bottom: 0.5rem;
+  border: 1px solid var(--bf-line);
+}
+
+/* The hidden copy of the plotted numbers is not a scroll region: nothing to scroll, nothing to focus. */
+.bf-sr .bf-table-wrap {
+  max-height: none;
+  overflow: visible;
+}
+
+.bf-table-wrap:focus-visible {
+  outline: 2px solid var(--bf-ink);
+  outline-offset: 2px;
+}
+
+.bf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.bf-table th,
+.bf-table td {
+  padding: 0.375rem 0.625rem;
+  border-bottom: 1px solid var(--bf-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.bf-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bf-inset);
+}
+
+.bf-table td[data-num="true"] {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.bf-csv {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin-right: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--bf-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.bf-csv:focus-visible {
+  outline: 2px solid var(--bf-ink);
+  outline-offset: 2px;
+}
+
+.bf-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media print {
+  .bf-controls,
+  .bf-hits,
+  .bf-detail {
+    display: none;
+  }
+}

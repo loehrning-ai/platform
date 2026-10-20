@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -39,10 +41,23 @@ vi.mock("@/components/learning/resource-context-banner", () => ({
 
 import ChapterPage, { generateMetadata, generateStaticParams } from "./page";
 
+// The chapters come from the manifests on disk, so the content refresh cannot desync this test.
+interface ManifestFile {
+  readonly chapters: readonly { readonly slug: string; readonly title: string }[];
+}
+const manifest = (locale: "de" | "en"): ManifestFile =>
+  JSON.parse(
+    readFileSync(join(process.cwd(), "content", "books", "ki-landschaft", locale === "de" ? "" : "en", "manifest.json"), "utf-8"),
+  ) as ManifestFile;
+const DE = manifest("de").chapters;
+const EN = manifest("en").chapters;
+const FIRST = DE[0]!;
+const FIRST_PATH = `/buecher/ki-landschaft/${FIRST.slug}`;
+
 const props = {
   params: Promise.resolve({
     slug: "ki-landschaft",
-    chapter: "01_eisberg",
+    chapter: FIRST.slug,
   }),
 };
 
@@ -54,31 +69,21 @@ describe("published book chapter locale routing", () => {
   it("keeps one locale-independent set of stable static identities", async () => {
     const params = await generateStaticParams();
 
-    expect(params).toHaveLength(10);
-    expect(new Set(params.map(({ chapter }) => chapter)).size).toBe(10);
+    expect(params).toHaveLength(DE.length);
+    expect(new Set(params.map(({ chapter }) => chapter)).size).toBe(DE.length);
     expect(params[0]).toEqual({
       slug: "ki-landschaft",
-      chapter: "01_eisberg",
+      chapter: FIRST.slug,
     });
     expect(params.at(-1)).toEqual({
       slug: "ki-landschaft",
-      chapter: "10_anhang",
+      chapter: DE.at(-1)!.slug,
     });
   });
 
   it.each([
-    [
-      "de",
-      "Das Eisberg-Problem · KI im deutschen Mittelstand",
-      "/buecher/ki-landschaft/01_eisberg",
-      "de_DE",
-    ],
-    [
-      "en",
-      "The iceberg problem · AI in German SMEs",
-      "/en/buecher/ki-landschaft/01_eisberg",
-      "en_GB",
-    ],
+    ["de", `${FIRST.title} · Von außen gesehen`, FIRST_PATH, "de_DE"],
+    ["en", `${EN.find((c) => c.slug === FIRST.slug)?.title ?? FIRST.title} · Seen from the outside`, `/en${FIRST_PATH}`, "en_GB"],
   ] as const)(
     "emits indexable %s metadata with canonical and reciprocal alternates",
     async (locale, title, canonical, openGraphLocale) => {
@@ -91,9 +96,9 @@ describe("published book chapter locale routing", () => {
         alternates: {
           canonical,
           languages: {
-            de: "/buecher/ki-landschaft/01_eisberg",
-            en: "/en/buecher/ki-landschaft/01_eisberg",
-            "x-default": "/buecher/ki-landschaft/01_eisberg",
+            de: FIRST_PATH,
+            en: `/en${FIRST_PATH}`,
+            "x-default": FIRST_PATH,
           },
         },
         openGraph: {
@@ -110,26 +115,23 @@ describe("published book chapter locale routing", () => {
 
     const reader = screen.getByTestId("chapter-reader");
     expect(reader).toHaveAttribute("data-locale", "en");
-    expect(reader).toHaveAttribute("data-book-title", "AI in German SMEs");
+    expect(reader).toHaveAttribute("data-book-title", "Seen from the outside");
     expect(reader).toHaveAttribute(
       "data-related-label",
       "Open the EU AI Act course",
     );
-    expect(reader).toHaveAttribute(
-      "data-next-title",
-      "Method without spurious precision",
-    );
-    expect(reader).toHaveAttribute("data-chapter-count", "10");
+    expect(reader).toHaveAttribute("data-next-title", EN[1]!.title);
+    expect(reader).toHaveAttribute("data-chapter-count", String(EN.length));
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "The iceberg problem",
+        name: EN.find((c) => c.slug === FIRST.slug)!.title,
       }),
     ).toBeVisible();
     expect(screen.queryByTestId("resource-context")).not.toBeInTheDocument();
   });
 
-  it("retains the German learning-context banner on the canonical route", async () => {
+  it("shows no course-funnel banner above the insight book on the canonical route", async () => {
     getRequestLocaleMock.mockResolvedValue("de");
     render(await ChapterPage(props));
 
@@ -137,6 +139,7 @@ describe("published book chapter locale routing", () => {
       "data-locale",
       "de",
     );
-    expect(screen.getByTestId("resource-context")).toBeVisible();
+    // The insight book is a data book: no "Stufe ... Kurs" strip above it, in any locale.
+    expect(screen.queryByTestId("resource-context")).toBeNull();
   });
 });

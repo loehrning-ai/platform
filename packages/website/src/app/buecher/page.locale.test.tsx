@@ -78,7 +78,7 @@ describe("book catalog locale metadata and structured data", () => {
       url: "https://loehrning.ai/en/buecher",
     });
     expect(book).toMatchObject({
-      name: "AI in German SMEs",
+      name: "Seen from the outside",
       inLanguage: "en-GB",
       url: "https://loehrning.ai/en/buecher/ki-landschaft",
       isAccessibleForFree: true,

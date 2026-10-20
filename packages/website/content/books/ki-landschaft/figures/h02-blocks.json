@@ -1,0 +1,465 @@
+{
+  "id": "h02-blocks",
+  "kind": "blocks",
+  "title": "Zwischen 35 und 49 von 100 Anzeigen mit KI-Wort oder Data Scientist im Titel sind technische Stellenanzeigen",
+  "alt": "10.088 Anzeigen mit KI-Wort oder Data Scientist im Titel in Deutschland. Zählt man gleiche Firma und gleichen Titel einmal und nimmt Gig-Arbeit, Studierende, Vermittler und Business-Rollen heraus, bleiben 3.558 technische Stellenanzeigen, das sind 35,3 von 100. Zählt man nur Kopien am selben Ort einmal, sind es 4.992, das sind 49,5 von 100.",
+  "caption": "10.088 Anzeigen, 5.704 verschiedene Stellen (Firma und Titel), 2.605 Arbeitgeber. Technische Stellenanzeigen: 3.558 oder 4.992, je nachdem, ob gleiche Stellen an verschiedenen Orten als eine oder als mehrere zählen.",
+  "n": 10088,
+  "nNote": "10.088 Anzeigen / 5.704 (Firma und Titel) / 7.816 (Firma, Titel und Ort)",
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+  "asOf": "2026-10-19",
+  "limitation": "Die Zahl hängt an der Definition von \"dieselbe Stelle\", deshalb zwei Zählweisen. Technisch ist eine Stichwortklasse des Titels. Eine Anzeige ist keine Einstellung. Suchbegriff-Stichprobe aus 18 Daten- und KI-Begriffen, 3,5 Monate, 55 % englische Anzeigen.",
+  "sourceLine": "Quelle: 10.088 Stellenanzeigen, gesammelt 28.02. bis 16.06.2026. Technisch heißt: Stichwort im Titel. Eine Anzeige ist keine Einstellung.",
+  "steps": [
+    {
+      "id": "roh",
+      "label": "Alle Anzeigen"
+    },
+    {
+      "id": "dubletten",
+      "label": "Doppelte raus"
+    },
+    {
+      "id": "klassen",
+      "label": "Gig, Studierende, Vermittler, Business"
+    },
+    {
+      "id": "technisch",
+      "label": "Technische Stellenanzeigen"
+    },
+    {
+      "id": "zaehlweise",
+      "label": "Zweite Zählweise"
+    }
+  ],
+  "data": {
+    "claim": "Zwischen 35 und 49 von 100 Anzeigen sind technische Stellenanzeigen.",
+    "total": 10088,
+    "blocks": 100,
+    "unit": "Anzeige|Anzeigen",
+    "bins": [
+      {
+        "id": "dup",
+        "label": "Doppelt"
+      },
+      {
+        "id": "gig",
+        "label": "Gig-Plattformen"
+      },
+      {
+        "id": "student",
+        "label": "Studierende"
+      },
+      {
+        "id": "inter",
+        "label": "Vermittler"
+      },
+      {
+        "id": "other",
+        "label": "Business-Rollen"
+      },
+      {
+        "id": "tech",
+        "label": "Technische Stellenanzeigen"
+      }
+    ],
+    "finding": "tech",
+    "variants": [
+      {
+        "id": "firm_title",
+        "label": "Gleiche Firma und Titel zählen einmal",
+        "counts": {
+          "dup": 4384,
+          "gig": 118,
+          "student": 910,
+          "inter": 100,
+          "other": 1018,
+          "tech": 3558
+        }
+      },
+      {
+        "id": "same_place",
+        "label": "Nur Kopien am selben Ort zählen einmal",
+        "counts": {
+          "dup": 2272,
+          "gig": 310,
+          "student": 1013,
+          "inter": 111,
+          "other": 1390,
+          "tech": 4992
+        }
+      }
+    ],
+    "defaultVariant": "firm_title"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 10088,
+    "base": "Anzeigen in Deutschland mit KI-Wort oder Data Scientist im Titel, LinkedIn, Indeed, Glassdoor",
+    "window": "2026-02-28 bis 2026-06-16",
+    "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+    "hero": "H02",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "raw_ads": {
+        "value": 10088.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "distinct_ads": {
+        "value": 5704.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "employers": {
+        "value": 2605.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "distinct_ads_same_place": {
+        "value": 7816.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dup_ads": {
+        "value": 4384.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dup_share_raw": {
+        "value": 43.4576,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "dup_ads_same_place": {
+        "value": 2272.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dup_share_raw_same_place": {
+        "value": 22.5218,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gig_ads": {
+        "value": 118.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "gig_share_raw": {
+        "value": 1.16971,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gig_ads_same_place": {
+        "value": 310.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "gig_share_raw_same_place": {
+        "value": 3.07296,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "student_ads": {
+        "value": 910.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "student_share_raw": {
+        "value": 9.02062,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "student_ads_same_place": {
+        "value": 1013.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "student_share_raw_same_place": {
+        "value": 10.0416,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "inter_ads": {
+        "value": 100.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "inter_share_raw": {
+        "value": 0.991277,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "inter_ads_same_place": {
+        "value": 111.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "inter_share_raw_same_place": {
+        "value": 1.10032,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "other_ads": {
+        "value": 1018.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "other_share_raw": {
+        "value": 10.0912,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "other_ads_same_place": {
+        "value": 1390.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "other_share_raw_same_place": {
+        "value": 13.7787,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "tech_ads": {
+        "value": 3558.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "tech_share_raw": {
+        "value": 35.2696,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "tech_ads_same_place": {
+        "value": 4992.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "tech_share_raw_same_place": {
+        "value": 49.4845,
+        "n": 10088,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gig_share_distinct": {
+        "value": 2.06872,
+        "lo": 0.48119,
+        "hi": 4.18463,
+        "n": 5704,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "student_share_distinct": {
+        "value": 15.9537,
+        "lo": 13.7038,
+        "hi": 18.3423,
+        "n": 5704,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "inter_share_distinct": {
+        "value": 1.75316,
+        "lo": 1.08338,
+        "hi": 2.61644,
+        "n": 5704,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "other_share_distinct": {
+        "value": 17.8471,
+        "lo": 16.5342,
+        "hi": 19.2555,
+        "n": 5704,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "tech_share_distinct": {
+        "value": 62.3773,
+        "lo": 59.8072,
+        "hi": 64.887,
+        "n": 5704,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "gig_employers": {
+        "value": 23.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "gig_top3_share": {
+        "value": 77.1186,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "tech_employers": {
+        "value": 1818.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dup_other_place": {
+        "value": 2112.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dup_same_place": {
+        "value": 2272.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "tech_share_same_place_of_distinct": {
+        "value": 63.869,
+        "n": 7816,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "tech_low": {
+        "value": 35.2696,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "tech_high": {
+        "value": 49.4845,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "blocks_shift": {
+        "value": 14.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "groups_ads": {
+        "value": 2146.0,
+        "n": 10088,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "search_terms": {
+        "value": 18.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "english_share": {
+        "value": 55.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

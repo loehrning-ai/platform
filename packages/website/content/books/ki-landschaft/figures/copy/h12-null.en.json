@@ -1,0 +1,33 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "ziehungen",
+        "label": "Chance: many draws",
+        "text": "Firms of equal size with equal homepage length, drawn {{h12-null.draws}} times at random, write AI at {{h12-null.null_lo}} to {{h12-null.null_hi}}.",
+        "numeral": "{{h12-null.draws}}",
+        "claim": "{{h12-null.draws}} random trials, this is how wide chance spreads.",
+        "unit": "Each square is one random trial, {{h12-null.draws}} in all.",
+        "variant": "n205"
+      },
+      {
+        "id": "beobachtet",
+        "label": "Observed in the lobby register",
+        "text": "The {{h12-null.register_firms}} register firms reach {{h12-null.ki_observed}} ({{h12-null.ki_observed.range}}), the expected value was {{h12-null.ki_expected}}.",
+        "numeral": "{{h12-null.ki_observed}}",
+        "claim": "The lobby register lands to the right of the chance band.",
+        "unit": "Each square is one random trial, {{h12-null.draws}} in all.",
+        "variant": "n205"
+      },
+      {
+        "id": "worte",
+        "label": "Four other words",
+        "text": "Factor against chance: Cloud {{h12-null.ratio_cloud}}, digitalisation {{h12-null.ratio_digitalisierung}}, sustainability {{h12-null.ratio_nachhaltigkeit}}, cyber {{h12-null.ratio_cyber}}.",
+        "numeral": "{{h12-null.ki_ratio}}x",
+        "claim": "By factor, AI sits among the other novelty words, cyber higher.",
+        "unit": "Each square is one random trial, {{h12-null.draws}} in all. Firm-to-website match not checked, being recalculated with checked websites.",
+        "variant": "n205"
+      }
+    ]
+  }
+}

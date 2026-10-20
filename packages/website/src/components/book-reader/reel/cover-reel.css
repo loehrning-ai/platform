@@ -1,0 +1,260 @@
+/*
+ * Cover reel slot (reel/cover-reel.tsx), the first thing under the title band.
+ * The base style is the poster: the giant numeral, one claim line and the
+ * settled field as SVG, in a box of fixed aspect (3:4 on phones, 16:9 wide) so
+ * the slot never collapses and nothing jumps when the film starts. The canvas
+ * and the text host lie over the poster only once the engine is running
+ * (data-state="playing"); then the film shows the numeral itself and the text
+ * copy stays for assistive technology only. Kalkweiss, Druckschwarz, Mennige;
+ * no radius, gradient or shadow. The pause switch is a 48px target: hover turns
+ * it Mennige, focus is a fixed 3px Mennige ring, press sinks 1px.
+ */
+
+.cr {
+  --cr-ink: var(--color-foreground, #121212);
+  --cr-paper: var(--color-background, #f3f0e9);
+  --cr-accent: var(--color-brand-orange, #b73a15);
+  --cr-leinen: var(--color-hairline, #d4cec5);
+  --cr-muted: var(--color-muted-foreground, #4f4640);
+
+  position: relative;
+  display: grid;
+  /* The film is scaled by the box's width, so the box must keep the film's aspect: on a tablet and wider it is
+     never cut by a height cap but made narrower instead (the 540 x 768 phone film within 66svh, the 16:9 film
+     within 72svh). A phone keeps the full width (a short phone window scrolls instead). */
+  width: auto;
+  min-width: 0;
+  margin-inline: auto;
+  color: var(--cr-ink);
+  background: var(--cr-paper);
+}
+
+@media (min-width: 640px) {
+  .cr {
+    width: min(100%, max(22rem, 46.4svh));
+  }
+}
+
+@media (min-width: 1024px) {
+  .cr {
+    width: min(100%, max(40rem, 128svh));
+  }
+}
+
+/* The box: 540 x 768 of the 540 x 960 film on phones (its source line may run to three lines and ends at 755,
+   plus the border), 16:9 wide (everything ends at 491 of 540). The film is scaled by the width, so the aspect is exact. */
+.cr-box {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 540 / 768;
+  min-width: 0;
+  background: var(--cr-paper);
+  border-block: 2px solid var(--cr-ink);
+}
+
+@media (min-width: 1024px) {
+  .cr-box {
+    aspect-ratio: 16 / 9;
+    border: 2px solid var(--cr-ink);
+  }
+}
+
+.cr-poster {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 1024px) {
+  .cr-poster {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-rows: 1fr auto;
+    column-gap: 3rem;
+    padding: 2rem;
+  }
+
+  .cr-copy {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .cr-field-wrap {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .cr-unit {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+.cr-field-wrap {
+  min-width: 0;
+}
+
+.cr-field {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 40 / 25;
+}
+
+.cr-unit {
+  margin-top: auto;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--cr-muted);
+}
+
+.cr-sq--rest {
+  fill: var(--cr-leinen);
+}
+
+.cr-sq--solid {
+  fill: var(--cr-accent);
+}
+
+.cr-canvas {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The text host takes the film's text rules (.reel-stage .rt) but must stay see-through: the squares are on the canvas under it. */
+.cr-text.reel-stage {
+  background: transparent;
+  overflow: visible;
+}
+
+.cr-text {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.cr[data-state="playing"] .cr-canvas,
+.cr[data-state="paused"] .cr-canvas,
+.cr[data-state="playing"] .cr-text,
+.cr[data-state="paused"] .cr-text {
+  display: block;
+}
+
+.cr[data-state="playing"] .cr-poster,
+.cr[data-state="paused"] .cr-poster {
+  visibility: hidden;
+}
+
+.cr[data-state="playing"] .cr-copy,
+.cr[data-state="paused"] .cr-copy {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.cr-pause {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  min-width: 3rem;
+  padding: 0 0.875rem;
+  border: 2px solid var(--cr-ink);
+  border-radius: 0;
+  background: var(--cr-paper);
+  color: var(--cr-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pause and play as two ink glyphs drawn in CSS (currentColor, so hover, focus and press recolour them). */
+.cr-pause-glyph {
+  flex: none;
+  width: 0.75rem;
+  height: 0.875rem;
+  background: currentColor;
+  clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0);
+}
+
+.cr-pause-glyph[data-glyph="play"] {
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+@media (max-width: 639px) {
+  /* A phone: a 44px icon at the corner (the word stays as the accessible name), not 90px of prime space. */
+  .cr-pause {
+    top: 0.5rem;
+    right: 0.5rem;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .cr-pause > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.cr-pause[hidden] {
+  display: none;
+}
+
+.cr-pause[aria-checked="true"] {
+  background: var(--cr-ink);
+  color: var(--cr-paper);
+}
+
+.cr-pause:focus-visible {
+  outline: 3px solid var(--cr-accent);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cr-pause:hover {
+    border-color: var(--cr-accent);
+    background: var(--cr-accent);
+    color: var(--cr-paper);
+  }
+}
+
+.cr-pause:active {
+  transform: translateY(1px);
+}
+
+@media print {
+  .cr-pause,
+  .cr-canvas,
+  .cr-text {
+    display: none !important;
+  }
+}

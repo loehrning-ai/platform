@@ -1,0 +1,143 @@
+{
+  "id": "h02-ladder",
+  "kind": "dumbbell",
+  "title": "Studierende pro Junior-Anzeige",
+  "alt": "In Anzeigen mit KI-Wort im Titel kommen 6,0 Studierenden-Anzeigen auf eine Junior-Anzeige, wenn man nur den Titel liest, und etwa 2,2, wenn man auch den Text liest. Bei Analysten-Titeln sind es 1,4 und 0,8.",
+  "caption": "Studierenden-Anzeigen je Junior-Anzeige, nach Titel und mit Junior-Wortlaut im Text.",
+  "n": 5113,
+  "nNote": "5.113 KI-Titel / 3.726 Analysten-Titel",
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+  "asOf": "2026-10-19",
+  "limitation": "Junior ist ein Stichwort des Titels, KI-Titel tragen selten eine Stufe. Die Textregel ist locker. Der Überschuss an Studierenden-Anzeigen bleibt in beiden Lesarten: 16,4 gegen 9,6 Prozent der Titel.",
+  "sourceLine": "n = 5.113 KI-Titel, 9.954 Arbeitgeber · 28.02. bis 16.06.2026 · Grenze: Stichwort im Titel, Text locker gelesen",
+  "data": {
+    "rows": [
+      {
+        "id": "ki",
+        "label": "KI-Titel",
+        "a": 6.014,
+        "b": 2.16
+      },
+      {
+        "id": "analyst",
+        "label": "Analysten-Titel",
+        "a": 1.363,
+        "b": 0.788
+      }
+    ],
+    "aLabel": "Nach dem Titel",
+    "bLabel": "Mit Text",
+    "fmt": {
+      "style": "decimal",
+      "digits": 1
+    },
+    "scale": "linear",
+    "reference": {
+      "value": 1,
+      "label": "gleich viele"
+    },
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 5113,
+    "base": "verschiedene Stellen (Firma und Titel), Deutschland, drei Portale",
+    "window": "2026-02-28 bis 2026-06-16",
+    "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, erstmals gesehen 28.02. bis 16.06.2026",
+    "hero": "H02",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "ki_title_ratio": {
+        "value": 6.01439,
+        "lo": 4.69074,
+        "hi": 7.88913,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ki_text_ratio": {
+        "value": 2.16021,
+        "lo": 1.75909,
+        "hi": 2.63883,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "ki_students": {
+        "value": 836.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ki_junior_title": {
+        "value": 139.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "ki_student_share": {
+        "value": 16.3505,
+        "n": 5113,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "analyst_title_ratio": {
+        "value": 1.3626,
+        "lo": 1.12639,
+        "hi": 1.66985,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "analyst_text_ratio": {
+        "value": 0.788079,
+        "lo": 0.651205,
+        "hi": 0.943627,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "analyst_students": {
+        "value": 357.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "analyst_junior_title": {
+        "value": 262.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "analyst_student_share": {
+        "value": 9.58132,
+        "n": 3726,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "student_share_other": {
+        "value": 10.7718,
+        "n": 27340,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

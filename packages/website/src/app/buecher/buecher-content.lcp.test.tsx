@@ -95,7 +95,7 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     ).toBeGreaterThan(0);
     expect(screen.getAllByText("English").length).toBeGreaterThan(0);
     const overview = screen.getByRole("link", {
-      name: "Open book and chapters: AI in German SMEs",
+      name: "Open book and chapters: Seen from the outside",
     });
     expect(overview).toHaveAttribute("href", "/en/buecher/ki-landschaft");
     expect(overview).toHaveClass("min-h-11");
@@ -116,12 +116,12 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Open the cover preview for “AI in German SMEs”",
+        name: "Open the cover preview for “Seen from the outside”",
       }),
     );
 
     const dialog = await screen.findByRole("dialog", {
-      name: "Cover preview: AI in German SMEs",
+      name: "Cover preview: Seen from the outside",
     });
     expect(dialog).toBeVisible();
     expect(
@@ -147,7 +147,7 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     render(<BuecherContent accountEnabled locale="en" />);
     expect(
       screen.getByRole("link", {
-        name: "German PDF after sign-in: AI in German SMEs",
+        name: "German PDF after sign-in: Seen from the outside",
       }),
     ).toHaveAttribute(
       "href",

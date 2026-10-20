@@ -105,23 +105,23 @@ interface BookPageCopy {
 
 const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
   "ki-landschaft": {
-    title: "AI in German SMEs",
-    subtitle: "Data, structures, opportunities",
-    edition: "Working edition 2026",
+    title: "Seen from the outside",
+    subtitle: "What 25,581 company websites reveal about AI in Germany",
+    edition: "October 2026 edition",
     audience: "Professionals working with AI",
-    resourceType: "HTML reading edition",
+    resourceType: "HTML reading edition with interactive figures",
     accessLabel: "Free online reader",
     statusLabel: "Reader available",
     relatedResourceLabel: "Open the EU AI Act course",
     description:
-      "Why the data foundation matters more than the choice of tool, how a team records its starting point without a score, and how to read a benchmark without overstating it.",
+      "Findings from company websites, job ads and press releases: why almost every second AI hit is missing the word on the second scan, what text length explains, how many ads with an AI word in the title are technical job ads, why every regional ranking is half chance and who owns the key ring of a website. The statements apply to firms with a findable website, not to Germany.",
     highlights: [
-      "Qualitative assessment without a proprietary score",
-      "Five areas of work for digital and AI readiness",
-      "Interpretation of benchmarks, sectors, and limitations",
+      "Measured twice: why almost every second AI hit is missing the word on the second scan",
+      "From text length to the key ring: findings from websites, jobs and press releases",
+      "A tool that works out in your browser where you stand, with interval and limit",
     ],
     adaptationNote:
-      "This edition leaves out consulting prices, private company data, proprietary scores and rankings built on them. It uses traceable self-assessments and linked primary sources.",
+      "The edition shows only aggregates from own analyses of company websites, job ads and press releases: every number rests on at least 5 hits, with no company names, addresses, prices, scores or rankings of individual firms. It applies to firms with a findable website, and the raw data stays private.",
   },
   "ki-arbeitsalltag": {
     title: "AI at Work",
@@ -172,6 +172,14 @@ const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
     "Leitlinien der Europäischen Kommission zur KI-Kompetenz",
   "AI-Native course content": "Kursinhalte von Mit KI arbeiten",
   "Tool-selection editorial notes": "Redaktionelle Notizen zur Werkzeugauswahl",
+  "Own analysis of company websites (aggregates, at least 5 hits per cell)":
+    "Eigene Auswertung von Firmenwebsites (Aggregate, mindestens 5 Treffer je Zelle)",
+  "Own analysis of job ads and press releases (aggregates, at least 5 hits per cell)":
+    "Eigene Auswertung von Stellenanzeigen und Pressemeldungen (Aggregate, mindestens 5 Treffer je Zelle)",
+  "Business register 2024 of the Federal Statistical Office (weights by state) and published surveys by KfW and Bitkom":
+    "Unternehmensregister 2024 des Statistischen Bundesamts (Gewichte nach Land) und veröffentlichte Umfragen von KfW und Bitkom",
+  "Regulation (EU) 2024/1689 and the pages of the European Commission":
+    "Verordnung (EU) 2024/1689 und die Seiten der Europäischen Kommission",
 };
 
 export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
@@ -394,7 +402,7 @@ export function getBookDisplay(
     highlights: book.highlights,
     adaptationNote:
       book.id === "ki-landschaft"
-        ? "Diese Fassung lässt Beratungspreise, private Unternehmensdaten, proprietäre Scores und die Rankings daraus weg. Sie arbeitet mit nachvollziehbaren Selbstprüfungen und verlinkten Primärquellen."
+        ? "Die Ausgabe zeigt nur Aggregate aus eigenen Auswertungen von Firmenwebsites, Stellenanzeigen und Pressemeldungen: jede Zahl mit mindestens 5 Treffern, ohne Firmennamen, Adressen, Preise, Scores und Ranglisten einzelner Firmen. Sie gilt für Firmen mit auffindbarer Website, die Rohdaten bleiben privat."
         : "",
   };
 }

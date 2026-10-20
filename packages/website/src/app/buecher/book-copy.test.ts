@@ -41,10 +41,10 @@ describe("book locale copy", () => {
     const book = allBooks[0];
 
     expect(getBookSourceInputs(book, "de")).toContain(
-      "Im Buch zitierte öffentliche Primärquellen",
+      "Eigene Auswertung von Firmenwebsites (Aggregate, mindestens 5 Treffer je Zelle)",
     );
     expect(getBookSourceInputs(book, "en")).toContain(
-      "Public primary sources cited in the book",
+      "Own analysis of company websites (aggregates, at least 5 hits per cell)",
     );
   });
 });

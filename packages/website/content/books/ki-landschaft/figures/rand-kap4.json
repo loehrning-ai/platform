@@ -1,0 +1,148 @@
+{
+  "id": "rand-kap4",
+  "kind": "bars",
+  "title": "Wo die Industrie Daten- und KI-Fachleute sucht",
+  "alt": "Wo die Industrie Daten- und KI-Fachleute sucht. Industrie-Anteil der Daten- und KI-Stellen in Orten unter 100.000 Einwohnern: 31,0 %; Industrie-Anteil in Orten ab 100.000 Einwohnern: 8,1 %.",
+  "caption": "Randnotiz: Industrie-Anteil der Daten- und KI-Stellen in Orten unter 100.000 Einwohnern 31,0 % (n = 893); Industrie-Anteil in Orten ab 100.000 Einwohnern 8,1 % (n = 5.446).",
+  "n": 5446,
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe",
+  "asOf": "2026-10-19",
+  "limitation": "Branche ist ein Stichwort der Arbeitgeberangabe, unbekannte Branchen sind ausgenommen. Das gilt auch für Daten-Stellen ohne KI-Titel, es ist also kein KI-Befund. Suchbegriff-Stichprobe.",
+  "sourceLine": "n = 5.446 · 2026-02-28 bis 2026-06-16 · Grenze: Branche aus Stichwort; gilt auch ohne KI-Titel",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "klein",
+        "label": "Industrie-Anteil der Daten- und KI-Stellen in Orten unter 100.000 Einwohnern",
+        "value": 31.01904,
+        "lo": 28.0718,
+        "hi": 34.12888,
+        "n": 893
+      },
+      {
+        "id": "gross",
+        "label": "Industrie-Anteil in Orten ab 100.000 Einwohnern",
+        "value": 8.11605,
+        "lo": 7.41994,
+        "hi": 8.8712,
+        "n": 5446
+      }
+    ],
+    "max": 100,
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 5446,
+    "base": "verschiedene Stellen (Firma, Titel, Ort) mit bekannter Branche und Ort, Deutschland",
+    "window": "2026-02-28 bis 2026-06-16",
+    "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe",
+    "hero": "M4",
+    "attribution": "not applicable",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "small_industry": {
+        "value": 31.019,
+        "lo": 28.0718,
+        "hi": 34.1289,
+        "n": 893,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "big_industry": {
+        "value": 8.11605,
+        "lo": 7.41994,
+        "hi": 8.8712,
+        "n": 5446,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "azure_per_aws_de": {
+        "value": 0.96305,
+        "lo": 0.899532,
+        "hi": 1.02737,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "azure_employers_de": {
+        "value": 3284.0,
+        "n": 32430,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "aws_employers_de": {
+        "value": 3410.0,
+        "n": 32430,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "azure_per_aws_at": {
+        "value": 1.46606,
+        "lo": 1.24455,
+        "hi": 1.72255,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "azure_employers_at": {
+        "value": 648.0,
+        "n": 9382,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "aws_employers_at": {
+        "value": 442.0,
+        "n": 9382,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "azure_per_aws_ch": {
+        "value": 1.867,
+        "lo": 1.53503,
+        "hi": 2.27765,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "azure_employers_ch": {
+        "value": 1516.0,
+        "n": 18426,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "aws_employers_ch": {
+        "value": 812.0,
+        "n": 18426,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "id": "c6",
+  "kind": "dotplot",
+  "title": "KI auf der Website nach Branche",
+  "alt": "Punktdiagramm von 39 Branchen mit mindestens 60 Firmenseiten. IT-Dienstleistungen liegt mit 15,9 % vorn, Getränkeherstellung mit 0,0 % hinten. Branchen mit weniger als 5 Treffern sind nicht angegeben.",
+  "caption": "Anteil der Seiten mit KI-Wort, mit 95-Prozent-Intervall. 12 Branchen haben weniger als 5 Treffer.",
+  "n": 16859,
+  "nNote": "39 Branchen mit mindestens 60 Seiten",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Die Branche ist aus Stichwörtern abgeleitet, nicht amtlich. Berater und IT-Firmen verkaufen KI und reden deshalb darüber. Die Reihenfolge im Mittelfeld ist weitgehend Zufall.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "sort": "value",
+    "items": [
+      {
+        "id": "wz01",
+        "label": "Landwirtschaft",
+        "value": 2.89,
+        "lo": 1.24,
+        "hi": 6.59,
+        "n": 173,
+        "hits": 5
+      },
+      {
+        "id": "wz10",
+        "label": "Nahrungsmittel",
+        "value": null,
+        "hits": null,
+        "n": 164
+      },
+      {
+        "id": "wz11",
+        "label": "Getränkeherstellung",
+        "value": 0,
+        "lo": 0,
+        "hi": 5.35,
+        "n": 68,
+        "hits": 0
+      },
+      {
+        "id": "wz14",
+        "label": "Bekleidung",
+        "value": null,
+        "hits": null,
+        "n": 141
+      },
+      {
+        "id": "wz18",
+        "label": "Druck und Vervielfältigung",
+        "value": 1.96,
+        "lo": 0.95,
+        "hi": 3.99,
+        "n": 357,
+        "hits": 7
+      },
+      {
+        "id": "wz20",
+        "label": "Chemie",
+        "value": null,
+        "hits": null,
+        "n": 119
+      },
+      {
+        "id": "wz21",
+        "label": "Pharma",
+        "value": 4.35,
+        "lo": 2.22,
+        "hi": 8.34,
+        "n": 184,
+        "hits": 8
+      },
+      {
+        "id": "wz22",
+        "label": "Gummi und Kunststoff",
+        "value": null,
+        "hits": null,
+        "n": 165
+      },
+      {
+        "id": "wz25",
+        "label": "Metallerzeugnisse",
+        "value": null,
+        "hits": null,
+        "n": 154
+      },
+      {
+        "id": "wz26",
+        "label": "Elektronik und Optik",
+        "value": 3.68,
+        "lo": 1.8,
+        "hi": 7.41,
+        "n": 190,
+        "hits": 7
+      },
+      {
+        "id": "wz28",
+        "label": "Maschinenbau",
+        "value": null,
+        "hits": null,
+        "n": 103
+      },
+      {
+        "id": "wz35",
+        "label": "Energieversorgung",
+        "value": null,
+        "hits": null,
+        "n": 139
+      },
+      {
+        "id": "wz38",
+        "label": "Abfallwirtschaft",
+        "value": 2.8,
+        "lo": 1.42,
+        "hi": 5.42,
+        "n": 286,
+        "hits": 8
+      },
+      {
+        "id": "wz41",
+        "label": "Hochbau",
+        "value": 1.65,
+        "lo": 1.22,
+        "hi": 2.24,
+        "n": 2419,
+        "hits": 40
+      },
+      {
+        "id": "wz42",
+        "label": "Tiefbau",
+        "value": null,
+        "hits": null,
+        "n": 170
+      },
+      {
+        "id": "wz43",
+        "label": "Bauinstallation",
+        "value": 1.24,
+        "lo": 0.76,
+        "hi": 2,
+        "n": 1295,
+        "hits": 16
+      },
+      {
+        "id": "wz45",
+        "label": "Kfz-Handel",
+        "value": null,
+        "hits": null,
+        "n": 354
+      },
+      {
+        "id": "wz46",
+        "label": "Großhandel",
+        "value": 3.39,
+        "lo": 2.39,
+        "hi": 4.8,
+        "n": 884,
+        "hits": 30
+      },
+      {
+        "id": "wz47",
+        "label": "Einzelhandel",
+        "value": 4.24,
+        "lo": 2.82,
+        "hi": 6.33,
+        "n": 519,
+        "hits": 22
+      },
+      {
+        "id": "wz49",
+        "label": "Landverkehr",
+        "value": 2.66,
+        "lo": 1.92,
+        "hi": 3.68,
+        "n": 1316,
+        "hits": 35
+      },
+      {
+        "id": "wz55",
+        "label": "Beherbergung",
+        "value": 3.29,
+        "lo": 2.09,
+        "hi": 5.14,
+        "n": 547,
+        "hits": 18
+      },
+      {
+        "id": "wz56",
+        "label": "Gastronomie",
+        "value": 1.68,
+        "lo": 0.92,
+        "hi": 3.07,
+        "n": 594,
+        "hits": 10
+      },
+      {
+        "id": "wz58",
+        "label": "Verlagswesen",
+        "value": 11.62,
+        "lo": 8.39,
+        "hi": 15.87,
+        "n": 284,
+        "hits": 33
+      },
+      {
+        "id": "wz62",
+        "label": "IT-Dienstleistungen",
+        "value": 15.91,
+        "lo": 9.72,
+        "hi": 24.95,
+        "n": 88,
+        "hits": 14
+      },
+      {
+        "id": "wz64",
+        "label": "Banken und Finanzen",
+        "value": 7.19,
+        "lo": 3.95,
+        "hi": 12.74,
+        "n": 139,
+        "hits": 10
+      },
+      {
+        "id": "wz65",
+        "label": "Versicherungen",
+        "value": 4.48,
+        "lo": 2.07,
+        "hi": 9.42,
+        "n": 134,
+        "hits": 6
+      },
+      {
+        "id": "wz66",
+        "label": "Fondsmanagement und Hilfstätigkeiten",
+        "value": 6.33,
+        "lo": 4.76,
+        "hi": 8.36,
+        "n": 711,
+        "hits": 45
+      },
+      {
+        "id": "wz68",
+        "label": "Immobilien",
+        "value": 3.19,
+        "lo": 2.56,
+        "hi": 3.98,
+        "n": 2380,
+        "hits": 76
+      },
+      {
+        "id": "wz69",
+        "label": "Rechts- und Steuerberatung",
+        "value": 4.17,
+        "lo": 2.54,
+        "hi": 6.76,
+        "n": 360,
+        "hits": 15
+      },
+      {
+        "id": "wz70",
+        "label": "Unternehmensberatung und PR",
+        "value": 11.71,
+        "lo": 7.99,
+        "hi": 16.83,
+        "n": 205,
+        "hits": 24
+      },
+      {
+        "id": "wz71",
+        "label": "Architektur und Ingenieurbüros",
+        "value": 3.1,
+        "lo": 1.64,
+        "hi": 5.79,
+        "n": 290,
+        "hits": 9
+      },
+      {
+        "id": "wz73",
+        "label": "Werbung und Marktforschung",
+        "value": 9.09,
+        "lo": 6.02,
+        "hi": 13.5,
+        "n": 231,
+        "hits": 21
+      },
+      {
+        "id": "wz80",
+        "label": "Wach- und Sicherheitsdienste",
+        "value": null,
+        "hits": null,
+        "n": 65
+      },
+      {
+        "id": "wz81",
+        "label": "Gebäudebetreuung",
+        "value": null,
+        "hits": null,
+        "n": 233
+      },
+      {
+        "id": "wz82",
+        "label": "Büro- und Veranstaltungsdienste",
+        "value": 5.56,
+        "lo": 2.4,
+        "hi": 12.35,
+        "n": 90,
+        "hits": 5
+      },
+      {
+        "id": "wz85",
+        "label": "Erziehung und Unterricht",
+        "value": 3.29,
+        "lo": 1.68,
+        "hi": 6.36,
+        "n": 243,
+        "hits": 8
+      },
+      {
+        "id": "wz86",
+        "label": "Gesundheitswesen",
+        "value": 4.58,
+        "lo": 3.28,
+        "hi": 6.37,
+        "n": 720,
+        "hits": 33
+      },
+      {
+        "id": "wz87",
+        "label": "Heime",
+        "value": null,
+        "hits": null,
+        "n": 220
+      },
+      {
+        "id": "wz93",
+        "label": "Sport und Freizeit",
+        "value": 5.6,
+        "lo": 2.74,
+        "hi": 11.11,
+        "n": 125,
+        "hits": 7
+      }
+    ],
+    "reference": {
+      "value": 4.35,
+      "label": "Alle: 4,3 %"
+    }
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "aliases": {
+      "it_services": "wz62",
+      "consulting": "wz70",
+      "publishing": "wz58",
+      "advertising": "wz73",
+      "funds": "wz66",
+      "building": "wz41",
+      "installation": "wz43",
+      "beverages": "wz11"
+    },
+    "values": {
+      "n_industries": {
+        "value": 39,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "n_suppressed": {
+        "value": 12,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "no_industry_rate": {
+        "value": 6.6,
+        "n": 8453,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "with_industry_rate": {
+        "value": 3.3,
+        "n": 17128,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

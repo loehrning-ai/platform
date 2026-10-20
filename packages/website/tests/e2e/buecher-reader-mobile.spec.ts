@@ -1,45 +1,27 @@
 import { test, expect, type Locator } from "@playwright/test";
+import { BOOK, calloutLabels, chapterPath, chapters, chapterSource } from "./fixtures/book";
 
 /**
- * Books reader on mobile (regression coverage). Pins the 390x844 layout: no
- * horizontal overflow, readable prose, reachable + tappable prev/next, a
- * collapsed desktop TOC, and tables that stay inside the viewport. Assertions
- * target roles + stable manifest titles, never prose, so a content refresh on
- * another branch stays green while a real layout regression fails. (No
- * chapter ships images, so an image-constraint check is intentionally
- * omitted.)
- *
- * Only ki-landschaft is in the published catalog (src/lib/books.ts), so both
- * rows below come from it — two real middle chapters (each has both a prev
- * and a next neighbour, required by the per-row prev/next assertions below)
- * that contain GFM tables. Neither has a labelled callout: ki-landschaft's
- * only callout ("Hinweis", 01_eisberg.md) is the book's very first chapter,
- * which structurally can't be used here (chapter 1 has no "Vorheriges
- * Kapitel" link, and every row below asserts both prev and next are
- * visible/tappable). That callout is still covered end-to-end in
- * buecher-reader-callouts.spec.ts against 01_eisberg directly.
+ * Books reader on mobile (regression coverage). Pins the 390x844 layout of every
+ * chapter of the manifest: no horizontal overflow, the poster band with the
+ * title as the one h1, readable prose, reachable and tappable previous and next
+ * links, no heading sidebar (the chapter list is visible instead), and tables
+ * and callouts that stay inside the viewport. Assertions target roles and the
+ * manifest, never prose, so a content refresh stays green while a real layout
+ * regression fails. The chapters come from the manifest on disk.
  */
 
 const MOBILE = { width: 390, height: 844 } as const;
 
-// Real middle chapters read from content/books/ki-landschaft/manifest.json:
-// each has both a previous and next neighbour and contains a GFM table.
-const CHAPTERS = [
-  {
-    book: "ki-landschaft",
-    slug: "03_reifegrad_ueberblick",
-    title: "Evidenzbasierte Selbstprüfung",
-    next: "04_bundesland",
-    hasCallouts: false,
-  },
-  {
-    book: "ki-landschaft",
-    slug: "06_eu_ki_verordnung",
-    title: "EU-KI-Verordnung und Artikel 4",
-    next: "07_schnellstart",
-    hasCallouts: false,
-  },
-] as const;
+const CHAPTERS = chapters().map((chapter, index, all) => ({
+  book: BOOK,
+  slug: chapter.slug,
+  title: chapter.title,
+  prev: index > 0 ? (all[index - 1]?.slug ?? null) : null,
+  next: index < all.length - 1 ? (all[index + 1]?.slug ?? null) : null,
+  hasCallouts: calloutLabels(chapter.slug).length > 0,
+  hasTable: /^\|.+\|\s*$/m.test(chapterSource(chapter.slug)),
+}));
 
 // overflow-x:clip hides a page-level x-scrollbar, so element geometry (not
 // scrollWidth alone) is the honest signal that a block leaks past the column.
@@ -57,7 +39,7 @@ async function expectInsideViewport(locator: Locator, label: string) {
 test.use({ viewport: MOBILE });
 
 for (const ch of CHAPTERS) {
-  const url = `/buecher/${ch.book}/${ch.slug}`;
+  const url = chapterPath(ch.slug);
 
   test.describe(`reader mobile · ${ch.book}/${ch.slug}`, () => {
     test("loads with readable prose, no horizontal overflow, no console error", async ({
@@ -75,14 +57,16 @@ for (const ch of CHAPTERS) {
       await expect(h1).toHaveCount(1);
       await expect(h1).toBeVisible();
       await expect(h1).toContainText(ch.title);
+      await expect(page.locator("[data-cover-band]")).toBeVisible();
+      await expect(page.locator("main details, main summary")).toHaveCount(0);
 
       const article = page.getByRole("article", { name: ch.title });
       await expect(article).toBeVisible();
 
       // Body copy: first top-level prose paragraph ("> p" excludes callout text,
       // which can be smaller mono). Must render at a legible size.
-      const paragraph = article.locator("> p").first();
-      await expect(paragraph).toBeVisible();
+      const paragraph = article.locator("p").first();
+      await expect(paragraph).toBeAttached();
       const fontPx = await paragraph.evaluate((el) =>
         parseFloat(getComputedStyle(el).fontSize),
       );
@@ -115,9 +99,11 @@ for (const ch of CHAPTERS) {
       // never scrolls horizontally while the table scrolls in place.
       const tables = article.getByRole("table");
       const tableCount = await tables.count();
-      expect(tableCount, "expected at least one GFM table").toBeGreaterThan(0);
+      if (ch.hasTable) expect(tableCount, "expected at least one GFM table").toBeGreaterThan(0);
       for (let i = 0; i < tableCount; i++) {
         const t = tables.nth(i);
+        // The plotted numbers of a figure sit in a visually hidden table for assistive technology; it has no layout to check.
+        if (await t.evaluate((el) => el.closest(".bf-sr, .bf-visually-hidden") !== null)) continue;
         const inScroller = await t.evaluate((el) => {
           let node = el.parentElement;
           while (node && node !== document.body) {
@@ -128,10 +114,25 @@ for (const ch of CHAPTERS) {
           return false;
         });
         if (inScroller) {
-          const scroller = t.locator(
-            "xpath=ancestor::*[contains(@class,'overflow-x-auto')][1]",
-          );
-          await expectInsideViewport(scroller, `table[${i}] scroll container`);
+          // The nearest scrolling ancestor: the reader's own wrapper or the explorer's table box.
+          const scroller = await t.evaluate((el) => {
+            let node = el.parentElement;
+            while (node && node !== document.body) {
+              const ox = getComputedStyle(node).overflowX;
+              if (ox === "auto" || ox === "scroll") {
+                const r = node.getBoundingClientRect();
+                return { x: r.x, width: r.width };
+              }
+              node = node.parentElement;
+            }
+            return null;
+          });
+          expect(scroller, `table[${i}] scroll container`).not.toBeNull();
+          expect(scroller!.x, `table[${i}] scroll container: left edge off-screen`).toBeGreaterThanOrEqual(-1);
+          expect(
+            scroller!.x + scroller!.width,
+            `table[${i}] scroll container: right edge past ${MOBILE.width}px viewport`,
+          ).toBeLessThanOrEqual(MOBILE.width + 1);
         } else {
           await expectInsideViewport(t, `table[${i}]`);
         }
@@ -144,22 +145,34 @@ for (const ch of CHAPTERS) {
       if (ch.hasCallouts) {
         expect(noteCount, "expected at least one callout").toBeGreaterThan(0);
       } else {
-        expect(noteCount, "chapter manifest fixture should remain callout-free").toBe(0);
+        expect(noteCount, "a chapter without a labelled callout renders no note").toBe(0);
       }
       for (let i = 0; i < noteCount; i++) {
         await expectInsideViewport(notes.nth(i), `callout[${i}]`);
       }
 
-      const prev = page.getByRole("link", { name: /Vorheriges Kapitel/ });
-      const next = page.getByRole("link", { name: /Nächstes Kapitel/ });
-      await expect(prev).toBeVisible();
-      await expect(next).toBeVisible();
-      await expect(next).toHaveAttribute("href", `/buecher/${ch.book}/${ch.next}`);
+      // The first chapter has no previous chapter (its left link goes to the cover); the last has no next.
+      const prev = page.getByRole("link", { name: /Vorheriges Kapitel/ }).first();
+      // The article footer and the reader bar both offer the next chapter: the first is the article's.
+      const next = page.getByRole("link", { name: /Nächstes Kapitel/ }).first();
+      if (ch.prev) {
+        await expect(prev).toBeVisible();
+        await expect(prev).toHaveAttribute("href", chapterPath(ch.prev));
+      } else {
+        await expect(prev).toHaveCount(0);
+      }
+      if (ch.next) {
+        await expect(next).toBeVisible();
+        await expect(next).toHaveAttribute("href", chapterPath(ch.next));
+      } else {
+        await expect(next).toHaveCount(0);
+      }
 
-      for (const [link, label] of [
-        [prev, "prev"],
-        [next, "next"],
-      ] as const) {
+      const links = [
+        ...(ch.prev ? ([[prev, "prev"]] as const) : []),
+        ...(ch.next ? ([[next, "next"]] as const) : []),
+      ];
+      for (const [link, label] of links) {
         const box = await link.boundingBox();
         expect(box, `${label} nav box`).not.toBeNull();
         if (box) {
@@ -174,24 +187,32 @@ for (const ch of CHAPTERS) {
 }
 
 test.describe("reader mobile · shared chrome", () => {
-  test("collapses the desktop TOC and follows 'next' to the next chapter", async ({
-    page,
-  }) => {
-    const first = CHAPTERS[0];
-    await page.goto(`/buecher/${first.book}/${first.slug}`, {
-      waitUntil: "domcontentloaded",
-    });
+  test("has no heading sidebar, offers a 44px Weiter in the reader bar and follows 'next' to the next chapter", async ({ page }) => {
+    const first = CHAPTERS[0] as (typeof CHAPTERS)[0] & { next: string };
+    await page.goto(chapterPath(first.slug), { waitUntil: "domcontentloaded" });
 
-    // The sticky in-chapter TOC sidebar is hidden below lg; it must not occupy
-    // the mobile viewport (a visible one would fail this).
-    await expect(
-      page.getByRole("complementary", { name: "Kapitelinhalt" }),
-    ).toBeHidden();
+    // The insight reader has no sidebar of headings; the desktop one of the plain reader is hidden below lg.
+    await expect(page.getByRole("complementary", { name: "Kapitelinhalt" })).toBeHidden();
 
-    await page.getByRole("link", { name: /Nächstes Kapitel/ }).click();
-    await expect(page).toHaveURL(
-      new RegExp(`/buecher/${first.book}/${first.next}$`),
-    );
+    const bar = page.locator("[data-reader-focus-bar]");
+    await expect(bar).toBeVisible();
+    await expect(bar.locator("details, summary, [data-chapter-toc-sheet]")).toHaveCount(0);
+    // A stage in view makes the bar the step control (Zurück, Weiter); past the last stage it is the chapter bar.
+    // The stage script starts when the browser is idle; the bar answers to it, so scroll only after it has taken over.
+    await expect(page.locator("[data-chapter-stage]").first()).toHaveAttribute("data-mode", "scrub", { timeout: 15_000 });
+    await expect(async () => {
+      await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await expect(bar).toHaveAttribute("data-bar-mode", "chapter", { timeout: 1_000 });
+      await expect(bar.getByRole("link")).toBeVisible({ timeout: 1_000 });
+    }).toPass({ timeout: 15_000 });
+    const action = bar.locator("[data-reader-focus-action]");
+    const box = await action.boundingBox();
+    expect(box, "reader bar action box").not.toBeNull();
+    expect(Math.min(box?.width ?? 0, box?.height ?? 0)).toBeGreaterThanOrEqual(44);
+    await expect(action).toHaveAttribute("href", chapterPath(first.next));
+
+    await action.click();
+    await expect(page).toHaveURL(new RegExp(`${chapterPath(first.next)}$`));
     const nextTitle = page.getByRole("heading", { level: 1 });
     await expect(nextTitle).toHaveCount(1);
     await expect(nextTitle).toBeVisible();

@@ -70,7 +70,7 @@ function SwitchLinks({
               // inset-ring, never ring-inset: with the --color-inset theme
               // token, Tailwind v4 also reads `ring-inset` as a ring colour
               // and it wins over the intended one.
-              "group relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-[0.6rem] px-2 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-colors duration-150 focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-cobalt motion-reduce:transition-none",
+              "group relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-[0.6rem] px-2 font-ui-mono text-sm font-bold uppercase tracking-[0.08em] outline-none transition-colors duration-150 focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-cobalt motion-reduce:transition-none",
               active
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground",

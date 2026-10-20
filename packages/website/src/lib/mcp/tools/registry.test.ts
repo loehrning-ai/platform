@@ -243,11 +243,11 @@ describe("public tools over the in-memory transport", () => {
   it("get_book_chapter returns the chapter Markdown", async () => {
     const payload = await client.callToolJson("get_book_chapter", {
       book: "ki-landschaft",
-      chapter: "01_eisberg",
+      chapter: "01_zweimal_gemessen",
     });
     expect(payload.body_available).toBe(true);
     expect(String(payload.markdown).length).toBeGreaterThan(200);
-    expect(String(payload.resource_uri)).toBe("book://ki-landschaft/01_eisberg");
+    expect(String(payload.resource_uri)).toBe("book://ki-landschaft/01_zweimal_gemessen");
   });
 
   it("list_open_source_tools pins every source revision", async () => {

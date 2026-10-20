@@ -20,6 +20,7 @@ import { Children, type ReactNode } from "react";
  *   Jetzt bist du dran  → border-green-700     bg-brand-acid/30
  *   Prompt-Vorlage      → border-brand-sand    bg-inset font-mono
  *   Begriff             → border-sky-600       bg-brand-sky/30
+ *   Was du tun kannst   → border-brand-orange  bg-card         (chapter end box)
  *   Navigation          → border-stone-500     bg-card
  *   (fallback)          → border-border        bg-card/20
  */
@@ -29,6 +30,8 @@ export interface CalloutStyle {
   readonly bg: string;
   readonly mono?: boolean;
   readonly icon?: string;
+  /** The box that closes a chapter ("Was du tun kannst"): larger, square, one accent rule. */
+  readonly endBox?: boolean;
 }
 
 const CALLOUT_STYLES: Record<
@@ -71,6 +74,11 @@ const CALLOUT_STYLES: Record<
   navigation: {
     border: "border-l-4 border-stone-500",
     bg: "bg-card",
+  },
+  "was du tun kannst": {
+    border: "border-l-4 border-[var(--color-brand-orange)]",
+    bg: "bg-card",
+    endBox: true,
   },
   hinweis: {
     border: "border-l-4 border-stone-500",

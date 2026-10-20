@@ -1,0 +1,126 @@
+{
+  "id": "rand-kap3",
+  "kind": "bars",
+  "title": "Gerundete Jahresangaben und englische Startseiten",
+  "alt": "Gerundete Jahresangaben und englische Startseiten. Jahresangaben ohne Zusatz: Vielfache von 5: 84,2 %; mit über oder mehr als: Vielfache von 5: 93,2 %; mit rund oder circa: Vielfache von 5: 92,9 %; Startseiten mit englischem Text: 15,1 %; Seiten auf Deutsch mit KI-Wort, die das alte HTML-Merkmal findet: 92,8 %.",
+  "caption": "Randnotiz: Jahresangaben ohne Zusatz: Vielfache von 5 84,2 % (n = 323); mit über oder mehr als: Vielfache von 5 93,2 % (n = 733); mit rund oder circa: Vielfache von 5 92,9 % (n = 28); Startseiten mit englischem Text 15,1 % (n = 18.541); Seiten auf Deutsch mit KI-Wort, die das alte HTML-Merkmal findet 92,8 % (n = 531).",
+  "n": 18541,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Gerundet, nicht übertrieben: runde Zahlen sind kein Beleg für falsche Angaben. Die Sprache stammt aus dem Text; der alte Merker liest Seiten auf Deutsch gut.",
+  "sourceLine": "n = 18.541 · 2026-03 bis 2026-05 · Grenze: Zusammenhang; gerundet, nicht übertrieben",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "fuenf_ohne",
+        "label": "Jahresangaben ohne Zusatz: Vielfache von 5",
+        "value": 84.21053,
+        "lo": 79.83478,
+        "hi": 87.78207,
+        "n": 323
+      },
+      {
+        "id": "fuenf_ueber",
+        "label": "mit über oder mehr als: Vielfache von 5",
+        "value": 93.17872,
+        "lo": 91.11936,
+        "hi": 94.78784,
+        "n": 733
+      },
+      {
+        "id": "fuenf_rund",
+        "label": "mit rund oder circa: Vielfache von 5",
+        "value": 92.85714,
+        "lo": 77.35426,
+        "hi": 98.01884,
+        "n": 28
+      },
+      {
+        "id": "englisch",
+        "label": "Startseiten mit englischem Text",
+        "value": 15.12324,
+        "lo": 14.61476,
+        "hi": 15.64617,
+        "n": 18541
+      },
+      {
+        "id": "flag_de",
+        "label": "Seiten auf Deutsch mit KI-Wort, die das alte HTML-Merkmal findet",
+        "value": 92.84369,
+        "lo": 90.32983,
+        "hi": 94.74209,
+        "n": 531
+      }
+    ],
+    "max": 100,
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 18541,
+    "base": "Startseiten mit eigener Domain und Text",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "M3",
+    "attribution": "website-level",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "rounded_n_plain": {
+        "value": 323.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "rounded_plain": {
+        "value": 84.2105,
+        "n": 323,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "rounded_ueber": {
+        "value": 93.1787,
+        "n": 733,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "rounded_rund": {
+        "value": 92.8571,
+        "n": 28,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "english_share": {
+        "value": 15.1232,
+        "lo": 14.6148,
+        "hi": 15.6462,
+        "n": 18541,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "flag_german": {
+        "value": 92.8437,
+        "n": 531,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

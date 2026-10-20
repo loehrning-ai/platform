@@ -12,6 +12,7 @@ import type { Locale } from "@/lib/i18n/locale";
 import {
   getBookChapterList,
   loadBookChapter,
+  plainChapterMarkdown,
 } from "@/lib/book-reader-content";
 import { bookById, bookUrlFor, publishedBooks } from "../catalog";
 import { MCP_MAX_OUTPUT_BYTES } from "../config";
@@ -83,7 +84,7 @@ export async function getBookChapter(
 
   try {
     const chapter = await loadBookChapter(book.id, chapterSlug, locale);
-    const body = capText(chapter.rawMarkdown, CHAPTER_BODY_MAX_BYTES);
+    const body = capText(await plainChapterMarkdown(book.id, chapter.rawMarkdown, locale), CHAPTER_BODY_MAX_BYTES);
     return {
       ...base,
       chapter_title: chapter.meta.title,

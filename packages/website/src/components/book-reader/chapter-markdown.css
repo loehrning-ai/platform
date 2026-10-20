@@ -1,0 +1,56 @@
+/*
+ * Wide markdown tables on a phone (chapter-markdown.tsx adds .md-stack and a
+ * data-label to every cell of a table with four or more columns): no sideways
+ * scroll and no clipped column. Each row is one card, its first cell the bold
+ * line, the others short labelled lines. From 640px the real table returns.
+ */
+
+@media (max-width: 639px) {
+  .md-stack,
+  .md-stack tbody,
+  .md-stack tr,
+  .md-stack td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .md-stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .md-stack tr {
+    padding: 0.75rem 0;
+    border-top: 2px solid var(--color-foreground, #121212);
+  }
+
+  .md-stack td {
+    padding: 0.125rem 0;
+    border: 0;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+
+  .md-stack td:first-child {
+    min-width: 0 !important;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--color-foreground, #121212);
+  }
+
+  .md-stack td:not(:first-child):not([data-label]) {
+    display: none;
+  }
+
+  .md-stack td[data-label]:not(:first-child)::before {
+    content: attr(data-label) ": ";
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-muted-foreground, #4f4640);
+  }
+}

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { chapterPath, chapters } from "./fixtures/book";
 
 const ROUTES = [
   "/",
@@ -14,7 +15,7 @@ const SOCIAL_METADATA_ROUTES = [
   "/",
   "/blog",
   "/buecher/ki-landschaft",
-  "/buecher/ki-landschaft/02_methodik",
+  chapterPath(chapters()[1]!.slug),
   "/open-source/lizenzrichtlinie",
   "/neuigkeiten",
   "/hilfe",

@@ -1,0 +1,774 @@
+/*
+ * Story islands of the book (C1, C2, C4, C12, C13, C14).
+ *
+ * Rules this file keeps:
+ * - The base style is the finished, readable figure. Every animation sits in
+ *   a prefers-reduced-motion: no-preference block.
+ * - Movement is transform and opacity only. No catch-all transitions.
+ * - Layout is decided in CSS (container queries, media queries), never by a
+ *   client measurement, so hydration changes nothing and heights are reserved
+ *   in the first paint.
+ * - Brand CI v5.3: Kalkweiss ground, Druckschwarz ink, Mennige as the one
+ *   accent (inside the SVGs), hard edges, no gradients, no shadows.
+ */
+
+.bf-figure {
+  --bf-ink: var(--color-foreground, #121212);
+  --bf-paper: var(--color-background, #f7f1e7);
+  --bf-sheet: var(--color-paper, #fffcf5);
+  --bf-muted: var(--color-muted-foreground, #4f4640);
+  --bf-muted-light: var(--color-muted, #655c54);
+  --bf-hair: var(--color-hairline, #d4cec5);
+  --bf-edge: var(--color-border, #827970);
+  --bf-accent: var(--color-brand-orange, #b73a15);
+  --bf-inset: var(--color-inset, #ece5d8);
+  --bf-sky: var(--color-sky-sheet, #d9ecf6);
+  --bf-nav: var(--nav-h-compact, 48px);
+
+  container-type: inline-size;
+  margin: 2.5rem 0;
+  padding: 0;
+  color: var(--bf-ink);
+}
+
+.bf-figure-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.bf-provisional {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--bf-ink);
+  background: var(--bf-inset);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.bf-kicker {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--bf-muted);
+}
+
+.bf-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------ SVG layouts */
+
+.bf-svg {
+  display: block;
+  width: 100%;
+}
+
+.bf-svg--compact {
+  display: block;
+  max-width: 560px;
+  margin-inline: auto;
+}
+
+.bf-svg--wide {
+  display: none;
+  max-width: 800px;
+  margin-inline: auto;
+}
+
+.bf-svg--solo {
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+@container (min-width: 540px) {
+  .bf-svg--compact {
+    display: none;
+  }
+
+  .bf-svg--wide {
+    display: block;
+  }
+}
+
+/* --------------------------------------------------------------- controls */
+
+.bf-figure {
+  /* Anchors and focus scrolling stop below the sticky site header. */
+  scroll-margin-top: 6rem;
+}
+
+.bf-lad-hint {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--bf-muted, inherit);
+}
+
+.bf-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0.75rem 0;
+}
+
+.bf-chip,
+.bf-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--bf-edge);
+  border-radius: 0;
+  background: var(--bf-sheet);
+  color: var(--bf-ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease-out,
+    border-color 120ms ease-out;
+}
+
+.bf-chip:hover,
+.bf-button:hover {
+  border-color: var(--bf-ink);
+}
+
+.bf-chip[aria-pressed="true"] {
+  background: var(--bf-sky);
+  border-color: var(--bf-ink);
+  box-shadow: inset 0 -3px 0 var(--bf-ink);
+}
+
+.bf-chip-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.bf-chip:focus-visible,
+.bf-button:focus-visible,
+.bf-select:focus-visible,
+.bf-range:focus-visible {
+  outline: 2px solid var(--bf-ink);
+  outline-offset: 2px;
+}
+
+.bf-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.bf-field-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bf-field-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.bf-field-value {
+  min-width: 5ch;
+  text-align: right;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.bf-fields,
+.bf-selects {
+  display: grid;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 1rem;
+}
+
+@container (min-width: 540px) {
+  .bf-selects {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bf-fields {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.bf-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--bf-edge);
+  border-radius: 0;
+  background: var(--bf-sheet);
+  color: var(--bf-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.bf-range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.bf-range::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--bf-edge);
+}
+
+.bf-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 28px;
+  margin-top: -12px;
+  border: 2px solid var(--bf-paper);
+  border-radius: 0;
+  background: var(--bf-ink);
+}
+
+.bf-range::-moz-range-track {
+  height: 4px;
+  background: var(--bf-edge);
+}
+
+.bf-range::-moz-range-thumb {
+  width: 16px;
+  height: 24px;
+  border: 2px solid var(--bf-paper);
+  border-radius: 0;
+  background: var(--bf-ink);
+}
+
+.bf-calc-hint,
+.bf-privacy {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--bf-muted);
+}
+
+.bf-privacy {
+  margin: 0.75rem 0 0;
+}
+
+.bf-result {
+  min-height: 11.5rem;
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--bf-hair);
+  background: var(--bf-sheet);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.bf-place-result[data-state="few"] {
+  border-color: var(--bf-ink);
+  background: var(--bf-inset);
+}
+
+@container (min-width: 540px) {
+  .bf-result {
+    min-height: 7.5rem;
+  }
+}
+
+.bf-tl-text {
+  min-height: 6.5rem;
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+@container (min-width: 540px) {
+  .bf-tl-text {
+    min-height: 4.75rem;
+  }
+}
+
+/* ------------------------------------------------------ caption and data */
+
+.bf-caption {
+  display: grid;
+  gap: 4px;
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.bf-table-wrap {
+  overflow-x: auto;
+}
+
+.bf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.bf-table th,
+.bf-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--bf-hair);
+  text-align: left;
+  vertical-align: top;
+}
+
+.bf-table th {
+  font-weight: 600;
+}
+
+.bf-table td[data-numeric="true"] {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.bf-csv {
+  justify-self: start;
+}
+
+/* ------------------------------------------------- C1 ladder: detail stack */
+
+.bf-ladder-svg {
+  cursor: default;
+}
+
+.bf-lad-details {
+  display: grid;
+  /* One shrinkable track: the stacked details must wrap inside the figure, never set its width. */
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 0.75rem;
+}
+
+/* Every panel shares one grid cell, so the block keeps the height of the tallest. */
+.bf-lad-detail {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--bf-hair);
+  background: var(--bf-sheet);
+}
+
+.bf-lad-detail[data-open="true"] {
+  visibility: visible;
+}
+
+.bf-lad-detail-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.bf-lad-dl {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.bf-lad-dl dt {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--bf-muted);
+}
+
+.bf-lad-dl dd {
+  margin: 0;
+}
+
+@media (scripting: none), print {
+  .bf-lad-details {
+    gap: 12px;
+  }
+
+  .bf-lad-detail {
+    grid-area: auto;
+    visibility: visible;
+  }
+}
+
+/* ----------------------------------------------- C4 sticky-stage waterfall */
+
+.bf-wf-figure .bf-figure-title {
+  margin-bottom: 0.25rem;
+}
+
+.bf-wf-stage {
+  position: sticky;
+  top: var(--bf-nav);
+  z-index: 2;
+  padding: 8px 0 12px;
+  border-bottom: 1px solid var(--bf-hair);
+  background: var(--bf-paper);
+}
+
+.bf-wf-count {
+  min-height: 1.25rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--bf-muted);
+}
+
+.bf-wf-readout {
+  display: block;
+  margin: 0 0 4px;
+}
+
+.bf-wf-num {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Two lines are reserved, so a longer label never moves the chart below it. */
+.bf-wf-numlabel {
+  display: block;
+  min-height: 2.6em;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--bf-muted);
+}
+
+.bf-wf-nav {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.bf-wf-nav .bf-chip {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+  padding: 2px 8px 5px;
+  font-size: 0.8125rem;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.bf-chip-num {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.bf-wf-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bf-wf-step {
+  min-height: 62svh;
+  padding: 24px 0;
+  border-top: 1px solid var(--bf-hair);
+  transition: border-color 120ms ease-out;
+}
+
+.bf-wf-step[data-active="true"] {
+  border-top: 2px solid var(--bf-ink);
+  padding-top: 23px;
+}
+
+/*
+ * Phone: the pinned stage may not swallow the screen, or the step text sits
+ * under it. Count and number share a row, the buttons shrink to numbers
+ * (their names stay in aria-label), and the text below stays readable.
+ */
+@media (max-width: 1023px) {
+  .bf-wf-stage {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 12px;
+    padding: 4px 0 8px;
+  }
+
+  .bf-wf-readout {
+    display: contents;
+  }
+
+  .bf-wf-num {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .bf-wf-count {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    text-align: right;
+  }
+
+  .bf-wf-numlabel {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: 1.3em;
+  }
+
+  .bf-wf-chart,
+  .bf-wf-nav {
+    grid-column: 1 / -1;
+  }
+
+  .bf-wf-nav {
+    margin-top: 4px;
+  }
+
+  .bf-wf-nav .bf-chip {
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .bf-wf-nav .bf-chip-label {
+    display: none;
+  }
+
+  .bf-wf-nav .bf-chip-num {
+    font-size: 1rem;
+  }
+}
+
+.bf-wf-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.bf-wf-body {
+  max-width: 68ch;
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.bf-wf-readout--card,
+.bf-wf-static {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .bf-wf {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 48px;
+    align-items: start;
+  }
+
+  .bf-wf-stage {
+    top: calc(var(--nav-h, 64px) + 16px);
+    border-bottom: 0;
+  }
+
+  /* The pinned stage must fit the screen with its readout and step buttons: the chart gives way, centred. */
+  .bf-wf-chart svg {
+    max-height: calc(100svh - var(--nav-h, 64px) - 17rem);
+  }
+
+  .bf-wf-step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 70svh;
+    border-top: 0;
+  }
+
+  .bf-wf-step[data-active="true"] {
+    border-top: 0;
+    padding-top: 24px;
+  }
+
+  /* A short bar over the kicker marks the active step; a full-width rule floated far above the centred text. */
+  .bf-wf-step .bf-kicker::before {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-bottom: 0.75rem;
+    background: var(--bf-hair);
+    transition: background-color 120ms ease-out;
+  }
+
+  .bf-wf-step[data-active="true"] .bf-kicker::before {
+    background: var(--bf-ink);
+  }
+}
+
+/* Every step as its own static figure: reduced motion, no JS, short screens, print. */
+@media (prefers-reduced-motion: reduce) {
+  .bf-wf-stage { display: none; }
+  .bf-wf { display: block; }
+  .bf-wf-step { display: block; min-height: 0; }
+  .bf-wf-readout--card { display: flex; }
+  .bf-wf-static { display: block; margin-top: 1rem; }
+}
+
+@media (max-height: 699px) {
+  .bf-wf-stage { display: none; }
+  .bf-wf { display: block; }
+  .bf-wf-step { display: block; min-height: 0; }
+  .bf-wf-readout--card { display: flex; }
+  .bf-wf-static { display: block; margin-top: 1rem; }
+}
+
+@media (scripting: none), print {
+  .bf-wf-stage { display: none; }
+  .bf-wf { display: block; }
+  .bf-wf-step { display: block; min-height: 0; break-inside: avoid; }
+  .bf-wf-readout--card { display: flex; }
+  .bf-wf-static { display: block; margin-top: 1rem; }
+}
+
+/* ------------------------------------------------------- C2 iceberg scrub */
+
+.bf-ice-chart {
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+.bf-ice-chart svg {
+  max-height: 72svh;
+}
+
+.bf-ice-text {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--bf-muted);
+}
+
+@keyframes bf-ice-fade {
+  from { opacity: 0; }
+}
+
+@keyframes bf-ice-rise {
+  from { opacity: 0; transform: translateY(36px); }
+}
+
+@keyframes bf-ice-drop {
+  from { opacity: 0; transform: translateY(-12px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * With scroll-driven animations the stage is pinned and the parts follow
+   * the scroll position. The wrapper is 210svh tall, so cover 100svh to
+   * cover 210svh is the pinned stretch; the parts run from 50svh (the stage
+   * enters) to 195svh and hold the finished iceberg for the last 15svh. The
+   * sea and the waterline are always there: the tip drops in, the hidden mass
+   * rises, then the total closes the picture.
+   */
+  @supports (animation-timeline: view()) {
+    .bf-ice {
+      height: 210svh;
+      view-timeline: --bf-ice block;
+    }
+
+    .bf-ice-stage {
+      position: sticky;
+      top: calc(var(--bf-nav) + 8px);
+    }
+
+    .bf-ice-part {
+      animation-duration: 1ms;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: --bf-ice;
+    }
+
+    .bf-ice-tip,
+    .bf-ice-tiplabel {
+      animation-range: cover 50svh cover 105svh;
+    }
+
+    .bf-ice-body,
+    .bf-ice-bodylabel {
+      animation-range: cover 90svh cover 150svh;
+    }
+
+    .bf-ice-total {
+      animation-range: cover 135svh cover 195svh;
+    }
+
+    .bf-ice-tiplabel,
+    .bf-ice-bodylabel,
+    .bf-ice-total {
+      animation-name: bf-ice-fade;
+    }
+
+    .bf-ice-tip {
+      animation-name: bf-ice-drop;
+    }
+
+    .bf-ice-body {
+      animation-name: bf-ice-rise;
+    }
+  }
+
+  /* Browsers without view timelines: the same keyframes play once on first sight. */
+  @supports not (animation-timeline: view()) {
+    .bf-ice[data-phase="armed"] .bf-ice-part {
+      opacity: 0;
+    }
+
+    .bf-ice[data-phase="in"] .bf-ice-part {
+      animation-duration: 360ms;
+      animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+      animation-fill-mode: both;
+    }
+
+    .bf-ice[data-phase="in"] .bf-ice-tiplabel,
+    .bf-ice[data-phase="in"] .bf-ice-bodylabel,
+    .bf-ice[data-phase="in"] .bf-ice-total {
+      animation-name: bf-ice-fade;
+    }
+
+    .bf-ice[data-phase="in"] .bf-ice-tip { animation-name: bf-ice-drop; }
+    .bf-ice[data-phase="in"] .bf-ice-body { animation-name: bf-ice-rise; animation-delay: 140ms; }
+    .bf-ice[data-phase="in"] .bf-ice-bodylabel { animation-delay: 140ms; }
+    .bf-ice[data-phase="in"] .bf-ice-total { animation-delay: 280ms; }
+  }
+}
+
+@media print {
+  .bf-chips,
+  .bf-wf-nav {
+    display: none;
+  }
+}

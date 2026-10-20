@@ -28,6 +28,8 @@
     "test:asset-tool": "node --test scripts/__tests__/scaffold-asset.test.mjs",
     "test:artifact-assets": "bun test scripts/__tests__/verify-artifact-assets.test.ts",
     "test:workspace-contract": "node --test scripts/__tests__/verify-workspaces.test.mjs",
+    "test:book-voice-gate": "node --test scripts/__tests__/book-voice-gate.test.mjs",
+    "book:voice-gate": "node scripts/book-voice-gate.mjs",
     "test:publication-clean": "node --test scripts/__tests__/verify-publication-clean.test.mjs",
     "test:course03-publication": "node --test scripts/__tests__/course03-publication.test.mjs scripts/__tests__/course03-builder-escaping.test.mjs",
     "test:workshop04-publication": "node --test scripts/__tests__/workshop04-publication.test.mjs scripts/__tests__/sync-frame.test.mjs",

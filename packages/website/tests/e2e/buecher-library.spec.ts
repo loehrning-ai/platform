@@ -32,11 +32,11 @@ const BOOK_OVERVIEW_LINK_NAME =
 const BOOKS = [
   {
     slug: "ki-landschaft",
-    title: "KI im deutschen Mittelstand",
-    subtitle: "Daten, Strukturen, Chancen",
+    title: "Von außen gesehen",
+    subtitle: "Was 25.581 Firmenwebsites über KI in Deutschland verraten",
     audience: "Alle mit beruflichem KI-Bezug",
-    chapters: "10 Kapitel · ca. 95 Seiten",
-    resourceType: "HTML-Lesefassung",
+    chapters: "9 Kapitel · ca. 32 Seiten",
+    resourceType: "HTML-Lesefassung mit interaktiven Abbildungen",
     materialLanguage: "Deutsch",
   },
 ] as const;

@@ -1,0 +1,51 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "roh",
+        "label": "Alle Anzeigen",
+        "text": "Ende Februar bis Mitte Juni 2026 habe ich sie auf drei Portalen gezählt.",
+        "numeral": "{{h02-blocks.raw_ads}}",
+        "claim": "Anzeigen mit KI-Wort oder Data Scientist im Titel.",
+        "unit": "1 Block = 1 % aller Anzeigen",
+        "variant": "firm_title"
+      },
+      {
+        "id": "dubletten",
+        "label": "Doppelte raus",
+        "text": "Gleiche Firma und gleicher Titel: {{h02-blocks.dup_ads}} Anzeigen zählen nur einmal.",
+        "numeral": "{{h02-blocks.dup_share_raw}}",
+        "claim": "Mehr als vier von zehn Anzeigen sind Kopien.",
+        "unit": "1 Block = 1 % aller Anzeigen, ganze Blöcke gerundet",
+        "variant": "firm_title"
+      },
+      {
+        "id": "klassen",
+        "label": "Vier Gruppen",
+        "text": "Studierende, Gig-Arbeit, Vermittler und Business-Rollen beantworten eine andere Frage.",
+        "numeral": "{{h02-blocks.groups_ads}}",
+        "claim": "Vier weitere Gruppen fallen weg.",
+        "unit": "1 Block = 1 % aller Anzeigen, ganze Blöcke gerundet",
+        "variant": "firm_title"
+      },
+      {
+        "id": "technisch",
+        "label": "Technische Stellenanzeigen",
+        "text": "Es bleiben {{h02-blocks.tech_ads}} technische Stellenanzeigen, das sind {{h02-blocks.tech_share_raw}} von {{h02-blocks.raw_ads}}. Eine Anzeige ist keine Einstellung.",
+        "numeral": "{{h02-blocks.tech_low}}",
+        "claim": "{{h02-blocks.tech_low}} von 100 sind technische Stellenanzeigen.",
+        "unit": "1 Block = 1 % aller Anzeigen, ganze Blöcke gerundet. Technisch = Stichwort im Titel; Suchbegriff-Stichprobe aus {{h02-blocks.search_terms}} Begriffen, {{h02-blocks.english_share}} englische Anzeigen.",
+        "variant": "firm_title"
+      },
+      {
+        "id": "zaehlweise",
+        "label": "Zweite Zählweise",
+        "text": "Zählt man Kopien am selben Ort nur einmal, bleiben {{h02-blocks.tech_ads_same_place}} Anzeigen. Ob dieselbe Stelle an zwei Orten eine Rolle ist, sagt keine Anzeige.",
+        "numeral": "{{h02-blocks.tech_low}} bis {{h02-blocks.tech_high}}",
+        "claim": "Zwischen {{h02-blocks.tech_low}} und {{h02-blocks.tech_high}} von 100 sind technische Stellenanzeigen.",
+        "unit": "1 Block = 1 % aller Anzeigen, ganze Blöcke gerundet. Technisch = Stichwort im Titel; Suchbegriff-Stichprobe aus {{h02-blocks.search_terms}} Begriffen, {{h02-blocks.english_share}} englische Anzeigen.",
+        "variant": "same_place"
+      }
+    ]
+  }
+}

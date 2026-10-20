@@ -1,0 +1,69 @@
+{
+  "id": "c1",
+  "kind": "ladder",
+  "title": "Wie viele Firmen nutzen KI? Es kommt darauf an, wer fragt",
+  "alt": "Vier Umfragen auf einer Skala von 0 bis 100 Prozent: KfW 20, Destatis 26, ifo 54,5 und Bitkom 57 Prozent. Darunter, auf einer eigenen Achse, unser Maß: Auf 3,8 Prozent der Firmenwebsites steht das Wort KI.",
+  "caption": "Vier Umfragen stellen vier Fragen und geben vier Antworten. Unser eigenes Maß liegt auf einer anderen Achse, weil es etwas anderes misst.",
+  "n": 5200,
+  "nNote": "KfW gut 5.200, Destatis 20.000, ifo rund 6.000, Bitkom 603 Antworten; unser Maß 24.944 Websites",
+  "source": "KfW Fokus 554, Destatis IKT-Erhebung 2025, ifo Konjunkturumfrage Mai 2026, Bitkom Research 2026; eigene Auswertung",
+  "asOf": "2026-10-19",
+  "limitation": "Die Umfragen unterscheiden sich in Frage, Zeitraum, Größenschwelle und Befragten. Die Werte sind nicht miteinander vergleichbar. Unser Maß zählt Websites mit dem Wort KI, nicht Firmen mit KI im Einsatz.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 0
+    },
+    "axisMax": 100,
+    "rungs": [
+      {
+        "id": "kfw",
+        "label": "KfW",
+        "year": "2022 bis 2024",
+        "value": 20,
+        "from": 4,
+        "definition": "Hat deine Firma KI-Anwendungen genutzt? Dreijahresfenster, auch Firmen unter 5 Beschäftigte."
+      },
+      {
+        "id": "destatis",
+        "label": "Destatis",
+        "year": "2025",
+        "value": 26,
+        "definition": "Nutzt deine Firma eine von acht KI-Technologien? Firmen ab 10 Beschäftigten."
+      },
+      {
+        "id": "ifo",
+        "label": "ifo",
+        "year": "Mai 2026",
+        "value": 54.5,
+        "from": 40.9,
+        "definition": "Ist KI im Einsatz, geplant, diskutiert oder kein Thema? Keine Definition von KI."
+      },
+      {
+        "id": "bitkom",
+        "label": "Bitkom (Verband)",
+        "year": "2026",
+        "value": 57,
+        "from": 36,
+        "definition": "Setzt deine Firma KI ein oder plant oder diskutiert sie den Einsatz? Firmen ab 20 Beschäftigten."
+      }
+    ],
+    "ours": {
+      "id": "ours",
+      "label": "KI steht auf der Firmenwebsite",
+      "value": 3.8,
+      "lo": 3.6,
+      "hi": 4.1,
+      "axisMax": 10,
+      "fmt": {
+        "style": "percent",
+        "digits": 1
+      },
+      "note": "Anderes Maß: Wir zählen Websites mit dem Wort KI. Das ist kein Anteil von Firmen, die KI nutzen."
+    }
+  },
+  "meta": {
+    "methodVersion": "v1-published-sources",
+    "frozenOn": "2026-10-19"
+  }
+}

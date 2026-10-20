@@ -722,6 +722,20 @@ describe("CapsLine, CornerDots, PosterNumeral and Halftone", () => {
     expect(band.querySelector("text")?.textContent).toBe("4");
   });
 
+  it("fits a long value whole into its box instead of bleeding off the edges (the cut-off \"46 %\")", () => {
+    const { container } = render(<PosterNumeral value="46 %" plakat="lemons" format="band" fit />);
+    const svg = container.querySelector("svg[data-poster-numeral-fit]")!;
+    expect(svg).toHaveAttribute("aria-hidden", "true");
+    expect(svg).toHaveAttribute("preserveAspectRatio", "xMaxYMax meet");
+    const [, , w, h] = (svg.getAttribute("viewBox") ?? "").split(" ").map(Number);
+    // The view box is as wide as the string (more than a single square glyph) and the text ends inside it.
+    expect(w).toBeGreaterThan((h ?? 0) * 1.5);
+    const text = svg.querySelector("text")!;
+    expect(text).toHaveAttribute("text-anchor", "end");
+    expect(Number(text.getAttribute("x"))).toBeLessThanOrEqual(w ?? 0);
+    expect(text.textContent).toBe("46 %");
+  });
+
   it.each(["demos", "blog"] as const)("masks one %s halftone image with the scene ink", (field) => {
     const { container } = render(<Halftone field={field} />);
     const halftone = container.querySelector(`[data-halftone="${field}"]`);

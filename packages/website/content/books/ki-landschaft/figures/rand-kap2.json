@@ -1,0 +1,95 @@
+{
+  "id": "rand-kap2",
+  "kind": "bars",
+  "title": "Wer KI schreibt, schreibt es oft nur einmal",
+  "alt": "Wer KI schreibt, schreibt es oft nur einmal. KI-Seiten mit genau einer Nennung: 35,4 %; Seiten, auf denen KI ein Thema ist: 2,0 %.",
+  "caption": "Randnotiz: KI-Seiten mit genau einer Nennung 35,4 % (n = 926); Seiten, auf denen KI ein Thema ist 2,0 % (n = 21.402).",
+  "n": 21402,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Thema heißt: mindestens fünf Nennungen oder KI in einer Überschrift. Zusammenhang, keine Ursache.",
+  "sourceLine": "n = 21.402 · 2026-03 bis 2026-05 · Grenze: Thema = 5 Nennungen oder Überschrift",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "einmal",
+        "label": "KI-Seiten mit genau einer Nennung",
+        "value": 35.42117,
+        "lo": 32.40664,
+        "hi": 38.55616,
+        "n": 926
+      },
+      {
+        "id": "thema",
+        "label": "Seiten, auf denen KI ein Thema ist",
+        "value": 1.9858,
+        "lo": 1.80732,
+        "hi": 2.18151,
+        "n": 21402
+      }
+    ],
+    "max": 100,
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21402,
+    "base": "Startseiten mit eigener Domain und Text",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "M2",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "ki_pages": {
+        "value": 926.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "once_share": {
+        "value": 35.4212,
+        "lo": 32.4066,
+        "hi": 38.5562,
+        "n": 926,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "topic_share": {
+        "value": 1.9858,
+        "lo": 1.80732,
+        "hi": 2.18151,
+        "n": 21402,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "topic_share_of_ki": {
+        "value": 45.8963,
+        "n": 926,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "median_mentions": {
+        "value": 2.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

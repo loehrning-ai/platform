@@ -1,0 +1,61 @@
+{
+  "id": "h08-auc",
+  "kind": "bars",
+  "title": "Was HSTS vorhersagt: Plattform oder Firma",
+  "alt": "Wie gut sagen die Server-Plattform, die Firmenmerkmale oder beides zusammen voraus, ob eine Website HSTS sendet (Trefferquote AUC, 0,5 ist Zufall).",
+  "caption": "Kreuzvalidierte Trefferquote (AUC) für HSTS, 0,5 ist Zufall, 1 ist perfekt.",
+  "n": 4168,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan 16.03. bis 04.05.2026, Antwort-Header)",
+  "asOf": "2026-10-19",
+  "limitation": "Firmenmerkmale: Bayern, Rechtsform, Vertretungsberechtigte, Branche, KI-Wort. Zusammenhang, keine Ursache.",
+  "sourceLine": "n = 4.168 Websites mit Headern · Scan 2026-03 bis 05 · Grenze: Zusammenhang, keine Ursache",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "decimal",
+      "digits": 2
+    },
+    "items": [
+      {
+        "id": "platform",
+        "label": "Server-Plattform",
+        "value": 0.724,
+        "lo": 0.7062,
+        "hi": 0.7423,
+        "n": 4168
+      },
+      {
+        "id": "firm",
+        "label": "Firmenmerkmale",
+        "value": 0.5745,
+        "lo": 0.5555,
+        "hi": 0.5948,
+        "n": 4168
+      },
+      {
+        "id": "both",
+        "label": "Beides zusammen",
+        "value": 0.7478,
+        "lo": 0.7309,
+        "hi": 0.7641,
+        "n": 4168
+      }
+    ],
+    "max": 1,
+    "baseline": 0.5,
+    "baselineLabel": "Zufall",
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4168,
+    "base": "Websites mit gespeicherten Antwort-Headern",
+    "window": "2026-03-16 bis 2026-05-04",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan 16.03. bis 04.05.2026, Antwort-Header)",
+    "hero": "H08",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
+  }
+}

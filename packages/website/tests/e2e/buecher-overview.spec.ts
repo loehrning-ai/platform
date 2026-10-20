@@ -4,10 +4,13 @@ import {
   formatBrowserErrors,
   meaningfulBrowserErrors,
 } from "./fixtures/console";
+import { BOOK, chapters } from "./fixtures/book";
 
 /**
- * /buecher/[slug] book overview deep-dive (regression coverage). The open-reader
- * table of contents between the /buecher library and a chapter page. Assertions
+ * /buecher/[slug] book overview deep-dive (regression coverage). For the data
+ * book it is the cover page of the insight experience: a poster band, a stage
+ * with the headline number on a field of 1.000 squares, the two cards, and the
+ * visible chapter list (nothing collapses). Assertions
  * target ROLES, stable manifest data (chapter titles/slugs, counts) and fixed
  * UI strings - never book prose - so a content refresh stays green while a real
  * regression (miscounted TOC, dead first-chapter link, dropped adaptation hint,
@@ -19,23 +22,24 @@ import {
  * other two books are pending re-review and their /buecher/<slug> routes 404.
  */
 
-// Real data read from src/lib/books.ts + content/books/<slug>/manifest.json.
-// chapterCount = number of manifest chapters (what the page actually renders).
+// The chapter list comes from the manifest on disk, so a content refresh cannot desync this spec.
 const BOOKS = [
   {
-    slug: "ki-landschaft",
-    title: "KI im deutschen Mittelstand",
-    chapterCount: 10,
-    firstChapter: { slug: "01_eisberg", title: "Das Eisberg-Problem" },
+    slug: BOOK,
+    title: "Von außen gesehen",
+    chapterCount: chapters().length,
+    firstChapter: chapters()[0] as { slug: string; title: string },
   },
 ] as const;
 
 test.describe("/buecher/[slug] book overview", () => {
   for (const book of BOOKS) {
     test.describe(book.slug, () => {
-      test("loads with h1, TOC count matching the manifest, and hints", async ({
+      test("loads with h1, a visible chapter list matching the manifest, and hints", async ({
         page,
       }) => {
+        // The settled poster (field, unit line) is the state without motion; the live reel replaces it once it plays.
+        await page.emulateMedia({ reducedMotion: "reduce" });
         const errors = collectBrowserErrors(page);
         const res = await page.goto(`/buecher/${book.slug}`, {
           waitUntil: "domcontentloaded",
@@ -48,16 +52,25 @@ test.describe("/buecher/[slug] book overview", () => {
         await expect(h1).toBeVisible();
         await expect(h1).toContainText(book.title);
 
-        // Chapter list length must equal the manifest chapter count, and the
-        // headline metadata must agree with it.
-        const toc = page.getByRole("navigation", {
-          name: "Inhaltsverzeichnis",
-        });
+        // The chapter list is visible, one link per manifest chapter, and nothing collapses.
+        const toc = page.getByRole("navigation", { name: "Alle Kapitel des Buchs" });
         await expect(toc).toBeVisible();
         await expect(toc.getByRole("listitem")).toHaveCount(book.chapterCount);
-        await expect(
-          page.getByText(`${book.chapterCount} Kapitel`),
-        ).toBeVisible();
+        await expect(page.locator("main details, main summary")).toHaveCount(0);
+
+        // Poster band, stage with the headline number, the squares and the unit line.
+        await expect(page.locator("[data-cover-band]")).toBeVisible();
+        const stage = page.locator("[data-book-stage]");
+        await expect(stage).toBeVisible();
+        await expect(stage.locator("[data-book-numeral]")).toContainText("%");
+        await expect(stage.locator("svg.cr-field")).toHaveAttribute("data-cover-squares", /^\d+$/);
+        await expect(stage.getByText(/^1 Quadrat = 0,1 % der [\d.]+ Firmen$/)).toBeVisible();
+
+        // The two cards and the small explorer link.
+        await expect(stage.locator("[data-book-start]")).toHaveAttribute(
+          "href",
+          `/buecher/${book.slug}/${book.firstChapter.slug}`,
+        );
 
         // adaptationNote + provider-free PDF truth. This build deliberately
         // has no account backend, so it must not advertise an impossible login.
@@ -65,13 +78,9 @@ test.describe("/buecher/[slug] book overview", () => {
           page.getByText("Redaktioneller Hinweis", { exact: true }),
         ).toBeVisible();
         await expect(
-          page.getByText(/PDF-Download in dieser Version nicht verfügbar/i),
+          page.getByText(/PDF in dieser Version nicht verfügbar/i),
         ).toBeVisible();
-        await expect(
-          page.getByRole("link", {
-            name: /Anmelden, um als PDF herunterzuladen/i,
-          }),
-        ).toHaveCount(0);
+        await expect(page.locator("[data-book-pdf]")).toHaveCount(0);
 
         // Back-to-library affordance.
         await expect(
@@ -92,9 +101,7 @@ test.describe("/buecher/[slug] book overview", () => {
         });
         expect(response?.status()).toBe(200);
 
-        const toc = page.getByRole("navigation", {
-          name: "Inhaltsverzeichnis",
-        });
+        const toc = page.getByRole("navigation", { name: "Alle Kapitel des Buchs" });
         const firstLink = toc.locator(
           `a[href="/buecher/${book.slug}/${book.firstChapter.slug}"]`,
         );
@@ -112,7 +119,8 @@ test.describe("/buecher/[slug] book overview", () => {
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
           book.firstChapter.title,
         );
-        await expect(page.getByText(/Kapitel 1 \//)).toBeVisible();
+        // The "Kapitel 1 von N" counter is the phone reader bar's; on a laptop it is in the DOM but the bar is hidden.
+        await expect(page.getByText(/Kapitel 1 von/).first()).toBeAttached();
       });
 
       test("has no horizontal overflow at 390px", async ({ page }) => {
@@ -123,7 +131,7 @@ test.describe("/buecher/[slug] book overview", () => {
 
         await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         await expect(
-          page.getByRole("navigation", { name: "Inhaltsverzeichnis" }),
+          page.getByRole("navigation", { name: "Alle Kapitel des Buchs" }),
         ).toBeVisible();
 
         const { scrollWidth, innerWidth } = await page.evaluate(() => ({

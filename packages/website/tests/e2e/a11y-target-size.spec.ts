@@ -82,9 +82,9 @@ test.describe("a11y: 44px product target floor at 390x844", () => {
     await page.goto("/buecher/ki-landschaft", {
       waitUntil: "domcontentloaded",
     });
-    // Enter the first chapter via the table of contents (no chapter slug hardcoded).
+    // Enter the first chapter via the visible chapter list (no chapter slug hardcoded).
     await page
-      .getByRole("navigation", { name: "Inhaltsverzeichnis" })
+      .getByRole("navigation", { name: "Alle Kapitel des Buchs" })
       .getByRole("link")
       .first()
       .click();

@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "a",
+        "label": "Rangliste der ersten Hälfte",
+        "text": "Jede Linie ist ein Kreis. Seine Firmen sind zufällig geteilt, hier zählt Hälfte A.",
+        "numeral": "{{h06-slope.kreise}}",
+        "claim": "Alle Kreise stehen in der Reihenfolge der ersten Hälfte.",
+        "unit": "1 Linie = 1 Kreis, anonym."
+      },
+      {
+        "id": "zehn",
+        "label": "Die zehn Spitzenkreise",
+        "text": "In Hälfte A liegen die ersten zehn Kreise beim {{h06-slope.top_a}}-Fachen des Durchschnitts, Intervall {{h06-slope.top_a.range}}.",
+        "numeral": "{{h06-slope.top_a}}x",
+        "claim": "Die zehn Spitzenkreise liegen etwa beim Doppelten.",
+        "unit": "1 Linie = 1 Kreis, anonym."
+      },
+      {
+        "id": "b",
+        "label": "Dieselben zehn in Hälfte B",
+        "text": "Dieselben zehn Kreise liegen in Hälfte B beim {{h06-slope.top_b}}-Fachen, Intervall {{h06-slope.top_b.range}}. Das Zufallsband bleibt, wo es war.",
+        "numeral": "{{h06-slope.top_b}}x",
+        "claim": "In Hälfte B liegen dieselben zehn beim Durchschnitt.",
+        "unit": "1 Linie = 1 Kreis, anonym."
+      }
+    ]
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "id": "c7",
+  "kind": "tilemap",
+  "title": "KI auf der Website nach Bundesland",
+  "alt": "Kachelkarte der 16 Länder mit dem bereinigten Anteil der Firmen, deren Website KI erwähnt. Hamburg, Bayern, Hessen liegen vorn, Sachsen liegt hinten. 2 Länder haben weniger als 5 Treffer und sind nicht angegeben. Die meisten Intervalle überlappen.",
+  "caption": "Bereinigt um Branche, Größe und Rechtsform. Osten ohne Berlin 2,3 % (n = 2.265), Westen ohne Berlin 4,4 % (n = 21.810). Chancenverhältnis Ost zu West 0,64 (Intervall 0,44 bis 0,95).",
+  "n": 24944,
+  "nNote": "Firmen mit eigener Adresse und bekanntem Land",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Die Stichprobe je Land ist nicht zufällig (das größte Land stellt 41 Prozent). Die Zuordnung von Adresse zu Firma stimmte in einer Prüfung nur bei 55 Prozent der entscheidbaren Fälle (Intervall 45 bis 65). Der Unterschied zwischen Ost und West beruht auf wenigen Treffern. Keine Aussage über Ursachen.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "emphasis": "ost",
+    "tiles": [
+      {
+        "id": "BW",
+        "value": 3.57,
+        "lo": 2.88,
+        "hi": 4.42,
+        "n": 2487
+      },
+      {
+        "id": "BY",
+        "value": 4.95,
+        "lo": 4.54,
+        "hi": 5.4,
+        "n": 10168
+      },
+      {
+        "id": "BE",
+        "value": 4.76,
+        "lo": 3.63,
+        "hi": 6.01,
+        "n": 869
+      },
+      {
+        "id": "BB",
+        "value": 4.51,
+        "lo": 3.28,
+        "hi": 6.01,
+        "n": 736
+      },
+      {
+        "id": "HB",
+        "value": 3.66,
+        "lo": 1.39,
+        "hi": 6.55,
+        "n": 201
+      },
+      {
+        "id": "HH",
+        "value": 5.4,
+        "lo": 4.08,
+        "hi": 6.79,
+        "n": 831
+      },
+      {
+        "id": "HE",
+        "value": 4.77,
+        "lo": 3.83,
+        "hi": 5.94,
+        "n": 1481
+      },
+      {
+        "id": "MV",
+        "value": 2.23,
+        "lo": 0.47,
+        "hi": 4.2,
+        "n": 278
+      },
+      {
+        "id": "NI",
+        "value": 2.98,
+        "lo": 2.09,
+        "hi": 4.2,
+        "n": 1133
+      },
+      {
+        "id": "NW",
+        "value": 3.82,
+        "lo": 3.1,
+        "hi": 4.47,
+        "n": 3821
+      },
+      {
+        "id": "RP",
+        "value": 2.93,
+        "lo": 1.82,
+        "hi": 4.13,
+        "n": 886
+      },
+      {
+        "id": "SL",
+        "value": null
+      },
+      {
+        "id": "SN",
+        "value": 1.24,
+        "lo": 0.39,
+        "hi": 2.36,
+        "n": 547
+      },
+      {
+        "id": "ST",
+        "value": null
+      },
+      {
+        "id": "SH",
+        "value": 3.73,
+        "lo": 2.07,
+        "hi": 5.61,
+        "n": 569
+      },
+      {
+        "id": "TH",
+        "value": 2.94,
+        "lo": 1.29,
+        "hi": 4.98,
+        "n": 417
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "aliases": {
+      "hamburg": "HH",
+      "bayern": "BY",
+      "berlin": "BE",
+      "sachsen": "SN"
+    },
+    "values": {
+      "east_share": {
+        "value": 2.34,
+        "lo": 1.8,
+        "hi": 3,
+        "n": 2265,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "west_share": {
+        "value": 4.44,
+        "lo": 4.2,
+        "hi": 4.7,
+        "n": 21810,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "or_adjusted": {
+        "value": 0.64,
+        "lo": 0.44,
+        "hi": 0.95,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "or_raw": {
+        "value": 0.52,
+        "lo": 0.35,
+        "hi": 0.76,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      }
+    }
+  }
+}

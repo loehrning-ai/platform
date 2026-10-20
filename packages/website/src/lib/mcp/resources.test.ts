@@ -89,7 +89,7 @@ describe("MCP resources", () => {
   });
 
   it("reads a book chapter resource", async () => {
-    const content = await readResource("book://ki-landschaft/01_eisberg", "book");
+    const content = await readResource("book://ki-landschaft/01_zweimal_gemessen", "book");
     expect(content.text.startsWith("# ")).toBe(true);
     expect(content.text.length).toBeGreaterThan(200);
   });

@@ -1,0 +1,264 @@
+{
+  "id": "c8",
+  "kind": "funnel",
+  "title": "Landkreise im Vergleich",
+  "alt": "Trichterdiagramm: Anteil der Firmen mit KI-Wort je Landkreis gegen die Zahl der Firmen, 37 Kreise mit mindestens 100 Firmen. 32 davon liegen innerhalb der 99,8-Prozent-Zufallsgrenzen, 5 liegen darüber.",
+  "caption": "Von 230 Kreisen mit mindestens 30 Firmen liegen nach Abzug von Branche, Größe und Rechtsform 9 außerhalb eines 95-Prozent-Zufallsbands (7 darüber, 2 darunter); bei reinem Zufall wären etwa 4 zu erwarten.",
+  "n": 11524,
+  "nNote": "390 Kreise mit Firmen, 230 mit mindestens 30, 51 mit mindestens 100",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Eingezeichnet sind Kreise mit mindestens 100 Firmen. 14 weitere Kreise haben 1 bis 4 Treffer und erscheinen nicht, weil Zahlen unter 5 nicht erscheinen; sie liegen alle innerhalb der Zufallsgrenzen. Roh gerechnet, Branchenmix nicht herausgerechnet. Zuordnung über Postleitzahl, bei etwa 5 Prozent weicht sie vom Registerland ab. Explorativ, keine Rangliste.",
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "overall": 4.34,
+    "limits": [
+      95,
+      99.8
+    ],
+    "xLabel": "Firmen je Kreis (logarithmische Achse)",
+    "points": [
+      {
+        "id": "k001",
+        "n": 103,
+        "value": 4.85
+      },
+      {
+        "id": "k002",
+        "n": 104,
+        "value": 4.81
+      },
+      {
+        "id": "k003",
+        "n": 107,
+        "value": 6.54
+      },
+      {
+        "id": "k004",
+        "n": 110,
+        "value": 6.36
+      },
+      {
+        "id": "k005",
+        "n": 114,
+        "value": 6.14
+      },
+      {
+        "id": "k006",
+        "n": 115,
+        "value": 6.09
+      },
+      {
+        "id": "k007",
+        "n": 125,
+        "value": 7.2
+      },
+      {
+        "id": "k008",
+        "n": 133,
+        "value": 3.76
+      },
+      {
+        "id": "k009",
+        "n": 134,
+        "value": 7.46
+      },
+      {
+        "id": "k010",
+        "n": 137,
+        "value": 5.11
+      },
+      {
+        "id": "k011",
+        "n": 138,
+        "value": 4.35
+      },
+      {
+        "id": "k012",
+        "n": 140,
+        "value": 4.29
+      },
+      {
+        "id": "k013",
+        "n": 142,
+        "value": 3.52
+      },
+      {
+        "id": "k014",
+        "n": 144,
+        "value": 4.86
+      },
+      {
+        "id": "k015",
+        "n": 146,
+        "value": 4.79
+      },
+      {
+        "id": "k016",
+        "n": 146,
+        "value": 5.48
+      },
+      {
+        "id": "k017",
+        "n": 147,
+        "value": 4.76
+      },
+      {
+        "id": "k018",
+        "n": 148,
+        "value": 7.43
+      },
+      {
+        "id": "k019",
+        "n": 155,
+        "value": 4.52
+      },
+      {
+        "id": "k020",
+        "n": 157,
+        "value": 3.18
+      },
+      {
+        "id": "k021",
+        "n": 160,
+        "value": 3.75
+      },
+      {
+        "id": "k022",
+        "n": 170,
+        "value": 5.88
+      },
+      {
+        "id": "k023",
+        "n": 183,
+        "value": 3.83
+      },
+      {
+        "id": "k024",
+        "n": 197,
+        "value": 7.61
+      },
+      {
+        "id": "k025",
+        "n": 212,
+        "value": 6.6
+      },
+      {
+        "id": "k026",
+        "n": 220,
+        "value": 3.64
+      },
+      {
+        "id": "k027",
+        "n": 225,
+        "value": 7.11
+      },
+      {
+        "id": "k028",
+        "n": 233,
+        "value": 9.01,
+        "label": "Würzburg (Stadt)"
+      },
+      {
+        "id": "k029",
+        "n": 280,
+        "value": 5.36
+      },
+      {
+        "id": "k030",
+        "n": 332,
+        "value": 8.43,
+        "label": "Augsburg (Stadt)"
+      },
+      {
+        "id": "k031",
+        "n": 384,
+        "value": 8.33,
+        "label": "Frankfurt am Main (Stadt)"
+      },
+      {
+        "id": "k032",
+        "n": 420,
+        "value": 5.48
+      },
+      {
+        "id": "k033",
+        "n": 488,
+        "value": 5.74
+      },
+      {
+        "id": "k034",
+        "n": 584,
+        "value": 7.88,
+        "label": "München (Landkreis)"
+      },
+      {
+        "id": "k035",
+        "n": 791,
+        "value": 6.07
+      },
+      {
+        "id": "k036",
+        "n": 869,
+        "value": 4.72
+      },
+      {
+        "id": "k037",
+        "n": 1444,
+        "value": 8.03,
+        "label": "München (Stadt)"
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "values": {
+      "kreise_total": {
+        "value": 230,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "kreise_outside": {
+        "value": 9,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "kreise_inside": {
+        "value": 221,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "kreise_above": {
+        "value": 7,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "kreise_below": {
+        "value": 2,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "kreise_expected": {
+        "value": 4,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

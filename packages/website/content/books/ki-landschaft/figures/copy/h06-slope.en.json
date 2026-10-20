@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "a",
+        "label": "Ranking of the first half",
+        "text": "Each line is one district. Its firms are split at random, here half A counts.",
+        "numeral": "{{h06-slope.kreise}}",
+        "claim": "All districts in the order of the first half.",
+        "unit": "1 line = 1 district, anonymous."
+      },
+      {
+        "id": "zehn",
+        "label": "The ten top districts",
+        "text": "In half A the first ten districts sit at {{h06-slope.top_a}} times the average, interval {{h06-slope.top_a.range}}.",
+        "numeral": "{{h06-slope.top_a}}x",
+        "claim": "The ten top districts sit at about double.",
+        "unit": "1 line = 1 district, anonymous."
+      },
+      {
+        "id": "b",
+        "label": "The same ten in half B",
+        "text": "The same ten districts sit at {{h06-slope.top_b}} times in half B, interval {{h06-slope.top_b.range}}. The chance band stays put.",
+        "numeral": "{{h06-slope.top_b}}x",
+        "claim": "Half B puts the same ten at the average.",
+        "unit": "1 line = 1 district, anonymous."
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+Zeile,Ebene,Lesart,Wert,Untergrenze,Obergrenze,n,Hinweis
+Bayern gegen den Rest,alle Firmen,,1.25316,1.09924,1.42862,10168,
+Bayern gegen den Rest,gleichartiger Kern,,0.98069,0.80546,1.19404,4349,
+Bayern gegen den Rest,alle mit Registerzweck,,1.09478,0.91456,1.31051,4978,
+Osten insgesamt,bei gleicher Textmenge,,0.53625,0.38602,0.74495,1969,
+Osten insgesamt,und gleicher Branche,,0.65337,0.46744,0.91325,1969,
+Vier Länder ohne Brandenburg,bei gleicher Textmenge,,0.32698,0.19675,0.54341,1293,
+Vier Länder ohne Brandenburg,und gleicher Branche,,0.4098,0.24503,0.68537,1293,
+Brandenburg,bei gleicher Textmenge,,0.92145,0.60209,1.4102,676,
+Brandenburg,und gleicher Branche,,1.06096,0.6862,1.64038,676,

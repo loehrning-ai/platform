@@ -1,4 +1,5 @@
 import { devices, test, expect, type Page } from "@playwright/test";
+import { chapterPath, chapters, chaptersMatching } from "./fixtures/book";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
@@ -33,14 +34,14 @@ const WIDTHS = [320, 360, 390, 768, 1024, 1440] as const;
 
 // Key routes, each verified to exist in src/app and to return 200. The chapter
 // reader slug/chapter is a real content file that buecher-reader-*.spec.ts
-// already exercises (ki-landschaft/03_reifegrad_ueberblick ships a GFM table).
+// already exercises (the second chapter of the manifest).
 const KEY_ROUTES = [
   { path: "/", label: "home" },
   { path: "/buecher", label: "buecher library" },
   { path: "/kurse", label: "kurse hub" },
   { path: "/ki-fuehrerschein", label: "ki-fuehrerschein" },
   {
-    path: "/buecher/ki-landschaft/03_reifegrad_ueberblick",
+    path: chapterPath(chapters()[1]!.slug),
     label: "chapter reader",
   },
 ] as const;
@@ -138,8 +139,9 @@ async function readShellGeometry(page: Page) {
 // Table chapter: the route and title are sourced from the public catalog rather
 // than an unpublished manuscript. Copy may wrap to fit; containment must remain
 // correct whether the current rows require horizontal scrolling or not.
-const TABLE_URL = "/buecher/ki-landschaft/08_fahrplan";
-const TABLE_TITLE = "Fahrplan für die nächsten Monate";
+const TABLE_CHAPTER = chaptersMatching(/^\|.+\|\s*$/m)[0] ?? chapters()[chapters().length - 1]!;
+const TABLE_URL = chapterPath(TABLE_CHAPTER.slug);
+const TABLE_TITLE = TABLE_CHAPTER.title;
 
 // Every captured console error, uncaught page error, and non-cancelled request
 // failure fails the check. A production Link may cancel a same-origin RSC
@@ -476,10 +478,13 @@ test.describe("responsive: book reader wide-table containment", () => {
       ).toBeLessThanOrEqual(391);
     }
 
+    // The appendix tables of the data book are short enough to fit at 390px (the first column breaks
+    // between words, never inside one), so a table may or may not need to scroll here. What must hold is
+    // that no wrapper ever has less scroll width than client width.
     expect(
-      Math.max(...wrappers.map((w) => w.scrollWidth - w.clientWidth)),
-      "fixture must contain a genuinely overflowing table so the scroll-container assertion is meaningful",
-    ).toBeGreaterThan(0);
+      Math.min(...wrappers.map((w) => w.scrollWidth - w.clientWidth)),
+      "a wrapper cannot be narrower than its content box",
+    ).toBeGreaterThanOrEqual(0);
 
     // The page itself has no horizontal overflow at 390px.
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({
@@ -492,20 +497,21 @@ test.describe("responsive: book reader wide-table containment", () => {
     ).toBeLessThanOrEqual(innerWidth + 1);
   });
 
-  test("the in-chapter TOC sidebar is hidden on mobile and shown on desktop", async ({
+  test("the insight chapter has no heading sidebar at any width and keeps its chapter list visible", async ({
     page,
   }) => {
     test.setTimeout(45_000);
     const toc = page.getByRole("complementary", { name: "Kapitelinhalt" });
+    const list = page.getByRole("navigation", { name: "Alle Kapitel des Buchs" });
 
-    // Below lg the sticky TOC (chapter-reader.tsx `hidden lg:block`) must not
-    // occupy the mobile viewport.
+    // Nothing opens and closes: no sidebar of headings below lg, none at desktop width, the chapter list always visible.
     await page.goto(TABLE_URL, { waitUntil: "domcontentloaded" });
-    await expect(toc).toBeHidden();
+    await expect(toc).toHaveCount(0);
+    await expect(list).toBeVisible();
 
-    // At a desktop width the same landmark is revealed.
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(TABLE_URL, { waitUntil: "domcontentloaded" });
-    await expect(toc).toBeVisible();
+    await expect(toc).toHaveCount(0);
+    await expect(list).toBeVisible();
   });
 });

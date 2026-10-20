@@ -1,0 +1,319 @@
+{
+  "id": "h10-or",
+  "kind": "strip",
+  "title": "Bayern: Vorsprung weg. Osten: Lücke bleibt",
+  "alt": "Chancenverhältnis, mit dem eine Firma KI auf der Startseite schreibt. Bayern gegen den Rest: 1,25 bei allen Firmen, 0,98 im gleichartigen Kern. Vier Länder im Osten ohne Brandenburg: 0,33 bei gleicher Textmenge, Brandenburg allein 0,92.",
+  "caption": "Chancenverhältnis mit 95-%-Intervall, logarithmische Achse; 1 heißt kein Unterschied. Bayern in drei Lesarten; der Osten bei gleicher Textmenge (10 Stufen) und zusätzlich bei gleicher Branche.",
+  "n": 24942,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera für den Osten",
+  "asOf": "2026-10-19",
+  "limitation": "Im Osten stehen 40 Treffer auf der Textkamera; die Lücke tragen vier kleine Länder, Brandenburg zeigt keine. Nach Branche, Größe und Wirtschaftskraft schrumpft sie (0,76 mit Wohlstand und Dichte, Intervall schließt 1 ein). Ein Wort auf der Website ist Sichtbarkeit, nicht Nutzung.",
+  "sourceLine": "n = 40 Treffer im Osten, Textkamera · Scan 2026-03 bis 05 · Grenze: wenige Treffer; Sichtbarkeit, nicht Nutzung · Wird mit geprüften Websites neu gerechnet.",
+  "data": {
+    "claim": "Bayerns Vorsprung weg, die Ostlücke bleibt.",
+    "rows": [
+      {
+        "id": "bayern",
+        "label": "Bayern gegen den Rest",
+        "marks": [
+          {
+            "layer": "alle",
+            "value": 1.25316,
+            "lo": 1.09924,
+            "hi": 1.42862,
+            "n": 10168
+          },
+          {
+            "layer": "kern",
+            "value": 0.98069,
+            "lo": 0.80546,
+            "hi": 1.19404,
+            "n": 4349
+          },
+          {
+            "layer": "zweck",
+            "value": 1.09478,
+            "lo": 0.91456,
+            "hi": 1.31051,
+            "n": 4978
+          }
+        ]
+      },
+      {
+        "id": "ost5",
+        "label": "Osten insgesamt",
+        "marks": [
+          {
+            "layer": "text",
+            "value": 0.53625,
+            "lo": 0.38602,
+            "hi": 0.74495,
+            "n": 1969
+          },
+          {
+            "layer": "branche",
+            "value": 0.65337,
+            "lo": 0.46744,
+            "hi": 0.91325,
+            "n": 1969
+          }
+        ]
+      },
+      {
+        "id": "ost4",
+        "label": "Vier Länder ohne Brandenburg",
+        "marks": [
+          {
+            "layer": "text",
+            "value": 0.32698,
+            "lo": 0.19675,
+            "hi": 0.54341,
+            "n": 1293
+          },
+          {
+            "layer": "branche",
+            "value": 0.4098,
+            "lo": 0.24503,
+            "hi": 0.68537,
+            "n": 1293
+          }
+        ]
+      },
+      {
+        "id": "bb",
+        "label": "Brandenburg",
+        "marks": [
+          {
+            "layer": "text",
+            "value": 0.92145,
+            "lo": 0.60209,
+            "hi": 1.4102,
+            "n": 676
+          },
+          {
+            "layer": "branche",
+            "value": 1.06096,
+            "lo": 0.6862,
+            "hi": 1.64038,
+            "n": 676
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "alle",
+        "label": "alle Firmen",
+        "shape": "ring",
+        "tone": "ink"
+      },
+      {
+        "id": "kern",
+        "label": "gleichartiger Kern",
+        "shape": "square",
+        "tone": "accent"
+      },
+      {
+        "id": "zweck",
+        "label": "alle mit Registerzweck",
+        "shape": "diamond",
+        "tone": "grey"
+      },
+      {
+        "id": "text",
+        "label": "bei gleicher Textmenge",
+        "shape": "square",
+        "tone": "accent"
+      },
+      {
+        "id": "branche",
+        "label": "und gleicher Branche",
+        "shape": "ring",
+        "tone": "ink"
+      }
+    ],
+    "fmt": {
+      "style": "decimal",
+      "digits": 2
+    },
+    "scale": "log",
+    "min": 0.15,
+    "max": 3,
+    "reference": {
+      "value": 1,
+      "label": "kein Unterschied"
+    },
+    "finding": "text"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 24942,
+    "base": "Firmen mit eigener Domain und Land aus dem Register",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera für den Osten",
+    "hero": "H10",
+    "attribution": "firm-level, pending verified rescan",
+    "rescan": "strengthens",
+    "rescanNote": "Wird mit geprüften Websites neu gerechnet.",
+    "values": {
+      "or_east5_text": {
+        "value": 0.536247,
+        "lo": 0.386016,
+        "hi": 0.744947,
+        "n": 1969,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "or_east5_ind": {
+        "value": 0.653367,
+        "lo": 0.467439,
+        "hi": 0.91325,
+        "n": 1969,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "or_east4_text": {
+        "value": 0.326984,
+        "lo": 0.196755,
+        "hi": 0.543411,
+        "n": 1293,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "or_east4_ind": {
+        "value": 0.4098,
+        "lo": 0.245029,
+        "hi": 0.685372,
+        "n": 1293,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "or_bb_text": {
+        "value": 0.92145,
+        "lo": 0.602092,
+        "hi": 1.4102,
+        "n": 676,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "or_bb_ind": {
+        "value": 1.06096,
+        "lo": 0.686204,
+        "hi": 1.64038,
+        "n": 676,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "east_or_adjusted": {
+        "value": 0.638885,
+        "lo": 0.433383,
+        "hi": 0.941833,
+        "n": 2262,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "east_or_wealth": {
+        "value": 0.76352,
+        "lo": 0.493915,
+        "hi": 1.18029,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "east_or_kreistyp": {
+        "value": 0.730742,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "east_hits": {
+        "value": 53.0,
+        "n": 2262,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "east_perm_rank": {
+        "value": 38.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "east_perm_total": {
+        "value": 3003.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "east_perm_p": {
+        "value": 0.012654,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "jobs_per_head": {
+        "value": 34.82,
+        "lo": 30.1386,
+        "hi": 39.962,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ai_jobs_per_head": {
+        "value": 32.2641,
+        "lo": 24.8637,
+        "hi": 39.9382,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ai_share_east": {
+        "value": 18.0247,
+        "n": 1620,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ai_share_west": {
+        "value": 19.4526,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "ai_share_ratio": {
+        "value": 0.926595,
+        "lo": 0.763456,
+        "hi": 1.09024,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      }
+    }
+  }
+}

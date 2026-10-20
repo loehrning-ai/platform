@@ -1,11 +1,13 @@
 import type { NextConfig } from "next";
 import createBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs/config";
+import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeSupabaseOrigin } from "./src/lib/supabase/config.ts";
 import { buildResourcePolicyHeaderRules } from "./src/lib/security/resource-policy.ts";
 import { buildSecurityHeaders } from "./security-headers.ts";
+import { BOOK_ID, legacyChapterRedirects } from "./src/lib/book-chapter-redirects.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,6 +18,19 @@ const SUPABASE_ORIGIN = SUPABASE_PUBLIC_URL
   ? normalizeSupabaseOrigin(SUPABASE_PUBLIC_URL)
   : null;
 const SECURITY_HEADERS = buildSecurityHeaders(process.env, SUPABASE_ORIGIN);
+
+/** Chapter slugs of the data book per locale, read once at config time (the manifests are build inputs). */
+function bookChapterSlugs(locale: "de" | "en"): string[] {
+  try {
+    const dir = locale === "de" ? "" : "en";
+    const manifest = JSON.parse(
+      readFileSync(join(__dirname, "content", "books", BOOK_ID, dir, "manifest.json"), "utf-8"),
+    ) as { chapters?: { slug?: string }[] };
+    return (manifest.chapters ?? []).flatMap((chapter) => (typeof chapter.slug === "string" ? [chapter.slug] : []));
+  } catch {
+    return [];
+  }
+}
 
 const nextConfig: NextConfig = {
   // No `output: "standalone"` — the website deploys to Vercel, which uses its own
@@ -116,6 +131,9 @@ const nextConfig: NextConfig = {
       destination: "/site.en.webmanifest",
       permanent: true,
     },
+    // Old chapter links of the data book keep working (see src/lib/book-chapter-redirects.ts).
+    ...legacyChapterRedirects(bookChapterSlugs("de"), ""),
+    ...legacyChapterRedirects(bookChapterSlugs("en"), "/en"),
   ],
   headers: async () => [
     {

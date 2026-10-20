@@ -1,0 +1,393 @@
+{
+  "id": "h01-dose",
+  "kind": "strip",
+  "title": "Je mehr Merkmale, desto öfter KI, bis man die Textmenge hält",
+  "alt": "Seiten mit 0 bis 1 von 41 Merkmalen sagen zu 0,9 % KI, Seiten mit 10 und mehr zu 8,7 %. Bei gleicher Textmenge (100 Stufen) liegen alle Gruppen zwischen 3,5 und 4,2 %.",
+  "caption": "KI-Wort nach Zahl der 41 übrigen Merkmale. Der Regler hält die Textmenge in 3, 10, 50 oder 100 Stufen. Chancen je zusätzliches Merkmal: roh 1,16, bei gleicher Textmenge 1,013 (0,992 bis 1,034).",
+  "n": 21402,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera",
+  "asOf": "2026-10-19",
+  "limitation": "Die Textmenge kann selbst eine Wirkung sein; Herausrechnen kann übertreiben. Zusammenhang, keine Ursache. Nur der Hauptinhalt der Startseite.",
+  "sourceLine": "n = 21.402 Startseiten, 41 Merkmale · Scan 2026-03 bis 05 · Grenze: Zusammenhang; Textmenge hier rausgerechnet · Wird vom Rescan geprüft.",
+  "data": {
+    "claim": "Textmenge halten: die Gruppen werden gleich.",
+    "rows": [
+      {
+        "id": "b1",
+        "label": "0 bis 1 Merkmale",
+        "marks": [
+          {
+            "layer": "rate",
+            "value": 0.86862,
+            "lo": 0.61596,
+            "hi": 1.22364,
+            "n": 3684,
+            "hits": 32,
+            "by": {
+              "s1": {
+                "value": 0.86862,
+                "lo": 0.61596,
+                "hi": 1.22364,
+                "n": 3684,
+                "hits": 32
+              },
+              "s3": {
+                "value": 2.9561,
+                "lo": 2.02914,
+                "hi": 4.30454,
+                "n": 3684
+              },
+              "s10": {
+                "value": 3.66654,
+                "lo": 2.5743,
+                "hi": 5.22211,
+                "n": 3684
+              },
+              "s50": {
+                "value": 3.72337,
+                "lo": 2.56615,
+                "hi": 4.85233,
+                "n": 3684
+              },
+              "s100": {
+                "value": 3.75118,
+                "lo": 2.6377,
+                "hi": 5.14488,
+                "n": 3684
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "b2",
+        "label": "2 bis 3 Merkmale",
+        "marks": [
+          {
+            "layer": "rate",
+            "value": 2.63268,
+            "lo": 2.21566,
+            "hi": 3.12568,
+            "n": 4786,
+            "hits": 126,
+            "by": {
+              "s1": {
+                "value": 2.63268,
+                "lo": 2.21566,
+                "hi": 3.12568,
+                "n": 4786,
+                "hits": 126
+              },
+              "s3": {
+                "value": 3.80789,
+                "lo": 3.14477,
+                "hi": 4.37573,
+                "n": 4786
+              },
+              "s10": {
+                "value": 4.01977,
+                "lo": 3.41499,
+                "hi": 4.66914,
+                "n": 4786
+              },
+              "s50": {
+                "value": 4.01006,
+                "lo": 3.48409,
+                "hi": 4.58238,
+                "n": 4786
+              },
+              "s100": {
+                "value": 3.99955,
+                "lo": 3.51402,
+                "hi": 4.69792,
+                "n": 4786
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "b3",
+        "label": "4 bis 6 Merkmale",
+        "marks": [
+          {
+            "layer": "rate",
+            "value": 3.73832,
+            "lo": 3.30126,
+            "hi": 4.23071,
+            "n": 6420,
+            "hits": 240,
+            "by": {
+              "s1": {
+                "value": 3.73832,
+                "lo": 3.30126,
+                "hi": 4.23071,
+                "n": 6420,
+                "hits": 240
+              },
+              "s3": {
+                "value": 3.60685,
+                "lo": 3.25699,
+                "hi": 4.10044,
+                "n": 6420
+              },
+              "s10": {
+                "value": 3.67185,
+                "lo": 3.25478,
+                "hi": 4.04693,
+                "n": 6420
+              },
+              "s50": {
+                "value": 3.68694,
+                "lo": 3.27227,
+                "hi": 4.21401,
+                "n": 6420
+              },
+              "s100": {
+                "value": 3.6737,
+                "lo": 3.19051,
+                "hi": 4.19757,
+                "n": 6420
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "b4",
+        "label": "7 bis 9 Merkmale",
+        "marks": [
+          {
+            "layer": "rate",
+            "value": 5.01222,
+            "lo": 4.3847,
+            "hi": 5.72418,
+            "n": 4090,
+            "hits": 205,
+            "by": {
+              "s1": {
+                "value": 5.01222,
+                "lo": 4.3847,
+                "hi": 5.72418,
+                "n": 4090,
+                "hits": 205
+              },
+              "s3": {
+                "value": 3.48307,
+                "lo": 2.91041,
+                "hi": 3.98359,
+                "n": 4090
+              },
+              "s10": {
+                "value": 3.48791,
+                "lo": 3.10419,
+                "hi": 3.88101,
+                "n": 4090
+              },
+              "s50": {
+                "value": 3.48929,
+                "lo": 3.05869,
+                "hi": 4.00257,
+                "n": 4090
+              },
+              "s100": {
+                "value": 3.48448,
+                "lo": 3.12211,
+                "hi": 4.03323,
+                "n": 4090
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "b5",
+        "label": "10 und mehr Merkmale",
+        "marks": [
+          {
+            "layer": "rate",
+            "value": 8.71181,
+            "lo": 7.65305,
+            "hi": 9.90134,
+            "n": 2422,
+            "hits": 211,
+            "by": {
+              "s1": {
+                "value": 8.71181,
+                "lo": 7.65305,
+                "hi": 9.90134,
+                "n": 2422,
+                "hits": 211
+              },
+              "s3": {
+                "value": 4.73936,
+                "lo": 4.29817,
+                "hi": 5.31709,
+                "n": 2422
+              },
+              "s10": {
+                "value": 4.24521,
+                "lo": 3.66305,
+                "hi": 4.75085,
+                "n": 2422
+              },
+              "s50": {
+                "value": 4.21415,
+                "lo": 3.74491,
+                "hi": 4.8688,
+                "n": 2422
+              },
+              "s100": {
+                "value": 4.24245,
+                "lo": 3.7355,
+                "hi": 4.67074,
+                "n": 2422
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "rate",
+        "label": "KI-Wort",
+        "shape": "bar",
+        "tone": "accent"
+      }
+    ],
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "scale": "linear",
+    "min": 0,
+    "max": 12,
+    "variants": [
+      {
+        "id": "s1",
+        "label": "ohne Textkontrolle"
+      },
+      {
+        "id": "s3",
+        "label": "3 Stufen"
+      },
+      {
+        "id": "s10",
+        "label": "10 Stufen"
+      },
+      {
+        "id": "s50",
+        "label": "50 Stufen"
+      },
+      {
+        "id": "s100",
+        "label": "100 Stufen"
+      }
+    ],
+    "defaultVariant": "s1",
+    "finding": "rate"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21402,
+    "base": "Startseiten mit eigener Domain und Text; Gruppen nach Zahl der 41 übrigen Merkmale",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera",
+    "hero": "H01",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "or_signal_s1": {
+        "value": 1.16219,
+        "lo": 1.14225,
+        "hi": 1.18247,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "or_signal_s3": {
+        "value": 1.03505,
+        "lo": 1.01412,
+        "hi": 1.05642,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "or_signal_s10": {
+        "value": 1.01322,
+        "lo": 0.992397,
+        "hi": 1.03447,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "or_signal_s50": {
+        "value": 1.01186,
+        "lo": 0.991062,
+        "hi": 1.03309,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "or_signal_s100": {
+        "value": 1.01263,
+        "lo": 0.991752,
+        "hi": 1.03394,
+        "fmt": {
+          "style": "decimal",
+          "digits": 3
+        }
+      },
+      "signals": {
+        "value": 41.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "zero_hits": {
+        "value": 6.0,
+        "n": 1733,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "zero_rate": {
+        "value": 0.34622,
+        "lo": 0.158767,
+        "hi": 0.753325,
+        "n": 1733,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "top_hits": {
+        "value": 156.0,
+        "n": 1637,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "top_rate": {
+        "value": 9.52963,
+        "lo": 8.20048,
+        "hi": 11.0483,
+        "n": 1637,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}

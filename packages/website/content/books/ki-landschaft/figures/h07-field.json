@@ -1,0 +1,160 @@
+{
+  "id": "h07-field",
+  "kind": "field",
+  "title": "Je jünger das Datum, desto öfter KI",
+  "alt": "4.574 Startseiten zeigen ein ausdrückliches Datum. Das Feld sortiert sie nach dem Jahr des jüngsten Datums in sechs Spalten. Je jünger die Spalte, desto größer der Anteil mit KI-Wort.",
+  "caption": "4.574 datierte Startseiten nach dem Jahr ihres jüngsten Datums; KI-Wort je Spalte: 8, 6, 6, 15, 51, 287. Rohzahlen, ohne Textkontrolle.",
+  "n": 4574,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan April 2026, Textkamera)",
+  "asOf": "2026-10-19",
+  "limitation": "Nur etwa jede fünfte Seite zeigt ein Datum. Rohzahlen: die Textkontrolle zeigt h07-curve. Frische, nicht Vernachlässigung.",
+  "sourceLine": "n = 4.574 datierte Startseiten · Scan 2026-04 · Grenze: Rohzahlen; nur 21 Prozent zeigen ein Datum · Wird vom Rescan geprüft.",
+  "steps": [
+    {
+      "id": "jahre",
+      "label": "Sechs Spalten nach Jahr"
+    }
+  ],
+  "data": {
+    "classes": [
+      {
+        "id": "ki",
+        "label": "KI-Wort",
+        "tone": "accent"
+      },
+      {
+        "id": "rest",
+        "label": "ohne KI-Wort",
+        "tone": "leinen"
+      }
+    ],
+    "scenes": [
+      {
+        "id": "jahre",
+        "population": "Startseite|Startseiten",
+        "base": 4574,
+        "squares": 1000,
+        "unit": "Startseite|Startseiten",
+        "layout": "bins",
+        "perRow": 6,
+        "adjacent": true,
+        "bins": [
+          {
+            "id": "y0",
+            "label": "bis 2020",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 8,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 613
+              }
+            ]
+          },
+          {
+            "id": "y1",
+            "label": "2021 bis 2022",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 6,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 290
+              }
+            ]
+          },
+          {
+            "id": "y2",
+            "label": "2023",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 6,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 218
+              }
+            ]
+          },
+          {
+            "id": "y3",
+            "label": "2024",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 15,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 327
+              }
+            ]
+          },
+          {
+            "id": "y4",
+            "label": "2025",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 51,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 689
+              }
+            ]
+          },
+          {
+            "id": "y5",
+            "label": "2026",
+            "segments": [
+              {
+                "cls": "ki",
+                "count": 287,
+                "partial": true
+              },
+              {
+                "cls": "rest",
+                "count": 2064
+              }
+            ]
+          }
+        ],
+        "numeral": {
+          "value": 5.343,
+          "fmt": {
+            "style": "decimal",
+            "digits": 1
+          },
+          "suffix": "x"
+        },
+        "claim": "Je jünger das Datum, desto öfter KI.",
+        "labelClasses": [
+          "ki"
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 4574,
+    "base": "Startseiten mit eigener Domain, Text und ausdrücklichem Datum",
+    "window": "2026-04-01 bis 2026-04-09",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan April 2026, Textkamera)",
+    "hero": "H07",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
+  }
+}

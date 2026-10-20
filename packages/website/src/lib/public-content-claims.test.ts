@@ -39,16 +39,15 @@ describe("public learning content claim hygiene", () => {
     "eu-ai-act-kurs/block-5-umsetzen-lessons.json",
     "ki-und-gesellschaft/block-3-fairness-lessons.json",
     "books/ki-arbeitsalltag/13_anhang.md",
-    "books/ki-landschaft/01_eisberg.md",
-    "books/ki-landschaft/02_methodik.md",
-    "books/ki-landschaft/03_reifegrad_ueberblick.md",
-    "books/ki-landschaft/04_bundesland.md",
-    "books/ki-landschaft/05_branchen.md",
-    "books/ki-landschaft/06_eu_ki_verordnung.md",
-    "books/ki-landschaft/07_schnellstart.md",
-    "books/ki-landschaft/08_fahrplan.md",
-    "books/ki-landschaft/09_ausblick.md",
-    "books/ki-landschaft/10_anhang.md",
+    "books/ki-landschaft/01_zweimal_gemessen.md",
+    "books/ki-landschaft/02_textmenge.md",
+    "books/ki-landschaft/03_schaufenster.md",
+    "books/ki-landschaft/04_stellen_namen.md",
+    "books/ki-landschaft/05_land.md",
+    "books/ki-landschaft/06_stimmen.md",
+    "books/ki-landschaft/07_schluessel.md",
+    "books/ki-landschaft/08_dein_zug.md",
+    "books/ki-landschaft/09_quellen.md",
   ];
 
   const reviewedFreelancerBookFiles = [
@@ -126,6 +125,76 @@ describe("public learning content claim hygiene", () => {
       expect(() =>
         read(`books/ki-landschaft/${chapter.sourceFile}`),
       ).not.toThrow();
+    }
+  });
+
+  it("keeps the data book to aggregates with an approved adaptation note", () => {
+    const german = JSON.parse(read("books/ki-landschaft/manifest.json")) as {
+      adaptationNote: string;
+      riskClass: string;
+    };
+    const english = JSON.parse(
+      read("books/ki-landschaft/en/manifest.json"),
+    ) as { adaptationNote: string };
+
+    // The note and this test change together: aggregates only, k = 5, the
+    // frame named, no names, scores or rankings of single firms.
+    expect(german.riskClass).toBe("statistical");
+    expect(german.adaptationNote).toMatch(/nur Aggregate/u);
+    expect(german.adaptationNote).toMatch(/mindestens 5 Treffern/u);
+    expect(german.adaptationNote).toMatch(/Firmen mit auffindbarer Website/u);
+    expect(german.adaptationNote).toMatch(/ohne Firmennamen/u);
+    expect(german.adaptationNote).toMatch(/Rohdaten bleiben privat/u);
+    expect(english.adaptationNote).toMatch(/only aggregates/u);
+    expect(english.adaptationNote).toMatch(/at least 5 hits/u);
+    expect(english.adaptationNote).toMatch(/firms with a findable website/u);
+    expect(english.adaptationNote).toMatch(/no company names/u);
+    expect(english.adaptationNote).toMatch(/raw data stays private/u);
+  });
+
+  it("keeps the data book free of internal paths, contacts, retired names and certification claims", () => {
+    const corpus = [
+      ...reviewedFiles.filter((file) => file.startsWith("books/ki-landschaft/")),
+      ...reviewedFiles
+        .filter((file) => file.startsWith("books/ki-landschaft/"))
+        .map((file) => file.replace("books/ki-landschaft/", "books/ki-landschaft/en/")),
+      "books/ki-landschaft/manifest.json",
+      "books/ki-landschaft/en/manifest.json",
+    ]
+      .map(read)
+      .join("\n");
+
+    expect(corpus).not.toMatch(
+      /Digifyde|\/Users\/|\/private\/|mavengence|CLAUDE\.md|plans\/|\.env\b|[\w.+-]+@[\w-]+\.[a-z]{2,}/iu,
+    );
+    expect(corpus).not.toMatch(
+      /\bcompliant\b|\bcertified\b|zertifiziert|DSGVO-konform|\b86,2\b/iu,
+    );
+  });
+
+  it("links the data book only to named public sources", () => {
+    const allowedHosts = new Set([
+      "www.kfw.de",
+      "www.destatis.de",
+      "www.ifo.de",
+      "www.bitkom.org",
+      "arxiv.org",
+      "eur-lex.europa.eu",
+      "digital-strategy.ec.europa.eu",
+    ]);
+    const files = reviewedFiles.filter((file) =>
+      file.startsWith("books/ki-landschaft/"),
+    );
+
+    for (const file of [
+      ...files,
+      ...files.map((entry) =>
+        entry.replace("books/ki-landschaft/", "books/ki-landschaft/en/"),
+      ),
+    ]) {
+      for (const match of read(file).matchAll(/\]\((https?:\/\/[^)\s]+)\)/gu)) {
+        expect(allowedHosts.has(new URL(match[1] ?? "").host)).toBe(true);
+      }
     }
   });
 

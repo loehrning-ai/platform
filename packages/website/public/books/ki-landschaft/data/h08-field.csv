@@ -1,0 +1,20 @@
+Szene,Bereich,Klasse,Anzahl,von
+plattform,Apache,keiner der sechs Header,1469,4168
+plattform,Apache,ein bis zwei,442,4168
+plattform,Apache,drei oder mehr,273,4168
+plattform,nginx,keiner der sechs Header,493,4168
+plattform,nginx,ein bis zwei,283,4168
+plattform,nginx,drei oder mehr,250,4168
+plattform,Cloudflare,keiner der sechs Header,66,4168
+plattform,Cloudflare,ein bis zwei,89,4168
+plattform,Cloudflare,drei oder mehr,118,4168
+plattform,Baukasten und Hoster,keiner der sechs Header,65,4168
+plattform,Baukasten und Hoster,ein bis zwei,174,4168
+plattform,Baukasten und Hoster,drei oder mehr,26,4168
+plattform,Sonstige oder ohne Angabe,keiner der sechs Header,147,4168
+plattform,Sonstige oder ohne Angabe,ein bis zwei,103,4168
+plattform,Sonstige oder ohne Angabe,drei oder mehr,170,4168
+banner,alle,übrige,3818,4168
+banner,alle,gleiche Versionszeile,350,4168
+dmarc,alle,übrige,710,1019
+dmarc,alle,gleiche Versionszeile,309,1019

@@ -1,0 +1,662 @@
+/*
+ * The chapter stage (stage/chapter-stage.tsx): one pinned stage per chapter,
+ * a column of step cards that scroll past it, Weiter and Zurück, a source line.
+ *
+ * Rules this file keeps (DIRECTION.md sections 2 and 3):
+ * - The base style is the scrub layout; the static layout (every step stacked
+ *   as text with its numeral, the figure once at its finished frame) is decided
+ *   in CSS only, for reduced motion, no script, short screens, print and the
+ *   chapter pause switch, so hydration never changes the layout.
+ * - One giant numeral per screen, 132px at 390 and up to 280px beside the text.
+ *   Claim 26px / 44px, step card 17px / 19px, unit line and labels 13px / 14px.
+ *   Figtree everywhere; mono only inside the figure's numerals and ticks.
+ * - Kalkweiss ground, Druckschwarz ink, Mennige only for the finding. No radius,
+ *   no gradient, no shadow. Hover, focus and press use the anti colours: an ink
+ *   element turns Mennige, focus is a fixed 3px Mennige ring, press sinks 1px.
+ * - Only the figure inside the stage moves. The shell writes data-step and
+ *   --cs-p on its own element and nothing else.
+ */
+
+.cs {
+  --cs-ink: var(--color-foreground, #121212);
+  --cs-paper: var(--color-background, #f3f0e9);
+  --cs-accent: var(--color-brand-orange, #b73a15);
+  --cs-hair: var(--color-hairline, #d4cec5);
+  --cs-muted: var(--color-muted-foreground, #4f4640);
+  --cs-top: var(--nav-h-compact, 3rem);
+  /* The pinned stage's height on a phone: the figure and the claim get most of the screen, the step sentence the
+     rest above the reader bar. One variable so the pin, the step blocks and the scroll margins agree. */
+  --cs-pin-h: 58svh;
+
+  position: relative;
+  margin: 0 0 2.5rem;
+  color: var(--cs-ink);
+  scroll-margin-top: calc(var(--cs-top) + 1rem);
+}
+
+/* Phones: the stage is full-bleed; text keeps the 16px gutter. */
+@media (max-width: 639px) {
+  .cs {
+    width: 100vw;
+    margin-inline: calc(50% - 50vw);
+  }
+}
+
+.cs-pin {
+  position: sticky;
+  top: var(--cs-top);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: var(--cs-pin-h);
+  min-height: 24rem;
+  background: var(--cs-paper);
+  border-block: 2px solid var(--cs-ink);
+}
+
+/* ---------------------------------------------------------------- heads */
+
+.cs-heads {
+  position: relative;
+  flex: none;
+  padding: 0.75rem 1rem 0;
+  /* The numeral fits the width of this box (cqw), so its whole string stays inside it. */
+  container-type: inline-size;
+  container-name: cs-heads;
+}
+
+/* The heads and the unit texts of all steps share one grid cell, so the cell is as tall as the tallest one and
+   the stage never changes height when the step changes (no layout shift when the script takes over). Only the
+   active one is visible. data-step is the only thing the shell writes while scrubbing. */
+.cs-heads,
+.cs-unit {
+  display: grid;
+}
+
+.cs-head,
+.cs-unit-text {
+  display: block;
+  grid-area: 1 / 1;
+  visibility: hidden;
+}
+
+.cs[data-step="0"] .cs-head[data-for="0"],
+.cs[data-step="1"] .cs-head[data-for="1"],
+.cs[data-step="2"] .cs-head[data-for="2"],
+.cs[data-step="3"] .cs-head[data-for="3"],
+.cs[data-step="4"] .cs-head[data-for="4"],
+.cs[data-step="5"] .cs-head[data-for="5"] {
+  visibility: visible;
+}
+
+.cs[data-step="0"] .cs-unit-text[data-for="0"],
+.cs[data-step="1"] .cs-unit-text[data-for="1"],
+.cs[data-step="2"] .cs-unit-text[data-for="2"],
+.cs[data-step="3"] .cs-unit-text[data-for="3"],
+.cs[data-step="4"] .cs-unit-text[data-for="4"],
+.cs[data-step="5"] .cs-unit-text[data-for="5"] {
+  visibility: visible;
+}
+
+.cs-numeral,
+.cs-step-numeral {
+  margin: 0;
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
+/* --cs-em is the numeral's width in em (set per numeral): the size is the wanted one, or less when the string
+   would not fit its box. The unit sign counts, so "46 %" never loses its "%". */
+.cs-head {
+  /* The numeral's size (--n) is set on the head so the claim can read it. */
+  --n: min(min(24.6vw, 96px), calc(100cqw / var(--cs-em, 3)));
+}
+
+.cs-numeral {
+  font-size: var(--n);
+}
+
+.cs-claim {
+  max-width: min(22ch, 100%);
+  overflow-wrap: break-word;
+  margin: 0.25rem 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* ----------------------------------------------------------------- view */
+
+.cs-view {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cs-view > * {
+  max-height: 100%;
+}
+
+.cs-unit {
+  flex: none;
+  margin: 0;
+  padding: 0.25rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--cs-muted);
+}
+
+/* ------------------------------------------------------------- controls */
+
+.cs-ctl {
+  flex: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 1rem 0.5rem;
+}
+
+@media (max-width: 1023px) {
+  /* The reader bar below lg is the step control (insight-focus-bar.tsx presses these buttons), so the
+     pinned stage keeps its whole height for the numeral, the claim and the figure. */
+  .cs-ctl {
+    display: none;
+  }
+}
+
+.cs-count {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.cs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  min-height: 3rem;
+  min-width: 3rem;
+  padding: 0 1rem;
+  border: 2px solid var(--cs-ink);
+  border-radius: 0;
+  background: var(--cs-paper);
+  color: var(--cs-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cs-btn[data-cs="prev"] {
+  justify-self: start;
+}
+
+.cs-btn[data-cs="next"] {
+  justify-self: end;
+}
+
+.cs-btn:focus-visible {
+  outline: 3px solid var(--cs-accent);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-btn:not([aria-disabled="true"]):hover {
+    border-color: var(--cs-accent);
+    background: var(--cs-accent);
+    color: var(--cs-paper);
+  }
+}
+
+.cs-btn:not([aria-disabled="true"]):active {
+  border-color: var(--cs-ink);
+  background: var(--cs-ink);
+  color: var(--cs-paper);
+  transform: translateY(1px);
+}
+
+.cs-btn[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------- steps */
+
+.cs-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A step block is as tall as the gap between the pin and the reader bar (which is where the reading line
+   sits), so at load the first card is already centred on the line: the first screen shows the data and its
+   sentence, and one swipe of a block's height moves one step. Wide screens keep their own height below. */
+.cs-step {
+  display: flex;
+  align-items: center;
+  min-height: max(10rem, calc(100svh - var(--cs-top) - var(--cs-pin-h) - var(--tabbar-h, 3.5rem) - env(safe-area-inset-bottom, 0px)));
+  padding: 0 1rem;
+  scroll-margin-top: calc(var(--cs-top) + var(--cs-pin-h));
+}
+
+@media (max-width: 1023px) {
+  /* The card sits directly under the stage rule (no dead band above it), and the reader bar already says
+     "Schritt n von N", so the label stays for assistive technology only. */
+  .cs-step {
+    align-items: flex-start;
+    padding-top: 0.75rem;
+  }
+
+  .cs-card-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.cs-card {
+  max-width: 34rem;
+  padding-top: 0.625rem;
+  border-top: 2px solid var(--cs-ink);
+}
+
+.cs-card-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--cs-muted);
+}
+
+.cs-card-text {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+}
+
+/* Static-only parts of a step: its own numeral and claim. */
+.cs-step-numeral,
+.cs-step-claim,
+.cs-step-unit {
+  display: none;
+}
+
+.cs-source {
+  padding: 0 1rem;
+}
+
+/* --------------------------------------------------------- wide screens
+ * The same stage, wider: the pin splits into numeral and claim on the left and
+ * the figure on the right (the figure bleeds to the right edge of the column);
+ * the step cards still scroll past below it, so one reading line serves both.
+ */
+
+@media (min-width: 1024px) {
+  .cs {
+    --cs-top: calc(var(--nav-h, 4rem) + 1rem);
+  }
+
+  .cs-pin {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "heads view"
+      "unit view"
+      "ctl ctl";
+    column-gap: 2rem;
+    height: 60svh;
+    border-block: 0;
+    border-top: 2px solid var(--cs-ink);
+  }
+
+  .cs-heads {
+    grid-area: heads;
+    padding: 0.75rem 0 0;
+    overflow: hidden;
+  }
+
+  .cs-view {
+    grid-area: view;
+    align-self: stretch;
+  }
+
+  .cs-unit {
+    grid-area: unit;
+    align-self: end;
+  }
+
+  .cs-ctl {
+    grid-area: ctl;
+  }
+
+  .cs-heads {
+    /* A size container: the numeral and the claim fit the box the grid leaves them in both directions, so
+       neither is clipped by the overflow rule above, whatever the window's height. */
+    container-type: size;
+  }
+
+  .cs-head {
+    --n: min(clamp(132px, 21.9vw, 280px), calc(100cqw / var(--cs-em, 3)), 46cqh);
+  }
+
+  /* Claim: the wanted size, or less when four lines of it would not fit under the numeral. */
+  .cs-claim {
+    font-size: max(1.125rem, min(2.75rem, 9.5cqw, calc((100cqh - 1.5rem - var(--n) * 0.88) / 4.6)));
+    max-width: min(18ch, 100%);
+  }
+
+  .cs-unit,
+  .cs-ctl {
+    padding-inline: 0;
+  }
+
+  .cs-step {
+    min-height: 70svh;
+    padding: 0;
+    scroll-margin-top: calc(var(--cs-top) + 60svh);
+  }
+
+  .cs-card-text {
+    font-size: 1.1875rem;
+  }
+
+  .cs-source {
+    padding: 0;
+  }
+}
+
+/* ---------------------------------------------------------- static layout
+ * Reduced motion, no script, short screens, print and the chapter pause
+ * switch: nothing is pinned, nothing moves, every step is stacked as text with
+ * its numeral, and the figure is drawn once at its finished frame.
+ */
+
+@media (prefers-reduced-motion: reduce), (scripting: none), (max-height: 559px), print {
+  .cs {
+    display: block;
+  }
+
+  .cs-pin {
+    position: static;
+    height: auto;
+    min-height: 0;
+    border-bottom: 0;
+  }
+
+  .cs-heads,
+  .cs-ctl {
+    display: none;
+  }
+
+  .cs-view {
+    min-height: 14rem;
+    overflow: visible;
+  }
+
+  .cs-step {
+    display: block;
+    min-height: 0;
+    padding-block: 1.25rem 0;
+    scroll-margin-top: 1rem;
+  }
+
+  .cs-step-numeral,
+  .cs-step-claim,
+  .cs-step-unit {
+    display: block;
+  }
+
+  /* The card is the box the numeral must fit (static layout only: the card is a block here). */
+  .cs-card {
+    container-type: inline-size;
+  }
+
+  .cs-step-numeral {
+    font-size: min(4rem, calc(100cqw / var(--cs-em, 3)));
+  }
+
+  .cs-step-claim {
+    margin: 0.25rem 0 0;
+    max-width: 28ch;
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .cs-step-unit {
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    color: var(--cs-muted);
+  }
+
+  .cs-card {
+    margin-top: 0.75rem;
+  }
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs {
+  display: block;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-pin {
+  position: static;
+  height: auto;
+  min-height: 0;
+  border-bottom: 0;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-heads,
+.cs-chapter:has(.cs-pause-input:checked) .cs-ctl {
+  display: none;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-view {
+  min-height: 14rem;
+  overflow: visible;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-step {
+  display: block;
+  min-height: 0;
+  padding-block: 1.25rem 0;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-step-numeral,
+.cs-chapter:has(.cs-pause-input:checked) .cs-step-claim,
+.cs-chapter:has(.cs-pause-input:checked) .cs-step-unit {
+  display: block;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-card {
+  container-type: inline-size;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-step-numeral {
+  font-size: min(4rem, calc(100cqw / var(--cs-em, 3)));
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-step-claim {
+  margin: 0.25rem 0 0;
+  max-width: 28ch;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-step-unit {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--cs-muted);
+}
+
+.cs-chapter:has(.cs-pause-input:checked) .cs-card {
+  margin-top: 0.75rem;
+}
+
+/* ------------------------------------------------------- the pause switch
+ * CSS only: a native checkbox with role="switch" under a 48px outlined button
+ * (the cover reel's pattern). It lives in the chapter band, so its colours are
+ * the band's scene tokens: ink outline on the ground. Hover and focus-visible
+ * invert it (ink fill, ground label), press sinks 1px and flips to the other
+ * anti colour, checked (paused) is the inverted state. The glyph is a pause bar
+ * pair, a play triangle once paused. Checked, the page is in the static layout
+ * above and the script stops writing steps.
+ */
+
+.cs-pause-wrap {
+  position: absolute;
+  top: 0.25rem;
+  right: 1rem;
+  z-index: 2;
+}
+
+@media (min-width: 640px) {
+  .cs-pause-wrap {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+}
+
+.cs-pause {
+  --cs-p-ink: var(--color-scene-ink, var(--color-foreground, #121212));
+  --cs-p-ground: var(--color-scene-ground, var(--color-background, #f3f0e9));
+  --cs-p-mid: var(--color-scene-mid, var(--color-brand-orange, #b73a15));
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  min-height: 3rem;
+  min-width: 3rem;
+  padding: 0 0.875rem;
+  border: 2px solid var(--cs-p-ink);
+  border-radius: 0;
+  background: var(--cs-p-ground);
+  color: var(--cs-p-ink);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The real control: stretched over the button, invisible, still the focus target and the click target. */
+.cs-pause-input {
+  appearance: none;
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.cs-pause-glyph {
+  flex: none;
+  width: 0.75rem;
+  height: 0.875rem;
+  background: currentColor;
+  clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0);
+}
+
+.cs-pause:has(.cs-pause-input:checked) .cs-pause-glyph {
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.cs-pause-text {
+  display: inline-flex;
+}
+
+.cs-pause-long {
+  display: none;
+}
+
+.cs-pause-stop {
+  display: none;
+}
+
+.cs-pause:has(.cs-pause-input:checked) .cs-pause-run {
+  display: none;
+}
+
+.cs-pause:has(.cs-pause-input:checked) .cs-pause-stop {
+  display: inline;
+}
+
+@media (min-width: 480px) {
+  .cs-pause-long {
+    display: inline;
+  }
+
+  .cs-pause-short {
+    display: none;
+  }
+}
+
+.cs-pause:has(.cs-pause-input:checked) {
+  background: var(--cs-p-ink);
+  color: var(--cs-p-ground);
+}
+
+.cs-pause:has(.cs-pause-input:focus-visible) {
+  outline: 3px solid var(--cs-p-ink);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-pause:hover {
+    border-color: var(--cs-p-ink);
+    background: var(--cs-p-ink);
+    color: var(--cs-p-ground);
+  }
+
+  .cs-pause:has(.cs-pause-input:checked):hover {
+    background: var(--cs-p-ground);
+    color: var(--cs-p-ink);
+  }
+}
+
+.cs-pause:active {
+  background: var(--cs-p-mid);
+  color: var(--cs-p-ink);
+  transform: translateY(1px);
+}
+
+/* Nothing moves in these layouts, so there is nothing to pause. */
+@media (prefers-reduced-motion: reduce), (scripting: none), print {
+  .cs-pause-wrap {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------- compact band
+ * On a phone the band above the stage is the caps line and one line of title, so the whole pinned
+ * stage sits on the first screen under it. (Tailwind's text-* utilities lose to .poster-title here.)
+ */
+@media (max-width: 639px) {
+  .cs-chapter [data-cover-band] .poster-title {
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+}

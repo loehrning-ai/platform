@@ -1,0 +1,321 @@
+{
+  "id": "h01-friends",
+  "kind": "strip",
+  "title": "Woran das Wort KI hängt, woran nicht",
+  "alt": "Chancenverhältnis, mit dem ein Merkmal mit dem Wort KI auf derselben Startseite zusammen steht, bei gleicher Textmenge (10 Stufen). Digitalisierung, Cyber und NIS2 gehen mit KI, Facebook-Link und Google-Karte seltener.",
+  "caption": "Chancenverhältnis für das KI-Wort, bei gleicher Textmenge, mit 95-%-Intervall (Bootstrap über Seiten). Die sechs stärksten Freunde und die vier stärksten Gegner unter den Merkmalen mit mindestens 100 Seiten.",
+  "n": 21402,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera",
+  "asOf": "2026-10-19",
+  "limitation": "Das Wort Digitalisierung gehört zur selben Wortfamilie wie das Ergebnis. Einzelne Chancenverhältnisse, kein Maß für den Anteil. Fußzeilen (Links, Impressum) fehlen im Hauptinhalt.",
+  "sourceLine": "n = 21.402 Startseiten · Scan 2026-03 bis 05 · Grenze: Zusammenhang; Fußzeilen fehlen · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet.",
+  "data": {
+    "rows": [
+      {
+        "id": "saipagededicated",
+        "label": "KI-Unterseite",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 35.1943,
+            "lo": 26.50805,
+            "hi": 46.67795,
+            "n": 312
+          }
+        ]
+      },
+      {
+        "id": "xdigital",
+        "label": "Digitalisierung",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 6.48161,
+            "lo": 5.54894,
+            "hi": 7.81096,
+            "n": 691
+          }
+        ]
+      },
+      {
+        "id": "sautomation",
+        "label": "Automatisierung",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 4.57212,
+            "lo": 3.64602,
+            "hi": 5.50452,
+            "n": 914
+          }
+        ]
+      },
+      {
+        "id": "xcyber",
+        "label": "Cyber/Phishing",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 4.14993,
+            "lo": 3.16877,
+            "hi": 5.39361,
+            "n": 349
+          }
+        ]
+      },
+      {
+        "id": "sconferencespeaker",
+        "label": "Vorträge/Speaker",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 3.19138,
+            "lo": 2.37429,
+            "hi": 4.20876,
+            "n": 518
+          }
+        ]
+      },
+      {
+        "id": "xreg",
+        "label": "NIS2/ESG/LkSG",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 2.73838,
+            "lo": 1.86315,
+            "hi": 3.93711,
+            "n": 238
+          }
+        ]
+      },
+      {
+        "id": "nfacebook",
+        "label": "Facebook",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 0.61008,
+            "lo": 0.46714,
+            "hi": 0.73224,
+            "n": 2626
+          }
+        ]
+      },
+      {
+        "id": "xfamilie",
+        "label": "Familienbetrieb",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 0.59465,
+            "lo": 0.4119,
+            "hi": 0.7955,
+            "n": 1663
+          }
+        ]
+      },
+      {
+        "id": "tvimeoembed",
+        "label": "Vimeo",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 0.44775,
+            "lo": 0.22604,
+            "hi": 0.70917,
+            "n": 472
+          }
+        ]
+      },
+      {
+        "id": "tgooglemaps",
+        "label": "Google Maps",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 0.2386,
+            "lo": 0.12461,
+            "hi": 0.35699,
+            "n": 1125
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "or",
+        "label": "Chancenverhältnis",
+        "shape": "ring",
+        "tone": "ink"
+      }
+    ],
+    "fmt": {
+      "style": "decimal",
+      "digits": 1
+    },
+    "scale": "log",
+    "min": 0.2,
+    "max": 20,
+    "reference": {
+      "value": 1,
+      "label": "kein Zusammenhang"
+    }
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 21402,
+    "base": "Startseiten mit eigener Domain und Text; 10 Stufen der Textlänge",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Textkamera",
+    "hero": "H01",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "or_saipagededicated": {
+        "value": 35.1943,
+        "lo": 26.5081,
+        "hi": 46.678,
+        "n": 312,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_xdigital": {
+        "value": 6.48161,
+        "lo": 5.54894,
+        "hi": 7.81096,
+        "n": 691,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_sautomation": {
+        "value": 4.57212,
+        "lo": 3.64602,
+        "hi": 5.50452,
+        "n": 914,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_xcyber": {
+        "value": 4.14993,
+        "lo": 3.16877,
+        "hi": 5.39361,
+        "n": 349,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_sconferencespeaker": {
+        "value": 3.19138,
+        "lo": 2.37429,
+        "hi": 4.20876,
+        "n": 518,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_xreg": {
+        "value": 2.73838,
+        "lo": 1.86315,
+        "hi": 3.93711,
+        "n": 238,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_nfacebook": {
+        "value": 0.61008,
+        "lo": 0.46714,
+        "hi": 0.73224,
+        "n": 2626,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_xfamilie": {
+        "value": 0.59465,
+        "lo": 0.4119,
+        "hi": 0.7955,
+        "n": 1663,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_tvimeoembed": {
+        "value": 0.44775,
+        "lo": 0.22604,
+        "hi": 0.70917,
+        "n": 472,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "or_tgooglemaps": {
+        "value": 0.2386,
+        "lo": 0.12461,
+        "hi": 0.35699,
+        "n": 1125,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "features_tested": {
+        "value": 180.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "features_crude_sig": {
+        "value": 121.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "features_effect_kept": {
+        "value": 56.7285,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "features_lost": {
+        "value": 44.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "features_reversed": {
+        "value": 3.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "features_fdr": {
+        "value": 77.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

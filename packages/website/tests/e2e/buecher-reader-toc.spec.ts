@@ -4,26 +4,23 @@ import {
   formatBrowserErrors,
   meaningfulBrowserErrors,
 } from "./fixtures/console";
+import { chapterPath, chapters, chapterSource } from "./fixtures/book";
 
 /**
- * Book reader - TOC sidebar, heading list, and anchor deep-links (release hardening
- * ). Complements buecher.spec.ts (library + PDF gating).
- *
- * Content is the CURRENT live copy (a refresh is pending on another branch), so
- * assertions target STRUCTURE/roles, the stable manifest chapter title, and
- * heading ids READ FROM THE LIVE DOM - never exact prose. Rendered ids come
- * from rehype-slug (github-slugger keeps umlauts) while the sidebar hrefs come
- * from the lib's extractHeadings (which transliterates), so the two slug
- * schemes diverge - hence deriving ids at runtime. Reader is open (no login).
- *
- * Chapter ki-landschaft/03_reifegrad_ueberblick ("Evidenzbasierte Selbstprüfung")
- * contains multiple h2/h3 headings, including umlaut ones, and no code fences.
+ * Book reader - visible chapter list and heading anchors. The insight reader has
+ * no sidebar or sheet of headings (nothing opens and closes): the chapters are one
+ * visible list under every chapter, and a heading that the text does carry is a
+ * deep-link target. Locators use roles and the manifest; heading ids are read from
+ * the live DOM (rehype-slug keeps umlauts), never exact prose. A chapter with `##`
+ * headings is picked from the markdown on disk; the anchor tests skip, and say so,
+ * while no chapter has any (the insight chapters are short).
  */
 
-const SLUG = "ki-landschaft";
-const CHAPTER = "03_reifegrad_ueberblick";
-const CHAPTER_TITLE = "Evidenzbasierte Selbstprüfung";
-const READER_PATH = `/buecher/${SLUG}/${CHAPTER}`;
+const ALL = chapters();
+const WITH_HEADINGS = ALL.filter((c) => /^## /m.test(chapterSource(c.slug)));
+const TARGET = WITH_HEADINGS[0];
+const READER_PATH = chapterPath((TARGET ?? ALL[0]!).slug);
+const CHAPTER_TITLE = (TARGET ?? ALL[0]!).title;
 
 /** Heading ids the reader actually rendered (rehype-slug/github-slugger). */
 async function renderedHeadingIds(page: Page): Promise<string[]> {
@@ -38,11 +35,7 @@ async function renderedHeadingIds(page: Page): Promise<string[]> {
  * forces a real document load at the fragment URL (the "open the link fresh"
  * path), not a same-page hash nudge.
  */
-async function deepLinkLandsOn(
-  page: Page,
-  id: string,
-  opts: { requireScroll: boolean },
-): Promise<void> {
+async function deepLinkLandsOn(page: Page, id: string, opts: { requireScroll: boolean }): Promise<void> {
   await page.goto("about:blank");
   await page.goto(`${READER_PATH}#${id}`, { waitUntil: "load" });
 
@@ -57,80 +50,44 @@ async function deepLinkLandsOn(
   }
 }
 
-test.describe("book reader TOC + heading anchors", () => {
-  test("renders the chapter, its h1 and heading anchors without console errors", async ({
-    page,
-  }) => {
+test.describe("book reader chapter list + heading anchors", () => {
+  test("renders the chapter, its h1 and no console error", async ({ page }) => {
     const errors = collectBrowserErrors(page);
     const res = await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
 
     expect(res?.status(), `status for ${READER_PATH}`).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
-    await expect(
-      page.getByRole("heading", { level: 1, name: CHAPTER_TITLE, exact: true }),
-    ).toBeVisible();
-
-    const ids = await renderedHeadingIds(page);
-    expect(ids.length, "rendered h2/h3 heading ids").toBeGreaterThan(1);
+    await expect(page.getByRole("heading", { level: 1, name: CHAPTER_TITLE, exact: true })).toBeVisible();
 
     const noise = meaningfulBrowserErrors(errors);
-    expect(
-      noise,
-      `console errors on ${READER_PATH}\n${formatBrowserErrors(noise)}`,
-    ).toEqual([]);
+    expect(noise, `console errors on ${READER_PATH}\n${formatBrowserErrors(noise)}`).toEqual([]);
   });
 
-  test("sidebar TOC lists the chapter headings as fragment links (desktop)", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
-
-    await expect(
-      page.getByRole("complementary", { name: "Kapitelinhalt" }),
-    ).toBeVisible();
-
-    const toc = page.getByRole("navigation", { name: "Kapitelinhalt" });
-    const links = toc.getByRole("link");
-    await expect(links.first()).toBeVisible();
-    expect(await links.count(), "TOC entries").toBeGreaterThan(1);
-    // Every TOC entry is an in-page fragment link.
-    await expect(links.first()).toHaveAttribute("href", /^#/);
+  test("has no sidebar or sheet of headings, on desktop and on a phone", async ({ page }) => {
+    for (const size of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
+      await page.setViewportSize(size);
+      await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
+      await expect(page.getByRole("complementary", { name: "Kapitelinhalt" })).toHaveCount(0);
+      await expect(page.locator("main details, main summary, [data-chapter-toc-sheet]")).toHaveCount(0);
+      await expect(page.getByRole("navigation", { name: "Alle Kapitel des Buchs" })).toBeVisible();
+    }
   });
 
-  test("clicking a TOC entry scrolls to its heading (desktop)", async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
+  test("clicking a chapter in the visible list opens that chapter (phone)", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(READER_PATH, { waitUntil: "load" });
-
-    const ids = await renderedHeadingIds(page);
-    const toc = page.getByRole("navigation", { name: "Kapitelinhalt" });
-    const links = toc.getByRole("link");
-    // Next can finish the window load event while the streamed page tree is
-    // still parked in a hidden container. Wait for the interactive copy before
-    // reading role-filtered links; evaluateAll does not auto-wait.
-    await expect(links.first()).toBeVisible();
-    const hrefs = await links
-      .evaluateAll((els) => els.map((e) => e.getAttribute("href") ?? ""));
-
-    // Pick the LAST TOC link whose slug resolves to a rendered heading id, so
-    // the click must scroll a meaningful distance. (Since the slug fix landed,
-    // sidebar slugs keep umlauts and match the DOM ids one-to-one.)
-    const resolvable = hrefs.filter((h) => h.startsWith("#") && ids.includes(h.slice(1)));
-    expect(
-      resolvable.length,
-      "at least one TOC link must resolve to a rendered heading id",
-    ).toBeGreaterThan(0);
-    const targetHref = resolvable[resolvable.length - 1]!;
-    const targetId = targetHref.slice(1);
-
-    await toc.locator(`a[href="${targetHref}"]`).first().click();
-
-    // location.hash percent-encodes unicode; compare decoded against the raw href.
-    expect(decodeURIComponent(new URL(page.url()).hash)).toBe(targetHref);
-    await expect(page.locator(`[id="${targetId}"]`)).toBeInViewport();
+    const list = page.getByRole("navigation", { name: "Alle Kapitel des Buchs" });
+    const other = ALL.find((c) => c.title !== CHAPTER_TITLE)!;
+    const link = list.locator(`a[href="${chapterPath(other.slug)}"]`);
+    await link.scrollIntoViewIfNeeded();
+    const box = await link.boundingBox();
+    expect(box?.height ?? 0, "list link is a 44px target").toBeGreaterThanOrEqual(43);
+    await Promise.all([page.waitForURL(new RegExp(`${chapterPath(other.slug)}$`)), link.click()]);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(other.title);
   });
 
   test("deep-linking to a late heading anchor scrolls to it", async ({ page }) => {
+    test.skip(!TARGET, "no chapter of the manifest has a ## heading yet");
     await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
     const ids = await renderedHeadingIds(page);
     const ascii = ids.filter((id) => /^[a-z0-9-]+$/.test(id));
@@ -138,19 +95,18 @@ test.describe("book reader TOC + heading anchors", () => {
     const targetId = pool[pool.length - 1];
     expect(targetId, "chapter must render a heading id for deep-link proof").toBeDefined();
 
-    // A late heading also proves the page scrolled down from the top.
-    await deepLinkLandsOn(page, targetId!, { requireScroll: true });
+    await deepLinkLandsOn(page, targetId!, { requireScroll: false });
   });
 
   test("deep-linking to a heading anchor with umlauts lands on it", async ({ page }) => {
-    await page.goto(READER_PATH, { waitUntil: "domcontentloaded" });
-    const umlautId = (await renderedHeadingIds(page)).find((id) => /[äöüß]/.test(id));
-    expect(
-      umlautId,
-      "fixture chapter must keep an umlaut heading id for unicode deep-link proof",
-    ).toBeDefined();
-
-    // Proves the percent-encoded umlaut fragment resolves to the umlaut heading.
-    await deepLinkLandsOn(page, umlautId!, { requireScroll: false });
+    const withUmlaut = WITH_HEADINGS.find((c) => /^##.*[äöüß]/im.test(chapterSource(c.slug)));
+    test.skip(!withUmlaut, "no chapter of the manifest has an umlaut heading yet");
+    const path = chapterPath(withUmlaut!.slug);
+    await page.goto(path, { waitUntil: "domcontentloaded" });
+    const umlautId = (await page.evaluate(() => Array.from(document.querySelectorAll("h2[id], h3[id]")).map((el) => el.id))).find((id) => /[äöüß]/.test(id));
+    expect(umlautId, "chapter must keep an umlaut heading id for unicode deep-link proof").toBeDefined();
+    await page.goto("about:blank");
+    await page.goto(`${path}#${umlautId}`, { waitUntil: "load" });
+    await expect(page.locator(`[id="${umlautId}"]`)).toBeInViewport();
   });
 });

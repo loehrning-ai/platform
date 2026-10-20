@@ -1,0 +1,9 @@
+Schritt,Art,Wert,Stand danach,n
+"Alle erreichbaren Seiten, roh",Messwert,8.2,8.2,37429
+Geteilte Adressen entfernt,Veränderung,-3.9,4.3,
+Nur eigene Adresse,Messwert,4.3,4.3,25581
+Nach Land gewichtet,Veränderung,-0.5,3.8,
+Gewichteter Wert,Messwert,3.8,3.8,24944
+Erste Messung,Messwert,10.6,10.6,840
+Zweite Messung,Veränderung,-4.3,6.3,
+Danach,Messwert,6.3,6.3,

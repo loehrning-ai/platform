@@ -1,0 +1,204 @@
+{
+  "id": "h05-waterfall",
+  "kind": "waterfall",
+  "title": "Eine Zahl, drei Messungen",
+  "alt": "Der Anteil der Firmenseiten mit dem Wort KI fällt von 8,2 % (alle erreichbaren Seiten) auf 4,3 %, wenn geteilte Adressen entfernt werden, und auf 3,8 % nach Gewichtung nach Land.",
+  "caption": "Gleiche Frage, andere Messung: 8,2 % roh, 4,3 % mit eigener Adresse, 3,8 % gewichtet (Intervall 3,6 bis 4,1 %).",
+  "n": 37429,
+  "nNote": "37.429 / 25.581 / 24.944",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-19",
+  "limitation": "Geteilte Adressen gelten als mögliche Falschzuordnung: in einer Prüfung von 180 Adressen gehörten nur etwa 55 Prozent zur Firma (Intervall 45 bis 65). Die Gewichtung folgt dem Unternehmensregister 2024 nach Land. Bayern stellt 41 Prozent der Stichprobe und 14 Prozent des Register-Pools.",
+  "sourceLine": "n = 37.429 erreichbare Seiten, 25.581 mit eigener Adresse · Scan 2026-03 bis 05 · Grenze: Messung hängt an Adresse und Gewicht · Wird mit geprüften Websites neu gerechnet.",
+  "steps": [
+    {
+      "id": "roh",
+      "label": "Der Rohwert",
+      "reveal": [
+        "raw"
+      ],
+      "focus": [
+        "raw"
+      ]
+    },
+    {
+      "id": "geteilt",
+      "label": "Geteilte Adressen",
+      "reveal": [
+        "shared",
+        "own"
+      ],
+      "focus": [
+        "shared"
+      ]
+    },
+    {
+      "id": "gewichtet",
+      "label": "Nach Land gewichtet",
+      "reveal": [
+        "weighted",
+        "weighted_total"
+      ],
+      "focus": [
+        "weighted_total"
+      ]
+    }
+  ],
+  "data": {
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "raw",
+        "label": "Alle erreichbaren Seiten, roh",
+        "kind": "total",
+        "value": 8.2,
+        "n": 37429
+      },
+      {
+        "id": "shared",
+        "label": "Geteilte Adressen entfernt",
+        "kind": "delta",
+        "value": -3.9
+      },
+      {
+        "id": "own",
+        "label": "Nur eigene Adresse",
+        "kind": "total",
+        "value": 4.3,
+        "n": 25581
+      },
+      {
+        "id": "weighted",
+        "label": "Nach Land gewichtet",
+        "kind": "delta",
+        "value": -0.5
+      },
+      {
+        "id": "weighted_total",
+        "label": "Gewichteter Wert",
+        "kind": "total",
+        "value": 3.8,
+        "n": 24944
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 37429,
+    "base": "erreichbare Firmenwebsites, dann nur eigene Adresse, dann nach Land gewichtet",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+    "hero": "H05",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "weighted_share": {
+        "ref": "weighted_total",
+        "lo": 3.55458,
+        "hi": 4.06691
+      },
+      "weighted_pool": {
+        "value": 3.96256,
+        "lo": 3.68495,
+        "hi": 4.25282,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "weighted_kreis": {
+        "value": 3.75913,
+        "lo": 3.24914,
+        "hi": 4.26261,
+        "fmt": {
+          "style": "percent",
+          "digits": 2
+        }
+      },
+      "shared_sites": {
+        "value": 11848.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "shared_hosts_share": {
+        "value": 31.6546,
+        "n": 37429,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "base_sites": {
+        "value": 25581.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "reachable_sites": {
+        "value": 37429.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "audit_pairs": {
+        "value": 180.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "audit_own": {
+        "value": 55.0,
+        "lo": 45.0,
+        "hi": 65.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "bayern_sample_share": {
+        "value": 41.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "bayern_pool_share": {
+        "value": 13.9,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "published_low": {
+        "value": 20.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "published_high": {
+        "value": 57.0,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    },
+    "aliases": {
+      "raw_share": "raw",
+      "shared_delta": "shared",
+      "own_share": "own",
+      "weighted_delta": "weighted"
+    }
+  }
+}

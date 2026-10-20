@@ -31,7 +31,7 @@ import type {
   TableRow,
   Text as MdText,
 } from "mdast";
-import { loadBookManifest, loadBookChapter } from "@/lib/book-reader-content";
+import { loadBookManifest, loadBookChapter, plainChapterMarkdown } from "@/lib/book-reader-content";
 import type { Book } from "@/lib/books";
 
 const BRAND_ORANGE = "#a5370f";
@@ -262,7 +262,11 @@ export async function generateBookPdf(book: Book, bookSlug: string): Promise<Buf
 
   const manifest = await loadBookManifest(bookSlug, "de");
   const chapters = await Promise.all(
-    manifest.chapters.map((c) => loadBookChapter(bookSlug, c.slug, "de")),
+    manifest.chapters.map(async (c) => {
+      const loaded = await loadBookChapter(bookSlug, c.slug, "de");
+      // The text PDF cannot show an interactive figure: it gets title and caption instead.
+      return { ...loaded, rawMarkdown: await plainChapterMarkdown(bookSlug, loaded.rawMarkdown, "de") };
+    }),
   );
 
   const pageStyle = {

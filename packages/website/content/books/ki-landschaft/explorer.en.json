@@ -1,0 +1,60 @@
+{
+  "outcome": "the word AI on the homepage",
+  "sourceLine": "Source: {n} GmbH homepages, March to May 2026. An estimate, not the cover figure. Only about 55 % of matches are right.",
+  "rescanNote": "Being recalculated with checked websites.",
+  "factors": {
+    "branche": {
+      "label": "Industry",
+      "levels": {
+        "dienste": { "label": "Other services" },
+        "bau": { "label": "Construction" },
+        "beratung": { "label": "Consulting and marketing" },
+        "finanzen_immo": { "label": "Finance and real estate" },
+        "handel": { "label": "Retail and trade" },
+        "industrie": { "label": "Industry and manufacturing" },
+        "it_medien": { "label": "IT and media" },
+        "technik": { "label": "Engineering and research" }
+      }
+    },
+    "bundesland": {
+      "label": "State",
+      "levels": {
+        "by": { "label": "Bavaria" },
+        "bb": { "label": "Brandenburg" },
+        "be": { "label": "Berlin" },
+        "bw": { "label": "Baden-Württemberg" },
+        "hb": { "label": "Bremen" },
+        "he": { "label": "Hesse" },
+        "hh": { "label": "Hamburg" },
+        "mv": { "label": "Mecklenburg-Western Pomerania" },
+        "ni": { "label": "Lower Saxony" },
+        "nw": { "label": "North Rhine-Westphalia" },
+        "pool": { "label": "Saarland, Saxony-Anhalt", "pooledNote": "too little data for a state of its own" },
+        "rp": { "label": "Rhineland-Palatinate" },
+        "sh": { "label": "Schleswig-Holstein" },
+        "sn": { "label": "Saxony" },
+        "th": { "label": "Thuringia" }
+      }
+    },
+    "size": {
+      "label": "Size",
+      "hint": "authorised representatives, not employees",
+      "levels": {
+        "1": { "label": "1 authorised representative" },
+        "2-4": { "label": "2 to 4" },
+        "5-9": { "label": "5 to 9" },
+        "10plus": { "label": "10 or more" }
+      }
+    },
+    "textmenge": {
+      "label": "Text length of your homepage",
+      "levels": {
+        "q1": { "label": "short", "example": "short as a business card" },
+        "q2": { "label": "quite short", "example": "a few paragraphs" },
+        "q3": { "label": "medium", "example": "about one screen" },
+        "q4": { "label": "quite long", "example": "several screens" },
+        "q5": { "label": "long", "example": "very long, many pages of text" }
+      }
+    }
+  }
+}

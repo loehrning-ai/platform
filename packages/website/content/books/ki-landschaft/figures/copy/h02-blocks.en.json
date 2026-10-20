@@ -1,0 +1,51 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "roh",
+        "label": "All ads",
+        "text": "I counted them on three portals from late February to mid June 2026.",
+        "numeral": "{{h02-blocks.raw_ads}}",
+        "claim": "Ads with an AI word or data scientist in the title.",
+        "unit": "1 block = 1% of all ads",
+        "variant": "firm_title"
+      },
+      {
+        "id": "dubletten",
+        "label": "Duplicates out",
+        "text": "Same firm, same title: {{h02-blocks.dup_ads}} ads count only once.",
+        "numeral": "{{h02-blocks.dup_share_raw}}",
+        "claim": "More than four in ten ads are copies.",
+        "unit": "1 block = 1% of all ads, rounded to whole blocks",
+        "variant": "firm_title"
+      },
+      {
+        "id": "klassen",
+        "label": "Four groups",
+        "text": "Students, gig work, intermediaries and business roles answer a different question.",
+        "numeral": "{{h02-blocks.groups_ads}}",
+        "claim": "Four more groups drop out.",
+        "unit": "1 block = 1% of all ads, rounded to whole blocks",
+        "variant": "firm_title"
+      },
+      {
+        "id": "technisch",
+        "label": "Technical jobs",
+        "text": "{{h02-blocks.tech_ads}} technical job ads remain, that is {{h02-blocks.tech_share_raw}} of {{h02-blocks.raw_ads}}. An ad is not a hire.",
+        "numeral": "{{h02-blocks.tech_low}}",
+        "claim": "{{h02-blocks.tech_low}} of 100 are technical job ads.",
+        "unit": "1 block = 1% of all ads, rounded to whole blocks. Technical = keyword in the title; search-term sample of {{h02-blocks.search_terms}} terms, {{h02-blocks.english_share}} English ads.",
+        "variant": "firm_title"
+      },
+      {
+        "id": "zaehlweise",
+        "label": "Second way of counting",
+        "text": "Counting copies in the same place once leaves {{h02-blocks.tech_ads_same_place}} ads. Whether one job in two places is one role, no ad says.",
+        "numeral": "{{h02-blocks.tech_low}} to {{h02-blocks.tech_high}}",
+        "claim": "Between {{h02-blocks.tech_low}} and {{h02-blocks.tech_high}} of 100 are technical job ads.",
+        "unit": "1 block = 1% of all ads, rounded to whole blocks. Technical = keyword in the title; search-term sample of {{h02-blocks.search_terms}} terms, {{h02-blocks.english_share}} English ads.",
+        "variant": "same_place"
+      }
+    ]
+  }
+}

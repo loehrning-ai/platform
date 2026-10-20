@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "plattform",
+        "label": "Protection headers by platform",
+        "text": "The platform predicts who sends protection (score {{h08-field.auc_platform}}), the firm's own features hardly do (score {{h08-field.auc_firm}}).",
+        "numeral": "{{h08-field.zero_all}}",
+        "claim": "On Apache they are missing at {{h08-field.zero_apache}}, behind Cloudflare at {{h08-field.zero_cloudflare}}.",
+        "unit": "1 square = 0.1% of {{h08-field.firms_headers}} websites"
+      },
+      {
+        "id": "banner",
+        "label": "The same server version",
+        "text": "Of these {{h08-field.banner_sites}} websites, {{h08-field.banner_enforced}} enforce the mail protection rule DMARC, of all others {{h08-field.other_enforced}}.",
+        "numeral": "{{h08-field.banner_share}}",
+        "claim": "Same server version, strikingly often the same mail rule.",
+        "unit": "1 square = 0.1% of {{h08-field.firms_headers}} websites"
+      },
+      {
+        "id": "dmarc",
+        "label": "Strictly set DMARC rules",
+        "text": "Strict means: mail without proof of sender is rejected (DMARC). That fits shared defaults, we have not tested it.",
+        "numeral": "{{h08-field.enforced_share_banner}}",
+        "claim": "Of {{h08-field.enforced_all}} strict mail rules, {{h08-field.enforced_share_banner}} come from just {{h08-field.banner_sites}} websites.",
+        "unit": "1 square = 0.1% of {{h08-field.enforced_all}} policies"
+      }
+    ]
+  }
+}

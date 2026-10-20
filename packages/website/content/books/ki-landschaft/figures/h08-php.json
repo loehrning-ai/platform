@@ -1,0 +1,82 @@
+{
+  "id": "h08-php",
+  "kind": "bars",
+  "title": "Welche PHP-Version Server zeigen",
+  "alt": "Bei 809 Websites nennt der Server seine PHP-Version. Bei 48 Prozent davon hat das PHP-Projekt den Support beendet, im Median vor 3,4 Jahren.",
+  "caption": "Verteilung der gezeigten PHP-Versionen, 809 Websites. Supportende heißt nicht ungepatcht: Distributionen können Korrekturen nachliefern.",
+  "n": 809,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan 16.03. bis 04.05.2026, Antwort-Header)",
+  "asOf": "2026-10-19",
+  "limitation": "Nur Server, die ihre Version zeigen, kommen vor; Supportende ist nicht gleich ungepatcht.",
+  "sourceLine": "n = 809 Websites mit sichtbarer PHP-Version · Scan 2026-03 bis 05 · Grenze: Supportende, nicht ungepatcht",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 0
+    },
+    "items": [
+      {
+        "id": "p0",
+        "label": "5.x",
+        "value": 6.6749,
+        "n": 809
+      },
+      {
+        "id": "p1",
+        "label": "7.0 bis 7.3",
+        "value": 8.6527,
+        "n": 809
+      },
+      {
+        "id": "p2",
+        "label": "7.4",
+        "value": 17.7998,
+        "n": 809
+      },
+      {
+        "id": "p3",
+        "label": "8.0",
+        "value": 4.3263,
+        "n": 809
+      },
+      {
+        "id": "p4",
+        "label": "8.1",
+        "value": 10.3832,
+        "n": 809
+      },
+      {
+        "id": "p5",
+        "label": "8.2",
+        "value": 23.6094,
+        "n": 809
+      },
+      {
+        "id": "p6",
+        "label": "8.3",
+        "value": 19.2831,
+        "n": 809
+      },
+      {
+        "id": "p7",
+        "label": "8.4 und neuer",
+        "value": 9.2707,
+        "n": 809
+      }
+    ],
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 809,
+    "base": "Websites mit gespeicherten Headern, die eine PHP-Version nennen",
+    "window": "2026-03-16 bis 2026-05-04",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan 16.03. bis 04.05.2026, Antwort-Header)",
+    "hero": "H08",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
+  }
+}

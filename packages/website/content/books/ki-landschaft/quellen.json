@@ -1,0 +1,416 @@
+{
+ "schema": "quellen/1",
+ "asOf": "2026-10-19",
+ "methodVersion": "v1-lab-2026-10-19",
+ "rows": [
+  {
+   "figure": "h05-dots",
+   "chapter": 1,
+   "hero": "H05",
+   "n": 89,
+   "base": "Firmenwebsites mit eigener Adresse, die zweimal gescannt wurden",
+   "window": "2026-03-16 bis 2026-04-12",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 840 Websites, zweimal gescannt · 16 Tage Abstand im Median · Grenze: Auswahl nicht zufällig; welche Kamera stimmt, ist offen · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h05-ladder",
+   "chapter": 1,
+   "hero": "H05",
+   "n": 865,
+   "base": "Firmenwebsites mit eigener Adresse, von beiden Abrufwegen gelesen",
+   "window": "2026-03-16 bis 2026-04-12",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 865 Websites, zwei Kameras · 16.03. bis 12.04.2026 · Grenze: welche Kamera stimmt, ist offen · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h05-waterfall",
+   "chapter": 1,
+   "hero": "H05",
+   "n": 37429,
+   "base": "erreichbare Firmenwebsites, dann nur eigene Adresse, dann nach Land gewichtet",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 37.429 erreichbare Seiten, 25.581 mit eigener Adresse · Scan 2026-03 bis 05 · Grenze: Messung hängt an Adresse und Gewicht · Wird mit geprüften Websites neu gerechnet."
+  },
+  {
+   "figure": "h01-bars",
+   "chapter": 2,
+   "hero": "H01",
+   "n": 21404,
+   "base": "Startseiten mit eigener Domain und gelesenem Text, nach Textlänge in fünf gleich große Gruppen",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.404 Startseiten mit eigener Domain und Text · Scan 2026-03 bis 05 · Grenze: Zusammenhang, keine Ursache · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h01-dose",
+   "chapter": 2,
+   "hero": "H01",
+   "n": 21402,
+   "base": "Startseiten mit eigener Domain und Text; Gruppen nach Zahl der 41 übrigen Merkmale",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.402 Startseiten, 41 Merkmale · Scan 2026-03 bis 05 · Grenze: Zusammenhang; Textmenge hier rausgerechnet · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h01-field",
+   "chapter": 2,
+   "hero": "H01",
+   "n": 21404,
+   "base": "Startseiten mit eigener Domain und gelesenem Text, nach Textlänge in fünf gleich große Gruppen",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.404 Startseiten · Scan 2026-03 bis 05 · Grenze: Zusammenhang, keine Ursache · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h01-friends",
+   "chapter": 2,
+   "hero": "H01",
+   "n": 21402,
+   "base": "Startseiten mit eigener Domain und Text; 10 Stufen der Textlänge",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.402 Startseiten · Scan 2026-03 bis 05 · Grenze: Zusammenhang; Fußzeilen fehlen · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h01-net",
+   "chapter": 2,
+   "hero": "H01",
+   "n": 21402,
+   "base": "Startseiten mit eigener Domain und Text (Textkamera), 60 Merkmale mit 1 bis 99 Prozent Verbreitung",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.402 Startseiten, 60 Merkmale · Scan 2026-03 bis 05 · Grenze: Zusammenhang; nur Hauptinhalt der Seite · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "rand-kap2",
+   "chapter": 2,
+   "hero": "M2",
+   "n": 21402,
+   "base": "Startseiten mit eigener Domain und Text",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.402 · 2026-03 bis 2026-05 · Grenze: Thema = 5 Nennungen oder Überschrift"
+  },
+  {
+   "figure": "c3",
+   "chapter": 3,
+   "hero": "C3",
+   "n": 64,
+   "base": "Firmenwebsites, die das Wort KI erwähnen; 269 Startseiten von Hand gelesen",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 269 gelesene Startseiten, davon 64 mit KI-Wort · Scan 2026-03 bis 05 · Grenze: Auswahl und Urteil eines KI-Assistenten, Gegenprüfung steht aus"
+  },
+  {
+   "figure": "c3-evidence",
+   "chapter": 3,
+   "hero": "C3",
+   "n": 1112,
+   "base": "Firmenwebsites, die das Wort KI erwähnen; 269 Startseiten von Hand gelesen",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 1.112 Seiten mit KI-Wort · Scan 2026-03 bis 05 · Grenze: Hinweise aus Signalen, ungeprüft"
+  },
+  {
+   "figure": "h04-dumbbell",
+   "chapter": 3,
+   "hero": "H04",
+   "n": 21402,
+   "base": "Startseiten von KI-Beratern und Firmenwebsites mit eigener Domain und Text",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 980 Berater, 21.402 Firmen · Scan 2026-03 bis 05 · Grenze: Berater sind auf KI ausgewählt · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h04-field",
+   "chapter": 3,
+   "hero": "H04",
+   "n": 21402,
+   "base": "Firmenwebsites mit eigener Domain und Text",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.402 Startseiten, davon 39 mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele IT-Anbieter · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h04-forest",
+   "chapter": 3,
+   "hero": "H04",
+   "n": 39,
+   "base": "Firmenwebsites mit eigener Domain und Text",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 39 Seiten mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele Seiten von IT-Anbietern · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h07-curve",
+   "chapter": 3,
+   "hero": "H07",
+   "n": 4574,
+   "base": "Startseiten mit eigener Domain, Text und ausdrücklichem Datum im Haupttext",
+   "window": "2026-04-01 bis 2026-04-09",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 4.574 datierte Startseiten · Scan 2026-04 · Grenze: Frische, nicht Vernachlässigung; nur 21 Prozent zeigen ein Datum · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "h07-field",
+   "chapter": 3,
+   "hero": "H07",
+   "n": 4574,
+   "base": "Startseiten mit eigener Domain, Text und ausdrücklichem Datum",
+   "window": "2026-04-01 bis 2026-04-09",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 4.574 datierte Startseiten · Scan 2026-04 · Grenze: Rohzahlen; nur 21 Prozent zeigen ein Datum · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "rand-kap3",
+   "chapter": 3,
+   "hero": "M3",
+   "n": 18541,
+   "base": "Startseiten mit eigener Domain und Text",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "neutral",
+   "sourceLine": "n = 18.541 · 2026-03 bis 2026-05 · Grenze: Zusammenhang; gerundet, nicht übertrieben"
+  },
+  {
+   "figure": "h02-blocks",
+   "chapter": 4,
+   "hero": "H02",
+   "n": 10088,
+   "base": "Anzeigen in Deutschland mit KI-Wort oder Data Scientist im Titel, LinkedIn, Indeed, Glassdoor",
+   "window": "2026-02-28 bis 2026-06-16",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "Quelle: 10.088 Stellenanzeigen, gesammelt 28.02. bis 16.06.2026. Technisch heißt: Stichwort im Titel. Eine Anzeige ist keine Einstellung."
+  },
+  {
+   "figure": "h02-gap",
+   "chapter": 4,
+   "hero": "H02",
+   "n": 4840,
+   "base": "verschiedene Stellen (Firma und Titel) mit Anzeigentext, Deutschland",
+   "window": "2026-02-28 bis 2026-06-16",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "n = 4.840 Anzeigen mit LLM oder GenAI im Text · 28.02. bis 16.06.2026 · Grenze: nennen, nicht verlangen; je Portal 37 bis 54"
+  },
+  {
+   "figure": "h02-gap-portal",
+   "chapter": 4,
+   "hero": "H02",
+   "n": 4840,
+   "base": "verschiedene Stellen mit LLM oder GenAI im Text, Deutschland",
+   "window": "2026-02-28 bis 2026-06-16",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "n = 4.840 Anzeigen · 28.02. bis 16.06.2026 · Grenze: Portalmix vom Scraper gewählt"
+  },
+  {
+   "figure": "h02-ladder",
+   "chapter": 4,
+   "hero": "H02",
+   "n": 5113,
+   "base": "verschiedene Stellen (Firma und Titel), Deutschland, drei Portale",
+   "window": "2026-02-28 bis 2026-06-16",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "n = 5.113 KI-Titel, 9.954 Arbeitgeber · 28.02. bis 16.06.2026 · Grenze: Stichwort im Titel, Text locker gelesen"
+  },
+  {
+   "figure": "h03-drift",
+   "chapter": 4,
+   "hero": "H03",
+   "n": 5344,
+   "base": "verschiedene Stellen (Arbeitgeber und Titel), Titel mit KI-Wort, LinkedIn und Indeed",
+   "window": "2026-03-02 bis 2026-06-16",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "n = 5.344 KI-Stellen, 2.474 Arbeitgeber · 02.03. bis 16.06.2026 · Grenze: Anstieg gilt auch für übrige Daten-Stellen"
+  },
+  {
+   "figure": "h03-strip",
+   "chapter": 4,
+   "hero": "H03",
+   "n": 21402,
+   "base": "vier Textsorten, dieselbe Wortliste; Firmenwebsites mit eigener Domain und Text",
+   "window": "2026-03 bis 2026-06",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 21.402 Firmenwebsites, 980 Berater, 2.474 Arbeitgeber · Scan 2026-03 bis 06 · Grenze: Nennung, nicht Einsatz; Rangfolge je Ebene lesen · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "rand-kap4",
+   "chapter": 4,
+   "hero": "M4",
+   "n": 5446,
+   "base": "verschiedene Stellen (Firma, Titel, Ort) mit bekannter Branche und Ort, Deutschland",
+   "window": "2026-02-28 bis 2026-06-16",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "n = 5.446 · 2026-02-28 bis 2026-06-16 · Grenze: Branche aus Stichwort; gilt auch ohne KI-Titel"
+  },
+  {
+   "figure": "h06-region",
+   "chapter": 5,
+   "hero": "H06",
+   "n": 24758,
+   "base": "Firmen mit eigener Domain in 394 Kreisen, Leave-Kreis-out-Kreuzvalidierung",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "firm-level, pending verified rescan",
+   "rescan": "may change",
+   "sourceLine": "n = 24.758 Firmen in 394 Kreisen · Scan 2026-03 bis 05 · Grenze: Vorhersage, keine Ursache; AUC ist stumpf für kleine Gruppen · Wird mit geprüften Websites neu gerechnet."
+  },
+  {
+   "figure": "h06-slope",
+   "chapter": 5,
+   "hero": "H06",
+   "n": 16564,
+   "base": "Firmen mit eigener Domain in Kreisen mit mindestens 60 Firmen, Kreis aus der Postleitzahl",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "firm-level, pending verified rescan",
+   "rescan": "may change",
+   "sourceLine": "n = 16.564 Firmen in 118 Kreisen · Scan 2026-03 bis 05 · Grenze: Zufallshälften; Kreis aus Postleitzahl · Wird mit geprüften Websites neu gerechnet."
+  },
+  {
+   "figure": "h10-or",
+   "chapter": 5,
+   "hero": "H10",
+   "n": 24942,
+   "base": "Firmen mit eigener Domain und Land aus dem Register",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "firm-level, pending verified rescan",
+   "rescan": "strengthens",
+   "sourceLine": "n = 40 Treffer im Osten, Textkamera · Scan 2026-03 bis 05 · Grenze: wenige Treffer; Sichtbarkeit, nicht Nutzung · Wird mit geprüften Websites neu gerechnet."
+  },
+  {
+   "figure": "h10-tiles",
+   "chapter": 5,
+   "hero": "H10",
+   "n": 24942,
+   "base": "Firmen mit eigener Domain und Land aus dem Register; Kern = per Suche gefunden, Registerzweck vorhanden",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "firm-level, pending verified rescan",
+   "rescan": "strengthens",
+   "sourceLine": "n = 24.942 Firmen mit Land · Scan 2026-03 bis 05 · Grenze: Auswahl der Stichprobe; Länder unter 5 Treffern zusammengefasst · Wird mit geprüften Websites neu gerechnet."
+  },
+  {
+   "figure": "rand-kap5",
+   "chapter": 5,
+   "hero": "M5",
+   "n": 1062,
+   "base": "Startseiten mit KI-Wort, Kreis aus der Postleitzahl",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "firm-level, pending verified rescan",
+   "rescan": "may change",
+   "sourceLine": "n = 1.062 · 2026-03 bis 2026-05 · Grenze: kein regionaler Unterschied nachweisbar"
+  },
+  {
+   "figure": "h11-field",
+   "chapter": 6,
+   "hero": "H11",
+   "n": 51716,
+   "base": "Pressemeldungen von Polizei und Feuerwehr, 494 Dienststellen, 86 % aus vier Ländern",
+   "window": "2026-02-27 bis 2026-08-10",
+   "attribution": "not applicable",
+   "rescan": "neutral",
+   "sourceLine": "n = 51.716 Meldungen von 494 Dienststellen · 27.02. bis 10.08.2026 · Grenze: Obergrenze, kein Kriminalitätsmaß"
+  },
+  {
+   "figure": "h12-null",
+   "chapter": 6,
+   "hero": "H12",
+   "n": 205,
+   "base": "Startseiten mit eigener Domain und Text, Abgleich mit dem Lobbyregister über die Website-Adresse",
+   "window": "2026-03 bis 2026-05",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "Quelle: 205 Register-Firmen von 21.402 Startseiten, März bis Mai 2026. Zuordnung nicht geprüft, wird neu gerechnet."
+  },
+  {
+   "figure": "h08-auc",
+   "chapter": 7,
+   "hero": "H08",
+   "n": 4168,
+   "base": "Websites mit gespeicherten Antwort-Headern",
+   "window": "2026-03-16 bis 2026-05-04",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 4.168 Websites mit Headern · Scan 2026-03 bis 05 · Grenze: Zusammenhang, keine Ursache"
+  },
+  {
+   "figure": "h08-field",
+   "chapter": 7,
+   "hero": "H08",
+   "n": 4168,
+   "base": "Websites mit eigener Domain und gespeicherten Antwort-Headern (16 Prozent der Basis, 71 Prozent Bayern)",
+   "window": "2026-03-16 bis 2026-05-04",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "Quelle: 4.168 Websites, gescannt März bis Mai 2026. Firma-zu-Website-Zuordnung nur etwa zur Hälfte richtig, wird neu gerechnet."
+  },
+  {
+   "figure": "h08-php",
+   "chapter": 7,
+   "hero": "H08",
+   "n": 809,
+   "base": "Websites mit gespeicherten Headern, die eine PHP-Version nennen",
+   "window": "2026-03-16 bis 2026-05-04",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n = 809 Websites mit sichtbarer PHP-Version · Scan 2026-03 bis 05 · Grenze: Supportende, nicht ungepatcht"
+  },
+  {
+   "figure": "h09-field",
+   "chapter": 7,
+   "hero": "H09",
+   "n": 4819,
+   "base": "fünf Teilmengen mit je eigener Basis (Zertifikate, Seiten, KI-Seiten, Stellentitel, Partnerlisten)",
+   "window": "2026-03 bis 2026-06",
+   "attribution": "website-level",
+   "rescan": "strengthens",
+   "sourceLine": "n je Sprosse eigen: 4.819 Zertifikate · Scan 2026-03 bis 05, Stellen bis 06-16 · Grenze: Sitz des Anbieters, nicht Ort des Servers; Teilmengen · Wird vom Rescan geprüft."
+  },
+  {
+   "figure": "rand-kap7",
+   "chapter": 7,
+   "hero": "M7",
+   "n": 25579,
+   "base": "Websites mit eigener Domain; deutsche Stellenanzeigen mit Text",
+   "window": "2026-03 bis 2026-06",
+   "attribution": "website-level",
+   "rescan": "neutral",
+   "sourceLine": "n = 25.579 · 2026-03 bis 2026-06 · Grenze: Zusammenhang; Anzeige ist keine Einstellung"
+  }
+ ],
+ "legal": [
+  {
+   "id": "eu-2024-1689",
+   "celex": "32024R1689",
+   "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32024R1689"
+  },
+  {
+   "id": "eu-2026-1744",
+   "celex": "32026R1744",
+   "url": "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32026R1744",
+   "note": "Änderung von 2024/1689, Digital-Omnibus KI, Inkrafttreten am dritten Tag nach Veröffentlichung am 24.7.2026"
+  }
+ ]
+}

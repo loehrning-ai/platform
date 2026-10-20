@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "plattform",
+        "label": "Schutz-Header nach Plattform",
+        "text": "Die Plattform sagt vorher, wer Schutz sendet (Wert {{h08-field.auc_platform}}), die Merkmale der Firma kaum (Wert {{h08-field.auc_firm}}).",
+        "numeral": "{{h08-field.zero_all}}",
+        "claim": "Auf Apache fehlen sie bei {{h08-field.zero_apache}}, hinter Cloudflare bei {{h08-field.zero_cloudflare}}.",
+        "unit": "1 Quadrat = 0,1 % von {{h08-field.firms_headers}} Websites"
+      },
+      {
+        "id": "banner",
+        "label": "Dieselbe Serverversion",
+        "text": "Von diesen {{h08-field.banner_sites}} Websites erzwingen {{h08-field.banner_enforced}} die Mail-Schutzregel DMARC, bei allen anderen {{h08-field.other_enforced}}.",
+        "numeral": "{{h08-field.banner_share}}",
+        "claim": "Dieselbe Serverversion, auffällig oft dieselbe Mail-Regel.",
+        "unit": "1 Quadrat = 0,1 % von {{h08-field.firms_headers}} Websites"
+      },
+      {
+        "id": "dmarc",
+        "label": "Streng gesetzte DMARC-Regeln",
+        "text": "Streng heißt: Mails ohne Absenderbeweis werden abgelehnt (DMARC). Das passt zu gemeinsamen Voreinstellungen, geprüft haben wir es nicht.",
+        "numeral": "{{h08-field.enforced_share_banner}}",
+        "claim": "Von {{h08-field.enforced_all}} strengen Mail-Regeln stammen {{h08-field.enforced_share_banner}} von nur {{h08-field.banner_sites}} Websites.",
+        "unit": "1 Quadrat = 0,1 % von {{h08-field.enforced_all}} Regeln"
+      }
+    ]
+  }
+}

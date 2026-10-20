@@ -143,7 +143,9 @@ const LOCKUP_FONT_STACK =
  * On scroll the tile tips a few degrees, and the wordmark's own leading L
  * fades and folds away while the rest of the word slides toward the tile, so
  * the tile's L takes its place: "L" + "OEHRNING.AI". The leading L keeps its
- * layout box and only its transform changes, so the header never reflows.
+ * layout box and only its transform changes, so the header never reflows. The slide stops 0.8em
+ * short of the full fold, which leaves a gap of about 8px between the tile and the O: the tile
+ * never touches the word.
  * The distances are in em, so the move is the same at every wordmark size.
  * Reduced motion keeps the complete lockup static.
  *
@@ -166,7 +168,7 @@ function LogoWordmark({
   const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
   const leadingLOpacity = useTransform(scrollY, [40, 120], [1, 0]);
   const leadingLScale = useTransform(scrollY, [40, 120], [1, 0]);
-  const remainderOffset = useTransform(scrollY, [40, 120], ["0em", "-1em"]);
+  const remainderOffset = useTransform(scrollY, [40, 120], ["0em", "-0.8em"]);
 
   return (
     <Link
@@ -660,7 +662,7 @@ export function Nav() {
                   routePathname === hrefPathname(link.href) ? "page" : undefined
                 }
                 className={cn(
-                  "inline-flex min-h-11 items-center whitespace-nowrap border-b-[3px] px-1 text-sm transition-colors duration-150 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                  "inline-flex min-h-11 min-w-11 items-center justify-center whitespace-nowrap border-b-[3px] px-1 text-sm transition-colors duration-150 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                   isActivePath(link.href)
                     ? "border-brand-orange text-foreground"
                     : "border-transparent text-muted-foreground",

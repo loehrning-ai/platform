@@ -1,0 +1,301 @@
+/*
+ * The insight cover page (book-landing.tsx). The band above is the poster
+ * scene; this stage is paper (Kalkweiss, Druckschwarz ink, one Mennige accent)
+ * and never borrows the band's colours. Hard edges, no gradient, no shadow.
+ * Cards: A is outlined ink, B is filled Mennige; hover (fine pointers) turns A
+ * Mennige and B Druckschwarz, press sinks 1px and flips to the other anti
+ * colour, focus is a fixed 3px Mennige ring. Targets are 56px high.
+ */
+
+.bl-stage {
+  --bl-ink: var(--color-foreground, #121212);
+  --bl-paper: var(--color-background, #f3f0e9);
+  --bl-accent: var(--color-brand-orange, #b73a15);
+  --bl-muted: var(--color-muted-foreground, #4f4640);
+
+  display: grid;
+  gap: 0.75rem;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 1rem 1rem 0;
+  color: var(--bl-ink);
+}
+
+@media (min-width: 640px) {
+  .bl-stage {
+    padding: 1.5rem 1.5rem 0;
+  }
+}
+
+/* Wide screens: the reel (poster or film) takes the row, the two cards sit under it side by side. */
+@media (min-width: 1024px) {
+  .bl-stage {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    row-gap: 1rem;
+  }
+
+  .bl-stage > .cr,
+  .bl-stage > .bl-reel {
+    grid-column: 1 / -1;
+  }
+
+  .bl-stage > .bl-link {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Phones: the stage starts right under the compact title band; the reel is full-bleed, the cards keep the gutter. */
+@media (max-width: 639px) {
+  .bl-stage {
+    padding-top: 0;
+    gap: 0.5rem;
+  }
+
+  .bl-stage > .cr {
+    margin-inline: -1rem;
+  }
+
+  /* "Kapitel 1 lesen" is pinned above the tab bar, so the way in is on the first screen at 390x844. The actions
+     dissolve into the stage grid so the sticky card is bounded by the whole stage, not by its own row. */
+  .bl-actions {
+    display: contents;
+  }
+
+  .bl-card--outline[data-book-start] {
+    position: sticky;
+    bottom: calc(var(--tabbar-h, 3.5rem) + env(safe-area-inset-bottom, 0px) + 0.5rem);
+    z-index: 5;
+    margin-top: 0.25rem;
+  }
+}
+
+.bl-numeral {
+  margin: 0;
+  font-size: min(33.85vw, 132px);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .bl-numeral {
+    font-size: clamp(132px, 13vw, 200px);
+  }
+}
+
+.bl-claim {
+  max-width: 24ch;
+  margin: 0.375rem 0 0.5rem;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .bl-claim {
+    font-size: 2rem;
+  }
+}
+
+.bl-notes {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.bl-unit {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--bl-muted);
+}
+
+.bl-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bl-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.bl-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0 1rem;
+  border: 2px solid var(--bl-ink);
+  border-radius: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bl-card--outline {
+  background: var(--bl-paper);
+  color: var(--bl-ink);
+}
+
+.bl-card--filled {
+  border-color: var(--bl-accent);
+  background: var(--bl-accent);
+  color: var(--bl-paper);
+}
+
+.bl-card:focus-visible,
+.bl-link:focus-visible {
+  outline: 3px solid var(--bl-accent);
+  outline-offset: 2px;
+}
+
+.bl-card--filled:focus-visible {
+  outline-color: var(--bl-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bl-card--outline:hover {
+    border-color: var(--bl-accent);
+    background: var(--bl-accent);
+    color: var(--bl-paper);
+  }
+
+  .bl-card--filled:hover {
+    border-color: var(--bl-ink);
+    background: var(--bl-ink);
+  }
+}
+
+.bl-card--outline:active {
+  border-color: var(--bl-ink);
+  background: var(--bl-ink);
+  color: var(--bl-paper);
+  transform: translateY(1px);
+}
+
+.bl-card--filled:active {
+  border-color: var(--bl-ink);
+  background: var(--bl-paper);
+  color: var(--bl-ink);
+  transform: translateY(1px);
+}
+
+.bl-card-note {
+  margin: 0;
+  padding: 0.75rem 0;
+  font-size: 0.9375rem;
+  color: var(--bl-muted);
+}
+
+.bl-link {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  min-height: 2.75rem;
+  padding: 0 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--bl-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bl-link:hover {
+    background: var(--bl-accent);
+    color: var(--bl-paper);
+    text-decoration-color: transparent;
+  }
+}
+
+.bl-link:active {
+  background: var(--bl-ink);
+  color: var(--bl-paper);
+  transform: translateY(1px);
+}
+
+.bl-body {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  color: var(--bl-ink, var(--color-foreground, #121212));
+}
+
+@media (min-width: 640px) {
+  .bl-body {
+    padding-inline: 1.5rem;
+  }
+}
+
+.bl-h2 {
+  margin: 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.bl-text {
+  max-width: 62ch;
+  margin: 0.5rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.bl-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0 0;
+  padding: 0.75rem 0 0;
+  border-top: 2px solid var(--color-foreground, #121212);
+}
+
+.bl-fact {
+  display: flex;
+  flex-direction: column-reverse;
+  min-width: 0;
+}
+
+.bl-fact dt {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--color-muted-foreground, #4f4640);
+}
+
+.bl-fact dd {
+  margin: 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phones: the title band is the caps line and one line of title; the reel starts right under it. */
+@media (max-width: 639px) {
+  [data-cover-band].bl-band .poster-title {
+    font-size: 2.25rem;
+    line-height: 1;
+  }
+}
+
+/* The narrowest phones (320): the poster's numeral, claim (up to four lines) and unit line must all fit the reel box. */
+@media (max-width: 359px) {
+  .bl-numeral {
+    font-size: min(30vw, 132px);
+  }
+
+  .bl-claim {
+    font-size: 1.375rem;
+  }
+}

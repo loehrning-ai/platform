@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "alle",
+        "label": "All homepages",
+        "text": "Of {{h04-dumbbell.firm_pages}} firm homepages, {{h04-forest.sov_pages}} write about digital sovereignty or data sovereignty.",
+        "numeral": "{{h04-dumbbell.sov_raw}}",
+        "claim": "Digital sovereignty appears on few homepages.",
+        "unit": "1 square = 0.1% of {{h04-field.n}} homepages"
+      },
+      {
+        "id": "zoom",
+        "label": "Zoom on these pages",
+        "text": "On all other pages only {{h04-forest.ki_share_without}} say AI. Most of these belong to IT and cloud vendors.",
+        "numeral": "{{h04-forest.sov_ki_share}}",
+        "claim": "{{h04-forest.sov_ki_pages}} of {{h04-forest.sov_pages}} also say AI.",
+        "unit": "1 square = 1 page with sovereignty"
+      },
+      {
+        "id": "dsgvo",
+        "label": "For comparison, GDPR",
+        "text": "{{h04-forest.dsgvo_ki_share}} of the {{h04-forest.dsgvo_pages}} GDPR pages say AI. With equal text volume the difference is zero, anything from {{h04-forest.dsgvo_or.range}} fits.",
+        "numeral": "{{h04-forest.dsgvo_or}}",
+        "claim": "With GDPR we see no difference when the text volume is equal.",
+        "unit": "1 square = 0.1% of {{h04-forest.dsgvo_pages}} pages with GDPR"
+      }
+    ]
+  }
+}

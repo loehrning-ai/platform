@@ -1,0 +1,30 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "alle",
+        "label": "Alle Startseiten",
+        "text": "Von {{h04-dumbbell.firm_pages}} Firmenstartseiten schreiben {{h04-forest.sov_pages}} von digitaler Souveränität oder Datenhoheit.",
+        "numeral": "{{h04-dumbbell.sov_raw}}",
+        "claim": "Digitale Souveränität steht auf wenigen Startseiten.",
+        "unit": "1 Quadrat = 0,1 % von {{h04-field.n}} Startseiten"
+      },
+      {
+        "id": "zoom",
+        "label": "Zoom auf diese Seiten",
+        "text": "Bei allen anderen Seiten sagen nur {{h04-forest.ki_share_without}} KI. Die meisten dieser Seiten gehören IT- und Cloud-Anbietern.",
+        "numeral": "{{h04-forest.sov_ki_share}}",
+        "claim": "{{h04-forest.sov_ki_pages}} von {{h04-forest.sov_pages}} sagen auch KI.",
+        "unit": "1 Quadrat = 1 Seite mit Souveränität"
+      },
+      {
+        "id": "dsgvo",
+        "label": "Zum Vergleich die DSGVO",
+        "text": "{{h04-forest.dsgvo_ki_share}} der {{h04-forest.dsgvo_pages}} Seiten mit DSGVO sagen KI. Bei gleicher Textmenge ist der Unterschied null, alles von {{h04-forest.dsgvo_or.range}} ist drin.",
+        "numeral": "{{h04-forest.dsgvo_or}}",
+        "claim": "Bei der DSGVO sehen wir keinen Unterschied, wenn die Textmenge gleich ist.",
+        "unit": "1 Quadrat = 0,1 % von {{h04-forest.dsgvo_pages}} Seiten mit DSGVO"
+      }
+    ]
+  }
+}

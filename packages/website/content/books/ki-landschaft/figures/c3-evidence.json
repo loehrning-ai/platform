@@ -1,0 +1,50 @@
+{
+  "id": "c3-evidence",
+  "kind": "bars",
+  "title": "Welche Belege es gibt",
+  "alt": "Anteil der Seiten mit Textmuster-Treffer für das Wort KI, die eine bestimmte Spur zeigen: Chat-Widget oder KI-Werkzeug und Hinweis auf maschinelles Lernen. KI-Stellen und KI-Regeln waren zu selten, um einen Anteil zu nennen. Eine Seite kann mehrere Spuren zeigen.",
+  "caption": "Anteil an 1.112 Seiten, bei denen das Textmuster das Wort KI fand. Mehrfachnennung möglich. KI-Stellen und KI-Regeln waren selten und nicht belastbar.",
+  "n": 1112,
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+  "asOf": "2026-10-18",
+  "limitation": "Textmuster im Quelltext. Ein Chat-Widget sagt nicht, ob KI dahintersteckt. Gegen gelesene Startseiten trafen die Muster in 28 % der Fälle und fanden 25 % der Seiten mit konkretem Gebrauch.",
+  "sourceLine": "n = 1.112 Seiten mit KI-Wort · Scan 2026-03 bis 05 · Grenze: Hinweise aus Signalen, ungeprüft",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "tool",
+        "label": "Chat-Widget oder KI-Werkzeug",
+        "value": 13.4,
+        "lo": 11.52,
+        "hi": 15.53,
+        "n": 1112
+      },
+      {
+        "id": "ml",
+        "label": "Hinweis auf maschinelles Lernen oder Fallstudie",
+        "value": 8.72,
+        "lo": 7.2,
+        "hi": 10.53,
+        "n": 1112
+      }
+    ],
+    "sort": "desc"
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "n": 1112,
+    "base": "Firmenwebsites, die das Wort KI erwähnen; 269 Startseiten von Hand gelesen",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026), Firmen, denen per Suche eine Website zugeordnet wurde",
+    "hero": "C3",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft"
+  }
+}

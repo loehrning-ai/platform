@@ -1,74 +1,106 @@
 {
   "bookSlug": "ki-landschaft",
-  "title": "KI im deutschen Mittelstand",
+  "title": "Von außen gesehen",
   "owner": "editorial:books",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2026-12-06",
+  "lastReviewed": "2026-10-19",
+  "nextReview": "2027-01-19",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
   "publicationStatus": "published",
-  "publicationReason": "Editorial review and public-release approval are recorded for the HTML reader and authenticated PDF.",
-  "adaptationNote": "Die offene Ausgabe entfernt Beratungsmarkt-Preisgestaltung, private Unternehmensdaten, proprietäre Scores und daraus abgeleitete Rankings. Sie nutzt stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen.",
+  "publicationReason": "Neuausgabe vom Oktober 2026 mit Aggregaten aus einer eigenen Auswertung von Firmenwebsites. Redaktionelle Freigabe durch den Herausgeber vor dem Merge.",
+  "adaptationNote": "Die Ausgabe zeigt nur Aggregate aus eigenen Auswertungen von Firmenwebsites, Stellenanzeigen und Pressemeldungen: jede Zahl mit mindestens 5 Treffern, ohne Firmennamen, Adressen, Preise, Scores und Ranglisten einzelner Firmen. Sie gilt für Firmen mit auffindbarer Website, die Rohdaten bleiben privat.",
+  "landing": {
+    "headlineRef": "h05-waterfall.weighted_share",
+    "headlineTail": "der Startseiten von Firmen mit eigener Domain schreiben das Wort KI.",
+    "sourceLine": "95-%-Intervall {{h05-waterfall.weighted_share.range}}. Nur {{h05-waterfall.audit_own}} der Firma-zu-Website-Zuordnungen stimmten. Wird mit geprüften Websites neu gerechnet.",
+    "facts": [
+      { "value": "{{h05-waterfall.base_sites}}", "label": "Firmen mit eigener Domain" },
+      { "value": "{{h02-blocks.raw_ads}}", "label": "Stellenanzeigen" },
+      { "value": "{{h11-field.releases}}", "label": "Pressemeldungen" }
+    ],
+    "explainer": {
+      "heading": "Was dich erwartet",
+      "text": "Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen, jeder mit Stichprobe, Zeitraum und Grenze. Du liest sie in acht kurzen Kapiteln und kannst am Ende selbst nachrechnen, wo du stehst."
+    },
+    "explorerChapter": "08_dein_zug"
+  },
   "chapters": [
     {
-      "slug": "01_eisberg",
-      "title": "Das Eisberg-Problem",
-      "sourceFile": "01_eisberg.md"
+      "slug": "01_zweimal_gemessen",
+      "title": "Zwei Messungen, zwei Bilder",
+      "sourceFile": "01_zweimal_gemessen.md",
+      "band": {
+        "numeral": "{{h05-dots.rescan_lost}}",
+        "claim": "Fast jeder zweite KI-Treffer fehlt bei der zweiten Messung, die den Text anders las."
+      }
     },
     {
-      "slug": "02_methodik",
-      "title": "Methodik ohne Scheingenauigkeit",
-      "sourceFile": "02_methodik.md"
+      "slug": "02_textmenge",
+      "title": "Wer viel schreibt, schreibt KI",
+      "sourceFile": "02_textmenge.md",
+      "band": {
+        "numeral": "{{h01-bars.ratio}}x",
+        "claim": "So viel öfter sagen lange Startseiten KI als kurze."
+      }
     },
     {
-      "slug": "03_reifegrad_ueberblick",
-      "title": "Evidenzbasierte Selbstprüfung",
-      "sourceFile": "03_reifegrad_ueberblick.md"
+      "slug": "03_schaufenster",
+      "title": "Im Schaufenster",
+      "sourceFile": "03_schaufenster.md",
+      "band": {
+        "numeral": "{{h04-forest.sov_ki_share}}",
+        "claim": "Wer Souveränität schreibt, sagt oft auch KI, bei der DSGVO nicht."
+      }
     },
     {
-      "slug": "04_bundesland",
-      "title": "Regionale Rahmenbedingungen",
-      "sourceFile": "04_bundesland.md"
+      "slug": "04_stellen_namen",
+      "title": "Stellen und Namen",
+      "sourceFile": "04_stellen_namen.md",
+      "band": {
+        "numeral": "{{h02-blocks.tech_low}} bis {{h02-blocks.tech_high}}",
+        "claim": "von 100 Anzeigen zu KI und Daten sind technische Stellen."
+      }
     },
     {
-      "slug": "05_branchen",
-      "title": "Branchenmuster als Hypothesen",
-      "sourceFile": "05_branchen.md"
+      "slug": "05_land",
+      "title": "Das Land ist keine Rangliste",
+      "sourceFile": "05_land.md",
+      "band": {
+        "numeral": "{{h06-slope.top_b}}x",
+        "claim": "Die Spitzenkreise der ersten Hälfte liegen in der zweiten beim Durchschnitt."
+      }
     },
     {
-      "slug": "06_eu_ki_verordnung",
-      "title": "EU-KI-Verordnung und Artikel 4",
-      "sourceFile": "06_eu_ki_verordnung.md"
+      "slug": "06_stimmen",
+      "title": "Wer sonst redet",
+      "sourceFile": "06_stimmen.md",
+      "band": {
+        "numeral": "{{h12-null.ki_ratio}}x",
+        "claim": "So viel öfter schreiben Register-Firmen KI als vergleichbare Firmen."
+      }
     },
     {
-      "slug": "07_schnellstart",
-      "title": "Schnellstart in sieben Schritten",
-      "sourceFile": "07_schnellstart.md"
+      "slug": "07_schluessel",
+      "title": "Wem der Schlüssel gehört",
+      "sourceFile": "07_schluessel.md",
+      "band": {
+        "numeral": "{{h09-field.cert_eu_strict}}",
+        "claim": "der Zertifikate stellt eine europäisch geführte Stelle aus."
+      }
     },
     {
-      "slug": "08_fahrplan",
-      "title": "Fahrplan für die nächsten Monate",
-      "sourceFile": "08_fahrplan.md"
+      "slug": "08_dein_zug",
+      "title": "Dein Zug",
+      "sourceFile": "08_dein_zug.md",
+      "band": {
+        "numeral": "{{h05-waterfall.weighted_share}}",
+        "claim": "der Startseiten schreiben KI. Rechne nach, wo du stehst."
+      }
     },
     {
-      "slug": "09_ausblick",
-      "title": "Ausblick",
-      "sourceFile": "09_ausblick.md"
-    },
-    {
-      "slug": "10_anhang",
-      "title": "Anhang",
-      "sourceFile": "10_anhang.md"
-    }
-  ],
-  "droppedChapters": [
-    {
-      "sourceFile": "06_beratungsmarkt.md",
-      "reason": "commercial-price-positioning"
-    },
-    {
-      "sourceFile": "07_beratungskosten.md",
-      "reason": "commercial-price-positioning"
+      "slug": "09_quellen",
+      "title": "Quellen, Stand, Grenzen",
+      "sourceFile": "09_quellen.md"
     }
   ]
 }

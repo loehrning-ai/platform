@@ -1,0 +1,150 @@
+{
+  "id": "rand-kap7",
+  "kind": "bars",
+  "title": "Sechs von hundert Websites ohne HTTPS, KI-Regeln in Anzeigen selten",
+  "alt": "Sechs von hundert Websites ohne HTTPS, KI-Regeln in Anzeigen selten. Websites ohne HTTPS: 6,1 %; im dünnsten Textfünftel ohne HTTPS: 16,9 %; KI-Stellen, die KI-Regeln nennen: 5,4 %; übrige Daten-Stellen, die KI-Regeln nennen: 0,8 %.",
+  "caption": "Randnotiz: Websites ohne HTTPS 6,1 % (n = 25.579); im dünnsten Textfünftel ohne HTTPS 16,9 % (n = 4.283); KI-Stellen, die KI-Regeln nennen 5,4 % (n = 2.663); übrige Daten-Stellen, die KI-Regeln nennen 0,8 % (n = 11.479).",
+  "n": 25579,
+  "source": "Eigene Auswertung von Firmenwebsites und Stellenanzeigen mit Standort Deutschland",
+  "asOf": "2026-10-19",
+  "limitation": "Ohne HTTPS heißt: die gespeicherte Endadresse beginnt mit http, das schließt Abrufe mit Zertifikatsfehler und dünne Seiten ein. Anzeigen nennen die Regeln, sie verlangen sie nicht.",
+  "sourceLine": "n = 25.579 · 2026-03 bis 2026-06 · Grenze: Zusammenhang; Anzeige ist keine Einstellung",
+  "data": {
+    "orientation": "horizontal",
+    "fmt": {
+      "style": "percent",
+      "digits": 1
+    },
+    "items": [
+      {
+        "id": "ohne_https",
+        "label": "Websites ohne HTTPS",
+        "value": 6.05184,
+        "lo": 5.76617,
+        "hi": 6.35071,
+        "n": 25579
+      },
+      {
+        "id": "ohne_https_duenn",
+        "label": "im dünnsten Textfünftel ohne HTTPS",
+        "value": 16.85734,
+        "lo": 15.76594,
+        "hi": 18.00815,
+        "n": 4283
+      },
+      {
+        "id": "regeln_ki",
+        "label": "KI-Stellen, die KI-Regeln nennen",
+        "value": 5.36988,
+        "lo": 4.57619,
+        "hi": 6.29215,
+        "n": 2663
+      },
+      {
+        "id": "regeln_andere",
+        "label": "übrige Daten-Stellen, die KI-Regeln nennen",
+        "value": 0.81889,
+        "lo": 0.66968,
+        "hi": 1.001,
+        "n": 11479
+      }
+    ],
+    "max": 100,
+    "sort": "none"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 25579,
+    "base": "Websites mit eigener Domain; deutsche Stellenanzeigen mit Text",
+    "window": "2026-03 bis 2026-06",
+    "source": "Eigene Auswertung von Firmenwebsites und Stellenanzeigen mit Standort Deutschland",
+    "hero": "M7",
+    "attribution": "website-level",
+    "rescan": "neutral",
+    "rescanNote": "Der Rescan ändert diese Zahl nicht.",
+    "values": {
+      "no_https_share": {
+        "value": 6.05184,
+        "lo": 5.76617,
+        "hi": 6.35071,
+        "n": 25579,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "https_laender_p": {
+        "value": 0.864049,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "https_laender_min": {
+        "value": 92.663,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "https_laender_max": {
+        "value": 94.4251,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "thin_no_https": {
+        "value": 16.8573,
+        "lo": 15.7659,
+        "hi": 18.0081,
+        "n": 4283,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "rules_ki": {
+        "value": 5.36988,
+        "lo": 4.57619,
+        "hi": 6.29215,
+        "n": 2663,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "rules_other": {
+        "value": 0.818887,
+        "lo": 0.669683,
+        "hi": 1.001,
+        "n": 11479,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "privsec_ki": {
+        "value": 22.944,
+        "lo": 21.3867,
+        "hi": 24.5794,
+        "n": 2663,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "privsec_other": {
+        "value": 18.2072,
+        "lo": 17.5119,
+        "hi": 18.9237,
+        "n": 11479,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      }
+    }
+  }
+}

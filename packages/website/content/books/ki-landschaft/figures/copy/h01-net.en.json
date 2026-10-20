@@ -1,0 +1,42 @@
+{
+  "stage": {
+    "steps": [
+      {
+        "id": "roh",
+        "label": "Without a text control",
+        "text": "{{h01-net.nodes}} features. Each line: at least twice as often together as chance.",
+        "numeral": "{{h01-net.edges_raw}}",
+        "claim": "That many connections without a text control.",
+        "unit": "1 dot = 1 feature, 1 line = at least twice as often together",
+        "variant": "s1"
+      },
+      {
+        "id": "drei",
+        "label": "Three text levels",
+        "text": "Compare only pages with similar text length, in three levels, and {{h01-net.edges_s3}} connections remain.",
+        "numeral": "{{h01-net.edges_s3}}",
+        "claim": "Even three text levels drop many lines.",
+        "unit": "1 dot = 1 feature, 1 line = at least twice as often together",
+        "variant": "s3"
+      },
+      {
+        "id": "zehn",
+        "label": "Ten text levels",
+        "text": "With ten levels {{h01-net.edges_s10}} connections remain, with 50 and 100 levels {{h01-net.edges_s50}} and {{h01-net.edges_s100}}.",
+        "numeral": "{{h01-net.edges_s10}}",
+        "claim": "At ten text levels the network halves.",
+        "unit": "1 dot = 1 feature, 1 line = at least twice as often together",
+        "variant": "s10"
+      },
+      {
+        "id": "ki",
+        "label": "What AI hangs on",
+        "text": "The word AI stays linked mostly to digitalisation ({{h01-net.or_digitalisierung}}), cyber ({{h01-net.or_cyber_phishing}}) and NIS2 ({{h01-net.or_nis2_esg_lksg}}).",
+        "numeral": "{{h01-net.or_digitalisierung}}",
+        "claim": "AI hangs mostly on digitalisation, cyber and NIS2.",
+        "unit": "1 dot = 1 feature, 1 line = at least twice as often together",
+        "variant": "s10"
+      }
+    ]
+  }
+}

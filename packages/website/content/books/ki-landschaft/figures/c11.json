@@ -1,0 +1,153 @@
+{
+  "id": "c11",
+  "kind": "dumbbell",
+  "title": "Stellen und Webseiten nach Bundesland",
+  "alt": "Hanteldiagramm für 14 Länder: Je Land der Index der KI-Stellen je Million Einwohner und der Index des KI-Worts auf Firmenseiten, jeweils mit dem Mittel der Länder gleich 100. Die Stellen streuen stark (Berlin 421 je Million, Schleswig-Holstein 14,2), die Webseiten viel weniger.",
+  "caption": "Spannweite zwischen höchstem und niedrigstem Land: Stellen etwa 30-fach, Firmenseiten etwa 4-fach. Rangkorrelation 0,68 (Intervall 0,18 bis 0,93, 14 Länder).",
+  "n": 6568,
+  "nNote": "14 Länder, verschiedene KI-Stellen",
+  "source": "Eigene Auswertung von Stellenanzeigen mit Standort Deutschland aus drei Portalen (LinkedIn, Indeed, Glassdoor), 18 Suchbegriffe, gesehen 28.02. bis 16.06.2026; Einwohner zum 01.01.2024: Eurostat demo_r_pjangrp3 und Destatis; Firmenseiten: eigene Auswertung",
+  "asOf": "2026-10-18",
+  "limitation": "2 Länder haben weniger als 5 Treffer auf Firmenseiten und erscheinen nur mit dem, was veröffentlicht werden darf. Länderwerte sagen nichts über einzelne Firmen (nur 14 Punkte). Stellen tragen den Ort der Stelle, Websites den Sitz der Firma. Stellen sind Anzeigen aus einer Suchbegriff-Stichprobe, keine Einstellungen. Die Spannweiten sind Verhältnisse zwischen höchstem und niedrigstem Land und hängen von einzelnen kleinen Ländern ab; ein Intervall dafür gibt es nicht.",
+  "data": {
+    "fmt": {
+      "style": "number",
+      "digits": 0
+    },
+    "scale": "log",
+    "aLabel": "KI-Stellen je Million Einwohner (Index)",
+    "bLabel": "KI-Wort auf Firmenseiten (Index)",
+    "reference": {
+      "value": 100,
+      "label": "Mittel der Länder = 100"
+    },
+    "sort": "a",
+    "rows": [
+      {
+        "id": "bw",
+        "label": "Baden-Württemberg",
+        "a": 84,
+        "b": 97
+      },
+      {
+        "id": "by",
+        "label": "Bayern",
+        "a": 145,
+        "b": 135
+      },
+      {
+        "id": "be",
+        "label": "Berlin",
+        "a": 478,
+        "b": 130
+      },
+      {
+        "id": "bb",
+        "label": "Brandenburg",
+        "a": 24,
+        "b": 123
+      },
+      {
+        "id": "hb",
+        "label": "Bremen",
+        "a": 103,
+        "b": 100
+      },
+      {
+        "id": "hh",
+        "label": "Hamburg",
+        "a": 254,
+        "b": 147
+      },
+      {
+        "id": "he",
+        "label": "Hessen",
+        "a": 113,
+        "b": 130
+      },
+      {
+        "id": "mv",
+        "label": "Mecklenburg-Vorpommern",
+        "a": 18,
+        "b": 61
+      },
+      {
+        "id": "ni",
+        "label": "Niedersachsen",
+        "a": 33,
+        "b": 81
+      },
+      {
+        "id": "nw",
+        "label": "Nordrhein-Westfalen",
+        "a": 50,
+        "b": 104
+      },
+      {
+        "id": "rp",
+        "label": "Rheinland-Pfalz",
+        "a": 23,
+        "b": 80
+      },
+      {
+        "id": "sl",
+        "label": "Saarland",
+        "a": 30,
+        "b": null
+      },
+      {
+        "id": "sn",
+        "label": "Sachsen",
+        "a": 39,
+        "b": 34
+      },
+      {
+        "id": "st",
+        "label": "Sachsen-Anhalt",
+        "a": 15,
+        "b": null
+      },
+      {
+        "id": "sh",
+        "label": "Schleswig-Holstein",
+        "a": 16,
+        "b": 101
+      },
+      {
+        "id": "th",
+        "label": "Thüringen",
+        "a": 19,
+        "b": 80
+      }
+    ]
+  },
+  "meta": {
+    "methodVersion": "v1-scan-2026-03-05",
+    "frozenOn": "2026-10-19",
+    "values": {
+      "spread_postings": {
+        "value": 29.6,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "spread_website": {
+        "value": 4.3,
+        "fmt": {
+          "style": "decimal",
+          "digits": 1
+        }
+      },
+      "rho": {
+        "value": 0.68,
+        "lo": 0.18,
+        "hi": 0.93,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      }
+    }
+  }
+}

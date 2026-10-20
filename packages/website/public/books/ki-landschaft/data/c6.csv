@@ -1,0 +1,40 @@
+Gruppe,Wert,Untergrenze,Obergrenze,n,Hinweis
+Landwirtschaft,2.89,1.24,6.59,173,
+Nahrungsmittel,,,,164,weniger als 5
+Getränkeherstellung,0,0,5.35,68,
+Bekleidung,,,,141,weniger als 5
+Druck und Vervielfältigung,1.96,0.95,3.99,357,
+Chemie,,,,119,weniger als 5
+Pharma,4.35,2.22,8.34,184,
+Gummi und Kunststoff,,,,165,weniger als 5
+Metallerzeugnisse,,,,154,weniger als 5
+Elektronik und Optik,3.68,1.8,7.41,190,
+Maschinenbau,,,,103,weniger als 5
+Energieversorgung,,,,139,weniger als 5
+Abfallwirtschaft,2.8,1.42,5.42,286,
+Hochbau,1.65,1.22,2.24,2419,
+Tiefbau,,,,170,weniger als 5
+Bauinstallation,1.24,0.76,2,1295,
+Kfz-Handel,,,,354,weniger als 5
+Großhandel,3.39,2.39,4.8,884,
+Einzelhandel,4.24,2.82,6.33,519,
+Landverkehr,2.66,1.92,3.68,1316,
+Beherbergung,3.29,2.09,5.14,547,
+Gastronomie,1.68,0.92,3.07,594,
+Verlagswesen,11.62,8.39,15.87,284,
+IT-Dienstleistungen,15.91,9.72,24.95,88,
+Banken und Finanzen,7.19,3.95,12.74,139,
+Versicherungen,4.48,2.07,9.42,134,
+Fondsmanagement und Hilfstätigkeiten,6.33,4.76,8.36,711,
+Immobilien,3.19,2.56,3.98,2380,
+Rechts- und Steuerberatung,4.17,2.54,6.76,360,
+Unternehmensberatung und PR,11.71,7.99,16.83,205,
+Architektur und Ingenieurbüros,3.1,1.64,5.79,290,
+Werbung und Marktforschung,9.09,6.02,13.5,231,
+Wach- und Sicherheitsdienste,,,,65,weniger als 5
+Gebäudebetreuung,,,,233,weniger als 5
+Büro- und Veranstaltungsdienste,5.56,2.4,12.35,90,
+Erziehung und Unterricht,3.29,1.68,6.36,243,
+Gesundheitswesen,4.58,3.28,6.37,720,
+Heime,,,,220,weniger als 5
+Sport und Freizeit,5.6,2.74,11.11,125,

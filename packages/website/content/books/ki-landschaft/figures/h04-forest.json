@@ -1,0 +1,143 @@
+{
+  "id": "h04-forest",
+  "kind": "strip",
+  "title": "Souveränität geht mit KI, DSGVO nicht",
+  "alt": "Chance, dass eine Startseite das Wort KI führt, wenn sie Souveränität schreibt: 30-fach (13,7 bis 65,7) bei gleicher Textlänge. Bei der DSGVO liegt sie bei 1,01 (0,82 bis 1,24), also bei 1.",
+  "caption": "Chancenverhältnis für das KI-Wort, bei gleicher Textlänge, mit 95-%-Intervall. Souveränität: 29 von 39 Seiten sagen KI.",
+  "n": 39,
+  "nNote": "39 Seiten mit Souveränität, 1.432 mit DSGVO",
+  "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+  "asOf": "2026-10-19",
+  "limitation": "Die 39 Seiten sind zum Teil IT- und Cloud-Anbieter. Zusammenhang, keine Ursache. Das Chancenverhältnis kontrolliert die Textlänge (Mantel-Haenszel-ähnlich über ein Modell).",
+  "sourceLine": "n = 39 Seiten mit Souveränität · Scan 2026-03 bis 05 · Grenze: Zusammenhang; viele Seiten von IT-Anbietern · Zuordnung Firma zu Website nicht geprüft, wird neu gerechnet.",
+  "data": {
+    "claim": "Souveränität geht mit KI, DSGVO nicht.",
+    "rows": [
+      {
+        "id": "sov",
+        "label": "Digitale Souveränität",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 29.99214,
+            "lo": 13.6863,
+            "hi": 65.72474,
+            "n": 39
+          }
+        ]
+      },
+      {
+        "id": "dsgvo",
+        "label": "DSGVO",
+        "marks": [
+          {
+            "layer": "or",
+            "value": 1.00838,
+            "lo": 0.81739,
+            "hi": 1.244,
+            "n": 1432
+          }
+        ]
+      }
+    ],
+    "layers": [
+      {
+        "id": "or",
+        "label": "Chancenverhältnis",
+        "shape": "ring",
+        "tone": "accent"
+      }
+    ],
+    "fmt": {
+      "style": "decimal",
+      "digits": 1
+    },
+    "scale": "log",
+    "min": 0.5,
+    "max": 100,
+    "reference": {
+      "value": 1,
+      "label": "kein Zusammenhang"
+    },
+    "finding": "or"
+  },
+  "meta": {
+    "methodVersion": "v1-lab-2026-10-19",
+    "frozenOn": "2026-10-19",
+    "n": 39,
+    "base": "Firmenwebsites mit eigener Domain und Text",
+    "window": "2026-03 bis 2026-05",
+    "source": "Eigene Auswertung von Firmenwebsites (Scan März bis Mai 2026)",
+    "hero": "H04",
+    "attribution": "website-level",
+    "rescan": "strengthens",
+    "rescanNote": "wird vom Rescan geprüft",
+    "values": {
+      "sov_pages": {
+        "value": 39.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "sov_ki_pages": {
+        "value": 29.0,
+        "n": 39,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "sov_ki_share": {
+        "value": 74.359,
+        "lo": 58.918,
+        "hi": 85.4314,
+        "n": 39,
+        "fmt": {
+          "style": "percent",
+          "digits": 0
+        }
+      },
+      "ki_share_without": {
+        "value": 4.41417,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      },
+      "sov_or": {
+        "value": 29.9921,
+        "lo": 13.6863,
+        "hi": 65.7247,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dsgvo_or": {
+        "value": 1.00838,
+        "lo": 0.817387,
+        "hi": 1.244,
+        "fmt": {
+          "style": "decimal",
+          "digits": 2
+        }
+      },
+      "dsgvo_pages": {
+        "value": 1432.0,
+        "fmt": {
+          "style": "number",
+          "digits": 0
+        }
+      },
+      "dsgvo_ki_share": {
+        "value": 7.96089,
+        "n": 1432,
+        "fmt": {
+          "style": "percent",
+          "digits": 1
+        }
+      }
+    }
+  }
+}
