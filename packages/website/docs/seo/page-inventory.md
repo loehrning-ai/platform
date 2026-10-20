@@ -60,20 +60,21 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/buecher/ki-landschaft | Von außen gesehen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | src/lib/books.ts + content/books/ki-landschaft/ | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft | Von außen gesehen | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | src/lib/books.ts + content/books/ki-landschaft/ | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
-### Buchkapitel (8)
+### Buchkapitel (9)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/buecher/ki-landschaft/01_eisberg | Die Zahl, die nicht stimmt | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/01_eisberg.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/02_sagen_zeigen | Sagen und zeigen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/02_sagen_zeigen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/03_zweimal_gemessen | Dieselbe Firma, zweimal gemessen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/03_zweimal_gemessen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/04_branche_land | Branche schlägt Land | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/04_branche_land.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/05_reden_einstellen | Reden und Einstellen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/05_reden_einstellen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/06_eu_ki_verordnung | Was seit Februar 2025 gilt | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/06_eu_ki_verordnung.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/07_pilot | Dein erster Pilot | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/07_pilot.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
-| https://loehrning.ai/buecher/ki-landschaft/08_methodik | Methode und Grenzen | Warum KI-Anteile je nach Erhebung zwischen 20 und 57 Prozent liegen, was das Wort KI auf einer Firmenwebsite… | content/books/ki-landschaft/08_methodik.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/01_zweimal_gemessen | Zwei Messungen, zwei Bilder | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/01_zweimal_gemessen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/02_textmenge | Wer viel schreibt, schreibt KI | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/02_textmenge.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/03_schaufenster | Im Schaufenster | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/03_schaufenster.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/04_stellen_namen | Stellen und Namen | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/04_stellen_namen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/05_land | Das Land ist keine Rangliste | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/05_land.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/06_stimmen | Wer sonst redet | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/06_stimmen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/07_schluessel | Wem der Schlüssel gehört | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/07_schluessel.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/08_dein_zug | Dein Zug | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/08_dein_zug.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
+| https://loehrning.ai/buecher/ki-landschaft/09_quellen | Quellen, Stand, Grenzen | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/09_quellen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
 ### Demo-Detailseiten (12)
 
