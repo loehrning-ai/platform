@@ -270,6 +270,22 @@ describe("slope", () => {
   it("offers no pin list: the lines are opaque ranks", () => {
     expect(pinItemsOf(SLOPE)).toEqual([]);
   });
+
+  it("packs the ranks closer and leaves the readout to the step card in a short stage box, and only there", () => {
+    const viewH = (markup: string): number => Number(parse(markup).documentElement.getAttribute("viewBox")?.split(" ")[3]);
+    const units = (markup: string): number => parse(markup).querySelectorAll('[data-t="unit"]').length;
+    const roomy = render(SLOPE, 1, 340, { bare: true, height: 2000 });
+    const short = render(SLOPE, 1, 340, { bare: true, height: 1 });
+    const page = render(SLOPE, 1, 340);
+    expect(viewH(short)).toBeLessThan(viewH(roomy));
+    expect(units(short)).toBe(0);
+    // A roomy stage box and the page keep the readout under the columns.
+    expect(units(roomy)).toBeGreaterThan(0);
+    expect(units(roomy)).toBe(units(page));
+    // The ranks still keep 0,8 px each: the fan of lines stays one picture, not a solid block.
+    const ys = Array.from(parse(short).querySelectorAll('line[data-id^="top"]')).map((l) => Number(l.getAttribute("y1")));
+    expect(ys[1]! - ys[0]!).toBeGreaterThanOrEqual(0.8 - 1e-6);
+  });
 });
 
 describe("nulldist", () => {

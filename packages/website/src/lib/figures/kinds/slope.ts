@@ -40,7 +40,12 @@ export function renderSlope(ctx: Ctx<SlopeData>): ReactElement {
   const xb = cx + gap / 2;
   const n = data.items;
   const colTop = head.bottom + 54;
-  const sp = flexible(ctx, colTop, 44 + 24 + (ctx.opts.bare ? 0 : 34), n * (compact ? 2.3 : 2.9), n * 1.4) / n;
+  const naturalSp = compact ? 2.3 : 2.9;
+  const below = 44 + 24 + (ctx.opts.bare ? 0 : 34);
+  // A short stage box (the phone strip): the shell's step card already says what the readout says, so the
+  // readout gives its lines to the columns, and the ranks pack closer (the lines still read as one fan).
+  const tight = ctx.opts.bare === true && ctx.opts.height !== undefined && ctx.opts.height < colTop + n * naturalSp + below;
+  const sp = flexible(ctx, colTop, tight ? 28 : below, n * naturalSp, n * (tight ? 0.8 : 1.4)) / n;
   const yA = (i: number): number => colTop + i * sp;
   const yB = (rank1: number): number => colTop + (rank1 - 1) * sp;
   const o = op(frameReveal(p));
@@ -115,7 +120,7 @@ export function renderSlope(ctx: Ctx<SlopeData>): ReactElement {
       : data.pooled.lo !== undefined && data.pooled.hi !== undefined
         ? T.secondHalf(numeralOf(data, data.pooled.b, lang), ` (${T.interval95} ${formatInterval(data.fmt, data.pooled.lo, data.pooled.hi, lang)})`)
         : "";
-  const lines = readout ? wrapText(readout, width - HM * 2, FS.small, 2) : [];
+  const lines = readout && !tight ? wrapText(readout, width - HM * 2, FS.small, 2) : [];
   if (lines.length > 0) {
     nodes.push(textLines(HM, bottom + 14, lines, 15, { size: FS.small, fill: pal.mutedLight, opacity: op(settleIn(p, 0.88, 1)), extra: { [ROLE_ATTR]: "unit" } }));
   }

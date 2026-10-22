@@ -17,7 +17,9 @@ for (const base of ["/buecher/ki-landschaft", "/en/buecher/ki-landschaft"]) {
       const geo = await page.evaluate(() => {
         const box = (el: Element | null) => (el ? el.getBoundingClientRect().toJSON() : null);
         const stage = box(document.querySelector(".hs-stage"));
-        const heads = box(document.querySelector(".cs-heads"));
+        // Below lg the claim moved into the step card: the pinned strip starts at its own top rule.
+        const headsEl = document.querySelector(".cs-heads");
+        const heads = headsEl && headsEl.getBoundingClientRect().height > 0 ? box(headsEl) : { bottom: document.querySelector("[data-cs-pin]")!.getBoundingClientRect().top };
         const blocks = Array.from(document.querySelectorAll('[data-layer="blocks"] > *')).map((el) => box(el));
         const labels = Array.from(document.querySelectorAll("[data-label]")).map((el) => box(el));
         return { stage, heads, blocks, labels };

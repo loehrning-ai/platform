@@ -31,7 +31,9 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.5rem;
-  height: var(--tabbar-h, 3.5rem);
+  /* 48px targets plus 2px air: the reader bar takes no more of the reading window than its buttons need
+     (chapter-stage.css counts the same 3.25rem in --cs-bar). */
+  height: 3.25rem;
   padding: 0 0.75rem;
 }
 

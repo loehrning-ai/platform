@@ -220,27 +220,36 @@ test.describe("chapter stage", () => {
     await expect(stage).toHaveAttribute("data-step", "0");
   });
 
-  test("the stage is pinned at 58svh with a 132px numeral and 48px buttons on a phone", async ({ page }) => {
+  test("the phone strip leaves the text at least 55 % of the screen, numerals sit in the cards, buttons are 48px", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(STAGE_PATHS[0]!, { waitUntil: "load" });
     await hydrated(page);
     const pin = page.locator("[data-chapter-stage] [data-cs-pin]").first();
     await expect(pin).toBeVisible();
+    await page.locator("[data-chapter-stage] .cs-step").nth(1).scrollIntoViewIfNeeded();
     const geometry = await pin.evaluate((el) => {
       const cs = getComputedStyle(el);
       const root = el.closest("[data-chapter-stage]") as HTMLElement;
-      const numeral = root.querySelector(".cs-numeral") as HTMLElement | null;
+      const numeral = root.querySelector(".cs-step-numeral") as HTMLElement | null;
+      const bar = document.querySelector("[data-reader-focus-bar]");
+      const barTop = bar && bar.getBoundingClientRect().height > 0 ? bar.getBoundingClientRect().top : window.innerHeight;
+      const height = el.getBoundingClientRect().height;
       return {
         position: cs.position,
-        height: el.getBoundingClientRect().height,
+        height,
+        window: (barTop - (parseFloat(cs.top) + height)) / window.innerHeight,
+        headsShown: (root.querySelector(".cs-heads") as HTMLElement).getBoundingClientRect().height > 0,
         numeralPx: numeral ? parseFloat(getComputedStyle(numeral).fontSize) : null,
         rootWidth: root.getBoundingClientRect().width,
       };
     });
     expect(geometry.position).toBe("sticky");
-    expect(Math.abs(geometry.height - 0.58 * 844), "pin height is 58svh").toBeLessThanOrEqual(2);
+    // clamp(12rem, 44svh - header - reader bar, 20rem), never taller than the figure needs.
+    expect(geometry.height, "strip height").toBeLessThanOrEqual(0.44 * 844 - 48 - 54 + 1);
+    expect(geometry.window, "reading window under the strip").toBeGreaterThanOrEqual(0.55);
+    expect(geometry.headsShown, "the pinned numeral gives way to the card numeral below lg").toBe(false);
     expect(geometry.rootWidth, "full-bleed on a phone").toBeGreaterThanOrEqual(389);
-    if (geometry.numeralPx !== null) expect(geometry.numeralPx).toBeLessThanOrEqual(132.5);
+    if (geometry.numeralPx !== null) expect(geometry.numeralPx).toBeLessThanOrEqual(56.5);
     // Below lg the stage's own control row gives way to the reader bar, the step control in the thumb zone.
     await expect(page.locator("[data-chapter-stage] .cs-ctl").first()).toBeHidden();
     await page.locator("[data-chapter-stage]").first().scrollIntoViewIfNeeded();
@@ -259,7 +268,7 @@ test.describe("chapter stage", () => {
     const report = await page.evaluate(() => {
       const root = document.querySelector("[data-chapter-stage]") as HTMLElement;
       const words = (text: string) => text.trim().split(/\s+/).filter(Boolean).length;
-      const claims = Array.from(root.querySelectorAll(".cs-claim")).map((el) => words(el.textContent ?? ""));
+      const claims = Array.from(root.querySelectorAll("[data-cs-claim]")).map((el) => words(el.textContent ?? ""));
       const cards = Array.from(root.querySelectorAll(".cs-card-text")).map((el) => words(el.textContent ?? ""));
       const mono = Array.from(root.querySelectorAll("*"))
         .filter((el) => !el.closest("svg") && /mono|courier/i.test(getComputedStyle(el).fontFamily) && (el.textContent ?? "").trim() !== "")

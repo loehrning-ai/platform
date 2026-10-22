@@ -36,6 +36,15 @@
   min-height: 0;
 }
 
+/* Below lg the pinned box is a short strip: a tablet keeps the phone layout of the figure (under the 35rem of
+   the wide variant), which is built for a short box, centred in the strip. */
+@media (max-width: 1023px) {
+  .cs[data-mode="scrub"] .hs[data-hs-stage="true"] {
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+}
+
 /* ----------------------------------------------------------------- stage */
 
 .hs-stage {
@@ -597,6 +606,20 @@
 .cs[data-mode="scrub"] .hs[data-hs-stage="true"] .hv[data-hv="segmented"] .hv-legend {
   margin: 0 0 0.125rem;
   font-size: 0.75rem;
+}
+
+/* Below lg the pin is a strip over the text window: the two buttons say what they pick, their question stays
+   their accessible name. */
+@media (max-width: 1023px) {
+  .cs[data-mode="scrub"] .hs[data-hs-stage="true"] .hv[data-hv="segmented"] .hv-legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 .cs[data-mode="scrub"] .hs[data-hs-stage="true"] .hv-ticks {

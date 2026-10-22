@@ -3,13 +3,17 @@ import { textWidth } from "@/lib/figures/svg";
 import { SourceLine, type SourceLineFields } from "@/components/book-figures/shared/source-line";
 import { StageEnhancer } from "./stage-enhancer";
 import type { StageStepCopy } from "./stage-protocol";
+import type { StripFit } from "./strip-fit";
 import "./chapter-stage.css";
 
 /**
  * The hero stage of a chapter (DIRECTION section 3): a pinned stage with the
- * figure, the giant numeral, the claim and the unit line; 3 to 4 step cards
- * that scroll past it; Weiter and Zurück; "Schritt 2 von 4" as real text; the
- * visible source line.
+ * figure and, from lg, the giant numeral; 3 to 4 step cards that scroll past it,
+ * each the words of its step (claim, sentence, unit line; below lg its numeral
+ * too); Weiter and Zurück; "Schritt 2 von 4" as real text; the visible source
+ * line. From lg the cards are a text column beside the pinned figure; below lg
+ * the pin is a strip over the text window, or, for a figure that cannot stay
+ * legible in that strip (strip-fit.ts), the stage stands inline.
  *
  * The shell is server markup. Its base layout is the scrub layout, and the
  * static layout (steps stacked with their numerals, the figure at progress 1)
@@ -35,6 +39,12 @@ export interface ChapterStageProps {
   readonly source: SourceLineFields;
   readonly locale?: "de" | "en";
   readonly csv?: readonly { readonly href: string; readonly label: string; readonly fileName: string }[];
+  /**
+   * How the figure sits in the pinned strip below lg (strip-fit.ts): the strip is no taller than the figure's
+   * smallest layout needs, and a figure that cannot keep 11px labels there makes the stage inline (steps stacked
+   * with their numerals, the figure once, full size). Without it the strip takes its full height.
+   */
+  readonly strip?: StripFit;
 }
 
 const COPY_BY_LOCALE = {
@@ -72,8 +82,12 @@ export function numeralEm(numeral: string): number {
 
 const emStyle = (numeral: string): CSSProperties => ({ "--cs-em": numeralEm(numeral) }) as CSSProperties;
 
-export function ChapterStage({ id, label, steps, children, source, csv, locale = "de" }: ChapterStageProps) {
+export function ChapterStage({ id, label, steps, children, source, csv, locale = "de", strip }: ChapterStageProps) {
   const COPY = COPY_BY_LOCALE[locale];
+  const stripStyle =
+    strip && strip.ratio !== null
+      ? ({ "--cs-fig-ratio": strip.ratio, "--cs-fig-control": `${strip.controlPx}px` } as CSSProperties)
+      : undefined;
   const total = steps.length;
   const last = total - 1;
   return (
@@ -86,6 +100,8 @@ export function ChapterStage({ id, label, steps, children, source, csv, locale =
         data-mode="static"
         data-step={last}
         data-steps={total}
+        data-strip={strip && !strip.fits ? "inline" : undefined}
+        style={stripStyle}
       >
         <div className="cs-pin" data-cs-pin>
           <div className="cs-heads">
@@ -96,24 +112,12 @@ export function ChapterStage({ id, label, steps, children, source, csv, locale =
                     {step.numeral}
                   </p>
                 ) : null}
-                {step.claim ? <p className="cs-claim" data-cs-claim>{step.claim}</p> : null}
               </div>
             ))}
           </div>
           <div className="cs-view" data-chapter-stage-view>
             {children}
           </div>
-          {steps.some((s) => s.unit) ? (
-            <p className="cs-unit" data-cs-unit>
-              {steps.map((step, i) =>
-                step.unit ? (
-                  <span key={step.id} className="cs-unit-text" data-for={i}>
-                    {step.unit}
-                  </span>
-                ) : null,
-              )}
-            </p>
-          ) : null}
           <div className="cs-ctl" role="group" aria-label={COPY.stepsAria}>
             <button
               type="button"
@@ -138,9 +142,17 @@ export function ChapterStage({ id, label, steps, children, source, csv, locale =
               <div className="cs-card">
                 <p className="cs-card-label">{COPY.step(i + 1, total)}</p>
                 {step.numeral ? <p className="cs-step-numeral" style={emStyle(step.numeral)}>{step.numeral}</p> : null}
-                {step.claim ? <p className="cs-step-claim">{step.claim}</p> : null}
+                {step.claim ? (
+                  <p className="cs-step-claim" data-cs-claim>
+                    {step.claim}
+                  </p>
+                ) : null}
                 <p className="cs-card-text">{step.text}</p>
-                {step.unit ? <p className="cs-step-unit">{step.unit}</p> : null}
+                {step.unit ? (
+                  <p className="cs-step-unit" data-cs-unit>
+                    {step.unit}
+                  </p>
+                ) : null}
               </div>
             </li>
           ))}
