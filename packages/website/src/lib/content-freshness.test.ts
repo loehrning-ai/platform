@@ -10,7 +10,7 @@ import { GET as getLlmsTxt } from "@/app/llms.txt/route";
 import { GET as getKnowledgeGraph } from "@/app/api/knowledge-graph.json/route";
 import { generateMetadata as generateEuAiActGrundlagenMetadata } from "@/app/blog/eu-ai-act-grundlagen/page";
 import { generateMetadata as generateKiInDerAusbildungMetadata } from "@/app/blog/ki-in-der-ausbildung/page";
-import { generateMetadata as generateDemoMetadata } from "@/app/demos/[slug]/page";
+import { demoMetadata } from "@/app/demos/_lib/demo-route";
 import { demos } from "./demos";
 
 type ArticleOpenGraph = {
@@ -120,9 +120,7 @@ describe("blog OpenGraph article freshness meta (public-content contract)", () =
 describe("dated catalog pages emit article:modified_time (public-content contract)", () => {
   it("every /demos/:slug emits modifiedTime from the catalog lastReviewed", async () => {
     for (const demo of demos) {
-      const pageMeta = await generateDemoMetadata({
-        params: Promise.resolve({ slug: demo.slug }),
-      });
+      const pageMeta = await demoMetadata(demo.slug);
       const og = pageMeta.openGraph as ArticleOpenGraph | undefined;
       expect(og?.type, `${demo.slug}: og type`).toBe("article");
       expect(

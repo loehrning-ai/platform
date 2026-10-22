@@ -12,10 +12,10 @@ test.describe("/buecher public book library", () => {
     await expect(page.locator("h1")).toBeVisible();
     await expect(page).not.toHaveURL(/\/login/);
 
-    await expect(
-      page.getByText(/PDF-Download nicht verfügbar/i),
-    ).toBeVisible();
-    await expect(page.getByRole("link", { name: /PDF nach Login/i })).toHaveCount(0);
+    // Without the account backend the shelf shows no PDF line at all: no
+    // login link and no "not available" noise.
+    await expect(page.getByRole("link", { name: /PDF/i })).toHaveCount(0);
+    await expect(page.getByText(/nicht verfügbar/i)).toHaveCount(0);
     await expect(page.locator('a[download][href*="download.pdf"]')).toHaveCount(0);
 
     const text = await page.locator("body").innerText();

@@ -143,7 +143,7 @@ export const ACCOUNT_COPY = {
       {
         key: "demos",
         title: "Praxisbeispiele",
-        body: "Arbeitsabläufe zum Durchklicken.",
+        body: "Eine Übung je Workshop.",
         href: "/demos",
       },
     ],
@@ -233,7 +233,7 @@ export const ACCOUNT_COPY = {
       {
         key: "demos",
         title: "Applied examples",
-        body: "Workflows to click through.",
+        body: "One exercise per workshop.",
         href: "/demos",
       },
     ],

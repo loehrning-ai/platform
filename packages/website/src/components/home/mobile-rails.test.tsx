@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { BOOK_RAIL_SHOWN, MobileRails } from "./mobile-rails";
 import { HOME_COPY } from "./home-copy";
 import { books } from "@/lib/books";
-import { getDemosForLocale } from "@/lib/demos-localization";
+import { getDemosForLocale } from "@/lib/demos";
 
 /** Every rail item is a link, so the whole tile is the touch target. */
 function railLinks(container: HTMLElement): readonly HTMLAnchorElement[] {
@@ -19,7 +19,7 @@ describe("MobileRails", () => {
   it("names each rail's subject as a heading", () => {
     render(<MobileRails />);
     expect(
-      screen.getByRole("heading", { level: 2, name: "Praxisbeispiele" }),
+      screen.getByRole("heading", { level: 2, name: "Üben am Fall" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { level: 2, name: "Lernbücher" }) !== null,
@@ -29,7 +29,7 @@ describe("MobileRails", () => {
   it("gives each rail a distinct accessible name", () => {
     render(<MobileRails />);
     expect(
-      screen.getByRole("list", { name: "Praxisbeispiele zum Ausprobieren" }),
+      screen.getByRole("list", { name: "Übungen aus den Workshops" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: "Lernbücher der Plattform" }) !== null,
@@ -42,14 +42,14 @@ describe("MobileRails", () => {
     expect(BOOK_RAIL_SHOWN).toBe(books.length > 1);
   });
 
-  it("shows six applied examples", () => {
+  it("shows the five workshop demos", () => {
     const { container } = render(<MobileRails />);
     const demoTiles = container.querySelectorAll(
       '[data-home-rail-tile="demo"]',
     );
-    expect(demoTiles).toHaveLength(6);
+    expect(demoTiles).toHaveLength(5);
 
-    const expected = getDemosForLocale("de").slice(0, 6);
+    const expected = getDemosForLocale("de");
     for (const [index, demo] of expected.entries()) {
       expect(demoTiles[index]).toHaveAttribute("href", `/demos/${demo.slug}`);
       expect(demoTiles[index]).toHaveTextContent(demo.title);
@@ -136,7 +136,7 @@ describe("MobileRails", () => {
     const { container } = render(<MobileRails locale="en" />);
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Applied examples" }),
+      screen.getByRole("heading", { level: 2, name: "Practice on the case" }),
     ).toBeInTheDocument();
     if (BOOK_RAIL_SHOWN) {
       expect(

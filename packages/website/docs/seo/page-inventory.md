@@ -76,22 +76,15 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/buecher/ki-landschaft/08_dein_zug | Dein Zug | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/08_dein_zug.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 | https://loehrning.ai/buecher/ki-landschaft/09_quellen | Quellen, Stand, Grenzen | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/09_quellen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
-### Demo-Detailseiten (12)
+### Demo-Detailseiten (5)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/excel | Claude in Excel. | Du markierst Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und eine Prognose zum Gegenprüfe… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/word | Claude in Word. | Aus deinem Briefing entsteht ein gegliederter Entwurf, den du auf Stil, Quellen und personenbezogene Daten pr… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/outbound-workflow | Signale im CRM. | Die Pipeline markiert Signale im CRM mit Quelle und schreibt je Kontakt einen Nachrichtenentwurf. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/agent-pipeline | Agent-Pipeline. | Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/n8n-supply-chain | Lieferverzug in n8n. | Ein Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation, bis die Disponentin freigibt. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/rag-vertragsassistent | Vertragsassistent. | Eine Keyword-Suche findet Klauseln in sechs Unternehmensdokumenten und zitiert sie mit Fundstelle. Ohne Treff… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/rechnung-zu-sap | Rechnung zu SAP. | Eine Beispielrechnung wird extrahiert, gegen Regeln geprüft und vor einem simulierten SAP-Import angehalten. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/prompt-scanner | Prompt-Scanner. | Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Sie übersehen man… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/cost-drift-observability | Kosten und Drift im Betrieb. | Du vergleichst Kosten, Antwortzeit, Fehler und Drift von vier Anwendungen und liest ab, welche am meisten kos… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/fine-tune-playground | Feintuning gegen Basismodell. | Du vergleichst die Antworten eines Basismodells und eines angepassten Modells auf dieselbe Frage. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/roi-rechner | Annahmen-Rechner. | Du trägst Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden ein und siehst die Formel hinter dem Erg… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/llm-observability | Antwortqualität messen. | Du prüfst die automatische Bewertung von vier Antworten. Drei hat auch ein Mensch bewertet, und zweimal liegt… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-prognosen-einschaetzen | 1.050 Stück, sieben Morgen | Angemeldet 1.370, geschätzt 1.180, geliefert 1.050. Du legst die Regel fest und führst eine Woche lang die Fr… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Die Zahl, die trägt | Entscheide über CRAFT, so wie ein Bericht gelesen werden sollte. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Mach die Zahl richtig. | Fünf Anfragen, wie sie an eine KI gestellt werden. Du legst fest, was die Zahl bedeutet, und siehst sofort, w… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/esg-berichte-mit-ki | Zehn Fakten, 14 Antworten | Du prüfst die Akte einer erfundenen Kellerei: zehn Fakten, die 14 Antworten an Importeur und Bank tragen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-im-unternehmen-sicher-nutzen | Darf das in diesen Chat? | Acht Einfügungen bei Vardar Works, einer erfundenen Firma. Du gibst jeder eine Ampel und siehst, wohin sie ge… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 
@@ -130,7 +123,6 @@ _None._
 | `/api/feedback` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/csp-report` | Public utility page; crawlable so crawlers can see noindex. |
 | `/api/ai-native/grade-exercise` | Public utility page; crawlable so crawlers can see noindex. |
-| `/api/demos/:slug/briefing.pdf` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-fuehrerschein/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/eu-ai-act-kurs/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ai-native/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
@@ -207,7 +199,6 @@ _None._
 | `/api/progress/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/ai-native/:path*` | Private account, state, or provider-backed API surface. |
 | `/api/course-workspace/:path*` | Private account, state, or provider-backed API surface. |
-| `/api/demos/:path*` | Private account, state, or provider-backed API surface. |
 | `/oauth/consent` | Private account, state, or provider-backed API surface. |
 | `/oauth/consent/:path*` | Private account, state, or provider-backed API surface. |
 | `/ki-fuehrerschein/kurs` | Private account, state, or provider-backed API surface. |
@@ -229,6 +220,19 @@ _None._
 | `/ai-native/capstone-gallery` | The retired capstone rules page resolves to the course landing. |
 | `/ai-native/demos` | The course simulation gallery merged into the demo gallery. |
 | `/ai-native/demos/:path*` | Course simulations merged into the demo gallery. |
+| `/demos/excel` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/roi-rechner` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/llm-observability` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/rag-vertragsassistent` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/rechnung-zu-sap` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/n8n-supply-chain` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/prompt-scanner` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/word` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/outbound-workflow` | A retired gallery demo resolves to its closest workshop demo. |
+| `/demos/cost-drift-observability` | A retired gallery demo resolves to the demo hub. |
+| `/demos/fine-tune-playground` | A retired gallery demo resolves to the demo hub. |
+| `/demos/agent-pipeline` | A retired gallery demo resolves to the demo hub. |
+| `/api/demos/:path*` | The retired demo briefing API returns 410. |
 | `/kurse/open-source/claude` | A removed course landing now resolves to the course hub. |
 | `/kurse/open-source/claude/:path*` | Removed course lessons and records now resolve to the course hub. |
 | `/kurse/open-source/codex` | A removed course landing now resolves to the course hub. |

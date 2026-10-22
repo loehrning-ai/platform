@@ -117,6 +117,8 @@ export interface WorkshopPageCopy {
     readonly downloadAction: string;
     /** Action of a kit card that opens the kit page (not the zip), and the cover button to it. */
     readonly kitPageAction: string;
+    /** Card A's secondary link to the workshop's practice demo. */
+    readonly demoAction: string;
     /** Screen-reader prefix of the material language ("Sprache: Englisch"). */
     readonly language: string;
     readonly selfHostHeading: string;
@@ -263,6 +265,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       openAction: "Öffnen",
       downloadAction: "Download",
       kitPageAction: "Kit ansehen",
+      demoAction: "Übung öffnen",
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
@@ -405,6 +408,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       openAction: "Open",
       downloadAction: "Download",
       kitPageAction: "View the kit",
+      demoAction: "Open the exercise",
       language: "Language",
       selfHostHeading: "Run it yourself",
       selfHostBody:

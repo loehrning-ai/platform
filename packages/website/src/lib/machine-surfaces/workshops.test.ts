@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { SITE_CONTENT_DATE } from "@/lib/content-freshness";
 import { STAND_DATE } from "@/lib/content-meta";
-import { WORKSHOPS, getWorkshopBySlug } from "@/lib/workshops";
+import { WORKSHOPS, getWorkshopBySlug, workshopFileMaterials } from "@/lib/workshops";
 import {
   buildMachineWorkshopCatalog,
   getMachineWorkshop,
@@ -62,8 +62,9 @@ describe("machine workshop records", () => {
   it("ships a materials manifest whose every file exists at its absolute URL", () => {
     for (const workshop of WORKSHOPS) {
       const record = getMachineWorkshop(workshop.slug, "de");
+      // The manifest lists files only; the practice demo is a page, not a file.
       expect(record?.material_count, workshop.slug).toBe(
-        workshop.materials.length,
+        workshopFileMaterials(workshop).length,
       );
       expect(record?.materials.length).toBeGreaterThan(0);
 

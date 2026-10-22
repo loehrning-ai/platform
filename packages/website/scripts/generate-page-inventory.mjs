@@ -149,7 +149,7 @@ const demoRows = demos.map((demo) =>
   row([
     `${SITE_ORIGIN}/demos/${demo.slug}`,
     demo.title,
-    demo.description,
+    demo.oneLiner,
     "src/lib/demos.ts",
     `canonical content date ${GENERATED_DATE}`,
     OWNER,

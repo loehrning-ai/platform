@@ -4,7 +4,7 @@ import { getCourseConfig } from "@/lib/course/config";
 import type { CourseSlug } from "@/lib/course/types";
 import { demos } from "@/lib/demos";
 import type { Locale } from "@/lib/i18n/locale";
-import { WORKSHOPS } from "@/lib/workshops";
+import { WORKSHOPS, workshopFileMaterials } from "@/lib/workshops";
 import type { LearningEdge, LearningNode, LearningStage } from "./types";
 
 type CourseNodeMeta = Pick<
@@ -132,22 +132,17 @@ const demoNodes: readonly LearningNode[] = demos.map((demo) => ({
   route: `/demos/${demo.slug}`,
   access: "public",
   language: "de",
-  sourceMaterialLanguages: ["de"],
-  audience:
-    demo.level === "fortg"
-      ? ["praktiker", "technische-vertiefung"]
-      : ["praktiker", "verantwortliche"],
+  sourceMaterialLanguages: ["de", "en"],
+  audience: ["praktiker", "verantwortliche"],
   level:
-    demo.level === "einstieg"
-      ? "entry"
-      : demo.level === "mittel"
-        ? "intermediate"
-        : "advanced",
-  stage: demo.category === "Governance" ? "dokumentieren" : "anwenden",
+    demo.workshopSlug === "datenbereitschaft-fuer-ki" ? "entry" : "intermediate",
+  // The ESG demo checks report answers against their evidence: the
+  // "Dokumentieren" stage. Every other demo practises applying a workflow.
+  stage: demo.workshopSlug === "esg-berichte-mit-ki" ? "dokumentieren" : "anwenden",
   evidenceMode: demo.evidenceMode,
   sourceOwner: "editorial:demos",
   courseSlug: demo.courseSlug,
-  summary: demo.description,
+  summary: demo.oneLiner,
 }));
 
 const workshopNodes: readonly LearningNode[] = WORKSHOPS.map((workshop) => ({
@@ -158,7 +153,7 @@ const workshopNodes: readonly LearningNode[] = WORKSHOPS.map((workshop) => ({
   access: "public",
   language: "de",
   sourceMaterialLanguages: Array.from(
-    new Set(workshop.materials.map((material) => material.language)),
+    new Set(workshopFileMaterials(workshop).map((material) => material.language)),
   ),
   audience: ["praktiker", "verantwortliche"],
   level:
@@ -271,13 +266,11 @@ const allEdges: readonly LearningEdge[] = [
     to: "course:ai-native",
     type: "supports",
   },
-  ...demos.flatMap((demo) =>
-    demo.bookSlugs.map((bookSlug) => ({
-      from: `demo:${demo.slug}`,
-      to: `book:${bookSlug}`,
-      type: "supports" as const,
-    })),
-  ),
+  ...demos.map((demo) => ({
+    from: `demo:${demo.slug}`,
+    to: `workshop:${demo.workshopSlug}`,
+    type: "practice_for" as const,
+  })),
   ...demos.map((demo) => ({
     from: `demo:${demo.slug}`,
     to: `course:${demo.courseSlug}`,

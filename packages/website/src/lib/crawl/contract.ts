@@ -1,5 +1,6 @@
 import { absoluteUrl, SITE_ORIGIN } from "@/lib/seo/entity";
 import { parseLocalePathname } from "@/lib/i18n/locale";
+import { RETIRED_DEMO_REDIRECTS } from "@/lib/demo-redirects";
 
 export type CrawlClass =
   | "public-indexable"
@@ -28,7 +29,7 @@ export interface CrawlRoute {
   readonly cache: CachePolicy;
   readonly xRobotsTag?: string;
   readonly redirectTo?: string;
-  readonly status?: 301 | 410;
+  readonly status?: 301 | 308 | 410;
   readonly explanation: string;
   readonly owner: string;
   readonly priority?: number;
@@ -93,7 +94,6 @@ const PUBLIC_NOINDEX_PATHS = [
   // must never fall into the protected /api/* default.
   "/api/csp-report",
   "/api/ai-native/grade-exercise",
-  "/api/demos/:slug/briefing.pdf",
   // The 4 native certified courses' verification routes stay public-noindex
   // even though their /kurs* lesson content is now login-gated (below) —
   // verification exists for third parties (e.g. an employer) checking a
@@ -311,7 +311,6 @@ const PROTECTED_PATHS = [
   "/api/progress/:path*",
   "/api/ai-native/:path*",
   "/api/course-workspace/:path*",
-  "/api/demos/:path*",
   // OAuth consent for the agent endpoint (the Supabase OAuth server's
   // authorization path) and its POST decision route below it. Both require a
   // signed-in learner. The proxy redirects a signed-out visitor to /login
@@ -388,6 +387,31 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
     "Course simulations merged into the demo gallery.",
     { auth: "redirect", cache: "public-short", redirectTo: "/demos", status: 301 },
   ),
+  // The twelve gallery demos were replaced by one demo per workshop
+  // (2026-10-20). Each old slug resolves to its closest workshop demo or to
+  // the hub (src/lib/demo-redirects.ts); the /en mirror follows the same
+  // entry. Their briefing PDF API is removed and answers 410.
+  ...RETIRED_DEMO_REDIRECTS.map(({ from, to }) =>
+    route(
+      `/demos/${from}`,
+      "retired",
+      to === "/demos"
+        ? "A retired gallery demo resolves to the demo hub."
+        : "A retired gallery demo resolves to its closest workshop demo.",
+      {
+        auth: "redirect",
+        cache: "public-short",
+        redirectTo: to,
+        status: 308,
+      },
+    ),
+  ),
+  route("/api/demos/:path*", "retired", "The retired demo briefing API returns 410.", {
+    auth: "gone",
+    robots: "disallow",
+    cache: "public-short",
+    status: 410,
+  }),
   // The Claude and Codex courses were removed from the catalogue. Their
   // landing pages, readers, quizzes, certificates and verification pages
   // resolve to the course hub; the /en mirror resolves to /en/kurse.

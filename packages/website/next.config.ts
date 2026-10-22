@@ -183,7 +183,6 @@ const nextConfig: NextConfig = {
       "/api/v1/scan/:path*",
       "/api/journey/:path*",
       "/api/ai-native/:path*",
-      "/api/demos/:path*",
     ].map((source) => ({
       source,
       headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],

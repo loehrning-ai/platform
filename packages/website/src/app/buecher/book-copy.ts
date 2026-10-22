@@ -32,42 +32,19 @@ interface BookPageCopy {
     readonly freeReadingEdition: string;
   };
   readonly catalog: {
-    readonly kicker: string;
+    /** The band's caps line; it states the band numeral (the total minutes). */
+    readonly caps: (books: number, minutes: number) => string;
     readonly heading: string;
-    readonly headingAccent: string;
-    readonly introduction: (count: number) => string;
-    readonly collectionHeading: string;
-    readonly collectionCountLabel: string;
-    readonly collectionDescription: string;
-    readonly publicationNumber: (position: number) => string;
+    readonly lede: string;
+    readonly rowMeta: (edition: string, chapters: number, minutes: number) => string;
+    readonly readChapter: (chapter: number) => string;
+    readonly openBook: string;
+    readonly pdfAfterLogin: (pages: number) => string;
+    /** Used by the detail page of a non-insight book. */
     readonly byAuthor: (author: string) => string;
-    readonly coverPreviewAria: (title: string) => string;
-    readonly coverAlt: (title: string) => string;
-    readonly previewLabel: string;
-    readonly facts: {
-      readonly audience: string;
-      readonly extent: string;
-      readonly format: string;
-      readonly materialLanguage: string;
-    };
-    readonly chapterCount: (chapters: number, pages: number) => string;
-    readonly materialLanguageValue: string;
-    readonly contents: string;
-    readonly openOverview: string;
-    readonly pdfAfterLogin: string;
-    readonly pdfUnavailable: string;
-    readonly detailsLabel: string;
-    readonly sourceInputs: string;
-    readonly nextReview: (date: string) => string;
     readonly reviewed: (date: string) => string;
-  };
-  readonly teaser: {
-    readonly dialogLabel: (title: string) => string;
-    readonly close: string;
-    readonly kicker: (chapters: number) => string;
-    readonly pageAlt: (title: string, page: number) => string;
-    readonly materialNote: string;
-    readonly openOverview: string;
+    readonly aggregates: (minHits: number) => string;
+    readonly companion: string;
   };
   readonly detail: {
     readonly context: string;
@@ -205,46 +182,20 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       freeReadingEdition: "Kostenlose HTML-Lesefassung",
     },
     catalog: {
-      kicker: "Lernbibliothek · Offene Lesefassungen",
-      heading: "Sachbücher mit",
-      headingAccent: "sichtbaren Quellen und Grenzen.",
-      introduction: () =>
-        "Alle Lesefassungen sind redaktionell freigegeben und kostenlos im Browser lesbar.",
-      collectionHeading: "Der aktuelle Bestand",
-      collectionCountLabel: "Lesefassungen online",
-      collectionDescription: "Kein Konto erforderlich.",
-      publicationNumber: (position) =>
-        `Ausgabe ${String(position).padStart(2, "0")}`,
+      caps: (books, minutes) =>
+        `Lernbücher · ${books} ${books === 1 ? "Buch" : "Bücher"} · ${minutes} Min. Lesezeit`,
+      heading: "Bücher zum Nachrechnen",
+      lede: "Jede Zahl mit Stichprobe, Zeitraum und Grenze. Kostenlos im Browser, ohne Konto.",
+      rowMeta: (edition, chapters, minutes) =>
+        `${edition} · ${chapters} Kapitel · ${minutes} Min.`,
+      readChapter: (chapter) => `Kapitel ${chapter} lesen`,
+      openBook: "Zum Buch",
+      pdfAfterLogin: (pages) => `PDF, ${pages} Seiten, nach Anmeldung`,
       byAuthor: (author) => `von ${author}`,
-      coverPreviewAria: (title) => `Vorschau von „${title}“ öffnen`,
-      coverAlt: (title) => `Deutsche Titelseite: ${title}`,
-      previewLabel: "Titelseite ansehen",
-      facts: {
-        audience: "Zielgruppe",
-        extent: "Umfang",
-        format: "Format",
-        materialLanguage: "Materialsprache",
-      },
-      chapterCount: (chapters, pages) =>
-        `${chapters} Kapitel · ca. ${pages} Seiten`,
-      materialLanguageValue: "Deutsch",
-      contents: "Nach der Lektüre",
-      openOverview: "Buch und Kapitel öffnen",
-      pdfAfterLogin: "Deutsches PDF nach Login",
-      pdfUnavailable: "PDF-Download nicht verfügbar",
-      detailsLabel: "Ausgabe, Quellen und Zugang",
-      sourceInputs: "Dokumentierte Quellengrundlage",
-      nextReview: (date) => `Nächste Prüfung: ${date}`,
-      reviewed: (date) => `Geprüft: ${date}`,
-    },
-    teaser: {
-      dialogLabel: (title) => `Titelseiten-Vorschau: ${title}`,
-      close: "Vorschau schließen",
-      kicker: (chapters) => `Deutsche Lesefassung · ${chapters} Kapitel`,
-      pageAlt: (title, page) =>
-        `Deutsche Titelseite von ${title}, Seite ${page}`,
-      materialNote: "Vorschau · Deutsch · kostenloser HTML-Reader",
-      openOverview: "Buch und Kapitel öffnen",
+      reviewed: (date) => `geprüft am ${date}`,
+      aggregates: (minHits) =>
+        `nur Aggregate, jede Zahl aus mindestens ${minHits} Treffern`,
+      companion: "Begleitkurs",
     },
     detail: {
       context: "Lernpfad · Stufe 6: Vertiefen",
@@ -303,45 +254,20 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       freeReadingEdition: "Free English HTML reading edition",
     },
     catalog: {
-      kicker: "Learning library · Open reading editions",
-      heading: "Reference books with",
-      headingAccent: "visible sources and limits.",
-      introduction: () =>
-        "Every English reading edition is editorially approved and free to read in your browser.",
-      collectionHeading: "The current collection",
-      collectionCountLabel: "Reading editions online",
-      collectionDescription: "No account required.",
-      publicationNumber: (position) =>
-        `Edition ${String(position).padStart(2, "0")}`,
+      caps: (books, minutes) =>
+        `Books · ${books} ${books === 1 ? "book" : "books"} · ${minutes} min read`,
+      heading: "Books you can check",
+      lede: "Every number with its sample, window and limit. Free in your browser, no account.",
+      rowMeta: (edition, chapters, minutes) =>
+        `${edition} · ${chapters} chapters · ${minutes} min`,
+      readChapter: (chapter) => `Read chapter ${chapter}`,
+      openBook: "Open the book",
+      pdfAfterLogin: (pages) => `German PDF, ${pages} pages, after sign-in`,
       byAuthor: (author) => `by ${author}`,
-      coverPreviewAria: (title) => `Open the cover preview for “${title}”`,
-      coverAlt: (title) => `Source-edition cover for ${title}`,
-      previewLabel: "View the cover",
-      facts: {
-        audience: "Audience",
-        extent: "Extent",
-        format: "Format",
-        materialLanguage: "Material language",
-      },
-      chapterCount: (chapters) => `${chapters} chapters`,
-      materialLanguageValue: "English",
-      contents: "After reading",
-      openOverview: "Open book and chapters",
-      pdfAfterLogin: "German PDF after sign-in",
-      pdfUnavailable: "PDF download unavailable",
-      detailsLabel: "Edition, sources, and access",
-      sourceInputs: "Documented source basis",
-      nextReview: (date) => `Next review: ${date}`,
-      reviewed: (date) => `Reviewed: ${date}`,
-    },
-    teaser: {
-      dialogLabel: (title) => `Cover preview: ${title}`,
-      close: "Close preview",
-      kicker: (chapters) => `English reading edition · ${chapters} chapters`,
-      pageAlt: (title, page) =>
-        `Source-edition cover for ${title}, page ${page}`,
-      materialNote: "Source cover in German · English HTML reader",
-      openOverview: "Open book and chapters",
+      reviewed: (date) => `reviewed ${date}`,
+      aggregates: (minHits) =>
+        `aggregates only, every number from at least ${minHits} hits`,
+      companion: "companion course",
     },
     detail: {
       context: "Learning path · Stage 6: Deepen",
@@ -414,5 +340,19 @@ export function getBookSourceInputs(
   if (locale === "en") return book.sourceInputs;
   return book.sourceInputs.map(
     (source) => BOOK_SOURCE_INPUTS_DE[source] ?? source,
+  );
+}
+
+/** The short name of a book's companion course, for the provenance line of the shelf. */
+const COMPANION_COURSE: Readonly<Record<string, Readonly<Record<Locale, string>>>> = {
+  "ki-landschaft": { de: "EU AI Act", en: "EU AI Act" },
+  "ki-arbeitsalltag": { de: "KI-Führerschein", en: "Everyday AI Literacy" },
+  "ki-tools-selbststaendige": { de: "Mit KI arbeiten", en: "AI-native work" },
+};
+
+export function getCompanionCourse(book: Book, locale: Locale): string {
+  return (
+    COMPANION_COURSE[book.id]?.[locale] ??
+    getBookDisplay(book, locale).relatedResourceLabel
   );
 }

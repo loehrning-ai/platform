@@ -156,16 +156,16 @@ describe("dispatchTrackedEvent", () => {
   }
 
   it("sends a declared event with declared values", () => {
-    dispatchTrackedEvent("demo_cta_clicked", { subject: "excel", facet: "kurs" });
+    dispatchTrackedEvent("demo_cta_clicked", { subject: "ki-prognosen-einschaetzen", facet: "kurs" });
     expect(sdkTrackMock).toHaveBeenCalledWith("demo_cta_clicked", {
-      subject: "excel",
+      subject: "ki-prognosen-einschaetzen",
       facet: "kurs",
     });
   });
 
   it("does not send an undeclared event name", () => {
-    dispatchTrackedEvent("demo_opened", { slug: "excel", source: "gallery" });
-    dispatchTrackedEvent("__proto__", { subject: "excel" });
+    dispatchTrackedEvent("demo_opened", { slug: "ki-prognosen-einschaetzen", source: "gallery" });
+    dispatchTrackedEvent("__proto__", { subject: "ki-prognosen-einschaetzen" });
     dispatchTrackedEvent("toString");
     expect(sdkTrackMock).not.toHaveBeenCalled();
   });
@@ -192,8 +192,8 @@ describe("dispatchTrackedEvent", () => {
     ["a lowercase UUID", lowercaseUuid],
     ["a JWT", syntheticJwt],
     ["German free text", "Mein Name ist Jörg Müller"],
-    ["a nested object", { subject: "excel" }],
-    ["an array", ["excel"]],
+    ["a nested object", { subject: "ki-prognosen-einschaetzen" }],
+    ["an array", ["ki-prognosen-einschaetzen"]],
     ["a bare number", 42],
     ["a boolean", true],
     ["null", null],
@@ -207,24 +207,24 @@ describe("dispatchTrackedEvent", () => {
 
   it("drops a third property key and every undeclared key", () => {
     dispatchTrackedEvent("demo_cta_clicked", {
-      subject: "excel",
+      subject: "ki-prognosen-einschaetzen",
       facet: "kurs",
       target: "kurs",
       email: "person@example.org",
     });
-    expect(sentProps()).toEqual({ subject: "excel", facet: "kurs" });
+    expect(sentProps()).toEqual({ subject: "ki-prognosen-einschaetzen", facet: "kurs" });
   });
 
   it("drops keys inherited through the prototype", () => {
-    const props = Object.create({ subject: "excel", facet: "kurs" }) as Record<string, unknown>;
+    const props = Object.create({ subject: "ki-prognosen-einschaetzen", facet: "kurs" }) as Record<string, unknown>;
     dispatchTrackedEvent("demo_cta_clicked", props);
     expect(sentProps()).toEqual({});
   });
 
   it("never mutates the caller's object", () => {
-    const props = Object.freeze({ subject: "excel", facet: "kurs", extra: "x" });
+    const props = Object.freeze({ subject: "ki-prognosen-einschaetzen", facet: "kurs", extra: "x" });
     dispatchTrackedEvent("demo_cta_clicked", props);
-    expect(props).toEqual({ subject: "excel", facet: "kurs", extra: "x" });
+    expect(props).toEqual({ subject: "ki-prognosen-einschaetzen", facet: "kurs", extra: "x" });
     expect(sdkTrackMock.mock.calls[0]?.[1]).not.toBe(props);
   });
 
@@ -238,7 +238,7 @@ describe("dispatchTrackedEvent", () => {
       throw new Error("transport failed");
     });
     expect(() =>
-      dispatchTrackedEvent("demo_cta_clicked", { subject: "excel", facet: "kurs" }),
+      dispatchTrackedEvent("demo_cta_clicked", { subject: "ki-prognosen-einschaetzen", facet: "kurs" }),
     ).not.toThrow();
     const hostile = Object.defineProperty({}, "subject", {
       enumerable: true,

@@ -4,54 +4,45 @@ import {
   formatBrowserErrors,
   meaningfulBrowserErrors,
 } from "./fixtures/console";
+import { chapters } from "./fixtures/book";
 
 /**
  * /buecher library index deep-dive (regression coverage). The existing
  * buecher.spec.ts is a light gate (login-free access, auth-gated PDF route,
- * API shape). This spec goes deeper into the CARD SURFACE rendered by
- * src/app/buecher/buecher-content.tsx from the src/lib/books.ts catalog:
- * every book card's metadata (title, subtitle, audience, chapter count,
- * resource type, access label), that each cover image actually loads and
- * maps to its book, that the book-overview link resolves to the reader,
- * and that the index has no horizontal overflow on a phone. Assertions target
- * roles, test IDs and stable catalog strings, so a prose refresh stays green
- * while a real regression (a dropped card, a broken cover, a dead reader link)
- * fails. NOTE: reading time is NOT on the index card; it lives on the
- * /buecher/<slug> detail page, so it is not asserted here.
+ * API shape). This spec covers the SHELF rendered by
+ * src/app/buecher/buecher-content.tsx from the src/lib/books.ts catalog: the
+ * Lemons band with the H1, one hub-style row per published book (cover tile,
+ * meta line, title, hook), the two cards that open chapter 1 and the book in
+ * one tap, the visible chapter list, no collapsible UI, and no horizontal
+ * overflow on a phone. Assertions target roles, test IDs and stable catalog
+ * strings, so a prose refresh stays green while a real regression (a dropped
+ * row, a dead card, a hidden chapter list) fails.
  *
- * Only ki-landschaft is in the published catalog (src/lib/books.ts) — the
- * other two books are pending re-review and don't render a card.
+ * Only ki-landschaft is in the published catalog (src/lib/books.ts); the
+ * other two books are pending re-review and don't render a row.
  */
 
 const ROUTE = "/buecher";
-const BOOK_OVERVIEW_LINK_NAME =
-  /^(?:Buch und Kapitel öffnen|Open book and chapters): .+$/i;
 
-// Exact catalog metadata as rendered by src/lib/books.ts. `·` is U+00B7 and
-// the umlauts are literal, matching the DOM text (CSS uppercase is visual only).
 const BOOKS = [
   {
     slug: "ki-landschaft",
     title: "Von außen gesehen",
-    subtitle: "Was 25.581 Firmenwebsites über KI in Deutschland verraten",
-    audience: "Alle mit beruflichem KI-Bezug",
-    chapters: "9 Kapitel · ca. 32 Seiten",
-    resourceType: "HTML-Lesefassung mit interaktiven Abbildungen",
-    materialLanguage: "Deutsch",
+    meta: "Ausgabe Oktober 2026 · 9 Kapitel · 24 Min.",
   },
 ] as const;
 
-const HERO_HEADLINE = "Sachbücher mit sichtbaren Quellen und Grenzen.";
+const HERO_HEADLINE = "Bücher zum Nachrechnen";
 
-// Scope to one card via its testid + the unique book heading it contains.
+// Scope to one row via its testid + the unique book heading it contains.
 function cardFor(page: Page, title: string) {
   return page
     .getByTestId("book-card")
-    .filter({ has: page.getByRole("heading", { level: 3, name: title }) });
+    .filter({ has: page.getByRole("heading", { level: 2, name: title }) });
 }
 
 test.describe("/buecher library index", () => {
-  test(`loads without login, shows the h1 and exactly ${BOOKS.length} book card(s)`, async ({
+  test(`loads without login, shows the h1 in the band and exactly ${BOOKS.length} book row(s)`, async ({
     page,
   }) => {
     const errors = collectBrowserErrors(page);
@@ -60,11 +51,13 @@ test.describe("/buecher library index", () => {
     expect(response?.status(), `status for ${ROUTE}`).toBe(200);
     await expect(page).not.toHaveURL(/\/login/);
 
-    const h1 = page.getByRole("heading", { level: 1 });
+    const band = page.locator('[data-cover-band][data-plakat="lemons"]');
+    const h1 = band.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText(HERO_HEADLINE);
+    await expect(h1).toHaveText(HERO_HEADLINE);
 
     await expect(page.getByTestId("book-card")).toHaveCount(BOOKS.length);
+    await expect(page.locator("main details, main summary, main dialog")).toHaveCount(0);
 
     const noise = meaningfulBrowserErrors(errors);
     expect(
@@ -74,81 +67,56 @@ test.describe("/buecher library index", () => {
   });
 
   for (const book of BOOKS) {
-    test(`card "${book.title}" renders full metadata and a loaded cover`, async ({
+    test(`row "${book.title}" shows meta, hook, tile, both cards and every chapter`, async ({
       page,
     }) => {
       await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
       const card = cardFor(page, book.title);
       await expect(card).toBeVisible();
 
-      // Title + subtitle + the four metadata pills + status label.
-      await expect(
-        card.getByText(book.subtitle, { exact: true }),
-      ).toBeVisible();
-      await expect(
-        card.getByText(book.audience, { exact: true }),
-      ).toBeVisible();
-      await expect(
-        card.getByText(book.chapters, { exact: true }),
-      ).toBeVisible();
-      await expect(
-        card.getByText(book.resourceType, { exact: true }),
-      ).toBeVisible();
-      await expect(
-        card.getByText(book.materialLanguage, { exact: true }),
-      ).toBeVisible();
-      await expect(
-        card.getByText("Lesefassung online", { exact: true }),
-      ).toBeVisible();
+      await expect(card.locator("[data-book-meta]")).toHaveText(book.meta);
+      await expect(card.locator("[data-book-hook]")).toBeVisible();
+      await expect(card.locator("[data-book-cover-tile]")).toBeVisible();
 
-      // Cover: mapped to THIS book and actually decoded (not a broken image).
-      const cover = card.getByRole("img", {
-        name: `Deutsche Titelseite: ${book.title}`,
-      });
-      await cover.scrollIntoViewIfNeeded();
-      await expect(cover).toBeVisible();
-      await expect(cover).toHaveAttribute(
-        "src",
-        new RegExp(`book-covers.*${book.slug}-2026-1`),
-      );
-      await expect
-        .poll(
-          () =>
-            cover.evaluate((el) => {
-              const img = el as HTMLImageElement;
-              return img.complete && img.naturalWidth > 0;
-            }),
-          {
-            // Real PNG covers can take a while to decode under heavy
-            // parallel-run load; give the decode a generous window (the src +
-            // visibility are already asserted above, so this only waits on
-            // pixels, never on a wrong/broken image).
-            message: `cover for ${book.title} never finished decoding`,
-            timeout: 15_000,
-          },
-        )
-        .toBe(true);
-
-      // The reader link is wired to this book's reader route.
       await expect(
-        card.getByRole("link", { name: BOOK_OVERVIEW_LINK_NAME }),
+        card.getByRole("link", { name: `Kapitel 1 lesen: ${book.title}` }),
+      ).toHaveAttribute("href", `/buecher/${book.slug}/${chapters("de")[0]!.slug}`);
+      await expect(
+        card.getByRole("link", { name: `Zum Buch: ${book.title}` }),
       ).toHaveAttribute("href", `/buecher/${book.slug}`);
+      await expect(
+        card
+          .getByRole("navigation", { name: "Alle Kapitel des Buchs" })
+          .getByRole("link"),
+      ).toHaveCount(chapters("de").length);
     });
 
-    test(`book-overview link on "${book.title}" opens /buecher/${book.slug}`, async ({
+    test(`"Kapitel 1 lesen" on "${book.title}" opens the first chapter`, async ({
       page,
     }) => {
       await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-      const card = cardFor(page, book.title);
-
-      // WebKit tap hardening: bring the link fully into view before clicking
-      // so the tap cannot land on the card's cover (which opens the teaser
-      // modal instead of navigating).
-      const readerLink = card.getByRole("link", {
-        name: BOOK_OVERVIEW_LINK_NAME,
+      const link = cardFor(page, book.title).getByRole("link", {
+        name: `Kapitel 1 lesen: ${book.title}`,
       });
-      await readerLink.scrollIntoViewIfNeeded();
-      await readerLink.click();
+      await link.scrollIntoViewIfNeeded();
+      await link.click();
+
+      const first = chapters("de")[0]!;
+      await expect(page).toHaveURL(
+        new RegExp(`/buecher/${book.slug}/${first.slug}$`),
+        { timeout: 10_000 },
+      );
+    });
+
+    test(`"Zum Buch" on "${book.title}" opens /buecher/${book.slug}`, async ({
+      page,
+    }) => {
+      await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+      const link = cardFor(page, book.title).getByRole("link", {
+        name: `Zum Buch: ${book.title}`,
+      });
+      await link.scrollIntoViewIfNeeded();
+      await link.click();
 
       await expect(page).toHaveURL(new RegExp(`/buecher/${book.slug}$`), {
         timeout: 10_000,
@@ -161,7 +129,7 @@ test.describe("/buecher library index", () => {
 });
 
 test.describe("/buecher mobile", () => {
-  test(`no horizontal overflow at 390px and all ${BOOKS.length} card(s) present`, async ({
+  test(`no horizontal overflow at 390px, all ${BOOKS.length} row(s) present, chapter 1 on the first screen`, async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
@@ -178,5 +146,13 @@ test.describe("/buecher mobile", () => {
       scrollWidth,
       `horizontal overflow at 390px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
     ).toBeLessThanOrEqual(innerWidth + 1);
+
+    // The way in sits above the tab bar without scrolling.
+    const start = await page
+      .getByRole("link", { name: /^Kapitel 1 lesen: / })
+      .first()
+      .boundingBox();
+    expect(start, "Kapitel 1 lesen has a layout box").not.toBeNull();
+    expect((start?.y ?? 0) + (start?.height ?? 0)).toBeLessThanOrEqual(780);
   });
 });

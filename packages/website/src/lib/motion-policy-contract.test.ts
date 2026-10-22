@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { DEMO_SLUGS } from "./demos";
 
 const SRC = join(__dirname, "..");
 
@@ -19,6 +20,26 @@ function productionSources(directory: string): readonly string[] {
       ? [readFileSync(absolute, "utf8")]
       : [];
   });
+}
+
+/** Production files of one workshop demo: its component folder and its lib folder. */
+function demoFolderFiles(slug: string): readonly string[] {
+  const walk = (relative: string): readonly string[] => {
+    let entries;
+    try {
+      entries = readdirSync(join(SRC, relative), { withFileTypes: true });
+    } catch {
+      return [];
+    }
+    return entries.flatMap((entry) => {
+      const path = `${relative}/${entry.name}`;
+      if (entry.isDirectory()) return walk(path);
+      return /\.(?:ts|tsx)$/.test(entry.name) && !/\.(?:test|spec)\.(?:ts|tsx)$/.test(entry.name)
+        ? [path]
+        : [];
+    });
+  };
+  return [...walk(`components/demos/${slug}`), ...walk(`lib/demo-cases/${slug}`)];
 }
 
 describe("website motion policy", () => {
@@ -72,27 +93,18 @@ describe("website motion policy", () => {
     expect(hero).not.toContain("bg-brand-peach/20");
   });
 
-  it("stops formerly ambient demos after one finite explanatory run", () => {
-    for (const file of [
-      "components/demos/cost-drift-observability-demo.tsx",
-      "components/demos/n8n-supply-chain-demo.tsx",
-    ]) {
-      expect(read(file)).not.toContain("setInterval(");
+  it("keeps the workshop demos deterministic: no timers, no client-only mount", () => {
+    for (const slug of DEMO_SLUGS) {
+      expect(demoFolderFiles(slug), slug).toContain(`components/demos/${slug}/index.tsx`);
+      for (const file of demoFolderFiles(slug)) {
+        const text = read(file);
+        expect(text, file).not.toContain("setInterval(");
+        expect(text, file).not.toContain("next/dynamic");
+      }
     }
+  });
 
-    expect(read("components/demos/rechnung-zu-sap-demo.tsx")).not.toContain(
-      "setStage(0), 8500",
-    );
-    expect(read("components/demos/agent-pipeline-demo.tsx")).not.toContain(
-      "const restart",
-    );
-    expect(read("components/demos/outbound-workflow-demo.tsx")).not.toContain(
-      "setLeadIdx",
-    );
-    expect(read("components/demos/excel-demo.tsx")).not.toMatch(
-      /usePhasedLoop|Auto-Play/,
-    );
-
+  it("stops the formerly ambient ai-native observability demo after one run", () => {
     const observability = read("components/ai-native/demos/observ-demo.tsx");
     expect(observability).toContain("if (!running) return");
     expect(observability).toContain("completedSteps >= OBSERVATION_STEPS");

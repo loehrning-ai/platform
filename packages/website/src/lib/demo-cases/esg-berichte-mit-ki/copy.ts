@@ -1,0 +1,301 @@
+import type { Locale } from "@/lib/i18n/locale";
+import { bindCopy, type EsgCopy, type EsgStrings } from "./copy-bind";
+import type { JudgeStrings } from "./core";
+
+export type { EsgCopy, EsgStrings } from "./copy-bind";
+
+/*
+ * Every word of the demo's frame in both locales (spec section 9). Server
+ * code and tests only: the page gets one locale's EsgStrings through the
+ * locale pack (pack.ts) and binds it on the client (copy-bind.ts).
+ */
+
+const DE: EsgStrings = {
+  spoiler: "Machst du noch das Kit? Die Demo zeigt die Lösungen von Schritt 1, 3 und 5.",
+  date: {
+    friday: "Heute ist Freitag, der 16. Oktober 2026.",
+    monday: "Heute ist Montag, der 19. Oktober 2026.",
+  },
+  index: {
+    heading: "Die Akte: zehn Fakten",
+    open: "offen",
+    stamped: "gestempelt: {grade}",
+    button: "Fakt {n}, {short}, {state}",
+  },
+  card: {
+    heading: "Fakt {n} von 10: {title}",
+    askedIn: "Gefragt in",
+    ask: "Was belegen die Dateien?",
+    status: {
+      ok: "Eine Datei belegt es.",
+      check: "Die Datei gibt es, aber sie ist abgelaufen, geschätzt oder widerspricht einer anderen.",
+      notFound: "Es gibt keine Datei. Du nennst, welche fehlt.",
+    },
+    second: {
+      ok: "Welche Zeile zitierst du?",
+      check: "Warum?",
+      notFound: "Welches Dokument fehlt?",
+    },
+    third: "Bricht der belegte Wert eine Regel aus einer Anfrage?",
+    yes: "Ja: Aufgabe vor der Abgabe",
+    no: "Nein",
+    hints: [
+      "Tipp: Such die Zeile mit einem Datum, einer Zahl oder dem Wort estimate. Daran hängt der Status.",
+      "Tipp: Erst der Status, dann der Beleg.",
+    ],
+    check: "Prüfen",
+    line: "Zeile {n}",
+    gap: "Zeilen ausgelassen",
+    decisive: "entscheidend",
+    excerptOf: "Auszug aus {file}",
+    transcribed: "Rechnung EL-25-09, abgeschrieben aus {file}",
+  },
+  feedback: {
+    grades: { right: "Richtig", defensible: "Vertretbar", half: "Halb richtig", wrong: "Daneben" },
+    rule: "Regel {n}",
+    feeds: "Wirkt auf",
+    parts: "Teile",
+    open: "offen",
+    next: "Weiter: Fakt {n}",
+    nextMonday: "Weiter: Montag darauf",
+    announce: "Fakt {n}: {grade}.",
+    coverage: "11 von 12 Monaten = 91,7 %. Nordvik verlangt 95 % (Fragebogen Z. 12).",
+    noBill: "keine Rechnung",
+    stripLabel: "Strom 2025 je Monat: {months} von 12 Monaten mit Rechnung, zusammen {mwh} MWh.",
+    year: "Jahr: {mwh} MWh aus {months} Monaten",
+    glasAction:
+      "Aufgabe: Flasche bis 420 g, Preis ab NOK 250 oder die Reserve aus der Ausschreibung nehmen.",
+    zertNote:
+      "amfori BSCI ist ein Audit, kein Zertifikat. Erneuerungsprüfung 22.10., Abgabe 23.10.: Das neue Zertifikat ist vielleicht nicht rechtzeitig da.",
+  },
+  sheet: {
+    heading: "Antwortbogen",
+    filled: "{n} von 14 belegt",
+    heads: {
+      nordvik: "Nordvik Vin AB · Fragebogen · kam Montag, fällig Freitag 23.10.",
+      bank: "Banka Povardarie · Screening-Formular · kam Freitag",
+    },
+    colId: "Nr.",
+    colQuestion: "Frage und Antwort",
+    colStatus: "Status",
+    yours: "deins",
+    withAction: "mit Aufgabe",
+    withoutAction: "ohne Aufgabe",
+    summaryHead: "Zehn Urteile, 14 Antworten.",
+    differOne: "Mit deinen Stempeln wäre {n} Antwort anders rausgegangen:",
+    differMany: "Mit deinen Stempeln wären {n} Antworten anders rausgegangen:",
+    allMatch: "Alle 14 wie im Schlüssel.",
+    tally: "{ok} OK · {check} NEEDS CHECK · {notFound} NOT FOUND",
+    partial: "{filled} von {total} belegt",
+    announceRows: "Im Antwortbogen belegt: {ids}.",
+  },
+  monday: {
+    heading: "Montag darauf",
+    locked: "Öffnet, wenn alle zehn Fakten gestempelt sind.",
+    start: "Zum Montag darauf",
+    head: "Die Buchhaltung findet die Septemberrechnung.",
+    predict: "Welche Antworten ändern ihren Status?",
+    predictHint: "Tipp vor dem Lesen. Markier alle, die du erwartest, auch keine.",
+    openInvoice: "Rechnung öffnen",
+    yourTip: "Dein Tipp: {ids}.",
+    noTip: "Dein Tipp: keine Antwort ändert ihren Status.",
+    invoiceCaption: "Rechnung EL-25-09, Lumivolt, als Text gesetzt. Mazedonisch mit englischer Glosse.",
+    invoiceAsk: "Wie viel Strom weist die Rechnung aus? Prüf die Menge mit den Zählerständen.",
+    invoiceRight: "Richtig.",
+    invoiceWrong: "Daneben.",
+    invoiceMath: "1.325.550 minus 1.284.350 sind 41.200 kWh. Der Punkt trennt Tausender.",
+    mixNote: "Auch diese Rechnung nennt keinen Strommix.",
+    restampLead: "Stempel den Strom noch einmal, mit der neuen Rechnung.",
+    revealHeading: "Was der Montag ändert",
+    changes: "ändert sich",
+    stays: "bleibt, weil",
+    staysStatus: "bleibt {status}",
+    to: "wird zu",
+    scoreHits: "Du hast {hits} von 2 Änderungen getroffen.",
+    scoreFalseAlarms: "Zu viel markiert: {ids}.",
+    scoreMisses: "Übersehen: {ids}.",
+    announceDay: "Heute ist Montag, der 19. Oktober 2026. Die Buchhaltung findet die Septemberrechnung.",
+  },
+  takeaways: {
+    heading: "Zum Mitnehmen",
+    sub: "Markiert ist, wo du heute danebenlagst.",
+    copy: "Kopieren",
+    copied: "Kopiert",
+    copyFailed: "Kopieren ging nicht. Markier den Text und kopier ihn selbst.",
+    fromKit: "aus dem Kit",
+    missed: "heute daneben",
+    privacy:
+      "Bevor du echte Firmendateien hochlädst: Modelltraining unter Settings > Privacy ausschalten und vorher deine Firma fragen.",
+    restart: "Von vorn",
+    titles: [
+      "Projektanweisung für deine Firma",
+      "Prompt für den nächsten Fragebogen",
+      "Gegenprobe vor dem Unterschreiben",
+    ],
+    notes: [
+      "Ändere das Datum jedes Mal, wenn du anfängst. Jede Ablaufprüfung hängt daran.",
+      "Jedes NOT FOUND ist eine Aufgabe: Es nennt das Dokument, das du als Nächstes holst.",
+      "Sechs Prüfungen, eine je Falle aus dieser Akte.",
+    ],
+  },
+};
+
+const EN: EsgStrings = {
+  spoiler: "Still doing the kit? This demo shows the answers to steps 1, 3 and 5.",
+  date: {
+    friday: "Today is Friday 16 October 2026.",
+    monday: "Today is Monday 19 October 2026.",
+  },
+  index: {
+    heading: "The file: ten facts",
+    open: "open",
+    stamped: "stamped: {grade}",
+    button: "Fact {n}, {short}, {state}",
+  },
+  card: {
+    heading: "Fact {n} of 10: {title}",
+    askedIn: "Asked in",
+    ask: "What do the files prove?",
+    status: {
+      ok: "A file proves it.",
+      check: "The file exists, but it is expired, an estimate or conflicts with another.",
+      notFound: "There is no file. You name the one that is missing.",
+    },
+    second: {
+      ok: "Which line do you cite?",
+      check: "Why?",
+      notFound: "Which document is missing?",
+    },
+    third: "Does the proven value break a rule in one of the requests?",
+    yes: "Yes: an action before you send",
+    no: "No",
+    hints: [
+      "Tip: find the line with a date, a number or the word estimate. The status hangs on it.",
+      "Tip: status first, then the evidence.",
+    ],
+    check: "Check",
+    line: "Line {n}",
+    gap: "lines left out",
+    decisive: "decisive",
+    excerptOf: "Excerpt from {file}",
+    transcribed: "Invoice EL-25-09, transcribed from {file}",
+  },
+  feedback: {
+    grades: { right: "Right", defensible: "Defensible", half: "Half right", wrong: "Off" },
+    rule: "Rule {n}",
+    feeds: "Feeds",
+    parts: "Parts",
+    open: "open",
+    next: "Next: fact {n}",
+    nextMonday: "Next: the Monday after",
+    announce: "Fact {n}: {grade}.",
+    coverage: "11 of 12 months = 91.7%. Nordvik requires 95% (questionnaire line 12).",
+    noBill: "no bill",
+    stripLabel: "Electricity 2025 by month: {months} of 12 months with a bill, {mwh} MWh in total.",
+    year: "Year: {mwh} MWh from {months} months",
+    glasAction:
+      "Action: a bottle of 420 g or less, a price of NOK 250 or more, or take the Reserve out of the tender.",
+    zertNote:
+      "amfori BSCI is an audit, not a certificate. Renewal inspection 22.10., deadline 23.10.: the new certificate may not be ready in time.",
+  },
+  sheet: {
+    heading: "Answer sheet",
+    filled: "{n} of 14 filled",
+    heads: {
+      nordvik: "Nordvik Vin AB · questionnaire · arrived Monday, due Friday 23.10.",
+      bank: "Banka Povardarie · screening form · arrived Friday",
+    },
+    colId: "No.",
+    colQuestion: "Question and answer",
+    colStatus: "Status",
+    yours: "yours",
+    withAction: "with an action",
+    withoutAction: "without an action",
+    summaryHead: "Ten calls, 14 answers.",
+    differOne: "With your calls, {n} answer would have gone out differently:",
+    differMany: "With your calls, {n} answers would have gone out differently:",
+    allMatch: "All 14 match the key.",
+    tally: "{ok} OK · {check} NEEDS CHECK · {notFound} NOT FOUND",
+    partial: "{filled} of {total} filled",
+    announceRows: "Filled on the answer sheet: {ids}.",
+  },
+  monday: {
+    heading: "The next Monday",
+    locked: "Opens once all ten facts are stamped.",
+    start: "On to the next Monday",
+    head: "Accounting finds the September bill.",
+    predict: "Which answers change their status?",
+    predictHint: "Guess before you read. Mark every one you expect, or none.",
+    openInvoice: "Open the invoice",
+    yourTip: "Your guess: {ids}.",
+    noTip: "Your guess: no answer changes its status.",
+    invoiceCaption: "Invoice EL-25-09 from Lumivolt, typeset. Macedonian with an English gloss.",
+    invoiceAsk: "How much electricity does the invoice show? Check the quantity against the meter readings.",
+    invoiceRight: "Right.",
+    invoiceWrong: "Off.",
+    invoiceMath: "1,325,550 minus 1,284,350 is 41,200 kWh. In the invoice, the dot separates thousands.",
+    mixNote: "This bill names no supply mix either.",
+    restampLead: "Stamp the electricity again, with the new bill.",
+    revealHeading: "What Monday changes",
+    changes: "changes",
+    stays: "stays, because",
+    staysStatus: "stays {status}",
+    to: "becomes",
+    scoreHits: "You caught {hits} of 2 changes.",
+    scoreFalseAlarms: "Marked too many: {ids}.",
+    scoreMisses: "Missed: {ids}.",
+    announceDay: "Today is Monday 19 October 2026. Accounting finds the September bill.",
+  },
+  takeaways: {
+    heading: "To take with you",
+    sub: "Marked: where you missed today.",
+    copy: "Copy",
+    copied: "Copied",
+    copyFailed: "Copying did not work. Select the text and copy it yourself.",
+    fromKit: "from the kit",
+    missed: "missed today",
+    privacy:
+      "Before you upload company files, switch off model training in Settings > Privacy, and ask your manager first.",
+    restart: "Start over",
+    titles: [
+      "Project instructions for your company",
+      "Prompt for the next questionnaire",
+      "Check before you sign",
+    ],
+    notes: [
+      "Change the date every time you start. Every expiry check depends on it.",
+      "Every NOT FOUND is a to-do: it names the document to collect next.",
+      "Six checks, one for each trap in this file.",
+    ],
+  },
+};
+
+export const ESG_STRINGS: Readonly<Record<Locale, EsgStrings>> = { de: DE, en: EN };
+
+export const ESG_COPY: Readonly<Record<Locale, EsgCopy>> = { de: bindCopy(DE), en: bindCopy(EN) };
+
+/** The judge's own sentences: the key line, the fallbacks and the missing action. */
+export const JUDGE_TEXT: Readonly<Record<Locale, JudgeStrings>> = {
+  de: {
+    keyNotFound: "Schlüssel: {status} · fehlt: {label}",
+    keyCheck: "Schlüssel: {status} · {label}",
+    keyOk: "Schlüssel: {status} · {label} · {action}",
+    withAction: "mit Aufgabe",
+    noAction: "keine Aufgabe",
+    fallbackOk: "Zitier die Zeile, die die Antwort trägt: {label}.",
+    fallbackCheck: "Der Grund ist: {label}.",
+    fallbackNotFound: "Es fehlt: {label}.",
+    noActionLine: "Der Wert ist belegt, und keine Anfrage setzt dafür eine Grenze: keine Aufgabe.",
+  },
+  en: {
+    keyNotFound: "Key: {status} · missing: {label}",
+    keyCheck: "Key: {status} · {label}",
+    keyOk: "Key: {status} · {label} · {action}",
+    withAction: "with an action",
+    noAction: "no action",
+    fallbackOk: "Cite the line that carries the answer: {label}.",
+    fallbackCheck: "The reason is: {label}.",
+    fallbackNotFound: "What is missing: {label}.",
+    noActionLine: "The value is proven, and no request sets a limit for it: no action.",
+  },
+};

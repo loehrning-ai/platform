@@ -48,7 +48,7 @@ export const ACCOUNT_ROUTES = ["/konto", "/login"] as const;
 
 /**
  * True when `pathname` is one of `prefixes` or sits below one of them. The
- * locale prefix is resolved first, so `/en/demos/excel` matches `/demos`.
+ * locale prefix is resolved first, so `/en/demos/esg-berichte-mit-ki` matches `/demos`.
  * `/` only ever matches itself, because every path starts with it.
  */
 export function matchesSection(

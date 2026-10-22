@@ -1,0 +1,1251 @@
+/*
+ * W04 demo "Zehn Fakten, 14 Antworten". Every rule is scoped under .eb.
+ *
+ * Paper (Kalkweiß) ground, Druckschwarz ink, hard edges, no gradients, no
+ * glows. File lines sit on Beton. Rost marks the lines that decide. The one
+ * Mennige fill on the page is "Prüfen". A selected row is Himmel-Blatt with an
+ * ink edge and a 3px foot. Hover (fine pointer only), focus and press bring an
+ * anti colour as a hard offset block, always the colour the control is not:
+ * Mennige behind ink-edged controls, Druckschwarz behind the Mennige
+ * "Prüfen". Never a tint of the box's own colour.
+ * Only transform and opacity transition; nothing moves on its own.
+ */
+
+.eb {
+  --eb-ink: #121212;
+  --eb-paper: #f7f1e7;
+  --eb-bogen: #fffcf5;
+  --eb-beton: #ece5d8;
+  --eb-rost: #944d44;
+  --eb-mennige: #b73a15;
+  --eb-mennige-deep: #97300f;
+  --eb-sky: #d9ecf6;
+  --eb-kante: #827970;
+  --eb-hair: #d4cec5;
+  --eb-muted: #4f4640;
+  --eb-faint: #655c54;
+  --eb-mono: var(--font-mono), ui-monospace, monospace;
+
+  max-width: 70rem;
+  color: var(--eb-ink);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.eb *,
+.eb *::before,
+.eb *::after {
+  box-sizing: border-box;
+}
+
+/* ─── Frame ───────────────────────────────────────────────────────────── */
+
+.eb-intro {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.eb-spoiler {
+  margin: 0;
+  max-width: 64ch;
+  color: var(--eb-muted);
+  font-size: 0.9375rem;
+}
+
+.eb-date {
+  margin: 0;
+  padding: 0.5rem 0;
+  border-block: 2px solid var(--eb-ink);
+  font-family: var(--eb-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+@media (min-width: 48rem) {
+  .eb-date {
+    font-size: 0.9375rem;
+  }
+}
+
+.eb-kicker {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.eb-h2 {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.eb-h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.eb-id {
+  display: inline-block;
+  min-width: 2.25ch;
+  font-family: var(--eb-mono);
+  font-weight: 700;
+}
+
+.eb-mono {
+  font-family: var(--eb-mono);
+}
+
+.eb-glyph {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+}
+
+.eb-link {
+  color: var(--eb-ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eb-link:hover {
+    text-decoration-color: var(--eb-mennige);
+    text-decoration-thickness: 3px;
+  }
+}
+
+/* ─── Layout: card column, sheet, Monday ─────────────────────────────── */
+
+.eb-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3rem;
+}
+
+.eb-col-card,
+.eb-col-monday {
+  min-width: 0;
+}
+
+/* The index reads its own column width, not the window. */
+.eb-col-card {
+  container-type: inline-size;
+}
+
+@media (min-width: 64rem) {
+  .eb-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas:
+      "card sheet"
+      "monday sheet";
+    column-gap: 2.5rem;
+    row-gap: 3rem;
+  }
+
+  .eb-col-card {
+    grid-area: card;
+  }
+
+  .eb-sheet {
+    grid-area: sheet;
+    align-self: start;
+  }
+
+  .eb-col-monday {
+    grid-area: monday;
+  }
+}
+
+@media (min-width: 64rem) and (min-height: 52rem) {
+  .eb-sheet[data-fits="true"] {
+    position: sticky;
+    top: calc(var(--nav-h, 4rem) + 1rem);
+  }
+}
+
+/* ─── Index: the file, ten facts ──────────────────────────────────────── */
+
+.eb-index {
+  margin-bottom: 1.5rem;
+}
+
+.eb-index-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.375rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* A stacked button needs about 2.25rem: ten in a row from a 28rem column. */
+@container (min-width: 28rem) {
+  .eb-index-list {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+
+.eb-index-btn {
+  display: flex;
+  width: 100%;
+  min-height: 2.75rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+  padding: 0.25rem 0.125rem;
+  border: 2px solid var(--eb-kante);
+  border-radius: 0;
+  background: var(--eb-bogen);
+  color: var(--eb-ink);
+  cursor: pointer;
+  font: inherit;
+  transition: transform 120ms var(--ease-deck, ease-out);
+}
+
+.eb-index-n {
+  font-family: var(--eb-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.eb-index-marks {
+  display: flex;
+  min-height: 1rem;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.eb-index-marks .eb-glyph {
+  width: 0.8125rem;
+  height: 0.8125rem;
+}
+
+.eb-index-empty {
+  display: block;
+  width: 0.8125rem;
+  height: 0.8125rem;
+  border: 1.5px dashed var(--eb-kante);
+}
+
+.eb-index-btn[data-stamped] {
+  border-color: var(--eb-ink);
+}
+
+.eb-index-btn[aria-current="step"] {
+  border-color: var(--eb-ink);
+  background: var(--eb-sky);
+  box-shadow: 0 3px 0 var(--eb-ink);
+}
+
+/* ─── The card ───────────────────────────────────────────────────────── */
+
+.eb-card {
+  display: grid;
+  gap: 1rem;
+  scroll-margin-top: calc(var(--nav-h-compact, 3rem) + 1rem);
+}
+
+@media (min-width: 64rem) {
+  .eb-card {
+    scroll-margin-top: calc(var(--nav-h, 4rem) + 1rem);
+  }
+}
+
+.eb-card-h {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.eb-card-h:focus {
+  outline: none;
+}
+
+.eb-card-h:focus-visible {
+  outline: 3px solid var(--eb-mennige);
+  outline-offset: 2px;
+}
+
+.eb-asked-line {
+  margin: 0;
+  color: var(--eb-muted);
+  font-size: 0.9375rem;
+}
+
+.eb-asked-k {
+  color: var(--eb-ink);
+  font-weight: 700;
+}
+
+.eb-hint {
+  margin: 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--eb-ink);
+  font-size: 0.9375rem;
+}
+
+/* ─── Excerpts: verbatim file lines ───────────────────────────────────── */
+
+.eb-excerpts {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.eb-ex {
+  min-width: 0;
+  margin: 0;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-beton);
+}
+
+.eb-ex-file {
+  padding: 0.375rem 0.75rem;
+  border-bottom: 1px solid var(--eb-kante);
+  background: var(--eb-bogen);
+  font-family: var(--eb-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.eb-ex-lines {
+  padding: 0.375rem 0;
+}
+
+.eb-ln {
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr);
+  column-gap: 0.75rem;
+  padding: 0.125rem 0.75rem 0.125rem 0.5rem;
+  font-family: var(--eb-mono);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+@media (min-width: 48rem) {
+  .eb-ln {
+    font-size: 1rem;
+  }
+}
+
+.eb-ln-n {
+  color: var(--eb-faint);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.eb-ln-t {
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* A line reference ("Z. 13-14") stays on one line. */
+.eb-nb {
+  white-space: nowrap;
+}
+
+.eb-ln[data-decisive] {
+  box-shadow: inset 4px 0 0 var(--eb-rost);
+  background: var(--eb-bogen);
+}
+
+.eb-ln-gap .eb-ln-n {
+  letter-spacing: 0.1em;
+}
+
+/* ─── Decisions ──────────────────────────────────────────────────────── */
+
+.eb-q {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.eb-q-legend {
+  display: block;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.eb-q-legend [tabindex="-1"]:focus {
+  outline: none;
+}
+
+.eb-opts {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.eb-opts-row {
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.eb-opt {
+  display: flex;
+  min-height: 3rem;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 2px solid var(--eb-kante);
+  background: var(--eb-bogen);
+  cursor: pointer;
+  transition: transform 120ms var(--ease-deck, ease-out);
+}
+
+.eb-opt input {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0.1875rem 0 0;
+  accent-color: var(--eb-ink);
+}
+
+.eb-opt-body {
+  display: grid;
+  min-width: 0;
+  gap: 0.125rem;
+}
+
+.eb-opt-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--eb-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.eb-opt-desc {
+  color: var(--eb-muted);
+  font-size: 0.9375rem;
+}
+
+.eb-opt-text {
+  overflow-wrap: anywhere;
+}
+
+.eb-opt[data-checked] {
+  border-color: var(--eb-ink);
+  background: var(--eb-sky);
+  box-shadow: 0 3px 0 var(--eb-ink);
+}
+
+.eb-opt:has(input:focus-visible) {
+  outline: 3px solid var(--eb-mennige);
+  outline-offset: 2px;
+}
+
+/* One ring per option: the row carries it, the radio does not. */
+.eb-opt input:focus-visible {
+  outline: none;
+}
+
+.eb-q:disabled .eb-opt {
+  cursor: default;
+}
+
+.eb-q:disabled .eb-opt:not([data-checked]) {
+  border-style: dashed;
+}
+
+.eb-q:disabled .eb-opt:not([data-checked]) .eb-opt-text,
+.eb-q:disabled .eb-opt:not([data-checked]) .eb-opt-status {
+  color: var(--eb-muted);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────── */
+
+.eb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.eb-primary,
+.eb-btn,
+.eb-copy,
+.eb-pick {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border: 2px solid var(--eb-ink);
+  border-radius: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 120ms var(--ease-deck, ease-out);
+}
+
+.eb-primary {
+  border-color: var(--eb-mennige);
+  background: var(--eb-mennige);
+  color: var(--eb-bogen);
+}
+
+.eb-primary:disabled {
+  border: 2px dashed var(--eb-kante);
+  background: transparent;
+  color: var(--eb-muted);
+  cursor: not-allowed;
+}
+
+.eb-btn,
+.eb-copy {
+  background: var(--eb-bogen);
+  color: var(--eb-ink);
+}
+
+.eb-pick {
+  justify-content: flex-start;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--eb-bogen);
+  color: var(--eb-ink);
+  font-weight: 400;
+  text-align: left;
+}
+
+.eb-pick-label {
+  overflow-wrap: anywhere;
+}
+
+.eb-pick[aria-pressed="true"] {
+  background: var(--eb-sky);
+  box-shadow: 0 3px 0 var(--eb-ink);
+}
+
+.eb-pick:disabled {
+  cursor: default;
+}
+
+.eb-pick:disabled:not([aria-pressed="true"]) {
+  border-style: dashed;
+  border-color: var(--eb-kante);
+  color: var(--eb-muted);
+}
+
+.eb-picks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.5rem;
+}
+
+/* The anti-colour block: a fine pointer or keyboard focus lifts the control
+   2px over a 4px block; a press sinks it to 1px over a 3px block. The block
+   is always the colour the control is not: Mennige behind every ink-edged
+   control, Druckschwarz behind the Mennige "Prüfen". */
+.eb-btn,
+.eb-pick,
+.eb-index-btn,
+.eb-copy,
+.eb-opt {
+  --eb-anti: var(--eb-mennige);
+}
+
+.eb-primary {
+  --eb-anti: var(--eb-ink);
+}
+
+.eb-btn:focus-visible,
+.eb-primary:not(:disabled):focus-visible,
+.eb-pick:not(:disabled):focus-visible,
+.eb-index-btn:focus-visible,
+.eb-copy:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--eb-anti);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eb-btn:hover,
+  .eb-primary:not(:disabled):hover,
+  .eb-pick:not(:disabled):hover,
+  .eb-index-btn:hover,
+  .eb-copy:hover,
+  .eb-q:not(:disabled) .eb-opt:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--eb-anti);
+  }
+}
+
+.eb-btn:active,
+.eb-primary:not(:disabled):active,
+.eb-pick:not(:disabled):active,
+.eb-index-btn:active,
+.eb-copy:active,
+.eb-q:not(:disabled) .eb-opt:active {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--eb-anti);
+}
+
+.eb-link:active {
+  text-decoration-color: var(--eb-mennige);
+  text-decoration-thickness: 3px;
+}
+
+/* ─── Feedback ───────────────────────────────────────────────────────── */
+
+.eb-fb {
+  display: grid;
+  gap: 0.625rem;
+  padding: 1rem;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-bogen);
+}
+
+.eb-fb-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.eb-fb-grade {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.eb-fb-grade:focus {
+  outline: none;
+}
+
+.eb-fb-grade:focus-visible {
+  outline: 3px solid var(--eb-mennige);
+  outline-offset: 2px;
+}
+
+.eb-fb[data-grade="half"] .eb-fb-grade,
+.eb-fb[data-grade="wrong"] .eb-fb-grade {
+  color: var(--eb-mennige-deep);
+}
+
+.eb-rule {
+  padding: 0.125rem 0.5rem;
+  border: 1.5px solid var(--eb-ink);
+  font-family: var(--eb-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.eb-fb-key {
+  margin: 0;
+  font-family: var(--eb-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.eb-fb-line {
+  margin: 0;
+  max-width: 62ch;
+}
+
+.eb-beat {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.eb-beat-line {
+  margin: 0;
+  padding-left: 0.75rem;
+  border-left: 4px solid var(--eb-rost);
+  font-weight: 600;
+}
+
+.eb-feeds {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--eb-hair);
+}
+
+.eb-feeds-h {
+  margin: 0 0 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.eb-feeds-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eb-feed {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.75rem;
+  row-gap: 0.125rem;
+}
+
+.eb-feed-status,
+.eb-cell-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--eb-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.eb-feed-parts {
+  grid-column: 1 / -1;
+  color: var(--eb-muted);
+  font-family: var(--eb-mono);
+  font-size: 0.8125rem;
+}
+
+/* ─── Month strip (M1, M4) ───────────────────────────────────────────── */
+
+.eb-strip {
+  max-width: 32rem;
+}
+
+.eb-strip-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.eb-strip-label {
+  fill: var(--eb-ink);
+  font-family: var(--eb-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.eb-strip-month {
+  fill: var(--eb-ink);
+  font-family: var(--eb-mono);
+  font-size: 13px;
+}
+
+.eb-strip-year {
+  margin: 0.25rem 0 0;
+  font-family: var(--eb-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+/* ─── Answer sheet ───────────────────────────────────────────────────── */
+
+.eb-sheet {
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-bogen);
+  scroll-margin-top: calc(var(--nav-h, 4rem) + 1rem);
+}
+
+.eb-sheet-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.eb-sheet-count {
+  margin: 0;
+  font-family: var(--eb-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.eb-summary {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: var(--eb-paper);
+  border: 2px solid var(--eb-ink);
+  border-left-width: 8px;
+}
+
+.eb-summary p {
+  margin: 0;
+}
+
+.eb-summary-h {
+  font-weight: 700;
+}
+
+.eb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.eb-caption {
+  caption-side: top;
+  padding-bottom: 0.375rem;
+  border-bottom: 2px solid var(--eb-ink);
+  text-align: left;
+}
+
+.eb-caption-h {
+  display: block;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.eb-caption-tally {
+  display: block;
+  margin-top: 0.125rem;
+  font-family: var(--eb-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.eb-table tr {
+  border-bottom: 1px solid var(--eb-hair);
+}
+
+.eb-table th,
+.eb-table td {
+  padding: 0.375rem 0.25rem;
+  vertical-align: top;
+  text-align: left;
+}
+
+.eb-td-id {
+  width: 2.5rem;
+  font-family: var(--eb-mono);
+  font-weight: 700;
+}
+
+.eb-td-q {
+  min-width: 0;
+}
+
+.eb-td-label {
+  display: block;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.eb-td-value {
+  display: block;
+  color: var(--eb-muted);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+.eb-td-label {
+  hyphens: auto;
+}
+
+.eb-cell-status {
+  white-space: nowrap;
+}
+
+/* Phone: the status sits under the title, so the description gets the full column. */
+@media (max-width: 30rem) {
+  .eb-table tr {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+
+  .eb-td-id {
+    width: auto;
+    grid-row: 1 / span 2;
+  }
+
+  .eb-td-q,
+  .eb-td-status {
+    grid-column: 2;
+  }
+
+  .eb-td-status {
+    width: auto;
+    padding-top: 0;
+  }
+}
+
+.eb-td-status {
+  width: 8.25rem;
+}
+
+.eb-cell-open {
+  color: var(--eb-faint);
+  font-family: var(--eb-mono);
+  font-size: 0.875rem;
+}
+
+/* Old status on its own line, then the arrow inline with the new one: "→ OK". */
+.eb-moved {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.375rem;
+  row-gap: 0.125rem;
+}
+
+.eb-moved > .eb-cell-status:first-child {
+  grid-column: 1 / -1;
+  color: var(--eb-faint);
+  text-decoration: line-through;
+}
+
+.eb-arrow {
+  font-family: var(--eb-mono);
+  font-weight: 700;
+}
+
+.eb-yours {
+  display: block;
+  margin-top: 0.125rem;
+  color: var(--eb-mennige-deep);
+  font-family: var(--eb-mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.eb-table tr:target {
+  outline: 3px solid var(--eb-mennige);
+  outline-offset: -3px;
+}
+
+/* ─── Monday ─────────────────────────────────────────────────────────── */
+
+.eb-monday {
+  display: grid;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--eb-ink);
+  scroll-margin-top: calc(var(--nav-h, 4rem) + 1rem);
+}
+
+.eb-monday .eb-h3:focus {
+  outline: none;
+}
+
+.eb-monday .eb-h3:focus-visible {
+  outline: 3px solid var(--eb-mennige);
+  outline-offset: 2px;
+}
+
+.eb-lock {
+  margin: 0;
+  padding: 0.75rem;
+  border: 2px dashed var(--eb-kante);
+  color: var(--eb-muted);
+}
+
+.eb-tip,
+.eb-lead {
+  margin: 0;
+  font-weight: 600;
+}
+
+.eb-fb-inline {
+  margin: 0;
+  padding: 0.75rem;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-bogen);
+}
+
+.eb-fb-inline:focus {
+  outline: none;
+}
+
+.eb-fb-inline:focus-visible {
+  outline: 3px solid var(--eb-mennige);
+  outline-offset: 2px;
+}
+
+.eb-inv {
+  min-width: 0;
+  margin: 0;
+  padding: 1rem;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-bogen);
+}
+
+.eb-inv-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--eb-ink);
+}
+
+.eb-inv-from,
+.eb-inv-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.eb-inv-title {
+  font-size: 1.125rem;
+  letter-spacing: 0.04em;
+}
+
+.eb-inv-gloss {
+  color: var(--eb-muted);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.eb-inv-fields {
+  display: grid;
+  margin: 0;
+}
+
+.eb-inv-row {
+  display: grid;
+  gap: 0.125rem;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  border-bottom: 1px solid var(--eb-hair);
+}
+
+@media (min-width: 40rem) {
+  .eb-inv-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 1rem;
+  }
+}
+
+.eb-inv-row dt {
+  font-size: 0.9375rem;
+}
+
+.eb-inv-row dd {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  font-family: var(--eb-mono);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.eb-inv-row[data-decisive] {
+  box-shadow: inset 4px 0 0 var(--eb-rost);
+}
+
+.eb-inv-note {
+  font-family: var(--font-sans);
+  font-weight: 600;
+}
+
+.eb-inv-cap {
+  margin-top: 0.5rem;
+  color: var(--eb-muted);
+  font-size: 0.875rem;
+}
+
+.eb-reveal {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-bogen);
+}
+
+.eb-reveal-k {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.eb-reveal-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.eb-reveal-row {
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--eb-ink);
+}
+
+.eb-score {
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--eb-paper);
+  border: 2px solid var(--eb-ink);
+  border-left-width: 8px;
+  font-weight: 700;
+}
+
+/* ─── Takeaways ──────────────────────────────────────────────────────── */
+
+.eb-take {
+  display: grid;
+  gap: 1rem;
+  margin-top: 3.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--eb-ink);
+}
+
+.eb-take-sub {
+  margin: 0;
+  color: var(--eb-muted);
+}
+
+.eb-take-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 64rem) {
+  .eb-take-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.eb-take-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 2px solid var(--eb-ink);
+  background: var(--eb-bogen);
+}
+
+.eb-take-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.eb-from-kit {
+  padding: 0.0625rem 0.375rem;
+  border: 1.5px solid var(--eb-ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* The text box is as tall as its text; the note and button sit at the card foot. */
+.eb-take-text {
+  flex: none;
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--eb-beton);
+  font-family: var(--eb-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.eb-checklist p {
+  margin: 0;
+}
+
+.eb-check-list {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0.375rem 0;
+  padding-left: 2.5ch;
+  list-style: decimal;
+}
+
+.eb-check-list li[data-marked] {
+  box-shadow: inset 0 -2px 0 var(--eb-mennige);
+}
+
+.eb-missed {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0 0.375rem;
+  border: 1.5px solid var(--eb-mennige-deep);
+  color: var(--eb-mennige-deep);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.eb-take-note {
+  margin: auto 0 0;
+  color: var(--eb-muted);
+  font-size: 0.9375rem;
+}
+
+.eb-copy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.eb-copy[data-state="copied"] {
+  background: var(--eb-sky);
+}
+
+.eb-copy-status {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.eb-privacy {
+  margin: 0;
+  max-width: 70ch;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--eb-ink);
+}
+
+/* ─── Reduced motion: every end state at once ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .eb-index-btn,
+  .eb-opt,
+  .eb-primary,
+  .eb-btn,
+  .eb-copy,
+  .eb-pick {
+    transition: none;
+  }
+}
+
+/* German words hyphenate at the line end instead of splitting mid-word. */
+.eb-opt-text,
+.eb-fb-key,
+.eb-fb-line,
+.eb-fb-inline,
+.eb-reveal-row,
+.eb-take-note {
+  hyphens: auto;
+}

@@ -4,6 +4,41 @@ import { describe, expect, it } from "vitest";
 
 const SOURCE_ROOT = join(__dirname, "..");
 
+const DEMO_SLUGS = [
+  "ki-prognosen-einschaetzen",
+  "geschaeftsberichte-mit-ki-lesen",
+  "datenbereitschaft-fuer-ki",
+  "esg-berichte-mit-ki",
+  "ki-im-unternehmen-sicher-nutzen",
+] as const;
+
+/**
+ * Every production source and stylesheet of the workshop demos: the whole
+ * component folder and the whole lib/demo-cases folder, because the tones
+ * live in the components and CSS, not in the thin index.tsx.
+ */
+function demoFiles(): readonly string[] {
+  const walk = (relativePath: string): readonly string[] => {
+    let entries;
+    try {
+      entries = readdirSync(join(SOURCE_ROOT, relativePath), { withFileTypes: true });
+    } catch {
+      return [];
+    }
+    return entries.flatMap((entry) => {
+      const path = `${relativePath}/${entry.name}`;
+      if (entry.isDirectory()) return walk(path);
+      return /\.(?:ts|tsx|css)$/.test(entry.name) && !/\.(?:test|spec)\.(?:ts|tsx)$/.test(entry.name)
+        ? [path]
+        : [];
+    });
+  };
+  return DEMO_SLUGS.flatMap((slug) => [
+    ...walk(`components/demos/${slug}`),
+    ...walk(`lib/demo-cases/${slug}`),
+  ]);
+}
+
 function source(relativePath: string): string {
   return readFileSync(join(SOURCE_ROOT, relativePath), "utf8");
 }
@@ -22,15 +57,7 @@ const FORMERLY_DARK = [
   "components/werk/question-card.tsx",
   "components/werk/button-link.tsx",
   "components/werk/chip.tsx",
-  "components/demos/demo-shell.tsx",
-  "components/demos/agent-pipeline-demo.tsx",
-  "components/demos/n8n-supply-chain-demo.tsx",
-  "components/demos/prompt-scanner-demo.tsx",
-  "components/demos/roi-rechner-demo.tsx",
-  "components/demos/cost-drift-observability-demo.tsx",
-  "components/demos/word-demo.tsx",
-  "components/demos/rag-vertragsassistent-demo.tsx",
-  "components/demos/rag-vertragsassistent-first-frame.tsx",
+  "components/demos/demo-page.tsx",
   "components/ai-native/primitives.tsx",
   "components/ai-native/demos/_shared.tsx",
   "components/ai-native/demos/agent-demo.tsx",
@@ -97,7 +124,7 @@ function productionFiles(directory: string): string[] {
 }
 
 describe("no dark surfaces", () => {
-  it.each(FORMERLY_DARK)("%s paints no black, graphit or near-black ground", (path) => {
+  it.each([...FORMERLY_DARK, ...demoFiles()])("%s paints no black, graphit or near-black ground", (path) => {
     const text = source(path);
     const match = DARK_SURFACE.exec(text);
     expect(match?.[0], `${path} still paints a dark ground`).toBeUndefined();
@@ -132,11 +159,7 @@ describe("no dark surfaces", () => {
   });
 
   it("uses paper-safe status tones in consoles and logs, never the light display tones", () => {
-    for (const path of [
-      "components/demos/n8n-supply-chain-demo.tsx",
-      "components/demos/prompt-scanner-demo.tsx",
-      "components/demos/cost-drift-observability-demo.tsx",
-    ]) {
+    for (const path of demoFiles()) {
       const text = source(path);
       expect(text, path).not.toMatch(/statusRedOnDark|rgba\(243,\s*240,\s*233/);
     }

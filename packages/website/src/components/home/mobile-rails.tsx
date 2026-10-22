@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getBookDisplay } from "@/app/buecher/book-copy";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { books } from "@/lib/books";
-import { getDemosForLocale } from "@/lib/demos-localization";
+import { getDemosForLocale } from "@/lib/demos";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { RailList } from "./rail-list";
 
@@ -35,8 +35,8 @@ import { RailList } from "./rail-list";
  * JavaScript beyond the rail's focus helper and requests no image.
  */
 
-/** How many applied examples the rail carries. */
-const RAIL_DEMO_COUNT = 6;
+/** How many workshop demos the rail carries: all five. */
+const RAIL_DEMO_COUNT = 5;
 
 /** The books rail needs at least two titles; one book is the board's row. */
 export const BOOK_RAIL_SHOWN = books.length > 1;
@@ -99,7 +99,7 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
                     {demo.title}
                   </span>
                   <span className="mt-1 block text-caption leading-snug text-muted-foreground">
-                    {demo.titleKicker}
+                    {copy.demoMeta(demo.workshopNumber)}
                   </span>
                 </span>
               </Link>

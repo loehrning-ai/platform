@@ -8,8 +8,8 @@ const chaptersFor = (locale: "de" | "en") => chapters(locale);
 const OVERVIEW_ROUTES = [
   {
     path: "/buecher",
-    deHeading: "Sachbücher mit sichtbaren Quellen und Grenzen.",
-    enHeading: "Reference books with visible sources and limits.",
+    deHeading: "Bücher zum Nachrechnen",
+    enHeading: "Books you can check",
   },
   {
     path: "/buecher/ki-landschaft",
@@ -172,18 +172,24 @@ for (const width of [320, 390, 768, 1440] as const) {
           // The cover is the insight cover: nothing collapses.
           await expect(page.locator("main details, main summary")).toHaveCount(0);
         } else {
-          const previewName =
-            locale === "de"
-              ? "Vorschau von „Von außen gesehen“ öffnen"
-              : "Open the cover preview for “Seen from the outside”";
-          await page.getByRole("button", { name: previewName }).click();
-          await expect(page.getByRole("dialog")).toBeVisible();
-          await page
-            .getByRole("dialog")
-            .getByRole("button", {
-              name: locale === "de" ? "Vorschau schließen" : "Close preview",
-            })
-            .click();
+          // The shelf: chapter 1 and the book are one tap away, every
+          // chapter is listed, and nothing collapses.
+          await expect(
+            page.getByRole("link", {
+              name: locale === "de" ? "Kapitel 1 lesen: Von außen gesehen" : "Read chapter 1: Seen from the outside",
+            }),
+          ).toHaveAttribute(
+            "href",
+            localized(`/buecher/ki-landschaft/${chaptersFor(locale)[0]!.slug}`, locale),
+          );
+          await expect(
+            page
+              .getByRole("navigation", {
+                name: locale === "de" ? "Alle Kapitel des Buchs" : "All chapters of the book",
+              })
+              .getByRole("link"),
+          ).toHaveCount(chaptersFor(locale).length);
+          await expect(page.locator("main details, main summary, main dialog")).toHaveCount(0);
         }
 
         await assertGeometry(page, path, width);

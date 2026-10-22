@@ -1,0 +1,992 @@
+/*
+ * Demo 03 "Mach die Zahl richtig." Every rule is scoped to .dr3 so nothing
+ * leaks into other pages. Plakat Bloom on Kalkweiß: Aubergine ink, Terrakotta
+ * tief fills and buttons with a Bogen label, Sand for the active step.
+ * Terrakotta (#d1733d) stays in the band motif only. Hover is fine-pointer
+ * only and brings in a contrasting anti colour (a Mennige or Aubergine offset
+ * block), never a tint of the element's own colour. No gradients, no glows,
+ * no rounded corners. Transitions live only inside prefers-reduced-motion:
+ * no-preference.
+ */
+.dr3 {
+  --dr3-ink: #3b1f45; /* Aubergine: 12.57 on Kalkweiß */
+  --dr3-accent: #964305; /* Terrakotta tief: 5.95 on Kalkweiß, Bogen label 6.61 */
+  --dr3-paper: #fffcf5; /* Bogen */
+  --dr3-sand: #e6d3af; /* Sand: Aubergine 9.74 */
+  --dr3-anti: #b73a15; /* Mennige: 5.08 on Kalkweiß, 3.94 on Sand */
+  --dr3-black: #121212; /* Druckschwarz */
+  --dr3-text: var(--color-foreground, #121212);
+  --dr3-muted: var(--color-muted-foreground, #4f4640);
+  --dr3-hatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M-2 2l4-4M0 8l8-8M6 10l4-4' stroke='%23964305' stroke-width='1.4'/%3E%3C/svg%3E");
+  color: var(--dr3-text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  min-width: 0;
+}
+
+.dr3 *,
+.dr3 *::before,
+.dr3 *::after {
+  border-radius: 0;
+}
+
+.dr3 code,
+.dr3 .dr3-mono {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+.dr3 :focus-visible {
+  outline: 3px solid var(--dr3-ink);
+  outline-offset: 3px;
+}
+
+.dr3-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------- Rail ---------------------------------- */
+
+.dr3-rail ol {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dr3-rail-btn {
+  display: flex;
+  width: 100%;
+  min-height: 60px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--dr3-paper);
+  color: var(--dr3-ink);
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dr3-rail-btn[aria-current="step"] {
+  background: var(--dr3-sand);
+}
+
+.dr3-rail-num {
+  font-size: 1.25rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.dr3-rail-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.dr3-rail-btn:focus-visible {
+  outline-offset: 2px;
+  box-shadow: 4px 4px 0 var(--dr3-anti);
+  transform: translate(-2px, -2px);
+}
+
+.dr3-rail-btn:active {
+  box-shadow: 3px 3px 0 var(--dr3-anti);
+  transform: translate(-1px, -1px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dr3-rail-btn:hover {
+    box-shadow: 4px 4px 0 var(--dr3-anti);
+    transform: translate(-2px, -2px);
+  }
+}
+
+@media (max-width: 479px) {
+  .dr3-rail-state-word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* ------------------------------- Sections -------------------------------- */
+
+.dr3-section {
+  scroll-margin-top: 6rem;
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 2px solid var(--dr3-ink);
+}
+
+.dr3-h2 {
+  margin: 0;
+  color: var(--dr3-ink);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.dr3-h2:focus {
+  outline: none;
+}
+
+.dr3-h2:focus-visible {
+  outline: 3px solid var(--dr3-ink);
+}
+
+.dr3-path {
+  margin: 6px 0 0;
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+}
+
+.dr3-path code {
+  color: var(--dr3-ink);
+}
+
+.dr3-question {
+  max-width: 34ch;
+  margin: 14px 0 0;
+  color: var(--dr3-text);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.dr3-context {
+  max-width: 68ch;
+  margin: 10px 0 0;
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.dr3-start {
+  margin: 12px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--dr3-accent);
+  font-size: 0.9375rem;
+}
+
+.dr3-start strong {
+  display: block;
+  color: var(--dr3-accent);
+  font-size: 1.0625rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.dr3-decision {
+  margin: 10px 0 0;
+  font-weight: 600;
+}
+
+.dr3-intro {
+  max-width: 60ch;
+  margin: 10px 0 0;
+}
+
+/* --------------------------------- Grid ---------------------------------- */
+
+.dr3-grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+@media (min-width: 1024px) {
+  .dr3-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    gap: 40px;
+  }
+}
+
+/* ------------------------------- Fieldsets ------------------------------- */
+
+.dr3-form {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+
+.dr3-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  scroll-margin-top: 6rem;
+}
+
+.dr3-legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--dr3-text);
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.dr3-legend-hint {
+  display: block;
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.dr3-chips {
+  display: grid;
+  gap: 8px;
+}
+
+.dr3-chips[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dr3-fixed {
+  margin: 0;
+  padding: 8px 0 8px 12px;
+  border-left: 3px solid var(--dr3-ink);
+  font-size: 0.9375rem;
+}
+
+.dr3-fixed-note {
+  display: block;
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* --------------------------------- Chips --------------------------------- */
+
+/* Flex so the face fills its grid cell: neighbours in a row share one height. */
+.dr3-chip {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dr3-chip-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dr3-chip-face {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--dr3-paper);
+  color: var(--dr3-ink);
+}
+
+.dr3-chip-mark {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--dr3-paper);
+  color: var(--dr3-accent);
+}
+
+/* A radio is a diamond that fills with a smaller diamond; a checkbox stays a square that gets a check. */
+.dr3-chip[data-type="radio"] .dr3-chip-mark {
+  width: 14px;
+  height: 14px;
+  margin: 4px 2px 0;
+  transform: rotate(45deg);
+}
+
+.dr3-chip-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+}
+
+.dr3-chip-mark svg,
+.dr3-chip-dot {
+  visibility: hidden;
+}
+
+.dr3-chip-text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dr3-chip-label {
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.dr3-chip-label code {
+  font-size: 0.875rem;
+}
+
+.dr3-chip-gloss,
+.dr3-chip-tag {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+}
+
+.dr3-chip-tag {
+  font-weight: 600;
+}
+
+.dr3-chip-input:checked + .dr3-chip-face {
+  border-color: var(--dr3-accent);
+  background: var(--dr3-accent);
+  color: var(--dr3-paper);
+}
+
+.dr3-chip-input:checked + .dr3-chip-face .dr3-chip-mark {
+  border-color: var(--dr3-paper);
+}
+
+.dr3-chip-input:checked + .dr3-chip-face .dr3-chip-mark svg,
+.dr3-chip-input:checked + .dr3-chip-face .dr3-chip-dot {
+  visibility: visible;
+}
+
+.dr3-chip-input:focus-visible + .dr3-chip-face {
+  outline: 3px solid var(--dr3-ink);
+  outline-offset: 2px;
+  box-shadow: 4px 4px 0 var(--dr3-anti);
+  transform: translate(-2px, -2px);
+}
+
+.dr3-chip-input:checked:focus-visible + .dr3-chip-face {
+  box-shadow: 4px 4px 0 var(--dr3-ink);
+}
+
+.dr3-chip-input:active + .dr3-chip-face {
+  box-shadow: 3px 3px 0 var(--dr3-anti);
+  transform: translate(-1px, -1px);
+}
+
+.dr3-chip-input:active + .dr3-chip-face .dr3-chip-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dr3-chip-input:checked:active + .dr3-chip-face {
+  box-shadow: 3px 3px 0 var(--dr3-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dr3-chip:hover .dr3-chip-face {
+    box-shadow: 4px 4px 0 var(--dr3-anti);
+    transform: translate(-2px, -2px);
+  }
+
+  .dr3-chip:hover .dr3-chip-input:checked + .dr3-chip-face {
+    box-shadow: 4px 4px 0 var(--dr3-ink);
+  }
+}
+
+/* -------------------------------- Buttons -------------------------------- */
+
+.dr3-btn {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 2px solid var(--dr3-accent);
+  background: var(--dr3-accent);
+  color: var(--dr3-paper);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  cursor: pointer;
+  --anti: var(--dr3-black);
+}
+
+.dr3-btn-wide {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .dr3-btn-wide {
+    width: auto;
+    min-width: 12rem;
+  }
+}
+
+.dr3-btn-secondary {
+  min-height: 44px;
+  border-color: var(--dr3-ink);
+  background: var(--dr3-paper);
+  color: var(--dr3-ink);
+  font-size: 0.9375rem;
+  --anti: var(--dr3-anti);
+}
+
+/* -------------------------------- Receipt -------------------------------- */
+
+.dr3-receipt {
+  position: relative;
+  min-width: 0;
+  container: dr3-receipt / inline-size;
+  padding: 14px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--dr3-paper);
+}
+
+.dr3-receipt[data-stale="true"] {
+  border-style: dashed;
+  border-color: var(--dr3-accent);
+}
+
+.dr3-receipt-hatch {
+  height: 8px;
+  margin: -14px -14px 12px;
+  background-image: var(--dr3-hatch);
+  background-repeat: repeat;
+  border-bottom: 2px solid var(--dr3-accent);
+}
+
+.dr3-receipt-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.dr3-receipt-title {
+  margin: 0;
+  color: var(--dr3-ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.dr3-receipt-title:focus {
+  outline: none;
+}
+
+.dr3-receipt-title:focus-visible {
+  outline: 3px solid var(--dr3-ink);
+}
+
+.dr3-verdict {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  color: var(--dr3-ink);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.dr3-verdict svg {
+  flex: none;
+}
+
+.dr3-stale {
+  margin: 10px 0 0;
+  color: var(--dr3-accent);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.dr3-empty {
+  margin: 10px 0 0;
+  color: var(--dr3-muted);
+}
+
+/* Yours against the database check: one table, so rows line up. */
+.dr3-rows {
+  width: 100%;
+  margin: 14px 0 0;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+}
+
+.dr3-rows th,
+.dr3-rows td {
+  padding: 5px 10px 5px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.dr3-rows th:last-child,
+.dr3-rows td:last-child {
+  padding-right: 0;
+}
+
+.dr3-rows thead th {
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid var(--dr3-ink);
+  color: var(--dr3-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  vertical-align: bottom;
+}
+
+.dr3-rows tbody tr + tr > * {
+  border-top: 1px solid var(--color-hairline, #d4cec5);
+}
+
+.dr3-rows thead th:first-child {
+  width: 1%;
+}
+
+.dr3-row-label {
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+/* "Datenbank-" / "prüfung" only at its soft hyphen, never inside a number. */
+.dr3-rows th {
+  hyphens: manual;
+}
+
+/*
+ * Phone receipts (content up to 459px, so every phone up to about 520px wide):
+ * two lines per row. The row's label takes its own line, its two values sit
+ * side by side under the two column heads, so nothing is clipped and nothing
+ * scrolls sideways. The roles keep it a table for assistive tech while the
+ * rows are grids.
+ */
+@container dr3-receipt (max-width: 459px) {
+  .dr3-rows,
+  .dr3-rows thead,
+  .dr3-rows tbody {
+    display: block;
+  }
+
+  .dr3-rows tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 10px;
+  }
+
+  .dr3-rows th,
+  .dr3-rows td {
+    padding-right: 0;
+  }
+
+  .dr3-rows thead tr {
+    border-bottom: 1.5px solid var(--dr3-ink);
+  }
+
+  .dr3-rows thead th {
+    border-bottom: 0;
+  }
+
+  .dr3-rows .dr3-rows-corner {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .dr3-rows tbody tr + tr {
+    border-top: 1px solid var(--color-hairline, #d4cec5);
+  }
+
+  .dr3-rows tbody tr + tr > * {
+    border-top: 0;
+  }
+
+  .dr3-rows .dr3-row-label {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+}
+
+.dr3-nowrap {
+  white-space: nowrap;
+}
+
+.dr3-row-empty {
+  color: var(--dr3-muted);
+}
+
+.dr3-origin-line {
+  margin: 8px 0 0;
+}
+
+.dr3-row-value {
+  font-weight: 700;
+}
+
+.dr3-yours .dr3-row-value {
+  color: var(--dr3-accent);
+}
+
+.dr3-origin {
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1.5px solid var(--dr3-ink);
+  color: var(--dr3-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.dr3-why {
+  margin: 14px 0 0;
+  max-width: 62ch;
+}
+
+.dr3-why + .dr3-why {
+  margin-top: 8px;
+}
+
+.dr3-note {
+  margin: 8px 0 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--dr3-ink);
+  font-size: 0.9375rem;
+}
+
+.dr3-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.dr3-dataline {
+  margin: 14px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-hairline, #d4cec5);
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.dr3-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+}
+
+/* -------------------------------- Figures -------------------------------- */
+
+.dr3-figure {
+  width: 100%;
+  margin: 14px 0 0;
+  container: dr3-figure / inline-size;
+}
+
+/* Key above each figure: what solid and outline mean. */
+.dr3-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0 0 8px;
+  color: var(--dr3-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dr3-key-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dr3-key-item svg {
+  display: block;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+/*
+ * Figure type stays at 13 to 15px on screen, like the key and the table: the
+ * SVG (326 units wide) grows with the receipt only up to 489px, and its type
+ * steps down in user units as it grows (13, 11.5, 10 units).
+ */
+.dr3-figure > svg {
+  display: block;
+  width: 100%;
+  max-width: 489px;
+  height: auto;
+  overflow: visible;
+}
+
+/*
+ * Below 326px of receipt content the figure would set its type under 12px:
+ * there it takes 10px of the receipt's padding on each side (4px stay
+ * between figure and border), so a 360px phone still reads 12.6px.
+ */
+@container dr3-receipt (max-width: 325px) {
+  .dr3-figure {
+    width: calc(100% + 20px);
+    margin-inline: -10px;
+  }
+
+  .dr3-figure > .dr3-key {
+    padding-inline: 10px;
+  }
+}
+
+.dr3-figure text {
+  font-family: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+@container dr3-figure (min-width: 376px) {
+  .dr3-figure text {
+    font-size: 11.5px;
+  }
+}
+
+@container dr3-figure (min-width: 430px) {
+  .dr3-figure text {
+    font-size: 10px;
+  }
+}
+
+/* ------------------------------- Triage ---------------------------------- */
+
+.dr3-cards {
+  display: grid;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+@media (min-width: 768px) {
+  .dr3-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  /* F01 takes the full row; its six ticks run in two columns. */
+  .dr3-card[data-card="F01"] {
+    grid-column: 1 / -1;
+  }
+
+  .dr3-card[data-card="F01"] [data-follow-up="freshTicks"] .dr3-chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .dr3-card[data-card="F01"] {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  .dr3-card[data-card="F01"] > .dr3-card-head,
+  .dr3-card[data-card="F01"] > .dr3-card-q {
+    grid-column: 1 / -1;
+  }
+}
+
+.dr3-card {
+  min-width: 0;
+  padding: 16px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--color-background, #f7f1e7);
+  scroll-margin-top: 6rem;
+}
+
+.dr3-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px 12px;
+}
+
+.dr3-h3 {
+  margin: 0;
+  color: var(--dr3-ink);
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.dr3-card-anchor {
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+}
+
+.dr3-card-q {
+  margin: 10px 0 0;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.dr3-card .dr3-form {
+  margin-top: 16px;
+  gap: 16px;
+}
+
+.dr3-card .dr3-receipt {
+  margin-top: 16px;
+}
+
+.dr3-ask {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1.5px dashed var(--dr3-ink);
+  background: var(--dr3-paper);
+}
+
+.dr3-ask-label {
+  display: block;
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.dr3-lock-legend code {
+  font-size: 0.875rem;
+}
+
+/* ------------------------------ Take-aways ------------------------------- */
+
+.dr3-closing {
+  max-width: 64ch;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--dr3-sand);
+  color: var(--dr3-ink);
+  font-weight: 600;
+}
+
+.dr3-takeaways {
+  display: grid;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+  .dr3-takeaways {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.dr3-take {
+  min-width: 0;
+  padding: 16px;
+  border: 2px solid var(--dr3-ink);
+  background: var(--dr3-paper);
+}
+
+.dr3-take-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dr3-take-text {
+  margin: 12px 0 0;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dr3-take-example {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--dr3-accent);
+  background: var(--color-background, #f7f1e7);
+  font-size: 0.9375rem;
+}
+
+.dr3-take-example-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--dr3-muted);
+  font-weight: 700;
+}
+
+.dr3-take-note {
+  margin: 12px 0 0;
+  color: var(--dr3-ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.dr3-copy {
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.dr3-copy-failed {
+  margin: 8px 0 0;
+  color: var(--dr3-accent);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.dr3-provenance {
+  max-width: 72ch;
+  margin: 28px 0 0;
+  color: var(--dr3-muted);
+  font-size: 0.9375rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dr3-chip-face,
+  .dr3-rail-btn {
+    transition:
+      transform 120ms ease-out,
+      box-shadow 0ms;
+  }
+}

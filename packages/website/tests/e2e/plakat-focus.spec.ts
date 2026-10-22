@@ -31,7 +31,7 @@ import {
 } from "./fixtures/plakat-pixels";
 
 /** §9 row 11 names one demo detail beside the §8.3 routes. */
-const FOCUS_ROUTES = [...PLAKAT_ROUTES, "/demos/excel"] as const;
+const FOCUS_ROUTES = [...PLAKAT_ROUTES, "/demos/ki-prognosen-einschaetzen"] as const;
 const MAX_TABS = 90;
 /** Longer than any colour transition a button could still carry (120ms). */
 const RING_SETTLE_MS = 250;

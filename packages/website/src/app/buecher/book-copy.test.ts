@@ -22,12 +22,41 @@ describe("book locale copy", () => {
     const copy = BOOK_PAGE_COPY.en;
     const display = getBookDisplay(allBooks[0], "en");
 
-    expect(copy.catalog.materialLanguageValue).toBe("English");
+    expect(copy.catalog.pdfAfterLogin(32)).toBe(
+      "German PDF, 32 pages, after sign-in",
+    );
     expect(copy.detail.contentsIntro).toContain("English reader");
     expect(copy.metadata.detailDescription(display)).toContain(
       "English HTML reading edition",
     );
     expect(copy.detail.pdfAfterLogin).toContain("German PDF");
+  });
+
+  it("keeps the shelf copy free of dashes used as punctuation", () => {
+    for (const locale of ["de", "en"] as const) {
+      const catalog = BOOK_PAGE_COPY[locale].catalog;
+      const strings = [
+        catalog.caps(1, 24),
+        catalog.caps(2, 97),
+        catalog.heading,
+        catalog.lede,
+        catalog.rowMeta("x", 9, 24),
+        catalog.readChapter(1),
+        catalog.openBook,
+        catalog.pdfAfterLogin(32),
+        catalog.reviewed("1 May 2026"),
+        catalog.aggregates(5),
+        catalog.companion,
+      ];
+      for (const text of strings) expect(text).not.toMatch(/[\u2013\u2014]/);
+    }
+    expect(BOOK_PAGE_COPY.de.catalog.caps(1, 24)).toBe(
+      "Lernbücher · 1 Buch · 24 Min. Lesezeit",
+    );
+    expect(BOOK_PAGE_COPY.de.catalog.caps(2, 97)).toContain("2 Bücher");
+    expect(BOOK_PAGE_COPY.en.catalog.caps(1, 24)).toBe(
+      "Books · 1 book · 24 min read",
+    );
   });
 
   it("keeps catalogue claims concrete and free of generic promotion", () => {

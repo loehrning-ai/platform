@@ -15,6 +15,7 @@
  * component.
  */
 
+import { demoForWorkshop } from "./demos";
 import type { Locale } from "./i18n/locale";
 import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
@@ -1136,6 +1137,50 @@ const WORKSHOPS_EN: readonly Workshop[] = [
   },
 ];
 
+/**
+ * The workshop's practice demo (src/lib/demos.ts) as one more material, in
+ * the page's own language: role "demo", during the session, optional, never
+ * the place to start. It is a page on this site (/demos/<slug>, or
+ * /en/demos/<slug>), not a file under public/workshops/.
+ */
+export function workshopDemoMaterial(
+  slug: string,
+  locale: Locale,
+): WorkshopMaterial | undefined {
+  const demo = demoForWorkshop(slug);
+  if (!demo) return undefined;
+  const copy = locale === "en" ? demo.en : demo;
+  return {
+    label: `${locale === "en" ? "Exercise" : "Übung"} · ${copy.title.replace(/\.$/, "")}`,
+    href: `${locale === "en" ? "/en" : ""}/demos/${demo.slug}`,
+    kind: "html",
+    language: locale,
+    description: copy.oneLiner,
+    role: "demo",
+    phase: "during",
+    minutes: demo.minutes,
+    optional: true,
+  };
+}
+
+/**
+ * The materials that are files under public/workshops/<slug>/ (deck, kit,
+ * guides): everything except the practice demo, which is a site page. File
+ * manifests and "material language" facts read this, never the demo.
+ */
+export function workshopFileMaterials(
+  workshop: Pick<Workshop, "materials">,
+): readonly WorkshopMaterial[] {
+  return workshop.materials.filter((material) => material.role !== "demo");
+}
+
+function withDemoMaterial(workshop: Workshop, locale: Locale): Workshop {
+  const material = workshopDemoMaterial(workshop.slug, locale);
+  return material
+    ? { ...workshop, materials: [...workshop.materials, material] }
+    : workshop;
+}
+
 export const WORKSHOPS_BY_LOCALE: Readonly<
   Record<Locale, readonly Workshop[]>
 > = {
@@ -1144,13 +1189,13 @@ export const WORKSHOPS_BY_LOCALE: Readonly<
     DATA_READINESS_WORKSHOP.de,
     ESG_REPORTING_WORKSHOP.de,
     AI_AT_WORK_WORKSHOP.de,
-  ],
+  ].map((workshop) => withDemoMaterial(workshop, "de")),
   en: [
     ...WORKSHOPS_EN,
     DATA_READINESS_WORKSHOP.en,
     ESG_REPORTING_WORKSHOP.en,
     AI_AT_WORK_WORKSHOP.en,
-  ],
+  ].map((workshop) => withDemoMaterial(workshop, "en")),
 };
 
 /** German remains the canonical catalog for machine endpoints and legacy imports. */

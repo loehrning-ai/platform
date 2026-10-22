@@ -9,9 +9,10 @@
  *     ternaries;
  *   - the per-course and per-book field mappings (level, stage, audience,
  *     evidenceMode, courseSlug);
- *   - the derived `practice_for` (demo -> course) and lab `supports` edges.
+ *   - the derived `practice_for` (demo -> workshop, demo -> course) and lab
+ *     `supports` edges.
  *
- * Concrete expected literals (e.g. "Claude in Excel") verify the transform is
+ * Concrete expected literals (e.g. "Mach die Zahl richtig") verify the transform is
  * real rather than a re-implementation of the source module.
  */
 
@@ -25,7 +26,7 @@ import {
 import { COURSE_CATALOG, IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { books } from "@/lib/books";
 import { demos } from "@/lib/demos";
-import { WORKSHOPS } from "@/lib/workshops";
+import { WORKSHOPS, workshopFileMaterials } from "@/lib/workshops";
 
 function nodeById(id: string) {
   return LEARNING_NODES.find((n) => n.id === id);
@@ -35,11 +36,11 @@ describe("demo node derivation", () => {
   it("strips a trailing period from the demo title", () => {
     // Guard: the source title genuinely ends with a period, so the strip is
     // not a no-op.
-    const excel = demos.find((d) => d.slug === "excel");
-    expect(excel?.title).toBe("Claude in Excel.");
+    const demo = demos.find((d) => d.slug === "datenbereitschaft-fuer-ki");
+    expect(demo?.title).toBe("Mach die Zahl richtig.");
 
-    const node = nodeById("demo:excel");
-    expect(node?.title).toBe("Claude in Excel");
+    const node = nodeById("demo:datenbereitschaft-fuer-ki");
+    expect(node?.title).toBe("Mach die Zahl richtig");
   });
 
   it("leaves no demo node title ending in a period", () => {
@@ -56,47 +57,18 @@ describe("demo node derivation", () => {
     }
   });
 
-  it("maps demo level einstieg/mittel/fortg to entry/intermediate/advanced", () => {
-    const expected: Record<string, string> = {
-      einstieg: "entry",
-      mittel: "intermediate",
-      fortg: "advanced",
-    };
+  it("gives each demo its workshop's level, its stage and the demo evidence mode", () => {
     for (const demo of demos) {
-      expect(nodeById(`demo:${demo.slug}`)?.level).toBe(expected[demo.level]);
+      const node = nodeById(`demo:${demo.slug}`);
+      const workshop = nodeById(`workshop:${demo.workshopSlug}`);
+      expect(node?.level, demo.slug).toBe(workshop?.level);
+      // The ESG demo checks answers against evidence; the others apply a workflow.
+      expect(node?.stage, demo.slug).toBe(
+        demo.slug === "esg-berichte-mit-ki" ? "dokumentieren" : "anwenden",
+      );
+      expect(node?.evidenceMode, demo.slug).toBe(demo.evidenceMode);
+      expect(node?.audience, demo.slug).toEqual(["praktiker", "verantwortliche"]);
     }
-  });
-
-  it("assigns Governance demos to the dokumentieren stage and the rest to anwenden", () => {
-    // prompt-scanner is the Governance demo; excel is Grundlagen.
-    expect(nodeById("demo:prompt-scanner")?.stage).toBe("dokumentieren");
-    expect(nodeById("demo:excel")?.stage).toBe("anwenden");
-    for (const demo of demos) {
-      const expectedStage =
-        demo.category === "Governance" ? "dokumentieren" : "anwenden";
-      expect(nodeById(`demo:${demo.slug}`)?.stage).toBe(expectedStage);
-    }
-  });
-
-  it("gives fortgeschritten demos a technische-vertiefung audience and others verantwortliche", () => {
-    const advanced = nodeById("demo:agent-pipeline"); // level fortg
-    expect(advanced?.audience).toContain("praktiker");
-    expect(advanced?.audience).toContain("technische-vertiefung");
-
-    const entry = nodeById("demo:excel"); // level einstieg
-    expect(entry?.audience).toContain("praktiker");
-    expect(entry?.audience).toContain("verantwortliche");
-    expect(entry?.audience).not.toContain("technische-vertiefung");
-  });
-
-  it("carries the demo evidenceMode through onto the node", () => {
-    expect(nodeById("demo:excel")?.evidenceMode).toBe("synthetic");
-    expect(nodeById("demo:rag-vertragsassistent")?.evidenceMode).toBe(
-      "rule_based",
-    );
-    expect(nodeById("demo:agent-pipeline")?.evidenceMode).toBe(
-      "recorded_trace",
-    );
   });
 });
 
@@ -200,13 +172,25 @@ describe("workshop node derivation", () => {
       expect(node?.access).toBe("public");
       expect(node?.stage).toBe("anwenden");
       expect(node?.sourceMaterialLanguages).toEqual([
-        ...new Set(workshop.materials.map((material) => material.language)),
+        ...new Set(workshopFileMaterials(workshop).map((material) => material.language)),
       ]);
     }
   });
 });
 
 describe("derived edges", () => {
+  it("creates a practice_for edge from every demo to its workshop", () => {
+    for (const demo of demos) {
+      const edge = LEARNING_EDGES.find(
+        (e) =>
+          e.from === `demo:${demo.slug}` &&
+          e.to === `workshop:${demo.workshopSlug}` &&
+          e.type === "practice_for",
+      );
+      expect(edge, `missing workshop edge for demo ${demo.slug}`).toBeDefined();
+    }
+  });
+
   it("creates a practice_for edge from every demo to its course", () => {
     for (const demo of demos) {
       const edge = LEARNING_EDGES.find(
