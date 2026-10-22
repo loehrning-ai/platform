@@ -52,11 +52,10 @@ describe("server render", () => {
     expect(html).toContain(copy.cardReply);
     expect(html).toContain(copy.cardRules);
     expect(html).toContain(copy.cardMail);
-    const text = html
-      .replace(/<[^>]+>/g, "")
-      .replace(/&amp;/g, "&")
-      .replace(/&#x27;/g, "'")
-      .replace(/&quot;/g, '"');
+    // Let the DOM parser read the markup instead of stripping tags and entities by hand.
+    const holder = document.createElement("div");
+    holder.innerHTML = html;
+    const text = holder.textContent ?? "";
     const empty = cards({ tool: "", owner: "" }, locale);
     for (const card of [empty.reply, empty.rules, empty.mail]) {
       for (const line of card.split("\n").filter(Boolean)) expect(text).toContain(line);
