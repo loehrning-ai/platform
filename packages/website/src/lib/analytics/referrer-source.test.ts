@@ -43,7 +43,7 @@ describe("classifyReferrerSource", () => {
     ["/ki-check", "ki_check"],
     ["/ki-check/ergebnis", "ki_check"],
     ["/demos", "demo"],
-    ["/demos/excel?cat=agenten", "demo"],
+    ["/demos/ki-prognosen-einschaetzen?cat=agenten", "demo"],
     ["/kurse", "katalog"],
     ["/kurse/open-source/codex", "katalog"],
     ["/lernpfad", "hub"],

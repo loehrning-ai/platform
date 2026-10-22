@@ -23,7 +23,7 @@ describe("isProgressUiRoute", () => {
     "/",
     "/blog/eu-ai-act-grundlagen",
     "/datenschutz",
-    "/demos/prompt-scanner",
+    "/demos/ki-im-unternehmen-sicher-nutzen",
     "/impressum",
     "/ueber-mich",
   ])("keeps the heavy progress UI off %s", (pathname) => {
@@ -90,7 +90,7 @@ describe("isProgressRuntimeRoute", () => {
     "/",
     "/blog/eu-ai-act-grundlagen",
     "/datenschutz",
-    "/demos/prompt-scanner",
+    "/demos/ki-im-unternehmen-sicher-nutzen",
     "/impressum",
     "/ki-check",
     "/login",

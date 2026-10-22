@@ -26,7 +26,7 @@ describe("crawl contract", () => {
       "/buecher",
       "/buecher/ki-arbeitsalltag",
       "/demos",
-      "/demos/excel",
+      "/demos/ki-prognosen-einschaetzen",
       "/kurse/open-source/data-infrastructure",
       "/open-source/lizenzrichtlinie",
       "/open-source/tools/example-tool",
@@ -45,7 +45,6 @@ describe("crawl contract", () => {
       "/api/progress",
       "/api/ai-native/practice",
       "/api/course-workspace/terminal",
-      "/api/demos/example/future-write",
       "/ki-fuehrerschein/kurs",
       "/ki-fuehrerschein/kurs/block-1",
       "/eu-ai-act-kurs/kurs",
@@ -80,7 +79,6 @@ describe("crawl contract", () => {
   it("keeps public noindex routes crawlable", () => {
     for (const path of [
       "/feedback",
-      "/api/demos/excel/briefing.pdf",
       "/api/ai-native/grade-exercise",
       "/ki-fuehrerschein/verifizierung",
       "/ai-native/verifizierung",
@@ -179,7 +177,7 @@ describe("crawl contract", () => {
 
   it("keeps every permanent redirect origin crawlable", () => {
     const redirects = CRAWL_CONTRACT.filter(
-      (entry) => entry.auth === "redirect" && entry.status === 301,
+      (entry) => entry.auth === "redirect" && (entry.status === 301 || entry.status === 308),
     );
     expect(redirects.length).toBeGreaterThan(0);
     for (const entry of redirects) {

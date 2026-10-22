@@ -279,7 +279,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         {
           path: "/demos",
           label: "Demos",
-          note: "Beispiele zum Ausprobieren.",
+          note: "Eine Übung je Workshop.",
         },
         {
           path: "/ki-check",
@@ -442,7 +442,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         {
           path: "/demos",
           label: "Demos",
-          note: "Examples you can try out.",
+          note: "One exercise per workshop.",
         },
         {
           path: "/ki-check",

@@ -20,10 +20,10 @@ describe("production dispatch without the analytics runtime", () => {
       (method) => vi.spyOn(console, method).mockImplementation(() => {}),
     );
     expect(() => {
-      track("demo_cta_clicked", { subject: "excel", facet: "kurs" });
-      track("unregistered_event", { subject: "excel" });
-      trackDemoCta("excel", "kurs");
-      trackDemoEngagedSeconds("excel", 10);
+      track("demo_cta_clicked", { subject: "ki-prognosen-einschaetzen", facet: "kurs" });
+      track("unregistered_event", { subject: "ki-prognosen-einschaetzen" });
+      trackDemoCta("ki-prognosen-einschaetzen", "kurs");
+      trackDemoEngagedSeconds("ki-prognosen-einschaetzen", 10);
     }).not.toThrow();
     for (const spy of spies) expect(spy).not.toHaveBeenCalled();
   });

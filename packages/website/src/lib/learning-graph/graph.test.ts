@@ -57,19 +57,11 @@ describe("learning graph", () => {
     }
   });
 
-  it("keeps books public and connects every demo book reference to a published book", () => {
-    const edgeIds = new Set(LEARNING_EDGES.map((edge) => `${edge.from}->${edge.to}`));
-    const publishedBookIds = new Set(books.map((book) => book.id));
+  it("keeps books public", () => {
     for (const book of books) {
       const node = LEARNING_NODES.find((item) => item.id === `book:${book.id}`);
       expect(node?.route).toBe(book.readerHref);
       expect(node?.access).toBe("public");
-    }
-    for (const demo of demos) {
-      for (const bookSlug of demo.bookSlugs) {
-        if (!publishedBookIds.has(bookSlug)) continue;
-        expect(edgeIds.has(`demo:${demo.slug}->book:${bookSlug}`)).toBe(true);
-      }
     }
   });
 

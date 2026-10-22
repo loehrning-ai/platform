@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { render } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -17,14 +19,29 @@ vi.mock("./buecher-content", () => ({
   BuecherContent: ({
     locale,
     headingFontClassName,
+    entries,
   }: {
     locale: string;
     headingFontClassName: string;
+    entries: readonly {
+      book: { id: string };
+      display: { title: string };
+      chapters: readonly unknown[];
+      headline: { value: string; share: number; tail: string } | null;
+    }[];
   }) => (
     <div
       data-testid="book-content"
       data-locale={locale}
       data-heading-font={headingFontClassName}
+      data-entries={JSON.stringify(
+        entries.map((entry) => ({
+          id: entry.book.id,
+          title: entry.display.title,
+          chapters: entry.chapters.length,
+          headline: entry.headline,
+        })),
+      )}
     />
   ),
 }));
@@ -51,6 +68,43 @@ describe("book catalog locale metadata and structured data", () => {
         locale: openGraphLocale,
         url: `https://loehrning.ai${canonical}`,
       });
+    },
+  );
+
+  it.each([
+    ["de", "Von außen gesehen", /^\d+,\d\u00a0%$/, /^der Startseiten/],
+    ["en", "Seen from the outside", /^\d+\.\d%$/, /^of the homepages/],
+  ] as const)(
+    "hands the %s shelf the manifest title, every chapter and the landing headline",
+    async (locale, title, valuePattern, tailPattern) => {
+      getRequestLocaleMock.mockResolvedValue(locale);
+      const { getByTestId } = render(await BuecherPage());
+      const entries = JSON.parse(
+        getByTestId("book-content").getAttribute("data-entries") ?? "[]",
+      ) as {
+        id: string;
+        title: string;
+        chapters: number;
+        headline: { value: string; share: number; tail: string } | null;
+      }[];
+      const manifest = JSON.parse(
+        readFileSync(
+          resolve(
+            process.cwd(),
+            `content/books/ki-landschaft/${locale === "de" ? "" : "en/"}manifest.json`,
+          ),
+          "utf-8",
+        ),
+      ) as { chapters: unknown[] };
+
+      expect(entries.map((entry) => entry.id)).toEqual(["ki-landschaft"]);
+      const [entry] = entries;
+      expect(entry?.title).toBe(title);
+      expect(entry?.chapters).toBe(manifest.chapters.length);
+      expect(entry?.headline?.value).toMatch(valuePattern);
+      expect(entry?.headline?.tail).toMatch(tailPattern);
+      expect(entry?.headline?.share).toBeGreaterThan(0);
+      expect(entry?.headline?.share).toBeLessThan(1);
     },
   );
 

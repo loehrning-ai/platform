@@ -87,8 +87,9 @@ function Card({
  * The two big actions of a workshop page, right under the band: card A opens
  * the slides (or the lab for a workshop without a deck), card B downloads the
  * kit (or opens the case). Each is one real link with a stretched hit area;
- * a workshop with a kit page also gets one small secondary link to it (a 44px
- * target named with the workshop's topic). Server component, zero script: the pictures move in CSS only
+ * card A carries one small secondary link to the workshop's practice demo,
+ * and a workshop with a kit page gets one on card B (each a 44px target
+ * named with the workshop's topic). Server component, zero script: the pictures move in CSS only
  * (action-cards.css), and the stage's pause control stops them
  * (docs/workshop-standard.md, "The stage").
  */
@@ -110,6 +111,15 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
           meta={stage.a.meta}
           spoken={`: ${topic}`}
           download={stage.a.material.kind !== "html"}
+          {...(stage.a.demoHref
+            ? {
+                secondary: {
+                  href: stage.a.demoHref,
+                  label: copy.demoAction,
+                  spoken: `: ${topic}`,
+                },
+              }
+            : {})}
         />
       ) : null}
       {stage.b ? (

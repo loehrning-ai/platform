@@ -25,6 +25,7 @@ import { absoluteUrl } from "@/lib/seo/entity";
 import {
   getWorkshopBySlug,
   WORKSHOPS,
+  workshopFileMaterials,
   type Workshop,
   type WorkshopMaterial,
 } from "@/lib/workshops";
@@ -280,10 +281,10 @@ function machineWorkshop(workshop: Workshop, locale: Locale): MachineWorkshop {
     })),
     case_study: machineCase(workshop),
     real_world_case: machineRealWorldCase(workshop),
-    materials: workshop.materials.map(machineMaterial),
-    material_count: workshop.materials.length,
+    materials: workshopFileMaterials(workshop).map(machineMaterial),
+    material_count: workshopFileMaterials(workshop).length,
     material_languages: Array.from(
-      new Set(workshop.materials.map((material) => material.language)),
+      new Set(workshopFileMaterials(workshop).map((material) => material.language)),
     ),
     available_locales: contentLocalesForPath(path),
     graph: machineGraphFacet(`workshop:${workshop.slug}`),
@@ -331,7 +332,7 @@ function catalogEntry(workshop: Workshop): MachineWorkshopCatalogEntry {
 
   return {
     slug: workshop.slug,
-    material_count: workshop.materials.length,
+    material_count: workshopFileMaterials(workshop).length,
     available_locales: locales,
     localized: Object.fromEntries(
       locales.map((locale) => [

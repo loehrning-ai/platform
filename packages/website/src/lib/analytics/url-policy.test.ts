@@ -75,7 +75,7 @@ describe("sanitizeTelemetryUrl", () => {
     );
   });
 
-  it.each(["/demos/excel", "/demos/", "/en/demos/word", "/de/demos"])(
+  it.each(["/demos/ki-prognosen-einschaetzen", "/demos/", "/en/demos/esg-berichte-mit-ki", "/de/demos"])(
     "removes every query parameter on %s, which is not exactly the gallery",
     (pathname) => {
       expect(sanitizeTelemetryUrl(`${SITE}${pathname}?cat=agenten`)).toBe(

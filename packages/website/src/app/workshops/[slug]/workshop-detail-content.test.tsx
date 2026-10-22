@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
+import { getWorkshopBySlug, getWorkshops, workshopFileMaterials } from "@/lib/workshops";
 import { workshopStage } from "@/lib/workshop-stage";
 import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT, type PlakatKey } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
@@ -439,14 +439,18 @@ describe("<WorkshopDetailContent>", () => {
     expect(container.querySelector("footer")).not.toHaveTextContent("Material auf Englisch");
   });
 
-  it("offers at most two materials per workshop, the deck and the kit, and no optional files", () => {
+  it("offers at most two files per workshop, the deck and the kit, plus the optional practice demo", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
-        expect(workshop.materials.length, workshop.slug).toBeLessThanOrEqual(2);
-        expect(workshop.materials.filter((material) => material.optional), workshop.slug).toEqual([]);
+        const files = workshopFileMaterials(workshop);
+        expect(files.length, workshop.slug).toBeLessThanOrEqual(2);
+        expect(files.filter((material) => material.optional), workshop.slug).toEqual([]);
         // Workshop 01 has no slide deck: its labs and its case play that part.
         const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "case"] : ["deck", "kit"];
-        for (const material of workshop.materials) expect(allowed, material.href).toContain(material.role);
+        for (const material of files) expect(allowed, material.href).toContain(material.role);
+        // The one non-file material is the demo page: optional, never primary.
+        const demos = workshop.materials.filter((material) => material.role === "demo");
+        expect(demos.map((material) => [material.optional, material.primary ?? false]), workshop.slug).toEqual([[true, false]]);
         const { container, unmount } = render(
           <WorkshopDetailContent workshop={workshop} locale={locale} />,
         );
@@ -458,11 +462,15 @@ describe("<WorkshopDetailContent>", () => {
 
   for (const locale of ["de", "en"] as const) {
     for (const workshop of getWorkshops(locale)) {
-      it(`${locale}/${workshop.slug}: lists no materials, because the two cards reach both files`, () => {
+      it(`${locale}/${workshop.slug}: lists no materials, because the two cards reach both files and the demo`, () => {
         const { container } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
         const stage = workshopStage(workshop, locale);
         const reached = new Set([stage.a?.material, stage.b?.material]);
-        expect(workshop.materials.every((material) => reached.has(material))).toBe(true);
+        expect(workshopFileMaterials(workshop).every((material) => reached.has(material))).toBe(true);
+        // Card A's secondary link reaches the demo page.
+        const demo = workshop.materials.find((material) => material.role === "demo");
+        expect(stage.a?.demoHref).toBe(demo?.href);
+        expect(container.querySelector(`a[href="${demo?.href}"]`)).not.toBeNull();
         expect(container.querySelector("#material, [data-material-row]")).toBeNull();
         expect(screen.queryByRole("heading", { name: locale === "de" ? "Material" : "Materials" })).toBeNull();
         expect(screen.queryByRole("link", { name: locale === "de" ? "Material ansehen" : "See materials" })).toBeNull();

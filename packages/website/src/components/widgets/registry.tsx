@@ -219,24 +219,6 @@ const REGISTRY: Record<
   () => Promise<{ default: WidgetComponent }>
 >;
 
-const ENGLISH_DEMO_REGISTRY: Partial<
-  Record<WidgetKind, () => Promise<{ default: WidgetComponent }>>
-> = {
-  "demo-chat-rag": () =>
-    import("@/components/demos/rag-vertragsassistent-demo"),
-  "demo-compliance": () => import("@/components/demos/prompt-scanner-demo"),
-  "demo-roi": () => import("@/components/demos/roi-rechner-demo"),
-  "demo-doc": () => import("@/components/demos/rechnung-zu-sap-demo"),
-  "demo-agent": () => import("@/components/demos/agent-pipeline-demo"),
-  "demo-finetune": () => import("@/components/demos/fine-tune-playground-demo"),
-  "demo-workflow": () => import("@/components/demos/n8n-supply-chain-demo"),
-  "demo-maturity": () => import("@/components/demos/roi-rechner-demo"),
-  "demo-observ": () => import("@/components/demos/llm-observability-demo"),
-  "demo-excel": () => import("@/components/demos/excel-demo"),
-  "demo-word": () => import("@/components/demos/word-demo"),
-  "demo-logistics": () => import("@/components/demos/n8n-supply-chain-demo"),
-};
-
 const lazyCache = new Map<string, ComponentType<Record<string, unknown>>>();
 
 function getLazyComponent(
@@ -246,11 +228,7 @@ function getLazyComponent(
   const cacheKey = `${locale}:${kind}`;
   const cached = lazyCache.get(cacheKey);
   if (cached) return cached;
-  const loader =
-    locale === "en"
-      ? (ENGLISH_DEMO_REGISTRY[kind] ?? REGISTRY[kind])
-      : REGISTRY[kind];
-  const Component = lazy(loader);
+  const Component = lazy(REGISTRY[kind]);
   lazyCache.set(cacheKey, Component);
   return Component;
 }

@@ -73,7 +73,7 @@ const LANDING_COPY = {
     resourcesHeading: "Außerdem",
     resources: [
       { href: "/ai-native/glossar", label: "Glossar", output: "16 Begriffe" },
-      { href: "/demos", label: "Praxisbeispiele", output: "Simulationen mit erfundenen Daten" },
+      { href: "/demos", label: "Praxisbeispiele", output: "Übungen aus den Workshops, mit erfundenen Daten" },
       { href: "/ki-fuehrerschein", label: "KI-Führerschein", output: "Empfohlener Einstieg" },
     ],
     boundarySummary: "Zugang, Nachweis und Herkunft",
@@ -125,7 +125,7 @@ const LANDING_COPY = {
     resourcesHeading: "Also useful",
     resources: [
       { href: "/ai-native/glossar", label: "Glossary", output: "16 terms" },
-      { href: "/demos", label: "Practice examples", output: "Simulations with invented data" },
+      { href: "/demos", label: "Practice examples", output: "Workshop exercises on invented data" },
       { href: "/ki-fuehrerschein", label: "Everyday AI Literacy", output: "Recommended first" },
     ],
     boundarySummary: "Access, record, and provenance",

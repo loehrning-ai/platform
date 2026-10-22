@@ -247,7 +247,7 @@ describe("mobile tab bar active state", () => {
     expect(isActiveTab(["/kurse"], "/kurse")).toBe(true);
     expect(isActiveTab(["/kurse"], "/kurse/open-source")).toBe(true);
     expect(isActiveTab(["/kurse"], "/kursebesteller")).toBe(false);
-    expect(isActiveTab(["/kurse", "/demos"], "/en/demos/excel")).toBe(true);
+    expect(isActiveTab(["/kurse", "/demos"], "/en/demos/ki-prognosen-einschaetzen")).toBe(true);
     expect(isActiveTab(["/kurse", "/demos"], "/demosammlung")).toBe(false);
   });
 
@@ -269,8 +269,8 @@ describe("mobile tab bar active state", () => {
     ["/workshops/esg-berichte-mit-ki", "Praxis"],
     ["/en/workshops", "Practice"],
     ["/demos", "Praxis"],
-    ["/demos/excel", "Praxis"],
-    ["/en/demos/rag-vertragsassistent", "Practice"],
+    ["/demos/ki-prognosen-einschaetzen", "Praxis"],
+    ["/en/demos/esg-berichte-mit-ki", "Practice"],
     ["/open-source", "Praxis"],
     ["/open-source/lizenzrichtlinie", "Praxis"],
     ["/konto", "Konto"],

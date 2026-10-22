@@ -155,9 +155,11 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
 
   // The "all in English" note is derived from the data, so it disappears as
   // soon as one material is published in another language.
-  const allMaterialsEnglish = workshop.materials.every(
-    (material) => material.language === "en",
-  );
+  // The practice demo is a page in the reader's language, not a material
+  // file, so it never decides this note.
+  const allMaterialsEnglish = workshop.materials
+    .filter((material) => material.role !== "demo")
+    .every((material) => material.language === "en");
   const title = splitTitle(workshop.title);
   const heading = titleHighlight(title.head, HEADLINE_MARK[workshop.slug]?.[locale]);
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;

@@ -28,6 +28,7 @@ vi.mock("@/lib/observability/api-error", () => ({
 }));
 
 import { config, proxy } from "./proxy";
+import { RETIRED_DEMO_REDIRECTS } from "./lib/demo-redirects";
 
 function authContinuation() {
   const response = NextResponse.next();
@@ -504,6 +505,37 @@ describe("locale routing and authentication boundaries", () => {
     expect(response.status).toBe(301);
     expect(response.headers.get("location")).toBe(`https://loehrning.ai${to}`);
     expect(response.headers.get("x-robots-tag")).toBeNull();
+  });
+
+  it.each(
+    RETIRED_DEMO_REDIRECTS.flatMap(({ from, to }) => [
+      [`/demos/${from}`, to],
+      [`/en/demos/${from}`, `/en${to}`],
+    ]),
+  )("308s the retired demo %s to %s", async (from, to) => {
+    const response = await proxy(
+      new NextRequest(`https://loehrning.ai${from}`),
+    );
+
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(`https://loehrning.ai${to}`);
+    expect(response.headers.get("x-robots-tag")).toBeNull();
+  });
+
+  it("keeps the query string on a retired demo redirect", async () => {
+    const { from, to } = RETIRED_DEMO_REDIRECTS[0]!;
+    for (const [path, target] of [
+      [`/demos/${from}`, to],
+      [`/en/demos/${from}`, `/en${to}`],
+    ] as const) {
+      const response = await proxy(
+        new NextRequest(`https://loehrning.ai${path}?source=mail&utm_campaign=x`),
+      );
+      expect(response.status).toBe(308);
+      expect(response.headers.get("location")).toBe(
+        `https://loehrning.ai${target}?source=mail&utm_campaign=x`,
+      );
+    }
   });
 
   it("terminates ambiguous encoded path separators before route classification", async () => {

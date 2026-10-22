@@ -12,8 +12,9 @@ import {
  * The two big actions under a workshop's band (docs/workshop-standard.md,
  * "The stage"): card A opens the first material (the slides, or the lab for
  * a workshop without a deck), card B hands over the second one (the kit zip,
- * or the case for a workshop without a kit). Both are derived from the
- * registry, so a new workshop needs no page code.
+ * or the case for a workshop without a kit). Card A also carries the
+ * workshop's practice demo as its small secondary link. All of it is derived
+ * from the registry, so a new workshop needs no page code.
  */
 export type WorkshopStageKindA = "slides" | "lab";
 export type WorkshopStageKindB = "kit" | "case";
@@ -25,6 +26,8 @@ export interface WorkshopStageCardA {
   readonly minutes?: number;
   /** "Deck · 60 Min." or "45 Min." for a lab: time, never a slide count. */
   readonly meta: string;
+  /** Set when the workshop has a practice demo: card A's one small secondary link. */
+  readonly demoHref?: string;
 }
 
 export interface WorkshopStageCardB {
@@ -73,6 +76,8 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
       ? [copy.roleLabels[material.role], timeOrLanguage(material)].join(" · ")
       : timeOrLanguage(material);
 
+  // The demo material's href is already in the page's language.
+  const demo = workshop.materials.find((material) => material.role === "demo");
   const a: WorkshopStageCardA | undefined = primary
     ? {
         kind: primary.role === "deck" ? "slides" : "lab",
@@ -80,6 +85,7 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
         href: primary.href,
         ...(primary.minutes ? { minutes: primary.minutes } : {}),
         meta: metaOf(primary),
+        ...(demo ? { demoHref: demo.href } : {}),
       }
     : undefined;
 
@@ -87,7 +93,10 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
     workshopKitMaterial(workshop) ??
     workshop.materials.find((material) => material.role === "kit" && material.kind === "zip");
   const second =
-    kitMaterial ?? workshop.materials.find((material) => material !== primary && material.kind === "html");
+    kitMaterial ??
+    workshop.materials.find(
+      (material) => material !== primary && material.role !== "demo" && material.kind === "html",
+    );
 
   let b: WorkshopStageCardB | undefined;
   if (kitMaterial) {

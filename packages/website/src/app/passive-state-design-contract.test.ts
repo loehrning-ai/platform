@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const PASSIVE_STATE_SURFACES = [
   "demos/error.tsx",
-  "demos/[slug]/error.tsx",
+  "demos/_lib/demo-detail-error.tsx",
   "ki-fuehrerschein/kurs/error.tsx",
   "ki-fuehrerschein/kurs/[blockId]/error.tsx",
   "eu-ai-act-kurs/kurs/error.tsx",

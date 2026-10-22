@@ -8,6 +8,7 @@ type LocalizedPage = {
   readonly title: string;
   readonly summary?: string;
   readonly riskNotes?: readonly string[];
+  readonly question?: string;
   readonly format?: string;
   readonly duration?: string;
 };
@@ -70,18 +71,18 @@ describe("knowledge-graph locale representations", () => {
     );
   });
 
-  it("localizes demo risk notes inside the matching URL representation", async () => {
+  it("localizes the demo question inside the matching URL representation", async () => {
     const body = await payload();
-    const demo = body.catalogs.demos.find(({ id }) => id === "demo:excel");
+    const demo = body.catalogs.demos.find(
+      ({ id }) => id === "demo:ki-prognosen-einschaetzen",
+    );
 
     expect(demo?.riskNotes).toBeUndefined();
-    expect(demo?.localizedPages.de.riskNotes?.[0]).toMatch(/von Hand/);
+    expect(demo?.localizedPages.de.question).toBe("Wann darf der Plan allein raus?");
     expect(demo?.localizedPages.en).toMatchObject({
-      url: "https://loehrning.ai/en/demos/excel",
+      url: "https://loehrning.ai/en/demos/ki-prognosen-einschaetzen",
       pageLanguage: "en-GB",
-      riskNotes: expect.arrayContaining([
-        "Recalculate each suggested formula by hand for one row.",
-      ]),
+      question: "When may the plan ship on its own?",
     });
   });
 

@@ -7,8 +7,7 @@ import { IMPORTED_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import { getCrawlRoute } from "@/lib/crawl/contract";
-import { demos } from "@/lib/demos";
-import { getDemoForLocale } from "@/lib/demos-localization";
+import { demos, getDemoForLocale } from "@/lib/demos";
 import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
 import { KI_CHECK_PAGE_COPY } from "@/lib/ki-check/localization";
 import { LEARNING_EDGES, LEARNING_NODES } from "@/lib/learning-graph";
@@ -19,7 +18,7 @@ import {
   SITE_ENTITY,
 } from "@/lib/seo/entity";
 import { KNOWLEDGE_GRAPH_SCHEMA_ID } from "@/lib/seo/knowledge-graph-schema";
-import { getWorkshopBySlug, WORKSHOPS } from "@/lib/workshops";
+import { getWorkshopBySlug, WORKSHOPS, workshopFileMaterials } from "@/lib/workshops";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
@@ -73,7 +72,7 @@ function localizedNodeCopy(
     if (demo) {
       return {
         title: demo.title.replace(/\.$/, ""),
-        summary: demo.description,
+        summary: demo.oneLiner,
       };
     }
   }
@@ -178,7 +177,8 @@ export async function GET() {
       demos: demos.map((demo) => ({
         id: `demo:${demo.slug}`,
         url: absoluteUrl(`/demos/${demo.slug}`),
-        sourceMaterialLanguages: ["de"],
+        sourceMaterialLanguages: ["de", "en"],
+        workshop: absoluteUrl(`/workshops/${demo.workshopSlug}`),
         localizedPages: localizedPagesFor(`/demos/${demo.slug}`, (locale) => {
           const localized = getDemoForLocale(demo.slug, locale);
           if (!localized) {
@@ -186,7 +186,7 @@ export async function GET() {
           }
           return {
             title: localized.title.replace(/\.$/, ""),
-            riskNotes: localized.riskNotes,
+            question: localized.question,
           };
         }),
         lastReviewed: demo.lastReviewed,
@@ -207,7 +207,7 @@ export async function GET() {
         id: `workshop:${workshop.slug}`,
         url: absoluteUrl(`/workshops/${workshop.slug}`),
         sourceMaterialLanguages: Array.from(
-          new Set(workshop.materials.map((material) => material.language)),
+          new Set(workshopFileMaterials(workshop).map((material) => material.language)),
         ),
         localizedPages: localizedPagesFor(
           `/workshops/${workshop.slug}`,
@@ -225,7 +225,7 @@ export async function GET() {
             };
           },
         ),
-        materialCount: workshop.materials.length,
+        materialCount: workshopFileMaterials(workshop).length,
         evidenceMode: "synthetic",
       })),
       // Imported labs are /kurse catalog content with open-source upstreams;

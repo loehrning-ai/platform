@@ -145,7 +145,7 @@ const ATLAS_COPY = {
       `${visible} von ${total} Kursen`,
     viewProgress: "Fortschritt in deinem Konto ansehen",
     tryDemo: (count: number) =>
-      count > 1 ? `${count} Praxisbeispiele ansehen` : "Praxisbeispiel ansehen",
+      count > 1 ? `${count} Übungen ansehen` : "Übung ansehen",
     tryDemoPhoneTail: " ansehen",
     sourceCode: "Quellcode",
     sourceCommit: "Commit",
@@ -190,7 +190,7 @@ const ATLAS_COPY = {
       `${visible} of ${total} courses`,
     viewProgress: "View your progress in your account",
     tryDemo: (count: number) =>
-      count > 1 ? `${count} applied examples` : "Applied example",
+      count > 1 ? `${count} exercises` : "Exercise",
     tryDemoPhoneTail: "",
     sourceCode: "Source code",
     sourceCommit: "Commit",

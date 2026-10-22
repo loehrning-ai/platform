@@ -39,7 +39,7 @@ describe("platform route access model", () => {
       "/kurse/open-source/data-infrastructure/kurs/mental-model",
       "/ai-native/glossar",
       "/demos",
-      "/demos/excel",
+      "/demos/ki-prognosen-einschaetzen",
       "/buecher",
       "/buecher/ki-arbeitsalltag",
       "/book-covers/ki-arbeitsalltag-2026-1.png",
@@ -111,7 +111,6 @@ describe("platform route access model", () => {
       "/api/progress/sync",
       "/api/ai-native/grade",
       "/api/ai-native/practice",
-      "/api/demos/example/future-write",
       "/api/account/agent-tokens",
       "/api/account/llm-key",
       "/api/account/chat",
@@ -135,15 +134,6 @@ describe("platform route access model", () => {
     ]) {
       expect(isPublicPlatformPath(nearMiss), nearMiss).toBe(false);
       expect(isProtectedPlatformPath(nearMiss), nearMiss).toBe(true);
-    }
-  });
-
-  it("keeps public learning downloads available without login", () => {
-    for (const path of [
-      "/api/demos/excel/briefing.pdf",
-    ]) {
-      expect(isPublicPlatformPath(path), path).toBe(true);
-      expect(isProtectedPlatformPath(path), path).toBe(false);
     }
   });
 

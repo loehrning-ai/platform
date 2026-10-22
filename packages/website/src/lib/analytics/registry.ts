@@ -72,18 +72,11 @@ export type AnalyticsBlockCourseSlug =
 
 /** Mirror of the demo slugs in src/lib/demos.ts. */
 export const ANALYTICS_DEMO_SLUGS = [
-  "excel",
-  "word",
-  "outbound-workflow",
-  "agent-pipeline",
-  "n8n-supply-chain",
-  "rag-vertragsassistent",
-  "rechnung-zu-sap",
-  "prompt-scanner",
-  "cost-drift-observability",
-  "fine-tune-playground",
-  "roi-rechner",
-  "llm-observability",
+  "ki-prognosen-einschaetzen",
+  "geschaeftsberichte-mit-ki-lesen",
+  "datenbereitschaft-fuer-ki",
+  "esg-berichte-mit-ki",
+  "ki-im-unternehmen-sicher-nutzen",
 ] as const;
 export type AnalyticsDemoSlug = (typeof ANALYTICS_DEMO_SLUGS)[number];
 

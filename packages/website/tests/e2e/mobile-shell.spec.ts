@@ -283,7 +283,7 @@ test.describe("mobile shell: the tab of the current section", () => {
   // one tab may carry it.
   const SECTION_ROUTES = [
     ["/demos", "praxis"],
-    ["/demos/excel", "praxis"],
+    ["/demos/ki-prognosen-einschaetzen", "praxis"],
     ["/workshops", "praxis"],
     ["/open-source", "praxis"],
     ["/ki-fuehrerschein", "lernen"],

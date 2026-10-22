@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { runInNewContext } from "node:vm";
 import { describe, expect, it } from "vitest";
-import { getWorkshops } from "./workshops";
+import { getWorkshops, workshopFileMaterials } from "./workshops";
 
 const root = resolve(process.cwd(), "public/workshops/datenbereitschaft-fuer-ki");
 const read = (name: string) => readFileSync(resolve(root, name), "utf8");
@@ -15,13 +15,18 @@ describe("published Data Readiness workshop", () => {
       const workshop = getWorkshops(locale)[2];
       expect(workshop.slug).toBe("datenbereitschaft-fuer-ki");
       expect(workshop.number).toBe("03");
-      const relative = workshop.materials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length));
+      // Beside the files, the workshop links its practice demo page (role "demo").
+      expect(workshop.materials.filter((material) => material.role === "demo").map((material) => material.href)).toEqual([
+        `${locale === "en" ? "/en" : ""}/demos/datenbereitschaft-fuer-ki`,
+      ]);
+      const fileMaterials = workshopFileMaterials(workshop);
+      const relative = fileMaterials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length));
       expect(relative).toEqual(["slides.html", "data-readiness-kit.zip"]);
-      expect(workshop.materials.map(({ role, phase }) => `${role}/${phase}`)).toEqual(["deck/during", "kit/during"]);
-      expect(workshop.materials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
-      expect(workshop.materials.filter((material) => material.optional)).toEqual([]);
-      expect(workshop.materials.every((material) => material.language === "en")).toBe(true);
-      for (const material of workshop.materials) {
+      expect(fileMaterials.map(({ role, phase }) => `${role}/${phase}`)).toEqual(["deck/during", "kit/during"]);
+      expect(fileMaterials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
+      expect(fileMaterials.filter((material) => material.optional)).toEqual([]);
+      expect(fileMaterials.every((material) => material.language === "en")).toBe(true);
+      for (const material of fileMaterials) {
         expect(existsSync(resolve(root, material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length).split("#")[0])), material.href).toBe(true);
       }
       // The presenter view, guide, demo and builder pages stay published only because the deck
@@ -41,11 +46,11 @@ describe("published Data Readiness workshop", () => {
     expect(en.duration).toBe("~90 minutes");
     expect(de.materials[0]?.description).toMatch(/^Für den Beamer\. .*P öffnet die Moderationsansicht/);
     expect(en.materials[0]?.description).toMatch(/^For the projector\. .*P opens the presenter view/);
-    expect(en.materials.map((material) => material.label)).toEqual([
+    expect(workshopFileMaterials(en).map((material) => material.label)).toEqual([
       "Deck · 26 scenes",
       "Readiness kit · .zip",
     ]);
-    expect(de.materials.map((material) => material.label)).toEqual([
+    expect(workshopFileMaterials(de).map((material) => material.label)).toEqual([
       "Deck · 26 Szenen",
       "Readiness-Kit · .zip",
     ]);

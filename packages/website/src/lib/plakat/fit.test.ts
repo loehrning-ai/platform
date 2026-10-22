@@ -10,8 +10,7 @@ import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
-import { demoName } from "@/lib/demos";
-import { getDemosForLocale } from "@/lib/demos-localization";
+import { getDemosForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { getWorkshops } from "@/lib/workshops";
 import {
@@ -131,13 +130,13 @@ const SURFACES: readonly Surface[] = ([
   },
   {
     name: "demo detail bands",
-    layout: "band",
-    files: ["src/components/demos/demo-detail-layout.tsx"],
+    layout: "band-art",
+    files: ["src/components/demos/demo-page.tsx"],
     titles: LOCALES.flatMap((locale) =>
       getDemosForLocale(locale).map((demo) => ({
         id: `${demo.slug} ${locale}`,
-        text: demoName(demo),
-        fit: fallbackFitEm(demoName(demo)),
+        text: demo.title,
+        fit: fallbackFitEm(demo.title),
       })),
     ),
   },
@@ -167,7 +166,7 @@ const SURFACES: readonly Surface[] = ([
       { id: `ueber-mich ${locale}`, text: PROFILE_COPY[locale].hero.title },
       {
         id: `buecher ${locale}`,
-        text: `${BOOK_PAGE_COPY[locale].catalog.heading} ${BOOK_PAGE_COPY[locale].catalog.headingAccent}`,
+        text: BOOK_PAGE_COPY[locale].catalog.heading,
       },
       { id: `einstieg ${locale}`, text: ENTRY_COPY[locale].title },
     ]),

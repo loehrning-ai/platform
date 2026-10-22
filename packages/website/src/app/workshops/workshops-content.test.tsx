@@ -120,9 +120,9 @@ describe("<WorkshopsContent>", () => {
     const amount = within(w03).getByText("-€19,960");
     expect(amount.tagName).toBe("SPAN");
     expect(amount).toHaveClass("whitespace-nowrap", "tabular-nums");
-    // Each workshop offers its deck and its kit, nothing else.
+    // Each workshop offers its deck, its practice demo and its kit, nothing else.
     expect(w03.querySelector("[data-workshop-roles]")?.textContent).toBe(
-      "Deck · Kit",
+      "Deck · Demo · Kit",
     );
     expect(w03.textContent).not.toContain("For data teams");
     for (const item of w03.querySelectorAll("[data-workshop-roles] > span")) {
@@ -138,7 +138,7 @@ describe("<WorkshopsContent>", () => {
     expect(within(w02).queryByText(/^Run live on/)).toBeNull();
     expect(
       w02.querySelector("[data-workshop-roles]")?.textContent,
-    ).toBe("Deck · Kit");
+    ).toBe("Deck · Demo · Kit");
 
     for (const row of rows) {
       const actions = within(row).getAllByRole("link");

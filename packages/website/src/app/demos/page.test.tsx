@@ -1,146 +1,62 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import type { DemoGridInitialFilters } from "@/components/demos/demo-grid";
+
+const localeRef = vi.hoisted(() => ({ value: "de" as "de" | "en" }));
+
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: vi.fn(async () => localeRef.value),
+}));
+
+import DemosPage, { generateMetadata } from "./page";
+import { demoLede, getDemosForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { expectCapsInsideScene } from "@/test/plakat-scene";
 
-vi.mock("@/lib/i18n/request-locale", () => ({
-  getRequestLocale: vi.fn(async () => "de"),
-}));
+describe("/demos hub", () => {
+  for (const locale of ["de", "en"] as const) {
+    it(`${locale}: an IDEA band, then one row per workshop demo, then the provenance line`, async () => {
+      localeRef.value = locale;
+      const copy = DEMOS_PAGE_COPY[locale].catalog;
+      const { container } = render(await DemosPage());
 
-vi.mock("@/components/demos/demo-grid", () => ({
-  DemoGrid: ({
-    initialFilters,
-  }: {
-    readonly initialFilters: DemoGridInitialFilters;
-  }) => (
-    <div
-      data-testid="demo-grid"
-      data-level={initialFilters.level}
-      data-category={initialFilters.category}
-      data-industry={initialFilters.industry}
-    />
-  ),
-}));
+      const h1 = screen.getByRole("heading", { level: 1, name: copy.heading });
+      expect(h1).toHaveClass("poster-title", "text-scene-mid");
+      const band = h1.closest("[data-cover-band]");
+      expect(band).toHaveClass("plakat-idea");
+      expect(band?.querySelectorAll("[data-halftone]")).toHaveLength(1);
+      expect(within(band as HTMLElement).getByText(copy.introduction(getDemosForLocale(locale).length))).toBeTruthy();
+      expectCapsInsideScene(container);
 
-import DemosPage from "./page";
+      const demos = getDemosForLocale(locale);
+      const rows = screen.getAllByTestId("demo-row");
+      expect(rows).toHaveLength(5);
+      const prefix = locale === "en" ? "/en" : "";
+      for (const [index, demo] of demos.entries()) {
+        const row = rows[index] as HTMLElement;
+        expect(within(row).getByRole("heading", { level: 3 })).toHaveTextContent(demo.title);
+        expect(row.querySelector("[data-demo-row-question]")).toHaveTextContent(demoLede(demo));
+        expect(row.querySelector("[data-demo-meta]")).toHaveTextContent(
+          `${copy.workshopNumber(demo.workshopNumber)} · ${copy.minutes(demo.minutes)}`,
+        );
+        expect(within(row).getByRole("link")).toHaveAttribute(
+          "href",
+          `${prefix}/demos/${demo.slug}?source=gallery`,
+        );
+        // The poster thumb carries the workshop's own palette and number.
+        expect(row.querySelector(`[data-plakat="${demo.plakat}"], .plakat-${demo.plakat}`)).not.toBeNull();
+      }
 
-describe("DemosPage URL filter boundary", () => {
-  it("renders the IDEA band and registry-derived stats, without a check-list box", async () => {
-    const { container } = render(
-      await DemosPage({ searchParams: Promise.resolve({}) }),
-    );
-
-    const h1 = screen.getByRole("heading", {
-      level: 1,
-      name: DEMOS_PAGE_COPY.de.catalog.heading,
+      expect(container.querySelector("[data-demo-provenance]")).toHaveTextContent(copy.provenance);
+      // No filters, no collapsible UI.
+      expect(container.querySelector("select, details, summary, [role=combobox]")).toBeNull();
     });
-    expect(h1).toBeVisible();
-    // One colour: no accent span inside the headline. It is the poster
-    // title in the scene mid (Himbeere, display size only).
-    expect(h1.querySelector("span")).toBeNull();
-    expect(h1).toHaveClass("poster-title", "text-scene-mid");
-    expect(h1.getAttribute("style")).toMatch(/--fit:\s*\d/);
-    // The caps line names the collection; the count lives in the stats below.
-    expect(h1.previousElementSibling).toHaveClass("plakat-caps");
-    expect(h1.previousElementSibling).toHaveTextContent("Praxisbeispiele · im Browser");
-    // Below sm the caps line keeps one row: the detail drops.
-    expect(
-      Array.from(h1.previousElementSibling?.querySelectorAll("span") ?? []).some(
-        (span) => span.classList.contains("max-sm:hidden") && span.textContent === " · im Browser",
-      ),
-    ).toBe(true);
-    // The band: IDEA scope, one halftone image, four corner dots, and no
-    // caption or label type inside it (SPEC §3.1 type budget).
-    const band = h1.closest("[data-cover-band]");
-    expect(band).toHaveClass("plakat-idea");
-    expect(band?.closest("[data-demo-atlas-hero]")).toBeTruthy();
-    expect(band?.querySelectorAll("[data-halftone]")).toHaveLength(1);
-    expect(band?.querySelectorAll("circle").length).toBe(4);
-    expect(band?.querySelector(".text-caption, .text-label, [role=group]")).toBeNull();
-    expectCapsInsideScene(container);
-    // The stat line says what runs and what is simulated; no scope box
-    // repeats it, and the lede is one sentence at every width.
-    expect(container.querySelector("[data-demo-scope]")).toBeNull();
-    expect(screen.queryByText("Eingaben und Annahmen")).toBeNull();
-    expect(
-      screen.getByText(DEMOS_PAGE_COPY.de.catalog.introduction).querySelector("span"),
-    ).toBeNull();
+  }
 
-    const stats = screen.getByRole("group", { name: "Umfang der Sammlung" });
-    const values = Array.from(stats.querySelectorAll("dd.text-num-lg")).map(
-      (node) => node.textContent,
-    );
-    // 12 demos, 3 execution modes in use, 0 actions that reach a real system.
-    expect(values).toEqual(["12", "3", "0"]);
-    // The stats sit on paper below the band. Below sm the StatRow gives way
-    // to one caption line with the same registry numbers.
-    expect(stats.closest("[data-cover-band]")).toBeNull();
-    expect(stats.parentElement).toHaveClass("max-sm:hidden");
-    // One unbreakable item per entry and a CSS separator that a clipping
-    // wrapper hides at each line start, so a wrap never leaves a line
-    // starting or ending with "·"; the zero
-    // count reads as a plain phrase instead of "0 Außenaktionen".
-    const statsLine = container.querySelector("[data-demo-stats-line]");
-    expect(
-      Array.from(statsLine?.querySelectorAll("li") ?? []).map(
-        (node) => node.textContent,
-      ),
-    ).toEqual([
-      "12 Beispiele",
-      "nichts wird wirklich gesendet",
-    ]);
-    expect(statsLine?.textContent).not.toContain("·");
-    expect(statsLine?.querySelector("li")).toHaveClass("whitespace-nowrap");
-    expect(statsLine).toHaveClass("-ml-[1em]");
-    expect(statsLine?.parentElement).toHaveClass("overflow-hidden", "sm:hidden");
-    expect(container.querySelector("[data-demo-atlas-hero]")).toBeTruthy();
-  });
-
-  it("passes allowlisted URL filters to the server-rendered grid", async () => {
-    render(
-      await DemosPage({
-        searchParams: Promise.resolve({
-          level: "mittel",
-          cat: "RAG",
-          industry: "Finance",
-        }),
-      }),
-    );
-
-    const grid = screen.getByTestId("demo-grid");
-    expect(grid).toHaveAttribute("data-level", "mittel");
-    expect(grid).toHaveAttribute("data-category", "RAG");
-    expect(grid).toHaveAttribute("data-industry", "Finance");
-  });
-
-  it("uses unfiltered defaults when URL filters are absent", async () => {
-    render(
-      await DemosPage({
-        searchParams: Promise.resolve({}),
-      }),
-    );
-
-    const grid = screen.getByTestId("demo-grid");
-    expect(grid).toHaveAttribute("data-level", "alle");
-    expect(grid).toHaveAttribute("data-category", "Alle");
-    expect(grid).toHaveAttribute("data-industry", "");
-  });
-
-  it("rejects unknown and repeated URL filters instead of reflecting them", async () => {
-    render(
-      await DemosPage({
-        searchParams: Promise.resolve({
-          level: ["einstieg", "fortg"],
-          cat: "<script>alert(1)</script>",
-          industry: ["Finance", "HR"],
-        }),
-      }),
-    );
-
-    const grid = screen.getByTestId("demo-grid");
-    expect(grid).toHaveAttribute("data-level", "alle");
-    expect(grid).toHaveAttribute("data-category", "Alle");
-    expect(grid).toHaveAttribute("data-industry", "");
+  it("states the count in the metadata", async () => {
+    localeRef.value = "de";
+    const metadata = await generateMetadata();
+    expect(metadata.title).toBe(DEMOS_PAGE_COPY.de.metadata.title);
+    expect(metadata.description).toBe(DEMOS_PAGE_COPY.de.metadata.description(5));
+    expect(metadata.alternates?.canonical).toBe("/demos");
   });
 });

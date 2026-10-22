@@ -12,3 +12,4 @@ route-workshops-locales.spec.ts
 plakat-contrast.spec.ts
 route-home-locales.spec.ts
 route-kurse-hub.spec.ts
+demos.spec.ts

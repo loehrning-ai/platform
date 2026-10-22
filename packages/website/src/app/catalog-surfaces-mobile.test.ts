@@ -64,7 +64,7 @@ describe("catalog surfaces below lg", () => {
     },
   );
 
-  it("reorders a stacked row only on the books route", () => {
+  it("reorders no catalog row: each reads in phone order in the DOM", () => {
     const reordering = SURFACES.filter((path) =>
       classLists(source(path)).some(
         (list) =>
@@ -72,12 +72,9 @@ describe("catalog surfaces below lg", () => {
       ),
     );
 
-    // Books is the one catalog row whose decision sits under a summary and a
-    // fact list. The workshop row already reads in phone order in the DOM
-    // (cover, kicker, title, question, link), and the demo and open-source
-    // rows lead with their decision, so a reorder there would be motion for
-    // its own sake.
-    expect(reordering).toEqual(["buecher/buecher-content.tsx"]);
+    // The book row now leads with its decision too (tile, meta, title,
+    // hook, then the two cards), so no catalog row needs `order`.
+    expect(reordering).toEqual([]);
   });
 
   it.each(SURFACES)(
@@ -92,25 +89,27 @@ describe("catalog surfaces below lg", () => {
     },
   );
 
-  it("leads the book row with title and reader link, contents after", () => {
+  it("lays the book row out on the workshop hub-row geometry", () => {
     const buecher = source("buecher/buecher-content.tsx");
+    const row = buecher.slice(buecher.indexOf("function ShelfRow"));
 
-    // The panel is a flex column at every width so `order` can move the two
-    // decision blocks on a phone; full-width children lay out identically in
-    // block and column flow, so md returns the reviewed spread untouched.
-    expect(buecher).toContain(
-      'className="flex min-w-0 flex-col bg-paper p-4 sm:p-7"',
+    // A 104px tile beside the text on a phone, 14rem from md, 18rem from lg,
+    // as WorkshopRow; the cards span the row on a phone and sit in the text
+    // column from md.
+    expect(row).toContain("grid-cols-[6.5rem_minmax(0,1fr)]");
+    expect(row).toContain(
+      "md:grid-cols-[14rem_minmax(0,1fr)] md:grid-rows-[auto_1fr] md:gap-x-10 md:gap-y-6 lg:grid-cols-[18rem_minmax(0,1fr)]",
     );
-    expect(buecher).toContain(
-      "md:grid-cols-[minmax(16rem,0.44fr)_minmax(0,1fr)]",
-    );
-    expect(buecher).toContain("py-6 sm:py-14");
-    expect(buecher).toContain("gap-6 sm:gap-12");
-    // The cover shrinks to 9rem on a phone and the srcset follows it, so the
-    // catalog stops shipping a 224px image to a 144px box.
-    expect(buecher).toContain("w-36 max-w-full");
-    expect(buecher).toContain('sizes="(max-width: 639px) 144px');
-    expect(buecher).toContain("sm:w-56 md:w-full");
+    expect(row).toContain("col-span-2 min-w-0 md:col-span-1 md:col-start-2");
+    // Phone order is source order: tile, meta, title, hook, the cards, then
+    // the chapter list.
+    expect(row.indexOf("<BookCoverTile")).toBeLessThan(row.indexOf("data-book-meta"));
+    expect(row.indexOf("data-book-meta")).toBeLessThan(row.indexOf("<h2"));
+    expect(row.indexOf("<h2")).toBeLessThan(row.indexOf("data-book-hook"));
+    expect(row.indexOf("data-book-hook")).toBeLessThan(row.indexOf("data-book-start"));
+    expect(row.indexOf("data-book-start")).toBeLessThan(row.indexOf("<ChapterList"));
+    // The subtitle is md-only; the hook carries the phone row.
+    expect(row).toContain("mt-1 hidden max-w-[48ch] text-body text-muted-foreground text-pretty md:block");
   });
 
   it("keeps the workshop row in phone order and compacts it below md", () => {

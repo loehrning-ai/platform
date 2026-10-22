@@ -197,6 +197,11 @@ describe("workshops catalog", () => {
         `${workshop.slug}.materials`,
       ).toBeGreaterThan(0);
       for (const material of workshop.materials) {
+        // The practice demo is a page of this site, not a published file.
+        if (material.role === "demo") {
+          expect(material.href).toBe(`/demos/${workshop.slug}`);
+          continue;
+        }
         expect(
           material.href.startsWith(`/workshops/${workshop.slug}/`),
           material.href,
@@ -226,6 +231,8 @@ describe("workshops catalog", () => {
       expect(englishWorkshop?.steps.map(({ n }) => n)).toEqual(
         germanWorkshop.steps.map(({ n }) => n),
       );
+      // The demo material is the same page in each locale: /en/demos/<slug>
+      // in English, in the page's own language.
       const materialShape = ({
         href,
         kind,
@@ -236,9 +243,9 @@ describe("workshops catalog", () => {
         optional,
         primary,
       }: WorkshopMaterial) => ({
-        href,
+        href: role === "demo" ? href.replace(/^\/en\//, "/") : href,
         kind,
-        language,
+        language: role === "demo" ? "page" : language,
         role,
         phase,
         minutes,
@@ -291,6 +298,11 @@ describe("workshops catalog", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         for (const material of workshop.materials) {
+          // The practice demo is a page in the reader's language.
+          if (material.role === "demo") {
+            expect(material.language).toBe(locale);
+            continue;
+          }
           expect(
             material.language,
             `${locale}/${workshop.slug}/${material.href}`,
@@ -451,6 +463,23 @@ describe("getWorkshopBySlug", () => {
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")?.title,
     ).toBe("Read business reports with AI");
+  });
+});
+
+describe("workshop demo material", () => {
+  it("links every workshop to its demo once, in the page's language, never as the start", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const workshop of getWorkshops(locale)) {
+        const demos = workshop.materials.filter((material) => material.role === "demo");
+        expect(demos, `${locale}/${workshop.slug}`).toHaveLength(1);
+        const [demo] = demos;
+        expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}`);
+        expect(demo?.language).toBe(locale);
+        expect(demo?.primary).toBeUndefined();
+        expect(demo?.optional).toBe(true);
+        expect(demo?.phase).toBe("during");
+      }
+    }
   });
 });
 

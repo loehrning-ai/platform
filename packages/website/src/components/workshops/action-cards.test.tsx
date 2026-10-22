@@ -71,8 +71,9 @@ describe("<ActionCards>", () => {
         expect(cards[0]).not.toHaveClass("ac-card-b");
         expect(cards[1]).toHaveClass("ac-card-b");
 
-        // Card A.
-        const linkA = within(cards[0] as HTMLElement).getByRole("link");
+        // Card A: the main link, then one small secondary link to the practice demo.
+        const linksA = within(cards[0] as HTMLElement).getAllByRole("link");
+        const linkA = linksA[0];
         expect(linkA).toHaveAttribute("href", stage.a!.href);
         expect(linkA).toHaveAttribute("hreflang", stage.a!.material.language);
         expect(linkA).toHaveAccessibleName(`${copy.stage[stage.a!.kind]}: ${workshop.topic}`);
@@ -82,6 +83,12 @@ describe("<ActionCards>", () => {
           expect(linkA).not.toHaveAttribute("target");
         }
         expect(cards[0]).toHaveTextContent(stage.a!.meta);
+        expect(stage.a!.demoHref).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}`);
+        expect(linksA).toHaveLength(2);
+        expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
+        expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
+        expect(linksA[1]).toHaveClass("ac-secondary");
+        expect(linksA[1]).not.toHaveAttribute("download");
 
         // Card B.
         const links = within(cards[1] as HTMLElement).getAllByRole("link");
@@ -108,12 +115,11 @@ describe("<ActionCards>", () => {
           expect(links[1]).toHaveAccessibleName(`${copy.kitPageAction}: ${workshop.topic}`);
           expect(links[1]).toHaveClass("ac-secondary");
           expect(links[1]).not.toHaveAttribute("download");
-          expect(within(cards[0] as HTMLElement).getAllByRole("link")).toHaveLength(1);
         } else {
           expect(links).toHaveLength(1);
         }
-        // Two main links and at most one secondary: every link target reachable.
-        expect(container.querySelectorAll("a")).toHaveLength(stage.b!.kitPageHref ? 3 : 2);
+        // Two main links, the demo link on card A and at most one kit-page link on card B.
+        expect(container.querySelectorAll("a")).toHaveLength(stage.b!.kitPageHref ? 4 : 3);
       });
     }
   }

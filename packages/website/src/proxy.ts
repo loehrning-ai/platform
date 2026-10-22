@@ -216,6 +216,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
         localizeHref(route.redirectTo, locale),
         redirectOriginForRequest(request.nextUrl),
       );
+      // Retired demo links keep their query string, so attribution such as
+      // ?source=... survives the move to the new page.
+      if (route.redirectTo.startsWith("/demos/") && !url.search) {
+        url.search = request.nextUrl.search;
+      }
       const redirect = NextResponse.redirect(url, route.status ?? 301);
       redirect.headers.set("Cache-Control", cacheHeaderFor(route));
       return redirect;

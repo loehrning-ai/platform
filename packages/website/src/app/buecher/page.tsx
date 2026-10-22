@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { cache } from "react";
-import { BuecherContent } from "./buecher-content";
+import {
+  BuecherContent,
+  type ShelfEntry,
+  type ShelfHeadline,
+} from "./buecher-content";
 import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
 import { JsonLd, ORG_ID, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { books, type Book } from "@/lib/books";
-import { loadBookManifest, type BookManifest } from "@/lib/book-reader-content";
+import {
+  getBookChapterListResolved,
+  loadBookManifest,
+  resolveLanding,
+  type BookManifest,
+} from "@/lib/book-reader-content";
+import { loadBookFigures } from "@/lib/book-figures";
+import { isInsightBook } from "@/lib/book-experience";
+import { quantityFor, resolveToken } from "@/lib/figures";
 import { getRuntimeFeatures } from "@/lib/runtime-features";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -44,7 +56,8 @@ const loadLocalizedCatalog = cache(
             book,
             manifest: await loadBookManifest(book.id, locale),
           };
-        } catch {
+        } catch (error) {
+          console.error(`[buecher] book "${book.id}" failed to load (${locale})`, error);
           return null;
         }
       }),
@@ -52,6 +65,69 @@ const loadLocalizedCatalog = cache(
     return entries.filter(
       (entry): entry is LocalizedCatalogEntry => entry !== null,
     );
+  },
+);
+
+/**
+ * The landing's headline (value, share, claim) from the figure JSON, the same
+ * calls as the insight branch of [slug]/page.tsx. A book without an insight
+ * landing, a headline figure or a claim gets none: its tile shows the field
+ * only and its hook falls back to the subtitle.
+ */
+async function loadShelfHeadline(
+  book: Book,
+  manifest: BookManifest,
+  locale: Locale,
+): Promise<ShelfHeadline | null> {
+  if (!isInsightBook(book.id)) return null;
+  try {
+    const landing = await resolveLanding(book.id, manifest, locale);
+    const ref = /^([a-z0-9][a-z0-9_-]*)\.([A-Za-z0-9_]+)$/i.exec(
+      landing.headlineRef,
+    );
+    if (!ref || !landing.headlineTail) return null;
+    const figures = await loadBookFigures(book.id);
+    const spec = figures.lookup((ref[1] as string).toLowerCase());
+    if (!spec) return null;
+    const key = ref[2] as string;
+    const quantity = quantityFor(spec, key);
+    if (!quantity) return null;
+    return {
+      // The token resolver, so the value reads as the chapter numerals of the
+      // same locale do ("3,8 %" in German, "3.8%" in English).
+      value: resolveToken(spec, key, "value", undefined, locale),
+      share: quantity.value / 100,
+      tail: landing.headlineTail,
+    };
+  } catch (error) {
+    console.error(`[buecher] headline of book "${book.id}" failed to load (${locale})`, error);
+    return null;
+  }
+}
+
+/** One shelf row: the manifest title, the resolved chapter list and the headline. */
+const loadShelf = cache(
+  async (locale: Locale): Promise<readonly ShelfEntry[]> => {
+    const catalog = await loadLocalizedCatalog(locale);
+    const entries = await Promise.all(
+      catalog.map(async ({ book, manifest }): Promise<ShelfEntry | null> => {
+        try {
+          const [chapters, headline] = await Promise.all([
+            getBookChapterListResolved(book.id, locale),
+            loadShelfHeadline(book, manifest, locale),
+          ]);
+          return {
+            book,
+            display: { ...getBookDisplay(book, locale), title: manifest.title },
+            chapters,
+            headline,
+          };
+        } catch {
+          return null;
+        }
+      }),
+    );
+    return entries.filter((entry): entry is ShelfEntry => entry !== null);
   },
 );
 
@@ -150,6 +226,7 @@ export default async function BuecherPage() {
     ],
   };
   const { account: accountEnabled } = getRuntimeFeatures();
+  const entries = await loadShelf(locale);
 
   return (
     <>
@@ -157,7 +234,7 @@ export default async function BuecherPage() {
       <BuecherContent
         accountEnabled={accountEnabled}
         locale={locale}
-        catalogBooks={localizedCatalog.map(({ book }) => book)}
+        entries={entries}
         headingFontClassName={catalogDisplayFont.className}
       />
     </>

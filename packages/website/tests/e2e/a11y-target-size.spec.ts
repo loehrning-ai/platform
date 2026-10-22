@@ -21,7 +21,7 @@ import { test, expect, type Locator } from "@playwright/test";
 
 const MIN = 44;
 const BOOK_OVERVIEW_LINK_NAME =
-  /^(?:Buch und Kapitel öffnen|Open book and chapters): .+$/i;
+  /^(?:Kapitel 1 lesen|Read chapter 1|Zum Buch|Open the book): .+$/i;
 
 async function expectMinTargetSize(
   locator: Locator,
@@ -57,8 +57,7 @@ test.describe("a11y: 44px product target floor at 390x844", () => {
   test("book-overview links on /buecher are large-enough touch targets", async ({
     page,
   }) => {
-    // Reduced motion so the whileInView book cards settle to their final,
-    // measurable layout instead of their opacity:0 entrance state.
+    // Reduced motion so any transition settles to its final, measurable layout.
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/buecher", { waitUntil: "domcontentloaded" });
 

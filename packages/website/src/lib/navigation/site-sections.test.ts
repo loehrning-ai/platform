@@ -21,7 +21,7 @@ describe("site sections", () => {
     expect(matchesSection(PRACTICE_ROUTES, "/workshops/esg-berichte-mit-ki")).toBe(
       true,
     );
-    expect(matchesSection(PRACTICE_ROUTES, "/en/demos/excel")).toBe(true);
+    expect(matchesSection(PRACTICE_ROUTES, "/en/demos/esg-berichte-mit-ki")).toBe(true);
     expect(
       matchesSection(PRACTICE_ROUTES, "/open-source/lizenzrichtlinie"),
     ).toBe(true);
