@@ -44,6 +44,11 @@ export interface DemoCopy {
   readonly question: string;
   /** The one honest line about the data, shown once under the band. */
   readonly syntheticDataLabel: string;
+  /**
+   * The hub's job line, the biggest text on the tile: verb first, about the
+   * visitor, at most 56 characters ("Prüf, ob dein Jahreswert zwölf Monate hat.").
+   */
+  readonly job: string;
   /** The hub tile: the surprise in one sentence, and what the visitor leaves with. */
   readonly tile: {
     readonly hook: string;
@@ -54,6 +59,12 @@ export interface DemoCopy {
 }
 
 export interface Demo extends DemoCopy {
+  /**
+   * "v3": the demo runs on the v3 shell (src/components/demos/shell), its route
+   * passes beats, and the v3 contract test applies. Opt-in while the five
+   * demos migrate; the integrator removes the flag once all five are on v3.
+   */
+  readonly shell?: "v3";
   /** Stable id for machine surfaces; equals the slug. */
   readonly id: DemoSlug;
   readonly slug: DemoSlug;
@@ -99,6 +110,7 @@ export const demos: readonly Demo[] = [
     question: "Kann KI die Zukunft vorhersagen?",
     syntheticDataLabel:
       "Erfundener Fall aus Workshop 01, gerechnet in deinem Browser. Keine KI, nichts wird gesendet.",
+    job: "Sieh, in wie vielen Wochen dein Lager nicht reicht.",
     tile: {
       hook: "Lager 1.050, erwartet 1.180. In 76 von 100 Startwochen reicht es nicht.",
       take: "ein Satz für deine Mail",
@@ -110,6 +122,7 @@ export const demos: readonly Demo[] = [
       question: "Can AI predict the future?",
       syntheticDataLabel:
         "Invented case from Workshop 01, worked out in your browser. No AI, nothing is sent.",
+      job: "See in how many weeks your stock falls short.",
       tile: {
         hook: "Stock 1,050, expected 1,180. In 76 of 100 launch weeks it falls short.",
         take: "a sentence for your email",
@@ -135,6 +148,7 @@ export const demos: readonly Demo[] = [
     question: "Stimmt das?",
     syntheticDataLabel:
       "NORTHWIND ist erfunden, die Zahlen stammen aus dem Workshop-Kit und werden in deinem Browser gerechnet. Keine KI, nichts wird gesendet.",
+    job: "Prüf, ob dein Wachstum an der Monatsgrenze hängt.",
     tile: {
       hook: "Dieselben neun Wochen: +26 %, −20 % oder +105 %.",
       take: "Regeln für deine Berichte",
@@ -146,6 +160,7 @@ export const demos: readonly Demo[] = [
       question: "Is that right?",
       syntheticDataLabel:
         "NORTHWIND is invented, the figures come from the workshop kit and are worked out in your browser. No AI, nothing is sent.",
+      job: "Check if your growth hangs on where a month ends.",
       tile: {
         hook: "The same nine weeks: +26 %, −20 % or +105 %.",
         take: "rules for your reports",
@@ -170,6 +185,7 @@ export const demos: readonly Demo[] = [
     question: "Warum ist April negativ?",
     syntheticDataLabel:
       "Erfundene Firma, Daten aus dem Workshop-Kit, gerechnet in deinem Browser. Keine KI, nichts wird gesendet.",
+    job: "Lies dieselben Zahlen als Stufe und als Treppe.",
     tile: {
       hook: "Aus −19.960 € werden 334.675 €, ohne dass sich ein Datensatz ändert.",
       take: "Zieh den Hebel: dieselben Zahlen, zwei Lesarten.",
@@ -181,6 +197,7 @@ export const demos: readonly Demo[] = [
       question: "Why is April negative?",
       syntheticDataLabel:
         "Invented company, data from the workshop kit, worked out in your browser. No AI, nothing is sent.",
+      job: "Read the same numbers as a step and a staircase.",
       tile: {
         hook: "−€19,960 becomes €334,675, without one record changing.",
         take: "Pull the lever: the same numbers, two readings.",
@@ -207,6 +224,7 @@ export const demos: readonly Demo[] = [
     question: "Ist das ein Jahreswert?",
     syntheticDataLabel:
       "Erfundene Kellerei, Dateien aus dem Workshop-Kit, gerechnet in deinem Browser. Keine KI, nichts wird gesendet.",
+    job: "Prüf, ob dein Jahreswert zwölf Monate hat.",
     tile: {
       hook: "279,7 MWh stehen als Jahreswert da. Rate den fehlenden Monat.",
       take: "eine Zeile, die nie wieder „Gesamtjahr“ sagt",
@@ -218,6 +236,7 @@ export const demos: readonly Demo[] = [
       question: "Is this a full-year figure?",
       syntheticDataLabel:
         "Invented winery, files from the workshop kit, worked out in your browser. No AI, nothing is sent.",
+      job: "Check that your annual figure has twelve months.",
       tile: {
         hook: "279.7 MWh sits there as the annual figure. Guess the missing month.",
         take: "a line that never says “full year” again",
@@ -243,6 +262,7 @@ export const demos: readonly Demo[] = [
     question: "Was fliegt mit, wenn du das einfügst?",
     syntheticDataLabel:
       "Alle Beispiele und Personen sind erfunden. Die Ampel ist die Regel aus dem Workshop, kein Gesetz. Keine Rechtsberatung. Dein Text bleibt auf deinem Gerät.",
+    job: "Schwärz deinen Text, bevor er in den Chat geht.",
     tile: {
       hook: "Füge deinen Text ein und sieh, was mitfliegen würde.",
       take: "ein sauberer Prompt",
@@ -254,6 +274,7 @@ export const demos: readonly Demo[] = [
       question: "What goes along when you paste this?",
       syntheticDataLabel:
         "All examples and people are invented. The light is the workshop's rule, not a law. Not legal advice. Your text stays on your device.",
+      job: "Black out your text before it goes into a chat.",
       tile: {
         hook: "Paste your text and see what would go along.",
         take: "a clean prompt",

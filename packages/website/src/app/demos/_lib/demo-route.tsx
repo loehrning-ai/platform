@@ -3,12 +3,18 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DemoPage } from "@/components/demos/demo-page";
 import type { DemoComponentProps } from "@/components/demos/demo-page";
+import { DemoPageV3 } from "@/components/demos/shell/demo-page-v3";
+import type { Beat } from "@/lib/demo-beats";
 import { getDemoForLocale, type DemoSlug } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
+
+function missingBeats(slug: string): never {
+  throw new Error(`demo ${slug} is on the v3 shell but its route passes no beats`);
+}
 
 /** Metadata for one demo route. An unknown slug is never indexable. */
 export async function demoMetadata(slug: string): Promise<Metadata> {
@@ -46,9 +52,15 @@ export async function demoMetadata(slug: string): Promise<Metadata> {
 /**
  * One demo route: the shell around the demo component the route file passes
  * in. Each route file imports only its own component (and so its own CSS),
- * so a demo page ships one demo, not all five.
+ * so a demo page ships one demo, not all five. A demo on the v3 shell
+ * (`shell: "v3"` in the registry) also passes its beats
+ * (src/lib/demo-cases/<slug>/beats.ts).
  */
-export async function renderDemoRoute(slug: DemoSlug, Demo: ComponentType<DemoComponentProps>) {
+export async function renderDemoRoute(
+  slug: DemoSlug,
+  Demo: ComponentType<DemoComponentProps>,
+  beats?: readonly Beat[],
+) {
   const locale = await getRequestLocale();
   const demo = getDemoForLocale(slug, locale);
   if (!demo) notFound();
@@ -106,7 +118,15 @@ export async function renderDemoRoute(slug: DemoSlug, Demo: ComponentType<DemoCo
   return (
     <>
       <JsonLd data={jsonLd} id={`demo-${demo.slug}-jsonld`} />
-      <DemoPage demo={demo} locale={locale} Demo={Demo} />
+      {demo.shell === "v3" ? (
+        beats ? (
+          <DemoPageV3 demo={demo} locale={locale} beats={beats} Demo={Demo} />
+        ) : (
+          missingBeats(slug)
+        )
+      ) : (
+        <DemoPage demo={demo} locale={locale} Demo={Demo} />
+      )}
     </>
   );
 }

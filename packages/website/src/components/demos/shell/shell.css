@@ -1,0 +1,345 @@
+/*
+ * The v3 demo shell (src/components/demos/shell). Demo CSS never selects
+ * these classes or the shell's data attributes (demo-contract.test.ts).
+ *
+ * Phone budget: the stage and the lever own the first screen at 390 x 664
+ * (Safari with its toolbar). The fold is the viewport minus the compact top
+ * bar, the tab bar and the home indicator; the stage gets what is left after
+ * the demo bar (56), the rail (28), the caption (44), the lever (72) and the
+ * gaps (32): 232px of chrome.
+ */
+[data-demo-v3] {
+  --demo-fold: calc(100svh - var(--nav-h-compact) - var(--tabbar-h) - env(safe-area-inset-bottom, 0px));
+  --demo-bar-h: 56px;
+  --demo-rail-h: 28px;
+  --demo-chrome-h: 232px;
+  --demo-stage-h: clamp(240px, calc(var(--demo-fold) - var(--demo-chrome-h)), 420px);
+  --demo-gap: 8px;
+}
+
+@media (min-width: 64rem) {
+  [data-demo-v3] {
+    --demo-fold: calc(100svh - var(--nav-h));
+    --demo-stage-h: min(560px, calc(100svh - var(--nav-h) - 96px - 160px));
+  }
+}
+
+/* ── Demo bar: back glyph, the one-line H1, the workshop chip ───────────── */
+.demo-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: var(--demo-bar-h);
+  border-bottom: 1px solid var(--color-hairline);
+}
+.demo-bar-back,
+.demo-bar-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  color: var(--color-foreground);
+  -webkit-tap-highlight-color: transparent;
+}
+.demo-bar-back {
+  gap: 6px;
+  margin-left: -10px;
+  padding: 0 10px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.demo-bar-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.demo-bar-chip {
+  flex: none;
+  padding: 0 10px;
+  border: 1px solid var(--color-foreground);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.demo-bar-back:active,
+.demo-bar-chip:active {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo-bar-back:hover,
+  .demo-bar-chip:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+}
+
+/* ── Layout: one column on a phone, 4/12 + 8/12 from 1024px ────────────── */
+.demo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.demo-aside {
+  display: none;
+}
+@media (min-width: 64rem) {
+  .demo-grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 48px;
+    padding-top: 32px;
+  }
+  .demo-aside {
+    display: block;
+    position: sticky;
+    top: calc(var(--nav-h) + 24px);
+    align-self: start;
+  }
+}
+
+/* ── Beat rail ───────────────────────────────────────────────────────────── */
+.demo-rail-list {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.demo-rail-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.demo-rail-mark {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: var(--demo-rail-h);
+  padding: 0;
+  color: var(--color-muted-foreground);
+  background: transparent;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+/* 44px hit area around the 28px row. */
+.demo-rail-mark::after {
+  content: "";
+  position: absolute;
+  inset: -8px 0;
+}
+.demo-rail-bar {
+  display: block;
+  height: 3px;
+  background: var(--color-hairline);
+}
+.demo-rail-mark[data-state="done"] .demo-rail-bar {
+  background: var(--color-foreground);
+}
+.demo-rail-mark[data-state="current"] .demo-rail-bar {
+  height: 6px;
+  background: var(--color-foreground);
+  box-shadow: inset 0 -3px 0 var(--color-mennige);
+}
+.demo-rail-mark[data-state="current"] {
+  color: var(--color-foreground);
+}
+.demo-rail-label {
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.demo-rail-mark[data-state="current"] .demo-rail-label {
+  font-weight: 800;
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo-rail-mark:hover .demo-rail-label {
+    text-decoration: underline 2px var(--color-mennige);
+    text-underline-offset: 3px;
+  }
+}
+.demo-rail-list.is-vertical {
+  flex-direction: column;
+  gap: 0;
+  border-left: 1px solid var(--color-hairline);
+}
+.demo-rail-list.is-vertical .demo-rail-mark {
+  flex-direction: row;
+  align-items: center;
+  height: 44px;
+  padding-left: 14px;
+}
+.demo-rail-list.is-vertical .demo-rail-mark::after {
+  inset: 0;
+}
+.demo-rail-list.is-vertical .demo-rail-bar {
+  position: absolute;
+  left: -2px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  height: auto;
+  background: transparent;
+}
+.demo-rail-list.is-vertical .demo-rail-mark[data-state="done"] .demo-rail-bar {
+  background: var(--color-foreground);
+}
+.demo-rail-list.is-vertical .demo-rail-mark[data-state="current"] .demo-rail-bar {
+  width: 5px;
+  height: auto;
+  background: var(--color-mennige);
+  box-shadow: none;
+}
+.demo-rail-list.is-vertical .demo-rail-label {
+  font-size: 0.9375rem;
+}
+
+/* ── Stage, caption, lever ───────────────────────────────────────────────── */
+.demo-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--demo-gap);
+  padding-top: var(--demo-gap);
+  min-width: 0;
+}
+.demo-stage {
+  position: relative;
+  height: var(--demo-stage-h);
+  margin: 0;
+  overflow: hidden;
+  border: 2px solid var(--color-foreground);
+  background: var(--color-card);
+}
+.demo-restart {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-left: 2px solid var(--color-foreground);
+  border-bottom: 2px solid var(--color-foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 0.875rem;
+  font-weight: 700;
+  -webkit-tap-highlight-color: transparent;
+}
+.demo-restart:active {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo-restart:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+}
+.demo-restart:disabled {
+  cursor: progress;
+}
+.demo-caption {
+  min-height: 2.75rem;
+  margin: 0;
+  max-width: 60ch;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.375;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-wrap: pretty;
+}
+.demo-lever {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+}
+.demo-lever-control {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.demo-next {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 2px solid var(--color-foreground);
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-size: 1rem;
+  font-weight: 700;
+  -webkit-tap-highlight-color: transparent;
+}
+.demo-next:active {
+  background: var(--color-mennige);
+  border-color: var(--color-mennige);
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo-next:hover {
+    background: var(--color-mennige);
+    border-color: var(--color-mennige);
+  }
+}
+.demo-privacy {
+  margin: 6px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--color-muted-foreground);
+}
+
+/* ── Desktop column copy ─────────────────────────────────────────────────── */
+.demo-aside-title {
+  margin-top: 12px;
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.demo-aside-question {
+  margin-top: 16px;
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+
+/* ── Projector mode (?room=1): stage only, larger type ───────────────────── */
+[data-demo-v3]:has([data-demo-clock][data-room]) {
+  --demo-stage-h: min(70svh, 720px);
+}
+[data-demo-v3]:has([data-demo-clock][data-room]) :is([data-demo-bar], [data-demo-aside], [data-demo-below], [data-closing-band], [data-takehome], [data-beat-rail]) {
+  display: none;
+}
+[data-demo-v3]:has([data-demo-clock][data-room]) .demo-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+[data-demo-v3]:has([data-demo-clock][data-room]) .demo-caption {
+  font-size: 1.75rem;
+  -webkit-line-clamp: 3;
+}
+
+@media print {
+  .demo-restart,
+  .demo-next,
+  [data-beat-rail] {
+    display: none;
+  }
+}

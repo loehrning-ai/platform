@@ -1,7 +1,10 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEMO_SLUGS } from "@/lib/demos";
+import { validateBeats, type Beat } from "@/lib/demo-beats";
+import { DEMO_TAKEHOME } from "@/lib/demo-takehome";
+import { DEMO_SLUGS, getDemoBySlug } from "@/lib/demos";
+import { listZipEntries } from "@/lib/zip/read";
 
 /**
  * The folder contract every demo lane fulfils, walked over the five folders:
@@ -140,5 +143,108 @@ describe.each(DEMO_SLUGS)("demo folder contract: %s", (slug) => {
       expect(page).not.toContain(other === slug ? "" : `components/demos/${other}`);
     }
     expect(page).not.toMatch(/components\/demos\/hub|tile/);
+  });
+});
+
+/**
+ * The v3 shell contract, for every demo that opted in (`shell: "v3"` in
+ * src/lib/demos.ts). Each builder flips the flag when their demo moves onto
+ * the shell; the integrator removes the flag once all five run on it.
+ *
+ *   src/lib/demo-cases/<slug>/beats.ts   BEATS: commit, reveal, tool, apply 0-3, own, takehome
+ *   src/app/demos/<slug>/page.tsx         passes BEATS to renderDemoRoute
+ *   src/lib/demo-takehome.ts              an entry; every beat kitFile is in the kit zip
+ *   the demo renders DemoStage and DemoLever from @/components/demos/shell
+ */
+const SHELL_SELECTORS = [
+  "[data-demo-page",
+  "[data-demo-v3",
+  "[data-cover-band",
+  "[data-demo-promise",
+  "[data-demo-synthetic",
+  "[data-demo-question",
+  "[data-plakat-art-phone",
+  "[data-demo-workshop-link",
+  "[data-demo-bar",
+  "[data-beat-rail",
+  "[data-demo-stage",
+  "[data-demo-lever",
+  "[data-demo-restart",
+  "[data-demo-next",
+  "[data-demo-privacy",
+  "[data-closing-band",
+  "[data-takehome",
+  ".demo-bar",
+  ".demo-rail",
+  ".demo-stage",
+  ".demo-caption",
+  ".demo-lever",
+  ".demo-next",
+  ".demo-restart",
+  ".demo-privacy",
+  ".demo-grid",
+  ".demo-aside",
+  ".demo-main",
+  ".glass",
+];
+
+const V3_SLUGS = DEMO_SLUGS.filter((slug) => getDemoBySlug(slug)?.shell === "v3");
+
+describe("v3 shell contract", () => {
+  it("lists the demos that opted in (none is fine while they migrate)", () => {
+    expect(V3_SLUGS.every((slug) => DEMO_SLUGS.includes(slug))).toBe(true);
+  });
+
+  it.each(V3_SLUGS.length > 0 ? V3_SLUGS : ["(none yet)"])("%s meets the v3 contract", async (slug) => {
+    if (slug === "(none yet)") return;
+    const typed = slug as (typeof DEMO_SLUGS)[number];
+    // beats: the kinds in order, at most eight
+    expect(existsSync(join(SRC, `lib/demo-cases/${slug}/beats.ts`)), "beats.ts").toBe(true);
+    const beatsSource = read(`lib/demo-cases/${slug}/beats.ts`);
+    expect(beatsSource, "beats.ts is plain data, not server-only").not.toMatch(/server-only/);
+    const { BEATS } = (await import(`@/lib/demo-cases/${slug}/beats.ts`)) as { BEATS: readonly Beat[] };
+    expect(validateBeats(BEATS)).toEqual([]);
+
+    // the route passes the beats
+    const page = read(`app/demos/${slug}/page.tsx`);
+    expect(page).toMatch(/renderDemoRoute\(SLUG, Demo, BEATS\)/);
+    expect(page).toContain(`@/lib/demo-cases/${slug}/beats`);
+
+    // a take-home entry; kit chips, instructions and beat kit files exist in the zip
+    const takeHome = DEMO_TAKEHOME[typed];
+    expect(takeHome, "DEMO_TAKEHOME entry").toBeDefined();
+    if (!takeHome) return;
+    for (const locale of ["de", "en"] as const) {
+      const kit = takeHome.kit[locale];
+      const zip = new Uint8Array(readFileSync(join(SRC, "..", "public", kit.href)));
+      const paths = new Set(listZipEntries(zip).map((entry) => entry.path));
+      for (const file of [...kit.shown, kit.instructions, kit.installDoc]) {
+        expect(paths.has(file), `${kit.href}: ${file}`).toBe(true);
+      }
+      for (const beat of BEATS) {
+        if (beat.kitFile) expect(paths.has(beat.kitFile), `${kit.href}: beat ${beat.id} ${beat.kitFile}`).toBe(true);
+      }
+    }
+
+    // the demo uses the shell's stage and lever and never re-implements them
+    const files = sources(slug);
+    const code = files.filter((file) => /\.tsx?$/.test(file)).map((file) => read(file)).join("\n");
+    expect(code).toMatch(/from "@\/components\/demos\/shell"/);
+    expect(code).toMatch(/<DemoStage\b/);
+    expect(code).toMatch(/<DemoLever\b/);
+    for (const file of files) {
+      const text = read(file);
+      // the page never scrolls itself: scrolling goes through the shell's revealIfOffscreen in a tap handler
+      expect(text, file).not.toMatch(/scrollIntoView|scrollTo\(|scrollBy\(|window\.scroll\(/);
+      // keys belong to the shell (src/lib/demo-keys.ts)
+      expect(text, file).not.toMatch(/addEventListener\(\s*["']key(?:down|up)["']/);
+      expect(text, file).not.toMatch(/onKeyDown=\{[^}]*\b(?:ArrowLeft|ArrowRight|Escape)\b/);
+      if (file.endsWith(".css")) {
+        for (const selector of SHELL_SELECTORS) expect(text, `${file} selects ${selector}`).not.toContain(selector);
+        // glass only through the one shared .glass class in globals.css
+        expect(text, file).not.toMatch(/backdrop-filter/);
+      }
+    }
+    expect(existsSync(join(SRC, `components/demos/${slug}/arrive.ts`)), "arrive.ts is gone").toBe(false);
   });
 });
