@@ -342,8 +342,8 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
   // Workshop 05 became "Audit-Vorbereitung mit KI" (audit-vorbereitung-mit-ki) in
   // its v3 rebuild. The released pages, the old kit zip and the old demo under
   // the previous slug resolve to the new ones; the /en mirror follows the same
-  // entries. Exact paths only: the workshop's deck still lives in the previous
-  // folder until it is rebuilt.
+  // entries. The rebuilt deck lives under the new slug; its former deck and
+  // presenter paths resolve to the German edition.
   route(
     "/workshops/ki-im-unternehmen-sicher-nutzen",
     "retired",
@@ -366,6 +366,18 @@ const RETIRED_ROUTES: readonly CrawlRoute[] = [
       redirectTo: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
       status: 301,
     },
+  ),
+  route(
+    "/workshops/ki-im-unternehmen-sicher-nutzen/slides.html",
+    "retired",
+    "The previous deck of Workshop 05 resolves to the rebuilt deck.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/workshops/audit-vorbereitung-mit-ki/slides.html", status: 301 },
+  ),
+  route(
+    "/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html",
+    "retired",
+    "The previous presenter view of Workshop 05 resolves to the rebuilt presenter view.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/workshops/audit-vorbereitung-mit-ki/presenter.html", status: 301 },
   ),
   route(
     "/demos/ki-im-unternehmen-sicher-nutzen",

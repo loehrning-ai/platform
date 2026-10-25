@@ -31,6 +31,7 @@ const storageKeys = (page: Page) => page.evaluate(() => [...Object.keys(localSto
 for (const deck of [
   { slug: "datenbereitschaft-fuer-ki", ready: "#cover" },
   { slug: "geschaeftsberichte-mit-ki-lesen", ready: "deck-stage > section:first-of-type" },
+  { slug: "audit-vorbereitung-mit-ki", ready: "#cover" },
 ]) {
   test(`${deck.slug} deck follows the shared key contract`, async ({ page }) => {
     await page.goto(`/workshops/${deck.slug}/slides.html`);

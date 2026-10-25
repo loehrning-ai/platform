@@ -19,11 +19,6 @@ function publicFileFor(path: string): string {
   return resolve(process.cwd(), "public", path.replace(/^\//, ""));
 }
 
-/** A deck that still lives under its workshop's former slug; remove once the rework moves it. */
-const DECK_UNDER_FORMER_SLUG: Readonly<Record<string, string>> = {
-  "audit-vorbereitung-mit-ki": "ki-im-unternehmen-sicher-nutzen",
-};
-
 describe("machine workshop records", () => {
   it("lists every workshop once, in catalog order", () => {
     const slugs = listMachineWorkshopSlugs();
@@ -75,7 +70,7 @@ describe("machine workshop records", () => {
 
       for (const material of record?.materials ?? []) {
         expect(material.path, material.label).toMatch(
-          new RegExp(`^/workshops/(?:${workshop.slug}${DECK_UNDER_FORMER_SLUG[workshop.slug] && material.kind === "html" ? `|${DECK_UNDER_FORMER_SLUG[workshop.slug]}` : ""})/`),
+          new RegExp(`^/workshops/${workshop.slug}/`),
         );
         expect(material.url).toBe(`https://loehrning.ai${material.path}`);
         expect(["html", "zip", "csv"]).toContain(material.kind);

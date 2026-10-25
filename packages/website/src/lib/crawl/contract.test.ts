@@ -130,11 +130,13 @@ describe("crawl contract", () => {
     );
   });
 
-  // Workshop 05 moved to audit-vorbereitung-mit-ki; its previous pages, kit zip and demo must not 404.
+  // Workshop 05 moved to audit-vorbereitung-mit-ki; its previous pages, kit zip, deck and demo must not 404.
   it.each([
     ["/workshops/ki-im-unternehmen-sicher-nutzen", "/workshops/audit-vorbereitung-mit-ki"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/kit", "/workshops/audit-vorbereitung-mit-ki/kit"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip", "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/slides.html", "/workshops/audit-vorbereitung-mit-ki/slides.html"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html", "/workshops/audit-vorbereitung-mit-ki/presenter.html"],
     ["/demos/ki-im-unternehmen-sicher-nutzen", "/demos/audit-vorbereitung-mit-ki"],
   ])("redirects the previous Workshop 05 path %s to %s", (from, to) => {
     const entry = getCrawlRoute(from);

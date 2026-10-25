@@ -14,7 +14,7 @@ const repo = path.resolve(here, "../..");
 export const DECK_KEYS_SOURCE = path.join(here, "deck-keys.js");
 
 /** Decks wired to the shared key contract. Add a slug when a deck adopts it (W4 and W5 builders). */
-export const DECK_KEYS_WORKSHOPS = ["geschaeftsberichte-mit-ki-lesen", "datenbereitschaft-fuer-ki"];
+export const DECK_KEYS_WORKSHOPS = ["geschaeftsberichte-mit-ki-lesen", "datenbereitschaft-fuer-ki", "audit-vorbereitung-mit-ki"];
 
 export const deckFolder = (slug) => path.join(repo, "packages/website/public/workshops", slug);
 export const deckKeysCopyPath = (slug) => path.join(deckFolder(slug), "lib/deck-keys.js");

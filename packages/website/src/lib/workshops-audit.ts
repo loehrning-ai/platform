@@ -4,11 +4,8 @@ import { AUDIT_KIT } from "./workshops-audit-kit";
 
 const base = "/workshops/audit-vorbereitung-mit-ki";
 
-/**
- * The deck still lives under the workshop's former slug until its rework lands; the redirects in
- * src/lib/crawl/contract.ts cover the other paths of the former slug.
- */
-const deckHref = "/workshops/ki-im-unternehmen-sicher-nutzen/slides.html";
+/** One deck in two editions, built from one copy source by scripts/workshop05/deck-src/build.mjs. */
+const DECK_FILE: Readonly<Record<Locale, string>> = { de: "slides.html", en: "slides.en.html" };
 
 /**
  * Workshop 05, "Audit Preparation with AI: Organize Evidence and Find Gaps". The kit's source files and
@@ -24,18 +21,21 @@ const KIT_SIZE_LABEL = "29 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
-/** Shared href, kind, language, role and phase: both locales list the same files in the same order. */
-const MATERIALS: readonly MaterialFrame[] = [
-  { href: deckHref, kind: "html", language: "en", role: "deck", phase: "during", minutes: 90, primary: true },
-  { href: `${base}/vardar-audit-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
-];
+/** Both locales list the same files in the same order; the deck is the edition in the page's language. */
+function materialFrames(locale: Locale): readonly MaterialFrame[] {
+  return [
+    { href: `${base}/${DECK_FILE[locale]}`, kind: "html", language: locale, role: "deck", phase: "during", minutes: 90, primary: true },
+    { href: `${base}/vardar-audit-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
+  ];
+}
 
 /** Label, description and, where the first sentence runs long on a phone, its short phone wording. */
 type MaterialCopy = readonly [label: string, description: string, short?: string];
 
-function materials(copy: readonly MaterialCopy[]): readonly WorkshopMaterial[] {
-  if (copy.length !== MATERIALS.length) throw new Error("Workshop 05: material copy does not match the material list");
-  return MATERIALS.map((frame, index) => {
+function materials(locale: Locale, copy: readonly MaterialCopy[]): readonly WorkshopMaterial[] {
+  const frames = materialFrames(locale);
+  if (copy.length !== frames.length) throw new Error("Workshop 05: material copy does not match the material list");
+  return frames.map((frame, index) => {
     const [label, description, short] = copy[index];
     const text = short === undefined ? { label, description } : { label, description, short };
     return frame.kind === "zip" ? { ...frame, ...text, sizeLabel: KIT_SIZE_LABEL } : { ...frame, ...text };
@@ -163,7 +163,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Zwei Zeilen zitieren Anthropics öffentliche Datenschutzseite. Das ist keine Rechtsberatung.",
       ],
     },
-    materials: materials([
+    materials: materials("de", [
       ["Deck", "Für den Beamer. Pfeil nach rechts zeigt den nächsten Schritt, Pfeil nach links geht zurück."],
       ["Vardar-Audit-Kit · .zip", "18 Textdateien: Anfrage, elf erfundene Dateien, Regeln, Vorlagen und Lösungen."],
     ]),
@@ -289,7 +289,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Two lines quote Anthropic's public privacy page. This is not legal advice.",
       ],
     },
-    materials: materials([
+    materials: materials("en", [
       ["Deck", "For the projector. The right arrow shows the next step, the left arrow goes back."],
       ["Vardar audit kit · .zip", "18 text files: the request, eleven invented files, rules, templates and the answers."],
     ]),

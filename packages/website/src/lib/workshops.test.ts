@@ -13,12 +13,11 @@ import {
 } from "./workshops";
 
 /**
- * A deck that still lives under its workshop's former slug until its rework
- * moves it. Remove the entry when the deck is published under the new slug.
+ * A deck published in two editions: the German page links slides.html (German),
+ * the English page slides.en.html (English), built from one copy source.
  */
-const DECK_UNDER_FORMER_SLUG: Readonly<Record<string, string>> = {
-  "audit-vorbereitung-mit-ki": "/workshops/ki-im-unternehmen-sicher-nutzen/",
-};
+const DECK_EDITIONS: ReadonlySet<string> = new Set(["audit-vorbereitung-mit-ki"]);
+const isDeckEdition = (slug: string, material: WorkshopMaterial) => material.role === "deck" && DECK_EDITIONS.has(slug);
 
 describe("workshops catalog", () => {
   it("is non-empty", () => {
@@ -210,11 +209,7 @@ describe("workshops catalog", () => {
           expect(material.href).toBe(`/demos/${workshop.slug}?source=workshop`);
           continue;
         }
-        expect(
-          material.href.startsWith(`/workshops/${workshop.slug}/`) ||
-            (material.role === "deck" && material.href.startsWith(DECK_UNDER_FORMER_SLUG[workshop.slug] ?? "\0")),
-          material.href,
-        ).toBe(true);
+        expect(material.href.startsWith(`/workshops/${workshop.slug}/`), material.href).toBe(true);
         // An in-page fragment (#section) addresses part of an existing file.
         const relativePath = material.href.replace(/^\//, "").split("#")[0];
         const filePath = resolve(process.cwd(), "public", relativePath);
@@ -242,25 +237,21 @@ describe("workshops catalog", () => {
       );
       // The demo material is the same page in each locale: /en/demos/<slug>
       // in English, in the page's own language.
-      const materialShape = ({
-        href,
-        kind,
-        language,
-        role,
-        phase,
-        minutes,
-        optional,
-        primary,
-      }: WorkshopMaterial) => ({
-        href: role === "demo" ? href.replace(/^\/en\//, "/") : href,
-        kind,
-        language: role === "demo" ? "page" : language,
-        role,
-        phase,
-        minutes,
-        optional,
-        primary,
-      });
+      // A deck with editions is the same deck in the page's language.
+      const materialShape = (material: WorkshopMaterial) => {
+        const { href, kind, language, role, phase, minutes, optional, primary } = material;
+        const edition = isDeckEdition(germanWorkshop.slug, material);
+        return {
+          href: role === "demo" ? href.replace(/^\/en\//, "/") : edition ? href.replace(/\/slides\.en\.html$/, "/slides.html") : href,
+          kind,
+          language: role === "demo" || edition ? "page" : language,
+          role,
+          phase,
+          minutes,
+          optional,
+          primary,
+        };
+      };
       expect(englishWorkshop?.materials.map(materialShape)).toEqual(
         germanWorkshop.materials.map(materialShape),
       );
@@ -307,8 +298,8 @@ describe("workshops catalog", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         for (const material of workshop.materials) {
-          // The practice demo is a page in the reader's language.
-          if (material.role === "demo") {
+          // The practice demo is a page in the reader's language, and so is a deck with editions.
+          if (material.role === "demo" || isDeckEdition(workshop.slug, material)) {
             expect(material.language).toBe(locale);
             continue;
           }

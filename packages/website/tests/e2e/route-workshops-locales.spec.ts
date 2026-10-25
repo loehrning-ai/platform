@@ -230,6 +230,8 @@ test("the previous Workshop 05 slug redirects to the audit preparation pages", a
     ["/workshops/ki-im-unternehmen-sicher-nutzen", "/workshops/audit-vorbereitung-mit-ki"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/kit", "/workshops/audit-vorbereitung-mit-ki/kit"],
     ["/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip", "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/slides.html", "/workshops/audit-vorbereitung-mit-ki/slides.html"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html", "/workshops/audit-vorbereitung-mit-ki/presenter.html"],
     ["/en/workshops/ki-im-unternehmen-sicher-nutzen", "/en/workshops/audit-vorbereitung-mit-ki"],
     ["/demos/ki-im-unternehmen-sicher-nutzen", "/demos/audit-vorbereitung-mit-ki"],
     ["/en/demos/ki-im-unternehmen-sicher-nutzen", "/en/demos/audit-vorbereitung-mit-ki"],
