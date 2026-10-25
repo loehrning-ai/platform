@@ -67,12 +67,22 @@ describe("/demos/[slug] page shell", () => {
         const demo = getDemoForLocale(base.slug, locale);
         if (!demo) throw new Error("missing demo");
         const { default: Demo } = await import(`@/components/demos/${base.slug}/index.tsx`);
+        // A demo on the v3 shell passes its beats, as its page.tsx does.
+        const beats = base.shell === "v3" ? (await import(`@/lib/demo-cases/${base.slug}/beats.ts`)).BEATS : undefined;
         const { container } = render(
-          await renderDemoRoute(base.slug, Demo),
+          await renderDemoRoute(base.slug, Demo, beats),
         );
 
         const h1 = screen.getByRole("heading", { level: 1 });
         expect(h1).toHaveTextContent(demo.title);
+        if (base.shell === "v3") {
+          // The v3 page has no cover band; shell.test.tsx covers its layout.
+          expect(container.querySelector("[data-plakat-page]")).toHaveAttribute("data-plakat-page", demo.plakat);
+          expect(container.querySelector(`[data-demo-mount="${demo.slug}"]`)).not.toBeNull();
+          expect(container.querySelectorAll("h1")).toHaveLength(1);
+          expect(container.querySelector("details, summary")).toBeNull();
+          return;
+        }
         const band = h1.closest("[data-cover-band]");
         expect(band).toHaveAttribute("data-plakat", demo.plakat);
         // CapsLine splits " · " parts into runs; the DOM text stays the same words.

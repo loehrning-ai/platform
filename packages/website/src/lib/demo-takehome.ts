@@ -32,7 +32,20 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
-export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {};
+const AUDIT_KIT_EDITION: TakeHomeKit = {
+    href: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+    shown: ["vardar-audit-kit/request_tannwald.md", "vardar-audit-kit/project-instructions.md", "vardar-audit-kit/templates/gap-request.md"],
+    instructions: "vardar-audit-kit/project-instructions.md",
+    installDoc: "vardar-audit-kit/START-HERE.md",
+  };
+
+export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
+  "audit-vorbereitung-mit-ki": {
+    kit: { de: AUDIT_KIT_EDITION, en: AUDIT_KIT_EDITION },
+    skill: { name: "audit-nachweise" },
+    templates: [{ vorlage: "luecken-anfrage" }],
+  },
+};
 
 export function takeHomeFor(slug: DemoSlug): TakeHome | undefined {
   return DEMO_TAKEHOME[slug];

@@ -502,234 +502,190 @@
 }
 /* w05 */
 .dt-item[data-scene="w05"] { --tile-t: 3400ms; }
-.dt-item[data-scene="w05"] [data-t="root"] { opacity: 1; }
-.dt-item[data-scene="w05"] [data-t="m0"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="b0"] { scale: 0 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w05"] [data-t="p0"] { opacity: 1; }
-.dt-item[data-scene="w05"] [data-t="m1"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="b1"] { scale: 0 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w05"] [data-t="p1"] { opacity: 1; }
-.dt-item[data-scene="w05"] [data-t="m2"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="b2"] { scale: 0 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w05"] [data-t="p2"] { opacity: 1; }
-.dt-item[data-scene="w05"] [data-t="m3"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="b3"] { scale: 0 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w05"] [data-t="p3"] { opacity: 1; }
-.dt-item[data-scene="w05"] [data-t="n0"] { opacity: 1; }
-.dt-item[data-scene="w05"] [data-t="n1"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="n2"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="n3"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="n4"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="lr"] { opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="scan"] { translate: 0px 118px; opacity: 0; }
-.dt-item[data-scene="w05"] [data-t="lk"] { translate: 0px 0px; }
-.dt-item[data-scene="w05"] [data-t="lb"] { scale: 1 1; transform-box: fill-box; transform-origin: 50% 100%; }
+.dt-item[data-scene="w05"] [data-t="s1"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="d1"] { opacity: 1; }
+.dt-item[data-scene="w05"] [data-t="s2"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="d2"] { opacity: 1; }
+.dt-item[data-scene="w05"] [data-t="s3"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="d3"] { opacity: 1; }
+.dt-item[data-scene="w05"] [data-t="s4"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="a4"] { opacity: 1; translate: 0px 0px; }
+.dt-item[data-scene="w05"] [data-t="b4"] { opacity: 1; translate: 0px 0px; }
+.dt-item[data-scene="w05"] [data-t="s6"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="a6"] { opacity: 1; translate: 0px 0px; }
+.dt-item[data-scene="w05"] [data-t="b6"] { opacity: 1; translate: 0px 0px; }
+.dt-item[data-scene="w05"] [data-t="s7"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="d7"] { opacity: 1; }
+.dt-item[data-scene="w05"] [data-t="scan"] { translate: 0px 224px; opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="n8"] { opacity: 0; }
+.dt-item[data-scene="w05"] [data-t="n2"] { opacity: 1; }
 @media screen and (prefers-reduced-motion: no-preference) {
-  @keyframes dt-w05-root-opacity {
-    0% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    8% { opacity: 1; }
-    100% { opacity: 1; }
-  }
-  @keyframes dt-w05-m0-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    3% { opacity: 0; animation-timing-function: linear; }
-    5% { opacity: 1; animation-timing-function: linear; }
-    26% { opacity: 1; animation-timing-function: linear; }
-    27% { opacity: 0; animation-timing-function: linear; }
+  @keyframes dt-w05-s1-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
+    25.25% { opacity: 1; animation-timing-function: linear; }
+    28.25% { opacity: 0; animation-timing-function: linear; }
     100% { opacity: 0; }
   }
-  @keyframes dt-w05-b0-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    18% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    28% { scale: 1 1; animation-timing-function: linear; }
-    33% { scale: 1 1; animation-timing-function: linear; }
-    34% { scale: 0 1; animation-timing-function: linear; }
-    100% { scale: 0 1; }
-  }
-  @keyframes dt-w05-p0-opacity {
+  @keyframes dt-w05-d1-opacity {
     0% { opacity: 0; animation-timing-function: linear; }
-    28% { opacity: 0; animation-timing-function: linear; }
-    33% { opacity: 1; animation-timing-function: linear; }
+    25.25% { opacity: 0; animation-timing-function: linear; }
+    28.25% { opacity: 1; animation-timing-function: linear; }
     100% { opacity: 1; }
   }
-  @keyframes dt-w05-m1-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    7.5% { opacity: 0; animation-timing-function: linear; }
-    9.5% { opacity: 1; animation-timing-function: linear; }
-    41% { opacity: 1; animation-timing-function: linear; }
-    42% { opacity: 0; animation-timing-function: linear; }
+  @keyframes dt-w05-s2-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
+    32.75% { opacity: 1; animation-timing-function: linear; }
+    35.75% { opacity: 0; animation-timing-function: linear; }
     100% { opacity: 0; }
   }
-  @keyframes dt-w05-b1-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    33% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    43% { scale: 1 1; animation-timing-function: linear; }
-    48% { scale: 1 1; animation-timing-function: linear; }
-    49% { scale: 0 1; animation-timing-function: linear; }
-    100% { scale: 0 1; }
-  }
-  @keyframes dt-w05-p1-opacity {
+  @keyframes dt-w05-d2-opacity {
     0% { opacity: 0; animation-timing-function: linear; }
-    43% { opacity: 0; animation-timing-function: linear; }
-    48% { opacity: 1; animation-timing-function: linear; }
+    32.75% { opacity: 0; animation-timing-function: linear; }
+    35.75% { opacity: 1; animation-timing-function: linear; }
     100% { opacity: 1; }
   }
-  @keyframes dt-w05-m2-opacity {
+  @keyframes dt-w05-s3-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
+    40.25% { opacity: 1; animation-timing-function: linear; }
+    43.25% { opacity: 0; animation-timing-function: linear; }
+    100% { opacity: 0; }
+  }
+  @keyframes dt-w05-d3-opacity {
     0% { opacity: 0; animation-timing-function: linear; }
-    12% { opacity: 0; animation-timing-function: linear; }
+    40.25% { opacity: 0; animation-timing-function: linear; }
+    43.25% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w05-s4-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
+    47.75% { opacity: 1; animation-timing-function: linear; }
+    50.75% { opacity: 0; animation-timing-function: linear; }
+    100% { opacity: 0; }
+  }
+  @keyframes dt-w05-a4-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    47.75% { opacity: 0; animation-timing-function: linear; }
+    49.75% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w05-a4-translate {
+    0% { translate: 10px 0px; animation-timing-function: linear; }
+    47.75% { translate: 10px 0px; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    55.75% { translate: 0px 0px; animation-timing-function: linear; }
+    100% { translate: 0px 0px; }
+  }
+  @keyframes dt-w05-b4-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    47.75% { opacity: 0; animation-timing-function: linear; }
+    49.75% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w05-b4-translate {
+    0% { translate: -10px 0px; animation-timing-function: linear; }
+    47.75% { translate: -10px 0px; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    55.75% { translate: 0px 0px; animation-timing-function: linear; }
+    100% { translate: 0px 0px; }
+  }
+  @keyframes dt-w05-s6-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
+    62.75% { opacity: 1; animation-timing-function: linear; }
+    65.75% { opacity: 0; animation-timing-function: linear; }
+    100% { opacity: 0; }
+  }
+  @keyframes dt-w05-a6-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    62.75% { opacity: 0; animation-timing-function: linear; }
+    64.75% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w05-a6-translate {
+    0% { translate: 10px 0px; animation-timing-function: linear; }
+    62.75% { translate: 10px 0px; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    70.75% { translate: 0px 0px; animation-timing-function: linear; }
+    100% { translate: 0px 0px; }
+  }
+  @keyframes dt-w05-b6-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    62.75% { opacity: 0; animation-timing-function: linear; }
+    64.75% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w05-b6-translate {
+    0% { translate: -10px 0px; animation-timing-function: linear; }
+    62.75% { translate: -10px 0px; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    70.75% { translate: 0px 0px; animation-timing-function: linear; }
+    100% { translate: 0px 0px; }
+  }
+  @keyframes dt-w05-s7-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
+    70.25% { opacity: 1; animation-timing-function: linear; }
+    73.25% { opacity: 0; animation-timing-function: linear; }
+    100% { opacity: 0; }
+  }
+  @keyframes dt-w05-d7-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    70.25% { opacity: 0; animation-timing-function: linear; }
+    73.25% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w05-scan-translate {
+    0% { translate: 0px 0px; animation-timing-function: linear; }
+    14% { translate: 0px 0px; animation-timing-function: linear; }
+    74% { translate: 0px 224px; animation-timing-function: linear; }
+    100% { translate: 0px 224px; }
+  }
+  @keyframes dt-w05-scan-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    13% { opacity: 0; animation-timing-function: linear; }
     14% { opacity: 1; animation-timing-function: linear; }
-    56% { opacity: 1; animation-timing-function: linear; }
-    57% { opacity: 0; animation-timing-function: linear; }
+    74% { opacity: 1; animation-timing-function: linear; }
+    76% { opacity: 0; animation-timing-function: linear; }
     100% { opacity: 0; }
   }
-  @keyframes dt-w05-b2-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    48% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    58% { scale: 1 1; animation-timing-function: linear; }
-    63% { scale: 1 1; animation-timing-function: linear; }
-    64% { scale: 0 1; animation-timing-function: linear; }
-    100% { scale: 0 1; }
-  }
-  @keyframes dt-w05-p2-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    58% { opacity: 0; animation-timing-function: linear; }
-    63% { opacity: 1; animation-timing-function: linear; }
-    100% { opacity: 1; }
-  }
-  @keyframes dt-w05-m3-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    16.5% { opacity: 0; animation-timing-function: linear; }
-    18.5% { opacity: 1; animation-timing-function: linear; }
-    71% { opacity: 1; animation-timing-function: linear; }
-    72% { opacity: 0; animation-timing-function: linear; }
-    100% { opacity: 0; }
-  }
-  @keyframes dt-w05-b3-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    63% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    73% { scale: 1 1; animation-timing-function: linear; }
-    78% { scale: 1 1; animation-timing-function: linear; }
-    79% { scale: 0 1; animation-timing-function: linear; }
-    100% { scale: 0 1; }
-  }
-  @keyframes dt-w05-p3-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    73% { opacity: 0; animation-timing-function: linear; }
-    78% { opacity: 1; animation-timing-function: linear; }
-    100% { opacity: 1; }
-  }
-  @keyframes dt-w05-n0-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    79% { opacity: 0; animation-timing-function: linear; }
+  @keyframes dt-w05-n8-opacity {
+    0% { opacity: 1; animation-timing-function: linear; }
     80% { opacity: 1; animation-timing-function: linear; }
-    100% { opacity: 1; }
-  }
-  @keyframes dt-w05-n1-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    64% { opacity: 0; animation-timing-function: linear; }
-    65% { opacity: 1; animation-timing-function: linear; }
-    79% { opacity: 1; animation-timing-function: linear; }
-    80% { opacity: 0; }
+    83% { opacity: 0; animation-timing-function: linear; }
     100% { opacity: 0; }
   }
   @keyframes dt-w05-n2-opacity {
     0% { opacity: 0; animation-timing-function: linear; }
-    49% { opacity: 0; animation-timing-function: linear; }
-    50% { opacity: 1; animation-timing-function: linear; }
-    64% { opacity: 1; animation-timing-function: linear; }
-    65% { opacity: 0; }
-    100% { opacity: 0; }
+    80% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    83% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
   }
-  @keyframes dt-w05-n3-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    34% { opacity: 0; animation-timing-function: linear; }
-    35% { opacity: 1; animation-timing-function: linear; }
-    49% { opacity: 1; animation-timing-function: linear; }
-    50% { opacity: 0; }
-    100% { opacity: 0; }
-  }
-  @keyframes dt-w05-n4-opacity {
-    0% { opacity: 1; animation-timing-function: linear; }
-    34% { opacity: 1; animation-timing-function: linear; }
-    35% { opacity: 0; }
-    100% { opacity: 0; }
-  }
-  @keyframes dt-w05-lr-opacity {
-    0% { opacity: 1; animation-timing-function: linear; }
-    81% { opacity: 1; animation-timing-function: linear; }
-    85% { opacity: 0; }
-    100% { opacity: 0; }
-  }
-  @keyframes dt-w05-scan-translate {
-    0% { translate: 0px 0px; animation-timing-function: linear; }
-    18% { translate: 0px 0px; animation-timing-function: linear; }
-    79% { translate: 0px 118px; animation-timing-function: linear; }
-    100% { translate: 0px 118px; }
-  }
-  @keyframes dt-w05-scan-opacity {
-    0% { opacity: 0; animation-timing-function: linear; }
-    17% { opacity: 0; animation-timing-function: linear; }
-    18% { opacity: 1; animation-timing-function: linear; }
-    79% { opacity: 1; animation-timing-function: linear; }
-    80% { opacity: 0; animation-timing-function: linear; }
-    100% { opacity: 0; }
-  }
-  @keyframes dt-w05-lk-translate {
-    0% { translate: 0px -8px; animation-timing-function: linear; }
-    86% { translate: 0px -8px; animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.15); }
-    91% { translate: 0px 0px; animation-timing-function: linear; }
-    100% { translate: 0px 0px; }
-  }
-  @keyframes dt-w05-lb-scale {
-    0% { scale: 1 1; animation-timing-function: linear; }
-    91% { scale: 1 1; animation-timing-function: linear; }
-    91.6% { scale: 1 1; animation-timing-function: linear; }
-    92.6% { scale: 1 1.22; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    95% { scale: 1 1; animation-timing-function: linear; }
-    100% { scale: 1 1; }
-  }
-  .dt-item.is-armed[data-scene="w05"] [data-t="root"] { animation-name: dt-w05-root-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="m0"] { animation-name: dt-w05-m0-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="b0"] { animation-name: dt-w05-b0-scale; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="p0"] { animation-name: dt-w05-p0-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="m1"] { animation-name: dt-w05-m1-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="b1"] { animation-name: dt-w05-b1-scale; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="p1"] { animation-name: dt-w05-p1-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="m2"] { animation-name: dt-w05-m2-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="b2"] { animation-name: dt-w05-b2-scale; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="p2"] { animation-name: dt-w05-p2-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="m3"] { animation-name: dt-w05-m3-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="b3"] { animation-name: dt-w05-b3-scale; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="p3"] { animation-name: dt-w05-p3-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="n0"] { animation-name: dt-w05-n0-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="n1"] { animation-name: dt-w05-n1-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="n2"] { animation-name: dt-w05-n2-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="n3"] { animation-name: dt-w05-n3-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="n4"] { animation-name: dt-w05-n4-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="lr"] { animation-name: dt-w05-lr-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="s1"] { animation-name: dt-w05-s1-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="d1"] { animation-name: dt-w05-d1-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="s2"] { animation-name: dt-w05-s2-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="d2"] { animation-name: dt-w05-d2-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="s3"] { animation-name: dt-w05-s3-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="d3"] { animation-name: dt-w05-d3-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="s4"] { animation-name: dt-w05-s4-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="a4"] { animation-name: dt-w05-a4-opacity, dt-w05-a4-translate; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="b4"] { animation-name: dt-w05-b4-opacity, dt-w05-b4-translate; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="s6"] { animation-name: dt-w05-s6-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="a6"] { animation-name: dt-w05-a6-opacity, dt-w05-a6-translate; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="b6"] { animation-name: dt-w05-b6-opacity, dt-w05-b6-translate; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="s7"] { animation-name: dt-w05-s7-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="d7"] { animation-name: dt-w05-d7-opacity; }
   .dt-item.is-armed[data-scene="w05"] [data-t="scan"] { animation-name: dt-w05-scan-translate, dt-w05-scan-opacity; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="lk"] { animation-name: dt-w05-lk-translate; }
-  .dt-item.is-armed[data-scene="w05"] [data-t="lb"] { animation-name: dt-w05-lb-scale; }
-  .dt-item.is-playing[data-scene="w05"] [data-t="root"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="m0"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="b0"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="p0"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="m1"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="b1"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="p1"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="m2"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="b2"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="p2"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="m3"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="b3"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="p3"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="n0"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="n1"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="n2"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="n3"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="n4"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="lr"],
+  .dt-item.is-armed[data-scene="w05"] [data-t="n8"] { animation-name: dt-w05-n8-opacity; }
+  .dt-item.is-armed[data-scene="w05"] [data-t="n2"] { animation-name: dt-w05-n2-opacity; }
+  .dt-item.is-playing[data-scene="w05"] [data-t="s1"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="d1"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="s2"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="d2"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="s3"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="d3"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="s4"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="a4"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="b4"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="s6"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="a6"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="b6"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="s7"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="d7"],
   .dt-item.is-playing[data-scene="w05"] [data-t="scan"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="lk"],
-  .dt-item.is-playing[data-scene="w05"] [data-t="lb"] { animation-play-state: running; }
+  .dt-item.is-playing[data-scene="w05"] [data-t="n8"],
+  .dt-item.is-playing[data-scene="w05"] [data-t="n2"] { animation-play-state: running; }
 }

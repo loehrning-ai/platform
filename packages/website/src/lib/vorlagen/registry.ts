@@ -64,6 +64,26 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       en: "/en/blog/ki-in-der-ausbildung",
     },
   },
+  {
+    slug: "luecken-anfrage",
+    kind: "template",
+    files: {
+      de: "luecken-anfrage.md",
+      en: "en/luecken-anfrage.md",
+    },
+    downloadNames: {
+      de: "luecken-anfrage.md",
+      en: "luecken-anfrage.en.md",
+    },
+    hostPaths: {
+      de: "/demos/audit-vorbereitung-mit-ki",
+      en: "/en/demos/audit-vorbereitung-mit-ki",
+    },
+    inKit: {
+      zip: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+      paths: { en: "vardar-audit-kit/templates/gap-request.md" },
+    },
+  },
 ];
 
 /**

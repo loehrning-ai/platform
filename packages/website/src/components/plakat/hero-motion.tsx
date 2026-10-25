@@ -50,7 +50,7 @@ export const HERO_MOTION: Readonly<Record<string, HeroSceneKey>> = {
   "datenbereitschaft-fuer-ki": "mend",
   "esg-berichte-mit-ki": "weave",
   // Workshop 05 tells the story of its own page: where a prompt goes.
-  "ki-im-unternehmen-sicher-nutzen": "gate",
+  "audit-vorbereitung-mit-ki": "gate",
 };
 
 /** The scene key of a workshop, or undefined for a slug without one. */

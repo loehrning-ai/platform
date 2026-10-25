@@ -41,6 +41,8 @@ describe("GET /vorlagen/[file]", () => {
     await expect(generateStaticParams()).resolves.toEqual([
       { file: "ki-in-der-ausbildung-fragen.md" },
       { file: "ki-in-der-ausbildung-fragen.en.md" },
+      { file: "luecken-anfrage.md" },
+      { file: "luecken-anfrage.en.md" },
     ]);
   });
 

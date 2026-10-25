@@ -8,7 +8,7 @@ const EXPECTED: Readonly<Record<string, { a: "slides" | "lab"; b: "kit" | "case"
   "geschaeftsberichte-mit-ki-lesen": { a: "slides", b: "kit", kitPage: false },
   "datenbereitschaft-fuer-ki": { a: "slides", b: "kit", kitPage: false },
   "esg-berichte-mit-ki": { a: "slides", b: "kit", kitPage: true },
-  "ki-im-unternehmen-sicher-nutzen": { a: "slides", b: "kit", kitPage: true },
+  "audit-vorbereitung-mit-ki": { a: "slides", b: "kit", kitPage: true },
 };
 
 describe("workshopStage", () => {
@@ -74,8 +74,8 @@ describe("workshopStage", () => {
   });
 
   it("formats a material as format and size, falling back to the language for a page", () => {
-    const [w05] = getWorkshops("de").filter((workshop) => workshop.slug === "ki-im-unternehmen-sicher-nutzen");
-    expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 14 KB");
+    const [w05] = getWorkshops("de").filter((workshop) => workshop.slug === "audit-vorbereitung-mit-ki");
+    expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 29 KB");
     expect(materialMeta(w05.materials.find((material) => material.kind === "html")!)).toBe("HTML · EN");
   });
 

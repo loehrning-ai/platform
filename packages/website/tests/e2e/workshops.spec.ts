@@ -192,7 +192,7 @@ test.describe("workshop self-study journey", () => {
       "/workshops",
       "/workshops/esg-berichte-mit-ki",
       "/workshops/datenbereitschaft-fuer-ki",
-      "/workshops/ki-im-unternehmen-sicher-nutzen",
+      "/workshops/audit-vorbereitung-mit-ki",
     ];
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
@@ -290,7 +290,7 @@ test.describe("workshop self-study journey", () => {
       "geschaeftsberichte-mit-ki-lesen": "idea",
       "datenbereitschaft-fuer-ki": "bloom",
       "esg-berichte-mit-ki": "autumn",
-      "ki-im-unternehmen-sicher-nutzen": "sage",
+      "audit-vorbereitung-mit-ki": "sage",
     } as const;
     const bandGrounds = new Set<string>();
     for (const [slug, plakat] of Object.entries(expected)) {

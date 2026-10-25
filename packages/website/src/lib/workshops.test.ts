@@ -12,6 +12,14 @@ import {
   type WorkshopMaterial,
 } from "./workshops";
 
+/**
+ * A deck that still lives under its workshop's former slug until its rework
+ * moves it. Remove the entry when the deck is published under the new slug.
+ */
+const DECK_UNDER_FORMER_SLUG: Readonly<Record<string, string>> = {
+  "audit-vorbereitung-mit-ki": "/workshops/ki-im-unternehmen-sicher-nutzen/",
+};
+
 describe("workshops catalog", () => {
   it("is non-empty", () => {
     expect(WORKSHOPS.length).toBeGreaterThan(0);
@@ -203,7 +211,8 @@ describe("workshops catalog", () => {
           continue;
         }
         expect(
-          material.href.startsWith(`/workshops/${workshop.slug}/`),
+          material.href.startsWith(`/workshops/${workshop.slug}/`) ||
+            (material.role === "deck" && material.href.startsWith(DECK_UNDER_FORMER_SLUG[workshop.slug] ?? "\0")),
           material.href,
         ).toBe(true);
         // An in-page fragment (#section) addresses part of an existing file.

@@ -169,21 +169,20 @@ describe("<WorkshopDetailContent>", () => {
     });
   });
 
-  it("lands the Workshop 05 band on the word Data, in both locales, and keeps the full title as the heading", () => {
-    for (const [locale, mark, lead, tail] of [
-      ["en", "data", "Where does your", " go?"],
-      ["de", "Daten?", "Wohin gehen deine", ""],
+  it("lands the Workshop 05 band on the head's last pair, in both locales, and keeps the full title as the heading", () => {
+    for (const [locale, mark, lead] of [
+      ["en", "with AI", "Audit Preparation"],
+      ["de", "mit KI", "Audit-Vorbereitung"],
     ] as const) {
-      const workshop = getWorkshopBySlug("ki-im-unternehmen-sicher-nutzen", locale)!;
+      const workshop = getWorkshopBySlug("audit-vorbereitung-mit-ki", locale)!;
       const { unmount } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
       const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
       expect(h1.textContent).toBe(workshop.title);
       expect(h1.firstElementChild).toHaveClass("relative");
-      expect(h1.firstElementChild).toHaveTextContent(lead);
+      expect(h1.textContent?.slice(0, h1.textContent.indexOf(mark)).trim()).toBe(lead);
       const marks = h1.querySelectorAll("span.title-mark");
       expect(marks).toHaveLength(1);
-      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark.replace("?", "\\?")}$`));
-      expect(marks[0].nextSibling?.textContent ?? "").toBe(tail);
+      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark}$`));
       // The words are never animated: no motion class or inline animation on the heading.
       expect(h1.outerHTML).not.toMatch(/animate-|animation|motion-/);
       unmount();

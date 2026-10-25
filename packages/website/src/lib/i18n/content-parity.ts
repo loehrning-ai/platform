@@ -27,7 +27,7 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/demos/datenbereitschaft-fuer-ki",
   "/demos/esg-berichte-mit-ki",
   "/demos/geschaeftsberichte-mit-ki-lesen",
-  "/demos/ki-im-unternehmen-sicher-nutzen",
+  "/demos/audit-vorbereitung-mit-ki",
   "/demos/ki-prognosen-einschaetzen",
   "/einstieg",
   "/eu-ai-act-kurs",
@@ -47,9 +47,9 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/open-source/tools/cv-engine",
   "/ueber-mich",
   "/workshops",
-  "/workshops/ki-im-unternehmen-sicher-nutzen",
+  "/workshops/audit-vorbereitung-mit-ki",
   // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
-  "/workshops/ki-im-unternehmen-sicher-nutzen/kit",
+  "/workshops/audit-vorbereitung-mit-ki/kit",
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
   // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).

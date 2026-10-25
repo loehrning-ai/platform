@@ -8,7 +8,7 @@ import { GateScene } from "./hero-gate-scene";
 import { HERO_MOTION, HeroMotion, heroMotionScene, isHeroSceneWired, renderHeroScene } from "./hero-motion";
 
 const DIR = __dirname;
-const SLUG = "ki-im-unternehmen-sicher-nutzen";
+const SLUG = "audit-vorbereitung-mit-ki";
 const SOURCES = ["hero-motion.tsx", "hero-gate-scene.tsx"] as const;
 const CSS = readFileSync(join(DIR, "hero-gate.css"), "utf8");
 const ROOT = postcss.parse(CSS);

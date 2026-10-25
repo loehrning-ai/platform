@@ -45,9 +45,9 @@ const WORKSHOP_ROUTES = [
     listedMaterials: 0,
   },
   {
-    path: "/workshops/ki-im-unternehmen-sicher-nutzen",
-    deHeading: "Wohin gehen deine Daten?",
-    enHeading: "Where does your data go?",
+    path: "/workshops/audit-vorbereitung-mit-ki",
+    deHeading: "Audit-Vorbereitung mit KI",
+    enHeading: "Audit preparation with AI",
     materialCount: 3,
     listedMaterials: 0,
   },
@@ -223,13 +223,16 @@ for (const width of [320, 390, 768, 1440] as const) {
   });
 }
 
-// Workshop 05 changed its slug before release: the first preview link, its kit page and the
-// first QR code must reach the released page, in German and in English.
-test("the first Workshop 05 slug redirects to the released page", async ({ request }) => {
+// Workshop 05 moved to audit-vorbereitung-mit-ki: the previous page, kit page, kit zip and demo
+// reach the new ones, in German and in English.
+test("the previous Workshop 05 slug redirects to the audit preparation pages", async ({ request }) => {
   for (const [from, to] of [
-    ["/workshops/audit-vorbereitung-mit-ki", "/workshops/ki-im-unternehmen-sicher-nutzen"],
-    ["/workshops/audit-vorbereitung-mit-ki/kit", "/workshops/ki-im-unternehmen-sicher-nutzen"],
-    ["/en/workshops/audit-vorbereitung-mit-ki", "/en/workshops/ki-im-unternehmen-sicher-nutzen"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen", "/workshops/audit-vorbereitung-mit-ki"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/kit", "/workshops/audit-vorbereitung-mit-ki/kit"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip", "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip"],
+    ["/en/workshops/ki-im-unternehmen-sicher-nutzen", "/en/workshops/audit-vorbereitung-mit-ki"],
+    ["/demos/ki-im-unternehmen-sicher-nutzen", "/demos/audit-vorbereitung-mit-ki"],
+    ["/en/demos/ki-im-unternehmen-sicher-nutzen", "/en/demos/audit-vorbereitung-mit-ki"],
   ] as const) {
     const response = await request.get(from, { maxRedirects: 0 });
     expect(response.status(), from).toBe(301);

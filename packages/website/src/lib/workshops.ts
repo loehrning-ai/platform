@@ -19,7 +19,7 @@ import { demoForWorkshop } from "./demos";
 import type { Locale } from "./i18n/locale";
 import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
-import { AI_AT_WORK_WORKSHOP } from "./workshops-ai-at-work";
+import { AUDIT_WORKSHOP } from "./workshops-audit";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 
 /** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
@@ -1189,13 +1189,13 @@ export const WORKSHOPS_BY_LOCALE: Readonly<
     ...WORKSHOPS_DE,
     DATA_READINESS_WORKSHOP.de,
     ESG_REPORTING_WORKSHOP.de,
-    AI_AT_WORK_WORKSHOP.de,
+    AUDIT_WORKSHOP.de,
   ].map((workshop) => withDemoMaterial(workshop, "de")),
   en: [
     ...WORKSHOPS_EN,
     DATA_READINESS_WORKSHOP.en,
     ESG_REPORTING_WORKSHOP.en,
-    AI_AT_WORK_WORKSHOP.en,
+    AUDIT_WORKSHOP.en,
   ].map((workshop) => withDemoMaterial(workshop, "en")),
 };
 

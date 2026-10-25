@@ -339,29 +339,39 @@ const PROTECTED_PATHS = [
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [
-  // Workshop 05 was first built as "audit-vorbereitung-mit-ki" and renamed before
-  // its release. The old preview link and the first QR code resolve to the final page.
+  // Workshop 05 became "Audit-Vorbereitung mit KI" (audit-vorbereitung-mit-ki) in
+  // its v3 rebuild. The released pages, the old kit zip and the old demo under
+  // the previous slug resolve to the new ones; the /en mirror follows the same
+  // entries. Exact paths only: the workshop's deck still lives in the previous
+  // folder until it is rebuilt.
   route(
-    "/workshops/audit-vorbereitung-mit-ki",
+    "/workshops/ki-im-unternehmen-sicher-nutzen",
     "retired",
-    "The first slug of Workshop 05 resolves to the released workshop page.",
+    "The previous slug of Workshop 05 resolves to the audit preparation workshop.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/workshops/audit-vorbereitung-mit-ki", status: 301 },
+  ),
+  route(
+    "/workshops/ki-im-unternehmen-sicher-nutzen/kit",
+    "retired",
+    "The previous kit page of Workshop 05 resolves to the new kit page.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/workshops/audit-vorbereitung-mit-ki/kit", status: 301 },
+  ),
+  route(
+    "/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip",
+    "retired",
+    "The previous kit zip of Workshop 05 resolves to the new kit zip.",
     {
       auth: "redirect",
       cache: "public-short",
-      redirectTo: "/workshops/ki-im-unternehmen-sicher-nutzen",
+      redirectTo: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
       status: 301,
     },
   ),
   route(
-    "/workshops/audit-vorbereitung-mit-ki/:path*",
+    "/demos/ki-im-unternehmen-sicher-nutzen",
     "retired",
-    "Files and pages under the first slug of Workshop 05 resolve to the released workshop page.",
-    {
-      auth: "redirect",
-      cache: "public-short",
-      redirectTo: "/workshops/ki-im-unternehmen-sicher-nutzen",
-      status: 301,
-    },
+    "The previous demo of Workshop 05 resolves to its evidence check demo.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/demos/audit-vorbereitung-mit-ki", status: 301 },
   ),
   // "Mit KI arbeiten" (ai-native) was rebuilt as nine tool-neutral lessons
   // (2026-10-04). Its self-assessment, simulation gallery and capstone rules

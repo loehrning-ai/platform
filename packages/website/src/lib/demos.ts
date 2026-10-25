@@ -26,7 +26,7 @@ export const DEMO_SLUGS = [
   "geschaeftsberichte-mit-ki-lesen",
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
-  "ki-im-unternehmen-sicher-nutzen",
+  "audit-vorbereitung-mit-ki",
 ] as const;
 
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
@@ -244,9 +244,10 @@ export const demos: readonly Demo[] = [
     },
   },
   {
-    id: "ki-im-unternehmen-sicher-nutzen",
-    slug: "ki-im-unternehmen-sicher-nutzen",
-    workshopSlug: "ki-im-unternehmen-sicher-nutzen",
+    shell: "v3",
+    id: "audit-vorbereitung-mit-ki",
+    slug: "audit-vorbereitung-mit-ki",
+    workshopSlug: "audit-vorbereitung-mit-ki",
     workshopNumber: "05",
     plakat: "sage",
     motif: "ledger",
@@ -255,29 +256,29 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-23",
-    title: "Was fliegt mit?",
+    lastReviewed: "2026-10-25",
+    title: "Nachweisprüfung",
     oneLiner:
-      "Füge deinen Text ein, bevor du ihn in einen KI-Chat gibst. Du siehst, was mitfliegen würde, schwärzt es mit einem Zug und nimmst einen sauberen Prompt mit. Läuft nur auf deinem Gerät, auch im Flugmodus.",
-    question: "Was fliegt mit, wenn du das einfügst?",
+      "Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Dateien und nimm einen Skill für deine eigenen Audits mit. Alles läuft in diesem Tab.",
+    question: "Welche Dateien im Ordner sind ein Nachweis?",
     syntheticDataLabel:
-      "Alle Beispiele und Personen sind erfunden. Die Ampel ist die Regel aus dem Workshop, kein Gesetz. Keine Rechtsberatung. Dein Text bleibt auf deinem Gerät.",
-    job: "Schwärz deinen Text, bevor er in den Chat geht.",
+      "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden; zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Gerechnet in deinem Browser, keine KI, nichts wird gesendet.",
+    job: "Prüf, welche Datei im Ordner wirklich etwas belegt.",
     tile: {
-      hook: "Füge deinen Text ein und sieh, was mitfliegen würde.",
-      take: "ein sauberer Prompt",
+      hook: "11 Dateien, 8 Anforderungen, 2 belegt.",
+      take: "eine Nachweisliste und ein Skill, der ohne Zitat nichts zählt",
     },
     en: {
-      title: "What goes along?",
+      title: "Evidence check",
       oneLiner:
-        "Put your text here before you put it in an AI chat. See what would go along, black it out with one drag, take a clean prompt away. Runs only on your device, even in airplane mode.",
-      question: "What goes along when you paste this?",
+        "Eight requests, eleven files. Test which file actually proves something, check Claude's quotes against the files, and take a skill home for your own audits. Everything runs in this tab.",
+      question: "Which files in the folder are evidence?",
       syntheticDataLabel:
-        "All examples and people are invented. The light is the workshop's rule, not a law. Not legal advice. Your text stays on your device.",
-      job: "Black out your text before it goes into a chat.",
+        "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented; two lines come from Anthropic's public privacy page. Worked out in your browser, no AI, nothing is sent.",
+      job: "Test which file in the folder actually proves something.",
       tile: {
-        hook: "Paste your text and see what would go along.",
-        take: "a clean prompt",
+        hook: "11 files, 8 requests, 2 covered.",
+        take: "an evidence index and a skill that counts nothing without a quote",
       },
     },
   },

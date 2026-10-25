@@ -29,6 +29,7 @@ import {
  * skill is a deliberate act that updates this list, never a side effect.
  */
 const PUBLISHED_SKILLS = [
+  "audit-nachweise",
   "cv-engine",
   "loehrning-plattform",
   "workshop-arbeiten",

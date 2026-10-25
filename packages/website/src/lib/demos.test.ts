@@ -85,7 +85,7 @@ describe("demo registry", () => {
       "geschaeftsberichte-mit-ki-lesen": ["Monatsgrenze", "The Month Line"],
       "datenbereitschaft-fuer-ki": ["Stufe oder Treppe?", "Step or staircase?"],
       "esg-berichte-mit-ki": ["Elf von zwölf", "Eleven of twelve"],
-      "ki-im-unternehmen-sicher-nutzen": ["Was fliegt mit?", "What goes along?"],
+      "audit-vorbereitung-mit-ki": ["Nachweisprüfung", "Evidence check"],
     } as const;
     for (const [slug, [de, en]] of Object.entries(names)) {
       expect(getDemoForLocale(slug, "de")?.title).toBe(de);
