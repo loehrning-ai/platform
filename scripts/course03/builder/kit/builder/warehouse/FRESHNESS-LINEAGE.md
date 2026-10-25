@@ -67,7 +67,7 @@ WHERE view_name = 'analytics.mrr_summary_monthly';
 
 The thresholds live in the table `core.serving_contracts`. Changing 36 to 48 is a data change with an owner and a version bump.
 
-## Worked lineage: where does April's 334,675 come from?
+## Worked lineage: where April's 334,675 comes from
 
 ```text
 analytics.mrr_summary_monthly        month_start 2026-04-01, ending_mrr_eur 334,675

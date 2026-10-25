@@ -14,7 +14,7 @@ FOLDLINE keeps two kinds of evidence apart:
 | **Database** | The data, the views, the grants and the course rules | `sql/70_checks.sql`, deterministic, runs in seconds | `DB CHECKS 22 of 22 PASS` |
 | **AI runs** | What an AI route actually answered | `claude-demo/AI-RUN-LOG.md`, at least 3 runs per case | "Observed N of M; not a benchmark" |
 
-Never merge them into one score. The deck's "9 of 9 tests pass" meant the database and the course rules behaved, never "the AI scores 9 of 9". The recorded AI runs were a separate plane: export lane 0 of 3 values right, approved lane 3 of 3, definition cited 0 of 3.
+Never merge them into one number. The deck's "9 of 9 tests pass" meant the database and the course rules behaved, never "the AI passes 9 of 9". The recorded AI runs were a separate plane: export lane 0 of 3 values right, approved lane 3 of 3, definition cited 0 of 3.
 
 ## The case kinds
 
@@ -30,7 +30,7 @@ Never merge them into one score. The deck's "9 of 9 tests pass" meant the databa
 | Teaching | T01, T02 | The extra metric shapes from `metric.yml` (`status: example`) | T01: 141 distinct accounts, not 378; T02: 2,720.93 / 2,800.41 / 2,931.93 |
 | Stale | F00, F01 | Answer, or answer with a warning, at a frozen clock | 60 hours: answer with a warning |
 
-The IDs match `semantic/verified-questions.yml` and the kit's `semantic-template/verified-questions.yml` (G01, C01, R01, R02, D01, F01). The deck's nine database checks are G01-G05, C01, R01, R02 and D01.
+The IDs match `semantic/verified-questions.yml` and `semantic-template/verified-questions.yml` (G01, C01, R01, R02, D01, F01). The deck's nine database checks are G01-G05, C01, R01, R02 and D01.
 
 C01, R01 and R02 are **policy-plane** cases. In the deck they were course rules checked outside the AI tool, before any SQL ran. The builder kit ships no policy engine, so Claude's instructions carry them and the AI plane tests them (does Claude ask back or refuse?). That guides without enforcing: a pass is guidance evidence, not the deck's C01/R01/R02 result. D01 (42501) still backs R02, and the SQL guard hook in `claude/hooks/` can block identifier columns before a query runs. `70_checks.sql` does not run them.
 
@@ -153,4 +153,4 @@ Optional CI recipe: start a disposable PostgreSQL, run `psql -X -v ON_ERROR_STOP
 | Real expected rows | `expected_rows: replace-with-reviewed-values` (an unfilled template) | A placeholder always "passes". This kit fills it in `semantic/verified-questions.yml`. |
 | One case per behaviour (answer, ask back, refuse, deny, stale) | One happy-path question | It cannot show whether refusal or denial works. |
 | Two planes, reported separately | "DB CHECKS 22 of 22, so the AI is ready" | The checks never asked the AI anything. |
-| The weakest control decides the gate | An average score across controls | 0 of 3 citations averaged with 9 of 9 hides a failing control. |
+| The weakest control decides the gate | An average across controls | 0 of 3 citations averaged with 9 of 9 hides a failing control. |

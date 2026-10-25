@@ -1433,7 +1433,7 @@
    "output": "The printed output of 70_checks.sql, saved as a receipt",
    "done": "DB CHECKS n of n PASS, with date, dataset and definition version on the receipt.",
    "foldline": "22 of 22 PASS as the login (the deck showed 9 of 9; C01, R01 and R02 move to step 11).",
-   "prevents": "AP-E03 database checks read as an AI score"
+   "prevents": "AP-E03 database checks read as an AI grade"
   },
   {
    "n": 10,

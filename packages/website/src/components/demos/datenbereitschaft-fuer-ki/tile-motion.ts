@@ -1,38 +1,39 @@
 import type { TileMotion, Track } from "@/lib/demo-tiles/types";
 
 /*
- * W03 "Stufe oder Treppe?", hub miniature, motion. Import-free apart from
- * types, so scripts/demo-tiles/build-css.mjs can run it. One clock p (0..1);
- * the last key of a track is the base style, the finished still frame.
- * Story: April hangs below zero, the lever is pulled, the zero line leaves
- * and the ground rises under the same three steps (their length never
- * changes): -19.960 becomes 334.675, the start rung lands, the stamp last.
+ * W03 "Die Fragekarte", hub miniature, motion. Import-free apart from types,
+ * so scripts/demo-tiles/build-css.mjs can run it; tile.test.ts pins the
+ * geometry to the kit values. One clock p (0..1), 3.6 s. Beats: Claude's
+ * April bar 75.890 grows on the floor (0 to 0.24); the opening level 258.785, from the left,
+ * slides in under it and lifts it (0.3 to 0.56); the figure turns from
+ * 75.890 to 334.675 (0.6); the five squares of the question card fill one by
+ * one (0.66 to 0.94). The last key of each track is the end frame.
  */
-const SETTLE: readonly Track[] = [
-  { id: "root", prop: "o", keys: [[0, 0], [0.08, 1, "ease"]] },
-  { id: "root", prop: "ty", keys: [[0, 8], [0.08, 0, "ease"]] },
-];
 
-/** A step rides from the zero line to its rung while the ground rises to meet it. */
-const lift = (id: string, from: number): Track => ({ id, prop: "ty", keys: [[0, from], [0.28, from], [0.72, 0, "ease"], [1, 0]] });
-const ground = (id: string): Track => ({ id, prop: "sy", origin: "50% 100%", keys: [[0, 0], [0.28, 0], [0.72, 1, "ease"], [1, 1]] });
+/** viewBox units per 1.000 EUR, one scale for the bar and the block. */
+export const PER_1000 = 0.54;
+/** The opening level, December 2025 (data.ts OPENING_DEC_2025). */
+export const OPENING = 258_785;
+/** How far the bar rises when the block slides under it. */
+export const LIFT = Math.round((OPENING / 1000) * PER_1000 * 10) / 10;
+
+/** Width of a swap in story time: about 30 ms, so two figures never show half faded. */
+const SWAP = 0.008;
+const on = (from: number): Track["keys"] => [[0, 0], [from, 0], [from + SWAP, 1], [1, 1]];
+const off = (to: number): Track["keys"] => [[0, 1], [to, 1], [to + SWAP, 0], [1, 0]];
+
+const SQUARES: readonly Track[] = [0, 1, 2, 3, 4].map((box) => ({ id: `sq${box + 1}`, prop: "o" as const, keys: on(0.66 + box * 0.07) }));
 
 export const MOTION: TileMotion = {
-  storyMs: 3400,
+  storyMs: 3600,
   tracks: [
-    ...SETTLE,
-    lift("s-apr", 54.2),
-    lift("s-may", 10.3),
-    lift("s-jun", 31.8),
-    ground("p-apr"),
-    ground("p-may"),
-    ground("p-jun"),
-    { id: "zero", prop: "dash", keys: [[0, 0], [0.26, 0], [0.42, 1, "ease"], [1, 1]] },
-    { id: "floor", prop: "o", keys: [[0, 0], [0.3, 0], [0.4, 1], [1, 1]] },
-    { id: "fig-a", prop: "o", keys: [[0, 1], [0.5, 1], [0.6, 0], [1, 0]] },
-    { id: "fig-b", prop: "o", keys: [[0, 0], [0.6, 0], [0.7, 1], [1, 1]] },
-    { id: "rung", prop: "o", keys: [[0, 0], [0.74, 0], [0.84, 1], [1, 1]] },
-    { id: "ghost", prop: "o", keys: [[0, 0], [0.8, 0], [0.9, 1], [1, 1]] },
-    { id: "stamp", prop: "o", keys: [[0, 0], [0.9, 0], [1, 1]] },
+    { id: "root", prop: "o", keys: [[0, 0], [0.06, 1, "ease"]] },
+    { id: "grow", prop: "sy", origin: "50% 100%", keys: [[0, 0], [0.24, 1, "ease"], [1, 1]] },
+    { id: "bar", prop: "ty", keys: [[0, LIFT], [0.3, LIFT], [0.56, 0, "ease"], [1, 0]] },
+    { id: "block", prop: "tx", keys: [[0, -160], [0.3, -160], [0.56, 0, "ease"], [1, 0]] },
+    { id: "fig-a", prop: "o", keys: off(0.6) },
+    { id: "fig-b", prop: "o", keys: on(0.6) },
+    { id: "bar-label", prop: "o", keys: on(0.6) },
+    ...SQUARES,
   ],
 };

@@ -25,7 +25,7 @@ Decision it changes: how the July marketing budget is split between search and e
 | --- | --- | --- |
 | Flow counts: `sessions`, `orders` | 21,000 sessions; 480 orders | Yes, across days and channels |
 | Rate: `conversion_rate_pct` = orders ÷ sessions | Search 2.00 %, email 8.00 %, shop **2.29 %** | Never. Pool the counts |
-| Distinct count: unique visitors | 1–3 June: 600, 500, 600 per day; **1,450** over the three days | Never across days. 250 visitors came back and would be counted twice (1,700) |
+| Distinct count: unique visitors | 1 to 3 June: 600, 500, 600 per day; **1,450** over the three days | Never across days. 250 visitors came back and would be counted twice (1,700) |
 | Level (not served here): registered customers at month end | A balance, like ending MRR | Across months, never |
 
 ## The five boxes (QUESTION-CARD)
@@ -34,7 +34,7 @@ Decision it changes: how the July marketing budget is split between search and e
 | --- | --- |
 | 1. Question | What was the order conversion rate in June 2026, by channel and for the whole shop? |
 | 2. Approved view | `analytics.conversion_by_channel_daily` |
-| 3. Four blanks | Kind: rate = orders ÷ sessions, pooled, in percent. Rows: one per channel plus one total. Months: June 2026 as UTC days 1–30, complete. Table: the conversion view above. |
+| 3. Four blanks | Kind: rate = orders ÷ sessions, pooled, in percent. Rows: one per channel plus one total. Months: June 2026 as UTC days 1 to 30, complete. Table: the conversion view above. |
 | 4. Boundary | No visitor keys, cookies, IP addresses or customer emails. The AI's login may SELECT only this view, which holds daily channel counts. |
 | 5. Test | Search 2.00 %, email 8.00 %, all channels 2.29 % (480 of 21,000). "5.00 %" fails. |
 
@@ -132,7 +132,7 @@ metrics:
 | Plausible answer | How it happens | Why it is wrong |
 | --- | --- | --- |
 | "June conversion: 5.00 %." | `AVG(cr)` over two channel rows | 1,000 email sessions weigh as much as 20,000 search sessions. Pooled: 2.29 % |
-| "1,700 unique visitors on 1–3 June." | `SUM(visitors)` over three days | 250 visitors came on two days. Distinct over the period: 1,450 |
+| "1,700 unique visitors on 1 to 3 June." | `SUM(visitors)` over three days | 250 visitors came on two days. Distinct over the period: 1,450 |
 | "Order 01:30 on 1 July counts in July." | Local timestamp without a zone | 01:30 Berlin summer time is 23:30 UTC on 30 June: a June order in a UTC report |
 
 ## What works, what does not

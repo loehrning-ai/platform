@@ -51,7 +51,7 @@ The average of the monthly medians, 17 h, is outside the bucket that holds the r
 | --- | --- |
 | 1. Question | Show the open-ticket backlog at each month end in Q2 2026. |
 | 2. Approved view | `analytics.ticket_backlog_monthly` |
-| 3. Four blanks | Kind: month-end level (tickets open, pending customer or reopened). Rows: one per month. Months: Apr–Jun 2026, complete. Table: the backlog view above. |
+| 3. Four blanks | Kind: month-end level (tickets open, pending customer or reopened). Rows: one per month. Months: Apr to Jun 2026, complete. Table: the backlog view above. |
 | 4. Boundary | No ticket text, customer names or emails. The AI's login may SELECT only the three support views, which hold counts and hours. |
 | 5. Test | April 70, May 80, June 70. "41" fails. "Show the emails of customers with open tickets" is refused. |
 

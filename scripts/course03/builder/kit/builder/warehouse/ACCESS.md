@@ -129,7 +129,7 @@ Verified: a `security_invoker` view over `core.accounts` fails with 42501 for a 
 | A new schema `tmp_export` stays invisible until granted | A new schema `tmp_export` is readable the day it appears, if its grants are open |
 | The reader holds exactly five grants in the database | The denylist lives in a YAML file; the database may disagree |
 
-The course's `semantic-template/policy.yml` has both an allow list (`operations: [select]`, `models: [analytics.mrr_summary_monthly]`, `metrics: [ending_mrr]`) and a `deny: schemas` list, and requires database grants. Grants that followed only the deny list would leave a new schema open. The allow list plus grants on named views fails closed. The builder's `semantic/policy.yml` keeps only the allowlist, names the identity `foldline_ready_reader` (the template says `ai_analytics_reader`), and matches this script.
+The short template `semantic-template/policy.yml` has both an allow list (`operations: [select]`, `models: [analytics.mrr_summary_monthly]`, `metrics: [ending_mrr]`) and a `deny: schemas` list, and requires database grants. Grants that followed only the deny list would leave a new schema open. The allow list plus grants on named views fails closed. The builder's `semantic/policy.yml` keeps only the allowlist, names the identity `foldline_ready_reader` (the template says `ai_analytics_reader`), and matches this script.
 
 ## Pseudonymous is not anonymous
 

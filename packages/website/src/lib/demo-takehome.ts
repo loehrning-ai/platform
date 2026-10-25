@@ -32,7 +32,26 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
-export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {};
+export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
+  "datenbereitschaft-fuer-ki": {
+    kit: {
+      de: {
+        href: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+        shown: ["data-readiness-kit/START-HIER.md", "data-readiness-kit/FRAGEKARTE.md", "data-readiness-kit/claude/README.md"],
+        instructions: "data-readiness-kit/claude/PROJEKT-ANWEISUNG-VORLAGE.txt",
+        installDoc: "data-readiness-kit/claude/README.md",
+      },
+      en: {
+        href: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+        shown: ["data-readiness-kit/START-HERE.md", "data-readiness-kit/QUESTION-CARD.md", "data-readiness-kit/claude/README.md"],
+        instructions: "data-readiness-kit/claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt",
+        installDoc: "data-readiness-kit/claude/README.md",
+      },
+    },
+    skill: { name: "kennzahl-fragekarte" },
+    templates: [{ vorlage: "fragekarte" }],
+  },
+};
 
 export function takeHomeFor(slug: DemoSlug): TakeHome | undefined {
   return DEMO_TAKEHOME[slug];

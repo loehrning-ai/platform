@@ -16,7 +16,7 @@ Seven rules cover almost everything:
 | # | Rule | Say it like this | Not like this |
 | --- | --- | --- | --- |
 | R1 | Say the shape: a level, a change, a rate or a count | `ending_mrr_eur`, `net_new_mrr_eur` | `amount`, `mrr` |
-| R2 | Say the unit | `_eur`, `_pct` (0–100), `_hours` | `value`, `mrr_cents` |
+| R2 | Say the unit | `_eur`, `_pct` (0 to 100), `_hours` | `value`, `mrr_cents` |
 | R3 | Say the time | `month_start`, `started_on`, `data_loaded_at_utc` | `dt`, `date`, `ts` |
 | R4 | Put the grain in the table name | `mrr_summary_monthly` | `monthly_revenue`, `customer_master` |
 | R5 | Use words, not codes | `active` / `churned` / `new` | `A` / `C` / `N` |
@@ -80,8 +80,8 @@ matches the formula: `SUM(net_new_mrr_eur) AS net_new_mrr_eur`.
 | Suffix | Means | FOLDLINE example | Counter-example |
 | --- | --- | --- | --- |
 | `_eur` | Euros, numeric(14,2) | `ending_mrr_eur` | `amount`, `mrr_cents` (source) |
-| `_pct` | Percent, 0–100 | `logo_churn_rate_pct` = 10.0 | `churn` = 0.1 |
-| `_ratio` | Fraction, 0–1 | (not served at FOLDLINE) | `_pct` holding 0.1 |
+| `_pct` | Percent, 0 to 100 | `logo_churn_rate_pct` = 10.0 | `churn` = 0.1 |
+| `_ratio` | Fraction, 0 to 1 | (not served at FOLDLINE) | `_pct` holding 0.1 |
 | `_hours`, `_days` | Durations | `warn_after_hours` = 36 | `sla` = 36 |
 | `_units`, `_kg`, `_kwh` | Physical quantities | `ending_units_on_hand` (bike shop) | `qty` |
 | plural noun | A count of things | `churned_accounts` = 4 | `cnt`, `n`, `total` |
@@ -226,7 +226,7 @@ Use only these tokens, each with one meaning across the whole lane.
 | `net_new_` | prefix | Signed change over the period | `net_new_mrr_eur` |
 | `new_`, `expansion_`, `contraction_`, `churned_` | prefix | Change components, stored positive | `contraction_mrr_eur` |
 | `active_` | prefix | Count of things active at the end of the period | `active_accounts` |
-| `_rate_pct`, `_rate_ratio` | suffix | A rate, 0–100 or 0–1 | `logo_churn_rate_pct` |
+| `_rate_pct`, `_rate_ratio` | suffix | A rate, 0 to 100 or 0 to 1 | `logo_churn_rate_pct` |
 | `_eur` | suffix | Euros | `expansion_mrr_eur` |
 | `_hours` | suffix | Duration in hours | `warn_after_hours` |
 | `_key` | suffix | Pseudonymous surrogate key, servable | `account_key` |
@@ -259,7 +259,7 @@ Never serve these names. `lint_names.sql` rule LINT-01 finds them.
 | `status`, `state`, `type` (bare) | Whose status? Which codes? | `account_status`, `movement_type` |
 | `id` (bare) | Id of what? | `account_id` (core), `account_key` (served) |
 | `mrr`, `revenue` (bare column) | Ambiguous: the clarify case C01 exists because of it | `ending_mrr_eur`, `net_new_mrr_eur` |
-| `A`/`C`/`N` and other 1–2 letter codes | Unsearchable; one letter, several meanings | `active` / `churned` / `new` |
+| `A`/`C`/`N` and other 1 to 2 letter codes | Unsearchable; one letter, several meanings | `active` / `churned` / `new` |
 | `final`, `_v2`, `new`, `old`, `tmp`, `test`, `copy`, `bak` | State of the work, not content | One published name; versions live in the definition |
 | `_export`, `_dump`, `_master`, `_log` as the whole description | Origin, not content or grain | Content + grain: `account_mrr_monthly` |
 | An alias that does not match its formula | `SUM(amount) AS ending_mrr` | Alias = the served name of what was computed |
@@ -284,7 +284,7 @@ segment's base: 4 of 48 = 8.33 % instead of 4 of 40 = 10.0 %.
 
 "Rule" points to §1.
 
-### FOLDLINE (1–24)
+### FOLDLINE (1 to 24)
 
 | # | Bad | Good | Why the bad name misleads an AI | Rule |
 | --- | --- | --- | --- | --- |
@@ -313,7 +313,7 @@ segment's base: 4 of 48 = 8.33 % instead of 4 of 40 = 10.0 %.
 | 23 | a view column `mrr` | `ending_mrr_eur` or `net_new_mrr_eur` | Bare "MRR" is the ambiguity behind clarify case C01 | R1 |
 | 24 | `churn` = 0.1 | `logo_churn_rate_pct` = 10.0, with `starting_accounts`, `churned_accounts` | 0.1 read as percent is 0.1 % churn; without counts nobody can check 4 of 40 | R2 |
 
-### Other domains (25–40)
+### Other domains (25 to 40)
 
 | # | Domain | Bad | Good | Why the bad name misleads an AI | Rule |
 | --- | --- | --- | --- | --- | --- |
@@ -475,7 +475,7 @@ The seven-rule table at the top is the summary; §1 gives each rule's counter-ex
 Every served name must pass.
 
 - [ ] Every number says its shape: `ending_`, `starting_`, `net_new_`, a direction, `_rate_`, or a plural count.
-- [ ] Every number says its unit: `_eur`, `_pct` (0–100), `_ratio` (0–1), `_hours`, `_units`.
+- [ ] Every number says its unit: `_eur`, `_pct` (0 to 100), `_ratio` (0 to 1), `_hours`, `_units`.
 - [ ] Every rate has its numerator and denominator in the same view.
 - [ ] Every date says which day: `month_start`, `period_start` / `period_end_exclusive`, `*_on`, `*_month`.
 - [ ] Every instant is `timestamptz` and ends in `_at_utc`.

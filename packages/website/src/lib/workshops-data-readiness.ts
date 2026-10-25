@@ -17,19 +17,19 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Sind deine Daten bereit für KI?",
     eyebrow: "Workshop 03 · Datenbereitschaft",
     summary:
-      "Eine KI meldet −19.960 € MRR für April. Du findest den Fehler und machst die Zahl richtig.",
+      "Aus einer richtigen Datei rechnet eine KI eine falsche Tabelle. Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht.",
     description:
-      "Die erfundene Firma FOLDLINE fragt nach dem MRR-Endbestand (monatlich wiederkehrender Umsatz) pro Monat im letzten abgeschlossenen Quartal. Auf sieben Exporttabellen antwortet die KI mit −19.960 / 9.775 / 42.565, weil sie die Veränderungen addiert und Bestand mit Veränderung verwechselt. Mit freigegebenen Sichten, schriftlicher Kennzahl-Definition (semantische Schicht), reinen Leserechten und Tests stimmt die Antwort mit der Datenbank überein: 334.675 / 344.450 / 387.015. Zum Schluss prüfst du die Grenzen des Aufbaus und schreibst deine eigene Frage in fünf Felder.",
+      "Die erfundene Firma FOLDLINE fragt nach dem MRR-Endbestand (monatlich wiederkehrender Umsatz) pro Monat im letzten abgeschlossenen Quartal. Auf sieben Exporttabellen antwortet die KI mit −19.960 / 9.775 / 42.565, weil sie die Veränderungen addiert und Bestand mit Veränderung verwechselt. Mit freigegebenen Sichten, schriftlicher Kennzahl-Definition (semantische Schicht), reinen Leserechten und Tests stimmt die Antwort mit der Datenbank überein: 334.675 / 344.450 / 387.015. Zum Schluss prüfst du die Grenzen des Aufbaus und füllst die fünf Kästchen der Fragekarte für eine eigene Zahl aus.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
       "Die Einführung im Deck ist auf Deutsch.",
-    outcome: "Fünf-Felder-Vorlage",
+    outcome: "Die Fragekarte",
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Eine Zip mit der Fragekarte zum Ausdrucken, Testfällen und Vorlagen für Definitionen, dazu Dateien für Datenteams. Du füllst die fünf Felder der Karte für eine eigene, erfundene Frage aus.",
-      facts: ["Nur Textdateien", "5 Felder", "ca. 75 Min. allein"],
+        "Eine Zip mit der Fragekarte auf Deutsch und Englisch, drei Dateien für dein Claude (Skill, Projektanweisung, Prüfliste) im FOLDLINE-Beispiel und dem Aufbau für Datenteams. START-HIER.md sagt, womit du anfängst.",
+      facts: ["Nur Textdateien", "5 Kästchen", "ca. 75 Min. allein"],
     },
     audience: [
       "Analystinnen und Controller, die Zahlen aus KI-Antworten weitergeben",
@@ -41,7 +41,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     question:
       "Zeige den MRR-Endbestand pro Monat für das letzte abgeschlossene Quartal.",
     outcomes: [
-      "Du erkennst, ob eine KI einen Bestand oder eine Veränderung ausgibt.",
+      "Bevor du eine Zahl aus der KI weitergibst, füllst du fünf Kästchen aus: Frage, freigegebene Sicht, Art der Zahl und wer zählt, Grenze, Test.",
       "Du legst für eine eigene Frage Zahlart, Zeilen, Zeitraum, Tabelle und Zählweise fest.",
       "Du sagst, ob eine Anweisung oder eine Datenbankberechtigung den Zugriff sperrt.",
       "Du schreibst einen Test mit erwarteter Antwort und ihrer Quelle.",
@@ -59,7 +59,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         activity: "vote",
         description:
-          "Die KI liefert −19.960 / 9.775 / 42.565; du stimmst ab, ob das ins Board-Pack geht.",
+          "Die KI liefert −19.960 / 9.775 / 42.565; du stimmst ab, ob das in den Monatsbericht geht.",
       },
       {
         label: "Warum sie falsch ist",
@@ -94,7 +94,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         activity: "write",
         description:
-          "Du füllst fünf Felder für eine eigene, erfundene Frage und stimmst erneut über die Antwort vom Anfang ab.",
+          "Du füllst die fünf Kästchen der Fragekarte für eine eigene, erfundene Zahl und stimmst erneut über die Antwort vom Anfang ab.",
       },
       {
         label: "Fragen",
@@ -160,9 +160,9 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "05",
-        title: "Deine fünf Felder ausfüllen",
+        title: "Deine Fragekarte ausfüllen",
         description:
-          "Für eine eigene, erfundene Frage füllst du fünf Felder, neben jedem das FOLDLINE-Beispiel.",
+          "Für eine eigene, erfundene Zahl füllst du fünf Kästchen, neben jedem das FOLDLINE-Beispiel. In der Demo entstehen daraus drei Dateien für dein Claude.",
         tool: "Fragekarte",
       },
     ],
@@ -210,8 +210,8 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "during",
         sizeLabel: "1,1 MB",
         description:
-          "Die Fragekarte zum Ausdrucken, dazu Testfälle, Definitionsvorlagen und Dateien für Datenteams. Nur Textdateien; START-HERE.md sagt, womit du anfängst.",
-        short: "Die Fragekarte zum Ausdrucken, dazu Testfälle und Vorlagen.",
+          "Die Fragekarte auf Deutsch und Englisch, ein Claude-Skill, eine Projektanweisung und eine Prüfliste im FOLDLINE-Beispiel, dazu der Aufbau für Datenteams. Nur Textdateien; START-HIER.md sagt, womit du anfängst.",
+        short: "Die Fragekarte, dazu drei Dateien für dein Claude.",
       },
     ],
   },
@@ -222,18 +222,18 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Are your data ready for AI?",
     eyebrow: "Workshop 03 · Data readiness",
     summary:
-      "An AI reports April MRR as −€19,960. You find the mistake and make the number right.",
+      "From a correct file, an AI builds a wrong table. Five boxes catch the mistake before the number goes out.",
     description:
-      "The invented company FOLDLINE asks: \"Show ending MRR by month for the last complete quarter\" (MRR is monthly recurring revenue). On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it adds up the changes and mixes up a balance with a change. With approved views, a written metric definition (the semantic layer), read-only access and tests, the answer matches the database: 334,675 / 344,450 / 387,015. Finally you test the setup's limits and write your own question into five boxes.",
+      "The invented company FOLDLINE asks: \"Show ending MRR by month for the last complete quarter\" (MRR is monthly recurring revenue). On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it adds up the changes and mixes up a balance with a change. With approved views, a written metric definition (the semantic layer), read-only access and tests, the answer matches the database: 334,675 / 344,450 / 387,015. Finally you test the setup's limits and fill the five boxes of the question card for a number of your own.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
       "The introduction in the deck is in German.",
-    outcome: "Five-box template",
+    outcome: "The question card",
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A zip with the question card to print, test cases and templates for definitions, plus files for data teams. You fill in the five boxes of the card for a question of your own, invented for the exercise.",
+        "A zip with the question card in German and English, three files for your Claude (skill, Project instructions, test list) in the FOLDLINE example, and the setup for data teams. START-HERE.md tells you where to begin.",
       facts: ["Text files only", "5 boxes", "about 75 min alone"],
     },
     audience: [
@@ -245,7 +245,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Not for you if you want to build a data warehouse.",
     question: "Show ending MRR by month for the last complete quarter.",
     outcomes: [
-      "Spot whether an AI returned a balance or a change.",
+      "Before you pass on a number an AI produced, fill five boxes: question, approved view, kind of number and who counts, boundary, test.",
       "Set the number type, rows, period, table and counting rule for a question of your own.",
       "Say whether an instruction or a database permission blocks a read.",
       "Write a test with the expected answer and its source.",
@@ -263,7 +263,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         activity: "vote",
         description:
-          "The AI returns −19,960 / 9,775 / 42,565; you vote on whether it goes into the board pack.",
+          "The AI returns −19,960 / 9,775 / 42,565; you vote on whether it goes into the monthly report.",
       },
       {
         label: "Why it is wrong",
@@ -298,7 +298,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         activity: "write",
         description:
-          "You fill five boxes for an invented question of your own and vote again on the opening answer.",
+          "You fill the five boxes of the question card for an invented number of your own and vote again on the opening answer.",
       },
       {
         label: "Questions",
@@ -364,9 +364,9 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       },
       {
         n: "05",
-        title: "Fill your five boxes",
+        title: "Fill your question card",
         description:
-          "For an invented question of your own you fill five boxes, each next to the FOLDLINE example.",
+          "For an invented number of your own you fill five boxes, each next to the FOLDLINE example. In the demo they become three files for your Claude.",
         tool: "Question card",
       },
     ],
@@ -414,8 +414,8 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "during",
         sizeLabel: "1.1 MB",
         description:
-          "The question card to print, plus test cases, definition templates and files for data teams. Text files only; START-HERE.md tells you where to begin.",
-        short: "The question card to print, plus test cases and templates.",
+          "The question card in German and English, a Claude skill, Project instructions and a test list in the FOLDLINE example, plus the setup for data teams. Text files only; START-HERE.md tells you where to begin.",
+        short: "The question card, plus three files for your Claude.",
       },
     ],
   },

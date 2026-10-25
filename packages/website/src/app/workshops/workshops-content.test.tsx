@@ -89,7 +89,7 @@ describe("<WorkshopsContent>", () => {
     ).toEqual([
       audit?.outcome,
       esg?.outcome,
-      "Five-box template",
+      "The question card",
       "Metrics skill + dashboard",
       "Go/no-go rule",
     ]);
@@ -116,10 +116,8 @@ describe("<WorkshopsContent>", () => {
     ).toBeInTheDocument();
     // U+2212 reads like a dash in the brand face; the hub shows ASCII minus.
     expect(w03.textContent).not.toContain("\u2212");
-    // The amount keeps its hyphen next to the euro sign on one line.
-    const amount = within(w03).getByText("-€19,960");
-    expect(amount.tagName).toBe("SPAN");
-    expect(amount).toHaveClass("whitespace-nowrap", "tabular-nums");
+    // The summary carries no negative amount, so nothing is wrapped as one.
+    expect(w03.querySelector("p:not([data-workshop-meta]) > .tabular-nums")).toBeNull();
     // Each workshop offers its deck, its practice demo and its kit, nothing else.
     expect(w03.querySelector("[data-workshop-roles]")?.textContent).toBe(
       "Deck · Demo · Kit",
@@ -226,8 +224,7 @@ describe("<WorkshopsContent>", () => {
     expect(newMarks[1]).toHaveAttribute("data-chip", "meta");
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
     expect(within(rows[2]).queryByText("Neu")).toBeNull();
-    // German amount: ASCII minus, euro sign on the same line.
-    expect(within(rows[2]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
+    expect(within(rows[2]).getByText(/Fünf Kästchen fangen den Fehler/).tagName).toBe("P");
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
     expect(within(rows[1]).getByText(/Drei ESG-Anfragen an eine Kellerei/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();

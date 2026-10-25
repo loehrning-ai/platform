@@ -106,7 +106,7 @@ It serves `account_key`, never `account_id`, `account_name` or `contact_email`. 
 
 One row per data view: `view_name`, `data_loaded_at_utc`, `complete_through_month`, `quality_status`, `warn_after_hours` (36), `hard_expiry_hours` (NULL), `owner_team`, `definition_version`. The thresholds come from the table `core.serving_contracts`, so changing one is a data change with an owner.
 
-## View, materialized view, or table?
+## View, materialized view, or table
 
 | Option | Freshness | Cost per query | Consistency | Tests before publish | Burden | Use when |
 | --- | --- | --- | --- | --- | --- | --- |

@@ -1,6 +1,6 @@
 ---
 name: foldline-analytics
-description: Answer FOLDLINE questions about ending MRR, net new MRR, MRR movements, logo churn rate, expansion MRR by country and top accounts by MRR from the five approved analytics views, with a metric trace. Use when a question names one of these metrics, FOLDLINE revenue or churn numbers, or the analytics schema. Asks back on bare "MRR" or "revenue"; refuses profit and customer identifiers.
+description: Answers FOLDLINE questions on ending MRR, net new MRR, logo churn and expansion MRR from the five approved views, with a Trace. Asks back on bare MRR; refuses profit and contact data.
 ---
 
 # FOLDLINE analytics

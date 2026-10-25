@@ -1,288 +1,284 @@
 "use client";
 
-import "./demo.css";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FOLDLINE } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { DemoLever, DemoStage, setTakeHomeLine, TAKEHOME_TARGET_ID, useBeatClock, useOnRestart } from "@/components/demos/shell";
+import { EMPTY_CARD, type OwnCard } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/card";
+import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
+import { CLAUDE_ANSWER, ENDING_MRR } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
+import { fill } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/files";
 import { formatNumber } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/format";
-import { DEFAULT_WIDTH, PHONE_HEIGHT } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/geometry";
-import { EMPTY_FIELDS, readFields, type Fields } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/input";
-import type { DemoPack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/pack";
-import { INTRO_MS, introAt, OWN_MS, ownAt, sceneAt } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/scene";
-import { exampleSeries, formatters, type OpId, type Reading, type Series } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/series";
-import { fill, joinList } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/text";
-import { Head } from "./head";
-import { Lever } from "./lever";
-import { defaultOp, Operators } from "./operators";
-import { OwnNumbers } from "./own-numbers";
-import { SceneSvg } from "./scene";
-import { ScalePair } from "./scale-pair";
-import { TakeBlocks } from "./take-blocks";
-import { useProgress } from "./use-progress";
+import type { Boundary, WhoFilter } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/logic";
+import { boxesDone, START, VOTES, type Bets } from "./model";
+import { OwnForm, OwnPreview, TakeHomeScene, takeHomeLine } from "./own-card";
+import { AnswerScene, ReadingsScene } from "./scene-answer";
+import { BoundaryScene, TestScene, ViewScene, WHO, WhoScene } from "./scene-boxes";
+import { useSince, useTween } from "./tween";
+import "./demo.css";
 
-const reducedMotion = (): boolean => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SLUG = "datenbereitschaft-fuer-ki";
+const LEVELS = [ENDING_MRR["2026-04"], ENDING_MRR["2026-05"], ENDING_MRR["2026-06"]];
+const BOUNDARIES: readonly Boundary[] = ["instruction", "notUploaded", "grant"];
 
-/** The visitor's samples: the workshop's numbers, written the way this locale writes them. */
-function sampleFields(kind: Reading, example: Series, pack: DemoPack): Fields {
-  const num = (value: number) => formatNumber(value, pack.locale);
-  const values = kind === "change" ? example.changes : example.levels;
-  return {
-    values: values.map(num).join("; "),
-    start: num(example.startLevel),
-    name: example.name,
-    table: FOLDLINE.table,
-    neverNeg: true,
-  };
+/** The question card strip on top of the stage: five squares, the state, the answer as it stands. */
+function Strip({ pack, done, index }: { readonly pack: Pack; readonly done: readonly boolean[]; readonly index: number }) {
+  const copy = pack.strip;
+  const right = done[1] as boolean;
+  const values = (right ? LEVELS : CLAUDE_ANSWER).map((value) => formatNumber(value, pack.locale)).join(" · ");
+  const state = done[4] ? copy.stateTested : right ? copy.stateView : copy.stateOpen;
+  return (
+    <div className="fk-strip" data-fk-strip="">
+      <p className="fk-strip-card">
+        <span className="fk-strip-name">{copy.card}</span>
+        <span className="fk-squares-5">
+          {copy.boxes.map((name, box) => (
+            <span
+              key={name}
+              className="fk-box-sq"
+              data-done={done[box] ? "" : undefined}
+              role="img"
+              aria-label={fill(done[box] ? copy.boxDone : copy.boxOpen, { n: box + 1, name })}
+            >
+              {box + 1}
+            </span>
+          ))}
+        </span>
+      </p>
+      {index > 0 ? (
+        <p className="fk-strip-answer" data-fk-state={done[4] ? "tested" : right ? "view" : "open"}>
+          <span className="fk-strip-values">{values}</span> <span className="fk-strip-state">{state}</span>
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/** The "Im Kit:" line and the beat's notes, under the lever. */
+function Notes({ pack, notes, kitFile, lead }: { readonly pack: Pack; readonly notes: readonly string[]; readonly kitFile: string; readonly lead?: string }) {
+  return (
+    <div className="fk-notes" data-fk-notes="">
+      {lead ? (
+        <p className="fk-lead" data-fk-feedback="">
+          {lead}
+        </p>
+      ) : null}
+      {notes.map((note) => (
+        <p key={note} className="fk-note">
+          {note}
+        </p>
+      ))}
+      <p className="fk-kit">
+        {pack.inKit}{" "}
+        <a href={`${pack.kitBase}${kitFile}`} className="fk-kit-link" data-fk-kit-file={kitFile}>
+          {kitFile}
+        </a>
+      </p>
+    </div>
+  );
+}
+
+function Radios<T extends string>({
+  name,
+  legend,
+  options,
+  labels,
+  value,
+  onChange,
+}: {
+  readonly name: string;
+  readonly legend: string;
+  readonly options: readonly T[];
+  readonly labels: Readonly<Record<T, string>>;
+  readonly value: T | null;
+  readonly onChange: (value: T) => void;
+}) {
+  return (
+    <fieldset className="fk-seg" data-fk-seg={name}>
+      <legend className="fk-sr">{legend}</legend>
+      {options.map((option) => (
+        <label key={option} className="fk-seg-option">
+          <input type="radio" name={name} value={option} checked={value === option} onChange={() => onChange(option)} />
+          <span>{labels[option]}</span>
+        </label>
+      ))}
+    </fieldset>
+  );
 }
 
 /**
- * The size of the drawing box in px: the box is as big, so chart text keeps its size on every
- * screen. Its height comes from the CSS (a phone height, a share of the viewport on wide
- * screens), which also reserves the room before this runs, so nothing jumps.
+ * "Die Fragekarte": Claude's answer from one correct file, the four
+ * readings of it, then the five boxes, the visitor's own card and the
+ * take-home. The stage is a pure function of the clock and the bets; the own
+ * card lives in this component only and survives "Von vorn".
  */
-function usePlotSize(node: React.RefObject<HTMLElement | null>): { readonly width: number; readonly height: number } {
-  const [size, setSize] = useState({ width: DEFAULT_WIDTH, height: PHONE_HEIGHT });
-  useEffect(() => {
-    const target = node.current;
-    if (!target) return;
-    const measure = () => {
-      const width = target.clientWidth;
-      const height = target.clientHeight;
-      if (width > 0 && height > 0) setSize((current) => (Math.abs(current.width - width) >= 1 || Math.abs(current.height - height) >= 1 ? { width, height } : current));
-    };
-    measure();
-    if (typeof ResizeObserver === "undefined") return;
-    const watcher = new ResizeObserver(measure);
-    watcher.observe(target);
-    return () => watcher.disconnect();
-  }, [node]);
-  return size;
-}
+export default function Demo({ pack }: { readonly pack: Pack }) {
+  const clock = useBeatClock();
+  const { index, progress, reducedMotion, commit, seek } = clock;
+  const [bets, setBets] = useState<Bets>(START);
+  const [card, setCard] = useState<OwnCard>(EMPTY_CARD);
+  const [preset, setPreset] = useState("");
+  const previousWho = useRef<WhoFilter | null>(null);
 
-const sum = (values: readonly number[]): number => values.reduce((total, value) => total + value, 0);
-
-export default function Demo({ copy }: { readonly copy: DemoPack }) {
-  const pack = copy;
-  const { ui } = pack;
-  const locale = pack.locale;
-  const example = useMemo(() => exampleSeries(ui.months), [ui.months]);
-  const progress = useProgress(0);
-  const { p, play, cancel, set, animateTo } = progress;
-  const stage = useRef<HTMLDivElement>(null);
-  const canvas = useRef<HTMLDivElement>(null);
-  const size = usePlotSize(canvas);
-  const touchedRef = useRef(false);
-  const watcher = useRef<IntersectionObserver | null>(null);
-  const [touched, setTouched] = useState(false);
-  const [live, setLive] = useState(false);
-  const [fields, setFields] = useState<Fields>(EMPTY_FIELDS);
-  const [override, setOverride] = useState<Reading | null>(null);
-  const [pick, setPick] = useState<{ readonly reading: Reading; readonly op: OpId } | null>(null);
-  const [settled, setSettled] = useState<Reading>("change");
-
-  const read = useMemo(
-    () => readFields(fields, override, (n) => fill(ui.monthShort, { n })),
-    [fields, override, ui.monthShort],
-  );
-  const series = read.status === "ok" ? read.series : example;
-  const scene = useMemo(() => sceneAt(series, p, fields.neverNeg), [series, p, fields.neverNeg]);
-  const reading: Reading = p < 0.5 ? "change" : "level";
-  // The operator on show is the right answer of the reading until the visitor tries another one.
-  const op = pick && pick.reading === reading ? pick.op : defaultOp(reading);
-  const fmt = formatters(series, locale);
-
-  // Derived while rendering: the last state the lever came to rest in.
-  if (p === 0 && settled !== "change") setSettled("change");
-  else if (p === 1 && settled !== "level") setSettled("level");
-
-  // The intro: once the scene is on screen, pull the lever and bring it back to the hero state.
-  // It never runs over a visitor: any touch, key or edit before it starts disarms it for good.
-  useEffect(() => {
-    if (reducedMotion()) {
-      set(1);
-      return;
-    }
-    const node = stage.current;
-    if (!node || touchedRef.current) return;
-    let started = false;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (touchedRef.current) {
-          observer.disconnect();
-          return;
-        }
-        // Only when the whole stage is on screen (or all of it that the screen can hold).
-        const whole = entries.some((entry) => entry.isIntersecting && entry.intersectionRect.height >= Math.min(entry.boundingClientRect.height, window.innerHeight - 80) * 0.9);
-        if (started || !whole) return;
-        started = true;
-        observer.disconnect();
-        play(INTRO_MS, introAt);
-      },
-      { threshold: [0, 0.25, 0.5, 0.75, 0.9, 0.95, 1] },
-    );
-    watcher.current = observer;
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [play, set]);
-
-  const touch = () => {
-    touchedRef.current = true;
-    watcher.current?.disconnect();
-    cancel();
-    setTouched(true);
-    setLive(true);
-  };
-
-  const goTo = (target: number) => {
-    touch();
-    if (reducedMotion()) set(target);
-    else animateTo(target, 700);
-  };
-
-  const apply = (nextFields: Fields, nextOverride: Reading | null) => {
-    setFields(nextFields);
-    setOverride(nextOverride);
-    const next = readFields(nextFields, nextOverride, (n) => fill(ui.monthShort, { n }));
-    const before = read.status === "ok" ? read.kind : null;
-    if (next.status === "ok" && next.kind !== before) goTo(next.kind === "level" ? 1 : 0);
-  };
-
-  // Bring the stage into view, so the reaction is seen. Never smooth under reduced motion.
-  const showStage = useCallback(() => {
-    const node = stage.current;
-    if (!node) return;
-    const box = node.getBoundingClientRect();
-    if (box.top >= 0 && box.bottom <= window.innerHeight - 72) return;
-    node.scrollIntoView({ block: "start", behavior: reducedMotion() ? "auto" : "smooth" });
-  }, []);
-
-  // The visitor's own numbers get the same lever moment as the example: once they are done with a
-  // field (paste, leaving it, a sample) and the numbers read, the stage scrolls into view and the
-  // lever pulls to the other reading and back to the one their numbers are.
-  const committed = useRef(false);
-  const revealed = useRef("");
-  const [tick, setTick] = useState(0);
-  const onCommit = (when: "paste" | "done") => {
-    committed.current = true;
-    if (when === "done") setTick((count) => count + 1);
-  };
-  useEffect(() => {
-    if (!committed.current) return;
-    if (read.status !== "ok") {
-      committed.current = false;
-      return;
-    }
-    const key = `${fields.values}|${fields.start}|${fields.neverNeg}|${override ?? ""}`;
-    committed.current = false;
-    if (key === revealed.current) return;
-    revealed.current = key;
-    const base: 0 | 1 = read.kind === "level" ? 1 : 0;
-    touchedRef.current = true;
-    watcher.current?.disconnect();
-    setTouched(true);
-    setLive(true);
-    showStage();
-    set(base);
-    if (reducedMotion()) return;
-    play(OWN_MS, (ms) => ownAt(ms, base));
-  }, [read, tick, fields, override, play, set, showStage]);
-
-  const status = (() => {
-    if (!live) return "";
-    const at = sceneAt(series, settled === "level" ? 1 : 0, fields.neverNeg);
-    const month = series.months[0] ?? "";
-    const value = fmt.money(at.counter);
-    const growth = settled === "level" ? fill(ui.statusGrowth, { growth: fmt.money(sum(series.changes)) }) : "";
-    return fill(settled === "level" ? ui.statusLevel : ui.statusChange, { month, value }) + growth;
-  })();
-
-  const label = fill(ui.sceneLabelBoth, {
-    changes: joinList(series.changes.map((v) => fmt.num(v)), pack.take.and),
-    levels: joinList(series.levels.map((v) => fmt.num(v)), pack.take.and),
+  useOnRestart(() => {
+    previousWho.current = null;
+    setBets(START);
   });
 
-  return (
-    <div
-      className="dr3"
-      data-hint={touched ? undefined : ""}
-      data-p={p === 0 ? "0" : p === 1 ? "1" : "mid"}
-      onPointerDownCapture={touch}
-      onKeyDownCapture={touch}
-    >
-      <div ref={stage} className="dr3-stage">
-        <Lever
-          p={p}
-          ui={ui}
-          onTouch={touch}
-          onScrub={set}
-          onRelease={(value) => {
-            if (value < 0.08 || value > 0.92) {
-              const target = value < 0.08 ? 0 : 1;
-              if (reducedMotion()) set(target);
-              else animateTo(target, 180);
-            }
-          }}
-        />
-        <div className="dr3-plot">
-          <Head series={series} scene={scene} pack={pack} width={size.width} />
-          <div className="dr3-canvas" ref={canvas}>
-            <SceneSvg series={series} scene={scene} pack={pack} label={label} width={size.width} height={size.height} />
-          </div>
-          <p className="dr3-caption" aria-hidden="true">
-            <strong style={{ opacity: scene.sentence }}>{ui.sentence}</strong>
-          </p>
+  const reading = useTween(bets.detent, 420, reducedMotion);
+  const fold = useTween(bets.view ? 1 : 0, 420, reducedMotion);
+  const whoShare = useSince(bets.who ?? "none", 860, reducedMotion);
+  const testRun = useTween(bets.tested ? 1 : 0, 2000, reducedMotion);
+  const done = boxesDone(index, bets);
+  const line = takeHomeLine(card, pack);
+
+  useEffect(() => setTakeHomeLine(SLUG, line), [line]);
+
+  const update = (patch: Partial<Bets>) => setBets((previous) => ({ ...previous, ...patch }));
+  const vote = (choice: (typeof VOTES)[number]) => {
+    update({ vote: choice });
+    commit();
+    seek(1, "user");
+  };
+  const chooseWho = (who: WhoFilter) => {
+    previousWho.current = bets.who;
+    update({ who });
+  };
+
+  let scene: ReactNode;
+  let caption: string = pack.answer.caption;
+  let lever: ReactNode;
+  let notes: ReactNode;
+  let below: ReactNode = null;
+
+  if (index === 0) {
+    scene = <AnswerScene pack={pack} progress={progress} />;
+    lever = (
+      <div className="fk-votes" role="group" aria-label={pack.answer.leverLabel}>
+        <p className="fk-lever-label" aria-hidden="true">
+          {pack.answer.leverLabel}
+        </p>
+        <div className="fk-vote-row">
+          {VOTES.map((choice) => (
+            <button key={choice} type="button" className="fk-vote" aria-pressed={bets.vote === choice} data-fk-vote={choice} onClick={() => vote(choice)}>
+              {pack.answer.votes[choice]}
+            </button>
+          ))}
         </div>
       </div>
-      <p className="dr3-sr" role="status">
-        {status}
-      </p>
-      <table className="dr3-sr">
-        <caption>{ui.tableCaption}</caption>
-        <thead>
-          <tr>
-            <th scope="col" />
-            {series.months.map((month) => (
-              <th key={month} scope="col">
-                {month}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {([["change", ui.readingChange, series.changes], ["level", ui.readingLevel, series.levels]] as const).map(([id, name, values]) => (
-            <tr key={id}>
-              <th scope="row">{name}</th>
-              {values.map((value, index) => (
-                <td key={index}>{fmt.money(value)}</td>
-              ))}
-            </tr>
+    );
+    notes = <Notes pack={pack} notes={pack.answer.notes} kitFile={pack.answer.kitFile} />;
+  } else if (index === 1) {
+    const copy = pack.reveal;
+    scene = <ReadingsScene pack={pack} progress={progress} reading={reading} detent={bets.detent} />;
+    caption = progress < 0.67 ? copy.captionFile : copy.captionVerdict;
+    const short = copy.readings[bets.detent]?.short ?? "";
+    lever = (
+      <label className="fk-slider">
+        <span className="fk-lever-label">
+          {copy.sliderLabel} {bets.detent + 1}: <strong>{short}</strong>
+        </span>
+        <input
+          type="range"
+          min={0}
+          max={3}
+          step={1}
+          value={bets.detent}
+          disabled={progress < 1}
+          aria-valuetext={copy.readings[bets.detent]?.label}
+          onChange={(event) => update({ detent: Number(event.currentTarget.value) })}
+          data-fk-slider=""
+        />
+      </label>
+    );
+    notes = <Notes pack={pack} notes={copy.notes} kitFile={copy.kitFile} lead={copy.feedback[bets.vote ?? "none"]} />;
+  } else if (index === 2) {
+    const copy = pack.view;
+    scene = <ViewScene pack={pack} view={bets.view} fold={fold} />;
+    caption = copy.caption;
+    lever = (
+      <Radios
+        name="fk-view"
+        legend={copy.toggleLabel}
+        options={["tables", "view"] as const}
+        labels={copy.toggle}
+        value={bets.view ? "view" : "tables"}
+        onChange={(value) => update({ view: value === "view" })}
+      />
+    );
+    notes = <Notes pack={pack} notes={[copy.box1Note, ...copy.notes, copy.stored]} kitFile={copy.kitFile} />;
+  } else if (index === 3) {
+    const copy = pack.who;
+    scene = <WhoScene pack={pack} who={bets.who} previous={previousWho.current} share={whoShare} />;
+    caption = copy.caption;
+    lever = <Radios name="fk-who" legend={copy.chipLabel} options={WHO} labels={copy.chips} value={bets.who} onChange={chooseWho} />;
+    notes = <Notes pack={pack} notes={[copy.honest, ...copy.notes, copy.rule]} kitFile={copy.kitFile} />;
+  } else if (index === 4) {
+    const copy = pack.boundary;
+    scene = <BoundaryScene pack={pack} boundary={bets.boundary} />;
+    caption = copy.caption;
+    lever = <Radios name="fk-boundary" legend={copy.label} options={BOUNDARIES} labels={copy.states} value={bets.boundary} onChange={(boundary) => update({ boundary })} />;
+    notes = <Notes pack={pack} notes={copy.notes} kitFile={copy.kitFile} />;
+  } else if (index === 5) {
+    const copy = pack.test;
+    scene = <TestScene pack={pack} tested={bets.tested} run={testRun} />;
+    caption = copy.caption;
+    lever = (
+      <button type="button" className="fk-button fk-button-ink" aria-pressed={bets.tested} onClick={() => update({ tested: true })} data-fk-run="">
+        {copy.run}
+      </button>
+    );
+    const recall = bets.vote ? fill(copy.recall, { vote: pack.answer.votes[bets.vote] }) : undefined;
+    notes = <Notes pack={pack} notes={copy.notes} kitFile={copy.kitFile} lead={recall} />;
+  } else if (index === 6) {
+    const copy = pack.own;
+    scene = <OwnPreview pack={pack} card={card} />;
+    caption = copy.caption;
+    lever = (
+      <label className="fk-select">
+        <span className="fk-lever-label">{copy.presetLabel}</span>
+        <select
+          value={preset}
+          onChange={(event) => {
+            const chosen = pack.presets.find((candidate) => candidate.id === event.currentTarget.value);
+            setPreset(event.currentTarget.value);
+            if (chosen) setCard(chosen.card);
+          }}
+          data-fk-preset=""
+        >
+          <option value="">{copy.presetChoose}</option>
+          {pack.presets.map((candidate) => (
+            <option key={candidate.id} value={candidate.id}>
+              {candidate.label}
+            </option>
           ))}
-        </tbody>
-      </table>
+        </select>
+      </label>
+    );
+    below = <OwnForm pack={pack} card={card} onChange={(next) => setCard(next)} />;
+    notes = <Notes pack={pack} notes={[]} kitFile={copy.kitFile} />;
+  } else {
+    const copy = pack.takehome;
+    scene = <TakeHomeScene pack={pack} fromCard={line !== ""} />;
+    caption = copy.caption;
+    lever = (
+      <a href={`#${TAKEHOME_TARGET_ID}`} className="fk-button fk-button-ink" data-fk-takehome="">
+        {copy.lever}
+      </a>
+    );
+    notes = <Notes pack={pack} notes={copy.notes} kitFile={copy.kitFile} />;
+  }
 
-      <Operators
-        series={series}
-        reading={reading}
-        op={op}
-        onOp={(next) => setPick({ reading, op: next })}
-        onReading={(r) => goTo(r === "level" ? 1 : 0)}
-        pack={pack}
-      />
-      <ScalePair series={series} pair={scene.pair} pack={pack} />
-      <OwnNumbers
-        fields={fields}
-        read={read}
-        override={override}
-        pack={pack}
-        onFields={(next) => apply(next, override)}
-        onOverride={(kind) => apply(fields, kind)}
-        onSample={(kind) => apply(sampleFields(kind, example, pack), null)}
-        onCommit={onCommit}
-        onReset={() => {
-          apply(EMPTY_FIELDS, null);
-          goTo(0);
-        }}
-      />
-      <TakeBlocks series={series} pack={pack} reading={reading} />
+  return (
+    <div className="fk" data-fk-beat={index}>
+      <h2 className="fk-sr">{pack.stageLabel}</h2>
+      <DemoStage label={pack.stageLabel} caption={caption}>
+        <div className="fk-stage">
+          <Strip pack={pack} done={done} index={index} />
+          <div className="fk-scene">{scene}</div>
+        </div>
+      </DemoStage>
+      <DemoLever>{lever}</DemoLever>
+      {notes}
+      {below}
     </div>
   );
 }

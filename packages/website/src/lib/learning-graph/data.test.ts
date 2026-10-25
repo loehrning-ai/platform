@@ -35,7 +35,7 @@ function nodeById(id: string) {
 describe("demo node derivation", () => {
   it("takes the demo title from the registry, without a trailing period", () => {
     const demo = demos.find((d) => d.slug === "datenbereitschaft-fuer-ki");
-    expect(demo?.title).toBe("Stufe oder Treppe?");
+    expect(demo?.title).toBe("Die Fragekarte");
 
     const node = nodeById("demo:datenbereitschaft-fuer-ki");
     expect(node?.title).toBe(demo?.title.replace(/\.$/, ""));

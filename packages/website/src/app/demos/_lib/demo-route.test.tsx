@@ -15,6 +15,7 @@ import UnknownDemoPage, {
   generateMetadata as unknownMetadata,
   generateStaticParams,
 } from "../[slug]/page";
+import type { Beat } from "@/lib/demo-beats";
 import { DEMO_SLUGS } from "@/lib/demos";
 import { demoLede, demos, getDemoForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
@@ -67,18 +68,28 @@ describe("/demos/[slug] page shell", () => {
         const demo = getDemoForLocale(base.slug, locale);
         if (!demo) throw new Error("missing demo");
         const { default: Demo } = await import(`@/components/demos/${base.slug}/index.tsx`);
+        // A demo on the v3 shell passes its beats, as its page.tsx does.
+        const beats =
+          base.shell === "v3"
+            ? ((await import(`@/lib/demo-cases/${base.slug}/beats.ts`)) as { BEATS: readonly Beat[] }).BEATS
+            : undefined;
         const { container } = render(
-          await renderDemoRoute(base.slug, Demo),
+          await renderDemoRoute(base.slug, Demo, beats),
         );
 
         const h1 = screen.getByRole("heading", { level: 1 });
         expect(h1).toHaveTextContent(demo.title);
-        const band = h1.closest("[data-cover-band]");
-        expect(band).toHaveAttribute("data-plakat", demo.plakat);
-        // CapsLine splits " · " parts into runs; the DOM text stays the same words.
-        expect(band?.querySelector(".plakat-caps")).toHaveTextContent(
-          DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber),
-        );
+        const caps = DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber);
+        if (base.shell === "v3") {
+          // The v3 shell has no cover band: the page carries the palette, the aside the caps line.
+          expect(h1.closest("[data-plakat-page]")).toHaveAttribute("data-plakat-page", demo.plakat);
+          expect(container.querySelector(".demo-aside-caps")).toHaveTextContent(caps);
+        } else {
+          const band = h1.closest("[data-cover-band]");
+          expect(band).toHaveAttribute("data-plakat", demo.plakat);
+          // CapsLine splits " · " parts into runs; the DOM text stays the same words.
+          expect(band?.querySelector(".plakat-caps")).toHaveTextContent(caps);
+        }
         expect(container.querySelector("[data-demo-question]")).toHaveTextContent(demoLede(demo));
 
         const workshop = getWorkshopBySlug(demo.workshopSlug, locale);

@@ -169,6 +169,7 @@ export const demos: readonly Demo[] = [
   },
   {
     id: "datenbereitschaft-fuer-ki",
+    shell: "v3",
     slug: "datenbereitschaft-fuer-ki",
     workshopSlug: "datenbereitschaft-fuer-ki",
     workshopNumber: "03",
@@ -179,28 +180,30 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "data-engineering-fundamentals",
-    lastReviewed: "2026-10-23",
-    title: "Stufe oder Treppe?",
-    oneLiner: "Zieh den Hebel: aus −19.960 € wird 334.675 €, und kein Datensatz ändert sich.",
-    question: "Warum ist April negativ?",
+    lastReviewed: "2026-10-25",
+    title: "Die Fragekarte",
+    oneLiner:
+      "Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am Ende füllst du deine eigene Karte.",
+    question: "Zeig Ending MRR je Monat für das letzte abgeschlossene Quartal. Stichtag: 1. Juli 2026.",
     syntheticDataLabel:
-      "Erfundene Firma, Daten aus dem Workshop-Kit, gerechnet in deinem Browser. Keine KI, nichts wird gesendet.",
-    job: "Lies dieselben Zahlen als Stufe und als Treppe.",
+      "FOLDLINE ist erfunden, die Zahlen stammen aus dem Workshop-Kit und werden in deinem Browser gerechnet. Claudes Antwort ist aus einem Probelauf beim Bau des Kurses aufgezeichnet. Keine KI läuft hier, nichts wird gesendet.",
+    job: "Füll fünf Kästchen, bevor eine KI-Zahl weitergeht.",
     tile: {
-      hook: "Aus −19.960 € werden 334.675 €, ohne dass sich ein Datensatz ändert.",
-      take: "Zieh den Hebel: dieselben Zahlen, zwei Lesarten.",
+      hook: "Die Datei stimmt, Claudes Tabelle nicht: 75.890 statt 334.675.",
+      take: "Fünf Kästchen und drei Dateien für dein Claude.",
       takeLabel: "",
     },
     en: {
-      title: "Step or staircase?",
-      oneLiner: "Pull the lever: −€19,960 becomes €334,675, and not one record changes.",
-      question: "Why is April negative?",
+      title: "The question card",
+      oneLiner:
+        "One correct file, one wrong table: five boxes catch the mistake before the number goes out. At the end you fill in your own card.",
+      question: "Show ending MRR by month for the last complete quarter. Clock: 1 July 2026.",
       syntheticDataLabel:
-        "Invented company, data from the workshop kit, worked out in your browser. No AI, nothing is sent.",
-      job: "Read the same numbers as a step and a staircase.",
+        "FOLDLINE is invented, the numbers come from the workshop kit and are worked out in your browser. Claude's answer was recorded in a rehearsal while building the course. No AI runs here, nothing is sent.",
+      job: "Fill five boxes before an AI number goes out.",
       tile: {
-        hook: "−€19,960 becomes €334,675, without one record changing.",
-        take: "Pull the lever: the same numbers, two readings.",
+        hook: "The file is right, Claude's table is not: 75,890, not 334,675.",
+        take: "Five boxes and three files for your Claude.",
         takeLabel: "",
       },
     },

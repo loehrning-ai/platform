@@ -83,7 +83,7 @@ describe("demo registry", () => {
     const names = {
       "ki-prognosen-einschaetzen": ["Hundert Startwochen", "A Hundred Launch Weeks"],
       "geschaeftsberichte-mit-ki-lesen": ["Monatsgrenze", "The Month Line"],
-      "datenbereitschaft-fuer-ki": ["Stufe oder Treppe?", "Step or staircase?"],
+      "datenbereitschaft-fuer-ki": ["Die Fragekarte", "The question card"],
       "esg-berichte-mit-ki": ["Elf von zwölf", "Eleven of twelve"],
       "ki-im-unternehmen-sicher-nutzen": ["Was fliegt mit?", "What goes along?"],
     } as const;

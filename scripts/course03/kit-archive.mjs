@@ -9,30 +9,40 @@ import { inspectZipArchive } from "../../packages/website/scripts/open-source/zi
 
 export const KIT_PREFIX = "data-readiness-kit/";
 
-/** Worksheets copied from the course source, in archive order. */
-export const KIT_SOURCE_FILES = [
-  "START-HERE.md",
-  "QUESTION-CARD.md",
-  "READY-CANVAS.md",
-  "FOLDLINE-SCENARIOS.md",
-  "semantic-template/model.yml",
-  "semantic-template/metric.yml",
-  "semantic-template/policy.yml",
-  "semantic-template/verified-questions.yml",
-  "agent/CLAUDE.example.md",
-];
+/**
+ * The learner layer, written in this repository, in archive order. Each name
+ * maps to its source file relative to the repository root: the question card
+ * is the published template (content/vorlagen), the skill is the served one
+ * (content/skills), and the claude/ editions are what the demo's "Deine Karte"
+ * makes from the FOLDLINE preset (kit-lockstep.test.ts keeps them in step).
+ */
+export const KIT_LEARNER_SOURCES = {
+  "START-HIER.md": "scripts/course03/kit/START-HIER.md",
+  "START-HERE.md": "scripts/course03/kit/START-HERE.md",
+  "FRAGEKARTE.md": "packages/website/content/vorlagen/fragekarte.md",
+  "QUESTION-CARD.md": "packages/website/content/vorlagen/en/fragekarte.md",
+  "claude/README.md": "scripts/course03/kit/claude/README.md",
+  "claude/kennzahl-fragekarte/SKILL.md": "packages/website/content/skills/kennzahl-fragekarte/SKILL.md",
+  "claude/kennzahl-fragekarte/references/kennzahlen.md": "scripts/course03/kit/claude/kennzahl-fragekarte/references/kennzahlen.md",
+  "claude/PROJEKT-ANWEISUNG-VORLAGE.txt": "scripts/course03/kit/claude/PROJEKT-ANWEISUNG-VORLAGE.txt",
+  "claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt": "scripts/course03/kit/claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt",
+  "claude/PRUEFLISTE-VORLAGE.md": "scripts/course03/kit/claude/PRUEFLISTE-VORLAGE.md",
+  "claude/TEST-LIST-TEMPLATE.md": "scripts/course03/kit/claude/TEST-LIST-TEMPLATE.md",
+};
+
+export const KIT_LEARNER_FILES = Object.keys(KIT_LEARNER_SOURCES);
 
 /** Files the export script writes itself. */
 export const KIT_GENERATED_FILES = ["README.md", "ASSET-RIGHTS.md"];
 
 /**
- * Archive entries relative to data-readiness-kit/: the worksheets, the
+ * Archive entries relative to data-readiness-kit/: the learner layer, the
  * generated notes, then the repository-authored builder kit (sorted paths).
- * The browser lab and the builder page stay online only: they need the
- * published fonts and assets next to them.
+ * The builder page stays online only: it needs the published fonts and
+ * assets next to it.
  */
 export function kitArchiveFiles(builderFiles = []) {
-  return [...KIT_SOURCE_FILES, ...KIT_GENERATED_FILES, ...[...builderFiles].sort().map((file) => `builder/${file}`)];
+  return [...KIT_LEARNER_FILES, ...KIT_GENERATED_FILES, ...[...builderFiles].sort().map((file) => `builder/${file}`)];
 }
 
 export function crc32(bytes) {
