@@ -389,7 +389,14 @@ describe("runSkillsMirrorCheck", () => {
   it("passes for the shipped collection", async () => {
     const { errors, names } = await runSkillsMirrorCheck();
     expect(errors).toEqual([]);
-    expect(names).toEqual(["cv-engine", "kennzahlen-steckbrief", "loehrning-plattform", "prognose-pruefen", "workshop-arbeiten"]);
+    expect(names).toEqual([
+      "cv-engine",
+      "kennzahl-fragekarte",
+      "kennzahlen-steckbrief",
+      "loehrning-plattform",
+      "prognose-pruefen",
+      "workshop-arbeiten",
+    ]);
   });
 
   it("resolves the collection inside the website package", () => {

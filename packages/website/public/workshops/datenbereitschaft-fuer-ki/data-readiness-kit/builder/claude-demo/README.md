@@ -123,7 +123,7 @@ upload, and a file copy is frozen at export time, so freshness means "age of the
 - **Connected setup.** To repeat the demo against the database instead of files, use Setup C in
   `../claude/README.md`. Chat A becomes a connector logged in as `foldline_bad_reader`; Project B
   becomes one logged in as `foldline_ready_reader`. Only the grants decide what each can read; the prompt cannot.
-- **Graded as.** `semantic/verified-questions.yml`, plane `ai_run`, cases G01–G03, C01, R01, R02, F01.
+- **Graded as.** `semantic/verified-questions.yml`, plane `ai_run`, cases G01 to G03, C01, R01, R02, F01.
 
 Claude menus change; check the Project and upload steps against the current Claude docs.
 Nothing in this folder certifies production readiness. FOLDLINE's verdict stays "limited pilot, not signed off".

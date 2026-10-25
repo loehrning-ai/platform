@@ -155,7 +155,7 @@ The fair-comparison rules in `README.md` apply too.
 
 | Numbers | Origin |
 | --- | --- |
-| Endings Mar–Jun, changes Mar–Jun, 32,380, 10.0 %, 3 h, 36 h, 60 h | Workshop deck (fixed facts) |
+| Endings Mar to Jun, changes Mar to Jun, 32,380, 10.0 %, 3 h, 36 h, 60 h | Workshop deck (fixed facts) |
 | Dec 2025 258,785; Jan 272,995, Feb 294,475; changes +14,210, +21,480 | Demo-only fill, kept consistent with the deck |
 | −19,960 / 9,775 / 42,565 and −17,595 | Recorded AI answers (one run each) |
 | 75,890 / 85,665 / 128,230 | Chat A rehearsals (observations) and arithmetic on `monthly_revenue.csv` |

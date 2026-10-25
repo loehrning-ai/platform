@@ -101,6 +101,17 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       en: "/en/demos/geschaeftsberichte-mit-ki-lesen",
     },
   },
+  {
+    slug: "fragekarte",
+    kind: "template",
+    files: { de: "fragekarte.md", en: "en/fragekarte.md" },
+    downloadNames: { de: "fragekarte.md", en: "fragekarte.en.md" },
+    hostPaths: { de: "/demos/datenbereitschaft-fuer-ki", en: "/en/demos/datenbereitschaft-fuer-ki" },
+    inKit: {
+      zip: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+      paths: { de: "data-readiness-kit/FRAGEKARTE.md", en: "data-readiness-kit/QUESTION-CARD.md" },
+    },
+  },
 ];
 
 /**

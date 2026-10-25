@@ -132,8 +132,8 @@ Other generated values: 318 billing movements (334 rows with 16 retry copies), 1
 | Never say | Say instead |
 | --- | --- |
 | "the same model" | "the same AI route" |
-| "benchmark", "the AI scores 3 of 3" | "one recorded run per case: an observation" |
-| "the AI scored 9 of 9" / "22 of 22" | "the database checks pass; they test the setup and course rules, not the AI" |
+| "benchmark", "the AI gets 3 of 3" | "one recorded run per case: an observation" |
+| "the AI passed 9 of 9" / "22 of 22" | "the database checks pass; they test the setup and course rules, not the AI" |
 | "the definition was used" | "it was loaded; the runs cited it 0 of 3" |
 | "read-only, so it is safe" | "two locks: refuse early, enforce anyway" |
 | "production-ready" | "limited pilot, not signed off" |

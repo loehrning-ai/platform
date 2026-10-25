@@ -45,6 +45,8 @@ describe("GET /vorlagen/[file]", () => {
       { file: "release-rule.en.md" },
       { file: "kennzahlen-steckbrief-vorlage.md" },
       { file: "metric-card-template.en.md" },
+      { file: "fragekarte.md" },
+      { file: "fragekarte.en.md" },
     ]);
   });
 

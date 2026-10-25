@@ -4,7 +4,7 @@
 
 Write down what Claude answered, one line per run, and compare it with `CHECK-YOUR-RESULT.md`.
 This log is the evidence about the AI; the database checks (`warehouse/sql/70_checks.sql`) and
-`check_numbers.py` are evidence about the data. Never merge them into one score.
+`check_numbers.py` are evidence about the data. Never merge them into one number.
 
 Rules:
 
@@ -32,7 +32,7 @@ Rules:
 | Metric + version | Both, or what was missing | `ending_mrr` 1.0.0 |
 | Freshness | Load time and age against the stated clock, or "not stated" | 3 h, fresh |
 | Pass? | Pass only if value, behaviour, source, citation and freshness all match the check sheet | pass |
-| Notes | Anything surprising: where the caveat was, side numbers that were wrong | Caveat after the table |
+| Notes | Anything unexpected: where the caveat was, side numbers that were wrong | Caveat after the table |
 
 ### Good row and counter-example
 

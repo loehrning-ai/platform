@@ -69,7 +69,7 @@ REPLAY OK: every recorded and deck export-lane number above was reproduced exact
 | Q02 PASS | The bathtub identity holds: 354,635 + 32,380 = 387,015, and each month's opening level plus its change gives its closing level. |
 | Q07 PASS | The lineage in `semantic/model.yml` matches what each view reads, according to PostgreSQL's dependency catalog (`pg_depend`). |
 | F01 PASS | At 60 hours the data is past the 36-hour warning. The answer comes with a warning. As the deck says: "No age-based block rule was written." |
-| DB CHECKS ... PASS | The database and the course rules behave. **This is not an AI score.** |
+| DB CHECKS ... PASS | The database and the course rules behave. **This is not an AI grade.** |
 | REPLAY OK | The export lane still produces the recorded wrong answers. |
 
 ## Full proof: log in as the reader

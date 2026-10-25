@@ -76,6 +76,10 @@ describe("/demos/[slug] page shell", () => {
           expect(container.querySelector("[data-demo-v3]")).toHaveAttribute("data-plakat-page", demo.plakat);
           // The v3 page has a bar and an aside instead of the cover band.
           expect(h1.closest("[data-demo-bar]")).not.toBeNull();
+          // The v3 shell has no cover band: the aside carries the caps line.
+          expect(container.querySelector(".demo-aside-caps")).toHaveTextContent(
+            DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber),
+          );
         } else {
           const band = h1.closest("[data-cover-band]");
           expect(band).toHaveAttribute("data-plakat", demo.plakat);

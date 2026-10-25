@@ -3,7 +3,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildKitArchive, kitArchiveFiles, KIT_SOURCE_FILES } from "./course03/kit-archive.mjs";
+import { buildKitArchive, kitArchiveFiles, KIT_LEARNER_SOURCES } from "./course03/kit-archive.mjs";
 import { loadOverrides, resolveOverride, writeManifest as writeOverrideManifest } from "./course03/overrides.mjs";
 import { KIT_ASSET_RIGHTS, KIT_README, PUBLICATION } from "./course03/published-text.mjs";
 import { assetRows, BUILDER_KIT_SOURCE, BUILDER_PAGE_SOURCE, bundleManifestText, DEMO_PAGE_SOURCE, GUIDE_SOURCE, listFiles, portraitRecord, sha256, writeAssetManifest } from "./course03/publication.mjs";
@@ -70,12 +70,8 @@ const mono = readFileSync(path.join(root, "packages/website/public/workshops/ges
 for (const weight of [400, 700]) put(`assets/fonts/JetBrainsMono-Static-${weight}.woff2`, mono);
 put("assets/fonts/OFL-1.1.txt", `${readFileSync(path.join(root, "LICENSES/OFL-1.1.txt"), "utf8").trimEnd()}\n`);
 put("assets/fonts/OFL-1.1-JetBrainsMono.txt", `${readFileSync(path.join(root, "LICENSES/OFL-1.1-JetBrainsMono.txt"), "utf8").trimEnd()}\n`);
-copyText("data-readiness-kit/readiness-lab.html");
-for (const name of KIT_SOURCE_FILES) {
-  copyText(`data-readiness-kit/${name}`);
-  const key = `data-readiness-kit/${name}`;
-  put(key, written.get(key).toString().replaceAll("`readiness-lab.html`", "[the public browser lab](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html)"));
-}
+// The kit's learner layer (start pages, question card, claude/ files) is written in this
+// repository; the course source's worksheets and browser lab are no longer published.
 
 // Repository-authored fixes replace the matching export output. The guard throws
 // when the course source changed underneath a recorded fix (see overrides.mjs).
@@ -93,8 +89,9 @@ for (const [name, bytes] of written) {
 const orphaned = [...overrides.entries.keys()].filter((name) => !overridden.has(name));
 if (orphaned.length) throw new Error(`Overrides for files this export no longer writes: ${orphaned.join(", ")}`);
 
-// Repository-authored surfaces: kit notes, learner guide, builder guide and kit.
+// Repository-authored surfaces: kit notes and learner layer, learner guide, builder guide and kit.
 put("data-readiness-kit/README.md", KIT_README);
+for (const [name, file] of Object.entries(KIT_LEARNER_SOURCES)) put(`data-readiness-kit/${name}`, readFileSync(path.join(root, file)));
 put("data-readiness-kit/ASSET-RIGHTS.md", KIT_ASSET_RIGHTS);
 const builderFiles = listFiles(path.join(root, BUILDER_KIT_SOURCE));
 for (const name of builderFiles) put(`data-readiness-kit/builder/${name}`, readFileSync(path.join(root, BUILDER_KIT_SOURCE, name)));

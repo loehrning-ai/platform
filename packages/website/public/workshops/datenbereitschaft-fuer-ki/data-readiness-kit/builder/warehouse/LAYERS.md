@@ -58,7 +58,7 @@ Each trap from the appendix has one home in the approved lane.
 | Data state on every row | None | `complete_through_month`, `data_loaded_at_utc`, `quality_status` |
 | Enforced | One login reads all 7 tables | The reader holds SELECT on 5 views; core returns 42501 (D01) |
 
-## One database or two?
+## One database or two
 
 The deck uses two databases, `saas_bad` and `saas_ready`, so the comparison stays legible and a login for one cannot connect to the other (test B-X01). A real warehouse usually keeps one database and separates the layers with schemas and roles. The principles hold: separate the layers, grant only the last one, test the grants. With one database, drop B-X01 and keep the rest.
 

@@ -73,7 +73,7 @@ for (const viewport of [
             clearRight: box.right - current.right,
           };
         });
-        expect(rail.text).toBe("01 Deck 02 Demo 03 Kit 04 Guide 05 Lab 06 Builder");
+        expect(rail.text).toBe("01 Deck 02 Demo 03 Kit 04 Guide 05 Card 06 Builder");
         expect(rail.clearLeft).toBeGreaterThanOrEqual(0);
         expect(rail.clearRight).toBeGreaterThanOrEqual(32);
         await expect(page.getByRole("link", { name: "Interactive demo" })).toBeHidden();

@@ -32,6 +32,16 @@ function bookChapterSlugs(locale: "de" | "en"): string[] {
   }
 }
 
+/** Workshop 03 kit v3: published paths that moved or became part of the demo. */
+const DATA_READINESS_KIT = "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit";
+const DATA_READINESS_KIT_MOVES = [
+  { source: `${DATA_READINESS_KIT}/readiness-lab.html`, destination: "/demos/datenbereitschaft-fuer-ki?beat=test", permanent: true },
+  { source: `${DATA_READINESS_KIT}/FOLDLINE-SCENARIOS.md`, destination: `${DATA_READINESS_KIT}/QUESTION-CARD.md`, permanent: true },
+  { source: `${DATA_READINESS_KIT}/READY-CANVAS.md`, destination: `${DATA_READINESS_KIT}/builder/READY-CANVAS.md`, permanent: true },
+  { source: `${DATA_READINESS_KIT}/semantic-template/:file`, destination: `${DATA_READINESS_KIT}/builder/semantic-template/:file`, permanent: true },
+  { source: `${DATA_READINESS_KIT}/agent/CLAUDE.example.md`, destination: `${DATA_READINESS_KIT}/builder/claude/CLAUDE.short.example.md`, permanent: true },
+];
+
 const nextConfig: NextConfig = {
   // No `output: "standalone"` — the website deploys to Vercel, which uses its own
   // build output and ignores standalone. It was unused here and broke monorepo
@@ -131,6 +141,9 @@ const nextConfig: NextConfig = {
       destination: "/site.en.webmanifest",
       permanent: true,
     },
+    // Workshop 03 kit v3: the browser lab became the demo's test beat, the
+    // optional worksheets moved into the builder kit.
+    ...DATA_READINESS_KIT_MOVES,
     // Old chapter links of the data book keep working (see src/lib/book-chapter-redirects.ts).
     ...legacyChapterRedirects(bookChapterSlugs("de"), ""),
     ...legacyChapterRedirects(bookChapterSlugs("en"), "/en"),

@@ -1,34 +1,35 @@
-# Data Readiness worksheets
+# Data Readiness kit
 
-Worksheets and example templates for Workshop 03, "Data Readiness for AI". Everything uses
-FOLDLINE, a made-up subscription software company. Use invented examples only. Do not enter
-employer, customer, personal, or sensitive data.
+Kit for Workshop 03, "Datenbereitschaft für KI" (Data readiness for AI). Everything uses FOLDLINE, a
+made-up subscription software company. Use invented examples only. Do not enter employer, customer,
+personal, or sensitive data.
 
 ## Open these first
 
-1. `START-HERE.md`: how to use this kit, in order, plus the short words you need.
-2. `QUESTION-CARD.md`: the five boxes. This is the only file you need during the lesson.
+1. `START-HIER.md` (Deutsch) or `START-HERE.md` (English): three steps, in order.
+2. `FRAGEKARTE.md` or `QUESTION-CARD.md`: the five boxes for one number, with the FOLDLINE example.
+3. `claude/README.md`: the three files for your Claude and how to install them.
 
 ## Online parts (not in this archive)
 
+- Demo "Die Fragekarte": https://loehrning.ai/demos/datenbereitschaft-fuer-ki
 - Learner guide: https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html
-- Browser lab (optional, 12 minutes, no AI or database): https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html
 - Builder guide for data teams (optional follow-up): https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/builder.html
 
 ## What is in this archive
 
 | File | What it is for |
 | --- | --- |
-| `START-HERE.md` | The recommended order and the 12-minute lab run. |
-| `QUESTION-CARD.md` | Five boxes for one question, with a worked FOLDLINE example. |
-| `READY-CANVAS.md` | Optional: a lab run log and the ten checks (two per gate) with their evidence. |
-| `FOLDLINE-SCENARIOS.md` | Optional: the six test cases the lab runs and their expected results. |
-| `semantic-template/` | Commented example definition files: metric, model, policy and verified questions. |
-| `agent/CLAUDE.example.md` | Example instructions for an AI assistant. They guide; they do not enforce. |
-| `builder/` | Optional follow-up for data teams: warehouse SQL starter, semantic layer, naming rules, metric definitions, Claude setup, four other domains and a live Claude demo. Start with `builder/README.md`. |
+| `START-HIER.md`, `START-HERE.md` | Three steps: the demo, the same question in your Claude, your own card. |
+| `UEBUNG.md` | The 10-minute exercise in German: one question, two setups in your Claude. The English version is `builder/claude-demo/README.md`. |
+| `FRAGEKARTE.md`, `QUESTION-CARD.md` | Five boxes for one number, each with the evidence file in this kit. |
+| `claude/kennzahl-fragekarte/` | A Claude skill: before any metric, fix its kind and source, ask back on gaps, name the trace. The FOLDLINE definition sits in `references/kennzahlen.md`. |
+| `claude/PROJEKT-ANWEISUNG-VORLAGE.txt`, `claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt` | Instructions for a Claude Project, FOLDLINE edition. They guide; they do not enforce. |
+| `claude/PRUEFLISTE-VORLAGE.md`, `claude/TEST-LIST-TEMPLATE.md` | Tests with expected values, FOLDLINE edition. They stay outside Claude. |
+| `builder/` | Optional follow-up for data teams (English): warehouse SQL starter, semantic layer and short templates, naming rules, metric definitions, Claude setup, an evidence canvas, four other domains and a live Claude demo. Start with `builder/README.md`. |
 | `ASSET-RIGHTS.md` | Rights notice. |
 
-The templates are examples, not active controls. Only database permissions make a forbidden read
-fail.
+The templates are examples, not active controls. Only what Claude cannot reach is locked: a file
+that is not uploaded, or a database login without the read grant.
 
 Copyright Tim Löhr. All rights reserved. Publication on loehrning.ai does not grant reuse rights.

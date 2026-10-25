@@ -1,5 +1,7 @@
 # Builder kit: build the approved lane for your own question
 
+Learners: start at `../START-HIER.md` (DE) or `../START-HERE.md` (EN). This folder is for data teams.
+
 ## In plain words
 
 The workshop asked one question twice: *"Show ending MRR by month for the last complete
@@ -20,7 +22,7 @@ matches the deck. The first two doors need no SQL.
 
 | Time | Who it is for | You need | Open | You finish with |
 | --- | --- | --- | --- | --- |
-| **5 minutes** | Anyone | A browser | [builder.html](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/builder.html) (on the workshop site) modules 1–3, then "Try yours" in module 11 (or `../QUESTION-CARD.md`), plus `CHEATSHEET.md` | The four blanks filled for one question |
+| **5 minutes** | Anyone | A browser | [builder.html](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/builder.html) (on the workshop site) modules 1 to 3, then "Try yours" in module 11 (or `../QUESTION-CARD.md`), plus `CHEATSHEET.md` | The four blanks filled for one question |
 | **30 minutes** | Claude users, no SQL | A Claude account with Projects | `claude-demo/README.md`, then `claude/README.md`, Setup A | The same question answered two ways, logged in `claude-demo/AI-RUN-LOG.md` |
 | **An afternoon** | Data builders | PostgreSQL 14+ and `psql` | `warehouse/README.md` | `DB CHECKS n of n PASS` on your own machine |
 | **First real setup** | A small team | Your own warehouse, an owner, a tester | `BUILD-ORDER.md` | A tested, Claude-ready lane for one question, gated by `READY-CANVAS.md` |

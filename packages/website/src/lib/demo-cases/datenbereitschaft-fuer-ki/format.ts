@@ -27,13 +27,18 @@ export function formatMoney(amount: number, unit: string, locale: Locale, digits
   return unit ? `${sign}${body}${NBSP}${unit}` : `${sign}${body}`;
 }
 
-/** How many decimals a number carries, at most `max` (float noise like 4.6000000000000005 counts as 4.6). */
+/**
+ * How many decimals a number carries, at most `max`. Read from the number's
+ * shortest decimal string after rounding to `max` places, so float noise
+ * (4.6000000000000005 -> 4.6) never counts and large values keep their cents
+ * (1234567.89 -> 2).
+ */
 export function countDecimals(value: number, max = 2): number {
-  for (let digits = 0; digits < max; digits += 1) {
-    const scaled = value * 10 ** digits;
-    if (Math.abs(scaled - Math.round(scaled)) < 1e-7 * Math.max(1, Math.abs(scaled))) return digits;
-  }
-  return max;
+  if (!Number.isFinite(value)) return 0;
+  const text = String(Number(value.toFixed(max)));
+  if (/e/i.test(text)) return max;
+  const point = text.indexOf(".");
+  return point < 0 ? 0 : Math.min(max, text.length - point - 1);
 }
 
 /**

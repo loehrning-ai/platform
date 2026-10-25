@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
 import { request } from "node:http";
 import os from "node:os";
@@ -6,7 +7,7 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { createPreviewServer, resolvePreviewFile } from "../course03/card-preview.mjs";
-import { buildKitArchive, crc32, kitArchiveFiles, KIT_SOURCE_FILES } from "../course03/kit-archive.mjs";
+import { buildKitArchive, crc32, kitArchiveFiles, KIT_LEARNER_FILES, KIT_LEARNER_SOURCES } from "../course03/kit-archive.mjs";
 import { check, isRepositoryAuthored, loadOverrides, resolveOverride, sha256, writeManifest } from "../course03/overrides.mjs";
 import { planRefresh } from "../course03/refresh-published.mjs";
 
@@ -28,9 +29,11 @@ test("crc32 matches the ZIP reference value", () => {
   assert.equal(crc32(Buffer.from("123456789")), 0xcbf43926);
 });
 
-test("kit archive is deterministic and lists worksheets before the builder kit", () => {
+test("kit archive is deterministic and lists the learner layer before the builder kit", () => {
   const files = kitArchiveFiles(["warehouse/README.md", "README.md"]);
-  assert.deepEqual(files.slice(0, KIT_SOURCE_FILES.length), KIT_SOURCE_FILES);
+  assert.deepEqual(files.slice(0, KIT_LEARNER_FILES.length), KIT_LEARNER_FILES);
+  assert.deepEqual(KIT_LEARNER_FILES.slice(0, 4), ["START-HIER.md", "START-HERE.md", "FRAGEKARTE.md", "QUESTION-CARD.md"]);
+  for (const source of Object.values(KIT_LEARNER_SOURCES)) assert.ok(existsSync(path.join(root, source)), source);
   assert.deepEqual(files.slice(-2), ["builder/README.md", "builder/warehouse/README.md"]);
   const entries = files.map((name) => [name, Buffer.from(`# ${name}\n`)]);
   assert.ok(buildKitArchive(entries).equals(buildKitArchive(entries)));
@@ -55,10 +58,10 @@ test("an edited override copy is rejected until the manifest is recaptured", asy
 });
 
 test("repository-authored surfaces never need an override", () => {
-  for (const name of ["guide.html", "builder.html", "demo.html", "data-readiness-kit/builder/README.md", "data-readiness-kit.zip", "bundle-manifest.json"]) {
+  for (const name of ["guide.html", "builder.html", "demo.html", "data-readiness-kit/builder/README.md", "data-readiness-kit/FRAGEKARTE.md", "data-readiness-kit/claude/README.md", "data-readiness-kit.zip", "bundle-manifest.json"]) {
     assert.equal(isRepositoryAuthored(name), true, name);
   }
-  for (const name of ["slides.html", "lib/deck-stage.js", "data-readiness-kit/readiness-lab.html"]) {
+  for (const name of ["slides.html", "lib/deck-stage.js", "presenter.html"]) {
     assert.equal(isRepositoryAuthored(name), false, name);
   }
 });

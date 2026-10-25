@@ -113,28 +113,18 @@ test.describe("workshop self-study journey", () => {
     expect(errors).toEqual([]);
   });
 
-  test("repairs the third workshop lab and invalidates results after a changed choice", async ({ page, request }) => {
+  test("sends the third workshop's retired lab to the demo's test beat and serves the kit", async ({ page, request }) => {
     const base = "/workshops/datenbereitschaft-fuer-ki";
+    const lab = await request.get(`${base}/data-readiness-kit/readiness-lab.html`, { maxRedirects: 0 });
+    expect(lab.status()).toBe(308);
+    expect(lab.headers().location).toBe("/demos/datenbereitschaft-fuer-ki?beat=test");
     await page.goto(`${base}/data-readiness-kit/readiness-lab.html`);
-    await page.getByRole("button", { name: "Test my choices" }).click();
-    await expect(page.locator("#simulation-grade")).not.toHaveText("6 / 6 cases · 10 / 10 controls");
-    for (const [id, value] of Object.entries({
-      "sim-surface": "governed",
-      "sim-metric": "ending_snapshot",
-      "sim-boundary": "least_privilege",
-      "sim-freshness": "governed",
-      "sim-yardstick": "corpus",
-    })) {
-      await page.locator(`#${id}`).selectOption(value);
-    }
-    await page.getByRole("button", { name: "Test my choices" }).click();
-    await expect(page.locator("#simulation-grade")).toHaveText("6 / 6 cases · 9 / 10 controls");
-    await expect(page.locator("#status")).toHaveText("PILOT ONLY");
-    await page.locator("#sim-metric").selectOption("movement");
-    await expect(page.locator("#simulation-grade")).toHaveText("0 / 6 cases · 0 / 10 controls");
+    await expect(page).toHaveURL(/\/demos\/datenbereitschaft-fuer-ki\?beat=test$/);
     const response = await request.get(`${base}/data-readiness-kit.zip`);
     expect(response.status()).toBe(200);
     expect((await response.body()).subarray(0, 2).toString("ascii")).toBe("PK");
+    const card = await request.get(`${base}/data-readiness-kit/FRAGEKARTE.md`);
+    expect(card.status()).toBe(200);
   });
 
   test("lists the workshops as compact rows on a phone, each one tap target", async ({

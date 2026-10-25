@@ -1,80 +1,66 @@
-# Question card
+# The question card
 
-## The five boxes from the lesson
+Five boxes for one number, before it goes out. Each one catches a different mistake.
+Paper is enough. On the right is the filled-in FOLDLINE example from the workshop "Data readiness for AI".
+FOLDLINE is invented, all numbers are synthetic.
 
-Use a synthetic or generic example. Do not enter employer, customer, personal, or sensitive data.
+| Box | Your answer | FOLDLINE | Catches |
+| --- | --- | --- | --- |
+| 1. Question: period, kind, unit, clock |  | Ending MRR for each month end, April to June 2026, in EUR. Clock 1 July 2026. | "How much MRR do we have?" Without a period and a kind there is no right answer, so ask back. |
+| 2. Approved view |  | `analytics.mrr_summary_monthly`, column `ending_mrr_eur`. Nothing else. | Seven export tables in which a change is called `amount`. |
+| 3. Kind of number and who counts |  | Level at month end, one row per month, April to June each on its own. Subscriptions running at month end count, new ones included. Cancelled ones do not. | −19,960 (a change read as a level), 75,890 (summed with no opening level), 1,066,140 (levels added), 120 instead of 132 active accounts. |
+| 4. Boundary |  | Claude sees no contact data. Locked because the file is not in the Project; in the database the login may read five views only. | An instruction "no emails" on its own. It steers, it locks nothing. |
+| 5. Test |  | April €334,675, May €344,450, June €387,015. Source: finance month-end close. "How much MRR do we have?" gets a question back. The request for emails is refused. | A number that only looks right. |
 
-Terms: [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary).
+## Box 3: the gaps, row by row
 
-During the lesson, fill only these five boxes (on paper works too). The prompts further down are
-optional follow-up.
-
-| Box | Your answer | Worked FOLDLINE example |
+| Gap | What you fix | FOLDLINE |
 | --- | --- | --- |
-| 1. Question |  | Show ending MRR by month for the last complete quarter (April to June 2026). |
-| 2. Approved view |  | The approved monthly MRR summary (a view is a saved selection of data). |
-| 3. Four blanks + who counts |  | Kind: month-end balance. Rows: one per month. Months: Apr to Jun. Table: MRR summary. Who counts: subscriptions still active at month end; cancelled ones are out. |
-| 4. Boundary |  | The AI cannot read customer contact details. Database permissions enforce this. |
-| 5. Test |  | April must equal €334,675 (true value from the finance-approved month-end report). A request for customer emails must be refused. |
+| Kind | level, change or rate | level at month end |
+| Rows | one row per day, week, month or quarter | per month |
+| Period | which periods, and whether they are complete | April, May, June 2026, each on its own, complete |
+| Column | which column in which view | `ending_mrr_eur` in `analytics.mrr_summary_monthly` |
+| Who counts | who is in and who is not, in words first, then the codes | subscriptions running at month end, new ones included: codes A and N, 132 accounts on 30 June |
 
-**Box 3 adds one line: who counts?** After the four blanks, write who is in and who is out. Most
-real questions hide their trap here: "active members" may or may not include paused or trial members.
+## Adding up: when yes, when never
 
-**Box 5 needs a source for the true value**, for example last month's board report or a
-finance-approved figure.
+| | across groups | across months | one number for the quarter |
+| --- | --- | --- | --- |
+| Level | yes | never | each month on its own, or the last one |
+| Change | yes | yes | the sum |
+| Rate | recompute | recompute | sum numerator and denominator again: 12 of 120 = 10.0 % |
 
-MRR is monthly recurring revenue: ten subscriptions at €20 per month give €200 MRR. One more €20
-subscription is a change of +€20, and MRR rises to €220.
+Check: last level plus change gives the new level. 354,635 + 32,380 = 387,015.
 
-## Optional detail for a future implementation
+## Box 5: how to test
 
-### Decision boundary
+- The expected value comes from outside the AI: month-end close, an approved report, a recount by a
+  second person. Never from the AI you are testing.
+- Test three behaviours: an answer with a value, a question back, a refusal. If you have an age rule,
+  add an answer with a warning.
+- Grade value and behaviour, not the working.
+- Run each question three times, each in a new chat. One run is one observation.
+- The test list stays outside Claude. If it sits in the Project, Claude checks itself.
 
-- Decision this answer changes:
-- Person or process making the decision:
-- Latest useful answer time:
+## Evidence in the kit, box by box
 
-### Exact question
+| Box | File in the kit | In the demo |
+| --- | --- | --- |
+| Start | `builder/claude-demo/AI-RUN-LOG.md`, `builder/claude-demo/A-export-tables/monthly_revenue.csv` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=lesarten |
+| 1 and 2 | `builder/semantic/verified-questions.yml` (case C01), `builder/claude/project/mrr_summary_monthly.csv` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=sicht |
+| 3 | `builder/CHEATSHEET.md`, `builder/claude-demo/A-export-tables/customer_master.csv` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=wer-zaehlt |
+| 4 | `builder/claude/project/PROJECT-INSTRUCTIONS.txt` rule 3, `builder/warehouse/ACCESS.md` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=grenze |
+| 5 | `builder/claude-demo/CHECK-YOUR-RESULT.md` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=test |
 
-> Replace this line with the exact user question.
+## Blank card
 
-### Four blanks and who counts (box 3)
+| Box | |
+| --- | --- |
+| 1. Metric · question · clock |  |
+| 2. Approved view · column |  |
+| 3. Kind · who counts, who does not |  |
+| 4. Never show · locked by |  |
+| 5. Expected values · unit · source |  |
 
-These map to `semantic-template/metric.yml`.
-
-- Kind of number (balance or change) → `aggregation`:
-- Rows per what → `result_grain`:
-- Which months → `time_behavior`:
-- Which table (approved view) → `model`:
-- Who counts (population and status) → `population`, `inclusions`, `exclusions`:
-
-### More meaning to pin down
-
-- Measure:
-- Time zone:
-- Currency or unit:
-- Valid breakdowns:
-
-### Expected behavior
-
-Choose one and state the rule.
-
-- [ ] Answer
-- [ ] Ask back (clarify) before querying
-- [ ] Refuse before querying
-
-### Evidence boundary
-
-- Approved views:
-- Forbidden schemas, tables, and columns:
-- Definition version:
-- Data snapshot or freshness state:
-- Expected result or result shape:
-- Source of the true value:
-- What the answer must show (trace):
-
-### Failure cost
-
-- Plausible wrong answer:
-- Harm if accepted:
-- Observable control that prevents it:
+Under "Your card" in the demo this card becomes a skill, Project instructions with `kennzahlen.md` and a
+test list, made in your browser.

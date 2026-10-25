@@ -25,7 +25,8 @@ describe("published Data Readiness workshop", () => {
       expect(fileMaterials.map(({ role, phase }) => `${role}/${phase}`)).toEqual(["deck/during", "kit/during"]);
       expect(fileMaterials.filter((material) => material.primary).map((material) => material.role)).toEqual(["deck"]);
       expect(fileMaterials.filter((material) => material.optional)).toEqual([]);
-      expect(fileMaterials.every((material) => material.language === "en")).toBe(true);
+      // The deck is English; the kit's learner layer is German first on the German page.
+      expect(fileMaterials.map((material) => material.language)).toEqual(locale === "de" ? ["en", "de"] : ["en", "en"]);
       for (const material of fileMaterials) {
         expect(existsSync(resolve(root, material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length).split("#")[0])), material.href).toBe(true);
       }
@@ -47,11 +48,11 @@ describe("published Data Readiness workshop", () => {
     expect(de.materials[0]?.description).toMatch(/^Für den Beamer\. .*P öffnet die Moderationsansicht/);
     expect(en.materials[0]?.description).toMatch(/^For the projector\. .*P opens the presenter view/);
     expect(workshopFileMaterials(en).map((material) => material.label)).toEqual([
-      "Deck · 26 scenes",
+      "Deck · 18 scenes + appendix",
       "Readiness kit · .zip",
     ]);
     expect(workshopFileMaterials(de).map((material) => material.label)).toEqual([
-      "Deck · 26 Szenen",
+      "Deck · 18 Szenen + Anhang",
       "Readiness-Kit · .zip",
     ]);
     expect(de.materials.find((material) => material.kind === "zip")?.sizeLabel).toBe("1,1 MB");

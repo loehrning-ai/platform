@@ -33,6 +33,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { KIT_LEARNER_FILES } from "./kit-archive.mjs";
 
 export const WORKSHOP_RELATIVE = "packages/website/public/workshops/datenbereitschaft-fuer-ki";
 export const OVERRIDES_RELATIVE = "scripts/course03/overrides";
@@ -56,6 +57,7 @@ export function isRepositoryAuthored(name) {
     name === "data-readiness-kit.zip" ||
     name === "data-readiness-kit/README.md" ||
     name === "data-readiness-kit/ASSET-RIGHTS.md" ||
+    KIT_LEARNER_FILES.some((file) => name === `data-readiness-kit/${file}`) ||
     name.startsWith("data-readiness-kit/builder/")
   );
 }
