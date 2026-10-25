@@ -591,10 +591,19 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
-      "sizeBytes": 59639,
-      "sha256": "387fe383f187a66fb46108bab32bc8bab51148ad3bf2aa7ba434b1d65f17385f",
+      "sizeBytes": 35701,
+      "sha256": "2da3cf4e3b80efb0f22e49744fdedb955a5e43833c3dcbee860537654dd2235e",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 Text-only Teilnehmer-Kit (CSV-\u00dcbungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Frei herunterladbar f\u00fcr Workshop-Teilnehmende und Website-Besucher"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
+      "sizeBytes": 36975,
+      "sha256": "37532c9462d5cf0d9a625e9c0ab853bac835f4fa1df3af454feb1e11ea767a1e",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai: Text-only Teilnehmer-Kit, deutsche Ausgabe (CSV-\u00dcbungsdaten, Berichte in Markdown, Skills, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Frei herunterladbar f\u00fcr Workshop-Teilnehmende und Website-Besucher"
     },

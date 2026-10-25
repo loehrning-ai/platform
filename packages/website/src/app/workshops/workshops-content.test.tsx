@@ -90,7 +90,7 @@ describe("<WorkshopsContent>", () => {
       audit?.outcome,
       esg?.outcome,
       "Five-box template",
-      "Metrics skill + dashboard",
+      "Metric card + skill",
       "Go/no-go rule",
     ]);
 

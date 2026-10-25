@@ -41,6 +41,8 @@ describe("GET /vorlagen/[file]", () => {
     await expect(generateStaticParams()).resolves.toEqual([
       { file: "ki-in-der-ausbildung-fragen.md" },
       { file: "ki-in-der-ausbildung-fragen.en.md" },
+      { file: "kennzahlen-steckbrief-vorlage.md" },
+      { file: "metric-card-template.en.md" },
     ]);
   });
 

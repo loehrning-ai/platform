@@ -1,596 +1,562 @@
 import "server-only";
 
-import type { Locale } from "@/lib/i18n/locale";
-
 /**
- * The words of the Monatsgrenze demo, both languages. Server only: index.tsx
- * picks one pack and passes it to the client demo as props, so the browser
- * bundle carries a single language (checked by demo-contract.test.ts). A pack
- * is plain data: strings, numbers, arrays and objects, no functions. Templates
- * use {name} placeholders that format.ts `fill` replaces.
+ * The words of "Eine Datei, drei Antworten", both languages. Server only:
+ * index.tsx picks one pack and passes it to the client demo, so the browser
+ * bundle carries a single language (demo-contract.test.ts). A pack is plain
+ * data. Every figure arrives through a {placeholder} from data.ts or the
+ * functions over it, so no number in here can drift from the kit
+ * (copy.test.ts). `kit` holds the lines the beats write into the kit's
+ * northwind-metrics Skill, word for word from metric-cards.md in the kit's
+ * language (kit-lockstep.test.ts).
  */
-interface UnitWords {
-  readonly one: string;
-  readonly many: string;
-  /** Dative singular and plural, for "bei 12 Arbeitstagen". English repeats the plain forms. */
-  readonly oneDat: string;
-  readonly manyDat: string;
-  readonly label: string;
-}
 
-export interface DemoPack {
-  readonly locale: Locale;
-  readonly money: { readonly mio: string; readonly full: string };
-  readonly numWords: readonly string[];
-  readonly months: readonly string[];
-  readonly spoken: { readonly plus: string; readonly minus: string; readonly percent: string };
-  readonly unit: {
-    readonly weeks: UnitWords;
-    readonly days: UnitWords;
-    /** All calendar days of a month (a paste with weekend rows). */
-    readonly cdays: UnitWords;
-  };
-  readonly stage: {
-    readonly sub: string;
-    readonly region: string;
-    readonly weeks: string;
-    readonly nudgeL: string;
-    readonly nudgeR: string;
-    readonly sw1: string;
-    readonly sw2: string;
-    readonly switchLabel: string;
-    readonly handleLabel: string;
-    readonly handleValue: string;
-    readonly handleValuePer: string;
-    readonly rulerCap: string;
-    readonly minWeeks: string;
-    readonly attr: string;
-    readonly spanHead: string;
-    readonly rulerAlt: string;
-    readonly unitsNote: string;
-    readonly stampOne: string;
-    readonly stampMany: string;
-    readonly stampNeg: string;
-    readonly stampPerNeg: string;
-    readonly hint: string;
-    readonly ask: string;
-    readonly monthA: string;
-    readonly monthB: string;
-    readonly weekCount: string;
-    readonly mean: string;
-    readonly tableCaption: string;
-    readonly tableHead: readonly string[];
-    readonly chartAlt: string;
-    readonly live: string;
-    readonly room: string;
-  };
-  readonly act2: {
-    readonly h: string;
-    readonly intro: string;
-    readonly sw1: string;
-    readonly sw2: string;
-    readonly switchLabel: string;
-    readonly lead: string;
-    readonly mult: string;
-    readonly close: string;
-    readonly vp: string;
-    readonly trig: string;
-    readonly trigLabel: string;
-    readonly trigDown: string;
-    readonly trigUp: string;
-    readonly trigValue: string;
-    readonly trigTag: string;
-    readonly trigHint: string;
-    readonly payoff: string;
-    readonly rowAlt: string;
-    readonly scaleCount: string;
-    readonly scaleRate: string;
-    readonly live: string;
-  };
-  readonly verdict: {
-    readonly calendarOne: string;
-    readonly calendarMany: string;
-    readonly calendarDayOne: string;
-    readonly calendarDayMany: string;
-    readonly calendarCDayOne: string;
-    readonly calendarCDayMany: string;
-    readonly mixed: string;
-    readonly real: string;
-    readonly equal: string;
-    readonly flat: string;
-    readonly none: string;
-    readonly reverse: string;
-    readonly shrinks: string;
-    readonly downWorse: string;
-    readonly downPart: string;
-    readonly downFlips: string;
-    readonly downSame: string;
-    readonly thin: string;
-  };
-  readonly cmp: {
-    readonly h: string;
-    readonly intro: string;
-    readonly example: string;
-    readonly own: string;
-    readonly reset: string;
-    readonly nameLabel: string;
-    readonly valueLabel: string;
-    readonly valuePlaceholder: string;
-    readonly countPlaceholder: string;
-    readonly unitLabel: string;
-    readonly unitW: string;
-    readonly unitD: string;
-    readonly monthLabel: string;
-    readonly holLabel: string;
-    readonly holDown: string;
-    readonly holUp: string;
-    readonly daysCount: string;
-    readonly metricLabel: string;
-    readonly rowHead: string;
-    readonly headline: string;
-    readonly perUnit: string;
-    readonly share: string;
-    readonly shareNone: string;
-    readonly shareReverse: string;
-    readonly gap: string;
-    readonly pp: string;
-    readonly yearLabel: string;
-    readonly thresholds: string;
-    readonly honestyWeeks: string;
-    readonly honestyDays: string;
-    readonly honestyCDays: string;
-    readonly unitC: string;
-    readonly daysCountC: string;
-    readonly holLabelC: string;
-    readonly holDownC: string;
-    readonly holUpC: string;
-    readonly pasteGapC: string;
-    readonly pasteGapCOne: string;
-    readonly thin: string;
-    readonly notNumber: string;
-    readonly countMin: string;
-    readonly valuePos: string;
-    readonly tooMany: string;
-    readonly tooBig: string;
-    readonly fieldNames: { readonly aVal: string; readonly aN: string; readonly bVal: string; readonly bN: string };
-    readonly scaleWord: string;
-    readonly paste: string;
-    readonly pasteHint: string;
-    readonly pastePlaceholder: string;
-    readonly pasteEmpty: string;
-    readonly pasteThin: string;
-    readonly pasteOk: string;
-    readonly pasteMonthly: string;
-    readonly pasteGap: string;
-    readonly pasteGapOne: string;
-    readonly granularity: { readonly daily: string; readonly dailyAll: string; readonly weekly: string; readonly monthly: string };
-  };
-  readonly take: {
-    readonly h: string;
-    readonly intro: string;
-    readonly empty: string;
-    readonly sentenceLabel: string;
-    readonly promptLabel: string;
-    readonly rulesLabel: string;
-    readonly copySentence: string;
-    readonly copyPrompt: string;
-    readonly copyRules: string;
-    readonly dlRules: string;
-    readonly copied: string;
-    readonly copyFailed: string;
-    readonly downloaded: string;
-    readonly fileName: string;
-    readonly metric: string;
-    readonly s1: string;
-    readonly inMonth: string;
-    readonly inOther: string;
-    readonly countsMonth: string;
-    readonly countsOther: string;
-    readonly per: string;
-    readonly limit: string;
-    readonly attr: string;
-    readonly prompt: string;
-    readonly rules: {
-      readonly title: string;
-      readonly lead: string;
-      readonly r1h: string;
-      readonly r1: string;
-      readonly r1proof: string;
-      readonly r1share: string;
-      readonly r2h: string;
-      readonly r2: string;
-      readonly r2proof: string;
-      readonly r3h: string;
-      readonly r3: string;
-      readonly r3trigger: string;
-      readonly r3gap: string;
-      readonly r4h: string;
-      readonly r4: string;
-    };
-  };
-}
-
-export const COPY = {
-  de: {
-    locale: "de",
-    money: { mio: "{v} Mio. €", full: "{v} €" },
-    numWords: ["null", "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "elf", "zwölf"],
-    months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-    spoken: { plus: "plus", minus: "minus", percent: "Prozent" },
-    unit: {
-      weeks: { one: "Lieferwoche", many: "Lieferwochen", oneDat: "Lieferwoche", manyDat: "Lieferwochen", label: "Lieferwochen" },
-      days: { one: "Arbeitstag", many: "Arbeitstage", oneDat: "Arbeitstag", manyDat: "Arbeitstagen", label: "Arbeitstage" },
-      cdays: { one: "Kalendertag", many: "Kalendertage", oneDat: "Kalendertag", manyDat: "Kalendertagen", label: "Kalendertage" },
+const DE = {
+  locale: "de",
+  money: "{v} €",
+  stageLabel: "Bühne: dieselbe Datei, drei Zählweisen",
+  stripHead: "→ northwind-metrics/SKILL.md",
+  kitFile: "Kit-Datei",
+  verdicts: { better: "besser", same: "gleich", worse: "schlechter" },
+  counters: {
+    records: { short: "Meldungen", long: "Meldungen", name: "Meldungen" },
+    affected: { short: "Betroffene", long: "betroffene Stück", name: "Betroffene Stück" },
+    scrapped: { short: "Verschrottet", long: "verschrottete Stück", name: "Verschrottete Stück" },
+  },
+  bases: {
+    month: { short: "Monatssumme", long: "Monatssumme" },
+    week: { short: "Je Woche", long: "je Versandwoche" },
+  },
+  months: { aug: "August", sep: "September" },
+  monthsShort: { aug: "Aug", sep: "Sep" },
+  claim: {
+    caption: "Ist die Qualität von CRAFT im September besser geworden? Schätze, bevor du die Daten siehst.",
+    caps: "Monatsbericht September {year} · Abschnitt {section}",
+    speaker: "VP Sales",
+    quoteBefore: "„Und die Qualität dreht bereits: Bei CRAFT fielen die Defekte von ",
+    quoteFigure: "{a} auf {b} je {per} Stück",
+    quoteAfter: ". Keine andere Linie hat sich verbessert.“",
+    pollLabel: "Deine Schätzung",
+    poll: { better: "Besser", same: "Gleich", worse: "Schlechter" },
+  },
+  reveal: {
+    caption: {
+      better: "Du hast „Besser“ gewählt. Das stimmt, wenn man Meldungen zählt.",
+      same: "Du hast „Gleich“ gewählt. Das stimmt, wenn man betroffene Stück zählt.",
+      worse: "Du hast „Schlechter“ gewählt. Das stimmt, wenn man verschrottete Stück zählt.",
+      none: "Meldungen: besser. Betroffene Stück: gleich. Verschrottete Stück: schlechter.",
     },
-    stage: {
-      sub: "September gegen August, neun Lieferwochen",
-      region: "Monatsgrenze: Schlagzeile und Umsatz der neun Lieferwochen",
-      weeks: "Wochen: {a} | {b}",
-      nudgeL: "Linie nach links",
-      nudgeR: "Linie nach rechts",
-      sw1: "Gesamt",
-      sw2: "Pro Woche",
-      switchLabel: "Rechnen als",
-      handleLabel: "Monatsgrenze zwischen den Lieferwochen",
-      handleValue: "Schnitt nach Woche {k}, Schlagzeile {h}",
-      handleValuePer: "Schnitt nach Woche {k}, pro Woche {p}",
-      rulerCap: "Neun Wochen, ein Beispiel. Jede Verschiebung um eine ganze Woche.",
-      minWeeks: "Mindestens drei Wochen je Seite.",
-      attr: "Wochen zugeordnet nach Startdatum.",
-      spanHead: "Spanne {a} bis {b}",
-      rulerAlt: "Spanne der Schlagzeilen: {a} bis {b} Prozent; pro Woche {c} bis {d} Prozent.",
-      unitsNote: "Nach Stück: {x}",
-      stampOne: "Rund {s} % des Anstiegs sind die zusätzliche Woche.",
-      stampMany: "Rund {s} % des Anstiegs sind die {n} zusätzlichen Wochen.",
-      stampNeg: "Hier schrumpft der Bericht. Der Kalender dreht das Vorzeichen.",
-      hint: "Schieb die Linie. Dann tippe auf Pro Woche.",
-      ask: "Stimmt das?",
-      stampPerNeg: "Pro Woche passiert hier fast nichts ({p}). Die {h} der Schlagzeile waren Kalender.",
-      monthA: "August",
-      monthB: "September",
-      weekCount: "{n} Wochen",
-      mean: "Ø {v}",
-      tableCaption: "Die neun Lieferwochen von NORTHWIND",
-      tableHead: ["Wochenstart", "Umsatz in Euro", "Stück"],
-      chartAlt: "Neun Lieferwochen als Blöcke, aufgeteilt auf zwei Monate.",
-      live: "Schnitt {a} | {b}. Schlagzeile {h}, pro Woche {p}.",
-      room: "Raum-Modus",
+    others: {
+      better: "Nach betroffenen Stück gezählt stimmt „Gleich“, nach verschrotteten Stück „Schlechter“.",
+      same: "Nach Meldungen gezählt stimmt „Besser“, nach verschrotteten Stück „Schlechter“.",
+      worse: "Nach Meldungen gezählt stimmt „Besser“, nach betroffenen Stück „Gleich“.",
+      none: "Du bist ohne Schätzung weitergegangen.",
     },
-    act2: {
-      h: "Gleiche Bewegung, anderer Befund",
-      intro: "Defektmeldungen im September, nach Linie.",
-      sw1: "Stück",
-      sw2: "pro 1.000 Stück",
-      switchLabel: "Defektmeldungen zählen als",
-      lead: "CRAFT liegt {x} % vor NEST.",
-      mult: "CRAFT hat das {x}-Fache der nächstschlechten Linie.",
-      close: "Nach Stück liegt CRAFT knapp vor NEST. Pro 1.000 Stück ist es das {x}-Fache.",
-      vp: "Wo die Vertriebsleitung recht hat: CRAFT verbesserte sich von 3,21 auf 2,51 je 1.000 Stück, als einzige Linie.",
-      trig: "Freigabe, wenn Oktober unter {x} je 1.000 Stück und Ausschuss unter 8 % des Umsatzes liegt.",
-      trigLabel: "Auslöser je 1.000 Stück",
-      trigDown: "Auslöser um 0,10 senken",
-      trigUp: "Auslöser um 0,10 erhöhen",
-      trigValue: "Auslöser {x} je 1.000 Stück",
-      trigTag: "Auslöser {x}",
-      trigHint: "Tippe auf pro 1.000 Stück, dann setzt du hier den Auslöser.",
-      payoff: "Das Wachstum war Kalender. Das Defektproblem bleibt.",
-      rowAlt: "{line}: {records} Defektmeldungen, {rate} je 1.000 Stück",
-      scaleCount: "Defektmeldungen",
-      scaleRate: "je 1.000 Stück",
-      live: "Defektmeldungen {mode}. {sentence}",
-    },
-    verdict: {
-      calendarOne: "Rund {s} % des Anstiegs sind die zusätzliche Woche.",
-      calendarMany: "Rund {s} % des Anstiegs sind die {n} zusätzlichen Wochen.",
-      calendarDayOne: "Rund {s} % des Anstiegs ist der zusätzliche Arbeitstag.",
-      calendarDayMany: "Rund {s} % des Anstiegs sind die {n} zusätzlichen Arbeitstage.",
-      calendarCDayOne: "Rund {s} % des Anstiegs ist der zusätzliche Kalendertag.",
-      calendarCDayMany: "Rund {s} % des Anstiegs sind die {n} zusätzlichen Kalendertage.",
-      mixed: "Etwa {s} % des Anstiegs erklärt der Kalender, der Rest ist Wachstum.",
-      real: "Der Kalender erklärt nur {s} %: das Wachstum ist überwiegend real.",
-      equal: "Beide Zeiträume sind gleich lang: der Kalender erklärt nichts.",
-      flat: "Die Schlagzeile ist unverändert; pro {u} ergibt sich {p}.",
-      none: "Der Kalender erklärt nichts vom Anstieg. Pro {u} sind es {p}.",
-      reverse: "Der Kalender wirkt hier in die Gegenrichtung: der spätere Zeitraum hat weniger {units}, pro {u} ist das Wachstum höher ({p}).",
-      shrinks: "Pro {u} sinkt der Wert ({p}); die Schlagzeile ist ein Kalendereffekt.",
-      downWorse: "Pro {u} fällt es noch stärker ({p}): der Kalender hat den Rückgang verdeckt.",
-      downPart: "Ein Teil des Rückgangs ist Kalender: pro {u} sind es {p}.",
-      downFlips: "Pro {u} sind es {p}: der Rückgang ist Kalender.",
-      downSame: "Der Kalender ändert hier nichts: pro {u} sind es ebenfalls {p}.",
-      thin: "Zu wenig Daten für ein Urteil.",
-    },
-    cmp: {
-      h: "Dein Vergleich",
-      intro: "Zwei Zeiträume, vier Zahlen. Das Ergebnis rechnet bei jeder Eingabe mit.",
-      example: "Beispiel: NORTHWIND",
-      own: "Deine Zahlen",
-      reset: "Zurück zum Beispiel",
-      nameLabel: "Name Zeitraum {x}",
-      valueLabel: "Wert {x}",
-      valuePlaceholder: "Wert Monat {x}",
-      countPlaceholder: "Anzahl {x}",
-      unitLabel: "Einheit",
-      unitW: "Lieferwochen",
-      unitD: "Arbeitstage",
-      monthLabel: "Monat {x}",
-      holLabel: "Feiertage {x}",
-      holDown: "Einen Feiertag weniger {x}",
-      holUp: "Einen Feiertag mehr {x}",
-      daysCount: "{n} Arbeitstage",
-      metricLabel: "Wofür stehen die Werte? (zum Beispiel Umsatz)",
-      rowHead: "Ergebnis",
-      headline: "Schlagzeile",
-      perUnit: "Pro {u}",
-      share: "Kalenderanteil",
-      shareNone: "keiner",
-      shareReverse: "Gegenrichtung",
-      gap: "Unterschied",
-      pp: "PP",
-      yearLabel: "Jahr {x}",
-      thresholds: "Ab 80 % Kalender, 30 bis 80 % gemischt, darunter echtes Wachstum.",
-      honestyWeeks: "Gerechnet pro Lieferwoche, gleich lange Wochen angenommen. Feiertage, Aktionen und Lieferrhythmus bleiben unberücksichtigt.",
-      honestyDays: "Gerechnet pro Arbeitstag (Montag bis Freitag minus deine Feiertage). Aktionen und Lieferrhythmus bleiben unberücksichtigt.",
-      honestyCDays: "Gerechnet pro Kalendertag (alle Tage des Monats minus deine freien Tage). Aktionen und Lieferrhythmus bleiben unberücksichtigt.",
-      unitC: "Kalendertage",
-      daysCountC: "{n} Kalendertage",
-      holLabelC: "Freie Tage {x}",
-      holDownC: "Einen freien Tag weniger {x}",
-      holUpC: "Einen freien Tag mehr {x}",
-      pasteGapCOne: "Aus deiner Einfügung: 1 Tag ohne Wert zählt als frei. Ändere das mit den Knöpfen.",
-      pasteGapC: "Aus deiner Einfügung: {n} Tage ohne Wert zählen als frei. Ändere das mit den Knöpfen.",
-      thin: "Zu wenig Daten. Es fehlt: {x}.",
-      notNumber: "{x}: keine Zahl erkannt.",
-      countMin: "{x} muss mindestens 1 sein.",
-      valuePos: "{x} muss größer als 0 sein.",
-      tooMany: "Eine Anzahl über {n} ist hier kaum gemeint (Wochen oder Tage, nicht Stück?). Prüfe: {x}.",
-      tooBig: "Ein Anstieg über 10.000 % ist kaum gemeint. Prüfe, ob beide Werte im selben Maß stehen (Euro, nicht Mio.; gleiche Spalte).",
-      fieldNames: { aVal: "Wert A", aN: "Anzahl A", bVal: "Wert B", bN: "Anzahl B" },
-      scaleWord: "Bitte die volle Zahl eingeben, ohne Mio. oder Tsd.",
-      paste: "Optional: Zeilen aus Excel einfügen (Datum, Wert)",
-      pasteHint: "Füllt die Felder oben. Alles bleibt auf deinem Gerät.",
-      pastePlaceholder: "02.09.2023\t4409249",
-      pasteEmpty: "Keine Zeile mit Datum und Wert gefunden. Erwartet: 02.09.2023, Tab, 4409249.",
-      pasteThin: "Zu wenig Daten: ich brauche mindestens zwei Monate mit je {n} Werten. Gefunden: {x}.",
-      pasteOk: "{a} und {b} übernommen ({g}). Prüfe die Felder.",
-      pasteMonthly: "Monatswerte erkannt: trage die Anzahl selbst ein.",
-      pasteGapOne: "Aus deiner Einfügung: 1 Arbeitstag ohne Wert zählt als Feiertag. Ändere das mit den Knöpfen.",
-      pasteGap: "Aus deiner Einfügung: {n} Arbeitstage ohne Wert zählen als Feiertage. Ändere das mit den Knöpfen.",
-      granularity: { daily: "Tageswerte, Mo bis Fr", dailyAll: "Tageswerte inklusive Sa und So", weekly: "Wochenwerte", monthly: "Monatswerte" },
-    },
-    take: {
-      h: "Mitnehmen",
-      intro: "Aus deinen Zahlen gebaut. Alles steht in voller Länge da, bevor du es kopierst.",
-      empty: "Fülle oben die Felder, dann entsteht hier dein Satz.",
-      sentenceLabel: "Berichtssatz",
-      promptLabel: "Prompt für deine KI",
-      rulesLabel: "Regeldatei",
-      copySentence: "Satz kopieren",
-      copyPrompt: "Prompt kopieren",
-      copyRules: "Regeln kopieren",
-      dlRules: "Regeldatei laden",
-      copied: "Kopiert",
-      copyFailed: "Kopieren nicht möglich. Markiere den Text und kopiere ihn selbst.",
-      downloaded: "Datei geladen",
-      fileName: "regeln-fuer-meine-berichte.md",
-      metric: "Umsatz",
-      s1: "{metric} {b}: {vb} gegenüber {va} {inA} ({h}).",
-      inMonth: "im {a}",
-      inOther: "in {a}",
-      countsMonth: "Der {b} hat {nb} {units}, der {a} {na}.",
-      countsOther: "{b} hat {nb} {units}, {a} {na}.",
-      per: "Pro {u}: {pb} gegenüber {pa} ({p}).",
-      limit: "Vergleichbar heißt nicht richtig: Feiertage und Aktionen sind nicht berücksichtigt.",
-      attr: "Zugeordnet nach Startdatum der Woche.",
-      prompt:
-        "Lies zuerst {file}. Der Bericht nennt {h} für {b} gegenüber {a} ({va} bei {na} {units}, {vb} bei {nb}). Prüfe aus meinen Rohdaten, ob die Monate vergleichbar sind. Rechne pro {u}, zeig deinen Rechenweg, nenne die Datei und die Spalte, aus der du es hast, und sag mir, wie viel der {h} übrig bleibt. Wo du etwas nicht prüfen kannst, schreib 'nicht prüfbar' und warum.",
-      rules: {
-        title: "# Regeln für meine Berichte",
-        lead: "Lies diese Datei, bevor du einen Bericht liest. Gilt für jede Zahl, die ich dir gebe.",
-        r1h: "## {n}. Gleich lange Zeiträume",
-        r1: "Zähle vor jedem Vergleich die Lieferwochen (oder Arbeitstage) beider Monate. Nenne die Schlagzeile UND den Wert pro {u}.",
-        r1proof: "Beleg: {a}/{b}: {h} wurden {p}.",
-        r1share: "Der Kalender erklärt rund {s} %.",
-        r2h: "## {n}. Das Richtige im Nenner",
-        r2: "Zähle Defektmeldungen je 1.000 ausgelieferte Stück, nie die Rohzahl allein.",
-        r2proof: "Beleg (Beispiel NORTHWIND): CRAFT {ra} gegen NEST {rb} ({lead}) wurden {pa} gegen {pb} je 1.000 ({mult} x).",
-        r3h: "## {n}. Grenze im selben Satz",
-        r3: "Sage in jedem Befund, was die Zahl nicht sagt und wann die Entscheidung kippt.",
-        r3trigger: "Auslöser (Beispiel NORTHWIND): {m} unter {t} Defektmeldungen je 1.000 Stück und Ausschuss unter 8 % des Umsatzes.",
-        r3gap: "Nicht prüfbar mit diesen Daten (Beispiel NORTHWIND): Marge je Produkt, Retouren je Linie. Ersetze das durch deine Lücken.",
-        r4h: "## {n}. Schreibweise",
-        r4: "Vergleichbar heißt nicht richtig. Wo ein Wert nicht prüfbar ist, schreibe \"nicht prüfbar\" und warum. Nenne Datei und Spalte der Quelle.",
-      },
+    body: "Alle drei Werte stammen aus derselben Datei und sind richtig gerechnet. Der Bericht sagt nicht, welcher gemeint ist. Wer das nicht festlegt, übernimmt die Zählweise des Berichts und mit ihr seinen Schluss.",
+    strip: "Bericht §{section}: {a} → {b} je {per} Stück",
+    file: "ncr_records.csv · CRAFT · September · {n} Zeilen",
+    counting: "Dieselben {n} Zeilen, dreimal gezählt.",
+    per: "je {per} versandte Stück",
+    band: "Änderung unter {band} gilt hier als gleich.",
+    live: "{name}: {verdict}, {a} auf {b}.",
+    liveTail: "Alle je {per} versandte Stück.",
+    legendTitle: "So liest du die Schienen",
+    legend: "Ein Punkt ist eine Meldung. Ein Balken ist so lang wie ihre Stückzahl. Gefüllt heißt verschrottet, umrandet heißt nachgearbeitet. Der Strich zeigt den August.",
+  },
+  counter: {
+    caption: "Fass erst die Meldungen zusammen. Dann wähle, was gezählt wird.",
+    captionMerged: "Gleiche Teile, gleicher Ausschuss. Nur die Meldungen wurden gebündelt.",
+    captionChosen: "Dein Zähler: {counter}. Er steht jetzt im Steckbrief des Kits.",
+    merge: "Gleiche Maschine und Woche zusammenfassen",
+    mergedCount: "{from} → {to}",
+    pick: "Tipp auf die Schiene, nach der du zählen würdest.",
+    mergedBody: "Gleiche Teile, gleicher Ausschuss. Geändert hat sich nur, wie die Qualitätssicherung Meldungen bündelt. Eine Kennzahl, die durch Zusammenfassen sinkt, taugt nicht als Freigabebedingung.",
+    fact: "Eine Meldung über {min} Stück zählt so viel wie eine über {max}.",
+    reasoning: "Entschieden wird über mehr Marketing für CRAFT. Jede zusätzlich verkaufte Einheit wird erst produziert. Was sie kostet, zeigt der Ausschuss je {per} Stück, nicht die Zahl der Meldungen.",
+    legend: "Zähler",
+    cardTitle: "Steckbrief CRAFT-Defekte",
+    cardLines: {
+      numerator: "Zähler: {counter}",
+      denominator: "Nenner: versandte Stück im selben Zeitraum (demand_actuals.csv, units_actual)",
+      limit: "Grenze: qty_affected ist eine Produktionsmenge, units_actual eine Liefermenge; die Quote ist eine Näherung, keine Ausbeute. NCRs sind Fertigungsbefunde, keine Retouren. {doc} der {n} Meldungen sind vom Typ documentation; sie stecken in allen drei Zählweisen.",
     },
   },
-  en: {
-    locale: "en",
-    money: { mio: "EUR {v}M", full: "EUR {v}" },
-    numWords: ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"],
-    months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    spoken: { plus: "plus", minus: "minus", percent: "percent" },
-    unit: {
-      weeks: { one: "shipping week", many: "shipping weeks", oneDat: "shipping week", manyDat: "shipping weeks", label: "Shipping weeks" },
-      days: { one: "working day", many: "working days", oneDat: "working day", manyDat: "working days", label: "Working days" },
-      cdays: { one: "calendar day", many: "calendar days", oneDat: "calendar day", manyDat: "calendar days", label: "Calendar days" },
+  period: {
+    caption: "Monatssumme oder je Versandwoche? Wähle, wie die Nachfrage verglichen wird.",
+    captionMonth: "Als Monatssumme wächst CRAFT um {g}. Der September hat {sep} Versandwochen, der August {aug}.",
+    captionWeek: "Je Versandwoche sinkt CRAFT um {g}. Die fünfte Woche ist herausgerechnet.",
+    strip: "Bericht §{section}: CRAFT Stück {g}",
+    legend: "Zeitraum",
+    divided: "{total} ÷ {weeks}",
+    weeksIn: "{w} Versandwochen",
+    company: "Ganze Firma: {m} als Monatssumme, {w} je Versandwoche.",
+    sections: "Im Bericht steht {m} in Abschnitt {first}. Die {w} je Woche stehen in Abschnitt {last}, auf der letzten Seite.",
+    calendar: "Der Handel vergleicht deshalb nach dem 4-5-4-Kalender: Vergleichsmonate haben gleich viele Wochen.",
+    rates: "Für Quoten je {per} Stück spielt die Wochenzahl keine Rolle, für Summen schon.",
+  },
+  trace: {
+    caption: "Tipp auf den Umsatz. Er wird aus den Zeilen der Datei nachgerechnet.",
+    captionDone: "{rows} Zeilen, drei Modelle, Stück mal Listenpreis.",
+    strip: "CRAFT · {units} Stück · ",
+    button: "Zurückverfolgen",
+    hint: "Tippen zum Prüfen",
+    file: "demand_actuals.csv · {n} Zeilen",
+    path: {
+      file: "demand_actuals.csv",
+      filter: "Filter: NW-CRAFT-*, September",
+      rows: "{n} Zeilen",
+      formula: "units_actual × base_price_eur",
+      sum: "Σ {eur}",
     },
-    stage: {
-      sub: "September against August, nine shipping weeks",
-      region: "The Month Line: headline and revenue of nine shipping weeks",
-      weeks: "Weeks: {a} | {b}",
-      nudgeL: "Move line left",
-      nudgeR: "Move line right",
-      sw1: "Total",
-      sw2: "Per week",
-      switchLabel: "Work out as",
-      handleLabel: "Month line between the shipping weeks",
-      handleValue: "Cut after week {k}, headline {h}",
-      handleValuePer: "Cut after week {k}, per week {p}",
-      rulerCap: "Nine weeks, one example. Each shift is one whole week.",
-      minWeeks: "At least three weeks per side.",
-      attr: "Weeks assigned by start date.",
-      spanHead: "Range {a} to {b}",
-      rulerAlt: "Range of the headlines: {a} to {b} percent; per week {c} to {d} percent.",
-      unitsNote: "By units: {x}",
-      stampOne: "Around {s} % of the increase is the extra week.",
-      stampMany: "Around {s} % of the increase is the {n} extra weeks.",
-      stampNeg: "Here the report shrinks. The calendar flips the sign.",
-      hint: "Drag the line. Then tap Per week.",
-      ask: "Is that right?",
-      stampPerNeg: "Per week almost nothing happens here ({p}). The {h} of the headline was calendar.",
-      monthA: "August",
-      monthB: "September",
-      weekCount: "{n} weeks",
-      mean: "Avg {v}",
-      tableCaption: "The nine shipping weeks of NORTHWIND",
-      tableHead: ["Week start", "Revenue in euros", "Units"],
-      chartAlt: "Nine shipping weeks as blocks, split into two months.",
-      live: "Cut {a} | {b}. Headline {h}, per week {p}.",
-      room: "Room mode",
+    bin: "{code} · {price}",
+    match: "stimmt mit Bericht §{section}",
+    body: "Die Prüfung zeigt auch, was „Umsatz“ hier heißt: Listenpreis mal Stück. Keine Rabatte, keine Kosten, kein Deckungsbeitrag.",
+    prices: "Im selben Kit stehen zwei Durchschnittspreise: {report} im Bericht (Umsatz ÷ Stück) und {mean} für die Ausschussbewertung (Mittel der Listenpreise). Welcher gilt, gehört in den Steckbrief.",
+    promptHead: "Prüf-Prompt für deinen Claude",
+    prompt: "Nenne für jede Zahl in deiner Antwort Datei und Spalte. Welche hast du aus den Daten gerechnet, welche aus dem Bericht übernommen?",
+  },
+  decide: {
+    caption: "Deine Steckbriefe ergeben diese Entscheidung.",
+    captionReport: "Die Zählweise des Berichts ergibt den Antrag des VP.",
+    legend: "Gezählt nach",
+    mine: "Deine Wahl",
+    report: "Wie der Bericht",
+    tiles: {
+      revenue: "Umsatz CRAFT",
+      demand: "Nachfrage CRAFT",
+      defects: "Defekte CRAFT",
+      counted: "So gezählt",
+      revenueHow: "Stück × Listenpreis, kein Deckungsbeitrag",
+      defectsHow: "{counter} je {per} versandte Stück",
     },
-    act2: {
-      h: "Same move, different finding",
-      intro: "Defect records in September, by line.",
-      sw1: "Count",
-      sw2: "per 1,000 units",
-      switchLabel: "Count defect records as",
-      lead: "CRAFT leads NEST by {x} %.",
-      mult: "CRAFT is {x} times the next-worst line.",
-      close: "By count CRAFT is just ahead of NEST. Per 1,000 units it is {x} times.",
-      vp: "Where the VP of Sales is right: CRAFT improved from 3.21 to 2.51 per 1,000 units, the only line that did.",
-      trig: "Release if October is below {x} per 1,000 units and scrap under 8 % of revenue.",
-      trigLabel: "Trigger per 1,000 units",
-      trigDown: "Lower the trigger by 0.10",
-      trigUp: "Raise the trigger by 0.10",
-      trigValue: "Trigger {x} per 1,000 units",
-      trigTag: "Trigger {x}",
-      trigHint: "Tap per 1,000 units, then set the trigger here.",
-      payoff: "The growth was calendar. The defect problem stays.",
-      rowAlt: "{line}: {records} defect records, {rate} per 1,000 units",
-      scaleCount: "Defect records",
-      scaleRate: "per 1,000 units",
-      live: "Defect records {mode}. {sentence}",
+    headlines: {
+      rework: "Erst Nacharbeit an CRAFT. Zusätzliches Q3-Marketing einen Monat zurückhalten.",
+      holdCause: "Marketing zurückhalten, bis die Ursache an den sechs Maschinen benannt ist.",
+      vp: "Mehr Q3-Marketing für CRAFT.",
+      holdDemand: "Marketing zurückhalten: Die Meldungen sinken, die Nachfrage je Versandwoche aber auch.",
     },
-    verdict: {
-      calendarOne: "Around {s} % of the increase is the extra week.",
-      calendarMany: "Around {s} % of the increase is the {n} extra weeks.",
-      calendarDayOne: "Around {s} % of the increase is the extra working day.",
-      calendarDayMany: "Around {s} % of the increase is the {n} extra working days.",
-      calendarCDayOne: "Around {s} % of the increase is the extra calendar day.",
-      calendarCDayMany: "Around {s} % of the increase is the {n} extra calendar days.",
-      mixed: "About {s} % of the increase is the calendar, the rest is growth.",
-      real: "The calendar explains only {s} %: the growth is mostly real.",
-      equal: "Both periods are the same length: the calendar explains nothing.",
-      flat: "The headline is unchanged; per {u} it comes to {p}.",
-      none: "The calendar explains none of the increase. Per {u} it is {p}.",
-      reverse: "The calendar works the other way here: the later period has fewer {units}, per {u} the growth is higher ({p}).",
-      shrinks: "Per {u} the value falls ({p}); the headline is a calendar effect.",
-      downWorse: "Per {u} it falls even harder ({p}): the calendar hid the decline.",
-      downPart: "Part of the decline is calendar: per {u} it is {p}.",
-      downFlips: "Per {u} it is {p}: the decline is calendar.",
-      downSame: "The calendar changes nothing here: per {u} it is also {p}.",
-      thin: "Not enough data for a verdict.",
+    fields: {
+      decision: "Entscheidung",
+      because: "Weil",
+      number: "Zahl",
+      risk: "Risiko",
+      counter: "Gegenposition",
+      trigger: "Auslöser",
     },
-    cmp: {
-      h: "Your comparison",
-      intro: "Two periods, four numbers. The result updates with every keystroke.",
-      example: "Example: NORTHWIND",
-      own: "Your numbers",
-      reset: "Back to the example",
-      nameLabel: "Name of period {x}",
-      valueLabel: "Value {x}",
-      valuePlaceholder: "Value period {x}",
-      countPlaceholder: "Count {x}",
-      unitLabel: "Unit",
-      unitW: "Shipping weeks",
-      unitD: "Working days",
-      monthLabel: "Month {x}",
-      holLabel: "Holidays {x}",
-      holDown: "One holiday fewer {x}",
-      holUp: "One holiday more {x}",
-      daysCount: "{n} working days",
-      metricLabel: "What do the values stand for? (for example revenue)",
-      rowHead: "Result",
-      headline: "Headline",
-      perUnit: "Per {u}",
-      share: "Calendar share",
-      shareNone: "none",
-      shareReverse: "opposite",
-      gap: "Difference",
-      pp: "pp",
-      yearLabel: "Year {x}",
-      thresholds: "From 80 % calendar, 30 to 80 % mixed, below that real growth.",
-      honestyWeeks: "Worked out per shipping week, equal-length weeks assumed. Holidays, promotions and delivery rhythm are not accounted for.",
-      honestyDays: "Worked out per working day (Monday to Friday minus your holidays). Promotions and delivery rhythm are not accounted for.",
-      honestyCDays: "Worked out per calendar day (every day of the month minus your days off). Promotions and delivery rhythm are not accounted for.",
-      unitC: "Calendar days",
-      daysCountC: "{n} calendar days",
-      holLabelC: "Days off {x}",
-      holDownC: "One day off fewer {x}",
-      holUpC: "One day off more {x}",
-      pasteGapCOne: "From your paste: 1 day without a value counts as a day off. Change it with the buttons.",
-      pasteGapC: "From your paste: {n} days without a value count as days off. Change it with the buttons.",
-      thin: "Not enough data. Missing: {x}.",
-      notNumber: "{x}: no number recognised.",
-      countMin: "{x} must be at least 1.",
-      valuePos: "{x} must be greater than 0.",
-      tooMany: "A count above {n} is hardly meant here (weeks or days, not units?). Check: {x}.",
-      tooBig: "An increase above 10,000 % is hardly meant. Check that both values use the same scale (euros, not millions; same column).",
-      fieldNames: { aVal: "Value A", aN: "Count A", bVal: "Value B", bN: "Count B" },
-      scaleWord: "Please enter the full number, without M or k.",
-      paste: "Optional: paste rows from Excel (date, value)",
-      pasteHint: "Fills the fields above. Everything stays on your device.",
-      pastePlaceholder: "2023-09-02\t4409249",
-      pasteEmpty: "No line with a date and a value found. Expected: 2023-09-02, tab, 4409249.",
-      pasteThin: "Not enough data: I need at least two months with {n} values each. Found: {x}.",
-      pasteOk: "{a} and {b} filled in ({g}). Check the fields.",
-      pasteMonthly: "Monthly values found: enter the count yourself.",
-      pasteGapOne: "From your paste: 1 working day without a value counts as a holiday. Change it with the buttons.",
-      pasteGap: "From your paste: {n} working days without a value count as holidays. Change it with the buttons.",
-      granularity: { daily: "daily values, Mon to Fri", dailyAll: "daily values including Sat and Sun", weekly: "weekly values", monthly: "monthly values" },
+    because: "{counter}: {b} je {per} versandte Stück, im August {a}. {demand}",
+    demand: {
+      month: "Die Stückzahl stieg als Monatssumme um {g}.",
+      week: "Die Nachfrage je Versandwoche sank um {g}.",
     },
-    take: {
-      h: "Take with you",
-      intro: "Built from your numbers. Everything is shown in full before you copy it.",
-      empty: "Fill in the fields above, and your sentence appears here.",
-      sentenceLabel: "Report sentence",
-      promptLabel: "Prompt for your AI",
-      rulesLabel: "Rules file",
-      copySentence: "Copy sentence",
-      copyPrompt: "Copy prompt",
-      copyRules: "Copy rules",
-      dlRules: "Download rules",
-      copied: "Copied",
-      copyFailed: "Copying is not possible here. Select the text and copy it yourself.",
-      downloaded: "File downloaded",
-      fileName: "report-rules.md",
-      metric: "Revenue",
-      s1: "{metric} {b}: {vb} against {va} {inA} ({h}).",
-      inMonth: "in {a}",
-      inOther: "in {a}",
-      countsMonth: "{b} has {nb} {units}, {a} {na}.",
-      countsOther: "{b} has {nb} {units}, {a} {na}.",
-      per: "Per {u}: {pb} against {pa} ({p}).",
-      limit: "Comparable does not mean right: holidays and promotions are not accounted for.",
-      attr: "Weeks assigned by start date.",
-      prompt:
-        "Read {file} first. The report states {h} for {b} against {a} ({va} at {na} {units}, {vb} at {nb}). Check from my raw data whether the months are comparable. Work per {u}, show your working, name the file and the column you took it from, and tell me how much of the {h} is left. Where you cannot check something, write 'not checkable' and why.",
-      rules: {
-        title: "# Rules for my reports",
-        lead: "Read this file before you read a report. It applies to every number I give you.",
-        r1h: "## {n}. Equal-length periods",
-        r1: "Before every comparison, count the shipping weeks (or working days) of both months. Give the headline AND the value per {u}.",
-        r1proof: "Evidence: {a}/{b}: {h} became {p}.",
-        r1share: "The calendar explains around {s} %.",
-        r2h: "## {n}. The right denominator",
-        r2: "Count defect records per 1,000 units shipped, never the raw count alone.",
-        r2proof: "Evidence (example NORTHWIND): CRAFT {ra} against NEST {rb} ({lead}) became {pa} against {pb} per 1,000 ({mult} x).",
-        r3h: "## {n}. A limit in the same sentence",
-        r3: "In every finding, say what the number does not say and when the decision flips.",
-        r3trigger: "Trigger (example NORTHWIND): {m} below {t} defect records per 1,000 units and scrap under 8 % of revenue.",
-        r3gap: "Not checkable with this data (example NORTHWIND): margin per product, returns per line. Replace with your own gaps.",
-        r4h: "## {n}. Wording",
-        r4: "Comparable does not mean right. Where a value is not checkable, write \"not checkable\" and why. Name the file and column of the source.",
-      },
+    number: {
+      scrapped: "{units} verschrottete Stück, {eur} zum mittleren Listenpreis von {price}, {share} des CRAFT-Umsatzes. Bewertet zu Listenpreisen, nicht zu Kosten.",
+      affected: "{units} betroffene Stück im September, davon {scrap} verschrottet.",
+      records: "{n} Meldungen im September, {merged} nach Zusammenfassen derselben Maschine und Woche.",
+    },
+    risk: "Halten wir zu Unrecht zurück, fehlt ein Monat möglicher Mehrabsatz der zweitgrößten Umsatzlinie. Fördern wir zu Unrecht, wächst der Ausschuss mit jeder zusätzlich verkauften Einheit, verteilt auf {m} Maschinen ({first} bis {last}).",
+    opposite: {
+      vp: "Nach Meldungen und Monatssumme gezählt ergibt sich der Antrag des VP: Defekte {a} auf {b} je {per}, Stück {g}.",
+      strict: "Nach verschrotteten Stück und je Versandwoche gezählt: Ausschuss {a} auf {b} je {per}, Stück {g}. Daraus folgt: {headline}",
+    },
+    triggers: {
+      records: "Freigabe, wenn CRAFT im Oktober unter {t} Meldungen je {per} versandte Stück liegt.",
+      affected: "Freigabe, wenn betroffene CRAFT-Stück im Oktober unter {t} je {per} versandte Stück liegen.",
+      scrapped: "Freigabe, wenn verschrottete CRAFT-Stück im Oktober unter {t} je {per} versandte Stück liegen.",
+    },
+    checks: {
+      units: "zählt Stück, nicht Belege",
+      unitsFail: "Mit Zusammenfassen schon im September erfüllt: {n} Meldungen ergeben {rate}.",
+      notMet: "heute nicht erfüllt ({today})",
+      named: "Zeitraum und Quelle genannt",
+    },
+    setting: "Die Schwelle ist eine Setzung und steht so im Steckbrief.",
+    closing: "Gleiche Daten, zwei Entscheidungen. Der Steckbrief sagt, welche gilt, und warum.",
+    stripAll: "Der ganze Block, den Schritt 2 im Kit schreibt:",
+  },
+  own: {
+    caption: "Leg eine Kennzahl aus deiner Arbeit fest. Die Prüfungen laufen hier im Browser.",
+    privacy: "Deine Eingaben bleiben in diesem Browser-Tab. Nichts wird hochgeladen, gespeichert oder an eine KI geschickt. Schließt du den Tab, ist alles weg.",
+    heading: "Dein Steckbrief",
+    lead: "Eine Zahl, über die bei dir regelmäßig entschieden wird. Daten brauchst du dafür nicht.",
+    preview: "So steht er im Skill",
+    noFindings: "Keine Hinweise.",
+    findings: "Hinweise: {n}",
+    add: "Steckbrief hinzufügen",
+    count: "{n} von {max}",
+    needs: "Hinzufügen geht, sobald Kennzahl, Zähler, Nenner und Zeitraum stehen.",
+    full: "Mehr als {max} Steckbriefe nimmt der Skill nicht auf.",
+    added: "Deine Steckbriefe",
+    none: "Noch keiner hinzugefügt.",
+    remove: "Entfernen",
+    clear: "Eigene Eingaben löschen",
+    dockZip: "Skill laden",
+    fields: {
+      name: { label: "Kennzahl", placeholder: "Reklamationsquote Werk 2" },
+      decision: { label: "Entscheidung, die sie stützt", placeholder: "Lieferant für Bauteil X wechseln, ja oder nein" },
+      numerator: { label: "Zähler", placeholder: "Reklamierte Stück" },
+      denominator: { label: "Nenner", placeholder: "Gelieferte Stück im selben Zeitraum" },
+      sourceFile: { label: "Quelle: Datei oder System", placeholder: "ERP, Export reklamationen.xlsx" },
+      sourceColumn: { label: "Spalte oder Feld", placeholder: "menge_reklamiert" },
+      limit: { label: "Grenze", placeholder: "Zählt nur gemeldete Reklamationen, keine Kulanzfälle." },
+      trigger: { label: "Auslöser", placeholder: "Wechsel, wenn die Quote zwei Monate über dem Plan liegt." },
+    },
+    kindLegend: "Der Zähler zählt",
+    kinds: {
+      events: "Vorgänge (Meldungen, Tickets, Aufträge, Datensätze)",
+      quantity: "Menge (Stück, Euro, Stunden, kg)",
+    },
+    noDenominator: "keiner, absolute Zahl",
+    periodLegend: "Zeitraum",
+    periods: {
+      month: "Kalendermonat",
+      week: "Kalenderwoche",
+      quarter: "Quartal",
+      year: "Geschäftsjahr",
+      other: "anderer",
+    },
+    comparisonLegend: "Verglichen mit",
+    comparisons: { previous: "Vorperiode", lastYear: "Vorjahresperiode", plan: "Plan" },
+    rules: {
+      R1: "Zählt Vorgänge. Zusammenfassen oder Aufteilen ändert den Wert, ohne dass sich in der Sache etwas ändert. Schreib eine Mengen-Variante daneben.",
+      R2: "Absolute Zahlen wachsen mit dem Volumen. Ohne Nenner ist mehr Geschäft nicht von mehr Problemen zu unterscheiden.",
+      R3: "Kalendermonate haben 28 bis 31 Tage, 4 oder 5 Wochenanfänge und unterschiedlich viele Arbeitstage. Vergleiche je Woche, je Arbeitstag oder mit dem Vorjahresmonat.",
+      R4: "Ohne Spalte lässt sich die Zahl nicht zurückverfolgen.",
+      R5: "Jede Kennzahl hat eine Grenze. Sie gehört in den Satz mit der Zahl, nicht in eine Fußnote.",
+      R6: "Bereinigt ist eine eigene Definition. Ein Posten, der früher schon auftrat, ist nicht einmalig, auch wenn er unregelmäßig auftritt. Nenne die berichtete Zahl zuerst.",
+      R7: "Dein Auslöser misst Vorgänge. Prüfe, ob er sich durch Zusammenfassen erreichen lässt.",
+      R8: "Ohne Entscheidung lässt sich nicht sagen, welcher Zähler der richtige ist.",
+    },
+    cite: "Quellen zu bereinigten Kennzahlen: SEC Non-GAAP C&DI 100.01 und 102.10, ESMA APM Guidelines.",
+    card: {
+      decision: "Entscheidung",
+      numerator: "Zähler",
+      denominator: "Nenner",
+      period: "Zeitraum",
+      source: "Quelle",
+      limit: "Grenze",
+      trigger: "Auslöser",
+      column: "Spalte",
+      comparison: "verglichen mit",
+      none: "keiner",
+      unset: "nicht festgelegt",
+      kinds: { events: "Vorgänge", quantity: "Menge" },
+      periods: { month: "Kalendermonat", week: "Kalenderwoche", quarter: "Quartal", year: "Geschäftsjahr", other: "anderer Zeitraum" },
+      comparisons: { previous: "Vorperiode", lastYear: "Vorjahresperiode", plan: "Plan" },
+    },
+    referencesTitle: "Unsere Steckbriefe",
+  },
+  takehome: {
+    caption: "Nimm den Skill mit deinen Steckbriefen mit. Er wird hier im Browser gepackt.",
+    captionEmpty: "Ohne eigene Steckbriefe bekommst du den Skill mit dem Format zum Ausfüllen.",
+    zip: "Skill mit deinen Steckbriefen laden",
+    zipEmpty: "Skill ohne eigene Steckbriefe laden",
+    inZip: "Im Zip",
+    skillNote: "unverändert, wie unter /skills",
+    refsNote: "deine Steckbriefe: {n}",
+    refsNone: "kommt dazu, sobald du einen Steckbrief hinzufügst",
+    instructionsHead: "Projektanweisungen mit deinen Steckbriefen",
+    instructionsLead: "Für Claude ohne Skills: in ein Projekt unter „Instructions“ einfügen. Projekte gibt es auf jedem Plan, auf Free bis zu fünf.",
+    copy: "Kopieren",
+    copied: "Kopiert",
+    promptsHead: "Zwei Prüf-Prompts",
+    prompts: [
+      "Nenne für jede Zahl in deiner Antwort Datei und Spalte. Welche hast du aus den Daten gerechnet, welche aus dem Bericht übernommen?",
+      "Welche andere Definition dieser Kennzahl liegt nahe? Rechne sie aus und stell beide Werte nebeneinander.",
+    ],
+    below: "Kit, Vorlage und Installation stehen unten unter „Für deinen Claude“.",
+  },
+  kit: {
+    defectsHeading: "CRAFT-Defekte",
+    demandHeading: "CRAFT-Nachfrage",
+    releaseHeading: "Freigabebedingung",
+    numeratorLabel: "Zähler",
+    periodLabel: "Zeitraum",
+    denominatorLine: "- Nenner: versandte Stück in denselben Wochen (demand_actuals.csv, units_actual), je {per}",
+    counters: {
+      records: "Meldungen (Zahl der Zeilen in ncr_records.csv).",
+      affected: "Betroffene Stück (qty_affected, Nacharbeit und Ausschuss zusammen).",
+      scrapped: "Verschrottete Stück (qty_affected mit scrap_or_rework = scrap).",
+    },
+    bases: {
+      month: "Monatssumme (alle Wochen, deren week_start im Monat liegt).",
+      week: "Je Versandwoche (Monatssumme geteilt durch die Zahl der week_start-Werte im Monat).",
     },
   },
-} as const satisfies Record<Locale, DemoPack>;
+};
+
+export type DemoPack = typeof DE;
+
+const EN: DemoPack = {
+  locale: "en",
+  money: "€{v}",
+  stageLabel: "Stage: one file, three ways to count",
+  stripHead: "→ northwind-metrics/SKILL.md",
+  kitFile: "Kit file",
+  verdicts: { better: "better", same: "same", worse: "worse" },
+  counters: {
+    records: { short: "Records", long: "NCR records", name: "NCR records" },
+    affected: { short: "Affected", long: "affected units", name: "Affected units" },
+    scrapped: { short: "Scrapped", long: "scrapped units", name: "Scrapped units" },
+  },
+  bases: {
+    month: { short: "Month total", long: "month total" },
+    week: { short: "Per week", long: "per shipping week" },
+  },
+  months: { aug: "August", sep: "September" },
+  monthsShort: { aug: "Aug", sep: "Sep" },
+  claim: {
+    caption: "Did CRAFT's quality get better in September? Make your call before you see the data.",
+    caps: "Monthly report September {year} · Section {section}",
+    speaker: "VP of Sales",
+    quoteBefore: "\"And quality is already turning: CRAFT's defects fell from ",
+    quoteFigure: "{a} to {b} per {per} units",
+    quoteAfter: ". No other line improved.\"",
+    pollLabel: "Your call",
+    poll: { better: "Better", same: "Same", worse: "Worse" },
+  },
+  reveal: {
+    caption: {
+      better: "You chose \"Better\". That holds if you count NCR records.",
+      same: "You chose \"Same\". That holds if you count affected units.",
+      worse: "You chose \"Worse\". That holds if you count scrapped units.",
+      none: "Records: better. Affected units: same. Scrapped units: worse.",
+    },
+    others: {
+      better: "Counted by affected units, \"Same\" holds; by scrapped units, \"Worse\".",
+      same: "Counted by NCR records, \"Better\" holds; by scrapped units, \"Worse\".",
+      worse: "Counted by NCR records, \"Better\" holds; by affected units, \"Same\".",
+      none: "You went on without making a call.",
+    },
+    body: "All three values come from the same file and are computed correctly. The report does not say which one it means. If you do not pin it down, you take over the report's way of counting and its conclusion with it.",
+    strip: "Report §{section}: {a} → {b} per {per} units",
+    file: "ncr_records.csv · CRAFT · September · {n} rows",
+    counting: "The same {n} rows, counted three ways.",
+    per: "per {per} units shipped",
+    band: "A change under {band} counts as the same here.",
+    live: "{name}: {verdict}, {a} to {b}.",
+    liveTail: "All per {per} units shipped.",
+    legendTitle: "How to read the rails",
+    legend: "A dot is one record. A bar is as long as its units. Filled means scrapped, outlined means reworked. The tick marks August.",
+  },
+  counter: {
+    caption: "Merge the records first. Then choose what gets counted.",
+    captionMerged: "Same parts, same scrap. Only the records were bundled.",
+    captionChosen: "Your numerator: {counter}. It is now in the kit's metric card.",
+    merge: "Merge records of the same machine and week",
+    mergedCount: "{from} → {to}",
+    pick: "Tap the rail you would count by.",
+    mergedBody: "Same parts, same scrap. All that changed is how quality bundles its records. A metric that drops when records are merged is no use as a release condition.",
+    fact: "A record on {min} units counts as much as one on {max}.",
+    reasoning: "The decision is about more marketing for CRAFT. Every extra unit sold gets produced first. What it costs shows in scrap per {per} units, not in the number of records.",
+    legend: "Numerator",
+    cardTitle: "Metric card CRAFT defects",
+    cardLines: {
+      numerator: "Numerator: {counter}",
+      denominator: "Denominator: units shipped in the same period (demand_actuals.csv, units_actual)",
+      limit: "Limit: qty_affected is a production quantity, units_actual a shipped quantity; the rate is an approximation, not a yield. NCRs are production findings, not returns. {doc} of the {n} records are of type documentation; all three counts include them.",
+    },
+  },
+  period: {
+    caption: "Month total or per shipping week? Choose how demand gets compared.",
+    captionMonth: "As a month total CRAFT grows by {g}. September has {sep} shipping weeks, August {aug}.",
+    captionWeek: "Per shipping week CRAFT falls by {g}. The fifth week is divided out.",
+    strip: "Report §{section}: CRAFT units {g}",
+    legend: "Period",
+    divided: "{total} ÷ {weeks}",
+    weeksIn: "{w} shipping weeks",
+    company: "Whole company: {m} as a month total, {w} per shipping week.",
+    sections: "The report states {m} in section {first}. The {w} per week sit in section {last}, on the last page.",
+    calendar: "That is why retail compares on the 4-5-4 calendar: compared months hold the same number of weeks.",
+    rates: "For rates per {per} units the week count does not matter; for totals it does.",
+  },
+  trace: {
+    caption: "Tap the revenue. It gets recomputed from the rows of the file.",
+    captionDone: "{rows} rows, three models, units times list price.",
+    strip: "CRAFT · {units} units · ",
+    button: "Trace it",
+    hint: "Tap to check",
+    file: "demand_actuals.csv · {n} rows",
+    path: {
+      file: "demand_actuals.csv",
+      filter: "Filter: NW-CRAFT-*, September",
+      rows: "{n} rows",
+      formula: "units_actual × base_price_eur",
+      sum: "Σ {eur}",
+    },
+    bin: "{code} · {price}",
+    match: "matches report §{section}",
+    body: "The trace also shows what \"revenue\" means here: list price times units. No discounts, no costs, no contribution margin.",
+    prices: "The same kit holds two average prices: {report} in the report (revenue ÷ units) and {mean} for valuing scrap (mean of the list prices). Which one applies belongs in the metric card.",
+    promptHead: "Check prompt for your Claude",
+    prompt: "For every number in your answer, name the file and column. Which did you compute from the data, and which did you take from the report?",
+  },
+  decide: {
+    caption: "Your metric cards produce this decision.",
+    captionReport: "The report's way of counting produces the VP's request.",
+    legend: "Counted by",
+    mine: "Your choice",
+    report: "As the report",
+    tiles: {
+      revenue: "Revenue CRAFT",
+      demand: "Demand CRAFT",
+      defects: "Defects CRAFT",
+      counted: "Counted as",
+      revenueHow: "units × list price, no contribution margin",
+      defectsHow: "{counter} per {per} units shipped",
+    },
+    headlines: {
+      rework: "Rework CRAFT first. Hold the extra Q3 marketing for one month.",
+      holdCause: "Hold marketing until the cause on the six machines is named.",
+      vp: "More Q3 marketing for CRAFT.",
+      holdDemand: "Hold marketing: records fall, but so does demand per shipping week.",
+    },
+    fields: {
+      decision: "Decision",
+      because: "Because",
+      number: "Number",
+      risk: "Risk",
+      counter: "Counter-position",
+      trigger: "Trigger",
+    },
+    because: "{counter}: {b} per {per} units shipped, {a} in August. {demand}",
+    demand: {
+      month: "Units grew by {g} as a month total.",
+      week: "Demand per shipping week fell by {g}.",
+    },
+    number: {
+      scrapped: "{units} scrapped units, {eur} at the mean list price of {price}, {share} of CRAFT revenue. Valued at list price, not at cost.",
+      affected: "{units} affected units in September, {scrap} of them scrapped.",
+      records: "{n} records in September, {merged} after merging the same machine and week.",
+    },
+    risk: "If we hold wrongly, we lose a month of possible extra sales on the second largest revenue line. If we push wrongly, scrap grows with every extra unit sold, spread over {m} machines ({first} to {last}).",
+    opposite: {
+      vp: "Counted by records and month total, you get the VP's request: defects {a} to {b} per {per}, units {g}.",
+      strict: "Counted by scrapped units and per shipping week: scrap {a} to {b} per {per}, units {g}. That leads to: {headline}",
+    },
+    triggers: {
+      records: "Release when CRAFT is below {t} records per {per} units shipped in October.",
+      affected: "Release when affected CRAFT units in October are below {t} per {per} units shipped.",
+      scrapped: "Release when scrapped CRAFT units in October are below {t} per {per} units shipped.",
+    },
+    checks: {
+      units: "counts units, not documents",
+      unitsFail: "Met in September already by merging: {n} records give {rate}.",
+      notMet: "not met today ({today})",
+      named: "period and source named",
+    },
+    setting: "The threshold is a setting and the metric card says so.",
+    closing: "Same data, two decisions. The metric card says which one holds, and why.",
+    stripAll: "The whole block that step 2 of the kit writes:",
+  },
+  own: {
+    caption: "Pin down one metric from your own work. The checks run here in the browser.",
+    privacy: "Your input stays in this browser tab. Nothing is uploaded, stored or sent to an AI. Close the tab and it is gone.",
+    heading: "Your metric card",
+    lead: "A number your team regularly decides on. You need no data for this.",
+    preview: "How it reads in the skill",
+    noFindings: "No notes.",
+    findings: "Notes: {n}",
+    add: "Add metric card",
+    count: "{n} of {max}",
+    needs: "You can add it once metric, numerator, denominator and period are set.",
+    full: "The skill takes at most {max} metric cards.",
+    added: "Your metric cards",
+    none: "None added yet.",
+    remove: "Remove",
+    clear: "Clear my input",
+    dockZip: "Download skill",
+    fields: {
+      name: { label: "Metric", placeholder: "Complaint rate plant 2" },
+      decision: { label: "Decision it serves", placeholder: "Switch supplier for part X, yes or no" },
+      numerator: { label: "Numerator", placeholder: "Units complained about" },
+      denominator: { label: "Denominator", placeholder: "Units delivered in the same period" },
+      sourceFile: { label: "Source: file or system", placeholder: "ERP, export complaints.xlsx" },
+      sourceColumn: { label: "Column or field", placeholder: "qty_complained" },
+      limit: { label: "Limit", placeholder: "Counts reported complaints only, no goodwill cases." },
+      trigger: { label: "Trigger", placeholder: "Switch when the rate is above plan two months running." },
+    },
+    kindLegend: "The numerator counts",
+    kinds: {
+      events: "Events (records, tickets, orders, rows)",
+      quantity: "Quantity (units, euros, hours, kg)",
+    },
+    noDenominator: "none, an absolute number",
+    periodLegend: "Period",
+    periods: {
+      month: "Calendar month",
+      week: "Calendar week",
+      quarter: "Quarter",
+      year: "Fiscal year",
+      other: "other",
+    },
+    comparisonLegend: "Compared with",
+    comparisons: { previous: "Previous period", lastYear: "Same period last year", plan: "Plan" },
+    rules: {
+      R1: "Counts events. Merging or splitting changes the value while nothing changes in the matter. Write a quantity version next to it.",
+      R2: "Absolute numbers grow with volume. Without a denominator, more business cannot be told apart from more problems.",
+      R3: "Calendar months have 28 to 31 days, 4 or 5 week starts and different numbers of working days. Compare per week, per working day or with the same month last year.",
+      R4: "Without a column the number cannot be traced.",
+      R5: "Every metric has a limit. It belongs in the sentence with the number, not in a footnote.",
+      R6: "Adjusted is a definition of its own. An item that occurred before is not one-off, even if it occurs irregularly. Name the reported number first.",
+      R7: "Your trigger measures events. Check whether merging alone could meet it.",
+      R8: "Without a decision there is no telling which numerator is the right one.",
+    },
+    cite: "Sources on adjusted metrics: SEC Non-GAAP C&DI 100.01 and 102.10, ESMA APM Guidelines.",
+    card: {
+      decision: "Decision",
+      numerator: "Numerator",
+      denominator: "Denominator",
+      period: "Period",
+      source: "Source",
+      limit: "Limit",
+      trigger: "Trigger",
+      column: "column",
+      comparison: "compared with",
+      none: "none",
+      unset: "not set",
+      kinds: { events: "events", quantity: "quantity" },
+      periods: { month: "calendar month", week: "calendar week", quarter: "quarter", year: "fiscal year", other: "other period" },
+      comparisons: { previous: "previous period", lastYear: "same period last year", plan: "plan" },
+    },
+    referencesTitle: "Our metric cards",
+  },
+  takehome: {
+    caption: "Take the skill home with your metric cards. It is packed here in the browser.",
+    captionEmpty: "Without cards of your own you get the skill with the format to fill in.",
+    zip: "Download skill with your cards",
+    zipEmpty: "Download skill without own cards",
+    inZip: "In the zip",
+    skillNote: "unchanged, as under /skills",
+    refsNote: "your metric cards: {n}",
+    refsNone: "added as soon as you add a metric card",
+    instructionsHead: "Project instructions with your metric cards",
+    instructionsLead: "For Claude without skills: paste into a project under \"Instructions\". Projects exist on every plan, up to five on Free.",
+    copy: "Copy",
+    copied: "Copied",
+    promptsHead: "Two check prompts",
+    prompts: [
+      "For every number in your answer, name the file and column. Which did you compute from the data, and which did you take from the report?",
+      "Which other definition of this metric is plausible? Compute it and put both values side by side.",
+    ],
+    below: "Kit, template and installation are below under \"For your Claude\".",
+  },
+  kit: {
+    defectsHeading: "CRAFT defects",
+    demandHeading: "CRAFT demand",
+    releaseHeading: "Release condition",
+    numeratorLabel: "Numerator",
+    periodLabel: "Period",
+    denominatorLine: "- Denominator: units shipped in the same weeks (demand_actuals.csv, units_actual), per {per}",
+    counters: {
+      records: "NCR records (count of rows in ncr_records.csv).",
+      affected: "Affected units (qty_affected, rework and scrap together).",
+      scrapped: "Scrapped units (qty_affected where scrap_or_rework = scrap).",
+    },
+    bases: {
+      month: "Month total (all weeks whose week_start falls in the month).",
+      week: "Per shipping week (month total divided by the number of week_start values in the month).",
+    },
+  },
+};
+
+export const COPY = { de: DE, en: EN } as const;

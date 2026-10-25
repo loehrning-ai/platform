@@ -243,9 +243,10 @@ describe("workshops catalog", () => {
         optional,
         primary,
       }: WorkshopMaterial) => ({
-        href: role === "demo" ? href.replace(/^\/en\//, "/") : href,
+        // A demo is a page per locale; a kit published in both languages is "<name>-de.zip" beside "<name>.zip".
+        href: role === "demo" ? href.replace(/^\/en\//, "/") : href.replace(/-de\.zip$/, ".zip"),
         kind,
-        language: role === "demo" ? "page" : language,
+        language: role === "demo" ? "page" : href.endsWith("-de.zip") ? "en" : language,
         role,
         phase,
         minutes,
@@ -301,6 +302,12 @@ describe("workshops catalog", () => {
           // The practice demo is a page in the reader's language.
           if (material.role === "demo") {
             expect(material.language).toBe(locale);
+            continue;
+          }
+          // A kit that exists in German is served in German on the German page.
+          if (material.role === "kit" && material.href.endsWith("-de.zip")) {
+            expect(locale, material.href).toBe("de");
+            expect(material.language, material.href).toBe("de");
             continue;
           }
           expect(

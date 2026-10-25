@@ -46,7 +46,7 @@ test.describe("workshop self-study journey", () => {
       "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
     );
     const kit = stage.getByRole("link", { name: /^Kit herunterladen/ });
-    await expect(kit).toHaveAttribute("href", /northwind-analyst-kit\.zip$/);
+    await expect(kit).toHaveAttribute("href", /northwind-analyst-kit-de\.zip$/);
     await expect(kit).toHaveAttribute("download", "");
     await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
     await expect(page.getByRole("list", { name: "Ablauf" })).toHaveCount(0);

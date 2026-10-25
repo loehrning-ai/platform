@@ -131,6 +131,7 @@ export const demos: readonly Demo[] = [
   },
   {
     id: "geschaeftsberichte-mit-ki-lesen",
+    shell: "v3",
     slug: "geschaeftsberichte-mit-ki-lesen",
     workshopSlug: "geschaeftsberichte-mit-ki-lesen",
     workshopNumber: "02",
@@ -141,29 +142,29 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-23",
-    title: "Monatsgrenze",
+    lastReviewed: "2026-10-25",
+    title: "Eine Datei, drei Antworten",
     oneLiner:
-      "Schieb die Linie um eine Woche. Aus +26 % wird −20 %. Dann rechne mit deinen Zahlen.",
-    question: "Stimmt das?",
+      "Eine Datei aus dem Workshop-Kit, eine Frage, drei richtig gerechnete Antworten. Danach legst du eine eigene Kennzahl fest und nimmst einen Skill für Claude mit. Alles im Browser.",
+    question: "Ist die Qualität von CRAFT im September besser geworden?",
     syntheticDataLabel:
       "NORTHWIND ist erfunden, die Zahlen stammen aus dem Workshop-Kit und werden in deinem Browser gerechnet. Keine KI, nichts wird gesendet.",
-    job: "Prüf, ob dein Wachstum an der Monatsgrenze hängt.",
+    job: "Leg fest, was deine Kennzahl zählt.",
     tile: {
-      hook: "Dieselben neun Wochen: +26 %, −20 % oder +105 %.",
-      take: "Regeln für deine Berichte",
+      hook: "Dieselbe CSV sagt besser, gleich und schlechter. Je nachdem, was man zählt.",
+      take: "Kennzahlen-Steckbrief als Skill",
     },
     en: {
-      title: "The Month Line",
+      title: "One file, three answers",
       oneLiner:
-        "Move the line by one week. +26 % becomes −20 %. Then run your own numbers.",
-      question: "Is that right?",
+        "One file from the workshop kit, one question, three correctly computed answers. Then you pin down one of your own metrics and take a Claude skill home. All in your browser.",
+      question: "Did CRAFT's quality get better in September?",
       syntheticDataLabel:
         "NORTHWIND is invented, the figures come from the workshop kit and are worked out in your browser. No AI, nothing is sent.",
-      job: "Check if your growth hangs on where a month ends.",
+      job: "Pin down what your metric counts.",
       tile: {
-        hook: "The same nine weeks: +26 %, −20 % or +105 %.",
-        take: "rules for your reports",
+        hook: "The same CSV says better, same and worse. It depends on what you count.",
+        take: "metric cards as a skill",
       },
     },
   },

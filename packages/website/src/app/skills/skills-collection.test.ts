@@ -30,6 +30,7 @@ import {
  */
 const PUBLISHED_SKILLS = [
   "cv-engine",
+  "kennzahlen-steckbrief",
   "loehrning-plattform",
   "workshop-arbeiten",
 ] as const;

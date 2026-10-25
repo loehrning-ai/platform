@@ -1,77 +1,87 @@
-import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEFECTS, REVENUES, UNITS, WEEKS } from "./data";
+import { COMPANY, CRAFT_MODELS, CRAFT_NCR_AUG, CRAFT_NCR_SEP, CRAFT_SEP_ROWS, CRAFT_WEEKS, DEMAND_ROWS, REPORT } from "./data";
+import { csvRows, kitText, type KitLocale } from "@/test/northwind-kit";
 
-const ZIP = join(process.cwd(), "public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip");
-const READY = existsSync(ZIP);
+/**
+ * Every constant in data.ts re-derived from the published kit zips, both
+ * editions: the demo cannot drift from the files the visitor downloads.
+ */
+const month = (date: string) => (date < "2023-09-01" ? "aug" : "sep");
 
-function entry(name: string): string {
-  return execFileSync("unzip", ["-p", ZIP, `northwind-analyst-kit/${name}`], { encoding: "utf8" });
-}
+describe.each(["en", "de"] as KitLocale[])("data.ts against the %s kit", (locale) => {
+  const demand = csvRows(kitText(locale, "data/demand_actuals.csv"));
+  const ncr = csvRows(kitText(locale, "data/ncr_records.csv"));
+  const products = csvRows(kitText(locale, "data/product_lines.csv"));
+  const price = new Map(products.map((row) => [`${row.line}-${row.model_code}`, Number(row.base_price_eur)]));
+  const parts = (sku: string) => sku.split("-");
 
-function rows(csv: string): Record<string, string>[] {
-  const [head, ...lines] = csv.trim().split(/\r?\n/);
-  const keys = (head as string).split(",");
-  return lines.map((line) => {
-    // product_lines.csv quotes the colour list; no other field holds a comma.
-    const cells = line.match(/("[^"]*"|[^,]*)(,|$)/g)?.map((cell) => cell.replace(/,$/, "").replace(/^"|"$/g, "")) ?? [];
-    return Object.fromEntries(keys.map((key, index) => [key, cells[index] ?? ""]));
-  });
-}
-
-describe("embedded NORTHWIND data", () => {
-  it("holds nine weeks, four in August and five in September by start date", () => {
-    expect(WEEKS).toHaveLength(9);
-    expect(WEEKS.filter((week) => week.start < "2023-09-01")).toHaveLength(4);
-    expect(WEEKS.filter((week) => week.start >= "2023-09-01")).toHaveLength(5);
-  });
-
-  it("sums to the printed report totals", () => {
-    const sum = (list: readonly number[]) => list.reduce((a, b) => a + b, 0);
-    expect(sum(REVENUES.slice(0, 4))).toBe(17233647);
-    expect(sum(REVENUES.slice(4))).toBe(21687544);
-    expect(sum(UNITS.slice(0, 4))).toBe(110373);
-    expect(sum(UNITS.slice(4))).toBe(139056);
-  });
-
-  it("defect rows add up to the report's September units per line", () => {
-    const by = Object.fromEntries(DEFECTS.map((row) => [row.line, row]));
-    expect(by.CRAFT?.sepUnits).toBe(9162);
-    expect(by.AURA?.sepUnits).toBe(42197);
-    expect(DEFECTS.map((row) => row.sepRecords)).toEqual([23, 19, 18, 11]);
-  });
-
-  it.skipIf(!READY)("re-derives every week and defect row from the kit CSVs", () => {
-    const price = new Map(rows(entry("data/product_lines.csv")).map((r) => [`${r.line}-${r.model_code}`, Number(r.base_price_eur)]));
-    const weeks = new Map<string, { revenueEur: number; units: number }>();
-    const lineUnits = new Map<string, number>();
-    const demand = rows(entry("data/demand_actuals.csv"));
-    expect(demand).toHaveLength(2115);
-    for (const r of demand) {
-      const [, line, code] = (r.sku as string).split("-");
-      const unitPrice = price.get(`${line}-${code}`);
-      expect(unitPrice, r.sku).toBeGreaterThan(0);
-      const units = Number(r.units_actual);
-      const week = weeks.get(r.week_start as string) ?? { revenueEur: 0, units: 0 };
-      weeks.set(r.week_start as string, { revenueEur: week.revenueEur + units * (unitPrice as number), units: week.units + units });
-      const key = `${line}-${(r.week_start as string) < "2023-09-01" ? "aug" : "sep"}`;
-      lineUnits.set(key, (lineUnits.get(key) ?? 0) + units);
+  it("has the CSVs byte for byte in both editions", () => {
+    for (const file of ["data/demand_actuals.csv", "data/ncr_records.csv", "data/product_lines.csv"]) {
+      expect(kitText(locale, file)).toBe(kitText("en", file));
     }
-    expect([...weeks.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([start, w]) => ({ start, ...w }))).toEqual(
-      WEEKS.map((week) => ({ ...week })),
+  });
+
+  it("re-derives the nine CRAFT weeks and the row count", () => {
+    expect(demand).toHaveLength(DEMAND_ROWS);
+    const weeks = new Map<string, number>();
+    for (const row of demand) {
+      if (parts(row.sku ?? "")[1] !== "CRAFT") continue;
+      weeks.set(row.week_start ?? "", (weeks.get(row.week_start ?? "") ?? 0) + Number(row.units_actual));
+    }
+    expect([...weeks.entries()].sort().map(([start, units]) => ({ start, units }))).toEqual(CRAFT_WEEKS);
+  });
+
+  it("re-derives the company totals per month", () => {
+    const units = { aug: 0, sep: 0 };
+    const revenue = { aug: 0, sep: 0 };
+    for (const row of demand) {
+      const [, line, code] = parts(row.sku ?? "");
+      const m = month(row.week_start ?? "");
+      units[m] += Number(row.units_actual);
+      revenue[m] += Number(row.units_actual) * (price.get(`${line}-${code}`) ?? Number.NaN);
+    }
+    expect(units).toEqual(COMPANY.units);
+    expect(revenue).toEqual(COMPANY.revenueEur);
+  });
+
+  it("re-derives the 23 September CRAFT NCRs and August's sums", () => {
+    const craft = ncr.filter((row) => row.line === "CRAFT");
+    const sep = craft
+      .filter((row) => month(row.ncr_date ?? "") === "sep")
+      .sort((a, b) => (a.ncr_date ?? "").localeCompare(b.ncr_date ?? "") || (a.ncr_id ?? "").localeCompare(b.ncr_id ?? ""))
+      .map((row) => ({
+        id: row.ncr_id,
+        date: row.ncr_date,
+        machine: row.machine_id,
+        type: row.ncr_type,
+        qty: Number(row.qty_affected),
+        scrap: row.scrap_or_rework === "scrap",
+      }));
+    expect(sep).toEqual(CRAFT_NCR_SEP);
+    const aug = craft.filter((row) => month(row.ncr_date ?? "") === "aug");
+    expect(aug).toHaveLength(CRAFT_NCR_AUG.records);
+    expect(aug.reduce((sum, row) => sum + Number(row.qty_affected), 0)).toBe(CRAFT_NCR_AUG.affected);
+    expect(aug.filter((row) => row.scrap_or_rework === "scrap").reduce((sum, row) => sum + Number(row.qty_affected), 0)).toBe(
+      CRAFT_NCR_AUG.scrapped,
     );
-    const records = new Map<string, number>();
-    for (const r of rows(entry("data/ncr_records.csv"))) {
-      const key = `${r.line}-${(r.ncr_date as string) < "2023-09-01" ? "aug" : "sep"}`;
-      records.set(key, (records.get(key) ?? 0) + 1);
-    }
-    for (const row of DEFECTS) {
-      expect(records.get(`${row.line}-aug`), row.line).toBe(row.augRecords);
-      expect(records.get(`${row.line}-sep`), row.line).toBe(row.sepRecords);
-      expect(lineUnits.get(`${row.line}-aug`), row.line).toBe(row.augUnits);
-      expect(lineUnits.get(`${row.line}-sep`), row.line).toBe(row.sepUnits);
-    }
+    expect(new Set(aug.map((row) => `${row.machine_id}|${row.ncr_date}`)).size).toBe(CRAFT_NCR_AUG.merged);
+  });
+
+  it("re-derives the 95 September CRAFT rows in file order and the model prices", () => {
+    const rows = demand
+      .filter((row) => parts(row.sku ?? "")[1] === "CRAFT" && month(row.week_start ?? "") === "sep")
+      .map((row) => [parts(row.sku ?? "")[2], Number(row.units_actual)]);
+    expect(rows).toEqual(CRAFT_SEP_ROWS);
+    for (const model of CRAFT_MODELS) expect(price.get(`CRAFT-${model.code}`)).toBe(model.price);
+  });
+
+  it("quotes the report's figures as the report prints them", () => {
+    const report = kitText(locale, "reports/2023-09-monthly-report.md");
+    const n = (value: number, digits = 0) =>
+      new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB", { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(value);
+    expect(report).toContain(n(REPORT.craftRevenueEur));
+    expect(report).toContain(n(REPORT.avgPriceCents / 100, 2));
+    expect(report).toContain(n(REPORT.vpDefectsAug, 2));
+    expect(report).toContain(n(REPORT.vpDefectsSep, 2));
   });
 });

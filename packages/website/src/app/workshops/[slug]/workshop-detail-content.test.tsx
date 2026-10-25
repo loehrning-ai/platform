@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { getWorkshopBySlug, getWorkshops, workshopFileMaterials } from "@/lib/workshops";
+import { getWorkshopBySlug, getWorkshops, workshopFileMaterials, type Workshop } from "@/lib/workshops";
 import { workshopStage } from "@/lib/workshop-stage";
 import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT, type PlakatKey } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
@@ -38,6 +38,25 @@ function follows(first: Element, second: Element): boolean {
   );
 }
 
+
+/** A public second case as the page renders one; no catalogue entry carries one at the moment. */
+function withRealWorldCase(workshop: Workshop): Workshop {
+  return {
+    ...workshop,
+    provenance: { ...workshop.provenance, data: "synthetic-and-public" },
+    realWorldCase: {
+      companyName: "Example Corp",
+      source: "Example Corp Q2 Results",
+      sourceHref: "https://example.com/q2-results.htm",
+      sourcePublishedAt: "2026-07-29",
+      sourceReviewedAt: "2026-08-26",
+      sourceLimitation: "Company release with unaudited figures.",
+      narrative: "The same method on a public quarterly release.",
+      metrics: [{ label: "Revenue", value: "+28%" }],
+      decisionQuestion: "Which figure describes the quarter?",
+    },
+  };
+}
 describe("<WorkshopDetailContent>", () => {
   it("puts the band, the stage, the kit explainer and the provenance line in that order, with nothing collapsible, no outcomes, no case section and no agenda", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
@@ -509,7 +528,7 @@ describe("<WorkshopDetailContent>", () => {
   });
 
   it("renders the English page with the real-world case source, dates and no German interface copy", () => {
-    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")!;
+    const workshop = withRealWorldCase(getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")!);
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="en" />,
     );
@@ -522,12 +541,9 @@ describe("<WorkshopDetailContent>", () => {
     expect(screen.queryByRole("heading", { name: "The case" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "After this you can" })).toBeNull();
     // The real source stays on the page, in the provenance line, with publisher and date.
-    const source = screen.getByRole("link", { name: /Meta Q2 2026 Results/ });
+    const source = screen.getByRole("link", { name: /Example Corp Q2 Results/ });
     expect(source.closest("footer")).not.toBeNull();
-    expect(source).toHaveAttribute(
-      "href",
-      "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
-    );
+    expect(source).toHaveAttribute("href", "https://example.com/q2-results.htm");
     expect(source).toHaveAttribute("target", "_blank");
     expect(container.querySelector('time[datetime="2026-07-29"]')).not.toBeNull();
 
@@ -610,11 +626,11 @@ describe("the compact band and the facts", () => {
   });
 
   it("names the origin of the data once, in the provenance line", () => {
-    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
+    const workshop = withRealWorldCase(getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!);
     const { container } = render(<WorkshopDetailContent workshop={workshop} locale="de" />);
     const footer = container.querySelector('footer[aria-label="Stand und Herkunft"]') as HTMLElement;
     expect(footer).toHaveTextContent(workshop.provenance.note);
-    expect(footer).toHaveTextContent("Quelle: Meta Q2 2026 Results");
+    expect(footer).toHaveTextContent("Quelle: Example Corp Q2 Results");
     expect(container.querySelector("[data-stage-explainer]")).not.toHaveTextContent(/öffentliche Zahlen/);
   });
 });

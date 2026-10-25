@@ -1,8 +1,14 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { expect, test, type Page } from "@playwright/test";
+import { listZipEntries, readZipText } from "../../src/lib/zip/read";
 
 const SLUG = "geschaeftsberichte-mit-ki-lesen";
+const SKILL = readFileSync(join(process.cwd(), "content/skills/kennzahlen-steckbrief/SKILL.md"), "utf8");
+/** A string that must never leave the browser: it goes into the visitor's own card. */
+const MARKER = "MARKER-7f3a-Werk2";
 
-/** Console errors and page errors of one run, filtered to nothing: the demo must be silent. */
+/** Console errors and page errors of one run: the demo must be silent. */
 function watch(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (message) => message.type() === "error" && errors.push(message.text()));
@@ -10,118 +16,174 @@ function watch(page: Page): string[] {
   return errors;
 }
 
-const number = (page: Page) => page.getByTestId("giant-number").locator("span").first();
-const noOverflow = (page: Page) =>
-  page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+const clock = (page: Page) => page.locator("[data-demo-clock]");
+const rail = (page: Page, counter: string) => page.locator(`[data-rail-value="${counter}"]`);
+
+/**
+ * ArrowRight until the clock shows `id`; next() first finishes a running motion, so it may take two presses.
+ * Arrows inside a radio group move the choice, so focus leaves the chips first.
+ */
+async function advanceTo(page: Page, id: string) {
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  await expect
+    .poll(
+      async () => {
+        const now = await clock(page).getAttribute("data-beat");
+        if (now !== id) await page.keyboard.press("ArrowRight");
+        return now;
+      },
+      { timeout: 8000, intervals: [250] },
+    )
+    .toBe(id);
+}
+
+/** From beat 1 to the own beat: the commit beat needs the tap, then a rail mark jumps. */
+async function pollThenOwn(page: Page) {
+  await page.locator('[data-poll="same"]').click();
+  await expect(clock(page)).toHaveAttribute("data-beat", "drei-zaehlweisen", { timeout: 4000 });
+  await page.locator('[data-beat-rail]:visible [data-beat-mark="deine-kennzahl"]').click();
+  await expect(clock(page)).toHaveAttribute("data-beat", "deine-kennzahl");
+}
+
+async function open(page: Page, path: string) {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const response = await page.goto(path, { waitUntil: "networkidle" });
+  expect(response?.status()).toBe(200);
+}
 
 test.describe(`/demos/${SLUG}`, () => {
+  test("DE: the poll, three rails, the merge test, the period and the decision", async ({ page }) => {
+    const errors = watch(page);
+    await open(page, `/demos/${SLUG}`);
+    await expect(page.locator("[data-nw-quote]")).toBeVisible();
+    for (const value of ["better", "same", "worse"]) await expect(page.locator(`[data-poll="${value}"]`)).toBeInViewport();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+
+    await page.locator('[data-poll="worse"]').click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "drei-zaehlweisen", { timeout: 4000 });
+    await expect(rail(page, "records")).toHaveText("2,51", { timeout: 6000 });
+    await expect(rail(page, "affected")).toHaveText("309");
+    await expect(rail(page, "scrapped")).toHaveText("168");
+    await expect(page.locator("[data-framed]")).toHaveCount(1);
+
+    await advanceTo(page, "zaehler-waehlen");
+    await page.locator("[data-merge-toggle]").click();
+    await expect(rail(page, "records")).toHaveText("1,86", { timeout: 3000 });
+    await expect(rail(page, "affected")).toHaveText("309");
+    await expect(rail(page, "scrapped")).toHaveText("168");
+    await page.locator('input[name="nw-counter"][value="scrapped"]').check({ force: true });
+
+    await advanceTo(page, "zeitraum");
+    await page.locator('input[name="nw-basis"][value="week"]').check({ force: true });
+    await expect(page.locator("[data-period-delta]")).toContainText("−2,1", { timeout: 3000 });
+    await expect(page.locator('[data-nw-notes="zeitraum"]')).toContainText("+0,8");
+
+    await advanceTo(page, "entscheiden");
+    await expect(page.locator("[data-decision-headline]")).toContainText("Erst Nacharbeit");
+    await expect(page.locator('[data-trigger-checks] [data-check="fail"]')).toHaveCount(0);
+    await expect(page.locator('[data-trigger-checks] [data-check="ok"]')).toHaveCount(3);
+    expect(errors).toEqual([]);
+  });
+
+  test("DE: a records release condition fails check one at the merged 1,86", async ({ page }) => {
+    await open(page, `/demos/${SLUG}?beat=zaehler-waehlen`);
+    await page.locator('input[name="nw-counter"][value="records"]').check({ force: true });
+    await advanceTo(page, "entscheiden");
+    const failed = page.locator('[data-trigger-checks] [data-check="fail"]');
+    await expect(failed).toHaveCount(1);
+    await expect(failed).toContainText("1,86");
+  });
+
+  test("DE: ?beat=5 traces 4.124.238 € to 95 rows", async ({ page }) => {
+    await open(page, `/demos/${SLUG}?beat=5`);
+    await expect(clock(page)).toHaveAttribute("data-beat", "zahl-pruefen");
+    await page.locator("[data-trace-figure]").click();
+    const sum = page.locator("[data-trace-sum]");
+    await expect(sum).toHaveAttribute("data-done", "", { timeout: 4000 });
+    await expect(sum).toContainText("4.124.238");
+    await expect(page.locator("[data-demo-stage]")).toContainText("95");
+  });
+
+  test("DE: r and Shift+R go to beat 1 and clear the poll; r inside a field is text", async ({ page }) => {
+    await open(page, `/demos/${SLUG}?beat=deine-kennzahl`);
+    const name = page.locator('[data-own-field="name"]');
+    await name.fill("Quote");
+    await name.press("r");
+    await expect(name).toHaveValue("Quoter");
+    await expect(clock(page)).toHaveAttribute("data-beat", "deine-kennzahl");
+    await name.blur();
+
+    await page.locator("body").press("r");
+    await expect(clock(page)).toHaveAttribute("data-beat", "frage");
+    await expect(page.locator('[data-poll][aria-pressed="true"]')).toHaveCount(0);
+
+    await pollThenOwn(page);
+    await expect(page.locator('[data-own-field="name"]')).toHaveValue("Quoter");
+    await page.locator("body").press("Shift+R");
+    await expect(clock(page)).toHaveAttribute("data-beat", "frage");
+    await expect(page.locator('[data-poll][aria-pressed="true"]')).toHaveCount(0);
+  });
+
   for (const [prefix, de] of [["", true], ["/en", false]] as const) {
-    test(`${prefix || "/"}demos plays the core loop at 390px without errors`, async ({ page }) => {
-      const errors = watch(page);
-      await page.setViewportSize({ width: 390, height: 844 });
-      const response = await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
-      expect(response?.status()).toBe(200);
-      const stage = page.locator(".mg-stage");
-      await stage.scrollIntoViewIfNeeded();
+    test(`${de ? "DE" : "EN"}: the own card goes into references, survives a reset and never leaves the browser`, async ({ page, baseURL }) => {
+      const origin = new URL(baseURL ?? "http://localhost:3000").origin;
+      const outbound: string[] = [];
+      page.on("request", (request) => {
+        const leaves = new URL(request.url()).origin !== origin;
+        const carries = request.url().includes(MARKER) || (request.postData() ?? "").includes(MARKER);
+        if (leaves || carries) outbound.push(request.url());
+      });
+      await open(page, `${prefix}/demos/${SLUG}?beat=deine-kennzahl`);
+      await page.locator('input[name="nw-kind"][value="events"]').check({ force: true });
+      await expect(page.locator('[data-finding="R1"]')).toBeVisible();
+      await page.locator('input[name="nw-kind"][value="quantity"]').check({ force: true });
 
-      // The finished hero is server-rendered; the pass replays once and ends on it by itself (about 4 s), or at once on touch.
-      await expect(number(page)).toHaveText(/\+26/, { timeout: 9000 });
-      await expect(page.getByTestId("weeks-label")).toHaveText(de ? "Wochen: 4 | 5" : "Weeks: 4 | 5");
+      await page.locator('[data-own-field="name"]').fill(`Quote ${MARKER}`);
+      await page.locator('[data-own-field="decision"]').fill(de ? "Lieferant wechseln" : "Switch supplier");
+      await page.locator('[data-own-field="numerator"]').fill(de ? "Reklamierte Stück" : "Units returned");
+      await page.locator('[data-own-field="denominator"]').fill(de ? "Gelieferte Stück" : "Units delivered");
+      await page.locator('input[name="nw-period"][value="week"]').check({ force: true });
+      await page.locator("[data-add-card]").click();
+      await expect(page.locator("[data-own-section]")).toContainText(MARKER);
 
-      // Move the line one week: +26 % becomes -20 %.
-      await page.getByRole("button", { name: de ? "Linie nach rechts" : "Move line right" }).click();
-      await expect(number(page)).toHaveText(/−20/);
+      // A reset clears the poll and the levers, never the visitor's own cards.
+      await page.locator("body").press("r");
+      await expect(clock(page)).toHaveAttribute("data-beat", "frage");
+      await pollThenOwn(page);
+      await expect(page.locator("[data-own-section]")).toContainText(MARKER);
 
-      // Drag the handle to the left edge of the allowed range.
-      const handle = page.getByRole("slider").first();
-      const box = (await handle.boundingBox())!;
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-      await page.mouse.down();
-      await page.mouse.move(box.x - 120, box.y + box.height / 2, { steps: 8 });
-      await page.mouse.up();
-      await expect(handle).toHaveAttribute("aria-valuenow", "3");
-      await expect(number(page)).toHaveText(/\+105/);
-      expect(box.width).toBeGreaterThanOrEqual(47.5);
-      expect(box.height).toBeGreaterThanOrEqual(47.5);
-
-      // Per week: the number barely moves, and the stamp names the calendar.
-      await page.getByRole("button", { name: de ? "Linie nach rechts" : "Move line right" }).click();
-      await page.getByRole("radio", { name: de ? "Pro Woche" : "Per week" }).first().click();
-      await expect(number(page)).toHaveText(de ? /\+0,7/ : /\+0\.7/);
-      await expect(page.locator(".mg-stamp")).toContainText(/97/);
-
-      // Act 2: same switch, other axis.
-      const act2 = page.locator(".mg-act2");
-      await act2.scrollIntoViewIfNeeded();
-      await act2.getByRole("radio").nth(1).click();
-      await expect(act2).toContainText(de ? "2,2-Fache" : "2.2 times");
-
-      // Your own numbers: fill the field, the result and the takeaway follow.
-      const own = page.locator(".mg-compare input[type=text]").nth(1);
-      await own.fill(de ? "20.000.000" : "20,000,000");
-      await expect(page.getByTestId("take-sentence")).toContainText(de ? "20,00 Mio. €" : "EUR 20.00M");
-      await expect(page.locator(".mg-tag")).toHaveText(de ? "Deine Zahlen" : "Your numbers");
-
-      // Copy shows a visible confirmation.
-      await page.context().grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => undefined);
-      await page.locator(".mg-take .mg-btn").first().click();
-      await expect(page.locator(".mg-copied").first()).not.toBeEmpty();
-
-      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
-      expect(errors).toEqual([]);
+      await advanceTo(page, "mitnehmen");
+      await expect(page.locator("[data-own-instructions]")).toContainText(MARKER);
+      const [download] = await Promise.all([
+        page.waitForEvent("download", { timeout: 5000 }),
+        page.locator("[data-skill-zip]").click(),
+      ]);
+      expect(download.suggestedFilename()).toBe("kennzahlen-steckbrief.zip");
+      const bytes = new Uint8Array(readFileSync((await download.path())!));
+      expect(listZipEntries(bytes).map((entry) => entry.path)).toEqual([
+        "kennzahlen-steckbrief/SKILL.md",
+        "kennzahlen-steckbrief/references/steckbriefe.md",
+      ]);
+      expect(readZipText(bytes, "kennzahlen-steckbrief/SKILL.md")).toBe(SKILL);
+      const references = readZipText(bytes, "kennzahlen-steckbrief/references/steckbriefe.md") ?? "";
+      expect(references).toContain(de ? "# Unsere Steckbriefe" : "# Our metric cards");
+      expect(references).toContain(`### Quote ${MARKER}`);
+      expect(outbound).toEqual([]);
     });
   }
 
-  test("reduced motion shows +26 % and -20 % side by side with both ticks, no intro", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
-    await expect(page.getByTestId("giant-number")).toContainText(/\+26.*−20/s);
-    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+  test("reduced motion: the final rail values are there right after the tap", async ({ browser, baseURL }) => {
+    const context = await browser.newContext({ baseURL, reducedMotion: "reduce", viewport: { width: 390, height: 844 } });
+    const page = await context.newPage();
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
+    await page.locator('[data-poll="better"]').click();
+    await expect(rail(page, "records")).toHaveText("2,51", { timeout: 1500 });
+    await expect(rail(page, "scrapped")).toHaveText("168", { timeout: 500 });
+    await context.close();
   });
 
-  test("desktop: number, towers, switch and ruler share the first 900 px; Act 2 beside the comparison; takeaway below", async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
-    const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
-    const [stage, chart, sw, ruler, act2, compare, take] = [
-      await box(".mg-stage"), await box(".mg-chart"), await box("#mg-mode"), await box(".mg-rulerwrap"),
-      await box(".mg-act2"), await box(".mg-compare"), await box(".mg-take"),
-    ];
-    expect(chart.y + chart.height).toBeLessThan(900);
-    expect(sw.y + sw.height).toBeLessThan(900);
-    expect(ruler.y + ruler.height).toBeLessThan(900);
-    expect(compare.x).toBeGreaterThan(act2.x + act2.width);
-    expect(Math.abs(compare.y - act2.y)).toBeLessThan(2);
-    expect(act2.y).toBeGreaterThan(stage.y + stage.height);
-    expect(take.y).toBeGreaterThan(Math.max(act2.y + act2.height, compare.y + compare.height));
-    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
-    await expect(page.locator(".mg-room-toggle")).toBeVisible();
-  });
-
-  test("phone 360x740: number, towers, switch and ruler all end above the tab bar", async ({ page }) => {
-    await page.setViewportSize({ width: 360, height: 740 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
-    await expect(number(page)).toHaveText(/\+26/);
-    for (const selector of [".mg-chart", "#mg-mode", ".mg-rulerwrap"]) {
-      const b = (await page.locator(selector).first().boundingBox())!;
-      expect(b.y + b.height, selector).toBeLessThan(740 - 56);
-    }
-    await expect(page.locator(".mg-room-toggle")).toBeHidden();
-    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
-  });
-
-  test("fast key presses are all counted, and the plot itself is a drag target", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
-    const handle = page.getByRole("slider").first();
-    await handle.focus();
-    for (let i = 0; i < 4; i += 1) await page.keyboard.press("ArrowRight");
-    await expect(handle).toHaveAttribute("aria-valuenow", "6");
-    for (let i = 0; i < 4; i += 1) await page.keyboard.press("ArrowLeft");
-    await expect(handle).toHaveAttribute("aria-valuenow", "3");
-    const plot = (await page.locator(".mg-plot").boundingBox())!;
-    await page.mouse.click(plot.x + plot.width * 0.8, plot.y + plot.height * 0.8);
-    await expect(handle).toHaveAttribute("aria-valuenow", "6");
+  test("room mode: ?room=1 marks the clock", async ({ page }) => {
+    await open(page, `/demos/${SLUG}?room=1`);
+    await expect(clock(page)).toHaveAttribute("data-room", "");
   });
 });

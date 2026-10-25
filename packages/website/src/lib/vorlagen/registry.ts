@@ -64,6 +64,22 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       en: "/en/blog/ki-in-der-ausbildung",
     },
   },
+  {
+    slug: "kennzahlen-steckbrief-vorlage",
+    kind: "template",
+    files: {
+      de: "kennzahlen-steckbrief-vorlage.md",
+      en: "en/metric-card-template.md",
+    },
+    downloadNames: {
+      de: "kennzahlen-steckbrief-vorlage.md",
+      en: "metric-card-template.en.md",
+    },
+    hostPaths: {
+      de: "/demos/geschaeftsberichte-mit-ki-lesen",
+      en: "/en/demos/geschaeftsberichte-mit-ki-lesen",
+    },
+  },
 ];
 
 /**
