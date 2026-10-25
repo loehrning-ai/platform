@@ -1,35 +1,31 @@
 #!/usr/bin/env node
 /**
- * Publishes Workshop 04 ("Answer ESG by Friday") from its course source into
+ * Publishes the Workshop 04 deck ("ESG-Berichte mit KI", v3) into
  * packages/website/public/workshops/esg-berichte-mit-ki/.
  *
- * Only allowlisted files leave the source: the deck (slides.html, its lib/ and the assets it
- * loads), the phone game sheet and the participant kit as a reviewed ZIP. Trainer notes, PDFs and
- * build scripts are never copied. A site-ready package keeps its compressed ZIP byte for byte and
- * gets the reviewed padded slide-counter format; source-built decks receive the partner/font/path
- * edits below. The export fails before writing anything if a client name or local path survives.
+ * The input is the course source's built deck folder (German at the root, English in en/). Only
+ * the allowlisted files leave it. The export fills two placeholders the source leaves open:
+ *   {{claude-ui:<path>}}  one string from src/lib/claude-ui.ts (CLAUDE_UI_DE or CLAUDE_UI_EN by edition)
+ *   {{qr:<url>}}          an inline SVG QR code for a loehrning.ai URL
+ * and adds lib/deck-keys.js from scripts/workshops/deck-keys.js, the cover block of lib/tokens.css
+ * and the poster (packages/website/scripts/plakat). The fonts, the poster card and the two kit zips
+ * (scripts/workshop04/kit-v3.mjs) are kept byte for byte. A file the folder holds for a decision
+ * outside this export (HELD_PATH_SHA256) is neither written nor removed, and its manifest row stays.
+ * The export fails before writing anything if a client name, a local path or an open placeholder
+ * survives.
  *
  * Usage (from the repository root):
- *   node scripts/workshop04/export-esg-passport.mjs <site-ready-workshop-folder>
- *   node scripts/workshop04/export-esg-passport.mjs <site-ready-workshop-folder> --check
+ *   node scripts/workshop04/export-esg-passport.mjs <course-deck-site-folder>
+ *   node scripts/workshop04/export-esg-passport.mjs <course-deck-site-folder> --check
  * --check writes nothing and exits 1 when the published folder differs from a fresh export.
  */
 import { createHash } from "node:crypto";
-import {
-  closeSync,
-  constants,
-  existsSync,
-  fstatSync,
-  mkdirSync,
-  openSync,
-  readFileSync,
-  readdirSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { closeSync, constants, existsSync, fstatSync, mkdirSync, openSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { buildKitArchive, KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
+import { CLAUDE_UI_DE, CLAUDE_UI_EN } from "../../packages/website/src/lib/claude-ui.ts";
+import { KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
@@ -37,58 +33,27 @@ export const SLUG = "esg-berichte-mit-ki";
 export const WORKSHOP_RELATIVE = `packages/website/public/workshops/${SLUG}`;
 export const WORKSHOP_DIR = path.join(REPO_ROOT, WORKSHOP_RELATIVE);
 
-/** Deck text files copied from the source, in the order the deck loads them. */
-export const DECK_TEXT_FILES = [
+/** The deck, as the course source builds it: German at the root, English in en/. */
+export const DECK_FILES = [
   "slides.html",
+  "en/slides.html",
+  "presenter.html",
+  "en/presenter.html",
   "sheet.html",
-  "lib/tokens.css",
-  "lib/deck.css",
-  "lib/esg.css",
   "lib/deck-stage.js",
-  "lib/esg.js",
-  "lib/geo.js",
-  "lib/globe.js",
+  "lib/scenes.js",
+  "lib/deck.css",
+  "lib/tokens.css",
+  "lib/presenter.js",
+  "lib/presenter.css",
   "assets/favicon.svg",
-  "assets/lockup-horizontal.svg",
-  "assets/brainster-logo.svg",
-  "assets/kit-qr.svg",
 ];
 
-/**
- * Repository-authored deck changes. The course source (outside this repository) does not carry them, so the
- * export re-applies full copies from scripts/workshop04/overlay/ after its own transforms:
- *  - slides.html and lib/deck-stage.js: the back-to-workshop button, Shift+R and P keys, the presenter hook and the
- *    speaker notes in the Time/Say/Students/Cue/Remember format. OVERLAY_ORIGINAL pins the export output each copy
- *    was made against; if the source changed underneath, the export stops so both versions can be reconciled by hand.
- *  - presenter.html, lib/presenter.js, lib/presenter.css: the presenter view, repository-authored (no original).
- */
-export const OVERLAY_DIR = path.join(HERE, "overlay");
-export const OVERLAY_ORIGINAL = {
-  "slides.html": "7a7365a5566d2b69688cca1d57a8afa72838413dd7c99b8c9020a17a16ad90d1",
-  "lib/deck-stage.js": "69597c2ca285211609b06f8881fcb1cbbd6997a9cca28a2d44e1315a03568199",
-};
-export const OVERLAY_NEW_FILES = ["presenter.html", "lib/presenter.css", "lib/presenter.js"];
+/** The shared key contract, copied from the repository (scripts/workshops/sync-deck-keys.mjs checks it). */
+export const DECK_KEYS = "lib/deck-keys.js";
+export const DECK_KEYS_SOURCE = path.join(REPO_ROOT, "scripts/workshops/deck-keys.js");
 
-/**
- * Deck images copied byte for byte: unedited Claude output from the rehearsal (the passport
- * dashboard before and after the late invoice) and the invented invoice photo. PNGs only, and
- * each must carry image chunks alone (no text or EXIF metadata).
- */
-export const DECK_IMAGES = [
-  "assets/proof/dashboard-before.png",
-  "assets/proof/dashboard-after.png",
-  "assets/proof/september-invoice.png",
-];
-
-/** The portrait the deck's host slide shows: the reviewed file already published with Workshop 02. */
-export const PORTRAIT = "assets/tim-loehr.jpg";
-export const PORTRAIT_SHA256 = "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4";
-
-/**
- * The deck's Typing faces, copied byte for byte from Workshop 01, where they are already
- * inventoried. They are the woff2 builds of the same Typing 2.0 the course source sets, so the
- * public deck keeps the source's line breaks (the 2.1 statics run wider and broke lines).
- */
+/** The Typing faces, copied byte for byte from Workshop 01, where they are inventoried. */
 export const FONT_SOURCE_RELATIVE = "packages/website/public/workshops/ki-prognosen-einschaetzen/assets/fonts";
 export const REUSED_FONTS = [
   "assets/fonts/Typing-Regular.woff2",
@@ -97,11 +62,7 @@ export const REUSED_FONTS = [
   "assets/fonts/Typing-Bold.woff2",
 ];
 
-/**
- * Files this folder already publishes and the export keeps byte for byte: the mono font with
- * the licence notices, and the poster card (generated in this repository by
- * packages/website/scripts/plakat/build-cards.mjs).
- */
+/** Files this folder already publishes and the export keeps byte for byte. */
 export const KEPT_FILES = [
   "assets/fonts/JetBrainsMono-var.woff2",
   "assets/fonts/OFL-1.1.txt",
@@ -109,77 +70,35 @@ export const KEPT_FILES = [
   "card-preview.webp",
 ];
 
-/** The cover poster, generated from src/lib/plakat (packages/website/scripts/plakat/build-static.mjs). */
+/** The cover poster the site's workshop cards show, generated from src/lib/plakat. */
 export const POSTER = "assets/plakat-cover.svg";
 
-/** Kit files as they sit in the source kit folder, published unchanged inside the ZIP. */
-export const KIT_SOURCE_FILES = [
-  "START-HERE.md",
-  "ANSWERS.md",
-  "project-instructions.md",
-  "inbox/1-nordvik-questionnaire.md",
-  "inbox/2-marketing-claims.md",
-  "inbox/3-bank-form.md",
-  "inbox/4-september-invoice.png",
-  "project-files/carbon_offsets_2025.txt",
-  "project-files/company_profile.md",
-  "project-files/energy_bills_2025.csv",
-  "project-files/energy_summary_2025_draft.txt",
-  "project-files/eu_green_claims_rules.md",
-  "project-files/health_safety_2025.txt",
-  "project-files/hr_headcount_2025.csv",
-  "project-files/organic_certificate_vineyard.txt",
-  "project-files/packaging_bottles.csv",
-  "project-files/policies_and_compliance.txt",
-  "project-files/solar_offer_2026.txt",
-  "project-files/vsme_basic_headings.md",
-  "project-files/water_bills_2025.csv",
-];
-
-/** Kit entries as published inside crvena-zemja-esg-kit.zip. */
-export const KIT_FILES = [...KIT_SOURCE_FILES];
-
-/** Every file the published folder holds, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...OVERLAY_NEW_FILES, ...DECK_IMAGES, PORTRAIT, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
-
-/** "loehrning.ai × <partner>": the partner's name stays out of this public repository. */
-const CO_BRANDING = /loehrning\.ai × [A-Za-z0-9-]+/gi;
+/** The two participant kits (v3), built by scripts/workshop04/kit-v3.mjs and kept byte for byte. */
+export const KIT_V3_ZIPS = { "crvena-zemja-nachweisprobe.zip": "crvena-zemja-nachweisprobe/", [ZIP_NAME]: `${KIT_NAME}/` };
 
 /**
- * Reviewed edits that take the partner out of slides.html, as [pattern, replacement, label].
- * Patterns match the partner's markup by shape (class names and file names are matched with a
- * wildcard), so the name itself never has to be written into this repository. Every pattern must
- * match, so a change in the source stops the export instead of leaking.
+ * sha256 of the published path of each file held for an owner decision: the export neither writes
+ * nor removes it, nothing it writes links to it, and its ASSET_MANIFEST.json row stays as it is.
+ * Only the hash is written here, so the path's words never enter this repository's source.
  */
-const PARTNER_EDITS = [
-  [/^\[data-n="(?:01|17)"\] \.(?:cv|s17)-[a-z]+ \{ display: block; height: \d+px; width: auto; \}\n(?=(?:\[data-n="01"\] \.cv-x|\n|<\/style>))/gm, "", "partner logo CSS"],
-  [/\n *<span class="cv-x">×<\/span>\n *<img src="\.\/assets\/[a-z]+\.png" alt="[A-Za-z]+" class="cv-[a-z]+" \/>/, "", "cover partner logo"],
-  [/\n *<span>×<\/span>\n *<img src="\.\/assets\/[a-z]+\.png" alt="[A-Za-z]+" class="s17-[a-z]+" \/>/, "", "closing partner logo"],
-  [/Tim Löhr · [A-Za-z]+ · 16 October 2026 · 60 minutes/, "Tim Löhr · North Macedonia · 16 October 2026 · 60 minutes", "cover date line"],
-  [/Workshop 04 · [A-Za-z]+ · 16 October 2026/, "Workshop 04 · North Macedonia · 16 October 2026", "closing date line"],
-  [/content="Workshop 04 for [A-Za-z]+: /, 'content="Workshop 04, held in North Macedonia: ', "page description"],
-  [/<p class="s17-kitt">[A-Za-z]+ sends you the kit link today\.<\/p>/, '<p class="s17-kitt">Download the kit from the workshop page.</p>', "closing kit line"],
-  [/\.\/assets\/\.\.\/crvena-zemja-esg-kit\/inbox\/4-september-invoice\.png/, "./assets/proof/september-invoice.png", "invoice photo path"],
-  // The published deck links participants to the kit rather than trainer-only working notes.
-  [/<p class="t-label">Expected status \(answer key\)<\/p>/, '<p class="t-label">Expected status (START-HERE.md)</p>', "expected-status label"],
-  [/<p class="t-src">answer key, step 4<br \/>/, '<p class="t-src">kit: START-HERE.md, step 4<br />', "step 4 source line"],
-  [/one short line from the answer key under the tag/, "one short line from the expected results under the tag", "style comment"],
-];
+export const HELD_PATH_SHA256 = new Set(["8c626bef58fd20e9c340b56e9b85052618d59e3467cef8433e314dfb5f0e0c50"]);
+
+/** Every file the export writes, and nothing else. */
+export const PUBLISHED_FILES = [...DECK_FILES, DECK_KEYS, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ...Object.keys(KIT_V3_ZIPS)].sort();
+
+/** Size budget per edition (deck spec §7), in bytes. */
+export const BUDGET = { "slides.html": 160_000, "en/slides.html": 160_000, "lib/scenes.js": 14_000, "lib/presenter.js": 15_000 };
 
 /** Case names retired because they collided with real companies; none may come back. */
 const RETIRED_CASE_NAMES = /Trei Dealuri|Banca Nistru|Valea Sturzilor|valea-sturzilor|Exempla|Energo Codru|Solar Codru|Vardar Oak|vardar-oak/i;
-const FONT_FILES = [
-  ["Typing-Regular.ttf", "Typing-Regular.woff2"],
-  ["Typing-Medium.ttf", "Typing-Medium.woff2"],
-  ["Typing-SemiBold.ttf", "Typing-SemiBold.woff2"],
-  ["Typing-Bold.ttf", "Typing-Bold.woff2"],
-];
 
 /**
  * sha256 of the partner's name in lower case. The guard hashes every nine-letter run of every
  * word in a published file, so the name itself never has to be written into this repository.
  */
 export const CLIENT_NAME_SHA256 = "f8dbeed3ff06ea864e4172b306f049fafc873576c4752d3e77bb8e4752f130e7";
+
+export const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 /**
  * A test for one lower-case word of `length` letters, known only by its sha256: true when the
@@ -202,61 +121,20 @@ export const mentionsClient = hashedWordGuard(CLIENT_NAME_SHA256, 9);
 /** Words that must never reach a published file. */
 export const FORBIDDEN = [
   [/loehrning\.ai ×/, "co-branding"],
-  [/\/Users\/|\/home\/[a-z]/, "local path"],
+  [/\/Users\/|\/home\/[a-z]|\/private\/(?:tmp|var)/, "local path"],
   [/facilitator|run-of-show|ground-truth|rescue\/|admin\//i, "presenter-only material"],
+  [/_obsidian\b|\bCLAUDE\.md|\bAGENTS\.md/, "internal reference"],
   [RETIRED_CASE_NAMES, "retired case name"],
 ];
 
-export const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
-
-/** Returns the text with `from` replaced, and fails when the transform no longer matches. */
-function replaceExpected(text, from, to, label) {
-  const next = text.replace(from, to);
-  if (next === text) throw new Error(`${label}: the reviewed transform no longer matches the source`);
-  return next;
-}
-
-function deckText(name, text) {
-  let out = text;
-  if (name === "slides.html" || name === "lib/esg.js") out = replaceExpected(out, CO_BRANDING, "loehrning.ai", name);
-  if (name === "slides.html") {
-    for (const [pattern, to, label] of PARTNER_EDITS) out = replaceExpected(out, pattern, to, `${name} (${label})`);
+/** Fails on a client name, a local path or presenter-only words in any text the export writes. */
+export function assertClean(name, bytes) {
+  if (!/\.(?:css|csv|html|js|md|svg|txt)$/.test(name)) return;
+  const text = bytes.toString("utf8");
+  if (mentionsClient(text)) throw new Error(`client name in ${name}`);
+  for (const [pattern, label] of FORBIDDEN) {
+    if (pattern.test(text)) throw new Error(`${label} in ${name}`);
   }
-  if (name === "lib/tokens.css") {
-    for (const [ttf, woff2] of FONT_FILES) {
-      out = replaceExpected(out, `url('../assets/fonts/${ttf}') format('truetype')`, `url('../assets/fonts/${woff2}') format('woff2')`, name);
-    }
-  }
-  return out;
-}
-
-/** Keep the published deck counter readable and padded across single- and double-digit slides. */
-function preparedDeckText(name, text) {
-  if (name !== "lib/deck-stage.js") return text;
-  let out = replaceExpected(
-    text,
-    '.count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }',
-    '.count .sep { color: rgba(255,255,255,0.45); margin: 0; font-weight: 400; }',
-    `${name} (counter spacing)`,
-  );
-  out = replaceExpected(
-    out,
-    '<span class="count" aria-live="polite"><span class="current">1</span><span class="sep">/</span><span class="total">1</span></span>',
-    '<span class="count" aria-live="polite"><span class="current">01</span><span class="sep"> / </span><span class="total">01</span></span>',
-    `${name} (counter format)`,
-  );
-  out = replaceExpected(
-    out,
-    'this._totalEl.textContent = String(this._slides.length || 1);',
-    'this._totalEl.textContent = pad2(this._slides.length || 1);',
-    `${name} (total format)`,
-  );
-  return replaceExpected(
-    out,
-    'this._countEl.textContent = String(curr + 1);',
-    'this._countEl.textContent = pad2(curr + 1);',
-    `${name} (current format)`,
-  );
 }
 
 /** PNG chunks a published image may carry: image data only. */
@@ -279,7 +157,6 @@ export function assertPlainPng(name, bytes) {
 /** Plain files only: a symlink or a folder where a file belongs stops the export. */
 function readSourceFile(root, name) {
   const file = path.join(root, ...name.split("/"));
-  // Open once without following a symlink, then check and read that same handle.
   let fd;
   try {
     fd = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW);
@@ -303,51 +180,46 @@ export function listFiles(dir, prefix = "") {
     .sort();
 }
 
-/** The kit folder must hold exactly the reviewed files, so a new file gets a look before it ships. */
-function checkKitFolder(kitDir) {
-  const present = listFiles(kitDir).filter((name) => !name.endsWith(".DS_Store"));
-  const unexpected = present.filter((name) => !KIT_SOURCE_FILES.includes(name));
-  const missing = KIT_SOURCE_FILES.filter((name) => !present.includes(name));
-  if (unexpected.length || missing.length) {
-    throw new Error(`Kit folder differs from the reviewed list. Unexpected: ${unexpected.join(", ") || "none"}. Missing: ${missing.join(", ") || "none"}.`);
-  }
+export const isHeld = (name) => HELD_PATH_SHA256.has(sha256(name));
+
+const escapeHtml = (value) => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/** The string at a dotted path of the edition's Claude UI copy ("app.steps.0"). */
+export function claudeUi(lang, dotted) {
+  const value = dotted.split(".").reduce((node, key) => (node == null ? undefined : node[key]), lang === "en" ? CLAUDE_UI_EN : CLAUDE_UI_DE);
+  if (typeof value !== "string") throw new Error(`{{claude-ui:${dotted}}} names no string in src/lib/claude-ui.ts`);
+  return value;
 }
 
-/** Fails on a client name, a local path or presenter-only words in any text the export writes. */
-export function assertClean(name, bytes) {
-  if (!/\.(?:css|csv|html|js|md|svg|txt)$/.test(name)) return;
-  const text = bytes.toString("utf8");
-  // Brainster is now an expressly requested workshop partner. Permit only its
-  // accessible logo label and asset reference; keep the hashed client guard elsewhere.
-  const clientCheckText = text
-    .replace(/\balt="Brainster"/g, "")
-    .replaceAll("assets/brainster-logo.svg", "");
-  if (mentionsClient(clientCheckText)) throw new Error(`client name in ${name}`);
-  for (const [pattern, label] of FORBIDDEN) {
-    if (pattern.test(text)) throw new Error(`${label} in ${name}`);
-  }
+const requireFromSite = createRequire(path.join(REPO_ROOT, "packages/website/package.json"));
+
+/** An inline, deterministic QR code for a loehrning.ai URL, drawn in Druckschwarz on Kalkweiß. */
+export async function qrSvg(url) {
+  if (!/^https:\/\/loehrning\.ai\/[a-z0-9/-]*$/.test(url)) throw new Error(`QR codes point to loehrning.ai only: ${url}`);
+  const svg = await requireFromSite("qrcode").toString(url, { type: "svg", margin: 2, errorCorrectionLevel: "M", color: { dark: "#121212ff", light: "#f3f0e9ff" } });
+  return svg.trim().replace("<svg ", `<svg role="img" aria-label="QR: ${escapeHtml(url.replace("https://", ""))}" `);
+}
+
+/** Fills the source's placeholders in one deck page. */
+export async function fillPlaceholders(name, text) {
+  const lang = name.startsWith("en/") ? "en" : "de";
+  let out = text.replace(/\{\{claude-ui:([a-z0-9.]+)\}\}/gi, (_whole, dotted) => escapeHtml(claudeUi(lang, dotted)));
+  for (const [whole, url] of [...out.matchAll(/\{\{qr:([^}]+)\}\}/g)]) out = out.replace(whole, await qrSvg(url));
+  if (/\{\{[^}]*\}\}/.test(out)) throw new Error(`${name} keeps an open placeholder`);
+  return out;
 }
 
 /** Builds the full published folder in memory: Map<publishedPath, Buffer>. */
 export async function exportWorkshop(source) {
-  if (!source || !existsSync(path.join(source, "slides.html"))) {
-    throw new Error("Usage: node scripts/workshop04/export-esg-passport.mjs <site-ready-workshop-folder> [--check]");
+  if (!source || !existsSync(path.join(source, "slides.html")) || !existsSync(path.join(source, "en/slides.html"))) {
+    throw new Error("Usage: node scripts/workshop04/export-esg-passport.mjs <course-deck-site-folder> [--check]");
   }
   const written = new Map();
-  const prebuiltPackage = existsSync(path.join(source, "sheet.html")) && existsSync(path.join(source, ZIP_NAME));
-  for (const name of DECK_TEXT_FILES) {
+  for (const name of DECK_FILES) {
     const text = readSourceFile(source, name).toString("utf8");
-    written.set(name, Buffer.from(prebuiltPackage ? preparedDeckText(name, text) : deckText(name, text)));
+    written.set(name, Buffer.from(name.endsWith(".html") ? await fillPlaceholders(name, text) : text));
   }
-  for (const name of DECK_IMAGES) {
-    const bytes = readSourceFile(source, name);
-    assertPlainPng(name, bytes);
-    written.set(name, bytes);
-  }
-
-  const portrait = readSourceFile(source, PORTRAIT);
-  if (sha256(portrait) !== PORTRAIT_SHA256) throw new Error("The host portrait is not the reviewed file");
-  written.set(PORTRAIT, portrait);
+  written.set(DECK_KEYS, readFileSync(DECK_KEYS_SOURCE));
 
   const { coverPosterSvg, withCoverBlock, workshopScenes } = await import(
     pathToFileURL(path.join(REPO_ROOT, "packages/website/scripts/plakat/static-lib.mjs")).href
@@ -364,71 +236,44 @@ export async function exportWorkshop(source) {
   for (const name of REUSED_FONTS) {
     written.set(name, readSourceFile(path.join(REPO_ROOT, FONT_SOURCE_RELATIVE), path.basename(name)));
   }
-
-  const suppliedArchive = path.join(source, ZIP_NAME);
-  if (existsSync(suppliedArchive)) {
-    const archive = readSourceFile(source, ZIP_NAME);
-    const entries = readKitArchive(archive);
-    const names = entries.map(([name]) => name).sort();
-    if (JSON.stringify(names) !== JSON.stringify([...KIT_FILES].sort())) {
-      throw new Error(`${ZIP_NAME} differs from the reviewed kit file list`);
-    }
-    for (const [name, bytes] of entries) assertClean(`${ZIP_NAME}/${name}`, bytes);
-    written.set(ZIP_NAME, archive);
-  } else {
-    const kitDir = path.join(source, KIT_NAME);
-    checkKitFolder(kitDir);
-    const kit = KIT_SOURCE_FILES.map((name) => {
-      const bytes = readSourceFile(kitDir, name);
-      if (name.endsWith(".png")) assertPlainPng(name, bytes);
-      return [name, bytes];
-    });
-    for (const [name, bytes] of kit) assertClean(`${ZIP_NAME}/${name}`, bytes);
-    written.set(ZIP_NAME, buildKitArchive(kit));
+  for (const [zip, prefix] of Object.entries(KIT_V3_ZIPS)) {
+    if (!existsSync(path.join(WORKSHOP_DIR, zip))) throw new Error(`${WORKSHOP_RELATIVE}/${zip} is missing; build it with scripts/workshop04/kit-v3.mjs`);
+    const archive = readSourceFile(WORKSHOP_DIR, zip);
+    for (const [name, bytes] of readKitArchive(archive, { prefix })) assertClean(`${zip}/${name}`, bytes);
+    written.set(zip, archive);
   }
 
-  for (const [name, original] of Object.entries(OVERLAY_ORIGINAL)) {
-    const overlay = readSourceFile(OVERLAY_DIR, name);
-    const exported = written.get(name);
-    if (!exported) throw new Error(`Overlay for ${name}, which this export does not write`);
-    if (sha256(exported) !== original && !exported.equals(overlay)) {
-      throw new Error(`The course source changed ${name} since its overlay was made. Reconcile scripts/workshop04/overlay/${name} by hand, then update OVERLAY_ORIGINAL.`);
-    }
-    written.set(name, overlay);
+  for (const [name, bytes] of written) {
+    assertClean(name, bytes);
+    if (name.endsWith(".html") && /assets\/[a-z-]+-logo\.svg/.test(bytes.toString("utf8"))) throw new Error(`${name} links a logo file`);
   }
-  for (const name of OVERLAY_NEW_FILES) written.set(name, readSourceFile(OVERLAY_DIR, name));
-
-  for (const [name, bytes] of written) assertClean(name, bytes);
+  for (const [name, limit] of Object.entries(BUDGET)) {
+    if (written.get(name).length > limit) throw new Error(`${name} is ${written.get(name).length} bytes, over its budget of ${limit}`);
+  }
   const names = [...written.keys()].sort();
   if (JSON.stringify(names) !== JSON.stringify(PUBLISHED_FILES)) throw new Error("Export does not match the published file list");
   return written;
 }
 
 /** Files whose manifest row follows the file; every other row must already match its bytes. */
-const GENERATED_ASSETS = new Set([ZIP_NAME, POSTER, "card-preview.webp", ...DECK_IMAGES]);
+const GENERATED_ASSETS = new Set([...Object.keys(KIT_V3_ZIPS), POSTER, "card-preview.webp"]);
 
-/** The row a new binary gets when the manifest has none yet. */
-const NEW_ROW_SOURCES = {
-  [ZIP_NAME]: "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
-  "assets/proof/dashboard-before.png": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
-  "assets/proof/dashboard-after.png": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
-  "assets/proof/september-invoice.png": "Original Answer ESG by Friday workshop material (photo of an invented invoice, rendered for Workshop 04), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
-};
-
-/** ASSET_MANIFEST.json rows for this folder: generated rows refreshed, stale rows dropped, the kit added. */
+/** ASSET_MANIFEST.json rows for this folder: generated rows refreshed, rows of retired files dropped, held rows kept. */
 export function manifestText(written) {
   const manifestPath = path.join(REPO_ROOT, "ASSET_MANIFEST.json");
   const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
   const prefix = `${WORKSHOP_RELATIVE}/`;
   const assets = [];
-  const seen = new Set();
   for (const entry of manifest.assets) {
     if (!entry.path.startsWith(prefix)) {
       assets.push(entry);
       continue;
     }
     const name = entry.path.slice(prefix.length);
-    seen.add(name);
+    if (isHeld(name)) {
+      assets.push(entry);
+      continue;
+    }
     const bytes = written.get(name);
     if (!bytes) continue;
     if (!GENERATED_ASSETS.has(name) && (entry.sha256 !== sha256(bytes) || entry.sizeBytes !== bytes.length)) {
@@ -436,35 +281,13 @@ export function manifestText(written) {
     }
     assets.push({ ...entry, sizeBytes: bytes.length, sha256: sha256(bytes) });
   }
-  for (const name of REUSED_FONTS) {
-    if (seen.has(name)) continue;
-    const reviewed = manifest.assets.find((entry) => entry.path === `${FONT_SOURCE_RELATIVE}/${path.basename(name)}`);
-    if (!reviewed || reviewed.sha256 !== sha256(written.get(name))) throw new Error(`${name}: no matching reviewed row under ${FONT_SOURCE_RELATIVE}`);
-    const at = assets.findIndex((entry) => entry.path === `${prefix}assets/fonts/JetBrainsMono-var.woff2`);
-    assets.splice(at === -1 ? assets.length : at, 0, { ...reviewed, path: `${prefix}${name}` });
-  }
-  for (const [name, source] of Object.entries(NEW_ROW_SOURCES)) {
-    if (seen.has(name)) continue;
-    const bytes = written.get(name);
-    const at = assets.findIndex((entry) => entry.path === `${prefix}card-preview.webp`);
-    const row = {
-      path: `${prefix}${name}`,
-      sizeBytes: bytes.length,
-      sha256: sha256(bytes),
-      owner: "Tim Löhr",
-      source,
-      license: "LicenseRef-Loehrning-Brand",
-      redistribution: "Included for loehrning.ai course operation; no standalone reuse rights granted",
-    };
-    assets.splice(at === -1 ? assets.length : at, 0, row);
-  }
   const text = JSON.stringify({ ...manifest, assets }, null, 2).replace(/[\u007f-￿]/g, (character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`);
   return `${text}\n`;
 }
 
-/** Differences between the published folder and an export: [path, reason][]. */
+/** Differences between the published folder and an export: [path, reason][]. Held files are skipped. */
 export function drift(written) {
-  const present = listFiles(WORKSHOP_DIR);
+  const present = listFiles(WORKSHOP_DIR).filter((name) => !isHeld(name));
   const problems = [];
   for (const name of present) if (!written.has(name)) problems.push([name, "not part of the export"]);
   for (const [name, bytes] of written) {
@@ -473,6 +296,12 @@ export function drift(written) {
     else if (!readFileSync(file).equals(bytes)) problems.push([name, "differs"]);
   }
   return problems;
+}
+
+function listDirs(dir) {
+  return readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) => [path.join(dir, entry.name), ...listDirs(path.join(dir, entry.name))]);
 }
 
 async function main() {
@@ -500,12 +329,6 @@ async function main() {
   for (const dir of listDirs(WORKSHOP_DIR).reverse()) if (readdirSync(dir).length === 0) rmSync(dir, { recursive: true });
   writeFileSync(path.join(REPO_ROOT, "ASSET_MANIFEST.json"), manifest);
   console.log(`Exported ${written.size} files to ${WORKSHOP_RELATIVE} (${problems.length} changed or removed).`);
-}
-
-function listDirs(dir) {
-  return readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .flatMap((entry) => [path.join(dir, entry.name), ...listDirs(path.join(dir, entry.name))]);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

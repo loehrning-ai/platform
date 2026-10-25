@@ -1,80 +1,76 @@
 import { tileNumber } from "@/lib/demo-tiles/format";
-import { HatchDef, TileSvg, type TileProps } from "../hub/tile-kit";
+import { TileSvg, type TileProps } from "../hub/tile-kit";
 
 /*
- * W04 "Elf von zwölf", hub miniature: the missing month. Eleven bills rise
- * (MWh, energy_bills_2025.csv), September is a slot, the draft says 279,7. A
- * hatched guess rises, then the real bill overshoots above every bar and the
- * figure becomes 320,9; the draft figure stays, struck. The strip row under
- * the chart flips from eleven squares and a hole to twelve squares. End
- * frame: the tallest bar is the missing one. Motion: tile-motion.ts.
+ * W04 "Nachweisprobe", hub miniature: the certificate that is attached and
+ * does not prove the sentence. Line 8 of bio_zertifikat_weinberg.txt says
+ * "Gültig bis 31.08.2026"; a validity ruler draws to that date, then a
+ * Mennige segment overshoots to the reference date 16.10.2026: 46 days
+ * expired. Below, 12 of 40 hectare cells fill; 28 stay open. End frame: the
+ * overshoot, the 46 and the 12 of 40. Motion: tile-motion.ts.
  */
-const HATCH = "dt-hatch-w04";
-const MWH = [21.4, 19.8, 20.6, 19.2, 22.5, 26.8, 30.4, 32.1, null, 38.7, 25.3, 22.9] as const;
-const BASE = 232;
-const PX = 3.6;
-const GUESS = 25;
-const BILL = 41.2;
-const barX = (index: number) => 28 + index * 29;
-const SEP = 8;
+const COPY = {
+  de: { line6: "Geltungsbereich: 12,0 ha von 40 ha", line8: "Gültig bis: 31.08.2026", days: "Tage", ha: "von 40 ha" },
+  en: { line6: "Scope: vineyard, 12.0 ha of 40 ha", line8: "Valid until: 31.08.2026", days: "days", ha: "of 40 ha" },
+} as const;
+
+const RULER_Y = 160;
+const START_X = 28;
+const END_X = 288;
+const EXPIRED_DAYS = 46;
+/** To scale: one year of validity is END_X - START_X, the 46 days past it on the same scale. */
+const STICHTAG_X = END_X + Math.round(((END_X - START_X) * EXPIRED_DAYS) / 365);
+const cellX = (index: number) => 28 + (index % 8) * 24;
+const cellY = (index: number) => 214 + Math.floor(index / 8) * 15;
+const cells = (from: number, to: number, inset: number) =>
+  Array.from({ length: to - from }, (_, offset) => {
+    const index = from + offset;
+    return `M${cellX(index) + inset} ${cellY(index) + inset}h${20 - 2 * inset}v${11 - 2 * inset}h${2 * inset - 20}z`;
+  }).join("");
+/** 12 certified hectares as solid cells, 28 open. */
+const FILLED = cells(0, 12, 0);
+const OPEN = cells(12, 40, 1);
 
 export default function Tile({ locale, reducedMotion }: TileProps) {
+  const words = COPY[locale];
   return (
     <TileSvg reducedMotion={reducedMotion}>
-      <HatchDef id={HATCH} />
-      <g data-t="bars">
-        {MWH.map((value, index) =>
-          value === null ? null : (
-            <rect key={index} className="dt-fill-ink dt-swap-ink" x={barX(index)} y={BASE - value * PX} width="23" height={value * PX} />
-          ),
-        )}
+      <rect className="dt-fill-ground dt-stroke-ink" x="20" y="22" width="360" height="86" strokeWidth="2" />
+      <text className="dt-fig dt-fill-mid" x="34" y="54" fontSize="15">
+        6
+      </text>
+      <text className="dt-fig dt-fill-ink" x="60" y="54" fontSize="15">
+        {words.line6}
+      </text>
+      <rect data-t="band" className="dt-fill-ink" x="22" y="68" width="356" height="30" />
+      <text className="dt-fig dt-fill-ground" x="34" y="89" fontSize="16">
+        8
+      </text>
+      <text className="dt-fig dt-fill-ground" x="60" y="89" fontSize="18">
+        {words.line8}
+      </text>
+      <path className="dt-stroke-ink" d={`M28 ${RULER_Y - 12}V${RULER_Y + 12}`} strokeWidth="3" />
+      <path data-t="ruler" className="dt-stroke-ink" d={`M28 ${RULER_Y}H${END_X}`} strokeWidth="8" pathLength="1" strokeDasharray="1" />
+      <path className="dt-stroke-ink" d={`M${END_X} ${RULER_Y - 16}V${RULER_Y + 16}`} strokeWidth="3" />
+      <path data-t="over" className="dt-stroke-mark" d={`M${END_X} ${RULER_Y}H${STICHTAG_X}`} strokeWidth="8" pathLength="1" strokeDasharray="1" />
+      <path data-t="stichtag" className="dt-stroke-mark" d={`M${STICHTAG_X} ${RULER_Y - 16}V${RULER_Y + 16}`} strokeWidth="3" />
+      <g data-t="days">
+        <text className="dt-fig dt-fill-mark" x={STICHTAG_X + 4} y="136" fontSize="30" textAnchor="end">
+          {tileNumber(EXPIRED_DAYS, locale)} {words.days}
+        </text>
       </g>
-      <rect
-        data-t="slot"
-        className="dt-stroke-mark"
-        fill="none"
-        x={barX(SEP)}
-        y={BASE - 46 * PX}
-        width="23"
-        height={46 * PX}
-        strokeWidth="2"
-        strokeDasharray="5 4"
-      />
-      <rect data-t="bill" className="dt-fill-mark dt-swap-mark" x={barX(SEP)} y={BASE - BILL * PX} width="23" height={BILL * PX} />
-      <rect
-        data-t="ghost"
-        className="dt-stroke-ink"
-        fill={`url(#${HATCH})`}
-        x={barX(SEP)}
-        y={BASE - GUESS * PX}
-        width="23"
-        height={GUESS * PX}
-        strokeWidth="2"
-        strokeDasharray="5 3"
-      />
-      <path className="dt-stroke-ink" d={`M22 ${BASE}H378`} strokeWidth="3" />
-      {MWH.map((value, index) => (
-        <rect key={index} className="dt-fill-ink dt-swap-ink" x={barX(index)} y="254" width="23" height="14" />
-      ))}
-      <rect data-t="cell-cover" className="dt-fill-ground" x={barX(SEP) - 1} y="253" width="25" height="16" />
-      <rect
-        data-t="cell-open"
-        className="dt-stroke-mark"
-        fill="none"
-        x={barX(SEP)}
-        y="254"
-        width="23"
-        height="14"
-        strokeWidth="2"
-        strokeDasharray="4 3"
-      />
-      <text data-t="fig-a" className="dt-fig dt-fill-ink" x="110" y="52" textAnchor="middle" fontSize="30">
-        {tileNumber(279.7, locale, { digits: 1 })}
-      </text>
-      <path data-t="strike" className="dt-stroke-mark" d="M62 43H158" strokeWidth="4" pathLength="1" strokeDasharray="1" />
-      <text data-t="fig-b" className="dt-fig dt-fill-mark" x="290" y="56" textAnchor="middle" fontSize="40">
-        {tileNumber(320.9, locale, { digits: 1 })}
-      </text>
+      <g data-t="cells">
+        <path className="dt-fill-ink" d={FILLED} />
+        <path className="dt-stroke-ink" fill="none" d={OPEN} strokeWidth="1.5" />
+      </g>
+      <g data-t="ha">
+        <text className="dt-fig dt-fill-ink" x="372" y="246" fontSize="40" textAnchor="end">
+          12
+        </text>
+        <text className="dt-fig dt-fill-ink" x="372" y="272" fontSize="16" textAnchor="end">
+          {words.ha}
+        </text>
+      </g>
     </TileSvg>
   );
 }

@@ -1,26 +1,24 @@
 import type { TileMotion } from "@/lib/demo-tiles/types";
 
 /*
- * W04 "Elf von zwölf", hub miniature, motion. Import-free apart from types.
- * One clock p (0..1), 3.4 s. Beats: eleven bars rise, the draft figure holds
- * (0-0.2); a hatched guess rises in the empty slot (0.2-0.42); the real bill
- * overshoots above every bar (0.42-0.58); the draft figure slides left and is
- * struck while the true figure arrives (0.52-0.7); the strip's ninth square
- * fills (0.6). The last key of each track is the end frame.
+ * W04 "Nachweisprobe", hub miniature, motion. Import-free apart from types.
+ * One clock p (0..1), 3.4 s: the band on line 8 settles (0-0.12); the
+ * validity ruler draws to 31.08.2026 (0.12-0.4); the Mennige overshoot draws
+ * to the reference date with a snap (0.44-0.6); "46 Tage" arrives
+ * (0.58-0.68); the hectare cells grow, 12 of 40 filled (0.66-0.86); the 12
+ * settles last. The last key of each track is the end frame.
  */
 export const MOTION: TileMotion = {
   storyMs: 3400,
   tracks: [
     { id: "root", prop: "o", keys: [[0, 0], [0.06, 1, "ease"]] },
-    { id: "bars", prop: "sy", origin: "50% 100%", keys: [[0, 0], [0.18, 1, "ease"], [1, 1]] },
-    { id: "ghost", prop: "sy", origin: "50% 100%", keys: [[0, 0], [0.2, 0], [0.42, 1, "ease"], [1, 1]] },
-    { id: "ghost", prop: "o", keys: [[0, 1], [0.5, 1], [0.58, 0], [1, 0]] },
-    { id: "slot", prop: "o", keys: [[0, 1], [0.2, 1], [0.24, 0], [1, 0]] },
-    { id: "bill", prop: "sy", origin: "50% 100%", keys: [[0, 0], [0.42, 0], [0.58, 1, "snap"], [1, 1]] },
-    { id: "fig-a", prop: "tx", keys: [[0, 76], [0.52, 76], [0.68, 0, "ease"], [1, 0]] },
-    { id: "strike", prop: "dash", keys: [[0, 1], [0.6, 1], [0.7, 0, "ease"], [1, 0]] },
-    { id: "fig-b", prop: "o", keys: [[0, 0], [0.62, 0], [0.7, 1], [1, 1]] },
-    { id: "cell-open", prop: "o", keys: [[0, 1], [0.6, 1], [0.61, 0], [1, 0]] },
-    { id: "cell-cover", prop: "o", keys: [[0, 1], [0.6, 1], [0.61, 0], [1, 0]] },
+    { id: "band", prop: "sx", origin: "0% 50%", keys: [[0, 0], [0.12, 1, "ease"], [1, 1]] },
+    { id: "ruler", prop: "dash", keys: [[0, 1], [0.12, 1], [0.4, 0, "ease"], [1, 0]] },
+    { id: "over", prop: "dash", keys: [[0, 1], [0.44, 1], [0.6, 0, "snap"], [1, 0]] },
+    { id: "stichtag", prop: "o", keys: [[0, 0], [0.56, 0], [0.6, 1], [1, 1]] },
+    { id: "days", prop: "o", keys: [[0, 0], [0.58, 0], [0.68, 1, "ease"], [1, 1]] },
+    { id: "cells", prop: "sy", origin: "50% 0%", keys: [[0, 0], [0.66, 0], [0.86, 1, "ease"], [1, 1]] },
+    { id: "ha", prop: "tx", keys: [[0, 24], [0.8, 24], [0.92, 0, "ease"], [1, 0]] },
+    { id: "ha", prop: "o", keys: [[0, 0], [0.8, 0], [0.92, 1, "ease"], [1, 1]] },
   ],
 };

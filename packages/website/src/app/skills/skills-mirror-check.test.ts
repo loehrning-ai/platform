@@ -391,6 +391,7 @@ describe("runSkillsMirrorCheck", () => {
     expect(errors).toEqual([]);
     expect(names).toEqual([
       "cv-engine",
+      "esg-nachweise",
       "kennzahl-fragekarte",
       "kennzahlen-steckbrief",
       "loehrning-plattform",

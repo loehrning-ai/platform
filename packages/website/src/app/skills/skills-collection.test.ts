@@ -30,6 +30,7 @@ import {
  */
 const PUBLISHED_SKILLS = [
   "cv-engine",
+  "esg-nachweise",
   "kennzahl-fragekarte",
   "kennzahlen-steckbrief",
   "loehrning-plattform",

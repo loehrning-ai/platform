@@ -59,8 +59,8 @@ describe("VORLAGEN", () => {
     expect(new Set(names).size).toBe(names.length);
     for (const name of names) expect(name).toMatch(DOWNLOAD_NAME_PATTERN);
     for (const entry of VORLAGEN) {
-      expect(entry.downloadNames.de.endsWith(".en.md")).toBe(false);
-      expect(entry.downloadNames.en.endsWith(".en.md")).toBe(true);
+      expect(entry.downloadNames.de).not.toMatch(/\.en\.(?:md|csv)$/);
+      expect(entry.downloadNames.en).toMatch(/\.en\.(?:md|csv)$/);
     }
   });
 

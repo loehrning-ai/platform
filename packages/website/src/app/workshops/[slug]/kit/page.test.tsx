@@ -40,8 +40,8 @@ describe("workshop kit page route", () => {
   });
 
   it.each([
-    ["de", "/workshops/esg-berichte-mit-ki/kit", "Das ESG-Kit"],
-    ["en", "/en/workshops/esg-berichte-mit-ki/kit", "The ESG kit"],
+    ["de", "/workshops/esg-berichte-mit-ki/kit", "Das Nachweisprobe-Kit"],
+    ["en", "/en/workshops/esg-berichte-mit-ki/kit", "The evidence check kit"],
   ] as const)("uses reviewed %s copy and the current locale canonical", async (locale, canonical, title) => {
     getRequestLocaleMock.mockResolvedValue(locale);
     const metadata = await generateMetadata(kitProps);
