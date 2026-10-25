@@ -186,7 +186,6 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
                   href={href}
                   target={external ? "_blank" : undefined}
                   rel={external ? "noopener noreferrer" : undefined}
-                  aria-label={external ? `${label}${newTabNotice}` : label}
                   className={`group grid min-h-24 min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_auto] items-center gap-4 px-4 py-4 text-foreground shadow-card ring-1 ring-foreground/20 transition-[background-color,transform] hover:-rotate-1 motion-reduce:transform-none motion-reduce:transition-none ${CONTACT_STYLES[index]}`}
                   data-link-preview
                 >
@@ -200,6 +199,9 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
                     <span className="mt-1 block min-w-0 break-words text-sm font-semibold [overflow-wrap:anywhere]">
                       {label}
                     </span>
+                    {external ? (
+                      <span className="sr-only">{newTabNotice}</span>
+                    ) : null}
                   </span>
                   {external ? (
                     <ArrowUpRight

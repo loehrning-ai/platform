@@ -33,7 +33,8 @@ describe("BlogIndexPage", () => {
 
     for (const post of BLOG_POSTS) {
       const link = screen.getByRole("link", {
-        name: `Artikel lesen: ${post.titleDe}`,
+        name: (name) =>
+          name.includes(post.titleDe) && name.includes("Artikel lesen"),
       });
       const row = within(link);
       const number = String(post.postNumber).padStart(2, "0");
@@ -55,7 +56,8 @@ describe("BlogIndexPage", () => {
 
     for (const post of BLOG_POSTS) {
       const link = screen.getByRole("link", {
-        name: `Read article: ${post.titleEn}`,
+        name: (name) =>
+          name.includes(post.titleEn) && name.includes("Read article"),
       });
       const row = within(link);
       expect(link).toHaveAttribute("href", `/en/blog/${post.slug}`);

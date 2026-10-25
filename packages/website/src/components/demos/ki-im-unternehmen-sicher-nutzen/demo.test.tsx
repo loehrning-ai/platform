@@ -226,7 +226,7 @@ describe("round 2 fixes", () => {
     render(<AiAtWorkDemo locale="de" />);
     const initials = [...document.querySelectorAll("[data-slot-initials]")].map((el) => el.textContent);
     expect(initials).toEqual(SCENES.map((scene) => scene.person.slice(0, 2)));
-    expect(document.querySelector('[data-slot="marko"]')).toHaveAttribute("aria-label", "Marko, offen");
+    expect(document.querySelector('[data-slot="marko"]')).toHaveAttribute("aria-label", "Ma: Marko, offen");
   });
 
   it("has no start button: the kit line and the templates link sit under the heading", () => {

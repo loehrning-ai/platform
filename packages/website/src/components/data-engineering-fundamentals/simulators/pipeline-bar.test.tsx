@@ -23,7 +23,7 @@ describe("PipelineBar ", () => {
       <PipelineBar activeId="ingest" setActiveId={() => {}} locale="en" />,
     );
     expect(
-      screen.getByRole("link", { name: /Chapter 03 · Store/ }),
+      screen.getByRole("link", { name: /Chapter 03\s*Store/ }),
     ).toHaveAttribute(
       "href",
       "/en/kurse/open-source/data-engineering-fundamentals/store",
@@ -33,7 +33,7 @@ describe("PipelineBar ", () => {
   it("marks the active stage with aria-current", () => {
     render(<PipelineBar activeId="orch" setActiveId={() => {}} locale="en" />);
     expect(
-      screen.getByRole("link", { name: /Chapter 05 · Orchestrate/ }),
+      screen.getByRole("link", { name: /Chapter 05\s*Orchestrate/ }),
     ).toHaveAttribute("aria-current", "step");
   });
 

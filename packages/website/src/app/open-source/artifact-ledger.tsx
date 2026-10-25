@@ -274,9 +274,6 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                                 frames.length,
                               ),
                             )}
-                            selectLabels={frames.map((frame) =>
-                              copy.previewSelect(frame.label),
-                            )}
                           />
                         )}
                       </div>

@@ -49,7 +49,7 @@ export interface UiCopy {
   readonly slotsLabel: string;
   /** {person}, {answer}, {you} */
   readonly slotName: string;
-  /** {person} */
+  /** {initials}, {person} */
   readonly slotNameOpen: string;
   /** {person} */
   readonly openScene: string;
@@ -157,7 +157,7 @@ const DE: UiCopy = {
   open: "offen",
   slotsLabel: "Szenen",
   slotName: "{person}, Lösung {answer}, du {you}",
-  slotNameOpen: "{person}, offen",
+  slotNameOpen: "{initials}: {person}, offen",
   openScene: "Szene {person} öffnen",
   fridayHeading: "Zurück zu Freitag",
   fridayIntro: "Würdest du das so senden?",
@@ -264,7 +264,7 @@ const EN: UiCopy = {
   open: "open",
   slotsLabel: "Scenes",
   slotName: "{person}, answer {answer}, you {you}",
-  slotNameOpen: "{person}, open",
+  slotNameOpen: "{initials}: {person}, open",
   openScene: "Open the scene {person}",
   fridayHeading: "Back to Friday",
   fridayIntro: "Would you send this?",

@@ -161,7 +161,7 @@ describe("OpenSourcePage", () => {
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Editor anzeigen" }),
+      screen.getByRole("button", { name: "01 Editor" }),
     ).toHaveAttribute("aria-pressed", "true");
 
     const sourceLink = screen.getByRole("link", {

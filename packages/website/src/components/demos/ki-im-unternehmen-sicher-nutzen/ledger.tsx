@@ -42,7 +42,12 @@ export function SlotRow({ state, text, dropping, onSelect }: SlotProps) {
                       answer: copy.lights[scene.key].word,
                       you: copy.lights[picked].word,
                     })
-                  : fmt(copy.slotNameOpen, { person: scene.person })
+                  : // The visible initials lead the name, so speech input
+                    // can say what it sees ("Ma") and still reach Marko.
+                    fmt(copy.slotNameOpen, {
+                      initials: scene.person.slice(0, 2),
+                      person: scene.person,
+                    })
               }
               data-slot={scene.id}
               onClick={() => onSelect(scene.id)}

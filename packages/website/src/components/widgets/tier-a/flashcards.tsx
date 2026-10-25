@@ -145,15 +145,20 @@ export function FlashcardsWidget({
           <button
             type="button"
             onClick={flip}
-            aria-label={renderAriaLabel(c.ariaLabelTemplate, idx + 1, total)}
             data-flipped={flipped ? "1" : "0"}
             className={cn(
               "relative block min-h-[160px] w-full border-2 border-border bg-background text-left transition-transform duration-500 [transform-style:preserve-3d]",
               flipped && !reduced && "[transform:rotateY(180deg)]",
             )}
           >
+            {/* The name comes from the face that shows, so the question is
+                read first and the answer only after the flip. */}
+            <span className="sr-only">
+              {renderAriaLabel(c.ariaLabelTemplate, idx + 1, total)}
+            </span>{" "}
             {/* Front */}
             <span
+              aria-hidden={flipped ? true : undefined}
               className={cn(
                 "absolute inset-0 flex flex-col justify-center gap-2 p-5 [backface-visibility:hidden]",
                 reduced && flipped && "invisible",
@@ -173,6 +178,7 @@ export function FlashcardsWidget({
             </span>
             {/* Back */}
             <span
+              aria-hidden={flipped ? undefined : true}
               className={cn(
                 "absolute inset-0 flex flex-col justify-center gap-2 p-5 [backface-visibility:hidden] [transform:rotateY(180deg)]",
                 reduced && "[transform:none]",

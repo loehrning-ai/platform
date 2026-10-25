@@ -15,14 +15,12 @@ interface ArtifactPreviewStackProps {
   readonly frames: readonly ArtifactPreviewFrame[];
   readonly groupLabel: string;
   readonly counterLabels: readonly string[];
-  readonly selectLabels: readonly string[];
 }
 
 export function ArtifactPreviewStack({
   frames,
   groupLabel,
   counterLabels,
-  selectLabels,
 }: ArtifactPreviewStackProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -139,7 +137,6 @@ export function ArtifactPreviewStack({
               }}
               type="button"
               aria-pressed={active}
-              aria-label={selectLabels[index]}
               className={`min-h-11 border-b border-r px-3 py-2 text-left font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,border-color,color] duration-150 [touch-action:manipulation] focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none sm:border-b-0 ${
                 active
                   ? "border-brand-orange bg-brand-orange text-white hover:bg-brand-orange hover:text-white focus-visible:ring-white"
@@ -148,9 +145,11 @@ export function ArtifactPreviewStack({
               onClick={() => setActiveIndex(index)}
               onKeyDown={(event) => handleSelectorKeyDown(event, index)}
             >
-              <span aria-hidden="true" className="mr-2 tabular-nums">
+              {/* A real space instead of a margin: one monospace space is
+                  the same gap, and the name reads "01 Editor", not "01Editor". */}
+              <span className="tabular-nums">
                 {String(index + 1).padStart(2, "0")}
-              </span>
+              </span>{" "}
               {frame.label}
             </button>
           );

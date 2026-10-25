@@ -622,7 +622,7 @@ test.describe("/open-source mobile", () => {
     });
     await expect(
       firstArtifactRow.getByRole("button", {
-        name: OPEN_SOURCE_PAGE_COPY.de.showcase.previewSelect("Editor"),
+        name: "01 Editor",
       }),
     ).toBeVisible();
 
@@ -658,9 +658,9 @@ test("keeps the artifact card fixed while product views change", async ({
     const card = artifactRow.locator("[data-open-source-artifact-sheet]");
     const preview = artifactRow.locator("[data-artifact-preview-stack]");
     const buttons = OPEN_SOURCE_PAGE_COPY.de.showcase.previewLabels.map(
-      (label) =>
+      (label, index) =>
         preview.getByRole("button", {
-          name: OPEN_SOURCE_PAGE_COPY.de.showcase.previewSelect(label),
+          name: `${String(index + 1).padStart(2, "0")} ${label}`,
         }),
     );
 

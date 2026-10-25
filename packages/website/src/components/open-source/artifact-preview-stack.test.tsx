@@ -35,7 +35,6 @@ function renderStack() {
       frames={FRAMES}
       groupLabel="Choose a CV Engine view"
       counterLabels={["View 1/3", "View 2/3", "View 3/3"]}
-      selectLabels={["Show Editor", "Show Form", "Show PDF"]}
     />,
   );
 }
@@ -43,8 +42,8 @@ function renderStack() {
 describe("<ArtifactPreviewStack>", () => {
   it("renders an explicitly sized lead view and switches by touch-safe controls", () => {
     const { container } = renderStack();
-    const editor = screen.getByRole("button", { name: "Show Editor" });
-    const form = screen.getByRole("button", { name: "Show Form" });
+    const editor = screen.getByRole("button", { name: "01 Editor" });
+    const form = screen.getByRole("button", { name: "02 Form" });
 
     expect(editor).toHaveAttribute("aria-pressed", "true");
     expect(editor).toHaveClass("min-h-11", "[touch-action:manipulation]");
@@ -94,9 +93,9 @@ describe("<ArtifactPreviewStack>", () => {
 
   it("supports arrow, Home, and End navigation with visible focus", () => {
     renderStack();
-    const editor = screen.getByRole("button", { name: "Show Editor" });
-    const form = screen.getByRole("button", { name: "Show Form" });
-    const pdf = screen.getByRole("button", { name: "Show PDF" });
+    const editor = screen.getByRole("button", { name: "01 Editor" });
+    const form = screen.getByRole("button", { name: "02 Form" });
+    const pdf = screen.getByRole("button", { name: "03 PDF" });
 
     editor.focus();
     fireEvent.keyDown(editor, { key: "ArrowRight" });

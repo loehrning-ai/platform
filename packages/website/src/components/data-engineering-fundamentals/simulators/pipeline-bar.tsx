@@ -664,10 +664,11 @@ export function PipelineBar({
               )}
               onMouseEnter={() => setActiveId(p.id)}
               onFocus={() => setActiveId(p.id)}
-              aria-label={`${chapterLabel} ${p.n} · ${p.title}`}
               aria-current={isActive ? "step" : undefined}
             >
-              <div className="ov-stop-n">{p.n}</div>
+              <div className="ov-stop-n">
+                <span className="sr-only">{chapterLabel}</span> {p.n}
+              </div>
               <div
                 className="ov-stop-dot"
                 style={

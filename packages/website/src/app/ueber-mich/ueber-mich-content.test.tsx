@@ -99,7 +99,7 @@ describe("<UeberMichContent>", () => {
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
     expect(
-      screen.getAllByRole("link", { name: /^Message me on LinkedIn/i }),
+      screen.getAllByRole("link", { name: /Message me on LinkedIn/i }),
     ).toHaveLength(1);
     expect(
       screen.getAllByRole("link", { name: /loehrning\.ai on LinkedIn/i }),

@@ -24,7 +24,6 @@ export const OPEN_SOURCE_PAGE_COPY = {
       previewGroup: "Produktansichten auswählen",
       previewCounter: (current: number, total: number) =>
         `Ansicht ${current}/${total}`,
-      previewSelect: (label: string) => `${label} anzeigen`,
       previewLabels: ["Editor", "Formular", "YAML", "Darstellung", "PDF"],
       facts: {
         delivery: "Betrieb",
@@ -72,7 +71,6 @@ export const OPEN_SOURCE_PAGE_COPY = {
       previewGroup: "Choose a product view",
       previewCounter: (current: number, total: number) =>
         `View ${current}/${total}`,
-      previewSelect: (label: string) => `Show ${label}`,
       previewLabels: ["Editor", "Form", "YAML", "Display", "PDF"],
       facts: {
         delivery: "Run",

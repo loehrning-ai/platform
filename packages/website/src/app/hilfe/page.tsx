@@ -367,7 +367,6 @@ function HilfeContent({
                 <li key={item.id} className="min-w-0 bg-background">
                   <Link
                     href={localizeHref(`${PATH}#${item.id}`, locale)}
-                    aria-label={item.question}
                     className="grid min-h-11 min-w-0 grid-cols-[1.6rem_minmax(0,1fr)] items-center gap-1.5 px-2 py-2 text-xs leading-4 text-muted-foreground outline-none transition-colors duration-150 hover:bg-card hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none"
                   >
                     <span className="font-mono tabular-nums text-brand-orange">
@@ -375,6 +374,7 @@ function HilfeContent({
                     </span>
                     <span className="min-w-0 break-words">
                       {copy.topics[index]}
+                      <span className="sr-only">: {item.question}</span>
                     </span>
                   </Link>
                 </li>

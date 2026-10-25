@@ -130,7 +130,6 @@ export function SceneCard({
                 className="w05-lamp anti-btn"
                 aria-pressed={isPicked}
                 aria-disabled={committed ? true : undefined}
-                aria-label={`${words.word}: ${words.rule}`}
                 data-lamp={light}
                 onClick={() => {
                   if (!committed) onCommit(light);

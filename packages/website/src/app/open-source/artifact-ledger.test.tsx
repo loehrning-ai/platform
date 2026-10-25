@@ -31,7 +31,7 @@ describe("<ArtifactLedger>", () => {
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Editor anzeigen" }),
+      screen.getByRole("button", { name: "01 Editor" }),
     ).toHaveAttribute("aria-pressed", "true");
 
     const previewSheet = document.querySelector(
@@ -86,7 +86,7 @@ describe("<ArtifactLedger>", () => {
         name: `View details: ${artifact.title}`,
       }),
     ).toHaveAttribute("href", `/en${artifact.href}`);
-    expect(screen.getByRole("button", { name: "Show Editor" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "01 Editor" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );

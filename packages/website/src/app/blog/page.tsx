@@ -42,7 +42,6 @@ const COPY = {
       count === 1 ? "Frühere Ausgabe" : "Frühere Ausgaben",
     articleNumber: "Artikel Nº",
     readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
-    readLabel: (title: string) => `Artikel lesen: ${title}`,
     read: "Artikel lesen",
     noteLabel: "Kein Redaktionsplan.",
     note: "Ein neuer Artikel erscheint, wenn ein Thema sauber erklärt ist und die Quellen stimmen.",
@@ -71,7 +70,6 @@ const COPY = {
       count === 1 ? "Earlier edition" : "Earlier editions",
     articleNumber: "Article Nº",
     readingTime: (minutes: number) => `${minutes} min read`,
-    readLabel: (title: string) => `Read article: ${title}`,
     read: "Read article",
     noteLabel: "No publishing quota.",
     note: "A new article appears when a subject is explained properly and the sources hold.",
@@ -237,7 +235,6 @@ function ArticleCard({
     <Link
       href={localizeHref(`/blog/${post.slug}`, locale)}
       className={variant === "earlier" ? "row row--earlier" : "row"}
-      aria-label={copy.readLabel(localized.title)}
       data-link-preview
       data-editorial-article={variant}
     >

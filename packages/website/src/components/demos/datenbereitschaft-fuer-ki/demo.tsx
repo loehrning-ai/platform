@@ -107,12 +107,14 @@ export function DataReadinessDemo({ text }: { readonly text: DemoText }) {
                   type="button"
                   className="dr3-rail-btn"
                   aria-current={state.active === id ? "step" : undefined}
-                  aria-label={`${text.requestWord} ${id}, ${text.requestTitles[id]}, ${statusWord}`}
                   data-rail={id}
                   data-status={status}
                   onClick={() => goTo(id)}
                 >
-                  <span className="dr3-rail-num">{id}</span>
+                  <span className="dr3-rail-num">
+                    <span className="sr-only">{text.requestWord}</span> {id}
+                    <span className="sr-only">, {text.requestTitles[id]},</span>
+                  </span>
                   <span className="dr3-rail-state">
                     <StatusGlyph status={status} />
                     <span className="dr3-rail-state-word">{statusWord}</span>
