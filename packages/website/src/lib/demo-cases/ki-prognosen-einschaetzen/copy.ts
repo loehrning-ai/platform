@@ -2,7 +2,7 @@
  * Demo 01: both locales' copy in one map, for server code and tests only.
  * No component imports it: client modules import copy-types.ts for the
  * shape and receive their locale's copy from a locale entry
- * (forecast-release-de/-en.tsx), see bundle-hygiene.test.ts.
+ * (forecast-release-de/-en.tsx).
  */
 import type { Locale } from "@/lib/i18n/locale";
 import { DE_COPY } from "./copy-de";

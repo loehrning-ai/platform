@@ -12,7 +12,7 @@
  * This server component picks the page's locale: it builds the locale pack
  * (lib/demo-cases/esg-berichte-mit-ki/pack.ts) and hands it to the client
  * tree as a prop, so the browser loads one locale's words and no client
- * module imports the bilingual data (bundle.test.ts walks the import graph).
+ * module imports the bilingual data.
  */
 import { buildPack } from "@/lib/demo-cases/esg-berichte-mit-ki/pack";
 import type { Locale } from "@/lib/i18n/locale";

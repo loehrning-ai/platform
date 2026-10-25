@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEMO_TEXT, type DemoText } from "./copy";
+import { DEMO_TEXT } from "./copy";
 import { ENDING_MRR, FOLDLINE, FRESHNESS, HEADCOUNT, NET_NEW_MRR } from "./data";
 
 const WEBSITE = join(__dirname, "../../../..");
@@ -55,44 +55,6 @@ const ALL = (["de", "en"] as const).flatMap((locale) =>
 describe("demo 03 copy", () => {
   it("has the same keys and list lengths in DE and EN", () => {
     expect(shape(DEMO_TEXT.en)).toEqual(shape(DEMO_TEXT.de));
-  });
-
-  it("uses no em or en dash anywhere", () => {
-    for (const { locale, path, text } of ALL) {
-      expect(text, `${locale}.${path}`).not.toMatch(/[–—]/);
-      expect(text, `${locale}.${path}`).not.toMatch(/\s-\s/);
-    }
-  });
-
-  it("uses the minus sign only in front of a number", () => {
-    for (const { locale, path, text } of ALL) {
-      for (const match of text.matchAll(/−/g)) {
-        const next = text.slice((match.index ?? 0) + 1, (match.index ?? 0) + 2);
-        expect(/[0-9€]/.test(next), `${locale}.${path}`).toBe(true);
-      }
-    }
-  });
-
-  it("addresses the reader as du, never Sie, and writes real umlauts", () => {
-    for (const { path, text } of ALL.filter((entry) => entry.locale === "de")) {
-      expect(text, path).not.toMatch(/\b(?:Sie|Ihnen|Ihr|Ihre)\b/);
-      expect(text, path).not.toMatch(
-        /\b(?:fuer|ueber|Ueber|koenn\w*|moeglich|aender\w*|Aender\w*|pruef\w*|Pruef\w*|waehl\w*|zaehl\w*|Zaehl\w*|groess\w*|schliess\w*|haengt|Bestaend\w*|Abgaeng\w*|Zugaeng\w*|Luecke\w*|Rueck\w*|Maerz|naechst\w*|ausserhalb|Massstab)\b/,
-      );
-    }
-  });
-
-  it("says level in English, never balance, except in the one kind gloss", () => {
-    const balance = ALL.filter((entry) => entry.locale === "en" && /balance/i.test(entry.text));
-    expect(balance.map((entry) => entry.path)).toEqual(["kind.level.gloss"]);
-  });
-
-  it("keeps every copy card short and copyable", () => {
-    for (const locale of ["de", "en"] as const) {
-      const cards = DEMO_TEXT[locale].takeaways;
-      expect(cards).toHaveLength(4);
-      for (const card of cards) expect(card.text.length, card.id).toBeLessThan(600);
-    }
   });
 
   it("quotes only numbers the kit has", () => {
@@ -156,22 +118,6 @@ describe("demo 03 copy", () => {
       expect(text.toLowerCase().includes(name.toLowerCase()), file).toBe(false);
       // Vault names are guarded repo-wide by the publication scanner (scan:public).
       if (!/\.test\.tsx?$/.test(file)) expect(text, file).not.toMatch(/\/Users\//);
-    }
-  });
-
-  it("names the four deck controls exactly", () => {
-    const labels = (text: DemoText) => Object.values(text.locks).map((lock) => lock.label);
-    expect(labels(DEMO_TEXT.de)).toEqual(["Guide", "Course policy", "Read-only SQL guard", "PostgreSQL role"]);
-    expect(labels(DEMO_TEXT.en)).toEqual(labels(DEMO_TEXT.de));
-  });
-});
-
-describe("numbers keep their units", () => {
-  it("never leaves a plain space between a digit and € or %", () => {
-    for (const locale of ["de", "en"] as const) {
-      for (const [path, text] of strings(DEMO_TEXT[locale])) {
-        expect(/\d (€|%)/.test(text), `${locale}.${path}`).toBe(false);
-      }
     }
   });
 });

@@ -11,7 +11,7 @@
  * - Copy holds functions, so it cannot cross from the server as props. Each
  *   locale has its own copy module and its own chain (index-de.tsx ->
  *   forecast-release-de.tsx -> copy-de.ts, same for en); no client module
- *   imports the two-locale map in copy.ts (bundle-hygiene.test.ts). This
+ *   imports the two-locale map in copy.ts. This
  *   default export still renders both chains for the shared registry, so the
  *   route's client bundle holds both until the registry imports index-de or
  *   index-en per locale route.

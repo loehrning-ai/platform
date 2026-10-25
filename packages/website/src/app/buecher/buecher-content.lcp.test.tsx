@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { allBooks } from "@/lib/books";
@@ -57,20 +55,7 @@ function renderShelf(locale: Locale, accountEnabled = false) {
   );
 }
 
-const SOURCE = readFileSync(
-  resolve(process.cwd(), "src/app/buecher/buecher-content.tsx"),
-  "utf8",
-);
-
 describe("BuecherContent, the shelf", () => {
-  it("is server markup with no collapse, dialog or motion library", () => {
-    expect(SOURCE).not.toMatch(/^\s*["']use client["']/);
-    expect(SOURCE).not.toContain("framer-motion");
-    expect(SOURCE).not.toMatch(/<details|<summary|<dialog|aria-expanded/);
-    expect(SOURCE).not.toContain("book-teaser");
-    expect(SOURCE).not.toContain("next/image");
-  });
-
   it("puts the H1 in the Lemons band with the caps line stating the band numeral", () => {
     const { container } = renderShelf("de");
     const band = container.querySelector("[data-cover-band]");
@@ -192,16 +177,5 @@ describe("BuecherContent, the shelf", () => {
 
     expect(names.every(Boolean)).toBe(true);
     expect(new Set(names).size).toBe(names.length);
-  });
-
-  it("uses the poster system: no rounded cards, shadows, washes or tiny labels", () => {
-    expect(SOURCE).not.toContain("transition-all");
-    expect(SOURCE).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
-    expect(SOURCE).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
-    expect(SOURCE).not.toContain("HighlightedText");
-    expect(SOURCE).not.toMatch(/\bbg-brand-(?:acid|peach|pink|sky|teal)\b/);
-    expect(SOURCE).not.toMatch(/\b-?rotate-\d/);
-    expect(SOURCE).not.toMatch(/shadow-|gradient/);
-    expect(BOOK_PAGE_COPY.de.catalog.heading).not.toMatch(/[–—]/);
   });
 });

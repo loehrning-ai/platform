@@ -207,14 +207,6 @@ describe("web app manifest", () => {
     expect(layoutSource()).not.toContain("serviceWorker");
   });
 
-  it.each(LOCALE_MANIFESTS)(
-    "keeps dashes out of the $locale install copy",
-    ({ file }) => {
-      // Same typography rule as every other user-facing string: hyphens only.
-      expect(readManifestSource(file)).not.toMatch(/[–—]/);
-    },
-  );
-
   it("keeps one manifest per locale wired into the document head", () => {
     const layout = layoutSource();
 

@@ -197,8 +197,7 @@
   /* Lesson engine ("Lab"): the lesson reader and its exercise widgets are a
      calm, elevated learning surface, deliberately unlike the flat poster and
      landing layer. Soft layered depth on paper, never a dark ground. Only
-     the lesson-engine and lab-widget files use these tokens
-     (lesson-engine-design-contract.test.ts). */
+     the lesson-engine and lab-widget files use these tokens. */
   --shadow-lab-sm: 0 1px 2px rgba(18, 18, 18, 0.05), 0 2px 6px rgba(18, 18, 18, 0.04);
   --shadow-lab:
     0 1px 2px rgba(18, 18, 18, 0.05), 0 8px 24px -10px rgba(18, 18, 18, 0.16);
@@ -366,7 +365,7 @@
   /* Anti colours: what a state change (hover, press, focus offset) brings in
      on top of a stage card. Per plakat, one for card A (the outlined card on
      the scene ground) and one for card B (the filled card on the scene ink).
-     Rule (anti-colors.test.ts): never the card's own colour; a palette
+     Rule: never the card's own colour; a palette
      accent (--color-scene-mid) or a brand colour (Mennige #b73a15,
      Druckschwarz #121212); at least 3:1 luminance contrast against the card
      or at least 60 degrees of hue apart. Contrast against the card (page

@@ -1,9 +1,8 @@
 /**
  * Every string of demo 03 in DE and EN (spec sections 8 and 9). copy.test.ts
- * keeps both locales equal in shape and scans them for dashes, "Sie", umlaut
- * substitutes and numbers the kit lacks. This module pulls in both languages:
- * import it from server code and tests only, never from a "use client" module
- * (client-bundle.test.ts guards that).
+ * keeps both locales equal in shape and checks that the copy quotes only
+ * numbers the kit has. This module pulls in both languages: import it from
+ * server code and tests only, never from a "use client" module.
  */
 import type { Locale } from "@/lib/i18n/locale";
 import { DE_TEXT } from "./copy-de";

@@ -9,8 +9,7 @@
  *   (pure TypeScript, no React, no Date, no randomness).
  * - This file is a server component: it picks the current locale's copy and
  *   hands it to the client tree as a prop, so the browser loads one language.
- *   No "use client" module imports copy.ts, copy-de.ts or copy-en.ts
- *   (client-bundle.test.ts).
+ *   No "use client" module imports copy.ts, copy-de.ts or copy-en.ts.
  * - The whole tree server-renders with its initial state: every section, the
  *   questions, the sources and the full take-aways are in the first HTML.
  * - Motion is seek(t) from layout.ts and plays only after Prüfen; reduced
