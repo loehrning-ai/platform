@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import {
@@ -94,4 +94,16 @@ test("the browser group builds exactly once", () => {
   const builds = steps.filter((step) => step.args.includes("verify:build"));
   assert.equal(builds.length, 1);
   assert.equal(steps[0], builds[0]);
+});
+
+test("test:scripts runs every bun-only script test by name", () => {
+  // node --test finds the .mjs tests by glob; the bun:test files are listed.
+  const bunTests = readdirSync(path.join(ROOT, "scripts/__tests__")).filter((file) =>
+    file.endsWith(".test.ts"),
+  );
+  assert.ok(bunTests.length > 0);
+  for (const file of bunTests) {
+    assert.ok(rootScripts["test:scripts"].includes(`./scripts/__tests__/${file}`), file);
+  }
+  assert.ok(GROUPS.static().flat().some((step) => step.args?.includes("test:scripts")));
 });

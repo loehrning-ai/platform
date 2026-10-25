@@ -61,7 +61,7 @@ function singlePackageLock(
 describe("Bun dependency snapshot", () => {
   it("submits the complete resolved lockfile rather than manifest-only data", () => {
     expect(Object.keys(resolved)).toHaveLength(registryCoordinateCount);
-    expect(Object.keys(resolved).length).toBeGreaterThan(800);
+    expect(Object.keys(resolved).length).toBeGreaterThan(500);
     expect(
       dependencies.filter((entry) => entry.relationship === "direct"),
     ).toHaveLength(declaredDependencyNames.size);

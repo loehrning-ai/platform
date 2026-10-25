@@ -32,6 +32,8 @@ export const SYSTEM_ENVIRONMENT_KEYS = Object.freeze([
 ]);
 
 export const VERIFICATION_ENVIRONMENT_KEYS = Object.freeze([
+  // An extra folder of frozen figure files for the figure privacy-gate test.
+  "BOOK_FROZEN_DIR",
   "E2E_GLOBAL_TIMEOUT",
   "E2E_PORT",
   "E2E_AUTH_PRESERVE_STORAGE_STATE",

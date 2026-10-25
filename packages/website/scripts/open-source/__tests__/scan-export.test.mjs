@@ -5,7 +5,7 @@
 // exit codes and reported findings. Every planted value is obviously fake and
 // self labelled (EXAMPLE / FAKE); no real secret is used. Run with:
 //   node scripts/open-source/__tests__/scan-export.test.mjs
-// or: bun run test:scan-export
+// or: bun run test:scripts (from the repository root)
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
