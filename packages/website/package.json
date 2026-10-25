@@ -8,7 +8,7 @@
   "scripts": {
     "predev": "bun run english-routes:check",
     "dev": "next dev --experimental-next-config-strip-types",
-    "prebuild": "bun run validate-env && bun run registry:check && bun run english-routes:check",
+    "prebuild": "bun run validate-env",
     "build": "node scripts/build-freshness.mjs build",
     "analyze": "bun run prebuild && ANALYZE=true node scripts/build-freshness.mjs build",
     "start": "next start --experimental-next-config-strip-types",

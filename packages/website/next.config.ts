@@ -86,6 +86,10 @@ const nextConfig: NextConfig = {
   // Drop the X-Powered-By: Next.js banner so we don't hand attackers a
   // free fingerprint of our stack version.
   poweredByHeader: false,
+  // The build type-checks app code only. Test files are checked by
+  // `tsc -p tsconfig.tests.json` in CI, so a test-only type error never
+  // breaks a preview or production build.
+  typescript: { tsconfigPath: "tsconfig.typecheck.json" },
   // Keep browser source maps unavailable as public Next.js assets. When the
   // optional Sentry upload group is configured, the wrapper below generates,
   // uploads, and then deletes its private upload artifacts.
