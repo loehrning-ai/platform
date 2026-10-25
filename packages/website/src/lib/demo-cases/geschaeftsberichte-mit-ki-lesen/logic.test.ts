@@ -1,377 +1,150 @@
 import { describe, expect, it } from "vitest";
-import { TRUTHS, type ClaimId, LINES } from "./data";
-import { formatPct, formatDecimal } from "./format";
+import { DEFECTS, REVENUES, UNITS, WORKSHOP } from "./data";
 import {
-  assessSheet,
-  checkClaim,
-  claimSummary,
-  craftEvidence,
-  extraWeekEffect,
-  gutLine,
-  INITIAL_STATE,
-  isPristine,
-  linePerWeekGrowth,
-  optionIds,
+  calendarShare,
+  compare,
+  craftComparison,
+  cutSpan,
+  groups,
+  growth,
+  headline,
+  leadPct,
   per1000,
-  rate,
-  readCompare,
-  readDefects,
-  readFlag,
-  reducer,
-  scrapShare,
-  SHEET_FIELDS,
-  SHEET_OPTIONS,
-  shrinkingLines,
-  totalPerWeekGrowth,
-  type DemoState,
-  type Sheet,
+  perUnit,
+  septemberRates,
+  verdict,
+  weekdaysInMonth,
 } from "./logic";
 
-const pct = (value: number) => formatPct("de", value).replace(/ /g, " ");
-const dec = (value: number | null) => (value === null ? null : formatDecimal("de", value));
+const pct = (x: number, digits = 1) => Number((x * 100).toFixed(digits));
 
-describe("per-week growth", () => {
-  it("matches the spec: company +0,8 %, CRAFT −2,1 %, PULSE −3,5 %, NEST −0,4 %, BEAM +6,8 %", () => {
-    expect(pct(totalPerWeekGrowth())).toBe("+0,8 %");
-    expect(pct(linePerWeekGrowth("CRAFT"))).toBe("−2,1 %");
-    expect(pct(linePerWeekGrowth("PULSE"))).toBe("−3,5 %");
-    expect(pct(linePerWeekGrowth("NEST"))).toBe("−0,4 %");
-    expect(pct(linePerWeekGrowth("BEAM"))).toBe("+6,8 %");
-    expect(pct(linePerWeekGrowth("ECHO"))).toBe("+2,8 %");
-    expect(pct(linePerWeekGrowth("BREW"))).toBe("+2,4 %");
-    expect(pct(linePerWeekGrowth("AURA"))).toBe("+0,9 %");
+describe("the month line table (spec section 2)", () => {
+  it.each([
+    [3, 104.5, 2.3],
+    [4, 25.8, 0.7],
+    [5, -20.2, -0.2],
+    [6, -50.0, -0.0],
+  ])("cut %i: headline %f %, per week %f %", (k, head, per) => {
+    expect(pct(headline(REVENUES, k))).toBeCloseTo(head, 1);
+    expect(pct(perUnit(REVENUES, k))).toBeCloseTo(per, 1);
   });
 
-  it("one extra week alone makes +25 %", () => {
-    expect(extraWeekEffect()).toBe(0.25);
+  it("splits weeks at the line", () => {
+    const { a, b } = groups(REVENUES, 4);
+    expect([a.n, b.n]).toEqual([4, 5]);
+    expect(a.total).toBe(17233647);
+    expect(b.total).toBe(21687544);
   });
 
-  it("three lines shrink, smallest first", () => {
-    expect(shrinkingLines()).toEqual(["PULSE", "CRAFT", "NEST"]);
-  });
-});
-
-describe("rates per 1.000 and scrap", () => {
-  it("September 2,51 / 1,13 / 0,71 / 0,43 and August 3,21 / 0,89 / 0,70 / 0,33", () => {
-    expect(["CRAFT", "NEST", "PULSE", "AURA"].map((line) => dec(rate(line as never, "2023-09")))).toEqual([
-      "2,51",
-      "1,13",
-      "0,71",
-      "0,43",
-    ]);
-    expect(["CRAFT", "NEST", "PULSE", "AURA"].map((line) => dec(rate(line as never, "2023-08")))).toEqual([
-      "3,21",
-      "0,89",
-      "0,70",
-      "0,33",
-    ]);
+  it("spans -50,0 to +104,5 as headline and -0,2 to +2,3 per week", () => {
+    const span = cutSpan(REVENUES);
+    expect(pct(span.head[0])).toBeCloseTo(-50, 1);
+    expect(pct(span.head[1])).toBeCloseTo(104.5, 1);
+    expect(pct(span.per[0])).toBeCloseTo(-0.2, 1);
+    expect(pct(span.per[1])).toBeCloseTo(2.3, 1);
   });
 
-  it("CRAFT runs 2,2 times NEST, and CRAFT's rate fell 22 %", () => {
-    expect(dec(rate("CRAFT", "2023-09")! / rate("NEST", "2023-09")!)?.slice(0, 3)).toBe("2,2");
-    expect(pct(rate("CRAFT", "2023-09")! / rate("CRAFT", "2023-08")! - 1).replace(",0", "")).toMatch(
-      /^−21,7 %$|^−22 %$/,
-    );
-    expect(Math.round((1 - rate("CRAFT", "2023-09")! / rate("CRAFT", "2023-08")!) * 100)).toBe(22);
+  it("explains 97 % of the report's growth by the calendar", () => {
+    const share = calendarShare(headline(REVENUES, 4), perUnit(REVENUES, 4)) as number;
+    expect(share).toBeCloseTo(0.974, 3);
+    expect(Math.round(share * 100)).toBe(97);
   });
 
-  it("null stays null", () => {
-    expect(per1000(null, 1000)).toBeNull();
-    expect(rate("ECHO", "2023-09")).toBeNull();
-    expect(scrapShare("BEAM", "2023-08")).toBeNull();
-    expect(per1000(0, 1000)).toBe(0);
+  it("gives the units-based per-week growth the deck prints (+0,8 %)", () => {
+    expect(pct(perUnit(UNITS, 4))).toBeCloseTo(0.8, 1);
   });
 
-  it("scrap shares 12,3 % → 16,8 %; 1.539 × 449 = 691.011, 16,8 % of 4.124.238", () => {
-    const evidence = craftEvidence();
-    expect(pct(evidence.scrapShareAug).replace("+", "")).toBe("12,3 %");
-    expect(pct(evidence.scrapShareSep).replace("+", "")).toBe("16,8 %");
-    expect(evidence.scrapEur).toBe(691_011);
-    expect(pct(evidence.scrapShareOfRevenue).replace("+", "")).toBe("16,8 %");
-    expect(evidence.scrapShareOfRevenue).toBeCloseTo(691_011 / 4_124_238, 10);
-    // "Ein Euro von sechs"
-    expect(Math.round(1 / evidence.scrapShareOfRevenue)).toBe(6);
-  });
-
-  it("CRAFT's revenue per week barely moves (−0,05 %): the −2,1 % is units, never revenue", () => {
-    const craft = LINES.find((line) => line.id === "CRAFT")!;
-    const revenuePerWeek = craft.revenueSepEur / 5 / (3_301_112 / 4) - 1;
-    expect(Math.abs(revenuePerWeek)).toBeLessThan(0.001);
+  it("returns NaN for a base of zero and null for no calendar effect", () => {
+    expect(growth(0, 5)).toBeNaN();
+    expect(calendarShare(-0.2, -0.01)).toBeNull();
+    expect(calendarShare(0.1, 0.12)).toBeNull();
+    expect(calendarShare(Number.NaN, 0.1)).toBeNull();
   });
 });
 
-describe("readCompare", () => {
-  it("line-week holds and puts CRAFT at −2,1 %", () => {
-    const reading = readCompare("line-week");
-    expect(reading.verdict).toBe("holds");
-    expect(pct(reading.rows.find((row) => row.line === "CRAFT")!.value)).toBe("−2,1 %");
-    expect(pct(reading.headline.value)).toBe("−2,1 %");
-    expect(reading.headline.line).toBe("CRAFT");
-    expect(reading.rows).toHaveLength(8);
-    expect(reading.stripTarget).toBe(1);
-  });
-
-  it("line-month misleads with the report's +26,0 % and the report's own MoM figures", () => {
-    const reading = readCompare("line-month");
-    expect(reading.verdict).toBe("misleads");
-    expect(pct(reading.headline.value)).toBe("+26,0 %");
-    expect(pct(reading.rows.find((row) => row.line === "CRAFT")!.value)).toBe("+22,4 %");
-    expect(reading.stripTarget).toBe(0);
-  });
-
-  it("total-week misleads with +0,8 % and one row", () => {
-    const reading = readCompare("total-week");
-    expect(reading.verdict).toBe("misleads");
-    expect(reading.rows).toHaveLength(1);
-    expect(pct(reading.headline.value)).toBe("+0,8 %");
-  });
-
-  it("sorts rows highest first, and both bases share the same order", () => {
-    const month = readCompare("line-month").rows.map((row) => row.line);
-    const week = readCompare("line-week").rows.map((row) => row.line);
-    expect(week).toEqual(["BEAM", "ECHO", "BREW", "AURA", "TOTAL", "NEST", "CRAFT", "PULSE"]);
-    expect(month).toEqual(week);
+describe("verdict thresholds", () => {
+  it("is calendar from 80 %, mixed from 30 %, real below", () => {
+    expect(verdict(0.258, 0.007)).toBe("calendar");
+    expect(verdict(0.1, 0.05)).toBe("mixed");
+    expect(verdict(0.1, 0.08)).toBe("real");
+    expect(verdict(0.1, -0.01)).toBe("shrinks");
+    expect(verdict(-0.2, -0.002)).toBe("down");
+    expect(verdict(Number.NaN, 0)).toBe("thin");
   });
 });
 
-describe("readDefects", () => {
-  it("count misleads: 23 / 19 / 18 / 11, the rest null", () => {
-    const reading = readDefects("count");
-    expect(reading.verdict).toBe("misleads");
-    const values = Object.fromEntries(reading.rows.map((row) => [row.line, row.value]));
-    expect(values).toEqual({ AURA: 18, CRAFT: 23, ECHO: null, NEST: 19, BREW: null, PULSE: 11, BEAM: null });
+describe("defects per 1.000 units (Act 2)", () => {
+  it("matches the report: CRAFT 2,51, NEST 1,13, PULSE 0,71, AURA 0,43", () => {
+    const rate = Object.fromEntries(septemberRates().map((r) => [r.line, r.rate]));
+    expect(rate.CRAFT).toBeCloseTo(2.51, 2);
+    expect(rate.NEST).toBeCloseTo(1.13, 2);
+    expect(rate.PULSE).toBeCloseTo(0.71, 2);
+    expect(rate.AURA).toBeCloseTo(0.43, 2);
   });
 
-  it("per1000 holds", () => {
-    const reading = readDefects("per1000");
-    expect(reading.verdict).toBe("holds");
-    expect(dec(reading.rows.find((row) => row.line === "CRAFT")!.value)).toBe("2,51");
+  it("re-derives CRAFT in August as 3,21 and the only improvement", () => {
+    const aug = (line: string) => {
+      const row = DEFECTS.find((r) => r.line === line)!;
+      return per1000(row.augRecords, row.augUnits);
+    };
+    expect(aug("CRAFT")).toBeCloseTo(WORKSHOP.craftIntensityAug, 2);
+    const improved = DEFECTS.filter((row) => per1000(row.sepRecords, row.sepUnits) < per1000(row.augRecords, row.augUnits));
+    expect(improved.map((row) => row.line)).toEqual(["CRAFT"]);
   });
 
-  it("returns is absent everywhere", () => {
-    const reading = readDefects("returns");
-    expect(reading.verdict).toBe("absent");
-    expect(reading.rows.every((row) => row.value === null && row.absent)).toBe(true);
-  });
-
-  it("keeps revenue order and always notes the ECHO escalation", () => {
-    for (const id of ["count", "per1000", "returns"] as const) {
-      const reading = readDefects(id);
-      expect(reading.rows.map((row) => row.line)).toEqual(LINES.map((line) => line.id));
-      expect(reading.rows.find((row) => row.line === "ECHO")!.note).toBe("echo-escalation");
-      expect(reading.rows.filter((row) => row.note)).toHaveLength(1);
-    }
-  });
-});
-
-describe("readFlag", () => {
-  it("chronic flags CRAFT and carries the evidence", () => {
-    const reading = readFlag("chronic");
-    expect(reading).toMatchObject({ flagged: ["CRAFT"], verdict: "holds", noise: [] });
-    const evidence = reading.evidence!;
-    expect(dec(evidence.rateAug)).toBe("3,21");
-    expect(dec(evidence.rateSep)).toBe("2,51");
-    expect(evidence.scrapShareAug).toBeCloseTo(0.123, 3);
-    expect(evidence.scrapShareSep).toBeCloseTo(0.168, 3);
-    expect(evidence.scrapEur).toBe(691_011);
-    expect(evidence.scrapShareOfRevenue).toBeCloseTo(0.168, 3);
-  });
-
-  it("rising flags exactly AURA, NEST, PULSE with PULSE as noise", () => {
-    expect(readFlag("rising")).toEqual({
-      flagged: ["AURA", "NEST", "PULSE"],
-      verdict: "misleads",
-      noise: ["PULSE"],
-    });
-  });
-
-  it("most-reports flags the right line for the wrong reason", () => {
-    expect(readFlag("most-reports")).toMatchObject({ flagged: ["CRAFT"], verdict: "misleads" });
+  it("leads NEST by 21 % in records and 2,2 times per 1.000 units", () => {
+    expect(leadPct(23, 19)).toBeCloseTo(0.21, 2);
+    const c = craftComparison();
+    expect(c.nextByRecords.line).toBe("NEST");
+    expect(c.nextByRate.line).toBe("NEST");
+    expect(c.multiple).toBeCloseTo(WORKSHOP.nextWorstMultiple, 1);
+    expect(c.leadRecords).toBeCloseTo(0.2105, 3);
   });
 });
 
-describe("checkClaim", () => {
-  const expected: Record<ClaimId, string> = {
-    "craft-units": "match",
-    "nest-ncr": "differs",
-    "craft-revenue": "match",
-    "craft-marketing": "nowhere",
-  };
-
-  it("returns the truth for all 4 × 3 predictions", () => {
-    for (const [id, truth] of Object.entries(expected) as [ClaimId, string][]) {
-      for (const said of TRUTHS) {
-        const check = checkClaim(id, said);
-        expect(check.truth).toBe(truth);
-        expect(check.said).toBe(said);
-        expect(check.same).toBe(said === truth);
-      }
-    }
-    expect(checkClaim("nest-ncr", "match").sourceValue).toBe(19);
-    expect(checkClaim("craft-marketing", "nowhere").sourceValue).toBeNull();
-    expect(checkClaim("nest-ncr", "differs").more).toBe(15);
+describe("working days", () => {
+  it("counts Mo-Fr: August 2023 has 23, September 2023 has 21", () => {
+    expect(weekdaysInMonth(2023, 8, 0)).toBe(23);
+    expect(weekdaysInMonth(2023, 9, 0)).toBe(21);
   });
 
-  it("counts the checked cards", () => {
-    expect(claimSummary({})).toEqual({ checked: 0, of: 4 });
-    expect(claimSummary({ "nest-ncr": "match", "craft-units": "match" })).toEqual({ checked: 2, of: 4 });
+  it("subtracts holidays but never goes below 1", () => {
+    expect(weekdaysInMonth(2023, 8, 1)).toBe(22);
+    expect(weekdaysInMonth(2023, 8, 99)).toBe(1);
+    expect(weekdaysInMonth(2024, 2, 0)).toBe(21);
+  });
+
+  it("shows +37,8 % per day when revenue is read in working days (known, not fixed)", () => {
+    const result = compare({ aVal: 17233647, aN: 23, bVal: 21687544, bN: 21 });
+    expect(result.ok && pct(result.p)).toBeCloseTo(37.8, 1);
   });
 });
 
-describe("assessSheet", () => {
-  it("returns every option's fixed verdict when no cross-row rule applies", () => {
-    for (const field of SHEET_FIELDS) {
-      for (const option of optionIds(field)) {
-        const sheet = { [field]: option } as Sheet;
-        const row = assessSheet(sheet).rows.find((entry) => entry.field === field)!;
-        const rule = (SHEET_OPTIONS[field] as Record<string, { verdict: string; vp?: true }>)[option as string];
-        expect(row.verdict, `${field}.${String(option)}`).toBe(rule.verdict);
-        expect(row.vp === true, `${field}.${String(option)} vp`).toBe(rule.vp === true);
-        expect(row.against).toBeUndefined();
-      }
-    }
+describe("compare (Dein Vergleich)", () => {
+  it("computes the prefilled example", () => {
+    const result = compare({ aVal: 17233647, aN: 4, bVal: 21687544, bN: 5 });
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(pct(result.h)).toBeCloseTo(25.8, 1);
+    expect(pct(result.p)).toBeCloseTo(0.7, 1);
+    expect(result.verdict).toBe("calendar");
+    expect(result.extra).toBe(1);
   });
 
-  it("matches the spec's fixed table", () => {
-    const table: [keyof Sheet, string, string][] = [
-      ["decision", "rework", "holds"],
-      ["decision", "marketing", "misleads"],
-      ["number", "craft-mom", "misleads"],
-      ["number", "rate-251", "holds"],
-      ["number", "rev-412", "misleads"],
-      ["number", "scrap-691", "holds"],
-      ["number", "ncr-23", "misleads"],
-      ["cost", "both-ways", "holds"],
-      ["cost", "lost-revenue", "absent"],
-      ["cost", "scrap-on-top", "misleads"],
-      ["open", "weeks", "misleads"],
-      ["open", "marketing", "holds"],
-      ["open", "rate", "misleads"],
-      ["counter", "price-margin", "absent"],
-      ["counter", "count-fell", "misleads"],
-      ["counter", "rate-fell", "holds"],
-      ["trigger", "rate-only", "misleads"],
-      ["trigger", "revenue", "misleads"],
-      ["trigger", "rate-and-scrap", "holds"],
-    ];
-    for (const [field, option, verdict] of table) {
-      const row = assessSheet({ [field]: option } as Sheet).rows.find((entry) => entry.field === field)!;
-      expect(row.verdict, `${field}.${option}`).toBe(verdict);
-    }
-    expect(table).toHaveLength(SHEET_FIELDS.reduce((total, field) => total + optionIds(field).length, 0));
+  it("names what is missing and never guesses", () => {
+    expect(compare({ aVal: null, aN: 4, bVal: 5, bN: 0 })).toEqual({ ok: false, missing: ["aVal", "bN"] });
+    expect(compare({ aVal: -3, aN: 4, bVal: 5, bN: 5 })).toEqual({ ok: false, missing: ["aVal"] });
   });
 
-  it("the strongest path holds 6 of 6", () => {
-    const result = assessSheet({
-      decision: "rework",
-      number: "rate-251",
-      cost: "both-ways",
-      open: "marketing",
-      counter: "rate-fell",
-      trigger: "rate-and-scrap",
-    });
-    expect(result).toMatchObject({ holding: 6, open: 0, holds: true });
+  it("reads equal-length periods as real growth with no calendar share", () => {
+    const result = compare({ aVal: 100, aN: 4, bVal: 130, bN: 4 });
+    expect(result.ok && result.verdict).toBe("real");
+    expect(result.ok && result.s).toBeNull();
   });
 
-  it("a number that argues for the other decision misleads, both ways", () => {
-    const marketing = assessSheet({ decision: "marketing", number: "rate-251" });
-    expect(marketing.rows[1]).toMatchObject({ verdict: "misleads", against: "marketing" });
-    expect(assessSheet({ decision: "marketing", number: "scrap-691" }).rows[1]).toMatchObject({
-      verdict: "misleads",
-      against: "marketing",
-    });
-    const rework = assessSheet({ decision: "rework", number: "craft-mom" });
-    expect(rework.rows[1]).toMatchObject({ verdict: "misleads", against: "rework" });
-    expect(assessSheet({ decision: "rework", number: "rev-412" }).rows[1]).toMatchObject({
-      verdict: "misleads",
-      against: "rework",
-    });
-    const aligned = assessSheet({ decision: "marketing", number: "rev-412" });
-    expect(aligned.rows[1]).toMatchObject({ verdict: "misleads" });
-    expect(aligned.rows[1].against).toBeUndefined();
-    // No side, no rule: 23 NCRs stays its own verdict with the VP's objection.
-    expect(assessSheet({ decision: "marketing", number: "ncr-23" }).rows[1]).toMatchObject({
-      verdict: "misleads",
-      vp: true,
-    });
-    // Without a decision the rule does not apply.
-    expect(assessSheet({ number: "rate-251" }).rows[1].verdict).toBe("holds");
-  });
-
-  it("the weakest path holds 0", () => {
-    const result = assessSheet({
-      decision: "marketing",
-      number: "rev-412",
-      cost: "lost-revenue",
-      open: "weeks",
-      counter: "price-margin",
-      trigger: "revenue",
-    });
-    expect(result).toMatchObject({ holding: 0, open: 0, holds: false });
-  });
-
-  it("an empty sheet is six open rows", () => {
-    expect(assessSheet({})).toMatchObject({ holding: 0, open: 6, holds: false });
-  });
-
-  it("the holding option is never the only one of its row", () => {
-    for (const field of SHEET_FIELDS) {
-      const verdicts = optionIds(field).map(
-        (option) => (SHEET_OPTIONS[field] as Record<string, { verdict: string }>)[option as string].verdict,
-      );
-      expect(verdicts.filter((verdict) => verdict !== "holds").length, field).toBeGreaterThan(0);
-      expect(verdicts.filter((verdict) => verdict === "holds").length, field).toBeGreaterThan(0);
-    }
-  });
-});
-
-describe("gutLine", () => {
-  it("covers the four cases", () => {
-    expect(gutLine(undefined, "rework", true)).toBeNull();
-    expect(gutLine("marketing", undefined, false)).toBeNull();
-    expect(gutLine("marketing", "rework", true)).toBe("turned");
-    expect(gutLine("rework", "rework", true)).toBe("same-holds");
-    expect(gutLine("rework", "rework", false)).toBe("same-weak");
-  });
-});
-
-describe("reducer", () => {
-  const deepFreeze = <T,>(value: T): T => {
-    if (value && typeof value === "object") {
-      Object.freeze(value);
-      for (const inner of Object.values(value)) deepFreeze(inner);
-    }
-    return value;
-  };
-
-  it("is pure: frozen input, new objects", () => {
-    const start = deepFreeze<DemoState>({ ...INITIAL_STATE, said: {}, sheet: {} });
-    const a = reducer(start, { type: "compare", value: "line-week" });
-    expect(a).not.toBe(start);
-    expect(a.compare).toBe("line-week");
-    expect(start.compare).toBeUndefined();
-
-    const b = reducer(deepFreeze(a), { type: "say", claim: "nest-ncr", value: "match" });
-    expect(b.said).toEqual({ "nest-ncr": "match" });
-    expect(b.said).not.toBe(a.said);
-
-    const c = reducer(deepFreeze(b), { type: "sheet", field: "number", value: "rate-251" });
-    expect(c.sheet).toEqual({ number: "rate-251" });
-    expect(b.sheet).toEqual({});
-
-    const d = reducer(deepFreeze(c), { type: "say", claim: "nest-ncr", value: "differs" });
-    expect(d.said).toEqual({ "nest-ncr": "differs" });
-  });
-
-  it("handles every action and resets", () => {
-    let state = INITIAL_STATE;
-    state = reducer(state, { type: "gut", value: "marketing" });
-    state = reducer(state, { type: "defect", value: "per1000" });
-    state = reducer(state, { type: "flag", value: "chronic" });
-    expect(state).toMatchObject({ gut: "marketing", defect: "per1000", flag: "chronic" });
-    expect(isPristine(state)).toBe(false);
-    const reset = reducer(state, { type: "reset" });
-    expect(reset).toEqual(INITIAL_STATE);
-    expect(isPristine(reset)).toBe(true);
+  it("refuses absurd inputs by name instead of printing nonsense", () => {
+    expect(compare({ aVal: 100, aN: 4, bVal: 130, bN: 9_450_000 })).toEqual({ ok: false, missing: [], implausible: "count", flagged: ["bN"] });
+    expect(compare({ aVal: 100, aN: 4, bVal: 100_000_000, bN: 4 })).toEqual({ ok: false, missing: [], implausible: "growth", flagged: ["aVal", "bVal"] });
+    expect(compare({ aVal: 100, aN: 400, bVal: 130, bN: 400 }).ok).toBe(true);
   });
 });

@@ -88,9 +88,9 @@ export const HOME_COPY = {
       accountCta: "Zum Konto",
     },
     companion: {
-      demosTitle: "Üben am Fall",
-      demosRailLabel: "Übungen aus den Workshops",
-      demoMeta: (number: string) => `Workshop ${number} · Übung`,
+      demosTitle: "Zum Anfassen",
+      demosRailLabel: "Demos aus den Workshops",
+      demoMeta: (number: string) => `Workshop ${number} · Demo`,
       booksTitle: "Lernbücher",
       booksRailLabel: "Lernbücher der Plattform",
       bookMeta: (chapters: number, minutes: number) =>
@@ -180,9 +180,9 @@ export const HOME_COPY = {
       accountCta: "Go to account",
     },
     companion: {
-      demosTitle: "Practice on the case",
-      demosRailLabel: "Exercises from the workshops",
-      demoMeta: (number: string) => `Workshop ${number} · Practice`,
+      demosTitle: "Hands on",
+      demosRailLabel: "Demos from the workshops",
+      demoMeta: (number: string) => `Workshop ${number} · Demo`,
       booksTitle: "Learning books",
       booksRailLabel: "Learning books on this platform",
       bookMeta: (chapters: number, minutes: number) =>

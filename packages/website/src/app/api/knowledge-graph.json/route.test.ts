@@ -78,11 +78,11 @@ describe("knowledge-graph locale representations", () => {
     );
 
     expect(demo?.riskNotes).toBeUndefined();
-    expect(demo?.localizedPages.de.question).toBe("Wann darf der Plan allein raus?");
+    expect(demo?.localizedPages.de.question).toBe("Kann KI die Zukunft vorhersagen?");
     expect(demo?.localizedPages.en).toMatchObject({
       url: "https://loehrning.ai/en/demos/ki-prognosen-einschaetzen",
       pageLanguage: "en-GB",
-      question: "When may the plan ship on its own?",
+      question: "Can AI predict the future?",
     });
   });
 

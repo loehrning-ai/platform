@@ -47,10 +47,10 @@ describe("demo registry", () => {
       }
     }
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "en")?.question).toBe(
-      "When may the plan ship on its own?",
+      "Can AI predict the future?",
     );
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "de")?.question).toBe(
-      "Wann darf der Plan allein raus?",
+      "Kann KI die Zukunft vorhersagen?",
     );
     expect(getDemoForLocale("unknown", "de")).toBeUndefined();
   });
@@ -58,7 +58,14 @@ describe("demo registry", () => {
   it("writes copy without em dashes or en dashes", () => {
     for (const locale of ["de", "en"] as const) {
       for (const demo of getDemosForLocale(locale)) {
-        const text = [demo.title, demo.oneLiner, demo.question, demo.syntheticDataLabel].join(" ");
+        const text = [
+          demo.title,
+          demo.oneLiner,
+          demo.question,
+          demo.syntheticDataLabel,
+          demo.tile.hook,
+          demo.tile.take,
+        ].join(" ");
         expect(text, demo.slug).not.toMatch(/[–—]/);
       }
     }
@@ -72,9 +79,41 @@ describe("demo registry", () => {
     }
   });
 
-  it("runs at most fifteen minutes on invented data, with no outside action", () => {
+  it("names the five demos and states each promise in German and English", () => {
+    const names = {
+      "ki-prognosen-einschaetzen": ["Hundert Startwochen", "A Hundred Launch Weeks"],
+      "geschaeftsberichte-mit-ki-lesen": ["Monatsgrenze", "The Month Line"],
+      "datenbereitschaft-fuer-ki": ["Stufe oder Treppe?", "Step or staircase?"],
+      "esg-berichte-mit-ki": ["Elf von zwölf", "Eleven of twelve"],
+      "ki-im-unternehmen-sicher-nutzen": ["Was fliegt mit?", "What goes along?"],
+    } as const;
+    for (const [slug, [de, en]] of Object.entries(names)) {
+      expect(getDemoForLocale(slug, "de")?.title).toBe(de);
+      expect(getDemoForLocale(slug, "en")?.title).toBe(en);
+    }
+    expect(getDemoForLocale("ki-prognosen-einschaetzen", "de")?.oneLiner).toBe(
+      "Zieh dein Lager durch hundert mögliche Startwochen und sieh, in wie vielen es nicht reicht.",
+    );
+    expect(getDemoForLocale("ki-prognosen-einschaetzen", "en")?.oneLiner).toBe(
+      "Drag your stock through a hundred possible launch weeks and see in how many it falls short.",
+    );
+  });
+
+  it("gives every demo a hub tile line and a take-away, without homework words", () => {
+    const homework = /(?<!\p{L})(Übung|Übungen|Aufgabe|Lösung|Prüfen|Bewertung|Auswertung|exercise|homework|quiz)(?!\p{L})/iu;
+    for (const locale of ["de", "en"] as const) {
+      for (const demo of getDemosForLocale(locale)) {
+        expect(demo.tile.hook.trim().length, `${locale} ${demo.slug} hook`).toBeGreaterThan(0);
+        expect(demo.tile.take.trim().length, `${locale} ${demo.slug} take`).toBeGreaterThan(0);
+        const all = [demo.title, demo.oneLiner, demo.question, demo.syntheticDataLabel, demo.tile.hook, demo.tile.take];
+        for (const text of all) expect(text, `${locale} ${demo.slug}`).not.toMatch(homework);
+      }
+    }
+  });
+
+  it("runs a few minutes on invented data, with no outside action", () => {
     for (const demo of demos) {
-      expect(demo.minutes).toBeGreaterThanOrEqual(5);
+      expect(demo.minutes).toBeGreaterThanOrEqual(3);
       expect(demo.minutes).toBeLessThanOrEqual(15);
       expect(demo.illustrative).toBe(true);
       expect(demo.externalActionMode).toBe("none");
@@ -82,9 +121,11 @@ describe("demo registry", () => {
     }
   });
 
-  it("has a component folder with an index for every slug", () => {
+  it("has a component folder with an index and a hub tile for every slug", () => {
     for (const slug of DEMO_SLUGS) {
-      expect(existsSync(join(WEBSITE, "src/components/demos", slug, "index.tsx")), slug).toBe(true);
+      for (const file of ["index.tsx", "tile.tsx", "tile-motion.ts"]) {
+        expect(existsSync(join(WEBSITE, "src/components/demos", slug, file)), `${slug}/${file}`).toBe(true);
+      }
     }
   });
 

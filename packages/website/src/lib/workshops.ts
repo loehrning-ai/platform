@@ -1151,7 +1151,7 @@ export function workshopDemoMaterial(
   if (!demo) return undefined;
   const copy = locale === "en" ? demo.en : demo;
   return {
-    label: `${locale === "en" ? "Exercise" : "Übung"} · ${copy.title.replace(/\.$/, "")}`,
+    label: `Demo · ${copy.title.replace(/\.$/, "")}`,
     href: `${locale === "en" ? "/en" : ""}/demos/${demo.slug}`,
     kind: "html",
     language: locale,

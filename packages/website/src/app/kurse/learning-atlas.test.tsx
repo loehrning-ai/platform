@@ -619,11 +619,11 @@ describe("LearningAtlas", () => {
       '[data-course-slug="ai-native"]',
     );
     // Three demos on this course, so the label carries the real count.
-    expect(aiNative).toHaveTextContent("3 Übungen ansehen");
+    expect(aiNative).toHaveTextContent("3 Demos ansehen");
     const single = container.querySelector<HTMLElement>(
       '[data-course-slug="data-science"]',
     );
-    expect(single).toHaveTextContent("Übung ansehen");
+    expect(single).toHaveTextContent("Demo ansehen");
     expect(single?.querySelector('a[href^="/demos/"]')).toHaveAttribute(
       "href",
       "/demos/ki-prognosen-einschaetzen?source=gallery",
@@ -631,7 +631,7 @@ describe("LearningAtlas", () => {
     // A phone prints the noun only, so the link fits beside the action; the
     // verb stays in the accessible name, which starts with the visible label.
     const demo = within(aiNative as HTMLElement).getByRole("link", {
-      name: "3 Übungen ansehen",
+      name: "3 Demos ansehen",
     });
     expect(demo.querySelector(".max-sm\\:sr-only")).toHaveTextContent(
       /^ansehen$/,

@@ -10,11 +10,11 @@ import { PLAKAT, ROUTE_PLAKAT, type PlakatPalette } from "@/lib/plakat/palettes"
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "loehrning.ai Übung zum Workshop · workshop exercise";
+export const alt = "loehrning.ai Demo zum Workshop · workshop demo";
 
 /**
  * The demo social card in its workshop's scene (SPEC §2.3, §3.15): the
- * poster ground, the arrow caps line "Workshop NN · Übung", the title at
+ * poster ground, the arrow caps line "Workshop NN · Demo", the title at
  * poster size (IDEA sets it in Himbeere, display only; every other scene in
  * its ink), the question as subtitle in the ink, the halftone strip, and the
  * shared Kalkweiß colophon strip with the header's L tile. IDEA alone keeps

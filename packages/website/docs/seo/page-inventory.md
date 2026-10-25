@@ -80,11 +80,11 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/ki-prognosen-einschaetzen | 1.050 Stück, sieben Morgen | Angemeldet 1.370, geschätzt 1.180, geliefert 1.050. Du legst die Regel fest und führst eine Woche lang die Fr… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Die Zahl, die trägt | Entscheide über CRAFT, so wie ein Bericht gelesen werden sollte. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Mach die Zahl richtig. | Fünf Anfragen, wie sie an eine KI gestellt werden. Du legst fest, was die Zahl bedeutet, und siehst sofort, w… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/esg-berichte-mit-ki | Zehn Fakten, 14 Antworten | Du prüfst die Akte einer erfundenen Kellerei: zehn Fakten, die 14 Antworten an Importeur und Bank tragen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/ki-im-unternehmen-sicher-nutzen | Darf das in diesen Chat? | Acht Einfügungen bei Vardar Works, einer erfundenen Firma. Du gibst jeder eine Ampel und siehst, wohin sie ge… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-prognosen-einschaetzen | Hundert Startwochen | Zieh dein Lager durch hundert mögliche Startwochen und sieh, in wie vielen es nicht reicht. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Monatsgrenze | Schieb die Linie um eine Woche. Aus +26 % wird −20 %. Dann rechne mit deinen Zahlen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Stufe oder Treppe? | Zieh den Hebel: aus −19.960 € wird 334.675 €, und kein Datensatz ändert sich. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/esg-berichte-mit-ki | Elf von zwölf | Im Entwurf steht „Gesamtjahr“. Im Ordner liegen elf Rechnungen. Rate den zwölften Monat, sieh, wie weit du da… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-im-unternehmen-sicher-nutzen | Was fliegt mit? | Füge deinen Text ein, bevor du ihn in einen KI-Chat gibst. Du siehst, was mitfliegen würde, schwärzt es mit e… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 

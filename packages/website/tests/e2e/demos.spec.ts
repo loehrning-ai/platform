@@ -6,24 +6,25 @@ import { DEMOS_PAGE_COPY } from "../../src/lib/demos-ui-copy";
 test.describe("/demos hub", () => {
   for (const locale of ["de", "en"] as const) {
     const prefix = locale === "en" ? "/en" : "";
-    test(`${prefix || "/"}demos lists the five workshop demos in order`, async ({ page }) => {
+    test(`${prefix || "/"}demos lists the five workshop demos as tiles, in order`, async ({ page }) => {
       const response = await page.goto(`${prefix}/demos`, { waitUntil: "domcontentloaded" });
       expect(response?.status()).toBe(200);
       await expect(page.locator("html")).toHaveAttribute("lang", locale);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(
         DEMOS_PAGE_COPY[locale].catalog.heading,
       );
-      const rows = page.locator('[data-testid="demo-row"]');
-      await expect(rows).toHaveCount(demos.length);
+      const tiles = page.locator('[data-testid="demo-tile"]');
+      await expect(tiles).toHaveCount(demos.length);
       const localized = getDemosForLocale(locale);
       for (const [index, demo] of localized.entries()) {
-        const row = rows.nth(index);
-        await expect(row.getByRole("heading", { level: 3 })).toHaveText(demo.title);
-        await expect(row.locator("[data-demo-row-question]")).toHaveText(demoLede(demo));
-        await expect(row.getByRole("link")).toHaveAttribute(
+        const tile = tiles.nth(index);
+        await expect(tile.getByRole("heading", { level: 3 })).toHaveText(demo.title);
+        await expect(tile.locator("[data-demo-hook]")).toHaveText(demo.tile.hook);
+        await expect(tile.getByRole("link")).toHaveAttribute(
           "href",
           `${prefix}/demos/${demo.slug}?source=gallery`,
         );
+        await expect(tile.locator(".dt-scene svg")).toBeVisible();
       }
       await expect(page.locator("[data-demo-provenance]")).toHaveText(
         DEMOS_PAGE_COPY[locale].catalog.provenance,
@@ -31,13 +32,45 @@ test.describe("/demos hub", () => {
     });
   }
 
-  test("has no horizontal overflow at 390px", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto("/demos", { waitUntil: "domcontentloaded" });
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  for (const width of [360, 390]) {
+    test(`has no horizontal overflow and no clipped tile at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("/demos", { waitUntil: "domcontentloaded" });
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      );
+      expect(overflow).toBeLessThanOrEqual(0);
+      const tile = await page.locator(".dt-card").first().boundingBox();
+      expect(tile?.width ?? 0).toBeGreaterThan(width - 40);
+      expect((tile?.x ?? 0) + (tile?.width ?? 0)).toBeLessThanOrEqual(width);
+    });
+  }
+
+  test("a tile plays once when seen, then holds the end frame", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto("/demos", { waitUntil: "networkidle" });
+    const first = page.locator("[data-dt-tile]").first();
+    await first.scrollIntoViewIfNeeded();
+    await expect(first).toHaveClass(/is-playing/);
+    const settled = await first.evaluate(
+      (element) => element.getAnimations({ subtree: true }).length,
     );
-    expect(overflow).toBeLessThanOrEqual(0);
+    expect(settled).toBeGreaterThan(0);
+    await page.waitForTimeout(4200);
+    const running = await first.evaluate(
+      (element) =>
+        element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running")
+          .length,
+    );
+    expect(running).toBe(0);
+  });
+
+  test("reduced motion shows the end frame and never arms a tile", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/demos", { waitUntil: "networkidle" });
+    await expect(page.locator(".is-armed, .is-playing")).toHaveCount(0);
+    const animations = await page.evaluate(() => document.getAnimations().length);
+    expect(animations).toBe(0);
   });
 });
 

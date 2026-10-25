@@ -1,105 +1,47 @@
-import type { ReactNode } from "react";
-import { Pictogram, cx } from "@/components/werk";
-import type { UiCopy } from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen/copy";
-import type { Device, Light } from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen/types";
+import { useId } from "react";
+import type { Light } from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen/types";
 
-const LIGHT_PICTOGRAM = { green: "pass", amber: "gap", red: "fail" } as const satisfies Record<
-  Light,
-  "pass" | "gap" | "fail"
->;
+/* Hard-edged glyphs. Shape carries the meaning, colour never does alone. */
+const SVG = { "aria-hidden": true, focusable: false, fill: "none", strokeLinecap: "square", strokeLinejoin: "miter" } as const;
 
-export function lightClass(light: Light): string {
-  return `w05-light-${light}`;
-}
-
-/** The light's pictogram (pass, gap, fail) in its risk colour; decorative. */
-export function LightGlyph({ light, className }: { readonly light: Light; readonly className?: string }) {
+/** Padlock: open lifts the shackle off one side, closed seats it. */
+export function LockGlyph({ closed }: { readonly closed: boolean }) {
   return (
-    <span className={cx("w05-glyph", lightClass(light), className)} aria-hidden="true">
-      <Pictogram name={LIGHT_PICTOGRAM[light]} className="size-full" strokeWidth={2} />
-    </span>
+    <svg {...SVG} viewBox="0 0 28 32" className="w05-lock" data-closed={closed ? "" : undefined}>
+      <path d={closed ? "M8 14V9a6 6 0 0 1 12 0v5" : "M8 14V9a6 6 0 0 1 11-3.3"} stroke="currentColor" strokeWidth="3" />
+      <rect x="3" y="14" width="22" height="15" fill="currentColor" />
+      <rect x="12.5" y="19" width="3" height="5" fill="var(--w05-bogen)" />
+    </svg>
   );
 }
 
-/** Glyph plus word: colour is never the only signal. */
-export function LightLabel({
-  light,
-  copy,
-  className,
-  glyphClassName = "size-4",
-}: {
-  readonly light: Light;
-  /** The page's copy (one language). */
-  readonly copy: UiCopy;
-  readonly className?: string;
-  readonly glyphClassName?: string;
-}) {
+export function ArrowGlyph() {
   return (
-    <span className={cx("inline-flex items-center gap-1.5 font-bold", lightClass(light), className)}>
-      <LightGlyph light={light} className={glyphClassName} />
-      <span>{copy.lights[light].word}</span>
-    </span>
+    <svg {...SVG} viewBox="0 0 20 12" className="w05-arrow">
+      <path d="M1 6h16M12 1l5 5-5 5" stroke="currentColor" strokeWidth="2.25" />
+    </svg>
   );
 }
 
-const FILL = (children: ReactNode) => (
-  <g fill="currentColor" stroke="none">
-    {children}
-  </g>
-);
-
-/** Device pictograms in the deck grammar: 100-unit box, square caps, filled details. */
-export const DEVICE_PATHS: Readonly<Record<Device, ReactNode>> = {
-  phone: (
-    <>
-      <rect x="28" y="6" width="44" height="88" />
-      <path d="M28 20h44M28 76h44" />
-      {FILL(<rect x="44" y="82" width="12" height="6" />)}
-    </>
-  ),
-  browser: (
-    <>
-      <rect x="6" y="14" width="88" height="72" />
-      <path d="M6 32h88M20 50h40M20 64h56" />
-      {FILL(<rect x="12" y="20" width="8" height="6" />)}
-    </>
-  ),
-  desktopFolder: (
-    <>
-      <rect x="12" y="12" width="76" height="52" />
-      <path d="M4 76h92M24 64l-8 12M76 64l8 12" />
-      {FILL(<path d="M28 26h16l4 6h24v22H28z" />)}
-    </>
-  ),
-  server: (
-    <>
-      <rect x="14" y="10" width="72" height="34" />
-      <rect x="14" y="56" width="72" height="34" />
-      {FILL(
+/** square = red, triangle = amber, circle = green, hatched square = open. */
+export function LightGlyph({ light }: { readonly light: Light }) {
+  const hatch = `w05-hatch-${useId().replace(/:/g, "")}`;
+  return (
+    <svg {...SVG} viewBox="0 0 32 32" className="w05-light-glyph" data-light={light}>
+      {light === "red" ? <rect x="3" y="3" width="26" height="26" fill="var(--w05-mennige)" stroke="var(--w05-ink)" strokeWidth="2" /> : null}
+      {light === "amber" ? <path d="M16 3 30 28H2Z" fill="var(--w05-bernstein)" stroke="var(--w05-ink)" strokeWidth="2" /> : null}
+      {light === "green" ? <circle cx="16" cy="16" r="13" fill="var(--w05-tanne)" stroke="var(--w05-ink)" strokeWidth="2" /> : null}
+      {light === "open" ? (
         <>
-          <rect x="24" y="23" width="8" height="8" />
-          <rect x="24" y="69" width="8" height="8" />
-        </>,
-      )}
-    </>
-  ),
-};
-
-export function DeviceGlyph({ device, className }: { readonly device: Device; readonly className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.75}
-      strokeLinecap="square"
-      strokeLinejoin="miter"
-      className={cx("size-5 shrink-0 [&_*]:[vector-effect:non-scaling-stroke]", className)}
-      aria-hidden="true"
-      focusable="false"
-      data-device={device}
-    >
-      {DEVICE_PATHS[device]}
+          <defs>
+            <pattern id={hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="6" height="6" fill="var(--w05-bogen)" />
+              <rect width="2.5" height="6" fill="var(--w05-ink)" />
+            </pattern>
+          </defs>
+          <rect x="3" y="3" width="26" height="26" fill={`url(#${hatch})`} stroke="var(--w05-ink)" strokeWidth="2" />
+        </>
+      ) : null}
     </svg>
   );
 }

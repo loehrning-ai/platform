@@ -1,106 +1,136 @@
-import type { Locale } from "@/lib/i18n/locale";
-import { ESG_REPORTING_KIT } from "@/lib/workshops-esg-reporting-kit";
+import { ASCII, stripOf } from "./analyse";
+import { formatNumber, formatPercent, formatSmart } from "./numbers";
+import type { Analysis, Locale, Series, TakeawayId, TextTemplates } from "./types";
 
-/**
- * The three copy cards of "Zum Mitnehmen" (spec section 8). The copied text
- * is the same for everyone; today's misses are marked on screen only.
- *
- * DE card 1 takes rules 1 to 3 verbatim from the kit registry and translates
- * the frame of START-HERE "Your Monday". EN cards 1 and 2 are the kit's own
- * template and prompt, verbatim (data.test.ts checks them against the zip).
+/*
+ * The three things to take away, generated from the series as the folder
+ * holds it. A guess and the revealed bill never enter: a hole stays a hole.
  */
+
+export function fill(template: string, values: Readonly<Record<string, string | number>>): string {
+  return template.replace(/\{(\w+)\}/g, (match, key: string) => (key in values ? String(values[key]) : match));
+}
+
+/** "September", "A und B", "A, B und C", with the year once at the end when known. */
+export function monthsText(months: readonly number[], names: readonly string[], and: string, year?: number): string {
+  const list = months.map((month) => names[month - 1] ?? String(month));
+  const joined =
+    list.length <= 1 ? (list[0] ?? "") : `${list.slice(0, -1).join(", ")} ${and} ${list[list.length - 1]}`;
+  return year === undefined ? joined : `${joined} ${year}`;
+}
+
+export interface BuildOptions {
+  readonly locale: Locale;
+  readonly texts: TextTemplates;
+  readonly months: readonly string[];
+  readonly ascii: boolean;
+}
+
+const swapGlyphs = (text: string): string =>
+  text.replace(/■/g, ASCII.proven).replace(/▨/g, ASCII.estimate).replace(/□/g, ASCII.missing);
+
+const isEnergyUnit = (unit: string) => /^[km]?wh$/i.test(unit.trim());
+
+/** The label the visitor or the folder gave; empty when none, so no placeholder name leaks into a copied line. */
+function labelOf(series: Series): string {
+  return series.label.trim();
+}
+
+/** Antwortzeile: one sentence per fact, a hole is NOT FOUND, never "full year". */
+export function buildAnswerLine(series: Series, analysis: Analysis, options: BuildOptions): string {
+  const { texts, locale } = options;
+  const digits = series.digits;
+  const common = {
+    lead: labelOf(series) === "" ? "" : `${labelOf(series)}: `,
+    // Own data: only the decimals a sum needs ("30.000", not "30.000,0"). Built-in series keep their fixed look.
+    sum: series.id === "own" ? formatSmart(analysis.provenSum, locale, digits) : formatNumber(analysis.provenSum, locale, digits),
+    unit: series.unit,
+    n: analysis.provenMonths,
+    pct: formatPercent(analysis.monthCoverage, locale, 1),
+    range: texts.stripRange,
+    strip: stripOf(series.cells, false),
+  };
+  const source = series.source ? fill(texts.source, { source: series.source }) : "";
+  const estimated =
+    analysis.estimatedMonths.length > 0
+      ? fill(texts.estimatedTail, { months: monthsText(analysis.estimatedMonths, options.months, texts.and, series.year) })
+      : "";
+  let line: string;
+  if (analysis.missingMonths.length > 0) {
+    const many = analysis.missingMonths.length > 1;
+    line = fill(texts.holes, {
+      ...common,
+      missing: fill(many ? texts.missingMany : texts.missingOne, {
+        months: monthsText(analysis.missingMonths, options.months, texts.and, series.year),
+      }),
+      notFound: many ? texts.notFoundMany : texts.notFoundOne,
+      estimated,
+      source,
+    });
+  } else if (analysis.estimatedMonths.length > 0) {
+    line = fill(texts.estimatedOnly, { ...common, estimated, source });
+  } else {
+    line = fill(texts.complete, { ...common, src: series.source ? ` (${series.source})` : "" });
+  }
+  // An empty unit leaves a double space: close it, so the line asserts nothing the visitor did not type.
+  const tidied = line.replace(/ {2,}/g, " ").replace(/ +([.,;:])/g, "$1");
+  // No label: the line opens with "mindestens", so it opens with a capital.
+  const closed = labelOf(series) === "" ? tidied.charAt(0).toUpperCase() + tidied.slice(1) : tidied;
+  return options.ascii ? swapGlyphs(closed) : closed;
+}
+
+/** Mail to accounting for the missing months. Null when nothing is missing. */
+export function buildMail(series: Series, analysis: Analysis, options: BuildOptions): string | null {
+  if (analysis.missingMonths.length === 0) return null;
+  const { texts } = options;
+  const many = analysis.missingMonths.length > 1;
+  const first = analysis.missingMonths[0] as number;
+  const cell = series.cells[first - 1];
+  const months = monthsText(analysis.missingMonths, options.months, texts.and, series.year);
+  const others = texts.numberWords[12 - analysis.missingMonths.length] ?? String(12 - analysis.missingMonths.length);
+  const meter = isEnergyUnit(series.unit) ? texts.mailMeter : "";
+  const builtIn = series.id !== "own" && !many && cell?.invoiceNo !== undefined;
+  let number = "";
+  if (builtIn) {
+    number = fill(texts.mailNumber, {
+      no: cell?.invoiceNo ?? "",
+      prev: series.cells[first - 2]?.invoiceNo ?? "",
+      next: series.cells[first]?.invoiceNo ?? "",
+    });
+  }
+  const subject = builtIn
+    ? fill(texts.mailSubjectNumber, {
+        mm: String(first).padStart(2, "0"),
+        year: series.year ?? "",
+        no: cell?.invoiceNo ?? "",
+      })
+    : fill(many ? texts.mailSubjectMany : texts.mailSubjectOne, { months });
+  const topic = series.id === "electricity" ? texts.mailTopic : labelOf(series) === "" ? texts.mailTopicGeneric : labelOf(series);
+  const body = fill(many ? texts.mailBodyMany : texts.mailBodyOne, {
+    topic,
+    months,
+    number,
+    meter,
+    others,
+  });
+  return `${subject}\n\n${body}`;
+}
+
+/** Regel 4 for the Claude project: static, with the legend in the chosen notation. */
+export function buildRule(options: BuildOptions): string {
+  return options.ascii ? swapGlyphs(options.texts.rule) : options.texts.rule;
+}
+
 export interface Takeaway {
-  readonly text: string;
-  /** True when the text is the kit's own, verbatim. */
-  readonly fromKit: boolean;
+  readonly id: TakeawayId;
+  /** Null: nothing to copy (no hole, no data). */
+  readonly text: string | null;
 }
 
-const [rule1, rule2, rule3] = ESG_REPORTING_KIT.de.rules;
-
-const INSTRUCTIONS_DE = [
-  "Heute ist der [Datum, z. B. 9. November 2026]. Berichtsjahr: [2025].",
-  "",
-  "Du bist die ESG-Belegassistenz von [Firma und Rechtsform], [Branche] in [Land]. Antworte kurz und klar auf Deutsch.",
-  "",
-  "Drei Regeln:",
-  `1. ${rule1}`,
-  `2. ${rule2}`,
-  `3. ${rule3}`,
-  "",
-  "Personendaten nur als Summen: keine Namen, keine Einzeldatensätze.",
-].join("\n");
-
-const INSTRUCTIONS_EN = [
-  "Today is [date, for example 9 November 2026]. Reporting year: [2025].",
-  "",
-  "You are the ESG evidence assistant of [company name and legal form], a [type of business] in [country]. Answer in plain, short English unless I ask for another language.",
-  "",
-  "Three rules:",
-  "1. Only our files. Never invent a number.",
-  "2. Cite the file and line for every fact (line numbers as in a text editor, counting every line). Do every calculation in code, with units.",
-  "3. Missing document: write NOT FOUND and name the document that would prove it. Document exists but is expired, an estimate or in conflict with another file: write NEEDS CHECK and give the reason in one sentence. If a document is missing and another file also conflicts, write NOT FOUND and name the conflict in the reason. A question with several parts gets the status of its weakest part.",
-  "",
-  "People data stays aggregated: no names, no individual records.",
-].join("\n");
-
-const PROMPT_DE = [
-  "Beantworte den Fragebogen von [Kunde oder Bank] in der angehängten Datei.",
-  "Gib eine Tabelle zurück, genau eine Zeile je Frage: # | Frage | Antwort | Quelldatei und Zeile | Status (OK, NEEDS CHECK oder NOT FOUND).",
-  "Zähl vor jeder Summe die Monate in Code.",
-  "Liste danach jedes NOT FOUND mit dem Dokument, das die Lücke schließt.",
-].join("\n");
-
-const PROMPT_EN = [
-  "Answer the questionnaire from [customer or bank name] in the attached file.",
-  "Return one table with exactly one row per question: # | Question | Answer | Source file and line | Status (OK, NEEDS CHECK or NOT FOUND).",
-  "Before any total, count the months in code.",
-  "Then list every NOT FOUND with the document that would close it.",
-].join("\n");
-
-/** The checklist: a title, six numbered checks, one closing line. */
-export const CHECKLIST: Readonly<
-  Record<Locale, { readonly title: string; readonly lines: readonly string[]; readonly close: string }>
-> = {
-  de: {
-    title: "Gegenprobe vor dem Unterschreiben",
-    lines: [
-      "Prüf, ob die Belege das ganze Jahr lückenlos abdecken. Zeiträume zählen, nicht Dokumente.",
-      "Prüf jedes Datum gegen heute und jede Zahl darauf, ob sie geschätzt ist. Abgelaufen, geschätzt oder im Widerspruch zu einer anderen Datei heißt NEEDS CHECK.",
-      "Fehlt das Dokument: NOT FOUND, auch wenn eine andere Datei widerspricht. Nenne das Dokument, das fehlt.",
-      "Zitier die Zeile, die die Antwort trägt, nicht die auffälligste.",
-      "OK heißt belegt, nicht gut. Bricht ein belegter Wert eine Regel, wird daraus eine Aufgabe.",
-      "Mehrere Teile: Der schwächste Teil entscheidet.",
-    ],
-    close: "Claude bereitet vor. Ein Mensch prüft und unterschreibt.",
-  },
-  en: {
-    title: "Check before you sign",
-    lines: [
-      "Check that the documents cover the whole year without a gap. Count periods, not documents.",
-      "Check every date against today and every number for whether it is an estimate. Expired, estimated or in conflict with another file means NEEDS CHECK.",
-      "No document: NOT FOUND, even if another file conflicts. Name the document that is missing.",
-      "Cite the line that carries the answer, not the one that stands out.",
-      "OK means proven, not good. When a proven value breaks a rule, it becomes an action.",
-      "Several parts: the weakest part decides.",
-    ],
-    close: "Claude prepares. A person checks and signs.",
-  },
-};
-
-function checklistText(locale: Locale): string {
-  const { title, lines, close } = CHECKLIST[locale];
-  return [title, ...lines.map((line, index) => `${index + 1}. ${line}`), close].join("\n");
+export function buildTakeaways(series: Series, analysis: Analysis, options: BuildOptions): readonly Takeaway[] {
+  return [
+    { id: "answer", text: buildAnswerLine(series, analysis, options) },
+    { id: "mail", text: buildMail(series, analysis, options) },
+    { id: "rule", text: buildRule(options) },
+  ];
 }
-
-export const TAKEAWAYS: Readonly<Record<Locale, readonly [Takeaway, Takeaway, Takeaway]>> = {
-  de: [
-    { text: INSTRUCTIONS_DE, fromKit: false },
-    { text: PROMPT_DE, fromKit: false },
-    { text: checklistText("de"), fromKit: false },
-  ],
-  en: [
-    { text: INSTRUCTIONS_EN, fromKit: true },
-    { text: PROMPT_EN, fromKit: true },
-    { text: checklistText("en"), fromKit: false },
-  ],
-};

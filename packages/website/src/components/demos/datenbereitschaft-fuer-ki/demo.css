@@ -1,992 +1,208 @@
 /*
- * Demo 03 "Mach die Zahl richtig." Every rule is scoped to .dr3 so nothing
- * leaks into other pages. Plakat Bloom on Kalkweiß: Aubergine ink, Terrakotta
- * tief fills and buttons with a Bogen label, Sand for the active step.
- * Terrakotta (#d1733d) stays in the band motif only. Hover is fine-pointer
- * only and brings in a contrasting anti colour (a Mennige or Aubergine offset
- * block), never a tint of the element's own colour. No gradients, no glows,
- * no rounded corners. Transitions live only inside prefers-reduced-motion:
- * no-preference.
+ * Demo 03 "Stufe oder Treppe?". Every rule is scoped to .dr3 so nothing leaks.
+ * Plakat Bloom: Aubergine ink, Sand scene ground, Terrakotta tief fills
+ * (never Terrakotta #d1733d as text), Bogen paper panels. Hover, focus and
+ * press bring in the contrasting anti colour (Mennige, then Terrakotta tief),
+ * never a tint of the element's own colour. Hard edges, no gradients, no
+ * glow, no filters. Hover only for a fine pointer. The pulse of the idle
+ * hint is a hard-edged square ring and stops on the first touch.
  */
 .dr3 {
-  --dr3-ink: #3b1f45; /* Aubergine: 12.57 on Kalkweiß */
-  --dr3-accent: #964305; /* Terrakotta tief: 5.95 on Kalkweiß, Bogen label 6.61 */
-  --dr3-paper: #fffcf5; /* Bogen */
-  --dr3-sand: #e6d3af; /* Sand: Aubergine 9.74 */
-  --dr3-anti: #b73a15; /* Mennige: 5.08 on Kalkweiß, 3.94 on Sand */
-  --dr3-black: #121212; /* Druckschwarz */
-  --dr3-text: var(--color-foreground, #121212);
-  --dr3-muted: var(--color-muted-foreground, #4f4640);
-  --dr3-hatch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M-2 2l4-4M0 8l8-8M6 10l4-4' stroke='%23964305' stroke-width='1.4'/%3E%3C/svg%3E");
-  color: var(--dr3-text);
-  font-size: 1.0625rem;
-  line-height: 1.55;
-  min-width: 0;
-}
-
-.dr3 *,
-.dr3 *::before,
-.dr3 *::after {
-  border-radius: 0;
-}
-
-.dr3 code,
-.dr3 .dr3-mono {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
-  overflow-wrap: anywhere;
-}
-
-.dr3 :focus-visible {
-  outline: 3px solid var(--dr3-ink);
-  outline-offset: 3px;
-}
-
-.dr3-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* --------------------------------- Rail ---------------------------------- */
-
-.dr3-rail ol {
+  --ink: #3b1f45; /* Aubergine: 12.57 on Kalkweiß, 9.74 on Sand */
+  --sand: #e6d3af;
+  --paper: #fffcf5; /* Bogen */
+  --accent: #964305; /* Terrakotta tief: 5.95 on Kalkweiß, 6.6 with Bogen text */
+  --anti: #b73a15; /* Mennige: 5.4 with Bogen text */
+  --muted: var(--color-muted-foreground, #4f4640);
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.dr3-rail-btn {
-  display: flex;
-  width: 100%;
-  min-height: 60px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 4px;
-  padding: 8px 10px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--dr3-paper);
-  color: var(--dr3-ink);
-  font-weight: 700;
-  text-align: left;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dr3-rail-btn[aria-current="step"] {
-  background: var(--dr3-sand);
-}
-
-.dr3-rail-num {
-  font-size: 1.25rem;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
-
-.dr3-rail-state {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.dr3-rail-btn:focus-visible {
-  outline-offset: 2px;
-  box-shadow: 4px 4px 0 var(--dr3-anti);
-  transform: translate(-2px, -2px);
-}
-
-.dr3-rail-btn:active {
-  box-shadow: 3px 3px 0 var(--dr3-anti);
-  transform: translate(-1px, -1px);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .dr3-rail-btn:hover {
-    box-shadow: 4px 4px 0 var(--dr3-anti);
-    transform: translate(-2px, -2px);
-  }
-}
-
-@media (max-width: 479px) {
-  .dr3-rail-state-word {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-}
-
-/* ------------------------------- Sections -------------------------------- */
-
-.dr3-section {
-  scroll-margin-top: 6rem;
-  margin-top: 56px;
-  padding-top: 20px;
-  border-top: 2px solid var(--dr3-ink);
-}
-
-.dr3-h2 {
-  margin: 0;
-  color: var(--dr3-ink);
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.dr3-h2:focus {
-  outline: none;
-}
-
-.dr3-h2:focus-visible {
-  outline: 3px solid var(--dr3-ink);
-}
-
-.dr3-path {
-  margin: 6px 0 0;
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-}
-
-.dr3-path code {
-  color: var(--dr3-ink);
-}
-
-.dr3-question {
-  max-width: 34ch;
-  margin: 14px 0 0;
-  color: var(--dr3-text);
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1.3;
-  text-wrap: balance;
-}
-
-.dr3-context {
-  max-width: 68ch;
-  margin: 10px 0 0;
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.dr3-start {
-  margin: 12px 0 0;
-  padding-left: 12px;
-  border-left: 3px solid var(--dr3-accent);
-  font-size: 0.9375rem;
-}
-
-.dr3-start strong {
-  display: block;
-  color: var(--dr3-accent);
-  font-size: 1.0625rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.dr3-decision {
-  margin: 10px 0 0;
-  font-weight: 600;
-}
-
-.dr3-intro {
-  max-width: 60ch;
-  margin: 10px 0 0;
-}
-
-/* --------------------------------- Grid ---------------------------------- */
-
-.dr3-grid {
-  display: grid;
-  gap: 24px;
-  margin-top: 24px;
-}
-
-@media (min-width: 1024px) {
-  .dr3-grid {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    align-items: start;
-    gap: 40px;
-  }
-}
-
-/* ------------------------------- Fieldsets ------------------------------- */
-
-.dr3-form {
-  display: grid;
-  gap: 20px;
+  gap: 1.25rem;
   min-width: 0;
-}
-
-.dr3-fieldset {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  scroll-margin-top: 6rem;
-}
-
-.dr3-legend {
-  margin-bottom: 8px;
-  padding: 0;
-  color: var(--dr3-text);
-  font-size: 1.0625rem;
-  font-weight: 700;
-}
-
-.dr3-legend-hint {
-  display: block;
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.dr3-chips {
-  display: grid;
-  gap: 8px;
-}
-
-.dr3-chips[data-columns="2"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dr3-fixed {
-  margin: 0;
-  padding: 8px 0 8px 12px;
-  border-left: 3px solid var(--dr3-ink);
-  font-size: 0.9375rem;
-}
-
-.dr3-fixed-note {
-  display: block;
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-/* --------------------------------- Chips --------------------------------- */
-
-/* Flex so the face fills its grid cell: neighbours in a row share one height. */
-.dr3-chip {
-  position: relative;
-  display: flex;
-  min-width: 0;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dr3-chip-input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.dr3-chip-face {
-  display: flex;
-  flex: 1;
-  min-width: 0;
-  min-height: 44px;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--dr3-paper);
-  color: var(--dr3-ink);
-}
-
-.dr3-chip-mark {
-  display: inline-flex;
-  width: 18px;
-  height: 18px;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--dr3-paper);
-  color: var(--dr3-accent);
-}
-
-/* A radio is a diamond that fills with a smaller diamond; a checkbox stays a square that gets a check. */
-.dr3-chip[data-type="radio"] .dr3-chip-mark {
-  width: 14px;
-  height: 14px;
-  margin: 4px 2px 0;
-  transform: rotate(45deg);
-}
-
-.dr3-chip-dot {
-  display: block;
-  width: 6px;
-  height: 6px;
-  background: currentColor;
-}
-
-.dr3-chip-mark svg,
-.dr3-chip-dot {
-  visibility: hidden;
-}
-
-.dr3-chip-text {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.dr3-chip-label {
-  font-weight: 700;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-}
-
-.dr3-chip-label code {
-  font-size: 0.875rem;
-}
-
-.dr3-chip-gloss,
-.dr3-chip-tag {
-  font-size: 0.9375rem;
-  line-height: 1.35;
-}
-
-.dr3-chip-tag {
-  font-weight: 600;
-}
-
-.dr3-chip-input:checked + .dr3-chip-face {
-  border-color: var(--dr3-accent);
-  background: var(--dr3-accent);
-  color: var(--dr3-paper);
-}
-
-.dr3-chip-input:checked + .dr3-chip-face .dr3-chip-mark {
-  border-color: var(--dr3-paper);
-}
-
-.dr3-chip-input:checked + .dr3-chip-face .dr3-chip-mark svg,
-.dr3-chip-input:checked + .dr3-chip-face .dr3-chip-dot {
-  visibility: visible;
-}
-
-.dr3-chip-input:focus-visible + .dr3-chip-face {
-  outline: 3px solid var(--dr3-ink);
-  outline-offset: 2px;
-  box-shadow: 4px 4px 0 var(--dr3-anti);
-  transform: translate(-2px, -2px);
-}
-
-.dr3-chip-input:checked:focus-visible + .dr3-chip-face {
-  box-shadow: 4px 4px 0 var(--dr3-ink);
-}
-
-.dr3-chip-input:active + .dr3-chip-face {
-  box-shadow: 3px 3px 0 var(--dr3-anti);
-  transform: translate(-1px, -1px);
-}
-
-.dr3-chip-input:active + .dr3-chip-face .dr3-chip-label {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.dr3-chip-input:checked:active + .dr3-chip-face {
-  box-shadow: 3px 3px 0 var(--dr3-ink);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .dr3-chip:hover .dr3-chip-face {
-    box-shadow: 4px 4px 0 var(--dr3-anti);
-    transform: translate(-2px, -2px);
-  }
-
-  .dr3-chip:hover .dr3-chip-input:checked + .dr3-chip-face {
-    box-shadow: 4px 4px 0 var(--dr3-ink);
-  }
-}
-
-/* -------------------------------- Buttons -------------------------------- */
-
-.dr3-btn {
-  display: inline-flex;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border: 2px solid var(--dr3-accent);
-  background: var(--dr3-accent);
-  color: var(--dr3-paper);
-  font-size: 1.0625rem;
-  font-weight: 700;
-  cursor: pointer;
-  --anti: var(--dr3-black);
-}
-
-.dr3-btn-wide {
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .dr3-btn-wide {
-    width: auto;
-    min-width: 12rem;
-  }
-}
-
-.dr3-btn-secondary {
-  min-height: 44px;
-  border-color: var(--dr3-ink);
-  background: var(--dr3-paper);
-  color: var(--dr3-ink);
-  font-size: 0.9375rem;
-  --anti: var(--dr3-anti);
-}
-
-/* -------------------------------- Receipt -------------------------------- */
-
-.dr3-receipt {
-  position: relative;
-  min-width: 0;
-  container: dr3-receipt / inline-size;
-  padding: 14px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--dr3-paper);
-}
-
-.dr3-receipt[data-stale="true"] {
-  border-style: dashed;
-  border-color: var(--dr3-accent);
-}
-
-.dr3-receipt-hatch {
-  height: 8px;
-  margin: -14px -14px 12px;
-  background-image: var(--dr3-hatch);
-  background-repeat: repeat;
-  border-bottom: 2px solid var(--dr3-accent);
-}
-
-.dr3-receipt-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 4px 12px;
-}
-
-.dr3-receipt-title {
-  margin: 0;
-  color: var(--dr3-ink);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.dr3-receipt-title:focus {
-  outline: none;
-}
-
-.dr3-receipt-title:focus-visible {
-  outline: 3px solid var(--dr3-ink);
-}
-
-.dr3-verdict {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0 0;
-  color: var(--dr3-ink);
-  font-size: 1.1875rem;
-  font-weight: 700;
-  line-height: 1.25;
-}
-
-.dr3-verdict svg {
-  flex: none;
-}
-
-.dr3-stale {
-  margin: 10px 0 0;
-  color: var(--dr3-accent);
-  font-size: 0.9375rem;
-  font-weight: 700;
-}
-
-.dr3-empty {
-  margin: 10px 0 0;
-  color: var(--dr3-muted);
-}
-
-/* Yours against the database check: one table, so rows line up. */
-.dr3-rows {
-  width: 100%;
-  margin: 14px 0 0;
-  border-collapse: collapse;
-  font-variant-numeric: tabular-nums;
-  line-height: 1.35;
-}
-
-.dr3-rows th,
-.dr3-rows td {
-  padding: 5px 10px 5px 0;
-  text-align: left;
-  vertical-align: top;
-}
-
-.dr3-rows th:last-child,
-.dr3-rows td:last-child {
-  padding-right: 0;
-}
-
-.dr3-rows thead th {
-  padding-bottom: 6px;
-  border-bottom: 1.5px solid var(--dr3-ink);
-  color: var(--dr3-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
-  vertical-align: bottom;
-}
-
-.dr3-rows tbody tr + tr > * {
-  border-top: 1px solid var(--color-hairline, #d4cec5);
-}
-
-.dr3-rows thead th:first-child {
-  width: 1%;
-}
-
-.dr3-row-label {
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-/* "Datenbank-" / "prüfung" only at its soft hyphen, never inside a number. */
-.dr3-rows th {
-  hyphens: manual;
-}
-
-/*
- * Phone receipts (content up to 459px, so every phone up to about 520px wide):
- * two lines per row. The row's label takes its own line, its two values sit
- * side by side under the two column heads, so nothing is clipped and nothing
- * scrolls sideways. The roles keep it a table for assistive tech while the
- * rows are grids.
- */
-@container dr3-receipt (max-width: 459px) {
-  .dr3-rows,
-  .dr3-rows thead,
-  .dr3-rows tbody {
-    display: block;
-  }
-
-  .dr3-rows tr {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 10px;
-  }
-
-  .dr3-rows th,
-  .dr3-rows td {
-    padding-right: 0;
-  }
-
-  .dr3-rows thead tr {
-    border-bottom: 1.5px solid var(--dr3-ink);
-  }
-
-  .dr3-rows thead th {
-    border-bottom: 0;
-  }
-
-  .dr3-rows .dr3-rows-corner {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-  }
-
-  .dr3-rows tbody tr + tr {
-    border-top: 1px solid var(--color-hairline, #d4cec5);
-  }
-
-  .dr3-rows tbody tr + tr > * {
-    border-top: 0;
-  }
-
-  .dr3-rows .dr3-row-label {
-    grid-column: 1 / -1;
-    padding-bottom: 0;
-  }
-}
-
-.dr3-nowrap {
-  white-space: nowrap;
-}
-
-.dr3-row-empty {
-  color: var(--dr3-muted);
-}
-
-.dr3-origin-line {
-  margin: 8px 0 0;
-}
-
-.dr3-row-value {
-  font-weight: 700;
-}
-
-.dr3-yours .dr3-row-value {
-  color: var(--dr3-accent);
-}
-
-.dr3-origin {
-  display: inline-block;
-  padding: 1px 6px;
-  border: 1.5px solid var(--dr3-ink);
-  color: var(--dr3-ink);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  text-wrap: balance;
-}
-
-.dr3-why {
-  margin: 14px 0 0;
-  max-width: 62ch;
-}
-
-.dr3-why + .dr3-why {
-  margin-top: 8px;
-}
-
-.dr3-note {
-  margin: 8px 0 0;
-  padding-left: 12px;
-  border-left: 3px solid var(--dr3-ink);
-  font-size: 0.9375rem;
-}
-
-.dr3-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.dr3-dataline {
-  margin: 14px 0 0;
-  padding-top: 10px;
-  border-top: 1px solid var(--color-hairline, #d4cec5);
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.dr3-parts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 14px;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.9375rem;
-}
-
-/* -------------------------------- Figures -------------------------------- */
-
-.dr3-figure {
-  width: 100%;
-  margin: 14px 0 0;
-  container: dr3-figure / inline-size;
-}
-
-/* Key above each figure: what solid and outline mean. */
-.dr3-key {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  margin: 0 0 8px;
-  color: var(--dr3-ink);
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.dr3-key-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.dr3-key-item svg {
-  display: block;
-  flex: none;
-  width: 14px;
-  height: 14px;
-}
-
-/*
- * Figure type stays at 13 to 15px on screen, like the key and the table: the
- * SVG (326 units wide) grows with the receipt only up to 489px, and its type
- * steps down in user units as it grows (13, 11.5, 10 units).
- */
-.dr3-figure > svg {
-  display: block;
-  width: 100%;
-  max-width: 489px;
-  height: auto;
-  overflow: visible;
-}
-
-/*
- * Below 326px of receipt content the figure would set its type under 12px:
- * there it takes 10px of the receipt's padding on each side (4px stay
- * between figure and border), so a 360px phone still reads 12.6px.
- */
-@container dr3-receipt (max-width: 325px) {
-  .dr3-figure {
-    width: calc(100% + 20px);
-    margin-inline: -10px;
-  }
-
-  .dr3-figure > .dr3-key {
-    padding-inline: 10px;
-  }
-}
-
-.dr3-figure text {
-  font-family: inherit;
-  font-size: 13px;
-  font-variant-numeric: tabular-nums;
-}
-
-@container dr3-figure (min-width: 376px) {
-  .dr3-figure text {
-    font-size: 11.5px;
-  }
-}
-
-@container dr3-figure (min-width: 430px) {
-  .dr3-figure text {
-    font-size: 10px;
-  }
-}
-
-/* ------------------------------- Triage ---------------------------------- */
-
-.dr3-cards {
-  display: grid;
-  gap: 20px;
-  margin-top: 24px;
-}
-
-@media (min-width: 768px) {
-  .dr3-cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
-
-  /* F01 takes the full row; its six ticks run in two columns. */
-  .dr3-card[data-card="F01"] {
-    grid-column: 1 / -1;
-  }
-
-  .dr3-card[data-card="F01"] [data-follow-up="freshTicks"] .dr3-chips {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .dr3-card[data-card="F01"] {
-    display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-    column-gap: 32px;
-    align-items: start;
-  }
-
-  .dr3-card[data-card="F01"] > .dr3-card-head,
-  .dr3-card[data-card="F01"] > .dr3-card-q {
-    grid-column: 1 / -1;
-  }
-}
-
-.dr3-card {
-  min-width: 0;
-  padding: 16px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--color-background, #f7f1e7);
-  scroll-margin-top: 6rem;
-}
-
-.dr3-card-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 2px 12px;
-}
-
-.dr3-h3 {
-  margin: 0;
-  color: var(--dr3-ink);
-  font-size: 1.0625rem;
-  font-weight: 700;
-}
-
-.dr3-card-anchor {
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-}
-
-.dr3-card-q {
-  margin: 10px 0 0;
-  font-size: 1.1875rem;
-  font-weight: 700;
-  line-height: 1.35;
-}
-
-.dr3-card .dr3-form {
-  margin-top: 16px;
-  gap: 16px;
-}
-
-.dr3-card .dr3-receipt {
-  margin-top: 16px;
-}
-
-.dr3-ask {
-  margin: 10px 0 0;
-  padding: 10px 12px;
-  border: 1.5px dashed var(--dr3-ink);
-  background: var(--dr3-paper);
-}
-
-.dr3-ask-label {
-  display: block;
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.dr3-lock-legend code {
-  font-size: 0.875rem;
-}
-
-/* ------------------------------ Take-aways ------------------------------- */
-
-.dr3-closing {
-  max-width: 64ch;
-  margin: 14px 0 0;
-  padding: 12px 14px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--dr3-sand);
-  color: var(--dr3-ink);
-  font-weight: 600;
-}
-
-.dr3-takeaways {
-  display: grid;
-  gap: 16px;
-  margin-top: 20px;
-}
-
-@media (min-width: 768px) {
-  .dr3-takeaways {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
-}
-
-.dr3-take {
-  min-width: 0;
-  padding: 16px;
-  border: 2px solid var(--dr3-ink);
-  background: var(--dr3-paper);
-}
-
-.dr3-take-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.dr3-take-text {
-  margin: 12px 0 0;
-  font-family: inherit;
+  color: var(--ink);
   font-size: 1rem;
-  line-height: 1.55;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.dr3 *, .dr3 *::before, .dr3 *::after { border-radius: 0; box-sizing: border-box; }
+.dr3 :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.dr3 button, .dr3 input, .dr3 textarea { font: inherit; -webkit-tap-highlight-color: transparent; }
+.dr3-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.dr3-h { margin: 0 0 0.75rem; font-size: 1.25rem; font-weight: 700; line-height: 1.2; }
+
+/* ------------------------------ stage: lever + scene ---------------------- */
+.dr3-stage { display: grid; grid-template-columns: 68px minmax(0, 1fr); border: 2px solid var(--ink); background: var(--sand); min-width: 0; scroll-margin-top: 12px; user-select: none; -webkit-user-select: none; }
+.dr3-plot { display: flex; flex-direction: column; min-width: 0; padding: 8px 4px 0 8px; }
+/* The header is HTML: the name, the word tag and ONE big counter in tabular numerals. */
+.dr3-head { display: grid; gap: 2px; min-width: 0; }
+.dr3-head-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 30px; }
+.dr3-chip { min-width: 0; max-width: 62%; overflow: hidden; padding: 1px 8px; border: 2px solid var(--ink); font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.9375rem; font-weight: 600; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.dr3-tag { flex: none; padding: 2px 10px; background: var(--ink); color: var(--sand); font-size: 0.9375rem; font-weight: 700; line-height: 1.35; }
+.dr3-counter { margin: 0; font-weight: 700; line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dr3-ghost { min-height: 1.4rem; margin: 0; font-size: 0.9375rem; font-weight: 600; line-height: 1.4; }
+/* The drawing box: its height is reserved here, so the page does not jump when the script measures it. */
+.dr3-canvas { height: 204px; min-width: 0; }
+.dr3-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.dr3-svg text { font-family: inherit; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.dr3-svg .dr3-barlabel { font-weight: 700; paint-order: stroke; stroke: var(--sand); stroke-width: 4px; stroke-linejoin: round; }
+.dr3-svg .dr3-barlabel-in { fill: var(--sand); stroke: none; }
+.dr3-svg .dr3-month, .dr3-svg .dr3-tick { font-weight: 600; }
+.dr3-sand { fill: var(--sand); }
+.dr3-ink-fill { fill: var(--ink); }
+.dr3-grid { stroke: var(--ink); stroke-opacity: 0.25; stroke-width: 1; }
+.dr3-axis { stroke: var(--ink); stroke-width: 2; }
+.dr3-zero { stroke: var(--accent); stroke-width: 3; }
+.dr3-floor { stroke: var(--ink); stroke-width: 2; }
+/* The ground of the staircase is Aubergine, the step on it Terrakotta tief; a step down is hatched. */
+.dr3-ground { fill: var(--ink); }
+.dr3-step { fill: var(--accent); }
+.dr3-step-down { fill: url(#dr3-hatch); stroke: var(--ink); stroke-width: 2; }
+.dr3-rung { stroke: var(--ink); stroke-width: 2; stroke-dasharray: 2 5; }
+.dr3-svg .dr3-rung-label { font-weight: 700; paint-order: stroke; stroke: var(--sand); stroke-width: 4px; stroke-linejoin: round; }
+.dr3-arrow { fill: none; stroke: var(--ink); stroke-width: 2; }
+.dr3-torn path { fill: none; stroke: var(--ink); stroke-width: 2; }
+.dr3-stamp rect { fill: var(--sand); stroke: var(--ink); stroke-width: 2.5; }
+.dr3-svg .dr3-stamp text { font-weight: 700; }
+.dr3-stamp-after rect { fill: var(--ink); }
+.dr3-svg .dr3-stamp-after text { fill: var(--sand); }
+.dr3-svg .dr3-zeronote { font-weight: 700; }
+/* The closing sentence has a row of its own, clear of the month names. */
+.dr3-caption { display: flex; align-items: center; min-height: 2.75rem; margin: 0; padding: 0.625rem 0.25rem 0.75rem; font-size: 1rem; font-weight: 700; line-height: 1.3; }
+
+.dr3-lever { display: flex; flex-direction: column; align-items: center; min-height: 100%; padding: 6px 0; border-right: 2px solid var(--ink); }
+.dr3-lever-end { flex: none; text-align: center; height: 22px; font-size: 0.75rem; font-weight: 700; line-height: 22px; letter-spacing: 0.02em; }
+.dr3-track { position: relative; flex: 1; width: 100%; min-height: 150px; touch-action: none; cursor: grab; }
+.dr3-track::before { content: ""; position: absolute; top: 28px; bottom: 28px; left: calc(50% - 2px); width: 4px; background: var(--ink); }
+.dr3-handle { position: absolute; left: calc(50% - 28px); display: grid; width: 56px; height: 56px; align-content: center; justify-items: center; gap: 1px; border: 3px solid var(--ink); background: var(--accent); color: var(--paper); cursor: grab; touch-action: none; }
+.dr3-handle svg { width: 18px; height: 18px; fill: currentColor; }
+.dr3-handle-cue { font-size: 0.8125rem; font-weight: 700; line-height: 1; letter-spacing: 0.02em; }
+.dr3-handle::after { content: ""; position: absolute; inset: -6px; border: 3px solid var(--accent); opacity: 0; pointer-events: none; }
+.dr3[data-hint] .dr3-handle::after { animation: dr3-pulse 1.6s ease-out infinite; }
+@keyframes dr3-pulse { 0% { opacity: 1; transform: scale(0.82); } 100% { opacity: 0; transform: scale(1.25); } }
+.dr3-handle:active { background: var(--anti); }
+@media (hover: hover) and (pointer: fine) { .dr3-handle:hover { background: var(--anti); } }
+@media (prefers-reduced-motion: reduce) { .dr3-handle::after { animation: none !important; } }
+
+/* ---------------------------------- operators ----------------------------- */
+.dr3-ops { display: grid; gap: 0.75rem; min-width: 0; }
+.dr3-read, .dr3-seg, .dr3-kind, .dr3-switch { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 0; border: 2px solid var(--ink); }
+.dr3-read { grid-auto-columns: 1fr; gap: 0.5rem; border: 0; }
+.dr3-radio, .dr3-btn { min-height: 44px; padding: 0.5rem 0.75rem; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); font-weight: 700; line-height: 1.2; cursor: pointer; }
+.dr3-seg .dr3-radio, .dr3-kind .dr3-radio, .dr3-switch .dr3-radio { border-width: 0 1px 0 0; }
+.dr3-seg .dr3-radio:last-child, .dr3-kind .dr3-radio:last-child, .dr3-switch .dr3-radio:last-child { border-right-width: 0; }
+.dr3-read .dr3-radio { min-height: 48px; font-size: 1.125rem; }
+.dr3-radio[aria-checked="true"] { background: var(--ink); color: var(--sand); }
+.dr3-radio:active, .dr3-btn:active { background: var(--accent); color: var(--paper); border-color: var(--ink); }
+@media (hover: hover) and (pointer: fine) {
+  .dr3-radio:hover, .dr3-btn:hover { background: var(--anti); color: var(--paper); }
+}
+.dr3-radio:focus-visible, .dr3-btn:focus-visible { outline-offset: 2px; }
+.dr3-arith { display: grid; gap: 0.125rem; margin: 0; padding: 0.625rem 0.75rem; border: 2px solid var(--ink); background: var(--paper); font-variant-numeric: tabular-nums; }
+.dr3-arith-sum { font-size: 1.125rem; overflow-wrap: anywhere; }
+.dr3-arith-label { font-size: 0.875rem; font-weight: 600; color: var(--muted); }
+.dr3-result { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; padding: 0.625rem 0.75rem; border: 2px solid var(--ink); background: var(--paper); min-height: 4.5rem; }
+.dr3-result-value { font-size: 1.75rem; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.dr3-verdict { padding: 0.125rem 0.5rem; border: 2px solid var(--ink); font-size: 0.875rem; font-weight: 700; transform: rotate(-2deg); }
+.dr3-verdict[data-kind="right"] { background: var(--ink); color: var(--sand); }
+.dr3-verdict[data-kind="wrong"] { border-color: var(--anti); color: var(--anti); }
+.dr3-result-note { flex-basis: 100%; font-size: 0.9375rem; }
+.dr3-result-tag { flex-basis: 100%; font-size: 0.875rem; font-weight: 600; color: var(--muted); }
+.dr3-test { margin: 0; font-size: 0.9375rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ------------------------------- the closing proof ------------------------ */
+.dr3-pair { display: grid; gap: 0.25rem; padding: 0.75rem; border: 2px solid var(--ink); background: var(--paper); min-height: 10.5rem; }
+.dr3-pair-ticker { margin: 0 0 0.25rem; font-size: 1.125rem; font-weight: 700; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.dr3-nowrap { white-space: nowrap; }
+.dr3-pair-label { margin: 0.25rem 0 0; font-size: 0.875rem; font-weight: 600; }
+.dr3-pair-row { display: flex; min-height: 2.25rem; }
+.dr3-pair-block { display: flex; flex: none; min-width: 0; align-items: center; justify-content: flex-end; overflow: hidden; padding: 0 0.5rem; background: var(--ink); color: var(--sand); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dr3-pair-block + .dr3-pair-block { border-left: 2px solid var(--paper); }
+.dr3-pair-block-last { background: var(--accent); color: var(--paper); }
+
+/* ------------------------------- own numbers ------------------------------ */
+.dr3-own, .dr3-take { padding: 1rem; border: 2px solid var(--ink); background: var(--paper); min-width: 0; }
+.dr3-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+.dr3-field { display: grid; gap: 0.25rem; font-size: 0.875rem; font-weight: 600; min-width: 0; }
+.dr3-field-wide { grid-column: 1 / -1; }
+.dr3-field input, .dr3-field textarea { width: 100%; min-height: 44px; padding: 0.5rem 0.625rem; border: 2px solid var(--ink); background: var(--paper); color: var(--ink); font-size: 1rem; font-weight: 400; font-variant-numeric: tabular-nums; }
+.dr3-field textarea { resize: vertical; }
+.dr3-field input::placeholder, .dr3-field textarea::placeholder { color: var(--muted); }
+@media (hover: hover) and (pointer: fine) { .dr3-field input:hover, .dr3-field textarea:hover { border-color: var(--anti); } }
+.dr3-field input:focus-visible, .dr3-field textarea:focus-visible { border-color: var(--anti); outline-offset: 0; }
+.dr3-check { display: flex; align-items: center; gap: 0.625rem; grid-column: 1 / -1; min-height: 44px; font-size: 0.9375rem; }
+.dr3-check input { flex: none; width: 24px; height: 24px; accent-color: var(--ink); }
+.dr3-status { min-height: 1.5rem; margin: 0.5rem 0 0; font-size: 0.9375rem; font-weight: 600; }
+.dr3-guess { display: grid; gap: 0.5rem; margin-top: 0.25rem; }
+.dr3-guess p { margin: 0; font-size: 0.9375rem; }
+.dr3-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.75rem; }
+.dr3-actions .dr3-btn { flex: 1 1 8rem; font-size: 0.9375rem; }
+.dr3-device { margin: 0.75rem 0 0; font-size: 0.875rem; color: var(--muted); }
+
+/* ------------------------------- take blocks ------------------------------ */
+.dr3-blocks { display: grid; gap: 0.75rem; }
+.dr3-block { display: grid; gap: 0.5rem; padding: 0.75rem; border: 2px solid var(--ink); min-width: 0; }
+.dr3-block header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.dr3-block h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+.dr3-switch { min-width: 9rem; }
+.dr3-pre { margin: 0; padding: 0.625rem; background: var(--sand); font: inherit; font-size: 0.9375rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; user-select: text; }
+.dr3-pre[data-mono] { font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.875rem; }
+.dr3-note { margin: 0; font-size: 0.875rem; color: var(--muted); }
+.dr3-copy, .dr3-copy-all { user-select: none; justify-self: start; }
+.dr3-copy-all { margin-top: 0.75rem; background: var(--ink); color: var(--sand); }
+.dr3-origin { margin: 0.75rem 0 0; font-size: 0.875rem; color: var(--muted); }
+
+/*
+ * From a laptop up the stage takes the wide column and the drawing box grows
+ * with it (the scene measures its plot), so the lever scene is projector size.
+ * The operators and the to-scale pair stand beside it; the rest runs full width.
+ */
+@media (min-width: 64rem) {
+  .dr3 { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); align-items: start; gap: 1.5rem; }
+  .dr3-stage { grid-column: 1; grid-row: 1 / span 2; align-self: start; }
+  .dr3-ops { grid-column: 2; grid-row: 1; }
+  .dr3-pair { grid-column: 2; grid-row: 2; align-self: stretch; }
+  .dr3-own { grid-column: 1 / -1; }
+  .dr3-take { grid-column: 1 / -1; }
+  .dr3-fields { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .dr3-field-wide, .dr3-check { grid-column: span 2; }
+  .dr3-blocks { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  .dr3-caption { font-size: 1.125rem; }
 }
 
-.dr3-take-example {
-  margin: 12px 0 0;
-  padding: 10px 12px;
-  border-left: 3px solid var(--dr3-accent);
-  background: var(--color-background, #f7f1e7);
-  font-size: 0.9375rem;
+/* A short phone screen (360 x 740) gives the plot a little less height so the whole stage still fits. */
+@media (max-width: 39.99rem) and (max-height: 780px) {
+  .dr3-canvas { height: 160px; }
+}
+@media (max-width: 39.99rem) {
+  .dr3 { gap: 0.875rem; }
+  .dr3-arith { padding: 0.5rem 0.75rem; }
+  .dr3-arith-sum { font-size: 1.0625rem; }
+  .dr3-arith-label { font-size: 0.8125rem; }
 }
 
-.dr3-take-example-label {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--dr3-muted);
-  font-weight: 700;
+/*
+ * A tablet and up: the drawing box takes a share of the viewport, so head, plot and the closing
+ * sentence fit one screen (about 60 percent of its height) and the scene stays 16:9 capable.
+ */
+@media (min-width: 37.5rem) {
+  .dr3-canvas { height: clamp(240px, calc(58vh - 190px), 460px); }
 }
 
-.dr3-take-note {
-  margin: 12px 0 0;
-  color: var(--dr3-ink);
-  font-size: 0.9375rem;
-  font-weight: 700;
+/*
+ * The first screen is the demo, on a phone and on a laptop. The shell above it makes way, by
+ * this demo's page attribute only: the promise and the synthetic-data line move BELOW the demo
+ * (order), the phone's poster strip goes, and from a laptop up the poster band is compact, so
+ * the whole stage (lever, bars, stamp) sits above the fold at 900 px of height, and the
+ * intro, which waits for the whole stage, starts in front of the visitor.
+ */
+[data-demo-page="datenbereitschaft-fuer-ki"] :has(> [data-demo-mount]) { display: flex; flex-direction: column; }
+[data-demo-page="datenbereitschaft-fuer-ki"] [data-demo-mount] { order: 1; margin-top: 0.75rem; }
+[data-demo-page="datenbereitschaft-fuer-ki"] [data-demo-promise] { order: 2; margin-top: 1.5rem; font-size: 1rem; }
+[data-demo-page="datenbereitschaft-fuer-ki"] [data-demo-synthetic] { order: 3; }
+@media (max-width: 39.99rem) {
+  [data-demo-page="datenbereitschaft-fuer-ki"] [data-plakat-art-phone] { display: none; }
 }
-
-.dr3-copy {
-  flex: none;
-  min-width: 44px;
-  min-height: 44px;
-}
-
-.dr3-copy-failed {
-  margin: 8px 0 0;
-  color: var(--dr3-accent);
-  font-size: 0.9375rem;
-  font-weight: 600;
-}
-
-.dr3-provenance {
-  max-width: 72ch;
-  margin: 28px 0 0;
-  color: var(--dr3-muted);
-  font-size: 0.9375rem;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .dr3-chip-face,
-  .dr3-rail-btn {
-    transition:
-      transform 120ms ease-out,
-      box-shadow 0ms;
-  }
+@media (min-width: 64rem) {
+  [data-demo-page="datenbereitschaft-fuer-ki"] [data-cover-band] { min-height: 0; }
+  [data-demo-page="datenbereitschaft-fuer-ki"] [data-cover-band] > div:nth-child(2) { padding-block: 1.25rem; }
+  [data-demo-page="datenbereitschaft-fuer-ki"] #demo-title { --text-poster: 3rem; margin-top: 0.5rem; }
+  [data-demo-page="datenbereitschaft-fuer-ki"] [data-demo-question] { margin-top: 0.5rem; }
+  [data-demo-page="datenbereitschaft-fuer-ki"] [data-demo-mount] { margin-top: 1.25rem; }
 }

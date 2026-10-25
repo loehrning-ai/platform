@@ -1,0 +1,1085 @@
+/*
+ * Monatsgrenze (W02). Everything is scoped under .mg, prefix `mg-`.
+ * Hard edges, no gradients, no glow. W02's poster is the IDEA scene, so the stage
+ * uses the band's and the hub tile's own tokens, by name and not by copy:
+ * --color-kobalt for the earlier month, --color-himbeere for the later one
+ * (--color-himbeere-tief where it is text), Druckschwarz for text and the cut.
+ * demo.test.tsx pins the three against globals.css. Hover, focus,
+ * press and drag switch to the page's one anti colour (--color-scene-anti-a),
+ * never a tint of the control's own colour. Geometry is
+ * driven by the scene (use-scene.ts), so no transition touches size or position.
+ */
+.mg {
+  --mg-ink: var(--color-foreground, #121212);
+  --mg-paper: var(--color-paper, #fffcf5);
+  --mg-ground: var(--color-background, #f7f1e7);
+  --mg-a: var(--color-kobalt, #2e4d90);
+  --mg-mark: var(--color-himbeere, #c94a7f);
+  --mg-mark-text: var(--color-himbeere-tief, #b6386f);
+  --mg-anti: var(--color-scene-anti-a, #c94a7f);
+  --mg-muted: var(--color-muted-foreground, #4f4640);
+  --mg-hair: var(--color-hairline, #d4cec5);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  min-width: 0;
+  color: var(--mg-ink);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.mg *,
+.mg *::before,
+.mg *::after {
+  box-sizing: border-box;
+}
+
+/*
+ * Desktop: the stage runs the full width with its controls beside the plot, so number, towers, switch and ruler share
+ * one screen. Then Act 2 and Dein Vergleich side by side, and Mitnehmen across the bottom: no column runs on alone.
+ */
+@media (min-width: 64rem) {
+  .mg {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+    align-items: start;
+  }
+  .mg-stage {
+    grid-column: 1 / -1;
+  }
+  .mg-colL,
+  .mg-colR {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    min-width: 0;
+  }
+}
+
+/* A phone: the columns dissolve; Act 2, Dein Vergleich, the sentence, and last the long rules file. */
+@media (max-width: 63.99rem) {
+  .mg-colL,
+  .mg-colR {
+    display: contents;
+  }
+  .mg-act2 { order: 1; }
+  .mg-compare { order: 2; }
+  .mg-take { order: 3; }
+  .mg-rules { order: 4; }
+}
+
+/*
+ * The shell's band is tall on purpose for the other demos. Here the number and
+ * the towers are the first thing the visitor must see, so on this route the
+ * decorative numeral strip, the workshop link row and the honest data line
+ * (moved below the demo) give their height back. Scoped to this route's page.
+ */
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-plakat-art-phone],
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-workshop-link] {
+  display: none;
+}
+
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-cover-band] > div:first-child {
+  padding-bottom: 1rem;
+}
+
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-mount] {
+  margin-top: 1rem;
+}
+
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-promise] {
+  margin-top: 1rem;
+  order: 0;
+}
+
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] > div:has(> [data-demo-mount]) {
+  display: flex;
+  flex-direction: column;
+}
+
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-mount] {
+  order: 1;
+}
+
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-synthetic] {
+  order: 3;
+  margin-top: 1.5rem;
+}
+
+/* The question belongs to the stage ("Stimmt das?" lights up beside the number), not under the title. */
+[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-question] {
+  display: none;
+}
+
+/* On a phone the stage comes first: the promise moves under it, the pass itself is the instruction. */
+@media (max-width: 39.99rem) {
+  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-promise] {
+    order: 2;
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 40rem) {
+  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-mount] {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-cover-band] {
+    min-height: 0;
+  }
+  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-cover-band] > div:first-child {
+    padding-block: 1.75rem;
+  }
+}
+
+/* A short phone (SE, landscape-ish): the context line gives its height back so the switch and the ruler stay above the tab bar. */
+@media (max-height: 700px) and (max-width: 639px) {
+  .mg-numside .mg-sub {
+    display: none;
+  }
+}
+
+.mg-card {
+  min-width: 0;
+  padding: 0.875rem 0.75rem 1rem;
+  border: 2px solid var(--mg-ink);
+  background: var(--mg-paper);
+}
+
+@media (min-width: 40rem) {
+  .mg-card {
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+}
+
+.mg-h {
+  margin: 0;
+  font-size: 1.375rem;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.mg-h3 {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mg-lede,
+.mg-sub {
+  margin: 0.375rem 0 0.875rem;
+  color: var(--mg-muted);
+  font-size: 0.9375rem;
+  text-wrap: pretty;
+}
+
+.mg-sub {
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.mg-note,
+.mg-hint,
+.mg-small {
+  margin: 0.625rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--mg-muted);
+  text-wrap: pretty;
+}
+
+.mg-hint {
+  font-size: 0.8125rem;
+}
+
+.mg-sentence {
+  margin: 0.75rem 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+
+.mg-strong {
+  font-weight: 800;
+}
+
+.mg-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Stage ─────────────────────────────────────────────────────────────── */
+
+.mg-stage {
+  position: relative;
+  padding-inline: 0.5rem;
+}
+
+@media (min-width: 40rem) {
+  .mg-stage {
+    padding-inline: 1.25rem;
+  }
+}
+
+.mg-stage-inner {
+  min-width: 0;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.mg-main,
+.mg-side {
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .mg-stage-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+    column-gap: 2.5rem;
+    align-items: center;
+    max-width: none;
+  }
+  .mg-side .mg-switch {
+    margin-top: 0;
+  }
+}
+
+.mg-numrow {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: 62% minmax(0, 1fr);
+  column-gap: 0.5rem;
+  align-items: end;
+  padding-inline: 0.25rem;
+}
+
+.mg-number {
+  margin: 0;
+  color: var(--mg-a);
+  font-size: min(7.5rem, 17cqw);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mg-numside {
+  min-width: 0;
+  padding-bottom: 0.2rem;
+}
+
+.mg-number[data-neg] {
+  color: var(--mg-mark-text);
+}
+
+.mg-alt {
+  display: none;
+  color: var(--mg-mark-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-number {
+    grid-column: 1 / -1;
+    font-size: min(6rem, 12.5cqw);
+  }
+  .mg-numside {
+    grid-column: 1 / -1;
+    padding-top: 0.375rem;
+  }
+  .mg-alt {
+    display: inline;
+  }
+}
+
+.mg-units-note {
+  min-height: 1.1rem;
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--mg-ink);
+}
+
+.mg-chart {
+  position: relative;
+  margin-top: 0.25rem;
+  touch-action: pan-y;
+}
+
+.mg-plot,
+.mg-weeks {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mg-plot {
+  cursor: ew-resize;
+}
+
+.mg-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mg-ask {
+  display: inline-block;
+  margin: 0 0 0.25rem;
+  padding: 0.125rem 0.375rem;
+  margin-left: -0.375rem;
+  border: 2px solid transparent;
+  white-space: nowrap;
+  font-size: 1rem;
+  line-height: 1.15;
+  font-weight: 800;
+  color: var(--mg-ink);
+}
+
+/* While -20 % stands, the question is inverted: it reads as the number's own caption. */
+.mg-ask[data-flash] {
+  background: var(--mg-ink);
+  color: var(--mg-paper);
+  border-color: var(--mg-ink);
+}
+
+@media (min-width: 64rem) {
+  .mg-ask {
+    font-size: 1.5rem;
+  }
+}
+
+.mg-numside .mg-sub {
+  margin: 0;
+  padding: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+@media (min-width: 64rem) {
+  .mg-numside .mg-sub,
+  .mg-units-note {
+    font-size: 1rem;
+  }
+}
+
+.mg-svg-text {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  fill: var(--mg-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.mg-svg-sub {
+  font-weight: 600;
+  fill: var(--mg-muted);
+}
+
+/* A paper halo behind SVG labels: a threshold or tick behind a number never strikes it through. */
+.mg-svg .mg-halo {
+  paint-order: stroke;
+  stroke: var(--mg-paper);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.mg-svg .mg-span-text {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mg-guide {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2;
+  stroke-dasharray: 3 3;
+}
+
+.mg-chip {
+  fill: var(--mg-ink);
+}
+
+.mg-svg .mg-chip-text {
+  font-size: 14px;
+  font-weight: 800;
+  fill: var(--mg-paper);
+}
+
+.mg-rail {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2;
+}
+
+/* Flat tops, no outline: the difference between two weeks reads as height and nothing else. */
+.mg-fill-l {
+  fill: var(--mg-a);
+}
+
+.mg-fill-r {
+  fill: var(--mg-mark);
+}
+
+.mg-svg .mg-wk {
+  font-size: 10px;
+  font-weight: 800;
+  fill: var(--mg-paper);
+  pointer-events: none;
+}
+
+.mg-flash {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 3;
+  pointer-events: none;
+}
+
+/* The level of a group's mean: a dashed reference line, so a week below it shows paper above its top and never a lid or a box. */
+.mg-level {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2.5;
+  stroke-dasharray: 7 4;
+}
+
+.mg-axis {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2;
+}
+
+.mg-cut {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+
+.mg-trigger {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 4;
+}
+
+.mg-band {
+  fill: var(--mg-mark);
+  fill-opacity: 0.16;
+  stroke: var(--mg-mark);
+  stroke-width: 1.5;
+}
+
+.mg-tick {
+  fill: none;
+  stroke: var(--mg-ink);
+  stroke-width: 2.5;
+  opacity: 0.55;
+}
+
+/* The second tick of the opening pass lands when the pass puts it there; reduced motion has no pass and shows it at once. */
+.mg-tick[data-seed] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-tick[data-seed] {
+    opacity: 0.55;
+  }
+}
+
+.mg-tick-now {
+  stroke: var(--mg-mark-text);
+  stroke-width: 4;
+  opacity: 1;
+}
+
+.mg-ruler {
+  margin-top: 0.25rem;
+}
+
+/* One reserved slot: a hint in a hairline box while the total view stands, the stamp in the accent box after the flip. */
+.mg-slot {
+  display: grid;
+  margin-top: 0.75rem;
+  border: 2px dashed var(--mg-hair);
+  transition: border-color 200ms;
+}
+
+.mg-slot[data-armed] {
+  border-style: solid;
+  border-color: var(--mg-mark);
+}
+
+.mg-slot > * {
+  grid-area: 1 / 1;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  align-self: center;
+}
+
+.mg-hint-line {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--mg-muted);
+}
+
+.mg-stamp {
+  min-height: 2.75rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.mg-stage .mg-note {
+  padding-inline: 0.25rem;
+}
+
+/* ─── Handle ────────────────────────────────────────────────────────────── */
+
+.mg-handle {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 4rem;
+  margin: -2rem 0 0 -1.5rem;
+  touch-action: none;
+  cursor: ew-resize;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.mg-knob {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 3px solid var(--mg-paper);
+  background: var(--mg-ink);
+  color: var(--mg-paper);
+  box-shadow: 0 0 0 2px var(--mg-ink);
+}
+
+.mg-knob svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.mg-handle[data-tone="mark"] .mg-knob {
+  background: var(--mg-a);
+  box-shadow: 0 0 0 2px var(--mg-a);
+}
+
+/* One anti colour for hover, focus and drag; focus adds a separate ink ring. */
+.mg-handle:focus-visible .mg-knob,
+.mg-handle[data-drag] .mg-knob {
+  background: var(--mg-anti);
+  box-shadow: 0 0 0 2px var(--mg-ink);
+}
+
+.mg-handle:focus-visible .mg-knob {
+  outline: 3px solid var(--mg-ink);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mg-handle:hover .mg-knob {
+    background: var(--mg-anti);
+    box-shadow: 0 0 0 2px var(--mg-ink);
+  }
+}
+
+/* ─── Controls ──────────────────────────────────────────────────────────── */
+
+.mg-cutbar {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-inline: 0.25rem;
+}
+
+.mg-weeks {
+  display: grid;
+  justify-items: center;
+  margin: 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 64rem) {
+  .mg-cutbar {
+    margin-top: 1.5rem;
+  }
+  .mg-weeks {
+    font-size: 1.5rem;
+  }
+}
+
+.mg-weeks > span {
+  grid-area: 1 / 1;
+}
+
+.mg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0 1rem;
+  border: 2px solid var(--mg-ink);
+  background: var(--mg-paper);
+  color: var(--mg-ink);
+  font: inherit;
+  font-weight: 800;
+  line-height: 1.1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 120ms, box-shadow 120ms;
+}
+
+.mg-icon-btn {
+  padding: 0;
+}
+
+.mg-btn-solid {
+  background: var(--mg-ink);
+  color: var(--mg-paper);
+}
+
+.mg-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.mg-btn:focus-visible,
+.mg-field input:focus-visible,
+.mg-field textarea:focus-visible,
+.mg-switch button:focus-visible {
+  outline: 3px solid var(--mg-anti);
+  outline-offset: 2px;
+}
+
+.mg-btn:not(:disabled):active {
+  transform: translate(0, 0);
+  box-shadow: 0 0 0 var(--mg-anti), inset 0 -4px 0 var(--mg-anti);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mg-btn:not(:disabled):hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--mg-anti);
+  }
+}
+
+.mg-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 0.75rem;
+  border: 2px solid var(--mg-ink);
+}
+
+.mg-switch button {
+  min-height: 3rem;
+  padding: 0 0.5rem;
+  border: 0;
+  background: var(--mg-paper);
+  color: var(--mg-ink);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mg-switch button + button {
+  border-left: 2px solid var(--mg-ink);
+}
+
+.mg-switch button[aria-checked="true"] {
+  background: var(--mg-ink);
+  color: var(--mg-paper);
+}
+
+.mg-switch button:active {
+  box-shadow: inset 0 -5px 0 var(--mg-anti);
+}
+
+.mg-switch button:focus-visible {
+  outline-offset: -5px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .mg-switch button:hover {
+    box-shadow: inset 0 -5px 0 var(--mg-anti);
+  }
+}
+
+/* ─── Act 2 ─────────────────────────────────────────────────────────────── */
+
+.mg-bars {
+  margin-top: 0.75rem;
+}
+
+.mg-bars .mg-svg-text {
+  font-size: 15px;
+}
+
+/* Until the per-1.000 view has settled the strip says what the trigger is for, at full strength, in the strip's own box. */
+.mg-trigger-hint {
+  position: absolute;
+  inset-inline: 0;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0.25rem 0.75rem;
+  border: 2px dashed var(--mg-hair);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--mg-ink);
+  pointer-events: none;
+}
+
+.mg-svg .mg-trigger-tag {
+  font-weight: 800;
+}
+
+.mg-payoff {
+  margin: 0.5rem 0 0;
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.mg-empty {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+}
+
+.mg-trigger-row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) 3.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.mg-trigger-value {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Dein Vergleich ────────────────────────────────────────────────────── */
+
+.mg-cmp-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+
+.mg-tag {
+  margin: 0;
+  padding: 0.125rem 0.5rem;
+  border: 2px solid var(--mg-ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mg-tag[data-own] {
+  background: var(--mg-ink);
+  color: var(--mg-paper);
+}
+
+.mg-cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.mg-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+.mg-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.mg-field input,
+.mg-field textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 3rem;
+  padding: 0.5rem 0.625rem;
+  border: 2px solid var(--mg-ink);
+  border-radius: 0;
+  background: var(--mg-paper);
+  color: var(--mg-ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.mg-field textarea {
+  resize: vertical;
+}
+
+.mg-field input[aria-invalid="true"] {
+  border-color: var(--mg-mark);
+  background: var(--mg-ground);
+}
+
+.mg-field input[type="month"] {
+  padding-inline: 0.5rem;
+}
+
+.mg-metric {
+  margin-top: 0.75rem;
+}
+
+.mg-stepper {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.125rem;
+}
+
+.mg-stepper .mg-btn {
+  min-width: 0;
+  padding: 0;
+}
+
+.mg-alert {
+  margin: 0.75rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--mg-mark);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.mg-flag {
+  margin: 0.25rem 0 0;
+  padding: 0.375rem 0.5rem;
+  border: 2px solid var(--mg-mark);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.mg-result {
+  margin-top: 0.875rem;
+  padding: 0.75rem;
+  border: 2px solid var(--mg-ink);
+  background: var(--mg-ground);
+}
+
+.mg-result dl {
+  display: grid;
+  gap: 0.375rem;
+  margin: 0;
+}
+
+.mg-result dl > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--mg-hair);
+}
+
+.mg-result dt {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+
+.mg-result dd {
+  margin: 0;
+  text-align: right;
+}
+
+.mg-big {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.mg-result dl > div.mg-stack {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+
+.mg-result .mg-stack dd {
+  text-align: left;
+}
+
+.mg-word {
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  font-weight: 800;
+  text-wrap: balance;
+}
+
+.mg-paste {
+  margin-top: 1rem;
+}
+
+.mg-reset {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* ─── Mitnehmen ─────────────────────────────────────────────────────────── */
+
+.mg-block {
+  margin-top: 1.125rem;
+}
+
+.mg-text {
+  margin: 0.375rem 0 0;
+  padding: 0.75rem;
+  border: 2px solid var(--mg-ink);
+  background: var(--mg-ground);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+  user-select: text;
+}
+
+.mg-file {
+  margin: 0.125rem 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+}
+
+.mg-actions-top {
+  margin-top: 0.375rem;
+}
+
+.mg-pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8125rem;
+  white-space: pre-wrap;
+}
+
+.mg-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.625rem;
+}
+
+.mg-copied {
+  min-height: 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.mg-copied[data-ok]::before {
+  content: "\2713\00a0";
+}
+
+/* ─── Room mode: number, stage, handle, label and switch only. A projector option, so desktop only ── */
+
+.mg-room-toggle {
+  display: none;
+}
+
+@media (min-width: 80rem) {
+  .mg-room-toggle {
+    display: flex;
+    width: fit-content;
+    min-height: 2.5rem;
+    margin: 0.75rem 0.25rem 0 auto;
+    padding: 0 0.875rem;
+    font-size: 0.875rem;
+  }
+  .mg[data-room] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mg[data-room] .mg-act2,
+  .mg[data-room] .mg-compare,
+  .mg[data-room] .mg-take,
+  .mg[data-room] .mg-rules,
+  .mg[data-room] .mg-rulerwrap,
+  .mg[data-room] .mg-stage .mg-note,
+  .mg[data-room] .mg-slot {
+    display: none;
+  }
+  /* Number, towers, handle, label and switch together fit a 900 px screen. */
+  .mg[data-room] .mg-stage-inner {
+    display: block;
+    max-width: 44rem;
+  }
+  .mg[data-room] .mg-number {
+    font-size: min(8.5rem, 17cqw);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mg[data-room] .mg-number {
+      font-size: min(7.5rem, 12.5cqw);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mg-btn,
+  .mg-slot {
+    transition: none;
+  }
+}

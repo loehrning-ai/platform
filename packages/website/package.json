@@ -46,6 +46,8 @@
     "english-routes:generate": "node scripts/generate-english-route-mirror.mjs",
     "english-routes:check": "node scripts/generate-english-route-mirror.mjs --check",
     "test:english-routes": "node --test scripts/__tests__/generate-english-route-mirror.test.mjs",
+    "demo-tiles:generate": "node scripts/demo-tiles/build-css.mjs",
+    "demo-tiles:check": "node scripts/demo-tiles/build-css.mjs --check",
     "page-inventory:generate": "bun scripts/generate-page-inventory.mjs",
     "page-inventory:check": "bun scripts/generate-page-inventory.mjs --check",
     "skills:mirror-check": "node scripts/skills-mirror-check.mjs",

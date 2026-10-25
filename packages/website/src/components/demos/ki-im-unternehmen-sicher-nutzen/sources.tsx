@@ -1,66 +1,34 @@
-import {
-  DECK05,
-  FACTS_AS_OF,
-  NOT_IN_FILES,
-  UI,
-  W05_FACTS,
-  type DemoLocale,
-} from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen";
+import { COPY } from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen/copy";
+import { FACTS_AS_OF, formatFactDate, NOT_IN_FILES, RULE_LINES, W05_FACTS } from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen/facts";
+import type { DemoLocale } from "@/lib/demo-cases/ki-im-unternehmen-sicher-nutzen/types";
 
-/** "#quellen": every used fact with its source and the dates verbatim, server-rendered. */
+/** "Quellen und Grenzen": the rule and the facts behind the light, dated, server-rendered, always open. */
 export function Sources({ locale }: { readonly locale: DemoLocale }) {
-  const copy = UI[locale];
+  const copy = COPY[locale].sources;
   return (
-    <section
-      id="quellen"
-      aria-labelledby="quellen-heading"
-      className="scroll-mt-24 border-t-2 border-scene-line pt-4"
-      data-sources=""
-    >
-      <h2 id="quellen-heading" className="text-fluid-h2 font-bold">
-        {copy.sourcesHeading}
-      </h2>
-      <p className="mt-2 max-w-[64ch] text-body text-muted-foreground">{copy.sourcesIntro}</p>
-      <ol className="mt-5 grid max-w-[72ch] gap-0">
+    <section id="quellen" aria-labelledby="w05-sources-title" className="w05-sources" data-sources="">
+      <h2 id="w05-sources-title" className="w05-h">{copy.heading}</h2>
+      <p className="w05-sources-intro">{copy.intro}</p>
+      <h3 className="w05-h3">{copy.rules}</h3>
+      <ul className="w05-source-list">
+        {RULE_LINES.map((line) => (
+          <li key={line.id} data-rule={line.id}>{line.text[locale]}</li>
+        ))}
+      </ul>
+      <h3 className="w05-h3">{copy.facts}</h3>
+      <ol className="w05-source-list">
         {W05_FACTS.map((fact) => (
-          <li
-            key={fact.id}
-            className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 border-t border-hairline py-3"
-            data-fact={fact.id}
-          >
-            <span className="font-mono text-[0.875rem] font-semibold tabular-nums text-muted-foreground">
-              F{fact.id}
-            </span>
-            <span>
-              <span className="block text-[1rem] leading-snug">
-                {locale === "de" ? fact.statementDe : fact.statementEn}
-              </span>
-              <span className="mt-1 block text-[0.875rem] leading-snug text-muted-foreground">
-                {fact.source} ·{" "}
-                {fact.dates.map((date, i) => (
-                  <span key={date}>
-                    {i > 0 ? ", " : null}
-                    <span className="whitespace-nowrap" data-fact-date="">
-                      {date}
-                    </span>
-                  </span>
-                ))}
-              </span>
+          <li key={fact.id} data-fact={fact.id}>
+            <span className="w05-fact-id">{copy.factWord} {fact.id}</span>
+            <span>{locale === "de" ? fact.statementDe : fact.statementEn}</span>
+            <span className="w05-fact-meta">
+              {locale === "de" ? fact.sourceDe : fact.source} · {fact.dates.map((entry) => formatFactDate(entry, locale)).join(", ")}
             </span>
           </li>
         ))}
-        <li className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 border-t border-hairline py-3" data-fact="deck05">
-          <span className="font-mono text-[0.875rem] font-semibold text-muted-foreground">05</span>
-          <span className="text-[1rem] leading-snug">{DECK05[locale]}</span>
-        </li>
-        <li className="grid grid-cols-[2.5rem_minmax(0,1fr)] gap-x-2 border-y border-hairline py-3" data-not-in-files="">
-          <span aria-hidden="true" className="font-mono text-[0.875rem] font-semibold text-muted-foreground">
-            ?
-          </span>
-          <span className="text-[1rem] leading-snug">{NOT_IN_FILES[locale]}</span>
-        </li>
       </ol>
-      <p className="mt-4 text-[0.9375rem] font-semibold">{FACTS_AS_OF[locale]}</p>
+      <p className="w05-sources-intro">{NOT_IN_FILES[locale]}</p>
+      <p className="w05-sources-asof">{FACTS_AS_OF[locale]}</p>
     </section>
   );
 }

@@ -1,230 +1,127 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { COPY } from "../../src/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
-import {
-  collectBrowserErrors,
-  formatBrowserErrors,
-  meaningfulBrowserErrors,
-  type BrowserErrorLog,
-} from "./fixtures/console";
 
-const PATH = "/demos/geschaeftsberichte-mit-ki-lesen";
+const SLUG = "geschaeftsberichte-mit-ki-lesen";
 
-async function open(page: Page, prefix = "") {
-  const response = await page.goto(`${prefix}${PATH}`, { waitUntil: "domcontentloaded" });
-  expect(response?.status()).toBe(200);
-  await expect(page.locator("[data-demo-root]")).toBeVisible();
-  // Wait for hydration: a choice must produce its consequence.
-  await expect(async () => {
-    await page.locator('[data-testid="compare-choices"] [data-option="line-week"]').click();
-    await expect(page.locator('[data-testid="compare-result"] [data-verdict]')).toBeVisible({ timeout: 1000 });
-  }).toPass({ timeout: 30_000 });
+/** Console errors and page errors of one run, filtered to nothing: the demo must be silent. */
+function watch(page: Page): string[] {
+  const errors: string[] = [];
+  page.on("console", (message) => message.type() === "error" && errors.push(message.text()));
+  page.on("pageerror", (error) => errors.push(error.message));
+  return errors;
 }
 
-/**
- * Uncaught errors and console.error both fail a test, through the suite's one
- * browser-error gate: React reports hydration mismatches through
- * console.error, never as a pageerror.
- */
-const logs = new WeakMap<Page, BrowserErrorLog>();
+const number = (page: Page) => page.getByTestId("giant-number").locator("span").first();
+const noOverflow = (page: Page) =>
+  page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
-test.beforeEach(({ page }) => {
-  logs.set(page, collectBrowserErrors(page));
-});
+test.describe(`/demos/${SLUG}`, () => {
+  for (const [prefix, de] of [["", true], ["/en", false]] as const) {
+    test(`${prefix || "/"}demos plays the core loop at 390px without errors`, async ({ page }) => {
+      const errors = watch(page);
+      await page.setViewportSize({ width: 390, height: 844 });
+      const response = await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+      expect(response?.status()).toBe(200);
+      const stage = page.locator(".mg-stage");
+      await stage.scrollIntoViewIfNeeded();
 
-test.afterEach(({ page }) => {
-  const log = logs.get(page);
-  if (!log) return;
-  const noise = meaningfulBrowserErrors(log);
-  expect(noise, `browser errors on ${PATH}\n${formatBrowserErrors(noise)}`).toEqual([]);
-});
+      // The finished hero is server-rendered; the pass replays once and ends on it by itself (about 4 s), or at once on touch.
+      await expect(number(page)).toHaveText(/\+26/, { timeout: 9000 });
+      await expect(page.getByTestId("weeks-label")).toHaveText(de ? "Wochen: 4 | 5" : "Weeks: 4 | 5");
 
-test.describe("Workshop 02 demo: Die Zahl, die trägt", () => {
-  test("plays the core loop from the gut call to a sheet that holds", async ({ page }) => {
-    const de = COPY.de;
+      // Move the line one week: +26 % becomes -20 %.
+      await page.getByRole("button", { name: de ? "Linie nach rechts" : "Move line right" }).click();
+      await expect(number(page)).toHaveText(/−20/);
+
+      // Drag the handle to the left edge of the allowed range.
+      const handle = page.getByRole("slider").first();
+      const box = (await handle.boundingBox())!;
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(box.x - 120, box.y + box.height / 2, { steps: 8 });
+      await page.mouse.up();
+      await expect(handle).toHaveAttribute("aria-valuenow", "3");
+      await expect(number(page)).toHaveText(/\+105/);
+      expect(box.width).toBeGreaterThanOrEqual(47.5);
+      expect(box.height).toBeGreaterThanOrEqual(47.5);
+
+      // Per week: the number barely moves, and the stamp names the calendar.
+      await page.getByRole("button", { name: de ? "Linie nach rechts" : "Move line right" }).click();
+      await page.getByRole("radio", { name: de ? "Pro Woche" : "Per week" }).first().click();
+      await expect(number(page)).toHaveText(de ? /\+0,7/ : /\+0\.7/);
+      await expect(page.locator(".mg-stamp")).toContainText(/97/);
+
+      // Act 2: same switch, other axis.
+      const act2 = page.locator(".mg-act2");
+      await act2.scrollIntoViewIfNeeded();
+      await act2.getByRole("radio").nth(1).click();
+      await expect(act2).toContainText(de ? "2,2-Fache" : "2.2 times");
+
+      // Your own numbers: fill the field, the result and the takeaway follow.
+      const own = page.locator(".mg-compare input[type=text]").nth(1);
+      await own.fill(de ? "20.000.000" : "20,000,000");
+      await expect(page.getByTestId("take-sentence")).toContainText(de ? "20,00 Mio. €" : "EUR 20.00M");
+      await expect(page.locator(".mg-tag")).toHaveText(de ? "Deine Zahlen" : "Your numbers");
+
+      // Copy shows a visible confirmation.
+      await page.context().grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => undefined);
+      await page.locator(".mg-take .mg-btn").first().click();
+      await expect(page.locator(".mg-copied").first()).not.toBeEmpty();
+
+      expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+      expect(errors).toEqual([]);
+    });
+  }
+
+  test("reduced motion shows +26 % and -20 % side by side with both ticks, no intro", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page);
-
-    // Before any further choice, the final material is already on the page.
-    await expect(page.getByTestId("workshop-answer")).toContainText(de.decide.workshopHeading);
-    await expect(page.getByTestId("text-check")).toHaveText(de.takeaways.check.text);
-
-    await page.locator('[data-testid="gut-vote"] [data-option="marketing"]').click();
-
-    // 1 · Vergleichen (chosen while waiting for hydration).
-    await expect(page.locator('[data-testid="compare-result"] [data-verdict="holds"]')).toBeVisible();
-    await expect(page.locator('[data-testid="compare-bars"] [data-row="CRAFT"]')).toContainText("−2,1");
-
-    // 2 · Mängel
-    await page.locator('[data-testid="defect-choices"] [data-option="per1000"]').click();
-    await expect(page.getByTestId("rate-ladder")).toHaveAttribute("data-scale", "per1000");
-    await page.locator('[data-testid="flag-choices"] [data-option="chronic"]').click();
-    await expect(page.getByTestId("flag-evidence")).toContainText("691 Tsd. €");
-    await expect(page.getByTestId("bridge-text")).toContainText(
-      "Das sind meine eigenen Antworten auf Blank 1, 4 und 5. Frag mich nur noch Blank 2, 3 und 6.",
-    );
-
-    // 3 · Prüfen
-    const nest = page.locator('[data-claim="nest-ncr"]');
-    await nest.locator('[data-option="match"]').click();
-    await expect(nest.locator("[data-source-value]")).toHaveText("Quelle zeigt 19");
-    await expect(nest.locator("[data-echo]")).toHaveText("Du hast gesagt: stimmt. Die Quelle zeigt: weicht ab.");
-    await page.locator('[data-claim="craft-marketing"] [data-option="nowhere"]').click();
-    await expect(page.getByTestId("check-counter")).toHaveText("Geprüft: 2 von 4");
-
-    // 4 · Entscheide
-    const picks: [string, string][] = [
-      ["decision", "rework"],
-      ["number", "rate-251"],
-      ["cost", "both-ways"],
-      ["open", "marketing"],
-      ["counter", "rate-fell"],
-      ["trigger", "rate-and-scrap"],
-    ];
-    for (const [field, option] of picks) {
-      await page.locator(`[data-sheet-row="${field}"] [data-option="${option}"]`).click();
-    }
-    await expect(page.getByTestId("sheet-summary")).toHaveText(de.decide.sheetHolds);
-    await expect(page.getByTestId("gut-line")).toContainText("Deine Regeln haben die Entscheidung gedreht.");
-    await expect(page.getByTestId("text-sheet-example")).toContainText(
-      "Freigabe: Oktober unter 2,51 je 1.000 und Ausschuss unter 8 % vom Umsatz.",
-    );
-    await expect(page.getByTestId("bridge-text")).toContainText("Frag mich nur noch Blank 2 und 3.");
-
-    await page.getByTestId("reset").click();
-    await expect(page.getByTestId("sheet-example")).toHaveCount(0);
-    await expect(page.locator("[data-demo-root] input:checked")).toHaveCount(0);
-  });
-
-  for (const [prefix, decision, number] of [
-    ["", "rework", "craft-mom"],
-    ["", "marketing", "scrap-691"],
-    ["/en", "rework", "rev-412"],
-  ] as const) {
-    test(`station 4: ${decision} with ${number}${prefix ? " (EN)" : ""} says why for that direction and keeps the number's own fact`, async ({
-      page,
-    }) => {
-      const copy = prefix ? COPY.en : COPY.de;
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      await open(page, prefix);
-      const row = page.locator('[data-sheet-row="number"]');
-      await page.locator(`[data-sheet-row="decision"] [data-option="${decision}"]`).click();
-      await row.locator(`[data-option="${number}"]`).click();
-      await expect(row).toHaveAttribute("data-verdict", "misleads");
-      await expect(row.locator("[data-against]")).toHaveText(copy.decide.against[decision]);
-      await expect(row.locator("[data-row-fact]")).toHaveText(
-        `${copy.decide.dataLabel}: ${copy.decide.options.number[number].fact}`,
-      );
-      const other = decision === "rework" ? "marketing" : "rework";
-      await expect(row).not.toContainText(copy.decide.against[other]);
-    });
-  }
-
-  test("works by keyboard: arrow keys change a choice", async ({ page }) => {
-    await open(page);
-    const checked = page.locator('[data-testid="compare-choices"] input:checked');
-    await expect(checked).toHaveValue("line-week");
-    await checked.focus();
-    await page.keyboard.press("ArrowUp");
-    await expect(checked).toHaveValue("total-week");
-    await expect(page.locator('[data-testid="compare-result"]')).toContainText("+0,8");
-  });
-
-  test("fits a 390px phone and passes axe inside the demo", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await open(page);
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
-    expect(overflow).toBeLessThanOrEqual(0);
-    const sticky = await page.evaluate(
-      () =>
-        [...document.querySelectorAll("[data-demo-root] *")].filter((el) =>
-          /sticky|fixed/.test(getComputedStyle(el).position),
-        ).length,
-    );
-    expect(sticky).toBe(0);
-    const axe = await new AxeBuilder({ page }).include("[data-demo-root]").analyze();
-    expect(axe.violations.map((violation) => violation.id)).toEqual([]);
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+    await expect(page.getByTestId("giant-number")).toContainText(/\+26.*−20/s);
+    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
   });
 
-  for (const [prefix, width] of [
-    ["", 390],
-    ["", 1440],
-    ["/en", 390],
-  ] as const) {
-    test(`passes axe fully played${prefix ? " (EN)" : ""} at ${width}px: every claim revealed, every row answered, every copy block`, async ({
-      page,
-      browserName,
-    }) => {
-      await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
-      await page.emulateMedia({ reducedMotion: "reduce" });
-      await open(page, prefix);
-      await page.locator('[data-testid="gut-vote"] [data-option="marketing"]').click();
-      await page.locator('[data-testid="defect-choices"] [data-option="per1000"]').click();
-      await page.locator('[data-testid="flag-choices"] [data-option="chronic"]').click();
-      const claims: [string, string][] = [
-        ["craft-units", "match"],
-        ["nest-ncr", "match"],
-        ["craft-revenue", "differs"],
-        ["craft-marketing", "nowhere"],
-      ];
-      for (const [claim, option] of claims) {
-        await page.locator(`[data-claim="${claim}"] [data-option="${option}"]`).click();
-      }
-      await expect(page.locator("[data-claim-rows]")).toHaveCount(4);
-      for (const field of ["decision", "number", "cost", "open", "counter", "trigger"]) {
-        await page.locator(`[data-sheet-row="${field}"] [data-option]`).first().click();
-      }
-      await expect(page.getByTestId("sheet-example")).toBeVisible();
-      await expect(page.getByTestId("bridge-text")).toBeVisible();
-      const axe = await new AxeBuilder({ page }).include("[data-demo-root]").analyze();
-      expect(
-        axe.violations.map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target).join(", ")}`),
-      ).toEqual([]);
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
-      expect(overflow).toBeLessThanOrEqual(0);
-
-      // The 2.4 s "Kopiert" state: every copy button shows it inside the
-      // button and keeps its name. WebKit knows no clipboard permissions; a
-      // click there copies through the user gesture or the legacy fallback.
-      const ui = prefix ? COPY.en.ui : COPY.de.ui;
-      if (browserName === "chromium") {
-        await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
-      }
-      // Hold only the 2.4 s "Kopiert" reset, so it cannot fire while axe runs
-      // (pausing the whole clock would also stall axe's own timers).
-      await page.evaluate(() => {
-        const original = window.setTimeout.bind(window);
-        window.setTimeout = ((handler: TimerHandler, ms?: number, ...rest: unknown[]) =>
-          original(handler, ms === 2400 ? 2_147_483_647 : ms, ...rest)) as typeof window.setTimeout;
-      });
-      const copyIds = ["copy-bridge", "copy-traps", "copy-check", "copy-sheet", "copy-sheet-example"];
-      for (const id of copyIds) await page.getByTestId(id).click();
-      for (const id of copyIds) {
-        // Both labels sit in the button; only the visible one counts.
-        await expect(page.getByTestId(id).locator('span[aria-hidden="true"]:visible')).toHaveText(ui.copied);
-        await expect(page.getByTestId(id)).toHaveAccessibleName(ui.copy);
-      }
-      const copied = await new AxeBuilder({ page }).include("[data-demo-root]").analyze();
-      expect(
-        copied.violations.map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target).join(", ")}`),
-      ).toEqual([]);
-    });
-  }
-
-  test("the English page carries the same exercise", async ({ page }) => {
-    await open(page, "/en");
-    await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.locator('[data-testid="compare-result"]')).toContainText("−2.1%");
-    await expect(page.locator("[data-demo-root] input[type=radio]")).toHaveCount(42);
-    await expect(page.getByTestId("workshop-answer")).toContainText(COPY.en.decide.workshopHeading);
+  test("desktop: number, towers, switch and ruler share the first 900 px; Act 2 beside the comparison; takeaway below", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+    const box = async (selector: string) => (await page.locator(selector).first().boundingBox())!;
+    const [stage, chart, sw, ruler, act2, compare, take] = [
+      await box(".mg-stage"), await box(".mg-chart"), await box("#mg-mode"), await box(".mg-rulerwrap"),
+      await box(".mg-act2"), await box(".mg-compare"), await box(".mg-take"),
+    ];
+    expect(chart.y + chart.height).toBeLessThan(900);
+    expect(sw.y + sw.height).toBeLessThan(900);
+    expect(ruler.y + ruler.height).toBeLessThan(900);
+    expect(compare.x).toBeGreaterThan(act2.x + act2.width);
+    expect(Math.abs(compare.y - act2.y)).toBeLessThan(2);
+    expect(act2.y).toBeGreaterThan(stage.y + stage.height);
+    expect(take.y).toBeGreaterThan(Math.max(act2.y + act2.height, compare.y + compare.height));
+    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+    await expect(page.locator(".mg-room-toggle")).toBeVisible();
   });
 
-  test("the deep link #pruefen lands on station 3", async ({ page }) => {
-    await page.goto(`${PATH}#pruefen`, { waitUntil: "domcontentloaded" });
-    await expect(page.locator("#pruefen")).toBeInViewport();
+  test("phone 360x740: number, towers, switch and ruler all end above the tab bar", async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+    await expect(number(page)).toHaveText(/\+26/);
+    for (const selector of [".mg-chart", "#mg-mode", ".mg-rulerwrap"]) {
+      const b = (await page.locator(selector).first().boundingBox())!;
+      expect(b.y + b.height, selector).toBeLessThan(740 - 56);
+    }
+    await expect(page.locator(".mg-room-toggle")).toBeHidden();
+    expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+  });
+
+  test("fast key presses are all counted, and the plot itself is a drag target", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+    const handle = page.getByRole("slider").first();
+    await handle.focus();
+    for (let i = 0; i < 4; i += 1) await page.keyboard.press("ArrowRight");
+    await expect(handle).toHaveAttribute("aria-valuenow", "6");
+    for (let i = 0; i < 4; i += 1) await page.keyboard.press("ArrowLeft");
+    await expect(handle).toHaveAttribute("aria-valuenow", "3");
+    const plot = (await page.locator(".mg-plot").boundingBox())!;
+    await page.mouse.click(plot.x + plot.width * 0.8, plot.y + plot.height * 0.8);
+    await expect(handle).toHaveAttribute("aria-valuenow", "6");
   });
 });

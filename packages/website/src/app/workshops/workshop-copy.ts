@@ -265,7 +265,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       openAction: "Öffnen",
       downloadAction: "Download",
       kitPageAction: "Kit ansehen",
-      demoAction: "Übung öffnen",
+      demoAction: "Demo öffnen",
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
@@ -408,7 +408,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       openAction: "Open",
       downloadAction: "Download",
       kitPageAction: "View the kit",
-      demoAction: "Open the exercise",
+      demoAction: "Open the demo",
       language: "Language",
       selfHostHeading: "Run it yourself",
       selfHostBody:

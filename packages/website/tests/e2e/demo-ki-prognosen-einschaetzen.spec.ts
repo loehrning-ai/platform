@@ -1,217 +1,282 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { FORECAST_COPY } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/copy";
-import { MORNINGS } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/data";
-import { rightOption } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/logic";
-import { buildTakeaways } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/takeaways";
 
-const PATH = "/demos/ki-prognosen-einschaetzen";
-const ROOT = '[data-demo="ki-prognosen-einschaetzen"]';
+/**
+ * "Hundert Startwochen": the core loop on a phone, in both languages. The
+ * intro hands over to the visitor, the line magnets onto the forecast
+ * (50 of 100), the Waage and the week strip arrive (the count stays in view,
+ * or the mini bar stands in), Mein Fall recomputes live, the takeaways
+ * follow, nothing is sent and the console stays clean.
+ */
+const SLUG = "ki-prognosen-einschaetzen";
 
-async function open(page: Page, prefix = "", hash = "") {
-  const response = await page.goto(`${prefix}${PATH}${hash}`, { waitUntil: "domcontentloaded" });
-  expect(response?.status()).toBe(200);
-  // Hydrated once the run has read this browser's saved state.
-  await expect(page.locator(".fr[data-ready]")).toBeAttached({ timeout: 30_000 });
+async function dragHandleTo(page: Page, value: number) {
+  const chart = await page.locator("[data-hw-chart]").boundingBox();
+  const handle = await page.locator(".hw-handle").boundingBox();
+  if (!chart || !handle) throw new Error("chart not laid out");
+  const height = chart.height - 4;
+  const top = 26;
+  const bottom = height - 42;
+  const targetY =
+    chart.y + 2 + bottom - ((value - 500) / 1000) * (bottom - top);
+  const x = handle.x + handle.width / 2;
+  const startY = handle.y + handle.height / 2;
+  await page.mouse.move(x, startY);
+  await page.mouse.down();
+  for (let step = 1; step <= 6; step += 1)
+    await page.mouse.move(x, startY + ((targetY - startY) * step) / 6);
+  await page.mouse.up();
 }
 
-async function split(page: Page, values: readonly [number, number, number]) {
-  for (const [i, value] of values.entries()) await page.locator(`#fr-units-${i}`).fill(String(value));
-}
+for (const prefix of ["", "/en"] as const) {
+  test.describe(`${prefix}/demos/${SLUG}`, () => {
+    test("plays the core loop at 390px without errors, overflow or network calls", async ({
+      page,
+    }) => {
+      const problems: string[] = [];
+      const requests: string[] = [];
+      page.on(
+        "console",
+        (message) =>
+          message.type() === "error" && problems.push(message.text()),
+      );
+      page.on("pageerror", (error) => problems.push(String(error)));
+      page.on("request", (request) => {
+        if (request.method() !== "GET" && request.url().includes(SLUG))
+          requests.push(request.url());
+      });
 
-async function playWeek(page: Page, locale: "de" | "en") {
-  const copy = FORECAST_COPY[locale];
-  await split(page, [500, 370, 180]);
-  await page.getByRole("button", { name: copy.split.check, exact: true }).click();
-  await expect(page.getByText(copy.split.headlineAll)).toBeVisible();
-  await page.getByRole("button", { name: copy.split.continueOwn }).click();
-  await expect(page.locator("#fr-h-mornings")).toBeFocused();
-
-  await page.getByRole("button", { name: copy.mornings.ownerOptions.analytics }).click();
-  await expect(page.getByRole("button", { name: copy.mornings.start })).toHaveCount(0);
-  await page.getByRole("button", { name: copy.mornings.ownerOptions.plannerOnDuty }).click();
-  await page.getByRole("button", { name: copy.mornings.start }).click();
-
-  for (const [day, morning] of MORNINGS.entries()) {
-    const options = page.locator(".fr-options button");
-    await expect(options).toHaveCount(3);
-    await options.nth(morning.options.indexOf(rightOption(morning))).click();
-    await expect(options).toHaveCount(0);
-    await expect(page.locator(".fr-stamp-line")).toBeFocused();
-    await page.getByRole("button", { name: day === 6 ? copy.mornings.toResult : copy.mornings.next }).click();
-  }
-  await expect(page.locator(".fr-score")).toHaveText(copy.result.score(7));
-  await expect(page.locator(".fr-week [data-slot]")).toHaveCount(7);
-}
-
-test.describe("Workshop 01 demo: 1.050 Stück, sieben Morgen", () => {
-  // Any uncaught error or console.error (hydration warnings included) fails the test.
-  // The one exception: WebKit reports a request that a reload cancels (an RSC
-  // prefetch, the dev overlay's stack frames) as an access-control error, and
-  // Next then logs its fallback to a browser navigation. Neither is the page.
-  const CANCELLED_REQUEST = /(_rsc=|__nextjs_original-stack-frames).* due to access control checks|^console\.error: Failed to fetch RSC payload .* Falling back to browser navigation/;
-  let problems: string[] = [];
-  test.beforeEach(({ page }) => {
-    problems = [];
-    const report = (text: string) => {
-      if (!CANCELLED_REQUEST.test(text)) problems.push(text);
-    };
-    page.on("pageerror", (error) => report(`pageerror: ${error.message}`));
-    page.on("console", (message) => {
-      if (message.type() === "error") report(`console.error: ${message.text()}`);
-    });
-  });
-  test.afterEach(() => {
-    expect(problems).toEqual([]);
-  });
-
-  test("the final material is on the page before any play", async ({ page }) => {
-    await open(page);
-    const de = FORECAST_COPY.de;
-    for (const id of ["verteilen", "morgen", "ergebnis", "mitnehmen", "quellen"]) {
-      await expect(page.locator(`${ROOT} #${id}`)).toBeAttached();
-    }
-    await expect(page.getByText(de.takeaways.rule)).toBeVisible();
-    await expect(page.getByTestId("fr-check-text")).toHaveText(
-      buildTakeaways({ owner: null, blanks: [], copy: FORECAST_COPY.de }).check,
-    );
-  });
-
-  test("plays the core loop in German: split, owner, seven mornings, result, copy, resume", async ({ page, context, browserName }) => {
-    // Only Chromium lets a test read the clipboard back; elsewhere the visible confirmation is checked.
-    const readsClipboard = browserName === "chromium";
-    if (readsClipboard) await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page);
-    const de = FORECAST_COPY.de;
-
-    // Too many first: the check stays off until exactly 1.050.
-    await split(page, [700, 300, 100]);
-    await expect(page.getByRole("button", { name: de.split.check, exact: true })).toBeDisabled();
-    await playWeek(page, "de");
-
-    await page.getByRole("link", { name: de.result.toTakeaways }).click();
-    await expect(page.locator("#fr-blank-7")).toHaveValue(/Planer/);
-    const checkArticle = page.getByRole("article", { name: de.takeaways.titles[1] });
-    await checkArticle.getByRole("button").click();
-    await expect(checkArticle.getByRole("button")).toHaveText(de.takeaways.copied);
-    if (readsClipboard) {
-      const clip = await page.evaluate(() => navigator.clipboard.readText());
-      expect(clip).toBe(await page.getByTestId("fr-check-text").textContent());
-    }
-
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "result");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toContainText(de.thread.resumed);
-    await page.getByRole("button", { name: de.result.restart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-    await expect(page.locator("#fr-units-0")).toHaveValue("0");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-  });
-
-  test("a week left mid-way says so on return and starts over from either restart", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page, "", "#morgen");
-    const de = FORECAST_COPY.de;
-    await expect(page.getByRole("button", { name: de.result.restart, exact: true })).toBeVisible();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.plannerOnDuty }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await page.locator(".fr-options button").first().click();
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-
-    await page.goto(PATH, { waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "mornings");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toBeVisible();
-    await page.getByRole("button", { name: de.thread.resumedRestart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-    await expect(page.locator("#fr-h-split")).toBeFocused();
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-
-    // Back into the mornings: the in-step restart works the same way.
-    await page.getByRole("button", { name: de.mornings.directEntry }).click();
-    await page.getByRole("button", { name: de.result.restart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "split");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-  });
-
-  test("after a restart with an own role, sentence 5 and the Morgen-Check name the same owner", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await open(page);
-    const de = FORECAST_COPY.de;
-    const role = "die Teamleitung Disposition";
-    const toMornings = async () => {
-      await split(page, [500, 370, 180]);
-      await page.getByRole("button", { name: de.split.check, exact: true }).click();
-      await page.getByRole("button", { name: de.split.continueOwn }).click();
-    };
-
-    await toMornings();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.plannerOnDuty }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await expect(page.locator("#fr-blank-7")).toHaveValue(de.takeaways.ownerDefault);
-    await page.getByRole("button", { name: de.result.restart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-
-    await toMornings();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.custom }).click();
-    await page.locator("#fr-custom-role").fill(role);
-    await page.getByRole("button", { name: de.mornings.customUse }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await expect(page.getByTestId("fr-check-text")).toContainText(`Ein Nein: ${role} entscheidet`);
-    await expect(page.locator("#fr-blank-7")).toHaveValue(role);
-    await expect(page.locator(".fr-sentence-text").nth(4)).toHaveText(`Bei einem Nein entscheidet ${role}, bevor etwas rausgeht.`);
-
-    // Survives a reload: the stored marker still tells an untouched prefill from an edit.
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "mornings");
-    await expect(page.locator("#fr-blank-7")).toHaveValue(role);
-  });
-
-  test("the English page plays the same week", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page, "/en");
-    await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await playWeek(page, "en");
-  });
-
-  test("#morgen opens the seven mornings directly with the median plan", async ({ page }) => {
-    await open(page, "", "#morgen");
-    const de = FORECAST_COPY.de;
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "mornings");
-    await expect(page.getByText(de.mornings.fallback, { exact: true })).toBeVisible();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.plannerOnDuty }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await page.locator(".fr-options button").first().click();
-    await expect(page.locator(".fr-stamp-line")).toContainText(de.mornings.stamps.rightRelease);
-  });
-
-  for (const [locale, prefix] of [
-    ["de", ""],
-    ["en", "/en"],
-  ] as const) {
-    test(`fits a 390px phone and passes axe (${locale})`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
-      await open(page, prefix);
+      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
+
+      // First ten seconds: the count and the top of the staircase are on screen at load, the handle is not at the screen edge.
+      const first = await page.evaluate(() => {
+        const count = document
+          .querySelector("[data-hw-count]")!
+          .getBoundingClientRect();
+        const chart = document
+          .querySelector("[data-hw-chart]")!
+          .getBoundingClientRect();
+        const handle = document.querySelector(".hw-handle")!.getBoundingClientRect();
+        return {
+          countBottom: count.bottom,
+          chartTop: chart.top,
+          handleRight: handle.right,
+          vw: window.innerWidth,
+        };
+      });
+      expect(first.countBottom).toBeLessThan(844);
+      expect(first.chartTop).toBeLessThan(700);
+      expect(first.vw - first.handleRight).toBeGreaterThanOrEqual(4);
+
+      // The page brings the whole chart into the first screen before the count-in, clear of the tab bar.
+      await expect
+        .poll(
+          async () =>
+            page.evaluate(() => {
+              const box = document
+                .querySelector("[data-hw-chart]")!
+                .getBoundingClientRect();
+              return box.top >= 48 && box.bottom <= window.innerHeight - 56;
+            }),
+          { timeout: 5000 },
+        )
+        .toBe(true);
+
+      // While the count shows a single digit, "/ 100" sits right behind it (no pinned gap) and the numeral is ink.
+      const lowCount = await page.evaluate(
+        () =>
+          new Promise<{ gap: number; low: boolean } | null>((resolve) => {
+            const stop = performance.now() + 4000;
+            const look = () => {
+              const numeral = document.querySelector("[data-hw-count]")!;
+              const unit = document.querySelector(".hw-count-of")!;
+              if (numeral.textContent!.length === 1)
+                return resolve({
+                  gap:
+                    unit.getBoundingClientRect().left -
+                    numeral.getBoundingClientRect().right,
+                  low: numeral.hasAttribute("data-low"),
+                });
+              if (performance.now() > stop) return resolve(null);
+              requestAnimationFrame(look);
+            };
+            look();
+          }),
+      );
+      if (lowCount) {
+        expect(lowCount.gap).toBeLessThanOrEqual(14);
+        expect(lowCount.low).toBe(true);
+      }
+      await page.locator("[data-hw-chart]").scrollIntoViewIfNeeded();
+
+      // The chart runs edge to edge on a phone.
+      const chartBox = await page.locator("[data-hw-chart]").boundingBox();
+      expect(chartBox?.width).toBeGreaterThanOrEqual(388);
+
+      // Intro ends in the hero state: 76 of 100, line at 1.050, layer 2 not there yet.
+      await expect(page.locator('[data-hw][data-phase="live"]')).toBeVisible({
+        timeout: 10_000,
+      });
+      await expect(page.locator("[data-hw-count]")).toHaveText("76");
+      await expect(page.getByRole("slider")).toHaveAttribute(
+        "aria-valuenow",
+        "1050",
+      );
+      await expect(page.locator("[data-hw-waage]")).toHaveCount(0);
+
+      // Revealing layer 2 must not move the chart under the finger.
+      const topBefore =
+        (await page.locator("[data-hw-chart]").boundingBox())?.y ?? 0;
+
+      // Drag onto the forecast: the magnet lands on 1.180, 50 of 100.
+      await dragHandleTo(page, 1186);
+      await expect(page.getByRole("slider")).toHaveAttribute(
+        "aria-valuenow",
+        "1180",
+      );
+      await expect(page.locator("[data-hw-count]")).toHaveText("50");
+      await expect(page.locator("[data-hw-waage]")).toBeVisible();
+      const topAfter =
+        (await page.locator("[data-hw-chart]").boundingBox())?.y ?? 0;
+      expect(Math.abs(topAfter - topBefore)).toBeLessThanOrEqual(1);
+
+      // The week strip waits for the first tap on the Waage (layer 3).
+      await expect(page.locator("[data-hw-strip]")).toHaveCount(0);
+
+      // Working the Waage far below the chart keeps the answer in view: the count itself, or the mini bar.
+      await page.getByRole("radio", { name: "9x" }).scrollIntoViewIfNeeded();
+      await page.getByRole("radio", { name: "9x" }).click();
+      await expect(page.locator("[data-hw-strip]")).toBeVisible();
+      await expect
+        .poll(async () =>
+          page.evaluate(() => {
+            const inView = (node: Element | null) => {
+              if (!node) return false;
+              const box = node.getBoundingClientRect();
+              return box.bottom > 0 && box.top < window.innerHeight;
+            };
+            return (
+              inView(document.querySelector("[data-hw-count]")) ||
+              inView(document.querySelector("[data-hw-minibar]"))
+            );
+          }),
+        )
+        .toBe(true);
+      await page.getByRole("radio", { name: "3x" }).click();
+      await page.locator("[data-hw-chart]").scrollIntoViewIfNeeded();
+
+      // The chart names only the line under the handle.
+      const names = await page.locator(".hw-tag text").allInnerTexts();
+      expect(names.length).toBeLessThanOrEqual(1);
+
+      // The best value at 3x is 1.268: 25 of 100.
+      await page.locator('[data-hw-chip="best"]').click();
+      await expect(page.locator("[data-hw-count]")).toHaveText("25");
+
+      // Picking a weight and then a week keeps the line.
+      await page.getByRole("radio", { name: "9x" }).click();
+      await page.locator(".hw-cell").nth(2).scrollIntoViewIfNeeded();
+      await page.locator(".hw-cell").nth(2).click();
+      await expect(page.getByRole("slider")).toHaveAttribute(
+        "aria-valuenow",
+        "1268",
+      );
+
+      // Mein Fall judges at once: a wrong range is explained while typing, the last valid chart stays.
+      const p10Field = page.locator('input[name="p10"]');
+      await p10Field.scrollIntoViewIfNeeded();
+      await p10Field.fill("1500");
+      await expect(page.locator(".hw-field-note.is-error").first()).toBeVisible();
+      await expect(page.locator(".hw-last-valid")).toBeVisible();
+      await p10Field.fill("980");
+
+      // Own numbers recompute and the takeaway names them.
+      const p50 = page.locator('input[name="p50"]');
+      await p50.fill(prefix ? "2,000" : "2.000");
+      await page.locator('input[name="p90"]').fill(prefix ? "2,400" : "2.400");
+      await expect(page.locator("[data-hw]")).toHaveAttribute(
+        "data-source",
+        "own",
+      );
+      await expect(page.locator("[data-hw-text]").first()).toContainText(
+        prefix ? "2,000" : "2.000",
+      );
+
+      // Takeaways are visible in full and the copy button confirms.
+      await page
+        .context()
+        .grantPermissions(["clipboard-read", "clipboard-write"])
+        .catch(() => undefined);
+      const copy = page.locator("[data-hw-block] .hw-copy").first();
+      await copy.scrollIntoViewIfNeeded();
+      await copy.click();
+      await expect(copy).toHaveText(
+        prefix ? /Copied|Select and copy/ : /Kopiert|Markieren und kopieren/,
+      );
+
       const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
       );
       expect(overflow).toBeLessThanOrEqual(0);
-      const axe = await new AxeBuilder({ page }).include(ROOT).analyze();
-      expect(axe.violations.map((violation) => violation.id)).toEqual([]);
-
-      // And once more on a morning, where the board and the options are.
-      await page.getByRole("button", { name: FORECAST_COPY[locale].mornings.directEntry }).click();
-      await page.getByRole("button", { name: FORECAST_COPY[locale].mornings.ownerOptions.plannerOnDuty }).click();
-      await page.getByRole("button", { name: FORECAST_COPY[locale].mornings.start }).click();
-      await page.locator(".fr-options button").first().click();
-      const later = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
-      expect(later).toBeLessThanOrEqual(0);
-      const axeMorning = await new AxeBuilder({ page }).include(ROOT).analyze();
-      expect(axeMorning.violations.map((violation) => violation.id)).toEqual([]);
+      expect(requests).toEqual([]);
+      expect(problems).toEqual([]);
     });
-  }
-});
+
+    test("takes six typed fields live: chip, slider and mail follow the stock", async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
+      const fill = async (name: string, value: string) => {
+        const input = page.locator(`input[name="${name}"]`);
+        await input.scrollIntoViewIfNeeded();
+        await input.fill(value);
+      };
+      await fill("p10", "400");
+      await fill("p50", "500");
+      await fill("p90", "700");
+      await fill("supply", "550");
+      await fill("ratio", "2");
+      await fill("unit", prefix ? "boxes" : "Kisten");
+      await expect(page.getByRole("slider")).toHaveAttribute(
+        "aria-valuenow",
+        "550",
+      );
+      await expect(page.locator('[data-hw-chip="today"]')).toContainText("550");
+      await expect(page.locator("[data-hw-text]").first()).toContainText(
+        prefix ? "stock 550" : "Lager 550",
+      );
+      await expect(page.locator("[data-hw-text]").first()).toContainText(
+        prefix ? "boxes" : "Kisten",
+      );
+    });
+
+    test("keeps the page scrollable on the chart body and shows the end state with reduced motion", async ({
+      browser,
+    }) => {
+      const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        reducedMotion: "reduce",
+        hasTouch: true,
+      });
+      const page = await context.newPage();
+      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
+      await expect(page.locator("[data-hw-count]")).toHaveText("76");
+      await expect(page.locator("[data-hw-waage]")).toBeVisible();
+      await expect(page.locator("[data-hw-strip]")).toBeVisible();
+      const touchAction = await page.evaluate(() => ({
+        body: getComputedStyle(
+          document.querySelector("[data-hw-chart]") as Element,
+        ).touchAction,
+        gutter: getComputedStyle(
+          document.querySelector(".hw-gutter") as Element,
+        ).touchAction,
+      }));
+      expect(touchAction.gutter).toBe("none");
+      expect(touchAction.body).not.toBe("none");
+      await context.close();
+    });
+  });
+}

@@ -1,260 +1,303 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { act, cleanup, fireEvent, render } from "@testing-library/react";
-import { renderToString } from "react-dom/server";
+// @vitest-environment jsdom
+import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { DEMO_TEXT } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy";
-import MakeTheNumberRightDemo from "./index";
-import { copyText } from "./takeaways";
+import { COPY } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy";
+import Demo from "./demo";
 
-const WEBSITE = join(__dirname, "../../../..");
-
-function mockReducedMotion(reduce: boolean) {
-  Object.defineProperty(window, "matchMedia", {
-    configurable: true,
-    writable: true,
-    value: (query: string) => ({
-      matches: reduce && query.includes("reduce"),
-      media: query,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      addListener: () => {},
-      removeListener: () => {},
-      onchange: null,
-      dispatchEvent: () => false,
-    }),
-  });
+function mockMedia(reduced: boolean) {
+  vi.stubGlobal(
+    "matchMedia",
+    (query: string) => ({ matches: reduced && query.includes("reduce"), media: query, addEventListener() {}, removeEventListener() {} }),
+  );
+  watchers.length = 0;
+  partial.length = 0;
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class {
+      constructor(private readonly callback: IntersectionObserverCallback) {}
+      observe() {
+        const entry = (visible: number) =>
+          ({ isIntersecting: true, intersectionRect: { height: visible }, boundingClientRect: { height: 400 } }) as unknown as IntersectionObserverEntry;
+        watchers.push(() => this.callback([entry(400)], this as unknown as IntersectionObserver));
+        partial.push(() => this.callback([entry(150)], this as unknown as IntersectionObserver));
+      }
+      disconnect() {}
+      unobserve() {}
+    },
+  );
 }
 
-/** The client's name from the deck's resolution scene, never written into a file. */
-function clientName(): string {
-  const deck = readFileSync(join(WEBSITE, "public/workshops/datenbereitschaft-fuer-ki/slides.html"), "utf8");
-  const start = deck.search(/<section[^>]*id="resolution"/);
-  const scene = deck.slice(start, deck.indexOf("</section>", start));
-  return (/×\s*([^<\s][^<]*)</.exec(scene)?.[1] ?? "").trim();
-}
+/** The stage-in-view callbacks the demo registered; calling one is "the stage scrolled into view". */
+const watchers: (() => void)[] = [];
+/** The same callbacks with only 150 of the stage's 400 px on screen. */
+const partial: (() => void)[] = [];
+
+const slider = () => screen.getByRole("slider");
+const arith = () => document.querySelector("[data-arith]")?.textContent ?? "";
 
 beforeEach(() => {
-  Element.prototype.scrollIntoView = vi.fn();
-  window.location.hash = "";
-  mockReducedMotion(true);
+  vi.useFakeTimers();
+  mockMedia(false);
 });
-
 afterEach(() => {
   cleanup();
-  vi.restoreAllMocks();
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
 });
 
-function input(request: string, blank: string, value: string): HTMLInputElement {
-  const el = document.querySelector<HTMLInputElement>(`#anfrage-${request} fieldset[data-blank="${blank}"] input[value="${value}"]`);
-  if (!el) throw new Error(`no ${request}/${blank}/${value}`);
-  return el;
-}
-
-function pick(request: string, definition: Record<string, string>) {
-  for (const [blank, value] of Object.entries(definition)) fireEvent.click(input(request, blank, value));
-}
-
-function submit(request: string) {
-  const button = document.querySelector<HTMLButtonElement>(`button[data-check="${request}"]`);
-  if (!button) throw new Error(`no check ${request}`);
-  fireEvent.click(button);
-}
-
-const receipt = (id: string) => document.querySelector<HTMLElement>(`[data-receipt="${id}"]`) as HTMLElement;
-
-describe("server render", () => {
-  it.each(["de", "en"] as const)("renders every request, every receipt and the full take-aways in %s", (locale) => {
-    const html = renderToString(<MakeTheNumberRightDemo locale={locale} />);
-    for (const id of ["anfrage-01", "anfrage-02", "anfrage-03", "anfrage-04", "anfrage-05", "mitnehmen"]) {
-      expect(html).toContain(`id="${id}"`);
-    }
-    for (const id of ["01", "02", "03", "05", "G01", "C01", "R01", "R02", "F01"]) {
-      expect(html).toContain(`data-receipt="${id}"`);
-    }
-    for (const card of DEMO_TEXT[locale].takeaways) {
-      // React escapes quotes in text; compare one plain line of each card.
-      expect(html).toContain(card.title);
-    }
+describe("Stufe oder Treppe? demo", () => {
+  it("starts in the hero state: -19.960, the stamp, the first arithmetic line", () => {
+    render(<Demo copy={COPY.de} />);
+    expect(slider().getAttribute("aria-valuenow")).toBe("0");
+    expect(slider().getAttribute("aria-valuetext")).toBe("Stufe: Veränderung pro Monat");
+    expect(arith()).toContain("−19.960 + 9.775 + 42.565 = 32.380");
+    expect(document.body.textContent).toContain("nie < 0");
   });
 
-  it("has no collapsible UI", () => {
-    const { container } = render(<MakeTheNumberRightDemo locale="de" />);
-    expect(container.querySelector("details, summary, [aria-expanded]")).toBeNull();
+  it("moves the lever by keyboard and keeps the buttons in sync", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(slider().getAttribute("aria-valuenow")).toBe("100");
+    expect(slider().getAttribute("aria-valuetext")).toBe("Treppe: Stand am Monatsende");
+    expect(screen.getByRole("radio", { name: "Treppe" }).getAttribute("aria-checked")).toBe("true");
+    expect(arith()).toContain("354.635 + 32.380 = 387.015");
+    fireEvent.keyDown(slider(), { key: "ArrowDown" });
+    expect(slider().getAttribute("aria-valuenow")).toBe("95");
+    fireEvent.keyDown(slider(), { key: "Home" });
+    expect(slider().getAttribute("aria-valuenow")).toBe("0");
+    expect(slider().getAttribute("aria-valuetext")).toBe("Stufe: Veränderung pro Monat");
   });
 
-  it("gives every group a legend", () => {
-    const { container } = render(<MakeTheNumberRightDemo locale="de" />);
-    const fieldsets = container.querySelectorAll("fieldset");
-    expect(fieldsets.length).toBeGreaterThan(20);
-    for (const fieldset of fieldsets) expect(fieldset.querySelector(":scope > legend")?.textContent?.trim()).toBeTruthy();
+  it("announces only the settled states", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.keyDown(slider(), { key: "End" });
+    const live = document.querySelectorAll('[role="status"]')[0] as HTMLElement;
+    expect(live.textContent).toContain("Jetzt: Treppe. Apr: 334.675");
+    expect(live.textContent).toContain("32.380");
+    fireEvent.keyDown(slider(), { key: "PageDown" });
+    expect(live.textContent).toContain("Jetzt: Treppe");
   });
 
-  it("renders English without German UI words and without the client's name", () => {
-    const html = renderToString(<MakeTheNumberRightDemo locale="en" />);
-    const de = DEMO_TEXT.de;
-    const en = DEMO_TEXT.en;
-    const german = [de.check, de.requestWord, de.copy, ...Object.values(de.verdicts), ...Object.values(de.legends)].filter(
-      (word) => !Object.values(en).includes(word),
-    );
-    for (const word of german) expect(html).not.toContain(`>${word}<`);
-    expect(html).not.toContain("Anfrage 0");
-    expect(html).not.toContain("Prüfen");
-    const name = clientName();
-    expect(name.length).toBeGreaterThan(3);
-    for (const locale of ["de", "en"] as const) {
-      expect(renderToString(<MakeTheNumberRightDemo locale={locale} />).toLowerCase()).not.toContain(name.toLowerCase());
-    }
-  });
-});
-
-describe("definition requests", () => {
-  it("solves 01 and says Stimmt, focus on the receipt heading", () => {
-    render(<MakeTheNumberRightDemo locale="de" />);
-    pick("01", { kind: "level", grain: "perMonth", period: "eachMonth", table: "analytics.mrr_summary_monthly" });
-    submit("01");
-    expect(receipt("01").dataset.verdict).toBe("correct");
-    expect(receipt("01").textContent).toContain(DEMO_TEXT.de.verdicts.correct);
-    expect(document.activeElement?.tagName).toBe("H3");
-    expect(document.querySelector('[data-rail="01"]')?.getAttribute("data-status")).toBe("solved");
-    expect(document.querySelector('[data-live]')?.textContent).toContain(DEMO_TEXT.de.verdicts.correct);
+  it("starts settled under reduced motion with the old figure kept beside the counter", async () => {
+    mockMedia(true);
+    render(<Demo copy={COPY.en} />);
+    await act(async () => {});
+    expect(slider().getAttribute("aria-valuenow")).toBe("100");
+    expect(document.body.textContent).toContain("Those were the steps.");
+    expect(document.body.textContent).toContain("Step was: −€19,960");
   });
 
-  it("marks a receipt out of date after a change, and run 2 offers the blank to change", () => {
-    render(<MakeTheNumberRightDemo locale="de" />);
-    pick("01", { kind: "level", grain: "single", period: "sumMonths", table: "analytics.mrr_summary_monthly" });
-    submit("01");
-    expect(receipt("01").dataset.verdict).toBe("wrong");
-    expect(receipt("01").querySelector("[data-change-blank]")).toBeNull();
-    submit("01");
-    const change = receipt("01").querySelector<HTMLButtonElement>("[data-change-blank]");
-    expect(change?.dataset.changeBlank).toBe("period");
-    fireEvent.click(change as HTMLButtonElement);
-    expect((document.activeElement as HTMLElement | null)?.closest("fieldset")?.dataset.blank).toBe("period");
-    fireEvent.click(input("01", "grain", "perMonth"));
-    expect(receipt("01").dataset.stale).toBe("true");
-    expect(receipt("01").textContent).toContain(DEMO_TEXT.de.stale);
+  it("gives the operator results for both readings", () => {
+    render(<Demo copy={COPY.de} />);
+    expect(document.querySelector(".dr3-result")?.textContent).toContain("32.380");
+    fireEvent.click(screen.getByRole("radio", { name: "Ende minus Start" }));
+    expect(document.querySelector(".dr3-result")?.textContent).toContain("−17.595");
+    expect(document.querySelector(".dr3-result")?.textContent).toContain("aufgezeichnete KI-Antwort");
+    // The lever came to the staircase: the control shows that reading's right answer first.
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(screen.getByRole("radio", { name: "Ende" }).getAttribute("aria-checked")).toBe("true");
+    expect(document.querySelector(".dr3-result")?.textContent).toContain("387.015");
+    expect(document.querySelector(".dr3-result")?.textContent).not.toContain("beschreibt nichts");
+    fireEvent.click(screen.getByRole("radio", { name: "Ende minus Start" }));
+    expect(document.querySelector(".dr3-result")?.textContent).toContain("32.380");
+    fireEvent.click(screen.getByRole("radio", { name: "Summe" }));
+    expect(document.querySelector(".dr3-result")?.textContent).toContain("1.066.140");
   });
 
-  it("focuses the first open blank on an open run", () => {
-    render(<MakeTheNumberRightDemo locale="de" />);
-    pick("03", { kind: "rate" });
-    submit("03");
-    expect(receipt("03").dataset.verdict).toBe("open");
-    const blank = (document.activeElement as HTMLElement | null)?.closest("fieldset")?.dataset.blank;
-    expect(blank).toBeTruthy();
-    expect(blank).not.toBe("kind");
+  it("reads the visitor's numbers, guesses the reading and keeps the example on garbage", () => {
+    render(<Demo copy={COPY.de} />);
+    const values = screen.getByLabelText(/Werte/);
+    fireEvent.change(values, { target: { value: "12k; 3; 4" } });
+    expect(document.querySelector(".dr3-status")?.textContent).toBe("Nicht lesbar. Ein Wert ist keine Zahl (kein k, kein Mio, höchstens 2 Nachkommastellen). Das Beispiel bleibt.");
+    fireEvent.change(values, { target: { value: "5; 6" } });
+    expect(document.querySelector(".dr3-status")?.textContent).toBe("Nicht lesbar. Es braucht 3 bis 6 Zahlen. Das Beispiel bleibt.");
+    expect(arith()).toContain("−19.960");
+    fireEvent.change(values, { target: { value: "100; -20; 300" } });
+    expect(document.querySelector(".dr3-status")?.textContent).toContain("Deine Zahlen sind geladen.");
+    expect(document.body.textContent).toContain("sehr wahrscheinlich eine Veränderung");
+    expect(document.querySelector('[data-block="board"] pre')?.textContent).toContain("100, −20 und 300 ergeben zusammen 380");
   });
 
-  it("pools 05 and says the export average is wrong first", () => {
-    render(<MakeTheNumberRightDemo locale="en" />);
-    pick("05", { kind: "rate", table: "analytics.attrition_by_department_quarter", combine: "averageRates", base: "startOfQuarter" });
-    submit("05");
-    expect(receipt("05").dataset.verdict).toBe("wrong");
-    pick("05", { combine: "pool" });
-    submit("05");
-    expect(receipt("05").dataset.verdict).toBe("correct");
-  });
-});
-
-describe("triage cards", () => {
-  it("shows the follow-up part only once the behaviour is right", () => {
-    render(<MakeTheNumberRightDemo locale="de" />);
-    const card = document.querySelector<HTMLElement>('[data-card="R02"]') as HTMLElement;
-    fireEvent.click(card.querySelector('input[value="answer"]') as HTMLInputElement);
-    fireEvent.click(card.querySelector("button[data-check-card]") as HTMLButtonElement);
-    const first = receipt("R02");
-    expect(first.dataset.verdict).toBe("wrong");
-    const parts = first.querySelector("[data-parts]")?.textContent ?? "";
-    expect(parts).not.toContain(DEMO_TEXT.de.parts.lock);
-
-    fireEvent.click(card.querySelector('input[value="refuse"]') as HTMLInputElement);
-    fireEvent.click(card.querySelector('input[value="sqlGuard"]') as HTMLInputElement);
-    fireEvent.click(card.querySelector("button[data-check-card]") as HTMLButtonElement);
-    expect(receipt("R02").dataset.verdict).toBe("wrong");
-    expect(receipt("R02").querySelector("[data-parts]")?.textContent).toContain(DEMO_TEXT.de.parts.lock);
-
-    fireEvent.click(card.querySelector('input[value="postgresRole"]') as HTMLInputElement);
-    fireEvent.click(card.querySelector("button[data-check-card]") as HTMLButtonElement);
-    expect(receipt("R02").dataset.verdict).toBe("correct");
+  it("builds the takeaways from the input and switches variants in place", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.change(screen.getByLabelText(/Name der Spalte/), { target: { value: "umsatz" } });
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "-5;6;7" } });
+    expect(document.querySelector('[data-block="def"] pre')?.textContent).toContain("Kennzahl: umsatz");
+    fireEvent.click(screen.getByRole("radio", { name: "YAML" }));
+    expect(document.querySelector('[data-block="def"] pre')?.textContent).toContain("slug: umsatz");
+    fireEvent.click(screen.getByRole("radio", { name: "Mensch" }));
+    expect(document.querySelector('[data-block="ask"] pre')?.textContent).toContain("Ist umsatz ein Stand oder eine Veränderung");
   });
 
-  it("builds the ask-back sentence live from the ticked gaps", () => {
-    render(<MakeTheNumberRightDemo locale="de" />);
-    const card = document.querySelector<HTMLElement>('[data-card="C01"]') as HTMLElement;
-    const ask = () => card.querySelector("[data-ask-back]")?.textContent ?? "";
-    const before = ask();
-    fireEvent.click(card.querySelector('input[value="period"]') as HTMLInputElement);
-    expect(ask()).not.toBe(before);
-  });
-});
-
-describe("take-aways", () => {
-  it("copies the card text exactly, without the example, and confirms visibly", async () => {
+  it("copies with the clipboard, shows the confirmation, and falls back to a selection", async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
-    render(<MakeTheNumberRightDemo locale="de" />);
-    const test = DEMO_TEXT.de.takeaways.find((card) => card.example);
-    expect(test).toBeDefined();
-    const button = document.querySelector<HTMLButtonElement>(`button[data-copy="${test?.id}"]`) as HTMLButtonElement;
+    vi.stubGlobal("navigator", { clipboard: { writeText } });
+    render(<Demo copy={COPY.de} />);
+    const block = document.querySelector('[data-block="board"]') as HTMLElement;
     await act(async () => {
-      fireEvent.click(button);
+      fireEvent.click(within(block).getByRole("button", { name: "Kopieren" }));
     });
-    expect(writeText).toHaveBeenCalledWith(test?.text);
-    expect(String(writeText.mock.calls[0][0])).not.toContain(test?.example?.text.slice(0, 20));
-    expect(button.textContent).toContain(DEMO_TEXT.de.copied);
-  });
-
-  it("copies a no-break space between number and unit as a plain space", async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });
-    await expect(copyText("19 von 200 = 9,5\u00a0%")).resolves.toBe(true);
-    expect(writeText).toHaveBeenCalledWith("19 von 200 = 9,5 %");
-  });
-
-  it("falls back to execCommand when the clipboard is missing", async () => {
-    Object.defineProperty(navigator, "clipboard", { configurable: true, value: undefined });
-    const exec = vi.fn().mockReturnValue(true);
-    Object.defineProperty(document, "execCommand", { configurable: true, value: exec });
-    render(<MakeTheNumberRightDemo locale="en" />);
-    const button = document.querySelector<HTMLButtonElement>('button[data-copy="definition"]') as HTMLButtonElement;
+    expect(writeText).toHaveBeenCalledWith(block.querySelector("pre")?.textContent);
+    expect(within(block).getByRole("button").textContent).toBe("Kopiert");
     await act(async () => {
-      fireEvent.click(button);
+      vi.advanceTimersByTime(1600);
     });
-    expect(exec).toHaveBeenCalledWith("copy");
-    expect(button.textContent).toContain(DEMO_TEXT.en.copied);
-  });
-});
+    expect(within(block).getByRole("button").textContent).toBe("Kopieren");
 
-describe("motion", () => {
-  it("starts no animation frame under reduced motion", () => {
-    mockReducedMotion(true);
-    const raf = vi.spyOn(window, "requestAnimationFrame");
-    render(<MakeTheNumberRightDemo locale="de" />);
-    pick("01", { kind: "level", grain: "single", period: "sumMonths", table: "analytics.mrr_summary_monthly" });
-    submit("01");
-    expect(receipt("01").querySelector('[data-reading="stackLevels"]')).not.toBeNull();
-    expect(raf).not.toHaveBeenCalled();
+    writeText.mockRejectedValue(new Error("denied"));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Alle drei kopieren" }));
+    });
+    expect(screen.getByRole("button", { name: /Markiert/ })).toBeDefined();
+    expect(window.getSelection()?.toString().length).toBeGreaterThan(0);
   });
 
-  it("animates the tower when motion is allowed", () => {
-    mockReducedMotion(false);
-    const raf = vi.spyOn(window, "requestAnimationFrame").mockImplementation(() => 1);
-    render(<MakeTheNumberRightDemo locale="de" />);
-    pick("01", { kind: "level", grain: "single", period: "sumMonths", table: "analytics.mrr_summary_monthly" });
-    submit("01");
-    expect(raf).toHaveBeenCalled();
+  it("never collapses, never calls the network, never stores the input", async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    const beacon = vi.fn();
+    vi.stubGlobal("navigator", { sendBeacon: beacon, clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } });
+    render(<Demo copy={COPY.de} />);
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "334.675; 344.450; 387.015" } });
+    fireEvent.change(screen.getByLabelText(/Start/), { target: { value: "354.635" } });
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(document.querySelector("details, summary, [aria-expanded]")).toBeNull();
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(beacon).not.toHaveBeenCalled();
+    expect(window.localStorage.length).toBe(0);
+    expect(window.sessionStorage.length).toBe(0);
   });
-});
 
-describe("receipt values", () => {
-  it("break only before =, after a comma or before a count's noun", async () => {
-    const { valueChunks } = await import("./receipt");
-    expect(valueChunks("19 von 200 = 9,5\u00a0%")).toEqual(["19 von 200", "= 9,5\u00a0%"]);
-    expect(valueChunks("0 von 0, keine Quote")).toEqual(["0 von 0,", "keine Quote"]);
-    expect(valueChunks("1.066.140\u00a0€")).toEqual(["1.066.140\u00a0€"]);
-    expect(valueChunks("206 Beschäftigte")).toEqual(["206", "Beschäftigte"]);
-    expect(valueChunks("+25 accounts")).toEqual(["+25", "accounts"]);
-    expect(valueChunks("keine prüfbare Zahl")).toEqual(["keine prüfbare Zahl"]);
+  it("renders the English pack", () => {
+    render(<Demo copy={COPY.en} />);
+    expect(slider().getAttribute("aria-valuetext")).toBe("Step: change per month");
+    expect(arith()).toContain("−19,960 + 9,775 + 42,565 = 32,380");
+  });
+
+  it("shows the month labels of the language, not German ones, in the English chart and table", () => {
+    render(<Demo copy={COPY.en} />);
+    const months = [...document.querySelectorAll(".dr3-month")].map((node) => node.textContent);
+    expect(months).toEqual(["Apr", "May", "Jun"]);
+    expect(document.querySelector("table")?.textContent).toContain("May");
+    expect(document.body.textContent).not.toContain("Mai");
+  });
+
+  it("never rounds the visitor's decimals away", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "1,2 3,4 5,6" } });
+    fireEvent.click(screen.getByRole("radio", { name: "Veränderung" }));
+    expect(document.querySelector('[data-block="board"] pre')?.textContent).toContain("1,2, 3,4 und 5,6 ergeben zusammen 10,2");
+    expect(document.querySelector(".dr3-counter")?.textContent).toBe("10,2");
+    expect([...document.querySelectorAll(".dr3-barlabel")].map((node) => node.textContent)).toEqual(["1,2", "3,4", "5,6"]);
+  });
+
+  it("uses the first level as the start for levels without one, and says so", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "120; 135; 180" } });
+    fireEvent.click(screen.getByRole("radio", { name: "Stand" }));
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(arith()).toContain("120 + 60 = 180");
+    expect(document.querySelector(".dr3-status")?.textContent).toContain("Ohne Start kennt das Bild die Veränderung im ersten Monat nicht");
+    // all three typed levels are bars and parts of the sum
+    expect(document.querySelectorAll("[data-bar]")).toHaveLength(3);
+    expect(document.querySelector("[data-ticker]")?.textContent).toContain("435");
+    expect(document.querySelector('[data-block="board"] pre')?.textContent).toContain("435");
+  });
+
+  it("flags an assumed start of zero and leaves out the pair that would rest on it", () => {
+    render(<Demo copy={COPY.de} />);
+    expect(document.querySelector(".dr3-pair")).not.toBeNull();
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "-5; 6; 7" } });
+    expect(document.querySelector(".dr3-pair")).toBeNull();
+    expect(document.querySelector(".dr3-status")?.textContent).toContain("Ohne Start rechnet das Bild mit 0");
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(arith()).toContain("0 + 8 = 8");
+    expect(document.querySelector("[data-arith]")?.textContent).toContain("Start angenommen: 0");
+    expect(document.querySelector('[data-block="board"] pre')?.textContent).not.toContain("Der Stand am Ende");
+    fireEvent.change(screen.getByLabelText(/Start/), { target: { value: "100" } });
+    expect(document.querySelector(".dr3-pair")).not.toBeNull();
+  });
+
+  it("draws the closing proof to scale: one block for the last level, one block per month for the sum", () => {
+    render(<Demo copy={COPY.de} />);
+    expect(document.querySelector("[data-ticker]")?.textContent).toBe("Alle Stände addiert: 1.066.140. Etwa 2,75-mal der letzte Stand.");
+    const widths = [...document.querySelectorAll<HTMLElement>(".dr3-pair-row:nth-of-type(n) .dr3-pair-block")].map((node) => Number.parseFloat(node.style.width));
+    // last / sum = 36.3 %, and the three months fill the row
+    expect(widths[0]).toBeCloseTo((387_015 / 1_066_140) * 100, 2);
+    expect(widths.slice(1).reduce((a, b) => a + b, 0)).toBeCloseTo(100, 2);
+    expect(document.querySelector(".dr3-pair-small")).toBeNull();
+  });
+
+  it("prints ONE counter and one label per bar, whatever p is", () => {
+    render(<Demo copy={COPY.de} />);
+    for (const key of ["Home", "PageUp", "ArrowUp", "ArrowUp", "End"]) {
+      fireEvent.keyDown(slider(), { key });
+      expect(document.querySelectorAll(".dr3-counter")).toHaveLength(1);
+      expect(document.querySelectorAll(".dr3-barlabel")).toHaveLength(3);
+      expect(document.querySelectorAll("[data-tag]")).toHaveLength(1);
+    }
+    fireEvent.keyDown(slider(), { key: "Home" });
+    expect(document.querySelector(".dr3-counter")?.textContent?.replace(/\u00a0/g, " ")).toBe("−19.960 €");
+    expect(document.querySelector("[data-tag]")?.textContent).toBe("Veränderung?");
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(document.querySelector(".dr3-counter")?.textContent?.replace(/\u00a0/g, " ")).toBe("334.675 €");
+    expect(document.querySelector("[data-tag]")?.textContent).toBe("Stand!");
+  });
+
+  it("gives the visitor's numbers the lever moment: the lever goes to their reading and pulls", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.click(screen.getByRole("button", { name: "Beispiel: Stände" }));
+    expect(slider().getAttribute("aria-valuenow")).toBe("100");
+    expect(document.querySelector(".dr3-guess")).not.toBeNull();
+    expect(document.querySelector("[data-live]")).toBeNull();
+  });
+
+  it("leaves the name chip out while the visitor's column has no name", () => {
+    render(<Demo copy={COPY.de} />);
+    expect(document.querySelector("[data-chip]")).not.toBeNull();
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "-5;6;7" } });
+    expect(document.querySelector("[data-chip]")).toBeNull();
+    fireEvent.change(screen.getByLabelText(/Name der Spalte/), { target: { value: "umsatz" } });
+    expect(document.querySelector("[data-chip]")).not.toBeNull();
+  });
+
+  it("explains the board sentence of the reading the lever shows", () => {
+    render(<Demo copy={COPY.de} />);
+    const board = () => document.querySelector('[data-block="board"]')?.textContent ?? "";
+    expect(board()).toContain("ergeben zusammen 32.380");
+    fireEvent.keyDown(slider(), { key: "End" });
+    expect(board()).toContain("Ins Board-Paket gehört der letzte Stand: 387.015");
+    expect(board()).toContain("Gilt für die Lesart: Stand (Treppe)");
+  });
+
+  it("never plays the intro over a visitor who got there first", () => {
+    render(<Demo copy={COPY.de} />);
+    fireEvent.change(screen.getByLabelText(/Werte/), { target: { value: "334.675; 344.450; 387.015" } });
+    fireEvent.change(screen.getByLabelText(/Start/), { target: { value: "354.635" } });
+    expect(slider().getAttribute("aria-valuenow")).toBe("0");
+    act(() => {
+      for (const arrive of watchers) arrive();
+      vi.advanceTimersByTime(4000);
+    });
+    expect(slider().getAttribute("aria-valuenow")).not.toBe("0");
+  });
+
+  it("waits for the whole stage: a stage that is only partly on screen does not start the intro", () => {
+    render(<Demo copy={COPY.de} />);
+    act(() => {
+      for (const arrive of partial) arrive();
+      vi.advanceTimersByTime(2500);
+    });
+    expect(slider().getAttribute("aria-valuenow")).toBe("0");
+    act(() => {
+      for (const arrive of watchers) arrive();
+      vi.advanceTimersByTime(2000);
+    });
+    expect(slider().getAttribute("aria-valuenow")).not.toBe("0");
+  });
+
+  it("plays the intro when the stage comes into view and nobody touched anything", () => {
+    render(<Demo copy={COPY.de} />);
+    expect(watchers.length).toBe(1);
   });
 });

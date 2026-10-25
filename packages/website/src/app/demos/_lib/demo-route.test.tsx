@@ -35,7 +35,7 @@ describe("/demos static route contract", () => {
     expect(generateStaticParams()).toEqual([]);
     localeRef.value = "de";
     await expect(unknownMetadata()).resolves.toEqual({
-      title: "Übung nicht gefunden",
+      title: "Demo nicht gefunden",
       robots: { index: false, follow: false },
     });
     expect(() => UnknownDemoPage()).toThrow();
@@ -53,7 +53,7 @@ describe("/demos static route contract", () => {
   it("does not emit indexable metadata for an unknown slug", async () => {
     localeRef.value = "de";
     await expect(demoMetadata("not-in-the-catalog")).resolves.toEqual({
-      title: "Übung nicht gefunden",
+      title: "Demo nicht gefunden",
       robots: { index: false, follow: false },
     });
   });
@@ -89,6 +89,7 @@ describe("/demos/[slug] page shell", () => {
         );
         expect(back).toHaveTextContent(workshop?.title ?? "");
 
+        expect(container.querySelector("[data-demo-promise]")).toHaveTextContent(demo.oneLiner.replace(/\u00a0/g, " "));
         expect(container.querySelector("[data-demo-synthetic]")).toHaveTextContent(
           demo.syntheticDataLabel,
         );

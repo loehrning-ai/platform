@@ -1,161 +1,238 @@
 import type { Locale } from "@/lib/i18n/locale";
 
-/** One string per locale. */
-export type L = Readonly<Record<Locale, string>>;
+export type { Locale };
 
-/** The three statuses of kit rule 3. Their labels stay English in both locales. */
-export type Status = "ok" | "check" | "notFound";
+/** A month's evidence: a bill in the folder, an estimate, or nothing. */
+export type CellState = "proven" | "estimate" | "missing";
+/** The workshop's rule 3 vocabulary, kept in English in both languages. */
+export type Status = "OK" | "NEEDS_CHECK" | "NOT_FOUND";
+export type DatasetId = "electricity" | "water" | "own";
 
-/** Why a document needs a check: the three cases of kit rule 3. */
-export type CheckReason = "expired" | "estimate" | "conflict";
-
-export type FactId =
-  | "bussgeld"
-  | "wasser"
-  | "kopf"
-  | "unfall"
-  | "ghg"
-  | "mix"
-  | "zert"
-  | "pv"
-  | "glas"
-  | "strom";
-
-export type Day = "friday" | "monday";
-
-export type RowId =
-  | "Q1"
-  | "Q2"
-  | "Q3"
-  | "Q4"
-  | "Q5"
-  | "Q6"
-  | "Q7"
-  | "Q8"
-  | "F1"
-  | "F2"
-  | "F3"
-  | "F4"
-  | "F5"
-  | "F6";
-
-export type Request = "nordvik" | "bank";
-
-/** The file names of the kit that the demo quotes. */
-export type KitFile =
-  | "policies_and_compliance.txt"
-  | "water_bills_2025.csv"
-  | "company_profile.md"
-  | "hr_headcount_2025.csv"
-  | "health_safety_2025.txt"
-  | "carbon_offsets_2025.txt"
-  | "energy_bills_2025.csv"
-  | "organic_certificate_vineyard.txt"
-  | "solar_offer_2026.txt"
-  | "packaging_bottles.csv"
-  | "energy_summary_2025_draft.txt"
-  | "inbox/1-nordvik-questionnaire.md";
-
-/** One verbatim line of a kit file, numbered as in a text editor. */
-export interface FileLine {
-  readonly file: KitFile;
-  readonly n: number;
-  readonly text: string;
+export interface MonthCell {
+  /** 1..12 */
+  readonly month: number;
+  /** In the series' unit; null while the bill is missing. */
+  readonly value: number | null;
+  readonly state: CellState;
+  /** Built-in datasets only. */
+  readonly invoiceNo?: string;
 }
 
-/** A summary row that is not a numbered file line (the September invoice on Monday). */
-export interface DocLine {
-  readonly file: string;
-  readonly n: null;
-  readonly text: string;
+export interface Series {
+  readonly id: DatasetId;
+  readonly label: string;
+  readonly unit: string;
+  readonly source?: string;
+  readonly year?: number;
+  /** Decimals to print (electricity 1, water 0). */
+  readonly digits: number;
+  /** Always 12 cells, January first. */
+  readonly cells: readonly MonthCell[];
 }
 
-export type Excerpt = readonly (FileLine | DocLine | "gap")[];
-
-export interface Option {
-  readonly id: string;
-  readonly label: L;
-}
-
-/** What someone answers on one fact card. `detail` is an option id or a CheckReason. */
-export interface Answer {
+export interface Analysis {
+  readonly provenMonths: number;
+  readonly estimateMonths: number;
+  readonly missingMonths: readonly number[];
+  readonly estimatedMonths: readonly number[];
+  /** Proven bills only; estimates are never added. */
+  readonly provenSum: number;
+  readonly monthCoverage: number;
+  readonly avgTimes12: number | null;
+  readonly maxFill: number | null;
+  /** Smallest and largest proven month. Display only, no forecast. */
+  readonly band: { readonly min: number; readonly max: number } | null;
   readonly status: Status;
-  readonly detail: string;
-  /** Asked only after OK: does the proven value break a rule in one of the requests? */
-  readonly action?: boolean;
 }
 
-export interface AcceptedAnswer extends Answer {
-  readonly note: L;
+/** One line of a ranked comparison under the chart. */
+export interface LadderRow {
+  readonly id: "draft" | "average" | "maxFill" | "guess" | "bill";
+  readonly value: number;
 }
 
-export interface Fact {
-  readonly id: FactId;
-  readonly n: number;
-  readonly title: L;
-  /** A short name for the parts of a composite answer. */
-  readonly short: L;
-  readonly excerpt: Excerpt;
-  /** Asked after OK. */
-  readonly cite: readonly [Option, Option, Option];
-  /** Asked after NOT FOUND. */
-  readonly docs: readonly [Option, Option, Option];
-  readonly key: Answer;
-  readonly accepted?: readonly AcceptedAnswer[];
-  /** Lines that carry the answer; marked after the check. */
-  readonly decisive: readonly { readonly file: string; readonly n: number | null }[];
-  /** The kit rule the right answer rests on. */
-  readonly rule: 1 | 2 | 3;
-  readonly why: L;
-  /** Keyed "status", "status/detail" or "action:yes" / "action:no". */
-  readonly traps: Readonly<Record<string, L>>;
-  /** A rule tag for a specific trap key, where it differs from the default. */
-  readonly trapRules?: Readonly<Record<string, 1 | 2 | 3>>;
-  readonly feeds: readonly RowId[];
+/** Everything the chart and the number draw at one moment. */
+export interface SceneFrame {
+  readonly envelope: number;
+  /** The invoice sheet's bottom edge, in the chart's value units above the baseline. */
+  readonly sheetBottom: number;
+  readonly sheetOpacity: number;
+  readonly barHeight: number;
+  readonly total: number;
+  readonly stampStrike: number;
+  /** The strike is lifted again once all twelve months are proven: the stamp is true. */
+  readonly stampLift: number;
+  readonly stripFlip: 0 | 1;
+  readonly ghost: number;
+  /** The "off by" label beside the bar. */
+  readonly offLabel: number;
+  readonly ladder: readonly number[];
 }
 
-export interface AnswerRow {
-  readonly id: RowId;
-  readonly request: Request;
-  readonly label: L;
-  /** The row's status is the weakest status of these facts (rule 3). */
-  readonly deps: readonly FactId[];
-  /** Q6 only: an OK on this fact with an action makes the row carry an action. */
-  readonly actionFrom?: FactId;
-  readonly value: { readonly friday: L; readonly monday?: L };
-  /** Where the answer comes from, as in ANSWERS.md. */
-  readonly sources: string;
+/** Everything the intro draws at one moment (0..1). */
+export interface IntroFrame {
+  readonly bars: readonly number[];
+  readonly stamp: number;
+  readonly hole: number;
+  readonly pulse: number;
 }
 
-export interface Bill {
-  readonly month: string;
-  readonly kWh: number | null;
-  readonly line: number | null;
+export type TakeawayId = "answer" | "mail" | "rule";
+
+/** The words of the demo in one language, passed from the server index. Plain data. */
+export interface DemoPack {
+  readonly locale: Locale;
+  readonly region: string;
+  readonly switchLabel: string;
+  readonly datasets: { readonly electricity: string; readonly water: string; readonly own: string };
+  readonly months: readonly string[];
+  readonly monthLetters: readonly string[];
+  readonly stripNotation: string;
+  readonly legend: { readonly proven: string; readonly estimate: string; readonly missing: string };
+  readonly stripAria: {
+    readonly some: string;
+    readonly all: string;
+    readonly estimate: string;
+  };
+  readonly statuses: { readonly OK: string; readonly NEEDS_CHECK: string; readonly NOT_FOUND: string };
+  readonly form: {
+    readonly electricity: string;
+    readonly water: string;
+    readonly stamp: string;
+    readonly draft: string;
+    readonly estimated: string;
+    readonly proven: string;
+    readonly totalAria: string;
+  };
+  readonly chart: {
+    readonly aria: string;
+    readonly drag: string;
+    readonly prompt: string;
+    readonly holeAria: string;
+    readonly holeValue: string;
+    readonly holeNone: string;
+    readonly barAria: string;
+    readonly barMissingAria: string;
+    readonly legendGuess: string;
+    readonly legendBill: string;
+    readonly off: string;
+    readonly exact: string;
+    readonly valueAria: string;
+  };
+  readonly gauge: {
+    readonly months: string;
+    readonly draftMonths: string;
+    readonly draftKwh: string;
+    readonly line: string;
+    readonly hint: string;
+    readonly computed: string;
+  };
+  readonly reveal: {
+    readonly open: string;
+    readonly back: string;
+    readonly slider: string;
+    readonly sliderValue: string;
+    readonly opened: string;
+    readonly closed: string;
+    readonly locked: string;
+    readonly guessFirst: string;
+  };
+  readonly ladder: {
+    readonly title: string;
+    readonly rows: { readonly draft: string; readonly average: string; readonly maxFill: string; readonly guess: string; readonly bill: string };
+    readonly kicker: string;
+    readonly note: string;
+    readonly axis: string;
+    readonly pending: string;
+    readonly gap: string;
+    readonly over: string;
+    readonly rowAria: string;
+  };
+  readonly water: { readonly control: string; readonly line: string };
+  readonly own: {
+    readonly intro: string;
+    readonly placeholder: string;
+    readonly label: string;
+    readonly unit: string;
+    readonly threshold: string;
+    readonly thresholdAria: string;
+    readonly example: string;
+    readonly clear: string;
+    readonly defaultLabel: string;
+    readonly cellsAria: string;
+    readonly cellAria: string;
+    readonly unread: string;
+    readonly duplicate: string;
+    readonly duplicateSwap: string;
+    readonly unitHint: string;
+    readonly unitMissing: string;
+    readonly unitPlaceholder: string;
+    readonly readThousands: string;
+    readonly readDecimal: string;
+    readonly readMany: string;
+    readonly sep: { readonly dot: string; readonly comma: string };
+    readonly unitToken: string;
+    readonly unitWarn: string;
+    readonly zeroHint: string;
+    readonly prefilled: string;
+    readonly count: string;
+    readonly counted: string;
+    readonly resultNone: string;
+    readonly cap: string;
+    readonly band: string;
+    readonly empty: string;
+    readonly privacy: string;
+    readonly exampleText: string;
+    readonly exampleLabel: string;
+    readonly exampleUnit: string;
+  };
+  readonly takeaways: {
+    readonly title: string;
+    readonly names: { readonly answer: string; readonly mail: string; readonly rule: string };
+    readonly copy: string;
+    readonly copied: string;
+    readonly copyFailed: string;
+    readonly nothingMissing: string;
+    readonly signs: string;
+    readonly glyphs: string;
+    readonly ascii: string;
+    readonly asciiNote: string;
+    readonly why: string;
+    readonly folderNote: string;
+    readonly view: { readonly after: string; readonly before: string };
+    readonly tag: { readonly after: string; readonly before: string };
+    readonly beforeNote: string;
+    readonly ownNote: string;
+    readonly ownEmpty: string;
+  };
+  readonly texts: TextTemplates;
+  readonly footer: string;
+  readonly workshopLink: string;
 }
 
-export type Grade = "right" | "defensible" | "half" | "wrong";
-
-export interface Verdict {
-  readonly grade: Grade;
-  readonly rule: 1 | 2 | 3;
-  /** The key line first, then the trap or note for this answer, then the why. */
-  readonly lines: readonly L[];
-}
-
-/** A row of the answer sheet in one state: still open, or filled with a status. */
-export type Cell =
-  | { readonly state: "open" }
-  | { readonly state: "filled"; readonly status: Status; readonly action: boolean };
-
-export interface SheetRow {
-  readonly row: AnswerRow;
-  readonly key: Cell;
-  readonly yours: Cell;
-  readonly differs: boolean;
-}
-
-export interface PredictionScore {
-  readonly hits: readonly RowId[];
-  readonly misses: readonly RowId[];
-  readonly falseAlarms: readonly RowId[];
+/** Templates for the three takeaways. `{x}` placeholders are filled by takeaways.ts. */
+export interface TextTemplates {
+  readonly numberWords: readonly string[];
+  readonly and: string;
+  readonly defaultLabel: string;
+  readonly stripRange: string;
+  readonly holes: string;
+  readonly missingOne: string;
+  readonly missingMany: string;
+  readonly notFoundOne: string;
+  readonly notFoundMany: string;
+  readonly complete: string;
+  readonly source: string;
+  readonly estimatedOnly: string;
+  readonly estimatedTail: string;
+  readonly mailSubjectOne: string;
+  readonly mailSubjectMany: string;
+  readonly mailSubjectNumber: string;
+  readonly mailBodyOne: string;
+  readonly mailBodyMany: string;
+  readonly mailNumber: string;
+  readonly mailMeter: string;
+  readonly mailTopic: string;
+  readonly mailTopicGeneric: string;
+  readonly rule: string;
 }

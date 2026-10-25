@@ -1,176 +1,107 @@
-/**
- * Types of the Workshop 05 demo "Darf das in diesen Chat?".
- *
- * The light is the kit's Rule 2 (project-instructions.md) plus deck slide 07,
- * computed from two variables only: the account a paste goes into and the
- * kind of content that is pasted. Every vendor line mirrors one line of the
- * kit's facts.md (checked 18 Oct 2026).
+/*
+ * W05 "Was fliegt mit?": the shared vocabulary of the pure modules. Everything
+ * here is plain data; nothing is mutated after it is built.
  */
-
-/** Order: green 0 < amber 1 < red 2. */
-export type Light = "green" | "amber" | "red";
-
 export type DemoLocale = "de" | "en";
 export type L10n = Readonly<Record<DemoLocale, string>>;
 
-export type AccountId =
-  /** personal, vendor unknown (Ana, Stefan) */
-  | "freeChatbot"
-  /** personal Claude: Free, Pro and Max share one rulebook (F1) */
-  | "claudePro"
-  /** company */
-  | "claudeTeam"
-  /** company, Desktop app with a Cowork folder (F9) */
-  | "claudeTeamDesktop"
-  /** company */
-  | "claudeEnterprise"
-  /** API test account (Dario); facts.md says nothing about it */
-  | "apiTest";
-
-export type AccountKind = "personal" | "company" | "test";
-
-export type ContentKind =
-  /** green on any tool */
-  | "public"
-  | "invented"
-  /** not public: names and numbers in */
-  | "customer"
-  | "people"
-  /** "paste it whole, Claude cleans it": behaves exactly like customer */
-  | "pastedToClean"
-  /** cleaned by hand, placeholders in, still not public */
-  | "cleaned"
-  /** API key, password */
+export type HitKind =
+  | "person"
+  | "order"
+  | "ref"
+  | "address"
+  | "email"
+  | "phone"
+  | "iban"
+  | "amount"
   | "secret"
-  /** a whole connected folder, wider than the task */
-  | "folder";
+  | "manual";
 
-/** Only the facts this demo uses. */
-export type FactId = 1 | 2 | 3 | 5 | 6 | 7 | 9 | 10 | 13;
-export type Cite = FactId | "deck05";
+export type Check = "pattern" | "iban-mod97" | "prefix" | "entropy" | "salutation" | "visitor";
 
-export type RouteKey = "contract" | "training" | "company" | "stored";
-
-/** Mirrors one facts.md line verbatim. */
-export interface Fact {
-  readonly id: FactId;
-  /** verbatim facts.md text */
-  readonly statementEn: string;
-  /** faithful translation, shown in #quellen */
-  readonly statementDe: string;
-  /** verbatim, e.g. "Anthropic privacy 7996890" */
-  readonly source: string;
-  /** verbatim list; never mapped 1:1 to sources */
-  readonly dates: readonly string[];
+export interface Hit {
+  /** `${kind}:${start}`, stable while the text does not change. */
+  readonly id: string;
+  readonly kind: HitKind;
+  /** UTF-16 index into the source text. */
+  readonly start: number;
+  /** Exclusive. */
+  readonly end: number;
+  /** source.slice(start, end). */
+  readonly value: string;
+  readonly check: Check;
 }
 
-export interface RouteRow {
-  readonly key: RouteKey;
-  readonly value: L10n;
-  /** shown only in #quellen, never inline */
-  readonly cite: Cite;
+export type AccountId = "personal" | "team" | "enterprise";
+export type Light = "red" | "amber" | "green" | "open";
+
+/** Placeholder words per kind, one set per interface language. */
+export type KindLabels = Readonly<Record<HitKind, string>>;
+
+export interface Placeholder {
+  readonly hitId: string;
+  /** "KUNDE" or "KUNDE_2". */
+  readonly label: string;
+  /** "[KUNDE]". */
+  readonly token: string;
 }
 
-export type Device = "phone" | "browser" | "desktopFolder" | "server";
-
-export interface Account {
-  readonly id: AccountId;
-  readonly kind: AccountKind;
-  /** Card chip, e.g. "Privat: Claude Pro". */
-  readonly label: L10n;
-  /** Dial option, e.g. "Privat: Pro". */
-  readonly dialLabel: L10n;
-  /** null = nothing in the files: one merged line instead. */
-  readonly route: readonly RouteRow[] | null;
-  /** used when route is null */
-  readonly unknownLine?: L10n;
-  /** "Fehlt:" line, from the last line of facts.md */
-  readonly gaps: L10n | null;
-  /** Desktop: F9, "unsere Lesart" */
-  readonly note?: { readonly text: L10n; readonly cite: FactId };
+export interface Redaction {
+  readonly text: string;
+  /** Detector output plus the visitor's own words, sorted and non-overlapping. */
+  readonly hits: readonly Hit[];
+  /** Hit ids the visitor chose to keep raw. */
+  readonly kept: ReadonlySet<string>;
+  readonly placeholders: readonly Placeholder[];
 }
 
-export type ContentOptionId = "asIs" | "pastedToClean" | "cleaned" | "alt";
-
-export interface ContentOption {
-  readonly id: ContentOptionId;
-  readonly kind: ContentKind;
-  /** Dial option label. */
-  readonly label: L10n;
-  /** read only when the light is amber */
-  readonly todo?: readonly L10n[];
+export interface KeyEntry {
+  readonly token: string;
+  readonly label: string;
+  readonly original: string;
 }
 
-export type SceneId =
-  | "ana"
-  | "stefan"
-  | "elena"
-  | "marko"
-  | "jovana"
-  | "mila"
-  | "petar"
-  | "dario";
-
-export interface Scene {
-  readonly id: SceneId;
-  /** kit order, used for "1 von 8" only */
-  readonly order: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  readonly person: string;
-  readonly role: L10n;
-  /** "Fügt ein:", "Lädt hoch:", "Verbindet:", "Fügt ein und fragt:" */
-  readonly verb: L10n;
-  readonly what: L10n;
-  /** mono tokens on the card */
-  readonly parts: readonly L10n[];
-  /** Short account word for the table ("Handy", "Pro"). */
-  readonly short: L10n;
-  /** The device per account in this scene. */
-  readonly devices: Readonly<Partial<Record<AccountId, Device>>>;
-  /** first = initial; length 1 = no account dial */
-  readonly accountDial: readonly AccountId[];
-  /** first = initial */
-  readonly contentDial: readonly ContentOption[];
-  /** ANSWERS.md mission 3; a test asserts key === light of the initial state */
-  readonly key: Light;
-  /** at most 12 words, from ANSWERS.md */
-  readonly reason: L10n;
-  readonly misconception: Readonly<Partial<Record<Light, L10n>>>;
-  /** Jovana: F13 */
-  readonly flag?: { readonly text: L10n; readonly cite: FactId };
-  /** Ana: the kit mission 2 line */
-  readonly afterNote?: L10n;
-}
-
-export type RuleId =
+export type VerdictReason =
   | "secret"
-  | "folder"
-  | "public"
-  | "invented"
-  | "personalNotPublic"
-  | "testRealRows"
-  | "companyTodo";
+  | "customerOnPersonal"
+  | "personalClean"
+  | "companyRaw"
+  | "companyClean"
+  | "publicText";
 
-/** The rule buckets of "Deine Szenen". */
-export type Bucket = "allowed" | "askFirst" | "never";
+export type TodoId = "namesOut" | "contract" | "personReads" | "changeKey" | "companyNames";
+export type CiteId = 4 | 7 | 10 | 13 | "deck07" | "answers3";
 
-export type Direction = "exact" | "stricter" | "looser";
-export type Goal = "leaveRed" | "shrinkTodo" | "findRed";
+export interface Verdict {
+  readonly light: Light;
+  readonly reason: VerdictReason;
+  readonly todo: readonly TodoId[];
+  readonly cites: readonly CiteId[];
+  /** Show "Enterprise macht Rot nicht grün". */
+  readonly enterpriseNote: boolean;
+}
 
-export interface DialState {
+export type SampleId = "ana" | "marko" | "mila";
+
+/** A sample as one language pack holds it. */
+export interface Sample {
+  readonly id: SampleId;
+  /** The scene's own account (kit scenes 1, 4, 6). */
   readonly account: AccountId;
-  readonly content: ContentOptionId;
+  readonly chip: string;
+  readonly who: string;
+  readonly task: string;
+  readonly text: string;
+  /** A fitting reply as the chat would write it: placeholders only, one of them unknown to the key. */
+  readonly answer: string;
 }
 
-export interface SceneResult {
-  readonly id: SceneId;
-  readonly picked: Light;
-  readonly tried: boolean;
-}
-
-export type Vote = "true" | "half" | "false";
-export type FridayNumber = 1 | 2 | 3;
-
-export interface CardInput {
-  readonly tool: string;
-  readonly owner: string;
+export interface Fact {
+  readonly id: number;
+  readonly statementEn: string;
+  readonly statementDe: string;
+  readonly source: string;
+  /** German rendering of `source` for the German page. */
+  readonly sourceDe: string;
+  readonly dates: readonly string[];
 }

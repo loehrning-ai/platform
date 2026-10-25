@@ -1,167 +1,206 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { DEMO_TEXT } from "../../src/lib/demo-cases/datenbereitschaft-fuer-ki/copy";
 
-const PATH = "/demos/datenbereitschaft-fuer-ki";
-const ROOT = '[data-demo="datenbereitschaft-fuer-ki"]';
+/** W03 "Stufe oder Treppe?": the core loop on a phone, DE and EN, with console.error capture and no external requests. */
+const SLUG = "datenbereitschaft-fuer-ki";
 
-async function open(page: Page, prefix = "", hash = "") {
-  const response = await page.goto(`${prefix}${PATH}${hash}`, { waitUntil: "domcontentloaded" });
-  expect(response?.status()).toBe(200);
-  await expect(page.locator(`${ROOT}[data-ready]`)).toBeAttached({ timeout: 30_000 });
-}
-
-async function define(page: Page, request: string, definition: Record<string, string>) {
-  for (const [blank, value] of Object.entries(definition)) {
-    await page.locator(`#anfrage-${request} fieldset[data-blank="${blank}"] input[value="${value}"]`).check();
-  }
-  await page.locator(`button[data-check="${request}"]`).click();
-}
-
-async function triage(page: Page, id: string, picks: readonly string[]) {
-  const card = page.locator(`[data-card="${id}"]`);
-  for (const value of picks) await card.locator(`input[value="${value}"]`).check();
-  await card.locator(`button[data-check-card="${id}"]`).click();
-}
-
-const receipt = (page: Page, id: string) => page.locator(`[data-receipt="${id}"]`);
-
-/**
- * Uncaught errors and console.error (React reports hydration mismatches
- * there, not as page errors). Dev-server chatter that is not the page's
- * fault (HMR socket, Fast Refresh) is left out.
- */
-function collectErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(`pageerror: ${error.message}`));
+async function open(page: Page, prefix: string, errors: string[], external: string[]) {
   page.on("console", (message) => {
-    if (message.type() !== "error") return;
-    const text = message.text();
-    if (/webpack-hmr|_next\/webpack|\[HMR\]|\[Fast Refresh\]/.test(text)) return;
-    errors.push(`console.error: ${text}`);
+    if (message.type() === "error") errors.push(message.text());
   });
-  return errors;
+  page.on("pageerror", (error) => errors.push(String(error)));
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (!["localhost", "127.0.0.1"].includes(url.hostname) && url.protocol.startsWith("http")) external.push(request.url());
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const response = await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+  expect(response?.status()).toBe(200);
+  await expect(page.locator(".dr3-stage")).toBeVisible();
 }
 
-/** Elements inside the demo whose content is wider than their box (clipped or scrolling). */
-async function clippedInside(page: Page): Promise<string[]> {
-  return page.locator(ROOT).evaluate((root) => {
-    const out: string[] = [];
-    for (const el of root.querySelectorAll<HTMLElement>("*")) {
-      // Visually hidden text (1px, clipped) is meant to be clipped.
-      if (el.closest(".dr3-sr, svg") || el.clientWidth <= 1 || getComputedStyle(el).clip.startsWith("rect")) continue;
-      if (el.scrollWidth > el.clientWidth + 1) out.push(`${el.tagName}.${el.className} ${el.scrollWidth}>${el.clientWidth}`);
-    }
-    for (const box of root.querySelectorAll<HTMLElement>("[data-receipt]")) {
-      const style = getComputedStyle(box);
-      const right = box.getBoundingClientRect().right - parseFloat(style.borderRightWidth) - parseFloat(style.paddingRight);
-      for (const el of box.querySelectorAll<HTMLElement>("table, th, td")) {
-        if (el.getBoundingClientRect().right > right + 1) out.push(`past receipt: ${el.tagName} "${(el.textContent ?? "").slice(0, 30)}"`);
-      }
-    }
-    return out;
-  });
-}
+for (const [prefix, stufe, treppe] of [
+  ["", "Stufe", "Treppe"],
+  ["/en", "Step", "Staircase"],
+] as const) {
+  test.describe(`${prefix || "/"}demos/${SLUG}`, () => {
+    test("pulls the lever, reads the operators, takes own numbers and copies", async ({ page, context }) => {
+      const errors: string[] = [];
+      const external: string[] = [];
+      await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => undefined);
+      await open(page, prefix, errors, external);
 
-test.describe("Demo 03: Mach die Zahl richtig", () => {
-  test("plays the whole loop in German: wrong, out of date, right, five cards, copy", async ({ page, context, browserName }) => {
-    const text = DEMO_TEXT.de;
-    const errors = collectErrors(page);
-    await open(page);
+      const slider = page.getByRole("slider");
+      const stage = page.locator(".dr3-stage");
+      await stage.scrollIntoViewIfNeeded();
+      await slider.focus();
+      await page.keyboard.press("Home");
+      await expect(slider).toHaveAttribute("aria-valuenow", "0");
+      await expect(page.locator(".dr3-counter")).toContainText(/19[.,]960/);
 
-    // Everything is in the first HTML: all five requests and the take-aways.
-    for (const id of ["01", "02", "03", "04", "05"]) await expect(page.locator(`#anfrage-${id}`)).toBeAttached();
-    await expect(page.locator("#mitnehmen")).toBeAttached();
+      await page.getByRole("radio", { name: treppe, exact: true }).click();
+      await expect(slider).toHaveAttribute("aria-valuenow", "100", { timeout: 3000 });
+      await expect(page.locator(".dr3-counter")).toContainText(/334[.,]675/);
+      await expect(page.locator("[data-arith]")).toContainText(/354[.,]635 \+ 32[.,]380/);
+      // the control starts on the right answer of the reading (Ende = 387.015), and the wrong one is one tap away
+      await expect(page.locator(".dr3-result")).toContainText(/387[.,]015/);
 
-    // 01: levels added across months, twice; run 2 names the blank to change.
-    await define(page, "01", { kind: "level", grain: "single", period: "sumMonths", table: "analytics.mrr_summary_monthly" });
-    await expect(receipt(page, "01")).toHaveAttribute("data-verdict", "wrong");
-    await expect(page.locator("#anfrage-01-receipt")).toBeFocused();
-    await define(page, "01", {});
-    const change = receipt(page, "01").locator("button[data-change-blank]");
-    await expect(change).toHaveAttribute("data-change-blank", "period");
-    await change.click();
-    await expect(page.locator('#anfrage-01 fieldset[data-blank="period"] input').first()).toBeFocused();
-    await page.locator('#anfrage-01 fieldset[data-blank="grain"] input[value="perMonth"]').check();
-    await expect(receipt(page, "01")).toHaveAttribute("data-stale", "true");
-    await expect(receipt(page, "01")).toContainText(text.stale);
-    await define(page, "01", { period: "eachMonth" });
-    await expect(receipt(page, "01")).toHaveAttribute("data-verdict", "correct");
-    await expect(receipt(page, "01")).toContainText(text.verdicts.correct);
-    await expect(page.locator('[data-rail="01"]')).toHaveAttribute("data-status", "solved");
+      await page.getByRole("radio", { name: stufe, exact: true }).click();
+      await expect(slider).toHaveAttribute("aria-valuenow", "0", { timeout: 3000 });
 
-    // 02: the export sum is the right number for the wrong reason.
-    await define(page, "02", { kind: "change", period: "sumMonths", table: "public.monthly_revenue" });
-    await expect(receipt(page, "02")).toHaveAttribute("data-verdict", "rightNumberWrongDef");
-    await define(page, "02", { table: "analytics.mrr_summary_monthly" });
-    await expect(receipt(page, "02")).toHaveAttribute("data-verdict", "correct");
+      // drag the lever with the pointer
+      const box = await page.locator(".dr3-track").boundingBox();
+      if (!box) throw new Error("no track");
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height - 22);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2, box.y + 22, { steps: 8 });
+      await page.mouse.up();
+      await expect(slider).toHaveAttribute("aria-valuenow", "100", { timeout: 3000 });
 
-    // 03: joiners in the base, then the start of the quarter.
-    await define(page, "03", { kind: "rate", grain: "perSegment", table: "analytics.logo_churn_by_segment_quarter", base: "startPlusJoiners" });
-    await expect(receipt(page, "03")).toHaveAttribute("data-verdict", "wrong");
-    await define(page, "03", { base: "startOfQuarter" });
-    await expect(receipt(page, "03")).toHaveAttribute("data-verdict", "correct");
+      // own numbers: leaving the field brings the stage into view and pulls the lever for them
+      const values = page.locator(".dr3-own textarea");
+      await values.fill("12k; 3; 4");
+      await expect(page.locator(".dr3-status")).toHaveText(/Nicht lesbar|Not readable/);
+      await values.fill("-5; 6; 7");
+      await expect(page.locator(".dr3-guess")).toBeVisible();
+      await expect(page.locator('[data-block="board"] pre')).toContainText(/8/);
 
-    // 04: five cards; R02 needs the lock that really holds.
-    await triage(page, "G01", ["answer"]);
-    await triage(page, "C01", ["askBack", "kind", "period"]);
-    await triage(page, "R01", ["refuse"]);
-    await triage(page, "R02", ["refuse", "sqlGuard"]);
-    await expect(receipt(page, "R02")).toHaveAttribute("data-verdict", "wrong");
-    await triage(page, "R02", ["postgresRole"]);
-    await triage(page, "F01", ["answerWarn", "loadedAt", "age", "warnAfter", "definition"]);
-    for (const id of ["G01", "C01", "R01", "R02", "F01"]) await expect(receipt(page, id)).toHaveAttribute("data-verdict", "correct");
+      // copy: visible confirmation (clipboard or selection fallback)
+      await page.locator('[data-block="board"] .dr3-copy').click();
+      await expect(page.locator('[data-block="board"] .dr3-copy')).not.toHaveText(/^(Kopieren|Copy)$/);
 
-    // 05: averaged rates are wrong, pooled counts are right.
-    await define(page, "05", { kind: "rate", table: "analytics.attrition_by_department_quarter", combine: "averageRates", base: "startOfQuarter" });
-    await expect(receipt(page, "05")).toHaveAttribute("data-verdict", "wrong");
-    await define(page, "05", { combine: "pool" });
-    await expect(receipt(page, "05")).toHaveAttribute("data-verdict", "correct");
-
-    for (const id of ["01", "02", "03", "04", "05"]) await expect(page.locator(`[data-rail="${id}"]`)).toHaveAttribute("data-status", "solved");
-    await expect(page.locator("[data-closing]")).toHaveText(text.closing);
-
-    // Copy: the visible confirmation always; the exact text where the clipboard can be read.
-    const copy = page.locator('button[data-copy="definition"]');
-    if (browserName === "chromium") await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await copy.click();
-    await expect(copy).toContainText(text.copied);
-    if (browserName === "chromium") {
-      const clip = await page.evaluate(() => navigator.clipboard.readText());
-      expect(clip).toBe(text.takeaways.find((card) => card.id === "definition")?.text);
-    }
-
-    const axe = await new AxeBuilder({ page }).include(ROOT).analyze();
-    expect(axe.violations.map((violation) => violation.id)).toEqual([]);
-    expect(errors).toEqual([]);
-  });
-
-  test("English: the direct link lands on its request and the loop answers in English", async ({ page }) => {
-    const text = DEMO_TEXT.en;
-    const errors = collectErrors(page);
-    await open(page, "/en", "#anfrage-05");
-    await expect(page.locator('[data-rail="05"]')).toHaveAttribute("aria-current", "step");
-    await define(page, "05", { kind: "rate", table: "analytics.attrition_by_department_quarter", combine: "pool", base: "startOfQuarter" });
-    await expect(receipt(page, "05")).toHaveAttribute("data-verdict", "correct");
-    await expect(receipt(page, "05")).toContainText(text.verdicts.correct);
-    await expect(page.locator(ROOT)).not.toContainText("Prüfen");
-    expect(errors).toEqual([]);
-  });
-
-  for (const width of [320, 390]) {
-    test(`nothing overflows or is clipped on a ${width}px phone`, async ({ page }) => {
-      const errors = collectErrors(page);
-      await page.setViewportSize({ width, height: 844 });
-      await open(page);
-      await define(page, "01", { kind: "level", grain: "single", period: "sumMonths", table: "analytics.mrr_summary_monthly" });
-      // The widest receipt rows: an empty base per segment, and the average base in 05.
-      await define(page, "03", { kind: "rate", grain: "perSegment", table: "public.acct_history", base: "startOfQuarter" });
-      await define(page, "05", { kind: "rate", table: "analytics.attrition_by_department_quarter", combine: "pool", base: "averageHeadcount" });
-      for (const id of ["01", "03", "05"]) await expect(receipt(page, id).locator("table[data-rows]")).toBeVisible();
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(0);
-      expect(await clippedInside(page)).toEqual([]);
       expect(errors).toEqual([]);
+      expect(external).toEqual([]);
     });
-  }
+
+    test("shows the settled end state under reduced motion", async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+      await expect(page.getByRole("slider")).toHaveAttribute("aria-valuenow", "100");
+      await expect(page.locator(".dr3-caption")).toContainText(/Stufen|steps/);
+    });
+  });
+}
+
+test("desktop 1440 x 900: the whole stage sits above the fold", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+  const stage = await page.locator(".dr3-stage").boundingBox();
+  expect(stage && stage.y + stage.height).toBeLessThan(860);
+  await expect(page.locator(".dr3-stamp")).toBeVisible();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test.describe("touch", () => {
+  test.use({ hasTouch: true, isMobile: true });
+
+  test("shows the hero state, the lever and the arithmetic line together on the first screen, and drags with a finger without scrolling", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    for (const [width, height] of [
+      [390, 844],
+      [360, 740],
+    ] as const) {
+      await page.setViewportSize({ width, height });
+      await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+      await expect(page.locator(".dr3-handle-cue")).toBeVisible();
+      // Lever, plot and the arithmetic line are on screen together, above the 64 px bottom navigation.
+      const stage = await page.locator(".dr3-stage").boundingBox();
+      const arith = await page.locator("[data-arith]").boundingBox();
+      expect(stage && stage.y).toBeGreaterThanOrEqual(0);
+      // 390 x 844: lever, plot and formula together. On a 740 px screen the whole stage (lever and plot) is the promise.
+      expect(stage && stage.y + stage.height, `${width}x${height} stage`).toBeLessThan(height - 64);
+      expect(arith && arith.y + arith.height, `${width}x${height} arithmetic`).toBeLessThan(height - 64);
+      // 390 x 844 also has the Stufe / Treppe buttons above the bottom navigation
+      const read = await page.locator(".dr3-read").boundingBox();
+      if (height >= 800) expect(read && read.y + read.height, `${width}x${height} toggles`).toBeLessThan(height - 64);
+      // the page does not jump once the script measures the plot
+      const before = await page.locator(".dr3-stage").evaluate((node) => node.getBoundingClientRect().height);
+      await page.waitForTimeout(500);
+      const after = await page.locator(".dr3-stage").evaluate((node) => node.getBoundingClientRect().height);
+      expect(Math.abs(after - before)).toBeLessThanOrEqual(1);
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.querySelector(".dr3-stage")?.scrollIntoView({ block: "start" }));
+    const slider = page.getByRole("slider");
+    await slider.focus();
+    await page.keyboard.press("Home");
+    const track = await page.locator(".dr3-track").boundingBox();
+    if (!track) throw new Error("no track");
+    const scrollBefore = await page.evaluate(() => window.scrollY);
+    const x = track.x + track.width / 2;
+    const client = await page.context().newCDPSession(page);
+    const point = (y: number) => [{ x, y, id: 1 }];
+    await client.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: point(track.y + track.height - 28) });
+    for (let step = 1; step <= 10; step += 1) {
+      await client.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: point(track.y + track.height - 28 - ((track.height - 56) * step) / 10) });
+    }
+    await client.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    await expect(slider).toHaveAttribute("aria-valuenow", "100", { timeout: 3000 });
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
+    await expect(page.locator(".dr3-counter")).toContainText(/334[.,]675/);
+  });
+
+  test("prints only numbers that exist in the data while the lever is in between", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`/demos/${SLUG}`);
+    const slider = page.getByRole("slider");
+    await slider.focus();
+    await page.keyboard.press("Home");
+    const digits = (text: string) => Number(text.replace(/[^\d−-]/g, "").replace("−", "-"));
+    const changes = [-19960, 9775, 42565];
+    const levels = [334675, 344450, 387015];
+    for (let step = 0; step <= 20; step += 1) {
+      await expect(page.locator(".dr3-counter")).toHaveCount(1);
+      await expect(page.locator(".dr3-svg .dr3-barlabel")).toHaveCount(3);
+      // 0.05 added ten times is not exactly 0.5 in floating point: leave the cut itself to the unit tests
+      if (step === 10) {
+        await page.keyboard.press("ArrowUp");
+        continue;
+      }
+      expect([-19960, 334675]).toContain(digits(await page.locator(".dr3-counter").innerText()));
+      const labels = (await page.locator(".dr3-svg .dr3-barlabel").evaluateAll((nodes) => nodes.map((node) => node.textContent ?? ""))).map(digits);
+      expect(labels).toEqual(step < 10 ? changes : levels);
+      await page.keyboard.press("ArrowUp");
+    }
+  });
+
+  test("answers own numbers within 1.2 s and keeps all three typed levels as bars", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto(`/demos/${SLUG}`);
+    await page.locator(".dr3-own textarea").fill("120.000; 135.000; 150.000");
+    await page.locator(".dr3-own textarea").blur();
+    await page.waitForTimeout(1400);
+    await expect(page.getByRole("slider")).toHaveAttribute("aria-valuenow", "100");
+    await expect(page.locator("[data-bar]")).toHaveCount(3);
+    await expect(page.locator(".dr3-svg .dr3-barlabel")).toHaveText(["120.000", "135.000", "150.000"]);
+    await expect(page.locator("[data-ticker]")).toContainText("405.000");
+    await expect(page.locator('[data-block="board"] pre')).toContainText("405.000");
+  });
+
+  test("touch: no collapsible UI anywhere in the demo", async ({ page }) => {
+    await page.goto(`/demos/${SLUG}`);
+    await expect(page.locator(".dr3 details, .dr3 summary, .dr3 [aria-expanded]")).toHaveCount(0);
+  });
+
+  test("own numbers without a start say that zero is assumed or below the frame, and get the lever moment", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`/demos/${SLUG}`);
+    await page.locator(".dr3-own textarea").fill("-5; 6; 7");
+    await page.locator(".dr3-own textarea").blur();
+    await expect(page.locator(".dr3-status")).toContainText(/angenommen|0 als Stand/);
+    await expect(page.locator(".dr3-board, [data-block='board'] pre")).not.toContainText("Der Stand am Ende");
+    await page.locator(".dr3-own textarea").fill("120; 135; 150");
+    await page.locator(".dr3-own textarea").blur();
+    await expect(page.getByRole("slider")).toHaveAttribute("aria-valuenow", "100");
+    await expect(page.locator(".dr3-zeronote")).toBeVisible();
+    await expect(page.locator(".dr3-svg")).toBeInViewport();
+  });
 });

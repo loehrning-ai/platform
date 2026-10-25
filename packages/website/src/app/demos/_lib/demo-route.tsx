@@ -91,7 +91,7 @@ export async function renderDemoRoute(slug: DemoSlug, Demo: ComponentType<DemoCo
         inLanguage,
         publisher: { "@id": ORG_ID },
         isAccessibleForFree: true,
-        learningResourceType: "Interactive practice exercise",
+        learningResourceType: "Interactive demo",
         educationalUse: "self-study",
         timeRequired: `PT${demo.minutes}M`,
         dateModified: demo.lastReviewed,

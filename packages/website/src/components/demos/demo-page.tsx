@@ -71,6 +71,7 @@ export function DemoPage({ demo, locale, Demo }: Props) {
       <nav aria-label={copy.navigation} className="border-b border-hairline max-sm:hidden">
         <div className={CONTAINER}>
           <Link
+            prefetch={false}
             href={localizeHref("/demos", locale)}
             className="inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-mennige hover:decoration-2 active:decoration-mennige active:decoration-2 focus-visible:outline-offset-[-3px] motion-reduce:transition-none"
           >
@@ -106,6 +107,7 @@ export function DemoPage({ demo, locale, Demo }: Props) {
         }
       >
         <Link
+          prefetch={false}
           href={localizeHref("/demos", locale)}
           data-cover-back=""
           className="-my-2.5 inline-flex min-h-11 items-center gap-2 text-[0.875rem] font-bold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] active:decoration-[var(--color-scene-anti-a)] sm:hidden"
@@ -129,7 +131,7 @@ export function DemoPage({ demo, locale, Demo }: Props) {
         </p>
         {workshop ? (
           <p className="mt-2 sm:mt-3">
-            <Link href={workshopHref} data-demo-workshop-link="" className={BAND_LINK}>
+            <Link prefetch={false} href={workshopHref} data-demo-workshop-link="" className={BAND_LINK}>
               {copy.toWorkshop(demo.workshopNumber, workshop.title)}
               <ArrowGlyph direction="right" className="size-4" />
             </Link>
@@ -139,8 +141,14 @@ export function DemoPage({ demo, locale, Demo }: Props) {
 
       <div className={CONTAINER}>
         <p
+          data-demo-promise=""
+          className="mt-5 max-w-[56ch] text-[1.0625rem] font-semibold leading-snug text-foreground text-pretty sm:mt-8"
+        >
+          {demo.oneLiner}
+        </p>
+        <p
           data-demo-synthetic=""
-          className="mt-4 max-w-[64ch] text-[0.9375rem] leading-normal text-muted-foreground text-pretty sm:mt-6"
+          className="mt-3 max-w-[64ch] text-[0.9375rem] leading-normal text-muted-foreground text-pretty"
         >
           {demo.syntheticDataLabel}
         </p>
