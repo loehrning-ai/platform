@@ -4,7 +4,7 @@ import { materialMeta, workshopStage } from "./workshop-stage";
 
 /** The expected cards per workshop: slides or lab, kit or case. */
 const EXPECTED: Readonly<Record<string, { a: "slides" | "lab"; b: "kit" | "case"; kitPage: boolean }>> = {
-  "ki-prognosen-einschaetzen": { a: "lab", b: "case", kitPage: false },
+  "ki-prognosen-einschaetzen": { a: "lab", b: "kit", kitPage: true },
   "geschaeftsberichte-mit-ki-lesen": { a: "slides", b: "kit", kitPage: false },
   "datenbereitschaft-fuer-ki": { a: "slides", b: "kit", kitPage: false },
   "esg-berichte-mit-ki": { a: "slides", b: "kit", kitPage: true },

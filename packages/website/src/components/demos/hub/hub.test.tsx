@@ -88,8 +88,9 @@ describe("hub tile scenes", () => {
 
   it("formats the figures for the language", () => {
     const Tile = TILES["ki-prognosen-einschaetzen"];
-    expect(renderToStaticMarkup(<Tile locale="de" />)).toContain("1.050");
-    expect(renderToStaticMarkup(<Tile locale="en" />)).toContain("1,050");
+    // W01: the planning number of the kit's plan week (under 1,000, so the same in both).
+    expect(renderToStaticMarkup(<Tile locale="de" />)).toContain(">748<");
+    expect(renderToStaticMarkup(<Tile locale="en" />)).toContain(">748<");
   });
 });
 

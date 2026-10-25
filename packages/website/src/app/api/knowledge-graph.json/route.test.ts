@@ -78,11 +78,13 @@ describe("knowledge-graph locale representations", () => {
     );
 
     expect(demo?.riskNotes).toBeUndefined();
-    expect(demo?.localizedPages.de.question).toBe("Kann KI die Zukunft vorhersagen?");
+    expect(demo?.localizedPages.de.question).toBe(
+      "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
+    );
     expect(demo?.localizedPages.en).toMatchObject({
       url: "https://loehrning.ai/en/demos/ki-prognosen-einschaetzen",
       pageLanguage: "en-GB",
-      question: "Can AI predict the future?",
+      question: "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
     });
   });
 
@@ -100,7 +102,7 @@ describe("knowledge-graph locale representations", () => {
       url: "https://loehrning.ai/en/workshops/ki-prognosen-einschaetzen",
       pageLanguage: "en-GB",
       format: "Self-study kit",
-      duration: "~90 minutes",
+      duration: "~55 minutes",
     });
   });
 });

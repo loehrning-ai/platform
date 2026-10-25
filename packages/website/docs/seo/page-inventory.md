@@ -80,7 +80,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/ki-prognosen-einschaetzen | Hundert Startwochen | Zieh dein Lager durch hundert mögliche Startwochen und sieh, in wie vielen es nicht reicht. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-prognosen-einschaetzen | Die Fehlerliste | Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Monatsgrenze | Schieb die Linie um eine Woche. Aus +26 % wird −20 %. Dann rechne mit deinen Zahlen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Stufe oder Treppe? | Zieh den Hebel: aus −19.960 € wird 334.675 €, und kein Datensatz ändert sich. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/esg-berichte-mit-ki | Elf von zwölf | Im Entwurf steht „Gesamtjahr“. Im Ordner liegen elf Rechnungen. Rate den zwölften Monat, sieh, wie weit du da… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |

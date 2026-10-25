@@ -87,7 +87,7 @@ describe("<WorkshopDetailContent>", () => {
     const footer = container.querySelector('footer[aria-label="Stand und Herkunft"]') as HTMLElement;
     expect(follows(explainer, footer)).toBe(true);
     expect(footer).toHaveTextContent("Tim Löhr");
-    expect(footer).toHaveTextContent("geprüft 26. September 2026");
+    expect(footer).toHaveTextContent("geprüft 25. Oktober 2026");
     expect(footer).toHaveTextContent(workshop.provenance.note);
     expect(footer).toHaveTextContent("Material auf Englisch");
     expect(screen.queryByText("Referenz")).toBeNull();
@@ -229,10 +229,11 @@ describe("<WorkshopDetailContent>", () => {
       .getByRole("heading", { level: 1 })
       .closest("[data-cover-band]") as HTMLElement;
     const lab = w01.materials.find((material) => material.primary)!;
-    const caseStudy = w01.materials.find((material) => material.role === "case")!;
+    const w01Kit = w01.materials.find((material) => material.role === "kit")!;
     const stage = container.querySelector("[data-workshop-stage]") as HTMLElement;
     expect(within(stage).getByRole("link", { name: /^Labor öffnen/ })).toHaveAttribute("href", lab.href);
-    expect(within(stage).getByRole("link", { name: /^Fall ansehen/ })).toHaveAttribute("href", caseStudy.href);
+    // W01 since the kit "prognose-pruefen": the labs on card A, the kit zip on card B.
+    expect(within(stage).getByRole("link", { name: /^Kit herunterladen/ })).toHaveAttribute("href", w01Kit.href);
     // The band holds the poster and the words only: the back link is its one link.
     expect(
       within(cover).queryAllByRole("link").filter((link) => !link.hasAttribute("data-cover-back")),
@@ -445,8 +446,8 @@ describe("<WorkshopDetailContent>", () => {
         const files = workshopFileMaterials(workshop);
         expect(files.length, workshop.slug).toBeLessThanOrEqual(2);
         expect(files.filter((material) => material.optional), workshop.slug).toEqual([]);
-        // Workshop 01 has no slide deck: its labs and its case play that part.
-        const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "case"] : ["deck", "kit"];
+        // Workshop 01 has no slide deck: its labs play that part, next to its kit.
+        const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "kit"] : ["deck", "kit"];
         for (const material of files) expect(allowed, material.href).toContain(material.role);
         // The one non-file material is the demo page: optional, never primary.
         const demos = workshop.materials.filter((material) => material.role === "demo");

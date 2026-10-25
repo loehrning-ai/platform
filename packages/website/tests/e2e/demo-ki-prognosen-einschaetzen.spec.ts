@@ -1,282 +1,186 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { expect, test, type Page } from "@playwright/test";
+import { KIT_CSV } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/kit-series";
 
 /**
- * "Hundert Startwochen": the core loop on a phone, in both languages. The
- * intro hands over to the visitor, the line magnets onto the forecast
- * (50 of 100), the Waage and the week strip arrive (the count stays in view,
- * or the mini bar stands in), Mein Fall recomputes live, the takeaways
- * follow, nothing is sent and the console stays clean.
+ * "Die Fehlerliste" (workshop 01) on the v3 shell: the bet gates the first
+ * beat, every number on screen is the kit's (loesungen.md), the own file is
+ * checked in the tab with no request, R and Shift+R reset the bets but never
+ * the owner, keys typed into a field stay in the field, and the downloads
+ * carry the visitor's own words. Reduced motion shows each end frame at once,
+ * so the assertions never wait for an animation.
  */
-const SLUG = "ki-prognosen-einschaetzen";
+const PATH = "/demos/ki-prognosen-einschaetzen";
+const NUR_IST = readFileSync(
+  fileURLToPath(
+    new URL("../../src/lib/demo-cases/ki-prognosen-einschaetzen/__fixtures__/linsensuppe-nur-ist.csv", import.meta.url),
+  ),
+  "utf8",
+);
 
-async function dragHandleTo(page: Page, value: number) {
-  const chart = await page.locator("[data-hw-chart]").boundingBox();
-  const handle = await page.locator(".hw-handle").boundingBox();
-  if (!chart || !handle) throw new Error("chart not laid out");
-  const height = chart.height - 4;
-  const top = 26;
-  const bottom = height - 42;
-  const targetY =
-    chart.y + 2 + bottom - ((value - 500) / 1000) * (bottom - top);
-  const x = handle.x + handle.width / 2;
-  const startY = handle.y + handle.height / 2;
-  await page.mouse.move(x, startY);
-  await page.mouse.down();
-  for (let step = 1; step <= 6; step += 1)
-    await page.mouse.move(x, startY + ((targetY - startY) * step) / 6);
-  await page.mouse.up();
+async function open(page: Page, query = "") {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(`${PATH}${query}`, { waitUntil: "networkidle" });
+  await expect(page.locator("[data-demo-stage]")).toBeVisible();
 }
 
-for (const prefix of ["", "/en"] as const) {
-  test.describe(`${prefix}/demos/${SLUG}`, () => {
-    test("plays the core loop at 390px without errors, overflow or network calls", async ({
-      page,
-    }) => {
-      const problems: string[] = [];
-      const requests: string[] = [];
-      page.on(
-        "console",
-        (message) =>
-          message.type() === "error" && problems.push(message.text()),
-      );
-      page.on("pageerror", (error) => problems.push(String(error)));
-      page.on("request", (request) => {
-        if (request.method() !== "GET" && request.url().includes(SLUG))
-          requests.push(request.url());
-      });
+const caption = (page: Page) => page.locator("[data-demo-caption]");
+const beat = (page: Page) => page.locator("[data-fl-beat]");
 
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
-
-      // First ten seconds: the count and the top of the staircase are on screen at load, the handle is not at the screen edge.
-      const first = await page.evaluate(() => {
-        const count = document
-          .querySelector("[data-hw-count]")!
-          .getBoundingClientRect();
-        const chart = document
-          .querySelector("[data-hw-chart]")!
-          .getBoundingClientRect();
-        const handle = document.querySelector(".hw-handle")!.getBoundingClientRect();
-        return {
-          countBottom: count.bottom,
-          chartTop: chart.top,
-          handleRight: handle.right,
-          vw: window.innerWidth,
-        };
-      });
-      expect(first.countBottom).toBeLessThan(844);
-      expect(first.chartTop).toBeLessThan(700);
-      expect(first.vw - first.handleRight).toBeGreaterThanOrEqual(4);
-
-      // The page brings the whole chart into the first screen before the count-in, clear of the tab bar.
-      await expect
-        .poll(
-          async () =>
-            page.evaluate(() => {
-              const box = document
-                .querySelector("[data-hw-chart]")!
-                .getBoundingClientRect();
-              return box.top >= 48 && box.bottom <= window.innerHeight - 56;
-            }),
-          { timeout: 5000 },
-        )
-        .toBe(true);
-
-      // While the count shows a single digit, "/ 100" sits right behind it (no pinned gap) and the numeral is ink.
-      const lowCount = await page.evaluate(
-        () =>
-          new Promise<{ gap: number; low: boolean } | null>((resolve) => {
-            const stop = performance.now() + 4000;
-            const look = () => {
-              const numeral = document.querySelector("[data-hw-count]")!;
-              const unit = document.querySelector(".hw-count-of")!;
-              if (numeral.textContent!.length === 1)
-                return resolve({
-                  gap:
-                    unit.getBoundingClientRect().left -
-                    numeral.getBoundingClientRect().right,
-                  low: numeral.hasAttribute("data-low"),
-                });
-              if (performance.now() > stop) return resolve(null);
-              requestAnimationFrame(look);
-            };
-            look();
-          }),
-      );
-      if (lowCount) {
-        expect(lowCount.gap).toBeLessThanOrEqual(14);
-        expect(lowCount.low).toBe(true);
-      }
-      await page.locator("[data-hw-chart]").scrollIntoViewIfNeeded();
-
-      // The chart runs edge to edge on a phone.
-      const chartBox = await page.locator("[data-hw-chart]").boundingBox();
-      expect(chartBox?.width).toBeGreaterThanOrEqual(388);
-
-      // Intro ends in the hero state: 76 of 100, line at 1.050, layer 2 not there yet.
-      await expect(page.locator('[data-hw][data-phase="live"]')).toBeVisible({
-        timeout: 10_000,
-      });
-      await expect(page.locator("[data-hw-count]")).toHaveText("76");
-      await expect(page.getByRole("slider")).toHaveAttribute(
-        "aria-valuenow",
-        "1050",
-      );
-      await expect(page.locator("[data-hw-waage]")).toHaveCount(0);
-
-      // Revealing layer 2 must not move the chart under the finger.
-      const topBefore =
-        (await page.locator("[data-hw-chart]").boundingBox())?.y ?? 0;
-
-      // Drag onto the forecast: the magnet lands on 1.180, 50 of 100.
-      await dragHandleTo(page, 1186);
-      await expect(page.getByRole("slider")).toHaveAttribute(
-        "aria-valuenow",
-        "1180",
-      );
-      await expect(page.locator("[data-hw-count]")).toHaveText("50");
-      await expect(page.locator("[data-hw-waage]")).toBeVisible();
-      const topAfter =
-        (await page.locator("[data-hw-chart]").boundingBox())?.y ?? 0;
-      expect(Math.abs(topAfter - topBefore)).toBeLessThanOrEqual(1);
-
-      // The week strip waits for the first tap on the Waage (layer 3).
-      await expect(page.locator("[data-hw-strip]")).toHaveCount(0);
-
-      // Working the Waage far below the chart keeps the answer in view: the count itself, or the mini bar.
-      await page.getByRole("radio", { name: "9x" }).scrollIntoViewIfNeeded();
-      await page.getByRole("radio", { name: "9x" }).click();
-      await expect(page.locator("[data-hw-strip]")).toBeVisible();
-      await expect
-        .poll(async () =>
-          page.evaluate(() => {
-            const inView = (node: Element | null) => {
-              if (!node) return false;
-              const box = node.getBoundingClientRect();
-              return box.bottom > 0 && box.top < window.innerHeight;
-            };
-            return (
-              inView(document.querySelector("[data-hw-count]")) ||
-              inView(document.querySelector("[data-hw-minibar]"))
-            );
-          }),
-        )
-        .toBe(true);
-      await page.getByRole("radio", { name: "3x" }).click();
-      await page.locator("[data-hw-chart]").scrollIntoViewIfNeeded();
-
-      // The chart names only the line under the handle.
-      const names = await page.locator(".hw-tag text").allInnerTexts();
-      expect(names.length).toBeLessThanOrEqual(1);
-
-      // The best value at 3x is 1.268: 25 of 100.
-      await page.locator('[data-hw-chip="best"]').click();
-      await expect(page.locator("[data-hw-count]")).toHaveText("25");
-
-      // Picking a weight and then a week keeps the line.
-      await page.getByRole("radio", { name: "9x" }).click();
-      await page.locator(".hw-cell").nth(2).scrollIntoViewIfNeeded();
-      await page.locator(".hw-cell").nth(2).click();
-      await expect(page.getByRole("slider")).toHaveAttribute(
-        "aria-valuenow",
-        "1268",
-      );
-
-      // Mein Fall judges at once: a wrong range is explained while typing, the last valid chart stays.
-      const p10Field = page.locator('input[name="p10"]');
-      await p10Field.scrollIntoViewIfNeeded();
-      await p10Field.fill("1500");
-      await expect(page.locator(".hw-field-note.is-error").first()).toBeVisible();
-      await expect(page.locator(".hw-last-valid")).toBeVisible();
-      await p10Field.fill("980");
-
-      // Own numbers recompute and the takeaway names them.
-      const p50 = page.locator('input[name="p50"]');
-      await p50.fill(prefix ? "2,000" : "2.000");
-      await page.locator('input[name="p90"]').fill(prefix ? "2,400" : "2.400");
-      await expect(page.locator("[data-hw]")).toHaveAttribute(
-        "data-source",
-        "own",
-      );
-      await expect(page.locator("[data-hw-text]").first()).toContainText(
-        prefix ? "2,000" : "2.000",
-      );
-
-      // Takeaways are visible in full and the copy button confirms.
-      await page
-        .context()
-        .grantPermissions(["clipboard-read", "clipboard-write"])
-        .catch(() => undefined);
-      const copy = page.locator("[data-hw-block] .hw-copy").first();
-      await copy.scrollIntoViewIfNeeded();
-      await copy.click();
-      await expect(copy).toHaveText(
-        prefix ? /Copied|Select and copy/ : /Kopiert|Markieren und kopieren/,
-      );
-
-      const overflow = await page.evaluate(
-        () =>
-          document.documentElement.scrollWidth -
-          document.documentElement.clientWidth,
-      );
-      expect(overflow).toBeLessThanOrEqual(0);
-      expect(requests).toEqual([]);
-      expect(problems).toEqual([]);
-    });
-
-    test("takes six typed fields live: chip, slider and mail follow the stock", async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
-      const fill = async (name: string, value: string) => {
-        const input = page.locator(`input[name="${name}"]`);
-        await input.scrollIntoViewIfNeeded();
-        await input.fill(value);
-      };
-      await fill("p10", "400");
-      await fill("p50", "500");
-      await fill("p90", "700");
-      await fill("supply", "550");
-      await fill("ratio", "2");
-      await fill("unit", prefix ? "boxes" : "Kisten");
-      await expect(page.getByRole("slider")).toHaveAttribute(
-        "aria-valuenow",
-        "550",
-      );
-      await expect(page.locator('[data-hw-chip="today"]')).toContainText("550");
-      await expect(page.locator("[data-hw-text]").first()).toContainText(
-        prefix ? "stock 550" : "Lager 550",
-      );
-      await expect(page.locator("[data-hw-text]").first()).toContainText(
-        prefix ? "boxes" : "Kisten",
-      );
-    });
-
-    test("keeps the page scrollable on the chart body and shows the end state with reduced motion", async ({
-      browser,
-    }) => {
-      const context = await browser.newContext({
-        viewport: { width: 390, height: 844 },
-        reducedMotion: "reduce",
-        hasTouch: true,
-      });
-      const page = await context.newPage();
-      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
-      await expect(page.locator("[data-hw-count]")).toHaveText("76");
-      await expect(page.locator("[data-hw-waage]")).toBeVisible();
-      await expect(page.locator("[data-hw-strip]")).toBeVisible();
-      const touchAction = await page.evaluate(() => ({
-        body: getComputedStyle(
-          document.querySelector("[data-hw-chart]") as Element,
-        ).touchAction,
-        gutter: getComputedStyle(
-          document.querySelector(".hw-gutter") as Element,
-        ).touchAction,
-      }));
-      expect(touchAction.gutter).toBe("none");
-      expect(touchAction.body).not.toBe("none");
-      await context.close();
-    });
+test.describe("Die Fehlerliste", () => {
+  test("the bet gates beat 1, then the baseline shows the kit's numbers", async ({ page }) => {
+    await open(page);
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "schaetzen");
+    await expect(page.locator('[data-fl-card="tool"]')).toContainText("94,2 %");
+    await page.locator("body").press("ArrowRight");
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "schaetzen");
+    await page.locator('[data-fl-guess="85"]').click();
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "messlatte");
+    await expect(caption(page)).toHaveText("21 % kleinere Fehler. Näher dran in 30 von 50 Wochen.");
+    const notes = page.locator('[data-fl-notes="messlatte"]');
+    await expect(notes).toContainText("Deine Schätzung: um 85 %. Gerechnet: 92,6 %.");
+    await expect(notes).toContainText("1,6 Prozentpunkte");
+    await expect(notes).toContainText("Ø Fehler Prognose 33,3 Gläser, „wie letzte Woche“ 42,2 Gläser");
+    await expect(page.locator("[data-fl-tally]")).toContainText("33,3");
+    await expect(page.locator("[data-fl-pin]")).toContainText("Regel 167 daneben, Prognose 34");
   });
-}
+
+  test("the range waits for a tip and counts 36 of 50", async ({ page }) => {
+    await open(page, "?beat=spanne");
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "spanne");
+    await expect(caption(page)).toContainText("Die Spanne soll 80 % der Wochen fassen.");
+    await page.locator('[data-fl-tip="fewer"]').click();
+    await expect(caption(page)).toHaveText("36 von 50 Wochen in der Spanne. Versprochen waren 40.");
+    const notes = page.locator('[data-fl-notes="spanne"]');
+    await expect(notes).toContainText("Vor dem 07.04. 9/12, ab dem 07.04. 27/38. 11 der 14 Fehltreffer");
+    await expect(notes).toContainText("11 %");
+  });
+
+  test("the costs pick 748, the canteen chip 729", async ({ page }) => {
+    await open(page, "?beat=planzahl");
+    await expect(caption(page)).toHaveText("Plane 748, nicht 729.");
+    await expect(page.locator("[data-fl-plan]")).toHaveText("748");
+    const ledger = page.locator("[data-fl-ledger]");
+    for (const value of ["2.052 €", "1.105 €", "1.023 €"]) await expect(ledger).toContainText(value);
+    await expect(page.locator('[data-fl-notes="planzahl"]')).toContainText(
+      "In 5 der letzten 26 Wochen hätte 748 nicht gereicht, in 19",
+    );
+    await page.locator('[data-fl-preset="ohne"]').click();
+    await expect(caption(page)).toHaveText("Planzahl 729: bei diesen Kosten die Prognose selbst.");
+    await expect(ledger).toContainText("3.270 €");
+    await page.locator('[data-fl-cost="left"]').fill("0,40");
+    await expect(caption(page)).toHaveText("Plane 748, nicht 729.");
+  });
+
+  test("the rule frees 37 weeks, names the owner and hands out the filled rule", async ({ page }) => {
+    await open(page, "?beat=regel");
+    await expect(caption(page)).toHaveText("37 Wochen frei, 15 Wochen entscheidet eine Person.");
+    const notes = page.locator('[data-fl-notes="regel"]');
+    await expect(notes).toContainText("03.02.: Daten vollständig rot.");
+    await expect(notes).toContainText("21.04. bis 21.07.");
+    await expect(notes).toContainText("Die Regel schlägt 2 Wochen nach");
+    await expect(page.locator("[data-fl-plan-line]")).toHaveText(
+      "Woche ab 29.12.: alle vier Lampen grün. Planzahl 748 frei.",
+    );
+    await expect(page.locator("[data-fl-verdict]")).toHaveAttribute("data-fl-verdict", "free");
+
+    // Keys typed into the owner field stay there: no restart, no beat change.
+    const owner = page.locator("[data-fl-owner]");
+    await owner.fill("");
+    await owner.pressSequentially("Leitung Disposition r");
+    await owner.press("ArrowLeft");
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "regel");
+    await expect(owner).toHaveValue("Leitung Disposition r");
+    await owner.fill("Leitung Disposition");
+
+    await page.locator("[data-fl-strip]").fill("15");
+    await expect(page.locator("[data-fl-verdict]")).toHaveAttribute("data-fl-verdict", "person");
+
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.locator("[data-fl-download-rule]").click(),
+    ]);
+    expect(download.suggestedFilename()).toBe("pruefregel-linsensuppe-500-ml.md");
+    const text = readFileSync((await download.path()) as string, "utf8");
+    expect(text).toContain("Leitung Disposition");
+    expect(text).toContain("748");
+    expect(text).toContain("Linsensuppe 500 ml");
+  });
+
+  test("r and Shift+R go back to beat 1 and clear the bet, the owner stays", async ({ page }) => {
+    await open(page);
+    await page.locator('[data-fl-guess="75"]').click();
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "messlatte");
+    await page.locator("body").press("r");
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "schaetzen");
+    await expect(page.locator('[data-fl-guess="75"]')).toHaveAttribute("aria-pressed", "false");
+
+    const marks = page.locator("[data-beat-rail]:visible [data-beat-mark]");
+    await marks.nth(4).click();
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "regel");
+    const owner = page.locator("[data-fl-owner]");
+    await owner.fill("Schichtleitung");
+    // Out of the field first: inside it, R is a letter (the test above).
+    await owner.blur();
+    await page.keyboard.press("Shift+R");
+    await expect(beat(page)).toHaveAttribute("data-fl-beat", "schaetzen");
+    await marks.nth(4).click();
+    await expect(page.locator("[data-fl-owner]")).toHaveValue("Schichtleitung");
+  });
+
+  test("checks an own file in the tab: rules only without a forecast, too few forecast weeks, one problem per line", async ({
+    page,
+  }) => {
+    await open(page, "?beat=meine-daten");
+    const requests: string[] = [];
+    page.on("request", (request) => requests.push(request.url()));
+
+    const paste = page.locator("[data-fl-paste]");
+    const check = page.locator("[data-fl-check]");
+    const result = page.locator("[data-fl-own-result]");
+    await paste.fill(NUR_IST);
+    await check.click();
+    await expect(result).toContainText("Ohne gespeicherte alte Prognosen gibt es keine Prüfung 1.");
+    await expect(result).toContainText("„wie Vorjahreswoche“, mittlerer Fehler 40,0");
+
+    const lines = KIT_CSV.trim().split("\n");
+    await paste.fill([lines[0], ...lines.slice(-20)].join("\n"));
+    await check.click();
+    await expect(result).toContainText("Spanne und Lampen brauchen 33 Wochen mit gespeicherter Prognose. Du hast 19.");
+
+    await paste.fill("woche;ist\nOkt 25;12");
+    await check.click();
+    await expect(page.locator("[data-fl-problem]")).toHaveText(
+      "Zeile 2: „Okt 25“ ist kein Datum. Erlaubt: 2025-10-27, 27.10.2025, KW 44/2025.",
+    );
+
+    await paste.fill(KIT_CSV);
+    await page.locator("[data-fl-own-short]").fill("1,50");
+    await page.locator("[data-fl-own-left]").fill("0,40");
+    await check.click();
+    await expect(page.locator('[data-fl-own-line="plan"]')).toContainText("Planzahl 748");
+    await expect(page.locator('[data-fl-own-line="rule"]')).toContainText("37 von 52 Wochen frei");
+    expect(requests, "the own file never leaves the tab").toEqual([]);
+  });
+
+  test("serves the skill, both kit editions and the rule template", async ({ request }) => {
+    for (const path of [
+      "/skills/prognose-pruefen.zip",
+      "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+      "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+      "/vorlagen/pruefregel.md",
+      "/vorlagen/release-rule.en.md",
+    ]) {
+      const response = await request.get(path);
+      expect(response.status(), path).toBe(200);
+    }
+  });
+
+  test("speaks English on /en with the same numbers", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`/en${PATH}?beat=planzahl`, { waitUntil: "networkidle" });
+    await expect(caption(page)).toHaveText("Plan 748, not 729.");
+    await expect(page.locator("[data-fl-ledger]")).toContainText("€2,052");
+  });
+});

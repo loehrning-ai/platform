@@ -1,0 +1,125 @@
+{
+ "hinweise": [
+  "2024-09-16: doppelte Zeile, einmal gezählt"
+ ],
+ "geprueft": "wie letzte Woche",
+ "messlatte": "wie letzte Woche",
+ "von": "2024-12-30",
+ "bis": "2025-12-22",
+ "wochen": 51,
+ "nicht_bewertet": [
+  [
+   "2025-03-10",
+   "ausverkauft: Ist ist kleiner als die Nachfrage"
+  ]
+ ],
+ "tabelle": {
+  "wie letzte Woche": {
+   "mae": 42.0,
+   "bias": -0.0038190063763767178,
+   "wape": 0.07303849694820473
+  },
+  "wie Vorjahreswoche": {
+   "mae": 40.01960784313726,
+   "bias": -0.018378968186312954,
+   "wape": 0.06959457155522215
+  },
+  "Schnitt 4 Wochen": {
+   "mae": 41.6764705882353,
+   "bias": -0.005540969072868006,
+   "wape": 0.07247587547311352
+  }
+ },
+ "naeher": 0,
+ "zu_hoch": 25,
+ "spanne_treffer": 38,
+ "spanne_wochen": 51,
+ "beste_regel": "wie Vorjahreswoche",
+ "regel_wochen": 52,
+ "regel_frei": 41,
+ "regel_rot": [
+  [
+   "2025-03-24",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-03-31",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-04-07",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-04-14",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-04-21",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-04-28",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-05-19",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-05-26",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-02",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-09",
+   [
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-16",
+   [
+    "spanne"
+   ]
+  ]
+ ],
+ "naechste": {
+  "woche": "2025-12-29",
+  "prognose": 733.0,
+  "lampen": {
+   "daten": true,
+   "messlatte": null,
+   "bias": true,
+   "spanne": true,
+   "frei": true,
+   "verhaeltnis": 1.0,
+   "bias_wert": -0.017971014492753623,
+   "treffer": 9
+  },
+  "p10": 704.0,
+  "p50": 740.0,
+  "p90": 795.0
+ }
+}

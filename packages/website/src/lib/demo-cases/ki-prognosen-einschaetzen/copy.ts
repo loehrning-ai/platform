@@ -1,389 +1,602 @@
 import "server-only";
 
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import type { Locale } from "@/lib/i18n/locale";
 
 /**
- * The words of "Hundert Startwochen" / "A Hundred Launch Weeks", both
- * languages. Server only: index.tsx picks one pack and passes it to the
- * client demo, so the browser bundle carries a single language. A pack is
- * plain data. `{name}` slots are filled by format.ts `fill`.
+ * The words of "Die Fehlerliste" / "The Error List", both languages. Server
+ * only: index.tsx picks one pack and passes it to the client demo, so the
+ * browser bundle carries a single language. A pack is plain data.
+ *
+ * No number is written here: every number on screen is computed from the
+ * kit CSV (check.ts) and filled into a `{slot}` (format.ts `fill`). The only
+ * digits are in `product` (the article's name) and in the blank rule
+ * template, which is the kit file itself (content/vorlagen, byte-identical
+ * to the one in the zip).
  */
 export interface DemoPack {
   readonly locale: Locale;
-  readonly defaultUnit: string;
-  readonly restDefault: string;
-  readonly restCustom: string;
+  readonly product: string;
+  readonly stageLabel: string;
+  readonly dataLine: string;
+  readonly fileChip: string;
+  readonly replay: string;
+  readonly files: {
+    readonly export: string;
+    readonly csv: string;
+    readonly costs: string;
+    readonly rule: string;
+    readonly template: string;
+    readonly exercise: string;
+    readonly solutions: string;
+    readonly skill: string;
+  };
   readonly chart: {
-    readonly counterLabel: string;
-    readonly captions: {
-      readonly threeQuarters: string;
-      readonly moreThanHalf: string;
-      readonly half: string;
-      readonly lessThanHalf: string;
-      readonly rare: string;
-    };
-    readonly detents: {
-      readonly today: string;
-      readonly forecast: string;
-      readonly p90: string;
-      readonly best: string;
-    };
-    readonly statShort: string;
-    readonly statLeft: string;
-    readonly axisFrom: string;
-    readonly xCaption: string;
-    readonly assumption: string;
-    readonly tailCue: string;
-    readonly request: string;
-    readonly legend: {
-      readonly short: string;
-      readonly enough: string;
-      readonly left: string;
-    };
-    /** The big label on the red region. */
-    readonly redLabel: string;
-    readonly badgeCase: string;
-    readonly badgeOwn: string;
-    readonly footnote: string;
-    readonly chartLabel: string;
-    readonly chartDesc: string;
-    readonly xp: {
-      readonly p10: string;
-      readonly p50: string;
-      readonly p90: string;
-    };
+    readonly label: string;
+    readonly actual: string;
+    readonly forecast: string;
+    readonly rule: string;
+    readonly soldOut: string;
+    readonly noForecast: string;
+    readonly planWeek: string;
+    readonly baseline: string;
   };
-  readonly controls: {
+  readonly ruleNames: Readonly<Record<"wie letzte Woche" | "wie Vorjahreswoche" | "Schnitt 4 Wochen", string>>;
+  readonly guess: {
+    readonly caption: string;
+    readonly accuracyLabel: string;
+    readonly chip: string;
     readonly chipsLabel: string;
-    readonly chipNames: {
-      readonly today: string;
-      readonly forecast: string;
-      readonly p90: string;
-      readonly best: string;
-    };
-    readonly chipCount: string;
-    readonly sliderLabel: string;
-    readonly sliderValue: string;
-    readonly announce: string;
-    readonly announceLayer2: string;
-    readonly announceLayer3: string;
-    readonly waageTitle: string;
-    readonly sliderHint: string;
-    readonly waageLead: string;
-    readonly waageTail: string;
-    readonly waageLabel: string;
-    readonly waageDiamond: string;
-    readonly stripLabel: string;
-    readonly stripCells: readonly string[];
-    readonly stripCell: string;
-    readonly miniBar: string;
-    readonly replay: string;
+    readonly skip: string;
   };
-  readonly form: {
-    readonly title: string;
-    readonly lead: string;
-    readonly p10: string;
-    readonly p10Hint: string;
-    readonly p50: string;
-    readonly p50Hint: string;
-    readonly p90: string;
-    readonly p90Hint: string;
-    readonly supply: string;
-    readonly ratio: string;
-    readonly ratioHint: string;
+  readonly messlatte: {
+    readonly captionShift: string;
+    readonly captionEnd: string;
+    readonly toolCard: string;
+    readonly ruleCard: string;
+    readonly guessLine: string;
+    readonly noGuessLine: string;
+    readonly tally: string;
     readonly unit: string;
-    readonly unitHint: string;
-    readonly reset: string;
-    readonly privacy: string;
-    readonly lastValid: string;
-    readonly supplyMoved: string;
-    readonly supplyFar: string;
-    readonly errors: {
-      readonly order: string;
-      readonly number: string;
-      readonly negative: string;
-      readonly ratio: string;
-      readonly unit: string;
-    };
+    readonly pin: string;
+    readonly notes: readonly string[];
+    readonly skipped: Readonly<Record<"ist" | "ausverkauft" | "prognose" | "messlatte", string>>;
   };
-  readonly takeaways: {
+  readonly spanne: {
+    readonly captionTip: string;
+    readonly captionEnd: string;
+    readonly tips: Readonly<Record<"more" | "about" | "fewer", string>>;
+    readonly tipsLabel: string;
+    readonly skipTip: string;
+    readonly tipLine: string;
+    readonly noTipLine: string;
+    readonly counter: string;
+    readonly promised: string;
+    readonly errorsLabel: string;
+    readonly pin: string;
+    readonly notes: readonly string[];
+  };
+  readonly planzahl: {
+    readonly caption: string;
+    readonly captionSame: string;
+    readonly planLabel: string;
+    readonly forecastLabel: string;
+    readonly jarsLabel: string;
+    readonly short: string;
+    readonly left: string;
+    readonly ledgerTitle: string;
+    readonly ledger: Readonly<Record<"Messlatte" | "Prognose" | "Planzahl", string>>;
+    readonly withCanteen: string;
+    readonly withoutCanteen: string;
+    readonly presetsLabel: string;
+    readonly costShort: string;
+    readonly costLeft: string;
+    readonly costsHeading: string;
+    readonly noCosts: string;
+    readonly notes: readonly string[];
+  };
+  readonly regel: {
+    readonly caption: string;
+    readonly lamps: Readonly<Record<"daten" | "messlatte" | "bias" | "spanne", string>>;
+    readonly lampValues: Readonly<Record<"daten" | "messlatte" | "bias" | "spanne", string>>;
+    readonly lampState: Readonly<Record<"green" | "red" | "none", string>>;
+    readonly weekHead: string;
+    readonly free: string;
+    readonly person: string;
+    readonly noLamps: string;
+    readonly stripLabel: string;
+    readonly stripValue: string;
+    readonly runLine: string;
+    readonly singleLine: string;
+    readonly lagLine: string;
+    readonly planLineFree: string;
+    readonly planLineRed: string;
+    readonly owner: string;
+    readonly ownerPlaceholder: string;
+    readonly download: string;
+    readonly chance: string;
+  };
+  readonly own: {
+    readonly caption: string;
     readonly heading: string;
-    readonly copy: string;
-    readonly copied: string;
-    readonly selectCopy: string;
-    readonly mailTitle: string;
-    readonly questionsTitle: string;
-    readonly workingTitle: string;
-    readonly questionsIntro: string;
-    readonly questions: readonly string[];
-    readonly mail: {
-      readonly head: string;
-      readonly atForecastLess: string;
-      readonly atForecast: string;
-      readonly equalWeight: string;
-      readonly weighBelow: string;
-      readonly weighAbove: string;
-      readonly open: string;
-    };
-    readonly working: string;
-    readonly workingNoPlan: string;
+    readonly privacy: string;
+    readonly paste: string;
+    readonly pastePlaceholder: string;
+    readonly check: string;
+    readonly file: string;
+    readonly excel: string;
+    readonly templateLink: string;
+    readonly series: string;
+    readonly seriesFallback: string;
+    readonly baseline: string;
+    readonly clear: string;
+    readonly empty: string;
+    readonly ignored: string;
+    readonly notices: Readonly<Record<"duplicate" | "gap", string>>;
+    readonly zeros: string;
+    readonly errors: Readonly<Record<"empty" | "tooBig" | "tooManyRows" | "header" | "date" | "number" | "negative" | "conflict" | "daily" | "tooFew" | "fileType" | "zeroSales", string>>;
+    readonly summary: string;
+    readonly noForecast: string;
+    readonly needMore: string;
+    readonly betterRule: string;
+    readonly checks: readonly string[];
+    readonly lineBaseline: string;
+    readonly lineBaselineWorse: string;
+    readonly lineRange: string;
+    readonly linePlan: string;
+    readonly linePlanMissing: string;
+    readonly lineRule: string;
+    readonly downloadRule: string;
+    readonly downloadCsv: string;
+    readonly csvWords: { readonly yes: string; readonly no: string; readonly allGreen: string };
+  };
+  readonly takeHome: {
+    readonly caption: string;
+    readonly lever: string;
+    readonly treeLabel: string;
+    readonly tree: readonly { readonly file: string; readonly beat: string }[];
+    readonly line: string;
+    readonly lineRed: string;
+    readonly lineNoOwner: string;
+  };
+  readonly ruleFile: {
+    readonly name: string;
+    readonly system: string;
+    readonly lampSummary: string;
+    readonly template: string;
   };
 }
 
-export const COPY = {
-  de: {
-    locale: "de",
-    defaultUnit: "Stück",
-    restDefault: "ein übriges Stück",
-    restCustom: "eine übrige Einheit",
-    chart: {
-      counterLabel: "Startwochen, in denen das Lager nicht reicht",
-      captions: {
-        threeQuarters: "Rund 3 von 4 Wochen zu wenig",
-        moreThanHalf: "Mehr als jede zweite Woche zu wenig",
-        half: "Die Hälfte der Wochen zu wenig",
-        lessThanHalf: "Seltener als jede zweite Woche",
-        rare: "Selten zu wenig, dafür viel übrig",
-      },
-      detents: {
-        today: "heute",
-        forecast: "Prognose",
-        p90: "oben",
-        best: "bester Wert",
-      },
-      statShort: "fehlen im Schnitt",
-      statLeft: "übrig im Schnitt",
-      axisFrom: "Achse ab {lo}",
-      xCaption:
-        "100 mögliche Startwochen, sortiert von wenig bis viel Nachfrage.",
-      assumption:
-        "Annahme: gleichmäßig verteilt zwischen unten, Prognose und oben. Keine Messung.",
-      tailCue: "Gestrichelt: darüber hinaus geschätzt.",
-      request: "Anfrage {n}",
-      legend: { short: "fehlt", enough: "verkauft", left: "übrig" },
-      redLabel: "fehlt in {n} von 100",
-      badgeCase: "Workshop-Fall (erfunden)",
-      badgeOwn: "Eigener Fall",
-      footnote:
-        "Ausverkauft heißt nicht: keine Nachfrage. Verkäufe enden am Lager, das Rote sieht kein Verkaufsbericht.",
-      chartLabel:
-        "Hundert mögliche Startwochen als Treppe, nach Nachfrage sortiert. Lager {cap}: In {n} von 100 Wochen reicht es nicht.",
-      chartDesc:
-        "Die Spanne reicht von unten {p10} über die Prognose {p50} bis oben {p90}. Angenommen ist ein gleichmäßiger Verlauf dazwischen. Rot ist, was über dem Lager liegt und fehlt.",
-      xp: { p10: "unten", p50: "Prognose", p90: "oben" },
-    },
-    controls: {
-      chipsLabel: "Lager auf einen Wert setzen",
-      chipNames: {
-        today: "Lager heute",
-        forecast: "Prognose",
-        p90: "Oben",
-        best: "Bester Wert",
-      },
-      chipCount: "{n}/100",
-      sliderLabel: "Lager",
-      sliderValue: "Lager {cap}, in {n} von 100 möglichen Startwochen zu wenig",
-      announce: "{n} von 100 zu wenig",
-      announceLayer2: "Waage verfügbar",
-      announceLayer3: "Wochenleiste verfügbar",
-      waageTitle: "Was kostet ein Fehlgriff?",
-      sliderHint:
-        "Pfeiltasten verschieben das Lager. Enter springt zur nächsten Marke und nach der letzten wieder zur ersten, Umschalt plus Enter rückwärts.",
-      waageLead: "Ein verpasster Verkauf wiegt so schwer wie",
-      waageTail: "ein übriges Stück (deine Annahme)",
-      waageLabel: "Gewicht eines verpassten Verkaufs",
-      waageDiamond: "bester Wert {opt} bei {r} : 1",
-      stripLabel: "Andere Woche ansehen",
-      stripCells: ["W-4", "W-3", "W-2", "W-1", "Start", "W+1", "W+2"],
-      stripCell: "Woche {week}, in {n} von 100 zu wenig",
-      miniBar: "Lager {cap}",
-      replay: "Nochmal",
-    },
-    form: {
-      title: "Mein Fall",
-      lead: "Setz die Spanne deiner eigenen Prognose ein. Die Treppe rechnet sofort mit.",
-      p10: "Unten",
-      p10Hint: "In 9 von 10 Wochen mehr",
-      p50: "Prognose (Mitte)",
-      p50Hint: "In der Hälfte der Wochen mehr",
-      p90: "Oben",
-      p90Hint: "Nur in 1 von 10 Wochen mehr",
-      supply: "Lager heute",
-      ratio: "Verpasster Verkauf = x übrige Stücke",
-      ratioHint: "1 bis 20",
-      unit: "Einheit",
-      unitHint: "Stück",
-      reset: "Fall zurücksetzen",
-      privacy:
-        "Bleibt auf deinem Gerät. Nichts wird gesendet oder gespeichert.",
-      lastValid: "Zeigt noch den letzten gültigen Fall",
-      supplyMoved: "Lag außerhalb deiner Spanne, jetzt auf der Prognose. Ändere es, wenn du magst.",
-      supplyFar: "Weit außerhalb der Spanne: Das Ergebnis ist dann fast immer 0 oder 100 von 100.",
-      errors: {
-        order:
-          "Unten muss kleiner sein als die Prognose, und die Prognose kleiner als oben.",
-        number: "Bitte eine Zahl eingeben, zum Beispiel 1.180.",
-        negative: "Zahlen müssen 0 oder größer sein.",
-        ratio: "Das Gewicht liegt zwischen 1 und 20.",
-        unit: "Die Einheit hat höchstens 12 Zeichen.",
-      },
-    },
-    takeaways: {
-      heading: "Zum Mitnehmen, aus deiner Linie gebaut",
-      copy: "Kopieren",
-      copied: "Kopiert",
-      selectCopy: "Markieren und kopieren",
-      mailTitle: "Satz für die Mail",
-      questionsTitle: "3 Fragen für die Runde",
-      workingTitle: "Rechenweg mit Annahme",
-      questionsIntro: "Vor jeder Prognose-Zahl fragen:",
-      questions: [
-        "Welche Spanne gehört zur Zahl, von unten bis oben?",
-        "Was wiegt schwerer, zu wenig oder zu viel, und um welchen Faktor?",
-        "Fehler worauf: Stück oder Prozent je Zeile? Und wer entscheidet, wenn der Tages-Check kippt?",
-      ],
-      mail: {
-        head: "Prognose {p50} {u} (Spanne {p10} bis {p90}), Lager {cap}: In {n} von 100 möglichen Startwochen reicht das Lager nicht, im Schnitt fehlen {short} {u}.",
-        atForecastLess: "Bei Lager {p50} wären es noch {nP50} von 100.",
-        atForecast: "Bei Lager {p50} wären es {nP50} von 100.",
-        equalWeight:
-          "Bei gleichem Gewicht beider Fehler ist die Prognose {p50} selbst die Planzahl.",
-        weighBelow:
-          "Wiegt ein verpasster Verkauf {r}-mal so schwer wie {rest} (unsere Annahme), ist {opt} die bessere Planzahl.",
-        weighAbove:
-          "Wiegt ein verpasster Verkauf {r}-mal so schwer wie {rest} (unsere Annahme), liegt das Lager auf oder über der besseren Planzahl {opt}.",
-        open: "Offen: Wer bekommt die fehlenden {u} zuerst, und nach welcher Regel?",
-      },
-      working:
-        "Planzahl {opt} = {pct}. Perzentil bei Verhältnis {r} : 1 (unsere Annahme). Quelle: Prognose-Spanne p10 {p10}, p50 {p50}, p90 {p90}; Annahme: linear zwischen den drei Werten, 100 gleich wahrscheinliche Szenarien, keine Messung. Lager {cap}: fehlt in {n} von 100, Ø fehlt {short}, Ø übrig {left}.",
-      workingNoPlan:
-        "Quelle: Prognose-Spanne p10 {p10}, p50 {p50}, p90 {p90}; Annahme: linear zwischen den drei Werten, 100 gleich wahrscheinliche Szenarien, keine Messung. Lager {cap}: fehlt in {n} von 100, Ø fehlt {short}, Ø übrig {left}.",
+function vorlage(file: string): string {
+  return readFileSync(path.join(process.cwd(), "content/vorlagen", file), "utf8");
+}
+
+const DE: DemoPack = {
+  locale: "de",
+  product: "Linsensuppe 500 ml",
+  stageLabel: "Die Fehlerliste: Wochenabsatz und Prognose der Linsensuppe",
+  dataLine: "Erfunden: Suppenwerk Feldmark, {product}, {weeks} Wochen",
+  fileChip: "aus {file}",
+  replay: "Nochmal abspielen",
+  files: {
+    export: "tool-export.txt",
+    csv: "linsensuppe-woechentlich.csv",
+    costs: "kosten.md",
+    rule: "pruefregel.md",
+    template: "meine-daten.csv",
+    exercise: "uebung.md",
+    solutions: "loesungen.md",
+    skill: "prognose-pruefen.zip",
+  },
+  chart: {
+    label: "Wochenabsatz {from} bis {to}, Balken je Woche",
+    actual: "Ist",
+    forecast: "Prognose",
+    rule: "wie letzte Woche",
+    soldOut: "ausverkauft",
+    noForecast: "keine Prognose",
+    planWeek: "Planwoche",
+    baseline: "Achse ab {value}",
+  },
+  ruleNames: {
+    "wie letzte Woche": "wie letzte Woche",
+    "wie Vorjahreswoche": "wie Vorjahreswoche",
+    "Schnitt 4 Wochen": "Schnitt 4 Wochen",
+  },
+  guess: {
+    caption: "Schätze zuerst: Wie genau ist „wie letzte Woche“ mit derselben Formel?",
+    accuracyLabel: "Prognosegenauigkeit {year}",
+    chip: "um {value} %",
+    chipsLabel: "Deine Schätzung für „wie letzte Woche“",
+    skip: "Ohne Schätzung weiter",
+  },
+  messlatte: {
+    captionShift: "„Wie letzte Woche“ kommt auf {accuracy}. Ohne Modell, ohne Tool.",
+    captionEnd: "{lead} kleinere Fehler. Näher dran in {closer} von {weeks} Wochen.",
+    toolCard: "Tool",
+    ruleCard: "wie letzte Woche",
+    guessLine: "Deine Schätzung: um {guess} %. Gerechnet: {accuracy}.",
+    noGuessLine: "Ohne Schätzung. Gerechnet: {accuracy}.",
+    tally: "Ø Fehler",
+    unit: "Gläser",
+    pin: "{date}: „{note}“. Regel {rule} daneben, Prognose {forecast}.",
+    notes: [
+      "Die gestrichelte Linie „wie letzte Woche“ ist der Absatz, um eine Woche verschoben. Die {tool} des Tools liegen {points} Prozentpunkte darüber.",
+      "Die Fehlerliste: je Woche Ist minus Prognose, nur Wochen, die die Prognose nicht kannte. Ø Fehler Prognose {mae} Gläser, „wie letzte Woche“ {maeRule} Gläser.",
+      "{points} Prozentpunkte sind hier {lead} kleinere Fehler. Nicht bewertet: {skipped}. Eine einzelne Woche beweist nichts.",
+    ],
+    skipped: {
+      ist: "{date} (Ist fehlt)",
+      ausverkauft: "{date} (ausverkauft)",
+      prognose: "{date} (keine Prognose gespeichert)",
+      messlatte: "{date} (Vorwoche fehlt)",
     },
   },
-  en: {
-    locale: "en",
-    defaultUnit: "units",
-    restDefault: "leftover unit",
-    restCustom: "leftover unit",
-    chart: {
-      counterLabel: "launch weeks where the stock falls short",
-      captions: {
-        threeQuarters: "About 3 of 4 weeks short",
-        moreThanHalf: "More than every second week short",
-        half: "Half the weeks short",
-        lessThanHalf: "Short less than every second week",
-        rare: "Rarely short, but a lot left over",
-      },
-      detents: {
-        today: "today",
-        forecast: "forecast",
-        p90: "high",
-        best: "best value",
-      },
-      statShort: "missing on average",
-      statLeft: "left over on average",
-      axisFrom: "Axis from {lo}",
-      xCaption: "100 possible launch weeks, sorted from low to high demand.",
-      assumption:
-        "Assumption: spread evenly between low, forecast and high. Not a measurement.",
-      tailCue: "Dashed: estimated beyond that.",
-      request: "Request {n}",
-      legend: { short: "missing", enough: "sold", left: "left over" },
-      redLabel: "short in {n} of 100",
-      badgeCase: "Workshop case (invented)",
-      badgeOwn: "Your case",
-      footnote:
-        "Sold out does not mean no demand. Sales stop at the shelf; no sales report ever sees the red.",
-      chartLabel:
-        "A hundred possible launch weeks as a staircase, sorted by demand. Stock {cap}: in {n} of 100 weeks it is not enough.",
-      chartDesc:
-        "The range runs from low {p10} through the forecast {p50} to high {p90}. An even course in between is assumed. Red is what lies above the stock and is missing.",
-      xp: { p10: "low", p50: "forecast", p90: "high" },
+  spanne: {
+    captionTip: "Die Spanne soll {share} der Wochen fassen. Tipp: In wie vielen lag das Ist?",
+    captionEnd: "{hits} von {weeks} Wochen in der Spanne. Versprochen waren {promised}.",
+    tips: { more: "mehr als {promised}", about: "etwa {promised}", fewer: "weniger als {promised}" },
+    tipsLabel: "Dein Tipp: Wochen in der Spanne",
+    skipTip: "Ohne Tipp zeigen",
+    tipLine: "Dein Tipp: {tip}. Gezählt: {hits}.",
+    noTipLine: "Ohne Tipp. Gezählt: {hits}.",
+    counter: "in der Spanne",
+    promised: "versprochen {promised}",
+    errorsLabel: "Die {count} Fehler davor, sortiert: 10-%- und 90-%-Wert",
+    pin: "{date}: „{note}“",
+    notes: [
+      "Je Woche: die Fehler (Ist minus Prognose) der {window} gültigen Wochen davor, ihr 10-%- und 90-%-Wert zur Prognose addiert. Gefüllt: Ist in der Spanne. Rot umrandet: daneben.",
+      "Vor dem {date} {before}, ab dem {date} {after}. {missesAfter} der {misses} Fehltreffer liegen ab dem {date}.",
+      "Auch eine ehrliche Spanne liegt durch Zufall in {chance} der Jahre bei {hits} oder weniger. Dass die Fehltreffer nach einem Datum gehäuft liegen, zeigt die Ursache.",
+    ],
+  },
+  planzahl: {
+    caption: "Plane {plan}, nicht {forecast}.",
+    captionSame: "Planzahl {plan}: bei diesen Kosten die Prognose selbst.",
+    planLabel: "Planzahl {date}",
+    forecastLabel: "Prognose {forecast}",
+    jarsLabel: "Die letzten {count} Fehler, sortiert",
+    short: "hätte nicht gereicht",
+    left: "übrig",
+    ledgerTitle: "Kosten der Fehler {year}",
+    ledger: { Messlatte: "wie letzte Woche", Prognose: "Prognose", Planzahl: "Prognose + Puffer" },
+    withCanteen: "Mit Kantine, Rest {rest}",
+    withoutCanteen: "Ohne Kantine, Rest {rest}",
+    presetsLabel: "Kosten eines übrigen Glases aus kosten.md",
+    costShort: "Fehlt ein Glas (€)",
+    costLeft: "Bleibt eins übrig (€)",
+    costsHeading: "Eigene Kosten je Stück",
+    noCosts: "Ohne Kosten keine Planzahl.",
+    notes: [
+      "Anteil, den du abdecken willst: {cu} ÷ ({cu} + {co}) = {tau}. Die Planzahl ist die Prognose plus der Fehler an dieser Stelle der sortierten Liste.",
+      "In {short} der letzten {of} Wochen hätte {plan} nicht gereicht, in {left} wäre etwas übrig geblieben.",
+      "Kosten der Fehler {year}, rückwirkend auf denselben Wochen: „wie letzte Woche“ {costRule}, Prognose {costForecast}, Prognose + Puffer {costPlan}.",
+    ],
+  },
+  regel: {
+    caption: "{free} Wochen frei, {red} Wochen entscheidet eine Person.",
+    lamps: {
+      daten: "Daten vollständig",
+      messlatte: "Fehler kleiner als die Messlatte",
+      bias: "Bias höchstens {max}",
+      spanne: "mindestens {min} von {of} in der Spanne",
     },
-    controls: {
-      chipsLabel: "Set the stock to a value",
-      chipNames: {
-        today: "Stock today",
-        forecast: "Forecast",
-        p90: "High",
-        best: "Best value",
-      },
-      chipCount: "{n}/100",
-      sliderLabel: "Stock",
-      sliderValue: "Stock {cap}, short in {n} of 100 possible launch weeks",
-      announce: "{n} of 100 short",
-      announceLayer2: "Scale available",
-      announceLayer3: "Week strip available",
-      waageTitle: "What does a wrong call cost?",
-      sliderHint:
-        "Arrow keys move the stock. Enter jumps to the next mark and, after the last, back to the first; Shift plus Enter goes backwards.",
-      waageLead: "A missed sale weighs as much as",
-      waageTail: "a leftover unit (your assumption)",
-      waageLabel: "Weight of a missed sale",
-      waageDiamond: "best value {opt} at {r} : 1",
-      stripLabel: "Look at another week",
-      stripCells: ["W-4", "W-3", "W-2", "W-1", "Launch", "W+1", "W+2"],
-      stripCell: "Week {week}, short in {n} of 100",
-      miniBar: "Stock {cap}",
-      replay: "Replay",
+    lampValues: {
+      daten: "Ist und Prognose da",
+      messlatte: "Verhältnis {ratio}",
+      bias: "Bias {bias}",
+      spanne: "{hits} von {of}",
     },
-    form: {
-      title: "Your case",
-      lead: "Enter the range of your own forecast. The staircase recalculates at once.",
-      p10: "Low",
-      p10Hint: "More than this in 9 of 10 weeks",
-      p50: "Forecast (middle)",
-      p50Hint: "More than this in half the weeks",
-      p90: "High",
-      p90Hint: "More than this in only 1 of 10 weeks",
-      supply: "Stock today",
-      ratio: "Missed sale = x leftover units",
-      ratioHint: "1 to 20",
-      unit: "Unit",
-      unitHint: "units",
-      reset: "Reset to workshop case",
-      privacy: "Stays on your device. Nothing is sent or stored.",
-      lastValid: "Still showing the last valid case",
-      supplyMoved: "Was outside your range, now on the forecast. Change it if you like.",
-      supplyFar: "Far outside the range: the result will almost always be 0 or 100 of 100.",
-      errors: {
-        order: "Low must be below the forecast, and the forecast below high.",
-        number: "Please enter a number, for example 1,180.",
-        negative: "Numbers must be 0 or more.",
-        ratio: "The weight is between 1 and 20.",
-        unit: "The unit has at most 12 characters.",
-      },
+    lampState: { green: "grün", red: "rot", none: "offen" },
+    weekHead: "Woche ab {date}",
+    free: "frei",
+    person: "Person entscheidet",
+    noLamps: "noch keine Lampen",
+    stripLabel: "Woche im Streifen wählen",
+    stripValue: "{date}: {state}",
+    runLine: "{from} bis {to}: {lamps} rot.",
+    singleLine: "{from}: {lamps} rot.",
+    lagLine: "Die Regel schlägt {lag} Wochen nach „{note}“ an. Die Prognose braucht {length} Wochen, bis sie es gelernt hat.",
+    planLineFree: "Woche ab {date}: alle vier Lampen grün. Planzahl {plan} frei.",
+    planLineRed: "Woche ab {date}: {count} Lampen rot. Eine Person entscheidet.",
+    owner: "Wer entscheidet in roten Wochen (Rolle oder Name)",
+    ownerPlaceholder: "zum Beispiel Leitung Disposition",
+    download: "Prüfregel laden",
+    chance: "Auch eine ehrliche Spanne fällt in {chance} der {window}-Wochen-Fenster zufällig unter {min}. Ein einzelnes Rot ist ein Anlass nachzusehen, kein Beweis.",
+  },
+  own: {
+    caption: "Dieselben vier Prüfungen mit deiner Datei. Sie bleibt auf diesem Gerät.",
+    heading: "Deine Datei",
+    privacy: "Deine Zahlen bleiben in diesem Browser-Tab. Kein Upload, kein Server, keine KI. Schließt du den Tab, sind sie weg.",
+    paste: "Aus Excel oder Sheets kopieren und hier einfügen",
+    pastePlaceholder: "woche;ist;prognose;hinweis",
+    check: "Prüfen",
+    file: "CSV-Datei wählen",
+    excel: "Excel: Spalten markieren, kopieren, hier einfügen. Erste Zeile: Spaltennamen.",
+    templateLink: "Leere Vorlage im Kit: {file}",
+    series: "Reihe (für Prüfregel und Dateinamen)",
+    seriesFallback: "meine-reihe",
+    baseline: "Was plant ihr ohne Tool",
+    clear: "Eigene Eingaben löschen",
+    empty: "Noch keine Datei. Mindestens {min} Wochen Ist und die damals gespeicherte Prognose.",
+    ignored: "Ignoriert: {columns}",
+    notices: {
+      duplicate: "{date} steht doppelt mit gleichen Werten, einmal gezählt.",
+      gap: "{date} fehlt in der Datei, bleibt leer und zählt nicht.",
     },
-    takeaways: {
-      heading: "To take with you, built from your line",
-      copy: "Copy",
-      copied: "Copied",
-      selectCopy: "Select and copy",
-      mailTitle: "Sentence for the email",
-      questionsTitle: "3 questions for the room",
-      workingTitle: "Working and assumption",
-      questionsIntro: "Before every forecast number, ask:",
-      questions: [
-        "Which range belongs to the number, from low to high?",
-        "Which weighs more, too little or too much, and by what factor?",
-        "Error on what: units or percent per row? And who decides when the daily check tips?",
-      ],
-      mail: {
-        head: "Forecast {p50} {u} (range {p10} to {p90}), stock {cap}: in {n} of 100 possible launch weeks the stock is not enough, on average {short} {u} are missing.",
-        atForecastLess: "At stock {p50} it would still be {nP50} of 100.",
-        atForecast: "At stock {p50} it would be {nP50} of 100.",
-        equalWeight:
-          "With equal weight on both mistakes, the forecast {p50} itself is the plan number.",
-        weighBelow:
-          "If a missed sale weighs {r} times as much as a {rest} (our assumption), {opt} is the better plan number.",
-        weighAbove:
-          "If a missed sale weighs {r} times as much as a {rest} (our assumption), the stock is at or above the better plan number {opt}.",
-        open: "Open: who gets the missing {u} first, and by which rule?",
-      },
-      working:
-        "Plan number {opt} = {pct} percentile at ratio {r} : 1 (our assumption). Source: forecast range p10 {p10}, p50 {p50}, p90 {p90}; assumption: linear between the three values, 100 equally likely scenarios, not a measurement. Stock {cap}: short in {n} of 100, avg. missing {short}, avg. leftover {left}.",
-      workingNoPlan:
-        "Source: forecast range p10 {p10}, p50 {p50}, p90 {p90}; assumption: linear between the three values, 100 equally likely scenarios, not a measurement. Stock {cap}: short in {n} of 100, avg. missing {short}, avg. leftover {left}.",
+    zeros: "Viele Nullwochen. Prozentwerte sagen hier wenig; schau auf den mittleren Fehler in Stück.",
+    errors: {
+      empty: "Die Eingabe ist leer. Erste Zeile zum Beispiel: woche;ist;prognose",
+      tooBig: "Die Datei ist größer als 1 MB. Bitte nur die Spalten woche, ist, prognose, hinweis.",
+      tooManyRows: "{rows} Zeilen. Mehr als {max} Wochen braucht die Prüfung nicht; die letzten zwei Jahre reichen.",
+      header: "Ich finde keine Spalten für Woche und Ist. Erste Zeile zum Beispiel: woche;ist;prognose",
+      date: "Zeile {line}: „{value}“ ist kein Datum. Erlaubt: 2025-10-27, 27.10.2025, KW 44/2025.",
+      number: "Zeile {line}, Spalte {column}: „{value}“ ist keine Zahl.",
+      negative: "Zeile {line}, Spalte {column}: {value} ist negativ. Retouren vorher abziehen.",
+      conflict: "{date} steht in Zeile {first} und {line} mit verschiedenen Werten. Eine Zeile löschen.",
+      daily: "Tageswerte bitte vorher zu Wochen (Montag bis Sonntag) summieren.",
+      tooFew: "Nur {weeks} vergleichbare Wochen. Die Prüfung braucht mindestens {min}.",
+      fileType: "Bitte eine CSV- oder Textdatei. Excel: Spalten markieren, kopieren, hier einfügen.",
+      zeroSales: "Kein Absatz im Prüffenster. Bias nicht berechenbar.",
+    },
+    summary: "Geprüft: {from} bis {to}, {weeks} Wochen.",
+    noForecast:
+      "Ohne gespeicherte alte Prognosen gibt es keine Prüfung 1. Eine heute nachgerechnete Prognose für vergangene Wochen kennt das Ergebnis schon. Leg ab dieser Woche jede Prognose mit Datum ab; nach {min} Wochen laufen die Lampen. Bis dahin ist deine Messlatte: „{rule}“, mittlerer Fehler {mae}. Ein Tool muss darunter bleiben.",
+    needMore: "Spanne und Lampen brauchen {min} Wochen mit gespeicherter Prognose. Du hast {weeks}.",
+    betterRule: "Auf deinen Daten ist „{best}“ besser als „{chosen}“ ({bestMae} statt {chosenMae}). Nimm sie als Messlatte.",
+    checks: ["Prüfung 1: Messlatte", "Prüfung 2: Spanne", "Prüfung 3: Planzahl", "Prüfung 4: Regel"],
+    lineBaseline: "Ø Fehler Prognose {mae}, „{rule}“ {maeRule}: {lead} kleiner. Näher dran in {closer} von {weeks} Wochen. Bias {bias}.",
+    lineBaselineWorse: "Ø Fehler Prognose {mae}, „{rule}“ {maeRule}: Die Prognose liegt {lead} weiter daneben als die einfache Regel. Bias {bias}.",
+    lineRange: "{hits} von {weeks} Wochen in der 80-%-Spanne, versprochen {promised}.",
+    linePlan: "Woche ab {date}: Prognose {forecast}, Spanne {p10} bis {p90}, Anteil {tau}, Planzahl {plan}.",
+    linePlanMissing: "Für eine Planzahl braucht es die Prognose der nächsten Woche und beide Kosten.",
+    lineRule: "{free} von {total} Wochen frei, {red} mit einer roten Lampe.",
+    downloadRule: "Prüfregel laden",
+    downloadCsv: "Ergebnis als CSV",
+    csvWords: { yes: "ja", no: "nein", allGreen: "alle grün" },
+  },
+  takeHome: {
+    caption: "Das Kit ist die Demo: dieselben Dateien, dieselben Zahlen.",
+    lever: "Zum Mitnehmen",
+    treeLabel: "Die Dateien des Kits und wo sie oben vorkamen",
+    tree: [
+      { file: "START-HIER.md", beat: "Reihenfolge" },
+      { file: "daten/tool-export.txt", beat: "Schätzen" },
+      { file: "daten/linsensuppe-woechentlich.csv", beat: "alle vier" },
+      { file: "daten/kosten.md", beat: "Planzahl" },
+      { file: "uebung.md", beat: "Messlatte bis Regel" },
+      { file: "loesungen.md", beat: "die Zahlen oben" },
+      { file: "pruefregel.md", beat: "Regel" },
+      { file: "vorlage/meine-daten.csv", beat: "Meine Daten" },
+      { file: "claude/prognose-pruefen/SKILL.md", beat: "alle vier, im Chat" },
+      { file: "pruefen.py", beat: "alle vier, ohne Chat" },
+    ],
+    line: "{series}: Prognose {forecast}, Planzahl {plan}, alle vier Lampen grün. In roten Wochen entscheidet {owner}.",
+    lineRed: "{series}: Prognose {forecast}, {count} Lampen rot. Es entscheidet {owner}.",
+    lineNoOwner: "noch offen",
+  },
+  ruleFile: {
+    name: "pruefregel-{series}.md",
+    system: "Warenwirtschaft, Prognosemodul",
+    lampSummary: "{green} grün, {red} rot",
+    template: "",
+  },
+};
+
+const EN: DemoPack = {
+  locale: "en",
+  product: "lentil soup 500 ml",
+  stageLabel: "The error list: weekly sales and forecast of the lentil soup",
+  dataLine: "Invented: Suppenwerk Feldmark, {product}, {weeks} weeks",
+  fileChip: "from {file}",
+  replay: "Play again",
+  files: {
+    export: "tool-export.txt",
+    csv: "lentil-soup-weekly.csv",
+    costs: "costs.md",
+    rule: "release-rule.md",
+    template: "my-data.csv",
+    exercise: "exercise.md",
+    solutions: "solutions.md",
+    skill: "prognose-pruefen.zip",
+  },
+  chart: {
+    label: "Weekly sales {from} to {to}, one bar per week",
+    actual: "actual",
+    forecast: "forecast",
+    rule: "same as last week",
+    soldOut: "sold out",
+    noForecast: "no forecast",
+    planWeek: "plan week",
+    baseline: "axis from {value}",
+  },
+  ruleNames: {
+    "wie letzte Woche": "same as last week",
+    "wie Vorjahreswoche": "same week last year",
+    "Schnitt 4 Wochen": "average of 4 weeks",
+  },
+  guess: {
+    caption: "Guess first: how accurate is \"same as last week\" with the same formula?",
+    accuracyLabel: "Forecast accuracy {year}",
+    chip: "about {value} %",
+    chipsLabel: "Your guess for \"same as last week\"",
+    skip: "Continue without a guess",
+  },
+  messlatte: {
+    captionShift: "\"Same as last week\" reaches {accuracy}. No model, no tool.",
+    captionEnd: "{lead} smaller errors. Closer in {closer} of {weeks} weeks.",
+    toolCard: "Tool",
+    ruleCard: "same as last week",
+    guessLine: "Your guess: about {guess} %. Computed: {accuracy}.",
+    noGuessLine: "No guess. Computed: {accuracy}.",
+    tally: "mean error",
+    unit: "jars",
+    pin: "{date}: \"{note}\". Rule off by {rule}, forecast by {forecast}.",
+    notes: [
+      "The dashed \"same as last week\" line is the sales line moved one week to the right. The tool's {tool} sits {points} percentage points above it.",
+      "The error list: actual minus forecast for every week, only weeks the forecast did not know. Mean error forecast {mae} jars, \"same as last week\" {maeRule} jars.",
+      "Here {points} percentage points mean {lead} smaller errors. Not scored: {skipped}. A single week proves nothing.",
+    ],
+    skipped: {
+      ist: "{date} (no actual)",
+      ausverkauft: "{date} (sold out)",
+      prognose: "{date} (no forecast stored)",
+      messlatte: "{date} (week before missing)",
     },
   },
-} as const satisfies Record<Locale, DemoPack>;
+  spanne: {
+    captionTip: "The range should hold {share} of weeks. Your tip: how many did it hold?",
+    captionEnd: "{hits} of {weeks} weeks inside the range. {promised} were promised.",
+    tips: { more: "more than {promised}", about: "about {promised}", fewer: "fewer than {promised}" },
+    tipsLabel: "Your tip: weeks inside the range",
+    skipTip: "Show without a tip",
+    tipLine: "Your tip: {tip}. Counted: {hits}.",
+    noTipLine: "No tip. Counted: {hits}.",
+    counter: "inside the range",
+    promised: "promised {promised}",
+    errorsLabel: "The {count} errors before, sorted: 10 % and 90 % values",
+    pin: "{date}: \"{note}\"",
+    notes: [
+      "For each week: the errors (actual minus forecast) of the {window} valid weeks before it, their 10 % and 90 % values added to the forecast. Filled: actual inside the range. Red outline: outside.",
+      "Before {date} {before}, from {date} {after}. {missesAfter} of the {misses} misses fall from {date} on.",
+      "Even an honest range lands at {hits} or fewer by chance in {chance} of years. That the misses cluster after one date points to the cause.",
+    ],
+  },
+  planzahl: {
+    caption: "Plan {plan}, not {forecast}.",
+    captionSame: "Planning number {plan}: at these costs, the forecast itself.",
+    planLabel: "Planning number {date}",
+    forecastLabel: "Forecast {forecast}",
+    jarsLabel: "The last {count} errors, sorted",
+    short: "would not have been enough",
+    left: "left over",
+    ledgerTitle: "Cost of the errors {year}",
+    ledger: { Messlatte: "same as last week", Prognose: "forecast", Planzahl: "forecast + buffer" },
+    withCanteen: "With canteen, leftover {rest}",
+    withoutCanteen: "Without canteen, leftover {rest}",
+    presetsLabel: "Cost of a leftover jar from costs.md",
+    costShort: "A missing jar (€)",
+    costLeft: "A leftover jar (€)",
+    costsHeading: "Your own costs per unit",
+    noCosts: "No costs, no planning number.",
+    notes: [
+      "The share you want to cover: {cu} ÷ ({cu} + {co}) = {tau}. The planning number is the forecast plus the error at that point of the sorted list.",
+      "In {short} of the last {of} weeks {plan} would not have been enough, in {left} something would have been left over.",
+      "Cost of the errors in {year}, looking back over the same weeks: \"same as last week\" {costRule}, forecast {costForecast}, forecast + buffer {costPlan}.",
+    ],
+  },
+  regel: {
+    caption: "{free} weeks free, in {red} weeks a person decides.",
+    lamps: {
+      daten: "Data complete",
+      messlatte: "Errors smaller than the baseline",
+      bias: "Bias at most {max}",
+      spanne: "at least {min} of {of} inside the range",
+    },
+    lampValues: {
+      daten: "actual and forecast present",
+      messlatte: "ratio {ratio}",
+      bias: "bias {bias}",
+      spanne: "{hits} of {of}",
+    },
+    lampState: { green: "green", red: "red", none: "open" },
+    weekHead: "Week from {date}",
+    free: "free",
+    person: "a person decides",
+    noLamps: "no lamps yet",
+    stripLabel: "Pick a week in the strip",
+    stripValue: "{date}: {state}",
+    runLine: "{from} to {to}: {lamps} red.",
+    singleLine: "{from}: {lamps} red.",
+    lagLine: "The rule reacts {lag} weeks after \"{note}\". The forecast needs {length} weeks to learn it.",
+    planLineFree: "Week from {date}: all four lamps green. Planning number {plan} free.",
+    planLineRed: "Week from {date}: {count} lamps red. A person decides.",
+    owner: "Who decides in red weeks (role or name)",
+    ownerPlaceholder: "for example head of planning",
+    download: "Download the release rule",
+    chance: "Even an honest range falls below {min} by chance in {chance} of {window}-week windows. A single red is a reason to look, not a proof.",
+  },
+  own: {
+    caption: "The same four checks on your own file. It stays on this device.",
+    heading: "Your file",
+    privacy: "Your numbers stay in this browser tab. No upload, no server, no AI. Close the tab and they are gone.",
+    paste: "Copy from Excel or Sheets and paste here",
+    pastePlaceholder: "week;actual;forecast;note",
+    check: "Check",
+    file: "Choose a CSV file",
+    excel: "Excel: select the columns, copy, paste here. First row: column names.",
+    templateLink: "Blank template in the kit: {file}",
+    series: "Series (for the rule and file names)",
+    seriesFallback: "my-series",
+    baseline: "What do you plan without a tool",
+    clear: "Clear my input",
+    empty: "No file yet. At least {min} weeks of actuals and the forecast stored at the time.",
+    ignored: "Ignored: {columns}",
+    notices: {
+      duplicate: "{date} appears twice with the same values, counted once.",
+      gap: "{date} is missing from the file, stays empty and does not count.",
+    },
+    zeros: "Many zero weeks. Percentages say little here; look at the mean error in units.",
+    errors: {
+      empty: "The input is empty. First row for example: week;actual;forecast",
+      tooBig: "The file is larger than 1 MB. Please only the columns week, actual, forecast, note.",
+      tooManyRows: "{rows} rows. The check needs no more than {max} weeks; the last two years are enough.",
+      header: "I find no columns for week and actual. First row for example: week;actual;forecast",
+      date: "Row {line}: \"{value}\" is not a date. Allowed: 2025-10-27, 27.10.2025, KW 44/2025.",
+      number: "Row {line}, column {column}: \"{value}\" is not a number.",
+      negative: "Row {line}, column {column}: {value} is negative. Subtract returns first.",
+      conflict: "{date} is in row {first} and row {line} with different values. Delete one row.",
+      daily: "Please sum daily values to weeks (Monday to Sunday) first.",
+      tooFew: "Only {weeks} comparable weeks. The check needs at least {min}.",
+      fileType: "Please a CSV or text file. Excel: select the columns, copy, paste here.",
+      zeroSales: "No sales in the check window. Bias cannot be computed.",
+    },
+    summary: "Checked: {from} to {to}, {weeks} weeks.",
+    noForecast:
+      "Without stored past forecasts there is no check 1. A forecast recomputed today for past weeks already knows the result. From this week on, store every forecast with its date; after {min} weeks the lamps run. Until then your baseline is \"{rule}\", mean error {mae}. A tool has to stay below it.",
+    needMore: "Range and lamps need {min} weeks with a stored forecast. You have {weeks}.",
+    betterRule: "On your data \"{best}\" beats \"{chosen}\" ({bestMae} instead of {chosenMae}). Use it as the baseline.",
+    checks: ["Check 1: baseline", "Check 2: range", "Check 3: planning number", "Check 4: rule"],
+    lineBaseline: "Mean error forecast {mae}, \"{rule}\" {maeRule}: {lead} smaller. Closer in {closer} of {weeks} weeks. Bias {bias}.",
+    lineBaselineWorse: "Mean error forecast {mae}, \"{rule}\" {maeRule}: the forecast misses by {lead} more than the simple rule. Bias {bias}.",
+    lineRange: "{hits} of {weeks} weeks inside the 80 % range, {promised} promised.",
+    linePlan: "Week from {date}: forecast {forecast}, range {p10} to {p90}, share {tau}, planning number {plan}.",
+    linePlanMissing: "A planning number needs next week's forecast and both costs.",
+    lineRule: "{free} of {total} weeks free, {red} with a red lamp.",
+    downloadRule: "Download the release rule",
+    downloadCsv: "Result as CSV",
+    csvWords: { yes: "yes", no: "no", allGreen: "all green" },
+  },
+  takeHome: {
+    caption: "The kit is the demo: the same files, the same numbers.",
+    lever: "To take home",
+    treeLabel: "The kit's files and where they appeared above",
+    tree: [
+      { file: "START-HERE.md", beat: "order" },
+      { file: "data/tool-export.txt", beat: "Guess" },
+      { file: "data/lentil-soup-weekly.csv", beat: "all four" },
+      { file: "data/costs.md", beat: "Plan number" },
+      { file: "exercise.md", beat: "Baseline to Rule" },
+      { file: "solutions.md", beat: "the numbers above" },
+      { file: "release-rule.md", beat: "Rule" },
+      { file: "template/my-data.csv", beat: "My data" },
+      { file: "claude/prognose-pruefen/SKILL.md", beat: "all four, in chat" },
+      { file: "pruefen.py", beat: "all four, without chat" },
+    ],
+    line: "{series}: forecast {forecast}, planning number {plan}, all four lamps green. In red weeks {owner} decides.",
+    lineRed: "{series}: forecast {forecast}, {count} lamps red. {owner} decides.",
+    lineNoOwner: "still open",
+  },
+  ruleFile: {
+    name: "release-rule-{series}.md",
+    system: "ERP, forecasting module",
+    lampSummary: "{green} green, {red} red",
+    template: "",
+  },
+};
+
+export const COPY: Readonly<Record<Locale, DemoPack>> = {
+  de: { ...DE, ruleFile: { ...DE.ruleFile, template: vorlage("pruefregel.md") } },
+  en: { ...EN, ruleFile: { ...EN.ruleFile, template: vorlage("en/release-rule.md") } },
+};

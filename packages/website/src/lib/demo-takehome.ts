@@ -32,7 +32,39 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
-export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {};
+export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
+  // Workshop 01 "Die Fehlerliste": built by scripts/workshop01/build-kit.mjs.
+  "ki-prognosen-einschaetzen": {
+    kit: {
+      de: {
+        href: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+        shown: [
+          "prognose-pruefen/daten/linsensuppe-woechentlich.csv",
+          "prognose-pruefen/daten/tool-export.txt",
+          "prognose-pruefen/daten/kosten.md",
+          "prognose-pruefen/pruefregel.md",
+          "prognose-pruefen/uebung.md",
+        ],
+        instructions: "prognose-pruefen/claude/projekt-anweisung.md",
+        installDoc: "prognose-pruefen/START-HIER.md",
+      },
+      en: {
+        href: "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+        shown: [
+          "forecast-check/data/lentil-soup-weekly.csv",
+          "forecast-check/data/tool-export.txt",
+          "forecast-check/data/costs.md",
+          "forecast-check/release-rule.md",
+          "forecast-check/exercise.md",
+        ],
+        instructions: "forecast-check/claude/project-instructions.md",
+        installDoc: "forecast-check/START-HERE.md",
+      },
+    },
+    skill: { name: "prognose-pruefen" },
+    templates: [{ vorlage: "pruefregel" }],
+  },
+};
 
 export function takeHomeFor(slug: DemoSlug): TakeHome | undefined {
   return DEMO_TAKEHOME[slug];

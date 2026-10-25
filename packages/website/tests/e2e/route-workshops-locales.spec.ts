@@ -18,9 +18,9 @@ const WORKSHOP_ROUTES = [
   },
   {
     path: "/workshops/ki-prognosen-einschaetzen",
-    deHeading: "Kann KI die Zukunft vorhersagen?",
-    enHeading: "Can AI predict the future?",
-    materialCount: 2,
+    deHeading: "KI-Prognosen prüfen, bevor danach geplant wird",
+    enHeading: "Checking AI forecasts before you plan with them",
+    materialCount: 3,
     listedMaterials: 0,
   },
   {

@@ -31,6 +31,7 @@ import {
 const PUBLISHED_SKILLS = [
   "cv-engine",
   "loehrning-plattform",
+  "prognose-pruefen",
   "workshop-arbeiten",
 ] as const;
 

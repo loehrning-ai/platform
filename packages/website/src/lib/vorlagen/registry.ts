@@ -64,6 +64,27 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       en: "/en/blog/ki-in-der-ausbildung",
     },
   },
+  {
+    // Workshop 01: the release rule the demo "Die Fehlerliste" fills in (beat "Regel").
+    slug: "pruefregel",
+    kind: "template",
+    files: {
+      de: "pruefregel.md",
+      en: "en/release-rule.md",
+    },
+    downloadNames: {
+      de: "pruefregel.md",
+      en: "release-rule.en.md",
+    },
+    hostPaths: {
+      de: "/demos/ki-prognosen-einschaetzen",
+      en: "/en/demos/ki-prognosen-einschaetzen",
+    },
+    inKit: {
+      zip: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+      paths: { de: "prognose-pruefen/pruefregel.md" },
+    },
+  },
 ];
 
 /**

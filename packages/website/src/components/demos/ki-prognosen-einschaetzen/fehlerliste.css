@@ -1,0 +1,814 @@
+/*
+ * "Die Fehlerliste": the stage drawing and the controls under the lever.
+ * Flat Kalkweiß and Druckschwarz, Mennige as the one accent, hard edges, no
+ * gradients, no glass. Never selects the shell's parts (demo-contract.test.ts).
+ */
+.fl-root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Stage frame ─────────────────────────────────────────────────────────── */
+.fl-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 10px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.fl-stage-head {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  min-height: 44px;
+  padding-right: 128px; /* the restart control sits top right */
+}
+.fl-stage-foot {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--color-muted-foreground);
+}
+
+/* A kit file quoted as a tab card: file name, label, value. */
+.fl-card {
+  display: inline-grid;
+  grid-template-columns: auto;
+  align-content: start;
+  gap: 1px;
+  min-width: 0;
+  padding: 4px 8px 5px;
+  border: 1px solid var(--color-foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+.fl-card.is-accent {
+  border-color: var(--color-mennige);
+  box-shadow: inset 3px 0 0 var(--color-mennige);
+}
+.fl-card-file {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fl-card-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fl-card-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.fl-card.is-accent .fl-card-value {
+  color: var(--color-mennige);
+}
+
+/* ── Chart ───────────────────────────────────────────────────────────────── */
+.fl-chart {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+.fl-chart svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: visible;
+}
+.fl-axis {
+  stroke: var(--color-foreground);
+  stroke-width: 1;
+}
+.fl-bar {
+  fill: var(--color-foreground);
+}
+.fl-bar.is-faded {
+  fill-opacity: 0.4;
+}
+.fl-hatch-ground {
+  fill: var(--color-card);
+}
+.fl-hatch-line {
+  stroke: var(--color-foreground);
+  stroke-width: 1.5;
+  stroke-opacity: 0.45;
+}
+.fl-gap {
+  stroke: var(--color-mennige);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.fl-rule {
+  fill: none;
+  stroke: var(--color-foreground);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 2;
+}
+.fl-tick {
+  stroke: var(--color-mennige);
+  stroke-width: 2.5;
+}
+.fl-tick-rule {
+  stroke: var(--color-foreground);
+  stroke-width: 1.5;
+}
+.fl-pin {
+  stroke: var(--color-mennige);
+  stroke-width: 1;
+}
+.fl-band {
+  fill: var(--color-foreground);
+  fill-opacity: 0.12;
+}
+.fl-band.is-focus {
+  fill-opacity: 0.32;
+}
+.fl-hit {
+  fill: var(--color-foreground);
+}
+.fl-miss {
+  fill: var(--color-card);
+  stroke: var(--color-mennige);
+  stroke-width: 2;
+}
+.fl-stub {
+  stroke: var(--color-mennige);
+  stroke-width: 2;
+  stroke-dasharray: 4 2;
+}
+.fl-label {
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--color-muted-foreground);
+}
+.fl-label.is-accent {
+  fill: var(--color-mennige);
+  font-weight: 700;
+}
+
+/* ── Baseline tally and pin line ─────────────────────────────────────────── */
+.fl-tally {
+  display: grid;
+  gap: 2px;
+}
+.fl-tally-row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.fl-tally-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fl-tally-track {
+  height: 8px;
+  background: var(--color-inset);
+}
+.fl-tally-bar {
+  display: block;
+  height: 100%;
+  background: var(--color-foreground);
+}
+.fl-tally-bar.is-accent {
+  background: var(--color-mennige);
+}
+.fl-tally-value {
+  text-align: right;
+  font-weight: 700;
+}
+.fl-tally-caption {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--color-muted-foreground);
+}
+.fl-pin-line {
+  margin: 0;
+  min-height: 2.4em;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--color-foreground);
+  border-left: 2px solid var(--color-mennige);
+  padding-left: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Range: corridor chart and the sorted error column ───────────────────── */
+.fl-range-body {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+}
+.fl-dots {
+  position: relative;
+  flex: none;
+  width: 28px;
+  margin: 10px 0 18px;
+  border-left: 1px solid var(--color-hairline);
+}
+.fl-dot,
+.fl-dot-actual {
+  position: absolute;
+  left: 8px;
+  width: 6px;
+  height: 6px;
+  margin-bottom: -3px;
+  background: var(--color-foreground);
+}
+.fl-dot.is-out {
+  background: var(--color-muted);
+  opacity: 0.6;
+}
+.fl-dot-actual {
+  left: 16px;
+  width: 9px;
+  height: 9px;
+  margin-bottom: -4.5px;
+}
+.fl-dot-actual.is-miss {
+  background: var(--color-card);
+  outline: 2px solid var(--color-mennige);
+  outline-offset: -2px;
+}
+.fl-cut {
+  position: absolute;
+  left: -4px;
+  right: 0;
+  height: 0;
+  border-top: 2px solid var(--color-mennige);
+}
+
+/* ── Planning number ─────────────────────────────────────────────────────── */
+.fl-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+.fl-plan-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: end;
+  min-height: 44px;
+  padding-right: 128px;
+}
+.fl-plan-label {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+}
+.fl-plan-number {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--color-mennige);
+  font-variant-numeric: tabular-nums;
+}
+.fl-plan-forecast {
+  margin: 0 0 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.fl-mini-label {
+  margin: 0 0 4px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+}
+.fl-jar-row {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 30px;
+}
+.fl-jar {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 22px;
+  border: 1.5px solid var(--color-foreground);
+  border-top-width: 4px;
+  background: var(--color-foreground);
+}
+.fl-jar.is-left {
+  background: var(--color-foreground);
+}
+.fl-jar.is-short {
+  border-color: var(--color-mennige);
+  background: var(--color-mennige);
+}
+.fl-jar.is-even,
+.fl-jar.is-plain {
+  background: var(--color-card);
+}
+.fl-order-line {
+  position: absolute;
+  top: -6px;
+  bottom: -4px;
+  width: 0;
+  margin-left: -1px;
+  border-left: 3px solid var(--color-mennige);
+  transform-origin: bottom;
+}
+.fl-jar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 4px 0 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+.fl-key {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 4px;
+}
+.fl-key.is-left {
+  background: var(--color-foreground);
+}
+.fl-key.is-short {
+  background: var(--color-mennige);
+}
+.fl-ledger {
+  display: grid;
+  gap: 3px;
+  margin-top: auto;
+}
+.fl-ledger-row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr) 4.5rem;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.fl-ledger-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fl-ledger-track {
+  height: 10px;
+  background: var(--color-inset);
+}
+.fl-ledger-bar {
+  display: block;
+  height: 100%;
+  background: var(--color-foreground);
+}
+.fl-ledger-bar.is-accent {
+  background: var(--color-mennige);
+}
+.fl-ledger-value {
+  text-align: right;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── Rule: lamps and the 52-week strip ───────────────────────────────────── */
+.fl-rule {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+.fl-lamps-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 44px;
+  margin: 0;
+  padding-right: 128px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.fl-verdict {
+  font-size: 1rem;
+  font-weight: 700;
+}
+.fl-verdict.is-person {
+  color: var(--color-mennige);
+}
+.fl-lamp-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fl-lamp {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  min-height: 24px;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+.fl-lamp-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-foreground);
+}
+.fl-lamp-dot.is-green {
+  background: var(--color-foreground);
+}
+.fl-lamp-dot.is-red {
+  border-color: var(--color-mennige);
+  background: var(--color-mennige);
+}
+.fl-lamp-dot.is-none {
+  background: transparent;
+}
+.fl-lamp-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fl-lamp[data-state="red"] .fl-lamp-name {
+  color: var(--color-mennige);
+  font-weight: 700;
+}
+.fl-lamp-value {
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+  white-space: nowrap;
+}
+.fl-strip {
+  display: grid;
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+  gap: 3px;
+  margin-top: auto;
+}
+.fl-square {
+  aspect-ratio: 1.6;
+  max-height: 22px;
+  border: 1px solid var(--color-hairline);
+  background: transparent;
+}
+.fl-square.is-free {
+  border-color: var(--color-foreground);
+  background: var(--color-foreground);
+}
+.fl-square.is-person {
+  border-color: var(--color-mennige);
+  background: var(--color-mennige);
+}
+.fl-square.is-none {
+  border-color: var(--color-foreground);
+}
+.fl-square.is-selected {
+  outline: 2px solid var(--color-foreground);
+  outline-offset: 2px;
+}
+
+/* ── Kit tree ────────────────────────────────────────────────────────────── */
+.fl-kit {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  overflow: hidden;
+}
+.fl-kit-root {
+  min-height: 36px;
+  margin: 0;
+  padding-right: 128px;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.fl-kit-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fl-kit-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--color-hairline);
+  font-size: 0.75rem;
+  line-height: 1.25;
+}
+.fl-kit-file {
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fl-kit-beat {
+  font-weight: 700;
+  color: var(--color-mennige);
+  white-space: nowrap;
+}
+
+/* ── Own data stage ──────────────────────────────────────────────────────── */
+.fl-own-empty {
+  justify-content: center;
+  gap: 8px;
+}
+.fl-own-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.fl-own-header {
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px dashed var(--color-foreground);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+.fl-own-hint {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+/* ── Lever controls ──────────────────────────────────────────────────────── */
+.fl-chips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.fl-chips.is-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.fl-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  min-width: 0;
+  padding: 0 8px;
+  border: 2px solid var(--color-foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+.fl-chip.is-wide {
+  width: 100%;
+}
+.fl-chip[aria-pressed="true"] {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  box-shadow: inset 0 -4px 0 var(--color-mennige);
+}
+.fl-chip:active {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fl-chip:hover {
+    background: var(--color-foreground);
+    color: var(--color-background);
+  }
+}
+.fl-chip:focus-visible,
+.fl-button:focus-visible,
+.fl-link:focus-visible,
+.fl-input:focus-visible,
+.fl-textarea:focus-visible {
+  outline: 3px solid var(--color-mennige);
+  outline-offset: 2px;
+}
+.fl-file:focus-within {
+  outline: 3px solid var(--color-mennige);
+  outline-offset: 2px;
+}
+.fl-slider {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+}
+.fl-slider input[type="range"] {
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  accent-color: var(--color-mennige);
+  cursor: pointer;
+}
+
+/* ── Under the lever ─────────────────────────────────────────────────────── */
+.fl-below {
+  margin-top: 4px;
+}
+.fl-notes {
+  display: grid;
+  gap: 8px;
+  max-width: 62ch;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.fl-notes p {
+  margin: 0;
+}
+.fl-note-strong {
+  font-weight: 700;
+}
+.fl-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  background: none;
+  color: var(--color-foreground);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border);
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .fl-link:hover {
+    text-decoration-color: var(--color-mennige);
+    text-decoration-thickness: 3px;
+  }
+}
+.fl-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fl-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 2px solid var(--color-foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.fl-button.is-primary {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+.fl-button:active {
+  background: var(--color-mennige);
+  border-color: var(--color-mennige);
+  color: var(--color-background);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fl-button:hover {
+    background: var(--color-mennige);
+    border-color: var(--color-mennige);
+    color: var(--color-background);
+  }
+}
+.fl-fields {
+  display: grid;
+  gap: 10px;
+}
+.fl-fields.is-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.fl-field {
+  display: grid;
+  gap: 4px;
+}
+.fl-field-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.fl-input,
+.fl-textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 2px solid var(--color-foreground);
+  border-radius: 0;
+  background: var(--color-card);
+  color: var(--color-foreground);
+  font-size: 1rem;
+}
+.fl-textarea {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  resize: vertical;
+}
+.fl-hint {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--color-muted-foreground);
+}
+.fl-own {
+  display: grid;
+  gap: 12px;
+  max-width: 62ch;
+}
+.fl-own-privacy {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.fl-own-result {
+  display: grid;
+  gap: 10px;
+}
+.fl-problem {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 4px solid var(--color-mennige);
+  background: var(--color-card);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.fl-own-lines {
+  display: grid;
+  gap: 8px;
+}
+.fl-own-summary {
+  margin: 0;
+  font-weight: 700;
+}
+.fl-own-line {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding-left: 10px;
+  border-left: 2px solid var(--color-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+@media (min-width: 64rem) {
+  .fl-stage {
+    padding: 14px 16px 12px;
+    gap: 10px;
+  }
+  .fl-card-value {
+    font-size: 1.625rem;
+  }
+  .fl-plan-number {
+    font-size: 4.5rem;
+  }
+  .fl-tally-row,
+  .fl-ledger-row,
+  .fl-kit-row {
+    font-size: 0.875rem;
+  }
+  .fl-lamp {
+    font-size: 0.9375rem;
+    min-height: 30px;
+  }
+  .fl-square {
+    max-height: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fl-order-line,
+  .fl-ledger-bar,
+  .fl-tally-bar {
+    transition: none;
+  }
+}
