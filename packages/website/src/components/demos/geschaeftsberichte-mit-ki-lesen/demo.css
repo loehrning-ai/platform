@@ -74,10 +74,6 @@
   font-family: var(--font-sans);
   font-weight: 700;
 }
-.nw-hint {
-  color: var(--nw-ink);
-  font-weight: 700;
-}
 .nw-area {
   position: relative;
   flex: 1 1 auto;
@@ -158,9 +154,27 @@
   font-size: 0.8125rem;
   color: var(--nw-muted);
 }
-.nw-claim .nw-file {
-  border: 0;
+.nw-quote-by code {
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+}
+.nw-strip-band {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
   margin-top: auto;
+}
+.nw-strip-band .nw-area {
+  min-height: 40px;
+  max-height: 260px;
+}
+.nw-strip-key {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--nw-muted);
 }
 
 /* ── Beats 2 and 3: the rails ────────────────────────────────────────── */
@@ -309,12 +323,30 @@
   font-size: 0.75rem;
   font-weight: 700;
 }
+.nw-week-date {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--nw-ink);
+  font-variant-numeric: tabular-nums;
+}
+.nw-week-date[data-sep] {
+  color: var(--nw-paper);
+}
+/* The delta sits between the two month columns, clear of both column labels. */
 .nw-delta {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 34%;
+  left: 50%;
+  transform: translateX(-50%);
   margin: 0;
-  font-size: 1.75rem;
+  white-space: nowrap;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
   color: var(--nw-accent);
@@ -322,11 +354,25 @@
 }
 
 /* ── Beat 5: the trace ───────────────────────────────────────────────── */
+.nw-trace-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+  margin: 0;
+  border-bottom: 1px solid var(--nw-line);
+}
+.nw-trace-rows {
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  color: var(--nw-muted);
+  font-variant-numeric: tabular-nums;
+}
 .nw-figure-button {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  margin-left: 2px;
+  margin-left: -4px;
   padding: 0 4px;
   background: transparent;
   color: var(--nw-ink);
@@ -343,9 +389,31 @@
 }
 .nw-bin-label {
   position: absolute;
+  margin: 0;
   font-size: 0.75rem;
+  font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
+}
+.nw-bin-product {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+}
+.nw-bin-product[data-show] {
+  opacity: 1;
+}
+.nw-bin-product span {
+  color: var(--nw-muted);
+}
+.nw-bin-product strong {
+  font-size: 1.1em;
 }
 .nw-sum {
   display: flex;
@@ -452,6 +520,27 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+}
+.nw-card-line {
+  font-weight: 700;
+}
+.nw-card-line[data-example] {
+  font-weight: 400;
+  color: var(--nw-muted);
+}
+.nw-example-note {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.nw-lever-field {
+  display: block;
+  min-width: 0;
+}
+.nw-lever-field .nw-input {
+  min-height: 48px;
 }
 .nw-own-meta {
   display: flex;
@@ -924,6 +1013,9 @@ textarea.nw-input {
   .nw-tile-value {
     font-size: 1.25rem;
   }
+  .nw-bin-product,
+  .nw-bin-label,
+  .nw-trace-rows,
   .nw-tile-how,
   .nw-checks,
   .nw-file,
@@ -932,5 +1024,11 @@ textarea.nw-input {
   }
   .nw-card-preview {
     font-size: 0.875rem;
+  }
+  .nw-own .nw-card-preview {
+    flex: 0 1 auto;
+    padding: 16px 18px;
+    font-size: 1.0625rem;
+    line-height: 1.55;
   }
 }

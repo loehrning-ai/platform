@@ -1,6 +1,6 @@
 ---
 name: kennzahlen-steckbrief
-description: Kennzahlen aus Berichten oder Dashboards vergleichen oder bewerten. Legt Zähler, Nenner und Zeitraum fest und prüft eine Zahl bis zur Datenzeile. Use when comparing or judging report metrics.
+description: Wenn Kennzahlen aus Bericht oder Dashboard bewertet werden (besser, schlechter, Wachstum, Quote). Erst Zähler, Nenner, Zeitraum festlegen, eine Zahl zurückverfolgen. Use before judging report KPIs.
 ---
 
 # Kennzahlen-Steckbrief
@@ -27,7 +27,7 @@ geht dem Bericht vor. Weicht der Bericht ab, zeig beide Fassungen.
 1. Zitieren, dann rechnen. Liste jede Kennzahl, auf der deine Antwort beruhen
    wird, und zitiere ihre Stelle: Abschnitt, Seite oder Tabellenzeile. Steht
    eine Zahl nirgends, schätze sie nicht, sondern schreib „nicht im Material“.
-2. Steckbrief je Kennzahl, fünf Zeilen:
+2. Steckbrief je Kennzahl, fünf Pflichtzeilen, dazu Entscheidung und Auslöser:
    - Zähler: was gezählt wird, Vorgänge oder Menge, mit Einheit
    - Nenner: je was, oder „keiner“
    - Zeitraum: welche Tage, Wochen oder Monate, und womit verglichen wird
@@ -49,6 +49,9 @@ geht dem Bericht vor. Weicht der Bericht ab, zeig beide Fassungen.
 4. Eine Zahl zurückverfolgen. Rechne mindestens eine tragende Zahl aus den
    Rohdaten nach und schreib eine Zeile: Wert = Datei, Spalten, Filter, Anzahl
    Zeilen, Summe. Weicht sie ab, nenn die Differenz und stütz dich nicht auf sie.
+   Gibt es keine Rohdaten, prüfe die Zahl gegen eine zweite Stelle im Material
+   (Tabelle gegen Text, Summe gegen Teilwerte) und schreib „nicht aus Rohdaten
+   nachgerechnet“.
 5. Ist eine Empfehlung gefragt, in sechs Feldern: Entscheidung; Weil, mit der
    Steckbrief-Zeile, auf der es beruht; Zahl; Risiko in beide Richtungen;
    Gegenposition, also was die andere Definition ergibt, mit Wert; Auslöser, die
@@ -86,7 +89,9 @@ word for word. Cite where each number stands, then write one card per metric:
 numerator, denominator, period, source, limit. When an obvious other definition
 flips the direction (events or quantity, absolute or per base, month total or
 per week, reported or adjusted), compute both side by side. Trace one figure to
-file, columns, filter, rows and sum. A recommendation takes the six fields
+file, columns, filter, rows and sum; without raw data, check it against a
+second place in the material (table against text, total against its parts) and
+write "not recomputed from raw data". A recommendation takes the six fields
 above, with a trigger in quantities. Never pick a definition silently, never
 ask for credentials, keys or tokens. To compute a metric from raw data, use the
 skill kennzahl-fragekarte.

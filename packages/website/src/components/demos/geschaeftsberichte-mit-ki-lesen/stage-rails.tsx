@@ -7,6 +7,7 @@ import {
   COUNTERS,
   mergeRecords,
   rate,
+  SAME_BAND,
   verdict,
   type Counter,
   type Verdict,
@@ -21,16 +22,20 @@ import {
   railItems,
   railX,
   REVEAL,
-  sourceX,
   span,
+  STRIP_IN_RAILS,
+  stripBar,
 } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/timelines";
 import { fill, type Fmt } from "./fmt";
+import { usePointerChoice } from "./pointer-choice";
 import { DECISION_SECTION } from "./stage-claim";
 
 /** The rail a poll answer is true on. */
 export const RAIL_OF: Readonly<Record<Verdict, Counter>> = { better: "records", same: "affected", worse: "scrapped" };
 
 const DOT_H = 6;
+/** The label row above each track, in viewBox units. */
+const LABEL_ROW = 24;
 const DOT_STEP = 7;
 const pct = (value: number, of: number) => `${(value / of) * 100}%`;
 
@@ -53,6 +58,9 @@ interface RailsProps {
   };
 }
 
+/** Ghosts (rework on the scrap rail) stay this faint once they have landed. */
+const GHOST_OPACITY = 0.15;
+
 function RailMarks({ counter, t, merge }: { readonly counter: Counter; readonly t: number; readonly merge: number }) {
   const plain = railItems(counter, false);
   const merged = counter === "records" ? railItems(counter, true) : plain;
@@ -61,7 +69,7 @@ function RailMarks({ counter, t, merge }: { readonly counter: Counter; readonly 
   const tickShow = span(t, REVEAL.tick[0], REVEAL.tick[1]);
   return (
     <g>
-      <line x1={RAIL_X0} x2={RAIL_VIEW.width - RAIL_X0} y1={bottom + 1.5} y2={bottom + 1.5} className="nw-track" vectorEffect="non-scaling-stroke" />
+      <line x1={RAIL_X0} x2={RAIL_VIEW.width - RAIL_X0} y1={bottom + 1.5} y2={bottom + 1.5} className="nw-track" opacity={span(t, REVEAL.labels[0], REVEAL.labels[1])} vectorEffect="non-scaling-stroke" />
       {plain.map((item, index) => {
         const target = merged[index] ?? item;
         const share = counter === "records" ? ease(merge) : 0;
@@ -71,27 +79,26 @@ function RailMarks({ counter, t, merge }: { readonly counter: Counter; readonly 
         const fly = flight(t, item.row);
         const h = counter === "records" ? DOT_H : RAIL_H;
         const y = bottom - h - level * DOT_STEP;
-        const fromX = sourceX(item.row);
-        const fx = lerp(fromX, x, fly);
-        const fy = lerp(-RAIL_H, y, fly);
-        const fw = lerp(2, w, fly);
+        // Before the flight every row stands in the file strip; the three rails' copies of a row coincide there.
+        const from = stripBar(item.row, STRIP_IN_RAILS.base, STRIP_IN_RAILS.height);
         return (
           <rect
             key={item.row}
-            x={fx}
-            y={fy}
-            width={Math.max(0.5, fw)}
-            height={h}
+            x={lerp(from.x, x, fly)}
+            y={lerp(from.y, y, fly)}
+            width={Math.max(0.5, lerp(from.w, w, fly))}
+            height={lerp(from.h, h, fly)}
             className={item.filled ? "nw-mark-fill" : "nw-mark-line"}
-            opacity={item.ghost ? 1 - fly : fly > 0 ? 1 : 0}
+            opacity={item.ghost ? lerp(1, GHOST_OPACITY, fly) : 1}
             vectorEffect="non-scaling-stroke"
           />
         );
       })}
+      {/* The August tick stays inside the band of marks, below the rail's label row. */}
       <line
         x1={tick}
         x2={tick}
-        y1={RAIL_Y[counter] - 4}
+        y1={RAIL_Y[counter] + 6}
         y2={bottom + 6}
         className="nw-tick"
         opacity={tickShow}
@@ -104,10 +111,23 @@ function RailMarks({ counter, t, merge }: { readonly counter: Counter; readonly 
 const RAIL_X0 = 8;
 
 /** The rail labels; on the counter beat they form one radio group with a legend. */
-function RailGroup({ legend, children }: { readonly legend: string | null; readonly children: ReactNode }) {
+function RailGroup({
+  legend,
+  pointer,
+  children,
+}: {
+  readonly legend: string | null;
+  readonly pointer: ReturnType<typeof usePointerChoice>;
+  readonly children: ReactNode;
+}) {
   if (legend === null) return <>{children}</>;
   return (
-    <fieldset className="nw-rail-group" data-chip-group="nw-counter">
+    <fieldset
+      className="nw-rail-group"
+      data-chip-group="nw-counter"
+      onPointerDown={pointer.onPointerDown}
+      onKeyDown={pointer.onKeyDown}
+    >
       <legend className="sr-only">{legend}</legend>
       {children}
     </fieldset>
@@ -117,9 +137,11 @@ function RailGroup({ legend, children }: { readonly legend: string | null; reado
 /** Beats 2 and 3: the 23 September rows of ncr_records.csv, laid out three ways. */
 export function StageRails({ pack, fmt, t, framed, merge, top, choice }: RailsProps) {
   const count = span(t, REVEAL.count[0], REVEAL.count[1]);
+  const labels = span(t, REVEAL.labels[0], REVEAL.labels[1]);
   const showVerdict = t >= REVEAL.verdict;
   const showFrame = t >= REVEAL.frame;
   const groups = mergeRecords(CRAFT_NCR_SEP).length;
+  const pointer = usePointerChoice();
   return (
     <div className="nw-rails">
       <div className="nw-top">{top}</div>
@@ -130,12 +152,13 @@ export function StageRails({ pack, fmt, t, framed, merge, top, choice }: RailsPr
             <RailMarks key={counter} counter={counter} t={t} merge={merge} />
           ))}
         </svg>
-        <RailGroup legend={choice?.legend ?? null}>
+        <RailGroup legend={choice?.legend ?? null} pointer={pointer}>
         {COUNTERS.map((counter) => {
           const aug = rate(counter, "aug");
           const sep = rate(counter, "sep");
           const now = counter === "records" ? lerp(sep, rate("records", "sep", true), ease(merge)) : sep;
-          const value = lerp(0, now, ease(count));
+          // The figure runs from August to September, so the motion itself carries the verdict.
+          const value = lerp(aug, now, ease(count));
           const isMerged = counter === "records" && merge > 0.5;
           const Row = choice ? "label" : "div";
           return (
@@ -145,7 +168,11 @@ export function StageRails({ pack, fmt, t, framed, merge, top, choice }: RailsPr
               data-rail={counter}
               data-choosable={choice ? "" : undefined}
               data-framed={framed === counter && showFrame ? "" : undefined}
-              style={{ top: pct(RAIL_Y[counter] - 22, RAIL_VIEW.height), height: pct(RAIL_H + 30, RAIL_VIEW.height) }}
+              style={{
+                top: pct(RAIL_Y[counter] - LABEL_ROW, RAIL_VIEW.height),
+                height: pct(RAIL_H + LABEL_ROW + 8, RAIL_VIEW.height),
+                opacity: labels,
+              }}
             >
               {choice ? (
                 <input
@@ -153,7 +180,10 @@ export function StageRails({ pack, fmt, t, framed, merge, top, choice }: RailsPr
                   name="nw-counter"
                   value={counter}
                   checked={choice.value === counter}
-                  onChange={() => choice.onChange(counter)}
+                  onChange={() => {
+                    choice.onChange(counter);
+                    pointer.settle();
+                  }}
                   className="nw-rail-input"
                 />
               ) : null}
@@ -174,7 +204,7 @@ export function StageRails({ pack, fmt, t, framed, merge, top, choice }: RailsPr
         })}
         </RailGroup>
       </div>
-      <p className="nw-per">{fill(pack.reveal.per, { per: fmt.per })}</p>
+      <p className="nw-per">{fill(pack.reveal.per, { per: fmt.per, band: fmt.share(SAME_BAND, 0) })}</p>
     </div>
   );
 }

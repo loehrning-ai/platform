@@ -1,11 +1,12 @@
 "use client";
 
 import { cx } from "@/components/werk/cx";
+import { usePointerChoice } from "./pointer-choice";
 
 /**
  * One radio group drawn as square chips: native radios, so arrow keys move
- * the choice and the shell leaves keys inside it alone. Nothing preselected
- * unless `value` says so.
+ * the choice and the shell leaves keys inside it alone. A tap hands focus to
+ * "Weiter" (pointer-choice.ts). Nothing preselected unless `value` says so.
  */
 export function ChipGroup<T extends string>({
   legend,
@@ -22,8 +23,14 @@ export function ChipGroup<T extends string>({
   readonly onChange: (value: T) => void;
   readonly className?: string;
 }) {
+  const pointer = usePointerChoice();
   return (
-    <fieldset className={cx("nw-chips", className)} data-chip-group={name}>
+    <fieldset
+      className={cx("nw-chips", className)}
+      data-chip-group={name}
+      onPointerDown={pointer.onPointerDown}
+      onKeyDown={pointer.onKeyDown}
+    >
       <legend className="sr-only">{legend}</legend>
       {options.map((option) => (
         <label key={option.value} className="nw-chip" data-checked={value === option.value ? "" : undefined}>
@@ -32,7 +39,10 @@ export function ChipGroup<T extends string>({
             name={name}
             value={option.value}
             checked={value === option.value}
-            onChange={() => onChange(option.value)}
+            onChange={() => {
+              onChange(option.value);
+              pointer.settle();
+            }}
             className="nw-chip-input"
           />
           <span>{option.label}</span>

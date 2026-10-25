@@ -29,12 +29,20 @@ export const RAIL_VIEW = { width: 340, height: 196 } as const;
 export const RAIL_X = 8;
 export const RAIL_W = 324;
 /** The top of each rail's track inside the rail SVG. */
-export const RAIL_Y: Readonly<Record<Counter, number>> = { records: 22, affected: 88, scrapped: 154 };
+export const RAIL_Y: Readonly<Record<Counter, number>> = { records: 26, affected: 92, scrapped: 158 };
 export const RAIL_H = 18;
 
-/** Each rail's own scale: 1.25 times the larger of August and September. */
+/**
+ * Rail scales. Records has its own (a count of rows). Affected and scrapped
+ * share one, 1.1 times the largest of their four rates, so the scrap rail
+ * reads as a part of the affected rail.
+ */
+const UNITS_MAX =
+  Math.max(rate("affected", "aug"), rate("affected", "sep"), rate("scrapped", "aug"), rate("scrapped", "sep")) * 1.1;
+
 export function railMax(counter: Counter): number {
-  return Math.max(rate(counter, "aug"), rate(counter, "sep")) * 1.25;
+  if (counter === "records") return Math.max(rate("records", "aug"), rate("records", "sep")) * 1.25;
+  return UNITS_MAX;
 }
 
 export const railX = (counter: Counter, value: number) => RAIL_X + (value / railMax(counter)) * RAIL_W;
@@ -47,7 +55,7 @@ export interface RailItem {
   /** Stack level above the track (merged records only). */
   readonly level: number;
   readonly filled: boolean;
-  /** Not counted on this rail (rework on the scrap rail). */
+  /** Not counted on this rail (rework on the scrap rail): drawn as a faint ghost after the counted marks. */
   readonly ghost: boolean;
 }
 
@@ -92,9 +100,9 @@ export function railItems(counter: Counter, merged = false): readonly RailItem[]
   for (const index of order) {
     const row = CRAFT_NCR_SEP[index];
     if (!row) continue;
-    // A row this rail does not count (rework on the scrap rail) lands with no width where the counted marks end.
+    // A row this rail does not count (rework on the scrap rail) lands after the counted marks, as a ghost.
     const ghost = counter === "scrapped" && !row.scrap;
-    const w = ghost ? 0 : row.qty * perThousand * scale;
+    const w = row.qty * perThousand * scale;
     placed.set(index, { row: index, x: cursor, w, level: 0, filled: row.scrap, ghost });
     cursor += w;
   }
@@ -106,9 +114,37 @@ export function sourceX(row: number): number {
   return RAIL_X + (row * RAIL_W) / CRAFT_NCR_SEP.length;
 }
 
+/** The largest qty_affected of the 23 rows: the tallest bar of the file strip. */
+export const QTY_MAX = Math.max(...CRAFT_NCR_SEP.map((row) => row.qty));
+
+export interface Bar {
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly h: number;
+}
+
+/**
+ * The file strip: the 23 rows as upright bars in ncr_date order, height by
+ * qty_affected, standing on `base` and at most `height` tall. Beat 1 draws it
+ * at rest, and the reveal starts from it, so the same bars fly into the rails.
+ */
+export function stripBar(row: number, base: number, height: number): Bar {
+  const slot = RAIL_W / CRAFT_NCR_SEP.length;
+  const qty = CRAFT_NCR_SEP[row]?.qty ?? 0;
+  const h = Math.max(2, (qty / QTY_MAX) * height);
+  return { x: RAIL_X + row * slot + slot * 0.18, y: base - h, w: slot * 0.64, h };
+}
+
+/** The strip inside the rail stage: it stands in the middle band, where no rail label sits before the reveal. */
+export const STRIP_IN_RAILS = { base: 150, height: 104 } as const;
+
 /** Reveal timing, all on the beat's 0..1 clock. */
 export const REVEAL = {
   fly: [0.12, 0.62, 0.24] as const,
+  /** Rail names and values fade in as the last bars land. */
+  labels: [0.5, 0.64] as const,
+  /** Values run from August to September. */
   count: [0.58, 0.8] as const,
   tick: [0.76, 0.86] as const,
   verdict: 0.86,
@@ -147,8 +183,8 @@ function asWeeks(index: number): Block {
 }
 
 /** Column x of a month when the weeks gather (both month total and per week). */
-export const MONTH_X: Readonly<Record<Month, number>> = { aug: 64, sep: 214 };
-const MONTH_W = 64;
+export const MONTH_X: Readonly<Record<Month, number>> = { aug: 40, sep: 236 };
+export const MONTH_W = 64;
 const TOTAL_MAX = unitsShipped("sep") * 1.08;
 
 /** Month total: the weeks stack into one column, to the month scale. */
@@ -213,7 +249,10 @@ export const BIN_X: Readonly<Record<ModelCode, number>> = { E1: 14, E2: 124, G1:
 const CHIP = 9;
 const CHIP_GAP = 2;
 const BIN_COLS = 9;
-export const BIN_TOP = 96;
+/** The bins sit at the top under their labels; their products appear under them; the file waits at the bottom. */
+export const BIN_TOP = 22;
+const SOURCE_COLS = 24;
+const SOURCE_TOP = 146;
 
 export interface Chip {
   readonly x: number;
@@ -221,13 +260,13 @@ export interface Chip {
   readonly model: ModelCode;
 }
 
-/** Where row i waits: a 19 × 5 grid, the file. */
+/** Where row i waits: a 24 × 4 grid at the bottom, the file. */
 export function chipSource(index: number): Chip {
-  const column = index % 19;
-  const line = Math.floor(index / 19);
+  const column = index % SOURCE_COLS;
+  const line = Math.floor(index / SOURCE_COLS);
   return {
-    x: 14 + column * (CHIP + 7.6),
-    y: 10 + line * (CHIP + 4),
+    x: 14 + column * ((TRACE_VIEW.width - 28 - CHIP) / (SOURCE_COLS - 1)),
+    y: SOURCE_TOP + line * (CHIP + 3),
     model: CRAFT_SEP_ROWS[index]?.[0] ?? "E1",
   };
 }
@@ -241,6 +280,11 @@ export function chipTarget(index: number): Chip {
   return { x: BIN_X[model] + column * (CHIP + CHIP_GAP), y: BIN_TOP + line * (CHIP + CHIP_GAP), model };
 }
 
+/** The bottom edge of the fullest bin: the products are written under it. */
+export const BIN_BOTTOM =
+  BIN_TOP +
+  Math.max(...MODELS.map((model) => Math.ceil(CRAFT_SEP_ROWS.filter(([code]) => code === model).length / BIN_COLS))) * (CHIP + CHIP_GAP);
+
 export const CHIP_SIZE = CHIP;
 export const TRACE_MODELS = MODELS;
 
@@ -248,6 +292,11 @@ export const TRACE_MODELS = MODELS;
 export function chipFlight(index: number, ms: number): number {
   const start = Math.min(index * STEP_MS, DELAY_CAP_MS);
   return clamp01((ms - start) / FLY_MS);
+}
+
+/** True once every row of `model` has landed: its product line may show. */
+export function binLanded(model: ModelCode, ms: number): boolean {
+  return CRAFT_SEP_ROWS.every(([code], index) => code !== model || chipFlight(index, ms) >= 1);
 }
 
 /** Rows that have landed `ms` after the tap: the counter adds only these. */

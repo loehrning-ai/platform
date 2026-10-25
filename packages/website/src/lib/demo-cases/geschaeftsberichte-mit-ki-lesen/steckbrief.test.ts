@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { COPY } from "./copy";
-import { ADJUSTED, canAddCard, cardToMarkdown, cleanField, EMPTY_CARD, FIELD_LIMITS, lintCard, type OwnCard } from "./steckbrief";
+import { ADJUSTED, canAddCard, cardToMarkdown, cleanField, EMPTY_CARD, FIELD_LIMITS, lintCard, withExample, type OwnCard } from "./steckbrief";
 
 const complete: OwnCard = {
   ...EMPTY_CARD,
@@ -86,5 +86,40 @@ describe("cards", () => {
     expect(markdown).toContain("Kalenderwoche, verglichen mit Vorperiode");
     expect(markdown).toContain("reklamationen.xlsx, Spalte menge");
     expect(cardToMarkdown(EMPTY_CARD, COPY.en.own.card)).toContain("### not set");
+  });
+});
+
+describe("the example card on the stage", () => {
+  const example: OwnCard = {
+    ...EMPTY_CARD,
+    name: "Reklamationsquote Werk 2",
+    decision: "Lieferant wechseln",
+    numerator: "Reklamierte Stück",
+    numeratorKind: "quantity",
+    denominator: "Gelieferte Stück",
+    period: "month",
+    comparison: "lastYear",
+    sourceFile: "ERP",
+    sourceColumn: "menge",
+    limit: "Nur gemeldete",
+    trigger: "Zwei Monate über Plan",
+  };
+
+  it("shows the example untouched while nothing is typed", () => {
+    const { card, typed } = withExample(EMPTY_CARD, example);
+    expect(card).toEqual(example);
+    expect(typed).toEqual([false, false, false, false, false, false, false, false]);
+  });
+
+  it("replaces a line as soon as the visitor sets it, and keeps the rest", () => {
+    const { card, typed } = withExample({ ...EMPTY_CARD, name: "Quote", noDenominator: true, period: "week" }, example);
+    expect(card.name).toBe("Quote");
+    expect(card.noDenominator).toBe(true);
+    expect(card.denominator).toBe("");
+    expect(card.period).toBe("week");
+    expect(card.comparison).toBe("");
+    expect(card.decision).toBe("Lieferant wechseln");
+    expect(typed).toEqual([true, false, false, true, true, false, false, false]);
+    expect(cardToMarkdown(card, COPY.de.own.card).split("\n")).toHaveLength(typed.length);
   });
 });

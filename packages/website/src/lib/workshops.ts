@@ -490,7 +490,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       "Alle, die Claude ohne Programmieren für Zahlen testen wollen",
     ],
     notForYou:
-      "Ohne Claude-Konto nimm Workshop 01, 03 oder 04; sie laufen ohne KI-Konto.",
+      "Ohne Claude-Konto: Die Demo geht ohne Konto, für das Kit brauchst du Claude.",
     question:
       "Soll NORTHWIND die Produktlinie CRAFT nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
     outcomes: [
@@ -514,7 +514,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Claude listet die Zahlen des Vertriebsleiters mit Abschnitt. Vorher schreibst du auf: besser, gleich oder schlechter?",
+          "Claude listet die Zahlen des VP Sales mit Abschnitt. Vorher schreibst du auf: besser, gleich oder schlechter?",
       },
       {
         label: "Die Definitionen festlegen",
@@ -577,7 +577,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         n: "01",
         title: "Das Argument lesen",
         description:
-          "Claude listet jede Zahl des Vertriebsleiters mit Abschnitt; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
+          "Claude listet jede Zahl des VP Sales mit Abschnitt; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
         tool: "Bericht",
       },
       {
@@ -640,7 +640,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Deck · 22 Folien",
+        label: "Deck · 15 Folien",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
@@ -658,7 +658,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         language: "de",
         role: "kit",
         phase: "before",
-        sizeLabel: "36 KB",
+        sizeLabel: "37 KB",
         description:
           "Das Kit enthält START-HERE.md, Rohdaten, beide Monatsberichte, die Steckbriefe zum Ausfüllen, den NORTHWIND-Skill, eine Dashboard-Vorlage, den Skill kennzahlen-steckbrief und Projektanweisungen. Nur Textdateien.",
         short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Steckbriefen und Skill.",
@@ -888,7 +888,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       "Anyone who wants to test Claude on figures without code",
     ],
     notForYou:
-      "Without a Claude account, pick Workshop 01, 03 or 04; they need no AI account.",
+      "Without a Claude account: the demo needs no account, the kit needs Claude.",
     question:
       "Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?",
     outcomes: [
@@ -1038,7 +1038,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     },
     materials: [
       {
-        label: "Deck · 22 slides",
+        label: "Deck · 15 slides",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
@@ -1056,7 +1056,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         language: "en",
         role: "kit",
         phase: "before",
-        sizeLabel: "35 KB",
+        sizeLabel: "36 KB",
         description:
           "The kit holds START-HERE.md, raw data, both monthly reports, the metric cards to fill in, the NORTHWIND skill, a dashboard template, the kennzahlen-steckbrief skill and project instructions. Text files only.",
         short: "The NORTHWIND kit with raw data, reports, metric cards and the skill.",

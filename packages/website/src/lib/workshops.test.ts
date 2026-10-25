@@ -103,10 +103,10 @@ describe("workshops catalog", () => {
     );
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")?.materials[0]?.label,
-    ).toBe("Deck · 22 Folien");
+    ).toBe("Deck · 15 Folien");
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")?.materials[0]?.label,
-    ).toBe("Deck · 22 slides");
+    ).toBe("Deck · 15 slides");
   });
 
   it("gives every real-world second case a source and a decision", () => {

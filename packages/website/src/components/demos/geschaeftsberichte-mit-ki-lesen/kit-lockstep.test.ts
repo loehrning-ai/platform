@@ -6,6 +6,7 @@ import { CRAFT_NCR_SEP, REPORT } from "@/lib/demo-cases/geschaeftsberichte-mit-k
 import { SCRAP_PRICE_EUR } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/decide";
 import { BASES, COUNTERS, demand, growth, rate } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
 import { traceGroups, traceSum } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trace";
+import { formatBytes } from "@/components/demos/take-home/for-your-claude";
 import { getWorkshopBySlug } from "@/lib/workshops";
 import { KITS, kitText } from "@/test/northwind-kit";
 import { kitWords, triggerText } from "./decision-text";
@@ -59,16 +60,17 @@ describe.each(["de", "en"] as const)("the %s kit", (locale) => {
   it("quotes the VP's claim from the report", () => {
     const claim = pack.claim;
     const figure = fill(claim.quoteFigure, { a: fmt.n(REPORT.vpDefectsAug, 2), b: fmt.n(REPORT.vpDefectsSep, 2), per: fmt.per });
-    const quote = `${claim.quoteBefore}${figure}${claim.quoteAfter}`.replace(/["„“]/g, "");
+    const quote = `${claim.quoteBefore}${figure}${claim.quoteAfter}`.replace(/["„“”]/g, "");
     expect(report).toContain(flat(quote));
   });
 });
 
 describe("the workshop page", () => {
+  // The size as the demo's take-home block prints it (formatBytes), so page and demo never disagree.
   it.each(["de", "en"] as const)("links the %s kit with its measured size", (locale) => {
     const kit = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", locale)?.materials.find((material) => material.role === "kit");
     expect(kit?.href.endsWith(KITS[locale].split("/").pop() ?? "")).toBe(true);
     const size = statSync(join(process.cwd(), KITS[locale])).size;
-    expect(kit?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
+    expect(kit?.sizeLabel).toBe(formatBytes(size, locale));
   });
 });

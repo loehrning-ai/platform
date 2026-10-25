@@ -4,6 +4,7 @@ import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/
 import { CRAFT_WEEKS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
 import { growth, unitsShipped, weekCount, type Month } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
 import {
+  MONTH_W,
   MONTH_X,
   monthTop,
   WEEK_BASE_Y,
@@ -17,6 +18,15 @@ import { fill, type Fmt } from "./fmt";
 export const LINES_SECTION = 2;
 const MONTHS: readonly Month[] = ["aug", "sep"];
 const pct = (value: number, of: number) => `${(value / of) * 100}%`;
+/** A block shorter than this (viewBox units) carries no date label. */
+const LABEL_MIN_H = 14;
+
+/** week_start as a short date: "2.9." in German, "9/2" in English. */
+function shortDate(start: string, locale: string): string {
+  const month = Number(start.slice(5, 7));
+  const day = Number(start.slice(8, 10));
+  return locale === "de" ? `${day}.${month}.` : `${month}/${day}`;
+}
 
 /**
  * Beat 4: the nine CRAFT weeks of demand_actuals.csv. Month total stacks a
@@ -73,7 +83,7 @@ export function StageWeeks({
                   key={month}
                   className="nw-col-label"
                   style={{
-                    left: pct(MONTH_X[month] - 18, WEEK_VIEW.width),
+                    left: pct(MONTH_X[month] + MONTH_W / 2 - 50, WEEK_VIEW.width),
                     width: pct(100, WEEK_VIEW.width),
                     top: `calc(${pct(monthTop(month, settled), WEEK_VIEW.height)} - 2.6rem)`,
                   }}
@@ -88,9 +98,31 @@ export function StageWeeks({
               );
             })
           : null}
+        {share >= 1 && to !== "week"
+          ? CRAFT_WEEKS.map((week, index) => {
+              const block = weekFrame(index, from, to, share, grow);
+              if (block.h < LABEL_MIN_H || grow < 1) return null;
+              return (
+                <span
+                  key={week.start}
+                  className="nw-week-date"
+                  data-sep={week.start >= "2023-09" ? "" : undefined}
+                  aria-hidden="true"
+                  style={{
+                    left: pct(block.x, WEEK_VIEW.width),
+                    width: pct(block.w, WEEK_VIEW.width),
+                    top: pct(block.y + block.h - LABEL_MIN_H, WEEK_VIEW.height),
+                    height: pct(LABEL_MIN_H, WEEK_VIEW.height),
+                  }}
+                >
+                  {shortDate(week.start, pack.locale)}
+                </span>
+              );
+            })
+          : null}
         <div className="nw-month-axis" aria-hidden="true">
           {MONTHS.map((month) => (
-            <span key={month} style={{ left: pct(MONTH_X[month] + 32, WEEK_VIEW.width) }}>
+            <span key={month} style={{ left: pct(MONTH_X[month] + MONTH_W / 2, WEEK_VIEW.width) }}>
               {pack.months[month]}
             </span>
           ))}

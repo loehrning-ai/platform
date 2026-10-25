@@ -366,6 +366,8 @@
   flex-wrap: wrap;
   align-items: center;
   column-gap: 0.5rem;
+  /* When the secondary link wraps under the pill, they must not touch. */
+  row-gap: 0.375rem;
 }
 
 /* The time or the file size is a small pill, so each row has a clear target

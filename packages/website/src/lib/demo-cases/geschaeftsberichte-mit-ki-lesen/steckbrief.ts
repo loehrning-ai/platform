@@ -135,3 +135,35 @@ export function cardToMarkdown(card: OwnCard, words: CardWords): string {
     `- ${words.trigger}: ${text("trigger")}`,
   ].join("\n");
 }
+
+/**
+ * The stage preview before and while the visitor types: every field the
+ * visitor has not set yet shows the example's value. `typed[i]` says whether
+ * line i of cardToMarkdown (heading, then the seven lines) is the visitor's.
+ */
+export function withExample(card: OwnCard, example: OwnCard): { readonly card: OwnCard; readonly typed: readonly boolean[] } {
+  const own = (field: TextField) => filled(card[field]);
+  const pick = (field: TextField) => (own(field) ? card[field] : example[field]);
+  const numeratorOwn = own("numerator") || card.numeratorKind !== "";
+  const denominatorOwn = own("denominator") || card.noDenominator;
+  const periodOwn = card.period !== "";
+  const sourceOwn = own("sourceFile") || own("sourceColumn");
+  const merged: OwnCard = {
+    name: pick("name"),
+    decision: pick("decision"),
+    numerator: numeratorOwn ? card.numerator : example.numerator,
+    numeratorKind: numeratorOwn ? card.numeratorKind : example.numeratorKind,
+    denominator: denominatorOwn ? card.denominator : example.denominator,
+    noDenominator: denominatorOwn ? card.noDenominator : example.noDenominator,
+    period: periodOwn ? card.period : example.period,
+    comparison: periodOwn ? card.comparison : example.comparison,
+    sourceFile: sourceOwn ? card.sourceFile : example.sourceFile,
+    sourceColumn: sourceOwn ? card.sourceColumn : example.sourceColumn,
+    limit: pick("limit"),
+    trigger: pick("trigger"),
+  };
+  return {
+    card: merged,
+    typed: [own("name"), own("decision"), numeratorOwn, denominatorOwn, periodOwn, sourceOwn, own("limit"), own("trigger")],
+  };
+}

@@ -4,8 +4,10 @@ import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/
 import { CRAFT_SEP_ROWS, DEMAND_ROWS, REPORT } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
 import { unitsShipped } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
 import {
+  BIN_BOTTOM,
   BIN_TOP,
   BIN_X,
+  binLanded,
   CHIP_SIZE,
   chipFlight,
   chipSource,
@@ -23,11 +25,14 @@ import { fill, type Fmt } from "./fmt";
 import { LINES_SECTION } from "./stage-weeks";
 
 const pct = (value: number, of: number) => `${(value / of) * 100}%`;
+/** A bin is this wide in viewBox units (nine chips and their gaps). */
+const BIN_W = 98;
 
 /**
- * Beat 5: CRAFT's September revenue traced to its 95 rows. The file count
- * falls from all rows to CRAFT's, the rows fly into their model's bin, and
- * the sum adds only rows that have landed.
+ * Beat 4: CRAFT's September revenue traced to its 95 rows. The file count
+ * falls from all rows to CRAFT's, the rows fly from the file at the bottom
+ * into their model's bin, each bin writes its product (rows, units × list
+ * price) once its last row has landed, and the sum adds only landed rows.
  */
 export function StageTrace({
   pack,
@@ -53,25 +58,33 @@ export function StageTrace({
   return (
     <div className="nw-trace">
       <div className="nw-top">
-        <p className="nw-strip">
-          {fill(copy.strip, { units: fmt.n(unitsShipped("sep")) })}
-          <button
-            type="button"
-            className="nw-figure-button"
-            data-trace-figure=""
-            aria-label={`${fmt.eur(REPORT.craftRevenueEur)}: ${copy.hint}`}
-            onClick={onTrace}
-          >
-            {fmt.eur(REPORT.craftRevenueEur)}
-          </button>
-        </p>
+        <p className="nw-strip">{fill(copy.strip, { section: LINES_SECTION, units: fmt.n(unitsShipped("sep")) })}</p>
       </div>
-      <p className="nw-file">
-        {fill(copy.file, { n: fmt.n(started ? rows : DEMAND_ROWS) })}
-        {started ? null : <span className="nw-hint"> · {copy.hint}</span>}
+      <p className="nw-trace-file">
+        <button
+          type="button"
+          className="nw-figure-button"
+          data-trace-figure=""
+          aria-label={`${fmt.eur(REPORT.craftRevenueEur)}: ${copy.hint}`}
+          onClick={onTrace}
+        >
+          {fmt.eur(REPORT.craftRevenueEur)}
+        </button>
+        <span className="nw-trace-rows">{fill(copy.file, { n: fmt.n(started ? rows : DEMAND_ROWS) })}</span>
       </p>
       <div className="nw-area">
         <svg className="nw-svg" viewBox={`0 0 ${TRACE_VIEW.width} ${TRACE_VIEW.height}`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          {TRACE_MODELS.map((model) => (
+            <line
+              key={model}
+              x1={BIN_X[model]}
+              x2={BIN_X[model] + BIN_W}
+              y1={BIN_TOP - 4}
+              y2={BIN_TOP - 4}
+              className="nw-track"
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
           {CRAFT_SEP_ROWS.map(([model], index) => {
             const from = chipSource(index);
             const to = chipTarget(index);
@@ -88,27 +101,30 @@ export function StageTrace({
               />
             );
           })}
-          {TRACE_MODELS.map((model) => (
-            <line
-              key={model}
-              x1={BIN_X[model]}
-              x2={BIN_X[model] + 98}
-              y1={BIN_TOP - 6}
-              y2={BIN_TOP - 6}
-              className="nw-track"
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
         </svg>
-        {groups.map((group) => (
-          <div
-            key={group.code}
-            className="nw-bin-label"
-            style={{ left: pct(BIN_X[group.code], TRACE_VIEW.width), top: pct(BIN_TOP - 26, TRACE_VIEW.height) }}
-          >
-            <strong>{fill(copy.bin, { code: group.code, price: fmt.eur(group.price) })}</strong>
-          </div>
-        ))}
+        {groups.map((group) => {
+          const shown = started && binLanded(group.code, ms);
+          return (
+            <div key={group.code}>
+              <p
+                className="nw-bin-label"
+                style={{ left: pct(BIN_X[group.code], TRACE_VIEW.width), width: pct(BIN_W, TRACE_VIEW.width), bottom: pct(TRACE_VIEW.height - BIN_TOP + 6, TRACE_VIEW.height) }}
+              >
+                {fill(copy.bin, { code: group.code, price: fmt.eur(group.price) })}
+              </p>
+              <p
+                className="nw-bin-product"
+                data-bin-product={group.code}
+                data-show={shown ? "" : undefined}
+                style={{ left: pct(BIN_X[group.code], TRACE_VIEW.width), width: pct(BIN_W + 8, TRACE_VIEW.width), top: pct(BIN_BOTTOM + 4, TRACE_VIEW.height) }}
+              >
+                <span>{fill(copy.binRows, { n: fmt.n(group.rows) })}</span>
+                <span>{fill(copy.binTimes, { units: fmt.n(group.units), price: fmt.eur(group.price) })}</span>
+                <strong>= {fmt.eur(group.revenue)}</strong>
+              </p>
+            </div>
+          );
+        })}
       </div>
       <p className="nw-sum" data-trace-sum="" data-done={done ? "" : undefined}>
         <span>{fill(copy.path.sum, { eur: fmt.eur(sum) })}</span>

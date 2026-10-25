@@ -8,7 +8,7 @@ import type { Beat } from "@/lib/demo-beats";
 const KIT = "northwind-analyst-kit";
 
 export const BEATS: readonly Beat[] = [
-  { id: "frage", kind: "commit", seconds: 0.6, label: { de: "Frage", en: "Question" }, kitFile: `${KIT}/reports/2023-09-monthly-report.md` },
+  { id: "frage", kind: "commit", seconds: 1.4, label: { de: "Frage", en: "Question" }, kitFile: `${KIT}/reports/2023-09-monthly-report.md` },
   { id: "drei-zaehlweisen", kind: "reveal", seconds: 3, label: { de: "Drei Zählweisen", en: "Three counts" }, kitFile: `${KIT}/data/ncr_records.csv` },
   { id: "zaehler-waehlen", kind: "tool", seconds: 0.4, label: { de: "Zähler", en: "Numerator" }, kitFile: `${KIT}/metric-cards.md` },
   { id: "zeitraum", kind: "apply", seconds: 1, label: { de: "Zeitraum", en: "Period" }, kitFile: `${KIT}/data/demand_actuals.csv` },

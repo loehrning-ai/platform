@@ -94,6 +94,23 @@ test.describe(`/demos/${SLUG}`, () => {
     await expect(failed).toContainText("1,86");
   });
 
+  test("DE: ArrowRight after a tapped rail moves on and keeps the tapped numerator", async ({ page }) => {
+    await open(page, `/demos/${SLUG}?beat=zaehler-waehlen`);
+    await page.locator('[data-rail="scrapped"]').click();
+    await expect(page.locator("[data-demo-next]")).toBeFocused();
+    await page.keyboard.press("ArrowRight");
+    await expect(clock(page)).toHaveAttribute("data-beat", "zeitraum");
+    await expect(page.locator("[data-nw-counter]")).toHaveAttribute("data-nw-counter", "scrapped");
+  });
+
+  test("DE: ?beat= opens a beat at its final state", async ({ page }) => {
+    await open(page, `/demos/${SLUG}?beat=drei-zaehlweisen`);
+    // The reveal runs 3 s; a deep link must not replay it, so the end values are there at once.
+    await expect(rail(page, "records")).toHaveText("2,51", { timeout: 800 });
+    await expect(rail(page, "affected")).toHaveText("309", { timeout: 200 });
+    await expect(rail(page, "scrapped")).toHaveText("168", { timeout: 200 });
+  });
+
   test("DE: ?beat=5 traces 4.124.238 € to 95 rows", async ({ page }) => {
     await open(page, `/demos/${SLUG}?beat=5`);
     await expect(clock(page)).toHaveAttribute("data-beat", "zahl-pruefen");

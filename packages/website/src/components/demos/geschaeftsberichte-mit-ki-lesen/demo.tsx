@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   DemoLever,
   DemoStage,
@@ -14,7 +14,6 @@ import { CRAFT_NCR_SEP, CRAFT_SEP_ROWS } from "@/lib/demo-cases/geschaeftsberich
 import {
   BASES,
   growth,
-  SAME_BAND,
   weekCount,
   type Basis,
   type Counter,
@@ -25,6 +24,7 @@ import {
   canAddCard,
   cardToMarkdown,
   EMPTY_CARD,
+  FIELD_LIMITS,
   lintCard,
   MAX_CARDS,
   type Finding,
@@ -32,6 +32,7 @@ import {
   type TextField,
 } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/steckbrief";
 import { REVEAL, TRACE_MS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/timelines";
+import { beatIndexFromParam } from "@/lib/demo-beats";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { ChipGroup } from "./chip-group";
 import { decisionText, kitWords } from "./decision-text";
@@ -82,7 +83,7 @@ export interface DemoProps {
  * poll and the levers, never the visitor's own cards.
  */
 export default function Demo({ pack, skillText, instructions }: DemoProps) {
-  const { beat, progress, index, reducedMotion, commit, canAdvance, next, locale } = useBeatClock();
+  const { beats, beat, progress, index, reducedMotion, commit, canAdvance, next, locale } = useBeatClock();
   const fmt = useMemo(() => formatter(pack), [pack]);
   const suggestion = DEMOS_PAGE_COPY[locale].shell.suggestionTaken;
   const [choices, setChoices] = useState<Choices>(EMPTY_CHOICES);
@@ -98,6 +99,23 @@ export default function Demo({ pack, skillText, instructions }: DemoProps) {
     setTraceRun(null);
     setView("mine");
   });
+
+  // A deep link (?beat=) opens its beat at the final state: the shell plays the
+  // motion on entry, and next() during a motion only finishes it.
+  const deepLink = useRef<number | null | undefined>(undefined);
+  useEffect(() => {
+    if (deepLink.current === undefined) {
+      deepLink.current = beatIndexFromParam(beats, new URLSearchParams(window.location.search).get("beat"));
+    }
+    const target = deepLink.current;
+    if (target === null || target <= 0) return;
+    if (index !== target) {
+      if (index > target) deepLink.current = null;
+      return;
+    }
+    deepLink.current = null;
+    if (progress < 1) next();
+  }, [beats, index, next, progress]);
 
   // The poll commits and moves on by itself once beat 1's motion has finished.
   useEffect(() => {
@@ -211,7 +229,7 @@ export default function Demo({ pack, skillText, instructions }: DemoProps) {
         revealT >= REVEAL.verdict
           ? pack.reveal.caption[choices.poll ?? "none"]
           : fill(pack.reveal.counting, { n: CRAFT_NCR_SEP.length });
-      lever = <p className="nw-lever-note">{fill(pack.reveal.band, { band: fmt.share(SAME_BAND, 0) })}</p>;
+      lever = revealT >= REVEAL.verdict ? <p className="nw-lever-note" data-reveal-note="">{pack.reveal.note}</p> : null;
     } else {
       caption = choices.counter
         ? fill(pack.counter.captionChosen, { counter: pack.counters[choices.counter].long })
@@ -274,15 +292,20 @@ export default function Demo({ pack, skillText, instructions }: DemoProps) {
     stage = <StageOwn pack={pack} card={draft} findings={findings} added={cards.length} />;
     caption = pack.own.caption;
     lever = (
-      <button
-        type="button"
-        className="nw-action"
-        data-add-card=""
-        disabled={!canAddCard(draft) || cards.length >= MAX_CARDS}
-        onClick={addCard}
-      >
-        {pack.own.add}
-      </button>
+      <label className="nw-lever-field">
+        <span className="sr-only">{pack.own.fields.name.label}</span>
+        <input
+          type="text"
+          className="nw-input"
+          data-own-lever=""
+          value={draft.name}
+          maxLength={FIELD_LIMITS.name}
+          placeholder={pack.own.fields.name.placeholder}
+          autoComplete="off"
+          spellCheck={false}
+          onChange={(event) => editDraft({ name: event.target.value })}
+        />
+      </label>
     );
   } else {
     stage = <StageTakeHome pack={pack} cards={cards} />;
@@ -295,7 +318,7 @@ export default function Demo({ pack, skillText, instructions }: DemoProps) {
   }
 
   return (
-    <div className="nw-demo" data-nw-beat={id}>
+    <div className="nw-demo" data-nw-beat={id} data-nw-counter={choices.counter ?? ""}>
       <h2 className="sr-only" data-nw-beat-heading="">
         {beat.label[locale]}
       </h2>
@@ -412,7 +435,7 @@ function OwnSection({
         </button>
       </p>
       <div className="nw-dock glass" data-own-dock="">
-        <button type="button" className="nw-action" disabled={!canAddCard(draft) || full} onClick={onAdd}>
+        <button type="button" className="nw-action" data-add-card="" disabled={!canAddCard(draft) || full} onClick={onAdd}>
           {own.add}
         </button>
         <span className="nw-dock-count">{fill(own.count, { n: cards.length, max: MAX_CARDS })}</span>
