@@ -1,9 +1,13 @@
 (() => {
-  const CHANNEL_NAME = "foldline-deck:v1";
-  const STATE_KEY = "foldline-deck:presenter-state:v1";
-  const COMMAND_KEY = "foldline-deck:presenter-command:v1";
-  const DECK_STARTED_KEY = "foldline-deck:deck-started:v1";
-  const TIMER_KEY = "foldline-deck:timer:v1";
+  // One deck id names every channel, window and storage key (lib/deck-keys.js), so two decks in one
+  // browser never share them.
+  const DECK_ID = document.documentElement.getAttribute("data-deck-id") || "datenbereitschaft-fuer-ki";
+  const PRESENTER_WINDOW = `deck-presenter:${DECK_ID}`;
+  const CHANNEL_NAME = PRESENTER_WINDOW;
+  const STATE_KEY = `deck:${DECK_ID}:presenter-state:v1`;
+  const COMMAND_KEY = `deck:${DECK_ID}:presenter-command:v1`;
+  const DECK_STARTED_KEY = `deck:${DECK_ID}:deck-started:v1`;
+  const TIMER_KEY = `deck:${DECK_ID}:timer:v1`;
   const WINDOW_PROTOCOL = "foldline-deck:window:v1";
   const SHARED_PROTOCOL = "foldline-deck:shared-auth:v1";
   const WINDOW_CHANNEL_PATTERN = /^[A-Za-z0-9._~-]{16,160}$/;
@@ -100,7 +104,7 @@
   let connectionStatus = "";
   let timerState = readTimer();
   let selectDirty = false;
-  const NOTE_OPEN_KEY = "foldline-deck:presenter-note-open:v1";
+  const NOTE_OPEN_KEY = `deck:${DECK_ID}:presenter-note-open:v1`;
 
   function byId(id) { return document.getElementById(id); }
 
@@ -996,7 +1000,7 @@
   // A standalone console (opened by hand) becomes the named presenter window, then opens the deck.
   // The deck's P reuses this window by name and re-runs the normal pairing handshake.
   function openDeckFromConsole() {
-    try { window.name = "foldline-presenter"; } catch (_error) { /* the deck's P opens its own console */ }
+    try { window.name = PRESENTER_WINDOW; } catch (_error) { /* the deck's P opens its own console */ }
     const deck = window.open("./slides.html", "_blank");
     setText(nodes.pairingLead, deck
       ? "The deck opened in a new tab. Press P there; this console reloads once and connects."

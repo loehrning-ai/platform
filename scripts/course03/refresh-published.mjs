@@ -39,6 +39,7 @@ export function planRefresh(root) {
     ["guide.html", readFileSync(path.join(root, GUIDE_SOURCE))],
     ["builder.html", readFileSync(path.join(root, BUILDER_PAGE_SOURCE))],
     ["demo.html", readFileSync(path.join(root, DEMO_PAGE_SOURCE))],
+    ["lib/deck-keys.js", readFileSync(path.join(root, "scripts/workshops/deck-keys.js"))],
     // The site's own Typing woff2 builds, used by the three pages above before the course TTF statics.
     ...["Regular", "Medium", "Bold"].map((weight) => [`assets/fonts/Typing-${weight}.woff2`, readFileSync(path.join(root, TYPING_WOFF2_SOURCE, `Typing-${weight}.woff2`))]),
   ]);

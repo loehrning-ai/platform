@@ -101,6 +101,8 @@ for (const name of builderFiles) put(`data-readiness-kit/builder/${name}`, readF
 put("builder.html", readFileSync(path.join(root, BUILDER_PAGE_SOURCE)));
 put("demo.html", readFileSync(path.join(root, DEMO_PAGE_SOURCE)));
 put("guide.html", readFileSync(path.join(root, GUIDE_SOURCE)));
+// The key contract every workshop deck shares (scripts/workshops/sync-deck-keys.mjs --check).
+put("lib/deck-keys.js", readFileSync(path.join(root, "scripts/workshops/deck-keys.js")));
 put("PUBLICATION.md", PUBLICATION);
 put("data-readiness-kit.zip", buildKitArchive(kitArchiveFiles(builderFiles).map((name) => [name, written.get(`data-readiness-kit/${name}`)])));
 // Poster files generated in this repository from src/lib/plakat (packages/website/scripts/plakat/

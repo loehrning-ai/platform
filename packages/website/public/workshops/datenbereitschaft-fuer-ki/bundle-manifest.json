@@ -570,14 +570,19 @@
       "sha256": "81e419db9291ce1a74fa868fe80e6275c489343cb690632a57273948e1e27a13"
     },
     {
+      "path": "lib/deck-keys.js",
+      "sizeBytes": 3734,
+      "sha256": "263ff1d1be1e23648f8b1ca7dace4b690fa161cb2cf116d5b67b13433281ec1e"
+    },
+    {
       "path": "lib/deck-runtime.js",
-      "sizeBytes": 64958,
-      "sha256": "c5e5fd894634e8eb6c04de7b8e597da7cab8ece3325452517728c6cfce06b6e0"
+      "sizeBytes": 65243,
+      "sha256": "8c4b00c2d3144f45580409f774a5e775b82cc5296c3030773c98ca259eab7613"
     },
     {
       "path": "lib/deck-stage.js",
-      "sizeBytes": 52446,
-      "sha256": "367408a8aebe57c0f89032c13c98e79a0118043ee47c099e66377df6891c6f86"
+      "sizeBytes": 52177,
+      "sha256": "2303b7794c73d338d3f6d0c61f3bfd447f9a4aab451df5d210119037cfa1591f"
     },
     {
       "path": "lib/demo-adapter.js",
@@ -601,8 +606,8 @@
     },
     {
       "path": "lib/presenter.js",
-      "sizeBytes": 51984,
-      "sha256": "2ffe8581099c257a1f0852f8ef96845493a5157e8172d8f5ab785582fddf9e6b"
+      "sizeBytes": 52280,
+      "sha256": "b84ff9072252c1fbe0874b400d7238febc20ad87ece1f0acc5a440c0e29d4c11"
     },
     {
       "path": "lib/replay-data.js",
@@ -761,13 +766,13 @@
     },
     {
       "path": "presenter.html",
-      "sizeBytes": 9154,
-      "sha256": "92c9f36e05a54fa9bb76f66799e3ad7cebd9913ff417b0aef6a345d8fdc65ec1"
+      "sizeBytes": 9195,
+      "sha256": "01d9c4d3121c4aa0bd493e11f79c26f696a4264e520a48793b773369806aeda1"
     },
     {
       "path": "slides.html",
-      "sizeBytes": 180071,
-      "sha256": "6eeacf8f318353bed109127802bcc9b4be5a715399357045a876f8fd49861b3a"
+      "sizeBytes": 180157,
+      "sha256": "6a1b805208870ae6834c10d9a9e9adb5015258bd5f0d801c19eb49c269340c90"
     }
   ]
 }

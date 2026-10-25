@@ -59,6 +59,8 @@
     "test:ci": "node --test scripts/__tests__/ci.test.mjs",
     "copy:lint": "node scripts/copy-lint.mjs",
     "test:copy-lint": "node --test scripts/__tests__/copy-lint.test.mjs",
+    "deck-keys:check": "node scripts/workshops/sync-deck-keys.mjs --check",
+    "test:deck-keys": "node --test scripts/__tests__/deck-keys.test.mjs",
     "verify": "bun run ci",
     "verify:release": "node scripts/verify-release.mjs",
     "deploy:production": "node scripts/deploy-production.mjs",

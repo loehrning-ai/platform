@@ -36,8 +36,12 @@
  *     e.detail.reason        // 'init' | 'keyboard' | 'click' | 'tap' | 'api'
  *   });
  *
- * Persistence: current slide index is saved to localStorage keyed by the
- * document path, so refresh returns you to the same place.
+ * Persistence: current slide index is saved to localStorage under
+ * "deck:<deck id>:slide" (the id is <html data-deck-id>), so refresh returns
+ * you to the same place and no other deck shares the key.
+ *
+ * Keys: the shared contract in lib/deck-keys.js (ArrowRight, ArrowLeft, r or
+ * Shift+R back to the first slide, P presenter view). Nothing else is bound.
  *
  * Usage:
  *   <deck-stage width="1920" height="1080">
@@ -54,9 +58,7 @@
 (() => {
   const DESIGN_W_DEFAULT = 1920;
   const DESIGN_H_DEFAULT = 1080;
-  const STORAGE_PREFIX = 'deck-stage:slide:';
   const OVERLAY_HIDE_MS = 1800;
-  const PORTRAIT_KEY = 'deck-stage:portrait-hint-dismissed';
   // Workshop page in the visitor's language: same rule as the strip on the other workshop materials
   // (German when arriving from /workshops/..., English after any /en/... page, else the session's choice).
   const WORKSHOP_PATH = '/workshops/geschaeftsberichte-mit-ki-lesen';
@@ -93,8 +95,12 @@
     } catch (e) { return null; }
   })();
   if (PREVIEW !== null) document.documentElement.setAttribute('data-deck-preview', '');
-  const CHANNEL_NAME = 'deck-presenter:' + location.pathname.replace(/[^/]*$/, '');
-  const PRESENTER_KEYS = new Set(['ArrowRight', 'ArrowLeft', 'PageDown', 'PageUp', ' ', 'Home', 'End', 'R', 'r']);
+  // One deck id names the presenter window, its channel and every storage key (lib/deck-keys.js).
+  const DECK_ID = document.documentElement.getAttribute('data-deck-id') || WORKSHOP_SLUG;
+  const CHANNEL_NAME = 'deck-presenter:' + DECK_ID;
+  const STORAGE_KEY = 'deck:' + DECK_ID + ':slide';
+  const PORTRAIT_KEY = 'deck:' + DECK_ID + ':portrait-hint-dismissed';
+  const PRESENTER_KEYS = new Set(['ArrowRight', 'ArrowLeft', 'R', 'r']);
 
   // Back-to-workshop button (a.deck-back in slides.html): same design on every deck. It fades out
   // after BACK_IDLE_MS without mouse movement, like the deck toolbar, and returns on move or focus.
@@ -409,7 +415,7 @@ html[data-deck-preview] .chrome__topbar .brand{opacity:1}
       this._notes = [];
       this._hideTimer = null;
       this._mouseIdleTimer = null;
-      this._storageKey = STORAGE_PREFIX + (location.pathname || '/');
+      this._storageKey = STORAGE_KEY;
 
       this._onKey = this._onKey.bind(this);
       this._onResize = this._onResize.bind(this);
@@ -736,42 +742,18 @@ html[data-deck-preview] .chrome__topbar .brand{opacity:1}
     }
 
     _onKey(e) {
-      // Ignore when the user is typing.
-      const t = e.target;
-      if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-
-      const key = e.key;
-      // Space/Enter on a focused button or link belongs to that control.
-      const origin = (e.composedPath && e.composedPath()[0]) || t;
-      if ((key === ' ' || key === 'Spacebar' || key === 'Enter') && origin && /^(BUTTON|A)$/.test(origin.tagName)) return;
-      let handled = true;
-
-      if (key === 'ArrowRight' || key === 'PageDown' || key === ' ' || key === 'Spacebar') {
-        this._go(this._index + 1, 'keyboard');
-      } else if (key === 'ArrowLeft' || key === 'PageUp') {
-        this._go(this._index - 1, 'keyboard');
-      } else if (key === 'Home') {
-        this._go(0, 'keyboard');
-      } else if (key === 'End') {
-        this._go(this._slides.length - 1, 'keyboard');
-      } else if ((key === 'r' || key === 'R') && e.shiftKey) {
-        this._go(0, 'keyboard');
-      } else if (key === 'p' || key === 'P') {
-        this.openPresenter();
-      } else if (/^[0-9]$/.test(key)) {
-        // 1..9 jump to that slide; 0 jumps to 10.
-        const n = key === '0' ? 9 : parseInt(key, 10) - 1;
-        if (n < this._slides.length) this._go(n, 'keyboard');
-      } else {
-        handled = false;
-      }
-
-      if (handled) {
-        e.preventDefault();
-        // keys sent from the presenter view stay off the projector's toolbar
-        if (!e._fromPresenter) this._flashOverlay();
-      }
+      // The shared key contract (lib/deck-keys.js): ArrowRight, ArrowLeft, r or Shift+R back to the
+      // first slide, P for the presenter view. Space, PageUp, PageDown, Home, End and digits are free.
+      const keys = window.DeckKeys;
+      if (!keys) return;
+      const handled = keys.handle(e, {
+        next: () => this._go(this._index + 1, 'keyboard'),
+        prev: () => this._go(this._index - 1, 'keyboard'),
+        reset: () => this._go(0, 'keyboard'),
+        presenter: () => this.openPresenter(),
+      });
+      // keys sent from the presenter view stay off the projector's toolbar
+      if (handled && !e._fromPresenter) this._flashOverlay();
     }
 
     _go(i, reason = 'api') {
@@ -790,7 +772,7 @@ html[data-deck-preview] .chrome__topbar .brand{opacity:1}
     /** Opens (or focuses) the presenter view: notes, the next slide and a clock for the speaker. */
     openPresenter() {
       if (PREVIEW !== null) return;
-      const w = window.open('./presenter.html', 'deck-presenter-' + WORKSHOP_SLUG, 'width=1180,height=820');
+      const w = window.open('./presenter.html', CHANNEL_NAME, 'width=1180,height=820');
       if (w) { try { w.focus(); } catch (e) { /* ignore */ } }
       this._postState('presenter');
     }

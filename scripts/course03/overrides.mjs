@@ -46,6 +46,8 @@ export function isRepositoryAuthored(name) {
     name === "guide.html" ||
     name === "builder.html" ||
     name === "demo.html" ||
+    // The shared deck key contract, copied from scripts/workshops/deck-keys.js.
+    name === "lib/deck-keys.js" ||
     /^assets\/fonts\/Typing-(?:Regular|Medium|Bold)\.woff2$/.test(name) ||
     name === "card-preview.webp" ||
     name === "assets/plakat-cover.svg" ||
