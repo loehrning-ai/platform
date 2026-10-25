@@ -481,19 +481,19 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Geschäftsberichte mit KI lesen",
     eyebrow: "Workshop 02 · Geschäftsberichte",
     summary:
-      "Du legst fest, was die Kennzahlen eines Monatsberichts bedeuten, und lässt Claude danach ein Dashboard füllen.",
+      "Du legst fest, was die Kennzahlen eines Monatsberichts bedeuten, prüfst eine Zahl bis zur Datenzeile und entscheidest erst dann.",
     description:
-      "In der Claude-App schreibst du in fünf Prompts auf, was Umsatz, Mängel und Marketing im Monatsbericht der erfundenen Firma NORTHWIND bedeuten. Daraus wird ein Skill für jeden weiteren Monatsbericht. Im zweiten Fall nutzt du dieselbe Methode für Metas öffentliche Quartalszahlen.",
+      "Der Septemberbericht der erfundenen Firma NORTHWIND begründet mehr Marketing für die Linie CRAFT mit zwei richtig gerechneten Zahlen. Keine sagt, wie sie gezählt wurde. Du legst in Claude Code Zähler, Nenner und Zeitraum fest, verfolgst eine Zahl bis zu ihren Zeilen zurück und entscheidest erst dann. Die Festlegungen landen in einem Skill für jeden weiteren Monatsbericht.",
     format: "Selbstlern-Kit",
-    duration: "~90 Minuten",
+    duration: "~60 Minuten",
     accessNote:
-      "Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
-    outcome: "Kennzahlen-Skill + Dashboard",
+      "Die Schritte 1 bis 5 brauchen Claude Code (in Pro und Max), Demo, Skill und Projektanweisungen gehen ohne Bezahlplan. Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
+    outcome: "Kennzahlen-Steckbrief + Skill",
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Eine Zip mit Rohdaten und Monatsberichten der erfundenen Firma NORTHWIND, einem halb fertigen Skill und einer Dashboard-Vorlage. Du öffnest sie in der Claude-Desktop-App und machst die fünf Prompts nach.",
-      facts: ["Nur Textdateien", "5 Prompts", "ca. 90 Min. allein"],
+        "Eine Zip mit Rohdaten und zwei Monatsberichten der erfundenen Firma NORTHWIND, Steckbriefen zum Ausfüllen und einem Skill. Du öffnest sie in Claude Code, legst fest, was gezählt wird, und prüfst eine Zahl bis zur Zeile.",
+      facts: ["Nur Textdateien", "5 Schritte", "ca. 60 Min. allein"],
     },
     audience: [
       "Controllerinnen und Controller mit Monats- oder Quartalsberichten",
@@ -501,14 +501,14 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       "Alle, die Claude ohne Programmieren für Zahlen testen wollen",
     ],
     notForYou:
-      "Ohne Claude-Desktop-App nimm Workshop 01, 03 oder 04; sie laufen ohne KI-Konto.",
+      "Ohne Claude-Konto: Die Demo geht ohne Konto, für das Kit brauchst du Claude.",
     question:
       "Soll NORTHWIND die Produktlinie CRAFT nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
     outcomes: [
-      "Du schreibst auf, was fünf Kennzahlen bedeuten, und speicherst das als Skill.",
-      "Du prüfst eine von Claude ausgelesene Zahl gegen Datei und Spalte.",
-      "Du begründest eine Entscheidung mit der Zahl, die sie trägt, und nennst, was ein Irrtum kostet und was die Daten offenlassen.",
-      "Du wendest den Skill auf den nächsten Monatsbericht an.",
+      "Für drei Kennzahlen eines Monatsberichts Zähler, Nenner, Zeitraum, Quelle und Grenze festlegen und als Skill ablegen.",
+      "An einer Datei zeigen, dass dieselbe Kennzahl je nach Zählweise besser, gleich oder schlechter ausfällt, und eine Zählweise begründet wählen.",
+      "Eine Zahl, die Claude ausgibt, bis zu Datei, Spalte, Filter und Zeilen zurückverfolgen.",
+      "Eine Entscheidung mit einem Auslöser schreiben, der sich nicht durch Umbuchen erfüllen lässt, und den Skill im nächsten Monat wieder anwenden.",
     ],
     agenda: [
       {
@@ -520,66 +520,57 @@ const WORKSHOPS_DE: readonly Workshop[] = [
           "Du entpackst das Kit und öffnest den Ordner in Claude Code.",
       },
       {
-        label: "Claude liest die Firma",
-        minutes: 10,
+        label: "Das Argument lesen",
+        minutes: 5,
         mode: "self",
         activity: "do",
         description:
-          "Claude liest Steckbrief und Monatsbericht und nennt die Entscheidung des Monats.",
+          "Claude listet die Zahlen des VP Sales mit Abschnitt. Vorher schreibst du auf: besser, gleich oder schlechter?",
       },
       {
-        label: "Den Kennzahlen-Skill schreiben",
-        minutes: 20,
-        mode: "self",
-        activity: "write",
-        description:
-          "Claude fragt nach Umsatz, Mängeln und Marketing und schreibt deine Antworten in den Skill.",
-      },
-      {
-        label: "Auslesen und an der Quelle prüfen",
-        minutes: 15,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude liest den Monat nach deinen Regeln aus, du prüfst eine Zahl gegen die CSV.",
-      },
-      {
-        label: "Das Dashboard füllen",
-        minutes: 10,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude trägt die Kennzahlen in die Dashboard-Vorlage ein.",
-      },
-      {
-        label: "Entscheiden",
+        label: "Die Definitionen festlegen",
         minutes: 15,
         mode: "self",
         activity: "write",
         description:
-          "Du entscheidest über CRAFT und nennst die Zahl, die trägt, was ein Irrtum kostet und das stärkste Gegenargument.",
+          "Claude rechnet jede Zählweise für August und September aus, du wählst Zähler, Zeitraum und Freigabebedingung.",
       },
       {
-        label: "Fall 2: Metas Quartal",
-        minutes: 15,
+        label: "Eine Zahl zurückverfolgen",
+        minutes: 10,
         mode: "self",
         activity: "do",
-        optional: true,
         description:
-          "Du wendest die Methode auf Metas Quartalsmitteilung Q2 2026 an.",
+          "Claude wendet den Skill an und führt den CRAFT-Umsatz auf seine Zeilen zurück.",
+      },
+      {
+        label: "Dashboard und Entscheidung",
+        minutes: 15,
+        mode: "self",
+        activity: "write",
+        description:
+          "Jede Kachel sagt, wie sie gezählt ist. Du entscheidest über CRAFT und nennst den Steckbrief, der die Entscheidung trägt.",
+      },
+      {
+        label: "Eine eigene Kennzahl",
+        minutes: 10,
+        mode: "self",
+        activity: "write",
+        description:
+          "Claude fragt dich Feld für Feld nach einer Kennzahl aus deinem Bericht und schreibt den Steckbrief.",
       },
     ],
     agendaSource: "plan",
-    minutesSelfStudy: 90,
+    minutesSelfStudy: 60,
     needs: [
-      "Die Claude-Desktop-App in einem Plan mit Claude Code",
+      "Die Claude-Desktop-App mit Claude Code (in Pro und Max)",
       "Windows oder macOS",
       "Ein Zip-Archiv entpacken; START-HERE.md führt durch die Einrichtung",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Einen API-Schlüssel",
-      "Eigene Firmendaten",
+      "Eigene Firmendaten: deine Kennzahl beschreibst du nur",
     ],
     notCovered: [
       "API, Datenbank oder Automatisierung",
@@ -588,58 +579,51 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
-      data: "synthetic-and-public",
-      note: "Fall 2 nutzt nur Metas öffentliche Quartalsmitteilung; der Autor arbeitet als Data Engineer bei Meta.",
+      reviewedAt: "2026-10-25",
+      data: "synthetic",
+      note: "NORTHWIND und alle Daten sind erfunden. Die erwarteten Werte in START-HERE.md sind aus den CSV-Dateien des Kits gerechnet.",
     },
     steps: [
       {
         n: "01",
-        title: "Claude liest die Firma",
+        title: "Das Argument lesen",
         description:
-          "Claude liest Steckbrief und Monatsbericht; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
-        tool: "Dateien",
+          "Claude listet jede Zahl des VP Sales mit Abschnitt; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
+        tool: "Bericht",
       },
       {
         n: "02",
-        title: "Den Kennzahlen-Skill schreiben",
+        title: "Die Definitionen festlegen",
         description:
-          "Claude fragt, was Umsatz, Mängel und Marketing bedeuten, und ergänzt damit den halb fertigen Skill. Prüf in jeder Antwort, ob Claude deine Regeln nennt.",
-        tool: "Skill",
+          "Dieselbe Datei ergibt je nach Zähler besser, gleich oder schlechter. Du wählst Zähler und Zeitraum mit einem Satz Begründung, und Claude schreibt beides in den Skill.",
+        tool: "Steckbriefe",
       },
       {
         n: "03",
-        title: "Auslesen und an der Quelle prüfen",
+        title: "Eine Zahl zurückverfolgen",
         description:
-          "Du prüfst eine ausgelesene Kennzahl mit Datei und Spalte gegen die CSV und vergleichst mit einer Antwort ohne Skill.",
-        tool: "Claude Code",
+          "Claude führt den CRAFT-Umsatz auf Datei, Spalten, Filter, Zeilen und Summe zurück. So zeigt sich auch, was Umsatz hier heißt.",
+        tool: "Skill",
       },
       {
         n: "04",
-        title: "Das Dashboard füllen",
+        title: "Dashboard und Entscheidung",
         description:
-          "Mit einem Prompt füllt Claude die Dashboard-Vorlage, die das Meeting statt des 8-Seiten-Berichts bekommt.",
+          "Jede Kachel zeigt ihren Wert und wie er gezählt ist. Du entscheidest in sechs Feldern; das Gegenargument nennt, was die anderen Zählweisen ergeben.",
         tool: "Dashboard",
       },
       {
         n: "05",
-        title: "Gegen den Vertriebsleiter argumentieren",
+        title: "Eine eigene Kennzahl",
         description:
-          "Du entscheidest über CRAFT und nennst die Zahl, die trägt, was ein Irrtum kostet, welche Daten fehlen und das stärkste Gegenargument.",
-        tool: "Entscheidung",
+          "Claude fragt Entscheidung, Zähler, Nenner, Zeitraum, Quelle, Grenze und Auslöser ab. Du beschreibst die Kennzahl, ohne Firmendaten einzufügen.",
+        tool: "Steckbrief",
       },
       {
         n: "06",
-        title: "Fall 2 mit Metas Quartal",
+        title: "Im nächsten Monat wiederholen",
         description:
-          "Claude lädt Metas Quartalsmitteilung Q2 2026 aus dem Netz, und du beurteilst 31 Mrd. $ Investitionen in einem Quartal.",
-        tool: "SEC-Mitteilung · live",
-      },
-      {
-        n: "07",
-        title: "Mit deinen eigenen Berichten wiederholen",
-        description:
-          "Im nächsten Monat wendest du den Skill auf den neuen Bericht an.",
+          "Du legst den neuen Bericht dazu und wiederholst Schritt 3 und 4. Die Steckbriefe bleiben, die Zahlen ändern sich.",
         tool: "Wiederholung",
       },
     ],
@@ -658,36 +642,16 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         { label: "CRAFT-Einheiten", value: "9.162" },
       ],
       decisionQuestion:
-        "Welche Zahl trägt die Entscheidung, und welche Daten fehlen dafür?",
+        "Welche Zählweise trägt die Entscheidung, und was zeigen die anderen?",
       dataLimitations: [
         "Keine Bruttomarge je Linie, weil Stückkosten fehlen.",
-        "Keine Retouren je Linie, weil Bestellungen nicht mit Linien verknüpft sind.",
-        "Kein Marketingbudget je Linie, weil Kampagnen nicht sauber zurechenbar sind.",
+        "Keine Retouren: Meldungen sind Befunde aus der Fertigung.",
+        "Kein Modell je Meldung, deshalb bewertet das Kit Ausschuss zum mittleren Listenpreis.",
       ],
-    },
-    realWorldCase: {
-      companyName: "Meta Platforms, Inc.",
-      source: "Meta Q2 2026 Results · SEC Exhibit 99.1",
-      sourceHref:
-        "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
-      sourcePublishedAt: "2026-07-29",
-      sourceReviewedAt: "2026-08-26",
-      sourceLimitation:
-        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Freier Cashflow ist eine Non-GAAP-Kennzahl. Die Quelle belegt Werte, nicht die Investitionsentscheidung.",
-      narrative:
-        "Fast der gesamte operative Cashflow floss in Infrastruktur. Du definierst sechs Kennzahlen, liest das Quartal aus und lässt Claude ein Dashboard ohne Vorlage entwerfen.",
-      metrics: [
-        { label: "Umsatz", value: "+28 %" },
-        { label: "Operatives Ergebnis", value: "−8 %" },
-        { label: "Investitionen, ein Quartal", value: "31,1 Mrd. $" },
-        { label: "Freier Cashflow", value: "784 Mio. $" },
-      ],
-      decisionQuestion:
-        "Lassen sich 31,1 Mrd. $ Investitionen in einem Quartal mit künftigen Erträgen begründen? Und welche Zahl beschreibt das Quartal besser, das gemeldete Minus oder der Wert ohne Sondereffekte?",
     },
     materials: [
       {
-        label: "Deck · 22 Folien",
+        label: "Deck · 15 Folien",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
@@ -695,20 +659,20 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "Die Folien zeigen Firma, Kit, die fünf Prompts mit Ergebnissen, drei Zusatz-Prompts und Fall 2. Jeder Prompt hat einen Kopierknopf.",
-        short: "Die Folien führen durch Firma, Kit, Prompts und Fall 2 mit Meta.",
+          "Die Folien zeigen Firma, Kit und die Prompts mit Ergebnissen. Jeder Prompt hat einen Kopierknopf.",
+        short: "Die Folien führen durch Firma, Kit und Prompts.",
       },
       {
         label: "Analyst-Kit · .zip",
-        href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
+        href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit-de.zip`,
         kind: "zip",
-        language: "en",
+        language: "de",
         role: "kit",
         phase: "before",
-        sizeLabel: "60 KB",
+        sizeLabel: "37 KB",
         description:
-          "Das Kit enthält START-HERE.md, Rohdaten, beide Monatsberichte, den halb fertigen Skill, Dashboard-Vorlage, Arbeitsblatt, Meta-Aufgabe und eine Vorlage für die eigene Firma. Nur Textdateien.",
-        short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Skill und Vorlagen.",
+          "Das Kit enthält START-HERE.md, Rohdaten, beide Monatsberichte, die Steckbriefe zum Ausfüllen, den NORTHWIND-Skill, eine Dashboard-Vorlage, den Skill kennzahlen-steckbrief und Projektanweisungen. Nur Textdateien.",
+        short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Steckbriefen und Skill.",
       },
     ],
   },
@@ -924,19 +888,19 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Read business reports with AI",
     eyebrow: "Workshop 02 · Business reports",
     summary:
-      "You define what a monthly report's metrics mean, then have Claude fill a dashboard by those rules.",
+      "You pin down what a monthly report's metrics mean, trace one figure to its data rows and only then decide.",
     description:
-      "In the Claude app you write down in five prompts what revenue, defects and marketing mean in the monthly report of the invented company NORTHWIND. That becomes a skill for every later monthly report. In the second case you apply the same method to Meta's public quarterly figures.",
+      "The September report of the invented company NORTHWIND argues for more marketing behind its CRAFT line with two correctly computed numbers. Neither says how it was counted. In Claude Code you pin down numerator, denominator and period, trace one figure to its rows and only then decide. The definitions go into a skill for every later monthly report.",
     format: "Self-study kit",
-    duration: "~90 minutes",
+    duration: "~60 minutes",
     accessNote:
-      "Use only the invented kit: Claude may transfer files to Anthropic.",
-    outcome: "Metrics skill + dashboard",
+      "Steps 1 to 5 need Claude Code (in Pro and Max), while the demo, the skill and the project instructions need no paid plan. Use only the invented kit: Claude may transfer files to Anthropic.",
+    outcome: "Metric card + skill",
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A zip with raw data and monthly reports of the invented company NORTHWIND, a half-finished skill and a dashboard template. You open it in the Claude desktop app and follow the five prompts.",
-      facts: ["Text files only", "5 prompts", "about 90 min alone"],
+        "A zip with raw data and two monthly reports of the invented company NORTHWIND, metric cards to fill in and a skill. You open it in Claude Code, pin down what is counted and trace one figure to its row.",
+      facts: ["Text files only", "5 steps", "about 60 min alone"],
     },
     audience: [
       "Controllers who work with monthly or quarterly reports",
@@ -944,14 +908,14 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       "Anyone who wants to test Claude on figures without code",
     ],
     notForYou:
-      "Without the Claude desktop app, pick Workshop 01, 03 or 04; they need no AI account.",
+      "Without a Claude account: the demo needs no account, the kit needs Claude.",
     question:
       "Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?",
     outcomes: [
-      "Write down what five metrics mean and save it as a skill.",
-      "Check a figure Claude extracted against its file and column.",
-      "Back a decision with its key figure, the cost of error and data gaps.",
-      "Apply the skill to the next monthly report.",
+      "Pin down numerator, denominator, period, source and limit for three metrics of a monthly report and save them as a skill.",
+      "Show on one file that the same metric reads better, the same or worse depending on the count, and choose one with a reason.",
+      "Trace a figure Claude gives you back to its file, column, filter and rows.",
+      "Write a decision with a trigger that no rebooking can meet, and apply the skill again next month.",
     ],
     agenda: [
       {
@@ -963,66 +927,57 @@ const WORKSHOPS_EN: readonly Workshop[] = [
           "You unzip the kit and open the folder in Claude Code.",
       },
       {
-        label: "Claude reads the company",
-        minutes: 10,
+        label: "Read the argument",
+        minutes: 5,
         mode: "self",
         activity: "do",
         description:
-          "Claude reads the profile and the monthly report and names the month's decision.",
+          "Claude lists the sales director's numbers by section. First you write down: better, same or worse?",
       },
       {
-        label: "Write the metrics skill",
-        minutes: 20,
-        mode: "self",
-        activity: "write",
-        description:
-          "Claude asks about revenue, defects and marketing and writes your answers into the skill.",
-      },
-      {
-        label: "Extract and check the source",
-        minutes: 15,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude extracts the month by your rules; you check one figure against the CSV.",
-      },
-      {
-        label: "Fill the dashboard",
-        minutes: 10,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude writes the metrics into the dashboard template.",
-      },
-      {
-        label: "Decide",
+        label: "Pin the definitions down",
         minutes: 15,
         mode: "self",
         activity: "write",
         description:
-          "You decide on CRAFT, with key figure, cost of error and the strongest counter-argument.",
+          "Claude computes every count for August and September; you choose numerator, period and release condition.",
       },
       {
-        label: "Case 2: Meta's quarter",
-        minutes: 15,
+        label: "Trace one figure",
+        minutes: 10,
         mode: "self",
         activity: "do",
-        optional: true,
         description:
-          "You apply the method to Meta's Q2 2026 quarterly release.",
+          "Claude runs the skill and traces CRAFT revenue to its rows.",
+      },
+      {
+        label: "Dashboard and decision",
+        minutes: 15,
+        mode: "self",
+        activity: "write",
+        description:
+          "Every tile says how it is counted. You decide on CRAFT and name the card the decision rests on.",
+      },
+      {
+        label: "One metric of your own",
+        minutes: 10,
+        mode: "self",
+        activity: "write",
+        description:
+          "Claude asks you field by field about one metric from your own report and writes the card.",
       },
     ],
     agendaSource: "plan",
-    minutesSelfStudy: 90,
+    minutesSelfStudy: 60,
     needs: [
-      "The Claude desktop app on a plan with Claude Code",
+      "The Claude desktop app with Claude Code (in Pro and Max)",
       "Windows or macOS",
       "Unzipping an archive; START-HERE.md walks you through setup",
     ],
     notNeeded: [
       "Programming skills",
       "An API key",
-      "Your own company data",
+      "Your own company data: you only describe your metric",
     ],
     notCovered: [
       "APIs, databases or automation",
@@ -1031,58 +986,51 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
-      data: "synthetic-and-public",
-      note: "Case 2 uses only Meta's public quarterly release; the author works as a data engineer at Meta.",
+      reviewedAt: "2026-10-25",
+      data: "synthetic",
+      note: "NORTHWIND and all its data are invented. The expected values in START-HERE.md are computed from the kit's CSV files.",
     },
     steps: [
       {
         n: "01",
-        title: "Claude reads the company",
+        title: "Read the argument",
         description:
-          "Claude reads the profile and the monthly report; the files may be transferred to the service, so check product, contract and retention settings before you use real data.",
-        tool: "Files",
+          "Claude lists every number the sales director uses, with its section; the files may be transferred to the service, so check product, contract and retention settings before you use real data.",
+        tool: "Report",
       },
       {
         n: "02",
-        title: "Write the metrics skill",
+        title: "Pin the definitions down",
         description:
-          "Claude asks what revenue, defects and marketing mean and completes the half-finished skill with your answers. Check that each answer names your rules.",
-        tool: "Skill",
+          "The same file comes out better, the same or worse depending on the numerator. You choose numerator and period with one sentence why, and Claude writes both into the skill.",
+        tool: "Metric cards",
       },
       {
         n: "03",
-        title: "Extract the figures and check the source",
+        title: "Trace one figure",
         description:
-          "You check one extracted metric against the CSV by file and column and compare with an answer without the skill.",
-        tool: "Claude Code",
+          "Claude traces CRAFT revenue to file, columns, filter, rows and sum. That also shows what revenue means here.",
+        tool: "Skill",
       },
       {
         n: "04",
-        title: "Fill the dashboard",
+        title: "Dashboard and decision",
         description:
-          "With one prompt Claude fills the dashboard template the meeting gets instead of the eight-page report.",
+          "Every tile shows its value and how it is counted. You decide in six fields; the counter-argument gives what the other counts produce.",
         tool: "Dashboard",
       },
       {
         n: "05",
-        title: "Argue against the sales director",
+        title: "One metric of your own",
         description:
-          "You decide on CRAFT with key figure, cost of error, data gaps and the strongest counter-argument.",
-        tool: "Decision",
+          "Claude asks for decision, numerator, denominator, period, source, limit and trigger. You describe the metric without pasting company data.",
+        tool: "Metric card",
       },
       {
         n: "06",
-        title: "Case 2 with Meta's quarter",
+        title: "Repeat next month",
         description:
-          "Claude fetches Meta's Q2 2026 release from the web, and you judge $31 billion of capital expenditure in one quarter.",
-        tool: "SEC filing · live",
-      },
-      {
-        n: "07",
-        title: "Repeat it on your own reports",
-        description:
-          "Next month you apply the skill to the new report.",
+          "You add the new report and repeat steps 3 and 4. The cards stay; the numbers change.",
         tool: "Repeat",
       },
     ],
@@ -1101,36 +1049,16 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         { label: "CRAFT units", value: "9,162" },
       ],
       decisionQuestion:
-        "Which figure carries the decision, and which data are missing?",
+        "Which count carries the decision, and what do the others show?",
       dataLimitations: [
         "No gross margin per line, because unit costs are missing.",
-        "No returns per line, because orders are not linked to lines.",
-        "No marketing spend per line, because campaigns are not cleanly allocated.",
+        "No returns: NCRs are production findings.",
+        "No model per NCR, so the kit values scrap at the mean list price.",
       ],
-    },
-    realWorldCase: {
-      companyName: "Meta Platforms, Inc.",
-      source: "Meta Q2 2026 Results · SEC Exhibit 99.1",
-      sourceHref:
-        "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
-      sourcePublishedAt: "2026-07-29",
-      sourceReviewedAt: "2026-08-26",
-      sourceLimitation:
-        "Company release with unaudited quarterly figures. Free cash flow is a non-GAAP measure. The source supports the figures, not the investment decision.",
-      narrative:
-        "Almost all operating cash flow went into infrastructure. You define six metrics, extract the quarter and have Claude design a dashboard without a template.",
-      metrics: [
-        { label: "Revenue", value: "+28%" },
-        { label: "Operating income", value: "−8%" },
-        { label: "Capital expenditure, one quarter", value: "$31.1bn" },
-        { label: "Free cash flow", value: "$784m" },
-      ],
-      decisionQuestion:
-        "Can $31.1 billion of capital expenditure in one quarter be justified by future returns? And which figure describes the quarter better, the reported decline or the result excluding special items?",
     },
     materials: [
       {
-        label: "Deck · 22 slides",
+        label: "Deck · 15 slides",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
@@ -1138,8 +1066,8 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "The slides show the company, the kit, the five prompts with results, three extra prompts and case 2. Every prompt has a copy button.",
-        short: "The slides walk through the company, the kit, the prompts and Meta.",
+          "The slides show the company, the kit and the prompts with results. Every prompt has a copy button.",
+        short: "The slides walk through the company, the kit and the prompts.",
       },
       {
         label: "Analyst kit · .zip",
@@ -1148,10 +1076,10 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         language: "en",
         role: "kit",
         phase: "before",
-        sizeLabel: "60 KB",
+        sizeLabel: "36 KB",
         description:
-          "The kit holds START-HERE.md, raw data, both monthly reports, the half-finished skill, dashboard template, worksheet, Meta exercise and a template for your own company. Text files only.",
-        short: "The NORTHWIND kit with raw data, reports, the skill and templates.",
+          "The kit holds START-HERE.md, raw data, both monthly reports, the metric cards to fill in, the NORTHWIND skill, a dashboard template, the kennzahlen-steckbrief skill and project instructions. Text files only.",
+        short: "The NORTHWIND kit with raw data, reports, metric cards and the skill.",
       },
     ],
   },

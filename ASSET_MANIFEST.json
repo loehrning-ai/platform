@@ -518,15 +518,6 @@
       "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/meta-platforms-logo.svg",
-      "sizeBytes": 3405,
-      "sha256": "4c967c04f0c1f69cc0ff6b8f306f091c389a5edfda010065cf961f36d16f44cb",
-      "owner": "Meta Platforms, Inc. (Marke)",
-      "source": "Wikimedia Commons, \u201eMeta Platforms Inc. logo.svg\u201c \u2014 unterhalb der Sch\u00f6pfungsh\u00f6he; Markenrechte von Meta Platforms, Inc. bleiben bestehen",
-      "license": "LicenseRef-Trademark-Meta",
-      "redistribution": "Nur als Arbeitgeber-Kennzeichnung auf der Referentenfolie, in kleiner Darstellung; keine Co-Branding- oder Markennutzungsrechte"
-    },
-    {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/assets/report/northwind-p01.webp",
       "sizeBytes": 79836,
       "sha256": "2cac3d9a5ad1969b862b36519bc19fd42724746eee99c636e523d62a6df5a151",
@@ -591,10 +582,19 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
-      "sizeBytes": 59639,
-      "sha256": "387fe383f187a66fb46108bab32bc8bab51148ad3bf2aa7ba434b1d65f17385f",
+      "sizeBytes": 35964,
+      "sha256": "56e187e5c4b213db79661999a6781178f4e3872173309bef4522d187ea4ccc85",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 Text-only Teilnehmer-Kit (CSV-\u00dcbungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Frei herunterladbar f\u00fcr Workshop-Teilnehmende und Website-Besucher"
+    },
+    {
+      "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
+      "sizeBytes": 37234,
+      "sha256": "d2c3a308801f5708fd06836e60541ec78a0cf5085fd69121b5a14532b8d3e72d",
+      "owner": "Tim L\u00f6hr",
+      "source": "Eigenes Workshop-Material, loehrning.ai: Text-only Teilnehmer-Kit, deutsche Ausgabe (CSV-\u00dcbungsdaten, Berichte in Markdown, Skills, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
       "redistribution": "Frei herunterladbar f\u00fcr Workshop-Teilnehmende und Website-Besucher"
     },

@@ -1,30 +1,24 @@
 import type { TileMotion } from "@/lib/demo-tiles/types";
 
 /*
- * W02 Monatsgrenze, hub miniature, motion. Import-free apart from types, so
- * scripts/demo-tiles/build-css.mjs can run it. One clock p (0..1, 3.2 s). The
- * first frame is already a full picture: the nine real columns, the cut after
- * week 4 and +26 %. The line then steps to after week 5 (-20 %) and jumps to
- * after week 3 (+105 %). The last key of every track is the base style: the
- * still frame shows the cut after week 3, two ghost lines where it was, and
- * all three figures.
+ * W02 "Eine Datei, drei Antworten", hub miniature, motion. Import-free apart
+ * from types, so scripts/demo-tiles/build-css.mjs can run it. One clock p
+ * (0..1, 3.2 s). The first frame already shows the three rails at their
+ * August length; then each moves to September: records shrink, affected
+ * units hold, scrapped units grow past the August tick, and the three
+ * figures appear. The start scales are August divided by September per rail
+ * (pinned to the kit data by tile-motion.test.ts).
  */
+export const AUG_OVER_SEP = { records: 1.2768, affected: 1.0041, scrapped: 0.7346 } as const;
+
 export const MOTION: TileMotion = {
   storyMs: 3200,
   tracks: [
-    // Week 4 and 5 change side with the line (an ink column under a mark one).
-    { id: "m4", prop: "o", keys: [[0, 0], [0.66, 0], [0.67, 1], [1, 1]] },
-    { id: "m5", prop: "o", keys: [[0, 1], [0.36, 1], [0.37, 0], [0.66, 0], [0.67, 1], [1, 1]] },
-    { id: "cut", prop: "tx", keys: [[0, 34], [0.26, 34], [0.38, 68, "ease"], [0.56, 68], [0.68, 0, "ease"], [1, 0]] },
-    { id: "g4", prop: "o", keys: [[0, 0], [0.3, 0], [0.34, 1], [1, 1]] },
-    { id: "g5", prop: "o", keys: [[0, 0], [0.6, 0], [0.64, 1], [1, 1]] },
-    { id: "f1", prop: "sx", keys: [[0, 1.12], [0.12, 1, "ease"], [1, 1]] },
-    { id: "f1", prop: "sy", keys: [[0, 1.12], [0.12, 1, "ease"], [1, 1]] },
-    { id: "f2", prop: "o", keys: [[0, 0], [0.36, 0], [0.42, 1], [1, 1]] },
-    { id: "f2", prop: "sx", keys: [[0, 1.4], [0.36, 1.4], [0.52, 1, "ease"], [1, 1]] },
-    { id: "f2", prop: "sy", keys: [[0, 1.4], [0.36, 1.4], [0.52, 1, "ease"], [1, 1]] },
-    { id: "f3", prop: "o", keys: [[0, 0], [0.66, 0], [0.72, 1], [1, 1]] },
-    { id: "f3", prop: "sx", keys: [[0, 1.4], [0.66, 1.4], [0.82, 1, "ease"], [1, 1]] },
-    { id: "f3", prop: "sy", keys: [[0, 1.4], [0.66, 1.4], [0.82, 1, "ease"], [1, 1]] },
+    { id: "ra", prop: "sx", origin: "0% 50%", keys: [[0, AUG_OVER_SEP.records], [0.22, AUG_OVER_SEP.records], [0.62, 1, "ease"], [1, 1]] },
+    { id: "rb", prop: "sx", origin: "0% 50%", keys: [[0, AUG_OVER_SEP.affected], [0.3, AUG_OVER_SEP.affected], [0.66, 1, "ease"], [1, 1]] },
+    { id: "rc", prop: "sx", origin: "0% 50%", keys: [[0, AUG_OVER_SEP.scrapped], [0.38, AUG_OVER_SEP.scrapped], [0.78, 1, "snap"], [1, 1]] },
+    { id: "fa", prop: "o", keys: [[0, 0], [0.6, 0], [0.7, 1], [1, 1]] },
+    { id: "fb", prop: "o", keys: [[0, 0], [0.66, 0], [0.76, 1], [1, 1]] },
+    { id: "fc", prop: "o", keys: [[0, 0], [0.76, 0], [0.86, 1], [1, 1]] },
   ],
 };

@@ -82,7 +82,7 @@ describe("demo registry", () => {
   it("names the five demos and states each promise in German and English", () => {
     const names = {
       "ki-prognosen-einschaetzen": ["Die Fehlerliste", "The Error List"],
-      "geschaeftsberichte-mit-ki-lesen": ["Monatsgrenze", "The Month Line"],
+      "geschaeftsberichte-mit-ki-lesen": ["Eine Datei, drei Antworten", "One file, three answers"],
       "datenbereitschaft-fuer-ki": ["Stufe oder Treppe?", "Step or staircase?"],
       "esg-berichte-mit-ki": ["Elf von zwölf", "Eleven of twelve"],
       "ki-im-unternehmen-sicher-nutzen": ["Was fliegt mit?", "What goes along?"],

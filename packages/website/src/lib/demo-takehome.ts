@@ -64,6 +64,42 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
     skill: { name: "prognose-pruefen" },
     templates: [{ vorlage: "pruefregel" }],
   },
+  "geschaeftsberichte-mit-ki-lesen": {
+    kit: {
+      de: {
+      href: "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
+      shown: [
+        "northwind-analyst-kit/reports/2023-09-monthly-report.md",
+        "northwind-analyst-kit/data/ncr_records.csv",
+        "northwind-analyst-kit/metric-cards.md",
+        "northwind-analyst-kit/data/demand_actuals.csv",
+        "northwind-analyst-kit/data/product_lines.csv",
+        "northwind-analyst-kit/dashboard/index.html",
+        "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
+        "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
+      ],
+      instructions: "northwind-analyst-kit/project-instructions.md",
+      installDoc: "northwind-analyst-kit/START-HERE.md",
+    },
+      en: {
+      href: "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
+      shown: [
+        "northwind-analyst-kit/reports/2023-09-monthly-report.md",
+        "northwind-analyst-kit/data/ncr_records.csv",
+        "northwind-analyst-kit/metric-cards.md",
+        "northwind-analyst-kit/data/demand_actuals.csv",
+        "northwind-analyst-kit/data/product_lines.csv",
+        "northwind-analyst-kit/dashboard/index.html",
+        "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
+        "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
+      ],
+      instructions: "northwind-analyst-kit/project-instructions.md",
+      installDoc: "northwind-analyst-kit/START-HERE.md",
+    },
+    },
+    skill: { name: "kennzahlen-steckbrief" },
+    templates: [{ vorlage: "kennzahlen-steckbrief-vorlage" }],
+  },
 };
 
 export function takeHomeFor(slug: DemoSlug): TakeHome | undefined {

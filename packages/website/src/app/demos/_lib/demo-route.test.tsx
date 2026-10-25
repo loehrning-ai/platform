@@ -74,6 +74,8 @@ describe("/demos/[slug] page shell", () => {
         expect(h1).toHaveTextContent(demo.title);
         if (demo.shell === "v3") {
           expect(container.querySelector("[data-demo-v3]")).toHaveAttribute("data-plakat-page", demo.plakat);
+          // The v3 page has a bar and an aside instead of the cover band.
+          expect(h1.closest("[data-demo-bar]")).not.toBeNull();
         } else {
           const band = h1.closest("[data-cover-band]");
           expect(band).toHaveAttribute("data-plakat", demo.plakat);

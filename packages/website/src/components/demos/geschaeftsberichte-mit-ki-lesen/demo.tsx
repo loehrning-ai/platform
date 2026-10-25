@@ -1,346 +1,474 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
-import { derive, prefill, type OwnState } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/compare-state";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  DemoLever,
+  DemoStage,
+  setTakeHomeLine,
+  useBeatClock,
+  useOnRestart,
+} from "@/components/demos/shell";
+import { CopyButton } from "@/components/demos/take-home/copy-button";
 import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
-import { MAX_CUT, MIN_CUT, REPORT_CUT, REVENUES, UNITS, WEEKS, WORKSHOP } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
-import { fill, formatNumber, formatPercent } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/format";
-import { HANDLE_AT, SLOT, STAGE } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/geometry";
-import { calendarShare, clamp, northwind } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/logic";
-import { smoothstep } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/motion";
-import { Act2 } from "./act2";
-import { DragHandle } from "./drag-handle";
-import { Chart, Ruler, numberAt, unitsGrowthAt } from "./stage";
-import { SwitchTwo } from "./switch-two";
-import { TakeawayCard, type TakeStatus } from "./takeaway-card";
-import { useScene } from "./use-scene";
-import { YourCompare } from "./your-compare";
+import { CRAFT_NCR_SEP, CRAFT_SEP_ROWS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
+import {
+  BASES,
+  growth,
+  weekCount,
+  type Basis,
+  type Counter,
+  type Verdict,
+} from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
+import { buildSkillZip, renderProjectInstructions, renderReferences, SKILL_NAME } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/skill-file";
+import {
+  canAddCard,
+  cardToMarkdown,
+  EMPTY_CARD,
+  FIELD_LIMITS,
+  lintCard,
+  MAX_CARDS,
+  type Finding,
+  type OwnCard,
+  type TextField,
+} from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/steckbrief";
+import { REVEAL, TRACE_MS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/timelines";
+import { beatIndexFromParam } from "@/lib/demo-beats";
+import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import { ChipGroup } from "./chip-group";
+import { decisionText, kitWords } from "./decision-text";
+import { fill, formatter } from "./fmt";
+import { Notes } from "./notes";
+import { OwnForm } from "./own-form";
+import { StageClaim } from "./stage-claim";
+import { StageDecide } from "./stage-decide";
+import { StageOwn, StageTakeHome } from "./stage-own";
+import { RAIL_OF, ReportStrip, StageRails } from "./stage-rails";
+import { StageTrace } from "./stage-trace";
+import { StageWeeks } from "./stage-weeks";
+import { EMPTY_CHOICES, REFERENCE, type Choices } from "./types";
+import { useRunClock, useTransitionShare } from "./use-motion";
 import "./demo.css";
 
-const spoken = (pack: DemoPack, fraction: number) => {
-  const rounded = Math.round(Math.abs(fraction) * 1000) / 10;
-  const sign = rounded === 0 ? "" : fraction < 0 ? pack.spoken.minus : pack.spoken.plus;
-  return `${sign} ${formatNumber(rounded, pack.locale, { digits: 1 })} ${pack.spoken.percent}`.trim();
-};
+const SLUG = "geschaeftsberichte-mit-ki-lesen";
+const POLL: readonly Verdict[] = ["better", "same", "worse"];
+const MERGE_MS = 600;
+const PERIOD_MS = 700;
+/** How long a downloaded file's object URL stays valid. */
+const URL_LIFETIME_MS = 30_000;
 
-function Chevron({ dir }: { readonly dir: "l" | "r" }) {
+/** Saves bytes as a file, in the browser only. */
+function saveBytes(bytes: Uint8Array, name: string): void {
+  const url = URL.createObjectURL(new Blob([bytes.slice().buffer], { type: "application/zip" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), URL_LIFETIME_MS);
+}
+
+export interface DemoProps {
+  readonly pack: DemoPack;
+  /** content/skills/kennzahlen-steckbrief/SKILL.md, read on the server. */
+  readonly skillText: string;
+  /** project-instructions.md from this locale's kit zip, read on the server. */
+  readonly instructions: string;
+}
+
+/**
+ * "Eine Datei, drei Antworten": eight beats on the v3 shell clock. Every
+ * object on the stage is a kit row or a number computed from one
+ * (src/lib/demo-cases/geschaeftsberichte-mit-ki-lesen). Restart clears the
+ * poll and the levers, never the visitor's own cards.
+ */
+export default function Demo({ pack, skillText, instructions }: DemoProps) {
+  const { beats, beat, progress, index, reducedMotion, commit, canAdvance, next, locale } = useBeatClock();
+  const fmt = useMemo(() => formatter(pack), [pack]);
+  const suggestion = DEMOS_PAGE_COPY[locale].shell.suggestionTaken;
+  const [choices, setChoices] = useState<Choices>(EMPTY_CHOICES);
+  const [advance, setAdvance] = useState(false);
+  const [traceRun, setTraceRun] = useState<number | null>(null);
+  const [view, setView] = useState<"mine" | "report">("mine");
+  const [draft, setDraft] = useState<OwnCard>(EMPTY_CARD);
+  const [cards, setCards] = useState<readonly OwnCard[]>([]);
+
+  useOnRestart(() => {
+    setChoices(EMPTY_CHOICES);
+    setAdvance(false);
+    setTraceRun(null);
+    setView("mine");
+  });
+
+  // A deep link (?beat=) opens its beat at the final state: the shell plays the
+  // motion on entry, and next() during a motion only finishes it.
+  const deepLink = useRef<number | null | undefined>(undefined);
+  useEffect(() => {
+    if (deepLink.current === undefined) {
+      deepLink.current = beatIndexFromParam(beats, new URLSearchParams(window.location.search).get("beat"));
+    }
+    const target = deepLink.current;
+    if (target === null || target <= 0) return;
+    if (index !== target) {
+      if (index > target) deepLink.current = null;
+      return;
+    }
+    deepLink.current = null;
+    if (progress < 1) next();
+  }, [beats, index, next, progress]);
+
+  // The poll commits and moves on by itself once beat 1's motion has finished.
+  useEffect(() => {
+    if (!advance || index !== 0 || !canAdvance) return;
+    setAdvance(false);
+    next();
+  }, [advance, canAdvance, index, next]);
+
+  const merge = useTransitionShare(choices.merged ? 1 : 0, MERGE_MS, reducedMotion);
+  const mergeAmount = merge.from + (merge.to - merge.from) * merge.share;
+  const period = useTransitionShare<"weeks" | Basis>(choices.basis ?? "weeks", PERIOD_MS, reducedMotion);
+  const traceMs = useRunClock(traceRun, TRACE_MS, reducedMotion);
+
+  const counter: Counter = choices.counter ?? REFERENCE.counter;
+  const basis: Basis = choices.basis ?? REFERENCE.basis;
+  const skipped = choices.counter === null || choices.basis === null;
+  const shownCounter: Counter = view === "report" ? "records" : counter;
+  const shownBasis: Basis = view === "report" ? "month" : basis;
+  const decision = useMemo(() => decisionText(pack, fmt, shownCounter, shownBasis), [pack, fmt, shownCounter, shownBasis]);
+  const words = useMemo(() => kitWords(pack, fmt), [pack, fmt]);
+
+  const findings = useMemo(() => lintCard(draft), [draft]);
+  const cardsMarkdown = useMemo(() => cards.map((card) => cardToMarkdown(card, pack.own.card)).join("\n\n"), [cards, pack]);
+  useEffect(() => setTakeHomeLine(SLUG, cardsMarkdown), [cardsMarkdown]);
+
+  const choose = (patch: Partial<Choices>) => setChoices((previous) => ({ ...previous, ...patch }));
+  const onPoll = (value: Verdict) => {
+    if (choices.poll !== null) return;
+    choose({ poll: value });
+    commit();
+    next();
+    setAdvance(true);
+  };
+  const addCard = () => {
+    if (!canAddCard(draft) || cards.length >= MAX_CARDS) return;
+    setCards((previous) => [...previous, draft]);
+    setDraft(EMPTY_CARD);
+  };
+  const downloadSkill = () => {
+    const references = cards.length > 0 ? renderReferences(cards, pack.own.card, pack.own.referencesTitle) : null;
+    saveBytes(buildSkillZip(skillText, references), `${SKILL_NAME}.zip`);
+  };
+  const editDraft = (patch: Partial<OwnCard>) => setDraft((previous) => ({ ...previous, ...patch }));
+  const startTrace = () => setTraceRun((previous) => (previous ?? 0) + 1);
+
+  const id = beat.id;
+  const revealT = id === "drei-zaehlweisen" ? progress : 1;
+  const traceDone = traceRun !== null && traceMs >= TRACE_MS;
+
+  let stage: ReactNode;
+  let caption: string;
+  let lever: ReactNode;
+
+  if (id === "frage") {
+    stage = <StageClaim pack={pack} fmt={fmt} progress={progress} />;
+    caption = pack.claim.caption;
+    lever = (
+      <div className="nw-poll" role="group" aria-label={pack.claim.pollLabel}>
+        {POLL.map((value) => (
+          <button
+            key={value}
+            type="button"
+            className="nw-poll-button"
+            data-poll={value}
+            aria-pressed={choices.poll === value}
+            data-dim={choices.poll !== null && choices.poll !== value ? "" : undefined}
+            onClick={() => onPoll(value)}
+          >
+            {pack.claim.poll[value]}
+          </button>
+        ))}
+      </div>
+    );
+  } else if (id === "drei-zaehlweisen" || id === "zaehler-waehlen") {
+    const reveal = id === "drei-zaehlweisen";
+    const framed = reveal ? (choices.poll ? RAIL_OF[choices.poll] : null) : choices.counter;
+    stage = (
+      <StageRails
+        pack={pack}
+        fmt={fmt}
+        t={revealT}
+        framed={framed}
+        merge={reveal ? 0 : mergeAmount}
+        choice={
+          reveal
+            ? undefined
+            : { legend: pack.counter.legend, value: choices.counter, onChange: (value) => choose({ counter: value }) }
+        }
+        top={
+          reveal ? (
+            <ReportStrip pack={pack} fmt={fmt} />
+          ) : (
+            <button
+              type="button"
+              className="nw-toggle"
+              aria-pressed={choices.merged}
+              data-merge-toggle=""
+              onClick={() => choose({ merged: !choices.merged })}
+            >
+              <span className="nw-toggle-box" aria-hidden="true">
+                {choices.merged ? "✓" : ""}
+              </span>
+              <span>{pack.counter.merge}</span>
+            </button>
+          )
+        }
+      />
+    );
+    if (reveal) {
+      caption =
+        revealT >= REVEAL.verdict
+          ? pack.reveal.caption[choices.poll ?? "none"]
+          : fill(pack.reveal.counting, { n: CRAFT_NCR_SEP.length });
+      lever = revealT >= REVEAL.verdict ? <p className="nw-lever-note" data-reveal-note="">{pack.reveal.note}</p> : null;
+    } else {
+      caption = choices.counter
+        ? fill(pack.counter.captionChosen, { counter: pack.counters[choices.counter].long })
+        : choices.merged
+          ? pack.counter.captionMerged
+          : pack.counter.caption;
+      lever = <p className="nw-lever-note">{pack.counter.pick}</p>;
+    }
+  } else if (id === "zeitraum") {
+    stage = <StageWeeks pack={pack} fmt={fmt} grow={progress} from={period.from} to={period.to} share={period.share} />;
+    caption =
+      choices.basis === "month"
+        ? fill(pack.period.captionMonth, { g: fmt.pct(growth("month")), sep: weekCount("sep"), aug: weekCount("aug") })
+        : choices.basis === "week"
+          ? fill(pack.period.captionWeek, { g: fmt.share(Math.abs(growth("week"))) })
+          : pack.period.caption;
+    lever = (
+      <ChipGroup
+        legend={pack.period.legend}
+        name="nw-basis"
+        value={choices.basis}
+        options={BASES.map((value) => ({ value, label: pack.bases[value].short }))}
+        onChange={(value) => choose({ basis: value })}
+      />
+    );
+  } else if (id === "zahl-pruefen") {
+    stage = <StageTrace pack={pack} fmt={fmt} ms={traceMs} started={traceRun !== null} onTrace={startTrace} />;
+    caption = traceDone ? fill(pack.trace.captionDone, { rows: fmt.n(CRAFT_SEP_ROWS.length) }) : pack.trace.caption;
+    lever = (
+      <button type="button" className="nw-action" data-trace-button="" onClick={startTrace}>
+        {pack.trace.button}
+      </button>
+    );
+  } else if (id === "entscheiden") {
+    stage = (
+      <StageDecide
+        pack={pack}
+        fmt={fmt}
+        counter={shownCounter}
+        basis={shownBasis}
+        decision={decision}
+        progress={progress}
+        suggested={view === "mine" && skipped ? suggestion : null}
+      />
+    );
+    caption = view === "mine" ? pack.decide.caption : pack.decide.captionReport;
+    lever = (
+      <ChipGroup
+        legend={pack.decide.legend}
+        name="nw-view"
+        value={view}
+        options={[
+          { value: "mine", label: pack.decide.mine },
+          { value: "report", label: pack.decide.report },
+        ]}
+        onChange={setView}
+      />
+    );
+  } else if (id === "deine-kennzahl") {
+    stage = <StageOwn pack={pack} card={draft} findings={findings} added={cards.length} />;
+    caption = pack.own.caption;
+    lever = (
+      <label className="nw-lever-field">
+        <span className="sr-only">{pack.own.fields.name.label}</span>
+        <input
+          type="text"
+          className="nw-input"
+          data-own-lever=""
+          value={draft.name}
+          maxLength={FIELD_LIMITS.name}
+          placeholder={pack.own.fields.name.placeholder}
+          autoComplete="off"
+          spellCheck={false}
+          onChange={(event) => editDraft({ name: event.target.value })}
+        />
+      </label>
+    );
+  } else {
+    stage = <StageTakeHome pack={pack} cards={cards} />;
+    caption = cards.length > 0 ? pack.takehome.caption : pack.takehome.captionEmpty;
+    lever = (
+      <button type="button" className="nw-action" data-skill-zip="" onClick={downloadSkill}>
+        {cards.length > 0 ? pack.takehome.zip : pack.takehome.zipEmpty}
+      </button>
+    );
+  }
+
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="22" height="22">
-      <path d={dir === "l" ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="square" />
-    </svg>
+    <div className="nw-demo" data-nw-beat={id} data-nw-counter={choices.counter ?? ""}>
+      <h2 className="sr-only" data-nw-beat-heading="">
+        {beat.label[locale]}
+      </h2>
+      <DemoStage label={pack.stageLabel} caption={caption}>
+        {stage}
+      </DemoStage>
+      <DemoLever>{lever}</DemoLever>
+      <Notes
+        pack={pack}
+        fmt={fmt}
+        id={id}
+        progress={progress}
+        reducedMotion={reducedMotion}
+        choices={choices}
+        counter={counter}
+        basis={basis}
+        skipped={skipped}
+        suggestion={suggestion}
+        decision={decision}
+        words={words}
+        traceMs={traceMs}
+        traceStarted={traceRun !== null}
+      />
+      {id === "deine-kennzahl" ? (
+        <OwnSection
+          pack={pack}
+          draft={draft}
+          cards={cards}
+          findings={findings}
+          onText={(field, value) => editDraft({ [field]: value })}
+          onEdit={editDraft}
+          onAdd={addCard}
+          onRemove={(position) => setCards((previous) => previous.filter((_, at) => at !== position))}
+          onClear={() => {
+            setDraft(EMPTY_CARD);
+            setCards([]);
+          }}
+          onDownload={downloadSkill}
+        />
+      ) : null}
+      {id === "mitnehmen" ? (
+        <TakeHomeNotes pack={pack} text={renderProjectInstructions(instructions, cards, pack.own.card)} />
+      ) : null}
+    </div>
   );
 }
 
-export default function Demo({ copy }: { readonly copy: DemoPack }) {
-  const ctl = useScene();
-  const { scene } = ctl;
-  const [mode, setMode] = useState<0 | 1>(0);
-  const [act2Mode, setAct2Mode] = useState<0 | 1>(0);
-  const [act2Used, setAct2Used] = useState(false);
-  const [trigger, setTrigger] = useState<number>(WORKSHOP.defaultTriggerPer1000);
-  const [visited, setVisited] = useState<readonly number[]>([REPORT_CUT, REPORT_CUT + 1]);
-  const [own, setOwn] = useState<OwnState>(() => prefill(copy));
-  const [announce, setAnnounce] = useState("");
-  const [takeStatus, setTakeStatus] = useState<TakeStatus>(null);
-  const [room, setRoom] = useState(false);
-  const chartRef = useRef<HTMLDivElement>(null);
-  // Where the line is heading, kept in a ref that is written the instant a press lands. The scene only catches up frame
-  // by frame, so reading it for "current + step" dropped every press that came before the tween had finished.
-  const cutTarget = useRef<number>(REPORT_CUT);
-  const plot = useRef<{ id: number; x: number; y: number; touch: boolean; active: boolean } | null>(null);
-  const t = copy.stage;
-  const ownDerived = useMemo(() => derive(own, copy), [own, copy]);
-
-  // First run. The stage always renders its finished hero state (+26 %, two towers), also on the server, so there is never an
-  // empty box. The pass then replays once from its first frame, when the whole chart (columns plus handle) is on screen above
-  // the fixed phone nav, or 0,7 s after any part of it is (a desktop chart can sit half below the fold). Reduced motion, no
-  // script, no observer, or a touch before it starts: the hero state stays.
-  useEffect(() => {
-    const node = chartRef.current;
-    if (!node || window.matchMedia("(prefers-reduced-motion: reduce)").matches || typeof IntersectionObserver === "undefined") return;
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const go = () => {
-      observer.disconnect();
-      clearTimeout(timer);
-      ctl.startIntro();
-    };
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[entries.length - 1];
-        if (!entry) return;
-        if (entry.intersectionRatio >= 0.98) go();
-        else if (entry.intersectionRatio > 0) timer ??= setTimeout(go, 700);
-        else {
-          clearTimeout(timer);
-          timer = undefined;
-        }
-      },
-      // The bottom margin keeps the chart clear of the fixed tab bar (56 px) plus 32 px of air.
-      { threshold: [0, 0.98], rootMargin: "0px 0px -88px 0px" },
-    );
-    observer.observe(node);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timer);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on mount
-  }, []);
-
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("room") === "1") setRoom(true);
-    const onKey = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
-      if ((event.key === "r" || event.key === "R") && !event.metaKey && !event.ctrlKey && !event.altKey) setRoom((value) => !value);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const liveFor = useCallback(
-    (k: number) =>
-      fill(t.live, {
-        a: k,
-        b: REVENUES.length - k,
-        h: spoken(copy, northwind.headline(k)),
-        p: spoken(copy, northwind.perUnit(k)),
-      }),
-    [copy, t.live],
-  );
-
-  const settleCut = useCallback(
-    (raw: number) => {
-      const k = clamp(Math.round(raw), MIN_CUT, MAX_CUT);
-      cutTarget.current = k;
-      ctl.to("cutF", k, 320);
-      setVisited((list) => (list.includes(k) ? list : [...list, k].sort((a, b) => a - b)));
-      setAnnounce(liveFor(k));
-    },
-    [ctl, liveFor],
-  );
-
-  const current = Math.round(clamp(scene.cutF, MIN_CUT, MAX_CUT));
-  const nudge = (step: number) => {
-    ctl.skipIntro();
-    const k = clamp(cutTarget.current + step, MIN_CUT, MAX_CUT);
-    if (k !== cutTarget.current) settleCut(k);
-  };
-
-  // The whole plot is a drag target, not only the handle. A mouse grabs at once; a finger only once the move is mostly
-  // horizontal (the SVG keeps touch-action pan-y, so a vertical swipe still scrolls the page and a tap snaps to a week).
-  const cutAt = (clientX: number) => {
-    const rect = chartRef.current?.getBoundingClientRect();
-    if (!rect || rect.width === 0) return cutTarget.current;
-    return clamp((((clientX - rect.left) / rect.width) * STAGE.width - STAGE.pad) / SLOT, MIN_CUT, MAX_CUT);
-  };
-  const plotDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if ((event.target as HTMLElement).closest(".mg-handle")) return;
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-    ctl.skipIntro();
-    const touch = event.pointerType !== "mouse";
-    plot.current = { id: event.pointerId, x: event.clientX, y: event.clientY, touch, active: false };
-    if (!touch) {
-      plot.current.active = true;
-      event.currentTarget.setPointerCapture(event.pointerId);
-      ctl.to("cutF", Math.round(cutAt(event.clientX)), 160);
-      cutTarget.current = Math.round(cutAt(event.clientX));
-    }
-  };
-  const plotMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = plot.current;
-    if (!drag || drag.id !== event.pointerId) return;
-    if (!drag.active) {
-      const dx = Math.abs(event.clientX - drag.x);
-      const dy = Math.abs(event.clientY - drag.y);
-      if (!(dx > 8 && dx > dy)) return;
-      drag.active = true;
-      event.currentTarget.setPointerCapture(event.pointerId);
-    }
-    ctl.set({ cutF: cutAt(event.clientX) });
-    cutTarget.current = Math.round(cutAt(event.clientX));
-  };
-  const plotUp = (event: ReactPointerEvent<HTMLDivElement>) => {
-    const drag = plot.current;
-    if (!drag || drag.id !== event.pointerId) return;
-    plot.current = null;
-    // Position, not scene: a press without a move has only just started its 160 ms tween.
-    if (event.type === "pointerup") settleCut(cutAt(event.clientX));
-    else if (drag.active) settleCut(ctl.read().cutF);
-  };
-  const changeMode = (value: 0 | 1) => {
-    ctl.skipIntro();
-    setMode(value);
-    ctl.to("m", value, 720);
-    setAnnounce(liveFor(current));
-  };
-  const changeAct2 = (value: 0 | 1) => {
-    ctl.skipIntro();
-    setAct2Mode(value);
-    if (value === 1) setAct2Used(true);
-    ctl.to("u", value, 720);
-  };
-
-  const value = numberAt(scene);
-  // Reduced motion states the surprise as a pair (+26 % | -20 %). Only until the first input: after that the number is the
-  // one the line stands on, never a stale second value (the stack is 0 until the visitor, or the pass, has moved anything).
-  const pairOn = scene.s === 0 && scene.m === 0 && scene.cutF === REPORT_CUT;
-  const hNow = northwind.headline(current);
-  const pNow = northwind.perUnit(current);
-  const share = calendarShare(hNow, pNow);
-  const extra = REVENUES.length - 2 * current;
-  const stamp =
-    hNow > 0 && share !== null
-      ? fill(extra === 1 ? t.stampOne : t.stampMany, { s: Math.round(share * 100), n: copy.numWords[extra] ?? extra })
-      : mode === 1
-        ? fill(t.stampPerNeg, { p: formatPercent(pNow, copy.locale, { digits: 1 }), h: formatPercent(hNow, copy.locale, { digits: 0 }) })
-        : t.stampNeg;
-  const span = northwind.span();
-  const rulerAlt = fill(t.rulerAlt, {
-    a: formatNumber(span.head[0] * 100, copy.locale, { digits: 1, sign: true }),
-    b: formatNumber(span.head[1] * 100, copy.locale, { digits: 1, sign: true }),
-    c: formatNumber(span.per[0] * 100, copy.locale, { digits: 1, sign: true }),
-    d: formatNumber(span.per[1] * 100, copy.locale, { digits: 1, sign: true }),
-  });
-  const cutBase = Math.floor(clamp(scene.cutF, MIN_CUT, MAX_CUT));
-  const cutFrac = clamp(scene.cutF, MIN_CUT, MAX_CUT) - cutBase;
-  const cutNext = cutFrac > 0.02 ? cutBase + 1 : cutBase;
-  const labelFor = (k: number) => fill(t.weeks, { a: k, b: REVENUES.length - k });
-  // The label crosses over with the number: both read the same cutF, so they never disagree mid-flip.
-  const labelMix = cutFrac > 0.02 ? smoothstep(0.35, 0.65, cutFrac) : 0;
-  const handleText = fill(mode === 0 ? t.handleValue : t.handleValuePer, {
-    k: current,
-    h: spoken(copy, hNow),
-    p: spoken(copy, pNow),
-  });
-  const withTick = (patch: Partial<OwnState>) => setOwn((previous) => ({ ...previous, ...patch }));
-
+function OwnSection({
+  pack,
+  draft,
+  cards,
+  findings,
+  onText,
+  onEdit,
+  onAdd,
+  onRemove,
+  onClear,
+  onDownload,
+}: {
+  readonly pack: DemoPack;
+  readonly draft: OwnCard;
+  readonly cards: readonly OwnCard[];
+  readonly findings: readonly Finding[];
+  readonly onText: (field: TextField, value: string) => void;
+  readonly onEdit: (patch: Partial<OwnCard>) => void;
+  readonly onAdd: () => void;
+  readonly onRemove: (position: number) => void;
+  readonly onClear: () => void;
+  readonly onDownload: () => void;
+}) {
+  const own = pack.own;
+  const full = cards.length >= MAX_CARDS;
+  const hint = full ? fill(own.full, { max: MAX_CARDS }) : canAddCard(draft) ? null : own.needs;
   return (
-    <div className="mg" data-room={room ? "" : undefined} data-mode={mode}>
-        <section className="mg-card mg-stage" aria-label={t.region} onPointerDownCapture={ctl.skipIntro}>
-          <div className="mg-stage-inner">
-            <div className="mg-main">
-              <div className="mg-hero">
-                <div className="mg-numrow">
-                  <p className="mg-number" data-testid="giant-number" data-neg={value < 0 ? "" : undefined} aria-hidden="true">
-                    <span>{formatPercent(value, copy.locale, { auto: true })}</span>
-                    {pairOn && <span className="mg-alt">{` | ${formatPercent(northwind.headline(REPORT_CUT + 1), copy.locale, { auto: true })}`}</span>}
-                  </p>
-                  <div className="mg-numside">
-                    <p className="mg-ask" data-flash={scene.ask > 0.5 ? "" : undefined}>{t.ask}</p>
-                    <p className="mg-sub">{t.sub}</p>
-                    <p className="mg-units-note" style={{ opacity: smoothstep(0.5, 1, scene.m) }}>
-                      {fill(t.unitsNote, { x: formatPercent(unitsGrowthAt(scene), copy.locale, { digits: 1 }) })}
-                    </p>
-                  </div>
-                </div>
-                <div
-                  className="mg-chart mg-plot"
-                  ref={chartRef}
-                  onPointerDown={plotDown}
-                  onPointerMove={plotMove}
-                  onPointerUp={plotUp}
-                  onPointerCancel={plotUp}
-                >
-                  <Chart scene={scene} pack={copy} />
-                  <DragHandle
-                    at={(STAGE.pad + scene.cutF * SLOT) / STAGE.width}
-                    top={HANDLE_AT}
-                    label={t.handleLabel}
-                    min={MIN_CUT}
-                    max={MAX_CUT}
-                    now={current}
-                    valueText={handleText}
-                    pulse={scene.pulse}
-                    onStart={ctl.skipIntro}
-                    onDrag={(fraction) => {
-                      const raw = clamp((fraction * STAGE.width - STAGE.pad) / SLOT, MIN_CUT, MAX_CUT);
-                      cutTarget.current = Math.round(raw);
-                      ctl.set({ cutF: raw });
-                    }}
-                    onDragEnd={() => settleCut(ctl.read().cutF)}
-                    onKey={(key) => {
-                      ctl.skipIntro();
-                      const step = key === "ArrowLeft" || key === "ArrowDown" || key === "PageDown" ? -1 : key === "ArrowRight" || key === "ArrowUp" || key === "PageUp" ? 1 : 0;
-                      if (step !== 0) nudge(step);
-                      else if (key === "Home") settleCut(MIN_CUT);
-                      else if (key === "End") settleCut(MAX_CUT);
-                      else return false;
-                      return true;
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="mg-cutbar">
-                <button type="button" className="mg-btn mg-icon-btn" aria-label={t.nudgeL} disabled={current <= MIN_CUT} onClick={() => nudge(-1)}>
-                  <Chevron dir="l" />
-                </button>
-                <p className="mg-weeks" data-testid="weeks-label">
-                  <span style={{ opacity: cutNext === cutBase ? 1 : 1 - labelMix }}>{labelFor(cutBase)}</span>
-                  {cutNext !== cutBase && <span className="mg-weeks-next" aria-hidden="true" style={{ opacity: labelMix }}>{labelFor(cutNext)}</span>}
-                </p>
-                <button type="button" className="mg-btn mg-icon-btn" aria-label={t.nudgeR} disabled={current >= MAX_CUT} onClick={() => nudge(1)}>
-                  <Chevron dir="r" />
-                </button>
-              </div>
-            </div>
-            <div className="mg-side">
-              <SwitchTwo id="mg-mode" label={t.switchLabel} options={[t.sw1, t.sw2]} value={mode} onChange={changeMode} />
-              <div className="mg-rulerwrap">
-                <Ruler scene={scene} visited={visited} pack={copy} />
-              </div>
-              <div className="mg-slot" data-armed={scene.m >= 0.5 ? "" : undefined}>
-                <p className="mg-hint-line" aria-hidden={mode === 1} style={{ opacity: 1 - smoothstep(0.1, 0.5, scene.m) }}>{t.hint}</p>
-                <p className="mg-stamp" aria-hidden={mode === 0} style={{ opacity: smoothstep(0.7, 1, scene.m) }}>{stamp}</p>
-              </div>
-              <p className="mg-note">{`${t.rulerCap} ${t.minWeeks} ${t.attr}`}</p>
-              <button type="button" className="mg-btn mg-room-toggle" aria-pressed={room} onClick={() => setRoom((v) => !v)}>
-                {t.room}
+    <section className="nw-section" aria-labelledby="nw-own-heading" data-own-section="">
+      <p className="nw-own-privacy" data-own-privacy="">
+        {own.privacy}
+      </p>
+      <h2 id="nw-own-heading" className="nw-h2">
+        {own.heading}
+      </h2>
+      <p className="nw-lead">{own.lead}</p>
+      <OwnForm
+        pack={pack}
+        card={draft}
+        findings={findings}
+        onText={onText}
+        onKind={(numeratorKind) => onEdit({ numeratorKind })}
+        onNoDenominator={(noDenominator) => onEdit({ noDenominator })}
+        onPeriod={(period) => onEdit({ period })}
+        onComparison={(comparison) => onEdit({ comparison })}
+      />
+      {hint ? <p className="nw-muted">{hint}</p> : null}
+      <h3 className="nw-h3">{own.added}</h3>
+      {cards.length === 0 ? (
+        <p className="nw-muted">{own.none}</p>
+      ) : (
+        <ol className="nw-card-list" data-own-cards="">
+          {cards.map((card, position) => (
+            <li key={position}>
+              <pre className="nw-card-preview">
+                <code>{cardToMarkdown(card, own.card)}</code>
+              </pre>
+              <button type="button" className="nw-small-button" onClick={() => onRemove(position)}>
+                {own.remove}
               </button>
-            </div>
-          </div>
-          <p className="mg-sr" role="img" aria-label={rulerAlt} />
-          <p className="mg-sr" aria-live="polite" data-testid="live">{announce}</p>
-          <table className="mg-sr">
-            <caption>{t.tableCaption}</caption>
-            <thead>
-              <tr>{t.tableHead.map((head) => <th key={head} scope="col">{head}</th>)}</tr>
-            </thead>
-            <tbody>
-              {WEEKS.map((week, index) => (
-                <tr key={week.start}>
-                  <th scope="row">{week.start}</th>
-                  <td>{formatNumber(REVENUES[index] ?? 0, copy.locale)}</td>
-                  <td>{formatNumber(UNITS[index] ?? 0, copy.locale)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-        {/* Two columns on a desktop (finding + sentence | your numbers + rules), one on a phone, where CSS order puts the sentence
-            right after Dein Vergleich and the long rules file last. */}
-        <div className="mg-colL">
-          <Act2
-            scene={scene}
-            pack={copy}
-            mode={act2Mode}
-            trigger={trigger}
-            onMode={changeAct2}
-            onTrigger={setTrigger}
-            onStart={ctl.skipIntro}
-          />
-          <TakeawayCard pack={copy} facts={ownDerived.facts} trigger={trigger} withDefects={act2Used} part="text" status={takeStatus} onStatus={setTakeStatus} />
-        </div>
-        <div className="mg-colR">
-          <YourCompare
-            pack={copy}
-            own={own}
-            derived={ownDerived}
-            onChange={withTick}
-            onReplace={setOwn}
-            onStart={ctl.skipIntro}
-          />
-          <TakeawayCard pack={copy} facts={ownDerived.facts} trigger={trigger} withDefects={act2Used} part="rules" status={takeStatus} onStatus={setTakeStatus} />
-        </div>
-    </div>
+            </li>
+          ))}
+        </ol>
+      )}
+      <p>
+        <button type="button" className="nw-small-button" data-own-clear="" onClick={onClear}>
+          {own.clear}
+        </button>
+      </p>
+      <div className="nw-dock glass" data-own-dock="">
+        <button type="button" className="nw-action" data-add-card="" disabled={!canAddCard(draft) || full} onClick={onAdd}>
+          {own.add}
+        </button>
+        <span className="nw-dock-count">{fill(own.count, { n: cards.length, max: MAX_CARDS })}</span>
+        <button type="button" className="nw-action nw-action-quiet" onClick={onDownload}>
+          {own.dockZip}
+        </button>
+      </div>
+    </section>
+  );
+}
+
+function TakeHomeNotes({ pack, text }: { readonly pack: DemoPack; readonly text: string }) {
+  const copy = pack.takehome;
+  return (
+    <section className="nw-section" aria-labelledby="nw-takehome-heading" data-takehome-notes="">
+      <h2 id="nw-takehome-heading" className="nw-h2">
+        {copy.instructionsHead}
+      </h2>
+      <p className="nw-lead">{copy.instructionsLead}</p>
+      <pre className="nw-instructions" data-own-instructions="" tabIndex={0}>
+        {text}
+      </pre>
+      <CopyButton text={text} label={copy.copy} doneLabel={copy.copied} />
+      <h3 className="nw-h3">{copy.promptsHead}</h3>
+      <ol className="nw-prompts">
+        {copy.prompts.map((prompt) => (
+          <li key={prompt}>
+            <p>{prompt}</p>
+            <CopyButton text={prompt} label={copy.copy} doneLabel={copy.copied} />
+          </li>
+        ))}
+      </ol>
+      <p className="nw-muted">{copy.below}</p>
+    </section>
   );
 }

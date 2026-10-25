@@ -16,6 +16,8 @@ import {
 /** Kits published in German as well: German edition -> the English one it mirrors. */
 const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
   "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip": "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+  "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip":
+    "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
 };
 
 describe("workshops catalog", () => {
@@ -109,10 +111,10 @@ describe("workshops catalog", () => {
     );
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")?.materials[0]?.label,
-    ).toBe("Deck · 22 Folien");
+    ).toBe("Deck · 15 Folien");
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")?.materials[0]?.label,
-    ).toBe("Deck · 22 slides");
+    ).toBe("Deck · 15 slides");
   });
 
   it("gives every real-world second case a source and a decision", () => {

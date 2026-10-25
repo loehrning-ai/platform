@@ -1,1085 +1,1034 @@
 /*
- * Monatsgrenze (W02). Everything is scoped under .mg, prefix `mg-`.
- * Hard edges, no gradients, no glow. W02's poster is the IDEA scene, so the stage
- * uses the band's and the hub tile's own tokens, by name and not by copy:
- * --color-kobalt for the earlier month, --color-himbeere for the later one
- * (--color-himbeere-tief where it is text), Druckschwarz for text and the cut.
- * demo.test.tsx pins the three against globals.css. Hover, focus,
- * press and drag switch to the page's one anti colour (--color-scene-anti-a),
- * never a tint of the control's own colour. Geometry is
- * driven by the scene (use-scene.ts), so no transition touches size or position.
+ * "Eine Datei, drei Antworten" (W02), the demo's own parts. Everything is
+ * scoped under .nw-demo with the prefix nw-; the shell's stage, caption and
+ * lever are never selected here (demo-contract.test.ts). Flat, hard edges,
+ * ink on paper, Mennige as the one accent; hover and press swap to the anti
+ * colour. Motion comes from the clock in the components, never from CSS.
  */
-.mg {
-  --mg-ink: var(--color-foreground, #121212);
-  --mg-paper: var(--color-paper, #fffcf5);
-  --mg-ground: var(--color-background, #f7f1e7);
-  --mg-a: var(--color-kobalt, #2e4d90);
-  --mg-mark: var(--color-himbeere, #c94a7f);
-  --mg-mark-text: var(--color-himbeere-tief, #b6386f);
-  --mg-anti: var(--color-scene-anti-a, #c94a7f);
-  --mg-muted: var(--color-muted-foreground, #4f4640);
-  --mg-hair: var(--color-hairline, #d4cec5);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.5rem;
-  min-width: 0;
-  color: var(--mg-ink);
-  font-size: 1rem;
-  line-height: 1.45;
-}
-
-.mg *,
-.mg *::before,
-.mg *::after {
-  box-sizing: border-box;
-}
-
-/*
- * Desktop: the stage runs the full width with its controls beside the plot, so number, towers, switch and ruler share
- * one screen. Then Act 2 and Dein Vergleich side by side, and Mitnehmen across the bottom: no column runs on alone.
- */
-@media (min-width: 64rem) {
-  .mg {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem;
-    align-items: start;
-  }
-  .mg-stage {
-    grid-column: 1 / -1;
-  }
-  .mg-colL,
-  .mg-colR {
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-    min-width: 0;
-  }
-}
-
-/* A phone: the columns dissolve; Act 2, Dein Vergleich, the sentence, and last the long rules file. */
-@media (max-width: 63.99rem) {
-  .mg-colL,
-  .mg-colR {
-    display: contents;
-  }
-  .mg-act2 { order: 1; }
-  .mg-compare { order: 2; }
-  .mg-take { order: 3; }
-  .mg-rules { order: 4; }
-}
-
-/*
- * The shell's band is tall on purpose for the other demos. Here the number and
- * the towers are the first thing the visitor must see, so on this route the
- * decorative numeral strip, the workshop link row and the honest data line
- * (moved below the demo) give their height back. Scoped to this route's page.
- */
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-plakat-art-phone],
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-workshop-link] {
-  display: none;
-}
-
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-cover-band] > div:first-child {
-  padding-bottom: 1rem;
-}
-
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-mount] {
-  margin-top: 1rem;
-}
-
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-promise] {
-  margin-top: 1rem;
-  order: 0;
-}
-
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] > div:has(> [data-demo-mount]) {
+.nw-demo {
+  --nw-ink: var(--color-foreground);
+  --nw-paper: var(--color-background);
+  --nw-card: var(--color-card);
+  --nw-line: var(--color-hairline);
+  --nw-muted: var(--color-muted-foreground);
+  --nw-accent: var(--color-mennige);
+  --nw-mono: var(--font-mono);
   display: flex;
   flex-direction: column;
-}
-
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-mount] {
-  order: 1;
-}
-
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-synthetic] {
-  order: 3;
-  margin-top: 1.5rem;
-}
-
-/* The question belongs to the stage ("Stimmt das?" lights up beside the number), not under the title. */
-[data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-question] {
-  display: none;
-}
-
-/* On a phone the stage comes first: the promise moves under it, the pass itself is the instruction. */
-@media (max-width: 39.99rem) {
-  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-promise] {
-    order: 2;
-    margin-top: 1.5rem;
-  }
-}
-
-@media (min-width: 40rem) {
-  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-demo-mount] {
-    margin-top: 1.5rem;
-  }
-}
-
-@media (min-width: 64rem) {
-  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-cover-band] {
-    min-height: 0;
-  }
-  [data-demo-page="geschaeftsberichte-mit-ki-lesen"] [data-cover-band] > div:first-child {
-    padding-block: 1.75rem;
-  }
-}
-
-/* A short phone (SE, landscape-ish): the context line gives its height back so the switch and the ruler stay above the tab bar. */
-@media (max-height: 700px) and (max-width: 639px) {
-  .mg-numside .mg-sub {
-    display: none;
-  }
-}
-
-.mg-card {
+  gap: var(--demo-gap, 8px);
   min-width: 0;
-  padding: 0.875rem 0.75rem 1rem;
-  border: 2px solid var(--mg-ink);
-  background: var(--mg-paper);
 }
 
-@media (min-width: 40rem) {
-  .mg-card {
-    padding: 1.25rem 1.25rem 1.5rem;
-  }
+/* ── Stage layouts: each fills the shell's fixed-height frame ─────────── */
+.nw-claim,
+.nw-rails,
+.nw-weeks,
+.nw-trace,
+.nw-decide,
+.nw-own,
+.nw-takehome {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 12px 10px;
+  color: var(--nw-ink);
 }
-
-.mg-h {
+.nw-top {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-right: 128px;
+}
+.nw-caps {
   margin: 0;
-  font-size: 1.375rem;
-  line-height: 1.15;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--nw-muted);
 }
-
-.mg-h3 {
+.nw-strip {
   margin: 0;
+  font-family: var(--nw-mono);
   font-size: 0.8125rem;
   line-height: 1.3;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
 }
-
-.mg-lede,
-.mg-sub {
-  margin: 0.375rem 0 0.875rem;
-  color: var(--mg-muted);
-  font-size: 0.9375rem;
-  text-wrap: pretty;
+.nw-file {
+  margin: 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--nw-line);
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--nw-muted);
+  font-variant-numeric: tabular-nums;
 }
-
-.mg-sub {
-  margin-top: 0;
-  margin-bottom: 0.25rem;
+.nw-file code {
+  color: var(--nw-ink);
+}
+.nw-file-label {
+  font-family: var(--font-sans);
   font-weight: 700;
-  letter-spacing: 0.02em;
+}
+.nw-area {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+.nw-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.nw-track {
+  stroke: var(--nw-line);
+  stroke-width: 1;
+}
+.nw-tick {
+  stroke: var(--nw-ink);
+  stroke-width: 2;
+  stroke-dasharray: 3 2;
+}
+.nw-mark-fill,
+.nw-week-sep,
+.nw-chip-fill {
+  fill: var(--nw-ink);
+}
+.nw-mark-line,
+.nw-week-aug,
+.nw-chip-line,
+.nw-chip-half {
+  fill: var(--nw-card);
+  stroke: var(--nw-ink);
+  stroke-width: 1.5;
+}
+.nw-chip-half {
+  stroke-width: 3;
+}
+.nw-week-sep {
+  stroke: var(--nw-card);
+  stroke-width: 1;
 }
 
-.mg-note,
-.mg-hint,
-.mg-small {
-  margin: 0.625rem 0 0;
-  font-size: 0.875rem;
+/* ── Beat 1: the claim ───────────────────────────────────────────────── */
+.nw-claim {
+  justify-content: flex-start;
+  gap: 10px;
+}
+.nw-quote {
+  margin: 0;
+  padding: 0 0 0 12px;
+  border-left: 3px solid var(--nw-ink);
+}
+.nw-quote p {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
   line-height: 1.4;
-  color: var(--mg-muted);
   text-wrap: pretty;
 }
-
-.mg-hint {
+.nw-figure {
+  /* one box, so the underline spans the whole figure even when it wraps */
+  display: inline-block;
+  position: relative;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.nw-figure-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 3px;
+  background: var(--nw-accent);
+  transform-origin: left center;
+}
+.nw-quote-by {
+  margin-top: 6px;
   font-size: 0.8125rem;
+  color: var(--nw-muted);
+}
+.nw-quote-by code {
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+}
+.nw-strip-band {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  margin-top: auto;
+}
+.nw-strip-band .nw-area {
+  min-height: 40px;
+  max-height: 260px;
+}
+.nw-strip-key {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--nw-muted);
 }
 
-.mg-sentence {
-  margin: 0.75rem 0 0;
-  font-size: 1.0625rem;
-  line-height: 1.35;
-  text-wrap: pretty;
+/* ── Beats 2 and 3: the rails ────────────────────────────────────────── */
+.nw-rail-label {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 6px 0;
+  border: 2px solid transparent;
+  font-size: 0.8125rem;
+  line-height: 1.25;
+  pointer-events: none;
 }
-
-.mg-strong {
-  font-weight: 800;
+.nw-rail-label[data-framed] {
+  border-color: var(--nw-accent);
 }
-
-.mg-sr {
+.nw-rail-group {
+  position: absolute;
+  inset: 0;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.nw-rail-label[data-choosable] {
+  border-color: var(--nw-line);
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.nw-rail-label[data-choosable][data-framed] {
+  border-color: var(--nw-accent);
+}
+.nw-rail-label[data-choosable]:has(:focus-visible) {
+  outline: 2px solid var(--nw-ink);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .nw-rail-label[data-choosable]:not([data-framed]):hover {
+    border-color: var(--nw-ink);
+  }
+}
+.nw-rail-input {
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* ─── Stage ─────────────────────────────────────────────────────────────── */
-
-.mg-stage {
-  position: relative;
-  padding-inline: 0.5rem;
-}
-
-@media (min-width: 40rem) {
-  .mg-stage {
-    padding-inline: 1.25rem;
-  }
-}
-
-.mg-stage-inner {
-  min-width: 0;
-  max-width: 48rem;
-  margin-inline: auto;
-}
-
-.mg-main,
-.mg-side {
-  min-width: 0;
-}
-
-@media (min-width: 64rem) {
-  .mg-stage-inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
-    column-gap: 2.5rem;
-    align-items: center;
-    max-width: none;
-  }
-  .mg-side .mg-switch {
-    margin-top: 0;
-  }
-}
-
-.mg-numrow {
-  container-type: inline-size;
-  display: grid;
-  grid-template-columns: 62% minmax(0, 1fr);
-  column-gap: 0.5rem;
-  align-items: end;
-  padding-inline: 0.25rem;
-}
-
-.mg-number {
   margin: 0;
-  color: var(--mg-a);
-  font-size: min(7.5rem, 17cqw);
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+  opacity: 0;
 }
-
-.mg-numside {
+.nw-rail-name {
   min-width: 0;
-  padding-bottom: 0.2rem;
-}
-
-.mg-number[data-neg] {
-  color: var(--mg-mark-text);
-}
-
-.mg-alt {
-  display: none;
-  color: var(--mg-mark-text);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mg-number {
-    grid-column: 1 / -1;
-    font-size: min(6rem, 12.5cqw);
-  }
-  .mg-numside {
-    grid-column: 1 / -1;
-    padding-top: 0.375rem;
-  }
-  .mg-alt {
-    display: inline;
-  }
-}
-
-.mg-units-note {
-  min-height: 1.1rem;
-  margin: 0.25rem 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.3;
   font-weight: 700;
-  color: var(--mg-ink);
+}
+.nw-rail-value {
+  display: flex;
+  flex: none;
+  align-items: baseline;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.nw-rail-value strong {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+.nw-rail-verdict,
+.nw-rail-aug {
+  opacity: 0;
+}
+.nw-rail-verdict[data-show],
+.nw-rail-aug[data-show] {
+  opacity: 1;
+}
+.nw-rail-verdict {
+  font-weight: 700;
+}
+.nw-rail-aug {
+  font-size: 0.75rem;
+  color: var(--nw-muted);
+}
+.nw-per {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--nw-muted);
+}
+.nw-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  color: var(--nw-ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.nw-toggle-box {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--nw-ink);
+  background: var(--nw-paper);
+  font-size: 0.875rem;
+  line-height: 1;
+}
+.nw-toggle[aria-pressed="true"] .nw-toggle-box {
+  background: var(--nw-ink);
+  color: var(--nw-paper);
 }
 
-.mg-chart {
-  position: relative;
-  margin-top: 0.25rem;
-  touch-action: pan-y;
+/* ── Beat 4: the weeks ───────────────────────────────────────────────── */
+.nw-col-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--nw-muted);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
-
-.mg-plot,
-.mg-weeks {
-  user-select: none;
-  -webkit-user-select: none;
+.nw-col-label strong {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--nw-ink);
 }
-
-.mg-plot {
-  cursor: ew-resize;
+.nw-month-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 18px;
 }
-
-.mg-svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
+.nw-month-axis span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-weight: 700;
 }
-
-.mg-ask {
-  display: inline-block;
-  margin: 0 0 0.25rem;
-  padding: 0.125rem 0.375rem;
-  margin-left: -0.375rem;
-  border: 2px solid transparent;
+.nw-week-date {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
   white-space: nowrap;
-  font-size: 1rem;
-  line-height: 1.15;
-  font-weight: 800;
-  color: var(--mg-ink);
+  color: var(--nw-ink);
+  font-variant-numeric: tabular-nums;
+}
+.nw-week-date[data-sep] {
+  color: var(--nw-paper);
+}
+/* The delta sits between the two month columns, clear of both column labels. */
+.nw-delta {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--nw-accent);
+  font-variant-numeric: tabular-nums;
 }
 
-/* While -20 % stands, the question is inverted: it reads as the number's own caption. */
-.mg-ask[data-flash] {
-  background: var(--mg-ink);
-  color: var(--mg-paper);
-  border-color: var(--mg-ink);
+/* ── Beat 5: the trace ───────────────────────────────────────────────── */
+.nw-trace-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+  margin: 0;
+  border-bottom: 1px solid var(--nw-line);
+}
+.nw-trace-rows {
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  color: var(--nw-muted);
+  font-variant-numeric: tabular-nums;
+}
+.nw-figure-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-left: -4px;
+  padding: 0 4px;
+  background: transparent;
+  color: var(--nw-ink);
+  font-family: var(--nw-mono);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: underline dotted 2px var(--nw-accent);
+  text-underline-offset: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.nw-figure-button:active {
+  background: var(--nw-ink);
+  color: var(--nw-paper);
+}
+.nw-bin-label {
+  position: absolute;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.nw-bin-product {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+}
+.nw-bin-product[data-show] {
+  opacity: 1;
+}
+.nw-bin-product span {
+  color: var(--nw-muted);
+}
+.nw-bin-product strong {
+  font-size: 1.1em;
+}
+.nw-sum {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 0;
+  padding-top: 4px;
+  border-top: 2px solid var(--nw-ink);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.nw-match {
+  font-size: 0.8125rem;
 }
 
-@media (min-width: 64rem) {
-  .mg-ask {
-    font-size: 1.5rem;
-  }
-}
-
-.mg-numside .mg-sub {
+/* ── Beat 6: tiles and decision ──────────────────────────────────────── */
+.nw-tiles {
+  display: flex;
+  flex-direction: column;
   margin: 0;
   padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--nw-ink);
+}
+.nw-tile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--nw-line);
+}
+.nw-tile-label {
   font-size: 0.8125rem;
+  font-weight: 700;
+}
+.nw-tile-value {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.nw-tile-how {
+  grid-column: 1 / -1;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--nw-muted);
+}
+.nw-decision {
+  margin-top: 4px;
+  padding-left: 10px;
+  border-left: 4px solid var(--nw-accent);
+}
+.nw-decision-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nw-muted);
+}
+.nw-decision-head {
+  margin: 2px 0 4px;
+  font-size: 0.9375rem;
+  font-weight: 700;
   line-height: 1.3;
+  text-wrap: pretty;
+}
+.nw-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.75rem;
+}
+.nw-check-mark {
+  font-weight: 700;
+}
+[data-check="fail"] .nw-check-mark {
+  color: var(--nw-accent);
+}
+.nw-suggested {
+  font-weight: 600;
+  text-transform: none;
   letter-spacing: 0;
 }
 
-@media (min-width: 64rem) {
-  .mg-numside .mg-sub,
-  .mg-units-note {
-    font-size: 1rem;
-  }
+/* ── Beats 7 and 8 on the stage ──────────────────────────────────────── */
+.nw-card-preview {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--nw-ink);
+  background: var(--nw-paper);
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
-
-.mg-svg-text {
-  font-family: inherit;
-  font-size: 14px;
+.nw-own .nw-card-preview {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 0.6875rem;
+  line-height: 1.35;
+}
+.nw-card-line {
   font-weight: 700;
-  fill: var(--mg-ink);
-  font-variant-numeric: tabular-nums;
 }
-
-.mg-svg-sub {
+.nw-card-line[data-example] {
+  font-weight: 400;
+  color: var(--nw-muted);
+}
+.nw-example-note {
+  text-transform: none;
+  letter-spacing: 0;
   font-weight: 600;
-  fill: var(--mg-muted);
 }
-
-/* A paper halo behind SVG labels: a threshold or tick behind a number never strikes it through. */
-.mg-svg .mg-halo {
-  paint-order: stroke;
-  stroke: var(--mg-paper);
-  stroke-width: 5px;
-  stroke-linejoin: round;
+.nw-lever-field {
+  display: block;
+  min-width: 0;
 }
-
-.mg-svg .mg-span-text {
-  font-size: 13px;
-  font-weight: 800;
+.nw-lever-field .nw-input {
+  min-height: 48px;
 }
-
-.mg-guide {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2;
-  stroke-dasharray: 3 3;
-}
-
-.mg-chip {
-  fill: var(--mg-ink);
-}
-
-.mg-svg .mg-chip-text {
-  font-size: 14px;
-  font-weight: 800;
-  fill: var(--mg-paper);
-}
-
-.mg-rail {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2;
-}
-
-/* Flat tops, no outline: the difference between two weeks reads as height and nothing else. */
-.mg-fill-l {
-  fill: var(--mg-a);
-}
-
-.mg-fill-r {
-  fill: var(--mg-mark);
-}
-
-.mg-svg .mg-wk {
-  font-size: 10px;
-  font-weight: 800;
-  fill: var(--mg-paper);
-  pointer-events: none;
-}
-
-.mg-flash {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 3;
-  pointer-events: none;
-}
-
-/* The level of a group's mean: a dashed reference line, so a week below it shows paper above its top and never a lid or a box. */
-.mg-level {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2.5;
-  stroke-dasharray: 7 4;
-}
-
-.mg-axis {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2;
-}
-
-.mg-cut {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2;
-  stroke-dasharray: 5 4;
-}
-
-.mg-trigger {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2.5;
-  stroke-dasharray: 6 4;
-}
-
-.mg-band {
-  fill: var(--mg-mark);
-  fill-opacity: 0.16;
-  stroke: var(--mg-mark);
-  stroke-width: 1.5;
-}
-
-.mg-tick {
-  fill: none;
-  stroke: var(--mg-ink);
-  stroke-width: 2.5;
-  opacity: 0.55;
-}
-
-/* The second tick of the opening pass lands when the pass puts it there; reduced motion has no pass and shows it at once. */
-.mg-tick[data-seed] {
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mg-tick[data-seed] {
-    opacity: 0.55;
-  }
-}
-
-.mg-tick-now {
-  stroke: var(--mg-mark-text);
-  stroke-width: 4;
-  opacity: 1;
-}
-
-.mg-ruler {
-  margin-top: 0.25rem;
-}
-
-/* One reserved slot: a hint in a hairline box while the total view stands, the stamp in the accent box after the flip. */
-.mg-slot {
-  display: grid;
-  margin-top: 0.75rem;
-  border: 2px dashed var(--mg-hair);
-  transition: border-color 200ms;
-}
-
-.mg-slot[data-armed] {
-  border-style: solid;
-  border-color: var(--mg-mark);
-}
-
-.mg-slot > * {
-  grid-area: 1 / 1;
+.nw-own-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
   margin: 0;
-  padding: 0.5rem 0.75rem;
-  align-self: center;
-}
-
-.mg-hint-line {
-  font-size: 1rem;
+  font-size: 0.8125rem;
   font-weight: 700;
-  line-height: 1.3;
-  color: var(--mg-muted);
 }
-
-.mg-stamp {
-  min-height: 2.75rem;
-  font-size: 1.0625rem;
-  font-weight: 800;
-  line-height: 1.3;
-  text-wrap: balance;
-}
-
-.mg-stage .mg-note {
-  padding-inline: 0.25rem;
-}
-
-/* ─── Handle ────────────────────────────────────────────────────────────── */
-
-.mg-handle {
-  position: absolute;
-  z-index: 2;
+.nw-tree {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 4rem;
-  margin: -2rem 0 0 -1.5rem;
-  touch-action: none;
-  cursor: ew-resize;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-
-.mg-knob {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  border: 3px solid var(--mg-paper);
-  background: var(--mg-ink);
-  color: var(--mg-paper);
-  box-shadow: 0 0 0 2px var(--mg-ink);
-}
-
-.mg-knob svg {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.mg-handle[data-tone="mark"] .mg-knob {
-  background: var(--mg-a);
-  box-shadow: 0 0 0 2px var(--mg-a);
-}
-
-/* One anti colour for hover, focus and drag; focus adds a separate ink ring. */
-.mg-handle:focus-visible .mg-knob,
-.mg-handle[data-drag] .mg-knob {
-  background: var(--mg-anti);
-  box-shadow: 0 0 0 2px var(--mg-ink);
-}
-
-.mg-handle:focus-visible .mg-knob {
-  outline: 3px solid var(--mg-ink);
-  outline-offset: 4px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .mg-handle:hover .mg-knob {
-    background: var(--mg-anti);
-    box-shadow: 0 0 0 2px var(--mg-ink);
-  }
-}
-
-/* ─── Controls ──────────────────────────────────────────────────────────── */
-
-.mg-cutbar {
-  display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) 3rem;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  padding-inline: 0.25rem;
-}
-
-.mg-weeks {
-  display: grid;
-  justify-items: center;
+  flex-direction: column;
+  gap: 6px;
   margin: 0;
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+.nw-tree li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  padding-left: 14px;
+  border-left: 2px solid var(--nw-ink);
+}
+.nw-tree .nw-tree-root {
+  padding-left: 0;
+  border: 0;
+  font-weight: 700;
+}
+.nw-tree code {
+  font-family: var(--nw-mono);
+  overflow-wrap: anywhere;
+}
+.nw-tree span {
+  color: var(--nw-muted);
+}
+.nw-card-preview-small {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-@media (min-width: 64rem) {
-  .mg-cutbar {
-    margin-top: 1.5rem;
-  }
-  .mg-weeks {
-    font-size: 1.5rem;
-  }
+/* ── Levers ──────────────────────────────────────────────────────────── */
+.nw-poll {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
 }
-
-.mg-weeks > span {
-  grid-area: 1 / 1;
-}
-
-.mg-btn {
+.nw-poll-button,
+.nw-chip,
+.nw-action,
+.nw-small-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3rem;
-  min-height: 3rem;
-  padding: 0 1rem;
-  border: 2px solid var(--mg-ink);
-  background: var(--mg-paper);
-  color: var(--mg-ink);
-  font: inherit;
-  font-weight: 800;
-  line-height: 1.1;
-  cursor: pointer;
+  min-height: 48px;
+  padding: 0 10px;
+  border: 2px solid var(--nw-ink);
+  background: var(--nw-paper);
+  color: var(--nw-ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 120ms, box-shadow 120ms;
 }
-
-.mg-icon-btn {
-  padding: 0;
+.nw-poll-button[aria-pressed="true"],
+.nw-chip[data-checked],
+.nw-action {
+  background: var(--nw-ink);
+  color: var(--nw-paper);
 }
-
-.mg-btn-solid {
-  background: var(--mg-ink);
-  color: var(--mg-paper);
+.nw-poll-button[data-dim] {
+  opacity: 0.4;
 }
-
-.mg-btn:disabled {
-  opacity: 0.35;
+.nw-poll-button:active,
+.nw-chip:active,
+.nw-small-button:active,
+.nw-action-quiet:active {
+  background: var(--nw-ink);
+  color: var(--nw-paper);
+}
+.nw-action:active {
+  background: var(--nw-paper);
+  color: var(--nw-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nw-poll-button:hover,
+  .nw-chip:hover,
+  .nw-small-button:hover,
+  .nw-action-quiet:hover,
+  .nw-figure-button:hover {
+    background: var(--nw-ink);
+    color: var(--nw-paper);
+  }
+  .nw-action:not(:disabled):not(.nw-action-quiet):hover {
+    background: var(--nw-paper);
+    color: var(--nw-ink);
+  }
+}
+.nw-action:disabled {
+  border-color: var(--nw-line);
+  background: var(--nw-paper);
+  color: var(--nw-muted);
   cursor: not-allowed;
 }
-
-.mg-btn:focus-visible,
-.mg-field input:focus-visible,
-.mg-field textarea:focus-visible,
-.mg-switch button:focus-visible {
-  outline: 3px solid var(--mg-anti);
+.nw-action-quiet {
+  background: var(--nw-paper);
+  color: var(--nw-ink);
+}
+.nw-chips {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.nw-chip {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.nw-chip-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.nw-chip:has(.nw-chip-input:focus-visible),
+.nw-poll-button:focus-visible,
+.nw-action:focus-visible,
+.nw-small-button:focus-visible,
+.nw-toggle:focus-visible,
+.nw-figure-button:focus-visible {
+  outline: 3px solid var(--nw-accent);
   outline-offset: 2px;
 }
-
-.mg-btn:not(:disabled):active {
-  transform: translate(0, 0);
-  box-shadow: 0 0 0 var(--mg-anti), inset 0 -4px 0 var(--mg-anti);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .mg-btn:not(:disabled):hover {
-    transform: translate(-2px, -2px);
-    box-shadow: 4px 4px 0 var(--mg-anti);
-  }
-}
-
-.mg-switch {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-top: 0.75rem;
-  border: 2px solid var(--mg-ink);
-}
-
-.mg-switch button {
-  min-height: 3rem;
-  padding: 0 0.5rem;
-  border: 0;
-  background: var(--mg-paper);
-  color: var(--mg-ink);
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.mg-switch button + button {
-  border-left: 2px solid var(--mg-ink);
-}
-
-.mg-switch button[aria-checked="true"] {
-  background: var(--mg-ink);
-  color: var(--mg-paper);
-}
-
-.mg-switch button:active {
-  box-shadow: inset 0 -5px 0 var(--mg-anti);
-}
-
-.mg-switch button:focus-visible {
-  outline-offset: -5px;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .mg-switch button:hover {
-    box-shadow: inset 0 -5px 0 var(--mg-anti);
-  }
-}
-
-/* ─── Act 2 ─────────────────────────────────────────────────────────────── */
-
-.mg-bars {
-  margin-top: 0.75rem;
-}
-
-.mg-bars .mg-svg-text {
-  font-size: 15px;
-}
-
-/* Until the per-1.000 view has settled the strip says what the trigger is for, at full strength, in the strip's own box. */
-.mg-trigger-hint {
-  position: absolute;
-  inset-inline: 0;
-  display: flex;
-  align-items: center;
+.nw-lever-note {
   margin: 0;
-  padding: 0.25rem 0.75rem;
-  border: 2px dashed var(--mg-hair);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--mg-ink);
-  pointer-events: none;
-}
-
-.mg-svg .mg-trigger-tag {
-  font-weight: 800;
-}
-
-.mg-payoff {
-  margin: 0.5rem 0 0;
-  font-size: 1.1875rem;
-  line-height: 1.3;
-  font-weight: 800;
-  text-wrap: balance;
-}
-
-.mg-empty {
-  margin-top: 0.75rem;
-  font-size: 0.9375rem;
-}
-
-.mg-trigger-row {
-  display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr) 3.5rem;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.mg-trigger-value {
-  text-align: center;
-  font-size: 1.25rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-}
-
-/* ─── Dein Vergleich ────────────────────────────────────────────────────── */
-
-.mg-cmp-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.25rem 1rem;
-}
-
-.mg-tag {
-  margin: 0;
-  padding: 0.125rem 0.5rem;
-  border: 2px solid var(--mg-ink);
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.mg-tag[data-own] {
-  background: var(--mg-ink);
-  color: var(--mg-paper);
-}
-
-.mg-cols {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-.mg-col {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-  min-width: 0;
-}
-
-.mg-field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 0;
   font-size: 0.8125rem;
-  font-weight: 700;
+  line-height: 1.35;
+  color: var(--nw-muted);
 }
 
-.mg-field input,
-.mg-field textarea {
-  width: 100%;
-  min-width: 0;
-  min-height: 3rem;
-  padding: 0.5rem 0.625rem;
-  border: 2px solid var(--mg-ink);
-  border-radius: 0;
-  background: var(--mg-paper);
-  color: var(--mg-ink);
-  font: inherit;
-  font-size: 1rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+/* ── Below the lever ─────────────────────────────────────────────────── */
+.nw-notes,
+.nw-section {
+  max-width: 64ch;
+  margin-top: 12px;
 }
-
-.mg-field textarea {
-  resize: vertical;
+.nw-section {
+  padding-top: 16px;
+  border-top: 2px solid var(--nw-ink);
 }
-
-.mg-field input[aria-invalid="true"] {
-  border-color: var(--mg-mark);
-  background: var(--mg-ground);
-}
-
-.mg-field input[type="month"] {
-  padding-inline: 0.5rem;
-}
-
-.mg-metric {
-  margin-top: 0.75rem;
-}
-
-.mg-stepper {
-  display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr) 3rem;
-  align-items: center;
-  text-align: center;
-  font-weight: 800;
-  font-size: 1.125rem;
-}
-
-.mg-stepper .mg-btn {
-  min-width: 0;
-  padding: 0;
-}
-
-.mg-alert {
-  margin: 0.75rem 0 0;
-  padding: 0.5rem 0.75rem;
-  border: 2px solid var(--mg-mark);
-  font-weight: 700;
-  font-size: 0.9375rem;
-}
-
-.mg-flag {
-  margin: 0.25rem 0 0;
-  padding: 0.375rem 0.5rem;
-  border: 2px solid var(--mg-mark);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.mg-result {
-  margin-top: 0.875rem;
-  padding: 0.75rem;
-  border: 2px solid var(--mg-ink);
-  background: var(--mg-ground);
-}
-
-.mg-result dl {
-  display: grid;
-  gap: 0.375rem;
-  margin: 0;
-}
-
-.mg-result dl > div {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding-bottom: 0.375rem;
-  border-bottom: 1px solid var(--mg-hair);
-}
-
-.mg-result dt {
-  font-size: 0.8125rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  line-height: 1.25;
-}
-
-.mg-result dd {
-  margin: 0;
-  text-align: right;
-}
-
-.mg-big {
-  font-size: 1.5rem;
-  line-height: 1.1;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.mg-result dl > div.mg-stack {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
-}
-
-.mg-result .mg-stack dd {
-  text-align: left;
-}
-
-.mg-word {
-  font-size: 1.0625rem;
-  line-height: 1.25;
-  font-weight: 800;
-  text-wrap: balance;
-}
-
-.mg-paste {
-  margin-top: 1rem;
-}
-
-.mg-reset {
-  margin-top: 1rem;
-  width: 100%;
-}
-
-/* ─── Mitnehmen ─────────────────────────────────────────────────────────── */
-
-.mg-block {
-  margin-top: 1.125rem;
-}
-
-.mg-text {
-  margin: 0.375rem 0 0;
-  padding: 0.75rem;
-  border: 2px solid var(--mg-ink);
-  background: var(--mg-ground);
+.nw-para {
+  margin: 0 0 10px;
   font-size: 0.9375rem;
   line-height: 1.5;
-  overflow-wrap: anywhere;
   text-wrap: pretty;
-  user-select: text;
 }
-
-.mg-file {
-  margin: 0.125rem 0 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8125rem;
+.nw-h2 {
+  margin: 8px 0 4px;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
-
-.mg-actions-top {
-  margin-top: 0.375rem;
+.nw-h3 {
+  margin: 16px 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
 }
-
-.mg-pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8125rem;
+.nw-lead {
+  margin: 0 0 8px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.nw-muted {
+  margin: 8px 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--nw-muted);
+}
+.nw-card-lines {
+  margin: 12px 0;
+  padding-left: 10px;
+  border-left: 4px solid var(--nw-ink);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+.nw-card-lines p {
+  margin: 2px 0;
+}
+.nw-skill-strip {
+  margin: 14px 0 0;
+}
+.nw-skill-strip figcaption {
+  margin-bottom: 4px;
+  font-size: 0.75rem;
+  color: var(--nw-muted);
+}
+.nw-skill-strip figcaption code {
+  font-family: var(--nw-mono);
+  color: var(--nw-ink);
+}
+.nw-skill-strip pre {
+  display: grid;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--nw-ink);
+  background: var(--color-inset);
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  line-height: 1.5;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.nw-strip-ghost,
+.nw-strip-typed {
+  grid-area: 1 / 1;
+}
+.nw-strip-ghost {
+  visibility: hidden;
+}
+.nw-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+.nw-path li {
+  padding: 4px 8px;
+  border: 1px solid var(--nw-line);
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  color: var(--nw-muted);
+}
+.nw-path li[data-lit] {
+  border-color: var(--nw-ink);
+  background: var(--nw-ink);
+  color: var(--nw-paper);
+}
+.nw-prompt {
+  margin: 12px 0;
+  padding: 12px;
+  border: 2px solid var(--nw-ink);
+}
+.nw-prompt p {
+  margin: 0 0 8px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.nw-fields {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.nw-fields dt {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nw-muted);
+}
+.nw-fields dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.nw-fields [data-field="decision"] dd {
+  font-weight: 700;
+}
+.nw-check-list {
+  margin: 12px 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.nw-closing {
+  margin: 12px 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.nw-own-privacy {
+  margin: 0 0 8px;
+  padding-left: 10px;
+  border-left: 4px solid var(--nw-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.45;
 }
 
-.mg-actions {
+/* ── The card form ───────────────────────────────────────────────────── */
+.nw-form {
+  margin-top: 8px;
+}
+.nw-field {
+  margin: 12px 0;
+}
+.nw-field > label,
+.nw-fieldset > legend {
+  display: block;
+  margin-bottom: 4px;
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.nw-fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+.nw-input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 2px solid var(--nw-ink);
+  border-radius: 0;
+  background: var(--nw-paper);
+  color: var(--nw-ink);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+textarea.nw-input {
+  resize: vertical;
+}
+.nw-input:disabled {
+  border-color: var(--nw-line);
+  color: var(--nw-muted);
+}
+.nw-input:focus-visible,
+.nw-radio:has(input:focus-visible),
+.nw-check:has(input:focus-visible) {
+  outline: 3px solid var(--nw-accent);
+  outline-offset: 2px;
+}
+.nw-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nw-radio,
+.nw-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 10px;
+  border: 1px solid var(--nw-ink);
+  font-size: 0.875rem;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.nw-radio:has(input:checked) {
+  border-width: 2px;
+  font-weight: 700;
+}
+.nw-radio input,
+.nw-check input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--nw-ink);
+}
+.nw-findings {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.nw-findings li {
+  margin-top: 4px;
+  padding: 4px 8px;
+  border-left: 3px solid var(--nw-accent);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.nw-cite {
+  color: var(--nw-muted);
+}
+.nw-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nw-card-list .nw-small-button {
+  margin-top: 6px;
+}
+.nw-small-button {
+  min-height: 44px;
+  font-size: 0.875rem;
+}
+.nw-dock {
+  position: sticky;
+  bottom: calc(var(--tabbar-band-h, 0px) + 8px);
+  z-index: 3;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem 0.75rem;
-  margin-top: 0.625rem;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 8px;
 }
-
-.mg-copied {
-  min-height: 1.25rem;
+.nw-dock-count {
+  flex: 1 1 auto;
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 64rem) {
+  .nw-dock {
+    bottom: 16px;
+  }
+}
+.nw-instructions {
+  max-height: 22rem;
+  margin: 8px 0;
+  padding: 10px 12px;
+  overflow: auto;
+  border: 1px solid var(--nw-ink);
+  background: var(--nw-card);
+  font-family: var(--nw-mono);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.nw-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nw-prompts p {
+  margin: 0 0 6px;
   font-size: 0.9375rem;
-  font-weight: 800;
+  line-height: 1.45;
 }
 
-.mg-copied[data-ok]::before {
-  content: "\2713\00a0";
-}
-
-/* ─── Room mode: number, stage, handle, label and switch only. A projector option, so desktop only ── */
-
-.mg-room-toggle {
-  display: none;
-}
-
-@media (min-width: 80rem) {
-  .mg-room-toggle {
-    display: flex;
-    width: fit-content;
-    min-height: 2.5rem;
-    margin: 0.75rem 0.25rem 0 auto;
-    padding: 0 0.875rem;
+@media (min-width: 64rem) {
+  .nw-quote p {
+    font-size: 1.5rem;
+  }
+  .nw-rail-label,
+  .nw-tile-label,
+  .nw-decision-head {
+    font-size: 1rem;
+  }
+  .nw-rail-value strong,
+  .nw-col-label strong {
+    font-size: 1.375rem;
+  }
+  .nw-tile-value {
+    font-size: 1.25rem;
+  }
+  .nw-bin-product,
+  .nw-bin-label,
+  .nw-trace-rows,
+  .nw-tile-how,
+  .nw-checks,
+  .nw-file,
+  .nw-per {
     font-size: 0.875rem;
   }
-  .mg[data-room] {
-    grid-template-columns: minmax(0, 1fr);
+  .nw-card-preview {
+    font-size: 0.875rem;
   }
-  .mg[data-room] .mg-act2,
-  .mg[data-room] .mg-compare,
-  .mg[data-room] .mg-take,
-  .mg[data-room] .mg-rules,
-  .mg[data-room] .mg-rulerwrap,
-  .mg[data-room] .mg-stage .mg-note,
-  .mg[data-room] .mg-slot {
-    display: none;
-  }
-  /* Number, towers, handle, label and switch together fit a 900 px screen. */
-  .mg[data-room] .mg-stage-inner {
-    display: block;
-    max-width: 44rem;
-  }
-  .mg[data-room] .mg-number {
-    font-size: min(8.5rem, 17cqw);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .mg[data-room] .mg-number {
-      font-size: min(7.5rem, 12.5cqw);
-    }
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mg-btn,
-  .mg-slot {
-    transition: none;
+  .nw-own .nw-card-preview {
+    flex: 0 1 auto;
+    padding: 16px 18px;
+    font-size: 1.0625rem;
+    line-height: 1.55;
   }
 }

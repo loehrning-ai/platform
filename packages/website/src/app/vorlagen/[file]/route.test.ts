@@ -43,6 +43,8 @@ describe("GET /vorlagen/[file]", () => {
       { file: "ki-in-der-ausbildung-fragen.en.md" },
       { file: "pruefregel.md" },
       { file: "release-rule.en.md" },
+      { file: "kennzahlen-steckbrief-vorlage.md" },
+      { file: "metric-card-template.en.md" },
     ]);
   });
 
