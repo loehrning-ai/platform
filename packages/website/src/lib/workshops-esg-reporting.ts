@@ -8,9 +8,10 @@ const base = "/workshops/esg-berichte-mit-ki";
  * Workshop 04, "ESG Reporting with AI: From Raw Inputs to Clearer Insights". The published deck is
  * written by scripts/workshop04/export-esg-passport.mjs, the two kit editions (v3, "Nachweisprobe")
  * by scripts/workshop04/kit-v3.mjs (repository root). Every number in this copy is printed in the
- * deck or the kit, and the company, its files and its certificates are invented. The agenda follows
- * the deck's 19 slides and the 16 October run sheet. Tim demos Claude while the room plays; the kit
- * is the take-home assignment.
+ * deck or the kit, and the company, its files and its certificates are invented. The deck has a German
+ * edition (slides.html) and an English one (en/slides.html), 15 slides each plus an appendix; the
+ * agenda follows the planned time in its speaker notes. Tim demos Claude while the room plays; the
+ * kit is the take-home assignment.
  */
 
 /**
@@ -22,18 +23,25 @@ const KIT_SIZE_LABEL = "897 KB";
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
-/** Shared href, kind, language, role and phase: both locales list the same files in the same order. */
-const MATERIALS: readonly MaterialFrame[] = [
-  { href: `${base}/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 60, primary: true },
-  { href: `${base}/crvena-zemja-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
-];
+/** Href, kind, language, role and phase: each locale links its own deck edition, both the same kit. */
+const MATERIALS: Readonly<Record<Locale, readonly MaterialFrame[]>> = {
+  de: [
+    { href: `${base}/slides.html`, kind: "html", language: "de", role: "deck", phase: "during", minutes: 60, primary: true },
+    { href: `${base}/crvena-zemja-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
+  ],
+  en: [
+    { href: `${base}/en/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 60, primary: true },
+    { href: `${base}/crvena-zemja-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
+  ],
+};
 
 /** Label, description and, where the first sentence runs long on a phone, its short phone wording. */
 type MaterialCopy = readonly [label: string, description: string, short?: string];
 
-function materials(copy: readonly MaterialCopy[]): readonly WorkshopMaterial[] {
-  if (copy.length !== MATERIALS.length) throw new Error("Workshop 04: material copy does not match the material list");
-  return MATERIALS.map((frame, index) => {
+function materials(locale: Locale, copy: readonly MaterialCopy[]): readonly WorkshopMaterial[] {
+  const frames = MATERIALS[locale];
+  if (copy.length !== frames.length) throw new Error("Workshop 04: material copy does not match the material list");
+  return frames.map((frame, index) => {
     const [label, description, short] = copy[index];
     const text = short === undefined ? { label, description } : { label, description, short };
     return frame.kind === "zip" ? { ...frame, ...text, sizeLabel: KIT_SIZE_LABEL } : { ...frame, ...text };
@@ -79,15 +87,15 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Du erkennst, welche Antworten sich mit einem nachgereichten Dokument ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
-      { label: "Kaltstart: Daumen hoch oder runter", minutes: 1, activity: "vote", description: "Würdest du diese Antwort an die Bank schicken?" },
-      { label: "Hände, Vermutungen und Setup", minutes: 10, activity: "do", description: "Warum die Anfrage hier landet, der Fall und das Claude-Projekt." },
-      { label: "Durchsicht der Dateien", minutes: 3.5, activity: "do", description: "In Paaren Mängel in den Dateien finden und die saubere Datei erkennen." },
-      { label: "Vorhersage: der Fragebogen", minutes: 6.5, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
-      { label: "Abstimmung: die Werbeaussagen", minutes: 7, activity: "vote", description: "Die Gruppe entscheidet für sieben Aussagen: darf raus oder streichen." },
-      { label: "Selbst rechnen: das Bankformular", minutes: 4, activity: "do", description: "Die Amortisation zuerst selbst mit dem Handy ausrechnen." },
-      { label: "Vorhersage: das Nachweisregister", minutes: 9, activity: "do", description: "Vor der Auswertung vorhersagen, welche Dokumente fehlen." },
-      { label: "Die nachgereichte Rechnung", minutes: 8, activity: "vote", description: "Vorhersagen, was sich mit dem neuen Dokument ändert, dann die Rechnung prüfen." },
-      { label: "Exit-Ticket und Abschluss", minutes: 11, activity: "write", description: "Die Methode in drei Karten zusammenfassen und einen eigenen nächsten Schritt festhalten." },
+      { label: "Ein Satz, eine Datei", minutes: 5, activity: "vote", description: "Würdest du diese Regalkarte so drucken? Erst abstimmen, dann die Datei daneben legen." },
+      { label: "Die Nachweisprobe", minutes: 3, activity: "listen", description: "Vier Prüfungen für jede Antwort: Zitat, Zeitraum, Umfang, Stand." },
+      { label: "Anfragen, Kit und Projekt", minutes: 6, activity: "do", description: "Wer fragt, was im Kit liegt und wie das Claude-Projekt angelegt wird." },
+      { label: "Durchsicht ohne Claude", minutes: 10, activity: "do", description: "Zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
+      { label: "Schritt 1: der Fragebogen", minutes: 7, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
+      { label: "Schritt 2: die Werbeaussagen", minutes: 7, activity: "vote", description: "Für jede Aussage entscheiden: darf raus oder nicht." },
+      { label: "Schritt 3: das Bankformular", minutes: 5, activity: "do", description: "Eine Zeile selbst mit dem Taschenrechner nachrechnen, dann Claude." },
+      { label: "Register und Nachreichung", minutes: 11, activity: "do", description: "Alle Antworten an einer Stelle, dann ändert ein neues Dokument einige davon." },
+      { label: "Drei Sätze und Mitnehmen", minutes: 6, activity: "write", description: "Drei neue Sätze auf Papier einordnen, dann Skill und Vorlagen für die eigene Firma." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
@@ -180,10 +188,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Der Tarif von 9,50 MKD pro kWh ist erfunden.",
       ],
     },
-    materials: materials([
+    materials: materials("de", [
       [
-        "Deck · 19 Folien",
-        "Für den Beamer. Die Pfeiltaste nach rechts zeigt den nächsten Schritt einer Folie, nach links geht es zurück; jeder Prompt hat einen Kopierknopf.",
+        "Deck · 15 Folien",
+        "Für den Beamer. Die Pfeiltaste nach rechts zeigt den nächsten Schritt einer Folie, nach links geht es zurück, r führt zum Anfang; jeder Prompt hat einen Kopierknopf.",
       ],
       [
         "Nachweisprobe-Kit · .zip",
@@ -231,15 +239,15 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
-      { label: "Cold open: thumbs", minutes: 1, activity: "vote", description: "Would you send this answer to the bank?" },
-      { label: "Hands, guesses and setup", minutes: 10, activity: "do", description: "Why the request lands here, the case and the Claude Project." },
-      { label: "Review of the files", minutes: 3.5, activity: "do", description: "Find defects in the files in pairs and identify the clean file." },
-      { label: "Prediction: the questionnaire", minutes: 6.5, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },
-      { label: "Vote: the marketing claims", minutes: 7, activity: "vote", description: "Decide for each of seven claims: send or drop." },
-      { label: "Work it out: the bank form", minutes: 4, activity: "do", description: "Work out the payback with your phone calculator first." },
-      { label: "Prediction: the evidence register", minutes: 9, activity: "do", description: "Predict which documents are missing before the result." },
-      { label: "The late invoice", minutes: 8, activity: "vote", description: "Predict what changes with the new document, then check the invoice." },
-      { label: "Exit ticket and close", minutes: 11, activity: "write", description: "Summarize the method on three cards and name your next step." },
+      { label: "One sentence, one file", minutes: 5, activity: "vote", description: "Would you print this shelf card? Vote first, then put the file next to it." },
+      { label: "The evidence check", minutes: 3, activity: "listen", description: "Four checks for every answer: quote, period, scope, final." },
+      { label: "Requests, kit and project", minutes: 6, activity: "do", description: "Who asks, what is in the kit and how to set up the Claude Project." },
+      { label: "Review without Claude", minutes: 10, activity: "do", description: "In pairs on paper: file, line and which check fails." },
+      { label: "Step 1: the questionnaire", minutes: 7, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },
+      { label: "Step 2: the marketing claims", minutes: 7, activity: "vote", description: "Decide for each claim: send or not." },
+      { label: "Step 3: the bank form", minutes: 5, activity: "do", description: "Work out one line with a calculator yourself, then Claude." },
+      { label: "Register and late document", minutes: 11, activity: "do", description: "Every answer in one place, then a new document changes some of them." },
+      { label: "Three sentences and take-home", minutes: 6, activity: "write", description: "Place three new sentences on paper, then the skill and templates for your own company." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
@@ -332,10 +340,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "The tariff of 9.50 MKD per kWh is invented.",
       ],
     },
-    materials: materials([
+    materials: materials("en", [
       [
-        "Deck · 19 slides",
-        "For the projector. The right arrow key shows the next step of a slide and the left one goes back; every prompt has a copy button.",
+        "Deck · 15 slides",
+        "For the projector. The right arrow key shows the next step of a slide, the left one goes back and r returns to the start; every prompt has a copy button.",
       ],
       [
         "Evidence check kit · .zip",

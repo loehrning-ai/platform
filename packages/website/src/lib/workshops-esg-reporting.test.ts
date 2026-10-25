@@ -8,6 +8,7 @@ const slug = "esg-berichte-mit-ki";
 const publicRoot = resolve(process.cwd(), "public");
 const root = resolve(publicRoot, "workshops", slug);
 const slides = readFileSync(resolve(root, "slides.html"), "utf8");
+const slidesEn = readFileSync(resolve(root, "en/slides.html"), "utf8");
 const de = ESG_REPORTING_WORKSHOP.de;
 const en = ESG_REPORTING_WORKSHOP.en;
 const both = [de, en] as const;
@@ -31,7 +32,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
   });
 
   it("has the same nine agenda blocks in both locales and follows the run sheet clock", () => {
-    const minutes = [1, 10, 3.5, 6.5, 7, 4, 9, 8, 11];
+    const minutes = [5, 3, 6, 10, 7, 7, 5, 11, 6];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
@@ -43,16 +44,19 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.selfStudyDurationLabel).toBe("solo about 90 min");
   });
 
-  it("lists the deck and the English kit and labels the zip with its real size", () => {
-    expect(slides.match(/<section\b/g)).toHaveLength(19);
-    expect(en.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length))).toEqual([
-      "slides.html",
-      "crvena-zemja-esg-kit.zip",
-    ]);
+  it("links each locale to its own deck edition, the English kit, and labels the zip with its real size", () => {
+    const mainSlides = (html: string) => html.match(/<section class="slide[^"]*" id="[^"]+" data-kind="main"/g) ?? [];
+    expect(mainSlides(slides)).toHaveLength(15);
+    expect(mainSlides(slidesEn)).toHaveLength(15);
+    const files = (workshop: typeof de) => workshop.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length));
+    expect(files(de)).toEqual(["slides.html", "crvena-zemja-esg-kit.zip"]);
+    expect(files(en)).toEqual(["en/slides.html", "crvena-zemja-esg-kit.zip"]);
+    expect(de.materials[0]?.language).toBe("de");
+    expect(en.materials[0]?.language).toBe("en");
     expect(existsSync(resolve(root, "sheet.html"))).toBe(true);
-    expect(existsSync(resolve(root, "assets/brainster-logo.svg"))).toBe(true);
     for (const workshop of both) {
-      expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 19 Folien" : "Deck · 19 slides");
+      expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 15 Folien" : "Deck · 15 slides");
+      expect(existsSync(resolve(publicRoot, workshop.materials[0]!.href.slice(1)))).toBe(true);
       for (const material of workshop.materials.slice(1)) {
         const bytes = statSync(resolve(publicRoot, material.href.slice(1))).size;
         expect(material.sizeLabel, material.href).toBe(`${Math.floor(bytes / 1024)} KB`);
@@ -60,13 +64,16 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     }
   });
 
-  it("uses the new cover, numbered cold open and human office-manager note", () => {
-    expect(slides).toContain("<title>ESG Reporting with AI: From Raw Inputs to Clearer Insights · loehrning.ai</title>");
-    expect(slides).toContain('data-n="02" data-label="Cold open"');
-    expect(slides).toContain('src="./assets/brainster-logo.svg" alt="Brainster"');
-    expect(slides).toContain("The EU law that sets sustainability reporting rules for large companies.");
-    expect(slides).toContain("Hi, I’ve put 279.7 MWh");
-    expect(slides).not.toContain("OK to send to bank.");
+  it("opens both decks on the objective, the shared key contract and no partner mark", () => {
+    for (const [html, lang] of [[slides, "de"], [slidesEn, "en"]] as const) {
+      expect(html).toContain(`<html lang="${lang}"`);
+      expect(html).toContain("lib/deck-keys.js");
+      expect(html).toContain('class="objective"');
+      expect(html).toContain('data-kind="appendix"');
+      expect(html).not.toMatch(/logo/i);
+    }
+    expect(slides).toContain("Jede Antwort, die die Firma verlässt, trägt ihren Nachweis");
+    expect(slidesEn).toContain("Every answer that leaves the company carries its evidence");
   });
 
   it("repeats the kit's own rules and keeps step cards predictive", () => {
@@ -129,7 +136,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       { label: "Defects in the files", value: "8" },
     ]);
     expect(en.caseStudy.limitationsHeading).toBe("Before you start");
-    expect(en.materials[0]?.label).toBe("Deck · 19 slides");
+    expect(en.materials[0]?.label).toBe("Deck · 15 slides");
     expect(en.materials[1]?.description).toContain("project-instructions.md");
     expect(en.materials[1]?.description).toContain("ANSWERS.md");
     expect(en.provenance.note).not.toMatch(/prompts were run/i);

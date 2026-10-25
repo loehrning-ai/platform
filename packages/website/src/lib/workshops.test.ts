@@ -232,7 +232,8 @@ describe("workshops catalog", () => {
         germanWorkshop.steps.map(({ n }) => n),
       );
       // The demo material is the same page in each locale: /en/demos/<slug>
-      // in English, in the page's own language.
+      // in English, in the page's own language. A deck published in both
+      // languages works the same way: its English edition lives under en/.
       const materialShape = ({
         href,
         kind,
@@ -243,9 +244,9 @@ describe("workshops catalog", () => {
         optional,
         primary,
       }: WorkshopMaterial) => ({
-        href: role === "demo" ? href.replace(/^\/en\//, "/") : href,
+        href: role === "demo" ? href.replace(/^\/en\//, "/") : href.replace(/\/en\/slides\.html$/, "/slides.html"),
         kind,
-        language: role === "demo" ? "page" : language,
+        language: role === "demo" || (role === "deck" && (language !== "en" || href.endsWith("/en/slides.html"))) ? "page" : language,
         role,
         phase,
         minutes,
@@ -303,6 +304,8 @@ describe("workshops catalog", () => {
             expect(material.language).toBe(locale);
             continue;
           }
+          // A deck with a German edition links it on the German page.
+          if (material.role === "deck" && material.language === locale) continue;
           expect(
             material.language,
             `${locale}/${workshop.slug}/${material.href}`,

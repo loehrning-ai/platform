@@ -482,7 +482,7 @@ const en: Pack = {
   regel: {
     caption: "The card from the kit, evidence-check.md. It applies to every answer that leaves the company.",
     objective:
-      "Every answer that leaves the company carries its proof: a file and a line that cover the answer's period, scope and finality, or the name of the document that is missing.",
+      "Every answer that leaves the company carries its evidence: a file and line that covers the period, scope and finality of the answer, or the name of the document that is missing.",
     checks: [
       ["QUOTE", "Which file, which line says it?"],
       ["PERIOD", "The whole period, valid on the reference date. Count months, not rows."],
