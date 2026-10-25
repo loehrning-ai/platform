@@ -22,44 +22,48 @@
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.png",
-      "sizeBytes": 344513,
-      "sha256": "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.webp",
+      "sizeBytes": 168864,
+      "sha256": "07367fdbcfc5f3e0d85bb5780628ae4d3c6aea7bccc38623c17d753e0b4522ed",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/cv.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, same 1241x1754 size: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/form-experience.png",
-      "sizeBytes": 581785,
-      "sha256": "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/form-experience.webp",
+      "sizeBytes": 83782,
+      "sha256": "d371b4d01fefeee52337b1ce2353ce5e1e18906d4da3be7d29bb0e7ac9c5407b",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/form-experience.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, scaled to 1440x900: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.png",
-      "sizeBytes": 644467,
-      "sha256": "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.webp",
+      "sizeBytes": 91666,
+      "sha256": "0bd73bcca2ab9b3d670a333e72b4ebcc5e5b03d9d060f7d7df4868d14dfe0bed",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/theme-picker.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, scaled to 1440x900: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.png",
-      "sizeBytes": 690749,
-      "sha256": "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.webp",
+      "sizeBytes": 103048,
+      "sha256": "49bdb3c9e7e41f2bf56f5b39a4e8808dfc23ec0a5a306152b7ad92ad915423c9",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/yaml-view.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, scaled to 1440x900: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
       "path": "packages/website/public/artifacts/tools/cv-engine/screenshot.webp",
@@ -70,6 +74,80 @@
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/reelcode/LICENSE.txt",
+      "sizeBytes": 1066,
+      "sha256": "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/LICENSE",
+      "license": "MIT",
+      "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/reelcode/demo/contact-example.jpg",
+      "sizeBytes": 229131,
+      "sha256": "5d1ec31012f7fea1d24e6f0a533d08aa02ce7094760c7bb5ba548dbe243e5c4e",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/contact-example.jpg",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "Upstream file with its JPEG comment (COM) segment removed losslessly, pixels unchanged"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/reelcode/screenshot.png",
+      "sizeBytes": 104808,
+      "sha256": "a43e99964d4844e0b43dff26643392eb916a8c8a57a9435cb5c390acd7362c08",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/social-preview.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/formats.jpg",
+      "sizeBytes": 41852,
+      "sha256": "02cf30147e0d1959e2d2ba941277557a43c8cd39f2faea85d325cdc3dd7390ad",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/hero.gif",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg frame 0.6 s before the end of formats.mp4, JPEG, bitexact (no encoder comment)"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/formats.mp4",
+      "sizeBytes": 666538,
+      "sha256": "04d6befa1fb44490b09a07a370d13cd84e5bda634ef6420193a96bc5071cdc9e",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/hero.gif",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg re-arrangement of the GIF into two rows (9:16, 1:1 and 4:5 above, 16:9 below, labels kept), 504x484, muted, H.264 crf 26, 12 fps"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/specimen.jpg",
+      "sizeBytes": 43469,
+      "sha256": "ac9665ea1e7cb874edbc1e36e5bf8419cd221c4a4e979aa4180f4bb8d33689da",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/showreel-1x1.mp4",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg frame at 15.2 s, 720x720 JPEG; JPEG comment (COM) segment removed losslessly, pixels unchanged"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/specimen.mp4",
+      "sizeBytes": 740664,
+      "sha256": "37aafb6991faafee6bc256b8bcd5ecde72ef5d15fa0901c4dc32a24f8a941063",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/showreel-1x1.mp4",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg re-encode, muted, 720x720, H.264 crf 30, GOP 8"
     },
     {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",
@@ -893,8 +971,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 285840,
-      "sha256": "7dd2db35a4b0f66f501fd3209d2aa6464a4a25fd1615ef9317d8ab4a7dc7d5e7",
+      "sizeBytes": 201682,
+      "sha256": "060cb36b5fa31c02062ef3ae955e5f3971d35bcad5ee7eda2a9f8661264b7845",
       "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

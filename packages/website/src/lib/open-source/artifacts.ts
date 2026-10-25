@@ -170,6 +170,68 @@ export interface SoftwareArtifactRelatedLearning {
   readonly href: string;
 }
 
+/** A specimen film is small enough to scrub on a phone without a CDN. */
+export const OPEN_SOURCE_SPECIMEN_FILM_MAX_BYTES = 1_572_864;
+
+/** A file derived from one pinned upstream file (re-encoded, never invented). */
+export interface DerivedMediaFile {
+  readonly src: string;
+  readonly sha256: string;
+  readonly sizeBytes: number;
+}
+
+/** A muted mp4 re-encoded from a pinned upstream file. */
+export interface DerivedFilm extends DerivedMediaFile {
+  /** Upstream path at the pin, for example `docs/media/showreel-1x1.mp4`. */
+  readonly derivedFrom: string;
+  readonly width: number;
+  readonly height: number;
+  /** True file duration in seconds. */
+  readonly durationS: number;
+  /** JPEG frame of the same upstream file. */
+  readonly poster: DerivedMediaFile;
+  /** What the film shows, in words. */
+  readonly alt: string;
+}
+
+export interface SpecimenChapter {
+  /** Start second, ascending, the first is 0. */
+  readonly atS: number;
+  readonly label: string;
+}
+
+/**
+ * What the tool's stage plays as a pure function of time. `film` scrubs a
+ * derived mp4; `drawn` is a component keyed by artifact id (its chapters live
+ * in the component), allowed only for ids in DRAWN_SPECIMEN_IDS.
+ */
+export type SoftwareArtifactSpecimen =
+  | {
+      readonly kind: "film";
+      readonly film: DerivedFilm;
+      /** Rest frame: ruler end, poster frame and hold point. */
+      readonly endS: number;
+      /** Minor ruler ticks. */
+      readonly beatS?: number;
+      readonly chapters: readonly SpecimenChapter[];
+    }
+  | { readonly kind: "drawn" };
+
+export const DRAWN_SPECIMEN_IDS = ["tool:cv-engine"] as const;
+
+export interface SoftwareArtifactFormula {
+  readonly input: string;
+  readonly process: string;
+  readonly output: string;
+}
+
+export interface SoftwareArtifactQuickstart {
+  /** One line that clones the pinned revision and runs the tool. */
+  readonly command: string;
+  /** Prerequisites and download size, in plain words. */
+  readonly note: string;
+}
+
 /**
  * Mandatory publication guide for future tools and projects. An entry cannot
  * enter the public registry with only a title and repository link: it must be
@@ -198,6 +260,13 @@ export interface SoftwareArtifactGuide {
    */
   readonly demo?: readonly SoftwareArtifactDemoStep[];
   readonly relatedLearning: readonly SoftwareArtifactRelatedLearning[];
+  /** What goes in, what happens in between, what comes out. */
+  readonly formula?: SoftwareArtifactFormula;
+  readonly quickstart?: SoftwareArtifactQuickstart;
+  /** Without one, the stage shows the lead screenshot. */
+  readonly specimen?: SoftwareArtifactSpecimen;
+  /** Real output films for the detail page. */
+  readonly outputFilms?: readonly DerivedFilm[];
 }
 
 export const SOFTWARE_ARTIFACT_DELIVERY_MODES = [
@@ -916,6 +985,184 @@ function assertSoftwareArtifactGuide(
   }
 }
 
+function assertTextWithin(
+  id: string,
+  field: string,
+  value: unknown,
+  limit: number,
+): asserts value is string {
+  assertText(id, field, value);
+  if (Array.from(value).length > limit) {
+    artifactError(id, field, `must not exceed ${String(limit)} Unicode code points`);
+  }
+}
+
+function assertDerivedFile(
+  id: string,
+  field: string,
+  file: DerivedMediaFile | undefined,
+  pattern: RegExp,
+  maxBytes: number,
+): void {
+  if (!file || typeof file !== "object") {
+    artifactError(id, field, "must define a stored derived file");
+  }
+  assertInternalHref(id, `${field}.src`, file.src);
+  if (!pattern.test(file.src)) {
+    artifactError(id, `${field}.src`, `must match ${pattern.source}`);
+  }
+  if (typeof file.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(file.sha256)) {
+    artifactError(id, `${field}.sha256`, "must be a lowercase SHA-256 digest");
+  }
+  if (
+    !Number.isSafeInteger(file.sizeBytes) ||
+    file.sizeBytes <= 0 ||
+    file.sizeBytes > maxBytes
+  ) {
+    artifactError(
+      id,
+      `${field}.sizeBytes`,
+      `must be between 1 and ${String(maxBytes)} bytes`,
+    );
+  }
+}
+
+function assertDerivedFilm(
+  id: string,
+  field: string,
+  film: DerivedFilm | undefined,
+  mediaPrefix: string,
+): void {
+  const prefix = mediaPrefix.replaceAll("/", "\\/");
+  assertDerivedFile(
+    id,
+    field,
+    film,
+    new RegExp(`^${prefix}[a-z0-9-]+\\.mp4$`),
+    OPEN_SOURCE_SPECIMEN_FILM_MAX_BYTES,
+  );
+  const checked = film as DerivedFilm;
+  assertDerivedFile(
+    id,
+    `${field}.poster`,
+    checked.poster,
+    new RegExp(`^${prefix}[a-z0-9-]+\\.jpg$`),
+    OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES,
+  );
+  assertUpstreamSourcePath(id, `${field}.derivedFrom`, checked.derivedFrom);
+  for (const dimension of ["width", "height"] as const) {
+    if (!Number.isSafeInteger(checked[dimension]) || checked[dimension] <= 0) {
+      artifactError(id, `${field}.${dimension}`, "must be a positive safe integer");
+    }
+  }
+  if (
+    typeof checked.durationS !== "number" ||
+    !(checked.durationS > 0 && checked.durationS <= 60)
+  ) {
+    artifactError(id, `${field}.durationS`, "must be above 0 and at most 60 seconds");
+  }
+  assertText(id, `${field}.alt`, checked.alt);
+}
+
+/**
+ * The optional showcase fields of a tool or project: the formula line, the
+ * one-line quickstart pinned to the reviewed revision, the specimen the
+ * stage plays, and derived output films. Every film is a muted re-encode
+ * of a named upstream file below the artifact's own media folder.
+ */
+function assertSoftwareArtifactShowcase(
+  id: string,
+  artifact: ToolArtifact | ProjectArtifact,
+): void {
+  const { guide } = artifact;
+  if (guide.formula !== undefined) {
+    assertTextWithin(id, "guide.formula.input", guide.formula.input, 40);
+    assertTextWithin(id, "guide.formula.process", guide.formula.process, 120);
+    assertTextWithin(id, "guide.formula.output", guide.formula.output, 60);
+  }
+
+  if (guide.quickstart !== undefined) {
+    const { command, note } = guide.quickstart;
+    assertTextWithin(id, "guide.quickstart.command", command, 400);
+    if (/[\r\n]/.test(command) || hasControlCharacter(command)) {
+      artifactError(id, "guide.quickstart.command", "must be one line");
+    }
+    if (!command.includes(`git checkout ${artifact.source.revision}`)) {
+      artifactError(
+        id,
+        "guide.quickstart.command",
+        "must check out the full pinned source revision",
+      );
+    }
+    if (command.includes(".env")) {
+      artifactError(id, "guide.quickstart.command", "must not touch .env files");
+    }
+    assertTextWithin(id, "guide.quickstart.note", note, 240);
+  }
+
+  const mediaPrefix = `/media/${artifact.kind}s/${artifact.slug}/`;
+  const specimen = guide.specimen;
+  if (specimen !== undefined) {
+    if (specimen.kind === "drawn") {
+      if (!(DRAWN_SPECIMEN_IDS as readonly string[]).includes(id)) {
+        artifactError(id, "guide.specimen", "has no drawn stage for this id");
+      }
+    } else if (specimen.kind === "film") {
+      assertDerivedFilm(id, "guide.specimen.film", specimen.film, mediaPrefix);
+      if (
+        typeof specimen.endS !== "number" ||
+        !(specimen.endS > 0 && specimen.endS <= specimen.film.durationS)
+      ) {
+        artifactError(id, "guide.specimen.endS", "must lie inside the film");
+      }
+      if (
+        specimen.beatS !== undefined &&
+        !(typeof specimen.beatS === "number" && specimen.beatS > 0)
+      ) {
+        artifactError(id, "guide.specimen.beatS", "must be positive");
+      }
+      assertNonEmptyArray(id, "guide.specimen.chapters", specimen.chapters);
+      specimen.chapters.forEach((chapter, index) => {
+        const field = `guide.specimen.chapters[${index}]`;
+        assertText(id, `${field}.label`, chapter.label);
+        const previous = specimen.chapters[index - 1];
+        if (
+          typeof chapter.atS !== "number" ||
+          (index === 0 ? chapter.atS !== 0 : !(chapter.atS > previous.atS)) ||
+          chapter.atS >= specimen.endS
+        ) {
+          artifactError(
+            id,
+            `${field}.atS`,
+            "must start at 0, ascend strictly and stay before endS",
+          );
+        }
+      });
+      assertUniqueTextValues(
+        id,
+        "guide.specimen.chapters",
+        specimen.chapters.map((chapter) => chapter.label),
+      );
+    } else {
+      artifactError(id, "guide.specimen.kind", "must be film or drawn");
+    }
+  }
+
+  if (guide.outputFilms !== undefined) {
+    if (guide.outputFilms.length > 2) {
+      artifactError(id, "guide.outputFilms", "must hold at most two films");
+    }
+    guide.outputFilms.forEach((film, index) =>
+      assertDerivedFilm(id, `guide.outputFilms[${index}]`, film, mediaPrefix),
+    );
+    const sources = guide.outputFilms.map((film) => film.src);
+    if (specimen?.kind === "film") sources.push(specimen.film.src);
+    if (new Set(sources).size !== sources.length) {
+      artifactError(id, "guide.outputFilms", "must not repeat a film");
+    }
+  }
+}
+
 function publicHrefForMediaFile(file: OpenSourceMediaFile): string {
   return file.path.slice("packages/website/public".length);
 }
@@ -1076,6 +1323,7 @@ export function assertOpenSourceArtifacts(
     if (artifact.kind === "tool" || artifact.kind === "project") {
       assertSoftwareArtifactDelivery(id, artifact);
       assertSoftwareArtifactGuide(id, artifact.guide);
+      assertSoftwareArtifactShowcase(id, artifact);
       assertSoftwareArtifactAssetHref(
         id,
         "license.href",
@@ -1505,31 +1753,31 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     },
     demo: [
       {
-        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/form-experience.png`,
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/form-experience.webp`,
         sourcePath: "docs/screenshots/form-experience.png",
         alt: "Das Editor-Formular bei Experience: pro Eintrag eine Karte mit beschrifteten Feldern für Rolle, Firma, Zeitraum und Stichpunkte, dazu Pfeile zum Umsortieren.",
         caption:
           "Jedes Feld ist beschriftet. Listen sortierst und kürzt du, ohne YAML anzufassen.",
         sha256:
-          "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
-        sizeBytes: 581785,
-        width: 2880,
-        height: 1800,
+          "d371b4d01fefeee52337b1ce2353ce5e1e18906d4da3be7d29bb0e7ac9c5407b",
+        sizeBytes: 83782,
+        width: 1440,
+        height: 900,
       },
       {
-        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/yaml-view.png`,
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/yaml-view.webp`,
         sourcePath: "docs/screenshots/yaml-view.png",
         alt: "Dieselbe Ansicht mit aktivem YAML-Tab: links der Rohtext mit Syntaxhervorhebung, rechts die unveränderte A4-Vorschau.",
         caption:
           "Im YAML-Tab schreibst du direkt Text. Formular und Datei teilen eine Quelle.",
         sha256:
-          "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
-        sizeBytes: 690749,
-        width: 2880,
-        height: 1800,
+          "49bdb3c9e7e41f2bf56f5b39a4e8808dfc23ec0a5a306152b7ad92ad915423c9",
+        sizeBytes: 103048,
+        width: 1440,
+        height: 900,
       },
       {
-        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/theme-picker.png`,
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/theme-picker.webp`,
         sourcePath: "docs/screenshots/theme-picker.png",
         // "Darstellung", not "Vorlage": the panel in this frame sets accent,
         // font, density and paper tone. The eight Vorlagen named in the
@@ -1539,20 +1787,20 @@ const CV_ENGINE_TOOL_ARTIFACT = {
         caption:
           "Passt der Text nicht auf eine Seite, änderst du Akzent, Schrift oder Dichte.",
         sha256:
-          "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
-        sizeBytes: 644467,
-        width: 2880,
-        height: 1800,
+          "0bd73bcca2ab9b3d670a333e72b4ebcc5e5b03d9d060f7d7df4868d14dfe0bed",
+        sizeBytes: 91666,
+        width: 1440,
+        height: 900,
       },
       {
-        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/cv.png`,
+        src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/cv.webp`,
         sourcePath: "docs/screenshots/cv.png",
         alt: "Das fertige PDF als eine A4-Seite mit Kopfzeile, Erfahrung, Ausbildung, Fähigkeiten und Projekten.",
         caption:
           "Der Build liefert genau eine Seite.",
         sha256:
-          "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
-        sizeBytes: 344513,
+          "07367fdbcfc5f3e0d85bb5780628ae4d3c6aea7bccc38623c17d753e0b4522ed",
+        sizeBytes: 168864,
         width: 1241,
         height: 1754,
       },
@@ -1565,6 +1813,251 @@ const CV_ENGINE_TOOL_ARTIFACT = {
         href: "/ai-native",
       },
     ],
+    formula: {
+      input: "cv.yaml",
+      process: "WeasyPrint setzt die A4-Seite und zählt die Seiten",
+      output: "cv.pdf, genau eine Seite",
+    },
+    // Every token comes from the installation and usage steps above.
+    quickstart: {
+      command: `git clone https://github.com/loehrning-ai/${CV_ENGINE_SLUG}.git && cd ${CV_ENGINE_SLUG} && git checkout ${CV_ENGINE_REVISION} && python3 -m venv .venv && .venv/bin/python -m pip install --require-hashes -r requirements.lock && cp content/cv.example.yaml content/cv.yaml && .venv/bin/python engine/build.py`,
+      note: "Vorher: brew install pango. Unter Debian oder Ubuntu: Schritt 1 der Installation unten. Braucht Python 3.13, läuft lokal, kein Schlüssel nötig.",
+    },
+    specimen: { kind: "drawn" },
+  },
+} as const satisfies ToolArtifact;
+
+/**
+ * reelcode, admitted at Commit A of https://github.com/loehrning-ai/reelcode
+ * Verified at this pin:
+ * - `git show <sha>:LICENSE | shasum -a 256` equals `license.sha256` below;
+ * - `<sha>:docs/media/social-preview.png` hashes to `screenshot.sha256`;
+ * - the films and posters under /media are re-encodes of the named upstream
+ *   files (ASSET_MANIFEST.json records each derivation).
+ *
+ * A source change after this commit requires a new pin and a new registry
+ * review; never rewrite this reference in place.
+ */
+const REELCODE_SLUG = "reelcode";
+const REELCODE_REVISION = "b9a1990f2c8ad6f480ae0a49365350f12477ff04";
+const REELCODE_REPOSITORY = `https://github.com/loehrning-ai/${REELCODE_SLUG}`;
+const REELCODE_ARTIFACTS = `/artifacts/tools/${REELCODE_SLUG}`;
+const REELCODE_MEDIA = `/media/tools/${REELCODE_SLUG}`;
+
+const REELCODE_TOOL_ARTIFACT = {
+  id: `tool:${REELCODE_SLUG}`,
+  kind: "tool",
+  publicationLifecycle: "published",
+  slug: REELCODE_SLUG,
+  title: "reelcode",
+  eyebrow: "Werkzeug · Motion Design",
+  description:
+    "Claude-Code-Plugin und Engine: Aus einer project.json wird ein Film mit Musik, in vier Formaten zugleich. Läuft lokal.",
+  href: `/open-source/tools/${REELCODE_SLUG}`,
+  language: "Englisch",
+  languageTag: "en",
+  source: {
+    href: REELCODE_REPOSITORY,
+    revision: REELCODE_REVISION,
+    revisionHref: `${REELCODE_REPOSITORY}/commit/${REELCODE_REVISION}`,
+  },
+  license: {
+    href: `${REELCODE_ARTIFACTS}/LICENSE.txt`,
+    sourcePath: "LICENSE",
+    sha256:
+      "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+    sizeBytes: 1066,
+    licenseId: "MIT",
+  },
+  delivery: "source-only",
+  guide: {
+    status: "experimental",
+    statusNote:
+      "Version 0.1. Getestet unter macOS, unter Linux nur in der CI, nicht unter Windows. Das Format von project.json kann sich noch ändern, Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst.",
+    dataFlow:
+      "Alles rendert lokal: ein Server auf 127.0.0.1, Chromium ohne Netz, capture lehnt fremde Adressen ab. Netz braucht nur das einmalige Setup (rund 1,2 GB für Chromium und Python-Pakete) und die optionale Sprachausgabe über ElevenLabs mit deinem eigenen Schlüssel.",
+    prerequisites: [
+      { label: "Node.js 20 oder neuer", detail: "Für CLI und Engine." },
+      { label: "ffmpeg", detail: "Schneidet und kodiert die Formate." },
+      {
+        label: "Python 3.12 oder uv",
+        detail: "Für Musik und Mischung auf dem Takt.",
+      },
+      {
+        label: "Claude Code, optional",
+        detail:
+          "Für das Plugin, das Entwurf, Prüfung und Nachbessern steuert.",
+      },
+    ],
+    installation: {
+      summary: "Klonen, auf den geprüften Stand wechseln, einmal einrichten.",
+      steps: [
+        {
+          title: "Geprüften Quellstand auschecken",
+          detail:
+            "Anleitung, Filme und Prüfsummen gehören zu genau diesem Quellstand.",
+          command: `(git clone ${REELCODE_REPOSITORY} && cd ${REELCODE_SLUG} && git checkout ${REELCODE_REVISION})`,
+        },
+        {
+          title: "Abhängigkeiten installieren",
+          detail: "npx startet danach die Kopie in deinem Checkout.",
+          command: `(cd ${REELCODE_SLUG} && npm install)`,
+        },
+        {
+          title: "Einmal einrichten",
+          detail:
+            "Lädt Chromium für Playwright (rund 570 MB) und die Python-Pakete (rund 290 MB).",
+          command: `(cd ${REELCODE_SLUG} && npx reelcode setup)`,
+        },
+        {
+          title: "Installation prüfen",
+          detail: "doctor sagt dir, was noch fehlt.",
+          command: `(cd ${REELCODE_SLUG} && npx reelcode doctor)`,
+        },
+      ],
+    },
+    usage: {
+      summary:
+        "Du beschreibst den Film in project.json, reelcode rendert alle Formate.",
+      steps: [
+        {
+          title: "Beispielfilm rendern",
+          detail: "Ein Entwurf dauert auf Apple Silicon rund eine Minute.",
+          command: `(cd ${REELCODE_SLUG} && npx reelcode make example-showreel --formats 1x1)`,
+        },
+        {
+          title: "Eigenes Projekt aus einer Vorlage",
+          detail:
+            "Acht Vorlagen, etwa data-story, product-launch oder logo-sting.",
+          command: `(cd ${REELCODE_SLUG} && npx reelcode new --template data-story --name q3-zahlen)`,
+        },
+        {
+          title: "Final rendern",
+          detail: "60 Bilder pro Sekunde mit Bewegungsunschärfe.",
+          command: `(cd ${REELCODE_SLUG} && npx reelcode make q3-zahlen --quality final)`,
+        },
+      ],
+    },
+    integration: {
+      summary:
+        "Am stärksten mit einem Coding-Agenten: Er schreibt project.json, bewertet seinen Entwurf auf einem Kontaktbogen und bessert nach.",
+      targets: ["Claude Code", "andere Coding-Agenten", "project.json", "MP4"],
+      steps: [
+        {
+          title: "Marktplatz in Claude Code hinzufügen",
+          detail: "Einmal pro Rechner.",
+          command: "/plugin marketplace add loehrning-ai/reelcode",
+        },
+        {
+          title: "Plugin installieren",
+          detail: "Danach beschreibst du den Film in normalen Worten.",
+          command: "/plugin install reelcode@reelcode",
+        },
+        {
+          title: "Andere Agenten",
+          detail: "Lass den Agenten zuerst docs/AGENTS_GUIDE.md lesen.",
+        },
+      ],
+    },
+    documentation: {
+      label: "README im Repository",
+      href: `${REELCODE_REPOSITORY}/blob/${REELCODE_REVISION}/README.md`,
+    },
+    screenshot: {
+      src: `${REELCODE_ARTIFACTS}/screenshot.png`,
+      sourcePath: "docs/media/social-preview.png",
+      alt: "reelcode: dieselbe Zeile WE MAKE TYPE MOVE in 9:16, 1:1, 4:5 und 16:9.",
+      sha256:
+        "a43e99964d4844e0b43dff26643392eb916a8c8a57a9435cb5c390acd7362c08",
+      sizeBytes: 104808,
+      width: 1280,
+      height: 640,
+    },
+    demo: [
+      {
+        src: `${REELCODE_ARTIFACTS}/demo/contact-example.jpg`,
+        sourcePath: "docs/media/contact-example.jpg",
+        alt: "Kontaktbogen mit 32 Bildern aus dem Beispielfilm, in sechs Reihen.",
+        caption:
+          "So prüft der Agent seinen Entwurf: Kontaktbogen ansehen, bewerten, nachbessern.",
+        sha256:
+          "5d1ec31012f7fea1d24e6f0a533d08aa02ce7094760c7bb5ba548dbe243e5c4e",
+        sizeBytes: 229131,
+        width: 900,
+        height: 900,
+      },
+    ],
+    relatedLearning: [
+      {
+        title: "Mit KI arbeiten",
+        description:
+          "Übt, Entwürfe eines Agenten zu prüfen und nachzubessern.",
+        href: "/ai-native",
+      },
+    ],
+    formula: {
+      input: "project.json",
+      process:
+        "Chromium rendert jedes Bild als seek(t), ffmpeg kodiert, Python setzt Musik auf den Takt",
+      output: "Film in vier Formaten",
+    },
+    quickstart: {
+      command: `git clone ${REELCODE_REPOSITORY} && cd ${REELCODE_SLUG} && git checkout ${REELCODE_REVISION} && npm install && npx reelcode setup && npx reelcode make example-showreel --formats 1x1`,
+      note: "Braucht Node.js 20, ffmpeg und Python 3.12 oder uv. Das Setup lädt einmal rund 1,2 GB. Danach in Claude Code: /plugin marketplace add loehrning-ai/reelcode",
+    },
+    specimen: {
+      kind: "film",
+      film: {
+        src: `${REELCODE_MEDIA}/specimen.mp4`,
+        sha256:
+          "37aafb6991faafee6bc256b8bcd5ecde72ef5d15fa0901c4dc32a24f8a941063",
+        sizeBytes: 740664,
+        derivedFrom: "docs/media/showreel-1x1.mp4",
+        width: 720,
+        height: 720,
+        durationS: 16,
+        poster: {
+          src: `${REELCODE_MEDIA}/specimen.jpg`,
+          sha256:
+            "ac9665ea1e7cb874edbc1e36e5bf8419cd221c4a4e979aa4180f4bb8d33689da",
+          sizeBytes: 43469,
+        },
+        alt: "Der Beispielfilm: Typo im Takt, von ON THE BEAT bis REELCODE.",
+      },
+      // The last 0.8 s is the loop seam; 15.2 s is the end card.
+      endS: 15.2,
+      beatS: 0.5,
+      // The eight shots of projects/example-showreel/project.json at 120 bpm.
+      chapters: [
+        { atS: 0, label: "scale" },
+        { atS: 1, label: "kinetic" },
+        { atS: 2.5, label: "slam" },
+        { atS: 4.5, label: "ticker" },
+        { atS: 6.5, label: "grid" },
+        { atS: 8, label: "montage" },
+        { atS: 11.5, label: "formats" },
+        { atS: 14, label: "end" },
+      ],
+    },
+    outputFilms: [
+      {
+        src: `${REELCODE_MEDIA}/formats.mp4`,
+        sha256:
+          "04d6befa1fb44490b09a07a370d13cd84e5bda634ef6420193a96bc5071cdc9e",
+        sizeBytes: 666538,
+        derivedFrom: "docs/media/hero.gif",
+        width: 504,
+        height: 484,
+        durationS: 16,
+        poster: {
+          src: `${REELCODE_MEDIA}/formats.jpg`,
+          sha256:
+            "02cf30147e0d1959e2d2ba941277557a43c8cd39f2faea85d325cdc3dd7390ad",
+          sizeBytes: 41852,
+        },
+        alt: "Derselbe Film in 9:16, 1:1 und 4:5, darunter 16:9, Bild für Bild synchron.",
+      },
+    ],
   },
 } as const satisfies ToolArtifact;
 
@@ -1575,6 +2068,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
 // video lanes stay empty until a repository of that kind is published there.
 export const OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES: readonly ToolArtifact[] = [
   CV_ENGINE_TOOL_ARTIFACT,
+  REELCODE_TOOL_ARTIFACT,
 ];
 export const OPEN_SOURCE_PROJECT_ARTIFACT_CANDIDATES: readonly ProjectArtifact[] =
   [];
@@ -1597,6 +2091,35 @@ export const OPEN_SOURCE_ARTIFACT_CANDIDATES: readonly OpenSourceArtifact[] = [
 ];
 
 assertOpenSourceArtifacts(OPEN_SOURCE_ARTIFACT_CANDIDATES);
+
+/**
+ * A tool's plate number: its 1-based place in the append-only candidate
+ * order, so a new tool never renumbers an older one.
+ */
+export function plateNumber(
+  id: string,
+  order: readonly { readonly id: string }[] = OPEN_SOURCE_ARTIFACT_CANDIDATES,
+): string {
+  const index = order.findIndex((artifact) => artifact.id === id);
+  if (index < 0) throw new Error(`No plate number for ${id}`);
+  return String(index + 1).padStart(2, "0");
+}
+
+/**
+ * Distributive `Omit`: the tool type is an intersection with a delivery
+ * union, and a plain `Omit` would collapse it and lose the tie between
+ * `delivery` and `launchHref`.
+ */
+type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+/**
+ * A complete tool record staged in `pending/` before its public commit
+ * exists. `source` does not exist on the type, so no unverified pin can be
+ * written (ARTIFACT_PUBLICATION.md, "Staging a record before Commit A").
+ */
+export type PendingToolArtifact = DistributiveOmit<ToolArtifact, "source">;
 
 export const OPEN_SOURCE_TOOL_ARTIFACTS = selectPublishedOpenSourceArtifacts(
   OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES,

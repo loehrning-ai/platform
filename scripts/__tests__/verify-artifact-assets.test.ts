@@ -584,8 +584,115 @@ describe("artifact publication integrity", () => {
       licenses: 1,
       screenshots: 1,
       demoFrames: 1,
+      films: 0,
       mediaFiles: 0,
     });
+  });
+
+  /** Minimal ISO BMFF bytes: an ftyp box and one handler box per track. */
+  function mp4Bytes(handlers: readonly string[]): Buffer {
+    const ftyp = Buffer.from("\0\0\0\x10ftypisom\0\0\0\0", "latin1");
+    const boxes = handlers.map((handler) =>
+      Buffer.concat([
+        Buffer.from("\0\0\0\x20hdlr\0\0\0\0\0\0\0\0", "latin1"),
+        Buffer.from(handler, "latin1"),
+        Buffer.alloc(12),
+      ]),
+    );
+    return Buffer.concat([ftyp, ...boxes]);
+  }
+
+  async function filmFixture(filmBytes: Buffer) {
+    const base = await publicationFixture();
+    // SOI, a baseline SOF0 segment for a 32x16 frame, EOI.
+    const posterBytes = Buffer.from([
+      0xff, 0xd8, 0xff, 0xc0, 0x00, 0x11, 0x08, 0x00, 0x10, 0x00, 0x20, 0x03,
+      0x01, 0x22, 0x00, 0x02, 0x11, 0x01, 0x03, 0x11, 0x01, 0xff, 0xd9,
+    ]);
+    const files = [
+      ["packages/website/public/media/tools/example-tool/specimen.mp4", filmBytes],
+      ["packages/website/public/media/tools/example-tool/specimen.jpg", posterBytes],
+    ] as const;
+    for (const [filePath, bytes] of files) {
+      await mkdir(path.join(base.repositoryRoot, path.dirname(filePath)), {
+        recursive: true,
+      });
+      await writeFile(path.join(base.repositoryRoot, filePath), bytes);
+    }
+    const digest = (bytes: Buffer) =>
+      createHash("sha256").update(bytes).digest("hex");
+    const revision = "b".repeat(40);
+    const film = {
+      src: "/media/tools/example-tool/specimen.mp4",
+      sha256: digest(filmBytes),
+      sizeBytes: filmBytes.byteLength,
+      derivedFrom: "docs/media/reel.mp4",
+      poster: {
+        src: "/media/tools/example-tool/specimen.jpg",
+        sha256: digest(posterBytes),
+        sizeBytes: posterBytes.byteLength,
+      },
+    };
+    const artifact = {
+      ...base.artifact,
+      guide: {
+        ...(base.artifact as ToolArtifact).guide,
+        specimen: { kind: "film", film, endS: 1, chapters: [] },
+      },
+    } as unknown as ToolArtifact;
+    const manifest: ArtifactManifest = {
+      version: 1,
+      assets: [
+        ...base.manifest.assets,
+        ...files.map(([filePath, bytes]) => ({
+          path: filePath,
+          sha256: digest(bytes),
+          sizeBytes: bytes.byteLength,
+          source: `https://github.com/loehrning-ai/example-tool/blob/${revision}/docs/media/reel.mp4`,
+          redistributionLicenseHref: "/artifacts/tools/example-tool/LICENSE.txt",
+        })),
+      ],
+    };
+    return { ...base, artifact, manifest, filmPath: files[0][0] };
+  }
+
+  it("verifies a muted derived film and its poster", async () => {
+    const { artifact, manifest, repositoryRoot } = await filmFixture(
+      mp4Bytes(["vide"]),
+    );
+    const summary = await verifyArtifactPublicationAssets({
+      repositoryRoot,
+      artifacts: [artifact],
+      manifest,
+    });
+    expect(summary.films).toBe(1);
+  });
+
+  it("rejects a derived film whose bytes differ from the registry", async () => {
+    const { artifact, manifest, repositoryRoot, filmPath } = await filmFixture(
+      mp4Bytes(["vide"]),
+    );
+    await writeFile(path.join(repositoryRoot, filmPath), mp4Bytes(["vidf"]));
+    await expect(
+      verifyArtifactPublicationAssets({
+        repositoryRoot,
+        artifacts: [artifact],
+        manifest,
+      }),
+    ).rejects.toThrow(/film .*SHA-256/);
+  });
+
+  it("rejects a derived film that carries an audio track", async () => {
+    const { artifact, manifest, repositoryRoot } = await filmFixture(
+      mp4Bytes(["vide", "soun"]),
+    );
+    await expect(
+      verifyArtifactPublicationAssets({
+        repositoryRoot,
+        artifacts: [artifact],
+        manifest,
+      }),
+    ).rejects.toThrow(/audio track/);
   });
 
   it("rejects tampered demo frame bytes", async () => {

@@ -1,25 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { OPEN_SOURCE_TOOL_ARTIFACTS } from "./artifacts";
 import {
+  ENGLISH_ARTIFACT_COPY,
   localizeOpenSourceArtifact,
-  OPEN_SOURCE_PAGE_COPY,
   OPEN_SOURCE_SHARED_COPY,
 } from "./display-copy";
 
 describe("open-source display copy", () => {
-  it("keeps publication evidence and artifact states precise in both languages", () => {
-    expect(OPEN_SOURCE_PAGE_COPY.de.showcase.publicationStandard).toContain(
-      "unveränderlichem Commit",
-    );
-    expect(OPEN_SOURCE_PAGE_COPY.en.showcase.publicationStandard).toContain(
-      "immutable commit",
-    );
+  it("names artifact states in both languages and mirrors every published tool in English", () => {
     expect(OPEN_SOURCE_SHARED_COPY.de.statuses.experimental).toBe(
       "Experimentell",
     );
     expect(OPEN_SOURCE_SHARED_COPY.en.statuses.experimental).toBe(
       "Experimental",
     );
+    for (const artifact of OPEN_SOURCE_TOOL_ARTIFACTS) {
+      expect(ENGLISH_ARTIFACT_COPY[artifact.id]).toBeDefined();
+    }
   });
 
   it("translates CV Engine presentation without changing publication evidence", () => {

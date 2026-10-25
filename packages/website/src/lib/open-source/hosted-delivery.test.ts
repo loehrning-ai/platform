@@ -60,18 +60,18 @@ describe("hosted-service delivery", () => {
       "hosted-service",
     ]);
 
-    // A mode without a label renders `undefined` in the ledger's fact rail, so
+    // A mode without a label renders `undefined` in a plate's colophon, so
     // the union and both label maps are pinned to each other here.
     for (const locale of ["de", "en"] as const) {
       expect(
-        Object.keys(OPEN_SOURCE_PAGE_COPY[locale].showcase.delivery).sort(),
+        Object.keys(OPEN_SOURCE_PAGE_COPY[locale].plate.delivery).sort(),
       ).toEqual([...SOFTWARE_ARTIFACT_DELIVERY_MODES].sort());
     }
 
-    expect(OPEN_SOURCE_PAGE_COPY.de.showcase.delivery["hosted-service"]).toBe(
+    expect(OPEN_SOURCE_PAGE_COPY.de.plate.delivery["hosted-service"]).toBe(
       "Gehostet von loehrning.ai · Hetzner EU",
     );
-    expect(OPEN_SOURCE_PAGE_COPY.en.showcase.delivery["hosted-service"]).toBe(
+    expect(OPEN_SOURCE_PAGE_COPY.en.plate.delivery["hosted-service"]).toBe(
       "Hosted by loehrning.ai · Hetzner EU",
     );
   });

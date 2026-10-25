@@ -91,11 +91,12 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 
-### Open-Source-Artefakte (1)
+### Open-Source-Artefakte (2)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 | https://loehrning.ai/open-source/tools/cv-engine | CV Engine | Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Eine… | src/lib/open-source/artifacts.ts | source revision f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e | Tim Löhr |
+| https://loehrning.ai/open-source/tools/reelcode | reelcode | Claude-Code-Plugin und Engine: Aus einer project.json wird ein Film mit Musik, in vier Formaten zugleich. Läu… | src/lib/open-source/artifacts.ts | source revision b9a1990f2c8ad6f480ae0a49365350f12477ff04 | Tim Löhr |
 
 ### Indexable patterns deliberately excluded from the sitemap
 

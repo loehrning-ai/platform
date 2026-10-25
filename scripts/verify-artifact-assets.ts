@@ -10,6 +10,8 @@ import {
   OPEN_SOURCE_ARTIFACT_LICENSE_MAX_BYTES,
   OPEN_SOURCE_ARTIFACT_MEDIA_MAX_BYTES,
   OPEN_SOURCE_ARTIFACT_CANDIDATES,
+  OPEN_SOURCE_SPECIMEN_FILM_MAX_BYTES,
+  type DerivedFilm,
   type OpenSourceArtifact,
   type OpenSourceMediaFile,
   type VideoArtifact,
@@ -39,6 +41,7 @@ export type ArtifactVerificationSummary = {
   licenses: number;
   screenshots: number;
   demoFrames: number;
+  films: number;
   mediaFiles: number;
 };
 
@@ -652,6 +655,84 @@ function imageDimensions(
   fail(`${label} is not a readable PNG, JPEG, or WebP image`);
 }
 
+/** True when an ISO BMFF file declares a sound handler (an audio track). */
+function hasSoundHandler(bytes: Buffer): boolean {
+  for (
+    let at = bytes.indexOf("hdlr");
+    at >= 0;
+    at = bytes.indexOf("hdlr", at + 4)
+  ) {
+    if (bytes.toString("latin1", at + 12, at + 16) === "soun") return true;
+  }
+  return false;
+}
+
+/**
+ * A derived film and its poster: manifest rows pinned to the upstream file
+ * they were re-encoded from, byte-exact digests, an mp4 container without
+ * an audio track (MEDIA_POLICY.md, muted tool specimens) and a JPEG poster.
+ */
+async function verifyDerivedFilm({
+  repositoryRoot,
+  artifact,
+  film,
+  manifestByPath,
+  hooks,
+}: {
+  repositoryRoot: string;
+  artifact: OpenSourceArtifact;
+  film: DerivedFilm;
+  manifestByPath: ReadonlyMap<string, ArtifactManifestEntry>;
+  hooks?: ArtifactAssetVerificationHooks;
+}): Promise<void> {
+  const files = [
+    {
+      file: film,
+      role: "film",
+      maxSizeBytes: OPEN_SOURCE_SPECIMEN_FILM_MAX_BYTES,
+    },
+    {
+      file: film.poster,
+      role: "film poster",
+      maxSizeBytes: OPEN_SOURCE_ARTIFACT_IMAGE_MAX_BYTES,
+    },
+  ];
+  for (const { file, role, maxSizeBytes } of files) {
+    const label = `${artifact.id} ${role} ${file.src}`;
+    const repositoryPath = publicHrefToRepositoryPath(file.src, label);
+    const entry = requireManifestEntry(manifestByPath, repositoryPath, label);
+    assertPinnedManifestSource({
+      artifact,
+      entry,
+      label,
+      expectedSourcePath: film.derivedFrom,
+    });
+    assertArtifactRedistribution(artifact, entry, role);
+    const bytes = await readVerifiedFile({
+      repositoryRoot,
+      repositoryPath,
+      label,
+      expectedSha256: file.sha256,
+      expectedSizeBytes: file.sizeBytes,
+      manifestByPath,
+      hooks,
+      maxSizeBytes,
+    });
+    if (file === film) {
+      if (bytes.toString("latin1", 4, 8) !== "ftyp") {
+        fail(`${label} must be an ISO BMFF (mp4) file`);
+      }
+      if (hasSoundHandler(bytes)) {
+        fail(`${label} must not carry an audio track`);
+      }
+    } else if (bytes[0] !== 0xff || bytes[1] !== 0xd8) {
+      fail(`${label} must be a JPEG image`);
+    } else {
+      imageDimensions(bytes, label);
+    }
+  }
+}
+
 async function verifyVideoMediaFiles({
   repositoryRoot,
   artifacts,
@@ -758,6 +839,7 @@ export async function verifyArtifactPublicationAssets({
     licenses: 0,
     screenshots: 0,
     demoFrames: 0,
+    films: 0,
     mediaFiles: 0,
   };
 
@@ -899,6 +981,22 @@ export async function verifyArtifactPublicationAssets({
         }
         summary.demoFrames += 1;
       }
+
+      const { specimen, outputFilms } = artifact.guide;
+      const films = [
+        ...(specimen?.kind === "film" ? [specimen.film] : []),
+        ...(outputFilms ?? []),
+      ];
+      for (const film of films) {
+        await verifyDerivedFilm({
+          repositoryRoot,
+          artifact,
+          film,
+          manifestByPath,
+          hooks,
+        });
+        summary.films += 1;
+      }
     }
   }
 
@@ -931,7 +1029,7 @@ async function main(): Promise<void> {
   process.stdout.write(
     "Artifact candidate asset verification passed: " +
       `${summary.licenses} licenses, ${summary.screenshots} tool/project screenshots, ` +
-      `${summary.demoFrames} demo frames, ` +
+      `${summary.demoFrames} demo frames, ${summary.films} derived films, ` +
       `${summary.mediaFiles} video files.\n`,
   );
 }

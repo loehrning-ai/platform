@@ -1,105 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ProjectArtifact } from "@/lib/open-source/artifacts";
-
-const { PROJECT } = vi.hoisted(() => {
-  const revision = "d".repeat(40);
-  const project = {
-    id: "project:metadata-project",
-    kind: "project",
-    publicationLifecycle: "published",
-    slug: "metadata-project",
-    title: "Metadata Project",
-    eyebrow: "Open-Source-Projekt",
-    description: "A typed project fixture for collection metadata.",
-    href: "/open-source/projects/metadata-project",
-    language: "English (United Kingdom)",
-    languageTag: "en-GB",
-    source: {
-      href: "https://github.com/loehrning-ai/metadata-project",
-      revision,
-      revisionHref: `https://github.com/loehrning-ai/metadata-project/commit/${revision}`,
-    },
-    license: {
-      href: "/artifacts/projects/metadata-project/LICENSE.txt",
-      sourcePath: "LICENSE",
-      sha256: "e".repeat(64),
-      sizeBytes: 1066,
-      licenseId: "MIT",
-    },
-    delivery: "source-only",
-    guide: {
-      status: "stable",
-      statusNote: "The publication contract is stable.",
-      dataFlow: "All project data remains local.",
-      prerequisites: [
-        {
-          label: "Python",
-          detail: "Install the supported runtime.",
-        },
-      ],
-      installation: {
-        summary: "Install locked dependencies.",
-        steps: [
-          {
-            title: "Install",
-            detail: "Use the lock file.",
-            command: "python -m pip install -r requirements.lock",
-          },
-        ],
-      },
-      usage: {
-        summary: "Run the project locally.",
-        steps: [
-          {
-            title: "Run",
-            detail: "Start the documented entry point.",
-            command: "python app.py",
-          },
-        ],
-      },
-      integration: {
-        summary: "Consume the generated document.",
-        targets: ["PDF"],
-        steps: [
-          {
-            title: "Export",
-            detail: "Read the generated PDF.",
-          },
-        ],
-      },
-      documentation: {
-        label: "README",
-        href: "https://github.com/loehrning-ai/metadata-project",
-      },
-      screenshot: {
-        src: "/artifacts/projects/metadata-project/screenshot.webp",
-        sourcePath: "docs/screenshots/metadata-project.webp",
-        alt: "Metadata Project showing a generated document.",
-        sha256: "f".repeat(64),
-        sizeBytes: 1000,
-        width: 1600,
-        height: 1000,
-      },
-      relatedLearning: [
-        {
-          title: "Open Source",
-          description: "Publication context.",
-          href: "/open-source",
-        },
-      ],
-    },
-  } as const satisfies ProjectArtifact;
-  return { PROJECT: project };
-});
+import { OPEN_SOURCE_TOOL_ARTIFACTS } from "@/lib/open-source/artifacts";
+import { ContentsTable } from "@/components/open-source/contents-table";
+import { ToolWall, plateEntries } from "@/components/open-source/tool-plate";
 
 const { getRequestLocaleMock } = vi.hoisted(() => ({
   getRequestLocaleMock: vi.fn(),
 }));
 
-vi.mock("@/lib/open-source/artifacts", () => ({
-  OPEN_SOURCE_ARTIFACTS: [PROJECT],
-}));
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: getRequestLocaleMock,
 }));
@@ -112,112 +20,65 @@ describe("OpenSourcePage", () => {
     getRequestLocaleMock.mockResolvedValue("de");
   });
 
-  it("keeps its mocked artifact aligned with the publication validator", async () => {
-    const { assertOpenSourceArtifacts } = await vi.importActual<
-      typeof import("@/lib/open-source/artifacts")
-    >("@/lib/open-source/artifacts");
-
-    expect(() => assertOpenSourceArtifacts([PROJECT])).not.toThrow();
-  });
-
-  it("leads with a product teaser while retaining registry metadata", async () => {
+  it("numbers the published tools from the candidate order", async () => {
     const { container } = render(await OpenSourcePage());
 
     expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "Open-Source-Werkzeuge",
-      }),
+      screen.getByRole("heading", { level: 1, name: "Werkzeuge zum Anfassen." }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Prüfe an echten Ansichten/)).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Jetzt veröffentlicht" }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("Projekt").length).toBeGreaterThan(0);
-    expect(screen.queryByText(/in Vorbereitung/i)).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(/bleibt dieser Bereich leer/i),
-    ).not.toBeInTheDocument();
-
-    expect(
-      document.querySelector("[data-open-source-risograph-hero]"),
-    ).not.toBeNull();
-    expect(
-      document.querySelector("[data-open-source-image-fan]"),
-    ).not.toBeNull();
-    expect(
-      screen.getByRole("img", {
-        name: "Produktansichten auswählen: Metadata Project",
-      }),
-    ).toBeVisible();
-    expect(screen.getByAltText(PROJECT.guide.screenshot.alt)).toHaveAttribute(
-      "width",
-      "1600",
+    const wall = screen.getByRole("list", { name: "Werkzeuge" });
+    expect(wall).toHaveAttribute(
+      "data-entry-count",
+      String(OPEN_SOURCE_TOOL_ARTIFACTS.length),
     );
-
-    expect(
-      screen.getByRole("region", {
-        name: "Produktansichten auswählen: Metadata Project",
-      }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: "Editor anzeigen" }),
-    ).toHaveAttribute("aria-pressed", "true");
-
-    const sourceLink = screen.getByRole("link", {
-      name: /Quellcode: Metadata Project/,
-    });
-    expect(sourceLink).toHaveAttribute("target", "_blank");
-    expect(sourceLink).toHaveAttribute("rel", "noopener noreferrer");
-    expect(sourceLink).toHaveAttribute("href", PROJECT.source.revisionHref);
-    expect(
-      screen.getByRole("link", {
-        name: /Plattform-Code, öffnet in neuem Tab/,
-      }),
-    ).toHaveAttribute("href", "https://github.com/loehrning-ai/platform");
+    expect(container.querySelector("#nr-01")).not.toBeNull();
+    // Below three tools the plates are the contents: no table repeats them.
+    expect(screen.queryByRole("navigation", { name: "Inhalt" })).toBeNull();
 
     const graph = JSON.parse(
       container.querySelector<HTMLScriptElement>("script#open-source-jsonld")
         ?.textContent ?? "{}",
     )["@graph"];
-    expect(graph[1].hasPart).toEqual([
-      expect.objectContaining({
-        name: PROJECT.title,
-        inLanguage: "en-GB",
-      }),
-    ]);
+    expect(graph[1].hasPart).toHaveLength(OPEN_SOURCE_TOOL_ARTIFACTS.length);
   });
 
-  it("renders the English directory and localizes page routes and structured data", async () => {
+  it("puts the newest plate first and gives every ruler a name", () => {
+    const artifacts = OPEN_SOURCE_TOOL_ARTIFACTS;
+
+    const { container } = render(
+      <>
+        <ContentsTable entries={plateEntries(artifacts)} locale="de" />
+        <ToolWall artifacts={artifacts} locale="de" />
+      </>,
+    );
+
+    const plates = [...container.querySelectorAll("ol[data-entry-count] > li")];
+    expect(plates.map((plate) => plate.id)).toEqual(["nr-02", "nr-01"]);
+    expect(
+      container.querySelector("ol[data-entry-count]"),
+    ).toHaveAttribute("data-entry-count", "2");
+    const contents = within(container.querySelector("nav")!).getAllByRole("link");
+    expect(contents.map((link) => link.getAttribute("href"))).toEqual([
+      "#nr-02",
+      "#nr-01",
+    ]);
+    for (const title of ["reelcode", "CV Engine"]) {
+      expect(
+        screen.getByRole("slider", { name: `Zeitleiste ${title}` }),
+      ).toBeInTheDocument();
+    }
+  });
+
+  it("renders the English page with localized routes and structured data", async () => {
     getRequestLocaleMock.mockResolvedValue("en");
     const { container } = render(await OpenSourcePage());
 
     expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "Open source tools",
-      }),
+      screen.getByRole("heading", { level: 1, name: "Tools you can touch." }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Published now" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", {
-        name: "Choose a product view: Metadata Project",
-      }),
-    ).toBeVisible();
-    expect(screen.getAllByText("Project").length).toBeGreaterThan(0);
-    for (const licensePolicy of screen.getAllByRole("link", {
-      name: "License policy",
-    })) {
-      expect(licensePolicy).toHaveAttribute(
-        "href",
-        "/en/open-source/lizenzrichtlinie",
-      );
-    }
-    expect(
-      screen.getByRole("link", { name: "Browse visual-learning courses" }),
-    ).toHaveAttribute("href", "/en/kurse");
+      screen.getByRole("link", { name: "License policy" }),
+    ).toHaveAttribute("href", "/en/open-source/lizenzrichtlinie");
 
     const graph = JSON.parse(
       container.querySelector<HTMLScriptElement>("script#open-source-jsonld")
@@ -228,7 +89,7 @@ describe("OpenSourcePage", () => {
       inLanguage: "en-GB",
     });
     expect(graph[1].hasPart[0].url).toBe(
-      "https://loehrning.ai/en/open-source/projects/metadata-project",
+      "https://loehrning.ai/en/open-source/tools/cv-engine",
     );
   });
 
