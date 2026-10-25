@@ -37,12 +37,11 @@ test("every smoke spec exists, once, and none is a known flaky or brittle spec",
   }
 });
 
-test("the smoke run is Chromium desktop and phone with one retry", () => {
+test("the smoke run is desktop Chromium with one retry", () => {
   const args = smokeArguments(["tests/e2e/x.spec.ts"]);
   assert.deepEqual(args, [
     "test",
     "--project=chromium",
-    "--project=mobile-chromium",
     "--workers=2",
     "--retries=1",
     "tests/e2e/x.spec.ts",

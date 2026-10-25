@@ -31,7 +31,7 @@ is the composite action at `.github/actions/setup`.
 | --------- | ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, `bun audit --audit-level=critical` (a critical advisory blocks the PR), and that `git diff --exit-code` finds no regenerated file. |
 | `unit`    | `unit tests`     | `bun run ci:unit`    | The complete Vitest suite. Coverage floors run nightly.                                                                                                                                                                                      |
-| `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium and the iPhone 13 Chromium viewport.                                                                                           |
+| `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium.                                                                                           |
 | `verify`  | `verify`         | inline shell       | Aggregation only. Red unless each of the three results is exactly `success`; failure, cancelled and skipped are all red.                                                                                                                    |
 
 `verify` declares `if: always()`. That is load-bearing: a job that is skipped
@@ -39,9 +39,9 @@ when a dependency fails would not be a red check. It is the only job called
 `verify` in any workflow.
 
 The smoke list is `packages/website/tests/e2e/smoke.list`, one spec per line.
-It is curated from the specs that caught real regressions (route matrix, axe and
-target size, SEO, legal, edge states, phone shell, workshop and home locales, the
-plakat contrast, the courses hub). Adding a spec is a one-line diff. A spec
+It holds five specs: the route matrix, axe, SEO metadata, edge states and the
+legal pages. Phone layout, locale copy and WebKit run in the weekly extended
+run instead. Adding a spec is a one-line diff. A spec
 whose title carries `@quarantine` is skipped by the nightly run and is deleted
 if still tagged after 14 days; no known-flaky spec belongs in the list. Retries
 are set to one on this path, and a test that passes on its retry does not fail

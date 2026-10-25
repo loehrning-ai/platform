@@ -14,8 +14,7 @@ build output changed while the gate was running.
 ## Tiers
 
 - **Smoke (the pull-request and `main` gate):** the specs named in
-  `tests/e2e/smoke.list`, run on desktop Chromium and the iPhone 13 Chromium
-  viewport with one retry. Run with `bun run ci:browser` from the repository
+  `tests/e2e/smoke.list`, run on desktop Chromium with one retry. Run with `bun run ci:browser` from the repository
   root (builds once, then runs the privacy probe and the smoke). Add a spec by
   adding a line; keep known-flaky specs out. A test titled `@quarantine` is
   skipped by the nightly run and deleted if still tagged after 14 days.

@@ -23,7 +23,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const SMOKE_LIST = "packages/website/tests/e2e/smoke.list";
-const SMOKE_PROJECTS = ["chromium", "mobile-chromium"];
+const SMOKE_PROJECTS = ["chromium"];
 const WEBSITE = ["--cwd", "packages/website"];
 
 const bun = (name, ...args) => ({ name, command: "bun", args });
