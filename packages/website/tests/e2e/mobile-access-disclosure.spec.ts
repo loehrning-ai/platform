@@ -106,13 +106,16 @@ for (const locale of ["de", "en"] as const) {
       const overview = `${prefix}/ki-fuehrerschein`;
       const atlasRoute = `${prefix}/kurse`;
 
-      test.beforeEach(async ({ page }, testInfo) => {
-        test.skip(
-          !["mobile-chromium", "mobile-webkit"].includes(testInfo.project.name),
-          "The explicit phone matrix runs in both mobile browser engines.",
-        );
+      // The spec sets its own phone so it runs in any project, including the
+      // weekly desktop Chromium suite.
+      test.use({
+        viewport: { width, height: 844 },
+        isMobile: true,
+        hasTouch: true,
+      });
+
+      test.beforeEach(async ({ page }) => {
         test.setTimeout(90_000);
-        await page.setViewportSize({ width, height: 844 });
         await page.addInitScript(() => localStorage.clear());
       });
 

@@ -20,8 +20,10 @@ build output changed while the gate was running.
   skipped by the weekly run and deleted if still tagged after 14 days.
 - **Public (full suite, weekly):** every spec on desktop Chromium (`chromium`
   project), plus the smoke list on the iPhone 13 WebKit viewport
-  (`mobile-webkit`). Phone layout specs set their own viewport. The
-  `mobile-chromium` project remains for local phone runs. Run locally with
+  (`mobile-webkit`). Phone specs that must run weekly set their own phone
+  context (`test.use` with a phone viewport, `isMobile` and `hasTouch`);
+  specs that branch on the project's `isMobile` (for example
+  `plakat-contrast`) only exercise their desktop branch there. Run locally with
   `bun run test:e2e` (desktop Chromium, builds first); narrow it with `bun run --cwd packages/website e2e:shard:built test <spec>` after a build.
   `bun run test:e2e:dev` runs against the dev server instead of a production
   build. Set `E2E_FAIL_ON_FLAKY=1` to count a pass-on-retry as a failure.

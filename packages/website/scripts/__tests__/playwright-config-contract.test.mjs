@@ -34,7 +34,7 @@ function listWith(environment, project = "chromium") {
 }
 
 test("every scripted project loads and lists its specs", () => {
-  for (const project of ["chromium", "mobile-chromium", "mobile-webkit"]) {
+  for (const project of ["chromium", "mobile-webkit"]) {
     const result = listWith({}, project);
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /Total: \d+ tests? in \d+ files?/, project);

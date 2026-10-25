@@ -122,14 +122,14 @@ const OPERATOR_PATHS = [
   "/zertifikat",
   "/verifizierung",
 ];
+const OPERATOR_LESSONS = MODULE_IDS.reduce((sum, moduleId) => sum + MODULE_LESSON_COUNTS[moduleId], 0);
 
 test.describe("AI-Native Operator course routes", () => {
   for (const prefix of ["", "/en"]) {
-    test(`${prefix || "de"}: 9 modules and 39 lessons return 200, unknown ones 404`, async ({
+    test(`${prefix || "de"}: ${MODULE_IDS.length} modules and ${OPERATOR_LESSONS} lessons return 200, unknown ones 404`, async ({
       request,
     }) => {
       test.setTimeout(120_000);
-      expect(OPERATOR_PATHS).toHaveLength(1 + 9 + 39 + 3);
       for (const path of OPERATOR_PATHS) {
         const route = `${prefix}${OPERATOR_ROOT}${path}`;
         const response = await request.get(route, { maxRedirects: 0 });

@@ -267,18 +267,13 @@ export default defineConfig({
   },
   projects: [
     // Desktop Chromium carries the pull-request smoke and the weekly full
-    // suite. The iPhone 13 projects stay for the weekly WebKit smoke and for
-    // local phone runs; keeping viewport and engine explicit prevents a native
-    // WebKit crash from being misreported as a responsive-layout bug.
+    // suite. The iPhone 13 WebKit project runs the weekly WebKit smoke; keeping
+    // viewport and engine explicit prevents a native WebKit crash from being
+    // misreported as a responsive-layout bug.
     {
       name: "chromium",
       testIgnore: [/\.authed\.spec\.ts$/],
       use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "mobile-chromium",
-      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
-      use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
       name: "mobile-webkit",

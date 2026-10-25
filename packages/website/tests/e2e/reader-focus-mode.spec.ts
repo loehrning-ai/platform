@@ -101,16 +101,21 @@ test.describe("reader focus mode: chapter reader below lg", () => {
     await expect(bar).toBeVisible();
 
     // The bar replaces the tab bar on the bottom edge, full width, at its
-    // stacking level. Its height is the reader bar's own (insight-focus-bar.css).
+    // stacking level. Its row is shorter than the tab bar (insight-focus-bar.css),
+    // so the band the body reserves only has to be at least as tall as the bar.
     const geometry = await page.evaluate((barSelector) => {
       const element = document.querySelector(barSelector);
       if (!element) return null;
       const box = element.getBoundingClientRect();
       return {
+        height: box.height,
         bottom: box.bottom,
         width: box.width,
         viewportHeight: window.innerHeight,
         viewportWidth: document.documentElement.clientWidth,
+        bodyPaddingBottom: Number.parseFloat(
+          getComputedStyle(document.body).paddingBottom,
+        ),
         zIndex: getComputedStyle(element).zIndex,
       };
     }, READER_BAR);
@@ -123,6 +128,10 @@ test.describe("reader focus mode: chapter reader below lg", () => {
       Math.round(geometry.bottom),
       "reader bar sits on the bottom edge",
     ).toBe(Math.round(geometry.viewportHeight));
+    expect(
+      Math.round(geometry.bodyPaddingBottom),
+      "the reserved band is at least as tall as the bar, so it never covers the last lines",
+    ).toBeGreaterThanOrEqual(Math.round(geometry.height));
     expect(geometry.zIndex, "the bar takes the tab bar's stacking level").toBe(
       "40",
     );
