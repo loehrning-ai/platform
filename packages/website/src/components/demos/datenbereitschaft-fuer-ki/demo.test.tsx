@@ -230,13 +230,30 @@ describe("Stufe oder Treppe? demo", () => {
 
   it("prints ONE counter and one label per bar, whatever p is", () => {
     render(<Demo copy={COPY.de} />);
+    const texts = (selector: string) => [...document.querySelectorAll(selector)].map((node) => node.textContent ?? "");
     for (const key of ["Home", "PageUp", "ArrowUp", "ArrowUp", "End"]) {
       fireEvent.keyDown(slider(), { key });
       expect(document.querySelectorAll(".dr3-counter")).toHaveLength(1);
-      expect(document.querySelectorAll(".dr3-barlabel")).toHaveLength(3);
+      expect(document.querySelectorAll("[data-label]")).toHaveLength(3);
       expect(document.querySelectorAll("[data-tag]")).toHaveLength(1);
+      // besides the bar labels only a downward step's own change and the two tone names print in label type
+      const notes = texts("[data-step-note] text");
+      const tones = texts("[data-tones] text");
+      expect(document.querySelectorAll("[data-tones]").length).toBeLessThanOrEqual(1);
+      expect(document.querySelectorAll(".dr3-barlabel")).toHaveLength(3 + notes.length + tones.length);
+      // and no number twice: a step's change never repeats a bar's label
+      const numbers = [...texts("[data-label]"), ...notes];
+      expect(new Set(numbers).size).toBe(numbers.length);
     }
+    fireEvent.keyDown(slider(), { key: "End" });
+    // the levels show: April's step names its own change once, the tones name ground and step
+    expect(texts("[data-label]")).toEqual(["334.675", "344.450", "387.015"]);
+    expect(texts("[data-step-note] text")).toEqual(["−19.960"]);
+    expect(texts("[data-tones] text")).toEqual(["Stand", "davor", "Stufe"]);
     fireEvent.keyDown(slider(), { key: "Home" });
+    // the changes show: the step notes and the tones are gone, nothing contradicts the labels
+    expect(document.querySelectorAll("[data-step-note]")).toHaveLength(0);
+    expect(document.querySelectorAll("[data-tones]")).toHaveLength(0);
     expect(document.querySelector(".dr3-counter")?.textContent?.replace(/\u00a0/g, " ")).toBe("−19.960 €");
     expect(document.querySelector("[data-tag]")?.textContent).toBe("Veränderung?");
     fireEvent.keyDown(slider(), { key: "End" });

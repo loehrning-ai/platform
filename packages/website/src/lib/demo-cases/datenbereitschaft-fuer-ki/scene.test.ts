@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { INTRO_MS, introAt, LIFT_END, NUDGE_AT, niceTicks, OWN_MS, ownAt, sceneAt, smooth } from "./scene";
+import { INTRO_MS, introAt, LIFT_END, niceTicks, OWN_MS, ownAt, sceneAt, smooth } from "./scene";
 import { buildSeries, exampleSeries, headline, type Series } from "./series";
 
 const EXAMPLE = exampleSeries(["Apr", "Mai", "Jun"]);
@@ -73,7 +73,7 @@ describe("sceneAt", () => {
     });
   }
 
-  it("lets the zero line leave the frame early in the lift", () => {
+  it("keeps the zero line through most of the lift and lets it leave before the lift ends", () => {
     let exit = -1;
     for (let step = 0; step <= 1000; step += 1) {
       if (sceneAt(EXAMPLE, step / 1000).lo > 0) {
@@ -81,8 +81,15 @@ describe("sceneAt", () => {
         break;
       }
     }
-    expect(exit).toBeGreaterThanOrEqual(0.1);
-    expect(exit).toBeLessThanOrEqual(0.3);
+    // the floor lags the lift (FLOOR_LAG): zero, and the claim on it, stay until about p = 0.4
+    expect(exit).toBeGreaterThanOrEqual(0.3);
+    expect(exit).toBeLessThan(LIFT_END);
+    // and the claim "never below zero" leaves with it: it fades as the zero note comes in, and is gone before the lift ends
+    for (const p of SWEEP) {
+      const scene = sceneAt(EXAMPLE, p);
+      expect(scene.stampBefore).toBeLessThanOrEqual(1 - scene.zeroNote + 1e-9);
+    }
+    expect(sceneAt(EXAMPLE, LIFT_END - 0.01).stampBefore).toBe(0);
   });
 
   it("cuts the word tag and the counter over hard at the end of the lift and fades the stamps only at rest", () => {
@@ -172,11 +179,16 @@ describe("helpers", () => {
     expect(introAt(INTRO_MS)).toBe(0);
     expect(introAt(INTRO_MS + 500)).toBe(0);
   });
-  it("nudges the handle once, 12 percent, after the intro and a quiet second", () => {
-    expect(introAt(NUDGE_AT - 10)).toBe(0);
-    const peak = Math.max(...Array.from({ length: 91 }, (_, i) => introAt(NUDGE_AT + i * 10)));
-    expect(peak).toBeCloseTo(0.12, 2);
-    expect(introAt(INTRO_MS)).toBe(0);
+  it("pulls the lever all the way once, rising and falling without a wobble, and then rests (no nudge)", () => {
+    const times = Array.from({ length: INTRO_MS / 10 + 1 }, (_, i) => i * 10);
+    const values = times.map((ms) => introAt(ms));
+    const peakAt = values.indexOf(1);
+    expect(peakAt).toBeGreaterThan(0);
+    // up without a dip, then down without a bump: one pull, one return
+    for (let i = 1; i <= peakAt; i += 1) expect(values[i]).toBeGreaterThanOrEqual(values[i - 1] as number);
+    for (let i = peakAt + 1; i < values.length; i += 1) expect(values[i]).toBeLessThanOrEqual(values[i - 1] as number);
+    // after the intro the page is still: the ring marks the handle, the lever does not move again
+    for (let ms = INTRO_MS; ms <= INTRO_MS + 10_000; ms += 50) expect(introAt(ms)).toBe(0);
   });
   it("answers the visitor's own numbers in 1.2 s or less and lands exactly where it started", () => {
     expect(OWN_MS).toBeLessThanOrEqual(1200);

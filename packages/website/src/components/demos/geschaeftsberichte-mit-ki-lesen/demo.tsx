@@ -12,7 +12,7 @@ import { Act2 } from "./act2";
 import { DragHandle } from "./drag-handle";
 import { Chart, Ruler, numberAt, unitsGrowthAt } from "./stage";
 import { SwitchTwo } from "./switch-two";
-import { TakeawayCard } from "./takeaway-card";
+import { TakeawayCard, type TakeStatus } from "./takeaway-card";
 import { useScene } from "./use-scene";
 import { YourCompare } from "./your-compare";
 import "./demo.css";
@@ -41,6 +41,7 @@ export default function Demo({ copy }: { readonly copy: DemoPack }) {
   const [visited, setVisited] = useState<readonly number[]>([REPORT_CUT, REPORT_CUT + 1]);
   const [own, setOwn] = useState<OwnState>(() => prefill(copy));
   const [announce, setAnnounce] = useState("");
+  const [takeStatus, setTakeStatus] = useState<TakeStatus>(null);
   const [room, setRoom] = useState(false);
   const chartRef = useRef<HTMLDivElement>(null);
   // Where the line is heading, kept in a ref that is written the instant a press lands. The scene only catches up frame
@@ -327,7 +328,7 @@ export default function Demo({ copy }: { readonly copy: DemoPack }) {
             onTrigger={setTrigger}
             onStart={ctl.skipIntro}
           />
-          <TakeawayCard pack={copy} facts={ownDerived.facts} trigger={trigger} withDefects={act2Used} part="text" />
+          <TakeawayCard pack={copy} facts={ownDerived.facts} trigger={trigger} withDefects={act2Used} part="text" status={takeStatus} onStatus={setTakeStatus} />
         </div>
         <div className="mg-colR">
           <YourCompare
@@ -338,7 +339,7 @@ export default function Demo({ copy }: { readonly copy: DemoPack }) {
             onReplace={setOwn}
             onStart={ctl.skipIntro}
           />
-          <TakeawayCard pack={copy} facts={ownDerived.facts} trigger={trigger} withDefects={act2Used} part="rules" />
+          <TakeawayCard pack={copy} facts={ownDerived.facts} trigger={trigger} withDefects={act2Used} part="rules" status={takeStatus} onStatus={setTakeStatus} />
         </div>
     </div>
   );

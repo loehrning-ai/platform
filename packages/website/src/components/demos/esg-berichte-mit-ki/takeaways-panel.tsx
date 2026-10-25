@@ -87,7 +87,7 @@ export function TakeawaysPanel({
 
   return (
     <section className="esg-take" aria-labelledby="esg-take-title">
-      <h3 id="esg-take-title" className="esg-h">{pack.takeaways.title}</h3>
+      <h2 id="esg-take-title" className="esg-h">{pack.takeaways.title}</h2>
       {view && !empty ? (
         <>
           <div className="esg-seg esg-seg--wide" role="radiogroup" aria-label={pack.takeaways.title}>
@@ -109,7 +109,7 @@ export function TakeawaysPanel({
           const own = feedback?.id === item.id ? feedback : null;
           return (
             <article key={item.id} className="esg-block" data-take={item.id}>
-              <h4 className="esg-block__name">{pack.takeaways.names[item.id]}</h4>
+              <h3 className="esg-block__name">{pack.takeaways.names[item.id]}</h3>
               <p className="esg-block__text" data-disabled={disabled ? "" : undefined}>
                 {empty ? "" : item.text === null ? pack.takeaways.nothingMissing : shown(item.id, item.text)}
               </p>

@@ -39,7 +39,7 @@ export function LadderPending({ pack, draft }: { readonly pack: DemoPack; readon
   const locale = pack.locale;
   return (
     <section className="esg-ladder esg-ladder--pending" aria-hidden="true">
-      <h3 className="esg-h">{pack.ladder.title}</h3>
+      <h2 className="esg-h">{pack.ladder.title}</h2>
       <p className="esg-ladder__axis">{pack.ladder.axis}</p>
       <ol className="esg-ladder__rows">
         {PENDING_ROWS.map((id) => {
@@ -95,7 +95,7 @@ export function Ladder({
   const thr = Math.round(threshold * 100);
   return (
     <section className="esg-ladder" ref={innerRef} aria-labelledby="esg-ladder-title">
-      <h3 id="esg-ladder-title" className="esg-h">{pack.ladder.title}</h3>
+      <h2 id="esg-ladder-title" className="esg-h">{pack.ladder.title}</h2>
       <p className="esg-ladder__axis">{pack.ladder.axis}</p>
       <ol className="esg-ladder__rows">
         {rows.map((row, index) => {

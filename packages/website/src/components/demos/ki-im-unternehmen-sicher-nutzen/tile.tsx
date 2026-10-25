@@ -17,7 +17,7 @@ const SLAB = 28;
 /** [row, x, width, the made-up raw text under the marker, the slab label]. */
 const SLOTS: readonly (readonly [number, number, number, string, string])[] = [
   [0, 128, 76, "Mara B.", "NAME"],
-  [1, 106, 132, "mara@mail.de", "E-MAIL"],
+  [1, 106, 132, "mara@b.invalid", "E-MAIL"],
   [2, 130, 130, "", "IBAN"],
   [3, 122, 118, "", "TEL"],
 ];

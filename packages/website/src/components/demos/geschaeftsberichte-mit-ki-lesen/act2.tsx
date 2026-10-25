@@ -3,7 +3,7 @@ import { TRIGGER } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
 import { fill, formatNumber } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/format";
 import { BARS, bars, meanLabelOpacity, rowLabelOpacity, totalLabelOpacity } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/geometry";
 import { clamp, craftComparison, septemberRates } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/logic";
-import { blend, smoothstep, type Scene } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/motion";
+import { smoothstep, type Scene } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/motion";
 import { DragHandle } from "./drag-handle";
 import { SwitchTwo } from "./switch-two";
 
@@ -32,7 +32,6 @@ const round2 = (value: number) => Math.round(value * 100) / 100;
 /** Same switch, other axis: defect records as a count, then per 1.000 units. */
 export function Act2({ scene, pack, mode, trigger, onMode, onTrigger, onStart }: Props) {
   const t = pack.act2;
-  const e = blend(scene.u);
   const countOp = totalLabelOpacity(scene.u);
   const rateOp = meanLabelOpacity(scene.u);
   // The finding is shown only once the per-1.000 view has been reached.

@@ -1,9 +1,10 @@
-import { useState } from "react";
 import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
 import { fill } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/format";
 import { buildPrompt, buildRules, buildSentence, type Facts } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/takeaway";
 
 type Slot = "sentence" | "prompt" | "rules" | "file";
+/** The last copy or download, shared by both parts so the page has one live region for it. */
+export type TakeStatus = { readonly slot: Slot; readonly ok: boolean } | null;
 
 /** Copy with the async clipboard, falling back to a hidden textarea and execCommand. */
 export async function copyText(text: string): Promise<boolean> {
@@ -49,18 +50,21 @@ interface Props {
   readonly withDefects: boolean;
   /** "text": the sentence and the prompt (first, so a short visit reaches Satz kopieren fast). "rules": the whole rules file, last. */
   readonly part: "text" | "rules";
+  readonly status: TakeStatus;
+  readonly onStatus: (status: TakeStatus) => void;
 }
 
 /** The three things to take away, shown in full before any button. */
-export function TakeawayCard({ pack, facts, trigger, withDefects, part }: Props) {
+export function TakeawayCard({ pack, facts, trigger, withDefects, part, status, onStatus: setStatus }: Props) {
   const t = pack.take;
-  const [status, setStatus] = useState<{ slot: Slot; ok: boolean } | null>(null);
 
   const text = part === "text";
   if (!facts) {
+    // One neutral line, in Mitnehmen; the rules file waits for the numbers without repeating it.
+    if (!text) return null;
     return (
-      <section className={`mg-card ${text ? "mg-take" : "mg-rules"}`} aria-labelledby={`mg-${part}-h`}>
-        <h2 id={`mg-${part}-h`} className="mg-h">{text ? t.h : t.rulesLabel}</h2>
+      <section className="mg-card mg-take" aria-labelledby="mg-text-h">
+        <h2 id="mg-text-h" className="mg-h">{t.h}</h2>
         <p className="mg-hint mg-empty">{t.empty}</p>
       </section>
     );
@@ -70,7 +74,7 @@ export function TakeawayCard({ pack, facts, trigger, withDefects, part }: Props)
   const rules = buildRules(pack, facts, { trigger, withDefects });
 
   const copy = async (slot: Slot, text: string) => setStatus({ slot, ok: await copyText(text) });
-  // The confirmation is drawn next to its button (aria-hidden) and spoken once by the single live region below.
+  // The confirmation is drawn next to its button (aria-hidden) and spoken once by the single live region in Mitnehmen.
   const spoken = status ? (status.slot === "file" ? fill(t.downloaded, {}) : status.ok ? t.copied : t.copyFailed) : "";
   const note = (slot: Slot) => (
     <span className="mg-copied" aria-hidden="true" data-ok={status?.slot === slot && status.ok ? "" : undefined}>
@@ -84,7 +88,6 @@ export function TakeawayCard({ pack, facts, trigger, withDefects, part }: Props)
       <section className="mg-card mg-rules" aria-labelledby="mg-rules-h">
         <h2 id="mg-rules-h" className="mg-h">{t.rulesLabel}</h2>
         <p className="mg-lede mg-file">{t.fileName}</p>
-        {status_}
         <div className="mg-actions mg-actions-top">
           <button
             type="button"

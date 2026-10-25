@@ -36,7 +36,9 @@ function layoutFor(series: Series, p: number, width: number, height: number, nev
 /** Everything that prints, as named rectangles. */
 function marks(layout: Layout, scene: ReturnType<typeof sceneAt>): [string, Rect][] {
   return [
-    ...layout.labels.filter((entry) => !entry.inside).map((entry, index): [string, Rect] => [`label ${index}`, entry.rect]),
+    ...layout.labels.map((entry, index): [string, Rect] => [`label ${index}`, entry.rect]),
+    ...layout.stepNotes.map((note): [string, Rect] => [`step note ${note.index}`, note.rect]),
+    ...(layout.tones && scene.tones > 0 ? layout.tones.rects.map((rect, index): [string, Rect] => [`tone ${index}`, rect]) : []),
     ...(scene.stampBefore > 0.5 ? [["stamp before", layout.before.rect] as [string, Rect]] : []),
     ...(scene.stampAfter > 0.5 ? [["stamp after", layout.after.rect] as [string, Rect]] : []),
     ...(layout.rungLabel && scene.startLabel > 0.5 ? [["start label", layout.rungLabel.rect] as [string, Rect]] : []),

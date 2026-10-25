@@ -78,6 +78,8 @@ export interface RungLabel {
   readonly text: string;
   readonly x: number;
   readonly y: number;
+  /** 14 px, or 12 where the bigger one would leave the stamp "passt" no free place. */
+  readonly size: number;
   readonly rect: Rect;
 }
 
@@ -98,6 +100,8 @@ export interface ToneLayout {
   readonly index: number;
   readonly ground: { readonly lines: readonly string[]; readonly x: number; readonly y: number; readonly size: number };
   readonly step: { readonly text: string; readonly x: number; readonly y: number; readonly size: number };
+  /** The boxes of the two names, so a test can prove they touch no other text. */
+  readonly rects: readonly Rect[];
 }
 
 export interface Layout {
@@ -231,24 +235,31 @@ export function layoutAt({ geo, scene, label, unknown, startLevel, startPrefix, 
   }
 
   // The two tones, named once: on the bar with the longest step up that has room for both words.
-  let tones: ToneLayout | null = null;
+  // All bars that could carry them, best first; the start rung's label may push them to the next one.
+  const toneOptions: ToneLayout[] = [];
   if (scene.labelsOf === "level" && scene.lift === 1) {
     const lines = stampLines(toneGround);
     const size = Math.min(FONT - 1, Math.floor((barWidth - 8) / (Math.max(...lines.map((line) => estimateEm(line))) * 1.06)));
-    const pick = bars
+    const picks = bars
       .map((bar, index) => ({ bar, index }))
       .filter(({ bar, index }) => (steps[index]?.to ?? 0) > (steps[index]?.from ?? 0) && bar.pillar !== null && size >= 11)
       .filter(({ bar }) => bar.step.h >= size + 8 && (bar.pillar?.h ?? 0) >= lines.length * (size + 3) + 14 && textWidth(toneStep, size) <= barWidth - 6)
-      .sort((a, b) => b.bar.step.h - a.bar.step.h)[0];
-    if (pick) {
+      .sort((a, b) => b.bar.step.h - a.bar.step.h);
+    for (const pick of picks) {
       const pillarTop = (pick.bar.pillar as Rect).y;
-      tones = {
-        index: pick.index,
-        ground: { lines, x: pick.bar.center, y: pillarTop + size + 8, size },
-        step: { text: toneStep, x: pick.bar.center, y: pick.bar.step.y + pick.bar.step.h / 2 + size * 0.36, size },
-      };
+      const cx = pick.bar.center;
+      const groundY = pillarTop + size + 8;
+      const stepY = pick.bar.step.y + pick.bar.step.h / 2 + size * 0.36;
+      const groundW = Math.max(...lines.map((line) => textWidth(line, size)));
+      const groundRect: Rect = { x: cx - groundW / 2, y: groundY - size, w: groundW, h: (lines.length - 1) * (size + 3) + size + 3 };
+      const rects = [groundRect, labelBox(cx, stepY, textWidth(toneStep, size), size)];
+      // A label held inside the frame can reach into a bar: the tones never sit on it.
+      const taken = [...labels.map((entry) => entry.rect), ...stepNotes.map((note) => note.rect)];
+      if (rects.some((rect) => taken.some((other) => overlaps(rect, other, 1)))) continue;
+      toneOptions.push({ index: pick.index, ground: { lines, x: cx, y: groundY, size }, step: { text: toneStep, x: cx, y: stepY, size }, rects });
     }
   }
+  let tones: ToneLayout | null = toneOptions[0] ?? null;
 
   const barRects = bars.flatMap((bar) => (bar.pillar ? [bar.pillar, bar.step] : [bar.step]));
   const obstacles: Rect[] = [...barRects, ...labels.map((entry) => entry.rect), ...stepNotes.filter((note) => note.pill === null).map((note) => note.rect)];
@@ -258,15 +269,24 @@ export function layoutAt({ geo, scene, label, unknown, startLevel, startPrefix, 
     rect.x >= X0 + 1 && rect.x + rect.w <= X1 + 2 && rect.y >= Y0 - 2 && rect.y + rect.h <= Y1 && !against.some((other) => overlaps(rect, other, 2));
 
   const boxAt = (x: number, bottom: number, size: { readonly w: number; readonly h: number }): Rect => ({ x, y: bottom - size.h, w: size.w, h: size.h });
-  /** A stamp tries two lines first, then one; for each, its preferred places in order, clear of the grid first. */
-  const place = (text: string, places: (size: { readonly w: number; readonly h: number }) => Rect[], against: readonly Rect[]): StampLayout => {
-    const variants = [stampLines(text), [text]].filter((lines, i, all) => i === 0 || lines.length !== all[0]?.length);
-    const options = variants.map((lines) => ({ lines, candidates: places(stampSize(lines)) }));
+  type Places = (size: { readonly w: number; readonly h: number }) => Rect[];
+  const optionsOf = (text: string, places: Places) =>
+    [stampLines(text), [text]]
+      .filter((lines, i, all) => i === 0 || lines.length !== all[0]?.length)
+      .map((lines) => ({ lines, candidates: places(stampSize(lines)) }));
+  /** A stamp tries two lines first, then one; for each, its preferred places in order, clear of the grid first. Null where no place is free. */
+  const placeFree = (text: string, places: Places, against: readonly Rect[]): StampLayout | null => {
+    const options = optionsOf(text, places);
     for (const avoid of [[...against, ...bands], against]) {
       const hit = options.find((option) => option.candidates.some((rect) => free(rect, avoid)));
       if (hit) return { lines: hit.lines, rect: hit.candidates.find((rect) => free(rect, avoid)) as Rect };
     }
-    const chosen = options[0] as (typeof options)[number];
+    return null;
+  };
+  const place = (text: string, places: Places, against: readonly Rect[]): StampLayout => {
+    const found = placeFree(text, places, against);
+    if (found) return found;
+    const chosen = optionsOf(text, places)[0] as ReturnType<typeof optionsOf>[number];
     return { lines: chosen.lines, rect: chosen.candidates[0] as Rect };
   };
 
@@ -287,42 +307,71 @@ export function layoutAt({ geo, scene, label, unknown, startLevel, startPrefix, 
   );
   const beforeRect = before.rect;
 
-  // The rung's label stands on the rung: over the first bar (whose top is the start), else beside it.
-  let rungLabel: RungLabel | null = null;
-  if (rungY !== null && startLevel !== null) {
-    const text = `${startPrefix} ${label(startLevel, false)}`;
-    const size = FONT;
-    const w = textWidth(text, size);
-    const against = [...obstacles, ...(scene.stampBefore > 0.5 ? [beforeRect] : [])];
-    const xs = [
-      ...bars.map((bar) => Math.max(X0 + 2, Math.min(bar.center - w / 2, X1 - w - 2))),
-      X0 + 6,
-      X1 - w - 2,
-    ].filter((x) => x >= X0 + 1 && x + w <= X1 + 2);
-    const rows = [rungY - 7, rungY + size + 6, rungY - 7 - size - 4];
-    const candidates = rows.flatMap((baseline) => xs.map((x) => ({ baseline, rect: { x, y: baseline - size, w, h: size + 3 } as Rect })));
-    const picked = candidates.find((entry) => free(entry.rect, against)) ?? (candidates[0] as (typeof candidates)[number]);
-    rungLabel = { text, x: picked.rect.x, y: picked.baseline, rect: picked.rect };
-  }
-
-  // "passt": in free air above the bars and the labels, clear of the rung's label and the grid.
+  // "passt": in free air above the bars and the labels, else above the rung's label, clear of it and of the grid.
   const firstBar = bars[0];
-  const after = place(
-    stampAfter,
+  const afterPlaces =
+    (rung: Rect | null): Places =>
     (size) => {
       const list: Rect[] = [];
+      const xOver = (bar: BarLayout) => Math.max(X0 + 3, Math.min(bar.center - size.w / 2, X1 - size.w - 2));
       for (const index of [1, 0, 2]) {
         const bar = bars[index];
         if (!bar) continue;
         const own = labels[index];
         const above = Math.min(bar.topY, own && !own.inside ? own.rect.y : bar.topY) - 5;
-        list.push(boxAt(Math.max(X0 + 3, Math.min(bar.center - size.w / 2, X1 - size.w - 2)), above, size));
+        list.push(boxAt(xOver(bar), above, size));
+      }
+      if (rung) {
+        for (const index of [1, 0, 2]) {
+          const bar = bars[index];
+          if (bar) list.push(boxAt(xOver(bar), rung.y - 4, size));
+        }
       }
       list.push(boxAt(X0 + 4, Y0 + size.h + 1, size), boxAt(X1 - size.w - 2, Y0 + size.h + 1, size), boxAt(X0 + 4, (Y0 + Y1) / 2, size));
       return firstBar ? list : list.slice(-3);
-    },
-    [...obstacles, ...(rungLabel ? [rungLabel.rect] : [])],
-  );
+    };
+
+  // The rung's label stands on the rung: over the first bar (whose top is the start), else beside it.
+  // It takes the nearest free place that still leaves "passt" a free place of its own; at 12 px if 14 cannot.
+  let rungLabel: RungLabel | null = null;
+  let after: StampLayout | null = null;
+  if (rungY !== null && startLevel !== null) {
+    const text = `${startPrefix} ${label(startLevel, false)}`;
+    const against = [...obstacles, ...(scene.stampBefore > 0.5 ? [beforeRect] : [])];
+    const near = [7, 9, 11, 13, 15, 17];
+    const rowsAt = (size: number, far: boolean) =>
+      far ? [rungY + size + 6, rungY - 7 - size - 4].map((baseline) => ({ baseline, size })) : near.map((lift) => ({ baseline: rungY - lift, size }));
+    const rows = [...rowsAt(FONT, false), ...rowsAt(MIN_FONT, false), ...rowsAt(FONT, true)];
+    const candidates = rows.flatMap(({ baseline, size }) => {
+      const w = textWidth(text, size);
+      const xs = [...bars.map((bar) => Math.max(X0 + 2, Math.min(bar.center - w / 2, X1 - w - 2))), X0 + 6, X1 - w - 2].filter((x) => x >= X0 + 1 && x + w <= X1 + 2);
+      return xs.map((x) => ({ baseline, size, rect: { x, y: baseline - size, w, h: size + 3 } as Rect }));
+    });
+    const open = candidates.filter((entry) => free(entry.rect, against));
+    // Where the rung runs through the bars there is no free air on it: then the label may stand on a
+    // bar (its sand halo keeps it readable), but never on another text.
+    const texts = [...labels.map((entry) => entry.rect), ...stepNotes.map((note) => note.rect), ...(scene.stampBefore > 0.5 ? [beforeRect] : [])];
+    const onBars = [
+      ...candidates.filter((entry) => !open.includes(entry) && free(entry.rect, [...texts, ...(tones ? tones.rects : [])])),
+      // and only where no place keeps clear of the tones as well, they give way (to another bar, or out)
+      ...candidates.filter((entry) => !open.includes(entry) && free(entry.rect, texts)),
+    ];
+    let picked = open[0] ?? onBars[0] ?? (candidates[0] as (typeof candidates)[number]);
+    if (scene.canAfter) {
+      for (const entry of [...open, ...onBars]) {
+        const stamp = placeFree(stampAfter, afterPlaces(entry.rect), [...obstacles, entry.rect]);
+        if (stamp) {
+          picked = entry;
+          after = stamp;
+          break;
+        }
+      }
+    }
+    rungLabel = { text, x: picked.rect.x, y: picked.baseline, size: picked.size, rect: picked.rect };
+    const rungRect = picked.rect;
+    tones = toneOptions.find((option) => option.rects.every((rect) => !overlaps(rect, rungRect, 2))) ?? null;
+  }
+  after ??= place(stampAfter, afterPlaces(rungLabel?.rect ?? null), [...obstacles, ...(rungLabel ? [rungLabel.rect] : [])]);
 
   return {
     y,

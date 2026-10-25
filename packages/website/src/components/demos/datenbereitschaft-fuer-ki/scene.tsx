@@ -1,6 +1,6 @@
 import { formatCompact, formatShort } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/format";
 import { geometry, MONTH_ROW } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/geometry";
-import { FONT, layoutAt, type StampLayout } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/layout";
+import { layoutAt, type StampLayout } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/layout";
 import type { DemoPack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/pack";
 import type { Scene as SceneState } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/scene";
 import { formatters, type Series } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/series";
@@ -117,7 +117,7 @@ export function SceneSvg({
 
         {rungY !== null ? <line x1={X0} x2={X1} y1={rungY} y2={rungY} className="dr3-rung" opacity={scene.startRung} /> : null}
         {layout.rungLabel ? (
-          <text x={layout.rungLabel.x} y={layout.rungLabel.y} fontSize={FONT} className="dr3-rung-label" opacity={scene.startLabel} data-start-label="">
+          <text x={layout.rungLabel.x} y={layout.rungLabel.y} fontSize={layout.rungLabel.size} className="dr3-rung-label" opacity={scene.startLabel} data-start-label="">
             {layout.rungLabel.text}
           </text>
         ) : null}
