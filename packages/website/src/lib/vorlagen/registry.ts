@@ -111,14 +111,32 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/mail-fehlendes-dokument.md" },
     },
   },
+  // Workshop 04 take-home: the Nachweisregister as a table (German: semicolons for German Excel; English: commas).
+  // The English copy ships in crvena-zemja-esg-kit.zip as take-home/evidence-register-template.csv.
+  {
+    slug: "esg-nachweisregister",
+    kind: "template",
+    files: { de: "esg-nachweisregister.csv", en: "en/esg-nachweisregister.csv" },
+    downloadNames: { de: "esg-nachweisregister.csv", en: "esg-nachweisregister.en.csv" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/nachweisregister-vorlage.csv" },
+    },
+  },
 ];
 
 /**
  * A download name is also the URL segment. Lower-case ASCII words joined by
- * single hyphens, an optional ".en" and the ".md" extension: nothing that
- * could traverse out of the content directory passes.
+ * single hyphens, an optional ".en" and the ".md" or ".csv" extension:
+ * nothing that could traverse out of the content directory passes.
  */
-export const DOWNLOAD_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\.en)?\.md$/;
+export const DOWNLOAD_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\.en)?\.(?:md|csv)$/;
+
+/** The download's media type, from its extension. */
+export function contentTypeFor(name: string): string {
+  return name.endsWith(".csv") ? "text/csv; charset=utf-8" : "text/markdown; charset=utf-8";
+}
 
 /**
  * Works in development and during the production build, where the working

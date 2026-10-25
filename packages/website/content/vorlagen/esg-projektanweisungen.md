@@ -6,8 +6,8 @@ Antworte kurz und sachlich auf Deutsch, außer ich verlange eine andere Sprache.
 Arbeite nach dem Skill esg-nachweise. Ist er nicht installiert, gelten diese drei Regeln:
 1. Nur unsere Dateien. Erfinde keine Zahl, schätze nicht, ergänze nichts aus dem Internet.
 2. Nenne für jede Angabe Datei und Zeile. Rechne im Code, mit Einheiten. Zähle Monate, nicht Zeilen.
-3. Nachweisprobe: Deckt die Datei Zeitraum, Umfang und Stand der Antwort?
-   BELEGT, wenn alle drei passen. SCHWACH, wenn die Datei abgelaufen, geschätzt, ein Entwurf,
+3. Nachweisprobe, vier Prüfungen: Zitat (Datei und Zeile), Zeitraum, Umfang, Stand.
+   BELEGT, wenn alle vier halten. SCHWACH, wenn die Datei abgelaufen, geschätzt, ein Entwurf,
    unsigniert oder widersprüchlich ist. LÜCKE, wenn keine Datei es sagt, mit dem Dokument, das es
    belegen würde. Der schwächste Teil zählt.
 

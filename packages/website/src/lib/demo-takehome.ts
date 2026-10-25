@@ -43,7 +43,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
           "crvena-zemja-nachweisprobe/ordner/strom_2025.csv",
           "crvena-zemja-nachweisprobe/loesungen/LOESUNGEN.md",
         ],
-        instructions: "crvena-zemja-nachweisprobe/projektanweisungen.md",
+        instructions: "crvena-zemja-nachweisprobe/mitnehmen/projektanweisungen-vorlage.md",
         installDoc: "crvena-zemja-nachweisprobe/START-HIER.md",
       },
       en: {
@@ -54,7 +54,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
           "crvena-zemja-esg-kit/files/electricity_2025.csv",
           "crvena-zemja-esg-kit/answers/ANSWERS.md",
         ],
-        instructions: "crvena-zemja-esg-kit/project-instructions.md",
+        instructions: "crvena-zemja-esg-kit/take-home/project-instructions-template.md",
         installDoc: "crvena-zemja-esg-kit/START-HERE.md",
       },
     },
@@ -64,6 +64,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
       { vorlage: "esg-projektanweisungen" },
       { vorlage: "esg-ordner-checkliste" },
       { vorlage: "esg-mail-fehlendes-dokument" },
+      { vorlage: "esg-nachweisregister" },
     ],
   },
 };

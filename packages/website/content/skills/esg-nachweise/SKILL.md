@@ -1,6 +1,6 @@
 ---
 name: esg-nachweise
-description: Prüft ESG-Antworten und Umweltaussagen gegen Firmendateien: Datei und Zeile oder fehlendes Dokument, Status je Antwort, Verbotsliste EU 2024/825. ESG evidence check.
+description: Nachhaltigkeits- oder ESG-Fragebogen, VSME, Bankformular, Umweltaussage (Etikett, klimaneutral) aus Firmendateien beantworten: Datei und Zeile oder fehlendes Dokument. Sustainability questionnaire.
 ---
 
 # ESG-Antworten mit Nachweis

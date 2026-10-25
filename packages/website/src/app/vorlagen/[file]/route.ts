@@ -2,15 +2,16 @@ export const runtime = "nodejs";
 
 import {
   VORLAGEN,
+  contentTypeFor,
   findByDownloadName,
   readVorlageSource,
 } from "@/lib/vorlagen/registry";
 import { SITE_ORIGIN } from "@/lib/seo/entity";
 
 /**
- * GET /vorlagen/<file>.md
+ * GET /vorlagen/<file>.md (or .csv)
  *
- * Serves one question-sheet template (CC BY 4.0) as a Markdown download. The
+ * Serves one template (CC BY 4.0) as a Markdown or CSV download. The
  * response body is the content file byte for byte: no rendering, no rewriting,
  * no injected header, so a downloaded copy equals the authored source.
  *
@@ -61,7 +62,7 @@ export async function GET(
   return new Response(body, {
     status: 200,
     headers: {
-      "Content-Type": "text/markdown; charset=utf-8",
+      "Content-Type": contentTypeFor(entry.downloadNames[locale]),
       // The registered name, never the raw request segment.
       "Content-Disposition": `attachment; filename="${entry.downloadNames[locale]}"`,
       "Content-Language": locale,
