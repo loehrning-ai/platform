@@ -13,12 +13,13 @@ Monday for organic shops. The numbers are invented. The flaws in the file are th
 real exports have: one row twice, one week without a stored forecast, two weeks sold
 out.
 
-## Order (40 minutes)
+## Order (55 minutes)
 
-1. Look at data/ (5 minutes).
-2. exercise.md, tasks 1 to 4 (30 minutes).
-3. Compare with solutions.md (5 minutes).
-4. Then: your own series in template/my-data.csv, fill in release-rule.md.
+1. Play the demo once: loehrning.ai/en/demos/ki-prognosen-einschaetzen (5 minutes).
+2. Look at data/ (5 minutes).
+3. exercise.md, tasks 1 to 4 (30 minutes).
+4. Compare with solutions.md (5 minutes).
+5. Your own series in template/my-data.csv, fill in release-rule.md (10 minutes).
 
 ## Three ways, the same numbers
 
@@ -30,23 +31,22 @@ out.
   leftover jar €0.40." Without the skill: paste claude/project-instructions.md into a
   project's instructions.
 - Without Claude, with Python 3 and no extra packages:
-  `python3 pruefen.py data/lentil-soup-weekly.csv --fehlmenge 1.50 --rest 0.40`
+  `python3 pruefen.py data/lentil-soup-weekly.csv --shortage 1.50 --leftover 0.40`
 
 All three ways run the same code and arrive at the same numbers as solutions.md. The
 skill and the script are written in German; Claude answers in your language.
 
 ## The columns
 
-    woche;ist;prognose;hinweis
+    week;actual;forecast;note
 
-The file keeps its German column names. The English names week, actual, forecast and
-note work too, and so does stock_end.
+The German names woche, ist, prognose and hinweis work too, and so does stock_end.
 
-- woche (week): the Monday of the week, 2025-04-07 or 07.04.2025.
-- ist (actual): the quantity sold. Empty in the week you plan.
-- prognose (forecast): the number that was in the system at the time. Never recompute it later.
-- hinweis (note): free text. If it says "ausverkauft" or "sold out", the week does not
-  count. A column bestand_ende (stock_end) with 0 has the same effect.
+- week: the Monday of the week, 2025-04-07 or 07.04.2025.
+- actual: the quantity sold. Empty in the week you plan.
+- forecast: the number that was in the system at the time. Never recompute it later.
+- note: free text. If it says "sold out" or "ausverkauft", the week does not count. A
+  column stock_end with 0 has the same effect.
 
 ## What the kit cannot do
 

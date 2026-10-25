@@ -35,14 +35,17 @@ describe("workshop kit blocks", () => {
         expect(de.kit).toBeDefined();
         expect(en.kit).toBeDefined();
         const [a, b] = [de.kit!, en.kit!];
-        expect(a.fileName).toBe(b.fileName);
+        // A kit with a German edition names its own files (prognose-pruefen.zip,
+        // pruefregel.md); then only the shape has to match, not the names.
+        const sameEdition = a.fileName === b.fileName;
+        const name = (file: string | undefined) => (sameEdition ? file : Boolean(file));
         expect(a.steps).toHaveLength(b.steps.length);
         expect(a.rules).toHaveLength(b.rules.length);
-        expect(a.contents.map((item) => item.name)).toEqual(b.contents.map((item) => item.name));
+        expect(a.contents.map((item) => name(item.name))).toEqual(b.contents.map((item) => name(item.name)));
         expect(a.stats.map((stat) => stat.value)).toEqual(b.stats.map((stat) => stat.value));
         a.steps.forEach((step, index) => {
           const twin = b.steps[index];
-          expect(step.file, step.tag).toBe(twin.file);
+          expect(name(step.file), step.tag).toBe(name(twin.file));
           expect(step.segments?.map(({ tone, value }) => [tone, value])).toEqual(
             twin.segments?.map(({ tone, value }) => [tone, value]),
           );

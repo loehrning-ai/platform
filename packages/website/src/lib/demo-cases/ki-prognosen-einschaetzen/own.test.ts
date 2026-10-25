@@ -19,6 +19,9 @@ describe("the own-data path", () => {
     expect(own.lampsReady).toBe(true);
     expect(own.notices.map((n) => n.key)).toContain("duplicate");
     expect(own.manyZeros).toBe(false);
+    // The weeks the summary line counts: a forecast, an actual and a rule value.
+    const scored = own.check.rows.filter((_, t) => own.check.valid(t) && own.check.forecast(t) !== null && own.check.rule(t) !== null);
+    expect(own.forecastWeeks).toBe(scored.length);
   });
 
   it("scores the simple rules on a sales-only file", () => {

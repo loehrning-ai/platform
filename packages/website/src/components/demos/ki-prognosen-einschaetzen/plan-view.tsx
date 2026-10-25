@@ -21,6 +21,7 @@ export interface PlanViewProps {
     readonly jarsLabel: string;
     readonly short: string;
     readonly left: string;
+    readonly even: string;
     readonly ledgerTitle: string;
     readonly ledger: Readonly<Record<"Messlatte" | "Prognose" | "Planzahl", string>>;
     readonly noCosts: string;
@@ -39,6 +40,8 @@ export function PlanView({ locale, result, errors, buffer, jars, line, copy, yea
   // Where the order line sits in the row: between the last jar at or under the buffer and the next.
   const cut = buffer === null ? errors.length : errors.filter((e) => e <= buffer).length;
   const linePos = errors.length === 0 ? 0 : (cut / errors.length) * 100;
+  const anyEven = buffer !== null && errors.some((e) => e === buffer);
+  const signed = (value: number) => (value > 0 ? `+${formatNumber(value, locale)}` : formatNumber(value, locale));
 
   return (
     <div className="fl-plan">
@@ -61,12 +64,27 @@ export function PlanView({ locale, result, errors, buffer, jars, line, copy, yea
             return <span key={i} className={`fl-jar ${state}`} style={{ opacity: shown ? 1 : 0 }} />;
           })}
           {buffer !== null ? (
-            <span className="fl-order-line" style={{ left: `${linePos}%`, opacity: line, transform: `scaleY(${line})` }} />
+            <span className="fl-order-line" style={{ left: `${linePos}%`, opacity: line, transform: `scaleY(${line})` }}>
+              <span className="fl-order-value" data-fl-buffer="">
+                {signed(buffer)}
+              </span>
+            </span>
           ) : null}
         </div>
+        {errors.length > 0 ? (
+          <p className="fl-jar-scale" aria-hidden="true">
+            <span>{signed(errors[0] as number)}</span>
+            <span>{signed(errors[errors.length - 1] as number)}</span>
+          </p>
+        ) : null}
         {buffer !== null ? (
           <p className="fl-jar-legend">
             <span className="fl-key is-left" /> {copy.left}
+            {anyEven ? (
+              <>
+                <span className="fl-key is-even" /> {copy.even}
+              </>
+            ) : null}
             <span className="fl-key is-short" /> {copy.short}
           </p>
         ) : (

@@ -8,7 +8,8 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
  */
 
 const WORKSHOPS = [
-  { slug: "ki-prognosen-einschaetzen", a: ["Labor öffnen", "Open the lab"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  // Workshop 01 starts at its demo (the kit as a demo); the labs are card A's secondary link.
+  { slug: "ki-prognosen-einschaetzen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
   { slug: "geschaeftsberichte-mit-ki-lesen", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
   { slug: "datenbereitschaft-fuer-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
   { slug: "esg-berichte-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },

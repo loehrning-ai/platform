@@ -88,9 +88,14 @@ describe("hub tile scenes", () => {
 
   it("formats the figures for the language", () => {
     const Tile = TILES["ki-prognosen-einschaetzen"];
-    // W01: the planning number of the kit's plan week (under 1,000, so the same in both).
-    expect(renderToStaticMarkup(<Tile locale="de" />)).toContain(">748<");
-    expect(renderToStaticMarkup(<Tile locale="en" />)).toContain(">748<");
+    // W01: the hook, the tool's claim against "same as last week" with the same formula.
+    const de = renderToStaticMarkup(<Tile locale="de" />);
+    const en = renderToStaticMarkup(<Tile locale="en" />);
+    expect(de).toContain(">94,2\u00a0%<");
+    expect(de).toContain(">92,6\u00a0%<");
+    expect(en).toContain(">94.2\u00a0%<");
+    expect(en).toContain(">92.6\u00a0%<");
+    expect(de).not.toContain(">748<");
   });
 });
 

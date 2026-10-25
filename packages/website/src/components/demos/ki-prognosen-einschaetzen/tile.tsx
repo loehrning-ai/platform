@@ -1,53 +1,55 @@
-import { KIT_COSTS, kitCheck } from "@/lib/demo-cases/ki-prognosen-einschaetzen/kit";
+import { kitCheck } from "@/lib/demo-cases/ki-prognosen-einschaetzen/kit";
 import { tileNumber } from "@/lib/demo-tiles/format";
-import { HatchDef, TileSvg, type TileProps } from "../hub/tile-kit";
+import { TileSvg, type TileProps } from "../hub/tile-kit";
 
 /*
- * W01 "Die Fehlerliste", hub miniature: the release rule's 52-week strip of
- * the kit (ink = the forecast runs without sign-off, hatched Mennige = a
- * person decides), computed from the same check as the demo, and the
- * planning number of the plan week. End frame: 37 ink, 15 hatched, "748".
- * Motion: tile-motion.ts (the rows fill left to right, then the number).
+ * W01 "Die Fehlerliste", hub miniature: the demo's hook. The last 26 weeks
+ * of the kit's lentil soup rise as bars; the tool's forecast lands on them as
+ * mark ticks next to its claim, 94,2 %; then the dashed line of "same as last
+ * week" (the bars moved one week) and its own score with the same formula,
+ * 92,6 %. Two numbers that close are the question the demo answers. Every
+ * value comes from the same check as the demo. Motion: tile-motion.ts.
  */
-const HATCH = "dt-hatch-w01";
-const COLUMNS = 13;
-const LEFT = 20;
-const RIGHT = 380;
-const TOP = 128;
-const ROW_H = 38;
-const GAP = 5;
-const CELL_W = (RIGHT - LEFT - GAP * (COLUMNS - 1)) / COLUMNS;
-const CELL_H = ROW_H - GAP * 2;
+const { check, result } = kitCheck(null, null);
+const WEEKS = check.wochen.slice(-26);
+const LEFT = 24;
+const RIGHT = 376;
+const BASE = 270;
+const TOP = 120;
+const STEP = (RIGHT - LEFT) / WEEKS.length;
+const BAR = Math.round(STEP * 0.62);
+const values = WEEKS.flatMap((t) => [check.rows[t]?.ist ?? 0, check.forecast(t) ?? 0, check.rule(t) ?? 0]);
+const FLOOR = Math.floor((Math.min(...values) - 40) / 50) * 50;
+const CEIL = Math.max(...values);
+const y = (value: number) => Math.round(BASE - ((value - FLOOR) / (CEIL - FLOOR)) * (BASE - TOP));
+const x = (i: number) => Math.round(LEFT + i * STEP + (STEP - BAR) / 2);
 
-const { check, result } = kitCheck(KIT_COSTS.fehlmenge, KIT_COSTS.restKantine);
-const FREE = check.streifen.map((t) => check.lamps(t)?.frei === true);
-const PLAN = result.naechste?.planzahl ?? 0;
-const ROWS = Math.ceil(FREE.length / COLUMNS);
-
-function cell(i: number): string {
-  const x = LEFT + (i % COLUMNS) * (CELL_W + GAP);
-  const y = TOP + Math.floor(i / COLUMNS) * ROW_H;
-  return `M${x.toFixed(1)} ${y}h${CELL_W.toFixed(1)}v${CELL_H}h-${CELL_W.toFixed(1)}z`;
-}
-
-const rowPath = (row: number, free: boolean) =>
-  FREE.map((value, i) => (Math.floor(i / COLUMNS) === row && value === free ? cell(i) : ""))
-    .filter(Boolean)
-    .join("");
+const BARS = WEEKS.map((t, i) => `M${x(i)} ${BASE}V${y(check.rows[t]?.ist ?? FLOOR)}h${BAR}V${BASE}z`).join("");
+const TICKS = WEEKS.map((t, i) => `M${x(i) - 2} ${y(check.forecast(t) ?? FLOOR)}h${BAR + 4}`).join("");
+const RULE = WEEKS.map((t, i) => `${i === 0 ? "M" : "L"}${x(i) - 2} ${y(check.rule(t) ?? FLOOR)}h${BAR + 4}`).join("");
+const TOOL = 1 - (result.tabelle.Prognose?.wape ?? 0);
+const PLAIN = 1 - (result.tabelle["wie letzte Woche"]?.wape ?? 0);
 
 export default function Tile({ locale, reducedMotion }: TileProps) {
+  const percent = (share: number) => `${tileNumber(share * 100, locale, { digits: 1 })}\u00a0%`;
   return (
     <TileSvg reducedMotion={reducedMotion}>
-      <HatchDef id={HATCH} />
-      {Array.from({ length: ROWS }, (_, row) => (
-        <g key={row} data-t={`row${row}`}>
-          <path d={rowPath(row, true)} className="dt-fill-ink" />
-          <path d={rowPath(row, false)} fill={`url(#${HATCH})`} className="dt-stroke-mark" strokeWidth="2" />
-        </g>
-      ))}
-      <text data-t="plan" className="dt-fig dt-fill-mark" x={RIGHT} y="96" fontSize="64" textAnchor="end">
-        {tileNumber(PLAN, locale)}
-      </text>
+      <path data-t="bars" className="dt-fill-ink" d={BARS} />
+      <path data-t="ticks" className="dt-stroke-mark" d={TICKS} strokeWidth="4" />
+      <path data-t="rule" className="dt-stroke-ink" d={RULE} strokeWidth="2.5" strokeDasharray="5 3" />
+      <path className="dt-stroke-ink" d={`M${LEFT} ${BASE + 2}H${RIGHT}`} strokeWidth="3" />
+      <g data-t="tool">
+        <text className="dt-fig dt-fill-mark" x={LEFT} y="70" fontSize="50">
+          {percent(TOOL)}
+        </text>
+        <path className="dt-stroke-mark" d={`M${LEFT} 88h52`} strokeWidth="5" />
+      </g>
+      <g data-t="plain">
+        <text className="dt-fig dt-fill-ink" x={RIGHT} y="70" fontSize="50" textAnchor="end">
+          {percent(PLAIN)}
+        </text>
+        <path className="dt-stroke-ink" d={`M${RIGHT - 52} 88h52`} strokeWidth="3" strokeDasharray="6 4" />
+      </g>
     </TileSvg>
   );
 }

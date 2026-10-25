@@ -37,7 +37,7 @@ Rechnung.
 - Neues Produkt oder neue Packungsgröße ohne eigene Vergangenheit.
 
 Diese Ereignisse stehen in keiner Fehlerliste. Das Tool lernt sie erst aus den
-Fehlern danach; bei der Linsensuppe dauerte das 14 Wochen.
+Fehlern danach. [Bei der Linsensuppe blieb die Regel danach 14 Wochen rot.]
 
 ## Korrigieren
 

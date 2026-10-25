@@ -1,61 +1,81 @@
-import type { TileMotion, Track } from "@/lib/demo-tiles/types";
+import type { TileMotion } from "@/lib/demo-tiles/types";
 
 /*
- * W01 "Die Fehlerliste", hub miniature. The four rows of the release rule's
- * 52-week strip fill left to right, one after the other (ink = free, hatched
- * Mennige = a person decides), then the planning number lands. The end frame
- * is the whole strip and "748", so a screenshot, a reduced-motion visitor and
- * a printer see the same picture. Import-free apart from types (the css
- * generator runs it).
+ * W01 "Die Fehlerliste", hub miniature. The bars rise, the tool's claim and
+ * its forecast ticks land, then the dashed "same as last week" line and its
+ * score, nearly the same number. The end frame shows all of it, so a
+ * screenshot, a reduced-motion visitor and a printer see the same picture.
+ * Import-free apart from types (the css generator runs it).
  */
-const ROWS = 4;
-const START = 0.08;
-const ROW_SPAN = 0.17;
-
-const FILL: readonly Track[] = Array.from({ length: ROWS }, (_, row) => {
-  const from = START + row * ROW_SPAN;
-  return {
-    id: `row${row}`,
-    prop: "sx" as const,
-    origin: "0% 50%",
-    keys: [
-      [0, 0],
-      [from, 0],
-      [from + ROW_SPAN, 1, "ease"],
-      [1, 1],
-    ] as const,
-  };
-});
-
 export const MOTION: TileMotion = {
-  storyMs: 3200,
+  storyMs: 3400,
   tracks: [
     {
       id: "root",
       prop: "o",
       keys: [
         [0, 0],
-        [0.06, 1, "ease"],
+        [0.05, 1, "ease"],
       ],
     },
-    ...FILL,
     {
-      id: "plan",
-      prop: "o",
+      id: "bars",
+      prop: "sy",
+      origin: "50% 100%",
       keys: [
         [0, 0],
-        [0.8, 0],
-        [0.81, 1],
+        [0.05, 0],
+        [0.3, 1, "ease"],
         [1, 1],
       ],
     },
     {
-      id: "plan",
+      id: "tool",
+      prop: "o",
+      keys: [
+        [0, 0],
+        [0.3, 0],
+        [0.4, 1, "ease"],
+        [1, 1],
+      ],
+    },
+    {
+      id: "ticks",
+      prop: "o",
+      keys: [
+        [0, 0],
+        [0.36, 0],
+        [0.48, 1, "ease"],
+        [1, 1],
+      ],
+    },
+    {
+      id: "rule",
+      prop: "o",
+      keys: [
+        [0, 0],
+        [0.56, 0],
+        [0.7, 1, "ease"],
+        [1, 1],
+      ],
+    },
+    {
+      id: "plain",
+      prop: "o",
+      keys: [
+        [0, 0],
+        [0.72, 0],
+        [0.82, 1, "ease"],
+        [1, 1],
+      ],
+    },
+    {
+      id: "plain",
       prop: "ty",
       keys: [
-        [0, 12],
-        [0.8, 12],
-        [0.92, 0, "snap"],
+        [0, 10],
+        [0.72, 10],
+        [0.86, 0, "snap"],
         [1, 0],
       ],
     },

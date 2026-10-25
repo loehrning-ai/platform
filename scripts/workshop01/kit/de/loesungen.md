@@ -18,9 +18,12 @@ d) Aktion Bio-Markt, 20 % Rabatt. Ist 637, Prognose 671, „wie letzte Woche“ 
 
 ## 2. Spanne
 
-b) 36 von 50, versprochen waren 40. Vor dem 07.04.: 9 von 12. Ab dem 07.04.:
-   27 von 38. 11 der 14 Fehltreffer liegen ab dem 07.04.
-c) Eine Bio-Markt-Kette mit 9 Filialen listet aus, rund 70 Gläser pro Woche weniger.
+b) 10-%-Wert −50,5, 90-%-Wert +18. Spanne 607 − 50,5 = 556,5 bis 607 + 18 = 625.
+   Das Ist 484 liegt darunter: ein Fehltreffer, gleich in der ersten Woche der
+   Auslistung.
+c) 36 von 50, bei einer ehrlichen Spanne wären es um 40. Vor dem 07.04.: 9 von 12.
+   Ab dem 07.04.: 27 von 38. 11 der 14 Fehltreffer liegen ab dem 07.04.
+d) Eine Bio-Markt-Kette mit 9 Filialen listet aus, rund 70 Gläser pro Woche weniger.
    Das Tool plant weiter auf altem Niveau; die Fehler werden einseitig, das Ist fällt
    unter die Spanne. Zufall allein ergibt 36 oder weniger in etwa 11 von 100 Jahren;
    dass die Fehltreffer nach einem Datum gehäuft liegen, zeigt die Ursache.
@@ -38,12 +41,14 @@ c) Ein übriges Glas kostet 1,60 €: Anteil 1,50 ÷ 3,10 = 0,48, Planzahl 729.
 
 ## 4. Regel
 
-a) 37 Wochen frei, 15 gesperrt. 03.02.2025: Daten (keine Prognose). 21.04. bis
+a) Prognose 8.300, Ist 7.874: (8.300 − 7.874) ÷ 7.874 = +5,4 %. Über 5 %: rot. Die
+   Spanne ist in dieser Woche auch rot (8 von 13).
+b) 37 Wochen frei, 15 gesperrt. 03.02.2025: Daten (keine Prognose). 21.04. bis
    21.07.2025: Bias über 5 % und weniger als 9 von 13 in der Spanne; am 28.04. war
    zusätzlich „wie letzte Woche“ besser (Verhältnis 1,05). Höchster Bias: +10,6 % am
    16.06.2025. Ab 28.07. wieder frei.
-b) Zwei Wochen: Auslistung 07.04., erste rote Woche 21.04.
-c) Die Person aus der Prüfregel, mit Zahl und Grund: Prognose minus rund 70 Gläser,
+c) Zwei Wochen: Auslistung 07.04., erste rote Woche 21.04.
+d) Die Person aus der Prüfregel, mit Zahl und Grund: Prognose minus rund 70 Gläser,
    Grund Auslistung. Große Korrekturen mit bekanntem Grund haben in der Studie von
    Fildes et al. (2009) die Genauigkeit eher verbessert, kleine aus dem Gefühl eher
    verschlechtert.

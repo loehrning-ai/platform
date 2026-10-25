@@ -24,7 +24,7 @@ export type OwnOutcome =
       readonly notices: readonly ParseNotice[];
       readonly ignored: readonly string[];
       readonly manyZeros: boolean;
-      /** Valid weeks with a stored forecast (the lamps need LAMP_WEEKS). */
+      /** Valid weeks with a stored forecast and a baseline value (the lamps need LAMP_WEEKS). */
       readonly forecastWeeks: number;
       readonly lampsReady: boolean;
     };
@@ -40,8 +40,11 @@ export function evaluateOwn(text: string, options: CheckOptions): OwnOutcome {
   if (sales <= 0) return { kind: "problem", problem: { key: "zeroSales" } };
   const actuals = parsed.rows.filter((row) => row.ist !== null);
   const zeros = actuals.filter((row) => row.ist === 0).length;
+  // Weeks the range and the lamps can use: an actual, a stored forecast and the
+  // baseline's value (the first week has no "last week"), so the count matches
+  // the "Geprüft: ... Wochen" line instead of the file's row count.
   const forecastWeeks = check.hasForecast
-    ? parsed.rows.filter((row, t) => check.valid(t) && row.f !== null).length
+    ? parsed.rows.filter((row, t) => check.valid(t) && row.f !== null && check.rule(t) !== null).length
     : 0;
   return {
     kind: "ok",

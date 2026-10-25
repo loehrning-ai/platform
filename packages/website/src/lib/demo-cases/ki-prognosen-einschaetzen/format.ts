@@ -15,6 +15,23 @@ export function formatNumber(value: number, locale: DemoLocale, maxFraction = 0,
     .replace(/^-/, "−");
 }
 
+/**
+ * A number for a CSV cell: the locale's decimal mark, no grouping and the
+ * ASCII hyphen as minus, so Excel reads it as a number ("-99", "694,25").
+ * The real minus sign of formatNumber is for the screen only.
+ */
+export function formatCsvNumber(value: number, locale: DemoLocale, maxFraction = 2): string {
+  const rounded = Number.isFinite(value) ? value : 0;
+  return new Intl.NumberFormat(INTL[locale], { maximumFractionDigits: maxFraction, useGrouping: false })
+    .format(rounded)
+    .replace(/^[\u2212-]/, "-");
+}
+
+/** "1 Woche" / "14 Wochen": a count with the copy's singular or plural form ({count} is filled). */
+export function plural(count: number, forms: { readonly one: string; readonly many: string }): string {
+  return fill(count === 1 ? forms.one : forms.many, { count });
+}
+
 /** One decimal, always shown: 33,3 / 33.3. */
 export const formatOne = (value: number, locale: DemoLocale) => formatNumber(value, locale, 1, 1);
 

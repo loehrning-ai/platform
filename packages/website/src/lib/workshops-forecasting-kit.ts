@@ -6,13 +6,13 @@ import type { WorkshopKit } from "./workshop-kit";
  * The zip is built by scripts/workshop01/build-kit.mjs from scripts/workshop01/kit/;
  * every number below is printed in loesungen.md / solutions.md of that kit and
  * recomputed by the demo's check (workshops-forecasting.test.ts holds them together).
- * The page lists the English edition forecast-check.zip, like every workshop
- * material; the German edition prognose-pruefen.zip has the same tree and numbers
- * and is offered by the German demo.
+ * The German page offers the German edition prognose-pruefen.zip, the English page
+ * forecast-check.zip; both have the same tree and the same numbers, each with its
+ * own file names.
  */
 export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
-    fileName: "forecast-check.zip",
+    fileName: "prognose-pruefen.zip",
     title: "Prognose prüfen",
     lead: "Eine Spalte, Ist minus Prognose, beantwortet vier Fragen. Am Ende steht eine Prüfregel für jede Woche.",
     stats: [
@@ -59,7 +59,7 @@ export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       {
         tag: "Prüfung 3",
         title: "Planzahl",
-        input: "data/costs.md: 1,50 € je fehlendes, 0,40 € je übriges Glas.",
+        input: "daten/kosten.md: 1,50 € je fehlendes, 0,40 € je übriges Glas.",
         action: "Du nimmst den Fehler an der Stelle 1,50 ÷ 1,90 = 0,79 der sortierten Liste.",
         output: "Die Menge für die Woche ab 29.12.2025.",
         line: { text: "729 + 19", result: "748" },
@@ -70,8 +70,8 @@ export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         title: "Regel",
         input: "Die vier Lampen, jede Woche 2025.",
         action: "Du rechnest sie für alle 52 Wochen und trägst die Person für rote Wochen ein.",
-        output: "release-rule.md, ausgefüllt.",
-        file: "release-rule.md",
+        output: "pruefregel.md, ausgefüllt.",
+        file: "pruefregel.md",
         segments: [
           { tone: "ink", label: "frei", value: 37 },
           { tone: "accent", label: "Person entscheidet", value: 15 },
@@ -79,19 +79,24 @@ export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Im Browser oder mit Python 3 ohne Konto, etwa 40 Minuten. Mit dem Claude-Skill können die Dateien an Anthropic übertragen werden. Die deutsche Ausgabe prognose-pruefen.zip gibt es in der Demo unter „Mitnehmen“.",
+      "Im Browser oder mit Python 3 ohne Konto, etwa 55 Minuten. Mit dem Claude-Skill können die Dateien an Anthropic übertragen werden.",
     fictionalNote:
       "Suppenwerk Feldmark und alle Zahlen sind erfunden. Die Fehler in der Datei sind die echter Exporte.",
     contents: [
-      { name: "START-HERE.md", description: "Reihenfolge, drei Wege, die Spalten." },
-      { name: "data/", description: "104 Wochen Linsensuppe, Tool-Export, Kosten." },
-      { name: "exercise.md", description: "Vier Aufgaben, 30 Minuten." },
-      { name: "solutions.md", description: "Alle Zahlen zum Vergleichen." },
-      { name: "release-rule.md", description: "Die Prüfregel zum Ausfüllen." },
-      { name: "template/my-data.csv", description: "Leere Vorlage für deine Reihe." },
+      { name: "START-HIER.md", description: "Reihenfolge, drei Wege, die Spalten." },
+      { name: "daten/", description: "104 Wochen Linsensuppe, Tool-Export, Kosten." },
+      { name: "uebung.md", description: "Vier Aufgaben, 30 Minuten." },
+      { name: "loesungen.md", description: "Alle Zahlen zum Vergleichen." },
+      { name: "pruefregel.md", description: "Die Prüfregel zum Ausfüllen." },
+      { name: "vorlage/meine-daten.csv", description: "Leere Vorlage für deine Reihe." },
       { name: "pruefen.py", description: "Rechnet alles nach, nur Python 3." },
       { name: "claude/", description: "Skill und Projekt-Anweisung." },
     ],
+    labels: {
+      stepper: "Die vier Prüfungen des Kits",
+      action: "Rechnen (Demo, Skill oder pruefen.py)",
+      result: "Lösung (loesungen.md)",
+    },
   },
   en: {
     fileName: "forecast-check.zip",
@@ -161,7 +166,7 @@ export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "In the browser or with Python 3, no account, about 40 minutes. With the Claude skill the files may be transferred to Anthropic. The German edition prognose-pruefen.zip is in the German demo under \"Mitnehmen\".",
+      "In the browser or with Python 3, no account, about 55 minutes. With the Claude skill the files may be transferred to Anthropic.",
     fictionalNote:
       "Suppenwerk Feldmark and all numbers are invented. The flaws in the file are those of real exports.",
     contents: [
@@ -174,5 +179,10 @@ export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "pruefen.py", description: "Recomputes everything, Python 3 only." },
       { name: "claude/", description: "Skill and project instructions." },
     ],
+    labels: {
+      stepper: "The four checks of the kit",
+      action: "Compute (demo, skill or pruefen.py)",
+      result: "Solution (solutions.md)",
+    },
   },
 };

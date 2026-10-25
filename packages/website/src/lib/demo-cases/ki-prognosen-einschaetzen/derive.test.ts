@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { runCheck } from "./check";
-import { baselinePin, causeBefore, chances, longestRun, planErrors, rangeSplit, redRuns, runningHits, runningMeans } from "./derive";
+import { baselinePin, causeBefore, chances, dataGap, longestRun, planErrors, rangeSplit, redRuns, runningHits, runningMeans } from "./derive";
 import { KIT_CSV } from "./kit-series";
 import { parseTable } from "./parse";
 
@@ -31,6 +31,20 @@ describe("the stage points at computed weeks (kit)", () => {
     expect(runs.reduce((n, run) => n + run.to - run.from + 1, 0)).toBe(15);
     expect(check.rows[runs[0]!.from]?.woche).toBe("2025-02-03");
     expect(runs[0]!.lamps).toEqual(["daten"]);
+    expect(dataGap(check, runs[0]!.from)).toBe("prognose");
+  });
+
+  it("names only the lamps red in every week of a run, the others apart", () => {
+    const longest = longestRun(redRuns(check))!;
+    // Bias and range stay red for all 14 weeks; the Messlatte lamp only on 28.04.
+    expect(longest.lamps).toEqual(["bias", "spanne"]);
+    expect(longest.extra.map(({ key, weeks }) => [key, weeks.map((t) => check.rows[t]?.woche)])).toEqual([
+      ["messlatte", ["2025-04-28"]],
+    ]);
+    for (const t of check.streifen.filter((week) => week >= longest.from && week <= longest.to)) {
+      const lamps = check.lamps(t)!;
+      for (const key of longest.lamps) expect(lamps[key], `${check.rows[t]?.woche} ${key}`).toBe(false);
+    }
   });
 
   it("splits the range hits at the delisting", () => {

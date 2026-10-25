@@ -3,12 +3,12 @@
 import { useEffect, useId, useMemo, useState, type ReactNode } from "react";
 import { DemoLever, DemoStage, TAKEHOME_TARGET_ID, setTakeHomeLine, useBeatClock, useOnEscape, useOnRestart } from "@/components/demos/shell";
 import { BEATS, type BeatId } from "@/lib/demo-cases/ki-prognosen-einschaetzen/beats";
-import { BIAS_MAX, LAMP_KEYS, LERNEN, PRUEF, TREFFER_MIN, type CheckResult, type Checker } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
+import { LAMP_KEYS, LERNEN, PRUEF, TREFFER_MIN, type CheckResult, type Checker } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
 import type { DemoPack } from "@/lib/demo-cases/ki-prognosen-einschaetzen/copy";
-import { baselinePin, causeBefore, chances, longestRun, planErrors, rangeSplit, redRuns } from "@/lib/demo-cases/ki-prognosen-einschaetzen/derive";
+import { baselinePin, causeBefore, chances, dataGap, longestRun, planErrors, rangeSplit, redRuns, type RedRun } from "@/lib/demo-cases/ki-prognosen-einschaetzen/derive";
 import { slugify, toResultCsv, toRuleMarkdown } from "@/lib/demo-cases/ki-prognosen-einschaetzen/export";
-import { formatEuro, formatNumber, formatOne, formatPercent, formatShortDay, fill } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
-import { KIT_COSTS, kitCheck } from "@/lib/demo-cases/ki-prognosen-einschaetzen/kit";
+import { formatDay, formatEuro, formatNumber, formatOne, formatPercent, formatShortDay, fill, plural } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
+import { KIT_COSTS, kitCheck, kitCsv } from "@/lib/demo-cases/ki-prognosen-einschaetzen/kit";
 import { evaluateOwn } from "@/lib/demo-cases/ki-prognosen-einschaetzen/own";
 import { MAX_BYTES, parseCell } from "@/lib/demo-cases/ki-prognosen-einschaetzen/parse";
 import { GUESSES, RANGE_TIPS, planFrame, sweep, type RangeTip } from "@/lib/demo-cases/ki-prognosen-einschaetzen/timeline";
@@ -28,12 +28,58 @@ function parseCost(text: string): number | null {
   return cell.ok && cell.value !== null && cell.value > 0 ? cell.value : null;
 }
 
+/** True when a cost field holds text that is not a number at all ("abc"), as opposed to empty or zero. */
+function notANumber(text: string): boolean {
+  return text.trim() !== "" && !parseCell(text.replace(/€/g, "")).ok;
+}
+
+/** The longest red run as the rule file's sentence: "... 14 Wochen lang."; "" without a red week. */
+function longestRedSentence(copy: DemoPack, check: Checker): string {
+  const longest = longestRun(redRuns(check));
+  return longest ? plural(longest.to - longest.from + 1, copy.ruleFile.longestRed) : "";
+}
+
+/** "Bias und Spanne", "data and range". */
+function joinWords(words: readonly string[], and: string): string {
+  if (words.length <= 1) return words.join("");
+  return `${words.slice(0, -1).join(", ")} ${and} ${words[words.length - 1]}`;
+}
+
+/** One sentence per red run, naming only lamps that were red in its weeks. */
+function runSentence(copy: DemoPack, check: Checker, run: RedRun): string {
+  const locale = copy.locale;
+  const day = (t: number) => formatShortDay(check.rows[t]?.woche ?? "", locale);
+  const names = (keys: readonly string[]) => joinWords(keys.map((key) => copy.regel.lampsShort[key as keyof typeof copy.regel.lampsShort]), copy.regel.and);
+  const from = day(run.from);
+  if (run.from === run.to && run.lamps.length === 1 && run.lamps[0] === "daten") {
+    return fill(copy.regel.gap[dataGap(check, run.from)], { from });
+  }
+  const head =
+    run.from === run.to
+      ? fill(copy.regel.singleLine, { from, lamps: names(run.lamps) })
+      : fill(copy.regel.runLine, { from, to: day(run.to), lamps: names(run.lamps), weeks: plural(run.to - run.from + 1, copy.regel.weeks) });
+  const extras = run.extra.map((entry) =>
+    fill(copy.regel.extraLine, { dates: joinWords(entry.weeks.map(day), copy.regel.and), lamps: names([entry.key]) }),
+  );
+  return [head, ...extras].join(" ");
+}
+
 const costText = (value: number, locale: DemoPack["locale"]) => formatNumber(value, locale, 2, 2);
 
-function ruleFill(copy: DemoPack, series: string, owner: string, result: CheckResult, fehlmenge: number | null, rest: number | null) {
+function ruleFill(
+  copy: DemoPack,
+  series: string,
+  owner: string,
+  target: { readonly result: CheckResult; readonly check: Checker },
+  fehlmenge: number | null,
+  rest: number | null,
+  system: string | null,
+) {
+  const { result } = target;
   return {
     reihe: series,
-    system: copy.ruleFile.system,
+    system,
+    longestRed: longestRedSentence(copy, target.check),
     messlatte: copy.ruleNames[result.messlatte],
     owner,
     fehlmenge,
@@ -53,7 +99,7 @@ function personalLine(copy: DemoPack, series: string, owner: string, result: Che
   if (next.lampen?.frei && next.planzahl !== undefined) {
     return fill(copy.takeHome.line, { series, forecast, plan: formatNumber(next.planzahl, copy.locale), owner: who });
   }
-  return fill(copy.takeHome.lineRed, { series, forecast, count: red, owner: who });
+  return fill(copy.takeHome.lineRed, { series, forecast, lamps: plural(red, copy.regel.lampCount), owner: who });
 }
 
 export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
@@ -85,7 +131,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
 
   const fehlmenge = parseCost(shortText);
   const rest = parseCost(leftText);
-  const kit = useMemo(() => kitCheck(fehlmenge, rest), [fehlmenge, rest]);
+  const kit = useMemo(() => kitCheck(fehlmenge, rest, locale), [fehlmenge, rest, locale]);
   const facts: KitFacts = useMemo(() => {
     const { result } = kit;
     return {
@@ -127,8 +173,9 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
   const strip = selected ?? lastStrip;
   const gated = tip === null && !clock.room;
 
-  const downloadRule = (series: string, target: { result: CheckResult }, short: number | null, left: number | null) => {
-    const text = toRuleMarkdown(copy.ruleFile.template, target.result, ruleFill(copy, series, owner, target.result, short, left), locale);
+  // The kit's rule names its system; an own file keeps "[System]" for the reader to fill.
+  const downloadRule = (series: string, target: { result: CheckResult; check: Checker }, short: number | null, left: number | null, system: string | null) => {
+    const text = toRuleMarkdown(copy.ruleFile.template, target.result, ruleFill(copy, series, owner, target, short, left, system), locale);
     downloadText(fill(copy.ruleFile.name, { series: slugify(series, copy.own.seriesFallback) }), text, "text/markdown");
   };
   const downloadCsv = (series: string, target: { check: Checker }) => {
@@ -152,7 +199,8 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
     </label>
   );
 
-  const replay = (
+  // Under reduced motion every beat is its end frame: a replay would do nothing, so there is none.
+  const replay = clock.reducedMotion ? null : (
     <button type="button" className="fl-chip is-wide" onClick={() => clock.seek(clock.index)} data-fl-replay="">
       {copy.replay}
     </button>
@@ -200,6 +248,17 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
         ? fill(copy.messlatte.captionShift, { accuracy })
         : fill(copy.messlatte.captionEnd, { lead, closer: result.naeher, weeks: scored });
     lever = replay;
+    const best = result.tabelle[result.beste_regel];
+    const betterNote =
+      result.beste_regel !== result.messlatte && best && forecast && rule
+        ? fill(copy.messlatte.betterNote, {
+            best: copy.ruleNames[result.beste_regel],
+            bestMae: formatOne(best.mae, locale),
+            maeRule: formatOne(rule.mae, locale),
+            leadBest: formatPercent(1 - forecast.mae / best.mae, locale, { decimals: 0 }),
+            lead,
+          })
+        : null;
     const skipped = result.nicht_bewertet
       .map(([woche, reason]) => fill(copy.messlatte.skipped[reason], { date: formatShortDay(woche, locale) }))
       .join(", ");
@@ -216,6 +275,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
           })}
         </p>
         <p>{fill(copy.messlatte.notes[2] as string, { points, lead, skipped })}</p>
+        {betterNote ? <p data-fl-better="">{betterNote}</p> : null}
       </div>
     );
   } else if (beat === "spanne") {
@@ -223,10 +283,10 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
     const ranged = check.wochen.filter((t) => check.hit(t) !== null).length;
     const done = !gated && sweep(effective, ranged) >= ranged;
     stage = <RangeStage copy={copy} kit={facts} p={effective} cause={derived.cause} showBars={gated} />;
-    const share = formatPercent(0.8, locale, { decimals: 0 });
+    const share = locale === "de" ? "80-%" : "80\u00a0%";
     caption = done
       ? fill(copy.spanne.captionEnd, { hits: result.spanne_treffer, weeks: result.spanne_wochen, promised })
-      : fill(copy.spanne.captionTip, { share });
+      : fill(copy.spanne.captionTip, { share, promised, weeks: result.spanne_wochen });
     const pick = (value: RangeTip | "none") => {
       setTip(value);
       clock.seek(clock.index);
@@ -243,7 +303,8 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
       replay
     );
     const split = derived.split;
-    const date = split ? formatShortDay(split.cause.woche, locale) : "";
+    // The long date ("7. April"): a short one ends in a point and would double the sentence's full stop.
+    const date = split ? formatDay(split.cause.woche, locale) : "";
     below = gated ? (
       <button type="button" className="fl-link" onClick={() => pick("none")} data-fl-skip-tip="">
         {copy.spanne.skipTip}
@@ -260,8 +321,8 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
           <p>
             {fill(copy.spanne.notes[1] as string, {
               date,
-              before: `${split.before.hits}/${split.before.weeks}`,
-              after: `${split.after.hits}/${split.after.weeks}`,
+              before: fill(copy.spanne.hitsOf, { hits: split.before.hits, weeks: split.before.weeks }),
+              after: fill(copy.spanne.hitsOf, { hits: split.after.hits, weeks: split.after.weeks }),
               misses: split.misses,
               missesAfter: split.missesAfter,
             })}
@@ -295,7 +356,12 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
         ? copy.planzahl.noCosts
         : plan === next.prognose
           ? fill(copy.planzahl.captionSame, { plan: formatNumber(plan, locale) })
-          : fill(copy.planzahl.caption, { plan: formatNumber(plan, locale), forecast: formatNumber(next.prognose, locale) });
+          : fill(copy.planzahl.caption, {
+              plan: formatNumber(plan, locale),
+              forecast: formatNumber(next.prognose, locale),
+              cu: formatEuro(fehlmenge ?? 0, locale, 2),
+              co: formatEuro(rest ?? 0, locale, 2),
+            });
     const kantine = rest === KIT_COSTS.restKantine && fehlmenge === KIT_COSTS.fehlmenge;
     const ohne = rest === KIT_COSTS.restOhne && fehlmenge === KIT_COSTS.fehlmenge;
     const preset = (value: number) => {
@@ -325,6 +391,11 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
             <input className="fl-input" inputMode="decimal" value={leftText} onChange={(event) => setLeftText(event.target.value)} data-fl-cost="left" />
           </label>
         </div>
+        {[shortText, leftText].filter(notANumber).map((value) => (
+          <p key={value} className="fl-problem" role="alert" data-fl-cost-problem="">
+            {fill(copy.planzahl.notNumber, { value })}
+          </p>
+        ))}
         {result.anteil !== undefined && fehlmenge !== null && rest !== null ? (
           <p>
             {fill(copy.planzahl.notes[0] as string, {
@@ -362,7 +433,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
     const filled = sweep(p, check.streifen.length);
     stage = (
       <div className="fl-stage">
-        <RuleView check={check} locale={locale} filled={filled} selected={strip} copy={copy.regel} />
+        <RuleView check={check} locale={locale} filled={filled} selected={strip} onSelect={setSelected} copy={copy.regel} />
       </div>
     );
     caption = fill(copy.regel.caption, { free: result.regel_frei, red: result.regel_wochen - result.regel_frei });
@@ -384,30 +455,24 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
         />
       </label>
     );
-    const lampNames = (keys: readonly string[]) =>
-      keys.map((key) => fill(copy.regel.lamps[key as keyof typeof copy.regel.lamps], { max: formatPercent(BIAS_MAX, locale, { decimals: 0 }), min: TREFFER_MIN, of: PRUEF })).join(" + ");
     const next = result.naechste;
     const nextRed = next?.lampen ? LAMP_KEYS.filter((key) => next.lampen?.[key] === false).length : 0;
     const longest = derived.longest;
     below = (
       <div className="fl-notes" data-fl-notes="regel">
-        {derived.runs.map((run) => {
-          const from = formatShortDay(check.rows[run.from]?.woche ?? "", locale);
-          const to = formatShortDay(check.rows[run.to]?.woche ?? "", locale);
-          return (
-            <p key={run.from}>
-              {run.from === run.to
-                ? fill(copy.regel.singleLine, { from, lamps: lampNames(run.lamps) })
-                : fill(copy.regel.runLine, { from, to, lamps: lampNames(run.lamps) })}
-            </p>
-          );
-        })}
+        {derived.runs.map((run) => (
+          <p key={run.from} data-fl-run="">
+            {runSentence(copy, check, run)}
+          </p>
+        ))}
         {longest && derived.cause ? (
-          <p>
+          <p data-fl-lag="">
             {fill(copy.regel.lagLine, {
-              lag: longest.from - derived.cause.t,
-              note: derived.cause.note,
-              length: longest.to - longest.from + 1,
+              date: formatShortDay(derived.cause.woche, locale),
+              // The note up to its bracket: the cause, without the detail the range beat already quoted.
+              note: derived.cause.note.replace(/\s*\(.*$/, ""),
+              lag: plural(longest.from - derived.cause.t, copy.regel.weeks),
+              length: plural(longest.to - longest.from + 1, copy.regel.weeks),
             })}
           </p>
         ) : null}
@@ -415,7 +480,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
           <p className="fl-note-strong" data-fl-plan-line="">
             {next.lampen?.frei && next.planzahl !== undefined
               ? fill(copy.regel.planLineFree, { date: formatShortDay(next.woche, locale), plan: formatNumber(next.planzahl, locale) })
-              : fill(copy.regel.planLineRed, { date: formatShortDay(next.woche, locale), count: nextRed })}
+              : fill(copy.regel.planLineRed, { date: formatShortDay(next.woche, locale), lamps: plural(nextRed, copy.regel.lampCount) })}
           </p>
         ) : null}
         <p>{fill(copy.regel.chance, { chance: formatPercent(derived.chance.lamp, locale), window: PRUEF, min: TREFFER_MIN })}</p>
@@ -424,7 +489,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
           <button
             type="button"
             className="fl-button is-primary"
-            onClick={() => downloadRule(copy.product, kit, fehlmenge, rest)}
+            onClick={() => downloadRule(copy.product, kit, fehlmenge, rest, copy.ruleFile.system)}
             data-fl-download-rule=""
           >
             {copy.regel.download}
@@ -433,7 +498,28 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
       </div>
     );
   } else if (beat === "meine-daten") {
-    stage = <OwnStage copy={copy} outcome={ownOutcome} series={ownSeries} />;
+    const kitText = kitCsv(locale);
+    const kitLines = kitText.trim().split("\n");
+    const tryKit = () => {
+      setFileProblem(null);
+      setOwn((previous) => ({
+        ...previous,
+        text: kitText,
+        series: copy.product,
+        short: costText(KIT_COSTS.fehlmenge, locale),
+        left: costText(KIT_COSTS.restKantine, locale),
+      }));
+      setOwnChecked(kitText);
+    };
+    stage = (
+      <OwnStage
+        copy={copy}
+        outcome={ownOutcome}
+        series={ownSeries}
+        example={[kitLines[0] as string, ...kitLines.slice(-4)]}
+        onKitTry={tryKit}
+      />
+    );
     caption = copy.own.caption;
     const onFile = async (file: File | undefined) => {
       if (!file) return;
@@ -483,7 +569,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
         fileProblem={fileProblem}
         ownerField={ownerField}
         onDownloadRule={() => {
-          if (ownOutcome.kind === "ok") downloadRule(ownSeries, ownOutcome, parseCost(own.short), parseCost(own.left));
+          if (ownOutcome.kind === "ok") downloadRule(ownSeries, ownOutcome, parseCost(own.short), parseCost(own.left), null);
         }}
         onDownloadCsv={() => {
           if (ownOutcome.kind === "ok") downloadCsv(ownSeries, ownOutcome);

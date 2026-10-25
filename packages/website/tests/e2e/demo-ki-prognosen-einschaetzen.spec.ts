@@ -33,6 +33,9 @@ test.describe("Die Fehlerliste", () => {
     await open(page);
     await expect(beat(page)).toHaveAttribute("data-fl-beat", "schaetzen");
     await expect(page.locator('[data-fl-card="tool"]')).toContainText("94,2 %");
+    // The hook names both sides before the bet: the tool against "wie letzte Woche", still open.
+    await expect(page.locator('[data-fl-card="rule"]')).toContainText("? %");
+    await expect(caption(page)).toHaveText("Ohne Tool plant Feldmark den Absatz der Vorwoche. Wie genau ist das?");
     await page.locator("body").press("ArrowRight");
     await expect(beat(page)).toHaveAttribute("data-fl-beat", "schaetzen");
     await page.locator('[data-fl-guess="85"]').click();
@@ -43,23 +46,27 @@ test.describe("Die Fehlerliste", () => {
     await expect(notes).toContainText("1,6 Prozentpunkte");
     await expect(notes).toContainText("Ø Fehler Prognose 33,3 Gläser, „wie letzte Woche“ 42,2 Gläser");
     await expect(page.locator("[data-fl-tally]")).toContainText("33,3");
-    await expect(page.locator("[data-fl-pin]")).toContainText("Regel 167 daneben, Prognose 34");
+    await expect(page.locator("[data-fl-pin]")).toContainText("„Wie letzte Woche“ liegt 167 daneben, die Prognose 34.");
   });
 
-  test("the range waits for a tip and counts 36 of 50", async ({ page }) => {
+  test("the range waits for an estimate and counts 36 of 50", async ({ page }) => {
     await open(page, "?beat=spanne");
     await expect(beat(page)).toHaveAttribute("data-fl-beat", "spanne");
-    await expect(caption(page)).toContainText("Die Spanne soll 80 % der Wochen fassen.");
+    await expect(caption(page)).toHaveText("Die 80-%-Spanne sollte 40 der 50 Wochen fassen. Schätze: Wie viele waren es?");
+    // Before the sweep the counter has no count yet, never "0 / 0".
+    await expect(page.locator("[data-fl-hits]")).toHaveText("? / 50");
     await page.locator('[data-fl-tip="fewer"]').click();
-    await expect(caption(page)).toHaveText("36 von 50 Wochen in der Spanne. Versprochen waren 40.");
+    await expect(caption(page)).toHaveText("36 von 50 in der Spanne. Bei einer ehrlichen Spanne wären es um 40.");
+    await expect(page.locator("[data-fl-hits]")).toHaveText("36 / 50");
     const notes = page.locator('[data-fl-notes="spanne"]');
-    await expect(notes).toContainText("Vor dem 07.04. 9/12, ab dem 07.04. 27/38. 11 der 14 Fehltreffer");
+    await expect(notes).toContainText("Vor dem 7. April: 9 von 12. Ab dem 7. April: 27 von 38. 11 der 14 Fehltreffer");
+    await expect(notes).not.toContainText("..");
     await expect(notes).toContainText("11 %");
   });
 
   test("the costs pick 748, the canteen chip 729", async ({ page }) => {
     await open(page, "?beat=planzahl");
-    await expect(caption(page)).toHaveText("Plane 748, nicht 729.");
+    await expect(caption(page)).toHaveText("Plane 748, nicht 729: Ein fehlendes Glas kostet 1,50 €, ein übriges 0,40 €.");
     await expect(page.locator("[data-fl-plan]")).toHaveText("748");
     const ledger = page.locator("[data-fl-ledger]");
     for (const value of ["2.052 €", "1.105 €", "1.023 €"]) await expect(ledger).toContainText(value);
@@ -70,16 +77,22 @@ test.describe("Die Fehlerliste", () => {
     await expect(caption(page)).toHaveText("Planzahl 729: bei diesen Kosten die Prognose selbst.");
     await expect(ledger).toContainText("3.270 €");
     await page.locator('[data-fl-cost="left"]').fill("0,40");
-    await expect(caption(page)).toHaveText("Plane 748, nicht 729.");
+    await expect(caption(page)).toContainText("Plane 748, nicht 729");
+    // A word in a cost field says so instead of silently dropping the number.
+    await page.locator('[data-fl-cost="left"]').fill("abc");
+    await expect(page.locator("[data-fl-cost-problem]")).toHaveText("„abc“ ist keine Zahl. Zum Beispiel: 1,50");
   });
 
   test("the rule frees 37 weeks, names the owner and hands out the filled rule", async ({ page }) => {
     await open(page, "?beat=regel");
     await expect(caption(page)).toHaveText("37 Wochen frei, 15 Wochen entscheidet eine Person.");
     const notes = page.locator('[data-fl-notes="regel"]');
-    await expect(notes).toContainText("03.02.: Daten vollständig rot.");
-    await expect(notes).toContainText("21.04. bis 21.07.");
-    await expect(notes).toContainText("Die Regel schlägt 2 Wochen nach");
+    await expect(notes).toContainText("03.02.: keine Prognose gespeichert.");
+    // The run names only the lamps red in all 14 weeks; Messlatte was red on 28.04. alone.
+    await expect(notes).toContainText("21.04. bis 21.07.: Bias und Spanne rot (14 Wochen).");
+    await expect(notes).toContainText("28.04. zusätzlich Messlatte.");
+    await expect(page.locator("[data-fl-lag]")).toContainText("2 Wochen später ist die erste Lampe rot. Rot bleibt es 14 Wochen.");
+    await expect(page.locator("[data-fl-lag]")).not.toContainText("(");
     await expect(page.locator("[data-fl-plan-line]")).toHaveText(
       "Woche ab 29.12.: alle vier Lampen grün. Planzahl 748 frei.",
     );
@@ -106,6 +119,7 @@ test.describe("Die Fehlerliste", () => {
     expect(text).toContain("Leitung Disposition");
     expect(text).toContain("748");
     expect(text).toContain("Linsensuppe 500 ml");
+    expect(text).toContain("die längste rote Strecke 14 Wochen lang");
   });
 
   test("r and Shift+R go back to beat 1 and clear the bet, the owner stays", async ({ page }) => {
@@ -147,7 +161,9 @@ test.describe("Die Fehlerliste", () => {
     const lines = KIT_CSV.trim().split("\n");
     await paste.fill([lines[0], ...lines.slice(-20)].join("\n"));
     await check.click();
-    await expect(result).toContainText("Spanne und Lampen brauchen 33 Wochen mit gespeicherter Prognose. Du hast 19.");
+    await expect(result).toContainText(
+      "Spanne und Lampen brauchen 33 geprüfte Wochen mit gespeicherter Prognose, hier sind es 18.",
+    );
 
     await paste.fill("woche;ist\nOkt 25;12");
     await check.click();
@@ -161,7 +177,27 @@ test.describe("Die Fehlerliste", () => {
     await check.click();
     await expect(page.locator('[data-fl-own-line="plan"]')).toContainText("Planzahl 748");
     await expect(page.locator('[data-fl-own-line="rule"]')).toContainText("37 von 52 Wochen frei");
+
+    // The audit CSV carries numbers Excel reads: an ASCII minus, never U+2212.
+    const [csv] = await Promise.all([page.waitForEvent("download"), page.locator("[data-fl-own-csv]").click()]);
+    const csvText = readFileSync((await csv.path()) as string, "utf8");
+    expect(csvText).not.toContain("\u2212");
+    expect(csvText).toMatch(/;-\d/);
+
+    // The own rule keeps the system open and no kit-only sentence.
+    const [rule] = await Promise.all([page.waitForEvent("download"), page.locator("[data-fl-own-rule]").click()]);
+    const ruleText = readFileSync((await rule.path()) as string, "utf8");
+    expect(ruleText).toContain("[System]");
+    expect(ruleText).not.toContain("Linsensuppe blieb");
     expect(requests, "the own file never leaves the tab").toEqual([]);
+  });
+
+  test("an empty own stage offers the kit file, which fills the field and checks it", async ({ page }) => {
+    await open(page, "?beat=meine-daten");
+    await expect(page.locator("[data-fl-example]")).toContainText("woche;ist;prognose;hinweis");
+    await page.locator("[data-fl-kit-try]").click();
+    await expect(page.locator("[data-fl-paste]")).toHaveValue(KIT_CSV);
+    await expect(page.locator('[data-fl-own-line="plan"]')).toContainText("Planzahl 748");
   });
 
   test("serves the skill, both kit editions and the rule template", async ({ request }) => {
@@ -180,7 +216,7 @@ test.describe("Die Fehlerliste", () => {
   test("speaks English on /en with the same numbers", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto(`/en${PATH}?beat=planzahl`, { waitUntil: "networkidle" });
-    await expect(caption(page)).toHaveText("Plan 748, not 729.");
+    await expect(caption(page)).toContainText("Plan 748, not 729");
     await expect(page.locator("[data-fl-ledger]")).toContainText("€2,052");
   });
 });

@@ -12,27 +12,41 @@ import { SeriesChart } from "./series-chart";
  * The stages of the first two beats and the range beat, each a pure
  * function of the clock's progress p and the check. The planning number,
  * the rule strip, the own file and the kit tree have their own views.
+ *
+ * One colour code from the first frame on: Mennige is the tool (its card,
+ * its forecast ticks, its tally bar), ink with a dashed edge is "same as
+ * last week" (its card, its dashed line, its tally bar).
  */
 
-export function FileCard({
-  file,
+/** A number card: the tool (Mennige edge), the simple rule (dashed ink edge) or a plain count. */
+export function StatCard({
   label,
   value,
-  accent = false,
+  tone,
   testId,
 }: {
-  readonly file: string;
   readonly label: string;
   readonly value: string;
-  readonly accent?: boolean;
+  readonly tone: "tool" | "rule" | "plain";
   readonly testId?: string;
 }) {
   return (
-    <div className={accent ? "fl-card is-accent" : "fl-card"} data-fl-card={testId}>
-      <span className="fl-card-file">{file}</span>
+    <div className={`fl-card is-${tone}`} data-fl-card={testId}>
       <span className="fl-card-label">{label}</span>
       <span className="fl-card-value">{value}</span>
     </div>
+  );
+}
+
+/** The kit files a stage reads, on their own full-width line: "aus tool-export.txt · linsensuppe-woechentlich.csv". */
+export function FilesLine({ template, files, testId }: { readonly template: string; readonly files: readonly string[]; readonly testId: string }) {
+  const [before = "", after = ""] = template.split("{files}");
+  return (
+    <p className="fl-files" data-fl-files={testId}>
+      {before}
+      <span className="fl-files-names">{files.join(" · ")}</span>
+      {after}
+    </p>
   );
 }
 
@@ -48,22 +62,31 @@ function chartLabels(copy: DemoPack) {
   return { soldOut: copy.chart.soldOut, noForecast: copy.chart.noForecast, baseline: copy.chart.baseline, forecast: copy.chart.forecast };
 }
 
-/** Beat 1 before the bet: two years of bars rising, the tool's claim quoted from tool-export.txt. */
+/** The two cards of the hook: the tool's claim and the plain rule it has to beat. */
+function HookCards({ copy, kit, ruleValue }: { readonly copy: DemoPack; readonly kit: KitFacts; readonly ruleValue: string }) {
+  return (
+    <div className="fl-stage-head">
+      <StatCard label={copy.messlatte.toolCard} value={formatPercent(kit.toolAccuracy, copy.locale)} tone="tool" testId="tool" />
+      <StatCard label={copy.messlatte.ruleCard} value={ruleValue} tone="rule" testId="rule" />
+    </div>
+  );
+}
+
+/** Beat 1 before the bet: two years of bars rising, the tool's claim next to the open question. */
 export function GuessStage({ copy, kit, p }: { readonly copy: DemoPack; readonly kit: KitFacts; readonly p: number }) {
   const { check } = kit;
   const from = 0;
   const to = check.letzte;
   const n = to - from + 1;
+  const [before = "", after = ""] = copy.guess.formulaLine.split("{file}");
   return (
     <div className="fl-stage">
-      <div className="fl-stage-head">
-        <FileCard
-          file={copy.files.export}
-          label={fill(copy.guess.accuracyLabel, { year: kit.year })}
-          value={formatPercent(kit.toolAccuracy, copy.locale)}
-          testId="tool"
-        />
-      </div>
+      <HookCards copy={copy} kit={kit} ruleValue={"?\u00a0%"} />
+      <p className="fl-files" data-fl-files="guess">
+        {fill(before, { year: kit.year })}
+        <span className="fl-files-names">{copy.files.export}</span>
+        {fill(after, { year: kit.year })}
+      </p>
       <SeriesChart
         check={check}
         locale={copy.locale}
@@ -72,6 +95,7 @@ export function GuessStage({ copy, kit, p }: { readonly copy: DemoPack; readonly
         labels={chartLabels(copy)}
         rise={(t) => barRise(t - from, n, p)}
         fadeBefore={check.wochen[0]}
+        years
         noForecastLabel
       />
       <p className="fl-stage-foot">
@@ -104,16 +128,8 @@ export function BaselineStage({
   const unit = copy.messlatte.unit;
   return (
     <div className="fl-stage">
-      <div className="fl-stage-head">
-        <FileCard file={copy.files.export} label={copy.messlatte.toolCard} value={formatPercent(kit.toolAccuracy, copy.locale)} testId="tool" />
-        <FileCard
-          file={copy.files.csv}
-          label={copy.messlatte.ruleCard}
-          value={`${formatOne(frame.counter, copy.locale)}\u00a0%`}
-          accent
-          testId="rule"
-        />
-      </div>
+      <HookCards copy={copy} kit={kit} ruleValue={`${formatOne(frame.counter, copy.locale)}\u00a0%`} />
+      <FilesLine template={copy.filesLine} files={[copy.files.export, copy.files.csv]} testId="messlatte" />
       <SeriesChart
         check={check}
         locale={copy.locale}
@@ -127,16 +143,22 @@ export function BaselineStage({
       />
       <div className="fl-tally" data-fl-tally="" aria-live="off">
         <p className="fl-tally-row">
-          <span className="fl-tally-name">{copy.chart.forecast}</span>
+          <span className="fl-tally-name">
+            <span className="fl-swatch is-tool" aria-hidden="true" />
+            {copy.chart.forecast}
+          </span>
           <span className="fl-tally-track">
             <span className="fl-tally-bar is-accent" style={{ width: `${(means.forecast / max) * 100}%` }} />
           </span>
           <span className="fl-tally-value">{frame.revealed > 0 ? formatOne(means.forecast, copy.locale) : "·"}</span>
         </p>
         <p className="fl-tally-row">
-          <span className="fl-tally-name">{copy.chart.rule}</span>
+          <span className="fl-tally-name">
+            <span className="fl-swatch is-rule" aria-hidden="true" />
+            {copy.chart.rule}
+          </span>
           <span className="fl-tally-track">
-            <span className="fl-tally-bar" style={{ width: `${(means.rule / max) * 100}%` }} />
+            <span className="fl-tally-bar is-rule" style={{ width: `${(means.rule / max) * 100}%` }} />
           </span>
           <span className="fl-tally-value">{frame.revealed > 0 ? formatOne(means.rule, copy.locale) : "·"}</span>
         </p>
@@ -185,18 +207,22 @@ export function RangeStage({
   const span = errors.length > 0 ? Math.max(1, (errors[errors.length - 1] as number) - (errors[0] as number)) : 1;
   const pos = (e: number) => (errors.length > 0 ? ((e - (errors[0] as number)) / span) * 100 : 0);
   const actual = focus === null ? null : (check.rows[focus]?.ist as number) - (check.forecast(focus) as number);
+  // Before the sweep there is no count yet: "? / 50", never "0 / 0".
+  const counted = shown === 0 ? "?" : formatNumber(hits, copy.locale);
+  const of = formatNumber(shown === 0 ? ranged.length : shown, copy.locale);
   return (
     <div className="fl-stage">
       <div className="fl-stage-head">
-        <div className="fl-card" data-fl-card="range">
-          <span className="fl-card-file">{copy.files.csv}</span>
-          <span className="fl-card-label">{copy.spanne.counter}</span>
-          <span className="fl-card-value" data-fl-hits="">
-            {formatNumber(hits, copy.locale)} / {formatNumber(shown, copy.locale)}
+        <div className="fl-card is-plain" data-fl-card="range">
+          <span className="fl-card-label">
+            {copy.spanne.counter} · <span className="is-muted">{fill(copy.spanne.promised, { promised })}</span>
           </span>
-          <span className="fl-card-label">{fill(copy.spanne.promised, { promised })}</span>
+          <span className="fl-card-value" data-fl-hits="">
+            {`${counted}\u00a0/\u00a0${of}`}
+          </span>
         </div>
       </div>
+      <FilesLine template={copy.filesLine} files={[copy.files.csv]} testId="spanne" />
       <div className="fl-range-body">
         <SeriesChart
           check={check}

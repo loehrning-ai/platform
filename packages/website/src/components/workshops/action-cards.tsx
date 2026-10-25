@@ -69,12 +69,21 @@ function Card({
           <div className="ac-sub">
             <p className="ac-meta">{meta}</p>
             {secondary ? (
-              <Link href={secondary.href} className="ac-secondary">
-                {secondary.label}
-                {/* The topic gives the link its context in a list of links. */}
-                <span className="sr-only">{secondary.spoken}</span>
-                <ArrowGlyph direction="right" className="ac-secondary-go" />
-              </Link>
+              // A static file under public/ (the lab, .html) is a plain link; a site page goes through Link.
+              secondary.href.endsWith(".html") ? (
+                <a href={secondary.href} className="ac-secondary">
+                  {secondary.label}
+                  <span className="sr-only">{secondary.spoken}</span>
+                  <ArrowGlyph direction="right" className="ac-secondary-go" />
+                </a>
+              ) : (
+                <Link href={secondary.href} className="ac-secondary">
+                  {secondary.label}
+                  {/* The topic gives the link its context in a list of links. */}
+                  <span className="sr-only">{secondary.spoken}</span>
+                  <ArrowGlyph direction="right" className="ac-secondary-go" />
+                </Link>
+              )
             ) : null}
           </div>
         </div>
@@ -119,7 +128,15 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
                   spoken: `: ${topic}`,
                 },
               }
-            : {})}
+            : stage.a.labHref
+              ? {
+                  secondary: {
+                    href: stage.a.labHref,
+                    label: copy.labAction,
+                    spoken: `: ${topic}`,
+                  },
+                }
+              : {})}
         />
       ) : null}
       {stage.b ? (

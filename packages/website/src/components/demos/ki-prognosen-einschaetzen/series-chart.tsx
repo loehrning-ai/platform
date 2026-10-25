@@ -2,7 +2,7 @@
 
 import { useId } from "react";
 import type { Checker } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
-import { formatNumber, formatShortDay, fill, type DemoLocale } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
+import { formatNumber, formatShortDay, type DemoLocale } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
 import { useSize } from "./use-size";
 
 /**
@@ -45,9 +45,12 @@ export interface SeriesChartProps {
   readonly focus?: number | null;
   /** Marks the week without a stored forecast. */
   readonly noForecastLabel?: boolean;
+  /** Labels the bottom edge with the years ("2024", "2025") under their weeks instead of the first and last date. */
+  readonly years?: boolean;
 }
 
-const PAD = { left: 6, right: 6, top: 10, bottom: 18 } as const;
+/** left leaves room for the axis floor ("340") at the foot of the bars. */
+const PAD = { left: 26, right: 6, top: 10, bottom: 18 } as const;
 
 function niceFloor(value: number): number {
   const step = value > 400 ? 100 : value > 40 ? 10 : 1;
@@ -118,6 +121,17 @@ export function SeriesChart(props: SeriesChartProps) {
 
   const firstLabel = check.rows[from]?.woche;
   const lastLabel = check.rows[to]?.woche;
+  // The years under their weeks: each label centred under its own span of bars.
+  const yearSpans: { year: string; from: number; to: number }[] = [];
+  if (props.years) {
+    for (let t = from; t <= to; t += 1) {
+      const year = check.rows[t]?.woche.slice(0, 4);
+      if (!year) continue;
+      const last = yearSpans[yearSpans.length - 1];
+      if (last && last.year === year) last.to = t;
+      else yearSpans.push({ year, from: t, to: t });
+    }
+  }
 
   return (
     <div ref={ref} className="fl-chart" aria-hidden="true">
@@ -221,15 +235,26 @@ export function SeriesChart(props: SeriesChartProps) {
           </g>
         ) : null}
 
-        <text x={PAD.left} y={height - 4} className="fl-label">
-          {firstLabel ? formatShortDay(firstLabel, locale) : ""}
+        {/* The axis does not start at 0: its floor stands at the foot of the bars, where a reader looks for it. */}
+        <text x={PAD.left - 4} y={base + 3.5} textAnchor="end" className="fl-label" data-fl-floor="">
+          {formatNumber(floor, locale)}
         </text>
-        <text x={width / 2} y={height - 4} textAnchor="middle" className="fl-label">
-          {fill(labels.baseline, { value: formatNumber(floor, locale) })}
-        </text>
-        <text x={width - PAD.right} y={height - 4} textAnchor="end" className="fl-label">
-          {lastLabel ? formatShortDay(lastLabel, locale) : ""}
-        </text>
+        {props.years ? (
+          yearSpans.map((span) => (
+            <text key={span.year} x={(x(span.from) + x(span.to)) / 2} y={height - 4} textAnchor="middle" className="fl-label is-year">
+              {span.year}
+            </text>
+          ))
+        ) : (
+          <>
+            <text x={PAD.left} y={height - 4} className="fl-label">
+              {firstLabel ? formatShortDay(firstLabel, locale) : ""}
+            </text>
+            <text x={width - PAD.right} y={height - 4} textAnchor="end" className="fl-label">
+              {lastLabel ? formatShortDay(lastLabel, locale) : ""}
+            </text>
+          </>
+        )}
       </svg>
     </div>
   );

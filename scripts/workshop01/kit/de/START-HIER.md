@@ -13,12 +13,13 @@ für Bio-Läden. Die Zahlen sind erfunden. Die Fehler in der Datei sind die, die
 Exporte haben: eine Zeile doppelt, eine Woche ohne gespeicherte Prognose, zwei Wochen
 ausverkauft.
 
-## Reihenfolge (40 Minuten)
+## Reihenfolge (55 Minuten)
 
-1. daten/ ansehen (5 Minuten).
-2. uebung.md, Aufgaben 1 bis 4 (30 Minuten).
-3. Mit loesungen.md vergleichen (5 Minuten).
-4. Danach: deine eigene Reihe in vorlage/meine-daten.csv, pruefregel.md ausfüllen.
+1. Die Demo einmal durchspielen: loehrning.ai/demos/ki-prognosen-einschaetzen (5 Minuten).
+2. daten/ ansehen (5 Minuten).
+3. uebung.md, Aufgaben 1 bis 4 (30 Minuten).
+4. Mit loesungen.md vergleichen (5 Minuten).
+5. Deine eigene Reihe in vorlage/meine-daten.csv, pruefregel.md ausfüllen (10 Minuten).
 
 ## Drei Wege, dieselben Zahlen
 

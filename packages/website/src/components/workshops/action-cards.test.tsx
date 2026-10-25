@@ -83,10 +83,18 @@ describe("<ActionCards>", () => {
           expect(linkA).not.toHaveAttribute("target");
         }
         expect(cards[0]).toHaveTextContent(stage.a!.meta);
-        expect(stage.a!.demoHref).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
+        const demoHref = `${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`;
         expect(linksA).toHaveLength(2);
-        expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
-        expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
+        if (stage.a!.kind === "demo") {
+          // A workshop that starts at its demo: the secondary link goes to the lab.
+          expect(stage.a!.href).toBe(demoHref);
+          expect(linksA[1]).toHaveAttribute("href", stage.a!.labHref);
+          expect(linksA[1]).toHaveAccessibleName(`${copy.labAction}: ${workshop.topic}`);
+        } else {
+          expect(stage.a!.demoHref).toBe(demoHref);
+          expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
+          expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
+        }
         expect(linksA[1]).toHaveClass("ac-secondary");
         expect(linksA[1]).not.toHaveAttribute("download");
 

@@ -36,7 +36,7 @@ arithmetic.
 - A new product or a new pack size without its own history.
 
 These events are in no error list. The tool learns them only from the errors that
-follow; for the lentil soup that took 14 weeks.
+follow. [For the lentil soup the rule then stayed red for 14 weeks.]
 
 ## Adjusting
 

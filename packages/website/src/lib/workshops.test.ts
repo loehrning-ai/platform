@@ -12,6 +12,12 @@ import {
   type WorkshopMaterial,
 } from "./workshops";
 
+
+/** Kits published in German as well: German edition -> the English one it mirrors. */
+const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
+  "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip": "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+};
+
 describe("workshops catalog", () => {
   it("is non-empty", () => {
     expect(WORKSHOPS.length).toBeGreaterThan(0);
@@ -232,7 +238,8 @@ describe("workshops catalog", () => {
         germanWorkshop.steps.map(({ n }) => n),
       );
       // The demo material is the same page in each locale: /en/demos/<slug>
-      // in English, in the page's own language.
+      // in English, in the page's own language. A kit with a German edition
+      // is the same material as its English one.
       const materialShape = ({
         href,
         kind,
@@ -243,9 +250,9 @@ describe("workshops catalog", () => {
         optional,
         primary,
       }: WorkshopMaterial) => ({
-        href: role === "demo" ? href.replace(/^\/en\//, "/") : href,
+        href: role === "demo" ? href.replace(/^\/en\//, "/") : (GERMAN_KIT_EDITIONS[href] ?? href),
         kind,
-        language: role === "demo" ? "page" : language,
+        language: role === "demo" ? "page" : href in GERMAN_KIT_EDITIONS ? "en" : language,
         role,
         phase,
         minutes,
@@ -301,6 +308,12 @@ describe("workshops catalog", () => {
           // The practice demo is a page in the reader's language.
           if (material.role === "demo") {
             expect(material.language).toBe(locale);
+            continue;
+          }
+          // A kit with a German edition offers it on the German page only.
+          if (material.href in GERMAN_KIT_EDITIONS) {
+            expect(locale).toBe("de");
+            expect(material.language).toBe("de");
             continue;
           }
           expect(
@@ -467,7 +480,7 @@ describe("getWorkshopBySlug", () => {
 });
 
 describe("workshop demo material", () => {
-  it("links every workshop to its demo once, in the page's language, never as the start", () => {
+  it("links every workshop to its demo once, in the page's language, the start only where nothing else is", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         const demos = workshop.materials.filter((material) => material.role === "demo");
@@ -476,9 +489,13 @@ describe("workshop demo material", () => {
         // ?source=workshop makes the demo's back control return to this workshop.
         expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(demo?.language).toBe(locale);
-        expect(demo?.primary).toBeUndefined();
-        expect(demo?.optional).toBe(true);
+        // Workshop 01 marks no material primary: its demo (the kit, made
+        // visible) is where it starts. Everywhere else the demo is optional.
+        const startsAtDemo = !workshop.materials.some((material) => material.role !== "demo" && material.primary);
+        expect(demo?.primary).toBe(startsAtDemo ? true : undefined);
+        expect(demo?.optional).toBe(!startsAtDemo);
         expect(demo?.phase).toBe("during");
+        expect(workshop.materials.filter((material) => material.primary)).toHaveLength(1);
       }
     }
   });

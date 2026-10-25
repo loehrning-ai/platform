@@ -14,67 +14,67 @@
   }
 }
 /* w01 */
-.dt-item[data-scene="w01"] { --tile-t: 3200ms; }
+.dt-item[data-scene="w01"] { --tile-t: 3400ms; }
 .dt-item[data-scene="w01"] [data-t="root"] { opacity: 1; }
-.dt-item[data-scene="w01"] [data-t="row0"] { scale: 1 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w01"] [data-t="row1"] { scale: 1 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w01"] [data-t="row2"] { scale: 1 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w01"] [data-t="row3"] { scale: 1 1; transform-box: fill-box; transform-origin: 0% 50%; }
-.dt-item[data-scene="w01"] [data-t="plan"] { opacity: 1; translate: 0px 0px; }
+.dt-item[data-scene="w01"] [data-t="bars"] { scale: 1 1; transform-box: fill-box; transform-origin: 50% 100%; }
+.dt-item[data-scene="w01"] [data-t="tool"] { opacity: 1; }
+.dt-item[data-scene="w01"] [data-t="ticks"] { opacity: 1; }
+.dt-item[data-scene="w01"] [data-t="rule"] { opacity: 1; }
+.dt-item[data-scene="w01"] [data-t="plain"] { opacity: 1; translate: 0px 0px; }
 @media screen and (prefers-reduced-motion: no-preference) {
   @keyframes dt-w01-root-opacity {
     0% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    6% { opacity: 1; }
+    5% { opacity: 1; }
     100% { opacity: 1; }
   }
-  @keyframes dt-w01-row0-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    8% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    25% { scale: 1 1; animation-timing-function: linear; }
+  @keyframes dt-w01-bars-scale {
+    0% { scale: 1 0; animation-timing-function: linear; }
+    5% { scale: 1 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    30% { scale: 1 1; animation-timing-function: linear; }
     100% { scale: 1 1; }
   }
-  @keyframes dt-w01-row1-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    25% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    42% { scale: 1 1; animation-timing-function: linear; }
-    100% { scale: 1 1; }
-  }
-  @keyframes dt-w01-row2-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    42% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    59% { scale: 1 1; animation-timing-function: linear; }
-    100% { scale: 1 1; }
-  }
-  @keyframes dt-w01-row3-scale {
-    0% { scale: 0 1; animation-timing-function: linear; }
-    59% { scale: 0 1; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
-    76% { scale: 1 1; animation-timing-function: linear; }
-    100% { scale: 1 1; }
-  }
-  @keyframes dt-w01-plan-opacity {
+  @keyframes dt-w01-tool-opacity {
     0% { opacity: 0; animation-timing-function: linear; }
-    80% { opacity: 0; animation-timing-function: linear; }
-    81% { opacity: 1; animation-timing-function: linear; }
+    30% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    40% { opacity: 1; animation-timing-function: linear; }
     100% { opacity: 1; }
   }
-  @keyframes dt-w01-plan-translate {
-    0% { translate: 0px 12px; animation-timing-function: linear; }
-    80% { translate: 0px 12px; animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.15); }
-    92% { translate: 0px 0px; animation-timing-function: linear; }
+  @keyframes dt-w01-ticks-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    36% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    48% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w01-rule-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    56% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    70% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w01-plain-opacity {
+    0% { opacity: 0; animation-timing-function: linear; }
+    72% { opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+    82% { opacity: 1; animation-timing-function: linear; }
+    100% { opacity: 1; }
+  }
+  @keyframes dt-w01-plain-translate {
+    0% { translate: 0px 10px; animation-timing-function: linear; }
+    72% { translate: 0px 10px; animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.15); }
+    86% { translate: 0px 0px; animation-timing-function: linear; }
     100% { translate: 0px 0px; }
   }
   .dt-item.is-armed[data-scene="w01"] [data-t="root"] { animation-name: dt-w01-root-opacity; }
-  .dt-item.is-armed[data-scene="w01"] [data-t="row0"] { animation-name: dt-w01-row0-scale; }
-  .dt-item.is-armed[data-scene="w01"] [data-t="row1"] { animation-name: dt-w01-row1-scale; }
-  .dt-item.is-armed[data-scene="w01"] [data-t="row2"] { animation-name: dt-w01-row2-scale; }
-  .dt-item.is-armed[data-scene="w01"] [data-t="row3"] { animation-name: dt-w01-row3-scale; }
-  .dt-item.is-armed[data-scene="w01"] [data-t="plan"] { animation-name: dt-w01-plan-opacity, dt-w01-plan-translate; }
+  .dt-item.is-armed[data-scene="w01"] [data-t="bars"] { animation-name: dt-w01-bars-scale; }
+  .dt-item.is-armed[data-scene="w01"] [data-t="tool"] { animation-name: dt-w01-tool-opacity; }
+  .dt-item.is-armed[data-scene="w01"] [data-t="ticks"] { animation-name: dt-w01-ticks-opacity; }
+  .dt-item.is-armed[data-scene="w01"] [data-t="rule"] { animation-name: dt-w01-rule-opacity; }
+  .dt-item.is-armed[data-scene="w01"] [data-t="plain"] { animation-name: dt-w01-plain-opacity, dt-w01-plain-translate; }
   .dt-item.is-playing[data-scene="w01"] [data-t="root"],
-  .dt-item.is-playing[data-scene="w01"] [data-t="row0"],
-  .dt-item.is-playing[data-scene="w01"] [data-t="row1"],
-  .dt-item.is-playing[data-scene="w01"] [data-t="row2"],
-  .dt-item.is-playing[data-scene="w01"] [data-t="row3"],
-  .dt-item.is-playing[data-scene="w01"] [data-t="plan"] { animation-play-state: running; }
+  .dt-item.is-playing[data-scene="w01"] [data-t="bars"],
+  .dt-item.is-playing[data-scene="w01"] [data-t="tool"],
+  .dt-item.is-playing[data-scene="w01"] [data-t="ticks"],
+  .dt-item.is-playing[data-scene="w01"] [data-t="rule"],
+  .dt-item.is-playing[data-scene="w01"] [data-t="plain"] { animation-play-state: running; }
 }
 /* w02 */
 .dt-item[data-scene="w02"] { --tile-t: 3200ms; }

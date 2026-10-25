@@ -96,7 +96,8 @@ describe("knowledge-graph locale representations", () => {
 
     expect(workshop?.format).toBeUndefined();
     expect(workshop?.duration).toBeUndefined();
-    expect(workshop?.sourceMaterialLanguages).toEqual(["en"]);
+    // The labs are English; the kit has a German edition.
+    expect(workshop?.sourceMaterialLanguages).toEqual(["en", "de"]);
     expect(workshop?.localizedPages.de.format).toBe("Selbstlern-Kit");
     expect(workshop?.localizedPages.en).toMatchObject({
       url: "https://loehrning.ai/en/workshops/ki-prognosen-einschaetzen",

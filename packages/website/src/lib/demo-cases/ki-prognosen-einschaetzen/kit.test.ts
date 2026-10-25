@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { formatEuro, formatPercent } from "./format";
-import { KIT_COSTS, kitCheck, kitTable } from "./kit";
+import { KIT_COSTS, kitCheck, kitCsv, kitTable } from "./kit";
 
 const KIT = join(__dirname, "../../../../../../scripts/workshop01/kit");
 const kitFile = (path: string) => readFileSync(join(KIT, path), "utf8");
@@ -37,5 +37,18 @@ describe("the demo's constants are the kit's", () => {
     expect(kitFile("de/loesungen.md")).toContain(plan);
     expect(kitFile("en/solutions.md")).toContain(plan);
     expect(kitFile("de/loesungen.md")).toContain(`${result.regel_frei}`);
+  });
+
+  it("ships the English edition with the same numbers and English notes", () => {
+    expect(kitCsv("en")).toBe(kitFile("../data/lentil-soup-weekly.csv"));
+    expect(kitCsv("de")).toBe(kitFile("../data/linsensuppe-woechentlich.csv"));
+    const [de, en] = [kitTable("de").rows, kitTable("en").rows];
+    expect(en.map(({ woche, ist, f }) => [woche, ist, f])).toEqual(de.map(({ woche, ist, f }) => [woche, ist, f]));
+    expect(kitCsv("en").split("\n")[0]).toBe("week;actual;forecast;note");
+    // No German left in the English notes.
+    expect(kitCsv("en")).not.toMatch(/[äöüß]|Aktion|ausverkauft|Kantine|Warenwirtschaft/);
+    const [a, b] = [kitCheck(KIT_COSTS.fehlmenge, KIT_COSTS.restKantine, "de"), kitCheck(KIT_COSTS.fehlmenge, KIT_COSTS.restKantine, "en")];
+    expect(b.result.naechste?.planzahl).toBe(a.result.naechste?.planzahl);
+    expect(b.result.regel_frei).toBe(a.result.regel_frei);
   });
 });

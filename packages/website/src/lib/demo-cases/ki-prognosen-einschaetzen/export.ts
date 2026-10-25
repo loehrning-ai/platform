@@ -8,10 +8,10 @@
 import type { CheckResult, Checker, Lamps, LampKey } from "./check";
 import { LAMP_KEYS } from "./check";
 import type { DemoLocale } from "./format";
-import { formatNumber, formatEuro } from "./format";
+import { formatCsvNumber, formatNumber, formatEuro } from "./format";
 
-/** The bracketed slots of the template, in order of appearance (19 in both languages). */
-export const TEMPLATE_SLOTS = 19;
+/** The bracketed slots of the template, in order of appearance (20 in both languages). */
+export const TEMPLATE_SLOTS = 20;
 const SLOT = /\[[^\]\n]*\]/g;
 
 /** Fills the template's brackets in order; null keeps a bracket for the reader to fill. */
@@ -31,11 +31,14 @@ export function cellText(text: string): string {
 
 export interface RuleFill {
   readonly reihe: string;
+  /** The forecasting system; null keeps "[System]" for the reader (an own file). */
   readonly system: string | null;
   readonly messlatte: string;
   readonly owner: string;
   readonly fehlmenge: number | null;
   readonly rest: number | null;
+  /** The sentence about this series' longest red run; "" when it had none. */
+  readonly longestRed: string;
   readonly lampWords: Readonly<Record<"green" | "red" | "none", string>>;
   /** "4 grün" / "2 rot" for the log line. */
   readonly lampSummary: (green: number, red: number) => string;
@@ -66,6 +69,7 @@ export function toRuleMarkdown(template: string, result: CheckResult, fill: Rule
     fill.rest ? formatEuro(fill.rest, locale, 2) : null,
     result.anteil !== undefined ? decimals(result.anteil) : null,
     null,
+    fill.longestRed,
     next ? next.woche : null,
     next ? formatNumber(next.prognose, locale) : null,
     lamps ? fill.lampSummary(green, red) : null,
@@ -82,7 +86,7 @@ export function toResultCsv(
   locale: DemoLocale,
   words: { readonly yes: string; readonly no: string; readonly allGreen: string },
 ): string {
-  const num = (value: number | null) => (value === null ? "" : formatNumber(value, locale, 2).replace(/[.,\u00a0\u202f](?=\d{3}(?!\d))/g, ""));
+  const num = (value: number | null) => (value === null ? "" : formatCsvNumber(value, locale));
   const lines = check.rows.map((row, t) => {
     const forecast = check.forecast(t);
     const rule = check.rule(t);

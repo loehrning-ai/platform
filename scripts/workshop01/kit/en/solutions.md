@@ -18,9 +18,11 @@ d) Promotion at the organic market, 20 % off. Actual 637, forecast 671, "same as
 
 ## 2. Range
 
-b) 36 of 50, 40 were promised. Before 07.04.: 9 of 12. From 07.04.: 27 of 38.
-   11 of the 14 misses fall from 07.04. on.
-c) An organic market chain with 9 stores delists the soup, about 70 jars a week
+b) 10 % value −50.5, 90 % value +18. Range 607 − 50.5 = 556.5 to 607 + 18 = 625.
+   The actual 484 lies below it: a miss, right in the first week of the delisting.
+c) 36 of 50; an honest range would hold about 40. Before 07.04.: 9 of 12. From
+   07.04.: 27 of 38. 11 of the 14 misses fall from 07.04. on.
+d) An organic market chain with 9 stores delists the soup, about 70 jars a week
    fewer. The tool keeps planning at the old level; the errors turn one-sided and the
    actual falls below the range. Chance alone gives 36 or fewer in about 11 of 100
    years; that the misses cluster after one date points to the cause.
@@ -38,12 +40,14 @@ c) A leftover jar costs €1.60: share 1.50 ÷ 3.10 = 0.48, planning number 729.
 
 ## 4. Rule
 
-a) 37 weeks free, 15 stopped. 03.02.2025: data (no forecast). 21.04. to 21.07.2025:
+a) Forecast 8,300, actual 7,874: (8,300 − 7,874) ÷ 7,874 = +5.4 %. Above 5 %: red.
+   The range lamp is red that week too (8 of 13).
+b) 37 weeks free, 15 stopped. 03.02.2025: data (no forecast). 21.04. to 21.07.2025:
    bias above 5 % and fewer than 9 of 13 inside the range; on 28.04. "same as last
    week" was also better (ratio 1.05). Highest bias: +10.6 % on 16.06.2025. Free
    again from 28.07.
-b) Two weeks: delisting 07.04., first red week 21.04.
-c) The person named in the release rule, with a number and a reason: forecast minus
+c) Two weeks: delisting 07.04., first red week 21.04.
+d) The person named in the release rule, with a number and a reason: forecast minus
    about 70 jars, reason delisting. In the study by Fildes et al. (2009), large
    adjustments with a known reason tended to improve accuracy, small ones from gut
    feeling tended to make it worse.

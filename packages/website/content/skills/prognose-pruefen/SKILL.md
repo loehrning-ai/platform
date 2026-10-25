@@ -1,6 +1,6 @@
 ---
 name: prognose-pruefen
-description: Prüft Wochenprognosen an ihren alten Fehlern, mit Messlatte, Spanne, Planzahl aus Fehlmenge- und Restkosten und Prüfregel. Rechnet im Code. Checks a forecast against a naive baseline.
+description: Prüft Absatz- oder Bedarfsprognosen an Ist-Werten. Besser als „wie letzte Woche“? Spanne, Bestellmenge aus Kosten, Freigaberegel. Rechnet per Code. Forecast vs actuals, order quantity.
 ---
 
 # Prognose prüfen
@@ -121,6 +121,7 @@ format above. The skill needs no key or token and sends nothing anywhere.
 ```python
 """Prüft eine Wochenprognose an ihren alten Fehlern. Nur Python-Standardbibliothek, kein Netz.
 Aufruf: python3 pruefen.py DATEI.csv [--fehlmenge 1,50] [--rest 0,40] [--messlatte "wie letzte Woche"]   Ausgabe: JSON
+English: --shortage and --leftover are the same as --fehlmenge and --rest.
 Spalten (Kopfzeile): woche, ist; optional prognose, hinweis, bestand_ende. Trenner ; , oder Tab.
 Gleiche Regeln wie loehrning.ai/demos/ki-prognosen-einschaetzen."""
 import argparse, csv, datetime as dt, io, json, math, re, sys
@@ -254,7 +255,8 @@ def pruefen(rows, hinweise, fehlmenge, rest, messlatte):
     return out
 
 if __name__ == "__main__":
-    a = argparse.ArgumentParser(); a.add_argument("datei"); a.add_argument("--fehlmenge"); a.add_argument("--rest")
+    a = argparse.ArgumentParser(); a.add_argument("datei")
+    a.add_argument("--fehlmenge", "--shortage"); a.add_argument("--rest", "--leftover")  # Kosten je Stück
     a.add_argument("--messlatte", default="wie letzte Woche"); a = a.parse_args()
     rows, hinweise = lesen(open(a.datei, encoding="utf-8-sig").read())
     e = pruefen(rows, hinweise, a.fehlmenge and zahl(a.fehlmenge, "--fehlmenge"), a.rest and zahl(a.rest, "--rest"), a.messlatte)

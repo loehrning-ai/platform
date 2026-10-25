@@ -447,26 +447,26 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       ],
     },
     materials: [
+      // No material here is marked primary: the demo (the kit, made visible) is
+      // where workshop 01 starts (withDemoMaterial). The labs are depth, after it.
       {
         label: "Labore · 3 Simulationen",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
         kind: "html",
         language: "en",
         role: "lab",
-        phase: "during",
-        minutes: 45,
-        primary: true,
+        phase: "after",
         description:
           "Vertiefung: drei Simulationen zu Kapazität, Puffern und einem Nachfrageschock.",
       },
       {
         label: "Kit · .zip",
-        href: `${FORECAST_BASE_PATH}/forecast-check.zip`,
+        href: `${FORECAST_BASE_PATH}/prognose-pruefen.zip`,
         kind: "zip",
-        language: "en",
+        language: "de",
         role: "kit",
         phase: "during",
-        sizeLabel: "41 KB",
+        sizeLabel: "42 KB",
         description:
           "Daten, Tool-Export, Kosten, vier Aufgaben, Lösungen, die Prüfregel, pruefen.py und der Claude-Skill. Nur Textdateien.",
         short: "Die Linsensuppe, vier Aufgaben, Lösungen und die Prüfregel.",
@@ -891,15 +891,14 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       ],
     },
     materials: [
+      // No material here is marked primary: the demo is where workshop 01 starts.
       {
         label: "Labs · 3 simulations",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
         kind: "html",
         language: "en",
         role: "lab",
-        phase: "during",
-        minutes: 45,
-        primary: true,
+        phase: "after",
         description:
           "Going further: three simulations on capacity, buffers and a demand shock.",
       },
@@ -910,7 +909,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         language: "en",
         role: "kit",
         phase: "during",
-        sizeLabel: "41 KB",
+        sizeLabel: "42 KB",
         description:
           "Data, tool export, costs, four tasks, solutions, the release rule, pruefen.py and the Claude skill. Text files only.",
         short: "The lentil soup, four tasks, solutions and the release rule.",
@@ -1160,8 +1159,9 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 
 /**
  * The workshop's practice demo (src/lib/demos.ts) as one more material, in
- * the page's own language: role "demo", during the session, optional, never
- * the place to start. It is a page on this site (/demos/<slug>, or
+ * the page's own language: role "demo", during the session, optional. It is
+ * the place to start only for a workshop whose own materials mark none
+ * (withDemoMaterial). It is a page on this site (/demos/<slug>, or
  * /en/demos/<slug>), not a file under public/workshops/.
  */
 export function workshopDemoMaterial(
@@ -1198,9 +1198,13 @@ export function workshopFileMaterials(
 
 function withDemoMaterial(workshop: Workshop, locale: Locale): Workshop {
   const material = workshopDemoMaterial(workshop.slug, locale);
-  return material
-    ? { ...workshop, materials: [...workshop.materials, material] }
-    : workshop;
+  if (!material) return workshop;
+  // A workshop that marks no material primary starts at its demo (workshop 01:
+  // the demo is its kit, made visible).
+  const start = workshop.materials.some((item) => item.primary)
+    ? material
+    : { ...material, primary: true, optional: false };
+  return { ...workshop, materials: [...workshop.materials, start] };
 }
 
 export const WORKSHOPS_BY_LOCALE: Readonly<

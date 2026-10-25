@@ -24,7 +24,7 @@
   flex-wrap: nowrap;
   gap: 6px;
   min-height: 44px;
-  padding-right: 128px; /* the restart control sits top right */
+  padding-right: 110px; /* the restart control sits top right (112px wide at most, "Start over") */
 }
 .fl-stage-foot {
   margin: 0;
@@ -33,7 +33,11 @@
   color: var(--color-muted-foreground);
 }
 
-/* A kit file quoted as a tab card: file name, label, value. */
+/*
+ * A number card. One colour code on every stage: the tool is Mennige (as its
+ * forecast ticks), "same as last week" is ink with a dashed edge (as its
+ * dashed line), a plain count is ink.
+ */
 .fl-card {
   display: inline-grid;
   grid-template-columns: auto;
@@ -45,18 +49,28 @@
   background: var(--color-background);
   color: var(--color-foreground);
 }
-.fl-card.is-accent {
-  border-color: var(--color-mennige);
+.fl-card.is-tool {
+  border: 2px solid var(--color-mennige);
   box-shadow: inset 3px 0 0 var(--color-mennige);
+  padding: 3px 8px 4px 10px;
 }
-.fl-card-file {
-  font-family: var(--font-mono);
+.fl-card.is-tool .fl-card-value {
+  color: var(--color-mennige);
+}
+.fl-card.is-rule {
+  border: 2px dashed var(--color-foreground);
+  padding: 3px 8px 4px;
+}
+/* The kit files a stage reads, on their own line under the cards. */
+.fl-files {
+  margin: -2px 0 0;
   font-size: 0.6875rem;
-  line-height: 1.2;
+  line-height: 1.3;
   color: var(--color-muted-foreground);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+.fl-files-names {
+  font-family: var(--font-mono);
+  color: var(--color-foreground);
 }
 .fl-card-label {
   font-size: 0.75rem;
@@ -72,8 +86,8 @@
   line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
-.fl-card.is-accent .fl-card-value {
-  color: var(--color-mennige);
+.fl-card-label .is-muted {
+  color: var(--color-muted-foreground);
 }
 
 /* ── Chart ───────────────────────────────────────────────────────────────── */
@@ -155,6 +169,11 @@
   font-weight: 600;
   fill: var(--color-muted-foreground);
 }
+.fl-label.is-year {
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--color-foreground);
+}
 .fl-label.is-accent {
   fill: var(--color-mennige);
   font-weight: 700;
@@ -167,7 +186,7 @@
 }
 .fl-tally-row {
   display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1fr) 3rem;
+  grid-template-columns: 8.75rem minmax(0, 1fr) 3rem;
   align-items: center;
   gap: 6px;
   margin: 0;
@@ -176,9 +195,25 @@
   line-height: 1.2;
 }
 .fl-tally-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+/* The legend of the chart, inside the tally: a Mennige tick and a dashed ink line. */
+.fl-swatch {
+  flex: none;
+  width: 14px;
+  height: 0;
+}
+.fl-swatch.is-tool {
+  border-top: 3px solid var(--color-mennige);
+}
+.fl-swatch.is-rule {
+  border-top: 2px dashed var(--color-foreground);
 }
 .fl-tally-track {
   height: 8px;
@@ -268,6 +303,12 @@
   gap: 8px;
   height: 100%;
 }
+.fl-jars {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
 .fl-plan-head {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -307,14 +348,16 @@
 .fl-jar-row {
   position: relative;
   display: flex;
-  align-items: flex-end;
+  flex: 1 1 auto;
+  align-items: stretch;
   gap: 2px;
-  height: 30px;
+  min-height: 30px;
+  max-height: 96px;
+  margin-top: 16px;
 }
 .fl-jar {
   flex: 1 1 0;
   min-width: 0;
-  height: 22px;
   border: 1.5px solid var(--color-foreground);
   border-top-width: 4px;
   background: var(--color-foreground);
@@ -332,12 +375,32 @@
 }
 .fl-order-line {
   position: absolute;
-  top: -6px;
+  top: -8px;
   bottom: -4px;
   width: 0;
   margin-left: -1px;
   border-left: 3px solid var(--color-mennige);
   transform-origin: bottom;
+}
+.fl-order-value {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  transform: translateX(-50%);
+  padding-bottom: 1px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-mennige);
+  white-space: nowrap;
+}
+.fl-jar-scale {
+  display: flex;
+  justify-content: space-between;
+  margin: 3px 0 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
 }
 .fl-jar-legend {
   display: flex;
@@ -357,13 +420,20 @@
 .fl-key.is-left {
   background: var(--color-foreground);
 }
-.fl-key.is-short {
+.fl-key.is-short,
+.fl-key.is-person {
   background: var(--color-mennige);
+}
+.fl-key.is-even,
+.fl-key.is-none {
+  border: 1.5px solid var(--color-foreground);
+}
+.fl-key.is-free {
+  background: var(--color-foreground);
 }
 .fl-ledger {
   display: grid;
   gap: 3px;
-  margin-top: auto;
 }
 .fl-ledger-row {
   display: grid;
@@ -465,17 +535,56 @@
   color: var(--color-muted-foreground);
   white-space: nowrap;
 }
+.fl-strip-block {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 0;
+}
+/* The strip takes the stage's free height: rows grow from 22px up to 56px, so
+   no band of empty paper sits between the lamps and the strip. */
 .fl-strip {
   display: grid;
-  grid-template-columns: repeat(13, minmax(0, 1fr));
+  flex: 1 1 auto;
+  grid-auto-rows: minmax(22px, 56px);
+  align-content: end;
   gap: 3px;
-  margin-top: auto;
+  min-height: 0;
+}
+.fl-strip-row {
+  display: grid;
+  grid-template-columns: 2.6rem repeat(13, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 3px;
+}
+.fl-strip-date {
+  align-self: center;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-muted-foreground);
+  font-variant-numeric: tabular-nums;
 }
 .fl-square {
-  aspect-ratio: 1.6;
-  max-height: 22px;
+  min-height: 22px;
+  min-width: 0;
+  padding: 0;
   border: 1px solid var(--color-hairline);
+  border-radius: 0;
   background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fl-strip-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 0;
+  padding-left: calc(2.6rem + 3px);
+  font-size: 0.6875rem;
+  font-weight: 600;
 }
 .fl-square.is-free {
   border-color: var(--color-foreground);
@@ -511,7 +620,10 @@
 }
 .fl-kit-list {
   display: grid;
+  flex: 1 1 auto;
+  grid-auto-rows: minmax(0, 1fr);
   gap: 0;
+  max-height: 440px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -520,7 +632,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
-  align-items: baseline;
+  align-items: center;
   padding: 3px 0;
   border-bottom: 1px solid var(--color-hairline);
   font-size: 0.75rem;
@@ -543,6 +655,14 @@
   justify-content: center;
   gap: 8px;
 }
+.fl-own-example {
+  display: grid;
+  gap: 2px;
+}
+.fl-own-try {
+  justify-content: center;
+  align-self: stretch;
+}
 .fl-own-title {
   margin: 0;
   font-size: 1.125rem;
@@ -553,13 +673,20 @@
   padding: 6px 8px;
   border: 1px dashed var(--color-foreground);
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: pre;
+  overflow: hidden;
 }
 .fl-own-hint {
   margin: 0;
   max-width: 44ch;
   font-size: 0.875rem;
   line-height: 1.35;
+}
+.fl-own-hint.is-small {
+  font-size: 0.75rem;
+  color: var(--color-muted-foreground);
 }
 
 /* ── Lever controls ──────────────────────────────────────────────────────── */
@@ -800,8 +927,9 @@
     font-size: 0.9375rem;
     min-height: 30px;
   }
-  .fl-square {
-    max-height: 30px;
+  /* The taller desktop stage goes to the jars, not to empty paper. */
+  .fl-jar-row {
+    max-height: 240px;
   }
 }
 

@@ -38,12 +38,19 @@ export function baselinePin(check: Checker): (Pin & { readonly ruleError: number
 export interface RedRun {
   readonly from: number;
   readonly to: number;
+  /** The lamps that were red in every week of the run. */
   readonly lamps: readonly LampKey[];
+  /** Lamps red in only some weeks of the run, with those weeks. */
+  readonly extra: readonly { readonly key: LampKey; readonly weeks: readonly number[] }[];
 }
 
-/** The red weeks of the strip as runs of consecutive strip weeks, with every lamp that was red in the run. */
+/**
+ * The red weeks of the strip as runs of consecutive strip weeks. A run names
+ * the lamps red in all of its weeks and, apart, a lamp red only in some, so
+ * a sentence never claims a lamp was red where it was green.
+ */
 export function redRuns(check: Checker): readonly RedRun[] {
-  const runs: { from: number; to: number; lamps: Set<LampKey> }[] = [];
+  const runs: { from: number; to: number; weeks: { t: number; red: readonly LampKey[] }[] }[] = [];
   for (const t of check.streifen) {
     const lamps = check.lamps(t);
     if (!lamps || lamps.frei) continue;
@@ -51,10 +58,21 @@ export function redRuns(check: Checker): readonly RedRun[] {
     const last = runs[runs.length - 1];
     if (last && last.to === t - 1) {
       last.to = t;
-      for (const key of red) last.lamps.add(key);
-    } else runs.push({ from: t, to: t, lamps: new Set(red) });
+      last.weeks.push({ t, red });
+    } else runs.push({ from: t, to: t, weeks: [{ t, red }] });
   }
-  return runs.map((run) => ({ from: run.from, to: run.to, lamps: LAMP_KEYS.filter((key) => run.lamps.has(key)) }));
+  return runs.map((run) => {
+    const always = LAMP_KEYS.filter((key) => run.weeks.every((week) => week.red.includes(key)));
+    const extra = LAMP_KEYS.filter((key) => !always.includes(key))
+      .map((key) => ({ key, weeks: run.weeks.filter((week) => week.red.includes(key)).map((week) => week.t) }))
+      .filter((entry) => entry.weeks.length > 0);
+    return { from: run.from, to: run.to, lamps: always, extra };
+  });
+}
+
+/** Why the data lamp of week t is red: no stored forecast, or no actual the week before. */
+export function dataGap(check: Checker, t: number): "prognose" | "ist" {
+  return check.forecast(t) === null ? "prognose" : "ist";
 }
 
 /** The longest red run (the first on a tie). */

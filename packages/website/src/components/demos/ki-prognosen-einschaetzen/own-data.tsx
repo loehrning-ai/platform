@@ -38,15 +38,41 @@ export interface OwnInputs {
   readonly left: string;
 }
 
-/** The stage of "Meine Daten": the visitor's series once checked, the template header before. */
-export function OwnStage({ copy, outcome, series }: { readonly copy: DemoPack; readonly outcome: OwnOutcome; readonly series: string }) {
+/**
+ * The stage of "Meine Daten": the visitor's series once checked. Before, the
+ * file's shape (the header and the last weeks of the kit CSV, the real file,
+ * not an invented one) and one tap that loads the kit file, so a phone
+ * without a CSV still sees the four checks run on a file it did not type.
+ */
+export function OwnStage({
+  copy,
+  outcome,
+  series,
+  example,
+  onKitTry,
+}: {
+  readonly copy: DemoPack;
+  readonly outcome: OwnOutcome;
+  readonly series: string;
+  /** The kit CSV's header and last rows, verbatim. */
+  readonly example: readonly string[];
+  readonly onKitTry: () => void;
+}) {
   if (outcome.kind !== "ok") {
     return (
       <div className="fl-stage fl-own-empty">
         <p className="fl-own-title">{copy.own.heading}</p>
-        <p className="fl-own-header">{copy.own.pastePlaceholder}</p>
         <p className="fl-own-hint">{fill(copy.own.empty, { min: PRUEF })}</p>
-        <p className="fl-own-hint">{copy.own.privacy}</p>
+        <div className="fl-own-example">
+          <p className="fl-mini-label">{fill(copy.own.exampleLabel, { file: copy.files.csv })}</p>
+          <pre className="fl-own-header" data-fl-example="">
+            {example.join("\n")}
+          </pre>
+        </div>
+        <button type="button" className="fl-button is-primary fl-own-try" onClick={onKitTry} data-fl-kit-try="">
+          {copy.own.kitTry}
+        </button>
+        <p className="fl-own-hint is-small">{fill(copy.own.kitTryNote, { file: copy.files.csv, costs: copy.files.costs })}</p>
       </div>
     );
   }
@@ -58,9 +84,12 @@ export function OwnStage({ copy, outcome, series }: { readonly copy: DemoPack; r
       <div className="fl-stage-head">
         <div className="fl-card" data-fl-card="own">
           <span className="fl-card-file">{series}</span>
-          <span className="fl-card-label">{fill(copy.own.summary, { from: formatShortDay(result.von, copy.locale), to: formatShortDay(result.bis, copy.locale), weeks: result.wochen })}</span>
         </div>
       </div>
+      {/* The summary on its own full-width line, so the week count is never cut. */}
+      <p className="fl-files" data-fl-files="own">
+        {fill(copy.own.summary, { from: formatShortDay(result.von, copy.locale), to: formatShortDay(result.bis, copy.locale), weeks: result.wochen })}
+      </p>
       <SeriesChart
         check={check}
         locale={copy.locale}
