@@ -4,7 +4,7 @@
  * groups, so a red job is reproduced by running the same script name locally.
  *
  *   bun run ci            static and unit in parallel, then browser
- *   bun run ci:static     types, lint, public-leak scan, content and route checks
+ *   bun run ci:static     types, lint, public-leak scan, content and route checks, critical audit
  *   bun run ci:unit       vitest, no coverage
  *   bun run ci:browser    the one production build, server-log privacy, browser smoke
  *   bun run ci:hygiene    audits and tool self-tests (nightly only, not part of `ci`)
@@ -84,6 +84,8 @@ export const GROUPS = {
       site("english-routes:check", "english-routes:check"),
       site("migrations:check", "migrations:check"),
       root("verify:workspace-contract", "verify:workspace-contract"),
+      // A critical advisory blocks the PR; high and below surface in hygiene.
+      root("audit:critical", "audit:critical"),
       root("test:deploy-production", "test:deploy-production"),
       // Cheap self-tests of the gates that guard the public tree and the copy.
       root("test:ci", "test:ci"),

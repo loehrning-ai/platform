@@ -16,7 +16,7 @@ assignees: ""
 <!-- What happens instead? -->
 
 **Browser and runtime version**
-<!-- e.g. Safari 18.5 on macOS, or Node 24.17.0 for repository scripts -->
+<!-- e.g. Safari 18.5 on macOS, or Node 24.22.1 for repository scripts -->
 
 **Reproduction steps**
 <!-- Numbered steps to reproduce the issue -->

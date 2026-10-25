@@ -20,7 +20,7 @@ Content registries are the source of truth:
 - `src/lib/open-source/artifacts.ts` for future tools, projects, and videos published under the `loehrning-ai` GitHub organization (imported labs stay in `src/lib/courses/catalog.ts`);
 - `src/lib/crawl/contract.ts` for public indexing behavior.
 
-New routes must be registered consistently in navigation, crawl policy, sitemap, machine-readable discovery, tests, and Lighthouse coverage.
+New routes must be registered consistently in navigation, crawl policy, sitemap, machine-readable discovery, and tests.
 The committed page inventory is generated from the same crawl and artifact
 registries. `bun run --cwd packages/website page-inventory:check`
 blocks drift; regenerate it only with the package's `page-inventory:generate`
@@ -28,7 +28,7 @@ command.
 
 Deployment and runtime operations are documented in
 [packages/website/docs/deployment.md](packages/website/docs/deployment.md).
-The repeatable local Lighthouse budgets for the public routes are defined in
+The performance targets for a manual Lighthouse run are defined in
 [packages/website/perf-budgets.md](packages/website/perf-budgets.md).
 
 ## Asset and media admission boundary

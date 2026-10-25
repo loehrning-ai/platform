@@ -46,7 +46,6 @@ video lanes are deliberately empty release state, not placeholders.
 - Media policy: `MEDIA_POLICY.md`.
 - Data-driven browser admission coverage:
   `packages/website/tests/e2e/route-open-source.spec.ts`.
-- Lighthouse representatives: `lighthouserc.json`.
 - Records staged before their source commit exists:
   `packages/website/src/lib/open-source/pending/`. This is not a
   second catalog and never becomes one. A module there is imported by nothing
@@ -447,12 +446,7 @@ JSON-LD, and page inventory. After adding an entry:
    bun run --cwd packages/website page-inventory:check
    ```
 
-3. Add one real detail URL from every non-empty artifact kind to
-   `lighthouserc.json`. The first published tool, project, or video must become
-   the representative for that lane. Do not add a future or placeholder URL.
-4. Run `bun run lighthouse:local` to measure the new route. No script checks
-   `lighthouserc.json` against the registry, so confirm the URL by hand.
-5. Do not hand-edit sitemap totals. Unit tests derive their expected count from
+3. Do not hand-edit sitemap totals. Unit tests derive their expected count from
    `OPEN_SOURCE_ARTIFACTS`.
 
 The registry-driven cases in
@@ -469,7 +463,6 @@ Run from the repository root:
 bun run scan:public
 bun run artifact-assets:check
 bun run ci
-bun run lighthouse:local
 ```
 
 `bun run ci` is the same gate pull requests run. A release also requires the separate legal launch gate documented in
@@ -497,7 +490,7 @@ Reject the artifact when any of the following is true:
   without an explicit privacy and security review;
 - a tool/project guide cannot be followed, a video lacks human-reviewed
   captions or transcript, or the browser and accessibility proof is absent;
-- page inventory, scanner, verifier, browser, build, or Lighthouse gates fail.
+- page inventory, scanner, verifier, browser, or build gates fail.
 
 Do not weaken a validator, skip a failing lane, fabricate evidence, or publish
 an empty promise to obtain a green release.

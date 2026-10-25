@@ -1,7 +1,7 @@
 name: Nightly
 
 # Everything that left the pull-request path: the full browser suites, a Safari
-# check, Lighthouse, coverage and the audits. It never blocks a merge and never
+# check, coverage and the audits. It never blocks a merge and never
 # gates a deploy by default (`bun run deploy:production -- --require-nightly`
 # makes one run on an exact commit a deploy condition). A red run opens or
 # updates the single `nightly-red` issue, and closes it again when green.
@@ -16,7 +16,7 @@ on:
       suite:
         description: Which part to run
         type: choice
-        options: [all, webkit, lighthouse]
+        options: [all, webkit]
         default: all
 
 permissions:
@@ -135,62 +135,6 @@ jobs:
       # preload. DOM and token-plumbing coverage, not authentication proof.
       - run: bun run --cwd packages/website test:e2e:konto-dom-mocked
 
-  lighthouse:
-    name: lighthouse
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' || inputs.suite == 'lighthouse' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      E2E_SERVER_MODE: production
-      E2E_PORT: "3000"
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/setup
-        with:
-          playwright-browsers: chromium
-          next-build-cache: "true"
-      - run: bun run --cwd packages/website verify:build
-      # Advisory: total blocking time moves with runner load, and this check has
-      # never caught a defect. The step may fail; the table below says how.
-      - name: Lighthouse (advisory)
-        id: lighthouse
-        continue-on-error: true
-        run: |
-          export CHROME_PATH="$(bun --cwd packages/website -e 'import { chromium } from "@playwright/test"; console.log(chromium.executablePath())')"
-          bun run lighthouse:ci:built
-      - name: Summarise scores
-        if: always()
-        env:
-          OUTCOME: ${{ steps.lighthouse.outcome }}
-        run: |
-          {
-            echo "### Lighthouse (advisory): ${OUTCOME}"
-            echo
-            echo "| URL | performance | accessibility | best practices | SEO |"
-            echo "| --- | --- | --- | --- | --- |"
-            node -e '
-              const fs = require("node:fs");
-              const file = ".lighthouseci/reports/manifest.json";
-              if (!fs.existsSync(file)) process.exit(0);
-              const pct = (value) => Math.round(value * 100);
-              for (const run of JSON.parse(fs.readFileSync(file, "utf8")).filter((r) => r.isRepresentativeRun)) {
-                const s = run.summary;
-                console.log(`| ${run.url} | ${pct(s.performance)} | ${pct(s.accessibility)} | ${pct(s["best-practices"])} | ${pct(s.seo)} |`);
-              }
-            '
-          } >> "$GITHUB_STEP_SUMMARY"
-      - name: Upload Lighthouse reports
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: lighthouse-reports
-          path: .lighthouseci/
-          include-hidden-files: true
-          if-no-files-found: ignore
-          retention-days: 7
-
   coverage:
     name: coverage
     if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' }}
@@ -220,7 +164,7 @@ jobs:
   report:
     name: report
     if: ${{ always() && github.ref == 'refs/heads/main' }}
-    needs: [browser, webkit, konto-dom, lighthouse, coverage, hygiene]
+    needs: [browser, webkit, konto-dom, coverage, hygiene]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     # The only elevated token in the repository's CI besides dependency

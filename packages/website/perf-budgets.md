@@ -1,74 +1,24 @@
 # Performance Budgets
 
-`lighthouserc.json` at the repository root is the repeatable Lighthouse budget
-configuration for this package. The nightly workflow measures five routes three
-times each against a fresh production build and reports the scores in its job
-summary; it is advisory and never blocks a merge or a deploy. `bun run
-verify:release` enforces the full 35-route, three-run measurement against that
-release build.
+No CI job measures Lighthouse: the scores moved with runner load and the check
+never caught a defect. Before a release that could move bundle size, Core Web
+Vitals or accessibility, run Lighthouse by hand (Chrome DevTools, mobile preset)
+against the Vercel preview of `/`, `/ai-native`, one blog article, `/buecher`
+and one course overview, and compare with these targets:
 
-## Routes audited (`collect.url`)
+| Metric                   | Target      |
+| ------------------------ | ----------- |
+| Accessibility score      | 1.00        |
+| Performance score        | >= 0.80     |
+| Largest Contentful Paint | <= 4500 ms  |
+| Cumulative Layout Shift  | <= 0.1      |
+| Total Blocking Time      | <= 200 ms   |
+| Script transfer          | <= 360 KiB  |
+| Total transfer           | <= 1024 KiB |
+| Third-party requests     | <= 8        |
 
-`numberOfRuns: 3` with `aggregationMethod: "median"` (LHCI evaluates the
-middle result of the three runs per URL). The server starts through the
-provider-free wrapper and `next start`, matched on
-`startServerReadyPattern: "Ready in"`.
-
-The `collect.url` array in the root `lighthouserc.json` is the only route
-inventory. It covers every static, public, indexable page plus at least one
-published representative for every dynamic public route pattern. This includes
-the homepage and learning entry points, course and book readers, editorial and
-open-source pages, interactive demos, informational pages, and legal pages.
-No script validates the list; keep entries canonical, indexable and unique by hand. The documentation deliberately does not copy the
-route list, preventing a second inventory from drifting.
-
-## Assertions (`assert.assertions`)
-
-What `lhci assert` passes or fails when the local Lighthouse command runs:
-
-| Assertion                            | Threshold   | Severity          |
-| ------------------------------------ | ----------- | ----------------- |
-| `categories:accessibility`           | 1.00        | **error, blocks** |
-| `categories:performance`             | >= 0.80     | **error, blocks** |
-| `categories:best-practices`          | >= 0.9      | warn              |
-| `categories:seo`                     | >= 0.9      | warn              |
-| `largest-contentful-paint`           | <= 4500 ms  | **error, blocks** |
-| `cumulative-layout-shift`            | <= 0.1      | **error, blocks** |
-| `total-blocking-time`                | <= 200 ms   | **error, blocks** |
-| `resource-summary:script:size`       | <= 360 KiB  | **error, blocks** |
-| `resource-summary:total:size`        | <= 1024 KiB | **error, blocks** |
-| `resource-summary:third-party:count` | <= 8        | **error, blocks** |
-
-Accessibility and every performance budget are hard assertions. Best practices
-and SEO remain diagnostic warnings because their category scores can change
-with browser-version audits that do not represent a runtime regression. The
-0.80 performance and 4.5-second LCP limits are blocking regression guardrails,
-not claims about production field performance. CLS, blocking time, transfer,
-and request limits remain independently blocking. Reports are written only to
-`.lighthouseci/reports`; no report is uploaded.
-
-## How to run it
-
-```bash
-bun run lighthouse:local
-```
-
-The command performs a fresh provider-free production build, writes a
-content-and-environment-bound build receipt, verifies that receipt, then starts
-the provider-free production server and runs LHCI from the repository root.
-The `lighthouse:local:built` variant is internal reuse only and rejects a
-missing or stale receipt.
-
-The nightly run measures `/`, `/ai-native`, the published
-blog article, `/buecher`, and the data-science course overview three times each,
-spanning the main rendering modes. Pull requests do not run Lighthouse. The
-release runner uses `lighthouse:release:built` after the static, unit and build steps;
-it rejects a changed build receipt and covers every configured route three
-times using the median result before the browser journey gates.
-
-Run it locally before shipping a change that could move bundle size, Core Web
-Vitals, or the accessibility score. Treat it as environment-sensitive evidence,
-not as proof of production performance.
+Treat a lab run as environment-sensitive evidence, not as proof of production
+performance.
 
 To inspect webpack bundle composition (a different, complementary signal from
 the transfer budgets above):

@@ -29,7 +29,7 @@ is the composite action at `.github/actions/setup`.
 
 | Job       | Check name       | Command            | What it proves                                                                                                                                                                                                                              |
 | --------- | ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, and that `git diff --exit-code` finds no regenerated file. |
+| `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, `bun audit --audit-level=critical` (a critical advisory blocks the PR), and that `git diff --exit-code` finds no regenerated file. |
 | `unit`    | `unit tests`     | `bun run ci:unit`    | The complete Vitest suite. Coverage floors run nightly.                                                                                                                                                                                      |
 | `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium and the iPhone 13 Chromium viewport.                                                                                           |
 | `verify`  | `verify`         | inline shell       | Aggregation only. Red unless each of the three results is exactly `success`; failure, cancelled and skipped are all red.                                                                                                                    |
@@ -82,11 +82,11 @@ information line.
 
 ## Nightly (`nightly.yml`)
 
-Runs at 02:30 UTC and on `workflow_dispatch` (input `suite`: `all`, `webkit` or
-`lighthouse`). It never blocks a merge. Jobs: the full desktop Chromium, phone
+Runs at 02:30 UTC and on `workflow_dispatch` (input `suite`: `all` or
+`webkit`). It never blocks a merge. Jobs: the full desktop Chromium, phone
 Chromium and AI-native operator browser suites (sharded, one build each), a
 mobile WebKit run of the smoke list, the mocked-session `/konto` DOM suite,
-advisory Lighthouse (scores in the job summary), coverage with the Vitest
+coverage with the Vitest
 floors, and `bun run ci:hygiene` (live `bun audit`, licence audit, and the
 self-tests of publication and tooling scripts). The `report` job opens one issue
 labelled `nightly-red` when any job fails, comments on it while it stays red,
@@ -188,37 +188,12 @@ link, or exchange a same-browser PKCE code. Those steps require a separate
 isolated hosted login-journey test; a green session-integration run must not be
 reported as proof of the production login flow.
 
-## Release gate: Lighthouse measurements
-
-`lighthouserc.json` is the route inventory and has no separate checker: keep its
-entries canonical, indexable and unique by hand. The measurement runs inside
-`bun run verify:release`, not in pull-request CI.
-
-The complete release command runs the actual Lighthouse measurement from the
-repository root:
-
-```bash
-bun run verify:release
-```
-
-The command creates a fresh provider-free production build and a
-content-and-environment-bound receipt before measuring. Its internal
-`:built` variant rejects a missing or stale receipt. The release gate
-passes only when the command completes for every URL in `lighthouserc.json`,
-the perfect-score accessibility assertion passes, and every warning-level
-budget or score regression is reviewed. Reports are written only to
-`.lighthouseci/reports`; they are local release evidence and remain excluded
-from the public tree. The complete 35-route, three-run measurement stays out of
-CI because performance scores vary with runner load and Chromium conditions.
-The nightly run measures five routes three times each and reports the scores in
-its job summary without failing the run.
-
 ## Release validation
 
 `bun run verify:release` first runs an unwrapped strict preflight against the
 supplied provider environment. This prevents the provider-free verification
 wrapper from hiding partial or unattested production configuration. It then
-runs `ci:static` and `ci:unit`, then the full Lighthouse gate, the server-log
+runs `ci:static` and `ci:unit`, then the server-log
 privacy probe, the browser smoke list and the launch gate against one
 provider-free build receipt, then finishes
 by compiling the supplied provider configuration with

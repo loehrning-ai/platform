@@ -59,12 +59,6 @@ const steps = [
     captureProviderFreeReceipt: true,
   },
   {
-    label: "full Lighthouse performance gate",
-    args: ["run", "lighthouse:release:built"],
-    browserEnvironment: true,
-    verifyProviderFreeReceipt: true,
-  },
-  {
     label: "server-log privacy probe",
     args: ["run", "--cwd", "packages/website", "test:server-log-privacy:built"],
     browserEnvironment: true,

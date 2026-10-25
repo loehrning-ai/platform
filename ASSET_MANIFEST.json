@@ -592,7 +592,7 @@
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
       "sizeBytes": 59639,
-      "sha256": "387fe383f187a66fb46108bab32bc8bab51148ad3bf2aa7ba434b1d65f17385f",
+      "sha256": "3e5b52318fb889404396c63e1832e6d8ed8ec3a8e353ea07bda666c02ed15fd0",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 Text-only Teilnehmer-Kit (CSV-\u00dcbungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",

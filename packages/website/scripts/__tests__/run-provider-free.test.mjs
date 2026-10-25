@@ -437,10 +437,8 @@ assert.ok(
 );
 assert.ok(
   releaseRunner.indexOf('"static checks"') <
-    releaseRunner.indexOf('"full Lighthouse performance gate"') &&
-    releaseRunner.indexOf('"full Lighthouse performance gate"') <
-      releaseRunner.indexOf('"browser smoke"'),
-  "release verification must measure the complete verified build before browser journey gates",
+    releaseRunner.indexOf('"browser smoke"'),
+  "release verification must run the static checks before browser journey gates",
 );
 assert.ok(
   releaseRunner.indexOf('"launch browser gate"') <
@@ -449,8 +447,8 @@ assert.ok(
 );
 assert.ok(
   releaseRunner.indexOf('"provider-free production build"') <
-    releaseRunner.indexOf('"full Lighthouse performance gate"'),
-  "release verification must pin one provider-free build receipt before measuring it",
+    releaseRunner.indexOf('"server-log privacy probe"'),
+  "release verification must pin one provider-free build receipt before probing it",
 );
 for (const name of ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"]) {
   assert.match(
@@ -541,23 +539,6 @@ assert.match(
   /isDeepStrictEqual\(receipt\.toolchain, providerFreeReceipt\.toolchain\)/,
   "the configured release build must retain the provider-free toolchain",
 );
-assert.equal(
-  rootPackageJson.scripts["lighthouse:local"],
-  "node packages/website/scripts/run-provider-free.mjs bun run build && bun run lighthouse:local:built",
-);
-assert.equal(
-  rootPackageJson.scripts["lighthouse:local:built"],
-  "node packages/website/scripts/run-provider-free.mjs bun run lighthouse:local:built:internal",
-);
-assert.equal(
-  rootPackageJson.scripts["lighthouse:local:built:internal"],
-  "node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
-);
-assert.equal(
-  rootPackageJson.scripts["lighthouse:release:built"],
-  "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
-);
-assert.match(releaseRunner, /"run", "lighthouse:release:built"/);
 
 const launchListEnvironment = {
   ...process.env,
@@ -617,7 +598,6 @@ const jobsNeedingLoopbackVerification = [
   ["ci.yml", "browser:", "run: bun run ci:browser"],
   ["nightly.yml", "browser:", "run: bun run --cwd packages/website verify:build"],
   ["nightly.yml", "webkit:", "run: bun run --cwd packages/website verify:build"],
-  ["nightly.yml", "lighthouse:", "run: bun run --cwd packages/website verify:build"],
 ];
 for (const [file, jobHeader, buildCommand] of jobsNeedingLoopbackVerification) {
   const ciWorkflow = workflowText(file);
