@@ -179,7 +179,7 @@ describe("phone hero globe: live globe", () => {
       container.querySelector("[data-home-globe]"),
     ).toHaveAttribute("data-home-globe-motion", "static");
     expect(
-      screen.queryByRole("button", { name: "Globus anhalten" }),
+      screen.queryByRole("button", { name: "Animation pausieren" }),
     ).toBeNull();
   });
 
@@ -216,7 +216,7 @@ describe("phone hero globe: live globe", () => {
       container.querySelector("[data-home-globe]"),
     ).toHaveAttribute("data-home-globe-motion", "running");
     expect(
-      screen.getByRole("button", { name: "Globus anhalten" }),
+      screen.getByRole("button", { name: "Animation pausieren" }),
     ).toHaveAttribute("aria-pressed", "false");
 
     // The opening's end hands the stage to the live globe, at idle.
@@ -256,7 +256,7 @@ describe("phone hero globe: live globe", () => {
       expect(slot).toHaveAttribute("data-home-globe-live", ""),
     );
     expect(phoneMounts()).toHaveLength(1);
-    const toggle = screen.getByRole("button", { name: "Pause the globe" });
+    const toggle = screen.getByRole("button", { name: "Pause animation" });
     expect(slot).toHaveAttribute("data-home-globe-live", "");
     expect(slot).toHaveAttribute("data-home-globe-motion", "running");
     expect(toggle).toHaveAttribute("aria-pressed", "false");
@@ -291,9 +291,9 @@ describe("phone hero globe: live globe", () => {
     const { container } = renderHero();
     // No opening plays for a remembered pause; the pressed control arrives
     // when the page has settled, the live globe after the same wait.
-    expect(screen.queryByRole("button", { name: "Globus anhalten" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Animation pausieren" })).toBeNull();
     await advance(300);
-    const toggle = screen.getByRole("button", { name: "Globus anhalten" });
+    const toggle = screen.getByRole("button", { name: "Animation pausieren" });
     expect(toggle).toHaveAttribute("aria-pressed", "true");
     expect(
       container.querySelector("[data-home-globe]"),
@@ -392,14 +392,14 @@ describe("phone hero: the signal from Berlin", () => {
     vi.useFakeTimers();
     installMatchMedia({});
     const { container } = renderWithIntro();
-    expect(screen.queryByRole("button", { name: "Globus anhalten" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Animation pausieren" })).toBeNull();
     expect(slotOf(container)).toHaveAttribute("data-home-globe-motion", "static");
     await advance(300);
     vi.useRealTimers();
     expect(slotOf(container)).toHaveAttribute("data-home-intro", "play");
     expect(slotOf(container)).toHaveAttribute("data-home-globe-motion", "running");
     expect(
-      screen.getByRole("button", { name: "Globus anhalten" }),
+      screen.getByRole("button", { name: "Animation pausieren" }),
     ).toHaveAttribute("aria-pressed", "false");
   });
 
@@ -472,7 +472,7 @@ describe("phone hero: the signal from Berlin", () => {
     vi.useRealTimers();
     expect(phoneMounts()).toHaveLength(0);
     expect(slot).toHaveAttribute("data-home-intro", "play");
-    fireEvent.click(screen.getByRole("button", { name: "Globus anhalten" }));
+    fireEvent.click(screen.getByRole("button", { name: "Animation pausieren" }));
     expect(slot).toHaveAttribute("data-home-intro", "done");
 
     window.localStorage.clear();
