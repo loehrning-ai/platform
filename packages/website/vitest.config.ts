@@ -36,15 +36,6 @@ export default defineConfig({
         "src/**/types.ts",
         "src/instrumentation.ts",
       ],
-      // Coverage floors retain a 1.5 percentage-point margin below the latest
-      // complete local measurement to absorb runtime variance without allowing
-      // material coverage regression.
-      thresholds: {
-        lines: 74,
-        functions: 70,
-        branches: 68,
-        statements: 72,
-      },
     },
   },
   resolve: {

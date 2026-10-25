@@ -33,35 +33,11 @@ function listWith(environment, project = "chromium") {
   );
 }
 
-test("manual visual capture is isolated from every mandatory public project", () => {
-  const ordinaryVisualProject = listWith({}, "chromium-visual-qa");
-  assert.notEqual(ordinaryVisualProject.status, 0);
-  assert.match(
-    `${ordinaryVisualProject.stdout}\n${ordinaryVisualProject.stderr}`,
-    /Project\(s\) "chromium-visual-qa" not found/,
-  );
-
-  const optedInVisualProject = listWith(
-    { PLAYWRIGHT_CAPTURE_VISUALS: "1" },
-    "chromium-visual-qa",
-  );
-  assert.equal(optedInVisualProject.status, 0, optedInVisualProject.stderr);
-  assert.equal(
-    optedInVisualProject.stdout.match(/qa-visuals\.spec\.ts/g)?.length,
-    24,
-  );
-
-  for (const project of [
-    "chromium",
-    "mobile-chromium",
-    "mobile-webkit",
-  ]) {
-    const ordinary = listWith({}, project);
-    const optedIn = listWith({ PLAYWRIGHT_CAPTURE_VISUALS: "1" }, project);
-    assert.equal(ordinary.status, 0, ordinary.stderr);
-    assert.equal(optedIn.status, 0, optedIn.stderr);
-    assert.equal(optedIn.stdout, ordinary.stdout);
-    assert.doesNotMatch(optedIn.stdout, /qa-visuals\.spec\.ts/);
+test("every scripted project loads and lists its specs", () => {
+  for (const project of ["chromium", "mobile-chromium", "mobile-webkit"]) {
+    const result = listWith({}, project);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /Total: \d+ tests? in \d+ files?/, project);
   }
 });
 

@@ -66,7 +66,7 @@ const probe = [
   "'DATABASE_URL',",
   "'STRIPE_SECRET_KEY',",
   "'SSH_AUTH_SOCK',",
-  "'PLAYWRIGHT_CAPTURE_VISUALS',",
+  "'RUN_WEBKIT',",
   "'PROVIDER_FREE_BENIGN_MARKER'",
   "];",
   "process.stdout.write(JSON.stringify(Object.fromEntries(keys.map((key) => [key, process.env[key]]))));",
@@ -113,7 +113,7 @@ const result = spawnSync(
       DATABASE_URL: "postgres://sentinel.invalid/db",
       STRIPE_SECRET_KEY: "sentinel-stripe",
       SSH_AUTH_SOCK: "/tmp/sentinel-agent.sock",
-      PLAYWRIGHT_CAPTURE_VISUALS: "arbitrary-untrusted-value",
+      RUN_WEBKIT: "arbitrary-untrusted-value",
       PROVIDER_FREE_BENIGN_MARKER: "preserved",
     },
   },
@@ -161,7 +161,7 @@ for (const key of [
   "DATABASE_URL",
   "STRIPE_SECRET_KEY",
   "SSH_AUTH_SOCK",
-  "PLAYWRIGHT_CAPTURE_VISUALS",
+  "RUN_WEBKIT",
   "PROVIDER_FREE_BENIGN_MARKER",
 ]) {
   assert.equal(
@@ -220,22 +220,22 @@ for (const name of APPLICATION_PROVIDER_ENVIRONMENT_KEYS) {
   );
 }
 
-const visualCaptureResult = spawnSync(
+const webkitOptInResult = spawnSync(
   process.execPath,
   [wrapper, process.execPath, "-e", probe],
   {
     encoding: "utf8",
     env: {
       ...process.env,
-      PLAYWRIGHT_CAPTURE_VISUALS: "1",
+      RUN_WEBKIT: "1",
     },
   },
 );
-assert.equal(visualCaptureResult.status, 0, visualCaptureResult.stderr);
+assert.equal(webkitOptInResult.status, 0, webkitOptInResult.stderr);
 assert.equal(
-  JSON.parse(visualCaptureResult.stdout).PLAYWRIGHT_CAPTURE_VISUALS,
+  JSON.parse(webkitOptInResult.stdout).RUN_WEBKIT,
   "1",
-  "the explicit visual-capture opt-in must cross the minimal boundary",
+  "the explicit WebKit opt-in must cross the minimal boundary",
 );
 
 const dotenvDirectory = mkdtempSync(

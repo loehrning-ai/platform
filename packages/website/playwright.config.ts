@@ -55,8 +55,6 @@ const PACKAGE_ROOT = fileURLToPath(new URL(".", import.meta.url));
 // Desktop Safari is an optional local tier. Enable it with RUN_WEBKIT after
 // installing WebKit. Use element screenshots for unusually tall pages.
 const RUN_WEBKIT = process.env.RUN_WEBKIT === "1";
-const CAPTURE_VISUALS = process.env.PLAYWRIGHT_CAPTURE_VISUALS === "1";
-const MANUAL_VISUAL_SPEC = /qa-visuals\.spec\.ts$/;
 // Live auth is excluded from the default project graph. Only the explicit,
 // fail-closed `test:e2e:authenticated-live(:built)` command sets this flag.
 const RUN_LIVE_AUTH = process.env.E2E_AUTH_LIVE === "1";
@@ -267,10 +265,6 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "retain-on-failure",
   },
-  // Pixel baselines are deliberately project/OS independent. The checked-in
-  // desktop-Chromium references use bundled local fonts and a bounded 3%
-  // tolerance, so Linux CI verifies the same reviewed pixels as local macOS.
-  snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   projects: [
     // Desktop Chromium carries the pull-request smoke and the weekly full
     // suite. The iPhone 13 projects stay for the weekly WebKit smoke and for
@@ -278,16 +272,12 @@ export default defineConfig({
     // WebKit crash from being misreported as a responsive-layout bug.
     {
       name: "chromium",
-      testIgnore: [/\.authed\.spec\.ts$/, MANUAL_VISUAL_SPEC],
+      testIgnore: [/\.authed\.spec\.ts$/],
       use: { ...devices["Desktop Chrome"] },
     },
     {
       name: "mobile-chromium",
-      testIgnore: [
-        /\.authed\.spec\.ts$/,
-        /course-workspace\.spec\.ts$/,
-        MANUAL_VISUAL_SPEC,
-      ],
+      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
       use: { ...devices["iPhone 13"], browserName: "chromium" },
     },
     {
@@ -298,25 +288,9 @@ export default defineConfig({
       // Keep the timeout strict so an actual hang still fails.
       workers: 1,
       timeout: 60_000,
-      testIgnore: [
-        /\.authed\.spec\.ts$/,
-        /course-workspace\.spec\.ts$/,
-        MANUAL_VISUAL_SPEC,
-      ],
+      testIgnore: [/\.authed\.spec\.ts$/, /course-workspace\.spec\.ts$/],
       use: { ...devices["iPhone 13"], video: "on-first-retry" },
     },
-
-    // Human-review screenshots are a separate opt-in project. They never
-    // change the mandatory public project's inventory or WebKit shard size.
-    ...(CAPTURE_VISUALS
-      ? [
-          {
-            name: "chromium-visual-qa",
-            testMatch: MANUAL_VISUAL_SPEC,
-            use: { ...devices["Desktop Chrome"] },
-          },
-        ]
-      : []),
 
     // Live authentication is opt-in and fail-closed. The command validates all
     // nine dedicated test variables before Playwright starts; auth.setup.ts

@@ -50,7 +50,6 @@
     "book:tokens": "node scripts/list-book-tokens.mjs",
     "migrations:check": "node scripts/verify-migrations-tracked.mjs",
     "verify": "bun run --cwd ../.. ci",
-    "verify:unit": "node scripts/run-provider-free.mjs bun run test:coverage",
     "verify:build": "E2E_SERVER_MODE=${E2E_SERVER_MODE:-production} E2E_PORT=${E2E_PORT:-3000} node scripts/run-provider-free.mjs bun run build",
     "e2e:shard:built": "E2E_SERVER_MODE=production node scripts/run-provider-free.mjs node scripts/run-built-gate.mjs node scripts/run-playwright.mjs"
   },

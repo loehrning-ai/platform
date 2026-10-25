@@ -12,7 +12,7 @@ import {
  * in PUBLIC_ACCESS_PATHS (src/lib/crawl/contract.ts): public-noindex,
  * reachable without login. The fluency test, simulation gallery and capstone
  * rules page were retired with the tool-neutral rebuild and now redirect
- * (route-ai-native-locales.spec.ts covers the 301s).
+ * (src/lib/ai-native/en-integration.test.ts covers the 301s).
  * Assertions target ROLES, aria-labels, or state-derived counters rather than
  * marketing copy, so a wording refresh stays green while a real regression
  * (dead page, unwired search, broken funnel link, mobile overflow) fails.

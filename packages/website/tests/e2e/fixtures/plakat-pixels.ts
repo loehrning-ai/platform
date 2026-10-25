@@ -3,9 +3,8 @@ import sharp from "sharp";
 import { settleFontsAndFrame } from "./settle";
 
 /**
- * Shared pixel tools for the poster-scene checks (SPEC §3.9, §8.3):
- * `plakat-contrast.spec.ts` samples the ground under band text and
- * `plakat-focus.spec.ts` samples focus rings against their neighbours.
+ * Pixel tools for the poster-scene check (SPEC §3.9):
+ * `plakat-contrast.spec.ts` samples the ground under band text.
  *
  * Colours are read from real screenshots, never from tokens, so a shape,
  * halftone or canvas behind the text counts exactly as a reader sees it.
