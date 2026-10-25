@@ -6,9 +6,9 @@ import {
 } from "./fixtures/console";
 
 /**
- * /feedback smoke + provider-free fallback coverage. Stored feedback is an
+ * /feedback smoke + provider-free contact coverage. Stored feedback is an
  * optional provider-backed feature, so the credential-free publication build
- * must render the mailto fallback and must not expose an inert form.
+ * renders a plain contact page and must not expose an inert form.
  */
 
 const ROUTE = "/feedback";
@@ -25,7 +25,7 @@ test.describe("/feedback surface", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText("Rückmeldung");
+    await expect(h1).toHaveText("Kontakt");
 
     const noise = meaningfulBrowserErrors(errors);
     expect(
@@ -34,35 +34,31 @@ test.describe("/feedback surface", () => {
     ).toEqual([]);
   });
 
-  test("renders the disabled-storage status and direct-contact mailto fallback", async ({
-    page,
-  }) => {
+  test("renders the contact channels and no form", async ({ page }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
-    await expect(page.getByRole("status")).toContainText(
-      "Hier wird nichts gespeichert.",
-    );
     await expect(page.getByRole("group", { name: /Art der Rückmeldung/i })).toHaveCount(0);
     await expect(page.getByLabel(/Nachricht/i)).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Rückmeldung senden/i })).toHaveCount(0);
 
-    // The anonymous surface still offers a real contact channel.
     await expect(
       page.getByRole("link", { name: /tim@loehrning\.ai/i }),
     ).toHaveAttribute("href", "mailto:tim@loehrning.ai");
+    await expect(
+      page.getByRole("link", { name: /Tim Löhr auf LinkedIn/ }),
+    ).toHaveAttribute("href", /^https:\/\/www\.linkedin\.com\/in\//);
   });
 
 });
 
 test.describe("/feedback mobile", () => {
-  test("has no horizontal overflow at 390px and keeps the fallback visible", async ({
+  test("has no horizontal overflow at 390px and keeps the contact visible", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("status")).toBeVisible();
     await expect(page.getByRole("link", { name: /tim@loehrning\.ai/i })).toBeVisible();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({

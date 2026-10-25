@@ -326,7 +326,7 @@ describe("Footer link disclosure below lg", () => {
       "Blog",
       "Über mich",
       "Hilfe",
-      "Rückmeldung",
+      "Kontakt",
     ]) {
       expect(disclosure).toContainElement(screen.getByRole("link", { name }));
     }

@@ -521,12 +521,26 @@ export const FEEDBACK_COPY = {
       description:
         "Fehler oder Unklarheiten auf loehrning.ai melden. Das Formular fragt weder Name noch E-Mail-Adresse ab.",
     },
-    eyebrow: "Rückmeldung / Beta",
+    contact: {
+      metadata: {
+        title: "Kontakt",
+        description:
+          "Kontakt zu Tim Löhr, dem Betreiber von loehrning.ai: per E-Mail oder über LinkedIn.",
+      },
+      title: "Kontakt",
+      intro:
+        "Fragen zu Kursen und Workshops, ein Fehler auf einer Seite oder eine Idee für eine Zusammenarbeit: Schreib mir direkt.",
+      emailLabel: "E-Mail",
+      linkedInLabel: "LinkedIn",
+      linkedInText: "Tim Löhr auf LinkedIn",
+      opensNewTab: "öffnet in einem neuen Tab",
+      errorHint:
+        "Bei einem Fehler hilft mir der Link zur Seite und ein Satz dazu, was nicht stimmt.",
+    },
+    eyebrow: "Rückmeldung",
     title: "Rückmeldung zu Fehlern oder Unklarheiten",
     introAvailable:
       "Das Formular fragt weder Namen noch E-Mail-Adresse ab, eine Antwort ist also nicht möglich. Gib keine personenbezogenen, vertraulichen oder urheberrechtlich geschützten Inhalte ein.",
-    introUnavailable:
-      "Das Formular ist hier nicht freigeschaltet.",
     emailBefore: "Direkter Kontakt: ",
     boundaryHeading: "Was gesendet wird",
     boundaryEyebrow: "01 / Datenumfang",
@@ -536,9 +550,6 @@ export const FEEDBACK_COPY = {
       "Keine eigenen Felder für Name oder E-Mail-Adresse",
       "Keine Anfrageparameter oder URL-Fragmente im Seitenpfad",
     ],
-    disabledStatus:
-      "Hier wird nichts gespeichert. Schick deine Rückmeldung per E-Mail.",
-    disabledCodeLabel: "Status / Formular deaktiviert",
     form: {
       categoryLegend: "Art der Rückmeldung",
       categories: [
@@ -569,12 +580,26 @@ export const FEEDBACK_COPY = {
       description:
         "Report an error or unclear passage on loehrning.ai. The form requests neither a name nor an email address.",
     },
-    eyebrow: "Feedback / Beta",
+    contact: {
+      metadata: {
+        title: "Contact",
+        description:
+          "Contact Tim Löhr, who runs loehrning.ai, by email or on LinkedIn.",
+      },
+      title: "Contact",
+      intro:
+        "Questions about courses and workshops, an error on a page or an idea for working together: write to me directly.",
+      emailLabel: "Email",
+      linkedInLabel: "LinkedIn",
+      linkedInText: "Tim Löhr on LinkedIn",
+      opensNewTab: "opens in a new tab",
+      errorHint:
+        "For an error, the link to the page and one sentence on what is wrong help most.",
+    },
+    eyebrow: "Feedback",
     title: "Report an error or unclear passage",
     introAvailable:
       "The form does not ask for a name or email address, so a reply is not possible. Do not enter personal, confidential or copyrighted material.",
-    introUnavailable:
-      "The form is not enabled here.",
     emailBefore: "Direct contact: ",
     boundaryHeading: "Data submitted",
     boundaryEyebrow: "01 / Scope",
@@ -584,9 +609,6 @@ export const FEEDBACK_COPY = {
       "No dedicated name or email fields",
       "No query parameters or URL fragments in the page path",
     ],
-    disabledStatus:
-      "Nothing is stored here. Send your feedback by email.",
-    disabledCodeLabel: "Status / Form disabled",
     form: {
       categoryLegend: "Feedback category",
       categories: [
