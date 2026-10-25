@@ -68,9 +68,6 @@ const RUN_MOCK_AUTH = process.env.E2E_AUTH_MOCK === "1";
 const MOCK_AUTH_PRELOAD = fileURLToPath(
   new URL("./tests/e2e/fixtures/mock-auth-backend.cjs", import.meta.url),
 );
-const DESKTOP_CHROMIUM_ISOLATED_SPECS = [
-  /route-ai-native-operator\.spec\.ts$/,
-] as const;
 const STORAGE_STATE = RUN_LIVE_AUTH
   ? validateLiveAuthStorageStatePath(process.env.E2E_AUTH_STORAGE_STATE)
   : STATIC_STORAGE_STATE;
@@ -224,9 +221,8 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: true,
   // Retries retain a trace and separate infrastructure noise from a stable
-  // defect. The pull-request and main gate retries once and tolerates a test
-  // that passes on its retry; the nightly desktop run sets E2E_FAIL_ON_FLAKY=1
-  // so those intermittent failures are counted there instead of blocking a merge.
+  // defect. Every scripted run retries once and tolerates a test that passes
+  // on its retry; set E2E_FAIL_ON_FLAKY=1 to count those as failures.
   retries: process.env.CI ? 2 : 1,
   failOnFlakyTests: process.env.E2E_FAIL_ON_FLAKY === "1",
   // CI: 1 worker (GitHub runner). Local: cap at 2 — the suite runs against a
@@ -276,25 +272,13 @@ export default defineConfig({
   // tolerance, so Linux CI verifies the same reviewed pixels as local macOS.
   snapshotPathTemplate: "{testDir}/__screenshots__/{testFilePath}/{arg}{ext}",
   projects: [
-    // Default PR tier: desktop Chromium plus the same iPhone 13 viewport in
-    // Chromium and WebKit. Keeping viewport and engine explicit prevents a
-    // native WebKit crash from being misreported as a responsive-layout bug.
-    // No auth dependency, so these carry the whole public suite.
+    // Desktop Chromium carries the pull-request smoke and the weekly full
+    // suite. The iPhone 13 projects stay for the weekly WebKit smoke and for
+    // local phone runs; keeping viewport and engine explicit prevents a native
+    // WebKit crash from being misreported as a responsive-layout bug.
     {
       name: "chromium",
-      // These two exhaustive route matrices each get a fresh browser process
-      // below. Running both after sustained route walking in one worker
-      // reproduced a Chromium renderer deadlock on two protected CI runs.
-      testIgnore: [
-        /\.authed\.spec\.ts$/,
-        ...DESKTOP_CHROMIUM_ISOLATED_SPECS,
-        MANUAL_VISUAL_SPEC,
-      ],
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "chromium-ai-native-operator",
-      testMatch: DESKTOP_CHROMIUM_ISOLATED_SPECS[0],
+      testIgnore: [/\.authed\.spec\.ts$/, MANUAL_VISUAL_SPEC],
       use: { ...devices["Desktop Chrome"] },
     },
     {

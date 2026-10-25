@@ -22,7 +22,7 @@ bun run ci
 `bun run ci` runs exactly what a pull request runs on GitHub: `static` and
 `unit` in parallel, then `browser`. When a GitHub job is red, run the script of
 the same name (`bun run ci:static`, `ci:unit` or `ci:browser`). WebKit runs
-nightly only; install it (`playwright install webkit`) when you work on a
+in the weekly extended run only; install it (`playwright install webkit`) when you work on a
 Safari-specific bug.
 
 On a minimal Linux or CI image, install browser system dependencies with

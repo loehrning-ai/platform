@@ -17,16 +17,15 @@ build output changed while the gate was running.
   `tests/e2e/smoke.list`, run on desktop Chromium with one retry. Run with `bun run ci:browser` from the repository
   root (builds once, then runs the privacy probe and the smoke). Add a spec by
   adding a line; keep known-flaky specs out. A test titled `@quarantine` is
-  skipped by the nightly run and deleted if still tagged after 14 days.
-- **Public (full suite, nightly):** desktop Chromium plus an iPhone 13 viewport in
-  Chromium and WebKit (`chromium`, `mobile-chromium`, `mobile-webkit`
-  projects). Covers the public route matrix, open-source routes, and
-  structural accessibility. The nightly workflow runs every Chromium spec and
-  the smoke list on WebKit. Run locally with `bun run test:e2e` (desktop and phone Chromium, builds
-  first); narrow it with `bun run --cwd packages/website e2e:shard:built test <spec>` after a build.
+  skipped by the weekly run and deleted if still tagged after 14 days.
+- **Public (full suite, weekly):** every spec on desktop Chromium (`chromium`
+  project), plus the smoke list on the iPhone 13 WebKit viewport
+  (`mobile-webkit`). Phone layout specs set their own viewport. The
+  `mobile-chromium` project remains for local phone runs. Run locally with
+  `bun run test:e2e` (desktop Chromium, builds first); narrow it with `bun run --cwd packages/website e2e:shard:built test <spec>` after a build.
   `bun run test:e2e:dev` runs against the dev server instead of a production
   build. Set `E2E_FAIL_ON_FLAKY=1` to count a pass-on-retry as a failure.
-- **Konto DOM, mocked session (runs nightly):** the `konto-dom-mocked` project
+- **Konto DOM, mocked session (runs weekly):** the `konto-dom-mocked` project
   builds with three fictional-but-well-formed public Supabase variables and
   serves the endpoints the server calls during SSR from an in-process preload
   (`tests/e2e/fixtures/mock-auth-backend.cjs`), so the signed-in `/konto` DOM

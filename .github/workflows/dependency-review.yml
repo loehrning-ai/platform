@@ -10,7 +10,7 @@ permissions:
 # privileged pull_request_target submission would still lose write permission
 # on Dependabot PRs while expanding the attack surface for fork data. Keep this
 # workflow unprivileged. It reviews the dependency-graph diff GitHub can
-# recognise and nothing else; the live `bun audit` runs nightly (nightly.yml,
+# recognise and nothing else; the live `bun audit` runs weekly (nightly.yml,
 # `bun run ci:hygiene`), because its result changes with the advisory database,
 # not with the pull request. Informational for deploys: only `verify` gates.
 concurrency:

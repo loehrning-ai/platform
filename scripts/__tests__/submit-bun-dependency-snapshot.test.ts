@@ -410,7 +410,7 @@ describe("Supply-chain install contract", () => {
 
     // Browsers install through the composite action so a shard pulls only the
     // engine it runs. The workspace-locked CLI is still the only entry point;
-    // pull requests request Chromium and the nightly workflow adds WebKit.
+    // pull requests request Chromium and the weekly workflow adds WebKit.
     expect(ciSetupAction).toContain(
       "bun run --cwd packages/website playwright install --with-deps ${{ inputs.playwright-browsers }}",
     );
@@ -434,7 +434,7 @@ describe("Supply-chain install contract", () => {
     expect(workflow).not.toContain("pull_request_target:");
     expect(workflow).toMatch(/permissions:\s*\n\s*contents: read/);
     expect(workflow).toContain("actions/dependency-review-action@");
-    // The live audit runs nightly through `ci:hygiene`. It may carry --ignore
+    // The live audit runs weekly through `ci:hygiene`. It may carry --ignore
     // for advisories with no published fix, but only for specific GHSA ids:
     // --audit-level or a bare skip would silently stop gating everything else.
     expect(scripts.audit).toMatch(/^bun audit(\s+--ignore=GHSA-[\w-]+)*$/);

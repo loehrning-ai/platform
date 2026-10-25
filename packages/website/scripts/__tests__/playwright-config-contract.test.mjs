@@ -53,7 +53,6 @@ test("manual visual capture is isolated from every mandatory public project", ()
 
   for (const project of [
     "chromium",
-    "chromium-ai-native-operator",
     "mobile-chromium",
     "mobile-webkit",
   ]) {
@@ -110,7 +109,7 @@ function workflowJobs(file) {
     .filter((block) => block.includes("E2E_GLOBAL_TIMEOUT"));
 }
 
-test("every CI and nightly browser job gives Playwright a budget under its job timeout", () => {
+test("every CI and weekly browser job gives Playwright a budget under its job timeout", () => {
   const ciJobs = workflowJobs("ci.yml");
   assert.ok(ciJobs.length >= 1, "the browser smoke job must set a budget");
 

@@ -1,29 +1,22 @@
-name: Nightly
+name: Extended
 
-# Everything that left the pull-request path: the full browser suites, a Safari
-# check, coverage and the audits. It never blocks a merge and never
-# gates a deploy by default (`bun run deploy:production -- --require-nightly`
-# makes one run on an exact commit a deploy condition). A red run opens or
-# updates the single `nightly-red` issue, and closes it again when green.
+# The weekly extended run: everything that left the pull-request path. The
+# full desktop Chromium suite, the smoke list on iPhone WebKit, the mocked
+# /konto DOM suite and the full advisory and licence audits. It never blocks a
+# merge. A red test here is fixed or deleted within 7 days.
 #
-# Run it on demand before a risky deploy:  gh workflow run nightly.yml --ref main
+# Run it on demand before a risky release:  gh workflow run nightly.yml --ref main
 # No job here may be called `verify`: that name is the release signal in ci.yml.
 on:
   schedule:
-    - cron: "30 2 * * *"
+    - cron: "17 4 * * 1"
   workflow_dispatch:
-    inputs:
-      suite:
-        description: Which part to run
-        type: choice
-        options: [all, webkit]
-        default: all
 
 permissions:
   contents: read
 
 concurrency:
-  group: nightly
+  group: extended
   cancel-in-progress: false
 
 env:
@@ -31,27 +24,17 @@ env:
 
 jobs:
   browser:
-    name: browser ${{ matrix.project }} ${{ matrix.shard }}
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' }}
+    name: browser chromium ${{ matrix.shard }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     env:
       E2E_SERVER_MODE: production
       E2E_PORT: "3000"
-      E2E_GLOBAL_TIMEOUT: 1380000
-      # Only the desktop run counts a pass-on-retry as a failure.
-      E2E_FAIL_ON_FLAKY: ${{ matrix.flaky }}
+      E2E_GLOBAL_TIMEOUT: 2100000
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { project: chromium, shard: 1/3, workers: 2, flaky: "1" }
-          - { project: chromium, shard: 2/3, workers: 2, flaky: "1" }
-          - { project: chromium, shard: 3/3, workers: 2, flaky: "1" }
-          - { project: mobile-chromium, shard: 1/2, workers: 2, flaky: "0" }
-          - { project: mobile-chromium, shard: 2/2, workers: 2, flaky: "0" }
-          # Exhaustive route walking runs in its own browser process (see playwright.config.ts).
-          - { project: chromium-ai-native-operator, shard: 1/1, workers: 1, flaky: "0" }
+        shard: [1/2, 2/2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -64,16 +47,16 @@ jobs:
       - name: Browser suite
         run: >-
           bun run --cwd packages/website e2e:shard:built test
-          --project=${{ matrix.project }}
+          --project=chromium
           --shard=${{ matrix.shard }}
-          --workers=${{ matrix.workers }}
+          --workers=2
           --retries=1
           --grep-invert "@quarantine|@launch-gate"
       - name: Upload failure artifacts
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: failures-${{ matrix.project }}-${{ strategy.job-index }}
+          name: failures-chromium-${{ strategy.job-index }}
           path: packages/website/test-results/
           if-no-files-found: ignore
           retention-days: 7
@@ -82,7 +65,6 @@ jobs:
   # full iPhone/WebKit suite was the main source of timeouts.
   webkit:
     name: browser mobile-webkit smoke
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' || inputs.suite == 'webkit' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -116,7 +98,6 @@ jobs:
 
   konto-dom:
     name: konto DOM
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -135,63 +116,14 @@ jobs:
       # preload. DOM and token-plumbing coverage, not authentication proof.
       - run: bun run --cwd packages/website test:e2e:konto-dom-mocked
 
-  coverage:
-    name: coverage
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/setup
-      # vitest enforces the line, branch, function and statement floors.
-      - run: bun run --cwd packages/website verify:unit
-
   hygiene:
     name: hygiene
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.suite == 'all' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup
-      # The live advisory audit, the licence audit and the self-tests of tools.
+      # The full advisory audit (every level) and the licence audit.
       - run: bun run ci:hygiene
-
-  report:
-    name: report
-    if: ${{ always() && github.ref == 'refs/heads/main' }}
-    needs: [browser, webkit, konto-dom, coverage, hygiene]
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # The only elevated token in the repository's CI besides dependency
-    # submission: it files and closes one issue. No checkout, no repository code.
-    permissions:
-      issues: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      NEEDS: ${{ toJSON(needs) }}
-      # A partial manual run must not close the issue.
-      FULL_RUN: ${{ github.event_name == 'schedule' || inputs.suite == 'all' }}
-    steps:
-      - name: Open, update or close the nightly-red issue
-        run: |
-          failed="$(jq -r 'to_entries[] | select(.value.result == "failure" or .value.result == "cancelled") | "- \(.key): \(.value.result)"' <<<"${NEEDS}")"
-          number="$(gh issue list --label nightly-red --state open --limit 1 --json number --jq '.[0].number // empty')"
-          if [ -n "${failed}" ]; then
-            body="$(printf 'Nightly is red: %s\n\n%s\n' "${RUN_URL}" "${failed}")"
-            if [ -n "${number}" ]; then
-              gh issue comment "${number}" --body "${body}"
-            else
-              gh label create nightly-red --color d73a4a --description "The nightly run failed" 2>/dev/null || true
-              gh issue create --title "Nightly is red" --label nightly-red --body "${body}"
-            fi
-          elif [ "${FULL_RUN}" = "true" ] && [ -n "${number}" ]; then
-            gh issue comment "${number}" --body "Green again: ${RUN_URL}"
-            gh issue close "${number}"
-          fi

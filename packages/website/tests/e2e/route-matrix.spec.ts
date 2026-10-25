@@ -17,6 +17,7 @@
  */
 
 import { test, expect, type Page } from "@playwright/test";
+import { MODULE_IDS, MODULE_LESSON_COUNTS } from "../../src/lib/ai-native-operator/types";
 
 // ---------------------------------------------------------------------------
 // Public routes: expect 200, no login redirect
@@ -102,6 +103,43 @@ test.describe("public routes return 200", () => {
         browserErrors,
         `Browser errors on ${route}:\n${browserErrors.join("\n")}`,
       ).toEqual([]);
+    });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// AI-Native Operator: every module and lesson route, both locales
+// ---------------------------------------------------------------------------
+
+const OPERATOR_ROOT = "/kurse/open-source/ai-native-operator";
+const OPERATOR_PATHS = [
+  "",
+  ...MODULE_IDS.map((moduleId) => `/${moduleId}`),
+  ...MODULE_IDS.flatMap((moduleId) =>
+    Array.from({ length: MODULE_LESSON_COUNTS[moduleId] }, (_, index) => `/${moduleId}/${index + 1}`),
+  ),
+  "/quiz",
+  "/zertifikat",
+  "/verifizierung",
+];
+
+test.describe("AI-Native Operator course routes", () => {
+  for (const prefix of ["", "/en"]) {
+    test(`${prefix || "de"}: 9 modules and 39 lessons return 200, unknown ones 404`, async ({
+      request,
+    }) => {
+      test.setTimeout(120_000);
+      expect(OPERATOR_PATHS).toHaveLength(1 + 9 + 39 + 3);
+      for (const path of OPERATOR_PATHS) {
+        const route = `${prefix}${OPERATOR_ROOT}${path}`;
+        const response = await request.get(route, { maxRedirects: 0 });
+        expect.soft(response.status(), route).toBe(200);
+      }
+      for (const path of ["/not-a-module", "/mindset/999"]) {
+        const route = `${prefix}${OPERATOR_ROOT}${path}`;
+        const response = await request.get(route, { maxRedirects: 0 });
+        expect.soft(response.status(), route).toBe(404);
+      }
     });
   }
 });

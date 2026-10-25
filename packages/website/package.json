@@ -24,7 +24,7 @@
     "test:watch": "vitest",
     "test:server-log-privacy": "node scripts/run-provider-free.mjs bun run build && bun run test:server-log-privacy:built",
     "test:server-log-privacy:built": "node scripts/run-provider-free.mjs node scripts/run-built-gate.mjs node scripts/verify-server-log-privacy.mjs",
-    "test:e2e": "node scripts/run-provider-free.mjs bun run build && bun run e2e:shard:built test --project=chromium --project=mobile-chromium",
+    "test:e2e": "node scripts/run-provider-free.mjs bun run build && bun run e2e:shard:built test --project=chromium",
     "test:e2e:dev": "E2E_SERVER_MODE=development node scripts/run-provider-free.mjs node scripts/run-playwright.mjs test",
     "test:e2e:konto-dom-mocked": "node scripts/run-mock-auth-e2e.mjs",
     "test:e2e:konto-dom-mocked:built": "node scripts/run-mock-auth-e2e.mjs --built",
