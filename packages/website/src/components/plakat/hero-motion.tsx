@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { ConeScene } from "./hero-cone-scene";
-import { GateScene } from "./hero-gate-scene";
+import { LinksScene } from "./hero-links-scene";
 import { MendScene } from "./hero-mend-scene";
 import { TraceScene } from "./hero-trace-scene";
 import { WeaveScene } from "./hero-weave-scene";
@@ -16,7 +16,7 @@ import { WeaveScene } from "./hero-weave-scene";
  * Add a scene (docs/workshop-standard.md, "Adding a workshop"):
  * 1. Write `hero-<key>-scene.tsx` (a named export `<Key>Scene(): ReactNode`
  *    with no props) and `hero-<key>.css` (imported by the component) next to
- *    `hero-gate-scene.tsx`.
+ *    `hero-links-scene.tsx`.
  * 2. Add the key to `HeroSceneKey`, import the component and add one line to
  *    `HERO_SCENES`.
  * 3. Map the workshop slug to the key in `HERO_MOTION`.
@@ -30,7 +30,7 @@ import { WeaveScene } from "./hero-weave-scene";
  * stroke-dashoffset move.
  */
 
-export type HeroSceneKey = "cone" | "trace" | "mend" | "weave" | "gate";
+export type HeroSceneKey = "cone" | "trace" | "mend" | "weave" | "links";
 
 /**
  * Scene key to component. A new workshop adds one import and one line here.
@@ -40,7 +40,7 @@ const HERO_SCENES: Readonly<Partial<Record<HeroSceneKey, () => ReactNode>>> = {
   trace: TraceScene,
   mend: MendScene,
   weave: WeaveScene,
-  gate: GateScene,
+  links: LinksScene,
 };
 
 /** Workshop slug to scene key. All five workshops have one; unwired keys render nothing yet. */
@@ -49,8 +49,8 @@ export const HERO_MOTION: Readonly<Record<string, HeroSceneKey>> = {
   "geschaeftsberichte-mit-ki-lesen": "trace",
   "datenbereitschaft-fuer-ki": "mend",
   "esg-berichte-mit-ki": "weave",
-  // Workshop 05 tells the story of its own page: where a prompt goes.
-  "ki-im-unternehmen-sicher-nutzen": "gate",
+  // Workshop 05 shows its demo's first screen: eight links by name, the four tests, two hold.
+  "audit-vorbereitung-mit-ki": "links",
 };
 
 /** The scene key of a workshop, or undefined for a slug without one. */

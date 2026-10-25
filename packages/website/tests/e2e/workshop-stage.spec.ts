@@ -13,7 +13,7 @@ const WORKSHOPS = [
   { slug: "geschaeftsberichte-mit-ki-lesen", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
   { slug: "datenbereitschaft-fuer-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
   { slug: "esg-berichte-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
-  { slug: "ki-im-unternehmen-sicher-nutzen", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "audit-vorbereitung-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
 ] as const;
 
 const LOCALES = [
@@ -211,7 +211,7 @@ test.describe("workshop stage first screen", () => {
 
 test.describe("workshop stage motion and pause", () => {
   test("the pause control stops card and scene animation, and starts it again", async ({ page }) => {
-    await open(page, "/workshops/ki-im-unternehmen-sicher-nutzen");
+    await open(page, "/workshops/audit-vorbereitung-mit-ki");
     const stage = page.locator("[data-workshop-stage]");
     const pause = stage.locator("label.ws-pause");
     await expect(pause).toBeVisible();
@@ -219,11 +219,11 @@ test.describe("workshop stage motion and pause", () => {
     expect(box.height).toBeGreaterThanOrEqual(44);
     await expect(pause).toContainText("Bewegung anhalten");
 
-    // Playing: the kit chips, the top slide and the gate's cards move.
+    // Playing: the kit chips, the top slide and the links' sweep move.
     const chip = stage.locator(".ac-chip").first();
     const frame = stage.locator(".ac-frame-top");
-    const card = stage.locator(".hm-p1");
-    await expect(stage).toHaveAttribute("data-stage-scene", "gate");
+    const card = stage.locator(".hk-scan");
+    await expect(stage).toHaveAttribute("data-stage-scene", "links");
     expect(await animationName(chip)).not.toBe("none");
     expect(await animationName(frame)).not.toBe("none");
     expect(await animationName(card)).not.toBe("none");
@@ -234,8 +234,8 @@ test.describe("workshop stage motion and pause", () => {
     expect(await animationName(chip)).toBe("none");
     expect(await animationName(frame)).toBe("none");
     expect(await animationName(card)).toBe("none");
-    // Still frame: the lamps stay lit, the kit chips stay in the box.
-    await expect(stage.locator(".hm-lamp-go")).toHaveCSS("opacity", "1");
+    // Still frame: the broken links stay broken, the kit chips stay in the box.
+    await expect(stage.locator(".hk-fail-5")).toHaveCSS("opacity", "1");
     await expect(chip).toHaveCSS("opacity", "1");
 
     await pause.click();
@@ -244,7 +244,7 @@ test.describe("workshop stage motion and pause", () => {
   });
 
   test("the pause control is reachable by keyboard with a visible ring and toggles with Space", async ({ page }) => {
-    await open(page, "/workshops/ki-im-unternehmen-sicher-nutzen");
+    await open(page, "/workshops/audit-vorbereitung-mit-ki");
     const input = page.locator("input.ws-pause-input");
     await input.focus();
     await expect(input).toBeFocused();
@@ -273,9 +273,9 @@ test.describe("workshop stage motion and pause", () => {
   test("under reduced motion nothing animates and the pause control is hidden", async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: "reduce" });
     const page = await context.newPage();
-    await open(page, "/workshops/ki-im-unternehmen-sicher-nutzen");
+    await open(page, "/workshops/audit-vorbereitung-mit-ki");
     await expect(page.locator("label.ws-pause")).toBeHidden();
-    for (const selector of [".ac-chip", ".ac-frame-top", ".hm-p1", ".hm-orbit", ".hm-layer-far"]) {
+    for (const selector of [".ac-chip", ".ac-frame-top", ".hk-scan", ".hk-links", ".hk-far"]) {
       expect(await animationName(page.locator(selector).first()), selector).toBe("none");
     }
     await context.close();
@@ -284,7 +284,7 @@ test.describe("workshop stage motion and pause", () => {
   test("the scene fills the frame of the stage at every width and never overflows the page", async ({ page }) => {
     for (const width of [390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
-      await open(page, "/workshops/ki-im-unternehmen-sicher-nutzen");
+      await open(page, "/workshops/audit-vorbereitung-mit-ki");
       const scene = page.locator("[data-workshop-scene]");
       const box = (await scene.boundingBox())!;
       const svg = (await scene.locator("svg").boundingBox())!;

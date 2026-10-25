@@ -390,6 +390,7 @@ describe("runSkillsMirrorCheck", () => {
     const { errors, names } = await runSkillsMirrorCheck();
     expect(errors).toEqual([]);
     expect(names).toEqual([
+      "audit-nachweise",
       "cv-engine",
       "esg-nachweise",
       "kennzahl-fragekarte",

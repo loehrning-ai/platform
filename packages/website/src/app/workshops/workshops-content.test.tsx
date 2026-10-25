@@ -67,7 +67,7 @@ describe("<WorkshopsContent>", () => {
     const audit = getWorkshops("en").find((w) => w.number === "05");
     const esg = getWorkshops("en").find((w) => w.number === "04");
     expect(rows.map((row) => row.id)).toEqual([
-      "workshop-ki-im-unternehmen-sicher-nutzen",
+      "workshop-audit-vorbereitung-mit-ki",
       "workshop-esg-berichte-mit-ki",
       "workshop-datenbereitschaft-fuer-ki",
       "workshop-geschaeftsberichte-mit-ki-lesen",
@@ -171,7 +171,7 @@ describe("<WorkshopsContent>", () => {
       ["02", "Business reports", "#workshop-geschaeftsberichte-mit-ki-lesen"],
       ["03", "Data readiness", "#workshop-datenbereitschaft-fuer-ki"],
       ["04", esg?.topic, "#workshop-esg-berichte-mit-ki"],
-      ["05", audit?.topic, "#workshop-ki-im-unternehmen-sicher-nutzen"],
+      ["05", audit?.topic, "#workshop-audit-vorbereitung-mit-ki"],
     ];
     expect(jumps).toEqual([
       ...index.map(([number, topic, href]) => [`${number} ${topic}`, href]),
@@ -228,7 +228,7 @@ describe("<WorkshopsContent>", () => {
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
     expect(within(rows[1]).getByText(/Drei ESG-Anfragen an ein Weingut/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
-    expect(within(rows[0]).getByText(/Du prüfst dein Konto/).tagName).toBe("P");
+    expect(within(rows[0]).getByText(/Unterlagen für ein Audit zu ordnen/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
@@ -297,7 +297,7 @@ describe("<WorkshopsContent>", () => {
     // The phone meta line is a short duration line; the row the cover
     // button recommends says so.
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Neu · Live 90 Min. · Selbstlernen 75 Min.",
+      "Neu · Live 90 Min. · Selbstlernen 60 Min.",
     );
     expect(rows[2].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -316,7 +316,8 @@ describe("<WorkshopsContent>", () => {
     const w05 = getWorkshops("de").find((w) => w.number === "05")!;
     const heading = within(rows[0]).getByRole("heading", { level: 3 });
     expect(heading).toHaveAccessibleName(w05.title);
-    expect(heading.querySelector(".sr-only")).toBeNull();
+    // W05's title has a head and a subtitle: the phone shows the head, the subtitle stays in the name.
+    expect(heading.querySelector(".sr-only")).toHaveTextContent(": Nachweise ordnen, Lücken finden");
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
     const esgHeading = within(rows[1]).getByRole("heading", { level: 3 });
     expect(esgHeading).toHaveAccessibleName(w04.title);
@@ -335,7 +336,7 @@ describe("<WorkshopsContent>", () => {
     const times = rows[0].querySelectorAll("[data-workshop-meta] > span.whitespace-nowrap");
     expect([...times].map((time) => time.textContent)).toEqual([
       "Live 90 Min. ·",
-      "Selbstlernen 75 Min.",
+      "Selbstlernen 60 Min.",
     ]);
     // The H1 is the old display head at the leading the highlight band is
     // built for (0.9): a 36px phone size, fluid from sm.
@@ -441,7 +442,7 @@ describe("<WorkshopsContent>", () => {
       "02 Geschäftsberichte",
       "03 Datenbereitschaft",
       "04 ESG",
-      "05 KI im Unternehmen",
+      "05 Audit-Vorbereitung",
     ]);
     for (const square of squares) {
       expect(square).toHaveClass("size-11", "focus-visible:outline-brand-orange");
@@ -452,7 +453,7 @@ describe("<WorkshopsContent>", () => {
       "#workshop-geschaeftsberichte-mit-ki-lesen",
       "#workshop-datenbereitschaft-fuer-ki",
       "#workshop-esg-berichte-mit-ki",
-      "#workshop-ki-im-unternehmen-sicher-nutzen",
+      "#workshop-audit-vorbereitung-mit-ki",
     ]);
     expect(bars[0]).toHaveClass("w-full", "bg-brand-pink/70", "min-h-11");
     expect(bars[3]).toHaveClass("w-[64%]", "bg-brand-acid/80");

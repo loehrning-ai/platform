@@ -32,6 +32,18 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
+const AUDIT_KIT_EDITION: TakeHomeKit = {
+  href: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+  shown: [
+    "vardar-audit-kit/folder/backup-report_2026-10.txt",
+    "vardar-audit-kit/folder/training-records_2026.csv",
+    "vardar-audit-kit/folder/infosec-policy_v4_DRAFT.md",
+    "vardar-audit-kit/project-instructions.md",
+  ],
+  instructions: "vardar-audit-kit/project-instructions.md",
+  installDoc: "vardar-audit-kit/START-HERE.md",
+};
+
 export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
   // Workshop 01 "Die Fehlerliste": built by scripts/workshop01/build-kit.mjs.
   "ki-prognosen-einschaetzen": {
@@ -67,35 +79,35 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
   "geschaeftsberichte-mit-ki-lesen": {
     kit: {
       de: {
-      href: "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
-      shown: [
-        "northwind-analyst-kit/reports/2023-09-monthly-report.md",
-        "northwind-analyst-kit/data/ncr_records.csv",
-        "northwind-analyst-kit/metric-cards.md",
-        "northwind-analyst-kit/data/demand_actuals.csv",
-        "northwind-analyst-kit/data/product_lines.csv",
-        "northwind-analyst-kit/dashboard/index.html",
-        "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
-        "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
-      ],
-      instructions: "northwind-analyst-kit/project-instructions.md",
-      installDoc: "northwind-analyst-kit/START-HERE.md",
-    },
+        href: "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
+        shown: [
+          "northwind-analyst-kit/reports/2023-09-monthly-report.md",
+          "northwind-analyst-kit/data/ncr_records.csv",
+          "northwind-analyst-kit/metric-cards.md",
+          "northwind-analyst-kit/data/demand_actuals.csv",
+          "northwind-analyst-kit/data/product_lines.csv",
+          "northwind-analyst-kit/dashboard/index.html",
+          "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
+          "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
+        ],
+        instructions: "northwind-analyst-kit/project-instructions.md",
+        installDoc: "northwind-analyst-kit/START-HERE.md",
+      },
       en: {
-      href: "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
-      shown: [
-        "northwind-analyst-kit/reports/2023-09-monthly-report.md",
-        "northwind-analyst-kit/data/ncr_records.csv",
-        "northwind-analyst-kit/metric-cards.md",
-        "northwind-analyst-kit/data/demand_actuals.csv",
-        "northwind-analyst-kit/data/product_lines.csv",
-        "northwind-analyst-kit/dashboard/index.html",
-        "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
-        "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
-      ],
-      instructions: "northwind-analyst-kit/project-instructions.md",
-      installDoc: "northwind-analyst-kit/START-HERE.md",
-    },
+        href: "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
+        shown: [
+          "northwind-analyst-kit/reports/2023-09-monthly-report.md",
+          "northwind-analyst-kit/data/ncr_records.csv",
+          "northwind-analyst-kit/metric-cards.md",
+          "northwind-analyst-kit/data/demand_actuals.csv",
+          "northwind-analyst-kit/data/product_lines.csv",
+          "northwind-analyst-kit/dashboard/index.html",
+          "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
+          "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
+        ],
+        instructions: "northwind-analyst-kit/project-instructions.md",
+        installDoc: "northwind-analyst-kit/START-HERE.md",
+      },
     },
     skill: { name: "kennzahlen-steckbrief" },
     templates: [{ vorlage: "kennzahlen-steckbrief-vorlage" }],
@@ -166,6 +178,11 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
       { vorlage: "esg-mail-fehlendes-dokument" },
       { vorlage: "esg-nachweisregister" },
     ],
+  },
+  "audit-vorbereitung-mit-ki": {
+    kit: { de: AUDIT_KIT_EDITION, en: AUDIT_KIT_EDITION },
+    skill: { name: "audit-nachweise" },
+    templates: [{ vorlage: "luecken-anfrage" }],
   },
 };
 

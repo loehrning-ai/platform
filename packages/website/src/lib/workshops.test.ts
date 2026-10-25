@@ -20,6 +20,13 @@ const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
     "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
 };
 
+/**
+ * A deck published in two editions: the German page links slides.html (German),
+ * the English page slides.en.html (English), built from one copy source.
+ */
+const DECK_EDITIONS: ReadonlySet<string> = new Set(["audit-vorbereitung-mit-ki"]);
+const isDeckEdition = (slug: string, material: WorkshopMaterial) => material.role === "deck" && DECK_EDITIONS.has(slug);
+
 describe("workshops catalog", () => {
   it("is non-empty", () => {
     expect(WORKSHOPS.length).toBeGreaterThan(0);
@@ -210,10 +217,7 @@ describe("workshops catalog", () => {
           expect(material.href).toBe(`/demos/${workshop.slug}?source=workshop`);
           continue;
         }
-        expect(
-          material.href.startsWith(`/workshops/${workshop.slug}/`),
-          material.href,
-        ).toBe(true);
+        expect(material.href.startsWith(`/workshops/${workshop.slug}/`), material.href).toBe(true);
         // An in-page fragment (#section) addresses part of an existing file.
         const relativePath = material.href.replace(/^\//, "").split("#")[0];
         const filePath = resolve(process.cwd(), "public", relativePath);
@@ -242,34 +246,34 @@ describe("workshops catalog", () => {
       // The demo material is the same page in each locale: /en/demos/<slug>
       // in English, in the page's own language. A kit with a German edition
       // is the same material as its English one. A deck published in both
-      // languages works the same way: its English edition lives under en/.
-      const materialShape = ({
-        href,
-        kind,
-        language,
-        role,
-        phase,
-        minutes,
-        optional,
-        primary,
-      }: WorkshopMaterial) => ({
-        href:
-          role === "demo"
-            ? href.replace(/^\/en\//, "/")
-            : (GERMAN_KIT_EDITIONS[href] ?? href.replace(/\/en\/slides\.html$/, "/slides.html")),
-        kind,
-        language:
-          role === "demo" || (role === "deck" && (language !== "en" || href.endsWith("/en/slides.html")))
-            ? "page"
-            : href in GERMAN_KIT_EDITIONS
-              ? "en"
-              : language,
-        role,
-        phase,
-        minutes,
-        optional,
-        primary,
-      });
+      // languages is the same deck in the page's language: its English
+      // edition lives under en/slides.html or at slides.en.html.
+      const materialShape = (material: WorkshopMaterial) => {
+        const { href, kind, language, role, phase, minutes, optional, primary } = material;
+        const edition = isDeckEdition(germanWorkshop.slug, material);
+        return {
+          href:
+            role === "demo"
+              ? href.replace(/^\/en\//, "/")
+              : edition
+                ? href.replace(/\/slides\.en\.html$/, "/slides.html")
+                : (GERMAN_KIT_EDITIONS[href] ?? href.replace(/\/en\/slides\.html$/, "/slides.html")),
+          kind,
+          language:
+            role === "demo" ||
+            edition ||
+            (role === "deck" && (language !== "en" || href.endsWith("/en/slides.html")))
+              ? "page"
+              : href in GERMAN_KIT_EDITIONS
+                ? "en"
+                : language,
+          role,
+          phase,
+          minutes,
+          optional,
+          primary,
+        };
+      };
       expect(englishWorkshop?.materials.map(materialShape)).toEqual(
         germanWorkshop.materials.map(materialShape),
       );
@@ -316,8 +320,8 @@ describe("workshops catalog", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         for (const material of workshop.materials) {
-          // The practice demo is a page in the reader's language.
-          if (material.role === "demo") {
+          // The practice demo is a page in the reader's language, and so is a deck with editions.
+          if (material.role === "demo" || isDeckEdition(workshop.slug, material)) {
             expect(material.language).toBe(locale);
             continue;
           }

@@ -84,7 +84,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Monatsgrenze | Schieb die Linie um eine Woche. Aus +26 % wird −20 %. Dann rechne mit deinen Zahlen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Stufe oder Treppe? | Zieh den Hebel: aus −19.960 € wird 334.675 €, und kein Datensatz ändert sich. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/esg-berichte-mit-ki | Elf von zwölf | Im Entwurf steht „Gesamtjahr“. Im Ordner liegen elf Rechnungen. Rate den zwölften Monat, sieh, wie weit du da… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/ki-im-unternehmen-sicher-nutzen | Was fliegt mit? | Füge deinen Text ein, bevor du ihn in einen KI-Chat gibst. Du siehst, was mitfliegen würde, schwärzt es mit e… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Nachweisprüfung | Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Date… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 
@@ -215,8 +215,10 @@ _None._
 
 | Pattern | Explanation |
 | --- | --- |
-| `/workshops/audit-vorbereitung-mit-ki` | The first slug of Workshop 05 resolves to the released workshop page. |
-| `/workshops/audit-vorbereitung-mit-ki/:path*` | Files and pages under the first slug of Workshop 05 resolve to the released workshop page. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen` | The previous slug of Workshop 05 resolves to the audit preparation workshop. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/kit` | The previous kit page of Workshop 05 resolves to the new kit page. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip` | The previous kit zip of Workshop 05 resolves to the new kit zip. |
+| `/demos/ki-im-unternehmen-sicher-nutzen` | The previous demo of Workshop 05 resolves to its evidence check demo. |
 | `/ai-native/fluency-test` | The retired self-assessment resolves to the course landing. |
 | `/ai-native/capstone-gallery` | The retired capstone rules page resolves to the course landing. |
 | `/ai-native/demos` | The course simulation gallery merged into the demo gallery. |

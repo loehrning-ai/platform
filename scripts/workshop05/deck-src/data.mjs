@@ -1,0 +1,199 @@
+/**
+ * Every fact the Workshop 05 deck shows, read from the kit source (scripts/workshop05/kit) or computed
+ * from it. The deck never types a number or a quote by hand: build.mjs passes this object to slides.mjs,
+ * and packages/website/src/lib/workshops-audit-deck.test.ts holds the result to the demo's model.
+ */
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+export const KIT_DIR = path.join(HERE, "..", "kit");
+
+export const kit = (file) => readFileSync(path.join(KIT_DIR, file), "utf8");
+
+const must = (value, what) => {
+  if (value === undefined || value === null || value === "") throw new Error(`deck data: ${what} not found in the kit`);
+  return value;
+};
+
+/** Days from a to b (ISO dates, UTC). */
+export const days = (a, b) => Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86400000);
+
+/** The indented prompt blocks of a START-HERE section, in order. */
+function promptBlocks(startHere, heading) {
+  const from = startHere.indexOf(heading);
+  const rest = startHere.slice(from + heading.length);
+  const end = rest.search(/\n## /);
+  const section = end === -1 ? rest : rest.slice(0, end);
+  const blocks = [];
+  let current = null;
+  for (const line of section.split("\n")) {
+    if (line.startsWith("    ")) {
+      current ??= [];
+      current.push(line.slice(4));
+    } else if (current) {
+      blocks.push(current.join("\n"));
+      current = null;
+    }
+  }
+  if (current) blocks.push(current.join("\n"));
+  return must(blocks.length ? blocks : null, `prompt blocks under ${heading}`);
+}
+
+/** A Markdown table under a heading, as arrays of cells (header row dropped). */
+function table(text, after) {
+  const from = must(text.indexOf(after) >= 0 ? text.indexOf(after) : null, `table after ${after}`);
+  const lines = text.slice(from).split("\n");
+  const start = lines.findIndex((line) => line.startsWith("|"));
+  const rows = [];
+  for (let i = start + 2; i < lines.length && lines[i].startsWith("|"); i += 1) {
+    rows.push(lines[i].slice(1, -1).split("|").map((cell) => cell.trim()));
+  }
+  return rows;
+}
+
+function quoteIn(file, pattern) {
+  const match = pattern.exec(kit(file));
+  return must(match && match[0], `${pattern} in ${file}`);
+}
+
+/**
+ * The file whose name fits each item (the first screen of the demo) and the first test it fails there.
+ * The demo computes both (src/lib/demo-cases/audit-vorbereitung-mit-ki/model.ts); the deck test holds
+ * this table to that model.
+ */
+export const NAIVE = {
+  R1: { file: "system-list_2026-09.csv", failsAt: null },
+  R2: { file: "subprocessors_2026-09.csv", failsAt: "quote" },
+  R3: { file: "ai-use-rule_v1.md", failsAt: "scope" },
+  R4: { file: "access-review_2026-08-14.csv", failsAt: "scope" },
+  R5: { file: "training-records_2026.csv", failsAt: "quote" },
+  R6: { file: "incident-log_2026.csv", failsAt: null },
+  R7: { file: "backup-report_2026-10.txt", failsAt: "quote" },
+  R8: { file: "infosec-policy_v4_DRAFT.md", failsAt: "approval" },
+};
+
+export function deckData() {
+  const request = kit("request_tannwald.md");
+  const draft = kit("draft-reply.md");
+  const answers = kit("ANSWERS.md");
+  const startHere = kit("START-HERE.md");
+  const training = kit("folder/training-records_2026.csv");
+  const incidents = kit("folder/incident-log_2026.csv");
+
+  const field = (name) => must(new RegExp(`^${name}: (.+)$`, "m").exec(request)?.[1], `request field ${name}`);
+  const items = [...request.matchAll(/^\| (R[1-8]) \| (.+?) \| ([\d.]+) \|$/gm)].map((m) => ({ id: m[1], text: m[2], section: m[3] }));
+  if (items.length !== 8) throw new Error("deck data: the request must hold R1 to R8");
+  const rulesBlock = request.slice(request.indexOf("How we read your documents")).split("\n\n")[0];
+  const rules = rulesBlock.split("\n").filter((line) => line.startsWith("- ")).map((line) => line.slice(2));
+  const clause7 = must(/^Clause 7 .*?: "(.+)"$/m.exec(request)?.[1], "clause 7");
+
+  // Training: rows, people, share, what 95 % needs. Counted the way rule 11 asks: duplicates out first.
+  const rows = training.split("\n").filter((line) => /^E\d+,/.test(line));
+  const ids = rows.map((line) => line.split(",")[0]);
+  const unique = new Set(ids).size;
+  const duplicate = ids.find((id, index) => ids.indexOf(id) !== index);
+  const staff = Number(must(/Staff on [\d-]+: (\d+)\./.exec(training)?.[1], "staff count"));
+  const target = Number(must(/at least (\d+)%/.exec(request)?.[1], "training share")) / 100;
+  const needed = Math.ceil(staff * target - 1e-9);
+  const share = Math.round((unique / staff) * 1000) / 10;
+
+  // R6: hours from detection to notice, INC-02.
+  const inc = must(incidents.split("\n").find((line) => line.includes(",Tannwald,")), "the Tannwald incident");
+  const [detected, told] = [...inc.matchAll(/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2})/g)].map((m) => Date.parse(`${m[1]}T${m[2]}:00Z`));
+  const noticeHours = Math.round(((told - detected) / 3600000) * 10) / 10;
+  const allowedHours = Number(must(/within (\d+) hours/.exec(request)?.[1], "notice hours"));
+
+  const windowStart = "2025-12-10";
+  const ruleFrom = must(/Valid from (\d{4}-\d{2}-\d{2})/.exec(kit("folder/ai-use-rule_v1.md"))?.[1], "AI rule start");
+
+  // Mission 1: the index, straight from ANSWERS.md.
+  const index = table(answers, "## Mission 1").map(([file, type, date, by, dateTest, approvalTest]) => ({
+    file,
+    type,
+    date,
+    by,
+    dateOk: dateTest === "pass",
+    approvalOk: approvalTest === "pass",
+  }));
+  const passing = index.filter((row) => row.dateOk && row.approvalOk).length;
+
+  // Mission 2: status per item, straight from ANSWERS.md.
+  const statusWord = { COVERED: "covered", WEAK: "weak", GAP: "gap" };
+  const mission2 = table(answers, "## Mission 2").map(([id, file, quote, failing, status]) => ({
+    id,
+    file,
+    quote,
+    failing,
+    status: statusWord[status],
+    naive: NAIVE[id].file,
+    failsAt: NAIVE[id].failsAt,
+  }));
+  const tally = { covered: 0, weak: 0, gap: 0 };
+  for (const row of mission2) tally[row.status] += 1;
+
+  // The gap request for R7: the template, its slots, and the values the filled email in ANSWERS.md gives them.
+  const template = kit("templates/gap-request.md").trimEnd();
+  const emailStart = answers.indexOf("Example email (R7)");
+  const email = must(/```\n([\s\S]*?)```/.exec(answers.slice(emailStart))?.[1], "R7 email").trimEnd();
+  const parts = template.split(/(\[[^\]]+\])/g);
+  const pattern = new RegExp(
+    "^" + parts.map((part, i) => (i % 2 ? "(.+?)" : part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("") + "$",
+    "s",
+  );
+  const filled = must(pattern.exec(email), "R7 email matching the template");
+  const emailSegments = parts.map((part, i) => (i % 2 ? { slot: part, value: filled[(i + 1) / 2] } : { text: part }));
+
+  const sample = must(/```\n([\s\S]*?)```/.exec(answers.slice(answers.indexOf("Sample reply")))?.[1], "sample reply").trimEnd();
+
+  const [m1] = promptBlocks(startHere, "## Mission 1");
+  const [m2, m2follow] = promptBlocks(startHere, "## Mission 2");
+  const [m3] = promptBlocks(startHere, "## Mission 3");
+
+  return {
+    customer: "Tannwald",
+    sent: field("Sent"),
+    audit: "2026-12-10",
+    auditLine: field("Remote audit"),
+    sendBy: "2026-11-25",
+    exercise: "2026-11-09",
+    windowStart,
+    due: "2026-12-02",
+    from: field("From"),
+    headline: must(rules[0], "first rule"),
+    rules: rules.slice(1),
+    items,
+    clause7,
+    draft: [...draft.matchAll(/^\d\. (.+)$/gm)].map((m) => m[1]),
+    draftOpen: draft.slice(draft.indexOf("Dear"), draft.indexOf("\n1. ")).trim(),
+    draftClose: draft.slice(draft.indexOf("Best regards")).trim(),
+    files: index.map((row) => row.file),
+    index,
+    passing,
+    mission2,
+    tally,
+    trainingDupIndex: ids.lastIndexOf(duplicate),
+    training: { rows: rows.length, unique, duplicate, staff, share, needed, missing: needed - unique, target },
+    notice: { hours: noticeHours, allowed: allowedHours },
+    r3Days: days(windowStart, ruleFrom),
+    quotes: {
+      policyBackup: quoteIn("folder/infosec-policy_v3_FINAL.md", /Backups are restore-tested[^.]+\./),
+      policyApproved: quoteIn("folder/infosec-policy_v3_FINAL.md", /Approved \d{4}-\d{2}-\d{2}/),
+      notesBackup: quoteIn("folder/it-notes_2026-10-06.md", /Backups are tested[^.]+\./),
+      notesReview: quoteIn("folder/it-notes_2026-10-06.md", /Not reviewed by anyone\./),
+      reportRestore: quoteIn("folder/backup-report_2026-10.txt", /Restore test: [^.]+\./),
+      systemUs: quoteIn("folder/system-list_2026-09.csv", /United States \(see [^)]+\)/),
+      claudeRow: quoteIn("folder/system-list_2026-09.csv", /^Claude Team \(browser[^)]+\)/m),
+      storedUs: quoteIn("folder/vendor-page_claude_2026-06-15.md", /Note that data is stored in the US\./),
+      v4Open: quoteIn("folder/infosec-policy_v4_DRAFT.md", /Approved by: \(open\)/),
+      staffLine: quoteIn("folder/training-records_2026.csv", /Staff on [^:]+: \d+\./),
+      accessReview: quoteIn("folder/access-review_2026-08-14.csv", /Review of administrator accounts in \w+/),
+      accessDone: quoteIn("folder/access-review_2026-08-14.csv", /Done \d{4}-\d{2}-\d{2}/),
+    },
+    email,
+    emailSegments,
+    sample,
+    prompts: { m1, m2, m2follow, m3 },
+  };
+}

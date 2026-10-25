@@ -70,15 +70,12 @@ export const TITLE_HIGHLIGHT: Readonly<
 const HIGHLIGHT_PAIR_MAX = 12;
 
 /**
- * A workshop whose H1 marks one chosen word instead of its tail, per locale.
- * Workshop 05 marks "Data" in "Where Your Data Goes", the word the whole
- * workshop is about; the words after it follow the band unmarked.
+ * A workshop whose H1 marks one chosen word instead of its tail, per locale;
+ * the words after it follow the band unmarked. No workshop needs one today.
  */
 const HEADLINE_MARK: Readonly<
   Record<string, Readonly<Partial<Record<Locale, string>>>>
-> = {
-  "ki-im-unternehmen-sicher-nutzen": { de: "Daten?", en: "data" },
-};
+> = {};
 
 /**
  * The H1 split for its highlight: a short last pair goes on the band ("mit
@@ -308,16 +305,20 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 className="title-mark box-decoration-slice px-[0.12em]"
               >
                 {heading.highlight}
+                {/* The colon belongs to the marked words, so it never sits
+                    alone on paper after the band. */}
+                {title.subtitle && !heading.tail ? ":" : null}
               </HighlightedText>
               {heading.tail ? ` ${heading.tail}` : null}
             </>
           ) : null}
           {title.subtitle ? (
             <>
-              {/* The colon stays visible, so the text, the accessible name
-                  and the search snippet all read as the full title. The
-                  subtitle drops to the band's body size. */}
-              :{" "}
+              {/* The colon stays visible (inside the band when the band
+                  ends the head), so the text, the accessible name and the
+                  search snippet all read as the full title. The subtitle
+                  drops to the band's body size. */}
+              {heading.highlight && !heading.tail ? " " : ": "}
               <span
                 data-title-subtitle=""
                 className="mt-3 block text-[1.0625rem] font-semibold leading-snug tracking-normal max-[359px]:mt-2"

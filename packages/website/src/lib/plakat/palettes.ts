@@ -170,7 +170,7 @@ export const WORKSHOP_PLAKAT = {
   "geschaeftsberichte-mit-ki-lesen": { plakat: "idea", motif: "pie" },
   "datenbereitschaft-fuer-ki": { plakat: "bloom", motif: "dome" },
   "esg-berichte-mit-ki": { plakat: "autumn", motif: "leaves" },
-  "ki-im-unternehmen-sicher-nutzen": { plakat: "sage", motif: "ledger" },
+  "audit-vorbereitung-mit-ki": { plakat: "sage", motif: "ledger" },
 } as const satisfies Record<string, WorkshopPlakat>;
 
 export type WorkshopPlakatSlug = keyof typeof WORKSHOP_PLAKAT;

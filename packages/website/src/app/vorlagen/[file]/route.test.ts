@@ -57,6 +57,8 @@ describe("GET /vorlagen/[file]", () => {
       { file: "esg-mail-fehlendes-dokument.en.md" },
       { file: "esg-nachweisregister.csv" },
       { file: "esg-nachweisregister.en.csv" },
+      { file: "luecken-anfrage.md" },
+      { file: "luecken-anfrage.en.md" },
     ]);
   });
 

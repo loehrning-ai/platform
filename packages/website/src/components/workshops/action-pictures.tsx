@@ -162,7 +162,7 @@ const KIT_FACES: Readonly<Record<string, readonly [Face, Face, Face, Face]>> = {
   "geschaeftsberichte-mit-ki-lesen": ["sheet", "tile", "table", "key"],
   "datenbereitschaft-fuer-ki": ["sheet", "fields", "table", "key"],
   "esg-berichte-mit-ki": ["question", "leaf", "table", "key"],
-  "ki-im-unternehmen-sicher-nutzen": ["light", "sheet", "question", "key"],
+  "audit-vorbereitung-mit-ki": ["light", "sheet", "question", "key"],
 };
 
 const GENERIC_FACES = ["sheet", "table", "folded", "key"] as const;

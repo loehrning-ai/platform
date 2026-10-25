@@ -4,7 +4,7 @@ import KiPrognosen from "../ki-prognosen-einschaetzen/tile";
 import Geschaeftsberichte from "../geschaeftsberichte-mit-ki-lesen/tile";
 import Datenbereitschaft from "../datenbereitschaft-fuer-ki/tile";
 import Esg from "../esg-berichte-mit-ki/tile";
-import KiImUnternehmen from "../ki-im-unternehmen-sicher-nutzen/tile";
+import AuditVorbereitung from "../audit-vorbereitung-mit-ki/tile";
 import type { TileProps } from "./tile-kit";
 
 /**
@@ -17,5 +17,5 @@ export const TILES: Readonly<Record<DemoSlug, ComponentType<TileProps>>> = {
   "geschaeftsberichte-mit-ki-lesen": Geschaeftsberichte,
   "datenbereitschaft-fuer-ki": Datenbereitschaft,
   "esg-berichte-mit-ki": Esg,
-  "ki-im-unternehmen-sicher-nutzen": KiImUnternehmen,
+  "audit-vorbereitung-mit-ki": AuditVorbereitung,
 };

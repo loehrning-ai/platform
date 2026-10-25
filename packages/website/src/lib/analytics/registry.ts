@@ -76,7 +76,7 @@ export const ANALYTICS_DEMO_SLUGS = [
   "geschaeftsberichte-mit-ki-lesen",
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
-  "ki-im-unternehmen-sicher-nutzen",
+  "audit-vorbereitung-mit-ki",
 ] as const;
 export type AnalyticsDemoSlug = (typeof ANALYTICS_DEMO_SLUGS)[number];
 
@@ -86,7 +86,7 @@ export const ANALYTICS_WORKSHOP_SLUGS = [
   "geschaeftsberichte-mit-ki-lesen",
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
-  "ki-im-unternehmen-sicher-nutzen",
+  "audit-vorbereitung-mit-ki",
 ] as const;
 export type AnalyticsWorkshopSlug = (typeof ANALYTICS_WORKSHOP_SLUGS)[number];
 
