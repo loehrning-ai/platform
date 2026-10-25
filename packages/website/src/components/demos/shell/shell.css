@@ -175,6 +175,7 @@
 .demo-rail-list.is-vertical .demo-rail-mark {
   flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
   height: 44px;
   padding-left: 14px;
 }
