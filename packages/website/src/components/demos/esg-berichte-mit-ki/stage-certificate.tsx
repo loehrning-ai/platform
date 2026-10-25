@@ -3,15 +3,19 @@
 import type { Pack } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
 import { fill } from "@/lib/demo-cases/esg-berichte-mit-ki/export";
 import { BIO } from "@/lib/demo-cases/esg-berichte-mit-ki/kit";
-import { probeAt, seg } from "@/lib/demo-cases/esg-berichte-mit-ki/motion";
+import { EXPIRED_DAYS, probeAt, seg } from "@/lib/demo-cases/esg-berichte-mit-ki/motion";
 import { CheckChips, DocCard, StatusTag } from "./parts";
 
 export type Bet = "yes" | "no";
 
-/** On a short phone screen: the operator line and the cellar line step back for the bet, */
-const SATZ_OPTIONAL = [5, 11] as const;
-/** and the probe keeps the four lines it cites: body (4), scope (6), validity (8), note (10). */
-const PROBE_OPTIONAL = [3, 5, 7, 9, 11] as const;
+/** When the stage is short, lines step back in this order (DocCard measures): the operator line first, the cellar line last, */
+const SATZ_OPTIONAL = [5, 9, 7, 11] as const;
+/** and the probe keeps the lines it cites: body (4), scope (6), validity (8), the uncertified rest (10, 11). */
+const PROBE_OPTIONAL = [5, 3, 9, 7, 11] as const;
+
+/** The ruler to scale: one year of validity is 150 units, the days past it on the same scale. */
+const YEAR_X = 150;
+const OVER_X = (YEAR_X * EXPIRED_DAYS) / 365;
 
 /** Beat 1 and 2: "Zertifizierte Bio-Weinberge" next to bio_zertifikat_weinberg.txt. */
 export function CertificateStage({
@@ -39,6 +43,7 @@ export function CertificateStage({
           file={pack.satz1.file}
           lines={pack.satz1.lines}
           optional={SATZ_OPTIONAL}
+          fitKey="satz"
           className="nw-doc-cert nw-doc-tight"
           style={{ transform: `translateY(${(1 - doc) * 16}px)`, opacity: doc }}
         />
@@ -63,17 +68,17 @@ export function CertificateStage({
         <span className="nw-sentence-small">{pack.satz1.text}</span>
       </div>
       <CheckChips pack={pack} marks={["ok", "fail", "fail", "ok"]} shown={[frame.zitat, frame.zeitraum, frame.umfang, frame.stand]} active={active} />
-      <DocCard file={pack.satz1.file} lines={pack.satz1.lines} lineClass={lineClass} optional={PROBE_OPTIONAL} className="nw-doc-cert nw-doc-tight" />
+      <DocCard file={pack.satz1.file} lines={pack.satz1.lines} lineClass={lineClass} optional={PROBE_OPTIONAL} fitKey={`probe-${bet ?? "none"}`} className="nw-doc-cert nw-doc-tight" />
       <div className="nw-evidence-band">
         <svg className="nw-ruler" viewBox="0 0 200 52" role="img" aria-label={`${pack.probe.rulerFrom} ${pack.probe.rulerTo} ${fill(pack.probe.overshoot, { days: frame.days })}`}>
-          <line x1="4" y1="22" x2={4 + 150 * frame.ruler} y2="22" className="nw-stroke-ink" strokeWidth="4" />
-          <line x1="154" y1="22" x2={154 + 38 * frame.overshoot} y2="22" className="nw-stroke-mark" strokeWidth="4" />
+          <line x1="4" y1="22" x2={4 + YEAR_X * frame.ruler} y2="22" className="nw-stroke-ink" strokeWidth="4" />
+          <line x1={4 + YEAR_X} y1="22" x2={4 + YEAR_X + OVER_X * frame.overshoot} y2="22" className="nw-stroke-mark" strokeWidth="4" />
           <line x1="4" y1="14" x2="4" y2="30" className="nw-stroke-ink" strokeWidth="1.5" />
-          <line x1="154" y1="12" x2="154" y2="32" className="nw-stroke-ink" strokeWidth="1.5" style={{ opacity: frame.ruler }} />
-          <line x1="192" y1="12" x2="192" y2="32" className="nw-stroke-mark" strokeWidth="1.5" style={{ opacity: frame.overshoot }} />
+          <line x1={4 + YEAR_X} y1="12" x2={4 + YEAR_X} y2="32" className="nw-stroke-ink" strokeWidth="1.5" style={{ opacity: frame.ruler }} />
+          <line x1={4 + YEAR_X + OVER_X} y1="12" x2={4 + YEAR_X + OVER_X} y2="32" className="nw-stroke-mark" strokeWidth="1.5" style={{ opacity: frame.overshoot }} />
           <text x="4" y="9" className="nw-svg-text">{pack.probe.rulerFrom}</text>
-          <text x="151" y="9" textAnchor="end" className="nw-svg-text" style={{ opacity: frame.ruler }}>{pack.probe.rulerTo.slice(0, 6)}</text>
-          <text x="198" y="9" textAnchor="end" className="nw-svg-text nw-svg-mark" style={{ opacity: frame.overshoot }}>{pack.probe.rulerStichtag}</text>
+          <text x={1 + YEAR_X} y="9" textAnchor="end" className="nw-svg-text" style={{ opacity: frame.ruler }}>{pack.probe.rulerTo.slice(0, 6)}</text>
+          <text x={4 + YEAR_X + OVER_X} y="9" textAnchor="middle" className="nw-svg-text nw-svg-mark" style={{ opacity: frame.overshoot }}>{pack.probe.rulerStichtag}</text>
           <text x="196" y="47" textAnchor="end" className="nw-svg-text nw-svg-mark nw-svg-bold" style={{ opacity: frame.overshoot }}>
             {fill(pack.probe.overshoot, { days: frame.days })}
           </text>

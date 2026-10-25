@@ -73,6 +73,8 @@ export function cleanSentence(text: string): string {
 export const isConsumer = (destination: Destination) => destination === "label" || destination === "website";
 export const usesMonths = (evidence: Evidence) => evidence === "bills" || evidence === "measurement";
 export const usesValidity = (evidence: Evidence) => evidence === "certificate" || evidence === "audit" || evidence === "statement";
+/** A signed declaration is dated, not limited: its expiry date is optional. */
+export const validityOptional = (evidence: Evidence) => evidence === "statement";
 /** An offer, a draft or an offset certificate is never final. */
 export const forcesNotFinal = (evidence: Evidence) => evidence === "offer" || evidence === "draft" || evidence === "offset";
 
@@ -85,13 +87,14 @@ export type Reason =
   | { readonly code: "monthsMissing"; readonly months: readonly number[] }
   | { readonly code: "expired"; readonly days: number; readonly validUntil: string }
   | { readonly code: "noValidity" }
+  | { readonly code: "noStichtag" }
   | { readonly code: "scopePart" }
   | { readonly code: "notFinal"; readonly evidence: Evidence }
   | { readonly code: "gate"; readonly gate: GateId };
 
 export type MissingDoc =
   | { readonly code: "nothing" }
-  | { readonly code: "months"; readonly months: readonly number[] }
+  | { readonly code: "months"; readonly months: readonly number[]; readonly year: number | null }
   | { readonly code: "valid"; readonly evidence: Evidence; readonly stichtag: string }
   | { readonly code: "signed" }
   | { readonly code: "released" }
@@ -134,6 +137,12 @@ export function effectiveGates(input: OwnInput): readonly GateId[] {
   return hits;
 }
 
+/** The first year the sentence names (2000 to 2099), so a request names it too: "Rechnungen für September 2025". */
+export function sentenceYear(sentence: string): number | null {
+  const match = /(?:^|\D)(20\d{2})(?!\d)/.exec(sentence);
+  return match ? Number(match[1]) : null;
+}
+
 function missingMonths(months: readonly boolean[]): number[] {
   return months.flatMap((ticked, index) => (ticked ? [] : [index + 1]));
 }
@@ -149,6 +158,7 @@ export function probeOwn(input: OwnInput): OwnResult {
   const consumer = isConsumer(input.destination);
   const reasons: Reason[] = gates.map((gate) => ({ code: "gate", gate }) as const);
   const missing: MissingDoc[] = [];
+  const year = sentenceYear(input.sentence);
 
   if (input.evidence === "nothing") {
     return {
@@ -169,21 +179,23 @@ export function probeOwn(input: OwnInput): OwnResult {
       zeitraum = "fail";
       parts.push("luecke");
       reasons.push({ code: "noMonths" });
-      missing.push({ code: "months", months: missingMonths(input.months) });
+      missing.push({ code: "months", months: missingMonths(input.months), year });
     } else if (input.wholeYear && ticked < 12) {
       zeitraum = "fail";
       parts.push("luecke");
       const gaps = missingMonths(input.months);
       reasons.push({ code: "monthsMissing", months: gaps });
-      missing.push({ code: "months", months: gaps });
+      missing.push({ code: "months", months: gaps, year });
     }
   } else if (usesValidity(input.evidence)) {
     const until = parseDate(input.validUntil);
     const reference = parseDate(input.stichtag);
     if (!until) {
-      zeitraum = "open";
-      parts.push("schwach");
-      reasons.push({ code: "noValidity" });
+      if (!validityOptional(input.evidence)) {
+        zeitraum = "open";
+        parts.push("schwach");
+        reasons.push({ code: "noValidity" });
+      }
     } else if (reference && daysBetween(until, reference) > 0) {
       zeitraum = "fail";
       parts.push("schwach");
@@ -192,6 +204,7 @@ export function probeOwn(input: OwnInput): OwnResult {
     } else if (!reference) {
       zeitraum = "open";
       parts.push("schwach");
+      reasons.push({ code: "noStichtag" });
     }
   }
 

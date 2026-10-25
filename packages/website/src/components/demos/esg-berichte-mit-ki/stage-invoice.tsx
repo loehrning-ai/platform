@@ -18,7 +18,8 @@ export function InvoiceCard({ pack, locale, compact = false }: { readonly pack: 
   if (compact) {
     return (
       <p className="nw-invoice-compact">
-        <span className="nw-invoice-title">{pack.invoice.title}</span> · {n(SEPTEMBER_INVOICE.kwh)} kWh
+        <span className="nw-invoice-title">{pack.invoice.title}</span>
+        <span className="nw-invoice-kwh">{n(SEPTEMBER_INVOICE.kwh)} kWh</span>
       </p>
     );
   }

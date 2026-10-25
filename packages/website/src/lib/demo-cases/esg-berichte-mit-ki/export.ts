@@ -16,6 +16,10 @@ export interface ExportWords {
   readonly evidence: Readonly<Record<Evidence, string>>;
   readonly months: readonly string[];
   readonly and: string;
+  /** "Januar bis August". */
+  readonly to: string;
+  /** "{n} von 12 Monaten". */
+  readonly monthsCount: string;
   readonly wholeYear: string;
   readonly decisions: { readonly raus: string; readonly streichen: string; readonly mitStatus: string };
   readonly reasons: {
@@ -24,6 +28,7 @@ export interface ExportWords {
     readonly monthsMissing: string;
     readonly expired: string;
     readonly noValidity: string;
+    readonly noStichtag: string;
     readonly scopePart: string;
     readonly notFinal: string;
     readonly gate: Readonly<Record<"4c" | "4a" | "4b" | "2a" | "zukunft", string>>;
@@ -43,6 +48,8 @@ export interface ExportWords {
     readonly subject: string;
     readonly greeting: string;
     readonly need: string;
+    /** The destination as the mail names it: "den Fragebogen eines Kunden". */
+    readonly destinations: Readonly<Record<Destination, string>>;
     readonly answer: string;
     readonly withoutAnswer: string;
     readonly withoutClaim: string;
@@ -56,11 +63,19 @@ export function fill(template: string, values: Readonly<Record<string, string | 
   return template.replace(/\{(\w+)\}/g, (whole, key: string) => (key in values ? String(values[key]) : whole));
 }
 
-/** "Januar, März und September". */
+/** "Januar, März und September"; three or more months in a row become a range: "Januar bis August und Oktober bis Dezember". */
 export function monthList(months: readonly number[], words: ExportWords): string {
-  const names = months.map((month) => words.months[month - 1] ?? String(month));
-  if (names.length <= 1) return names.join("");
-  return `${names.slice(0, -1).join(", ")} ${words.and} ${names.at(-1)}`;
+  const name = (month: number) => words.months[month - 1] ?? String(month);
+  const sorted = [...new Set(months)].sort((a, b) => a - b);
+  const runs: number[][] = [];
+  for (const month of sorted) {
+    const last = runs.at(-1);
+    if (last && month === last.at(-1)! + 1) last.push(month);
+    else runs.push([month]);
+  }
+  const parts = runs.flatMap((run) => (run.length >= 3 ? [`${name(run[0]!)} ${words.to} ${name(run.at(-1)!)}`] : run.map(name)));
+  if (parts.length <= 1) return parts.join("");
+  return `${parts.slice(0, -1).join(", ")} ${words.and} ${parts.at(-1)}`;
 }
 
 export function reasonText(reason: Reason, words: ExportWords): string {
@@ -81,7 +96,7 @@ export function reasonText(reason: Reason, words: ExportWords): string {
 export function missingText(doc: MissingDoc, words: ExportWords): string {
   switch (doc.code) {
     case "months":
-      return fill(words.missing.months, { months: monthList(doc.months, words) });
+      return fill(words.missing.months, { months: monthList(doc.months, words), year: doc.year === null ? "" : ` ${doc.year}` });
     case "valid":
       return fill(words.missing.valid, { evidence: words.evidence[doc.evidence], date: doc.stichtag });
     default:
@@ -94,7 +109,7 @@ export function periodText(input: OwnInput, words: ExportWords): string {
   if (usesMonths(input.evidence)) {
     const ticked = input.months.flatMap((on, index) => (on ? [index + 1] : []));
     if (ticked.length === 0) return "";
-    return ticked.length === 12 ? words.wholeYear : monthList(ticked, words);
+    return ticked.length === 12 ? words.wholeYear : `${monthList(ticked, words)} (${fill(words.monthsCount, { n: ticked.length })})`;
   }
   if (usesValidity(input.evidence) && input.validUntil.trim() !== "") return input.validUntil.trim();
   return "";
@@ -195,7 +210,7 @@ export function missingDocMails(rows: readonly OwnRow[], words: ExportWords): re
         "",
         words.mail.greeting,
         "",
-        fill(words.mail.need, { destination: words.destinations[entry.destination], doc: name }),
+        fill(words.mail.need, { destination: words.mail.destinations[entry.destination], doc: name }),
         fill(words.mail.answer, { sentence: entry.sentence }),
         consumer ? words.mail.withoutClaim : fill(words.mail.withoutAnswer, { status: words.statuses[entry.result.status] }),
         "",

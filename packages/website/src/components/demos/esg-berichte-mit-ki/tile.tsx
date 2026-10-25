@@ -15,8 +15,11 @@ const COPY = {
 } as const;
 
 const RULER_Y = 160;
+const START_X = 28;
 const END_X = 288;
-const STICHTAG_X = 368;
+const EXPIRED_DAYS = 46;
+/** To scale: one year of validity is END_X - START_X, the 46 days past it on the same scale. */
+const STICHTAG_X = END_X + Math.round(((END_X - START_X) * EXPIRED_DAYS) / 365);
 const cellX = (index: number) => 28 + (index % 8) * 24;
 const cellY = (index: number) => 214 + Math.floor(index / 8) * 15;
 const cells = (from: number, to: number, inset: number) =>
@@ -53,7 +56,7 @@ export default function Tile({ locale, reducedMotion }: TileProps) {
       <path data-t="stichtag" className="dt-stroke-mark" d={`M${STICHTAG_X} ${RULER_Y - 16}V${RULER_Y + 16}`} strokeWidth="3" />
       <g data-t="days">
         <text className="dt-fig dt-fill-mark" x={STICHTAG_X + 4} y="136" fontSize="30" textAnchor="end">
-          {tileNumber(46, locale)} {words.days}
+          {tileNumber(EXPIRED_DAYS, locale)} {words.days}
         </text>
       </g>
       <g data-t="cells">

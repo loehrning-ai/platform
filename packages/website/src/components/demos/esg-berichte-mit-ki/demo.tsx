@@ -7,6 +7,7 @@ import {
   revealIfOffscreen,
   TAKEHOME_TARGET_ID,
   useBeatClock,
+  useBeatGate,
   useOnRestart,
 } from "@/components/demos/shell";
 import type { Locale } from "@/lib/i18n/locale";
@@ -19,6 +20,7 @@ import type { OwnRow } from "@/lib/demo-cases/esg-berichte-mit-ki/own";
 import { FolderDetails, InvoiceDetails, ProbeDetails, ThreeDetails } from "./details";
 import { OwnSentences } from "./own-sentences";
 import { StatusTag } from "./parts";
+import { ReadingDock } from "./reading-dock";
 import { CertificateStage, type Bet } from "./stage-certificate";
 import { FolderStage } from "./stage-folder";
 import { InvoiceStage } from "./stage-invoice";
@@ -52,7 +54,18 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   const [bets, setBets] = useState<Bets>(START);
   const [ownRows, setOwnRows] = useState<readonly OwnRow[]>([]);
   const ownRef = useRef<HTMLElement>(null);
-  useOnRestart(() => setBets(START));
+  const rootRef = useRef<HTMLDivElement>(null);
+  useOnRestart(() => {
+    setBets(START);
+    // r is the visitor's own key press: bring the stage back into view, and drop a ?beat= deep link
+    // so a reload starts at the first sentence too.
+    revealIfOffscreen(rootRef.current?.querySelector("[data-demo-stage]") ?? null, clock.reducedMotion);
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("beat")) {
+      url.searchParams.delete("beat");
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+  });
 
   const threeBet = bets.three[bets.threeIndex] ?? null;
   const verdictT = useTimeline(threeBet ? `three-${bets.threeIndex}` : null, VERDICT_MS, clock.reducedMotion);
@@ -60,6 +73,16 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   const cascadeT = useTimeline(bets.invoiceRun > 0 ? `cascade-${bets.invoiceRun}` : null, CASCADE_MS, clock.reducedMotion);
 
   const id = clock.beat.id;
+  const swept = bets.folderRun > 0 && sweepAt(sweepT).tally >= 1;
+  const cascaded = bets.invoiceRun > 0 && cascadeAt(cascadeT).summary >= 1;
+  // Beats with inner steps hold "Weiter" and ArrowRight: the three sentences one by one, the
+  // folder after "Prüfen", the invoice after "Ablegen". One button moves on at a time.
+  const gate = id === "drei-saetze" ? threeBet !== null && verdictT >= 1 : id === "ordner" ? swept : id === "rechnung" ? cascaded : null;
+  useBeatGate(gate, () => {
+    if (id !== "drei-saetze" || bets.threeIndex >= 2) return false;
+    setBets((previous) => ({ ...previous, threeIndex: previous.threeIndex + 1 }));
+    return true;
+  });
   const before = ledgerCounts("before");
   const after = ledgerCounts("after");
   const counts = (value: typeof before) =>
@@ -125,10 +148,6 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
           </button>
         ))}
       </div>
-    ) : bets.threeIndex < 2 ? (
-      <button type="button" className="nw-button" disabled={verdictT < 1} onClick={() => setBets((previous) => ({ ...previous, threeIndex: previous.threeIndex + 1 }))}>
-        {pack.three.nextSentence}
-      </button>
     ) : null;
     details =
       threeBet && verdictT >= 1 ? (
@@ -136,7 +155,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
       ) : null;
   } else if (id === "ordner") {
     const ran = bets.folderRun > 0;
-    const done = ran && sweepAt(sweepT).tally >= 1;
+    const done = swept;
     stage = <FolderStage pack={pack} t={sweepT} />;
     caption = done ? fill(pack.folder.caption, { n: before.belegt, schwach: before.schwach, luecke: before.luecke }) : pack.folder.question;
     lever = (
@@ -146,13 +165,14 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
         onChange={(folderGuess) => setBets((previous) => ({ ...previous, folderGuess }))}
         action={pack.folder.check}
         disabled={ran && !done}
+        primary={!done}
         onAction={() => setBets((previous) => ({ ...previous, folderRun: previous.folderRun + 1 }))}
       />
     );
     details = done ? <FolderDetails pack={pack} guess={bets.folderGuess} /> : null;
   } else if (id === "rechnung") {
     const filed = bets.invoiceRun > 0;
-    const done = filed && cascadeAt(cascadeT).summary >= 1;
+    const done = cascaded;
     stage = <InvoiceStage pack={pack} locale={locale} figures={figures} t={cascadeT} filed={filed} />;
     caption = done ? fill(pack.invoice.caption, figures) : pack.invoice.question;
     lever = (
@@ -218,7 +238,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   }
 
   return (
-    <div className="nw-demo" data-esg-demo="">
+    <div ref={rootRef} className="nw-demo" data-esg-demo="">
       <DemoStage label={pack.stageLabel} caption={caption}>
         {stage}
       </DemoStage>
@@ -229,6 +249,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
         </div>
       ) : null}
       <OwnSentences ref={ownRef} pack={pack} onRows={setOwnRows} />
+      <ReadingDock root={rootRef} backLabel={pack.dockBack} />
     </div>
   );
 }

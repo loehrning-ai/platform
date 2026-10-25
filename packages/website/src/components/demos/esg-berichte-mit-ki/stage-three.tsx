@@ -43,23 +43,39 @@ export function ThreeStage({
           file={sentence.file}
           lines={sentence.lines}
           optional={index === 0 ? DRAFT_OPTIONAL : undefined}
+          fitKey={`${index}-${decided ? "decided" : "open"}`}
           className="nw-doc-tight"
           lineClass={() => (decided && frame.checks[0] > 0 ? (gate ? "is-fail" : "is-focus") : undefined)}
         />
       ) : null}
-      {index === 0 ? (
+      {index === 0 || index === 2 ? (
         <div className="nw-strip-wrap">
-          <p className="nw-doc-name">{FILE_NAMES.strom[pack.locale === "en" ? "en" : "de"]}</p>
-          <MonthStrip rows={STROM} monthsShort={pack.three.monthsShort} twice={pack.three.twice} />
+          <p className="nw-doc-name">
+            {index === 0 ? FILE_NAMES.strom[pack.locale === "en" ? "en" : "de"] : sentence.file}
+            <span className="nw-strip-note"> · {fill(sentence.strip, figures)}</span>
+          </p>
+          <MonthStrip rows={index === 0 ? STROM : WASSER} monthsShort={pack.three.monthsShort} twice={pack.three.twice} />
         </div>
       ) : null}
-      {index === 2 ? (
-        <div className="nw-strip-wrap">
-          <p className="nw-doc-name">{sentence.file}</p>
-          <MonthStrip rows={WASSER} monthsShort={pack.three.monthsShort} twice={pack.three.twice} />
-        </div>
-      ) : null}
-      {decided ? (
+      {decided && gate ? (
+        <>
+          {/* The ban list comes first: no check runs, the sentence is cut. */}
+          <p className="nw-ban-chip" data-ban="4c" style={{ opacity: Math.min(1, frame.checks[0] * 2) }}>
+            <span>{fill(pack.three.banChip, { gate: "4c" })}</span>
+            <span aria-hidden="true">✗</span>
+          </p>
+          <DocCard
+            file={FILE_NAMES.regeln[pack.locale === "en" ? "en" : "de"]}
+            lines={[pack.three.banLine]}
+            className="nw-doc-tight"
+            lineClass={() => "is-fail"}
+            style={{ opacity: Math.min(1, frame.checks[0] * 2) }}
+          />
+          <div className="nw-verdict-line" style={{ opacity: frame.verdict, transform: `translateY(${(1 - frame.verdict) * 6}px)` }}>
+            <span className="nw-cut">{pack.own.decisions.streichen}</span>
+          </div>
+        </>
+      ) : decided ? (
         <>
           <CheckChips pack={pack} marks={sentence.marks as Mark[]} shown={frame.checks} />
           <div className="nw-verdict-line" style={{ opacity: frame.verdict, transform: `translateY(${(1 - frame.verdict) * 6}px)` }}>

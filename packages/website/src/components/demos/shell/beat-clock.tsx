@@ -54,6 +54,19 @@ export interface BeatClock {
   readonly onRestart: (listener: () => void) => () => void;
   /** Called on Escape: close an open detail card. */
   readonly onEscape: (listener: () => void) => () => void;
+  /** Lets the current beat hold "Weiter" and ArrowRight, or take a press for an inner step (useBeatGate). */
+  readonly setGate: (gate: BeatGate | null) => void;
+}
+
+/**
+ * A beat with inner steps (several sentences, an action that must run first)
+ * gates the clock: while `ready` is false "Weiter" stays hidden and
+ * ArrowRight does nothing; once ready, `onNext` may take the press for an
+ * inner step by returning true. Rail marks and r never wait for a gate.
+ */
+export interface BeatGate {
+  readonly ready: boolean;
+  readonly onNext?: () => boolean;
 }
 
 const BeatClockContext = createContext<BeatClock | null>(null);
@@ -72,6 +85,26 @@ export function useOnRestart(listener: () => void): void {
     latest.current = listener;
   });
   useEffect(() => onRestart(() => latest.current()), [onRestart]);
+}
+
+/**
+ * Gates the current beat (see BeatGate). Pass null on beats without inner
+ * steps. The latest onNext is always the one called.
+ */
+export function useBeatGate(ready: boolean | null, onNext?: () => boolean): void {
+  const { setGate } = useBeatClock();
+  const latest = useRef(onNext);
+  useEffect(() => {
+    latest.current = onNext;
+  });
+  useEffect(() => {
+    if (ready === null) {
+      setGate(null);
+      return;
+    }
+    setGate({ ready, onNext: () => latest.current?.() ?? false });
+    return () => setGate(null);
+  }, [ready, setGate]);
 }
 
 /** Subscribes a listener to Escape for the lifetime of the component. */
@@ -154,6 +187,12 @@ export function BeatClockProvider({
   const [stageSeen, setStageSeen] = useState(false);
   const frame = useRef(0);
   const stageRef = useRef<HTMLElement | null>(null);
+  const gateRef = useRef<BeatGate | null>(null);
+  const [gateReady, setGateReady] = useState(true);
+  const setGate = useCallback((gate: BeatGate | null) => {
+    gateRef.current = gate;
+    setGateReady(gate ? gate.ready : true);
+  }, []);
   const restartListeners = useListeners();
   const escapeListeners = useListeners();
   const stateRef = useRef(state);
@@ -202,6 +241,7 @@ export function BeatClockProvider({
   const current = beats[state.index] as Beat;
   const canAdvance =
     !state.rewinding &&
+    gateReady &&
     state.progress >= 1 &&
     state.index < beats.length - 1 &&
     (current.kind !== "commit" || committed.has(state.index));
@@ -217,6 +257,8 @@ export function BeatClockProvider({
       return;
     }
     if (beat.kind === "commit" && !committed.has(index)) return;
+    const gate = gateRef.current;
+    if (gate && (!gate.ready || gate.onNext?.())) return;
     enter(index + 1, "user");
   }, [beats, committed, enter, stop]);
 
@@ -374,8 +416,9 @@ export function BeatClockProvider({
       registerStage,
       onRestart: restartListeners.add,
       onEscape: escapeListeners.add,
+      setGate,
     }),
-    [beats, canAdvance, commit, escapeListeners.add, locale, next, prev, reducedMotion, registerStage, restart, restartListeners.add, room, seek, skippedCommit, state],
+    [beats, canAdvance, commit, escapeListeners.add, locale, next, prev, reducedMotion, registerStage, restart, restartListeners.add, room, seek, setGate, skippedCommit, state],
   );
 
   return (

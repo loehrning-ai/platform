@@ -78,18 +78,32 @@ test.describe(`/demos/${SLUG}`, () => {
 
   test("three sentences, the folder and the late invoice", async ({ page }) => {
     await page.goto(`/demos/${SLUG}?beat=drei-saetze`, { waitUntil: "networkidle" });
+    const next = page.locator("[data-demo-next]");
     for (const [index, bet] of (["yes", "yes", "no"] as const).entries()) {
+      // One way forward: "Weiter" waits for each verdict, then moves to the next sentence.
+      await expect(next).toHaveCount(0);
       await page.locator(`[data-bet="${bet}"]`).click();
-      if (index < 2) await page.getByRole("button", { name: "Nächster Satz" }).click();
+      if (index === 1) await expect(stage(page).locator('[data-ban="4c"]')).toContainText("VERBOTSLISTE 4c", { timeout: 6000 });
+      if (index < 2) {
+        await next.click({ timeout: 6000 });
+        await expect(clock(page)).toHaveAttribute("data-beat", "drei-saetze");
+      }
     }
+    await expect(page.getByRole("button", { name: "Nächster Satz" })).toHaveCount(0);
     await expect(page.locator("[data-tally]")).toContainText("Du hättest 2 von 3 Sätzen so rausgeschickt");
     await expect(page.locator("[data-tally]")).toContainText("Den belegten Satz hättest du zurückgehalten.");
 
     await page.goto(`/demos/${SLUG}?beat=ordner`, { waitUntil: "networkidle" });
+    await expect(next).toHaveCount(0);
     await page.getByRole("button", { name: "Eins mehr" }).click();
     await page.locator("[data-step-action]").click();
     await expect(page.locator('[data-doc="septemberInvoice"]')).toContainText("Q1, Q2, C5, F2, F3, B3", { timeout: 9000 });
     await expect(page.locator("[data-folder-result]")).toHaveText("9 von 21 BELEGT");
+    await expect(stage(page)).toContainText("strom_2025.csv");
+    await expect(page.locator('[data-row="Q1"] [data-cite]')).toHaveText(
+      "strom_2025.csv Z. 3 bis 14 · strom_zusammenfassung_entwurf.txt Z. 5",
+    );
+    await expect(next).toBeVisible();
 
     await page.goto(`/demos/${SLUG}?beat=rechnung`, { waitUntil: "networkidle" });
     await expect(stage(page)).toContainText("RECHNUNG EL-25-09");

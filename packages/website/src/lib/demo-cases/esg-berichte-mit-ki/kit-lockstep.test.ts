@@ -3,7 +3,8 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { readZipText } from "@/lib/zip/read";
 import { COPY } from "./copy";
-import { FILE_IDS, FILE_NAMES, KIT_ROOT, SEPTEMBER_INVOICE, STROM, WASSER } from "./kit";
+import { FILE_IDS, FILE_NAMES, KIT_ROOT, SEPTEMBER_INVOICE, STROM, WASSER, type FileId } from "./kit";
+import { formatLines, LEDGER } from "./ledger";
 
 /*
  * The demo is the kit visualized: every line the stage quotes and every row
@@ -23,6 +24,20 @@ const lines = (locale: "de" | "en", file: string) => {
 };
 const folder = (locale: "de" | "en") => KIT_ROOT[locale].slice(ZIPS[locale].root.length);
 
+/** How the solutions file names each folder file in its "Datei, Zeile" cells. */
+const SHORT: Readonly<Record<"de" | "en", Readonly<Record<FileId, string>>>> = {
+  de: {
+    strom: "strom_2025.csv", entwurf: "entwurf", bio: "bio", kompensation: "kompensation", wasser: "wasser",
+    firmenprofil: "firmenprofil", flaschen: "flaschen", personal: "personal", arbeitsschutz: "arbeitsschutz",
+    richtlinien: "richtlinien", pv: "pv_angebot", regeln: "regeln", vsme: "vsme_basismodul",
+  },
+  en: {
+    strom: "electricity_2025.csv", entwurf: "draft", bio: "organic", kompensation: "carbon_offsets", wasser: "water",
+    firmenprofil: "company_profile", flaschen: "bottles", personal: "headcount", arbeitsschutz: "health_safety",
+    richtlinien: "policies", pv: "solar_offer", regeln: "green_claims_rules", vsme: "vsme_basic_module",
+  },
+};
+
 describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
   const pack = COPY[locale];
 
@@ -41,6 +56,8 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
       const file = lines(locale, `${folder(locale)}${sentence.file}`);
       for (const [line, text] of sentence.lines) expect(file[line - 1], `${sentence.file}:${line}`).toBe(text);
     }
+    const rules = lines(locale, `${folder(locale)}${FILE_NAMES.regeln[locale]}`);
+    expect(rules[pack.three.banLine[0] - 1], "ban list 4c").toBe(pack.three.banLine[1]);
     expect(pack.three.sentences.map((sentence) => sentence.file)).toEqual([FILE_NAMES.entwurf[locale], FILE_NAMES.kompensation[locale], FILE_NAMES.wasser[locale]]);
   });
 
@@ -73,6 +90,22 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
     expect(answers).toContain(SEPTEMBER_INVOICE.invoice);
     expect(answers).toMatch(locale === "de" ? /10 BELEGT, 4 SCHWACH, 7 LÜCKE/ : /10 COVERED, 4 WEAK, 7 GAP/);
     expect(answers).toMatch(locale === "de" ? /9 BELEGT, 3 SCHWACH, 9 LÜCKE/ : /9 COVERED, 3 WEAK, 9 GAP/);
+  });
+
+  it("cites every register row with the file and lines of the solutions file", () => {
+    const answers = lines(locale, locale === "de" ? "loesungen/LOESUNGEN.md" : "answers/ANSWERS.md");
+    const step2 = answers.findIndex((line) => /^## (?:Schritt|Step) 2/.test(line));
+    for (const row of LEDGER) {
+      const at = row.group === "werbung"
+        ? answers.findIndex((line, index) => index > step2 && line.startsWith(`| ${row.id.slice(1)} |`))
+        : answers.findIndex((line) => line.startsWith(`| ${row.id} |`));
+      const line = answers[at] ?? "";
+      expect(line, `${row.id} in the solutions file`).not.toBe("");
+      expect(row.lines.length, row.id).toBeGreaterThan(0);
+      for (const [file, refs] of row.lines) {
+        expect(line, `${row.id}: ${file}`).toContain(`${SHORT[locale][file]} ${formatLines(refs, pack.range)}`);
+      }
+    }
   });
 
   it("states the objective word for word as the skill does", () => {

@@ -6,6 +6,7 @@ import {
   csvCell,
   fill,
   missingDocMails,
+  monthList,
   safeWording,
   toMarkdownTable,
   toRegisterCsv,
@@ -52,6 +53,8 @@ const words = (locale: "de" | "en"): ExportWords => {
     evidence: own.evidenceOptions,
     months: own.monthNames,
     and: own.and,
+    to: own.to,
+    monthsCount: own.monthsCount,
     wholeYear: own.wholeYear,
     decisions: own.decisions,
     reasons: own.reasons,
@@ -206,13 +209,23 @@ describe("own sentences", () => {
     const months = Array.from({ length: 12 }, (_, index) => index !== 8);
     const result = probeOwn(input({ evidence: "bills", months }));
     expect(result.status).toBe("luecke");
-    expect(result.missing).toEqual([{ code: "months", months: [9] }]);
+    expect(result.missing).toEqual([{ code: "months", months: [9], year: null }]);
+    expect(probeOwn(input({ sentence: "Strom 2025: 412 MWh", evidence: "bills", months })).missing).toEqual([{ code: "months", months: [9], year: 2025 }]);
     expect(probeOwn(input({ evidence: "bills", months: Array(12).fill(true) })).status).toBe("belegt");
   });
   it("gives SCHWACH for an expired certificate, with the days", () => {
     const result = probeOwn(input({ evidence: "certificate", validUntil: "31.08.2026", stichtag: "16.10.2026" }));
     expect(result.status).toBe("schwach");
     expect(result.reasons).toContainEqual({ code: "expired", days: 46, validUntil: "31.08.2026" });
+  });
+  it("names the missing reference date as the reason, and lets a signed declaration go without an expiry", () => {
+    const certificate = probeOwn(input({ evidence: "certificate", validUntil: "31.08.2026", stichtag: "" }));
+    expect(certificate.status).toBe("schwach");
+    expect(certificate.reasons).toContainEqual({ code: "noStichtag" });
+    const statement = probeOwn(input({ evidence: "statement", stichtag: "16.10.2026" }));
+    expect(statement.status).toBe("belegt");
+    expect(statement.reasons).toEqual([]);
+    expect(probeOwn(input({ evidence: "certificate", stichtag: "16.10.2026" })).reasons).toContainEqual({ code: "noValidity" });
   });
   it("never counts an offer, a draft or an offset certificate as final", () => {
     for (const evidence of ["offer", "draft", "offset"] as const) {
@@ -271,6 +284,19 @@ describe("exports", () => {
     const table = toMarkdownTable([rowFor({ sentence: "a | b", evidence: "nothing" })], words("de"));
     expect(table).toContain("a \\| b");
     expect(table.split("\n")[0]).toBe("| Satz | Wohin | Nachweis | Status | Fehlt |");
+  });
+  it("writes month runs as ranges, with the count", () => {
+    const months = Array.from({ length: 12 }, (_, index) => index !== 8);
+    expect(rowFor({ sentence: "Strom 2025: 412 MWh", evidence: "bills", months, wholeYear: false }).safe).toBe(
+      "Strom 2025: 412 MWh, laut Rechnungen, Januar bis August und Oktober bis Dezember (11 von 12 Monaten).",
+    );
+    expect(monthList([1, 2, 5], words("de"))).toBe("Januar, Februar und Mai");
+    expect(monthList([10, 11, 12], words("en"))).toBe("October to December");
+  });
+  it("names the year and the destination in the mail, without a form-letter colon", () => {
+    const months = Array.from({ length: 12 }, (_, index) => index !== 8);
+    const [mail] = missingDocMails([rowFor({ sentence: "Strom 2025: 412 MWh", evidence: "bills", months })], words("de"));
+    expect(mail!.text).toContain("für den Fragebogen eines Kunden brauche ich Rechnungen für September 2025.");
   });
   it("writes one mail per missing document and leaves nothing in brackets", () => {
     const rows = [rowFor({ evidence: "nothing" }), rowFor({ evidence: "nothing", sentence: "Zweiter Satz" }), rowFor({ evidence: "offer" }, "de")];

@@ -12,10 +12,12 @@ export {
   REWIND_MS,
   revealIfOffscreen,
   useBeatClock,
+  useBeatGate,
   useOnEscape,
   useOnRestart,
   type BeatCause,
   type BeatClock,
+  type BeatGate,
 } from "./beat-clock";
 export { TAKEHOME_TARGET_ID } from "@/lib/demo-beats";
 export { BeatRail } from "./beat-rail";

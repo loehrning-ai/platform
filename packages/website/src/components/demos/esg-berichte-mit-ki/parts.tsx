@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, ReactNode } from "react";
+import { useLayoutEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import type { Pack } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
 import type { BillRow, Status } from "@/lib/demo-cases/esg-berichte-mit-ki/rules";
 
@@ -29,25 +29,60 @@ export function StatusTag({ status, pack }: { readonly status: Status; readonly 
   );
 }
 
+/**
+ * Hides the optional lines, in the given order, only while the stage would
+ * overflow: measured, never by breakpoint. Runs again when the stage resizes
+ * or the stage's content changes (fitKey).
+ */
+function useFitLines(card: React.RefObject<HTMLDivElement | null>, optional: readonly number[] | undefined, fitKey: string | undefined) {
+  useLayoutEffect(() => {
+    const element = card.current;
+    const stage = element?.closest<HTMLElement>(".nw-stage");
+    if (!element || !stage || !optional || optional.length === 0) return;
+    const fit = () => {
+      const lines = optional.flatMap((line) => {
+        const item = element.querySelector<HTMLElement>(`[data-line="${line}"]`);
+        return item ? [item] : [];
+      });
+      element.dataset.fitted = "";
+      for (const item of lines) item.hidden = false;
+      for (const item of lines) {
+        if (stage.scrollHeight <= stage.clientHeight + 1) break;
+        item.hidden = true;
+      }
+    };
+    fit();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(fit);
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, [card, optional, fitKey]);
+}
+
 /** A kit file as a paper card: real line numbers in the gutter, the lines verbatim. */
 export function DocCard({
   file,
   lines,
   lineClass,
   optional,
+  fitKey,
   className,
   style,
 }: {
   readonly file: string;
   readonly lines: readonly (readonly [number, string])[];
   readonly lineClass?: (line: number) => string | undefined;
-  /** Lines a short phone screen may leave out; the gutter keeps the real numbers. */
+  /** Lines that step back, in this order, while the stage is too short for all; the gutter keeps the real numbers. */
   readonly optional?: readonly number[];
+  /** Changes whenever the stage around the card changes its content. */
+  readonly fitKey?: string;
   readonly className?: string;
   readonly style?: CSSProperties;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useFitLines(ref, optional, fitKey);
   return (
-    <div className={`nw-doc ${className ?? ""}`} style={style}>
+    <div ref={ref} className={`nw-doc ${className ?? ""}`} style={style}>
       <p className="nw-doc-name">{file}</p>
       <ol className="nw-doc-lines">
         {lines.map(([line, text]) => (

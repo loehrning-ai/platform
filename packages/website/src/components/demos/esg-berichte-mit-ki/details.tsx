@@ -3,7 +3,8 @@
 import type { Pack } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
 import { fill } from "@/lib/demo-cases/esg-berichte-mit-ki/export";
 import type { Figures } from "@/lib/demo-cases/esg-berichte-mit-ki/figures";
-import { LEDGER, ledgerCounts, missingDocuments, ROW_GROUPS, tileStatus, VSME, vsmeCounts } from "@/lib/demo-cases/esg-berichte-mit-ki/ledger";
+import { FILE_NAMES } from "@/lib/demo-cases/esg-berichte-mit-ki/kit";
+import { formatLines, LEDGER, ledgerCounts, missingDocuments, ROW_GROUPS, tileStatus, VSME, vsmeCounts, type LedgerRow } from "@/lib/demo-cases/esg-berichte-mit-ki/ledger";
 import { StatusGlyph, StatusTag } from "./parts";
 import type { Bet } from "./stage-certificate";
 
@@ -46,11 +47,17 @@ export function ThreeDetails({
   return (
     <>
       <ul className="nw-detail-checks">
-        {sentence.notes.map((note, position) => (
-          <li key={position} data-mark={sentence.marks[position]}>
-            <span className="nw-rule-label">{checks[position]}</span> {fill(note, figures)}
+        {index === 1 ? (
+          <li data-mark="fail">
+            <span className="nw-rule-label">{fill(pack.three.banChip, { gate: "4c" })}</span> {sentence.notes[0]}
           </li>
-        ))}
+        ) : (
+          sentence.notes.map((note, position) => (
+            <li key={position} data-mark={sentence.marks[position]}>
+              <span className="nw-rule-label">{checks[position]}</span> {fill(note, figures)}
+            </li>
+          ))
+        )}
       </ul>
       {sentence.details.map((line, position) => (
         <p key={position}>{fill(line, figures)}</p>
@@ -63,6 +70,12 @@ export function ThreeDetails({
       ) : null}
     </>
   );
+}
+
+/** "strom_2025.csv Z. 3 bis 14 · strom_zusammenfassung_entwurf.txt Z. 5": the register's Datei und Zeile. */
+export function citeText(row: LedgerRow, pack: Pack): string {
+  const locale = pack.locale === "en" ? "en" : "de";
+  return row.lines.map(([file, refs]) => `${FILE_NAMES[file][locale]} ${pack.lineAbbr} ${formatLines(refs, pack.range)}`).join(" · ");
 }
 
 /** Under the lever after the sweep: the register, the VSME tiles and the request list (kit step 4). */
@@ -82,11 +95,15 @@ export function FolderDetails({ pack, guess }: { readonly pack: Pack; readonly g
             {LEDGER.filter((row) => row.group === group).map((row) => {
               const [text, reason] = pack.folder.rows[row.id];
               return (
-                <li key={row.id} className="nw-ledger-row">
+                <li key={row.id} className="nw-ledger-row" data-row={row.id}>
                   <span className="nw-cell-id">{row.id}</span>
                   <StatusGlyph status={row.before} />
                   <span className="nw-ledger-text">
+                    {row.gate ? <span className="nw-ban-tag">{fill(pack.folder.ban, { gate: row.gate })}</span> : null}
                     <strong>{text}</strong> {reason}
+                    <span className="nw-ledger-cite" data-cite="">
+                      {citeText(row, pack)}
+                    </span>
                   </span>
                 </li>
               );

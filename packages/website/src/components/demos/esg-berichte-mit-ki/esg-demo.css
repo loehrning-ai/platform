@@ -1,7 +1,8 @@
 /*
  * Workshop 04 "Nachweisprobe". Tokens only (Druckschwarz, Kalkweiß, Mennige
- * and their site mixes), hard edges, no gradients, no glass. Mennige marks
- * only a LÜCKE, a failing check and the over-limit counter. The shell's
+ * and their site mixes), hard edges, no gradients. Glass only on the phone's
+ * control dock, through the one shared glass class. Mennige marks only a LÜCKE,
+ * a failing check, a ban-list hit and the over-limit counter. The shell's
  * parts (stage frame, caption, lever, rail) are never selected here.
  */
 .nw-demo {
@@ -103,7 +104,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.nw-strip-wrap .nw-doc-name { border-bottom: 0; padding: 0; }
+.nw-strip-wrap .nw-doc-name { border-bottom: 0; padding: 0; white-space: normal; }
+.nw-strip-note { font-weight: 700; color: var(--nw-ink); }
 .nw-doc-lines { margin: 0; padding: 4px 0; list-style: none; }
 .nw-doc-line {
   display: grid;
@@ -119,6 +121,7 @@
 .nw-doc-line.is-focus { background: var(--nw-soft); border-left-color: var(--nw-ink); }
 .nw-doc-line.is-ok { border-left-color: var(--nw-ink); font-weight: 700; }
 .nw-doc-line.is-fail { border-left-color: var(--nw-mark); font-weight: 700; }
+.nw-doc-line[hidden] { display: none; }
 .nw-doc-line.is-fail .nw-line-text { text-decoration: underline 2px var(--nw-mark); text-underline-offset: 2px; }
 
 /* ── Checks, status ─────────────────────────────────────────────────── */
@@ -145,6 +148,22 @@
 .nw-glyph { flex: none; }
 .nw-verdict-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-weight: 700; font-size: 0.875rem; }
 .nw-verdict-note { font-weight: 500; font-size: 0.8125rem; color: var(--nw-muted); }
+.nw-ban-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  min-height: 26px;
+  padding: 0 8px;
+  border: 2px solid var(--nw-mark);
+  color: var(--nw-mark);
+  font-family: var(--nw-mono);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+.nw-cut { color: var(--nw-mark); font-weight: 800; letter-spacing: 0.02em; }
 
 /* ── Probe 1: ruler and hectares ─────────────────────────────────────── */
 .nw-evidence-band { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); gap: 10px; align-items: end; }
@@ -188,14 +207,14 @@
 .nw-slot-label { text-align: center; font-size: 0.625rem; font-weight: 700; color: var(--nw-muted); }
 
 /* ── Folder and register ─────────────────────────────────────────────── */
-.nw-files { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; margin: 0; padding: 0; list-style: none; }
+.nw-files { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; margin: 0; padding: 0; list-style: none; }
 .nw-file {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 2px;
+  gap: 1px;
   min-height: 24px;
-  padding: 0 4px;
+  padding: 1px 3px;
   border: 1px solid var(--nw-line);
   background: var(--nw-paper);
   font-size: 0.625rem;
@@ -203,9 +222,13 @@
 }
 .nw-file[data-lit="belegt"], .nw-file[data-lit="schwach"] { border: 2px solid var(--nw-ink); }
 .nw-file[data-lit="luecke"] { border: 2px solid var(--nw-mark); }
-.nw-file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.nw-file-count { flex: none; font-family: var(--nw-mono); font-weight: 800; }
-.nw-register { display: grid; gap: 4px; }
+.nw-file-name { font-family: var(--nw-mono); font-size: 0.5625rem; font-weight: 600; line-height: 1.15; overflow-wrap: anywhere; }
+.nw-file-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; min-height: 0.625rem; line-height: 1; }
+.nw-file-defect { min-width: 0; font-size: 0.5625rem; font-weight: 800; letter-spacing: 0.03em; line-height: 1.2; color: var(--nw-mark); }
+.nw-file-count { flex: none; margin-left: auto; font-family: var(--nw-mono); font-weight: 800; }
+.nw-register { display: grid; gap: 3px; }
+/* The folder holds 13 files and 21 cells on a 324px stage: tighter rhythm there only. */
+.nw-stage[data-scene="ordner"] { gap: 4px; padding-bottom: 6px; }
 .nw-register-group { display: grid; grid-template-columns: 4.75rem minmax(0, 1fr); align-items: center; gap: 6px; }
 .nw-register-label { margin: 0; font-size: 0.6875rem; font-weight: 800; overflow: hidden; text-overflow: ellipsis; }
 .nw-cells { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 3px; margin: 0; padding: 0; list-style: none; }
@@ -214,7 +237,7 @@
   align-items: center;
   justify-content: center;
   gap: 3px;
-  min-height: 24px;
+  min-height: 19px;
   border: 1px solid var(--nw-line);
   font-family: var(--nw-mono);
   font-size: 0.625rem;
@@ -225,23 +248,26 @@
 .nw-cell-blank { display: inline-block; width: 12px; height: 12px; }
 .nw-cell-id { font-family: var(--nw-mono); font-weight: 800; font-size: 0.6875rem; }
 .nw-tally { margin: auto 0 0; font-size: 1.5rem; font-weight: 900; letter-spacing: -0.02em; }
+.nw-kicker .nw-tally { display: block; margin: 0; font-size: 1.25rem; line-height: 1.2; letter-spacing: -0.01em; text-transform: none; color: var(--nw-ink); }
 
 /* ── Invoice and cascade ─────────────────────────────────────────────── */
 .nw-invoice-stage { justify-content: center; }
 .nw-invoice {
   align-self: center;
-  width: min(100%, 320px);
-  padding: 12px 14px;
+  width: min(100%, 340px);
+  padding: 16px 16px;
   border: 1px solid var(--nw-ink);
   background: var(--nw-paper);
   font-family: var(--nw-mono);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }
-.nw-invoice-title { margin: 0; font-weight: 800; font-size: 0.875rem; letter-spacing: 0.04em; }
+.nw-invoice-title { margin: 0; font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; }
 .nw-invoice-sub { margin: 4px 0 0; color: var(--nw-muted); }
 .nw-invoice-rows { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; margin: 8px 0 0; }
 .nw-invoice-rows dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
-.nw-invoice-compact { margin: 0; padding-right: 128px; min-height: 24px; font-family: var(--nw-mono); font-size: 0.75rem; }
+.nw-invoice-compact { display: grid; margin: 0; padding-right: 128px; min-height: 24px; font-family: var(--nw-mono); font-size: 0.75rem; }
+.nw-invoice-kwh { font-weight: 800; }
 .nw-meter { margin: 0; font-family: var(--nw-mono); font-size: 0.75rem; font-weight: 700; }
 .nw-cascade-energy .nw-slot-track { height: 38px; }
 .nw-total { display: flex; align-items: baseline; gap: 8px; margin: 2px 0 0; }
@@ -316,9 +342,17 @@
 .nw-ledger { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
 .nw-ledger-group { display: grid; gap: 4px; }
 .nw-ledger-row { display: grid; grid-template-columns: 1.75rem 14px minmax(0, 1fr); gap: 8px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--nw-line); font-size: 0.875rem; }
+.nw-ledger-cite { display: block; margin-top: 2px; font-family: var(--nw-mono); font-size: 0.75rem; line-height: 1.35; color: var(--nw-ink); overflow-wrap: anywhere; }
+.nw-ban-tag { display: inline-block; margin-right: 6px; padding: 0 4px; border: 2px solid var(--nw-mark); color: var(--nw-mark); font-family: var(--nw-mono); font-size: 0.75rem; font-weight: 800; }
 .nw-vsme { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
 .nw-vsme-tile { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr) auto; gap: 6px; align-items: center; min-height: 40px; padding: 4px 8px; border: 1px solid var(--nw-ink); font-size: 0.8125rem; }
 .nw-vsme-tile[data-status="luecke"] { border: 2px dashed var(--nw-mark); }
+@media (max-width: 30rem) {
+  .nw-vsme-tile { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "id count" "name name"; gap: 2px 6px; align-items: start; }
+  .nw-vsme-id { grid-area: id; }
+  .nw-vsme-count { grid-area: count; }
+  .nw-vsme-name { grid-area: name; overflow-wrap: anywhere; hyphens: auto; line-height: 1.25; }
+}
 .nw-vsme-id { font-family: var(--nw-mono); font-weight: 800; }
 .nw-vsme-count { display: inline-flex; align-items: center; gap: 4px; font-family: var(--nw-mono); font-weight: 700; }
 .nw-request { display: grid; gap: 6px; margin: 0; padding-left: 1.4em; font-size: 0.875rem; }
@@ -412,7 +446,7 @@
 .nw-mail-text { margin: 0; padding: 10px; border: 1px solid var(--nw-line); background: var(--nw-paper); font-family: var(--nw-mono); font-size: 0.75rem; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 @media (min-width: 64rem) {
-  .nw-stage { padding: 16px 20px; gap: 10px; }
+  .nw-stage, .nw-stage[data-scene="ordner"] { padding: 16px 20px; gap: 10px; }
   .nw-sentence { font-size: 1.75rem; }
   .nw-sentence-mid { font-size: 1.375rem; }
   .nw-doc-line { font-size: 0.875rem; }
@@ -422,18 +456,38 @@
   .nw-cascade-energy .nw-slot-track { height: 64px; }
   .nw-objective { font-size: 1.0625rem; }
   .nw-rule-checks, .nw-rule-statuses { font-size: 0.9375rem; gap: 6px; }
-  .nw-files .nw-file { min-height: 30px; font-size: 0.75rem; }
-  .nw-cell { min-height: 40px; font-size: 0.75rem; }
-  .nw-register { gap: 8px; }
+  .nw-files { gap: 4px; }
+  .nw-files .nw-file { min-height: 52px; padding: 6px 8px; font-size: 0.75rem; }
+  .nw-files .nw-file-name { font-size: 0.8125rem; }
+  .nw-file-defect { font-size: 0.6875rem; }
+  .nw-register-label { font-size: 0.8125rem; }
+  .nw-kicker .nw-tally { font-size: 1.75rem; }
+  .nw-cell { min-height: 46px; font-size: 0.75rem; }
+  .nw-register { gap: 10px; }
   .nw-ruler, .nw-hectares { max-height: 120px; }
   .nw-cascade-row { font-size: 0.875rem; min-height: 26px; }
   .nw-tally { font-size: 2rem; }
 }
 
-/* A phone with a short screen: the stage is about 324px high. Lines the
-   probe does not cite step back, the verdict note lives in the caption. */
+/* The control dock: floats above the tab bar once the lever has scrolled away (reading-dock.tsx). */
+.nw-dock {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(var(--tabbar-band-h) + 8px);
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 8px;
+  padding: 8px;
+}
+@media (min-width: 64rem) { .nw-dock { display: none; } }
+
+/* A phone with a short screen: the stage is about 324px high. Before the
+   card has measured itself (DocCard), lines the probe does not cite step
+   back; the verdict note lives in the caption. */
 @media (max-width: 63.99rem) and (max-height: 760px) {
-  .nw-doc-line.is-optional { display: none; }
+  .nw-doc:not([data-fitted]) .nw-doc-line.is-optional { display: none; }
   .nw-stage { gap: 4px; }
   .nw-sentence { padding: 6px 8px; font-size: 1.1875rem; }
   .nw-sentence-mid { font-size: 1rem; }
@@ -446,3 +500,4 @@
   .nw-demo * { transition: none !important; }
 }
 .nw-verdict-line .nw-bet-tag { font-weight: 400; color: var(--nw-muted); }
+@media (min-width: 64rem) { .nw-files { grid-template-columns: repeat(4, minmax(0, 1fr)); } }

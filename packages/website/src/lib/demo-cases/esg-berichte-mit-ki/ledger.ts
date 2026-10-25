@@ -31,6 +31,11 @@ export type DocId =
 
 export type TileId = "B1" | "B2" | "B3" | "B4" | "B5" | "B6" | "B7" | "B8" | "B9" | "B10" | "B11";
 
+/** One line number, or a range [from, to] as the solutions file writes it ("3 bis 14"). */
+export type LineRef = number | readonly [number, number];
+/** A citation: the file and the lines that carry the answer, as in loesungen/LOESUNGEN.md. */
+export type Cite = readonly [FileId, readonly LineRef[]];
+
 export interface LedgerRow {
   readonly id: RowId;
   readonly group: RowGroup;
@@ -42,6 +47,8 @@ export interface LedgerRow {
   readonly missing: readonly DocId[];
   /** A claim to consumers that hits the ban list (Richtlinie (EU) 2024/825, Anhang I). */
   readonly gate?: "4a" | "4b" | "4c";
+  /** File and line for the register, copied from the solutions file (kit-lockstep.test.ts). */
+  readonly lines: readonly Cite[];
 }
 
 const row = (
@@ -51,9 +58,41 @@ const row = (
   before: Status,
   missing: readonly DocId[] = [],
   extra: { readonly after?: Status; readonly gate?: "4a" | "4b" | "4c" } = {},
-): LedgerRow => ({ id, group, cites, before, after: extra.after ?? before, missing, ...(extra.gate ? { gate: extra.gate } : {}) });
+): Omit<LedgerRow, "lines"> => ({ id, group, cites, before, after: extra.after ?? before, missing, ...(extra.gate ? { gate: extra.gate } : {}) });
 
-export const LEDGER: readonly LedgerRow[] = [
+const ALL_MONTHS: LineRef = [3, 14];
+
+/** File and line per answer, from loesungen/LOESUNGEN.md (steps 1 to 3). Request files are left out: they ask, they prove nothing. */
+const LINES: Readonly<Record<RowId, readonly Cite[]>> = {
+  Q1: [["strom", [ALL_MONTHS]], ["entwurf", [5]]],
+  Q2: [["firmenprofil", [14, 17]], ["kompensation", [5]], ["vsme", [12]]],
+  Q3: [["personal", [[3, 6]]]],
+  Q4: [["arbeitsschutz", [[4, 7]]]],
+  Q5: [["richtlinien", [13, 14]]],
+  Q6: [["flaschen", [[3, 5]]]],
+  Q7: [["bio", [[6, 9]]], ["richtlinien", [8, 9]]],
+  Q8: [["wasser", [ALL_MONTHS]], ["firmenprofil", [8]]],
+  C1: [["kompensation", [7]], ["firmenprofil", [17]]],
+  C2: [["regeln", [12, 13]]],
+  C3: [["bio", [6, 8, 10, 11]]],
+  C4: [["firmenprofil", [13]], ["pv", [3, 11]]],
+  C5: [["strom", [ALL_MONTHS]]],
+  C6: [["flaschen", [3]]],
+  C7: [["wasser", [ALL_MONTHS]], ["firmenprofil", [8]]],
+  F1: [["richtlinien", [13, 14]]],
+  F2: [["strom", [ALL_MONTHS]], ["entwurf", [5]]],
+  F3: [["pv", [8]], ["strom", [ALL_MONTHS]]],
+  F4: [["pv", [6, 8, 9, 11]]],
+  F5: [["personal", [[3, 6]]], ["arbeitsschutz", [[4, 7]]]],
+  F6: [["bio", [[6, 9]]], ["richtlinien", [8, 9]]],
+};
+
+/** "3 bis 14", "14, 17": the solutions file's way of writing lines. */
+export function formatLines(refs: readonly LineRef[], to: string): string {
+  return refs.map((ref) => (typeof ref === "number" ? String(ref) : `${ref[0]} ${to} ${ref[1]}`)).join(", ");
+}
+
+const ROWS: readonly Omit<LedgerRow, "lines">[] = [
   row("Q1", "fragebogen", ["strom", "entwurf"], "luecke", ["septemberInvoice", "supplyMix"]),
   row("Q2", "fragebogen", ["firmenprofil", "kompensation", "strom"], "luecke", ["septemberInvoice", "gridFactor", "diesel"]),
   row("Q3", "fragebogen", ["personal"], "belegt"),
@@ -76,6 +115,8 @@ export const LEDGER: readonly LedgerRow[] = [
   row("F5", "bank", ["personal", "arbeitsschutz"], "belegt"),
   row("F6", "bank", ["bio", "richtlinien"], "schwach", ["bioRenewed"]),
 ];
+
+export const LEDGER: readonly LedgerRow[] = ROWS.map((entry) => ({ ...entry, lines: LINES[entry.id] }));
 
 export const ROW_GROUPS: readonly RowGroup[] = ["fragebogen", "werbung", "bank"];
 

@@ -29,6 +29,7 @@ import {
   usesMonths,
   usesValidity,
   validate,
+  validityOptional,
   type GateId,
   type OwnInput,
   type OwnRow,
@@ -44,6 +45,8 @@ export function exportWords(pack: Pack): ExportWords {
     evidence: own.evidenceOptions,
     months: own.monthNames,
     and: own.and,
+    to: own.to,
+    monthsCount: own.monthsCount,
     wholeYear: own.wholeYear,
     decisions: own.decisions,
     reasons: own.reasons,
@@ -250,7 +253,7 @@ export const OwnSentences = forwardRef<HTMLElement, { readonly pack: Pack; reado
             <div className="nw-field-row">
               <div className="nw-field">
                 <label className="nw-label" htmlFor={`${id}-valid`}>
-                  {own.validUntil}
+                  {validityOptional(input.evidence) ? own.validUntilOptional : own.validUntil}
                 </label>
                 <input
                   id={`${id}-valid`}
@@ -368,6 +371,11 @@ export const OwnSentences = forwardRef<HTMLElement, { readonly pack: Pack; reado
               <strong>{own.safeLabel}: </strong>
               {safe ?? own.safe.cut}
             </p>
+            {errors.length > 0 ? (
+              <p className="nw-error" data-own-errors="">
+                {errors.map((error) => own.errors[error]).join(" ")}
+              </p>
+            ) : null}
             <p className="nw-hint">{own.limit}</p>
             <div className="nw-own-actions">
               <button type="button" className="nw-button" disabled={full || errors.length > 0} onClick={add}>
