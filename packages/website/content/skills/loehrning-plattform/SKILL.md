@@ -1,6 +1,6 @@
 ---
 name: loehrning-plattform
-description: Lies die Lernplattform loehrning.ai als Agent: Kurse, Lektionen, Workshops, Buchkapitel, Open-Source-Werkzeuge und, nach Anmeldung, den eigenen Lernstand der Person, die dich fragt. Alles nur lesend, über einen MCP-Endpunkt. Read loehrning.ai as an agent over a read-only MCP endpoint.
+description: loehrning.ai als Agent lesen: Kurse, Lektionen, Workshops, Bücher, Werkzeuge und nach Anmeldung den eigenen Lernstand, nur lesend über MCP. Read loehrning.ai over read-only MCP.
 ---
 
 # Mit loehrning.ai arbeiten

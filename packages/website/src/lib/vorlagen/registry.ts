@@ -1,10 +1,16 @@
 /**
- * Question-sheet templates (CC BY 4.0) under content/vorlagen/.
+ * Templates (CC BY 4.0) under content/vorlagen/, of two kinds:
  *
- * One entry per sheet, one Markdown file per locale. The files are the single
- * source: the download route at /vorlagen/<file>.md serves their bytes
- * unchanged, and the page named in `hostPaths` renders the structure that
- * `parseQuestionSheet` returns from the same bytes.
+ * - "question-sheet": a sheet the page named in `hostPaths` renders from the
+ *   structure `parseQuestionSheet` returns.
+ * - "template": a plain Markdown file a workshop demo hands out in its
+ *   "Für deinen Claude" block; `hostPaths` are /demos/<slug> and
+ *   /en/demos/<slug>. Templates are never parsed.
+ *
+ * One entry per file pair, one Markdown file per locale. The files are the
+ * single source: the download route at /vorlagen/<file>.md serves their bytes
+ * unchanged. A template that also ships inside a workshop kit names that copy
+ * in `inKit`; a test asserts both are byte-identical.
  *
  * Server only: reads the content directory with Node.js fs. The parser in
  * ./question-sheet stays pure so tests and scripts can call it directly.
@@ -19,19 +25,32 @@ import {
   type SheetLocale,
 } from "./question-sheet";
 
+export type VorlageKind = "question-sheet" | "template";
+
 export interface VorlageEntry {
   readonly slug: string;
+  readonly kind: VorlageKind;
   /** Paths relative to content/vorlagen. */
   readonly files: Readonly<Record<SheetLocale, string>>;
   /** Public file names under /vorlagen/. Also the route segment. */
   readonly downloadNames: Readonly<Record<SheetLocale, string>>;
-  /** The page that publishes the sheet; equals frontmatter hostPath. */
+  /** The page that publishes the file (a question sheet's frontmatter hostPath; a demo page for a template). */
   readonly hostPaths: Readonly<Record<SheetLocale, string>>;
+  /**
+   * Templates only: the same file inside a workshop kit zip. `zip` is the
+   * public path of the archive (/workshops/<slug>/<kit>.zip), `paths` the
+   * entry per locale. A test asserts the bytes are identical.
+   */
+  readonly inKit?: {
+    readonly zip: string;
+    readonly paths: Readonly<Partial<Record<SheetLocale, string>>>;
+  };
 }
 
 export const VORLAGEN: readonly VorlageEntry[] = [
   {
     slug: "ki-in-der-ausbildung-fragen",
+    kind: "question-sheet",
     files: {
       de: "ki-in-der-ausbildung-fragen.md",
       en: "en/ki-in-der-ausbildung-fragen.md",
@@ -98,12 +117,24 @@ export async function readVorlageSource(
 
 const cache = new Map<string, Promise<QuestionSheet>>();
 
+/** The entries of one kind, in registry order. */
+export function vorlagenOfKind(kind: VorlageKind): readonly VorlageEntry[] {
+  return VORLAGEN.filter((entry) => entry.kind === kind);
+}
+
 /** The parsed sheet. A parse or read failure is not cached, so it surfaces again. */
 export function loadQuestionSheet(
   slug: string,
   locale: SheetLocale,
 ): Promise<QuestionSheet> {
   const key = `${slug}:${locale}`;
+  try {
+    if (entryFor(slug).kind !== "question-sheet") {
+      return Promise.reject(new Error(`not a question sheet: ${slug}`));
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
   const cached = cache.get(key);
   if (cached) return cached;
   const pending = readVorlageSource(slug, locale).then((raw) =>
