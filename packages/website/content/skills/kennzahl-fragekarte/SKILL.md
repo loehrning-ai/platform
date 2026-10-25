@@ -1,6 +1,6 @@
 ---
 name: kennzahl-fragekarte
-description: Eine Kennzahl selbst aus Rohdaten, CSV oder Datenbank rechnen: Stand, Veränderung oder Quote und Quelle festlegen. Computing a metric from raw data, a CSV or a database.
+description: Eine Kennzahl selbst aus Excel, CSV, Rohdaten oder Datenbank rechnen: Stand, Veränderung oder Quote und Quelle festlegen. Computing a metric from a spreadsheet, CSV or database.
 ---
 
 # Kennzahl-Fragekarte
@@ -23,8 +23,9 @@ Quote = rate, Rückfrage = ask back, Ablehnung = refusal, Herkunft = trace.
 
 ## Vor jeder Rechnung
 
-1. **Frage.** Fehlt Zeitraum, Art der Zahl oder Einheit: stell genau eine kurze Rückfrage und
-   rechne nicht.
+1. **Frage.** Fehlt Zeitraum, Art der Zahl oder Einheit und lässt es sich nicht eindeutig aus der
+   Frage, den Spaltennamen oder `references/kennzahlen.md` ablesen: stell genau eine kurze
+   Rückfrage und rechne nicht.
 2. **Quelle.** Steht die Kennzahl in `references/kennzahlen.md`, nimm nur die dort genannte Datei
    oder Sicht und Spalte. Steht sie dort nicht: sag das und nenne die Quelle, die du nehmen
    würdest, bevor du rechnest. Andere Dateien im Chat nutzt du nur, wenn der Mensch es ausdrücklich
@@ -40,9 +41,10 @@ Quote = rate, Rückfrage = ask back, Ablehnung = refusal, Herkunft = trace.
      Beispiel A, C, N), such nie nach einem Wort wie „active“. Ist ein Code nicht erklärt: frag nach.
    - Heißt eine Spalte `amount`, `value`, `wert`, `betrag` oder `status` und ist nicht definiert:
      frag, ob sie Stand oder Veränderung ist.
-4. **Grenze.** Namen, E-Mail-Adressen, Telefonnummern, Anschriften und andere direkte Kennungen:
-   lehne ab, bevor du rechnest. Pseudonyme Schlüssel sind nicht anonym; nenn sie nicht so. Für eine
-   Kennzahl ohne Definition nimm keinen Ersatzwert: lehne ab und sag, was fehlt.
+4. **Grenze.** Was in `references/kennzahlen.md` unter „Nie zeigen“ steht: lehne ab, bevor du
+   rechnest. Ohne Definition: gib keine Kontaktdaten (E-Mail, Telefon, Anschrift) von Kunden oder
+   Personen aus. Pseudonyme Schlüssel sind nicht anonym; nenn sie nicht so. Für eine Kennzahl ohne
+   Definition nimm keinen Ersatzwert: lehne ab und sag, was fehlt.
 5. **Herkunft.** Jede Antwort mit Zahl endet mit diesem Block:
 
    ```text
@@ -52,7 +54,7 @@ Quote = rate, Rückfrage = ask back, Ablehnung = refusal, Herkunft = trace.
    - Zeitraum: <von> bis <bis>, Einheit <Einheit>
    - Quelle: <Datei oder Sicht>, Spalte <Spalte>
    - Wer zählt: <Regel in einem Satz>
-   - Datenstand: <Ladezeit>, <n> h alt am Stichtag <Stichtag>
+   - Datenstand: <Ladezeit, falls bekannt, sonst „unbekannt“>, Stichtag <Stichtag>
    - Nicht enthalten: <eine Zeile>
    ```
 
@@ -82,7 +84,8 @@ Definitions live in `references/kennzahlen.md`, one metric per section. Without 
 source, kind and counting rule before the first calculation. For a number from a finished report
 or dashboard, use the skill `kennzahlen-steckbrief` instead.
 
-1. **Question.** Period, kind of number or unit missing: ask one short question back, no
+1. **Question.** Period, kind of number or unit missing, and not readable without doubt from the
+   question, the column names or `references/kennzahlen.md`: ask one short question back, no
    calculation.
 2. **Source.** Use only the file or view and column named in `references/kennzahlen.md`. Not
    listed: say so and name the source you would use before calculating.
@@ -91,10 +94,12 @@ or dashboard, use the skill `kennzahlen-steckbrief` instead.
    from numerator and denominator, never averaged; denominator 0 means "no rate". Codes such as A,
    C, N are never searched for as words like "active". An undefined `amount`, `value` or `status`:
    ask whether it is a level or a change.
-4. **Boundary.** Names, e-mail addresses, phone numbers, postal addresses and other direct
-   identifiers: refuse before calculating. Pseudonymous keys are not anonymous.
+4. **Boundary.** What `references/kennzahlen.md` lists under "Nie zeigen" (never show): refuse
+   before calculating. Without a definition: give out no contact details (e-mail, phone, postal
+   address) of customers or people. Pseudonymous keys are not anonymous.
 5. **Trace.** Every answer with a number ends with the trace block above: metric and version,
-   kind, period and unit, file and column, who counts, data as of and age, one line "not included".
+   kind, period and unit, file and column, who counts, data as of (if known, else "unknown"), one
+   line "not included".
 
 Use the clock date from the question; never assume today. Never compute or confirm expected test
 values yourself: they come from outside.

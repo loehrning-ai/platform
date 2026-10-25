@@ -21,6 +21,7 @@ personal, or sensitive data.
 | File | What it is for |
 | --- | --- |
 | `START-HIER.md`, `START-HERE.md` | Three steps: the demo, the same question in your Claude, your own card. |
+| `UEBUNG.md` | The 10-minute exercise in German: one question, two setups in your Claude. The English version is `builder/claude-demo/README.md`. |
 | `FRAGEKARTE.md`, `QUESTION-CARD.md` | Five boxes for one number, each with the evidence file in this kit. |
 | `claude/kennzahl-fragekarte/` | A Claude skill: before any metric, fix its kind and source, ask back on gaps, name the trace. The FOLDLINE definition sits in `references/kennzahlen.md`. |
 | `claude/PROJEKT-ANWEISUNG-VORLAGE.txt`, `claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt` | Instructions for a Claude Project, FOLDLINE edition. They guide; they do not enforce. |

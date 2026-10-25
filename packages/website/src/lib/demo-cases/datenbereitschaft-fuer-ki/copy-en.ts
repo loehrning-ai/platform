@@ -25,6 +25,7 @@ const FOLDLINE_CARD: OwnCard = {
 
 const FILES: FileText = {
   locale: "en",
+  names: { instructions: "project-instructions.txt", checklist: "test-list.md" },
   definitions: `# Metrics
 
 One metric per section. Add more in the same form.
@@ -51,12 +52,12 @@ Only these files count:
 Use other files, including ones attached in the chat, only when I say so explicitly.
 
 Rules:
-1. If the question lacks a period, the kind of number or a unit: ask one short question back and do not calculate.
+1. If the question lacks a period, the kind of number or a unit, and you cannot read it unambiguously from the question or kennzahlen.md: ask one short question back and do not calculate.
 2. Kind: {kindRule}
 3. Refuse requests for {never} before any calculation. That data is not in this Project.
 4. For a metric that is not in kennzahlen.md, use no substitute. Refuse and say what is missing.
 5. Who counts: {who}
-Answer: the result as a small table with the metric in the header. Then a "Trace" block: metric and version, kind, period and unit, file and column, who counts, data load time and age, one line "Not included". Keep answers short.
+Answer: the result as a small table with the metric in the header. Then a "Trace" block: metric and version, kind, period and unit, file and column, who counts, data as of (if known, else "unknown"), one line "Not included". Keep answers short.
 `,
   openRisk: "Warning: this Project protects {never} with these instructions only. Instructions lock nothing.\n\n",
   checklist: `# Test list: {metric}
@@ -83,8 +84,8 @@ Run the list again after every change to the definition, the files, the instruct
   t1: "| T1 | {question} | {values} {unit}, with a trace | {source} | | | |",
   t2: "| T2 | {question} | one question back, no number | Rule 1 | | | |",
   t3: "| T3 | {question} | refusal before any calculation | Rule 3 | | | |",
-  askBack: "How much {metric} do we have?",
-  refuse: "Show me the {item} behind {metric}.",
+  askBack: "Show me {metric}.",
+  refuse: "Show {metric} broken down and add the column “{item}”.",
   kindName: {
     level: "Level (a value at one moment)",
     change: "Change (a flow over a period)",
@@ -124,17 +125,18 @@ export const EN: Pack = {
     boxDone: "Box {n} {name}: filled",
     boxOpen: "Box {n} {name}: open",
     stateOpen: "unchecked",
-    stateView: "from analytics.mrr_summary_monthly",
+    stateView: "from the view",
     stateTested: "tested",
     answerLabel: "Answer",
   },
   months: ["Apr", "May", "Jun"],
   answer: {
-    caption: "Show ending MRR by month for the last complete quarter. Clock: 1 July 2026.",
+    question: "“Show ending MRR by month for the last complete quarter. Clock: 1 July 2026.”",
+    caption: "Does this go into the monthly report as it is?",
     kicker: "Claude got two export files and answered:",
     header: "Ending MRR · EUR",
     caveat: "Claude's caveat sat under the table, not in it: “MRR added since 1 Jan 2026, not total MRR”",
-    source: "New chat, only monthly_revenue.csv and customer_master.csv. Rehearsal while building the course: 2 of 2 runs the same, model not logged.",
+    source: "New chat, only these two files. Rehearsal while building the course: 2 of 2 runs the same, model not logged.",
     leverLabel: "Does this go into the monthly report as it is?",
     votes: { take: "Accept", ask: "Ask back", reject: "Reject" },
     kitFile: "builder/claude-demo/AI-RUN-LOG.md",
@@ -145,7 +147,9 @@ export const EN: Pack = {
   },
   reveal: {
     captionFile: "The file is right: each month adds up exactly to the net change in the month-end close.",
+    captionMissing: "Missing in every month: the level at the end of December 2025. The file starts in January.",
     captionVerdict: "The file is right. The table built from it is not.",
+    captionRight: "With the level from the month-end close, the table is right.",
     fileName: "monthly_revenue.csv",
     fileRows: "{rows} rows · dt, segment, amount",
     fileCheck: "{n} of {total} months = month-end close",
@@ -174,11 +178,20 @@ export const EN: Pack = {
   view: {
     caption: "Boxes 1 and 2: an exact question, and one approved view instead of seven export tables.",
     box1: "1 · Question",
-    question: "Ending MRR by month, April to June 2026, in EUR. Clock 1 July 2026.",
-    checks: ["Period", "Kind", "Unit"],
-    box1Note: "The question was already exact. Needed, but not enough.",
+    questions: {
+      vague: "How much MRR do we have?",
+      exact: "Ending MRR by month, April to June 2026, in EUR. Clock 1 July 2026.",
+    },
+    questionToggle: { vague: "Vague", exact: "Exact" },
+    questionLabel: "Which question Claude gets",
+    expects: {
+      vague: "Expected: one short question back, no calculation (case C01).",
+      exact: "Expected: an answer.",
+    },
+    checks: ["Period", "Kind of number", "Unit"],
+    box1Note: "The question in the rehearsal was already exact. An exact question is needed. It is not enough.",
     box2: "2 · Approved view",
-    toggle: { tables: "7 export tables", view: "1 approved view" },
+    toggle: { tables: "7 exports", view: "1 view" },
     toggleLabel: "What Claude reads",
     traps: {
       "AP-N01": "amount: a change with no name",
@@ -197,6 +210,12 @@ export const EN: Pack = {
     caption: "Box 3: the kind of number and who counts. First the rule in words, then the stored codes.",
     box3: "3 · Kind and who counts",
     kind: "Kind: level at month end. Never add across months.",
+    addLabel: "One number for the quarter, by kind",
+    addCells: {
+      level: { name: "Level", rule: "June: {level}" },
+      change: { name: "Change", rule: "sum: {sum}" },
+      rate: { name: "Rate", rule: "{part} of {whole} = {pct}" },
+    },
     honest: "For ending MRR a wrong counting rule hardly shows: cancelled subscriptions carry €0. It shows in the number next to it: active accounts on 30 June.",
     legend: "customer_master.csv, column status, 144 accounts",
     codes: { A: "A active", C: "C cancelled", N: "N new" },
@@ -216,6 +235,7 @@ export const EN: Pack = {
       AN: "approved view",
     },
     rule: "Write the rule in words first. Then check which stored codes fit it.",
+    addNote: "One number for the quarter depends on the kind: a level takes the last month, a change the sum, a rate recomputes numerator and denominator. QUESTION-CARD.md has the same grid.",
     kitFile: "builder/claude-demo/A-export-tables/customer_master.csv",
     notes: [
       "Tap the chips: the same 144 rows, four counting rules. Only one fits the words “active at month end”.",
@@ -229,7 +249,7 @@ export const EN: Pack = {
     requestCase: "Case R02",
     data: "Contact data",
     label: "What protects the data",
-    states: { instruction: "Instruction only", notUploaded: "Not in Project", grant: "Read grant" },
+    states: { instruction: "Instruction only", notUploaded: "Not in Project", grant: "No read grant" },
     line: "Project instruction: no contact data",
     shelf: "not uploaded",
     wall: "Login reads 5 views",
@@ -261,6 +281,7 @@ export const EN: Pack = {
     gradeValue: "April: {got}, not {want}",
     gradeLength: "one number, not three",
     pass: "matches",
+    rehearsed: "in the rehearsal, one run",
     recorded: "Claude Project with the approved files, rehearsal, one run per case",
     kitFile: "builder/claude-demo/CHECK-YOUR-RESULT.md",
     notes: [
@@ -299,14 +320,30 @@ export const EN: Pack = {
     errors: {
       required: "Still missing.",
       length: "Please use {detail} characters.",
-      chars: "Letters, digits, dot, underscore, hyphen and space only.",
+      chars: "Letters, digits, spaces and _ . - ( ) / only.",
       forbidden: "The character {detail} does not work, it breaks the files.",
-      date: "A date, for example 2026-07-01.",
+      date: "A date, for example 2026-07-01 or 01.07.2026.",
       items: "{detail} entries, each at most 60 characters.",
       token: "“{detail}” is not a number.",
       count: "{detail} numbers.",
       "ai-source": "The expected value must not come from an AI. Otherwise the test measures whether the AI agrees with itself.",
     },
+    columnDropped: "The files leave the column out until it fits.",
+    fieldShort: {
+      metric: "Metric",
+      question: "Question",
+      clock: "Clock",
+      view: "View",
+      column: "Column",
+      kind: "Kind",
+      who: "Who counts",
+      never: "Never see",
+      lockedBy: "Locked by",
+      expected: "Expected values",
+      unit: "Unit",
+      source: "Source",
+    },
+    openItem: "Box {n} {field}",
     hints: {
       period: "No period. Without a period there is no right answer and no test.",
       kind: "Unclear whether level, change or rate.",
@@ -315,35 +352,38 @@ export const EN: Pack = {
       "rates-averaged": "Never average rates. Recompute from numerator and denominator.",
     },
     preview: {
-      empty: "Still empty. Load an example or fill in the fields under the lever.",
+      empty: "Still empty. Load an example or fill in the fields below.",
       open: "Still open: {list}",
-      ready: "Done. The three files are made in your browser.",
+      ready: "Done. The files are made in your browser.",
       tests: "Ask-back test: “{askBack}” · Refusal test: “{refuse}”",
     },
     downloads: {
-      heading: "Three files for your Claude",
+      heading: "Files from your card",
       skill: "Skill as zip",
-      skillWhere: "kennzahl-fragekarte.zip: the skill plus your definition in references/kennzahlen.md. Installation below under “For your Claude”.",
+      skillWhere: "kennzahl-fragekarte.zip: the skill plus your definition in references/kennzahlen.md. Further down, under “For your Claude”, you find the installation and the same files as the FOLDLINE example from the kit.",
       copy: "Copy Project instructions",
       copied: "Copied",
-      instructionsFile: "Download projekt-anweisung.txt",
-      instructionsWhere: "Into the instructions of a Claude Project. Do not upload the file with {never}. That is the lock.",
+      instructionsFile: "Download {file}",
+      definitionsFile: "Download kennzahlen.md",
+      instructionsWhere: "Without the skill, in a Claude Project: the instructions into the Project instructions, kennzahlen.md and your data as Project files.",
+      lockWhere: "Do not upload the file with {never}. That is the lock.",
       checklist: "Download test list",
-      checklistWhere: "pruefliste.md stays with you. If you upload it, Claude checks itself.",
+      checklistWhere: "{file} stays with you. If you upload it, Claude checks itself.",
       blocked: "Still open: {list}. The buttons work once everything is filled in.",
     },
     takeHomeLine: "{metric}: {slug} 1.0.0, {kind}, from {source}. Expected {values} {unit} per {sourceOfTruth}.",
     kitFile: "QUESTION-CARD.md",
   },
   takehome: {
-    caption: "Three files for your Claude. Below them the kit with the FOLDLINE example, and the installation.",
+    objective: "Before I pass on a number an AI produced, I fill five boxes: question, approved view, kind of number and who counts, boundary, test.",
+    caption: "What you take home: a skill, a Project, a test list.",
     files: [
       { name: "kennzahl-fragekarte.zip", where: "Claude skill", does: "fixes the kind and source before any metric, asks back on gaps, names the trace" },
-      { name: "projekt-anweisung.txt", where: "Claude Project", does: "says which files count and how to answer" },
-      { name: "pruefliste.md", where: "with you, never in Claude", does: "your tests with expected values" },
+      { name: "project-instructions.txt + kennzahlen.md", where: "Claude Project, no skill", does: "says which files count and how to answer" },
+      { name: "test-list.md", where: "with you, never in Claude", does: "your tests with expected values" },
     ],
-    fromCard: "from your card",
-    fromKit: "FOLDLINE edition in the kit",
+    fromCard: "All three from your card.",
+    fromKit: "All three as the FOLDLINE edition in the kit.",
     lever: "To the kit, skill and installation",
     kitFile: "claude/README.md",
     notes: [
@@ -365,7 +405,7 @@ export const EN: Pack = {
         who: "Helmets on the shelf of the Harbour store at month end. Ordered helmets not yet delivered do not count.",
         never: "cost prices, supplier terms",
         lockedBy: "grant",
-          expected: "110 / 95 / 110",
+        expected: "110 / 95 / 110",
         unit: "units",
         source: "Store stock count",
       },
@@ -383,7 +423,7 @@ export const EN: Pack = {
         who: "Tickets that are open, waiting on the customer or reopened (codes O, P and R). Closed ones (C) do not count.",
         never: "ticket texts, customer names, email addresses",
         lockedBy: "grant",
-          expected: "70 / 80 / 70",
+        expected: "70 / 80 / 70",
         unit: "tickets",
         source: "Support lead's count",
       },
@@ -401,7 +441,7 @@ export const EN: Pack = {
         who: "Leavers in the quarter divided by headcount on 31 March, recomputed for the whole company. Hires in the quarter are not in the base.",
         never: "names, salaries, reasons for leaving",
         lockedBy: "grant",
-          expected: "9.5",
+        expected: "9.5",
         unit: "%",
         source: "HR, leavers and headcount counted",
       },
@@ -419,7 +459,7 @@ export const EN: Pack = {
         who: "",
         never: "",
         lockedBy: "",
-          expected: "",
+        expected: "",
         unit: "",
         source: "",
       },

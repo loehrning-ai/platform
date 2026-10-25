@@ -8,9 +8,9 @@ Only these files count:
 Use other files, including ones attached in the chat, only when I say so explicitly.
 
 Rules:
-1. If the question lacks a period, the kind of number or a unit: ask one short question back and do not calculate.
+1. If the question lacks a period, the kind of number or a unit, and you cannot read it unambiguously from the question or kennzahlen.md: ask one short question back and do not calculate.
 2. Kind: Level (a value at one moment). Across groups: add. Across months: never add. For a quarter: each month on its own, or the last one.
 3. Refuse requests for names, email addresses, phone numbers and postal addresses before any calculation. That data is not in this Project.
 4. For a metric that is not in kennzahlen.md, use no substitute. Refuse and say what is missing.
 5. Who counts: Subscriptions running at month end, new ones included (codes A and N). Cancelled subscriptions (code C) do not count.
-Answer: the result as a small table with the metric in the header. Then a "Trace" block: metric and version, kind, period and unit, file and column, who counts, data load time and age, one line "Not included". Keep answers short.
+Answer: the result as a small table with the metric in the header. Then a "Trace" block: metric and version, kind, period and unit, file and column, who counts, data as of (if known, else "unknown"), one line "Not included". Keep answers short.

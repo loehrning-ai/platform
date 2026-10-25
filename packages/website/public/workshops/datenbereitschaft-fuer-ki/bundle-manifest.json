@@ -156,8 +156,8 @@
     },
     {
       "path": "data-readiness-kit.zip",
-      "sizeBytes": 1135555,
-      "sha256": "8d23b5c67122e544eafc65ed6f02cd54b89beb732e9000e83de55044bf4736c9"
+      "sizeBytes": 1139935,
+      "sha256": "cb9142a07c01794984c7bde30638ed791f4474816e5bab47a80e37fdc679fe0b"
     },
     {
       "path": "data-readiness-kit/ASSET-RIGHTS.md",
@@ -166,18 +166,18 @@
     },
     {
       "path": "data-readiness-kit/FRAGEKARTE.md",
-      "sizeBytes": 4257,
-      "sha256": "0efe294c9903c64ae00ac23388f4507cc762f7f08efb2aa4bfa557294d857d91"
+      "sizeBytes": 4430,
+      "sha256": "9d8a5013435e5fc97d3a9a29af6260f74fdacb1abf35cafcf22d1c393ce108c3"
     },
     {
       "path": "data-readiness-kit/QUESTION-CARD.md",
-      "sizeBytes": 4040,
-      "sha256": "5a0023be63daccd0dff3beb22e8d60e26d9c00b5ddd1fb2767450363a391cd30"
+      "sizeBytes": 4229,
+      "sha256": "a00ddeed6338ad702d52e54f60117bdc3aab4fbe40b810cdb7938da881d27953"
     },
     {
       "path": "data-readiness-kit/README.md",
-      "sizeBytes": 2226,
-      "sha256": "81c584f0d4b3e99a2ebc07e3b13040be044d03f59bf7518d4057232947e4bd93"
+      "sizeBytes": 2375,
+      "sha256": "23c3a5e24c2dbea35dd988c18eefcc9b44dea3a48fe6b7aa0a5723a3943db971"
     },
     {
       "path": "data-readiness-kit/START-HERE.md",
@@ -186,8 +186,13 @@
     },
     {
       "path": "data-readiness-kit/START-HIER.md",
-      "sizeBytes": 1808,
-      "sha256": "639fb9cec2b43ed51ca19732df89476aeeb78d17f90507d5b6aff5564382984b"
+      "sizeBytes": 1772,
+      "sha256": "395e915a8835ee4464c4c4b01d00b9fa30dc79580e5a0672c06d26dd79689665"
+    },
+    {
+      "path": "data-readiness-kit/UEBUNG.md",
+      "sizeBytes": 3103,
+      "sha256": "fe8ec5881d6164ebf3202bdb64e852c31a1dafb3b6f62cd37b453c865b85bf37"
     },
     {
       "path": "data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
@@ -561,18 +566,18 @@
     },
     {
       "path": "data-readiness-kit/claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt",
-      "sizeBytes": 1324,
-      "sha256": "6702c96c6880ecc73bd6433adfc209d6ca1c974fef49d374fec63ea7b6359e6c"
+      "sizeBytes": 1412,
+      "sha256": "f2ef4f475b9713e4e1778229b96984fe406ae869aacb748fd5c73a0b6e079ea4"
     },
     {
       "path": "data-readiness-kit/claude/PROJEKT-ANWEISUNG-VORLAGE.txt",
-      "sizeBytes": 1386,
-      "sha256": "097c40fa57347ed02c26582dc2986a89c7793542c171e7d0b01acde073073c02"
+      "sizeBytes": 1491,
+      "sha256": "d3f86871340a32ed68c08e4c0786642e6fd704866df92ab42303128a78e82a2a"
     },
     {
       "path": "data-readiness-kit/claude/PRUEFLISTE-VORLAGE.md",
-      "sizeBytes": 1072,
-      "sha256": "08f404891e60aa96ae059faf6a4a5a63e1b32f3147e8b9584fddc568ab95e606"
+      "sizeBytes": 1095,
+      "sha256": "61f4039c3a9dee90ba8ffa8b0170f840dc0210ccb1cdb40baacdfd3499ef79e2"
     },
     {
       "path": "data-readiness-kit/claude/README.md",
@@ -581,13 +586,13 @@
     },
     {
       "path": "data-readiness-kit/claude/TEST-LIST-TEMPLATE.md",
-      "sizeBytes": 1047,
-      "sha256": "029772f5887af998340fc0c60747ef64387e54cac1e81e6bc03ddfcad5d7ff1d"
+      "sizeBytes": 1058,
+      "sha256": "a3011e51e634fcf9b8bdadc0ff1961be8689f2ea58793a9e235f8bc6191e9a57"
     },
     {
       "path": "data-readiness-kit/claude/kennzahl-fragekarte/SKILL.md",
-      "sizeBytes": 5633,
-      "sha256": "b236311cd0b63962b8d4246da8077b271ca1670c95d1183d9b080e7ea2862895"
+      "sizeBytes": 6076,
+      "sha256": "1c3db6b8b55208a46e06d34a65b9fea22c88025b757f288e70b1cbcc40107517"
     },
     {
       "path": "data-readiness-kit/claude/kennzahl-fragekarte/references/kennzahlen.md",

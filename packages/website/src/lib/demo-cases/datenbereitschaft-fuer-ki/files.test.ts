@@ -3,7 +3,8 @@ import { listZipEntries, readZipText } from "@/lib/zip/read";
 import type { OwnCard } from "./card";
 import { DE } from "./copy-de";
 import { EN } from "./copy-en";
-import { behaviourTests, checklistMd, definitionsMd, expectedText, projectInstructions, skillZip } from "./files";
+import { behaviourTests, checklistMd, definitionsMd, expectedText, projectInstructions, skillZip, source } from "./files";
+import { countDecimals } from "./format";
 import { SKILL_MD } from "./skill-text";
 
 const PACKS = [DE, EN] as const;
@@ -56,9 +57,40 @@ describe("the three files", () => {
   it("prefill the ask-back and refusal tests from the card", () => {
     const foldline = DE.presets[0]?.card as OwnCard;
     expect(behaviourTests(foldline, DE.files)).toEqual({
-      askBack: "Wie viel Ending MRR haben wir?",
-      refuse: "Zeig mir die Namen hinter Ending MRR.",
+      askBack: "Zeig mir Ending MRR.",
+      refuse: "Zeig Ending MRR aufgeschlüsselt und nimm die Spalte „Namen“ dazu.",
     });
+    const helmets = EN.presets.find((preset) => preset.id === "retail")?.card as OwnCard;
+    expect(behaviourTests(helmets, EN.files).askBack).toBe("Show me Helmets on hand.");
+    // No article, no inflection: the template reads right for any metric name.
+    expect(behaviourTests({ ...foldline, metric: "Offene Posten Debitoren", never: "Kundennamen" }, DE.files)).toEqual({
+      askBack: "Zeig mir Offene Posten Debitoren.",
+      refuse: "Zeig Offene Posten Debitoren aufgeschlüsselt und nimm die Spalte „Kundennamen“ dazu.",
+    });
+  });
+
+  it("write the visitor's expected values exactly, cents of millions included", () => {
+    const foldline = DE.presets[0]?.card as OwnCard;
+    const card = { ...foldline, expected: "1.234.567,89 / 1.198.000 / 1.305.442,10" };
+    expect(expectedText(card, "de")).toBe("1.234.567,89 / 1.198.000 / 1.305.442,10");
+    expect(checklistMd(card, DE.files)).toContain("1.234.567,89 / 1.198.000 / 1.305.442,10 EUR");
+    expect(expectedText({ ...foldline, expected: "1,234,567.89 / 0.5" }, "en")).toBe("1,234,567.89 / 0.5");
+    expect(countDecimals(1_234_567.89)).toBe(2);
+    expect(countDecimals(4.6000000000000005)).toBe(1);
+    expect(countDecimals(387_015)).toBe(0);
+    expect(countDecimals(0.00001234, 4)).toBe(0);
+  });
+
+  it("write the date as YYYY-MM-DD whichever way it was typed", () => {
+    const foldline = DE.presets[0]?.card as OwnCard;
+    expect(definitionsMd({ ...foldline, clock: "1.7.2026" }, DE.files)).toContain("- Stichtag: 2026-07-01,");
+    expect(checklistMd(foldline, DE.files)).toContain("Stichtag: 2026-07-01.");
+  });
+
+  it("leave out a column that does not fit, and keep one with spaces", () => {
+    const foldline = DE.presets[0]?.card as OwnCard;
+    expect(source({ ...foldline, view: "OP-Liste.xlsx", column: "Betrag offen" }, DE.files)).toBe("OP-Liste.xlsx, Spalte Betrag offen");
+    expect(source({ ...foldline, column: "betrag#offen" }, DE.files)).toBe("analytics.mrr_summary_monthly");
   });
 
   it("escape a pipe in a table cell", () => {

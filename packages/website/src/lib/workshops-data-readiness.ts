@@ -28,7 +28,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Eine Zip mit der Fragekarte auf Deutsch und Englisch, drei Dateien für dein Claude (Skill, Projektanweisung, Prüfliste) im FOLDLINE-Beispiel und dem Aufbau für Datenteams. START-HIER.md sagt, womit du anfängst.",
+        "Eine Zip mit der Fragekarte auf Deutsch und Englisch, die Dateien für deinen Claude (Skill, Projektanweisung, Prüfliste) im FOLDLINE-Beispiel und dem Aufbau für Datenteams. START-HIER.md sagt, womit du anfängst.",
       facts: ["Nur Textdateien", "5 Kästchen", "ca. 75 Min. allein"],
     },
     audience: [
@@ -162,7 +162,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "05",
         title: "Deine Fragekarte ausfüllen",
         description:
-          "Für eine eigene, erfundene Zahl füllst du fünf Kästchen, neben jedem das FOLDLINE-Beispiel. In der Demo entstehen daraus drei Dateien für dein Claude.",
+          "Für eine eigene, erfundene Zahl füllst du fünf Kästchen, neben jedem das FOLDLINE-Beispiel. In der Demo entstehen daraus die Dateien für deinen Claude.",
         tool: "Fragekarte",
       },
     ],
@@ -190,7 +190,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: [
       {
-        label: "Deck · 26 Szenen",
+        label: "Deck · 18 Szenen + Anhang",
         href: `${base}/slides.html`,
         kind: "html",
         language: "en",
@@ -199,19 +199,19 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "Für den Beamer. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
+          "Für den Beamer. Folien auf Englisch. Pfeiltasten blättern, R setzt auf Anfang, P öffnet die Moderationsansicht.",
       },
       {
         label: "Readiness-Kit · .zip",
         href: `${base}/data-readiness-kit.zip`,
         kind: "zip",
-        language: "en",
+        language: "de",
         role: "kit",
         phase: "during",
         sizeLabel: "1,1 MB",
         description:
-          "Die Fragekarte auf Deutsch und Englisch, ein Claude-Skill, eine Projektanweisung und eine Prüfliste im FOLDLINE-Beispiel, dazu der Aufbau für Datenteams. Nur Textdateien; START-HIER.md sagt, womit du anfängst.",
-        short: "Die Fragekarte, dazu drei Dateien für dein Claude.",
+          "Die Fragekarte auf Deutsch und Englisch, eine Übung für deinen Claude, ein Claude-Skill, eine Projektanweisung und eine Prüfliste im FOLDLINE-Beispiel, dazu der Aufbau für Datenteams (englisch). Nur Textdateien; START-HIER.md sagt, womit du anfängst.",
+        short: "Die Fragekarte, dazu die Dateien für deinen Claude.",
       },
     ],
   },
@@ -394,7 +394,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: [
       {
-        label: "Deck · 26 scenes",
+        label: "Deck · 18 scenes + appendix",
         href: `${base}/slides.html`,
         kind: "html",
         language: "en",
@@ -403,7 +403,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "For the projector. Arrow keys move on; P opens the presenter view.",
+          "For the projector. Arrow keys move on, R goes back to the start, P opens the presenter view.",
       },
       {
         label: "Readiness kit · .zip",

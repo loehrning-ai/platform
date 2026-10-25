@@ -14,7 +14,7 @@ import {
   WARN_AFTER_H,
 } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
 import { fill } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/files";
-import { formatNumber } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/format";
+import { formatNumber, NBSP } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/format";
 import {
   boundaryOutcome,
   countWho,
@@ -22,6 +22,7 @@ import {
   freshness,
   gradeValue,
   type Boundary,
+  type Kind,
   type WhoFilter,
 } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/logic";
 import { readingFigures } from "./scene-answer";
@@ -48,21 +49,25 @@ function identity(pack: Pack): string {
   return parts.join(" · ");
 }
 
-/** Beat 3: box 1 (the exact question) and box 2 (seven export tables or one approved view). */
-export function ViewScene({ pack, view, fold }: { readonly pack: Pack; readonly view: boolean; readonly fold: number }) {
+/** Beat 3: box 1 (a vague or the exact question) and box 2 (seven export tables or one approved view). */
+export function ViewScene({ pack, exact, view, fold }: { readonly pack: Pack; readonly exact: boolean; readonly view: boolean; readonly fold: number }) {
   const copy = pack.view;
+  const question = exact ? "exact" : "vague";
   return (
     <div className="fk-boxes">
-      <section className="fk-box" aria-label={copy.box1}>
+      <section className="fk-box" aria-label={copy.box1} data-fk-question={question}>
         <p className="fk-box-title">{copy.box1}</p>
-        <p className="fk-question">{copy.question}</p>
-        <ul className="fk-checks">
+        <p className="fk-question">{copy.questions[question]}</p>
+        <ul className="fk-checks" data-ok={exact ? "" : undefined}>
           {copy.checks.map((check) => (
             <li key={check}>
-              <span aria-hidden="true">✓</span> {check}
+              <span aria-hidden="true">{exact ? "✓" : "✕"}</span> {check}
             </li>
           ))}
         </ul>
+        <p className="fk-expect" data-fk-expect={question}>
+          {copy.expects[question]}
+        </p>
       </section>
       <section className="fk-box fk-box-grow" aria-label={copy.box2}>
         <p className="fk-box-title">{copy.box2}</p>
@@ -80,7 +85,7 @@ export function ViewScene({ pack, view, fold }: { readonly pack: Pack; readonly 
               </thead>
               <tbody>
                 {VIEW_ROWS.map((row) => (
-                  <tr key={row.month}>
+                  <tr key={row.month} data-base={row.month === "2026-03" ? "" : undefined}>
                     <td>{row.month}</td>
                     <td data-strong={row.month === "2026-03" ? undefined : ""}>{n(row.ending, pack)}</td>
                     <td>{n(row.change, pack)}</td>
@@ -114,6 +119,22 @@ export function ViewScene({ pack, view, fold }: { readonly pack: Pack; readonly 
 }
 
 const WHO: readonly WhoFilter[] = ["active", "A", "AC", "AN"];
+const KIND_ROW: readonly Kind[] = ["level", "change", "rate"];
+
+/** The three cells of "Darf ich addieren?", every number from the kit values. */
+function addCells(pack: Pack): readonly { readonly kind: Kind; readonly name: string; readonly rule: string }[] {
+  const whole = countWho("AC", STATUS).matched;
+  const part = whole - countWho("A", STATUS).matched;
+  const pct = `${formatNumber((part / whole) * 100, pack.locale, 1)}${NBSP}%`;
+  const values = {
+    level: n(ENDING_MRR["2026-06"], pack),
+    sum: n(NET_NEW_2026.slice(3).reduce((total, value) => total + value, 0), pack),
+    part,
+    whole,
+    pct,
+  };
+  return KIND_ROW.map((kind) => ({ kind, name: pack.who.addCells[kind].name, rule: fill(pack.who.addCells[kind].rule, values) }));
+}
 
 /** Beat 4: box 3. The kind in one line, then 144 accounts and four counting rules. */
 export function WhoScene({
@@ -136,6 +157,13 @@ export function WhoScene({
     <div className="fk-who">
       <p className="fk-box-title">{copy.box3}</p>
       <p className="fk-kind">{copy.kind}</p>
+      <ol className="fk-add" aria-label={copy.addLabel}>
+        {addCells(pack).map((cell) => (
+          <li key={cell.kind} className="fk-add-cell" data-on={cell.kind === "level" ? "" : undefined}>
+            <span className="fk-add-name">{cell.name}</span> {cell.rule}
+          </li>
+        ))}
+      </ol>
       <div className="fk-who-body">
         <ol className="fk-squares" aria-label={copy.legend}>
           {[...STATUS].map((code, index) => {
@@ -199,12 +227,16 @@ export function BoundaryScene({ pack, boundary }: { readonly pack: Pack; readonl
   );
 }
 
-/** Beat 6: box 5. Expected values outside Claude; "Prüfen" grades the four readings and the three behaviours. */
+/**
+ * Beat 6: box 5. Expected values outside Claude; "Prüfen" grades the four
+ * readings of G01. The three behaviour cases are recorded rehearsal runs and
+ * say so from the start: the button never pretends to test Claude.
+ */
 export function TestScene({ pack, tested, run }: { readonly pack: Pack; readonly tested: boolean; readonly run: number }) {
   const copy = pack.test;
   const values = LEVELS.map((value) => n(value, pack)).join(" · ");
   const age = freshness(LOAD_UTC, F01_CLOCK_UTC, WARN_AFTER_H);
-  const shownAt = (step: number) => tested && phase(run, step * 0.14, step * 0.14 + 0.1) >= 1;
+  const shownAt = (step: number) => tested && phase(run, step * 0.22, step * 0.22 + 0.12) >= 1;
   return (
     <div className="fk-test">
       <div className="fk-test-head">
@@ -237,14 +269,14 @@ export function TestScene({ pack, tested, run }: { readonly pack: Pack; readonly
                 })}
               </ol>
             ) : (
-              <p className="fk-grade" data-pass={shownAt(3 + rowIndex) ? "true" : undefined}>
-                {shownAt(3 + rowIndex) ? `✓ ${copy.pass}` : ""}
+              <p className="fk-grade" data-fk-rehearsed="">
+                ✓ {copy.rehearsed}
               </p>
             )}
           </li>
         ))}
       </ol>
-      <p className="fk-origin">{shownAt(6) ? copy.recorded : ""}</p>
+      <p className="fk-origin">{copy.recorded}</p>
     </div>
   );
 }

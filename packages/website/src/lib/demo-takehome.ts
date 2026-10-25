@@ -37,13 +37,28 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
     kit: {
       de: {
         href: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
-        shown: ["data-readiness-kit/START-HIER.md", "data-readiness-kit/FRAGEKARTE.md", "data-readiness-kit/claude/README.md"],
+        // The files the stage moved, beat by beat (BEATS kitFile), then the card.
+        shown: [
+          "data-readiness-kit/builder/claude-demo/A-export-tables/monthly_revenue.csv",
+          "data-readiness-kit/builder/claude/project/mrr_summary_monthly.csv",
+          "data-readiness-kit/builder/claude-demo/A-export-tables/customer_master.csv",
+          "data-readiness-kit/builder/claude/project/PROJECT-INSTRUCTIONS.txt",
+          "data-readiness-kit/builder/claude-demo/CHECK-YOUR-RESULT.md",
+          "data-readiness-kit/FRAGEKARTE.md",
+        ],
         instructions: "data-readiness-kit/claude/PROJEKT-ANWEISUNG-VORLAGE.txt",
         installDoc: "data-readiness-kit/claude/README.md",
       },
       en: {
         href: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
-        shown: ["data-readiness-kit/START-HERE.md", "data-readiness-kit/QUESTION-CARD.md", "data-readiness-kit/claude/README.md"],
+        shown: [
+          "data-readiness-kit/builder/claude-demo/A-export-tables/monthly_revenue.csv",
+          "data-readiness-kit/builder/claude/project/mrr_summary_monthly.csv",
+          "data-readiness-kit/builder/claude-demo/A-export-tables/customer_master.csv",
+          "data-readiness-kit/builder/claude/project/PROJECT-INSTRUCTIONS.txt",
+          "data-readiness-kit/builder/claude-demo/CHECK-YOUR-RESULT.md",
+          "data-readiness-kit/QUESTION-CARD.md",
+        ],
         instructions: "data-readiness-kit/claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt",
         installDoc: "data-readiness-kit/claude/README.md",
       },

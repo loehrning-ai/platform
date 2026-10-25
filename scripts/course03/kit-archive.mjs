@@ -21,6 +21,7 @@ export const KIT_LEARNER_SOURCES = {
   "START-HERE.md": "scripts/course03/kit/START-HERE.md",
   "FRAGEKARTE.md": "packages/website/content/vorlagen/fragekarte.md",
   "QUESTION-CARD.md": "packages/website/content/vorlagen/en/fragekarte.md",
+  "UEBUNG.md": "scripts/course03/kit/UEBUNG.md",
   "claude/README.md": "scripts/course03/kit/claude/README.md",
   "claude/kennzahl-fragekarte/SKILL.md": "packages/website/content/skills/kennzahl-fragekarte/SKILL.md",
   "claude/kennzahl-fragekarte/references/kennzahlen.md": "scripts/course03/kit/claude/kennzahl-fragekarte/references/kennzahlen.md",

@@ -190,7 +190,7 @@ export const demos: readonly Demo[] = [
     job: "Füll fünf Kästchen, bevor eine KI-Zahl weitergeht.",
     tile: {
       hook: "Die Datei stimmt, Claudes Tabelle nicht: 75.890 statt 334.675.",
-      take: "Fünf Kästchen und drei Dateien für dein Claude.",
+      take: "Fünf Kästchen und die Dateien für deinen Claude.",
       takeLabel: "",
     },
     en: {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_CARD, forbiddenChar, isAiSource, isDate, lintQuestion, metricSlug, neverItems, parseExpected, validateCard, type OwnCard } from "./card";
+import { columnIssue, EMPTY_CARD, forbiddenChar, isAiSource, isDate, isoDate, lintQuestion, metricSlug, neverItems, parseExpected, validateCard, type OwnCard } from "./card";
 import { DE } from "./copy-de";
 import { EN } from "./copy-en";
 
@@ -23,8 +23,20 @@ describe("validateCard", () => {
   it("rejects characters that break the files, and names them", () => {
     expect(validateCard({ ...FOLDLINE, metric: "MRR <b>" })).toContainEqual({ field: "metric", code: "forbidden", detail: "<" });
     expect(forbiddenChar("a `b`")).toBe("`");
-    expect(validateCard({ ...FOLDLINE, view: "analytics/mrr" })).toContainEqual({ field: "view", code: "chars" });
-    expect(validateCard({ ...FOLDLINE, column: "ending mrr" })).toContainEqual({ field: "column", code: "chars" });
+    expect(validateCard({ ...FOLDLINE, view: "analytics#mrr" })).toContainEqual({ field: "view", code: "chars" });
+  });
+
+  it("takes file and column names as people write them", () => {
+    expect(validateCard({ ...FOLDLINE, view: "OP-Liste (Export) Q3.xlsx", column: "Betrag offen" })).toEqual([]);
+    expect(validateCard({ ...FOLDLINE, view: "Finanzen/Übersicht.xlsx", column: "Größe_Stück" }).map((error) => error.field)).toEqual([]);
+  });
+
+  it("never blocks the files on the optional column", () => {
+    expect(validateCard({ ...FOLDLINE, column: "betrag#offen" })).toEqual([]);
+    expect(columnIssue({ column: "betrag#offen" })).toEqual({ field: "column", code: "chars" });
+    expect(columnIssue({ column: "a`b" })).toEqual({ field: "column", code: "forbidden", detail: "`" });
+    expect(columnIssue({ column: "" })).toBeNull();
+    expect(columnIssue({ column: "Betrag offen" })).toBeNull();
   });
 
   it("names a token that is not a number, and the count limits", () => {
@@ -43,7 +55,13 @@ describe("validateCard", () => {
   it("checks the clock and the never list", () => {
     expect(isDate("2026-02-29")).toBe(false);
     expect(isDate("2028-02-29")).toBe(true);
-    expect(validateCard({ ...FOLDLINE, clock: "1.7.2026" })).toContainEqual({ field: "clock", code: "date" });
+    expect(validateCard({ ...FOLDLINE, clock: "1.7.2026" })).toEqual([]);
+    expect(validateCard({ ...FOLDLINE, clock: "01.10.2026" })).toEqual([]);
+    expect(validateCard({ ...FOLDLINE, clock: "31.09.2026" })).toContainEqual({ field: "clock", code: "date" });
+    expect(validateCard({ ...FOLDLINE, clock: "Juli 2026" })).toContainEqual({ field: "clock", code: "date" });
+    expect(isoDate("01.10.2026")).toBe("2026-10-01");
+    expect(isoDate(" 2026-07-01 ")).toBe("2026-07-01");
+    expect(isoDate("2026-7-1")).toBeNull();
     expect(neverItems(" Namen,  E-Mail ; ,Telefon ")).toEqual(["Namen", "E-Mail", "Telefon"]);
     expect(validateCard({ ...FOLDLINE, never: "a,b,c,d,e,f,g" })).toContainEqual({ field: "never", code: "items", detail: "1-6" });
   });

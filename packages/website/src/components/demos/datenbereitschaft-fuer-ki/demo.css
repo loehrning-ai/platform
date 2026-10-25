@@ -70,10 +70,11 @@
 /* The first row shares its height with the restart control at the top right. */
 .fk-strip-card {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 4px 10px;
   min-height: 44px;
-  padding: 0 136px 0 12px;
+  padding: 4px 116px 4px 12px;
 }
 .fk-strip-name {
   font-size: 0.8125rem;
@@ -144,10 +145,16 @@
   color: var(--fk-muted);
 }
 
-/* Beat 1: the answer card */
+/* Beat 1: the answer card. The question leads on a phone; the desktop column already shows it. */
+.fk-ask {
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 4px !important;
+}
 .fk-sheet {
-  margin-top: 6px;
-  padding: 8px 10px;
+  margin-top: 4px;
+  padding: 6px 10px;
   border: 1px solid var(--fk-ink);
   background: var(--fk-ground);
 }
@@ -158,7 +165,7 @@
 }
 .fk-bars {
   display: grid;
-  gap: 6px;
+  gap: 3px;
   margin-top: 6px !important;
 }
 .fk-bar-row {
@@ -173,7 +180,7 @@
 }
 .fk-bar-track {
   position: relative;
-  height: 18px;
+  height: 16px;
   border-left: 2px solid var(--fk-ink);
 }
 .fk-bar {
@@ -226,6 +233,9 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
 }
+.fk-chart > * {
+  grid-column: 1;
+}
 .fk-chart-svg {
   grid-row: 2;
   display: block;
@@ -251,6 +261,26 @@
   stroke: var(--fk-paper);
   stroke-width: 3;
   vector-effect: non-scaling-stroke;
+}
+/* The opening level printed inside each hollow Mennige block, in the SVG's own coordinates. */
+.fk-chart-opens {
+  position: relative;
+  grid-row: 2;
+  grid-column: 1;
+  pointer-events: none;
+}
+.fk-chart-open {
+  position: absolute;
+  width: 24%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--fk-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--fk-mark);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .fk-chart-figures,
 .fk-chart-months {
@@ -311,6 +341,13 @@
   gap: 4px 12px;
   font-size: 0.75rem;
   font-weight: 700;
+}
+.fk-checks:not([data-ok]) span {
+  color: var(--fk-mark);
+}
+.fk-expect {
+  font-size: 0.75rem;
+  line-height: 1.3;
 }
 .fk-tiles {
   display: grid;
@@ -398,6 +435,29 @@
 .fk-kind {
   font-size: 0.8125rem;
   line-height: 1.35;
+}
+.fk-add {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  gap: 4px;
+}
+.fk-add-cell {
+  min-width: 0;
+  white-space: nowrap;
+  padding: 2px 5px;
+  border: 1px solid var(--fk-rule);
+  color: var(--fk-muted);
+  font-size: 0.6875rem;
+  line-height: 1.25;
+}
+.fk-add-cell[data-on] {
+  border: 2px solid var(--fk-ink);
+  color: var(--fk-ink);
+}
+.fk-add-name {
+  display: block;
+  font-weight: 700;
 }
 .fk-who-body {
   display: flex;
@@ -507,14 +567,17 @@
   font-weight: 700;
   line-height: 1.3;
 }
+/* The legend draws the barrier as it stands in the lane: a dashed line, or a wall. */
 .fk-barrier-key {
   flex: none;
-  width: 12px;
-  height: 12px;
-  border: 2px dashed var(--fk-ink);
+  width: 22px;
+  height: 0;
+  border-top: 3px dashed var(--fk-ink);
 }
 .fk-barrier-label[data-kind="grant"] .fk-barrier-key {
-  border-style: solid;
+  width: 8px;
+  height: 14px;
+  border: 0;
   background: var(--fk-ink);
 }
 .fk-data {
@@ -664,14 +727,30 @@
   font-weight: 600;
   line-height: 1.35;
 }
+.fk-takehome {
+  display: grid;
+  gap: 8px;
+}
+/* The learning objective, word for word as in the kit's first lines: the last screen states it. */
+.fk-objective {
+  padding-left: 10px;
+  border-left: 4px solid var(--fk-mark);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+/* Three files as ruled rows: the name, then where it goes on the same line when it fits. */
 .fk-files {
   display: grid;
-  gap: 6px;
+  border-top: 1px solid var(--fk-ink);
 }
 .fk-file-card {
-  padding: 6px 8px;
-  border: 1px solid var(--fk-ink);
-  background: var(--fk-ground);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--fk-rule);
 }
 .fk-file-card-name {
   font-family: var(--fk-mono);
@@ -680,13 +759,14 @@
 }
 .fk-file-card-where {
   font-size: 0.75rem;
-  font-weight: 700;
+  color: var(--fk-muted);
 }
 .fk-file-card-does {
+  flex-basis: 100%;
   font-size: 0.75rem;
   line-height: 1.35;
 }
-.fk-file-card .fk-origin {
+.fk-takehome .fk-origin {
   margin-top: 0;
 }
 
@@ -769,6 +849,25 @@
   padding: 0;
   border: 0;
 }
+.fk-two {
+  display: grid;
+  gap: 4px;
+}
+.fk-seg-mark {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 2px solid var(--fk-ink);
+  font-variant-numeric: tabular-nums;
+}
+/* Four counting rules: two by two, so "A und C" never breaks inside its chip. */
+.fk-seg[data-fk-seg="fk-who"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 .fk-seg-option {
   position: relative;
   flex: 1 1 0;
@@ -800,9 +899,23 @@
 }
 .fk-slider input {
   width: 100%;
-  height: 32px;
+  height: 28px;
   margin: 0;
   accent-color: var(--fk-ink);
+}
+/* One mark per reading under the slider, so the four tables are visible before anyone drags. */
+.fk-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--fk-muted);
+  font-variant-numeric: tabular-nums;
+}
+.fk-ticks [data-on] {
+  color: var(--fk-ink);
+  font-weight: 800;
 }
 .fk-select select {
   width: 100%;
@@ -974,6 +1087,16 @@
 }
 
 @media (min-width: 64rem) {
+  .fk-ask {
+    display: none;
+  }
+  .fk-chart-open {
+    font-size: 0.9375rem;
+  }
+  .fk-add-cell,
+  .fk-expect {
+    font-size: 0.8125rem;
+  }
   /* The desktop stage is taller than most scenes: they sit in its middle, not on its top edge. */
   .fk-scene {
     display: flex;
@@ -1000,6 +1123,9 @@
   }
   .fk-own-metric {
     font-size: 1.5rem;
+  }
+  .fk-objective {
+    font-size: 1.25rem;
   }
   .fk-own-boxes {
     gap: 8px;
@@ -1087,7 +1213,42 @@
 /* On a short phone the stage keeps the table and the lane whole and drops the line under each. */
 @media (max-width: 39.99rem) and (max-height: 760px) {
   .fk-identity,
-  .fk-boundary > .fk-origin {
+  .fk-boundary > .fk-origin,
+  .fk-view-table tr[data-base],
+  .fk-file-card-does,
+  .fk-expect[data-fk-expect="exact"] {
     display: none;
+  }
+  .fk-squares {
+    grid-template-columns: repeat(12, 9px);
+    grid-auto-rows: 9px;
+  }
+  .fk-sq {
+    width: 9px;
+    height: 9px;
+  }
+}
+/* Below 360px the three add cells share the width and wrap inside. */
+@media (max-width: 22.49rem) {
+  .fk-objective {
+    font-size: 0.8125rem;
+  }
+  .fk-add {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .fk-add-cell {
+    white-space: normal;
+  }
+}
+/* A small, short phone keeps the objective and the three files whole; the origin line goes. */
+@media (max-width: 22.49rem) and (max-height: 760px) {
+  .fk-takehome {
+    gap: 4px;
+  }
+  .fk-takehome .fk-origin {
+    display: none;
+  }
+  .fk-file-card {
+    padding: 2px 0;
   }
 }

@@ -18,6 +18,9 @@ export function AnswerScene({ pack, progress }: { readonly pack: Pack; readonly 
   const grow = ease(progress);
   return (
     <div className="fk-answer">
+      <p className="fk-ask" data-fk-ask="">
+        {copy.question}
+      </p>
       <p className="fk-kicker">{copy.kicker}</p>
       <div className="fk-sheet" data-fk-answer="">
         <p className="fk-sheet-head">{copy.header}</p>
@@ -146,6 +149,21 @@ export function ReadingsScene({
             );
           })}
         </svg>
+        <ol className="fk-chart-opens" aria-hidden="true">
+          {columns.map((column, index) => {
+            const share = column.open / OPENING_DEC_2025;
+            const top = (y(column.open) / CHART_H) * 100;
+            return (
+              <li
+                key={pack.months[index]}
+                className="fk-chart-open"
+                style={{ left: `${((18 + index * 96) / 300) * 100}%`, top: `${top}%`, height: `${((zero - y(column.open)) / CHART_H) * 100}%`, opacity: share > 0.5 ? (share - 0.5) * 2 : 0 }}
+              >
+                {share > 0 ? formatNumber(OPENING_DEC_2025, pack.locale) : ""}
+              </li>
+            );
+          })}
+        </ol>
         <ol className="fk-chart-figures" aria-label={label?.label}>
           {pack.months.map((month, index) => (
             <li key={month} className="fk-chart-figure" data-strong={!revealing && detent === 3 ? "" : undefined}>

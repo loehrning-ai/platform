@@ -13,8 +13,8 @@ Das Ziel in einem Satz:
 | Schritt | Öffnen | Zeit | Ergebnis |
 | --- | --- | --- | --- |
 | 1 | Demo „Die Fragekarte“: loehrning.ai/demos/datenbereitschaft-fuer-ki | 4 Minuten | Vier falsche Tabellen aus derselben richtigen Datei, und welches Kästchen jede fängt. |
-| 2 | `builder/claude-demo/README.md` (Englisch) | 10 Minuten | Dieselbe Frage zweimal in deinem Claude: mit zwei Exportdateien und mit den freigegebenen Dateien. Prüfen mit `builder/claude-demo/CHECK-YOUR-RESULT.md`. |
-| 3 | `FRAGEKARTE.md` | 15 Minuten | Deine Karte für eine Zahl, die du regelmäßig weitergibst. Unter „Deine Karte“ in der Demo werden daraus die drei Dateien aus `claude/`. |
+| 2 | `UEBUNG.md` | 10 Minuten | Dieselbe Frage zweimal in deinem Claude: mit zwei Exportdateien und mit den freigegebenen Dateien. Prüfen mit `builder/claude-demo/CHECK-YOUR-RESULT.md`. |
+| 3 | `FRAGEKARTE.md` | 15 Minuten | Deine Karte für eine Zahl, die du regelmäßig weitergibst. Unter „Deine Karte“ in der Demo werden daraus die Dateien aus `claude/`. |
 
 ## Was du danach hast
 

@@ -47,10 +47,10 @@ Check: last level plus change gives the new level. 354,635 + 32,380 = 387,015.
 | Box | File in the kit | In the demo |
 | --- | --- | --- |
 | Start | `builder/claude-demo/AI-RUN-LOG.md`, `builder/claude-demo/A-export-tables/monthly_revenue.csv` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=lesarten |
-| 1 and 2 | `builder/semantic/verified-questions.yml` (case C01), `builder/claude/project/mrr_summary_monthly.csv` | ?beat=sicht |
-| 3 | `builder/CHEATSHEET.md`, `builder/claude-demo/A-export-tables/customer_master.csv` | ?beat=wer-zaehlt |
-| 4 | `builder/claude/project/PROJECT-INSTRUCTIONS.txt` rule 3, `builder/warehouse/ACCESS.md` | ?beat=grenze |
-| 5 | `builder/claude-demo/CHECK-YOUR-RESULT.md` | ?beat=test |
+| 1 and 2 | `builder/semantic/verified-questions.yml` (case C01), `builder/claude/project/mrr_summary_monthly.csv` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=sicht |
+| 3 | `builder/CHEATSHEET.md`, `builder/claude-demo/A-export-tables/customer_master.csv` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=wer-zaehlt |
+| 4 | `builder/claude/project/PROJECT-INSTRUCTIONS.txt` rule 3, `builder/warehouse/ACCESS.md` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=grenze |
+| 5 | `builder/claude-demo/CHECK-YOUR-RESULT.md` | loehrning.ai/en/demos/datenbereitschaft-fuer-ki?beat=test |
 
 ## Blank card
 
@@ -59,8 +59,8 @@ Check: last level plus change gives the new level. 354,635 + 32,380 = 387,015.
 | 1. Metric · question · clock |  |
 | 2. Approved view · column |  |
 | 3. Kind · who counts, who does not |  |
-| 4. Never show · locked by · warn after hours |  |
+| 4. Never show · locked by |  |
 | 5. Expected values · unit · source |  |
 
-Under "Your card" in the demo this card becomes a skill, Project instructions and a test list, made in
-your browser.
+Under "Your card" in the demo this card becomes a skill, Project instructions with `kennzahlen.md` and a
+test list, made in your browser.

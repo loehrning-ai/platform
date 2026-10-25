@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { DemoLever, DemoStage, setTakeHomeLine, TAKEHOME_TARGET_ID, useBeatClock, useOnRestart } from "@/components/demos/shell";
+import { DemoLever, DemoStage, revealIfOffscreen, setTakeHomeLine, TAKEHOME_TARGET_ID, useBeatClock, useOnRestart } from "@/components/demos/shell";
 import { EMPTY_CARD, type OwnCard } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/card";
 import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
 import { CLAUDE_ANSWER, ENDING_MRR } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
@@ -83,6 +83,7 @@ function Radios<T extends string>({
   labels,
   value,
   onChange,
+  mark,
 }: {
   readonly name: string;
   readonly legend: string;
@@ -90,10 +91,17 @@ function Radios<T extends string>({
   readonly labels: Readonly<Record<T, string>>;
   readonly value: T | null;
   readonly onChange: (value: T) => void;
+  /** The box number in front of the control, when one beat carries two boxes. */
+  readonly mark?: number;
 }) {
   return (
     <fieldset className="fk-seg" data-fk-seg={name}>
       <legend className="fk-sr">{legend}</legend>
+      {mark ? (
+        <span className="fk-seg-mark" aria-hidden="true">
+          {mark}
+        </span>
+      ) : null}
       {options.map((option) => (
         <label key={option} className="fk-seg-option">
           <input type="radio" name={name} value={option} checked={value === option} onChange={() => onChange(option)} />
@@ -117,10 +125,13 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   const [card, setCard] = useState<OwnCard>(EMPTY_CARD);
   const [preset, setPreset] = useState("");
   const previousWho = useRef<WhoFilter | null>(null);
+  const root = useRef<HTMLDivElement | null>(null);
 
+  // A reset is always the visitor's own key or tap: bring the stage back if they had scrolled away from it.
   useOnRestart(() => {
     previousWho.current = null;
     setBets(START);
+    revealIfOffscreen(root.current, reducedMotion);
   });
 
   const reading = useTween(bets.detent, 420, reducedMotion);
@@ -153,9 +164,6 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
     scene = <AnswerScene pack={pack} progress={progress} />;
     lever = (
       <div className="fk-votes" role="group" aria-label={pack.answer.leverLabel}>
-        <p className="fk-lever-label" aria-hidden="true">
-          {pack.answer.leverLabel}
-        </p>
         <div className="fk-vote-row">
           {VOTES.map((choice) => (
             <button key={choice} type="button" className="fk-vote" aria-pressed={bets.vote === choice} data-fk-vote={choice} onClick={() => vote(choice)}>
@@ -169,7 +177,16 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   } else if (index === 1) {
     const copy = pack.reveal;
     scene = <ReadingsScene pack={pack} progress={progress} reading={reading} detent={bets.detent} />;
-    caption = progress < 0.67 ? copy.captionFile : copy.captionVerdict;
+    const revealing = progress < 1;
+    caption = revealing
+      ? progress < 0.25
+        ? copy.captionFile
+        : progress < 0.67
+          ? copy.captionMissing
+          : copy.captionVerdict
+      : bets.detent === 3
+        ? copy.captionRight
+        : copy.captionVerdict;
     const short = copy.readings[bets.detent]?.short ?? "";
     lever = (
       <label className="fk-slider">
@@ -187,22 +204,41 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
           onChange={(event) => update({ detent: Number(event.currentTarget.value) })}
           data-fk-slider=""
         />
+        <span className="fk-ticks" aria-hidden="true">
+          {copy.readings.map((reading, detent) => (
+            <span key={reading.short} data-on={detent === bets.detent ? "" : undefined}>
+              {detent + 1}
+            </span>
+          ))}
+        </span>
       </label>
     );
     notes = <Notes pack={pack} notes={copy.notes} kitFile={copy.kitFile} lead={copy.feedback[bets.vote ?? "none"]} />;
   } else if (index === 2) {
     const copy = pack.view;
-    scene = <ViewScene pack={pack} view={bets.view} fold={fold} />;
+    scene = <ViewScene pack={pack} exact={bets.exact} view={bets.view} fold={fold} />;
     caption = copy.caption;
     lever = (
-      <Radios
-        name="fk-view"
-        legend={copy.toggleLabel}
-        options={["tables", "view"] as const}
-        labels={copy.toggle}
-        value={bets.view ? "view" : "tables"}
-        onChange={(value) => update({ view: value === "view" })}
-      />
+      <div className="fk-two">
+        <Radios
+          name="fk-question"
+          legend={copy.questionLabel}
+          options={["vague", "exact"] as const}
+          labels={copy.questionToggle}
+          value={bets.exact ? "exact" : "vague"}
+          onChange={(value) => update({ exact: value === "exact" })}
+          mark={1}
+        />
+        <Radios
+          name="fk-view"
+          legend={copy.toggleLabel}
+          options={["tables", "view"] as const}
+          labels={copy.toggle}
+          value={bets.view ? "view" : "tables"}
+          onChange={(value) => update({ view: value === "view" })}
+          mark={2}
+        />
+      </div>
     );
     notes = <Notes pack={pack} notes={[copy.box1Note, ...copy.notes, copy.stored]} kitFile={copy.kitFile} />;
   } else if (index === 3) {
@@ -210,7 +246,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
     scene = <WhoScene pack={pack} who={bets.who} previous={previousWho.current} share={whoShare} />;
     caption = copy.caption;
     lever = <Radios name="fk-who" legend={copy.chipLabel} options={WHO} labels={copy.chips} value={bets.who} onChange={chooseWho} />;
-    notes = <Notes pack={pack} notes={[copy.honest, ...copy.notes, copy.rule]} kitFile={copy.kitFile} />;
+    notes = <Notes pack={pack} notes={[copy.honest, ...copy.notes, copy.rule, copy.addNote]} kitFile={copy.kitFile} />;
   } else if (index === 4) {
     const copy = pack.boundary;
     scene = <BoundaryScene pack={pack} boundary={bets.boundary} />;
@@ -268,7 +304,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   }
 
   return (
-    <div className="fk" data-fk-beat={index}>
+    <div className="fk" data-fk-beat={index} ref={root}>
       <h2 className="fk-sr">{pack.stageLabel}</h2>
       <DemoStage label={pack.stageLabel} caption={caption}>
         <div className="fk-stage">

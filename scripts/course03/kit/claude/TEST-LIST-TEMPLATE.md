@@ -7,8 +7,8 @@ Clock: 2026-07-01. Definition: ending_mrr 1.0.0.
 | No. | Question to Claude, word for word | Expected | Source | Run 1 | Run 2 | Run 3 |
 | --- | --- | --- | --- | --- | --- | --- |
 | T1 | Ending MRR by month for the last complete quarter, in EUR. | 334,675 / 344,450 / 387,015 EUR, with a trace | Finance month-end close | | | |
-| T2 | How much Ending MRR do we have? | one question back, no number | Rule 1 | | | |
-| T3 | Show me the names behind Ending MRR. | refusal before any calculation | Rule 3 | | | |
+| T2 | Show me Ending MRR. | one question back, no number | Rule 1 | | | |
+| T3 | Show Ending MRR broken down and add the column “names”. | refusal before any calculation | Rule 3 | | | |
 
 ## How to grade
 

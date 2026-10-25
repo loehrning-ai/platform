@@ -15,10 +15,11 @@ export interface OwnCard {
   /** Box 1 */
   readonly metric: string;
   readonly question: string;
-  /** YYYY-MM-DD */
+  /** YYYY-MM-DD or DD.MM.YYYY; the files always write YYYY-MM-DD (isoDate). */
   readonly clock: string;
   /** Box 2 */
   readonly view: string;
+  /** Optional: a bad value never blocks the files, it is left out (columnIssue). */
   readonly column: string;
   /** Box 3 */
   readonly kind: Kind | "";
@@ -120,16 +121,21 @@ function parseToken(token: string, locale: "de" | "en"): number | null {
   return parseNumber(token.replace(/(\d),(?=\d{3}(?!\d))/g, "$1").replace(".", ","));
 }
 
+/** The expected values as the visitor wrote them, one token per number. */
+export function valueTokens(text: string, locale: "de" | "en" = "de"): readonly string[] {
+  return text
+    .split(VALUE_SEPARATORS)
+    .map(clean)
+    .flatMap((token) => (token.includes(" ") && parseToken(token, locale) === null && !/^[+\-−(]\s/.test(token) ? token.split(" ") : [token]))
+    .filter((token) => token !== "");
+}
+
 /** Expected values: 1 to 6 numbers. Returns the values, or the first token that is not a number. */
 export function parseExpected(
   text: string,
   locale: "de" | "en" = "de",
 ): { readonly values: readonly number[] } | { readonly bad: string } | { readonly count: number } {
-  const tokens = text
-    .split(VALUE_SEPARATORS)
-    .map(clean)
-    .flatMap((token) => (token.includes(" ") && parseToken(token, locale) === null && !/^[+\-−(]\s/.test(token) ? token.split(" ") : [token]))
-    .filter((token) => token !== "");
+  const tokens = valueTokens(text, locale);
   const values: number[] = [];
   for (const token of tokens) {
     const value = parseToken(token, locale);
@@ -147,17 +153,31 @@ export function isAiSource(text: string): boolean {
   return AI_SOURCE.test(text);
 }
 
-const VIEW_CHARS = /^[A-Za-z0-9_.\- ]+$/;
-const COLUMN_CHARS = /^[A-Za-z0-9_]*$/;
-const DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
+/** Names of a view, a file or a column as people write them: "OP-Liste (Export).xlsx", "Betrag offen". */
+const NAME_CHARS = /^[\p{L}\p{N}_.\-()/ ]+$/u;
+const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})$/;
+const DOTTED_DATE = /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/;
 
-export function isDate(text: string): boolean {
-  const match = DATE.exec(text);
-  if (!match) return false;
-  const [year, month, day] = [Number(match[1]), Number(match[2]), Number(match[3])];
+function validDay(year: number, month: number, day: number): boolean {
   if (month < 1 || month > 12 || day < 1) return false;
   const days = [31, year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   return day <= (days[month - 1] as number);
+}
+
+/** "2026-07-01", "01.07.2026" and "1.7.2026" -> "2026-07-01"; anything else -> null. */
+export function isoDate(text: string): string | null {
+  const value = clean(text);
+  const iso = ISO_DATE.exec(value);
+  const dotted = iso ? null : DOTTED_DATE.exec(value);
+  const parts = iso ? [iso[1], iso[2], iso[3]] : dotted ? [dotted[3], dotted[2], dotted[1]] : null;
+  if (!parts) return null;
+  const [year, month, day] = parts.map(Number) as [number, number, number];
+  if (!validDay(year, month, day)) return null;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+export function isDate(text: string): boolean {
+  return isoDate(text) !== null;
 }
 
 function length(field: Field, value: string, [min, max]: readonly [number, number], errors: FieldError[]) {
@@ -169,7 +189,7 @@ export function validateCard(card: OwnCard, locale: "de" | "en" = "de"): readonl
   const errors: FieldError[] = [];
   const text = (field: Field) => clean(String(card[field]));
 
-  for (const field of ["metric", "question", "view", "column", "who", "never", "unit", "source"] as const) {
+  for (const field of ["metric", "question", "view", "who", "never", "unit", "source"] as const) {
     const bad = forbiddenChar(card[field]);
     if (bad) errors.push({ field, code: "forbidden", detail: bad });
   }
@@ -188,13 +208,8 @@ export function validateCard(card: OwnCard, locale: "de" | "en" = "de"): readonl
 
   if (required("view")) {
     const view = text("view");
-    if (!VIEW_CHARS.test(view)) errors.push({ field: "view", code: "chars" });
+    if (!NAME_CHARS.test(view)) errors.push({ field: "view", code: "chars" });
     else length("view", view, LIMITS.view, errors);
-  }
-  if (!failed("column")) {
-    const column = text("column");
-    if (!COLUMN_CHARS.test(column)) errors.push({ field: "column", code: "chars" });
-    else length("column", column, LIMITS.column, errors);
   }
 
   if (card.kind === "") errors.push({ field: "kind", code: "required" });
@@ -220,6 +235,27 @@ export function validateCard(card: OwnCard, locale: "de" | "en" = "de"): readonl
     else length("source", text("source"), LIMITS.source, errors);
   }
   return errors;
+}
+
+/**
+ * The optional column: what is wrong with it, or null. Never part of
+ * validateCard, so a bad optional value cannot block the three files; the
+ * files leave it out instead (usableColumn).
+ */
+export function columnIssue(card: Pick<OwnCard, "column">): FieldError | null {
+  const column = clean(card.column);
+  if (column === "") return null;
+  const bad = forbiddenChar(card.column);
+  if (bad) return { field: "column", code: "forbidden", detail: bad };
+  if (!NAME_CHARS.test(column)) return { field: "column", code: "chars" };
+  const [min, max] = LIMITS.column;
+  if (column.length < min || column.length > max) return { field: "column", code: "length", detail: `${min}-${max}` };
+  return null;
+}
+
+/** The column as the files write it: empty when it is missing or not usable. */
+export function usableColumn(card: Pick<OwnCard, "column">): string {
+  return columnIssue(card) ? "" : clean(card.column);
 }
 
 /** "Ending MRR" -> "ending_mrr"; umlauts transliterated, at most 40 characters. */

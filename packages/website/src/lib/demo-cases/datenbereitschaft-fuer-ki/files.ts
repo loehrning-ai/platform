@@ -1,22 +1,24 @@
 /**
- * The three files "Deine Karte" makes, built in the browser from the card:
+ * The files "Deine Karte" makes, built in the browser from the card:
  *
  *   kennzahl-fragekarte.zip   kennzahl-fragekarte/SKILL.md (static) + references/kennzahlen.md
- *   projekt-anweisung.txt     the instructions of a Claude Project
- *   pruefliste.md             the tests with expected values; never goes into Claude
+ *   kennzahlen.md             the same definition on its own, a Project file
+ *   projekt-anweisung.txt     the instructions of a Claude Project (EN project-instructions.txt)
+ *   pruefliste.md             the tests with expected values; never goes into Claude (EN test-list.md)
  *
  * Pure functions of (card, the locale's file text). The kit ships the
  * FOLDLINE edition of each, made by these same functions (kit-lockstep.test.ts).
  * The expected values appear only in the test list.
  */
 import { zipStore } from "@/lib/zip/store";
-import { cell, clean, metricSlug, neverItems, parseExpected, type Lock, type OwnCard } from "./card";
-import { formatNumber, countDecimals } from "./format";
+import { cell, clean, isoDate, metricSlug, neverItems, parseExpected, usableColumn, valueTokens, type Lock, type OwnCard } from "./card";
 import { canAdd, type AddRule, type Kind } from "./logic";
 import { SKILL_MD, SKILL_NAME } from "./skill-text";
 
 export interface FileText {
   readonly locale: "de" | "en";
+  /** Download names of the locale; kennzahlen.md is fixed by the bilingual skill. */
+  readonly names: { readonly instructions: string; readonly checklist: string };
   /** {slug} {metric} {question} {clock} {kindRule} {source} {who} {never} {locked} */
   readonly definitions: string;
   /** {openRisk} {metric} {slug} {clock} {source} {never} {kindRule} {who} */
@@ -64,17 +66,22 @@ export function kindRule(kind: Kind, text: FileText): string {
   ].join(" ");
 }
 
-function source(card: OwnCard, text: FileText): string {
+/** "analytics.mrr_summary_monthly, Spalte ending_mrr_eur", or the view alone. */
+export function source(card: OwnCard, text: FileText): string {
   const view = clean(card.view);
-  const column = clean(card.column);
+  const column = usableColumn(card);
   return column ? fill(text.viewColumn, { view, column }) : view;
 }
 
-/** The expected values as the locale writes them: "334.675 / 344.450 / 387.015". */
+/**
+ * The expected values exactly as the visitor typed them, one per number:
+ * "334.675 / 344.450 / 387.015". Never reformatted, so no cent and no
+ * trailing zero is lost in the one file that holds the truth outside Claude.
+ */
 export function expectedText(card: OwnCard, locale: "de" | "en"): string {
   const parsed = parseExpected(card.expected, locale);
   if (!("values" in parsed)) return clean(card.expected);
-  return parsed.values.map((value) => formatNumber(value, locale, countDecimals(value, 2))).join(" / ");
+  return valueTokens(card.expected, locale).join(" / ");
 }
 
 function common(card: OwnCard, text: FileText) {
@@ -84,7 +91,7 @@ function common(card: OwnCard, text: FileText) {
     slug: metricSlug(metric),
     metric,
     question: clean(card.question),
-    clock: clean(card.clock),
+    clock: isoDate(card.clock) ?? clean(card.clock),
     kindRule: card.kind === "" ? "" : kindRule(card.kind, text),
     source: source(card, text),
     who: clean(card.who),
@@ -93,7 +100,7 @@ function common(card: OwnCard, text: FileText) {
   };
 }
 
-/** references/kennzahlen.md: the definition the skill and the Project read. No expected values. */
+/** kennzahlen.md (in the zip under references/): the definition the skill and the Project read. No expected values. */
 export function definitionsMd(card: OwnCard, text: FileText): string {
   const values = common(card, text);
   return fill(text.definitions, {

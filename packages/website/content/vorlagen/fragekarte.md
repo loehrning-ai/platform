@@ -47,10 +47,10 @@ Probe: letzter Stand plus Veränderung ergibt den neuen Stand. 354.635 + 32.380 
 | Kästchen | Datei im Kit | In der Demo |
 | --- | --- | --- |
 | Ausgang | `builder/claude-demo/AI-RUN-LOG.md`, `builder/claude-demo/A-export-tables/monthly_revenue.csv` | loehrning.ai/demos/datenbereitschaft-fuer-ki?beat=lesarten |
-| 1 und 2 | `builder/semantic/verified-questions.yml` (Fall C01), `builder/claude/project/mrr_summary_monthly.csv` | ?beat=sicht |
-| 3 | `builder/CHEATSHEET.md`, `builder/claude-demo/A-export-tables/customer_master.csv` | ?beat=wer-zaehlt |
-| 4 | `builder/claude/project/PROJECT-INSTRUCTIONS.txt` Regel 3, `builder/warehouse/ACCESS.md` | ?beat=grenze |
-| 5 | `builder/claude-demo/CHECK-YOUR-RESULT.md` | ?beat=test |
+| 1 und 2 | `builder/semantic/verified-questions.yml` (Fall C01), `builder/claude/project/mrr_summary_monthly.csv` | loehrning.ai/demos/datenbereitschaft-fuer-ki?beat=sicht |
+| 3 | `builder/CHEATSHEET.md`, `builder/claude-demo/A-export-tables/customer_master.csv` | loehrning.ai/demos/datenbereitschaft-fuer-ki?beat=wer-zaehlt |
+| 4 | `builder/claude/project/PROJECT-INSTRUCTIONS.txt` Regel 3, `builder/warehouse/ACCESS.md` | loehrning.ai/demos/datenbereitschaft-fuer-ki?beat=grenze |
+| 5 | `builder/claude-demo/CHECK-YOUR-RESULT.md` | loehrning.ai/demos/datenbereitschaft-fuer-ki?beat=test |
 
 ## Leere Karte
 
@@ -59,8 +59,8 @@ Probe: letzter Stand plus Veränderung ergibt den neuen Stand. 354.635 + 32.380 
 | 1. Kennzahl · Frage · Stichtag |  |
 | 2. Freigegebene Sicht · Spalte |  |
 | 3. Art · wer zählt, wer nicht |  |
-| 4. Nie sehen · gesperrt durch · warnen nach Stunden |  |
+| 4. Nie sehen · gesperrt durch |  |
 | 5. Erwartete Werte · Einheit · Quelle |  |
 
 Unter „Deine Karte“ in der Demo wird aus dieser Karte in deinem Browser ein Skill, eine Projektanweisung
-und eine Prüfliste.
+mit `kennzahlen.md` und eine Prüfliste.
