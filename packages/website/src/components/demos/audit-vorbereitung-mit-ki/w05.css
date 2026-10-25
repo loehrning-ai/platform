@@ -1,7 +1,8 @@
 /*
  * W05 "Nachweisprüfung". Every rule sits under .w05 (static-privacy.test.ts).
- * Hard edges, one accent (Mennige) for failing marks and the selected chip,
- * status always as a word. The stage frame fills the shell's stage and is a
+ * Hard edges, one accent (Mennige) for failing marks only (SCHWACH, LÜCKE);
+ * a selected or switched-on control is Druckschwarz with Kalkweiß text.
+ * Status always as a word, except the phone ribbon's squares. The stage frame fills the shell's stage and is a
  * size container, so rows and type follow the stage height.
  */
 
@@ -99,7 +100,7 @@
 }
 .w05 .w05-req {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 5px;
   min-width: 0;
   white-space: nowrap;
@@ -111,8 +112,13 @@
 .w05 .w05-req-label {
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
   font-size: 12.5px;
+  line-height: 1.1;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .w05 .w05-link {
   position: relative;
@@ -184,10 +190,14 @@
   border-color: var(--w05-accent);
 }
 .w05 .w05-file-name {
+  position: relative;
+  z-index: 1;
   font-size: 11.5px;
   line-height: 1.15;
 }
 .w05 .w05-file-sub {
+  position: relative;
+  z-index: 1;
   display: block;
   min-width: 0;
   overflow: hidden;
@@ -201,13 +211,17 @@
   color: var(--w05-accent);
   font-weight: 600;
 }
+/* The draft stamp sits in the card's top-right corner, under the text, never over the defect line;
+   a phone card is too narrow for it next to the name, which says DRAFT itself. */
 .w05 .w05-draft-mark {
+  display: none;
   position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%) rotate(-8deg);
-  font-size: 18px;
+  z-index: 0;
+  right: 3px;
+  top: 1px;
+  font-size: 9px;
   font-weight: 900;
+  line-height: 1;
   letter-spacing: 0.08em;
   color: var(--w05-accent);
   pointer-events: none;
@@ -230,6 +244,16 @@
   color: var(--w05-ink);
 }
 .w05 .w05-unlinked-label {
+  flex: none;
+}
+/* A phone shows the count; the names come whole at "Alle acht". A wide stage shows the names here. */
+.w05 .w05-unlinked-files {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.w05 .w05-unlinked-count {
   flex: none;
 }
 
@@ -263,28 +287,47 @@
 }
 
 /* ── Tool ─────────────────────────────────────────────────────────────── */
-.w05 .w05-tool-grid {
-  flex: 1 1 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  margin: 8px 0 0;
-  padding: 0;
-  list-style: none;
-  align-content: start;
+.w05 .w05-tool > * {
+  flex: none;
 }
-.w05 .w05-tool-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 6px;
-  border: 1px solid var(--w05-ink);
-}
-.w05 .w05-tool-line {
-  font-size: 12px;
+.w05 .w05-objective {
+  margin: 4px 0 0;
+  padding: 0 0 4px;
+  border-bottom: 2px solid var(--w05-ink);
+  font-size: 13px;
+  font-weight: 700;
   line-height: 1.3;
 }
+/* A phone: one test per line, the word left, the rule right. */
+.w05 .w05-tool-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.w05 .w05-tool-cell {
+  display: grid;
+  grid-template-columns: 6em minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  border-bottom: 1px solid var(--w05-line);
+}
+.w05 .w05-tool-cell .w05-mark {
+  justify-content: center;
+}
+.w05 .w05-tool-line {
+  font-size: 11.5px;
+  line-height: 1.2;
+}
+.w05 .w05-tool-status {
+  margin: 4px 0 0;
+  font-size: 11.5px;
+  line-height: 1.2;
+}
+
 
 /* ── R7 cards ─────────────────────────────────────────────────────────── */
 .w05 .w05-cards {
@@ -429,6 +472,13 @@
   font-size: 13px;
   font-weight: 700;
 }
+.w05 .w05-mistakes {
+  margin: auto 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--w05-line);
+  font-size: 12.5px;
+  line-height: 1.3;
+}
 
 /* ── All eight ────────────────────────────────────────────────────────── */
 .w05 .w05-all-status {
@@ -477,6 +527,19 @@
 }
 .w05 .w05-all-close {
   font-size: 12px;
+}
+.w05 .w05-all-unlinked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px !important;
+  padding-top: 5px;
+  border-top: 1px solid var(--w05-line);
+}
+.w05 .w05-all-unlinked .w05-chip {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .w05 .w05-label {
   font-size: 11px;
@@ -641,8 +704,8 @@
   color: var(--color-background);
 }
 .w05 [aria-pressed="true"] {
-  border-color: var(--w05-accent);
-  background: var(--w05-accent);
+  border-color: var(--w05-ink);
+  background: var(--w05-ink);
   color: var(--color-background);
 }
 .w05 .w05-estimate:active,
@@ -778,6 +841,48 @@
 }
 .w05 .w05-ribbon-chip b {
   font-family: var(--font-mono);
+}
+.w05 .w05-ribbon-square {
+  display: none;
+  width: 10px;
+  height: 10px;
+  border: 2px solid currentColor;
+}
+.w05 .w05-ribbon-chip[data-status="covered"] .w05-ribbon-square {
+  background: currentColor;
+}
+.w05 .w05-ribbon-chip[data-status="weak"] .w05-ribbon-square {
+  border-color: var(--w05-accent);
+}
+.w05 .w05-ribbon-chip[data-status="gap"] .w05-ribbon-square {
+  border-color: var(--w05-accent);
+  background: var(--w05-accent);
+}
+/* A phone: all eight fit, the id and a status square; the word stays for screen readers. */
+@media (max-width: 26.8rem) {
+  .w05 .w05-ribbon-list {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 3px;
+    overflow: visible;
+  }
+  .w05 .w05-ribbon-chip {
+    gap: 4px;
+    width: 100%;
+    padding: 0 2px;
+  }
+  .w05 .w05-ribbon-square {
+    display: inline-block;
+    flex: none;
+  }
+  .w05 .w05-ribbon-word {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 .w05 .w05-ribbon-chip[data-status="weak"] span,
 .w05 .w05-ribbon-chip[data-status="gap"] span {
@@ -1065,6 +1170,38 @@
   .w05 .w05-r5 {
     --w05-cell: 34px;
     --w05-gap: 4px;
+  }
+  .w05 .w05-unlinked-files {
+    display: inline-flex;
+  }
+  .w05 .w05-unlinked-count {
+    display: none;
+  }
+  .w05 .w05-draft-mark {
+    display: block;
+    font-size: 11px;
+  }
+  .w05 .w05-objective {
+    font-size: 16px;
+  }
+  .w05 .w05-tool-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .w05 .w05-tool-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px;
+    border: 1px solid var(--w05-ink);
+  }
+  .w05 .w05-tool-status {
+    font-size: 14px;
+  }
+  .w05 .w05-mistakes {
+    font-size: 14px;
   }
   .w05 .w05-square {
     font-size: 11px;

@@ -218,11 +218,11 @@ test.describe("workshop stage motion and pause", () => {
     expect(box.height).toBeGreaterThanOrEqual(44);
     await expect(pause).toContainText("Bewegung anhalten");
 
-    // Playing: the kit chips, the top slide and the gate's cards move.
+    // Playing: the kit chips, the top slide and the links' sweep move.
     const chip = stage.locator(".ac-chip").first();
     const frame = stage.locator(".ac-frame-top");
-    const card = stage.locator(".hm-p1");
-    await expect(stage).toHaveAttribute("data-stage-scene", "gate");
+    const card = stage.locator(".hk-scan");
+    await expect(stage).toHaveAttribute("data-stage-scene", "links");
     expect(await animationName(chip)).not.toBe("none");
     expect(await animationName(frame)).not.toBe("none");
     expect(await animationName(card)).not.toBe("none");
@@ -233,8 +233,8 @@ test.describe("workshop stage motion and pause", () => {
     expect(await animationName(chip)).toBe("none");
     expect(await animationName(frame)).toBe("none");
     expect(await animationName(card)).toBe("none");
-    // Still frame: the lamps stay lit, the kit chips stay in the box.
-    await expect(stage.locator(".hm-lamp-go")).toHaveCSS("opacity", "1");
+    // Still frame: the broken links stay broken, the kit chips stay in the box.
+    await expect(stage.locator(".hk-fail-5")).toHaveCSS("opacity", "1");
     await expect(chip).toHaveCSS("opacity", "1");
 
     await pause.click();
@@ -274,7 +274,7 @@ test.describe("workshop stage motion and pause", () => {
     const page = await context.newPage();
     await open(page, "/workshops/audit-vorbereitung-mit-ki");
     await expect(page.locator("label.ws-pause")).toBeHidden();
-    for (const selector of [".ac-chip", ".ac-frame-top", ".hm-p1", ".hm-orbit", ".hm-layer-far"]) {
+    for (const selector of [".ac-chip", ".ac-frame-top", ".hk-scan", ".hk-links", ".hk-far"]) {
       expect(await animationName(page.locator(selector).first()), selector).toBe("none");
     }
     await context.close();

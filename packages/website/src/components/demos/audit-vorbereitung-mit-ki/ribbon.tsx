@@ -36,7 +36,12 @@ export function Ribbon({
               onClick={() => onSelect(row.item.id)}
             >
               <b>{row.item.id}</b>
-              {shown ? <span>{copy.status[row.best.status]}</span> : null}
+              {shown ? (
+                <>
+                  <i className="w05-ribbon-square" aria-hidden="true" />
+                  <span className="w05-ribbon-word">{copy.status[row.best.status]}</span>
+                </>
+              ) : null}
             </button>
           </li>
         ))}

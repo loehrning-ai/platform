@@ -92,3 +92,33 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     expect(html).not.toMatch(/\/Users\/|\/private\//);
   });
 });
+
+/**
+ * One objective, one status rule, one quote rule: the deck's "four" slide, the demo's tool
+ * beat, the kit's START-HERE.md and the skill carry the same three sentences, so the room,
+ * the phone and the visitor's own Claude learn the same thing.
+ */
+describe("W05 objective lockstep", async () => {
+  const { COPY } = await import("./demo-cases/audit-vorbereitung-mit-ki/copy");
+  const deckCopy = JSON.parse(readFileSync(resolve(process.cwd(), "../../scripts/workshop05/deck-src/deck-copy.json"), "utf8")) as Record<
+    "de" | "en",
+    { four: { objective: string; tool: readonly string[] } }
+  >;
+  const skill = readFileSync(resolve(process.cwd(), "content/skills/audit-nachweise/SKILL.md"), "utf8");
+  const startHere = flat(kit("START-HERE.md"));
+
+  it.each(["de", "en"] as const)("the demo's %s tool beat says the deck's objective, status rule and quote rule word for word", (lang) => {
+    const four = deckCopy[lang].four;
+    expect(COPY[lang].objective).toBe(four.objective);
+    expect(COPY[lang].tool.status).toBe(four.tool[1]);
+    expect(COPY[lang].tool.rule).toBe(four.tool[2]);
+    expect(flat(readFileSync(resolve(root, lang === "de" ? "slides.html" : "slides.en.html"), "utf8"))).toContain(four.objective);
+  });
+
+  it("the kit and the skill carry the same sentences", () => {
+    const en = deckCopy.en.four;
+    for (const line of [en.objective, en.tool[1], en.tool[2]]) expect(startHere).toContain(line);
+    expect(skill).toContain(deckCopy.de.four.tool[2]);
+    expect(skill).toContain(en.tool[2]);
+  });
+});

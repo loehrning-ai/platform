@@ -9,10 +9,14 @@
 export type IsoDate = string;
 
 export interface DateToken {
-  /** The earliest day the token can mean; null when it is ambiguous. */
+  /** The earliest day the token can mean; null when it is ambiguous or not a real day. */
   readonly iso: IsoDate | null;
+  /** The latest day the token can mean (the same day for an exact date). */
+  readonly latest: IsoDate | null;
   readonly uncertain: boolean;
   readonly ambiguous: boolean;
+  /** Shaped like a date but no real day ("2026/13/45"): never read as anything else. */
+  readonly invalid: boolean;
   readonly raw: string;
   readonly index: number;
 }
@@ -91,25 +95,31 @@ export function formatLongEn(iso: IsoDate): string {
 
 interface Pattern {
   readonly re: RegExp;
-  /** A token; null consumes the text without a date (an impossible date); undefined leaves it (no month word). */
-  readonly read: (match: RegExpExecArray) => Omit<DateToken, "raw" | "index"> | null | undefined;
+  /** A token; null marks an impossible date (kept as an invalid token); undefined leaves the text (no month word). */
+  readonly read: (match: RegExpExecArray) => Read | null | undefined;
 }
 
-const exact = (year: number, month: number, day: number) =>
-  isValidDate(year, month, day) ? { iso: toIso(year, month, day), uncertain: false, ambiguous: false } : null;
-const earliest = (year: number, month: number) =>
-  isValidDate(year, month, 1) ? { iso: toIso(year, month, 1), uncertain: true, ambiguous: false } : null;
+type Read = Omit<DateToken, "raw" | "index">;
+
+const exact = (year: number, month: number, day: number): Read | null =>
+  isValidDate(year, month, day) ? { iso: toIso(year, month, day), latest: toIso(year, month, day), uncertain: false, ambiguous: false, invalid: false } : null;
+/** A month, a quarter or a year: from the first day of `month` to the last day of `lastMonth`. */
+const earliest = (year: number, month: number, lastMonth = month): Read | null =>
+  isValidDate(year, month, 1) && isValidDate(year, lastMonth, 1)
+    ? { iso: toIso(year, month, 1), latest: toIso(year, lastMonth, daysInMonth(year, lastMonth)), uncertain: true, ambiguous: false, invalid: false }
+    : null;
 const monthOf = (word: string) => MONTHS[word.toLowerCase().replace(/\.$/, "")];
 
 /** In the order the spec gives: full dates first, then the uncertain ones. */
 const PATTERNS: readonly Pattern[] = [
   { re: /(?<!\d)(\d{4})[-_](\d{2})[-_](\d{2})(?!\d)/g, read: (m) => exact(Number(m[1]), Number(m[2]), Number(m[3])) },
+  { re: /(?<!\d)(\d{4})\/(\d{1,2})\/(\d{1,2})(?!\d)/g, read: (m) => exact(Number(m[1]), Number(m[2]), Number(m[3])) },
   { re: /(?<!\d)(\d{1,2})\.(\d{1,2})\.(\d{4})(?!\d)/g, read: (m) => exact(Number(m[3]), Number(m[2]), Number(m[1])) },
   {
     re: /(?<!\d)(\d{1,2})\/(\d{1,2})\/(\d{4})(?!\d)/g,
     read: (m) => {
       const [a, b, year] = [Number(m[1]), Number(m[2]), Number(m[3])];
-      if (a <= 12 && b <= 12 && a !== b) return { iso: null, uncertain: true, ambiguous: true };
+      if (a <= 12 && b <= 12 && a !== b) return { iso: null, latest: null, uncertain: true, ambiguous: true, invalid: false };
       return a > 12 ? exact(year, b, a) : b > 12 ? exact(year, a, b) : exact(year, a, a);
     },
   },
@@ -121,8 +131,8 @@ const PATTERNS: readonly Pattern[] = [
     },
   },
   { re: /(?<!\d)(20\d{2})(\d{2})(\d{2})(?!\d)/g, read: (m) => exact(Number(m[1]), Number(m[2]), Number(m[3])) },
-  { re: /(?<!\d)(\d{4})[-_ ]?[Qq]([1-4])(?!\d)/g, read: (m) => earliest(Number(m[1]), (Number(m[2]) - 1) * 3 + 1) },
-  { re: /(?<![\p{L}\d])[Qq]([1-4])[-_ ]?(\d{4})(?!\d)/gu, read: (m) => earliest(Number(m[2]), (Number(m[1]) - 1) * 3 + 1) },
+  { re: /(?<!\d)(\d{4})[-_ ]?[Qq]([1-4])(?!\d)/g, read: (m) => earliest(Number(m[1]), (Number(m[2]) - 1) * 3 + 1, Number(m[2]) * 3) },
+  { re: /(?<![\p{L}\d])[Qq]([1-4])[-_ ]?(\d{4})(?!\d)/gu, read: (m) => earliest(Number(m[2]), (Number(m[1]) - 1) * 3 + 1, Number(m[1]) * 3) },
   { re: /(?<!\d)(\d{4})[-_](\d{2})(?![-_]?\d)/g, read: (m) => earliest(Number(m[1]), Number(m[2])) },
   {
     re: /(?<![\p{L}\d])(\p{L}{3,9}\.?)\s+(\d{4})(?!\d)/gu,
@@ -131,13 +141,14 @@ const PATTERNS: readonly Pattern[] = [
       return month ? earliest(Number(m[2]), month) : undefined;
     },
   },
-  { re: /(?<!\d)((?:19|20)\d{2})(?!\d)/g, read: (m) => earliest(Number(m[1]), 1) },
+  { re: /(?<!\d)((?:19|20)\d{2})(?!\d)/g, read: (m) => earliest(Number(m[1]), 1, 12) },
 ];
 
 /**
  * Every date in a string, in reading order. Each pattern runs on what the
  * earlier ones left, so "2026-05-07" is one exact date and never also a year;
- * an impossible date ("2026-13-40") is consumed without a token.
+ * an impossible date ("2026-13-40", "2026/13/45") becomes an invalid token and
+ * never a year.
  */
 export function parseDateTokens(input: string): readonly DateToken[] {
   let rest = input;
@@ -149,7 +160,7 @@ export function parseDateTokens(input: string): readonly DateToken[] {
       const raw = match[0] as string;
       const token = read(match);
       if (token === undefined) return raw;
-      if (token) found.push({ ...token, raw, index });
+      found.push(token ? { ...token, raw, index } : { iso: null, latest: null, uncertain: false, ambiguous: false, invalid: true, raw, index });
       return " ".repeat(raw.length);
     });
   }

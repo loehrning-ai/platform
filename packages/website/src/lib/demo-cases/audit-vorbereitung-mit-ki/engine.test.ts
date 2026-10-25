@@ -11,6 +11,7 @@ import { parseList } from "./parse-list";
 import { verifyQuote } from "./quote";
 import { stemOf, versionChains } from "./versions";
 import { formatPercent } from "./counts";
+import { COPY } from "./copy";
 
 describe("dates", () => {
   it("clamps the window start on a leap day", () => {
@@ -101,6 +102,36 @@ describe("own folder", () => {
     const result = assessFolder([entry("backup-test.md", { text: "# Restore test record\nDone 2026-03-02 by IT. Approved 2026-03-03 by Eva Muster." })], "2025-12-10");
     expect(result.items.find((item) => item.id === "R7")?.bound).toBe("open");
   });
+  it("a record whose text says planned is LÜCKE unless another record exists, never BELEGT", () => {
+    const text = "Backup report October 2026. Generated 2026-11-01 by the backup system. Owner: IT lead.\nRestore test: planned for Q4.";
+    const result = assessFolder([entry("backup-bericht_2026-10.txt", { text })], "2025-12-10");
+    const file = result.files[0];
+    expect(file?.type).toBe("RECORD");
+    expect(file?.dateTest).toBe(true);
+    expect(file?.notMet).toBe("planned");
+    expect(result.items.find((item) => item.id === "R7")?.bound).toBe("notMet");
+  });
+  it("a policy that plans something is intent, not a failed record", () => {
+    const result = assessFolder([entry("backup-richtlinie.md", { text: "# Backup policy\nApproved 2026-03-03 by the Managing Director.\nRestore tests are planned twice a year." })], "2025-12-10");
+    expect(result.files[0]?.notMet).toBeNull();
+  });
+  it("an unreadable listed date is a note and DATUM open; an uncertain one fails only when its last day is before the window", () => {
+    const garbled = assessFolder([entry("Unterauftragsverarbeiter.xlsx", { listedInvalid: true })], "2025-12-10");
+    expect(garbled.files[0]?.notes).toContain("dateUnreadable");
+    expect(garbled.files[0]?.dateTest).toBeNull();
+    const year = assessFolder([entry("Schulung.xlsx", { listedDate: "2025-01-01", listedLatest: "2025-12-31" })], "2025-12-10");
+    expect(year.files[0]?.dateTest).toBeNull();
+    const old = assessFolder([entry("Schulung.xlsx", { listedDate: "2024-01-01", listedLatest: "2024-12-31" })], "2025-12-10");
+    expect(old.files[0]?.dateTest).toBe(false);
+  });
+  it("flags a dd/mm/yyyy date in a name as ambiguous", () => {
+    const result = assessFolder([entry("Datenschutz_Schulung_05/06/2026.pdf")], "2025-12-10");
+    expect(result.files[0]?.notes).toContain("dateAmbiguous");
+  });
+  it("types a file without umlauts the same as with them", () => {
+    const result = assessFolder([entry("Zugriffspruefung_Q2-2026.xlsx"), entry("Zugriffsprüfung_Q2-2026.xlsx")], "2025-12-10");
+    expect(result.files.map((file) => file.type)).toEqual(["RECORD", "RECORD"]);
+  });
   it("detects copied modification dates", () => {
     const now = Date.UTC(2026, 9, 25);
     expect(datesWereCopied([0, 1, 2, 3].map((i) => entry(`a${i}.md`, { lastModified: now + i * 100 })))).toBe(true);
@@ -114,6 +145,26 @@ describe("parse list", () => {
     expect(parsed.files[1]?.yearMissing).toBe(true);
     expect(parsed.files[2]?.date?.iso).toBe("2024-03-12");
     expect(parsed.unread).toEqual([4]);
+  });
+  it("reads a Windows dir line: the date is not a file name", () => {
+    const parsed = parseList(" Verzeichnis von C:\\Audit\n\n25.10.2026  09:14    48.211 Leitlinie_IT-Sicherheit_v4_ENTWURF.docx\n25.10.2026  09:10    <DIR>          Alt\n               1 Datei(en),         48.211 Bytes");
+    expect(parsed.files.map((file) => file.name)).toEqual(["Leitlinie_IT-Sicherheit_v4_ENTWURF.docx"]);
+    expect(parsed.files[0]?.date?.iso).toBe("2026-10-25");
+    expect(parsed.unread).toEqual([]);
+  });
+  it("keeps a dd/mm/yyyy date inside a name and flags it ambiguous", () => {
+    const parsed = parseList("Datenschutz_Schulung_05/06/2026.pdf\nC:\\Audit\\Backup\\Restore-Test.pdf\nAudit/Backup/Restore.pdf");
+    expect(parsed.files.map((file) => file.name)).toEqual(["Datenschutz_Schulung_05/06/2026.pdf", "Restore-Test.pdf", "Restore.pdf"]);
+    expect(parsed.files[0]?.dateAmbiguous).toBe(true);
+  });
+  it("never reads a garbled date as a year", () => {
+    const parsed = parseList("Unterauftragsverarbeiter.xlsx  2026/13/45");
+    expect(parsed.files[0]?.date).toBeNull();
+    expect(parsed.files[0]?.dateInvalid).toBe(true);
+    expect(firstDate("2026/13/45")).toBeNull();
+    expect(parseDateTokens("2026/13/45")[0]).toMatchObject({ invalid: true, iso: null });
+    expect(firstDate("Bericht 2025")).toMatchObject({ iso: "2025-01-01", latest: "2025-12-31" });
+    expect(firstDate("2026-Q2")).toMatchObject({ iso: "2026-04-01", latest: "2026-06-30" });
   });
 });
 
@@ -140,6 +191,15 @@ describe("quote and Claude's answer", () => {
     const checked = checkAnswer(parseClaudeAnswer("R5: training-records_2026.csv, 26 Personen geschult, 21,7 %, SCHWACH"), vardarContext());
     const flags = checked[0]?.flags ?? [];
     expect(flags).toEqual(expect.arrayContaining([{ kind: "number-differs", found: 26, expected: 25 }, { kind: "status-differs", expected: "gap" }]));
+  });
+  it("finds all three planted mistakes in the probe's sample lines, in both languages", () => {
+    for (const lang of ["de", "en"] as const) {
+      const checked = checkAnswer(parseClaudeAnswer(COPY[lang].probe.sampleText), vardarContext());
+      const kinds = (item: string) => checked.find((row) => row.row.item === item)?.flags.map((flag) => flag.kind) ?? [];
+      expect(kinds("R7"), lang).toContain("policy-for-record");
+      expect(kinds("R5"), lang).toContain("number-differs");
+      expect(kinds("R4"), lang).toContain("compliance-word");
+    }
   });
   it("flags a section number that is in no file", () => {
     const checked = checkAnswer(parseClaudeAnswer('R8 | infosec-policy_v3_FINAL.md | ISO 27001 A.5.1 | "Approved 2024-03-12" | WEAK'), vardarContext());

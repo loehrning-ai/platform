@@ -61,8 +61,8 @@
     var span = parseFloat(el.getAttribute('data-span') || String(1 - delay));
     if (span <= 0) span = 0.001;
     var local = ease((t - delay) / span);
-    if (step > until + 1) return 0;
-    if (step === until + 1) return 1 - ease(t / 0.35);
+    // A layer that ends is gone the moment the next step starts: layers share one area, a cross-fade would print one over the other.
+    if (step > until) return 0;
     if (step > from) return 1;
     if (step === from) return local;
     return 0;

@@ -96,11 +96,12 @@ describe("<WorkshopDetailContent>", () => {
 
   it("sets a title's subtitle on its own line and keeps the full title as the heading name", () => {
     for (const locale of ["de", "en"] as const) {
-      const workshop = getWorkshopBySlug("esg-berichte-mit-ki", locale)!;
+      const workshop = getWorkshopBySlug("audit-vorbereitung-mit-ki", locale)!;
       const { unmount } = render(
         <WorkshopDetailContent workshop={workshop} locale={locale} />,
       );
       const [head, subtitle] = workshop.title.split(": ");
+      expect(subtitle).toBeTruthy();
       const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
       // The text reads as the full title, colon included; only the subtitle
       // moves to its own line.
@@ -110,7 +111,8 @@ describe("<WorkshopDetailContent>", () => {
       const lead = h1.firstElementChild;
       const mark = h1.querySelector("span.title-mark");
       expect(lead).toHaveClass("relative");
-      expect(`${lead?.textContent} ${mark?.textContent}`).toBe(head);
+      // The colon sits inside the band, never alone after it.
+      expect(`${lead?.textContent} ${mark?.textContent}`).toBe(`${head}:`);
       expect(h1.querySelector("[data-title-subtitle]")?.textContent).toBe(subtitle);
       unmount();
     }
@@ -182,7 +184,7 @@ describe("<WorkshopDetailContent>", () => {
       expect(h1.textContent?.slice(0, h1.textContent.indexOf(mark)).trim()).toBe(lead);
       const marks = h1.querySelectorAll("span.title-mark");
       expect(marks).toHaveLength(1);
-      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark}$`));
+      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark}:?$`));
       // The words are never animated: no motion class or inline animation on the heading.
       expect(h1.outerHTML).not.toMatch(/animate-|animation|motion-/);
       unmount();

@@ -154,7 +154,7 @@
         "infosec-policy_v4_DRAFT.md": "„Approved by: (open)“"
       },
       "result": "{passing} von {total} bestehen DATUM und FREIGABE.",
-      "resultSub": "Drei fallen durch, und ihr Name verrät nicht, welche."
+      "resultSub": "Drei fallen durch. Warum, steht nur im Text der Datei."
     },
     "m2": {
       "title": "Mission 2: erst das Zitat, dann der Status",
@@ -462,7 +462,7 @@
         "infosec-policy_v4_DRAFT.md": "“Approved by: (open)”"
       },
       "result": "{passing} of {total} pass DATE and APPROVAL.",
-      "resultSub": "Three fail, and their names do not tell you which."
+      "resultSub": "Three fail. Why, only the text inside the file says."
     },
     "m2": {
       "title": "Mission 2: quote first, then status",

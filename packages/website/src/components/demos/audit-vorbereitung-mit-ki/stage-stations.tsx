@@ -38,11 +38,22 @@ function Head({ children, sub }: { readonly children: React.ReactNode; readonly 
   );
 }
 
-/** Beat 3: the tool, the four tests with their one-line rules. */
+/**
+ * Beat 3: the tool. The learning objective word for word (as on the deck's
+ * slide), the four tests with their one-line rules and the status rule; the
+ * quote rule is the caption right under it. Nothing is cut: the objective is
+ * the sentence the visitor takes home.
+ */
 export function ToolStage({ model, copy, locale }: { readonly model: Model; readonly copy: W05Copy; readonly locale: Loc }) {
   return (
     <div className="w05-stage w05-tool" data-w05-stage="tool">
-      <Head sub={copy.toolSource}>{copy.toolCaption}</Head>
+      <div className="w05-head w05-tool-head">
+        <p className="w05-head-a">{copy.objectiveLabel}</p>
+        <p className="w05-head-b">{copy.toolSource}</p>
+      </div>
+      <p className="w05-objective" data-w05-objective="">
+        {copy.objective}
+      </p>
       <ul className="w05-tool-grid">
         {TEST_ORDER.map((test: TestId) => (
           <li key={test} className="w05-tool-cell">
@@ -53,6 +64,9 @@ export function ToolStage({ model, copy, locale }: { readonly model: Model; read
           </li>
         ))}
       </ul>
+      <p className="w05-tool-status" data-w05-tool-status="">
+        {copy.tool.status}
+      </p>
     </div>
   );
 }
@@ -116,7 +130,7 @@ export function R5Stage({ model, copy, locale, t }: { readonly model: Model; rea
   const counted = merge >= 1;
   return (
     <div className="w05-stage w05-r5" data-w05-stage="r5">
-      <Head sub={copy.r5.mistakes}>{`R5 · ${model.rows.find((row) => row.item.id === "R5")?.item.label[locale] ?? ""}`}</Head>
+      <Head>{`R5 · ${model.rows.find((row) => row.item.id === "R5")?.item.label[locale] ?? ""}`}</Head>
       <ol className="w05-squares" aria-label={fill(copy.r5.rows, { rows: TRAINING.length })}>
         {TRAINING.map((id, index) => {
           const drop = within(t, index * 0.012, index * 0.012 + 0.1);
@@ -146,6 +160,9 @@ export function R5Stage({ model, copy, locale, t }: { readonly model: Model; rea
       </div>
       <p className="w05-needed" style={{ opacity: within(t, 0.86, 0.96) }}>
         {fill(copy.r5.needed, { needed: figures.needed ?? 0, staff, missing: figures.missing ?? 0 })}
+      </p>
+      <p className="w05-mistakes" style={{ opacity: within(t, 0.9, 1) }}>
+        {copy.r5.mistakes}
       </p>
     </div>
   );
@@ -190,6 +207,14 @@ export function AllStage({ model, copy, locale, selected }: { readonly model: Mo
             <span className="w05-label">{copy.all.owner}</span> {OWNERS[row.item.owner][locale]}
           </p>
         ) : null}
+        <p className="w05-all-unlinked" data-w05-unlinked-all="">
+          <span className="w05-label">{fill(copy.unlinkedAll, { n: model.unlinked.length })}</span>{" "}
+          {model.unlinked.map((file) => (
+            <span key={file} className="w05-chip">
+              {file}
+            </span>
+          ))}
+        </p>
       </div>
       <ol className="w05-all-overview" aria-hidden="true">
         {model.rows.map((entry) => (

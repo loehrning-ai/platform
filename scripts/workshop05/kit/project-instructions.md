@@ -23,4 +23,4 @@ Working
 10. Quote first, then status. Before you finish, find every quote in its file again; if you cannot, delete that status and say so.
 11. Compute every date difference, count and share in code against 10 December 2026. Remove duplicate rows before you count and say how many there were.
 12. Use section numbers only from request_tannwald.md. Never invent a control number, clause or standard reference. Never write "compliant", "certified" or "fully".
-13. Use staff and account IDs, never names of customers or staff.
+13. Never copy names from data rows (customers, staff in training or access lists); use their IDs. Name approvers and owners by role (IT lead, HR lead, Managing Director); a request email may greet its owner by first name.

@@ -9,6 +9,7 @@
 import { boundOf, type Bound } from "./bound";
 import { GENERIC_ITEM_IDS, docType, keywordHits, type DocType, type ItemId } from "./classify";
 import { approvalTest, dateTest, readDoc } from "./evidence";
+import { parseDateTokens } from "./dates";
 import type { DatedFact } from "./meta";
 import { NAME_APPROVAL, NAME_DRAFT, versionChains } from "./versions";
 
@@ -25,6 +26,12 @@ export interface OwnEntry {
   /** A date from a pasted list line (ISO), with its year possibly missing. */
   readonly listedDate: string | null;
   readonly yearMissing: boolean;
+  /** The latest day the listed date can mean (a month or a year spans many). */
+  readonly listedLatest?: string | null;
+  /** The pasted line carried a date that is no real day ("2026/13/45"). */
+  readonly listedInvalid?: boolean;
+  /** The pasted line or the name carried a dd/mm/yyyy date that could be two days. */
+  readonly listedAmbiguous?: boolean;
   /** The file's text when it was read (a .txt, .md, .csv or .tsv under 2 MB). */
   readonly text: string | null;
 }
@@ -39,10 +46,28 @@ export interface OwnFile {
   readonly dateTest: Tri;
   readonly approvalTest: Tri;
   readonly approvedBy: string | null;
+  /** The words of a record's text that say it was not done ("planned"), or null. */
+  readonly notMet: string | null;
   readonly notes: readonly OwnNote[];
 }
 
-export type OwnNote = "lock" | "notRead" | "modifiedDate" | "nameDraft" | "nameApproval" | "yearMissing" | "approvalOpen" | "draftInText";
+export type OwnNote =
+  | "lock"
+  | "notRead"
+  | "modifiedDate"
+  | "nameDraft"
+  | "nameApproval"
+  | "yearMissing"
+  | "approvalOpen"
+  | "draftInText"
+  | "dateUnreadable"
+  | "dateAmbiguous";
+
+/**
+ * Words in a record that say the thing was not done. Narrower than the kit's
+ * NOT_MET: "none" is too common in a stranger's CSV to mean anything.
+ */
+export const OWN_NOT_MET = /\b(planned|pending|not done|not performed|not yet|geplant|ausstehend|nicht durchgeführt|noch nicht)\b/i;
 
 export interface OwnItem {
   readonly id: ItemId;
@@ -86,6 +111,7 @@ function assess(entry: OwnEntry, windowStart: string | null): OwnFile {
     const used = date.used;
     const fallback = !used && entry.lastModified !== null ? isoOf(entry.lastModified) : null;
     if (fallback) notes.push("modifiedDate");
+    const notMet = doc.type === "RECORD" ? (OWN_NOT_MET.exec(entry.text)?.[1] ?? null) : null;
     return {
       entry,
       type: doc.type,
@@ -95,11 +121,16 @@ function assess(entry: OwnEntry, windowStart: string | null): OwnFile {
       dateTest: windowStart === null ? null : used ? date.pass : fallback && fallback < windowStart ? false : null,
       approvalTest: lock ? false : approval.pass,
       approvedBy: approval.by,
+      notMet,
       notes,
     };
   }
   notes.push("notRead");
+  if (entry.listedInvalid) notes.push("dateUnreadable");
+  if (entry.listedAmbiguous || parseDateTokens(entry.name).some((token) => token.ambiguous)) notes.push("dateAmbiguous");
   const listed = entry.listedDate;
+  // An uncertain listed date ("2026", "2026-Q2") fails DATUM only when even its last day lies before the window.
+  const latest = listed ? (entry.listedLatest ?? listed) : null;
   const modified = entry.lastModified !== null ? isoOf(entry.lastModified) : null;
   const iso = listed ?? modified;
   if (iso) notes.push("modifiedDate");
@@ -113,9 +144,10 @@ function assess(entry: OwnEntry, windowStart: string | null): OwnFile {
     lock,
     date: iso ? { iso, source: listed ? "list" : "modified", kind: null } : null,
     // A file last changed before the window cannot carry an approval inside it.
-    dateTest: entry.yearMissing || windowStart === null ? null : iso && iso < windowStart ? false : null,
+    dateTest: entry.yearMissing || windowStart === null ? null : iso && (latest ?? iso) < windowStart ? false : null,
     approvalTest: lock || nameDraft ? false : null,
     approvedBy: null,
+    notMet: null,
     notes,
   };
 }
@@ -150,7 +182,11 @@ export function assessFolder(input: readonly OwnEntry[], windowStart: string | n
       .sort((a, b) => keywordHits(id, b.entry.name) - keywordHits(id, a.entry.name) || ((a.date?.iso ?? "") < (b.date?.iso ?? "") ? 1 : -1))
       .slice(0, 3);
     const best = candidates.find((file) => file.dateTest !== false && file.approvalTest !== false) ?? candidates[0] ?? null;
-    return { id, candidates, bound: boundOf({ hasCandidate: best !== null, date: best?.dateTest ?? null, approval: best?.approvalTest ?? null }) };
+    return {
+      id,
+      candidates,
+      bound: boundOf({ hasCandidate: best !== null, date: best?.dateTest ?? null, approval: best?.approvalTest ?? null, notMet: best?.notMet != null }),
+    };
   });
   return {
     files,

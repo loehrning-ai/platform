@@ -12,8 +12,18 @@ import { fill } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/fill";
 
 export type Loc = "de" | "en";
 
-/** What is wrong with a file for an item, in one short line; null when nothing is. */
-export function defectOf(result: Evaluation, copy: W05Copy, locale: Loc): string | null {
+/** A quote cut to the words after its label, for a card one line wide: "Restore test: not done in 2026." becomes "…not done in 2026.". */
+export function quoteTail(quote: string): string {
+  const colon = quote.lastIndexOf(": ");
+  return colon > 0 && quote.length - colon > 8 ? `…${quote.slice(colon + 2)}` : quote;
+}
+
+/**
+ * What is wrong with a file for an item, in one short line; null when nothing
+ * is. `short` is for the link stage's file cards on a phone: column names
+ * become words and a long quote keeps its answering tail.
+ */
+export function defectOf(result: Evaluation, copy: W05Copy, locale: Loc, short = false): string | null {
   const { tests } = result;
   const first = result.failed[0];
   if (!first) {
@@ -28,10 +38,15 @@ export function defectOf(result: Evaluation, copy: W05Copy, locale: Loc): string
       ? fill(copy.defect.systems, { covered: coveredSystems.length, total: coveredSystems.length + missingSystems.length })
       : fill(copy.defect.days, { days: uncoveredDays, of: windowDays });
   }
-  if (tests.quote.kind === "part") return fill(copy.defect.empty, { parts: tests.quote.missingParts.join(", ") });
+  if (tests.quote.kind === "part") {
+    if (!short) return fill(copy.defect.empty, { parts: tests.quote.missingParts.join(", ") });
+    const names: Readonly<Record<string, string>> = copy.defect.parts;
+    return fill(copy.defect.emptyShort, { parts: tests.quote.missingParts.map((part) => names[part] ?? part).join(", ") });
+  }
   const { unique, staff } = tests.quote.figures;
   if (unique !== undefined && staff !== undefined) return fill(copy.defect.trained, { unique, staff });
-  return tests.quote.quote ? `"${tests.quote.quote}"` : null;
+  if (!tests.quote.quote) return null;
+  return `"${short ? quoteTail(tests.quote.quote) : tests.quote.quote}"`;
 }
 
 /** The date the file itself states, with its kind ("2026-09-02 freigegeben"). */

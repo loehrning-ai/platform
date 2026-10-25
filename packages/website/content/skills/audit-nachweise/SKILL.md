@@ -1,6 +1,6 @@
 ---
 name: audit-nachweise
-description: Prüft Unterlagen für ein Audit, eine Dokumentanforderung oder einen Sicherheits- oder Datenschutzfragebogen: Datum, Freigabe, Umfang, Zitat. BELEGT, SCHWACH, LÜCKE. Audit evidence check.
+description: Für Audit-Vorbereitung: Unterlagen einer Dokumentanforderung, eines Sicherheits- oder Datenschutzfragebogens prüfen und Lücken listen. Datum, Freigabe, Umfang, Zitat. Audit prep, evidence gaps.
 ---
 
 # Audit-Nachweise prüfen
@@ -20,6 +20,7 @@ Arbeite nur mit Dateien aus diesem Gespräch oder Projekt. Was dort nicht steht:
 
 ## Schritt 1: Nachweisliste
 Eine Zeile pro Datei: Datei, Typ, Datum und Art des Datums, freigegeben oder geführt von, Umfang, andere Fassungen.
+Liegt eine nachweis-index.csv bei, fülle ihre leeren Spalten und gib sie mit demselben Kopf zurück.
 - Typen: RICHTLINIE (eine Regel der Firma), REGISTER (eine aktuell gehaltene Liste), PROTOKOLL (zeigt, dass etwas getan wurde: Prüfung, Log, Test, Schulungsliste, Bericht, Export), AUSSAGE (Notizen, E-Mails, Chats, Folien, Herstellerseiten).
 - Datum und Freigabe liest du im Dokument, nie im Dateinamen. "final", "signed" oder ein Datum im Namen belegen nichts. Das Änderungsdatum einer Datei ist kein Freigabedatum.
 - Fasse Fassungen desselben Dokuments zusammen. Nur eine freigegebene Fassung kann zählen.
@@ -38,6 +39,8 @@ Rechne jeden Datumsabstand, jede Zählung und jeden Anteil im Code, gegen den St
 - SCHWACH: ein Zitat antwortet, aber eine Prüfung scheitert oder ein Teil fehlt. Nenne die Prüfung.
 - LÜCKE: nichts antwortet, oder der Nachweis zeigt, dass die Anforderung nicht erfüllt ist.
 
+Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.
+
 Die beste Datei bestimmt den Status. BELEGT heißt belegt, nicht gut: Eine freigegebene Systemliste, die Daten in den USA zeigt, belegt die Frage nach dem Speicherort.
 
 Erst Zitate, dann Status. Suche am Ende jedes Zitat noch einmal in seiner Datei. Findest du es nicht wörtlich, streich den Status und sag es.
@@ -54,7 +57,7 @@ Legt die Person einen Entwurf für den Kunden vor, prüf jeden Satz: BEHALTEN (z
 - Nummern von Kontrollen, Normen, Artikeln oder Abschnitten nennen, die nicht in den Unterlagen oder der Anforderung stehen.
 - "konform", "zertifiziert", "vollständig", "compliant" oder "certified" schreiben. Schreib, was die Dateien zeigen.
 - Eine Zelle füllen, damit die Tabelle vollständig aussieht.
-- Namen von Kunden oder Beschäftigten übernehmen. Nimm IDs und Rollen.
+- Namen aus Datenzeilen übernehmen (Kunden, Beschäftigte in Schulungs- oder Zugriffslisten). Nimm IDs. Wer freigibt oder führt, nennst du mit der Rolle.
 - Schlüssel, Token oder Passwörter aus den Unterlagen wiedergeben. Nenne nur die Datei, in der eins steht, und dass es dort nicht hingehört.
 
 Ein Status sagt, was der Ordner heute zeigt. Ob die Firma sicher arbeitet, entscheidet ein Mensch.
@@ -76,6 +79,7 @@ Work only with files from this chat or project. What they do not say: NOT IN FIL
 
 ### Step 1: evidence index
 One row per file: file, type, date and its kind, approved or owned by, scope, other versions.
+If an evidence-index.csv is attached, fill its empty columns and return it with the same header.
 - Types: POLICY (a rule the firm sets), REGISTER (a list kept current), RECORD (shows something was done: review, log, test, training list, report, export), STATEMENT (notes, emails, chats, slides, vendor pages).
 - Read date and approval inside the document, never from the file name. "final", "signed" or a date in the name prove nothing. A file's modified date is no approval date.
 - Group versions of the same document. Only an approved version can count.
@@ -94,6 +98,8 @@ Compute every date difference, count and share in code, against the audit date. 
 - WEAK: a quote answers, but a test fails or a part is missing. Name the test.
 - GAP: nothing answers, or the evidence shows the requirement is not met.
 
+No quote, no COVERED. A policy shows intent; only a record shows practice.
+
 The best file sets the status. COVERED means proven, not good: an approved system list that shows data in the US covers the question about where data is stored.
 
 Quotes first, then status. At the end, find every quote in its file again. If you cannot find it word for word, delete the status and say so.
@@ -110,7 +116,7 @@ If the person has a draft for the customer, check each sentence: KEEP (quote the
 - Name control, standard, article or section numbers that are not in the documents or the request.
 - Write "compliant", "certified", "complete" or "fully". Write what the files show.
 - Fill a cell to make the table look complete.
-- Copy names of customers or staff. Use IDs and roles.
+- Copy names from data rows (customers, staff in training or access lists). Use IDs. Name approvers and owners by their role.
 - Repeat keys, tokens or passwords from the documents. Name only the file that holds one and that it does not belong there.
 
 A status says what the folder shows today. Whether the firm works securely is for a person to decide.

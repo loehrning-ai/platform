@@ -6,7 +6,7 @@ Exercise date: Monday 9 November 2026. Read every date in the folder as of that 
 
 Vardar Works DOOEL in Skopje (120 staff) runs customer service for Tannwald Haustechnik GmbH in Hamburg. That makes Vardar Tannwald's processor. On 9 November 2026 Tannwald sent a document request for a remote supplier audit on 10 December 2026. You hold the folder: 11 files, and every request item has a file whose name fits.
 
-What you practise: turning a folder into evidence. A file is evidence only when four tests hold. You give Claude the tests as rules and get a gap list you can defend.
+What you practise, in one sentence: "A file is evidence only when its date, approval, scope and quote hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote." The result is a gap list you can defend.
 
 | Test | Holds when |
 |---|---|
@@ -15,7 +15,7 @@ What you practise: turning a folder into evidence. A file is evidence only when 
 | SCOPE | It covers the systems, people and period the request names. |
 | QUOTE | Words copied exactly from the file answer the request. A policy or a note says what should happen; only a record shows it happened. |
 
-COVERED: all four hold for every part. WEAK: a quote answers, but a test fails or a part is missing. GAP: nothing answers, or the record shows the requirement is not met.
+COVERED, WEAK or GAP. A part is missing or one test fails: WEAK. Nothing answers it, or the record shows “not met”: GAP. No quote, no COVERED. A policy shows intent; only a record shows practice.
 
 ## What you need
 - Claude (claude.ai or the desktop app), any plan, with code execution on: Settings > Capabilities > "Code execution and file creation". On Team or Enterprise your owner may need to allow it.
@@ -35,7 +35,7 @@ On paper first: how many of the 11 files pass DATE and APPROVAL?
 
     Build the evidence index of the folder: one row per file, 11 rows.
     Columns: File | Type (POLICY, REGISTER, RECORD, STATEMENT) | Date and its kind (approved, reviewed, done, generated, exported, printed, edited) | Approved or owned by | Covers (systems, people, period) | DATE | APPROVAL.
-    Copy dates and names from the file text. If the text does not say it, write NOT IN FILE.
+    Copy dates and roles from the file text. If the text does not say it, write NOT IN FILE.
 
 Check against ANSWERS.md, Mission 1. Look at the two policy files: what did Claude write as approver?
 

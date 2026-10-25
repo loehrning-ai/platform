@@ -299,7 +299,7 @@
   <figcaption class="prompt-head"><span>Prompt aus START-HERE.md, Mission 1</span><button type="button" class="copy" data-copy>Kopieren</button></figcaption>
   <pre class="prompt-body">Build the evidence index of the folder: one row per file, 11 rows.
 Columns: File | Type (POLICY, REGISTER, RECORD, STATEMENT) | Date and its kind (approved, reviewed, done, generated, exported, printed, edited) | Approved or owned by | Covers (systems, people, period) | DATE | APPROVAL.
-Copy dates and names from the file text. If the text does not say it, write NOT IN FILE.</pre>
+Copy dates and roles from the file text. If the text does not say it, write NOT IN FILE.</pre>
 </figure>
   </div>
 </div>
@@ -311,7 +311,7 @@ Copy dates and names from the file text. If the text does not say it, write NOT 
   <div class="index-result" data-from="3" data-delay="0.85" data-span="0.15">
     <p class="big-n"><b>8</b><span>/ 11</span></p>
     <p class="counter-text">8 von 11 bestehen DATUM und FREIGABE.</p>
-    <p class="counter-sub">Drei fallen durch, und ihr Name verrät nicht, welche.</p>
+    <p class="counter-sub">Drei fallen durch. Warum, steht nur im Text der Datei.</p>
   </div>
 </div>
 </div>
@@ -377,7 +377,7 @@ Then find every quote in its file again. Delete any status whose quote you canno
   <p class="r5-needed" data-from="3" data-delay="0.9" data-span="0.1">Nötig: 114 von 120. Es fehlen 89.</p>
 </div>
 <div class="run" data-from="4" data-span="0.08" data-until="4">
-  <p class="panel-head"><span>Alle acht, Prüfung für Prüfung</span><span class="run-pass" data-run-pass data-label="Prüfung {n} von 4: {test}" data-tests="DATUM|FREIGABE|UMFANG|ZITAT"></span></p>
+  <p class="panel-head"><span>Alle acht, Prüfung für Prüfung</span><span class="run-pass" data-run-pass data-label="Prüfung {n} von 4: {test}" data-tests="DATUM|FREIGABE|UMFANG|ZITAT"></span><span class="tally tally-head" data-tally><span class="tally-covered"><span class="chip chip-covered">BELEGT</span><b>2</b></span><span class="tally-weak"><span class="chip chip-weak">SCHWACH</span><b>4</b></span><span class="tally-gap"><span class="chip chip-gap">LÜCKE</span><b>2</b></span></span></p>
   <div class="links links-run" data-links="run">
   <ol class="lk-rows"><li class="lk-row" data-item="R1" data-status="covered" data-fails-at="" data-i="0">
     <span class="lk-req"><b>R1</b> <span>Systeme</span></span>
@@ -421,7 +421,6 @@ Then find every quote in its file again. Delete any status whose quote you canno
   </li></ol>
   <p class="lk-unlinked"><span>ohne Treffer:</span><span class="fname lk-chip" title="vendor-page_claude_2026-06-15.md"><span class="fname-a">vendor-page_claude</span><span class="fname-b">_2026-06-15.md</span></span><span class="fname lk-chip" title="it-notes_2026-10-06.md"><span class="fname-a">it-notes</span><span class="fname-b">_2026-10-06.md</span></span><span class="fname lk-chip" title="infosec-policy_v3_FINAL.md"><span class="fname-a">infosec-policy_v3</span><span class="fname-b">_FINAL.md</span></span></p>
 </div>
-  <p class="tally" data-tally><span class="tally-covered"><span class="chip chip-covered">BELEGT</span><b>2</b></span><span class="tally-weak"><span class="chip chip-weak">SCHWACH</span><b>4</b></span><span class="tally-gap"><span class="chip chip-gap">LÜCKE</span><b>2</b></span></p>
 </div>
 <div class="r1" data-from="5" data-span="0.6">
   <p class="panel-head">R1 ist BELEGT und trotzdem eine schlechte Nachricht.</p>

@@ -16,6 +16,13 @@ import { VARDAR_VALUES, renderGapList, renderInstructions } from "@/lib/demo-cas
 import type { Loc } from "./words";
 
 const verdict = (pass: boolean) => (pass ? "pass" : "FAIL");
+
+/** Kit rule 13: approvers and owners by role. "Dragan Ilievski, Managing Director" becomes "Managing Director"; a name without a role stays. */
+export function roleOf(by: string | null): string {
+  if (!by) return "";
+  const comma = by.indexOf(",");
+  return comma > 0 ? by.slice(comma + 1).trim() : by.trim();
+}
 const tri = (value: boolean | null) => (value === null ? "?" : verdict(value));
 
 function vardarRow(result: Evaluation, copy: W05Copy, locale: Loc, due: string): EvidenceRow {
@@ -28,7 +35,7 @@ function vardarRow(result: Evaluation, copy: W05Copy, locale: Loc, due: string):
     doc_type: result.doc.type,
     date: fact?.iso ?? "",
     date_kind: fact?.kind ?? "",
-    approved_or_owned_by: tests.approval.by ?? "",
+    approved_or_owned_by: roleOf(tests.approval.by),
     scope: tests.scope.coveredSystems.join(" + "),
     quote: tests.quote.quote ?? "",
     date_test: verdict(tests.date.pass),
@@ -55,7 +62,7 @@ export function indexCsv(model: Model, own: OwnResult | null, copy: W05Copy, loc
       doc_type: file.type,
       date: file.date?.iso ?? "",
       date_kind: file.date ? (file.date.kind ?? file.date.source) : "",
-      approved_or_owned_by: file.approvedBy ?? "",
+      approved_or_owned_by: roleOf(file.approvedBy),
       scope: "?",
       quote: "?",
       date_test: tri(file.dateTest),

@@ -72,6 +72,17 @@ export function QuoteProbe({
           type="button"
           className="w05-button"
           onClick={() => {
+            setText(copy.probe.sampleText);
+            setChecked(checkAnswer(parseClaudeAnswer(copy.probe.sampleText), context));
+          }}
+          data-w05-probe-sample=""
+        >
+          {copy.probe.sample}
+        </button>
+        <button
+          type="button"
+          className="w05-button"
+          onClick={() => {
             setText("");
             setChecked(null);
           }}

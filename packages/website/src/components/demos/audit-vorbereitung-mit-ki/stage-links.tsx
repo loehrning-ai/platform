@@ -9,11 +9,17 @@ import { drawIn, frame, type LinkFrame } from "@/lib/demo-cases/audit-vorbereitu
 import { dateLine, defectOf, type Loc } from "./words";
 
 /**
- * Where a file name may be cut: before its last "_" part (a date, a version,
- * DRAFT) when that part is short, else before the last 14 characters.
+ * Where a file name may be cut. A date in a name proves nothing, so a name
+ * that ends in one ("access-review_2026-08-14.csv") keeps its words and only
+ * its extension is sure to stay; the date gives way first. A version or a
+ * draft word ("_v4_DRAFT.md", "_FINAL.md") does matter and stays whole.
+ * Otherwise the last 14 characters stay.
  */
 export function tailStart(name: string): number {
   const underscore = name.lastIndexOf("_");
+  const dot = name.lastIndexOf(".");
+  const last = underscore > 0 ? name.slice(underscore + 1, dot > underscore ? dot : undefined) : "";
+  if (dot > 0 && /^[\d-]+$/.test(last)) return dot;
   if (underscore > 0 && name.length - underscore <= 16) return underscore;
   return Math.max(0, name.length - 14);
 }
@@ -103,7 +109,7 @@ export function LinkStage({ model, copy, locale, drawT, runT }: Props) {
           const link = run.links[index] as LinkFrame;
           const failPass = row.failsAt ? TEST_ORDER.indexOf(row.failsAt) : -1;
           const failed = link.dashed || link.broken;
-          const defect = failed || run.tallyOpacity > 0 ? defectOf(row.naive, copy, locale) : null;
+          const defect = failed || run.tallyOpacity > 0 ? defectOf(row.naive, copy, locale, true) : null;
           const draft = row.naive.doc.meta.draft && failed;
           return (
             <li
@@ -145,10 +151,13 @@ export function LinkStage({ model, copy, locale, drawT, runT }: Props) {
         })}
       </ol>
       <p className="w05-unlinked">
-        <span className="w05-unlinked-label">{copy.unlinked}</span>
-        {model.unlinked.map((file) => (
-          <FileName key={file} name={file} className="w05-chip" />
-        ))}
+        <span className="w05-unlinked-count w05-chip">{fill(copy.unlinkedCount, { n: model.unlinked.length })}</span>
+        <span className="w05-unlinked-files">
+          <span className="w05-unlinked-label">{copy.unlinked}</span>
+          {model.unlinked.map((file) => (
+            <FileName key={file} name={file} className="w05-chip" />
+          ))}
+        </span>
       </p>
     </div>
   );

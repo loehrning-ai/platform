@@ -37,6 +37,11 @@ function FileRow({ file, copy }: { readonly file: OwnFile; readonly copy: W05Cop
           {copy.test.approval} <Tri value={file.approvalTest} copy={copy} />
         </span>
       </span>
+      {file.notMet ? (
+        <span className="w05-own-notes w05-own-notmet" data-w05-notmet="">
+          {fill(copy.folder.notMet, { word: file.notMet })}
+        </span>
+      ) : null}
       {file.notes.length > 0 ? <span className="w05-own-notes">{file.notes.map((note) => copy.folder.notes[note]).join(" · ")}</span> : null}
     </li>
   );
@@ -205,7 +210,7 @@ export function OwnFolderSection({
       {result ? (
         <div className="w05-own-out" data-w05-own-out="">
           <ul className="w05-notices">
-            {result.ignored > 0 ? <li>{fill(words.ignored, { n: result.ignored })}</li> : null}
+            {result.ignored > 0 ? <li>{result.ignored === 1 ? words.ignoredOne : fill(words.ignored, { n: result.ignored })}</li> : null}
             {result.overCap ? (
               <li>{fill(words.overCap, { listed: result.overCap.listed.toLocaleString(locale), total: result.overCap.total.toLocaleString(locale) })}</li>
             ) : null}

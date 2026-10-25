@@ -9,6 +9,7 @@ import { decodeText } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/text-deco
 
 /** Only the audit date and the window are remembered, never a file. */
 const SETTINGS_KEY = "w05-audit-settings";
+
 export const WINDOWS = [6, 12, 24] as const;
 export type WindowMonths = (typeof WINDOWS)[number];
 
@@ -107,6 +108,9 @@ export function useOwnFolder(): OwnFolder {
         size: null,
         lastModified: null,
         listedDate: file.date?.iso ?? null,
+        listedLatest: file.date?.latest ?? null,
+        listedInvalid: file.dateInvalid,
+        listedAmbiguous: file.dateAmbiguous,
         yearMissing: file.yearMissing,
         text: null,
       })),

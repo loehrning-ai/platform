@@ -34,7 +34,12 @@ export interface TakeHome {
 
 const AUDIT_KIT_EDITION: TakeHomeKit = {
     href: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
-    shown: ["vardar-audit-kit/request_tannwald.md", "vardar-audit-kit/project-instructions.md", "vardar-audit-kit/templates/gap-request.md"],
+    shown: [
+      "vardar-audit-kit/folder/backup-report_2026-10.txt",
+      "vardar-audit-kit/folder/training-records_2026.csv",
+      "vardar-audit-kit/folder/infosec-policy_v4_DRAFT.md",
+      "vardar-audit-kit/project-instructions.md",
+    ],
     instructions: "vardar-audit-kit/project-instructions.md",
     installDoc: "vardar-audit-kit/START-HERE.md",
   };

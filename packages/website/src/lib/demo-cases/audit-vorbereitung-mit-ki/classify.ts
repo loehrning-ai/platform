@@ -7,18 +7,19 @@
 
 export type DocType = "POLICY" | "CONTRACT" | "REGISTER" | "RECORD" | "STATEMENT";
 
+/** Matched against folded text (umlauts as ae, oe, ue, ss), so "Zugriffspruefung" and "Zugriffsprüfung" read the same. */
 const TYPE_WORDS: readonly (readonly [DocType, RegExp])[] = [
   ["POLICY", /policy|richtlinie|leitlinie|rule|regel|anweisung|handbuch|konzept/i],
   ["CONTRACT", /contract|vertrag|agreement|vereinbarung|\bavv\b|\bdpa\b/i],
-  ["STATEMENT", /notes?\b|notiz|vendor|page|printout|e-?mail|chat|folie|slides?|präsentation|memo/i],
+  ["STATEMENT", /notes?\b|notiz|vendor|page|printout|e[- ]?mail|chat|folie|slides?|praesentation|memo/i],
   ["REGISTER", /list|liste|register|verzeichnis|inventar|inventory|subprocessor|unterauftrag/i],
-  ["RECORD", /review|prüfung|log|records?|nachweis|protokoll|report|bericht|export|test|schulung|training|audit/i],
+  ["RECORD", /review|pruefung|log|records?|nachweis|protokoll|report|bericht|export|test|schulung|training|audit|zugriff|access|admin/i],
 ];
 
 /** The type from the file name, then from the first lines of the text. */
 export function docType(name: string, text = ""): DocType {
-  const stem = name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
-  for (const source of [stem, text.split("\n").slice(0, 3).join(" ")]) {
+  const stem = foldName(name.replace(/\.[^.]+$/, ""));
+  for (const source of [stem, foldName(text.split("\n").slice(0, 3).join(" "))]) {
     const hit = TYPE_WORDS.find(([, words]) => words.test(source));
     if (hit) return hit[0];
   }

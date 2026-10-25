@@ -6,6 +6,7 @@ import type { ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
 import { GENERIC_ITEM_IDS } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/classify";
 import type { W05Copy } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/copy";
 import { formatPercent } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/counts";
+import { formatShort } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/dates";
 import { TEST_ORDER } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/evidence";
 import { fill } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/fill";
 import { buildModel } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
@@ -20,7 +21,7 @@ import { LinkStage } from "./stage-links";
 import { OwnStage, TakehomeStage } from "./stage-own";
 import { AllStage, R5Stage, R7Stage, ToolStage } from "./stage-stations";
 import { useOwnFolder } from "./use-own-folder";
-import type { Loc } from "./words";
+import { filesLabel, type Loc } from "./words";
 import "./w05.css";
 
 const SLUG = "audit-vorbereitung-mit-ki";
@@ -59,9 +60,22 @@ export default function Demo({ copy, locale }: { readonly copy: W05Copy; readonl
     setCopied(false);
   });
 
+  // "Deine Zeile" exists only once the visitor's own folder does, and it is built from it.
+  const ownResult = own.result;
+  const ownLine = useMemo(() => {
+    if (!ownResult || ownResult.files.length === 0) return "";
+    const items = ownResult.items.filter((item) => item.candidates.length > 0).map((item) => item.id);
+    const values = {
+      files: filesLabel(copy, ownResult.files.length),
+      items: items.length > 0 ? items.join(", ") : copy.takehome.noItems,
+      audit: own.audit ? formatShort(own.audit, locale) : "",
+      window: own.windowFrom ? formatShort(own.windowFrom, locale) : "",
+    };
+    return fill(own.windowFrom ? copy.takehome.ownLine : copy.takehome.ownLineNoAudit, values);
+  }, [ownResult, own.audit, own.windowFrom, copy, locale]);
   useEffect(() => {
-    setTakeHomeLine(SLUG, copy.takehome.prompt);
-  }, [copy.takehome.prompt]);
+    setTakeHomeLine(SLUG, ownLine);
+  }, [ownLine]);
 
   const runT = index === BEAT.run ? progress : index > BEAT.run ? 1 : 0;
   const revealed = index > BEAT.run || (index === BEAT.run && progress >= LABELS_FROM);
@@ -113,8 +127,15 @@ export default function Demo({ copy, locale }: { readonly copy: W05Copy; readonl
       caption = revealed
         ? fill(copy.revealCaption, { word: copy.numberWords[covered] ?? String(covered) })
         : fill(copy.passCaption, { n: pass + 1, test: copy.test[TEST_ORDER[pass] ?? "date"] });
-      lever = (
-        <div className="w05-tally" style={{ opacity: Math.max(0.25, run.tallyOpacity) }} data-w05-tally="">
+      // Before the labels land the lever shows only the pass and the estimate: the result is never readable early, not even dimmed.
+      lever = !revealed ? (
+        <p className="w05-lever-text w05-run-lever" data-w05-run="">
+          {estimate === null
+            ? fill(copy.runLeverNone, { n: pass + 1 })
+            : fill(copy.runLever, { n: pass + 1, estimate })}
+        </p>
+      ) : (
+        <div className="w05-tally" style={{ opacity: run.tallyOpacity }} data-w05-tally="">
           <p className="w05-tally-words">
             {(["covered", "weak", "gap"] as const).map((status) => (
               <span key={status} data-status={status}>

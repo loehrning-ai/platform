@@ -304,9 +304,8 @@ function mission2(d, c) {
   <p class="r5-needed"${rv(3, { delay: 0.9, span: 0.1 })}>${esc(fill(c.m2.r5Needed, vars))}</p>
 </div>
 <div class="run"${rv(4, { span: 0.08, until: 4 })}>
-  <p class="panel-head"><span>${esc(c.m2.runHead)}</span><span class="run-pass" data-run-pass data-label="${esc(c.m2.running)}" data-tests="${esc(TESTS.map((x) => c.tests[x]).join("|"))}"></span></p>
+  <p class="panel-head"><span>${esc(c.m2.runHead)}</span><span class="run-pass" data-run-pass data-label="${esc(c.m2.running)}" data-tests="${esc(TESTS.map((x) => c.tests[x]).join("|"))}"></span><span class="tally tally-head" data-tally>${STATUS_ORDER.map((s) => `<span class="tally-${s}">${statusChip(s, c)}<b>${d.tally[s]}</b></span>`).join("")}</span></p>
   ${links(d, c, { mode: "run" })}
-  <p class="tally" data-tally>${STATUS_ORDER.map((s) => `<span class="tally-${s}">${statusChip(s, c)}<b>${d.tally[s]}</b></span>`).join("")}</p>
 </div>
 <div class="r1"${rv(5, { span: 0.6 })}>
   <p class="panel-head">${esc(c.m2.r1Head)}</p>

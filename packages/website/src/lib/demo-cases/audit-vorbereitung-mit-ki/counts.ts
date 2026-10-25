@@ -59,7 +59,8 @@ export function share(part: number, whole: number): number {
 
 /** "20,8 %" in German, "20.8%" in English. */
 export function formatPercent(value: number, locale: "de" | "en"): string {
-  const text = (Math.round(value * 1000) / 10).toFixed(1);
+  // One decimal where it carries information (20,8 %), none on a whole number (95 %).
+  const text = (Math.round(value * 1000) / 10).toFixed(1).replace(/\.0$/, "");
   return locale === "de" ? `${text.replace(".", ",")} %` : `${text}%`;
 }
 

@@ -6,19 +6,19 @@ Fictional training material. Compare facts and statuses, not wording. Where you 
 
 | File | Type | Date (kind) | Approved or owned by | DATE | APPROVAL |
 |---|---|---|---|---|---|
-| system-list_2026-09.csv | REGISTER | 2026-09-02 approved | D. Ilievski; owner G. Petrovski | pass | pass |
-| subprocessors_2026-09.csv | REGISTER | 2026-09-05 updated | G. Petrovski | pass | pass |
-| ai-use-rule_v1.md | POLICY | 2026-10-01 approved | D. Ilievski | pass | pass |
+| system-list_2026-09.csv | REGISTER | 2026-09-02 approved | Managing Director; owner IT lead | pass | pass |
+| subprocessors_2026-09.csv | REGISTER | 2026-09-05 updated | IT lead | pass | pass |
+| ai-use-rule_v1.md | POLICY | 2026-10-01 approved | Managing Director | pass | pass |
 | vendor-page_claude_2026-06-15.md | STATEMENT | page 2026-06-15, printed 2026-10-06 | Anthropic (issuer) | pass | pass |
-| access-review_2026-08-14.csv | RECORD | 2026-08-14 done, 2026-08-17 approved | D. Ilievski | pass | pass |
-| training-records_2026.csv | RECORD | 2026-11-02 exported | M. Trajkovska | pass | pass |
-| incident-log_2026.csv | RECORD | last entry 2026-10-12 | G. Petrovski | pass | pass |
-| backup-report_2026-10.txt | RECORD | 2026-11-01 generated | G. Petrovski | pass | pass |
+| access-review_2026-08-14.csv | RECORD | 2026-08-14 done, 2026-08-17 approved | IT lead; approved by Managing Director | pass | pass |
+| training-records_2026.csv | RECORD | 2026-11-02 exported | HR lead | pass | pass |
+| incident-log_2026.csv | RECORD | last entry 2026-10-12 | IT lead | pass | pass |
+| backup-report_2026-10.txt | RECORD | 2026-11-01 generated | backup system; owner IT lead | pass | pass |
 | it-notes_2026-10-06.md | STATEMENT | 2026-10-06 written | "Not reviewed by anyone" | pass | FAIL |
-| infosec-policy_v3_FINAL.md | POLICY | 2024-03-12 approved, review due March 2025 | D. Ilievski | FAIL | pass |
+| infosec-policy_v3_FINAL.md | POLICY | 2024-03-12 approved, review due March 2025 | Managing Director | FAIL | pass |
 | infosec-policy_v4_DRAFT.md | POLICY | 2026-09-18 edited | "Approved by: (open)" | pass | FAIL |
 
-Watch for: an approver given to v4; "FINAL" read as current; a date taken from a file name; the vendor page marked unapproved (vendor plus page date count).
+Watch for: an approver given to v4; "FINAL" read as current; a date taken from a file name; the vendor page marked unapproved (vendor plus page date count); a person's name where rule 13 asks for a role.
 
 ## Mission 2: the eight requests
 | Item | File | Quote | Failing test | Status |
@@ -33,6 +33,8 @@ Watch for: an approver given to v4; "FINAL" read as current; a date taken from a
 | R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | DATE (v3), APPROVAL (v4) | WEAK |
 
 Count: 2 COVERED, 4 WEAK, 2 GAP.
+
+R1 asks which systems store or process your data now. The free chatbot that it-notes mentions until September belongs to R3, not to R1.
 
 R1 is COVERED and still bad news: the system list proves that Claude Team stores Tannwald request text in the US, and clause 7 requires written notice and EU/EEA storage unless Tannwald agrees in writing. COVERED means proven, not good.
 

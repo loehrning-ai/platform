@@ -336,7 +336,13 @@ deck-stage{position:fixed;inset:0;display:block}
 .r5-tick span{position:absolute;right:12px;top:-30px;font:700 28px/1 var(--mono);white-space:nowrap}
 .r5-share{margin-top:24px;font:700 44px/1 var(--mono);opacity:var(--p,0)}
 .r5-needed{margin-top:20px;font-size:36px}
-.run .panel-head{margin-bottom:20px}
+.run .panel-head{margin-bottom:20px;align-items:center}
+.run .panel-head > span:first-child{margin-right:auto}
+/* The tally sits in the head row, next to the pass, never on the footer. */
+.tally-head{margin:0;gap:24px}
+.tally-head > span{gap:10px}
+.tally-head .chip{font-size:22px;padding:4px 10px}
+.tally-head b{font:700 40px/1 var(--mono)}
 .cols-r1{grid-template-columns:minmax(0,1fr) 380px;gap:72px}
 .r1-proof{display:grid;gap:16px}
 .r1-file{display:flex;align-items:center;gap:20px;font:500 28px/1.2 var(--mono);color:var(--muted)}
@@ -393,7 +399,7 @@ deck-stage{position:fixed;inset:0;display:block}
 .phase-box{position:absolute;inset:76px 0 0 0;grid-template-columns:1000px minmax(0,1fr);gap:64px;align-items:start}
 .phase-hint{font:700 40px/1.25 var(--sans);padding-left:24px;border-left:8px solid var(--accent)}
 .sample{position:absolute;inset:0;padding:24px 40px}
-.sample-body{margin:0;font:400 29px/1.42 var(--sans);white-space:pre-wrap}
+.sample-body{margin:0;font:400 33px/1.38 var(--sans);white-space:pre-wrap}
 .sample .sheet-tag{margin-top:18px}
 
 /* ── 11 result ── */
