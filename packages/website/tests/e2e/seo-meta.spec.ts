@@ -72,6 +72,35 @@ for (const route of SOCIAL_METADATA_ROUTES) {
   });
 }
 
+// Every indexable page shares exactly one card. A page that sets its own
+// openGraph drops the layout's, so it has to name an image itself.
+const SOCIAL_IMAGE_ROUTES = [
+  ...SOCIAL_METADATA_ROUTES,
+  "/demos",
+  "/buecher",
+  "/open-source",
+  "/en/impressum",
+] as const;
+
+for (const route of SOCIAL_IMAGE_ROUTES) {
+  test(`seo: ${route} declares one social image`, async ({ page }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+
+    await expect(page.locator('meta[property="og:image"]')).toHaveCount(1);
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveCount(1);
+  });
+}
+
+test("seo: a route card wins over the default card", async ({ page }) => {
+  await page.goto("/einstieg", { waitUntil: "domcontentloaded" });
+
+  const images = page.locator('meta[property="og:image"]');
+  await expect(images).toHaveCount(1);
+  expect(await images.getAttribute("content")).toContain(
+    "/einstieg/opengraph-image",
+  );
+});
+
 for (const route of ["/login", "/feedback"] as const) {
   test(`seo: ${route} is noindex without inherited homepage identity`, async ({
     page,

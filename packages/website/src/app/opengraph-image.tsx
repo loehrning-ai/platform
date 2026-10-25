@@ -15,11 +15,11 @@ import {
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import type { Locale } from "@/lib/i18n/locale";
 import { PLAKAT, ROUTE_PLAKAT } from "@/lib/plakat/palettes";
+import { DEFAULT_SOCIAL_IMAGE_ALT } from "@/lib/seo/page-metadata";
 
 // One alt serves both locales: the /en mirror re-exports this module, and a
 // static export cannot read the request.
-export const alt =
-  "KI verstehen. Sicher anwenden. / Understand AI. Apply it safely. Pale yellow headline on an ultramarine poster beside a flat red globe with Germany marked, above the loehrning.ai wordmark.";
+export const alt = DEFAULT_SOCIAL_IMAGE_ALT;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

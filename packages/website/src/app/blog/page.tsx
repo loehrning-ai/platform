@@ -20,6 +20,7 @@ import {
 } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { SITE_URL } from "@/lib/seo/json-ld";
+import { defaultSocialImage } from "@/lib/seo/page-metadata";
 
 const PATH = "/blog";
 
@@ -163,11 +164,13 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: locale === "de" ? "de_DE" : "en_GB",
       alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "website",
+      images: [defaultSocialImage(locale)],
     },
     twitter: {
       card: "summary_large_image",
       title: copy.metadataTitle,
       description: copy.metadataDescription,
+      images: [defaultSocialImage(locale)],
     },
   };
 }

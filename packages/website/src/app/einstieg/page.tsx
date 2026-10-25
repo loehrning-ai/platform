@@ -26,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: copy.description,
     path: localizedPath,
     locale,
+    hasRouteCard: true,
   });
 
   return {
