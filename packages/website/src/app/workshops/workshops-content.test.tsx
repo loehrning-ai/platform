@@ -82,7 +82,7 @@ describe("<WorkshopsContent>", () => {
       esg?.title,
       "Are your data ready for AI?",
       "Read business reports with AI",
-      "Can AI predict the future?",
+      "Checking AI forecasts before you plan with them",
     ]);
     expect(
       rows.map((row) => row.querySelector("[data-workshop-output]")?.textContent),
@@ -91,7 +91,7 @@ describe("<WorkshopsContent>", () => {
       esg?.outcome,
       "Five-box template",
       "Metrics skill + dashboard",
-      "Go/no-go rule",
+      "Release rule",
     ]);
 
     const [, , w03, w02, w01] = rows;
@@ -99,7 +99,7 @@ describe("<WorkshopsContent>", () => {
       within(w03).getByText("Workshop 03 · Live 90 min · Self-paced about 75 min"),
     ).toBeInTheDocument();
     expect(
-      within(w01).getByText("Workshop 01 · Self-paced about 90 min"),
+      within(w01).getByText("Workshop 01 · Self-paced about 55 min"),
     ).toBeInTheDocument();
     // The fixed question is the first thing on the workshop page; the hub
     // row does not repeat it.
@@ -151,7 +151,7 @@ describe("<WorkshopsContent>", () => {
       );
     }
     expect(
-      screen.getByRole("link", { name: "View workshop: Can AI predict the future?" }),
+      screen.getByRole("link", { name: "View workshop: Checking AI forecasts before you plan with them" }),
     ).toHaveAttribute("href", "/en/workshops/ki-prognosen-einschaetzen");
 
     // The one primary action goes into the recommended start, Workshop 03.

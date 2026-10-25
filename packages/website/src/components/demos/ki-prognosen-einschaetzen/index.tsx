@@ -1,16 +1,12 @@
-/*
- * DEMO · /demos/ki-prognosen-einschaetzen (and /en/demos/ki-prognosen-einschaetzen)
- * Workshop 01 "Hundert Startwochen". Server component: picks the locale pack and renders
- * the client demo with it, so the browser bundle holds one language. The hub
- * miniature is tile.tsx (+ tile-motion.ts); the contract of this folder is
- * checked by src/components/demos/demo-contract.test.ts.
- */
-import type { DemoComponentProps } from "../demo-page";
 import { COPY } from "@/lib/demo-cases/ki-prognosen-einschaetzen/copy";
-import Demo from "./demo";
+import type { DemoComponentProps } from "@/components/demos/demo-page";
+import { Fehlerliste } from "./fehlerliste";
 
-export default function KiPrognosenEinschaetzenDemo({
-  locale,
-}: DemoComponentProps) {
-  return <Demo copy={COPY[locale]} />;
+/**
+ * "Die Fehlerliste" (workshop 1): the kit prognose-pruefen visualized. The
+ * server picks one language pack; the client demo runs on the v3 shell's
+ * clock and never sends the visitor's data anywhere.
+ */
+export default function Demo({ locale }: DemoComponentProps) {
+  return <Fehlerliste copy={COPY[locale]} />;
 }

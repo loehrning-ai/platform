@@ -83,10 +83,18 @@ describe("<ActionCards>", () => {
           expect(linkA).not.toHaveAttribute("target");
         }
         expect(cards[0]).toHaveTextContent(stage.a!.meta);
-        expect(stage.a!.demoHref).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
+        const demoHref = `${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`;
         expect(linksA).toHaveLength(2);
-        expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
-        expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
+        if (stage.a!.kind === "demo") {
+          // A workshop that starts at its demo: the secondary link goes to the lab.
+          expect(stage.a!.href).toBe(demoHref);
+          expect(linksA[1]).toHaveAttribute("href", stage.a!.labHref);
+          expect(linksA[1]).toHaveAccessibleName(`${copy.labAction}: ${workshop.topic}`);
+        } else {
+          expect(stage.a!.demoHref).toBe(demoHref);
+          expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
+          expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
+        }
         expect(linksA[1]).toHaveClass("ac-secondary");
         expect(linksA[1]).not.toHaveAttribute("download");
 
@@ -158,7 +166,17 @@ describe("<ActionCards>", () => {
       getWorkshops("en").find((entry) => entry.slug === "ki-prognosen-einschaetzen")!,
       getWorkshops("en").find((entry) => entry.slug === "geschaeftsberichte-mit-ki-lesen")!,
     ];
-    const lab = render(<ActionCards workshop={w01} locale="en" plakat="lemons" />);
+    // No live workshop hands out a case any more (W01 moved to a kit), so the
+    // case picture is drawn for W01 with its kit row swapped for a case row.
+    const withCase = {
+      ...w01,
+      materials: w01.materials.map((material) =>
+        material.role === "kit"
+          ? { label: "Case", href: "/workshops/ki-prognosen-einschaetzen/case-study/index.html", kind: "html" as const, language: "en" as const, role: "case" as const, phase: "during" as const, minutes: 30, description: "A case." }
+          : material,
+      ),
+    };
+    const lab = render(<ActionCards workshop={withCase} locale="en" plakat="lemons" />);
     expect(lab.container.querySelectorAll(".ac-pic-lab .ac-knob")).toHaveLength(1);
     expect(lab.container.querySelectorAll(".ac-pic-lab .ac-forecast")).toHaveLength(1);
     expect(lab.container.querySelectorAll(".ac-pic-case .ac-bar")).toHaveLength(3);

@@ -101,6 +101,16 @@ export interface WorkshopKit {
   readonly fictionalNote: string;
   /** What is inside the zip, one entry per top-level file or folder. */
   readonly contents: readonly WorkshopKitContent[];
+  /**
+   * The stepper's words where the kit is not a Claude prompt flow (workshop 01:
+   * the participant computes, and the result is the solution file). Each
+   * falls back to the shared kit page copy.
+   */
+  readonly labels?: {
+    readonly stepper?: string;
+    readonly action?: string;
+    readonly result?: string;
+  };
 }
 
 /** The path of a workshop's kit page, without locale prefix. */

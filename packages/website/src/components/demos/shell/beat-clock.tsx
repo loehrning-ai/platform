@@ -193,7 +193,11 @@ export function BeatClockProvider({
       const clamped = Math.max(0, Math.min(beats.length - 1, index));
       play(clamped);
       if (cause === "user" && beats[clamped]?.kind === "takehome") {
-        revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), reducedMotion);
+        // Measure after the take-home beat has rendered: the beat before it may
+        // be taller (an own-data panel), and a target measured now lands past it.
+        window.requestAnimationFrame(() =>
+          window.requestAnimationFrame(() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), reducedMotion)),
+        );
       }
     },
     [beats, play, reducedMotion],

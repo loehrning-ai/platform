@@ -389,7 +389,7 @@ describe("runSkillsMirrorCheck", () => {
   it("passes for the shipped collection", async () => {
     const { errors, names } = await runSkillsMirrorCheck();
     expect(errors).toEqual([]);
-    expect(names).toEqual(["cv-engine", "loehrning-plattform", "workshop-arbeiten"]);
+    expect(names).toEqual(["cv-engine", "loehrning-plattform", "prognose-pruefen", "workshop-arbeiten"]);
   });
 
   it("resolves the collection inside the website package", () => {
@@ -401,7 +401,7 @@ describe("runSkillsMirrorCheck", () => {
       baseUrl: "https://loehrning.ai",
       fetchImpl: async () => stubResponse("nicht der Inhalt"),
     });
-    expect(errors).toHaveLength(3);
+    expect(errors).toHaveLength(4);
     for (const error of errors) {
       expect(error).toContain("served copy");
       expect(error).toContain("differs from the content directory");

@@ -23,11 +23,15 @@ describe("workshop kit page route", () => {
   });
 
   it("prerenders only the workshops that have a kit block and 404s every other slug", async () => {
-    expect(await generateStaticParams()).toEqual([{ slug: "esg-berichte-mit-ki" }, { slug: "ki-im-unternehmen-sicher-nutzen" }]);
+    expect(await generateStaticParams()).toEqual([
+      { slug: "ki-prognosen-einschaetzen" },
+      { slug: "esg-berichte-mit-ki" },
+      { slug: "ki-im-unternehmen-sicher-nutzen" },
+    ]);
     expect(dynamicParams).toBe(false);
     getRequestLocaleMock.mockResolvedValue("de");
     await expect(
-      WorkshopKitPage({ params: Promise.resolve({ slug: "ki-prognosen-einschaetzen" }) }),
+      WorkshopKitPage({ params: Promise.resolve({ slug: "geschaeftsberichte-mit-ki-lesen" }) }),
     ).rejects.toThrow("NEXT_NOT_FOUND");
     await expect(
       WorkshopKitPage({ params: Promise.resolve({ slug: "missing" }) }),

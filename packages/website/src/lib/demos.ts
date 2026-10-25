@@ -92,6 +92,7 @@ export type LocalizedDemo = Omit<Demo, "en"> & { readonly locale: Locale };
 
 export const demos: readonly Demo[] = [
   {
+    shell: "v3",
     id: "ki-prognosen-einschaetzen",
     slug: "ki-prognosen-einschaetzen",
     workshopSlug: "ki-prognosen-einschaetzen",
@@ -103,29 +104,31 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "data-science",
-    lastReviewed: "2026-10-23",
-    title: "Hundert Startwochen",
+    lastReviewed: "2026-10-25",
+    title: "Die Fehlerliste",
     oneLiner:
-      "Zieh dein Lager durch hundert mögliche Startwochen und sieh, in wie vielen es nicht reicht.",
-    question: "Kann KI die Zukunft vorhersagen?",
+      "Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel.",
+    question:
+      "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
     syntheticDataLabel:
-      "Erfundener Fall aus Workshop 01, gerechnet in deinem Browser. Keine KI, nichts wird gesendet.",
-    job: "Sieh, in wie vielen Wochen dein Lager nicht reicht.",
+      "Erfundene Firma, erfundene Zahlen. Gerechnet in deinem Browser, ohne KI. Nichts wird gesendet.",
+    job: "Prüf die Prognose deines Tools an ihren alten Fehlern.",
     tile: {
-      hook: "Lager 1.050, erwartet 1.180. In 76 von 100 Startwochen reicht es nicht.",
-      take: "ein Satz für deine Mail",
+      hook: "Linsensuppe 2025: Die Prognose liegt 21 % näher als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
+      take: "Prüfregel + Claude-Skill",
     },
     en: {
-      title: "A Hundred Launch Weeks",
+      title: "The Error List",
       oneLiner:
-        "Drag your stock through a hundred possible launch weeks and see in how many it falls short.",
-      question: "Can AI predict the future?",
+        "Check your tool's forecast against its own past errors: baseline, range, planning number, rule.",
+      question:
+        "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
       syntheticDataLabel:
-        "Invented case from Workshop 01, worked out in your browser. No AI, nothing is sent.",
-      job: "See in how many weeks your stock falls short.",
+        "Invented company, invented numbers. Worked out in your browser, no AI. Nothing is sent.",
+      job: "Check your tool's forecast against its past errors.",
       tile: {
-        hook: "Stock 1,050, expected 1,180. In 76 of 100 launch weeks it falls short.",
-        take: "a sentence for your email",
+        hook: "Lentil soup 2025: the forecast misses 21 % less than \"same as last week\". The release rule still stops it for 15 weeks.",
+        take: "Release rule + Claude skill",
       },
     },
   },

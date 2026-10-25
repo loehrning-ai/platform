@@ -16,7 +16,7 @@ import {
  * workshop's practice demo as its small secondary link. All of it is derived
  * from the registry, so a new workshop needs no page code.
  */
-export type WorkshopStageKindA = "slides" | "lab";
+export type WorkshopStageKindA = "slides" | "lab" | "demo";
 export type WorkshopStageKindB = "kit" | "case";
 
 export interface WorkshopStageCardA {
@@ -28,6 +28,8 @@ export interface WorkshopStageCardA {
   readonly meta: string;
   /** Set when the workshop has a practice demo: card A's one small secondary link. */
   readonly demoHref?: string;
+  /** Set when card A is the demo and the workshop has a lab: the secondary link goes there instead. */
+  readonly labHref?: string;
 }
 
 export interface WorkshopStageCardB {
@@ -76,16 +78,22 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
       ? [copy.roleLabels[material.role], timeOrLanguage(material)].join(" · ")
       : timeOrLanguage(material);
 
-  // The demo material's href is already in the page's language.
+  // The demo material's href is already in the page's language. A workshop
+  // that starts at its demo shows it as card A ("Kit als Demo")
+  // and points its secondary link at the lab instead.
   const demo = workshop.materials.find((material) => material.role === "demo");
+  const lab = workshop.materials.find((material) => material.role === "lab");
+  const startsAtDemo = primary?.role === "demo";
   const a: WorkshopStageCardA | undefined = primary
     ? {
-        kind: primary.role === "deck" ? "slides" : "lab",
+        kind: startsAtDemo ? "demo" : primary.role === "deck" ? "slides" : "lab",
         material: primary,
         href: primary.href,
         ...(primary.minutes ? { minutes: primary.minutes } : {}),
-        meta: metaOf(primary),
-        ...(demo ? { demoHref: demo.href } : {}),
+        meta: startsAtDemo
+          ? [copy.demoMeta, ...(primary.minutes ? [copy.minutes(primary.minutes)] : [])].join(" · ")
+          : metaOf(primary),
+        ...(startsAtDemo ? (lab ? { labHref: lab.href } : {}) : demo ? { demoHref: demo.href } : {}),
       }
     : undefined;
 

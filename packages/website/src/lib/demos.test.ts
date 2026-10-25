@@ -47,10 +47,10 @@ describe("demo registry", () => {
       }
     }
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "en")?.question).toBe(
-      "Can AI predict the future?",
+      "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
     );
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "de")?.question).toBe(
-      "Kann KI die Zukunft vorhersagen?",
+      "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
     );
     expect(getDemoForLocale("unknown", "de")).toBeUndefined();
   });
@@ -81,7 +81,7 @@ describe("demo registry", () => {
 
   it("names the five demos and states each promise in German and English", () => {
     const names = {
-      "ki-prognosen-einschaetzen": ["Hundert Startwochen", "A Hundred Launch Weeks"],
+      "ki-prognosen-einschaetzen": ["Die Fehlerliste", "The Error List"],
       "geschaeftsberichte-mit-ki-lesen": ["Monatsgrenze", "The Month Line"],
       "datenbereitschaft-fuer-ki": ["Stufe oder Treppe?", "Step or staircase?"],
       "esg-berichte-mit-ki": ["Elf von zwölf", "Eleven of twelve"],
@@ -92,10 +92,10 @@ describe("demo registry", () => {
       expect(getDemoForLocale(slug, "en")?.title).toBe(en);
     }
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "de")?.oneLiner).toBe(
-      "Zieh dein Lager durch hundert mögliche Startwochen und sieh, in wie vielen es nicht reicht.",
+      "Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel.",
     );
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "en")?.oneLiner).toBe(
-      "Drag your stock through a hundred possible launch weeks and see in how many it falls short.",
+      "Check your tool's forecast against its own past errors: baseline, range, planning number, rule.",
     );
   });
 

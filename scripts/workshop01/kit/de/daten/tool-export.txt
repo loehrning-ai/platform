@@ -1,0 +1,12 @@
+Warenwirtschaft, Prognosemodul, Export Kennzahlen
+Artikel 2210 Linsensuppe 500 ml frisch        Stand: 28.12.2025 18:05
+(Erfundene Firma Suppenwerk Feldmark, erfundene Zahlen)
+
+Prognoselauf ............ sonntags 18:00, Horizont 1 Woche
+Prognosen gespeichert ... seit 01.01.2024 (03.02.2025 fehlt: Update der Warenwirtschaft)
+Aktionskalender ......... angebunden
+
+Prognosegenauigkeit 2025: 94,2 %
+  Definition: 1 − Summe |Prognose − Ist| / Summe Ist
+  Wochen: 30.12.2024 bis 22.12.2025 mit gespeicherter Prognose,
+          ohne Wochen mit Hinweis „ausverkauft“

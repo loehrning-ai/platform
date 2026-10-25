@@ -17,7 +17,7 @@ afterEach(() => {
 
 describe("<KitPage>", () => {
   it("renders nothing for a workshop without a kit block", () => {
-    const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
     const { container } = render(<KitPage workshop={workshop} locale="de" />);
     expect(container).toBeEmptyDOMElement();
   });
