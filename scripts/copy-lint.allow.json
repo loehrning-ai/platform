@@ -1,0 +1,686 @@
+[
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/ANTI-PATTERNS.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/ANTI-PATTERNS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/ANTI-PATTERNS.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/BUILD-ORDER.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/BUILD-ORDER.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "question-heading",
+    "match": "1. Bathtub: level or change?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "question-heading",
+    "match": "2. Can I add it?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/claude-demo/AI-RUN-LOG.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/claude-demo/AI-RUN-LOG.md",
+    "rule": "surprise",
+    "match": "surprising",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/claude-demo/CHECK-YOUR-RESULT.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/claude-demo/README.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/domains/RETAIL-INVENTORY.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/domains/SUPPORT-BACKLOG.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/domains/WEBSHOP-CONVERSION.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "score",
+    "match": "Score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/naming/NAMING-RULES.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/README.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/semantic/SEMANTIC-LAYER.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/FRESHNESS-LINEAGE.md",
+    "rule": "question-heading",
+    "match": "Worked lineage: where does April's 334,675 come from?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/LAYERS.md",
+    "rule": "question-heading",
+    "match": "One database or two?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/README.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/seed/SEED-FACTS.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/SERVING-VIEWS.md",
+    "rule": "question-heading",
+    "match": "View, materialized view, or table?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/TESTS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/builder/warehouse/TESTS.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/FOLDLINE-SCENARIOS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip!data-readiness-kit/READY-CANVAS.md",
+    "rule": "score",
+    "match": "Score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/ANTI-PATTERNS.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/ANTI-PATTERNS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/ANTI-PATTERNS.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/BUILD-ORDER.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/BUILD-ORDER.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "question-heading",
+    "match": "1. Bathtub: level or change?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "question-heading",
+    "match": "2. Can I add it?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/CHEATSHEET.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/claude-demo/AI-RUN-LOG.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/claude-demo/AI-RUN-LOG.md",
+    "rule": "surprise",
+    "match": "surprising",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/claude-demo/CHECK-YOUR-RESULT.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/claude-demo/README.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/domains/RETAIL-INVENTORY.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/domains/SUPPORT-BACKLOG.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/domains/WEBSHOP-CONVERSION.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/naming/NAMING-REVIEW.md",
+    "rule": "score",
+    "match": "Score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/naming/NAMING-RULES.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/README.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/semantic/SEMANTIC-LAYER.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/FRESHNESS-LINEAGE.md",
+    "rule": "question-heading",
+    "match": "Worked lineage: where does April's 334,675 come from?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/LAYERS.md",
+    "rule": "question-heading",
+    "match": "One database or two?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/README.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/seed/SEED-FACTS.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/SERVING-VIEWS.md",
+    "rule": "question-heading",
+    "match": "View, materialized view, or table?",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/TESTS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/builder/warehouse/TESTS.md",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/FOLDLINE-SCENARIOS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/READY-CANVAS.md",
+    "rule": "score",
+    "match": "Score",
+    "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/ANSWERS.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/ANSWERS.md",
+    "rule": "score",
+    "match": "Score",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/inbox/1-nordvik-questionnaire.md",
+    "rule": "deadline",
+    "match": "Friday",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/START-HERE.md",
+    "rule": "deadline",
+    "match": "Friday",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/START-HERE.md",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/START-HERE.md",
+    "rule": "surprise",
+    "match": "surprise",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/data/company-backstory.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/data/company-backstory.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/meta-quarterly/TASK.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/PROMPTS.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/README.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/reports/2023-08-monthly-report.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/reports/2023-09-monthly-report.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/reports/2023-09-monthly-report.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/reports/report-template.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/START-HERE.md",
+    "rule": "dash",
+    "match": "–",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/START-HERE.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/START-HERE.md",
+    "rule": "question-heading",
+    "match": "Something's off?",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/worksheet.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/your-company-skill/README.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/your-company-skill/SKILL.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/your-company-skill/worksheet.md",
+    "rule": "dash",
+    "match": "—",
+    "reason": "debt: the W2 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip!ai-at-work-kit/customer-email.md",
+    "rule": "boss",
+    "match": "boss",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip!ai-at-work-kit/customer-email.md",
+    "rule": "deadline",
+    "match": "Friday",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/public/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip!ai-at-work-kit/START-HERE.md",
+    "rule": "question-heading",
+    "match": "START HERE: where does your data go?",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-ai-at-work-kit.ts",
+    "rule": "boss",
+    "match": "boss",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-ai-at-work-kit.ts",
+    "rule": "boss",
+    "match": "Chefs",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-ai-at-work.ts",
+    "rule": "boss",
+    "match": "boss",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-ai-at-work.ts",
+    "rule": "boss",
+    "match": "Chef",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-ai-at-work.ts",
+    "rule": "boss",
+    "match": "Chefs",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-esg-reporting-kit.ts",
+    "rule": "surprise",
+    "match": "surprise",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-esg-reporting-kit.ts",
+    "rule": "surprise",
+    "match": "Überraschung",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-esg-reporting.ts",
+    "rule": "surprise",
+    "match": "surprise",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "packages/website/src/lib/workshops-esg-reporting.ts",
+    "rule": "surprise",
+    "match": "Überraschung",
+    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/deck-src/notes.json",
+    "rule": "boss",
+    "match": "boss",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/deck-src/notes.json",
+    "rule": "deadline",
+    "match": "Friday",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/deck-src/notes.json",
+    "rule": "score",
+    "match": "score",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/deck-src/notes.json",
+    "rule": "score",
+    "match": "scores",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/deck-src/notes.json",
+    "rule": "stamp",
+    "match": "stamp",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/deck-src/notes.json",
+    "rule": "stamp",
+    "match": "Stamp",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/kit/customer-email.md",
+    "rule": "boss",
+    "match": "boss",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/kit/customer-email.md",
+    "rule": "deadline",
+    "match": "Friday",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  },
+  {
+    "file": "scripts/workshop05/kit/START-HERE.md",
+    "rule": "question-heading",
+    "match": "START HERE: where does your data go?",
+    "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
+  }
+]

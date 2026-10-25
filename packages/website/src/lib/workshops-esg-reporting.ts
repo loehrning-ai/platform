@@ -65,7 +65,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     notForYou:
       "Nicht für dich, wenn du einen vollständigen CSRD- oder VSME-Bericht erstellen oder eine Treibhausgasbilanz von Grund auf lernen willst.",
     question:
-      "Wie beantworten wir drei ESG-Anfragen bis Freitag aus einem Satz Fakten, ohne etwas zu behaupten, das wir nicht belegen können?",
+      "Wie beantworten wir drei ESG-Anfragen aus einem Satz Fakten, ohne etwas zu behaupten, das wir nicht belegen können?",
     outcomes: [
       "Du richtest ein Claude-Projekt mit eigenen Dateien und drei Regeln ein.",
       "Du lässt Claude einen Fragebogen und ein Bankformular mit Quelle und Status je Antwort füllen.",
@@ -216,7 +216,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     notForYou:
       "Not for you if you want to write a full CSRD or VSME report or learn greenhouse gas accounting from scratch.",
     question:
-      "How do we answer three ESG requests by Friday from one set of facts, without claiming anything we cannot prove?",
+      "How do we answer three ESG requests from one set of facts, without claiming anything we cannot prove?",
     outcomes: [
       "Set up a Claude Project with your own files and three rules.",
       "Have Claude fill a questionnaire and a bank form with a source and a status for every answer.",

@@ -57,6 +57,8 @@
     "ci:browser": "node packages/website/scripts/run-provider-free.mjs node scripts/ci.mjs browser",
     "ci:hygiene": "node packages/website/scripts/run-provider-free.mjs node scripts/ci.mjs hygiene",
     "test:ci": "node --test scripts/__tests__/ci.test.mjs",
+    "copy:lint": "node scripts/copy-lint.mjs",
+    "test:copy-lint": "node --test scripts/__tests__/copy-lint.test.mjs",
     "verify": "bun run ci",
     "verify:release": "node scripts/verify-release.mjs",
     "deploy:production": "node scripts/deploy-production.mjs",

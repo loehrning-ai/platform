@@ -67,7 +67,7 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     notForYou:
       "Nicht für dich, wenn du Rechtsberatung brauchst oder Claude für eine ganze Firma einrichtest.",
     question:
-      "Was können wir unserem Kunden bis Freitag wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
+      "Was können wir unserem Kunden wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
     outcomes: [
       "Du prüfst dein eigenes Claude-Konto: Du nennst Plan und Trainings-Einstellung und sagst, wo deine Chats gespeichert sind.",
       "Du sortierst Einfügungen in Grün, Gelb oder Rot und fünf KI-Nutzungen in die vier Kästen des EU AI Act.",
@@ -163,7 +163,7 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         { label: "Tage bis zur Antwort", value: "4" },
       ],
       decisionQuestion:
-        "Was können wir unserem Kunden bis Freitag wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
+        "Was können wir unserem Kunden wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
       limitationsHeading: "Zuerst lesen",
       dataLimitations: [
         "Jeder Name, jede Zahl und jedes Umfrageergebnis ist erfunden.",
@@ -211,7 +211,7 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     notForYou:
       "Not for you if you need legal advice or want to set up Claude for a whole company.",
     question:
-      "What can we truthfully tell our customer by Friday about where their data goes when we use AI?",
+      "What can we truthfully tell our customer about where their data goes when we use AI?",
     outcomes: [
       "Check your own Claude account: name its plan and training setting, and say where your chats are stored.",
       "Sort pastes into green, amber or red and five AI uses into the four boxes of the EU AI Act.",
@@ -307,7 +307,7 @@ export const AI_AT_WORK_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         { label: "Days to answer", value: "4" },
       ],
       decisionQuestion:
-        "What can we truthfully tell our customer by Friday about where their data goes when we use AI?",
+        "What can we truthfully tell our customer about where their data goes when we use AI?",
       limitationsHeading: "Read this first",
       dataLimitations: [
         "Every name, number and survey result is invented.",

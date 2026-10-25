@@ -94,10 +94,10 @@ describe("Workshop 05 registry copy (Where Your Data Goes)", () => {
     expect(de.title).toBe("Wohin gehen deine Daten?");
     expect(en.title).toBe("Where does your data go?");
     expect(en.question).toBe(
-      "What can we truthfully tell our customer by Friday about where their data goes when we use AI?",
+      "What can we truthfully tell our customer about where their data goes when we use AI?",
     );
     expect(de.question).toBe(
-      "Was können wir unserem Kunden bis Freitag wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
+      "Was können wir unserem Kunden wahrheitsgemäß sagen, wohin seine Daten gehen, wenn wir KI nutzen?",
     );
     expect(en.selfStudyDurationLabel).toBeUndefined();
     expect(de.selfStudyDurationLabel).toBeUndefined();
