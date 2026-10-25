@@ -43,19 +43,6 @@ export default defineConfig({
     // Playwright specs live in tests/e2e and use @playwright/test's test
     // runtime, not Vitest, so we keep them out of the unit-test run.
     exclude: [...defaultExclude, "**/tests/e2e/**"],
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "html", "lcov"],
-      include: ["src/**/*.{ts,tsx}"],
-      exclude: [
-        "src/**/*.test.*",
-        "src/**/*.spec.*",
-        "src/**/__tests__/**",
-        "src/test/**",
-        "src/**/types.ts",
-        "src/instrumentation.ts",
-      ],
-    },
   },
   resolve: {
     alias: {

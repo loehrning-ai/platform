@@ -40,16 +40,13 @@ updates:
       - dependency-name: "@vitejs/plugin-react"
         update-types: ["version-update:semver-major"]
       # Sentry 11 removes or renames options this app uses (PR #107 fails the
-      # build). Vitest 5 and its coverage provider must move in one pull
-      # request and break the unit tests (PRs #105 and #106 each fail alone).
+      # build). Vitest 5 breaks the unit tests (PR #105).
       # Each needs a dedicated migration pull request; remove these rules with
       # it. Like the rule above, they also hold back a security update that
       # would need the major; `bun audit` in CI would still report it.
       - dependency-name: "@sentry/nextjs"
         update-types: ["version-update:semver-major"]
       - dependency-name: "vitest"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@vitest/coverage-v8"
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions

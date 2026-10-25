@@ -24,7 +24,7 @@
     "test:e2e:authenticated-live:built": "bun run --cwd packages/website test:e2e:authenticated-live:built",
     "test:e2e:release": "bun run --cwd packages/website test:e2e:release",
     "test:e2e:release:built": "bun run --cwd packages/website test:e2e:release:built",
-    "test:scripts": "node --test 'scripts/__tests__/*.test.mjs' 'packages/website/scripts/**/__tests__/*.test.mjs' && bun test ./scripts/__tests__/verify-artifact-assets.test.ts ./scripts/__tests__/submit-bun-dependency-snapshot.test.ts",
+    "test:scripts": "node --test 'scripts/__tests__/*.test.mjs' 'packages/website/scripts/**/__tests__/*.test.mjs' && bun test ./scripts/__tests__/*.test.ts",
     "book:voice-gate": "node scripts/book-voice-gate.mjs",
     "test:dependency-snapshot": "bun test scripts/__tests__/submit-bun-dependency-snapshot.test.ts",
     "asset:record": "node scripts/scaffold-asset.mjs",
@@ -49,7 +49,7 @@
   },
   "overrides": {
     "postcss": "^8.5.26",
-    "fast-uri": ">=4.2.3",
+    "fast-uri": "^4.2.3",
     "esbuild": "^0.28.1",
     "undici": "^7.30.1",
     "vite": "^7.3.7",
