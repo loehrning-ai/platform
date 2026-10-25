@@ -67,18 +67,26 @@ describe("/demos/[slug] page shell", () => {
         const demo = getDemoForLocale(base.slug, locale);
         if (!demo) throw new Error("missing demo");
         const { default: Demo } = await import(`@/components/demos/${base.slug}/index.tsx`);
+        // A demo on the v3 shell passes its beats, as its page.tsx does.
+        const beats = base.shell === "v3" ? (await import(`@/lib/demo-cases/${base.slug}/beats.ts`)).BEATS : undefined;
         const { container } = render(
-          await renderDemoRoute(base.slug, Demo),
+          await renderDemoRoute(base.slug, Demo, beats),
         );
 
         const h1 = screen.getByRole("heading", { level: 1 });
         expect(h1).toHaveTextContent(demo.title);
-        const band = h1.closest("[data-cover-band]");
-        expect(band).toHaveAttribute("data-plakat", demo.plakat);
-        // CapsLine splits " · " parts into runs; the DOM text stays the same words.
-        expect(band?.querySelector(".plakat-caps")).toHaveTextContent(
-          DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber),
-        );
+        if (base.shell === "v3") {
+          // The v3 page has a bar and an aside instead of the cover band.
+          expect(container.querySelector("[data-demo-v3]")).toHaveAttribute("data-plakat-page", demo.plakat);
+          expect(h1.closest("[data-demo-bar]")).not.toBeNull();
+        } else {
+          const band = h1.closest("[data-cover-band]");
+          expect(band).toHaveAttribute("data-plakat", demo.plakat);
+          // CapsLine splits " · " parts into runs; the DOM text stays the same words.
+          expect(band?.querySelector(".plakat-caps")).toHaveTextContent(
+            DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber),
+          );
+        }
         expect(container.querySelector("[data-demo-question]")).toHaveTextContent(demoLede(demo));
 
         const workshop = getWorkshopBySlug(demo.workshopSlug, locale);

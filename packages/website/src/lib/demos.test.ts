@@ -84,7 +84,7 @@ describe("demo registry", () => {
       "ki-prognosen-einschaetzen": ["Hundert Startwochen", "A Hundred Launch Weeks"],
       "geschaeftsberichte-mit-ki-lesen": ["Monatsgrenze", "The Month Line"],
       "datenbereitschaft-fuer-ki": ["Stufe oder Treppe?", "Step or staircase?"],
-      "esg-berichte-mit-ki": ["Elf von zwölf", "Eleven of twelve"],
+      "esg-berichte-mit-ki": ["Nachweisprobe", "Evidence check"],
       "ki-im-unternehmen-sicher-nutzen": ["Was fliegt mit?", "What goes along?"],
     } as const;
     for (const [slug, [de, en]] of Object.entries(names)) {

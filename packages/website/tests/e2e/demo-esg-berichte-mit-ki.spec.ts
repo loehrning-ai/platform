@@ -1,239 +1,144 @@
 import { expect, test, type Page } from "@playwright/test";
 
-/** W04 "Elf von zwölf": the core loop on a phone, German and English, with console errors captured. */
+/**
+ * W04 "Nachweisprobe" on the v3 shell: the first screen, the certificate
+ * bet, the four beats of the kit, the visitor's own sentence and the keys.
+ * The shared shell checks (fold, rail, glass) live in demo-v3-shell.spec.ts.
+ */
 const SLUG = "esg-berichte-mit-ki";
 
 function collectErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on("console", (message) => {
-    // the motion library warns once under reduced motion: harmless, not ours
-    if (message.type() === "error" && !/reduced motion/i.test(message.text())) errors.push(message.text());
+    if (message.type() === "error") errors.push(message.text());
   });
   page.on("pageerror", (error) => errors.push(error.message));
   return errors;
 }
 
-async function dragSlot(page: Page, mwh: number) {
-  const box = await page.locator(".esg-slot").boundingBox();
-  if (!box) throw new Error("slot not found");
-  const x = box.x + box.width / 2;
-  // plot geometry of month-chart.tsx: baseline 144, top 8, view height 150, axis 0..45 MWh
-  const yOf = (value: number) => box.y + box.height * ((144 - value * (136 / 45)) / 150);
-  const y = yOf(mwh);
-  await page.mouse.move(x, yOf(21)); // the idle handle: a press on it grabs it
-  await page.mouse.down();
-  await page.mouse.move(x, y, { steps: 8 });
-  await page.mouse.up();
-}
-
 const overflow = (page: Page) =>
   page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
+const stage = (page: Page) => page.locator("[data-demo-stage]");
+const caption = (page: Page) => page.locator("[data-demo-caption]");
+const clock = (page: Page) => page.locator("[data-demo-clock]");
+
 test.describe(`/demos/${SLUG}`, () => {
-  for (const [prefix, locale] of [["", "de"], ["/en", "en"]] as const) {
-    test(`${locale}: guess, open the bill, take the lines away, at 390px`, async ({ page, context }) => {
-      await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => undefined);
-      const errors = collectErrors(page);
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
-      const root = page.locator("[data-esg-root]");
-      await root.scrollIntoViewIfNeeded();
-      await page.waitForTimeout(1200);
-
-      const number = page.locator(".esg-field__num");
-      await expect(number).toHaveText(locale === "de" ? "279,7" : "279.7");
-      await expect(page.locator(".esg-pill")).toHaveText("NOT FOUND");
-
-      await dragSlot(page, 30);
-      const slot = page.locator(".esg-slot");
-      const guessed = Number(await slot.getAttribute("aria-valuenow"));
-      expect(guessed).toBeGreaterThan(25);
-      expect(guessed).toBeLessThan(35);
-      await expect(page.locator(".esg-pill")).toHaveText("NEEDS CHECK");
-      // the coverage does not move with a guess
-      await expect(page.locator(".esg-count")).toHaveText("11/12");
-
-      // keyboard: arrows move the guess by 0.5
-      await slot.focus();
-      await page.keyboard.press("ArrowUp");
-      expect(Number(await slot.getAttribute("aria-valuenow"))).toBeCloseTo(guessed + 0.5, 5);
-
-      await expect(page.locator(".esg-verdict__text")).toHaveText(locale === "de" ? /nicht den Beleg/ : /not the evidence/);
-      await page.locator(".esg-reveal .esg-btn").click();
-      await expect(number).toHaveText(locale === "de" ? "320,9" : "320.9", { timeout: 4000 });
-      await expect(page.locator(".esg-pill")).toHaveText("OK");
-      // the stale line is gone, the button says what it does, the lines say what they describe
-      await expect(page.locator(".esg-verdict__text")).toHaveCount(0);
-      await expect(page.locator("#esg-locked")).toHaveCount(0);
-      // the lines default to the folder as it was; the 12 of 12 variant is the second view
-      await expect(page.locator("[data-take-tag]")).toContainText("11");
-      await expect(page.locator("[data-take=answer]")).toContainText("NOT FOUND");
-      await expect(page.locator('[data-take="mail"] .esg-btn')).toBeEnabled();
-      await page.getByRole("radio", { name: locale === "de" ? "Mit Rechnung" : "With the bill" }).check({ force: true });
-      await expect(page.locator("[data-take=answer]")).toContainText(locale === "de" ? "12 von 12" : "12 of 12");
-      await page.getByRole("radio", { name: locale === "de" ? "Vor dem Öffnen" : "Before opening" }).check({ force: true });
-      await expect(page.locator(".esg-ladder__row")).toHaveCount(5);
-      // the ladder sits right under the stage, in view after the bill landed (phone) or beside the chart (desktop)
-      const ladderBox = await page.locator(".esg-ladder").boundingBox();
-      expect(ladderBox?.y ?? 9999).toBeLessThan(844);
-      await expect(slot).toHaveAttribute("aria-readonly", "true");
-
-      // scrub back with the slider: the guess unlocks
-      await page.locator(".esg-reveal input[type=range]").fill("0");
-      await expect(number).toHaveText(/^3[01]\d[.,]\d$/);
-      await expect(slot).not.toHaveAttribute("aria-readonly", "true");
-
-      // takeaways: shown in full, copy gives feedback; a guess changed none of them
-      const answer = page.locator('[data-take="answer"]');
-      await expect(answer).toContainText("NOT FOUND");
-      await expect(answer).not.toContainText(/Gesamtjahr|full year/);
-      await answer.getByRole("button").click();
-      await expect(answer.locator(".esg-block__done")).not.toBeEmpty();
-      await page.getByRole("radio", { name: /X ~ _/ }).check({ force: true });
-      await expect(answer).toContainText("XXXXXXXX_XXX");
-
-      expect(await overflow(page)).toBeLessThanOrEqual(0);
-      expect(errors).toEqual([]);
+  test("first screen: the sentence, the certificate and both calls above the fold at 390 x 664", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.setViewportSize({ width: 390, height: 664 });
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
+    await expect(stage(page).locator(".nw-sentence")).toHaveText("Zertifizierte Bio-Weinberge");
+    await expect(stage(page)).toContainText("Gültig bis: 31.08.2026");
+    const fold = await page.evaluate(() => {
+      const bar = document.querySelector("[data-mobile-tab-bar]");
+      return Math.min(bar ? bar.getBoundingClientRect().top : window.innerHeight, window.innerHeight);
     });
+    for (const bet of ["yes", "no"]) {
+      const box = await page.locator(`[data-bet="${bet}"]`).boundingBox();
+      expect(box, bet).not.toBeNull();
+      expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(fold + 0.5);
+    }
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    expect(errors).toEqual([]);
+  });
 
-    test(`${locale}: water says yes, own numbers read a paste, nothing is sent`, async ({ page }) => {
-      const errors = collectErrors(page);
-      const requests: string[] = [];
-      page.on("request", (request) => {
-        if (request.method() !== "GET") requests.push(`${request.method()} ${request.url()}`);
-      });
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
-      await page.locator("[data-esg-root]").scrollIntoViewIfNeeded();
+  test("the call, then the probe: Darf so nicht raus, 46 Tage, 12 von 40 ha", async ({ page }) => {
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
+    await page.locator('[data-bet="yes"]').click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "probe");
+    await expect(caption(page)).toContainText("Darf so nicht raus", { timeout: 6000 });
+    await expect(stage(page)).toContainText("46 Tage abgelaufen");
+    await expect(stage(page)).toContainText("12 von 40 ha");
+    await expect(page.locator("[data-bet-line]")).toContainText("Das Zertifikat liegt bei");
+  });
 
-      await page.locator(".esg-seg__item", { hasText: locale === "de" ? "Wasser" : "Water" }).first().click();
-      await expect(page.locator(".esg-pill")).toHaveText("OK");
-      await expect(page.locator(".esg-field__num")).toHaveText(locale === "de" ? "4.630" : "4,630");
-      await expect(page.locator('[data-take="mail"] .esg-btn')).toBeDisabled();
-
-      await page.locator(".esg-seg__item", { hasText: locale === "de" ? "Meine" : "My" }).first().click();
-      await page.locator(".esg-own__text").fill(locale === "de"
-        ? "Jan 21.400\nFeb 19.800\nMär 20.600\nApr 19.200\nOkt 38.700\nquatsch"
-        : "Jan 21,400\nFeb 19,800\nMar 20,600\nApr 19,200\nOct 38,700\nnonsense");
-      await expect(page.locator(".esg-pill")).toHaveText("NOT FOUND");
-      await expect(page.locator(".esg-count")).toHaveText("5/12");
-      await expect(page.locator(".esg-issue--unread")).toHaveCount(1);
-      await expect(page.locator('[data-take="answer"]')).toContainText(locale === "de" ? "Es fehlen:" : "Missing:");
-      expect(await overflow(page)).toBeLessThanOrEqual(0);
-
-      await page.locator(".esg-own__row--buttons .esg-btn").first().click();
-      await expect(page.locator(".esg-count")).toHaveText("11/12");
-      expect(requests).toEqual([]);
-      expect(errors).toEqual([]);
+  test("r resets the beats but never the own sentence; Ctrl+R and r in a field are left alone", async ({ page }) => {
+    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
+    await page.locator('[data-bet="no"]').click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "probe");
+    const field = page.getByLabel("Satz", { exact: true });
+    await field.fill("Unser Strom 2025: 412 MWh");
+    await field.press("r");
+    await expect(field).toHaveValue("Unser Strom 2025: 412 MWhr");
+    await expect(clock(page)).toHaveAttribute("data-beat", "probe");
+    const prevented = await page.evaluate(() => {
+      const event = new KeyboardEvent("keydown", { key: "r", ctrlKey: true, bubbles: true, cancelable: true });
+      document.body.dispatchEvent(event);
+      return event.defaultPrevented;
     });
-  }
-
-  test("the reveal button is fully above the tab bar on the first screen at 360x740, and it waits for a guess", async ({ page }) => {
-    await page.setViewportSize({ width: 360, height: 740 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.waitForTimeout(400);
-    const button = page.locator(".esg-reveal .esg-btn");
-    const box = await button.boundingBox();
-    expect((box?.y ?? 9999) + (box?.height ?? 0)).toBeLessThanOrEqual(740 - 56);
-    await expect(button).toHaveAttribute("aria-disabled", "true");
-    await button.click({ force: true });
-    await expect(page.locator(".esg-field__num")).toHaveText("279,7");
-    await expect(page.locator(".esg-reveal input[type=range]")).toHaveCount(0);
+    expect(prevented).toBe(false);
+    await field.blur();
+    await page.keyboard.press("r");
+    await expect(clock(page)).toHaveAttribute("data-beat", "satz");
+    await expect(page.locator('[data-bet][aria-pressed="true"]')).toHaveCount(0);
+    await expect(field).toHaveValue("Unser Strom 2025: 412 MWhr");
   });
 
-  test("own numbers: the example button and the result are on the first screens at 360x740", async ({ page }) => {
-    await page.setViewportSize({ width: 360, height: 740 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.locator(".esg-seg__item", { hasText: "Meine" }).first().click();
-    const example = await page.getByRole("button", { name: "Beispiel einsetzen" }).boundingBox();
-    expect((example?.y ?? 9999) + (example?.height ?? 0)).toBeLessThanOrEqual(740 - 56);
-    await page.getByRole("button", { name: "Beispiel einsetzen" }).click();
-    await page.evaluate(() => window.scrollTo(0, 0));
-    const plot = await page.locator(".esg-plot").boundingBox();
-    const area = await page.locator(".esg-own__text").boundingBox();
-    expect((plot?.y ?? 9999) + (plot?.height ?? 0)).toBeLessThan(740 - 56);
-    expect(plot?.y ?? 0).toBeLessThan(area?.y ?? 0);
-    await expect(page.locator('[data-take="answer"]')).toContainText("Stromverbrauch 2025: mindestens");
+  test("three sentences, the folder and the late invoice", async ({ page }) => {
+    await page.goto(`/demos/${SLUG}?beat=drei-saetze`, { waitUntil: "networkidle" });
+    for (const [index, bet] of (["yes", "yes", "no"] as const).entries()) {
+      await page.locator(`[data-bet="${bet}"]`).click();
+      if (index < 2) await page.getByRole("button", { name: "Nächster Satz" }).click();
+    }
+    await expect(page.locator("[data-tally]")).toContainText("Du hättest 2 von 3 Sätzen so rausgeschickt");
+    await expect(page.locator("[data-tally]")).toContainText("Den belegten Satz hättest du zurückgehalten.");
+
+    await page.goto(`/demos/${SLUG}?beat=ordner`, { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Eins mehr" }).click();
+    await page.locator("[data-step-action]").click();
+    await expect(page.locator('[data-doc="septemberInvoice"]')).toContainText("Q1, Q2, C5, F2, F3, B3", { timeout: 9000 });
+    await expect(page.locator("[data-folder-result]")).toHaveText("9 von 21 BELEGT");
+
+    await page.goto(`/demos/${SLUG}?beat=rechnung`, { waitUntil: "networkidle" });
+    await expect(stage(page)).toContainText("RECHNUNG EL-25-09");
+    await page.locator("[data-step-action]").click();
+    await expect(caption(page)).toContainText("2 ändern ihren Status", { timeout: 11000 });
+    await expect(stage(page).locator("[data-flipped]")).toHaveCount(2);
+    await expect(page.locator("[data-cascade-total]")).toHaveText("320,9 MWh");
   });
 
-  test("the payoff plays where the visitor can see it, at 360px", async ({ page }) => {
-    await page.setViewportSize({ width: 360, height: 740 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    const stage = page.locator(".esg-stage");
-    await stage.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(1200);
-    await dragSlot(page, 30);
-    // number, bars and the button are one unit that fits the screen
-    const box = await stage.boundingBox();
-    expect(box?.height ?? 9999).toBeLessThan(740 - 64);
-    await page.evaluate(() => window.scrollBy(0, 300)); // chart now above the fold
-    await page.locator(".esg-reveal .esg-btn").click();
-    await page.waitForTimeout(900);
-    const plot = await page.locator(".esg-plot").boundingBox();
-    expect(plot).not.toBeNull();
-    expect((plot?.y ?? -999) + (plot?.height ?? 0)).toBeGreaterThan(40);
-    expect(plot?.y ?? 9999).toBeLessThan(740 - 150);
+  test("own sentence: a climate neutral label claim on offsets is cut under 4c, the register downloads", async ({ page }) => {
+    await page.goto(`/demos/${SLUG}?beat=deine-saetze`, { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Zu deinen Sätzen" }).click();
+    await expect(page.locator("[data-own-sentences]")).toBeInViewport();
+    await page.getByLabel("Satz", { exact: true }).fill("Unser Wein ist klimaneutral");
+    await page.getByRole("radio", { name: "Etikett, Verpackung oder Regal" }).check();
+    await page.getByLabel("Was belegt ihn?").selectOption("offset");
+    const gate = page.locator("fieldset", { hasText: "Stützt sich der Satz auf gekaufte Kompensation" });
+    await gate.getByRole("radio", { name: "Ja", exact: true }).check();
+    await page.locator("[data-own-sentences]").getByRole("button", { name: "Prüfen" }).click();
+    const result = page.locator("[data-own-result]");
+    await expect(result.locator("[data-own-decision]")).toHaveText("Streichen");
+    await expect(result).toContainText("Nr. 4c");
+    await page.getByRole("button", { name: "Zur Liste" }).click();
+    const download = page.waitForEvent("download");
+    await page.locator("[data-own-download]").click();
+    expect((await download).suggestedFilename()).toBe("nachweisregister.csv");
   });
 
-  test("the first screen of a phone already shows the stamp and the slot", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+  test("reduced motion shows the end frame at once, and nothing leaves the page", async ({ page, baseURL }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const origin = new URL(baseURL ?? "http://localhost").origin;
+    const foreign: string[] = [];
+    page.on("request", (request) => {
+      const url = new URL(request.url());
+      if (/^(data|blob):/.test(url.protocol)) return;
+      if (url.origin !== origin) foreign.push(url.href);
+    });
     await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.waitForTimeout(400);
-    const stamp = await page.locator(".esg-stamp").boundingBox();
-    const slot = await page.locator(".esg-slot").boundingBox();
-    expect((stamp?.y ?? 9999) + (stamp?.height ?? 0)).toBeLessThan(844 - 64);
-    expect(slot?.y ?? 9999).toBeLessThan(844 - 64 - 60);
+    await page.locator('[data-bet="yes"]').click();
+    await expect(caption(page)).toContainText("Darf so nicht raus", { timeout: 1000 });
+    expect(foreign).toEqual([]);
   });
 
-  test("reduced motion shows the end state and the bill still opens", async ({ browser }) => {
-    const context = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 390, height: 844 } });
-    const page = await context.newPage();
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.locator("[data-esg-root]").scrollIntoViewIfNeeded();
-    await expect(page.locator(".esg-field__num")).toHaveText("279,7");
-    await page.locator(".esg-slot").focus();
-    await page.keyboard.press("PageUp");
-    await page.locator(".esg-reveal .esg-btn").click();
-    await expect(page.locator(".esg-field__num")).toHaveText("320,9", { timeout: 500 });
-    await context.close();
-  });
-
-  test("desktop 1440x900: the reveal button is on the first screen, the lesson waits behind the Leiter slot", async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.waitForTimeout(1200);
-    const button = await page.locator(".esg-reveal .esg-btn").boundingBox();
-    expect(button && button.y + button.height <= 900).toBe(true);
-    // the placeholder ladder holds the right column; the takeaways start below it
-    await expect(page.locator(".esg-ladder--pending")).toBeVisible();
-    const take = await page.locator(".esg-take").boundingBox();
-    expect(take && take.y > 900).toBe(true);
-  });
-
-  test("the dataset switch takes a click on the label text, and the Leiter's bars are far apart after the reveal", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.locator(".esg-seg__item span", { hasText: "Wasser 2025" }).click({ timeout: 3000 });
-    await expect(page.locator(".esg-pill")).toHaveText("OK");
-    await page.locator(".esg-seg__item span", { hasText: "Strom 2025" }).first().click({ timeout: 3000 });
-    await dragSlot(page, 30);
-    await page.locator(".esg-reveal .esg-btn").click();
-    await page.waitForTimeout(2800);
-    await expect(page.locator('[role="status"]', { hasText: /geöffnet/ }).first()).toBeAttached();
-    const widths = await page.locator(".esg-ladder__row .esg-ladder__fill").evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().width));
-    const track = (await page.locator(".esg-ladder__bar").first().boundingBox())?.width ?? 1;
-    expect((Math.max(...widths) - Math.min(...widths)) / track).toBeGreaterThan(0.5);
-  });
-
-  test("own numbers: a unit slip is fixed from the hero line, not from the bottom of the page", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.locator(".esg-seg__item span", { hasText: "Meine Zahlen" }).click();
-    await page.locator("textarea").fill("Jan 21.400\nFeb 19,8\nMär 20,6\nApr 19,2\nMai 22,5\nJun 26,8\nJul 30,4\nAug 32,1\nOkt 38,7\nNov 25,3\nDez 22,9");
-    const chip = page.locator(".esg-field__flip");
-    const box = await chip.boundingBox();
-    expect(box && box.y + box.height < 844).toBe(true);
-    await chip.click();
-    await expect(page.locator(".esg-field__num")).toHaveText("279,7");
+  test("English: COVERED, WEAK, GAP and no German status word", async ({ page }) => {
+    await page.goto(`/en/demos/${SLUG}?beat=regel`, { waitUntil: "networkidle" });
+    await expect(stage(page)).toContainText("COVERED");
+    await expect(stage(page)).toContainText("WEAK");
+    await expect(stage(page)).toContainText("GAP");
+    const text = await page.locator("[data-esg-demo]").innerText();
+    for (const word of ["BELEGT", "SCHWACH", "LÜCKE"]) expect(text).not.toContain(word);
   });
 });

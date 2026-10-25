@@ -1,429 +1,234 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { analyse, ladder } from "@/lib/demo-cases/esg-berichte-mit-ki/analyse";
-import { ELECTRICITY, HOLE, WATER, electricityWith } from "@/lib/demo-cases/esg-berichte-mit-ki/data";
-import { formatNumber, formatSmart } from "@/lib/demo-cases/esg-berichte-mit-ki/numbers";
-import { INTRO_MS, REVEAL_MS, introAt, sceneAt } from "@/lib/demo-cases/esg-berichte-mit-ki/scene";
-import { buildTakeaways, fill, monthsText } from "@/lib/demo-cases/esg-berichte-mit-ki/takeaways";
-import type { DatasetId, DemoPack, Series } from "@/lib/demo-cases/esg-berichte-mit-ki/types";
-import { localizeHref } from "@/lib/i18n/locale";
-import { CoverageGauge } from "./coverage-gauge";
-import { FormField } from "./form-field";
-import { Ladder, LadderPending } from "./ladder";
-import { MonthChart } from "./month-chart";
-import { OwnData } from "./own-data";
-import { RevealControl } from "./reveal-control";
-import { Strip, StripLegend, stripLabel } from "./strip";
-import { TakeawaysPanel } from "./takeaways-panel";
-import { useReducedMotion, useTween } from "./use-tween";
-import { THRESHOLD_MAX, THRESHOLD_MIN, useOwnSeries } from "./use-own-series";
+import { useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  DemoLever,
+  DemoStage,
+  revealIfOffscreen,
+  TAKEHOME_TARGET_ID,
+  useBeatClock,
+  useOnRestart,
+} from "@/components/demos/shell";
+import type { Locale } from "@/lib/i18n/locale";
+import type { Pack } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
+import { fill } from "@/lib/demo-cases/esg-berichte-mit-ki/export";
+import { figures as deriveFigures } from "@/lib/demo-cases/esg-berichte-mit-ki/figures";
+import { ledgerCounts } from "@/lib/demo-cases/esg-berichte-mit-ki/ledger";
+import { cascadeAt, sweepAt } from "@/lib/demo-cases/esg-berichte-mit-ki/motion";
+import type { OwnRow } from "@/lib/demo-cases/esg-berichte-mit-ki/own";
+import { FolderDetails, InvoiceDetails, ProbeDetails, ThreeDetails } from "./details";
+import { OwnSentences } from "./own-sentences";
+import { StatusTag } from "./parts";
+import { CertificateStage, type Bet } from "./stage-certificate";
+import { FolderStage } from "./stage-folder";
+import { InvoiceStage } from "./stage-invoice";
+import { RegelStage } from "./stage-regel";
+import { ThreeStage } from "./stage-three";
+import { Stepper } from "./stepper";
+import { useTimeline } from "./use-timeline";
 import "./esg-demo.css";
 
-const DATASETS: readonly DatasetId[] = ["electricity", "water", "own"];
-const FIXED_THRESHOLD = 0.95;
-const SLAM_MS = 150;
+const VERDICT_MS = 1600;
+const SWEEP_MS = 6000;
+const CASCADE_MS = 8000;
 
-/** No unit typed: close the gap it leaves instead of printing a placeholder in a sentence. */
-const tidy = (text: string) => text.replace(/ {2,}/g, " ").replace(/ +([.,;:])/g, "$1");
-
-function niceMax(values: readonly number[]): number {
-  const top = Math.max(1, ...values) * 1.15;
-  const magnitude = 10 ** Math.floor(Math.log10(top));
-  return Math.ceil(top / magnitude / 0.5) * 0.5 * magnitude;
+/** Everything the visitor has done in the beats; "Von vorn" clears it, never "Deine Sätze". */
+interface Bets {
+  readonly first: Bet | null;
+  readonly three: readonly (Bet | null)[];
+  readonly threeIndex: number;
+  readonly folderGuess: number | null;
+  readonly folderRun: number;
+  readonly invoiceGuess: number | null;
+  readonly invoiceRun: number;
 }
 
-/**
- * Elf von zwölf. One scene per series: the draft's annual figure, twelve
- * monthly bars with one slot the visitor fills, the evidence strip, the
- * bill that opens, and three things to take away. Every drawn quantity is a
- * pure function of three inputs: the intro clock, the bill's progress and the
- * guess (scene.ts). Runs in the browser only; nothing is sent or stored.
- */
-export default function Demo({ pack }: { readonly pack: DemoPack }) {
-  const locale = pack.locale;
-  const rootRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const ladderRef = useRef<HTMLElement>(null);
-  const ladderTimer = useRef(0);
-  const [seen, setSeen] = useState(false);
-  const [dataset, setDataset] = useState<DatasetId>("electricity");
-  const [guess, setGuess] = useState<number | null>(null);
-  const [ascii, setAscii] = useState(false);
-  const [announce, setAnnounce] = useState("");
-  const reduced = useReducedMotion();
-  const intro = useTween(1);
-  const bill = useTween(0);
-  const slam = useTween(0);
-  const own = useOwnSeries(pack);
-  const { set: setIntro, to: introTo, current: introNow } = intro;
-  const { set: setBill, to: billTo, current: billNow } = bill;
-  const { set: setSlam, to: slamTo } = slam;
+const START: Bets = { first: null, three: [null, null, null], threeIndex: 0, folderGuess: null, folderRun: 0, invoiceGuess: null, invoiceRun: 0 };
 
-  // The intro plays once, as soon as a good part of the stage is on screen (15 %, or 120 px of it): on
-  // a desktop that is at mount, on a phone it is the first screen. Reduced motion: the end state.
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    if (reduced || typeof IntersectionObserver === "undefined") {
-      setIntro(1);
-      return;
-    }
-    setIntro(0);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const ready = entries.some(
-          (entry) => entry.isIntersecting && (entry.intersectionRatio >= 0.15 || entry.intersectionRect.height >= 120),
-        );
-        if (!ready) return;
-        observer.disconnect();
-        introTo(1, INTRO_MS);
-      },
-      { threshold: [0, 0.1, 0.15, 0.3, 0.6, 1] },
-    );
-    observer.observe(stage);
-    return () => observer.disconnect();
-  }, [reduced, setIntro, introTo]);
+export default function Demo({ pack }: { readonly pack: Pack }) {
+  const clock = useBeatClock();
+  const locale: Locale = pack.locale === "en" ? "en" : "de";
+  const figures = useMemo(() => deriveFigures(locale), [locale]);
+  const [bets, setBets] = useState<Bets>(START);
+  const [ownRows, setOwnRows] = useState<readonly OwnRow[]>([]);
+  const ownRef = useRef<HTMLElement>(null);
+  useOnRestart(() => setBets(START));
 
-  const skipIntro = useCallback(() => {
-    if (introNow.current < 1) setIntro(1);
-  }, [introNow, setIntro]);
+  const threeBet = bets.three[bets.threeIndex] ?? null;
+  const verdictT = useTimeline(threeBet ? `three-${bets.threeIndex}` : null, VERDICT_MS, clock.reducedMotion);
+  const sweepT = useTimeline(bets.folderRun > 0 ? `sweep-${bets.folderRun}` : null, SWEEP_MS, clock.reducedMotion);
+  const cascadeT = useTimeline(bets.invoiceRun > 0 ? `cascade-${bets.invoiceRun}` : null, CASCADE_MS, clock.reducedMotion);
 
-  const scene = sceneAt(bill.value, guess);
-  const introFrame = introAt(intro.value);
-  const billOpen = bill.value >= 0.75;
+  const id = clock.beat.id;
+  const before = ledgerCounts("before");
+  const after = ledgerCounts("after");
+  const counts = (value: typeof before) =>
+    `${value.belegt} ${pack.statuses.belegt}, ${value.schwach} ${pack.statuses.schwach}, ${value.luecke} ${pack.statuses.luecke}`;
 
-  const live = useMemo(
-    () => electricityWith(guess, billOpen, pack.form.electricity),
-    [guess, billOpen, pack.form.electricity],
-  );
-  const folder = useMemo<Series>(() => ({ ...ELECTRICITY, label: pack.form.electricity }), [pack.form.electricity]);
-  const waterSeries = useMemo<Series>(() => ({ ...WATER, label: pack.form.water }), [pack.form.water]);
-  const shown: Series = dataset === "electricity" ? live : dataset === "water" ? waterSeries : own.series;
-  const analysis = useMemo(() => analyse(shown), [shown]);
-  // The lines default to the folder as it was (the hole stays a hole, whatever was guessed or opened);
-  // once the bill is open a switch offers the 12 of 12 variant as the second view.
-  const proved = bill.value > 0.8;
-  const [takeView, setTakeView] = useState<"after" | "before">("before");
-  const takeState = proved ? takeView : "before";
-  if (bill.value > 0 && !seen) setSeen(true);
-  useEffect(() => () => window.clearTimeout(ladderTimer.current), []);
-  const withBill = useMemo(() => electricityWith(null, true, pack.form.electricity), [pack.form.electricity]);
-  // Own numbers: the series label (default "Meine Reihe") leads the line, a missing unit is a visible placeholder.
-  // No label typed: the lines stay nameless ("diese Zahlen" in the mail) rather than calling the data "Meine Reihe".
-  const ownNamed = useMemo<Series>(
-    () => ({ ...own.series, label: own.series.label.trim(), unit: own.series.unit || pack.own.unitToken }),
-    [own.series, pack.own.unitToken],
-  );
-  const takeawaySeries: Series =
-    dataset === "electricity" ? (takeState === "after" ? withBill : folder) : dataset === "water" ? waterSeries : ownNamed;
-  const takeawayAnalysis = useMemo(() => analyse(takeawaySeries), [takeawaySeries]);
-  const threshold = dataset === "own" ? own.threshold / 100 : FIXED_THRESHOLD;
+  let stage: ReactNode;
+  let caption: ReactNode;
+  let lever: ReactNode;
+  let details: ReactNode = null;
 
-  const items = useMemo(
-    () => buildTakeaways(takeawaySeries, takeawayAnalysis, { locale, texts: pack.texts, months: pack.months, ascii }),
-    [takeawaySeries, takeawayAnalysis, locale, pack.texts, pack.months, ascii],
-  );
-
-  const guessed = guess !== null && guess > 0;
-  // The stamp is struck in 150 ms when a guess exists, and lifted again when it is cleared.
-  useEffect(() => {
-    if (reduced) setSlam(guessed ? 1 : 0);
-    else slamTo(guessed ? 1 : 0, SLAM_MS);
-  }, [guessed, reduced, setSlam, slamTo]);
-  const stripText = stripLabel(pack, analysis);
-  const ownEmpty = dataset === "own" && !own.hasInput;
-  const unitFlagged = dataset === "own" ? own.resolved.unitHints : [];
-  const status = analysis.status === "OK" && unitFlagged.length > 0 ? "NEEDS_CHECK" : analysis.status;
-  const ownUnit = own.series.unit;
-
-  /** The payoff happens in the chart: bring the stage into view before the bill opens. */
-  function bringStageIntoView() {
-    const stage = stageRef.current;
-    if (!stage || typeof stage.scrollIntoView !== "function") return;
-    const box = stage.getBoundingClientRect();
-    if (box.top >= 0 && box.bottom <= window.innerHeight - 72) return;
-    stage.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
-  }
-  /** The ladder is the lesson: once the bill has landed and the chart has had a moment, bring it up. */
-  function bringLadderIntoView() {
-    window.clearTimeout(ladderTimer.current);
-    ladderTimer.current = window.setTimeout(
-      () => {
-        const ladderEl = ladderRef.current;
-        if (!ladderEl || typeof ladderEl.scrollIntoView !== "function") return;
-        if (ladderEl.getBoundingClientRect().top < window.innerHeight * 0.55) return;
-        ladderEl.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
-      },
-      reduced ? 0 : 900,
-    );
-  }
-  const openedText = () => {
-    setAnnounce(fill(pack.reveal.opened, { x: formatNumber(HOLE.truthTotal, locale, 1) }));
-    bringLadderIntoView();
-  };
-
-  function toggleBill() {
-    if (billNow.current >= 0.999) {
-      if (reduced) {
-        setBill(0);
-        setAnnounce(pack.reveal.closed);
-      } else billTo(0, REVEAL_MS, () => setAnnounce(pack.reveal.closed));
-      return;
-    }
-    bringStageIntoView();
-    if (reduced) {
-      setBill(1);
-      openedText();
-    } else billTo(1, REVEAL_MS, openedText);
-  }
-  function settleBill() {
-    if (billNow.current >= 0.999) openedText();
-  }
-
-  const isElectricity = dataset === "electricity";
-  // Struck by the guess or the opening bill; lifted again once the bill proves the year.
-  const strike = isElectricity ? Math.max(scene.stampStrike, slam.value) * (1 - scene.stampLift) : 0;
-  const formProps = (() => {
-    if (isElectricity) {
-      return {
-        label: pack.form.electricity,
-        value: formatNumber(scene.total, locale, 1),
-        unit: "MWh",
-        stamp: pack.form.stamp,
-        strike,
-        note: billOpen ? pack.form.proven : guessed ? pack.form.estimated : pack.form.draft,
-      };
-    }
-    if (dataset === "water") {
-      return {
-        label: pack.form.water,
-        value: formatNumber(analysis.provenSum, locale, 0),
-        unit: "m³",
-        stamp: pack.form.stamp,
-        strike: 0,
-        note: fill(pack.water.line, { x: formatNumber(analysis.provenSum, locale, 0) }),
-      };
-    }
-    return {
-      label: own.series.label.trim() === "" ? pack.own.defaultLabel : own.series.label,
-      prefix: pack.locale === "de" ? "mindestens" : "at least",
-      value: formatSmart(analysis.provenSum, locale, own.series.digits),
-      unit: own.series.unit,
-      unitMissing: pack.own.unitMissing,
-      stamp: undefined,
-      strike: 0,
-      action:
-        own.flipLabel !== null ? (
-          <button type="button" className="esg-chip esg-field__flip" aria-pressed={own.allFlipped} onClick={() => own.flipMany(own.flippable.map((entry) => entry.id), !own.allFlipped)}>
-            {own.flipLabel}
+  if (id === "satz") {
+    stage = <CertificateStage pack={pack} mode="satz" progress={clock.progress} bet={bets.first} />;
+    caption = pack.satz1.question;
+    lever = (
+      <div className="nw-bets">
+        {(["yes", "no"] as const).map((bet) => (
+          <button
+            key={bet}
+            type="button"
+            className="nw-button nw-bet"
+            aria-pressed={bets.first === bet}
+            data-bet={bet}
+            onClick={() => {
+              setBets((previous) => ({ ...previous, first: bet }));
+              clock.commit();
+              clock.seek(clock.index + 1);
+            }}
+          >
+            {bet === "yes" ? pack.bet.yes : pack.bet.no}
           </button>
-        ) : undefined,
-      note:
-        unitFlagged.length > 0
-          ? fill(pack.own.unitWarn, { months: monthsText(unitFlagged, pack.months, pack.texts.and) })
-          : analysis.provenMonths > 0 ? fill(pack.own.counted, { n: analysis.provenMonths }) : pack.own.resultNone,
-    };
-  })();
-
-  // Own numbers: the axis fits the values that agree with each other; a doubtful one is cut at the top (month-chart).
-  const fitting = shown.cells.filter((cell) => !unitFlagged.includes(cell.month)).map((cell) => cell.value ?? 0);
-  const axisMax = isElectricity ? HOLE.axisMax : dataset === "water" ? 1000 : niceMax(fitting.some((value) => value > 0) ? fitting : shown.cells.map((cell) => cell.value ?? 0));
-  const ladderRows = ladder(analyse(folder), HOLE.truthTotal, guessed ? guess : null);
-  const ladderVisible = isElectricity && scene.ladder[0] !== undefined && scene.ladder[0] > 0;
-  const offBy = guessed ? Math.abs(HOLE.truth - (guess as number)) : 0;
-  const bridge = bill.value > 0;
-
-  const formEl = (
-    <FormField
-      {...formProps}
-      stampIn={isElectricity ? introFrame.stamp : 1}
-      valueAria={fill(pack.form.totalAria, { label: formProps.label, x: formProps.value, unit: formProps.unit })}
-      status={status}
-      statusText={pack.statuses[status]}
-    />
-  );
-
-  /* One reserved line under the bars (no layout shift): the instruction, the rule of the guess, or the verdict. */
-  const verdictEl = isElectricity ? (
-    <div className="esg-verdict" aria-live="polite">
-      {scene.barHeight > 0 ? (
-        <>
-          <p className="esg-legend">
-            {guessed && scene.ghost > 0 ? (
-              <span className="esg-legend__item esg-legend__item--guess">
-                {fill(pack.chart.legendGuess, { x: formatNumber(guess as number, locale, 1), unit: "MWh" })}
-              </span>
-            ) : null}
-            <span className="esg-legend__item esg-legend__item--bill">
-              {fill(pack.chart.legendBill, { x: formatNumber(HOLE.truth, locale, 1), unit: "MWh" })}
-            </span>
-          </p>
-          {guessed && scene.ghost > 0.5 ? (
-            <strong className="esg-sr">
-              {offBy < 0.05 ? pack.chart.exact : fill(pack.chart.off, { x: formatNumber(offBy, locale, 1), unit: "MWh" })}
-            </strong>
-          ) : null}
-        </>
-      ) : (
-        <p className="esg-verdict__text">{guessed ? pack.gauge.hint : pack.chart.prompt}</p>
-      )}
-    </div>
-  ) : null;
-
-  const chartEl = (
-    <>
-      <MonthChart
-        pack={pack}
-        cells={shown.cells}
-        unit={shown.unit}
-        digits={shown.digits}
-        axisMax={axisMax}
-        intro={introFrame}
-        hole={
-          isElectricity
-            ? {
-                month: HOLE.month,
-                guess,
-                locked: bridge,
-                scene,
-                onGuess: setGuess,
-                onCommit: (value) =>
-                  setAnnounce(
-                    value > 0 ? fill(pack.chart.holeValue, { x: formatNumber(value, locale, 1), unit: "MWh" }) : pack.chart.holeNone,
-                  ),
-              }
-            : undefined
-        }
-      />
-      <div className="esg-months" aria-hidden="true">
-        {pack.monthLetters.map((letter, index) => (
-          <span key={`${letter}${index}`}>{letter}</span>
         ))}
       </div>
-      {verdictEl}
-    </>
-  );
-
-  const stripEl = (
-    <>
-      <Strip cells={shown.cells} label={stripText} />
-      <StripLegend pack={pack} count={analysis.provenMonths} />
-    </>
-  );
-
-  const takeNote =
-    isElectricity ? (proved ? (takeState === "before" ? pack.takeaways.beforeNote : null) : pack.takeaways.folderNote)
-    : dataset === "own" ? pack.takeaways.ownNote
-    : null;
-
-  const gaugeEl = (
-    <>
-      <CoverageGauge pack={pack} label={pack.gauge.months} value={analysis.monthCoverage} threshold={threshold} />
-      {dataset === "own" ? (
-        <div className="esg-threshold">
-          <span id="esg-thr">{pack.own.threshold}</span>
-          <button type="button" className="esg-btn esg-btn--square" aria-label={`${pack.own.thresholdAria} -`} disabled={own.threshold <= THRESHOLD_MIN} onClick={() => own.setThreshold(own.threshold - 1)}>-</button>
-          <output aria-labelledby="esg-thr">{formatNumber(own.threshold, locale, 0)} %</output>
-          <button type="button" className="esg-btn esg-btn--square" aria-label={`${pack.own.thresholdAria} +`} disabled={own.threshold >= THRESHOLD_MAX} onClick={() => own.setThreshold(own.threshold + 1)}>+</button>
-        </div>
-      ) : null}
-      {dataset === "water" ? <p className="esg-hint">{pack.water.control}</p> : null}
-      {dataset === "own" && analysis.missingMonths.length > 0 && analysis.band ? (
-        <div className="esg-ownfacts">
-          <p>
-            {tidy(fill(pack.own.cap, {
-              cap: formatSmart(analysis.provenSum * (1 / threshold - 1), locale, own.series.digits === 0 ? 0 : 1),
-              unit: ownUnit,
-              thr: own.threshold,
-            }))}
-          </p>
-          <p>
-            {tidy(fill(pack.own.band, {
-              min: formatSmart(analysis.band.min, locale, own.series.digits),
-              max: formatSmart(analysis.band.max, locale, own.series.digits),
-              unit: ownUnit,
-            }))}
-          </p>
-        </div>
-      ) : null}
-    </>
-  );
+    );
+  } else if (id === "probe") {
+    stage = <CertificateStage pack={pack} mode="probe" progress={clock.progress} bet={bets.first} />;
+    caption = clock.progress >= 1 ? pack.probe.verdict : pack.probe.running;
+    lever = bets.first ? null : <p className="nw-lever-note">{pack.bet.none}</p>;
+    details = clock.progress >= 1 ? <ProbeDetails pack={pack} bet={bets.first} days={figures.days!} /> : null;
+  } else if (id === "regel") {
+    stage = <RegelStage pack={pack} progress={clock.progress} />;
+    caption = pack.regel.caption;
+    lever = (
+      <a className="nw-button" href={pack.regel.downloadHref} download>
+        {pack.regel.download}
+      </a>
+    );
+  } else if (id === "drei-saetze") {
+    const sentence = pack.three.sentences[bets.threeIndex]!;
+    stage = <ThreeStage pack={pack} figures={figures} index={bets.threeIndex} bet={threeBet} t={verdictT} />;
+    caption = threeBet && verdictT >= 1 ? sentence.verdict : pack.three.question;
+    const allDone = bets.three.every((bet) => bet !== null);
+    lever = !threeBet ? (
+      <div className="nw-bets">
+        {(["yes", "no"] as const).map((bet) => (
+          <button
+            key={bet}
+            type="button"
+            className="nw-button nw-bet"
+            data-bet={bet}
+            onClick={() => setBets((previous) => ({ ...previous, three: previous.three.map((value, index) => (index === previous.threeIndex ? bet : value)) }))}
+          >
+            {bet === "yes" ? pack.bet.yesShort : pack.bet.noShort}
+          </button>
+        ))}
+      </div>
+    ) : bets.threeIndex < 2 ? (
+      <button type="button" className="nw-button" disabled={verdictT < 1} onClick={() => setBets((previous) => ({ ...previous, threeIndex: previous.threeIndex + 1 }))}>
+        {pack.three.nextSentence}
+      </button>
+    ) : null;
+    details =
+      threeBet && verdictT >= 1 ? (
+        <ThreeDetails pack={pack} figures={figures} index={bets.threeIndex} first={bets.first} three={bets.three} allDone={allDone} />
+      ) : null;
+  } else if (id === "ordner") {
+    const ran = bets.folderRun > 0;
+    const done = ran && sweepAt(sweepT).tally >= 1;
+    stage = <FolderStage pack={pack} t={sweepT} />;
+    caption = done ? fill(pack.folder.caption, { n: before.belegt, schwach: before.schwach, luecke: before.luecke }) : pack.folder.question;
+    lever = (
+      <Stepper
+        pack={pack}
+        value={bets.folderGuess}
+        onChange={(folderGuess) => setBets((previous) => ({ ...previous, folderGuess }))}
+        action={pack.folder.check}
+        disabled={ran && !done}
+        onAction={() => setBets((previous) => ({ ...previous, folderRun: previous.folderRun + 1 }))}
+      />
+    );
+    details = done ? <FolderDetails pack={pack} guess={bets.folderGuess} /> : null;
+  } else if (id === "rechnung") {
+    const filed = bets.invoiceRun > 0;
+    const done = filed && cascadeAt(cascadeT).summary >= 1;
+    stage = <InvoiceStage pack={pack} locale={locale} figures={figures} t={cascadeT} filed={filed} />;
+    caption = done ? fill(pack.invoice.caption, figures) : pack.invoice.question;
+    lever = (
+      <Stepper
+        pack={pack}
+        value={bets.invoiceGuess}
+        onChange={(invoiceGuess) => setBets((previous) => ({ ...previous, invoiceGuess }))}
+        action={pack.invoice.file}
+        disabled={filed}
+        onAction={() => setBets((previous) => ({ ...previous, invoiceRun: previous.invoiceRun + 1 }))}
+      />
+    );
+    details = done ? (
+      <InvoiceDetails pack={pack} figures={figures} guess={bets.invoiceGuess} summary={fill(pack.invoice.summary, { ...figures, before: counts(before), after: counts(after), b3before: 0, b3after: 1 })} />
+    ) : null;
+  } else if (id === "deine-saetze") {
+    const latest = ownRows.at(-1);
+    stage = (
+      <div className="nw-stage nw-own-stage" data-scene="eigene">
+        {latest ? (
+          <>
+            <p className="nw-kicker">{pack.own.stageLatest}</p>
+            <p className="nw-sentence nw-sentence-mid">{latest.sentence}</p>
+            <p className="nw-own-verdict">
+              <StatusTag status={latest.result.status} pack={pack} />
+              <span>{pack.own.decisions[latest.result.decision]}</span>
+            </p>
+          </>
+        ) : (
+          <p className="nw-own-empty">{pack.own.stageEmpty}</p>
+        )}
+      </div>
+    );
+    caption = pack.own.caption;
+    lever = (
+      <button type="button" className="nw-button nw-button-primary" onClick={() => revealIfOffscreen(ownRef.current, clock.reducedMotion)}>
+        {pack.own.lever}
+      </button>
+    );
+  } else {
+    stage = (
+      <div className="nw-stage" data-scene="mitnehmen">
+        <ul className="nw-takehome">
+          {pack.takehome.items.map(([file, text]) => (
+            <li key={file}>
+              <span className="nw-takehome-file">{file}</span>
+              <span>{text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+    caption = pack.takehome.caption;
+    lever = (
+      <button
+        type="button"
+        className="nw-button nw-button-primary"
+        onClick={() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), clock.reducedMotion)}
+      >
+        {pack.takehome.lever}
+      </button>
+    );
+  }
 
   return (
-    <div
-      ref={rootRef}
-      className="esg"
-      data-esg-root=""
-      data-dataset={dataset}
-      role="group"
-      aria-label={pack.region}
-      onPointerDownCapture={skipIntro}
-      onKeyDownCapture={skipIntro}
-    >
-      <div className="esg-seg" role="radiogroup" aria-label={pack.switchLabel}>
-        {DATASETS.map((id) => (
-          <label key={id} className="esg-seg__item">
-            <input type="radio" name="esg-dataset" checked={dataset === id} onChange={() => setDataset(id)} />
-            <span>{pack.datasets[id]}</span>
-          </label>
-        ))}
-      </div>
-
-      <div className="esg-grid">
-        <div className="esg-main">
-          {ownEmpty ? (
-            <>
-              <OwnData pack={pack} own={own} />
-              <p className="esg-empty">{pack.own.empty}</p>
-            </>
-          ) : (
-            <>
-              <div className="esg-stage" ref={stageRef}>
-                {formEl}
-                {chartEl}
-                {stripEl}
-                {isElectricity ? (
-                  <RevealControl
-                    pack={pack}
-                    progress={bill.value}
-                    armed={guess !== null}
-                    seen={seen}
-                    onToggle={toggleBill}
-                    onScrub={setBill}
-                    onSettle={settleBill}
-                  />
-                ) : null}
-              </div>
-              {isElectricity ? null : gaugeEl}
-              {dataset === "own" ? <OwnData pack={pack} own={own} /> : null}
-            </>
-          )}
+    <div className="nw-demo" data-esg-demo="">
+      <DemoStage label={pack.stageLabel} caption={caption}>
+        {stage}
+      </DemoStage>
+      <DemoLever>{lever}</DemoLever>
+      {details ? (
+        <div className="nw-details" data-details={id}>
+          {details}
         </div>
-
-        {ladderVisible ? (
-          <Ladder innerRef={ladderRef} pack={pack} rows={ladderRows} reveal={scene.ladder} draft={analyse(folder)} threshold={FIXED_THRESHOLD} />
-        ) : isElectricity ? (
-          <LadderPending pack={pack} draft={analyse(folder)} />
-        ) : null}
-        <div className="esg-side">
-          <TakeawaysPanel
-            pack={pack}
-            items={items}
-            ascii={ascii}
-            onAscii={setAscii}
-            empty={ownEmpty}
-            note={takeNote}
-            view={isElectricity && proved ? { value: takeView, onChange: setTakeView } : undefined}
-          />
-        </div>
-      </div>
-
-      <p className="esg-footer">{pack.footer}</p>
-      <p className="esg-wlink">
-        <a href={localizeHref("/workshops/esg-berichte-mit-ki", locale)}>{pack.workshopLink}</a>
-      </p>
-      <div className="esg-sr" role="status" aria-live="polite">{announce}</div>
+      ) : null}
+      <OwnSentences ref={ownRef} pack={pack} onRows={setOwnRows} />
     </div>
   );
 }

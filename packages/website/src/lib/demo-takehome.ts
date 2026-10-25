@@ -32,7 +32,41 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
-export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {};
+export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
+  "esg-berichte-mit-ki": {
+    kit: {
+      de: {
+        href: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+        shown: [
+          "crvena-zemja-nachweisprobe/nachweisprobe.md",
+          "crvena-zemja-nachweisprobe/ordner/bio_zertifikat_weinberg.txt",
+          "crvena-zemja-nachweisprobe/ordner/strom_2025.csv",
+          "crvena-zemja-nachweisprobe/loesungen/LOESUNGEN.md",
+        ],
+        instructions: "crvena-zemja-nachweisprobe/projektanweisungen.md",
+        installDoc: "crvena-zemja-nachweisprobe/START-HIER.md",
+      },
+      en: {
+        href: "/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+        shown: [
+          "crvena-zemja-esg-kit/evidence-check.md",
+          "crvena-zemja-esg-kit/files/organic_certificate_vineyard.txt",
+          "crvena-zemja-esg-kit/files/electricity_2025.csv",
+          "crvena-zemja-esg-kit/answers/ANSWERS.md",
+        ],
+        instructions: "crvena-zemja-esg-kit/project-instructions.md",
+        installDoc: "crvena-zemja-esg-kit/START-HERE.md",
+      },
+    },
+    skill: { name: "esg-nachweise" },
+    templates: [
+      { vorlage: "esg-nachweisprobe" },
+      { vorlage: "esg-projektanweisungen" },
+      { vorlage: "esg-ordner-checkliste" },
+      { vorlage: "esg-mail-fehlendes-dokument" },
+    ],
+  },
+};
 
 export function takeHomeFor(slug: DemoSlug): TakeHome | undefined {
   return DEMO_TAKEHOME[slug];
