@@ -365,7 +365,7 @@ describe("crawl contract", () => {
     }
   });
 
-  it("classifies exactly the skill documents as public machine surfaces", () => {
+  it("classifies exactly the skill documents and zips as public machine surfaces", () => {
     const served = getCrawlRoute("/skills/loehrning-plattform/SKILL.md");
     expect(served.pattern).toBe("/skills/:name/SKILL.md");
     expect(served.routeClass).toBe("public-machine");
@@ -374,11 +374,17 @@ describe("crawl contract", () => {
     expect(served.includeInSitemap).toBe(false);
     expect(served.xRobotsTag).toBeUndefined();
 
+    // The upload zip is the one single-segment route under /skills
+    // (dynamicParams is off, so any other name there is a 404).
+    const zip = getCrawlRoute("/skills/loehrning-plattform.zip");
+    expect(zip.pattern).toBe("/skills/:name");
+    expect(zip.routeClass).toBe("public-machine");
+    expect(zip.includeInSitemap).toBe(false);
+
     // A sibling path is not a skill document and must not inherit the class:
     // it reaches the fail-closed default, whose pattern echoes the path.
     for (const path of [
       "/skills",
-      "/skills/loehrning-plattform",
       "/skills/loehrning-plattform/README.md",
     ]) {
       const entry = getCrawlRoute(path);

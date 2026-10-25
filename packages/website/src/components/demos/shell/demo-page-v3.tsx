@@ -1,7 +1,6 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { ArrowGlyph } from "@/components/werk";
-import { CapsLine } from "@/components/plakat";
 import { ForYourClaude } from "@/components/demos/take-home/for-your-claude";
 import type { Beat } from "@/lib/demo-beats";
 import { demoLede, type LocalizedDemo } from "@/lib/demos";
@@ -85,7 +84,7 @@ export function DemoPageV3({
         <BeatClockProvider beats={beats} locale={locale}>
           <div className="demo-grid">
             <div className="demo-aside" data-demo-aside="">
-              <CapsLine>{pageCopy.detail.caps(demo.workshopNumber)}</CapsLine>
+              <p className="demo-aside-caps">{pageCopy.detail.caps(demo.workshopNumber)}</p>
               <p className="demo-aside-title" aria-hidden="true">
                 {demo.title}
               </p>

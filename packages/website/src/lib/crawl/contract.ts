@@ -240,9 +240,12 @@ const PUBLIC_MACHINE_PATHS = [
   "/.well-known/oauth-protected-resource",
   "/.well-known/oauth-protected-resource/api/mcp",
   // Exact document pattern on purpose: /skills/<name>/SKILL.md is the only
-  // route under /skills, so a sibling path falls through to the fail-closed
-  // default instead of inheriting the machine class.
+  // document route under /skills, so a sibling path falls through to the
+  // fail-closed default instead of inheriting the machine class.
   "/skills/:name/SKILL.md",
+  // The same skill as a claude.ai upload: /skills/<name>.zip (one static
+  // param per skill, dynamicParams off, so any other name is a 404).
+  "/skills/:name",
   // CC BY 4.0 template sources under content/vorlagen, served byte for byte.
   // Crawlable, never in the sitemap; the canonical is the page named in the
   // Link header. /vorlagen itself stays unlisted and fails closed.

@@ -305,6 +305,15 @@
 }
 
 /* ── Desktop column copy ─────────────────────────────────────────────────── */
+/* The caps line on paper (the plakat caps line belongs to scenes only). */
+.demo-aside-caps {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
 .demo-aside-title {
   margin-top: 12px;
   font-size: 3rem;
