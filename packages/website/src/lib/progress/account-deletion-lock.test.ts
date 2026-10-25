@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   ACCOUNT_DELETION_ORIGIN_LOCK_NAME,

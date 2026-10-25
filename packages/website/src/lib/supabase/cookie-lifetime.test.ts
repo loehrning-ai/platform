@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 /**
  * cookie-lifetime.test.ts
  *

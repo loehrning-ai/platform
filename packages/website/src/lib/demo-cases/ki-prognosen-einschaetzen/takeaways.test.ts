@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { FORECAST_COPY } from "./copy";
 import { MORNINGS } from "./data";
