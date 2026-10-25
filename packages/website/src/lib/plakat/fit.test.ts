@@ -10,7 +10,6 @@ import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
-import { getDemosForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { getWorkshops } from "@/lib/workshops";
 import {
@@ -128,18 +127,7 @@ const SURFACES: readonly Surface[] = ([
     files: ["src/app/demos/page.tsx"],
     titles: LOCALES.map((locale) => ({ id: `demos ${locale}`, text: DEMOS_PAGE_COPY[locale].catalog.heading })),
   },
-  {
-    name: "demo detail bands",
-    layout: "band-art",
-    files: ["src/components/demos/demo-page.tsx"],
-    titles: LOCALES.flatMap((locale) =>
-      getDemosForLocale(locale).map((demo) => ({
-        id: `${demo.slug} ${locale}`,
-        text: demo.title,
-        fit: fallbackFitEm(demo.title),
-      })),
-    ),
-  },
+
   // The blog index is the old bold index again (the giant "Blog."), not a
   // poster band.
   {
@@ -295,7 +283,6 @@ describe("the poster title registry", () => {
     expect(SURFACES.map((surface) => surface.name)).toEqual([
       "workshop detail bands",
       "demos hub band",
-      "demo detail bands",
       "/kurse headline on paper",
       "paper page headlines",
       "course landing bands",

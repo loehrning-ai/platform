@@ -57,7 +57,7 @@ const FORMERLY_DARK = [
   "components/werk/question-card.tsx",
   "components/werk/button-link.tsx",
   "components/werk/chip.tsx",
-  "components/demos/demo-page.tsx",
+  "components/demos/shell/demo-page-v3.tsx",
   "components/ai-native/primitives.tsx",
   "components/ai-native/demos/_shared.tsx",
   "components/ai-native/demos/agent-demo.tsx",

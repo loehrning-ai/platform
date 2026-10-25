@@ -704,8 +704,8 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
-      "sizeBytes": 42119,
-      "sha256": "4790804848d2a8dbb3102569b92d036bc284955df65ca5dc49be9adf7d7af9ad",
+      "sizeBytes": 43378,
+      "sha256": "097e0aaf560e0e2127bc07672b0fd1ea2226a8afcf0adbc5d0f98f2f32d841ee",
       "owner": "Tim L\u00f6hr",
       "source": "Original Prognose pr\u00fcfen workshop material (German edition of the Workshop 01 participant kit, invented company data), built by scripts/workshop01/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -713,8 +713,8 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
-      "sizeBytes": 41968,
-      "sha256": "77f9dbf79c62757db8f61299125a2decffd580b86ee1bb394fa9058e588cc961",
+      "sizeBytes": 43118,
+      "sha256": "fb884e2bd15e033745370692c61d644a689ca509baaf14f415456cf8951463e2",
       "owner": "Tim L\u00f6hr",
       "source": "Original Prognose pr\u00fcfen workshop material (English edition of the Workshop 01 participant kit, invented company data), built by scripts/workshop01/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1196,8 +1196,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
-      "sizeBytes": 29198,
-      "sha256": "19e5a8b1301a85d36d4997468c9c59aac0cdbdf6babd54f7bba995abcd430edb",
+      "sizeBytes": 29658,
+      "sha256": "fefdebb42bfd86e651f99e4a3aa787dd428be18e092964772bec38686b455d25",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

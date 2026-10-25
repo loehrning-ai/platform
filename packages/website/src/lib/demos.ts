@@ -59,12 +59,6 @@ export interface DemoCopy {
 }
 
 export interface Demo extends DemoCopy {
-  /**
-   * "v3": the demo runs on the v3 shell (src/components/demos/shell), its route
-   * passes beats, and the v3 contract test applies. Opt-in while the five
-   * demos migrate; the integrator removes the flag once all five are on v3.
-   */
-  readonly shell?: "v3";
   /** Stable id for machine surfaces; equals the slug. */
   readonly id: DemoSlug;
   readonly slug: DemoSlug;
@@ -92,7 +86,6 @@ export type LocalizedDemo = Omit<Demo, "en"> & { readonly locale: Locale };
 
 export const demos: readonly Demo[] = [
   {
-    shell: "v3",
     id: "ki-prognosen-einschaetzen",
     slug: "ki-prognosen-einschaetzen",
     workshopSlug: "ki-prognosen-einschaetzen",
@@ -134,7 +127,6 @@ export const demos: readonly Demo[] = [
   },
   {
     id: "geschaeftsberichte-mit-ki-lesen",
-    shell: "v3",
     slug: "geschaeftsberichte-mit-ki-lesen",
     workshopSlug: "geschaeftsberichte-mit-ki-lesen",
     workshopNumber: "02",
@@ -173,7 +165,6 @@ export const demos: readonly Demo[] = [
   },
   {
     id: "datenbereitschaft-fuer-ki",
-    shell: "v3",
     slug: "datenbereitschaft-fuer-ki",
     workshopSlug: "datenbereitschaft-fuer-ki",
     workshopNumber: "03",
@@ -224,7 +215,6 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    shell: "v3",
     lastReviewed: "2026-10-25",
     title: "Nachweisprobe",
     oneLiner:
@@ -252,7 +242,6 @@ export const demos: readonly Demo[] = [
     },
   },
   {
-    shell: "v3",
     id: "audit-vorbereitung-mit-ki",
     slug: "audit-vorbereitung-mit-ki",
     workshopSlug: "audit-vorbereitung-mit-ki",

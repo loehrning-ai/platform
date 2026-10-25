@@ -124,11 +124,12 @@ const BINARY_SAMPLE_BYTES = 4 * 1024;
 const FAIL_CLOSED_PLATFORM_ARCHIVE_EXTENSIONS = new Set(["7z", "gz", "tar"]);
 /**
  * Reviewed archives that may carry PNG entries (each one validated chunk by
- * chunk by zip-inspection.mjs). Workshop 04's kit ships a photo of an invented
- * invoice that participants attach in Claude.
+ * chunk by zip-inspection.mjs). Workshop 04's kit (English and German edition)
+ * ships a photo of an invented invoice that participants attach in Claude.
  */
 const ZIP_ARCHIVES_WITH_PNG_ENTRIES = new Set([
   "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+  "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
 ]);
 /** Workshop 04's supplied compressed kit carries standard timestamp and Unix-id metadata. */
 const ZIP_ARCHIVES_WITH_SAFE_UNIX_METADATA = new Set([

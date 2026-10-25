@@ -21,7 +21,7 @@ const TEXT_LINK =
   "inline-flex min-h-11 items-center gap-2 font-semibold text-foreground underline decoration-border decoration-1 underline-offset-4 [-webkit-tap-highlight-color:transparent] active:decoration-mennige active:decoration-[3px] [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-mennige [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-[3px]";
 
 /**
- * The v3 demo page (opt-in per demo: `shell: "v3"` in src/lib/demos.ts).
+ * The demo page every demo runs on (the v3 shell).
  *
  * Phone: a 56px demo bar (back glyph, the one-line H1, the workshop chip),
  * the beat rail, then the demo's stage and lever own the first screen; the

@@ -3,12 +3,11 @@ import { demos } from "../../src/lib/demos";
 import { expectGlassBudget } from "./fixtures/glass";
 
 /**
- * The v3 shell contract every opted-in demo shares (registry `shell: "v3"`):
+ * The v3 shell contract all five demos share:
  * the stage and the lever own the first screen at 390 x 664 without the page
  * scrolling itself, a restart is visible, and at most two glass surfaces show.
- * Runs for each demo as it opts in; with none on v3 yet it checks nothing.
  */
-const V3 = demos.filter((demo) => demo.shell === "v3");
+const V3 = demos;
 
 for (const demo of V3) {
   test.describe(`${demo.slug} on the v3 shell`, () => {

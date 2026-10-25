@@ -3,7 +3,7 @@ import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { validateBeats, type Beat } from "@/lib/demo-beats";
 import { DEMO_TAKEHOME } from "@/lib/demo-takehome";
-import { DEMO_SLUGS, getDemoBySlug } from "@/lib/demos";
+import { DEMO_SLUGS } from "@/lib/demos";
 import { listZipEntries } from "@/lib/zip/read";
 
 /**
@@ -147,9 +147,8 @@ describe.each(DEMO_SLUGS)("demo folder contract: %s", (slug) => {
 });
 
 /**
- * The v3 shell contract, for every demo that opted in (`shell: "v3"` in
- * src/lib/demos.ts). Each builder flips the flag when their demo moves onto
- * the shell; the integrator removes the flag once all five run on it.
+ * The v3 shell contract. All five demos run on the shell, so it holds for
+ * every demo in the registry.
  *
  *   src/lib/demo-cases/<slug>/beats.ts   BEATS: commit, reveal, tool, apply 0-3, own, takehome
  *   src/app/demos/<slug>/page.tsx         passes BEATS to renderDemoRoute
@@ -188,16 +187,10 @@ const SHELL_SELECTORS = [
   ".glass",
 ];
 
-const V3_SLUGS = DEMO_SLUGS.filter((slug) => getDemoBySlug(slug)?.shell === "v3");
 
 describe("v3 shell contract", () => {
-  it("lists the demos that opted in (none is fine while they migrate)", () => {
-    expect(V3_SLUGS.every((slug) => DEMO_SLUGS.includes(slug))).toBe(true);
-  });
-
-  it.each(V3_SLUGS.length > 0 ? V3_SLUGS : ["(none yet)"])("%s meets the v3 contract", async (slug) => {
-    if (slug === "(none yet)") return;
-    const typed = slug as (typeof DEMO_SLUGS)[number];
+  it.each(DEMO_SLUGS)("%s meets the v3 contract", async (slug) => {
+    const typed = slug;
     // beats: the kinds in order, at most eight
     expect(existsSync(join(SRC, `lib/demo-cases/${slug}/beats.ts`)), "beats.ts").toBe(true);
     const beatsSource = read(`lib/demo-cases/${slug}/beats.ts`);

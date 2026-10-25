@@ -81,9 +81,9 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 | https://loehrning.ai/demos/ki-prognosen-einschaetzen | Die Fehlerliste | Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Monatsgrenze | Schieb die Linie um eine Woche. Aus +26 % wird −20 %. Dann rechne mit deinen Zahlen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Stufe oder Treppe? | Zieh den Hebel: aus −19.960 € wird 334.675 €, und kein Datensatz ändert sich. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/esg-berichte-mit-ki | Elf von zwölf | Im Entwurf steht „Gesamtjahr“. Im Ordner liegen elf Rechnungen. Rate den zwölften Monat, sieh, wie weit du da… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Eine Datei, drei Antworten | Eine Datei aus dem Workshop-Kit, eine Frage, drei richtig gerechnete Antworten. Danach legst du eine eigene K… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Die Fragekarte | Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am End… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/esg-berichte-mit-ki | Nachweisprobe | Vier Sätze, vier Dateien, vier Prüfungen. Dann derselbe Ordner für drei Anfragen, eine nachgereichte Rechnung… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Nachweisprüfung | Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Date… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
@@ -218,6 +218,8 @@ _None._
 | `/workshops/ki-im-unternehmen-sicher-nutzen` | The previous slug of Workshop 05 resolves to the audit preparation workshop. |
 | `/workshops/ki-im-unternehmen-sicher-nutzen/kit` | The previous kit page of Workshop 05 resolves to the new kit page. |
 | `/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip` | The previous kit zip of Workshop 05 resolves to the new kit zip. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/slides.html` | The previous deck of Workshop 05 resolves to the rebuilt deck. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html` | The previous presenter view of Workshop 05 resolves to the rebuilt presenter view. |
 | `/demos/ki-im-unternehmen-sicher-nutzen` | The previous demo of Workshop 05 resolves to its evidence check demo. |
 | `/ai-native/fluency-test` | The retired self-assessment resolves to the course landing. |
 | `/ai-native/capstone-gallery` | The retired capstone rules page resolves to the course landing. |

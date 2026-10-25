@@ -9,6 +9,9 @@ import { inspectZipArchive } from "../../packages/website/scripts/open-source/zi
 
 export const KIT_PREFIX = "data-readiness-kit/";
 
+/** Where the kit files written for this repository live. */
+const KIT_SOURCE = "scripts/course03/kit";
+
 /**
  * The learner layer, written in this repository, in archive order. Each name
  * maps to its source file relative to the repository root: the question card
@@ -17,18 +20,18 @@ export const KIT_PREFIX = "data-readiness-kit/";
  * makes from the FOLDLINE preset (kit-lockstep.test.ts keeps them in step).
  */
 export const KIT_LEARNER_SOURCES = {
-  "START-HIER.md": "scripts/course03/kit/START-HIER.md",
-  "START-HERE.md": "scripts/course03/kit/START-HERE.md",
+  "START-HIER.md": `${KIT_SOURCE}/START-HIER.md`,
+  "START-HERE.md": `${KIT_SOURCE}/START-HERE.md`,
   "FRAGEKARTE.md": "packages/website/content/vorlagen/fragekarte.md",
   "QUESTION-CARD.md": "packages/website/content/vorlagen/en/fragekarte.md",
-  "UEBUNG.md": "scripts/course03/kit/UEBUNG.md",
-  "claude/README.md": "scripts/course03/kit/claude/README.md",
+  "UEBUNG.md": `${KIT_SOURCE}/UEBUNG.md`,
+  "claude/README.md": `${KIT_SOURCE}/claude/README.md`,
   "claude/kennzahl-fragekarte/SKILL.md": "packages/website/content/skills/kennzahl-fragekarte/SKILL.md",
-  "claude/kennzahl-fragekarte/references/kennzahlen.md": "scripts/course03/kit/claude/kennzahl-fragekarte/references/kennzahlen.md",
-  "claude/PROJEKT-ANWEISUNG-VORLAGE.txt": "scripts/course03/kit/claude/PROJEKT-ANWEISUNG-VORLAGE.txt",
-  "claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt": "scripts/course03/kit/claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt",
-  "claude/PRUEFLISTE-VORLAGE.md": "scripts/course03/kit/claude/PRUEFLISTE-VORLAGE.md",
-  "claude/TEST-LIST-TEMPLATE.md": "scripts/course03/kit/claude/TEST-LIST-TEMPLATE.md",
+  "claude/kennzahl-fragekarte/references/kennzahlen.md": `${KIT_SOURCE}/claude/kennzahl-fragekarte/references/kennzahlen.md`,
+  "claude/PROJEKT-ANWEISUNG-VORLAGE.txt": `${KIT_SOURCE}/claude/PROJEKT-ANWEISUNG-VORLAGE.txt`,
+  "claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt": `${KIT_SOURCE}/claude/PROJECT-INSTRUCTIONS-TEMPLATE.txt`,
+  "claude/PRUEFLISTE-VORLAGE.md": `${KIT_SOURCE}/claude/PRUEFLISTE-VORLAGE.md`,
+  "claude/TEST-LIST-TEMPLATE.md": `${KIT_SOURCE}/claude/TEST-LIST-TEMPLATE.md`,
 };
 
 export const KIT_LEARNER_FILES = Object.keys(KIT_LEARNER_SOURCES);

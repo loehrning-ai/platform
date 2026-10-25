@@ -573,16 +573,12 @@ test("PNG entries pass only when the caller opts in and every chunk validates", 
   );
 });
 
-test("Workshop 04 permits only the reviewed timestamp and Unix-id ZIP metadata", async () => {
+test("Workshop 04's kit passes with its reviewed PNG and no ZIP extra fields", async () => {
   const archive = await readFile(workshopKitPath);
-  assert.throws(
-    () => inspectZipArchive(archive, { label: "workshop04.zip", allowPngEntries: true }),
-    /extra fields are forbidden/,
-  );
-  const entries = inspectZipArchive(archive, {
-    label: "workshop04.zip",
-    allowPngEntries: true,
-    allowSafeUnixMetadata: true,
-  });
-  assert.ok(entries.some((entry) => entry.path === "crvena-zemja-esg-kit/ANSWERS.md"));
+  // The deterministic builder (scripts/workshop04/kit-archive.mjs) writes no
+  // extra fields, so the kit passes without the Unix-metadata allowance.
+  const entries = inspectZipArchive(archive, { label: "workshop04.zip", allowPngEntries: true });
+  assert.ok(entries.some((entry) => entry.path === "crvena-zemja-esg-kit/answers/ANSWERS.md"));
+  assert.ok(entries.some((entry) => entry.path.endsWith(".png")));
+  assert.throws(() => inspectZipArchive(archive, { label: "workshop04.zip" }), /not a recognized text file/);
 });

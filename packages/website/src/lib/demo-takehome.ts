@@ -32,16 +32,19 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
+/** Workshop 05 ships one kit for both locales. */
+const AUDIT_KIT = "vardar-audit-kit";
+
 const AUDIT_KIT_EDITION: TakeHomeKit = {
-  href: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+  href: `/workshops/audit-vorbereitung-mit-ki/${AUDIT_KIT}.zip`,
   shown: [
-    "vardar-audit-kit/folder/backup-report_2026-10.txt",
-    "vardar-audit-kit/folder/training-records_2026.csv",
-    "vardar-audit-kit/folder/infosec-policy_v4_DRAFT.md",
-    "vardar-audit-kit/project-instructions.md",
+    `${AUDIT_KIT}/folder/backup-report_2026-10.txt`,
+    `${AUDIT_KIT}/folder/training-records_2026.csv`,
+    `${AUDIT_KIT}/folder/infosec-policy_v4_DRAFT.md`,
+    `${AUDIT_KIT}/project-instructions.md`,
   ],
-  instructions: "vardar-audit-kit/project-instructions.md",
-  installDoc: "vardar-audit-kit/START-HERE.md",
+  instructions: `${AUDIT_KIT}/project-instructions.md`,
+  installDoc: `${AUDIT_KIT}/START-HERE.md`,
 };
 
 export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
