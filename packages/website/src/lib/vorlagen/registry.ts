@@ -63,7 +63,56 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       de: "/blog/ki-in-der-ausbildung",
       en: "/en/blog/ki-in-der-ausbildung",
     },
-  },  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as evidence-check.md.
+  },
+  {
+    // Workshop 01: the release rule the demo "Die Fehlerliste" fills in (beat "Regel").
+    slug: "pruefregel",
+    kind: "template",
+    files: {
+      de: "pruefregel.md",
+      en: "en/release-rule.md",
+    },
+    downloadNames: {
+      de: "pruefregel.md",
+      en: "release-rule.en.md",
+    },
+    hostPaths: {
+      de: "/demos/ki-prognosen-einschaetzen",
+      en: "/en/demos/ki-prognosen-einschaetzen",
+    },
+    inKit: {
+      zip: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+      paths: { de: "prognose-pruefen/pruefregel.md" },
+    },
+  },
+  {
+    slug: "kennzahlen-steckbrief-vorlage",
+    kind: "template",
+    files: {
+      de: "kennzahlen-steckbrief-vorlage.md",
+      en: "en/metric-card-template.md",
+    },
+    downloadNames: {
+      de: "kennzahlen-steckbrief-vorlage.md",
+      en: "metric-card-template.en.md",
+    },
+    hostPaths: {
+      de: "/demos/geschaeftsberichte-mit-ki-lesen",
+      en: "/en/demos/geschaeftsberichte-mit-ki-lesen",
+    },
+  },
+  {
+    slug: "fragekarte",
+    kind: "template",
+    files: { de: "fragekarte.md", en: "en/fragekarte.md" },
+    downloadNames: { de: "fragekarte.md", en: "fragekarte.en.md" },
+    hostPaths: { de: "/demos/datenbereitschaft-fuer-ki", en: "/en/demos/datenbereitschaft-fuer-ki" },
+    inKit: {
+      zip: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+      paths: { de: "data-readiness-kit/FRAGEKARTE.md", en: "data-readiness-kit/QUESTION-CARD.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as evidence-check.md.
   {
     slug: "esg-nachweisprobe",
     kind: "template",
@@ -122,54 +171,6 @@ export const VORLAGEN: readonly VorlageEntry[] = [
     inKit: {
       zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
       paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/nachweisregister-vorlage.csv" },
-    },
-  },
-  {
-    // Workshop 01: the release rule the demo "Die Fehlerliste" fills in (beat "Regel").
-    slug: "pruefregel",
-    kind: "template",
-    files: {
-      de: "pruefregel.md",
-      en: "en/release-rule.md",
-    },
-    downloadNames: {
-      de: "pruefregel.md",
-      en: "release-rule.en.md",
-    },
-    hostPaths: {
-      de: "/demos/ki-prognosen-einschaetzen",
-      en: "/en/demos/ki-prognosen-einschaetzen",
-    },
-    inKit: {
-      zip: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
-      paths: { de: "prognose-pruefen/pruefregel.md" },
-    },
-  },
-  {
-    slug: "kennzahlen-steckbrief-vorlage",
-    kind: "template",
-    files: {
-      de: "kennzahlen-steckbrief-vorlage.md",
-      en: "en/metric-card-template.md",
-    },
-    downloadNames: {
-      de: "kennzahlen-steckbrief-vorlage.md",
-      en: "metric-card-template.en.md",
-    },
-    hostPaths: {
-      de: "/demos/geschaeftsberichte-mit-ki-lesen",
-      en: "/en/demos/geschaeftsberichte-mit-ki-lesen",
-    },
-  },
-  {
-    slug: "fragekarte",
-    kind: "template",
-    files: { de: "fragekarte.md", en: "en/fragekarte.md" },
-    downloadNames: { de: "fragekarte.md", en: "fragekarte.en.md" },
-    hostPaths: { de: "/demos/datenbereitschaft-fuer-ki", en: "/en/demos/datenbereitschaft-fuer-ki" },
-    inKit: {
-      zip: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
-      paths: { de: "data-readiness-kit/FRAGEKARTE.md", en: "data-readiness-kit/QUESTION-CARD.md" },
     },
   },
   {

@@ -20,6 +20,9 @@ const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
     "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
 };
 
+/** Kits that carry both languages in one zip: the material is labelled in the page's language. */
+const BILINGUAL_KITS: ReadonlySet<string> = new Set(["/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip"]);
+
 /**
  * A deck published in two editions: the German page links slides.html (German),
  * the English page slides.en.html (English), built from one copy source.
@@ -262,6 +265,7 @@ describe("workshops catalog", () => {
           language:
             role === "demo" ||
             edition ||
+            BILINGUAL_KITS.has(href) ||
             (role === "deck" && (language !== "en" || href.endsWith("/en/slides.html")))
               ? "page"
               : href in GERMAN_KIT_EDITIONS
@@ -323,6 +327,11 @@ describe("workshops catalog", () => {
           // The practice demo is a page in the reader's language, and so is a deck with editions.
           if (material.role === "demo" || isDeckEdition(workshop.slug, material)) {
             expect(material.language).toBe(locale);
+            continue;
+          }
+          // A kit with both languages in one zip is labelled in the page's language.
+          if (BILINGUAL_KITS.has(material.href)) {
+            expect(material.language, material.href).toBe(locale);
             continue;
           }
           // A kit with a German edition offers it on the German page only.

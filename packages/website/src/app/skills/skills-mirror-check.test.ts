@@ -406,11 +406,13 @@ describe("runSkillsMirrorCheck", () => {
   });
 
   it("compares the served copies when a base URL is given", async () => {
+    const { names } = await runSkillsMirrorCheck();
     const { errors } = await runSkillsMirrorCheck({
       baseUrl: "https://loehrning.ai",
       fetchImpl: async () => stubResponse("nicht der Inhalt"),
     });
-    expect(errors).toHaveLength(4);
+    // One served copy per published skill.
+    expect(errors).toHaveLength(names.length);
     for (const error of errors) {
       expect(error).toContain("served copy");
       expect(error).toContain("differs from the content directory");

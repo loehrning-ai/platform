@@ -511,8 +511,8 @@ describe("<WorkshopDetailContent>", () => {
     const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
     render(<WorkshopDetailContent workshop={workshop} locale="de" />);
 
-    // The language is said once, in the provenance line.
-    expect(document.querySelector("footer")).toHaveTextContent("Material auf Englisch");
+    // The kit has a German edition, so the provenance line says no "auf Englisch".
+    expect(document.querySelector("footer")).not.toHaveTextContent("Material auf Englisch");
     expect(screen.queryByText(/Alle Materialien auf Englisch/)).toBeNull();
     for (const material of workshop.materials) {
       expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
