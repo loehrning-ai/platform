@@ -439,9 +439,13 @@ describe("Supply-chain install contract", () => {
     // --audit-level or a bare skip would silently stop gating everything else.
     expect(scripts.audit).toMatch(/^bun audit(\s+--ignore=GHSA-[\w-]+)*$/);
     expect(scripts.audit).not.toContain("--audit-level");
-    expect(await repositoryFile("scripts/ci.mjs")).toContain(
-      'root("audit", "audit")',
+    // The PR gate blocks on critical advisories, with the same escape hatch.
+    expect(scripts["audit:critical"]).toMatch(
+      /^bun audit --audit-level=critical(\s+--ignore=GHSA-[\w-]+)*$/,
     );
+    const ci = await repositoryFile("scripts/ci.mjs");
+    expect(ci).toContain('root("audit", "audit")');
+    expect(ci).toContain('root("audit:critical", "audit:critical")');
   });
 
   it("isolates the write token from checkout, Bun, and repository scripts", async () => {

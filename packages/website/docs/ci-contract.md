@@ -34,6 +34,13 @@ is the composite action at `.github/actions/setup`.
 | `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium.                                                                                           |
 | `verify`  | `verify`         | inline shell       | Aggregation only. Red unless each of the three results is exactly `success`; failure, cancelled and skipped are all red.                                                                                                                    |
 
+A critical advisory turns `static` red on every pull request, and with it
+`verify` and the deploy gate; that is intended. The fix is a bump or an
+override. When no fixed version exists yet, add `--ignore=GHSA-...` to the
+`audit:critical` script and a dated line here naming the advisory and the
+reason, and remove both once a fix ships. Never drop the step. An outage of
+the npm advisory API also turns `static` red; re-run the job.
+
 `verify` declares `if: always()`. That is load-bearing: a job that is skipped
 when a dependency fails would not be a red check. It is the only job called
 `verify` in any workflow.
