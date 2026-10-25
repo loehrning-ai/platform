@@ -63,6 +63,53 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       de: "/blog/ki-in-der-ausbildung",
       en: "/en/blog/ki-in-der-ausbildung",
     },
+  },  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as evidence-check.md.
+  {
+    slug: "esg-nachweisprobe",
+    kind: "template",
+    files: { de: "esg-nachweisprobe.md", en: "en/esg-nachweisprobe.md" },
+    downloadNames: { de: "esg-nachweisprobe.md", en: "esg-nachweisprobe.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/nachweisprobe.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as take-home/project-instructions-template.md.
+  {
+    slug: "esg-projektanweisungen",
+    kind: "template",
+    files: { de: "esg-projektanweisungen.md", en: "en/esg-projektanweisungen.md" },
+    downloadNames: { de: "esg-projektanweisungen.md", en: "esg-projektanweisungen.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/projektanweisungen-vorlage.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as take-home/folder-checklist.md.
+  {
+    slug: "esg-ordner-checkliste",
+    kind: "template",
+    files: { de: "esg-ordner-checkliste.md", en: "en/esg-ordner-checkliste.md" },
+    downloadNames: { de: "esg-ordner-checkliste.md", en: "esg-ordner-checkliste.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/ordner-checkliste.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as take-home/email-missing-document.md.
+  {
+    slug: "esg-mail-fehlendes-dokument",
+    kind: "template",
+    files: { de: "esg-mail-fehlendes-dokument.md", en: "en/esg-mail-fehlendes-dokument.md" },
+    downloadNames: { de: "esg-mail-fehlendes-dokument.md", en: "esg-mail-fehlendes-dokument.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/mail-fehlendes-dokument.md" },
+    },
   },
 ];
 

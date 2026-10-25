@@ -2,6 +2,7 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
+import { readZipText } from "./zip/read";
 
 const slug = "esg-berichte-mit-ki";
 const publicRoot = resolve(process.cwd(), "public");
@@ -20,7 +21,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.eyebrow).toBe("Workshop 04 · ESG");
       expect(workshop.summary.length).toBeLessThanOrEqual(160);
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-15");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-25");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.provenance.liveRunAt).toBeUndefined();
       expect(workshop.provenance.aiOutputsRecordedAt).toBeUndefined();
@@ -36,13 +37,13 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
       expect(workshop.agenda.reduce((sum, item) => sum + item.minutes, 0)).toBe(60);
       expect(workshop.minutesLive).toBe(60);
-      expect(workshop.minutesSelfStudy).toBe(120);
+      expect(workshop.minutesSelfStudy).toBe(90);
     }
     expect(de.agenda).toHaveLength(en.agenda.length);
-    expect(en.selfStudyDurationLabel).toBe("solo about 2 h");
+    expect(en.selfStudyDurationLabel).toBe("solo about 90 min");
   });
 
-  it("lists the deck and kit at the existing URLs and uses the exact supplied ZIP size", () => {
+  it("lists the deck and the English kit and labels the zip with its real size", () => {
     expect(slides.match(/<section\b/g)).toHaveLength(19);
     expect(en.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length))).toEqual([
       "slides.html",
@@ -50,10 +51,12 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     ]);
     expect(existsSync(resolve(root, "sheet.html"))).toBe(true);
     expect(existsSync(resolve(root, "assets/brainster-logo.svg"))).toBe(true);
-    expect(statSync(resolve(root, "crvena-zemja-esg-kit.zip")).size).toBe(896622);
     for (const workshop of both) {
       expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 19 Folien" : "Deck · 19 slides");
-      expect(workshop.materials[1]?.sizeLabel).toBe("875 KB");
+      for (const material of workshop.materials.slice(1)) {
+        const bytes = statSync(resolve(publicRoot, material.href.slice(1))).size;
+        expect(material.sizeLabel, material.href).toBe(`${Math.floor(bytes / 1024)} KB`);
+      }
     }
   });
 
@@ -66,32 +69,35 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(slides).not.toContain("OK to send to bank.");
   });
 
-  it("matches the supplied kit rules and keeps step cards predictive", () => {
-    const expectedEnglishRules = [
-      "Only our files. Never invent a number.",
-      "Cite the file and line for every fact (line numbers as in a text editor, counting every line). Do every calculation in code, with units.",
-      "Missing document: write NOT FOUND and name the document that would prove it. Document exists but is expired, an estimate or in conflict with another file: write NEEDS CHECK and give the reason in one sentence. If a document is missing and another file also conflicts, write NOT FOUND and name the conflict in the reason. A question with several parts gets the status of its weakest part.",
-    ];
-    expect(en.kit?.rules).toEqual(expectedEnglishRules);
-    for (const workshop of both) {
+  it("repeats the kit's own rules and keeps step cards predictive", () => {
+    const zipText = (name: string, file: string) =>
+      readZipText(new Uint8Array(readFileSync(resolve(root, name))), file)!.replace(/\n\s+/g, " ");
+    const instructions = {
+      de: zipText("crvena-zemja-nachweisprobe.zip", "crvena-zemja-nachweisprobe/projektanweisungen.md"),
+      en: zipText("crvena-zemja-esg-kit.zip", "crvena-zemja-esg-kit/project-instructions.md"),
+    };
+    for (const [locale, workshop] of [["de", de], ["en", en]] as const) {
       const kit = workshop.kit!;
       expect(kit.fileName).toBe("crvena-zemja-esg-kit.zip");
       expect(kit.stats.map((stat) => stat.value)).toEqual(["13", "5", "3"]);
       expect(kit.steps).toHaveLength(5);
       expect(kit.rules).toHaveLength(3);
+      expect(instructions[locale]).toContain(kit.rules[0]);
+      expect(instructions[locale]).toContain(kit.rules[1]);
+      const statuses = locale === "de" ? ["BELEGT", "SCHWACH", "LÜCKE"] : ["COVERED", "WEAK", "GAP"];
+      for (const status of statuses) {
+        expect(kit.rules[2]).toContain(status);
+        expect(instructions[locale]).toContain(status);
+      }
       expect(kit.steps.every((step) => !step.segments && !step.line)).toBe(true);
     }
-    expect(en.kit?.steps[0].note).toBe("How many of the 8 questions come back OK? Guess first, then check ANSWERS.md.");
-    expect(en.kit?.steps[1].note).toBe("Mark each claim RED, AMBER or GREEN yourself first. The red claims come first.");
+    expect(en.kit?.steps[1].note).toBe("Decide for each claim yourself first: send or drop.");
     expect(en.kit?.steps[2].input).toBe("Banka Povardarie's screening form for the solar loan.");
-    expect(en.kit?.steps[2].action).toBe("Fills in the form as one table, with a source and a status for each field, and works out the payback in code.");
-    expect(en.kit?.steps[2].note).toBe("Race Claude: work out the payback with your phone calculator first.");
     expect(en.kit?.steps[3].note).toBe("Gaps are named, not filled.");
-    expect(en.kit?.steps[4].title).toBe("The surprise");
-    expect(en.kit?.steps[4].input).toBe("One more document.");
-    expect(en.kit?.steps[4].note).toBe("Your bet: which answers change, and which stay the same?");
-    expect(en.kit?.howTo).toContain("About 2 hours the first time");
-    expect(en.kit?.contents.map((item) => item.name)).toContain("ANSWERS.md");
+    expect(en.kit?.steps[4].title).toBe("The late invoice");
+    expect(en.kit?.howTo).toContain("About 90 minutes the first time");
+    expect(de.kit?.contents.map((item) => item.name)).toContain("answers/ANSWERS.md");
+    expect(de.kit?.howTo).toContain("crvena-zemja-nachweisprobe.zip");
   });
 
   it("removes answer spoilers from page copy, including descriptions used for metadata", () => {
@@ -115,12 +121,12 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     }
     expect(en.description).toContain("Tim demos Claude live on a projector");
     expect(en.accessNote).toContain("a phone or paper is enough");
-    expect(en.kit?.howTo).toContain("About 2 hours the first time");
+    expect(en.kit?.howTo).toContain("About 90 minutes the first time");
     expect(en.caseStudy.metrics).toEqual([
       { label: "Employees", value: "42" },
       { label: "Requests", value: "3" },
       { label: "Company files", value: "13" },
-      { label: "Hidden traps", value: "7" },
+      { label: "Defects in the files", value: "8" },
     ]);
     expect(en.caseStudy.limitationsHeading).toBe("Before you start");
     expect(en.materials[0]?.label).toBe("Deck · 19 slides");

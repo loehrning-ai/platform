@@ -420,42 +420,6 @@
     "reason": "debt: the W3 builder rewrites this copy (demos v3); remove the entry with the fix"
   },
   {
-    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/ANSWERS.md",
-    "rule": "score",
-    "match": "score",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/ANSWERS.md",
-    "rule": "score",
-    "match": "Score",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/inbox/1-nordvik-questionnaire.md",
-    "rule": "deadline",
-    "match": "Friday",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/START-HERE.md",
-    "rule": "deadline",
-    "match": "Friday",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/START-HERE.md",
-    "rule": "score",
-    "match": "score",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip!crvena-zemja-esg-kit/START-HERE.md",
-    "rule": "surprise",
-    "match": "surprise",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
     "file": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip!northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
     "rule": "dash",
     "match": "—",
@@ -604,30 +568,6 @@
     "rule": "boss",
     "match": "Chefs",
     "reason": "debt: the W5 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/src/lib/workshops-esg-reporting-kit.ts",
-    "rule": "surprise",
-    "match": "surprise",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/src/lib/workshops-esg-reporting-kit.ts",
-    "rule": "surprise",
-    "match": "Überraschung",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/src/lib/workshops-esg-reporting.ts",
-    "rule": "surprise",
-    "match": "surprise",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
-  },
-  {
-    "file": "packages/website/src/lib/workshops-esg-reporting.ts",
-    "rule": "surprise",
-    "match": "Überraschung",
-    "reason": "debt: the W4 builder rewrites this copy (demos v3); remove the entry with the fix"
   },
   {
     "file": "scripts/workshop05/deck-src/notes.json",

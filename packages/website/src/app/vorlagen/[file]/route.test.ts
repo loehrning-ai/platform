@@ -41,6 +41,14 @@ describe("GET /vorlagen/[file]", () => {
     await expect(generateStaticParams()).resolves.toEqual([
       { file: "ki-in-der-ausbildung-fragen.md" },
       { file: "ki-in-der-ausbildung-fragen.en.md" },
+      { file: "esg-nachweisprobe.md" },
+      { file: "esg-nachweisprobe.en.md" },
+      { file: "esg-projektanweisungen.md" },
+      { file: "esg-projektanweisungen.en.md" },
+      { file: "esg-ordner-checkliste.md" },
+      { file: "esg-ordner-checkliste.en.md" },
+      { file: "esg-mail-fehlendes-dokument.md" },
+      { file: "esg-mail-fehlendes-dokument.en.md" },
     ]);
   });
 

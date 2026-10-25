@@ -9,7 +9,7 @@ import {
   assertPlainPng,
   FORBIDDEN,
   hashedWordGuard,
-  KIT_FILES,
+  KIT_V3_ZIPS,
   listFiles,
   mentionsClient,
   PUBLISHED_FILES,
@@ -18,6 +18,7 @@ import {
   WORKSHOP_RELATIVE,
 } from "../workshop04/export-esg-passport.mjs";
 import { buildKitArchive, readKitArchive, ZIP_NAME } from "../workshop04/kit-archive.mjs";
+import { KITS, kitFiles, PLATFORM_FILES, zipName } from "../workshop04/kit-v3.mjs";
 
 const read = (name) => readFileSync(path.join(WORKSHOP_DIR, name));
 const kit = () => new Map(readKitArchive(read(ZIP_NAME)));
@@ -56,8 +57,10 @@ test("no published file or kit entry names the client, a local path or presenter
   for (const name of PUBLISHED_FILES.filter((file) => TEXT.test(file))) {
     assert.doesNotThrow(() => assertClean(name, read(name)), name);
   }
-  for (const [name, bytes] of kit()) {
-    assert.doesNotThrow(() => assertClean(`${ZIP_NAME}/${name}`, bytes), name);
+  for (const [zip, prefix] of Object.entries(KIT_V3_ZIPS)) {
+    for (const [name, bytes] of readKitArchive(read(zip), { prefix })) {
+      assert.doesNotThrow(() => assertClean(`${zip}/${name}`, bytes), name);
+    }
   }
   // The requested partner mark is the only co-branding on the cover; it remains a logo lockup.
   const slides = read("slides.html").toString("utf8");
@@ -89,17 +92,17 @@ test("the deck's five prompts are identical to the code blocks in the kit's STAR
   for (const [n, prompt] of deck) assert.equal(prompt, guide.get(n), `prompt ${n}`);
 });
 
-test("the kit zip holds exactly the reviewed kit files, including its post-session answer key", () => {
-  const archive = read(ZIP_NAME);
-  const entries = readKitArchive(archive);
-  assert.deepEqual(entries.map(([name]) => name).sort(), [...KIT_FILES].sort());
-  assert.equal(entries.some(([name]) => name === "ANSWERS.md"), true);
-  assert.equal(archive.length, 896622);
-  // The late invoice is a photo; the deck shows the same bytes.
-  const photo = kit().get("inbox/4-september-invoice.png");
-  assert.ok(photo.equals(read("assets/proof/september-invoice.png")));
-  assert.doesNotThrow(() => assertPlainPng("invoice", photo));
-  assert.match(kit().get("START-HERE.md").toString("utf8"), /Attach `inbox\/4-september-invoice\.png`/);
+test("both kit editions hold exactly the reviewed files, with the website's skill and templates byte for byte", () => {
+  for (const locale of ["de", "en"]) {
+    const entries = new Map(readKitArchive(read(zipName(locale)), { prefix: `${KITS[locale].name}/` }));
+    assert.deepEqual([...entries.keys()].sort(), kitFiles(locale));
+    for (const [name, source] of Object.entries(PLATFORM_FILES[locale])) {
+      assert.ok(entries.get(name).equals(readFileSync(path.join(REPO_ROOT, "packages/website", source))), `${locale}: ${name}`);
+    }
+    for (const [name, bytes] of entries) if (name.endsWith(".png")) assert.doesNotThrow(() => assertPlainPng(name, bytes));
+    assert.doesNotMatch(entries.get(KITS[locale].start).toString("utf8"), /\{\{CLAUDE_UI\}\}/);
+  }
+  assert.match(kit().get("START-HERE.md").toString("utf8"), /attach `late-document\/invoice-EL-25-09\.png`/);
 });
 
 test("the deterministic kit archive builder refuses other file types, duplicates and PNGs with metadata", () => {

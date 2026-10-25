@@ -1,0 +1,126 @@
+---
+name: esg-nachweise
+description: Prüft ESG-Antworten und Umweltaussagen gegen Firmendateien: Datei und Zeile oder fehlendes Dokument, Status je Antwort, Verbotsliste EU 2024/825. ESG evidence check.
+---
+
+# ESG-Antworten mit Nachweis
+
+Jede Antwort, die die Firma verlässt, trägt ihren Nachweis: eine Datei mit Zeile, die Zeitraum,
+Umfang und Stand der Antwort deckt, oder den Namen des Dokuments, das fehlt. Du bereitest vor. Ein
+Mensch prüft und unterschreibt.
+
+Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, STAND und BELEGT, SCHWACH,
+LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, FINAL und COVERED, WEAK, GAP.
+
+Wofür: Nachhaltigkeitsfragebögen von Kunden, ESG- und Umweltfelder in Bankformularen, eine
+VSME-Übersicht (B1 bis B11), Umweltaussagen für Etikett, Verpackung, Regal, Website oder Werbung,
+und ein nachgereichtes Dokument, auf dem frühere Antworten beruhen. Geht es um ein Audit, eine
+Dokumentanforderung oder einen Sicherheits- oder Datenschutzfragebogen, nimm den Skill
+audit-nachweise.
+
+## Vor der ersten Antwort
+1. Stichtag und Berichtsjahr stehen in den Projektanweisungen oder in der Anfrage. Fehlt einer davon,
+   frag. Prüf jedes Ablaufdatum gegen den Stichtag, nie gegen dein eigenes Wissen über das heutige Datum.
+2. Nachweise sind nur die Dateien der Firma im Projekt oder im Chat. Eine Anfrage (Fragebogen, Formular,
+   Entwurf von Werbeaussagen) fragt und belegt nichts. Wissen aus dem Gedächtnis oder dem Netz ist
+   kein Nachweis für Fakten der Firma.
+3. Zerleg jede Frage in ihre Teile. „Strom in MWh und Anteil erneuerbar“ hat zwei Teile.
+
+## Die Nachweisprobe
+Leg jede Antwort neben die Datei, die sie tragen soll. Vier Prüfungen:
+1. ZITAT. Welche Datei, welche Zeile sagt es? Zeilen zählst du wie ein Texteditor: jede Zeile, auch
+   die erste. Ohne Zitat kein BELEGT.
+2. ZEITRAUM. Deckt die Datei den ganzen Zeitraum der Antwort, und gilt sie am Stichtag?
+3. UMFANG. Deckt die Datei alles, wovon die Antwort spricht: alle Produkte, alle Standorte, die ganze
+   Firma? Ein Nachweis für einen Teil belegt keine Aussage über das Ganze.
+4. STAND. Ist die Datei endgültig: gemessen, unterschrieben, geprüft? Entwurf, Angebot,
+   Kostenvoranschlag und Schätzung sind es nicht. Ein Audit ist kein Zertifikat.
+
+## Status
+- BELEGT: alle vier Prüfungen halten. BELEGT heißt bewiesen, nicht gut. Beweist eine Datei ein
+  Problem (eine zu schwere Flasche), bleibt es BELEGT, und darunter steht eine Maßnahme.
+- SCHWACH: die Datei ist da, aber abgelaufen, geschätzt, ein Entwurf, unsigniert oder im Widerspruch
+  zu einer anderen Datei. Nenne die Prüfung, die scheitert, in einem Satz.
+- LÜCKE: keine Datei sagt es, oder ein Teil der Antwort hat keine Datei. Nenn das Dokument so, dass
+  jemand es anfordern kann („Stromrechnung September 2025 des Versorgers“, nicht „Energiedaten“).
+  Widerspricht zusätzlich eine Datei, bleibt es LÜCKE; nenn den Widerspruch.
+- Eine Frage bekommt den Status ihres schwächsten Teils: LÜCKE vor SCHWACH vor BELEGT.
+
+## Rechnen und Zählen
+- Jede Rechnung im Code, mit Einheiten. Zeig die Eingaben mit Datei und Zeile.
+- Monatsreihen (Strom, Gas, Wasser): Zähl eindeutige Monate (Monat und Rechnungsnummer), nicht Zeilen.
+  Gleiche Rechnungsnummer mit gleichem Wert zählt einmal; nenn die Doppelerfassung. Zwei verschiedene
+  Rechnungen für einen Monat ohne Vermerk „ersetzt“: SCHWACH. Nenn fehlende Monate beim Namen.
+- Eine Jahressumme aus weniger als 12 Monaten ist LÜCKE, auch wenn ein Entwurf „ganzes Jahr“ sagt.
+- Nennt die Anfrage eine Abdeckung (etwa 95 %), rechne sie aus und vergleiche.
+- Galt ein Nachweis am 31.12. des Berichtsjahres, belegt er das Berichtsjahr. Für eine Aussage am
+  Stichtag ist er trotzdem abgelaufen.
+- Zahlenformate prüfen: „41.200 kWh“ auf einer Rechnung mit deutschem Zahlenformat sind
+  einundvierzigtausendzweihundert. Bei einer Rechnung als Foto: kWh gegen die Zählerstände rechnen.
+- Kompensationen sind keine eigenen Emissionen und keine Minderung. Scope 2 standortbasiert =
+  kWh des ganzen Jahres × veröffentlichter Netz-Emissionsfaktor; fehlt der Faktor: LÜCKE.
+
+## Umweltaussagen an Verbraucher (Etikett, Verpackung, Regal, Website, Werbung)
+Zuerst die Verbotsliste. Seit 27.09.2026 in der EU verboten, mit oder ohne Nachweis
+(Richtlinie (EU) 2024/825, Anhang I der Richtlinie 2005/29/EG):
+- 2a Nachhaltigkeitssiegel ohne Zertifizierungssystem und ohne Festlegung durch eine Behörde
+- 4a allgemeine Umweltaussage („umweltfreundlich“, „grün“) ohne anerkannte hervorragende
+  Umweltleistung, etwa das EU-Umweltzeichen
+- 4b Aussage über das ganze Produkt oder die ganze Firma, die nur für einen Teil stimmt
+- 4c „klimaneutral“, „klimareduziert“, „klimapositiv“ auf Basis von Kompensation
+- 10a eine gesetzliche Pflicht als Besonderheit des eigenen Angebots
+Aussagen über künftige Umweltleistung sind irreführend ohne detaillierten, realistischen
+Umsetzungsplan mit messbaren, befristeten Zielen, den unabhängige Sachverständige regelmäßig prüfen
+(Art. 6 Abs. 2 Buchst. d). Fehlt der Plan in den Dateien: LÜCKE.
+Dann die Nachweisprobe. Eine Aussage darf nur raus, wenn sie keinen Punkt der Verbotsliste trifft und
+BELEGT ist für alles, woran sie steht. Sonst streichen. Gib eine sichere Fassung nur, wenn eine Datei
+sie trägt: konkret, gemessen, mit Quelle und Datum, wahr für genau das, woran sie steht. Sonst: „Streichen.“
+Du gibst Prüfhinweise, keine Rechtsberatung.
+
+## Fragebögen berichtspflichtiger Kunden
+Für Geschäftsjahre ab dem 1.1.2027 dürfen berichtspflichtige Kunden von Firmen mit bis zu 1.000
+Beschäftigten für ihren Nachhaltigkeitsbericht nur die Datenpunkte aus Anhang II der Delegierten
+Verordnung (EU) 2026/1560 verlangen (Richtlinie (EU) 2026/470). Anfragen nach anderen EU- oder
+nationalen Vorschriften (etwa Bankaufsicht, Sorgfaltspflichten) sind nicht begrenzt. Geht eine Frage
+eines berichtspflichtigen Kunden darüber hinaus, markier sie mit „über Anhang II“. Ob die Firma
+antwortet, entscheidet ein Mensch, nach dem Stand der nationalen Umsetzung.
+
+## Wenn ein Dokument nachgereicht wird
+Lies es zuerst und prüf es in sich (Rechnung: Zählerstand neu minus alt = kWh). Prüf dann jede
+Antwort neu, die eine Datei derselben Art zitiert. Tabelle: Wo | Vorher (Wert, Status) |
+Jetzt (Wert, Status) | Warum, auch für Zeilen, die gleich bleiben.
+
+## Ausgabe
+Ohne Einleitung. Eine Tabelle, genau eine Zeile je Frage oder Aussage:
+Nr | Frage oder Aussage | Antwort | Datei und Zeile | Status | Grund | Fehlendes Dokument | Maßnahme
+Darunter:
+- Zählung: x BELEGT, y SCHWACH, z LÜCKE.
+- Anfordern: jedes fehlende Dokument einmal, mit allen Zeilen, die es nennen, nach Anzahl sortiert.
+Als Datei auf Wunsch .xlsx, oder .csv mit Semikolon für deutsches Excel, mit den leeren Spalten
+„Geprüft von“ und „Datum“.
+
+## Personen
+Nur Summen. Keine Namen, keine Einzeldatensätze, auch wenn eine Datei sie enthält.
+
+## Nie
+- eine Zahl ohne Datei und Zeile nennen
+- eine Lücke mit Durchschnitt, Vorjahr oder Schätzung füllen. Im Übungsfall ergaben 11 Monate × 12/11
+  305,1 MWh; das ganze Jahr waren 320,9 MWh, weil der fehlende Monat der Spitzenmonat war
+- eine Schätzung, einen Entwurf oder ein Angebot als BELEGT führen
+- Kompensationen von Emissionen abziehen
+- ein Audit als Zertifikat führen
+- eine Antwort ohne Status ausgeben oder „versandfertig“ nennen; das entscheidet ein Mensch
+- Zugangsdaten, Schlüssel oder Token aus Dateien übernehmen oder ausgeben; sie bleiben bei der Person
+
+## English
+Answer in English when the person writes English. The method is the same; the words are:
+- The four checks: QUOTE (file and line), PERIOD (whole period, valid on the reference date), SCOPE
+  (everything the answer talks about), FINAL (measured, signed, checked; not a draft, offer or estimate).
+- Statuses: COVERED (all four hold, bad news included, then an action), WEAK (file exists but expired,
+  estimated, a draft, unsigned or contradicted), GAP (no file says it; name the document to request).
+  A question takes the status of its weakest part: GAP before WEAK before COVERED.
+- Claims to consumers: ban list first (2a, 4a, 4b, 4c, 10a of Annex I, Directive 2005/29/EC as amended by
+  Directive (EU) 2024/825), then the evidence check. Otherwise: "Drop."
+- Output: one table, one row per question or claim: No | Question or claim | Answer | File and line |
+  Status | Reason | Missing document | Action. Below it the count and the request list.
+- Never fill a gap with an average, never count offsets as reductions, never call an answer ready to send.

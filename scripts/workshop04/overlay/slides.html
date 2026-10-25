@@ -2677,11 +2677,9 @@ People data stays aggregated: no names, no individual records.</p>
   <div class="hs-cardwrap">
     <div class="prompt-card hs-card wipe auto" style="--delay:520ms">
       <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 1</span><button class="pc-copy" type="button">Copy</button></div>
-      <p class="prompt pc-body" data-prompt="1">Answer the Nordvik Vin AB questionnaire in the attached file.
-Return one table with exactly one row per question, Q1 to Q8: # | Question | Answer | Source file and line | Status (OK, NEEDS CHECK or NOT FOUND).
-Before any energy total, count the months in code.
-Also save the table as nordvik-answers.xlsx, with the Status cells filled green, amber or red.
-Then write a 3-line summary.</p>
+      <p class="prompt pc-body" data-prompt="1">Answer the attached questionnaire from Nordvik Vin AB.
+One table, exactly one row per question Q1 to Q8: No | Question | Answer | File and line | Status | Reason | Missing document.
+Before any annual total, count the distinct months in code.</p>
     </div>
   </div>
 
@@ -2877,9 +2875,8 @@ Then write a 3-line summary.</p>
   <div class="hs-cardwrap">
     <div class="prompt-card hs-card wipe auto" style="--delay:520ms">
       <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 2</span><button class="pc-copy" type="button">Copy</button></div>
-      <p class="prompt pc-body" data-prompt="2">Check the seven claims in the attached file against our files and eu_green_claims_rules.md.
-Return a table: Claim | RED, AMBER or GREEN | Reason | Source file | Safe rewrite.
-Put the red ones first.</p>
+      <p class="prompt pc-body" data-prompt="2">Check the seven claims in the attached file: first against the ban list in green_claims_rules.md, then with the evidence check.
+One table: No | Claim | Ban list (number or none) | Status | Reason with file and line | Send (yes/no) | Safe wording.</p>
     </div>
     <div class="hs-law rise auto" style="--delay:760ms">
       <p class="t-label">The rule file in the Project</p>
@@ -3009,9 +3006,9 @@ Put the red ones first.</p>
   <div class="hs-cardwrap">
     <div class="prompt-card hs-card wipe auto" style="--delay:520ms">
       <div class="pc-head"><svg class="pc-mark"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 3</span><button class="pc-copy" type="button">Copy</button></div>
-      <p class="prompt pc-body" data-prompt="3">Fill in Banka Povardarie's form in the attached file.
-Return one table: Field | Answer | Source file and line | Status (OK, NEEDS CHECK or NOT FOUND).
-Calculate F4 in code with the formula printed on the form. Mark every estimate.</p>
+      <p class="prompt pc-body" data-prompt="3">Complete the attached form.
+One table: Field | Answer | File and line | Status | Reason | Missing document.
+Calculate F4 in code with the formula from the form. Mark every estimate.</p>
     </div>
     <div class="hs-law rise auto" style="--delay:760ms">
       <p class="hs-law-t">Modelled on the screening every bank lending <b>EBRD</b> money must do.</p>
@@ -3171,11 +3168,10 @@ Calculate F4 in code with the formula printed on the form. Mark every estimate.<
     <div class="prompt-card s14-card rise auto" style="--delay:360ms">
       <div class="pc-head"><svg class="pc-mark" aria-hidden="true"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 4</span><button class="pc-copy" type="button">Copy</button></div>
       <div class="s14-sweep" aria-hidden="true"></div>
-      <p class="prompt pc-body" data-prompt="4">The three attached files are this week's requests.
-Build our ESG Passport: one row per VSME Basic heading B1 to B11 from vsme_basic_headings.md, with what we have, the source file, the status (OK; PARTIAL when some of the heading's data points are proven and others are missing, naming the missing ones; NOT FOUND when we have nothing; judge each heading for reporting year 2025 and put anything that expired or changed since then in the open points), and which questions in the attached files it answers. Use only the statuses OK, PARTIAL and NOT FOUND.
-Deliver it two ways:
-1. An interactive one-page dashboard as an artifact: status tiles B1 to B11 that open what we have and the source when clicked, a 12-month electricity bar chart in MWh that shows the missing month, a red, amber or green light for each of the seven claims, and the open points: every NOT FOUND, NEEDS CHECK and partial gap, each with the document that would close it. List a proven fail (data documented, rule broken) as an action, not as NEEDS CHECK. One self-contained file, no external data.
-2. esg-passport.docx, ready to send.</p>
+      <p class="prompt pc-body" data-prompt="4">The three attached files are our open requests. Create evidence_register.xlsx with three sheets:
+1. Register: one row per question, claim and field. Columns: Request | No | Answer | File and line | Status | Reason | Missing document | Action | Checked by | Date. Leave the last two empty.
+2. VSME: B1 to B11 from vsme_basic_module.md, per disclosure the datapoints with status, covered x of y, status of the disclosure by its weakest datapoint.
+3. Request: every missing document once, with all rows that name it, sorted by count.</p>
     </div>
     <div class="s14-watch rise auto" style="--delay:520ms">
       <p><b>Warm-up, 1 point:</b> what will the chart do with September? A gap, an average, a zero, or an error?</p>
@@ -3314,11 +3310,10 @@ Deliver it two ways:
     <div class="prompt-card s15-card rise auto" style="--delay:360ms">
       <div class="pc-head"><svg class="pc-mark" aria-hidden="true"><use href="#i-claude"/></svg><span class="pc-tag">Prompt 5</span><button class="pc-copy" type="button">Copy</button></div>
       <div class="s15-sweep" aria-hidden="true"></div>
-      <p class="prompt pc-body" data-prompt="5">I attached the September 2025 electricity invoice. Read it first.
-Then recheck every answer from this week that depends on electricity.
-Also say what the invoice means for the draft energy summary, and how wrong the year would have been if we had estimated it as the 11-month average × 12.
-Return a table with one row per question or form field: Where | Before (value and status) | Now (value and status) | Why.
-Then update the dashboard and esg-passport.docx.</p>
+      <p class="prompt pc-body" data-prompt="5">Attached is the electricity invoice for September 2025. Read it first and check the kWh against the two meter readings.
+Then check again every row in the register that cites electricity_2025.csv. One table: Where | Before (value, status) | Now (value, status) | Why. Also for rows that stay the same.
+Say what the invoice means for electricity_summary_draft.txt and how far 11 months × 12/11 is from the full year.
+Update evidence_register.xlsx.</p>
     </div>
     <p class="s15-watch rise auto" style="--delay:520ms"><b>Your bet:</b> the 11-month average says 305.1 MWh for the year. Is the real year higher, the same or lower? <b>Thumbs:</b> up = higher, sideways = same, down = lower.</p>
   </div>

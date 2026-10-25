@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Publishes Workshop 04 ("Answer ESG by Friday") from its course source into
+ * Publishes Workshop 04 ("ESG-Berichte mit KI") from its course source into
  * packages/website/public/workshops/esg-berichte-mit-ki/.
  *
  * Only allowlisted files leave the source: the deck (slides.html, its lib/ and the assets it
@@ -29,7 +29,7 @@ import {
 } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { buildKitArchive, KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
+import { KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
@@ -112,35 +112,15 @@ export const KEPT_FILES = [
 /** The cover poster, generated from src/lib/plakat (packages/website/scripts/plakat/build-static.mjs). */
 export const POSTER = "assets/plakat-cover.svg";
 
-/** Kit files as they sit in the source kit folder, published unchanged inside the ZIP. */
-export const KIT_SOURCE_FILES = [
-  "START-HERE.md",
-  "ANSWERS.md",
-  "project-instructions.md",
-  "inbox/1-nordvik-questionnaire.md",
-  "inbox/2-marketing-claims.md",
-  "inbox/3-bank-form.md",
-  "inbox/4-september-invoice.png",
-  "project-files/carbon_offsets_2025.txt",
-  "project-files/company_profile.md",
-  "project-files/energy_bills_2025.csv",
-  "project-files/energy_summary_2025_draft.txt",
-  "project-files/eu_green_claims_rules.md",
-  "project-files/health_safety_2025.txt",
-  "project-files/hr_headcount_2025.csv",
-  "project-files/organic_certificate_vineyard.txt",
-  "project-files/packaging_bottles.csv",
-  "project-files/policies_and_compliance.txt",
-  "project-files/solar_offer_2026.txt",
-  "project-files/vsme_basic_headings.md",
-  "project-files/water_bills_2025.csv",
-];
-
-/** Kit entries as published inside crvena-zemja-esg-kit.zip. */
-export const KIT_FILES = [...KIT_SOURCE_FILES];
+/**
+ * The two participant kits (v3): German and English edition. scripts/workshop04/kit-v3.mjs builds them
+ * from the course source's kit-v3/ folder plus this repository's skill and templates; this export keeps
+ * them byte for byte and checks every entry.
+ */
+export const KIT_V3_ZIPS = { "crvena-zemja-nachweisprobe.zip": "crvena-zemja-nachweisprobe/", [ZIP_NAME]: `${KIT_NAME}/` };
 
 /** Every file the published folder holds, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...OVERLAY_NEW_FILES, ...DECK_IMAGES, PORTRAIT, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ZIP_NAME].sort();
+export const PUBLISHED_FILES = [...DECK_TEXT_FILES, ...OVERLAY_NEW_FILES, ...DECK_IMAGES, PORTRAIT, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ...Object.keys(KIT_V3_ZIPS)].sort();
 
 /** "loehrning.ai × <partner>": the partner's name stays out of this public repository. */
 const CO_BRANDING = /loehrning\.ai × [A-Za-z0-9-]+/gi;
@@ -303,16 +283,6 @@ export function listFiles(dir, prefix = "") {
     .sort();
 }
 
-/** The kit folder must hold exactly the reviewed files, so a new file gets a look before it ships. */
-function checkKitFolder(kitDir) {
-  const present = listFiles(kitDir).filter((name) => !name.endsWith(".DS_Store"));
-  const unexpected = present.filter((name) => !KIT_SOURCE_FILES.includes(name));
-  const missing = KIT_SOURCE_FILES.filter((name) => !present.includes(name));
-  if (unexpected.length || missing.length) {
-    throw new Error(`Kit folder differs from the reviewed list. Unexpected: ${unexpected.join(", ") || "none"}. Missing: ${missing.join(", ") || "none"}.`);
-  }
-}
-
 /** Fails on a client name, a local path or presenter-only words in any text the export writes. */
 export function assertClean(name, bytes) {
   if (!/\.(?:css|csv|html|js|md|svg|txt)$/.test(name)) return;
@@ -365,26 +335,11 @@ export async function exportWorkshop(source) {
     written.set(name, readSourceFile(path.join(REPO_ROOT, FONT_SOURCE_RELATIVE), path.basename(name)));
   }
 
-  const suppliedArchive = path.join(source, ZIP_NAME);
-  if (existsSync(suppliedArchive)) {
-    const archive = readSourceFile(source, ZIP_NAME);
-    const entries = readKitArchive(archive);
-    const names = entries.map(([name]) => name).sort();
-    if (JSON.stringify(names) !== JSON.stringify([...KIT_FILES].sort())) {
-      throw new Error(`${ZIP_NAME} differs from the reviewed kit file list`);
-    }
-    for (const [name, bytes] of entries) assertClean(`${ZIP_NAME}/${name}`, bytes);
-    written.set(ZIP_NAME, archive);
-  } else {
-    const kitDir = path.join(source, KIT_NAME);
-    checkKitFolder(kitDir);
-    const kit = KIT_SOURCE_FILES.map((name) => {
-      const bytes = readSourceFile(kitDir, name);
-      if (name.endsWith(".png")) assertPlainPng(name, bytes);
-      return [name, bytes];
-    });
-    for (const [name, bytes] of kit) assertClean(`${ZIP_NAME}/${name}`, bytes);
-    written.set(ZIP_NAME, buildKitArchive(kit));
+  for (const [zip, prefix] of Object.entries(KIT_V3_ZIPS)) {
+    if (!existsSync(path.join(WORKSHOP_DIR, zip))) throw new Error(`${WORKSHOP_RELATIVE}/${zip} is missing; build it with scripts/workshop04/kit-v3.mjs`);
+    const archive = readSourceFile(WORKSHOP_DIR, zip);
+    for (const [name, bytes] of readKitArchive(archive, { prefix })) assertClean(`${zip}/${name}`, bytes);
+    written.set(zip, archive);
   }
 
   for (const [name, original] of Object.entries(OVERLAY_ORIGINAL)) {
@@ -405,11 +360,12 @@ export async function exportWorkshop(source) {
 }
 
 /** Files whose manifest row follows the file; every other row must already match its bytes. */
-const GENERATED_ASSETS = new Set([ZIP_NAME, POSTER, "card-preview.webp", ...DECK_IMAGES]);
+const GENERATED_ASSETS = new Set([...Object.keys(KIT_V3_ZIPS), POSTER, "card-preview.webp", ...DECK_IMAGES]);
 
 /** The row a new binary gets when the manifest has none yet. */
 const NEW_ROW_SOURCES = {
-  [ZIP_NAME]: "Original Answer ESG by Friday workshop material (Workshop 04 participant kit, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
+  [ZIP_NAME]: "Original Workshop 04 participant kit, English edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
+  "crvena-zemja-nachweisprobe.zip": "Original Workshop 04 participant kit, German edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
   "assets/proof/dashboard-before.png": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
   "assets/proof/dashboard-after.png": "Original Answer ESG by Friday workshop material (unedited Claude output from the Workshop 04 rehearsal, invented company data), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
   "assets/proof/september-invoice.png": "Original Answer ESG by Friday workshop material (photo of an invented invoice, rendered for Workshop 04), exported by scripts/workshop04/export-esg-passport.mjs, owner-authorized loehrning.ai publication",
