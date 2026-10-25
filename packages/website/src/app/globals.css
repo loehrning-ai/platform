@@ -1208,6 +1208,47 @@
   }
 }
 
+/* ── .glass: the one floating-chrome material (amendment 27) ─────────────
+   For chrome that floats over moving content: a pinned demo bar, a floating
+   lever. At most two visible at once, never nested, never on a card, a stage
+   or body copy. Kalkweiß at 0.80 over a blur (src/lib/glass.ts proves ink
+   and the Mennige marker stay legible over Druckschwarz behind it), a hard
+   1px hairline, square corners, no gradient. Opaque paper wherever
+   backdrop-filter is missing, transparency is reduced or colours are forced. */
+.glass {
+  background-color: var(--color-background);
+  border: 1px solid rgb(18 18 18 / 0.14);
+  border-radius: 0;
+  color: var(--color-foreground);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: rgb(247 241 231 / 0.8);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background-color: var(--color-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .glass {
+    background-color: Canvas;
+    border-color: CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 /* ── Workshop kit page: the explainer's motion ───────────────────────────
    Pure CSS, run when a step's panel mounts (the stepper keys the panel on the
    selected step). Finite reveals of 250 to 450 ms, no loops. Inside
