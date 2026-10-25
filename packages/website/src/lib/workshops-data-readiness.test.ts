@@ -17,7 +17,7 @@ describe("published Data Readiness workshop", () => {
       expect(workshop.number).toBe("03");
       // Beside the files, the workshop links its practice demo page (role "demo").
       expect(workshop.materials.filter((material) => material.role === "demo").map((material) => material.href)).toEqual([
-        `${locale === "en" ? "/en" : ""}/demos/datenbereitschaft-fuer-ki`,
+        `${locale === "en" ? "/en" : ""}/demos/datenbereitschaft-fuer-ki?source=workshop`,
       ]);
       const fileMaterials = workshopFileMaterials(workshop);
       const relative = fileMaterials.map((material) => material.href.slice("/workshops/datenbereitschaft-fuer-ki/".length));

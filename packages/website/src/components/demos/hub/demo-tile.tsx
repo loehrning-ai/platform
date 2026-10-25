@@ -1,19 +1,34 @@
 import Link from "next/link";
 import { ArrowGlyph } from "@/components/werk";
 import { cx } from "@/components/werk/cx";
+import { takeHomeArtifacts, type TakeHomeArtifact } from "@/lib/demo-takehome";
 import { DEMO_SLUGS, type LocalizedDemo } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { plakatClass } from "@/lib/plakat/palettes";
+import { getWorkshopBySlug } from "@/lib/workshops";
 import { TILES } from "./tiles";
 
 /**
- * One hub tile: a live miniature of the demo's own object on the workshop's
- * ground, then the name, the surprise in one sentence and what you take away.
- * The miniature is aria-hidden; the title link (stretched over the tile) is
- * the one tab stop. The `<li>` carries the workshop's plakat class so its
- * anti colour resolves for the offset block (demo-tile.css); playback is the
- * island's job (demo-tile-stage.tsx).
+ * What a visitor takes home, in the words of the take-home rows. A demo
+ * without a take-home entry yet still names the workshop's kit zip.
+ */
+function artifactsFor(demo: LocalizedDemo, locale: Locale): readonly TakeHomeArtifact[] {
+  const fromTakeHome = takeHomeArtifacts(demo.slug);
+  if (fromTakeHome.length > 0) return fromTakeHome;
+  const workshop = getWorkshopBySlug(demo.workshopSlug, locale);
+  const hasKit = workshop?.materials.some((material) => material.role === "kit" && material.kind === "zip") ?? false;
+  return hasKit ? ["kit"] : [];
+}
+
+/**
+ * One hub tile, read in five seconds on a phone: a live 16:9 miniature of
+ * the demo's own object, the workshop kicker ("04 · ESG", its own link to the
+ * workshop), the job line (the biggest text: what the demo does for you), the
+ * demo name as the stretched link, then the artifacts you take home and the
+ * time it takes. The miniature is aria-hidden; the `<li>` carries the
+ * workshop's plakat class so its anti colour resolves for the offset block
+ * (demo-tile.css); playback is the island's job (demo-tile-stage.tsx).
  */
 export function DemoTile({
   demo,
@@ -22,12 +37,14 @@ export function DemoTile({
   readonly demo: LocalizedDemo;
   readonly locale: Locale;
 }) {
-  const copy = DEMOS_PAGE_COPY[locale].catalog;
+  const copy = DEMOS_PAGE_COPY[locale];
   const Scene = TILES[demo.slug];
   const index = DEMO_SLUGS.indexOf(demo.slug);
   const headingId = `demo-${demo.slug}-heading`;
-  const hookId = `demo-${demo.slug}-hook`;
-  const workshop = copy.workshopNumber(demo.workshopNumber);
+  const jobId = `demo-${demo.slug}-job`;
+  const workshop = getWorkshopBySlug(demo.workshopSlug, locale);
+  const kicker = copy.hub.kicker(demo.workshopNumber, workshop?.topic ?? copy.catalog.workshopNumber(demo.workshopNumber));
+  const artifacts = artifactsFor(demo, locale);
 
   return (
     <li
@@ -38,36 +55,48 @@ export function DemoTile({
     >
       <article aria-labelledby={headingId} className="dt-card" data-testid="demo-tile">
         <div className="dt-scene" aria-hidden="true">
-          <span className="dt-chip">{demo.workshopNumber}</span>
           <Scene locale={locale} />
         </div>
         <div className="dt-cap">
           <p className="dt-kicker">
-            <span>{workshop}</span>
-            <ArrowGlyph className="dt-go" />
+            <Link
+              prefetch={false}
+              href={localizeHref(`/workshops/${demo.workshopSlug}`, locale)}
+              className="dt-kicker-link"
+              data-demo-workshop-kicker=""
+              aria-label={`${copy.catalog.workshopNumber(demo.workshopNumber)}: ${workshop?.title ?? kicker}`}
+            >
+              {kicker}
+            </Link>
+          </p>
+          <p id={jobId} className="dt-job" data-demo-job="">
+            {demo.job}
           </p>
           <h3 id={headingId} className="dt-title">
             <Link
               prefetch={false}
               href={`${localizeHref(`/demos/${demo.slug}`, locale)}?source=gallery`}
-              aria-label={`${demo.title}, ${workshop}`}
-              aria-describedby={hookId}
+              aria-describedby={jobId}
               className="dt-link"
             >
               {demo.title}
             </Link>
+            <ArrowGlyph className="dt-go" />
           </h3>
-          <p id={hookId} className="dt-hook" data-demo-hook="">
-            {demo.tile.hook}
-          </p>
-          <p className="dt-take" data-demo-take="">
-            {(demo.tile.takeLabel ?? copy.takeLabel) === "" ? null : (
-              <>
-                <span className="dt-take-label">{demo.tile.takeLabel ?? copy.takeLabel}</span>{" "}
-              </>
-            )}
-            {demo.tile.take}
-          </p>
+          <div className="dt-foot">
+            {artifacts.length > 0 ? (
+              <ul className="dt-artifacts" data-demo-artifacts="">
+                {artifacts.map((artifact) => (
+                  <li key={artifact} className="dt-artifact">
+                    {copy.hub.artifacts[artifact]}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            <p className="dt-meta" data-demo-meta="">
+              {copy.hub.meta(demo.minutes)}
+            </p>
+          </div>
         </div>
       </article>
     </li>

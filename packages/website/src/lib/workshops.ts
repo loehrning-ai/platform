@@ -1152,7 +1152,8 @@ export function workshopDemoMaterial(
   const copy = locale === "en" ? demo.en : demo;
   return {
     label: `Demo · ${copy.title.replace(/\.$/, "")}`,
-    href: `${locale === "en" ? "/en" : ""}/demos/${demo.slug}`,
+    // ?source=workshop: the demo's back control then returns to this workshop.
+    href: `${locale === "en" ? "/en" : ""}/demos/${demo.slug}?source=workshop`,
     kind: "html",
     language: locale,
     description: copy.oneLiner,

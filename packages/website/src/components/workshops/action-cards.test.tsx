@@ -83,7 +83,7 @@ describe("<ActionCards>", () => {
           expect(linkA).not.toHaveAttribute("target");
         }
         expect(cards[0]).toHaveTextContent(stage.a!.meta);
-        expect(stage.a!.demoHref).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}`);
+        expect(stage.a!.demoHref).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(linksA).toHaveLength(2);
         expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
         expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);

@@ -199,7 +199,7 @@ describe("workshops catalog", () => {
       for (const material of workshop.materials) {
         // The practice demo is a page of this site, not a published file.
         if (material.role === "demo") {
-          expect(material.href).toBe(`/demos/${workshop.slug}`);
+          expect(material.href).toBe(`/demos/${workshop.slug}?source=workshop`);
           continue;
         }
         expect(
@@ -473,7 +473,8 @@ describe("workshop demo material", () => {
         const demos = workshop.materials.filter((material) => material.role === "demo");
         expect(demos, `${locale}/${workshop.slug}`).toHaveLength(1);
         const [demo] = demos;
-        expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}`);
+        // ?source=workshop makes the demo's back control return to this workshop.
+        expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(demo?.language).toBe(locale);
         expect(demo?.primary).toBeUndefined();
         expect(demo?.optional).toBe(true);

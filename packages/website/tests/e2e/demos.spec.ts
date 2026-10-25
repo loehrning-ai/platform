@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { RETIRED_DEMO_REDIRECTS } from "../../src/lib/demo-redirects";
 import { demoLede, demos, getDemosForLocale } from "../../src/lib/demos";
 import { DEMOS_PAGE_COPY } from "../../src/lib/demos-ui-copy";
+import { expectGlassBudget } from "./fixtures/glass";
 
 test.describe("/demos hub", () => {
   for (const locale of ["de", "en"] as const) {
@@ -19,10 +20,14 @@ test.describe("/demos hub", () => {
       for (const [index, demo] of localized.entries()) {
         const tile = tiles.nth(index);
         await expect(tile.getByRole("heading", { level: 3 })).toHaveText(demo.title);
-        await expect(tile.locator("[data-demo-hook]")).toHaveText(demo.tile.hook);
-        await expect(tile.getByRole("link")).toHaveAttribute(
+        await expect(tile.locator("[data-demo-job]")).toHaveText(demo.job);
+        await expect(tile.getByRole("link", { name: demo.title })).toHaveAttribute(
           "href",
           `${prefix}/demos/${demo.slug}?source=gallery`,
+        );
+        await expect(tile.locator("[data-demo-workshop-kicker]")).toHaveAttribute(
+          "href",
+          `${prefix}/workshops/${demo.workshopSlug}`,
         );
         await expect(tile.locator(".dt-scene svg")).toBeVisible();
       }
@@ -45,6 +50,22 @@ test.describe("/demos hub", () => {
       expect((tile?.x ?? 0) + (tile?.width ?? 0)).toBeLessThanOrEqual(width);
     });
   }
+
+  test("tile 1 sits whole in the first screen at 390 x 664, under a hero of at most 160px", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 664 });
+    await page.goto("/demos", { waitUntil: "domcontentloaded" });
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    const hero = await page.locator("[data-demo-hub-hero]").boundingBox();
+    expect(hero?.height ?? 999).toBeLessThanOrEqual(160);
+    const tile = await page.locator(".dt-card").first().boundingBox();
+    const fold = await page.evaluate(() => {
+      const bar = document.querySelector("[data-mobile-tab-bar]");
+      const top = bar ? bar.getBoundingClientRect().top : window.innerHeight;
+      return Math.min(top, window.innerHeight);
+    });
+    expect((tile?.y ?? 999) + (tile?.height ?? 999)).toBeLessThanOrEqual(fold);
+    await expectGlassBudget(page, "/demos at 390 x 664");
+  });
 
   test("a tile plays once when seen, then holds the end frame", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });

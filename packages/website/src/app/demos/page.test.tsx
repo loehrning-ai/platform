@@ -14,18 +14,20 @@ import { expectCapsInsideScene } from "@/test/plakat-scene";
 
 describe("/demos hub", () => {
   for (const locale of ["de", "en"] as const) {
-    it(`${locale}: an IDEA band, five tiles in workshop order, then the shared promise`, async () => {
+    it(`${locale}: a compact IDEA band, five tiles in workshop order, then the shared promise`, async () => {
       localeRef.value = locale;
       const copy = DEMOS_PAGE_COPY[locale].catalog;
+      const hub = DEMOS_PAGE_COPY[locale].hub;
       const { container } = render(await DemosPage());
 
       const h1 = screen.getByRole("heading", { level: 1, name: copy.heading });
       expect(h1).toHaveClass("poster-title", "text-scene-mid");
+      expect(h1.style.getPropertyValue("--text-poster")).toMatch(/^clamp\(2\.75rem,/);
       const band = h1.closest("[data-cover-band]");
       expect(band).toHaveClass("plakat-idea");
       // No halftone and no poster covers: the tiles are the picture.
       expect(container.querySelector("[data-halftone], [data-demo-cover], [data-demo-tile]")).toBeNull();
-      expect(within(band as HTMLElement).getByText(copy.introduction)).toBeTruthy();
+      expect(within(band as HTMLElement).getByText(hub.lede)).toBeTruthy();
       expectCapsInsideScene(container);
 
       const demos = getDemosForLocale(locale);
@@ -39,18 +41,22 @@ describe("/demos hub", () => {
         expect(item).toHaveClass("dt-item", `plakat-${demo.plakat}`);
         expect(item).toHaveAttribute("data-scene", `w0${index + 1}`);
         expect(within(tile).getByRole("heading", { level: 3 })).toHaveTextContent(demo.title);
-        expect(tile.querySelector("[data-demo-hook]")).toHaveTextContent(demo.tile.hook.replace(/\u00a0/g, " "));
-        expect(tile.querySelector("[data-demo-take]")).toHaveTextContent(demo.tile.take);
-        // One link, with the workshop in its name; the miniature is silent.
-        const link = within(tile).getByRole("link");
+        // The job line is the biggest text and describes the demo link.
+        const job = tile.querySelector("[data-demo-job]");
+        expect(job).toHaveTextContent(demo.job);
+        expect(demo.job.length).toBeLessThanOrEqual(56);
+        const link = within(tile).getByRole("link", { name: demo.title });
         expect(link).toHaveAttribute("href", `${prefix}/demos/${demo.slug}?source=gallery`);
-        expect(link).toHaveAccessibleName(`${demo.title}, ${copy.workshopNumber(demo.workshopNumber)}`);
-        expect(link).toHaveAccessibleDescription(demo.tile.hook);
+        expect(link).toHaveAccessibleDescription(demo.job);
+        // The kicker "0N · topic" links to the workshop on its own.
+        const kicker = tile.querySelector("[data-demo-workshop-kicker]");
+        expect(kicker).toHaveAttribute("href", `${prefix}/workshops/${demo.workshopSlug}`);
+        expect(kicker?.textContent).toMatch(new RegExp(`^${demo.workshopNumber} · \\S`));
+        expect(within(tile).getAllByRole("link")).toHaveLength(2);
+        expect(tile.querySelector("[data-demo-meta]")).toHaveTextContent(hub.meta(demo.minutes));
         const scene = tile.querySelector(".dt-scene");
         expect(scene).toHaveAttribute("aria-hidden", "true");
         expect(scene?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
-        // The hub sells the payoff, never the minutes.
-        expect(tile.textContent).not.toMatch(/\bMin\b|minutes?/i);
       }
 
       const promise = container.querySelector("[data-demo-promise-cell]");

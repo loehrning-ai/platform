@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowGlyph } from "@/components/werk";
 import { CapsLine, PlakatBand } from "@/components/plakat";
@@ -45,22 +46,18 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
 
-/**
- * From lg the band's corner dots sit 12px inside the 75rem content box
- * instead of the viewport corners, so they frame the text column on wide
- * screens (below 75rem both edges are the same).
- */
-const CONTENT_BOX_DOTS =
-  "lg:[&>[data-corner$=left]]:left-[max(0.75rem,calc(50%-36.75rem))] lg:[&>[data-corner$=right]]:right-[max(0.75rem,calc(50%-36.75rem))]";
+/** The hub's poster title stays 2.75rem on a phone (3.5rem at most), so the hero stays under 160px. */
+const HUB_TITLE_SIZE = { "--text-poster": "clamp(2.75rem, 2rem + 2.4vw, 3.5rem)" } as CSSProperties;
 
 const TEXT_LINK =
   "inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-mennige hover:decoration-2 active:decoration-mennige active:decoration-2";
 
 /**
- * The hub: five live trailers, not five posters. A short IDEA band, then a
- * grid of tiles (one column on a phone, two from md, three from lg), each a
- * miniature of the demo's own object that plays its story once when first
- * seen and replays on hover or focus (demo-tile-stage.tsx). The sixth cell
+ * The hub: five live trailers, not five posters. A compact IDEA band, then
+ * a grid of tiles (one column on a phone, two from md, three from lg), each
+ * a 16:9 miniature of the demo's own object that plays its story once when
+ * first seen and replays on hover or focus (demo-tile-stage.tsx), with the
+ * job line, the workshop kicker and what you take home. The sixth cell
  * states the promise all five share.
  */
 export default async function DemosPage() {
@@ -98,30 +95,30 @@ export default async function DemosPage() {
     <div className="overflow-x-clip pb-10 sm:pb-20" data-plakat-page={ROUTE_PLAKAT.demos}>
       <JsonLd data={jsonLd} id="demos-jsonld" />
 
-      {/* IDEA band: four corner dots, the arrow caps line, the Himbeere
-          poster H1 and a 17px Kobalt lede. No picture: the tiles below are it. */}
+      {/* A compact IDEA band (at most 160px on a phone): the caps line, the
+          H1 and one line. The tiles below are the picture, and the first one
+          sits whole in the first screen at 390 x 664. */}
       <header data-demo-hub-hero="">
         <PlakatBand
           plakat={ROUTE_PLAKAT.demos}
           labelledBy="demos-title"
-          cornerDots
-          className={CONTENT_BOX_DOTS}
+          contentClassName="pt-3 pb-0 sm:pb-2 lg:py-10"
         >
           <CapsLine arrow>{copy.catalog.kicker}</CapsLine>
           <h1
             id="demos-title"
-            className="poster-title mt-4 text-scene-mid sm:mt-5"
-            style={posterTitleFallbackStyle(copy.catalog.heading)}
+            className="poster-title mt-2 text-scene-mid sm:mt-3"
+            style={{ ...posterTitleFallbackStyle(copy.catalog.heading), ...HUB_TITLE_SIZE }}
           >
             {copy.catalog.heading}
           </h1>
-          <p className="mt-4 max-w-[46ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:mt-5">
-            {copy.catalog.introduction}
+          <p className="mt-2 max-w-[46ch] text-[1rem] leading-snug text-scene-ink text-pretty sm:mt-3 sm:text-[1.0625rem]">
+            {copy.hub.lede}
           </p>
         </PlakatBand>
       </header>
 
-      <section aria-labelledby="demo-list-heading" className="pt-8 sm:pt-12">
+      <section aria-labelledby="demo-list-heading" className="pt-4 sm:pt-8">
         <div className={CONTAINER}>
           <h2 id="demo-list-heading" className="sr-only">
             {copy.catalog.listHeading}
