@@ -1,7 +1,7 @@
 /**
  * Werkglas, the one glass material of the site (amendment 27): `.glass` in
- * src/app/globals.css. Floating chrome over moving visuals only (the desktop
- * nav on the hub, demo, workshop and open-source pages), at most two visible
+ * src/app/globals.css. Floating chrome over moving visuals only (demo control
+ * docks; the site navigation keeps its own look), at most two visible
  * at once on a desktop and one on a phone, never nested, never on a card, a
  * stage or text that stays put under it. Everything else stays paper.
  *
