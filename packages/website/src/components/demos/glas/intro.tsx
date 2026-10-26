@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { cx } from "@/components/werk/cx";
+import type { GlasTone } from "@/lib/glas";
 import { GLAS_PRIORITY } from "./budget";
 import { GlasButton } from "./button";
 import { GlasPanel } from "./panel";
@@ -39,6 +40,7 @@ export function DemoIntro({
   headingId,
   className,
   autoFocus,
+  tone,
 }: {
   readonly content: DemoIntroContent;
   readonly onStart: () => void;
@@ -49,6 +51,8 @@ export function DemoIntro({
   readonly className?: string;
   /** Focus "Starten" on mount (only after a visitor action, never on page load). */
   readonly autoFocus?: boolean;
+  /** Overrides the stage tone (light reading glass over a dark field). */
+  readonly tone?: GlasTone;
 }) {
   const start = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
@@ -60,6 +64,7 @@ export function DemoIntro({
       material="thick"
       live={GLAS_PRIORITY.intro}
       elevation={3}
+      tone={tone}
       appear={leaving ? "out" : "in"}
       className={cx("glas-intro", className)}
       aria-labelledby={headingId}
