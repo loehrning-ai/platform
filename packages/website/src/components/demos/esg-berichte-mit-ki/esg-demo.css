@@ -1,7 +1,7 @@
 /*
  * Workshop 04 "Nachweisprobe". Tokens only (Druckschwarz, Kalkweiß, Mennige
- * and their site mixes), hard edges, no gradients. Glass only on the phone's
- * control dock, through the one shared glass class. Mennige marks only a LÜCKE,
+ * and their site mixes), hard edges, no gradients, no glass (the phone's
+ * control dock floats over reading text, so it is solid). Mennige marks only a LÜCKE,
  * a failing check, a ban-list hit and the over-limit counter. The shell's
  * parts (stage frame, caption, lever, rail) are never selected here.
  */
@@ -472,6 +472,8 @@
 /* The control dock: floats above the tab bar once the lever has scrolled away (reading-dock.tsx). */
 .nw-dock {
   position: fixed;
+  border: 1px solid var(--nw-ink);
+  background: var(--nw-ground);
   left: 16px;
   right: 16px;
   bottom: calc(var(--tabbar-band-h) + 8px);

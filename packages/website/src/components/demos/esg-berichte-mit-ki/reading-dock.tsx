@@ -5,7 +5,9 @@ import { revealIfOffscreen, useBeatClock } from "@/components/demos/shell";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 
 /**
- * The control dock on a phone (the one glass surface of this demo): once the
+ * The control dock on a phone (solid paper: it only shows once the stage has
+ * left the screen, over reading text, and fixed glass on a phone flickers in
+ * iOS WebKit): once the
  * visitor scrolls past the lever to read what a beat found, a floating dock
  * above the tab bar keeps the way back to the stage and "Weiter" in reach.
  * It shows only while the lever is above the screen, the demo is still in
@@ -53,7 +55,7 @@ export function ReadingDock({
   const stage = () => root.current?.querySelector("[data-demo-stage]") ?? null;
   const nextIsTakeHome = clock.beats[clock.index + 1]?.kind === "takehome";
   return (
-    <div className="nw-dock glass" data-reading-dock="">
+    <div className="nw-dock" data-reading-dock="">
       <button type="button" className="nw-button" onClick={() => revealIfOffscreen(stage(), clock.reducedMotion)}>
         <span aria-hidden="true">↑</span>&nbsp;{backLabel}
       </button>

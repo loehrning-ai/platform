@@ -85,7 +85,9 @@ describe("course app design contract", () => {
     }
     const css = read("app/globals.css");
     expect(css).toMatch(/\.course-app-ground\s*\{[^}]*background-color:\s*#fbf8f2/);
-    expect(css).toMatch(/\.course-app-frost\s*\{[^}]*background-color:\s*rgba\(255, 252, 245, 0\.97\)/);
+    // Solid Bogen: lesson text scrolls under it, and text behind text is never glass.
+    expect(css).toMatch(/\.course-app-frost\s*\{[^}]*background-color:\s*#fffcf5/);
+    expect(css).not.toMatch(/\.course-app-frost\s*\{[^}]*backdrop-filter/);
   });
 
   it("runs the Grundlagen readers on the course-app shell", () => {

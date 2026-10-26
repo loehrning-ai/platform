@@ -137,7 +137,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span className="absolute bottom-3 right-3 hidden rounded-full border border-foreground/10 bg-paper/90 px-3 py-1.5 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-card backdrop-blur-sm sm:inline-flex">
+                    <span className="absolute bottom-3 right-3 hidden rounded-none border border-foreground bg-paper px-3 py-1.5 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground sm:inline-flex">
                       {courseCopy.duration}
                     </span>
                   </span>

@@ -1074,7 +1074,7 @@ export function WorkshopQuizPage({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25, ease: EASE_OUT_EXPO }}
               data-quiz-action-bar
-              className="fixed inset-x-0 bottom-[var(--tabbar-band-h)] z-30 border-t border-lab-line/80 bg-paper/95 px-4 py-3 backdrop-blur-xl lg:static lg:mt-5 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none"
+              className="fixed inset-x-0 bottom-[var(--tabbar-band-h)] z-30 border-t border-lab-line/80 bg-paper px-4 py-3 lg:static lg:mt-5 lg:border-0 lg:bg-transparent lg:p-0"
             >
               <div className="mx-auto flex max-w-2xl justify-end">
                 <button
