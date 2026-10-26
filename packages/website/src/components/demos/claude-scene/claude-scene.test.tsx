@@ -3,7 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it } from "vitest";
 import { GlasRoot } from "@/components/demos/glas/glas-root";
 import { CLAUDE_SCENES } from "@/lib/claude-scenes";
-import type { ClaudeRecording, TimelineItem } from "@/lib/claude-runs";
+import { promptsFor, type ClaudeRecording, type TimelineItem } from "@/lib/claude-runs";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { sceneKitFiles } from "./claude-scene-section";
 import { ClaudeDesktopScene } from "./claude-desktop-scene";
@@ -116,7 +116,8 @@ describe("file chips", () => {
 
   it("reads the kit files from the shipped zip and checks their bytes against the recording", () => {
     const files = sceneKitFiles(SCENE);
-    expect(Object.keys(files).sort()).toEqual(TAKE.kit_files.map((file) => file.name).sort());
+    const named = new Set(SCENE.recordings.flatMap((recording) => recording.kit_files.map((file) => file.name)));
+    expect(Object.keys(files).sort()).toEqual([...named].sort());
     expect(files["kosten.md"]?.text).toContain("Glas");
   });
 });
@@ -136,6 +137,8 @@ describe("ClaudeDesktopScene", () => {
   for (const locale of ["de", "en"] as const) {
     it(`${locale}: labels the depiction with its date and model, never shows a logo, and offers the real files`, () => {
       const copy = DEMOS_PAGE_COPY[locale].claudeScene;
+      const prompt = promptsFor(SCENE, locale).prompts[0];
+      const take = SCENE.recordings.find((recording) => recording.id === prompt?.withSkill[0]) as ClaudeRecording;
       const { container } = render(
         <GlasRoot tone="dunkel">
           <ClaudeDesktopScene scene={SCENE} locale={locale} skillName={TAKE.skill_name} kitFiles={sceneKitFiles(SCENE)} />
@@ -145,20 +148,22 @@ describe("ClaudeDesktopScene", () => {
       expect(container.querySelector(".cds-caption")).toHaveTextContent(copy.caption(date, "Claude Opus 5.5 (claude-opus-5-5)"));
       expect(screen.getByText(copy.depiction)).toBeInTheDocument();
       expect(screen.getByText(copy.recordedOn(date))).toBeInTheDocument();
-      expect(screen.getByText(copy.rejected(2))).toBeInTheDocument();
+      expect(screen.getByText(copy.rejected(prompt?.rejected ?? 0))).toBeInTheDocument();
       expect(container.querySelector("img, [data-logo]")).toBeNull();
       // The drawn window is decoration; every control lives in the dock.
       expect(container.querySelector(".cds-chrome")).toHaveAttribute("aria-hidden", "true");
       expect(screen.getByRole("link", { name: copy.downloadSkill })).toHaveAttribute("href", `/skills/${TAKE.skill_name}.zip`);
       expect(screen.getByRole("button", { name: copy.copyPrompt })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: `${copy.openFile}: kosten.md` })).toBeInTheDocument();
-      expect(screen.getByText(copy.noWithout)).toBeInTheDocument();
-      if (locale === "en") expect(container.textContent).toContain(copy.foreign);
+      const costs = locale === "de" ? "kosten.md" : "costs.md";
+      expect(screen.getByRole("button", { name: `${copy.openFile}: ${costs}` })).toBeInTheDocument();
+      // Both variants are recorded in both languages, so neither note shows.
+      expect(screen.queryByText(copy.noWithout)).toBeNull();
+      expect(container.textContent).not.toContain(copy.foreign);
       // The plain-text alternative carries both full answers.
       const transcript = container.querySelector(".cds-transcript") as HTMLElement;
       expect(within(transcript).getByText(copy.transcript)).toBeInTheDocument();
       expect(transcript.textContent).toContain("729");
-      expect(transcript.textContent).toContain(TAKE.follow_ups[0]?.prompt ?? "missing");
+      expect(transcript.textContent).toContain(take.follow_ups[0]?.prompt ?? "missing");
     });
   }
 
@@ -175,9 +180,9 @@ describe("ClaudeDesktopScene", () => {
     const followUp = SCENE.prompts[0]?.followUpLabel as string;
     expect(screen.getByRole("button", { name: followUp })).toBeInTheDocument();
     act(() => {
-      fireEvent.click(screen.getByRole("button", { name: `${copy.openFile}: pruefen.py` }));
+      fireEvent.click(screen.getByRole("button", { name: `${copy.openFile}: pruefregel-linsensuppe.md` }));
     });
-    expect(screen.getByRole("complementary", { name: `${copy.file}: pruefen.py` })).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: `${copy.file}: pruefregel-linsensuppe.md` })).toBeInTheDocument();
     act(() => {
       fireEvent.click(screen.getByRole("button", { name: copy.install }));
     });

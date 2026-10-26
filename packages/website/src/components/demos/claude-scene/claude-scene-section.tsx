@@ -65,7 +65,7 @@ export function ClaudeSceneSection({ slug, locale, standalone = false }: { reado
   const skillName = scene.recordings[0]?.skill_name ?? "";
   const body = (
     <section className="cds-section" aria-labelledby={`claude-scene-${slug}`} data-claude-scene-section="">
-      <GlasStage feld={feldFor(demo.plakat, [{ x: 0.08, y: 0.1 }, { x: 0.95, y: 0.35 }, { x: 0.5, y: 1.02 }], 0.85)} className="cds-stage">
+      <GlasStage feld={feldFor(demo.plakat, [{ x: 0.08, y: 0.1 }, { x: 0.95, y: 0.35 }, { x: 0.5, y: 1.02 }], 0.85)} tone={glasToneFor(demo.plakat)} className="cds-stage">
         <div className="cds-section-head">
           <h2 id={`claude-scene-${slug}`} className="cds-section-title">
             {copy.heading}

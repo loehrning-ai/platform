@@ -17,6 +17,8 @@ export interface WegCopy {
   readonly prev: string;
   /** Next with the step's name when there is one ("Weiter: die Spanne"). */
   readonly next: string;
+  /** A short "Weiter" a compact dock shows on a phone; the long one stays the accessible name. */
+  readonly nextShort?: string;
   readonly toGuide: string;
   readonly nav: string;
 }
@@ -108,7 +110,16 @@ export function GlasWeg({
             aria-keyshortcuts="ArrowRight"
             data-demo-next=""
           >
-            {copy.next}
+            {copy.nextShort ? (
+              <>
+                <span className="glas-weg-next-long">{copy.next}</span>
+                <span className="glas-weg-next-short" aria-hidden="true">
+                  {copy.nextShort}
+                </span>
+              </>
+            ) : (
+              copy.next
+            )}
           </GlasButton>
         ) : null}
       </span>

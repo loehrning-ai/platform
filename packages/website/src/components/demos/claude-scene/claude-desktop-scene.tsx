@@ -276,6 +276,17 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
     if (frame.done && replay.started && recording) setSeenVariants((previous) => new Set([...previous, `${promptId}:${variantWithSkill}`]));
   }, [frame.done, promptId, recording, replay.started, variantWithSkill]);
 
+  // On a wide window the rule file Claude wrote opens beside the chat once the run ends, like an artifact panel.
+  const autoOpened = useRef<string | null>(null);
+  const artifact = recording?.produced_files.find((entry) => entry.name.endsWith(".md") && frame.turns.some((turnFrame) => turnFrame.files.includes(entry.name)));
+  useEffect(() => {
+    if (!frame.done || !replay.started || !recording || !artifact || autoOpened.current === recording.id) return;
+    autoOpened.current = recording.id;
+    if (typeof window.matchMedia === "function" && window.matchMedia("(min-width: 900px)").matches) {
+      setFile({ name: artifact.name, bytes: artifact.bytes, text: artifact.text ?? null, kind: "produced" });
+    }
+  }, [artifact, frame.done, recording, replay.started]);
+
   if (!prompt || !recording) return null;
 
   const date = recordedOn(recording.recorded_at, locale);
@@ -309,14 +320,6 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
               <span />
             </span>
             <span className="cds-title">Claude</span>
-          </div>
-          <div className="cds-phonebar">
-            <GlasIcon name="menu" />
-            <span className="cds-phone-title">
-              <span>Claude</span>
-              <span className="cds-phone-model">{modelShortName(recording.model)}</span>
-            </span>
-            <GlasIcon name="compose" />
           </div>
           <div className="cds-body">
             <nav className="cds-sidebar">
@@ -540,9 +543,12 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
         {!hasWithout ? <p className="cds-hint">{copy.noWithout}</p> : !variantWithSkill ? <p className="cds-hint">{copy.withoutHint}</p> : null}
         {takes.length > 1 ? (
           <div className="cds-row">
+            <span className="cds-row-label" aria-hidden="true">
+              {copy.takes}
+            </span>
             <GlasSegmented
               label={copy.takeOf(takeIndex + 1, takes.length)}
-              options={takes.map((take, index) => ({ value: String(index), label: copy.takeOf(index + 1, takes.length) }))}
+              options={takes.map((take, index) => ({ value: String(index), label: String(index + 1) }))}
               value={String(takeIndex)}
               onChange={(value) => {
                 setTakeIndex(Number(value));
