@@ -28,7 +28,6 @@ import { TakeHome, type TakeHomeFiles } from "./takehome";
 import "./demo.css";
 
 type FreeScene = keyof Pack["free"]["scenes"];
-type View = BeatId | FreeScene;
 type SheetId = "more" | "terms" | "invoice" | "tile" | "missing";
 
 const FREE_SCENES: readonly FreeScene[] = ["karte", "umschreiben", "strom", "rechnung", "ordner"];

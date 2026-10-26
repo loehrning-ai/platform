@@ -55,7 +55,7 @@ const MONTH_NAMES: Readonly<Record<string, number>> = {
 
 const normal = (cell: string) =>
   cell
-    .replace(/^﻿/, "")
+    .replace(/^\uFEFF/, "")
     .trim()
     .replace(/^"(.*)"$/, "$1")
     .toLowerCase()
@@ -130,7 +130,7 @@ export function numberFormat(values: readonly string[]): "de" | "en" {
   let de = 0;
   let en = 0;
   for (const raw of values) {
-    const value = raw.replace(/[\s '’]/g, "");
+    const value = raw.replace(/[\s\u00A0'’]/g, "");
     if (/,\d{1,2}$/.test(value) || /\.\d{3}(?:,|$)/.test(value)) de += 1;
     if (/\.\d{1,2}$/.test(value) || /,\d{3}(?:\.|$)/.test(value)) en += 1;
   }
@@ -138,7 +138,7 @@ export function numberFormat(values: readonly string[]): "de" | "en" {
 }
 
 export function parseNumber(raw: string, format: "de" | "en"): number | null {
-  let value = raw.replace(/[\s '’]/g, "").replace(/[^\d.,-]/g, "");
+  let value = raw.replace(/[\s\u00A0'’]/g, "").replace(/[^\d.,-]/g, "");
   if (value === "" || value === "-") return null;
   value = format === "de" ? value.replace(/\./g, "").replace(",", ".") : value.replace(/,/g, "");
   const number = Number(value);
@@ -148,7 +148,7 @@ export function parseNumber(raw: string, format: "de" | "en"): number | null {
 /** Reads a bill export. Line numbers count like a text editor, comments and the header included. */
 export function parseBills(text: string): ParseResult {
   if (new TextEncoder().encode(text).length > MAX_BYTES) return { ok: false, error: "tooBig" };
-  const lines = text.replace(/^﻿/, "").split(/\r\n|\r|\n/);
+  const lines = text.replace(/^\uFEFF/, "").split(/\r\n|\r|\n/);
   const headerAt = lines.findIndex((line) => line.trim() !== "" && !line.trim().startsWith("#"));
   if (headerAt < 0) return { ok: false, error: "empty" };
   const separator = detectSeparator(lines[headerAt] as string);

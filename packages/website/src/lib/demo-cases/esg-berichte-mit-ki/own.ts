@@ -308,6 +308,7 @@ export function fromClaim(claim: ClaimInput): OwnInput {
 /** "strom_2025.csv, Zeile 3" as the visitor typed it, or "" when the quote is not known. */
 export function quoteOf(claim: ClaimInput): string {
   if (claim.zitat === "unknown") return "";
+  // eslint-disable-next-line no-control-regex -- a file name must not carry control characters into the sheet
   const file = claim.file.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 80);
   const line = claim.line.replace(/[^\d,\s-]/g, "").trim().slice(0, 20);
   return [file, line].filter(Boolean).join(" ");
