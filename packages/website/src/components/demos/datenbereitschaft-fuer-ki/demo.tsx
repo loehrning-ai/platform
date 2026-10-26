@@ -11,14 +11,14 @@ import { boxes, codesRight, demoReducer, INITIAL_STATE, moveDone, openingOf, pou
 import { EXAMPLES, type ExampleId } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/examples";
 import { answerLine, CardCapsule, CardSheetBody } from "./card";
 import { captionFor } from "./captions";
-import { DockCaption } from "./dock-caption";
+import { CaptionSheetBody, DockCaption } from "./dock-caption";
 import { formatter, type Fmt } from "./fmt";
 import { EMPTY_OWN, loadTable, ownCaption, OwnStage, readOwnFile, type OwnState } from "./own";
 import { OwnForm, ownFills } from "./own-form";
 import { SceneAnswer, TARGET_ATTR } from "./scene-answer";
 import { ProjectSort, TestCard, TestMarks, TUB_DROP_ATTR } from "./scene-project";
 import { QuestionBuilder, ViewPicker } from "./scene-question";
-import { PourLayer, WhoCounts } from "./scene-who";
+import { PourTub, WhoCounts } from "./scene-who";
 import { TakeHome, type TakeHomeHrefs } from "./takehome";
 import { Tub } from "./tub";
 import "./demo.css";
@@ -82,7 +82,9 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
   const clock = useBeatClock();
   const [state, dispatch] = useReducer(demoReducer, INITIAL_STATE);
   const [own, setOwn] = useState<OwnState>(EMPTY_OWN);
-  const [sheet, setSheet] = useState<null | "card" | "more">(null);
+  const [sheet, setSheet] = useState<null | "card" | "more" | "caption">(null);
+  /** The whole card was shown after the test (the first "Weiter" there opens it). */
+  const [cardShown, setCardShown] = useState(false);
   const [hover, setHover] = useState<Sent | null>(null);
   const [hold, setHold] = useState<{ readonly x: number; readonly y: number } | null>(null);
   const desktop = useDesktop();
@@ -118,6 +120,7 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
     dispatch({ type: "restart" });
     setSheet(null);
     setHold(null);
+    setCardShown(false);
   });
   useOnEscape(() => setSheet(null));
 
@@ -136,7 +139,11 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
     else if (beat === "sicht" && state.sichtMove === 1) dispatch({ type: "sichtMove", move: 2 });
     else if (beat === "wer-zaehlt" && state.werMove === 1) dispatch({ type: "werMove", move: 2 });
     else if (beat === "projekt" && state.projektMove === 1) dispatch({ type: "projektMove", move: 2 });
-    else return false;
+    else if (beat === "projekt" && state.tested && !cardShown) {
+      // After the test the first "Weiter" shows the whole card, all five boxes filled.
+      setCardShown(true);
+      setSheet("card");
+    } else return false;
     return true;
   });
 
@@ -145,10 +152,7 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
     setTakeHomeLine(SLUG, ownReady ? clean(own.card.question) : "");
   }, [own.card.question, ownReady]);
 
-  const test = () => {
-    dispatch({ type: "test" });
-    setSheet("card");
-  };
+  const test = () => dispatch({ type: "test" });
 
   const takeExample = (id: ExampleId) => {
     const example = EXAMPLES.find((entry) => entry.id === id);
@@ -189,7 +193,11 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
     </>
   );
   const terms = TERMS[beat].map((key) => pack.glossary[key]);
-  const captionNode = <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} extra={captionExtra} terms={terms} />;
+  const captionNode = desktop ? (
+    <DockCaption mode="full" sentences={caption} extra={captionExtra} terms={terms} />
+  ) : (
+    <DockCaption mode="peek" sentences={caption} onPeek={() => setSheet("caption")} peekLabel={pack.captionMore} />
+  );
 
   // The tub on the scenes that draw it.
   const tubCommon = { pack, fmt, reducedMotion: reduced, onHold: setHold, label: pack.stageLabel };
@@ -216,7 +224,7 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
         ghost
         brackets={openingOf(state) > 0}
         asLevel={state.readAsLevel}
-        onOpening={state.wanneMove === 1 || free ? (value) => dispatch({ type: "opening", value }) : undefined}
+        onOpening={state.wanneMove === 1 || free ? (value, snap) => dispatch({ type: "opening", value, snap }) : undefined}
         onEdge={second ? (edge) => dispatch({ type: "edge", edge }) : undefined}
         computed={state.edge > 0}
       />
@@ -234,7 +242,7 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
   } else if (beat === "wer-zaehlt") {
     scene =
       state.werMove === 1 ? (
-        <Tub {...tubCommon} opening={OPENING_DEC_2025} edge={0} wide={false} ghost={false} strips={false} layer={(geometry) => <PourLayer pack={pack} fmt={fmt} geometry={geometry} pour={state.pour} onPour={(pour) => dispatch({ type: "pour", pour })} reducedMotion={reduced} />} />
+        <PourTub tub={{ ...tubCommon, opening: OPENING_DEC_2025, edge: 0, wide: false, ghost: false, strips: false }} pack={pack} fmt={fmt} pour={state.pour} onPour={(pour) => dispatch({ type: "pour", pour })} reducedMotion={reduced} />
       ) : (
         <WhoCounts pack={pack} fmt={fmt} state={state} onCode={(code: Code, on: boolean) => dispatch({ type: "code", code, on })} onSearch={(on) => dispatch({ type: "search", on })} reducedMotion={reduced} />
       );
@@ -353,6 +361,9 @@ export default function Demo({ pack, hrefs, todayLine }: { readonly pack: Pack; 
         }
       >
         <CardSheetBody pack={pack} fmt={fmt} fills={fills} expected={T1_EXPECTED} halfWho={halfWho} />
+      </GlasSheet>
+      <GlasSheet open={sheet === "caption" && !desktop} onClose={() => setSheet(null)} title={clock.beat.label[pack.locale]} closeLabel={pack.close} resizeLabel={pack.resize} detent="medium">
+        <CaptionSheetBody sentences={caption} terms={terms} extra={captionExtra} />
       </GlasSheet>
       <GlasSheet open={sheet === "more" && more !== null} onClose={() => setSheet(null)} title={beat === "wanne" ? pack.wanne.moreTitle : pack.more} closeLabel={pack.close} resizeLabel={pack.resize} detent="medium">
         {beat === "wanne" ? (

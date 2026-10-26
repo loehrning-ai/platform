@@ -7,7 +7,7 @@ import { ACTIVE_ACCOUNTS, ENDING_MRR, NET_NEW_2026, STATUS } from "@/lib/demo-ca
 import { CODES, type Code, type DemoState, type Pour } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
 import { countCodes, sumAt } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/logic";
 import type { Fmt } from "./fmt";
-import type { TubGeometry } from "./tub";
+import { Tub, type TubGeometry, type TubProps } from "./tub";
 import { PLOT, QUARTER_MONTHS, y, Y_MAX } from "./tub-geometry";
 
 const LEVELS = [ENDING_MRR["2026-04"], ENDING_MRR["2026-05"], ENDING_MRR["2026-06"]];
@@ -23,14 +23,6 @@ function quarterAt(geometry: TubGeometry, x: number): number | null {
   return index < 0 ? null : index;
 }
 
-function svgX(element: Element, clientX: number, clientY: number): number {
-  const svg = element instanceof SVGElement ? element.ownerSVGElement : null;
-  const matrix = svg?.getScreenCTM();
-  if (!matrix) return 0;
-  const inverse = matrix.inverse();
-  return inverse.a * clientX + inverse.c * clientY + inverse.e;
-}
-
 /** The members after pouring `from` onto `to`: the stack grows when the kind stays the same. */
 export function pourOnto(current: Pour, kind: "levels" | "changes", from: number, to: number): Pour {
   const base = current.kind === kind ? current.members : [];
@@ -38,33 +30,69 @@ export function pourOnto(current: Pour, kind: "levels" | "changes", from: number
   return { kind, members };
 }
 
+interface PourDrag {
+  readonly id: number;
+  readonly kind: "levels" | "changes";
+  readonly from: number;
+  readonly x0: number;
+  readonly x: number;
+}
+
 /**
- * Scene 4 move 1, drawn on the tub: the April to June water columns and the
- * three change arrows, each draggable onto another one. Released anywhere
- * else they spring back. Tapping June lights it alone.
+ * Scene 4 move 1 on the tub: the April to June water columns and the three
+ * change arrows, each draggable onto another one. Released anywhere else they
+ * spring back. Tapping June lights it alone. The marks are SVG; the touch
+ * areas are HTML over them (touch-action works there, so a drag never scrolls).
  */
-export function PourLayer({ pack, fmt, geometry, pour, onPour, reducedMotion }: { readonly pack: Pack; readonly fmt: Fmt; readonly geometry: TubGeometry; readonly pour: Pour; readonly onPour: (pour: Pour) => void; readonly reducedMotion: boolean }) {
+export function PourTub({ tub, pack, fmt, pour, onPour, reducedMotion }: { readonly tub: Omit<TubProps, "layer" | "overlay">; readonly pack: Pack; readonly fmt: Fmt; readonly pour: Pour; readonly onPour: (pour: Pour) => void; readonly reducedMotion: boolean }) {
   const glas = useGlas();
-  const [drag, setDrag] = useState<null | { id: number; kind: "levels" | "changes"; from: number; x0: number; x: number }>(null);
+  const [drag, setDrag] = useState<PourDrag | null>(null);
   useEffect(() => {
     if (!drag) return;
     return pushEscapeLayer(ESCAPE_PRIORITY.drag, () => setDrag(null));
   }, [drag]);
-  const w = pack.wer;
+  return (
+    <Tub
+      {...tub}
+      layer={(geometry) => <PourMarks pack={pack} fmt={fmt} geometry={geometry} pour={pour} drag={drag} reducedMotion={reducedMotion} />}
+      overlay={(geometry) => <PourHits pack={pack} fmt={fmt} geometry={geometry} pour={pour} onPour={onPour} drag={drag} setDrag={setDrag} onStart={() => glas.noteDrag()} />}
+    />
+  );
+}
 
-  const down = (kind: "levels" | "changes", from: number) => (event: PointerEvent<SVGElement>) => {
+function PourHits({
+  pack,
+  fmt,
+  geometry,
+  pour,
+  onPour,
+  drag,
+  setDrag,
+  onStart,
+}: {
+  readonly pack: Pack;
+  readonly fmt: Fmt;
+  readonly geometry: TubGeometry;
+  readonly pour: Pour;
+  readonly onPour: (pour: Pour) => void;
+  readonly drag: PourDrag | null;
+  readonly setDrag: (drag: PourDrag | null) => void;
+  readonly onStart: () => void;
+}) {
+  const w = pack.wer;
+  const down = (kind: "levels" | "changes", from: number) => (event: PointerEvent<HTMLElement>) => {
     if (event.button !== 0) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture?.(event.pointerId);
-    const x = svgX(event.currentTarget, event.clientX, event.clientY);
+    const x = geometry.toSvg(event.clientX, event.clientY).x;
     setDrag({ id: event.pointerId, kind, from, x0: x, x });
-    glas.noteDrag();
+    onStart();
   };
-  const move = (event: PointerEvent<SVGElement>) => {
+  const move = (event: PointerEvent<HTMLElement>) => {
     if (!drag || drag.id !== event.pointerId) return;
-    setDrag({ ...drag, x: svgX(event.currentTarget, event.clientX, event.clientY) });
+    setDrag({ ...drag, x: geometry.toSvg(event.clientX, event.clientY).x });
   };
-  const up = (event: PointerEvent<SVGElement>) => {
+  const up = (event: PointerEvent<HTMLElement>) => {
     if (!drag || drag.id !== event.pointerId) return;
     const moved = Math.abs(drag.x - drag.x0) > 6;
     const target = quarterAt(geometry, drag.x);
@@ -75,7 +103,52 @@ export function PourLayer({ pack, fmt, geometry, pour, onPour, reducedMotion }: 
     }
     if (target !== null && target !== drag.from) onPour(pourOnto(pour, drag.kind, drag.from, target));
   };
+  const handlers = (kind: "levels" | "changes", from: number) => ({ onPointerDown: down(kind, from), onPointerMove: move, onPointerUp: up, onPointerCancel: () => setDrag(null) });
+  return (
+    <>
+      {QUARTER_MONTHS.map((month, index) => {
+        const c = geometry.col(month);
+        if (!c) return null;
+        const level = LEVELS[index] ?? 0;
+        return (
+          <span
+            key={`col-${month}`}
+            className="w03-grab"
+            data-kind="column"
+            aria-hidden="true"
+            title={fmt.t(w.columnLabel, { month: fmt.month(month), value: fmt.eur(level) })}
+            style={geometry.box(c.x0 + 2, y(level), c.x1 - c.x0 - 4, PLOT.b - y(level))}
+            {...handlers("levels", index)}
+            data-w03-column={index}
+          />
+        );
+      })}
+      {QUARTER_MONTHS.map((month, index) => {
+        const c = geometry.col(month);
+        if (!c) return null;
+        const before = index === 0 ? MARCH : (LEVELS[index - 1] ?? 0);
+        const after = LEVELS[index] ?? 0;
+        const x = c.x0 + 6;
+        // The arrow sits at the top of its column; its area is drawn last, so the column below it stays draggable.
+        return (
+          <span
+            key={`arrow-${month}`}
+            className="w03-grab"
+            data-kind="arrow"
+            aria-hidden="true"
+            title={fmt.t(w.arrowLabel, { month: fmt.month(month), value: fmt.eur(after - before) })}
+            style={geometry.box(x - 11, Math.min(y(before), y(after)) - 10, 22, Math.abs(y(before) - y(after)) + 20)}
+            {...handlers("changes", index)}
+            data-w03-arrow={index}
+          />
+        );
+      })}
+    </>
+  );
+}
 
+function PourMarks({ pack, fmt, geometry, pour, drag, reducedMotion }: { readonly pack: Pack; readonly fmt: Fmt; readonly geometry: TubGeometry; readonly pour: Pour; readonly drag: PourDrag | null; readonly reducedMotion: boolean }) {
+  const w = pack.wer;
   const columnsDrawn = QUARTER_MONTHS.map((month, index) => {
     const c = geometry.col(month);
     if (!c) return null;
@@ -83,20 +156,7 @@ export function PourLayer({ pack, fmt, geometry, pour, onPour, reducedMotion }: 
     const lit = pour.kind === "june" ? index === 2 : pour.kind === "levels" && pour.members.includes(index);
     const dim = (pour.kind === "june" && index !== 2) || (pour.kind === "levels" && pour.members.length > 0 && !pour.members.includes(index));
     return (
-      <g
-        key={month}
-        className="w03-pour-col"
-        data-lit={lit ? "" : undefined}
-        data-dim={dim ? "" : undefined}
-        role="button"
-        tabIndex={-1}
-        aria-label={fmt.t(w.columnLabel, { month: fmt.month(month), value: fmt.eur(level) })}
-        onPointerDown={down("levels", index)}
-        onPointerMove={move}
-        onPointerUp={up}
-        onPointerCancel={() => setDrag(null)}
-        data-w03-column={index}
-      >
+      <g key={month} className="w03-pour-col" data-lit={lit ? "" : undefined} data-dim={dim ? "" : undefined} aria-hidden="true">
         <rect x={c.x0 + 2} y={y(level)} width={c.x1 - c.x0 - 4} height={PLOT.b - y(level)} rx="3" />
       </g>
     );
@@ -110,27 +170,12 @@ export function PourLayer({ pack, fmt, geometry, pour, onPour, reducedMotion }: 
     const lit = pour.kind === "changes" && pour.members.includes(index);
     const x = c.x0 + 6;
     return (
-      <g
-        key={month}
-        className="w03-pour-arrow"
-        data-lit={lit ? "" : undefined}
-        data-down={after < before ? "" : undefined}
-        role="button"
-        tabIndex={-1}
-        aria-label={fmt.t(w.arrowLabel, { month: fmt.month(month), value: fmt.eur(after - before) })}
-        onPointerDown={down("changes", index)}
-        onPointerMove={move}
-        onPointerUp={up}
-        onPointerCancel={() => setDrag(null)}
-        data-w03-arrow={index}
-      >
-        <rect x={x - 11} y={Math.min(y(before), y(after)) - 10} width="22" height={Math.abs(y(before) - y(after)) + 20} className="w03-hit" />
+      <g key={month} className="w03-pour-arrow" data-lit={lit ? "" : undefined} data-down={after < before ? "" : undefined} aria-hidden="true">
         <line x1={x} x2={x} y1={y(before)} y2={y(after)} />
         <path d={after < before ? `M${x - 4},${y(after) - 5}l4,5l4,-5` : `M${x - 4},${y(after) + 5}l4,-5l4,5`} />
       </g>
     );
   });
-
   let result: ReactNode = null;
   if (pour.kind === "levels" && pour.members.length >= 2) {
     const last = pour.members[pour.members.length - 1] as number;
@@ -152,7 +197,7 @@ export function PourLayer({ pack, fmt, geometry, pour, onPour, reducedMotion }: 
             {fmt.n(sum)}
           </text>
           {over ? (
-            <text x={(c.x0 + c.x1) / 2} y={PLOT.t + 34} textAnchor="middle" className="w03-stack-note">
+            <text x={(c.x0 + c.x1) / 2} y={PLOT.t + 38} textAnchor="middle" className="w03-stack-note">
               {w.breakMark}
             </text>
           ) : null}

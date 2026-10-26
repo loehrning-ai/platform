@@ -85,6 +85,8 @@ export interface DemoState {
   readonly placed: Readonly<Record<FileId, Side | null>>;
   /** The chip that landed last and whether it still waits to glide to the card's side. */
   readonly lastFile: FileId | null;
+  /** Whether the visitor's own placement of lastFile matched the card (kept after the glide). */
+  readonly lastMatched: boolean;
   readonly pending: FileId | null;
   readonly projektMove: 1 | 2;
   readonly tested: boolean;
@@ -115,6 +117,7 @@ export const INITIAL_STATE: DemoState = {
   codesSeen: false,
   placed: NOTHING_PLACED,
   lastFile: null,
+  lastMatched: false,
   pending: null,
   projektMove: 1,
   tested: false,
@@ -124,7 +127,8 @@ export type Action =
   | { readonly type: "restart" }
   | { readonly type: "send"; readonly to: Sent }
   | { readonly type: "run"; readonly run: 1 | 2 }
-  | { readonly type: "opening"; readonly value: number }
+  /** `snap` (pointer drags only) pulls a value near zero onto Claude's start; keys step freely. */
+  | { readonly type: "opening"; readonly value: number; readonly snap?: boolean }
   | { readonly type: "edge"; readonly edge: number }
   | { readonly type: "wanneMove"; readonly move: 1 | 2 }
   | { readonly type: "readAsLevel"; readonly on: boolean }
@@ -244,7 +248,7 @@ export function demoReducer(state: DemoState, action: Action): DemoState {
     case "run":
       return { ...state, run: action.run };
     case "opening": {
-      const value = clampOpening(action.value < NOTCH_EUR ? 0 : action.value);
+      const value = clampOpening(action.snap && action.value < NOTCH_EUR ? 0 : action.value);
       return { ...state, opening: value, edge: 0, dragged: state.dragged || value >= MOVED_EUR };
     }
     case "edge":
@@ -279,7 +283,8 @@ export function demoReducer(state: DemoState, action: Action): DemoState {
     case "place": {
       const settled = state.pending ? { ...state.placed, [state.pending]: CARD_SIDE[state.pending] } : state.placed;
       const placed = { ...settled, [action.file]: action.side };
-      return { ...state, placed, lastFile: action.file, pending: action.side === CARD_SIDE[action.file] ? null : action.file };
+      const matched = action.side === CARD_SIDE[action.file];
+      return { ...state, placed, lastFile: action.file, lastMatched: matched, pending: matched ? null : action.file };
     }
     case "settle":
       return state.pending ? { ...state, placed: { ...state.placed, [state.pending]: CARD_SIDE[state.pending] }, pending: null } : state;

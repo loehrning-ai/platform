@@ -3,7 +3,7 @@ import { aliasTarget, BEATS } from "./beats";
 import { DE } from "./copy-de";
 import { EN } from "./copy-en";
 import { CLAUDE_ANSWER, ENDING_MRR, NET_NEW_2026, OPENING_DEC_2025 } from "./data";
-import { boxes, CARD_SIDE, demoReducer, INITIAL_STATE, moveDone, NOTCH_EUR, openingOf, sortDone, type Action, type DemoState } from "./demo-state";
+import { boxes, CARD_SIDE, demoReducer, INITIAL_STATE, moveDone, NOTCH_EUR, OPENING_STEP, openingOf, sortDone, type Action, type DemoState } from "./demo-state";
 import { EDGE_STARTS, tubLevels } from "./logic";
 
 const run = (actions: readonly Action[], from: DemoState = INITIAL_STATE) => actions.reduce(demoReducer, from);
@@ -38,10 +38,16 @@ describe("the old kit links (v3 beat ids)", () => {
 });
 
 describe("the tub", () => {
-  it("snaps to Claude's start near zero, and Claude's table is the tub filled from empty", () => {
-    expect(run([{ type: "opening", value: NOTCH_EUR - 1 }]).opening).toBe(0);
+  it("a drag snaps to Claude's start near zero, and Claude's table is the tub filled from empty", () => {
+    expect(run([{ type: "opening", value: NOTCH_EUR - 1, snap: true }]).opening).toBe(0);
     const levels = tubLevels(NET_NEW_2026, 0).slice(3);
     expect(levels).toEqual(CLAUDE_ANSWER);
+  });
+
+  it("the arrow keys step up from zero: only a drag snaps (ArrowUp from 0 is 5.000, not 0)", () => {
+    expect(run([{ type: "opening", value: OPENING_STEP }]).opening).toBe(OPENING_STEP);
+    const up = Array.from({ length: 4 }, (_, index) => ({ type: "opening", value: (index + 1) * OPENING_STEP }) as Action);
+    expect(run(up).opening).toBe(4 * OPENING_STEP);
   });
 
   it("pulling the file edge back to the first subscription gives the approved levels", () => {
@@ -70,6 +76,9 @@ describe("the five boxes", () => {
     expect(boxes(wrong)[3]).toBe("empty");
     const settled = run([{ type: "settle" }], wrong);
     expect(settled.placed.contacts).toBe(CARD_SIDE.contacts);
+    // After the glide the file sits where the card wants it, but the visitor did not put it there.
+    expect(settled.lastMatched).toBe(false);
+    expect(run([{ type: "place", file: "contacts", side: CARD_SIDE.contacts }]).lastMatched).toBe(true);
     expect(boxes(settled)[3]).toBe("full");
   });
 

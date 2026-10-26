@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { GlasReadout, pushEscapeLayer, ESCAPE_PRIORITY, SvgLens, useGlas, useSpringValue } from "@/components/demos/glas";
 import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
 import { EXPORT_ROWS } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
@@ -12,6 +12,10 @@ import { columns, ghostLevels, levelsFor, MONTHS_2026, PLOT, QUARTER_MONTHS, sur
 /** Height of the two file strips under the vessel, in SVG units. */
 const STRIP = { exportTop: 218, exportH: 30, lowerTop: 252, lowerH: 18 } as const;
 export const TUB_VIEW = { w: VIEW.w, h: 274 } as const;
+/** The view box height without the file strips: the vessel and its month labels only. */
+const BARE_H = 216;
+/** A touch area is never smaller than this, in screen pixels (Apple HIG). */
+const MIN_TOUCH = 44;
 const MONTH_CHANGES = [...monthlyTotals(EXPORT_ROWS).values()];
 const GRID = [100_000, 200_000, 300_000, 400_000];
 
@@ -19,6 +23,16 @@ export interface TubGeometry {
   readonly cols: readonly Column[];
   readonly col: (month: string) => Column | undefined;
   readonly levels: ReadonlyMap<string, number | null>;
+  /** A screen point in the SVG's own units. */
+  readonly toSvg: (clientX: number, clientY: number) => { readonly x: number; readonly y: number };
+  /**
+   * An HTML box over an SVG rectangle, in pixels inside the tub, at least
+   * MIN_TOUCH on each side. Touch areas are HTML because Chrome ignores
+   * touch-action on SVG children, so a drag there would scroll the page.
+   */
+  readonly box: (x: number, y: number, w: number, h: number) => CSSProperties;
+  /** True on a phone: larger labels, fewer pills. */
+  readonly phone: boolean;
 }
 
 export interface TubProps {
@@ -36,8 +50,8 @@ export interface TubProps {
   readonly brackets?: boolean;
   /** Read amount as a level (scene 2, "Mehr dazu"): the water becomes each month's change. */
   readonly asLevel?: boolean;
-  /** Water line handle (scene 2 move 1, free play). */
-  readonly onOpening?: (value: number) => void;
+  /** Water line handle (scene 2 move 1, free play); `snap` is true for a drag, false for a key. */
+  readonly onOpening?: (value: number, snap: boolean) => void;
   /** File edge handle (scene 2 move 2, free play). */
   readonly onEdge?: (edge: number) => void;
   /** The handle the computation has taken over: the readout says so. */
@@ -47,6 +61,8 @@ export interface TubProps {
   readonly reducedMotion: boolean;
   /** Extra marks drawn with the tub's geometry (the pour, the test marks). */
   readonly layer?: (geometry: TubGeometry) => ReactNode;
+  /** HTML over the drawing (the touch areas of the pour). */
+  readonly overlay?: (geometry: TubGeometry) => ReactNode;
   /** Hide the strips (scenes that only need the vessel). */
   readonly strips?: boolean;
   readonly label: string;
@@ -99,6 +115,7 @@ export function Tub({
   onHold,
   reducedMotion,
   layer,
+  overlay,
   strips = true,
   label,
 }: TubProps) {
@@ -111,7 +128,8 @@ export function Tub({
   const [chip, setChip] = useState<string | null>(null);
   const [flow, setFlow] = useState<string | null>(null);
   const [desktop, setDesktop] = useState(false);
-  const w = TUB_VIEW;
+  const w = { w: TUB_VIEW.w, h: strips ? TUB_VIEW.h : BARE_H };
+  const [size, setSize] = useState({ w: 0, h: 0 });
 
   useEffect(() => {
     if (typeof window === "undefined" || !window.matchMedia) return;
@@ -121,6 +139,30 @@ export function Tub({
     query.addEventListener?.("change", update);
     return () => query.removeEventListener?.("change", update);
   }, []);
+
+  // The drawn box of the SVG (it may be letterboxed by max-height), so HTML touch areas sit on the drawing.
+  useLayoutEffect(() => {
+    const element = svg.current;
+    if (!element) return;
+    const measure = () => {
+      const rect = element.getBoundingClientRect();
+      setSize((previous) => (previous.w === rect.width && previous.h === rect.height ? previous : { w: rect.width, h: rect.height }));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+  const scale = size.w > 0 && size.h > 0 ? Math.min(size.w / w.w, size.h / w.h) : 0;
+  const offsetX = (size.w - w.w * scale) / 2;
+  const offsetY = (size.h - w.h * scale) / 2;
+  const box = (x: number, yy: number, bw: number, bh: number): CSSProperties => {
+    const width = Math.max(MIN_TOUCH, bw * scale);
+    const height = Math.max(MIN_TOUCH, bh * scale);
+    return { left: offsetX + x * scale + (bw * scale - width) / 2, top: offsetY + yy * scale + (bh * scale - height) / 2, width, height };
+  };
+  const phone = !desktop;
 
   const wideShare = useSpringValue(wide ? 1 : 0, "smooth", reducedMotion);
   const shown = useSpringValue(opening, "smooth", reducedMotion || drag?.kind === "water");
@@ -138,17 +180,17 @@ export function Tub({
   useEffect(() => {
     if (!drag) return;
     return pushEscapeLayer(ESCAPE_PRIORITY.drag, () => {
-      if (drag.kind === "water") onOpening?.(drag.startValue);
+      if (drag.kind === "water") onOpening?.(drag.startValue, false);
       else onEdge?.(drag.startValue);
       setDrag(null);
       onHold?.(null);
     });
   }, [drag, onEdge, onHold, onOpening]);
 
-  const startDrag = (kind: "water" | "edge") => (event: PointerEvent<SVGElement>) => {
+  const startDrag = (kind: "water" | "edge") => (event: PointerEvent<HTMLElement>) => {
     if (event.button !== 0) return;
     event.preventDefault();
-    (event.currentTarget as Element).setPointerCapture?.(event.pointerId);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     const point = svgPoint(svg.current, event.clientX, event.clientY);
     setDrag({ kind, x: point.x, startValue: kind === "water" ? opening : edge });
     glas.noteDrag();
@@ -158,7 +200,7 @@ export function Tub({
   const moveDrag = (kind: "water" | "edge", point: { x: number; y: number }) => {
     if (kind === "water") {
       const value = Math.min(OPENING_MAX, Math.max(0, valueAt(point.y)));
-      onOpening?.(value);
+      onOpening?.(value, true);
       onHold?.(share(point.x, y(value)));
     } else {
       const index = nearestEdge(cols, point.x);
@@ -167,7 +209,7 @@ export function Tub({
     }
   };
 
-  const onMove = (event: PointerEvent<SVGElement>) => {
+  const onMove = (event: PointerEvent<HTMLElement>) => {
     if (!drag) return;
     const point = svgPoint(svg.current, event.clientX, event.clientY);
     setDrag({ ...drag, x: point.x });
@@ -183,9 +225,9 @@ export function Tub({
     const step = sliderKey(event.key, event.shiftKey);
     if (step === null || !onOpening) return;
     event.preventDefault();
-    if (step === "home") onOpening(0);
-    else if (step === "end") onOpening(OPENING_MAX);
-    else onOpening(Math.min(OPENING_MAX, Math.max(0, opening + step)));
+    if (step === "home") onOpening(0, false);
+    else if (step === "end") onOpening(OPENING_MAX, false);
+    else onOpening(Math.min(OPENING_MAX, Math.max(0, opening + step)), false);
   };
 
   const onEdgeKey = (event: KeyboardEvent<SVGGElement>) => {
@@ -202,13 +244,18 @@ export function Tub({
   const edgeText = fmt.t(pack.wanne.edgeText, { month: fmt.month(start), opening: fmt.n(opening) });
   const startCol = col(start);
   const edgeX = startCol ? startCol.x0 : PLOT.l;
-  const labelMonths = wideShare > 0.5 ? ["2025-12", ...QUARTER_MONTHS] : ["2025-12", ...MONTHS_2026];
+  // A phone shows December and the quarter only, so every pill stays readable at its larger size.
+  const labelMonths = wideShare > 0.5 || phone ? ["2025-12", ...QUARTER_MONTHS] : ["2025-12", ...MONTHS_2026];
+  const pill = phone ? { char: 7.1, h: 18, step: 20 } : { char: 5.4, h: 13, step: 14 };
+  const notchShown = Boolean(onOpening) && !computed && !asLevel && shown < 4_000 && drag === null;
+  const toSvg = (clientX: number, clientY: number) => svgPoint(svg.current, clientX, clientY);
+  const geometry: TubGeometry = { cols, col, levels, toSvg, box, phone };
   const chipMonth = chip ? MONTHS_2026.indexOf(chip) : -1;
   const lensX = drag?.kind === "water" ? Math.min(PLOT.r - 20, Math.max(PLOT.l + 20, drag.x)) : 0;
 
   return (
-    <div className="w03-tub" data-flat={flat ? "" : undefined} data-dragging={drag ? "" : undefined}>
-      <svg ref={svg} viewBox={`0 0 ${w.w} ${w.h}`} className="w03-tub-svg" role="group" aria-label={label} onPointerMove={onMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
+    <div className="w03-tub" data-flat={flat ? "" : undefined} data-phone={phone ? "" : undefined} data-dragging={drag ? "" : undefined} onPointerMove={onMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
+      <svg ref={svg} viewBox={`0 0 ${w.w} ${w.h}`} className="w03-tub-svg" role="group" aria-label={label}>
         <defs>
           <linearGradient id={`${ids}-rim`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#ffffff" stopOpacity="0.85" />
@@ -277,8 +324,9 @@ export function Tub({
         {(() => {
           const band = col("2026-04");
           const end = col("2026-06");
+          // Right-aligned to the vessel's inner edge: in the wide view the band is narrower than its name.
           return band && end ? (
-            <text x={(band.x0 + end.x1) / 2} y={PLOT.t + 9} textAnchor="middle" className="w03-band-label">
+            <text x={PLOT.r - 3} y={PLOT.t + 11} textAnchor="end" className="w03-band-label">
               {pack.wanne.quarterBand}
             </text>
           ) : null;
@@ -310,15 +358,16 @@ export function Tub({
               const level = levels.get(month);
               if (!c || level == null || c.x1 - c.x0 < 8) return null;
               const cx = (c.x0 + c.x1) / 2;
+              if (month === "2025-12" && notchShown) return null;
               const text = fmt.n(Math.round(level));
-              const width = Math.max(30, text.length * 5.4 + 8);
-              // In the wide view the quarter's columns are narrow: its pills step up so none hides another.
-              const step = wideShare > 0.5 ? Math.max(0, QUARTER_MONTHS.indexOf(month)) * 14 : 0;
-              const top = Math.max(PLOT.t + 12, y(level) - 15 - step);
+              const width = Math.max(30, text.length * pill.char + 10);
+              // Narrow quarter columns (wide view, or any phone): the pills step up so none hides another.
+              const step = wideShare > 0.5 || phone ? Math.max(0, QUARTER_MONTHS.indexOf(month)) * pill.step : 0;
+              const top = Math.max(PLOT.t + 12, y(level) - pill.h - 2 - step);
               return (
                 <g key={month} className="w03-pill" aria-hidden="true">
-                  <rect x={cx - width / 2} y={top} width={width} height="13" rx="6.5" />
-                  <text x={cx} y={top + 9.5} textAnchor="middle">
+                  <rect x={cx - width / 2} y={top} width={width} height={pill.h} rx={pill.h / 2} />
+                  <text x={cx} y={top + pill.h * 0.72} textAnchor="middle">
                     {text}
                   </text>
                 </g>
@@ -356,7 +405,7 @@ export function Tub({
             })
           : null}
 
-        {layer ? layer({ cols, col, levels }) : null}
+        {layer ? layer(geometry) : null}
 
         {strips ? (
           <g className="w03-strips">
@@ -420,7 +469,6 @@ export function Tub({
             aria-orientation="vertical"
             data-active={drag?.kind === "water" ? "" : undefined}
             onKeyDown={onWaterKey}
-            onPointerDown={startDrag("water")}
           >
             <rect x={PLOT.l} y={openingY - 22} width={PLOT.r - PLOT.l + 44} height="44" className="w03-band" />
             <line x1={PLOT.l} x2={PLOT.r} y1={openingY} y2={openingY} className="w03-opening-line" />
@@ -429,11 +477,6 @@ export function Tub({
               <path d="M-6,-4h12M-6,0h12M-6,4h12" className="w03-grip-lines" />
             </g>
           </g>
-        ) : null}
-        {onOpening && !computed && !asLevel && shown < 4_000 ? (
-          <text x={PLOT.r + 22} y={openingY - 18} textAnchor="middle" className="w03-notch">
-            {pack.wanne.notch}
-          </text>
         ) : null}
 
         {onEdge && wideShare > 0.5 ? (
@@ -448,7 +491,6 @@ export function Tub({
             aria-valuetext={edgeText}
             data-active={drag?.kind === "edge" ? "" : undefined}
             onKeyDown={onEdgeKey}
-            onPointerDown={startDrag("edge")}
           >
             <rect x={edgeX - 22} y={PLOT.t} width="44" height={STRIP.lowerTop + STRIP.lowerH - PLOT.t} className="w03-band" />
             <line x1={edgeX} x2={edgeX} y1={PLOT.t} y2={STRIP.lowerTop + STRIP.lowerH} className="w03-edge-line" />
@@ -460,8 +502,20 @@ export function Tub({
         <SvgLens contentId={contentId} cx={lensX} cy={openingY} r={36} scale={1.25} visible={drag?.kind === "water" && !reducedMotion} />
       </svg>
 
+      {scale > 0 && onOpening && !computed && !asLevel ? (
+        <span className="w03-grab" data-kind="water" aria-hidden="true" style={box(PLOT.l, openingY - 24, PLOT.r - PLOT.l + 44, 48)} onPointerDown={startDrag("water")} data-w03-grab="water" />
+      ) : null}
+      {scale > 0 && onEdge && wideShare > 0.5 ? (
+        <span className="w03-grab" data-kind="edge" aria-hidden="true" style={box(edgeX - 22, PLOT.t, 44, STRIP.lowerTop + STRIP.lowerH - PLOT.t)} onPointerDown={startDrag("edge")} data-w03-grab="edge" />
+      ) : null}
+      {scale > 0 && overlay ? overlay(geometry) : null}
+      {scale > 0 && notchShown ? (
+        <span className="w03-notch" style={{ right: Math.max(0, size.w - (offsetX + (PLOT.r + 44) * scale)), bottom: size.h - (offsetY + (openingY - 15) * scale) }}>
+          {pack.wanne.notch}
+        </span>
+      ) : null}
       {drag?.kind === "water" ? (
-        <span className="w03-readout-anchor" style={{ left: `${(lensX / w.w) * 100}%`, top: `${(Math.max(PLOT.t + 40, openingY) / w.h) * 100}%` }}>
+        <span className="w03-readout-anchor" style={{ left: offsetX + lensX * scale, top: offsetY + Math.max(PLOT.t + 40, openingY) * scale }}>
           <GlasReadout hidden>{fmt.t(pack.wanne.readout, { opening: fmt.eur(Math.round(opening)) })}</GlasReadout>
         </span>
       ) : null}

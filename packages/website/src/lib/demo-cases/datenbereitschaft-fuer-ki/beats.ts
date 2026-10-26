@@ -4,6 +4,9 @@ import KIT_NAMES from "./kit-names.json";
 const KIT = "data-readiness-kit/";
 
 /**
+ * The guided path names no next step ("Weiter" alone), so the dots, back and
+ * next fit one row on a phone; each step sentence fits one line at 390px.
+ *
  * The red line of "Die Fragekarte", the same in deck, kit and demo: Claude's
  * answer, the tub that shows what the file cannot know, then the five boxes
  * of the question card (1 and 2 together, 3, then 4 and 5 in the project),
@@ -25,8 +28,7 @@ export const BEATS: readonly Beat[] = [
     seconds: 0,
     label: { de: "Wanne", en: "Tub" },
     kitFile: `${KIT}builder/claude-demo/A-export-tables/monthly_revenue.csv`,
-    step: { de: "Du ziehst am Wasser und am Anfang der Datei.", en: "You pull the water and the start of the file." },
-    nextName: { de: "die Wanne", en: "the tub" },
+    step: { de: "Du ziehst am Wasser und am Dateianfang.", en: "You drag the water and the file's start." },
   },
   {
     id: "sicht",
@@ -35,7 +37,6 @@ export const BEATS: readonly Beat[] = [
     label: { de: "Frage und Sicht", en: "Question, view" },
     kitFile: `${KIT}builder/claude/project/mrr_summary_monthly.csv`,
     step: { de: "Du baust die Frage und wählst die Tabelle.", en: "You build the question and pick the table." },
-    nextName: { de: "Frage und Sicht", en: "question and view" },
   },
   {
     id: "wer-zaehlt",
@@ -43,8 +44,7 @@ export const BEATS: readonly Beat[] = [
     seconds: 0,
     label: { de: "Wer zählt", en: "Who counts" },
     kitFile: `${KIT}builder/claude-demo/A-export-tables/customer_master.csv`,
-    step: { de: "Du gießt Monate zusammen und schreibst die Zählregel.", en: "You pour months together and write the counting rule." },
-    nextName: { de: "wer zählt", en: "who counts" },
+    step: { de: "Du prüfst, was man addiert und wer zählt.", en: "You test what adds up and who counts." },
   },
   {
     id: "projekt",
@@ -53,7 +53,6 @@ export const BEATS: readonly Beat[] = [
     label: { de: "Projekt", en: "Project" },
     kitFile: `${KIT}builder/claude/project/${KIT_NAMES.instructions}`,
     step: { de: "Du sortierst die Dateien und machst den Test.", en: "You sort the files and run the test." },
-    nextName: { de: "das Projekt", en: "the project" },
   },
   {
     id: "deine-karte",
@@ -61,8 +60,7 @@ export const BEATS: readonly Beat[] = [
     seconds: 0,
     label: { de: "Deine Karte", en: "Your card" },
     kitFile: `${KIT}${KIT_NAMES.cardDe}`,
-    step: { de: "Du füllst die Karte für eine eigene Zahl aus.", en: "You fill in the card for a number of your own." },
-    nextName: { de: "deine Karte", en: "your card" },
+    step: { de: "Du füllst die Karte für deine Zahl aus.", en: "You fill in the card for your own number." },
   },
   {
     id: "mitnehmen",
@@ -71,7 +69,6 @@ export const BEATS: readonly Beat[] = [
     label: { de: "Mitnehmen", en: "Take home" },
     kitFile: `${KIT}claude/${KIT_NAMES.readme}`,
     step: { de: "Du nimmst Skill, Projekt und Prüfliste mit.", en: "You take the skill, the project and the test list." },
-    nextName: { de: "Mitnehmen", en: "take home" },
   },
 ];
 
