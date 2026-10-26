@@ -4,13 +4,14 @@ import { expect, type Page, test } from "@playwright/test";
  * Workshop 04 deck, both editions: every ArrowRight press walks the main slides step by step and
  * never enters the appendix, ArrowLeft walks back, r and Shift+R return to #cover/0, unbound keys
  * do nothing, modified r stays the browser's, P opens the presenter, Escape leaves an appendix
- * page for the slide it came from, and a reload keeps the position the hash names.
+ * page for the slide it came from, a reload keeps the position the hash names, and the phone note
+ * links only to a page on this site.
  */
 
 const SLUG = "esg-berichte-mit-ki";
 const EDITIONS = [
-  { lang: "de", deck: `/workshops/${SLUG}/slides.html`, presenter: `/workshops/${SLUG}/presenter.html` },
-  { lang: "en", deck: `/workshops/${SLUG}/en/slides.html`, presenter: `/workshops/${SLUG}/en/presenter.html` },
+  { lang: "de", deck: `/workshops/${SLUG}/slides.html`, presenter: `/workshops/${SLUG}/presenter.html`, demo: `/demos/${SLUG}` },
+  { lang: "en", deck: `/workshops/${SLUG}/en/slides.html`, presenter: `/workshops/${SLUG}/en/presenter.html`, demo: `/en/demos/${SLUG}` },
 ] as const;
 
 test.use({ contextOptions: { reducedMotion: "reduce" } });
@@ -26,11 +27,13 @@ const shown = (page: Page) =>
   });
 const expectShown = (page: Page, where: string, why: string) => expect.poll(() => shown(page), why).toBe(where);
 
+/** Opens a deck URL; each edition keeps its own deck id, so the two never share storage or channels. */
 async function open(page: Page, url: string) {
   await page.goto(url);
   const target = new URL(url, "http://deck").hash.slice(1).split("/")[0] || "cover";
   await expect(page.locator(`#${target}`)).toHaveAttribute("data-deck-active", "");
-  await expect(page.locator("html")).toHaveAttribute("data-deck-id", SLUG);
+  const deckId = url.includes("/en/") ? `${SLUG}:en` : SLUG;
+  await expect(page.locator("html")).toHaveAttribute("data-deck-id", deckId);
 }
 
 /** Every main position in order: #slide/0 .. #slide/last for each main slide. */
@@ -133,6 +136,24 @@ for (const edition of EDITIONS) {
       await page.keyboard.press("ArrowRight");
       await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 15`);
       await popup.close();
+    });
+
+    test("the phone note links to this edition's demo and never to a script or another host", async ({ page }) => {
+      await open(page, edition.deck);
+      const link = page.locator("deck-stage .rotate a");
+      const resolved = () => link.evaluate((a) => (a as HTMLAnchorElement).href);
+      await expect.poll(resolved).toBe(new URL(edition.demo, page.url()).href);
+
+      for (const hostile of ["javascript:alert(1)", "data:text/html,x", "//example.com/x", "https://example.com/x"]) {
+        await page.route(`**${edition.deck}`, async (route) => {
+          const response = await route.fetch();
+          const body = (await response.text()).replace(/data-rotate-href="[^"]*"/, `data-rotate-href="${hostile}"`);
+          await route.fulfill({ response, body });
+        });
+        await open(page, edition.deck);
+        await expect.poll(resolved, { message: hostile }).toBe(new URL("./guide.html", page.url()).href);
+        await page.unrouteAll();
+      }
     });
   });
 }

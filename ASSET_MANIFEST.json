@@ -1131,8 +1131,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-      "sizeBytes": 919946,
-      "sha256": "349efbdb11bb41fa7cfc41ad12b52c0d7d43731941376d66d714a3eb2d6b68da",
+      "sizeBytes": 919940,
+      "sha256": "abf34e0c738c72f16004143a33128e82b27f0bfd34fce3a710c4858e5b19c5e6",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, English edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

@@ -25,6 +25,14 @@
   const BACK_IDLE_MS = 2500;
   // One Back gesture stays inside the deck and asks for a second one.
   const BACK_CONFIRM_MS = 3000;
+  // The phone note's link comes from page markup. Only a link on this site is taken, rebuilt on this
+  // origin, so a javascript: or data: value, or a //host path, never becomes the link.
+  // The phone note links only to one of these pages; the attribute picks one, it never becomes the link.
+  const ROTATE_TARGETS = Object.freeze({
+    "/demos/esg-berichte-mit-ki": "/demos/esg-berichte-mit-ki",
+    "/en/demos/esg-berichte-mit-ki": "/en/demos/esg-berichte-mit-ki",
+  });
+  const rotateTarget = (value) => (value && Object.hasOwn(ROTATE_TARGETS, value) ? ROTATE_TARGETS[value] : "./guide.html");
   const SWIPE_MIN_PX = 48;
   const TAP_MAX_PX = 12;
   const TAP_MAX_MS = 500;
@@ -631,7 +639,7 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       rotate.setAttribute("role", "note");
       const rotateText = document.createElement("p");
       const rotateLink = document.createElement("a");
-      rotateLink.href = this.getAttribute("data-rotate-href") || "./guide.html";
+      rotateLink.href = rotateTarget(this.getAttribute("data-rotate-href"));
       rotateLink.textContent = this.getAttribute("data-rotate-label") || COPY.rotateLink;
       rotateText.append(COPY.rotateBefore, rotateLink, COPY.rotateAfter);
       const rotateButton = document.createElement("button");

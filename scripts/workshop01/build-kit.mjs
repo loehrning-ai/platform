@@ -28,7 +28,7 @@
  *   node scripts/workshop01/build-kit.mjs --check   writes nothing, exits 1 when anything differs
  */
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { zipStore } from "../../packages/website/src/lib/zip/store.ts";
@@ -168,12 +168,22 @@ export function outputs() {
   return out;
 }
 
+/** The file's bytes, or null when it does not exist: one read, no exists-then-read race. */
+function readIfPresent(file) {
+  try {
+    return readFileSync(file);
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const check = process.argv.includes("--check");
   let stale = 0;
   for (const [file, bytes] of outputs()) {
     const rel = path.relative(REPO_ROOT, file);
-    const same = existsSync(file) && readFileSync(file).equals(bytes);
+    const same = readIfPresent(file)?.equals(bytes) ?? false;
     if (check) {
       if (!same) {
         stale += 1;

@@ -148,6 +148,16 @@ function presenterPage() {
   return readFileSync(path.join(HERE, "presenter.html"), "utf8");
 }
 
+/** The file's text, or null when it does not exist: one read, no exists-then-read race. */
+function readIfPresent(file) {
+  try {
+    return readFileSync(file, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 function main() {
   const checkOnly = process.argv.includes("--check");
   const outputs = [
@@ -157,7 +167,7 @@ function main() {
   const drift = [];
   for (const [file, html] of outputs) {
     const target = path.join(OUT_DIR, file);
-    const current = existsSync(target) ? readFileSync(target, "utf8") : null;
+    const current = readIfPresent(target);
     if (current === html) continue;
     if (checkOnly) drift.push(file);
     else {

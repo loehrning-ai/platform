@@ -217,7 +217,7 @@ export function kitModule() {
     `export const KIT_ZIP_NAME = ${JSON.stringify(ZIP_NAME)};`,
     `export const KIT_ZIP_NAME_DE = ${JSON.stringify(ZIP_NAME_DE)};`,
     "",
-    `export const FOLDER_FILES = ${JSON.stringify(FOLDER_FILES, null, 2).replace(/\n/g, "\n")} as const;`,
+    `export const FOLDER_FILES = ${JSON.stringify(FOLDER_FILES, null, 2)} as const;`,
     "",
     "export type FolderFile = (typeof FOLDER_FILES)[number];",
     "",

@@ -302,8 +302,8 @@ export function htmlTextLines(source) {
 function htmlVisibleLines(source) {
   const blank = (block) => block.replace(/[^\n]/g, " ");
   const visible = source
-    .replace(/<script\b[\s\S]*?<\/script>/gi, blank)
-    .replace(/<style\b[\s\S]*?<\/style>/gi, blank)
+    .replace(/<script\b[\s\S]*?<\/script\b[^>]*>/gi, blank)
+    .replace(/<style\b[\s\S]*?<\/style\b[^>]*>/gi, blank)
     .replace(/<!--[\s\S]*?-->/g, blank);
   const lineAt = (index) => visible.slice(0, index).split("\n").length;
   const out = [];
