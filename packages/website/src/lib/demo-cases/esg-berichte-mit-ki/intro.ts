@@ -10,21 +10,21 @@ export const SHELL: DemoShellVersion = "v4";
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "ESG-Antworten mit Datei und Zeile belegen",
+    title: "ESG-Antworten belegen",
     sentences: [
-      "Ein erfundenes Weingut soll einer Bank seinen Stromverbrauch nennen und will „Zertifizierte Bio-Weinberge“ auf seine Regalkarten drucken.",
-      "Du verbindest jede Antwort mit ihrer Zeile und prüfst, ob die Zeile die ganze Zeit und alles deckt, wovon die Antwort spricht.",
-      "Danach prüfst du deine eigene Stromdatei und nimmst die Prüfkarte und einen Skill mit, der Claude genauso prüfen lässt.",
-      "Das dauert etwa {minutes} Minuten, und alles bleibt in deinem Browser.",
+      "Ein erfundenes Weingut will „Zertifizierte Bio-Weinberge“ auf seine Regalkarten drucken und einer Bank seinen Stromverbrauch nennen.",
+      "Du verbindest jede Antwort mit der Zeile, die sie belegt, und findest das fehlende Dokument.",
+      "Am Ende prüfst du deine eigene Stromdatei und nimmst einen Skill für Claude mit.",
+      "Das dauert etwa {minutes} Minuten, und nichts verlässt deinen Browser.",
     ],
     start: "Mit der Regalkarte starten",
   },
   en: {
-    title: "Back every ESG answer with a file and a line",
+    title: "Back your ESG answers",
     sentences: [
-      "An invented winery must report its electricity use to its bank and wants “Certified organic vineyards” on its shelf cards.",
-      "You link each answer to the line meant to back it, then check that the line covers the whole period and everything claimed.",
-      "Then you check your own electricity file and take home a check card and a Claude skill that works the same way.",
+      "An invented winery wants “Certified organic vineyards” on its shelf cards and must report its electricity use to a bank.",
+      "You link each answer to the line that backs it and find the missing document.",
+      "At the end you check your own electricity file and take home a skill for Claude.",
       "It takes about {minutes} minutes, and nothing leaves your browser.",
     ],
     start: "Start with the shelf card",
