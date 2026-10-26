@@ -1,0 +1,3 @@
+# Extract from incident-log_2026.csv (owner: Goran Petrovski, IT lead; last entry 2026-10-12). Rows copied unchanged; only incidents involving Tannwald data. Extract prepared 2026-11-09, full log available on request.
+id,detected,customer_data,what_happened,customer_told,cause,fix,closed
+INC-02,2026-05-07 09:40,Tannwald,"service list with 14 Tannwald customers e-mailed to a wrong external address",2026-05-08 16:10,mail auto-complete chose the wrong address,"auto-complete off for external mail; recipient confirmed deletion on 2026-05-07",2026-05-11

@@ -1,0 +1,1 @@
+R7: the backup report is supporting only. The restore test record goes here (see A7).

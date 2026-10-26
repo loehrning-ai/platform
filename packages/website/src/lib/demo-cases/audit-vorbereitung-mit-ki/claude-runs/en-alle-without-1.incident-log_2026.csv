@@ -1,0 +1,5 @@
+# Fictional training material. Incident log 2026. Owner: Goran Petrovski, IT lead. Last entry 2026-10-12.
+id,detected,customer_data,what_happened,customer_told,cause,fix,closed
+INC-01,2026-02-19 08:15,none,laptop lost (disk encrypted),not needed,left on a train,device wiped remotely,2026-02-19
+INC-02,2026-05-07 09:40,Tannwald,"service list with 14 Tannwald customers e-mailed to a wrong external address",2026-05-08 16:10,mail auto-complete chose the wrong address,"auto-complete off for external mail; recipient confirmed deletion on 2026-05-07",2026-05-11
+INC-03,2026-10-12 11:05,none,phishing link clicked,not needed,phishing mail,password reset and MFA check,2026-10-12
