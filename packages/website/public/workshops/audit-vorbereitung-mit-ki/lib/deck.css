@@ -1,7 +1,8 @@
 /* deck.css: the Workshop 05 deck (both editions). CI v5.3 "Das Ö": Kalkweiß ground, Druckschwarz ink,
    Mennige as the one accent (a failed test, a gap, the current route stop). Hard edges, no gradients, no
    shadows. One 1920 × 1080 stage, scaled by lib/deck-stage.js; the smallest type on a slide is 28 px.
-   Glass (the shared .glass recipe of the site) only on the floating toolbar and the phone note. */
+   The toolbar and the phone note are solid paper with a hairline: no slide is full-bleed, so glass
+   over the empty band at the foot of a slide would only show paper, and a phone gets no fixed glass. */
 
 @font-face{font-family:'Typing';font-weight:400;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Regular.woff2') format('woff2')}
 @font-face{font-family:'Typing';font-weight:700;font-style:normal;font-display:swap;src:url('../assets/fonts/Typing-Bold.woff2') format('woff2')}
@@ -460,13 +461,10 @@ html[data-idle] .toolbar:focus-within,html[data-idle] .deck-back:focus-visible{o
 /* while the phone note is open, the stage sits below it */
 html[data-rotate-open] deck-stage{top:250px;bottom:84px}
 
-/* the one glass recipe of the site (src/app/globals.css .glass), with its opaque fallbacks */
-.glass{background-color:var(--paper);border:1px solid rgb(18 18 18 / .14);border-radius:0;color:var(--ink)}
-@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .glass{background-color:rgb(243 240 233 / .8);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);box-shadow:inset 0 1px 0 rgb(255 255 255 / .55)}
-}
-@media (prefers-reduced-transparency:reduce){.glass{background-color:var(--paper);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}}
-@media (forced-colors:active){.glass{background-color:Canvas;border-color:CanvasText;-webkit-backdrop-filter:none;backdrop-filter:none}}
+/* solid chrome: paper and a hairline, never translucent (the site's Werkglas is desktop nav only) */
+.toolbar,.rotate{background-color:var(--paper);border:1px solid var(--hair);border-radius:0;color:var(--ink)}
+@media (prefers-contrast:more){.toolbar,.rotate{border-color:var(--ink)}}
+@media (forced-colors:active){.toolbar,.rotate{background-color:Canvas;border-color:CanvasText;color:CanvasText}}
 
 @media (hover:none) and (pointer:coarse){
   .tb,.deck-back{min-width:56px;height:56px;font-size:17px}

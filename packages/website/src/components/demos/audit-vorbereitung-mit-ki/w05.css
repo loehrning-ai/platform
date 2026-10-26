@@ -789,12 +789,17 @@
   font-weight: 700;
 }
 
-/* ── Ribbon (the one glass surface) ────────────────────────────────────── */
+/* ── Ribbon ─────────────────────────────────────────────────────────────
+   Solid paper, not glass. From 1024px it docks directly under the glass nav,
+   and glass is never stacked on glass; below 1024px it is a stuck bar, and a
+   phone gets no fixed glass. */
 .w05 .w05-ribbon {
   position: sticky;
   top: var(--nav-h-compact);
   z-index: 5;
   margin: 16px 0 0;
+  border-bottom: 1px solid var(--w05-line);
+  background: var(--color-background);
 }
 @media (min-width: 64rem) {
   .w05 .w05-ribbon {

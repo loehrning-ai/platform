@@ -434,7 +434,7 @@ function OwnSection({
           {own.clear}
         </button>
       </p>
-      <div className="nw-dock glass" data-own-dock="">
+      <div className="nw-dock" data-own-dock="">
         <button type="button" className="nw-action" data-add-card="" disabled={!canAddCard(draft) || full} onClick={onAdd}>
           {own.add}
         </button>

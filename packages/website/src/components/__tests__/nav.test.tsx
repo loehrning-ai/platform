@@ -165,8 +165,13 @@ describe("<Nav />", () => {
     expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/buecher");
     expect(hrefs).not.toContain("/open-source");
-    // The studio dropdown: a rounded paper card with the soft hover shadow.
-    expect(menu).toHaveClass("rounded-2xl", "bg-paper", "shadow-card-hover");
+    // The dropdown hangs from the square bar as the same object: square
+    // paper, a 1px ink line, no shadow, and the anti-colour hover.
+    expect(menu).toHaveClass("rounded-none", "bg-paper", "border-foreground");
+    expect(menu.className).not.toMatch(/\brounded-(?!none)|\bshadow-/);
+    for (const item of within(menu).getAllByRole("link")) {
+      expect(item).toHaveClass("hover:bg-foreground", "hover:text-background");
+    }
     expect(menu.querySelectorAll("svg")).toHaveLength(0);
   });
 
@@ -188,7 +193,7 @@ describe("<Nav />", () => {
     ).not.toHaveAttribute("aria-current");
   });
 
-  it("uses a copper rule for the current group, an opaque phone bar and a translucent studio pill", () => {
+  it("uses a copper rule for the current group and an opaque phone bar", () => {
     navigationMock.pathname = "/kurse";
     renderGerman();
 
@@ -196,21 +201,35 @@ describe("<Nav />", () => {
     expect(trigger.className).toContain("min-h-11");
     expect(trigger.className).toContain("border-brand-orange");
     const row = document.querySelector("[data-nav-header-row]");
-    // The studio pill is the desktop treatment only. Below lg the same row
-    // is the flush companion bar: opaque paper, because a backdrop blur on a
-    // fixed bar flickers in iOS WebKit while content scrolls under it. The
-    // rounding, shadow, translucency and blur are lg-scoped.
-    expect(row).toHaveClass(
-      "bg-background",
-      "lg:rounded-2xl",
-      "lg:bg-background/85",
-      "lg:shadow-card",
-      "lg:backdrop-blur-xl",
-    );
-    expect(row?.className).not.toMatch(/(?<![:\w-])backdrop-blur/);
-    expect(row?.className).not.toMatch(/(?<![:\w-])bg-background\/\d+/);
+    // Below lg the row is the flush companion bar: opaque paper, because a
+    // backdrop blur on a fixed bar flickers in iOS WebKit while content
+    // scrolls under it. From lg the row turns transparent and its surface
+    // layer carries the material. Square, no shadow, no blur on the row.
+    expect(row).toHaveClass("bg-background", "lg:bg-transparent");
+    expect(row?.className).not.toMatch(/backdrop|rounded|shadow/);
+    expect(row?.className).not.toMatch(/bg-background\/\d+/);
     // Never a dark surface.
     expect(row?.className).not.toMatch(/bg-(?:foreground|black|graphit)\b/);
+  });
+
+  it("puts Werkglas under the desktop bar only on pages with moving visuals", () => {
+    navigationMock.pathname = "/demos";
+    const { unmount } = renderGerman();
+    const nav = screen.getByRole("navigation", { name: /Hauptnavigation|Main navigation/ });
+    expect(nav).toHaveAttribute("data-chrome", "glass");
+    const surface = document.querySelector("[data-nav-surface]");
+    expect(surface).toHaveAttribute("aria-hidden", "true");
+    // The one shared material, desktop only: the phone bar never gets it.
+    expect(surface).toHaveClass("glass", "hidden", "lg:block", "-z-10");
+    expect(surface?.parentElement).toHaveAttribute("data-nav-header-row");
+    unmount();
+
+    navigationMock.pathname = "/blog/eu-ai-act-grundlagen";
+    renderGerman();
+    expect(document.querySelector("nav[data-chrome]")).toHaveAttribute("data-chrome", "paper");
+    const paper = document.querySelector("[data-nav-surface]");
+    expect(paper).not.toHaveClass("glass");
+    expect(paper).toHaveClass("bg-background", "hidden", "lg:block");
   });
 
   it("marks the current menu row with a copper rule and ink text", () => {
@@ -249,7 +268,7 @@ describe("<Nav />", () => {
     }
   });
 
-  it("is a flush --nav-h-compact band below lg and the studio pill from lg", () => {
+  it("is a flush --nav-h-compact band below lg and a square floating bar from lg", () => {
     renderGerman();
     const nav = document.querySelector("nav.no-js-primary-nav");
     const row = document.querySelector("[data-nav-header-row]");
@@ -264,13 +283,8 @@ describe("<Nav />", () => {
     expect(row).toHaveClass("h-[var(--nav-h-compact)]", "border-b");
     expect(row).not.toHaveClass("rounded-2xl");
     expect(row).not.toHaveClass("shadow-card");
-    expect(row).toHaveClass(
-      "lg:h-12",
-      "lg:rounded-2xl",
-      "lg:border-x",
-      "lg:border-t",
-      "max-w-6xl",
-    );
+    expect(row).toHaveClass("lg:h-12", "lg:border-b-0", "max-w-6xl");
+    expect(row?.className).not.toMatch(/rounded/);
   });
 
   it("keeps the desktop cluster a size container so a zoomed layout never overflows", () => {
@@ -281,6 +295,9 @@ describe("<Nav />", () => {
       name: "loehrning-ai auf GitHub",
     });
     expect(github).toHaveClass("@max-[44rem]/desktop-nav:hidden");
+    // Square on the square bar, and the anti-colour hover, never a tint.
+    expect(github).toHaveClass("rounded-none", "hover:bg-foreground", "hover:text-background");
+    expect(github.className).not.toMatch(/brand-peach|brand-pink/);
   });
 
   it("carries only the brand, the language pill and the menu button below lg", () => {
@@ -289,9 +306,12 @@ describe("<Nav />", () => {
     const compact = container.querySelector<HTMLElement>(".js-compact-nav");
     expect(compact).not.toBeNull();
 
-    // Brand link, desktop cluster, compact cluster. A fourth control in the
-    // row would not fit the compact band at 320px.
-    expect(row?.children).toHaveLength(3);
+    // Brand link, desktop cluster, compact cluster, plus the desktop bar's
+    // inert surface layer. A fourth control in the row would not fit the
+    // compact band at 320px.
+    const controls = Array.from(row?.children ?? []).filter((child) => !child.hasAttribute("data-nav-surface"));
+    expect(controls).toHaveLength(3);
+    expect(row?.children).toHaveLength(4);
     expect(compact?.children).toHaveLength(2);
     const [pill, menuButton] = Array.from(compact?.children ?? []);
     expect(pill).toHaveAttribute("role", "group");

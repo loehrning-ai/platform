@@ -1218,16 +1218,16 @@
   border-top: 1px solid var(--color-lab-line);
 }
 
-/* Frosted sticky chrome (course header, bottom action bar). Solid Bogen
-   fallback where backdrop-filter is unsupported. */
+/* Sticky course chrome (lesson header, quiz bar, reader bar). Solid Bogen:
+   lesson text scrolls under it, and text behind text is never glass. */
 .course-app-frost {
-  background-color: rgba(255, 252, 245, 0.97);
+  background-color: #fffcf5;
 }
 
 /* The lesson header sticks right below the top bar. While it is stuck
    (data-stuck, set by course-lesson-header.tsx) its cap paints the band
    behind that bar too, so lesson text never scrolls visibly through the
-   gaps around the floating, translucent desktop nav. (The compact phone
+   gaps around the floating desktop nav. (The compact phone
    bar is opaque, so there the cap is a second layer of the same paper.)
    Unstuck, the cap would cover what sits above the header (the guest
    banner on a phone), so it is not drawn. The fixed quiz bar is always
@@ -1250,20 +1250,17 @@
   }
 }
 
-@supports (backdrop-filter: blur(1px)) {
-  .course-app-frost {
-    background-color: rgba(255, 252, 245, 0.96);
-    backdrop-filter: saturate(1.4) blur(16px);
-  }
-}
-
-/* ── .glass: the one floating-chrome material (amendment 27) ─────────────
-   For chrome that floats over moving content: a pinned demo bar, a floating
-   lever. At most two visible at once, never nested, never on a card, a stage
-   or body copy. Kalkweiß at 0.80 over a blur (src/lib/glass.ts proves ink
-   and the Mennige marker stay legible over Druckschwarz behind it), a hard
-   1px hairline, square corners, no gradient. Opaque paper wherever
-   backdrop-filter is missing, transparency is reduced or colours are forced. */
+/* ── .glass: Werkglas, the one floating-chrome material (amendment 27) ───
+   For chrome that floats over moving content: the desktop nav over the
+   posters and demo stages. At most two visible at once on a desktop and one
+   on a phone, never nested, never on a card, a stage or body copy, never a
+   fixed bar below 1024px. Kalkweiß at 0.80 over a blur (src/lib/glass.ts
+   proves Druckschwarz and Schiefer text stay at 4.5:1 over a black frame
+   behind it, with no credit for the blur; Mennige is for marks only), a hard
+   1px hairline and a 1px light edge on top, square corners, no gradient, no
+   glow. The filter is never transitioned or animated: a surface fades by its
+   own opacity. Opaque paper wherever backdrop-filter is missing, and for
+   reduced transparency, more contrast, forced colours and print. */
 .glass {
   background-color: var(--color-background);
   border: 1px solid rgb(18 18 18 / 0.14);
@@ -1289,12 +1286,35 @@
   }
 }
 
+/* More contrast: solid paper and a full ink edge, drawn as border plus an
+   inset line so the surface reads as 2px without moving its content. */
+@media (prefers-contrast: more) {
+  .glass {
+    background-color: var(--color-background);
+    border-color: var(--color-foreground);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 0 0 1px var(--color-foreground);
+  }
+}
+
 @media (forced-colors: active) {
   .glass {
     background-color: Canvas;
     border-color: CanvasText;
+    color: CanvasText;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+@media print {
+  .glass {
+    background-color: var(--color-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 }
 
