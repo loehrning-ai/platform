@@ -1,31 +1,31 @@
 import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
 
 /**
- * The intro of this demo (language-standard B.8) and its shell. Owned by this
- * demo's builder: switch SHELL to "v4" when the demo runs on the Glas shell.
- * The sentences are drafts from the language standard; check every claim
- * against the kit before shipping v4.
+ * The intro of this demo (language-standard B.8) on the Glas shell. Sentence 2 repeats the learning
+ * objective's list word for word, so "gemeinsame Basis" is defined where it first appears. Brandtwerk
+ * and its three offers are in the kit's case (fall/anfrage.md); the three take-home files are the
+ * filled table, the negotiation email and the skill.
  */
-export const SHELL: DemoShellVersion = "v3";
+export const SHELL: DemoShellVersion = "v4";
 
 export const INTRO: DemoIntroData = {
   de: {
     title: "Drei Angebote fair vergleichen",
     sentences: [
-      "Eine erfundene Firma hat drei Angebote für Versandkartons.",
-      "Du schätzt, welches am günstigsten ist, und rechnest dann alle drei auf dieselbe Basis: gleiche Menge, geliefert bis ins Werk, mit Einmalkosten und Skonto.",
-      "Danach rechnest du eigene Angebote und nimmst die Vergleichsvorlage und einen Skill mit.",
-      "Das dauert etwa {minutes} Minuten, und alles bleibt in deinem Browser.",
+      "Die erfundene Firma Brandtwerk hat drei Angebote für Versandkartons bekommen.",
+      "Du schätzt zuerst, welches am günstigsten ist. Dann rechnest du alle drei auf eine gemeinsame Basis um: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto.",
+      "Du nimmst die Tabelle, eine Verhandlungsmail und einen Skill für deinen Claude mit.",
+      "Das dauert etwa {minutes} Minuten, und alles läuft in deinem Browser.",
     ],
     start: "Mit der Schätzung starten",
   },
   en: {
     title: "Compare three offers fairly",
     sentences: [
-      "An invented company has three offers for shipping boxes.",
-      "You guess which is cheapest, then put all three on one basis: the same quantity, delivered to the plant, with one-off costs and cash discount.",
-      "Then you compare offers of your own and take the comparison template and a skill with you.",
-      "It takes about {minutes} minutes, and everything stays in your browser.",
+      "The invented company Brandtwerk has received three offers for shipping boxes.",
+      "First you guess which one is cheapest. Then you convert all three to one shared basis: same quantity, per unit, delivered to the plant, with one-off costs and early-payment discount.",
+      "You take home the table, a negotiation email and a skill for your own Claude.",
+      "It takes about {minutes} minutes, and everything runs in your browser.",
     ],
     start: "Start with your guess",
   },

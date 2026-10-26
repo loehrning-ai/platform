@@ -1,17 +1,19 @@
 /**
  * The kit files the demo reads, as text, so the page needs no request: the cost lines of the case,
- * the second case and the comparison template. kit-lockstep.test.ts asserts each string equals its
- * entry in angebote-vergleichen-kit.zip byte for byte (source: scripts/workshop06/kit).
+ * the second case and the comparison template. They live in kit-data.json because they are the
+ * kit's own data, not copy of this page. kit-lockstep.test.ts asserts each string equals its entry
+ * in angebote-vergleichen-kit.zip byte for byte (source: scripts/workshop06/kit).
  */
+import DATA from "./kit-data.json";
 
 /** angebote-vergleichen-kit/kostenzeilen.csv */
-export const CASE_CSV = "angebot,zeile,betrag,je,stelle\nA Nürnberg,Ware,26400,jährlich,\"„0,66 €“ je Stück, Pos. 1, „40.000 Stück / Jahr“ · angebot-a-nuernberg.md\"\nA Nürnberg,Fracht,0,jährlich,„frei Werk Brandtwerk (DAP Incoterms® 2020)“ · angebot-a-nuernberg.md\nA Nürnberg,Einmalig,0,einmalig,\"„Stanzform und Klischee: vorhanden aus Ihrem Muster, ohne Berechnung.“ · angebot-a-nuernberg.md\"\nA Nürnberg,Lager,0,jährlich,\"„Abrufe ab 3.000 Stück“: 3 Paletten, im eigenen Lager sind 10 frei · kosten-intern.md\"\nA Nürnberg,Skonto,-528,jährlich,„innerhalb 14 Tagen mit 2 % Skonto“ · angebot-a-nuernberg.md\nB Poznań,Ware,20800,jährlich,\"„520,00 EUR / 1000 szt. (Stück)“ · angebot-b-poznan.md\"\nB Poznań,Fracht,2800,jährlich,\"„EXW Poznań“, also 2 Fahrten zu „1.400 €“, Poznań ins Werk · kosten-intern.md\"\nB Poznań,Einmalig,1450,einmalig,\"„¹ Für die Stanzform berechnen wir einmalig 1.450,00 EUR netto“ · angebot-b-poznan.md\"\nB Poznań,Lager,1920,jährlich,\"„20.000 Stück je Auftrag“: 20 Paletten, 10 extern zu „16 € je Palettenplatz und Monat“ · kosten-intern.md\"\nB Poznań,Skonto,-416,jährlich,„2 % Skonto bei Zahlung in 10 Tagen“ · angebot-b-poznan.md\nC Brno,Ware,23000,jährlich,\"„57,50 EUR“ je VE, „Verpackungseinheit = 100 Stück“ · angebot-c-brno.md\"\nC Brno,Fracht,2600,jährlich,\"„FCA Brno“, also 4 Fahrten zu „650 €“, Brno ins Werk · kosten-intern.md\"\nC Brno,Einmalig,0,einmalig,\"„Stanzform und Klischee übernehmen wir, ohne Berechnung.“ · angebot-c-brno.md\"\nC Brno,Lager,0,jährlich,„10.000 Stück je Lieferung (10 Paletten)“: passt in die 10 freien Plätze · kosten-intern.md\nC Brno,Skonto,-690,jährlich,„3 % Skonto innerhalb 10 Tagen“ · angebot-c-brno.md\n";
+export const CASE_CSV: string = DATA.case;
 
 /** angebote-vergleichen-kit/fall/zweiter-fall.csv */
-export const SECOND_CASE_CSV = "angebot,zeile,betrag,je\nX Kassel,Ware,9600,jährlich\nX Kassel,Fracht,0,jährlich\nX Kassel,Skonto,-192,jährlich\nY Leipzig,Ware,9200,jährlich\nY Leipzig,Fracht,540,jährlich\nY Leipzig,Skonto,0,jährlich\n";
+export const SECOND_CASE_CSV: string = DATA.second;
 
 /** angebote-vergleichen-kit/vorlagen/vergleichsbasis.md */
-export const BASIS_TEMPLATE = "# Vergleichsbasis\n\nFrage: {{question}}\n\n## Die Basis\n\n<!-- rotfaden:basis -->\n- Menge im Jahr: ______\n- Einheit: Preis je ______\n- Geliefert bis: ______ (wer zahlt die Fahrt?)\n- Einmalige Kosten: ______\n- Zahlung: Skonto ______ % in ______ Tagen, ziehen wir es? ______\n<!-- /rotfaden:basis -->\n\n## Die Zeilen, ein Jahr\n\n<!-- rotfaden:table -->\n| Zeile | Angebot 1 | Angebot 2 | Angebot 3 |\n|---|---:|---:|---:|\n| Ware |  |  |  |\n| Fracht |  |  |  |\n| Einmalig |  |  |  |\n| Lager |  |  |  |\n| Skonto |  |  |  |\n| Summe |  |  |  |\n<!-- /rotfaden:table -->\n\n## Das Ergebnis\n\n<!-- rotfaden:result -->\nGeliefert und bezahlt kostet {{winner}} im Jahr am wenigsten: {{winner_total}}. Danach kommt {{runner}} mit\n{{runner_total}}, {{gap}} mehr. Nach dem Warenpreis allein läge {{headline_winner}} vorn.\n\nDie Zeile, die zwischen den beiden ersten entscheidet: {{decider}}.\n<!-- /rotfaden:result -->\n\nWas ich vor der Unterschrift frage: ______\n\nNimm erfundene oder allgemeine Zahlen, wenn du diese Datei teilst. Keine Daten von Kunden oder Personen.\n";
+export const BASIS_TEMPLATE: string = DATA.template;
 
 /** Paths of the three files inside the zip, for the test and the file chips. */
 export const KIT_DATA_PATHS = {

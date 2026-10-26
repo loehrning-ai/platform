@@ -385,7 +385,8 @@ export function fmtEur(cents: number, lang: Lang): string {
 
 /** A number with up to `places` decimals, trailing zeros dropped, German decimal comma. */
 export function fmtNumber(value: number, places: number, lang: Lang): string {
-  const text = (Math.round(value * 10 ** places) / 10 ** places).toFixed(places).replace(/\.?0+$/, "");
+  // Trailing zeros go only after a decimal point: 6.50 is "6,5", but 10 stays "10".
+  const text = (Math.round(value * 10 ** places) / 10 ** places).toFixed(places).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
   return lang === "de" ? text.replace(".", ",") : text;
 }
 

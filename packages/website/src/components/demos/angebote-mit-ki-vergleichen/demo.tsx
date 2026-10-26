@@ -1,354 +1,555 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import {
-  DemoLever,
-  DemoStage,
-  FILE_CHIP,
-  revealIfOffscreen,
-  setTakeHomeLine,
-  TAKEHOME_TARGET_ID,
-  useBeatClock,
-  useOnRestart,
-} from "@/components/demos/shell";
-import type { Pack } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
-import { DEMO, HORIZON, KIT_BASIS, kitRows, modelAt, PAPER, paperFlip, STACK } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/config";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
+import { feldFor, GlasButton, GlasSegmented, GlasSheet, GlasToggle } from "@/components/demos/glas";
+import { DemoDock, DemoGlasStage, revealIfOffscreen, setTakeHomeLine, useBeatClock, useBeatGate, useOnEscape, useOnRestart } from "@/components/demos/shell";
+import { assemble } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/basis";
+import { BEATS } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/beats";
+import { DEMO, HORIZON, KIT_BASIS, kitRows, STACK } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/config";
+import type { DemoPack } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
+import { demoReducer, FREE_START, INITIAL_STATE, MOVES, moveDone, type Unit } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/demo-state";
 import { BASIS_TEMPLATE, SECOND_CASE_CSV } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/kit-data";
-import {
-  compute,
-  fill,
-  fmtEur,
-  fmtNumber,
-  parse,
-  type CostRow,
-  type Lang,
-  type ParseError,
-  type StackModel,
-} from "@/lib/demo-cases/angebote-mit-ki-vergleichen/stack";
-import { fillTemplate, firstMissing, missingSentence, templateVars } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/template";
+import { keyOf, OFFER_KEYS, printedPrice, TERMS, unitCents, type OfferKey } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/konditionen";
+import { compute, parse, type CostRow, type StackModel } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/stack";
+import { ALL_LINES, paperNumbers, stageView, type View } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/stage";
+import { fillTemplate, templateVars } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/template";
+import { captionFor, deciderSentence, freeSentence, type TermStage } from "./captions";
+import { DockCaption } from "./dock-caption";
 import { downloadText } from "./download";
-import { OwnLines } from "./own-lines";
-import { Sources } from "./sources";
-import { StackChart } from "./stack-chart";
-import "./offers.css";
+import { formatter } from "./fmt";
+import { FreeLevers } from "./free";
+import { Letters } from "./letters";
+import { TermsSort } from "./lieferort";
+import { QtyStrip, RequestCard } from "./menge";
+import { draftToCsv, DRAFT_KEY, Keypad, NO_OWN, OwnEditor, readOwn, rowsToDraft, type OwnState } from "./own";
+import { PaperSlider } from "./paper";
+import { Rangliste, type CapHandle, type RankRow } from "./rangliste";
+import { MailBody, MethodBody, SourceBody, type SourcePick } from "./sheets";
+import { Composer, fileSetOf, TakeHomeRows, type FileKey, type TakeHomeData } from "./takehome";
+import "./demo.css";
 
 const SLUG = "angebote-mit-ki-vergleichen";
-/** The filled basis has its own name: the blank template in the take-home block is vergleichsbasis.md. */
 const FILLED_BASIS = "vergleichsbasis-mit-zahlen.md";
+/** How long the trucks of a sorted term drive before its pallets land (the caption follows). */
+const TERM_STEP_MS = 1600;
+/** Where the Mennige pool rests behind the offer in the lead (A, B, C from left to right). */
+const POOL_X: Readonly<Record<OfferKey, number>> = { A: 0.2, B: 0.5, C: 0.82 };
 
-/** What the visitor did in the beats; "Von vorn" clears it, never their own lines. */
-interface Bets {
-  readonly bet: string | null;
-  readonly selected: string | null;
-  readonly stop: number;
+export interface DemoData {
+  /** The three offers as the kit writes them (fall/angebot-*.md). */
+  readonly letters: Readonly<Record<OfferKey, string>>;
+  readonly takehome: TakeHomeData;
 }
-const START: Bets = { bet: null, selected: null, stop: 0 };
 
-/** The visitor's own lines: the text, and the rows once "Rechnen" read them without an error. */
-interface Own {
-  readonly text: string;
-  readonly rows: readonly CostRow[] | null;
-  readonly errors: readonly ParseError[];
+type Sheet =
+  | { readonly kind: "source"; readonly pick: SourcePick }
+  | { readonly kind: "keypad"; readonly pick: SourcePick }
+  | { readonly kind: "method" }
+  | { readonly kind: "mail" }
+  | { readonly kind: "more" }
+  | { readonly kind: "free" };
+
+/** "C Brno" → "c-brno": lower case, diacritics folded, spaces to hyphens. */
+export function fileSlug(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 }
-const NO_OWN: Own = { text: "", rows: null, errors: [] };
 
-export default function Demo({ pack }: { readonly pack: Pack }) {
+function saveDraft(text: string): void {
+  try {
+    if (text) window.localStorage.setItem(DRAFT_KEY, text);
+    else window.localStorage.removeItem(DRAFT_KEY);
+  } catch {
+    // No storage in this browser: the draft lives only in the tab.
+  }
+}
+
+function lineName(pack: DemoPack, line: string): string {
+  return pack.lineNames[line as keyof DemoPack["lineNames"]] ?? line;
+}
+
+function offerName(pack: DemoPack, option: string): string {
+  const key = keyOf(option);
+  return key ? pack.offers[key].name : option;
+}
+
+export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly data: DemoData }) {
   const clock = useBeatClock();
-  const lang: Lang = pack.locale === "en" ? "en" : "de";
+  const lang = pack.locale === "en" ? "en" : "de";
+  const fmt = useMemo(() => formatter(lang), [lang]);
   const kit = useMemo(() => kitRows(lang), [lang]);
-  const flip = useMemo(() => paperFlip(kit), [kit]);
-  const [bets, setBets] = useState<Bets>(START);
-  const [own, setOwn] = useState<Own>(NO_OWN);
-  const ownRef = useRef<HTMLElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const name = (line: string) => pack.lineNames[line] ?? line;
-  // In a caption a number never breaks from its unit ("962 €", "+10 %").
-  const bound = (text: string) => text.replace(/(\d) (€|%)/g, "$1\u00a0$2");
-  const money = (cents: number) => bound(fmtEur(cents, lang));
+  const second = useMemo(() => parse(SECOND_CASE_CSV, lang, STACK).rows, [lang]);
+  const [state, dispatch] = useReducer(demoReducer, INITIAL_STATE);
+  const [own, setOwn] = useState<OwnState>(NO_OWN);
+  const [sheet, setSheet] = useState<Sheet | null>(null);
+  const [termStage, setTermStage] = useState<TermStage>("trucks");
+  const [paid, setPaid] = useState(false);
+  const [attached, setAttached] = useState<readonly FileKey[]>([]);
+  const [highlight, setHighlight] = useState<string | null>(null);
+  const [stripOver, setStripOver] = useState(false);
+  const strip = useRef<HTMLElement | null>(null);
+  const closeSheet = useCallback(() => setSheet(null), []);
+
+  const free = clock.phase === "free";
+  const view: View = clock.phase === "intro" ? "tipp" : free ? "free" : (clock.beat.id as View);
+  const paperAtZero = useMemo(() => paperNumbers(kit, 0, null), [kit]);
+  const flip = paperAtZero.flip;
+  const stage = stageView({ view, state, kit, own: own.rows });
+  const fullKit = useMemo(() => assemble(kit, ALL_LINES, STACK, HORIZON), [kit]);
+  const ownModel = useMemo(() => (own.rows ? compute(own.rows, HORIZON, null, STACK) : null), [own.rows]);
+  const shownModel: StackModel = ownModel && ownModel.complete ? ownModel : fullKit;
+
+  // The draft of pasted text, from this browser only (never the rows).
+  useEffect(() => {
+    try {
+      const text = window.localStorage.getItem(DRAFT_KEY);
+      if (text) setOwn((current) => ({ ...current, text }));
+    } catch {
+      // Storage blocked: start empty.
+    }
+  }, []);
+
+  const beatId = clock.beat.id;
+  const lastBeat = useRef(beatId);
+  // The beat a deep link opens with a sheet raised: arriving there keeps the sheet once.
+  const keepSheetOn = useRef<string | null>(null);
+  // Old links to the method beat open the end of beat 2 with the method sheet raised.
+  const deepLinked = useRef(false);
+  useEffect(() => {
+    if (deepLinked.current) return;
+    deepLinked.current = true;
+    if (new URLSearchParams(window.location.search).get("beat") !== "methode") return;
+    const at = clock.beats.findIndex((beat) => beat.id === "kipp");
+    if (at < 0) return;
+    keepSheetOn.current = "kipp";
+    clock.seek(at, "load");
+    dispatch({ type: "method" });
+    setSheet({ kind: "method" });
+  }, [clock]);
+
+  // A sorted delivery term: the trucks arrive, then the pallets land, then (all sorted) the sum.
+  const lastTerm = state.lastTerm;
+  const lastKey = lastTerm?.key ?? null;
+  const allSorted = OFFER_KEYS.every((key) => state.terms[key] !== null);
+  useEffect(() => {
+    if (!lastTerm) return;
+    setTermStage("trucks");
+    const timer = window.setTimeout(() => setTermStage(lastTerm.key === "A" ? "done" : "pallets"), TERM_STEP_MS);
+    return () => window.clearTimeout(timer);
+  }, [lastTerm]);
+  useEffect(() => {
+    if (termStage !== "pallets" || !allSorted) return;
+    const timer = window.setTimeout(() => setTermStage("done"), TERM_STEP_MS);
+    return () => window.clearTimeout(timer);
+  }, [allSorted, termStage]);
+  const shownTermStage: TermStage = termStage === "done" && !allSorted ? "pallets" : termStage;
+
+  // Free play always opens as printed with every field off, in the sheet "Die Basis".
+  useEffect(() => {
+    if (clock.phase !== "free") return;
+    dispatch({ type: "free", patch: FREE_START });
+    setSheet({ kind: "free" });
+  }, [clock.phase]);
+
+  // A new beat closes what the last one opened (the deep link's method sheet stays).
+  useEffect(() => {
+    if (lastBeat.current === beatId) return;
+    lastBeat.current = beatId;
+    if (keepSheetOn.current === beatId) {
+      keepSheetOn.current = null;
+      return;
+    }
+    if (clock.phase === "guided") setSheet(null);
+    setHighlight(null);
+  }, [beatId, clock.phase]);
 
   useOnRestart(() => {
-    setBets(START);
-    revealIfOffscreen(rootRef.current?.querySelector("[data-demo-stage]") ?? null, clock.reducedMotion);
+    dispatch({ type: "restart" });
+    setSheet(null);
+    setPaid(false);
+    setAttached([]);
+    setHighlight(null);
+    setTermStage("trucks");
     const url = new URL(window.location.href);
     if (url.searchParams.has("beat")) {
       url.searchParams.delete("beat");
       window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
     }
   });
+  useOnEscape(() => setHighlight(null));
 
-  const id = clock.beat.id;
-  const ownApplied = own.rows !== null;
-  const kitModel = modelAt(kit, 0);
-  const paperModel = modelAt(kit, bets.stop);
-  const ownModel: StackModel | null = own.rows ? compute(own.rows, HORIZON, null, STACK) : null;
-  // The take-home and the own beat read the visitor's lines once applied, the kit's otherwise.
-  const shownModel = ownModel ?? kitModel;
+  // Beat 2's "Weiter" walks through the five fields, the result and the method sheet first.
+  useBeatGate(view === "kipp" ? true : null, () => {
+    if (view !== "kipp") return false;
+    if (state.move < 4) {
+      dispatch({ type: "nextMove" });
+      return true;
+    }
+    if (state.move === 4) {
+      if (!paid && state.discount) {
+        setPaid(true);
+        return true;
+      }
+      dispatch({ type: "nextMove" });
+      setSheet({ kind: "method" });
+      return true;
+    }
+    setSheet(null);
+    return false;
+  });
 
-  // Row 1 of "Für deinen Claude": the visitor's own result, or their open line. Never the kit's.
-  const takeLine = ownModel ? (ownModel.complete ? fill(pack.mitnehmen.line, vars(ownModel)) : missingSentence(ownModel, pack.deins)) : "";
+  // The personal line of "Für deinen Claude": the result on the stage, the kit's or the visitor's.
   useEffect(() => {
-    setTakeHomeLine(SLUG, takeLine);
-  }, [takeLine]);
-
-  function vars(model: StackModel): Record<string, string> {
-    const bet = bets.bet ?? `${model.headWinner.name} (${pack.suggested})`;
-    return {
-      bet,
-      winner: model.winner.name,
-      winner_total: money(model.winner.total),
-      runner: model.runner.name,
-      runner_total: money(model.runner.total),
-      gap: money(model.gap),
-      headline_winner: model.headWinner.name,
-      headline_gap: money(model.headGap),
-      last: model.last.name,
-      last_total: money(model.last.total),
-      decider: name(model.decider),
-      factor: bound(fill(pack.papier.label, { v: fmtNumber(PAPER.index.values[bets.stop] ?? 0, 2, lang) })),
-    };
-  }
-
-  let stage: ReactNode;
-  let caption: ReactNode;
-  let lever: ReactNode = null;
-  let details: ReactNode = null;
-  let rows: 1 | 2 = 1;
-
-  if (id === "tipp") {
-    stage = (
-      <Scene kicker={pack.tipp.lever} file={DEMO.data}>
-        <StackChart model={kitModel} phase="headline" progress={clock.progress} bet={bets.bet} pack={pack} lang={lang} />
-      </Scene>
+    setTakeHomeLine(
+      SLUG,
+      fmt.t(pack.takehome.line, { winner: shownModel.winner.name, gap: fmt.money(shownModel.gap), runner: shownModel.runner.name, decider: lineName(pack, shownModel.decider) }),
     );
-    caption = fill(pack.tipp.caption, vars(kitModel));
-    lever = (
-      <div className="av-bets" role="group" aria-label={pack.tipp.lever}>
-        {kitModel.options.map((option) => (
-          <button
-            key={option.name}
-            type="button"
-            className="av-button av-bet"
-            aria-pressed={bets.bet === option.name}
-            data-bet={option.name}
-            onClick={() => {
-              setBets((previous) => ({ ...previous, bet: option.name }));
-              clock.commit();
-              clock.seek(clock.index + 1);
+  }, [fmt, pack, shownModel]);
+
+  const applyOwn = (rows: readonly CostRow[], isSecond: boolean) => setOwn((current) => ({ ...current, rows, draft: rowsToDraft(rows, lang), errors: [], second: isSecond }));
+  const read = (text: string) => {
+    const result = readOwn(text, lang);
+    if (result.rows) applyOwn(result.rows, false);
+    else setOwn((current) => ({ ...current, errors: result.errors }));
+  };
+
+  const mailText = (model: StackModel) => fillTemplate(data.takehome.mail, model, templateVars(model, DEMO.question), null);
+  const downloadMail = (model: StackModel) => downloadText(`verhandlungsmail-an-${fileSlug(model.winner.name)}.md`, mailText(model));
+  const downloadTable = () =>
+    downloadText(FILLED_BASIS, fillTemplate(BASIS_TEMPLATE, shownModel, templateVars(shownModel, DEMO.question), shownModel === fullKit ? KIT_BASIS : null));
+
+  // The Rangliste's rows, in a fixed DOM order; they move by rank.
+  const rows: readonly RankRow[] = stage.own
+    ? (stage.model?.options ?? []).map((option) => ({
+        option: option.name,
+        badge: option.name.slice(0, 1).toUpperCase(),
+        name: option.name,
+        bar: stage.bars?.find((bar) => bar.option === option.name) ?? null,
+      }))
+    : OFFER_KEYS.map((key) => ({
+        option: TERMS[key].option,
+        badge: key,
+        name: pack.offers[key].name,
+        printed: printedPrice(key),
+        printedUnit: pack.rank.printedUnits[key] || undefined,
+        perBox: fmt.unit(unitCents(key)),
+        bar: stage.bars?.find((bar) => bar.option === TERMS[key].option) ?? null,
+      }));
+  const cheapestKey = stage.cheapest ? keyOf(stage.cheapest) : null;
+  const feld = feldFor("kraft", [cheapestKey ? { x: POOL_X[cheapestKey], y: 0.16 } : undefined]);
+
+  const surchargeCents = stage.bars?.flatMap((bar) => bar.segments).find((segment) => segment.kind === "Papier")?.cents ?? 0;
+  const onSegment = (option: string, line: string) => {
+    const missing = stage.model?.options.find((candidate) => candidate.name === option)?.missing.includes(line);
+    setSheet(missing && stage.own ? { kind: "keypad", pick: { option, line } } : { kind: "source", pick: { option, line } });
+  };
+
+  const paperState = free ? { v: state.free.v, cap: state.free.cap } : { v: state.v, cap: state.cap };
+  const capShown = (view === "papier" && state.crossed && state.v > 0) || (free && state.free.unit === "piece" && state.free.data === "kit" && state.free.v > 0);
+  const capText = fmt.t(pack.papier.capSlider, { cap: fmt.pct(paperState.cap ?? paperState.v, 1) });
+  const cap: CapHandle | null = capShown
+    ? {
+        option: TERMS.C.option,
+        cap: paperState.cap,
+        v: paperState.v,
+        perPoint: paperAtZero.perPoint,
+        label: capText,
+        valueText: capText,
+        onCap: (value) => (free ? dispatch({ type: "free", patch: { cap: value } }) : dispatch({ type: "cap", cap: value })),
+      }
+    : null;
+
+  const move = view === "kipp" ? MOVES[state.move] : undefined;
+  const guessRow = (option: string) => {
+    const key = keyOf(option);
+    if (!key) return;
+    dispatch({ type: "guess", key });
+    clock.commit();
+  };
+
+  // One line of progress at the top of the stage, beside the restart button (contract S2): the field
+  // during the basis beat, the step otherwise.
+  const beatIndex = BEATS.findIndex((beat) => beat.id === view);
+  const stepLine = move
+    ? fmt.t(pack.moves.of, { n: state.move + 1, name: pack.moves.names[move] })
+    : free
+      ? pack.free.title
+      : fmt.t(pack.moves.step, { n: Math.max(0, beatIndex) + 1, name: BEATS[Math.max(0, beatIndex)]?.label[fmt.lang] ?? "" });
+  const moveStrip = !move ? (
+    <div className="av4-moves" data-av4-moves="">
+      <p className="av4-move-of" data-av4-step={view}>
+        {stepLine}
+      </p>
+    </div>
+  ) : (
+    <div className="av4-moves" data-av4-moves="">
+      <p className="av4-move-of" data-av4-move={move}>
+        {stepLine}
+      </p>
+      <ol className="av4-move-chips" aria-label={pack.moves.fieldsLabel}>
+        {MOVES.map((name, index) => (
+          <li key={name} data-current={index === state.move ? "" : undefined} data-done={index < state.move || moveDone(state, name) ? "" : undefined}>
+            {pack.moves.names[name]}
+          </li>
+        ))}
+      </ol>
+      {state.move > 0 ? (
+        <GlasButton variant="plain" size="compact" icon="back" onClick={() => dispatch({ type: "prevMove" })} data-av4-prev-move="">
+          {pack.moves.names[MOVES[state.move - 1] ?? "menge"]}
+        </GlasButton>
+      ) : null}
+    </div>
+  );
+
+  const bench = (): ReactNode => {
+    switch (view) {
+      case "kipp":
+        switch (move) {
+          case "menge":
+            return state.qty ? null : <RequestCard pack={pack} fmt={fmt} set={state.qty} strip={() => strip.current} onDrop={() => dispatch({ type: "qty" })} onOver={setStripOver} />;
+          case "lieferort":
+            return <TermsSort pack={pack} fmt={fmt} terms={state.terms} lastKey={lastKey} onSort={(key, payer) => dispatch({ type: "term", key, payer })} />;
+          case "einmalig":
+            return state.finds.length < OFFER_KEYS.length ? <Letters pack={pack} fmt={fmt} letters={data.letters} finds={state.finds} onFind={(key) => dispatch({ type: "find", key })} /> : null;
+          default:
+            return null;
+        }
+      case "papier":
+        return (
+          <div className="av4-paper-bench">
+            <PaperSlider pack={pack} fmt={fmt} kit={kit} v={state.v} cap={state.cap} flip={flip} onChange={(v) => dispatch({ type: "paper", v, flip })} />
+          </div>
+        );
+      case "deins":
+        return (
+          <OwnEditor
+            pack={pack}
+            fmt={fmt}
+            own={own}
+            onText={(text) => {
+              setOwn((current) => ({ ...current, text }));
+              saveDraft(text);
             }}
-          >
-            {option.name}
-          </button>
-        ))}
-      </div>
-    );
-  } else if (id === "kipp") {
-    const done = clock.progress >= 1;
-    stage = (
-      <Scene kicker={pack.question} file="ANSWERS.md">
-        <StackChart
-          model={kitModel}
-          phase={done ? "full" : "stack"}
-          progress={clock.progress}
-          bet={bets.bet}
-          pack={pack}
-          lang={lang}
-          selected={bets.selected ?? kitModel.headWinner.name}
-          onSelect={(selected) => setBets((previous) => ({ ...previous, selected }))}
-        />
-      </Scene>
-    );
-    caption = done ? fill(pack.kipp.caption, vars(kitModel)) : pack.kipp.running;
-    details = done ? <Sources model={kitModel} option={bets.selected ?? kitModel.headWinner.name} pack={pack} lang={lang} /> : null;
-  } else if (id === "methode") {
-    stage = (
-      <Scene kicker={pack.question} file={pack.methode.file}>
-        <ol className="av-method">
-          {pack.methode.lines.map((line, index) => (
-            <li key={line} style={{ opacity: Math.min(1, clock.progress * 3 - index), transform: `translateY(${Math.max(0, 1 - (clock.progress * 3 - index)) * 8}px)` }}>
-              <span className="av-method-n">{index + 1}</span>
-              <span>{line}</span>
-            </li>
-          ))}
-        </ol>
-      </Scene>
-    );
-    caption = pack.methode.caption;
-    lever = (
-      <a className="av-button" href={pack.methode.kitHref} download>
-        {pack.methode.download}
-      </a>
-    );
-  } else if (id === "papier") {
-    const flipText = flip
-      ? fill(pack.papier.flip, { rival: flip.rival.split(" ")[0] ?? flip.rival, v: fmtNumber(flip.v, 2, lang) })
-      : "";
-    stage = (
-      <Scene kicker={pack.papier.lever} file="fall/angebot-c-brno.md">
-        {/* The guess was settled at the reveal; here the rows carry only who is cheapest, so a phone keeps two lines a row. */}
-        <StackChart model={paperModel} phase="full" progress={1} bet={null} pack={pack} lang={lang} />
-      </Scene>
-    );
-    caption = fill(pack.papier.caption, vars(paperModel));
-    lever = (
-      <fieldset className="av-stops">
-        <legend className="av-stops-legend">
-          {pack.papier.stops}
-          {flipText ? <span className="av-stops-flip"> · {flipText}</span> : null}
-        </legend>
-        <div className="av-stops-row">
-          {PAPER.index.values.map((value, stop) => (
-            <label key={value} className="av-stop" data-past-flip={flip && value > flip.v ? "" : undefined}>
-              <input
-                type="radio"
-                name="av-paper"
-                value={stop}
-                checked={bets.stop === stop}
-                onChange={() => setBets((previous) => ({ ...previous, stop }))}
-              />
-              <span>{fill(pack.papier.stop, { v: fmtNumber(value, 2, lang) })}</span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-    );
-    rows = 2;
-  } else if (id === "deins") {
-    stage = (
-      <Scene kicker={ownApplied ? pack.deins.ownShown : pack.deins.kitShown} file={ownApplied ? null : DEMO.data}>
-        <StackChart model={shownModel} phase="full" progress={1} bet={null} pack={pack} lang={lang} />
-      </Scene>
-    );
-    // The caption holds two lines at most: the result, or the first open line. Every open line is listed under the stage.
-    caption = ownModel ? (ownModel.complete ? fill(pack.deins.result, vars(ownModel)) : firstMissing(ownModel, pack.deins.missing)) : pack.deins.caption;
-    details = ownModel && !ownModel.complete ? <OpenLines model={ownModel} pack={pack} /> : null;
-    lever = (
-      <button
-        type="button"
-        className="av-button av-button-primary"
-        onClick={() => {
-          revealIfOffscreen(ownRef.current, clock.reducedMotion);
-          ownRef.current?.querySelector("textarea")?.focus({ preventScroll: true });
-        }}
+            onDraft={(draft) => setOwn((current) => ({ ...current, draft }))}
+            onEditor={(editor) => setOwn((current) => ({ ...current, editor }))}
+            onCompare={() => read(own.text.trim() ? own.text : draftToCsv(own.draft))}
+            onFile={read}
+            onSecond={() => applyOwn(second, true)}
+            onClear={() => {
+              setOwn(NO_OWN);
+              saveDraft("");
+            }}
+          />
+        );
+      case "mitnehmen":
+        return (
+          <>
+            <Composer
+              pack={pack}
+              fmt={fmt}
+              data={data.takehome}
+              attached={attached}
+              onAttached={setAttached}
+              reducedMotion={clock.reducedMotion}
+              onJump={(option) => {
+                setHighlight(option);
+                revealIfOffscreen(document.querySelector("[data-demo-stage]"), clock.reducedMotion);
+              }}
+            />
+            <TakeHomeRows pack={pack} fmt={fmt} data={data.takehome} own={shownModel !== fullKit} onTable={downloadTable} onMail={() => downloadMail(shownModel)} />
+          </>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const freeAnswer = free ? freeSentence(pack, fmt, state, kit, own.rows) : "";
+  const caption = ((): readonly string[] => {
+    if (free) return [freeAnswer];
+    if (view === "mitnehmen") {
+      if (attached.length === 0) return [pack.claude.trayHint];
+      const set = fileSetOf(attached);
+      return [set === "mit-saetzen" ? pack.claude.mit : set === "ohne-saetze" ? pack.claude.ohne : pack.claude.none];
+    }
+    return captionFor(pack, fmt, { view, state, kit, termStage: shownTermStage, paid, own: own.rows, second: own.second });
+  })();
+
+  const controls = (): ReactNode => {
+    if (clock.phase === "intro") return null;
+    switch (view) {
+      case "tipp":
+        return state.guess === null ? (
+          <GlasButton variant="plain" size="compact" onClick={clock.next} data-av4-skip="">
+            {pack.tipp.skip}
+          </GlasButton>
+        ) : null;
+      case "kipp":
+        if (move === "menge" && state.qty) {
+          return (
+            <GlasButton variant="plain" size="compact" icon="info" onClick={() => setSheet({ kind: "more" })} data-av4-more="">
+              {pack.more}
+            </GlasButton>
+          );
+        }
+        if (move === "zahlung") {
+          return (
+            <GlasToggle
+              checked={state.discount}
+              onChange={(on) => {
+                dispatch({ type: "discount", on });
+                if (on) setPaid(true);
+              }}
+              label={pack.zahlung.toggle}
+            />
+          );
+        }
+        if (state.move >= 5) {
+          return (
+            <GlasButton variant="fill" size="compact" icon="doc" onClick={() => setSheet({ kind: "method" })} data-av4-method-open="">
+              {pack.methode.title}
+            </GlasButton>
+          );
+        }
+        return null;
+      case "papier":
+        return state.crossed || state.cap !== null ? (
+          <GlasButton variant="fill" size="compact" icon="doc" onClick={() => setSheet({ kind: "mail" })} data-av4-mail-open="">
+            {pack.papier.mail}
+          </GlasButton>
+        ) : null;
+      case "free":
+        return (
+          <GlasButton variant="fill" size="compact" icon="sliders" onClick={() => setSheet({ kind: "free" })} aria-expanded={sheet?.kind === "free"} data-av4-free-open="">
+            {pack.free.open}
+          </GlasButton>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const benchNode = bench();
+  const compact = view === "mitnehmen" || view === "deins" || move === "einmalig" || move === "lieferort";
+  const sourceTitle = sheet?.kind === "source" ? fmt.t(pack.source.title, { line: lineName(pack, sheet.pick.line), option: offerName(pack, sheet.pick.option) }) : "";
+  const keypadTitle = sheet?.kind === "keypad" ? fmt.t(pack.deins.keypadTitle, { line: lineName(pack, sheet.pick.line), option: sheet.pick.option }) : "";
+
+  return (
+    <>
+      <DemoGlasStage
+        label={pack.stageLabel}
+        feld={feld}
+        className="av4-stage"
+        dock={
+          <div className="av4-dock-wrap" hidden={sheet !== null || undefined} data-av4-dock="">
+            <DemoDock className="av4-dock">
+              <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} />
+              {controls()}
+            </DemoDock>
+          </div>
+        }
       >
-        {pack.deins.lever}
-      </button>
-    );
-  } else {
-    stage = (
-      <Scene kicker={pack.mitnehmen.kicker} file={null}>
-        <ul className="av-takehome">
-          {pack.mitnehmen.items.map(([file, text]) => (
-            <li key={file}>
-              <span className={FILE_CHIP}>{file}</span>
-              <span>{text}</span>
-            </li>
-          ))}
-        </ul>
-      </Scene>
-    );
-    caption = pack.mitnehmen.caption;
-    // The filled basis is this demo's own file, so it is the lever; the blank template sits in "Für deinen Claude".
-    lever = (
-      <div className="av-takehome-levers">
-        <button
-          type="button"
-          className="av-button av-button-primary"
-          data-av-basis=""
-          onClick={() =>
-            downloadText(
-              FILLED_BASIS,
-              fillTemplate(BASIS_TEMPLATE, shownModel, templateVars(shownModel, DEMO.question), ownApplied ? null : KIT_BASIS),
-            )
-          }
-        >
-          {pack.mitnehmen.basisDownload}
-        </button>
-        <button
-          type="button"
-          className="av-button"
-          onClick={() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), clock.reducedMotion)}
-        >
-          {pack.mitnehmen.lever}
-        </button>
-      </div>
-    );
-    details = (
-      <section className="av-basis" aria-labelledby="av-basis-head">
-        <h2 id="av-basis-head" className="av-sources-head">
-          {FILLED_BASIS}
-        </h2>
-        <p className="av-sources-hint">
-          {pack.mitnehmen.basisNote} {ownApplied ? pack.mitnehmen.fromYours : pack.mitnehmen.fromKit}
-        </p>
-      </section>
-    );
-  }
-
-  return (
-    <div ref={rootRef} className="av-demo" data-av-demo="">
-      <DemoStage label={pack.stageLabel} caption={caption}>
-        {stage}
-      </DemoStage>
-      <DemoLever rows={rows}>{lever}</DemoLever>
-      {details ? (
-        <div className="av-details" data-details={id}>
-          {details}
+        <div className="av4-data" data-av4-view={view} data-move={move} data-bench={benchNode ? "" : undefined}>
+          {moveStrip}
+          {move === "einheit" ? (
+            <div className="av4-unit">
+              <GlasSegmented<Unit>
+                label={pack.einheit.control}
+                options={[
+                  { value: "printed", label: pack.einheit.printed },
+                  { value: "piece", label: pack.einheit.piece },
+                ]}
+                value={state.unit}
+                onChange={(unit) => dispatch({ type: "unit", unit })}
+              />
+            </div>
+          ) : null}
+          {move === "menge" || move === "einheit" ? (
+            <QtyStrip
+              pack={pack}
+              fmt={fmt}
+              set={state.qty}
+              over={stripOver}
+              stripRef={(element) => {
+                strip.current = element;
+              }}
+            />
+          ) : null}
+          <div className="av4-layout">
+            <div className="av4-rank-wrap">
+              <Rangliste
+                pack={pack}
+                fmt={fmt}
+                rows={rows}
+                order={stage.order}
+                mode={stage.mode}
+                scale={stage.scale}
+                guess={state.guess ? TERMS[state.guess].option : null}
+                cheapest={stage.cheapest}
+                cap={cap}
+                label={stage.cheapest ? pack.rank.label : pack.rank.labelKit}
+                onSegment={view === "tipp" ? undefined : onSegment}
+                onRow={view === "tipp" && clock.phase === "guided" ? guessRow : undefined}
+                rowAction={(row) => fmt.t(pack.tipp.pick, { option: row.name })}
+                highlight={highlight}
+                compact={compact}
+                perBox={move === "einheit" && state.unit === "piece"}
+              />
+            </div>
+            {benchNode ? <div className="av4-bench">{benchNode}</div> : null}
+          </div>
         </div>
-      ) : null}
-      {/* The form belongs to the own beat and the take-home; hidden, not unmounted, so a reset keeps what the visitor typed. */}
-      <div hidden={id !== "deins" && id !== "mitnehmen"} data-own-wrap="">
-        <OwnLines
-          ref={ownRef}
+      </DemoGlasStage>
+
+      <GlasSheet open={sheet?.kind === "source"} onClose={closeSheet} title={sourceTitle} closeLabel={pack.close} resizeLabel={pack.resize} modal={false}>
+        {sheet?.kind === "source" ? <SourceBody pack={pack} fmt={fmt} pick={sheet.pick} model={stage.model} own={stage.own} surchargeCents={surchargeCents} /> : null}
+      </GlasSheet>
+      <GlasSheet open={sheet?.kind === "keypad"} onClose={closeSheet} title={keypadTitle} closeLabel={pack.close} resizeLabel={pack.resize}>
+        {sheet?.kind === "keypad" ? (
+          <Keypad
+            pack={pack}
+            fmt={fmt}
+            onConfirm={(cents) => {
+              const pick = sheet.pick;
+              const per = ownModel?.options.find((option) => option.per[pick.line])?.per[pick.line] ?? "recurring";
+              applyOwn([...(own.rows ?? []), { option: pick.option, line: pick.line, cents, per, src: "" }], own.second);
+              setSheet(null);
+            }}
+          />
+        ) : null}
+      </GlasSheet>
+      <GlasSheet open={sheet?.kind === "method"} onClose={closeSheet} title={pack.methode.title} closeLabel={pack.close} resizeLabel={pack.resize} modal={false}>
+        <MethodBody pack={pack} state={state} decider={deciderSentence(pack, fmt, kit)} onNext={clock.next} />
+      </GlasSheet>
+      <GlasSheet open={sheet?.kind === "mail"} onClose={closeSheet} title={pack.papier.mailTitle} closeLabel={pack.close} resizeLabel={pack.resize} detent="large">
+        <MailBody pack={pack} fmt={fmt} text={mailText(fullKit)} cap={state.cap} onDownload={() => downloadMail(fullKit)} />
+      </GlasSheet>
+      <GlasSheet open={sheet?.kind === "more"} onClose={closeSheet} title={pack.more} closeLabel={pack.close} resizeLabel={pack.resize} modal={false}>
+        <div className="av4-sheet-body">
+          <p>{pack.menge.more}</p>
+          <p className="av4-from">angebot-a-nuernberg.md</p>
+        </div>
+      </GlasSheet>
+      <GlasSheet open={sheet?.kind === "free"} onClose={closeSheet} title={pack.free.title} closeLabel={pack.close} resizeLabel={pack.resize} modal={false}>
+        <FreeLevers
           pack={pack}
-          text={own.text}
-          applied={ownApplied}
-          errors={own.errors}
-          onText={(text) => setOwn((previous) => ({ ...previous, text }))}
-          onApply={() =>
-            setOwn((previous) => {
-              const parsed = parse(previous.text, lang, STACK);
-              return parsed.errors.length > 0 ? { ...previous, rows: null, errors: parsed.errors } : { ...previous, rows: parsed.rows, errors: [] };
-            })
-          }
-          onLoadSecond={() => {
-            const parsed = parse(SECOND_CASE_CSV, lang, STACK);
-            setOwn({ text: SECOND_CASE_CSV, rows: parsed.rows, errors: parsed.errors });
+          fmt={fmt}
+          kit={kit}
+          free={state.free}
+          flip={flip}
+          hasOwn={own.rows !== null}
+          answer={freeAnswer}
+          onChange={(patch) => dispatch({ type: "free", patch })}
+          onGuide={() => {
+            setSheet(null);
+            clock.toGuide();
           }}
-          onClear={() => setOwn(NO_OWN)}
         />
-      </div>
-    </div>
-  );
-}
-
-/** Every line one of the visitor's offers lacks: open, never 0, until they give the number. */
-function OpenLines({ model, pack }: { readonly model: StackModel; readonly pack: Pack }) {
-  return (
-    <section className="av-open" aria-labelledby="av-open-head" data-av-open="">
-      <h2 id="av-open-head" className="av-sources-head">
-        {pack.deins.openHead}
-      </h2>
-      <p className="av-sources-hint">{pack.deins.openNote}</p>
-      <ul className="av-open-list">
-        {model.missing.map((gap) => (
-          <li key={`${gap.option}/${gap.line}`}>{fill(pack.deins.openItem, { option: gap.option, line: gap.line })}</li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-/** A beat's frame inside the stage: the kicker line (clear of the restart button), a file chip, the drawing. */
-function Scene({ kicker, file, children }: { readonly kicker: string; readonly file: string | null; readonly children: ReactNode }) {
-  return (
-    <div className="av-stage">
-      <p className="av-kicker">{kicker}</p>
-      {file ? (
-        <p className="av-file">
-          <span className={FILE_CHIP}>{file}</span>
-        </p>
-      ) : null}
-      <div className="av-stage-body">{children}</div>
-    </div>
+      </GlasSheet>
+    </>
   );
 }
