@@ -16,7 +16,7 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "vardar-audit-kit-de.zi
  * the checks that tie every figure to them are in scripts/workshop05 (build-kit.mjs, verify-kit.mjs); the
  * demo at /demos/audit-vorbereitung-mit-ki runs the same folder. Vardar Works, Tannwald Haustechnik and
  * every file are invented; two lines quote Anthropic's public privacy page. The agenda follows the deck
- * plan's 11 main slides, one block per slide (the detail page does not show it; tests and machine
+ * plan's 12 main slides, one block per slide (the detail page does not show it; tests and machine
  * surfaces read it). Registered in WORKSHOPS_BY_LOCALE with the Sage poster palette.
  */
 
@@ -82,7 +82,8 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agenda: [
       { label: "Eine Anfrage, elf Dateien, vier Prüfungen", minutes: 1, activity: "listen" },
-      { label: "Die Anfrage: acht Anforderungen schätzen", minutes: 4, activity: "vote" },
+      { label: "Gastgeber", minutes: 1, activity: "listen" },
+      { label: "Die Anfrage: acht Anforderungen schätzen", minutes: 3, activity: "vote" },
       { label: "Der Antwortentwurf: vier Sätze", minutes: 3, activity: "vote" },
       { label: "Der Ordner und das Claude-Projekt", minutes: 8, activity: "do" },
       { label: "Die vier Prüfungen", minutes: 6, activity: "listen" },
@@ -209,7 +210,8 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agenda: [
       { label: "One request, eleven files, four tests", minutes: 1, activity: "listen" },
-      { label: "The request: estimate eight items", minutes: 4, activity: "vote" },
+      { label: "Your host", minutes: 1, activity: "listen" },
+      { label: "The request: estimate eight items", minutes: 3, activity: "vote" },
       { label: "The draft reply: four sentences", minutes: 3, activity: "vote" },
       { label: "The folder and the Claude Project", minutes: 8, activity: "do" },
       { label: "Four tests", minutes: 6, activity: "listen" },

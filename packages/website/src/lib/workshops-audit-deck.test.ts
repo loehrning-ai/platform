@@ -30,10 +30,10 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   const sections = Array.from(doc.querySelectorAll("deck-stage > section"));
   const main = sections.filter((section) => section.getAttribute("data-kind") === "main");
 
-  it("has eleven main slides for 90 minutes and three appendix slides outside the arrow path", () => {
+  it("has twelve main slides for 90 minutes and three appendix slides outside the arrow path", () => {
     expect(doc.documentElement.lang).toBe(edition.lang);
     expect(doc.documentElement.dataset.deckId).toBe(edition.deckId);
-    expect(main).toHaveLength(11);
+    expect(main).toHaveLength(12);
     expect(main.reduce((sum, section) => sum + Number(section.getAttribute("data-seconds")), 0)).toBe(5400);
     expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3"]);
     const notes = JSON.parse(doc.getElementById("speaker-notes")?.textContent ?? "[]") as string[];
@@ -87,7 +87,8 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
 
   it("carries the kit's numbers", () => {
     const text = flat(doc.body.textContent ?? "");
-    for (const needle of ["8 / 11", "25", "120", edition.share, "114", "89", "295"]) expect(text, needle).toContain(needle);
+    // "8/ 11" is the evidence index result on Step 1 (8 of 11 files pass); "8 / 11" used to match only the footer of slide 08.
+    for (const needle of ["8/ 11", "25", "120", edition.share, "114", "89", "295"]) expect(text, needle).toContain(needle);
   });
 
   it("speaks one language for the statuses and none of the banned words", () => {
