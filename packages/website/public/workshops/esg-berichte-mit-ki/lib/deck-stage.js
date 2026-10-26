@@ -25,6 +25,17 @@
   const BACK_IDLE_MS = 2500;
   // One Back gesture stays inside the deck and asks for a second one.
   const BACK_CONFIRM_MS = 3000;
+  // The phone note's link comes from page markup. Only a link on this site is taken, rebuilt on this
+  // origin, so a javascript: or data: value, or a //host path, never becomes the link.
+  const sameOriginHref = (value, fallback) => {
+    try {
+      const url = new URL(value || fallback, window.location.href);
+      if (/^https?:$/.test(url.protocol) && url.origin === window.location.origin) return `${window.location.origin}${url.pathname}${url.search}${url.hash}`;
+    } catch {
+      // A malformed value falls back.
+    }
+    return new URL(fallback, window.location.href).href;
+  };
   const SWIPE_MIN_PX = 48;
   const TAP_MAX_PX = 12;
   const TAP_MAX_MS = 500;
@@ -631,7 +642,7 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       rotate.setAttribute("role", "note");
       const rotateText = document.createElement("p");
       const rotateLink = document.createElement("a");
-      rotateLink.href = this.getAttribute("data-rotate-href") || "./guide.html";
+      rotateLink.href = sameOriginHref(this.getAttribute("data-rotate-href"), "./guide.html");
       rotateLink.textContent = this.getAttribute("data-rotate-label") || COPY.rotateLink;
       rotateText.append(COPY.rotateBefore, rotateLink, COPY.rotateAfter);
       const rotateButton = document.createElement("button");
