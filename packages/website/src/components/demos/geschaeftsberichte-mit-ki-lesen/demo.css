@@ -948,10 +948,14 @@ textarea.nw-input {
   min-height: 44px;
   font-size: 0.875rem;
 }
+/* Solid paper, not glass: the dock floats over the own-card form and its
+   text, never over the stage, and text behind text is never glass. */
 .nw-dock {
   position: sticky;
   bottom: calc(var(--tabbar-band-h, 0px) + 8px);
   z-index: 3;
+  border: 1px solid var(--nw-ink);
+  background: var(--nw-paper);
   display: flex;
   flex-wrap: wrap;
   align-items: center;

@@ -789,12 +789,16 @@
   font-weight: 700;
 }
 
-/* ── Ribbon (the one glass surface) ────────────────────────────────────── */
+/* ── Ribbon ─────────────────────────────────────────────────────────────
+   Solid paper, not glass: it sticks over the sections below the stage (text
+   and tables), and on a desktop it would sit right under the glass nav. */
 .w05 .w05-ribbon {
   position: sticky;
   top: var(--nav-h-compact);
   z-index: 5;
   margin: 16px 0 0;
+  border-bottom: 1px solid var(--w05-line);
+  background: var(--color-background);
 }
 @media (min-width: 64rem) {
   .w05 .w05-ribbon {
