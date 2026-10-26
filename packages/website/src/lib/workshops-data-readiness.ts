@@ -1,5 +1,6 @@
 import type { Locale } from "./i18n/locale";
 import type { Workshop } from "./workshops";
+import { DECK_KEYS } from "./deck-keys-copy";
 
 const base = "/workshops/datenbereitschaft-fuer-ki";
 
@@ -199,7 +200,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "Für den Beamer. Folien auf Englisch. Pfeiltasten blättern, R setzt auf Anfang, P öffnet die Moderationsansicht.",
+          `Für den Beamer. Folien auf Englisch. ${DECK_KEYS.de}`,
       },
       {
         label: "Readiness-Kit · .zip",
@@ -403,7 +404,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "For the projector. Arrow keys move on, R goes back to the start, P opens the presenter view.",
+          `For the projector. ${DECK_KEYS.en}`,
       },
       {
         label: "Readiness kit · .zip",

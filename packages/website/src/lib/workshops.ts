@@ -22,6 +22,7 @@ import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 import { FORECASTING_KIT } from "./workshops-forecasting-kit";
 import { AUDIT_WORKSHOP } from "./workshops-audit";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
+import { DECK_KEYS } from "./deck-keys-copy";
 
 /** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
 export type WorkshopNumber = "01" | "02" | "03" | "04" | "05";
@@ -664,7 +665,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "Die Folien zeigen Firma, Kit und die Prompts mit Ergebnissen. Jeder Prompt hat einen Kopierknopf.",
+          `Die Folien zeigen Firma, Kit und die Prompts mit Ergebnissen. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
         short: "Die Folien führen durch Firma, Kit und Prompts.",
       },
       {
@@ -1071,7 +1072,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "The slides show the company, the kit and the prompts with results. Every prompt has a copy button.",
+          `The slides show the company, the kit and the prompts with results. Every prompt has a copy button. ${DECK_KEYS.en}`,
         short: "The slides walk through the company, the kit and the prompts.",
       },
       {

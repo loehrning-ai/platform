@@ -13,8 +13,14 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "../..");
 export const DECK_KEYS_SOURCE = path.join(here, "deck-keys.js");
 
+/** The page of each workshop that follows the key contract: its deck, or W01's lab. */
+export const DECK_KEYS_PAGES = {
+  "ki-prognosen-einschaetzen": "hands-on.html",
+};
+
 /** Decks wired to the shared key contract. Add a slug when a deck adopts it (W4 and W5 builders). */
 export const DECK_KEYS_WORKSHOPS = [
+  "ki-prognosen-einschaetzen",
   "geschaeftsberichte-mit-ki-lesen",
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
@@ -25,14 +31,14 @@ export const deckFolder = (slug) => path.join(repo, "packages/website/public/wor
 export const deckKeysCopyPath = (slug) => path.join(deckFolder(slug), "lib/deck-keys.js");
 
 /** Problems with how slides.html loads the keys; empty when the wiring is right. */
-export function wiringProblems(slug, slidesHtml) {
+export function wiringProblems(slug, slidesHtml, page = "slides.html") {
   const problems = [];
   const keys = slidesHtml.indexOf('src="./lib/deck-keys.js"');
   const stage = slidesHtml.indexOf('src="./lib/deck-stage.js"');
-  if (keys === -1) problems.push(`${slug}/slides.html does not load ./lib/deck-keys.js`);
-  else if (stage !== -1 && keys > stage) problems.push(`${slug}/slides.html loads deck-keys.js after deck-stage.js`);
+  if (keys === -1) problems.push(`${slug}/${page} does not load ./lib/deck-keys.js`);
+  else if (stage !== -1 && keys > stage) problems.push(`${slug}/${page} loads deck-keys.js after deck-stage.js`);
   const html = slidesHtml.match(/<html\b[^>]*>/)?.[0] ?? "";
-  if (!html.includes(`data-deck-id="${slug}"`)) problems.push(`${slug}/slides.html: <html> needs data-deck-id="${slug}"`);
+  if (!html.includes(`data-deck-id="${slug}"`)) problems.push(`${slug}/${page}: <html> needs data-deck-id="${slug}"`);
   return problems;
 }
 
@@ -49,7 +55,8 @@ function main() {
         console.log(`wrote ${path.relative(repo, target)}`);
       }
     }
-    problems.push(...wiringProblems(slug, readFileSync(path.join(deckFolder(slug), "slides.html"), "utf8")));
+    const page = DECK_KEYS_PAGES[slug] ?? "slides.html";
+    problems.push(...wiringProblems(slug, readFileSync(path.join(deckFolder(slug), page), "utf8"), page));
   }
   for (const problem of problems) console.error(problem);
   if (problems.length) process.exit(1);

@@ -1,6 +1,7 @@
 import type { Locale } from "./i18n/locale";
 import type { Workshop, WorkshopMaterial } from "./workshops";
 import { AUDIT_KIT } from "./workshops-audit-kit";
+import { DECK_KEYS } from "./deck-keys-copy";
 
 const base = "/workshops/audit-vorbereitung-mit-ki";
 
@@ -168,7 +169,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
     },
     materials: materials("de", [
-      ["Deck", "Für den Beamer. Pfeil nach rechts zeigt den nächsten Schritt, Pfeil nach links geht zurück."],
+      ["Deck", `Für den Beamer. ${DECK_KEYS.de}`],
       ["Vardar-Audit-Kit · .zip", "19 Textdateien auf Deutsch: Anfrage, elf erfundene Dateien, Regeln, Skill, Vorlagen und Lösungen."],
     ]),
     kit: AUDIT_KIT.de,
@@ -295,7 +296,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
     },
     materials: materials("en", [
-      ["Deck", "For the projector. The right arrow shows the next step, the left arrow goes back."],
+      ["Deck", `For the projector. ${DECK_KEYS.en}`],
       ["Vardar audit kit · .zip", "19 text files: the request, eleven invented files, rules, the skill, templates and the answers."],
     ]),
     kit: AUDIT_KIT.en,

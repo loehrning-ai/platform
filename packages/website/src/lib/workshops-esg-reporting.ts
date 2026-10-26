@@ -1,6 +1,7 @@
 import type { Locale } from "./i18n/locale";
 import type { Workshop, WorkshopMaterial } from "./workshops";
 import { ESG_REPORTING_KIT } from "./workshops-esg-reporting-kit";
+import { DECK_KEYS } from "./deck-keys-copy";
 
 const base = "/workshops/esg-berichte-mit-ki";
 
@@ -191,7 +192,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     materials: materials("de", [
       [
         "Deck · 15 Folien",
-        "Für den Beamer. Die Pfeiltaste nach rechts zeigt den nächsten Schritt einer Folie, nach links geht es zurück, r führt zum Anfang; jeder Prompt hat einen Kopierknopf.",
+        `Für den Beamer. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
       ],
       [
         "Nachweisprobe-Kit · .zip",
@@ -343,7 +344,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     materials: materials("en", [
       [
         "Deck · 15 slides",
-        "For the projector. The right arrow key shows the next step of a slide, the left one goes back and r returns to the start; every prompt has a copy button.",
+        `For the projector. Every prompt has a copy button. ${DECK_KEYS.en}`,
       ],
       [
         "Evidence check kit · .zip",
