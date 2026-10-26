@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { inspectPdf } from "../../../../scripts/open-source/pdf-inspection.mjs";
 import { OPEN_SOURCE_TOOL_ARTIFACTS } from "../artifacts";
 import {
   CV_LIVE_DENSITIES,
@@ -49,7 +50,8 @@ describe("CV Engine live data", () => {
     expect(CV_LIVE_ENGINE.pullRequestHref).toBe(
       `${CV_LIVE_ENGINE.repository}/pull/${CV_LIVE_ENGINE.pullRequest}`,
     );
-    expect(CV_LIVE_COMMAND).toContain(`git checkout ${CV_LIVE_ENGINE.revision}`);
+    expect(CV_LIVE_COMMAND).toContain(`git fetch origin ${CV_LIVE_ENGINE.revision} && git checkout --detach ${CV_LIVE_ENGINE.revision}`);
+    expect(CV_LIVE_COMMAND).toContain("python3.13 -m venv");
   });
 
   it("covers every choice exactly once", () => {
@@ -78,19 +80,51 @@ describe("CV Engine live data", () => {
     }
   });
 
-  it("tells the story it promises: the fourth job overflows, tight brings it back", () => {
+  it("tells the story it promises in every template: one more job overflows, tight brings it back", () => {
     for (const lang of CV_LIVE_LANGUAGES) {
-      for (let stations = 0; stations < CV_LIVE_MAX_STATIONS; stations++) {
-        expect(cvLiveState({ lang, template: "classic", density: "normal", stations }).exitCode).toBe(0);
+      for (const template of CV_LIVE_TEMPLATES) {
+        const label = `${lang} ${template}`;
+        const normal = (stations: number) =>
+          cvLiveState({ lang, template, density: "normal", stations });
+        // The first job that pushes the page past the edge at normal density.
+        let first = -1;
+        for (let stations = 0; stations <= CV_LIVE_MAX_STATIONS; stations++) {
+          if (normal(stations).exitCode === 1) {
+            first = stations;
+            break;
+          }
+        }
+        expect(first, `${label}: never overflows`).toBeGreaterThan(0);
+        const overflow = normal(first);
+        expect(overflow.pdf, label).toBeNull();
+        expect(overflow.mainPx, label).toBeGreaterThan(CV_LIVE_DATA.pagePx + CV_LIVE_DATA.slackPx);
+        // The same words, set tight, fit again: a real PDF exists for it.
+        const rescued = cvLiveState({ lang, template, density: "tight", stations: first });
+        expect(rescued.exitCode, `${label}: tight at ${first}`).toBe(0);
+        expect(rescued.pdf, label).not.toBeNull();
       }
-      const full = { lang, template: "classic", density: "normal", stations: CV_LIVE_MAX_STATIONS } as const;
-      const overflow = cvLiveState(full);
-      expect(overflow.exitCode).toBe(1);
-      expect(overflow.pdf).toBeNull();
-      expect(overflow.naturalPx).toBeGreaterThan(CV_LIVE_DATA.pagePx + CV_LIVE_DATA.slackPx);
-      const rescued = cvLiveState({ ...full, density: "tight" });
-      expect(rescued.exitCode).toBe(0);
-      expect(rescued.pdf).not.toBeNull();
+    }
+  });
+
+  it("links the invented person to nothing anyone could claim", () => {
+    for (const state of CV_LIVE_DATA.states) {
+      expect(composeCvYaml(CV_LIVE_DATA.base[state.lang], state)).not.toMatch(/github/i);
+    }
+    for (const file of Object.values(CV_LIVE_DATA.bodies)) {
+      const body = readFileSync(join(PUBLIC, file.href), "utf8");
+      for (const [, href] of body.matchAll(/href="([^"]*)"/g)) {
+        expect(href, file.href).toMatch(/^(mailto:[^@]+@example\.com|https:\/\/[^/]*example\.com)/);
+      }
+    }
+    for (const state of CV_LIVE_DATA.states) {
+      if (!state.pdf) continue;
+      const { uris } = inspectPdf(readFileSync(join(PUBLIC, state.pdf.href)), {
+        label: state.pdf.href,
+      });
+      expect(uris.length, state.pdf.href).toBeGreaterThan(0);
+      for (const uri of uris) {
+        expect(uri, state.pdf.href).toMatch(/^(mailto:[^@]+@example\.com|https:\/\/[^/]*example\.com)$/);
+      }
     }
   });
 

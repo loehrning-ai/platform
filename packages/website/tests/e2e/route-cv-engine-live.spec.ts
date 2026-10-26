@@ -32,11 +32,11 @@ const HEIGHT_CASES: readonly CvLiveChoice[] = [
   { lang: "de", template: "classic", density: "normal", stations: 4 },
   { lang: "de", template: "classic", density: "tight", stations: 4 },
   { lang: "en", template: "classic", density: "airy", stations: 3 },
-  { lang: "de", template: "sidebar", density: "normal", stations: 4 },
+  { lang: "de", template: "sidebar", density: "normal", stations: 7 },
   { lang: "en", template: "sidebar", density: "tight", stations: 2 },
   { lang: "de", template: "executive", density: "airy", stations: 3 },
   { lang: "en", template: "executive", density: "normal", stations: 4 },
-  { lang: "de", template: "ats-compact", density: "airy", stations: 4 },
+  { lang: "de", template: "ats-compact", density: "normal", stations: 6 },
   { lang: "en", template: "ats-compact", density: "tight", stations: 1 },
 ];
 
@@ -107,6 +107,7 @@ test("one more job overflows, tight brings it back, R starts over", async ({ pag
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(copy.title);
 
   const status = page.getByRole("status").filter({ hasText: "$ build.py" });
+  const advice = page.locator("[data-cv-advice]");
   const more = page.locator("[data-cv-more]");
   const start: CvLiveChoice = { lang: "de", template: "classic", density: "normal", stations: 0 };
   await measured(page, start);
@@ -114,27 +115,35 @@ test("one more job overflows, tight brings it back, R starts over", async ({ pag
   // A shadow root, no iframe: the CSP keeps frame-src 'none'.
   await expect(page.locator("iframe")).toHaveCount(0);
   expect(
-    await page.locator("[data-cv-sheet]").evaluate((host) => host.shadowRoot !== null),
+    await page.locator("[data-cv-sheet]").first().evaluate((host) => host.shadowRoot !== null),
   ).toBe(true);
   await expect(status).toHaveAttribute("data-cv-status", "exit-0");
 
-  for (let stations = 1; stations <= CV_LIVE_MAX_STATIONS; stations++) {
+  // Add jobs until the build fails; the button then stops, the pane marks
+  // the job that broke the page.
+  let stations = 0;
+  while (cvLiveState({ ...start, stations }).exitCode === 0) {
+    stations++;
     await more.click();
     await measured(page, { ...start, stations });
   }
+  expect(stations).toBeLessThan(CV_LIVE_MAX_STATIONS + 1);
   await expect(more).toBeDisabled();
+  await expect(more).toContainText(copy.pageFull);
   await expect(status).toHaveAttribute("data-cv-status", "exit-1");
   await expect(status).toContainText("exit 1");
-  await expect(status).toContainText(copy.noPdf);
+  await expect(advice).toHaveText(`${copy.noPdf} ${copy.tryTight}`);
   await expect(page.locator("[data-cv-spill]")).toBeVisible();
   await expect(page.locator("[data-cv-pdf]")).toHaveCount(0);
+  await expect(page.locator("[data-cv-yaml-pane] [data-marked]").first()).toContainText("- role:");
 
   await page.locator("fieldset", { hasText: copy.controls.density }).getByText("tight").click();
-  const rescued = { ...start, density: "tight", stations: CV_LIVE_MAX_STATIONS } as const;
+  const rescued = { ...start, density: "tight", stations } as const;
   await measured(page, rescued);
   await expect(status).toHaveAttribute("data-cv-status", "exit-0");
-  await expect(status).toContainText(copy.rescued);
+  await expect(advice).toHaveText(copy.rescued);
   await expect(page.locator("[data-cv-spill]")).toHaveCount(0);
+  await expect(page.locator("[data-cv-yaml-pane] [data-marked]")).toHaveText(/density: tight/);
   expect(page.url()).toContain("dichte=tight");
 
   // The real PDF for this state serves, byte-exact.
@@ -161,9 +170,23 @@ test("one more job overflows, tight brings it back, R starts over", async ({ pag
     cvLiveState(rescued).yamlSha256,
   );
 
-  // R starts over from a radio choice too; it is not a text field.
+  // The full-size page opens as a dialog and Escape closes it.
+  await page.locator("[data-cv-zoom-open]").click();
+  const dialog = page.getByRole("dialog", { name: copy.zoomTitle });
+  await expect(dialog).toBeVisible();
+  expect(
+    await dialog.locator("[data-cv-sheet]").evaluate((host) => host.shadowRoot !== null),
+  ).toBe(true);
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+
+  // R is ignored while a radio group has the keyboard, and starts over
+  // from anywhere else.
   await page.locator("input[name='cv-density']:checked").focus();
   await page.keyboard.press("r");
+  await expect(page.locator("[data-cv-live]")).toHaveAttribute("data-state", cvLiveStateKey(rescued));
+  await page.locator("[data-cv-restart]").focus();
+  await page.keyboard.press("Shift+R");
   await measured(page, start);
   await expect(more).toBeEnabled();
 
@@ -192,11 +215,11 @@ test("nothing overflows from 320 px up, in both languages", async ({ page }) => 
         () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
       );
       expect(overflow, `${path} at ${width}x${height}`).toBeLessThanOrEqual(0);
-      // The A4 edge sits on the first screen on a desktop.
+      // From lg the sheet is set large enough to read: at least 60 % of
+      // its real size.
       if (width === 1440) {
-        const box = await page.locator("[data-cv-spill]").boundingBox();
-        expect(box, "spill zone").not.toBeNull();
-        expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(height);
+        const box = await page.locator("[data-cv-zoom-open]").boundingBox();
+        expect(box?.width ?? 0).toBeGreaterThan(793.7 * 0.6);
       }
     }
   }

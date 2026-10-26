@@ -28,8 +28,10 @@ export type CvLiveEngineStatus = "pending-upstream-merge" | "admitted";
 export const CV_LIVE_SHORT_REVISION = CV_LIVE_ENGINE.revision.slice(0, 7);
 
 /**
- * The build a visitor runs next to their downloaded cv.yaml: clone, check out
- * the exact revision the example was rendered with, install hash-pinned, build.
+ * The build a visitor runs next to their downloaded cv.yaml: clone, fetch and
+ * check out the exact revision the example was rendered with (by hash, so it
+ * still works once the pull request branch is gone), create a Python 3.13
+ * venv (the lock file is compiled for 3.13), install hash-pinned, build.
  * Every step comes from the cv-engine installation guide in artifacts.ts.
  */
-export const CV_LIVE_COMMAND = `git clone ${CV_LIVE_ENGINE.repository}.git && cd cv-engine && git checkout ${CV_LIVE_ENGINE.revision} && python3 -m venv .venv && .venv/bin/python -m pip install --require-hashes -r requirements.lock && .venv/bin/python engine/build.py --config ../cv.yaml --output ../cv.pdf`;
+export const CV_LIVE_COMMAND = `git clone ${CV_LIVE_ENGINE.repository}.git && cd cv-engine && git fetch origin ${CV_LIVE_ENGINE.revision} && git checkout --detach ${CV_LIVE_ENGINE.revision} && python3.13 -m venv .venv && .venv/bin/python -m pip install --require-hashes -r requirements.lock && .venv/bin/python engine/build.py --config ../cv.yaml --output ../cv.pdf`;

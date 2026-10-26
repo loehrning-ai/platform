@@ -57,103 +57,163 @@
   "bodies": {
     "de-standard-0": {
       "href": "/artifacts/tools/cv-engine/live/body/de-standard-0.html",
-      "sha256": "fe37a0fecba0ae7d4e041aa488323299e281dc1efd132850d655162e18b4f3e5",
-      "sizeBytes": 4500
+      "sha256": "8f36e06068a90a914803014fdbfd1e65912f14fd8673b20aa470116b0683c031",
+      "sizeBytes": 4047
     },
     "de-standard-1": {
       "href": "/artifacts/tools/cv-engine/live/body/de-standard-1.html",
-      "sha256": "6f90dbf88be42b79dec0c54ed74e28823838733bc4ea8bbf4a6fbe7f6862b521",
-      "sizeBytes": 5472
+      "sha256": "d01dd22806fae5dc1b527227035cda4172c742953ea2c58f20497a174cf363d0",
+      "sizeBytes": 5019
     },
     "de-standard-2": {
       "href": "/artifacts/tools/cv-engine/live/body/de-standard-2.html",
-      "sha256": "33c5a87dc806865ac6387d457f103d5c496d54c620ff3ae8f605ef993fed91c4",
-      "sizeBytes": 6373
+      "sha256": "78ec9010719e45dbb2b1c55286be12be6677f405ed8dcce34f9562eb11dd14d0",
+      "sizeBytes": 5920
     },
     "de-standard-3": {
       "href": "/artifacts/tools/cv-engine/live/body/de-standard-3.html",
-      "sha256": "842ff78a735b812d773bb9b599d25e68d1a7b4ae7bda9d6ab712917155e3f445",
-      "sizeBytes": 7233
+      "sha256": "dd0486f8d2dfc5a780d4ba604ff21f88353cdf2daa1673adf0278242c953beec",
+      "sizeBytes": 6780
     },
     "de-standard-4": {
       "href": "/artifacts/tools/cv-engine/live/body/de-standard-4.html",
-      "sha256": "053bac4314678a036515bcf00427e3a2bbb9282ee9666b1feb916cfe9f5ad885",
-      "sizeBytes": 8078
+      "sha256": "7311c4bcedfc3640f58f88dfab7be356f5cef8201b7a9f45ed98162e92599277",
+      "sizeBytes": 7261
+    },
+    "de-standard-5": {
+      "href": "/artifacts/tools/cv-engine/live/body/de-standard-5.html",
+      "sha256": "9f8e43b10a2a0166a6a2f575cbde95e590176e9b13fa3274980315bbd5356009",
+      "sizeBytes": 7840
+    },
+    "de-standard-6": {
+      "href": "/artifacts/tools/cv-engine/live/body/de-standard-6.html",
+      "sha256": "d0d179d0853f334a4186af96dea25afbd859f470ac84fc0b2e6aa647193c6110",
+      "sizeBytes": 8685
+    },
+    "de-standard-7": {
+      "href": "/artifacts/tools/cv-engine/live/body/de-standard-7.html",
+      "sha256": "085044559eb7c03fb33eac391b04d6b97e5d3338e4d63c76514302d545e8f9db",
+      "sizeBytes": 9456
     },
     "de-rail-0": {
       "href": "/artifacts/tools/cv-engine/live/body/de-rail-0.html",
-      "sha256": "6494af18c7d37a22b773cb6b58c42e6b1a0ed8884a8ca0532b4abce0e1f0d5b0",
-      "sizeBytes": 4616
+      "sha256": "afc33fa2cf4ed0efdbaf82828de85248ffab9eae9bc388ee795eaa6c39634c0c",
+      "sizeBytes": 4163
     },
     "de-rail-1": {
       "href": "/artifacts/tools/cv-engine/live/body/de-rail-1.html",
-      "sha256": "00aaf76a0dac8800a1f0d78ecafdc112299ae2f2b00140f80b295fd518a56985",
-      "sizeBytes": 5588
+      "sha256": "47efaf115d4f9557fa0aba4d949e5c94d3df941063730d0d59765871ffcbe5fc",
+      "sizeBytes": 5135
     },
     "de-rail-2": {
       "href": "/artifacts/tools/cv-engine/live/body/de-rail-2.html",
-      "sha256": "0c5608e1bc8b87248c19cae9617cae8a90d69a93529450bdec199d10e01d81c4",
-      "sizeBytes": 6489
+      "sha256": "8e7799e2b56e2cb859d88541021f37f229090b19be311de5276f5e13280856d3",
+      "sizeBytes": 6036
     },
     "de-rail-3": {
       "href": "/artifacts/tools/cv-engine/live/body/de-rail-3.html",
-      "sha256": "1af0fc2f93b174974d1d68fef6ee1ed2e9af602c49bd5b321f08ed228b322adc",
-      "sizeBytes": 7349
+      "sha256": "0395ceada91d1af03bbe9ead3753dbabcde538b1ebc6fd0550496ef88293eab2",
+      "sizeBytes": 6896
     },
     "de-rail-4": {
       "href": "/artifacts/tools/cv-engine/live/body/de-rail-4.html",
-      "sha256": "4aba992ba3026c4524398f25df232c9868a81d730a9200fdd704c6679a86379b",
-      "sizeBytes": 8194
+      "sha256": "9056fb539f2007c6f0999e7da1c051e56dd01904d546c5de0c215f8aaf9d2a1b",
+      "sizeBytes": 7377
+    },
+    "de-rail-5": {
+      "href": "/artifacts/tools/cv-engine/live/body/de-rail-5.html",
+      "sha256": "45d038a5ad09ada3ba4ae0fc85e29f213addb0447a84bf0c7e6a73fde1378dff",
+      "sizeBytes": 7956
+    },
+    "de-rail-6": {
+      "href": "/artifacts/tools/cv-engine/live/body/de-rail-6.html",
+      "sha256": "1c585ff37bbd70861c50d94879779a829489d7b86920783d1b2a96eee862d86c",
+      "sizeBytes": 8801
+    },
+    "de-rail-7": {
+      "href": "/artifacts/tools/cv-engine/live/body/de-rail-7.html",
+      "sha256": "be0dbf3b7d9ed59443243086d3379cb48254d3bcaa40694b2abd18dc8845bfde",
+      "sizeBytes": 9572
     },
     "en-standard-0": {
       "href": "/artifacts/tools/cv-engine/live/body/en-standard-0.html",
-      "sha256": "9d4ea62350f570105d0c0693ed418990fa6a0b776c94d5c0378d254c7cfb0fdb",
-      "sizeBytes": 4396
+      "sha256": "597f0a4a8a7a91428d1961f65a7381ebe9e7e82e1b60c101a93ef6b558d0bbc6",
+      "sizeBytes": 3943
     },
     "en-standard-1": {
       "href": "/artifacts/tools/cv-engine/live/body/en-standard-1.html",
-      "sha256": "921f4f302e5003666031172dce6f3301256fe87b884ed3d6c2c76d3047d38815",
-      "sizeBytes": 5384
+      "sha256": "5922aea001de6bc5b5c8137547a2446c90c565a68603514a38f6e0e2b67e7121",
+      "sizeBytes": 4931
     },
     "en-standard-2": {
       "href": "/artifacts/tools/cv-engine/live/body/en-standard-2.html",
-      "sha256": "7272d692cb57a8dd01613c5ffa044e70576231677522b3152355067fa54fbae3",
-      "sizeBytes": 6310
+      "sha256": "df0374fb347ff416e4a3985b0b78688e8909d2767a28f0b094be7733e266069c",
+      "sizeBytes": 5857
     },
     "en-standard-3": {
       "href": "/artifacts/tools/cv-engine/live/body/en-standard-3.html",
-      "sha256": "e0ddf31d8cfcdf6ab89bd3d78e54ead66f290b18ce30396346685ee06c897cd8",
-      "sizeBytes": 7171
+      "sha256": "c37a75689cf4978e23e344f950e59056f79287b62f2c345d3813108131c1a642",
+      "sizeBytes": 6718
     },
     "en-standard-4": {
       "href": "/artifacts/tools/cv-engine/live/body/en-standard-4.html",
-      "sha256": "546392611710643ea977b9a19addac66783473c05a8b3f38b7a428a8b13b7a67",
-      "sizeBytes": 8026
+      "sha256": "2d62f10a850ebb9f40cd4ec16761d09d2179b840b834b0b7f2025234b3de7519",
+      "sizeBytes": 7182
+    },
+    "en-standard-5": {
+      "href": "/artifacts/tools/cv-engine/live/body/en-standard-5.html",
+      "sha256": "5ccabef203634b2d9214af3f1ce91661105de5ccffc6c84211467e0e551f1dda",
+      "sizeBytes": 7744
+    },
+    "en-standard-6": {
+      "href": "/artifacts/tools/cv-engine/live/body/en-standard-6.html",
+      "sha256": "59a925ed3ecb0b7537cd6e053645ca65426323d1f428bc34d1dd7f787835a509",
+      "sizeBytes": 8599
+    },
+    "en-standard-7": {
+      "href": "/artifacts/tools/cv-engine/live/body/en-standard-7.html",
+      "sha256": "40938bc57288f00f129f161637df169a674bbf453f99be448dc7a02a7bb47855",
+      "sizeBytes": 9342
     },
     "en-rail-0": {
       "href": "/artifacts/tools/cv-engine/live/body/en-rail-0.html",
-      "sha256": "ed49177618e63f37d672abcd2d31bb1c57562a51658f2f3b96df2ca7265be2ad",
-      "sizeBytes": 4512
+      "sha256": "306bf8844cbbd90ebd8fb7d2ae448bd8ebe0b232c6821aa3ccbb7e88218303e8",
+      "sizeBytes": 4059
     },
     "en-rail-1": {
       "href": "/artifacts/tools/cv-engine/live/body/en-rail-1.html",
-      "sha256": "2dc11bce4e3ee12e5f5aa033e4aef05920aeb99235c220e96df8d85d841128ab",
-      "sizeBytes": 5500
+      "sha256": "0aefe32c17e29571775c64d5afc91a17fbabe244771112469f0092203860d8ef",
+      "sizeBytes": 5047
     },
     "en-rail-2": {
       "href": "/artifacts/tools/cv-engine/live/body/en-rail-2.html",
-      "sha256": "b5548193e2f011e66420cee5b8d4bf34ab39d6e8e511af4127553df380315502",
-      "sizeBytes": 6426
+      "sha256": "a02cf0b9e1ab596c6342443936f7692af0d67c5e4abc5efdd3d3c93491483a9c",
+      "sizeBytes": 5973
     },
     "en-rail-3": {
       "href": "/artifacts/tools/cv-engine/live/body/en-rail-3.html",
-      "sha256": "3bab71abc51d0dd16bc4f9dd1f7088947cc478294517b039b76d70b151274dcd",
-      "sizeBytes": 7287
+      "sha256": "74370a4faed3ae2d18baf48165475923adc9085fde426d0ea21f9fa05b10fba2",
+      "sizeBytes": 6834
     },
     "en-rail-4": {
       "href": "/artifacts/tools/cv-engine/live/body/en-rail-4.html",
-      "sha256": "ce350df808c9be6dcb34c9b8d1f95bb5574977f8d97545dffce4cb914fa31563",
-      "sizeBytes": 8142
+      "sha256": "feab6ef9a83fccb26012b5cbafcc2d7971c4d4bbe7bc58ee52cd2f1d5ed1a3f4",
+      "sizeBytes": 7298
+    },
+    "en-rail-5": {
+      "href": "/artifacts/tools/cv-engine/live/body/en-rail-5.html",
+      "sha256": "b157469735b0f91204888401a73dd55405aff5c5777130abdaa9301dbd49ab35",
+      "sizeBytes": 7860
+    },
+    "en-rail-6": {
+      "href": "/artifacts/tools/cv-engine/live/body/en-rail-6.html",
+      "sha256": "2083f25cdd3946917cad50a4a9e78908fd63cf682bf73aa2f7e6ae9e598ddc77",
+      "sizeBytes": 8715
+    },
+    "en-rail-7": {
+      "href": "/artifacts/tools/cv-engine/live/body/en-rail-7.html",
+      "sha256": "4e6afe97cbdad5ba93215540353ac14b11fa947180714802180bb03353d5777b",
+      "sizeBytes": 9458
     }
   },
   "states": [
@@ -170,11 +230,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "c642ffff7f7fe6bd7734fa7d7c87e176274ffd40f845e5dbec4ae53387efd2bd",
+      "yamlSha256": "898041d246568e6d602fb6af1c17b6e6e0eba081eb3198ed93526f75c8b0e5c0",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-tight-0.pdf",
-        "sha256": "61c2902da2e23b21061ef54ec050f7315081cb67d4fae2cb6bb5294177a82320",
-        "sizeBytes": 26430
+        "sha256": "d12fc0e2f75367d28f6c3dc0e5ba97359fafe441d9fe67418f259e647ba96bca",
+        "sizeBytes": 26247
       }
     },
     {
@@ -190,7 +250,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "9e55f639a5ab5680108771b9658f6fe0d3c71e00f0a07dc3198b558958deadc9",
+      "yamlSha256": "d705cda6af3a088cc9036b649cf7250d56ab51ca82456a5b66ed2729cbf17185",
       "pdf": null
     },
     {
@@ -206,7 +266,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "19dd1167bfe169c258083903c45dd4a3a8bdfed6d3a41b306fac12de6283964a",
+      "yamlSha256": "40b8bed1b96708a8d2bcbab83282ca1c546fdf294086c3a5dc9fe2252de6a8c5",
       "pdf": null
     },
     {
@@ -222,7 +282,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "8d07e99d42623d0df96d38c6c4d2432f02e8da1a98ebcb7e53bef1999f634f17",
+      "yamlSha256": "7adcabb6ddd601d2b316cd616f440f85fc731ad6d47826e79786a0de408b1993",
       "pdf": null
     },
     {
@@ -233,17 +293,69 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 1090.7,
-      "mainPx": 1090.7,
+      "naturalPx": 1032.3,
+      "mainPx": 1032.3,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-4",
-      "yamlSha256": "38bed06956271f0d8a7f7b50a036d986576ad478695df280e67eb7e17cc3b630",
+      "yamlSha256": "17975b49047f10a0d2fe932eb53d748c425f1b789b44e1216feca88bfef74f17",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-tight-4.pdf",
-        "sha256": "abe632eecf97e55a27117fc96f6d1c2b3551c5171fc465532823f9aa938aead1",
-        "sizeBytes": 29890
+        "sha256": "0fd532580477876822cb5eaad5e1562a9e7cb851306de7377a87df9f00d96de8",
+        "sizeBytes": 29134
       }
+    },
+    {
+      "key": "de-classic-tight-5",
+      "lang": "de",
+      "template": "classic",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1121.2,
+      "mainPx": 1121.2,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-standard-5",
+      "yamlSha256": "5f19ed4d9f7586f71a8544e239e8f377ec65a5a6dff51088da4b0ee2a5f2e29b",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-tight-5.pdf",
+        "sha256": "e8efd788a3760e2da83e9b1525ed3ae52bbf8536e44df2c643663fdce47ddeba",
+        "sizeBytes": 29646
+      }
+    },
+    {
+      "key": "de-classic-tight-6",
+      "lang": "de",
+      "template": "classic",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1239.4,
+      "mainPx": 1239.4,
+      "gate": "pages",
+      "overflowSection": "Projekte",
+      "body": "de-standard-6",
+      "yamlSha256": "e8e43fe779bbf05fa39c46df2ad9acf425f4b1a20a8c5d79ed7459fc9435876b",
+      "pdf": null
+    },
+    {
+      "key": "de-classic-tight-7",
+      "lang": "de",
+      "template": "classic",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1354.5,
+      "mainPx": 1354.5,
+      "gate": "pages",
+      "overflowSection": "Kenntnisse",
+      "body": "de-standard-7",
+      "yamlSha256": "39615a0ddf08b1c8cf775d2cd678e41fbbb4312f3938323a27000542f3c2f902",
+      "pdf": null
     },
     {
       "key": "de-classic-normal-0",
@@ -258,11 +370,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "11418271fbf5e1121e1a5e8de9f32a106472142454d2f88b4845f2d5b6c4788f",
+      "yamlSha256": "4eaab08494b4fb9c39c23885d952fa2c7669e0a08392e444702f33fb25de6b72",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-normal-0.pdf",
-        "sha256": "9e401630433f8585ebc828b3000549ed3f9bdb2207cdfcb762aec3ba57a5d23e",
-        "sizeBytes": 26416
+        "sha256": "3930af63bf243136fe869a988c739e64638018ad4bb3b8b6ef20ac48f3ca0f53",
+        "sizeBytes": 26236
       }
     },
     {
@@ -278,7 +390,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "dd1cb330efba7c198e7d49a2b04c5fdfad75ddfd9d9be55b8bb0d35826ccf432",
+      "yamlSha256": "ee6ef8242c46b1787cabdfed9c30ac663cae1fb5d3dd07c6307bc53466f9693d",
       "pdf": null
     },
     {
@@ -294,7 +406,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "3ca304d73448bc75ded7f4e0e9e15e7ee78898966b6f84eea70e71fb7562a053",
+      "yamlSha256": "b254b92e1835a36729b83f1e0f81076ae24aff8c52fc52b349a07e03944a552d",
       "pdf": null
     },
     {
@@ -310,7 +422,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "09b9ec45851ed877d5f6bd4f57965bc3ed5f00206e130c27805c5418b5224dc5",
+      "yamlSha256": "8197395d020ef7bc8850e8d2cf564ceeb9861980303a7aa28724be81f71de3cd",
       "pdf": null
     },
     {
@@ -319,14 +431,66 @@
       "template": "classic",
       "density": "normal",
       "stations": 4,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1117.2,
+      "mainPx": 1117.2,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-standard-4",
+      "yamlSha256": "44fb6a5b0e5f6928766580e7d18f3797668ed44907d296f7aa11838611041e2c",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-normal-4.pdf",
+        "sha256": "e8acd5ee648ca4efef5c7f814dbfe86f5c613ef87c501cd6464a78fd40ebe8fe",
+        "sizeBytes": 29119
+      }
+    },
+    {
+      "key": "de-classic-normal-5",
+      "lang": "de",
+      "template": "classic",
+      "density": "normal",
+      "stations": 5,
       "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1192.4,
-      "mainPx": 1192.4,
+      "naturalPx": 1212,
+      "mainPx": 1212,
       "gate": "pages",
       "overflowSection": "Projekte",
-      "body": "de-standard-4",
-      "yamlSha256": "7d7bafa175a7ea0dc4fee5d8730f3de43f7ca0c98e7c396aff08773dce00d3be",
+      "body": "de-standard-5",
+      "yamlSha256": "85133ae87783dd5306962171b488024b7b389cdbe382e8978207273018e48170",
+      "pdf": null
+    },
+    {
+      "key": "de-classic-normal-6",
+      "lang": "de",
+      "template": "classic",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1351.5,
+      "mainPx": 1351.5,
+      "gate": "pages",
+      "overflowSection": "Kenntnisse",
+      "body": "de-standard-6",
+      "yamlSha256": "51c36592d08deab9e0506d4d6dc4c0c40fc2562a32dc75bcbc39adbc87c03b11",
+      "pdf": null
+    },
+    {
+      "key": "de-classic-normal-7",
+      "lang": "de",
+      "template": "classic",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1473.8,
+      "mainPx": 1473.8,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-7",
+      "yamlSha256": "6ee1f1c29a65f99dd6a75a1ba545f87bc3ab0446d657a075ff94cd7c1d963778",
       "pdf": null
     },
     {
@@ -342,11 +506,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "d1d6e9856c2551cdd16e2563d6363484e030ef5cabc9a79463f8ca7d7915f3a5",
+      "yamlSha256": "77bf231c405be1ee6033099d76cacd58a85f54d6cb2a3498f8aa236fb6ede6aa",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-airy-0.pdf",
-        "sha256": "28613b5c6d7878910046ec79e1c1a2ed59193ab1512a5f36d6ff98c91d4f5ca4",
-        "sizeBytes": 26367
+        "sha256": "a41dcd84fae70c65d7d5b5072b7a4c911cc9632a460898dacdd37af4981ac2e5",
+        "sizeBytes": 26173
       }
     },
     {
@@ -362,7 +526,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "ee980517104f18060ae8faf87bed2c7db121e104798327d098dfaa047dbd64f1",
+      "yamlSha256": "a78edc522b6718f4bee05225bfd30b22bba0dc613644317e9ebe28520c56d3bf",
       "pdf": null
     },
     {
@@ -378,7 +542,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "643659f3b6873e5e0c9b32e929332e6f66a56dbc7e9163b4e0ae92066252383f",
+      "yamlSha256": "7b588a91f1dca311b31b35d0231237fc9b0c142e0a8d6a03d7ea6bd82b4841ed",
       "pdf": null
     },
     {
@@ -394,7 +558,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "7383ff01acaab7f758c1f851f4441ea27d5647eb2e47915833ef6611584cb0c9",
+      "yamlSha256": "004e4f025b5ec2c12e65b6a8e93b1ceb8f47d3705ae724b7fa88806f04110043",
       "pdf": null
     },
     {
@@ -405,12 +569,60 @@
       "stations": 4,
       "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1268.4,
-      "mainPx": 1268.4,
+      "naturalPx": 1189.6,
+      "mainPx": 1189.6,
       "gate": "pages",
       "overflowSection": "Projekte",
       "body": "de-standard-4",
-      "yamlSha256": "c244921d4ad7e6903f8687412e57be8c5834174fda40f9b7d783c06d00e81863",
+      "yamlSha256": "5fd854efe99114ffd3d1add684724ee8cce12b1b6790896ea92ad371e2321231",
+      "pdf": null
+    },
+    {
+      "key": "de-classic-airy-5",
+      "lang": "de",
+      "template": "classic",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1291.7,
+      "mainPx": 1291.7,
+      "gate": "pages",
+      "overflowSection": "Projekte",
+      "body": "de-standard-5",
+      "yamlSha256": "763fc56fa8e4452a2bbd87200ce4c70030344de99126935b5423874c1887b5e5",
+      "pdf": null
+    },
+    {
+      "key": "de-classic-airy-6",
+      "lang": "de",
+      "template": "classic",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1440.7,
+      "mainPx": 1440.7,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-6",
+      "yamlSha256": "3a9eefc99ff45da317ff2beba752c794867a5c79e29ad677d22e210d92aa1815",
+      "pdf": null
+    },
+    {
+      "key": "de-classic-airy-7",
+      "lang": "de",
+      "template": "classic",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1571.6,
+      "mainPx": 1571.6,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-7",
+      "yamlSha256": "baa3935fa5c23a1e82badd8104256c16a9e7e60751fd22fdb4a31d0010b23147",
       "pdf": null
     },
     {
@@ -426,11 +638,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-0",
-      "yamlSha256": "9ee8504b0bf440c2246be73b3c8becb96c7b8524eeb74a597023ce31d3d339d6",
+      "yamlSha256": "3b5461c455849517a174a42c9b35ddcd4e8af801222446d2236d81cd96bcc352",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-tight-0.pdf",
-        "sha256": "a31c7b6af0ea5a4b66fa21feaf8834dfabaf60b9e117e0a5b0a83ab9e12b1379",
-        "sizeBytes": 27141
+        "sha256": "9c9cc695b679f913b481709000e07384441dd049e7018e9e2de2568052b9dbd1",
+        "sizeBytes": 26939
       }
     },
     {
@@ -446,7 +658,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-1",
-      "yamlSha256": "73384369550ec8b59135790e53152cdf0ed8deb99dda6929eb2673ed76b9973b",
+      "yamlSha256": "a1007428116b85f7b5132bbaa2f47f034aa264fbed2db653db56010d77ead831",
       "pdf": null
     },
     {
@@ -462,7 +674,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-2",
-      "yamlSha256": "2f6a6916e3a2e0ddf188f181bb05f42f4522b0471eab9228a82cae4b08b910b2",
+      "yamlSha256": "69c7b3572fe1aedb9a9d8a4d678b2680af36c683a8bdf124e10a3f6c5395bc39",
       "pdf": null
     },
     {
@@ -478,7 +690,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-3",
-      "yamlSha256": "08324c05b11c20944b6565f9344160b0b079175918139be93ed364109fdb3eee",
+      "yamlSha256": "b25a35f6097bcb9202d4a17c40a012c086254b737c5967cc481bb937496a633e",
       "pdf": null
     },
     {
@@ -490,12 +702,68 @@
       "exitCode": 0,
       "pages": 1,
       "naturalPx": 1122.5,
-      "mainPx": 842.2,
+      "mainPx": 784.6,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-4",
-      "yamlSha256": "77c6cf942081be364c5390881484635a61dc9993548dbbab722981403adb72c8",
+      "yamlSha256": "1c4d5c498b74262d28416f24d26e1fbffddca82b359003bbbfbe3f4383894471",
       "pdf": null
+    },
+    {
+      "key": "de-sidebar-tight-5",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 856.2,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-rail-5",
+      "yamlSha256": "d3395d9a1e600be8ae1133d9defd5b2f69769190e23cc2669446cb3ca4897cf6",
+      "pdf": null
+    },
+    {
+      "key": "de-sidebar-tight-6",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 962,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-rail-6",
+      "yamlSha256": "bb5dde8809465f779f6a59a4628f953ea3dca8167747f893000b96b84fb01d43",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-tight-6.pdf",
+        "sha256": "ba8aad2b132f28b36e40b81b1a50915a6d3a0e7a53932d02986db48be2191f3b",
+        "sizeBytes": 31273
+      }
+    },
+    {
+      "key": "de-sidebar-tight-7",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 1054.3,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-rail-7",
+      "yamlSha256": "051c874c2afb5b6901a858fa57e1c3f68a9d5b26af8790eccd4e902f7a3472e9",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-tight-7.pdf",
+        "sha256": "32074bcc1755cbb8a23a2a88a8d0f7c9b41ac411fbeb28f9b3fb7d074395b9fa",
+        "sizeBytes": 31941
+      }
     },
     {
       "key": "de-sidebar-normal-0",
@@ -510,11 +778,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-0",
-      "yamlSha256": "e31e2704a2202f9547251cd11e60aa100ecb1c7887d5ca5a2d4ea6f8840ce470",
+      "yamlSha256": "adcb6bdc587b70ac6d5a62c5628c9d1ce5694c1de68d1b654a47907aaf31a99f",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-normal-0.pdf",
-        "sha256": "1f87fd00fc1a7d3920100b720c0c435cc6d7f037db37eedcf9652483c9e809fa",
-        "sizeBytes": 27082
+        "sha256": "e18d6b4ff84341b1e7d3864694e5ca04c5759b3f95cd39e8ceb1495f50863f09",
+        "sizeBytes": 26886
       }
     },
     {
@@ -530,7 +798,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-1",
-      "yamlSha256": "888cf2d01110fbc0a34c235cfb8efbff3157cda9865d1729aa557a524f088322",
+      "yamlSha256": "6835188870c70dcd1f77b82187f639b647e91865ce085f493bf996bf6b814728",
       "pdf": null
     },
     {
@@ -546,7 +814,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-2",
-      "yamlSha256": "b412e97f843fec1b981bfbc12dfe75e24cc9ba8cfe203979e3b573ddf03af00e",
+      "yamlSha256": "ce0fb8e7ee08cd64dbb026454ce8840de2499c424c60bd12518a021f5e7c2088",
       "pdf": null
     },
     {
@@ -562,7 +830,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-3",
-      "yamlSha256": "7f3e4078df58c3cae6d7c736e8c79f3e406d202116a496de8aa5a16abf1e79a2",
+      "yamlSha256": "1289de54e3d786d6c195ecb1dc5728ded3f5acde73f9e73cb4419e6c4b537766",
       "pdf": null
     },
     {
@@ -574,11 +842,63 @@
       "exitCode": 0,
       "pages": 1,
       "naturalPx": 1122.5,
-      "mainPx": 920.6,
+      "mainPx": 849.2,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-4",
-      "yamlSha256": "d4f3eb4b1f5b1d7f85e008ce3ee1e7bd0af450ba65dfcac1dc813e8c5739532f",
+      "yamlSha256": "22cd8ae511753cef453dc12abd53b628ea50b35d1a84434ee328a858a28e31b7",
+      "pdf": null
+    },
+    {
+      "key": "de-sidebar-normal-5",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "normal",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 925.9,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-rail-5",
+      "yamlSha256": "b53bdcafb8659e4790f597864dedacd36e71c4ef16edd87a69eca2fed8dcdbd0",
+      "pdf": null
+    },
+    {
+      "key": "de-sidebar-normal-6",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 1049.6,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-rail-6",
+      "yamlSha256": "103a35543dc4557f12bdfbd699f661fce58db870274e96decc20daaff3b28d62",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-normal-6.pdf",
+        "sha256": "e545e6f31ada16e74077e47310ac6f81cc0a3d6b3f436cc44599bc6a875bfd56",
+        "sizeBytes": 31236
+      }
+    },
+    {
+      "key": "de-sidebar-normal-7",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1147.9,
+      "mainPx": 1147.9,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "de-rail-7",
+      "yamlSha256": "c75d67dc4274c6345a6735e011e9b043c7033c4fe789e39bb69ed4b400ca5135",
       "pdf": null
     },
     {
@@ -594,11 +914,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-0",
-      "yamlSha256": "2fbe6dffff4275c5d34ef9744a53100ea810857cb449476d9f3c1c617f69cc62",
+      "yamlSha256": "1ed15f92fb3f0366231f01908edb7a6823f634158fd275b23df5094b851a86ef",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-airy-0.pdf",
-        "sha256": "e602a22b60d0209e7a45a284d915be4fd9b721a1dd737ef7b842e0bcfb150596",
-        "sizeBytes": 27208
+        "sha256": "b07a16a0cd8bafc1bd444752f06e592155c687b6c465f1b85c0c930d37595169",
+        "sizeBytes": 27004
       }
     },
     {
@@ -614,7 +934,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-1",
-      "yamlSha256": "c65e382fdd3aa08cab94984c13e4d782c91c4f18494784e7b6dd5f6f05551d4a",
+      "yamlSha256": "808e90398bb07fe78b3e852a27685821b509c8f3edab6d6a52c37a9adf75cbb0",
       "pdf": null
     },
     {
@@ -630,7 +950,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-2",
-      "yamlSha256": "d07cb9f02166e747a23296ae71e69c1a36d918a9640604707a1d9c5ed8911a4d",
+      "yamlSha256": "ae0bf5a720eceeaecced967f465716d5244b410e40e95d0db4149391b795bcfa",
       "pdf": null
     },
     {
@@ -646,7 +966,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-3",
-      "yamlSha256": "a11fbcfc1ec853e5331f61758efb7eb7e9c583b742ea92393f12231e2997c704",
+      "yamlSha256": "ff21509c87b29fb298119a5651026ac861be38f40702450b171ebaac5dd431cf",
       "pdf": null
     },
     {
@@ -658,11 +978,59 @@
       "exitCode": 0,
       "pages": 1,
       "naturalPx": 1122.5,
-      "mainPx": 1001.2,
+      "mainPx": 914.6,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-rail-4",
-      "yamlSha256": "d4ce22852c59bd11b5980a3870825f1b7cd44125b38eda6529070c6153fc31c4",
+      "yamlSha256": "7e82b58d38973fc301544a1b814ea5ce87138da022fea1a9a37846d9deb430d2",
+      "pdf": null
+    },
+    {
+      "key": "de-sidebar-airy-5",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 997.6,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-rail-5",
+      "yamlSha256": "930d5b74181d5764d14ff164c14804fb562f12cb5915a922571d007e9f9de416",
+      "pdf": null
+    },
+    {
+      "key": "de-sidebar-airy-6",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1141.8,
+      "mainPx": 1141.8,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "de-rail-6",
+      "yamlSha256": "509bd9fc84ffaea76174e696abb23f9b8b4120a3b9cc9b8d239bbadd0d9738a9",
+      "pdf": null
+    },
+    {
+      "key": "de-sidebar-airy-7",
+      "lang": "de",
+      "template": "sidebar",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1247.7,
+      "mainPx": 1247.7,
+      "gate": "pages",
+      "overflowSection": "Projekte",
+      "body": "de-rail-7",
+      "yamlSha256": "6978069a43a5720d8806423bebc1e363f4b0b10198a504616c148f8117f23cb8",
       "pdf": null
     },
     {
@@ -678,11 +1046,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "3355aaa6e7d1e8e604ed470d55d1f28e30aca3875283a25b3a18b07d1d4bb879",
+      "yamlSha256": "5237294c561f1b24c896072f4d259cf1c051bba3319ad474f6db8cb6bc2f950f",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-tight-0.pdf",
-        "sha256": "e1565a1d9a2cec58cf3d8bfd1d0c275a2bfd589778d88e6a204874453746195b",
-        "sizeBytes": 26705
+        "sha256": "56cb15c0b036f3e942999c33c21086e06c6b6360e75c49909c49f85f0e6d1b6a",
+        "sizeBytes": 26521
       }
     },
     {
@@ -698,7 +1066,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "0c7b34fcf7b1c396aa8a4087634cb53d814f5c4f035b30deeb097d38c321adf2",
+      "yamlSha256": "14e9c0838cdadf5e605f92c5eac393b8a124d1928f1d98699567f20d192d7d51",
       "pdf": null
     },
     {
@@ -714,7 +1082,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "58b8d86d43a84ec7aa2b900f97f252dc7f0bbb57f13f4c7f2b9dcf41b83cdba1",
+      "yamlSha256": "53ad680b02e9ce8813ae93976ea5aa9812ff41bf822be89a8cedb3be594fef49",
       "pdf": null
     },
     {
@@ -730,11 +1098,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "66ad94d81b0eaba81e7421284991056fc5d9f59d2049da6d4c1b15a95133cb46",
+      "yamlSha256": "5dad7d97e0ec9fbb08ce6039469ca982e9222230ddbd81bd95469ac3755b710b",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-tight-3.pdf",
-        "sha256": "98a041cdd14d3da781b0222a24c88efdbaad79ddb3f9cf98358d0e4030505314",
-        "sizeBytes": 29363
+        "sha256": "5f06fee442e5cd615241b0aa8e2a984255b4f5cd8d9b32b165961fc77f8e7ff4",
+        "sizeBytes": 29177
       }
     },
     {
@@ -743,14 +1111,66 @@
       "template": "executive",
       "density": "tight",
       "stations": 4,
-      "exitCode": 1,
+      "exitCode": 0,
       "pages": 1,
-      "naturalPx": 1155.4,
-      "mainPx": 1155.4,
-      "gate": "clipped",
+      "naturalPx": 1083.4,
+      "mainPx": 1083.4,
+      "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-4",
-      "yamlSha256": "3248f5b868fb7fd4587b3394d607209717c4cb38476141553f98a258549345df",
+      "yamlSha256": "bc9cf53a832bbc8e6fc8640b3c30a9a1f351faa200b5e16645d7d20caf2b8f53",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-tight-4.pdf",
+        "sha256": "f2d33ade9bd30e20e175e01d21e36798901a90e182ec3c17e88ab4d61fe270e7",
+        "sizeBytes": 29446
+      }
+    },
+    {
+      "key": "de-executive-tight-5",
+      "lang": "de",
+      "template": "executive",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1172.4,
+      "mainPx": 1172.4,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "de-standard-5",
+      "yamlSha256": "d3189bfe8583de2829e8a69e3644c6cd72ceeafa05e2f20df5c78996a0fb050d",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-tight-6",
+      "lang": "de",
+      "template": "executive",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1304.1,
+      "mainPx": 1304.1,
+      "gate": "pages",
+      "overflowSection": "Kenntnisse",
+      "body": "de-standard-6",
+      "yamlSha256": "56b4e19310faa21eaf6bf6d0cab5c5563a6a2a8579dc9f9f3688e635b53b133e",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-tight-7",
+      "lang": "de",
+      "template": "executive",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1419.2,
+      "mainPx": 1419.2,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-7",
+      "yamlSha256": "6d11c234ae3ab687919f03e7ad43ed2a42886447693a4bc0f518ca33e8725b07",
       "pdf": null
     },
     {
@@ -766,11 +1186,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "e520231a0f43d4e6fc6913f2852865666d54e366a9ba49efb8fc153e67001664",
+      "yamlSha256": "b9fe184d09a5898557493c146d26904f9b84e79087bad4d5e3c0c0ddd5b399b1",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-normal-0.pdf",
-        "sha256": "05df34944110aa83c64e47620bb8d8627ac9dca4f655050347bccf990d84331c",
-        "sizeBytes": 26583
+        "sha256": "fbefafd4cc2ae75e9193985ab20ee991eb860a62324d525fdfebf1ba2be8bf77",
+        "sizeBytes": 26380
       }
     },
     {
@@ -786,7 +1206,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "8d5eff7ae3100b0eeb02ef66bf0c0fac6f45fa18077202a77d337a6a66805c8a",
+      "yamlSha256": "e5e963abd1914919bfa44edf39d481ca55e8593f380cb838a7e9b382d570bbbf",
       "pdf": null
     },
     {
@@ -802,7 +1222,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "e83cc0536fc20af7866aa1fcfee56bedef946935e57ee3512e43bb50d161966d",
+      "yamlSha256": "8eb2241c0abb4df8a7876667b1e5a3df890b6fbf987939760b818fa9a2302b6f",
       "pdf": null
     },
     {
@@ -818,11 +1238,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "e65b6e03346a11fc41f098cc288d42d4f964c3e494a5dc28a955ca1376656e24",
+      "yamlSha256": "a070d1226f7ce389395111c957ba676503069fb52332efe9925ab2d82d539b75",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-normal-3.pdf",
-        "sha256": "86f79b8eaaaa1597ca2be5da0a958cd09f67697b44d5bc1b1c3b3158721f91c3",
-        "sizeBytes": 29196
+        "sha256": "e8baf7152178ab0a1f5bd675299829574f7c6b39f70ab45f375c413b720e8c37",
+        "sizeBytes": 28995
       }
     },
     {
@@ -832,13 +1252,61 @@
       "density": "normal",
       "stations": 4,
       "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1141.3,
+      "mainPx": 1141.3,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "de-standard-4",
+      "yamlSha256": "125da4aa3825d97546e1fca853d881d83eae992ed6d4cecc5070d3073497b96a",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-normal-5",
+      "lang": "de",
+      "template": "executive",
+      "density": "normal",
+      "stations": 5,
+      "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1216.4,
-      "mainPx": 1216.4,
+      "naturalPx": 1236.1,
+      "mainPx": 1236.1,
       "gate": "pages",
       "overflowSection": "Projekte",
-      "body": "de-standard-4",
-      "yamlSha256": "ea8209e0d79596017bf62c019e011ccc455f089c711d7db5f9c176ce4a5d1c97",
+      "body": "de-standard-5",
+      "yamlSha256": "aab7f9e761e7104948f4d407bfa4157767ccde8ca9fa13fcb0038cbb7313a06d",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-normal-6",
+      "lang": "de",
+      "template": "executive",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1375.6,
+      "mainPx": 1375.6,
+      "gate": "pages",
+      "overflowSection": "Kenntnisse",
+      "body": "de-standard-6",
+      "yamlSha256": "e3bd5a7c9ee47ec28cc406b0af00141541dfc00eb7be7067f4b6dc1a8a220453",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-normal-7",
+      "lang": "de",
+      "template": "executive",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1497.9,
+      "mainPx": 1497.9,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-7",
+      "yamlSha256": "068b8e169d6cc5df337318d94921fa46ae211c626ffcd1930fcfee7a850986c4",
       "pdf": null
     },
     {
@@ -854,11 +1322,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "6bdd3e5d1b221bea7294c48984e7d39f5c96b865a49d327e98854d6803db1d96",
+      "yamlSha256": "d71c6d3bbacb843e88e217be514193638daaa50b627b4294e957811adea91084",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-airy-0.pdf",
-        "sha256": "917103eb1ce03151e29cf7a3b40a9b55a449495087adb17de1b9170703a3f70d",
-        "sizeBytes": 26699
+        "sha256": "bee67ca9025c756d81658db35947770363d73a5e2634039109f1022d49e9f353",
+        "sizeBytes": 26516
       }
     },
     {
@@ -874,7 +1342,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "dc3887398d73611710d38db120715a5e918f2c5bf92d494c6c2db3695b80bf2a",
+      "yamlSha256": "63b5cde2ee3c1c6038561256437ebef60ccdf41a2d4622458eb1fe9c75f9cfc9",
       "pdf": null
     },
     {
@@ -890,7 +1358,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "9ac6099ad37ffe155037af2ea43b6133d6ac29935fc1b0cb20b5b9da9bc9bb6d",
+      "yamlSha256": "c0c03d505be680c97b24f24a2935e975c52303c09b10dd95e0bec2c6d8d7cc3a",
       "pdf": null
     },
     {
@@ -906,7 +1374,7 @@
       "gate": "pages",
       "overflowSection": "(unknown)",
       "body": "de-standard-3",
-      "yamlSha256": "47fdeb88ca3f4d45c8db2670e8a7280fd72e09f169ee2f45d4d7aadb53d7149e",
+      "yamlSha256": "9d0e206bb423d5951b52e8087bc3e0cb65af2f86424fc7f3a9fb9e356735d668",
       "pdf": null
     },
     {
@@ -917,12 +1385,60 @@
       "stations": 4,
       "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1337.3,
-      "mainPx": 1337.3,
+      "naturalPx": 1258.6,
+      "mainPx": 1258.6,
+      "gate": "pages",
+      "overflowSection": "Projekte",
+      "body": "de-standard-4",
+      "yamlSha256": "280ebac78bfd5744e45a408fa070154c66d8f76f885f01e7bb2e8a5a17a904e9",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-airy-5",
+      "lang": "de",
+      "template": "executive",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1360.7,
+      "mainPx": 1360.7,
       "gate": "pages",
       "overflowSection": "Kenntnisse",
-      "body": "de-standard-4",
-      "yamlSha256": "dc926c4155a78d5684ffa08b56c8339ddbb62e47eb76fb22db75033740fad88c",
+      "body": "de-standard-5",
+      "yamlSha256": "14ee51223319957671fa87df3f3facbe552d43a5766cc0f07dd8bdead076af70",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-airy-6",
+      "lang": "de",
+      "template": "executive",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1509.6,
+      "mainPx": 1509.6,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-6",
+      "yamlSha256": "a8a2a10122426960b59d12f6a553bf8e0060cd15f93dd0c24d5297961d2d7ca7",
+      "pdf": null
+    },
+    {
+      "key": "de-executive-airy-7",
+      "lang": "de",
+      "template": "executive",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1640.6,
+      "mainPx": 1640.6,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-7",
+      "yamlSha256": "7132f90db31895af92b58ba0170d346c7ed2fee212c0ff9438146c31f22ecdda",
       "pdf": null
     },
     {
@@ -938,11 +1454,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "f84344da589721933a5ec64e79c820a83f15e10af95abcc50226db86e677e7cf",
+      "yamlSha256": "27deb2abd30bf3da4afd0787610fc04a41c5e2213e1f297762e8f58db8e1bc92",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-tight-0.pdf",
-        "sha256": "1ffa7d31961078d53f2e3e6b035004dadf322ed5dd124135fc272cc4e71efbb7",
-        "sizeBytes": 26375
+        "sha256": "be2827d977dfc956c4aeed23ac66919b581e9c6eee59376d3095580f58889c04",
+        "sizeBytes": 26179
       }
     },
     {
@@ -958,7 +1474,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "fbf54d691843a3b0f49edda4ea266816377c776b4a0400b9d0951c87e589a600",
+      "yamlSha256": "2cbfe15d84864ef68993e0d7c9bfbce438c1ecf8931959cc9978b3b5bdc8862a",
       "pdf": null
     },
     {
@@ -974,7 +1490,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "ccdf5e381ce92625f43c797008ab5ec47f057627a371aefde5fbc64f79a58e32",
+      "yamlSha256": "68123af67a2900a1b89d5e41782c1e0b253d92076329379bb97cc3ee6aca10e6",
       "pdf": null
     },
     {
@@ -990,7 +1506,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "550fcd98001af9fdad0358e044525d15b6bdf942232c8dfdaccbcc669e0c7299",
+      "yamlSha256": "66f245daaf45790d52ea09ace36775500749946b258b639e665f919ce039f1a7",
       "pdf": null
     },
     {
@@ -1001,12 +1517,68 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 934.9,
-      "mainPx": 934.9,
+      "naturalPx": 883.6,
+      "mainPx": 883.6,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-4",
-      "yamlSha256": "280b2891258baa379d2bcf9b3600a8612c9256f98d0d04080600071dbaa7e3e5",
+      "yamlSha256": "7bb45877d98a11cf77134b5ae90ceb19eda9c8467e11815d082d57c45910fc98",
+      "pdf": null
+    },
+    {
+      "key": "de-ats-compact-tight-5",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 961.9,
+      "mainPx": 961.9,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-standard-5",
+      "yamlSha256": "665e0cc5e9283c4097ae89e4388362f7280f3b86ab4e55d33f298165c217be34",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-tight-5.pdf",
+        "sha256": "64aa35bfbf2e9f11be23acaf11f0de3f4da0ec3aac79516c43b1699a8b671a5e",
+        "sizeBytes": 29523
+      }
+    },
+    {
+      "key": "de-ats-compact-tight-6",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1066.1,
+      "mainPx": 1066.1,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-standard-6",
+      "yamlSha256": "f22fd2c826ca9ccd985ab3088a3daab35b0d15512b58ffdee0ca564d4ef8820c",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-tight-6.pdf",
+        "sha256": "0b629db87b02c3f1ffebf11c3c9cef4ee48a862e963dde3b2edbf08590aa2eb6",
+        "sizeBytes": 30148
+      }
+    },
+    {
+      "key": "de-ats-compact-tight-7",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1167.5,
+      "mainPx": 1167.5,
+      "gate": "pages",
+      "overflowSection": "(unknown)",
+      "body": "de-standard-7",
+      "yamlSha256": "f67d9d28e4773f81f2f2ddbaef86ef8176ac0be97343372cf43cd9550bc2f3b3",
       "pdf": null
     },
     {
@@ -1022,11 +1594,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "c349a95057192a98253e33e747103a8f279c6ff22870033601adb1bff27671a2",
+      "yamlSha256": "6f2e49df3559bee7e2f3566b40d6606486765c4ce0a691fd35735a237368eb13",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-normal-0.pdf",
-        "sha256": "bbc8cf069cacccb68ac6dd81527ea976b5c51019cbf7618f5d1bd3fa8269fbdf",
-        "sizeBytes": 26322
+        "sha256": "010e41a9082186e5454ef9806f258e2e3d963013a862ebc55aad36ad94e97c45",
+        "sizeBytes": 26120
       }
     },
     {
@@ -1042,7 +1614,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "4f682bef6cfcfd27d72409db9533c5fd7d931b3ab32e870540234022f5a58f55",
+      "yamlSha256": "6e595aa3efef3adcc752e769e827d26dd4745797312a8b7eab91de59d1300fd8",
       "pdf": null
     },
     {
@@ -1058,7 +1630,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "bab4e5cf8eff454fe89f893f6185d514fa18bd5d0a0f50fca8a149a03d4fb4f4",
+      "yamlSha256": "17e2dd9707c58fe4290c37252d9efa5b2da096981492529061f94e335b39a1cf",
       "pdf": null
     },
     {
@@ -1074,7 +1646,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "a294bba5e1b9331a4f1fd24b7ce1a586556b1e8acbc1d17fc0bbd38142d17572",
+      "yamlSha256": "ce3e78659057c029ba978d97e5b24bd9f4080a57a04656cb653da7108a7e54fe",
       "pdf": null
     },
     {
@@ -1085,12 +1657,64 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 987.4,
-      "mainPx": 987.4,
+      "naturalPx": 933.8,
+      "mainPx": 933.8,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-4",
-      "yamlSha256": "5498bb68c6614283d72fe1ad638bd58be13fb41a3b6918b58646c2f3535cefeb",
+      "yamlSha256": "59a89226ff13f0dec92bc03f254e60a1dea0eab8f2bb4e207b916593c001142d",
+      "pdf": null
+    },
+    {
+      "key": "de-ats-compact-normal-5",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "normal",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1017.5,
+      "mainPx": 1017.5,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "de-standard-5",
+      "yamlSha256": "00841586451ffb8830de2eba9e28422bfd767276ff1de1ce6964be89b33ef26a",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-normal-5.pdf",
+        "sha256": "568d8b66bf07cf304fb5f7aaa5737ff99251448d4b3d6dddcdeb1399a94ceeee",
+        "sizeBytes": 29418
+      }
+    },
+    {
+      "key": "de-ats-compact-normal-6",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1128.2,
+      "mainPx": 1128.2,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "de-standard-6",
+      "yamlSha256": "6108fa203f818dd1c540a953c4d6d383f87110e40c6e1119292f7aa43a4b8188",
+      "pdf": null
+    },
+    {
+      "key": "de-ats-compact-normal-7",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1236.1,
+      "mainPx": 1236.1,
+      "gate": "pages",
+      "overflowSection": "Projekte",
+      "body": "de-standard-7",
+      "yamlSha256": "6732f24361bbcdab8773663ce98be4520609f070b98ac92f4696da0e6a25e6be",
       "pdf": null
     },
     {
@@ -1106,11 +1730,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-0",
-      "yamlSha256": "e151cb5e1da117ad83f0f040cb4a1b75a3fe0b3d9978398da2d98e7555a3a097",
+      "yamlSha256": "e415144cc8d678b039c9b8aa7885372ea7107c16016d16c09d2d5b86bca10b89",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-airy-0.pdf",
-        "sha256": "7e98d2ff944a8784f7e196036d3acba77180501d319c0d20fcc70905748e64a9",
-        "sizeBytes": 26498
+        "sha256": "87ef4d77cf6a73db930aaaffbe2e7d880d9679aacc49fe3c9a0fc7f5f52f13aa",
+        "sizeBytes": 26298
       }
     },
     {
@@ -1126,7 +1750,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-1",
-      "yamlSha256": "8ef0b2187144efd11919975c07463f5c721a1cff8b15ff744136215758436952",
+      "yamlSha256": "4b49d9852b9011f13b66581431139c14d1fe9092a22da3bdd56a348318e324de",
       "pdf": null
     },
     {
@@ -1142,7 +1766,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-2",
-      "yamlSha256": "926664a4e22527a91043e5445c8aa26dd74afc68c3a7728d95acbf1543238ebc",
+      "yamlSha256": "7132e14b39aa2bc961bce1ee7260a81d45aa8719fe813ed0daa2552a143b6355",
       "pdf": null
     },
     {
@@ -1158,7 +1782,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-3",
-      "yamlSha256": "38dbc604121d168c03e15dcca604a6d9d7a745030bd449fe1a09d79c797966d3",
+      "yamlSha256": "ac8b47b8f1d8be7c430e621277a0c2872f13fa7ed6378e45522b795de2e98cdd",
       "pdf": null
     },
     {
@@ -1169,12 +1793,60 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 1119.4,
-      "mainPx": 1119.4,
+      "naturalPx": 1050.3,
+      "mainPx": 1050.3,
       "gate": "fits",
       "overflowSection": null,
       "body": "de-standard-4",
-      "yamlSha256": "65836a3e5cbf50eb56c9d81c27b288afcb4da56997d79cb77c7d305cf2dd03ad",
+      "yamlSha256": "a50743109ac24cfc0b593dc26a1ee3c17c254dccd153065113f1f6906f7d44e2",
+      "pdf": null
+    },
+    {
+      "key": "de-ats-compact-airy-5",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1140.7,
+      "mainPx": 1140.7,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "de-standard-5",
+      "yamlSha256": "0e78c4467b0236d5282b9dc289ba2ff20133bee72addce10f2ad8f556106c3dd",
+      "pdf": null
+    },
+    {
+      "key": "de-ats-compact-airy-6",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1272.4,
+      "mainPx": 1272.4,
+      "gate": "pages",
+      "overflowSection": "Kenntnisse",
+      "body": "de-standard-6",
+      "yamlSha256": "d82fe75bb8be10982ff627ee11e039db536f2f174f6e3351dbd477e630c832b5",
+      "pdf": null
+    },
+    {
+      "key": "de-ats-compact-airy-7",
+      "lang": "de",
+      "template": "ats-compact",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1388.3,
+      "mainPx": 1388.3,
+      "gate": "pages",
+      "overflowSection": "Ausbildung",
+      "body": "de-standard-7",
+      "yamlSha256": "6f84002f3b7c6fff6443aa6f79e3b1d2d57e7731bd026d8ffa833ae87655ddc2",
       "pdf": null
     },
     {
@@ -1190,11 +1862,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "3c4ef92c5fb6920a08cc78eaa6165a6db8f8756fcb7c10125893a8781bac30c9",
+      "yamlSha256": "347411befed0ef40e88902c3c4aff654e3cee91238633783957a438d84ae3d87",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-tight-0.pdf",
-        "sha256": "7cbb2e5df29ebcce6bce0a77e6e22fc2488566328a4ced52ee9142abd2d910bf",
-        "sizeBytes": 25376
+        "sha256": "cab85eb3b41e537d532777eee60bd9de477ab7cb9e9a38fbfb607e33d72b84b6",
+        "sizeBytes": 25151
       }
     },
     {
@@ -1210,7 +1882,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "b0298faed0c8904c2cccce3d58fda5d112185bbfca44b879f7d128f4de6bc9f5",
+      "yamlSha256": "1e6160d5f8b1cdf7ef84bbb57c1b0c7e0546e56a442358319470387047058845",
       "pdf": null
     },
     {
@@ -1226,7 +1898,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "2e9af869c856eec96d38df2ede1de1cbcd7b530d5bdf420ec7d149a3997fb5be",
+      "yamlSha256": "439af17354f9275f220d682b0014bb525adc21908aed8c2a38c5f37c06eca789",
       "pdf": null
     },
     {
@@ -1242,7 +1914,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "267b707e969e7526e33ce64901a706c147dca9b5cc319f8d08edfe4907df39b1",
+      "yamlSha256": "0993b091c980dccdc1cf8a3ce129dd062df5d8542010128b42d0d47a5c83fb8d",
       "pdf": null
     },
     {
@@ -1253,17 +1925,69 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 1077.1,
-      "mainPx": 1077.1,
+      "naturalPx": 1018.7,
+      "mainPx": 1018.7,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-4",
-      "yamlSha256": "71388c7f79006046630944667e461d8eb530e0e99b702530bb9c64c2ce253b0c",
+      "yamlSha256": "1adf0d6ce788c567018615b39797ace463d9faba22205c4d5c3178b51055b44c",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-tight-4.pdf",
-        "sha256": "e624b365b6f93a79ea378121651cba6e9f2ece783660c4526ee12eccc4fdd0af",
-        "sizeBytes": 29120
+        "sha256": "e6c672038a1096b8cfb9d895614ed27d63912ab9227b6bf84595ffe1be84f882",
+        "sizeBytes": 28167
       }
+    },
+    {
+      "key": "en-classic-tight-5",
+      "lang": "en",
+      "template": "classic",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1107.6,
+      "mainPx": 1107.6,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-standard-5",
+      "yamlSha256": "0105362da686dc9f06e3fb8b3287a975ab06be505a921c7499aeaad7faa99fef",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-tight-5.pdf",
+        "sha256": "ad9260c3f8698f9de3eb060cfe23f8f2a05ac528c1ed7abe599545b0ed0f58e0",
+        "sizeBytes": 28852
+      }
+    },
+    {
+      "key": "en-classic-tight-6",
+      "lang": "en",
+      "template": "classic",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1225.8,
+      "mainPx": 1225.8,
+      "gate": "pages",
+      "overflowSection": "Projects",
+      "body": "en-standard-6",
+      "yamlSha256": "ef8a85fc94e58360efc50ecab5abfb7eaa0b8ced937e1d8044c9151863d34383",
+      "pdf": null
+    },
+    {
+      "key": "en-classic-tight-7",
+      "lang": "en",
+      "template": "classic",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1340.9,
+      "mainPx": 1340.9,
+      "gate": "pages",
+      "overflowSection": "Skills",
+      "body": "en-standard-7",
+      "yamlSha256": "659549aeb4fcfe7cadaff208dfe925b30d07a94f06ea507a6c1562c6256769ab",
+      "pdf": null
     },
     {
       "key": "en-classic-normal-0",
@@ -1278,11 +2002,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "4b2d75378530d0bdd69c6fea7119613dd0309ebcff640a776c6bc68cd5ddaa55",
+      "yamlSha256": "b3c4dbc06be87747904a2d999957d7021f39f6b37f66863db878c73127f5c40b",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-normal-0.pdf",
-        "sha256": "010d90074a09c7d7654be444bac25886225ce7e7759908c19f3363791ed8b428",
-        "sizeBytes": 25316
+        "sha256": "64d85170254e222b45037efb2e364bc7536ed574b5e5c238feb1f7864803dd57",
+        "sizeBytes": 25089
       }
     },
     {
@@ -1298,7 +2022,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "6f1cf9474cc5bb338dc55d039b85bd5dd5f09be15cbba5c7dcfb0459d16525f9",
+      "yamlSha256": "85f056326726211e0038c304a8cb5c9ff5865a4006522c530409187a80a57d4b",
       "pdf": null
     },
     {
@@ -1314,7 +2038,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "179b2294230158df1b460420799ea24509b7b06828ef7799327650159368dafb",
+      "yamlSha256": "4cd1ab66b91d196cb86099904c5b89bd71ae49bb0ed0148988c942e3b0c32744",
       "pdf": null
     },
     {
@@ -1330,7 +2054,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "f02636041efab41bf684db3fc67ec7c4a8d15dfb99b8de61757e40181af31e00",
+      "yamlSha256": "aaa0a3428149bc9addef19c0edd17770756c68d3bbc585a1ef25108b1b3a7ba8",
       "pdf": null
     },
     {
@@ -1339,14 +2063,66 @@
       "template": "classic",
       "density": "normal",
       "stations": 4,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1117.2,
+      "mainPx": 1117.2,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-standard-4",
+      "yamlSha256": "140b28903905b69313744826db5c87f6934e411f6fe98629097b1ec483f53f54",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-normal-4.pdf",
+        "sha256": "7f8d76aece33fe72f17ff2217d77aff7478b4f118fda7a45bb7b74b3109eb2e8",
+        "sizeBytes": 28207
+      }
+    },
+    {
+      "key": "en-classic-normal-5",
+      "lang": "en",
+      "template": "classic",
+      "density": "normal",
+      "stations": 5,
       "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1206.6,
-      "mainPx": 1206.6,
+      "naturalPx": 1212,
+      "mainPx": 1212,
       "gate": "pages",
       "overflowSection": "Projects",
-      "body": "en-standard-4",
-      "yamlSha256": "e9a83737035db34a8bd711956d17d07cf6c16bf018701d938e75491d8fb9ddce",
+      "body": "en-standard-5",
+      "yamlSha256": "5f82893b2f76a2e572a37dcc8fe7fb07fd5cbddbb18531eca02c83182da37504",
+      "pdf": null
+    },
+    {
+      "key": "en-classic-normal-6",
+      "lang": "en",
+      "template": "classic",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1365.8,
+      "mainPx": 1365.8,
+      "gate": "pages",
+      "overflowSection": "Skills",
+      "body": "en-standard-6",
+      "yamlSha256": "9e7f56d22d3aee6221912a8e5d3e8f092fb92c56e7d631131508df681051b258",
+      "pdf": null
+    },
+    {
+      "key": "en-classic-normal-7",
+      "lang": "en",
+      "template": "classic",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1488.1,
+      "mainPx": 1488.1,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-7",
+      "yamlSha256": "8fa123fa65faa518f6ac39b02d7a71ddf75a75bed68b3575d49c2a464e66ea60",
       "pdf": null
     },
     {
@@ -1362,11 +2138,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "f258e99a1a1f9cf7817182b5184b9c0dc35bafd586dc0ed4843300799d450456",
+      "yamlSha256": "e380fb56dc0ee761bfe6866d31d51aacc8fa6bd72333698d4afb5f5a571b67c9",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-airy-0.pdf",
-        "sha256": "f5989a2ec48405ac4f8f06e19be3d40d50deeb158441a834064101db4766a3f2",
-        "sizeBytes": 25334
+        "sha256": "42730a791fc5585feee3d02d783c8be6055367bcb0a6c6870557423ccac4ec20",
+        "sizeBytes": 25098
       }
     },
     {
@@ -1382,7 +2158,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "631af650276e2bd2d6dea54bfa32bccf2581c64d0af73eefe69c7200a8602172",
+      "yamlSha256": "955aa3c63de95b836c10a0f35d0838f0b7133d17f0a15a8e4bb2ec092bb12086",
       "pdf": null
     },
     {
@@ -1398,7 +2174,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "f8df23f10ae863ba2407a3e3182286a75e3b0166dc5fd51d9a036405f42ca90f",
+      "yamlSha256": "1b4a7bfc7c95f8fb3ac80db48e1ab685dabc53bcf2bc4d78ed9dcc654e1755a8",
       "pdf": null
     },
     {
@@ -1414,7 +2190,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "257ea28dda8c8f09b6f9e26eb52e02f21d6c592006ae18b1493de3ff786aaa45",
+      "yamlSha256": "9e55b42a24adad96e16ceaa4cfc306d99f0abcb402b5d11acc36e2bdd5e17b41",
       "pdf": null
     },
     {
@@ -1425,12 +2201,60 @@
       "stations": 4,
       "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1283.3,
-      "mainPx": 1283.3,
+      "naturalPx": 1189.6,
+      "mainPx": 1189.6,
       "gate": "pages",
       "overflowSection": "Projects",
       "body": "en-standard-4",
-      "yamlSha256": "90adef7fec77b0b229c7f3e8a7fb7c65e6a080acf989d074bd53a8bc804e4861",
+      "yamlSha256": "0193e239b2181ed091e8aa72e419ee7c21b3288b74a9432711aab8d2358b5e5a",
+      "pdf": null
+    },
+    {
+      "key": "en-classic-airy-5",
+      "lang": "en",
+      "template": "classic",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1291.7,
+      "mainPx": 1291.7,
+      "gate": "pages",
+      "overflowSection": "Projects",
+      "body": "en-standard-5",
+      "yamlSha256": "5a3d0812895d0e96f837d6b78b95671d99dda00453e4091b6adf50bc348a1ecb",
+      "pdf": null
+    },
+    {
+      "key": "en-classic-airy-6",
+      "lang": "en",
+      "template": "classic",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1455.6,
+      "mainPx": 1455.6,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-6",
+      "yamlSha256": "46291d3ee3168aaf4201f9b0163d0ecf7af5046256f93ba7ea8c79fa1d2dcfae",
+      "pdf": null
+    },
+    {
+      "key": "en-classic-airy-7",
+      "lang": "en",
+      "template": "classic",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1586.6,
+      "mainPx": 1586.6,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-7",
+      "yamlSha256": "7bdef632d955f8050b60349973205324df76de2cd6706f5952edcd61d41114a8",
       "pdf": null
     },
     {
@@ -1446,11 +2270,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-0",
-      "yamlSha256": "d4fc9ef88710c277fb3315544f5cae1be79946d3c66edc8b51faed9f40a6b7b0",
+      "yamlSha256": "f98468721b72b03020b9680de03abdca7da791fcec6f3f9cbd3ea5f66027790e",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-tight-0.pdf",
-        "sha256": "02184162bd59db3dc294da51f8a02bc9dc115c1d714d4dfd1405faafcd17e68a",
-        "sizeBytes": 26239
+        "sha256": "d493f734f0d81fc68a55a8629a79e44f5477321fb73064572814460b4ff33e55",
+        "sizeBytes": 26014
       }
     },
     {
@@ -1466,7 +2290,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-1",
-      "yamlSha256": "530d79eb3f9dd0d4eddc1d8785c26bd4a727432c25d0ea9347c0ea99f9b5f63e",
+      "yamlSha256": "18f8a410b5c02fe4fed7e793b84d543f1f4969a0d1ed55a08223ca94925baa11",
       "pdf": null
     },
     {
@@ -1482,7 +2306,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-2",
-      "yamlSha256": "ad3d385f8cc63c5a6ac24c14f5f3935e9a45d79e13e9ecccce2ccfbb819f4ace",
+      "yamlSha256": "291dc60b2d81791cdf42a69588e218c2b5d0e2a9d4584f661ba79e58c94a6d58",
       "pdf": null
     },
     {
@@ -1498,7 +2322,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-3",
-      "yamlSha256": "c37fd254d0ce6fafa96edd3dc3f518d69641e1dfbed2e59a5203b12f34cc86ef",
+      "yamlSha256": "5198c9ce5662505722e22acda4bc0b536d1738592a39803baa1e628bb98fcc5d",
       "pdf": null
     },
     {
@@ -1510,12 +2334,68 @@
       "exitCode": 0,
       "pages": 1,
       "naturalPx": 1122.5,
-      "mainPx": 863.7,
+      "mainPx": 795.3,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-4",
-      "yamlSha256": "266070f58e8d31c9bfcb7a481b0a752d2bc5ab1ef0d10122f7f6d74932381637",
+      "yamlSha256": "d070013a53c0d1467a0ab049fff18a5413bd40f01648a51b82d85ced58939b8d",
       "pdf": null
+    },
+    {
+      "key": "en-sidebar-tight-5",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 866.9,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-rail-5",
+      "yamlSha256": "c08bf25da00bf5aaedbb25719afdd00e5904375f0f0adf0d080dea5e8f2a2698",
+      "pdf": null
+    },
+    {
+      "key": "en-sidebar-tight-6",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 983.6,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-rail-6",
+      "yamlSha256": "87c4c23ba145f450cd0ab1f97a02de75e08270b83dcaaea0ea35878dc1f2b587",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-tight-6.pdf",
+        "sha256": "84a65c62e010fad16b3a8c5afc7be4505d565e54bc5b4fb06d6688ec3a87e14e",
+        "sizeBytes": 30711
+      }
+    },
+    {
+      "key": "en-sidebar-tight-7",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 1075.8,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-rail-7",
+      "yamlSha256": "3357f0119436a927247d82d8ca55064ae22debf257a1324880509bc960fe7f2b",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-tight-7.pdf",
+        "sha256": "f6069da1424309a616324ba45400aa6d05b09700798630b1f7090c77ac36d9a0",
+        "sizeBytes": 31333
+      }
     },
     {
       "key": "en-sidebar-normal-0",
@@ -1530,11 +2410,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-0",
-      "yamlSha256": "9552c2c19d91d3b8d55e38d7f72689e1cb5cc92273436d8846783bc14246163b",
+      "yamlSha256": "fa36caa4139a1bee4e4a6eed980adbf7241fc976ecad5e9599c931458c245587",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-normal-0.pdf",
-        "sha256": "883b281b5c6fe70d83399904c2d8243a252ca3869c1b2609dd495e8d0df16bb6",
-        "sizeBytes": 26126
+        "sha256": "0cc33d645279ce6927b590376b61db37a59e9f7d82fc9eb44b84462156736cac",
+        "sizeBytes": 25892
       }
     },
     {
@@ -1550,7 +2430,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-1",
-      "yamlSha256": "48fccec02d7f2f8a4b21fdd7577cd0b56efde846d5d8d67e29587089be30d3fd",
+      "yamlSha256": "c79c9d7f1315c4dbf5130184a41fbb12e570f0cc33a75cc4f19f0e815cf04596",
       "pdf": null
     },
     {
@@ -1566,7 +2446,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-2",
-      "yamlSha256": "e64022ed010ed6dfdaf43b10b3732900858ee0441206075f98827fd3f0d25272",
+      "yamlSha256": "70847c136839d8f950c9ae8599c327e65231d9543fbae02cee75c6361ea7a47a",
       "pdf": null
     },
     {
@@ -1582,7 +2462,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-3",
-      "yamlSha256": "d86177ac3a8a70d4bd192fa590caf5da16b29dd83fe7f30fc09aef010c9f0c19",
+      "yamlSha256": "f382243217288ae818cc951f2e97fa488c95d947f9506e72bbadfea576249852",
       "pdf": null
     },
     {
@@ -1594,11 +2474,63 @@
       "exitCode": 0,
       "pages": 1,
       "naturalPx": 1122.5,
-      "mainPx": 920.6,
+      "mainPx": 837.9,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-4",
-      "yamlSha256": "2bfb0c4e8236128041b88e997201ff30a5fd667b0329b9b1e188e814bbf41aa1",
+      "yamlSha256": "271cabaed2c2468b000797aab78cefc9115e169a090ac42c9ff911dde9c9fe1f",
+      "pdf": null
+    },
+    {
+      "key": "en-sidebar-normal-5",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "normal",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 914.6,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-rail-5",
+      "yamlSha256": "ca51626c756eb1eecd01c0e12cb1ef7f39d1e5d1012e71af8025209b69c36b72",
+      "pdf": null
+    },
+    {
+      "key": "en-sidebar-normal-6",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 1049.6,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-rail-6",
+      "yamlSha256": "39b4aac9fa0d4ee64db930a4926f373edfbdbf24853495996552f508661afbc8",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-normal-6.pdf",
+        "sha256": "92e02329be2b68e4df88b8d6aa8047f3b5c5db3242f422261f148f2952afd644",
+        "sizeBytes": 30644
+      }
+    },
+    {
+      "key": "en-sidebar-normal-7",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1147.9,
+      "mainPx": 1147.9,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "en-rail-7",
+      "yamlSha256": "b91b7fca5146cab24a05edb6e45a1c0463fd653b587b4cd2411e306ec938ed47",
       "pdf": null
     },
     {
@@ -1614,11 +2546,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-0",
-      "yamlSha256": "44eb438a12bcc2baa20cde9160d337c57fa48bf8364a67036769746b2f57323e",
+      "yamlSha256": "a23bcc100cc0dabace3fa1640bfa91ad202569ae75d86fe7cc9ac04301694d41",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-airy-0.pdf",
-        "sha256": "8bef2669b728ff3bb91491bc844ab8fb50e4da132cd10f345dc7bc7b48111d4f",
-        "sizeBytes": 26215
+        "sha256": "0976156be37ecc28023ef80aa8d06d268faeba10c6c3f72fe12de2aba72e17be",
+        "sizeBytes": 25986
       }
     },
     {
@@ -1634,7 +2566,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-1",
-      "yamlSha256": "e3cfb6c4d1c4f3585e17a3fd6584180c71c4b33cb0ed07bae320371d1f290507",
+      "yamlSha256": "e618c3dc1345a24cd95ab707aae11426661ce9dc6fca099a6ab3843e60d7cd23",
       "pdf": null
     },
     {
@@ -1650,7 +2582,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-2",
-      "yamlSha256": "8586bbfeb1337832901e019ca8b4d23fadcc8454b4716ec1066bd89d08be7f84",
+      "yamlSha256": "9b20db0b4e2ed6b010d95ecb1e4ae3f7d3426df1e879b3dee8dd80bcfdb73ed6",
       "pdf": null
     },
     {
@@ -1666,7 +2598,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-3",
-      "yamlSha256": "2823e836f7a0b767f9b492c51b8c0f4b71c9adc1182c8c731fe75c838b60e1f7",
+      "yamlSha256": "bac777fce42ded0ba4c4d90e3f47546678ebeaae363ba4685165380744d0cbaf",
       "pdf": null
     },
     {
@@ -1678,11 +2610,59 @@
       "exitCode": 0,
       "pages": 1,
       "naturalPx": 1122.5,
-      "mainPx": 989.4,
+      "mainPx": 902.8,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-rail-4",
-      "yamlSha256": "2602c75379b8570f249dec4649ab922388ab2fe0fc356f791f13ccd38e06a741",
+      "yamlSha256": "e5d8417d546c3f2a55fbfb4200ca2339c713b62a32d00a5ebfe611d4b23ba702",
+      "pdf": null
+    },
+    {
+      "key": "en-sidebar-airy-5",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1122.5,
+      "mainPx": 985.8,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-rail-5",
+      "yamlSha256": "c5ed95aaca516efb823fdd4339ebdc9ceb819e9f880d1cb8d01781ca4bc3c7fb",
+      "pdf": null
+    },
+    {
+      "key": "en-sidebar-airy-6",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1130,
+      "mainPx": 1130,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "en-rail-6",
+      "yamlSha256": "7853c5427826ac78b72e8cefaf6ebee73de96507e7c4fddcdebd817b8b6d6107",
+      "pdf": null
+    },
+    {
+      "key": "en-sidebar-airy-7",
+      "lang": "en",
+      "template": "sidebar",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1235.8,
+      "mainPx": 1235.8,
+      "gate": "pages",
+      "overflowSection": "Projects",
+      "body": "en-rail-7",
+      "yamlSha256": "9e06f90400f19eb824d679eaae5d18dc82851c2f45a64d544edea6350e892027",
       "pdf": null
     },
     {
@@ -1698,11 +2678,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "f3c925e1f0b8b1bb7328b969599a3187904df06a2f1ba9ee96b933e0672bb147",
+      "yamlSha256": "b8214e971c86ac5760d94728a3ef7f40e583077fcf095183d369eba94d01f006",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-tight-0.pdf",
-        "sha256": "95b8e8c5d110d969470aa56e9ddc805123cb09f08e6d39648bfdb5bad71f80f4",
-        "sizeBytes": 25585
+        "sha256": "42a15a35c478b6a52079b6aef84d452ca9220f48bff3a04b25ed415d2194f1e7",
+        "sizeBytes": 25362
       }
     },
     {
@@ -1718,7 +2698,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "ca1867099c88fa31e81f82b4e5f22d0b33352fc7723509c1202f319e16353e69",
+      "yamlSha256": "3d637567cc9c92f29186387dceb48c164a1924ab14c298386dc2c8499414f08e",
       "pdf": null
     },
     {
@@ -1734,7 +2714,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "5090fd73542c4311ebff74e86bb6c98678c618cd262a317476447fafb9d231ad",
+      "yamlSha256": "c1faf688666ae00b7dd4f08f070480f62402461ce79e7f9673272c2dafd78913",
       "pdf": null
     },
     {
@@ -1750,11 +2730,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "dfe2664ad9a82e5778e9e5a5c85d5d716a174f6096799661c7f8ae6e94b34085",
+      "yamlSha256": "85baea00c2a15ec04d5335ac08d254d8e8118130e5e9a9a129d4066807276d7d",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-tight-3.pdf",
-        "sha256": "47d5d01de56cf0a7901bee7e7fe2bacb220f71041df812939ecb08789389ddbf",
-        "sizeBytes": 28520
+        "sha256": "314b8ef802b6da9e9a63f61e315c9f1cd76d6b9ff267fbc771645661f29d9b79",
+        "sizeBytes": 28337
       }
     },
     {
@@ -1763,14 +2743,66 @@
       "template": "executive",
       "density": "tight",
       "stations": 4,
-      "exitCode": 1,
+      "exitCode": 0,
       "pages": 1,
-      "naturalPx": 1169,
-      "mainPx": 1169,
-      "gate": "clipped",
+      "naturalPx": 1083.4,
+      "mainPx": 1083.4,
+      "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-4",
-      "yamlSha256": "f825b6cb8492ab3d3b051bf1cbb2788c302d8dad00099d05020fe91120b57198",
+      "yamlSha256": "4b2d83845829676944666e98a3fa44ebd06b57e783dc8f6d3a995536cc53e665",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-tight-4.pdf",
+        "sha256": "58215aa522a3b8cd1bf7a0389db5099040b8cae2a670bf5a128da242cfbd0743",
+        "sizeBytes": 28528
+      }
+    },
+    {
+      "key": "en-executive-tight-5",
+      "lang": "en",
+      "template": "executive",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1172.4,
+      "mainPx": 1172.4,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "en-standard-5",
+      "yamlSha256": "143c8fd0f70a1ca8abd2d95ed9b512224eca0c689c8a771273932f4ad21263fd",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-tight-6",
+      "lang": "en",
+      "template": "executive",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1317.7,
+      "mainPx": 1317.7,
+      "gate": "pages",
+      "overflowSection": "Skills",
+      "body": "en-standard-6",
+      "yamlSha256": "517950ee732854a51923f1dacacbf8a8b02556e3cbb6ac2a2e63242230fe1168",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-tight-7",
+      "lang": "en",
+      "template": "executive",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1432.8,
+      "mainPx": 1432.8,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-7",
+      "yamlSha256": "f46c5a8e26a5ed90ea52019c7256407ce30e5ec20a57b8a84d09c0db0b656b57",
       "pdf": null
     },
     {
@@ -1786,11 +2818,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "5f76a037ca6996c3de642ca88b4b74770918679b864048c16df1917d434322c3",
+      "yamlSha256": "636b74a5381e988700dcbc40265df2c17f2b2e183984f26d908882dfd942b57f",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-normal-0.pdf",
-        "sha256": "feba2e3a676bf99056a7c3bee7f834afec3f7a72e9745349019b0de72b10ecc8",
-        "sizeBytes": 25540
+        "sha256": "9e3f525dd1087470856d5dffa0bca86d134cfb0b7b81fc56de7748a0b2d23e4b",
+        "sizeBytes": 25303
       }
     },
     {
@@ -1806,7 +2838,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "4ac8eafa5fee6759e6c53a2c0f911ae202520563841809e1aa1d328379f7a6b1",
+      "yamlSha256": "0fe038f4e54d08c6e80f10e51cd10697a8ba468a42ecee8a2fc79e1c5b31dcb8",
       "pdf": null
     },
     {
@@ -1822,7 +2854,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "15868d7ec2d9143c7a4992a07d34a192cbb33ee4653b9c665d0369f0032b5c71",
+      "yamlSha256": "11a9e6cfd1f58b8252f1032792441fbcc0c08fffba3076420046818f68f01d91",
       "pdf": null
     },
     {
@@ -1838,11 +2870,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "c6b33245592584a0b6e2759ba83a1b54eafd35f99c3c8542dcca0e1d6958175b",
+      "yamlSha256": "ac8f3d328fdbdb75df1848c508a91a3555210cd99381ebf5b187541ee41877c6",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-normal-3.pdf",
-        "sha256": "d24aa989b925dbe458d13ac1b8b1780cce5a07446a41ecf9a351760c913a5da4",
-        "sizeBytes": 28376
+        "sha256": "3cf632c0321f67239deea0cea5a3c45d78cabc7840c44691ee6c0d7cec016a10",
+        "sizeBytes": 28176
       }
     },
     {
@@ -1852,13 +2884,61 @@
       "density": "normal",
       "stations": 4,
       "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1141.3,
+      "mainPx": 1141.3,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "en-standard-4",
+      "yamlSha256": "41244f22ce97a1cf7552946d8c0f094d245278d3fce16e0b0ad7624d8152e087",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-normal-5",
+      "lang": "en",
+      "template": "executive",
+      "density": "normal",
+      "stations": 5,
+      "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1230.7,
-      "mainPx": 1230.7,
+      "naturalPx": 1236.1,
+      "mainPx": 1236.1,
       "gate": "pages",
       "overflowSection": "Projects",
-      "body": "en-standard-4",
-      "yamlSha256": "c1ffde32bdbc5342ef29da6595b03498c30ac429c48ff899a1afcb1bfc2ce774",
+      "body": "en-standard-5",
+      "yamlSha256": "858d6fdecf3d45677697edd93e184ddc1d98f65adfa513897f360ceda29043d6",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-normal-6",
+      "lang": "en",
+      "template": "executive",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1389.8,
+      "mainPx": 1389.8,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-6",
+      "yamlSha256": "30baadd26c5b2563ed3991546f3785d0ca1185bb626255e70f7be9625d24a64b",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-normal-7",
+      "lang": "en",
+      "template": "executive",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1512.1,
+      "mainPx": 1512.1,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-7",
+      "yamlSha256": "ea638cfcfc4c30f1cedd37c91ed2bc1a4454f2f602d0eae74b763a64d962232e",
       "pdf": null
     },
     {
@@ -1874,11 +2954,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "0c6e9ef7ed4157e33e9743dc3e1334d9d4c7447509a58275db41f94dbcf3296e",
+      "yamlSha256": "680043778b8d27bd5e4737a1c1e2cb5b631ce3f7f7c6e6d2dbba0ae833f21006",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-airy-0.pdf",
-        "sha256": "5bfcf9ec82676bb0b0b77d49b75cf2c6c0010a66867b63204c2462bf2b8c5470",
-        "sizeBytes": 25514
+        "sha256": "b3e5eafdd784cca06d590db6545c9d508dad54c147bd0306f71d187b27cc5400",
+        "sizeBytes": 25295
       }
     },
     {
@@ -1894,7 +2974,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "9a0133298f0cf31871fcbb58ab028296480ba35fbfaf46e15ad90b3d128e8df1",
+      "yamlSha256": "bd2548208bceeff7d5d1af563735b8d1965c6ccaeecf142c1965fc116be90f21",
       "pdf": null
     },
     {
@@ -1910,7 +2990,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "7d6b646ad6a1998d423b023c6d067486665a1162ed6c882a2a81deba0896a9cd",
+      "yamlSha256": "611172b725b2342bc544c8f4df9d47055491b8111e4b3c49314c08c961f053f5",
       "pdf": null
     },
     {
@@ -1926,7 +3006,7 @@
       "gate": "clipped",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "5c55295728be6fe3bf2d09ccd8b89bee9fe5216cbf7d4f50a0c544f2075a50ca",
+      "yamlSha256": "fef0d91688f4c6125de8b895f4d953d5da38f737f15fe6b92010d340a4ee9ce9",
       "pdf": null
     },
     {
@@ -1937,12 +3017,60 @@
       "stations": 4,
       "exitCode": 1,
       "pages": 2,
-      "naturalPx": 1322.4,
-      "mainPx": 1322.4,
+      "naturalPx": 1228.7,
+      "mainPx": 1228.7,
+      "gate": "pages",
+      "overflowSection": "Projects",
+      "body": "en-standard-4",
+      "yamlSha256": "f2bb16653dc8f9b263492d9c3f9f4ad708c95d5895d4f488c658db9b0b7123a7",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-airy-5",
+      "lang": "en",
+      "template": "executive",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1330.8,
+      "mainPx": 1330.8,
       "gate": "pages",
       "overflowSection": "Skills",
-      "body": "en-standard-4",
-      "yamlSha256": "f162cf9f6607bb22b10de9e71d43c73a3b8779d034006df0808d15573da8cd98",
+      "body": "en-standard-5",
+      "yamlSha256": "b3f849367d738c507483a23e3c6bd40de1a52fdf8c727d1ce15546e7552c740f",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-airy-6",
+      "lang": "en",
+      "template": "executive",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1494.7,
+      "mainPx": 1494.7,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-6",
+      "yamlSha256": "3c2545f2a339916e6227266128477dff48206d096e979b5283306bf78e712c31",
+      "pdf": null
+    },
+    {
+      "key": "en-executive-airy-7",
+      "lang": "en",
+      "template": "executive",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1625.7,
+      "mainPx": 1625.7,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-7",
+      "yamlSha256": "54b93ac5824db6d283d4bc66e432099756d950ac099dcb2bb81a0b65796ae51c",
       "pdf": null
     },
     {
@@ -1958,11 +3086,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "9f4c89f3ed1739304ff02f9865d91747bb56a000299dff5516cacac5dd31b6d1",
+      "yamlSha256": "4487b6809c9588f58ee6dc4c1f99991dae7004004a1de0ba31a6568f345b492d",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-tight-0.pdf",
-        "sha256": "f1c47cdbeab3492811b4b9d7f24d030469ac4fef8413b43ca9bbd75b0b5c5a99",
-        "sizeBytes": 25415
+        "sha256": "78c605721650c4c3cf401d61c3c9385dab8b025e65d0fd65241202071016e90b",
+        "sizeBytes": 25184
       }
     },
     {
@@ -1978,7 +3106,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "088cbd2abf2a5541dbf8339b361ac6da491821981c870ab43a5da9773d835f6a",
+      "yamlSha256": "025228c91033948b04cd1a89f9f67ec0ba2b61c748cce01e5db8708bfc364d20",
       "pdf": null
     },
     {
@@ -1994,7 +3122,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "cae72de72be31f088be3f8423be38bb992eab38b921a88a930cb3b05d1380843",
+      "yamlSha256": "bd9a626679c0f3dbeb811b26d0eafcaa580c1458c7571e126094c06a5f847cb7",
       "pdf": null
     },
     {
@@ -2010,7 +3138,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "2ee845e73d0996a40cf992f18a2c5f098c324c9fe81e1c4c884ddfd5af2d0deb",
+      "yamlSha256": "f8d645758c518e5d37f47d4ff479e4b2b15e6a5e4cf712f1a15bc2f4a0d1f160",
       "pdf": null
     },
     {
@@ -2021,12 +3149,64 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 934.9,
-      "mainPx": 934.9,
+      "naturalPx": 895.5,
+      "mainPx": 895.5,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-4",
-      "yamlSha256": "ce2da9618b8759cbdf72d44ae75a5f3b39f3d294815684ee2183b6d901728808",
+      "yamlSha256": "f177d7ed1cd1bd01b0664731943d4b255fcedc7c5b9bb3834c48ebcc5d9b471b",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-tight-5",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "tight",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 961.9,
+      "mainPx": 961.9,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-standard-5",
+      "yamlSha256": "f2c0c78a3fb7f766c473d666ba5916da8dfdfe875faa8563043bc7ff27d0ea99",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-tight-6",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "tight",
+      "stations": 6,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1054.2,
+      "mainPx": 1054.2,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-standard-6",
+      "yamlSha256": "abd092f846d873c56e23e54e32902a2c7dcc46459045a4bc2d10ca3057a738d5",
+      "pdf": {
+        "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-tight-6.pdf",
+        "sha256": "8c61cb2907f473858a3b587c4028d382a3d141a5267bdd897c239cca352b6897",
+        "sizeBytes": 29400
+      }
+    },
+    {
+      "key": "en-ats-compact-tight-7",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "tight",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1131.8,
+      "mainPx": 1131.8,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "en-standard-7",
+      "yamlSha256": "0156b501e4db819e8bf4bad400c9d64ff213a6ffa50c735155aa20095079f3c7",
       "pdf": null
     },
     {
@@ -2042,11 +3222,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "30a9131c282f61b902546a00acc371e92dafe1a7d6a89959813bb182f68723b2",
+      "yamlSha256": "6e791167346d50bfe739270ea435437246486a369a18a0cd7c2d6db1ec6b3455",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-normal-0.pdf",
-        "sha256": "49e11f96bc2d669a912d0d8c5d371701f86da469b5d8e9ff186c9ac43d300f5b",
-        "sizeBytes": 25366
+        "sha256": "fa8049d476b76f89e5dfca29040886da8cee2fb1240f6a6585d48890fd2fa1e0",
+        "sizeBytes": 25144
       }
     },
     {
@@ -2062,7 +3242,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "7d22bb9c1e8965c31be823b7bd1f719daa63e30dde1affe3051349737722bbf2",
+      "yamlSha256": "6c00b5d57153a23b0719f92509950a86a9642afd958da1703fa69ddb17085b98",
       "pdf": null
     },
     {
@@ -2078,7 +3258,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "f0146cedc388a4bb29bb419391b7ced289de93fc3316e9430a1d011efc80a30e",
+      "yamlSha256": "cbb95137fb13e09e67ac0cf3d58f6b7f1c78d2d5f33c018afd292235e43295e4",
       "pdf": null
     },
     {
@@ -2094,7 +3274,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "8de766db893830bc85dd55e465530dd0abee6b1129c98f28b43dfb41513c9caf",
+      "yamlSha256": "f01ca4a15b9a24461b4345f46e85a17a391806fd858041272b6a7a8b32a193f6",
       "pdf": null
     },
     {
@@ -2105,12 +3285,60 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 999.9,
-      "mainPx": 999.9,
+      "naturalPx": 946.3,
+      "mainPx": 946.3,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-4",
-      "yamlSha256": "a0645a60b92dec14582703d050fd3a011bad37851554531bf03084a8677cb283",
+      "yamlSha256": "14b2002c3dbcc7f586d3f057deaabce76405aabb48765315ce175997eb13ebef",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-normal-5",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "normal",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1030,
+      "mainPx": 1030,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-standard-5",
+      "yamlSha256": "7a9cbfeb9e0ab0016906bdf98e335b0ba292bf9dceaf02cdb0395ead424485c9",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-normal-6",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "normal",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 1,
+      "naturalPx": 1140.6,
+      "mainPx": 1140.6,
+      "gate": "clipped",
+      "overflowSection": null,
+      "body": "en-standard-6",
+      "yamlSha256": "4230a67ad157d7d7f424e2edcbb2c066fb810998693682fa5a6d0a7cd8d66c3d",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-normal-7",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "normal",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1248.6,
+      "mainPx": 1248.6,
+      "gate": "pages",
+      "overflowSection": "Projects",
+      "body": "en-standard-7",
+      "yamlSha256": "f4252b833ff176b2f72554fb05075192ea6512c6a4ea153e24826bd3ef7f67e9",
       "pdf": null
     },
     {
@@ -2126,11 +3354,11 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-0",
-      "yamlSha256": "6c8203a13d8eabe4d35ce60cf2643b232cd3c509bd00eeb26ff1fcbde7add711",
+      "yamlSha256": "526465c763196d96c143c3623714bae36a89639295ef9258ad35593381fb5c08",
       "pdf": {
         "href": "/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-airy-0.pdf",
-        "sha256": "25581a08624291526eb00fa0f73658b0aea6d5a78f8cd564f209ac3752e6e9f8",
-        "sizeBytes": 25381
+        "sha256": "e4d474b85b45fc4118eb63e1e5fca9a396f11a6fd8df4bdf81d9fd2406b9a833",
+        "sizeBytes": 25145
       }
     },
     {
@@ -2146,7 +3374,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-1",
-      "yamlSha256": "331f521fa4c38c65c5aacfe871144767af92e850189dbec5d8f7438a1825549f",
+      "yamlSha256": "05a56bda6e94ed96970997bd78e795c31b7d8df2a59af6a5ffbb7a490fd579ed",
       "pdf": null
     },
     {
@@ -2162,7 +3390,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-2",
-      "yamlSha256": "0a9c75eab33f4ac76b7e7d27665e8f5ca7667eac70c06b125ad4c94149cf8917",
+      "yamlSha256": "290e8b9dc578ed11ebcce60b72988dea8b80aee9e8c96ccecdbcca4eccf15770",
       "pdf": null
     },
     {
@@ -2178,7 +3406,7 @@
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-3",
-      "yamlSha256": "f164a15d24b392e67d02c91dd8a19a5e9f846f85dda39a22501448a0af76f5ec",
+      "yamlSha256": "1e47e3ff5887ec3d80bf25dfeaa262051e307ee2be49b0ab2b31b765c5f53b71",
       "pdf": null
     },
     {
@@ -2189,12 +3417,60 @@
       "stations": 4,
       "exitCode": 0,
       "pages": 1,
-      "naturalPx": 1080.1,
-      "mainPx": 1080.1,
+      "naturalPx": 1011,
+      "mainPx": 1011,
       "gate": "fits",
       "overflowSection": null,
       "body": "en-standard-4",
-      "yamlSha256": "ca5626425224e053be81cc6749bb410f4daf161f8e33610f8309c8ac541c2d37",
+      "yamlSha256": "5eab10ff195c7726218f982fb5b487013d3d7dc733eed8888e6635aee7b0a7a8",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-airy-5",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "airy",
+      "stations": 5,
+      "exitCode": 0,
+      "pages": 1,
+      "naturalPx": 1101.4,
+      "mainPx": 1101.4,
+      "gate": "fits",
+      "overflowSection": null,
+      "body": "en-standard-5",
+      "yamlSha256": "e4e3adecfa35786f3b238206d2f584da85c513543ff54fa44781931c047d2efc",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-airy-6",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "airy",
+      "stations": 6,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1233.1,
+      "mainPx": 1233.1,
+      "gate": "pages",
+      "overflowSection": "Projects",
+      "body": "en-standard-6",
+      "yamlSha256": "d00f8af71d4d95319b8c5a1a460622562ccb32761e60ef6b76d2ab8cc1bae883",
+      "pdf": null
+    },
+    {
+      "key": "en-ats-compact-airy-7",
+      "lang": "en",
+      "template": "ats-compact",
+      "density": "airy",
+      "stations": 7,
+      "exitCode": 1,
+      "pages": 2,
+      "naturalPx": 1349.1,
+      "mainPx": 1349.1,
+      "gate": "pages",
+      "overflowSection": "Education",
+      "body": "en-standard-7",
+      "yamlSha256": "e82452f95ad4b99867bc830618a142657430771d66e5ee0aff3bf33b1fbaf881",
       "pdf": null
     }
   ]

@@ -31,10 +31,26 @@ function replaceLineOnce(text: string, line: string, next: string): string {
 }
 
 /**
+ * Drops a `- network: github` contact and its indented lines. The persona at
+ * the pin names a GitHub handle nobody has registered; a link from this site
+ * to it would point at whoever claims the name first. No-op once the
+ * persona upstream no longer carries one.
+ */
+function withoutGithubContact(text: string): string {
+  const lines = text.split("\n");
+  const at = lines.indexOf("  - network: github");
+  if (at < 0) return text;
+  let end = at + 1;
+  while (end < lines.length && lines[end].startsWith("    ")) end++;
+  return [...lines.slice(0, at), ...lines.slice(end)].join("\n");
+}
+
+/**
  * The exact cv.yaml the engine rendered for one choice: the persona file at
- * the pin with its `template:` and `density:` lines set and the first
- * `stations` earlier jobs appended to `experience:`. Pure text edits, so the
- * pre-render script and the download button produce identical bytes.
+ * the pin without its GitHub contact, with its `template:` and `density:`
+ * lines set and the first `stations` earlier jobs appended to `experience:`.
+ * Pure text edits, so the pre-render script and the download button produce
+ * identical bytes.
  */
 export function composeCvYaml(base: string, choice: CvLiveChoice): string {
   const blocks = CV_LIVE_STATIONS[choice.lang];
@@ -45,7 +61,7 @@ export function composeCvYaml(base: string, choice: CvLiveChoice): string {
   ) {
     throw new Error(`stations must be 0..${blocks.length}`);
   }
-  let text = replaceLineOnce(base, "template: classic", `template: ${choice.template}`);
+  let text = replaceLineOnce(withoutGithubContact(base), "template: classic", `template: ${choice.template}`);
   text = replaceLineOnce(text, "density: normal", `density: ${choice.density}`);
   const marker = "\neducation:\n";
   const at = text.indexOf(marker);

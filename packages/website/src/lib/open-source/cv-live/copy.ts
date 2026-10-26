@@ -26,11 +26,17 @@ export const CV_LIVE_COPY = {
     more: "Noch eine Station",
     stationsCount: (n: number, max: number) => `${n} von ${max}`,
     full: "Alle Stationen drin",
+    pageFull: "Seite voll",
+    less: "Eine Station weg",
     restart: "Von vorn",
     sheetLabel: (template: string, density: string) =>
       `A4-Seite, Vorlage ${template}, Dichte ${density}`,
     edge: "A4-Kante",
-    page2: "Seite 2",
+    page2: "läuft auf Seite 2",
+    zoom: "Seite in Originalgröße ansehen",
+    zoomChip: "1:1",
+    zoomTitle: "Seite in Originalgröße",
+    close: "Schließen",
     loading: "Lädt die Seite",
     pages: (n: number) => (n === 1 ? "1 Seite" : `${n} Seiten`),
     textEnds: (px: number, page: number, locale: Locale = "de") =>
@@ -39,7 +45,11 @@ export const CV_LIVE_COPY = {
     overflowUnknown: "Seite 2 beginnt mitten im Text",
     clipped: (px: number) => `Text ragt ${px} px über die Kante`,
     noPdf: "Kein PDF. Bei exit 1 schreibt der Build keins.",
+    tryTight: "Stell die Dichte auf tight: dieselben Wörter passen dann auf eine Seite.",
+    tryCut: "Hier hilft keine Dichte mehr. Nimm eine Station weg.",
     rescued: "Dieselben Wörter, enger gesetzt: wieder eine Seite.",
+    yamlPane: "cv.yaml für diesen Stand",
+    yamlPaneNote: "Markiert ist, was sich zuletzt geändert hat.",
     provenance: (short: string, count: number) =>
       `Jeder der ${count} Zustände ist ein echter Lauf von engine/build.py mit cv-engine ${short}. Die Höhen misst WeasyPrint.`,
     pending: (pr: number) =>
@@ -57,7 +67,7 @@ export const CV_LIVE_COPY = {
     yamlButton: "cv.yaml laden",
     cliTitle: "Der Build auf deinem Rechner",
     cliDetail:
-      "Im Ordner mit deiner cv.yaml ausführen. Vorher unter macOS brew install pango, unter Debian oder Ubuntu die Pakete aus der Installationsanleitung.",
+      "Im Ordner mit deiner cv.yaml ausführen. Die Engine braucht Python 3.13 und Pango: unter macOS brew install python@3.13 pango, auf einem Mac mit Apple-Chip vorher export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib. Unter Debian oder Ubuntu die Pakete aus der Installationsanleitung.",
     cliLabel: "Befehl für den Build",
     promptTitle: "Für deinen Claude",
     promptDetail:
@@ -87,11 +97,17 @@ export const CV_LIVE_COPY = {
     more: "One more job",
     stationsCount: (n: number, max: number) => `${n} of ${max}`,
     full: "All jobs added",
+    pageFull: "Page full",
+    less: "Remove a job",
     restart: "Start over",
     sheetLabel: (template: string, density: string) =>
       `A4 page, template ${template}, density ${density}`,
     edge: "A4 edge",
-    page2: "Page 2",
+    page2: "runs onto page 2",
+    zoom: "View the page at full size",
+    zoomChip: "1:1",
+    zoomTitle: "The page at full size",
+    close: "Close",
     loading: "Loading the page",
     pages: (n: number) => (n === 1 ? "1 page" : `${n} pages`),
     textEnds: (px: number, page: number, locale: Locale = "en") =>
@@ -100,7 +116,11 @@ export const CV_LIVE_COPY = {
     overflowUnknown: "Page 2 starts mid-text",
     clipped: (px: number) => `Text runs ${px} px past the edge`,
     noPdf: "No PDF. On exit 1 the build writes none.",
+    tryTight: "Set the density to tight: the same words then fit on one page.",
+    tryCut: "No density helps here. Remove a job.",
     rescued: "The same words, set tighter: one page again.",
+    yamlPane: "cv.yaml for this state",
+    yamlPaneNote: "The highlighted lines changed last.",
     provenance: (short: string, count: number) =>
       `Each of the ${count} states is a real run of engine/build.py with cv-engine ${short}. WeasyPrint measures the heights.`,
     pending: (pr: number) =>
@@ -118,7 +138,7 @@ export const CV_LIVE_COPY = {
     yamlButton: "Download cv.yaml",
     cliTitle: "The build on your machine",
     cliDetail:
-      "Run it in the folder with your cv.yaml. First, on macOS, brew install pango; on Debian or Ubuntu, the packages from the installation guide.",
+      "Run it in the folder with your cv.yaml. The engine needs Python 3.13 and Pango: on macOS brew install python@3.13 pango, and on a Mac with Apple silicon first export DYLD_FALLBACK_LIBRARY_PATH=/opt/homebrew/lib. On Debian or Ubuntu, the packages from the installation guide.",
     cliLabel: "Build command",
     promptTitle: "For your Claude",
     promptDetail: "Attach the cv.yaml and your current CV and send this text with them.",

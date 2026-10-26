@@ -19,6 +19,9 @@ export const SHEET_WIDTH_PX = 793.7;
  */
 export const LAYOUT_ZOOM = 4;
 
+/** How long a block takes to glide to its new place after a choice. */
+export const GLIDE_MS = 380;
+
 /**
  * Additions to the engine's stylesheet for the preview, nothing else:
  * `min-height: 0` is the same override the engine's own overflow probe
@@ -26,6 +29,12 @@ export const LAYOUT_ZOOM = 4;
  * The outer frame draws the A4 sheet instead.
  */
 const PREVIEW_CSS = `:host{display:block}main.page{min-height:0!important;background:transparent!important}.cv-body{background:transparent!important;zoom:${LAYOUT_ZOOM}}`;
+
+/**
+ * The blocks that glide: none of them contains another, so no block moves
+ * twice. Header, section titles, entries, the skills list, project rows.
+ */
+const BLOCKS = "header, .section-title, .item, .skills-grid, .row";
 
 export interface SheetMeasure {
   /** The state this measurement belongs to. */
@@ -57,6 +66,65 @@ function measure(key: string, host: HTMLElement, main: HTMLElement): SheetMeasur
   return { key, mainPx, naturalPx: Math.max(mainPx, rail) };
 }
 
+/** A block's identity across a choice: its section and its own first words. */
+function blockKey(block: Element): string {
+  const section = block.closest("section")?.id ?? "";
+  const words = (block.querySelector(".item-head, .item-sub") ? block.textContent : block.textContent?.slice(0, 60)) ?? "";
+  return `${section}|${block.className}|${words.replace(/\s+/g, " ").trim()}`;
+}
+
+function snapshot(main: HTMLElement): Map<string, DOMRect> {
+  const rects = new Map<string, DOMRect>();
+  for (const block of main.querySelectorAll(BLOCKS)) {
+    const key = blockKey(block);
+    if (!rects.has(key)) rects.set(key, block.getBoundingClientRect());
+  }
+  return rects;
+}
+
+/**
+ * First, last, invert, play: every block that existed before the choice
+ * starts where it was and glides to where the engine's layout puts it now;
+ * a block that is new fades in. Only transform and opacity animate, so the
+ * measured heights are the final ones from the first frame on. Screen
+ * pixels map to the block's own pixels through the sheet's scale.
+ */
+function glide(main: HTMLElement, before: Map<string, DOMRect>, scale: number) {
+  if (scale <= 0) return;
+  const seen = new Set<string>();
+  for (const block of main.querySelectorAll<HTMLElement>(BLOCKS)) {
+    const key = blockKey(block);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const from = before.get(key);
+    const to = block.getBoundingClientRect();
+    if (!from) {
+      block.animate([{ opacity: 0 }, { opacity: 1 }], {
+        duration: GLIDE_MS,
+        delay: GLIDE_MS / 3,
+        easing: "cubic-bezier(0.2, 0, 0, 1)",
+        fill: "backwards",
+      });
+      continue;
+    }
+    const dx = (from.left - to.left) / scale;
+    const dy = (from.top - to.top) / scale;
+    const sx = to.width > 0 ? from.width / to.width : 1;
+    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5 && Math.abs(sx - 1) < 0.01) continue;
+    block.animate(
+      [
+        { transformOrigin: "0 0", transform: `translate(${dx}px, ${dy}px) scaleX(${sx})` },
+        { transformOrigin: "0 0", transform: "none" },
+      ],
+      { duration: GLIDE_MS, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+    );
+  }
+}
+
+const reducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /**
  * One engine page inside a shadow root: the engine's stylesheet cannot leak
  * into the site and the site's cannot reach the page. No iframe, so the
@@ -67,17 +135,22 @@ export function CvSheet({
   choice,
   scale,
   onMeasured,
+  animate = false,
 }: {
   readonly body: string;
   readonly choice: CvLiveChoice;
   readonly scale: number;
-  readonly onMeasured: (measure: SheetMeasure) => void;
+  readonly onMeasured?: (measure: SheetMeasure) => void;
+  /** Blocks glide to their new place when the choice changes. */
+  readonly animate?: boolean;
 }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
   const measured = useRef(onMeasured);
+  const scaleRef = useRef(scale);
   useLayoutEffect(() => {
     measured.current = onMeasured;
+    scaleRef.current = scale;
   });
 
   // The shadow root and its stylesheet are created once; a choice only
@@ -98,11 +171,14 @@ export function CvSheet({
     root.append(link, style, wrapper);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = hostRef.current?.shadowRoot;
     const wrapper = root?.querySelector<HTMLDivElement>(".cv-body");
     const main = wrapper?.querySelector("main");
     if (!wrapper || !main) return;
+    const glides = animate && ready && main.childElementCount > 0 && !reducedMotion();
+    const before = glides ? snapshot(main) : null;
+    for (const running of main.getAnimations({ subtree: true })) running.cancel();
     const { bodyClass, mainAttributes } = cvLiveWrapper(choice);
     wrapper.className = `cv-body ${bodyClass}`;
     wrapper.lang = choice.lang;
@@ -111,8 +187,13 @@ export function CvSheet({
     }
     // Static engine output from this site's own public folder, checked by
     // scripts/build-cv-engine-live.ts for scripts, handlers and foreign links.
-    main.innerHTML = body;
-    if (!ready) return;
+    if (main.innerHTML !== body) main.innerHTML = body;
+    if (before) glide(main, before, scaleRef.current);
+  }, [body, choice, ready, animate]);
+
+  useEffect(() => {
+    const main = hostRef.current?.shadowRoot?.querySelector("main");
+    if (!ready || !main || !measured.current) return;
     let live = true;
     const weights = [...new Set(CV_LIVE_DATA.fonts.map((font) => font.weight))];
     Promise.all(
@@ -123,7 +204,7 @@ export function CvSheet({
       .catch(() => undefined)
       .then(() => {
         const host = hostRef.current;
-        if (live && host) measured.current(measure(cvLiveStateKey(choice), host, main));
+        if (live && host) measured.current?.(measure(cvLiveStateKey(choice), host, main));
       });
     return () => {
       live = false;

@@ -433,6 +433,14 @@ Never infer a license from a repository being public. Preserve required
 notices and do not assign the root MIT license to editorial, brand, media, or
 third-party files without explicit rights evidence.
 
+One stylesheet is exempt from a manifest row, because the publication scanner
+admits no `.css` asset path: `public/artifacts/tools/cv-engine/live/cv.css`,
+the cv-engine stylesheet that `scripts/build-cv-engine-live.ts` rewrites for a
+shadow root. Its SHA-256, byte size and source revision live in
+`packages/website/src/lib/open-source/cv-live/live-data.json` instead, and
+`live-data.test.ts` checks the stored bytes against that record on every run.
+Any other stylesheet needs its own reviewed exemption here.
+
 ## Discovery and rendering admission
 
 The shared registry drives the hub, static detail params, sitemap, `llms.txt`,
