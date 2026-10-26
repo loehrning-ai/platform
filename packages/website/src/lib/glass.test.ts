@@ -1,8 +1,18 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative } from "node:path";
 import postcss, { type AtRule, type Rule } from "postcss";
 import { describe, expect, it } from "vitest";
-import { GLASS_ACCENT, GLASS_ALPHA, GLASS_INK, GLASS_TINT, glassComposite, worstGlassContrast } from "./glass";
+import {
+  GLASS_ACCENT,
+  GLASS_ALPHA,
+  GLASS_INK,
+  GLASS_MARK_MIN,
+  GLASS_TEXT,
+  GLASS_TEXT_MIN,
+  GLASS_TINT,
+  glassComposite,
+  worstGlassContrast,
+} from "./glass";
 
 const css = readFileSync(join(__dirname, "../app/globals.css"), "utf8");
 const root = postcss.parse(css);
@@ -29,6 +39,22 @@ describe(".glass contrast (amendment 27)", () => {
   it("keeps Druckschwarz text at AA and the Mennige marker at 3:1 over the worst backdrop", () => {
     expect(worstGlassContrast(GLASS_INK)).toBeGreaterThanOrEqual(4.5);
     expect(worstGlassContrast(GLASS_ACCENT)).toBeGreaterThanOrEqual(3);
+  });
+
+  it("keeps every text colour allowed on glass at 4.5:1 over a black frame, with no credit for blur", () => {
+    for (const text of GLASS_TEXT) expect(worstGlassContrast(text), text).toBeGreaterThanOrEqual(GLASS_TEXT_MIN);
+  });
+
+  it("lets Mennige mark but never write on glass, and keeps the light grey off it", () => {
+    expect(worstGlassContrast(GLASS_ACCENT)).toBeGreaterThanOrEqual(GLASS_MARK_MIN);
+    expect(worstGlassContrast(GLASS_ACCENT)).toBeLessThan(GLASS_TEXT_MIN);
+    expect(GLASS_TEXT).not.toContain(GLASS_ACCENT);
+    expect(worstGlassContrast("#655c54")).toBeLessThan(GLASS_TEXT_MIN);
+  });
+
+  it("fixes the old desktop nav: Schiefer at the old 0.72 tint failed AA, at GLASS_ALPHA it passes", () => {
+    expect(worstGlassContrast("#4f4640", 0.72)).toBeLessThan(GLASS_TEXT_MIN);
+    expect(worstGlassContrast("#4f4640")).toBeGreaterThanOrEqual(GLASS_TEXT_MIN);
   });
 
   it("would fail the marker at a thinner tint, so the alpha is load-bearing", () => {
@@ -73,9 +99,16 @@ describe(".glass in globals.css", () => {
     expect(Number(match![4])).toBe(GLASS_ALPHA);
   });
 
-  it("falls back to opaque paper for reduced transparency and forced colours", () => {
+  it("falls back to opaque paper for reduced transparency, more contrast, forced colours and print", () => {
     const media = rules.map(parentAtRule).filter((rule): rule is AtRule => rule?.name === "media").map((rule) => rule.params);
-    expect(media).toEqual(expect.arrayContaining(["(prefers-reduced-transparency: reduce)", "(forced-colors: active)"]));
+    expect(media).toEqual(
+      expect.arrayContaining([
+        "(prefers-reduced-transparency: reduce)",
+        "(prefers-contrast: more)",
+        "(forced-colors: active)",
+        "print",
+      ]),
+    );
     for (const rule of rules.filter((r) => parentAtRule(r)?.name === "media")) {
       expect(declarations(rule).get("backdrop-filter")).toBe("none");
     }
@@ -87,6 +120,58 @@ describe(".glass in globals.css", () => {
         expect(value, prop).not.toMatch(/gradient/);
         if (prop === "border-radius") expect(value).toBe("0");
       }
+    }
+  });
+});
+
+/* ── One material, site-wide ──────────────────────────────────────────── */
+
+const SRC = join(__dirname, "..");
+
+function walk(dir: string, out: string[] = []): string[] {
+  for (const name of readdirSync(dir)) {
+    const path = join(dir, name);
+    if (statSync(path).isDirectory()) walk(path, out);
+    else if (/\.(css|tsx?)$/.test(name) && !/\.test\.tsx?$/.test(name)) out.push(path);
+  }
+  return out;
+}
+
+const FILES = walk(SRC).map((path) => ({ file: relative(SRC, path), text: readFileSync(path, "utf8") }));
+
+describe("Werkglas is the only glass on the site", () => {
+  it("has no backdrop-filter outside .glass except switching one off", () => {
+    const offenders: string[] = [];
+    for (const { file, text } of FILES.filter((entry) => entry.file.endsWith(".css"))) {
+      postcss.parse(text).walkDecls(/backdrop-filter$/, (declaration) => {
+        const rule = declaration.parent as Rule;
+        const isGlass = file === "app/globals.css" && rule.selectors?.every((selector) => selector === ".glass");
+        if (!isGlass && declaration.value !== "none") offenders.push(`${file}: ${rule.selector} ${declaration.value}`);
+      });
+    }
+    expect(offenders).toEqual([]);
+  });
+
+  it("has no Tailwind backdrop blur or translucent frost in components", () => {
+    const offenders = FILES.filter((entry) => /\.tsx?$/.test(entry.file))
+      .filter(({ text }) => /\bbackdrop-(?:blur|filter|saturate)(?!-none)/.test(text))
+      .map(({ file }) => file);
+    expect(offenders).toEqual([]);
+  });
+
+  it("never transitions or animates the filter, and never refracts through SVG", () => {
+    for (const { file, text } of FILES.filter((entry) => entry.file.endsWith(".css"))) {
+      const root = postcss.parse(text);
+      root.walkDecls(/^(?:transition|transition-property|will-change)$/, (declaration) => {
+        expect(declaration.value, `${file}: ${declaration.prop}`).not.toMatch(/backdrop/);
+      });
+      root.walkAtRules(/keyframes$/, (keyframes) => {
+        keyframes.walkDecls((declaration) => expect(declaration.prop, `${file}: @keyframes ${keyframes.params}`).not.toMatch(/backdrop/));
+      });
+      root.walkDecls(/backdrop-filter$/, (declaration) => expect(declaration.value, file).not.toMatch(/url\(/));
+    }
+    for (const rule of glassRules()) {
+      for (const [prop] of declarations(rule)) expect(prop, ".glass").not.toMatch(/^(?:transition|animation|will-change)/);
     }
   });
 });

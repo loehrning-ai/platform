@@ -22,6 +22,7 @@ import {
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
 import { cn } from "@/lib/utils";
+import { navChrome } from "@/lib/nav-chrome";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { GITHUB_ORG } from "@/lib/seo/entity";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
@@ -236,6 +237,7 @@ export function Nav() {
   const pathname = usePathname() ?? "";
   const parsedPathname = parseLocalePathname(pathname || "/");
   const routePathname = parsedPathname.valid ? parsedPathname.pathname : "/";
+  const chrome = navChrome(routePathname);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDialogLocked, setMobileDialogLocked] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
@@ -614,18 +616,32 @@ export function Nav() {
     // Two shells, one markup tree. Below lg the bar is flush with the top edge
     // of the viewport and exactly --nav-h-compact tall, which is the offset
     // <main> reserves, so page content begins directly under it. From lg the
-    // floating glass pill returns: an inset, rounded, softly shadowed studio
-    // bar inside the --nav-h band. Both shells are paper, never a dark
-    // surface: the flush bar is opaque (a backdrop blur on a fixed bar flickers
-    // in iOS WebKit while the page scrolls under it), the pill is translucent.
+    // bar floats inset inside the --nav-h band, square, on its own surface
+    // layer. Both shells are paper, never a dark surface. The flush bar is
+    // opaque: a backdrop blur on a fixed bar flickers in iOS WebKit while the
+    // page scrolls under it, and Safari tints its own toolbar from it. The
+    // floating bar is Werkglas (.glass) on pages with moving visuals and solid
+    // paper on reading pages (navChrome).
     <nav
       aria-label={copy.mainNavigation}
+      data-chrome={chrome}
       className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2"
     >
       <div
         data-nav-header-row
-        className="mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background px-3 sm:px-5 lg:h-12 lg:rounded-2xl lg:border-x lg:border-t lg:bg-background/85 lg:shadow-card lg:backdrop-blur-xl lg:supports-[backdrop-filter]:bg-background/72"
+        className="relative isolate mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background px-3 sm:px-5 lg:h-12 lg:border-b-0 lg:bg-transparent"
       >
+        {/* The desktop bar's surface: a layer under the row's controls, so
+            the one .glass class carries the material and the phone bar never
+            gets it. Nothing on it animates. */}
+        <span
+          aria-hidden="true"
+          data-nav-surface={chrome}
+          className={cn(
+            "pointer-events-none absolute inset-0 -z-10 hidden lg:block",
+            chrome === "glass" ? "glass" : "border border-[rgb(18_18_18/0.14)] bg-background",
+          )}
+        />
         <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
