@@ -500,12 +500,12 @@ test("platform profile rejects opaque archive formats after manifest verificatio
 });
 
 test("the published NORTHWIND kits are structurally valid and fully inspectable", async () => {
-  // Both editions: 23 entries (15 files + 8 directories), the same paths in each.
+  // Both editions: 24 entries (15 files + 9 directories, the skill under claude/), the same paths in each.
   // Re-derive these two numbers whenever the kit gains or loses a file.
   for (const kitPath of [actualKitPath, actualKitPath.replace(/\.zip$/, "-de.zip")]) {
     const archive = await readFile(kitPath);
     const entries = inspectZipArchive(archive, { label: kitPath.split("/").pop() });
-    assert.equal(entries.length, 23, kitPath);
+    assert.equal(entries.length, 24, kitPath);
     assert.equal(entries.filter((entry) => entry.kind === "file").length, 15, kitPath);
     assert.ok(
       entries.some(
