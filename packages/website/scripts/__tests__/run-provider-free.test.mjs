@@ -748,6 +748,10 @@ const explicitlyClassifiedApplicationEnvironment = new Set([
   "ANALYZE",
   "NEXT_RUNTIME",
   "NODE_ENV",
+  // Read only by vitest files under src/, never by the application or a child process.
+  "BOOK_FROZEN_DIR",
+  "PUBLIC_NAME_DENYLIST",
+  "UPDATE_KIT",
 ]);
 assert.deepEqual(
   [...applicationEnvironmentNames]
