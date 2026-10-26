@@ -1122,8 +1122,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
-      "sizeBytes": 856117,
-      "sha256": "4e391037b0b00ff6994709ef728542a798c1c3f45c5105d77e1adad3ba78a94c",
+      "sizeBytes": 856169,
+      "sha256": "f438cf9c8d8c4dc0a0c57fface6a89665bee57a544f0f782855dad6f7d8f4e28",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, German edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1131,8 +1131,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-      "sizeBytes": 920502,
-      "sha256": "192995b3ef33a540dfb02b60b160078f207f76a707545613b1975c11f99bd112",
+      "sizeBytes": 920543,
+      "sha256": "e1a77c5e2fc567e5eb5753e190f949b6bd339006e056120965154e6cfc75fb27",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, English edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

@@ -57,7 +57,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG-Berichte mit KI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Seit 27.09.2026 ist in Deutschland „klimaneutral“ wegen gekaufter Zertifikate verboten. Ein Weingut aus Nordmazedonien prüft mit Claude, was es belegen kann.",
+      "Seit dem 27.09.2026 ist in Deutschland „klimaneutral“ wegen gekaufter Zertifikate verboten. Ein Weingut in Nordmazedonien prüft mit Claude, was es belegen kann.",
     description:
       "Seit dem 27.09.2026 darf in Deutschland keine Umweltaussage mehr auf gekauften CO₂-Zertifikaten beruhen, und Banken in Nordmazedonien vergeben grüne Kredite der EBRD. Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
     format: "Live-Workshop mit Deck",
