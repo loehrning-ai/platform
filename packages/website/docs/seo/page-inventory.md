@@ -76,7 +76,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/buecher/ki-landschaft/08_dein_zug | Dein Zug | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/08_dein_zug.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 | https://loehrning.ai/buecher/ki-landschaft/09_quellen | Quellen, Stand, Grenzen | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/09_quellen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
-### Demo-Detailseiten (5)
+### Demo-Detailseiten (6)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
@@ -85,6 +85,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Die Fragekarte | Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am End… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/esg-berichte-mit-ki | Nachweisprobe | Vier Sätze, vier Dateien, vier Prüfungen. Dann derselbe Ordner für drei Anfragen, eine nachgereichte Rechnung… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Die Lückenliste | Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Date… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/angebote-mit-ki-vergleichen | Die Vergleichsbasis | Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Tipp zuerst, d… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 

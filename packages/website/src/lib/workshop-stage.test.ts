@@ -11,6 +11,7 @@ const EXPECTED: Readonly<Record<string, { a: "slides" | "lab" | "demo"; b: "kit"
   "datenbereitschaft-fuer-ki": { a: "demo", b: "kit", kitPage: false },
   "esg-berichte-mit-ki": { a: "demo", b: "kit", kitPage: true },
   "audit-vorbereitung-mit-ki": { a: "demo", b: "kit", kitPage: true },
+  "angebote-mit-ki-vergleichen": { a: "demo", b: "kit", kitPage: true },
 };
 
 describe("workshopStage", () => {

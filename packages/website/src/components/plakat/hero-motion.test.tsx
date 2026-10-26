@@ -7,11 +7,11 @@ import { HERO_MOTION, HeroMotion, heroMotionScene, isHeroSceneWired, renderHeroS
 
 const DIR = __dirname;
 const SLUG = "audit-vorbereitung-mit-ki";
-const SOURCES = ["hero-motion.tsx", "hero-links-scene.tsx"] as const;
-const SCENE_KEYS = ["cone", "trace", "mend", "weave", "links"];
+const SOURCES = ["hero-motion.tsx", "hero-links-scene.tsx", "hero-converge-scene.tsx"] as const;
+const SCENE_KEYS = ["cone", "trace", "mend", "weave", "links", "converge"];
 
 describe("hero motion registry", () => {
-  it("maps all five workshops to one scene key each, and each slug to a workshop that has a poster", () => {
+  it("maps all six workshops to one scene key each, and each slug to a workshop that has a poster", () => {
     expect(Object.keys(HERO_MOTION).sort()).toEqual(Object.keys(WORKSHOP_PLAKAT).sort());
     expect(Object.values(HERO_MOTION).sort()).toEqual([...SCENE_KEYS].sort());
     for (const slug of Object.keys(WORKSHOP_PLAKAT)) {
@@ -27,7 +27,7 @@ describe("hero motion registry", () => {
     const { container } = render(<div>{renderHeroScene(SLUG)}</div>);
     expect(container.querySelectorAll("svg[data-hero-motion='links']")).toHaveLength(1);
     // Every wired scene renders; every unwired one renders nothing and is not claimed by the stage.
-    for (const key of SCENE_KEYS as ("cone" | "trace" | "mend" | "weave" | "links")[]) {
+    for (const key of SCENE_KEYS as ("cone" | "trace" | "mend" | "weave" | "links" | "converge")[]) {
       const view = render(<div>{<HeroMotion scene={key} />}</div>);
       const svgs = view.container.querySelectorAll(`svg[data-hero-motion='${key}']`);
       expect(svgs.length, key).toBe(isHeroSceneWired(key) ? 1 : 0);

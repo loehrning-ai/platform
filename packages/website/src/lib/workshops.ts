@@ -21,11 +21,12 @@ import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 import { FORECASTING_KIT } from "./workshops-forecasting-kit";
 import { AUDIT_WORKSHOP } from "./workshops-audit";
+import { OFFERS_WORKSHOP } from "./workshops-offers";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 import { DECK_KEYS } from "./deck-keys-copy";
 
-/** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
-export type WorkshopNumber = "01" | "02" | "03" | "04" | "05";
+/** Two-digit catalogue number. "06" is the offer comparison workshop (Kraft palette). */
+export type WorkshopNumber = "01" | "02" | "03" | "04" | "05" | "06";
 
 /** When a learner uses a material: before, during or after the session. */
 export type WorkshopPhase = "before" | "during" | "after";
@@ -1149,12 +1150,14 @@ export const WORKSHOPS_BY_LOCALE: Readonly<
     DATA_READINESS_WORKSHOP.de,
     ESG_REPORTING_WORKSHOP.de,
     AUDIT_WORKSHOP.de,
+    OFFERS_WORKSHOP.de,
   ].map((workshop) => withDemoMaterial(workshop, "de")),
   en: [
     ...WORKSHOPS_EN,
     DATA_READINESS_WORKSHOP.en,
     ESG_REPORTING_WORKSHOP.en,
     AUDIT_WORKSHOP.en,
+    OFFERS_WORKSHOP.en,
   ].map((workshop) => withDemoMaterial(workshop, "en")),
 };
 

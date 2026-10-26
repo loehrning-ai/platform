@@ -153,6 +153,14 @@ const FACES = {
       <circle cx="9" cy="68" r="3.2" className="ac-hair" />
     </>
   ),
+  /** Three cost lines of different length over one total (Workshop 06). */
+  basis: (
+    <>
+      <rect x="0" y="48" width="18" height="28" className="ac-shape" />
+      <path d="M4 54H14M4 59H10M4 64H12" className="ac-hair" />
+      <path d="M4 70H14" className="ac-line" />
+    </>
+  ),
 } as const;
 
 type Face = keyof typeof FACES;
@@ -163,6 +171,7 @@ const KIT_FACES: Readonly<Record<string, readonly [Face, Face, Face, Face]>> = {
   "datenbereitschaft-fuer-ki": ["sheet", "fields", "table", "key"],
   "esg-berichte-mit-ki": ["question", "leaf", "table", "key"],
   "audit-vorbereitung-mit-ki": ["light", "sheet", "question", "key"],
+  "angebote-mit-ki-vergleichen": ["sheet", "basis", "table", "key"],
 };
 
 const GENERIC_FACES = ["sheet", "table", "folded", "key"] as const;

@@ -1,6 +1,12 @@
 {
   "version": 1,
   "cards": {
+    "angebote-mit-ki-vergleichen": {
+      "input": "2fee647653d0b0c650197b7e2183348af7e9dac68d26319aea43000ace1dd038",
+      "output": "0c267d527be278d7908ed8ee09a826dd70b887c7c7ea867a02b871f9a3ce717c",
+      "width": 1200,
+      "height": 630
+    },
     "audit-vorbereitung-mit-ki": {
       "input": "b7f5a57bae395b24026c94173b9958222f1e73758a790e72584af5db864b7db5",
       "output": "74bd341fe0721037b017cbc049de4a837a3475e62641d81ece49ba3ac364759d",

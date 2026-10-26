@@ -283,7 +283,7 @@ describe("Plakat scenes (poster palettes)", () => {
     if (!value) throw new Error(`${name} must exist in @theme`);
     return value;
   };
-  const SCENES = ["lemons", "idea", "bloom", "autumn", "sage"] as const;
+  const SCENES = ["lemons", "idea", "bloom", "autumn", "sage", "kraft"] as const;
   const STATUS_TOKENS = [
     "--color-pass",
     "--color-destructive",

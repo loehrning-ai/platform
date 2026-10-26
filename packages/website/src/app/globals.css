@@ -299,7 +299,8 @@
 /* Poster layer ("Plakat"): five scenes of three colours each, four sampled from
    the reference posters and Sage from the Workshop 05 deck. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
    Kobalt, Himbeere), Bloom (Sand, Aubergine, Terrakotta), Autumn (Rost,
-   Creme, Ocker), Sage (Salbei, Tanne, Bernstein). Mennige stays the one red: the lemons mid is Mennige.
+   Creme, Ocker), Sage (Salbei, Tanne, Bernstein), Kraft (Kraft, Druckschwarz, Mennige) for Workshop 06.
+   Mennige stays the one red: the lemons and kraft mid is Mennige.
    `static` keeps every value in the compiled :root even before a utility
    uses it, because CSS files outside this entry (phone-hero.css,
    blog-index.css) and inline SVG styles read them through var(), which
@@ -326,6 +327,8 @@
   --color-salbei: #dce6d4; /* Sage ground (Workshop 05), the soft green of the audit deck */
   --color-tanne: #1f4a38; /* Sage ink, 7.79 on Salbei, 8.92 on Kalkweiß */
   --color-bernstein: #d9a441; /* Sage mid, decoration only: 1.75 on Salbei */
+  --color-kraft: #d2b48a; /* Kraft ground (Workshop 06), the brown of a supplier's envelope */
+  --color-mennige-dunkel: #82270b; /* Mennige at text size on Kraft: 4.74 */
 
   /* Scene roles with their paper defaults. A .plakat-* scope redefines them,
      so one component reads correctly on paper and in every scene. Never use
@@ -381,6 +384,8 @@
        autumn B Creme      -> Mennige 4.50 (5.08)
        sage   A Salbei     -> Mennige 4.49, red vs green 80 deg (5.08)
        sage   B Tanne      -> Bernstein 4.46 (1.98)
+       kraft  A Kraft      -> Druckschwarz 9.49 (16.46)
+       kraft  B Druckschwarz -> Mennige 3.24 (5.08)
      Defined twice, like --color-scene-line: on the page root (so a list item
      outside the .plakat scope sees it) and in the .plakat scope. */
   :root:has([data-plakat-page="lemons"]) {
@@ -407,6 +412,11 @@
     --color-scene-line: #1f4a38;
     --color-scene-anti-a: #b73a15;
     --color-scene-anti-b: #d9a441;
+  }
+  :root:has([data-plakat-page="kraft"]) {
+    --color-scene-line: #121212;
+    --color-scene-anti-a: #121212;
+    --color-scene-anti-b: #b73a15;
   }
 
   html {
@@ -782,6 +792,45 @@
     --color-scene-button-text: #fffcf5;
     --color-scene-anti-a: #b73a15; /* see the anti-colour table above */
     --color-scene-anti-b: #d9a441;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Kraft (Workshop 06): Druckschwarz on Kraft, 9.49. Mennige is the mid
+     (2.93, shapes only); the button is Mennige dunkel (4.74 on Kraft, Bogen
+     label 9.13), so it never reads as a black block; a meaningful mark takes
+     the ink. Kraft is the darkest light ground: four status tones take a
+     deeper shade of the same hue to stay at 4.5 or more. */
+  .plakat-kraft,
+  [data-plakat-page="kraft"] [data-plakat-band] {
+    --color-background: #d2b48a;
+    --color-foreground: #121212; /* 9.49 */
+    --color-muted-foreground: #121212;
+    --color-muted: #121212;
+    --color-border: #121212;
+    --color-track: #a98f68; /* 1.56, decor */
+    --color-hairline: #a98f68;
+    --color-card: #d2b48a;
+    --color-card-hover: #c9ac80; /* 8.65 */
+    --color-inset: #cdb085; /* 9.05 */
+    --color-brand-orange: #121212;
+    --color-kupfer: #121212;
+    --color-kupfer-dark: #121212;
+    --color-pass: #174536; /* 5.48 */
+    --color-destructive: #7f1414; /* 5.28 */
+    --color-risk-red: #7f1414;
+    --color-risk-yellow: #66380f; /* 4.98 */
+    --color-brand-sand: #4f3d2b; /* 5.23 */
+    --color-scene-ground: #d2b48a;
+    --color-scene-ink: #121212;
+    --color-scene-mid: #b73a15; /* 2.93, shapes only */
+    --color-scene-mark: #121212;
+    --color-scene-accent-text: #82270b; /* Mennige dunkel, 4.74 */
+    --color-scene-line: #121212;
+    --color-scene-button: #82270b; /* Mennige dunkel fill, Bogen label 9.13 */
+    --color-scene-button-text: #fffcf5;
+    --color-scene-anti-a: #121212; /* see the anti-colour table above */
+    --color-scene-anti-b: #b73a15;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }

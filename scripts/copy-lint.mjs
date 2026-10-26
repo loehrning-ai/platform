@@ -194,6 +194,7 @@ export function targets() {
     ...walk(site("public/workshops"), (file) => PROSE_EXTENSIONS.has(path.extname(file))),
     ...walk(path.join(ROOT, "scripts/workshop04/overlay"), (file) => PROSE_EXTENSIONS.has(path.extname(file))),
     ...walk(path.join(ROOT, "scripts/workshop05/kit"), (file) => PROSE_EXTENSIONS.has(path.extname(file))),
+    ...walk(path.join(ROOT, "scripts/workshop06/kit"), (file) => PROSE_EXTENSIONS.has(path.extname(file))),
   ].filter((file) => !/\/(PUBLICATION|ASSET-RIGHTS)\.md$/.test(file));
 
   const json = [
