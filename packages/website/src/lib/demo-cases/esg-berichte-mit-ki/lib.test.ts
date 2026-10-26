@@ -292,6 +292,9 @@ describe("exports", () => {
   it("escapes pipes in the Markdown table", () => {
     const table = toMarkdownTable([rowFor({ sentence: "a | b", evidence: "nothing" })], words("de"));
     expect(table).toContain("a \\| b");
+    // A backslash before a pipe would otherwise turn the escape back into a column break.
+    const slashed = toMarkdownTable([rowFor({ sentence: "C:\\ | x \\| y", evidence: "nothing" })], words("de"));
+    expect(slashed).toContain("C:\\\\ \\| x \\\\\\| y");
     expect(table.split("\n")[0]).toBe("| Satz | Wohin | Nachweis | Status | Fehlt |");
   });
   it("writes month runs as ranges, with the count", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { columnIssue, EMPTY_CARD, forbiddenChar, isAiSource, isDate, isoDate, lintQuestion, metricSlug, neverItems, parseExpected, validateCard, type OwnCard } from "./card";
+import { cell, columnIssue, EMPTY_CARD, forbiddenChar, isAiSource, isDate, isoDate, lintQuestion, metricSlug, neverItems, parseExpected, validateCard, type OwnCard } from "./card";
 import { DE } from "./copy-de";
 import { EN } from "./copy-en";
 
@@ -98,5 +98,13 @@ describe("lintQuestion", () => {
   it("catches levels added over time and averaged rates", () => {
     expect(lintQuestion({ question: "Bestand Q2 2026 summiert, in Stück", kind: "level", unit: "Stück", who: "" })).toContain("levels-summed");
     expect(lintQuestion({ question: "Durchschnitt der Quoten Q2 2026, in %", kind: "rate", unit: "%", who: "" })).toContain("rates-averaged");
+  });
+});
+
+describe("cell", () => {
+  it("escapes a pipe, and a backslash first, so no cell splits", () => {
+    expect(cell("a | b")).toBe("a \\| b");
+    expect(cell("x \\| y")).toBe("x \\\\\\| y");
+    expect(cell("C:\\data")).toBe("C:\\\\data");
   });
 });

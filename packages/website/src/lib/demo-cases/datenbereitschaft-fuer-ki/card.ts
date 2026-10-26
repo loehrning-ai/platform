@@ -299,7 +299,7 @@ export function lintQuestion(card: Pick<OwnCard, "question" | "kind" | "unit" | 
   return hints;
 }
 
-/** "|" would split a Markdown table cell. */
+/** "|" would split a Markdown table cell; a backslash is escaped first, so "\|" cannot unescape it. */
 export function cell(text: string): string {
-  return clean(text).replace(/\|/g, "\\|");
+  return clean(text).replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
 }

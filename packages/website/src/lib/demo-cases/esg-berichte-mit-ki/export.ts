@@ -139,7 +139,8 @@ export function decisionText(result: OwnResult, words: ExportWords): string {
   return words.decisions[result.decision];
 }
 
-const cellMd = (text: string) => text.replace(/\r?\n|\r/g, " ").replace(/\|/g, "\\|");
+/** One Markdown table cell: one line, "|" escaped, and a backslash escaped first so "\|" cannot unescape it. */
+const cellMd = (text: string) => text.replace(/\r?\n|\r/g, " ").replace(/\\/g, "\\\\").replace(/\|/g, "\\|");
 
 /** "Als Tabelle für Claude kopieren": | Satz | Wohin | Nachweis | Status | Fehlt |. */
 export function toMarkdownTable(rows: readonly OwnRow[], words: ExportWords): string {

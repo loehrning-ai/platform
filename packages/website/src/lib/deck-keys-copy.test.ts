@@ -8,7 +8,7 @@ describe("one deck key sentence", () => {
   it.each(["de", "en"] as const)("every %s deck material ends with it", (locale) => {
     const decks = getWorkshops(locale).flatMap((workshop) => workshop.materials.filter((material) => material.role === "deck"));
     expect(decks.length).toBeGreaterThanOrEqual(4);
-    for (const deck of decks) expect(deck.description, deck.href).toMatch(new RegExp(`${DECK_KEYS[locale].replace(/[.]/g, "\\.")}$`));
+    for (const deck of decks) expect(deck.description, deck.href).toMatch(new RegExp(`${DECK_KEYS[locale].replace(/[\\^$.*+?()[\]{}|]/g, "\\$&")}$`));
   });
 
   it("names exactly the keys the shared deck contract binds", () => {
