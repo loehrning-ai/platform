@@ -1,7 +1,7 @@
 import { TileSvg, type TileProps } from "../hub/tile-kit";
 
 /*
- * W05 "Nachweisprüfung", hub miniature: eight request chips on the left, the
+ * W05 "Die Lückenliste", hub miniature: eight request chips on the left, the
  * eight files their names link on the right, a line between each pair. A
  * test bar sweeps down; four lines turn dashed (SCHWACH), two break apart
  * (LÜCKE), two stay solid (BELEGT), and the counter drops from 8/8 to 2/8.

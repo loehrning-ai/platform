@@ -582,8 +582,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
-      "sizeBytes": 35964,
-      "sha256": "56e187e5c4b213db79661999a6781178f4e3872173309bef4522d187ea4ccc85",
+      "sizeBytes": 36194,
+      "sha256": "5c2a9ce5c0a0687040a13d76634d122ee8e1d84309d2fc5eb99071fa91615e35",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai \u2014 Text-only Teilnehmer-Kit (CSV-\u00dcbungsdaten, Berichte in Markdown, Skill, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
@@ -591,8 +591,8 @@
     },
     {
       "path": "packages/website/public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
-      "sizeBytes": 37234,
-      "sha256": "d2c3a308801f5708fd06836e60541ec78a0cf5085fd69121b5a14532b8d3e72d",
+      "sizeBytes": 37457,
+      "sha256": "2ef983708e0e8f8231281091c400df6f4ad1525dcbc51aeedff735c8f67eed90",
       "owner": "Tim L\u00f6hr",
       "source": "Eigenes Workshop-Material, loehrning.ai: Text-only Teilnehmer-Kit, deutsche Ausgabe (CSV-\u00dcbungsdaten, Berichte in Markdown, Skills, Dashboard-Vorlage)",
       "license": "LicenseRef-Loehrning-Brand",
@@ -703,9 +703,9 @@
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
-      "sizeBytes": 43378,
-      "sha256": "097e0aaf560e0e2127bc07672b0fd1ea2226a8afcf0adbc5d0f98f2f32d841ee",
+      "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+      "sizeBytes": 43559,
+      "sha256": "902e6fbdde83e12ec590dca61d0651b6ffa0fbc01adb0595d1b5c11e4e6f38b0",
       "owner": "Tim L\u00f6hr",
       "source": "Original Prognose pr\u00fcfen workshop material (German edition of the Workshop 01 participant kit, invented company data), built by scripts/workshop01/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -713,8 +713,8 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
-      "sizeBytes": 43118,
-      "sha256": "fb884e2bd15e033745370692c61d644a689ca509baaf14f415456cf8951463e2",
+      "sizeBytes": 43245,
+      "sha256": "559565632b36e51233e786498af2818eae95570bb7d3a678f26c460fe725bcb6",
       "owner": "Tim L\u00f6hr",
       "source": "Original Prognose pr\u00fcfen workshop material (English edition of the Workshop 01 participant kit, invented company data), built by scripts/workshop01/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1019,8 +1019,8 @@
     },
     {
       "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
-      "sizeBytes": 1139935,
-      "sha256": "cb9142a07c01794984c7bde30638ed791f4474816e5bab47a80e37fdc679fe0b",
+      "sizeBytes": 1140159,
+      "sha256": "04f1cc295c3e820deda5a68eb34cb20c3d944763b408fca617b8728e68942bf9",
       "owner": "Tim L\u00f6hr",
       "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1122,8 +1122,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
-      "sizeBytes": 854377,
-      "sha256": "b0c4c7f91846bc88ba492ce7540840ea2d9e1a87b9c48a8d65102238c2fda080",
+      "sizeBytes": 855493,
+      "sha256": "01a5e3686486158d9c56d18957dd5f0e17e3a442b2e8389ebca43c30afc41506",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, German edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1131,8 +1131,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-      "sizeBytes": 918869,
-      "sha256": "07f991dec1242ba88596a68863b7f0ff95917d9d9ce45f63326a9e3e216aa8cf",
+      "sizeBytes": 919946,
+      "sha256": "349efbdb11bb41fa7cfc41ad12b52c0d7d43731941376d66d714a3eb2d6b68da",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, English edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -1196,8 +1196,17 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
-      "sizeBytes": 29658,
-      "sha256": "fefdebb42bfd86e651f99e4a3aa787dd428be18e092964772bec38686b455d25",
+      "sizeBytes": 40981,
+      "sha256": "724e032607705d78dc7535f8103540e0fc681267fd1217ac8ebff423e981c10c",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
+      "license": "LicenseRef-Loehrning-Brand",
+      "redistribution": "Included for loehrning.ai course operation; no standalone reuse rights granted"
+    },
+    {
+      "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip",
+      "sizeBytes": 43669,
+      "sha256": "be234f2ef69c54c1e65605aa937570912d2a847ff76f761781938910e4a669c4",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

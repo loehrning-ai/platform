@@ -30,7 +30,7 @@ function rv(from, { delay, span, until } = {}) {
 
 const OWNER_OF = { R2: "it", R3: "it", R4: "it", R5: "hr", R7: "it", R8: "md" };
 const STATUS_ORDER = ["covered", "weak", "gap"];
-const TESTS = ["date", "approval", "scope", "quote"];
+const TESTS = ["quote", "date", "scope", "approval"];
 
 /** Mono file name, cut before its tail so the date or version stays readable. */
 function fileName(name, extra = "") {
@@ -260,18 +260,15 @@ function mission1(d, c) {
 function mission2(d, c) {
   const t = d.training;
   const r7 = [
-    { key: "policy", file: "infosec-policy_v3_FINAL.md", quote: d.quotes.policyBackup, fail: "date" },
-    { key: "notes", file: "it-notes_2026-10-06.md", quote: d.quotes.notesBackup, fail: "approval" },
-    { key: "report", file: "backup-report_2026-10.txt", quote: d.quotes.reportRestore, fail: "notmet" },
+    // failed: the tests each file fails for R7, as the demo's model computes them (workshops-audit-deck.test.ts).
+    { key: "policy", file: "infosec-policy_v3_FINAL.md", quote: d.quotes.policyBackup, fail: "date", failed: ["quote", "date"] },
+    { key: "notes", file: "it-notes_2026-10-06.md", quote: d.quotes.notesBackup, fail: "approval", failed: ["quote", "approval"] },
+    { key: "report", file: "backup-report_2026-10.txt", quote: d.quotes.reportRestore, fail: "notmet", failed: ["quote"] },
   ]
-    .map((cand, i) => `<li class="cand cand-${cand.fail}"${rv(2, { delay: i * 0.28, span: 0.3 })}>
+    .map((cand, i) => `<li class="cand cand-${cand.fail}" data-file="${cand.file}" data-failed="${cand.failed.join(" ")}"${rv(2, { delay: i * 0.28, span: 0.3 })}>
       ${fileName(cand.file)}
       <p class="cand-q q" data-file="folder/${cand.file}">${esc(cand.quote)}</p>
-      <p class="cand-tests">${TESTS.map((test, k) => {
-        const failedAt = cand.fail === "date" ? 0 : cand.fail === "approval" ? 1 : 3;
-        const state = k < failedAt ? "pass" : k === failedAt ? "fail" : "skip";
-        return `<span class="tchip tchip-${state}">${esc(c.tests[test])}</span>`;
-      }).join("")}</p>
+      <p class="cand-tests">${TESTS.map((test) => `<span class="tchip tchip-${cand.failed.includes(test) ? "fail" : "pass"}">${esc(c.tests[test])}</span>`).join("")}</p>
       <p class="cand-why">${esc(c.m2.r7Reasons[cand.key])}</p>
       ${cand.fail === "notmet" ? statusChip("gap", c, "cand-status") : ""}
     </li>`)

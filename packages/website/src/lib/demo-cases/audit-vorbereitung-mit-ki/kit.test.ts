@@ -11,6 +11,7 @@ import { FOLDER_FILES, KIT_TEXT, kitText } from "./kit";
 import { VARDAR_VALUES, renderGapRequest, renderInstructions } from "./render";
 
 const KIT_DIR = join(__dirname, "../../../../../../scripts/workshop05/kit");
+const KIT_DIR_DE = join(__dirname, "../../../../../../scripts/workshop05/kit-de");
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -21,9 +22,13 @@ function walk(dir: string): string[] {
 
 describe("W05 kit lockstep", () => {
   it("kit.ts holds every kit file byte for byte", () => {
-    const files = walk(KIT_DIR).map((path) => relative(KIT_DIR, path)).sort();
-    expect(Object.keys(KIT_TEXT).sort()).toEqual(files.filter((file) => file !== "START-HERE.md"));
-    for (const file of Object.keys(KIT_TEXT)) expect(KIT_TEXT[file], file).toBe(readFileSync(join(KIT_DIR, file), "utf8"));
+    const en = walk(KIT_DIR).map((path) => relative(KIT_DIR, path)).filter((file) => file !== "START-HERE.md");
+    const de = walk(KIT_DIR_DE).map((path) => relative(KIT_DIR_DE, path)).filter((file) => file !== "START-HIER.md");
+    expect(Object.keys(KIT_TEXT).sort()).toEqual([...en, ...de.map((file) => `de/${file}`)].sort());
+    for (const file of Object.keys(KIT_TEXT)) {
+      const source = file.startsWith("de/") ? join(KIT_DIR_DE, file.slice(3)) : join(KIT_DIR, file);
+      expect(KIT_TEXT[file], file).toBe(readFileSync(source, "utf8"));
+    }
   });
 
   it("has eleven folder files", () => {
@@ -47,6 +52,16 @@ describe("W05 kit lockstep", () => {
 
   it("renders project-instructions.md byte for byte from the Vardar values", () => {
     expect(renderInstructions(VARDAR_VALUES)).toBe(kitText("project-instructions.md"));
+    expect(renderInstructions(VARDAR_VALUES, "de")).toBe(kitText("de/projektanweisungen.md"));
+  });
+
+  it("the German instructions keep the English rule numbers: 13 rules, the four tests at 4 to 7", () => {
+    const rules = (text: string) => [...text.matchAll(/^(\d+)\. (\S+)/gm)].map((match) => [Number(match[1]), match[2]]);
+    const en = rules(kitText("project-instructions.md"));
+    const de = rules(kitText("de/projektanweisungen.md"));
+    expect(de.map(([n]) => n)).toEqual(en.map(([n]) => n));
+    expect(de.slice(3, 7).map(([, word]) => word)).toEqual(["ZITAT:", "ZEITRAUM:", "UMFANG:", "FREIGABE:"]);
+    expect(en.slice(3, 7).map(([, word]) => word)).toEqual(["QUOTE:", "PERIOD:", "SCOPE:", "APPROVAL:"]);
   });
 
   it("renders the R7 email exactly as ANSWERS.md shows it", () => {
@@ -77,23 +92,23 @@ describe("W05 engine against the answer key", () => {
     expect(context.systems).toEqual(["Servicepult", "Sprechband", "Nordlager", "Claude Team"]);
   });
 
-  it("every item status equals ANSWERS.md Mission 2, tally 2 · 4 · 2", () => {
-    const key = keyItems();
+  it.each(["en", "de"] as const)("every item status equals the %s key, step 2, tally 2 · 1 · 5", (locale) => {
+    const key = keyItems(locale);
     expect(key).toHaveLength(8);
     const results = ITEMS.map((item) => itemStatus(item, context));
     for (const row of key) expect(results.find((result) => result.item.id === row.id)?.status, row.id).toBe(row.status);
-    expect(tally(results)).toEqual({ covered: 2, weak: 4, gap: 2 });
+    expect(tally(results)).toEqual({ covered: 2, weak: 1, gap: 5 });
   });
 
-  it("Mission 1: 8 of 11 files pass, exactly the files of the key", () => {
+  it.each(["en", "de"] as const)("%s key, step 1: 8 of 11 files pass, exactly the files of the key", (locale) => {
     const rows = indexRows(FOLDER_FILES.map(kitDoc), context.windowStart);
-    const key = keyIndex();
+    const key = keyIndex(locale);
     expect(key).toHaveLength(11);
     for (const row of key) {
       const found = rows.find((entry) => entry.doc.file === row.file);
       expect(found?.date.pass, `${row.file} DATE`).toBe(row.date);
       expect(found?.approval.pass, `${row.file} APPROVAL`).toBe(row.approval);
-      expect(found?.doc.type, `${row.file} type`).toBe(row.type);
+      if (locale === "en") expect(found?.doc.type, `${row.file} type`).toBe(row.type);
     }
     expect(rows.filter((row) => row.passes)).toHaveLength(8);
   });
@@ -101,6 +116,8 @@ describe("W05 engine against the answer key", () => {
   it("computes 295 days, 1 of 4 systems, 25 of 120, 30.5 hours, 638 days", () => {
     const at = (id: string) => itemStatus(ITEMS.find((item) => item.id === id)!, context);
     expect(at("R3").tests.scope.uncoveredDays).toBe(295);
+    expect(at("R3").tests.date.uncoveredDays).toBe(295);
+    expect(at("R3").tests.date.pass).toBe(false);
     expect(at("R4").tests.scope.coveredSystems).toHaveLength(1);
     const r5 = at("R5").tests.quote.figures;
     expect([r5.rows, r5.unique, r5.staff, r5.needed, r5.missing, r5.duplicateId]).toEqual([26, 25, 120, 114, 89, "E014"]);

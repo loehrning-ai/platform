@@ -577,7 +577,7 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
       />
     );
   } else {
-    const root = locale === "de" ? "prognose-pruefen" : "forecast-check";
+    const root = locale === "de" ? "prognose-pruefen-kit" : "forecast-check";
     stage = (
       <div className="fl-stage">
         <KitMap root={root} label={copy.takeHome.treeLabel} tree={copy.takeHome.tree} />

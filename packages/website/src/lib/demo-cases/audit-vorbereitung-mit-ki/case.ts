@@ -33,6 +33,8 @@ export interface Candidate {
   readonly file: FolderFile;
   /** Finds the words in the file that answer the item; null when none do. */
   readonly quote: RegExp;
+  /** The words report that the item is not met (an unapproved tool in use), so they never cover it. */
+  readonly showsNotMet?: true;
 }
 
 export interface Item {
@@ -136,7 +138,7 @@ export const ITEMS: readonly Item[] = [
     naive: "ai-use-rule_v1.md",
     candidates: [
       { file: "ai-use-rule_v1.md", quote: /Valid from [^.]+\./ },
-      { file: NOTES, quote: /Until September[^.]+\./ },
+      { file: NOTES, quote: /Until September[^.]+\./, showsNotMet: true },
     ],
     closing: {
       de: "Aufstellung der KI-Nutzung vom 10.12.2025 bis 30.09.2026 (Werkzeug, Daten, Speicherland), unterschrieben",

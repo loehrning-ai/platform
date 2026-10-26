@@ -2,7 +2,7 @@
 
 One folder per reporting year. Check when you file a document, not when the request arrives.
 
-| Document | VSME | Period | Scope | Final |
+| Document | VSME | Period | Scope | Approval |
 |---|---|---|---|---|
 | Company profile: legal form, NACE, turnover, balance sheet total, employees, sites | B1 | annual accounts | all sites | accounts approved |
 | Electricity invoices | B3 | 12 distinct months, nothing booked twice | all meters | invoice, not an instalment |

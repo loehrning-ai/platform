@@ -228,7 +228,7 @@ export const demos: readonly Demo[] = [
       take: "Nachweisprobe, Claude-Skill und Nachweisregister für deinen Ordner",
     },
     en: {
-      title: "Evidence check",
+      title: "Evidence test",
       oneLiner:
         "Four sentences, four files, four checks. Then the same folder for three requests, one late invoice and your own sentences.",
       question: "Does the file cover the sentence?",
@@ -254,7 +254,7 @@ export const demos: readonly Demo[] = [
     externalActionMode: "none",
     courseSlug: "ai-native",
     lastReviewed: "2026-10-25",
-    title: "Nachweisprüfung",
+    title: "Die Lückenliste",
     oneLiner:
       "Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Dateien und nimm einen Skill für deine eigenen Audits mit. Alles läuft in diesem Tab.",
     question: "Welche Dateien im Ordner sind ein Nachweis?",
@@ -266,7 +266,7 @@ export const demos: readonly Demo[] = [
       take: "eine Nachweisliste und ein Skill, der ohne Zitat nichts zählt",
     },
     en: {
-      title: "Evidence check",
+      title: "The gap list",
       oneLiner:
         "Eight requests, eleven files. Test which file actually proves something, check Claude's quotes against the files, and take a skill home for your own audits. Everything runs in this tab.",
       question: "Which files in the folder are evidence?",

@@ -4,7 +4,7 @@
  *   ArrowRight next build step, then the next main slide (never into the appendix)
  *   ArrowLeft  previous step; at step 0 the previous slide at its last step
  *   r, Shift+R the cover, step 0: votes, timers and the remembered slide cleared
- *   P          the presenter view (presenter.html?deck=<this edition>)
+ *   P          the presenter view (presenter.html at the deck root, ?deck=<this edition>)
  *   Escape     leaves the appendix, back to the slide and step it was opened from
  *
  * Motion is a pure function of (slide, step, t): an element with data-from="k" gets --p, 0 to 1, from the
@@ -202,7 +202,7 @@
   }
 
   function openPresenter() {
-    var w = window.open('./presenter.html?deck=' + encodeURIComponent(RUNTIME.edition), K.presenterChannel(ID), 'width=1180,height=820');
+    var w = window.open((RUNTIME.presenter || './presenter.html') + '?deck=' + encodeURIComponent(RUNTIME.edition), K.presenterChannel(ID), 'width=1180,height=820');
     if (w) { try { w.focus(); } catch (e) { /* ignore */ } }
     postState('presenter');
   }

@@ -149,7 +149,7 @@ function missingMonths(months: readonly boolean[]): number[] {
 
 /**
  * The probe: ban list first for consumer claims, then Zeitraum, Umfang and
- * Stand; the weakest part decides. Precedence: a ban-list hit cuts the claim,
+ * Freigabe; the weakest part decides. Precedence: a ban-list hit cuts the claim,
  * a part without a file is a LÜCKE, a part on an expired, estimated, draft or
  * unsigned file is SCHWACH, otherwise BELEGT.
  */

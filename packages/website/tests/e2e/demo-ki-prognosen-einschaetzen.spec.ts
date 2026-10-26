@@ -203,7 +203,7 @@ test.describe("Die Fehlerliste", () => {
   test("serves the skill, both kit editions and the rule template", async ({ request }) => {
     for (const path of [
       "/skills/prognose-pruefen.zip",
-      "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+      "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
       "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
       "/vorlagen/pruefregel.md",
       "/vorlagen/release-rule.en.md",

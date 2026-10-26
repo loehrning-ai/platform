@@ -1,21 +1,22 @@
 /* presenter.js: speaker view of the Workshop 05 deck. Built on the shared W02/W04 presenter.js: same
  * messages, same notes format, same timers. W05 additions:
  *   - one presenter page serves both editions: the deck opens presenter.html?deck=slides.html (German) or
- *     ?deck=slides.en.html (English); notes, the next-slide preview and the labels follow that edition;
+ *     ?deck=en/slides.html (English); notes, the next-slide preview, the labels and the channel follow
+ *     that edition (the English deck id is "<slug>:en");
  *   - appendix buttons (goto), so the appendix stays outside the arrow path of the deck;
  *   - a "goto" to an appendix slide makes the deck remember where it came from (Escape returns).
  *
- * Messages (channel "deck-presenter:<deck id>", the id from <html data-deck-id>):
+ * Messages (channel "deck-presenter:<deck id>", the id from <html data-deck-id> plus ":en" for English):
  *   deck -> view   { from: "deck", type: "state", index, total, label, section, step, steps }
  *   view -> deck   { from: "presenter", type: "hello" | "key" (key, shiftKey) | "goto" (index) }
  * Keys here: ArrowRight, ArrowLeft, r or Shift+R (forwarded to the deck), Escape closes this window.
  */
 (() => {
   'use strict';
-  const EDITIONS = ['slides.html', 'slides.en.html'];
+  const EDITIONS = ['slides.html', 'en/slides.html'];
   const asked = new URLSearchParams(location.search).get('deck');
   const EDITION = EDITIONS.includes(asked) ? asked : EDITIONS[0];
-  const LANG = EDITION === 'slides.en.html' ? 'en' : 'de';
+  const LANG = EDITION === 'en/slides.html' ? 'en' : 'de';
   const T = {
     de: {
       title: 'Moderation · Audit-Vorbereitung mit KI · loehrning.ai', back: 'Zurück zur Workshop-Seite', side: 'Zeit und nächste Folie',
@@ -41,7 +42,7 @@
 
   const body = document.body;
   const SLUG = body.dataset.slug || '';
-  const CHANNEL = 'deck-presenter:' + (document.documentElement.getAttribute('data-deck-id') || SLUG);
+  const CHANNEL = 'deck-presenter:' + (document.documentElement.getAttribute('data-deck-id') || SLUG) + (LANG === 'en' ? ':en' : '');
   const BLOCKS = ['Say', 'Students', 'Cue', 'Remember'];
   const CLS = { Say: 'say', Students: 'students', Cue: 'cue', Remember: 'remember' };
   const $ = (id) => document.getElementById(id);

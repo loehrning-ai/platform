@@ -2,11 +2,13 @@
 /**
  * Builds the Workshop 05 deck in two editions from one copy source:
  *   packages/website/public/workshops/audit-vorbereitung-mit-ki/slides.html      (German)
- *   packages/website/public/workshops/audit-vorbereitung-mit-ki/slides.en.html   (English)
+ *   packages/website/public/workshops/audit-vorbereitung-mit-ki/en/slides.html   (English)
  * plus presenter.html (one presenter view for both editions; the deck opens it with ?deck=<edition>).
+ * The English edition sits under en/ like every English deck, with its own deck id "<slug>:en", so
+ * its storage keys and presenter channel never mix with the German one.
  *
  * Words: deck-copy.json (de, en; the notes are the presenter notes, Time / Say / Students / Cue / Remember).
- * Facts: data.mjs, read from the kit source (scripts/workshop05/kit). Slides: slides.mjs.
+ * Facts: data.mjs, read from the kit sources (scripts/workshop05/kit, kit-de). Slides: slides.mjs.
  * Runtime, hand-written in the deck folder: lib/deck.css, lib/deck-stage.js, lib/scenes.js,
  * lib/presenter.{js,css}, lib/deck-keys.js (a synced copy of scripts/workshops/deck-keys.js).
  *
@@ -14,7 +16,7 @@
  *   node scripts/workshop05/deck-src/build.mjs           writes the three pages
  *   node scripts/workshop05/deck-src/build.mjs --check   writes nothing, exits 1 when a page differs
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CLAUDE_UI } from "../../../packages/website/src/lib/claude-ui.ts";
@@ -25,7 +27,10 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "../../..");
 export const SLUG = "audit-vorbereitung-mit-ki";
 export const OUT_DIR = path.join(REPO, "packages/website/public/workshops", SLUG);
-export const EDITIONS = { de: "slides.html", en: "slides.en.html" };
+export const EDITIONS = { de: "slides.html", en: "en/slides.html" };
+/** From an edition to the deck folder root: "./" for slides.html, "../" for en/slides.html. */
+const ROOT = { de: "./", en: "../" };
+export const DECK_IDS = { de: SLUG, en: `${SLUG}:en` };
 export const MAIN_SECONDS = 5400;
 export const MAIN_SLIDES = 11;
 
@@ -78,7 +83,7 @@ function chrome(c, lang) {
 </aside>`;
 }
 
-export function buildEdition(lang, d = deckData()) {
+export function buildEdition(lang, d = deckData(lang)) {
   const c = copyFor(lang);
   if (c.notes.length !== SLIDES.length) throw new Error(`${lang}: ${c.notes.length} notes for ${SLIDES.length} slides`);
   const sections = renderSlides(c, d);
@@ -86,11 +91,12 @@ export function buildEdition(lang, d = deckData()) {
     lang,
     edition: EDITIONS[lang],
     other: EDITIONS[lang === "de" ? "en" : "de"],
+    presenter: `${ROOT[lang]}presenter.html`,
     ui: c.ui,
     status: c.status,
   };
   const html = `<!doctype html>
-<html lang="${lang}" data-deck-id="${SLUG}" data-edition="${EDITIONS[lang]}">
+<html lang="${lang}" data-deck-id="${DECK_IDS[lang]}" data-edition="${EDITIONS[lang]}">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -98,7 +104,7 @@ export function buildEdition(lang, d = deckData()) {
 <title>${esc(c.htmlTitle)}</title>
 <meta name="description" content="${esc(c.description)}" />
 <link rel="icon" href="./assets/favicon.svg" />
-<link rel="alternate" hreflang="${lang === "de" ? "en" : "de"}" href="./${runtime.other}" />
+<link rel="alternate" hreflang="${lang === "de" ? "en" : "de"}" href="${ROOT[lang]}${runtime.other}" />
 <link rel="stylesheet" href="./lib/deck.css" />
 <script src="./lib/deck-keys.js"></script>
 <script src="./lib/scenes.js" defer></script>
@@ -115,7 +121,8 @@ ${sections.join("\n")}
 </html>
 `;
   check(lang, html, sections);
-  return html;
+  // slides.mjs and the head point at the deck folder as "./"; the English edition sits one folder down.
+  return lang === "de" ? html : html.replace(/(src|href)="\.\/(assets|lib)\//g, `$1="${ROOT[lang]}$2/`);
 }
 
 function check(lang, html, sections) {
@@ -143,9 +150,8 @@ function presenterPage() {
 
 function main() {
   const checkOnly = process.argv.includes("--check");
-  const d = deckData();
   const outputs = [
-    ...Object.entries(EDITIONS).map(([lang, file]) => [file, buildEdition(lang, d)]),
+    ...Object.entries(EDITIONS).map(([lang, file]) => [file, buildEdition(lang)]),
     ["presenter.html", presenterPage()],
   ];
   const drift = [];
@@ -155,9 +161,16 @@ function main() {
     if (current === html) continue;
     if (checkOnly) drift.push(file);
     else {
+      mkdirSync(path.dirname(target), { recursive: true });
       writeFileSync(target, html);
       console.log(`wrote ${path.relative(REPO, target)} (${Buffer.byteLength(html)} bytes)`);
     }
+  }
+  // The English edition moved to en/slides.html (next.config.ts redirects the old path).
+  const retired = path.join(OUT_DIR, "slides.en.html");
+  if (existsSync(retired)) {
+    if (checkOnly) drift.push("slides.en.html (retired)");
+    else rmSync(retired);
   }
   if (drift.length) {
     console.error(`deck drift, run node scripts/workshop05/deck-src/build.mjs: ${drift.join(", ")}`);

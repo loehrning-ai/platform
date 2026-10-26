@@ -1,15 +1,29 @@
 /**
- * The answer key as ANSWERS.md states it, read from the kit text: Mission 1
- * (which files pass DATE and APPROVAL) and Mission 2 (one status per item).
- * Tests hold the engine (evidence.ts) to it, so the demo can never show a
- * status the kit does not.
+ * The answer key as the kit states it, read from the kit text: step 1 (which
+ * files pass PERIOD and APPROVAL) and step 2 (one status per item). ANSWERS.md
+ * is the English edition, de/LOESUNGEN.md the German one. Tests hold the
+ * engine (evidence.ts) to both, so the demo can never show a status the kit
+ * does not, in either language.
  */
 
 import type { ItemId } from "./classify";
 import type { Status } from "./evidence";
 import { kitText } from "./kit";
 
-const STATUS: Readonly<Record<string, Status>> = { COVERED: "covered", WEAK: "weak", GAP: "gap" };
+const STATUS: Readonly<Record<string, Status>> = {
+  COVERED: "covered",
+  WEAK: "weak",
+  GAP: "gap",
+  BELEGT: "covered",
+  SCHWACH: "weak",
+  "LÜCKE": "gap",
+};
+
+export type KeyLocale = "de" | "en";
+
+const KEY_FILE: Readonly<Record<KeyLocale, string>> = { en: "ANSWERS.md", de: "de/LOESUNGEN.md" };
+const STEP: Readonly<Record<KeyLocale, string>> = { en: "## Step", de: "## Schritt" };
+const PASS: Readonly<Record<KeyLocale, string>> = { en: "pass", de: "hält" };
 
 function tableAfter(text: string, heading: string): readonly (readonly string[])[] {
   const start = text.indexOf(heading);
@@ -17,7 +31,7 @@ function tableAfter(text: string, heading: string): readonly (readonly string[])
   const rows: string[][] = [];
   for (const line of text.slice(start).split("\n").slice(1)) {
     if (line.startsWith("## ")) break;
-    if (!line.startsWith("| ") || /^\|\s*-/.test(line) || /^\| (File|Item) \|/.test(line)) continue;
+    if (!line.startsWith("| ") || /^\|\s*-/.test(line) || /^\| (File|Item|Datei|Anforderung) \|/.test(line)) continue;
     rows.push(line.slice(2, -2).split(" | ").map((cell) => cell.trim()));
   }
   return rows;
@@ -30,12 +44,12 @@ export interface KeyIndexRow {
   readonly approval: boolean;
 }
 
-export function keyIndex(text = kitText("ANSWERS.md")): readonly KeyIndexRow[] {
-  return tableAfter(text, "## Mission 1").map((cells) => ({
+export function keyIndex(locale: KeyLocale = "en"): readonly KeyIndexRow[] {
+  return tableAfter(kitText(KEY_FILE[locale]), `${STEP[locale]} 1`).map((cells) => ({
     file: cells[0] as string,
     type: cells[1] as string,
-    date: cells[4] === "pass",
-    approval: cells[5] === "pass",
+    date: cells[4] === PASS[locale],
+    approval: cells[5] === PASS[locale],
   }));
 }
 
@@ -45,8 +59,8 @@ export interface KeyItemRow {
   readonly status: Status;
 }
 
-export function keyItems(text = kitText("ANSWERS.md")): readonly KeyItemRow[] {
-  return tableAfter(text, "## Mission 2").map((cells) => ({
+export function keyItems(locale: KeyLocale = "en"): readonly KeyItemRow[] {
+  return tableAfter(kitText(KEY_FILE[locale]), `${STEP[locale]} 2`).map((cells) => ({
     id: cells[0] as ItemId,
     file: cells[1] as string,
     status: STATUS[cells[4] as string] as Status,

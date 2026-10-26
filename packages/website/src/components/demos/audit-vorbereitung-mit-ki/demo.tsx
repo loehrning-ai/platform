@@ -32,7 +32,7 @@ const BEAT = { estimate: 0, run: 1, tool: 2, r7: 3, r5: 4, all: 5, own: 6, home:
 type Download = "instructions" | "index" | "gapList";
 
 /**
- * W05 "Nachweisprüfung": eight requests, eleven files, a line from each
+ * W05 "Die Lückenliste": eight requests, eleven files, a line from each
  * request to the file whose name fits; the visitor estimates, then the four
  * tests run over the links and two of eight hold. Every object on the stage
  * is a kit file or a number computed from one (model.ts). The stage is a
@@ -82,7 +82,7 @@ export default function Demo({ copy, locale }: { readonly copy: W05Copy; readonl
   const covered = model.tally.covered;
 
   const download = (which: Download) => {
-    if (which === "instructions") downloadText(copy.takehome.fileNames.instructions, instructionsText(copy, own.audit, own.months));
+    if (which === "instructions") downloadText(copy.takehome.fileNames.instructions, instructionsText(copy, own.audit, own.months, locale));
     else if (which === "index") downloadText(copy.takehome.fileNames.index, indexCsv(model, own.result, copy, locale), "text/csv;charset=utf-8");
     else downloadText(copy.takehome.fileNames.gapList, gapListMarkdown(model, copy, locale));
   };
@@ -154,7 +154,7 @@ export default function Demo({ copy, locale }: { readonly copy: W05Copy; readonl
   } else if (index === BEAT.tool) {
     stage = <ToolStage model={model} copy={copy} locale={locale} />;
     caption = copy.tool.rule;
-    lever = <span className={FILE_CHIP}>project-instructions.md</span>;
+    lever = <span className={FILE_CHIP}>{copy.takehome.fileNames.instructions}</span>;
   } else if (index === BEAT.r7) {
     stage = <R7Stage model={model} copy={copy} locale={locale} pick={pick} t={progress} />;
     const report = model.r7[model.r7.length - 1];

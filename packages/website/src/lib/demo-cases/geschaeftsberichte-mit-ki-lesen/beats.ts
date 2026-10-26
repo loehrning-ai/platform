@@ -14,7 +14,7 @@ export const BEATS: readonly Beat[] = [
   { id: "zeitraum", kind: "apply", seconds: 1, label: { de: "Zeitraum", en: "Period" }, kitFile: `${KIT}/data/demand_actuals.csv` },
   { id: "zahl-pruefen", kind: "apply", seconds: 0.4, label: { de: "Prüfen", en: "Trace" }, kitFile: `${KIT}/data/product_lines.csv` },
   { id: "entscheiden", kind: "apply", seconds: 1, label: { de: "Entscheiden", en: "Decide" }, kitFile: `${KIT}/dashboard/index.html` },
-  { id: "deine-kennzahl", kind: "own", seconds: 0, label: { de: "Deine Kennzahl", en: "Your metric" }, kitFile: `${KIT}/kennzahlen-steckbrief/SKILL.md` },
+  { id: "deine-kennzahl", kind: "own", seconds: 0, label: { de: "Deine Kennzahl", en: "Your metric" }, kitFile: `${KIT}/claude/kennzahlen-steckbrief/SKILL.md` },
   { id: "mitnehmen", kind: "takehome", seconds: 0, label: { de: "Mitnehmen", en: "Take home" }, kitFile: `${KIT}/project-instructions.md` },
 ];
 

@@ -60,9 +60,9 @@ describe("workshop kit page route", () => {
 
   it("renders the audit workshop kit through the same route, in both locales", async () => {
     const auditProps = { params: Promise.resolve({ slug: "audit-vorbereitung-mit-ki" }) };
-    for (const [locale, canonical] of [
-      ["de", "/workshops/audit-vorbereitung-mit-ki/kit"],
-      ["en", "/en/workshops/audit-vorbereitung-mit-ki/kit"],
+    for (const [locale, canonical, zip] of [
+      ["de", "/workshops/audit-vorbereitung-mit-ki/kit", "vardar-audit-kit-de.zip"],
+      ["en", "/en/workshops/audit-vorbereitung-mit-ki/kit", "vardar-audit-kit.zip"],
     ] as const) {
       getRequestLocaleMock.mockResolvedValue(locale);
       const metadata = await generateMetadata(auditProps);
@@ -71,7 +71,7 @@ describe("workshop kit page route", () => {
       const json = JSON.stringify(await WorkshopKitPage(auditProps));
       expect(json).toContain(`https://loehrning.ai${canonical}`);
       expect(json).toContain("application/zip");
-      expect(json).toContain("/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip");
+      expect(json).toContain(`/workshops/audit-vorbereitung-mit-ki/${zip}`);
     }
   });
 

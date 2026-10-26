@@ -6,13 +6,13 @@ import type { WorkshopKit } from "./workshop-kit";
  * The zip is built by scripts/workshop01/build-kit.mjs from scripts/workshop01/kit/;
  * every number below is printed in loesungen.md / solutions.md of that kit and
  * recomputed by the demo's check (workshops-forecasting.test.ts holds them together).
- * The German page offers the German edition prognose-pruefen.zip, the English page
+ * The German page offers the German edition prognose-pruefen-kit.zip, the English page
  * forecast-check.zip; both have the same tree and the same numbers, each with its
  * own file names.
  */
 export const FORECASTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
-    fileName: "prognose-pruefen.zip",
+    fileName: "prognose-pruefen-kit.zip",
     title: "Prognose prüfen",
     lead: "Eine Spalte, Ist minus Prognose, beantwortet vier Fragen. Am Ende steht eine Prüfregel für jede Woche.",
     stats: [

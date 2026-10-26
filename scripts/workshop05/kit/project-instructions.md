@@ -10,13 +10,13 @@ Types
 3. POLICY: a rule we set. REGISTER: a list we keep current (systems, sub-processors). RECORD: shows something was done (review, log, test, training list, report). STATEMENT: notes, emails, vendor pages, what someone says.
 
 The four tests, for every file you consider for a request item
-4. DATE: a RECORD or REGISTER dated on or after the window start. A POLICY approved or reviewed on or after it.
-5. APPROVAL: a POLICY names its approver with a date. A RECORD or REGISTER names its owner or maker. A vendor page names the vendor and the page date. DRAFT, "(open)", a blank field, or "FINAL" in a file name is no approval.
-6. SCOPE: it covers the systems, people and period the request names. Check systems against the system list. Name what is not covered.
-7. QUOTE: words copied exactly from the file answer the item. A POLICY or STATEMENT shows intent; for an item about practice only a RECORD counts. "Planned" or "we do" is not a record.
+4. QUOTE: words copied exactly from the file answer the item. A POLICY or STATEMENT shows intent; for an item about practice only a RECORD counts. "Planned" or "we do" is not a record.
+5. PERIOD: a RECORD or REGISTER dated on or after the window start. A POLICY approved or reviewed on or after it. The file holds for the whole window: a rule valid only from a later day leaves the days before it without evidence.
+6. SCOPE: it covers the systems and people the request names. Check systems against the system list. Name what is not covered.
+7. APPROVAL: a POLICY names its approver with a date. A RECORD or REGISTER names its owner or maker. A vendor page names the vendor and the page date. DRAFT, "(open)", a blank field, or "FINAL" in a file name is no approval.
 
 Status
-8. COVERED: all four tests hold for every part of the item. WEAK: a quote answers, but a test fails or a part is missing; name the test. GAP: nothing answers, or the record shows the requirement is not met.
+8. COVERED: all four tests hold for every part of the item. WEAK: every part has a file that answers, but it is out of date, a draft or not approved; name the test. GAP: nothing answers, a part has no evidence (a system, a period, a field), or the record shows the requirement is not met. An item takes the status of its weakest part.
 9. COVERED means proven, not good news. Every WEAK and GAP names the document that would close it and who owns it.
 
 Working

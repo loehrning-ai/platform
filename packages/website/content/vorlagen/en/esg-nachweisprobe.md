@@ -1,17 +1,17 @@
 # The evidence check
 
-Put the answer next to its file. Check four things:
+Put the answer next to its file. Check four things, the same as in audit preparation (Workshop 05):
 
 1. **Quote.** Which file, which line says it? No quote, no COVERED.
 2. **Period.** Does the file cover the whole period of the answer, and is it valid on the reference date? Count months, not rows: an invoice booked twice counts once.
 3. **Scope.** Does the file cover everything the answer talks about? 12 of 40 ha are not "our vineyards".
-4. **Final.** Is the file final: measured, signed, checked? A draft, an offer and an estimate are not.
+4. **Approval.** Is the file final and owned: measured, signed, approved? A draft, an offer and an estimate are not.
 
 ## Status
 
-- ■ **COVERED**: All four hold. Bad news can be covered too; then an action follows.
-- ▨ **WEAK**: The file is there, but expired, estimated, a draft, unsigned or in conflict with another file.
-- □ **GAP**: No file says it. Write down which document would prove it.
+- ■ **COVERED**: All four hold, for every part. Bad news can be covered too; then an action follows.
+- ▨ **WEAK**: Every part has a file, but it is expired, estimated, a draft, unapproved or in conflict with another file.
+- □ **GAP**: No file says it, or a part has no file (a month, part of the area). Write down which document would prove it.
 
 Several parts: the weakest part counts.
 

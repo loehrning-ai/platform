@@ -32,7 +32,7 @@ describe("the install text (src/lib/claude-ui.ts)", () => {
     expect(fillSkillName(CLAUDE_UI.de.code.allProjects, "probe")).toBe("unzip probe.zip -d ~/.claude/skills/");
     const markdown = claudeUiMarkdown("en", "probe");
     expect(markdown).toContain("`unzip probe.zip -d .claude/skills/`");
-    expect(markdown).toContain("~/.claude/skills/probe/SKILL.md");
+    expect(markdown).toContain("SKILL.md then sits in skills/probe/");
     expect(markdown).not.toContain("{name}");
     expect(markdown).toMatch(/^### claude\.ai and the desktop app\n\n1\. /);
   });

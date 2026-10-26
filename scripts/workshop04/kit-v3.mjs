@@ -87,14 +87,14 @@ const CASE_FILES = {
 export const PLATFORM_FILES = {
   de: {
     "nachweisprobe.md": "content/vorlagen/esg-nachweisprobe.md",
-    "mitnehmen/esg-nachweise/SKILL.md": `content/skills/${SKILL_NAME}/SKILL.md`,
+    "claude/esg-nachweise/SKILL.md": `content/skills/${SKILL_NAME}/SKILL.md`,
     "mitnehmen/projektanweisungen-vorlage.md": "content/vorlagen/esg-projektanweisungen.md",
     "mitnehmen/ordner-checkliste.md": "content/vorlagen/esg-ordner-checkliste.md",
     "mitnehmen/mail-fehlendes-dokument.md": "content/vorlagen/esg-mail-fehlendes-dokument.md",
   },
   en: {
     "evidence-check.md": "content/vorlagen/en/esg-nachweisprobe.md",
-    "take-home/esg-nachweise/SKILL.md": `content/skills/${SKILL_NAME}/SKILL.md`,
+    "claude/esg-nachweise/SKILL.md": `content/skills/${SKILL_NAME}/SKILL.md`,
     "take-home/project-instructions-template.md": "content/vorlagen/en/esg-projektanweisungen.md",
     "take-home/folder-checklist.md": "content/vorlagen/en/esg-ordner-checkliste.md",
     "take-home/email-missing-document.md": "content/vorlagen/en/esg-mail-fehlendes-dokument.md",

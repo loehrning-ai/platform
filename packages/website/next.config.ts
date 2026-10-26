@@ -42,6 +42,21 @@ const DATA_READINESS_KIT_MOVES = [
   { source: `${DATA_READINESS_KIT}/agent/CLAUDE.example.md`, destination: `${DATA_READINESS_KIT}/builder/claude/CLAUDE.short.example.md`, permanent: true },
 ];
 
+/** Workshop files that moved to one naming pattern (English decks under en/, German kit names). */
+const WORKSHOP_FILE_MOVES = [
+  // Workshop 01: the German kit got its own name, so it never reads like the skill prognose-pruefen.zip.
+  {
+    source: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+    destination: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+    permanent: true,
+  },
+  {
+    source: "/workshops/audit-vorbereitung-mit-ki/slides.en.html",
+    destination: "/workshops/audit-vorbereitung-mit-ki/en/slides.html",
+    permanent: true,
+  },
+];
+
 const nextConfig: NextConfig = {
   // No `output: "standalone"` — the website deploys to Vercel, which uses its own
   // build output and ignores standalone. It was unused here and broke monorepo
@@ -144,6 +159,8 @@ const nextConfig: NextConfig = {
     // Workshop 03 kit v3: the browser lab became the demo's test beat, the
     // optional worksheets moved into the builder kit.
     ...DATA_READINESS_KIT_MOVES,
+    // English decks live under en/slides.html; old file names keep working.
+    ...WORKSHOP_FILE_MOVES,
     // Old chapter links of the data book keep working (see src/lib/book-chapter-redirects.ts).
     ...legacyChapterRedirects(bookChapterSlugs("de"), ""),
     ...legacyChapterRedirects(bookChapterSlugs("en"), "/en"),

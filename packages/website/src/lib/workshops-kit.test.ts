@@ -35,7 +35,7 @@ describe("workshop kit blocks", () => {
         expect(de.kit).toBeDefined();
         expect(en.kit).toBeDefined();
         const [a, b] = [de.kit!, en.kit!];
-        // A kit with a German edition names its own files (prognose-pruefen.zip,
+        // A kit with a German edition names its own files (prognose-pruefen-kit.zip,
         // pruefregel.md); then only the shape has to match, not the names.
         const sameEdition = a.fileName === b.fileName;
         const name = (file: string | undefined) => (sameEdition ? file : Boolean(file));

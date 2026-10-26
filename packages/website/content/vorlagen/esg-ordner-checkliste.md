@@ -2,7 +2,7 @@
 
 Ein Ordner je Berichtsjahr. Prüf beim Ablegen, nicht erst, wenn die Anfrage kommt.
 
-| Dokument | VSME | Zeitraum | Umfang | Stand |
+| Dokument | VSME | Zeitraum | Umfang | Freigabe |
 |---|---|---|---|---|
 | Firmenprofil: Rechtsform, NACE, Umsatz, Bilanzsumme, Beschäftigte, Standorte | B1 | Jahresabschluss | alle Standorte | Jahresabschluss festgestellt |
 | Stromrechnungen | B3 | 12 eindeutige Monate, keine Doppelerfassung | alle Zähler | Rechnung, kein Abschlag |

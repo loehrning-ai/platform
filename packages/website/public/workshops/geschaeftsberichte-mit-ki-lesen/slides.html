@@ -951,18 +951,27 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
   }
 
   // ── wire navigation ───────────────────────────────────────────────────
+  // A slide's address name: its id, else its label in lower case with dashes ("Prompt 3" -> "prompt-3").
+  function slideId(s){
+    return (s && s.id) || ((s && s.getAttribute('data-label')) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
   var gotEvent = false;
   stage.addEventListener('slidechange', function(e){
     gotEvent = true;
     resetSlide(e.detail.previousSlide);
     playSlide(e.detail.slide);
-    try { history.replaceState(null, '', '#' + (e.detail.index + 1)); } catch (err) {}
+    // #<slide id>/<step>, the address pattern of every workshop deck.
+    var stepOf = function(slide){ return parseInt((slide && slide.getAttribute('data-step')) || '0', 10) || 0; };
+    try { history.replaceState(null, '', '#' + slideId(e.detail.slide) + '/' + stepOf(e.detail.slide)); } catch (err) {}
   });
 
   window.addEventListener('DOMContentLoaded', function(){
     setTimeout(function(){
-      var m = (location.hash || '').match(/^#(\d+)$/);
-      var target = m ? Math.min(total, Math.max(1, +m[1])) - 1 : (stage.index || 0);
+      // #<slide id>/<step>; the older #<number> still opens its slide.
+      var byId = (location.hash || '').match(/^#([\w-]+)\/(\d+)$/);
+      var byNumber = (location.hash || '').match(/^#(\d+)$/);
+      var idIndex = byId ? slides.findIndex(function(s){ return slideId(s) === byId[1]; }) : -1;
+      var target = idIndex >= 0 ? idIndex : byNumber ? Math.min(total, Math.max(1, +byNumber[1])) - 1 : (stage.index || 0);
       stage.goTo(target);
       // goTo() is a no-op when target already equals the restored index — which is exactly
       // what a reload lands in, because the hash was written on the way out and the index is

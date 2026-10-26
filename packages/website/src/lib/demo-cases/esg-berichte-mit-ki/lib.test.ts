@@ -319,8 +319,8 @@ describe("beats and copy", () => {
   it("has the same status words as the kit: BELEGT · SCHWACH · LÜCKE and COVERED · WEAK · GAP", () => {
     expect(Object.values(COPY.de.statuses)).toEqual(["BELEGT", "SCHWACH", "LÜCKE"]);
     expect(Object.values(COPY.en.statuses)).toEqual(["COVERED", "WEAK", "GAP"]);
-    expect(Object.values(COPY.de.checks)).toEqual(["ZITAT", "ZEITRAUM", "UMFANG", "STAND"]);
-    expect(Object.values(COPY.en.checks)).toEqual(["QUOTE", "PERIOD", "SCOPE", "FINAL"]);
+    expect(Object.values(COPY.de.checks)).toEqual(["ZITAT", "ZEITRAUM", "UMFANG", "FREIGABE"]);
+    expect(Object.values(COPY.en.checks)).toEqual(["QUOTE", "PERIOD", "SCOPE", "APPROVAL"]);
     const english = JSON.stringify(COPY.en);
     for (const word of ["BELEGT", "SCHWACH", "LÜCKE", "PRÜFEN", "FEHLT"]) expect(english).not.toContain(word);
   });

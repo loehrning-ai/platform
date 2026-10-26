@@ -6,7 +6,7 @@ for the [customer] audit on [audit date], item [item] asks for:
 "[request text, word for word]"
 
 What we have: [file], dated [date].
-It fails [DATE / APPROVAL / SCOPE / QUOTE]: [one sentence with the quote or the empty field].
+It fails [QUOTE / PERIOD / SCOPE / APPROVAL]: [one sentence with the quote or the empty field].
 
 What closes it: [document], dated on or after [window start], [approved / made] by [role], covering [systems, people, period].
 

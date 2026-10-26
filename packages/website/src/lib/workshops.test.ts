@@ -15,9 +15,11 @@ import {
 
 /** Kits published in German as well: German edition -> the English one it mirrors. */
 const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
-  "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip": "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+  "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip": "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
   "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip":
     "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
+  "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip": "/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+  "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip": "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
 };
 
 /** Kits that carry both languages in one zip: the material is labelled in the page's language. */
@@ -25,7 +27,7 @@ const BILINGUAL_KITS: ReadonlySet<string> = new Set(["/workshops/datenbereitscha
 
 /**
  * A deck published in two editions: the German page links slides.html (German),
- * the English page slides.en.html (English), built from one copy source.
+ * the English page en/slides.html (English), built from one copy source.
  */
 const DECK_EDITIONS: ReadonlySet<string> = new Set(["audit-vorbereitung-mit-ki"]);
 const isDeckEdition = (slug: string, material: WorkshopMaterial) => material.role === "deck" && DECK_EDITIONS.has(slug);
@@ -250,7 +252,7 @@ describe("workshops catalog", () => {
       // in English, in the page's own language. A kit with a German edition
       // is the same material as its English one. A deck published in both
       // languages is the same deck in the page's language: its English
-      // edition lives under en/slides.html or at slides.en.html.
+      // edition lives under en/slides.html.
       const materialShape = (material: WorkshopMaterial) => {
         const { href, kind, language, role, phase, minutes, optional, primary } = material;
         const edition = isDeckEdition(germanWorkshop.slug, material);
@@ -259,7 +261,7 @@ describe("workshops catalog", () => {
             role === "demo"
               ? href.replace(/^\/en\//, "/")
               : edition
-                ? href.replace(/\/slides\.en\.html$/, "/slides.html")
+                ? href.replace(/\/en\/slides\.html$/, "/slides.html")
                 : (GERMAN_KIT_EDITIONS[href] ?? href.replace(/\/en\/slides\.html$/, "/slides.html")),
           kind,
           language:

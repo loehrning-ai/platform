@@ -1,2 +1,2 @@
-item,request,file,doc_type,date,date_kind,approved_or_owned_by,scope,quote,date_test,approval_test,scope_test,quote_test,status,closing_document,owner,due
-R7,A restore test of your backups from the last 12 months,backup-report_2026-10.txt,RECORD,2026-11-01,generated,IT lead,"Servicepult export, file share","Restore test: not done in 2026.",pass,pass,pass,not met,GAP,"Restore test record: date, data restored, result, who",IT lead,2026-12-02
+item,request,file,doc_type,date,date_kind,approved_or_owned_by,scope,quote,quote_test,period_test,scope_test,approval_test,status,closing_document,owner,due
+R7,A restore test of your backups from the last 12 months,backup-report_2026-10.txt,RECORD,2026-11-01,generated,IT lead,"Servicepult export, file share","Restore test: not done in 2026.",not met,pass,pass,pass,GAP,"Restore test record: date, data restored, result, who",IT lead,2026-12-02

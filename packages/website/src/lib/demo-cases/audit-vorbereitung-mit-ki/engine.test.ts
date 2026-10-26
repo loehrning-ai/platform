@@ -263,15 +263,15 @@ describe("text decoding", () => {
 });
 
 describe("model", () => {
-  it("the naive run ends 2 · 4 · 2 and fails where the stage draws it", async () => {
+  it("the naive run ends 2 · 1 · 5 and fails where the stage draws it", async () => {
     const { buildModel } = await import("./model");
     const model = buildModel();
-    expect(model.tally).toEqual({ covered: 2, weak: 4, gap: 2 });
+    expect(model.tally).toEqual({ covered: 2, weak: 1, gap: 5 });
     expect(model.exercise).toBe("2026-11-09");
     expect(Object.fromEntries(model.rows.map((row) => [row.item.id, row.failsAt]))).toEqual({
       R1: null,
       R2: "quote",
-      R3: "scope",
+      R3: "date",
       R4: "scope",
       R5: "quote",
       R6: null,
@@ -280,6 +280,6 @@ describe("model", () => {
     });
     expect(model.unlinked).toEqual(["vendor-page_claude_2026-06-15.md", "it-notes_2026-10-06.md", "infosec-policy_v3_FINAL.md"]);
     expect(model.r7.map((result) => result.status)).toEqual(["gap", "gap", "gap"]);
-    expect(model.r7.map((result) => result.failed)).toEqual([["date", "quote"], ["approval", "quote"], ["quote"]]);
+    expect(model.r7.map((result) => result.failed)).toEqual([["quote", "date"], ["quote", "approval"], ["quote"]]);
   });
 });

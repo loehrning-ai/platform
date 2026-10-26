@@ -6,7 +6,7 @@ für das Audit von [Kunde] am [Audit-Datum] verlangt Anforderung [Anforderung]:
 "[Anforderungstext, wörtlich]"
 
 Was wir haben: [Datei], datiert [Datum der Datei].
-Es scheitert an [DATUM / FREIGABE / UMFANG / ZITAT]: [ein Satz mit dem Zitat oder dem leeren Feld].
+Es scheitert an [ZITAT / ZEITRAUM / UMFANG / FREIGABE]: [ein Satz mit dem Zitat oder dem leeren Feld].
 
 Was die Lücke schließt: [Nachweis], datiert ab [Beginn des Prüfzeitraums], [freigegeben / erstellt] von [Rolle], für [Systeme, Personen, Zeitraum].
 

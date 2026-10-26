@@ -34,8 +34,8 @@ describe("the kennzahlen-steckbrief skill", () => {
   });
 
   it("ships byte for byte inside both kits", () => {
-    expect(kitText("en", `${SKILL_NAME}/SKILL.md`)).toBe(skillText);
-    expect(kitText("de", `${SKILL_NAME}/SKILL.md`)).toBe(skillText);
+    expect(kitText("en", `claude/${SKILL_NAME}/SKILL.md`)).toBe(skillText);
+    expect(kitText("de", `claude/${SKILL_NAME}/SKILL.md`)).toBe(skillText);
   });
 });
 

@@ -1,12 +1,16 @@
 /**
- * The four tests and the status, computed from the kit texts alone:
+ * The four tests and the status, computed from the kit texts alone, in the
+ * order and with the words Workshop 04 uses (esg-nachweise):
  *
- *   DATUM · FREIGABE · UMFANG · ZITAT  ->  BELEGT, SCHWACH oder LÜCKE
+ *   ZITAT · ZEITRAUM · UMFANG · FREIGABE  ->  BELEGT, SCHWACH oder LÜCKE
  *
- * A part is missing or one test fails: SCHWACH. Nothing answers, or the
- * record shows "not met": LÜCKE. No quote, no BELEGT; a policy shows intent,
- * only a record shows practice. dateTest and approvalTest also run on the
- * visitor's own files (own-folder.ts). Pure.
+ * The test id "date" is ZEITRAUM: dated in the window, and valid for the
+ * whole window. Every part has an answering file, but one is out of date, a
+ * draft or unapproved: SCHWACH. Nothing answers, a part has no evidence (an
+ * empty field, uncovered days, a system without a record), or the record
+ * shows "not met": LÜCKE. No quote, no BELEGT; a policy shows intent, only a
+ * record shows practice. dateTest and approvalTest also run on the visitor's
+ * own files (own-folder.ts). Pure.
  */
 
 import { docType, type DocType } from "./classify";
@@ -17,7 +21,7 @@ import { dateOfKind, documentDate, extractMeta, type DatedFact, type Meta } from
 import type { AuditContext, Item } from "./case";
 
 export type TestId = "date" | "approval" | "scope" | "quote";
-export const TEST_ORDER: readonly TestId[] = ["date", "approval", "scope", "quote"];
+export const TEST_ORDER: readonly TestId[] = ["quote", "date", "scope", "approval"];
 export type Status = "covered" | "weak" | "gap";
 
 export interface Doc {
@@ -45,9 +49,11 @@ export interface DateResult {
   readonly daysShort: number | null;
   /** A stated next review that already lies before the window. */
   readonly reviewDue: DatedFact | null;
+  /** Days of the window before the file starts to hold (a rule valid only from a later day); a part without evidence. */
+  readonly uncoveredDays: number;
 }
 
-/** DATUM: a record or register dated in the window; a policy approved or reviewed in it. */
+/** ZEITRAUM, the date half: a record or register dated in the window; a policy approved or reviewed in it. */
 export function dateTest(doc: Doc, windowStart: IsoDate): DateResult {
   const { meta } = doc;
   let used: DatedFact | null = doc.date;
@@ -60,10 +66,10 @@ export function dateTest(doc: Doc, windowStart: IsoDate): DateResult {
     const next = dateOfKind(meta, "nextReview");
     if (next && next.iso < windowStart) reviewDue = next;
   }
-  if (!used) return { pass: false, used: null, daysShort: null, reviewDue };
-  if (doc.type === "STATEMENT") return { pass: true, used, daysShort: null, reviewDue: null };
+  if (!used) return { pass: false, used: null, daysShort: null, reviewDue, uncoveredDays: 0 };
+  if (doc.type === "STATEMENT") return { pass: true, used, daysShort: null, reviewDue: null, uncoveredDays: 0 };
   const inWindow = used.iso >= windowStart && !reviewDue;
-  return { pass: inWindow, used, daysShort: used.iso < windowStart ? daysBetween(used.iso, windowStart) : null, reviewDue };
+  return { pass: inWindow, used, daysShort: used.iso < windowStart ? daysBetween(used.iso, windowStart) : null, reviewDue, uncoveredDays: 0 };
 }
 
 export type ApprovalFail = "open" | "draft" | "none" | "notReviewed";
@@ -113,7 +119,11 @@ export interface ScopeResult {
   readonly validFrom: IsoDate | null;
 }
 
-/** UMFANG: the set difference of what the item needs and what the file covers. */
+/**
+ * UMFANG: the set difference of what the item needs and what the file
+ * covers. The days a rule does not cover are measured here too, but they
+ * belong to ZEITRAUM (see evaluate).
+ */
 export function scopeTest(doc: Doc, item: Item, context: AuditContext): ScopeResult {
   const header = doc.text.split("\n").slice(0, 3).join(" ");
   const coveredSystems = context.systems.filter((system) => header.includes(system));
@@ -121,7 +131,7 @@ export function scopeTest(doc: Doc, item: Item, context: AuditContext): ScopeRes
   const validFrom = item.scopeNeed.includes("period") ? (dateOfKind(doc.meta, "validFrom")?.iso ?? null) : null;
   const uncoveredDays = validFrom && validFrom > context.windowStart ? daysBetween(context.windowStart, validFrom) : 0;
   return {
-    pass: missingSystems.length === 0 && uncoveredDays === 0,
+    pass: missingSystems.length === 0,
     missingSystems,
     coveredSystems,
     uncoveredDays,
@@ -165,6 +175,7 @@ export function quoteTest(doc: Doc, item: Item, context: AuditContext): QuoteRes
   const quote = candidate ? (candidate.quote.exec(doc.text)?.[0]?.trim() ?? null) : null;
   if (!quote) return { kind: "none", quote: null, missingParts: [], figures: {} };
   if (item.needsRecord && doc.type !== "RECORD") return { kind: "intent", quote, missingParts: [], figures: {} };
+  if (candidate?.showsNotMet) return { kind: "notMet", quote, missingParts: [], figures: {} };
 
   if (item.check === "transfer") {
     const table = readCsv(doc.text);
@@ -213,11 +224,21 @@ export function failedTests(tests: TestResults): readonly TestId[] {
   );
 }
 
-/** notMet or no answering quote: LÜCKE. Else any failure or a missing part: SCHWACH. Else BELEGT. */
+/**
+ * A part without evidence or "not met": LÜCKE (no answering quote, an empty
+ * field, uncovered days, a system without a record). Else a file that is out
+ * of date or unapproved: SCHWACH. Else BELEGT. The weakest part decides.
+ */
 export function statusOf(tests: TestResults): Status {
   const { kind } = tests.quote;
-  if (kind === "notMet" || kind === "none" || kind === "intent") return "gap";
+  if (kind !== "pass") return "gap";
+  if (tests.date.uncoveredDays > 0 || tests.scope.missingSystems.length > 0) return "gap";
   return failedTests(tests).length > 0 ? "weak" : "covered";
+}
+
+/** ZEITRAUM in full: the date test, failed as well when the file holds only for part of the window. */
+export function periodTest(date: DateResult, scope: ScopeResult): DateResult {
+  return scope.uncoveredDays > 0 ? { ...date, pass: false, uncoveredDays: scope.uncoveredDays } : date;
 }
 
 export interface Evaluation {
@@ -230,10 +251,11 @@ export interface Evaluation {
 
 export function evaluate(item: Item, file: FolderFile, context: AuditContext): Evaluation {
   const doc = kitDoc(file);
+  const scope = scopeTest(doc, item, context);
   const tests: TestResults = {
-    date: dateTest(doc, context.windowStart),
+    date: periodTest(dateTest(doc, context.windowStart), scope),
     approval: approvalTest(doc),
-    scope: scopeTest(doc, item, context),
+    scope,
     quote: quoteTest(doc, item, context),
   };
   return { item, doc, tests, failed: failedTests(tests), status: statusOf(tests) };
@@ -274,7 +296,7 @@ export interface IndexRow {
   readonly passes: boolean;
 }
 
-/** Mission 1: DATUM and FREIGABE for every file of a folder. */
+/** Step 1: ZEITRAUM (dated in the window) and FREIGABE for every file of a folder. */
 export function indexRows(docs: readonly Doc[], windowStart: IsoDate): readonly IndexRow[] {
   return docs.map((doc) => {
     const date = dateTest(doc, windowStart);

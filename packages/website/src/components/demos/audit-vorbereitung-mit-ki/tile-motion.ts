@@ -1,7 +1,7 @@
 import type { TileMotion, Track } from "@/lib/demo-tiles/types";
 
 /*
- * W05 "Nachweisprüfung", hub miniature motion. Every request starts linked
+ * W05 "Die Lückenliste", hub miniature motion. Every request starts linked
  * to a file (solid lines, 8/8). A test bar sweeps down row by row: where a
  * test fails the solid line gives way to a dashed one (SCHWACH), where the
  * record says "not met" the line breaks and its halves pull apart (LÜCKE).

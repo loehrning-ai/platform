@@ -81,8 +81,8 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       en: "/en/demos/ki-prognosen-einschaetzen",
     },
     inKit: {
-      zip: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
-      paths: { de: "prognose-pruefen/pruefregel.md" },
+      zip: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+      paths: { de: "prognose-pruefen-kit/pruefregel.md" },
     },
   },
   {

@@ -93,6 +93,13 @@ export function formatLongEn(iso: IsoDate): string {
   return `${day} ${names[month - 1]} ${year}`;
 }
 
+/** "10. Dezember 2026": the German long form, used inside the German kit texts. */
+export function formatLongDe(iso: IsoDate): string {
+  const [year, month, day] = iso.split("-").map(Number) as [number, number, number];
+  const names = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+  return `${day}. ${names[month - 1]} ${year}`;
+}
+
 interface Pattern {
   readonly re: RegExp;
   /** A token; null marks an impossible date (kept as an invalid token); undefined leaves the text (no month word). */

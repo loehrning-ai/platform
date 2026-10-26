@@ -11,7 +11,7 @@ import { expect, type Page, test } from "@playwright/test";
 const SLUG = "audit-vorbereitung-mit-ki";
 const EDITIONS = [
   { lang: "de", file: "slides.html" },
-  { lang: "en", file: "slides.en.html" },
+  { lang: "en", file: "en/slides.html" },
 ] as const;
 
 type DeckState = { index: number; id: string; step: number; steps: number; tallies: Record<string, string[]>; timers: number };

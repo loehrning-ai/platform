@@ -114,7 +114,7 @@ export interface CardWords {
   readonly comparisons: Readonly<Record<Exclude<Comparison, "">, string>>;
 }
 
-/** The card as a Markdown block, the same format as kennzahlen-steckbrief/SKILL.md. */
+/** The card as a Markdown block, the same format as claude/kennzahlen-steckbrief/SKILL.md. */
 export function cardToMarkdown(card: OwnCard, words: CardWords): string {
   const text = (field: TextField) => cleanField(card[field], FIELD_LIMITS[field]) || words.unset;
   const kind = card.numeratorKind ? ` (${words.kinds[card.numeratorKind]})` : "";

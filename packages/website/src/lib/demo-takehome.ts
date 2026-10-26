@@ -32,10 +32,11 @@ export interface TakeHome {
   readonly templates: readonly { readonly vorlage: string }[];
 }
 
-/** Workshop 05 ships one kit for both locales. */
+/** Workshop 05 ships an English and a German kit; both hold the same English case files. */
 const AUDIT_KIT = "vardar-audit-kit";
+const AUDIT_KIT_DE = "vardar-audit-kit-de";
 
-const AUDIT_KIT_EDITION: TakeHomeKit = {
+const AUDIT_KIT_EN: TakeHomeKit = {
   href: `/workshops/audit-vorbereitung-mit-ki/${AUDIT_KIT}.zip`,
   shown: [
     `${AUDIT_KIT}/folder/backup-report_2026-10.txt`,
@@ -47,21 +48,33 @@ const AUDIT_KIT_EDITION: TakeHomeKit = {
   installDoc: `${AUDIT_KIT}/START-HERE.md`,
 };
 
+const AUDIT_KIT_DE_EDITION: TakeHomeKit = {
+  href: `/workshops/audit-vorbereitung-mit-ki/${AUDIT_KIT_DE}.zip`,
+  shown: [
+    `${AUDIT_KIT_DE}/ordner/backup-report_2026-10.txt`,
+    `${AUDIT_KIT_DE}/ordner/training-records_2026.csv`,
+    `${AUDIT_KIT_DE}/ordner/infosec-policy_v4_DRAFT.md`,
+    `${AUDIT_KIT_DE}/projektanweisungen.md`,
+  ],
+  instructions: `${AUDIT_KIT_DE}/projektanweisungen.md`,
+  installDoc: `${AUDIT_KIT_DE}/START-HIER.md`,
+};
+
 export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
   // Workshop 01 "Die Fehlerliste": built by scripts/workshop01/build-kit.mjs.
   "ki-prognosen-einschaetzen": {
     kit: {
       de: {
-        href: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+        href: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
         shown: [
-          "prognose-pruefen/daten/linsensuppe-woechentlich.csv",
-          "prognose-pruefen/daten/tool-export.txt",
-          "prognose-pruefen/daten/kosten.md",
-          "prognose-pruefen/pruefregel.md",
-          "prognose-pruefen/uebung.md",
+          "prognose-pruefen-kit/daten/linsensuppe-woechentlich.csv",
+          "prognose-pruefen-kit/daten/tool-export.txt",
+          "prognose-pruefen-kit/daten/kosten.md",
+          "prognose-pruefen-kit/pruefregel.md",
+          "prognose-pruefen-kit/uebung.md",
         ],
-        instructions: "prognose-pruefen/claude/projekt-anweisung.md",
-        installDoc: "prognose-pruefen/START-HIER.md",
+        instructions: "prognose-pruefen-kit/claude/projekt-anweisung.md",
+        installDoc: "prognose-pruefen-kit/START-HIER.md",
       },
       en: {
         href: "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
@@ -91,7 +104,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
           "northwind-analyst-kit/data/product_lines.csv",
           "northwind-analyst-kit/dashboard/index.html",
           "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
-          "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
+          "northwind-analyst-kit/claude/kennzahlen-steckbrief/SKILL.md",
         ],
         instructions: "northwind-analyst-kit/project-instructions.md",
         installDoc: "northwind-analyst-kit/START-HERE.md",
@@ -106,7 +119,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
           "northwind-analyst-kit/data/product_lines.csv",
           "northwind-analyst-kit/dashboard/index.html",
           "northwind-analyst-kit/.claude/skills/northwind-metrics/SKILL.md",
-          "northwind-analyst-kit/kennzahlen-steckbrief/SKILL.md",
+          "northwind-analyst-kit/claude/kennzahlen-steckbrief/SKILL.md",
         ],
         instructions: "northwind-analyst-kit/project-instructions.md",
         installDoc: "northwind-analyst-kit/START-HERE.md",
@@ -183,7 +196,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
     ],
   },
   "audit-vorbereitung-mit-ki": {
-    kit: { de: AUDIT_KIT_EDITION, en: AUDIT_KIT_EDITION },
+    kit: { de: AUDIT_KIT_DE_EDITION, en: AUDIT_KIT_EN },
     skill: { name: "audit-nachweise" },
     templates: [{ vorlage: "luecken-anfrage" }],
   },

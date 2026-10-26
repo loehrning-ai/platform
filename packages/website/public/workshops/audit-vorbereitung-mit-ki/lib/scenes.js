@@ -10,7 +10,7 @@
 
   var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
   var ease = function (v) { v = clamp(v); return 1 - Math.pow(1 - v, 3); };
-  var TESTS = ['date', 'approval', 'scope', 'quote'];
+  var TESTS = ['quote', 'date', 'scope', 'approval'];
 
   /* The demo's reality run, ported 1:1 (motion.ts). */
   var PASS_START = 0.08, PASS_LENGTH = 0.2, LINK_STAGGER = 0.014, LABELS_FROM = 0.88, TEST_SPAN = 0.06;

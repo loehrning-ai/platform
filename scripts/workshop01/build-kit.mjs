@@ -3,7 +3,7 @@
  * Builds the kit of Workshop 01 ("KI-Prognosen prüfen, bevor danach geplant wird") from
  * scripts/workshop01/kit/{de,en}/ into
  *
- *   packages/website/public/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip   (DE)
+ *   packages/website/public/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip   (DE)
  *   packages/website/public/workshops/ki-prognosen-einschaetzen/forecast-check.zip     (EN)
  *
  * and writes the files the site derives from the same sources, so nothing can drift:
@@ -47,8 +47,8 @@ const PUBLIC_DIR = path.join(SITE, "public/workshops", SLUG);
 /** The two editions: same tree, file names, column names and notes in the edition's language. */
 export const EDITIONS = {
   de: {
-    root: "prognose-pruefen",
-    zip: "prognose-pruefen.zip",
+    root: "prognose-pruefen-kit",
+    zip: "prognose-pruefen-kit.zip",
     csvSource: CSV_PATH,
     csv: "daten/linsensuppe-woechentlich.csv",
     installDoc: "START-HIER.md",

@@ -1,6 +1,6 @@
 /**
- * Every fact the Workshop 05 deck shows, read from the kit source (scripts/workshop05/kit) or computed
- * from it. The deck never types a number or a quote by hand: build.mjs passes this object to slides.mjs,
+ * Every fact the Workshop 05 deck shows, read from the kit source (scripts/workshop05/kit, and for the
+ * German edition the prompts and the R7 email from scripts/workshop05/kit-de) or computed from it. The deck never types a number or a quote by hand: build.mjs passes this object to slides.mjs,
  * and packages/website/src/lib/workshops-audit-deck.test.ts holds the result to the demo's model.
  */
 import { readFileSync } from "node:fs";
@@ -10,7 +10,17 @@ import { fileURLToPath } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const KIT_DIR = path.join(HERE, "..", "kit");
 
+export const KIT_DIR_DE = path.join(HERE, "..", "kit-de");
+const GAP_TEMPLATE_DE = path.join(HERE, "../../../packages/website/content/vorlagen/luecken-anfrage.md");
+
 export const kit = (file) => readFileSync(path.join(KIT_DIR, file), "utf8");
+const kitDe = (file) => readFileSync(path.join(KIT_DIR_DE, file), "utf8");
+
+/** Per edition: the start file, its step headings, the gap template and the key that holds the filled R7 email. */
+const EDITION_SOURCES = {
+  en: { start: () => kit("START-HERE.md"), step: "## Step", template: () => kit("templates/gap-request.md"), key: () => kit("ANSWERS.md"), email: "Example email (R7)" },
+  de: { start: () => kitDe("START-HIER.md"), step: "## Schritt", template: () => readFileSync(GAP_TEMPLATE_DE, "utf8"), key: () => kitDe("LOESUNGEN.md"), email: "Beispiel-Mail (R7)" },
+};
 
 const must = (value, what) => {
   if (value === undefined || value === null || value === "") throw new Error(`deck data: ${what} not found in the kit`);
@@ -66,7 +76,7 @@ function quoteIn(file, pattern) {
 export const NAIVE = {
   R1: { file: "system-list_2026-09.csv", failsAt: null },
   R2: { file: "subprocessors_2026-09.csv", failsAt: "quote" },
-  R3: { file: "ai-use-rule_v1.md", failsAt: "scope" },
+  R3: { file: "ai-use-rule_v1.md", failsAt: "date" },
   R4: { file: "access-review_2026-08-14.csv", failsAt: "scope" },
   R5: { file: "training-records_2026.csv", failsAt: "quote" },
   R6: { file: "incident-log_2026.csv", failsAt: null },
@@ -74,11 +84,12 @@ export const NAIVE = {
   R8: { file: "infosec-policy_v4_DRAFT.md", failsAt: "approval" },
 };
 
-export function deckData() {
+export function deckData(lang = "en") {
+  const source = EDITION_SOURCES[lang];
   const request = kit("request_tannwald.md");
   const draft = kit("draft-reply.md");
   const answers = kit("ANSWERS.md");
-  const startHere = kit("START-HERE.md");
+  const startHere = source.start();
   const training = kit("folder/training-records_2026.csv");
   const incidents = kit("folder/incident-log_2026.csv");
 
@@ -108,8 +119,8 @@ export function deckData() {
   const windowStart = "2025-12-10";
   const ruleFrom = must(/Valid from (\d{4}-\d{2}-\d{2})/.exec(kit("folder/ai-use-rule_v1.md"))?.[1], "AI rule start");
 
-  // Mission 1: the index, straight from ANSWERS.md.
-  const index = table(answers, "## Mission 1").map(([file, type, date, by, dateTest, approvalTest]) => ({
+  // Step 1: the index, straight from ANSWERS.md.
+  const index = table(answers, "## Step 1").map(([file, type, date, by, dateTest, approvalTest]) => ({
     file,
     type,
     date,
@@ -119,9 +130,9 @@ export function deckData() {
   }));
   const passing = index.filter((row) => row.dateOk && row.approvalOk).length;
 
-  // Mission 2: status per item, straight from ANSWERS.md.
+  // Step 2: status per item, straight from ANSWERS.md.
   const statusWord = { COVERED: "covered", WEAK: "weak", GAP: "gap" };
-  const mission2 = table(answers, "## Mission 2").map(([id, file, quote, failing, status]) => ({
+  const mission2 = table(answers, "## Step 2").map(([id, file, quote, failing, status]) => ({
     id,
     file,
     quote,
@@ -133,10 +144,11 @@ export function deckData() {
   const tally = { covered: 0, weak: 0, gap: 0 };
   for (const row of mission2) tally[row.status] += 1;
 
-  // The gap request for R7: the template, its slots, and the values the filled email in ANSWERS.md gives them.
-  const template = kit("templates/gap-request.md").trimEnd();
-  const emailStart = answers.indexOf("Example email (R7)");
-  const email = must(/```\n([\s\S]*?)```/.exec(answers.slice(emailStart))?.[1], "R7 email").trimEnd();
+  // The gap request for R7: the template, its slots, and the values the filled email in the key gives them.
+  const template = source.template().trimEnd();
+  const key = source.key();
+  const emailStart = must(key.indexOf(source.email) >= 0 ? key.indexOf(source.email) : null, source.email);
+  const email = must(/```\n([\s\S]*?)```/.exec(key.slice(emailStart))?.[1], "R7 email").trimEnd();
   const parts = template.split(/(\[[^\]]+\])/g);
   const pattern = new RegExp(
     "^" + parts.map((part, i) => (i % 2 ? "(.+?)" : part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))).join("") + "$",
@@ -147,9 +159,9 @@ export function deckData() {
 
   const sample = must(/```\n([\s\S]*?)```/.exec(answers.slice(answers.indexOf("Sample reply")))?.[1], "sample reply").trimEnd();
 
-  const [m1] = promptBlocks(startHere, "## Mission 1");
-  const [m2, m2follow] = promptBlocks(startHere, "## Mission 2");
-  const [m3] = promptBlocks(startHere, "## Mission 3");
+  const [m1] = promptBlocks(startHere, `${source.step} 1`);
+  const [m2, m2follow] = promptBlocks(startHere, `${source.step} 2`);
+  const [m3] = promptBlocks(startHere, `${source.step} 3`);
 
   return {
     customer: "Tannwald",

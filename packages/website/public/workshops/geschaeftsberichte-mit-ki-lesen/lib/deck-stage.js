@@ -4,9 +4,9 @@
  * Handles:
  *  (a) speaker notes — reads <script type="application/json" id="speaker-notes">
  *      and posts {slideIndexChanged: N} to the parent window on nav.
- *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
- *  (c) press Shift+R to reset to slide 0, the same as every other workshop deck; a bare R does
- *      nothing, so a stray key press can never send a live talk back to the cover.
+ *  (b) keyboard navigation — ArrowRight and ArrowLeft only (lib/deck-keys.js); Space, PageUp,
+ *      PageDown, Home, End and digits stay free.
+ *  (c) r or Shift+R resets to slide 0, the same as every other workshop deck.
  *  (c2) P or Shift+P opens the presenter view (presenter.html): notes, current and next slide, a clock. It
  *      follows the deck over a BroadcastChannel and sends the same keys back.
  *  (d) bottom-center overlay showing slide count + hints, fades out on idle.
@@ -38,7 +38,9 @@
  *
  * Persistence: current slide index is saved to localStorage under
  * "deck:<deck id>:slide" (the id is <html data-deck-id>), so refresh returns
- * you to the same place and no other deck shares the key.
+ * you to the same place and no other deck shares the key. The page writes the
+ * position into the address as #<slide id>/<step> (slides.html), the same
+ * pattern as every other workshop deck.
  *
  * Keys: the shared contract in lib/deck-keys.js (ArrowRight, ArrowLeft, r or
  * Shift+R back to the first slide, P presenter view). Nothing else is bound.

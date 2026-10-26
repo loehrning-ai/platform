@@ -30,13 +30,12 @@ export function defectOf(result: Evaluation, copy: W05Copy, locale: Loc, short =
     const hours = tests.quote.figures.hours;
     return hours !== undefined ? fill(copy.defect.hours, { hours: formatDecimal(hours, locale) }) : null;
   }
+  if (first === "date" && tests.date.uncoveredDays > 0) return fill(copy.defect.days, { days: tests.date.uncoveredDays, of: tests.scope.windowDays });
   if (first === "date") return fill(copy.defect.reviewDue, { date: formatShort(tests.date.used?.iso ?? "", locale) });
   if (first === "approval") return result.doc.meta.notReviewed ? copy.defect.notReviewed : copy.defect.approvalOpen;
   if (first === "scope") {
-    const { missingSystems, coveredSystems, uncoveredDays, windowDays } = tests.scope;
-    return missingSystems.length > 0
-      ? fill(copy.defect.systems, { covered: coveredSystems.length, total: coveredSystems.length + missingSystems.length })
-      : fill(copy.defect.days, { days: uncoveredDays, of: windowDays });
+    const { missingSystems, coveredSystems } = tests.scope;
+    return fill(copy.defect.systems, { covered: coveredSystems.length, total: coveredSystems.length + missingSystems.length });
   }
   if (tests.quote.kind === "part") {
     if (!short) return fill(copy.defect.empty, { parts: tests.quote.missingParts.join(", ") });

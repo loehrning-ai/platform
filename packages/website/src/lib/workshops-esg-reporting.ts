@@ -15,19 +15,19 @@ const base = "/workshops/esg-berichte-mit-ki";
  */
 
 /**
- * Size of crvena-zemja-esg-kit.zip, rounded down to whole KB; workshops-esg-reporting.test.ts checks it
- * against the file. The workshop ran in English, so the page lists the English edition; the German
- * edition (crvena-zemja-nachweisprobe.zip) is named in the kit text and handed out by the demo.
+ * Sizes of the two kit editions, rounded down to whole KB; workshops-esg-reporting.test.ts checks them
+ * against the files. Each locale links its own edition: crvena-zemja-nachweisprobe.zip (German) on the
+ * German page, crvena-zemja-esg-kit.zip (English) on the English one, the same kit the demo hands out.
  */
-const KIT_SIZE_LABEL = "897 KB";
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "835 KB", en: "898 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
-/** Href, kind, language, role and phase: each locale links its own deck edition, both the same kit. */
+/** Href, kind, language, role and phase: each locale links its own deck edition and its own kit edition. */
 const MATERIALS: Readonly<Record<Locale, readonly MaterialFrame[]>> = {
   de: [
     { href: `${base}/slides.html`, kind: "html", language: "de", role: "deck", phase: "during", minutes: 60, primary: true },
-    { href: `${base}/crvena-zemja-esg-kit.zip`, kind: "zip", language: "en", role: "kit", phase: "after" },
+    { href: `${base}/crvena-zemja-nachweisprobe.zip`, kind: "zip", language: "de", role: "kit", phase: "after" },
   ],
   en: [
     { href: `${base}/en/slides.html`, kind: "html", language: "en", role: "deck", phase: "during", minutes: 60, primary: true },
@@ -44,7 +44,7 @@ function materials(locale: Locale, copy: readonly MaterialCopy[]): readonly Work
   return frames.map((frame, index) => {
     const [label, description, short] = copy[index];
     const text = short === undefined ? { label, description } : { label, description, short };
-    return frame.kind === "zip" ? { ...frame, ...text, sizeLabel: KIT_SIZE_LABEL } : { ...frame, ...text };
+    return frame.kind === "zip" ? { ...frame, ...text, sizeLabel: KIT_SIZE_LABEL[locale] } : { ...frame, ...text };
   });
 }
 
@@ -81,14 +81,14 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     question:
       "Welche unserer ESG-Antworten belegen unsere Dateien, und welches Dokument fehlt für den Rest?",
     outcomes: [
-      "Du prüfst jede Antwort mit der Nachweisprobe: Zitat, Zeitraum, Umfang, Stand.",
+      "Du prüfst jede Antwort mit der Nachweisprobe: Zitat, Zeitraum, Umfang, Freigabe.",
       "Du lässt Claude einen Fragebogen und ein Bankformular füllen, jede Antwort BELEGT, SCHWACH oder LÜCKE.",
       "Du prüfst Werbeaussagen zuerst gegen die Verbotsliste der EU und streichst, was keine Datei trägt.",
       "Du erkennst, welche Antworten sich mit einem nachgereichten Dokument ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
       { label: "Ein Satz, eine Datei", minutes: 5, activity: "vote", description: "Würdest du diese Regalkarte so drucken? Erst abstimmen, dann die Datei daneben legen." },
-      { label: "Die Nachweisprobe", minutes: 3, activity: "listen", description: "Vier Prüfungen für jede Antwort: Zitat, Zeitraum, Umfang, Stand." },
+      { label: "Die Nachweisprobe", minutes: 3, activity: "listen", description: "Vier Prüfungen für jede Antwort: Zitat, Zeitraum, Umfang, Freigabe." },
       { label: "Anfragen, Kit und Projekt", minutes: 6, activity: "do", description: "Wer fragt, was im Kit liegt und wie das Claude-Projekt angelegt wird." },
       { label: "Durchsicht ohne Claude", minutes: 10, activity: "do", description: "Zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
       { label: "Schritt 1: der Fragebogen", minutes: 7, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
@@ -195,7 +195,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       ],
       [
         "Nachweisprobe-Kit · .zip",
-        "START-HERE.md (Durchsicht, Einrichtung, fünf Prompts), evidence-check.md (die Nachweisprobe auf einer Seite), project-instructions.md (die drei Regeln), 13 Firmendateien, drei Anfragen, eine nachgereichte Rechnung für Schritt 5, ANSWERS.md und der Skill esg-nachweise mit Vorlagen.",
+        "START-HIER.md (Durchsicht, Einrichtung, fünf Prompts), nachweisprobe.md (die Nachweisprobe auf einer Seite), projektanweisungen.md (die drei Regeln), 13 Firmendateien, drei Anfragen, eine nachgereichte Rechnung für Schritt 5, LOESUNGEN.md und der Skill esg-nachweise mit Vorlagen.",
         "Fünf Prompts, Lösungen, 13 Dateien, drei Anfragen, Skill.",
       ],
     ]),
@@ -233,14 +233,14 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     question:
       "Which of our ESG answers do our files prove, and which document is missing for the rest?",
     outcomes: [
-      "Check every answer with the evidence check: quote, period, scope, final.",
+      "Check every answer with the evidence check: quote, period, scope, approval.",
       "Have Claude fill a questionnaire and a bank form, every answer COVERED, WEAK or GAP.",
       "Check marketing claims against the EU ban list first, and drop what no file carries.",
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
       { label: "One sentence, one file", minutes: 5, activity: "vote", description: "Would you print this shelf card? Vote first, then put the file next to it." },
-      { label: "The evidence check", minutes: 3, activity: "listen", description: "Four checks for every answer: quote, period, scope, final." },
+      { label: "The evidence check", minutes: 3, activity: "listen", description: "Four checks for every answer: quote, period, scope, approval." },
       { label: "Requests, kit and project", minutes: 6, activity: "do", description: "Who asks, what is in the kit and how to set up the Claude Project." },
       { label: "Review without Claude", minutes: 10, activity: "do", description: "In pairs on paper: file, line and which check fails." },
       { label: "Step 1: the questionnaire", minutes: 7, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },

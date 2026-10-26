@@ -156,8 +156,8 @@
     },
     {
       "path": "data-readiness-kit.zip",
-      "sizeBytes": 1139935,
-      "sha256": "cb9142a07c01794984c7bde30638ed791f4474816e5bab47a80e37fdc679fe0b"
+      "sizeBytes": 1140159,
+      "sha256": "04f1cc295c3e820deda5a68eb34cb20c3d944763b408fca617b8728e68942bf9"
     },
     {
       "path": "data-readiness-kit/ASSET-RIGHTS.md",
@@ -181,13 +181,13 @@
     },
     {
       "path": "data-readiness-kit/START-HERE.md",
-      "sizeBytes": 1705,
-      "sha256": "0864b1317ae8c32354a302411a17eeaac54638263ae330a5d0aab2fbfd693d86"
+      "sizeBytes": 1707,
+      "sha256": "578ca820133d75ece1f6c7d98788e53eaadb2da7b46807fb28cfac3bfe60b3e3"
     },
     {
       "path": "data-readiness-kit/START-HIER.md",
       "sizeBytes": 1772,
-      "sha256": "395e915a8835ee4464c4c4b01d00b9fa30dc79580e5a0672c06d26dd79689665"
+      "sha256": "e1c0774d5ff9cae81e02801a6983c905a5cddbd90b68251dbabeca19b40d591e"
     },
     {
       "path": "data-readiness-kit/UEBUNG.md",
@@ -581,8 +581,8 @@
     },
     {
       "path": "data-readiness-kit/claude/README.md",
-      "sizeBytes": 3786,
-      "sha256": "95c0bad62ca8a7244892e4db24c54382fa94bc99ad867062a8e8c06d3873ddbf"
+      "sizeBytes": 4006,
+      "sha256": "4c62768727a17b7ef4810974efbbb4703b60ceb79ff2aceb55dea457b885cd4e"
     },
     {
       "path": "data-readiness-kit/claude/TEST-LIST-TEMPLATE.md",
@@ -591,8 +591,8 @@
     },
     {
       "path": "data-readiness-kit/claude/kennzahl-fragekarte/SKILL.md",
-      "sizeBytes": 6076,
-      "sha256": "1c3db6b8b55208a46e06d34a65b9fea22c88025b757f288e70b1cbcc40107517"
+      "sizeBytes": 6078,
+      "sha256": "3244e6214f28e24cfc28864242935910bb0e3e08a5287292fecfa4af875adf71"
     },
     {
       "path": "data-readiness-kit/claude/kennzahl-fragekarte/references/kennzahlen.md",

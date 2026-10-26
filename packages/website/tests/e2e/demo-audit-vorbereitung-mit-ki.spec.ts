@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { expectGlassBudget } from "./fixtures/glass";
 
 /**
- * W05 "Nachweisprüfung" on a phone: the estimate commits before the reveal,
+ * W05 "Die Lückenliste" on a phone: the estimate commits before the reveal,
  * the four tests leave 2 · 4 · 2, a restart keeps the visitor's own list, the
  * Zitat-Probe checks a pasted table, and an old date caps an item at SCHWACH.
  */

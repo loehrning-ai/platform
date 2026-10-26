@@ -212,6 +212,11 @@ export interface Workshop {
   readonly eyebrow: string;
   /** One or two sentences for the listing card and meta description. Keep at or under 160 characters. */
   readonly summary: string;
+  /**
+   * The band lede on the workshop page when it should say what you do rather
+   * than repeat the teaser; the summary stays the hub row and meta text.
+   */
+  readonly lede?: string;
   /** The longer intro: the case, the wrong answer and the fix, in a few sentences. */
   readonly description: string;
   readonly format: string;
@@ -461,7 +466,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       },
       {
         label: "Kit · .zip",
-        href: `${FORECAST_BASE_PATH}/prognose-pruefen.zip`,
+        href: `${FORECAST_BASE_PATH}/prognose-pruefen-kit.zip`,
         kind: "zip",
         language: "de",
         role: "kit",

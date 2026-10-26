@@ -6,7 +6,7 @@
  */
 
 import { OWNERS, type AuditContext, type Item } from "./case";
-import { formatLongEn, formatShort } from "./dates";
+import { formatLongDe, formatLongEn, formatShort } from "./dates";
 import type { Evaluation, TestId } from "./evidence";
 import { kitText } from "./kit";
 
@@ -15,8 +15,8 @@ export interface InstructionValues {
   readonly audit: string;
   readonly windowStart: string;
   readonly requestFile: string;
-  /** "Fictional training material." for the kit; empty for a real audit. */
-  readonly note: string;
+  /** True for the kit's own case: the line then says it is fictional training material. */
+  readonly fictional: boolean;
 }
 
 export const VARDAR_VALUES: InstructionValues = {
@@ -24,24 +24,37 @@ export const VARDAR_VALUES: InstructionValues = {
   audit: "2026-12-10",
   windowStart: "2025-12-10",
   requestFile: "request_tannwald.md",
-  note: " Fictional training material.",
+  fictional: true,
 };
 
-/** project-instructions.md with the customer, the dates and the request file of this audit. */
-export function renderInstructions(values: InstructionValues): string {
-  const kit = kitText("project-instructions.md");
-  return kit
+/**
+ * The project instructions with the customer, the dates and the request file of this audit:
+ * project-instructions.md in English, de/projektanweisungen.md in German.
+ */
+export function renderInstructions(values: InstructionValues, locale: "de" | "en" = "en"): string {
+  if (locale === "de") {
+    const note = values.fictional ? " Erfundenes Übungsmaterial." : "";
+    return kitText("de/projektanweisungen.md")
+      .replace(
+        /^Audit: .*$/m,
+        `Audit: ${values.customerFull}, Lieferantenaudit am ${formatLongDe(values.audit)}. Prüfzeitraum ab ${formatLongDe(values.windowStart)}.${note}`,
+      )
+      .replace("gegen den 10. Dezember 2026", `gegen den ${formatLongDe(values.audit)}`)
+      .replace("nur aus request_tannwald.md", `nur aus ${values.requestFile}`);
+  }
+  const note = values.fictional ? " Fictional training material." : "";
+  return kitText("project-instructions.md")
     .replace(
       /^Audit: .*$/m,
-      `Audit: ${values.customerFull}, supplier audit on ${formatLongEn(values.audit)}. Evidence window from ${formatLongEn(values.windowStart)}.${values.note}`,
+      `Audit: ${values.customerFull}, supplier audit on ${formatLongEn(values.audit)}. Evidence window from ${formatLongEn(values.windowStart)}.${note}`,
     )
     .replace("against 10 December 2026", `against ${formatLongEn(values.audit)}`)
     .replace("only from request_tannwald.md", `only from ${values.requestFile}`);
 }
 
 const TEST_WORD: Readonly<Record<"de" | "en", Readonly<Record<TestId, string>>>> = {
-  de: { date: "DATUM", approval: "FREIGABE", scope: "UMFANG", quote: "ZITAT" },
-  en: { date: "DATE", approval: "APPROVAL", scope: "SCOPE", quote: "QUOTE" },
+  de: { date: "ZEITRAUM", approval: "FREIGABE", scope: "UMFANG", quote: "ZITAT" },
+  en: { date: "PERIOD", approval: "APPROVAL", scope: "SCOPE", quote: "QUOTE" },
 };
 
 /** The one sentence after "It fails ...:" for an evaluation, in the template's language. */
@@ -49,11 +62,12 @@ export function failSentence(result: Evaluation, locale: "de" | "en"): string {
   const { tests } = result;
   const first = result.failed[0];
   const de = locale === "de";
+  if (first === "date" && tests.date.uncoveredDays > 0)
+    return de ? `"${tests.quote.quote}", davor ${tests.date.uncoveredDays} Tage ohne Regel` : `"${tests.quote.quote}", so ${tests.date.uncoveredDays} days before it have no rule`;
   if (first === "date") return de ? `freigegeben am ${formatShort(tests.date.used?.iso ?? "", "de")}, nächste Prüfung war fällig` : `approved ${tests.date.used?.iso}, its next review was due before the window`;
   if (first === "approval") return de ? `im Kopf steht "Approved by: (open)"` : `its header says "Approved by: (open)"`;
-  if (first === "scope" && tests.scope.missingSystems.length > 0)
+  if (first === "scope")
     return de ? `"${tests.quote.quote}", die anderen ${tests.scope.missingSystems.length} Systeme fehlen` : `"${tests.quote.quote}", the other ${tests.scope.missingSystems.length} systems are missing`;
-  if (first === "scope") return de ? `"${tests.quote.quote}", davor ${tests.scope.uncoveredDays} Tage ohne Regel` : `"${tests.quote.quote}", so ${tests.scope.uncoveredDays} days before it have no rule`;
   if (tests.quote.kind === "part") return de ? `in der Zeile "${tests.quote.quote}" sind ${tests.quote.missingParts.join(" und ")} leer` : `in the row "${tests.quote.quote}" ${tests.quote.missingParts.join(" and ")} are empty`;
   if (tests.quote.figures.unique !== undefined)
     return de
@@ -92,7 +106,7 @@ export function renderGapRequest(result: Evaluation, context: AuditContext, temp
       "[Anforderungstext, wörtlich]": item.request,
       "[Datei]": result.doc.file,
       "[Datum der Datei]": day(fileDate),
-      "[DATUM / FREIGABE / UMFANG / ZITAT]": TEST_WORD.de[result.failed[0] ?? "quote"],
+      "[ZITAT / ZEITRAUM / UMFANG / FREIGABE]": TEST_WORD.de[result.failed[0] ?? "quote"],
       "[ein Satz mit dem Zitat oder dem leeren Feld]": failSentence(result, "de"),
       "[Nachweis]": item.closing.de,
       "[Beginn des Prüfzeitraums]": day(context.windowStart),
@@ -114,7 +128,7 @@ export function renderGapRequest(result: Evaluation, context: AuditContext, temp
     .replace("[request text, word for word]", item.request)
     .replace("[file]", result.doc.file)
     .replace("[date]", day(fileDate))
-    .replace("[DATE / APPROVAL / SCOPE / QUOTE]", TEST_WORD[locale][result.failed[0] ?? "quote"])
+    .replace("[QUOTE / PERIOD / SCOPE / APPROVAL]", TEST_WORD[locale][result.failed[0] ?? "quote"])
     .replace("[one sentence with the quote or the empty field]", failSentence(result, locale))
     .replace("[document]", de ? item.closing.de : item.closing.en)
     .replace("[window start]", day(context.windowStart))

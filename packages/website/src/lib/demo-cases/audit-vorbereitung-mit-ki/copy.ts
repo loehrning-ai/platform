@@ -17,7 +17,7 @@ const vorlage = (file: string) => readFileSync(path.join(process.cwd(), "content
 
 export const COPY = {
   de: {
-    stageLabel: "Nachweisprüfung: acht Anforderungen und elf Dateien",
+    stageLabel: "Lückenliste: acht Anforderungen und elf Dateien",
     caseLine: "Tannwald prüft Vardar Works",
     auditLine: "Stand {exercise} · Audit {date}",
     unlinked: "ohne Treffer:",
@@ -26,7 +26,7 @@ export const COPY = {
     estimateCaption: "Zu allen {total} passt ein Dateiname. Wie viele kann Vardar heute belegen?",
     estimateGroup: "Deine Schätzung: wie viele der 8 belegt?",
     status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" },
-    test: { date: "DATUM", approval: "FREIGABE", scope: "UMFANG", quote: "ZITAT" },
+    test: { date: "ZEITRAUM", approval: "FREIGABE", scope: "UMFANG", quote: "ZITAT" },
     type: { POLICY: "RICHTLINIE", CONTRACT: "VERTRAG", REGISTER: "REGISTER", RECORD: "PROTOKOLL", STATEMENT: "AUSSAGE" },
     dateKind: {
       approved: "freigegeben",
@@ -66,16 +66,16 @@ export const COPY = {
     },
     objectiveLabel: "Lernziel",
     objective:
-      "Eine Datei ist erst ein Nachweis, wenn Datum, Freigabe, Umfang und Zitat stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.",
+      "Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.",
     toolSource: "Im Kit: Regeln 4 bis 9",
     tool: {
       lines: {
-        date: "Im Prüfzeitraum: ab {window}. Bei Richtlinien zählt die letzte Freigabe oder Überprüfung.",
+        date: "Im Prüfzeitraum ab {window}, und für den ganzen Zeitraum. Bei Richtlinien zählt die letzte Freigabe oder Überprüfung.",
         approval: "Richtlinie, Vertrag: Name mit Datum im Dokument. Protokoll, Register: wer es führt.",
-        scope: "Die Systeme, Personen und den Zeitraum, nach denen gefragt ist.",
+        scope: "Die Systeme und Personen, nach denen gefragt ist.",
         quote: "Ein Satz oder eine Zeile aus der Datei, die die Anforderung beantwortet.",
       },
-      status: "BELEGT, SCHWACH oder LÜCKE. Teil fehlt oder eine Prüfung scheitert: SCHWACH. Nichts belegt es, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE.",
+      status: "BELEGT, SCHWACH oder LÜCKE. Datei veraltet oder nicht freigegeben: SCHWACH. Ein Teil ohne Nachweis, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE. Der schwächste Teil zählt.",
       rule: "Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.",
     },
     r7: {
@@ -120,7 +120,7 @@ export const COPY = {
       paste: "Liste einfügen",
       empty: "Noch keine eigenen Dateien. Nichts verlässt diesen Tab.",
       summary: "{files}, Prüfzeitraum ab {window}",
-      noAudit: "{files}. Trag unten den Stichtag ein, dann prüft DATUM.",
+      noAudit: "{files}. Trag unten den Stichtag ein, dann prüft ZEITRAUM.",
       bound: {
         none: "LÜCKE, wenn es nicht unter anderem Namen liegt",
         weak: "höchstens SCHWACH",
@@ -133,8 +133,8 @@ export const COPY = {
     takehome: {
       caption: "Die vier Prüfungen für dein nächstes Audit: als Skill und als Vorlagen.",
       rows: [
-        ["audit-nachweise", "Skill: Claude prüft DATUM, FREIGABE, UMFANG, ZITAT"],
-        ["projekt-anweisungen.md", "Die 13 Regeln, mit deinem Stichtag"],
+        ["audit-nachweise", "Skill: Claude prüft ZITAT, ZEITRAUM, UMFANG, FREIGABE"],
+        ["projektanweisungen.md", "Die 13 Regeln, mit deinem Stichtag"],
         ["nachweis-index.csv", "Deine Nachweisliste, Spalten wie im Kit"],
         ["lueckenliste.md", "Lücken, Zuständige, eine Anfrage pro Lücke"],
       ],
@@ -144,13 +144,13 @@ export const COPY = {
       copyPrompt: "Prompt kopieren",
       copied: "Kopiert",
       prompt:
-        "Nutze den Skill audit-nachweise. Hier sind die Dokumentanforderung und mein Ordner. Prüf jede Anforderung mit DATUM, FREIGABE, UMFANG und ZITAT, gib BELEGT, SCHWACH oder LÜCKE mit dem wörtlichen Zitat, und schreib für jede Lücke eine Anfrage an die zuständige Person.",
+        "Nutze den Skill audit-nachweise. Hier sind die Dokumentanforderung und mein Ordner. Prüf jede Anforderung mit ZITAT, ZEITRAUM, UMFANG und FREIGABE, gib BELEGT, SCHWACH oder LÜCKE mit dem wörtlichen Zitat, und schreib für jede Lücke eine Anfrage an die zuständige Person.",
       ownLine:
         "Nutze den Skill audit-nachweise. Stichtag {audit}, Prüfzeitraum ab {window}. Angehängt: die Anforderung, meine {files} und nachweis-index.csv (Kandidaten für {items}). Fülle UMFANG und ZITAT aus dem Text der Dateien, prüfe jede Anforderung mit den vier Prüfungen und rechne die Zählungen im Code.",
       noItems: "keine Anforderung",
       ownLineNoAudit:
         "Nutze den Skill audit-nachweise. Angehängt: die Anforderung, meine {files} und nachweis-index.csv (Kandidaten für {items}). Frag mich zuerst nach dem Stichtag. Fülle UMFANG und ZITAT aus dem Text der Dateien, prüfe jede Anforderung mit den vier Prüfungen und rechne die Zählungen im Code.",
-      fileNames: { instructions: "projekt-anweisungen.md", gapList: "lueckenliste.md", index: "nachweis-index.csv" },
+      fileNames: { instructions: "projektanweisungen.md", gapList: "lueckenliste.md", index: "nachweis-index.csv" },
       customerPlaceholder: "[Kunde]",
       requestFilePlaceholder: "[Anforderungsdatei]",
     },
@@ -171,11 +171,11 @@ export const COPY = {
         '"Note that data is stored in the US." (R1)',
       ],
       replyHeading: "Was die Dateien heute tragen",
-      replyNote: "Die Beispielantwort aus ANSWERS.md, auf Englisch wie das Kit. Deine Fassung klingt anders.",
+      replyNote: "Die Beispielantwort aus LOESUNGEN.md, auf Englisch an den Kunden. Deine Fassung klingt anders.",
     },
     probe: {
       heading: "Zitat-Probe",
-      lede: "Füg Claudes Tabelle aus Mission 2 ein. Jedes Zitat wird in den elf Dateien gesucht, hier im Tab.",
+      lede: "Füg Claudes Tabelle aus Schritt 2 ein. Jedes Zitat wird in den elf Dateien gesucht, hier im Tab.",
       label: "Claudes Antwort",
       run: "Prüfen",
       clear: "Leeren",
@@ -207,7 +207,7 @@ export const COPY = {
       insight: "Datei und Datum können einen Nachweis ausschließen, nie bestätigen. UMFANG und ZITAT prüfst du oder Claude mit dem Skill.",
       auditDate: "Stichtag des Audits",
       windowFrom: "Prüfzeitraum ab {date}",
-      windowNone: "Ohne Stichtag bleibt DATUM offen.",
+      windowNone: "Ohne Stichtag bleibt ZEITRAUM offen.",
       window: "Zeitfenster",
       months: "{n} Monate",
       dateError: "Kein gültiges Datum. Es gilt das letzte gültige.",
@@ -251,7 +251,7 @@ export const COPY = {
     gapTemplate: vorlage("luecken-anfrage.md"),
   },
   en: {
-    stageLabel: "Evidence check: eight requests and eleven files",
+    stageLabel: "Gap list: eight requests and eleven files",
     caseLine: "Tannwald audits Vardar Works",
     auditLine: "As of {exercise} · audit {date}",
     unlinked: "no match:",
@@ -260,7 +260,7 @@ export const COPY = {
     estimateCaption: "All {total} have a file whose name fits. How many can Vardar prove today?",
     estimateGroup: "Your estimate: how many of the 8 are covered?",
     status: { covered: "COVERED", weak: "WEAK", gap: "GAP" },
-    test: { date: "DATE", approval: "APPROVAL", scope: "SCOPE", quote: "QUOTE" },
+    test: { date: "PERIOD", approval: "APPROVAL", scope: "SCOPE", quote: "QUOTE" },
     type: { POLICY: "POLICY", CONTRACT: "CONTRACT", REGISTER: "REGISTER", RECORD: "RECORD", STATEMENT: "STATEMENT" },
     dateKind: {
       approved: "approved",
@@ -300,16 +300,16 @@ export const COPY = {
     },
     objectiveLabel: "Objective",
     objective:
-      "A file is evidence only when its date, approval, scope and quote hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.",
+      "A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.",
     toolSource: "In the kit: rules 4 to 9",
     tool: {
       lines: {
-        date: "Inside the audit window: from {window}. For a policy, its last approval or review counts.",
+        date: "Inside the audit window from {window}, and for all of it. For a policy, its last approval or review counts.",
         approval: "Policy, contract: a name with a date inside the file. Record, register: who keeps it.",
-        scope: "The systems, people and period the request names.",
+        scope: "The systems and people the request names.",
         quote: "A sentence or a line from the file that answers the request.",
       },
-      status: "COVERED, WEAK or GAP. A part is missing or one test fails: WEAK. Nothing answers it, or the record shows “not met”: GAP.",
+      status: "COVERED, WEAK or GAP. A file out of date or unapproved: WEAK. A part without evidence, or the record shows “not met”: GAP. The weakest part counts.",
       rule: "No quote, no COVERED. A policy shows intent; only a record shows practice.",
     },
     r7: {
@@ -354,7 +354,7 @@ export const COPY = {
       paste: "Paste a list",
       empty: "No files of your own yet. Nothing leaves this tab.",
       summary: "{files}, audit window from {window}",
-      noAudit: "{files}. Enter the audit date below, then DATE is tested.",
+      noAudit: "{files}. Enter the audit date below, then PERIOD is tested.",
       bound: {
         none: "GAP, unless it sits under another name",
         weak: "at most WEAK",
@@ -367,7 +367,7 @@ export const COPY = {
     takehome: {
       caption: "The four tests for your next audit: as a skill and as templates.",
       rows: [
-        ["audit-nachweise", "Skill: Claude tests DATE, APPROVAL, SCOPE, QUOTE"],
+        ["audit-nachweise", "Skill: Claude tests QUOTE, PERIOD, SCOPE, APPROVAL"],
         ["project-instructions.md", "The 13 rules, with your audit date"],
         ["evidence-index.csv", "Your evidence index, the kit's columns"],
         ["gap-list.md", "Gaps, owners, one request per gap"],
@@ -378,7 +378,7 @@ export const COPY = {
       copyPrompt: "Copy prompt",
       copied: "Copied",
       prompt:
-        "Use the audit-nachweise skill. Here are the document request and my folder. Test every item with DATE, APPROVAL, SCOPE and QUOTE, give COVERED, WEAK or GAP with the exact quote, and write a request to the owner of every gap.",
+        "Use the audit-nachweise skill. Here are the document request and my folder. Test every item with QUOTE, PERIOD, SCOPE and APPROVAL, give COVERED, WEAK or GAP with the exact quote, and write a request to the owner of every gap.",
       ownLine:
         "Use the audit-nachweise skill. Audit date {audit}, audit window from {window}. Attached: the request, my {files} and evidence-index.csv (candidates for {items}). Fill SCOPE and QUOTE from the text of the files, test every item with the four tests and compute the counts in code.",
       noItems: "no request",
@@ -409,7 +409,7 @@ export const COPY = {
     },
     probe: {
       heading: "Quote check",
-      lede: "Paste Claude's table from Mission 2. Every quote is looked up in the eleven files, here in this tab.",
+      lede: "Paste Claude's table from step 2. Every quote is looked up in the eleven files, here in this tab.",
       label: "Claude's answer",
       run: "Check",
       clear: "Clear",
@@ -441,7 +441,7 @@ export const COPY = {
       insight: "A file name and a date can rule evidence out, never confirm it. SCOPE and QUOTE are for you, or for Claude with the skill.",
       auditDate: "Audit date",
       windowFrom: "Audit window from {date}",
-      windowNone: "Without an audit date, DATE stays open.",
+      windowNone: "Without an audit date, PERIOD stays open.",
       window: "Window",
       months: "{n} months",
       dateError: "Not a valid date. The last valid one stays.",

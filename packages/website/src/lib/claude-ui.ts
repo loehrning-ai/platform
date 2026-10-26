@@ -59,10 +59,10 @@ export const CLAUDE_UI_DE: ClaudeUiCopy = {
     allProjects: "unzip {name}.zip -d ~/.claude/skills/",
     thisRepoLabel: "Nur für dieses Repository:",
     thisRepo: "unzip {name}.zip -d .claude/skills/",
-    result: "Danach liegt die Datei unter ~/.claude/skills/{name}/SKILL.md. Tipp /{name} oder frag einfach.",
+    result: "Danach liegt SKILL.md in skills/{name}/ (global oder im Repository). Tipp /{name} oder frag einfach.",
   },
   noSync:
-    "Skills werden nicht zwischen claude.ai und Claude Code synchronisiert: einmal pro Ort installieren.",
+    "Mit demselben claude.ai-Login lädt Claude Code (ab v2.1.273) deine in claude.ai eingeschalteten Skills selbst; dort nicht ein zweites Mal entpacken. Mit API-Key oder Bedrock: per unzip.",
   project: {
     heading: "Projektanweisungen",
     steps: [
@@ -91,9 +91,10 @@ export const CLAUDE_UI_EN: ClaudeUiCopy = {
     allProjects: "unzip {name}.zip -d ~/.claude/skills/",
     thisRepoLabel: "For this repository only:",
     thisRepo: "unzip {name}.zip -d .claude/skills/",
-    result: "The file then sits at ~/.claude/skills/{name}/SKILL.md. Type /{name} or just ask.",
+    result: "SKILL.md then sits in skills/{name}/ (global or in the repository). Type /{name} or just ask.",
   },
-  noSync: "Skills don't sync between claude.ai and Claude Code: install once per place.",
+  noSync:
+    "With the same claude.ai login, Claude Code (v2.1.273 or later) loads the skills you turned on in claude.ai by itself; do not unzip them there a second time. With an API key or Bedrock: unzip.",
   project: {
     heading: "Project instructions",
     steps: [

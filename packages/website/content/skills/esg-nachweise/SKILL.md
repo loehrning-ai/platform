@@ -5,12 +5,12 @@ description: Nachhaltigkeits- oder ESG-Fragebogen, VSME, Bankformular, Umweltaus
 
 # ESG-Antworten mit Nachweis
 
-Jede Antwort, die die Firma verlässt, trägt ihren Nachweis: eine Datei mit Zeile, die Zeitraum,
-Umfang und Stand der Antwort deckt, oder den Namen des Dokuments, das fehlt. Du bereitest vor. Ein
+Jede Antwort, die die Firma verlässt, trägt ihren Nachweis: eine freigegebene Datei mit Zeile, die
+Zeitraum und Umfang der Antwort deckt, oder den Namen des Dokuments, das fehlt. Du bereitest vor. Ein
 Mensch prüft und unterschreibt.
 
-Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, STAND und BELEGT, SCHWACH,
-LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, FINAL und COVERED, WEAK, GAP.
+Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und BELEGT, SCHWACH,
+LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, APPROVAL und COVERED, WEAK, GAP.
 
 Wofür: Nachhaltigkeitsfragebögen von Kunden, ESG- und Umweltfelder in Bankformularen, eine
 VSME-Übersicht (B1 bis B11), Umweltaussagen für Etikett, Verpackung, Regal, Website oder Werbung,
@@ -27,24 +27,30 @@ audit-nachweise.
 3. Zerleg jede Frage in ihre Teile. „Strom in MWh und Anteil erneuerbar“ hat zwei Teile.
 
 ## Die Nachweisprobe
-Leg jede Antwort neben die Datei, die sie tragen soll. Vier Prüfungen:
+Leg jede Antwort neben die Datei, die sie tragen soll. Vier Prüfungen, dieselben wie im Skill
+audit-nachweise:
 1. ZITAT. Welche Datei, welche Zeile sagt es? Zeilen zählst du wie ein Texteditor: jede Zeile, auch
    die erste. Ohne Zitat kein BELEGT.
 2. ZEITRAUM. Deckt die Datei den ganzen Zeitraum der Antwort, und gilt sie am Stichtag?
 3. UMFANG. Deckt die Datei alles, wovon die Antwort spricht: alle Produkte, alle Standorte, die ganze
    Firma? Ein Nachweis für einen Teil belegt keine Aussage über das Ganze.
-4. STAND. Ist die Datei endgültig: gemessen, unterschrieben, geprüft? Entwurf, Angebot,
-   Kostenvoranschlag und Schätzung sind es nicht. Ein Audit ist kein Zertifikat.
+4. FREIGABE. Ist die Datei endgültig und verantwortet: gemessen, unterschrieben, freigegeben?
+   Entwurf, Angebot, Kostenvoranschlag, Schätzung und ein leeres Freigabefeld sind es nicht. Ein
+   Audit ist kein Zertifikat.
 
 ## Status
-- BELEGT: alle vier Prüfungen halten. BELEGT heißt bewiesen, nicht gut. Beweist eine Datei ein
-  Problem (eine zu schwere Flasche), bleibt es BELEGT, und darunter steht eine Maßnahme.
-- SCHWACH: die Datei ist da, aber abgelaufen, geschätzt, ein Entwurf, unsigniert oder im Widerspruch
-  zu einer anderen Datei. Nenne die Prüfung, die scheitert, in einem Satz.
-- LÜCKE: keine Datei sagt es, oder ein Teil der Antwort hat keine Datei. Nenn das Dokument so, dass
-  jemand es anfordern kann („Stromrechnung September 2025 des Versorgers“, nicht „Energiedaten“).
-  Widerspricht zusätzlich eine Datei, bleibt es LÜCKE; nenn den Widerspruch.
+- BELEGT: alle vier Prüfungen halten, für jeden Teil. BELEGT heißt bewiesen, nicht gut.
+- SCHWACH: jeder Teil hat eine Datei, aber sie ist abgelaufen, geschätzt, ein Entwurf, nicht
+  freigegeben oder im Widerspruch zu einer anderen Datei. Nenne die Prüfung, die scheitert, in einem Satz.
+- LÜCKE: keine Datei sagt es, oder ein Teil der Antwort hat keine Datei (ein Monat, ein Standort, ein
+  Teil der Fläche). Nenn das Dokument so, dass jemand es anfordern kann („Stromrechnung September 2025
+  des Versorgers“, nicht „Energiedaten“). Widerspricht zusätzlich eine Datei, bleibt es LÜCKE; nenn
+  den Widerspruch.
 - Eine Frage bekommt den Status ihres schwächsten Teils: LÜCKE vor SCHWACH vor BELEGT.
+- Fragt die Anfrage nach einem Fakt (wie viel, wie schwer, wo) und beweist die Datei ihn, ist er
+  BELEGT, auch wenn er schlecht ist (eine zu schwere Flasche); darunter steht eine Maßnahme. Verlangt
+  eine Anforderung, dass etwas erfüllt ist (eine Quote, ein Test im Jahr), und der Nachweis zeigt, dass
+  es nicht erfüllt ist, ist es LÜCKE. So zählt auch audit-nachweise.
 
 ## Rechnen und Zählen
 - Jede Rechnung im Code, mit Einheiten. Zeig die Eingaben mit Datei und Zeile.
@@ -78,9 +84,9 @@ sie trägt: konkret, gemessen, mit Quelle und Datum, wahr für genau das, woran 
 Du gibst Prüfhinweise, keine Rechtsberatung.
 
 ## Fragebögen berichtspflichtiger Kunden
-Für Geschäftsjahre ab dem 1.1.2027 dürfen berichtspflichtige Kunden von Firmen mit bis zu 1.000
-Beschäftigten für ihren Nachhaltigkeitsbericht nur die Datenpunkte aus Anhang II der Delegierten
-Verordnung (EU) 2026/1560 verlangen (Richtlinie (EU) 2026/470). Anfragen nach anderen EU- oder
+Für Geschäftsjahre ab dem 1.1.2027 können Firmen mit bis zu 1.000 Beschäftigten Fragen
+berichtspflichtiger Kunden ablehnen, die für deren Nachhaltigkeitsbericht über die Datenpunkte aus
+Anhang II der Delegierten Verordnung (EU) 2026/1560 hinausgehen (Richtlinie (EU) 2026/470). Anfragen nach anderen EU- oder
 nationalen Vorschriften (etwa Bankaufsicht, Sorgfaltspflichten) sind nicht begrenzt. Geht eine Frage
 eines berichtspflichtigen Kunden darüber hinaus, markier sie mit „über Anhang II“. Ob die Firma
 antwortet, entscheidet ein Mensch, nach dem Stand der nationalen Umsetzung.
@@ -114,11 +120,14 @@ Nur Summen. Keine Namen, keine Einzeldatensätze, auch wenn eine Datei sie enth�
 
 ## English
 Answer in English when the person writes English. The method is the same; the words are:
-- The four checks: QUOTE (file and line), PERIOD (whole period, valid on the reference date), SCOPE
-  (everything the answer talks about), FINAL (measured, signed, checked; not a draft, offer or estimate).
-- Statuses: COVERED (all four hold, bad news included, then an action), WEAK (file exists but expired,
-  estimated, a draft, unsigned or contradicted), GAP (no file says it; name the document to request).
-  A question takes the status of its weakest part: GAP before WEAK before COVERED.
+- The four checks, the same as in audit-nachweise: QUOTE (file and line), PERIOD (whole period, valid
+  on the reference date), SCOPE (everything the answer talks about), APPROVAL (measured, signed,
+  approved; not a draft, offer or estimate).
+- Statuses: COVERED (all four hold for every part; a proven fact counts even when it is bad news, then
+  an action), WEAK (every part has a file, but it is expired, estimated, a draft, unapproved or
+  contradicted), GAP (no file says it, or a part has no file; name the document to request; a
+  requirement the evidence shows as not met is GAP too). A question takes the status of its weakest
+  part: GAP before WEAK before COVERED.
 - Claims to consumers: ban list first (2a, 4a, 4b, 4c, 10a of Annex I, Directive 2005/29/EC as amended by
   Directive (EU) 2024/825), then the evidence check. Otherwise: "Drop."
 - Output: one table, one row per question or claim: No | Question or claim | Answer | File and line |

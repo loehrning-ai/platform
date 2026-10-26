@@ -29,9 +29,9 @@ Für alle Projekte: `unzip kennzahl-fragekarte.zip -d ~/.claude/skills/`
 
 Nur für dieses Repository: `unzip kennzahl-fragekarte.zip -d .claude/skills/`
 
-Danach liegt die Datei unter ~/.claude/skills/kennzahl-fragekarte/SKILL.md. Tipp /kennzahl-fragekarte oder frag einfach.
+Danach liegt SKILL.md in skills/kennzahl-fragekarte/ (global oder im Repository). Tipp /kennzahl-fragekarte oder frag einfach.
 
-Skills werden nicht zwischen claude.ai und Claude Code synchronisiert: einmal pro Ort installieren.
+Mit demselben claude.ai-Login lädt Claude Code (ab v2.1.273) deine in claude.ai eingeschalteten Skills selbst; dort nicht ein zweites Mal entpacken. Mit API-Key oder Bedrock: per unzip.
 
 ### Projektanweisungen
 
@@ -62,9 +62,9 @@ For all projects: `unzip kennzahl-fragekarte.zip -d ~/.claude/skills/`
 
 For this repository only: `unzip kennzahl-fragekarte.zip -d .claude/skills/`
 
-The file then sits at ~/.claude/skills/kennzahl-fragekarte/SKILL.md. Type /kennzahl-fragekarte or just ask.
+SKILL.md then sits in skills/kennzahl-fragekarte/ (global or in the repository). Type /kennzahl-fragekarte or just ask.
 
-Skills don't sync between claude.ai and Claude Code: install once per place.
+With the same claude.ai login, Claude Code (v2.1.273 or later) loads the skills you turned on in claude.ai by itself; do not unzip them there a second time. With an API key or Bedrock: unzip.
 
 ### Project instructions
 

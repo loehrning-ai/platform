@@ -12,12 +12,14 @@ import { buildModel } from "./demo-cases/audit-vorbereitung-mit-ki/model";
 
 const root = resolve(process.cwd(), "public", "workshops", "audit-vorbereitung-mit-ki");
 const kitDir = resolve(process.cwd(), "../../scripts/workshop05/kit");
+const kitDirDe = resolve(process.cwd(), "../../scripts/workshop05/kit-de");
 const kit = (file: string) => readFileSync(resolve(kitDir, file), "utf8");
+const kitDe = (file: string) => readFileSync(resolve(kitDirDe, file), "utf8");
 const flat = (text: string) => text.replace(/\s+/g, " ").trim();
 
 const EDITIONS = [
-  { lang: "de", file: "slides.html", status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, share: "20,8", other: ["COVERED", "WEAK", "GAP"] },
-  { lang: "en", file: "slides.en.html", status: { covered: "COVERED", weak: "WEAK", gap: "GAP" }, share: "20.8", other: ["BELEGT", "SCHWACH", "LÜCKE"] },
+  { lang: "de", file: "slides.html", deckId: "audit-vorbereitung-mit-ki", start: () => kitDe("START-HIER.md"), status: { covered: "BELEGT", weak: "SCHWACH", gap: "LÜCKE" }, share: "20,8", other: ["COVERED", "WEAK", "GAP"] },
+  { lang: "en", file: "en/slides.html", deckId: "audit-vorbereitung-mit-ki:en", start: () => kit("START-HERE.md"), status: { covered: "COVERED", weak: "WEAK", gap: "GAP" }, share: "20.8", other: ["BELEGT", "SCHWACH", "LÜCKE"] },
 ] as const;
 
 const parse = (file: string) => new DOMParser().parseFromString(readFileSync(resolve(root, file), "utf8"), "text/html");
@@ -30,7 +32,7 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
 
   it("has eleven main slides for 90 minutes and three appendix slides outside the arrow path", () => {
     expect(doc.documentElement.lang).toBe(edition.lang);
-    expect(doc.documentElement.dataset.deckId).toBe("audit-vorbereitung-mit-ki");
+    expect(doc.documentElement.dataset.deckId).toBe(edition.deckId);
     expect(main).toHaveLength(11);
     expect(main.reduce((sum, section) => sum + Number(section.getAttribute("data-seconds")), 0)).toBe(5400);
     expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3"]);
@@ -41,7 +43,8 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
 
   it("loads the shared key contract before its runtime", () => {
     const scripts = Array.from(doc.querySelectorAll("script[src]")).map((script) => script.getAttribute("src"));
-    expect(scripts).toEqual(["./lib/deck-keys.js", "./lib/scenes.js", "./lib/deck-stage.js"]);
+    const up = edition.lang === "de" ? "./" : "../";
+    expect(scripts).toEqual([`${up}lib/deck-keys.js`, `${up}lib/scenes.js`, `${up}lib/deck-stage.js`]);
   });
 
   it("quotes only lines that are in the kit, word for word", () => {
@@ -54,8 +57,8 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     }
   });
 
-  it("shows the prompts exactly as START-HERE.md has them", () => {
-    const startHere = flat(kit("START-HERE.md"));
+  it("shows the prompts exactly as the start file of its kit edition has them", () => {
+    const startHere = flat(edition.start());
     const prompts = Array.from(doc.querySelectorAll(".prompt-body"));
     expect(prompts.length).toBeGreaterThanOrEqual(3);
     for (const prompt of prompts) expect(startHere).toContain(flat(prompt.textContent ?? ""));
@@ -74,6 +77,12 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
       `${edition.status.gap} ${model.tally.gap}`,
     ]);
     expect(doc.querySelector("[data-result-title]")?.getAttribute("data-covered")).toBe(String(model.tally.covered));
+  });
+
+  it("shows the R7 candidates failing exactly the tests the demo's model fails", () => {
+    const cands = Array.from(doc.querySelectorAll("#mission-2 .cand"));
+    expect(cands.map((cand) => cand.getAttribute("data-file"))).toEqual(model.r7.map((result) => result.doc.file));
+    expect(cands.map((cand) => (cand.getAttribute("data-failed") ?? "").split(" "))).toEqual(model.r7.map((result) => [...result.failed]));
   });
 
   it("carries the kit's numbers", () => {
@@ -112,12 +121,16 @@ describe("W05 objective lockstep", async () => {
     expect(COPY[lang].objective).toBe(four.objective);
     expect(COPY[lang].tool.status).toBe(four.tool[1]);
     expect(COPY[lang].tool.rule).toBe(four.tool[2]);
-    expect(flat(readFileSync(resolve(root, lang === "de" ? "slides.html" : "slides.en.html"), "utf8"))).toContain(four.objective);
+    expect(flat(readFileSync(resolve(root, lang === "de" ? "slides.html" : "en/slides.html"), "utf8"))).toContain(four.objective);
   });
 
   it("the kit and the skill carry the same sentences", () => {
     const en = deckCopy.en.four;
     for (const line of [en.objective, en.tool[1], en.tool[2]]) expect(startHere).toContain(line);
+    const de = deckCopy.de.four;
+    for (const line of [de.objective, de.tool[1], de.tool[2]]) expect(flat(kitDe("START-HIER.md"))).toContain(line);
+    expect(skill).toContain(de.objective);
+    expect(skill).toContain(en.objective);
     expect(skill).toContain(deckCopy.de.four.tool[2]);
     expect(skill).toContain(en.tool[2]);
   });

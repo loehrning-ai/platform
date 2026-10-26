@@ -44,12 +44,12 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.selfStudyDurationLabel).toBe("solo about 90 min");
   });
 
-  it("links each locale to its own deck edition, the English kit, and labels the zip with its real size", () => {
+  it("links each locale to its own deck and kit edition, and labels the zip with its real size", () => {
     const mainSlides = (html: string) => html.match(/<section class="slide[^"]*" id="[^"]+" data-kind="main"/g) ?? [];
     expect(mainSlides(slides)).toHaveLength(15);
     expect(mainSlides(slidesEn)).toHaveLength(15);
     const files = (workshop: typeof de) => workshop.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length));
-    expect(files(de)).toEqual(["slides.html", "crvena-zemja-esg-kit.zip"]);
+    expect(files(de)).toEqual(["slides.html", "crvena-zemja-nachweisprobe.zip"]);
     expect(files(en)).toEqual(["en/slides.html", "crvena-zemja-esg-kit.zip"]);
     expect(de.materials[0]?.language).toBe("de");
     expect(en.materials[0]?.language).toBe("en");
@@ -85,7 +85,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     };
     for (const [locale, workshop] of [["de", de], ["en", en]] as const) {
       const kit = workshop.kit!;
-      expect(kit.fileName).toBe("crvena-zemja-esg-kit.zip");
+      expect(kit.fileName).toBe(locale === "de" ? "crvena-zemja-nachweisprobe.zip" : "crvena-zemja-esg-kit.zip");
+      expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
       expect(kit.stats.map((stat) => stat.value)).toEqual(["13", "5", "3"]);
       expect(kit.steps).toHaveLength(5);
       expect(kit.rules).toHaveLength(3);
@@ -103,8 +104,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.kit?.steps[3].note).toBe("Gaps are named, not filled.");
     expect(en.kit?.steps[4].title).toBe("The late invoice");
     expect(en.kit?.howTo).toContain("About 90 minutes the first time");
-    expect(de.kit?.contents.map((item) => item.name)).toContain("answers/ANSWERS.md");
-    expect(de.kit?.howTo).toContain("crvena-zemja-nachweisprobe.zip");
+    expect(de.kit?.contents.map((item) => item.name)).toContain("loesungen/LOESUNGEN.md");
+    expect(de.kit?.howTo).toContain("crvena-zemja-esg-kit.zip");
   });
 
   it("removes answer spoilers from page copy, including descriptions used for metadata", () => {

@@ -3,14 +3,13 @@ import type { WorkshopKit } from "./workshop-kit";
 
 /**
  * The kit block of workshop 04 (the page /workshops/esg-berichte-mit-ki/kit), kit v3
- * "Nachweisprobe". The workshop ran in English, so the page offers the English edition,
- * crvena-zemja-esg-kit.zip, in both locales; the German edition, crvena-zemja-nachweisprobe.zip, is the
- * same kit in German and is named in howTo. The rules repeat project-instructions.md (EN) and
+ * "Nachweisprobe". Each locale offers its own edition: crvena-zemja-nachweisprobe.zip (German) and
+ * crvena-zemja-esg-kit.zip (English), the same kit; howTo names the other one. The rules repeat project-instructions.md (EN) and
  * projektanweisungen.md (DE); workshops-esg-reporting.test.ts checks that against the zips.
  */
 export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
-    fileName: "crvena-zemja-esg-kit.zip",
+    fileName: "crvena-zemja-nachweisprobe.zip",
     title: "Das Nachweisprobe-Kit",
     lead: "Dieselben drei ESG-Anfragen, derselbe Ordner, dein eigenes Claude.",
     stats: [
@@ -22,7 +21,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     rules: [
       "Nur unsere Dateien. Erfinde keine Zahl, schätze nicht, ergänze nichts aus dem Internet.",
       "Nenne für jede Angabe Datei und Zeile (Zeilen wie im Texteditor, jede Zeile zählt). Rechne im Code, mit Einheiten. Zähle vor jeder Jahressumme die eindeutigen Monate: Gleiche Rechnungsnummer zählt einmal.",
-      "Nachweisprobe für jede Antwort: Deckt die Datei Zeitraum, Umfang und Stand der Antwort? BELEGT, wenn alle drei passen. SCHWACH, wenn die Datei abgelaufen, geschätzt, ein Entwurf, unsigniert oder im Widerspruch zu einer anderen Datei ist. LÜCKE, wenn keine Datei es sagt, mit dem Dokument, das es belegen würde. Der schwächste Teil zählt.",
+      "Nachweisprobe für jede Antwort: Zitat, Zeitraum, Umfang, Freigabe. BELEGT, wenn alle vier halten. SCHWACH, wenn die Datei abgelaufen, geschätzt, ein Entwurf, nicht freigegeben oder im Widerspruch zu einer anderen Datei ist. LÜCKE, wenn keine Datei es sagt oder ein Teil keine Datei hat, mit dem Dokument, das es belegen würde. Der schwächste Teil zählt.",
     ],
     rulesShort: [
       "Nur unsere Dateien. Keine erfundene Zahl.",
@@ -37,7 +36,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Der Nachhaltigkeitsfragebogen von Nordvik Vin AB mit acht Fragen.",
         action: "Zählt die Strommonate im Code und beantwortet jede Frage mit Datei, Zeile und Status.",
         output: "Eine Tabelle mit genau einer Zeile je Frage und dem fehlenden Dokument, wo eines fehlt.",
-        note: "Wie viele der 8 Fragen werden COVERED, also belegt? Sag es zuerst voraus, dann prüf es in ANSWERS.md.",
+        note: "Wie viele der 8 Fragen werden BELEGT? Sag es zuerst voraus, dann prüf es in LOESUNGEN.md.",
       },
       {
         tag: "Prompt 2",
@@ -74,17 +73,18 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Du brauchst Claude mit Codeausführung und Dateierstellung, jeder Plan. Beim ersten Mal etwa 90 Minuten. Dasselbe Kit auf Deutsch, mit BELEGT, SCHWACH und LÜCKE: crvena-zemja-nachweisprobe.zip, in der Demo zum Workshop.",
+      "Du brauchst Claude mit Codeausführung und Dateierstellung, jeder Plan. Beim ersten Mal etwa 90 Minuten. Dasselbe Kit auf Englisch, so wie der Workshop lief: crvena-zemja-esg-kit.zip, auf der englischen Seite und in der Demo.",
     fictionalNote:
       "Alles im Kit ist erfunden, nur die zitierten Gesetze, Standards und Regeln sind echt.",
     contents: [
-      { name: "START-HERE.md", description: "Durchsicht, Einrichtung und fünf Prompts zum Kopieren." },
-      { name: "evidence-check.md", description: "Die vier Prüfungen und drei Status auf einer Seite." },
-      { name: "project-instructions.md", description: "Der Stichtag und die drei Regeln für Claude." },
-      { name: "files/", description: "13 Firmendateien, so unordentlich wie eine echte Ablage." },
-      { name: "requests/", description: "Fragebogen, Werbeaussagen und Bankformular." },
-      { name: "answers/ANSWERS.md", description: "Die Lösungen mit Datei und Zeile. Erst nach jedem Schritt öffnen." },
-      { name: "take-home/", description: "Der Skill esg-nachweise, Vorlagen und Checkliste für deine Firma." },
+      { name: "START-HIER.md", description: "Durchsicht, Einrichtung und fünf Prompts zum Kopieren." },
+      { name: "nachweisprobe.md", description: "Die vier Prüfungen und drei Status auf einer Seite." },
+      { name: "projektanweisungen.md", description: "Der Stichtag und die drei Regeln für Claude." },
+      { name: "ordner/", description: "13 Firmendateien, so unordentlich wie eine echte Ablage." },
+      { name: "anfragen/", description: "Fragebogen, Werbeaussagen und Bankformular." },
+      { name: "loesungen/LOESUNGEN.md", description: "Die Lösungen mit Datei und Zeile. Erst nach jedem Schritt öffnen." },
+      { name: "mitnehmen/", description: "Vorlagen und Checkliste für deine Firma." },
+      { name: "claude/", description: "Der Skill esg-nachweise." },
     ],
   },
   en: {
@@ -100,7 +100,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
     rules: [
       "Only our files. Do not invent a number, do not estimate, add nothing from the internet.",
       "Give file and line for every figure (lines as in a text editor, every line counts). Calculate in code, with units. Before any annual total, count the distinct months: the same invoice number counts once.",
-      "Evidence check for every answer: does the file cover the period, scope and finality of the answer? COVERED when all three fit. WEAK when the file is expired, estimated, a draft, unsigned or contradicts another file. GAP when no file says it, with the document that would prove it. The weakest part counts.",
+      "Evidence check for every answer: quote, period, scope, approval. COVERED when all four hold. WEAK when the file is expired, estimated, a draft, unapproved or contradicts another file. GAP when no file says it or a part has no file, with the document that would prove it. The weakest part counts.",
     ],
     rulesShort: [
       "Only our files. Never invent a number.",
@@ -162,7 +162,8 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "files/", description: "13 company files, as messy as a real filing system." },
       { name: "requests/", description: "Questionnaire, marketing claims and bank form." },
       { name: "answers/ANSWERS.md", description: "The answers with file and line. Open only after each step." },
-      { name: "take-home/", description: "The skill esg-nachweise, templates and a checklist for your company." },
+      { name: "take-home/", description: "Templates and a checklist for your company." },
+      { name: "claude/", description: "The skill esg-nachweise." },
     ],
   },
 };

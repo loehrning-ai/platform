@@ -1,10 +1,10 @@
 # Answers
 Fictional training material. Compare facts and statuses, not wording. Where you and Claude differ, the file decides.
 
-## Mission 1: the index
-8 of 11 files pass DATE and APPROVAL.
+## Step 1: the index
+8 of 11 files pass PERIOD and APPROVAL.
 
-| File | Type | Date (kind) | Approved or owned by | DATE | APPROVAL |
+| File | Type | Date (kind) | Approved or owned by | PERIOD | APPROVAL |
 |---|---|---|---|---|---|
 | system-list_2026-09.csv | REGISTER | 2026-09-02 approved | Managing Director; owner IT lead | pass | pass |
 | subprocessors_2026-09.csv | REGISTER | 2026-09-05 updated | IT lead | pass | pass |
@@ -20,29 +20,31 @@ Fictional training material. Compare facts and statuses, not wording. Where you 
 
 Watch for: an approver given to v4; "FINAL" read as current; a date taken from a file name; the vendor page marked unapproved (vendor plus page date count); a person's name where rule 13 asks for a role.
 
-## Mission 2: the eight requests
+## Step 2: the eight requests
 | Item | File | Quote | Failing test | Status |
 |---|---|---|---|---|
 | R1 | system-list | "United States (see vendor-page_claude_2026-06-15.md)" | none | COVERED |
-| R2 | subprocessors | "Anthropic,Claude Team,United States,accepted online 2026-09-01,," | QUOTE for part: last review and transfer basis empty | WEAK |
-| R3 | ai-use-rule | "Valid from 2026-10-01." | SCOPE: 10 Dec 2025 to 30 Sep 2026 (295 days) has no rule; it-notes report a free chatbot until September | WEAK |
-| R4 | access-review | "Review of administrator accounts in Servicepult" | SCOPE: 1 of 4 systems | WEAK |
+| R2 | subprocessors | "Anthropic,Claude Team,United States,accepted online 2026-09-01,," | QUOTE for two parts: last review and transfer basis empty | GAP |
+| R3 | ai-use-rule | "Valid from 2026-10-01." | PERIOD: 10 Dec 2025 to 30 Sep 2026 (295 days) has no rule; it-notes report a free chatbot until September | GAP |
+| R4 | access-review | "Review of administrator accounts in Servicepult" | SCOPE: 1 of 4 systems, three have no review | GAP |
 | R5 | training-records | "Staff on 2026-11-01: 120." | not met: 26 rows, E014 twice, 25 of 120 = 20.8%; 95% needs 114 | GAP |
 | R6 | incident-log | "INC-02,2026-05-07 09:40,Tannwald" and "2026-05-08 16:10" | none: told after 30.5 hours | COVERED |
 | R7 | backup-report | "Restore test: not done in 2026." | not met | GAP |
-| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | DATE (v3), APPROVAL (v4) | WEAK |
+| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | PERIOD (v3), APPROVAL (v4) | WEAK |
 
-Count: 2 COVERED, 4 WEAK, 2 GAP.
+Count: 2 COVERED, 1 WEAK, 5 GAP.
+
+WEAK means a file answers every part but is out of date, a draft or not approved (R8). A part with no evidence at all is GAP: two empty register fields (R2), 295 days without a rule (R3), three systems without a review (R4). The item takes the status of its weakest part, as in Workshop 04.
 
 R1 asks which systems store or process your data now. The free chatbot that it-notes mentions until September belongs to R3, not to R1.
 
-R1 is COVERED and still bad news: the system list proves that Claude Team stores Tannwald request text in the US, and clause 7 requires written notice and EU/EEA storage unless Tannwald agrees in writing. COVERED means proven, not good.
+R1 is COVERED and still bad news: the system list proves that Claude Team stores Tannwald request text in the US, and clause 7 requires written notice and EU/EEA storage unless Tannwald agrees in writing. COVERED means proven, not good. R1 asks for a fact, where the data is, so proof of bad news is COVERED. R5 and R7 ask that something is met; their records show it is not, so they are GAP.
 
 The R7 question: no. A policy says what should happen. Only a record shows that it happened, and this record says it did not. The same holds for R4 and "Administrator access is reviewed every quarter".
 
 Where Claude goes wrong on this folder, and the rule that stops it:
-- R7 or R4 COVERED from the policy: rule 7.
-- R8 COVERED from v4 because it is the newest: rule 5.
+- R7 or R4 COVERED from the policy: rule 4.
+- R8 COVERED from v4 because it is the newest: rule 7.
 - R5 "26 staff" or a share without code: rule 11.
 - R1 marked WEAK because the answer is unwelcome: rule 9.
 - "ISO 27001 A.x.x" or a GDPR article that is in no file: rule 12.
@@ -50,8 +52,8 @@ Where Claude goes wrong on this folder, and the rule that stops it:
 
 Where your status differs, find the rule number in project-instructions.md that decides it.
 
-## Mission 3: gaps and reply
-Gap list: R2, R3, R4, R8 (WEAK), R5, R7 (GAP). Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8. Needed by 2 December 2026.
+## Step 3: gaps and reply
+Gap list: R8 (WEAK); R2, R3, R4, R5, R7 (GAP). Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8. Needed by 2 December 2026.
 
 Example email (R7), filled from templates/gap-request.md:
 
