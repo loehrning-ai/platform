@@ -2135,6 +2135,13 @@ button.w4-doc-row {
   font-size: 0.8125rem;
   font-weight: 650;
 }
+.w4-quote[data-refuted] .w4-quote-file {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+.w4-quote[data-w4-quote-invoice] {
+  background: rgb(31 77 54 / 0.12);
+}
 .w4-missing ol {
   display: grid;
   gap: 6px;

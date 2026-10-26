@@ -134,6 +134,8 @@ function TileSheet({ pack, fmt, kit, row, phase }: { readonly pack: Pack; readon
   const status = statusOf(entry, phase);
   const after = phase === "after" ? (pack.folder.after as Readonly<Partial<Record<RowId, string>>>)[row] : undefined;
   const missing = missingFor(entry, phase);
+  // Once the late invoice is filed, every answer that waited for it quotes it, and the draft it refutes says so.
+  const invoiceFiled = phase === "after" && entry.missing.includes("septemberInvoice");
   return (
     <div className="w4-tile-sheet" data-w4-tile-sheet={row}>
       <p className="w4-status-line">
@@ -145,11 +147,20 @@ function TileSheet({ pack, fmt, kit, row, phase }: { readonly pack: Pack; readon
       <p className="w4-kicker">{pack.folder.tileQuotes}</p>
       <ul className="w4-quotes">
         {entry.lines.map(([file, refs]) => (
-          <li key={file} className="w4-quote">
+          <li key={file} className="w4-quote" data-refuted={invoiceFiled && file === "entwurf" ? "" : undefined}>
             <span className="w4-quote-file">{kit.fileNames[file]}</span>
-            <span className="w4-quote-lines">{fmt.t(pack.line, { n: formatLines(refs, pack.own.words.to) })}</span>
+            <span className="w4-quote-lines">
+              {fmt.t(pack.line, { n: formatLines(refs, pack.own.words.to) })}
+              {invoiceFiled && file === "entwurf" ? `, ${pack.folder.refuted}` : null}
+            </span>
           </li>
         ))}
+        {invoiceFiled ? (
+          <li className="w4-quote" data-w4-quote-invoice="">
+            <span className="w4-quote-file">{kit.invoiceName}</span>
+            <span className="w4-quote-lines">{pack.folder.invoiceQuote}</span>
+          </li>
+        ) : null}
       </ul>
       {missing.length > 0 ? (
         <>

@@ -7,7 +7,8 @@ import invoiceSource from "@/components/demos/esg-berichte-mit-ki/invoice-source
 import { CARD_WORDS } from "./card-words";
 import { COPY } from "./copy";
 import { figures } from "./figures";
-import { BIO, CERT_LINE, DRAFT_LINE, FILE_IDS, FILE_NAMES, KIT_ROOT, PROFILE_TANK_LINE, SEPTEMBER_INVOICE, STROM, WASSER, type FileId } from "./kit";
+import { ACCIDENTS, BIO, BOTTLE, CERT_LINE, CLAIM_SAVING, DECLARATION, DRAFT_LINE, FILE_IDS, FILE_NAMES, HEADCOUNT, KIT_ROOT, PROFILE_TANK_LINE, SEPTEMBER_INVOICE, STROM, WASSER, type FileId } from "./kit";
+import { longDate } from "./figures";
 import { INVOICE_PATHS, kitText } from "./kit-text";
 import { formatLines, LEDGER } from "./ledger";
 import { THREADS } from "./threads";
@@ -125,5 +126,17 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
     if (locale === "de") expect(skill).toContain(pack.regel.objective);
     const card = lines(locale, locale === "de" ? "nachweisprobe.md" : "evidence-check.md").join("\n");
     for (const word of [...CARD_WORDS[locale].checks, ...CARD_WORDS[locale].statuses]) expect(card.toLowerCase()).toContain(word.toLowerCase());
+  });
+
+  it("reads the facts the folder tiles name from their files", () => {
+    const file = (id: FileId) => lines(locale, `${folder(locale)}${FILE_NAMES[id][locale]}`);
+    expect(file("flaschen")[BOTTLE.line - 1]).toContain(`,${BOTTLE.grams},${BOTTLE.recycledPercent},`);
+    expect(file("personal")[HEADCOUNT.line - 1]).toMatch(new RegExp(`,${HEADCOUNT.total},[^,]*$`));
+    expect(file("arbeitsschutz")[ACCIDENTS.line - 1]).toMatch(new RegExp(`: ${ACCIDENTS.employees} \\(`));
+    expect(file("richtlinien")[DECLARATION.line - 1]).toContain(longDate(DECLARATION.date, locale));
+    expect(file("richtlinien")[DECLARATION.line]).toContain(`${DECLARATION.firstYear}, `);
+    expect(file("entwurf")[DRAFT_LINE.invented - 1]).toMatch(locale === "de" ? /Erfundene Übungsdaten/ : /[Ii]nvented/);
+    const claims = lines(locale, locale === "de" ? "anfragen/2-werbeaussagen.md" : "requests/2-marketing-claims.md");
+    expect(claims[CLAIM_SAVING.line - 1]).toContain(`${CLAIM_SAVING.percent} %`);
   });
 });

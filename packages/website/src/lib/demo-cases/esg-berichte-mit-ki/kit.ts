@@ -117,8 +117,8 @@ export const CERT_LINE = { title: 3, body: 4, operator: 5, scope: 6, from: 7, un
 /** Line 1 of every kit file: "Erfundene Übungsdaten..." (the certificate's line 2 is empty). */
 export const CERT_LINES = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const;
 
-/** strom_zusammenfassung_entwurf.txt: line 3 says it is an unchecked draft, line 5 holds the figure. */
-export const DRAFT_LINE = { status: 3, figure: 5 } as const;
+/** strom_zusammenfassung_entwurf.txt: line 1 says the data is invented, line 3 that it is an unchecked draft, line 5 holds the figure. */
+export const DRAFT_LINE = { invented: 1, status: 3, figure: 5 } as const;
 /** firmenprofil.md line 16: tank cooling peaks in September and October. */
 export const PROFILE_TANK_LINE = 16;
 /** anfragen/2-werbeaussagen.md line 10: claim 3, "Regalkarte, alle Weine". */
@@ -129,3 +129,14 @@ export const PV = { yieldMwh: 180, investmentMkd: 8_550_000, tariff: 9.5 } as co
 
 /** questionnaire line 12: energy data must cover 95 % of the year. */
 export const COVERAGE_RULE = 0.95;
+
+/** flaschen.csv (bottles.csv) line 3: the first wine's glass weight in g and its recycled glass share in %. */
+export const BOTTLE = { line: 3, grams: 395, recycledPercent: 60 } as const;
+/** personal_2025.csv (headcount_2025.csv) line 5: all employees, annual average. */
+export const HEADCOUNT = { line: 5, total: 42 } as const;
+/** arbeitsschutz_2025.txt (health_safety_2025.txt) line 4: reportable accidents of employees. */
+export const ACCIDENTS = { line: 4, employees: 2 } as const;
+/** richtlinien_und_compliance.txt (policies_and_compliance.txt) lines 13 and 14: the management's declaration and the first year it covers. */
+export const DECLARATION = { line: 13, date: { year: 2026, month: 1, day: 15 }, firstYear: 2023 } as const;
+/** anfragen/2-werbeaussagen.md (requests/2-marketing-claims.md) line 12: claim 5 promises this much less electricity, in %. */
+export const CLAIM_SAVING = { line: 12, percent: 12 } as const;
