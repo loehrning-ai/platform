@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowGlyph } from "@/components/werk";
 import { CapsLine, PlakatBand, PosterArt } from "@/components/plakat";
 import type { LocalizedDemo } from "@/lib/demos";
+import { takeHomeFor } from "@/lib/demo-takehome";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import type { Workshop } from "@/lib/workshops";
@@ -12,7 +13,9 @@ const BAND_LINK =
 /**
  * The closing band above the take-home block: the poster art with the big
  * workshop number, and "Weiter im Workshop 0N: Folien (60 Min) · Kit (ZIP)".
- * The deck and kit links come from the workshop's own materials.
+ * The deck link comes from the workshop's own materials. The kit link is the
+ * take-home kit of this locale (DEMO_TAKEHOME), so the band and the take-home
+ * block below it never offer two different zips on one page.
  */
 export function ClosingBand({
   demo,
@@ -25,7 +28,9 @@ export function ClosingBand({
 }) {
   const copy = DEMOS_PAGE_COPY[locale].shell;
   const deck = workshop?.materials.find((material) => material.role === "deck");
-  const kit = workshop?.materials.find((material) => material.role === "kit" && material.kind === "zip");
+  const kitHref =
+    takeHomeFor(demo.slug)?.kit[locale].href ??
+    workshop?.materials.find((material) => material.role === "kit" && material.kind === "zip")?.href;
   const workshopHref = localizeHref(`/workshops/${demo.workshopSlug}`, locale);
   return (
     <div data-closing-band="" className="mt-12 sm:mt-16">
@@ -51,9 +56,9 @@ export function ClosingBand({
               </a>
             </li>
           ) : null}
-          {kit ? (
+          {kitHref ? (
             <li>
-              <a href={kit.href} download="" className={BAND_LINK} data-closing-link="kit">
+              <a href={kitHref} download="" className={BAND_LINK} data-closing-link="kit">
                 {copy.closingKit}
                 <ArrowGlyph direction="down" className="size-4" />
               </a>

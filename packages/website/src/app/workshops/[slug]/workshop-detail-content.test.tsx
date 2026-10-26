@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { workshopObjective } from "@/lib/workshop-objectives";
 import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
@@ -259,7 +260,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(within(stage).getByRole("link", { name: /^Demo öffnen/ })).toHaveAttribute("href", demo.href);
     expect(within(stage).getByRole("link", { name: /^Vertiefung im Labor/ })).toHaveAttribute("href", lab.href);
     expect(within(stage).getByRole("link", { name: /^Kit herunterladen/ })).toHaveAttribute("href", w01Kit.href);
-    expect(w01Kit.href).toMatch(/\/prognose-pruefen\.zip$/);
+    expect(w01Kit.href).toMatch(/\/prognose-pruefen-kit\.zip$/);
     // The band holds the poster and the words only: the back link is its one link.
     expect(
       within(cover).queryAllByRole("link").filter((link) => !link.hasAttribute("data-cover-back")),
@@ -360,11 +361,20 @@ describe("<WorkshopDetailContent>", () => {
         expect(container.querySelectorAll("details, summary, [aria-expanded]")).toHaveLength(0);
         expect(container.textContent).not.toMatch(/Mehr Details|More details/);
         expect(screen.queryByRole("heading", { name: locale === "de" ? "Nach dem Workshop" : "After this you can" })).toBeNull();
-        // No h2 other than the stage heading and the explainer heading.
+        // No h2 other than the stage heading, the explainer heading and the Lernziel.
+        const objective = workshopObjective(workshop.slug, locale);
         expect([...container.querySelectorAll("h2")].map((heading) => heading.id)).toEqual([
           "workshop-stage-heading",
           "workshop-explainer-heading",
+          ...(objective ? ["workshop-objective-heading"] : []),
         ]);
+        if (objective) {
+          const block = container.querySelector("[data-workshop-objective]") as HTMLElement;
+          expect(follows(container.querySelector("[data-stage-explainer]")!, block)).toBe(true);
+          expect(follows(block, container.querySelector("footer")!)).toBe(true);
+          expect(block).toHaveTextContent(objective.objective);
+          expect(block.querySelectorAll("[data-objective-card] > li")).toHaveLength(3);
+        }
         // Order: band, stage, explainer, provenance footer.
         const band = container.querySelector("[data-cover-band]")!;
         const stage = container.querySelector("[data-workshop-stage]")!;

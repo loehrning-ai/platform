@@ -6,6 +6,7 @@ import { ArrowGlyph, cx } from "@/components/werk";
 import { CapsLine, PlakatBand, PosterArt } from "@/components/plakat";
 import { StageExplainer } from "@/components/workshops/stage-explainer";
 import { WorkshopStage } from "@/components/workshops/workshop-stage";
+import { WorkshopObjective } from "@/components/workshops/workshop-objective";
 import { HighlightedText } from "@/components/ui/highlighted-text";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import {
@@ -329,13 +330,16 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           ) : null}
         </h1>
         <p className="mt-2.5 max-w-[40ch] text-body text-scene-ink text-balance max-sm:leading-[1.4] sm:mt-4 lg:mt-5 lg:max-w-[52ch] lg:text-[1.1875rem]">
-          {keepAmountsTogether(bandLede(workshop.summary))}
+          {keepAmountsTogether(bandLede(workshop.lede ?? workshop.summary))}
         </p>
       </PlakatBand>
 
       <WorkshopStage workshop={workshop} locale={locale} plakat={scene.plakat} />
 
       <StageExplainer workshop={workshop} />
+
+      {/* Lernziel: the sentence the workshop teaches and its three-line card. */}
+      <WorkshopObjective slug={workshop.slug} locale={locale} />
 
       {/* The slim provenance line: who, when, what kind of data, and the one
           real source where there is one. Pad for the phone tab bar. */}
