@@ -139,21 +139,31 @@ function walk(dir: string, out: string[] = []): string[] {
 
 const FILES = walk(SRC).map((path) => ({ file: relative(SRC, path), text: readFileSync(path, "utf8") }));
 
-describe("Werkglas is the only glass on the site", () => {
-  it("has no backdrop-filter outside .glass except switching one off", () => {
+/**
+ * The demos' own design language, Glas (src/components/demos/glas/, glass-spec),
+ * is the one exception: it may set backdrop-filter in glas.css, and only on
+ * a live surface under [data-glas-mode="live"]. Everything else on the site
+ * keeps Werkglas as its only glass.
+ */
+const GLAS_CSS = "components/demos/glas/glas.css";
+const GLAS_MODULE = /^(?:components\/demos\/glas\/|lib\/glas(?:-motion)?\.ts$)/;
+
+describe("Werkglas is the only glass on the site, apart from the demos' Glas", () => {
+  it("has no backdrop-filter outside .glass (and the demo Glas) except switching one off", () => {
     const offenders: string[] = [];
     for (const { file, text } of FILES.filter((entry) => entry.file.endsWith(".css"))) {
       postcss.parse(text).walkDecls(/backdrop-filter$/, (declaration) => {
         const rule = declaration.parent as Rule;
         const isGlass = file === "app/globals.css" && rule.selectors?.every((selector) => selector === ".glass");
-        if (!isGlass && declaration.value !== "none") offenders.push(`${file}: ${rule.selector} ${declaration.value}`);
+        const isDemoGlas = file === GLAS_CSS && rule.selectors?.every((selector) => selector.startsWith('[data-glas-mode="live"] .glas[data-live="on"]'));
+        if (!isGlass && !isDemoGlas && declaration.value !== "none") offenders.push(`${file}: ${rule.selector} ${declaration.value}`);
       });
     }
     expect(offenders).toEqual([]);
   });
 
-  it("has no Tailwind backdrop blur or translucent frost in components", () => {
-    const offenders = FILES.filter((entry) => /\.tsx?$/.test(entry.file))
+  it("has no Tailwind backdrop blur or translucent frost in components (the Glas module documents its filter)", () => {
+    const offenders = FILES.filter((entry) => /\.tsx?$/.test(entry.file) && !GLAS_MODULE.test(entry.file))
       .filter(({ text }) => /\bbackdrop-(?:blur|filter|saturate)(?!-none)/.test(text))
       .map(({ file }) => file);
     expect(offenders).toEqual([]);
