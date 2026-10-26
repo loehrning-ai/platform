@@ -74,16 +74,8 @@ describe("cards", () => {
     const markdown = cardToMarkdown({ ...complete, name: "## Quote\nWerk 2" }, COPY.de.own.card);
     const lines = markdown.split("\n");
     expect(lines[0]).toBe("### Quote Werk 2");
-    expect(lines.slice(1).map((line) => line.split(":")[0])).toEqual([
-      "- Entscheidung",
-      "- Zähler",
-      "- Nenner",
-      "- Zeitraum",
-      "- Quelle",
-      "- Grenze",
-      "- Auslöser",
-    ]);
-    expect(markdown).toContain("Kalenderwoche, verglichen mit Vorperiode");
+    expect(lines.slice(1).map((line) => line.split(":")[0])).toEqual(["- Entscheidung", "- Zähler", "- Nenner", "- Zeitraum", "- Quelle", "- Grenze", "- Auslöser"]);
+    expect(markdown).toContain("je Woche, verglichen mit Vorperiode");
     expect(markdown).toContain("reklamationen.xlsx, Spalte menge");
     expect(cardToMarkdown(EMPTY_CARD, COPY.en.own.card)).toContain("### not set");
   });

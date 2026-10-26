@@ -1,0 +1,1851 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-marketing-with-3",
+  "slug": "geschaeftsberichte-mit-ki-lesen",
+  "locale": "en",
+  "prompt_id": "marketing",
+  "take": 3,
+  "recorded_at": "2026-10-26T15:05:48Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": ["claude-opus-5-5"],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash(python3 *)",
+    "Bash(mkdir *)",
+    "Bash(cd *)",
+    "Bash(sed *)",
+    "Bash(cat *)",
+    "Bash(ls *)",
+    "Bash(find *)",
+    "Bash(grep *)",
+    "Bash(head *)",
+    "Bash(wc *)"
+  ],
+  "prompt": "The folder holds the monthly report 2023-09-monthly-report.md and the files ncr_records.csv, demand_actuals.csv and product_lines.csv. The VP of Sales wants more Q3 marketing for CRAFT. Should NORTHWIND do it?",
+  "kit_zip": "public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
+  "kit_files": [
+    {
+      "name": "2023-09-monthly-report.md",
+      "path": "northwind-analyst-kit/reports/2023-09-monthly-report.md",
+      "bytes": 4389,
+      "sha256": "4625c35f4505a27d4727476c5225bc896728e7b9c67dd0603a447f0af56bbed5"
+    },
+    {
+      "name": "ncr_records.csv",
+      "path": "northwind-analyst-kit/data/ncr_records.csv",
+      "bytes": 7337,
+      "sha256": "3cac951080c9a46fb0baa27971af4a073b2914ef4666d7cc004e29fb259fcd1c"
+    },
+    {
+      "name": "demand_actuals.csv",
+      "path": "northwind-analyst-kit/data/demand_actuals.csv",
+      "bytes": 105328,
+      "sha256": "c7f55eaa89769762262182a050e27312684d61f7ada437762fecd9028d9b649f"
+    },
+    {
+      "name": "product_lines.csv",
+      "path": "northwind-analyst-kit/data/product_lines.csv",
+      "bytes": 1071,
+      "sha256": "82870ab19c65a971c44bf38550696b44cefd6378630c7c4fb2e01876758d9394"
+    }
+  ],
+  "skill": {
+    "name": "kennzahlen-steckbrief",
+    "sha256": "a3fead432df8f43bccf074694862b36e48a64ee452181fb4b05dad2871f28f2e"
+  },
+  "skill_name": "kennzahlen-steckbrief",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "kennzahlen-steckbrief",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": ["auto"],
+  "timeline": [
+    {
+      "t_ms": 3523,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "kennzahlen-steckbrief"
+      }
+    },
+    {
+      "t_ms": 3584,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 4563,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la; cat 2023-09-monthly-report.md; head -5 *.csv; wc -l *.csv",
+        "description": "List files and preview report and CSVs"
+      }
+    },
+    {
+      "t_ms": 9261,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 12395,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "ls .claude/skills/kennzahlen-steckbrief/references/ 2>&1; cat .claude/skills/kennzahlen-steckbrief/references/steckbriefe.md 2>&1",
+        "description": "Check for team metric cards reference"
+      }
+    },
+    {
+      "t_ms": 12524,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 16078,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; cat product_lines.csv; cut -d, -f1,2 demand_actuals.csv | sort -u | head -30; cut -d, -f2 ncr_records.csv | cut -c1-7 | sort | uniq -c; cut -d, -f4 ncr_records.csv | sort | uniq -c",
+        "description": "Inspect product lines, weeks and NCR distribution"
+      }
+    },
+    {
+      "t_ms": 16156,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 27116,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "mkdir -p /tmp/nw_scripts; cat > /tmp/nw_scripts/a.py <<'EOF'\nimport csv,sys,collections as C\nd=sys.argv[1]\nprice={}\nfor r in csv.DictReader(open(d+'/product_lines.csv')): price[(r['line'],r['model_code'])]=float(r['base_price_eur'])\nU=C.Counter();R=C.Counter();W=C.defaultdict(set);miss=set()\nfor r in csv.DictReader(open(d+'/demand_actuals.csv')):\n    p=r['sku'].split('-'); line,mc=p[1],p[2]; m=r['week_start'][:7]\n    u=int(r['units_actual']); U[(line,m)]+=u; W[m].add(r['week_start'])\n    if (line,mc) in price: R[(line,m)]+=u*price[(line,mc)]\n    else: miss.add(r['sku'])\nprint('weeks',{m:sorted(v) for m,v in W.items()}, 'missing price',miss)\nN=C.Counter();Q=C.Counter();T=C.defaultdict(C.Counter)\nfor r in csv.DictReader(open(d+'/ncr_records.csv')):\n    m=r['ncr_date'][:7]; N[(r['line'],m)]+=1; Q[(r['line'],m)]+=int(r['qty_affected'])\n    if r['line']=='CRAFT': T[m][r['ncr_type']+'/'+r['scrap_or_rework']]+=int(r['qty_affected'])\nlines=sorted({k[0] for k in U})\nfor m in ['2023-08','2023-09']:\n  nw=len(W[m]); print('\\n',m,'weeks',nw)\n  for l in lines:\n    u=U[(l,m)]; n=N[(l,m)]; q=Q[(l,m)]\n    print(f\"{l:6} units {u:7} u/wk {u/nw:8.0f} rev {R[(l,m)]:12,.0f} NCR {n:3} NCR/1k {1000*n/u:5.2f} affected {q:5} aff% {100*q/u:5.1f}\")\n  print('total units',sum(U[(l,m)] for l in lines),'rev',f\"{sum(R[(l,m)] for l in lines):,.0f}\")\nfor m in T: print(m,dict(T[m]))\nEOF\npython3 -I /tmp/nw_scripts/a.py .",
+        "description": "Recompute units, revenue, NCR rates per line and month"
+      }
+    },
+    {
+      "t_ms": 27276,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 36337,
+      "kind": "tool_use",
+      "tool": "Write",
+      "input": {
+        "file_path": "nw_scripts/a.py",
+        "content": "import csv, sys, collections as C\n\nd = sys.argv[1]\nprice = {}\nfor r in csv.DictReader(open(d + '/product_lines.csv')):\n    price[(r['line'], r['model_code'])] = float(r['base_price_eur'])\n\nU = C.Counter(); R = C.Counter(); W = C.defaultdict(set); miss = set()\nfor r in csv.DictReader(open(d + '/demand_actuals.csv')):\n    p = r['sku'].split('-'); line, mc = p[1], p[2]; m = r['week_start'][:7]\n    u = int(r['units_actual']); U[(line, m)] += u; W[m].add(r['week_start'])\n    if (line, mc) in price:\n        R[(line, m)] += u * price[(line, mc)]\n    else:\n        miss.add(r['sku'])\nprint('weeks', {m: sorted(v) for m, v in W.items()}, 'missing price', miss)\n\nN = C.Counter(); Q = C.Counter(); T = C.defaultdict(C.Counter)\nfor r in csv.DictReader(open(d + '/ncr_records.csv')):\n    m = r['ncr_date'][:7]; N[(r['line'], m)] += 1; Q[(r['line'], m)] += int(r['qty_affected'])\n    if r['line'] == 'CRAFT':\n        T[m][r['ncr_type'] + '/' + r['scrap_or_rework']] += int(r['qty_affected'])\n\nlines = sorted({k[0] for k in U})\nfor m in ['2023-08', '2023-09']:\n    nw = len(W[m]); print('\\n', m, 'weeks', nw)\n    for l in lines:\n        u = U[(l, m)]; n = N[(l, m)]; q = Q[(l, m)]\n        print(f\"{l:6} units {u:7} u/wk {u/nw:8.0f} rev {R[(l, m)]:12,.0f} NCR {n:3} \"\n              f\"NCR/1k {1000*n/u:5.2f} affected {q:5} aff% {100*q/u:5.1f}\")\n    print('total units', sum(U[(l, m)] for l in lines), 'rev', f\"{sum(R[(l, m)] for l in lines):,.0f}\")\nfor m in sorted(T):\n    print(m, dict(T[m]))\n"
+      }
+    },
+    {
+      "t_ms": 36366,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 37056,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I nw_scripts/a.py .",
+        "description": "Recompute units, revenue, NCR rates per line and month"
+      }
+    },
+    {
+      "t_ms": 37131,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 49761,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 49762,
+      "kind": "text",
+      "chunk": "Rec"
+    },
+    {
+      "t_ms": 49762,
+      "kind": "text",
+      "chunk": "omputed ever"
+    },
+    {
+      "t_ms": 49762,
+      "kind": "text",
+      "chunk": "ything from raw C"
+    },
+    {
+      "t_ms": 49762,
+      "kind": "text",
+      "chunk": "SVs; num"
+    },
+    {
+      "t_ms": 49762,
+      "kind": "text",
+      "chunk": "bers match the report. Get"
+    },
+    {
+      "t_ms": 49763,
+      "kind": "text",
+      "chunk": "ting a"
+    },
+    {
+      "t_ms": 49763,
+      "kind": "text",
+      "chunk": " row count for the trace line,"
+    },
+    {
+      "t_ms": 49763,
+      "kind": "text",
+      "chunk": " then writing up."
+    },
+    {
+      "t_ms": 51292,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; grep -c ',2023-09-..,NW-CRAFT-' demand_actuals.csv; grep -c '^NCR-[0-9]*,2023-09-..,[^,]*,CRAFT,' ncr_records.csv",
+        "description": "Count CRAFT September rows in demand and NCR files"
+      }
+    },
+    {
+      "t_ms": 51342,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 61907,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 61907,
+      "kind": "text",
+      "chunk": "**No"
+    },
+    {
+      "t_ms": 61907,
+      "kind": "text",
+      "chunk": ". F"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": "ix CRAFT first and"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " hold off on ext"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": "ra Q3 marketing"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": ".** Both of the VP"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": "'s arguments come"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " from how"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " the numbers are coun"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": "ted. When you count"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " them per"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " week or in"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " units aff"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": "ected, neither holds up"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": ".\n\n## The"
+    },
+    {
+      "t_ms": 61909,
+      "kind": "text",
+      "chunk": " two cla"
+    },
+    {
+      "t_ms": 61910,
+      "kind": "text",
+      "chunk": "ims, checked against the raw"
+    },
+    {
+      "t_ms": 61910,
+      "kind": "text",
+      "chunk": " data\n\n**1"
+    },
+    {
+      "t_ms": 61910,
+      "kind": "text",
+      "chunk": ". \"Units up 22."
+    },
+    {
+      "t_ms": 61910,
+      "kind": "text",
+      "chunk": "4% on August\"**\n-"
+    },
+    {
+      "t_ms": 61910,
+      "kind": "text",
+      "chunk": " **What"
+    },
+    {
+      "t_ms": 61910,
+      "kind": "text",
+      "chunk": "'s"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": " counted:** C"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": "RAFT units shipped"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": ", total"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": " for"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": " the month."
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": " Source: `demand_actu"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": "als.csv`"
+    },
+    {
+      "t_ms": 61911,
+      "kind": "text",
+      "chunk": " `"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "units_actual`, report §"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "2.\n- **Period:"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "** September"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": " has 5 week"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "ly buckets (09"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "-02 to"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": " 09-30)."
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": " August has 4 (08-"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "05 to 08-26)."
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": "\n- **Limit:**"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": " a"
+    },
+    {
+      "t_ms": 61912,
+      "kind": "text",
+      "chunk": " month"
+    },
+    {
+      "t_ms": 61913,
+      "kind": "text",
+      "chunk": " with more weeks will"
+    },
+    {
+      "t_ms": 61913,
+      "kind": "text",
+      "chunk": " look bigger."
+    },
+    {
+      "t_ms": 61913,
+      "kind": "text",
+      "chunk": " Report §6 says this it"
+    },
+    {
+      "t_ms": 61913,
+      "kind": "text",
+      "chunk": "self.\n\n| C"
+    },
+    {
+      "t_ms": 61913,
+      "kind": "text",
+      "chunk": "RAFT | A"
+    },
+    {
+      "t_ms": 61913,
+      "kind": "text",
+      "chunk": "ug ("
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": "4 wks) | S"
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": "ep (5 wks) |"
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": " Change |\n|---|---"
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": ":|---:|---:"
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": "|\n| Monthly total"
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": " | 7,488 | "
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": "9,162 | **+22"
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": ".4%** ("
+    },
+    {
+      "t_ms": 61914,
+      "kind": "text",
+      "chunk": "re"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": "ported) |\n| Per week"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": " | 1,872"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": " | 1,832 |"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": " **−2.1%** |"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": "\n\nPer week, CRA"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": "FT demand **fell sl"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": "ightly**. Most"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": " lines grew a little per"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": " week (AURA +0."
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": "8%, ECHO +"
+    },
+    {
+      "t_ms": 61915,
+      "kind": "text",
+      "chunk": "2.8%, BREW"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": " +2.4%), so"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": " CRAFT is one of"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": " the weaker lines, not"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": " a bre"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": "akout.\n\n**2. \""
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": "Defects fell from 3"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": ".21 to 2.51"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": " per 1,000 units"
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 61916,
+      "kind": "text",
+      "chunk": " and"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": " no other line improved\"**"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": "\n- **What's counted:**"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": " number of def"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": "ect reports (NCRs"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": "). It"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": " isn't the"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": " number of defective units."
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": " Source: `ncr_"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": "records.csv`"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": ", report §3.\n- **"
+    },
+    {
+      "t_ms": 61917,
+      "kind": "text",
+      "chunk": "Div"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "ided by:** units shipped"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": ". That"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " den"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "ominator grows by"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " 25"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "% just"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " from the"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " extra week.\n- **"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "Limit:** one"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " report can c"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "over 10"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " units or 400"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "."
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " This is also"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": " production qu"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "ality, not custom"
+    },
+    {
+      "t_ms": 61918,
+      "kind": "text",
+      "chunk": "er returns.\n\n|"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": " CRAFT | A"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "ug | Sep | Dire"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "ction |\n|---|---:"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "|---:|---|\n|"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": " Defect reports per 1"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": ",000 units (reported)"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": " | 3.21 | "
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "2.51 | better"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": " |\n| Def"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "ect reports (total) | "
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "24 | 23 | fl"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "at |\n| **"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "Units affected** ("
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "`qty_affected`)"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": " | 2,324 | "
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "2,832 | wor"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": "se |\n| Units affected"
+    },
+    {
+      "t_ms": 61919,
+      "kind": "text",
+      "chunk": " as a share of units"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " shipped | **31.0"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "%** | **30.9%"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "** | **"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "flat** |\n| Units"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " scr"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "apped | 924 | "
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "1,539 | wor"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "se |\n| Units with"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " weld cracks | 228"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " | 754 | worse"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " |\n\nThe count of defect re"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "ports per"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " week did fall ("
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "6.0 to"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " 4.6). But the"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " amount of product affected did"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "n't. About"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": " **31"
+    },
+    {
+      "t_ms": 61920,
+      "kind": "text",
+      "chunk": "% of CRAFT's"
+    },
+    {
+      "t_ms": 61921,
+      "kind": "text",
+      "chunk": " volume** sh"
+    },
+    {
+      "t_ms": 61921,
+      "kind": "text",
+      "chunk": "ows up in def"
+    },
+    {
+      "t_ms": 61921,
+      "kind": "text",
+      "chunk": "ect reports,"
+    },
+    {
+      "t_ms": 61921,
+      "kind": "text",
+      "chunk": " which is ro"
+    },
+    {
+      "t_ms": 61921,
+      "kind": "text",
+      "chunk": "ughly 3"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "× N"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "EST and 5"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "× AURA. Scr"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "ap went up"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": ". \"No other line improved\""
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": " is also w"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "rong: by"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": " units affected, NEST impro"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "ved from 11.8% to"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": " 10.5%.\n\n**"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": "Check against"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 61922,
+      "kind": "text",
+      "chunk": " raw data:** the C"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "RAFT September fig"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "ure"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": " of 9,162 units com"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "es from "
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "95 rows in `demand"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "_actuals.csv`"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": " (C"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "RAFT products"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": ", we"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "eks star"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": "ting in"
+    },
+    {
+      "t_ms": 62608,
+      "kind": "text",
+      "chunk": " September). The 23 defect"
+    },
+    {
+      "t_ms": 63238,
+      "kind": "text",
+      "chunk": " reports are"
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": " 23 rows in `"
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": "ncr_records.csv`"
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": " (CRAFT, d"
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": "ated in September). Rev"
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": "enue ("
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": "€4,124,238) and"
+    },
+    {
+      "t_ms": 63239,
+      "kind": "text",
+      "chunk": " the "
+    },
+    {
+      "t_ms": 63240,
+      "kind": "text",
+      "chunk": "2.51 r"
+    },
+    {
+      "t_ms": 63240,
+      "kind": "text",
+      "chunk": "ate also match ex"
+    },
+    {
+      "t_ms": 63240,
+      "kind": "text",
+      "chunk": "actly. The"
+    },
+    {
+      "t_ms": 63240,
+      "kind": "text",
+      "chunk": " report's ar"
+    },
+    {
+      "t_ms": 63864,
+      "kind": "text",
+      "chunk": "ithmetic is right; the"
+    },
+    {
+      "t_ms": 63864,
+      "kind": "text",
+      "chunk": " conclusions dr"
+    },
+    {
+      "t_ms": 63865,
+      "kind": "text",
+      "chunk": "awn from it a"
+    },
+    {
+      "t_ms": 63865,
+      "kind": "text",
+      "chunk": "ren't.\n\n## Recomm"
+    },
+    {
+      "t_ms": 63865,
+      "kind": "text",
+      "chunk": "endation\n- **Decision"
+    },
+    {
+      "t_ms": 63865,
+      "kind": "text",
+      "chunk": ":** put C"
+    },
+    {
+      "t_ms": 63866,
+      "kind": "text",
+      "chunk": "RAFT r"
+    },
+    {
+      "t_ms": 63866,
+      "kind": "text",
+      "chunk": "ework first. Don't move"
+    },
+    {
+      "t_ms": 63866,
+      "kind": "text",
+      "chunk": " more Q3 marketing"
+    },
+    {
+      "t_ms": 63866,
+      "kind": "text",
+      "chunk": " to"
+    },
+    {
+      "t_ms": 63866,
+      "kind": "text",
+      "chunk": " CRAFT y"
+    },
+    {
+      "t_ms": 63867,
+      "kind": "text",
+      "chunk": "et.\n- **Why:"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "** on a"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": " units"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "-affected basis, about "
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "31% of CRAFT"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": " vol"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "ume app"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "ears in defect reports, fl"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "at from"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": " August to September. Scrap"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": " rose from 924 to "
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": "1,539 units and"
+    },
+    {
+      "t_ms": 64527,
+      "kind": "text",
+      "chunk": " weld cracks from"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": " 228 to 754."
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": " More demand means more of"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": " this production. Per-week dem"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": "and is also sl"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": "ightly down (−2.1"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": "%), so there's no clear"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": " momentum to push beh"
+    },
+    {
+      "t_ms": 65152,
+      "kind": "text",
+      "chunk": "ind.\n- **Risks"
+    },
+    {
+      "t_ms": 65153,
+      "kind": "text",
+      "chunk": ":"
+    },
+    {
+      "t_ms": 65153,
+      "kind": "text",
+      "chunk": "**\n  - If you"
+    },
+    {
+      "t_ms": 65153,
+      "kind": "text",
+      "chunk": " wait,"
+    },
+    {
+      "t_ms": 65153,
+      "kind": "text",
+      "chunk": " you could lose some premium s"
+    },
+    {
+      "t_ms": 65882,
+      "kind": "text",
+      "chunk": "ales during r"
+    },
+    {
+      "t_ms": 65882,
+      "kind": "text",
+      "chunk": "ework. CRAFT is"
+    },
+    {
+      "t_ms": 65882,
+      "kind": "text",
+      "chunk": " about"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": " €0"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": ".8"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": "M of"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": " list revenue per week."
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": "\n  - If you spend now"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": ", you p"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": "ay to"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": " s"
+    },
+    {
+      "t_ms": 65883,
+      "kind": "text",
+      "chunk": "ell more of"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " a line"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " that sc"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": "ra"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": "ps about"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": "17% of its volume."
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " Margin is also unknown because"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " data has no cost per"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " product"
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " (§6)."
+    },
+    {
+      "t_ms": 66514,
+      "kind": "text",
+      "chunk": " A"
+    },
+    {
+      "t_ms": 67150,
+      "kind": "text",
+      "chunk": " €"
+    },
+    {
+      "t_ms": 67150,
+      "kind": "text",
+      "chunk": "450 average"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": " price doesn't mean high"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": " prof"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "it.\n- **The VP"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "'s re"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "ading:** coun"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "ting defect reports and com"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "paring monthly totals,"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": " qu"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "ality impro"
+    },
+    {
+      "t_ms": 67151,
+      "kind": "text",
+      "chunk": "ved (3.21 "
+    },
+    {
+      "t_ms": 67778,
+      "kind": "text",
+      "chunk": "to 2.51) and units"
+    },
+    {
+      "t_ms": 67778,
+      "kind": "text",
+      "chunk": " grew "
+    },
+    {
+      "t_ms": 67778,
+      "kind": "text",
+      "chunk": "22.4%. Both"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": " are real"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": " num"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": "bers, but they come"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": " from the coun"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": "ting method"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": ", not from better"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": " qu"
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": "ality or faster demand."
+    },
+    {
+      "t_ms": 67779,
+      "kind": "text",
+      "chunk": "\n- **What would change the decision"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": ":** these"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " are my suggested"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " thresholds, so"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " please conf"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": "irm or"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " set your"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " own."
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": "\n  - Units"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " affected st"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": "ay under about"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": " 10% of CRAF"
+    },
+    {
+      "t_ms": 68397,
+      "kind": "text",
+      "chunk": "T units shipped (NE"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "ST's level) for 4 "
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "we"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "eks in a row.\n  "
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "- Weld-"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "crack units fall back"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": " below"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": " August's "
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "228.\n  - Per-"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "week CRAFT demand"
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": " is flat or up."
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "\n\n  "
+    },
+    {
+      "t_ms": 69112,
+      "kind": "text",
+      "chunk": "I set these in units r"
+    },
+    {
+      "t_ms": 69733,
+      "kind": "text",
+      "chunk": "ather than defect-report counts"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " on"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " purpose. Merging or"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " spl"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": "itting reports would change the report"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " count without changing anything on"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " the line"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": ".\n\n**"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": "What"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " I"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " cou"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": "ldn't check:** prof"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": "it margin, custom"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": "er returns by line, and how"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " marketing spend spl"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": "its by"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " line. None"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " of these"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " are in the data (report §4"
+    },
+    {
+      "t_ms": 69734,
+      "kind": "text",
+      "chunk": " and §6)."
+    }
+  ],
+  "final_text": "**No. Fix CRAFT first and hold off on extra Q3 marketing.** Both of the VP's arguments come from how the numbers are counted. When you count them per week or in units affected, neither holds up.\n\n## The two claims, checked against the raw data\n\n**1. \"Units up 22.4% on August\"**\n- **What's counted:** CRAFT units shipped, total for the month. Source: `demand_actuals.csv` `units_actual`, report §2.\n- **Period:** September has 5 weekly buckets (09-02 to 09-30). August has 4 (08-05 to 08-26).\n- **Limit:** a month with more weeks will look bigger. Report §6 says this itself.\n\n| CRAFT | Aug (4 wks) | Sep (5 wks) | Change |\n|---|---:|---:|---:|\n| Monthly total | 7,488 | 9,162 | **+22.4%** (reported) |\n| Per week | 1,872 | 1,832 | **−2.1%** |\n\nPer week, CRAFT demand **fell slightly**. Most lines grew a little per week (AURA +0.8%, ECHO +2.8%, BREW +2.4%), so CRAFT is one of the weaker lines, not a breakout.\n\n**2. \"Defects fell from 3.21 to 2.51 per 1,000 units, and no other line improved\"**\n- **What's counted:** the number of defect reports (NCRs). It isn't the number of defective units. Source: `ncr_records.csv`, report §3.\n- **Divided by:** units shipped. That denominator grows by 25% just from the extra week.\n- **Limit:** one report can cover 10 units or 400. This is also production quality, not customer returns.\n\n| CRAFT | Aug | Sep | Direction |\n|---|---:|---:|---|\n| Defect reports per 1,000 units (reported) | 3.21 | 2.51 | better |\n| Defect reports (total) | 24 | 23 | flat |\n| **Units affected** (`qty_affected`) | 2,324 | 2,832 | worse |\n| Units affected as a share of units shipped | **31.0%** | **30.9%** | **flat** |\n| Units scrapped | 924 | 1,539 | worse |\n| Units with weld cracks | 228 | 754 | worse |\n\nThe count of defect reports per week did fall (6.0 to 4.6). But the amount of product affected didn't. About **31% of CRAFT's volume** shows up in defect reports, which is roughly 3× NEST and 5× AURA. Scrap went up. \"No other line improved\" is also wrong: by units affected, NEST improved from 11.8% to 10.5%.\n\n**Check against the raw data:** the CRAFT September figure of 9,162 units comes from 95 rows in `demand_actuals.csv` (CRAFT products, weeks starting in September). The 23 defect reports are 23 rows in `ncr_records.csv` (CRAFT, dated in September). Revenue (€4,124,238) and the 2.51 rate also match exactly. The report's arithmetic is right; the conclusions drawn from it aren't.\n\n## Recommendation\n- **Decision:** put CRAFT rework first. Don't move more Q3 marketing to CRAFT yet.\n- **Why:** on a units-affected basis, about 31% of CRAFT volume appears in defect reports, flat from August to September. Scrap rose from 924 to 1,539 units and weld cracks from 228 to 754. More demand means more of this production. Per-week demand is also slightly down (−2.1%), so there's no clear momentum to push behind.\n- **Risks:**\n  - If you wait, you could lose some premium sales during rework. CRAFT is about €0.8M of list revenue per week.\n  - If you spend now, you pay to sell more of a line that scraps about 17% of its volume. Margin is also unknown because the data has no cost per product (§6). A €450 average price doesn't mean high profit.\n- **The VP's reading:** counting defect reports and comparing monthly totals, quality improved (3.21 to 2.51) and units grew 22.4%. Both are real numbers, but they come from the counting method, not from better quality or faster demand.\n- **What would change the decision:** these are my suggested thresholds, so please confirm or set your own.\n  - Units affected stay under about 10% of CRAFT units shipped (NEST's level) for 4 weeks in a row.\n  - Weld-crack units fall back below August's 228.\n  - Per-week CRAFT demand is flat or up.\n\n  I set these in units rather than defect-report counts on purpose. Merging or splitting reports would change the report count without changing anything on the line.\n\n**What I couldn't check:** profit margin, customer returns by line, and how marketing spend splits by line. None of these are in the data (report §4 and §6).",
+  "stats": {
+    "duration_ms": 68930,
+    "duration_api_ms": 63930,
+    "ttft_ms": 1994,
+    "num_turns": 10,
+    "output_tokens": 5717
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [
+    {
+      "name": "a.py",
+      "bytes": 1483,
+      "sha256": "e25ac2e6c4a7b2eee1ab0311d84f44beb230cf99911cd72bb89cb01098102e10",
+      "stored_as": "en-marketing-with-3.a.py",
+      "text": "import csv, sys, collections as C\n\nd = sys.argv[1]\nprice = {}\nfor r in csv.DictReader(open(d + '/product_lines.csv')):\n    price[(r['line'], r['model_code'])] = float(r['base_price_eur'])\n\nU = C.Counter(); R = C.Counter(); W = C.defaultdict(set); miss = set()\nfor r in csv.DictReader(open(d + '/demand_actuals.csv')):\n    p = r['sku'].split('-'); line, mc = p[1], p[2]; m = r['week_start'][:7]\n    u = int(r['units_actual']); U[(line, m)] += u; W[m].add(r['week_start'])\n    if (line, mc) in price:\n        R[(line, m)] += u * price[(line, mc)]\n    else:\n        miss.add(r['sku'])\nprint('weeks', {m: sorted(v) for m, v in W.items()}, 'missing price', miss)\n\nN = C.Counter(); Q = C.Counter(); T = C.defaultdict(C.Counter)\nfor r in csv.DictReader(open(d + '/ncr_records.csv')):\n    m = r['ncr_date'][:7]; N[(r['line'], m)] += 1; Q[(r['line'], m)] += int(r['qty_affected'])\n    if r['line'] == 'CRAFT':\n        T[m][r['ncr_type'] + '/' + r['scrap_or_rework']] += int(r['qty_affected'])\n\nlines = sorted({k[0] for k in U})\nfor m in ['2023-08', '2023-09']:\n    nw = len(W[m]); print('\\n', m, 'weeks', nw)\n    for l in lines:\n        u = U[(l, m)]; n = N[(l, m)]; q = Q[(l, m)]\n        print(f\"{l:6} units {u:7} u/wk {u/nw:8.0f} rev {R[(l, m)]:12,.0f} NCR {n:3} \"\n              f\"NCR/1k {1000*n/u:5.2f} affected {q:5} aff% {100*q/u:5.1f}\")\n    print('total units', sum(U[(l, m)] for l in lines), 'rev', f\"{sum(R[(l, m)] for l in lines):,.0f}\")\nfor m in sorted(T):\n    print(m, dict(T[m]))\n"
+    }
+  ],
+  "edited": false,
+  "rejected": ["1 tool calls were denied"]
+}
