@@ -1,32 +1,32 @@
 import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
 
 /**
- * The intro of this demo (language-standard B.8) and its shell. Owned by this
- * demo's builder: switch SHELL to "v4" when the demo runs on the Glas shell.
- * The sentences are drafts from the language standard; check every claim
- * against the kit before shipping v4.
+ * The intro of "Die Fragekarte" (language-standard B.8) and its shell. Every
+ * claim is in the kit: the rehearsal table is builder/claude-demo/AI-RUN-LOG.md,
+ * the company is invented (README), the three take-homes are the files the
+ * last beat hands over. "{minutes}" is filled from demos.ts.
  */
-export const SHELL: DemoShellVersion = "v3";
+export const SHELL: DemoShellVersion = "v4";
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "Fünf Fragen, bevor eine Zahl in den Bericht geht",
+    title: "Die Fragekarte",
     sentences: [
-      "In einem erfundenen Fall bekommt Claude eine richtige Datei und baut daraus eine falsche Tabelle.",
-      "Du findest heraus, warum, und lernst fünf Fragen, die diesen Fehler abfangen, bevor die Zahl im Monatsbericht landet.",
-      "Am Ende füllst du diese fünf Felder für eine eigene Kennzahl aus und bekommst einen Skill, eine Projektanweisung und eine Prüfliste.",
-      "Das dauert etwa {minutes} Minuten, und alles bleibt in deinem Browser.",
+      "Beim Bau dieses Kurses hat Claude aus einer richtigen Exportdatei einer erfundenen Abo-Firma eine falsche Monatstabelle gebaut.",
+      "Du ziehst selbst an der Datei und findest heraus, welche Zahl ihr fehlt.",
+      "Danach füllst du die fünf Kästchen der Fragekarte aus und nimmst einen Skill, eine Projektanweisung und eine Prüfliste für deinen Claude mit.",
+      "Der geführte Teil dauert etwa {minutes} Minuten.",
     ],
-    start: "Mit der Datei starten",
+    start: "Mit Claudes Tabelle starten",
   },
   en: {
-    title: "Five questions before a number goes into the report",
+    title: "The question card",
     sentences: [
-      "In an invented case, Claude gets a correct file and builds a wrong table from it.",
-      "You find out why, and learn five questions that catch this mistake before the number lands in the monthly report.",
-      "At the end you fill in these five fields for a figure of your own and get a skill, a project instruction and a checklist.",
-      "It takes about {minutes} minutes, and everything stays in your browser.",
+      "While we were building this course, Claude took a correct export file from an invented subscription company and built a wrong monthly table from it.",
+      "You pull on the file yourself and find out which number it is missing.",
+      "Then you fill in the five boxes of the question card and take home a skill, project instructions and a test list for your Claude.",
+      "The guided part takes about {minutes} minutes.",
     ],
-    start: "Start with the file",
+    start: "Start with Claude's table",
   },
 };

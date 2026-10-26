@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { CLAUDE_ANSWER, CLOCK_UTC, ENDING_MRR, F01_CLOCK_UTC, LOAD_UTC, NET_NEW_2026, OPENING_DEC_2025, STATUS, WARN_AFTER_H } from "./data";
-import { ACROSS, boundaryLocks, boundaryOutcome, canAdd, countWho, freshness, gradeValue, KINDS, readings } from "./logic";
+import { CLAUDE_ANSWER, ENDING_MRR, NET_NEW_2026, OPENING_DEC_2025, RUN2_ACTIVE, STATUS, SUMMARY } from "./data";
+import { ACROSS, canAdd, countCodes, countWho, EDGE_STARTS, gradeValue, KINDS, openingFromStart, previousMonth, readings, sumAt, tubLevels, uncovered } from "./logic";
 
 const LEVELS = [ENDING_MRR["2026-04"], ENDING_MRR["2026-05"], ENDING_MRR["2026-06"]];
 
@@ -43,15 +43,6 @@ describe("countWho", () => {
   });
 });
 
-describe("boundary", () => {
-  it("locks only when the data is out of reach", () => {
-    expect(boundaryOutcome("instruction")).toBe("guidedOnly");
-    expect(boundaryOutcome("notUploaded")).toBe("nothingToRead");
-    expect(boundaryOutcome("grant")).toBe("denied42501");
-    expect([boundaryLocks("instruction"), boundaryLocks("notUploaded"), boundaryLocks("grant")]).toEqual([false, true, true]);
-  });
-});
-
 describe("gradeValue", () => {
   const result = readings(NET_NEW_2026, OPENING_DEC_2025);
   it("grades each reading against G01 by exact value", () => {
@@ -62,10 +53,39 @@ describe("gradeValue", () => {
   });
 });
 
-describe("freshness", () => {
-  it("is 3 h fresh at the course clock and 60 h with a warning at F01, never blocked", () => {
-    expect(freshness(LOAD_UTC, CLOCK_UTC, WARN_AFTER_H)).toEqual({ ageH: 3, state: "fresh" });
-    expect(freshness(LOAD_UTC, F01_CLOCK_UTC, WARN_AFTER_H)).toEqual({ ageH: 60, state: "warn" });
-    expect(freshness(LOAD_UTC, F01_CLOCK_UTC)).toEqual({ ageH: 60, state: null });
+describe("the tub", () => {
+  it("gives Claude's table at an opening of zero and the approved view at 258.785", () => {
+    expect(tubLevels(NET_NEW_2026, 0).slice(3)).toEqual(CLAUDE_ANSWER);
+    expect(tubLevels(NET_NEW_2026, OPENING_DEC_2025).slice(3)).toEqual([334_675, 344_450, 387_015]);
+    expect(tubLevels(NET_NEW_2026, 120_000)[5]).toBe(248_230);
+  });
+
+  it("pins the opening for each start of the file", () => {
+    expect(openingFromStart("2025-01")).toBe(258_785);
+    expect(openingFromStart("2025-03")).toBe(218_195);
+    expect(openingFromStart("2026-01")).toBe(0);
+    expect(EDGE_STARTS).toHaveLength(13);
+    const ending = (month: string) => SUMMARY.find((row) => row.month === month)?.ending ?? 0;
+    for (const start of EDGE_STARTS.slice(1)) expect(openingFromStart(start), start).toBe(258_785 - ending(previousMonth(start)));
+    expect(uncovered("2025-01")).toHaveLength(12);
+    expect(uncovered("2026-01")).toHaveLength(0);
+  });
+
+  it("knows the month before", () => {
+    expect([previousMonth("2025-01"), previousMonth("2025-03"), previousMonth("2026-01")]).toEqual(["2024-12", "2025-02", "2025-12"]);
+  });
+
+  it("pours columns and arrows into the numbers of scene 4", () => {
+    const levels = [334_675, 344_450, 387_015];
+    expect(sumAt(levels, [0, 1])).toBe(679_125);
+    expect(sumAt(levels, [0, 1, 2])).toBe(1_066_140);
+    expect(sumAt(NET_NEW_2026.slice(3), [0, 1, 2])).toBe(32_380);
+  });
+
+  it("counts any set of status codes, and A with C is the 120 of run 2", () => {
+    expect(countCodes(new Set(["A", "N"]), STATUS)).toBe(132);
+    expect(countCodes(new Set(["A", "C"]), STATUS)).toBe(RUN2_ACTIVE);
+    expect(countCodes(new Set(), STATUS)).toBe(0);
+    expect(countCodes(new Set(["A", "N", "C"]), STATUS)).toBe(144);
   });
 });

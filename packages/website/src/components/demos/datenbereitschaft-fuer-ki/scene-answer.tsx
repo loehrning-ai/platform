@@ -1,190 +1,170 @@
 "use client";
 
+import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { ESCAPE_PRIORITY, GlasChip, GlasSegmented, pushEscapeLayer, useGlas } from "@/components/demos/glas";
 import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
-import { CLAUDE_ANSWER, EXPORT_ROWS, NET_NEW_2026, OPENING_DEC_2025 } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
-import { fill } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/files";
-import { formatNumber, MINUS } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/format";
-import { monthlyTotals, readings } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/logic";
-import { ease, phase } from "./tween";
+import { QUARTER, REHEARSAL_RUNS } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
+import type { Sent } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
+import type { Fmt } from "./fmt";
 
-const READINGS = readings(NET_NEW_2026, OPENING_DEC_2025);
-const TOTALS = [...monthlyTotals(EXPORT_ROWS).values()];
-/** The answer card's fixed bar scale, 0 to 400.000. */
-const ANSWER_MAX = 400_000;
+/** The dock targets carry this attribute; a drop is hit-tested against it. */
+export const TARGET_ATTR = "data-w03-target";
+const MAX_TILT_DEG = 4;
 
-/** Beat 1: Claude's answer as it came, bars drawn once from 0 over the beat. */
-export function AnswerScene({ pack, progress }: { readonly pack: Pack; readonly progress: number }) {
-  const copy = pack.answer;
-  const grow = ease(progress);
-  return (
-    <div className="fk-answer">
-      <p className="fk-ask" data-fk-ask="">
-        {copy.question}
-      </p>
-      <p className="fk-kicker">{copy.kicker}</p>
-      <div className="fk-sheet" data-fk-answer="">
-        <p className="fk-sheet-head">{copy.header}</p>
-        <ul className="fk-bars">
-          {CLAUDE_ANSWER.map((value, index) => (
-            <li key={pack.months[index]} className="fk-bar-row">
-              <span className="fk-month">{pack.months[index]}</span>
-              <span className="fk-bar-track" aria-hidden="true">
-                <span className="fk-bar" style={{ transform: `scaleX(${(value / ANSWER_MAX) * grow})` }} />
-              </span>
-              <span className="fk-figure">{formatNumber(value, pack.locale)}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="fk-caveat">{copy.caveat}</p>
-      </div>
-      <p className="fk-source">{copy.source}</p>
-    </div>
-  );
-}
-
-/** One column of the readings chart: a Mennige outlined opening block and the ink part on it. */
-interface Column {
-  readonly open: number;
-  readonly value: number;
-}
-
-/** The columns of each reading: 0 change as level, 1 summed with no opening, 2 levels added, 3 opening plus changes. */
-const COLUMNS: readonly (readonly Column[])[] = [
-  READINGS.changeAsLevel.map((value) => ({ open: 0, value })),
-  READINGS.runningNoOpen.map((value) => ({ open: 0, value })),
-  [{ open: 0, value: READINGS.levelsSummed }, { open: 0, value: 0 }, { open: 0, value: 0 }],
-  READINGS.runningNoOpen.map((value) => ({ open: OPENING_DEC_2025, value })),
-];
-
-/** Columns at a continuous reading s in [0, 3]: neighbouring detents interpolated. */
-function columnsAt(s: number): readonly Column[] {
-  const low = Math.max(0, Math.min(3, Math.floor(s)));
-  const high = Math.min(3, low + 1);
-  const share = ease(s - low);
-  return (COLUMNS[low] as readonly Column[]).map((from, index) => {
-    const to = (COLUMNS[high] as readonly Column[])[index] as Column;
-    return { open: from.open + (to.open - from.open) * share, value: from.value + (to.value - from.value) * share };
-  });
-}
-
-/** The figures printed at a detent; never an interpolated value. */
-export function readingFigures(detent: number): readonly number[] {
-  if (detent === 0) return READINGS.changeAsLevel;
-  if (detent === 1) return READINGS.runningNoOpen;
-  if (detent === 2) return [READINGS.levelsSummed];
-  return READINGS.levels;
-}
-
-/** The arithmetic line under the chart, computed from the kit values. */
-function arithmetic(detent: number, pack: Pack): string {
-  const n = (value: number) => formatNumber(value, pack.locale);
-  if (detent === 1) {
-    const terms = NET_NEW_2026.slice(0, 4)
-      .map((value, index) => (index === 0 ? n(value) : value < 0 ? `${MINUS} ${n(-value)}` : `+ ${n(value)}`))
-      .join(" ");
-    return `${terms} = ${n(READINGS.runningNoOpen[0] as number)}`;
+/** Which dock target is under a screen point, if any. */
+function targetAt(x: number, y: number): Sent | null {
+  if (typeof document === "undefined" || !document.elementsFromPoint) return null;
+  for (const element of document.elementsFromPoint(x, y)) {
+    const hit = element.closest(`[${TARGET_ATTR}]`);
+    const value = hit?.getAttribute(TARGET_ATTR);
+    if (value === "report" || value === "ask") return value;
   }
-  if (detent === 2) return `${READINGS.levels.map(n).join(" + ")} = ${n(READINGS.levelsSummed)}. ${pack.reveal.readings[2]?.how ?? ""}`;
-  if (detent === 3) return `${n(OPENING_DEC_2025)} + ${n(READINGS.runningNoOpen[0] as number)} = ${n(READINGS.levels[0] as number)}`;
-  return pack.reveal.readings[0]?.how ?? "";
+  return null;
 }
-
-const Y_MIN = -40_000;
-const Y_MAX = 400_000;
-const CHART_H = 132;
-const y = (value: number) => CHART_H - ((Math.min(Y_MAX, value) - Y_MIN) / (Y_MAX - Y_MIN)) * CHART_H;
 
 /**
- * Beat 2: the file is right (ticks, 6 of 6 months), the missing level grows
- * under each bar, then the verdict; afterwards the slider walks the four
- * readings of the same 18 rows.
+ * Scene 1 "Die Antwort": Claude's rehearsal table as a card the visitor drags
+ * to one of the two dock targets (or taps a target). Both kept runs are on
+ * the card's stepper, as the run log records them. The choice is never
+ * scored; the card shrinks into the target it went to.
  */
-export function ReadingsScene({
+export function SceneAnswer({
   pack,
-  progress,
-  reading,
-  detent,
+  fmt,
+  sent,
+  run,
+  onRun,
+  onSend,
+  onHover,
+  todayLine,
+  reducedMotion,
 }: {
   readonly pack: Pack;
-  readonly progress: number;
-  /** Continuous reading from the slider's tween. */
-  readonly reading: number;
-  readonly detent: number;
+  readonly fmt: Fmt;
+  readonly sent: Sent | null;
+  readonly run: 1 | 2;
+  readonly onRun: (run: 1 | 2) => void;
+  readonly onSend: (to: Sent) => void;
+  /** The target the card hovers over while dragged (the dock brightens its rim). */
+  readonly onHover: (target: Sent | null) => void;
+  /** The line under the status chip when today's recording gave the same table (copy variant A), or null. */
+  readonly todayLine: string | null;
+  readonly reducedMotion: boolean;
 }) {
-  const copy = pack.reveal;
-  const revealing = progress < 1;
-  const ticks = Math.round(phase(progress, 0, 0.25) * TOTALS.length);
-  const s = revealing ? 1 + 2 * ease(phase(progress, 0.25, 0.67)) : reading;
-  const columns = columnsAt(s);
-  const settled = !revealing && Math.abs(reading - detent) < 0.001;
-  const shown = revealing ? (progress >= 0.67 ? 3 : 1) : detent;
-  const figures = revealing && progress < 0.67 ? READINGS.runningNoOpen : settled ? readingFigures(detent) : [];
-  const label = copy.readings[shown];
-  const zero = y(0);
+  const glas = useGlas();
+  const card = useRef<HTMLDivElement | null>(null);
+  const [drag, setDrag] = useState<null | { id: number; x0: number; y0: number; dx: number; dy: number }>(null);
+  const record = REHEARSAL_RUNS.find((entry) => entry.run === run) ?? REHEARSAL_RUNS[1];
+  const a = pack.answer;
+
+  useEffect(() => {
+    if (!drag) return;
+    return pushEscapeLayer(ESCAPE_PRIORITY.drag, () => {
+      setDrag(null);
+      onHover(null);
+    });
+  }, [drag, onHover]);
+
+  const onDown = (event: PointerEvent<HTMLDivElement>) => {
+    if (sent || event.button !== 0) return;
+    if ((event.target as Element).closest("button, a, [role='radiogroup']")) return;
+    // On touch the card scrolls; the grip on top drags it (a mouse or pen drags it anywhere).
+    if (event.pointerType === "touch" && !(event.target as Element).closest(".w03-answer-grip")) return;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    setDrag({ id: event.pointerId, x0: event.clientX, y0: event.clientY, dx: 0, dy: 0 });
+    glas.noteDrag();
+  };
+  const onMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!drag || drag.id !== event.pointerId) return;
+    setDrag({ ...drag, dx: event.clientX - drag.x0, dy: event.clientY - drag.y0 });
+    onHover(targetAt(event.clientX, event.clientY));
+  };
+  const onUp = (event: PointerEvent<HTMLDivElement>) => {
+    if (!drag || drag.id !== event.pointerId) return;
+    const target = targetAt(event.clientX, event.clientY);
+    setDrag(null);
+    onHover(null);
+    if (target) onSend(target);
+  };
+
+  const tilt = drag ? Math.max(-MAX_TILT_DEG, Math.min(MAX_TILT_DEG, drag.dx / 30)) : 0;
+  const style = drag ? { transform: `translate(${drag.dx}px, ${drag.dy}px) rotate(${tilt}deg)` } : undefined;
+  const note =
+    record && record.quote === null ? (
+      <p className="w03-answer-note" data-kind="described">
+        <span className="w03-kicker">{a.describedLabel}</span> {a.described}
+      </p>
+    ) : record ? (
+      <blockquote className="w03-answer-note" data-kind="quote" lang="en">
+        <span className="w03-kicker" lang={fmt.locale}>
+          {a.quoteLabel}
+        </span>{" "}
+        {fmt.quote(record.quote ?? "")}
+      </blockquote>
+    ) : null;
 
   return (
-    <div className="fk-readings">
-      <p className="fk-file">
-        <span className="fk-file-name">{copy.fileName}</span>
-        <span>{fill(copy.fileRows, { rows: EXPORT_ROWS.length })}</span>
-        <span className="fk-file-check" data-fk-check={ticks === TOTALS.length ? "done" : "running"}>
-          {fill(copy.fileCheck, { n: ticks, total: TOTALS.length })}
-        </span>
-      </p>
-      <div className="fk-chart" data-fk-reading={shown}>
-        <svg viewBox={`0 0 300 ${CHART_H}`} preserveAspectRatio="none" aria-hidden="true" className="fk-chart-svg">
-          <line x1="0" x2="300" y1={zero} y2={zero} className="fk-zero" />
-          {columns.map((column, index) => {
-            const x = 18 + index * 96;
-            const top = column.open + column.value;
-            const inkTop = y(Math.max(column.open, top));
-            const inkBottom = y(Math.min(column.open, top));
-            const clipped = top > Y_MAX;
-            return (
-              <g key={pack.months[index]}>
-                {column.open > 0 ? <rect x={x} width="72" y={y(column.open)} height={zero - y(column.open)} className="fk-open" /> : null}
-                <rect x={x} width="72" y={inkTop} height={Math.max(0, inkBottom - inkTop)} className="fk-ink" />
-                {clipped ? <path d={`M${x - 2} 10 l14 -6 l14 6 l14 -6 l14 6 l14 -6 l6 3`} className="fk-break" /> : null}
-              </g>
-            );
-          })}
-        </svg>
-        <ol className="fk-chart-opens" aria-hidden="true">
-          {columns.map((column, index) => {
-            const share = column.open / OPENING_DEC_2025;
-            const top = (y(column.open) / CHART_H) * 100;
-            return (
-              <li
-                key={pack.months[index]}
-                className="fk-chart-open"
-                style={{ left: `${((18 + index * 96) / 300) * 100}%`, top: `${top}%`, height: `${((zero - y(column.open)) / CHART_H) * 100}%`, opacity: share > 0.5 ? (share - 0.5) * 2 : 0 }}
-              >
-                {share > 0 ? formatNumber(OPENING_DEC_2025, pack.locale) : ""}
-              </li>
-            );
-          })}
-        </ol>
-        <ol className="fk-chart-figures" aria-label={label?.label}>
-          {pack.months.map((month, index) => (
-            <li key={month} className="fk-chart-figure" data-strong={!revealing && detent === 3 ? "" : undefined}>
-              {figures[index] === undefined ? "" : formatNumber(figures[index] as number, pack.locale)}
-            </li>
-          ))}
-        </ol>
-        <ol className="fk-chart-months" aria-hidden="true">
-          {pack.months.map((month, index) => (
-            <li key={month}>{shown === 2 && settled ? (index === 0 ? copy.oneNumber : "") : month}</li>
-          ))}
-        </ol>
-      </div>
-      {revealing && progress >= 0.25 ? (
-        <p className="fk-opening">{fill(copy.opening, { value: formatNumber(OPENING_DEC_2025, pack.locale) })}</p>
-      ) : (
-        <p className="fk-reading-line">
-          <strong>{label?.label}</strong> · {arithmetic(shown, pack)}
-          <span className="fk-origin">{label?.origin}</span>
+    <div className="w03-answer" data-sent={sent ?? undefined} data-reduced={reducedMotion ? "" : undefined}>
+      <div
+        ref={card}
+        className="w03-answer-card"
+        data-dragging={drag ? "" : undefined}
+        style={style}
+        onPointerDown={onDown}
+        onPointerMove={onMove}
+        onPointerUp={onUp}
+        onPointerCancel={() => {
+          setDrag(null);
+          onHover(null);
+        }}
+        aria-roledescription={a.dragHint}
+        data-w03-answer-card=""
+      >
+        <span className="w03-answer-grip" aria-hidden="true" />
+        <div className="w03-answer-head">
+          <p className="w03-answer-prompt">
+            <span className="w03-kicker">{a.promptLabel}</span> {fmt.quote(a.prompt)}
+          </p>
+          <GlasSegmented
+            label={a.runsLabel}
+            options={[
+              { value: "1", label: a.runPrev },
+              { value: "2", label: a.runNext },
+            ]}
+            value={String(run) as "1" | "2"}
+            onChange={(value) => onRun(value === "1" ? 1 : 2)}
+          />
+        </div>
+        <p className="w03-answer-status">
+          <GlasChip kind="status">{fmt.t(a.status, { n: run })}</GlasChip>
         </p>
-      )}
+        {todayLine ? <p className="w03-answer-today">{todayLine}</p> : null}
+        {record?.caveat === "before" ? note : null}
+        <table className="w03-answer-table">
+          <caption>{a.tableTitle}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{a.monthHead}</th>
+              <th scope="col">{a.valueHead}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {QUARTER.map((month, index) => (
+              <tr key={month}>
+                <th scope="row">{fmt.month(month)}</th>
+                <td>{fmt.eur(record?.values[index] ?? 0)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {record?.caveat === "after" ? note : null}
+        <p className="w03-answer-under">{a.under}</p>
+        {sent ? (
+          <p className="w03-answer-stamp" data-w03-stamp={sent}>
+            {a.stamps[sent]}
+          </p>
+        ) : null}
+      </div>
     </div>
   );
 }
