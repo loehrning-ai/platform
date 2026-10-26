@@ -3,7 +3,7 @@ import { expectGlassBudget } from "./fixtures/glass";
 
 /**
  * W05 "Die Lückenliste" on a phone: the estimate commits before the reveal,
- * the four tests leave 2 · 4 · 2, a restart keeps the visitor's own list, the
+ * the four tests leave 2 · 1 · 5, a restart keeps the visitor's own list, the
  * Zitat-Probe checks a pasted table, and an old date caps an item at SCHWACH.
  */
 const SLUG = "audit-vorbereitung-mit-ki";
@@ -22,7 +22,7 @@ const overflow = (page: Page) =>
 
 test.describe(`/demos/${SLUG}`, () => {
   for (const [prefix, locale] of [["", "de"], ["/en", "en"]] as const) {
-    test(`${locale}: estimate, reveal 2 · 4 · 2, ribbon and gap list, at 390 x 664`, async ({ page }) => {
+    test(`${locale}: estimate, reveal 2 · 1 · 5, ribbon and gap list, at 390 x 664`, async ({ page }) => {
       const errors = collectErrors(page);
       await page.setViewportSize({ width: 390, height: 664 });
       await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
@@ -31,14 +31,14 @@ test.describe(`/demos/${SLUG}`, () => {
       const lever = await page.locator("[data-demo-lever]").boundingBox();
       expect((lever?.y ?? 0) + (lever?.height ?? 0)).toBeLessThanOrEqual(664 + 0.5);
       expect(await page.evaluate(() => window.scrollY)).toBe(0);
-      // Nothing is revealed before the commit.
-      await expect(page.locator("[data-w05-ribbon] [data-status]")).toHaveCount(0);
+      // Nothing is revealed before the commit, and no R1 to R8 row competes with the estimate.
+      await expect(page.locator("[data-w05-ribbon]")).toHaveCount(0);
       await expect(page.locator("[data-w05-gaps]")).not.toContainText(locale === "de" ? "LÜCKE" : "GAP");
 
       await page.locator('[data-w05-estimate="6"]').click();
       await expect(page.locator("[data-demo-clock]")).toHaveAttribute("data-beat", "pruefen");
       const tally = page.locator("[data-w05-tally]");
-      const words = locale === "de" ? ["BELEGT 2", "SCHWACH 4", "LÜCKE 2"] : ["COVERED 2", "WEAK 4", "GAP 2"];
+      const words = locale === "de" ? ["BELEGT 2", "SCHWACH 1", "LÜCKE 5"] : ["COVERED 2", "WEAK 1", "GAP 5"];
       for (const word of words) await expect(tally).toContainText(word, { timeout: 12_000 });
       await expect(tally).toContainText("6");
       await expect(page.locator("[data-w05-ribbon] [data-status]")).toHaveCount(8, { timeout: 12_000 });

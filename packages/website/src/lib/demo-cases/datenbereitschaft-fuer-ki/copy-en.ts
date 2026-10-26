@@ -176,7 +176,7 @@ export const EN: Pack = {
     ],
   },
   view: {
-    caption: "Boxes 1 and 2: an exact question, and one approved view instead of seven export tables.",
+    caption: "Boxes 1 and 2: exact question, one view.",
     box1: "1 · Question",
     questions: {
       vague: "How much MRR do we have?",
@@ -207,7 +207,7 @@ export const EN: Pack = {
     ],
   },
   who: {
-    caption: "Box 3: the kind of number and who counts. First the rule in words, then the stored codes.",
+    caption: "Box 3: the rule in words, then the codes.",
     box3: "3 · Kind and who counts",
     kind: "Kind: level at month end. Never add across months.",
     addLabel: "One number for the quarter, by kind",
@@ -220,7 +220,7 @@ export const EN: Pack = {
     legend: "customer_master.csv, column status, 144 accounts",
     codes: { A: "A active", C: "C cancelled", N: "N new" },
     chipLabel: "Who counts as active",
-    chips: { active: "'active'", A: "A", AC: "A and C", AN: "A and N" },
+    chips: { active: "'active'", A: "A", AC: "A, C", AN: "A, N" },
     count: "{n} of {total}",
     lines: {
       active: "The column stores A, C and N. 'active' matches nothing.",

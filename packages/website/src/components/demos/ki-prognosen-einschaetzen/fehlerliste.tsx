@@ -285,7 +285,18 @@ export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
     stage = <RangeStage copy={copy} kit={facts} p={effective} cause={derived.cause} showBars={gated} />;
     const share = locale === "de" ? "80-%" : "80\u00a0%";
     caption = done
-      ? fill(copy.spanne.captionEnd, { hits: result.spanne_treffer, weeks: result.spanne_wochen, promised })
+      ? [
+          fill(copy.spanne.captionEnd, { hits: result.spanne_treffer, weeks: result.spanne_wochen, promised }),
+          derived.split
+            ? fill(copy.spanne.captionCause, {
+                after: derived.split.missesAfter,
+                misses: derived.split.misses,
+                date: formatDay(derived.split.cause.woche, locale),
+              })
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" ")
       : fill(copy.spanne.captionTip, { share, promised, weeks: result.spanne_wochen });
     const pick = (value: RangeTip | "none") => {
       setTip(value);

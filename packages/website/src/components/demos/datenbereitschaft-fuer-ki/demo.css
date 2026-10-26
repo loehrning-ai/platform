@@ -863,10 +863,10 @@
   border: 2px solid var(--fk-ink);
   font-variant-numeric: tabular-nums;
 }
-/* Four counting rules: two by two, so "A und C" never breaks inside its chip. */
+/* Four counting rules in one row, so the lever stays one row high above the tab bar. */
 .fk-seg[data-fk-seg="fk-who"] {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 .fk-seg-option {
   position: relative;

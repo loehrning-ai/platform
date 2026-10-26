@@ -264,6 +264,14 @@
   overflow: hidden;
   text-wrap: pretty;
 }
+/* A two-row lever (DemoLever rows={2}): below the desktop layout the stage
+   gives up one row of choices, so the lever and the privacy line stay above
+   the tab bar. */
+@media (max-width: 63.99rem) {
+  [data-demo-v3]:has([data-lever-rows="2"]) {
+    --demo-stage-h: clamp(220px, calc(var(--demo-fold) - var(--demo-chrome-h) - 52px), 420px);
+  }
+}
 .demo-lever {
   display: flex;
   align-items: center;

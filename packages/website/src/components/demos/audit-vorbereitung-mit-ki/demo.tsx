@@ -264,7 +264,9 @@ export default function Demo({ copy, locale }: { readonly copy: W05Copy; readonl
         </div>
       </DemoStage>
       <DemoLever>{lever}</DemoLever>
-      <Ribbon model={model} copy={copy} shown={revealed} selected={selected} onSelect={selectItem} />
+      {/* The R1 to R8 row is a result, never a second lever before the commit:
+          it appears with the labels, and marks an item only from "Alle acht" on. */}
+      {revealed ? <Ribbon model={model} copy={copy} shown selected={index >= BEAT.all ? selected : null} onSelect={selectItem} /> : null}
       <GapReply model={model} copy={copy} locale={locale} shown={revealed} selected={selected} onSelect={setSelected} />
       <QuoteProbe copy={copy} locale={locale} context={model.context} onFirstInput={firstInput} />
       <OwnFolderSection own={own} copy={copy} locale={locale} since={since} onFirstInput={firstInput} onExport={() => download("index")} />

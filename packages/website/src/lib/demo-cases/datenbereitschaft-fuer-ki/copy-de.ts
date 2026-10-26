@@ -183,7 +183,7 @@ export const DE = {
     ],
   },
   view: {
-    caption: "Kästchen 1 und 2: eine genaue Frage, und eine freigegebene Sicht statt sieben Exporttabellen.",
+    caption: "Kästchen 1 und 2: genaue Frage, eine Sicht.",
     box1: "1 · Frage",
     questions: {
       vague: "Wie viel MRR haben wir?",
@@ -214,7 +214,7 @@ export const DE = {
     ],
   },
   who: {
-    caption: "Kästchen 3: Art der Zahl und wer zählt. Erst die Regel in Worten, dann die gespeicherten Codes.",
+    caption: "Kästchen 3: erst die Regel, dann die Codes.",
     box3: "3 · Art und wer zählt",
     kind: "Art: Stand am Monatsende. Über Monate nie addieren.",
     addLabel: "Eine Zahl fürs Quartal, je nach Art",
@@ -227,7 +227,7 @@ export const DE = {
     legend: "customer_master.csv, Spalte status, 144 Konten",
     codes: { A: "A aktiv", C: "C gekündigt", N: "N neu" },
     chipLabel: "Wer zählt als aktiv",
-    chips: { active: "'active'", A: "A", AC: "A und C", AN: "A und N" },
+    chips: { active: "'active'", A: "A", AC: "A, C", AN: "A, N" },
     count: "{n} von {total}",
     lines: {
       active: "Die Spalte speichert A, C und N. 'active' trifft nichts.",

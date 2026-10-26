@@ -20,7 +20,7 @@ export function Ribbon({
   readonly model: Model;
   readonly copy: W05Copy;
   readonly shown: boolean;
-  readonly selected: ItemId;
+  readonly selected: ItemId | null;
   readonly onSelect: (id: ItemId) => void;
 }) {
   return (

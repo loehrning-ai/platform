@@ -28,6 +28,30 @@ for (const demo of V3) {
       await expectGlassBudget(page, `/demos/${demo.slug}`);
     });
 
+    test("on every beat the lever and each of its controls end above the tab bar at 390 x 664", async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 664 });
+      await page.goto(`/demos/${demo.slug}`, { waitUntil: "networkidle" });
+      const beats = await page.locator("[data-beat-mark]").evaluateAll((marks) => marks.map((mark) => mark.getAttribute("data-beat-mark") ?? ""));
+      expect(beats.length).toBeGreaterThan(3);
+      for (const beat of beats) {
+        await page.goto(`/demos/${demo.slug}?beat=${beat}`, { waitUntil: "networkidle" });
+        await expect(page.locator("[data-demo-clock]")).toHaveAttribute("data-beat", beat);
+        const bottoms = await page.evaluate(() => {
+          const bar = document.querySelector("[data-mobile-tab-bar]");
+          const fold = Math.min(bar ? bar.getBoundingClientRect().top : window.innerHeight, window.innerHeight);
+          const lever = document.querySelector("[data-demo-lever]");
+          const controls = [lever, ...(lever?.querySelectorAll("button, input:not(.sr-only), select, label, a") ?? [])]
+            .filter((element): element is Element => element !== null)
+            .map((element) => element.getBoundingClientRect())
+            .filter((box) => box.height > 0)
+            .map((box) => box.bottom);
+          return { fold, lowest: Math.max(0, ...controls) };
+        });
+        expect(bottoms.lowest, `${demo.slug} ${beat}`).toBeLessThanOrEqual(bottoms.fold + 0.5);
+        expect(await page.evaluate(() => window.scrollY), `${demo.slug} ${beat}`).toBe(0);
+      }
+    });
+
     test("r resets to beat 1 and a rail mark jumps", async ({ page }) => {
       await page.goto(`/demos/${demo.slug}`, { waitUntil: "networkidle" });
       const clock = page.locator("[data-demo-clock]");

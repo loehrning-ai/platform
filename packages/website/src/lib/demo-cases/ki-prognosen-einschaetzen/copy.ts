@@ -71,6 +71,8 @@ export interface DemoPack {
   readonly spanne: {
     readonly captionTip: string;
     readonly captionEnd: string;
+    /** After the sweep: how many misses fall after the cause week. */
+    readonly captionCause: string;
     readonly tips: Readonly<Record<"more" | "about" | "fewer", string>>;
     readonly tipsLabel: string;
     readonly skipTip: string;
@@ -258,6 +260,7 @@ const DE: DemoPack = {
   spanne: {
     captionTip: "Die {share}-Spanne sollte {promised} der {weeks} Wochen fassen. Schätze: Wie viele waren es?",
     captionEnd: "{hits} von {weeks} in der Spanne. Bei einer ehrlichen Spanne wären es um {promised}.",
+    captionCause: "{after} der {misses} Fehltreffer liegen ab dem {date}.",
     tips: { more: "mehr als {promised}", about: "etwa {promised}", fewer: "weniger als {promised}" },
     tipsLabel: "Deine Schätzung: Wochen in der Spanne",
     skipTip: "Ohne Schätzung zeigen",
@@ -489,6 +492,7 @@ const EN: DemoPack = {
   spanne: {
     captionTip: "The {share} range should hold {promised} of the {weeks} weeks. Guess: how many did it?",
     captionEnd: "{hits} of {weeks} inside the range. An honest range would hold about {promised}.",
+    captionCause: "{after} of the {misses} misses fall from {date} on.",
     tips: { more: "more than {promised}", about: "about {promised}", fewer: "fewer than {promised}" },
     tipsLabel: "Your guess: weeks inside the range",
     skipTip: "Show without a guess",

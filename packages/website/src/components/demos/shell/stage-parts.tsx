@@ -95,9 +95,18 @@ export function PrivacyLine({ className }: { readonly className?: string }) {
  * "Weiter" on the right, the privacy line under it. Its bottom edge is what
  * the fold test measures at 390 x 664.
  */
-export function DemoLever({ children, className }: { readonly children: ReactNode; readonly className?: string }) {
+export function DemoLever({
+  children,
+  className,
+  rows = 1,
+}: {
+  readonly children: ReactNode;
+  readonly className?: string;
+  /** A lever with two rows of 44px choices: on a phone the stage gives up one row, so the lever stays above the fold. */
+  readonly rows?: 1 | 2;
+}) {
   return (
-    <div className="demo-lever-wrap">
+    <div className="demo-lever-wrap" data-lever-rows={rows === 2 ? "2" : undefined}>
       <div className={cx("demo-lever", className)} data-demo-lever="">
         <div className="demo-lever-control">{children}</div>
         <NextButton />

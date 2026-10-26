@@ -56,7 +56,7 @@ test.describe("Die Fehlerliste", () => {
     // Before the sweep the counter has no count yet, never "0 / 0".
     await expect(page.locator("[data-fl-hits]")).toHaveText("? / 50");
     await page.locator('[data-fl-tip="fewer"]').click();
-    await expect(caption(page)).toHaveText("36 von 50 in der Spanne. Bei einer ehrlichen Spanne wären es um 40.");
+    await expect(caption(page)).toHaveText("36 von 50 in der Spanne. Bei einer ehrlichen Spanne wären es um 40. 11 der 14 Fehltreffer liegen ab dem 7. April.");
     await expect(page.locator("[data-fl-hits]")).toHaveText("36 / 50");
     const notes = page.locator('[data-fl-notes="spanne"]');
     await expect(notes).toContainText("Vor dem 7. April: 9 von 12. Ab dem 7. April: 27 von 38. 11 der 14 Fehltreffer");
