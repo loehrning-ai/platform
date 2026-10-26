@@ -68,7 +68,9 @@ describe("workshopStage", () => {
         const stage = workshopStage(workshop, locale);
         const unit = locale === "de" ? "Min." : "min";
         if (stage.a?.kind === "slides") {
-          expect(stage.a.meta, `${locale}/${workshop.slug}`).toMatch(new RegExp(`^Deck · (?:ca\\. |about )?\\d+ ${unit.replace(".", "\\.")}$`));
+          const other = locale === "de" ? "auf Englisch" : "in German";
+          const note = stage.a.material.language === locale ? "" : ` · ${other}`;
+          expect(stage.a.meta, `${locale}/${workshop.slug}`).toMatch(new RegExp(`^Deck · (?:ca\\. |about )?\\d+ ${unit.replace(".", "\\.")}${note}$`));
         } else if (stage.a) {
           // The title already says "lab": the meta is the time alone.
           expect(stage.a.meta).toMatch(new RegExp(`^\\d+ ${unit.replace(".", "\\.")}$`));
@@ -78,6 +80,18 @@ describe("workshopStage", () => {
         }
       }
     }
+  });
+
+  it("names the deck's language on its card only when it differs from the page", () => {
+    const deckLanguages = (locale: "de" | "en") =>
+      getWorkshops(locale).flatMap((workshop) => {
+        const a = workshopStage(workshop, locale).a;
+        return a?.kind === "slides" ? [[a.material.language, a.meta] as const] : [];
+      });
+    const de = deckLanguages("de");
+    expect(de.some(([language]) => language === "en"), "a German page links an English-only deck").toBe(true);
+    for (const [language, meta] of de) expect(meta.endsWith(" · auf Englisch")).toBe(language === "en");
+    for (const [language, meta] of deckLanguages("en")) expect(meta.endsWith(" · in German")).toBe(language === "de");
   });
 
   it("formats a material as format and size, falling back to the language for a page", () => {

@@ -52,6 +52,12 @@ export interface WorkshopStage {
 }
 
 /** "HTML · EN", "ZIP · 1,1 MB", "CSV · 1,6 KB": format and size as data. */
+/** Said on a deck card when the deck is in the other language than the page (W02, W03 and W06 have one edition). */
+const OTHER_LANGUAGE: Readonly<Record<Locale, Readonly<Record<Locale, string>>>> = {
+  de: { de: "auf Deutsch", en: "auf Englisch" },
+  en: { de: "in German", en: "in English" },
+};
+
 export function materialMeta(material: WorkshopMaterial): string {
   return [material.kind.toUpperCase(), material.sizeLabel ?? material.language.toUpperCase()].join(" · ");
 }
@@ -73,9 +79,14 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
   const timeOrLanguage = (material: WorkshopMaterial): string =>
     minutesOf(material) ?? material.language.toUpperCase();
   // The title already names a lab or a case, so its meta line is the time alone.
+  // A deck in the other language says so, so nobody opens English slides from a German page unwarned.
   const metaOf = (material: WorkshopMaterial): string =>
     material.role === "deck"
-      ? [copy.roleLabels[material.role], timeOrLanguage(material)].join(" · ")
+      ? [
+          copy.roleLabels[material.role],
+          timeOrLanguage(material),
+          ...(material.language === locale ? [] : [OTHER_LANGUAGE[locale][material.language]]),
+        ].join(" · ")
       : timeOrLanguage(material);
 
   // The demo material's href is already in the page's language.
