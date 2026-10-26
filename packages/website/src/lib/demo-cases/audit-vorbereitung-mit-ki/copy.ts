@@ -91,7 +91,7 @@ export const COPY = {
         notReviewed: '"Not reviewed by anyone"',
         notMet: "nicht erfüllt",
       },
-      waiting: "Tipp unten die Datei an, die du schicken würdest.",
+      waiting: "Anforderung und Akten sind englisch, wie im Vertrag mit Tannwald. Tipp unten die Datei an, die du schicken würdest.",
     },
     r5: {
       caption: "Zählen im Code: {rows} Zeilen sind nicht {rows} Personen.",

@@ -227,6 +227,7 @@
   pointer-events: none;
 }
 .w05 .w05-unlinked {
+  flex: none;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1217,5 +1218,30 @@
 @media (prefers-reduced-motion: reduce) {
   .w05 * {
     transition: none !important;
+  }
+}
+
+/* A phone reads the evidence in full: the file name wraps instead of being cut,
+   the date and the type stay below it, and the link column keeps only the room
+   its verdict word needs. */
+@media (max-width: 43.74rem) {
+  .w05 .w05-row {
+    grid-template-columns: minmax(0, 26%) 50px minmax(0, 1fr);
+  }
+  .w05 .w05-req-label {
+    overflow-wrap: normal;
+    hyphens: auto;
+  }
+  .w05 .w05-file-name.w05-fname {
+    display: block;
+    white-space: normal;
+    line-height: 1.12;
+  }
+  .w05 .w05-file-name .w05-fname-a {
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .w05 .w05-file-sub {
+    letter-spacing: -0.01em;
   }
 }
