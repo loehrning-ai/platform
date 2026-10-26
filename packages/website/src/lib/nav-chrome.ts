@@ -2,12 +2,16 @@
  * Which material the desktop nav wears on a page (from 1024px; below that the
  * compact bar is always opaque paper).
  *
- * Glass only where the top of the page carries moving visuals worth seeing
- * through the bar: the home page, the demo hub and every demo, the workshop
- * hub and detail pages, the open-source shelf and its tool pages. Every other
- * page is paper: lessons, articles, kit pages, legal pages, the account. Text
- * scrolling under text is never glass, and a page left off this list fails
- * safe to the solid bar.
+ * Glass only where the page opens on moving visuals worth seeing through the
+ * bar: the home page, the demo hub and every demo, the workshop hub and detail
+ * pages (the poster and its stage), the open-source shelf and its tool pages.
+ * The material is a property of the page, not of the scroll position: it
+ * never switches while the page scrolls, so further down the same bar also
+ * passes over that page's text (legible by the contrast proof in glass.ts).
+ * Pages that are reading from the first line are paper: lessons, articles,
+ * kit pages, legal pages, the account. A page left off this list fails safe
+ * to the solid bar. Nothing docked under the bar is glass: glass is never
+ * stacked on glass.
  */
 
 export type NavChrome = "glass" | "paper";

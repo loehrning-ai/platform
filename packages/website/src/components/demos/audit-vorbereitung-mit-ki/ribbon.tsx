@@ -7,8 +7,9 @@ import type { Model } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
 /**
  * The request ribbon: R1 to R8 with their status, docked under the site
  * header while the sections below the stage scroll by, so a station always
- * says which item it is about. Solid paper: what scrolls under it is text and
- * tables, never the stage, so glass would only ghost them.
+ * says which item it is about. Solid paper: from 1024px it docks directly
+ * under the glass nav and glass is never stacked on glass; below that it is a
+ * stuck bar, and a phone gets no fixed glass.
  */
 export function Ribbon({
   model,
