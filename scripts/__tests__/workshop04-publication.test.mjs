@@ -33,7 +33,16 @@ const PRESENTERS = { de: "presenter.html", en: "en/presenter.html" };
 
 const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", apos: "'" };
 const decode = (value) => value.replace(/&(amp|lt|gt|quot|#39|apos);/g, (_, name) => ENTITIES[name]);
-const visible = (html) => decode(html.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim();
+/** Applies one replacement until the text stops changing, so removing a match never leaves a new one. */
+const replaceUntilStable = (text, pattern, replacement) => {
+  let previous;
+  do {
+    previous = text;
+    text = text.replace(pattern, replacement);
+  } while (text !== previous);
+  return text;
+};
+const visible = (html) => decode(replaceUntilStable(html, /<[^>]+>/g, "")).replace(/\s+/g, " ").trim();
 
 const startGuide = (locale) => {
   const entries = new Map(readKitArchive(read(zipName(locale)), { prefix: `${KITS[locale].name}/` }));
@@ -71,13 +80,16 @@ function copyLines(html) {
     else if (value && typeof value === "object") Object.values(value).forEach(walk);
   };
   walk(JSON.parse(notes));
-  const body = html
-    .replace(/<style[\s\S]*?<\/style>/g, "")
-    .replace(/<script[\s\S]*?<\/script>/g, "")
+  const withoutCode = replaceUntilStable(
+    replaceUntilStable(html, /<style\b[\s\S]*?<\/style\b[^>]*>/gi, ""),
+    /<script\b[\s\S]*?<\/script\b[^>]*>/gi,
+    "",
+  );
+  const body = withoutCode
     .replace(/<pre class="prompt__text"[\s\S]*?<\/pre>/g, "")
     .replace(/<(?:p|li|h\d|td|th|div|blockquote|figcaption)\b/g, "\n$&");
   // A folder name such as "answers/" is a path, the same machine token the copy lint blanks out.
-  const lines = decode(body.replace(/<[^>]+>/g, " "))
+  const lines = decode(replaceUntilStable(body, /<[^>]+>/g, " "))
     .replace(/(^|\s)[\p{L}\d_-]+\/(?=\s|$)/gmu, "$1 ")
     .split("\n")
     .map((line) => line.replace(/\s+/g, " ").trim())

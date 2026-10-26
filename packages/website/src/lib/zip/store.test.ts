@@ -57,7 +57,7 @@ describe("zipStore", () => {
         return; // no unzip binary on this machine: the reader test above still covers the bytes
       }
       expect(listing).toContain("probe/SKILL.md");
-      expect(listing).toMatch(/01-01-1980 00:00/);
+      expect(listing).toMatch(/(01-01-1980|1980-01-01) 00:00/);
       execFileSync("unzip", ["-q", file, "-d", dir]);
       expect(readFileSync(path.join(dir, "probe/SKILL.md"), "utf8")).toBe("hallo\n");
     } finally {
