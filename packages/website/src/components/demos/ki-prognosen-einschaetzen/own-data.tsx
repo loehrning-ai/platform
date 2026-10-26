@@ -39,7 +39,7 @@ export interface OwnInputs {
 }
 
 /**
- * The stage of "Meine Daten": the visitor's series once checked. Before, the
+ * The stage of "Deine Daten": the visitor's series once checked. Before, the
  * file's shape (the header and the last weeks of the kit CSV, the real file,
  * not an invented one) and one tap that loads the kit file, so a phone
  * without a CSV still sees the four checks run on a file it did not type.

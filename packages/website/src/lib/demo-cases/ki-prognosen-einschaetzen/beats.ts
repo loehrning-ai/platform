@@ -19,7 +19,7 @@ export const BEATS = [
   { id: "spanne", kind: "tool", seconds: 5, label: { de: "Spanne", en: "Range" } },
   { id: "planzahl", kind: "apply", seconds: 1.6, label: { de: "Planzahl", en: "Plan number" } },
   { id: "regel", kind: "apply", seconds: 4, label: { de: "Regel", en: "Rule" } },
-  { id: "meine-daten", kind: "own", seconds: 0, label: { de: "Meine Daten", en: "My data" } },
+  { id: "meine-daten", kind: "own", seconds: 0, label: { de: "Deine Daten", en: "Your data" } },
   { id: "mitnehmen", kind: "takehome", seconds: 0, label: { de: "Mitnehmen", en: "Take home" } },
 ] as const satisfies readonly Beat[];
 

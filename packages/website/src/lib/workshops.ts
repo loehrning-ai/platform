@@ -426,7 +426,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         title: "Deine eigene Reihe",
         description:
           "Dieselben vier Prüfungen mit deiner Datei, in der Demo, mit pruefen.py oder mit dem Claude-Skill.",
-        tool: "Meine Daten",
+        tool: "Deine Daten",
       },
     ],
     caseStudy: {
@@ -834,7 +834,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         title: "Your own series",
         description:
           "The same four checks on your file, in the demo, with pruefen.py or with the Claude skill.",
-        tool: "My data",
+        tool: "Your data",
       },
     ],
     caseStudy: {
