@@ -149,6 +149,31 @@
     padding: 0;
   }
 }
+.demo4-dock .glas-weg-next-short {
+  display: none;
+}
+@media (max-width: 39.99rem) {
+  .demo4-dock.is-compact .glas-weg {
+    flex-wrap: nowrap;
+  }
+  .demo4-dock.is-compact .glas-weg-dots {
+    padding: 0;
+  }
+  .demo4-dock.is-compact .glas-weg-next-short {
+    display: inline;
+  }
+  .demo4-dock.is-compact .glas-weg-step,
+  .demo4-dock.is-compact .demo4-skipped,
+  .demo4-dock.is-compact .glas-slider-head,
+  .demo4-dock.is-compact .glas-weg-next-long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
 .demo4-dock .glas-weg-buttons {
   margin-left: auto;
 }

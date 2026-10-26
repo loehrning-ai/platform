@@ -98,7 +98,8 @@ export function GlasSheet({
   useEffect(() => {
     if (!open || !shown) return;
     const element = panel.current;
-    const first = element?.querySelector<HTMLElement>(FOCUSABLE);
+    // Never the grabber's resize button: focus would make its hidden label visible over the grabber.
+    const first = Array.from(element?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []).find((item) => !item.closest(".glas-sheet-grabber"));
     (first ?? element)?.focus({ preventScroll: true });
   }, [open, shown]);
 

@@ -59,7 +59,7 @@ export const CLAUDE_UI_DE: ClaudeUiCopy = {
     allProjects: "unzip {name}.zip -d ~/.claude/skills/",
     thisRepoLabel: "Nur für dieses Repository:",
     thisRepo: "unzip {name}.zip -d .claude/skills/",
-    result: "Danach liegt SKILL.md in skills/{name}/ (global oder im Repository). Tipp /{name} oder frag einfach.",
+    result: "Danach liegt SKILL.md in skills/{name}/, global oder im Repository. Tippe /{name} oder frag einfach.",
   },
   noSync:
     "Mit demselben claude.ai-Login lädt Claude Code (ab v2.1.273) deine in claude.ai eingeschalteten Skills selbst; dort nicht ein zweites Mal entpacken. Mit API-Key oder Bedrock: per unzip.",

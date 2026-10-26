@@ -13,7 +13,8 @@
   max-width: 1080px;
   margin: 0 auto 24px;
   padding-inline: 4px;
-  color: var(--glas-content-ink, inherit);
+  /* The stage carries its ground's tone, so this is Kalkweiß on a dark field and Druckschwarz on a light one. */
+  color: var(--glas-fg);
 }
 .cds-section-title {
   font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.125rem);
@@ -110,9 +111,9 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  height: 440px;
+  height: 480px;
   overflow: hidden;
-  border-radius: 32px;
+  border-radius: 12px;
   background: var(--cd-canvas);
   color: var(--cd-text);
   box-shadow: var(--cd-shadow);
@@ -138,11 +139,11 @@
   min-height: 0;
 }
 
-/* titlebar (desktop) and top bar (phone) */
+/* The title bar of the desktop app, on every width: the visitor should recognise the app they install the skill in. */
 .cds-titlebar {
-  display: none;
+  display: flex;
   position: relative;
-  height: 36px;
+  height: 32px;
   align-items: center;
   justify-content: center;
   background: var(--cd-side);
@@ -153,57 +154,37 @@
 }
 .cds-dots {
   position: absolute;
-  left: 14px;
+  left: 12px;
   top: 50%;
   display: flex;
-  gap: 8px;
+  gap: 7px;
   transform: translateY(-50%);
 }
 .cds-dots span {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: var(--cd-line-strong);
   box-shadow: inset 0 0 0 0.5px var(--cd-line-strong);
 }
-.cds-phonebar {
-  display: grid;
-  grid-template-columns: 44px 1fr 44px;
-  align-items: center;
-  height: 64px;
-  padding: 10px 8px 0;
-  color: var(--cd-text-2);
-}
-.cds-phonebar > svg {
-  justify-self: center;
-  width: 22px;
-  height: 22px;
-}
-.cds-phone-title {
-  display: grid;
-  justify-items: center;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--cd-text);
-}
-.cds-phone-model {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--cd-text-2);
-}
 @container cds (min-width: 900px) {
   .cds-titlebar {
-    display: flex;
+    height: 36px;
   }
-  .cds-phonebar {
-    display: none;
+  .cds-dots {
+    left: 14px;
+    gap: 8px;
+  }
+  .cds-dots span {
+    width: 12px;
+    height: 12px;
   }
 }
 
+/* Narrow: the sidebar collapses to a 44px icon rail, the way the desktop window looks when it is narrow. */
 .cds-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 44px minmax(0, 1fr);
   min-height: 0;
 }
 @container cds (min-width: 900px) {
@@ -212,21 +193,57 @@
   }
 }
 
-/* sidebar: a depiction, desktop only */
+/* sidebar: a depiction; a rail of icons when the window is narrow */
 .cds-sidebar {
-  display: none;
+  display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 2px;
   min-height: 0;
-  padding: 14px 10px 12px;
+  padding: 8px 4px;
   background: var(--cd-side);
   border-right: 0.5px solid var(--cd-line);
   font-size: 14px;
   color: var(--cd-text-2);
 }
+.cds-sidebar .cds-label,
+.cds-sidebar .cds-brand {
+  display: none;
+}
+.cds-sidebar .cds-nav-item {
+  justify-content: center;
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+.cds-sidebar .cds-new {
+  margin-bottom: 4px;
+}
+.cds-sidebar .cds-plus {
+  margin-left: 0;
+}
 @container cds (min-width: 900px) {
   .cds-sidebar {
-    display: flex;
+    align-items: stretch;
+    padding: 14px 10px 12px;
+  }
+  .cds-sidebar .cds-label {
+    display: block;
+  }
+  .cds-sidebar .cds-brand {
+    display: block;
+  }
+  .cds-sidebar .cds-nav-item {
+    justify-content: flex-start;
+    width: auto;
+    min-height: 34px;
+    padding: 0 10px;
+  }
+  .cds-sidebar .cds-new {
+    margin-bottom: 6px;
+  }
+  .cds-sidebar .cds-plus {
+    margin-left: -3px;
   }
 }
 .cds-brand {
@@ -333,6 +350,8 @@
 }
 .cds-column {
   display: grid;
+  /* minmax(0, 1fr): a wide table scrolls in its own box instead of widening the column */
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   width: min(100% - 32px, 720px);
   margin-inline: auto;
@@ -367,7 +386,9 @@
 
 .cds-turn {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
+  min-width: 0;
 }
 .cds-user {
   display: grid;
@@ -538,8 +559,9 @@
   max-width: 68ch;
   font-size: 15px;
   line-height: 1.6;
+  min-width: 0;
   color: var(--cd-text);
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 @container cds (min-width: 900px) {
   .cds-answer {
@@ -834,7 +856,8 @@
   font-size: 0.875rem;
   line-height: 1.45;
   font-weight: 500;
-  color: var(--glas-content-ink, inherit);
+  /* The stage carries its ground's tone, so this is Kalkweiß on a dark field and Druckschwarz on a light one. */
+  color: var(--glas-fg);
   text-wrap: pretty;
 }
 .cds-chips {
@@ -876,6 +899,10 @@
   align-items: center;
   gap: 8px;
 }
+.cds-row-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
 .cds-prompts {
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -897,7 +924,8 @@
   padding: 0 4px;
   font-size: 0.8125rem;
   line-height: 1.45;
-  color: var(--glas-content-ink, inherit);
+  /* The stage carries its ground's tone, so this is Kalkweiß on a dark field and Druckschwarz on a light one. */
+  color: var(--glas-fg);
   text-wrap: pretty;
 }
 .cds-note {
