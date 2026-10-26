@@ -101,9 +101,7 @@ describe("machine workshop records", () => {
         expect(record.minutes_self_study).toBe(source.minutesSelfStudy);
         expect(record.not_covered).toEqual(source.notCovered);
         expect(record.provenance.reviewed_at).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-        // One primary file, unless the workshop starts at its demo page (workshop 01).
-        const startsAtDemo = source.materials.some((material) => material.role === "demo" && material.primary);
-        expect(record.materials.filter((material) => material.primary)).toHaveLength(startsAtDemo ? 0 : 1);
+        expect(record.materials.filter((material) => material.primary)).toHaveLength(1);
         for (const material of record.materials) {
           expect(["before", "during", "after"]).toContain(material.phase);
           expect(material.role.length).toBeGreaterThan(0);

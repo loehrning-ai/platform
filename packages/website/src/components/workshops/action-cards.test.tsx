@@ -83,23 +83,12 @@ describe("<ActionCards>", () => {
           expect(linkA).not.toHaveAttribute("target");
         }
         expect(cards[0]).toHaveTextContent(stage.a!.meta);
-        const demoHref = `${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`;
+        // The slides (or the lab) are card A; the demo is never card A, only its secondary link.
+        expect(stage.a!.kind).not.toBe("demo");
+        expect(stage.a!.demoHref).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(linksA).toHaveLength(2);
-        if (stage.a!.kind === "demo" && stage.a!.labHref) {
-          // A workshop that starts at its demo: the secondary link goes to the lab.
-          expect(stage.a!.href).toBe(demoHref);
-          expect(linksA[1]).toHaveAttribute("href", stage.a!.labHref);
-          expect(linksA[1]).toHaveAccessibleName(`${copy.labAction}: ${workshop.topic}`);
-        } else if (stage.a!.kind === "demo") {
-          // Without a lab the secondary link opens the slides, with their minutes.
-          expect(stage.a!.href).toBe(demoHref);
-          expect(linksA[1]).toHaveAttribute("href", stage.a!.deck!.href);
-          expect(linksA[1]).toHaveAccessibleName(`${copy.deckAction(stage.a!.deck!.minutes)}: ${workshop.topic}`);
-        } else {
-          expect(stage.a!.demoHref).toBe(demoHref);
-          expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
-          expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
-        }
+        expect(linksA[1]).toHaveAttribute("href", stage.a!.demoHref);
+        expect(linksA[1]).toHaveAccessibleName(`${copy.demoAction}: ${workshop.topic}`);
         expect(linksA[1]).toHaveClass("ac-secondary");
         expect(linksA[1]).not.toHaveAttribute("download");
 
@@ -210,7 +199,7 @@ describe("<ActionCards>", () => {
   it("counts a main-link open by workshop and file kind, as the old band buttons did", () => {
     const workshop = getWorkshops("en").find((entry) => entry.slug === "geschaeftsberichte-mit-ki-lesen")!;
     render(<ActionCards workshop={workshop} locale="en" plakat="idea" />);
-    const link = screen.getByRole("link", { name: /^Open the demo/ });
+    const link = screen.getByRole("link", { name: /^View the slides/ });
     link.addEventListener("click", (event) => event.preventDefault());
     link.click();
     expect(trackMaterialOpened).toHaveBeenCalledWith("geschaeftsberichte-mit-ki-lesen", "html");

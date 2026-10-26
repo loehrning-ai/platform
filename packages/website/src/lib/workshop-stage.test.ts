@@ -2,16 +2,18 @@ import { describe, expect, it } from "vitest";
 import { getWorkshops } from "@/lib/workshops";
 import { materialMeta, workshopStage } from "./workshop-stage";
 
-/** The expected cards per workshop: slides, lab or demo, kit or case. */
-const EXPECTED: Readonly<Record<string, { a: "slides" | "lab" | "demo"; b: "kit" | "case"; kitPage: boolean }>> = {
-  // Every workshop with a demo starts at it (the kit, made visible); the lab
-  // (Workshop 01) or else the slides are its secondary link.
-  "ki-prognosen-einschaetzen": { a: "demo", b: "kit", kitPage: true },
-  "geschaeftsberichte-mit-ki-lesen": { a: "demo", b: "kit", kitPage: false },
-  "datenbereitschaft-fuer-ki": { a: "demo", b: "kit", kitPage: false },
-  "esg-berichte-mit-ki": { a: "demo", b: "kit", kitPage: true },
-  "audit-vorbereitung-mit-ki": { a: "demo", b: "kit", kitPage: true },
-  "angebote-mit-ki-vergleichen": { a: "demo", b: "kit", kitPage: true },
+/**
+ * The expected cards per workshop: slides (or the lab where there is no deck)
+ * and kit. The demo is never card A, only card A's secondary link.
+ */
+const EXPECTED: Readonly<Record<string, { a: "slides" | "lab"; b: "kit" | "case"; kitPage: boolean }>> = {
+  // Workshop 01 has no slide deck: its labs play that part.
+  "ki-prognosen-einschaetzen": { a: "lab", b: "kit", kitPage: true },
+  "geschaeftsberichte-mit-ki-lesen": { a: "slides", b: "kit", kitPage: false },
+  "datenbereitschaft-fuer-ki": { a: "slides", b: "kit", kitPage: false },
+  "esg-berichte-mit-ki": { a: "slides", b: "kit", kitPage: true },
+  "audit-vorbereitung-mit-ki": { a: "slides", b: "kit", kitPage: true },
+  "angebote-mit-ki-vergleichen": { a: "slides", b: "kit", kitPage: true },
 };
 
 describe("workshopStage", () => {
@@ -21,20 +23,12 @@ describe("workshopStage", () => {
         const expected = EXPECTED[workshop.slug];
         expect(expected, `no expectation for ${workshop.slug}`).toBeDefined();
         const stage = workshopStage(workshop, locale);
-        const primary =
-          workshop.materials.find((material) => material.role === "demo") ?? workshop.materials.find((material) => material.primary)!;
+        const primary = workshop.materials.find((material) => material.primary)!;
         expect(stage.a?.kind).toBe(expected.a);
         expect(stage.a?.href).toBe(primary.href);
         expect(stage.a?.material).toBe(primary);
-        if (expected.a === "demo") {
-          expect(stage.a?.demoHref).toBeUndefined();
-          const lab = workshop.materials.find((material) => material.role === "lab");
-          const deck = workshop.materials.find((material) => material.role === "deck");
-          expect(stage.a?.labHref).toBe(lab?.href);
-          // Without a lab the slides are the secondary link, with their minutes.
-          expect(stage.a?.deck?.href).toBe(lab ? undefined : deck?.href);
-          if (!lab && deck) expect(stage.a?.deck?.minutes).toMatch(/\d+ (?:Min\.|min)$/);
-        }
+        expect(stage.a?.material.role).not.toBe("demo");
+        expect(stage.a?.demoHref).toBe(workshop.materials.find((material) => material.role === "demo")?.href);
         expect(stage.b?.kind).toBe(expected.b);
         expect(stage.b?.material).not.toBe(primary);
         expect(stage.b?.href).toBe(stage.b?.material.href);
@@ -68,15 +62,13 @@ describe("workshopStage", () => {
     }
   }
 
-  it("gives every deck card minutes, never just the page language, a lab or case card its time alone and a demo card what it is", () => {
+  it("gives every deck card minutes, never just the page language, and a lab or case card its time alone", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         const stage = workshopStage(workshop, locale);
         const unit = locale === "de" ? "Min." : "min";
         if (stage.a?.kind === "slides") {
           expect(stage.a.meta, `${locale}/${workshop.slug}`).toMatch(new RegExp(`^Deck · (?:ca\\. |about )?\\d+ ${unit.replace(".", "\\.")}$`));
-        } else if (stage.a?.kind === "demo") {
-          expect(stage.a.meta).toMatch(new RegExp(`^${locale === "de" ? "Kit als Demo" : "Kit as a demo"} · \\d+ ${unit.replace(".", "\\.")}$`));
         } else if (stage.a) {
           // The title already says "lab": the meta is the time alone.
           expect(stage.a.meta).toMatch(new RegExp(`^\\d+ ${unit.replace(".", "\\.")}$`));

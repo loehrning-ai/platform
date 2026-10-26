@@ -33,7 +33,7 @@ test.describe("workshop self-study journey", () => {
     await expect(page.locator("body")).not.toContainText("No paid service");
     // Detail page: the band is the workshop's poster (IDEA for W02) and holds
     // no buttons; the stage right under it carries the two action cards: the
-    // demo (with the deck as its secondary link) and the kit zip. There is no agenda section, no numbered red line,
+    // deck and the kit zip. There is no agenda section, no numbered red line,
     // no outcomes list and no visible case section. The material list, the
     // audience, needs, scope, the case and its figures sit behind one
     // disclosure, which starts collapsed.
@@ -41,13 +41,14 @@ test.describe("workshop self-study journey", () => {
     await expect(cover).toHaveAttribute("data-plakat", "idea");
     await expect(cover.locator("a:not([data-cover-back])")).toHaveCount(0);
     const stage = page.locator("[data-workshop-stage]");
+    await expect(stage.getByRole("link", { name: /^Folien ansehen/ })).toHaveAttribute(
+      "href",
+      "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
+    );
+    // The demo is one clear link away: card A's secondary link.
     await expect(stage.getByRole("link", { name: /^Demo öffnen/ })).toHaveAttribute(
       "href",
       "/demos/geschaeftsberichte-mit-ki-lesen?source=workshop",
-    );
-    await expect(stage.getByRole("link", { name: /^Folien · / })).toHaveAttribute(
-      "href",
-      "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
     );
     const kit = stage.getByRole("link", { name: /^Kit herunterladen/ });
     await expect(kit).toHaveAttribute("href", /northwind-analyst-kit-de\.zip$/);

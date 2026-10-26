@@ -24,7 +24,7 @@ import type { CSSProperties, ReactNode } from "react";
  * drawing works on the plain card and on the inverted one.
  */
 
-export type ActionPictureKind = "slides" | "kit" | "lab" | "case" | "demo";
+export type ActionPictureKind = "slides" | "kit" | "lab" | "case";
 
 function Svg({ children }: { readonly children: ReactNode }): ReactNode {
   return (
@@ -246,10 +246,10 @@ export function ActionPicture({
   readonly slug: string;
 }): ReactNode {
   return (
-    <div aria-hidden="true" className={`ac-pic ac-pic-${kind === "demo" ? "lab" : kind}`}>
+    <div aria-hidden="true" className={`ac-pic ac-pic-${kind}`}>
       {kind === "slides" ? <SlidesPicture slug={slug} /> : null}
       {kind === "kit" ? <KitPicture slug={slug} /> : null}
-      {kind === "lab" || kind === "demo" ? <LabPicture /> : null}
+      {kind === "lab" ? <LabPicture /> : null}
       {kind === "case" ? <CasePicture /> : null}
     </div>
   );

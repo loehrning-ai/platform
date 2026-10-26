@@ -12,12 +12,13 @@ import {
  * The two big actions under a workshop's band (docs/workshop-standard.md,
  * "The stage"): card A opens the first material (the slides, or the lab for
  * a workshop without a deck), card B hands over the second one (the kit zip,
- * or the case for a workshop without a kit). A workshop with a practice
- * demo starts at the demo ("Kit als Demo"); card A's small secondary link
- * then goes to the lab, or else to the slides. All of it is derived
- * from the registry, so a new workshop needs no page code.
+ * or the case for a workshop without a kit). Card A also carries the
+ * workshop's practice demo as its small secondary link: a workshop is its
+ * slides and its kit, and the demo (the kit, performed) is one link away,
+ * never card A. All of it is derived from the registry, so a new workshop
+ * needs no page code.
  */
-export type WorkshopStageKindA = "slides" | "lab" | "demo";
+export type WorkshopStageKindA = "slides" | "lab";
 export type WorkshopStageKindB = "kit" | "case";
 
 export interface WorkshopStageCardA {
@@ -29,10 +30,6 @@ export interface WorkshopStageCardA {
   readonly meta: string;
   /** Set when the workshop has a practice demo: card A's one small secondary link. */
   readonly demoHref?: string;
-  /** Set when card A is the demo and the workshop has a lab: the secondary link goes there instead. */
-  readonly labHref?: string;
-  /** Set when card A is the demo, the workshop has no lab but a deck: the secondary link opens the slides. */
-  readonly deck?: { readonly href: string; readonly minutes: string };
 }
 
 export interface WorkshopStageCardB {
@@ -81,31 +78,18 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
       ? [copy.roleLabels[material.role], timeOrLanguage(material)].join(" · ")
       : timeOrLanguage(material);
 
-  // The demo material's href is already in the page's language. A workshop
-  // with a demo shows it as card A ("Kit als Demo") and points the
-  // secondary link at the lab, or else at the slides.
+  // The demo material's href is already in the page's language.
   const demo = workshop.materials.find((material) => material.role === "demo");
-  const lab = workshop.materials.find((material) => material.role === "lab");
-  const deck = workshop.materials.find((material) => material.role === "deck");
-  const deckMinutes = deck ? minutesOf(deck) : undefined;
-  const a: WorkshopStageCardA | undefined = demo
+  const a: WorkshopStageCardA | undefined = primary
     ? {
-        kind: "demo",
-        material: demo,
-        href: demo.href,
-        ...(demo.minutes ? { minutes: demo.minutes } : {}),
-        meta: [copy.demoMeta, ...(demo.minutes ? [copy.minutes(demo.minutes)] : [])].join(" · "),
-        ...(lab ? { labHref: lab.href } : deck && deckMinutes ? { deck: { href: deck.href, minutes: deckMinutes } } : {}),
+        kind: primary.role === "deck" ? "slides" : "lab",
+        material: primary,
+        href: primary.href,
+        ...(primary.minutes ? { minutes: primary.minutes } : {}),
+        meta: metaOf(primary),
+        ...(demo ? { demoHref: demo.href } : {}),
       }
-    : primary
-      ? {
-          kind: primary.role === "deck" ? "slides" : "lab",
-          material: primary,
-          href: primary.href,
-          ...(primary.minutes ? { minutes: primary.minutes } : {}),
-          meta: metaOf(primary),
-        }
-      : undefined;
+    : undefined;
 
   const kitMaterial =
     workshopKitMaterial(workshop) ??

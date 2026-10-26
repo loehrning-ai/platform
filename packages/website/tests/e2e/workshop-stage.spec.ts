@@ -8,14 +8,14 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
  */
 
 const WORKSHOPS = [
-  // Every workshop starts at its demo (the kit as a demo); card A's secondary
-  // link goes to the lab (Workshop 01) or else to the slides.
-  { slug: "ki-prognosen-einschaetzen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
-  { slug: "geschaeftsberichte-mit-ki-lesen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
-  { slug: "datenbereitschaft-fuer-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
-  { slug: "esg-berichte-mit-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
-  { slug: "audit-vorbereitung-mit-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
-  { slug: "angebote-mit-ki-vergleichen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  // A workshop is its slides and its kit; the demo is card A's secondary link.
+  // Workshop 01 has no slide deck: its labs are card A.
+  { slug: "ki-prognosen-einschaetzen", a: ["Labor öffnen", "Open the lab"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "geschaeftsberichte-mit-ki-lesen", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
+  { slug: "datenbereitschaft-fuer-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
+  { slug: "esg-berichte-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "audit-vorbereitung-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "angebote-mit-ki-vergleichen", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
 ] as const;
 
 const LOCALES = [
@@ -68,6 +68,11 @@ test.describe("workshop stage anatomy", () => {
         await expect(linkA).not.toHaveAttribute("download", /.*/);
         if (workshop.download) await expect(linkB).toHaveAttribute("download", "");
         else await expect(linkB).not.toHaveAttribute("download", /.*/);
+        // Card A's one secondary link opens the demo, in the page's language.
+        const demoLink = cards.nth(0).locator("a.ac-secondary");
+        await expect(demoLink).toHaveCount(1);
+        await expect(demoLink).toHaveAttribute("href", `${locale.prefix}/demos/${workshop.slug}?source=workshop`);
+        await expect(demoLink).toHaveAccessibleName(new RegExp(`^${["Demo öffnen", "Open the demo"][locale.index]}`));
         const secondary = cards.nth(1).locator("a.ac-secondary");
         await expect(secondary).toHaveCount(workshop.kitPage ? 1 : 0);
         if (workshop.kitPage) await expect(secondary).toHaveAttribute("href", `${locale.prefix}/workshops/${workshop.slug}/kit`);
