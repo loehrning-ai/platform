@@ -35,6 +35,7 @@ import {
   SOFTWARE_GUIDE_COPY,
   SPECIMEN_COPY,
 } from "@/lib/open-source/display-copy";
+import { shelveFilms } from "@/lib/open-source/film-shelf";
 import { absoluteUrl } from "@/lib/seo/entity";
 import {
   JsonLd,
@@ -308,7 +309,7 @@ function SoftwareDetail({
     { ...guide.screenshot, caption: guide.screenshot.alt, alt: "" },
     ...(guide.demo ?? []),
   ];
-  const films = guide.outputFilms ?? [];
+  const shelf = shelveFilms(guide.outputFilms ?? []);
   const formula = guide.formula;
   const heading = "text-xl font-bold tracking-[-0.03em] sm:text-2xl";
 
@@ -379,10 +380,10 @@ function SoftwareDetail({
 
       <section className="mt-10 sm:mt-12" aria-labelledby="real-output">
         <h2 id="real-output" className={heading}>
-          {copy.realOutput(films.length + stills.length)}
+          {copy.realOutput(shelf.count + stills.length)}
         </h2>
-        {films.map((film) => (
-          <figure key={film.src} className="mt-6">
+        {shelf.films.map(({ film, className }) => (
+          <figure key={film.src} className={`mt-6 ${className}`.trim()}>
             <OutputFilm
               film={film}
               title={artifact.title}

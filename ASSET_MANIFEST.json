@@ -1019,48 +1019,70 @@
       "derivation": "ffmpeg re-encode, muted, 720x720, H.264 crf 30, GOP 8"
     },
     {
+      "path": "packages/website/public/media/tools/rotfaden/specimen.jpg",
+      "sizeBytes": 66319,
+      "sha256": "cf4ad649c9de8200c623dafa82730f0b12796ef64deb877573d2519986ab3f14",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-1x1.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "ffmpeg frame at 18.5 s (the strict check at 0 errors), 720x720 JPEG, written without metadata"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/specimen.mp4",
+      "sizeBytes": 1391364,
+      "sha256": "9e67321d81c051695f08ac58a95377d0a2b109754919ebcf6c68f3df22e011b9",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-1x1.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "reelcode final render (project rotfaden-usage, 1:1, 60 fps) of captured real rotfaden runs, ffmpeg re-encode without the audio track, 720x720, 30 fps, H.264 crf 28, GOP 8 for scrubbing, container metadata removed"
+    },
+    {
       "path": "packages/website/public/media/tools/rotfaden/usage-16x9.jpg",
-      "sizeBytes": 79416,
-      "sha256": "aabb53837e0a424ec4b83d8c6d9828c778c4c850dd9636271553750cc07ffc81",
+      "sizeBytes": 83993,
+      "sha256": "73e3aa830fda9d9f6fcbffae23e8f9de2f5e78e4aae2dbc650bae35c101ba4c4",
       "owner": "Tim L\u00f6hr",
       "source": "loehrning-ai/rotfaden docs/media/usage-16x9.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
-      "derivation": "ffmpeg frame at 19.5 s (the check at 0 errors), 1280x720 JPEG, re-saved without metadata"
+      "derivation": "ffmpeg frame at 18.5 s (the strict check at 0 errors), 1280x720 JPEG, written without metadata"
     },
     {
       "path": "packages/website/public/media/tools/rotfaden/usage-16x9.mp4",
-      "sizeBytes": 422416,
-      "sha256": "2c3b8a4b973e100f7e1f8cb4676c1390ac033b269ed68a497334997f07664e05",
+      "sizeBytes": 580483,
+      "sha256": "d95616389ba593c04dd5a7e32e1e613e256f86f4d3dc9e4adff83ff4be0b5eab",
       "owner": "Tim L\u00f6hr",
       "source": "loehrning-ai/rotfaden docs/media/usage-16x9.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
-      "derivation": "reelcode render (project rotfaden-usage, 16:9) of real rotfaden runs, ffmpeg re-encode without the audio track, 1280x720, H.264, container metadata removed"
+      "derivation": "reelcode final render (project rotfaden-usage, 16:9, 60 fps) of captured real rotfaden runs, ffmpeg re-encode without the audio track, 1280x720, 30 fps, H.264 crf 26, container metadata removed"
     },
     {
       "path": "packages/website/public/media/tools/rotfaden/usage-9x16.jpg",
-      "sizeBytes": 73861,
-      "sha256": "2dbbd939fb7f0c4b676fc02abd293c1edfffed736e74dfb3258c7a3b397750bb",
+      "sizeBytes": 90918,
+      "sha256": "f4a84917b4879a1d70e1009d20dc36fa660c6809ce66d1a54570d7bb5ae581df",
       "owner": "Tim L\u00f6hr",
       "source": "loehrning-ai/rotfaden docs/media/usage-9x16.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
-      "derivation": "ffmpeg frame at 19.5 s (the check at 0 errors), 720x1280 JPEG, re-saved without metadata"
+      "derivation": "ffmpeg frame at 18.5 s (the strict check at 0 errors), 720x1280 JPEG, written without metadata"
     },
     {
       "path": "packages/website/public/media/tools/rotfaden/usage-9x16.mp4",
-      "sizeBytes": 433769,
-      "sha256": "8b2f6e325dad917403384f9a65f79e2254a96c7787a4e3c96a6eb6857e2dad17",
+      "sizeBytes": 476007,
+      "sha256": "da4c5cf2142b1978349644cad4cc952fec295f9cc94193528ef1c42fce2fd47d",
       "owner": "Tim L\u00f6hr",
       "source": "loehrning-ai/rotfaden docs/media/usage-9x16.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
-      "derivation": "reelcode render (project rotfaden-usage, 9:16) of real rotfaden runs, ffmpeg re-encode without the audio track, 720x1280, H.264, container metadata removed"
+      "derivation": "reelcode final render (project rotfaden-usage, 9:16, 60 fps) of captured real rotfaden runs, ffmpeg re-encode without the audio track, 720x1280, 30 fps, H.264 crf 26, container metadata removed"
     },
     {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",

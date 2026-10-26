@@ -27,6 +27,7 @@ const composed = composeForValidation({
   revisionHref: `${REPOSITORY}/commit/${FIXTURE_REVISION}`,
 });
 const guide = ROTFADEN_PENDING_TOOL.guide;
+const specimen = guide.specimen;
 
 const PUBLIC = resolve(process.cwd(), "public");
 const manifest = JSON.parse(
@@ -49,6 +50,8 @@ const ASSETS = [
   ...guide.demo,
   ...guide.outputFilms,
   ...guide.outputFilms.map((film) => film.poster),
+  specimen.film,
+  specimen.film.poster,
 ];
 
 /** The handler type of every track in an mp4: `vide`, `soun`, ... */
@@ -67,6 +70,9 @@ describe("staged rotfaden record", () => {
     ).not.toThrow();
     expect(composed.guide.quickstart?.command).toContain(
       `git checkout ${FIXTURE_REVISION}`,
+    );
+    expect(composed.guide.quickstart?.command).toMatch(
+      /&& bin\/rotfaden new mein-workshop --topic "[^"]+" && bin\/rotfaden check mein-workshop$/,
     );
     expect(composed.guide.documentation.href).toBe(
       `${REPOSITORY}/blob/${FIXTURE_REVISION}/README.md`,
@@ -103,7 +109,7 @@ describe("staged rotfaden record", () => {
   );
 
   it("ships silent films: one video track, no sound track", () => {
-    for (const film of guide.outputFilms) {
+    for (const film of [...guide.outputFilms, specimen.film]) {
       // `mdir` is the handler of the empty metadata box, not a track.
       const handlers = trackHandlers(stored(film.src).bytes);
       expect(handlers.filter((handler) => handler !== "mdir")).toEqual(["vide"]);
@@ -142,7 +148,10 @@ describe("the open-source wall with the staged entry", () => {
 
     const plate = within(plates[0] as HTMLElement);
     expect(plate.getByRole("heading", { level: 2, name: "rotfaden" })).toBeInTheDocument();
-    expect(plate.getByText(guide.screenshot.alt)).toBeInTheDocument();
+    // the plate plays the square specimen film, not the 2:1 screenshot
+    expect(plates[0].querySelector("video source")).toHaveAttribute("src", specimen.film.src);
+    expect(plates[0].textContent).toContain(specimen.film.alt);
+    expect(plates[0].querySelector(`img[src="${guide.screenshot.src}"]`)).toBeNull();
     expect(
       within(container.querySelector("nav")!).getByRole("link", { name: /rotfaden/ }),
     ).toHaveAttribute("href", "#nr-03");

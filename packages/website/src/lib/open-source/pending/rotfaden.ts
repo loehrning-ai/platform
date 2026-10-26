@@ -9,11 +9,13 @@ import type { ArtifactEnglishCopy } from "@/lib/open-source/display-copy";
  * (ARTIFACT_PUBLICATION.md, "Staging a record before Commit A"). Nothing
  * but the colocated spec imports this module.
  *
- * Two things land upstream at Commit A, because the record names them as
- * `derivedFrom`: the usage films `docs/media/usage-16x9.mp4` and
- * `docs/media/usage-9x16.mp4`, rendered with reelcode from real runs of
- * `rotfaden new` and `check`, the Workshop 06 deck, the kit's file list and
- * the demo on a phone. The files here are their muted re-encodes.
+ * Three films land upstream at Commit A, because the record names them as
+ * `derivedFrom`: `docs/media/usage-16x9.mp4`, `usage-9x16.mp4` and
+ * `usage-1x1.mp4`, one reelcode project in three formats, rendered from the
+ * captured output of real runs of `rotfaden new` and `check`, the Workshop
+ * 06 deck, the kit's file list and the demo on a phone (the project's
+ * PROVENANCE.md lands beside them). The files here are their muted
+ * re-encodes; the square one is the plate's specimen.
  *
  * On admission the record moves into `artifacts.ts` as
  * `composeForValidation(source)` returns it, and the English copy below
@@ -195,12 +197,44 @@ export const ROTFADEN_PENDING_TOOL = {
         "Der Agent schneidet die Geschichte auf eine Frage und baut Deck, Kit und Demo; Skripte und Chromium prüfen",
       output: "geprüfter Workshop",
     },
+    specimen: {
+      kind: "film",
+      film: {
+        src: `${MEDIA}/specimen.mp4`,
+        sha256:
+          "9e67321d81c051695f08ac58a95377d0a2b109754919ebcf6c68f3df22e011b9",
+        sizeBytes: 1391364,
+        derivedFrom: "docs/media/usage-1x1.mp4",
+        width: 720,
+        height: 720,
+        durationS: 22,
+        poster: {
+          src: `${MEDIA}/specimen.jpg`,
+          sha256:
+            "cf4ad649c9de8200c623dafa82730f0b12796ef64deb877573d2519986ab3f14",
+          sizeBytes: 66319,
+        },
+        alt: "Echte Läufe, gekürzt, quadratisch: new legt das Projekt an, check meldet 26 errors, dann Ausschnitte aus dem Deck von Workshop 06, die Dateien des Kits, die Demo und check mit 0 errors.",
+      },
+      // Rest on the strict check: its last line reads 0 errors from 17.6 s; the end card (19.5 s) stays off the plate.
+      endS: 18.5,
+      beatS: 0.5,
+      // The six shots of the reelcode project rotfaden-usage at 120 bpm.
+      chapters: [
+        { atS: 0, label: "new" },
+        { atS: 2, label: "check" },
+        { atS: 5.5, label: "deck" },
+        { atS: 10.5, label: "kit" },
+        { atS: 13, label: "demo" },
+        { atS: 16, label: "check --strict" },
+      ],
+    },
     outputFilms: [
       {
         src: `${MEDIA}/usage-16x9.mp4`,
         sha256:
-          "2c3b8a4b973e100f7e1f8cb4676c1390ac033b269ed68a497334997f07664e05",
-        sizeBytes: 422416,
+          "d95616389ba593c04dd5a7e32e1e613e256f86f4d3dc9e4adff83ff4be0b5eab",
+        sizeBytes: 580483,
         derivedFrom: "docs/media/usage-16x9.mp4",
         width: 1280,
         height: 720,
@@ -208,16 +242,16 @@ export const ROTFADEN_PENDING_TOOL = {
         poster: {
           src: `${MEDIA}/usage-16x9.jpg`,
           sha256:
-            "aabb53837e0a424ec4b83d8c6d9828c778c4c850dd9636271553750cc07ffc81",
-          sizeBytes: 79416,
+            "73e3aa830fda9d9f6fcbffae23e8f9de2f5e78e4aae2dbc650bae35c101ba4c4",
+          sizeBytes: 83993,
         },
         alt: "Echte Läufe, gekürzt: new legt das Projekt an, check meldet 26 errors, dann das Deck von Workshop 06, die Dateien des Kits, die Demo am Telefon und check mit 0 errors.",
       },
       {
         src: `${MEDIA}/usage-9x16.mp4`,
         sha256:
-          "8b2f6e325dad917403384f9a65f79e2254a96c7787a4e3c96a6eb6857e2dad17",
-        sizeBytes: 433769,
+          "da4c5cf2142b1978349644cad4cc952fec295f9cc94193528ef1c42fce2fd47d",
+        sizeBytes: 476007,
         derivedFrom: "docs/media/usage-9x16.mp4",
         width: 720,
         height: 1280,
@@ -225,10 +259,10 @@ export const ROTFADEN_PENDING_TOOL = {
         poster: {
           src: `${MEDIA}/usage-9x16.jpg`,
           sha256:
-            "2dbbd939fb7f0c4b676fc02abd293c1edfffed736e74dfb3258c7a3b397750bb",
-          sizeBytes: 73861,
+            "f4a84917b4879a1d70e1009d20dc36fa660c6809ce66d1a54570d7bb5ae581df",
+          sizeBytes: 90918,
         },
-        alt: "Derselbe Film hochkant, für das Telefon.",
+        alt: "Hochkant fürs Telefon, echte Läufe, gekürzt: new legt das Projekt an, check meldet 26 errors, dann Ausschnitte aus dem Deck von Workshop 06, die Dateien des Kits, die Demo und check mit 0 errors.",
       },
     ],
     liveExample: {
@@ -375,10 +409,12 @@ export const ROTFADEN_ENGLISH_COPY: ArtifactEnglishCopy = {
       output: "checked workshop",
     },
     quickstartNote:
-      "Needs Python 3.9 or newer, nothing else. The check in a browser needs bin/rotfaden setup once (about 200 MB). In Claude Code: /plugin marketplace add loehrning-ai/rotfaden",
+      "Needs Python 3.9 or newer. check ends with 26 errors, exit 1: the TODO markers for your content. For the check in a browser, run bin/rotfaden setup once (about 200 MB). In Claude Code: /plugin marketplace add loehrning-ai/rotfaden",
+    specimenAlt:
+      "Real runs, cut, square: new creates the project, check reports 26 errors, then crops of the Workshop 06 deck, the kit's files, the demo and check at 0 errors.",
     outputFilmAlts: [
       "Real runs, cut: new creates the project, check reports 26 errors, then the Workshop 06 deck, the kit's files, the demo on a phone and check at 0 errors.",
-      "The same film upright, for the phone.",
+      "Upright for the phone, real runs, cut: new creates the project, check reports 26 errors, then crops of the Workshop 06 deck, the kit's files, the demo and check at 0 errors.",
     ],
     liveExample: {
       title: "Live example: Workshop 06",
@@ -423,8 +459,8 @@ export function composeForValidation(source: ToolArtifact["source"]): ToolArtifa
         href: `${REPOSITORY}/blob/${source.revision}/README.md`,
       },
       quickstart: {
-        command: `git clone ${REPOSITORY} && cd ${SLUG} && git checkout ${source.revision} && bin/rotfaden init my-deck && bin/rotfaden build my-deck`,
-        note: "Braucht Python 3.9 oder neuer, sonst nichts. Der Check im Browser braucht einmal bin/rotfaden setup (rund 200 MB). In Claude Code: /plugin marketplace add loehrning-ai/rotfaden",
+        command: `git clone ${REPOSITORY} && cd ${SLUG} && git checkout ${source.revision} && bin/rotfaden new mein-workshop --topic "Angebote mit KI vergleichen" && bin/rotfaden check mein-workshop`,
+        note: "Braucht Python 3.9 oder neuer. check endet mit 26 errors, Exit 1: die TODO-Stellen für deinen Inhalt. Für den Check im Browser einmal bin/rotfaden setup (rund 200 MB). In Claude Code: /plugin marketplace add loehrning-ai/rotfaden",
       },
     },
   };
