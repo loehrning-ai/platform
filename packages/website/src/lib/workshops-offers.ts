@@ -19,10 +19,10 @@ const base = "/workshops/angebote-mit-ki-vergleichen";
 const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "33 KB", en: "33 KB" };
 
 /**
- * Places changed by hand: 9 in the rotfaden run (scripts/workshop06/source/BUILD-LOG.md) and 4 for this
+ * Places changed by hand: 9 in the rotfaden run (scripts/workshop06/source/BUILD-LOG.md) and 5 for this
  * site (scripts/workshop06/PORT-LOG.md). workshops-offers.test.ts counts both lists.
  */
-export const OFFERS_HAND_EDITS = 13;
+export const OFFERS_HAND_EDITS = 14;
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 

@@ -42,7 +42,7 @@
       "kind": "reveal",
       "label": "Kipp",
       "seconds": 2.6,
-      "caption": "Dein Tipp: {bet}. Geliefert und bezahlt im Jahr ist {last} das teuerste Angebot: {last_total}. {winner} kostet am wenigsten, {gap} weniger als {runner}."
+      "caption": "Geliefert und bezahlt gewinnt {winner}, um {gap}. {last} ist am teuersten."
     },
     {
       "id": "methode",

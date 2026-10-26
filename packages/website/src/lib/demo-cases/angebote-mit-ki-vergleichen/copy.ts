@@ -56,8 +56,8 @@ const de = {
     lever: beat("papier").lever ?? "",
     label: beat("papier").apply?.index.label ?? "",
     flip: "{rival} vorn ab {v} %",
-    stops: "Anstieg des Papierindex",
-    stop: "+{v} %",
+    stops: "Anstieg des Papierindex in\u00a0%",
+    stop: "+{v}",
   },
   deins: {
     caption: beat("deins").caption,
@@ -91,6 +91,7 @@ const de = {
     },
   },
   mitnehmen: {
+    kicker: "Vier Dateien für deinen Claude",
     caption: beat("mitnehmen").caption,
     lever: "Zu „Für deinen Claude“",
     items: [
@@ -128,8 +129,7 @@ const en: Pack = {
     lever: "What costs least, delivered and paid?",
   },
   kipp: {
-    caption:
-      "Your guess: {bet}. Delivered and paid for a year, {last} is the most expensive offer: {last_total}. {winner} costs least, {gap} less than {runner}.",
+    caption: "Delivered and paid, {winner} wins by {gap}. {last} costs most.",
     running: "Freight, one-off costs, storage and discount come in.",
   },
   sources: {
@@ -156,8 +156,8 @@ const en: Pack = {
     lever: "Offer C's paper surcharge follows an index. How far does it rise?",
     label: "Paper +{v}%",
     flip: "{rival} leads from {v}%",
-    stops: "Rise of the paper index",
-    stop: "+{v}%",
+    stops: "Rise of the paper index in\u00a0%",
+    stop: "+{v}",
   },
   deins: {
     caption: "Paste the lines of your own offers. Invented or general numbers will do.",
@@ -191,6 +191,7 @@ const en: Pack = {
     },
   },
   mitnehmen: {
+    kicker: "Four files for your Claude",
     caption: "The files you just moved, and the method for your own Claude.",
     lever: "To \"For your Claude\"",
     items: [

@@ -3,7 +3,7 @@ import { expectGlassBudget } from "./fixtures/glass";
 
 /**
  * W06 "Die Vergleichsbasis" on a phone: the guess commits before the reveal, the cost lines turn the
- * order from B, C, A to C, A, B, the paper index flips first place to A, a line one offer lacks stays
+ * order from B, C, A to C, A, B, the paper index flips first place to A at +7 %, a line one offer lacks stays
  * open (never 0), a restart keeps the visitor's own lines, and the take-home fills the basis.
  */
 const SLUG = "angebote-mit-ki-vergleichen";
@@ -61,13 +61,13 @@ test.describe(`/demos/${SLUG}`, () => {
     });
   }
 
-  test("de: the paper index hands first place to A between +3 % and +5 %", async ({ page }) => {
+  test("de: the paper index hands first place to A between +5 % and +7 % (the kit: 6,97 %)", async ({ page }) => {
     await page.goto(`/demos/${SLUG}?beat=papier`, { waitUntil: "networkidle" });
     await expect(page.locator("[data-demo-clock]")).toHaveAttribute("data-beat", "papier");
     await expect(page.locator('[data-av-chart] [data-option^="C"][data-win]')).toHaveCount(1);
-    await page.locator(".av-stop").nth(2).click();
+    await page.locator(".av-stop").nth(3).click();
     await expect(page.locator('[data-av-chart] [data-option^="A"][data-win]')).toHaveCount(1);
-    await page.locator(".av-stop").nth(1).click();
+    await page.locator(".av-stop").nth(2).click();
     await expect(page.locator('[data-av-chart] [data-option^="C"][data-win]')).toHaveCount(1);
   });
 
@@ -79,7 +79,7 @@ test.describe(`/demos/${SLUG}`, () => {
     // Y has no freight line: its total is open, not 900, and nobody wins.
     await expect(page.locator('[data-av-chart] [data-option="Y"] [data-av-total]')).toHaveText("offen");
     await expect(page.locator("[data-av-chart] [data-win]")).toHaveCount(0);
-    await expect(page.locator("[data-demo-stage]")).toContainText("Y nennt keine Zeile Fracht");
+    await expect(page.locator("[data-demo-caption]")).toContainText("Y nennt keine Zeile Fracht");
 
     // A key typed into the field never restarts.
     await field.press("r");

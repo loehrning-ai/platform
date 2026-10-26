@@ -227,7 +227,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
     );
   } else {
     stage = (
-      <Scene kicker={pack.mitnehmen.caption} file={null}>
+      <Scene kicker={pack.mitnehmen.kicker} file={null}>
         <ul className="av-takehome">
           {pack.mitnehmen.items.map(([file, text]) => (
             <li key={file}>

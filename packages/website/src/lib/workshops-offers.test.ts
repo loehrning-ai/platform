@@ -41,7 +41,7 @@ describe("Workshop 06 data", () => {
     const build = numberedItems("source/BUILD-LOG.md", /^## Handarbeit außerhalb des Ablaufs: (\d+) Stellen$/m);
     const port = numberedItems("PORT-LOG.md", /^## Changes for the site: (\d+) places$/m);
     expect(build).toBe(9);
-    expect(port).toBe(4);
+    expect(port).toBe(5);
     expect(OFFERS_HAND_EDITS).toBe(build + port);
     expect(OFFERS_WORKSHOP.de.provenance.note).toContain(`an ${build + port} Stellen geändert`);
     expect(OFFERS_WORKSHOP.en.provenance.note).toContain(`changed in ${build + port} places`);
