@@ -39,7 +39,8 @@ export type QuoteCheck =
   | { readonly kind: "similar"; readonly file: string; readonly share: number }
   | { readonly kind: "missing" };
 
-const MAX_FILE = 2000;
+/** Covers every attached kit file (the request has 2,123 characters, the largest folder file 1,697); kit.test.ts asserts it. */
+export const MAX_FILE = 4000;
 const MAX_QUOTE = 400;
 export const SIMILAR_SHARE = 0.8;
 

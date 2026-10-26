@@ -99,7 +99,8 @@ export function parseClaudeAnswer(text: string): readonly AnswerRow[] {
       files: [...new Set([...(previous?.files ?? []), ...files])],
       unknownFiles: [...(previous?.unknownFiles ?? []), ...unknown],
       quotes: [...(previous?.quotes ?? []), ...quotes],
-      status: statusIn(raw) ?? previous?.status ?? null,
+      // The first line that gives a status wins: a later remark ("R6 becomes a gap if ...") never overrides the table.
+      status: previous?.status ?? statusIn(raw),
       refs: [...(previous?.refs ?? []), ...refs],
       numbers: [...(previous?.numbers ?? []), ...numbers],
     });

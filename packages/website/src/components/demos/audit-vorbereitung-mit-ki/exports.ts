@@ -1,8 +1,9 @@
 /**
  * The three files the visitor takes home, built in the tab: the evidence
- * index (Vardar's, or the visitor's own folder once there is one), the gap
+ * index (the kit's, or the visitor's own folder once there is one), the gap
  * list with one request per gap, and the project instructions with the
- * visitor's audit date. Pure.
+ * visitor's audit date. The status, test and type words are the kit's own
+ * (vocab.ts), so the files read like the kit. Pure.
  */
 
 import { OWNERS, itemById } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
@@ -11,13 +12,10 @@ import { toEvidenceCsv, type EvidenceRow } from "@/lib/demo-cases/audit-vorberei
 import { formatShort, windowStart } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/dates";
 import type { Evaluation } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/evidence";
 import type { Model } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
-import type { OwnResult } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/own-folder";
+import type { OwnBoard } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/own-board";
 import { VARDAR_VALUES, renderGapList, renderInstructions } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/render";
-import type { Loc } from "./words";
-
-/** The test columns in the template's words: "hält" / "scheitert" in German, "pass" / "FAIL" in English. */
-const VERDICT = { de: { pass: "hält", fail: "scheitert", notMet: "nicht erfüllt" }, en: { pass: "pass", fail: "FAIL", notMet: "not met" } } as const;
-const verdict = (pass: boolean, locale: Loc) => (pass ? VERDICT[locale].pass : VERDICT[locale].fail);
+import { kitVocab } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/vocab";
+import type { Loc } from "./fmt";
 
 /** Kit rule 13: approvers and owners by role. "Dragan Ilievski, Managing Director" becomes "Managing Director"; a name without a role stays. */
 export function roleOf(by: string | null): string {
@@ -25,45 +23,49 @@ export function roleOf(by: string | null): string {
   const comma = by.indexOf(",");
   return comma > 0 ? by.slice(comma + 1).trim() : by.trim();
 }
-const tri = (value: boolean | null, locale: Loc) => (value === null ? "?" : verdict(value, locale));
 
-function vardarRow(result: Evaluation, copy: W05Copy, locale: Loc, due: string): EvidenceRow {
+function kitRow(result: Evaluation, copy: W05Copy, locale: Loc, due: string): EvidenceRow {
+  const vocab = kitVocab(locale);
   const { tests, item } = result;
   const fact = tests.date.used ?? result.doc.date;
+  const verdict = (pass: boolean) => (pass ? vocab.pass : vocab.fail);
   return {
     item: item.id,
     request: item.request,
     file: result.doc.file,
-    doc_type: copy.type[result.doc.type],
+    doc_type: vocab.type[result.doc.type] ?? result.doc.type,
     date: fact?.iso ?? "",
     date_kind: fact ? copy.dateKind[fact.kind] : "",
     approved_or_owned_by: roleOf(tests.approval.by),
     scope: tests.scope.coveredSystems.join(" + "),
     quote: tests.quote.quote ?? "",
-    period_test: verdict(tests.date.pass, locale),
-    approval_test: verdict(tests.approval.pass, locale),
-    scope_test: verdict(tests.scope.pass, locale),
-    quote_test: tests.quote.kind === "pass" ? VERDICT[locale].pass : tests.quote.kind === "notMet" ? VERDICT[locale].notMet : verdict(false, locale),
-    status: copy.status[result.status],
+    period_test: verdict(tests.date.pass),
+    approval_test: verdict(tests.approval.pass),
+    scope_test: verdict(tests.scope.pass),
+    quote_test: tests.quote.kind === "pass" ? vocab.pass : tests.quote.kind === "notMet" ? copy.sheet.notMet : vocab.fail,
+    status: vocab.status[result.status],
     closing_document: result.status === "covered" ? "" : item.closing[locale],
     owner: OWNERS[item.owner][locale],
     due: result.status === "covered" ? "" : formatShort(due, locale),
   };
 }
 
-export function indexCsv(model: Model, own: OwnResult | null, copy: W05Copy, locale: Loc): string {
-  if (!own) return toEvidenceCsv(model.rows.map((row) => vardarRow(row.best, copy, locale, model.context.due)), locale);
-  const rows: EvidenceRow[] = own.items.flatMap((ownItem) => {
-    const item = itemById(ownItem.id);
-    const status = copy.own.bound[ownItem.bound];
-    if (ownItem.candidates.length === 0) return [{ item: item.id, request: item.label[locale], status, scope: "?", quote: "?", scope_test: "?", quote_test: "?" }];
-    return ownItem.candidates.map((file) => ({
+const tri = (value: boolean | null, locale: Loc) => (value === null ? "?" : value ? kitVocab(locale).pass : kitVocab(locale).fail);
+
+/** The evidence index: the kit's best file per request, or the visitor's own cards in the kit's columns. */
+export function indexCsv(model: Model, own: OwnBoard | null, copy: W05Copy, locale: Loc): string {
+  if (!own) return toEvidenceCsv(model.rows.map((row) => kitRow(row.best, copy, locale, model.context.due)), locale);
+  const rows: EvidenceRow[] = own.rows.flatMap((row) => {
+    const item = itemById(row.id);
+    const status = copy.own.boundStamp[row.bound];
+    if (row.files.length === 0) return [{ item: item.id, request: copy.own.genericName[row.id], status, scope: "?", quote: "?", scope_test: "?", quote_test: "?" }];
+    return row.files.map((file) => ({
       item: item.id,
-      request: item.label[locale],
+      request: copy.own.genericName[row.id],
       file: file.entry.name,
-      doc_type: copy.type[file.type],
+      doc_type: kitVocab(locale).type[file.type] ?? file.type,
       date: file.date?.iso ?? "",
-      date_kind: file.date ? (file.date.kind ?? file.date.source) : "",
+      date_kind: file.date?.kind ? copy.dateKind[file.date.kind] : (file.date?.source ?? ""),
       approved_or_owned_by: roleOf(file.approvedBy),
       scope: "?",
       quote: "?",
@@ -86,14 +88,14 @@ export function gapListMarkdown(model: Model, copy: W05Copy, locale: Loc): strin
   );
 }
 
-/** The project instructions in the page's language: Vardar's values, or the visitor's audit date with placeholders for customer and request file. */
-export function instructionsText(copy: W05Copy, audit: string, months: number, locale: Loc): string {
+/** The project instructions in the page's language: the kit's values, or the visitor's audit date with placeholders for customer and request file. */
+export function instructionsText(copy: W05Copy, audit: string, locale: Loc): string {
   if (!audit) return renderInstructions(VARDAR_VALUES, locale);
   return renderInstructions(
     {
       customerFull: copy.takehome.customerPlaceholder,
       audit,
-      windowStart: windowStart(audit, months),
+      windowStart: windowStart(audit, 12),
       requestFile: copy.takehome.requestFilePlaceholder,
       fictional: false,
     },
