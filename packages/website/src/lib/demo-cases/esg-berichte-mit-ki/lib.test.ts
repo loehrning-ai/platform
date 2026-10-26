@@ -280,6 +280,15 @@ describe("exports", () => {
     expect(csvCell("a\nb", ",")).toBe('"a\nb"');
     expect(toRegisterCsv([], words("en")).slice(1).split("\r\n")[0]!.split(",")).toHaveLength(12);
   });
+  it("never writes a cell a spreadsheet would run as a formula", () => {
+    expect(csvCell("=HYPERLINK(\"x\")", ";")).toBe("\"'=HYPERLINK(\"\"x\"\")\"");
+    expect(csvCell("+49 Strom", ";")).toBe("'+49 Strom");
+    expect(csvCell("-12 %", ",")).toBe("'-12 %");
+    expect(csvCell("@SUM(A1)", ",")).toBe("'@SUM(A1)");
+    expect(csvCell("12 von 40 ha", ",")).toBe("12 von 40 ha");
+    const csv = toRegisterCsv([rowFor({ sentence: "=1+1", evidence: "nothing" })], words("de"));
+    expect(csv).toContain(";'=1+1;");
+  });
   it("escapes pipes in the Markdown table", () => {
     const table = toMarkdownTable([rowFor({ sentence: "a | b", evidence: "nothing" })], words("de"));
     expect(table).toContain("a \\| b");

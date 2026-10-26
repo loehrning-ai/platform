@@ -69,3 +69,13 @@ describe("the filled release rule", () => {
     expect(fillSlots("[a] und [b]", ["x", null])).toBe("x und [b]");
   });
 });
+
+describe("the result CSV never carries a formula", () => {
+  it("prefixes a text cell that starts like a formula and leaves numbers alone", async () => {
+    const { csvText } = await import("./export");
+    expect(csvText("=HYPERLINK(\"x\")")).toBe("'=HYPERLINK(\"x\")");
+    expect(csvText("+1 Aktion")).toBe("'+1 Aktion");
+    expect(csvText("@SUM(A1)")).toBe("'@SUM(A1)");
+    expect(csvText("Aktion -10 %")).toBe("Aktion -10 %");
+  });
+});

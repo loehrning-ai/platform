@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { boundOf } from "./bound";
-import { checkAnswer, parseClaudeAnswer } from "./claude-answer";
+import { checkAnswer, MAX_ANSWER, MAX_LINE, MAX_QUOTES, parseClaudeAnswer } from "./claude-answer";
 import { vardarContext } from "./case";
 import { toEvidenceCsv } from "./csv";
 import { daysBetween, firstDate, formatShort, parseDateTokens, windowStart } from "./dates";
 import { extractMeta, documentDate } from "./meta";
 import { frame, drawIn } from "./motion";
-import { assessFolder, datesWereCopied, type OwnEntry } from "./own-folder";
+import { MAX_READ, MAX_SLICE_BYTES, READ_BUDGET_BYTES, assessFolder, datesWereCopied, type OwnEntry } from "./own-folder";
 import { parseList } from "./parse-list";
 import { verifyQuote } from "./quote";
 import { stemOf, versionChains } from "./versions";
@@ -281,5 +281,39 @@ describe("model", () => {
     expect(model.unlinked).toEqual(["vendor-page_claude_2026-06-15.md", "it-notes_2026-10-06.md", "infosec-policy_v3_FINAL.md"]);
     expect(model.r7.map((result) => result.status)).toEqual(["gap", "gap", "gap"]);
     expect(model.r7.map((result) => result.failed)).toEqual([["quote", "date"], ["quote", "approval"], ["quote"]]);
+  });
+});
+
+describe("the Zitat-Probe on hostile input", () => {
+  it("parses a long run without an extension in bounded time", () => {
+    const line = `| R1 | ${"a".repeat(1_900)} | COVERED |`;
+    const started = performance.now();
+    for (let i = 0; i < 25; i += 1) parseClaudeAnswer(`${line}\n`.repeat(20));
+    expect(performance.now() - started).toBeLessThan(1_500);
+  });
+
+  it("cuts the answer, each line and the quotes to their caps", () => {
+    const quoted = `| R2 | ${Array.from({ length: 200 }, (_, i) => `"quote number ${i} is long"`).join(" ")} | GAP |`;
+    const [row] = parseClaudeAnswer(quoted);
+    expect(row?.quotes.length).toBeLessThanOrEqual(MAX_QUOTES);
+    expect(row?.raw.length).toBeLessThanOrEqual(MAX_LINE);
+    const beyond = `${"x".repeat(MAX_ANSWER)}\n| R3 | ai-use-rule_v1.md | GAP |`;
+    expect(parseClaudeAnswer(beyond)).toEqual([]);
+  });
+});
+
+describe("the own folder reads a bounded head of each file", () => {
+  it("states the slice and the budget", () => {
+    expect(MAX_SLICE_BYTES).toBe(64 * 1024);
+    expect(READ_BUDGET_BYTES).toBe(8 * 1024 * 1024);
+    expect(MAX_READ * MAX_SLICE_BYTES).toBeLessThanOrEqual(READ_BUDGET_BYTES);
+  });
+
+  it("parses each file once when only the window changes", () => {
+    const entry: OwnEntry = { name: "backup-report_2026.txt", size: 40, lastModified: null, listedDate: null, yearMissing: false, text: "Generated 2026-11-01.\nRestore test: not done in 2026.\n" };
+    const first = assessFolder([entry], "2025-12-10");
+    const second = assessFolder([entry], "2026-06-01");
+    expect(first.files[0]?.type).toBe(second.files[0]?.type);
+    expect(first.files[0]?.date?.iso).toBe(second.files[0]?.date?.iso);
   });
 });

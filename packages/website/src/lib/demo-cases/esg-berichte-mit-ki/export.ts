@@ -161,9 +161,14 @@ export function toMarkdownTable(rows: readonly OwnRow[], words: ExportWords): st
   return [header, rule, ...body].join("\n");
 }
 
-/** RFC 4180: quote when the cell holds the separator, a quote or a line break. */
+/**
+ * RFC 4180: quote when the cell holds the separator, a quote or a line break.
+ * A cell a spreadsheet would run as a formula (=, +, -, @, tab or CR first)
+ * gets a leading ', so a pasted sentence never executes in Excel.
+ */
 export function csvCell(text: string, separator: string): string {
-  return text.includes(separator) || /["\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+  const safe = /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+  return safe.includes(separator) || /["\r\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 }
 
 export const BOM = "﻿";

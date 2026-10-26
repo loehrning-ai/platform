@@ -268,7 +268,7 @@ export const DE = {
     footnote: "account_key ist pseudonym, nicht anonym (DSGVO Art. 4 Nr. 5).",
     kitFile: "builder/claude/project/PROJECT-INSTRUCTIONS.txt",
     notes: [
-      "Regel 3 der Projekt-Anweisung lehnt Kontaktdaten ab. Anthropic beschreibt solche Dateien als Kontext, nicht als erzwungene Konfiguration (code.claude.com/docs/en/memory).",
+      "Regel 3 der Projekt-Anweisung lehnt Kontaktdaten ab. CLAUDE.md und Projektanweisungen leiten, sie erzwingen nichts (für CLAUDE.md: code.claude.com/docs/en/memory).",
       "Gesperrt ist erst, was nicht im Zugriff liegt: eine Datei, die nicht hochgeladen ist, oder ein Datenbank-Login ohne Leserecht (Fall D01 in builder/semantic/verified-questions.yml).",
     ],
   },

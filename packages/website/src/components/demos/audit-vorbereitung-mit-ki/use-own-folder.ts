@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { GENERIC_ITEM_IDS, type ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/classify";
 import { isValidDate, windowStart } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/dates";
-import { MAX_READ, MAX_TEXT_BYTES, TEXT_EXTENSIONS, assessFolder, type OwnEntry, type OwnResult } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/own-folder";
+import { MAX_READ, MAX_SLICE_BYTES, READ_BUDGET_BYTES, TEXT_EXTENSIONS, assessFolder, type OwnEntry, type OwnResult } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/own-folder";
 import { parseList } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/parse-list";
 import { decodeText } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/text-decode";
 
@@ -42,9 +42,9 @@ export function validIso(value: string): boolean {
 async function entryOf(file: File, readContent: boolean): Promise<OwnEntry> {
   const name = file.name;
   const base = { name, size: file.size, lastModified: file.lastModified, listedDate: null, yearMissing: false };
-  if (!readContent || file.size > MAX_TEXT_BYTES) return { ...base, text: null };
+  if (!readContent) return { ...base, text: null };
   try {
-    return { ...base, text: TEXT_EXTENSIONS.test(name) ? decodeText(new Uint8Array(await file.arrayBuffer())) : null };
+    return { ...base, text: TEXT_EXTENSIONS.test(name) ? decodeText(new Uint8Array(await file.slice(0, MAX_SLICE_BYTES).arrayBuffer())) : null };
   } catch {
     return { ...base, text: null };
   }
@@ -85,13 +85,19 @@ export function useOwnFolder(): OwnFolder {
     setMonthsValue(stored.months);
   }, []);
 
+  // Bytes read so far in this visit; a cleared folder starts again.
+  const bytesRead = useRef(0);
   const addFiles = useCallback(async (files: readonly File[]) => {
     if (files.length === 0) return;
     let budget = MAX_READ;
     const read: OwnEntry[] = [];
     for (const file of files) {
-      const content = readable(file.name) && budget > 0;
-      if (content) budget -= 1;
+      const bytes = Math.min(file.size, MAX_SLICE_BYTES);
+      const content = readable(file.name) && budget > 0 && bytesRead.current + bytes <= READ_BUDGET_BYTES;
+      if (content) {
+        budget -= 1;
+        bytesRead.current += bytes;
+      }
       read.push(await entryOf(file, content));
     }
     setEntries((current) => [...current, ...read]);
@@ -153,6 +159,7 @@ export function useOwnFolder(): OwnFolder {
   }, []);
 
   const clear = useCallback(() => {
+    bytesRead.current = 0;
     setEntries([]);
     setUnread([]);
   }, []);

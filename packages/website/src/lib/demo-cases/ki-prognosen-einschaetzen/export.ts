@@ -29,6 +29,12 @@ export function cellText(text: string): string {
   return text.replace(/[|\r\n]+/g, " ").replace(/\s+/g, " ").trim();
 }
 
+/** A text cell a spreadsheet would run as a formula (=, +, -, @ first) gets a leading '. Numbers never pass through here. */
+export function csvText(text: string): string {
+  const cell = cellText(text);
+  return /^[=+\-@]/.test(cell) ? `'${cell}` : cell;
+}
+
 export interface RuleFill {
   readonly reihe: string;
   /** The forecasting system; null keeps "[System]" for the reader (an own file). */
@@ -96,10 +102,10 @@ export function toResultCsv(
     const lamps = t >= 1 ? check.lamps(t) : null;
     const red = lamps ? LAMP_KEYS.filter((key) => lamps[key] === false) : [];
     return [
-      row.woche,
+      csvText(row.woche).replaceAll(";", ","),
       num(row.ist),
       num(row.f),
-      cellText(row.hinweis).replaceAll(";", ","),
+      csvText(row.hinweis).replaceAll(";", ","),
       num(rule),
       row.ist !== null && forecast !== null ? num(row.ist - forecast) : "",
       band && forecast !== null ? num(forecast + band[0]) : "",

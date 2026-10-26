@@ -261,7 +261,7 @@ export const EN: Pack = {
     footnote: "account_key is pseudonymous, not anonymous (GDPR Art. 4(5)).",
     kitFile: "builder/claude/project/PROJECT-INSTRUCTIONS.txt",
     notes: [
-      "Rule 3 of the Project instructions refuses contact data. Anthropic describes such files as context, not enforced configuration (code.claude.com/docs/en/memory).",
+      "Rule 3 of the Project instructions refuses contact data. CLAUDE.md and Project instructions guide; they enforce nothing (for CLAUDE.md: code.claude.com/docs/en/memory).",
       "Locked is only what is out of reach: a file that is not uploaded, or a database login without the read grant (case D01 in builder/semantic/verified-questions.yml).",
     ],
   },

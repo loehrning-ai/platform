@@ -36,7 +36,16 @@ const STATUS_WORDS: Readonly<Record<string, Status>> = {
 
 const QUOTE_PATTERNS = [/"([^"\n]{12,}?)"/g, /“([^”\n]{12,}?)”/g, /„([^“”"\n]{12,}?)[“”"]/g, /»([^«\n]{12,}?)«/g];
 const REFERENCE = /\b(A\.\d+(?:\.\d+)*|Art\.?\s*\d+(?:\(\d+\))?|(?:section|clause|Abschnitt|Ziffer|Klausel)\s+\d+(?:\.\d+)?)/gi;
-const FILE_TOKEN = /[\w.-]+\.(?:md|csv|txt|docx?|pdf|xlsx?)\b/gi;
+/**
+ * A file name: starts at a token boundary and is at most 80 characters, so a
+ * long run of letters without an extension costs one bounded scan per start
+ * and never backtracks across the whole line.
+ */
+const FILE_TOKEN = /(?<![\w.-])[\w-][\w.-]{0,79}\.(?:md|csv|txt|docx?|pdf|xlsx?)\b/gi;
+/** Pasted answers are cut to these sizes before any pattern runs. */
+export const MAX_ANSWER = 50_000;
+export const MAX_LINE = 2_000;
+export const MAX_QUOTES = 64;
 export const COMPLIANCE = /\b(compliant|certified|konform\w*|zertifiziert\w*)\b/i;
 
 const stem = (name: string) => name.toLowerCase().replace(/\.[a-z0-9]+$/, "");
@@ -67,14 +76,20 @@ function statusIn(line: string): Status | null {
 /** One row per item; a line that names two or more items (a summary) is skipped. */
 export function parseClaudeAnswer(text: string): readonly AnswerRow[] {
   const rows = new Map<ItemId, AnswerRow>();
-  for (const raw of text.split(/\r?\n/)) {
+  let quoteCount = 0;
+  for (const fullLine of text.slice(0, MAX_ANSWER).split(/\r?\n/)) {
+    const raw = fullLine.slice(0, MAX_LINE);
     const ids = [...new Set(raw.match(/\bR[1-8]\b/g) ?? [])] as ItemId[];
     if (ids.length !== 1 || /^\s*\|?\s*:?-{3,}/.test(raw)) continue;
     const item = ids[0] as ItemId;
-    const quotes = QUOTE_PATTERNS.flatMap((pattern) => [...raw.matchAll(pattern)].map((match) => (match[1] as string).trim()));
+    const quotes = QUOTE_PATTERNS.flatMap((pattern) => [...raw.matchAll(pattern)].map((match) => (match[1] as string).trim())).slice(
+      0,
+      Math.max(0, MAX_QUOTES - quoteCount),
+    );
+    quoteCount += quotes.length;
     const { files, unknown } = citedFiles(raw);
     const refs = [...raw.replace(/"[^"]*"/g, " ").matchAll(REFERENCE)].map((match) => (match[1] as string).trim());
-    const numbers = [...raw.replace(/\bR[1-8]\b|\d{4}-\d{2}-\d{2}|[\w.-]+\.(?:md|csv|txt)/g, " ").matchAll(/(?<![\w.])(\d+(?:[.,]\d+)?)(?![\w])/g)].map((match) =>
+    const numbers = [...raw.replace(/\bR[1-8]\b|\d{4}-\d{2}-\d{2}|(?<![\w.-])[\w-][\w.-]{0,79}\.(?:md|csv|txt)/g, " ").matchAll(/(?<![\w.])(\d+(?:[.,]\d+)?)(?![\w])/g)].map((match) =>
       Number((match[1] as string).replace(",", ".")),
     );
     const previous = rows.get(item);

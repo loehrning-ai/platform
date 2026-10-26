@@ -15,7 +15,10 @@ import { NAME_APPROVAL, NAME_DRAFT, versionChains } from "./versions";
 
 export const MAX_LISTED = 2000;
 export const MAX_READ = 80;
-export const MAX_TEXT_BYTES = 2 * 1024 * 1024;
+/** Only the head of a text file is read: dates, approvals and "not met" sit at the top. */
+export const MAX_SLICE_BYTES = 64 * 1024;
+/** All reads of one visit together stop at this many bytes. */
+export const READ_BUDGET_BYTES = 8 * 1024 * 1024;
 export const TEXT_EXTENSIONS = /\.(txt|md|csv|tsv)$/i;
 
 export interface OwnEntry {
@@ -32,7 +35,7 @@ export interface OwnEntry {
   readonly listedInvalid?: boolean;
   /** The pasted line or the name carried a dd/mm/yyyy date that could be two days. */
   readonly listedAmbiguous?: boolean;
-  /** The file's text when it was read (a .txt, .md, .csv or .tsv under 2 MB). */
+  /** The first 64 KB of the file's text when it was read (a .txt, .md, .csv or .tsv). */
   readonly text: string | null;
 }
 
@@ -98,12 +101,22 @@ export function isIgnored(entry: Pick<OwnEntry, "name" | "size">): boolean {
 
 const isoOf = (ms: number) => new Date(ms).toISOString().slice(0, 10);
 
+/** One parse per file: a new audit date or window re-runs the tests, never the reading. */
+const DOCS = new WeakMap<OwnEntry, ReturnType<typeof readDoc>>();
+function docOf(entry: OwnEntry, text: string): ReturnType<typeof readDoc> {
+  const cached = DOCS.get(entry);
+  if (cached) return cached;
+  const doc = readDoc(entry.name, text);
+  DOCS.set(entry, doc);
+  return doc;
+}
+
 function assess(entry: OwnEntry, windowStart: string | null): OwnFile {
   const lock = entry.name.startsWith("~$");
   const notes: OwnNote[] = [];
   if (lock) notes.push("lock");
   if (entry.text !== null) {
-    const doc = readDoc(entry.name, entry.text);
+    const doc = docOf(entry, entry.text);
     const date = dateTest(doc, windowStart ?? "0000-01-01");
     const approval = approvalTest(doc);
     if (doc.meta.approvalOpen) notes.push("approvalOpen");

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { AuditContext } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
-import { checkAnswer, parseClaudeAnswer, type CheckedRow, type Flag } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-answer";
+import { checkAnswer, MAX_ANSWER, parseClaudeAnswer, type CheckedRow, type Flag } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-answer";
 import type { W05Copy } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/copy";
 import { formatPercent } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/counts";
 import { fill } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/fill";
@@ -56,6 +56,7 @@ export function QuoteProbe({
         <textarea
           className="w05-textarea"
           rows={6}
+          maxLength={MAX_ANSWER}
           value={text}
           spellCheck={false}
           onChange={(event) => {
