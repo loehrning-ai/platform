@@ -420,7 +420,13 @@
     document.addEventListener('click', onClick);
     document.addEventListener('pointerup', onPointerUp);
     ['mousemove', 'pointerdown', 'keydown'].forEach(function (type) { window.addEventListener(type, wake, { passive: true }); });
-    window.addEventListener('hashchange', function () { var h = fromHash(); if (h && (h.index !== pos.index || h.step !== pos.step)) go(h.index, h.step, false); });
+    window.addEventListener('hashchange', function () {
+      var h = fromHash();
+      if (!h || (h.index === pos.index && h.step === pos.step)) return;
+      // A typed appendix hash opens from the current main slide, so Escape returns there.
+      if (!isMain(h.index) && isMain(pos.index)) set('sessionStorage', RETURN_KEY, pos.index + ':' + pos.step);
+      go(h.index, h.step, false);
+    });
     setupRotateNote();
     paintVotes();
     paintTimers();

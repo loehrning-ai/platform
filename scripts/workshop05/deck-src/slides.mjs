@@ -114,6 +114,27 @@ function cover(d, c) {
 </div>`;
 }
 
+/** Slide 02: the host. The same short card in every workshop deck: photo, name, degree, three career stops; each stop inks as the line reaches it. */
+function host(d, c) {
+  const h = c.host;
+  const last = h.career.length - 1;
+  const stops = h.career
+    .map((stop, i) => `<li class="host-stop${i === last ? " host-own" : ""}"${rv(0, { delay: [0.28, 0.42, 0.72][i] ?? 0.72, span: 0.25 })}><i class="host-dot" aria-hidden="true"></i><b>${esc(stop.org)}</b><span>${esc(stop.role)}</span></li>`)
+    .join("");
+  return `<figure class="host-photo"><img src="./assets/tim-loehr.jpg" width="1100" height="1100" alt="${esc(h.alt)}" /></figure>
+<div class="host-copy">
+  <p class="host-kicker"${rv(0, { span: 0.4 })}>${esc(h.kicker)}</p>
+  <h2 class="host-name"${rv(0, { delay: 0.06, span: 0.45 })}>Tim Löhr</h2>
+  <p class="host-msc"${rv(0, { delay: 0.18, span: 0.4 })}><b>${esc(h.degree)}</b><span>${esc(h.school)}</span></p>
+  <div class="host-career">
+    <i class="host-track" aria-hidden="true"></i><i class="host-fill" aria-hidden="true"${rv(0, { delay: 0.3, span: 0.7 })}></i>
+    <ol class="host-stops">${stops}</ol>
+    <p class="host-now"${rv(0, { delay: 0.8, span: 0.2 })}><span>${esc(h.now)}</span></p>
+  </div>
+  <p class="host-line"${rv(0, { delay: 0.5, span: 0.4 })}>${esc(h.line)}</p>
+</div>`;
+}
+
 function request(d, c) {
   const rules = d.rules
     .map((rule, i) => `<li class="rule"><span class="rule-mark" aria-hidden="true"${rv(2, { delay: i * 0.12, span: 0.5 })}></span><span class="rule-text q" data-file="request_tannwald.md">${esc(rule)}</span><span class="rule-tag"${rv(2, { delay: i * 0.12 + 0.2, span: 0.4 })}>${esc(fill(c.request.ruleTags[i], { window: fmtDate(d.windowStart, c) })).replace(/ (%|h)$/, "\u00a0$1")}</span></li>`)
@@ -463,7 +484,8 @@ function a3(d, c) {
 /** The slides in deck order: id, route stop (null: none), build steps, minutes, kind, body. */
 export const SLIDES = [
   { id: "cover", route: null, steps: 0, minutes: 1, body: cover, title: null },
-  { id: "request", route: 0, steps: 3, minutes: 4, body: request, title: (c) => c.request.title, sub: (c, d) => fill(c.request.sub, { audit: fmtDate(d.audit, c), sendBy: fmtDate(d.sendBy, c) }) },
+  { id: "host", route: null, steps: 0, minutes: 1, body: host, title: null },
+  { id: "request", route: 0, steps: 3, minutes: 3, body: request, title: (c) => c.request.title, sub: (c, d) => fill(c.request.sub, { audit: fmtDate(d.audit, c), sendBy: fmtDate(d.sendBy, c) }) },
   { id: "draft", route: 0, steps: 4, minutes: 3, body: draft, title: (c) => c.draft.title, sub: (c) => c.draft.sub },
   { id: "folder", route: 1, steps: 2, minutes: 8, body: folder, title: (c) => c.folder.title, sub: (c) => c.folder.sub },
   { id: "tests", route: 2, steps: 5, minutes: 6, body: four, title: (c) => c.four.title, sub: (c) => c.four.sub },
