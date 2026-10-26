@@ -135,6 +135,16 @@ for (const edition of EDITIONS) {
       expect((await state(page)).id).toBe("result");
     });
 
+    test("a typed appendix hash returns to the slide and step it was typed on", async ({ page }) => {
+      await open(page, edition.file);
+      for (let press = 0; press < 4; press += 1) await page.keyboard.press("ArrowRight");
+      expect(await state(page)).toMatchObject({ id: "request", step: 2 });
+      await page.evaluate(() => { location.hash = "#a1/0"; });
+      await expect.poll(async () => (await state(page)).id, "the hash opens the appendix").toBe("a1");
+      await page.keyboard.press("Escape");
+      expect(await state(page), "Escape").toMatchObject({ id: "request", step: 2 });
+    });
+
     test("the presenter drives the deck; its preview frame binds no keys", async ({ page, context }) => {
       await open(page, edition.file);
       const presenter = await context.newPage();
