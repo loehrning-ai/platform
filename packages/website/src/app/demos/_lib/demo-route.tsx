@@ -3,7 +3,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { DemoComponentProps } from "@/components/demos/demo-page";
 import { DemoPageV3 } from "@/components/demos/shell/demo-page-v3";
+import { DemoPageV4 } from "@/components/demos/shell/demo-page-v4";
 import type { Beat } from "@/lib/demo-beats";
+import { demoShell } from "@/lib/demo-intros";
 import { getDemoForLocale, type DemoSlug } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
@@ -47,8 +49,9 @@ export async function demoMetadata(slug: string): Promise<Metadata> {
 /**
  * One demo route: the shell around the demo component the route file passes
  * in. Each route file imports only its own component (and so its own CSS),
- * so a demo page ships one demo, not all five. Every demo runs on the v3
- * shell and passes its beats (src/lib/demo-cases/<slug>/beats.ts).
+ * so a demo page ships one demo, not all six. A demo runs on the v3 shell
+ * until its intro.ts says SHELL = "v4" (the Glas shell); either way it
+ * passes its beats (src/lib/demo-cases/<slug>/beats.ts).
  */
 export async function renderDemoRoute(
   slug: DemoSlug,
@@ -112,7 +115,11 @@ export async function renderDemoRoute(
   return (
     <>
       <JsonLd data={jsonLd} id={`demo-${demo.slug}-jsonld`} />
-      <DemoPageV3 demo={demo} locale={locale} beats={beats} Demo={Demo} />
+      {demoShell(demo.slug) === "v4" ? (
+        <DemoPageV4 demo={demo} locale={locale} beats={beats} Demo={Demo} />
+      ) : (
+        <DemoPageV3 demo={demo} locale={locale} beats={beats} Demo={Demo} />
+      )}
     </>
   );
 }

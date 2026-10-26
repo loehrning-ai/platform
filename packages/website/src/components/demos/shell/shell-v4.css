@@ -1,0 +1,224 @@
+/*
+ * The v4 demo page (Glas). Scoped under [data-demo-v4]; demo CSS never
+ * selects these classes (demo-contract.test.ts). The look of every glass
+ * surface lives in ../glas/glas.css.
+ *
+ * Phone budget at 390 x 664: the fold is the viewport minus the compact nav
+ * and the tab bar (560px). The bar takes 44, the gap 8; the stage gets the
+ * rest, so the intro card (budget 470) and its "Starten" sit in the first
+ * screen, and after the start the dock does.
+ */
+[data-demo-v4] {
+  --demo-fold: calc(100svh - var(--nav-h-compact) - var(--tabbar-h) - env(safe-area-inset-bottom, 0px));
+  --demo4-bar-h: 44px;
+  --demo4-stage-h: max(480px, calc(var(--demo-fold) - var(--demo4-bar-h) - 8px));
+  background-color: var(--color-background);
+  padding-bottom: 48px;
+}
+@media (min-width: 64rem) {
+  [data-demo-v4] {
+    --demo-fold: calc(100svh - var(--nav-h));
+    --demo4-stage-h: clamp(560px, calc(100svh - var(--nav-h) - var(--demo4-bar-h) - 40px), 760px);
+    padding-bottom: 80px;
+  }
+}
+
+.demo4-bar {
+  display: flex;
+  max-width: 75rem;
+  height: var(--demo4-bar-h);
+  margin: 0 auto;
+  align-items: center;
+  gap: 4px;
+  padding: 0 16px;
+}
+.demo4-bar .demo-bar-back {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-left: -10px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  color: var(--color-foreground);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.demo4-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.demo4-chip {
+  display: inline-flex;
+  flex: none;
+  min-height: 32px;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 9999px;
+  background-color: rgb(18 18 18 / 0.07);
+  color: var(--color-foreground);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo4-bar .demo-bar-back:hover,
+  .demo4-chip:hover {
+    background-color: rgb(18 18 18 / 0.12);
+  }
+}
+
+.demo4-mount {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 0 8px;
+}
+@media (min-width: 40rem) {
+  .demo4-mount {
+    padding: 0 16px;
+  }
+}
+
+/* The stage: the field, the data, the caption and the dock in one rounded plate. */
+.demo4-stage {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  height: var(--demo4-stage-h);
+  margin: 0;
+  padding: 8px;
+  border-radius: var(--glas-r-stage);
+  color: var(--glas-fg);
+}
+@media (min-width: 64rem) {
+  .demo4-stage {
+    gap: 12px;
+    padding: 16px;
+  }
+}
+.demo4-data {
+  min-height: 0;
+  min-width: 0;
+}
+.demo4-caption {
+  padding: 12px 16px;
+  font-size: 1.0625rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+  --r: var(--glas-r-cardInStage, 24px);
+}
+.demo4-caption > p {
+  margin: 0;
+}
+.demo4-caption > p + p {
+  margin-top: 6px;
+}
+.demo4-dock-slot {
+  min-width: 0;
+}
+.demo4-dock {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  --r: 24px;
+}
+.demo4-dock .glas-weg {
+  flex-wrap: wrap;
+}
+.demo4-dock .glas-weg-step {
+  order: 3;
+  flex-basis: 100%;
+  padding: 0 8px 2px;
+}
+@media (min-width: 40rem) {
+  .demo4-dock .glas-weg {
+    flex-wrap: nowrap;
+  }
+  .demo4-dock .glas-weg-step {
+    order: 0;
+    flex-basis: auto;
+    padding: 0;
+  }
+}
+.demo4-dock .glas-weg-buttons {
+  margin-left: auto;
+}
+.demo4-dock-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.demo4-skipped {
+  margin: 0;
+  padding: 0 4px;
+}
+.demo4-restart {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  padding: 0;
+}
+.demo4-restart .glas-btn[data-variant="icon"] {
+  background: transparent;
+}
+
+/* The intro card sits over the living field; on a phone it rests at the bottom, in thumb reach. */
+.demo4-intro-layer {
+  position: absolute;
+  inset: 8px;
+  z-index: 5;
+  display: grid;
+  align-items: end;
+  justify-items: center;
+}
+@media (min-width: 64rem) {
+  .demo4-intro-layer {
+    inset: 16px;
+    align-items: center;
+  }
+}
+.demo4-intro-layer[data-leaving] {
+  pointer-events: none;
+}
+
+.demo4-below {
+  display: grid;
+  max-width: 75rem;
+  gap: 8px;
+  margin: 20px auto 0;
+  padding: 0 16px;
+}
+.demo4-question {
+  max-width: 60ch;
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.demo4-note {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--color-muted-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.demo4-less {
+  max-width: 34rem;
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 24px;
+  background-color: rgb(18 18 18 / 0.05);
+}

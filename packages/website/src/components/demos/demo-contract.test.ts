@@ -1,7 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { validateBeats, type Beat } from "@/lib/demo-beats";
+import { validateBeats, validateBeatsV4, type Beat } from "@/lib/demo-beats";
+import { demoShell } from "@/lib/demo-intros";
 import { DEMO_TAKEHOME } from "@/lib/demo-takehome";
 import { DEMO_SLUGS } from "@/lib/demos";
 import { listZipEntries } from "@/lib/zip/read";
@@ -147,13 +148,15 @@ describe.each(DEMO_SLUGS)("demo folder contract: %s", (slug) => {
 });
 
 /**
- * The v3 shell contract. All five demos run on the shell, so it holds for
- * every demo in the registry.
+ * The shell contract, v3 or v4 by SHELL in src/lib/demo-cases/<slug>/intro.ts.
  *
- *   src/lib/demo-cases/<slug>/beats.ts   BEATS: commit, reveal, tool, apply 0-3, own, takehome
+ *   src/lib/demo-cases/<slug>/beats.ts   BEATS: v3 commit, reveal, tool, apply 0-3, own, takehome;
+ *                                        v4 starts with a commit, one own beat, ends with takehome
  *   src/app/demos/<slug>/page.tsx         passes BEATS to renderDemoRoute
  *   src/lib/demo-takehome.ts              an entry; every beat kitFile is in the kit zip
- *   the demo renders DemoStage and DemoLever from @/components/demos/shell
+ *   the demo renders DemoStage and DemoLever (v3) or DemoGlasStage and DemoDock (v4)
+ *   from @/components/demos/shell; its CSS never selects the shell or Glas and never
+ *   sets backdrop-filter (the look lives in src/components/demos/glas/glas.css)
  */
 const SHELL_SELECTORS = [
   "[data-demo-page",
@@ -185,18 +188,25 @@ const SHELL_SELECTORS = [
   ".demo-aside",
   ".demo-main",
   ".glass",
+  ".glas",
+  "[data-glas",
+  "[data-demo-v4",
+  "[data-demo-dock",
+  "[data-demo-caption",
+  ".demo4-",
 ];
 
 
-describe("v3 shell contract", () => {
-  it.each(DEMO_SLUGS)("%s meets the v3 contract", async (slug) => {
+describe("shell contract (v3 or v4)", () => {
+  it.each(DEMO_SLUGS)("%s meets the contract of its shell", async (slug) => {
     const typed = slug;
+    const v4 = demoShell(slug) === "v4";
     // beats: the kinds in order, at most eight
     expect(existsSync(join(SRC, `lib/demo-cases/${slug}/beats.ts`)), "beats.ts").toBe(true);
     const beatsSource = read(`lib/demo-cases/${slug}/beats.ts`);
     expect(beatsSource, "beats.ts is plain data, not server-only").not.toMatch(/server-only/);
     const { BEATS } = (await import(`@/lib/demo-cases/${slug}/beats.ts`)) as { BEATS: readonly Beat[] };
-    expect(validateBeats(BEATS)).toEqual([]);
+    expect(v4 ? validateBeatsV4(BEATS) : validateBeats(BEATS)).toEqual([]);
 
     // the route passes the beats
     const page = read(`app/demos/${slug}/page.tsx`);
@@ -223,8 +233,8 @@ describe("v3 shell contract", () => {
     const files = sources(slug);
     const code = files.filter((file) => /\.tsx?$/.test(file)).map((file) => read(file)).join("\n");
     expect(code).toMatch(/from "@\/components\/demos\/shell"/);
-    expect(code).toMatch(/<DemoStage\b/);
-    expect(code).toMatch(/<DemoLever\b/);
+    expect(code).toMatch(v4 ? /<DemoGlasStage\b/ : /<DemoStage\b/);
+    expect(code).toMatch(v4 ? /<DemoDock\b/ : /<DemoLever\b/);
     for (const file of files) {
       const text = read(file);
       // the page never scrolls itself: scrolling goes through the shell's revealIfOffscreen in a tap handler
@@ -234,7 +244,7 @@ describe("v3 shell contract", () => {
       expect(text, file).not.toMatch(/onKeyDown=\{[^}]*\b(?:ArrowLeft|ArrowRight|Escape)\b/);
       if (file.endsWith(".css")) {
         for (const selector of SHELL_SELECTORS) expect(text, `${file} selects ${selector}`).not.toContain(selector);
-        // glass only through the one shared .glass class in globals.css
+        // glass only through the shared Werkglas (.glass) and Glas (glas.css) layers
         expect(text, file).not.toMatch(/backdrop-filter/);
       }
     }
