@@ -19,7 +19,7 @@ import { settleFontsAndFrame } from "./fixtures/settle";
  *   5. Below `lg` the header is the compact companion bar: flush with the top
  *      edge of the viewport, exactly `--nav-h-compact` tall, and that is the
  *      offset `<main>` reserves, so content begins directly beneath it. From
- *      `lg` the inset square bar floats and `--nav-h` reserves it instead.
+ *      `lg` the inset studio pill returns and `--nav-h` reserves it instead.
  *
  * Assertions target GEOMETRY, roles and structural anchors (data-section, the
  * hamburger's aria-label, the wrapper class, the TOC landmark), never prose, so a
@@ -297,7 +297,7 @@ test.describe("responsive: navigation hamburger breakpoint", () => {
 });
 
 test.describe("responsive: compact companion top bar", () => {
-  test("is flush and exactly --nav-h-compact below lg, an inset square bar from lg", async ({
+  test("is flush and exactly --nav-h-compact below lg, an inset pill from lg", async ({
     page,
   }) => {
     // Six measured widths on one loaded page. Nothing here depends on lazy
@@ -329,7 +329,7 @@ test.describe("responsive: compact companion top bar", () => {
       ).toBeCloseTo(shell.cssViewportWidth, 0);
       expect(
         shell.cornerRadius,
-        `a flush bar must stay square at ${cssWidth}px`,
+        `a flush bar must not keep the pill rounding at ${cssWidth}px`,
       ).toBe("0px");
     }
 
@@ -339,7 +339,7 @@ test.describe("responsive: compact companion top bar", () => {
 
       expect(
         shell.barTop,
-        `the floating bar lost its outer inset at ${cssWidth}px`,
+        `the studio pill lost its outer inset at ${cssWidth}px`,
       ).toBeGreaterThan(0);
       expect(
         shell.mainOffset,
@@ -347,17 +347,16 @@ test.describe("responsive: compact companion top bar", () => {
       ).toBeCloseTo(shell.desktopToken, 0);
       expect(
         shell.barBottom,
-        `the bar overlaps the content offset at ${cssWidth}px`,
+        `the pill overlaps the content offset at ${cssWidth}px`,
       ).toBeLessThanOrEqual(shell.mainOffset + 0.5);
       expect(
         shell.barWidth,
-        `the bar runs edge to edge at ${cssWidth}px`,
+        `the pill runs edge to edge at ${cssWidth}px`,
       ).toBeLessThan(shell.cssViewportWidth);
-      // Werkglas: hard edges, the floating bar is square like everything else.
       expect(
         shell.cornerRadius,
-        `the floating bar is rounded at ${cssWidth}px`,
-      ).toBe("0px");
+        `the pill lost its rounding at ${cssWidth}px`,
+      ).not.toBe("0px");
     }
   });
 });
