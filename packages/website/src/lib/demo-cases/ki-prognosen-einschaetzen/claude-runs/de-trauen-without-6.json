@@ -1,0 +1,2258 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-trauen-without-6",
+  "slug": "ki-prognosen-einschaetzen",
+  "locale": "de",
+  "prompt_id": "trauen",
+  "take": 6,
+  "recorded_at": "2026-10-26T16:46:34Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Im Anhang sind unser Wochenabsatz mit der Prognose aus der Warenwirtschaft (linsensuppe-woechentlich.csv), der Export des Tools (tool-export.txt) und unsere Kosten je Glas (kosten.md). Das Tool sagt 94,2 % Prognosegenauigkeit. Können wir der Prognose trauen, und wie viele Gläser kochen wir für die Woche ab 29.12.2025? Heute ist Sonntag, der 28.12.2025.",
+  "kit_zip": "public/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+  "kit_files": [
+    {
+      "name": "linsensuppe-woechentlich.csv",
+      "path": "prognose-pruefen-kit/daten/linsensuppe-woechentlich.csv",
+      "bytes": 2402,
+      "sha256": "693cbcf1c842d11ed7d0db37a206b4bb42e8cd370262dcc92377a8b1d1183924"
+    },
+    {
+      "name": "tool-export.txt",
+      "path": "prognose-pruefen-kit/daten/tool-export.txt",
+      "bytes": 569,
+      "sha256": "e175fb5ba3779d922e114485dc8dd9e7cb7a429615ecfcc742980c2e82c786df"
+    },
+    {
+      "name": "kosten.md",
+      "path": "prognose-pruefen-kit/daten/kosten.md",
+      "bytes": 668,
+      "sha256": "d4cb28239dcd297c6b4adb03d63744237b07610f2e6c5a7ec977cd43a6d7151a"
+    }
+  ],
+  "skill": null,
+  "skill_name": "prognose-pruefen",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 4234,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la; cat tool-export.txt kosten.md; cat linsensuppe-woechentlich.csv",
+        "description": "List and show attached files"
+      }
+    },
+    {
+      "t_ms": 5249,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 19225,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'EOF'\nimport csv,statistics as st\nrows=list(csv.DictReader(open('linsensuppe-woechentlich.csv'),delimiter=';'))\nprint(len(rows))\nfrom collections import Counter\nprint([k for k,v in Counter(r['woche'] for r in rows).items() if v>1])\ndef acc(sel):\n    a=sum(abs(int(r['prognose'])-int(r['ist'])) for r in sel); s=sum(int(r['ist']) for r in sel)\n    return 1-a/s\ndef ok(r): return r['ist'] and r['prognose']\ny25=[r for r in rows if '2024-12-30'<=r['woche']<='2025-12-22' and ok(r)]\nprint('2025 all',len(y25),acc(y25))\ny25n=[r for r in y25 if 'ausverkauft' not in r['hinweis']]\nprint('2025 no sold-out',len(y25n),acc(y25n))\nfor name,sel in [('2025',y25),('ab 2025-04-07',[r for r in y25 if r['woche']>='2025-04-07']),('ab 2025-06',[r for r in y25 if r['woche']>='2025-06-01']),('2024',[r for r in rows if r['woche']<'2024-12-30' and ok(r)])]:\n    e=[int(r['ist'])-int(r['prognose']) for r in sel if 'ausverkauft' not in r['hinweis']]\n    print(name,len(e),'bias',st.mean(e),'sd',st.pstdev(e),'mae',st.mean(map(abs,e)), 'acc',acc([r for r in sel if 'ausverkauft' not in r['hinweis']]))\n# ratio errors in stable period\nsel=[r for r in rows if r['woche']>='2025-05-19' and ok(r) and not r['hinweis']]\ne=sorted(int(r['ist'])-int(r['prognose']) for r in sel)\nprint(len(e),e)\nrat=sorted(int(r['ist'])/int(r['prognose']) for r in sel); print([round(x,3) for x in rat])\n# include 2024 too (pre-delisting errors are relative)\nsel2=[r for r in rows if ok(r) and not r['hinweis'] and r['woche']!='2025-04-07' and not('2025-04-07'<r['woche']<'2025-05-19')]\nrat2=sorted(int(r['ist'])/int(r['prognose']) for r in sel2); print(len(rat2))\nimport math\nfor q in (0.5,0.79,0.8):\n  for R in (rat,rat2):\n    k=q*(len(R)-1); print(q, round(729*(R[math.floor(k)]+(R[math.ceil(k)]-R[math.floor(k)])*(k-math.floor(k)))))\n# post-delisting period Apr7-May12\nfor r in rows:\n    if '2025-03-31'<=r['woche']<='2025-06-02': print(r)\nEOF",
+        "description": "Recompute accuracy, bias and error quantiles"
+      }
+    },
+    {
+      "t_ms": 19371,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 35793,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'EOF'\nimport csv\nrows=list(csv.DictReader(open('linsensuppe-woechentlich.csv'),delimiter=';'))\nsel=[r for r in rows if r['woche']>='2025-05-19' and r['ist'] and r['prognose'] and not r['hinweis']]\nrat=[int(r['ist'])/int(r['prognose']) for r in sel]\nfor med,lab in [(729,'Prognose'),(729*0.955,'Feiertags-Abschlag 4,5%')]:\n  out=[]\n  for q in range(690,800,10):\n    c=sum(1.5*max(0,med*x-q)+0.4*max(0,q-med*x) for x in rat)/len(rat)\n    out.append(f\"{q}:{c:.1f}\")\n  print(lab,' '.join(out))\nEOF",
+        "description": "Expected cost per production quantity"
+      }
+    },
+    {
+      "t_ms": 35923,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "**Kur"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "z g"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "esagt:** Der"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": " Prognose kön"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "nt ihr im"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": " Groß"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "en und"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": " Ganzen trauen"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": ". Die 94,2 "
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "% sagen aber wen"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "ig dar"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "über,"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": " wie vi"
+    },
+    {
+      "t_ms": 49152,
+      "kind": "text",
+      "chunk": "ele Gläser "
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "ihr kochen sol"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "ltet. M"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "ein Vorschlag für"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " die Woche ab 29"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": ".12.2025:"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " **740 Gläser**"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " (Prognose: 729"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": ").\n\n## St"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "immen die 94,2"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " %?\n\nJa"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": ", ich kom"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "me m"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "it der"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " Definition a"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "us dem Export auf gen"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "au **"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "94,2 %**"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " (50 Wochen,"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " ohne die Woche "
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "10"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": ".03."
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " mit „"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "ausverkauft“"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "). Nimmt man"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": " di"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "ese Woche d"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "azu, s"
+    },
+    {
+      "t_ms": 49153,
+      "kind": "text",
+      "chunk": "ind es 93,9 %"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": ". Am"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "Aus"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "schluss li"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "egt es"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " also nicht. Die"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " Zahl h"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "at aber z"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "wei Sch"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "wächen:\n\n- **"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "Sie zeigt nic"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "ht, in"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " welche Richtung die"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " Prognose dan"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "ebenliegt.** "
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "2"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "025 lag s"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "ie im Sch"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "nitt **17 G"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "läser pro Woche z"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "u hoch**. Das"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " kommt fast ganz"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " aus der Z"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "eit nach d"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "em"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": " Auslisten dur"
+    },
+    {
+      "t_ms": 49154,
+      "kind": "text",
+      "chunk": "ch die Bio-Mark"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "t-Kette am 07"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": ".04. Dan"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "ach lag die Prognose"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " rund "
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "8 Wochen lang"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "40 bis 80 "
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "Gläser zu hoch"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " bis sie sich ang"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "epasst hat"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "te. Das"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " Modell er"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "f"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "ährt also"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " n"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "icht von sel"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "bst, wenn ein"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " Kunde wegfäll"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "t. So"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " et"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "was müsst ihr"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " kün"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "ftig selbst e"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "intragen.\n- **"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "Seit Juni 2025"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " läuft die Progn"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "ose gut.** In"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": " dieser Zeit li"
+    },
+    {
+      "t_ms": 49155,
+      "kind": "text",
+      "chunk": "egt sie im"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " Schnitt nur "
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "3 Gläser da"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "neben, typ"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "isch et"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "wa "
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "±"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "24 Gläser (r"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "und 4 %), und er"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "reicht 95,7 "
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "%.\n\nWas"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " m"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "ir in"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " den Daten no"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "ch aufgefallen "
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "ist:\n- **Fe"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "iertagswochen:"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "** In allen drei W"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "ochen um"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " Weihnachten und"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " Neujahr lag die"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " Prognose zu hoch"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": ":"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " 23"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": ".12.2024 um "
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "29, 30.12.2"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "024 um 25 "
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "und 22.12.2025"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " um 43 Glä"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": "ser. Der Export"
+    },
+    {
+      "t_ms": 49156,
+      "kind": "text",
+      "chunk": " n"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ennt nur einen A"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ktionskalender,"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " keinen Feiertag"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "skalender. Dr"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ei Wochen s"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ind w"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "enig, aber sie z"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "eigen alle in"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " dieselbe Richt"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ung.\n- **Aus"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "verkaufte Woch"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "en:** Hier "
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ist der tatsächliche"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " B"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "edarf unbekannt"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": ", weil n"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ur der"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " Absatz b"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "is zum le"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "eren L"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ager er"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "fasst ist. De"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "shalb ist es richt"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ig, diese Wochen"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " her"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "auszunehmen."
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "\n- **Doppelte"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " Zeile:** Die"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " Woche 2024-09-"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "16 steht z"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "weimal in der CSV"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": ". Das betrifft n"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": "ur 2024,"
+    },
+    {
+      "t_ms": 49157,
+      "kind": "text",
+      "chunk": " nicht die K"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ennzahl für 2025"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "."
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "\n\n## W"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ie viele Gläser k"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ochen?\n\nMit"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " Kantine k"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ostet ein fehlend"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "es Glas 1,50"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " € und ein übriges"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " Glas 0,40 "
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "€. Fehlm"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "engen sind also f"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ast vi"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ermal so teuer."
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " De"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "shalb sollte die"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " Menge so h"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "och sein, dass "
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ihr in"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " etwa **79 %"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " der Wochen** nic"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "ht ausverkauft se"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": "id (1,50 /"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": " (1,50 + 0"
+    },
+    {
+      "t_ms": 49158,
+      "kind": "text",
+      "chunk": ",40))."
+    },
+    {
+      "t_ms": 49204,
+      "kind": "text",
+      "chunk": "\n\nIch habe die er"
+    },
+    {
+      "t_ms": 49247,
+      "kind": "text",
+      "chunk": "warteten Kosten"
+    },
+    {
+      "t_ms": 49304,
+      "kind": "text",
+      "chunk": " mit den Prognosef"
+    },
+    {
+      "t_ms": 49355,
+      "kind": "text",
+      "chunk": "ehlern seit Mit"
+    },
+    {
+      "t_ms": 49398,
+      "kind": "text",
+      "chunk": "te Mai 2025 "
+    },
+    {
+      "t_ms": 49447,
+      "kind": "text",
+      "chunk": "dur"
+    },
+    {
+      "t_ms": 49498,
+      "kind": "text",
+      "chunk": "chgerechnet,"
+    },
+    {
+      "t_ms": 49548,
+      "kind": "text",
+      "chunk": " und"
+    },
+    {
+      "t_ms": 49597,
+      "kind": "text",
+      "chunk": " zwar für zwei"
+    },
+    {
+      "t_ms": 49648,
+      "kind": "text",
+      "chunk": " Fälle:\n\n| K"
+    },
+    {
+      "t_ms": 49697,
+      "kind": "text",
+      "chunk": "ochm"
+    },
+    {
+      "t_ms": 49747,
+      "kind": "text",
+      "chunk": "enge | Prognose st"
+    },
+    {
+      "t_ms": 49798,
+      "kind": "text",
+      "chunk": "immt (729) |"
+    },
+    {
+      "t_ms": 49848,
+      "kind": "text",
+      "chunk": " Feiertagswoche "
+    },
+    {
+      "t_ms": 49898,
+      "kind": "text",
+      "chunk": "~"
+    },
+    {
+      "t_ms": 49954,
+      "kind": "text",
+      "chunk": "4,5 % sch"
+    },
+    {
+      "t_ms": 50004,
+      "kind": "text",
+      "chunk": "wächer |\n|---|"
+    },
+    {
+      "t_ms": 50055,
+      "kind": "text",
+      "chunk": "---|---|\n| 720"
+    },
+    {
+      "t_ms": 50098,
+      "kind": "text",
+      "chunk": " | 34,9 €"
+    },
+    {
+      "t_ms": 50149,
+      "kind": "text",
+      "chunk": " | **"
+    },
+    {
+      "t_ms": 50200,
+      "kind": "text",
+      "chunk": "22,3 €** |"
+    },
+    {
+      "t_ms": 50254,
+      "kind": "text",
+      "chunk": "\n| 740"
+    },
+    {
+      "t_ms": 50299,
+      "kind": "text",
+      "chunk": " | 25,9 €"
+    },
+    {
+      "t_ms": 50367,
+      "kind": "text",
+      "chunk": " | 24,8 € |"
+    },
+    {
+      "t_ms": 50399,
+      "kind": "text",
+      "chunk": "\n| 750 | **"
+    },
+    {
+      "t_ms": 50449,
+      "kind": "text",
+      "chunk": "23,5 €** | "
+    },
+    {
+      "t_ms": 50504,
+      "kind": "text",
+      "chunk": "27,5 € |"
+    },
+    {
+      "t_ms": 50549,
+      "kind": "text",
+      "chunk": "\n| 760 | 23,"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": "6 € | 30,9"
+    },
+    {
+      "t_ms": 50653,
+      "kind": "text",
+      "chunk": " € |\n\nW"
+    },
+    {
+      "t_ms": 50699,
+      "kind": "text",
+      "chunk": "enn man"
+    },
+    {
+      "t_ms": 50749,
+      "kind": "text",
+      "chunk": " der Prognose vo"
+    },
+    {
+      "t_ms": 50800,
+      "kind": "text",
+      "chunk": "ll vertraut, ist"
+    },
+    {
+      "t_ms": 50856,
+      "kind": "text",
+      "chunk": " **"
+    },
+    {
+      "t_ms": 50901,
+      "kind": "text",
+      "chunk": "750**"
+    },
+    {
+      "t_ms": 50948,
+      "kind": "text",
+      "chunk": " am gün"
+    },
+    {
+      "t_ms": 51000,
+      "kind": "text",
+      "chunk": "stigsten. M"
+    },
+    {
+      "t_ms": 51050,
+      "kind": "text",
+      "chunk": "it dem Feiertag"
+    },
+    {
+      "t_ms": 51100,
+      "kind": "text",
+      "chunk": "sabschlag wären es"
+    },
+    {
+      "t_ms": 51149,
+      "kind": "text",
+      "chunk": " et"
+    },
+    {
+      "t_ms": 51199,
+      "kind": "text",
+      "chunk": "wa **720**. **740"
+    },
+    {
+      "t_ms": 51250,
+      "kind": "text",
+      "chunk": "** li"
+    },
+    {
+      "t_ms": 51300,
+      "kind": "text",
+      "chunk": "egt in beiden F"
+    },
+    {
+      "t_ms": 51359,
+      "kind": "text",
+      "chunk": "ällen nur "
+    },
+    {
+      "t_ms": 51399,
+      "kind": "text",
+      "chunk": "2"
+    },
+    {
+      "t_ms": 51451,
+      "kind": "text",
+      "chunk": " bis 3 € über"
+    },
+    {
+      "t_ms": 51499,
+      "kind": "text",
+      "chunk": " dem j"
+    },
+    {
+      "t_ms": 51549,
+      "kind": "text",
+      "chunk": "eweils"
+    },
+    {
+      "t_ms": 51600,
+      "kind": "text",
+      "chunk": " besten W"
+    },
+    {
+      "t_ms": 51650,
+      "kind": "text",
+      "chunk": "ert. Deshalb emp"
+    },
+    {
+      "t_ms": 51700,
+      "kind": "text",
+      "chunk": "fehle ich 740."
+    },
+    {
+      "t_ms": 51754,
+      "kind": "text",
+      "chunk": "\n\n**"
+    },
+    {
+      "t_ms": 51801,
+      "kind": "text",
+      "chunk": "B"
+    },
+    {
+      "t_ms": 51848,
+      "kind": "text",
+      "chunk": "itte v"
+    },
+    {
+      "t_ms": 51907,
+      "kind": "text",
+      "chunk": "or"
+    },
+    {
+      "t_ms": 51964,
+      "kind": "text",
+      "chunk": "her kl"
+    },
+    {
+      "t_ms": 52006,
+      "kind": "text",
+      "chunk": "ären:** Holt die"
+    },
+    {
+      "t_ms": 52048,
+      "kind": "text",
+      "chunk": " Betriebskantine am"
+    },
+    {
+      "t_ms": 52112,
+      "kind": "text",
+      "chunk": " Sonntag, 04."
+    },
+    {
+      "t_ms": 52149,
+      "kind": "text",
+      "chunk": "01.2026, w"
+    },
+    {
+      "t_ms": 52207,
+      "kind": "text",
+      "chunk": "irklich ab? W"
+    },
+    {
+      "t_ms": 52262,
+      "kind": "text",
+      "chunk": "eg"
+    },
+    {
+      "t_ms": 52298,
+      "kind": "text",
+      "chunk": "en der Feiertage "
+    },
+    {
+      "t_ms": 52349,
+      "kind": "text",
+      "chunk": "ist das nicht sicher"
+    },
+    {
+      "t_ms": 52399,
+      "kind": "text",
+      "chunk": ". "
+    },
+    {
+      "t_ms": 52448,
+      "kind": "text",
+      "chunk": "Ohne Kantine kost"
+    },
+    {
+      "t_ms": 52501,
+      "kind": "text",
+      "chunk": "et ein übriges Gl"
+    },
+    {
+      "t_ms": 52549,
+      "kind": "text",
+      "chunk": "as 1,60 €"
+    },
+    {
+      "t_ms": 52599,
+      "kind": "text",
+      "chunk": " und ist dam"
+    },
+    {
+      "t_ms": 52648,
+      "kind": "text",
+      "chunk": "it te"
+    },
+    {
+      "t_ms": 52700,
+      "kind": "text",
+      "chunk": "urer als ein fehl"
+    },
+    {
+      "t_ms": 52749,
+      "kind": "text",
+      "chunk": "endes (1,50 €"
+    },
+    {
+      "t_ms": 52802,
+      "kind": "text",
+      "chunk": "). Dann sol"
+    },
+    {
+      "t_ms": 52848,
+      "kind": "text",
+      "chunk": "ltet ihr e"
+    },
+    {
+      "t_ms": 52899,
+      "kind": "text",
+      "chunk": "her kn"
+    },
+    {
+      "t_ms": 52950,
+      "kind": "text",
+      "chunk": "app k"
+    },
+    {
+      "t_ms": 52998,
+      "kind": "text",
+      "chunk": "ochen, etwa **700"
+    },
+    {
+      "t_ms": 53049,
+      "kind": "text",
+      "chunk": " bis 720 G"
+    },
+    {
+      "t_ms": 53101,
+      "kind": "text",
+      "chunk": "läser**."
+    },
+    {
+      "t_ms": 53149,
+      "kind": "text",
+      "chunk": "\n\nÄrger im"
+    },
+    {
+      "t_ms": 53201,
+      "kind": "text",
+      "chunk": " Laden über ein lee"
+    },
+    {
+      "t_ms": 53251,
+      "kind": "text",
+      "chunk": "res Regal habe ich"
+    },
+    {
+      "t_ms": 53299,
+      "kind": "text",
+      "chunk": " w"
+    },
+    {
+      "t_ms": 53349,
+      "kind": "text",
+      "chunk": "ie in `kosten.md"
+    },
+    {
+      "t_ms": 53410,
+      "kind": "text",
+      "chunk": "` v"
+    },
+    {
+      "t_ms": 53448,
+      "kind": "text",
+      "chunk": "orgeg"
+    },
+    {
+      "t_ms": 53499,
+      "kind": "text",
+      "chunk": "eben nicht e"
+    },
+    {
+      "t_ms": 53548,
+      "kind": "text",
+      "chunk": "ingerechnet. W"
+    },
+    {
+      "t_ms": 53599,
+      "kind": "text",
+      "chunk": "enn ihr ihn"
+    },
+    {
+      "t_ms": 53648,
+      "kind": "text",
+      "chunk": " in Euro ansetz"
+    },
+    {
+      "t_ms": 53698,
+      "kind": "text",
+      "chunk": "t, ver"
+    },
+    {
+      "t_ms": 53749,
+      "kind": "text",
+      "chunk": "schiebt sich die"
+    },
+    {
+      "t_ms": 53804,
+      "kind": "text",
+      "chunk": " Empfehlung n"
+    },
+    {
+      "t_ms": 53844,
+      "kind": "text",
+      "chunk": "ach oben."
+    }
+  ],
+  "final_text": "**Kurz gesagt:** Der Prognose könnt ihr im Großen und Ganzen trauen. Die 94,2 % sagen aber wenig darüber, wie viele Gläser ihr kochen solltet. Mein Vorschlag für die Woche ab 29.12.2025: **740 Gläser** (Prognose: 729).\n\n## Stimmen die 94,2 %?\n\nJa, ich komme mit der Definition aus dem Export auf genau **94,2 %** (50 Wochen, ohne die Woche 10.03. mit „ausverkauft“). Nimmt man diese Woche dazu, sind es 93,9 %. Am Ausschluss liegt es also nicht. Die Zahl hat aber zwei Schwächen:\n\n- **Sie zeigt nicht, in welche Richtung die Prognose danebenliegt.** 2025 lag sie im Schnitt **17 Gläser pro Woche zu hoch**. Das kommt fast ganz aus der Zeit nach dem Auslisten durch die Bio-Markt-Kette am 07.04. Danach lag die Prognose rund 8 Wochen lang 40 bis 80 Gläser zu hoch, bis sie sich angepasst hatte. Das Modell erfährt also nicht von selbst, wenn ein Kunde wegfällt. So etwas müsst ihr künftig selbst eintragen.\n- **Seit Juni 2025 läuft die Prognose gut.** In dieser Zeit liegt sie im Schnitt nur 3 Gläser daneben, typisch etwa ±24 Gläser (rund 4 %), und erreicht 95,7 %.\n\nWas mir in den Daten noch aufgefallen ist:\n- **Feiertagswochen:** In allen drei Wochen um Weihnachten und Neujahr lag die Prognose zu hoch: 23.12.2024 um 29, 30.12.2024 um 25 und 22.12.2025 um 43 Gläser. Der Export nennt nur einen Aktionskalender, keinen Feiertagskalender. Drei Wochen sind wenig, aber sie zeigen alle in dieselbe Richtung.\n- **Ausverkaufte Wochen:** Hier ist der tatsächliche Bedarf unbekannt, weil nur der Absatz bis zum leeren Lager erfasst ist. Deshalb ist es richtig, diese Wochen herauszunehmen.\n- **Doppelte Zeile:** Die Woche 2024-09-16 steht zweimal in der CSV. Das betrifft nur 2024, nicht die Kennzahl für 2025.\n\n## Wie viele Gläser kochen?\n\nMit Kantine kostet ein fehlendes Glas 1,50 € und ein übriges Glas 0,40 €. Fehlmengen sind also fast viermal so teuer. Deshalb sollte die Menge so hoch sein, dass ihr in etwa **79 % der Wochen** nicht ausverkauft seid (1,50 / (1,50 + 0,40)).\n\nIch habe die erwarteten Kosten mit den Prognosefehlern seit Mitte Mai 2025 durchgerechnet, und zwar für zwei Fälle:\n\n| Kochmenge | Prognose stimmt (729) | Feiertagswoche ~4,5 % schwächer |\n|---|---|---|\n| 720 | 34,9 € | **22,3 €** |\n| 740 | 25,9 € | 24,8 € |\n| 750 | **23,5 €** | 27,5 € |\n| 760 | 23,6 € | 30,9 € |\n\nWenn man der Prognose voll vertraut, ist **750** am günstigsten. Mit dem Feiertagsabschlag wären es etwa **720**. **740** liegt in beiden Fällen nur 2 bis 3 € über dem jeweils besten Wert. Deshalb empfehle ich 740.\n\n**Bitte vorher klären:** Holt die Betriebskantine am Sonntag, 04.01.2026, wirklich ab? Wegen der Feiertage ist das nicht sicher. Ohne Kantine kostet ein übriges Glas 1,60 € und ist damit teurer als ein fehlendes (1,50 €). Dann solltet ihr eher knapp kochen, etwa **700 bis 720 Gläser**.\n\nÄrger im Laden über ein leeres Regal habe ich wie in `kosten.md` vorgegeben nicht eingerechnet. Wenn ihr ihn in Euro ansetzt, verschiebt sich die Empfehlung nach oben.",
+  "stats": {
+    "duration_ms": 52992,
+    "duration_api_ms": 51716,
+    "ttft_ms": 3351,
+    "num_turns": 4,
+    "output_tokens": 4887
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [
+    {
+      "prompt": "Die Kantine holt ab sofort keine übrigen Gläser mehr ab. Wie viele Gläser kochen wir dann für die Woche ab 29.12.2025?",
+      "timeline": [
+        {
+          "t_ms": 5852,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd .; python3 -I - <<'EOF'\nimport csv\nrows=list(csv.DictReader(open('linsensuppe-woechentlich.csv'),delimiter=';'))\nsel=[r for r in rows if r['woche']>='2025-05-19' and r['ist'] and r['prognose'] and not r['hinweis']]\nrat=[int(r['ist'])/int(r['prognose']) for r in sel]\nfor med,lab in [(729,'Prognose'),(729*0.955,'Abschlag')]:\n  out=[]\n  for q in range(670,771,10):\n    c=sum(1.5*max(0,med*x-q)+1.6*max(0,q-med*x) for x in rat)/len(rat)\n    out.append(f\"{q}:{c:.1f}\")\n  print(lab,' '.join(out))\nEOF",
+            "description": "Expected cost without canteen"
+          }
+        },
+        {
+          "t_ms": 7172,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 17391,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 17391,
+          "kind": "text",
+          "chunk": "Ich"
+        },
+        {
+          "t_ms": 17391,
+          "kind": "text",
+          "chunk": " emp"
+        },
+        {
+          "t_ms": 17391,
+          "kind": "text",
+          "chunk": "fehle j"
+        },
+        {
+          "t_ms": 17391,
+          "kind": "text",
+          "chunk": "etzt **700 G"
+        },
+        {
+          "t_ms": 17391,
+          "kind": "text",
+          "chunk": "läser** stat"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "t 740.\n\n**"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "Warum we"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "niger:** Ohne"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " Kantine kostet "
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "ein übriges Glas die"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " vollen 1,60 "
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "€,"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " ein fehlendes"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " Glas we"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "iter"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "hin 1,50 €"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": ". "
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "Ein übriges Glas "
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "ist dam"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "it etwas teurer als"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " ein fehlendes."
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " Deshalb sol"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "ltet ihr nicht"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": " mehr mit Pu"
+        },
+        {
+          "t_ms": 17392,
+          "kind": "text",
+          "chunk": "ffer kochen, sond"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "ern so"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": ","
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": " dass ihr in kn"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "app der"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": " Hälfte der W"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "ochen "
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "ausverkauft seid."
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": " Das ent"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "spricht etwa d"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "em m"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "ittleren er"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "warteten Abs"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "atz (1,50 /"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": " (1,50 + 1"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": ",60) ≈ "
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "48 %).\n\nDie er"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "warteten Kosten"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": " habe ich wie v"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "orher mit den Progn"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": "osefehlern seit"
+        },
+        {
+          "t_ms": 17393,
+          "kind": "text",
+          "chunk": " Mitte Mai 2"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "025 g"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "erechnet:\n\n|"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": " Kochmenge | Pr"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "ognose stimmt (729"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": ") | Feiertagsw"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "oche ~4,5 "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "% schwächer |\n|"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "---|---|---|\n|"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": " 690 | 67"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": ",5 € | **54,"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "5 €** |\n| "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "700 | 61,5 "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "€ | 56,1 €"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": " |\n| 710 | "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "58,7 € | 60"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": ",1 € |\n| "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "720 | **57,1 "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "€** | 67,1 "
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": "€ |\n| 740 |"
+        },
+        {
+          "t_ms": 17394,
+          "kind": "text",
+          "chunk": " 61,2 € | "
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "90,1 € |\n\n-"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " Wenn man"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " der Prognose voll v"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ertraut, w"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ären **720**"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " Gläser am günstigs"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ten. Mit dem"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " Feiertagsabschl"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ag wären es etwa **"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "690**.\n- Bei"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " **700** z"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ahlt ihr im"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ungünstige"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ren Fall höchstens"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " etwa 4 € m"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "ehr als bei der"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " j"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": "eweils besten Menge"
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": ","
+        },
+        {
+          "t_ms": 17395,
+          "kind": "text",
+          "chunk": " bei 710 wären es"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " bis zu 6 €"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": ". Für"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "700 spricht auß"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "erdem, dass die"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " Prognose in allen drei"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " b"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "isherigen Feiert"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "agswochen zu ho"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "ch l"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "ag.\n- Die er"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "warteten Kosten"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " steigen von rund 25"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " € auf "
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "55 b"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "is 60 € pro"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " Woche. Das li"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "egt an den te"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": "ureren"
+        },
+        {
+          "t_ms": 17396,
+          "kind": "text",
+          "chunk": " Res"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "ten, nicht an der ne"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "uen Menge."
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "\n\nWenn ihr "
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "Ärger im Laden über "
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "ein leeres Regal in"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": " Euro ansetzt"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": ", ver"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "schiebt sich die"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": " Menge wieder nach o"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "ben. M"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "it "
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "0,50 € pro f"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "ehlendem Glas w"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "ären es etwa 720"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "."
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "\n\nWenn s"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "ich für die übrigen"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": " Gläser ein anderer"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": " Abnehmer findet"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": ", r"
+        },
+        {
+          "t_ms": 17397,
+          "kind": "text",
+          "chunk": "echnet es sich wie"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": "der anders."
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": " Sch"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": "on ein"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": " Erlös von 1,"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": "00 € pro Glas"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": " würde die"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": " Menge"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": " Richtung 730"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": " ver"
+        },
+        {
+          "t_ms": 17398,
+          "kind": "text",
+          "chunk": "schieben."
+        }
+      ],
+      "final_text": "Ich empfehle jetzt **700 Gläser** statt 740.\n\n**Warum weniger:** Ohne Kantine kostet ein übriges Glas die vollen 1,60 €, ein fehlendes Glas weiterhin 1,50 €. Ein übriges Glas ist damit etwas teurer als ein fehlendes. Deshalb solltet ihr nicht mehr mit Puffer kochen, sondern so, dass ihr in knapp der Hälfte der Wochen ausverkauft seid. Das entspricht etwa dem mittleren erwarteten Absatz (1,50 / (1,50 + 1,60) ≈ 48 %).\n\nDie erwarteten Kosten habe ich wie vorher mit den Prognosefehlern seit Mitte Mai 2025 gerechnet:\n\n| Kochmenge | Prognose stimmt (729) | Feiertagswoche ~4,5 % schwächer |\n|---|---|---|\n| 690 | 67,5 € | **54,5 €** |\n| 700 | 61,5 € | 56,1 € |\n| 710 | 58,7 € | 60,1 € |\n| 720 | **57,1 €** | 67,1 € |\n| 740 | 61,2 € | 90,1 € |\n\n- Wenn man der Prognose voll vertraut, wären **720** Gläser am günstigsten. Mit dem Feiertagsabschlag wären es etwa **690**.\n- Bei **700** zahlt ihr im ungünstigeren Fall höchstens etwa 4 € mehr als bei der jeweils besten Menge, bei 710 wären es bis zu 6 €. Für 700 spricht außerdem, dass die Prognose in allen drei bisherigen Feiertagswochen zu hoch lag.\n- Die erwarteten Kosten steigen von rund 25 € auf 55 bis 60 € pro Woche. Das liegt an den teureren Resten, nicht an der neuen Menge.\n\nWenn ihr Ärger im Laden über ein leeres Regal in Euro ansetzt, verschiebt sich die Menge wieder nach oben. Mit 0,50 € pro fehlendem Glas wären es etwa 720.\n\nWenn sich für die übrigen Gläser ein anderer Abnehmer findet, rechnet es sich wieder anders. Schon ein Erlös von 1,00 € pro Glas würde die Menge Richtung 730 verschieben.",
+      "stats": {
+        "duration_ms": 16591,
+        "duration_api_ms": 66970,
+        "ttft_ms": 2145,
+        "num_turns": 2,
+        "output_tokens": 1450
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    }
+  ],
+  "produced_files": [],
+  "edited": false
+}
