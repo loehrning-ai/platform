@@ -214,7 +214,7 @@ export function StromScene({
             text={strom.t >= 0.5 ? pack.strom.unsortButton : pack.strom.sortButton}
             reducedMotion={reducedMotion}
           />
-          {strom.t >= 1 && !water ? <DocSlot kicker={pack.connect.missingDoc} name={pack.strom.slot} /> : null}
+          {strom.t >= 1 && !water ? <DocSlot kicker={pack.strom.slotKicker} name={pack.strom.slot} /> : null}
         </div>
       ) : null}
       {readout ? (

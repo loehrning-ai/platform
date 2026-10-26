@@ -104,7 +104,7 @@ export function InvoiceScene({
           dropTarget={!invoiceIn}
         />
       </div>
-      {invoiceIn ? null : <DocSlot kicker={pack.connect.missingDoc} name={pack.strom.slot} />}
+      {invoiceIn ? null : <DocSlot kicker={pack.strom.slotKicker} name={pack.strom.slot} />}
       <div className="w4-tray" data-w4-tray="" data-empty={invoiceIn ? "" : undefined}>
         <p className="w4-tray-label">{pack.invoice.tray}</p>
         <button

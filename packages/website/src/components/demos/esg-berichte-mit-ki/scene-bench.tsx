@@ -11,7 +11,7 @@ import { DocCard } from "./doc-card";
 import { FieldDrawing, RulerDrawing } from "./drawings";
 import type { Fmt } from "./fmt";
 import { StatusGlyph } from "./glyph";
-import { ShelfCard } from "./scene-card";
+import { DocSlot, ShelfCard } from "./scene-card";
 
 export interface BenchLevers {
   readonly scope: BenchScope;
@@ -104,10 +104,6 @@ export function BenchScene({
 
   return (
     <div className="w4-s2" data-w4-scene="umschreiben" data-status={result.status}>
-      <div className="w4-s2-doc">
-        <DocCard name={kit.certificate.name} subtitle={kit.invented} lines={kit.certificate.lines.filter((line) => line.n > 2)} marks={marks} compact className="w4-phone-only-doc" />
-        <DocCard name={kit.certificate.name} subtitle={kit.invented} lines={kit.certificate.lines.filter((line) => line.n > 2)} marks={marks} className="w4-wide-only-doc" />
-      </div>
       <div className="w4-s2-card">
         <ShelfCard
           pack={pack}
@@ -171,6 +167,24 @@ export function BenchScene({
           ]}
         />
       </div>
+      <div className="w4-s2-side">
+      <div className="w4-s2-doc">
+        <DocCard name={kit.certificate.name} subtitle={kit.invented} lines={kit.certificate.lines.filter((line) => line.n > 2)} marks={marks} compact className="w4-phone-only-doc" />
+        <DocCard name={kit.certificate.name} subtitle={kit.invented} lines={kit.certificate.lines.filter((line) => line.n > 2)} marks={marks} className="w4-wide-only-doc" />
+      </div>
+      {/* The documents the first check found missing stay: a rewrite can make one unnecessary, never present. */}
+      <div className="w4-s2-slots" role="list" aria-label={pack.bench.slotsLabel} data-w4-bench-slots="">
+        {(
+          [
+            ["restCertificate", result.checks.umfang !== "belegt"],
+            ["renewedCertificate", result.expired],
+          ] as const
+        ).map(([slot, needed]) => (
+          <div key={slot} role="listitem" className="w4-s1-slot" data-settled={needed ? undefined : ""}>
+            <DocSlot id={slot} kicker={needed ? pack.connect.slotKickers[slot] : pack.bench.slotSettled} name={fmt.t(pack.connect.slots[slot])} />
+          </div>
+        ))}
+      </div>
       <section className="w4-checks" aria-label={pack.bench.panel} data-w4-checks="">
         <p className="w4-checks-head">
           <span>{pack.bench.panel}</span>
@@ -192,6 +206,7 @@ export function BenchScene({
           })}
         </ul>
       </section>
+      </div>
     </div>
   );
 }

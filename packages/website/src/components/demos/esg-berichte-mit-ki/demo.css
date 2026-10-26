@@ -960,6 +960,9 @@ button.w4-doc-row {
 .w4-wide-only-doc {
   display: none;
 }
+.w4-s2-side {
+  display: contents;
+}
 /* Phone order: the card and its levers first, then the date, the checks, the drawing and the file. */
 @media (max-width: 63.99rem) {
   .w4-s2-card {
@@ -981,9 +984,64 @@ button.w4-doc-row {
     order: 6;
   }
 }
+.w4-s2-slots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.w4-s1-slot[data-settled] .w4-slot {
+  background: rgb(253 251 246 / 0.55);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+}
+.w4-s1-slot[data-settled] .w4-slot-kicker {
+  color: var(--w4-ok, #2f5d3a);
+}
+.w4-s1-slot[data-settled] .w4-slot-name {
+  color: var(--w4-muted);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+/*
+ * A phone keeps what the levers change in one view: the card, the levers, the
+ * date and the four checks. The drawings, the file and the slots wait for a
+ * wider screen; the checks name the same gaps.
+ */
+@media (max-width: 63.99rem) {
+  .w4-s2 {
+    gap: 6px;
+  }
+  .w4-s2 .w4-card {
+    margin-right: 0;
+    padding: 8px 12px;
+  }
+  .w4-s2 .w4-card-kicker,
+  .w4-s2 .w4-card-place,
+  .w4-s2 .w4-card-chip {
+    display: none;
+  }
+  .w4-s2 .w4-card-claim {
+    font-size: 1.0625rem;
+  }
+  .w4-s2-levers {
+    gap: 4px;
+    padding: 4px;
+  }
+  .w4-s2 .w4-checks {
+    padding: 7px 12px 8px;
+  }
+  .w4-s2 .w4-checks-head {
+    margin-bottom: 4px;
+  }
+  .w4-s2-ruler .w4-ruler,
+  .w4-s2-field,
+  .w4-s2-doc,
+  .w4-s2-slots {
+    display: none;
+  }
+}
 @media (max-width: 63.99rem) and (max-height: 760px) {
   .w4-s2 .w4-card {
-    padding: 10px 14px;
+    padding: 8px 12px;
   }
   .w4-s2 .w4-card-kicker {
     display: none;
@@ -1068,7 +1126,8 @@ button.w4-doc-row {
 @media (min-width: 64rem) {
   .w4-s2 {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+    height: 100%;
     align-content: start;
     column-gap: 28px;
   }
@@ -1078,10 +1137,22 @@ button.w4-doc-row {
   .w4-wide-only-doc {
     display: flex;
   }
-  .w4-s2-doc {
+  .w4-s2-side {
+    display: flex;
     min-height: 0;
     grid-column: 2;
-    grid-row: 1 / span 3;
+    grid-row: 1 / -1;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .w4-s2-doc {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  .w4-s2-doc > .w4-doc {
+    flex: 1 1 auto;
+    min-height: 0;
   }
   .w4-s2-card,
   .w4-s2-levers,
@@ -1089,10 +1160,9 @@ button.w4-doc-row {
   .w4-s2-ruler {
     grid-column: 1;
   }
+  .w4-s2-slots,
   .w4-s2 .w4-checks {
-    align-self: start;
-    grid-column: 2;
-    grid-row: 4;
+    flex: none;
   }
 }
 
@@ -1385,6 +1455,154 @@ button.w4-doc-row {
   from {
     opacity: 0;
     transform: translateY(4px);
+  }
+}
+/*
+ * Phone, once the figure is connected: the field shrinks to one block, the two
+ * file names lose their second line, and the chart takes the height that is
+ * left, so the months, the September gap and the missing invoice share one view.
+ */
+@media (max-width: 63.99rem) {
+  .w4-s3[data-linked] {
+    height: 100%;
+    min-height: 0;
+    gap: 6px;
+  }
+  .w4-s3[data-linked] .w4-f2 {
+    display: grid;
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 10px;
+    padding: 8px 12px;
+  }
+  .w4-s3[data-linked] .w4-f2-kicker {
+    grid-column: 1 / -1;
+  }
+  .w4-s3[data-linked] .w4-f2-question {
+    margin: 2px 0 0;
+  }
+  .w4-s3[data-linked] .w4-doc-sub {
+    display: none;
+  }
+  .w4-s3[data-linked] .w4-s3-file-head {
+    flex: none;
+  }
+  /* Sorted, the field's own status says what the draft said; the chart gets its room. */
+  .w4-s3:has(.w4-months[data-end="months"]) .w4-s3-draft {
+    display: none;
+  }
+  .w4-s3[data-linked] .w4-s3-file {
+    position: relative;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+  .w4-s3[data-linked] .w4-s3-chart {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .w4-s3-chart:has(.w4-months[data-end="months"]) {
+    display: flex;
+    overflow: hidden;
+  }
+  .w4-s3-chart:has(.w4-months[data-end="months"]) .w4-months {
+    height: 100%;
+    max-height: none;
+  }
+  .w4-s3 .w4-s3-file .w4-grabber {
+    position: static;
+    flex: none;
+  }
+  /* Sorted, the grabber folds to its icon in the chart's corner. */
+  .w4-s3 .w4-s3-file .w4-grabber[aria-valuenow="100"] {
+    position: absolute;
+    top: 42px;
+    right: 8px;
+    min-width: 44px;
+    justify-content: center;
+    padding: 6px;
+  }
+  .w4-s3 .w4-grabber[aria-valuenow="100"] .w4-grabber-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .w4-s3[data-linked] .w4-readout {
+    display: none;
+  }
+  /* S4 on a phone: the field, the photo in reach, then the chart it drops into. */
+  .w4-s4 {
+    height: 100%;
+    min-height: 0;
+    gap: 6px;
+  }
+  .w4-s4-top {
+    order: 1;
+  }
+  .w4-s4 .w4-f2 {
+    display: grid;
+    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 10px;
+    padding: 8px 12px;
+  }
+  .w4-s4 .w4-f2-kicker {
+    grid-column: 1 / -1;
+  }
+  .w4-s4 .w4-f2-question {
+    margin: 2px 0 0;
+  }
+  .w4-s4 .w4-tray {
+    order: 2;
+    padding: 6px 10px;
+  }
+  .w4-s4 .w4-tray[data-empty] {
+    display: none;
+  }
+  .w4-s4 .w4-photo {
+    width: 3.5rem;
+  }
+  .w4-s4-chart {
+    display: flex;
+    min-height: 0;
+    flex: 1 1 auto;
+    order: 3;
+    overflow: hidden;
+  }
+  .w4-s4-chart .w4-months {
+    height: 100%;
+    max-height: none;
+  }
+  .w4-s4 > .w4-slot {
+    order: 4;
+  }
+  .w4-s4 .w4-readout {
+    flex: none;
+    order: 5;
+  }
+  .w4-s4 .w4-readout-body {
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+  .w4-s3-file > .w4-slot,
+  .w4-s4 > .w4-slot {
+    flex: none;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
+    padding: 6px 12px;
+  }
+  .w4-s3-file > .w4-slot .w4-slot-name,
+  .w4-s4 > .w4-slot .w4-slot-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 @media (min-width: 64rem) {
