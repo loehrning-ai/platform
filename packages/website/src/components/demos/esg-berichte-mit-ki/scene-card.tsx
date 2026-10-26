@@ -10,7 +10,7 @@ import { BIO, STICHTAG } from "@/lib/demo-cases/esg-berichte-mit-ki/kit";
 import type { KitText } from "@/lib/demo-cases/esg-berichte-mit-ki/kit-text";
 import type { Status } from "@/lib/demo-cases/esg-berichte-mit-ki/rules";
 import { PARTS, THREADS, type PartId } from "@/lib/demo-cases/esg-berichte-mit-ki/threads";
-import { curve, Loupe, threadPath, useAnchors, useConnectDrag, type DragState } from "./connect";
+import { curve, Loupe, slotPath, threadPath, useAnchors, useConnectDrag, type DragState } from "./connect";
 import { DocCard, type LineMark } from "./doc-card";
 import { FieldDrawing, RulerDrawing } from "./drawings";
 import type { Fmt } from "./fmt";
@@ -23,6 +23,8 @@ export interface CardFace {
   readonly claimKey?: string;
   readonly place: string;
   readonly stichtag: string;
+  /** The Stichtag as the strip shows it on a phone: the date alone, under "Wann". */
+  readonly stichtagShort: string;
   readonly status: Status | null;
   readonly statusLabel?: string;
 }
@@ -41,6 +43,7 @@ export function ShelfCard({
   linked,
   handleProps,
   registerHandle,
+  guessNote,
 }: {
   readonly pack: Pack;
   readonly face: CardFace;
@@ -50,6 +53,8 @@ export function ShelfCard({
   readonly linked?: Readonly<Partial<Record<PartId, Status>>>;
   readonly handleProps?: (part: PartId) => Record<string, unknown>;
   readonly registerHandle?: (part: PartId) => (node: HTMLElement | null) => void;
+  /** After the verdict: the visitor's guess, next to the card it was about. No judgement attached. */
+  readonly guessNote?: string;
 }) {
   return (
     <article className="w4-card" data-layout={layout} data-w4-card="" aria-label={pack.card.kicker}>
@@ -68,10 +73,11 @@ export function ShelfCard({
           </p>
           <p className="w4-card-place">{face.place}</p>
           <p className="w4-card-chip">{face.stichtag}</p>
+          {guessNote ? <p className="w4-card-guess">{guessNote}</p> : null}
         </>
       ) : null}
       {handles ? (
-        <div className="w4-handles" role="group" aria-label={pack.connect.instruction[1]}>
+        <div className="w4-handles" role="group" aria-label={pack.connect.instruction[0]} aria-description={pack.connect.tapHint}>
           {PARTS.map((part) => {
             const status = linked?.[part];
             return (
@@ -86,9 +92,16 @@ export function ShelfCard({
                 aria-label={status ? undefined : pack.card.connect.replace("{part}", part === "stichtag" ? face.stichtag : pack.card.parts[part])}
                 {...(handleProps?.(part) ?? {})}
               >
-                <span className="w4-handle-dot" aria-hidden="true" />
-                <span className="w4-handle-text">{part === "stichtag" ? face.stichtag : pack.card.parts[part]}</span>
-                {status ? <StatusGlyph status={status} label={pack.statuses[status]} size={16} /> : null}
+                {status ? <StatusGlyph status={status} label={pack.statuses[status]} size={16} className="w4-handle-glyph" /> : <span className="w4-handle-dot" aria-hidden="true" />}
+                <span className="w4-handle-words">
+                  <span className="w4-handle-kicker" aria-hidden="true">
+                    {pack.card.partKickers[part]}
+                  </span>
+                  <span className="w4-handle-text">{part === "stichtag" ? face.stichtag : pack.card.parts[part]}</span>
+                  <span className="w4-handle-short" aria-hidden="true">
+                    {part === "stichtag" ? face.stichtagShort : pack.card.partsShort[part]}
+                  </span>
+                </span>
               </button>
             );
           })}
@@ -103,10 +116,28 @@ export function ShelfCard({
   );
 }
 
-/** An empty document slot: the name of the document that belongs here. */
-export function DocSlot({ kicker, name, filled = false, children }: { readonly kicker: string; readonly name: string; readonly filled?: boolean; readonly children?: ReactNode }) {
+/**
+ * An empty document slot: the name of the document that belongs here, on a
+ * frosted card with an inset shadow, like an empty photo well. It stays on
+ * the stage once a connection has run into it.
+ */
+export function DocSlot({
+  kicker,
+  name,
+  filled = false,
+  slotRef,
+  id,
+  children,
+}: {
+  readonly kicker: string;
+  readonly name: string;
+  readonly filled?: boolean;
+  readonly slotRef?: (node: HTMLElement | null) => void;
+  readonly id?: string;
+  readonly children?: ReactNode;
+}) {
   return (
-    <div className="w4-slot" data-filled={filled ? "" : undefined} data-w4-slot="">
+    <div ref={slotRef} className="w4-slot" data-filled={filled ? "" : undefined} data-w4-slot={id ?? ""}>
       <span className="w4-slot-kicker">{kicker}</span>
       <span className="w4-slot-name">{name}</span>
       {children}
@@ -126,7 +157,8 @@ function readoutFor(
   if (!last) return null;
   if (!last.accepted) {
     const hints = pack.connect.hints[last.part] as Readonly<Record<string, string>>;
-    const hint = hints[String(last.line)] ?? fmt.t(pack.connect.picking, { part: pack.card.parts[last.part] });
+    const template = hints[String(last.line)];
+    const hint = template ? fmt.t(template, { n: last.line }) : fmt.t(pack.connect.picking, { part: pack.card.parts[last.part] });
     return {
       key: `miss-${last.part}-${last.line}-${state.misses[last.part]}`,
       body: (
@@ -151,29 +183,29 @@ function readoutFor(
           <p key={sentence}>{sentence}</p>
         ))}
         {last.part === "flaeche" ? (
-          <figure className="w4-readout-figure" aria-label={pack.connect.field}>
+          <figure className="w4-readout-figure" aria-label={fmt.t(pack.connect.field)}>
             <FieldDrawing outline="all" cellarLabel={pack.connect.cellar} pulse />
           </figure>
         ) : null}
         {last.part === "stichtag" ? (
-          <figure className="w4-readout-figure" aria-label={pack.connect.ruler}>
-            <RulerDrawing
-              stichtag={STICHTAG}
-              gapLabel={fmt.t(pack.connect.gap, { days: EXPIRED_DAYS })}
-              dates={{ from: fmt.date(BIO.validFrom), until: fmt.date(BIO.validUntil), pin: fmt.date(STICHTAG) }}
-            />
+          <figure className="w4-readout-figure" aria-label={fmt.t(pack.connect.ruler)}>
+            <RulerDrawing stichtag={STICHTAG} gapLabel={fmt.t(pack.connect.gap, { days: EXPIRED_DAYS })} dates={rulerDates(fmt)} />
           </figure>
         ) : null}
-        {slot ? <DocSlot kicker={pack.connect.missingDoc} name={pack.connect.slots[slot]} /> : null}
+        {slot ? <DocSlot kicker={pack.connect.slotKickers[slot]} name={fmt.t(pack.connect.slots[slot])} /> : null}
       </>
     ),
   };
 }
 
+const rulerDates = (fmt: Fmt) => ({ from: fmt.date(BIO.validFrom), until: fmt.date(BIO.validUntil), pin: fmt.date(STICHTAG) });
+
 /**
  * Scene 1: the shelf card over the certificate. Beat 1 shows both at rest
- * (the guess is in the dock); beat 2 collapses the card into its handles and
- * the visitor connects each part to a line.
+ * (the guess is in the dock); beat 2 collapses the card into its strip of
+ * three parts and the visitor connects each part to a line. A part the file
+ * does not carry runs on into the empty slot of its missing document, which
+ * stays on the stage. After the verdict the card opens again with its status.
  */
 export function CardScene({
   pack,
@@ -196,6 +228,7 @@ export function CardScene({
 }) {
   const container = useRef<HTMLDivElement | null>(null);
   const verdict = cardVerdict(state);
+  const step = !connecting ? "guess" : verdict ? "verdict" : "connect";
   const { anchors, register } = useAnchors(container, [state.links, state.picking, connecting, verdict]);
   const { drag, handlers } = useConnectDrag<PartId>({
     container,
@@ -232,41 +265,70 @@ export function CardScene({
     linked[part] = status;
     marks[line] = { status, label: fmt.t(pack.card.connected, { part: pack.card.parts[part], n: line, status: pack.statuses[status] }) };
   }
+  const slots = PARTS.flatMap((part) => {
+    const slot = THREADS[part].slot;
+    const line = state.links[part];
+    return slot && line !== undefined ? [{ part, slot, line }] : [];
+  });
   const glowPart = state.last && !state.last.accepted && needsHelp(state, state.last.part) ? state.last.part : null;
-  const readout = connecting ? readoutFor(pack, fmt, state, (part) => dispatch({ type: "show", part })) : null;
-  // On a phone the readout floats over the certificate's lower lines; "Schließen" puts it away until the next one.
+  // The readout never covers a line while a finger is looking for one.
+  const readout = connecting && !drag ? readoutFor(pack, fmt, state, (part) => dispatch({ type: "show", part })) : null;
+  // "Schließen" puts the readout away until the next one.
   const [closedKey, setClosedKey] = useState<string | null>(null);
   const shownReadout = readout && readout.key !== closedKey ? readout : null;
   const face: CardFace = {
     claim: kit.claim.text,
     place: kit.claim.place,
     stichtag: fmt.t(pack.card.stichtag, { date: fmt.date(STICHTAG) }),
+    stichtagShort: fmt.date(STICHTAG),
     status: verdict,
     statusLabel: verdict ? fmt.t(pack.card.status, { status: pack.statuses[verdict] }) : undefined,
   };
-  // While connecting (and after the verdict) the card is its handles, so the certificate keeps its room.
-  const layout = connecting ? "strip" : "full";
 
   return (
-    <div ref={container} className="w4-s1" data-connecting={connecting ? "" : undefined} data-layout={layout} data-motion={reducedMotion ? "reduced" : undefined} data-w4-scene="karte">
+    <div
+      ref={container}
+      className="w4-s1"
+      data-connecting={connecting ? "" : undefined}
+      data-step={step}
+      data-readout={shownReadout ? "" : undefined}
+      data-motion={reducedMotion ? "reduced" : undefined}
+      data-w4-scene="karte"
+    >
       <div className="w4-s1-card">
         <ShelfCard
           pack={pack}
           face={face}
-          layout={layout}
+          layout={step === "connect" ? "strip" : "full"}
           handles={connecting}
           picking={state.picking}
           linked={linked}
+          guessNote={verdict && state.guess ? fmt.t(pack.guess.chip, { guess: pack.guess[state.guess] }) : undefined}
           registerHandle={(part) => register(`handle:${part}`)}
           handleProps={(part) => ({ ...handlers(part) })}
         />
       </div>
+      {connecting ? (
+        <div className="w4-s1-drawings" aria-hidden="true">
+          {state.links.flaeche !== undefined ? (
+            <figure className="w4-s1-drawing" data-pop="">
+              <FieldDrawing outline="all" cellarLabel={pack.connect.cellar} />
+            </figure>
+          ) : null}
+          {state.links.stichtag !== undefined ? (
+            <figure className="w4-s1-drawing" data-pop="">
+              <RulerDrawing stichtag={STICHTAG} gapLabel={fmt.t(pack.connect.gap, { days: EXPIRED_DAYS })} dates={rulerDates(fmt)} />
+            </figure>
+          ) : null}
+        </div>
+      ) : null}
       <div className="w4-s1-doc">
         <DocCard
           name={kit.certificate.name}
           subtitle={kit.invented}
           lines={kit.certificate.lines.filter((line) => line.n > 2)}
           marks={marks}
+          stripMarks={step === "verdict"}
           glow={glowPart ? THREADS[glowPart].target : null}
           hot={drag?.line ?? null}
           picking={picking}
@@ -276,6 +338,15 @@ export function CardScene({
           }}
           lineRef={(n) => register(`line:${n}`)}
         />
+        {slots.length > 0 ? (
+          <div className="w4-s1-slots" role="list" aria-label={pack.connect.missingDoc}>
+            {slots.map(({ slot }) => (
+              <div key={slot} role="listitem" className="w4-s1-slot">
+                <DocSlot id={slot} kicker={pack.connect.slotKickers[slot]} name={fmt.t(pack.connect.slots[slot])} slotRef={register(`slot:${slot}`)} />
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
       <svg className="w4-threads" aria-hidden="true" focusable="false">
         {PARTS.map((part, lane) => {
@@ -284,6 +355,12 @@ export function CardScene({
           const to = line === undefined ? undefined : anchors[`line:${line}`];
           if (!from || !to || !connecting) return null;
           return <path key={part} d={threadPath(from, to, lane)} className="w4-thread" data-status={THREADS[part].status} />;
+        })}
+        {slots.map(({ slot, line }, lane) => {
+          const from = anchors[`line:${line}`];
+          const to = anchors[`slot:${slot}`];
+          if (!from || !to) return null;
+          return <path key={slot} d={slotPath(from, to, lane)} className="w4-thread" data-kind="slot" />;
         })}
         {drag && anchors[`handle:${drag.part}`] ? <path d={curve(anchors[`handle:${drag.part}`] as { x: number; y: number }, drag.at)} className="w4-thread" data-live="" /> : null}
       </svg>

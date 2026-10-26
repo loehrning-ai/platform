@@ -1,4 +1,4 @@
-import { figures, formatNumber, type Figures } from "@/lib/demo-cases/esg-berichte-mit-ki/figures";
+import { figures, formatNumber, longDate, shortDate, type Figures } from "@/lib/demo-cases/esg-berichte-mit-ki/figures";
 import type { CalendarDate } from "@/lib/demo-cases/esg-berichte-mit-ki/rules";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -20,11 +20,6 @@ export interface Fmt {
   readonly longDate: (date: CalendarDate) => string;
 }
 
-const MONTHS = {
-  de: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-} as const;
-
 export function formatter(locale: Locale): Fmt {
   const kit = figures(locale);
   const t = (template: string, values: Readonly<Record<string, string | number>> = {}) =>
@@ -33,15 +28,14 @@ export function formatter(locale: Locale): Fmt {
       if (key in kit) return String(kit[key]);
       return whole;
     });
-  const pad = (value: number) => String(value).padStart(2, "0");
   return {
     locale,
     figures: kit,
     t,
     ts: (templates, values) => templates.map((template) => t(template, values)),
     n: (value, digits = 0) => formatNumber(value, locale, digits),
-    date: (date) => `${pad(date.day)}.${pad(date.month)}.${date.year}`,
-    longDate: (date) => (locale === "de" ? `${date.day}. ${MONTHS.de[date.month - 1]} ${date.year}` : `${date.day} ${MONTHS.en[date.month - 1]} ${date.year}`),
+    date: shortDate,
+    longDate: (date) => longDate(date, locale),
   };
 }
 

@@ -4,9 +4,30 @@
  * {placeholders}; this fills them, so a changed kit row changes the page.
  */
 import type { Locale } from "@/lib/i18n/locale";
-import { BIO, PV, SEPTEMBER_INVOICE, STICHTAG, STROM, WASSER, YEAR } from "./kit";
+import { BIO, CERT_LINE, PV, SEPTEMBER_INVOICE, STICHTAG, STROM, WASSER, YEAR } from "./kit";
 import { ledgerCounts } from "./ledger";
-import { daysBetween, distinctMonths, naiveSum, roundTo, share, sumDistinct, type CalendarDate } from "./rules";
+import { BAN_DATE, daysBetween, distinctMonths, naiveSum, roundTo, share, sumDistinct, type CalendarDate } from "./rules";
+
+const MONTH_NAMES = {
+  de: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+  en: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+} as const;
+
+/** "16.10.2026" in both languages: the way the kit files write a date. */
+export function shortDate(date: CalendarDate): string {
+  const pad = (value: number) => String(value).padStart(2, "0");
+  return `${pad(date.day)}.${pad(date.month)}.${date.year}`;
+}
+
+/** "16. Oktober 2026" / "16 October 2026": the way a sentence says it. */
+export function longDate(date: CalendarDate, locale: Locale): string {
+  return locale === "de" ? `${date.day}. ${MONTH_NAMES.de[date.month - 1]} ${date.year}` : `${date.day} ${MONTH_NAMES.en[date.month - 1]} ${date.year}`;
+}
+
+/** "16. Oktober" / "16 October": a date inside the year the sentence already named. */
+export function dayMonth(date: CalendarDate, locale: Locale): string {
+  return locale === "de" ? `${date.day}. ${MONTH_NAMES.de[date.month - 1]}` : `${date.day} ${MONTH_NAMES.en[date.month - 1]}`;
+}
 
 export function formatNumber(value: number, locale: Locale, digits = 0): string {
   return new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB", {
@@ -75,6 +96,20 @@ export function figures(locale: Locale): Figures {
     waterM3: f(sumDistinct(WASSER)),
     waterSeptember: f(WASSER.find((row) => row.month === `${YEAR}-09`)?.amount ?? 0),
     days: String(EXPIRED_DAYS),
+    stichtag: longDate(STICHTAG, locale),
+    stichtagDay: dayMonth(STICHTAG, locale),
+    stichtagShort: shortDate(STICHTAG),
+    validFrom: longDate(BIO.validFrom, locale),
+    validUntil: longDate(BIO.validUntil, locale),
+    validUntilShort: shortDate(BIO.validUntil),
+    renewal: longDate(BIO.renewalBooked, locale),
+    banDate: longDate(BAN_DATE, locale),
+    controlBody: BIO.controlBody,
+    lineBody: String(CERT_LINE.body),
+    lineScope: String(CERT_LINE.scope),
+    lineUntil: String(CERT_LINE.until),
+    lineCellar: String(CERT_LINE.cellar),
+    year: String(YEAR),
     haCertified: String(BIO.haCertified),
     haTotal: String(BIO.haTotal),
     haRest: String(BIO.haTotal - BIO.haCertified),

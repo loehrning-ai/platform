@@ -172,7 +172,7 @@
   }
 }
 .w4-caption[data-picking] {
-  --w4-caption-lines: 1;
+  --w4-caption-lines: 2;
 }
 .w4-guess {
   display: flex;
@@ -208,8 +208,7 @@
 .w4-glyph-gap {
   fill: var(--w4-paper);
   stroke: var(--w4-mark);
-  stroke-width: 1.6;
-  stroke-dasharray: 3 2.4;
+  stroke-width: 1.8;
 }
 .w4-status,
 .w4-status-line {
@@ -415,9 +414,9 @@ button.w4-doc-row {
   display: inline-block;
   margin: 0 2px;
   padding: 0 8px;
-  border: 1.5px dashed var(--w4-mark);
   border-radius: 8px;
-  background: var(--w4-mark-soft);
+  background: linear-gradient(180deg, rgb(183 58 21 / 0.08), rgb(183 58 21 / 0.14));
+  box-shadow: inset 0 1px 2px rgb(30 12 6 / 0.22), inset 0 0 0 1px rgb(183 58 21 / 0.22);
   color: var(--w4-mark);
   font-family: var(--w4-sans);
   font-size: 0.8125rem;
@@ -440,15 +439,90 @@ button.w4-doc-row {
   position: relative;
   z-index: 4;
 }
-/* A phone keeps the three parts on two rows, so the certificate keeps its room. */
+/*
+ * A phone keeps the card to one 44px strip: three equal parts, each with what
+ * it asks (Wer, Wofür, Wann) over its words, so the certificate keeps the
+ * height its wrapped lines need. The restart button keeps its corner.
+ */
 @media (max-width: 63.99rem) {
-  .w4-card[data-layout="strip"] .w4-handles {
-    gap: 4px;
+  .w4-card[data-layout="strip"] {
+    margin-right: 48px;
+    padding: 0;
+    border-radius: 14px;
   }
-  .w4-card[data-layout="strip"] .w4-handle {
-    gap: 5px;
-    padding: 4px 8px 4px 6px;
-    font-size: 0.75rem;
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle {
+    display: grid;
+    min-width: 0;
+    min-height: 44px;
+    align-content: center;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 5px;
+    padding: 3px 4px 3px 7px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-words {
+    display: contents;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-dot,
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-glyph {
+    width: 10px;
+    height: 10px;
+    align-self: center;
+    grid-column: 1;
+    grid-row: 1;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-glyph {
+    width: 12px;
+    height: 12px;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle + .w4-handle {
+    box-shadow: inset 1px 0 0 var(--w4-hair);
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle:first-child {
+    border-radius: 14px 0 0 14px;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle:last-child {
+    border-radius: 0 14px 14px 0;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle[data-state="picking"] {
+    background: rgb(183 58 21 / 0.1);
+    box-shadow: inset 0 -3px 0 var(--w4-mark);
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-text {
+    display: none;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-kicker {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    color: var(--w4-muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+  :is(.w4-card[data-layout="strip"], .w4-s1[data-step="verdict"] .w4-card) .w4-handle-short {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    overflow: hidden;
+    font-size: 0.78125rem;
+    letter-spacing: -0.005em;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .w4-card[data-layout="strip"] .w4-card-status {
+    position: absolute;
+    top: 50%;
+    right: -40px;
+    padding: 0;
+    transform: translateY(-50%);
   }
 }
 .w4-handle {
@@ -468,6 +542,19 @@ button.w4-doc-row {
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+}
+.w4-handle-words {
+  display: inline-flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.w4-handle-kicker,
+.w4-handle-short {
+  display: none;
+}
+.w4-handle-glyph {
+  flex: none;
 }
 .w4-handle-dot {
   width: 12px;
@@ -581,16 +668,28 @@ button.w4-doc-row {
   max-height: 96px;
 }
 
-/* An empty slot: the document that would belong here, named. */
+/*
+ * An empty slot: the document that would belong here, named. It reads as a
+ * well a document drops into, like an empty photo well: a frosted, slightly
+ * sunken plate with a soft inner glow, never a dashed box.
+ */
 .w4-slot {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  padding: 7px 12px;
-  border: 1.5px dashed var(--w4-mark);
-  border-radius: 12px;
-  background: rgb(253 251 246 / 0.92);
+  padding: 8px 12px 9px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgb(245 240 230 / 0.94), rgb(253 251 246 / 0.97));
+  box-shadow:
+    inset 0 2px 5px rgb(30 12 6 / 0.2),
+    inset 0 0 0 1px rgb(183 58 21 / 0.18),
+    inset 0 -10px 18px -12px rgb(183 58 21 / 0.35),
+    0 1px 0 rgb(255 255 255 / 0.25);
   color: var(--w4-fg);
+}
+.w4-slot[data-filled] {
+  background: var(--w4-paper);
+  box-shadow: var(--w4-shadow);
 }
 .w4-slot-kicker {
   color: var(--w4-mark);
@@ -604,8 +703,10 @@ button.w4-doc-row {
 .w4-slot-line {
   display: block;
   margin: 0 0 4px;
-  padding-left: 10px;
-  border-left: 2px dashed var(--w4-mark);
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgb(183 58 21 / 0.08);
+  box-shadow: inset 0 1px 3px rgb(30 12 6 / 0.16), inset 3px 0 0 var(--w4-mark);
   font-weight: 600;
 }
 
@@ -633,7 +734,8 @@ button.w4-doc-row {
   fill: none;
   stroke: var(--w4-creme);
   stroke-width: 2.5;
-  stroke-dasharray: 6 4;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px rgb(255 217 201 / 0.55));
   opacity: 0;
   transition: opacity 260ms var(--w4-ease);
 }
@@ -670,7 +772,8 @@ button.w4-doc-row {
 .w4-ruler-gap {
   stroke: var(--w4-mark);
   stroke-width: 3;
-  stroke-dasharray: 3 3;
+  stroke-linecap: round;
+  stroke-opacity: 0.85;
 }
 .w4-s2 .w4-ruler-gap,
 .w4-s2 .w4-ruler-pin {
@@ -698,14 +801,21 @@ button.w4-doc-row {
   display: grid;
   height: 100%;
   min-height: 0;
-  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 8px;
 }
 .w4-s1-card {
+  position: relative;
+  z-index: 4;
+  grid-column: 1;
   grid-row: 1;
 }
-.w4-s1 {
-  grid-template-rows: auto minmax(0, 1fr);
+.w4-s1-drawings {
+  display: none;
+}
+.w4-s1-drawing {
+  margin: 0;
+  color: var(--w4-creme);
 }
 /* Phone: the readout shares the certificate's cell and floats over its later lines, never over the card. */
 .w4-s1 .w4-readout {
@@ -731,18 +841,83 @@ button.w4-doc-row {
   grid-column: 1;
   grid-row: 2;
   flex-direction: column;
+  gap: 8px;
 }
 .w4-s1-doc > .w4-doc {
   flex: 1 1 auto;
 }
-.w4-s1:not([data-connecting]) .w4-s1-doc {
-  opacity: 0.94;
+.w4-s1-slots {
+  display: grid;
+  flex: none;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 8px;
+}
+.w4-s1-slot {
+  display: grid;
+  min-width: 0;
+}
+.w4-card-guess {
+  display: inline-block;
+  margin: 8px 0 0 8px;
+  color: var(--w4-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.w4-doc-strip-marks:not([data-always]) {
+  display: none;
+}
+@media (max-width: 63.99rem) {
+  /* While connecting, slots live in the readout; after the verdict they stay on the stage. */
+  .w4-s1[data-step="connect"] .w4-s1-slots {
+    display: none;
+  }
+  /* After the verdict the certificate folds to its header and its marks. */
+  .w4-s1[data-step="verdict"] .w4-s1-doc > .w4-doc {
+    flex: none;
+  }
+  .w4-s1[data-step="verdict"] .w4-doc-body {
+    display: none;
+  }
+  .w4-s1[data-step="verdict"] .w4-doc-strip-marks {
+    display: flex;
+  }
+  .w4-s1[data-step="verdict"] .w4-doc-sub {
+    display: none;
+  }
+  .w4-s1[data-step="verdict"] .w4-card-place,
+  .w4-s1[data-step="verdict"] .w4-card-chip {
+    display: none;
+  }
+  .w4-s1[data-step="verdict"] .w4-card {
+    margin-right: 48px;
+    padding: 10px 0 0;
+  }
+  .w4-s1[data-step="verdict"] .w4-card-kicker,
+  .w4-s1[data-step="verdict"] .w4-card-claim,
+  .w4-s1[data-step="verdict"] .w4-card-guess {
+    padding: 0 12px;
+  }
+  .w4-s1[data-step="verdict"] .w4-handles {
+    margin-top: 6px;
+    border-top: 1px solid var(--w4-hair);
+  }
+  .w4-s1[data-step="verdict"] .w4-card-claim {
+    font-size: 1.125rem;
+  }
+  .w4-s1[data-step="verdict"] .w4-card-guess {
+    margin: 2px 0 0;
+  }
+  /* On a phone the verdict needs the room: the last readout steps aside, the slot names say what it said. */
+  .w4-s1[data-step="verdict"] .w4-readout {
+    display: none;
+  }
 }
 @media (min-width: 64rem) {
   .w4-s1 {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    grid-template-rows: auto minmax(0, 1fr);
-    column-gap: 28px;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    column-gap: 40px;
+    row-gap: 12px;
   }
   .w4-s1-card {
     grid-column: 1;
@@ -754,12 +929,26 @@ button.w4-doc-row {
     grid-column: 1;
     grid-row: 2;
   }
+  .w4-s1-drawings {
+    display: grid;
+    align-content: start;
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+  }
   .w4-s1-doc {
     grid-column: 2;
-    grid-row: 1 / span 2;
+    grid-row: 1 / span 3;
+    margin-right: 22px;
   }
   .w4-card-claim {
     font-size: 1.625rem;
+  }
+  /* The drawings and the slots stay on the stage, so the readout keeps to its sentences. */
+  .w4-s1 .w4-readout-figure,
+  .w4-s1 .w4-readout .w4-slot {
+    display: none;
   }
 }
 
@@ -1021,10 +1210,9 @@ button.w4-doc-row {
   font-size: 8.5px;
 }
 .w4-months-slot {
-  fill: var(--w4-mark-soft);
-  stroke: var(--w4-mark);
-  stroke-width: 1.4;
-  stroke-dasharray: 4 3;
+  fill: rgb(253 251 246 / 0.16);
+  stroke: rgb(255 217 201 / 0.75);
+  stroke-width: 1.2;
 }
 .w4-months-slot[data-drop] {
   fill: rgb(183 58 21 / 0.2);
@@ -1286,8 +1474,9 @@ button.w4-doc-row {
   gap: 8px;
   margin-top: 6px;
   padding: 4px 10px;
-  border: 1.5px dashed rgb(243 240 233 / 0.55);
-  border-radius: 12px;
+  border-radius: 14px;
+  background: rgb(18 12 10 / 0.22);
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.28), inset 0 0 0 1px rgb(243 240 233 / 0.18);
 }
 .w4-ablage-label {
   font-size: 0.75rem;
@@ -1381,8 +1570,7 @@ button.w4-doc-row {
   box-shadow: 0 0 0 2px var(--w4-creme), var(--w4-shadow);
 }
 .w4-tile[data-link="depends"] {
-  outline: 2px dashed var(--w4-creme);
-  outline-offset: 1px;
+  box-shadow: 0 0 0 2px rgb(243 240 233 / 0.45), 0 0 14px rgb(255 217 201 / 0.35), var(--w4-shadow);
 }
 .w4-ban {
   margin-left: auto;
@@ -1796,5 +1984,35 @@ button.w4-doc-row {
 @media (prefers-reduced-motion: reduce) {
   .w4-readout-steps p {
     animation: none;
+  }
+}
+
+/* ---------- Phone budget for scene 1 (390 x 664) ----------
+ * While the quotes are being connected, the toolbar steps aside (the
+ * certificate's header says the data are invented), the card is its strip
+ * and the certificate shows lines 3 to 11 whole, above the dock, so no line
+ * has to scroll under a finger. */
+@media (max-width: 63.99rem) {
+  .w4-data[data-connecting] .w4-toolbar {
+    display: none;
+  }
+  .w4-s1 .w4-doc-head {
+    min-height: 34px;
+    padding: 3px 10px;
+  }
+  .w4-s1[data-connecting] .w4-doc-body {
+    padding: 2px 0;
+  }
+  .w4-s1[data-connecting] .w4-doc-row {
+    min-height: 24px;
+    grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+    padding-right: 6px;
+  }
+  .w4-s1[data-connecting] .w4-doc-text {
+    padding: 2px 0 2px 8px;
+    line-height: 1.28;
+  }
+  .w4-s1[data-connecting] .w4-doc-n {
+    padding-right: 6px;
   }
 }

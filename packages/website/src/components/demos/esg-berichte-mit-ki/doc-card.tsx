@@ -29,6 +29,7 @@ export function DocCard({
   onPick,
   lineRef,
   compact = false,
+  stripMarks = false,
   className,
   children,
   label,
@@ -48,6 +49,8 @@ export function DocCard({
   readonly lineRef?: (n: number) => Ref<HTMLElement>;
   /** Only the header row: the file stays visible as a strip. */
   readonly compact?: boolean;
+  /** Also show the line marks in the header row (a phone may fold the body away). */
+  readonly stripMarks?: boolean;
   readonly className?: string;
   readonly children?: ReactNode;
   readonly label?: string;
@@ -63,8 +66,8 @@ export function DocCard({
           <span className="w4-doc-name">{name}</span>
           {subtitle ? <span className="w4-doc-sub">{subtitle}</span> : null}
         </span>
-        {compact ? (
-          <span className="w4-doc-strip-marks" aria-hidden="true">
+        {compact || stripMarks ? (
+          <span className="w4-doc-strip-marks" data-always={compact ? "" : undefined} aria-hidden="true">
             {Object.entries(marks).map(([n, mark]) => (
               <span key={n} className="w4-doc-strip-mark">
                 {n}

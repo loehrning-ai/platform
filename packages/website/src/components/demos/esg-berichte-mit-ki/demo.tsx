@@ -43,7 +43,7 @@ function captionFor(pack: Pack, fmt: Fmt, view: BeatId, state: DemoState, guided
     case "zitate": {
       if (state.card.picking) return [fmt.t(pack.connect.picking, { part: pack.card.parts[state.card.picking] })];
       if (cardVerdict(state.card)) return fmt.ts(pack.connect.verdict);
-      return Object.keys(state.card.links).length === 0 ? [...pack.connect.instruction, pack.connect.tapHint] : pack.connect.instruction;
+      return pack.connect.instruction;
     }
     case "umschreiben":
       return state.bench.scope === DEMO_START.bench.scope && state.bench.place === DEMO_START.bench.place && state.bench.offset === DEMO_START.bench.offset
@@ -203,7 +203,9 @@ export default function Demo({ pack, kit, files }: { readonly pack: Pack; readon
 
   const report = ownFile ? ownReport(ownFile.parsed.rows, ownFile.year) : null;
   const caption = captionFor(pack, fmt, view, state, guided, { file: ownFile, door });
-  const picking = view === "zitate" && state.card.picking !== null;
+  // While the quotes are being connected, the caption keeps to two short lines so the certificate keeps its room.
+  const connecting = view === "zitate" && cardVerdict(state.card) === null;
+  const picking = connecting;
   const feld = feldFor("autumn", [{ x: 0.5, y: 0.94 }, { x: view === "ordner" ? 0.3 : 0.72, y: 0.34 }]);
 
   const data = (): ReactNode => {
@@ -287,11 +289,8 @@ export default function Demo({ pack, kit, files }: { readonly pack: Pack; readon
           </div>
         );
       case "zitate":
-        return state.card.guess && !free ? (
-          <GlasChip kind="status" label={fmt.t(pack.guess.chip, { guess: pack.guess[state.card.guess] })}>
-            {fmt.t(pack.guess.chip, { guess: pack.guess[state.card.guess] })}
-          </GlasChip>
-        ) : null;
+        // The card itself carries the guess next to the verdict.
+        return null;
       case "strom": {
         const s = state.strom;
         if (s.water)
@@ -381,13 +380,13 @@ export default function Demo({ pack, kit, files }: { readonly pack: Pack; readon
         feld={feld}
         className="w4-stage"
         dock={
-          <DemoDock className="w4-dock">
+          <DemoDock className="w4-dock" compact>
             {clock.phase === "intro" ? null : <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} picking={picking} />}
             {controls()}
           </DemoDock>
         }
       >
-        <div className="w4-data" data-view={view} data-w4-view={view} data-free={free ? "" : undefined}>
+        <div className="w4-data" data-view={view} data-w4-view={view} data-free={free ? "" : undefined} data-connecting={connecting ? "" : undefined}>
           <div className="w4-toolbar" hidden={clock.phase === "intro"}>
             <span className="w4-invented" data-w4-invented="">
               {pack.invented}
@@ -418,7 +417,7 @@ export default function Demo({ pack, kit, files }: { readonly pack: Pack; readon
           {pack.glossary.map(([term, text]) => (
             <div key={term}>
               <dt>{term}</dt>
-              <dd>{text}</dd>
+              <dd>{fmt.t(text)}</dd>
             </div>
           ))}
         </dl>

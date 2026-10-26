@@ -64,16 +64,45 @@ export function threadPath(from: Anchor, to: Anchor, lane: number): string {
     const pull = Math.max(24, (lineLeft - from.x) / 2);
     return `M${from.x} ${y0}C${from.x} ${y0 + 48} ${lineLeft - pull} ${to.y} ${lineLeft} ${to.y}`;
   }
+  // The file lies below the parts: leave each part from its bottom edge, run along the gap
+  // under the strip in the part's own lane, down the file's right margin, into the glyph.
   const gx = to.x + 6 - lane * 3;
-  const r = Math.max(2, Math.min(10, Math.abs(to.y - from.y) / 2, Math.abs(gx - startX)));
-  const down = to.y >= from.y ? 1 : -1;
+  const y0 = from.y + (from.hh ?? 0);
+  const y1 = y0 + 3 + lane * 2;
+  const r = Math.max(2, Math.min(8, Math.abs(to.y - y1) / 2, Math.abs(gx - from.x) / 2));
   return [
-    `M${startX} ${from.y}`,
-    `L${gx - r} ${from.y}`,
-    `Q${gx} ${from.y} ${gx} ${from.y + down * r}`,
-    `L${gx} ${to.y - down * r}`,
+    `M${from.x} ${y0}`,
+    `L${from.x} ${y1 - r}`,
+    `Q${from.x} ${y1} ${from.x + r} ${y1}`,
+    `L${gx - r} ${y1}`,
+    `Q${gx} ${y1} ${gx} ${y1 + r}`,
+    `L${gx} ${to.y - r}`,
     `Q${gx} ${to.y} ${gx - r} ${to.y}`,
     `L${to.x + 4} ${to.y}`,
+  ].join("");
+}
+
+/**
+ * The connection running on from a line that does not carry its part into the
+ * empty slot of the missing document below the file: out of the line's glyph,
+ * down the file's right margin, into the slot's right edge.
+ */
+export function slotPath(from: Anchor, to: Anchor, lane: number): string {
+  // Down the right margin, then along the gap above the slots, into the slot's top edge:
+  // the thread never runs across another slot's words.
+  const gx = Math.max(from.x + 14, to.x + (to.hw ?? 0) + 10) + lane * 4;
+  const top = to.y - (to.hh ?? 0);
+  const ty = top - 4 - lane * 3;
+  const r = Math.max(2, Math.min(6, Math.abs(ty - from.y) / 2, Math.abs(gx - to.x) / 2));
+  return [
+    `M${from.x + 6} ${from.y}`,
+    `L${gx - r} ${from.y}`,
+    `Q${gx} ${from.y} ${gx} ${from.y + r}`,
+    `L${gx} ${ty - r}`,
+    `Q${gx} ${ty} ${gx - r} ${ty}`,
+    `L${to.x + r} ${ty}`,
+    `Q${to.x} ${ty} ${to.x} ${ty + r}`,
+    `L${to.x} ${top}`,
   ].join("");
 }
 

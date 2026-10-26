@@ -116,6 +116,7 @@ export function BenchScene({
             claimKey: `${levers.scope}-${result.expired}`,
             place: levers.scope === "alle" && levers.place === "regalkarte" ? kit.claim.place : pack.bench.place[levers.place],
             stichtag: fmt.t(pack.card.stichtag, { date: fmt.date(date) }),
+            stichtagShort: fmt.date(date),
             status: result.status,
             statusLabel: fmt.t(pack.card.status, { status: pack.statuses[result.status] }),
           }}
@@ -138,7 +139,7 @@ export function BenchScene({
           onChange={onPlace}
         />
       </div>
-      <div className="w4-s2-field" aria-label={pack.connect.field} role="img">
+      <div className="w4-s2-field" aria-label={fmt.t(pack.connect.field)} role="img">
         <FieldDrawing outline={outline} cellarLabel={pack.connect.cellar} />
       </div>
       <div className="w4-s2-ruler">
