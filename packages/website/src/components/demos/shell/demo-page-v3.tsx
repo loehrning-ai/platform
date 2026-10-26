@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { ArrowGlyph } from "@/components/werk";
+import { ClaudeSceneSection } from "@/components/demos/claude-scene/claude-scene-section";
 import { ForYourClaude } from "@/components/demos/take-home/for-your-claude";
 import type { Beat } from "@/lib/demo-beats";
 import { demoLede, type LocalizedDemo } from "@/lib/demos";
@@ -126,6 +127,7 @@ export function DemoPageV3({
 
       <ClosingBand demo={demo} workshop={workshop} locale={locale} />
       <ForYourClaude slug={demo.slug} locale={locale} />
+      <ClaudeSceneSection slug={demo.slug} locale={locale} standalone />
       <DemoOpenTracker slug={demo.slug} />
     </article>
   );

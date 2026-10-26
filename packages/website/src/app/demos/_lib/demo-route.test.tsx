@@ -104,9 +104,12 @@ describe("/demos/[slug] page shell", () => {
         for (const status of mount?.querySelectorAll('[role="status"]') ?? []) {
           expect(status.textContent?.trim() ?? "").toBe("");
         }
-        // The band owns the only h1; no collapsible UI anywhere on the page.
+        // The band owns the only h1; no collapsible UI anywhere on the page,
+        // except the Claude scene's plain-text alternative ("Als Text lesen").
         expect(container.querySelectorAll("h1")).toHaveLength(1);
-        expect(container.querySelector("details, summary")).toBeNull();
+        for (const element of container.querySelectorAll("details, summary")) {
+          expect(element.closest(".cds-transcript")).not.toBeNull();
+        }
         expectCapsInsideScene(container);
         expectNoMennigeInScene(container);
       });
