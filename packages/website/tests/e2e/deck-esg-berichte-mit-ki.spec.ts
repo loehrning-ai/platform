@@ -141,7 +141,8 @@ for (const edition of EDITIONS) {
     test("the phone note links to this edition's demo and never to a script or another host", async ({ page }) => {
       await open(page, edition.deck);
       const link = page.locator("deck-stage .rotate a");
-      await expect(link).toHaveAttribute("href", new URL(edition.demo, page.url()).href);
+      const resolved = () => link.evaluate((a) => (a as HTMLAnchorElement).href);
+      await expect.poll(resolved).toBe(new URL(edition.demo, page.url()).href);
 
       for (const hostile of ["javascript:alert(1)", "data:text/html,x", "//example.com/x", "https://example.com/x"]) {
         await page.route(`**${edition.deck}`, async (route) => {
@@ -150,7 +151,7 @@ for (const edition of EDITIONS) {
           await route.fulfill({ response, body });
         });
         await open(page, edition.deck);
-        await expect(link, hostile).toHaveAttribute("href", new URL("./guide.html", page.url()).href);
+        await expect.poll(resolved, { message: hostile }).toBe(new URL("./guide.html", page.url()).href);
         await page.unrouteAll();
       }
     });
