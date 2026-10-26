@@ -8,7 +8,8 @@
  *
  *   6  links to this site: the closing slide names the demo page and carries a QR code to it, the kit slide a
  *      QR code to the kit page, the footer drops the repository that is not public yet
- *   7  the site's frame: the loehrning.ai mark and author, "← Workshop" back to the workshop page, the toolbar
+ *   7  the site's frame: the loehrning.ai mark and author, "← Workshop" back to the workshop page (it fades when the
+ *      mouse rests, as in Workshops 01 to 05), the vote band on paper instead of ink, the toolbar
  *      always shown with "Neu starten R" and "Moderation P", like the decks of Workshops 01 to 05; a light cover
  *      (no dark slide, paper behind the stage) and the host on slide 2, which takes one of the cover's two minutes
  *   8  three presenter notes in the site's words: no boss ("an die Chefin weitergeben" becomes "so weitergeben")
@@ -100,6 +101,14 @@ body.presenting #controls { display: none; }
 .host-now { position: absolute; left: 640px; top: 166px; width: 240px; height: 16px; margin: 0; border: 3px solid var(--accent); border-top: 0; }
 .host-now span { position: absolute; left: 0; top: 26px; font: 700 28px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
 .host-line { margin: 40px 0 0; max-width: 900px; font-size: 34px; line-height: 1.3; color: var(--muted); }
+/* The vote band on paper like every other ground: an ink frame, ink text, outlined number chips. */
+.room-vote { background: var(--bg); color: var(--fg); border: 3px solid var(--fg); }
+.room-vote .rv-tag { border: 0; border-right: 3px solid var(--fg); }
+.room-vote .rv-opts b { background: transparent; color: var(--fg); border: 3px solid var(--fg); }
+/* "← Workshop" fades after 2.5 s without mouse movement, as on the decks of Workshops 01 to 05, so it leaves the mark free. */
+.site-back { transition: opacity 200ms; }
+.site-back[data-idle] { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .site-back { transition: none; } }
 </style>
 `;
 
@@ -123,6 +132,23 @@ const HOST_SLIDE = `<!-- 02 host (loehrning.ai edition) -->
     <p class="host-line" data-step="0" style="--order:4">Jede Firma, jede Person und jede Datei in diesem Workshop ist erfunden.</p>
   </div>
 </section>
+`;
+
+/** "← Workshop" fades after BACK_IDLE_MS without mouse movement and returns on mouse move or focus (as in Workshops 01 to 05). */
+const BACK_IDLE_SCRIPT = `<script id="site-back-idle">
+(function () {
+  var link = document.querySelector('.site-back');
+  if (!link) return;
+  var BACK_IDLE_MS = 2500, timer = 0;
+  function hide() { if (document.activeElement !== link) link.setAttribute('data-idle', ''); }
+  function wake() { link.removeAttribute('data-idle'); clearTimeout(timer); timer = setTimeout(hide, BACK_IDLE_MS); }
+  window.addEventListener('mousemove', wake, { passive: true });
+  window.addEventListener('pointerdown', wake, { passive: true });
+  link.addEventListener('focus', wake);
+  link.addEventListener('blur', wake);
+  wake();
+})();
+</script>
 `;
 
 /** The host's presenter cue, in the shape of rotfaden's deck-meta cues. */
@@ -185,6 +211,7 @@ async function edits(source) {
       `<a class="site-back" href="/workshops/${SLUG}" aria-label="Zurück zur Workshop-Seite"><span aria-hidden="true">←</span><span class="site-back-label">Workshop</span></a>\n<div id="viewport">`,
     ],
     [7, `<span class="brand">rotfaden</span>`, `<span class="brand">${MARK}loehrning.ai</span>`],
+    [7, `</body>`, `${BACK_IDLE_SCRIPT}</body>`],
     [7, `"author": "rotfaden"`, `"author": "loehrning.ai"`],
     [
       7,
