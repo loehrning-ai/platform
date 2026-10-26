@@ -131,6 +131,14 @@ test.describe(`/demos/${SLUG}`, () => {
       await next(page);
       await page.locator("[data-w03-test]").click();
       await expect(page.locator("[data-w03-test-card]")).toContainText(n("334.675"));
+      // The test list grades the recorded answers: the take with the skill names no level, the view passes.
+      await expect(page.getByRole("dialog")).toHaveCount(0);
+      await page.locator('[data-w03-grade="with"]').click();
+      await expect(caption(page)).toContainText(de ? "keinen Stand" : "no month-end level");
+      await page.locator('[data-w03-grade="view"]').click();
+      await expect(caption(page)).toContainText(de ? "Der Test besteht" : "The test passes");
+      // The first "Weiter" after the test opens the whole card.
+      await next(page);
       await expect(page.getByRole("dialog")).toBeVisible();
       await page.locator("[data-w03-sheet-next]").click();
       await expect(beat(page)).toHaveAttribute("data-beat", "deine-karte");
@@ -225,6 +233,79 @@ test.describe(`/demos/${SLUG}`, () => {
     const text = readFileSync(await download.path(), "utf8");
     expect(text).toContain("1.234.567,89 / 1.198.000 / 1.305.442,10 EUR");
     expect(text).toContain("Stichtag: 2026-10-01.");
+  });
+
+  test("at 390 x 664 the object to touch sits above the dock in every scene", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.setViewportSize({ width: 390, height: 664 });
+    await open(page, `/demos/${SLUG}`);
+    await start(page);
+    const aboveDock = async (selector: string) => {
+      const target = page.locator(selector).first();
+      await expect(target).toBeInViewport();
+      const box = await target.boundingBox();
+      const dock = await page.locator("[data-demo-lever]").boundingBox();
+      expect(box && dock ? box.y + 12 : 9999, selector).toBeLessThan(dock?.y ?? 0);
+    };
+    await aboveDock("[data-w03-answer-card] table");
+    await page.locator('[data-w03-send="ask"]').click();
+    await next(page);
+    await aboveDock('[data-w03-grab="water"]');
+    await page.getByRole("slider", { name: "Anfangsstand Ende Dezember 2025" }).press("PageUp");
+    await next(page);
+    await aboveDock(".w03-edge-handle");
+    await next(page);
+    await aboveDock("[data-w03-chip]");
+    for (const chip of ["kindRight", "periodRight", "unit", "dateRight"]) await page.locator(`[data-w03-chip="${chip}"]`).click();
+    await next(page);
+    await aboveDock('[data-w03-tile="view"]');
+    await page.locator('[data-w03-tile="view"]').click();
+    await next(page);
+    await aboveDock(".w03-pour-col");
+    await page.locator('[data-w03-pour="levels"]').click();
+    await page.locator('[data-w03-pour="june"]').click();
+    await next(page);
+    await aboveDock(".w03-grid12");
+    await page.locator('[data-w03-rule="A"]').click();
+    await page.locator('[data-w03-rule="N"]').click();
+    await next(page);
+    await aboveDock('[data-w03-zone="out"]');
+  });
+
+  test("a touch drag on the water line moves the level and never scrolls the stage", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "touch is dispatched through the Chrome DevTools Protocol");
+    await page.setViewportSize({ width: 390, height: 664 });
+    await open(page, `/demos/${SLUG}`);
+    await start(page);
+    await page.locator('[data-w03-send="ask"]').click();
+    await next(page);
+    const grab = page.locator('[data-w03-grab="water"]');
+    await expect(grab).toBeInViewport();
+    const box = await grab.boundingBox();
+    if (!box) throw new Error("no water grab");
+    const main = page.locator(".w03-main");
+    const scrolled = await main.evaluate((element) => element.scrollTop);
+    const cdp = await page.context().newCDPSession(page);
+    const x = box.x + box.width / 2;
+    const y0 = box.y + box.height / 2;
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y: y0 }] });
+    for (let step = 1; step <= 12; step += 1) await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y: y0 - step * 10 }] });
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    const water = page.getByRole("slider", { name: "Anfangsstand Ende Dezember 2025" });
+    await expect.poll(async () => Number(await water.getAttribute("aria-valuenow"))).toBeGreaterThanOrEqual(200_000);
+    expect(await main.evaluate((element) => element.scrollTop)).toBe(scrolled);
+  });
+
+  test("ArrowUp leaves zero: the snap to Claude's start is for pointer drags only", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await open(page, `/demos/${SLUG}`);
+    await start(page);
+    await page.locator('[data-w03-send="ask"]').click();
+    await next(page);
+    const water = page.getByRole("slider", { name: "Anfangsstand Ende Dezember 2025" });
+    await water.focus();
+    await water.press("ArrowUp");
+    await expect(water).not.toHaveAttribute("aria-valuenow", "0");
   });
 
   test("the first screen holds the intro and its start at 390 x 664", async ({ page }) => {

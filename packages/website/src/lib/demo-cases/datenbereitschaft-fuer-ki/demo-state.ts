@@ -90,7 +90,15 @@ export interface DemoState {
   readonly pending: FileId | null;
   readonly projektMove: 1 | 2;
   readonly tested: boolean;
+  /** Which answer the test list grades after the test (scene 5 move 2). */
+  readonly grade: GradeId;
 }
+
+/** The answers the test list can grade: the rehearsal table and three takes of today's recording. */
+export const GRADES = ["rehearsal", "without", "with", "view"] as const;
+export type GradeId = (typeof GRADES)[number];
+/** The values each graded answer ends with, read from the takes by facts.ts (null: it names no level). */
+export type Grading = Readonly<Record<GradeId, readonly number[] | null>>;
 
 const NO_GAPS: Readonly<Record<GapId, ChipId | null>> = { kind: null, period: null, unit: null, date: null };
 const NOTHING_PLACED: Readonly<Record<FileId, Side | null>> = { view: null, definitions: null, instructions: null, export: null, contacts: null, testlist: null };
@@ -121,6 +129,7 @@ export const INITIAL_STATE: DemoState = {
   pending: null,
   projektMove: 1,
   tested: false,
+  grade: "rehearsal",
 };
 
 export type Action =
@@ -144,6 +153,7 @@ export type Action =
   | { readonly type: "settle" }
   | { readonly type: "projektMove"; readonly move: 1 | 2 }
   | { readonly type: "test" }
+  | { readonly type: "grade"; readonly grade: GradeId }
   | { readonly type: "reach"; readonly beat: number; readonly move?: 1 | 2 };
 
 export function clampOpening(value: number): number {
@@ -292,6 +302,8 @@ export function demoReducer(state: DemoState, action: Action): DemoState {
       return { ...state, projektMove: action.move };
     case "test":
       return sortDone(state) || state.projektMove === 2 ? { ...state, tested: true } : state;
+    case "grade":
+      return state.tested ? { ...state, grade: action.grade } : state;
     case "reach":
       return reach(state, action.beat, action.move);
   }

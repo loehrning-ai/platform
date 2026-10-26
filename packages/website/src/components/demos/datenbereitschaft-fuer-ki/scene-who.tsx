@@ -54,6 +54,7 @@ export function PourTub({ tub, pack, fmt, pour, onPour, reducedMotion }: { reado
   return (
     <Tub
       {...tub}
+      hidePills={(pour.kind === "levels" || pour.kind === "changes") && pour.members.length >= 2}
       layer={(geometry) => <PourMarks pack={pack} fmt={fmt} geometry={geometry} pour={pour} drag={drag} reducedMotion={reducedMotion} />}
       overlay={(geometry) => <PourHits pack={pack} fmt={fmt} geometry={geometry} pour={pour} onPour={onPour} drag={drag} setDrag={setDrag} onStart={() => glas.noteDrag()} />}
     />
@@ -223,16 +224,8 @@ function PourMarks({ pack, fmt, geometry, pour, drag, reducedMotion }: { readonl
         </g>
       );
     }
-  } else if (pour.kind === "june") {
-    const c = geometry.col("2026-06");
-    if (c) {
-      result = (
-        <text x={(c.x0 + c.x1) / 2} y={y(LEVELS[2] ?? 0) - 20} textAnchor="middle" className="w03-stack-label" aria-hidden="true">
-          {fmt.n(LEVELS[2] ?? 0)}
-        </text>
-      );
-    }
   }
+  // "Stand Ende Juni" lights the June column; its pill already names the level.
 
   const ghostX = drag ? drag.x : 0;
   const dragged = drag ? geometry.col(QUARTER_MONTHS[drag.from] as string) : undefined;
@@ -259,7 +252,7 @@ export function pourCaption(pack: Pack, fmt: Fmt, pour: Pour): readonly string[]
   if (pour.kind === "levels" && pour.members.length >= 2) return [fmt.t(w.levels, { count: pour.members.length, sum: fmt.eur(sumAt(LEVELS, pour.members)) })];
   if (pour.kind === "changes" && pour.members.length === 3) return [fmt.t(w.changesAll, { sum: fmt.eur(sumAt(CHANGES, pour.members)) })];
   if (pour.kind === "changes" && pour.members.length === 2) return [fmt.t(w.changesTwo, { sum: fmt.eur(sumAt(CHANGES, pour.members)) })];
-  return [w.lead1, w.pourStart];
+  return [w.pourStart, w.lead1];
 }
 
 /** The key of the counting rule for its caption: "AN", "A", "search", "none" … */
@@ -294,6 +287,20 @@ export function WhoCounts({ pack, fmt, state, onCode, onSearch, reducedMotion }:
   const n = matchedCount(state);
   return (
     <div className="w03-who" data-reduced={reducedMotion ? "" : undefined}>
+      <div className="w03-accounts">
+        <div className="w03-grid12" role="img" aria-label={`${w.tilesLabel}. ${fmt.t(w.counter, { n })}`}>
+          {[...STATUS].map((code, index) => {
+            const lit = !state.search && state.codes[code as Code];
+            return <span key={index} className="w03-acct" data-lit={lit ? "" : undefined} data-group={code} />;
+          })}
+        </div>
+        <div className="w03-counter">
+          <p className="w03-counter-n" data-w03-counter="">
+            {fmt.t(w.counter, { n })}
+          </p>
+          <p className="w03-counter-target">{fmt.t(w.target, { n: ACTIVE_ACCOUNTS["2026-06"] })}</p>
+        </div>
+      </div>
       <ul className="w03-rules">
         {CODES.map((code) => {
           const [before, after] = w.sentences[code];
@@ -322,20 +329,6 @@ export function WhoCounts({ pack, fmt, state, onCode, onSearch, reducedMotion }:
       <button type="button" className="w03-search" aria-pressed={state.search} onClick={() => onSearch(!state.search)} data-w03-search="">
         {w.search}
       </button>
-      <div className="w03-accounts">
-        <div className="w03-grid12" role="img" aria-label={`${w.tilesLabel}. ${fmt.t(w.counter, { n })}`}>
-          {[...STATUS].map((code, index) => {
-            const lit = !state.search && state.codes[code as Code];
-            return <span key={index} className="w03-acct" data-lit={lit ? "" : undefined} data-group={code} />;
-          })}
-        </div>
-        <div className="w03-counter">
-          <p className="w03-counter-n" data-w03-counter="">
-            {fmt.t(w.counter, { n })}
-          </p>
-          <p className="w03-counter-target">{fmt.t(w.target, { n: ACTIVE_ACCOUNTS["2026-06"] })}</p>
-        </div>
-      </div>
     </div>
   );
 }

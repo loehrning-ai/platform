@@ -2,7 +2,7 @@
 
 import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
 import { ENDING_MRR, NET_NEW_2026, SUMMARY } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
-import { CHIP_GAP, CHIP_ORDER, GAPS, RIGHT_CHIPS, TILES, type ChipId, type DemoState, type GapId, type TileId } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
+import { CHIP_GAP, CHIP_ORDER, GAPS, RIGHT_CHIPS, type ChipId, type DemoState, type GapId, type TileId } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
 import type { Fmt } from "./fmt";
 import { hit, useDrop } from "./use-drop";
 
@@ -79,6 +79,9 @@ export function QuestionBuilder({ pack, fmt, state, onChip, onUnchip }: { readon
   );
 }
 
+/** The order on screen: the approved view sits among the exports, in the first rows, never last and below the fold. */
+const TILE_ORDER: readonly TileId[] = ["monthly_revenue", "subscription_export", "view", "billing_events", "acct_history", "customer_master", "usage_log", "tickets"];
+
 /**
  * Scene 3, box 2: eight tiles, the seven export tables and the approved
  * view. An export tile lands, says its one sentence and springs back; the
@@ -131,7 +134,7 @@ export function ViewPicker({ pack, fmt, state, onTile }: { readonly pack: Pack; 
       </div>
       {!landed ? (
         <div className="w03-tiles" role="group" aria-label={s.tilesLabel}>
-          {TILES.map((tile) => (
+          {TILE_ORDER.map((tile) => (
             <button
               key={tile}
               type="button"

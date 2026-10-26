@@ -46,6 +46,8 @@ export interface TubProps {
   readonly wide: boolean;
   /** Claude's table as a dashed ghost line. */
   readonly ghost: boolean;
+  /** Hides the quarter's level pills and band name (a stacked pour draws its own sum there). */
+  readonly hidePills?: boolean;
   /** The brackets between the ghost and the water in the quarter. */
   readonly brackets?: boolean;
   /** Read amount as a level (scene 2, "Mehr dazu"): the water becomes each month's change. */
@@ -91,6 +93,29 @@ function sliderKey(key: string, shift: boolean): number | "home" | "end" | null 
   return null;
 }
 
+/**
+ * Where each level pill sits. A pill wants to sit just above its water line,
+ * never above the rim. Narrow quarter columns (the wide view, or any phone)
+ * overlap side by side, so from June backwards each quarter pill moves down
+ * until it clears the pill of the month after it: none hides another, even
+ * when the rim pushes them all to the top.
+ */
+export function stackPills(entries: readonly { readonly month: string; readonly level: number | null | undefined }[], height: number, narrow: boolean): Map<string, number> {
+  const tops = new Map<string, number>();
+  const ceiling = PLOT.t + 12;
+  for (const { month, level } of entries) if (level != null) tops.set(month, Math.max(ceiling, y(level) - height - 2));
+  if (!narrow) return tops;
+  let below: number | null = null;
+  for (const month of [...QUARTER_MONTHS].reverse()) {
+    const top = tops.get(month);
+    if (top == null) continue;
+    const placed: number = below === null ? top : Math.max(top, below + height + 2);
+    tops.set(month, placed);
+    below = placed;
+  }
+  return tops;
+}
+
 /** The keys of the file edge: left pulls it back one month, right forward. */
 function edgeKey(key: string): number | "home" | "end" | null {
   if (key === "Home") return "home";
@@ -107,6 +132,7 @@ export function Tub({
   edge,
   wide,
   ghost,
+  hidePills = false,
   brackets = false,
   asLevel = false,
   onOpening,
@@ -246,7 +272,12 @@ export function Tub({
   const edgeX = startCol ? startCol.x0 : PLOT.l;
   // A phone shows December and the quarter only, so every pill stays readable at its larger size.
   const labelMonths = wideShare > 0.5 || phone ? ["2025-12", ...QUARTER_MONTHS] : ["2025-12", ...MONTHS_2026];
-  const pill = phone ? { char: 7.1, h: 18, step: 20 } : { char: 5.4, h: 13, step: 14 };
+  const pill = phone ? { char: 7.1, h: 18 } : { char: 5.4, h: 13 };
+  const pillTops = stackPills(
+    labelMonths.map((month) => ({ month, level: levels.get(month) })),
+    pill.h,
+    wideShare > 0.5 || phone,
+  );
   const notchShown = Boolean(onOpening) && !computed && !asLevel && shown < 4_000 && drag === null;
   const toSvg = (clientX: number, clientY: number) => svgPoint(svg.current, clientX, clientY);
   const geometry: TubGeometry = { cols, col, levels, toSvg, box, phone };
@@ -306,10 +337,10 @@ export function Tub({
           <line x1={PLOT.l - 6} x2={PLOT.r + 6} y1={PLOT.b} y2={PLOT.b} className="w03-floor" />
           <rect x={PLOT.l - 6} y={PLOT.t - 4} width={PLOT.r - PLOT.l + 12} height={PLOT.b - PLOT.t + 8} rx="12" fill={`url(#${ids}-wall)`} className="w03-vessel-wall" />
           <rect x={PLOT.l - 6} y={PLOT.t - 4} width={PLOT.r - PLOT.l + 12} height="16" rx="12" fill={`url(#${ids}-rim)`} className="w03-vessel-rim" />
-          <text x={PLOT.l - 9} y={y(Y_MAX) + 4} textAnchor="end" className="w03-axis">
+          <text x={PLOT.l - 7} y={y(Y_MAX) + 4} textAnchor="end" className="w03-axis w03-axis-y">
             {fmt.compact(Y_MAX)}
           </text>
-          <text x={PLOT.l - 9} y={PLOT.b + 3} textAnchor="end" className="w03-axis">
+          <text x={PLOT.l - 7} y={PLOT.b + 3} textAnchor="end" className="w03-axis w03-axis-y">
             0
           </text>
           {cols.map((c) =>
@@ -325,7 +356,7 @@ export function Tub({
           const band = col("2026-04");
           const end = col("2026-06");
           // Right-aligned to the vessel's inner edge: in the wide view the band is narrower than its name.
-          return band && end ? (
+          return band && end && !hidePills ? (
             <text x={PLOT.r - 3} y={PLOT.t + 11} textAnchor="end" className="w03-band-label">
               {pack.wanne.quarterBand}
             </text>
@@ -342,7 +373,7 @@ export function Tub({
               return (
                 <g key={month} className="w03-bracket" aria-hidden="true">
                   <path d={`M${x - 3},${y(top)}h3V${y(low)}h-3`} />
-                  {month === "2026-05" ? (
+                  {month === "2026-05" && wideShare < 0.5 ? (
                     <text x={x - 5} y={(y(top) + y(low)) / 2 + 3} textAnchor="end" className="w03-bracket-label">
                       {fmt.n(Math.round(shown))}
                     </text>
@@ -359,11 +390,10 @@ export function Tub({
               if (!c || level == null || c.x1 - c.x0 < 8) return null;
               const cx = (c.x0 + c.x1) / 2;
               if (month === "2025-12" && notchShown) return null;
+              if (hidePills && QUARTER_MONTHS.includes(month)) return null;
               const text = fmt.n(Math.round(level));
               const width = Math.max(30, text.length * pill.char + 10);
-              // Narrow quarter columns (wide view, or any phone): the pills step up so none hides another.
-              const step = wideShare > 0.5 || phone ? Math.max(0, QUARTER_MONTHS.indexOf(month)) * pill.step : 0;
-              const top = Math.max(PLOT.t + 12, y(level) - pill.h - 2 - step);
+              const top = pillTops.get(month) ?? PLOT.t + 12;
               return (
                 <g key={month} className="w03-pill" aria-hidden="true">
                   <rect x={cx - width / 2} y={top} width={width} height={pill.h} rx={pill.h / 2} />

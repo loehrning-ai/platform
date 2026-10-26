@@ -8,6 +8,16 @@ import { EDGE_STARTS, tubLevels } from "./logic";
 
 const run = (actions: readonly Action[], from: DemoState = INITIAL_STATE) => actions.reduce(demoReducer, from);
 
+describe("grading after the test", () => {
+  it("picks an answer only once the test ran, and a restart forgets it", () => {
+    expect(run([{ type: "grade", grade: "with" }]).grade).toBe("rehearsal");
+    const tested = run([{ type: "reach", beat: 4, move: 2 }, { type: "test" }, { type: "grade", grade: "view" }]);
+    expect(tested.tested).toBe(true);
+    expect(tested.grade).toBe("view");
+    expect(demoReducer(tested, { type: "restart" }).grade).toBe("rehearsal");
+  });
+});
+
 describe("the old kit links (v3 beat ids)", () => {
   it("land on their v4 beat and move", () => {
     const index = (id: string) => BEATS.findIndex((beat) => beat.id === id);

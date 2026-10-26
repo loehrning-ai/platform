@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type PointerEvent } from "react";
-import { ESCAPE_PRIORITY, GlasChip, GlasSegmented, pushEscapeLayer, useGlas } from "@/components/demos/glas";
+import { ESCAPE_PRIORITY, GlasSegmented, pushEscapeLayer, useGlas } from "@/components/demos/glas";
 import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
 import { QUARTER, REHEARSAL_RUNS } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
 import type { Sent } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
@@ -47,7 +47,7 @@ export function SceneAnswer({
   readonly onSend: (to: Sent) => void;
   /** The target the card hovers over while dragged (the dock brightens its rim). */
   readonly onHover: (target: Sent | null) => void;
-  /** The line under the status chip when today's recording gave the same table (copy variant A), or null. */
+  /** The lines under the status about today's recording (from its facts), or null. */
   readonly todayLine: string | null;
   readonly reducedMotion: boolean;
 }) {
@@ -122,9 +122,7 @@ export function SceneAnswer({
       >
         <span className="w03-answer-grip" aria-hidden="true" />
         <div className="w03-answer-head">
-          <p className="w03-answer-prompt">
-            <span className="w03-kicker">{a.promptLabel}</span> {fmt.quote(a.prompt)}
-          </p>
+          <span className="w03-kicker">{a.promptLabel}</span>
           <GlasSegmented
             label={a.runsLabel}
             options={[
@@ -135,13 +133,10 @@ export function SceneAnswer({
             onChange={(value) => onRun(value === "1" ? 1 : 2)}
           />
         </div>
-        <p className="w03-answer-status">
-          <GlasChip kind="status">{fmt.t(a.status, { n: run })}</GlasChip>
-        </p>
-        {todayLine ? <p className="w03-answer-today">{todayLine}</p> : null}
+        <p className="w03-answer-prompt">{fmt.quote(a.prompt)}</p>
         {record?.caveat === "before" ? note : null}
         <table className="w03-answer-table">
-          <caption>{a.tableTitle}</caption>
+          <caption className="sr-only">{a.tableTitle}</caption>
           <thead>
             <tr>
               <th scope="col">{a.monthHead}</th>
@@ -158,6 +153,11 @@ export function SceneAnswer({
           </tbody>
         </table>
         {record?.caveat === "after" ? note : null}
+        {/* The status wraps instead of being cut off (a chip truncates it on a phone). */}
+        <p className="w03-answer-status" data-w03-status="">
+          {fmt.t(a.status, { n: run })}
+        </p>
+        {todayLine ? <p className="w03-answer-today">{todayLine}</p> : null}
         <p className="w03-answer-under">{a.under}</p>
         {sent ? (
           <p className="w03-answer-stamp" data-w03-stamp={sent}>

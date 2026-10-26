@@ -195,25 +195,6 @@ export function OwnStage({ pack, fmt, own, onChange, onExample, onFile }: { read
       <p className="w03-privacy" data-w03-privacy="">
         {o.privacy}
       </p>
-      <GlasDropZone
-        text={o.dropText}
-        buttonLabel={o.dropButton}
-        accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values"
-        onFile={onFile}
-        error={own.error ? (own.error === "read" ? o.errors.read : o.errors[own.error]) : undefined}
-        className="w03-drop"
-      />
-      <div className="w03-examples" role="group" aria-label={o.examplesLabel}>
-        <p className="w03-pick-label">{o.examplesLabel}</p>
-        <div className="w03-pick-chips">
-          {EXAMPLES.map((example) => (
-            <button key={example.id} type="button" className="w03-col-chip" aria-pressed={own.example === example.id} onClick={() => onExample(example.id)} data-w03-example={example.id}>
-              {o.examples[example.id]}
-            </button>
-          ))}
-        </div>
-        {own.example ? <p className="w03-own-note">{o.exampleNote}</p> : null}
-      </div>
       {own.table ? (
         <div className="w03-own-read">
           <p className="w03-own-line" data-w03-own-read="">
@@ -279,6 +260,26 @@ export function OwnStage({ pack, fmt, own, onChange, onExample, onFile }: { read
       ) : (
         <p className="w03-own-note">{o.noFile}</p>
       )}
+      {/* Once a file is read, its result comes first; the drop zone and the examples move below it. */}
+      <GlasDropZone
+        text={o.dropText}
+        buttonLabel={o.dropButton}
+        accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values"
+        onFile={onFile}
+        error={own.error ? (own.error === "read" ? o.errors.read : o.errors[own.error]) : undefined}
+        className="w03-drop"
+      />
+      <div className="w03-examples" role="group" aria-label={o.examplesLabel}>
+        <p className="w03-pick-label">{o.examplesLabel}</p>
+        <div className="w03-pick-chips">
+          {EXAMPLES.map((example) => (
+            <button key={example.id} type="button" className="w03-col-chip" aria-pressed={own.example === example.id} onClick={() => onExample(example.id)} data-w03-example={example.id}>
+              {o.examples[example.id]}
+            </button>
+          ))}
+        </div>
+        {own.example ? <p className="w03-own-note">{o.exampleNote}</p> : null}
+      </div>
     </div>
   );
 }

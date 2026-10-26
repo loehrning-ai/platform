@@ -2,22 +2,22 @@
 
 import { useEffect, useState } from "react";
 import type { Pack } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
-import { CLAUDE_ANSWER, QUARTER, T1_EXPECTED } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
-import { CARD_SIDE, FILES, SETTLE_MS, type DemoState, type FileId, type Side } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
+import { QUARTER, T1_EXPECTED } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/data";
+import { CARD_SIDE, FILES, SETTLE_MS, type DemoState, type FileId, type GradeId, type Side } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/demo-state";
 import type { Fmt } from "./fmt";
 import type { TubGeometry } from "./tub";
-import { y } from "./tub-geometry";
+import { PLOT, y } from "./tub-geometry";
 import { hit, useDrop } from "./use-drop";
 
 const SIDE_ATTR = "data-w03-side";
 /** The tub carries this attribute in scene 5 move 2: the Prüfliste is dropped on it. */
 export const TUB_DROP_ATTR = "data-w03-tubdrop";
 
-/** The sentence a file gets when it lands: the card's view of it, then why. */
-export function fileSentences(pack: Pack, file: FileId, pending: boolean): readonly string[] {
+/** The sentence a file gets when it lands: the card's view of it, then why. `matched` is the visitor's own placement, not where the file ended up. */
+export function fileSentences(pack: Pack, file: FileId, matched: boolean): readonly string[] {
   const p = pack.projekt;
   const why = file === "contacts" ? p.sentences.contacts : file === "testlist" ? p.sentences.testlist : file === "export" ? p.sentences.export : p.sentences.in;
-  return [pending ? p.moved : p.same, why];
+  return [matched ? p.same : p.moved, why];
 }
 
 function FileChip({
@@ -120,9 +120,11 @@ export function ProjectSort({
               onPlace(selected, side);
               setSelected(null);
             }}
+            aria-label={fmt.t(side === "in" ? p.moveTo.in : p.moveTo.out, { file: selectedName })}
             data-w03-place={side}
           >
-            {fmt.t(side === "in" ? p.moveTo.in : p.moveTo.out, { file: selectedName })}
+            <span className="w03-zone-target-long">{fmt.t(side === "in" ? p.moveTo.in : p.moveTo.out, { file: selectedName })}</span>
+            <span className="w03-zone-target-short">{p.placeHere}</span>
           </button>
         ) : null}
       </div>
@@ -152,40 +154,79 @@ export function placedRight(state: DemoState, file: FileId): boolean {
 
 /**
  * Scene 5 move 2, drawn on the tub: once tested, the three expected values
- * as Mennige marks on the water, and the first month where Claude's ghost
- * line differs gets a short readout.
+ * as Mennige marks on the water, and the graded answer as a dashed bar in
+ * each quarter column. Where the answer misses, a line runs from its value
+ * to the expected one, with a short readout in April.
  */
-export function TestMarks({ pack, fmt, geometry, tested }: { readonly pack: Pack; readonly fmt: Fmt; readonly geometry: TubGeometry; readonly tested: boolean }) {
+export function TestMarks({
+  pack,
+  fmt,
+  geometry,
+  tested,
+  grade,
+  values,
+}: {
+  readonly pack: Pack;
+  readonly fmt: Fmt;
+  readonly geometry: TubGeometry;
+  readonly tested: boolean;
+  readonly grade: GradeId;
+  readonly values: readonly number[] | null;
+}) {
   if (!tested) return null;
+  const p = pack.projekt;
   const april = geometry.col(QUARTER[0] as string);
+  const aprilGot = values?.[0];
+  const aprilWant = T1_EXPECTED[0] ?? 0;
   return (
-    <g className="w03-marks" aria-hidden="true">
+    <g className="w03-marks" aria-hidden="true" data-w03-grade-marks={grade}>
       {QUARTER.map((month, index) => {
         const c = geometry.col(month);
         if (!c) return null;
         const cx = (c.x0 + c.x1) / 2;
         const want = T1_EXPECTED[index] ?? 0;
+        const got = values?.[index];
         return (
           <g key={month} className="w03-mark" style={{ animationDelay: `${index * 90}ms` }}>
+            {got != null ? <line x1={c.x0 + 3} x2={c.x1 - 3} y1={y(got)} y2={y(got)} className="w03-got" data-hit={got === want ? "" : undefined} /> : null}
             <circle cx={cx} cy={y(want)} r="5.5" />
             <path d={`M${cx - 2.6},${y(want)}l1.8,1.9l3.6,-3.8`} className="w03-mark-tick" />
           </g>
         );
       })}
-      {april ? (
+      {april && aprilGot != null && aprilGot !== aprilWant ? (
         <g className="w03-miss">
-          <line x1={(april.x0 + april.x1) / 2} x2={(april.x0 + april.x1) / 2} y1={y(CLAUDE_ANSWER[0] ?? 0)} y2={y(T1_EXPECTED[0] ?? 0) + 7} />
-          <text x={april.x0 + 3} y={y(CLAUDE_ANSWER[0] ?? 0) + 14} className="w03-miss-label">
-            {fmt.t(pack.projekt.claudeRow, { got: fmt.n(CLAUDE_ANSWER[0] ?? 0) })}
+          <line x1={(april.x0 + april.x1) / 2} x2={(april.x0 + april.x1) / 2} y1={y(aprilGot)} y2={y(aprilWant) + 7} />
+          <text x={april.x0 + 3} y={y(aprilGot) - 6} className="w03-miss-label">
+            {fmt.t(p.gradeRow, { source: p.grades[grade], got: fmt.n(aprilGot) })}
           </text>
         </g>
+      ) : null}
+      {april && values === null ? (
+        <text x={PLOT.l + 6} y={PLOT.t + 28} className="w03-miss-label">
+          {fmt.t(p.gradeRowNone, { source: p.grades[grade] })}
+        </text>
       ) : null}
     </g>
   );
 }
 
 /** The Prüfliste as a chip the visitor drags onto the tub, then as the opened test card. */
-export function TestCard({ pack, fmt, tested, onTest }: { readonly pack: Pack; readonly fmt: Fmt; readonly tested: boolean; readonly onTest: () => void }) {
+export function TestCard({
+  pack,
+  fmt,
+  tested,
+  onTest,
+  grade,
+  values,
+}: {
+  readonly pack: Pack;
+  readonly fmt: Fmt;
+  readonly tested: boolean;
+  readonly onTest: () => void;
+  readonly grade: GradeId;
+  readonly values: readonly number[] | null;
+}) {
   const p = pack.projekt;
   const drag = useDrop((_item, x, yy) => {
     if (hit(x, yy, TUB_DROP_ATTR) !== null) onTest();
@@ -215,14 +256,18 @@ export function TestCard({ pack, fmt, tested, onTest }: { readonly pack: Pack; r
     <div className="w03-test-card" data-w03-test-card="">
       <p className="w03-test-title">{p.testCard}</p>
       <ul>
-        {QUARTER.map((month, index) => (
-          <li key={month}>
-            <span>{fmt.t(p.testRow, { month: fmt.monthShort(month), want: fmt.n(T1_EXPECTED[index] ?? 0) })}</span>
-            <span className="w03-test-got">{fmt.t(p.claudeRow, { got: fmt.n(CLAUDE_ANSWER[index] ?? 0) })}</span>
-          </li>
-        ))}
+        {QUARTER.map((month, index) => {
+          const got = values?.[index];
+          return (
+            <li key={month}>
+              <span>{fmt.t(p.testRow, { month: fmt.monthShort(month), want: fmt.n(T1_EXPECTED[index] ?? 0) })}</span>
+              <span className="w03-test-got" data-hit={got === T1_EXPECTED[index] ? "" : undefined}>
+                {got == null ? fmt.t(p.gradeRowNone, { source: p.grades[grade] }) : fmt.t(p.gradeRow, { source: p.grades[grade], got: fmt.n(got) })}
+              </span>
+            </li>
+          );
+        })}
       </ul>
-      <p className="w03-test-view">{p.viewRow}</p>
     </div>
   );
 }
