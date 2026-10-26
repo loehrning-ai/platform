@@ -508,7 +508,7 @@ describe("getWorkshopBySlug", () => {
 });
 
 describe("workshop demo material", () => {
-  it("links every workshop to its demo once, in the page's language, the start only where nothing else is", () => {
+  it("links every workshop to its demo once, in the page's language, never as the start", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         const demos = workshop.materials.filter((material) => material.role === "demo");
@@ -517,11 +517,9 @@ describe("workshop demo material", () => {
         // ?source=workshop makes the demo's back control return to this workshop.
         expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(demo?.language).toBe(locale);
-        // Workshop 01 marks no material primary: its demo (the kit, made
-        // visible) is where it starts. Everywhere else the demo is optional.
-        const startsAtDemo = !workshop.materials.some((material) => material.role !== "demo" && material.primary);
-        expect(demo?.primary).toBe(startsAtDemo ? true : undefined);
-        expect(demo?.optional).toBe(!startsAtDemo);
+        // A workshop is its slides (or labs) and its kit; the demo is one link away.
+        expect(demo?.primary).toBeUndefined();
+        expect(demo?.optional).toBe(true);
         expect(demo?.phase).toBe("during");
         expect(workshop.materials.filter((material) => material.primary)).toHaveLength(1);
       }
