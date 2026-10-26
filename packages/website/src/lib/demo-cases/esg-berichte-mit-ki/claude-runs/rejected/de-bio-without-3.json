@@ -1,0 +1,1114 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-bio-without-3",
+  "slug": "esg-berichte-mit-ki",
+  "locale": "de",
+  "prompt_id": "bio",
+  "take": 3,
+  "recorded_at": "2026-10-26T17:59:16Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Im Anhang sind unser Bio-Zertifikat (bio_zertifikat_weinberg.txt) und unser Firmenprofil (firmenprofil.md). Darf „Zertifizierte Bio-Weinberge“ so auf die Regalkarte an allen unseren Weinen? Heute ist der 16.10.2026.",
+  "kit_zip": "public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+  "kit_files": [
+    {
+      "name": "bio_zertifikat_weinberg.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/bio_zertifikat_weinberg.txt",
+      "bytes": 426,
+      "sha256": "c5d896ecdde33f6819befbb22e9f0d8262616e4de104c9558c722ff8b75cb1f0"
+    },
+    {
+      "name": "firmenprofil.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/firmenprofil.md",
+      "bytes": 1896,
+      "sha256": "c1b390aee869b92760d3fc7aa43f1fd138765f10713ad1ef3e8fefadc391f7a9"
+    }
+  ],
+  "skill": null,
+  "skill_name": "esg-nachweise",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 4515,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "bio_zertifikat_weinberg.txt"
+      }
+    },
+    {
+      "t_ms": 4525,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "firmenprofil.md"
+      }
+    },
+    {
+      "t_ms": 4553,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 4555,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 21325,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 21326,
+      "kind": "text",
+      "chunk": "#"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": " Nein, so"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": " dar"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "f der Satz nicht"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": " auf die Regalkar"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "te,"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": " und sch"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "on gar nicht b"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "ei allen Weinen."
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "\n\n**"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "1"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": ". Das Zertifik"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "at ist abgelauf"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "en.**\nEs gal"
+    },
+    {
+      "t_ms": 21327,
+      "kind": "text",
+      "chunk": "t n"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "ur bis z"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "um 31.08.2026"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": ". Die"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " Erneuerungspr"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "üfung ist er"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "st für den 22.10."
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "2026 gebucht."
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " Im"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " Moment gibt es also"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " keine gültige Bio"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "-Zertifizierung"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": ". „"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "Zertifi"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "ziert“ wäre dam"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "it sch"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "licht falsch."
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "\n\nKle"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "iner Hinweis z"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "um Datum: Sie"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " schreiben "
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "16.10.2026, m"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "ein System zeigt den"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " 26.10.2026."
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " Wenn die Prü"
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": "fung am 22.10."
+    },
+    {
+      "t_ms": 21329,
+      "kind": "text",
+      "chunk": " schon war"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": ":"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": " Bis"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": " das"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": " neue Zertifikat"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": " sch"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "riftlich vorlieg"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "t, gilt tr"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "otzdem nichts."
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "\n\n**2. Nur "
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "ein Teil der Wein"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "berge ist zertifi"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "ziert.**\nB"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "io s"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "ind nur 12 "
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "ha von 40 ha,"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": " also "
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "30 %. Die an"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "deren 28 ha s"
+    },
+    {
+      "t_ms": 21330,
+      "kind": "text",
+      "chunk": "ind "
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "ausdrücklich nic"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "ht zertifiziert."
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": " Ste"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "ht „"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "Zertifizierte"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": " Bio-Weinberge"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "“ an"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": " allen Weinen, gl"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "auben Kunden, al"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "le"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": " Trauben kämen a"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "us Bio-An"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "bau. Für"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": " die meisten Fl"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "aschen st"
+    },
+    {
+      "t_ms": 21331,
+      "kind": "text",
+      "chunk": "immt das nicht."
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": " Das ist ir"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "reführende"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": " Werbung.\n\n**3"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": ". Keller und Wein"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "bereitung sind nic"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "ht zertifiziert."
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "**\nNach der EU"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "-Ö"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "ko-Verordnung ("
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "EU)"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": " 2018/848 darf"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "ein W"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "ein nur mit Bio"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": " wer"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "ben, wenn au"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "ch die We"
+    },
+    {
+      "t_ms": 21332,
+      "kind": "text",
+      "chunk": "inbereitung zertif"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "iziert ist. Das"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": " gilt auch für die"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": " Werbung am Reg"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "al, n"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "icht nur für das"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": " Etikett. "
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "Oh"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "ne z"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "ertifizierten Keller"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": " ist j"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "e"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "der Bio"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "-Hinweis direk"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "t am Produkt problemat"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "isch. Das g"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": "ilt auch für"
+    },
+    {
+      "t_ms": 21333,
+      "kind": "text",
+      "chunk": " Weine, die n"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "ur aus den 12 "
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "Bio-Hektar st"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "ammen. Für "
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "Ihren Export nach De"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "utschland, Polen und"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": " Schweden gel"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "ten diese E"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "U-Regeln, und"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": " in Deutschland komm"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "t das"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": " Wettbewerbsr"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "echt ("
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "UWG) dazu."
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "\n\n##"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": " Was Sie st"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "attdessen tun können"
+    },
+    {
+      "t_ms": 21334,
+      "kind": "text",
+      "chunk": "\n- **"
+    },
+    {
+      "t_ms": 21335,
+      "kind": "text",
+      "chunk": "Jetzt:**"
+    },
+    {
+      "t_ms": 21335,
+      "kind": "text",
+      "chunk": " Auf den Regalkar"
+    },
+    {
+      "t_ms": 21335,
+      "kind": "text",
+      "chunk": "ten keinen Bio-"
+    },
+    {
+      "t_ms": 21336,
+      "kind": "text",
+      "chunk": "Hinweis ver"
+    },
+    {
+      "t_ms": 21336,
+      "kind": "text",
+      "chunk": "wenden.\n- **"
+    },
+    {
+      "t_ms": 21336,
+      "kind": "text",
+      "chunk": "W"
+    },
+    {
+      "t_ms": 21336,
+      "kind": "text",
+      "chunk": "enn das neue Zert"
+    },
+    {
+      "t_ms": 21336,
+      "kind": "text",
+      "chunk": "ifikat da"
+    },
+    {
+      "t_ms": 21336,
+      "kind": "text",
+      "chunk": " ist:** E"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "ine ehrliche A"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "ussage über den"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": " Betrieb ist e"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "her mö"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "glich, zum Beisp"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "iel „12 der"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": " 40 ha unserer"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": " Weinberge wer"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "den nach E"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "U-Bio-Reg"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "eln bewirtscha"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "ftet und k"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "ontrolliert ("
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": "Kontrollstelle"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": " XX-BIO-000"
+    },
+    {
+      "t_ms": 21337,
+      "kind": "text",
+      "chunk": ")“. Sie g"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": "ehört e"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": "her in die allgemeine"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": " K"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": "ommunikation über"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": " das Weingut und nic"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": "ht an"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": " einen b"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": "estimmten Wein."
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": " Stimmen Sie"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": " den gen"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": "auen Wortlaut"
+    },
+    {
+      "t_ms": 21338,
+      "kind": "text",
+      "chunk": " vorher mit"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": " Ihrer Kontr"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "ollstelle ab."
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "\n- **Wen"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "n Sie ech"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "te Bio-Weine"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": " wollen:** Keller"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": " und Weinbereitung"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": " m"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "it z"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "ertifizieren lassen"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": " und"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": " die Bio-Tr"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "auben getrennt ver"
+    },
+    {
+      "t_ms": 21339,
+      "kind": "text",
+      "chunk": "arbeiten. D"
+    },
+    {
+      "t_ms": 21340,
+      "kind": "text",
+      "chunk": "ann dürfen di"
+    },
+    {
+      "t_ms": 21340,
+      "kind": "text",
+      "chunk": "ese Weine als"
+    },
+    {
+      "t_ms": 22126,
+      "kind": "text",
+      "chunk": " Bio-Wein gek"
+    },
+    {
+      "t_ms": 22126,
+      "kind": "text",
+      "chunk": "ennzeichnet werden"
+    },
+    {
+      "t_ms": 22126,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 22126,
+      "kind": "text",
+      "chunk": " mit EU-B"
+    },
+    {
+      "t_ms": 22126,
+      "kind": "text",
+      "chunk": "io-Logo und Code"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": " der Kontrollstel"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "le.\n\nDas ist e"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "ine f"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "achliche Einschätz"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "ung und keine Recht"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "sberatung. Bev"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "or Sie et"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "was dr"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "ucken, soll"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "ten Sie es von"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": " Ihrer Kontr"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "ollstelle oder d"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "em de"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "utschen Importeur b"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "z"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "w. Händler bestät"
+    },
+    {
+      "t_ms": 22127,
+      "kind": "text",
+      "chunk": "igen lassen."
+    }
+  ],
+  "final_text": "# Nein, so darf der Satz nicht auf die Regalkarte, und schon gar nicht bei allen Weinen.\n\n**1. Das Zertifikat ist abgelaufen.**\nEs galt nur bis zum 31.08.2026. Die Erneuerungsprüfung ist erst für den 22.10.2026 gebucht. Im Moment gibt es also keine gültige Bio-Zertifizierung. „Zertifiziert“ wäre damit schlicht falsch.\n\nKleiner Hinweis zum Datum: Sie schreiben 16.10.2026, mein System zeigt den 26.10.2026. Wenn die Prüfung am 22.10. schon war: Bis das neue Zertifikat schriftlich vorliegt, gilt trotzdem nichts.\n\n**2. Nur ein Teil der Weinberge ist zertifiziert.**\nBio sind nur 12 ha von 40 ha, also 30 %. Die anderen 28 ha sind ausdrücklich nicht zertifiziert. Steht „Zertifizierte Bio-Weinberge“ an allen Weinen, glauben Kunden, alle Trauben kämen aus Bio-Anbau. Für die meisten Flaschen stimmt das nicht. Das ist irreführende Werbung.\n\n**3. Keller und Weinbereitung sind nicht zertifiziert.**\nNach der EU-Öko-Verordnung (EU) 2018/848 darf ein Wein nur mit Bio werben, wenn auch die Weinbereitung zertifiziert ist. Das gilt auch für die Werbung am Regal, nicht nur für das Etikett. Ohne zertifizierten Keller ist jeder Bio-Hinweis direkt am Produkt problematisch. Das gilt auch für Weine, die nur aus den 12 Bio-Hektar stammen. Für Ihren Export nach Deutschland, Polen und Schweden gelten diese EU-Regeln, und in Deutschland kommt das Wettbewerbsrecht (UWG) dazu.\n\n## Was Sie stattdessen tun können\n- **Jetzt:** Auf den Regalkarten keinen Bio-Hinweis verwenden.\n- **Wenn das neue Zertifikat da ist:** Eine ehrliche Aussage über den Betrieb ist eher möglich, zum Beispiel „12 der 40 ha unserer Weinberge werden nach EU-Bio-Regeln bewirtschaftet und kontrolliert (Kontrollstelle XX-BIO-000)“. Sie gehört eher in die allgemeine Kommunikation über das Weingut und nicht an einen bestimmten Wein. Stimmen Sie den genauen Wortlaut vorher mit Ihrer Kontrollstelle ab.\n- **Wenn Sie echte Bio-Weine wollen:** Keller und Weinbereitung mit zertifizieren lassen und die Bio-Trauben getrennt verarbeiten. Dann dürfen diese Weine als Bio-Wein gekennzeichnet werden, mit EU-Bio-Logo und Code der Kontrollstelle.\n\nDas ist eine fachliche Einschätzung und keine Rechtsberatung. Bevor Sie etwas drucken, sollten Sie es von Ihrer Kontrollstelle oder dem deutschen Importeur bzw. Händler bestätigen lassen.",
+  "stats": {
+    "duration_ms": 20969,
+    "duration_api_ms": 20903,
+    "ttft_ms": 3344,
+    "num_turns": 3,
+    "output_tokens": 1818
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}
