@@ -72,24 +72,37 @@ export function StackChart({
             return [];
           });
           const total = option.missing.length > 0 ? pack.open : fmtEur(option.total, lang);
+          const isBet = bet === option.name;
+          // A right guess gets one chip, not two; chips wrap under the name, so the value always stays in view.
+          const chips =
+            isBet && win ? (
+              <span className="av-chip av-chip-win">{pack.yourBetWins}</span>
+            ) : (
+              <>
+                {isBet ? <span className="av-chip">{pack.yourBet}</span> : null}
+                {win ? <span className="av-chip av-chip-win">{pack.winner}</span> : null}
+              </>
+            );
+          // Two lines: the name with its chips, then the bar with the value at its end, so a chip never pushes a value out.
           const body = (
             <>
-              <span className="av-row-head">
-                <span className="av-row-name">{option.name}</span>
-                {bet === option.name ? <span className="av-chip">{pack.yourBet}</span> : null}
-                {win ? <span className="av-chip av-chip-win">{pack.winner}</span> : null}
-                <span className="av-row-value" aria-live="off">
-                  <span style={{ opacity: landed ? 0 : 1 }}>{fmtEur(option.headline, lang)}</span>
-                  <span style={{ opacity: landed ? 1 : 0 }} data-av-total="">
-                    {total}
-                  </span>
+              <span className="av-row-label">
+                <span className="av-row-name" title={option.name}>
+                  {option.name}
                 </span>
+                {chips}
               </span>
               <span className="av-bar" aria-hidden="true">
                 {segments}
                 {negative > 0 ? (
                   <i className="av-seg av-seg-neg" style={{ left: `${((position - negative) / max) * 100}%`, width: `${(negative / max) * 100}%` }} />
                 ) : null}
+              </span>
+              <span className="av-row-value" aria-live="off">
+                <span style={{ opacity: landed ? 0 : 1 }}>{fmtEur(option.headline, lang)}</span>
+                <span style={{ opacity: landed ? 1 : 0 }} data-av-total="">
+                  {total}
+                </span>
               </span>
             </>
           );

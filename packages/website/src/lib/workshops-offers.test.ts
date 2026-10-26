@@ -2,6 +2,8 @@ import { readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { listZipEntries, readZipText } from "./zip/read";
+import { COPY as DEMO_COPY } from "./demo-cases/angebote-mit-ki-vergleichen/copy";
+import { workshopObjective } from "./workshop-objectives";
 import { OFFERS_HAND_EDITS, OFFERS_WORKSHOP } from "./workshops-offers";
 
 /**
@@ -41,7 +43,7 @@ describe("Workshop 06 data", () => {
     const build = numberedItems("source/BUILD-LOG.md", /^## Handarbeit außerhalb des Ablaufs: (\d+) Stellen$/m);
     const port = numberedItems("PORT-LOG.md", /^## Changes for the site: (\d+) places$/m);
     expect(build).toBe(9);
-    expect(port).toBe(5);
+    expect(port).toBe(10);
     expect(OFFERS_HAND_EDITS).toBe(build + port);
     expect(OFFERS_WORKSHOP.de.provenance.note).toContain(`an ${build + port} Stellen geändert`);
     expect(OFFERS_WORKSHOP.en.provenance.note).toContain(`changed in ${build + port} places`);
@@ -63,7 +65,8 @@ describe("Workshop 06 data", () => {
     const files = listZipEntries(zip).filter((entry) => !entry.path.endsWith("/"));
     for (const workshop of both) {
       const kit = workshop.materials.find((material) => material.role === "kit");
-      expect(kit?.sizeLabel).toBe(`${Math.round(size / 1024)} KB`);
+      // The rule of formatBytes in the demo's take-home block, so the workshop page and the demo print one size.
+      expect(kit?.sizeLabel).toBe(`${Math.max(1, Math.ceil(size / 1024))} KB`);
       expect(workshop.kit?.stats[0]?.value).toBe(String(files.length));
       expect(workshop.stageExplainer.facts?.[0]).toMatch(new RegExp(`^${files.length} `));
     }
@@ -99,6 +102,18 @@ describe("Workshop 06 data", () => {
 
   it("states the method in the field card's words", () => {
     for (const rule of OFFERS_WORKSHOP.de.kit?.rules ?? []) expect(flat(fieldCard)).toContain(flat(rule));
+  });
+
+  it("ships the site edition of the deck: the objective word for word, links to this site only", () => {
+    const deck = readFileSync(resolve(process.cwd(), "public/workshops", slug, "slides.html"), "utf8");
+    expect(deck).toContain(DEMO_COPY.de.objective);
+    expect(deck).toContain(workshopObjective(slug, "de")?.objective ?? "missing");
+    expect(deck).not.toMatch(/github\.com\/loehrning-ai\/rotfaden|loehrning-ai\.github\.io/);
+    expect(deck).toContain(`href="/workshops/${slug}"`);
+    expect(deck).toContain(`Kit und Demo: loehrning.ai/demos/${slug}`);
+    expect(deck).toContain(`Das Kit: loehrning.ai/workshops/${slug}/kit`);
+    expect(deck).toContain('<span class="brand"><svg class="oe"');
+    expect(deck).not.toMatch(/\bChefin?\b/);
   });
 
   it("times the live agenda to the deck's 90 minutes", () => {

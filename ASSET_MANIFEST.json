@@ -1232,8 +1232,8 @@
     },
     {
       "path": "packages/website/public/workshops/angebote-mit-ki-vergleichen/angebote-vergleichen-kit.zip",
-      "sizeBytes": 34212,
-      "sha256": "b4c602811144ff5d9fb6eeb044768bd7508d0e470e20855e9d60e4d6f5e34a49",
+      "sizeBytes": 34269,
+      "sha256": "c4f847f989e7bbdb5877bca00d0ef529e2604762c44a03fbf34ee741e12b4f21",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 06 material (Welches Angebot ist g\u00fcnstiger?, invented company data), built with rotfaden (example angebote-mit-ki-vergleichen) and changed for this site as listed in scripts/workshop06/PORT-LOG.md; built by scripts/workshop06/build-kit.mjs",
       "license": "MIT",

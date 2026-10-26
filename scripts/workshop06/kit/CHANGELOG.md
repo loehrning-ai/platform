@@ -15,4 +15,5 @@
 
 - Erste Fassung: Anfrage und drei Angebote für 40.000 Versandkartons (Nürnberg, Poznań, Brno), interne Sätze für
   Fracht und Lager, drei Schritte, ein zweiter Fall, die Feldkarte, die Vergleichsbasis, die Verhandlungsmail und die
-  Dateien für deinen eigenen Claude. `ANSWERS.md` und `kostenzeilen.csv` schreibt `tools/fall.py` im Projekt.
+  Dateien für deinen eigenen Claude. `ANSWERS.md` und `kostenzeilen.csv` schreibt ein Skript des rotfaden-Beispiels
+  (`tools/fall.py`); es liegt nicht in diesem Kit.

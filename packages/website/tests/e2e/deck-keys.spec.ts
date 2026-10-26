@@ -102,6 +102,27 @@ test("angebote-mit-ki-vergleichen deck keeps the five contract keys", async ({ p
   expect(keys.filter((key) => /^(foldline-deck|deck-stage):/.test(key))).toEqual([]);
 });
 
+/** Workshop 06's deck wears the site's frame like decks 01 to 05: back link, mark, visible toolbar with R and P. */
+test("angebote-mit-ki-vergleichen deck links back to its workshop and shows its toolbar", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/workshops/angebote-mit-ki-vergleichen/slides.html");
+  await expect(page).toHaveTitle("Welches Angebot ist günstiger? · Deck · loehrning.ai");
+  const back = page.getByRole("link", { name: "Zurück zur Workshop-Seite" });
+  await expect(back).toBeVisible();
+  await expect(back).toHaveAttribute("href", "/workshops/angebote-mit-ki-vergleichen");
+  await expect(page.locator(".chrome-top .brand").first()).toHaveText("loehrning.ai");
+  const reset = page.locator('#controls [data-act="reset"]');
+  const presenter = page.locator('#controls [data-act="present"]');
+  await expect(reset).toBeVisible();
+  await expect(reset).toHaveText("Neu startenR");
+  await expect(presenter).toHaveText("ModerationP");
+  expect(await page.locator("#controls").evaluate((element) => getComputedStyle(element).opacity)).toBe("1");
+  await page.evaluate(() => {
+    location.hash = "#exit/1";
+  });
+  await expect(page.locator('.slide[data-id="exit"] .src')).toHaveText("Kit und Demo: loehrning.ai/demos/angebote-mit-ki-vergleichen");
+});
+
 async function pressUntilLeavesScene(page: Page, scene: () => Promise<string>, start: string): Promise<string> {
   for (let press = 0; press < 12; press += 1) {
     await page.keyboard.press("ArrowRight");

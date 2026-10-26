@@ -3,8 +3,9 @@ import { expectGlassBudget } from "./fixtures/glass";
 
 /**
  * W06 "Die Vergleichsbasis" on a phone: the guess commits before the reveal, the cost lines turn the
- * order from B, C, A to C, A, B, the paper index flips first place to A at +7 %, a line one offer lacks stays
- * open (never 0), a restart keeps the visitor's own lines, and the take-home fills the basis.
+ * order from B, C, A to C, A, B, the paper index flips first place to A at +7 %, every total and caption fits
+ * a 320 px phone for every guess and stop, a line one offer lacks stays open (never 0) and is listed under
+ * the stage, a restart keeps the visitor's own lines, and the take-home fills the basis.
  */
 const SLUG = "angebote-mit-ki-vergleichen";
 
@@ -61,6 +62,39 @@ test.describe(`/demos/${SLUG}`, () => {
     });
   }
 
+  for (const width of [320, 390]) {
+    test(`de: at ${width} x 664 every guess and every paper stop keeps the totals inside the stage and the caption whole`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 664 });
+      const fit = () =>
+        page.evaluate(() => {
+          const stage = document.querySelector("[data-demo-stage]")!.getBoundingClientRect();
+          const out = [...document.querySelectorAll("[data-av-chart] [data-option] :is(.av-row-value, .av-chip)")]
+            .map((element) => ({ text: element.textContent, rect: element.getBoundingClientRect() }))
+            .filter(({ rect }) => rect.right > stage.right + 0.5 || rect.left < stage.left - 0.5)
+            .map(({ text }) => text);
+          const caption = document.querySelector("[data-demo-caption]")!;
+          return { out, clamped: caption.scrollHeight > caption.clientHeight + 1, caption: caption.textContent };
+        });
+      for (const bet of ["A", "B", "C"]) {
+        await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
+        await page.locator(`[data-bet^="${bet}"]`).click();
+        await expect(page.locator('[data-av-chart] [data-option^="C"][data-win]')).toHaveCount(1, { timeout: 12_000 });
+        expect(await fit(), `kipp, guess ${bet}`).toMatchObject({ out: [], clamped: false });
+        // A right guess carries one chip, not two.
+        await expect(page.locator(`[data-av-chart] [data-option^="${bet}"] .av-chip`)).toHaveCount(1);
+        await page.locator("[data-beat-rail]:visible [data-beat-mark]").nth(3).click();
+        await expect(page.locator("[data-demo-clock]")).toHaveAttribute("data-beat", "papier");
+        for (let stop = 0; stop < 5; stop += 1) {
+          await page.locator(".av-stop").nth(stop).click();
+          await expect(page.locator(".av-stop input").nth(stop)).toBeChecked();
+          expect(await fit(), `papier, guess ${bet}, stop ${stop}`).toMatchObject({ out: [], clamped: false });
+        }
+        await expect(page.locator("[data-demo-caption]")).toContainText("Entscheidet: Fracht");
+        expect(await overflow(page)).toBeLessThanOrEqual(0);
+      }
+    });
+  }
+
   test("de: the paper index hands first place to A between +5 % and +7 % (the kit: 6,97 %)", async ({ page }) => {
     await page.goto(`/demos/${SLUG}?beat=papier`, { waitUntil: "networkidle" });
     await expect(page.locator("[data-demo-clock]")).toHaveAttribute("data-beat", "papier");
@@ -73,13 +107,17 @@ test.describe(`/demos/${SLUG}`, () => {
 
   test("de: a missing line stays open, r keeps the visitor's lines, only the clear button drops them", async ({ page }) => {
     await page.goto(`/demos/${SLUG}?beat=deins`, { waitUntil: "networkidle" });
+    // Before the visitor's lines, the stage shows the kit's numbers and names the kit's file.
+    await expect(page.locator(".av-file")).toHaveText("kostenzeilen.csv");
     const field = page.locator("[data-av-own] textarea");
-    await field.fill("angebot,zeile,betrag,je\nX,Ware,1000,jährlich\nX,Fracht,100,jährlich\nY,Ware,900,jährlich");
+    await field.fill("angebot,zeile,betrag,je\nX,Ware,1000,jährlich\nX,Fracht,100,jährlich\nY,Ware,900,jährlich\nZ,Ware,950,jährlich");
     await page.getByRole("button", { name: "Rechnen" }).click();
-    // Y has no freight line: its total is open, not 900, and nobody wins.
+    // Y and Z have no freight line: their totals are open, not 900, and nobody wins.
     await expect(page.locator('[data-av-chart] [data-option="Y"] [data-av-total]')).toHaveText("offen");
     await expect(page.locator("[data-av-chart] [data-win]")).toHaveCount(0);
-    await expect(page.locator("[data-demo-caption]")).toContainText("Y nennt keine Zeile Fracht");
+    await expect(page.locator(".av-file")).toHaveCount(0);
+    await expect(page.locator("[data-demo-caption]")).toHaveText("Y nennt keine Zeile Fracht. Sie bleibt offen.");
+    await expect(page.locator("[data-av-open] li")).toHaveText(["Y: Fracht", "Z: Fracht"]);
 
     // A key typed into the field never restarts.
     await field.press("r");
@@ -104,9 +142,10 @@ test.describe(`/demos/${SLUG}`, () => {
     await page.goto(`/demos/${SLUG}?beat=mitnehmen`, { waitUntil: "networkidle" });
     await expect(page.locator("[data-demo-clock]")).toHaveAttribute("data-beat", "mitnehmen");
     const download = page.waitForEvent("download");
-    await page.getByRole("button", { name: "vergleichsbasis.md" }).click();
+    // The filled basis is the beat's lever and has its own name; the blank template keeps vergleichsbasis.md.
+    await page.locator("[data-demo-lever]").getByRole("button", { name: "Gefüllte Basis laden" }).click();
     const file = await download;
-    expect(file.suggestedFilename()).toBe("vergleichsbasis.md");
+    expect(file.suggestedFilename()).toBe("vergleichsbasis-mit-zahlen.md");
     const text = await (await file.createReadStream()).toArray();
     const body = Buffer.concat(text as Buffer[]).toString("utf8");
     expect(body).toContain("24.910 €");

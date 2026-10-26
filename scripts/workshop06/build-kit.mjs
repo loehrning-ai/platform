@@ -4,7 +4,8 @@
  * packages/website/public/workshops/angebote-mit-ki-vergleichen/angebote-vergleichen-kit.zip.
  *
  * The kit was built with rotfaden (example angebote-mit-ki-vergleichen); scripts/workshop06/kit/ holds its
- * files byte for byte. Two files come from this site instead (PORT-LOG.md, items 2 to 4):
+ * files byte for byte, except CHANGELOG.md (PORT-LOG.md, item 10). Two files come from this site instead
+ * (PORT-LOG.md, items 2 to 4):
  *
  *   take-home/skill/angebote-vergleichen/SKILL.md   packages/website/content/skills/angebote-vergleichen/SKILL.md
  *   take-home/INSTALL.md                             the site's install text, claudeUiMarkdown("de", ...)

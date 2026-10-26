@@ -25,7 +25,7 @@ import {
   type ParseError,
   type StackModel,
 } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/stack";
-import { fillTemplate, missingSentence, templateVars } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/template";
+import { fillTemplate, firstMissing, missingSentence, templateVars } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/template";
 import { downloadText } from "./download";
 import { OwnLines } from "./own-lines";
 import { Sources } from "./sources";
@@ -33,6 +33,8 @@ import { StackChart } from "./stack-chart";
 import "./offers.css";
 
 const SLUG = "angebote-mit-ki-vergleichen";
+/** The filled basis has its own name: the blank template in the take-home block is vergleichsbasis.md. */
+const FILLED_BASIS = "vergleichsbasis-mit-zahlen.md";
 
 /** What the visitor did in the beats; "Von vorn" clears it, never their own lines. */
 interface Bets {
@@ -60,6 +62,9 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   const ownRef = useRef<HTMLElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const name = (line: string) => pack.lineNames[line] ?? line;
+  // In a caption a number never breaks from its unit ("962 €", "+10 %").
+  const bound = (text: string) => text.replace(/(\d) (€|%)/g, "$1\u00a0$2");
+  const money = (cents: number) => bound(fmtEur(cents, lang));
 
   useOnRestart(() => {
     setBets(START);
@@ -90,16 +95,16 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
     return {
       bet,
       winner: model.winner.name,
-      winner_total: fmtEur(model.winner.total, lang),
+      winner_total: money(model.winner.total),
       runner: model.runner.name,
-      runner_total: fmtEur(model.runner.total, lang),
-      gap: fmtEur(model.gap, lang),
+      runner_total: money(model.runner.total),
+      gap: money(model.gap),
       headline_winner: model.headWinner.name,
-      headline_gap: fmtEur(model.headGap, lang),
+      headline_gap: money(model.headGap),
       last: model.last.name,
-      last_total: fmtEur(model.last.total, lang),
+      last_total: money(model.last.total),
       decider: name(model.decider),
-      factor: fill(pack.papier.label, { v: fmtNumber(PAPER.index.values[bets.stop] ?? 0, 2, lang) }),
+      factor: bound(fill(pack.papier.label, { v: fmtNumber(PAPER.index.values[bets.stop] ?? 0, 2, lang) })),
     };
   }
 
@@ -175,11 +180,12 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
     );
   } else if (id === "papier") {
     const flipText = flip
-      ? fill(pack.papier.flip, { rival: flip.rival, v: fmtNumber(flip.v, 2, lang) })
+      ? fill(pack.papier.flip, { rival: flip.rival.split(" ")[0] ?? flip.rival, v: fmtNumber(flip.v, 2, lang) })
       : "";
     stage = (
       <Scene kicker={pack.papier.lever} file="fall/angebot-c-brno.md">
-        <StackChart model={paperModel} phase="full" progress={1} bet={bets.bet} pack={pack} lang={lang} />
+        {/* The guess was settled at the reveal; here the rows carry only who is cheapest, so a phone keeps two lines a row. */}
+        <StackChart model={paperModel} phase="full" progress={1} bet={null} pack={pack} lang={lang} />
       </Scene>
     );
     caption = fill(pack.papier.caption, vars(paperModel));
@@ -208,11 +214,13 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
     rows = 2;
   } else if (id === "deins") {
     stage = (
-      <Scene kicker={ownApplied ? pack.deins.ownShown : pack.deins.kitShown} file={ownApplied ? null : DEMO.own.fixture}>
+      <Scene kicker={ownApplied ? pack.deins.ownShown : pack.deins.kitShown} file={ownApplied ? null : DEMO.data}>
         <StackChart model={shownModel} phase="full" progress={1} bet={null} pack={pack} lang={lang} />
       </Scene>
     );
-    caption = ownModel ? (ownModel.complete ? fill(pack.mitnehmen.line, vars(ownModel)) : missingSentence(ownModel, pack.deins)) : pack.deins.caption;
+    // The caption holds two lines at most: the result, or the first open line. Every open line is listed under the stage.
+    caption = ownModel ? (ownModel.complete ? fill(pack.deins.result, vars(ownModel)) : firstMissing(ownModel, pack.deins.missing)) : pack.deins.caption;
+    details = ownModel && !ownModel.complete ? <OpenLines model={ownModel} pack={pack} /> : null;
     lever = (
       <button
         type="button"
@@ -239,35 +247,39 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
       </Scene>
     );
     caption = pack.mitnehmen.caption;
+    // The filled basis is this demo's own file, so it is the lever; the blank template sits in "Für deinen Claude".
     lever = (
-      <button
-        type="button"
-        className="av-button av-button-primary"
-        onClick={() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), clock.reducedMotion)}
-      >
-        {pack.mitnehmen.lever}
-      </button>
-    );
-    details = (
-      <section className="av-basis" aria-labelledby="av-basis-head">
-        <h2 id="av-basis-head" className="av-sources-head">
-          {pack.mitnehmen.basisDownload}
-        </h2>
-        <p className="av-sources-hint">
-          {pack.mitnehmen.basisNote} {ownApplied ? pack.mitnehmen.fromYours : pack.mitnehmen.fromKit}
-        </p>
+      <div className="av-takehome-levers">
         <button
           type="button"
-          className="av-button"
+          className="av-button av-button-primary"
+          data-av-basis=""
           onClick={() =>
             downloadText(
-              "vergleichsbasis.md",
+              FILLED_BASIS,
               fillTemplate(BASIS_TEMPLATE, shownModel, templateVars(shownModel, DEMO.question), ownApplied ? null : KIT_BASIS),
             )
           }
         >
-          vergleichsbasis.md
+          {pack.mitnehmen.basisDownload}
         </button>
+        <button
+          type="button"
+          className="av-button"
+          onClick={() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), clock.reducedMotion)}
+        >
+          {pack.mitnehmen.lever}
+        </button>
+      </div>
+    );
+    details = (
+      <section className="av-basis" aria-labelledby="av-basis-head">
+        <h2 id="av-basis-head" className="av-sources-head">
+          {FILLED_BASIS}
+        </h2>
+        <p className="av-sources-hint">
+          {pack.mitnehmen.basisNote} {ownApplied ? pack.mitnehmen.fromYours : pack.mitnehmen.fromKit}
+        </p>
       </section>
     );
   }
@@ -306,6 +318,23 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
         />
       </div>
     </div>
+  );
+}
+
+/** Every line one of the visitor's offers lacks: open, never 0, until they give the number. */
+function OpenLines({ model, pack }: { readonly model: StackModel; readonly pack: Pack }) {
+  return (
+    <section className="av-open" aria-labelledby="av-open-head" data-av-open="">
+      <h2 id="av-open-head" className="av-sources-head">
+        {pack.deins.openHead}
+      </h2>
+      <p className="av-sources-hint">{pack.deins.openNote}</p>
+      <ul className="av-open-list">
+        {model.missing.map((gap) => (
+          <li key={`${gap.option}/${gap.line}`}>{fill(pack.deins.openItem, { option: gap.option, line: gap.line })}</li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

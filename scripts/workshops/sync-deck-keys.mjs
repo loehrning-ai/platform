@@ -31,9 +31,10 @@ export const DECK_KEYS_WORKSHOPS = [
 
 /**
  * Decks that keep their own engine and are held to the contract by an explicit, tested equivalence
- * instead of the shared file. Workshop 06's deck is rotfaden's single-file output, published byte for
- * byte: it binds the five contract keys the same way (ArrowRight, ArrowLeft, r or Shift+R, P, Escape
- * out of an appendix; never with Ctrl, Meta or Alt, never in a text field, a held key fires once) and
+ * instead of the shared file. Workshop 06's deck is rotfaden's single-file output plus the site edits of
+ * scripts/workshop06/build-deck.mjs, none of which touches the key handler: it binds the five contract
+ * keys the same way (ArrowRight, ArrowLeft, r or Shift+R, P, Escape out of an appendix; never with Ctrl,
+ * Meta or Alt, never in a text field, a held key fires once) and
  * binds more on top: ArrowDown, PageDown and Space also go forward, ArrowUp, PageUp and Shift+Space
  * back, and while its presenter view is open G, T, B, F, the digits and ? work there. The pinned
  * hash makes any change to the file a deliberate one, re-checked by tests/e2e/deck-keys.spec.ts.
@@ -41,7 +42,7 @@ export const DECK_KEYS_WORKSHOPS = [
 export const DECK_KEYS_EQUIVALENT = {
   "angebote-mit-ki-vergleichen": {
     page: "slides.html",
-    sha256: "2bb4a11e9dda9e5c19a6db00459a1f0179b30889f98bb04a2f9ce978f8ccb878",
+    sha256: "9e86b729b5b777cfc6eed1cacad577075e91cfc90c83346355dc909e2d0c5602",
     extraKeys: ["ArrowDown", "PageDown", "Space", "ArrowUp", "PageUp", "Shift+Space"],
     /** The handler lines that carry the five contract keys. */
     contract: [

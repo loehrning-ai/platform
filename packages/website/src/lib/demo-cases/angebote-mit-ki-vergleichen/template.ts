@@ -17,16 +17,27 @@ export const TEMPLATE_WORDS = {
   basisOpen: "offen",
   missing: "{option} nennt keine Zeile {line}. Bevor jemand vergleicht, fehlt diese Zahl.",
   missingMore: "Dazu {n} weitere fehlende Zeilen.",
+  missingMoreOne: "Dazu eine weitere fehlende Zeile.",
 } as const;
 
 const block = (name: string) => new RegExp(`<!--\\s*rotfaden:${name}\\s*-->([\\s\\S]*?)<!--\\s*\\/rotfaden:${name}\\s*-->`, "g");
 
 /** The first missing line, and how many more: the sentence that stands where a result would. */
-export function missingSentence(model: StackModel, words: { readonly missing: string; readonly missingMore: string } = TEMPLATE_WORDS): string {
+export function missingSentence(
+  model: StackModel,
+  words: { readonly missing: string; readonly missingMore: string; readonly missingMoreOne: string } = TEMPLATE_WORDS,
+): string {
   const first = model.missing[0];
   if (!first) return "";
   const more = model.missing.length - 1;
-  return fill(words.missing, { option: first.option, line: first.line }) + (more > 0 ? ` ${fill(words.missingMore, { n: more })}` : "");
+  const tail = more === 1 ? words.missingMoreOne : more > 1 ? fill(words.missingMore, { n: more }) : "";
+  return fill(words.missing, { option: first.option, line: first.line }) + (tail ? ` ${tail}` : "");
+}
+
+/** The caption's short form: the first open line only; the rest are listed under the stage. */
+export function firstMissing(model: StackModel, missing: string): string {
+  const first = model.missing[0];
+  return first ? fill(missing, { option: first.option, line: first.line }) : "";
 }
 
 function table(model: StackModel, inner: string): string {

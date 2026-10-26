@@ -34,7 +34,7 @@
       "id": "tipp",
       "kind": "commit",
       "label": "Tipp",
-      "caption": "Nach der Ware ist {headline_winner} günstiger, um {headline_gap}.",
+      "caption": "Nach dem Warenpreis liegt {headline_winner} {headline_gap} vorn.",
       "lever": "Was kostet geliefert und bezahlt am wenigsten?"
     },
     {
@@ -42,7 +42,7 @@
       "kind": "reveal",
       "label": "Kipp",
       "seconds": 2.6,
-      "caption": "Geliefert und bezahlt gewinnt {winner}, um {gap}. {last} ist am teuersten."
+      "caption": "Geliefert und bezahlt liegt {winner} {gap} vorn. {last} ist am teuersten."
     },
     {
       "id": "methode",
@@ -60,8 +60,8 @@
       "id": "papier",
       "kind": "apply",
       "label": "Papier",
-      "caption": "{factor}: {winner} ist günstiger, um {gap}. Die Zeile, die entscheidet: {decider}.",
-      "lever": "Der Papierzuschlag von C folgt einem Index. Wie stark steigt er?",
+      "caption": "{factor}: {winner} liegt {gap} vorn. Entscheidet: {decider}.",
+      "lever": "Wie stark steigt der Papierindex von C?",
       "apply": {
         "param": "scale",
         "line": "Ware",
@@ -89,7 +89,7 @@
       "id": "mitnehmen",
       "kind": "takehome",
       "label": "Mitnehmen",
-      "caption": "Die Dateien, die du gerade bewegt hast, und die Methode für deinen eigenen Claude."
+      "caption": "Die Dateien von eben und die Methode für deinen Claude."
     }
   ],
   "own": {

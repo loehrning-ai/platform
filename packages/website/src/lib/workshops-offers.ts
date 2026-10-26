@@ -8,21 +8,24 @@ const base = "/workshops/angebote-mit-ki-vergleichen";
 /**
  * Workshop 06, "Welches Angebot ist günstiger?". Deck, kit and demo were built with rotfaden (example
  * angebote-mit-ki-vergleichen); scripts/workshop06 holds the kit's files, the build log of that run
- * (source/BUILD-LOG.md), the changes made for this site (PORT-LOG.md) and build-kit.mjs, which writes the
- * zip. The deck is rotfaden's deck.html, published as slides.html byte for byte; it is German only, so
- * both locales link the German deck and the German kit. Brandtwerk Gerätebau and the three suppliers are
+ * (source/BUILD-LOG.md), the changes made for this site (PORT-LOG.md), build-kit.mjs, which writes the zip,
+ * and build-deck.mjs, which writes slides.html from rotfaden's deck.html plus PORT-LOG items 6 to 9. The
+ * deck is German only, so both locales link the German deck and the German kit. Brandtwerk Gerätebau and the three suppliers are
  * invented. The agenda follows the seven acts of the deck (75 minutes) plus 15 minutes of questions.
  * Registered in WORKSHOPS_BY_LOCALE with the Kraft poster palette.
  */
 
-/** The kit zip is 34,212 bytes, rounded to the nearest KB (1024 bytes); workshops-offers.test.ts checks it. */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "33 KB", en: "33 KB" };
+/**
+ * The kit zip is 34,269 bytes, so 34 KB by the rule of the demo's take-home block (formatBytes: whole KB of
+ * 1024 bytes, rounded up), and the pages and the demo print the same size; workshops-offers.test.ts checks it.
+ */
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "34 KB", en: "34 KB" };
 
 /**
- * Places changed by hand: 9 in the rotfaden run (scripts/workshop06/source/BUILD-LOG.md) and 5 for this
+ * Places changed by hand: 9 in the rotfaden run (scripts/workshop06/source/BUILD-LOG.md) and 10 for this
  * site (scripts/workshop06/PORT-LOG.md). workshops-offers.test.ts counts both lists.
  */
-export const OFFERS_HAND_EDITS = 14;
+export const OFFERS_HAND_EDITS = 19;
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -92,7 +95,7 @@ export const OFFERS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 45,
     needs: [
-      "Live: ein Handy für die Abstimmungen und claude.ai oder die Claude-Desktop-App, jeder Plan, mit Codeausführung",
+      "Live: claude.ai oder die Claude-Desktop-App, jeder Plan, mit Codeausführung. Abgestimmt wird per Handzeichen.",
       "Zu Hause: dasselbe und das Kit",
     ],
     notNeeded: ["Programmierkenntnisse", "Einen API-Schlüssel", "Eine Einkaufsausbildung", "Echte Angebote"],
@@ -216,7 +219,7 @@ export const OFFERS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 45,
     needs: [
-      "Live: a phone for the votes and claude.ai or the Claude desktop app, any plan, with code execution on",
+      "Live: claude.ai or the Claude desktop app, any plan, with code execution on. Votes are a show of hands.",
       "At home: the same and the kit",
     ],
     notNeeded: ["Programming skills", "An API key", "Purchasing training", "Real offers"],

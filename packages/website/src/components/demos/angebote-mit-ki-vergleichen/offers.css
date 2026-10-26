@@ -28,15 +28,21 @@
   padding: 10px 12px 10px;
   overflow: hidden;
 }
-/* The shell's restart button is 44px high at the top right; the kicker clears it. */
+/* The shell's restart button is 44px high at the top right. A float keeps the kicker's first line clear of it,
+   and the lines below it use the full width, so a long question costs one line less on a phone. */
 .av-kicker {
   margin: 0;
   min-height: 34px;
-  padding-right: 112px;
   font-size: 0.9375rem;
   font-weight: 800;
   line-height: 1.2;
   overflow-wrap: anywhere;
+}
+.av-kicker::before {
+  content: "";
+  float: right;
+  width: 112px;
+  height: 34px;
 }
 .av-file { margin: 0; }
 .av-stage-body {
@@ -73,10 +79,11 @@
   will-change: transform;
 }
 .av-row-button {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: center;
+  align-items: center;
+  gap: 4px 10px;
   width: 100%;
   height: 100%;
   padding: 2px 0;
@@ -91,15 +98,21 @@ button.av-row-button[aria-pressed="true"] .av-row-name { text-decoration: underl
 @media (hover: hover) and (pointer: fine) {
   button.av-row-button:hover .av-row-name { text-decoration: underline; text-decoration-color: var(--av-mark); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 }
-.av-row-head {
+/* Line 1: the name and its chips across the row. Line 2: the bar and, at its end, the value. */
+.av-row-label {
+  grid-column: 1 / -1;
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px;
+  gap: 2px 6px;
   min-width: 0;
 }
 .av-row-name {
+  min-width: 0;
+  overflow: hidden;
   font-size: 0.9375rem;
   font-weight: 800;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .av-chip {
@@ -114,7 +127,6 @@ button.av-row-button[aria-pressed="true"] .av-row-name { text-decoration: underl
 .av-row-value {
   position: relative;
   display: inline-grid;
-  margin-left: auto;
   font-family: var(--av-mono);
   font-size: 0.9375rem;
   font-weight: 700;
@@ -125,6 +137,7 @@ button.av-row-button[aria-pressed="true"] .av-row-name { text-decoration: underl
 .av-bar {
   position: relative;
   display: block;
+  min-width: 0;
   height: 18px;
   border-bottom: 1px solid var(--av-line);
 }
@@ -226,6 +239,8 @@ button.av-row-button[aria-pressed="true"] .av-row-name { text-decoration: underl
   width: 100%;
 }
 .av-bet { padding: 0 6px; font-size: 0.875rem; }
+.av-takehome-levers { display: flex; flex-wrap: wrap; gap: 6px; }
+.av-takehome-levers .av-button { flex: 1 1 auto; padding: 0 10px; }
 
 .av-stops {
   min-width: 0;
@@ -283,6 +298,7 @@ button.av-row-button[aria-pressed="true"] .av-row-name { text-decoration: underl
 .av-details { margin-top: 8px; }
 .av-sources,
 .av-basis,
+.av-open,
 .av-own {
   display: flex;
   flex-direction: column;
@@ -319,6 +335,14 @@ button.av-row-button[aria-pressed="true"] .av-row-name { text-decoration: underl
   .av-sources-list li { grid-template-columns: minmax(0, 1fr) auto; }
   .av-sources-quote { grid-column: 1 / -1; }
 }
+.av-open-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--av-mono);
+  font-size: 0.875rem;
+}
+.av-open-list li { padding: 6px 0; border-bottom: 1px solid var(--av-line); overflow-wrap: anywhere; }
 .av-own-label { font-size: 0.9375rem; font-weight: 700; }
 .av-own-field {
   width: 100%;
