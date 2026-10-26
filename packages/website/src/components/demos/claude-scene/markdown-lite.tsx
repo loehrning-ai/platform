@@ -116,7 +116,9 @@ type Inline = { readonly kind: "text" | "strong" | "em" | "code"; readonly text:
 /** Inline Markdown into spans. At the stream edge, an unmatched opener is dropped instead of shown. */
 export function parseInline(text: string, edge = false): readonly Inline[] {
   const out: Inline[] = [];
-  const pattern = /(`[^`\n]+`)|(\*\*[^*\n](?:[^*\n]|\*(?!\*))*?\*\*)|(__[^_\n]+__)|(\*[^*\s][^*\n]*?\*)|(_[^_\s][^_\n]*?_)|(\n)/g;
+  // An underscore inside a word (strom_2025.csv) is a letter, never emphasis: _ and __ only open and close at a word edge.
+  const pattern =
+    /(`[^`\n]+`)|(\*\*[^*\n](?:[^*\n]|\*(?!\*))*?\*\*)|((?<![\p{L}\p{N}_])__[^_\n]+__(?![\p{L}\p{N}_]))|(\*[^*\s][^*\n]*?\*)|((?<![\p{L}\p{N}_])_[^_\s][^_\n]*?_(?![\p{L}\p{N}_]))|(\n)/gu;
   let last = 0;
   for (const match of text.matchAll(pattern)) {
     const at = match.index ?? 0;
@@ -130,7 +132,7 @@ export function parseInline(text: string, edge = false): readonly Inline[] {
   }
   if (last < text.length) {
     let tail = text.slice(last);
-    if (edge) tail = tail.replace(/(\*\*|__|`|\*|_)(?=[^*_`]*$)/, "");
+    if (edge) tail = tail.replace(/(\*\*|`|\*|(?<![\p{L}\p{N}_])__|(?<![\p{L}\p{N}_])_)(?=[^*_`]*$)/u, "");
     out.push({ kind: "text", text: tail });
   }
   return out;
