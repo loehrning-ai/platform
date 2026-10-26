@@ -464,7 +464,7 @@
     root.replaceChildren();
     const entries = noteEntries(richNote, total);
     if (!entries.length) {
-      root.textContent = state.note || "—";
+      root.textContent = state.note || "·";
       return;
     }
     const rank = (entry) => (entry.kind === "must" && !entry.steps.length ? 0 : entry.kind === "detail" || entry.kind === "block" ? 2 : 1);
@@ -504,7 +504,7 @@
       const vote = !nodes.voteCard.hidden;
       const ask = !nodes.stepAskRow.hidden;
       empty.textContent = !richNote
-        ? state?.note || "—"
+        ? state?.note || "·"
         : vote
           ? "Run the vote: take hands for each option, then say the split aloud."
           : ask
@@ -695,7 +695,7 @@
     renderAppendixBanner();
     const endOfMain = state.kind === "main" && state.mainIndex === state.mainTotal - 1;
     setText(nodes.nextLabel, endOfMain ? "None · Q&A uses the appendix routes" : state.next?.label || "End of deck");
-    setText(nodes.nextId, endOfMain ? "—" : state.next?.sceneId || "—");
+    setText(nodes.nextId, endOfMain ? "·" : state.next?.sceneId || "·");
     setText(nodes.nextKind, endOfMain ? "end" : state.next?.kind || "end");
     document.documentElement.dataset.deckKind = state.kind || "main";
     populateSceneSelect(state.scenes);
@@ -752,12 +752,12 @@
   // "On screen now" is what the current press shows; "Next press" is what the next arrow press will show.
   function renderStepLines(richNote, step, total) {
     const order = richNote?.revealOrder || [];
-    setText(nodes.stepNow, order[step] || "—");
+    setText(nodes.stepNow, order[step] || "·");
     const aloud = (richNote?.ask || []).filter((item) => item.aloud && item.at === step).map((item) => item.text);
     nodes.stepAskRow.hidden = !aloud.length;
-    setText(nodes.stepAsk, aloud.join(" · ") || "—");
+    setText(nodes.stepAsk, aloud.join(" · ") || "·");
     let next;
-    if (step < total) next = order[step + 1] || "—";
+    if (step < total) next = order[step + 1] || "·";
     else if (state.kind === "main" && state.mainIndex === state.mainTotal - 1) next = "Nothing · the main path ends here. Open Q&A.";
     else if (state.kind === "appendix") next = state.next?.kind === "appendix" ? `Next appendix page · ${state.next.label}` : "Nothing · last appendix page";
     else next = state.next ? `Next scene · ${state.next.label}` : "End of deck";
@@ -787,7 +787,7 @@
   function renderLines(root, lines) {
     root.replaceChildren();
     if (!lines.length) {
-      root.textContent = "—";
+      root.textContent = "·";
       return;
     }
     lines.forEach((line) => {
@@ -1130,7 +1130,7 @@
     window.setInterval(() => {
       renderClock();
       renderConnectionHealth();
-      setText(nodes.stateAge, state?.timestamp ? `${Math.max(0, Math.round((Date.now() - state.timestamp) / 1000))}s old` : "—");
+      setText(nodes.stateAge, state?.timestamp ? `${Math.max(0, Math.round((Date.now() - state.timestamp) / 1000))}s old` : "·");
     }, HEARTBEAT_INTERVAL_MS);
   }
 

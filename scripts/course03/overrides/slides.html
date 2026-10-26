@@ -1079,7 +1079,7 @@
   <section class="slide" id="evaluation" data-act="5" data-kind="main" data-label="Evaluation" data-section="Evaluation · five requests, nine checks" data-track="evaluation" data-seconds="300" data-note-key="evaluation" data-note="Show the recorded AI runs first, then the nine fixed database checks. Never present 9 of 9 as an AI score." data-design="v3" data-route="shown" data-live-check="corpus">
   <!-- scene:evaluation -->
 <h1 class="scene-title" data-step-until="3">What should the AI do with each request?</h1>
-<h1 class="ev-headline" id="evaluation-vote-question" data-step="3" data-step-until="4" data-motion="rise"><span data-ev="corpus:ready-pass" data-format="of:9">9 of 9</span> tests pass. Does the AI score 9 of 9?</h1>
+<h1 class="ev-headline" id="evaluation-vote-question" data-step="3" data-step-until="4" data-motion="rise"><span data-ev="corpus:ready-pass" data-format="of:9">9 of 9</span> tests pass. Does the AI pass 9 of 9?</h1>
 <h1 class="ev-headline" id="evaluation-scope" data-step="4" data-motion="rise" style="--order:1" data-focus>They test the database and course rules, <span class="ev-headline__focus">not the AI.</span></h1>
 <div class="ev-stage" data-visual="five cases, each question with its expected behaviour, then two separate boards: recorded AI runs on three questions, and nine fixed database checks in a nine-cell grid with 9 of 9 and its scope line">
   <ol class="ev-cases" data-focus>
@@ -1511,17 +1511,17 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
     </tbody>
   </table>
 </div>
-<p class="ae-summary" data-focus>approved <span data-ev="corpus:ready-pass" data-format="int">9</span>/9 · export 0/5 applicable · not an AI score</p>
+<p class="ae-summary" data-focus>approved <span data-ev="corpus:ready-pass" data-format="int">9</span>/9 · export 0/5 applicable · not a grade for the AI</p>
 <div class="ae-board ae-board--run" data-visual="recorded-runs">
   <p class="ae-head"><svg class="icon icon--32" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI runs (G01 to G03)</p>
   <table class="ctable ae-table ae-table--run">
     <thead><tr><th>grade</th><th class="num">export</th><th class="num">approved</th></tr></thead>
     <tbody>
           <tr><td>value matches truth</td><td class="num"><span data-ev="summary:bad:valueCorrectnessPasses" data-format="int">0</span>/<span data-ev="summary:bad:trials" data-format="int">3</span></td><td class="num"><span data-ev="summary:ready:valueCorrectnessPasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
-          <tr><td>canonical relation</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:relationCorrectnessPasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
-          <tr><td>verified question in trace</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
-          <tr><td>governed metric citation</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:metricCitationPasses" data-format="int">0</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
-          <tr><td>combined ready evidence</td><td class="num ae-dash">—</td><td class="num"><span data-ev="summary:ready:readyEvidencePasses" data-format="int">0</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>canonical relation</td><td class="num ae-dash">n/a</td><td class="num"><span data-ev="summary:ready:relationCorrectnessPasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>verified question in trace</td><td class="num ae-dash">n/a</td><td class="num"><span data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="int">3</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>governed metric citation</td><td class="num ae-dash">n/a</td><td class="num"><span data-ev="summary:ready:metricCitationPasses" data-format="int">0</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
+          <tr><td>combined ready evidence</td><td class="num ae-dash">n/a</td><td class="num"><span data-ev="summary:ready:readyEvidencePasses" data-format="int">0</span>/<span data-ev="summary:ready:trials" data-format="int">3</span></td></tr>
     </tbody>
   </table>
   <p class="ae-small">one forced run per case and lane · <span class="mono">skipClarify=true</span> · uncached · not a benchmark</p>
@@ -1631,7 +1631,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
   <span class="rm-stamp" data-focus>LIMITED PILOT · CITATION GATE RED</span>
   <span class="rm-verdict__rest">metric citation absent · ready E2E FAIL · fresh 18-call protocol NOT RUN 0/18 · AI deployment BLOCKED</span>
 </div>
-<p class="rm-limits"><b>Does not prove:</b> repeatable model quality · pinned model version · production readiness · current provider availability · 9/9 as an AI score · course policy or database denial as Ask behavior</p>
+<p class="rm-limits"><b>Does not prove:</b> repeatable model quality · pinned model version · production readiness · current provider availability · 9/9 as a grade for the AI · course policy or database denial as Ask behavior</p>
 <p class="rm-notes">Run settings, the route and the dataset checksum are in the speaker notes.</p>
 <!-- /scene:appendix-run-metadata -->
   </section>

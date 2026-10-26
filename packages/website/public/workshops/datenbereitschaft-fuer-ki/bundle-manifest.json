@@ -626,8 +626,8 @@
     },
     {
       "path": "lib/demo-adapter.js",
-      "sizeBytes": 17490,
-      "sha256": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e"
+      "sizeBytes": 17489,
+      "sha256": "aedc32f31c9de1b64450d9d5b6069aeeca9dd26d5d5c9188deb5d1111afcdb6e"
     },
     {
       "path": "lib/model-capture-data.js",
@@ -646,8 +646,8 @@
     },
     {
       "path": "lib/presenter.js",
-      "sizeBytes": 52280,
-      "sha256": "b84ff9072252c1fbe0874b400d7238febc20ad87ece1f0acc5a440c0e29d4c11"
+      "sizeBytes": 52271,
+      "sha256": "ecd4666d3e894a12d97deb8e45c7518f195a4622a56e1afe0221d115a8bc52d0"
     },
     {
       "path": "lib/replay-data.js",
@@ -806,13 +806,13 @@
     },
     {
       "path": "presenter.html",
-      "sizeBytes": 9195,
-      "sha256": "01d9c4d3121c4aa0bd493e11f79c26f696a4264e520a48793b773369806aeda1"
+      "sizeBytes": 9186,
+      "sha256": "211270179c067ce4102ea356fa4e3dcf83fa979a946e6816c617d9067d14cbdb"
     },
     {
       "path": "slides.html",
-      "sizeBytes": 180157,
-      "sha256": "6a1b805208870ae6834c10d9a9e9adb5015258bd5f0d801c19eb49c269340c90"
+      "sizeBytes": 180170,
+      "sha256": "6202f6be10ef39a4f3c10a48e0275d40ea94cd0ca35f36ba801fa75b2ef177e5"
     }
   ]
 }

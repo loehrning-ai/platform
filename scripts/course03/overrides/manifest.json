@@ -64,6 +64,10 @@
       "original": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
       "override": "2303b7794c73d338d3f6d0c61f3bfd447f9a4aab451df5d210119037cfa1591f"
     },
+    "lib/demo-adapter.js": {
+      "original": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e",
+      "override": "aedc32f31c9de1b64450d9d5b6069aeeca9dd26d5d5c9188deb5d1111afcdb6e"
+    },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
       "override": "a6702adc1b11f13c1ad41dcb26f4df5530bcc717f54e0be6ed61d3838ff6b2a4"
@@ -74,7 +78,7 @@
     },
     "lib/presenter.js": {
       "original": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d",
-      "override": "b84ff9072252c1fbe0874b400d7238febc20ad87ece1f0acc5a440c0e29d4c11"
+      "override": "ecd4666d3e894a12d97deb8e45c7518f195a4622a56e1afe0221d115a8bc52d0"
     },
     "lib/scenes/appendix-access-controls.css": {
       "original": "fc99d6418a6757fae8c2c078d912650bde00c72ad2b6a50e6d6b0fd90344c7d6",
@@ -190,11 +194,11 @@
     },
     "presenter.html": {
       "original": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db",
-      "override": "01d9c4d3121c4aa0bd493e11f79c26f696a4264e520a48793b773369806aeda1"
+      "override": "211270179c067ce4102ea356fa4e3dcf83fa979a946e6816c617d9067d14cbdb"
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "6a1b805208870ae6834c10d9a9e9adb5015258bd5f0d801c19eb49c269340c90"
+      "override": "6202f6be10ef39a4f3c10a48e0275d40ea94cd0ca35f36ba801fa75b2ef177e5"
     }
   }
 }

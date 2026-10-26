@@ -201,8 +201,12 @@ export function targets() {
     ...walk(path.join(ROOT, "scripts"), (file) => /\/deck-copy[^/]*\.json$/.test(file) || /\/deck-src\/notes\.json$/.test(file)),
   ];
 
+  // Decks and presenter views: the visible text nodes and the spoken
+  // attributes of their HTML, never script, style or comments.
+  const html = walk(site("public/workshops"), (file) => /\/(slides[^/]*|presenter)\.html$/.test(file));
+
   const zips = walk(site("public/workshops"), (file) => file.endsWith(".zip"));
-  return { code, prose, json, zips };
+  return { code, prose, json, html, zips };
 }
 
 /* ── Extraction ────────────────────────────────────────────────────────── */
@@ -249,6 +253,42 @@ export function jsonStrings(source) {
     else if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) visit(item, at ? `${at}.${key}` : key);
   };
   visit(JSON.parse(source), "");
+  return out;
+}
+
+const ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", mdash: "—", ndash: "–", hellip: "…", shy: "" };
+
+/** Decodes the few entities a deck uses, numeric ones included. */
+function decodeEntities(text) {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, name) => {
+    if (name[0] === "#") return String.fromCodePoint(name[1].toLowerCase() === "x" ? parseInt(name.slice(2), 16) : Number(name.slice(1)));
+    return ENTITIES[name.toLowerCase()] ?? whole;
+  });
+}
+
+/**
+ * The text a visitor sees or hears in an HTML page: text nodes plus alt,
+ * title, aria-label and placeholder values, with line numbers. Script, style
+ * and comments are blanked first (their line breaks kept).
+ */
+export function htmlTextLines(source) {
+  const blank = (block) => block.replace(/[^\n]/g, " ");
+  const visible = source
+    .replace(/<script\b[\s\S]*?<\/script>/gi, blank)
+    .replace(/<style\b[\s\S]*?<\/style>/gi, blank)
+    .replace(/<!--[\s\S]*?-->/g, blank);
+  const lineAt = (index) => visible.slice(0, index).split("\n").length;
+  const out = [];
+  const push = (index, raw) => {
+    raw.split("\n").forEach((part, offset) => {
+      const text = decodeEntities(part).trim();
+      // A file tree row ("loesungen/", "START-HIER.md") is a name, not prose.
+      const isPath = /^[\w.-]+(?:\/[\w.-]+)*\/$/.test(text) || /^[\w-]+(?:\.[\w-]+)*\.[a-z0-9]{1,4}$/i.test(text);
+      if (text && !isPath && /\p{L}|[‒-―]/u.test(text)) out.push({ line: lineAt(index) + offset, text });
+    });
+  };
+  for (const match of visible.matchAll(/>([^<]+)</g)) push(match.index + 1, match[1]);
+  for (const match of visible.matchAll(/\s(?:alt|title|aria-label|placeholder)="([^"]*)"/gi)) push(match.index, match[1]);
   return out;
 }
 
@@ -317,6 +357,7 @@ export function collectFindings(sources = targets()) {
   for (const file of sources.code) findings.push(...lintLines(rel(file), codeStrings(readFileSync(file, "utf8"), file), { code: true }));
   for (const file of sources.prose) findings.push(...lintLines(rel(file), proseLines(readFileSync(file, "utf8")), { markdown: file.endsWith(".md") }));
   for (const file of sources.json) findings.push(...lintLines(rel(file), jsonStrings(readFileSync(file, "utf8"))));
+  for (const file of sources.html ?? []) findings.push(...lintLines(rel(file), htmlTextLines(readFileSync(file, "utf8"))));
   for (const file of sources.zips) {
     for (const member of zipProse(readFileSync(file))) {
       findings.push(...lintLines(`${rel(file)}!${member.name}`, proseLines(member.text), { markdown: member.name.endsWith(".md") }));

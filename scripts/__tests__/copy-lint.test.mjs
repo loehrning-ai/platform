@@ -7,6 +7,7 @@ import {
   applyAllowlist,
   codeStrings,
   collectFindings,
+  htmlTextLines,
   jsonStrings,
   lintLines,
   proseLines,
@@ -77,4 +78,29 @@ test("the repository is clean against its allowlist, and the allowlist has no st
   const { blocking, stale } = applyAllowlist(collectFindings(sources), readAllowlist());
   assert.deepEqual(blocking, []);
   assert.deepEqual(stale, []);
+});
+
+test("deck HTML: text nodes and spoken attributes, never script, style, comments or file names", () => {
+  const html = [
+    '<html><head><style>.a::after{content:"—"}</style><script>const s = "—";</script></head>',
+    "<body><!-- a — note -->",
+    '<td class="num">—</td><p aria-label="Folie — eins">Weiter &mdash; jetzt</p>',
+    "<li><span>loesungen/</span><span>START-HIER.md</span></li></body></html>",
+  ].join("\n");
+  const lines = htmlTextLines(html);
+  assert.deepEqual(
+    lines.map(({ line, text }) => [line, text]),
+    [
+      [3, "—"],
+      [3, "Weiter — jetzt"],
+      [3, "Folie — eins"],
+    ],
+  );
+  assert.equal(lintLines("deck.html", lines).filter((finding) => finding.rule === "dash").length, 3);
+});
+
+test("the targets include every deck and presenter page", () => {
+  const { html } = targets();
+  assert.ok(html.some((file) => file.endsWith("datenbereitschaft-fuer-ki/presenter.html")));
+  assert.ok(html.some((file) => file.endsWith("audit-vorbereitung-mit-ki/en/slides.html")));
 });
