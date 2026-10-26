@@ -338,3 +338,50 @@ export function buildSecurityHeaders(
     { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
   ];
 }
+
+/**
+ * Workshop decks: the presenter view (presenter.html) shows the next slide in
+ * a same-origin iframe of the deck (slides.html?preview=1). The site-wide
+ * policy forbids every frame (`frame-src 'none'`, `frame-ancestors 'none'`,
+ * `X-Frame-Options: DENY`), which leaves that preview blank. These rules open
+ * exactly that pair and nothing else: the presenter may frame its own origin,
+ * and a deck file may be framed by its own origin. Every other directive is
+ * the enforced baseline, byte for byte. The sources use Next's `headers()`
+ * syntax; a later rule for the same key overrides the site-wide one.
+ */
+export const DECK_PRESENTER_SOURCES = [
+  "/workshops/:slug/presenter.html",
+  "/workshops/:slug/en/presenter.html",
+] as const;
+
+export const DECK_SLIDES_SOURCES = [
+  "/workshops/:slug/slides.html",
+  "/workshops/:slug/slides.en.html",
+  "/workshops/:slug/en/slides.html",
+] as const;
+
+type DeckHeaderRule = Readonly<{ source: string; headers: Header[] }>;
+
+export function buildDeckFrameHeaderRules(
+  environment: SecurityHeaderEnvironment,
+  supabaseOrigin: string | null,
+): DeckHeaderRule[] {
+  const baseline = buildContentSecurityPolicy(environment, supabaseOrigin);
+  const presenterPolicy = baseline.replace(/frame-src [^;]+/, (current) =>
+    current === "frame-src 'none'" ? "frame-src 'self'" : `${current} 'self'`,
+  );
+  const slidesPolicy = baseline.replace("frame-ancestors 'none'", "frame-ancestors 'self'");
+  return [
+    ...DECK_PRESENTER_SOURCES.map((source) => ({
+      source,
+      headers: [{ key: "Content-Security-Policy", value: presenterPolicy }],
+    })),
+    ...DECK_SLIDES_SOURCES.map((source) => ({
+      source,
+      headers: [
+        { key: "Content-Security-Policy", value: slidesPolicy },
+        { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      ],
+    })),
+  ];
+}

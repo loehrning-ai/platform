@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildContentSecurityPolicy,
+  buildDeckFrameHeaderRules,
   buildSecurityHeaders,
   createCspNonce,
   CSP_REPORT_GROUP,
@@ -562,5 +563,42 @@ describe("report-only canary", () => {
     expect(reportingEndpoints).toMatch(/^[a-z][a-z0-9_.*-]*="[^"\\\s]+"$/);
     expect(reportingEndpoints?.split("=")[0]).toBe(CSP_REPORT_GROUP);
     expect(reportingEndpoints).toContain(`"${CSP_REPORT_PATH}"`);
+  });
+});
+
+describe("workshop deck framing", () => {
+  const rules = buildDeckFrameHeaderRules(production, null);
+  const baseline = buildContentSecurityPolicy(production, null);
+  const policyOf = (source: string) =>
+    rules.find((rule) => rule.source === source)?.headers.find((header) => header.key === "Content-Security-Policy")?.value ?? "";
+
+  it("lets only the presenter frame its own origin", () => {
+    const presenter = policyOf("/workshops/:slug/presenter.html");
+    expect(directive(presenter, "frame-src")).toBe("frame-src 'self'");
+    expect(directive(presenter, "frame-ancestors")).toBe("frame-ancestors 'none'");
+    expect(presenter.replace("frame-src 'self'", "frame-src 'none'")).toBe(baseline);
+  });
+
+  it("lets only a deck file be framed, and only by its own origin", () => {
+    for (const source of ["/workshops/:slug/slides.html", "/workshops/:slug/slides.en.html", "/workshops/:slug/en/slides.html"]) {
+      const slides = policyOf(source);
+      expect(directive(slides, "frame-ancestors"), source).toBe("frame-ancestors 'self'");
+      expect(directive(slides, "frame-src"), source).toBe("frame-src 'none'");
+      expect(slides.replace("frame-ancestors 'self'", "frame-ancestors 'none'"), source).toBe(baseline);
+      const frameOptions = rules.find((rule) => rule.source === source)?.headers.find((header) => header.key === "X-Frame-Options");
+      expect(frameOptions?.value, source).toBe("SAMEORIGIN");
+    }
+  });
+
+  it("covers nothing outside the workshop deck files", () => {
+    for (const rule of rules) expect(rule.source).toMatch(/^\/workshops\/:slug\/(?:en\/)?(?:presenter|slides(?:\.en)?)\.html$/);
+  });
+
+  it("is wired into next.config.ts after the site-wide rule", () => {
+    const configSource = readFileSync(resolve(process.cwd(), "next.config.ts"), "utf8");
+    const siteWide = configSource.indexOf("headers: SECURITY_HEADERS");
+    const deck = configSource.indexOf("...buildDeckFrameHeaderRules(");
+    expect(siteWide).toBeGreaterThan(-1);
+    expect(deck).toBeGreaterThan(siteWide);
   });
 });

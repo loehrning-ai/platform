@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeSupabaseOrigin } from "./src/lib/supabase/config.ts";
 import { buildResourcePolicyHeaderRules } from "./src/lib/security/resource-policy.ts";
-import { buildSecurityHeaders } from "./security-headers.ts";
+import { buildDeckFrameHeaderRules, buildSecurityHeaders } from "./security-headers.ts";
 import { BOOK_ID, legacyChapterRedirects } from "./src/lib/book-chapter-redirects.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -153,6 +153,10 @@ const nextConfig: NextConfig = {
       source: "/:path*",
       headers: SECURITY_HEADERS,
     },
+    // Workshop decks: the presenter view frames its own deck for the
+    // next-slide preview. Overrides only frame-src / frame-ancestors on the
+    // deck files (security-headers.ts, buildDeckFrameHeaderRules).
+    ...buildDeckFrameHeaderRules(process.env, SUPABASE_ORIGIN),
     // Cross-Origin-Resource-Policy: same-origin on the per-session surfaces
     // (/api, the account and the OAuth consent trees). Not site-wide: social
     // preview images, covers and fonts must stay loadable by other origins.
