@@ -100,13 +100,29 @@ export const WASSER: readonly BillRow[] = [
   bill("2025-12", "W-25-12", 240, 14),
 ];
 
-/** bio_zertifikat_weinberg.txt lines 6 to 8. */
+/** bio_zertifikat_weinberg.txt (organic_certificate_vineyard.txt) lines 4 and 6 to 9. */
 export const BIO = {
+  /** Line 4: the inspection body's code. */
+  controlBody: "XX-BIO-000",
   validFrom: { year: 2025, month: 9, day: 1 },
   validUntil: { year: 2026, month: 8, day: 31 },
+  /** Line 9: the renewal inspection is booked, not done. */
+  renewalBooked: { year: 2026, month: 10, day: 22 },
   haCertified: 12,
   haTotal: 40,
 } as const;
+
+/** The line numbers of the certificate the demo connects to (the same in both editions). */
+export const CERT_LINE = { title: 3, body: 4, operator: 5, scope: 6, from: 7, until: 8, renewal: 9, rest: 10, cellar: 11 } as const;
+/** Line 1 of every kit file: "Erfundene Übungsdaten..." (the certificate's line 2 is empty). */
+export const CERT_LINES = [1, 3, 4, 5, 6, 7, 8, 9, 10, 11] as const;
+
+/** strom_zusammenfassung_entwurf.txt: line 3 says it is an unchecked draft, line 5 holds the figure. */
+export const DRAFT_LINE = { status: 3, figure: 5 } as const;
+/** firmenprofil.md line 16: tank cooling peaks in September and October. */
+export const PROFILE_TANK_LINE = 16;
+/** anfragen/2-werbeaussagen.md line 10: claim 3, "Regalkarte, alle Weine". */
+export const CLAIM_LINE = 10;
 
 /** pv_angebot_2026.txt lines 8 and 9; the tariff from strom_2025.csv. */
 export const PV = { yieldMwh: 180, investmentMkd: 8_550_000, tariff: 9.5 } as const;

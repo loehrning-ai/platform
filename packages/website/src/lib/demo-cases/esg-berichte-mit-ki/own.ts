@@ -249,3 +249,66 @@ export interface OwnRow {
 export function addRow(rows: readonly OwnRow[], next: OwnRow): readonly OwnRow[] {
   return rows.length >= MAX_ROWS ? rows : [...rows, next];
 }
+
+/**
+ * The "Eigene Angabe prüfen" door: four segmented rows, one control each
+ * (Zitat, Zeitraum, Umfang, Freigabe), plus one switch for a marketing claim.
+ * fromClaim() maps them onto the probe's input, so the rules above stay the
+ * only place that decides a status.
+ */
+export interface ClaimInput {
+  readonly sentence: string;
+  /** "Datei und Zeile bekannt" or "Weiß ich nicht". */
+  readonly zitat: "known" | "unknown";
+  readonly file: string;
+  readonly line: string;
+  /** Monthly values (bills, readings) or a document valid until a date. */
+  readonly zeitraum: "months" | "validUntil";
+  readonly months: readonly boolean[];
+  readonly validUntil: string;
+  readonly stichtag: string;
+  readonly umfang: "all" | "part" | "unsure";
+  readonly freigabe: "yes" | "no" | "unsure";
+  /** For a label, a shelf or a website: the ban list comes first. */
+  readonly marketing: boolean;
+  readonly gates: Readonly<Partial<Record<GateId, boolean>>>;
+}
+
+export const EMPTY_CLAIM: ClaimInput = {
+  sentence: "",
+  zitat: "known",
+  file: "",
+  line: "",
+  zeitraum: "months",
+  months: Array.from({ length: 12 }, () => true),
+  validUntil: "",
+  stichtag: "",
+  umfang: "all",
+  freigabe: "yes",
+  marketing: false,
+  gates: {},
+};
+
+export function fromClaim(claim: ClaimInput): OwnInput {
+  const evidence: Evidence = claim.zitat === "unknown" ? "nothing" : claim.zeitraum === "months" ? "bills" : "certificate";
+  return {
+    sentence: claim.sentence,
+    destination: claim.marketing ? "website" : "questionnaire",
+    evidence,
+    months: claim.months,
+    wholeYear: true,
+    validUntil: claim.validUntil,
+    stichtag: claim.stichtag,
+    scope: claim.umfang === "all" ? "yes" : claim.umfang === "part" ? "part" : "unsure",
+    final: claim.freigabe,
+    gates: claim.gates,
+  };
+}
+
+/** "strom_2025.csv, Zeile 3" as the visitor typed it, or "" when the quote is not known. */
+export function quoteOf(claim: ClaimInput): string {
+  if (claim.zitat === "unknown") return "";
+  const file = claim.file.replace(/[\u0000-\u001f\u007f]/g, "").trim().slice(0, 80);
+  const line = claim.line.replace(/[^\d,\s-]/g, "").trim().slice(0, 20);
+  return [file, line].filter(Boolean).join(" ");
+}

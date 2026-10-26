@@ -1,10 +1,16 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { readZipText } from "@/lib/zip/read";
+import { createHash } from "node:crypto";
+import { readZipEntry, readZipText } from "@/lib/zip/read";
+import invoiceSource from "@/components/demos/esg-berichte-mit-ki/invoice-source.json";
+import { CARD_WORDS } from "./card-words";
 import { COPY } from "./copy";
-import { FILE_IDS, FILE_NAMES, KIT_ROOT, SEPTEMBER_INVOICE, STROM, WASSER, type FileId } from "./kit";
+import { figures } from "./figures";
+import { BIO, CERT_LINE, DRAFT_LINE, FILE_IDS, FILE_NAMES, KIT_ROOT, PROFILE_TANK_LINE, SEPTEMBER_INVOICE, STROM, WASSER, type FileId } from "./kit";
+import { INVOICE_PATHS, kitText } from "./kit-text";
 import { formatLines, LEDGER } from "./ledger";
+import { THREADS } from "./threads";
 
 /*
  * The demo is the kit visualized: every line the stage quotes and every row
@@ -45,20 +51,34 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
     for (const id of FILE_IDS) lines(locale, `${folder(locale)}${FILE_NAMES[id][locale]}`);
   });
 
-  it("quotes the certificate lines verbatim", () => {
-    expect(pack.satz1.file).toBe(FILE_NAMES.bio[locale]);
-    const file = lines(locale, `${folder(locale)}${pack.satz1.file}`);
-    for (const [line, text] of pack.satz1.lines) expect(file[line - 1], `${pack.satz1.file}:${line}`).toBe(text);
+  it("reads the certificate, the draft and the requests from the zip, with the facts the scenes connect to", () => {
+    const kit = kitText(locale);
+    const cert = new Map(kit.certificate.lines.map((line) => [line.n, line.text]));
+    const date = (d: { year: number; month: number; day: number }) => `${String(d.day).padStart(2, "0")}.${String(d.month).padStart(2, "0")}.${d.year}`;
+    expect(kit.certificate.name).toBe(FILE_NAMES.bio[locale]);
+    expect(cert.get(CERT_LINE.body)).toContain(BIO.controlBody);
+    expect(cert.get(CERT_LINE.scope)).toMatch(new RegExp(`\\b${BIO.haCertified}\\b`));
+    expect(cert.get(CERT_LINE.scope)).toMatch(new RegExp(`\\b${BIO.haTotal}\\b`));
+    expect(cert.get(CERT_LINE.from)).toContain(date(BIO.validFrom));
+    expect(cert.get(CERT_LINE.until)).toContain(date(BIO.validUntil));
+    expect(cert.get(CERT_LINE.renewal)).toContain(date(BIO.renewalBooked));
+    for (const thread of Object.values(THREADS)) for (const line of thread.accepted) expect(cert.get(line), `line ${line}`).toBeTruthy();
+    const draft = new Map(kit.draft.lines.map((line) => [line.n, line.text]));
+    expect(draft.get(DRAFT_LINE.figure)).toContain(figures(locale).mwh11);
+    expect(draft.get(DRAFT_LINE.status)).toMatch(locale === "de" ? /ENTWURF/ : /DRAFT/);
+    expect(kit.claim.text).toBe(locale === "de" ? "Zertifizierte Bio-Weinberge" : "Certified organic vineyards");
+    expect(kit.f2).toMatch(/MWh/);
+    expect(kit.invented).toMatch(locale === "de" ? /[Ee]rfunden/ : /[Ii]nvented|[Ff]ictional/);
+    const profile = lines(locale, `${folder(locale)}${FILE_NAMES.firmenprofil[locale]}`);
+    expect(profile[PROFILE_TANK_LINE - 1]).toMatch(locale === "de" ? /September/ : /September/);
   });
 
-  it("quotes the lines of sentences 2 and 3 verbatim", () => {
-    for (const sentence of pack.three.sentences) {
-      const file = lines(locale, `${folder(locale)}${sentence.file}`);
-      for (const [line, text] of sentence.lines) expect(file[line - 1], `${sentence.file}:${line}`).toBe(text);
-    }
-    const rules = lines(locale, `${folder(locale)}${FILE_NAMES.regeln[locale]}`);
-    expect(rules[pack.three.banLine[0] - 1], "ban list 4c").toBe(pack.three.banLine[1]);
-    expect(pack.three.sentences.map((sentence) => sentence.file)).toEqual([FILE_NAMES.entwurf[locale], FILE_NAMES.kompensation[locale], FILE_NAMES.wasser[locale]]);
+  it("shows the invoice photo derived from the PNG in this zip", () => {
+    const entry = (invoiceSource as Record<string, { source: string; sha256: string }>)[locale]!;
+    expect(entry.source).toBe(INVOICE_PATHS[locale]);
+    const png = readZipEntry(zip(locale), entry.source);
+    expect(png).not.toBeNull();
+    expect(createHash("sha256").update(png!).digest("hex")).toBe(entry.sha256);
   });
 
   it("counts the same bill rows as the CSV files", () => {
@@ -71,14 +91,6 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
         expect([cells[0], cells[1], Number(cells[2])], `${id}:${row.line}`).toEqual([row.month, row.invoice, row.amount]);
       }
     }
-  });
-
-  it("takes sentences 1, 3 and 4 from the marketing request, sentence 2 from the draft", () => {
-    const requests = lines(locale, locale === "de" ? "anfragen/2-werbeaussagen.md" : "requests/2-marketing-claims.md").join("\n");
-    expect(requests).toContain(pack.satz1.text);
-    expect(requests).toContain(pack.three.sentences[1]!.text);
-    expect(requests).toContain(pack.three.sentences[2]!.text);
-    expect(lines(locale, `${folder(locale)}${pack.three.sentences[0]!.file}`)[4]).toContain(pack.three.sentences[0]!.text);
   });
 
   it("draws the late invoice with the numbers of the solutions file", () => {
@@ -103,7 +115,7 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
       expect(line, `${row.id} in the solutions file`).not.toBe("");
       expect(row.lines.length, row.id).toBeGreaterThan(0);
       for (const [file, refs] of row.lines) {
-        expect(line, `${row.id}: ${file}`).toContain(`${SHORT[locale][file]} ${formatLines(refs, pack.range)}`);
+        expect(line, `${row.id}: ${file}`).toContain(`${SHORT[locale][file]} ${formatLines(refs, pack.own.words.to)}`);
       }
     }
   });
@@ -112,6 +124,6 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
     const skill = readFileSync(path.join(process.cwd(), "content/skills/esg-nachweise/SKILL.md"), "utf8").replace(/\s+/g, " ");
     if (locale === "de") expect(skill).toContain(pack.regel.objective);
     const card = lines(locale, locale === "de" ? "nachweisprobe.md" : "evidence-check.md").join("\n");
-    for (const status of Object.values(pack.statuses)) expect(card).toContain(status);
+    for (const word of [...CARD_WORDS[locale].checks, ...CARD_WORDS[locale].statuses]) expect(card.toLowerCase()).toContain(word.toLowerCase());
   });
 });

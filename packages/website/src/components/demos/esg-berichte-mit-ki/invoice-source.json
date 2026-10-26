@@ -1,0 +1,14 @@
+{
+  "de": {
+    "source": "crvena-zemja-nachweisprobe/nachreichung/rechnung-EL-25-09.png",
+    "sha256": "2347ea01e427195e0024324d7810bd1e5504a2bd94c79936d64a5b8662177859",
+    "webp": "invoice-de.webp",
+    "command": "cwebp -q 82 -resize 1040 0"
+  },
+  "en": {
+    "source": "crvena-zemja-esg-kit/late-document/invoice-EL-25-09.png",
+    "sha256": "b3b75b1bb309b79e30c172a8ce365eb6e7ad98c1be1fcfdd9e85237a33b8f842",
+    "webp": "invoice-en.webp",
+    "command": "cwebp -q 82 -resize 1040 0"
+  }
+}
