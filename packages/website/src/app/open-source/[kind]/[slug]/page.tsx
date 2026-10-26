@@ -231,7 +231,7 @@ export default async function OpenSourceArtifactDetailPage({
                 href={localizeHref(launchHref, locale)}
                 className={`${buttonClass} bg-foreground text-background hover:bg-background hover:text-foreground focus-visible:bg-background focus-visible:text-foreground`}
               >
-                {copy.open}
+                {copy.openInternal}
               </Link>
             )
           ) : null}

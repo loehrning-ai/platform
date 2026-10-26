@@ -37,7 +37,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       runs: "Läuft",
       delivery: {
         "source-only": "Lokal, ohne Cloud",
-        "internal-route": "Im Browser",
+        "internal-route": "Lokal · Beispiel im Browser",
         "external-service": "Externer Dienst",
         "hosted-service": "Gehostet von loehrning.ai · Hetzner EU",
       },
@@ -83,7 +83,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       runs: "Runs",
       delivery: {
         "source-only": "Locally, no cloud",
-        "internal-route": "In browser",
+        "internal-route": "Locally · example in browser",
         "external-service": "External service",
         "hosted-service": "Hosted by loehrning.ai · Hetzner EU",
       },
@@ -227,6 +227,7 @@ export const OPEN_SOURCE_DETAIL_COPY = {
     license: "Lizenz",
     licenseText: "Lizenztext",
     open: "Öffnen",
+    openInternal: "Live-Beispiel",
     sourceRevision: "Quellstand",
     externalTab: ", öffnet in neuem Tab",
     oneCommand: "Ein Befehl. Dann läuft es bei dir.",
@@ -245,6 +246,7 @@ export const OPEN_SOURCE_DETAIL_COPY = {
     license: "License",
     licenseText: "License text",
     open: "Open",
+    openInternal: "Live example",
     sourceRevision: "Source revision",
     externalTab: ", opens in a new tab",
     oneCommand: "One command. Then it runs on your machine.",
@@ -331,9 +333,9 @@ const CV_ENGINE_ENGLISH_COPY: ArtifactEnglishCopy = {
   language: "English",
   guide: {
     statusNote:
-      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local.",
+      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. The live example shows pages built in advance for an invented person. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local.",
     dataFlow:
-      "The core runs entirely locally: cv.yaml, fonts and CSS stay in the checkout; the PDF build opens no socket, needs no API key. Unconfigured, the editor talks only to 127.0.0.1 and keeps documents in memory; only the self-hosted Supabase variant (DEPLOY.md) saves them. Optional AI import and text generation call out with your key, or stay local with Ollama.",
+      "The core runs entirely locally: cv.yaml, fonts and CSS stay in the checkout; the PDF build opens no socket, needs no API key. Unconfigured, the editor talks only to 127.0.0.1 and keeps documents in memory; only the self-hosted Supabase variant (DEPLOY.md) saves them. Optional AI import and text generation call out with your key, or stay local with Ollama. The live example here in the browser only loads finished pages of an invented person; your own CV stays on your machine.",
     prerequisites: [
       {
         label: "Python 3.13",

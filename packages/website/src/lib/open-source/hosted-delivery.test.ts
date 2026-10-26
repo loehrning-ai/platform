@@ -19,7 +19,7 @@ const CV_ENGINE = OPEN_SOURCE_TOOL_ARTIFACTS.find(
 /**
  * The registry has no hosted entry yet, so the mode is exercised against a
  * synthetic artifact rather than a published one: the published entry stays
- * source-only until `cv.loehrning.ai` actually answers. `hostedVariant` takes
+ * off a hosted instance until `cv.loehrning.ai` actually answers. `hostedVariant` takes
  * the real cv-engine record and swaps only the delivery pair, so every other
  * field the validator inspects is a field the registry really ships.
  */
@@ -106,16 +106,17 @@ describe("hosted-service delivery", () => {
     expect(disclosesItsHost(hosted)).toBe(true);
   });
 
-  it("keeps cv-engine source-only while no host answers for it", () => {
+  it("keeps cv-engine off a hosted instance while no host answers for it", () => {
     if (!CV_ENGINE) return;
     const english = localizeOpenSourceArtifact(CV_ENGINE, "en");
 
     // The regression this pins: a `hosted-service` entry publishes an absolute
     // launch URL to the detail page, the hub card and the knowledge-graph
     // endpoint. `cv.loehrning.ai` has no DNS record, so the registry may not
-    // name it anywhere until it does.
-    expect(CV_ENGINE.delivery).toBe("source-only");
-    expect(CV_ENGINE.launchHref).toBeUndefined();
+    // name it anywhere until it does. The live example is a route on this
+    // site that only loads pre-rendered pages of an invented person.
+    expect(CV_ENGINE.delivery).toBe("internal-route");
+    expect(CV_ENGINE.launchHref).toBe("/open-source/tools/cv-engine/live");
 
     for (const artifact of [CV_ENGINE, english]) {
       for (const field of [

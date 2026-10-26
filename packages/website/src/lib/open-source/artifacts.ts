@@ -1582,15 +1582,15 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     sizeBytes: 1066,
     licenseId: "MIT",
   },
-  // Source only, deliberately, and a build-time constant rather than an
-  // environment read: the sitemap, `llms.txt` and the knowledge-graph endpoint
-  // must be identical in every environment, so this registry may never depend
-  // on a variable. A `hosted-service` entry here is a public promise that a
-  // machine answers, and none does yet.
+  // A route on this site, not a hosted instance, and a build-time constant
+  // rather than an environment read: the sitemap, `llms.txt` and the
+  // knowledge-graph endpoint must be identical in every environment. The
+  // route shows pages the pinned engine rendered ahead of time for an
+  // invented person (scripts/build-cv-engine-live.ts); it never receives a
+  // visitor's CV, so the tool itself still runs only on the reader's machine.
   //
-  // Flipping this to `delivery: "hosted-service"` plus
-  // `launchHref: "https://cv.loehrning.ai"` requires all four of these to be
-  // true first, verified by hand, not assumed:
+  // `hosted-service` with `launchHref: "https://cv.loehrning.ai"` requires
+  // all four of these first, verified by hand, not assumed:
   //
   // - `cv.loehrning.ai` resolves in public DNS;
   // - that host answers over TLS with the pinned cv-engine revision;
@@ -1598,16 +1598,17 @@ const CV_ENGINE_TOOL_ARTIFACT = {
   // - `CV_ENGINE_HOSTED_CONFIRMED_AT` records the date it was reached.
   //
   // The same commit has to rewrite `guide.statusNote` and `guide.dataFlow`
-  // below and their English twins in display-copy.ts, because both currently
-  // tell the reader the tool runs on their own machine, and the hub eyebrow in
+  // below and their English twins in display-copy.ts, because both tell the
+  // reader the tool runs on their own machine, and the hub eyebrow in
   // display-copy.ts, which promises a tool you run yourself.
-  delivery: "source-only",
+  delivery: "internal-route",
+  launchHref: `/open-source/tools/${CV_ENGINE_SLUG}/live`,
   guide: {
     status: "experimental",
     statusNote:
-      "Das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst auf deinem Rechner. Lies vor dem Konfigurieren docs/data-flow.md im Repository. Das Diagramm darin zeigt, welche Datenwege lokal bleiben.",
+      "Das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst auf deinem Rechner. Das Live-Beispiel zeigt vorab gebaute Seiten einer erfundenen Person. Lies vor dem Konfigurieren docs/data-flow.md im Repository. Das Diagramm darin zeigt, welche Datenwege lokal bleiben.",
     dataFlow:
-      "Der Kern rendert lokal: cv.yaml, Schriften und CSS bleiben im Checkout; der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher; dauerhaft speichert nur die selbst betriebene Supabase-Variante (DEPLOY.md). Optionaler KI-Import und Textgenerierung rufen mit deinem Schlüssel nach außen oder bleiben mit Ollama lokal.",
+      "Der Kern rendert lokal: cv.yaml, Schriften und CSS bleiben im Checkout; der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher; dauerhaft speichert nur die selbst betriebene Supabase-Variante (DEPLOY.md). Optionaler KI-Import und Textgenerierung rufen mit deinem Schlüssel nach außen oder bleiben mit Ollama lokal. Das Live-Beispiel hier im Browser lädt nur fertige Seiten einer erfundenen Person; dein eigener Lebenslauf bleibt auf deinem Rechner.",
     prerequisites: [
       {
         label: "Python 3.13",

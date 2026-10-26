@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (25)
+### Static pages (26)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/open-source/tools/cv-engine/live | src/app/open-source/tools/cv-engine/live/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |

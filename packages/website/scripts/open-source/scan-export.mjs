@@ -33,6 +33,11 @@ import {
   MAX_ZIP_ARCHIVE_BYTES,
   inspectZipArchive,
 } from "./zip-inspection.mjs";
+import {
+  MAX_PDF_BYTES,
+  inspectPdf,
+  isPdfPublicationPath,
+} from "./pdf-inspection.mjs";
 
 // Build output and VCS internals are normally not publication candidates.
 // Platform scans still descend into any generated directory containing a
@@ -1560,9 +1565,14 @@ async function walk(dir, { candidateOnly = false } = {}) {
     const opaquePlatformArchive =
       profile === "platform" &&
       FAIL_CLOSED_PLATFORM_ARCHIVE_EXTENSIONS.has(ext);
+    // A PDF in a reviewed directory goes through pdf-inspection.mjs; every
+    // other PDF, and every Office container, stays forbidden.
+    const inspectablePdf =
+      profile === "platform" && ext === "pdf" && isPdfPublicationPath(rel);
     const opaquePlatformContainer =
       profile === "platform" &&
-      FAIL_CLOSED_PLATFORM_CONTAINER_EXTENSIONS.has(ext);
+      FAIL_CLOSED_PLATFORM_CONTAINER_EXTENSIONS.has(ext) &&
+      !inspectablePdf;
     const manifestEntry =
       profile === "platform" ? assetManifestEntries.get(rel) : null;
     let openedFile;
@@ -1573,12 +1583,15 @@ async function walk(dir, { candidateOnly = false } = {}) {
         readContents:
           !binaryAsset ||
           inspectableZip ||
+          inspectablePdf ||
           (profile === "platform" && IMAGE_METADATA_EXTENSIONS.has(ext)),
         hashContents: binaryAsset && Boolean(manifestEntry),
         sampleContents: profile === "platform" && binaryAsset,
         maxBytes: inspectableZip
           ? MAX_ZIP_ARCHIVE_BYTES
-          : binaryAsset
+          : inspectablePdf
+            ? MAX_PDF_BYTES
+            : binaryAsset
             ? MAX_SCANNED_FILE_BYTES
             : MAX_BUFFERED_FILE_BYTES,
       });
@@ -1663,6 +1676,21 @@ async function walk(dir, { candidateOnly = false } = {}) {
           FAIL,
           `${ext.toUpperCase()} is an opaque or active container and is forbidden without a format-specific publication validator`,
         );
+      } else if (inspectablePdf && !magicFailure) {
+        if (!openedFile.bytes) {
+          addFinding(rel, null, FAIL, "PDF contents were not read; file cannot be inspected");
+        } else {
+          try {
+            inspectPdf(openedFile.bytes, { label: rel });
+          } catch (error) {
+            addFinding(
+              rel,
+              null,
+              FAIL,
+              `PDF failed publication inspection (${error?.message ?? "unknown"})`,
+            );
+          }
+        }
       } else if (inspectableZip && !magicFailure) {
         if (!openedFile.bytes) {
           addFinding(

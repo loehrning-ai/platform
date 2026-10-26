@@ -68,6 +68,10 @@ const PUBLIC_INDEXABLE_PATHS = [
   "/open-source",
   "/open-source/lizenzrichtlinie",
   "/open-source/:kind/:slug",
+  // The CV Engine live example: pages the pinned engine rendered ahead of
+  // time for an invented person. The registry links it as cv-engine's
+  // internal-route launch target.
+  "/open-source/tools/cv-engine/live",
   "/ueber-mich",
   "/neuigkeiten",
   "/hilfe",
