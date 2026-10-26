@@ -118,15 +118,10 @@ const SURFACES: readonly Surface[] = ([
       })),
     ),
   },
+  // The demos hub is Glas (glass-spec): its H1 is no poster title either.
   // The workshops hub and the home hero are no poster titles any more: the
   // owner asked for the old highlighted hub heading and the old paper hero
   // with the line globe back.
-  {
-    name: "demos hub band",
-    layout: "band",
-    files: ["src/app/demos/page.tsx"],
-    titles: LOCALES.map((locale) => ({ id: `demos ${locale}`, text: DEMOS_PAGE_COPY[locale].catalog.heading })),
-  },
 
   // The blog index is the old bold index again (the giant "Blog."), not a
   // poster band.
@@ -282,7 +277,6 @@ describe("the poster title registry", () => {
   it("covers every surface the spec sets in the poster size", () => {
     expect(SURFACES.map((surface) => surface.name)).toEqual([
       "workshop detail bands",
-      "demos hub band",
       "/kurse headline on paper",
       "paper page headlines",
       "course landing bands",

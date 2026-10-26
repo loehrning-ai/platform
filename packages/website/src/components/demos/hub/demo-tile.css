@@ -1,29 +1,28 @@
 /*
- * The /demos hub tiles (demo-tile.tsx, demo-tile-stage.tsx). Prefix `dt-`.
+ * The /demos hub tiles (demo-tile.tsx, demo-tile-stage.tsx) in Glas
+ * (glass-spec 3, hub). Prefix `dt-`.
  *
- * Contract, checked by hub.test.ts and the page test:
- * - Hard edges (no radius), a 2px Druckschwarz border, no shadow, no
- *   gradient. The scene sits on the workshop's own ground, the caption on
- *   paper. Each <li> carries the workshop's plakat class so its anti-colour
- *   tokens resolve; the class would also colour the <li>, so the first rule
- *   resets that.
- * - The offset block under a tile is the scene's anti colour
- *   (--color-scene-anti-a, -b), never the tile's own colour: a pseudo element
- *   on the <li>, not a box-shadow. A fine pointer's hover and keyboard focus
- *   lift the tile 2px over a 4px block, nudge the arrow and underline the
- *   title in the anti colour; focus adds one 3px Druckschwarz ring 6px out; a
- *   press (finger or click) shows the block at 3px in the second anti colour.
- *   Hover rules sit in (hover: hover) and (pointer: fine), so a tap never sticks.
+ * Contract, checked by hub.test.tsx and the page test:
+ * - A tile is a continuous 28px card: the miniature fills it on the
+ *   workshop's own ground, and the caption is a frosted plate inside it,
+ *   inset 8px, painted without any filter (frost: a near-opaque tint of the
+ *   ground over Kalkweiß, a specular rim and a soft shadow). Six tiles cost
+ *   zero live backdrop filters, so the hub needs no budget.
+ * - Hover (fine pointer only) and keyboard focus lift the card 4px and grow
+ *   its shadow (an opacity change on a pseudo element, never an animated
+ *   box-shadow); a press scales it to 0.98. Focus adds one 2px Druckschwarz
+ *   ring 4px out. Hover rules sit in (hover: hover) and (pointer: fine), so a
+ *   tap never sticks.
  * - Motion lives in tile-scenes.css (generated from each tile-motion.ts) and
- *   only runs when the island armed the tile. Here only transform transitions
- *   (240ms), listed explicitly, and only without a reduced-motion request.
+ *   only runs when the island armed the tile. Here only transform and opacity
+ *   transitions, listed explicitly, and only without a reduced-motion request.
  * - No collapsible UI. Colour is never the only carrier of meaning in a scene.
  */
 
 .dt-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 1.75rem;
+  gap: 1.25rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -32,7 +31,7 @@
 @media (min-width: 48rem) {
   .dt-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem 1.5rem;
+    gap: 1.5rem;
   }
 
   .dt-grid > .dt-promise {
@@ -46,7 +45,7 @@
   }
 }
 
-/* The plakat class sets a ground and an ink on the <li>: back to paper. */
+/* The plakat class sets a ground and an ink on the <li>: back to the page. */
 .dt-grid > .dt-item {
   position: relative;
   display: flex;
@@ -55,23 +54,36 @@
   color: var(--color-lab-ink);
 }
 
-.dt-item::before {
+/* The resting and the lifted shadow; the lifted one fades in (opacity only). */
+.dt-item::before,
+.dt-item::after {
   content: "";
   position: absolute;
   inset: 0;
-  background-color: var(--color-scene-anti-a);
+  border-radius: 28px;
   pointer-events: none;
+}
+
+.dt-item::before {
+  box-shadow: 0 1px 2px rgb(18 18 18 / 0.06), 0 10px 24px -12px rgb(18 18 18 / 0.28);
+}
+
+.dt-item::after {
+  box-shadow: 0 2px 4px rgb(18 18 18 / 0.06), 0 24px 44px -16px rgb(18 18 18 / 0.38);
+  opacity: 0;
 }
 
 .dt-card {
   position: relative;
   isolation: isolate;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
   width: 100%;
   min-width: 0;
-  border: 2px solid var(--color-lab-ink);
-  background-color: var(--color-paper);
+  overflow: hidden;
+  border-radius: 28px;
+  background-color: var(--color-scene-ground);
+  box-shadow: inset 0 0 0 0.5px rgb(18 18 18 / 0.14);
 }
 
 /* ─── Scene ─────────────────────────────────────────────────────────────── */
@@ -82,7 +94,6 @@
   overflow: hidden;
   background-color: var(--color-scene-ground);
   color: var(--color-scene-ink);
-  border-bottom: 2px solid var(--color-lab-ink);
   content-visibility: auto;
   contain-intrinsic-size: auto 12.5rem;
 }
@@ -119,15 +130,22 @@ path[class*="dt-stroke-"] { fill: none; }
   animation: none !important;
 }
 
-/* ─── Caption ───────────────────────────────────────────────────────────── */
+/* ─── Caption: the frosted plate ────────────────────────────────────────── */
 
 .dt-cap {
   position: relative;
   display: flex;
-  flex: 1 1 auto;
   flex-direction: column;
   gap: 0.375rem;
-  padding: 0.75rem 0.875rem 0.875rem;
+  margin: 0 0.5rem 0.5rem;
+  padding: 0.875rem 1rem 0.875rem;
+  border-radius: 20px;
+  background-color: color-mix(in srgb, var(--color-scene-ground) 14%, rgb(251 250 246 / 0.94));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),
+    inset 0 0 0 0.5px rgb(18 18 18 / 0.1),
+    0 6px 16px -10px rgb(18 18 18 / 0.35);
+  color: var(--color-lab-ink);
 }
 
 /* "04 · ESG": its own link to the workshop, above the stretched title link,
@@ -233,8 +251,9 @@ path[class*="dt-stroke-"] { fill: none; }
 }
 
 .dt-artifact {
-  padding: 0.0625rem 0.375rem;
-  border: 1px solid var(--color-lab-ink);
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background-color: rgb(18 18 18 / 0.07);
   font-size: 0.75rem;
   line-height: 1.4;
   font-weight: 700;
@@ -248,24 +267,26 @@ path[class*="dt-stroke-"] { fill: none; }
   font-variant-numeric: tabular-nums;
 }
 
-/* ─── States: lift, anti-colour block, press ────────────────────────────── */
+/* ─── States: lift, shadow, press ───────────────────────────────────────── */
 
 .dt-item:has(.dt-link:focus-visible) {
-  outline: 3px solid var(--color-lab-ink);
-  outline-offset: 6px;
+  outline: 2px solid var(--color-lab-ink);
+  outline-offset: 4px;
+  border-radius: 30px;
 }
 
-.dt-item:has(.dt-link:focus-visible)::before {
-  transform: translate(4px, 4px);
-}
-
+.dt-item:has(.dt-link:focus-visible)::before,
+.dt-item:has(.dt-link:focus-visible)::after,
 .dt-item:has(.dt-link:focus-visible) .dt-card {
-  transform: translate(-2px, -2px);
+  transform: translateY(-4px);
+}
+
+.dt-item:has(.dt-link:focus-visible)::after {
+  opacity: 1;
 }
 
 .dt-item:has(.dt-link:focus-visible) .dt-link {
   text-decoration-line: underline;
-  text-decoration-color: var(--color-scene-anti-a);
 }
 
 .dt-item:has(.dt-link:focus-visible) .dt-go {
@@ -275,20 +296,20 @@ path[class*="dt-stroke-"] { fill: none; }
 @media (hover: hover) and (pointer: fine) {
   .dt-kicker-link:hover {
     text-decoration-line: underline;
-    text-decoration-color: var(--color-scene-anti-a);
   }
 
-  .dt-item:hover::before {
-    transform: translate(4px, 4px);
-  }
-
+  .dt-item:hover::before,
+  .dt-item:hover::after,
   .dt-item:hover .dt-card {
-    transform: translate(-2px, -2px);
+    transform: translateY(-4px);
+  }
+
+  .dt-item:hover::after {
+    opacity: 1;
   }
 
   .dt-item:hover .dt-link {
     text-decoration-line: underline;
-    text-decoration-color: var(--color-scene-anti-a);
   }
 
   .dt-item:hover .dt-go {
@@ -296,25 +317,23 @@ path[class*="dt-stroke-"] { fill: none; }
   }
 }
 
-.dt-item:active::before {
-  background-color: var(--color-scene-anti-b);
-  transform: translate(3px, 3px);
-}
-
+.dt-item:active::before,
+.dt-item:active::after,
 .dt-item:active .dt-card {
-  transform: translate(-1px, -1px);
-}
-
-.dt-item:active .dt-link {
-  text-decoration-line: underline;
-  text-decoration-color: var(--color-scene-anti-b);
+  transform: scale(0.98);
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .dt-item::before,
   .dt-card,
   .dt-go {
-    transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: transform 486ms linear(0, 0.054, 0.175, 0.321, 0.466, 0.596, 0.705, 0.793, 0.861, 0.911, 0.946, 0.971, 0.987, 0.997, 1.002, 1.005, 1.006, 1.006, 1.006, 1.005, 1.004, 1.003, 1.002, 1.002, 1);
+  }
+
+  .dt-item::after {
+    transition:
+      transform 486ms linear(0, 0.054, 0.175, 0.321, 0.466, 0.596, 0.705, 0.793, 0.861, 0.911, 0.946, 0.971, 0.987, 0.997, 1.002, 1.005, 1.006, 1.006, 1.006, 1.005, 1.004, 1.003, 1.002, 1.002, 1),
+      opacity 240ms linear;
   }
 }
 
@@ -350,26 +369,18 @@ path[class*="dt-stroke-"] { fill: none; }
   justify-content: center;
   gap: 0.5rem;
   min-width: 0;
-  padding: 1.25rem 1rem;
-  border: 2px solid var(--color-lab-ink);
-  background-color: transparent;
+  padding: 1.5rem 1.25rem;
+  border-radius: 28px;
+  background-color: rgb(255 255 255 / 0.6);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 0.5px rgb(18 18 18 / 0.12);
   color: var(--color-lab-ink);
-}
-
-.dt-promise .dt-zero {
-  display: block;
-  background-color: transparent;
-  color: var(--color-scene-mid);
-  font-size: clamp(5rem, 4rem + 8vw, 8rem);
-  line-height: 0.85;
-  font-weight: 700;
-  letter-spacing: -0.04em;
 }
 
 .dt-promise-title {
   margin: 0;
+  max-width: 40ch;
   font-size: 1.375rem;
-  line-height: 1.15;
+  line-height: 1.2;
   font-weight: 700;
   text-wrap: balance;
 }
@@ -377,6 +388,7 @@ path[class*="dt-stroke-"] { fill: none; }
 .dt-promise-body,
 .dt-promise-note {
   margin: 0;
+  max-width: 64ch;
   font-size: 0.9375rem;
   line-height: 1.45;
   text-wrap: pretty;
@@ -384,4 +396,18 @@ path[class*="dt-stroke-"] { fill: none; }
 
 .dt-promise-note {
   color: color-mix(in srgb, var(--color-lab-ink) 82%, transparent);
+}
+
+@media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+  .dt-cap {
+    background-color: var(--color-paper);
+    box-shadow: inset 0 0 0 1px var(--color-lab-ink);
+  }
+}
+
+@media (forced-colors: active) {
+  .dt-card,
+  .dt-grid > .dt-promise {
+    border: 1px solid CanvasText;
+  }
 }

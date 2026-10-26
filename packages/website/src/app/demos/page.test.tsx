@@ -10,25 +10,25 @@ vi.mock("@/lib/i18n/request-locale", () => ({
 import DemosPage, { generateMetadata } from "./page";
 import { getDemosForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
-import { expectCapsInsideScene } from "@/test/plakat-scene";
 
 describe("/demos hub", () => {
   for (const locale of ["de", "en"] as const) {
-    it(`${locale}: a compact IDEA band, six tiles in workshop order, then the shared promise`, async () => {
+    it(`${locale}: a Glas hero with the intro, six tiles in workshop order, then the shared promise`, async () => {
       localeRef.value = locale;
       const copy = DEMOS_PAGE_COPY[locale].catalog;
       const hub = DEMOS_PAGE_COPY[locale].hub;
       const { container } = render(await DemosPage());
 
       const h1 = screen.getByRole("heading", { level: 1, name: copy.heading });
-      expect(h1).toHaveClass("poster-title", "text-scene-mid");
-      expect(h1.style.getPropertyValue("--text-poster")).toMatch(/^clamp\(2\.75rem,/);
-      const band = h1.closest("[data-cover-band]");
-      expect(band).toHaveClass("plakat-idea");
+      // The hub is Glas in frost mode: the hero is the hub's own field, no live filter.
+      expect(container.querySelector("[data-demos-hub-glas]")).toHaveAttribute("data-glas-mode", "frost");
+      const hero = h1.closest("[data-demo-hub-hero]");
+      expect(hero?.querySelector(".glas-stage")).not.toBeNull();
       // No halftone and no poster covers: the tiles are the picture.
       expect(container.querySelector("[data-halftone], [data-demo-cover], [data-demo-tile]")).toBeNull();
-      expect(within(band as HTMLElement).getByText(hub.lede)).toBeTruthy();
-      expectCapsInsideScene(container);
+      // The four-sentence intro of language-standard B.8.
+      expect(within(hero as HTMLElement).getByText(hub.lede)).toBeTruthy();
+      expect(hub.lede.split(/(?<=\.)\s/)).toHaveLength(3);
 
       const demos = getDemosForLocale(locale);
       const tiles = screen.getAllByTestId("demo-tile");
@@ -60,7 +60,7 @@ describe("/demos hub", () => {
       }
 
       const promise = container.querySelector("[data-demo-promise-cell]");
-      expect(promise).toHaveTextContent(`${copy.promiseZero}${copy.promiseTitle}`);
+      expect(promise).toHaveTextContent(copy.promiseTitle);
       expect(container.querySelector("[data-demo-provenance]")).toHaveTextContent(copy.provenance);
       expect(screen.getByRole("link", { name: copy.toWorkshops })).toHaveAttribute(
         "href",
