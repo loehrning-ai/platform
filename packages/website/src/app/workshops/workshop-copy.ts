@@ -125,6 +125,8 @@ export interface WorkshopPageCopy {
     readonly demoMeta: string;
     /** Card A's secondary link to the lab when the demo is card A. */
     readonly labAction: string;
+    /** Card A's secondary link when card A is the demo and the workshop has a deck. */
+    readonly deckAction: (minutes: string) => string;
     /** Screen-reader prefix of the material language ("Sprache: Englisch"). */
     readonly language: string;
     readonly selfHostHeading: string;
@@ -275,6 +277,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       demoAction: "Demo öffnen",
       demoMeta: "Kit als Demo",
       labAction: "Vertiefung im Labor",
+      deckAction: (minutes) => `Folien · ${minutes}`,
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
@@ -421,6 +424,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       demoAction: "Open the demo",
       demoMeta: "Kit as a demo",
       labAction: "Go further in the lab",
+      deckAction: (minutes) => `Slides · ${minutes}`,
       language: "Language",
       selfHostHeading: "Run it yourself",
       selfHostBody:

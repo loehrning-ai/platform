@@ -267,13 +267,18 @@ describe("<WorkshopDetailContent>", () => {
     ).toHaveLength(0);
     unmount();
 
-    // W02: the slides on card A, the kit zip on card B, downloaded by name.
+    // W02: the demo on card A with the slides as its secondary link, the kit
+    // zip on card B, downloaded by name.
     const w02 = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")!;
     const view = render(<WorkshopDetailContent workshop={w02} locale="en" />);
     const enStage = view.container.querySelector("[data-workshop-stage]") as HTMLElement;
-    expect(within(enStage).getByRole("link", { name: /^View the slides/ })).toHaveAttribute(
+    expect(within(enStage).getByRole("link", { name: /^Open the demo/ })).toHaveAttribute(
       "href",
-      w02.materials.find((material) => material.primary)!.href,
+      w02.materials.find((material) => material.role === "demo")!.href,
+    );
+    expect(within(enStage).getByRole("link", { name: /^Slides · / })).toHaveAttribute(
+      "href",
+      w02.materials.find((material) => material.role === "deck")!.href,
     );
     const kit = within(enStage).getByRole("link", { name: /^Download the kit/ });
     expect(kit).toHaveAttribute("href", w02.materials.find((material) => material.role === "kit")!.href);
@@ -504,7 +509,7 @@ describe("<WorkshopDetailContent>", () => {
       it(`${locale}/${workshop.slug}: lists no materials, because the two cards reach both files and the demo`, () => {
         const { container } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
         const stage = workshopStage(workshop, locale);
-        const reached = new Set([stage.a?.href, stage.a?.labHref, stage.b?.href]);
+        const reached = new Set([stage.a?.href, stage.a?.labHref, stage.a?.deck?.href, stage.b?.href]);
         expect(workshopFileMaterials(workshop).every((material) => reached.has(material.href))).toBe(true);
         // Card A or its secondary link reaches the demo page.
         const demo = workshop.materials.find((material) => material.role === "demo");

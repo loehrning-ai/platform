@@ -4,12 +4,13 @@ import { materialMeta, workshopStage } from "./workshop-stage";
 
 /** The expected cards per workshop: slides, lab or demo, kit or case. */
 const EXPECTED: Readonly<Record<string, { a: "slides" | "lab" | "demo"; b: "kit" | "case"; kitPage: boolean }>> = {
-  // Workshop 01 starts at its demo (the kit, made visible); the labs are its secondary link.
+  // Every workshop with a demo starts at it (the kit, made visible); the lab
+  // (Workshop 01) or else the slides are its secondary link.
   "ki-prognosen-einschaetzen": { a: "demo", b: "kit", kitPage: true },
-  "geschaeftsberichte-mit-ki-lesen": { a: "slides", b: "kit", kitPage: false },
-  "datenbereitschaft-fuer-ki": { a: "slides", b: "kit", kitPage: false },
-  "esg-berichte-mit-ki": { a: "slides", b: "kit", kitPage: true },
-  "audit-vorbereitung-mit-ki": { a: "slides", b: "kit", kitPage: true },
+  "geschaeftsberichte-mit-ki-lesen": { a: "demo", b: "kit", kitPage: false },
+  "datenbereitschaft-fuer-ki": { a: "demo", b: "kit", kitPage: false },
+  "esg-berichte-mit-ki": { a: "demo", b: "kit", kitPage: true },
+  "audit-vorbereitung-mit-ki": { a: "demo", b: "kit", kitPage: true },
 };
 
 describe("workshopStage", () => {
@@ -19,13 +20,19 @@ describe("workshopStage", () => {
         const expected = EXPECTED[workshop.slug];
         expect(expected, `no expectation for ${workshop.slug}`).toBeDefined();
         const stage = workshopStage(workshop, locale);
-        const primary = workshop.materials.find((material) => material.primary)!;
+        const primary =
+          workshop.materials.find((material) => material.role === "demo") ?? workshop.materials.find((material) => material.primary)!;
         expect(stage.a?.kind).toBe(expected.a);
         expect(stage.a?.href).toBe(primary.href);
         expect(stage.a?.material).toBe(primary);
         if (expected.a === "demo") {
           expect(stage.a?.demoHref).toBeUndefined();
-          expect(stage.a?.labHref).toBe(workshop.materials.find((material) => material.role === "lab")?.href);
+          const lab = workshop.materials.find((material) => material.role === "lab");
+          const deck = workshop.materials.find((material) => material.role === "deck");
+          expect(stage.a?.labHref).toBe(lab?.href);
+          // Without a lab the slides are the secondary link, with their minutes.
+          expect(stage.a?.deck?.href).toBe(lab ? undefined : deck?.href);
+          if (!lab && deck) expect(stage.a?.deck?.minutes).toMatch(/\d+ (?:Min\.|min)$/);
         }
         expect(stage.b?.kind).toBe(expected.b);
         expect(stage.b?.material).not.toBe(primary);

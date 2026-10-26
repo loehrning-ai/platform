@@ -12,8 +12,9 @@ import {
  * The two big actions under a workshop's band (docs/workshop-standard.md,
  * "The stage"): card A opens the first material (the slides, or the lab for
  * a workshop without a deck), card B hands over the second one (the kit zip,
- * or the case for a workshop without a kit). Card A also carries the
- * workshop's practice demo as its small secondary link. All of it is derived
+ * or the case for a workshop without a kit). A workshop with a practice
+ * demo starts at the demo ("Kit als Demo"); card A's small secondary link
+ * then goes to the lab, or else to the slides. All of it is derived
  * from the registry, so a new workshop needs no page code.
  */
 export type WorkshopStageKindA = "slides" | "lab" | "demo";
@@ -30,6 +31,8 @@ export interface WorkshopStageCardA {
   readonly demoHref?: string;
   /** Set when card A is the demo and the workshop has a lab: the secondary link goes there instead. */
   readonly labHref?: string;
+  /** Set when card A is the demo, the workshop has no lab but a deck: the secondary link opens the slides. */
+  readonly deck?: { readonly href: string; readonly minutes: string };
 }
 
 export interface WorkshopStageCardB {
@@ -79,23 +82,30 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
       : timeOrLanguage(material);
 
   // The demo material's href is already in the page's language. A workshop
-  // that starts at its demo shows it as card A ("Kit als Demo")
-  // and points its secondary link at the lab instead.
+  // with a demo shows it as card A ("Kit als Demo") and points the
+  // secondary link at the lab, or else at the slides.
   const demo = workshop.materials.find((material) => material.role === "demo");
   const lab = workshop.materials.find((material) => material.role === "lab");
-  const startsAtDemo = primary?.role === "demo";
-  const a: WorkshopStageCardA | undefined = primary
+  const deck = workshop.materials.find((material) => material.role === "deck");
+  const deckMinutes = deck ? minutesOf(deck) : undefined;
+  const a: WorkshopStageCardA | undefined = demo
     ? {
-        kind: startsAtDemo ? "demo" : primary.role === "deck" ? "slides" : "lab",
-        material: primary,
-        href: primary.href,
-        ...(primary.minutes ? { minutes: primary.minutes } : {}),
-        meta: startsAtDemo
-          ? [copy.demoMeta, ...(primary.minutes ? [copy.minutes(primary.minutes)] : [])].join(" · ")
-          : metaOf(primary),
-        ...(startsAtDemo ? (lab ? { labHref: lab.href } : {}) : demo ? { demoHref: demo.href } : {}),
+        kind: "demo",
+        material: demo,
+        href: demo.href,
+        ...(demo.minutes ? { minutes: demo.minutes } : {}),
+        meta: [copy.demoMeta, ...(demo.minutes ? [copy.minutes(demo.minutes)] : [])].join(" · "),
+        ...(lab ? { labHref: lab.href } : deck && deckMinutes ? { deck: { href: deck.href, minutes: deckMinutes } } : {}),
       }
-    : undefined;
+    : primary
+      ? {
+          kind: primary.role === "deck" ? "slides" : "lab",
+          material: primary,
+          href: primary.href,
+          ...(primary.minutes ? { minutes: primary.minutes } : {}),
+          meta: metaOf(primary),
+        }
+      : undefined;
 
   const kitMaterial =
     workshopKitMaterial(workshop) ??

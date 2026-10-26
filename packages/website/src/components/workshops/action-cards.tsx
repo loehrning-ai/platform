@@ -21,6 +21,8 @@ interface CardProps {
   readonly plakat: PlakatKey;
   readonly slot: "a" | "b";
   readonly kind: ActionPictureKind;
+  /** The picture when it differs from the kind: a demo card of a workshop with a deck shows the deck's own cover. */
+  readonly picture?: ActionPictureKind;
   readonly material: Parameters<typeof WorkshopMaterialLink>[0]["material"];
   readonly title: string;
   readonly meta: string;
@@ -40,6 +42,7 @@ function Card({
   plakat,
   slot,
   kind,
+  picture,
   material,
   title,
   meta,
@@ -53,7 +56,7 @@ function Card({
         data-action-card={kind}
         className={cx("ac-card", slot === "b" && "ac-card-b", plakatClass(plakat))}
       >
-        <ActionPicture kind={kind} slug={workshop.slug} />
+        <ActionPicture kind={picture ?? kind} slug={workshop.slug} />
         <div className="ac-body">
           <div className="ac-head">
             <WorkshopMaterialLink
@@ -115,6 +118,7 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
           plakat={plakat}
           slot="a"
           kind={stage.a.kind}
+          {...(stage.a.deck ? { picture: "slides" as const } : {})}
           material={stage.a.material}
           title={copy.stage[stage.a.kind]}
           meta={stage.a.meta}
@@ -136,7 +140,15 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
                     spoken: `: ${topic}`,
                   },
                 }
-              : {})}
+              : stage.a.deck
+                ? {
+                    secondary: {
+                      href: stage.a.deck.href,
+                      label: copy.deckAction(stage.a.deck.minutes),
+                      spoken: `: ${topic}`,
+                    },
+                  }
+                : {})}
         />
       ) : null}
       {stage.b ? (

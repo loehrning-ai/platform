@@ -8,12 +8,13 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
  */
 
 const WORKSHOPS = [
-  // Workshop 01 starts at its demo (the kit as a demo); the labs are card A's secondary link.
+  // Every workshop starts at its demo (the kit as a demo); card A's secondary
+  // link goes to the lab (Workshop 01) or else to the slides.
   { slug: "ki-prognosen-einschaetzen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
-  { slug: "geschaeftsberichte-mit-ki-lesen", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
-  { slug: "datenbereitschaft-fuer-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
-  { slug: "esg-berichte-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
-  { slug: "audit-vorbereitung-mit-ki", a: ["Folien ansehen", "View the slides"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "geschaeftsberichte-mit-ki-lesen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
+  { slug: "datenbereitschaft-fuer-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
+  { slug: "esg-berichte-mit-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "audit-vorbereitung-mit-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
 ] as const;
 
 const LOCALES = [
