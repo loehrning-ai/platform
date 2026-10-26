@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { ClaudeRecording } from "@/lib/claude-runs";
 import { SCENE } from "./claude-runs";
-import { asksQuestion, factsOf, holdsAll } from "./facts";
+import { CLAUDE_ANSWER, T1_EXPECTED } from "./data";
+import { answerValues, asksQuestion, factsOf, holdsAll } from "./facts";
 
 const take = (id: string): ClaudeRecording => {
   const found = SCENE?.recordings.find((recording) => recording.id === id);
@@ -25,6 +26,7 @@ describe("facts of the recorded takes", () => {
       expect(factsOf(take(id)), id).toMatchObject({ turns: 2, expectedValuesTurn: null });
       expect(factsOf(take(id)).rehearsalValuesTurn, id).not.toBeNull();
       expect(factsOf(take(id)).followUpGivesRehearsal, id).toBe(true);
+      expect(factsOf(take(id)).firstTurnNamesOpening, id).toBe(true);
     }
   });
 
@@ -34,6 +36,14 @@ describe("facts of the recorded takes", () => {
     expect(factsOf(take("en-month-with-1")).rehearsalValuesTurn).toBeNull();
     expect(factsOf(take("de-monat-without-1")).rehearsalValuesTurn).toBe(2);
     for (const id of ["de-monat-with-1", "en-month-with-1"]) expect(factsOf(take(id)).followUpGivesRehearsal, id).toBe(false);
+  });
+
+  it("reads the values each graded take ends with", () => {
+    expect(answerValues(take("de-monat-without-1"))).toEqual(CLAUDE_ANSWER);
+    expect(answerValues(take("en-month-without-1"))).toEqual(CLAUDE_ANSWER);
+    expect(answerValues(take("de-monat-with-1"))).toBeNull();
+    expect(answerValues(take("en-month-with-1"))).toBeNull();
+    for (const id of ["de-sicht-with-1", "de-sicht-without-1", "en-view-with-1", "en-view-without-1"]) expect(answerValues(take(id)), id).toEqual(T1_EXPECTED);
   });
 
   it("every take is an unedited recording", () => {

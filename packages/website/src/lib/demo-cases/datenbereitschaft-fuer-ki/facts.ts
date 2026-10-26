@@ -19,7 +19,12 @@ export interface TakeFacts {
   readonly asksBack: boolean;
   /** The take has a follow-up, and its answer holds the rehearsal values (copy variant A of scene 1). */
   readonly followUpGivesRehearsal: boolean;
+  /** The first answer says itself that the starting level (31 December 2025) is missing. */
+  readonly firstTurnNamesOpening: boolean;
 }
+
+/** How the takes name the missing starting level, in either language. */
+const NAMES_OPENING = /Anfangs(?:stand|bestand|wert)|Stand vom 31\.12\.2025|MRR at the start|starting MRR|MRR at 31 Dec/i;
 
 function texts(recording: ClaudeRecording): readonly string[] {
   return [recording.final_text, ...recording.follow_ups.map((turn) => turn.final_text)];
@@ -41,6 +46,20 @@ export function asksQuestion(text: string): boolean {
   return /\?(?:\*\*)?(?:\s|$)/.test(text.replace(/```[\s\S]*?```/g, ""));
 }
 
+/**
+ * The three month-end values the take's last answer gives as its result:
+ * the expected values, the rehearsal table, or null when it names no level
+ * at all (an answer that keeps the opening open as "X + 75.890" names none).
+ */
+export function answerValues(recording: ClaudeRecording): readonly number[] | null {
+  const locale = recording.locale === "en" ? "en" : "de";
+  const all = texts(recording);
+  const last = all[all.length - 1] ?? "";
+  if (holdsAll(last, T1_EXPECTED, locale)) return T1_EXPECTED;
+  if (holdsAll(last, CLAUDE_ANSWER, locale)) return CLAUDE_ANSWER;
+  return null;
+}
+
 export function factsOf(recording: ClaudeRecording): TakeFacts {
   const locale = recording.locale === "en" ? "en" : "de";
   const all = texts(recording);
@@ -55,5 +74,6 @@ export function factsOf(recording: ClaudeRecording): TakeFacts {
     expectedValuesTurn: firstTurn(T1_EXPECTED),
     asksBack: asksQuestion(all[0] ?? ""),
     followUpGivesRehearsal: all.length > 1 && holdsAll(all[all.length - 1] ?? "", CLAUDE_ANSWER, locale),
+    firstTurnNamesOpening: NAMES_OPENING.test(all[0] ?? ""),
   };
 }
