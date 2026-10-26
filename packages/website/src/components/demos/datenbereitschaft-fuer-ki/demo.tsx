@@ -312,7 +312,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
           <div className="fk-scene">{scene}</div>
         </div>
       </DemoStage>
-      <DemoLever rows={index === 2 ? 2 : 1}>{lever}</DemoLever>
+      <DemoLever rows={index === 2 || index === 6 ? 2 : 1}>{lever}</DemoLever>
       {notes}
       {below}
     </div>
