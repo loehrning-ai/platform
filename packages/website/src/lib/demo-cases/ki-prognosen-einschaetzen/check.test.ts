@@ -119,6 +119,29 @@ describe("parity with pruefen.py", () => {
     const out = execFileSync("python3", ["-I", path.join(dir, "pruefen.py"), path.join(dir, "kit.csv"), "--fehlmenge", "1,50", "--rest", "0,40"], { encoding: "utf8" });
     expectClose(JSON.parse(out), expected);
   });
+
+  it.skipIf(!python)("all three rules with costs: pruefen.py and runCheck agree field by field", () => {
+    const skill = readFileSync(SKILL, "utf8");
+    const code = /\n```python\n([\s\S]*?)\n```\n/.exec(skill)?.[1] as string;
+    const dir = mkdtempSync(path.join(tmpdir(), "w01-rules-"));
+    writeFileSync(path.join(dir, "pruefen.py"), `${code}\n`);
+    writeFileSync(path.join(dir, "kit.csv"), KIT_CSV);
+    for (const rule of ["wie letzte Woche", "wie Vorjahreswoche", "Schnitt 4 Wochen"] as const) {
+      const out = execFileSync("python3", ["-I", path.join(dir, "pruefen.py"), path.join(dir, "kit.csv"), "--fehlmenge", "1,50", "--rest", "0,40", "--messlatte", rule], { encoding: "utf8" });
+      const { result, notices } = run(KIT_CSV, 1.5, 0.4, rule);
+      expectClose(asPython(result, notices), JSON.parse(out), rule);
+    }
+  });
+
+  it("„wie Vorjahreswoche“ gives a range to 30 of 50 weeks and leaves the first week out of the ledger", () => {
+    const { result } = run(KIT_CSV, 1.5, 0.4, "wie Vorjahreswoche");
+    expect(result.wochen).toBe(50);
+    expect(result.spanne_wochen).toBe(30);
+    expect(result.spanne_treffer).toBe(24);
+    expect(result.regel_frei).toBe(28);
+    expect(result.kosten_wochen).toBe(49);
+    expect(result.kosten).toBeDefined();
+  });
 });
 
 describe("pinned numbers of the spec", () => {

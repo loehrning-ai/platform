@@ -13,7 +13,7 @@ c) „wie letzte Woche“: 92,6 %. Die 1,6 Prozentpunkte Abstand sind 21 % klein
    Fehler (1 − 33,3 ÷ 42,2). Näher dran war das Tool in 30 von 50 Wochen: eine
    einzelne Woche beweist nichts. Zum Vergleich: „wie Vorjahreswoche“ 38,8, „Schnitt
    4 Wochen“ 42,2. Gegen die bessere Regel „wie Vorjahreswoche“ sind es 14 %.
-d) Aktion Bio-Markt, 20 % Rabatt. Ist 637, Prognose 671, „wie letzte Woche“ 470.
+d) Aktion Reformhaus-Kette, 20 % Rabatt. Ist 637, Prognose 671, „wie letzte Woche“ 470.
    Das Tool kennt den Aktionskalender.
 
 ## 2. Spanne

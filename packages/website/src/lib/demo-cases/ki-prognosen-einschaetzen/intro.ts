@@ -1,31 +1,30 @@
 import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
 
 /**
- * The intro of this demo (language-standard B.8) and its shell. Owned by this
- * demo's builder: switch SHELL to "v4" when the demo runs on the Glas shell.
- * The sentences are drafts from the language standard; check every claim
- * against the kit before shipping v4.
+ * The intro card of "Die Fehlerliste" (language-standard B.8) and its shell.
+ * Every claim holds against the kit: the soup maker is invented, the rule is
+ * the kit's Messlatte, the skill is prognose-pruefen.
  */
-export const SHELL: DemoShellVersion = "v3";
+export const SHELL: DemoShellVersion = "v4";
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "Eine Prognose an ihren alten Fehlern prüfen",
+    title: "Eine Prognose an ihren Fehlern prüfen",
     sentences: [
-      "Ein erfundener Suppenhersteller lässt seinen Wochenabsatz von einem Tool vorhersagen.",
-      "Du prüfst diese Prognose an ihren alten Fehlern und siehst, ob sie besser ist als die einfache Regel ‚so viel wie letzte Woche‘.",
-      "Am Ende hast du eine Prüfregel für deine eigene Prognose und einen Skill, mit dem Claude sie nachrechnet.",
-      "Das dauert etwa {minutes} Minuten, und alles bleibt in deinem Browser.",
+      "Ein erfundener Suppenhersteller kocht jede Woche so viel Linsensuppe, wie ein Tool vorhersagt.",
+      "Du prüfst an den alten Fehlern, ob das Tool besser plant als die Regel ‚so viel wie letzte Woche‘, und fasst die Daten selbst an.",
+      "Am Ende weißt du, wann ihr der Prognose folgen könnt, und hast einen Skill, mit dem Claude das jede Woche nachrechnet.",
+      "Das dauert etwa {minutes} Minuten.",
     ],
     start: "Mit der Schätzung starten",
   },
   en: {
-    title: "Check a forecast against its own past errors",
+    title: "Check a forecast against its own errors",
     sentences: [
-      "An invented soup maker lets a tool forecast its weekly sales.",
-      "You check that forecast against its own past errors and see whether it beats the simple rule ‘same as last week’.",
-      "You leave with a release rule for your own forecast and a skill that lets Claude redo the maths.",
-      "It takes about {minutes} minutes, and everything stays in your browser.",
+      "An invented soup maker cooks as much lentil soup each week as a tool forecasts.",
+      "Using its past errors, you check whether the tool plans better than the rule ‘same as last week’, and you move the data yourself.",
+      "At the end you know when you can follow the forecast, and you have a skill that lets Claude redo the check every week.",
+      "It takes about {minutes} minutes.",
     ],
     start: "Start with your guess",
   },
