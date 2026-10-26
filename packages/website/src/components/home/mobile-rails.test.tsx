@@ -42,12 +42,12 @@ describe("MobileRails", () => {
     expect(BOOK_RAIL_SHOWN).toBe(books.length > 1);
   });
 
-  it("shows the five workshop demos", () => {
+  it("shows the six workshop demos", () => {
     const { container } = render(<MobileRails />);
     const demoTiles = container.querySelectorAll(
       '[data-home-rail-tile="demo"]',
     );
-    expect(demoTiles).toHaveLength(5);
+    expect(demoTiles).toHaveLength(6);
 
     const expected = getDemosForLocale("de");
     for (const [index, demo] of expected.entries()) {

@@ -48,6 +48,10 @@ const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
  *   room for a lighter wash behind Creme, so the band turns the pair round.
  * - sage: Bernstein at 100% over Salbei (1.75 against the ground, a visible
  *   band), Tanne on it 4.46.
+ * - kraft: Mennige at 60% over Kraft (1.94 against the ground, as Bloom's
+ *   band), Druckschwarz (the scene ink) on it 4.89 and 9.49 where a line's box
+ *   runs past the band onto Kraft. Never light words: Bogen on Kraft is 1.93,
+ *   and full Mennige leaves the ink at 3.24.
  */
 export const TITLE_HIGHLIGHT: Readonly<
   Record<
@@ -65,6 +69,7 @@ export const TITLE_HIGHLIGHT: Readonly<
   bloom: { colorVar: "--color-scene-mid", opacity: 80 },
   autumn: { colorVar: "--color-scene-mid", opacity: 100, textColorVar: "--color-lab-ink" },
   sage: { colorVar: "--color-scene-mid", opacity: 100 },
+  kraft: { colorVar: "--color-scene-mid", opacity: 60 },
 };
 
 /** Longest two-word tail that still reads as a short marked phrase. */

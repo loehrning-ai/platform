@@ -59,6 +59,10 @@ describe("GET /vorlagen/[file]", () => {
       { file: "esg-nachweisregister.en.csv" },
       { file: "luecken-anfrage.md" },
       { file: "luecken-anfrage.en.md" },
+      { file: "vergleichsbasis.md" },
+      { file: "vergleichsbasis.en.md" },
+      { file: "verhandlungsmail.md" },
+      { file: "verhandlungsmail.en.md" },
     ]);
   });
 

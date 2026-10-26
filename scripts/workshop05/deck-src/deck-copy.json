@@ -111,6 +111,28 @@
       "meta": "90 Minuten · erfundener Fall · Stand der Übung {exercise}",
       "drawing": "Acht Anforderungen links, elf Dateien rechts. Jede Linie verbindet eine Anforderung mit der Datei, deren Name passt."
     },
+    "host": {
+      "kicker": "Gastgeber",
+      "alt": "Porträt von Tim Löhr",
+      "degree": "M.Sc. Informatik",
+      "school": "FAU Erlangen-Nürnberg",
+      "career": [
+        {
+          "org": "Apple",
+          "role": "Data Scientist"
+        },
+        {
+          "org": "Red Bull",
+          "role": "Data Scientist"
+        },
+        {
+          "org": "loehrning.ai",
+          "role": "Gründer"
+        }
+      ],
+      "now": "jetzt",
+      "line": "Jede Firma, jede Person und jede Datei in diesem Workshop ist erfunden."
+    },
     "request": {
       "title": "Tannwalds Anfrage: acht Anforderungen",
       "sub": "Remote-Audit am {audit}. Unterlagen bis {sendBy}. Gewertet werden Dokumente, nicht Antworten.",
@@ -145,7 +167,7 @@
         "weiß nicht"
       ],
       "voteLabel": "Satz {n}: Stimmen des Raums",
-      "hint": "Pro Satz die Handzeichen zählen. Aufgelöst wird auf Folie 10."
+      "hint": "Pro Satz die Handzeichen zählen. Aufgelöst wird auf Folie 11."
     },
     "folder": {
       "title": "Der Ordner: elf Dateien, acht Treffer",
@@ -366,9 +388,9 @@
     "result": {
       "titleVotes": "Ihr habt {estimate} geschätzt. Der Ordner belegt {covered}.",
       "titleNone": "Der Ordner belegt {covered} von 8.",
-      "estimateHead": "Eure Schätzung, Folie 2",
+      "estimateHead": "Eure Schätzung, Folie 3",
       "resultHead": "Nach vier Prüfungen",
-      "draftHead": "Der Entwurf, Folie 3",
+      "draftHead": "Der Entwurf, Folie 4",
       "draftLine": "Satz {n}: {votes} · gestrichen",
       "draftNone": "Satz {n}: gestrichen",
       "next": "Nächste Anfrage: erst die vier Prüfungen, dann die Antwort.",
@@ -444,16 +466,17 @@
     },
     "notes": [
       "01 · Titel\nTime: 1 min\nSay: \"Heute bekommt eine Firma eine Dokumentanforderung für ein Audit. Wir ordnen den Ordner und finden die Lücken. Jede Firma, jede Person und jede Datei ist erfunden.\"\nStudents: Ankommen. Laptop mit Claude öffnen, Handy bereit.\nCue: Die acht Linien ziehen sich von den Anforderungen zu den Dateien. Pfeil rechts startet. R setzt das Deck auf diese Folie zurück, P öffnet diese Ansicht.\nRemember: Den Lernsatz einmal sagen: Eine Datei ist erst ein Nachweis, wenn Datum, Freigabe, Umfang und Zitat stimmen.",
-      "02 · Die Anfrage\nTime: 4 min\nSay: \"Tannwald, der Kunde, nutzt sein Auditrecht. Lest den ersten Satz laut: We assess documents, not answers. Gewertet werden Dokumente.\"\nStudents: Die fünf Regeln mitlesen. Dann per Handzeichen schätzen: wie viele der acht Anforderungen kann Vardar heute belegen?\nCue: Die Anfrage tippt sich ein. Pfeil rechts: die acht Anforderungen. Pfeil rechts: die fünf Regeln werden markiert. Pfeil rechts: Schätzung, Handzeichen auf die Zahlen klicken. Falscher Klick: Letzte Stimme zurücknehmen.\nRemember: Art. 28 Abs. 3 lit. h DSGVO einmal nennen: Der Auftragsverarbeiter ermöglicht Überprüfungen und trägt dazu bei. Nichts auflösen, die Schätzung kommt auf Folie 11 zurück.",
-      "03 · Der Entwurf\nTime: 3 min\nSay: \"Der Geschäftsführer hat schon geantwortet, nicht gesendet. Vier Sätze. Stimmt jeder?\"\nStudents: Pro Satz abstimmen: stimmt, falsch, weiß nicht.\nCue: Pfeil rechts markiert Satz für Satz. Die Stimmen pro Satz auf die Knöpfe klicken.\nRemember: Neutral bleiben. Satz 4 (Daten bleiben in der EU) wird verteidigt, lass es zu. Aufgelöst wird auf Folie 10.",
-      "04 · Der Ordner\nTime: 8 min\nSay: \"Zu jeder Anforderung liegt eine Datei, deren Name passt. Acht von acht. Das sieht fertig aus, und genau das prüfen wir jetzt.\"\nStudents: QR scannen oder die Adresse tippen, das Kit laden, das Projekt einrichten. Paare sind gut.\nCue: Die Karten legen sich in das Raster. Pfeil rechts: die Namenstreffer. Pfeil rechts: Einrichtung und QR-Code.\nRemember: Codeausführung prüfen: Settings, Capabilities, Code execution and file creation. Lädt eine .md-Datei nicht, als .txt umbenennen. Ohne Projekte: ein Chat mit 12 Anhängen.",
-      "05 · Vier Prüfungen\nTime: 6 min\nSay: \"Vier Prüfungen, an vier erfundenen Dateien, die nicht im Kit sind. Die Dateien im Kit findet ihr selbst.\"\nStudents: Bei jeder Karte zuerst raten, an welcher Prüfung sie scheitert.\nCue: Pfeil rechts viermal: ZITAT, ZEITRAUM, UMFANG, FREIGABE. Der fünfte Druck zeigt den Lernsatz und das Werkzeug.\nRemember: ISO 19011 und 27001 sind kostenpflichtig, sag \"zusammengefasst\". Die dritte Zeile zweimal sagen: Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.",
-      "06 · Schritt 1\nTime: 15 min\nSay: \"Erst auf Papier: Wie viele der elf Dateien bestehen ZEITRAUM und FREIGABE? Dann baut Claude die Nachweisliste.\"\nStudents: Vorhersage per Handzeichen, dann den Prompt im Projekt senden und die Liste mit LOESUNGEN.md vergleichen.\nCue: Pfeil rechts: Vorhersage. Pfeil rechts: Prompt und Arbeitszeit, Start drücken. Pfeil rechts: die Liste baut sich auf, drei Dateien fallen durch.\nRemember: Laut fragen: Was hat Claude bei den zwei Richtlinien als Freigabe eingetragen? Achten auf: eine Freigabe für v4, FINAL als aktuell gelesen, ein Datum aus dem Dateinamen, die Herstellerseite als nicht freigegeben markiert.",
-      "07 · Schritt 2\nTime: 20 min\nSay: \"Pro Anforderung zuerst das Zitat, dann der Status. Gezählt wird im Code.\"\nStudents: Prompt senden, dann die Nachfrage zu R7. Im Code-Fenster zwei Zahlen prüfen: Geschulte und Stunden bis zur Meldung. Handys: Claudes Tabelle in die Zitat-Probe einfügen.\nCue: Pfeil rechts: Prompt und Arbeitszeit. Dann R7 mit drei Dateien, R5 im Code, alle acht mit den vier Prüfungen, zuletzt R1 und der QR-Code zur Zitat-Probe.\nRemember: Claudes echte Antwort auf die R7-Frage zeigen, nie eine vorbereitete. BELEGT heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.",
-      "08 · Wo Claude danebenliegt\nTime: 5 min\nSay: \"Vier Fehler, die bei diesem Ordner oft passieren. Jeder hat eine Regel, die ihn stoppt.\"\nStudents: In der eigenen Tabelle nach diesen vier Zeilen suchen.\nCue: Pfeil rechts viermal: Die falsche Zeile wird gestrichen, die Regelnummer erscheint. Der fünfte Druck: der Fall Deloitte und die Kontoregel.\nRemember: Sachlich bleiben, niemand ist schuld. Die Regelnummern zeigen in projektanweisungen.md. Fragen zum Konto: Anhang A1 über die Moderationsansicht.",
-      "09 · Schritt 3: Lücken\nTime: 12 min\nSay: \"Jede Lücke ist eine Aufgabe: eine Person, ein Dokument, ein Termin.\"\nStudents: Den Prompt aus Schritt 3 senden, Vorlage und Entwurf anhängen, die Lückenliste prüfen.\nCue: Pfeil rechts: die sechs Lücken. Pfeil rechts: die Anfrage für R7 füllt sich. Pfeil rechts: Prompt und Arbeitszeit.\nRemember: Den Satz mit \"gibt es nicht\" laut lesen: Auch diese Antwort hilft. Zuständig: IT-Leitung für R2, R3, R4, R7, HR-Leitung für R5, Geschäftsführung für R8.",
-      "10 · Die Antwort\nTime: 10 min\nSay: \"Alle vier Sätze des Entwurfs fallen. Was bleibt, ist eine Antwort, die nur belegte Sätze enthält.\"\nStudents: Antwort mit Claude schreiben, einen Satz von Hand ändern, mit dem Nachbarn tauschen, eine Antwort vorlesen.\nCue: Pfeil rechts viermal: Satz für Satz gestrichen, darunter der Nachweis. Dann die Arbeitszeit (6, 3, 1 Minuten), dann die Musterantwort.\nRemember: Du unterschreibst, nicht Claude. Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung.",
-      "11 · Schätzung und Ergebnis\nTime: 6 min\nSay: \"Eure Schätzung von vorhin, und was der Ordner belegt. Bei der nächsten Anfrage: erst die vier Prüfungen, dann die Antwort.\"\nStudents: QR-Codes scannen: eigener Ordner in der Demo, der Skill, das Kit. Fragen.\nCue: Pfeil rechts: Die Schätzung wird zum Ergebnis 2, 4, 2. Pfeil rechts: QR-Codes. Anhang über die Links unten oder die Moderationsansicht.\nRemember: Skill installieren: Customize, Skills, +, Create skill, Upload a skill, dann einschalten.",
+      "02 · Gastgeber\nTime: 1 min\nSay: \"Ich bin Tim Löhr. Ich war Data Scientist bei Apple und Red Bull und baue mit loehrning.ai Workshops wie diesen. Alles, was ihr heute seht, ist erfunden.\"\nStudents: Zuhören.\nCue: Die Linie läuft von allein von Apple bis loehrning.ai. Pfeil rechts geht zur Anfrage.\nRemember: Unter einer Minute bleiben, dann direkt zur Anfrage.",
+      "03 · Die Anfrage\nTime: 3 min\nSay: \"Tannwald, der Kunde, nutzt sein Auditrecht. Lest den ersten Satz laut: We assess documents, not answers. Gewertet werden Dokumente.\"\nStudents: Die fünf Regeln mitlesen. Dann per Handzeichen schätzen: wie viele der acht Anforderungen kann Vardar heute belegen?\nCue: Die Anfrage tippt sich ein. Pfeil rechts: die acht Anforderungen. Pfeil rechts: die fünf Regeln werden markiert. Pfeil rechts: Schätzung, Handzeichen auf die Zahlen klicken. Falscher Klick: Letzte Stimme zurücknehmen.\nRemember: Art. 28 Abs. 3 lit. h DSGVO einmal nennen: Der Auftragsverarbeiter ermöglicht Überprüfungen und trägt dazu bei. Nichts auflösen, die Schätzung kommt auf Folie 12 zurück.",
+      "04 · Der Entwurf\nTime: 3 min\nSay: \"Der Geschäftsführer hat schon geantwortet, nicht gesendet. Vier Sätze. Stimmt jeder?\"\nStudents: Pro Satz abstimmen: stimmt, falsch, weiß nicht.\nCue: Pfeil rechts markiert Satz für Satz. Die Stimmen pro Satz auf die Knöpfe klicken.\nRemember: Neutral bleiben. Satz 4 (Daten bleiben in der EU) wird verteidigt, lass es zu. Aufgelöst wird auf Folie 11.",
+      "05 · Der Ordner\nTime: 8 min\nSay: \"Zu jeder Anforderung liegt eine Datei, deren Name passt. Acht von acht. Das sieht fertig aus, und genau das prüfen wir jetzt.\"\nStudents: QR scannen oder die Adresse tippen, das Kit laden, das Projekt einrichten. Paare sind gut.\nCue: Die Karten legen sich in das Raster. Pfeil rechts: die Namenstreffer. Pfeil rechts: Einrichtung und QR-Code.\nRemember: Codeausführung prüfen: Settings, Capabilities, Code execution and file creation. Lädt eine .md-Datei nicht, als .txt umbenennen. Ohne Projekte: ein Chat mit 12 Anhängen.",
+      "06 · Vier Prüfungen\nTime: 6 min\nSay: \"Vier Prüfungen, an vier erfundenen Dateien, die nicht im Kit sind. Die Dateien im Kit findet ihr selbst.\"\nStudents: Bei jeder Karte zuerst raten, an welcher Prüfung sie scheitert.\nCue: Pfeil rechts viermal: ZITAT, ZEITRAUM, UMFANG, FREIGABE. Der fünfte Druck zeigt den Lernsatz und das Werkzeug.\nRemember: ISO 19011 und 27001 sind kostenpflichtig, sag \"zusammengefasst\". Die dritte Zeile zweimal sagen: Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.",
+      "07 · Schritt 1\nTime: 15 min\nSay: \"Erst auf Papier: Wie viele der elf Dateien bestehen ZEITRAUM und FREIGABE? Dann baut Claude die Nachweisliste.\"\nStudents: Vorhersage per Handzeichen, dann den Prompt im Projekt senden und die Liste mit LOESUNGEN.md vergleichen.\nCue: Pfeil rechts: Vorhersage. Pfeil rechts: Prompt und Arbeitszeit, Start drücken. Pfeil rechts: die Liste baut sich auf, drei Dateien fallen durch.\nRemember: Laut fragen: Was hat Claude bei den zwei Richtlinien als Freigabe eingetragen? Achten auf: eine Freigabe für v4, FINAL als aktuell gelesen, ein Datum aus dem Dateinamen, die Herstellerseite als nicht freigegeben markiert.",
+      "08 · Schritt 2\nTime: 20 min\nSay: \"Pro Anforderung zuerst das Zitat, dann der Status. Gezählt wird im Code.\"\nStudents: Prompt senden, dann die Nachfrage zu R7. Im Code-Fenster zwei Zahlen prüfen: Geschulte und Stunden bis zur Meldung. Handys: Claudes Tabelle in die Zitat-Probe einfügen.\nCue: Pfeil rechts: Prompt und Arbeitszeit. Dann R7 mit drei Dateien, R5 im Code, alle acht mit den vier Prüfungen, zuletzt R1 und der QR-Code zur Zitat-Probe.\nRemember: Claudes echte Antwort auf die R7-Frage zeigen, nie eine vorbereitete. BELEGT heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.",
+      "09 · Wo Claude danebenliegt\nTime: 5 min\nSay: \"Vier Fehler, die bei diesem Ordner oft passieren. Jeder hat eine Regel, die ihn stoppt.\"\nStudents: In der eigenen Tabelle nach diesen vier Zeilen suchen.\nCue: Pfeil rechts viermal: Die falsche Zeile wird gestrichen, die Regelnummer erscheint. Der fünfte Druck: der Fall Deloitte und die Kontoregel.\nRemember: Sachlich bleiben, niemand ist schuld. Die Regelnummern zeigen in projektanweisungen.md. Fragen zum Konto: Anhang A1 über die Moderationsansicht.",
+      "10 · Schritt 3: Lücken\nTime: 12 min\nSay: \"Jede Lücke ist eine Aufgabe: eine Person, ein Dokument, ein Termin.\"\nStudents: Den Prompt aus Schritt 3 senden, Vorlage und Entwurf anhängen, die Lückenliste prüfen.\nCue: Pfeil rechts: die sechs Lücken. Pfeil rechts: die Anfrage für R7 füllt sich. Pfeil rechts: Prompt und Arbeitszeit.\nRemember: Den Satz mit \"gibt es nicht\" laut lesen: Auch diese Antwort hilft. Zuständig: IT-Leitung für R2, R3, R4, R7, HR-Leitung für R5, Geschäftsführung für R8.",
+      "11 · Die Antwort\nTime: 10 min\nSay: \"Alle vier Sätze des Entwurfs fallen. Was bleibt, ist eine Antwort, die nur belegte Sätze enthält.\"\nStudents: Antwort mit Claude schreiben, einen Satz von Hand ändern, mit dem Nachbarn tauschen, eine Antwort vorlesen.\nCue: Pfeil rechts viermal: Satz für Satz gestrichen, darunter der Nachweis. Dann die Arbeitszeit (6, 3, 1 Minuten), dann die Musterantwort.\nRemember: Du unterschreibst, nicht Claude. Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung.",
+      "12 · Schätzung und Ergebnis\nTime: 6 min\nSay: \"Eure Schätzung von vorhin, und was der Ordner belegt. Bei der nächsten Anfrage: erst die vier Prüfungen, dann die Antwort.\"\nStudents: QR-Codes scannen: eigener Ordner in der Demo, der Skill, das Kit. Fragen.\nCue: Pfeil rechts: Die Schätzung wird zum Ergebnis 2, 4, 2. Pfeil rechts: QR-Codes. Anhang über die Links unten oder die Moderationsansicht.\nRemember: Skill installieren: Customize, Skills, +, Create skill, Upload a skill, dann einschalten.",
       "A1 · Konto\nTime: 0 min\nSay: \"Welche Konten echte Unterlagen sehen dürfen, entscheidet deine Firma. Das sagen die Seiten des Anbieters.\"\nStudents: Nur bei Fragen.\nCue: Escape oder Pfeil links führt zurück zur Folie, von der du gekommen bist.\nRemember: Die Zeilen vor jedem Workshop auf den Quellseiten neu prüfen.",
       "A2 · Team und Enterprise\nTime: 0 min\nSay: \"Auf Firmenkonten entscheidet der Admin über Codeausführung und eigene Skills.\"\nStudents: Nur bei Fragen.\nCue: Escape führt zurück.\nRemember: Keine Aussage über Vertragsinhalte machen, die nicht auf den Quellseiten steht.",
       "A3 · Quellen\nTime: 0 min\nSay: \"Jede Zahl von außen hat hier ihre Quelle und das Prüfdatum.\"\nStudents: Nur bei Fragen.\nCue: Escape führt zurück.\nRemember: Alles andere im Deck kommt aus dem Kit."
@@ -571,6 +594,28 @@
       "meta": "90 minutes · invented case · exercise date {exercise}",
       "drawing": "Eight request items on the left, eleven files on the right. Each line joins an item to the file whose name fits."
     },
+    "host": {
+      "kicker": "Your host",
+      "alt": "Portrait of Tim Löhr",
+      "degree": "M.Sc. Computer Science",
+      "school": "FAU Erlangen-Nürnberg",
+      "career": [
+        {
+          "org": "Apple",
+          "role": "Data Scientist"
+        },
+        {
+          "org": "Red Bull",
+          "role": "Data Scientist"
+        },
+        {
+          "org": "loehrning.ai",
+          "role": "Founder"
+        }
+      ],
+      "now": "now",
+      "line": "Every company, person and file in this workshop is invented."
+    },
     "request": {
       "title": "Tannwald's request: eight items",
       "sub": "Remote audit on {audit}. Documents by {sendBy}. They assess documents, not answers.",
@@ -605,7 +650,7 @@
         "not sure"
       ],
       "voteLabel": "Sentence {n}: the room's votes",
-      "hint": "Count the hands for each sentence. Slide 10 resolves them."
+      "hint": "Count the hands for each sentence. Slide 11 resolves them."
     },
     "folder": {
       "title": "The folder: eleven files, eight matches",
@@ -826,9 +871,9 @@
     "result": {
       "titleVotes": "You estimated {estimate}. The folder proves {covered}.",
       "titleNone": "The folder proves {covered} of 8.",
-      "estimateHead": "Your estimate, slide 2",
+      "estimateHead": "Your estimate, slide 3",
       "resultHead": "After four tests",
-      "draftHead": "The draft, slide 3",
+      "draftHead": "The draft, slide 4",
       "draftLine": "Sentence {n}: {votes} · deleted",
       "draftNone": "Sentence {n}: deleted",
       "next": "Next request: run the four tests before you answer.",
@@ -904,16 +949,17 @@
     },
     "notes": [
       "01 · Cover\nTime: 1 min\nSay: \"Today a firm gets a document request for an audit. We sort its folder and find the gaps. Every company, person and file is invented.\"\nStudents: Settle in. Open Claude on the laptop, keep the phone ready.\nCue: The eight lines draw from the items to the files. Right arrow starts. R resets the deck to this slide, P opens this view.\nRemember: Say the objective once: a file is evidence only when its date, approval, scope and quote hold.",
-      "02 · The request\nTime: 4 min\nSay: \"Tannwald, the customer, uses its audit right. Read the first line aloud: We assess documents, not answers.\"\nStudents: Read the five rules along. Then estimate by show of hands: how many of the eight items can Vardar prove today?\nCue: The request types itself in. Right arrow: the eight items. Right arrow: the five rules get marked. Right arrow: the estimate; click the hands onto the numbers. Wrong click: Undo last vote.\nRemember: Name GDPR Art. 28(3)(h) once: the processor allows for and contributes to audits. Reveal nothing; the estimate returns on slide 11.",
-      "03 · The draft\nTime: 3 min\nSay: \"The managing director has already answered, not sent. Four sentences. Is each one true?\"\nStudents: Vote per sentence: true, false, not sure.\nCue: Right arrow marks one sentence at a time. Click the votes for each sentence onto its buttons.\nRemember: Stay neutral. Sentence 4 (data stays in the EU) is the one people defend: let them. Slide 10 resolves it.",
-      "04 · The folder\nTime: 8 min\nSay: \"Every item has a file whose name fits. Eight of eight. It looks done, and that is what we test now.\"\nStudents: Scan the QR or type the address, get the kit, set up the Project. Pairs are fine.\nCue: The cards settle into the grid. Right arrow: the name matches. Right arrow: setup and QR code.\nRemember: Check code execution: Settings, Capabilities, Code execution and file creation. If an .md file will not upload, rename it .txt. Without Projects: one chat with 12 attachments.",
-      "05 · Four tests\nTime: 6 min\nSay: \"Four tests on four invented files that are not in the kit. The kit's files you test yourselves.\"\nStudents: For each card, guess first which test it fails.\nCue: Right arrow four times: QUOTE, PERIOD, SCOPE, APPROVAL. The fifth press shows the objective and the tool.\nRemember: ISO 19011 and 27001 are paywalled; say \"summarised\". Say the third line twice: a policy shows intent, only a record shows practice.",
-      "06 · Step 1\nTime: 15 min\nSay: \"On paper first: how many of the eleven files pass PERIOD and APPROVAL? Then Claude builds the evidence index.\"\nStudents: Predict by show of hands, then send the prompt in the Project and compare the index with ANSWERS.md.\nCue: Right arrow: prediction. Right arrow: prompt and work time; press Start. Right arrow: the index builds; three files fail.\nRemember: Ask aloud: what did Claude write as approver for the two policy files? Watch for an approver given to v4, FINAL read as current, a date taken from a file name, and the vendor page marked unapproved.",
-      "07 · Step 2\nTime: 20 min\nSay: \"For each item, first the quote, then the status. Counting happens in code.\"\nStudents: Send the prompt, then the R7 follow-up. In the code box check two numbers: staff trained, and hours until Tannwald was told. Phones: paste Claude's table into the quote check.\nCue: Right arrow: prompt and work time. Then R7 with three files, R5 in code, all eight with the four tests, and last R1 with the QR code to the quote check.\nRemember: Show Claude's real answer to the R7 question, never a prepared one. COVERED means proven, not good: R1 proves that data sits in the US.",
-      "08 · Where Claude goes wrong\nTime: 5 min\nSay: \"Four mistakes that often happen on this folder. Each has a rule that stops it.\"\nStudents: Look for these four lines in your own table.\nCue: Right arrow four times: the wrong line is struck and the rule number lands. The fifth press: the Deloitte case and the account rule.\nRemember: Keep it factual; no blame. The rule numbers point into project-instructions.md. Account questions: appendix A1 from the presenter view.",
-      "09 · Step 3: gaps\nTime: 12 min\nSay: \"Every gap is a task: a person, a document, a date.\"\nStudents: Send the step 3 prompt with the template and the draft attached; check the gap list.\nCue: Right arrow: the six gaps. Right arrow: the R7 request fills in. Right arrow: prompt and work time.\nRemember: Read the \"does not exist\" line aloud: that answer helps too. Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8.",
-      "10 · The reply\nTime: 10 min\nSay: \"All four sentences of the draft go. What remains is a reply with only proven sentences.\"\nStudents: Write the reply with Claude, edit one sentence by hand, swap with your neighbour, read one aloud.\nCue: Right arrow four times: each sentence struck, the evidence under it. Then the work time (6, 3, 1 minutes), then the sample reply.\nRemember: You sign it, not Claude. Anything that admits a contract point (clause 7) is the managing director's decision.",
-      "11 · Estimate and result\nTime: 6 min\nSay: \"Your estimate from earlier, and what the folder proves. Next request: run the four tests before you answer.\"\nStudents: Scan the QR codes: your own folder in the demo, the skill, the kit. Questions.\nCue: Right arrow: the estimate turns into the result 2, 4, 2. Right arrow: the QR codes. The appendix sits behind the links at the bottom or in the presenter view.\nRemember: Installing the skill: Customize, Skills, +, Create skill, Upload a skill, then switch it on.",
+      "02 · Your host\nTime: 1 min\nSay: \"I am Tim Löhr. I worked as a data scientist at Apple and Red Bull, and with loehrning.ai I build workshops like this one. Everything you see today is invented.\"\nStudents: Listen.\nCue: The line runs by itself from Apple to loehrning.ai. Right arrow goes to the request.\nRemember: Stay under one minute, then go straight to the request.",
+      "03 · The request\nTime: 3 min\nSay: \"Tannwald, the customer, uses its audit right. Read the first line aloud: We assess documents, not answers.\"\nStudents: Read the five rules along. Then estimate by show of hands: how many of the eight items can Vardar prove today?\nCue: The request types itself in. Right arrow: the eight items. Right arrow: the five rules get marked. Right arrow: the estimate; click the hands onto the numbers. Wrong click: Undo last vote.\nRemember: Name GDPR Art. 28(3)(h) once: the processor allows for and contributes to audits. Reveal nothing; the estimate returns on slide 12.",
+      "04 · The draft\nTime: 3 min\nSay: \"The managing director has already answered, not sent. Four sentences. Is each one true?\"\nStudents: Vote per sentence: true, false, not sure.\nCue: Right arrow marks one sentence at a time. Click the votes for each sentence onto its buttons.\nRemember: Stay neutral. Sentence 4 (data stays in the EU) is the one people defend: let them. Slide 11 resolves it.",
+      "05 · The folder\nTime: 8 min\nSay: \"Every item has a file whose name fits. Eight of eight. It looks done, and that is what we test now.\"\nStudents: Scan the QR or type the address, get the kit, set up the Project. Pairs are fine.\nCue: The cards settle into the grid. Right arrow: the name matches. Right arrow: setup and QR code.\nRemember: Check code execution: Settings, Capabilities, Code execution and file creation. If an .md file will not upload, rename it .txt. Without Projects: one chat with 12 attachments.",
+      "06 · Four tests\nTime: 6 min\nSay: \"Four tests on four invented files that are not in the kit. The kit's files you test yourselves.\"\nStudents: For each card, guess first which test it fails.\nCue: Right arrow four times: QUOTE, PERIOD, SCOPE, APPROVAL. The fifth press shows the objective and the tool.\nRemember: ISO 19011 and 27001 are paywalled; say \"summarised\". Say the third line twice: a policy shows intent, only a record shows practice.",
+      "07 · Step 1\nTime: 15 min\nSay: \"On paper first: how many of the eleven files pass PERIOD and APPROVAL? Then Claude builds the evidence index.\"\nStudents: Predict by show of hands, then send the prompt in the Project and compare the index with ANSWERS.md.\nCue: Right arrow: prediction. Right arrow: prompt and work time; press Start. Right arrow: the index builds; three files fail.\nRemember: Ask aloud: what did Claude write as approver for the two policy files? Watch for an approver given to v4, FINAL read as current, a date taken from a file name, and the vendor page marked unapproved.",
+      "08 · Step 2\nTime: 20 min\nSay: \"For each item, first the quote, then the status. Counting happens in code.\"\nStudents: Send the prompt, then the R7 follow-up. In the code box check two numbers: staff trained, and hours until Tannwald was told. Phones: paste Claude's table into the quote check.\nCue: Right arrow: prompt and work time. Then R7 with three files, R5 in code, all eight with the four tests, and last R1 with the QR code to the quote check.\nRemember: Show Claude's real answer to the R7 question, never a prepared one. COVERED means proven, not good: R1 proves that data sits in the US.",
+      "09 · Where Claude goes wrong\nTime: 5 min\nSay: \"Four mistakes that often happen on this folder. Each has a rule that stops it.\"\nStudents: Look for these four lines in your own table.\nCue: Right arrow four times: the wrong line is struck and the rule number lands. The fifth press: the Deloitte case and the account rule.\nRemember: Keep it factual; no blame. The rule numbers point into project-instructions.md. Account questions: appendix A1 from the presenter view.",
+      "10 · Step 3: gaps\nTime: 12 min\nSay: \"Every gap is a task: a person, a document, a date.\"\nStudents: Send the step 3 prompt with the template and the draft attached; check the gap list.\nCue: Right arrow: the six gaps. Right arrow: the R7 request fills in. Right arrow: prompt and work time.\nRemember: Read the \"does not exist\" line aloud: that answer helps too. Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8.",
+      "11 · The reply\nTime: 10 min\nSay: \"All four sentences of the draft go. What remains is a reply with only proven sentences.\"\nStudents: Write the reply with Claude, edit one sentence by hand, swap with your neighbour, read one aloud.\nCue: Right arrow four times: each sentence struck, the evidence under it. Then the work time (6, 3, 1 minutes), then the sample reply.\nRemember: You sign it, not Claude. Anything that admits a contract point (clause 7) is the managing director's decision.",
+      "12 · Estimate and result\nTime: 6 min\nSay: \"Your estimate from earlier, and what the folder proves. Next request: run the four tests before you answer.\"\nStudents: Scan the QR codes: your own folder in the demo, the skill, the kit. Questions.\nCue: Right arrow: the estimate turns into the result 2, 4, 2. Right arrow: the QR codes. The appendix sits behind the links at the bottom or in the presenter view.\nRemember: Installing the skill: Customize, Skills, +, Create skill, Upload a skill, then switch it on.",
       "A1 · Account\nTime: 0 min\nSay: \"Your firm decides which accounts may see real documents. This is what the vendor's pages say.\"\nStudents: Only if asked.\nCue: Escape or the left arrow returns to the slide you came from.\nRemember: Check the lines against the source pages before every workshop.",
       "A2 · Team and Enterprise\nTime: 0 min\nSay: \"On company accounts the admin decides about code execution and custom skills.\"\nStudents: Only if asked.\nCue: Escape returns.\nRemember: Make no claim about contract terms that the source pages do not state.",
       "A3 · Sources\nTime: 0 min\nSay: \"Every outside fact has its source and check date here.\"\nStudents: Only if asked.\nCue: Escape returns.\nRemember: Everything else on the deck comes from the kit."

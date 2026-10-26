@@ -32,6 +32,12 @@ const BILINGUAL_KITS: ReadonlySet<string> = new Set(["/workshops/datenbereitscha
 const DECK_EDITIONS: ReadonlySet<string> = new Set(["audit-vorbereitung-mit-ki"]);
 const isDeckEdition = (slug: string, material: WorkshopMaterial) => material.role === "deck" && DECK_EDITIONS.has(slug);
 
+/**
+ * Workshops whose deck and kit exist in German only (Workshop 06: German paperwork, a German case). The
+ * English page describes them in English and labels them German, so nobody expects an English file.
+ */
+const GERMAN_ONLY: ReadonlySet<string> = new Set(["angebote-mit-ki-vergleichen"]);
+
 describe("workshops catalog", () => {
   it("is non-empty", () => {
     expect(WORKSHOPS.length).toBeGreaterThan(0);
@@ -92,12 +98,12 @@ describe("workshops catalog", () => {
 
   it("numbers workshops from data and follows one naming pattern in both locales", () => {
     const formats = {
-      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Live-Workshop mit Deck", "Live-Workshop mit Deck", "Live-Workshop mit Deck"],
-      en: ["Self-study kit", "Self-study kit", "Live workshop with deck", "Live workshop with deck", "Live workshop with deck"],
+      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Live-Workshop mit Deck", "Live-Workshop mit Deck", "Live-Workshop mit Deck", "Live-Workshop mit Deck"],
+      en: ["Self-study kit", "Self-study kit", "Live workshop with deck", "Live workshop with deck", "Live workshop with deck", "Live workshop with deck"],
     } as const;
     for (const locale of ["de", "en"] as const) {
       const workshops = getWorkshops(locale);
-      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03", "04", "05"]);
+      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03", "04", "05", "06"]);
       for (const [index, workshop] of workshops.entries()) {
         expect(workshop.eyebrow).toBe(
           `Workshop ${workshop.number} · ${workshop.topic}`,
@@ -322,7 +328,7 @@ describe("workshops catalog", () => {
     }
   });
 
-  it("states that every currently published material is English", () => {
+  it("states that every currently published material is English, apart from the German-only workshop", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         for (const material of workshop.materials) {
@@ -340,6 +346,11 @@ describe("workshops catalog", () => {
           if (material.href in GERMAN_KIT_EDITIONS) {
             expect(locale).toBe("de");
             expect(material.language).toBe("de");
+            continue;
+          }
+          // A workshop published in German only says so on both pages.
+          if (GERMAN_ONLY.has(workshop.slug)) {
+            expect(material.language, `${locale}/${workshop.slug}/${material.href}`).toBe("de");
             continue;
           }
           // A deck with a German edition links it on the German page.
@@ -508,7 +519,7 @@ describe("getWorkshopBySlug", () => {
 });
 
 describe("workshop demo material", () => {
-  it("links every workshop to its demo once, in the page's language, the start only where nothing else is", () => {
+  it("links every workshop to its demo once, in the page's language, never as the start", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         const demos = workshop.materials.filter((material) => material.role === "demo");
@@ -517,11 +528,9 @@ describe("workshop demo material", () => {
         // ?source=workshop makes the demo's back control return to this workshop.
         expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(demo?.language).toBe(locale);
-        // Workshop 01 marks no material primary: its demo (the kit, made
-        // visible) is where it starts. Everywhere else the demo is optional.
-        const startsAtDemo = !workshop.materials.some((material) => material.role !== "demo" && material.primary);
-        expect(demo?.primary).toBe(startsAtDemo ? true : undefined);
-        expect(demo?.optional).toBe(!startsAtDemo);
+        // A workshop is its slides (or labs) and its kit; the demo is one link away.
+        expect(demo?.primary).toBeUndefined();
+        expect(demo?.optional).toBe(true);
         expect(demo?.phase).toBe("during");
         expect(workshop.materials.filter((material) => material.primary)).toHaveLength(1);
       }

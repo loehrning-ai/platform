@@ -81,7 +81,7 @@ export const DEMOS_PAGE_COPY = {
       shareCopied: "Link kopiert",
     },
     hub: {
-      lede: "Fünf Werkzeuge aus den Workshops. Deine Daten bleiben im Browser.",
+      lede: "Sechs Werkzeuge aus den Workshops. Deine Daten bleiben im Browser.",
       kicker: (number: string, topic: string) => `${number} · ${topic}`,
       meta: (minutes: number) => `${minutes} Min · ohne Konto`,
       artifacts: { kit: "Kit", skill: "Skill", vorlage: "Vorlage" },
@@ -181,7 +181,7 @@ export const DEMOS_PAGE_COPY = {
       shareCopied: "Link copied",
     },
     hub: {
-      lede: "Five tools from the workshops. Your data stays in the browser.",
+      lede: "Six tools from the workshops. Your data stays in the browser.",
       kicker: (number: string, topic: string) => `${number} · ${topic}`,
       meta: (minutes: number) => `${minutes} min · no account`,
       artifacts: { kit: "Kit", skill: "Skill", vorlage: "Template" },

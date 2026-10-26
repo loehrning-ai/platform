@@ -82,6 +82,8 @@ export const GROUPS = {
       root("copy:lint", "copy:lint"),
       root("deck-keys:check", "deck-keys:check"),
       root("workshop05-deck:check", "workshop05-deck:check"),
+      root("workshop06-kit:check", "workshop06-kit:check"),
+      root("workshop06-deck:check", "workshop06-deck:check"),
       site("skills:mirror-check", "skills:mirror-check"),
       site("page-inventory:check", "page-inventory:check"),
       site("english-routes:check", "english-routes:check"),

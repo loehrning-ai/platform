@@ -7,7 +7,7 @@ import { expectGlassBudget } from "./fixtures/glass";
 test.describe("/demos hub", () => {
   for (const locale of ["de", "en"] as const) {
     const prefix = locale === "en" ? "/en" : "";
-    test(`${prefix || "/"}demos lists the five workshop demos as tiles, in order`, async ({ page }) => {
+    test(`${prefix || "/"}demos lists the six workshop demos as tiles, in order`, async ({ page }) => {
       const response = await page.goto(`${prefix}/demos`, { waitUntil: "domcontentloaded" });
       expect(response?.status()).toBe(200);
       await expect(page.locator("html")).toHaveAttribute("lang", locale);

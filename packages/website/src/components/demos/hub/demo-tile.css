@@ -44,10 +44,6 @@
   .dt-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-
-  .dt-grid > .dt-promise {
-    grid-column: auto;
-  }
 }
 
 /* The plakat class sets a ground and an ink on the <li>: back to paper. */
@@ -346,7 +342,7 @@ path[class*="dt-stroke-"] { fill: none; }
   }
 }
 
-/* ─── The sixth cell: the one promise all five share ────────────────────── */
+/* ─── The last cell: the one promise all six share, a full row ──────────── */
 
 .dt-grid > .dt-promise {
   display: flex;

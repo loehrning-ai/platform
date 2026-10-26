@@ -6,7 +6,7 @@ import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
  * stage and any material list together; the kit page of a workshop with one
  * counts once more, next to its zip).
  * listedMaterials: rows of the material list. A workshop lists its files only
- * when the two cards cannot reach one; all five reach everything from the stage.
+ * when the two cards cannot reach one; all six reach everything from the stage.
  */
 const WORKSHOP_ROUTES = [
   {
@@ -48,6 +48,13 @@ const WORKSHOP_ROUTES = [
     path: "/workshops/audit-vorbereitung-mit-ki",
     deHeading: "Audit-Vorbereitung mit KI",
     enHeading: "Audit preparation with AI",
+    materialCount: 3,
+    listedMaterials: 0,
+  },
+  {
+    path: "/workshops/angebote-mit-ki-vergleichen",
+    deHeading: "Welches Angebot ist günstiger?",
+    enHeading: "Which offer costs less?",
     materialCount: 3,
     listedMaterials: 0,
   },

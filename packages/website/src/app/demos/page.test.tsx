@@ -14,7 +14,7 @@ import { expectCapsInsideScene } from "@/test/plakat-scene";
 
 describe("/demos hub", () => {
   for (const locale of ["de", "en"] as const) {
-    it(`${locale}: a compact IDEA band, five tiles in workshop order, then the shared promise`, async () => {
+    it(`${locale}: a compact IDEA band, six tiles in workshop order, then the shared promise`, async () => {
       localeRef.value = locale;
       const copy = DEMOS_PAGE_COPY[locale].catalog;
       const hub = DEMOS_PAGE_COPY[locale].hub;
@@ -32,7 +32,7 @@ describe("/demos hub", () => {
 
       const demos = getDemosForLocale(locale);
       const tiles = screen.getAllByTestId("demo-tile");
-      expect(tiles).toHaveLength(5);
+      expect(tiles).toHaveLength(6);
       const prefix = locale === "en" ? "/en" : "";
       for (const [index, demo] of demos.entries()) {
         const tile = tiles[index] as HTMLElement;
@@ -75,7 +75,7 @@ describe("/demos hub", () => {
     localeRef.value = "de";
     const metadata = await generateMetadata();
     expect(metadata.title).toBe(DEMOS_PAGE_COPY.de.metadata.title);
-    expect(metadata.description).toBe(DEMOS_PAGE_COPY.de.metadata.description(5));
+    expect(metadata.description).toBe(DEMOS_PAGE_COPY.de.metadata.description(6));
     expect(metadata.alternates?.canonical).toBe("/demos");
   });
 });

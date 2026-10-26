@@ -133,19 +133,19 @@ describe("palettes.ts matches the CSS scopes", () => {
     });
   });
 
-  it("keeps three distinct colours per scene and five distinct grounds", () => {
+  it("keeps three distinct colours per scene and six distinct grounds", () => {
     for (const key of PLAKAT_KEYS) {
       const { ground, ink, mid } = PLAKAT[key];
       expect(new Set([ground, ink, mid]).size, key).toBe(3);
     }
-    expect(new Set(PLAKAT_KEYS.map((key) => PLAKAT[key].ground)).size).toBe(5);
+    expect(new Set(PLAKAT_KEYS.map((key) => PLAKAT[key].ground)).size).toBe(6);
   });
 
   it("sets the numerals as the posters do: Himbeere for IDEA, a light 04 for autumn", () => {
     expect(PLAKAT.idea.numRole).toBe("mid");
     expect(PLAKAT.idea.cornerDots).toBe(true);
     expect(PLAKAT.autumn.numWeight).toBe(400);
-    for (const key of ["lemons", "bloom", "autumn", "sage"] as const) {
+    for (const key of ["lemons", "bloom", "autumn", "sage", "kraft"] as const) {
       expect(PLAKAT[key].numRole).toBe("ink");
       expect(PLAKAT[key].cornerDots).toBe(false);
     }
@@ -166,7 +166,7 @@ describe("workshop palettes (locked, decision D3)", () => {
     }
   });
 
-  it("maps five workshops to five distinct palettes in the series order", () => {
+  it("maps six workshops to six distinct palettes in the series order", () => {
     const byNumber = [...getWorkshops("de")]
       .sort((a, b) => a.number.localeCompare(b.number))
       .map((workshop) => [workshop.number, workshopPlakat(workshop.slug)?.plakat]);
@@ -176,6 +176,7 @@ describe("workshop palettes (locked, decision D3)", () => {
       ["03", "bloom"],
       ["04", "autumn"],
       ["05", "sage"],
+      ["06", "kraft"],
     ]);
     expect(Object.keys(WORKSHOP_PLAKAT).sort()).toEqual(getWorkshops("de").map((w) => w.slug).sort());
     const motifs = Object.values(WORKSHOP_PLAKAT).map((entry) => entry.motif);
@@ -183,8 +184,8 @@ describe("workshop palettes (locked, decision D3)", () => {
   });
 
   it("gives the hub band the newest workshop's palette", () => {
-    expect(hubPlakat(getWorkshops("de"))).toBe("sage");
-    expect(hubPlakat(getWorkshops("en"))).toBe("sage");
+    expect(hubPlakat(getWorkshops("de"))).toBe("kraft");
+    expect(hubPlakat(getWorkshops("en"))).toBe("kraft");
     expect(
       hubPlakat([
         { slug: "ki-prognosen-einschaetzen", number: "01" },

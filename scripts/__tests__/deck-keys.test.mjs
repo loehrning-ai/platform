@@ -5,7 +5,15 @@ import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
-import { DECK_KEYS_SOURCE, DECK_KEYS_WORKSHOPS, deckKeysCopyPath, wiringProblems } from "../workshops/sync-deck-keys.mjs";
+import {
+  DECK_KEYS_EQUIVALENT,
+  DECK_KEYS_SOURCE,
+  DECK_KEYS_WORKSHOPS,
+  deckFolder,
+  deckKeysCopyPath,
+  equivalenceProblems,
+  wiringProblems,
+} from "../workshops/sync-deck-keys.mjs";
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SCRIPT = path.join(REPO_ROOT, "scripts/workshops/sync-deck-keys.mjs");
@@ -89,4 +97,19 @@ test("every wired deck holds the canonical copy and passes --check", () => {
   for (const slug of DECK_KEYS_WORKSHOPS) assert.ok(readFileSync(deckKeysCopyPath(slug)).equals(source), slug);
   const run = spawnSync(process.execPath, [SCRIPT, "--check"], { encoding: "utf8" });
   assert.equal(run.status, 0, run.stderr);
+});
+
+test("a deck with its own engine is the pinned file and keeps the five contract keys", () => {
+  assert.deepEqual(Object.keys(DECK_KEYS_EQUIVALENT), ["angebote-mit-ki-vergleichen"]);
+  for (const [slug, entry] of Object.entries(DECK_KEYS_EQUIVALENT)) {
+    assert.ok(!DECK_KEYS_WORKSHOPS.includes(slug), `${slug} is wired or equivalent, not both`);
+    const bytes = readFileSync(path.join(deckFolder(slug), entry.page));
+    assert.deepEqual(equivalenceProblems(slug, bytes), []);
+    const changed = Buffer.from(bytes.toString("utf8").replace("else if (k === 'p' || k === 'P') togglePresenter();", ""));
+    const problems = equivalenceProblems(slug, changed);
+    assert.equal(problems.length, 2);
+    assert.match(problems[0], /lost/);
+    assert.match(problems[1], /re-check the key equivalence/);
+  }
+  assert.match(equivalenceProblems("unknown", Buffer.from(""))[0], /no key equivalence/);
 });

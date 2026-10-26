@@ -2,6 +2,11 @@
   "$comment": "Per-file, per-rule exceptions for the voice rules in content-lint.mjs. Every entry needs `file` (relative to packages/website; a trailing slash allows a directory), `rule` (a VOICE-* rule id) and a non-empty `reason`. Optional `phrase` narrows the entry to one phrase id from the rule tables. An entry without a reason fails the lint.",
   "entries": [
     {
+      "file": "content/vorlagen/verhandlungsmail.md",
+      "rule": "VOICE-FORM",
+      "reason": "The template is the mail a buyer sends to a supplier's sales office. Sie is the correct form in German business correspondence; the site never addresses the reader in it."
+    },
+    {
       "file": "content/books/ki-arbeitsalltag/06_emails_meetings_berichte.md",
       "rule": "VOICE-FORM",
       "reason": "The chapter quotes a customer reply the model drafts. Sie is the correct form in German business correspondence, so the example keeps it while the chapter around it stays Du."

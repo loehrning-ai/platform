@@ -89,8 +89,6 @@ export interface WorkshopPageCopy {
       readonly lab: string;
       readonly kit: string;
       readonly case: string;
-      /** Card A of a workshop that starts at its demo. */
-      readonly demo: string;
       /** CSS-only pause control (WCAG 2.2.2): label while motion plays, and while it is stopped. */
       readonly pauseOff: string;
       readonly pauseOn: string;
@@ -121,12 +119,6 @@ export interface WorkshopPageCopy {
     readonly kitPageAction: string;
     /** Card A's secondary link to the workshop's practice demo. */
     readonly demoAction: string;
-    /** Meta line of a demo card A, before its minutes: what the demo is. */
-    readonly demoMeta: string;
-    /** Card A's secondary link to the lab when the demo is card A. */
-    readonly labAction: string;
-    /** Card A's secondary link when card A is the demo and the workshop has a deck. */
-    readonly deckAction: (minutes: string) => string;
     /** Screen-reader prefix of the material language ("Sprache: Englisch"). */
     readonly language: string;
     readonly selfHostHeading: string;
@@ -199,6 +191,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
         "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Plan mit Dateierstellung",
         "audit-vorbereitung-mit-ki": "Zum Nachmachen ein Claude-Konto, jeder Plan",
+        "angebote-mit-ki-vergleichen": "Zum Nachmachen ein Claude-Konto mit Codeausführung, jeder Plan",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
@@ -234,7 +227,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         lab: "Labor öffnen",
         kit: "Kit herunterladen",
         case: "Fall ansehen",
-        demo: "Demo öffnen",
         pauseOff: "Bewegung anhalten",
         pauseOn: "Bewegung starten",
         pauseLabel: "Bewegung pausieren",
@@ -275,9 +267,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       downloadAction: "Download",
       kitPageAction: "Kit ansehen",
       demoAction: "Demo öffnen",
-      demoMeta: "Kit als Demo",
-      labAction: "Vertiefung im Labor",
-      deckAction: (minutes) => `Folien · ${minutes}`,
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
@@ -349,6 +338,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
           "Claude desktop app and a Claude plan that includes Claude Code",
         "esg-berichte-mit-ki": "To replay it, a Claude plan with file creation",
         "audit-vorbereitung-mit-ki": "To replay it, a Claude account on any plan",
+        "angebote-mit-ki-vergleichen": "To replay it, a Claude account with code execution, any plan",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Self-paced about ${minutes} min`,
@@ -381,7 +371,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         lab: "Open the lab",
         kit: "Download the kit",
         case: "See the case",
-        demo: "Open the demo",
         pauseOff: "Stop motion",
         pauseOn: "Start motion",
         pauseLabel: "Pause motion",
@@ -422,9 +411,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       downloadAction: "Download",
       kitPageAction: "View the kit",
       demoAction: "Open the demo",
-      demoMeta: "Kit as a demo",
-      labAction: "Go further in the lab",
-      deckAction: (minutes) => `Slides · ${minutes}`,
       language: "Language",
       selfHostHeading: "Run it yourself",
       selfHostBody:

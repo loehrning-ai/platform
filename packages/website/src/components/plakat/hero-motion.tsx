@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ConeScene } from "./hero-cone-scene";
+import { ConvergeScene } from "./hero-converge-scene";
 import { LinksScene } from "./hero-links-scene";
 import { MendScene } from "./hero-mend-scene";
 import { TraceScene } from "./hero-trace-scene";
@@ -30,7 +31,7 @@ import { WeaveScene } from "./hero-weave-scene";
  * stroke-dashoffset move.
  */
 
-export type HeroSceneKey = "cone" | "trace" | "mend" | "weave" | "links";
+export type HeroSceneKey = "cone" | "trace" | "mend" | "weave" | "links" | "converge";
 
 /**
  * Scene key to component. A new workshop adds one import and one line here.
@@ -41,9 +42,10 @@ const HERO_SCENES: Readonly<Partial<Record<HeroSceneKey, () => ReactNode>>> = {
   mend: MendScene,
   weave: WeaveScene,
   links: LinksScene,
+  converge: ConvergeScene,
 };
 
-/** Workshop slug to scene key. All five workshops have one; unwired keys render nothing yet. */
+/** Workshop slug to scene key. All six workshops have one; unwired keys render nothing yet. */
 export const HERO_MOTION: Readonly<Record<string, HeroSceneKey>> = {
   "ki-prognosen-einschaetzen": "cone",
   "geschaeftsberichte-mit-ki-lesen": "trace",
@@ -51,6 +53,8 @@ export const HERO_MOTION: Readonly<Record<string, HeroSceneKey>> = {
   "esg-berichte-mit-ki": "weave",
   // Workshop 05 shows its demo's first screen: eight links by name, the four tests, two hold.
   "audit-vorbereitung-mit-ki": "links",
+  // Workshop 06 shows its demo: three offers meet in one basis, the bars stack and change order.
+  "angebote-mit-ki-vergleichen": "converge",
 };
 
 /** The scene key of a workshop, or undefined for a slug without one. */

@@ -198,6 +198,16 @@ const PORTRAIT_MOTIFS = {
     shape("ink", rect(60, 392, 250, 18)),
     shape("ink", rect(60, 448, 56, 56)),
   ],
+  // W06 Angebote vergleichen (kraft): three offers converge on one basis.
+  // Three ink wedges run in from the left edge, narrow as they cross the
+  // poster and meet as one band at a mid block cut by the right and bottom
+  // edges. Starts below y 230 so the numeral zone stays clear.
+  converge: () => [
+    shape("mid", rect(250, 300, 170, 220)),
+    shape("ink", "M -10 248 L 250 372 L 250 384 L -10 274 Z"),
+    shape("ink", "M -10 340 L 250 384 L 250 396 L -10 366 Z"),
+    shape("ink", "M -10 432 L 250 396 L 250 408 L -10 458 Z"),
+  ],
   // Grundlagenpfad (lemons), numerals 01 to 04.
   disc: () => [shape("mid", circle(300, 392, 168)), shape("ink", circle(118, 300, 40))],
   pair: () => [shape("ink", circle(176, 402, 118)), shape("mid", circle(330, 402, 118))],
@@ -392,6 +402,7 @@ const STRIP_WINDOWS: Record<MotifId, readonly [top: number, bottom: number]> = {
   dome: [196, 500],
   leaves: [168, 380],
   ledger: [220, 500],
+  converge: [236, 500],
   disc: [212, 500],
   pair: [272, 500],
   ring: [243, 500],

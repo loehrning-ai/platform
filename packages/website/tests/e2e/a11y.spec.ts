@@ -22,6 +22,7 @@ const ROUTES = [
   "/feedback",
   "/demos",
   "/demos/audit-vorbereitung-mit-ki",
+  "/demos/angebote-mit-ki-vergleichen",
   "/blog",
   "/blog/eu-ai-act-grundlagen",
   "/blog/ki-in-der-ausbildung",

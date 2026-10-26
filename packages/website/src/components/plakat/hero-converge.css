@@ -1,0 +1,138 @@
+/*
+ * Hero scene "the basis" (Workshop 06, hero-converge-scene.tsx). Base styles = the finished still
+ * frame (the lines drawn, every cost line stacked, the discounts outlined, the rows in the delivered
+ * order C, A, B, C framed). Every animation sits under no-preference; only transform, opacity and
+ * stroke-dashoffset move. 10 s loop: the three offers meet in the basis (0 to 1.4 s) and fan out to
+ * the bars (1.4 to 2 s); freight, one-off costs and storage stack on (2.2 to 4 s), the discounts are
+ * cut back (4 to 4.4 s), the rows move from the goods order to the delivered order (4.6 to 6 s) and
+ * C gets its frame (6.2 to 6.6 s), rest, then all of it fades and starts again. Keyframe
+ * percentages are seconds times ten.
+ */
+.hb-root {
+  overflow: visible;
+  --hb-ink: var(--color-scene-ink);
+  --hb-mid: var(--color-scene-mid);
+  --hb-ground: var(--color-scene-ground);
+  --hb-paper: var(--color-paper);
+}
+.hb-dust { fill: var(--hb-ink); opacity: 0.35; }
+.hb-sheet { fill: var(--hb-paper); stroke: var(--hb-ink); stroke-width: 2.5; }
+.hb-head { fill: var(--hb-ink); }
+.hb-line { fill: none; stroke: var(--hb-ink); stroke-width: 6; stroke-linecap: butt; opacity: 0.3; }
+.hb-basis { fill: var(--hb-paper); stroke: var(--hb-ink); stroke-width: 3; }
+.hb-field { fill: none; stroke: var(--hb-ink); stroke-width: 2; }
+.hb-converge, .hb-fan { fill: none; stroke: var(--hb-ink); stroke-width: 2.5; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.hb-goods { fill: var(--hb-ink); }
+.hb-add { fill: var(--hb-mid); stroke: var(--hb-paper); stroke-width: 1; }
+.hb-neg { fill: var(--hb-paper); stroke: var(--hb-ink); stroke-width: 2; }
+.hb-win { fill: none; stroke: var(--hb-mid); stroke-width: 4; }
+@media (prefers-reduced-motion: no-preference) {
+  .hb-far, .hb-cards, .hb-row, .hb-add, .hb-neg, .hb-win {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .hb-add { transform-origin: left center; }
+  .hb-cards { animation: hb-rise 0.9s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+  .hb-far { animation: hb-drift 10s ease-in-out infinite; }
+  .hb-converge { animation: hb-converge 10s linear infinite; }
+  .hb-fan { animation: hb-fan 10s linear infinite; }
+  .hb-add-1 { animation: hb-add-1 10s linear infinite; }
+  .hb-add-2 { animation: hb-add-2 10s linear infinite; }
+  .hb-add-3 { animation: hb-add-3 10s linear infinite; }
+  .hb-neg { animation: hb-neg 10s linear infinite; }
+  .hb-row-c, .hb-row-a { animation: hb-down-one 10s linear infinite; }
+  .hb-row-b { animation: hb-up-two 10s linear infinite; }
+  .hb-win { animation: hb-win 10s linear infinite; }
+  @keyframes hb-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hb-drift {
+    0%, 50%, 100% { transform: translate(0, 0) }
+    25%, 75% { transform: translate(-6px, 4px) }
+  }
+  @keyframes hb-converge {
+    0% { opacity: 1; stroke-dashoffset: 1; animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1) }
+    14% { opacity: 1; stroke-dashoffset: 0 }
+    93% { opacity: 1; stroke-dashoffset: 0; animation-timing-function: ease-in }
+    97.5% { opacity: 0; stroke-dashoffset: 0 }
+    99.9% { opacity: 0; stroke-dashoffset: 1 }
+    100% { opacity: 1; stroke-dashoffset: 1 }
+  }
+  @keyframes hb-fan {
+    0% { opacity: 1; stroke-dashoffset: 1 }
+    14% { opacity: 1; stroke-dashoffset: 1; animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1) }
+    20% { opacity: 1; stroke-dashoffset: 0 }
+    93% { opacity: 1; stroke-dashoffset: 0; animation-timing-function: ease-in }
+    97.5% { opacity: 0; stroke-dashoffset: 0 }
+    99.9% { opacity: 0; stroke-dashoffset: 1 }
+    100% { opacity: 1; stroke-dashoffset: 1 }
+  }
+  @keyframes hb-add-1 {
+    0% { opacity: 1; transform: scaleX(0) }
+    22% { opacity: 1; transform: scaleX(0); animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1) }
+    28% { opacity: 1; transform: scaleX(1) }
+    93% { opacity: 1; transform: scaleX(1); animation-timing-function: ease-in }
+    97.5% { opacity: 0; transform: scaleX(1) }
+    99.9% { opacity: 0; transform: scaleX(0) }
+    100% { opacity: 1; transform: scaleX(0) }
+  }
+  @keyframes hb-add-2 {
+    0% { opacity: 1; transform: scaleX(0) }
+    28% { opacity: 1; transform: scaleX(0); animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1) }
+    34% { opacity: 1; transform: scaleX(1) }
+    93% { opacity: 1; transform: scaleX(1); animation-timing-function: ease-in }
+    97.5% { opacity: 0; transform: scaleX(1) }
+    99.9% { opacity: 0; transform: scaleX(0) }
+    100% { opacity: 1; transform: scaleX(0) }
+  }
+  @keyframes hb-add-3 {
+    0% { opacity: 1; transform: scaleX(0) }
+    34% { opacity: 1; transform: scaleX(0); animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1) }
+    40% { opacity: 1; transform: scaleX(1) }
+    93% { opacity: 1; transform: scaleX(1); animation-timing-function: ease-in }
+    97.5% { opacity: 0; transform: scaleX(1) }
+    99.9% { opacity: 0; transform: scaleX(0) }
+    100% { opacity: 1; transform: scaleX(0) }
+  }
+  @keyframes hb-neg {
+    0% { opacity: 0 }
+    40% { opacity: 0; animation-timing-function: ease-out }
+    44% { opacity: 1 }
+    93% { opacity: 1; animation-timing-function: ease-in }
+    97.5% { opacity: 0 }
+    100% { opacity: 0 }
+  }
+  @keyframes hb-down-one {
+    0% { opacity: 0; transform: translateY(100px) }
+    4% { opacity: 1; transform: translateY(100px) }
+    46% { opacity: 1; transform: translateY(100px); animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1) }
+    60% { opacity: 1; transform: translateY(0) }
+    93% { opacity: 1; transform: translateY(0); animation-timing-function: ease-in }
+    97.5% { opacity: 0; transform: translateY(0) }
+    100% { opacity: 0; transform: translateY(100px) }
+  }
+  @keyframes hb-up-two {
+    0% { opacity: 0; transform: translateY(-200px) }
+    4% { opacity: 1; transform: translateY(-200px) }
+    46% { opacity: 1; transform: translateY(-200px); animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1) }
+    60% { opacity: 1; transform: translateY(0) }
+    93% { opacity: 1; transform: translateY(0); animation-timing-function: ease-in }
+    97.5% { opacity: 0; transform: translateY(0) }
+    100% { opacity: 0; transform: translateY(-200px) }
+  }
+  @keyframes hb-win {
+    0% { opacity: 0; transform: scale(0.96) }
+    62% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    66% { opacity: 1; transform: scale(1) }
+    93% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.5% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hb-root, .hb-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

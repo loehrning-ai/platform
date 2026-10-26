@@ -21,11 +21,12 @@ import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
 import { FORECASTING_KIT } from "./workshops-forecasting-kit";
 import { AUDIT_WORKSHOP } from "./workshops-audit";
+import { OFFERS_WORKSHOP } from "./workshops-offers";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 import { DECK_KEYS } from "./deck-keys-copy";
 
-/** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
-export type WorkshopNumber = "01" | "02" | "03" | "04" | "05";
+/** Two-digit catalogue number. "06" is the offer comparison workshop (Kraft palette). */
+export type WorkshopNumber = "01" | "02" | "03" | "04" | "05" | "06";
 
 /** When a learner uses a material: before, during or after the session. */
 export type WorkshopPhase = "before" | "during" | "after";
@@ -453,15 +454,17 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       ],
     },
     materials: [
-      // No material here is marked primary: the demo (the kit, made visible) is
-      // where workshop 01 starts (withDemoMaterial). The labs are depth, after it.
+      // Workshop 01 has no slide deck: its labs play that part on card A, and
+      // the demo (the kit, performed) is card A's secondary link.
       {
         label: "Labore · 3 Simulationen",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
         kind: "html",
         language: "en",
         role: "lab",
-        phase: "after",
+        phase: "during",
+        minutes: 45,
+        primary: true,
         description:
           "Vertiefung: drei Simulationen zu Kapazität, Puffern und einem Nachfrageschock.",
       },
@@ -861,14 +864,16 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       ],
     },
     materials: [
-      // No material here is marked primary: the demo is where workshop 01 starts.
+      // No slide deck: the labs play that part on card A, the demo is its secondary link.
       {
         label: "Labs · 3 simulations",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
         kind: "html",
         language: "en",
         role: "lab",
-        phase: "after",
+        phase: "during",
+        minutes: 45,
+        primary: true,
         description:
           "Going further: three simulations on capacity, buffers and a demand shock.",
       },
@@ -1093,9 +1098,9 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 
 /**
  * The workshop's practice demo (src/lib/demos.ts) as one more material, in
- * the page's own language: role "demo", during the session, optional. It is
- * the place to start only for a workshop whose own materials mark none
- * (withDemoMaterial). It is a page on this site (/demos/<slug>, or
+ * the page's own language: role "demo", during the session, optional, never
+ * the place to start: a workshop is its slides and its kit, the demo is one
+ * link away. It is a page on this site (/demos/<slug>, or
  * /en/demos/<slug>), not a file under public/workshops/.
  */
 export function workshopDemoMaterial(
@@ -1132,13 +1137,9 @@ export function workshopFileMaterials(
 
 function withDemoMaterial(workshop: Workshop, locale: Locale): Workshop {
   const material = workshopDemoMaterial(workshop.slug, locale);
-  if (!material) return workshop;
-  // A workshop that marks no material primary starts at its demo (workshop 01:
-  // the demo is its kit, made visible).
-  const start = workshop.materials.some((item) => item.primary)
-    ? material
-    : { ...material, primary: true, optional: false };
-  return { ...workshop, materials: [...workshop.materials, start] };
+  return material
+    ? { ...workshop, materials: [...workshop.materials, material] }
+    : workshop;
 }
 
 export const WORKSHOPS_BY_LOCALE: Readonly<
@@ -1149,12 +1150,14 @@ export const WORKSHOPS_BY_LOCALE: Readonly<
     DATA_READINESS_WORKSHOP.de,
     ESG_REPORTING_WORKSHOP.de,
     AUDIT_WORKSHOP.de,
+    OFFERS_WORKSHOP.de,
   ].map((workshop) => withDemoMaterial(workshop, "de")),
   en: [
     ...WORKSHOPS_EN,
     DATA_READINESS_WORKSHOP.en,
     ESG_REPORTING_WORKSHOP.en,
     AUDIT_WORKSHOP.en,
+    OFFERS_WORKSHOP.en,
   ].map((workshop) => withDemoMaterial(workshop, "en")),
 };
 

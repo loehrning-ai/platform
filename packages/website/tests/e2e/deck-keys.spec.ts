@@ -55,3 +55,83 @@ for (const deck of [
     expect(keys.some((key) => key.startsWith(`deck:${deck.slug}:`))).toBe(true);
   });
 }
+
+/**
+ * Workshop 06 keeps rotfaden's own engine (scripts/workshops/sync-deck-keys.mjs, DECK_KEYS_EQUIVALENT): the
+ * five contract keys behave as everywhere else. It binds more on top (ArrowDown, PageDown and Space forward,
+ * ArrowUp, PageUp back), so only End and the digits are checked as unbound here.
+ */
+test("angebote-mit-ki-vergleichen deck keeps the five contract keys", async ({ page }) => {
+  const scene = () => page.evaluate(() => document.querySelector(".slide[data-active]")?.getAttribute("data-id") ?? "");
+  await page.goto("/workshops/angebote-mit-ki-vergleichen/slides.html");
+  await expect(page.locator('.slide[data-id="cover"]')).toHaveAttribute("data-active", "");
+
+  for (const key of ["End", "5", "0"]) {
+    await page.keyboard.press(key);
+    await expect.poll(scene, key).toBe("cover");
+  }
+  const second = await pressUntilLeavesScene(page, scene, "cover");
+  await page.keyboard.press("ArrowLeft");
+  await expect.poll(scene, "ArrowLeft goes back").toBe("cover");
+
+  await pressUntilLeavesScene(page, scene, "cover");
+  await page.keyboard.press("r");
+  await expect.poll(scene, "bare r resets").toBe("cover");
+  await pressUntilLeavesScene(page, scene, "cover");
+  await page.keyboard.press("Shift+R");
+  await expect.poll(scene, "Shift+R resets").toBe("cover");
+
+  await page.keyboard.press("p");
+  await expect(page.locator("body")).toHaveClass(/\bpresenting\b/);
+  await page.keyboard.press("P");
+  await expect(page.locator("body")).not.toHaveClass(/\bpresenting\b/);
+
+  // Escape leaves an appendix and returns to the scene it was opened from.
+  await pressUntilLeavesScene(page, scene, "cover");
+  expect(await scene()).toBe(second);
+  await page.evaluate(() => {
+    location.hash = "#kostenzeilen/0";
+  });
+  await expect.poll(scene, "the appendix opens").toBe("kostenzeilen");
+  await page.keyboard.press("Escape");
+  await expect.poll(scene, "Escape returns").toBe(second);
+
+  await page.keyboard.press("r");
+  await expect.poll(scene).toBe("cover");
+  const keys = await storageKeys(page);
+  expect(keys.filter((key) => /^(foldline-deck|deck-stage):/.test(key))).toEqual([]);
+});
+
+/** Workshop 06's deck wears the site's frame like decks 01 to 05: back link, mark, visible toolbar with R and P. */
+test("angebote-mit-ki-vergleichen deck links back to its workshop and shows its toolbar", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/workshops/angebote-mit-ki-vergleichen/slides.html");
+  await expect(page).toHaveTitle("Welches Angebot ist günstiger? · Deck · loehrning.ai");
+  const back = page.getByRole("link", { name: "Zurück zur Workshop-Seite" });
+  await expect(back).toBeVisible();
+  await expect(back).toHaveAttribute("href", "/workshops/angebote-mit-ki-vergleichen");
+  await expect(page.locator(".chrome-top .brand").first()).toHaveText("loehrning.ai");
+  const reset = page.locator('#controls [data-act="reset"]');
+  const presenter = page.locator('#controls [data-act="present"]');
+  await expect(reset).toBeVisible();
+  await expect(reset).toHaveText("Neu startenR");
+  await expect(presenter).toHaveText("ModerationP");
+  expect(await page.locator("#controls").evaluate((element) => getComputedStyle(element).opacity)).toBe("1");
+  // Like decks 01 to 05, the back link fades while the mouse rests (so it leaves the mark free) and returns on movement.
+  await expect(back).toHaveAttribute("data-idle", "", { timeout: 6000 });
+  await page.mouse.move(400, 300);
+  await expect(back).not.toHaveAttribute("data-idle", "");
+  await page.evaluate(() => {
+    location.hash = "#exit/1";
+  });
+  await expect(page.locator('.slide[data-id="exit"] .src')).toHaveText("Kit und Demo: loehrning.ai/demos/angebote-mit-ki-vergleichen");
+});
+
+async function pressUntilLeavesScene(page: Page, scene: () => Promise<string>, start: string): Promise<string> {
+  for (let press = 0; press < 12; press += 1) {
+    await page.keyboard.press("ArrowRight");
+    const now = await scene();
+    if (now !== start) return now;
+  }
+  throw new Error(`ArrowRight never left ${start}`);
+}

@@ -238,6 +238,10 @@ describe("<WorkshopDetailContent>", () => {
       const text = rgb(hexOf(key, band.textColorVar ?? "--color-scene-ink"));
       // Display type (40px and up): the words on the band keep 4.4:1 or more.
       expect(contrast(text, painted), `${key} words on their band`).toBeGreaterThanOrEqual(4.4);
+      // A line's box is taller than its band (0.84em), so the same words also
+      // sit on the bare ground: display floor 3 there too (Bogen on Kraft, 1.93,
+      // passed the line above and failed the pixel check).
+      expect(contrast(text, rgb(ground)), `${key} words on the ground`).toBeGreaterThanOrEqual(3);
       // The band is a visible mark on its ground: 1.6:1 or more (a wash that
       // matched the ground marked nothing; idea 35% and autumn 30% were 1.54 and 1.40).
       expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.6);
@@ -250,15 +254,15 @@ describe("<WorkshopDetailContent>", () => {
     const cover = screen
       .getByRole("heading", { level: 1 })
       .closest("[data-cover-band]") as HTMLElement;
-    const demo = w01.materials.find((material) => material.primary)!;
-    const lab = w01.materials.find((material) => material.role === "lab")!;
+    const lab = w01.materials.find((material) => material.primary)!;
+    const demo = w01.materials.find((material) => material.role === "demo")!;
     const w01Kit = w01.materials.find((material) => material.role === "kit")!;
     const stage = container.querySelector("[data-workshop-stage]") as HTMLElement;
-    // W01 starts at its demo (the kit, made visible), the labs are card A's
-    // secondary link, the German kit zip is card B.
-    expect(demo.role).toBe("demo");
+    // W01 has no slide deck: the labs are card A, the demo (the kit, performed)
+    // is card A's secondary link, the German kit zip is card B.
+    expect(lab.role).toBe("lab");
+    expect(within(stage).getByRole("link", { name: /^Labor öffnen/ })).toHaveAttribute("href", lab.href);
     expect(within(stage).getByRole("link", { name: /^Demo öffnen/ })).toHaveAttribute("href", demo.href);
-    expect(within(stage).getByRole("link", { name: /^Vertiefung im Labor/ })).toHaveAttribute("href", lab.href);
     expect(within(stage).getByRole("link", { name: /^Kit herunterladen/ })).toHaveAttribute("href", w01Kit.href);
     expect(w01Kit.href).toMatch(/\/prognose-pruefen-kit\.zip$/);
     // The band holds the poster and the words only: the back link is its one link.
@@ -267,18 +271,13 @@ describe("<WorkshopDetailContent>", () => {
     ).toHaveLength(0);
     unmount();
 
-    // W02: the demo on card A with the slides as its secondary link, the kit
-    // zip on card B, downloaded by name.
+    // W02: the slides on card A, the kit zip on card B, downloaded by name.
     const w02 = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")!;
     const view = render(<WorkshopDetailContent workshop={w02} locale="en" />);
     const enStage = view.container.querySelector("[data-workshop-stage]") as HTMLElement;
-    expect(within(enStage).getByRole("link", { name: /^Open the demo/ })).toHaveAttribute(
+    expect(within(enStage).getByRole("link", { name: /^View the slides/ })).toHaveAttribute(
       "href",
-      w02.materials.find((material) => material.role === "demo")!.href,
-    );
-    expect(within(enStage).getByRole("link", { name: /^Slides · / })).toHaveAttribute(
-      "href",
-      w02.materials.find((material) => material.role === "deck")!.href,
+      w02.materials.find((material) => material.primary)!.href,
     );
     const kit = within(enStage).getByRole("link", { name: /^Download the kit/ });
     expect(kit).toHaveAttribute("href", w02.materials.find((material) => material.role === "kit")!.href);
@@ -490,11 +489,9 @@ describe("<WorkshopDetailContent>", () => {
         // Workshop 01 has no slide deck: its labs play that part, next to its kit.
         const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "kit"] : ["deck", "kit"];
         for (const material of files) expect(allowed, material.href).toContain(material.role);
-        // The one non-file material is the demo page: optional, and primary
-        // only where it is the start (workshop 01, the kit made visible).
+        // The one non-file material is the demo page: optional, never primary.
         const demos = workshop.materials.filter((material) => material.role === "demo");
-        const start = workshop.slug === "ki-prognosen-einschaetzen";
-        expect(demos.map((material) => [material.optional, material.primary ?? false]), workshop.slug).toEqual([[!start, start]]);
+        expect(demos.map((material) => [material.optional, material.primary ?? false]), workshop.slug).toEqual([[true, false]]);
         const { container, unmount } = render(
           <WorkshopDetailContent workshop={workshop} locale={locale} />,
         );
@@ -509,11 +506,11 @@ describe("<WorkshopDetailContent>", () => {
       it(`${locale}/${workshop.slug}: lists no materials, because the two cards reach both files and the demo`, () => {
         const { container } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
         const stage = workshopStage(workshop, locale);
-        const reached = new Set([stage.a?.href, stage.a?.labHref, stage.a?.deck?.href, stage.b?.href]);
+        const reached = new Set([stage.a?.href, stage.b?.href]);
         expect(workshopFileMaterials(workshop).every((material) => reached.has(material.href))).toBe(true);
-        // Card A or its secondary link reaches the demo page.
+        // Card A's secondary link reaches the demo page.
         const demo = workshop.materials.find((material) => material.role === "demo");
-        expect(stage.a?.kind === "demo" ? stage.a.href : stage.a?.demoHref).toBe(demo?.href);
+        expect(stage.a?.demoHref).toBe(demo?.href);
         expect(container.querySelector(`a[href="${demo?.href}"]`)).not.toBeNull();
         expect(container.querySelector("#material, [data-material-row]")).toBeNull();
         expect(screen.queryByRole("heading", { name: locale === "de" ? "Material" : "Materials" })).toBeNull();

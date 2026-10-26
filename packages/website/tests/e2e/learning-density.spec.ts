@@ -36,6 +36,7 @@ const WORKSHOP_ROUTES = [
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
   "/workshops/audit-vorbereitung-mit-ki",
+  "/workshops/angebote-mit-ki-vergleichen",
 ] as const;
 
 async function openLearningRoute(page: Page, route: string): Promise<void> {

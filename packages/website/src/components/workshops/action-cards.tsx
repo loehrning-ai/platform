@@ -21,8 +21,6 @@ interface CardProps {
   readonly plakat: PlakatKey;
   readonly slot: "a" | "b";
   readonly kind: ActionPictureKind;
-  /** The picture when it differs from the kind: a demo card of a workshop with a deck shows the deck's own cover. */
-  readonly picture?: ActionPictureKind;
   readonly material: Parameters<typeof WorkshopMaterialLink>[0]["material"];
   readonly title: string;
   readonly meta: string;
@@ -42,7 +40,6 @@ function Card({
   plakat,
   slot,
   kind,
-  picture,
   material,
   title,
   meta,
@@ -56,7 +53,7 @@ function Card({
         data-action-card={kind}
         className={cx("ac-card", slot === "b" && "ac-card-b", plakatClass(plakat))}
       >
-        <ActionPicture kind={picture ?? kind} slug={workshop.slug} />
+        <ActionPicture kind={kind} slug={workshop.slug} />
         <div className="ac-body">
           <div className="ac-head">
             <WorkshopMaterialLink
@@ -72,21 +69,12 @@ function Card({
           <div className="ac-sub">
             <p className="ac-meta">{meta}</p>
             {secondary ? (
-              // A static file under public/ (the lab, .html) is a plain link; a site page goes through Link.
-              secondary.href.endsWith(".html") ? (
-                <a href={secondary.href} className="ac-secondary">
-                  {secondary.label}
-                  <span className="sr-only">{secondary.spoken}</span>
-                  <ArrowGlyph direction="right" className="ac-secondary-go" />
-                </a>
-              ) : (
-                <Link href={secondary.href} className="ac-secondary">
-                  {secondary.label}
-                  {/* The topic gives the link its context in a list of links. */}
-                  <span className="sr-only">{secondary.spoken}</span>
-                  <ArrowGlyph direction="right" className="ac-secondary-go" />
-                </Link>
-              )
+              <Link href={secondary.href} className="ac-secondary">
+                {secondary.label}
+                {/* The topic gives the link its context in a list of links. */}
+                <span className="sr-only">{secondary.spoken}</span>
+                <ArrowGlyph direction="right" className="ac-secondary-go" />
+              </Link>
             ) : null}
           </div>
         </div>
@@ -99,7 +87,8 @@ function Card({
  * The two big actions of a workshop page, right under the band: card A opens
  * the slides (or the lab for a workshop without a deck), card B downloads the
  * kit (or opens the case). Each is one real link with a stretched hit area;
- * card A carries one small secondary link to the workshop's practice demo,
+ * card A carries one small secondary link to the workshop's practice demo
+ * ("Demo öffnen"; the demo is never card A),
  * and a workshop with a kit page gets one on card B (each a 44px target
  * named with the workshop's topic). Server component, zero script: the pictures move in CSS only
  * (action-cards.css), and the stage's pause control stops them
@@ -118,7 +107,6 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
           plakat={plakat}
           slot="a"
           kind={stage.a.kind}
-          {...(stage.a.deck ? { picture: "slides" as const } : {})}
           material={stage.a.material}
           title={copy.stage[stage.a.kind]}
           meta={stage.a.meta}
@@ -132,23 +120,7 @@ export function ActionCards({ workshop, locale, plakat }: Props): ReactNode {
                   spoken: `: ${topic}`,
                 },
               }
-            : stage.a.labHref
-              ? {
-                  secondary: {
-                    href: stage.a.labHref,
-                    label: copy.labAction,
-                    spoken: `: ${topic}`,
-                  },
-                }
-              : stage.a.deck
-                ? {
-                    secondary: {
-                      href: stage.a.deck.href,
-                      label: copy.deckAction(stage.a.deck.minutes),
-                      spoken: `: ${topic}`,
-                    },
-                  }
-                : {})}
+            : {})}
         />
       ) : null}
       {stage.b ? (

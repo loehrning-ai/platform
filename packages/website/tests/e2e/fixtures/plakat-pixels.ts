@@ -26,6 +26,7 @@ export const PLAKAT_ROUTES = [
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
   "/workshops/audit-vorbereitung-mit-ki",
+  "/workshops/angebote-mit-ki-vergleichen",
   "/kurse",
   "/demos",
   "/blog",

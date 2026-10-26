@@ -27,7 +27,7 @@ interface Props {
 }
 
 /** Workshops that carry the "Neu" meta chip on the hub. */
-const NEW_WORKSHOPS: ReadonlySet<WorkshopNumber> = new Set(["05"]);
+const NEW_WORKSHOPS: ReadonlySet<WorkshopNumber> = new Set(["06"]);
 
 /**
  * The cover-band button is a recommendation, not "the newest": it stays on
@@ -218,8 +218,8 @@ export function WorkshopsContent({ workshops, locale }: Props) {
 
 /**
  * Catalogue index bars in the hero card, one per workshop in number order,
- * widest first. Four pastel washes of the brand palette (the fifth bar cycles
- * back to the first); ink text on each stays above 12:1.
+ * widest first. Four pastel washes of the brand palette (the fifth and sixth
+ * bars cycle back to the first two); ink text on each stays above 12:1.
  */
 const INDEX_WASHES = [
   "bg-brand-pink/70",
@@ -227,7 +227,7 @@ const INDEX_WASHES = [
   "bg-brand-peach/75",
   "bg-brand-acid/80",
 ] as const;
-const INDEX_WIDTHS = ["w-full", "w-[88%]", "w-[76%]", "w-[64%]", "w-[52%]"] as const;
+const INDEX_WIDTHS = ["w-full", "w-[90%]", "w-[81%]", "w-[71%]", "w-[62%]", "w-[52%]"] as const;
 
 /**
  * The hub header on paper (the reviewed look of 6f2617a): a mono kicker, the

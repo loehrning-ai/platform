@@ -53,12 +53,12 @@ const TEXT_LINK =
   "inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-mennige hover:decoration-2 active:decoration-mennige active:decoration-2";
 
 /**
- * The hub: five live trailers, not five posters. A compact IDEA band, then
+ * The hub: six live trailers, not six posters. A compact IDEA band, then
  * a grid of tiles (one column on a phone, two from md, three from lg), each
  * a 16:9 miniature of the demo's own object that plays its story once when
  * first seen and replays on hover or focus (demo-tile-stage.tsx), with the
- * job line, the workshop kicker and what you take home. The sixth cell
- * states the promise all five share.
+ * job line, the workshop kicker and what you take home. A last cell, a
+ * full row, states the promise all six share.
  */
 export default async function DemosPage() {
   const locale = await getRequestLocale();

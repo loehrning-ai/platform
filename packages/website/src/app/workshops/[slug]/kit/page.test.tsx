@@ -27,6 +27,7 @@ describe("workshop kit page route", () => {
       { slug: "ki-prognosen-einschaetzen" },
       { slug: "esg-berichte-mit-ki" },
       { slug: "audit-vorbereitung-mit-ki" },
+      { slug: "angebote-mit-ki-vergleichen" },
     ]);
     expect(dynamicParams).toBe(false);
     getRequestLocaleMock.mockResolvedValue("de");

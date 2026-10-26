@@ -35,8 +35,8 @@ import { RailList } from "./rail-list";
  * JavaScript beyond the rail's focus helper and requests no image.
  */
 
-/** How many workshop demos the rail carries: all five. */
-const RAIL_DEMO_COUNT = 5;
+/** How many workshop demos the rail carries: all six. */
+const RAIL_DEMO_COUNT = 6;
 
 /** The books rail needs at least two titles; one book is the board's row. */
 export const BOOK_RAIL_SHOWN = books.length > 1;
