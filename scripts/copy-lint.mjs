@@ -136,6 +136,64 @@ export const RULES = [
   },
 ];
 
+/**
+ * The v4 language standard (demos v4, "Glas"): the clear-cut rules only, for
+ * the copy that already follows it. They run on every demo intro
+ * (src/lib/demo-cases/<slug>/intro.ts), on every file of a demo whose intro
+ * says SHELL = "v4", and on the v4, claudeScene, catalog and hub blocks of
+ * src/lib/demos-ui-copy.ts. Label roles (chips, buttons, the activity line)
+ * may use the middle dot, so the separator rule only fires on sentences.
+ */
+export const V4_ACRONYMS = new Set([
+  "CSV", "ZIP", "PDF", "ESG", "VSME", "CSRD", "JSON", "HTML", "URL", "API", "ISO", "UTC", "KPI", "ERP", "CRM", "SQL",
+  "DSGVO", "GDPR", "IBAN", "MWST", "USD", "EUR", "CHF", "PLN", "XLSX", "HGB", "IFRS", "WAPE", "MAPE", "NCR", "NCRS",
+]);
+
+export const V4_RULES = [
+  {
+    id: "v4-symbol",
+    why: "no symbols in prose: say „geteilt durch“, „Summe“, „im Mittel“, „Abschnitt“, „plus“, „ergibt“",
+    test: (line) => [
+      ...(line.match(/[→÷×ΣØ§]/g) ?? []),
+      ...[...line.matchAll(/(?:^|\s)([+=])(?=\s|$)/g)].map((hit) => hit[1]),
+      // A middle dot between words in a full sentence is a telegram separator.
+      ...(/[.!?“"]\s*$/.test(line.trim()) ? line.match(/\p{L}\s·\s\p{L}/gu) ?? [] : []),
+    ],
+  },
+  {
+    id: "v4-caps",
+    why: "no ALL CAPS words in sentences: write status words in normal case („belegt“, „Lücke“)",
+    test: (line) => (line.match(/(?<![\p{L}{])[A-ZÄÖÜ]{4,}(?![\p{L}}])/gu) ?? []).filter((word) => !V4_ACRONYMS.has(word)),
+  },
+  {
+    id: "v4-calque",
+    why: "no English calques (Hands on, Ask back, Week from, Please a, I find no, leads by, what tips, Clock:)",
+    test: (line) => line.match(/\b(hands on|ask back|week from|please an? |i find no|leads by|what tips)|\bClock:/gi) ?? [],
+  },
+  {
+    id: "v4-tipp",
+    why: "„Tipp“ reads as the noun „guess“: write „Tippe auf …“ or „Wähle …“",
+    test: (line) => line.match(/\bTipp\s+(?:auf|an|eine?n?|die|das|den)\b/g) ?? [],
+  },
+  {
+    id: "v4-jargon",
+    why: "no words that exist only in our UI (Bühne, Schiene, Kipp, Deins)",
+    test: (line) => line.match(/(?<!\p{L})(Bühne|Schiene|Kipp|Deins)(?!\p{L})/gu) ?? [],
+  },
+  {
+    id: "v4-long",
+    why: "a sentence has at most 25 words",
+    test: (line) =>
+      line
+        .split(/(?<=[.!?])\s+(?=[\p{Lu}„"{$])/u)
+        .filter((sentence) => sentence.split(/\s+/).filter((word) => /[\p{L}\d{]/u.test(word)).length > 25)
+        .map((sentence) => `${sentence.split(/\s+/).slice(0, 6).join(" ")} …`),
+  },
+];
+
+/** The property blocks of demos-ui-copy.ts that already follow the v4 standard. */
+const V4_COPY_BLOCKS = new Set(["v4", "claudeScene", "catalog", "hub"]);
+
 /** Markdown only: a heading that ends in a question mark. */
 const QUESTION_HEADING = {
   id: "question-heading",
@@ -364,15 +422,16 @@ export function zipProse(bytes) {
 
 /* ── Lint ──────────────────────────────────────────────────────────────── */
 
-export function lintLines(file, lines, { markdown = false, code = false } = {}) {
-  const rules = markdown ? [...RULES, QUESTION_HEADING] : RULES;
+export function lintLines(file, lines, { markdown = false, code = false, v4 = false } = {}) {
+  const rules = [...RULES, ...(markdown ? [QUESTION_HEADING] : []), ...(v4 ? V4_RULES : [])];
   const findings = [];
   for (const { line, text } of lines) {
     // In code, a one-word lowercase string is a key or a class name, not copy.
     if (code && /^[a-z][a-z0-9]*$/.test(text.trim())) continue;
     const prose = proseOnly(text);
     for (const rule of rules) {
-      for (const hit of rule.test(rule.id === "dash" || rule.id === QUESTION_HEADING.id ? text : prose)) {
+      const raw = rule.id === "dash" || rule.id === QUESTION_HEADING.id || rule.id.startsWith("v4-");
+      for (const hit of rule.test(raw ? text : prose)) {
         findings.push({ file, line, rule: rule.id, match: hit, text: text.trim().slice(0, 160) });
       }
     }
@@ -380,9 +439,49 @@ export function lintLines(file, lines, { markdown = false, code = false } = {}) 
   return findings;
 }
 
+/**
+ * Which lines of a code file the v4 rules read: every string of a demo intro
+ * and of a v4 demo's folders, the v4 blocks of demos-ui-copy.ts, else none.
+ */
+export function v4Lines(relative, source, lines, shellOf = demoShellOf) {
+  if (/\/src\/lib\/demo-cases\/[^/]+\/intro\.ts$/.test(relative)) return lines;
+  const slug = /\/src\/(?:lib\/demo-cases|components\/demos)\/([^/]+)\//.exec(relative)?.[1];
+  if (slug && shellOf(slug) === "v4") return lines;
+  if (!relative.endsWith("src/lib/demos-ui-copy.ts")) return [];
+  const ts = typescript();
+  const file = ts.createSourceFile("copy.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const ranges = [];
+  const visit = (node) => {
+    if (ts.isPropertyAssignment(node) && ts.isIdentifier(node.name) && V4_COPY_BLOCKS.has(node.name.text)) {
+      ranges.push([file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1, file.getLineAndCharacterOfPosition(node.getEnd()).line + 1]);
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
+  return lines.filter(({ line }) => ranges.some(([from, to]) => line >= from && line <= to));
+}
+
+/** SHELL of a demo, read from its intro.ts ("v3" when there is none). */
+export function demoShellOf(slug) {
+  const intro = path.join(WEBSITE, "src/lib/demo-cases", slug, "intro.ts");
+  if (!existsSync(intro)) return "v3";
+  return /SHELL[^=]*=\s*["']v4["']/.test(readFileSync(intro, "utf8")) ? "v4" : "v3";
+}
+
 export function collectFindings(sources = targets()) {
   const findings = [];
-  for (const file of sources.code) findings.push(...lintLines(rel(file), codeStrings(readFileSync(file, "utf8"), file), { code: true }));
+  for (const file of sources.code) {
+    const source = readFileSync(file, "utf8");
+    const lines = codeStrings(source, file);
+    findings.push(...lintLines(rel(file), lines, { code: true }));
+    const scoped = v4Lines(rel(file), source, lines);
+    if (scoped.length > 0) {
+      findings.push(
+        ...lintLines(rel(file), scoped, { code: true, v4: true }).filter((finding) => finding.rule.startsWith("v4-")),
+      );
+    }
+  }
   for (const file of sources.prose) findings.push(...lintLines(rel(file), proseLines(readFileSync(file, "utf8")), { markdown: file.endsWith(".md") }));
   for (const file of sources.json) findings.push(...lintLines(rel(file), jsonStrings(readFileSync(file, "utf8"))));
   for (const file of sources.html ?? []) findings.push(...lintLines(rel(file), htmlTextLines(readFileSync(file, "utf8"))));

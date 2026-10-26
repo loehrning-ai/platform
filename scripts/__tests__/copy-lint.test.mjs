@@ -124,3 +124,44 @@ test("the targets include every deck and presenter page", () => {
   assert.ok(html.some((file) => file.endsWith("datenbereitschaft-fuer-ki/presenter.html")));
   assert.ok(html.some((file) => file.endsWith("audit-vorbereitung-mit-ki/en/slides.html")));
 });
+
+test("v4 rules: symbols, caps, calques, Tipp as a verb, UI jargon and long sentences", async () => {
+  const { lintLines: lint } = await import("../copy-lint.mjs");
+  const v4 = (text) => lint("x.ts", [{ line: 1, text }], { v4: true }).map((finding) => finding.rule).filter((rule) => rule.startsWith("v4-"));
+  assert.deepEqual(v4("Die Summe ist Σ 12 → 14 Gläser."), ["v4-symbol", "v4-symbol"]);
+  assert.deepEqual(v4("Kosten + Rest = Planzahl."), ["v4-symbol", "v4-symbol"]);
+  assert.deepEqual(v4("Der Satz ist BELEGT, die CSV bleibt."), ["v4-caps"]);
+  assert.deepEqual(v4("Hands on"), ["v4-calque"]);
+  assert.deepEqual(v4("Week from 29 December"), ["v4-calque"]);
+  assert.deepEqual(v4("Tipp auf ein Angebot."), ["v4-tipp"]);
+  assert.deepEqual(v4("Die Bühne zeigt den Kipp."), ["v4-jargon", "v4-jargon"]);
+  assert.deepEqual(v4(Array.from({ length: 26 }, () => "Wort").join(" ") + "."), ["v4-long"]);
+  // Labels may use the middle dot; a sentence may not.
+  assert.deepEqual(v4("4 Min · ohne Konto"), []);
+  assert.deepEqual(v4("Das ist frei · das ist rot."), ["v4-symbol"]);
+  assert.deepEqual(v4("Tippe auf „Weiter“, dann siehst du die Planzahl."), []);
+  // Without the v4 option the old rules alone run.
+  assert.deepEqual(lint("x.ts", [{ line: 1, text: "Die Bühne ist BELEGT." }]), []);
+});
+
+test("v4 rules read the demo intros, v4 demos and the v4 blocks of demos-ui-copy.ts only", async () => {
+  const { v4Lines } = await import("../copy-lint.mjs");
+  const lines = [{ line: 1, text: "a" }];
+  assert.equal(v4Lines("packages/website/src/lib/demo-cases/x/intro.ts", "", lines).length, 1);
+  assert.equal(v4Lines("packages/website/src/lib/demo-cases/x/copy.ts", "", lines, () => "v3").length, 0);
+  assert.equal(v4Lines("packages/website/src/components/demos/x/view.tsx", "", lines, () => "v4").length, 1);
+  const source = 'export const C = { de: { shell: { back: "Zurück" }, v4: { next: "Weiter" } } };';
+  const all = [
+    { line: 1, text: "Zurück" },
+    { line: 1, text: "Weiter" },
+  ];
+  assert.equal(v4Lines("packages/website/src/lib/demos-ui-copy.ts", source, all).length, 2, "one-line source: both on the v4 line");
+  const multi = 'export const C = {\n  shell: { back: "Zurück" },\n  v4: {\n    next: "Weiter",\n  },\n};\n';
+  assert.deepEqual(
+    v4Lines("packages/website/src/lib/demos-ui-copy.ts", multi, [
+      { line: 2, text: "Zurück" },
+      { line: 4, text: "Weiter" },
+    ]).map((line) => line.text),
+    ["Weiter"],
+  );
+});
