@@ -53,7 +53,7 @@ for (const edition of EDITIONS) {
     test("every press walks the main slides in order, then stops", async ({ page }) => {
       await open(page, edition.file);
       const slides = (await plan(page)).filter((slide) => slide.main);
-      expect(slides).toHaveLength(11);
+      expect(slides).toHaveLength(12);
       const expected: Array<[string, number]> = [];
       slides.forEach((slide, i) => {
         for (let step = i === 0 ? 1 : 0; step <= slide.steps; step += 1) expected.push([slide.id, step]);
@@ -71,6 +71,8 @@ for (const edition of EDITIONS) {
     test("ArrowLeft enters the previous slide at its last step", async ({ page }) => {
       await open(page, edition.file);
       await page.keyboard.press("ArrowRight");
+      expect(await state(page)).toMatchObject({ id: "host", step: 0 });
+      await page.keyboard.press("ArrowRight");
       for (let press = 0; press < 3; press += 1) await page.keyboard.press("ArrowRight");
       await page.keyboard.press("ArrowRight");
       expect(await state(page)).toMatchObject({ id: "draft", step: 0 });
@@ -81,11 +83,11 @@ for (const edition of EDITIONS) {
     for (const key of ["r", "Shift+R"]) {
       test(`${key} goes back to the cover and clears votes and timers`, async ({ page }) => {
         await open(page, edition.file);
-        for (let press = 0; press < 4; press += 1) await page.keyboard.press("ArrowRight");
+        for (let press = 0; press < 5; press += 1) await page.keyboard.press("ArrowRight");
         expect(await state(page)).toMatchObject({ id: "request", step: 3 });
         await page.locator('#request [data-vote="estimate"] [data-value="3"]').click();
         await page.locator('#request [data-vote="estimate"] [data-value="5"]').click();
-        await page.evaluate(() => (window as unknown as DeckWindow).DECK.goto(5));
+        await page.evaluate(() => (window as unknown as DeckWindow).DECK.goto(6));
         await page.keyboard.press("ArrowRight");
         await page.keyboard.press("ArrowRight");
         await page.locator("#mission-1 [data-timer-toggle]").click();
@@ -124,7 +126,7 @@ for (const edition of EDITIONS) {
       }
     });
 
-    test("an appendix opens from slide 11 and Escape or ArrowLeft returns there", async ({ page }) => {
+    test("an appendix opens from slide 12 and Escape or ArrowLeft returns there", async ({ page }) => {
       await open(page, edition.file);
       const slides = await plan(page);
       const result = slides.findIndex((slide) => slide.id === "result");
@@ -145,13 +147,25 @@ for (const edition of EDITIONS) {
       expect((await state(page)).id).toBe("result");
     });
 
+    test("a typed appendix hash returns to the slide and step it was typed on", async ({ page }) => {
+      await open(page, edition.file);
+      for (let press = 0; press < 4; press += 1) await page.keyboard.press("ArrowRight");
+      expect(await state(page)).toMatchObject({ id: "request", step: 2 });
+      await page.evaluate(() => { location.hash = "#a1/0"; });
+      await expect.poll(async () => (await state(page)).id, "the hash opens the appendix").toBe("a1");
+      await page.keyboard.press("Escape");
+      expect(await state(page), "Escape").toMatchObject({ id: "request", step: 2 });
+    });
+
     test("the presenter drives the deck; its preview frame binds no keys", async ({ page, context }) => {
       await open(page, edition.file);
       const presenter = await context.newPage();
       await presenter.goto(`/workshops/${SLUG}/presenter.html?deck=${encodeURIComponent(edition.file)}`);
       await expect(presenter.locator("html")).toHaveAttribute("lang", edition.lang);
-      await expect(presenter.locator("#pv-pos")).toHaveText(/01 \/ 11/);
+      await expect(presenter.locator("#pv-pos")).toHaveText(/01 \/ 12/);
       await presenter.locator("#pv-forward").click();
+      await expect.poll(() => state(page).then((s) => s.id)).toBe("host");
+      await presenter.keyboard.press("ArrowRight");
       await expect.poll(() => state(page).then((s) => s.id)).toBe("request");
       await presenter.keyboard.press("ArrowRight");
       await expect.poll(() => state(page).then((s) => s.step)).toBe(1);
@@ -182,7 +196,7 @@ test("reduced motion lands every press on its final frame", async ({ browser }) 
   const context = await browser.newContext({ reducedMotion: "reduce" });
   const page = await context.newPage();
   await open(page, "slides.html");
-  for (let press = 0; press < 3; press += 1) await page.keyboard.press("ArrowRight");
+  for (let press = 0; press < 4; press += 1) await page.keyboard.press("ArrowRight");
   const progress = await page.evaluate(() =>
     Array.from(document.querySelectorAll('#request [data-from="1"]')).map((el) => getComputedStyle(el).getPropertyValue("--p").trim()).map(Number),
   );

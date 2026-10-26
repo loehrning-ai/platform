@@ -25,14 +25,14 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.provenance.reviewedAt).toBe("2026-10-25");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.provenance.liveRunAt).toBeUndefined();
-      expect(workshop.provenance.aiOutputsRecordedAt).toBeUndefined();
+      expect(workshop.provenance.aiOutputsRecordedAt).toBe("2026-10-26");
     }
     expect(de.title).toBe("ESG-Berichte mit KI");
     expect(en.title).toBe("ESG reports with AI");
   });
 
-  it("has the same nine agenda blocks in both locales and follows the run sheet clock", () => {
-    const minutes = [5, 3, 6, 10, 7, 7, 5, 11, 6];
+  it("has the same ten agenda blocks in both locales and follows the run sheet clock", () => {
+    const minutes = [4, 5, 3, 6, 8, 6, 7, 5, 10, 6];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
@@ -46,8 +46,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
 
   it("links each locale to its own deck and kit edition, and labels the zip with its real size", () => {
     const mainSlides = (html: string) => html.match(/<section class="slide[^"]*" id="[^"]+" data-kind="main"/g) ?? [];
-    expect(mainSlides(slides)).toHaveLength(15);
-    expect(mainSlides(slidesEn)).toHaveLength(15);
+    expect(mainSlides(slides)).toHaveLength(19);
+    expect(mainSlides(slidesEn)).toHaveLength(19);
     const files = (workshop: typeof de) => workshop.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length));
     expect(files(de)).toEqual(["slides.html", "crvena-zemja-nachweisprobe.zip"]);
     expect(files(en)).toEqual(["en/slides.html", "crvena-zemja-esg-kit.zip"]);

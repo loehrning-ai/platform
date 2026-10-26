@@ -47,7 +47,16 @@ rotfaden example too; item 7 is this site's frame.
    on the cover ("Workshop 06"), the author `loehrning.ai`, a "← Workshop" link back to the workshop page, and the
    toolbar always shown with "Neu starten R" and "Moderation P" (rotfaden shows it only under a mouse). On a phone held
    sideways the toolbar keeps rotfaden's rule, because it would cover the slide. The typeface stays: the decks of
-   Workshops 01 to 05 set "Typing", a renamed derivative of Inter, and this deck sets Inter.
+   Workshops 01 to 05 set "Typing", a renamed derivative of Inter, and this deck sets Inter. Like the other decks it
+   has no dark slide or band: the cover is light, paper shows behind the stage, and the "Abstimmung" band is paper
+   with an ink frame and outlined number chips instead of solid ink. "← Workshop" fades after 2.5 seconds without
+   mouse movement, as on the other decks, so it does not sit on the loehrning.ai mark while the deck runs. Slide 2 is the host card the other decks
+   share (photo `assets/tim-loehr.jpg`, name, degree, Apple, Red Bull, loehrning.ai); it takes one of the cover's two
+   minutes, so the deck still runs 75 minutes, and its presenter cue sits in `deck-meta` with the others.
+   The key handler stays rotfaden's and is not routed through the shared `deck-keys.js`: the five contract keys work
+   as in Workshops 01 to 05, and on top ArrowDown, PageDown and Space go forward, ArrowUp, PageUp and Shift+Space go
+   back, P toggles the presenter view inside the page instead of a second window, and while that view is open the
+   digits count votes. `scripts/workshops/sync-deck-keys.mjs` records this exception and pins the file by sha256.
 8. **Three presenter notes in the site's words.** "Wer würde diese Antwort an die Chefin weitergeben?" reads "Wer würde
    diese Antwort so weitergeben?", and the "Ungeprüft" mark of scene 4 is "das Urteil" in two notes instead of "der
    Stempel". The site's copy check now reads the notes of every deck.

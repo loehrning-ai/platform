@@ -46,6 +46,8 @@ export const DECK_FILES = [
   "lib/tokens.css",
   "lib/presenter.js",
   "lib/presenter.css",
+  "lib/globe.js",
+  "lib/geo.js",
   "assets/favicon.svg",
 ];
 
@@ -61,6 +63,10 @@ export const REUSED_FONTS = [
   "assets/fonts/Typing-SemiBold.woff2",
   "assets/fonts/Typing-Bold.woff2",
 ];
+
+/** The host photo on slide 2, copied byte for byte from Workshop 03, where it is inventoried. */
+export const HOST_PHOTO = "assets/tim-loehr.jpg";
+export const HOST_PHOTO_SOURCE_RELATIVE = "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/tim-loehr.jpg";
 
 /** Files this folder already publishes and the export keeps byte for byte. */
 export const KEPT_FILES = [
@@ -84,7 +90,7 @@ export const KIT_V3_ZIPS = { "crvena-zemja-nachweisprobe.zip": "crvena-zemja-nac
 export const HELD_PATH_SHA256 = new Set(["8c626bef58fd20e9c340b56e9b85052618d59e3467cef8433e314dfb5f0e0c50"]);
 
 /** Every file the export writes, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_FILES, DECK_KEYS, ...REUSED_FONTS, ...KEPT_FILES, POSTER, ...Object.keys(KIT_V3_ZIPS)].sort();
+export const PUBLISHED_FILES = [...DECK_FILES, DECK_KEYS, ...REUSED_FONTS, HOST_PHOTO, ...KEPT_FILES, POSTER, ...Object.keys(KIT_V3_ZIPS)].sort();
 
 /** Size budget per edition (deck spec §7), in bytes. */
 export const BUDGET = { "slides.html": 160_000, "en/slides.html": 160_000, "lib/scenes.js": 14_000, "lib/presenter.js": 15_000 };
@@ -236,6 +242,7 @@ export async function exportWorkshop(source) {
   for (const name of REUSED_FONTS) {
     written.set(name, readSourceFile(path.join(REPO_ROOT, FONT_SOURCE_RELATIVE), path.basename(name)));
   }
+  written.set(HOST_PHOTO, readSourceFile(REPO_ROOT, HOST_PHOTO_SOURCE_RELATIVE));
   for (const [zip, prefix] of Object.entries(KIT_V3_ZIPS)) {
     if (!existsSync(path.join(WORKSHOP_DIR, zip))) throw new Error(`${WORKSHOP_RELATIVE}/${zip} is missing; build it with scripts/workshop04/kit-v3.mjs`);
     const archive = readSourceFile(WORKSHOP_DIR, zip);

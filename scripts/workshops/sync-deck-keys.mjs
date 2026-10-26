@@ -36,13 +36,14 @@ export const DECK_KEYS_WORKSHOPS = [
  * keys the same way (ArrowRight, ArrowLeft, r or Shift+R, P, Escape out of an appendix; never with Ctrl,
  * Meta or Alt, never in a text field, a held key fires once) and
  * binds more on top: ArrowDown, PageDown and Space also go forward, ArrowUp, PageUp and Shift+Space
- * back, and while its presenter view is open G, T, B, F, the digits and ? work there. The pinned
+ * back, P toggles its presenter view inside the page (no second window), and while that view is open G, T, B, F,
+ * the digits (votes) and ? work there. PORT-LOG item 7 states the same exception. The pinned
  * hash makes any change to the file a deliberate one, re-checked by tests/e2e/deck-keys.spec.ts.
  */
 export const DECK_KEYS_EQUIVALENT = {
   "angebote-mit-ki-vergleichen": {
     page: "slides.html",
-    sha256: "9e86b729b5b777cfc6eed1cacad577075e91cfc90c83346355dc909e2d0c5602",
+    sha256: "85248523708daf34d8a8f5ce0ac0f5ad96e403f795fc8dd5cf6a184a2ef77035",
     extraKeys: ["ArrowDown", "PageDown", "Space", "ArrowUp", "PageUp", "Shift+Space"],
     /** The handler lines that carry the five contract keys. */
     contract: [
