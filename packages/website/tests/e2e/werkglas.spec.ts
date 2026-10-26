@@ -20,6 +20,10 @@ async function surface(page: Page) {
       background: style.backgroundColor,
       filter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter"),
       radius: style.borderTopLeftRadius,
+      border: style.borderTopColor,
+      borderWidth: style.borderTopWidth,
+      shadow: style.boxShadow,
+      color: style.color,
       // "all 0s" is the browser default and moves nothing; only a timed transition counts.
       transition: style.transitionDuration.split(",").every((value) => parseFloat(value) === 0) ? "none" : style.transitionProperty,
       animation: style.animationName,
@@ -54,6 +58,29 @@ test.describe("Werkglas desktop nav", () => {
     });
   }
 
+  test("hangs a square paper menu from the square bar: no rounding, no shadow, ink line", async ({ page }) => {
+    await page.goto("/demos", { waitUntil: "networkidle" });
+    await page.locator('[data-nav-dropdown="praxis"] button').click();
+    const menu = page.locator("#praxis-nav-menu");
+    await expect(menu).toBeVisible();
+    const look = await menu.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { radius: style.borderTopLeftRadius, shadow: style.boxShadow, border: style.borderTopColor, background: style.backgroundColor };
+    });
+    expect(look.radius).toBe("0px");
+    expect(look.shadow).toBe("none");
+    expect(look.border).toBe("rgb(18, 18, 18)");
+    expect(look.background).not.toMatch(/rgba\(.*, 0\.\d+\)/);
+    // Nothing on the bar is rounded either.
+    const rounded = await page.locator("nav[data-chrome] .js-desktop-nav").evaluate((cluster) =>
+      Array.from(cluster.querySelectorAll<HTMLElement>("a, button"))
+        .filter((element) => element.closest("[data-nav-dropdown]") || element.matches('[aria-label*="GitHub"]'))
+        .filter((element) => getComputedStyle(element).borderTopLeftRadius !== "0px")
+        .map((element) => element.textContent?.trim() || element.getAttribute("aria-label")),
+    );
+    expect(rounded).toEqual([]);
+  });
+
   test("keeps reading pages on a solid bar", async ({ page }) => {
     for (const path of ["/blog/eu-ai-act-grundlagen", "/impressum", "/workshops/esg-berichte-mit-ki/kit"]) {
       await page.goto(path, { waitUntil: "networkidle" });
@@ -79,6 +106,36 @@ test.describe("Werkglas desktop nav", () => {
       expect(nav.background).not.toMatch(/rgba\(.*, 0\.\d+\)/);
     });
   }
+
+  test("draws a full ink edge under more contrast: ink border plus an inset ink line", async ({ page }) => {
+    await page.emulateMedia({ contrast: "more" });
+    await page.goto("/demos", { waitUntil: "networkidle" });
+    const nav = await surface(page);
+    expect(nav.background).toBe("rgb(247, 241, 231)");
+    expect(nav.border).toBe("rgb(18, 18, 18)");
+    expect(nav.borderWidth).toBe("1px");
+    expect(nav.shadow).toBe("rgb(18, 18, 18) 0px 0px 0px 1px inset");
+  });
+
+  test("hands the bar to the system colours under forced colours", async ({ page }) => {
+    await page.emulateMedia({ forcedColors: "active" });
+    await page.goto("/demos", { waitUntil: "networkidle" });
+    // The system pair as this browser resolves it, read from a probe.
+    const system = await page.evaluate(() => {
+      const probe = document.createElement("div");
+      probe.style.cssText = "position:absolute;background-color:Canvas;color:CanvasText;border:1px solid CanvasText";
+      document.body.append(probe);
+      const style = getComputedStyle(probe);
+      const pair = { canvas: style.backgroundColor, text: style.color };
+      probe.remove();
+      return pair;
+    });
+    const nav = await surface(page);
+    expect(nav.background).toBe(system.canvas);
+    expect(nav.border).toBe(system.text);
+    expect(nav.color).toBe(system.text);
+    expect(nav.shadow).toBe("none");
+  });
 });
 
 test.describe("Werkglas on a phone", () => {
