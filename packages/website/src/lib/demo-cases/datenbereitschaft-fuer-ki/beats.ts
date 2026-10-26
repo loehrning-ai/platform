@@ -26,7 +26,7 @@ export const BEATS: readonly Beat[] = [
     label: { de: "Wer zählt", en: "Who counts" },
     kitFile: `${KIT}builder/claude-demo/A-export-tables/customer_master.csv`,
   },
-  { id: "grenze", kind: "apply", seconds: 0, label: { de: "Grenze", en: "Boundary" }, kitFile: `${KIT}builder/claude/project/PROJECT-INSTRUCTIONS.txt` },
+  { id: "grenze", kind: "apply", seconds: 0, label: { de: "Sperre", en: "Never show" }, kitFile: `${KIT}builder/claude/project/PROJECT-INSTRUCTIONS.txt` },
   { id: "test", kind: "apply", seconds: 0, label: { de: "Test", en: "Test" }, kitFile: `${KIT}builder/claude-demo/CHECK-YOUR-RESULT.md` },
   { id: "deine-karte", kind: "own", seconds: 0, label: { de: "Deine Karte", en: "Your card" }, kitFile: `${KIT}FRAGEKARTE.md` },
   { id: "mitnehmen", kind: "takehome", seconds: 0, label: { de: "Mitnehmen", en: "Take home" }, kitFile: `${KIT}claude/README.md` },

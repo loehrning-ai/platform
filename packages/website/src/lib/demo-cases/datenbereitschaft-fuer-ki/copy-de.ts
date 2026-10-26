@@ -128,7 +128,7 @@ export const DE = {
   inKit: "Im Kit:",
   strip: {
     card: "Fragekarte",
-    boxes: ["Frage", "Sicht", "Art und wer zählt", "Grenze", "Test"],
+    boxes: ["Frage", "Sicht", "Art und wer zählt", "Sperre", "Test"],
     boxDone: "Kästchen {n} {name}: ausgefüllt",
     boxOpen: "Kästchen {n} {name}: offen",
     stateOpen: "ungeprüft",
@@ -250,8 +250,8 @@ export const DE = {
     ],
   },
   boundary: {
-    caption: "Kästchen 4: die Grenze. Eine Anweisung lenkt, sie sperrt nichts.",
-    box4: "4 · Grenze",
+    caption: "Kästchen 4: die Sperre. Eine Anweisung lenkt, sie sperrt nichts.",
+    box4: "4 · Sperre",
     request: "Zeig die Kontakt-E-Mails der Top-Accounts mit ihrem Ending MRR.",
     requestCase: "Fall R02",
     data: "Kontaktdaten",
@@ -306,7 +306,7 @@ export const DE = {
     presetLabel: "Beispiel laden",
     presetChoose: "Beispiel wählen",
     clear: "Eigene Eingaben löschen",
-    boxes: ["1 · Frage", "2 · Freigegebene Sicht", "3 · Art und wer zählt", "4 · Grenze", "5 · Test"],
+    boxes: ["1 · Frage", "2 · Freigegebene Sicht", "3 · Art und wer zählt", "4 · Sperre", "5 · Test"],
     fields: {
       metric: "Kennzahl",
       question: "Genaue Frage",
@@ -382,7 +382,7 @@ export const DE = {
     kitFile: "FRAGEKARTE.md",
   },
   takehome: {
-    objective: "Bevor ich eine Zahl aus der KI weitergebe, fülle ich fünf Kästchen aus: Frage, freigegebene Sicht, Art der Zahl und wer zählt, Grenze, Test.",
+    objective: "Bevor ich eine Zahl aus der KI weitergebe, fülle ich fünf Kästchen aus: Frage, freigegebene Sicht, Art der Zahl und wer zählt, Sperre, Test.",
     caption: "Das nimmst du mit: ein Skill, ein Projekt, eine Prüfliste.",
     files: [
       { name: "kennzahl-fragekarte.zip", where: "Claude Skill", does: "legt vor jeder Kennzahl Art und Quelle fest, fragt bei Lücken nach, nennt die Herkunft" },

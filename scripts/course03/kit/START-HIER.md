@@ -6,7 +6,7 @@ Firma, die Software im Abo verkauft. Alle Zahlen sind synthetisch.
 Das Ziel in einem Satz:
 
 > Bevor ich eine Zahl aus der KI weitergebe, fülle ich fünf Kästchen aus: Frage, freigegebene Sicht,
-> Art der Zahl und wer zählt, Grenze, Test.
+> Art der Zahl und wer zählt, Sperre, Test.
 
 ## Drei Schritte
 

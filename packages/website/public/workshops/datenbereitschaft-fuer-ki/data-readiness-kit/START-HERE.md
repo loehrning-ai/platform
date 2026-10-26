@@ -6,7 +6,7 @@ that sells software by subscription. All numbers are synthetic.
 The goal in one sentence:
 
 > Before I pass on a number an AI produced, I fill five boxes: question, approved view, kind of number
-> and who counts, boundary, test.
+> and who counts, never show, test.
 
 ## Three steps
 

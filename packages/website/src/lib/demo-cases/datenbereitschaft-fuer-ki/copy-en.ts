@@ -121,7 +121,7 @@ export const EN: Pack = {
   inKit: "In the kit:",
   strip: {
     card: "Question card",
-    boxes: ["Question", "View", "Kind and who counts", "Boundary", "Test"],
+    boxes: ["Question", "View", "Kind and who counts", "Never show", "Test"],
     boxDone: "Box {n} {name}: filled",
     boxOpen: "Box {n} {name}: open",
     stateOpen: "unchecked",
@@ -243,8 +243,8 @@ export const EN: Pack = {
     ],
   },
   boundary: {
-    caption: "Box 4: the boundary. An instruction steers, it locks nothing.",
-    box4: "4 · Boundary",
+    caption: "Box 4: never show. An instruction steers, it locks nothing.",
+    box4: "4 · Never show",
     request: "Show the contact emails of our top accounts with their ending MRR.",
     requestCase: "Case R02",
     data: "Contact data",
@@ -299,7 +299,7 @@ export const EN: Pack = {
     presetLabel: "Load an example",
     presetChoose: "Choose an example",
     clear: "Clear my input",
-    boxes: ["1 · Question", "2 · Approved view", "3 · Kind and who counts", "4 · Boundary", "5 · Test"],
+    boxes: ["1 · Question", "2 · Approved view", "3 · Kind and who counts", "4 · Never show", "5 · Test"],
     fields: {
       metric: "Metric",
       question: "Exact question",
@@ -375,7 +375,7 @@ export const EN: Pack = {
     kitFile: "QUESTION-CARD.md",
   },
   takehome: {
-    objective: "Before I pass on a number an AI produced, I fill five boxes: question, approved view, kind of number and who counts, boundary, test.",
+    objective: "Before I pass on a number an AI produced, I fill five boxes: question, approved view, kind of number and who counts, never show, test.",
     caption: "What you take home: a skill, a Project, a test list.",
     files: [
       { name: "kennzahl-fragekarte.zip", where: "Claude skill", does: "fixes the kind and source before any metric, asks back on gaps, names the trace" },

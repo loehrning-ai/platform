@@ -41,7 +41,7 @@ Quote = rate, Rückfrage = ask back, Ablehnung = refusal, Herkunft = trace.
      Beispiel A, C, N), such nie nach einem Wort wie „active“. Ist ein Code nicht erklärt: frag nach.
    - Heißt eine Spalte `amount`, `value`, `wert`, `betrag` oder `status` und ist nicht definiert:
      frag, ob sie Stand oder Veränderung ist.
-4. **Grenze.** Was in `references/kennzahlen.md` unter „Nie zeigen“ steht: lehne ab, bevor du
+4. **Sperre.** Was in `references/kennzahlen.md` unter „Nie zeigen“ steht: lehne ab, bevor du
    rechnest. Ohne Definition: gib keine Kontaktdaten (E-Mail, Telefon, Anschrift) von Kunden oder
    Personen aus. Pseudonyme Schlüssel sind nicht anonym; nenn sie nicht so. Für eine Kennzahl ohne
    Definition nimm keinen Ersatzwert: lehne ab und sag, was fehlt.
@@ -94,7 +94,7 @@ or dashboard, use the skill `kennzahlen-steckbrief` instead.
    from numerator and denominator, never averaged; denominator 0 means "no rate". Codes such as A,
    C, N are never searched for as words like "active". An undefined `amount`, `value` or `status`:
    ask whether it is a level or a change.
-4. **Boundary.** What `references/kennzahlen.md` lists under "Nie zeigen" (never show): refuse
+4. **Never show.** What `references/kennzahlen.md` lists under "Nie zeigen" (never show): refuse
    before calculating. Without a definition: give out no contact details (e-mail, phone, postal
    address) of customers or people. Pseudonymous keys are not anonymous.
 5. **Trace.** Every answer with a number ends with the trace block above: metric and version,
