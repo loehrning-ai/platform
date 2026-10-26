@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { COPY as OFFERS } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
 import { COPY as AUDIT } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/copy";
 import { COPY as ESG } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
 import { DE as READINESS_DE } from "@/lib/demo-cases/datenbereitschaft-fuer-ki/copy-de";
@@ -13,12 +14,13 @@ const DEMO_WORKSHOPS = [
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
   "audit-vorbereitung-mit-ki",
+  "angebote-mit-ki-vergleichen",
 ];
 const flat = (text: string) => text.replace(/\s+/g, " ").trim();
 const skill = (name: string) => flat(readFileSync(resolve(process.cwd(), "content/skills", name, "SKILL.md"), "utf8"));
 
 describe("workshop objectives (the Lernziel block)", () => {
-  it("covers the five workshops with a demo, and only published workshops", () => {
+  it("covers the six workshops with a demo, and only published workshops", () => {
     expect([...WORKSHOP_OBJECTIVE_SLUGS].sort()).toEqual([...DEMO_WORKSHOPS].sort());
     for (const slug of WORKSHOP_OBJECTIVE_SLUGS) expect(getWorkshopSlugs()).toContain(slug);
   });
@@ -33,6 +35,16 @@ describe("workshop objectives (the Lernziel block)", () => {
       expect(text.length).toBeGreaterThan(10);
       expect(text).not.toMatch(/[‒–—―]/);
     }
+  });
+
+  it("Workshop 06 says what its demo and its field card say", () => {
+    const card = flat(readFileSync(resolve(process.cwd(), "../../scripts/workshop06/kit/karten/feldkarte.md"), "utf8"));
+    for (const locale of ["de", "en"] as const) {
+      const entry = workshopObjective("angebote-mit-ki-vergleichen", locale);
+      expect(entry?.objective).toBe(OFFERS[locale].objective);
+      expect(entry?.card).toEqual(OFFERS[locale].methode.lines);
+    }
+    for (const line of OFFERS.de.methode.lines) expect(card).toContain(flat(line));
   });
 
   it("Workshops 03 to 05 say what their demo says", () => {

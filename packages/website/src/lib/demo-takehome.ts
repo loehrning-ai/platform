@@ -60,6 +60,22 @@ const AUDIT_KIT_DE_EDITION: TakeHomeKit = {
   installDoc: `${AUDIT_KIT_DE}/START-HIER.md`,
 };
 
+/** Workshop 06 ships one German kit; the English page hands out the same zip. */
+const OFFERS = "angebote-vergleichen-kit";
+const OFFERS_KIT: TakeHomeKit = {
+  href: `/workshops/angebote-mit-ki-vergleichen/${OFFERS}.zip`,
+  shown: [
+    `${OFFERS}/kostenzeilen.csv`,
+    `${OFFERS}/ANSWERS.md`,
+    `${OFFERS}/karten/feldkarte.md`,
+    `${OFFERS}/fall/angebot-c-brno.md`,
+    `${OFFERS}/fall/zweiter-fall.csv`,
+    `${OFFERS}/vorlagen/vergleichsbasis.md`,
+  ],
+  instructions: `${OFFERS}/take-home/projekt-anweisungen.md`,
+  installDoc: `${OFFERS}/take-home/INSTALL.md`,
+};
+
 export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
   // Workshop 01 "Die Fehlerliste": built by scripts/workshop01/build-kit.mjs.
   "ki-prognosen-einschaetzen": {
@@ -199,6 +215,13 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
     kit: { de: AUDIT_KIT_DE_EDITION, en: AUDIT_KIT_EN },
     skill: { name: "audit-nachweise" },
     templates: [{ vorlage: "luecken-anfrage" }],
+  },
+  // Workshop 06 "Die Vergleichsbasis": built by scripts/workshop06/build-kit.mjs from the rotfaden example.
+  // One German kit for both locales: the case is German paperwork.
+  "angebote-mit-ki-vergleichen": {
+    kit: { de: OFFERS_KIT, en: OFFERS_KIT },
+    skill: { name: "angebote-vergleichen" },
+    templates: [{ vorlage: "vergleichsbasis" }, { vorlage: "verhandlungsmail" }],
   },
 };
 

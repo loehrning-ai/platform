@@ -1,12 +1,13 @@
 /**
  * The "Lernziel" block of each workshop page: the one sentence the workshop
  * teaches and the three-line card that carries it into your own Claude.
- * Workshops 03 to 05 take both from their demo's copy, so the page, the demo
+ * Workshops 03 to 06 take both from their demo's copy, so the page, the demo
  * and the skill say the same words (workshop-objectives.test.ts holds them in
  * lockstep); Workshops 01 and 02 take them from their kit's start file and
  * their skill.
  */
 import type { Locale } from "@/lib/i18n/locale";
+import { COPY as OFFERS } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
 import { COPY as AUDIT } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/copy";
 import { TEST_ORDER } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/evidence";
 import { COPY as ESG } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
@@ -42,6 +43,19 @@ function esg(locale: Locale): WorkshopObjective {
     objective: copy.regel.objective,
     card: [copy.regel.checks.map(([word]) => word).join(" · "), `${statuses}.`, copy.regel.weakest],
     cardSource: copy.regel.caption,
+  };
+}
+
+/** Workshop 06: the demo's promise and the field card's three lines (karten/feldkarte.md, the method beat). */
+function offers(locale: Locale): WorkshopObjective {
+  const copy = OFFERS[locale];
+  const [basis, bring, decide] = copy.methode.lines;
+  if (!basis || !bring || !decide) throw new Error("Workshop 06: the method beat needs three lines");
+  return {
+    label: LABEL[locale],
+    objective: copy.objective,
+    card: [basis, bring, decide],
+    cardSource: locale === "de" ? "Im Kit: karten/feldkarte.md" : "In the kit: karten/feldkarte.md",
   };
 }
 
@@ -118,6 +132,7 @@ const OBJECTIVES: Readonly<Record<string, Readonly<Record<Locale, WorkshopObject
   },
   "esg-berichte-mit-ki": { de: esg("de"), en: esg("en") },
   "audit-vorbereitung-mit-ki": { de: audit("de"), en: audit("en") },
+  "angebote-mit-ki-vergleichen": { de: offers("de"), en: offers("en") },
 };
 
 export function workshopObjective(slug: string, locale: Locale): WorkshopObjective | undefined {

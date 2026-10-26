@@ -193,6 +193,30 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       paths: { en: "vardar-audit-kit/templates/gap-request.md" },
     },
   },
+  // Workshop 06 take-home: the comparison basis and the negotiation email, the German files byte-identical
+  // to the copies in angebote-vergleichen-kit.zip (vorlagen/). The {{fields}} are filled by the skill or by hand.
+  {
+    slug: "vergleichsbasis",
+    kind: "template",
+    files: { de: "vergleichsbasis.md", en: "en/vergleichsbasis.md" },
+    downloadNames: { de: "vergleichsbasis.md", en: "vergleichsbasis.en.md" },
+    hostPaths: { de: "/demos/angebote-mit-ki-vergleichen", en: "/en/demos/angebote-mit-ki-vergleichen" },
+    inKit: {
+      zip: "/workshops/angebote-mit-ki-vergleichen/angebote-vergleichen-kit.zip",
+      paths: { de: "angebote-vergleichen-kit/vorlagen/vergleichsbasis.md" },
+    },
+  },
+  {
+    slug: "verhandlungsmail",
+    kind: "template",
+    files: { de: "verhandlungsmail.md", en: "en/verhandlungsmail.md" },
+    downloadNames: { de: "verhandlungsmail.md", en: "verhandlungsmail.en.md" },
+    hostPaths: { de: "/demos/angebote-mit-ki-vergleichen", en: "/en/demos/angebote-mit-ki-vergleichen" },
+    inKit: {
+      zip: "/workshops/angebote-mit-ki-vergleichen/angebote-vergleichen-kit.zip",
+      paths: { de: "angebote-vergleichen-kit/vorlagen/verhandlungsmail.md" },
+    },
+  },
 ];
 
 /**

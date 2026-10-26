@@ -1,0 +1,131 @@
+{
+  "$schema": "https://raw.githubusercontent.com/loehrning-ai/rotfaden/main/skills/rotfaden/schemas/demo.schema.json",
+  "version": 1,
+  "kind": "stack",
+  "title": "Welches Angebot ist günstiger?",
+  "question": "Welches Angebot ist günstiger?",
+  "case_line": "Erfundener Fall. Brandtwerk Gerätebau braucht Versandkartons und hat drei Angebote: Nürnberg, Poznań, Brno.",
+  "promise": "Danach kannst du Angebote auf einer gemeinsamen Basis vergleichen: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto.",
+  "data": "kostenzeilen.csv",
+  "stack": {
+    "columns": {
+      "option": "angebot",
+      "line": "zeile",
+      "amount": "betrag",
+      "per": "je",
+      "source": "stelle"
+    },
+    "headline": "Ware",
+    "once": "einmalig",
+    "recurring": "jährlich",
+    "horizon": {
+      "value": 1,
+      "min": 1,
+      "max": 3,
+      "unit": "Jahre",
+      "unit_one": "Jahr"
+    },
+    "format": "eur",
+    "decimals": 0,
+    "better": "lower"
+  },
+  "beats": [
+    {
+      "id": "tipp",
+      "kind": "commit",
+      "label": "Tipp",
+      "caption": "Nach der Ware ist {headline_winner} günstiger, um {headline_gap}.",
+      "lever": "Was kostet geliefert und bezahlt am wenigsten?"
+    },
+    {
+      "id": "kipp",
+      "kind": "reveal",
+      "label": "Kipp",
+      "seconds": 2.6,
+      "caption": "Dein Tipp: {bet}. Geliefert und bezahlt im Jahr ist {last} das teuerste Angebot: {last_total}. {winner} kostet am wenigsten, {gap} weniger als {runner}."
+    },
+    {
+      "id": "methode",
+      "kind": "tool",
+      "label": "Methode",
+      "kit_file": "karten/feldkarte.md",
+      "caption": "Drei Zeilen von der Feldkarte. Das ist die Methode.",
+      "lines": [
+        "Lege die Basis fest, bevor du vergleichst: Menge im Jahr, Preis je Stück, bis ins Werk, einmalige Kosten, Skonto.",
+        "Rechne jedes Angebot auf diese Basis um und schreib zu jeder Zahl, wo sie steht.",
+        "Nenne die Zeile, die entscheidet, und frag nach jeder Zahl, die fehlt."
+      ]
+    },
+    {
+      "id": "papier",
+      "kind": "apply",
+      "label": "Papier",
+      "caption": "{factor}: {winner} ist günstiger, um {gap}. Die Zeile, die entscheidet: {decider}.",
+      "lever": "Der Papierzuschlag von C folgt einem Index. Wie stark steigt er?",
+      "apply": {
+        "param": "scale",
+        "line": "Ware",
+        "option": "C Brno",
+        "index": {
+          "values": [
+            0,
+            3,
+            5,
+            7,
+            10
+          ],
+          "share": 0.6,
+          "label": "Papier +{v} %"
+        }
+      }
+    },
+    {
+      "id": "deins",
+      "kind": "own",
+      "label": "Deins",
+      "caption": "Füg die Zeilen deiner eigenen Angebote ein. Erfundene oder allgemeine Zahlen reichen."
+    },
+    {
+      "id": "mitnehmen",
+      "kind": "takehome",
+      "label": "Mitnehmen",
+      "caption": "Die Dateien, die du gerade bewegt hast, und die Methode für deinen eigenen Claude."
+    }
+  ],
+  "own": {
+    "hint": "Eine Zeile pro Posten: Angebot, Zeile, Betrag, einmalig oder jährlich, dazu wenn du willst die Stelle. Zum Beispiel: Angebot A, Fracht, 1400, jährlich",
+    "fixture": "fall/zweiter-fall.csv"
+  },
+  "takehome": {
+    "line": "Geliefert und bezahlt ist {winner} im Jahr günstiger, um {gap}. Frag vor der Unterschrift nach der Zeile {decider}.",
+    "templates": [
+      "vorlagen/vergleichsbasis.md",
+      "vorlagen/verhandlungsmail.md"
+    ],
+    "instructions": "take-home/projekt-anweisungen.md",
+    "prompt": "take-home/prompt.md",
+    "skill": "take-home/skill/angebote-vergleichen/SKILL.md",
+    "basis": [
+      "Menge im Jahr: 40.000 Kartons BW-K12",
+      "Einheit: Preis je Stück",
+      "Geliefert bis: Werk Brandtwerk, Rampe 3 (bei EXW und FCA zahlt Brandtwerk die Fahrt)",
+      "Einmalige Kosten: Stanzform und Klischee",
+      "Zahlung: Skonto ziehen wir immer"
+    ]
+  },
+  "lockstep": {
+    "b_goods": "raw:B Poznań:Ware",
+    "a_total": "total:A Nürnberg",
+    "b_total": "total:B Poznań",
+    "c_total": "total:C Brno",
+    "c_lead": "diff:A Nürnberg:C Brno",
+    "b_over_a": "diff:B Poznań:A Nürnberg",
+    "c_total_paper10": "total:C Brno?scale=Ware*1.06&option=C Brno"
+  },
+  "links": {
+    "back": {
+      "label": "rotfaden",
+      "href": "https://github.com/loehrning-ai/rotfaden"
+    }
+  }
+}

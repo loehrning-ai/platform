@@ -27,6 +27,7 @@ export const DEMO_SLUGS = [
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
   "audit-vorbereitung-mit-ki",
+  "angebote-mit-ki-vergleichen",
 ] as const;
 
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
@@ -276,6 +277,44 @@ export const demos: readonly Demo[] = [
       tile: {
         hook: "11 files, 8 requests, 2 covered.",
         take: "an evidence index and a skill that counts nothing without a quote",
+      },
+    },
+  },
+  {
+    id: "angebote-mit-ki-vergleichen",
+    slug: "angebote-mit-ki-vergleichen",
+    workshopSlug: "angebote-mit-ki-vergleichen",
+    workshopNumber: "06",
+    plakat: "kraft",
+    motif: "converge",
+    minutes: 4,
+    illustrative: true,
+    evidenceMode: "rule_based",
+    externalActionMode: "none",
+    courseSlug: "ai-native",
+    lastReviewed: "2026-10-26",
+    title: "Die Vergleichsbasis",
+    oneLiner:
+      "Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Tipp zuerst, dann siehst du, welche Zeile entscheidet.",
+    question: "Welches Angebot ist günstiger?",
+    syntheticDataLabel:
+      "Erfundener Fall aus Workshop 06: Brandtwerk Gerätebau und die drei Lieferanten sind erfunden, jede Zahl steht im Kit. Gerechnet in deinem Browser, keine KI, nichts wird gesendet.",
+    job: "Bring drei Angebote auf eine Basis.",
+    tile: {
+      hook: "Der billigste Stückpreis ist das teuerste Angebot.",
+      take: "eine Vergleichsbasis und ein Skill, der keine fehlende Zeile als 0 zählt",
+    },
+    en: {
+      title: "The comparison basis",
+      oneLiner:
+        "Three offers, one basis: same quantity, per unit, delivered, with one-off costs and discount. Guess first, then see which line decides.",
+      question: "Which offer costs less?",
+      syntheticDataLabel:
+        "Invented case from Workshop 06: Brandtwerk Gerätebau and the three suppliers are invented, every number is in the kit. Worked out in your browser, no AI, nothing is sent.",
+      job: "Bring three offers onto one basis.",
+      tile: {
+        hook: "The lowest unit price is the most expensive offer.",
+        take: "a comparison basis and a skill that never counts a missing line as 0",
       },
     },
   },

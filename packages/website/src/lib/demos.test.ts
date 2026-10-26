@@ -17,7 +17,7 @@ const WEBSITE = join(__dirname, "../..");
 
 describe("demo registry", () => {
   it("holds exactly one demo per workshop, keyed by the workshop slug", () => {
-    expect(demos).toHaveLength(5);
+    expect(demos).toHaveLength(6);
     expect(demos.map((demo) => demo.slug)).toEqual([...DEMO_SLUGS]);
     expect(demos.map((demo) => demo.slug).sort()).toEqual(
       getWorkshops("de").map((workshop) => workshop.slug).sort(),
