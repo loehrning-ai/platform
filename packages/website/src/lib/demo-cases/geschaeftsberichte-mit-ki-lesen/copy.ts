@@ -83,7 +83,7 @@ const DE = {
     },
   },
   period: {
-    caption: "Monatssumme oder je Versandwoche? Wähle, wie die Nachfrage verglichen wird.",
+    caption: "Zweites VP-Argument: die Nachfrage. Monatssumme oder je Versandwoche?",
     captionMonth: "Als Monatssumme {g}. Der September hat {sep} Versandwochen, der August {aug}.",
     captionWeek: "Je Versandwoche sinkt CRAFT um {g}. Die fünfte Woche ist herausgerechnet.",
     strip: "Bericht §{section}: CRAFT Stück {g}",
@@ -96,7 +96,7 @@ const DE = {
     rates: "Für Quoten je {per} Stück spielt die Wochenzahl keine Rolle, für Summen schon.",
   },
   trace: {
-    caption: "Tipp auf den Umsatz. Er wird aus den Zeilen der Datei nachgerechnet.",
+    caption: "Drittes VP-Argument: der Umsatz. Tipp darauf, er wird nachgerechnet.",
     captionDone: "{rows} Zeilen, drei Modelle, Stück mal Listenpreis.",
     strip: "Bericht §{section} · CRAFT · {units} Stück",
     button: "Zurückverfolgen",
@@ -362,7 +362,7 @@ const EN: DemoPack = {
     },
   },
   period: {
-    caption: "Month total or per shipping week? Choose how demand gets compared.",
+    caption: "The VP's second argument: demand. Month total or per shipping week?",
     captionMonth: "As a month total {g}. September has {sep} shipping weeks, August {aug}.",
     captionWeek: "Per shipping week CRAFT falls by {g}. The fifth week is divided out.",
     strip: "Report §{section}: CRAFT units {g}",
@@ -375,7 +375,7 @@ const EN: DemoPack = {
     rates: "For rates per {per} units the week count does not matter; for totals it does.",
   },
   trace: {
-    caption: "Tap the revenue. It gets recomputed from the rows of the file.",
+    caption: "The VP's third argument: revenue. Tap it to recompute it from the rows.",
     captionDone: "{rows} rows, three models, units times list price.",
     strip: "Report §{section} · CRAFT · {units} units",
     button: "Trace it",

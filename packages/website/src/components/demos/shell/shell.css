@@ -24,7 +24,7 @@
   }
 }
 
-/* ── Demo bar: back glyph, the one-line H1, the workshop chip ───────────── */
+/* ── Demo bar: back glyph, the H1 (two lines at most), the workshop chip ── */
 .demo-bar {
   display: flex;
   align-items: center;
@@ -49,15 +49,18 @@
   font-size: 0.875rem;
   font-weight: 700;
 }
+/* A long title takes a second line next to a wide chip instead of being cut. */
 .demo-bar-title {
   flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   font-size: 1.125rem;
   font-weight: 700;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.15;
+  overflow-wrap: break-word;
 }
 .demo-bar-chip {
   flex: none;

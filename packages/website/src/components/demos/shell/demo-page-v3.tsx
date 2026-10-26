@@ -23,7 +23,7 @@ const TEXT_LINK =
 /**
  * The demo page every demo runs on (the v3 shell).
  *
- * Phone: a 56px demo bar (back glyph, the one-line H1, the workshop chip),
+ * Phone: a 56px demo bar (back glyph, the H1 on two lines at most, the workshop chip),
  * the beat rail, then the demo's stage and lever own the first screen; the
  * promise and the synthetic-data line follow below the demo. Desktop (from
  * 1024px): a sticky 4/12 column with the caps line, the poster title, the
