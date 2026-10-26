@@ -97,6 +97,7 @@ export const GROUPS = {
       site("test:migrations-tracked", "test:migrations-tracked"),
       root("test:marketing", "test:marketing"),
       root("test:copy-lint", "test:copy-lint"),
+      root("test:claude-recorder", "test:claude-recorder"),
       root("test:deck-keys", "test:deck-keys"),
       root("test:publication-clean", "test:publication-clean"),
       root("test:workspace-contract", "test:workspace-contract"),
