@@ -70,13 +70,13 @@ export const SCENE: ClaudeSceneData | null = {
   ],
   notes: {
     de: [
-      "Ohne Skill rechnet Claude mehrere Zählweisen und entscheidet selbst, welche gilt, meist die mit gleich vielen Wochen in beiden Monaten. Wie es zählt, legt es nicht als Wahl offen.",
-      "Mit Skill stellt Claude zwei Definitionen der Defektrate nebeneinander und verfolgt die 2,51 bis zu den 23 Zeilen der Datei zurück. Am Ende fragt es, welche Definition gelten soll.",
+      "Ohne Skill rechnet Claude mehrere Zählweisen nach und kommt zum selben Schluss. Welche Zählweise künftig gelten soll, schreibt es nicht fest.",
+      "Mit Skill schreibt Claude zwei Definitionen der Defektrate als Steckbriefe auf und verfolgt die 2,51 bis zu den 23 Zeilen der Datei zurück. Am Ende fragt es euch, welche Definition gelten soll.",
       "Bei der Frage nach mehr Marketing raten beide Fassungen zur Nacharbeit. Mit Skill schreibt Claude den Auslöser ausdrücklich in Stück, weil sich Meldungen zusammenlegen lassen.",
     ],
     en: [
-      "Without the skill, Claude computes several ways of counting and decides by itself which one applies. Usually that is the one with the same number of weeks in both months, and it doesn't present that as a choice.",
-      "With the skill, Claude puts two definitions of the defect rate side by side and traces one figure back to its rows in the file. It also says that no team definition was available.",
+      "Without the skill, Claude recomputes several ways of counting and reaches the same conclusion. It doesn't write down which way of counting should apply from now on.",
+      "With the skill, Claude shows two definitions of the defect rate side by side and names the filtered rows behind both figures. It says that no team definition was available and doesn't pick one for you.",
       "Asked about more marketing, both versions recommend rework first. With the skill, Claude writes the trigger in units on purpose, because a target based on records could be met by merging them.",
     ],
   },

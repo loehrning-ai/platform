@@ -4,7 +4,7 @@
  * for the demo carry source "demo"; the kit's own suggestion carries "kit".
  */
 import { CRAFT_MODELS, REPORT } from "./data";
-import { growth, machines, maxMerges, numerator, rate, reading, recordsOf, unitsShipped, type Counter, type Period } from "./definitions";
+import { growth, machines, maxMerges, numerator, rate, reading, recordsOf, unitsShipped, type Counter, type Denom, type Period } from "./definitions";
 
 export type DecisionKey = "rework" | "holdCause" | "vp" | "holdDemand";
 
@@ -18,6 +18,15 @@ export interface Decision {
 export function decide(counter: Counter, period: Period): Decision {
   const key: DecisionKey = counter === "scrapped" ? "rework" : counter === "affected" ? "holdCause" : period === "month" ? "vp" : "holdDemand";
   return { key, counter, period };
+}
+
+/**
+ * Free play: the grid's decision for a card that takes this numerator as a
+ * month total (free play has no period lever). Without a denominator the
+ * figure compares two months of different size, and the grid decides nothing.
+ */
+export function freeDecision(counter: Counter, denom: Denom): Decision | null {
+  return denom === "none" ? null : decide(counter, "month");
 }
 
 export interface Setting {
@@ -35,9 +44,6 @@ export const DEMO_START: Readonly<{ affected: Setting; records: Setting }> = {
   affected: { value: 250, source: "demo" },
   records: { value: REPORT.vpDefectsSep, source: "demo" },
 };
-
-/** The condition the scene-3 card assumes when the recorded take proposes none. */
-export const FALLBACK_CONDITION: Setting = { value: 2, source: "demo" };
 
 export function startTrigger(counter: Counter): Setting {
   return counter === "scrapped" ? KIT_TRIGGER.scrapped : DEMO_START[counter];

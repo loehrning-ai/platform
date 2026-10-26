@@ -65,7 +65,7 @@ function countCaption(pack: DemoPack, fmt: Fmt, state: DemoState, guessLabel: st
   const sentence = counterSentence(pack, fmt, state.counter);
   if (state.visited.length < 3) return [sentence];
   if (state.countEvent === "counterNew") {
-    const all = fmt.t(c.allThree, { sep: recordsOf("sep").length });
+    const all = fmt.t(c.allThree, { total: recordsOf("aug").length + recordsOf("sep").length });
     return guessLabel ? [all, fmt.t(c.guessEcho, { guess: guessLabel })] : [sentence, all];
   }
   return [
@@ -95,12 +95,17 @@ function mergeCaption(pack: DemoPack, fmt: Fmt, state: DemoState): readonly stri
 
 function periodCaption(pack: DemoPack, fmt: Fmt, state: DemoState): readonly string[] {
   const p = pack.period;
-  if (state.period === "week")
+  // The kit's per-week figure always uses the kit's months (the week from 30 September in September).
+  const g3 = fmt.share(Math.abs(growth("week")));
+  if (state.period === "week" && state.septemberEnds === "sep29")
     return [
-      fmt.t(p.perWeek, {
-        g3: fmt.share(Math.abs(growthWith(state.septemberEnds, "week"))),
+      fmt.t(p.perWeekDropped, {
+        last: fmt.date(LAST_WEEK),
+        g4: fmt.share(Math.abs(growthWith("sep29", "week"))),
+        g3,
       }),
     ];
+  if (state.period === "week") return [fmt.t(p.perWeek, { g3 })];
   if (state.septemberEnds === "sep29")
     return [
       fmt.t(p.dropped, {
@@ -164,9 +169,9 @@ function freeCaption(pack: DemoPack, fmt: Fmt, state: DemoState): readonly strin
   const key = freeKey(state.free);
   const r = reading(key);
   const perBase = key.denom === "per1000";
-  return [
+  const sentences = [
     fmt.t(f.reading, {
-      counter: pack.counters[key.counter].label,
+      unit: pack.counters[key.counter].unit,
       denom: perBase ? fmt.t(pack.per) : pack.absolute,
       a: fmt.value(key.counter, r.aug, perBase),
       b: fmt.value(key.counter, r.sep, perBase),
@@ -174,6 +179,9 @@ function freeCaption(pack: DemoPack, fmt: Fmt, state: DemoState): readonly strin
       verdict: pack.verdictPhrase[r.verdict],
     }),
   ];
+  if (key.merges > 0 && key.counter === "records") sentences.push(f.readingMerged);
+  if (key.septemberEnds === "sep29") sentences.push(fmt.t(f.readingEnds, { date: septemberEnd(fmt, "sep29") }));
+  return sentences;
 }
 
 export function captionFor(pack: DemoPack, fmt: Fmt, beat: BeatId, state: DemoState, phase: "intro" | "guided" | "free", ownCards: number): readonly string[] {

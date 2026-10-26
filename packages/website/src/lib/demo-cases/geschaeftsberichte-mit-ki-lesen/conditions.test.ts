@@ -17,6 +17,18 @@ describe.each(["de", "en"] as const)("the %s condition card", (locale) => {
     expect(prompt?.id).toBe("marketing");
   });
 
+  it("marks three gaps, one per open card line, each once and in reading order", () => {
+    const quote = fill(condition.quote, { line: LINE });
+    expect(condition.gaps.map((gap) => gap.line).sort()).toEqual(["denominator", "period", "trigger"]);
+    let at = -1;
+    for (const gap of condition.gaps) {
+      expect(quote.split(gap.phrase).length - 1, gap.phrase).toBe(1);
+      const index = quote.indexOf(gap.phrase);
+      expect(index).toBeGreaterThan(at);
+      at = index;
+    }
+  });
+
   it("counts units, so merging leaves it where it was", () => {
     const before = reading({
       counter: condition.counter,

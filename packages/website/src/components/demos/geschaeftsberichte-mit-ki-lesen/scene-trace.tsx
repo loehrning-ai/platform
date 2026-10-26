@@ -3,8 +3,20 @@
 import { useMemo, useState } from "react";
 import { DataHandle, GlasIcon, GlasReadout } from "@/components/demos/glas";
 import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
-import { CRAFT_MODELS, CRAFT_SKUS, REPORT, WEEK_STARTS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
-import { clampRange, matchesReport, rowsIn, TRACE_ROWS, type WeekRange } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trace";
+import {
+  CRAFT_MODELS,
+  CRAFT_SKUS,
+  REPORT,
+  WEEK_STARTS,
+} from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
+import {
+  clampRange,
+  matchesReport,
+  rowsIn,
+  TRACE_ROWS,
+  type WeekRange,
+} from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trace";
+import { FitBox } from "./fit-box";
 import type { Fmt } from "./fmt";
 import { lerpNumber, useMorph } from "./use-morph";
 
@@ -40,7 +52,12 @@ export function TraceCarpet({
   const t = pack.trace;
   const [active, setActive] = useState<"start" | "end" | null>(null);
   const rows = useMemo(() => rowsIn(range), [range]);
-  const landed = useMorph(rows.length, `${range.from}/${range.to}`, (a, b, share) => (share >= 1 ? b : Math.min(b, lerpNumber(0, b, share))), reducedMotion);
+  const landed = useMorph(
+    rows.length,
+    `${range.from}/${range.to}`,
+    (a, b, share) => (share >= 1 ? b : Math.min(b, lerpNumber(0, b, share))),
+    reducedMotion,
+  );
   const count = Math.floor(landed);
   const arrived = rows.slice(0, count);
   const bins = CRAFT_MODELS.map((model) => {
@@ -54,8 +71,15 @@ export function TraceCarpet({
   const sum = bins.reduce((total, bin) => total + bin.revenue, 0);
   const done = count >= rows.length;
   const match = done && matchesReport(range);
-  const maxBin = Math.max(1, ...bins.map((bin) => bin.revenue), REPORT.craftRevenueEur / 2.2);
-  const landedIds = useMemo(() => new Set(arrived.map((row) => `${row.weekIndex}/${row.skuIndex}`)), [arrived]);
+  const maxBin = Math.max(
+    1,
+    ...bins.map((bin) => bin.revenue),
+    REPORT.craftRevenueEur / 2.2,
+  );
+  const landedIds = useMemo(
+    () => new Set(arrived.map((row) => `${row.weekIndex}/${row.skuIndex}`)),
+    [arrived],
+  );
   const rangeText = (r: WeekRange) =>
     fmt.t(t.range, {
       from: fmt.date(WEEK_STARTS[r.from] as string),
@@ -63,7 +87,7 @@ export function TraceCarpet({
     });
 
   return (
-    <div className="w02-trace" data-match={match ? "" : undefined}>
+    <div className="w02-scene w02-trace" data-match={match ? "" : undefined}>
       <div className="w02-trace-head">
         <p className="w02-report-cell" data-w02-report-cell="">
           {fmt.t(t.reportCell, { eur: fmt.eur(REPORT.craftRevenueEur) })}
@@ -78,103 +102,156 @@ export function TraceCarpet({
           {fmt.t(t.readout, { rows: fmt.n(count), sum: fmt.eur(sum) })}
         </p>
       </div>
-      <svg viewBox={`0 0 ${VIEW.w} ${VIEW.h}`} className="w02-carpet" role="group" aria-label={rangeText(range)}>
-        <defs>
-          <pattern id="w02-e2" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <rect width="3" height="3" className="w02-carpet-ground" />
-            <line x1="0" y1="0" x2="0" y2="3" className="w02-carpet-ink" />
-          </pattern>
-          <pattern id="w02-g1" width="3" height="3" patternUnits="userSpaceOnUse">
-            <rect width="3" height="3" className="w02-carpet-ground" />
-            <circle cx="1.5" cy="1.5" r="0.8" className="w02-carpet-dot" />
-          </pattern>
-        </defs>
-        {WEEK_STARTS.map((week, index) => (
-          <text key={week} x={edgeX(index) + COL / 2} y={TOP - 14} textAnchor="middle" className="w02-carpet-week">
-            {fmt.n(Number(week.slice(8, 10)))}.{fmt.n(Number(week.slice(5, 7)))}.
-          </text>
-        ))}
-        <rect x={edgeX(range.from)} y={TOP - 4} width={edgeX(range.to + 1) - edgeX(range.from)} height={CARPET_H + 8} rx={6} className="w02-brush" />
-        <g className="w02-carpet-rows">
-          {TRACE_ROWS.map((row) => {
-            const inside = row.weekIndex >= range.from && row.weekIndex <= range.to;
-            return (
-              <rect
-                key={`${row.weekIndex}/${row.skuIndex}`}
-                x={edgeX(row.weekIndex) + 2}
-                y={TOP + row.skuIndex * ROW}
-                width={COL - 4}
-                height={ROW - 0.8}
-                className="w02-carpet-row"
-                data-model={row.model}
-                data-in={inside ? "" : undefined}
-                data-landed={landedIds.has(`${row.weekIndex}/${row.skuIndex}`) ? "" : undefined}
-                fill={row.model === "E2" ? "url(#w02-e2)" : row.model === "G1" ? "url(#w02-g1)" : undefined}
-              />
-            );
-          })}
-        </g>
-        <DataHandle
-          x={edgeX(range.from)}
-          y={TOP - 4}
-          label={t.start}
-          valueText={rangeText(range)}
-          onActiveChange={(on) => setActive(on ? "start" : null)}
-          onMove={(point) =>
-            onRange(
-              clampRange({
-                from: Math.min(nearestEdge(point.x), range.to),
-                to: range.to,
-              }),
-            )
-          }
-          onStep={(dx, dy) =>
-            onRange(
-              clampRange({
-                from: Math.min(range.to, range.from + (dx || dy)),
-                to: range.to,
-              }),
-            )
-          }
-        />
-        <DataHandle
-          x={edgeX(range.to + 1)}
-          y={BOTTOM + 4}
-          label={t.end}
-          valueText={rangeText(range)}
-          onActiveChange={(on) => setActive(on ? "end" : null)}
-          onMove={(point) =>
-            onRange(
-              clampRange({
-                from: range.from,
-                to: Math.max(range.from, nearestEdge(point.x) - 1),
-              }),
-            )
-          }
-          onStep={(dx, dy) =>
-            onRange(
-              clampRange({
-                from: range.from,
-                to: Math.max(range.from, range.to + (dx || dy)),
-              }),
-            )
-          }
-        />
-      </svg>
-      {active ? (
-        <div
-          className="w02-trace-readout"
-          style={{
-            left: `${((active === "start" ? edgeX(range.from) : edgeX(range.to + 1)) / VIEW.w) * 100}%`,
-          }}
+      <FitBox ratio={VIEW.w / VIEW.h} min={96}>
+        <svg
+          viewBox={`0 0 ${VIEW.w} ${VIEW.h}`}
+          className="w02-carpet"
+          role="group"
+          aria-label={rangeText(range)}
         >
-          <GlasReadout hidden>{rangeText(range)}</GlasReadout>
-        </div>
-      ) : null}
-      <ul className="w02-bins" aria-label={fmt.t(t.legend, { e1: "E1", e2: "E2", g1: "G1" })}>
+          <defs>
+            <pattern
+              id="w02-e2"
+              width="3"
+              height="3"
+              patternUnits="userSpaceOnUse"
+              patternTransform="rotate(45)"
+            >
+              <rect width="3" height="3" className="w02-carpet-ground" />
+              <line x1="0" y1="0" x2="0" y2="3" className="w02-carpet-ink" />
+            </pattern>
+            <pattern
+              id="w02-g1"
+              width="3"
+              height="3"
+              patternUnits="userSpaceOnUse"
+            >
+              <rect width="3" height="3" className="w02-carpet-ground" />
+              <circle cx="1.5" cy="1.5" r="0.8" className="w02-carpet-dot" />
+            </pattern>
+          </defs>
+          {WEEK_STARTS.map((week, index) => (
+            <text
+              key={week}
+              x={edgeX(index) + COL / 2}
+              y={TOP - 14}
+              textAnchor="middle"
+              className="w02-carpet-week"
+            >
+              {fmt.n(Number(week.slice(8, 10)))}.
+              {fmt.n(Number(week.slice(5, 7)))}.
+            </text>
+          ))}
+          <rect
+            x={edgeX(range.from)}
+            y={TOP - 4}
+            width={edgeX(range.to + 1) - edgeX(range.from)}
+            height={CARPET_H + 8}
+            rx={6}
+            className="w02-brush"
+          />
+          <g className="w02-carpet-rows">
+            {TRACE_ROWS.map((row) => {
+              const inside =
+                row.weekIndex >= range.from && row.weekIndex <= range.to;
+              return (
+                <rect
+                  key={`${row.weekIndex}/${row.skuIndex}`}
+                  x={edgeX(row.weekIndex) + 2}
+                  y={TOP + row.skuIndex * ROW}
+                  width={COL - 4}
+                  height={ROW - 0.8}
+                  className="w02-carpet-row"
+                  data-model={row.model}
+                  data-in={inside ? "" : undefined}
+                  data-landed={
+                    landedIds.has(`${row.weekIndex}/${row.skuIndex}`)
+                      ? ""
+                      : undefined
+                  }
+                  fill={
+                    row.model === "E2"
+                      ? "url(#w02-e2)"
+                      : row.model === "G1"
+                        ? "url(#w02-g1)"
+                        : undefined
+                  }
+                />
+              );
+            })}
+          </g>
+          <DataHandle
+            x={edgeX(range.from)}
+            y={TOP - 4}
+            label={t.start}
+            valueText={rangeText(range)}
+            onActiveChange={(on) => setActive(on ? "start" : null)}
+            onMove={(point) =>
+              onRange(
+                clampRange({
+                  from: Math.min(nearestEdge(point.x), range.to),
+                  to: range.to,
+                }),
+              )
+            }
+            onStep={(dx, dy) =>
+              onRange(
+                clampRange({
+                  from: Math.min(range.to, range.from + (dx || dy)),
+                  to: range.to,
+                }),
+              )
+            }
+          />
+          <DataHandle
+            x={edgeX(range.to + 1)}
+            y={BOTTOM + 4}
+            label={t.end}
+            valueText={rangeText(range)}
+            onActiveChange={(on) => setActive(on ? "end" : null)}
+            onMove={(point) =>
+              onRange(
+                clampRange({
+                  from: range.from,
+                  to: Math.max(range.from, nearestEdge(point.x) - 1),
+                }),
+              )
+            }
+            onStep={(dx, dy) =>
+              onRange(
+                clampRange({
+                  from: range.from,
+                  to: Math.max(range.from, range.to + (dx || dy)),
+                }),
+              )
+            }
+          />
+        </svg>
+        {active ? (
+          <div
+            className="w02-trace-readout"
+            style={{
+              left: `${((active === "start" ? edgeX(range.from) : edgeX(range.to + 1)) / VIEW.w) * 100}%`,
+            }}
+          >
+            <GlasReadout hidden>{rangeText(range)}</GlasReadout>
+          </div>
+        ) : null}
+      </FitBox>
+      <ul
+        className="w02-bins"
+        aria-label={fmt.t(t.legend, { e1: "E1", e2: "E2", g1: "G1" })}
+      >
         {bins.map((bin) => (
-          <li key={bin.code} className="w02-bin" data-model={bin.code} data-locked={match ? "" : undefined}>
-            <span className="w02-bin-name">{fmt.t(t.bin, { model: bin.code, price: fmt.eur(bin.price) })}</span>
+          <li
+            key={bin.code}
+            className="w02-bin"
+            data-model={bin.code}
+            data-locked={match ? "" : undefined}
+          >
+            <span className="w02-bin-name">
+              {fmt.t(t.bin, { model: bin.code, price: fmt.eur(bin.price) })}
+            </span>
             <span className="w02-bin-bar" aria-hidden="true">
               <span
                 style={{

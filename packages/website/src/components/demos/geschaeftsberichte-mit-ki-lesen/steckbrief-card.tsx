@@ -9,7 +9,8 @@ import { lintCard } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/steck
 import { craftLines, craftOwnCard, type CraftChoice } from "./craft-card";
 import type { Fmt } from "./fmt";
 
-const EDITABLE: readonly CardLine[] = ["numerator", "denominator", "period"];
+/** The lines scene 6 lets the visitor change. */
+export const EDITABLE: readonly CardLine[] = ["numerator", "denominator", "period"];
 const SHOWN_RULES = new Set(["R1", "R2", "R3", "R7"]);
 
 /** The findings of the shared lint under each line of the CRAFT card (R1 Vorgänge, R2 no Nenner). */
@@ -27,6 +28,8 @@ function findingsFor(pack: DemoPack, fmt: Fmt, choice: CraftChoice, trigger: num
  * The visitor's CRAFT card: seven lines, each written by the scene that
  * teaches it. In scene 6 the lines Zähler, Nenner and Zeitraum open a sheet
  * to change them, and the shared lint speaks under a line as one sentence.
+ * `only` draws a few lines under a heading of their own (scene 6 on a phone:
+ * the three lines the visitor can still change).
  */
 export function SteckbriefCard({
   pack,
@@ -36,6 +39,8 @@ export function SteckbriefCard({
   reached,
   editable,
   onChange,
+  only,
+  heading,
 }: {
   readonly pack: DemoPack;
   readonly fmt: Fmt;
@@ -44,19 +49,27 @@ export function SteckbriefCard({
   readonly reached: number;
   readonly editable: boolean;
   readonly onChange: (patch: { counter?: Counter; denom?: Denom; period?: Period }) => void;
+  readonly only?: readonly CardLine[];
+  readonly heading?: string;
 }) {
   const [editing, setEditing] = useState<CardLine | null>(null);
   const lines = craftLines(pack, fmt, choice, trigger);
   const findings = editable ? findingsFor(pack, fmt, choice, trigger) : {};
   const c = pack.chip;
   return (
-    <div className="w02-doc w02-card" data-w02-card="">
-      <p className="w02-doc-kicker">
-        {c.label} <span className="w02-card-count">{fmt.t(c.count, { n: linesWritten(reached), max: CARD_LINES.length })}</span>
-      </p>
-      <p className="w02-card-title">{fmt.t(c.title)}</p>
+    <div className="w02-doc w02-card" data-w02-card={only ? "lines" : ""}>
+      {heading ? (
+        <p className="w02-doc-kicker">{heading}</p>
+      ) : (
+        <>
+          <p className="w02-doc-kicker">
+            {c.label} <span className="w02-card-count">{fmt.t(c.count, { n: linesWritten(reached), max: CARD_LINES.length })}</span>
+          </p>
+          <p className="w02-card-title">{fmt.t(c.title)}</p>
+        </>
+      )}
       <dl className="w02-card-lines">
-        {CARD_LINES.map((line) => {
+        {(only ?? CARD_LINES).map((line) => {
           const written = lineWritten(line, reached);
           const canEdit = editable && EDITABLE.includes(line);
           return (

@@ -6,7 +6,7 @@ import { feldFor, GlasButton, GlasChip, GlasSegmented, GlasSheet, GlasSlider, Gl
 import type { BeatId } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/beats";
 import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
 import type { NcrRow } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
-import { decide, startTrigger, TRIGGER_RANGE } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/decide";
+import { decide, freeDecision, startTrigger, TRIGGER_RANGE } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/decide";
 import {
   COUNTERS,
   maxMerges,
@@ -22,27 +22,31 @@ import {
 } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
 import { cardChoice, demoReducer, freeKey, INITIAL_STATE, totalMerges, type DemoState } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/demo-state";
 import { EMPTY_CARD, MAX_CARDS, canAddCard, type OwnCard } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/steckbrief";
-import { scaleX, SCALE_VIEW } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trays";
+import { scaleX, SCALE_VIEW, TRAY_VIEW } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trays";
 import { captionFor, septemberEnd } from "./captions";
 import { ConditionCard } from "./condition-card";
 import { craftOwnCard } from "./craft-card";
+import { DockCaption } from "./dock-caption";
+import { FitBox } from "./fit-box";
 import { formatter, type Fmt } from "./fmt";
 import { OwnCardForm } from "./own";
 import { RecordSheet } from "./record-sheet";
 import { ReportCard } from "./report-card";
 import { ScaleView, type ScaleTick } from "./scale-view";
 import { DecisionRaster, TriggerChecks } from "./scene-decide";
-import { MergeGrid } from "./scene-merge";
+import { MERGE_VIEW, MergeGrid } from "./scene-merge";
 import { PeriodCalendar } from "./scene-period";
 import { TraceCarpet } from "./scene-trace";
 import { SceneMore, SceneTable } from "./sheets";
 import type { KitCardWords } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/skill-file";
-import { SteckbriefCard, SteckbriefChip } from "./steckbrief-card";
+import { EDITABLE, SteckbriefCard, SteckbriefChip } from "./steckbrief-card";
 import { TakeHome, type TakeHomeFiles } from "./takehome";
 import { TraysView } from "./trays-view";
 import "./demo.css";
 
 const GUESSES: readonly Verdict[] = ["worse", "same", "better"];
+const TRAY_RATIO = TRAY_VIEW.w / TRAY_VIEW.h;
+const MERGE_RATIO = MERGE_VIEW.w / MERGE_VIEW.h;
 const TABLE_BEATS = new Set<BeatId | "free">(["zaehlen", "zusammenfassen", "zeitraum", "nachrechnen", "free"]);
 const MORE_BEATS = new Set<BeatId | "free">(["zaehlen", "zeitraum", "nachrechnen", "entscheiden", "free"]);
 const SIDE_BEATS = new Set<BeatId | "free">(["schaetzen", "zaehlen", "zusammenfassen", "zeitraum", "nachrechnen", "free"]);
@@ -121,7 +125,7 @@ export default function Demo({
   const [card, setCard] = useState<OwnCard>(EMPTY_CARD);
   const [cards, setCards] = useState<readonly OwnCard[]>([]);
   const [record, setRecord] = useState<NcrRow | null>(null);
-  const [sheet, setSheet] = useState<"table" | "more" | "levers" | null>(null);
+  const [sheet, setSheet] = useState<"table" | "more" | "levers" | "raster" | null>(null);
   const flat = glas.mode === "solid";
   const reduced = clock.reducedMotion;
   const free = clock.phase === "free";
@@ -145,9 +149,20 @@ export default function Demo({
   const showScale = view === "zaehlen" || view === "free";
   const feld = feldFor("idea", [undefined, undefined, showScale ? { x: scaleX(scale.change) / SCALE_VIEW.w, y: 0.5 } : undefined]);
 
-  const cardView = (editable: boolean) => (
-    <SteckbriefCard pack={pack} fmt={fmt} choice={choice} trigger={trigger} reached={reached} editable={editable} onChange={(patch) => dispatch({ type: "cardLine", ...patch })} />
+  const cardView = (editable: boolean, only?: typeof EDITABLE) => (
+    <SteckbriefCard
+      pack={pack}
+      fmt={fmt}
+      choice={choice}
+      trigger={trigger}
+      reached={reached}
+      editable={editable}
+      only={only}
+      heading={only ? pack.decide.cardLines : undefined}
+      onChange={(patch) => dispatch({ type: "cardLine", ...patch })}
+    />
   );
+  const freeChoice = freeDecision(state.free.counter, state.free.denom);
 
   const counterControl = (value: Counter, onChange: (counter: Counter) => void) => (
     <GlasSegmented
@@ -168,17 +183,19 @@ export default function Demo({
         return (
           <>
             <ReportCard pack={pack} fmt={fmt} compact={state.guess !== null} />
-            <TraysView
-              pack={pack}
-              fmt={fmt}
-              counter="records"
-              denom="per1000"
-              reducedMotion={reduced}
-              flat={flat}
-              resting={state.guess === null}
-              onSelect={setRecord}
-              selected={record?.id}
-            />
+            <FitBox ratio={TRAY_RATIO} min={state.guess === null ? 0 : 96}>
+              <TraysView
+                pack={pack}
+                fmt={fmt}
+                counter="records"
+                denom="per1000"
+                reducedMotion={reduced}
+                flat={flat}
+                resting={state.guess === null}
+                onSelect={setRecord}
+                selected={record?.id}
+              />
+            </FitBox>
           </>
         );
       case "zaehlen":
@@ -186,16 +203,6 @@ export default function Demo({
         return (
           <>
             {view === "zaehlen" ? <ReportCard pack={pack} fmt={fmt} compact /> : null}
-            <TraysView
-              pack={pack}
-              fmt={fmt}
-              counter={free ? state.free.counter : state.counter}
-              denom={free ? state.free.denom : state.denom}
-              reducedMotion={reduced}
-              flat={flat}
-              onSelect={setRecord}
-              selected={record?.id}
-            />
             <ScaleView
               pack={pack}
               fmt={fmt}
@@ -210,9 +217,27 @@ export default function Demo({
                 else dispatch({ type: "counter", counter });
               }}
             />
+            <FitBox ratio={TRAY_RATIO} min={72}>
+              <TraysView
+                pack={pack}
+                fmt={fmt}
+                counter={free ? state.free.counter : state.counter}
+                denom={free ? state.free.denom : state.denom}
+                reducedMotion={reduced}
+                flat={flat}
+                onSelect={setRecord}
+                selected={record?.id}
+              />
+            </FitBox>
             {free ? (
               <p className="w02-free-decision" data-w02-free-decision="">
-                <span className="w02-doc-kicker">{pack.free.decision}</span> {fmt.t(pack.decide.decisions[decide(state.free.counter, "month").key])}
+                {freeChoice ? (
+                  <>
+                    <span className="w02-doc-kicker">{pack.free.decision}</span> {fmt.t(pack.decide.decisions[freeChoice.key])}
+                  </>
+                ) : (
+                  pack.free.noDecision
+                )}
               </p>
             ) : null}
           </>
@@ -240,8 +265,10 @@ export default function Demo({
                 </dd>
               </div>
             </dl>
-            <MergeGrid pack={pack} fmt={fmt} state={state} reducedMotion={reduced} flat={flat} onMerge={(cell) => dispatch({ type: "merge", cell })} />
-            <ConditionCard pack={pack} fmt={fmt} merges={merges} recordedOn={recordedOn} />
+            <FitBox ratio={MERGE_RATIO} min={96}>
+              <MergeGrid pack={pack} fmt={fmt} state={state} reducedMotion={reduced} flat={flat} onMerge={(cell) => dispatch({ type: "merge", cell })} />
+            </FitBox>
+            <ConditionCard pack={pack} fmt={fmt} recordedOn={recordedOn} />
           </>
         );
       }
@@ -261,9 +288,22 @@ export default function Demo({
       case "entscheiden":
         return (
           <div className="w02-decide">
-            {cardView(true)}
             <TriggerChecks pack={pack} fmt={fmt} counter={choice.counter} threshold={trigger} />
-            <DecisionRaster pack={pack} fmt={fmt} counter={choice.counter} period={choice.period} />
+            <div className="w02-outcome" data-w02-outcome="">
+              <p>
+                <span className="w02-doc-kicker">{pack.decide.outcome}</span> {fmt.t(pack.decide.decisions[decide(choice.counter, choice.period).key])}
+              </p>
+              <span className="w02-phone-only">
+                <GlasButton variant="plain" size="compact" trailingIcon="forward" onClick={() => setSheet("raster")} data-w02-raster-open="">
+                  {pack.decide.rasterOpen}
+                </GlasButton>
+              </span>
+            </div>
+            <div className="w02-decide-card">{cardView(true)}</div>
+            <div className="w02-decide-lines">{cardView(true, EDITABLE)}</div>
+            <div className="w02-decide-raster">
+              <DecisionRaster pack={pack} fmt={fmt} counter={choice.counter} period={choice.period} />
+            </div>
             <p className="w02-objective" data-w02-objective="">
               <span className="w02-doc-kicker">{pack.decide.rule}</span> {pack.decide.objective}
             </p>
@@ -307,6 +347,7 @@ export default function Demo({
           </>
         );
       case "schaetzen":
+        // No extra skip button: "Weiter" in the path moves on without a guess.
         return (
           <div className="w02-guess" role="group" aria-label={pack.guess.label}>
             {GUESSES.map((guess) => (
@@ -322,11 +363,6 @@ export default function Demo({
                 {pack.guess.options[guess]}
               </GlasChip>
             ))}
-            {state.guess === null ? (
-              <GlasButton variant="plain" size="compact" onClick={clock.next}>
-                {pack.guess.skip}
-              </GlasButton>
-            ) : null}
           </div>
         );
       case "zaehlen":
@@ -349,6 +385,11 @@ export default function Demo({
             ) : (
               <p className="w02-dock-label">{pack.merge.choose}</p>
             )}
+            {merges > 0 && merges < maxMerges() ? (
+              <GlasButton variant="plain" size="compact" icon="back" onClick={() => dispatch({ type: "undo" })} data-w02-undo="">
+                {pack.merge.undo}
+              </GlasButton>
+            ) : null}
             {merges >= maxMerges() ? (
               <GlasSegmented
                 label={pack.merge.choose}
@@ -390,7 +431,7 @@ export default function Demo({
               step={range.step}
               bigStep={range.step * 10}
               onChange={(value) => dispatch({ type: "trigger", counter: choice.counter, value })}
-              format={(value) => fmt.rate(choice.counter, value)}
+              format={(value) => fmt.t(pack.decide.triggerShort, { v: fmt.rate(choice.counter, value) })}
               valueText={(value) =>
                 fmt.t(pack.decide.triggerValue, {
                   v: fmt.rate(choice.counter, value),
@@ -430,18 +471,14 @@ export default function Demo({
         className="w02-stage"
         dock={
           <DemoDock className="w02-dock">
-            <div className="w02-caption" aria-live="polite" data-w02-caption="">
-              {caption.map((sentence) => (
-                <p key={sentence}>{sentence}</p>
-              ))}
-            </div>
+            <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} />
             {controls()}
           </DemoDock>
         }
       >
         <div className="w02-data" data-view={view} data-w02-view={view}>
           <div className="w02-toolbar" hidden={clock.phase === "intro"}>
-            {view !== "deine-kennzahl" && view !== "mitnehmen" && view !== "entscheiden" ? (
+            {view !== "deine-kennzahl" && view !== "mitnehmen" ? (
               <SteckbriefChip pack={pack} fmt={fmt} reached={reached}>
                 {cardView(false)}
               </SteckbriefChip>
@@ -449,11 +486,6 @@ export default function Demo({
             {TABLE_BEATS.has(view) ? (
               <GlasButton variant="plain" size="compact" onClick={() => setSheet("table")}>
                 {pack.table.open}
-              </GlasButton>
-            ) : null}
-            {view === "zusammenfassen" ? (
-              <GlasButton variant="plain" size="compact" onClick={() => dispatch({ type: "undo" })} disabled={totalMerges(state) === 0}>
-                {pack.merge.undo}
               </GlasButton>
             ) : null}
             {MORE_BEATS.has(view) ? <GlasButton variant="icon" size="compact" icon="info" label={pack.more} onClick={() => setSheet("more")} /> : null}
@@ -467,6 +499,10 @@ export default function Demo({
       <RecordSheet pack={pack} fmt={fmt} row={record} onSelect={setRecord} onClose={() => setRecord(null)} />
       <GlasSheet open={sheet === "table"} onClose={() => setSheet(null)} title={pack.table.title} closeLabel={pack.close} resizeLabel={pack.resize}>
         <SceneTable pack={pack} fmt={fmt} beat={view} ends={state.septemberEnds} range={state.range} />
+      </GlasSheet>
+      <GlasSheet open={sheet === "raster"} onClose={() => setSheet(null)} title={pack.decide.rasterTitle} closeLabel={pack.close} resizeLabel={pack.resize}>
+        <DecisionRaster pack={pack} fmt={fmt} counter={choice.counter} period={choice.period} />
+        <p className="w02-sheet-lead">{pack.decide.raster}</p>
       </GlasSheet>
       <GlasSheet open={sheet === "more"} onClose={() => setSheet(null)} title={pack.more} closeLabel={pack.close} resizeLabel={pack.resize}>
         <div className="w02-more">

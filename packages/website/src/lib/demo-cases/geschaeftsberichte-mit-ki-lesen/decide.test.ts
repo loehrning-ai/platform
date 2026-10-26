@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkTrigger, decide, decisionFacts, DEMO_START, FALLBACK_CONDITION, KIT_TRIGGER, SCRAP_PRICE_EUR, scrapValue, startTrigger } from "./decide";
+import { checkTrigger, decide, decisionFacts, DEMO_START, freeDecision, KIT_TRIGGER, SCRAP_PRICE_EUR, scrapValue, startTrigger } from "./decide";
 import { COUNTERS, PERIODS } from "./definitions";
 
 describe("decide (L22)", () => {
@@ -20,6 +20,11 @@ describe("decide (L22)", () => {
     const keys = COUNTERS.flatMap((counter) => PERIODS.map((period) => decide(counter, period).key));
     expect(new Set(keys).size).toBe(4);
   });
+
+  it("free play: decides by the numerator as a month total, and not at all without a denominator", () => {
+    expect(COUNTERS.map((counter) => freeDecision(counter, "per1000")?.key)).toEqual(["vp", "holdCause", "rework"]);
+    for (const counter of COUNTERS) expect(freeDecision(counter, "none")).toBeNull();
+  });
 });
 
 describe("the trigger (L23)", () => {
@@ -27,7 +32,6 @@ describe("the trigger (L23)", () => {
     expect(KIT_TRIGGER.scrapped).toEqual({ value: 80, source: "kit" });
     expect(DEMO_START.affected).toEqual({ value: 250, source: "demo" });
     expect(DEMO_START.records).toEqual({ value: 2.51, source: "demo" });
-    expect(FALLBACK_CONDITION).toEqual({ value: 2, source: "demo" });
     expect(COUNTERS.map((counter) => startTrigger(counter).source)).toEqual(["demo", "demo", "kit"]);
   });
 
@@ -48,7 +52,7 @@ describe("the trigger (L23)", () => {
     expect(records.mergedToday.toFixed(2)).toBe("1.86");
     expect(records.mergeGameable).toBe(true);
     expect(checkTrigger("records", 1.5).mergeGameable).toBe(false);
-    expect(checkTrigger("records", FALLBACK_CONDITION.value).mergeGameable).toBe(true);
+    expect(checkTrigger("records", 2).mergeGameable).toBe(true);
   });
 });
 

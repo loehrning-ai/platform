@@ -8,13 +8,16 @@ import { cellKey, mergesLeft, type DemoState } from "@/lib/demo-cases/geschaefts
 import type { Rect } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/treemap";
 import { lerpRect } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/treemap";
 import type { Fmt } from "./fmt";
+import { GlassPebble, PebbleDefs } from "./pebble";
 import { useMorph } from "./use-morph";
 
-const VIEW = { w: 360, h: 156 } as const;
+const VIEW = { w: 360, h: 132 } as const;
+/** The grid's drawing size, for the FitBox around it. */
+export const MERGE_VIEW = VIEW;
 const LABEL_W = 46;
-const HEAD_H = 20;
-const ROW_H = 27;
-const SIDE = 14;
+const HEAD_H = 17;
+const ROW_H = 23;
+const SIDE = 13;
 const GAP = 3;
 const MERGE_REACH = 18;
 
@@ -156,10 +159,7 @@ export function MergeGrid({
           <feGaussianBlur in="SourceGraphic" stdDeviation="2.6" result="blur" />
           <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 16 -6" />
         </filter>
-        <pattern id={`mhatch-${ids}`} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="4" height="4" className="w02-hatch-ground" />
-          <line x1="0" y1="0" x2="0" y2="4" className="w02-hatch-line" />
-        </pattern>
+        <PebbleDefs ids={ids} />
       </defs>
       {MACHINES.map((machine) => (
         <text key={machine} x={colX(machine) + 4} y={12} className="w02-merge-head">
@@ -216,17 +216,13 @@ export function MergeGrid({
                 const x = slot.rect.x + (lifted ? drag.dx : 0);
                 const y = slot.rect.y + (lifted ? drag.dy : 0);
                 return (
-                  <rect
+                  <GlassPebble
                     key={slot.row.id}
-                    x={x}
-                    y={y}
-                    width={slot.rect.w}
-                    height={slot.rect.h}
-                    rx={3}
-                    className="w02-pebble-body"
-                    data-scrap={slot.row.scrap ? "" : undefined}
-                    data-lifted={lifted ? "" : undefined}
-                    fill={slot.row.scrap ? undefined : `url(#mhatch-${ids})`}
+                    rect={{ x, y, w: slot.rect.w, h: slot.rect.h }}
+                    scrap={slot.row.scrap}
+                    ids={ids}
+                    flat={flat}
+                    lifted={lifted}
                     style={{ opacity: slot.alive }}
                     onPointerDown={startDrag(slot)}
                     onPointerMove={moveDrag}

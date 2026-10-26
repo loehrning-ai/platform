@@ -7,6 +7,7 @@ import { numerator, unitsShipped, type Counter, type Denom, type Month } from "@
 import { lerpRect, type Rect } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/treemap";
 import { nearestPebble, TRAY_VIEW, trayLayout, type Pebble, type TrayLayout } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trays";
 import type { Fmt } from "./fmt";
+import { GlassPebble, PebbleDefs } from "./pebble";
 import { useMorph } from "./use-morph";
 
 interface Shown {
@@ -115,14 +116,7 @@ export function TraysView({
       aria-label={fmt.t(pack.stageLabel)}
     >
       <defs>
-        <pattern id={`hatch-${ids}`} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="4" height="4" className="w02-hatch-ground" />
-          <line x1="0" y1="0" x2="0" y2="4" className="w02-hatch-line" />
-        </pattern>
-        <linearGradient id={`rim-${ids}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity="0.9" />
-          <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
-        </linearGradient>
+        <PebbleDefs ids={ids} />
       </defs>
       {MONTHS.map((month) => {
         const tray = shown.trays[month];
@@ -168,27 +162,7 @@ export function TraysView({
               data-selected={isSelected ? "" : undefined}
               style={{ opacity: 1 - ghost * 0.82 }}
             >
-              <rect
-                x={rect.x}
-                y={rect.y}
-                width={rect.w}
-                height={rect.h}
-                rx={Math.min(3, rect.w / 3, rect.h / 3)}
-                className="w02-pebble-body"
-                fill={pebble.row.scrap ? undefined : `url(#hatch-${ids})`}
-              />
-              {flat ? null : (
-                <rect
-                  x={rect.x + 0.5}
-                  y={rect.y + 0.5}
-                  width={Math.max(0, rect.w - 1)}
-                  height={Math.max(0, rect.h - 1)}
-                  rx={Math.min(2.5, rect.w / 3, rect.h / 3)}
-                  fill="none"
-                  stroke={`url(#rim-${ids})`}
-                  className="w02-pebble-rim"
-                />
-              )}
+              <GlassPebble rect={rect} scrap={pebble.row.scrap} ids={ids} flat={flat} />
             </g>
           );
         })}

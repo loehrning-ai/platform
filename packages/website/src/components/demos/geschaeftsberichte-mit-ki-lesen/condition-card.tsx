@@ -1,50 +1,113 @@
 "use client";
 
-import { useState } from "react";
-import { GlasButton } from "@/components/demos/glas";
-import { CONDITIONS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/conditions";
+import { useState, type ReactNode } from "react";
+import { GlasButton, GlasSheet } from "@/components/demos/glas";
+import { CONDITIONS, type ConditionGap } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/conditions";
 import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
-import { FALLBACK_CONDITION } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/decide";
-import { mergeStepRate, rate } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
+import { rate } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
 import type { Fmt } from "./fmt";
 
-/**
- * Scene 3's document card: the release condition Claude proposed without the
- * skill, quoted from the recorded take, checked live against the merges.
- * Claude's condition counts affected units, so merging leaves it where it
- * is; the labelled "Angenommen" condition counts records and only the merge
- * meets it.
- */
-export function ConditionCard({ pack, fmt, merges, recordedOn }: { readonly pack: DemoPack; readonly fmt: Fmt; readonly merges: number; readonly recordedOn: string }) {
-  const [open, setOpen] = useState(false);
+type GapLine = ConditionGap["line"];
+
+/** The quote cut at its gap phrases, each gap a button that explains which card line it leaves open. */
+function QuoteWithGaps({
+  quote,
+  gaps,
+  chosen,
+  onChoose,
+  textId,
+}: {
+  readonly quote: string;
+  readonly gaps: readonly ConditionGap[];
+  readonly chosen: GapLine | null;
+  readonly onChoose: (line: GapLine) => void;
+  readonly textId: string;
+}) {
+  const parts: ReactNode[] = [];
+  let rest = quote;
+  for (const gap of gaps) {
+    const at = rest.indexOf(gap.phrase);
+    if (at < 0) continue;
+    parts.push(rest.slice(0, at));
+    parts.push(
+      <button key={gap.line} type="button" className="w02-gap" data-gap={gap.line} aria-pressed={chosen === gap.line} aria-controls={textId} onClick={() => onChoose(gap.line)}>
+        {gap.phrase}
+      </button>,
+    );
+    rest = rest.slice(at + gap.phrase.length);
+  }
+  parts.push(rest);
+  return <>{parts}</>;
+}
+
+function ConditionBody({
+  pack,
+  fmt,
+  chosen,
+  onChoose,
+  textId,
+}: {
+  readonly pack: DemoPack;
+  readonly fmt: Fmt;
+  readonly chosen: GapLine | null;
+  readonly onChoose: (line: GapLine) => void;
+  readonly textId: string;
+}) {
   const m = pack.merge;
   const condition = CONDITIONS[fmt.locale];
-  const value = rate(condition.counter, "sep", merges);
-  const assumed = mergeStepRate(merges);
-  const met = assumed < FALLBACK_CONDITION.value;
+  const value = rate(condition.counter, "sep");
   return (
-    <div className="w02-doc w02-condition" data-open={open ? "" : undefined} data-w02-condition="">
-      <p className="w02-doc-kicker">
-        {m.conditionHead}, {fmt.t(m.conditionDate, { date: fmt.fullDate(recordedOn) })}
-      </p>
-      <blockquote className="w02-condition-quote" id="w02-condition-quote">
-        „{fmt.t(condition.quote)}“
+    <>
+      <blockquote className="w02-condition-quote">
+        „<QuoteWithGaps quote={fmt.t(condition.quote)} gaps={condition.gaps} chosen={chosen} onChoose={onChoose} textId={textId} />“
       </blockquote>
       <p className="w02-condition-line" data-w02-claude-condition="">
         {fmt.t(m.conditionUnits, { v: fmt.share(value / 1000) })}
       </p>
-      <p className="w02-condition-line w02-assumed" data-w02-assumed="">
-        <span className="w02-tag" data-source="demo">
-          {m.assumedTag}
-        </span>{" "}
-        {fmt.t(m.assumedHead, { t: fmt.n(FALLBACK_CONDITION.value) })}{" "}
-        {met ? fmt.t(m.assumedAfter, { v: fmt.n(assumed, 2) }) : fmt.t(m.assumedBefore, { v: fmt.n(mergeStepRate(0), 2) })}
+      <p className="w02-condition-line" id={textId} aria-live="polite" data-w02-gap-text="">
+        {chosen ? (
+          <>
+            <span className="w02-tag" data-mine="">
+              {m.gapLines[chosen]}
+            </span>{" "}
+            {m.gaps[chosen]}
+          </>
+        ) : (
+          m.gapsLead
+        )}
       </p>
-      <div className="w02-condition-toggle">
-        <GlasButton variant="plain" size="compact" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="w02-condition-quote">
+    </>
+  );
+}
+
+/**
+ * Scene 3's document card: the release condition Claude proposed without the
+ * skill, quoted word for word from the recorded take. It counts affected
+ * units, so merging leaves it where it is; what it lacks are three lines of a
+ * metric card, marked in the quote (our annotation, never Claude's words). On
+ * a phone the card is a one-line plate that opens the quote in a sheet.
+ */
+export function ConditionCard({ pack, fmt, recordedOn }: { readonly pack: DemoPack; readonly fmt: Fmt; readonly recordedOn: string }) {
+  const [open, setOpen] = useState(false);
+  const [chosen, setChosen] = useState<GapLine | null>(null);
+  const m = pack.merge;
+  const head = `${m.conditionHead}, ${fmt.t(m.conditionDate, { date: fmt.fullDate(recordedOn) })}`;
+  return (
+    <div className="w02-doc w02-condition" data-w02-condition="">
+      <p className="w02-doc-kicker">{head}</p>
+      <div className="w02-condition-body">
+        <ConditionBody pack={pack} fmt={fmt} chosen={chosen} onChoose={setChosen} textId="w02-condition-gap-inline" />
+      </div>
+      <div className="w02-condition-open">
+        <GlasButton variant="plain" size="compact" trailingIcon="forward" onClick={() => setOpen(true)} data-w02-condition-open="">
           {m.conditionRead}
         </GlasButton>
       </div>
+      <GlasSheet open={open} onClose={() => setOpen(false)} title={head} closeLabel={pack.close} resizeLabel={pack.resize}>
+        <div className="w02-condition-sheet">
+          <ConditionBody pack={pack} fmt={fmt} chosen={chosen} onChoose={setChosen} textId="w02-condition-gap-sheet" />
+        </div>
+      </GlasSheet>
     </div>
   );
 }

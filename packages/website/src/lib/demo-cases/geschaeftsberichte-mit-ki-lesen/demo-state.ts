@@ -198,7 +198,13 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
       };
     case "period":
       if (action.period === state.period) return state;
-      return { ...state, period: action.period, periodEvent: "period" };
+      // Per shipping week the kit's month rule applies again: the week from 30 September goes back to September.
+      return {
+        ...state,
+        period: action.period,
+        periodEvent: "period",
+        septemberEnds: action.period === "week" ? "oct6" : state.septemberEnds,
+      };
     case "range":
       return { ...state, range: clampRange(action.range), rangeTouched: true };
     case "trigger":
