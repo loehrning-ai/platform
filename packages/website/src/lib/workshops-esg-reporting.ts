@@ -10,7 +10,7 @@ const base = "/workshops/esg-berichte-mit-ki";
  * written by scripts/workshop04/export-esg-passport.mjs, the two kit editions (v3, "Nachweisprobe")
  * by scripts/workshop04/kit-v3.mjs (repository root). Every number in this copy is printed in the
  * deck or the kit, and the company, its files and its certificates are invented. The deck has a German
- * edition (slides.html) and an English one (en/slides.html), 15 slides each plus an appendix; the
+ * edition (slides.html) and an English one (en/slides.html), 19 slides each plus an appendix; the
  * agenda follows the planned time in its speaker notes. Tim demos Claude while the room plays; the
  * kit is the take-home assignment.
  */
@@ -20,7 +20,7 @@ const base = "/workshops/esg-berichte-mit-ki";
  * against the files. Each locale links its own edition: crvena-zemja-nachweisprobe.zip (German) on the
  * German page, crvena-zemja-esg-kit.zip (English) on the English one, the same kit the demo hands out.
  */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "835 KB", en: "898 KB" };
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "836 KB", en: "898 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -57,9 +57,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG-Berichte mit KI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Drei ESG-Anfragen an ein Weingut. Claude beantwortet sie aus einem Ordner: mit Datei und Zeile oder mit dem Dokument, das fehlt.",
+      "Seit dem 27.09.2026 ist in Deutschland „klimaneutral“ wegen gekaufter Zertifikate verboten. Ein Weingut in Nordmazedonien prüft mit Claude, was es belegen kann.",
     description:
-      "Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
+      "Seit dem 27.09.2026 darf in Deutschland keine Umweltaussage mehr auf gekauften CO₂-Zertifikaten beruhen, und Banken in Nordmazedonien vergeben grüne Kredite der EBRD. Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
@@ -88,14 +88,15 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Du erkennst, welche Antworten sich mit einem nachgereichten Dokument ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
+      { label: "Warum dieser Fall", minutes: 4, activity: "listen", description: "Was in Deutschland und Skopje wirklich passiert ist und welche Frage daraus für ein Weingut folgt." },
       { label: "Ein Satz, eine Datei", minutes: 5, activity: "vote", description: "Würdest du diese Regalkarte so drucken? Erst abstimmen, dann die Datei daneben legen." },
       { label: "Die Nachweisprobe", minutes: 3, activity: "listen", description: "Vier Prüfungen für jede Antwort: Zitat, Zeitraum, Umfang, Freigabe." },
       { label: "Anfragen, Kit und Projekt", minutes: 6, activity: "do", description: "Wer fragt, was im Kit liegt und wie das Claude-Projekt angelegt wird." },
-      { label: "Durchsicht ohne Claude", minutes: 10, activity: "do", description: "Zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
-      { label: "Schritt 1: der Fragebogen", minutes: 7, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
+      { label: "Durchsicht ohne Claude", minutes: 8, activity: "do", description: "Zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
+      { label: "Schritt 1: der Fragebogen", minutes: 6, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
       { label: "Schritt 2: die Werbeaussagen", minutes: 7, activity: "vote", description: "Für jede Aussage entscheiden: darf raus oder nicht." },
       { label: "Schritt 3: das Bankformular", minutes: 5, activity: "do", description: "Eine Zeile selbst mit dem Taschenrechner nachrechnen, dann Claude." },
-      { label: "Register und Nachreichung", minutes: 11, activity: "do", description: "Alle Antworten an einer Stelle, dann ändert ein neues Dokument einige davon." },
+      { label: "Register und Nachreichung", minutes: 10, activity: "do", description: "Alle Antworten an einer Stelle, dann ändert ein neues Dokument einige davon. Zum Schluss: was wir mit Claude gemessen haben, und was nicht." },
       { label: "Drei Sätze und Mitnehmen", minutes: 6, activity: "write", description: "Drei neue Sätze auf Papier einordnen, dann Skill und Vorlagen für die eigene Firma." },
     ],
     agendaSource: "deck",
@@ -120,6 +121,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-10-25",
+      aiOutputsRecordedAt: "2026-10-26",
       data: "synthetic",
       note: "Auch Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt. Keine Rechtsberatung.",
     },
@@ -209,9 +211,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG reports with AI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Three ESG requests to one winery. Claude answers from one folder: with a file and a line, or with the document that is missing.",
+      "Since 27.09.2026, wine in Germany may not be called climate neutral because of bought credits. A North Macedonian winery checks with Claude what it can prove.",
     description:
-      "Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, has three ESG requests open: a questionnaire from its Swedish importer, seven environmental claims from its own marketing team for German shelves and the website, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room works along on paper or phones: the group finds defects in the files, predicts each result before Claude shows it, and decides on the marketing claims.",
+      "Since 27.09.2026 no environmental claim in Germany may rest on bought carbon credits, and banks in North Macedonia lend green money from the EBRD. Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, has three ESG requests open: a questionnaire from its Swedish importer, seven environmental claims from its own marketing team for German shelves and the website, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room works along on paper or phones: the group finds defects in the files, predicts each result before Claude shows it, and decides on the marketing claims.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
@@ -240,14 +242,15 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
+      { label: "Why this case", minutes: 4, activity: "listen", description: "What actually happened in Germany and Skopje, and the question it leaves a winery with." },
       { label: "One sentence, one file", minutes: 5, activity: "vote", description: "Would you print this shelf card? Vote first, then put the file next to it." },
       { label: "The evidence check", minutes: 3, activity: "listen", description: "Four checks for every answer: quote, period, scope, approval." },
       { label: "Requests, kit and project", minutes: 6, activity: "do", description: "Who asks, what is in the kit and how to set up the Claude Project." },
-      { label: "Review without Claude", minutes: 10, activity: "do", description: "In pairs on paper: file, line and which check fails." },
-      { label: "Step 1: the questionnaire", minutes: 7, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },
+      { label: "Review without Claude", minutes: 8, activity: "do", description: "In pairs on paper: file, line and which check fails." },
+      { label: "Step 1: the questionnaire", minutes: 6, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },
       { label: "Step 2: the marketing claims", minutes: 7, activity: "vote", description: "Decide for each claim: send or not." },
       { label: "Step 3: the bank form", minutes: 5, activity: "do", description: "Work out one line with a calculator yourself, then Claude." },
-      { label: "Register and late document", minutes: 11, activity: "do", description: "Every answer in one place, then a new document changes some of them." },
+      { label: "Register and late document", minutes: 10, activity: "do", description: "Every answer in one place, then a new document changes some of them. Last: what we measured with Claude, and what we did not." },
       { label: "Three sentences and take-home", minutes: 6, activity: "write", description: "Place three new sentences on paper, then the skill and templates for your own company." },
     ],
     agendaSource: "deck",
@@ -272,6 +275,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-10-25",
+      aiOutputsRecordedAt: "2026-10-26",
       data: "synthetic",
       note: "Certificates and documents are invented too; the laws and rules cited are real. Not legal advice.",
     },
