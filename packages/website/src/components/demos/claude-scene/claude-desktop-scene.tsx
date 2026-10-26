@@ -294,7 +294,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
   const produced = recording.produced_files.map((entry) => ({ name: entry.name, bytes: entry.bytes }));
   const nextFollowUp = recording.follow_ups[followUps];
   const status = replay.playing ? copy.statusRunning : frame.done && replay.started ? copy.statusDone : "";
-  const note = scene.notes?.[locale];
+  const note = prompt.notes ?? scene.notes?.[locale];
   const bothSeen = seenVariants.has(`${promptId}:true`) && seenVariants.has(`${promptId}:false`);
   const rejected = prompt.rejected ?? 0;
   const kitList = recording.kit_files.map((entry) => kitFiles[entry.name]).filter((entry): entry is SceneKitFile => Boolean(entry));
@@ -476,7 +476,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
         ) : null}
         {rejected > 0 ? (
           <GlasChip kind="status" glass>
-            {copy.rejected(rejected)}
+            {prompt.rejectedReason ? `${copy.rejected(rejected)}: ${prompt.rejectedReason}` : copy.rejected(rejected)}
           </GlasChip>
         ) : null}
       </p>
