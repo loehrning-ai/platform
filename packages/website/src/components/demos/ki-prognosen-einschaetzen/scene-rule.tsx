@@ -1,13 +1,13 @@
 "use client";
 
-import type { PointerEvent } from "react";
+import { useState, type PointerEvent } from "react";
 import { SvgLens } from "@/components/demos/glas";
-import { LAMP_KEYS, PRUEF, type Checker, type LampKey, type Lamps } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
+import { BIAS_MAX, LAMP_KEYS, PRUEF, TREFFER_MIN, type Checker, type LampKey, type Lamps } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
 import type { DemoPack } from "@/lib/demo-cases/ki-prognosen-einschaetzen/copy";
 import { biasWindow } from "@/lib/demo-cases/ki-prognosen-einschaetzen/derive";
 import { fill } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
 import type { Model } from "@/lib/demo-cases/ki-prognosen-einschaetzen/model";
-import { biasWords, jars, weekSentence } from "./helpers";
+import { biasWords, jars, percent, weekSentence } from "./helpers";
 import { linear, PAD, PersonGlyph, SceneFrame, usePlotSize, useScrub, weekScale } from "./plot";
 
 /** Mean absolute error of the tool and of the rule over the 13 weeks before t (the Messlatte lamp, drawn). */
@@ -35,21 +35,55 @@ export function lampValue(copy: DemoPack, check: Checker, t: number, key: LampKe
   return fill(copy.s5.values.spanne, { hits: lamps.treffer, of: PRUEF });
 }
 
-export function LampRow({ copy, check, t }: { readonly copy: DemoPack; readonly check: Checker; readonly t: number }) {
+/** Below this plot width the bars show a window of ZOOM_WEEKS weeks, ZOOM_AFTER of them after the playhead. */
+const ZOOM_BELOW = 560;
+const ZOOM_WEEKS = 20;
+const ZOOM_AFTER = 3;
+
+/** The question one lamp asks, with its limit. */
+export function lampSentence(copy: DemoPack, key: LampKey): string {
+  if (key === "bias") return fill(copy.s5.lamps.bias, { max: percent(BIAS_MAX, copy.locale, 0) });
+  if (key === "spanne") return fill(copy.s5.lamps.spanne, { min: TREFFER_MIN, of: PRUEF });
+  return copy.s5.lamps[key];
+}
+
+/** A pressed lamp's line: its name, this week's value and its question (the value is hidden in the row on a phone). */
+function lampLine(copy: DemoPack, check: Checker, t: number, key: LampKey): string {
+  const lamps = check.lamps(t);
+  const value = lamps ? lampValue(copy, check, t, key, lamps) : "";
+  return `${copy.s5.lampNames[key]}${value ? ` (${value})` : ""}: ${lampSentence(copy, key)}`;
+}
+
+/** The four lamps of a week. Each is a button: a tap puts its question under the row. */
+export function LampRow({
+  copy,
+  check,
+  t,
+  active,
+  onLamp,
+}: {
+  readonly copy: DemoPack;
+  readonly check: Checker;
+  readonly t: number;
+  readonly active: LampKey | null;
+  readonly onLamp: (key: LampKey) => void;
+}) {
   const lamps = check.lamps(t);
   return (
-    <ul className="w01-lamps" aria-label={copy.s5.term}>
+    <ul className="w01-lamps" aria-label={copy.s5.lampsLabel}>
       {LAMP_KEYS.map((key) => {
         const value = lamps ? lamps[key] : null;
         const state = value === null ? "none" : value ? "green" : "red";
         return (
           <li key={key} className="w01-lamp" data-state={state}>
-            <span className="w01-lamp-disc" aria-hidden="true" />
-            <span className="w01-lamp-name">
-              {copy.s5.lampNames[key]}
-              <span className="sr-only">: {copy.s5.state[state]}</span>
-            </span>
-            <span className="w01-lamp-value">{lamps ? lampValue(copy, check, t, key, lamps) : ""}</span>
+            <button type="button" className="w01-lamp-button" aria-pressed={active === key} onClick={() => onLamp(key)} data-w01-lamp={key}>
+              <span className="w01-lamp-disc" aria-hidden="true" />
+              <span className="w01-lamp-name">
+                {copy.s5.lampNames[key]}
+                <span className="sr-only">: {copy.s5.state[state]}</span>
+              </span>
+              <span className="w01-lamp-value">{lamps ? lampValue(copy, check, t, key, lamps) : ""}</span>
+            </button>
           </li>
         );
       })}
@@ -88,10 +122,34 @@ export function SceneRule({
   readonly onSelect: (t: number) => void;
 }) {
   const { check, strip } = model;
+  const [lamp, setLamp] = useState<LampKey | null>(null);
+  const [held, setHeld] = useState<number | null>(null);
   const [plotRef, { width, height }] = usePlotSize();
-  const scale = weekScale(strip, PAD.left, width - PAD.right);
-  const scrub = useScrub(scale, onPlayhead, (t) => onCommit(t, scale.x(t) / width));
-  const square = Math.max(4, Math.min(11, scale.step * 0.78));
+  // On a phone the bars zoom to a window around the bracket; the squares keep the whole year.
+  const year = weekScale(strip, PAD.left, width - PAD.right);
+  const first = strip[0] ?? 0;
+  const last = strip[strip.length - 1] ?? first;
+  const zoom = width > 0 && width < ZOOM_BELOW && last - first + 1 > ZOOM_WEEKS;
+  const liveStart = Math.min(last - ZOOM_WEEKS + 1, Math.max(first, playhead - ZOOM_WEEKS + ZOOM_AFTER + 1));
+  const start = held ?? liveStart;
+  const shownWeeks = zoom ? strip.filter((t) => t >= start && t < start + ZOOM_WEEKS) : strip;
+  const scale = zoom ? weekScale(shownWeeks, PAD.left, width - PAD.right) : year;
+  const scrub = useScrub(scale, onPlayhead, (t) => {
+    setHeld(null);
+    onCommit(t, scale.x(t) / width);
+  });
+  const scrubHandlers = {
+    ...scrub.handlers,
+    onPointerDown: (event: PointerEvent<Element>) => {
+      if (zoom) setHeld(start);
+      scrub.handlers.onPointerDown(event);
+    },
+    onPointerCancel: () => {
+      setHeld(null);
+      scrub.handlers.onPointerCancel();
+    },
+  };
+  const square = Math.max(4, Math.min(11, year.step * 0.78));
   const squaresY = height - square / 2 - 4;
   const stripTop = 8;
   const stripBottom = Math.max(stripTop + 40, squaresY - square - 14);
@@ -108,26 +166,26 @@ export function SceneRule({
   const inside = new Set(weeks);
   const bias = biasWindow(check, playhead);
   const lamps = check.lamps(playhead);
-  const bx0 = weeks.length > 0 ? scale.x(Math.min(...weeks)) - scale.step / 2 : 0;
-  const bx1 = weeks.length > 0 ? scale.x(Math.max(...weeks)) + scale.step / 2 : 0;
+  const bx0 = weeks.length > 0 ? Math.max(0, scale.x(Math.min(...weeks)) - scale.step / 2) : 0;
+  const bx1 = weeks.length > 0 ? Math.min(width, scale.x(Math.max(...weeks)) + scale.step / 2) : 0;
   const biasOut = bias ? Math.abs(bias.mean) > bias.band : false;
 
   const onSquaresTap = (event: PointerEvent<SVGRectElement>) => {
     const box = event.currentTarget.ownerSVGElement?.getBoundingClientRect();
     if (!box) return;
-    const t = scale.at(event.clientX - box.left);
+    const t = year.at(event.clientX - box.left);
     if (filled || t <= playhead) {
       onSelect(t);
       return;
     }
     onPlayhead(t);
-    onCommit(t, scale.x(t) / width);
+    onCommit(t, year.x(t) / width);
   };
   const head = (
     <>
-      <LampRow copy={copy} check={check} t={playhead} />
-      <p className="w01-line" aria-live="polite">
-        {weekSentence(copy, lamps, owner)}
+      <LampRow copy={copy} check={check} t={playhead} active={lamp} onLamp={(key) => setLamp((current) => (current === key ? null : key))} />
+      <p className="w01-line" aria-live="polite" data-w01-lamp-line={lamp ?? undefined}>
+        {lamp ? lampLine(copy, check, playhead, lamp) : weekSentence(copy, lamps, owner)}
       </p>
     </>
   );
@@ -148,7 +206,7 @@ export function SceneRule({
               ) : null}
             </g>
           ) : null}
-          {strip.map((t) => {
+          {shownWeeks.map((t) => {
             const ist = check.rows[t]?.ist;
             const forecast = check.forecast(t);
             if (ist === null || ist === undefined || forecast === null || !check.valid(t)) return null;
@@ -164,12 +222,20 @@ export function SceneRule({
               />
             );
           })}
-          <path className="w01-playhead-line" d={`M${scale.x(playhead).toFixed(1)} ${stripTop - 6}V${height}`} />
+          <path className="w01-playhead-line" d={`M${scale.x(playhead).toFixed(1)} ${stripTop - 6}V${zoom ? stripBottom + 4 : height}`} />
         </g>
-        <rect x={0} y={0} width={width} height={stripBottom + 6} className="w01-hit" {...scrub.handlers} />
+        <rect x={0} y={0} width={width} height={stripBottom + 6} className="w01-hit" {...scrubHandlers} />
+        {zoom ? (
+          <path
+            className="w01-window"
+            aria-hidden="true"
+            d={`M${(year.x(start) - year.step / 2).toFixed(1)} ${(squaresY - square / 2 - 5).toFixed(1)}H${(year.x(start + ZOOM_WEEKS - 1) + year.step / 2).toFixed(1)}`}
+          />
+        ) : null}
+        {zoom ? <path className="w01-playhead-line" aria-hidden="true" d={`M${year.x(playhead).toFixed(1)} ${(squaresY - square / 2 - 8).toFixed(1)}V${height}`} /> : null}
         <g className="w01-squares" aria-hidden="true">
           {strip.map((t) => {
-            const x = scale.x(t);
+            const x = year.x(t);
             const shown = filled || t <= playhead;
             const week = check.lamps(t);
             const h = square / 2;

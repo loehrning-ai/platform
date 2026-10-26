@@ -375,7 +375,6 @@ export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPac
   const freeAt = (list: readonly number[]) => clampTo(list, freeT ?? list[list.length - 1] ?? 0);
   let data: ReactNode;
   let caption: Paragraphs;
-  let captionExtra: ReactNode = null;
   let controls: ReactNode = null;
 
   if (view === "messlatte") {
@@ -401,15 +400,6 @@ export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPac
       />
     );
     caption = baselineCaption(copy, model, progress);
-    if (guessState === "open" && !useOwn) {
-      captionExtra = (
-        <p>
-          <GlasChip kind="file" icon="doc" onClick={() => setSheet({ kind: "export" })}>
-            {copy.files.export}
-          </GlasChip>
-        </p>
-      );
-    }
     const tool = model.toolAccuracy;
     controls =
       guessState === "open" ? (
@@ -438,8 +428,6 @@ export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPac
             },
           )}
         </>
-      ) : guessState === "locked" ? (
-        <GlasChip kind="status">{fill(copy.ui.locked, { value: percent(guess / 100, locale) })}</GlasChip>
       ) : null;
   } else if (view === "fehlerliste" || view === "fehler") {
     const playhead = free ? freeAt(span) : P2;
@@ -534,6 +522,11 @@ export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPac
           onCommit={commitBuffer}
           onActive={setPlanActive}
           active={planActive}
+          costNote={
+            useOwn
+              ? fill(copy.s4.costOwn, { cu: euro2(costs.cu, locale), co: euro2(costs.co, locale) })
+              : `${fill(copy.s4.costShort, { cu: euro2(costs.cu, locale) })} ${fill(canteen ? copy.s4.costLeft : copy.s4.costLeftNone, { co: euro2(costs.co, locale) })}`
+          }
         />
       ) : (
         missing(planCaption(copy, model, progress))
@@ -642,13 +635,19 @@ export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPac
     <DemoGlasStage
       label={copy.stageLabel}
       feld={feld}
-      caption={<Caption paragraphs={caption}>{captionExtra}</Caption>}
-      dock={<DemoDock>{controls}</DemoDock>}
+      readingTone="hell"
+      caption={<Caption paragraphs={caption} />}
+      dock={<DemoDock compact>{controls}</DemoDock>}
       className="w01-stage"
     >
       <div className="w01-data" data-w01-view={view} data-w01-source={useOwn ? "own" : "kit"}>
         <div className="w01-top">
           <span className="w01-tag">{useOwn ? series : copy.invented}</span>
+          {view === "messlatte" && guessState === "open" && !useOwn ? (
+            <GlasChip kind="file" icon="doc" className="w01-file" onClick={() => setSheet({ kind: "export" })}>
+              {copy.files.export}
+            </GlasChip>
+          ) : null}
           {(view === "pruefregel" || view === "lampen") && model.toolAccuracy !== null ? (
             <span className="w01-tag is-soft">{fill(copy.ui.year, { value: percent(model.toolAccuracy, locale) })}</span>
           ) : null}

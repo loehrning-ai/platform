@@ -44,6 +44,37 @@ test.describe("Die Fehlerliste", () => {
     await expectGlasBudget(page, `${PATH} intro`);
   });
 
+  test("on a 390 × 664 phone every caption shows all its words, without scrolling inside", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 664 });
+    for (const beat of ["", "?beat=fehlerliste", "?beat=spanne", "?beat=planzahl", "?beat=pruefregel"]) {
+      await open(page, beat);
+      if (!beat) await start(page);
+      const text = caption(page).locator("[data-w01-caption]");
+      await expect(text).toBeVisible();
+      const fit = await text.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        return { inside: element.scrollHeight <= element.clientHeight + 1, top: box.top, bottom: box.bottom, words: element.textContent?.length ?? 0 };
+      });
+      expect(fit.words, `${beat || "messlatte"}: caption has words`).toBeGreaterThan(40);
+      expect(fit.inside, `${beat || "messlatte"}: caption scrolls inside`).toBe(true);
+      expect(fit.top, `${beat || "messlatte"}: caption top`).toBeGreaterThanOrEqual(0);
+      expect(fit.bottom, `${beat || "messlatte"}: caption bottom`).toBeLessThanOrEqual(664);
+    }
+  });
+
+  test("a tap on a lamp puts its question under the lamp row", async ({ page }) => {
+    await open(page, "?beat=pruefregel");
+    await expect(clock(page)).toHaveAttribute("data-beat", "pruefregel");
+    const lamp = page.locator('[data-w01-lamp="bias"]');
+    await expect(async () => {
+      await lamp.click({ timeout: 1000 });
+      await expect(lamp).toHaveAttribute("aria-pressed", "true", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await expect(page.locator("[data-w01-lamp-line]")).toContainText("Die Prognose lag in den letzten 13 Wochen");
+    await lamp.click();
+    await expect(lamp).toHaveAttribute("aria-pressed", "false");
+  });
+
   test("dragging the sales line one week builds the rule and snaps to 92,6 %", async ({ page }) => {
     await open(page);
     await start(page);
@@ -64,7 +95,7 @@ test.describe("Die Fehlerliste", () => {
       await page.mouse.move(x + 30, y, { steps: 4 });
       await page.mouse.move(x + 120, y, { steps: 4 });
       await page.mouse.up();
-      await expect(page.locator("[data-demo-data]")).toContainText("wie letzte Woche: 92,6 %", { timeout: 1000 });
+      await expect(page.locator("[data-demo-data]")).toContainText("Die Regel ‚wie letzte Woche‘ erreicht 92,6 %", { timeout: 1000 });
     }).toPass({ timeout: 15_000 });
     await expect(caption(page)).toContainText("92,6 %");
     await expectGlasBudget(page, `${PATH} baseline done`);
@@ -117,6 +148,10 @@ test.describe("Die Fehlerliste", () => {
     await section.getByRole("radio", { name: SCENE.withSkill }).click();
     await section.locator("[data-scene-play]").click();
     await expect(answers.first()).toBeVisible();
+    // On a wide window the rule file Claude wrote opens beside the chat.
+    if ((page.viewportSize()?.width ?? 0) >= 900) {
+      await expect(section.getByRole("complementary", { name: `${SCENE.file}: pruefregel-linsensuppe.md` })).toBeVisible();
+    }
     await section.locator("[data-scene-follow-up]").click();
     await expect(section.locator(".cds-chat")).toContainText("Kantine");
     await expectGlasBudget(page, `${PATH} Claude scene`);

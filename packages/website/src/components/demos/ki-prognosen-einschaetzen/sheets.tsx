@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react";
 import { GlasSheet } from "@/components/demos/glas";
-import { BIAS_MAX, LAMP_KEYS, TREFFER_MIN, PRUEF } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
+import { BIAS_MAX, LAMP_KEYS } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
 import type { DemoPack } from "@/lib/demo-cases/ki-prognosen-einschaetzen/copy";
 import { fill, formatNumber } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
 import type { Model } from "@/lib/demo-cases/ki-prognosen-einschaetzen/model";
 import { biasSentence, day, euro0, jars, percent, weekOf, weekSentence } from "./helpers";
-import { lampValue } from "./scene-rule";
+import { lampSentence, lampValue } from "./scene-rule";
 
 export type SheetState =
   | { readonly kind: "export" }
@@ -129,14 +129,14 @@ export function YearSheet({ copy, model, open, onClose, gap }: { readonly copy: 
           </ul>
           <p>
             {fill(copy.s4.honest, {
+              weeks: result.kosten_wochen ?? result.wochen,
               costPlan: euro0(costs.Planzahl, locale),
               costForecast: euro0(costs.Prognose, locale),
               costRule: euro0(costs.Messlatte, locale),
             })}
           </p>
           <p>
-            {fill(copy.s4.euro, {
-              weeks: result.kosten_wochen ?? result.wochen,
+            {fill(copy.s4.saving, {
               saveTool: euro0(costs.Messlatte - costs.Prognose, locale),
               saveBuffer: euro0(costs.Prognose - costs.Planzahl, locale),
             })}
@@ -162,12 +162,7 @@ export function WeekSheet({ copy, model, t, owner, onClose }: { readonly copy: D
           {LAMP_KEYS.map((key) => {
             const value = lamps[key];
             const state = value === null ? "none" : value ? "green" : "red";
-            const sentence =
-              key === "bias"
-                ? fill(copy.s5.lamps.bias, { max: percent(BIAS_MAX, copy.locale, 0) })
-                : key === "spanne"
-                  ? fill(copy.s5.lamps.spanne, { min: TREFFER_MIN, of: PRUEF })
-                  : copy.s5.lamps[key];
+            const sentence = lampSentence(copy, key);
             return (
               <li key={key} className="w01-lamp" data-state={state}>
                 <span className="w01-lamp-disc" aria-hidden="true" />

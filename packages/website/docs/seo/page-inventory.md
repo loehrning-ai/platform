@@ -80,7 +80,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/ki-prognosen-einschaetzen | Die Fehlerliste | Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-prognosen-einschaetzen | Die Fehlerliste | Du prüfst die Prognose deines Tools an ihren eigenen alten Fehlern und legst fest, wann sie ohne Freigabe in… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Eine Datei, drei Antworten | Eine Datei aus dem Workshop-Kit, eine Frage, drei richtig gerechnete Antworten. Danach legst du eine eigene K… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Die Fragekarte | Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am End… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/esg-berichte-mit-ki | Nachweisprobe | Vier Sätze, vier Dateien, vier Prüfungen. Dann derselbe Ordner für drei Anfragen, eine nachgereichte Rechnung… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |

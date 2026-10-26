@@ -77,7 +77,7 @@ export function SceneErrors({
   const means = runningMeans(check, n);
   const head = (
     <Readline live className="w01-tabular">
-      {n > 0 && hasForecast ? fill(copy.s2.counters, { mae: jars(means.forecast, locale), maeRule: jars(means.rule, locale) }) : copy.s2.term}
+      {n > 0 && hasForecast ? fill(copy.s2.counters, { mae: jars(means.forecast, locale), maeRule: jars(means.rule, locale) }) : copy.s2.countersEmpty}
     </Readline>
   );
 

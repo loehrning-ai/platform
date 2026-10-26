@@ -146,16 +146,15 @@ export function SceneBaseline({
   const lastIst = check.rows[lastWeek]?.ist ?? 0;
   const gripX = scale.x(lastWeek) + shown * scale.step;
 
+  // While the guess is open the caption carries the words; the plot keeps its height.
   const readout = !showGrip
-    ? copy.s1.term
+    ? null
     : atZero
       ? copy.s1.zero
-      : atRule
-        ? `${copy.s1.rulerRule}: ${percent(accuracy, locale)}`
-        : `${copy.s1.between} ${percent(accuracy, locale)}`;
+      : fill(atRule ? copy.s1.atRule : copy.s1.between, { accuracy: percent(accuracy, locale) });
 
   return (
-    <SceneFrame head={<Readline live>{readout}</Readline>} plotRef={plotRef}>
+    <SceneFrame head={readout ? <Readline live>{readout}</Readline> : null} plotRef={plotRef}>
       <svg width={width} height={height} className="w01-svg" role="img" aria-label={copy.s1.rulerLabel}>
         <g className="w01-ruler" aria-hidden="true">
           <path className="w01-axis" d={`M${ruler(RULER_MIN)} ${rulerY}H${ruler(RULER_MAX)}`} />

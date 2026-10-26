@@ -59,10 +59,10 @@ describe.each(["de", "en"] as const)("every caption slot is filled from the mode
   it("states the kit's numbers", () => {
     const text = plain(all);
     const n = (de: string, en: string) => (locale === "de" ? de : en);
-    expect(text).toContain(n("92,6 %", "92.6 %"));
+    expect(text).toContain(n("92,6 %", "92.6%"));
     expect(text).toContain(n("1,6 Prozentpunkte", "1.6 percentage points"));
-    expect(text).toContain(n("Tool in 30 von 50", "closer in 30 of 50"));
-    expect(text).toContain(n("In 36 von 50 Wochen", "in 36 of 50 weeks"));
+    expect(text).toContain(n("nur in 30 von 50 Wochen", "closer in only 30 of 50 weeks"));
+    expect(text).toContain(n("In 36 von 50 Wochen", "inside the range in 36 of 50 weeks"));
     expect(text).toContain(n("11 der 14 Fehltreffer", "11 of the 14 misses"));
     expect(text).toContain("748");
     expect(text).toContain("728");
@@ -71,7 +71,7 @@ describe.each(["de", "en"] as const)("every caption slot is filled from the mode
     expect(text).toContain(n("1,30 €", "€1.30"));
     expect(text).toContain(n("In 37 Wochen", "In 37 weeks"));
     expect(text).toContain(n("14 Wochen lang rot", "red for 14 weeks"));
-    expect(text).toContain(n("2 Wochen später", "2 weeks later"));
+    expect(text).toContain(n("2 Wochen nach der Auslistung", "2 weeks after the delisting"));
     expect(text).toContain("Leitung Disposition");
   });
 
@@ -86,7 +86,7 @@ describe.each(["de", "en"] as const)("every caption slot is filled from the mode
     const t = on.check.rows.findIndex((row) => row.woche === "2025-04-21");
     const lamps = on.check.lamps(t)!;
     const words = biasWords(copy, lamps).replace(NBSP, " ");
-    expect(words).toBe(locale === "de" ? "5,4 % zu hoch" : "5.4 % too high");
+    expect(words).toBe(locale === "de" ? "5,4 % zu hoch" : "5.4% too high");
     const sentence = biasSentence(copy, lamps, 0.05);
     expect(sentence).not.toMatch(/[−+-]\d/);
     for (const key of LAMP_KEYS) expect(lampValue(copy, on.check, t, key, lamps)).not.toMatch(/[−+]\d/);

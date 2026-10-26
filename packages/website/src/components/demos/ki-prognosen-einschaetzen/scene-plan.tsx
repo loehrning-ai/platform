@@ -53,6 +53,7 @@ export function ScenePlan({
   onCommit,
   onActive,
   active,
+  costNote,
 }: {
   readonly copy: DemoPack;
   readonly plan: PlanModel;
@@ -66,6 +67,8 @@ export function ScenePlan({
   /** Stable (a state setter). */
   readonly onActive: (active: boolean) => void;
   readonly active: boolean;
+  /** What one missing and one leftover jar cost, and why: the two numbers the curve is made of. */
+  readonly costNote: string;
 }) {
   const locale = copy.locale;
   const [plotRef, { width, height }] = usePlotSize();
@@ -93,7 +96,17 @@ export function ScenePlan({
   const to = full ? hi : Math.min(hi, Math.max(visited[1], buffer));
 
   return (
-    <SceneFrame head={<Readline live className="w01-tabular">{readout}</Readline>} plotRef={plotRef}>
+    <SceneFrame
+      head={
+        <>
+          <Readline className="w01-costs">{costNote}</Readline>
+          <Readline live className="w01-tabular">
+            {readout}
+          </Readline>
+        </>
+      }
+      plotRef={plotRef}
+    >
       <svg width={width} height={height} className="w01-svg" role="img" aria-label={copy.s4.term}>
         <text x={4} y={12} className="w01-label">
           {copy.s4.left}
