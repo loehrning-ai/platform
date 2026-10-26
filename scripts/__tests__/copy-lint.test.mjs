@@ -99,6 +99,26 @@ test("deck HTML: text nodes and spoken attributes, never script, style, comments
   assert.equal(lintLines("deck.html", lines).filter((finding) => finding.rule === "dash").length, 3);
 });
 
+test("deck HTML: the speaker notes in JSON script blocks count, ids and folder names do not", () => {
+  const html = [
+    "<html><body><p>Folie</p>",
+    '<script type="application/json" id="deck-meta">{"scenes":[{"id":"pruefprotokoll","notes":{"say":["Wer würde das an die Chefin weitergeben?"]}}]}</script>',
+    '<script type="application/json" class="notes">{"say":["Erst loesungen/ öffnen, dann das Urteil."]}</script>',
+    '<script type="application/json">not json</script>',
+    "</body></html>",
+  ].join("\n");
+  const lines = htmlTextLines(html);
+  assert.deepEqual(
+    lines.map(({ line, text }) => [line, text]),
+    [
+      [2, "Wer würde das an die Chefin weitergeben?"],
+      [3, "Erst loesungen/ öffnen, dann das Urteil."],
+      [1, "Folie"],
+    ],
+  );
+  assert.deepEqual(lintLines("deck.html", lines).map((finding) => finding.rule), ["boss"]);
+});
+
 test("the targets include every deck and presenter page", () => {
   const { html } = targets();
   assert.ok(html.some((file) => file.endsWith("datenbereitschaft-fuer-ki/presenter.html")));

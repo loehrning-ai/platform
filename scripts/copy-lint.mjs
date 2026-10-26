@@ -58,7 +58,12 @@ function isMachineToken(token) {
 export function proseOnly(line) {
   return line
     .split(/(\s+)/)
-    .map((token) => (isMachineToken(token.replace(/^[\p{P}]+|[\p{P}]+$/gu, "")) ? " " : token))
+    .map((token) =>
+      // A folder name keeps its slash ("loesungen/"): only quotes, brackets and sentence marks come off first.
+      isMachineToken(token.replace(/^[\p{P}]+|[\p{P}]+$/gu, "")) || isMachineToken(token.replace(/^[("'„“‚‘`]+|[)"'“”‘’`,;:!?.]+$/gu, ""))
+        ? " "
+        : token,
+    )
     .join("");
 }
 
@@ -270,9 +275,31 @@ function decodeEntities(text) {
 /**
  * The text a visitor sees or hears in an HTML page: text nodes plus alt,
  * title, aria-label and placeholder values, with line numbers. Script, style
- * and comments are blanked first (their line breaks kept).
+ * and comments are blanked first (their line breaks kept). The string values
+ * of JSON script blocks count too: a deck keeps its speaker notes there, and
+ * a presenter reads them aloud.
  */
 export function htmlTextLines(source) {
+  const lineOf = (index) => source.slice(0, index).split("\n").length;
+  const notes = [];
+  for (const match of source.matchAll(/<script\b[^>]*type="application\/json"[^>]*>([\s\S]*?)<\/script>/gi)) {
+    let strings;
+    try {
+      strings = jsonStrings(match[1]);
+    } catch {
+      continue;
+    }
+    const at = lineOf(match.index);
+    for (const { text } of strings) {
+      const trimmed = text.trim();
+      // A bare lowercase token ("pruefprotokoll", "write") is an id or a kind, not a sentence.
+      if (trimmed && !/^[a-z0-9-]+$/.test(trimmed) && /\p{L}|[‒-―]/u.test(trimmed)) notes.push({ line: at, text: trimmed });
+    }
+  }
+  return [...notes, ...htmlVisibleLines(source)];
+}
+
+function htmlVisibleLines(source) {
   const blank = (block) => block.replace(/[^\n]/g, " ");
   const visible = source
     .replace(/<script\b[\s\S]*?<\/script>/gi, blank)
