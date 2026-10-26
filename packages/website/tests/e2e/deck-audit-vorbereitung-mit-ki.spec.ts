@@ -1,11 +1,12 @@
 import { expect, type Page, test } from "@playwright/test";
+import { countVisibleGlass, expectGlassBudget } from "./fixtures/glass";
 
 /**
  * Workshop 05 deck, both editions: every press from the cover to the last
  * build step, the key contract (r and Shift+R back to the cover, P opens the
  * presenter, Escape and ArrowLeft leave an appendix, repeats and unbound keys
  * do nothing), the presenter channel, the preview frame that binds no keys,
- * reduced motion and the glass budget.
+ * reduced motion and the solid chrome (no slide is full-bleed, so no glass).
  */
 
 const SLUG = "audit-vorbereitung-mit-ki";
@@ -26,6 +27,17 @@ const plan = (page: Page) =>
       main: slide.getAttribute("data-kind") === "main",
     })),
   );
+
+/** The chrome's computed material: opaque paper, no filter, square. */
+const chromeMaterial = (page: Page, selector: string) =>
+  page.locator(selector).evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      filter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter") || "none",
+      radius: style.borderTopLeftRadius,
+    };
+  });
 
 async function open(page: Page, file: string) {
   await page.goto(`/workshops/${SLUG}/${file}`);
@@ -157,13 +169,11 @@ for (const edition of EDITIONS) {
       await presenter.close();
     });
 
-    test("glass stays on floating chrome, at most two visible", async ({ page }) => {
+    test("the toolbar is solid paper, never glass", async ({ page }) => {
       await open(page, edition.file);
-      const glass = await page.evaluate(() =>
-        Array.from(document.querySelectorAll(".glass")).filter((el) => (el as HTMLElement).offsetParent !== null).map((el) => el.className),
-      );
-      expect(glass.length).toBeLessThanOrEqual(2);
-      expect(await page.locator("deck-stage .glass").count()).toBe(0);
+      expect(await page.locator(".glass").count()).toBe(0);
+      await expectGlassBudget(page, `W05 deck ${edition.lang}`);
+      expect(await chromeMaterial(page, ".toolbar")).toEqual({ background: "rgb(243, 240, 233)", filter: "none", radius: "0px" });
     });
   });
 }
@@ -187,6 +197,12 @@ test("phone portrait: the rotate note offers the demo and the page never scrolls
   await open(page, "slides.html");
   await expect(page.locator("[data-rotate]")).toBeVisible();
   await expect(page.locator("[data-rotate] a")).toHaveAttribute("href", `/demos/${SLUG}`);
+  // Toolbar and note are both fixed on a phone: solid paper, so no fixed glass below 1024px.
+  expect((await countVisibleGlass(page)).visible).toBe(0);
+  await expectGlassBudget(page, "W05 deck at 390px");
+  for (const selector of [".toolbar", "[data-rotate]"]) {
+    expect(await chromeMaterial(page, selector), selector).toEqual({ background: "rgb(243, 240, 233)", filter: "none", radius: "0px" });
+  }
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   await page.locator("[data-rotate-close]").click();
   await expect(page.locator("[data-rotate]")).toBeHidden();

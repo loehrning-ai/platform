@@ -69,14 +69,14 @@ function copyFor(lang) {
 function chrome(c, lang) {
   const ui = c.ui;
   return `<a class="deck-back" href="${WORKSHOP[lang]}" aria-label="${esc(c.backLabel)}"><span aria-hidden="true">←</span> ${esc(c.back)}</a>
-<div class="toolbar glass" role="toolbar" aria-label="${esc(ui.toolbar)}">
+<div class="toolbar" role="toolbar" aria-label="${esc(ui.toolbar)}">
   <button type="button" class="tb" data-action="prev" aria-label="${esc(ui.prev)}"><span aria-hidden="true">←</span></button>
   <span class="tb-pos" data-pos aria-live="polite"></span>
   <button type="button" class="tb" data-action="next" aria-label="${esc(ui.next)}"><span aria-hidden="true">→</span></button>
   <button type="button" class="tb tb-text" data-action="reset">${esc(ui.reset)} <kbd>R</kbd></button>
   <button type="button" class="tb tb-text tb-presenter" data-action="presenter">${esc(ui.presenter)} <kbd>P</kbd></button>
 </div>
-<aside class="rotate glass" data-rotate hidden>
+<aside class="rotate" data-rotate hidden>
   <p>${esc(ui.rotate)}</p>
   <a href="${DEMO[lang]}">${esc(ui.rotateLink)}</a>
   <button type="button" class="tb" data-rotate-close aria-label="${esc(ui.close)}"><span aria-hidden="true">×</span></button>
