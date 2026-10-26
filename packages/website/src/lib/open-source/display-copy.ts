@@ -296,7 +296,7 @@ interface EnglishProcedure {
  * registry record. Commands, paths, hashes, chapter tokens and every other
  * publication fact always come from the registry.
  */
-interface ArtifactEnglishCopy {
+export interface ArtifactEnglishCopy {
   readonly eyebrow: string;
   readonly description: string;
   readonly language: string;
@@ -323,6 +323,11 @@ interface ArtifactEnglishCopy {
     readonly quickstartNote?: string;
     readonly specimenAlt?: string;
     readonly outputFilmAlts?: readonly string[];
+    readonly liveExample?: {
+      readonly title: string;
+      readonly summary: string;
+      readonly links: readonly { readonly label: string; readonly detail: string }[];
+    };
   };
 }
 
@@ -669,6 +674,17 @@ export function localizeOpenSourceArtifact<Artifact extends OpenSourceArtifact>(
         ...film,
         alt: english.outputFilmAlts?.[index] ?? film.alt,
       })),
+      liveExample:
+        guide.liveExample && english.liveExample
+          ? {
+              title: english.liveExample.title,
+              summary: english.liveExample.summary,
+              links: guide.liveExample.links.map((link, index) => ({
+                ...link,
+                ...english.liveExample?.links[index],
+              })),
+            }
+          : guide.liveExample,
     },
   } as Artifact;
 }

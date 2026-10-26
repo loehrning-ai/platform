@@ -50,7 +50,12 @@ export function OutputFilm({
       <video
         ref={videoRef}
         className="block h-auto w-full border border-foreground bg-[#121212]"
-        style={{ maxWidth: film.width, aspectRatio: `${film.width} / ${film.height}` }}
+        // An upright film stops at 80 % of the viewport height, so its
+        // play button stays on screen with the frame.
+        style={{
+          maxWidth: `min(${film.width}px, calc(80svh * ${film.width} / ${film.height}))`,
+          aspectRatio: `${film.width} / ${film.height}`,
+        }}
         muted
         loop
         playsInline

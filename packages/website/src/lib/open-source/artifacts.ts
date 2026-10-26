@@ -219,6 +219,29 @@ export type SoftwareArtifactSpecimen =
 
 export const DRAWN_SPECIMEN_IDS = ["tool:cv-engine"] as const;
 
+/** One thing the tool made for the live example, on this site. */
+export interface SoftwareArtifactLiveExampleLink {
+  readonly label: string;
+  /** What the reader finds there, in one short sentence. */
+  readonly detail: string;
+  /** Repository-local route or static file. */
+  readonly href: string;
+}
+
+/**
+ * A finished piece of work built with the tool and published on this site,
+ * linked rather than embedded: the reader opens the real output.
+ */
+export interface SoftwareArtifactLiveExample {
+  readonly title: string;
+  /** What was built, and whether the case is invented. */
+  readonly summary: string;
+  readonly links: readonly SoftwareArtifactLiveExampleLink[];
+}
+
+/** A live example links two to six outputs. */
+export const OPEN_SOURCE_LIVE_EXAMPLE_LINKS = { min: 2, max: 6 } as const;
+
 export interface SoftwareArtifactFormula {
   readonly input: string;
   readonly process: string;
@@ -267,6 +290,8 @@ export interface SoftwareArtifactGuide {
   readonly specimen?: SoftwareArtifactSpecimen;
   /** Real output films for the detail page. */
   readonly outputFilms?: readonly DerivedFilm[];
+  /** Finished work made with the tool, published on this site. */
+  readonly liveExample?: SoftwareArtifactLiveExample;
 }
 
 export const SOFTWARE_ARTIFACT_DELIVERY_MODES = [
@@ -1161,6 +1186,35 @@ function assertSoftwareArtifactShowcase(
       artifactError(id, "guide.outputFilms", "must not repeat a film");
     }
   }
+
+  if (guide.liveExample !== undefined) {
+    assertLiveExample(id, guide.liveExample);
+  }
+}
+
+/** Every link stays on this site, so the example can never become an embed. */
+function assertLiveExample(id: string, example: SoftwareArtifactLiveExample): void {
+  assertTextWithin(id, "guide.liveExample.title", example.title, 60);
+  assertTextWithin(id, "guide.liveExample.summary", example.summary, 320);
+  const { min, max } = OPEN_SOURCE_LIVE_EXAMPLE_LINKS;
+  if (
+    !Array.isArray(example.links) ||
+    example.links.length < min ||
+    example.links.length > max
+  ) {
+    artifactError(id, "guide.liveExample.links", `must hold ${min} to ${max} links`);
+  }
+  example.links.forEach((link, index) => {
+    const field = `guide.liveExample.links[${index}]`;
+    assertTextWithin(id, `${field}.label`, link.label, 40);
+    assertTextWithin(id, `${field}.detail`, link.detail, 140);
+    assertInternalHref(id, `${field}.href`, link.href);
+  });
+  assertUniqueTextValues(
+    id,
+    "guide.liveExample.links",
+    example.links.map((link) => link.href),
+  );
 }
 
 function publicHrefForMediaFile(file: OpenSourceMediaFile): string {

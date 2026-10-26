@@ -1284,6 +1284,18 @@ describe("open-source artifact registry", () => {
       /specimen\.film\.sizeBytes/,
     );
     rejects({ specimen: { kind: "drawn" } }, /guide\.specimen/);
+
+    const link = (href: string) => ({ label: `Teil ${href}`, detail: "Was dort steht.", href });
+    const example = (links: readonly unknown[]) => ({
+      liveExample: { title: "Live-Beispiel", summary: "Mit dem Werkzeug gebaut.", links },
+    });
+    expect(() =>
+      assertOpenSourceArtifacts(withGuide(example([link("/workshops/x/slides.html"), link("/demos/x")]))),
+    ).not.toThrow();
+    rejects(example([link("/demos/x")]), /liveExample\.links/);
+    rejects(example([link("/demos/x"), link("https://example.com/deck")]), /liveExample\.links\[1\]\.href/);
+    rejects(example([link("/demos/x"), link("//example.com/deck")]), /liveExample\.links\[1\]\.href/);
+    rejects(example([link("/demos/x"), link("/demos/x")]), /liveExample\.links/);
   });
 
   it("admits exactly the pinned tools, in plate order, and keeps the other lanes empty", () => {

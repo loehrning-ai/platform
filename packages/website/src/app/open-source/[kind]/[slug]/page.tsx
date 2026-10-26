@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { CommandBlock } from "@/components/open-source/command-block";
 import { OutputFilm } from "@/components/open-source/output-film";
+import { LiveExample } from "@/components/open-source/live-example";
 import { SoftwareArtifactGuide } from "@/components/open-source/software-artifact-guide";
 import {
   Colophon,
@@ -419,6 +420,12 @@ function SoftwareDetail({
           ))}
         </ul>
       </section>
+
+      {guide.liveExample ? (
+        <div className="mt-10 sm:mt-12">
+          <LiveExample example={guide.liveExample} locale={locale} />
+        </div>
+      ) : null}
 
       <div className="mt-10 max-w-4xl sm:mt-12">
         <SoftwareArtifactGuide artifact={artifact} locale={locale} />

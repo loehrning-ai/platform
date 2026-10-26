@@ -656,6 +656,45 @@
       "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt"
     },
     {
+      "path": "packages/website/public/artifacts/tools/rotfaden/LICENSE.txt",
+      "sizeBytes": 1066,
+      "sha256": "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden LICENSE, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/demo/before-after.png",
+      "sizeBytes": 90678,
+      "sha256": "33330b6afce7d50e293fdd543ee62f120c980b7c1805f3cbeb78686241575206",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/before-after.png, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/demo/demo.png",
+      "sizeBytes": 180653,
+      "sha256": "42df82e10bb29f445a92fd6e8541e3b8b82945fe08cd8be5b419cbe02c61dcb6",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/demo.png, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/screenshot.png",
+      "sizeBytes": 110384,
+      "sha256": "3c8dcb708bc9ba8093aaadecb5e18d90a0c544de03c606929193f5e25f73e374",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/social-preview.png, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt"
+    },
+    {
       "path": "packages/website/public/media/tools/reelcode/formats.jpg",
       "sizeBytes": 41852,
       "sha256": "02cf30147e0d1959e2d2ba941277557a43c8cd39f2faea85d325cdc3dd7390ad",
@@ -698,6 +737,50 @@
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
       "derivation": "ffmpeg re-encode, muted, 720x720, H.264 crf 30, GOP 8"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-16x9.jpg",
+      "sizeBytes": 79416,
+      "sha256": "aabb53837e0a424ec4b83d8c6d9828c778c4c850dd9636271553750cc07ffc81",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-16x9.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "ffmpeg frame at 19.5 s (the check at 0 errors), 1280x720 JPEG, re-saved without metadata"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-16x9.mp4",
+      "sizeBytes": 422416,
+      "sha256": "2c3b8a4b973e100f7e1f8cb4676c1390ac033b269ed68a497334997f07664e05",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-16x9.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "reelcode render (project rotfaden-usage, 16:9) of real rotfaden runs, ffmpeg re-encode without the audio track, 1280x720, H.264, container metadata removed"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-9x16.jpg",
+      "sizeBytes": 73861,
+      "sha256": "2dbbd939fb7f0c4b676fc02abd293c1edfffed736e74dfb3258c7a3b397750bb",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-9x16.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "ffmpeg frame at 19.5 s (the check at 0 errors), 720x1280 JPEG, re-saved without metadata"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-9x16.mp4",
+      "sizeBytes": 433769,
+      "sha256": "8b2f6e325dad917403384f9a65f79e2254a96c7787a4e3c96a6eb6857e2dad17",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-9x16.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "reelcode render (project rotfaden-usage, 9:16) of real rotfaden runs, ffmpeg re-encode without the audio track, 720x1280, H.264, container metadata removed"
     },
     {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",

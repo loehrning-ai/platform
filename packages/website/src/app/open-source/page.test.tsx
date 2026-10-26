@@ -32,6 +32,11 @@ describe("OpenSourcePage", () => {
       String(OPEN_SOURCE_TOOL_ARTIFACTS.length),
     );
     expect(container.querySelector("#nr-01")).not.toBeNull();
+    // Two listed; rotfaden is staged (pending/rotfaden.test.tsx renders the
+    // wall with all three) and never reaches the public page before admission.
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toHaveLength(2);
+    expect(container.querySelector("#nr-03")).toBeNull();
+    expect(screen.queryByText(/rotfaden/)).toBeNull();
     // Below three tools the plates are the contents: no table repeats them.
     expect(screen.queryByRole("navigation", { name: "Inhalt" })).toBeNull();
 
