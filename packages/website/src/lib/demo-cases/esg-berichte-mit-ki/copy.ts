@@ -25,8 +25,6 @@ const de = {
   bet: {
     yes: "Darf so raus",
     no: "Darf so nicht raus",
-    yesShort: "Raus",
-    noShort: "Nicht raus",
     yours: "Dein Tipp: {bet}",
     none: "Ohne Tipp weiter",
   },
@@ -274,6 +272,8 @@ const de = {
   },
   own: {
     stageEmpty: "Dein Satz, deine Datei. Die Probe läuft hier im Browser.",
+    stageExample: "Beispiel, bis du einen eigenen Satz prüfst",
+    exampleSentence: "Unser Strom 2025: 412 MWh",
     stageLatest: "Zuletzt geprüft",
     lever: "Zu deinen Sätzen",
     caption: "Leg einen eigenen Satz neben seine Datei. Feste Regeln, keine KI.",
@@ -449,8 +449,6 @@ const en: Pack = {
   bet: {
     yes: "OK to send",
     no: "Not as written",
-    yesShort: "Send",
-    noShort: "Hold",
     yours: "Your call: {bet}",
     none: "Moved on without a call",
   },
@@ -698,6 +696,8 @@ const en: Pack = {
   },
   own: {
     stageEmpty: "Your sentence, your file. The check runs here in the browser.",
+    stageExample: "An example, until you check a sentence of your own",
+    exampleSentence: "Our electricity 2025: 412 MWh",
     stageLatest: "Last checked",
     lever: "To your sentences",
     caption: "Put one of your own sentences next to its file. Fixed rules, no AI.",

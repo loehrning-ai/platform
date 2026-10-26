@@ -55,14 +55,13 @@ test.describe(`/demos/${SLUG}`, () => {
   });
 
   test("r resets the beats but never the own sentence; Ctrl+R and r in a field are left alone", async ({ page }) => {
-    await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
-    await page.locator('[data-bet="no"]').click();
-    await expect(clock(page)).toHaveAttribute("data-beat", "probe");
+    await page.goto(`/demos/${SLUG}?beat=deine-saetze`, { waitUntil: "networkidle" });
+    await expect(clock(page)).toHaveAttribute("data-beat", "deine-saetze");
     const field = page.getByLabel("Satz", { exact: true });
     await field.fill("Unser Strom 2025: 412 MWh");
     await field.press("r");
     await expect(field).toHaveValue("Unser Strom 2025: 412 MWhr");
-    await expect(clock(page)).toHaveAttribute("data-beat", "probe");
+    await expect(clock(page)).toHaveAttribute("data-beat", "deine-saetze");
     const prevented = await page.evaluate(() => {
       const event = new KeyboardEvent("keydown", { key: "r", ctrlKey: true, bubbles: true, cancelable: true });
       document.body.dispatchEvent(event);
@@ -73,7 +72,23 @@ test.describe(`/demos/${SLUG}`, () => {
     await page.keyboard.press("r");
     await expect(clock(page)).toHaveAttribute("data-beat", "satz");
     await expect(page.locator('[data-bet][aria-pressed="true"]')).toHaveCount(0);
+    // The form waits for its own beat, and keeps what the visitor typed.
+    await expect(page.locator("[data-own-sentences]")).toBeHidden();
     await expect(field).toHaveValue("Unser Strom 2025: 412 MWhr");
+  });
+
+  test("the own beat's stage shows a worked example until the visitor checks a sentence", async ({ page }) => {
+    await page.goto(`/demos/${SLUG}?beat=deine-saetze`, { waitUntil: "networkidle" });
+    const preview = stage(page).locator("[data-own-preview]");
+    await expect(preview).toHaveAttribute("data-own-preview", "example");
+    await expect(preview).toContainText("Unser Strom 2025: 412 MWh");
+    await expect(preview.locator(".nw-check")).toHaveCount(4);
+    await expect(preview).toContainText("LÜCKE");
+    await page.getByLabel("Satz", { exact: true }).fill("Unser Strom 2025: 300 MWh");
+    await page.locator("[data-own-sentences]").getByRole("button", { name: "Prüfen" }).click();
+    await page.getByRole("button", { name: "Zur Liste" }).click();
+    await expect(preview).toHaveAttribute("data-own-preview", "latest");
+    await expect(preview).toContainText("Unser Strom 2025: 300 MWh");
   });
 
   test("three sentences, the folder and the late invoice", async ({ page }) => {

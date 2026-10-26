@@ -13,7 +13,7 @@ export const BEATS: readonly Beat[] = [
   { id: "satz", kind: "commit", seconds: 0.9, label: { de: "Satz", en: "Sentence" } },
   { id: "probe", kind: "reveal", seconds: 3.6, label: { de: "Probe", en: "Check" } },
   { id: "regel", kind: "tool", seconds: 0.8, label: { de: "Regel", en: "Rule" } },
-  { id: "drei-saetze", kind: "apply", seconds: 0.6, label: { de: "Drei Sätze", en: "Three more" } },
+  { id: "drei-saetze", kind: "apply", seconds: 0.6, label: { de: "Sätze 2 bis 4", en: "Sentences 2 to 4" } },
   { id: "ordner", kind: "apply", seconds: 0.6, label: { de: "Ordner", en: "Folder" } },
   { id: "rechnung", kind: "apply", seconds: 0.6, label: { de: "Rechnung", en: "Invoice" } },
   { id: "deine-saetze", kind: "own", seconds: 0, label: { de: "Deine Sätze", en: "Your sentences" } },

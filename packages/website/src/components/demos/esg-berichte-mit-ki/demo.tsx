@@ -18,8 +18,8 @@ import { ledgerCounts } from "@/lib/demo-cases/esg-berichte-mit-ki/ledger";
 import { cascadeAt, sweepAt } from "@/lib/demo-cases/esg-berichte-mit-ki/motion";
 import type { OwnRow } from "@/lib/demo-cases/esg-berichte-mit-ki/own";
 import { FolderDetails, InvoiceDetails, ProbeDetails, ThreeDetails } from "./details";
-import { OwnSentences } from "./own-sentences";
-import { StatusTag } from "./parts";
+import { OwnPreview } from "./own-preview";
+import { exportWords, OwnSentences } from "./own-sentences";
 import { ReadingDock } from "./reading-dock";
 import { CertificateStage, type Bet } from "./stage-certificate";
 import { FolderStage } from "./stage-folder";
@@ -53,6 +53,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
   const figures = useMemo(() => deriveFigures(locale), [locale]);
   const [bets, setBets] = useState<Bets>(START);
   const [ownRows, setOwnRows] = useState<readonly OwnRow[]>([]);
+  const ownWords = useMemo(() => exportWords(pack), [pack]);
   const ownRef = useRef<HTMLElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   useOnRestart(() => {
@@ -144,7 +145,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
             data-bet={bet}
             onClick={() => setBets((previous) => ({ ...previous, three: previous.three.map((value, index) => (index === previous.threeIndex ? bet : value)) }))}
           >
-            {bet === "yes" ? pack.bet.yesShort : pack.bet.noShort}
+            {bet === "yes" ? pack.bet.yes : pack.bet.no}
           </button>
         ))}
       </div>
@@ -189,23 +190,7 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
       <InvoiceDetails pack={pack} figures={figures} guess={bets.invoiceGuess} summary={fill(pack.invoice.summary, { ...figures, before: counts(before), after: counts(after), b3before: 0, b3after: 1 })} />
     ) : null;
   } else if (id === "deine-saetze") {
-    const latest = ownRows.at(-1);
-    stage = (
-      <div className="nw-stage nw-own-stage" data-scene="eigene">
-        {latest ? (
-          <>
-            <p className="nw-kicker">{pack.own.stageLatest}</p>
-            <p className="nw-sentence nw-sentence-mid">{latest.sentence}</p>
-            <p className="nw-own-verdict">
-              <StatusTag status={latest.result.status} pack={pack} />
-              <span>{pack.own.decisions[latest.result.decision]}</span>
-            </p>
-          </>
-        ) : (
-          <p className="nw-own-empty">{pack.own.stageEmpty}</p>
-        )}
-      </div>
-    );
+    stage = <OwnPreview pack={pack} words={ownWords} latest={ownRows.at(-1)} />;
     caption = pack.own.caption;
     lever = (
       <button type="button" className="nw-button nw-button-primary" onClick={() => revealIfOffscreen(ownRef.current, clock.reducedMotion)}>
@@ -248,7 +233,10 @@ export default function Demo({ pack }: { readonly pack: Pack }) {
           {details}
         </div>
       ) : null}
-      <OwnSentences ref={ownRef} pack={pack} onRows={setOwnRows} />
+      {/* The form belongs to the own beat and the take-home; hidden, not unmounted, so a reset keeps what the visitor typed. */}
+      <div hidden={id !== "deine-saetze" && id !== "mitnehmen"} data-own-wrap="">
+        <OwnSentences ref={ownRef} pack={pack} onRows={setOwnRows} />
+      </div>
       <ReadingDock root={rootRef} backLabel={pack.dockBack} />
     </div>
   );

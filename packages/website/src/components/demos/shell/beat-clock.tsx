@@ -325,6 +325,12 @@ export function BeatClockProvider({
       setStageSeen(true);
       enter(index, "load");
     }
+    // A cleanup while the deep link's motion still runs (React's development double effect,
+    // whose unmount pass stops the frame loop) reads the link again on the next run; without
+    // this the beat stays at progress 0 and "Weiter" never shows.
+    return () => {
+      if (frame.current !== 0) loaded.current = false;
+    };
   }, [beats, enter]);
 
   // The first beat's intro plays once, when the stage is 60 % in view.
