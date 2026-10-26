@@ -238,6 +238,10 @@ describe("<WorkshopDetailContent>", () => {
       const text = rgb(hexOf(key, band.textColorVar ?? "--color-scene-ink"));
       // Display type (40px and up): the words on the band keep 4.4:1 or more.
       expect(contrast(text, painted), `${key} words on their band`).toBeGreaterThanOrEqual(4.4);
+      // A line's box is taller than its band (0.84em), so the same words also
+      // sit on the bare ground: display floor 3 there too (Bogen on Kraft, 1.93,
+      // passed the line above and failed the pixel check).
+      expect(contrast(text, rgb(ground)), `${key} words on the ground`).toBeGreaterThanOrEqual(3);
       // The band is a visible mark on its ground: 1.6:1 or more (a wash that
       // matched the ground marked nothing; idea 35% and autumn 30% were 1.54 and 1.40).
       expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.6);
