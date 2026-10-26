@@ -36,6 +36,43 @@ async function openBeat(page: Page, beat: string) {
   await expect(clock(page)).toHaveAttribute("data-beat", beat);
 }
 
+/** Where the visitor's view ends: the phone's tab bar, or the window's bottom when there is none. */
+async function tabBarTop(page: Page): Promise<number> {
+  return page.evaluate(() => {
+    const bar = document.querySelector("[data-mobile-tab-bar]");
+    const top = bar && getComputedStyle(bar).display !== "none" ? bar.getBoundingClientRect().top : window.innerHeight;
+    return Math.min(top, window.innerHeight);
+  });
+}
+const bottomOf = (page: Page, selector: string) => page.locator(selector).first().evaluate((element) => element.getBoundingClientRect().bottom);
+const dockTop = (page: Page) => page.locator(".w4-dock").evaluate((element) => element.getBoundingClientRect().top);
+
+/** The scene's key object sits on the stage, above the dock, without scrolling. */
+async function expectOnStage(page: Page, selector: string, what: string) {
+  const target = page.locator(selector).first();
+  await expect(target, what).toBeVisible();
+  const box = await target.evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect);
+  const stage = await page.locator("[data-demo-stage]").evaluate((element) => element.getBoundingClientRect().top);
+  expect(box.top, `${what}: below the stage top`).toBeGreaterThanOrEqual(stage - 1);
+  expect(box.bottom, `${what}: above the dock`).toBeLessThanOrEqual((await dockTop(page)) + 1);
+}
+
+/** A real finger: touchStart on the part, twelve moves, touchEnd on the line (Chrome DevTools touch events). */
+async function touchDrag(page: Page, from: string, to: string) {
+  const cdp = await page.context().newCDPSession(page);
+  const a = await page.locator(from).boundingBox();
+  const b = await page.locator(to).boundingBox();
+  if (!a || !b) throw new Error(`touchDrag: ${from} or ${to} has no box`);
+  const p0 = { x: a.x + a.width / 2, y: a.y + a.height / 2 };
+  const p1 = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [p0] });
+  for (let i = 1; i <= 12; i += 1) {
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: p0.x + ((p1.x - p0.x) * i) / 12, y: p0.y + ((p1.y - p0.y) * i) / 12 }] });
+  }
+  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+  await cdp.detach();
+}
+
 /** Tap a part of the claim, then the certificate line that carries it. */
 async function connect(page: Page, part: string, line: number) {
   await page.locator(`[data-w4-handle="${part}"]`).click();
@@ -43,7 +80,7 @@ async function connect(page: Page, part: string, line: number) {
 }
 
 test.describe(PATH, () => {
-  test("intro: what it is, and the start button above 640 px at 390 x 664", async ({ page }) => {
+  test("intro: what it is, and the whole card with both buttons above the tab bar at 390 x 664", async ({ page }) => {
     const errors = collectErrors(page);
     await page.setViewportSize({ width: 390, height: 664 });
     await page.goto(PATH, { waitUntil: "networkidle" });
@@ -51,9 +88,11 @@ test.describe(PATH, () => {
     await expect(page.locator("[data-demo-intro-body]")).toContainText("erfundenes Weingut");
     const start = page.locator("[data-demo-start]");
     await expect(start).toBeVisible();
-    const box = await start.boundingBox();
-    expect(box, "start button").not.toBeNull();
-    expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(640);
+    const fold = await tabBarTop(page);
+    for (const selector of ["[data-demo-intro]", "[data-demo-start]", "[data-demo-explore]"]) {
+      await expect(page.locator(selector)).toBeVisible();
+      expect(await bottomOf(page, selector), `${selector} above the tab bar`).toBeLessThanOrEqual(fold);
+    }
     expect(await overflow(page)).toBeLessThanOrEqual(0);
     await expectGlasBudget(page, "intro");
     expect(errors).toEqual([]);
@@ -69,7 +108,7 @@ test.describe(PATH, () => {
     await connect(page, "flaeche", 6);
     await connect(page, "stichtag", 8);
     await expect(page.locator("[data-w4-card-status]")).toHaveAttribute("data-w4-card-status", "luecke");
-    await expect(caption(page)).toContainText("Es zählt der schwächste Teil");
+    await expect(caption(page)).toContainText("Der schwächste Teil zählt");
     await expectGlasBudget(page, "S1 verdict");
   });
 
@@ -114,8 +153,8 @@ test.describe(PATH, () => {
     });
     await page.locator("[data-w4-grabber]").click();
     await expect(page.locator("[data-w4-grabber]")).toHaveAttribute("aria-valuenow", "100");
-    await expect(page.locator('[data-w4-scene="strom"] [data-w4-readout]')).toContainText("elf Monate");
-    await expect(page.locator('[data-w4-scene="strom"] [data-w4-slot]')).toBeVisible();
+    await expect(page.locator('[data-w4-scene="strom"] .w4-months')).toHaveAttribute("data-end", "months");
+    await expect(page.locator('[data-w4-scene="strom"] [data-w4-slot]')).toContainText("EL-25-09");
     await expect(page.locator("[data-w4-f2-status]")).toHaveAttribute("data-w4-f2-status", "luecke");
   });
 
@@ -186,5 +225,67 @@ test.describe(PATH, () => {
     await expect(clock(page)).toHaveAttribute("data-beat", "mitnehmen");
     await expect(page.locator('[data-w4-take="skill"] a[download]')).toHaveAttribute("href", /esg-nachweise\.zip$/);
     expect(await overflow(page)).toBeLessThanOrEqual(0);
+  });
+});
+
+test.describe(`${PATH} on a 390 x 664 phone`, () => {
+  test.use({ viewport: { width: 390, height: 664 }, hasTouch: true });
+
+  test("S1: lines 3 to 11 sit above the dock while connecting, and a finger drag lands on line 4", async ({ page }) => {
+    await openBeat(page, "zitate");
+    await expect(page.locator('[data-w4-scene="karte"]')).toHaveAttribute("data-step", "connect");
+    for (let line = 3; line <= 11; line += 1) await expectOnStage(page, `[data-w4-line="${line}"]`, `line ${line}`);
+    const handle = page.locator('[data-w4-handle="zertifiziert"]');
+    await expect(async () => {
+      await touchDrag(page, '[data-w4-handle="zertifiziert"]', '[data-w4-line="4"]');
+      await expect(handle).toHaveAttribute("data-state", "linked", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+  });
+
+  test("every scene shows its key object without scrolling", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await expectOnStage(page, "[data-w4-card]", "S1 the shelf card");
+    expect(await bottomOf(page, ".w4-guess"), "S1 the two answers above the tab bar").toBeLessThanOrEqual(await tabBarTop(page));
+
+    await openBeat(page, "zitate");
+    await expect(async () => {
+      await connect(page, "zertifiziert", 4);
+      await expect(page.locator('[data-w4-handle="zertifiziert"]')).toHaveAttribute("data-state", "linked", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await connect(page, "flaeche", 6);
+    await connect(page, "stichtag", 8);
+    await expect(page.locator('[data-w4-scene="karte"]')).toHaveAttribute("data-step", "verdict");
+    await expectOnStage(page, "[data-w4-card-status]", "S1 the verdict on the card");
+    await expectOnStage(page, '.w4-s1-slots [data-w4-slot="restCertificate"]', "S1 the first missing document");
+    await expectOnStage(page, '.w4-s1-slots [data-w4-slot="renewedCertificate"]', "S1 the second missing document");
+
+    await openBeat(page, "umschreiben");
+    await expectOnStage(page, "[data-w4-levers]", "S2 the levers");
+    await expectOnStage(page, '[data-w4-scene="umschreiben"] [role="slider"]', "S2 the Stichtag");
+    await expectOnStage(page, "[data-w4-checks]", "S2 the four checks");
+
+    await openBeat(page, "strom");
+    await firstPress(page, '[data-w4-handle="f2"]', async () => {
+      await page.locator('button[data-w4-line="5"]').click({ timeout: 1000 });
+      await expect(page.locator('[data-w4-scene="strom"]')).toHaveAttribute("data-linked", "", { timeout: 1000 });
+    });
+    await page.locator("[data-w4-grabber]").click();
+    await expect(page.locator("[data-w4-grabber]")).toHaveAttribute("aria-valuenow", "100");
+    await expectOnStage(page, "[data-w4-f2]", "S3 the bank field");
+    await expectOnStage(page, '[data-w4-scene="strom"] .w4-months', "S3 the months");
+    await expectOnStage(page, '[data-w4-scene="strom"] [data-w4-slot]', "S3 the missing invoice");
+
+    await openBeat(page, "rechnung");
+    await expectOnStage(page, "[data-w4-photo]", "S4 the invoice photo");
+    await expectOnStage(page, ".w4-s4-chart", "S4 the chart it drops into");
+
+    await openBeat(page, "ordner");
+    await expectOnStage(page, '[data-w4-file="strom"]', "S5 the folder");
+    await expectOnStage(page, '[data-w4-tile="Q1"]', "S5 the first answer");
+
+    await openBeat(page, "deine-datei");
+    await expectOnStage(page, ".w4-drop", "S6 the drop zone");
+    await expectGlasBudget(page, "S6 on a phone");
   });
 });
