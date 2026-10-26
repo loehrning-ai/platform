@@ -165,8 +165,13 @@ describe("<Nav />", () => {
     expect(hrefs).toContain("/ki-check");
     expect(hrefs).toContain("/buecher");
     expect(hrefs).not.toContain("/open-source");
-    // The studio dropdown: a rounded paper card with the soft hover shadow.
-    expect(menu).toHaveClass("rounded-2xl", "bg-paper", "shadow-card-hover");
+    // The dropdown hangs from the square bar as the same object: square
+    // paper, a 1px ink line, no shadow, and the anti-colour hover.
+    expect(menu).toHaveClass("rounded-none", "bg-paper", "border-foreground");
+    expect(menu.className).not.toMatch(/\brounded-(?!none)|\bshadow-/);
+    for (const item of within(menu).getAllByRole("link")) {
+      expect(item).toHaveClass("hover:bg-foreground", "hover:text-background");
+    }
     expect(menu.querySelectorAll("svg")).toHaveLength(0);
   });
 
@@ -290,6 +295,9 @@ describe("<Nav />", () => {
       name: "loehrning-ai auf GitHub",
     });
     expect(github).toHaveClass("@max-[44rem]/desktop-nav:hidden");
+    // Square on the square bar, and the anti-colour hover, never a tint.
+    expect(github).toHaveClass("rounded-none", "hover:bg-foreground", "hover:text-background");
+    expect(github.className).not.toMatch(/brand-peach|brand-pink/);
   });
 
   it("carries only the brand, the language pill and the menu button below lg", () => {

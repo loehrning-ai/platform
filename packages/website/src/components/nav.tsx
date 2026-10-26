@@ -507,7 +507,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-border/70 bg-paper p-2 shadow-card-hover"
+              className="absolute left-0 top-full mt-2 w-64 rounded-none border border-foreground bg-paper p-2"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
@@ -524,10 +524,10 @@ export function Nav() {
                       // inset-ring, never ring-inset: with the --color-inset
                       // token, Tailwind v4 also reads `ring-inset` as a ring
                       // colour (Beton) and it wins over ring-brand-orange.
-                      "flex min-h-11 items-center border-l-[3px] px-3 py-2 text-sm outline-none transition-[background-color,border-color,color] duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
+                      "flex min-h-11 items-center border-l-[3px] px-3 py-2 text-sm outline-none transition-[background-color,border-color,color] duration-150 hover:bg-foreground hover:text-background focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
                       isActivePath(item.href)
                         ? "border-brand-orange text-foreground"
-                        : "border-transparent text-muted-foreground hover:text-foreground",
+                        : "border-transparent text-muted-foreground",
                     )}
                   >
                     <span>{itemLabel}</span>
@@ -621,11 +621,13 @@ export function Nav() {
     // opaque: a backdrop blur on a fixed bar flickers in iOS WebKit while the
     // page scrolls under it, and Safari tints its own toolbar from it. The
     // floating bar is Werkglas (.glass) on pages with moving visuals and solid
-    // paper on reading pages (navChrome).
+    // paper on reading pages (navChrome). The 8px strip above the floating
+    // bar is capped in page paper, so content slides under the bar's top
+    // edge instead of showing as a sliver above it.
     <nav
       aria-label={copy.mainNavigation}
       data-chrome={chrome}
-      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2"
+      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2 lg:before:pointer-events-none lg:before:absolute lg:before:inset-x-0 lg:before:top-0 lg:before:h-2 lg:before:bg-background lg:before:content-['']"
     >
       <div
         data-nav-header-row
@@ -698,7 +700,7 @@ export function Nav() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={copy.githubOrganisation}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-peach/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none @max-[44rem]/desktop-nav:hidden"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-none border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-foreground hover:bg-foreground hover:text-background focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none @max-[44rem]/desktop-nav:hidden"
             >
               <Github size={17} aria-hidden="true" />
             </a>
@@ -725,7 +727,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-peach/45 hover:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-none p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-foreground hover:text-background focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -803,7 +805,7 @@ export function Nav() {
                   type="button"
                   ref={mobileCloseRef}
                   onClick={closeMobileMenu}
-                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-pink/45 hover:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
+                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-none p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-foreground hover:text-background focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
                   aria-label={copy.closeMenu}
                 >
                   <X size={19} aria-hidden="true" />
