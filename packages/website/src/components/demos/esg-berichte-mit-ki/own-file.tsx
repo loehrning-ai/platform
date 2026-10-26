@@ -84,7 +84,7 @@ export function OwnFileStep({
       </p>
       {!file ? (
         <GlasDropZone
-          text={own.drop}
+          text={<span className="w4-drop-text">{own.drop}</span>}
           buttonLabel={own.choose}
           accept=".csv,.tsv,.txt,text/csv,text/plain"
           onFile={(chosen) => {
