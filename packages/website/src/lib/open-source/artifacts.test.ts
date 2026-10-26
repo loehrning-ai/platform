@@ -19,6 +19,7 @@ import {
   type ProjectArtifact,
   type SoftwareArtifactGuide,
   type ToolArtifact,
+  OPEN_SOURCE_SPECIMEN_FILM_MAX_BYTES,
 } from "./artifacts";
 
 // Complete fixtures matching the publication contract. The registry itself is
@@ -1245,34 +1246,87 @@ describe("open-source artifact registry", () => {
     ).toThrow(/guide\.demo\[0\]\.caption/);
   });
 
-  it("admits exactly the pinned cv-engine tool and keeps the other lanes empty", () => {
-    // The tool lane carries its first admitted record. Every claim here is a
-    // tripwire: an accidental second entry, a slug drift, or a silently
-    // changed pin fails loudly instead of shipping.
-    expect(OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES).toHaveLength(1);
-    const [cvEngine] = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES;
-    expect(cvEngine.id).toBe("tool:cv-engine");
-    expect(cvEngine.slug).toBe("cv-engine");
-    expect(cvEngine.href).toBe("/open-source/tools/cv-engine");
-    expect(cvEngine.source.href).toBe(
-      "https://github.com/loehrning-ai/cv-engine",
-    );
-    expect(cvEngine.source.revision).toBe(
-      "f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e",
-    );
-    expect(cvEngine.source.revisionHref).toBe(
-      "https://github.com/loehrning-ai/cv-engine/commit/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e",
-    );
-    expect(OPEN_SOURCE_ARTIFACT_CANDIDATE_REGISTRY.tool).toHaveLength(1);
-    expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toHaveLength(1);
+  it("validates the showcase: one-line pinned quickstart, ordered film chapters, allowed drawn stages", () => {
+    const [cvEngine, reel] = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES;
+    expect(() => assertOpenSourceArtifacts([cvEngine])).not.toThrow();
+    expect(() => assertOpenSourceArtifacts([reel])).not.toThrow();
+    const quickstart = reel.guide.quickstart;
+    const specimen = reel.guide.specimen;
+    if (!quickstart || specimen?.kind !== "film") throw new Error("fixture");
 
-    // The record is published: it is the one entry every published view,
-    // discovery surface, and static detail route derives from.
-    expect(cvEngine.publicationLifecycle).toBe("published");
-    expect(OPEN_SOURCE_TOOL_ARTIFACTS).toHaveLength(1);
-    expect(OPEN_SOURCE_TOOL_ARTIFACTS[0]?.id).toBe("tool:cv-engine");
-    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(1);
-    expect(OPEN_SOURCE_ARTIFACTS).toHaveLength(1);
+    const withGuide = (guide: Record<string, unknown>) =>
+      [{ ...reel, guide: { ...reel.guide, ...guide } }] as unknown as OpenSourceArtifact[];
+    const rejects = (guide: Record<string, unknown>, field: RegExp) =>
+      expect(() => assertOpenSourceArtifacts(withGuide(guide))).toThrow(field);
+    const command = (value: string) => ({ quickstart: { ...quickstart, command: value } });
+    const film = (patch: Record<string, unknown>) => ({ specimen: { ...specimen, ...patch } });
+
+    rejects(command(quickstart.command.replace(reel.source.revision, reel.source.revision.slice(0, 7))), /quickstart\.command/);
+    rejects(command(`${quickstart.command} && cat .env`), /quickstart\.command/);
+    rejects(command(`${quickstart.command} ${"x".repeat(400)}`), /quickstart\.command/);
+    rejects(command(`${quickstart.command}\nls`), /quickstart\.command/);
+
+    rejects(
+      film({ chapters: [specimen.chapters[0], specimen.chapters[2], specimen.chapters[1]] }),
+      /specimen\.chapters\[2\]\.atS/,
+    );
+    rejects(
+      film({ chapters: [...specimen.chapters, { atS: specimen.endS, label: "after" }] }),
+      /specimen\.chapters\[8\]\.atS/,
+    );
+    rejects(film({ endS: specimen.film.durationS + 1 }), /specimen\.endS/);
+    rejects(
+      film({ film: { ...specimen.film, src: "/media/tools/cv-engine/specimen.mp4" } }),
+      /specimen\.film\.src/,
+    );
+    rejects(
+      film({ film: { ...specimen.film, sizeBytes: OPEN_SOURCE_SPECIMEN_FILM_MAX_BYTES + 1 } }),
+      /specimen\.film\.sizeBytes/,
+    );
+    rejects({ specimen: { kind: "drawn" } }, /guide\.specimen/);
+
+    const link = (href: string) => ({ label: `Teil ${href}`, detail: "Was dort steht.", href });
+    const example = (links: readonly unknown[]) => ({
+      liveExample: { title: "Live-Beispiel", summary: "Mit dem Werkzeug gebaut.", links },
+    });
+    expect(() =>
+      assertOpenSourceArtifacts(withGuide(example([link("/workshops/x/slides.html"), link("/demos/x")]))),
+    ).not.toThrow();
+    rejects(example([link("/demos/x")]), /liveExample\.links/);
+    rejects(example([link("/demos/x"), link("https://example.com/deck")]), /liveExample\.links\[1\]\.href/);
+    rejects(example([link("/demos/x"), link("//example.com/deck")]), /liveExample\.links\[1\]\.href/);
+    rejects(example([link("/demos/x"), link("/demos/x")]), /liveExample\.links/);
+  });
+
+  it("admits exactly the pinned tools, in plate order, and keeps the other lanes empty", () => {
+    // Every claim here is a tripwire: an accidental extra entry, a slug
+    // drift, a reordering that would renumber a plate, or a silently changed
+    // pin fails loudly instead of shipping.
+    const pins = [
+      ["cv-engine", "f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e"],
+      ["reelcode", "b9a1990f2c8ad6f480ae0a49365350f12477ff04"],
+    ] as const;
+    expect(OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES).toHaveLength(pins.length);
+    pins.forEach(([slug, revision], index) => {
+      const tool = OPEN_SOURCE_TOOL_ARTIFACT_CANDIDATES[index];
+      const repository = `https://github.com/loehrning-ai/${slug}`;
+      expect(tool.id).toBe(`tool:${slug}`);
+      expect(tool.href).toBe(`/open-source/tools/${slug}`);
+      expect(tool.source).toEqual({
+        href: repository,
+        revision,
+        revisionHref: `${repository}/commit/${revision}`,
+      });
+      // Published: every published view, discovery surface and static
+      // detail route derives from these records.
+      expect(tool.publicationLifecycle).toBe("published");
+    });
+    expect(OPEN_SOURCE_ARTIFACT_CANDIDATES).toHaveLength(pins.length);
+    expect(OPEN_SOURCE_TOOL_ARTIFACTS.map((tool) => tool.slug)).toEqual(
+      pins.map(([slug]) => slug),
+    );
+    expect(OPEN_SOURCE_ARTIFACT_REGISTRY.tool).toHaveLength(pins.length);
+    expect(OPEN_SOURCE_ARTIFACTS).toHaveLength(pins.length);
 
     // The project and video lanes remain deliberately empty until a
     // loehrning-ai repository of that kind is published.

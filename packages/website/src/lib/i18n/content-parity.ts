@@ -46,6 +46,7 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/open-source",
   "/open-source/lizenzrichtlinie",
   "/open-source/tools/cv-engine",
+  "/open-source/tools/cv-engine/live",
   "/ueber-mich",
   "/workshops",
   "/workshops/angebote-mit-ki-vergleichen",

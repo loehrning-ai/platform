@@ -89,6 +89,15 @@ const { PROJECT } = vi.hoisted(() => {
           href: "/open-source",
         },
       ],
+      formula: {
+        input: "project.yaml",
+        process: "The engine renders the page",
+        output: "report.pdf",
+      },
+      quickstart: {
+        command: `git clone https://github.com/loehrning-ai/example-project && cd example-project && git checkout ${revision} && python app.py`,
+        note: "Needs Python 3.13.",
+      },
     },
   } as const satisfies ProjectArtifact;
 
@@ -107,6 +116,7 @@ vi.mock("@/lib/open-source/artifacts", () => ({
   OPEN_SOURCE_VIDEO_ARTIFACTS: [],
   getOpenSourceArtifactByRoute: (kind: string, slug: string) =>
     kind === "projects" && slug === PROJECT.slug ? PROJECT : undefined,
+  plateNumber: () => "01",
 }));
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: getRequestLocaleMock,
@@ -182,6 +192,19 @@ describe("OpenSourceArtifactDetailPage", () => {
       inLanguage: "en-GB",
     });
     expect(
+      screen.getByRole("heading", { level: 1, name: PROJECT.title }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Nr\. 01/)).toBeInTheDocument();
+    // One && step per display line; the copy button keeps the exact string.
+    const quickstart = container.querySelector("code[data-quickstart]")?.textContent ?? "";
+    expect(quickstart.split("\n")).toHaveLength(4);
+    expect(quickstart.replaceAll("\n", " ")).toBe(PROJECT.guide.quickstart.command);
+    expect(screen.getByText("Needs Python 3.13.")).toBeInTheDocument();
+    expect(screen.getByText("Stabil")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: PROJECT.source.revision.slice(0, 7) + ", öffnet in neuem Tab" }),
+    ).toHaveAttribute("href", PROJECT.source.revisionHref);
+    expect(
       screen.getByRole("heading", { name: "Datenfluss" }),
     ).toBeInTheDocument();
     expect(
@@ -213,7 +236,7 @@ describe("OpenSourceArtifactDetailPage", () => {
     const { container } = render(
       await OpenSourceArtifactDetailPage({ params: PARAMS }),
     );
-    expect(screen.getByRole("link", { name: "Open source" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "All tools" })).toHaveAttribute(
       "href",
       "/en/open-source",
     );

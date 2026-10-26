@@ -32,6 +32,21 @@ Every video must have:
 
 Machine-generated captions or transcripts are drafts. A human must review names, technical terms, timing, reading order, and non-speech cues before publication. Captions and transcripts must be updated in the same change when media content changes.
 
+## Muted tool specimens (Stumme Werkzeug-Specimens)
+
+A tool or project in the open-source registry may show a short muted film on
+its plate (`guide.specimen.film`, `guide.outputFilms`). Such a film is not a
+video item in the sense above and needs no captions or transcript, under all of
+these conditions:
+
+- it has no audio track; `bun run artifact-assets:check` rejects any file with a sound handler;
+- it is an mp4 below `packages/website/public/media/<kind>s/<slug>/`, at most 1.5 MiB, with a JPEG poster;
+- its text equivalent is always visible next to it: the `alt` sentence and, for a specimen, the chapter list;
+- its provenance is the `ASSET_MANIFEST.json` row naming the pinned upstream file it was re-encoded from, plus a `derivation` note with the exact encode.
+
+A film with speech, music or any other sound is a video item and follows the
+full policy.
+
 ## Storage and privacy
 
 The current implementation admits only repository-local first-party media below `packages/website/public/media/`. Its typed registry requires local public URLs, its asset verifier reads stored repository bytes, and its player assumes direct same-origin files. This is the only supported media-delivery choice today. Large files still require an explicit storage review before they are committed because repository history is not a media distribution system.

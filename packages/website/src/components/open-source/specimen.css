@@ -1,0 +1,120 @@
+/* Specimen plates on /open-source: the ruler under each stage. Everything
+   else is Tailwind. Only transform moves per frame (playhead, marker). */
+
+.specimen-surface {
+  touch-action: pan-y;
+  cursor: ew-resize;
+}
+
+.specimen-ruler {
+  position: relative;
+  height: 44px;
+  overflow: hidden;
+  border-block: 1px solid var(--color-foreground);
+  border-inline: 1px solid var(--color-foreground);
+  border-top: 0;
+  background: var(--color-background);
+  color: var(--color-foreground);
+  scroll-margin-bottom: 88px;
+}
+
+/* A phone plate's stage bleeds to the plate border: the plate draws the
+   sides, so the ruler draws only its bottom rule. */
+@media (width < 40rem) {
+  .specimen-surface[data-bleed] .specimen-ruler {
+    border-inline-width: 0;
+  }
+}
+
+/* Anti colour: hover, keyboard focus and press invert the band. The stage
+   above is Druckschwarz too, so a Kalkweiß rule keeps the band's top edge
+   (an inset shadow: no layout shift). */
+@media (hover: hover) {
+  .specimen-surface:hover .specimen-ruler {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    box-shadow: inset 0 1px 0 var(--color-background);
+  }
+}
+.specimen-ruler:has(.specimen-input:focus-visible),
+.specimen-ruler[data-pressed] {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  box-shadow: inset 0 1px 0 var(--color-background);
+}
+.specimen-ruler:has(.specimen-input:focus-visible) {
+  outline: 3px solid var(--color-brand-orange);
+  outline-offset: 2px;
+}
+
+.specimen-tick {
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  height: 6px;
+  background: currentColor;
+}
+.specimen-tick-major {
+  height: 16px;
+}
+.specimen-tick-number {
+  position: absolute;
+  top: -15px;
+  left: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1;
+}
+
+/* A full-width wrapper moved by its own width: no layout read per frame. */
+.specimen-playhead {
+  position: absolute;
+  inset-block: 0;
+  left: -100%;
+  width: 100%;
+  pointer-events: none;
+}
+.specimen-playhead::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  width: 2px;
+  background: var(--color-mennige);
+}
+
+/* The native range carries keyboard and screen-reader access; the surface
+   above handles pointers so a vertical swipe still scrolls the page. */
+.specimen-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  appearance: none;
+  background: transparent;
+}
+
+.specimen-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+.specimen-marker::before {
+  content: "";
+  position: absolute;
+  inset-block: 6px;
+  left: 0;
+  width: 3px;
+  background: var(--color-mennige);
+}
+
+@media print {
+  .specimen-ruler,
+  .specimen-surface + div {
+    display: none;
+  }
+}

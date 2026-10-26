@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (25)
+### Static pages (26)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/open-source/tools/cv-engine/live | src/app/open-source/tools/cv-engine/live/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
@@ -92,11 +93,12 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 
-### Open-Source-Artefakte (1)
+### Open-Source-Artefakte (2)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 | https://loehrning.ai/open-source/tools/cv-engine | CV Engine | Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Eine… | src/lib/open-source/artifacts.ts | source revision f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e | Tim Löhr |
+| https://loehrning.ai/open-source/tools/reelcode | reelcode | Claude-Code-Plugin und Engine: Aus einer project.json wird ein Film mit Musik, in vier Formaten zugleich. Läu… | src/lib/open-source/artifacts.ts | source revision b9a1990f2c8ad6f480ae0a49365350f12477ff04 | Tim Löhr |
 
 ### Indexable patterns deliberately excluded from the sitemap
 

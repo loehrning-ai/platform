@@ -22,44 +22,48 @@
       "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.png",
-      "sizeBytes": 344513,
-      "sha256": "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/cv.webp",
+      "sizeBytes": 168864,
+      "sha256": "07367fdbcfc5f3e0d85bb5780628ae4d3c6aea7bccc38623c17d753e0b4522ed",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/cv.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, same 1241x1754 size: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/form-experience.png",
-      "sizeBytes": 581785,
-      "sha256": "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/form-experience.webp",
+      "sizeBytes": 83782,
+      "sha256": "d371b4d01fefeee52337b1ce2353ce5e1e18906d4da3be7d29bb0e7ac9c5407b",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/form-experience.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, scaled to 1440x900: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.png",
-      "sizeBytes": 644467,
-      "sha256": "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/theme-picker.webp",
+      "sizeBytes": 91666,
+      "sha256": "0bd73bcca2ab9b3d670a333e72b4ebcc5e5b03d9d060f7d7df4868d14dfe0bed",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/theme-picker.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, scaled to 1440x900: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
-      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.png",
-      "sizeBytes": 690749,
-      "sha256": "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
+      "path": "packages/website/public/artifacts/tools/cv-engine/demo/yaml-view.webp",
+      "sizeBytes": 103048,
+      "sha256": "49bdb3c9e7e41f2bf56f5b39a4e8808dfc23ec0a5a306152b7ad92ad915423c9",
       "owner": "Tim L\u00f6hr",
       "source": "https://github.com/loehrning-ai/cv-engine/blob/f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e/docs/screenshots/yaml-view.png",
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
-      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt",
+      "derivation": "Re-encoded as WebP for the web, scaled to 1440x900: cwebp 1.6.0 -q 82 -m 6 -metadata none"
     },
     {
       "path": "packages/website/public/artifacts/tools/cv-engine/screenshot.webp",
@@ -70,6 +74,1015 @@
       "license": "MIT",
       "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
       "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-0.html",
+      "sizeBytes": 4047,
+      "sha256": "8f36e06068a90a914803014fdbfd1e65912f14fd8673b20aa470116b0683c031",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-1.html",
+      "sizeBytes": 5019,
+      "sha256": "d01dd22806fae5dc1b527227035cda4172c742953ea2c58f20497a174cf363d0",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-1, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-2.html",
+      "sizeBytes": 5920,
+      "sha256": "78ec9010719e45dbb2b1c55286be12be6677f405ed8dcce34f9562eb11dd14d0",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-2, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-3.html",
+      "sizeBytes": 6780,
+      "sha256": "dd0486f8d2dfc5a780d4ba604ff21f88353cdf2daa1673adf0278242c953beec",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-4.html",
+      "sizeBytes": 7261,
+      "sha256": "7311c4bcedfc3640f58f88dfab7be356f5cef8201b7a9f45ed98162e92599277",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-5.html",
+      "sizeBytes": 7840,
+      "sha256": "9f8e43b10a2a0166a6a2f575cbde95e590176e9b13fa3274980315bbd5356009",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-6.html",
+      "sizeBytes": 8685,
+      "sha256": "d0d179d0853f334a4186af96dea25afbd859f470ac84fc0b2e6aa647193c6110",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-standard-7.html",
+      "sizeBytes": 9456,
+      "sha256": "085044559eb7c03fb33eac391b04d6b97e5d3338e4d63c76514302d545e8f9db",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-standard-7, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-0.html",
+      "sizeBytes": 4163,
+      "sha256": "afc33fa2cf4ed0efdbaf82828de85248ffab9eae9bc388ee795eaa6c39634c0c",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-1.html",
+      "sizeBytes": 5135,
+      "sha256": "47efaf115d4f9557fa0aba4d949e5c94d3df941063730d0d59765871ffcbe5fc",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-1, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-2.html",
+      "sizeBytes": 6036,
+      "sha256": "8e7799e2b56e2cb859d88541021f37f229090b19be311de5276f5e13280856d3",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-2, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-3.html",
+      "sizeBytes": 6896,
+      "sha256": "0395ceada91d1af03bbe9ead3753dbabcde538b1ebc6fd0550496ef88293eab2",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-4.html",
+      "sizeBytes": 7377,
+      "sha256": "9056fb539f2007c6f0999e7da1c051e56dd01904d546c5de0c215f8aaf9d2a1b",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-5.html",
+      "sizeBytes": 7956,
+      "sha256": "45d038a5ad09ada3ba4ae0fc85e29f213addb0447a84bf0c7e6a73fde1378dff",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-6.html",
+      "sizeBytes": 8801,
+      "sha256": "1c585ff37bbd70861c50d94879779a829489d7b86920783d1b2a96eee862d86c",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/de-rail-7.html",
+      "sizeBytes": 9572,
+      "sha256": "be0dbf3b7d9ed59443243086d3379cb48254d3bcaa40694b2abd18dc8845bfde",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html de-rail-7, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-0.html",
+      "sizeBytes": 3943,
+      "sha256": "597f0a4a8a7a91428d1961f65a7381ebe9e7e82e1b60c101a93ef6b558d0bbc6",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-1.html",
+      "sizeBytes": 4931,
+      "sha256": "5922aea001de6bc5b5c8137547a2446c90c565a68603514a38f6e0e2b67e7121",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-1, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-2.html",
+      "sizeBytes": 5857,
+      "sha256": "df0374fb347ff416e4a3985b0b78688e8909d2767a28f0b094be7733e266069c",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-2, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-3.html",
+      "sizeBytes": 6718,
+      "sha256": "c37a75689cf4978e23e344f950e59056f79287b62f2c345d3813108131c1a642",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-4.html",
+      "sizeBytes": 7182,
+      "sha256": "2d62f10a850ebb9f40cd4ec16761d09d2179b840b834b0b7f2025234b3de7519",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-5.html",
+      "sizeBytes": 7744,
+      "sha256": "5ccabef203634b2d9214af3f1ce91661105de5ccffc6c84211467e0e551f1dda",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-6.html",
+      "sizeBytes": 8599,
+      "sha256": "59a925ed3ecb0b7537cd6e053645ca65426323d1f428bc34d1dd7f787835a509",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-standard-7.html",
+      "sizeBytes": 9342,
+      "sha256": "40938bc57288f00f129f161637df169a674bbf453f99be448dc7a02a7bb47855",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-standard-7, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-0.html",
+      "sizeBytes": 4059,
+      "sha256": "306bf8844cbbd90ebd8fb7d2ae448bd8ebe0b232c6821aa3ccbb7e88218303e8",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-1.html",
+      "sizeBytes": 5047,
+      "sha256": "0aefe32c17e29571775c64d5afc91a17fbabe244771112469f0092203860d8ef",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-1, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-2.html",
+      "sizeBytes": 5973,
+      "sha256": "a02cf0b9e1ab596c6342443936f7692af0d67c5e4abc5efdd3d3c93491483a9c",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-2, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-3.html",
+      "sizeBytes": 6834,
+      "sha256": "74370a4faed3ae2d18baf48165475923adc9085fde426d0ea21f9fa05b10fba2",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-4.html",
+      "sizeBytes": 7298,
+      "sha256": "feab6ef9a83fccb26012b5cbafcc2d7971c4d4bbe7bc58ee52cd2f1d5ed1a3f4",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-5.html",
+      "sizeBytes": 7860,
+      "sha256": "b157469735b0f91204888401a73dd55405aff5c5777130abdaa9301dbd49ab35",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-6.html",
+      "sizeBytes": 8715,
+      "sha256": "2083f25cdd3946917cad50a4a9e78908fd63cf682bf73aa2f7e6ae9e598ddc77",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/body/en-rail-7.html",
+      "sizeBytes": 9458,
+      "sha256": "4e6afe97cbdad5ba93215540353ac14b11fa947180714802180bb03353d5777b",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; html en-rail-7, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/fonts/Inter-Light.woff2",
+      "sizeBytes": 23964,
+      "sha256": "22455134132ec851dfa1996fa062168762d8e05bcae8b71d919d89b928055ec0",
+      "owner": "Rasmus Andersson and The Inter Project Authors",
+      "source": "Latin woff2 subset of design/fonts/Inter-Light.ttf at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d, renamed to \"CV Engine Inter\", by scripts/build-cv-engine-live.ts",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/fonts/Inter-Regular.woff2",
+      "sizeBytes": 23876,
+      "sha256": "4701545faf128b4896b54cb12fee000c01d6c431722a8d7abd47665a5fcfe552",
+      "owner": "Rasmus Andersson and The Inter Project Authors",
+      "source": "Latin woff2 subset of design/fonts/Inter-Regular.ttf at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d, renamed to \"CV Engine Inter\", by scripts/build-cv-engine-live.ts",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/fonts/Inter-Medium.woff2",
+      "sizeBytes": 24364,
+      "sha256": "f4a83d7cbdf03d97b225f89fb8b7b9729e5989499c1b211d4d31c0c019ca561d",
+      "owner": "Rasmus Andersson and The Inter Project Authors",
+      "source": "Latin woff2 subset of design/fonts/Inter-Medium.ttf at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d, renamed to \"CV Engine Inter\", by scripts/build-cv-engine-live.ts",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/fonts/Inter-SemiBold.woff2",
+      "sizeBytes": 24328,
+      "sha256": "ffb44a08787a12a4547221b41f0a255833212d984eff7b73066cba56570da76e",
+      "owner": "Rasmus Andersson and The Inter Project Authors",
+      "source": "Latin woff2 subset of design/fonts/Inter-SemiBold.ttf at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d, renamed to \"CV Engine Inter\", by scripts/build-cv-engine-live.ts",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/fonts/Inter-Bold.woff2",
+      "sizeBytes": 24404,
+      "sha256": "509d2adc1e49fdebb56bb813531f5098150676b679bd88aa1b03797982812560",
+      "owner": "Rasmus Andersson and The Inter Project Authors",
+      "source": "Latin woff2 subset of design/fonts/Inter-Bold.ttf at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d, renamed to \"CV Engine Inter\", by scripts/build-cv-engine-live.ts",
+      "license": "OFL-1.1",
+      "redistribution": "Redistribution of this OFL-1.1 font is permitted with its license notice; see LICENSES/OFL-1.1.txt",
+      "redistributionLicenseHref": "/artifacts/../LICENSES/OFL-1.1.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-tight-0.pdf",
+      "sizeBytes": 26247,
+      "sha256": "d12fc0e2f75367d28f6c3dc0e5ba97359fafe441d9fe67418f259e647ba96bca",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-classic-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-tight-4.pdf",
+      "sizeBytes": 29134,
+      "sha256": "0fd532580477876822cb5eaad5e1562a9e7cb851306de7377a87df9f00d96de8",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-classic-tight-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-tight-5.pdf",
+      "sizeBytes": 29646,
+      "sha256": "e8efd788a3760e2da83e9b1525ed3ae52bbf8536e44df2c643663fdce47ddeba",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-classic-tight-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-normal-0.pdf",
+      "sizeBytes": 26236,
+      "sha256": "3930af63bf243136fe869a988c739e64638018ad4bb3b8b6ef20ac48f3ca0f53",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-classic-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-normal-4.pdf",
+      "sizeBytes": 29119,
+      "sha256": "e8acd5ee648ca4efef5c7f814dbfe86f5c613ef87c501cd6464a78fd40ebe8fe",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-classic-normal-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-classic-airy-0.pdf",
+      "sizeBytes": 26173,
+      "sha256": "a41dcd84fae70c65d7d5b5072b7a4c911cc9632a460898dacdd37af4981ac2e5",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-classic-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-tight-0.pdf",
+      "sizeBytes": 26939,
+      "sha256": "9c9cc695b679f913b481709000e07384441dd049e7018e9e2de2568052b9dbd1",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-sidebar-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-tight-6.pdf",
+      "sizeBytes": 31273,
+      "sha256": "ba8aad2b132f28b36e40b81b1a50915a6d3a0e7a53932d02986db48be2191f3b",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-sidebar-tight-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-tight-7.pdf",
+      "sizeBytes": 31941,
+      "sha256": "32074bcc1755cbb8a23a2a88a8d0f7c9b41ac411fbeb28f9b3fb7d074395b9fa",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-sidebar-tight-7, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-normal-0.pdf",
+      "sizeBytes": 26886,
+      "sha256": "e18d6b4ff84341b1e7d3864694e5ca04c5759b3f95cd39e8ceb1495f50863f09",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-sidebar-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-normal-6.pdf",
+      "sizeBytes": 31236,
+      "sha256": "e545e6f31ada16e74077e47310ac6f81cc0a3d6b3f436cc44599bc6a875bfd56",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-sidebar-normal-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-sidebar-airy-0.pdf",
+      "sizeBytes": 27004,
+      "sha256": "b07a16a0cd8bafc1bd444752f06e592155c687b6c465f1b85c0c930d37595169",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-sidebar-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-tight-0.pdf",
+      "sizeBytes": 26521,
+      "sha256": "56cb15c0b036f3e942999c33c21086e06c6b6360e75c49909c49f85f0e6d1b6a",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-executive-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-tight-3.pdf",
+      "sizeBytes": 29177,
+      "sha256": "5f06fee442e5cd615241b0aa8e2a984255b4f5cd8d9b32b165961fc77f8e7ff4",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-executive-tight-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-tight-4.pdf",
+      "sizeBytes": 29446,
+      "sha256": "f2d33ade9bd30e20e175e01d21e36798901a90e182ec3c17e88ab4d61fe270e7",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-executive-tight-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-normal-0.pdf",
+      "sizeBytes": 26380,
+      "sha256": "fbefafd4cc2ae75e9193985ab20ee991eb860a62324d525fdfebf1ba2be8bf77",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-executive-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-normal-3.pdf",
+      "sizeBytes": 28995,
+      "sha256": "e8baf7152178ab0a1f5bd675299829574f7c6b39f70ab45f375c413b720e8c37",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-executive-normal-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-executive-airy-0.pdf",
+      "sizeBytes": 26516,
+      "sha256": "bee67ca9025c756d81658db35947770363d73a5e2634039109f1022d49e9f353",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-executive-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-tight-0.pdf",
+      "sizeBytes": 26179,
+      "sha256": "be2827d977dfc956c4aeed23ac66919b581e9c6eee59376d3095580f58889c04",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-ats-compact-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-tight-5.pdf",
+      "sizeBytes": 29523,
+      "sha256": "64aa35bfbf2e9f11be23acaf11f0de3f4da0ec3aac79516c43b1699a8b671a5e",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-ats-compact-tight-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-tight-6.pdf",
+      "sizeBytes": 30148,
+      "sha256": "0b629db87b02c3f1ffebf11c3c9cef4ee48a862e963dde3b2edbf08590aa2eb6",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-ats-compact-tight-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-normal-0.pdf",
+      "sizeBytes": 26120,
+      "sha256": "010e41a9082186e5454ef9806f258e2e3d963013a862ebc55aad36ad94e97c45",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-ats-compact-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-normal-5.pdf",
+      "sizeBytes": 29418,
+      "sha256": "568d8b66bf07cf304fb5f7aaa5737ff99251448d4b3d6dddcdeb1399a94ceeee",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-ats-compact-normal-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-de-ats-compact-airy-0.pdf",
+      "sizeBytes": 26298,
+      "sha256": "87ef4d77cf6a73db930aaaffbe2e7d880d9679aacc49fe3c9a0fc7f5f52f13aa",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf de-ats-compact-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-tight-0.pdf",
+      "sizeBytes": 25151,
+      "sha256": "cab85eb3b41e537d532777eee60bd9de477ab7cb9e9a38fbfb607e33d72b84b6",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-classic-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-tight-4.pdf",
+      "sizeBytes": 28167,
+      "sha256": "e6c672038a1096b8cfb9d895614ed27d63912ab9227b6bf84595ffe1be84f882",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-classic-tight-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-tight-5.pdf",
+      "sizeBytes": 28852,
+      "sha256": "ad9260c3f8698f9de3eb060cfe23f8f2a05ac528c1ed7abe599545b0ed0f58e0",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-classic-tight-5, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-normal-0.pdf",
+      "sizeBytes": 25089,
+      "sha256": "64d85170254e222b45037efb2e364bc7536ed574b5e5c238feb1f7864803dd57",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-classic-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-normal-4.pdf",
+      "sizeBytes": 28207,
+      "sha256": "7f8d76aece33fe72f17ff2217d77aff7478b4f118fda7a45bb7b74b3109eb2e8",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-classic-normal-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-classic-airy-0.pdf",
+      "sizeBytes": 25098,
+      "sha256": "42730a791fc5585feee3d02d783c8be6055367bcb0a6c6870557423ccac4ec20",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-classic-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-tight-0.pdf",
+      "sizeBytes": 26014,
+      "sha256": "d493f734f0d81fc68a55a8629a79e44f5477321fb73064572814460b4ff33e55",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-sidebar-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-tight-6.pdf",
+      "sizeBytes": 30711,
+      "sha256": "84a65c62e010fad16b3a8c5afc7be4505d565e54bc5b4fb06d6688ec3a87e14e",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-sidebar-tight-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-tight-7.pdf",
+      "sizeBytes": 31333,
+      "sha256": "f6069da1424309a616324ba45400aa6d05b09700798630b1f7090c77ac36d9a0",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-sidebar-tight-7, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-normal-0.pdf",
+      "sizeBytes": 25892,
+      "sha256": "0cc33d645279ce6927b590376b61db37a59e9f7d82fc9eb44b84462156736cac",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-sidebar-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-normal-6.pdf",
+      "sizeBytes": 30644,
+      "sha256": "92e02329be2b68e4df88b8d6aa8047f3b5c5db3242f422261f148f2952afd644",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-sidebar-normal-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-sidebar-airy-0.pdf",
+      "sizeBytes": 25986,
+      "sha256": "0976156be37ecc28023ef80aa8d06d268faeba10c6c3f72fe12de2aba72e17be",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-sidebar-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-tight-0.pdf",
+      "sizeBytes": 25362,
+      "sha256": "42a15a35c478b6a52079b6aef84d452ca9220f48bff3a04b25ed415d2194f1e7",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-executive-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-tight-3.pdf",
+      "sizeBytes": 28337,
+      "sha256": "314b8ef802b6da9e9a63f61e315c9f1cd76d6b9ff267fbc771645661f29d9b79",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-executive-tight-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-tight-4.pdf",
+      "sizeBytes": 28528,
+      "sha256": "58215aa522a3b8cd1bf7a0389db5099040b8cae2a670bf5a128da242cfbd0743",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-executive-tight-4, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-normal-0.pdf",
+      "sizeBytes": 25303,
+      "sha256": "9e3f525dd1087470856d5dffa0bca86d134cfb0b7b81fc56de7748a0b2d23e4b",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-executive-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-normal-3.pdf",
+      "sizeBytes": 28176,
+      "sha256": "3cf632c0321f67239deea0cea5a3c45d78cabc7840c44691ee6c0d7cec016a10",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-executive-normal-3, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-executive-airy-0.pdf",
+      "sizeBytes": 25295,
+      "sha256": "b3e5eafdd784cca06d590db6545c9d508dad54c147bd0306f71d187b27cc5400",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-executive-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-tight-0.pdf",
+      "sizeBytes": 25184,
+      "sha256": "78c605721650c4c3cf401d61c3c9385dab8b025e65d0fd65241202071016e90b",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-ats-compact-tight-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-tight-6.pdf",
+      "sizeBytes": 29400,
+      "sha256": "8c61cb2907f473858a3b587c4028d382a3d141a5267bdd897c239cca352b6897",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-ats-compact-tight-6, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-normal-0.pdf",
+      "sizeBytes": 25144,
+      "sha256": "fa8049d476b76f89e5dfca29040886da8cee2fb1240f6a6585d48890fd2fa1e0",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-ats-compact-normal-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/cv-engine/live/pdf/mira-kessler-en-ats-compact-airy-0.pdf",
+      "sizeBytes": 25145,
+      "sha256": "e4d474b85b45fc4118eb63e1e5fca9a396f11a6fd8df4bdf81d9fd2406b9a833",
+      "owner": "Tim L\u00f6hr",
+      "source": "Rendered by engine/build.py at https://github.com/loehrning-ai/cv-engine/commit/5137165ccee559081f547252038d8b86c7c0fb3d (pull request 24, pending upstream merge) from the invented person in content/examples plus invented stations; pdf en-ats-compact-airy-0, written by scripts/build-cv-engine-live.ts",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/cv-engine/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/cv-engine/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/reelcode/LICENSE.txt",
+      "sizeBytes": 1066,
+      "sha256": "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/LICENSE",
+      "license": "MIT",
+      "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/reelcode/demo/contact-example.jpg",
+      "sizeBytes": 229131,
+      "sha256": "5d1ec31012f7fea1d24e6f0a533d08aa02ce7094760c7bb5ba548dbe243e5c4e",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/contact-example.jpg",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "Upstream file with its JPEG comment (COM) segment removed losslessly, pixels unchanged"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/reelcode/screenshot.png",
+      "sizeBytes": 104808,
+      "sha256": "a43e99964d4844e0b43dff26643392eb916a8c8a57a9435cb5c390acd7362c08",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/social-preview.png",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/LICENSE.txt",
+      "sizeBytes": 1066,
+      "sha256": "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden LICENSE, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/demo/before-after.png",
+      "sizeBytes": 90678,
+      "sha256": "33330b6afce7d50e293fdd543ee62f120c980b7c1805f3cbeb78686241575206",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/before-after.png, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/demo/demo.png",
+      "sizeBytes": 180653,
+      "sha256": "42df82e10bb29f445a92fd6e8541e3b8b82945fe08cd8be5b419cbe02c61dcb6",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/demo.png, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/artifacts/tools/rotfaden/screenshot.png",
+      "sizeBytes": 110384,
+      "sha256": "3c8dcb708bc9ba8093aaadecb5e18d90a0c544de03c606929193f5e25f73e374",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/social-preview.png, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/formats.jpg",
+      "sizeBytes": 41852,
+      "sha256": "02cf30147e0d1959e2d2ba941277557a43c8cd39f2faea85d325cdc3dd7390ad",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/hero.gif",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg frame 0.6 s before the end of formats.mp4, JPEG, bitexact (no encoder comment)"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/formats.mp4",
+      "sizeBytes": 666538,
+      "sha256": "04d6befa1fb44490b09a07a370d13cd84e5bda634ef6420193a96bc5071cdc9e",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/hero.gif",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg re-arrangement of the GIF into two rows (9:16, 1:1 and 4:5 above, 16:9 below, labels kept), 504x484, muted, H.264 crf 26, 12 fps"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/specimen.jpg",
+      "sizeBytes": 43469,
+      "sha256": "ac9665ea1e7cb874edbc1e36e5bf8419cd221c4a4e979aa4180f4bb8d33689da",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/showreel-1x1.mp4",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg frame at 15.2 s, 720x720 JPEG; JPEG comment (COM) segment removed losslessly, pixels unchanged"
+    },
+    {
+      "path": "packages/website/public/media/tools/reelcode/specimen.mp4",
+      "sizeBytes": 740664,
+      "sha256": "37aafb6991faafee6bc256b8bcd5ecde72ef5d15fa0901c4dc32a24f8a941063",
+      "owner": "Tim L\u00f6hr",
+      "source": "https://github.com/loehrning-ai/reelcode/blob/b9a1990f2c8ad6f480ae0a49365350f12477ff04/docs/media/showreel-1x1.mp4",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/reelcode/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/reelcode/LICENSE.txt",
+      "derivation": "ffmpeg re-encode, muted, 720x720, H.264 crf 30, GOP 8"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/specimen.jpg",
+      "sizeBytes": 66319,
+      "sha256": "cf4ad649c9de8200c623dafa82730f0b12796ef64deb877573d2519986ab3f14",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-1x1.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "ffmpeg frame at 18.5 s (the strict check at 0 errors), 720x720 JPEG, written without metadata"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/specimen.mp4",
+      "sizeBytes": 1391364,
+      "sha256": "9e67321d81c051695f08ac58a95377d0a2b109754919ebcf6c68f3df22e011b9",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-1x1.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "reelcode final render (project rotfaden-usage, 1:1, 60 fps) of captured real rotfaden runs, ffmpeg re-encode without the audio track, 720x720, 30 fps, H.264 crf 28, GOP 8 for scrubbing, container metadata removed"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-16x9.jpg",
+      "sizeBytes": 83993,
+      "sha256": "73e3aa830fda9d9f6fcbffae23e8f9de2f5e78e4aae2dbc650bae35c101ba4c4",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-16x9.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "ffmpeg frame at 18.5 s (the strict check at 0 errors), 1280x720 JPEG, written without metadata"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-16x9.mp4",
+      "sizeBytes": 580483,
+      "sha256": "d95616389ba593c04dd5a7e32e1e613e256f86f4d3dc9e4adff83ff4be0b5eab",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-16x9.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "reelcode final render (project rotfaden-usage, 16:9, 60 fps) of captured real rotfaden runs, ffmpeg re-encode without the audio track, 1280x720, 30 fps, H.264 crf 26, container metadata removed"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-9x16.jpg",
+      "sizeBytes": 90918,
+      "sha256": "f4a84917b4879a1d70e1009d20dc36fa660c6809ce66d1a54570d7bb5ae581df",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-9x16.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "ffmpeg frame at 18.5 s (the strict check at 0 errors), 720x1280 JPEG, written without metadata"
+    },
+    {
+      "path": "packages/website/public/media/tools/rotfaden/usage-9x16.mp4",
+      "sizeBytes": 476007,
+      "sha256": "da4c5cf2142b1978349644cad4cc952fec295f9cc94193528ef1c42fce2fd47d",
+      "owner": "Tim L\u00f6hr",
+      "source": "loehrning-ai/rotfaden docs/media/usage-9x16.mp4, staged before the repository's first public commit; the pinned source URL replaces this text on admission",
+      "license": "MIT",
+      "redistribution": "Permitted under the corresponding file at public/artifacts/tools/rotfaden/LICENSE.txt",
+      "redistributionLicenseHref": "/artifacts/tools/rotfaden/LICENSE.txt",
+      "derivation": "reelcode final render (project rotfaden-usage, 9:16, 60 fps) of captured real rotfaden runs, ffmpeg re-encode without the audio track, 720x1280, 30 fps, H.264 crf 26, container metadata removed"
     },
     {
       "path": "packages/website/public/book-covers/ki-arbeitsalltag-2026-1.png",
@@ -911,8 +1924,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 285840,
-      "sha256": "7dd2db35a4b0f66f501fd3209d2aa6464a4a25fd1615ef9317d8ab4a7dc7d5e7",
+      "sizeBytes": 201682,
+      "sha256": "060cb36b5fa31c02062ef3ae955e5f3971d35bcad5ee7eda2a9f8661264b7845",
       "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",

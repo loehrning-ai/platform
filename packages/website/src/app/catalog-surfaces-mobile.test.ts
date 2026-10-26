@@ -12,7 +12,6 @@ const SURFACES = [
   "demos/page.tsx",
   "workshops/workshops-content.tsx",
   "open-source/page.tsx",
-  "open-source/artifact-ledger.tsx",
 ] as const;
 
 type Surface = (typeof SURFACES)[number];
@@ -144,30 +143,6 @@ describe("catalog surfaces below lg", () => {
     // No route rail: the posters follow the cover at every width.
     expect(workshops).not.toContain("workshop-route-heading");
     expect(workshops).toContain('"pb-10 pt-4 sm:pb-24 sm:pt-12"');
-  });
-
-  it("keeps the open-source cover and ledger frames bounded on phones", () => {
-    const hub = source("open-source/page.tsx");
-    const ledger = source("open-source/artifact-ledger.tsx");
-
-    expect(hub).toContain("py-4 sm:py-8");
-    expect(hub).toContain("min-h-[17rem]");
-    expect(hub).toContain("sm:min-h-[22rem] md:min-h-[25rem]");
-    expect(hub).toContain("inset-6 sm:inset-10");
-    expect(hub).toContain(
-      "md:grid-cols-[minmax(0,0.88fr)_minmax(20rem,1.12fr)]",
-    );
-
-    expect(ledger).toContain("py-4 sm:py-6");
-    // A 16:9 poster in a phone-wide column is already 190px tall; the 18rem
-    // floor belongs to the wide desktop column, where it stops the frame
-    // collapsing next to the fact grid.
-    expect(ledger).toContain("aspect-video min-h-[11rem] sm:min-h-[18rem]");
-    expect(ledger).toContain(
-      "lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]",
-    );
-    expect(ledger).toContain("grid-cols-2 border-l border-t border-foreground");
-    expect(ledger).toContain("sm:grid-cols-3");
   });
 });
 

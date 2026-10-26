@@ -6,7 +6,11 @@
 
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
-import { OPEN_SOURCE_ARTIFACTS } from "../../src/lib/open-source/artifacts";
+import {
+  OPEN_SOURCE_ARTIFACTS,
+  OPEN_SOURCE_PROJECT_ARTIFACTS,
+  OPEN_SOURCE_TOOL_ARTIFACTS,
+} from "../../src/lib/open-source/artifacts";
 import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 import { chapterPath, chapters } from "./fixtures/book";
 
@@ -43,6 +47,9 @@ const ROUTES = [
   "/datenschutz",
   "/bot",
   ...OPEN_SOURCE_DETAIL_ROUTES,
+  ...[...OPEN_SOURCE_TOOL_ARTIFACTS, ...OPEN_SOURCE_PROJECT_ARTIFACTS].flatMap((artifact) =>
+    artifact.delivery === "internal-route" ? [artifact.launchHref] : [],
+  ),
 ];
 
 /**
