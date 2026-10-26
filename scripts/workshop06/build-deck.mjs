@@ -9,7 +9,8 @@
  *   6  links to this site: the closing slide names the demo page and carries a QR code to it, the kit slide a
  *      QR code to the kit page, the footer drops the repository that is not public yet
  *   7  the site's frame: the loehrning.ai mark and author, "← Workshop" back to the workshop page, the toolbar
- *      always shown with "Neu starten R" and "Moderation P", like the decks of Workshops 01 to 05
+ *      always shown with "Neu starten R" and "Moderation P", like the decks of Workshops 01 to 05; a light cover
+ *      (no dark slide, paper behind the stage) and the host on slide 2, which takes one of the cover's two minutes
  *   8  three presenter notes in the site's words: no boss ("an die Chefin weitergeben" becomes "so weitergeben")
  *      and no stamp (the "Ungeprüft" mark on scene 4 is "das Urteil", as its class "verdict" says)
  *   9  the objective, word for word as the workshop page and the demo state it, on the arc slide
@@ -75,8 +76,70 @@ body.presenting #controls { display: none; }
 .site-take .src { white-space: normal; }
 .site-qr { width: 200px; height: 200px; padding: 14px; flex: none; }
 [data-n="12"] .file { min-height: 300px; }
+/* No black ground: paper behind the stage too. The host card is the same in every workshop deck. */
+:root { --letterbox: #F3F0E9; }
+.slide[data-id="host"] .host-photo { position: absolute; left: 0; top: 0; bottom: 0; width: 760px; margin: 0; overflow: hidden; background: var(--card); }
+.slide[data-id="host"] .host-photo img { display: block; width: calc(100% + 56px); height: 100%; margin-left: -56px; object-fit: cover; object-position: 50% 35%; }
+.slide[data-id="host"] .host-copy { position: absolute; left: 856px; right: var(--mx); top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; }
+.host-kicker { margin: 0; font: 700 28px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.host-name { margin: 24px 0 0; font-size: 150px; line-height: .92; letter-spacing: var(--track-hero); font-weight: var(--weight-h); }
+.host-msc { margin: 40px 0 0; display: flex; align-items: baseline; gap: 22px; font-size: 32px; line-height: 1.3; }
+.host-msc b { font-weight: 700; }
+.host-msc span { font: 400 28px/1.3 var(--font-mono); color: var(--muted); }
+.host-career { position: relative; margin-top: 84px; height: 230px; }
+.host-track, .host-fill { position: absolute; left: 0; width: 668px; display: block; }
+.host-track { top: 13px; height: 2px; background: var(--line); }
+.host-fill { top: 11px; height: 6px; background: var(--fg); transform-origin: 0 50%; }
+.host-stops { position: relative; display: flex; margin: 0; padding: 0; list-style: none; }
+.host-stops li { width: 320px; }
+.host-dot { display: block; width: 28px; height: 28px; background: var(--fg); }
+.host-own .host-dot { background: var(--accent); }
+.host-stops b { display: block; margin-top: 26px; font-size: 44px; line-height: 1; letter-spacing: var(--track-h); font-weight: 700; }
+.host-own b { color: var(--accent-text); }
+.host-stops span { display: block; margin-top: 14px; font: 400 28px/1 var(--font-mono); color: var(--muted); white-space: nowrap; }
+.host-now { position: absolute; left: 640px; top: 166px; width: 240px; height: 16px; margin: 0; border: 3px solid var(--accent); border-top: 0; }
+.host-now span { position: absolute; left: 0; top: 26px; font: 700 28px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-text); }
+.host-line { margin: 40px 0 0; max-width: 900px; font-size: 34px; line-height: 1.3; color: var(--muted); }
 </style>
 `;
+
+/** Slide 2, the host: the same short card as in the other workshop decks (photo, name, degree, three career stops). */
+const HOST_SLIDE = `<!-- 02 host (loehrning.ai edition) -->
+<section data-n="host" data-id="host" class="slide" data-title="Gastgeber" data-minutes="1" data-route="" data-no-chrome>
+  <figure class="host-photo"><img src="./assets/tim-loehr.jpg" width="1100" height="1100" alt="Porträt von Tim Löhr"></figure>
+  <div class="host-copy">
+    <p class="host-kicker" data-step="0">Gastgeber</p>
+    <h2 class="host-name" data-step="0" style="--order:1">Tim Löhr</h2>
+    <p class="host-msc" data-step="0" style="--order:2"><b>M.Sc. Informatik</b><span>FAU Erlangen-Nürnberg</span></p>
+    <div class="host-career">
+      <i class="host-track" aria-hidden="true"></i><i class="host-fill" aria-hidden="true" data-step="0" data-motion="grow" style="--order:2"></i>
+      <ol class="host-stops">
+        <li data-step="0" data-motion="stamp" style="--order:2"><i class="host-dot" aria-hidden="true"></i><b>Apple</b><span>Data Scientist</span></li>
+        <li data-step="0" data-motion="stamp" style="--order:3"><i class="host-dot" aria-hidden="true"></i><b>Red Bull</b><span>Data Scientist</span></li>
+        <li class="host-own" data-step="0" data-motion="stamp" style="--order:4"><i class="host-dot" aria-hidden="true"></i><b>loehrning.ai</b><span>Gründer</span></li>
+      </ol>
+      <p class="host-now" data-step="0" style="--order:4"><span>jetzt</span></p>
+    </div>
+    <p class="host-line" data-step="0" style="--order:4">Jede Firma, jede Person und jede Datei in diesem Workshop ist erfunden.</p>
+  </div>
+</section>
+`;
+
+/** The host's presenter cue, in the shape of rotfaden's deck-meta cues. */
+const HOST_CUE =
+  '{"purpose": "Kurz sagen, wer durch den Workshop führt, und dass alles erfunden ist.", "action": "listen", ' +
+  '"say": ["Ich bin Tim Löhr. Ich war Data Scientist bei Apple und Red Bull und baue mit loehrning.ai Workshops wie diesen. Alles, was ihr heute seht, ist erfunden."], ' +
+  '"sayAt": {"0": [0]}, "revealOrder": ["Foto, Name, Studium und die Linie von Apple bis loehrning.ai"], ' +
+  '"cut": "Nur den Namen sagen und weiter.", "remember": "Unter einer Minute bleiben, dann direkt zum Fall.", ' +
+  '"ifItGoesWrong": "Wenn das Foto nicht lädt: Name und Linie reichen.", "clock": {"start": "1:00", "end": "2:00"}}, ';
+
+/** deck-meta's slide list from n = 2 on moves one down for the host: one [anchor, replacement] per slide id. */
+function hostRenumbering(source) {
+  const meta = JSON.parse(/<script type="application\/json" id="deck-meta">([\s\S]*?)<\/script>/.exec(source)[1]);
+  return meta.slides
+    .filter((slide) => slide.n >= 2)
+    .map((slide) => [7, `{"n": ${slide.n}, "id": "${slide.id}"`, `{"n": ${slide.n + 1}, "id": "${slide.id}"`]);
+}
 
 async function qrSvg(url) {
   const require = createRequire(path.join(WEBSITE, "package.json"));
@@ -86,7 +149,7 @@ async function qrSvg(url) {
 }
 
 /** [PORT-LOG item, anchor in rotfaden's deck, replacement]. Each anchor occurs exactly once. */
-async function edits() {
+async function edits(source) {
   const demoQr = await qrSvg(DEMO_URL);
   const kitQr = await qrSvg(KIT_URL);
   return [
@@ -138,6 +201,16 @@ async function edits() {
     ],
     [7, `present: 'Referentenansicht',`, `present: 'Moderation',`],
     [7, `reset: 'Neustart',`, `reset: 'Neu starten',`],
+    // 7: a light cover, and the host on slide 2 with one of the cover's two minutes.
+    [7, `class="slide dark" data-title="Welches Angebot ist günstiger?" data-minutes="2" data-no-chrome>`, `class="slide" data-title="Welches Angebot ist günstiger?" data-minutes="1" data-no-chrome>`],
+    [7, `<!-- 02 02-case -->\n`, `${HOST_SLIDE}<!-- 02 02-case -->\n`],
+    [7, `"clock": {"start": "0:00", "end": "2:00"}`, `"clock": {"start": "0:00", "end": "1:00"}`],
+    [7, `Nie streichen. Unter zwei Minuten bleiben; den Weg zeigt die übernächste Szene.`, `Nie streichen. Unter einer Minute bleiben; den Weg zeigt die Szene nach dem Fall.`],
+    [7, `{"purpose": "Den Fall zeigen`, `${HOST_CUE}{"purpose": "Den Fall zeigen`],
+    [7, `"clock": [[0.0, 2.0], [2.0, 4.0],`, `"clock": [[0.0, 1.0], [1.0, 2.0], [2.0, 4.0],`],
+    ...hostRenumbering(source),
+    [7, `{"n": 1, "id": "cover", "kind": "main", "title": "Welches Angebot ist günstiger?", "minutes": 2.0, "steps": 2}, `,
+      `{"n": 1, "id": "cover", "kind": "main", "title": "Welches Angebot ist günstiger?", "minutes": 1.0, "steps": 2}, {"n": 2, "id": "host", "kind": "main", "title": "Gastgeber", "minutes": 1.0, "steps": 0}, `],
     // 8: no boss in the notes.
     [8, `Wer würde diese Antwort an die Chefin weitergeben?`, `Wer würde diese Antwort so weitergeben?`],
     [8, `"Der Stempel: ungeprüft"`, `"Das Urteil: ungeprüft"`],
@@ -160,7 +233,7 @@ async function edits() {
 
 export async function buildDeck(source = readFileSync(SOURCE, "utf8")) {
   let out = source;
-  for (const [item, anchor, replacement] of await edits()) {
+  for (const [item, anchor, replacement] of await edits(source)) {
     const count = out.split(anchor).length - 1;
     if (count !== 1) throw new Error(`PORT-LOG item ${item}: the anchor occurs ${count} times, expected once:\n${anchor.slice(0, 160)}`);
     out = out.replace(anchor, () => replacement);

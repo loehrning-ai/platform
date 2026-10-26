@@ -47,7 +47,10 @@ rotfaden example too; item 7 is this site's frame.
    on the cover ("Workshop 06"), the author `loehrning.ai`, a "← Workshop" link back to the workshop page, and the
    toolbar always shown with "Neu starten R" and "Moderation P" (rotfaden shows it only under a mouse). On a phone held
    sideways the toolbar keeps rotfaden's rule, because it would cover the slide. The typeface stays: the decks of
-   Workshops 01 to 05 set "Typing", a renamed derivative of Inter, and this deck sets Inter.
+   Workshops 01 to 05 set "Typing", a renamed derivative of Inter, and this deck sets Inter. Like the other decks it
+   has no dark slide: the cover is light and paper shows behind the stage. Slide 2 is the host card the other decks
+   share (photo `assets/tim-loehr.jpg`, name, degree, Apple, Red Bull, loehrning.ai); it takes one of the cover's two
+   minutes, so the deck still runs 75 minutes, and its presenter cue sits in `deck-meta` with the others.
 8. **Three presenter notes in the site's words.** "Wer würde diese Antwort an die Chefin weitergeben?" reads "Wer würde
    diese Antwort so weitergeben?", and the "Ungeprüft" mark of scene 4 is "das Urteil" in two notes instead of "der
    Stempel". The site's copy check now reads the notes of every deck.

@@ -42,7 +42,7 @@ export const DECK_KEYS_WORKSHOPS = [
 export const DECK_KEYS_EQUIVALENT = {
   "angebote-mit-ki-vergleichen": {
     page: "slides.html",
-    sha256: "9e86b729b5b777cfc6eed1cacad577075e91cfc90c83346355dc909e2d0c5602",
+    sha256: "fe6c4f419c3e995ce5f4f372143b13fc6955843ad74c07a15bbfbb55d5199e27",
     extraKeys: ["ArrowDown", "PageDown", "Space", "ArrowUp", "PageUp", "Shift+Space"],
     /** The handler lines that carry the five contract keys. */
     contract: [
