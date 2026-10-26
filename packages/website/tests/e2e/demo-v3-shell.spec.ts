@@ -3,7 +3,7 @@ import { demos } from "../../src/lib/demos";
 import { expectGlassBudget } from "./fixtures/glass";
 
 /**
- * The v3 shell contract all five demos share:
+ * The v3 shell contract all six demos share:
  * the stage and the lever own the first screen at 390 x 664 without the page
  * scrolling itself, a restart is visible, and at most two glass surfaces show.
  */

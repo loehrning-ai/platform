@@ -15,6 +15,7 @@ const WORKSHOPS = [
   { slug: "datenbereitschaft-fuer-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: false },
   { slug: "esg-berichte-mit-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
   { slug: "audit-vorbereitung-mit-ki", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
+  { slug: "angebote-mit-ki-vergleichen", a: ["Demo öffnen", "Open the demo"], b: ["Kit herunterladen", "Download the kit"], download: true, kitPage: true },
 ] as const;
 
 const LOCALES = [
