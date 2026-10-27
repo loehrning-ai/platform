@@ -32,6 +32,14 @@ export const MCP_MAX_OUTPUT_BYTES = 64 * 1024;
  */
 export const MCP_MAX_REQUEST_BYTES = 256 * 1024;
 
+/**
+ * Ceiling on array elements plus object keys in one tool call's arguments.
+ * Every tool takes a few scalars, so this sits far above legitimate use and
+ * stops a small body from making validation exhaust memory
+ * (GHSA-46jr-4wx8-v453; the SDK leaves the cap off by default).
+ */
+export const MCP_MAX_TOOL_INPUT_ELEMENTS = 1_000;
+
 /** Per-client budget: one hour, 240 JSON-RPC requests. */
 export const MCP_RATE_LIMIT_WINDOW_SECONDS = 60 * 60;
 export const MCP_RATE_LIMIT_MAX = 240;

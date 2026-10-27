@@ -125,7 +125,7 @@ const LIVE_AUTH_E2E_ALLOWED_PUBLIC_VARIABLES = new Set([
 // It is trusted here in exactly one narrow case: its value is the *exact*
 // derivation environment-policy.mjs's localVerificationOrigin() would itself
 // produce from this same process's E2E_SERVER_MODE/E2E_PORT — i.e. this is a
-// self-consistent build the CI e2e/lighthouse/auth-scaffold pipeline
+// self-consistent build the CI e2e/auth-scaffold pipeline
 // produced for its own loopback-HTTP test server, not an arbitrarily
 // injected value. Any other value, or a value present with no matching
 // E2E_SERVER_MODE/E2E_PORT to derive it from, still fails loudly.

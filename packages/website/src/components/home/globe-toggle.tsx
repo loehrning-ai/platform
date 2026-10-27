@@ -1,9 +1,10 @@
 "use client";
 
 /**
- * A globe's pause control: a quiet 44px target (no frame, a small glyph at
- * reduced contrast), a fixed localized name and a pressed state, so the name
- * says what the button does and aria-pressed says whether it is on.
+ * A globe's pause control: a 44px target with a small glyph, a fixed
+ * localized name (also its tooltip) and a pressed state, so the name says
+ * what the button does and aria-pressed says whether it is on. The pressed
+ * state is visible too: a play glyph on a tinted, Kobalt-edged ground.
  *
  * The phone variant drives the horizon renderer; the desktop variant drives
  * the projection globe (aria-controls names it). Each is rendered only while
@@ -28,6 +29,7 @@ export function GlobeToggle({
       data-home-globe-toggle={variant === "phone" ? "" : undefined}
       data-hero-globe-toggle={variant === "desktop" ? "" : undefined}
       aria-label={label}
+      title={label}
       aria-pressed={paused}
       aria-controls={controls}
       onClick={onToggle}

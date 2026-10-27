@@ -276,6 +276,25 @@ describe("POST /api/mcp", () => {
     expect(body).toContain("workshop://");
   });
 
+  it("refuses tool arguments above the element cap before validating them", async () => {
+    enableAgentAccess();
+    const response = await POST(
+      jsonRequest({
+        jsonrpc: "2.0",
+        id: 5,
+        method: "tools/call",
+        params: {
+          name: "list_workshops",
+          arguments: { locale: "en", padding: new Array(1_500).fill(0) },
+        },
+      }),
+    );
+    expect(response.status).toBe(200);
+    const body = await response.text();
+    expect(body).toContain("more than the maximum of 1000 elements");
+    expect(body).not.toContain("workshop://");
+  });
+
   it("serves resources/list over the Streamable HTTP transport", async () => {
     enableAgentAccess();
     const response = await POST(

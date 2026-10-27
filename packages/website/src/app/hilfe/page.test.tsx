@@ -91,7 +91,7 @@ describe("HilfePage locale and provider boundaries", () => {
     );
     expect(
       topicIndex?.querySelector('a[href="/hilfe#grenzen"]'),
-    ).toHaveAccessibleName("Welche Einschränkungen sind bekannt?");
+    ).toHaveAccessibleName(/Welche Einschränkungen sind bekannt\?$/);
     const limitations = document.querySelector<HTMLElement>(
       "[data-limitations-ledger]",
     );

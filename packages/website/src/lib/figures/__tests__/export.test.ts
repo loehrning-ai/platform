@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { PRINT_OPTIONS, renderFigureMarkup, renderStandaloneSvg } from "../export.ts";
 import { ALL_FIXTURES, WATERFALL } from "./fixtures.ts";

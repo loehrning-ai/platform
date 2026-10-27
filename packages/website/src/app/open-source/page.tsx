@@ -10,6 +10,7 @@ import {
 } from "@/lib/open-source/display-copy";
 import { JsonLd, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
 import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
+import { defaultSocialImage } from "@/lib/seo/page-metadata";
 import { ContentsTable } from "@/components/open-source/contents-table";
 import { ToolWall, plateEntries } from "@/components/open-source/tool-plate";
 
@@ -37,6 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: absoluteUrl(localizedPath),
       locale: locale === "de" ? "de_DE" : "en_GB",
       type: "website",
+      images: [defaultSocialImage(locale)],
     },
   };
 }

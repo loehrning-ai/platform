@@ -1896,42 +1896,6 @@
       "redistribution": "Permitted under LICENSES/OFL-1.1.txt"
     },
     {
-      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 101362,
-      "sha256": "9af066de30e678b074b62d69833a94121bcdf5032202ecc09724c00037dc1b55",
-      "owner": "Tim L\u00f6hr",
-      "source": "Playwright-generated visual regression baseline from this repository",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/courses-desktop.png",
-      "sizeBytes": 118386,
-      "sha256": "1002f62ff6c330a296f6238f9316491602d211236bf26ab2d83719d895bd2384",
-      "owner": "Tim L\u00f6hr",
-      "source": "Playwright-generated visual regression baseline from this repository",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/legal-desktop.png",
-      "sizeBytes": 104531,
-      "sha256": "4a9d098287d2ef244ac59961b1fb3e0c770ccaf38c8f59dcdaaf5b93e3a89d31",
-      "owner": "Tim L\u00f6hr",
-      "source": "Playwright-generated visual regression baseline from this repository",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
-      "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/open-source-desktop.png",
-      "sizeBytes": 201682,
-      "sha256": "060cb36b5fa31c02062ef3ae955e5f3971d35bcad5ee7eda2a9f8661264b7845",
-      "owner": "Tim L\u00f6hr",
-      "source": "Playwright-generated visual regression baseline from this repository",
-      "license": "LicenseRef-Loehrning-Editorial",
-      "redistribution": "Included for repository operation; reuse is not granted"
-    },
-    {
       "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/assets/favicon.svg",
       "sizeBytes": 375,
       "sha256": "93307b8d9a43e69099e6f407ba120ed6ee5a586921be96b0613271cc269441ac",

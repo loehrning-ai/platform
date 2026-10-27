@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach, beforeAll, vi } from "vitest";
 
 /** In-memory localStorage polyfill (some jsdom combos expose a no-op). */

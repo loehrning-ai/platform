@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";

@@ -17,7 +17,7 @@ export const HOME_COPY = {
         facts: ["Ohne Paywall", "Deutsch und Englisch", "Quelloffen"],
       },
       primaryCta: "Lernroute wählen",
-      globeToggle: "Globus anhalten",
+      globeToggle: "Animation pausieren",
       pillars: [
         {
           title: "Lernen",
@@ -111,7 +111,7 @@ export const HOME_COPY = {
         facts: ["No paywall", "German and English", "Open source"],
       },
       primaryCta: "Choose a learning route",
-      globeToggle: "Pause the globe",
+      globeToggle: "Pause animation",
       pillars: [
         {
           title: "Learn",

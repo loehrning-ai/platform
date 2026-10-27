@@ -181,7 +181,7 @@ describe("HeroSection responsive globe", () => {
       document.querySelector('[data-hero-globe-motion="running"]'),
     ).not.toBeNull();
     // Exactly one control: no invisible surface button over the globe.
-    const controls = screen.getAllByRole("button", { name: "Pause the globe" });
+    const controls = screen.getAllByRole("button", { name: "Pause animation" });
     expect(controls).toHaveLength(1);
     const toggle = controls[0];
     expect(container.querySelector("[data-hero-globe-surface-control]")).toBeNull();
@@ -196,7 +196,7 @@ describe("HeroSection responsive globe", () => {
       "true",
     );
     expect(toggle).toHaveAttribute("aria-pressed", "true");
-    expect(toggle).toHaveAccessibleName("Pause the globe");
+    expect(toggle).toHaveAccessibleName("Pause animation");
     expect(
       document.querySelector('[data-hero-globe-motion="paused"]'),
     ).not.toBeNull();

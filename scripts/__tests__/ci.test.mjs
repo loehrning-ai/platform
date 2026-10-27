@@ -25,24 +25,21 @@ test("parseSmokeList keeps one spec per line and prefixes the e2e directory", ()
   ]);
 });
 
-test("every smoke spec exists, once, and none is a known flaky or brittle spec", () => {
+test("every smoke spec exists, once, and the known-brittle workshops spec stays out", () => {
   const files = readSmokeFiles();
   assert.ok(files.length > 0);
   assert.equal(new Set(files).size, files.length);
   for (const file of files) {
     assert.ok(existsSync(path.join(ROOT, "packages/website", file)), file);
   }
-  for (const excluded of ["workshops.spec.ts", "learning-density", "site-header-logo-mark", "visual-regression"]) {
-    assert.ok(!files.some((file) => file.includes(excluded)), excluded);
-  }
+  assert.ok(!files.some((file) => file.includes("workshops.spec.ts")), "workshops.spec.ts");
 });
 
-test("the smoke run is Chromium desktop and phone with one retry", () => {
+test("the smoke run is desktop Chromium with one retry", () => {
   const args = smokeArguments(["tests/e2e/x.spec.ts"]);
   assert.deepEqual(args, [
     "test",
     "--project=chromium",
-    "--project=mobile-chromium",
     "--workers=2",
     "--retries=1",
     "tests/e2e/x.spec.ts",

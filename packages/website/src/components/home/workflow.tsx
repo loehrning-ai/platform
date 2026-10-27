@@ -41,6 +41,16 @@ const RESOURCE_TONES = [
   "bg-brand-teal/15",
   "bg-brand-peach/45",
 ] as const;
+/* The small R-number is text, so it needs 4.5:1 on its card. Mennige
+   reaches that on the sky and acid cards; on pink, teal and peach it falls
+   just short, so those take the ink. */
+const LABEL_TONES = [
+  "text-brand-orange",
+  "text-foreground",
+  "text-brand-orange",
+  "text-foreground",
+  "text-foreground",
+] as const;
 const ICON_TONES = [
   "bg-brand-cobalt text-white",
   "bg-brand-orange text-white",
@@ -121,7 +131,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                     </span>
                     <span
                       aria-hidden="true"
-                      className={`font-ui-mono text-xs font-bold tabular-nums max-lg:hidden ${index === 3 ? "text-foreground" : "text-brand-orange"}`}
+                      className={`font-ui-mono text-xs font-bold tabular-nums max-lg:hidden ${LABEL_TONES[index] ?? "text-foreground"}`}
                     >
                       R{String(index + 1).padStart(2, "0")}
                     </span>

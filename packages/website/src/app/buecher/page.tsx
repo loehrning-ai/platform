@@ -8,6 +8,7 @@ import {
 } from "./buecher-content";
 import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
 import { JsonLd, ORG_ID, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
+import { defaultSocialImage } from "@/lib/seo/page-metadata";
 import { books, type Book } from "@/lib/books";
 import {
   getBookChapterListResolved,
@@ -153,11 +154,13 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: locale === "de" ? "de_DE" : "en_GB",
       alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "website",
+      images: [defaultSocialImage(locale)],
     },
     twitter: {
       card: "summary_large_image",
       title: copy.metadata.openGraphTitle(localizedCatalog.length),
       description: copy.metadata.openGraphDescription,
+      images: [defaultSocialImage(locale)],
     },
   };
 }

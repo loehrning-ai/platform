@@ -2,8 +2,8 @@
 // (@vitejs/plugin-react) doesn't apply, so the real import isn't callable
 // here. Stub matches the shape consumers read (.className/.style/.variable),
 // plus echoes the raw options object back under `__mockOptions` so tests can
-// assert the real weight/style matrix a course requested (e.g.
-// lib/data-science/fonts.test.ts) without needing a real Next.js build.
+// assert the real weight/style matrix a course requested without needing a
+// real Next.js build.
 
 interface MockFontOptions {
   readonly weight?: string | readonly string[];

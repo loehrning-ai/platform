@@ -20,6 +20,7 @@ import {
 } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { SITE_URL } from "@/lib/seo/json-ld";
+import { defaultSocialImage } from "@/lib/seo/page-metadata";
 
 const PATH = "/blog";
 
@@ -42,7 +43,6 @@ const COPY = {
       count === 1 ? "Frühere Ausgabe" : "Frühere Ausgaben",
     articleNumber: "Artikel Nº",
     readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
-    readLabel: (title: string) => `Artikel lesen: ${title}`,
     read: "Artikel lesen",
     noteLabel: "Kein Redaktionsplan.",
     note: "Ein neuer Artikel erscheint, wenn ein Thema sauber erklärt ist und die Quellen stimmen.",
@@ -71,7 +71,6 @@ const COPY = {
       count === 1 ? "Earlier edition" : "Earlier editions",
     articleNumber: "Article Nº",
     readingTime: (minutes: number) => `${minutes} min read`,
-    readLabel: (title: string) => `Read article: ${title}`,
     read: "Read article",
     noteLabel: "No publishing quota.",
     note: "A new article appears when a subject is explained properly and the sources hold.",
@@ -165,11 +164,13 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: locale === "de" ? "de_DE" : "en_GB",
       alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "website",
+      images: [defaultSocialImage(locale)],
     },
     twitter: {
       card: "summary_large_image",
       title: copy.metadataTitle,
       description: copy.metadataDescription,
+      images: [defaultSocialImage(locale)],
     },
   };
 }
@@ -237,7 +238,6 @@ function ArticleCard({
     <Link
       href={localizeHref(`/blog/${post.slug}`, locale)}
       className={variant === "earlier" ? "row row--earlier" : "row"}
-      aria-label={copy.readLabel(localized.title)}
       data-link-preview
       data-editorial-article={variant}
     >

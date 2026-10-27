@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeAll, beforeEach, vi } from "vitest";
 
 // progress.ts is a thin facade over the unified store (src/lib/progress/store).

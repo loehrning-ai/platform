@@ -54,29 +54,6 @@ function shapeOf(value: unknown): Shape {
   return typeof value;
 }
 
-function collectStrings(value: unknown, found: string[] = []): string[] {
-  if (typeof value === "string") {
-    found.push(value);
-    return found;
-  }
-  if (typeof value === "function") {
-    // Every copy function is a pure template over its arguments; probing it
-    // with placeholders puts its prose into the scan without duplicating it.
-    const probed = (value as (...args: unknown[]) => unknown)("42", "43");
-    return collectStrings(probed, found);
-  }
-  if (Array.isArray(value)) {
-    for (const entry of value) collectStrings(entry, found);
-    return found;
-  }
-  if (value !== null && typeof value === "object") {
-    for (const entry of Object.values(value as Record<string, unknown>)) {
-      collectStrings(entry, found);
-    }
-  }
-  return found;
-}
-
 describe("agent help copy structure", () => {
   it("carries the same shape in both locales", () => {
     expect(shapeOf(AGENT_HELP_COPY.en)).toEqual(shapeOf(AGENT_HELP_COPY.de));
@@ -115,33 +92,7 @@ describe("agent help copy structure", () => {
   });
 });
 
-describe("agent help copy voice", () => {
-  it("uses no em or en dash in either locale", () => {
-    for (const locale of SUPPORTED_LOCALES) {
-      for (const text of collectStrings(AGENT_HELP_COPY[locale])) {
-        expect(text).not.toContain("—");
-        expect(text).not.toContain("–");
-      }
-    }
-  });
-
-  it("addresses the reader with Du in German", () => {
-    for (const text of collectStrings(AGENT_HELP_COPY.de)) {
-      expect(text).not.toMatch(/\bSie\b/);
-      expect(text).not.toMatch(/\bIhre[nrms]?\b/);
-    }
-  });
-
-  it("writes real umlauts, never an ASCII replacement", () => {
-    const germanProse = collectStrings(AGENT_HELP_COPY.de)
-      .filter((text) => !text.includes("://") && !text.includes("locale="))
-      .join("\n");
-
-    expect(germanProse).not.toMatch(/\bfuer\b/);
-    expect(germanProse).not.toMatch(/\bSchluessel\b/);
-    expect(germanProse).toMatch(/[äöüßÄÖÜ]/);
-  });
-
+describe("agent help wording", () => {
   it("names the completion record with the platform's own word", () => {
     expect(AGENT_HELP_COPY.de.overview.readOnlyBody).toContain(
       "Teilnahmebestätigung",

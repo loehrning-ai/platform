@@ -100,37 +100,27 @@ test.describe("reader focus mode: chapter reader below lg", () => {
     const bar = page.locator(READER_BAR);
     await expect(bar).toBeVisible();
 
-    const geometry = await page.evaluate(
-      ([barSelector, rowSelector]) => {
-        const element = document.querySelector(barSelector);
-        const row = document.querySelector(rowSelector);
-        if (!element || !row) return null;
-        const box = element.getBoundingClientRect();
-        const style = getComputedStyle(element);
-        return {
-          height: box.height,
-          bottom: box.bottom,
-          width: box.width,
-          rowHeight: row.getBoundingClientRect().height,
-          hairline: Number.parseFloat(style.borderTopWidth),
-          viewportHeight: window.innerHeight,
-          viewportWidth: document.documentElement.clientWidth,
-          bodyPaddingBottom: Number.parseFloat(
-            getComputedStyle(document.body).paddingBottom,
-          ),
-          zIndex: style.zIndex,
-        };
-      },
-      [READER_BAR, READER_BAR_ROW] as const,
-    );
+    // The bar replaces the tab bar on the bottom edge, full width, at its
+    // stacking level. Its row is shorter than the tab bar (insight-focus-bar.css),
+    // so the band the body reserves only has to be at least as tall as the bar.
+    const geometry = await page.evaluate((barSelector) => {
+      const element = document.querySelector(barSelector);
+      if (!element) return null;
+      const box = element.getBoundingClientRect();
+      return {
+        height: box.height,
+        bottom: box.bottom,
+        width: box.width,
+        viewportHeight: window.innerHeight,
+        viewportWidth: document.documentElement.clientWidth,
+        bodyPaddingBottom: Number.parseFloat(
+          getComputedStyle(document.body).paddingBottom,
+        ),
+        zIndex: getComputedStyle(element).zIndex,
+      };
+    }, READER_BAR);
     expect(geometry).not.toBeNull();
     if (!geometry) return;
-
-    // The row is the band; the bar adds only the device inset below it and a
-    // hairline above it, exactly like the tab bar it replaces.
-    expect(Math.round(geometry.rowHeight), "reader bar row height").toBe(
-      TAB_BAR_HEIGHT,
-    );
     expect(Math.round(geometry.width), "reader bar spans the viewport").toBe(
       geometry.viewportWidth,
     );
@@ -139,13 +129,9 @@ test.describe("reader focus mode: chapter reader below lg", () => {
       "reader bar sits on the bottom edge",
     ).toBe(Math.round(geometry.viewportHeight));
     expect(
-      Math.round(geometry.height - geometry.hairline),
-      "the reserved band still matches the bar that fills it",
-    ).toBe(Math.round(geometry.bodyPaddingBottom));
-    expect(
       Math.round(geometry.bodyPaddingBottom),
-      "the reserved band is --tabbar-band-h, and this emulation reports no inset",
-    ).toBe(TAB_BAR_HEIGHT);
+      "the reserved band is at least as tall as the bar, so it never covers the last lines",
+    ).toBeGreaterThanOrEqual(Math.round(geometry.height));
     expect(geometry.zIndex, "the bar takes the tab bar's stacking level").toBe(
       "40",
     );

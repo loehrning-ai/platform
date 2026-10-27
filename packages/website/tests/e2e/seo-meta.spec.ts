@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { chapterPath, chapters } from "./fixtures/book";
 
 const ROUTES = [
@@ -22,6 +22,12 @@ const SOCIAL_METADATA_ROUTES = [
   "/impressum",
   "/datenschutz",
 ] as const;
+
+/** Every indexable page shares exactly one card. */
+async function expectOneSocialImage(page: Page): Promise<void> {
+  await expect(page.locator('meta[property="og:image"]')).toHaveCount(1);
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveCount(1);
+}
 
 for (const route of ROUTES) {
   test(`seo: ${route} has valid JSON-LD + canonical + title`, async ({ page }) => {
@@ -69,8 +75,28 @@ for (const route of SOCIAL_METADATA_ROUTES) {
     expect(openGraphTitle?.trim().length).toBeGreaterThan(4);
     expect(openGraphTitle).not.toBe("loehrning.ai");
     expect(twitterTitle).toBe(openGraphTitle);
+    await expectOneSocialImage(page);
   });
 }
+
+// Pages that set their own openGraph without a route card and are not
+// covered above. Setting openGraph drops the layout's, so each names an image.
+for (const route of ["/demos", "/buecher", "/open-source", "/en/impressum"] as const) {
+  test(`seo: ${route} declares one social image`, async ({ page }) => {
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    await expectOneSocialImage(page);
+  });
+}
+
+test("seo: a route card wins over the default card", async ({ page }) => {
+  await page.goto("/einstieg", { waitUntil: "domcontentloaded" });
+
+  const images = page.locator('meta[property="og:image"]');
+  await expect(images).toHaveCount(1);
+  expect(await images.getAttribute("content")).toContain(
+    "/einstieg/opengraph-image",
+  );
+});
 
 for (const route of ["/login", "/feedback"] as const) {
   test(`seo: ${route} is noindex without inherited homepage identity`, async ({
