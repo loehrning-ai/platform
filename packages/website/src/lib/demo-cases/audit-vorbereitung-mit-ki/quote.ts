@@ -35,20 +35,55 @@ export function longestCommonSubstring(a: string, b: string): number {
 }
 
 export type QuoteCheck =
-  | { readonly kind: "found"; readonly file: string }
+  | { readonly kind: "found"; readonly file: string; /** The quote leaves words out with "…"; every part stands in the file, in order. */ readonly elided?: true }
   | { readonly kind: "similar"; readonly file: string; readonly share: number }
   | { readonly kind: "missing" };
 
-const MAX_FILE = 2000;
+/** Covers every attached kit file (the request has 2,123 characters, the largest folder file 1,697); kit.test.ts asserts it. */
+export const MAX_FILE = 4000;
 const MAX_QUOTE = 400;
 export const SIMILAR_SHARE = 0.8;
 
+/**
+ * A quote as the answer's sentence closes it: the full stop or comma inside
+ * the quote marks belongs to the answer's sentence, not to the file
+ * ("…, with its result." quotes the table cell "…, with its result").
+ */
+export function needleOf(quote: string): string {
+  return normalizeForQuote(quote).replace(/[\s.,;:!?]+$/u, "");
+}
+
+/** The parts of a quote that leaves words out ("A … B", "A [...] B"), or null. */
+export function elidedParts(quote: string): readonly string[] | null {
+  if (!/…|\.\.\.|\[…\]|\[\.\.\.\]/.test(quote)) return null;
+  const parts = quote
+    .split(/\[?(?:…|\.\.\.)\]?/)
+    .map((part) => needleOf(part).replace(/^[\s.,;:!?]+/u, ""))
+    .filter((part) => part.length > 0);
+  return parts.length > 0 ? parts : null;
+}
+
+function inOrder(text: string, parts: readonly string[]): boolean {
+  let at = 0;
+  for (const part of parts) {
+    const index = text.indexOf(part, at);
+    if (index < 0) return false;
+    at = index + part.length;
+  }
+  return true;
+}
+
 export function verifyQuote(quote: string, files: readonly { readonly name: string; readonly text: string }[]): QuoteCheck {
-  const needle = normalizeForQuote(quote);
+  const needle = needleOf(quote);
   if (!needle) return { kind: "missing" };
   const normalized = files.map((file) => ({ name: file.name, text: normalizeForQuote(file.text) }));
   const exact = normalized.find((file) => file.text.includes(needle));
   if (exact) return { kind: "found", file: exact.name };
+  const parts = elidedParts(quote);
+  if (parts) {
+    const whole = normalized.find((file) => inOrder(file.text, parts));
+    if (whole) return { kind: "found", file: whole.name, elided: true };
+  }
   let best: { file: string; share: number } | null = null;
   const capped = needle.slice(0, MAX_QUOTE);
   for (const file of normalized) {

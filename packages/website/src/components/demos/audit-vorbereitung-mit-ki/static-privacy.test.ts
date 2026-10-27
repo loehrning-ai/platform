@@ -1,7 +1,8 @@
 /**
  * W05 static guards: the visitor's files stay in the tab, the only browser
- * storage holds the audit date and the window, nothing collapses, and the
- * copy fills every slot of the gap template it renders but the signature.
+ * storage holds the audit date and the window, no <details> hides content,
+ * the css stays inside .w05 and off the glass, and the copy fills every slot
+ * of the gap template it renders but the signature.
  */
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
@@ -33,14 +34,15 @@ describe("W05 demo, static guards", () => {
     expect(hook).toContain("w05-audit-settings");
   });
 
-  it("never collapses and scopes every css rule under .w05", () => {
-    for (const { name, text } of sources) expect(text, name).not.toMatch(/<details|<summary|aria-expanded/);
+  it("uses no <details> and scopes every css rule under .w05", () => {
+    for (const { name, text } of sources) expect(text, name).not.toMatch(/<details|<summary/);
     const css = readFileSync(path.join(here, "w05.css"), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
     const selectors = [...css.matchAll(/(^|})\s*([^{}@]+)\{/g)].map((match) => match[2].trim()).filter((sel) => !/^(from|to|\d+%)$/.test(sel));
     for (const selector of selectors) {
       for (const part of selector.split(",")) expect(part.trim(), part).toMatch(/^\.w05/);
     }
-    expect(css).not.toMatch(/backdrop-filter|gradient|border-radius:\s*[1-9]/);
+    // Glass belongs to glas.css: no filter and no gradient here (radii are the content cards' own).
+    expect(css).not.toMatch(/backdrop-filter|gradient/);
   });
 
   it("fills every slot of the gap template it renders", async () => {

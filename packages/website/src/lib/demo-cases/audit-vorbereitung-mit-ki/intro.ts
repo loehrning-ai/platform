@@ -1,32 +1,32 @@
 import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
 
 /**
- * The intro of this demo (language-standard B.8) and its shell. Owned by this
- * demo's builder: switch SHELL to "v4" when the demo runs on the Glas shell.
- * The sentences are drafts from the language standard; check every claim
- * against the kit before shipping v4.
+ * The intro of this demo (language-standard B.8) and its shell. Every claim
+ * is checked against the kit: the case is invented, the request lists eight
+ * items, the skill runs the same four checks; the shell's footnote says
+ * that everything stays in the browser.
  */
-export const SHELL: DemoShellVersion = "v3";
+export const SHELL: DemoShellVersion = "v4";
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "Prüfen, welche Datei wirklich belegt",
+    title: "Audit-Nachweise prüfen",
     sentences: [
-      "Ein Kunde schickt einer erfundenen Firma acht Fragen vor einem Audit, und im Ordner liegen elf Dateien.",
-      "Du prüfst, welche Datei wirklich belegt, was gefragt ist, und welche nur so heißt.",
-      "Am Ende hast du eine Lückenliste mit Anfragen und einen Skill, der ohne wörtliches Zitat nichts als belegt zählt.",
-      "Das dauert etwa {minutes} Minuten, und alles bleibt in deinem Browser.",
+      "Ein Kunde will vor einem Audit acht Nachweise von einer erfundenen Firma sehen.",
+      "Du prüfst mit vier Fragen, welche Datei im Ordner wirklich belegt, was verlangt ist.",
+      "Du nimmst die Lücken, fertige Anfragen und einen Skill für Claude mit.",
+      "Das dauert etwa {minutes} Minuten, und deine Dateien bleiben in deinem Browser.",
     ],
-    start: "Mit der ersten Frage starten",
+    start: "Ordner ansehen und schätzen",
   },
   en: {
-    title: "Check which file really proves it",
+    title: "Checking audit evidence",
     sentences: [
-      "A customer sends an invented company eight questions before an audit, and the folder holds eleven files.",
-      "You check which file really proves what is asked and which one only has the right name.",
-      "At the end you have a gap list with requests and a skill that counts nothing as proven without a word-for-word quote.",
-      "It takes about {minutes} minutes, and everything stays in your browser.",
+      "Before an audit, a customer wants eight pieces of evidence from an invented company.",
+      "You use four questions to check which file in the folder really proves what is asked.",
+      "You take home the gaps, ready-made requests and a skill for Claude.",
+      "It takes about {minutes} minutes, and your files stay in your browser.",
     ],
-    start: "Start with the first question",
+    start: "Look at the folder and guess",
   },
 };

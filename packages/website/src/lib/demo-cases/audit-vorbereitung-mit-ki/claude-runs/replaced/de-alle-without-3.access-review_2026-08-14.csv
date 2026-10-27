@@ -1,0 +1,7 @@
+# Fictional training material. Review of administrator accounts in Servicepult (ticket system). Done 2026-08-14 by Goran Petrovski, IT lead. Approved 2026-08-17 by Dragan Ilievski, Managing Director.
+account,person_status,role,mfa,decision
+adm-01,employee,system owner,yes,keep
+adm-02,employee,team lead Tannwald desk,yes,keep
+adm-03,left 2026-07-31,team lead,yes,removed 2026-08-14
+adm-04,employee,reporting,no,MFA switched on 2026-08-14
+adm-05,employee,IT support,yes,keep

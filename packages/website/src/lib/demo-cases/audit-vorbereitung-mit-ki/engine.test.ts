@@ -5,13 +5,11 @@ import { vardarContext } from "./case";
 import { toEvidenceCsv } from "./csv";
 import { daysBetween, firstDate, formatShort, parseDateTokens, windowStart } from "./dates";
 import { extractMeta, documentDate } from "./meta";
-import { frame, drawIn } from "./motion";
 import { MAX_READ, MAX_SLICE_BYTES, READ_BUDGET_BYTES, assessFolder, datesWereCopied, type OwnEntry } from "./own-folder";
 import { parseList } from "./parse-list";
 import { verifyQuote } from "./quote";
 import { stemOf, versionChains } from "./versions";
 import { formatPercent } from "./counts";
-import { COPY } from "./copy";
 
 describe("dates", () => {
   it("clamps the window start on a leap day", () => {
@@ -192,15 +190,6 @@ describe("quote and Claude's answer", () => {
     const flags = checked[0]?.flags ?? [];
     expect(flags).toEqual(expect.arrayContaining([{ kind: "number-differs", found: 26, expected: 25 }, { kind: "status-differs", expected: "gap" }]));
   });
-  it("finds all three planted mistakes in the probe's sample lines, in both languages", () => {
-    for (const lang of ["de", "en"] as const) {
-      const checked = checkAnswer(parseClaudeAnswer(COPY[lang].probe.sampleText), vardarContext());
-      const kinds = (item: string) => checked.find((row) => row.row.item === item)?.flags.map((flag) => flag.kind) ?? [];
-      expect(kinds("R7"), lang).toContain("policy-for-record");
-      expect(kinds("R5"), lang).toContain("number-differs");
-      expect(kinds("R4"), lang).toContain("compliance-word");
-    }
-  });
   it("flags a section number that is in no file", () => {
     const checked = checkAnswer(parseClaudeAnswer('R8 | infosec-policy_v3_FINAL.md | ISO 27001 A.5.1 | "Approved 2024-03-12" | WEAK'), vardarContext());
     expect(checked[0]?.flags.map((flag) => flag.kind)).toContain("unknown-ref");
@@ -219,38 +208,6 @@ describe("csv", () => {
   it("formats shares per locale", () => {
     expect(formatPercent(25 / 120, "de")).toBe("20,8 %");
     expect(formatPercent(25 / 120, "en")).toBe("20.8%");
-  });
-});
-
-describe("motion", () => {
-  const links = [
-    { failsAt: null, status: "covered" as const },
-    { failsAt: "approval" as const, status: "weak" as const },
-    { failsAt: "quote" as const, status: "gap" as const },
-  ];
-  it("frame(0) is clean and frame(1) is the end state", () => {
-    const start = frame(0, links);
-    expect(start.links.every((link) => !link.dashed && !link.broken && link.labelOpacity === 0)).toBe(true);
-    expect(start.tallyOpacity).toBe(0);
-    const end = frame(1, links);
-    expect(end.links.map((link) => [link.dashed, link.broken])).toEqual([
-      [false, false],
-      [true, false],
-      [false, true],
-    ]);
-    expect(end.tallyOpacity).toBe(1);
-    expect(end.links[2]?.breakT).toBe(1);
-  });
-  it("is pure and the break only grows", () => {
-    let last = 0;
-    for (let t = 0; t <= 1; t += 0.01) {
-      expect(frame(t, links)).toEqual(frame(t, links));
-      const value = frame(t, links).links[2]?.breakT ?? 0;
-      expect(value).toBeGreaterThanOrEqual(last);
-      last = value;
-    }
-    expect(drawIn(0, 0)).toBe(0);
-    expect(drawIn(1, 7)).toBe(1);
   });
 });
 

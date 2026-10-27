@@ -249,7 +249,7 @@ export const demos: readonly Demo[] = [
     workshopNumber: "05",
     plakat: "sage",
     motif: "ledger",
-    minutes: 4,
+    minutes: 8,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
@@ -260,10 +260,10 @@ export const demos: readonly Demo[] = [
       "Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Dateien und nimm einen Skill für deine eigenen Audits mit. Alles läuft in diesem Tab.",
     question: "Welche Dateien im Ordner sind ein Nachweis?",
     syntheticDataLabel:
-      "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden; zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Gerechnet in deinem Browser, keine KI, nichts wird gesendet.",
+      "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden, zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Auf dieser Seite läuft keine KI. Die Claude-Antwort ist eine Aufzeichnung. Was du prüfst, bleibt in deinem Browser.",
     job: "Prüf, welche Datei im Ordner wirklich etwas belegt.",
     tile: {
-      hook: "11 Dateien, 8 Anforderungen, 2 belegt.",
+      hook: "Zu jeder der acht Anforderungen liegt eine passend benannte Datei im Ordner. Nur zwei davon belegen, was verlangt ist.",
       take: "eine Nachweisliste und ein Skill, der ohne Zitat nichts zählt",
     },
     en: {
@@ -272,10 +272,10 @@ export const demos: readonly Demo[] = [
         "Eight requests, eleven files. Test which file actually proves something, check Claude's quotes against the files, and take a skill home for your own audits. Everything runs in this tab.",
       question: "Which files in the folder are evidence?",
       syntheticDataLabel:
-        "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented; two lines come from Anthropic's public privacy page. Worked out in your browser, no AI, nothing is sent.",
+        "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented, and two lines come from Anthropic's public privacy page. No AI runs on this page. The Claude answer is a recording. What you check stays in your browser.",
       job: "Test which file in the folder actually proves something.",
       tile: {
-        hook: "11 files, 8 requests, 2 covered.",
+        hook: "Each of the eight requests has a file with a matching name. Only two of them prove what is asked.",
         take: "an evidence index and a skill that counts nothing without a quote",
       },
     },
