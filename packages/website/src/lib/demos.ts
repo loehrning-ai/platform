@@ -105,7 +105,7 @@ export const demos: readonly Demo[] = [
     question:
       "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
     syntheticDataLabel:
-      "Firma und Zahlen sind erfunden. Die Demo rechnet in deinem Browser und sendet nichts. Die Antworten von Claude unter der Demo sind aufgezeichnete Läufe.",
+      "Firma und Zahlen sind erfunden. Die Demo rechnet in deinem Browser und sendet nichts. Die Antworten von Claude am Ende der Demo sind aufgezeichnete Läufe.",
     job: "Prüf die Prognose deines Tools an ihren alten Fehlern.",
     tile: {
       hook: "Linsensuppe 2025: Die Prognose macht 21 % kleinere Fehler als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
@@ -118,7 +118,7 @@ export const demos: readonly Demo[] = [
       question:
         "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
       syntheticDataLabel:
-        "The company and its numbers are invented. The demo runs in your browser and sends nothing. The Claude answers below the demo are recorded runs.",
+        "The company and its numbers are invented. The demo runs in your browser and sends nothing. The Claude answers at the end of the demo are recorded runs.",
       job: "Check your tool's forecast against its past errors.",
       tile: {
         hook: "Lentil soup 2025: the forecast's errors are 21% smaller than with \"same as last week\". The release rule still stops it for 15 weeks.",

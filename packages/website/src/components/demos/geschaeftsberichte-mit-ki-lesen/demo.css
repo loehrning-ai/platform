@@ -64,6 +64,18 @@
   padding-bottom: 4px;
   scrollbar-width: thin;
 }
+/* The last beat sits under the Claude window in a stage that grows, so the take-home takes its own height. */
+.w02-data[data-view="mitnehmen"] {
+  height: auto;
+  overflow: visible;
+}
+.w02-data[data-view="mitnehmen"] .w02-layout {
+  flex: none;
+  grid-template-rows: auto;
+}
+.w02-data[data-view="mitnehmen"] .w02-main {
+  overflow: visible;
+}
 .w02-main > * {
   flex: none;
 }

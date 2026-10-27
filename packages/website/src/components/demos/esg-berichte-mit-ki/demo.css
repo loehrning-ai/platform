@@ -70,6 +70,15 @@
   padding: 2px 2px 8px;
   scrollbar-width: thin;
 }
+/* The last beat sits under the Claude window in a stage that grows, so the take-home takes its own height. */
+.w4-data[data-view="mitnehmen"] {
+  height: auto;
+  overflow: visible;
+}
+.w4-data[data-view="mitnehmen"] .w4-main {
+  flex: none;
+  overflow: visible;
+}
 .w4-kicker {
   margin: 0 0 6px;
   color: var(--w4-creme-2);
@@ -270,12 +279,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* The file's own first line wraps instead of being cut mid-word. */
 .w4-doc-sub {
-  overflow: hidden;
   color: var(--w4-muted);
   font-size: 0.6875rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-wrap: pretty;
 }
 .w4-doc-strip-marks {
   display: flex;

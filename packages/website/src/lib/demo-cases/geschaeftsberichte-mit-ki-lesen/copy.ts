@@ -536,7 +536,7 @@ const DE = {
     copy: "Kopieren",
     copied: "Kopiert",
     below:
-      "Unten unter „Für deinen Claude“ siehst du, wie Claude mit und ohne diesen Skill auf dieselben Dateien antwortet.",
+      "Im Claude-Fenster darüber siehst du, wie Claude mit und ohne diesen Skill auf dieselben Dateien antwortet.",
   },
   kit: {
     defectsHeading: "{line}-Defekte",
@@ -1076,7 +1076,7 @@ const EN: DemoPack = {
     copy: "Copy",
     copied: "Copied",
     below:
-      "Further down, under “For your Claude”, you can see how Claude answers about the same files with and without this skill.",
+      "In the Claude window above you can see how Claude answers about the same files with and without this skill.",
   },
   kit: {
     defectsHeading: "{line} defects",

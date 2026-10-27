@@ -57,7 +57,7 @@ const de = {
     ["Lücke", "Für einen Teil gibt es keine Datei. Du nennst das Dokument, das ihn belegen würde."],
     ["Schätzung", "Deine Vermutung vor dem Prüfen. Sie wird nirgends bewertet."],
   ],
-  invented: "Erfundener Fall aus dem Kit",
+  invented: "Erfundener Fall",
   free: {
     label: "Szene",
     scenes: { karte: "Regalkarte", umschreiben: "Umschreiben", strom: "Stromdatei", rechnung: "Rechnung", ordner: "Ordner" },
@@ -71,7 +71,7 @@ const de = {
     stichtag: "Stichtag {date}",
     parts: { zertifiziert: "Zertifizierte", flaeche: "Bio-Weinberge, alle Weine", stichtag: "Stichtag" },
     /** The strip on a phone: what each part asks, over the words it stands for. */
-    partKickers: { zertifiziert: "Wer", flaeche: "Wofür", stichtag: "Wann" },
+    partKickers: { zertifiziert: "Siegel", flaeche: "Reichweite", stichtag: "Datum" },
     partsShort: { zertifiziert: "Zertifizierte", flaeche: "Alle Weine" },
     connect: "Zitat verbinden: {part}",
     connected: "{part}: verbunden mit Zeile {n}, {status}",
@@ -633,7 +633,7 @@ const de = {
   takehome: {
     caption: [
       "Hier liegt alles, was du für deine eigenen Antworten brauchst.",
-      "Unter der Demo siehst du außerdem, wie Claude mit und ohne den Skill auf dieselben Dateien antwortet.",
+      "Darüber siehst du außerdem, wie Claude mit und ohne den Skill auf dieselben Dateien antwortet.",
     ],
     heading: "Zum Mitnehmen",
     items: {
@@ -646,7 +646,7 @@ const de = {
       kit: ["Kit herunterladen (ZIP)", "Jede Zahl, die du oben gesehen hast, stammt aus diesen Dateien des Kits."],
     },
     prompts: "Die drei Fragen an Claude",
-    promptsLead: "Diese Fragen haben wir Claude für die Aufzeichnung unter der Demo gestellt, jeweils mit den Dateien aus dem Kit.",
+    promptsLead: "Diese Fragen haben wir Claude für die Aufzeichnung im Claude-Fenster oben gestellt, jeweils mit den Dateien aus dem Kit.",
     copy: "Kopieren",
     copied: "Kopiert",
     own: "Deine Prüfung",
@@ -696,7 +696,7 @@ const en: DePack = {
     ["Gap", "One part has no file. You name the document that would back it."],
     ["Guess", "What you think before you check. It is never scored."],
   ],
-  invented: "An invented case from the kit",
+  invented: "Invented case",
   free: {
     label: "Scene",
     scenes: { karte: "Shelf card", umschreiben: "Rewrite", strom: "Electricity", rechnung: "Invoice", ordner: "Folder" },
@@ -709,7 +709,7 @@ const en: DePack = {
     kicker: "Shelf card",
     stichtag: "Reference date {date}",
     parts: { zertifiziert: "Certified", flaeche: "organic vineyards, all wines", stichtag: "Reference date" },
-    partKickers: { zertifiziert: "Who", flaeche: "What", stichtag: "When" },
+    partKickers: { zertifiziert: "Seal", flaeche: "Scope", stichtag: "Date" },
     partsShort: { zertifiziert: "Certified", flaeche: "All wines" },
     connect: "Connect a quote: {part}",
     connected: "{part}: linked to line {n}, {status}",
@@ -1271,7 +1271,7 @@ const en: DePack = {
   takehome: {
     caption: [
       "Here is everything you need for your own answers.",
-      "Below the demo you can also see how Claude answers about the same files with and without the skill.",
+      "Above it you can also see how Claude answers about the same files with and without the skill.",
     ],
     heading: "To take home",
     items: {
@@ -1284,7 +1284,7 @@ const en: DePack = {
       kit: ["Download the kit (ZIP)", "Every figure you saw above comes from these files of the kit."],
     },
     prompts: "The three questions for Claude",
-    promptsLead: "We asked Claude these questions for the recording below the demo, each with the files from the kit.",
+    promptsLead: "We asked Claude these questions for the recording in the Claude window above, each with the files from the kit.",
     copy: "Copy",
     copied: "Copied",
     own: "Your check",
