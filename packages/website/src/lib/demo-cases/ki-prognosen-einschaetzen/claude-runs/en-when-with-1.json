@@ -1,0 +1,1481 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-when-with-1",
+  "slug": "ki-prognosen-einschaetzen",
+  "locale": "en",
+  "prompt_id": "when",
+  "take": 1,
+  "recorded_at": "2026-10-26T16:46:54Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}"
+  ],
+  "prompt": "Attached are our weekly sales with the forecast from our ERP system (lentil-soup-weekly.csv) and the tool's export (tool-export.txt). In which weeks of 2025 should we not simply have followed the forecast, and why? Today is Sunday, 28 December 2025.",
+  "kit_zip": "public/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+  "kit_files": [
+    {
+      "name": "lentil-soup-weekly.csv",
+      "path": "forecast-check/data/lentil-soup-weekly.csv",
+      "bytes": 2391,
+      "sha256": "aab5e3788a206920227c868b0a8bf6666ad884f147a25b8f5c143ee479319ec1"
+    },
+    {
+      "name": "tool-export.txt",
+      "path": "forecast-check/data/tool-export.txt",
+      "bytes": 535,
+      "sha256": "bb594b76e7506179c1099f1bf5600dce43518ce909204d0c1516317a8ddb0869"
+    }
+  ],
+  "skill": {
+    "name": "prognose-pruefen",
+    "sha256": "e90021fa580a2c756ca1a08095295770ca89bf44ad40fd033e14da9aea1303c2"
+  },
+  "skill_name": "prognose-pruefen",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "prognose-pruefen",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 3659,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "prognose-pruefen",
+        "args": "lentil-soup-weekly.csv vs tool-export.txt: In which weeks of 2025 should we not simply have followed the ERP forecast, and why? Today is Sunday, 28 December 2025."
+      }
+    },
+    {
+      "t_ms": 3681,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 6372,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la; head -5 lentil-soup-weekly.csv; wc -l lentil-soup-weekly.csv; cat tool-export.txt",
+        "description": "List files and preview inputs"
+      }
+    },
+    {
+      "t_ms": 7708,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 10004,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; sed -n '50,107p' lentil-soup-weekly.csv",
+        "description": "Show 2025 rows of the CSV"
+      }
+    },
+    {
+      "t_ms": 10105,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 45535,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "mkdir -p $TMPDIR/skill && cat > $TMPDIR/skill/pruefen.py <<'EOF'\n\"\"\"Prüft eine Wochenprognose an ihren alten Fehlern. Nur Python-Standardbibliothek, kein Netz.\nAufruf: python3 pruefen.py DATEI.csv [--fehlmenge 1,50] [--rest 0,40] [--messlatte \"wie letzte Woche\"]   Ausgabe: JSON\nEnglish: --shortage and --leftover are the same as --fehlmenge and --rest.\nSpalten (Kopfzeile): woche, ist; optional prognose, hinweis, bestand_ende. Trenner ; , oder Tab.\nGleiche Regeln wie loehrning.ai/demos/ki-prognosen-einschaetzen.\"\"\"\nimport argparse, csv, datetime as dt, io, json, math, re, sys\n\nLERNEN, MIN_LERNEN, PRUEF, FENSTER = 26, 20, 13, 52   # Wochen\nBIAS_MAX, TREFFER_MIN = 0.05, 9                      # Prüfregel: |Bias| <= 5 %, >= 9 von 13 in der Spanne\nALIAS = {\"woche\": \"woche\", \"week\": \"woche\", \"datum\": \"woche\", \"date\": \"woche\", \"kw\": \"woche\",\n         \"ist\": \"ist\", \"verkauft\": \"ist\", \"absatz\": \"ist\", \"sales\": \"ist\", \"actual\": \"ist\",\n         \"prognose\": \"prognose\", \"forecast\": \"prognose\", \"tool_prognose\": \"prognose\",\n         \"hinweis\": \"hinweis\", \"note\": \"hinweis\", \"kommentar\": \"hinweis\",\n         \"bestand_ende\": \"bestand\", \"bestand\": \"bestand\", \"stock_end\": \"bestand\"}\nAUSVERKAUFT = (\"ausverkauft\", \"sold out\", \"stockout\", \"fehlbestand\")\n\ndef zahl(s, zeile):\n    t = (s or \"\").strip().replace(\" \", \"\").replace(\" \", \"\").replace(\" \", \"\")\n    if not t: return None\n    if re.fullmatch(r\"\\d{1,3}(\\.\\d{3})+(,\\d+)?\", t): t = t.replace(\".\", \"\").replace(\",\", \".\")\n    elif re.fullmatch(r\"\\d{1,3}(,\\d{3})+(\\.\\d+)?\", t): t = t.replace(\",\", \"\")\n    elif re.fullmatch(r\"\\d+,\\d+\", t): t = t.replace(\",\", \".\")\n    if not re.fullmatch(r\"\\d+(\\.\\d+)?\", t): sys.exit(f\"Zeile {zeile}: '{s}' ist keine Zahl (negativ oder Text).\")\n    return float(t)\n\ndef datum(s, zeile):\n    s = s.strip()\n    for f in (\"%Y-%m-%d\", \"%d.%m.%Y\", \"%d.%m.%y\", \"%d/%m/%Y\"):\n        try: return dt.datetime.strptime(s, f).date()\n        except ValueError: pass\n    m = re.fullmatch(r\"(?:KW|W)\\s?(\\d{1,2})[/ -](\\d{4})\", s, re.I) or re.fullmatch(r\"(\\d{4})-W(\\d{2})\", s)\n    if m:\n        w, j = (int(m[1]), int(m[2])) if s[0] in \"KkWw\" else (int(m[2]), int(m[1]))\n        return dt.date.fromisocalendar(j, w, 1)\n    sys.exit(f\"Zeile {zeile}: '{s}' ist kein Datum. Erlaubt: 2025-10-27, 27.10.2025, KW 44/2025.\")\n\ndef lesen(text):\n    r = list(csv.reader(io.StringIO(text), csv.Sniffer().sniff(text.splitlines()[0], delimiters=\";,\\t\")))\n    kopf = [ALIAS.get(h.strip().lower()) for h in r[0]]\n    if \"woche\" not in kopf or \"ist\" not in kopf: sys.exit(\"Kopfzeile braucht mindestens: woche;ist\")\n    tage, hinweise = {}, []\n    for nr, z in enumerate(r[1:], start=2):\n        if not any(c.strip() for c in z): continue\n        d = {k: (z[i] if i < len(z) else \"\") for i, k in enumerate(kopf) if k}\n        w = datum(d[\"woche\"], nr)\n        zeile = dict(ist=zahl(d.get(\"ist\"), nr), f=zahl(d.get(\"prognose\"), nr), hinweis=d.get(\"hinweis\", \"\").strip(),\n                     zensiert=zahl(d.get(\"bestand\"), nr) == 0 or any(a in d.get(\"hinweis\", \"\").lower() for a in AUSVERKAUFT))\n        if w in tage:\n            if tage[w] == zeile: hinweise.append(f\"{w}: doppelte Zeile, einmal gezählt\"); continue\n            sys.exit(f\"Zeile {nr}: {w} steht zweimal mit verschiedenen Werten. Eine Zeile löschen.\")\n        tage[w] = zeile\n    ws = sorted(tage)\n    if len(ws) > 1 and min(b - a for a, b in zip(ws, ws[1:])).days == 1:\n        sys.exit(\"Tageswerte: bitte vorher zu Wochen (Montag bis Sonntag) summieren.\")\n    rows = [dict(woche=ws[0], **tage[ws[0]])]\n    for w in ws[1:]:\n        while (w - rows[-1][\"woche\"]).days > 7:\n            leer = rows[-1][\"woche\"] + dt.timedelta(7)\n            hinweise.append(f\"{leer}: Woche fehlt in der Datei, zählt nicht\")\n            rows.append(dict(woche=leer, ist=None, f=None, hinweis=\"\", zensiert=False))\n        rows.append(dict(woche=w, **tage[w]))\n    return rows, hinweise\n\ndef q(xs, p):  # Quantil wie Excel QUANTIL.INKL (Typ 7)\n    s = sorted(xs); h = (len(s) - 1) * p; i = math.floor(h)\n    return s[i] + (h - i) * (s[min(i + 1, len(s) - 1)] - s[i])\n\ndef pruefen(rows, hinweise, fehlmenge, rest, messlatte):\n    ist = [r[\"ist\"] for r in rows]\n    regeln = {\"wie letzte Woche\": lambda t: ist[t - 1] if t >= 1 else None,\n              \"wie Vorjahreswoche\": lambda t: ist[t - 52] if t >= 52 else None,\n              \"Schnitt 4 Wochen\": lambda t: sum(ist[t - 4:t]) / 4 if t >= 4 and None not in ist[t - 4:t] else None}\n    hat_prognose = any(r[\"f\"] is not None for r in rows)\n    if messlatte not in regeln: sys.exit(f\"Messlatte unbekannt. Erlaubt: {', '.join(regeln)}\")\n    letzte = max(t for t, r in enumerate(rows) if r[\"ist\"] is not None)\n    naechste = letzte + 1 if letzte + 1 < len(rows) else None\n    gueltig = lambda t: ist[t] is not None and not rows[t][\"zensiert\"]\n    F = (lambda t: rows[t][\"f\"]) if hat_prognose else regeln[messlatte]  # ohne Prognose: die Messlatte selbst\n    wochen = [t for t in range(max(0, letzte - FENSTER + 1), letzte + 1)\n              if gueltig(t) and F(t) is not None and regeln[messlatte](t) is not None]\n    if len(wochen) < PRUEF: sys.exit(f\"Zu wenig vergleichbare Wochen: {len(wochen)}. Nötig: {PRUEF}, besser 52.\")\n    A = sum(ist[t] for t in wochen)\n    def kennzahlen(g):\n        if any(g(t) is None for t in wochen): return None\n        e = [g(t) - ist[t] for t in wochen]\n        return dict(mae=sum(map(abs, e)) / len(e), bias=sum(e) / A, wape=sum(map(abs, e)) / A)\n    tabelle = {\"Prognose\": kennzahlen(F)} if hat_prognose else {}\n    tabelle.update({k: kennzahlen(g) for k, g in regeln.items()})\n    def fehler(t, n):\n        ws = [k for k in range(t) if gueltig(k) and F(k) is not None and regeln[messlatte](k) is not None][-n:]\n        return [ist[k] - F(k) for k in ws], ws\n    def spanne(t):\n        e, _ = fehler(t, LERNEN); return (q(e, .1), q(e, .9)) if len(e) >= MIN_LERNEN else None\n    def treffer(t):\n        s = spanne(t); return None if s is None else s[0] <= ist[t] - F(t) <= s[1]\n    def lampen(t):\n        _, ws = fehler(t, PRUEF)\n        if len(ws) < PRUEF: return None\n        m = sum(abs(F(k) - ist[k]) for k in ws); mr = sum(abs(regeln[messlatte](k) - ist[k]) for k in ws)\n        b = sum(F(k) - ist[k] for k in ws) / sum(ist[k] for k in ws); h = sum(1 for k in ws if treffer(k))\n        l = dict(daten=ist[t - 1] is not None and F(t) is not None, messlatte=(m < mr) if hat_prognose else None,\n                 bias=abs(b) <= BIAS_MAX, spanne=h >= TREFFER_MIN)\n        return dict(l, frei=all(v for v in l.values() if v is not None), verhaeltnis=m / mr, bias_wert=b, treffer=h)\n    gezaehlt = [t for t in wochen if treffer(t) is not None]\n    out = dict(hinweise=hinweise, geprueft=\"Prognose\" if hat_prognose else messlatte, messlatte=messlatte,\n               von=str(rows[wochen[0]][\"woche\"]), bis=str(rows[wochen[-1]][\"woche\"]), wochen=len(wochen),\n               nicht_bewertet=[(str(rows[t][\"woche\"]), \"Ist fehlt\" if ist[t] is None else \"ausverkauft: Ist ist kleiner als die Nachfrage\"\n                                if rows[t][\"zensiert\"] else \"keine Prognose gespeichert\" if F(t) is None else \"Vorwoche fehlt\")\n                               for t in range(wochen[0], letzte + 1) if t not in wochen],\n               tabelle=tabelle, naeher=sum(abs(F(t) - ist[t]) < abs(regeln[messlatte](t) - ist[t]) for t in wochen),\n               zu_hoch=sum(F(t) > ist[t] for t in wochen),\n               spanne_treffer=sum(treffer(t) for t in gezaehlt), spanne_wochen=len(gezaehlt))\n    out[\"beste_regel\"] = min((k for k in regeln if tabelle[k]), key=lambda k: tabelle[k][\"mae\"])\n    if hat_prognose: out[\"vorsprung\"] = 1 - tabelle[\"Prognose\"][\"mae\"] / tabelle[messlatte][\"mae\"]\n    streifen = [t for t in range(max(1, (naechste or letzte) - FENSTER + 1), (naechste or letzte) + 1)]\n    sperre = [(str(rows[t][\"woche\"]), [k for k in (\"daten\", \"messlatte\", \"bias\", \"spanne\") if l[k] is False])\n              for t in streifen if (l := lampen(t)) and not l[\"frei\"]]\n    out.update(regel_wochen=len(streifen), regel_frei=len(streifen) - len(sperre), regel_rot=sperre)\n    if fehlmenge and rest:\n        tau = fehlmenge / (fehlmenge + rest)\n        kosten = lambda Q, D: fehlmenge * max(0, D - Q) + rest * max(0, Q - D)\n        mit = [t for t in wochen if fehler(t, LERNEN)[0]]  # ohne Fehler davor keine Planzahl: Woche fällt heraus\n        out[\"anteil\"] = tau\n        out[\"kosten_wochen\"] = len(mit)\n        out[\"kosten\"] = {\"Messlatte\": sum(kosten(regeln[messlatte](t), ist[t]) for t in mit),\n                         \"Prognose\": sum(kosten(F(t), ist[t]) for t in mit),\n                         \"Planzahl\": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in mit)}\n    if naechste is not None and F(naechste) is not None:\n        e, _ = fehler(naechste, LERNEN); n = dict(woche=str(rows[naechste][\"woche\"]), prognose=F(naechste), lampen=lampen(naechste))\n        if len(e) >= MIN_LERNEN:\n            n.update(p10=F(naechste) + q(e, .1), p50=F(naechste) + q(e, .5), p90=F(naechste) + q(e, .9))\n            if fehlmenge and rest:\n                z = math.floor(F(naechste) + q(e, out[\"anteil\"]) + 0.5)  # kaufmännisch runden, wie die Demo\n                n.update(planzahl=z, zu_wenig=sum(F(naechste) + x > z for x in e), uebrig=sum(F(naechste) + x < z for x in e), von=len(e))\n        out[\"naechste\"] = n\n    return out\n\nif __name__ == \"__main__\":\n    a = argparse.ArgumentParser(); a.add_argument(\"datei\")\n    a.add_argument(\"--fehlmenge\", \"--shortage\"); a.add_argument(\"--rest\", \"--leftover\")  # Kosten je Stück\n    a.add_argument(\"--messlatte\", default=\"wie letzte Woche\"); a = a.parse_args()\n    rows, hinweise = lesen(open(a.datei, encoding=\"utf-8-sig\").read())\n    e = pruefen(rows, hinweise, a.fehlmenge and zahl(a.fehlmenge, \"--fehlmenge\"), a.rest and zahl(a.rest, \"--rest\"), a.messlatte)\n    print(json.dumps(e, ensure_ascii=False, indent=1, default=str))\nEOF\npython3 -I $TMPDIR/skill/pruefen.py lentil-soup-weekly.csv",
+        "description": "Save check script and run it on the sales file"
+      }
+    },
+    {
+      "t_ms": 45709,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 54029,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd $TMPDIR/skill && python3 -I -c \"\nimport sys; sys.argv=['x','lentil-soup-weekly.csv']\nsys.path.insert(0,'.'); import pruefen as p\nrows,h=p.lesen(open(sys.argv[1]).read())\nist=[r['ist'] for r in rows]\nok=lambda t: ist[t] is not None and not rows[t]['zensiert'] and rows[t]['f'] is not None and t>=1 and ist[t-1] is not None\nfor t,r in enumerate(rows):\n  if str(r['woche'])<'2025-03-24' or str(r['woche'])>'2025-08-04': continue\n  ws=[k for k in range(t) if ok(k)][-13:]\n  b=sum(rows[k]['f']-ist[k] for k in ws)/sum(ist[k] for k in ws)\n  m=sum(abs(rows[k]['f']-ist[k]) for k in ws); mr=sum(abs(ist[k-1]-ist[k]) for k in ws)\n  print(r['woche'], r['f'], ist[t], (r['f']-ist[t]) if ist[t] else None, 'bias13=%.1f%%'%(b*100), 'mae/naive=%.2f'%(m/mr))\n\"",
+        "description": "Show rolling bias per week around red period"
+      }
+    },
+    {
+      "t_ms": 54158,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 57944,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 57944,
+      "kind": "text",
+      "chunk": "The"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": " check"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": " has"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": " run. I"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": "'m writing the release r"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": "ule file now"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": ", then the"
+    },
+    {
+      "t_ms": 57945,
+      "kind": "text",
+      "chunk": " answer."
+    },
+    {
+      "t_ms": 62100,
+      "kind": "tool_use",
+      "tool": "Write",
+      "input": {
+        "file_path": "pruefregel-lentil-soup.md",
+        "content": "# Release rule – item 2210 lentil soup 500 ml fresh\n\nChecked every Sunday after the forecast run, on the last 13 valid weeks\n(weeks noted \"sold out\" and weeks without a stored forecast don't count).\nBaseline: \"same as last week\".\n\nThe forecast goes into planning without sign-off only if all four check lights are green:\n\n1. **Data:** last week's actual and this week's forecast are both available.\n2. **Baseline:** the forecast's mean absolute error is smaller than the error of \"same as last week\".\n3. **Bias:** the sum of (forecast − actual) is no more than 5 % of the sum of actuals, too high or too low.\n4. **Range:** the actual fell inside the 80 % range (10 %–90 % of the last 26 errors) at least 9 times out of 13.\n\nIf any light is red, **[person – to be named]** decides and records the number and the reason in the log.\n\nA person always decides, whatever the lights show, when there is a new product, a customer\njoins or leaves (for example the delisting on 7 April 2025), a price change of more than [10 %],\nor a supply shortage.\n"
+      }
+    },
+    {
+      "t_ms": 62129,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 73378,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 73378,
+      "kind": "text",
+      "chunk": "The"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": " two"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": " weeks where you cl"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": "early sh"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": "ouldn't have just followed"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": " the ERP forecast are"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": " **3 February** ("
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": "it"
+    },
+    {
+      "t_ms": 73379,
+      "kind": "text",
+      "chunk": " st"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": "ored no forecast) and the"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " st"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": "retch from"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " **7 April to about"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " 21 July "
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": "2025**. In"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " that stretch the forecast"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " was"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " set too high for weeks after"
+    },
+    {
+      "t_ms": 73380,
+      "kind": "text",
+      "chunk": " a customer st"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": "opped st"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": "ocking the soup. For"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": " the rest of the year the for"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": "ecast was f"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": "ine to follow.\n\n**What"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": " I"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": " checked:** the"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": " lentil soup for"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": "ecast against"
+    },
+    {
+      "t_ms": 73381,
+      "kind": "text",
+      "chunk": " act"
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": "ual sales, "
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": "30 "
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": "Dec 2024 to "
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": "22 Dec 2025"
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": ", 50 weeks."
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": " Two weeks were left out"
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": ":"
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": "\n- 3 Feb"
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": " 2025 "
+    },
+    {
+      "t_ms": 73382,
+      "kind": "text",
+      "chunk": "had no st"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": "ored forecast.\n- "
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": "10 Mar 2025"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": " s"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": "old out from Thursday,"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": " so act"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": "ual sales were lower than real"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": " demand.\n\nYour file has"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": " row for 16 "
+    },
+    {
+      "t_ms": 73383,
+      "kind": "text",
+      "chunk": "Sep 2024 twice"
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": " with the same values,"
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": " and I counted it once."
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": " I m"
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": "apped your"
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": " columns like"
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": " this: week →"
+    },
+    {
+      "t_ms": 73384,
+      "kind": "text",
+      "chunk": " woche, actual → "
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": "ist, forecast → progn"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": "ose, note → hinweis"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": ".\n\n| | Mean error"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": " (units"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": ") | Bias | WA"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": "PE |\n|---|---"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": "|---|---|\n| "
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": "ERP forecast | 33"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": ".3 | 3.0"
+    },
+    {
+      "t_ms": 73385,
+      "kind": "text",
+      "chunk": " % too high | 5."
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": "8 % |\n| Same"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": " as last week | 42.2"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": " | 0.3 %"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": " too low | 7"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": ".4 % |\n\n1"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": ". **Baseline:**"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": " the forecast's error was "
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": "21 % smaller than \""
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": "same as last week\", and it was"
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": " closer in 30 of "
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": "50 weeks. \""
+    },
+    {
+      "t_ms": 73386,
+      "kind": "text",
+      "chunk": "Same week"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": " last year\" did"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": " better than \"same as last week\""
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": " (mean error 38.8"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": "), but the forecast be"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": "at it too"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": ". So over"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": " the year the forecast was wor"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": "th using.\n2. **"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": "Range:** act"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": "ual sales fell in"
+    },
+    {
+      "t_ms": 73387,
+      "kind": "text",
+      "chunk": "side the for"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": "ecast's 80 % range"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " in 36 of 50 "
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": "weeks, below"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " the 40"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " you"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": "'d expect. The misses"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " b"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": "unch up after"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": "7 April, the"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " week your"
+    },
+    {
+      "t_ms": 73388,
+      "kind": "text",
+      "chunk": " file not"
+    },
+    {
+      "t_ms": 73389,
+      "kind": "text",
+      "chunk": "es:"
+    },
+    {
+      "t_ms": 73389,
+      "kind": "text",
+      "chunk": " \"Organic market chain with"
+    },
+    {
+      "t_ms": 73389,
+      "kind": "text",
+      "chunk": " 9 stores delists the"
+    },
+    {
+      "t_ms": 73389,
+      "kind": "text",
+      "chunk": " lentil soup (about "
+    },
+    {
+      "t_ms": 73389,
+      "kind": "text",
+      "chunk": "70 jars a week)\"."
+    },
+    {
+      "t_ms": 73389,
+      "kind": "text",
+      "chunk": "\n3. **Next week ("
+    },
+    {
+      "t_ms": 73444,
+      "kind": "text",
+      "chunk": "29 Dec 2025"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": "):** the forecast is "
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": "729, with"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": " a lik"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": "ely range of 694"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": " to 756. I did"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": "n't cal"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": "culate how"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": " much"
+    },
+    {
+      "t_ms": 73445,
+      "kind": "text",
+      "chunk": " to pl"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": "an, because I don't have"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": " your"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": " costs for a missing j"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": "ar and a leftover jar"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": ".\n4. **Rule"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": ":** all four chec"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": "ks are green for 29 "
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": "Dec,"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": " so the forecast can"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": " go into planning without sign-"
+    },
+    {
+      "t_ms": 73446,
+      "kind": "text",
+      "chunk": "off."
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " Over the"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " last year, 15 of"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " 52 weeks had at"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " least one red check, in"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " these peri"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": "ods:\n   - **3 "
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": "Feb 2025:**"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " no"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " forecast was stored ("
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": "ERP update). There"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": " was nothing to foll"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": "ow.\n   - **21 "
+    },
+    {
+      "t_ms": 73448,
+      "kind": "text",
+      "chunk": "Apr to 21 "
+    },
+    {
+      "t_ms": 73448,
+      "kind": "text",
+      "chunk": "Jul 2025 "
+    },
+    {
+      "t_ms": 73448,
+      "kind": "text",
+      "chunk": "(14 weeks):**"
+    },
+    {
+      "t_ms": 73448,
+      "kind": "text",
+      "chunk": " over the previ"
+    },
+    {
+      "t_ms": 73448,
+      "kind": "text",
+      "chunk": "ous 13 weeks the"
+    },
+    {
+      "t_ms": 73448,
+      "kind": "text",
+      "chunk": " forecast was more"
+    },
+    {
+      "t_ms": 73461,
+      "kind": "text",
+      "chunk": " than 5 % too high,"
+    },
+    {
+      "t_ms": 73506,
+      "kind": "text",
+      "chunk": " pe"
+    },
+    {
+      "t_ms": 73556,
+      "kind": "text",
+      "chunk": "aking at 10"
+    },
+    {
+      "t_ms": 73606,
+      "kind": "text",
+      "chunk": ".6 % too high in m"
+    },
+    {
+      "t_ms": 73657,
+      "kind": "text",
+      "chunk": "id-June. Also, too"
+    },
+    {
+      "t_ms": 73706,
+      "kind": "text",
+      "chunk": " few weeks land"
+    },
+    {
+      "t_ms": 73760,
+      "kind": "text",
+      "chunk": "ed inside the range"
+    },
+    {
+      "t_ms": 73805,
+      "kind": "text",
+      "chunk": ". In the week of 28 "
+    },
+    {
+      "t_ms": 73856,
+      "kind": "text",
+      "chunk": "Apr the"
+    },
+    {
+      "t_ms": 73906,
+      "kind": "text",
+      "chunk": " forecast was also"
+    },
+    {
+      "t_ms": 73956,
+      "kind": "text",
+      "chunk": " worse than \"same as last week"
+    },
+    {
+      "t_ms": 74006,
+      "kind": "text",
+      "chunk": "\".\n\n**Why April"
+    },
+    {
+      "t_ms": 74056,
+      "kind": "text",
+      "chunk": " to"
+    },
+    {
+      "t_ms": 74106,
+      "kind": "text",
+      "chunk": " July:** the for"
+    },
+    {
+      "t_ms": 74157,
+      "kind": "text",
+      "chunk": "ecast was too high every"
+    },
+    {
+      "t_ms": 74206,
+      "kind": "text",
+      "chunk": " week from 7 April to "
+    },
+    {
+      "t_ms": 74259,
+      "kind": "text",
+      "chunk": "9 June. The g"
+    },
+    {
+      "t_ms": 74304,
+      "kind": "text",
+      "chunk": "aps were m"
+    },
+    {
+      "t_ms": 74358,
+      "kind": "text",
+      "chunk": "ostly 80"
+    },
+    {
+      "t_ms": 74420,
+      "kind": "text",
+      "chunk": " to 120"
+    },
+    {
+      "t_ms": 74456,
+      "kind": "text",
+      "chunk": " j"
+    },
+    {
+      "t_ms": 74507,
+      "kind": "text",
+      "chunk": "ars, about"
+    },
+    {
+      "t_ms": 74556,
+      "kind": "text",
+      "chunk": " the "
+    },
+    {
+      "t_ms": 74610,
+      "kind": "text",
+      "chunk": "70 jars a"
+    },
+    {
+      "t_ms": 74655,
+      "kind": "text",
+      "chunk": " week the del"
+    },
+    {
+      "t_ms": 74704,
+      "kind": "text",
+      "chunk": "isting"
+    },
+    {
+      "t_ms": 74754,
+      "kind": "text",
+      "chunk": " c"
+    },
+    {
+      "t_ms": 74804,
+      "kind": "text",
+      "chunk": "ost you"
+    },
+    {
+      "t_ms": 74855,
+      "kind": "text",
+      "chunk": ". The forecast only learned"
+    },
+    {
+      "t_ms": 74911,
+      "kind": "text",
+      "chunk": " about the l"
+    },
+    {
+      "t_ms": 74954,
+      "kind": "text",
+      "chunk": "ost custom"
+    },
+    {
+      "t_ms": 75004,
+      "kind": "text",
+      "chunk": "er sl"
+    },
+    {
+      "t_ms": 75053,
+      "kind": "text",
+      "chunk": "owly,"
+    },
+    {
+      "t_ms": 75103,
+      "kind": "text",
+      "chunk": " from its own err"
+    },
+    {
+      "t_ms": 75154,
+      "kind": "text",
+      "chunk": "ors."
+    },
+    {
+      "t_ms": 75203,
+      "kind": "text",
+      "chunk": "\n\nThe checks didn't tur"
+    },
+    {
+      "t_ms": 75253,
+      "kind": "text",
+      "chunk": "n red until 21 April."
+    },
+    {
+      "t_ms": 75303,
+      "kind": "text",
+      "chunk": " But"
+    },
+    {
+      "t_ms": 75354,
+      "kind": "text",
+      "chunk": " los"
+    },
+    {
+      "t_ms": 75408,
+      "kind": "text",
+      "chunk": "ing a customer always"
+    },
+    {
+      "t_ms": 75454,
+      "kind": "text",
+      "chunk": " needs a person's"
+    },
+    {
+      "t_ms": 75510,
+      "kind": "text",
+      "chunk": " decision, so you should have over"
+    },
+    {
+      "t_ms": 75553,
+      "kind": "text",
+      "chunk": "ridden the forecast from "
+    },
+    {
+      "t_ms": 75604,
+      "kind": "text",
+      "chunk": "7 April at"
+    },
+    {
+      "t_ms": 75658,
+      "kind": "text",
+      "chunk": " the latest, or"
+    },
+    {
+      "t_ms": 75705,
+      "kind": "text",
+      "chunk": " as"
+    },
+    {
+      "t_ms": 75754,
+      "kind": "text",
+      "chunk": " soon as the del"
+    },
+    {
+      "t_ms": 75802,
+      "kind": "text",
+      "chunk": "isting was known"
+    },
+    {
+      "t_ms": 75856,
+      "kind": "text",
+      "chunk": ". The other"
+    },
+    {
+      "t_ms": 75902,
+      "kind": "text",
+      "chunk": " not"
+    },
+    {
+      "t_ms": 75955,
+      "kind": "text",
+      "chunk": "es don't need"
+    },
+    {
+      "t_ms": 76002,
+      "kind": "text",
+      "chunk": " action"
+    },
+    {
+      "t_ms": 76053,
+      "kind": "text",
+      "chunk": ":"
+    },
+    {
+      "t_ms": 76103,
+      "kind": "text",
+      "chunk": "\n- The 12"
+    },
+    {
+      "t_ms": 76153,
+      "kind": "text",
+      "chunk": " May promotion was in"
+    },
+    {
+      "t_ms": 76207,
+      "kind": "text",
+      "chunk": " the forecast (671"
+    },
+    {
+      "t_ms": 76253,
+      "kind": "text",
+      "chunk": " for"
+    },
+    {
+      "t_ms": 76305,
+      "kind": "text",
+      "chunk": "ecast, 637 s"
+    },
+    {
+      "t_ms": 76355,
+      "kind": "text",
+      "chunk": "old).\n- The 10"
+    },
+    {
+      "t_ms": 76406,
+      "kind": "text",
+      "chunk": " Mar sell"
+    },
+    {
+      "t_ms": 76454,
+      "kind": "text",
+      "chunk": "-out is exc"
+    },
+    {
+      "t_ms": 76509,
+      "kind": "text",
+      "chunk": "luded from the checks."
+    },
+    {
+      "t_ms": 76556,
+      "kind": "text",
+      "chunk": "\n\nThe ERP's \"94."
+    },
+    {
+      "t_ms": 76605,
+      "kind": "text",
+      "chunk": "2 % accuracy\""
+    },
+    {
+      "t_ms": 76654,
+      "kind": "text",
+      "chunk": " mat"
+    },
+    {
+      "t_ms": 76703,
+      "kind": "text",
+      "chunk": "ches my"
+    },
+    {
+      "t_ms": 76753,
+      "kind": "text",
+      "chunk": " calculation (100"
+    },
+    {
+      "t_ms": 76803,
+      "kind": "text",
+      "chunk": " %"
+    },
+    {
+      "t_ms": 76854,
+      "kind": "text",
+      "chunk": " − 5.8 %"
+    },
+    {
+      "t_ms": 76903,
+      "kind": "text",
+      "chunk": " WAPE). But it's"
+    },
+    {
+      "t_ms": 76953,
+      "kind": "text",
+      "chunk": " a y"
+    },
+    {
+      "t_ms": 77003,
+      "kind": "text",
+      "chunk": "early average, so it hides"
+    },
+    {
+      "t_ms": 77053,
+      "kind": "text",
+      "chunk": " both"
+    },
+    {
+      "t_ms": 77103,
+      "kind": "text",
+      "chunk": " the three"
+    },
+    {
+      "t_ms": 77155,
+      "kind": "text",
+      "chunk": " months"
+    },
+    {
+      "t_ms": 77205,
+      "kind": "text",
+      "chunk": " of over"
+    },
+    {
+      "t_ms": 77253,
+      "kind": "text",
+      "chunk": "-forecasting and the f"
+    },
+    {
+      "t_ms": 77307,
+      "kind": "text",
+      "chunk": "act that the forecast "
+    },
+    {
+      "t_ms": 77352,
+      "kind": "text",
+      "chunk": "ran too high in"
+    },
+    {
+      "t_ms": 77403,
+      "kind": "text",
+      "chunk": " 33 of 50 we"
+    },
+    {
+      "t_ms": 77458,
+      "kind": "text",
+      "chunk": "eks overall.\n\nI w"
+    },
+    {
+      "t_ms": 77503,
+      "kind": "text",
+      "chunk": "rote the we"
+    },
+    {
+      "t_ms": 77553,
+      "kind": "text",
+      "chunk": "ekly check rule to"
+    },
+    {
+      "t_ms": 77604,
+      "kind": "text",
+      "chunk": " `pruefregel-l"
+    },
+    {
+      "t_ms": 77654,
+      "kind": "text",
+      "chunk": "entil-soup.md`"
+    },
+    {
+      "t_ms": 77705,
+      "kind": "text",
+      "chunk": "."
+    },
+    {
+      "t_ms": 77753,
+      "kind": "text",
+      "chunk": " F"
+    },
+    {
+      "t_ms": 77804,
+      "kind": "text",
+      "chunk": "ill in who"
+    },
+    {
+      "t_ms": 77854,
+      "kind": "text",
+      "chunk": " decides when a check"
+    },
+    {
+      "t_ms": 77913,
+      "kind": "text",
+      "chunk": " is red;"
+    },
+    {
+      "t_ms": 77953,
+      "kind": "text",
+      "chunk": " you"
+    },
+    {
+      "t_ms": 78009,
+      "kind": "text",
+      "chunk": " didn't name an"
+    },
+    {
+      "t_ms": 78059,
+      "kind": "text",
+      "chunk": "yone,"
+    },
+    {
+      "t_ms": 78104,
+      "kind": "text",
+      "chunk": " so it"
+    },
+    {
+      "t_ms": 78153,
+      "kind": "text",
+      "chunk": "'s a placeholder for"
+    },
+    {
+      "t_ms": 78204,
+      "kind": "text",
+      "chunk": " now. If you send me what"
+    },
+    {
+      "t_ms": 78253,
+      "kind": "text",
+      "chunk": " a missing jar and"
+    },
+    {
+      "t_ms": 78308,
+      "kind": "text",
+      "chunk": " a le"
+    },
+    {
+      "t_ms": 78362,
+      "kind": "text",
+      "chunk": "ftover jar cost you,"
+    },
+    {
+      "t_ms": 78403,
+      "kind": "text",
+      "chunk": " I'll add"
+    },
+    {
+      "t_ms": 78462,
+      "kind": "text",
+      "chunk": " how much to plan for each week"
+    },
+    {
+      "t_ms": 78504,
+      "kind": "text",
+      "chunk": "."
+    }
+  ],
+  "final_text": "The two weeks where you clearly shouldn't have just followed the ERP forecast are **3 February** (it stored no forecast) and the stretch from **7 April to about 21 July 2025**. In that stretch the forecast was set too high for weeks after a customer stopped stocking the soup. For the rest of the year the forecast was fine to follow.\n\n**What I checked:** the lentil soup forecast against actual sales, 30 Dec 2024 to 22 Dec 2025, 50 weeks. Two weeks were left out:\n- 3 Feb 2025 had no stored forecast.\n- 10 Mar 2025 sold out from Thursday, so actual sales were lower than real demand.\n\nYour file has the row for 16 Sep 2024 twice, with the same values, and I counted it once. I mapped your columns like this: week → woche, actual → ist, forecast → prognose, note → hinweis.\n\n| | Mean error (units) | Bias | WAPE |\n|---|---|---|---|\n| ERP forecast | 33.3 | 3.0 % too high | 5.8 % |\n| Same as last week | 42.2 | 0.3 % too low | 7.4 % |\n\n1. **Baseline:** the forecast's error was 21 % smaller than \"same as last week\", and it was closer in 30 of 50 weeks. \"Same week last year\" did better than \"same as last week\" (mean error 38.8), but the forecast beat it too. So over the year the forecast was worth using.\n2. **Range:** actual sales fell inside the forecast's 80 % range in 36 of 50 weeks, below the 40 you'd expect. The misses bunch up after 7 April, the week your file notes: \"Organic market chain with 9 stores delists the lentil soup (about 70 jars a week)\".\n3. **Next week (29 Dec 2025):** the forecast is 729, with a likely range of 694 to 756. I didn't calculate how much to plan, because I don't have your costs for a missing jar and a leftover jar.\n4. **Rule:** all four checks are green for 29 Dec, so the forecast can go into planning without sign-off. Over the last year, 15 of 52 weeks had at least one red check, in these periods:\n   - **3 Feb 2025:** no forecast was stored (ERP update). There was nothing to follow.\n   - **21 Apr to 21 Jul 2025 (14 weeks):** over the previous 13 weeks the forecast was more than 5 % too high, peaking at 10.6 % too high in mid-June. Also, too few weeks landed inside the range. In the week of 28 Apr the forecast was also worse than \"same as last week\".\n\n**Why April to July:** the forecast was too high every week from 7 April to 9 June. The gaps were mostly 80 to 120 jars, about the 70 jars a week the delisting cost you. The forecast only learned about the lost customer slowly, from its own errors.\n\nThe checks didn't turn red until 21 April. But losing a customer always needs a person's decision, so you should have overridden the forecast from 7 April at the latest, or as soon as the delisting was known. The other notes don't need action:\n- The 12 May promotion was in the forecast (671 forecast, 637 sold).\n- The 10 Mar sell-out is excluded from the checks.\n\nThe ERP's \"94.2 % accuracy\" matches my calculation (100 % − 5.8 % WAPE). But it's a yearly average, so it hides both the three months of over-forecasting and the fact that the forecast ran too high in 33 of 50 weeks overall.\n\nI wrote the weekly check rule to `pruefregel-lentil-soup.md`. Fill in who decides when a check is red; you didn't name anyone, so it's a placeholder for now. If you send me what a missing jar and a leftover jar cost you, I'll add how much to plan for each week.",
+  "stats": {
+    "duration_ms": 77782,
+    "duration_api_ms": 76023,
+    "ttft_ms": 1946,
+    "num_turns": 8,
+    "output_tokens": 8948
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [
+    {
+      "name": "pruefregel-lentil-soup.md",
+      "bytes": 1049,
+      "sha256": "21bbac68804301eb47a3aeab91feeb2364d9005884110538f65031dd675d4461",
+      "stored_as": "en-when-with-1.pruefregel-lentil-soup.md",
+      "text": "# Release rule – item 2210 lentil soup 500 ml fresh\n\nChecked every Sunday after the forecast run, on the last 13 valid weeks\n(weeks noted \"sold out\" and weeks without a stored forecast don't count).\nBaseline: \"same as last week\".\n\nThe forecast goes into planning without sign-off only if all four check lights are green:\n\n1. **Data:** last week's actual and this week's forecast are both available.\n2. **Baseline:** the forecast's mean absolute error is smaller than the error of \"same as last week\".\n3. **Bias:** the sum of (forecast − actual) is no more than 5 % of the sum of actuals, too high or too low.\n4. **Range:** the actual fell inside the 80 % range (10 %–90 % of the last 26 errors) at least 9 times out of 13.\n\nIf any light is red, **[person – to be named]** decides and records the number and the reason in the log.\n\nA person always decides, whatever the lights show, when there is a new product, a customer\njoins or leaves (for example the delisting on 7 April 2025), a price change of more than [10 %],\nor a supply shortage.\n"
+    }
+  ],
+  "edited": false
+}

@@ -93,7 +93,7 @@ export const demos: readonly Demo[] = [
     workshopNumber: "01",
     plakat: "lemons",
     motif: "fan",
-    minutes: 4,
+    minutes: 10,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
@@ -101,28 +101,28 @@ export const demos: readonly Demo[] = [
     lastReviewed: "2026-10-25",
     title: "Die Fehlerliste",
     oneLiner:
-      "Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel.",
+      "Du prüfst die Prognose deines Tools an ihren eigenen alten Fehlern und legst fest, wann sie ohne Freigabe in die Planung darf.",
     question:
       "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
     syntheticDataLabel:
-      "Erfundene Firma, erfundene Zahlen. Gerechnet in deinem Browser, ohne KI. Nichts wird gesendet.",
+      "Firma und Zahlen sind erfunden. Die Demo rechnet in deinem Browser und sendet nichts. Die Antworten von Claude unter der Demo sind aufgezeichnete Läufe.",
     job: "Prüf die Prognose deines Tools an ihren alten Fehlern.",
     tile: {
-      hook: "Linsensuppe 2025: Die Prognose liegt 21 % näher als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
-      take: "Prüfregel + Claude-Skill",
+      hook: "Linsensuppe 2025: Die Prognose macht 21 % kleinere Fehler als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
+      take: "Eine Prüfregel und ein Skill für deinen Claude",
     },
     en: {
       title: "The Error List",
       oneLiner:
-        "Check your tool's forecast against its own past errors: baseline, range, planning number, rule.",
+        "You check your tool's forecast against its own past errors and decide when it may go into planning without sign-off.",
       question:
         "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
       syntheticDataLabel:
-        "Invented company, invented numbers. Worked out in your browser, no AI. Nothing is sent.",
+        "The company and its numbers are invented. The demo runs in your browser and sends nothing. The Claude answers below the demo are recorded runs.",
       job: "Check your tool's forecast against its past errors.",
       tile: {
-        hook: "Lentil soup 2025: the forecast misses 21 % less than \"same as last week\". The release rule still stops it for 15 weeks.",
-        take: "Release rule + Claude skill",
+        hook: "Lentil soup 2025: the forecast's errors are 21% smaller than with \"same as last week\". The release rule still stops it for 15 weeks.",
+        take: "A release rule and a skill for your Claude",
       },
     },
   },

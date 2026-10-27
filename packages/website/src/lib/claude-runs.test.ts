@@ -90,7 +90,9 @@ describe("recording labels", () => {
     const scene = CLAUDE_SCENES["ki-prognosen-einschaetzen"];
     if (!scene) throw new Error("W01 has a scene");
     expect(promptsFor(scene, "de").foreign).toBe(false);
-    expect(promptsFor(scene, "en")).toMatchObject({ foreign: true });
+    expect(promptsFor(scene, "en").foreign).toBe(false);
+    const germanOnly = { ...scene, prompts: scene.prompts.filter((item) => item.locale === "de") };
+    expect(promptsFor(germanOnly, "en")).toMatchObject({ foreign: true, prompts: germanOnly.prompts });
     const prompt = scene.prompts[0];
     if (!prompt) throw new Error("W01 has a prompt");
     expect(takesFor(scene, prompt, true).map((take: ClaudeRecording) => take.id)).toEqual(prompt.withSkill);

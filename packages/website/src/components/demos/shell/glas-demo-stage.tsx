@@ -11,6 +11,7 @@ import { DemoIntro } from "@/components/demos/glas/intro";
 import { GlasGroup, GlasPanel } from "@/components/demos/glas/panel";
 import { GlasWeg } from "@/components/demos/glas/weg";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import type { GlasTone } from "@/lib/glas";
 import { useBeatClock } from "./beat-clock";
 import { useDemoV4Page } from "./demo-v4-context";
 
@@ -32,6 +33,7 @@ export function DemoGlasStage({
   dock,
   className,
   style,
+  readingTone,
 }: {
   /** Accessible name of the stage (what the picture shows). */
   readonly label: string;
@@ -45,6 +47,12 @@ export function DemoGlasStage({
   readonly dock?: ReactNode;
   readonly className?: string;
   readonly style?: CSSProperties;
+  /**
+   * The tone of the reading surfaces (intro card and caption) when it differs
+   * from the stage's: "hell" puts light reading glass over a dark field, while
+   * the dock keeps the stage tone.
+   */
+  readonly readingTone?: GlasTone;
 }) {
   const clock = useBeatClock();
   const page = useDemoV4Page();
@@ -82,7 +90,7 @@ export function DemoGlasStage({
         {children}
       </div>
       {!inIntro && caption ? (
-        <GlasPanel material="regular" live={GLAS_PRIORITY.caption} className="demo4-caption" data-demo-caption="" aria-live="polite">
+        <GlasPanel material="regular" tone={readingTone} live={GLAS_PRIORITY.caption} className="demo4-caption" data-demo-caption="" aria-live="polite">
           {caption}
         </GlasPanel>
       ) : null}
@@ -107,6 +115,7 @@ export function DemoGlasStage({
             content={page.intro}
             headingId={headingId}
             leaving={!inIntro}
+            tone={readingTone}
             onStart={clock.start}
             onExplore={clock.explore}
           />
@@ -121,7 +130,23 @@ export function DemoGlasStage({
  * with "Zurück" and "Weiter", then this beat's controls as fills. In free
  * play the path collapses into "Zur Führung". It rises when the intro leaves.
  */
-export function DemoDock({ children, label, className }: { readonly children?: ReactNode; readonly label?: string; readonly className?: string }) {
+export function DemoDock({
+  children,
+  label,
+  className,
+  compact,
+}: {
+  readonly children?: ReactNode;
+  readonly label?: string;
+  readonly className?: string;
+  /**
+   * On a phone, keeps the dock to one path row and the controls: the step
+   * sentence, the "Vorschlag übernommen" chip and the slider's label line
+   * become screen-reader text, and "Weiter" drops the next step's name, for
+   * a demo whose caption and chart already say all of it.
+   */
+  readonly compact?: boolean;
+}) {
   const clock = useBeatClock();
   const copy = DEMOS_PAGE_COPY[clock.locale].v4;
   const locale = clock.locale;
@@ -135,7 +160,7 @@ export function DemoDock({ children, label, className }: { readonly children?: R
       material="regular"
       shape="card"
       appear={clock.phase === "intro" ? "out" : "in"}
-      className={cx("demo4-dock", className)}
+      className={cx("demo4-dock", compact && "is-compact", className)}
       data-demo-lever=""
     >
       <GlasWeg
@@ -155,7 +180,7 @@ export function DemoDock({ children, label, className }: { readonly children?: R
         canNext={clock.index < clock.beats.length - 1}
         free={clock.phase === "free"}
         onToGuide={clock.toGuide}
-        copy={{ stepOf: copy.stepOf, prev: copy.prev, next: nextLabel, toGuide: copy.toGuide, nav: copy.wegNav }}
+        copy={{ stepOf: copy.stepOf, prev: copy.prev, next: nextLabel, nextShort: compact ? copy.next : undefined, toGuide: copy.toGuide, nav: copy.wegNav }}
       />
       {clock.skippedCommit && clock.phase === "guided" ? (
         <p className="demo4-skipped">

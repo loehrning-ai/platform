@@ -5,7 +5,7 @@ One column, actual minus forecast, answers four questions:
 
 1. Baseline: are the errors smaller than those of "same as last week"?
 2. Range: did the actual land inside the 80 % range as often as it promises?
-3. Planning number: what quantity follows from the cost of one missing and one leftover unit?
+3. Order quantity: what quantity follows from the cost of one missing and one leftover unit?
 4. Rule: in which week does the forecast run alone, and in which does a person decide?
 
 The company is invented: Suppenwerk Feldmark cooks lentil soup (500 ml, fresh) every
@@ -53,7 +53,7 @@ The German names woche, ist, prognose and hinweis work too, and so does stock_en
 - It builds no forecast. It checks one that already exists.
 - Without stored past forecasts there is no check 1. Start storing them today.
 - A new product has no error list. There, a person decides.
-- The planning number holds for goods that lose their value after the week.
+- The order quantity holds for goods that lose their value after the week.
 
 ## How the skill gets into your Claude
 

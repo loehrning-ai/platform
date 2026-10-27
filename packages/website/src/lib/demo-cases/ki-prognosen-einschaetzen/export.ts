@@ -126,7 +126,7 @@ export function slugify(text: string, fallback: string): string {
     .replaceAll("ö", "oe")
     .replaceAll("ü", "ue")
     .replaceAll("ß", "ss")
-    .normalize("NFKD")
+    .normalize("NFD")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 40);

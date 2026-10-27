@@ -79,6 +79,8 @@ export interface CheckResult {
   readonly regel_frei: number;
   readonly regel_rot: readonly (readonly [string, readonly LampKey[]])[];
   readonly anteil?: number;
+  /** Scored weeks the cost ledger covers: those with at least one error before them. */
+  readonly kosten_wochen?: number;
   readonly kosten?: { readonly Messlatte: number; readonly Prognose: number; readonly Planzahl: number };
   readonly naechste?: NextWeek;
 }
@@ -267,14 +269,14 @@ export function runCheck(rows: readonly Row[], options: CheckOptions): CheckOutc
     const tau = share(cu, co);
     const cost = (q: number, d: number) => cu * Math.max(0, d - q) + co * Math.max(0, q - d);
     result.anteil = tau;
-    // The buffered policy needs an error list before every scored week; a short file gets no ledger.
-    if (wochen.every((t) => errorsBefore(t, LERNEN).errors.length > 0)) {
-      result.kosten = {
-        Messlatte: sum(wochen.map((t) => cost(rule(t) as number, A(t)))),
-        Prognose: sum(wochen.map((t) => cost(F(t) as number, A(t)))),
-        Planzahl: sum(wochen.map((t) => cost((F(t) as number) + quantile7(errorsBefore(t, LERNEN).errors, tau), A(t)))),
-      };
-    }
+    // A week with no error before it has no buffer: it leaves the ledger for all three, as in pruefen.py.
+    const mit = wochen.filter((t) => errorsBefore(t, LERNEN).errors.length > 0);
+    result.kosten_wochen = mit.length;
+    result.kosten = {
+      Messlatte: sum(mit.map((t) => cost(rule(t) as number, A(t)))),
+      Prognose: sum(mit.map((t) => cost(F(t) as number, A(t)))),
+      Planzahl: sum(mit.map((t) => cost((F(t) as number) + quantile7(errorsBefore(t, LERNEN).errors, tau), A(t)))),
+    };
   }
   if (naechste !== null && F(naechste) !== null) {
     const forecast = F(naechste) as number;

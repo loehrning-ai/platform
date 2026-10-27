@@ -1,614 +1,688 @@
 "use client";
 
-import { useEffect, useId, useMemo, useState, type ReactNode } from "react";
-import { DemoLever, DemoStage, TAKEHOME_TARGET_ID, setTakeHomeLine, useBeatClock, useOnEscape, useOnRestart } from "@/components/demos/shell";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { feldFor, GlasButton, GlasChip, GlasSegmented, GlasSheet, GlasSlider, GlasToggle } from "@/components/demos/glas";
+import { DemoDock, DemoGlasStage, setTakeHomeLine, useBeatClock, useBeatGate, useOnRestart } from "@/components/demos/shell";
 import { BEATS, type BeatId } from "@/lib/demo-cases/ki-prognosen-einschaetzen/beats";
-import { LAMP_KEYS, LERNEN, PRUEF, TREFFER_MIN, type CheckResult, type Checker } from "@/lib/demo-cases/ki-prognosen-einschaetzen/check";
 import type { DemoPack } from "@/lib/demo-cases/ki-prognosen-einschaetzen/copy";
-import { baselinePin, causeBefore, chances, dataGap, longestRun, planErrors, rangeSplit, redRuns, type RedRun } from "@/lib/demo-cases/ki-prognosen-einschaetzen/derive";
 import { slugify, toResultCsv, toRuleMarkdown } from "@/lib/demo-cases/ki-prognosen-einschaetzen/export";
-import { formatDay, formatEuro, formatNumber, formatOne, formatPercent, formatShortDay, fill, plural } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
+import { fill, formatDay, formatShortDay } from "@/lib/demo-cases/ki-prognosen-einschaetzen/format";
 import { KIT_COSTS, kitCheck, kitCsv } from "@/lib/demo-cases/ki-prognosen-einschaetzen/kit";
+import { buildModel, type Model } from "@/lib/demo-cases/ki-prognosen-einschaetzen/model";
 import { evaluateOwn } from "@/lib/demo-cases/ki-prognosen-einschaetzen/own";
-import { MAX_BYTES, parseCell } from "@/lib/demo-cases/ki-prognosen-einschaetzen/parse";
-import { GUESSES, RANGE_TIPS, planFrame, sweep, type RangeTip } from "@/lib/demo-cases/ki-prognosen-einschaetzen/timeline";
+import { MAX_BYTES } from "@/lib/demo-cases/ki-prognosen-einschaetzen/parse";
+import {
+  baselineCaption,
+  errorsCaption,
+  errorsMoment,
+  freeCaption,
+  planCaption,
+  planGap,
+  rangeCaption,
+  ruleCaption,
+  type Paragraphs,
+  type Progress,
+} from "./captions";
 import { downloadText } from "./download";
-import { KitMap } from "./kit-map";
-import { OwnPanel, OwnStage, type OwnInputs } from "./own-data";
-import { PlanView } from "./plan-view";
-import { RuleView } from "./rule-view";
-import { BaselineStage, GuessStage, RangeStage, type KitFacts } from "./stages";
-import "./fehlerliste.css";
+import { euro2, fillProject, jars, ownerOr, parseCost, percent, personalLine, ruleFill, SLUG, weekOf, weekSentence } from "./helpers";
+import { EMPTY_OWN, OwnStep, type OwnInputs } from "./own-step";
+import { SceneBaseline } from "./scene-baseline";
+import { SceneErrors } from "./scene-errors";
+import { bufferDomain, curveMax, ScenePlan } from "./scene-plan";
+import { SceneRange } from "./scene-range";
+import { SceneRule } from "./scene-rule";
+import { ExportSheet, RangeSheet, RowSheet, WeekSheet, YearSheet, type SheetState } from "./sheets";
+import { CopyRowButton, TakeHomeStep } from "./take-home-step";
+import "./w01.css";
 
-const SLUG = "ki-prognosen-einschaetzen";
+type Decision = "open" | "locked" | "skipped";
+type FreeView = "fehler" | "spanne" | "planzahl" | "lampen";
+const FREE_VIEWS: readonly FreeView[] = ["fehler", "spanne", "planzahl", "lampen"];
+const GUESS_START = 90;
+const GUESS3_START = 30;
+const POOL_REST = 0.92;
 
-/** A cost field's text as euros: "1,50", "1.50", "1,50 €"; null when empty, zero or not a number. */
-function parseCost(text: string): number | null {
-  const cell = parseCell(text.replace(/€/g, ""));
-  return cell.ok && cell.value !== null && cell.value > 0 ? cell.value : null;
+function clampTo(list: readonly number[], t: number): number {
+  const first = list[0] ?? t;
+  const last = list[list.length - 1] ?? t;
+  return Math.min(last, Math.max(first, t));
 }
 
-/** True when a cost field holds text that is not a number at all ("abc"), as opposed to empty or zero. */
-function notANumber(text: string): boolean {
-  return text.trim() !== "" && !parseCell(text.replace(/€/g, "")).ok;
-}
-
-/** The longest red run as the rule file's sentence: "... 14 Wochen lang."; "" without a red week. */
-function longestRedSentence(copy: DemoPack, check: Checker): string {
-  const longest = longestRun(redRuns(check));
-  return longest ? plural(longest.to - longest.from + 1, copy.ruleFile.longestRed) : "";
-}
-
-/** "Bias und Spanne", "data and range". */
-function joinWords(words: readonly string[], and: string): string {
-  if (words.length <= 1) return words.join("");
-  return `${words.slice(0, -1).join(", ")} ${and} ${words[words.length - 1]}`;
-}
-
-/** One sentence per red run, naming only lamps that were red in its weeks. */
-function runSentence(copy: DemoPack, check: Checker, run: RedRun): string {
-  const locale = copy.locale;
-  const day = (t: number) => formatShortDay(check.rows[t]?.woche ?? "", locale);
-  const names = (keys: readonly string[]) => joinWords(keys.map((key) => copy.regel.lampsShort[key as keyof typeof copy.regel.lampsShort]), copy.regel.and);
-  const from = day(run.from);
-  if (run.from === run.to && run.lamps.length === 1 && run.lamps[0] === "daten") {
-    return fill(copy.regel.gap[dataGap(check, run.from)], { from });
-  }
-  const head =
-    run.from === run.to
-      ? fill(copy.regel.singleLine, { from, lamps: names(run.lamps) })
-      : fill(copy.regel.runLine, { from, to: day(run.to), lamps: names(run.lamps), weeks: plural(run.to - run.from + 1, copy.regel.weeks) });
-  const extras = run.extra.map((entry) =>
-    fill(copy.regel.extraLine, { dates: joinWords(entry.weeks.map(day), copy.regel.and), lamps: names([entry.key]) }),
+function Caption({ paragraphs, children }: { readonly paragraphs: Paragraphs; readonly children?: ReactNode }) {
+  return (
+    <div className="w01-cap" data-w01-caption="">
+      {paragraphs.map((text) => (
+        <p key={text}>{text}</p>
+      ))}
+      {children}
+    </div>
   );
-  return [head, ...extras].join(" ");
 }
 
-const costText = (value: number, locale: DemoPack["locale"]) => formatNumber(value, locale, 2, 2);
-
-function ruleFill(
-  copy: DemoPack,
-  series: string,
-  owner: string,
-  target: { readonly result: CheckResult; readonly check: Checker },
-  fehlmenge: number | null,
-  rest: number | null,
-  system: string | null,
-) {
-  const { result } = target;
-  return {
-    reihe: series,
-    system,
-    longestRed: longestRedSentence(copy, target.check),
-    messlatte: copy.ruleNames[result.messlatte],
-    owner,
-    fehlmenge,
-    rest,
-    lampWords: copy.regel.lampState,
-    lampSummary: (green: number, red: number) => fill(copy.ruleFile.lampSummary, { green, red }),
-  };
-}
-
-/** The visitor's sentence for the take-home block: the plan week, its number and who decides. */
-function personalLine(copy: DemoPack, series: string, owner: string, result: CheckResult): string {
-  const next = result.naechste;
-  if (!next) return "";
-  const who = owner.trim() || copy.takeHome.lineNoOwner;
-  const red = next.lampen ? LAMP_KEYS.filter((key) => next.lampen?.[key] === false).length : 0;
-  const forecast = formatNumber(next.prognose, copy.locale);
-  if (next.lampen?.frei && next.planzahl !== undefined) {
-    return fill(copy.takeHome.line, { series, forecast, plan: formatNumber(next.planzahl, copy.locale), owner: who });
-  }
-  return fill(copy.takeHome.lineRed, { series, forecast, lamps: plural(red, copy.regel.lampCount), owner: who });
-}
-
-export function Fehlerliste({ copy }: { readonly copy: DemoPack }) {
+/**
+ * "Die Fehlerliste" on the v4 shell: one column (sales minus forecast)
+ * built by hand and read four ways. The visitor's bets, playheads and
+ * levers live here; r and Shift+R reset them, never the own file or the
+ * person who decides. Every number comes from one check (the kit's or the
+ * visitor's file) through buildModel, so the captions, the take-home and
+ * the rule file say the same thing.
+ */
+export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPack; readonly kitHref: string; readonly kitSize: string }) {
   const clock = useBeatClock();
   const locale = copy.locale;
-  const id = useId();
-  const beat = (BEATS[clock.index]?.id ?? "schaetzen") as BeatId;
-  const p = clock.progress;
+  const beat = (BEATS[clock.index]?.id ?? "messlatte") as BeatId;
+  const free = clock.phase === "free";
 
-  // The visitor's bets and levers. Restart clears them; the owner and the own file stay.
-  const [guess, setGuess] = useState<number | null>(null);
-  const [tip, setTip] = useState<RangeTip | "none" | null>(null);
-  const [shortText, setShortText] = useState(() => costText(KIT_COSTS.fehlmenge, locale));
-  const [leftText, setLeftText] = useState(() => costText(KIT_COSTS.restKantine, locale));
+  const [guess, setGuess] = useState(GUESS_START);
+  const [guessState, setGuessState] = useState<Decision>("open");
+  const [shift, setShift] = useState(0);
+  const [shiftDrag, setShiftDrag] = useState(false);
+  const [baselineDone, setBaselineDone] = useState(false);
+  const [p2, setP2] = useState<number | null>(null);
+  const [errorsDone, setErrorsDone] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
+  const [guess3, setGuess3] = useState(GUESS3_START);
+  const [guess3State, setGuess3State] = useState<Decision>("open");
+  const [p3, setP3] = useState<number | null>(null);
+  const [rangeDone, setRangeDone] = useState(false);
+  const [canteen, setCanteen] = useState(true);
+  const [buffer, setBuffer] = useState(0);
+  const [visited, setVisited] = useState<readonly [number, number]>([0, 0]);
+  const [planFull, setPlanFull] = useState(false);
+  const [planDone, setPlanDone] = useState(false);
+  const [planActive, setPlanActive] = useState(false);
+  const [p5, setP5] = useState<number | null>(null);
+  const [ruleDone, setRuleDone] = useState(false);
+  const [freeView, setFreeView] = useState<FreeView>("fehler");
+  const [freeT, setFreeT] = useState<number | null>(null);
+  const [sheet, setSheet] = useState<SheetState | null>(null);
+  const [poolX, setPoolX] = useState(POOL_REST);
+  // The visitor's own data and the person: r never clears them.
   const [owner, setOwner] = useState("");
-  const [own, setOwn] = useState<OwnInputs>({ text: "", series: "", messlatte: "wie letzte Woche", short: "", left: "" });
+  const [own, setOwn] = useState<OwnInputs>(EMPTY_OWN);
   const [ownChecked, setOwnChecked] = useState("");
   const [fileProblem, setFileProblem] = useState<"tooBig" | "fileType" | null>(null);
+  const [source, setSource] = useState<"kit" | "own">("kit");
 
-  useOnRestart(() => {
-    setGuess(null);
-    setTip(null);
-    setShortText(costText(KIT_COSTS.fehlmenge, locale));
-    setLeftText(costText(KIT_COSTS.restKantine, locale));
-    setSelected(null);
-  });
-  useOnEscape(() => setSelected(null));
-
-  const fehlmenge = parseCost(shortText);
-  const rest = parseCost(leftText);
-  const kit = useMemo(() => kitCheck(fehlmenge, rest, locale), [fehlmenge, rest, locale]);
-  const facts: KitFacts = useMemo(() => {
-    const { result } = kit;
-    return {
-      check: kit.check,
-      result,
-      toolAccuracy: 1 - (result.tabelle.Prognose?.wape ?? 0),
-      ruleAccuracy: 1 - (result.tabelle["wie letzte Woche"]?.wape ?? 0),
-      year: result.bis.slice(0, 4),
-    };
-  }, [kit]);
-  const { check, result } = kit;
-
-  const derived = useMemo(() => {
-    const runs = redRuns(check);
-    const longest = longestRun(runs);
-    const cause = longest ? causeBefore(check, longest.from) : null;
-    return { pin: baselinePin(check), runs, longest, cause, split: rangeSplit(check, cause), chance: chances(result) };
-  }, [check, result]);
-
+  const kitCo = canteen ? KIT_COSTS.restKantine : KIT_COSTS.restOhne;
+  const kit = useMemo(() => kitCheck(KIT_COSTS.fehlmenge, kitCo, locale), [kitCo, locale]);
+  const kitModel = useMemo(() => buildModel(kit.check, kit.result, { cu: KIT_COSTS.fehlmenge, co: kitCo }), [kit, kitCo]);
+  const kitText = useMemo(() => kitCsv(locale), [locale]);
+  const ownCu = parseCost(own.short);
+  const ownCo = parseCost(own.left);
   const ownOutcome = useMemo(
-    () =>
-      evaluateOwn(ownChecked, {
-        fehlmenge: parseCost(own.short),
-        rest: parseCost(own.left),
-        messlatte: own.messlatte,
-      }),
-    [ownChecked, own.short, own.left, own.messlatte],
+    () => evaluateOwn(ownChecked, { fehlmenge: ownCu, rest: ownCo, messlatte: own.rule }),
+    [ownChecked, ownCu, ownCo, own.rule],
   );
-  const ownSeries = own.series.trim() || copy.own.seriesFallback;
+  const ownModel = useMemo(
+    () => (ownOutcome.kind === "ok" ? buildModel(ownOutcome.check, ownOutcome.result, ownCu && ownCo ? { cu: ownCu, co: ownCo } : null) : null),
+    [ownOutcome, ownCu, ownCo],
+  );
+  const useOwn = source === "own" && ownModel !== null;
+  const model: Model = useOwn && ownModel ? ownModel : kitModel;
+  const ownCosts = ownCu && ownCo ? { cu: ownCu, co: ownCo } : null;
+  const costs = useOwn ? ownCosts : { cu: KIT_COSTS.fehlmenge, co: kitCo };
+  const lampsReady = useOwn ? ownOutcome.kind === "ok" && ownOutcome.lampsReady : true;
+  const series = useOwn ? own.series.trim() || copy.own.seriesFallback : copy.product;
+  const { check, span, strip } = model;
 
-  // The take-home block's personal line: the own file once checked, otherwise the kit with the named owner.
+  const errorsFirst = (span[0] ?? 0) - 1;
+  const errorsLast = span[span.length - 1] ?? 0;
+  const P2 = p2 ?? errorsFirst;
+  const P3 = p3 ?? model.park;
+  const P5 = p5 ?? clampTo(strip, model.park);
+  const plan = model.plan;
+  const yMax = useMemo(() => {
+    if (!plan) return 1;
+    if (useOwn) return curveMax(plan, ownCosts ? [ownCosts] : []);
+    return curveMax(plan, [
+      { cu: KIT_COSTS.fehlmenge, co: KIT_COSTS.restKantine },
+      { cu: KIT_COSTS.fehlmenge, co: KIT_COSTS.restOhne },
+    ]);
+  }, [plan, useOwn, ownCosts?.cu, ownCosts?.co]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const resetScenes = () => {
+    setGuess(GUESS_START);
+    setGuessState("open");
+    setShift(0);
+    setShiftDrag(false);
+    setBaselineDone(false);
+    setP2(null);
+    setErrorsDone(false);
+    setSelected(null);
+    setGuess3(GUESS3_START);
+    setGuess3State("open");
+    setP3(null);
+    setRangeDone(false);
+    setBuffer(0);
+    setVisited([0, 0]);
+    setPlanFull(false);
+    setPlanDone(false);
+    setP5(null);
+    setRuleDone(false);
+    setFreeT(null);
+    setSheet(null);
+    setPoolX(POOL_REST);
+  };
+  useOnRestart(() => {
+    resetScenes();
+    setCanteen(true);
+    setFreeView("fehler");
+  });
+
+  // The light under the finger moves on release only, never per frame under the live dock.
+  const settle = (share: number) => {
+    if (!clock.reducedMotion) setPoolX(Math.min(0.95, Math.max(0.05, share)));
+  };
+
+  const moveP2 = (t: number) => {
+    const next = Math.min(errorsLast, Math.max(errorsFirst, t));
+    setP2(next);
+    if (next >= errorsLast) setErrorsDone(true);
+  };
+  const moveP3 = (t: number) => {
+    const next = clampTo(span, t);
+    setP3(next);
+    if (next >= model.rangeDone) setRangeDone(true);
+  };
+  const moveP5 = (t: number) => {
+    const next = clampTo(strip, t);
+    setP5(next);
+    if (next >= model.ruleDone) setRuleDone(true);
+  };
+  const moveBuffer = (b: number) => {
+    setBuffer(b);
+    setVisited(([lo, hi]) => [Math.min(lo, b), Math.max(hi, b)]);
+  };
+  const commitBuffer = (share: number) => {
+    setPlanFull(true);
+    settle(share);
+    if (plan && Math.abs(buffer - plan.argmin) <= 2) setPlanDone(true);
+  };
+  const toggleCanteen = (on: boolean) => {
+    setCanteen(on);
+    setPlanDone(true);
+    setPlanFull(true);
+  };
+  // The order line follows the new curve's lowest point when the canteen flips.
+  const kitArgmin = kitModel.plan?.argmin ?? 0;
   useEffect(() => {
-    if (ownOutcome.kind === "ok") setTakeHomeLine(SLUG, personalLine(copy, ownSeries, owner, ownOutcome.result));
-    else if (owner.trim()) setTakeHomeLine(SLUG, personalLine(copy, copy.product, owner, result));
+    if (!planDone) return;
+    setBuffer(kitArgmin);
+  }, [canteen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // The take-home block's personal line (in memory only).
+  useEffect(() => {
+    if (useOwn && ownModel) setTakeHomeLine(SLUG, personalLine(copy, series, owner, ownModel.result));
+    else if (owner.trim()) setTakeHomeLine(SLUG, personalLine(copy, copy.product, owner, kitModel.result));
     else setTakeHomeLine(SLUG, "");
-  }, [copy, owner, ownOutcome, ownSeries, result]);
+  }, [copy, owner, useOwn, ownModel, kitModel, series]);
 
-  const lastStrip = check.streifen.length - 1;
-  const strip = selected ?? lastStrip;
-  const gated = tip === null && !clock.room;
-
-  // The kit's rule names its system; an own file keeps "[System]" for the reader to fill.
-  const downloadRule = (series: string, target: { result: CheckResult; check: Checker }, short: number | null, left: number | null, system: string | null) => {
-    const text = toRuleMarkdown(copy.ruleFile.template, target.result, ruleFill(copy, series, owner, target, short, left, system), locale);
-    downloadText(fill(copy.ruleFile.name, { series: slugify(series, copy.own.seriesFallback) }), text, "text/markdown");
+  // Scene gates: "Weiter" turns prominent once a scene's goal is met (it always works).
+  const ready: Readonly<Record<BeatId, boolean | null>> = {
+    messlatte: baselineDone,
+    fehlerliste: errorsDone,
+    spanne: !lampsReady || (guess3State !== "open" && rangeDone),
+    planzahl: !plan || planDone,
+    pruefregel: !lampsReady || ruleDone,
+    "meine-daten": null,
+    mitnehmen: null,
   };
-  const downloadCsv = (series: string, target: { check: Checker }) => {
-    const name = `${locale === "de" ? "ergebnis" : "result"}-${slugify(series, copy.own.seriesFallback)}.csv`;
-    downloadText(name, toResultCsv(target.check, locale, copy.own.csvWords), "text/csv");
+  useBeatGate(clock.phase === "guided" ? ready[beat] : null);
+
+  const progress: Progress = {
+    guess: guessState,
+    guessValue: guess,
+    baselineDone,
+    errorsAt: P2,
+    errorsDone,
+    guess3: guess3State,
+    guess3Value: guess3,
+    rangeAt: P3,
+    rangeDone,
+    planDone,
+    canteen,
+    ruleDone,
+    owner,
+    kit: !useOwn,
+    lampsReady,
   };
 
-  const ownerField: ReactNode = (
-    <label className="fl-field" htmlFor={`${id}-owner`}>
-      <span className="fl-field-label">{copy.regel.owner}</span>
+  // Downloads and the question for Claude, built in this tab.
+  const ruleCosts = useOwn ? { cu: ownCu, co: ownCo } : { cu: KIT_COSTS.fehlmenge, co: kitCo };
+  const downloadRule = () => {
+    const fillIn = ruleFill(copy, series, owner, model, ruleCosts.cu, ruleCosts.co, useOwn ? null : copy.ruleFile.system);
+    downloadText(fill(copy.ruleFile.name, { series: slugify(series, copy.own.seriesFallback) }), toRuleMarkdown(copy.ruleFile.template, model.result, fillIn, locale), "text/markdown");
+  };
+  const downloadCsv = () => {
+    downloadText(fill(copy.ruleFile.resultName, { series: slugify(series, copy.own.seriesFallback) }), toResultCsv(check, locale, copy.own.csvWords), "text/csv");
+  };
+  const downloadTemplate = () => downloadText(copy.files.template, copy.kitText.template, "text/csv");
+  const who = ownerOr(copy, owner);
+  const prompt =
+    ruleCosts.cu && ruleCosts.co
+      ? fill(copy.takeHome.promptText, { cu: euro2(ruleCosts.cu, locale), co: euro2(ruleCosts.co, locale), owner: who, today: copy.takeHome.promptToday })
+      : fill(copy.takeHome.promptNoCosts, { owner: who, today: copy.takeHome.promptToday });
+  const project = fillProject(copy.kitText.project, {
+    series,
+    rule: copy.own.ruleNames[model.result.messlatte],
+    cu: ruleCosts.cu ? euro2(ruleCosts.cu, locale) : null,
+    co: ruleCosts.co ? euro2(ruleCosts.co, locale) : null,
+    owner: owner.trim() || null,
+  });
+  const line = model.result.naechste ? personalLine(copy, series, owner, model.result) : "";
+
+  // The visitor's own file, read in this tab only.
+  const startOwn = (text: string) => {
+    setOwnChecked(text);
+    setSource("own");
+    resetScenes();
+  };
+  const takeFile = (file: File) => {
+    setFileProblem(null);
+    if (file.size > MAX_BYTES) {
+      setFileProblem("tooBig");
+      return;
+    }
+    if (!/\.(csv|txt|tsv)$/i.test(file.name) && !file.type.startsWith("text/")) {
+      setFileProblem("fileType");
+      return;
+    }
+    void file.text().then((text) => {
+      setOwn((previous) => ({ ...previous, text }));
+      startOwn(text);
+    });
+  };
+  const tryKit = () => {
+    setFileProblem(null);
+    setOwn((previous) => ({ ...previous, text: kitText }));
+    startOwn(kitText);
+  };
+  const clearOwn = () => {
+    setOwn(EMPTY_OWN);
+    setOwnChecked("");
+    setFileProblem(null);
+    setSource("kit");
+    resetScenes();
+  };
+  const switchSource = (next: "kit" | "own") => {
+    setSource(next);
+    resetScenes();
+  };
+
+  // The timeline in the dock: one row index per week, the week as its value text.
+  const timeline = (value: number, min: number, max: number, onChange: (t: number) => void, announce: (t: number) => string) => (
+    <GlasSlider
+      className="w01-timeline"
+      label={copy.ui.timeline}
+      value={value}
+      min={min}
+      max={max}
+      step={1}
+      bigStep={4}
+      onChange={onChange}
+      onCommit={(t) => settle((t - min) / Math.max(1, max - min))}
+      format={(t) => formatShortDay(check.rows[t]?.woche ?? "", locale)}
+      valueText={(t) => weekOf(copy, check, t)}
+      announce={announce}
+    />
+  );
+  const errorsAnnounce = (t: number) => {
+    const moment = errorsMoment(copy, model, t, !useOwn);
+    if (moment) return moment;
+    const ist = check.rows[t]?.ist;
+    const forecast = check.forecast(t);
+    const rule = check.rule(t);
+    if (ist === null || ist === undefined || forecast === null || rule === null) return weekOf(copy, check, t);
+    return fill(copy.s2.barLabel, { date: formatDay(check.rows[t]!.woche, locale), forecast: jars(Math.abs(ist - forecast), locale), rule: jars(Math.abs(ist - rule), locale) });
+  };
+  const rangeAnnounce = (t: number) => {
+    const hit = check.hit(t);
+    return hit === null ? copy.s3.weekNone : hit ? copy.s3.weekIn : copy.s3.weekOut;
+  };
+  const ruleAnnounce = (t: number) => weekSentence(copy, check.lamps(t), owner);
+
+  const decideButtons = (onLock: () => void, onSkip: () => void) => (
+    <div className="w01-decide">
+      <GlasButton variant="prominent" size="compact" icon="check" onClick={onLock} data-w01-lock="">
+        {copy.ui.lock}
+      </GlasButton>
+      <GlasButton variant="plain" size="compact" onClick={onSkip} data-w01-skip="">
+        {copy.ui.skip}
+      </GlasButton>
+    </div>
+  );
+
+  const ownerField = (
+    <label className="w01-field is-dock is-owner">
+      <span className="w01-field-label">{copy.s5.owner}</span>
       <input
-        id={`${id}-owner`}
-        className="fl-input"
+        className="w01-input"
         value={owner}
-        placeholder={copy.regel.ownerPlaceholder}
+        placeholder={copy.s5.ownerPlaceholder}
         onChange={(event) => setOwner(event.target.value)}
         autoComplete="off"
         maxLength={80}
-        data-fl-owner=""
+        data-w01-owner=""
       />
     </label>
   );
+  const canteenToggle = !useOwn ? <GlasToggle className="w01-toggle" checked={canteen} onChange={toggleCanteen} label={copy.s4.toggle} /> : null;
+  const missing = (paragraphs: Paragraphs) => <p className="w01-empty">{paragraphs[0]}</p>;
 
-  // Under reduced motion every beat is its end frame: a replay would do nothing, so there is none.
-  const replay = clock.reducedMotion ? null : (
-    <button type="button" className="fl-chip is-wide" onClick={() => clock.seek(clock.index)} data-fl-replay="">
-      {copy.replay}
-    </button>
-  );
+  // ---- What the stage shows for each beat (guided) or view (free) ----
+  const view: BeatId | FreeView = free ? freeView : beat;
+  const freeAt = (list: readonly number[]) => clampTo(list, freeT ?? list[list.length - 1] ?? 0);
+  let data: ReactNode;
+  let caption: Paragraphs;
+  let controls: ReactNode = null;
 
-  let stage: ReactNode;
-  let caption: ReactNode;
-  let lever: ReactNode;
-  let below: ReactNode = null;
-
-  const scored = result.wochen;
-  const rule = result.tabelle["wie letzte Woche"];
-  const forecast = result.tabelle.Prognose;
-  const lead = formatPercent(result.vorsprung ?? 0, locale, { decimals: 0 });
-  const points = formatOne((facts.toolAccuracy - facts.ruleAccuracy) * 100, locale);
-  const promised = Math.round(result.spanne_wochen * 0.8);
-
-  if (beat === "schaetzen") {
-    stage = <GuessStage copy={copy} kit={facts} p={p} />;
-    caption = copy.guess.caption;
-    const choose = (value: number | null) => {
-      setGuess(value);
-      clock.commit();
-      clock.seek(BEATS.findIndex((b) => b.id === "messlatte"));
-    };
-    lever = (
-      <div className="fl-chips" role="group" aria-label={copy.guess.chipsLabel}>
-        {GUESSES.map((value) => (
-          <button key={value} type="button" className="fl-chip" aria-pressed={guess === value} onClick={() => choose(value)} data-fl-guess={value}>
-            {fill(copy.guess.chip, { value })}
-          </button>
-        ))}
-      </div>
-    );
-    below = (
-      <button type="button" className="fl-link" onClick={() => choose(null)} data-fl-skip="">
-        {copy.guess.skip}
-      </button>
-    );
-  } else if (beat === "messlatte") {
-    stage = <BaselineStage copy={copy} kit={facts} p={p} guess={guess} pin={derived.pin} />;
-    const accuracy = formatPercent(facts.ruleAccuracy, locale);
-    caption =
-      p < 1
-        ? fill(copy.messlatte.captionShift, { accuracy })
-        : fill(copy.messlatte.captionEnd, { lead, closer: result.naeher, weeks: scored });
-    lever = replay;
-    const best = result.tabelle[result.beste_regel];
-    const betterNote =
-      result.beste_regel !== result.messlatte && best && forecast && rule
-        ? fill(copy.messlatte.betterNote, {
-            best: copy.ruleNames[result.beste_regel],
-            bestMae: formatOne(best.mae, locale),
-            maeRule: formatOne(rule.mae, locale),
-            leadBest: formatPercent(1 - forecast.mae / best.mae, locale, { decimals: 0 }),
-            lead,
-          })
-        : null;
-    const skipped = result.nicht_bewertet
-      .map(([woche, reason]) => fill(copy.messlatte.skipped[reason], { date: formatShortDay(woche, locale) }))
-      .join(", ");
-    below = (
-      <div className="fl-notes" data-fl-notes="messlatte">
-        <p className="fl-note-strong">
-          {guess !== null ? fill(copy.messlatte.guessLine, { guess, accuracy }) : fill(copy.messlatte.noGuessLine, { accuracy })}
-        </p>
-        <p>{fill(copy.messlatte.notes[0] as string, { tool: formatPercent(facts.toolAccuracy, locale), points })}</p>
-        <p>
-          {fill(copy.messlatte.notes[1] as string, {
-            mae: forecast ? formatOne(forecast.mae, locale) : "",
-            maeRule: rule ? formatOne(rule.mae, locale) : "",
-          })}
-        </p>
-        <p>{fill(copy.messlatte.notes[2] as string, { points, lead, skipped })}</p>
-        {betterNote ? <p data-fl-better="">{betterNote}</p> : null}
-      </div>
-    );
-  } else if (beat === "spanne") {
-    const effective = gated ? 0 : p;
-    const ranged = check.wochen.filter((t) => check.hit(t) !== null).length;
-    const done = !gated && sweep(effective, ranged) >= ranged;
-    stage = <RangeStage copy={copy} kit={facts} p={effective} cause={derived.cause} showBars={gated} />;
-    const share = locale === "de" ? "80-%" : "80\u00a0%";
-    caption = done
-      ? [
-          fill(copy.spanne.captionEnd, { hits: result.spanne_treffer, weeks: result.spanne_wochen, promised }),
-          derived.split
-            ? fill(copy.spanne.captionCause, {
-                after: derived.split.missesAfter,
-                misses: derived.split.misses,
-                date: formatDay(derived.split.cause.woche, locale),
-              })
-            : "",
-        ]
-          .filter(Boolean)
-          .join(" ")
-      : fill(copy.spanne.captionTip, { share, promised, weeks: result.spanne_wochen });
-    const pick = (value: RangeTip | "none") => {
-      setTip(value);
-      clock.seek(clock.index);
-    };
-    lever = gated ? (
-      <div className="fl-chips" role="group" aria-label={copy.spanne.tipsLabel}>
-        {RANGE_TIPS.map((value) => (
-          <button key={value} type="button" className="fl-chip" onClick={() => pick(value)} data-fl-tip={value}>
-            {fill(copy.spanne.tips[value], { promised })}
-          </button>
-        ))}
-      </div>
-    ) : (
-      replay
-    );
-    const split = derived.split;
-    // The long date ("7. April"): a short one ends in a point and would double the sentence's full stop.
-    const date = split ? formatDay(split.cause.woche, locale) : "";
-    below = gated ? (
-      <button type="button" className="fl-link" onClick={() => pick("none")} data-fl-skip-tip="">
-        {copy.spanne.skipTip}
-      </button>
-    ) : (
-      <div className="fl-notes" data-fl-notes="spanne">
-        <p className="fl-note-strong">
-          {tip && tip !== "none"
-            ? fill(copy.spanne.tipLine, { tip: fill(copy.spanne.tips[tip], { promised }), hits: result.spanne_treffer })
-            : fill(copy.spanne.noTipLine, { hits: result.spanne_treffer })}
-        </p>
-        <p>{fill(copy.spanne.notes[0] as string, { window: LERNEN })}</p>
-        {split ? (
-          <p>
-            {fill(copy.spanne.notes[1] as string, {
-              date,
-              before: fill(copy.spanne.hitsOf, { hits: split.before.hits, weeks: split.before.weeks }),
-              after: fill(copy.spanne.hitsOf, { hits: split.after.hits, weeks: split.after.weeks }),
-              misses: split.misses,
-              missesAfter: split.missesAfter,
-            })}
-          </p>
-        ) : null}
-        <p>{fill(copy.spanne.notes[2] as string, { chance: formatPercent(derived.chance.year, locale, { decimals: 0 }), hits: result.spanne_treffer })}</p>
-      </div>
-    );
-  } else if (beat === "planzahl") {
-    const { errors, buffer } = planErrors(check, result);
-    const frame = planFrame(p, errors.length);
-    const next = result.naechste;
-    stage = (
-      <div className="fl-stage">
-        <PlanView
-          locale={locale}
-          result={result}
-          errors={errors}
-          buffer={buffer}
-          jars={frame.jars}
-          line={frame.line}
-          copy={copy.planzahl}
-          year={facts.year}
-          dateLabel={next ? formatShortDay(next.woche, locale) : ""}
-        />
-      </div>
-    );
-    const plan = next?.planzahl;
-    caption =
-      plan === undefined || !next
-        ? copy.planzahl.noCosts
-        : plan === next.prognose
-          ? fill(copy.planzahl.captionSame, { plan: formatNumber(plan, locale) })
-          : fill(copy.planzahl.caption, {
-              plan: formatNumber(plan, locale),
-              forecast: formatNumber(next.prognose, locale),
-              cu: formatEuro(fehlmenge ?? 0, locale, 2),
-              co: formatEuro(rest ?? 0, locale, 2),
-            });
-    const kantine = rest === KIT_COSTS.restKantine && fehlmenge === KIT_COSTS.fehlmenge;
-    const ohne = rest === KIT_COSTS.restOhne && fehlmenge === KIT_COSTS.fehlmenge;
-    const preset = (value: number) => {
-      setShortText(costText(KIT_COSTS.fehlmenge, locale));
-      setLeftText(costText(value, locale));
-    };
-    lever = (
-      <div className="fl-chips is-two" role="group" aria-label={copy.planzahl.presetsLabel}>
-        <button type="button" className="fl-chip" aria-pressed={kantine} onClick={() => preset(KIT_COSTS.restKantine)} data-fl-preset="kantine">
-          {fill(copy.planzahl.withCanteen, { rest: formatEuro(KIT_COSTS.restKantine, locale, 2) })}
-        </button>
-        <button type="button" className="fl-chip" aria-pressed={ohne} onClick={() => preset(KIT_COSTS.restOhne)} data-fl-preset="ohne">
-          {fill(copy.planzahl.withoutCanteen, { rest: formatEuro(KIT_COSTS.restOhne, locale, 2) })}
-        </button>
-      </div>
-    );
-    const costs = result.kosten;
-    below = (
-      <div className="fl-notes" data-fl-notes="planzahl">
-        <div className="fl-fields is-two">
-          <label className="fl-field">
-            <span className="fl-field-label">{copy.planzahl.costShort}</span>
-            <input className="fl-input" inputMode="decimal" value={shortText} onChange={(event) => setShortText(event.target.value)} data-fl-cost="short" />
-          </label>
-          <label className="fl-field">
-            <span className="fl-field-label">{copy.planzahl.costLeft}</span>
-            <input className="fl-input" inputMode="decimal" value={leftText} onChange={(event) => setLeftText(event.target.value)} data-fl-cost="left" />
-          </label>
-        </div>
-        {[shortText, leftText].filter(notANumber).map((value) => (
-          <p key={value} className="fl-problem" role="alert" data-fl-cost-problem="">
-            {fill(copy.planzahl.notNumber, { value })}
-          </p>
-        ))}
-        {result.anteil !== undefined && fehlmenge !== null && rest !== null ? (
-          <p>
-            {fill(copy.planzahl.notes[0] as string, {
-              cu: formatNumber(fehlmenge, locale, 2, 2),
-              co: formatNumber(rest, locale, 2, 2),
-              tau: formatNumber(result.anteil, locale, 2, 2),
-            })}
-          </p>
-        ) : (
-          <p>{copy.planzahl.noCosts}</p>
-        )}
-        {next?.planzahl !== undefined ? (
-          <p>
-            {fill(copy.planzahl.notes[1] as string, {
-              short: next.zu_wenig ?? 0,
-              left: next.uebrig ?? 0,
-              of: next.von ?? 0,
-              plan: formatNumber(next.planzahl, locale),
-            })}
-          </p>
-        ) : null}
-        {costs ? (
-          <p>
-            {fill(copy.planzahl.notes[2] as string, {
-              year: facts.year,
-              costRule: formatEuro(costs.Messlatte, locale),
-              costForecast: formatEuro(costs.Prognose, locale),
-              costPlan: formatEuro(costs.Planzahl, locale),
-            })}
-          </p>
-        ) : null}
-      </div>
-    );
-  } else if (beat === "regel") {
-    const filled = sweep(p, check.streifen.length);
-    stage = (
-      <div className="fl-stage">
-        <RuleView check={check} locale={locale} filled={filled} selected={strip} onSelect={setSelected} copy={copy.regel} />
-      </div>
-    );
-    caption = fill(copy.regel.caption, { free: result.regel_frei, red: result.regel_wochen - result.regel_frei });
-    const week = check.streifen[strip];
-    const weekLamps = week === undefined ? null : check.lamps(week);
-    const weekState = weekLamps ? (weekLamps.frei ? copy.regel.free : copy.regel.person) : copy.regel.noLamps;
-    lever = (
-      <label className="fl-slider">
-        <span className="sr-only">{copy.regel.stripLabel}</span>
-        <input
-          type="range"
-          min={0}
-          max={lastStrip}
-          step={1}
-          value={strip}
-          onChange={(event) => setSelected(Number(event.target.value))}
-          aria-valuetext={week === undefined ? "" : fill(copy.regel.stripValue, { date: formatShortDay(check.rows[week]?.woche ?? "", locale), state: weekState })}
-          data-fl-strip=""
-        />
-      </label>
-    );
-    const next = result.naechste;
-    const nextRed = next?.lampen ? LAMP_KEYS.filter((key) => next.lampen?.[key] === false).length : 0;
-    const longest = derived.longest;
-    below = (
-      <div className="fl-notes" data-fl-notes="regel">
-        {derived.runs.map((run) => (
-          <p key={run.from} data-fl-run="">
-            {runSentence(copy, check, run)}
-          </p>
-        ))}
-        {longest && derived.cause ? (
-          <p data-fl-lag="">
-            {fill(copy.regel.lagLine, {
-              date: formatShortDay(derived.cause.woche, locale),
-              // The note up to its bracket: the cause, without the detail the range beat already quoted.
-              note: derived.cause.note.replace(/\s*\(.*$/, ""),
-              lag: plural(longest.from - derived.cause.t, copy.regel.weeks),
-              length: plural(longest.to - longest.from + 1, copy.regel.weeks),
-            })}
-          </p>
-        ) : null}
-        {next ? (
-          <p className="fl-note-strong" data-fl-plan-line="">
-            {next.lampen?.frei && next.planzahl !== undefined
-              ? fill(copy.regel.planLineFree, { date: formatShortDay(next.woche, locale), plan: formatNumber(next.planzahl, locale) })
-              : fill(copy.regel.planLineRed, { date: formatShortDay(next.woche, locale), lamps: plural(nextRed, copy.regel.lampCount) })}
-          </p>
-        ) : null}
-        <p>{fill(copy.regel.chance, { chance: formatPercent(derived.chance.lamp, locale), window: PRUEF, min: TREFFER_MIN })}</p>
-        <div className="fl-fields">{ownerField}</div>
-        <div className="fl-row">
-          <button
-            type="button"
-            className="fl-button is-primary"
-            onClick={() => downloadRule(copy.product, kit, fehlmenge, rest, copy.ruleFile.system)}
-            data-fl-download-rule=""
-          >
-            {copy.regel.download}
-          </button>
-        </div>
-      </div>
-    );
-  } else if (beat === "meine-daten") {
-    const kitText = kitCsv(locale);
-    const kitLines = kitText.trim().split("\n");
-    const tryKit = () => {
-      setFileProblem(null);
-      setOwn((previous) => ({
-        ...previous,
-        text: kitText,
-        series: copy.product,
-        short: costText(KIT_COSTS.fehlmenge, locale),
-        left: costText(KIT_COSTS.restKantine, locale),
-      }));
-      setOwnChecked(kitText);
-    };
-    stage = (
-      <OwnStage
+  if (view === "messlatte") {
+    data = (
+      <SceneBaseline
         copy={copy}
-        outcome={ownOutcome}
-        series={ownSeries}
-        example={[kitLines[0] as string, ...kitLines.slice(-4)]}
-        onKitTry={tryKit}
+        model={model}
+        guess={guessState === "skipped" ? null : guess}
+        onGuess={guessState === "open" ? setGuess : undefined}
+        showGrip={guessState !== "open"}
+        shift={shift}
+        dragging={shiftDrag}
+        onShift={setShift}
+        onActive={setShiftDrag}
+        onRelease={(share) => {
+          setShift((value) => {
+            const snapped = Math.round(Math.min(1, Math.max(0, value)));
+            if (snapped === 1) setBaselineDone(true);
+            return snapped;
+          });
+          settle(share);
+        }}
       />
     );
-    caption = copy.own.caption;
-    const onFile = async (file: File | undefined) => {
-      if (!file) return;
-      if (!/\.(csv|txt)$/i.test(file.name)) {
-        setFileProblem("fileType");
-        return;
-      }
-      if (file.size > MAX_BYTES) {
-        setFileProblem("tooBig");
-        return;
-      }
-      const text = await file.text();
-      setFileProblem(null);
-      setOwn((previous) => ({ ...previous, text, series: previous.series || file.name.replace(/\.(csv|txt)$/i, "") }));
-      setOwnChecked(text);
-    };
-    lever = (
-      <label className="fl-chip is-wide fl-file">
-        <input
-          type="file"
-          accept=".csv,.txt,text/csv,text/plain"
-          className="sr-only"
-          onChange={(event) => {
-            void onFile(event.target.files?.[0]);
-            event.target.value = "";
-          }}
-          data-fl-file=""
-        />
-        <span>{copy.own.file}</span>
-      </label>
+    caption = baselineCaption(copy, model, progress);
+    const tool = model.toolAccuracy;
+    controls =
+      guessState === "open" ? (
+        <>
+          <GlasSlider
+            className="w01-guess is-ruler"
+            label={copy.s1.sliderLabel}
+            value={guess}
+            min={80}
+            max={100}
+            step={0.5}
+            bigStep={2}
+            onChange={setGuess}
+            format={(value) => percent(value / 100, locale)}
+            valueText={(value) => fill(copy.s1.sliderValue, { value: percent(value / 100, locale).replace(/\s?%$/, "") })}
+            ticks={tool !== null ? [{ value: Math.round(tool * 1000) / 10 }] : []}
+          />
+          {decideButtons(
+            () => {
+              setGuessState("locked");
+              clock.commit();
+            },
+            () => {
+              setGuessState("skipped");
+              clock.commit();
+            },
+          )}
+        </>
+      ) : null;
+  } else if (view === "fehlerliste" || view === "fehler") {
+    const playhead = free ? freeAt(span) : P2;
+    const move = free ? (t: number) => setFreeT(clampTo(span, t)) : moveP2;
+    data = (
+      <SceneErrors
+        copy={copy}
+        model={model}
+        playhead={playhead}
+        selected={selected}
+        onPlayhead={move}
+        onCommit={(_, share) => settle(share)}
+        onSelect={(t) => {
+          setSelected(t);
+          setSheet({ kind: "row", t });
+        }}
+      />
     );
-    below = (
-      <OwnPanel
+    caption = free ? freeCaption(copy, model) : errorsCaption(copy, model, progress);
+    const row = check.rows[playhead];
+    controls = (
+      <>
+        {timeline(playhead, free ? (span[0] ?? 0) : errorsFirst, errorsLast, move, errorsAnnounce)}
+        {row?.line && check.wochen.includes(playhead) ? (
+          <GlasButton
+            variant="icon"
+            icon="doc"
+            label={fill(copy.s2.rowTitle, { line: row.line, file: useOwn ? series : copy.files.csv })}
+            onClick={() => {
+              setSelected(playhead);
+              setSheet({ kind: "row", t: playhead });
+            }}
+            data-w01-row-open=""
+          />
+        ) : null}
+      </>
+    );
+  } else if (view === "spanne") {
+    const playhead = free ? freeAt(span) : P3;
+    const move = free ? (t: number) => setFreeT(clampTo(span, t)) : moveP3;
+    data = lampsReady ? (
+      <SceneRange copy={copy} model={model} playhead={playhead} filled={free || rangeDone} onPlayhead={move} onCommit={(_, share) => settle(share)} />
+    ) : (
+      missing(rangeCaption(copy, model, progress))
+    );
+    caption = free ? freeCaption(copy, model) : rangeCaption(copy, model, progress);
+    const promised = Math.round(model.result.spanne_wochen * 0.8);
+    if (!lampsReady) controls = null;
+    else if (!free && guess3State === "open") {
+      controls = (
+        <>
+          <GlasSlider
+            className="w01-guess"
+            label={copy.s3.sliderLabel}
+            value={guess3}
+            min={0}
+            max={model.result.spanne_wochen}
+            step={1}
+            bigStep={5}
+            onChange={setGuess3}
+            format={(value) => String(value)}
+            valueText={(value) => fill(copy.s3.sliderValue, { value })}
+            ticks={[{ value: promised }]}
+          />
+          {decideButtons(
+            () => setGuess3State("locked"),
+            () => setGuess3State("skipped"),
+          )}
+        </>
+      );
+    } else {
+      controls = (
+        <>
+          {timeline(playhead, span[0] ?? 0, errorsLast, move, rangeAnnounce)}
+          <GlasButton variant="icon" icon="info" label={copy.ui.more} onClick={() => setSheet({ kind: "range" })} data-w01-range-more="" />
+        </>
+      );
+    }
+  } else if (view === "planzahl") {
+    const domain = plan ? bufferDomain(plan) : ([0, 0] as const);
+    data =
+      plan && costs ? (
+        <ScenePlan
+          copy={copy}
+          plan={plan}
+          costs={costs}
+          yMax={yMax}
+          buffer={Math.min(domain[1], Math.max(domain[0], buffer))}
+          visited={visited}
+          full={planFull || free}
+          onBuffer={moveBuffer}
+          onCommit={commitBuffer}
+          onActive={setPlanActive}
+          active={planActive}
+          costNote={
+            useOwn
+              ? fill(copy.s4.costOwn, { cu: euro2(costs.cu, locale), co: euro2(costs.co, locale) })
+              : `${fill(copy.s4.costShort, { cu: euro2(costs.cu, locale) })} ${fill(canteen ? copy.s4.costLeft : copy.s4.costLeftNone, { co: euro2(costs.co, locale) })}`
+          }
+        />
+      ) : (
+        missing(planCaption(copy, model, progress))
+      );
+    caption = free ? freeCaption(copy, model) : planCaption(copy, model, progress);
+    controls = (
+      <>
+        {canteenToggle}
+        {model.result.kosten ? <GlasButton variant="icon" icon="info" label={copy.s4.yearTitle} onClick={() => setSheet({ kind: "year" })} data-w01-year="" /> : null}
+      </>
+    );
+  } else if (view === "pruefregel" || view === "lampen") {
+    const playhead = free ? freeAt(strip) : P5;
+    const move = free ? (t: number) => setFreeT(clampTo(strip, t)) : moveP5;
+    data = lampsReady ? (
+      <SceneRule
+        copy={copy}
+        model={model}
+        playhead={playhead}
+        filled={free || ruleDone}
+        owner={owner}
+        selected={sheet?.kind === "week" ? sheet.t : null}
+        onPlayhead={move}
+        onCommit={(_, share) => settle(share)}
+        onSelect={(t) => setSheet({ kind: "week", t })}
+      />
+    ) : (
+      missing(ruleCaption(copy, model, progress))
+    );
+    caption = free ? freeCaption(copy, model) : ruleCaption(copy, model, progress);
+    controls = lampsReady ? (
+      <>
+        {timeline(playhead, strip[0] ?? 0, strip[strip.length - 1] ?? 0, move, ruleAnnounce)}
+        {ownerField}
+      </>
+    ) : null;
+  } else if (view === "meine-daten") {
+    data = (
+      <OwnStep
         copy={copy}
         inputs={own}
-        onChange={(next) => setOwn((previous) => ({ ...previous, ...next }))}
-        onCheck={() => {
-          setFileProblem(null);
-          setOwnChecked(own.text);
-        }}
-        onClear={() => {
-          setFileProblem(null);
-          setOwn({ text: "", series: "", messlatte: "wie letzte Woche", short: "", left: "" });
-          setOwnChecked("");
-        }}
         outcome={ownOutcome}
         fileProblem={fileProblem}
-        ownerField={ownerField}
-        onDownloadRule={() => {
-          if (ownOutcome.kind === "ok") downloadRule(ownSeries, ownOutcome, parseCost(own.short), parseCost(own.left), null);
+        owner={owner}
+        onInputs={setOwn}
+        onCheck={() => {
+          setFileProblem(null);
+          startOwn(own.text);
         }}
-        onDownloadCsv={() => {
-          if (ownOutcome.kind === "ok") downloadCsv(ownSeries, ownOutcome);
+        onFile={takeFile}
+        onKitTry={tryKit}
+        onTemplate={downloadTemplate}
+        onClear={clearOwn}
+        onReplay={() => {
+          resetScenes();
+          setSource("own");
+          clock.seek(0);
         }}
+        onExplore={() => {
+          setSource("own");
+          setFreeView("fehler");
+          clock.explore();
+        }}
+        onOwner={setOwner}
       />
     );
+    caption = [copy.own.caption];
   } else {
-    const root = locale === "de" ? "prognose-pruefen-kit" : "forecast-check";
-    stage = (
-      <div className="fl-stage">
-        <KitMap root={root} label={copy.takeHome.treeLabel} tree={copy.takeHome.tree} />
-      </div>
-    );
-    caption = copy.takeHome.caption;
-    lever = (
-      <a className="fl-chip is-wide" href={`#${TAKEHOME_TARGET_ID}`} data-fl-takehome="">
-        {copy.takeHome.lever}
-      </a>
+    data = <TakeHomeStep copy={copy} line={line} kitHref={kitHref} kitSize={kitSize} prompt={prompt} onRule={downloadRule} onMore={() => setSheet({ kind: "files" })} />;
+    caption = [copy.takeHome.caption];
+  }
+
+  if (free) {
+    const viewControls = controls;
+    controls = (
+      <>
+        <GlasSegmented
+          className="w01-views"
+          label={copy.free.viewLabel}
+          options={FREE_VIEWS.map((value) => ({ value, label: copy.free.views[value] }))}
+          value={freeView}
+          onChange={(next) => {
+            setFreeView(next);
+            setSheet(null);
+          }}
+        />
+        {viewControls}
+        {ownModel ? (
+          <GlasSegmented
+            className="w01-source"
+            label={copy.free.sourceLabel}
+            options={(["kit", "own"] as const).map((value) => ({ value, label: copy.free.sources[value] }))}
+            value={useOwn ? "own" : "kit"}
+            onChange={switchSource}
+          />
+        ) : null}
+      </>
     );
   }
 
+  const feld = feldFor("lemons", [undefined, { x: poolX, y: 1.04, size: 0.85 }, { x: 0.1, y: 1.12, size: 0.7 }]);
+  const scrolls = view === "meine-daten" || view === "mitnehmen";
+  const closeSheet = () => setSheet(null);
+
   return (
-    <div className="fl-root" data-fl-beat={beat}>
-      <DemoStage label={copy.stageLabel} caption={caption}>
-        {stage}
-      </DemoStage>
-      <DemoLever>{lever}</DemoLever>
-      {below ? <div className="fl-below">{below}</div> : null}
-    </div>
+    <DemoGlasStage
+      label={copy.stageLabel}
+      feld={feld}
+      readingTone="hell"
+      caption={<Caption paragraphs={caption} />}
+      dock={<DemoDock compact>{controls}</DemoDock>}
+      className="w01-stage"
+    >
+      <div className="w01-data" data-w01-view={view} data-w01-source={useOwn ? "own" : "kit"}>
+        <div className="w01-top">
+          <span className="w01-tag">{useOwn ? series : copy.invented}</span>
+          {view === "messlatte" && guessState === "open" && !useOwn ? (
+            <GlasChip kind="file" icon="doc" className="w01-file" onClick={() => setSheet({ kind: "export" })}>
+              {copy.files.export}
+            </GlasChip>
+          ) : null}
+          {(view === "pruefregel" || view === "lampen") && model.toolAccuracy !== null ? (
+            <span className="w01-tag is-soft">{fill(copy.ui.year, { value: percent(model.toolAccuracy, locale) })}</span>
+          ) : null}
+        </div>
+        <div className={scrolls ? "w01-body is-scroll" : "w01-body"}>{data}</div>
+      </div>
+      <ExportSheet copy={copy} open={sheet?.kind === "export"} onClose={closeSheet} />
+      <RowSheet
+        copy={copy}
+        model={model}
+        source={useOwn ? ownChecked : kitText}
+        file={useOwn ? series : copy.files.csv}
+        t={sheet?.kind === "row" ? sheet.t : null}
+        onClose={closeSheet}
+      />
+      <RangeSheet copy={copy} model={model} open={sheet?.kind === "range"} onClose={closeSheet} />
+      <YearSheet copy={copy} model={model} open={sheet?.kind === "year"} onClose={closeSheet} gap={!useOwn && !canteen ? planGap(copy, model) : null} />
+      <WeekSheet copy={copy} model={model} t={sheet?.kind === "week" ? sheet.t : null} owner={owner} onClose={closeSheet} />
+      <GlasSheet open={sheet?.kind === "files"} onClose={closeSheet} title={copy.takeHome.more} closeLabel={copy.ui.close} resizeLabel={copy.ui.resize} modal={false}>
+        <div className="w01-sheet">
+          <p className="w01-take-title">{copy.takeHome.project}</p>
+          <p>{copy.takeHome.projectNote}</p>
+          <CopyRowButton text={project} label={copy.takeHome.project} copied={copy.takeHome.copied} testId="project" />
+          <p className="w01-take-title">{copy.takeHome.csv}</p>
+          <p>{copy.takeHome.csvNote}</p>
+          <GlasButton variant="glass" icon="download" onClick={downloadCsv}>
+            {copy.takeHome.csv}
+          </GlasButton>
+          <p className="w01-take-title">{copy.takeHome.template}</p>
+          <p>{copy.takeHome.templateNote}</p>
+          <GlasButton variant="glass" icon="download" onClick={downloadTemplate}>
+            {copy.takeHome.template}
+          </GlasButton>
+        </div>
+      </GlasSheet>
+    </DemoGlasStage>
   );
 }

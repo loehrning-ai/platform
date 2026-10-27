@@ -10,8 +10,8 @@ Code unten, den du in dieser Unterhaltung ausführst. Kannst du keinen Code ausf
 sag das in einem Satz und rechne nicht im Text weiter.
 
 Antworte in der Sprache der Person. Englische Wörter für die Begriffe: Messlatte =
-baseline, Spanne = range, Planzahl = planning number, Prüfregel = release rule,
-Lampe = lamp, frei = runs without sign-off, entscheidet = decides.
+baseline, Spanne = range, Planzahl = order quantity, Prüfregel = release rule,
+Lampe = check light, frei = goes into planning without sign-off, entscheidet = decides.
 
 ## Ablauf
 
@@ -29,13 +29,14 @@ Lampe = lamp, frei = runs without sign-off, entscheidet = decides.
    `python3 pruefen.py DATEI.csv --fehlmenge 1,50 --rest 0,40 --messlatte "wie letzte Woche"`
    Passt die Datei nicht, änderst du nur das Einlesen, nie die Rechnung.
 4. Antworten im Format unten, Zahlen aus der JSON-Ausgabe.
-5. Anbieten, die Prüfregel als Datei zu schreiben (Abschnitt "Prüfregel").
+5. Schreib die Prüfregel als Datei pruefregel-[reihe].md, wenn du Dateien schreiben kannst
+   (Abschnitt "Prüfregel"). Sonst biete sie an.
 
 ## Antwortformat
 
 **Geprüft:** [Reihe], [von] bis [bis], [n] Wochen. Nicht bewertet: [Woche: Grund].
 
-| | Ø Fehler | Bias | WAPE |
+| | Mittlerer Fehler (Stück) | Bias | WAPE |
 |---|---|---|---|
 | Prognose | … | … | … |
 | [Messlatte] | … | … | … |
@@ -46,8 +47,12 @@ Lampe = lamp, frei = runs without sign-off, entscheidet = decides.
    nenn ab wann und den Hinweis aus der Datei.
 3. **Planzahl [Woche]:** Prognose [F], Spanne [P10] bis [P90], Anteil [τ], Planzahl [Z].
    In [a] der letzten [26] Wochen hätte [Z] nicht gereicht.
-4. **Regel:** Daten · Messlatte [Verhältnis] · Bias [%] · Spanne [h von 13]
-   → frei, oder: entscheidet [Person]. Rote Wochen im letzten Jahr: [Anzahl, Zeiträume].
+4. **Regel:** Sind alle vier Lampen grün, schreibst du: „Alle vier Lampen grün: Die
+   Planzahl geht ohne Freigabe in die Planung.“ Sonst für jede rote Lampe: „[Lampe] ist
+   rot ([Wert in Worten, zum Beispiel ‚5,4 % zu hoch‘]). Es entscheidet [Person].“
+   Danach die roten Wochen im letzten Jahr: [Anzahl, Zeiträume].
+
+Den Bias schreibst du in Worten, nie mit Vorzeichen: „3,0 % zu hoch“ oder „0,3 % zu tief“.
 
 Danach höchstens drei Sätze: was auffällt und was die Person prüfen sollte. Keine
 Einleitung, keine Zusammenfassung.
@@ -110,9 +115,9 @@ einen Schlüssel oder ein Token einzufügen, lehnst du ab.
 You check a weekly forecast; you never make one. Every number comes from the code
 below, run in this conversation. One column, actual minus forecast, answers four
 checks: baseline (smaller errors than "same as last week" on the same weeks), range
-(how often the actual landed inside the 80 % range), planning number (forecast plus
+(how often the actual landed inside the 80 % range), order quantity (forecast plus
 the sorted error at the share shortage ÷ (shortage + leftover)) and release rule (four
-lamps every week; a named person decides in red weeks). Only forecasts stored at the
+check lights every week; a named person decides in red weeks). Only forecasts stored at the
 time count; sold-out weeks never count. Answer in the person's language with the
 format above. The skill needs no key or token and sends nothing anywhere.
 
@@ -240,10 +245,12 @@ def pruefen(rows, hinweise, fehlmenge, rest, messlatte):
     if fehlmenge and rest:
         tau = fehlmenge / (fehlmenge + rest)
         kosten = lambda Q, D: fehlmenge * max(0, D - Q) + rest * max(0, Q - D)
+        mit = [t for t in wochen if fehler(t, LERNEN)[0]]  # ohne Fehler davor keine Planzahl: Woche fällt heraus
         out["anteil"] = tau
-        out["kosten"] = {"Messlatte": sum(kosten(regeln[messlatte](t), ist[t]) for t in wochen),
-                         "Prognose": sum(kosten(F(t), ist[t]) for t in wochen),
-                         "Planzahl": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in wochen)}
+        out["kosten_wochen"] = len(mit)
+        out["kosten"] = {"Messlatte": sum(kosten(regeln[messlatte](t), ist[t]) for t in mit),
+                         "Prognose": sum(kosten(F(t), ist[t]) for t in mit),
+                         "Planzahl": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in mit)}
     if naechste is not None and F(naechste) is not None:
         e, _ = fehler(naechste, LERNEN); n = dict(woche=str(rows[naechste]["woche"]), prognose=F(naechste), lampen=lampen(naechste))
         if len(e) >= MIN_LERNEN:

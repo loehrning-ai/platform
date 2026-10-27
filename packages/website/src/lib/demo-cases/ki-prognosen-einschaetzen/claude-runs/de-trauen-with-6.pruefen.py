@@ -119,10 +119,12 @@ def pruefen(rows, hinweise, fehlmenge, rest, messlatte):
     if fehlmenge and rest:
         tau = fehlmenge / (fehlmenge + rest)
         kosten = lambda Q, D: fehlmenge * max(0, D - Q) + rest * max(0, Q - D)
+        mit = [t for t in wochen if fehler(t, LERNEN)[0]]  # ohne Fehler davor keine Planzahl: Woche fällt heraus
         out["anteil"] = tau
-        out["kosten"] = {"Messlatte": sum(kosten(regeln[messlatte](t), ist[t]) for t in wochen),
-                         "Prognose": sum(kosten(F(t), ist[t]) for t in wochen),
-                         "Planzahl": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in wochen)}
+        out["kosten_wochen"] = len(mit)
+        out["kosten"] = {"Messlatte": sum(kosten(regeln[messlatte](t), ist[t]) for t in mit),
+                         "Prognose": sum(kosten(F(t), ist[t]) for t in mit),
+                         "Planzahl": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in mit)}
     if naechste is not None and F(naechste) is not None:
         e, _ = fehler(naechste, LERNEN); n = dict(woche=str(rows[naechste]["woche"]), prognose=F(naechste), lampen=lampen(naechste))
         if len(e) >= MIN_LERNEN:

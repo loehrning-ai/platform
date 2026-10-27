@@ -704,8 +704,8 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
-      "sizeBytes": 43559,
-      "sha256": "902e6fbdde83e12ec590dca61d0651b6ffa0fbc01adb0595d1b5c11e4e6f38b0",
+      "sizeBytes": 44242,
+      "sha256": "fb48c1fc2150981e12783dd5506385305b9bc88a82261a36bd1e232ab5137764",
       "owner": "Tim L\u00f6hr",
       "source": "Original Prognose pr\u00fcfen workshop material (German edition of the Workshop 01 participant kit, invented company data), built by scripts/workshop01/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -713,8 +713,8 @@
     },
     {
       "path": "packages/website/public/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
-      "sizeBytes": 43245,
-      "sha256": "559565632b36e51233e786498af2818eae95570bb7d3a678f26c460fe725bcb6",
+      "sizeBytes": 43974,
+      "sha256": "53c2e3fa948ba8c0e2b7d16a911c03582525111be9c71e1b46723eb10493813d",
       "owner": "Tim L\u00f6hr",
       "source": "Original Prognose pr\u00fcfen workshop material (English edition of the Workshop 01 participant kit, invented company data), built by scripts/workshop01/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

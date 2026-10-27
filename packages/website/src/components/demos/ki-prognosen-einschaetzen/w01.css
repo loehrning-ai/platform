@@ -1,0 +1,704 @@
+/*
+ * W01 "Die Fehlerliste" on the v4 shell. Content on the field only: the
+ * data layer (charts, strips, jars, lamps) and the text inside captions,
+ * docks and sheets. Glass surfaces come from the shared Glas layer; this
+ * file never selects them and never sets a filter.
+ *
+ * Ink on the Lemons field (Ultramarin): Kalkweiß #f3f0e9 (11.4:1), Butter
+ * #fceeaf, Stein #c9c0b5 for secondary text. State is always a shape
+ * (filled or hollow, a diagonal, a person), never colour alone.
+ */
+.w01-stage {
+  --w01-ink: #f3f0e9;
+  --w01-butter: #fceeaf;
+  --w01-stein: #c9c0b5;
+}
+
+.w01-data {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+  color: var(--w01-ink);
+}
+.w01-top {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 52px 4px 4px;
+}
+.w01-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 1px solid rgb(243 240 233 / 0.55);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.w01-tag.is-soft {
+  color: var(--w01-stein);
+  border-color: rgb(201 192 181 / 0.45);
+}
+.w01-body {
+  min-height: 0;
+  height: 100%;
+}
+.w01-body.is-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 4px 12px;
+}
+
+/* A scene: head line, the measured plot, an optional foot. */
+.w01-scene {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+  gap: 4px;
+}
+.w01-head {
+  display: grid;
+  gap: 4px;
+  padding: 0 4px;
+}
+.w01-line {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  text-wrap: pretty;
+}
+.w01-line.is-strong {
+  font-weight: 600;
+}
+.w01-tabular {
+  font-variant-numeric: tabular-nums;
+}
+.w01-soft {
+  color: var(--w01-stein);
+}
+.w01-plot {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+.w01-svg {
+  display: block;
+  overflow: visible;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.w01-empty {
+  max-width: 52ch;
+  margin: 0;
+  padding: 16px 8px;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+/* Series */
+.w01-sales {
+  fill: var(--w01-butter);
+  opacity: 0.85;
+}
+.w01-sales.is-dim {
+  opacity: 0.42;
+}
+.w01-sales-line {
+  fill: none;
+  stroke: var(--w01-butter);
+  stroke-width: 1.5;
+  opacity: 0.85;
+}
+.w01-forecast path {
+  fill: none;
+  stroke: var(--w01-ink);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.w01-forecast circle {
+  fill: var(--w01-ink);
+}
+.w01-rule {
+  fill: none;
+  stroke: var(--w01-butter);
+  stroke-width: 2;
+  stroke-dasharray: 5 3;
+}
+.w01-playhead path,
+.w01-playhead-line {
+  stroke: var(--w01-ink);
+  stroke-width: 1;
+  opacity: 0.75;
+}
+.w01-playhead .w01-gap {
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 1;
+}
+.w01-hit {
+  fill: transparent;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+.w01-hit.is-tap {
+  cursor: pointer;
+}
+.w01-label {
+  fill: var(--w01-stein);
+  font-size: 12px;
+  font-weight: 600;
+}
+.w01-label.is-strong {
+  fill: var(--w01-ink);
+}
+.w01-label.is-tick {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.w01-zero,
+.w01-axis {
+  stroke: rgb(243 240 233 / 0.45);
+  stroke-width: 1;
+  fill: none;
+}
+
+/* Scene 1: the ruler and the copy of the sales line */
+.w01-mark.is-tool circle {
+  fill: none;
+  stroke: var(--w01-ink);
+  stroke-width: 2;
+}
+.w01-mark.is-guess path {
+  fill: var(--w01-butter);
+}
+.w01-mark.is-rule path {
+  stroke: var(--w01-butter);
+  stroke-width: 3;
+}
+.w01-mark.is-copy path {
+  stroke: var(--w01-ink);
+  stroke-width: 3;
+  opacity: 0.7;
+}
+.w01-copy {
+  transition: transform var(--glas-dur-quick, 486ms) var(--glas-ease-quick, ease-out);
+}
+.w01-copy[data-drag] {
+  transition: none;
+}
+.w01-copy path {
+  fill: none;
+  stroke: var(--w01-ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  opacity: 0.55;
+}
+.w01-copy[data-rule] path {
+  stroke: var(--w01-butter);
+  stroke-dasharray: 5 3;
+  opacity: 1;
+}
+.w01-grip {
+  fill: rgb(243 240 233 / 0.22);
+  stroke: var(--w01-ink);
+  stroke-width: 1.5;
+}
+
+/* Scene 2: the two error strips */
+.w01-strip rect,
+.w01-strip circle {
+  transition:
+    transform var(--glas-dur-smooth, 734ms) var(--glas-ease-smooth, ease-out),
+    opacity 240ms linear;
+}
+.w01-strip[data-fast] rect,
+.w01-strip[data-fast] circle {
+  transition: none;
+}
+.w01-ebar.is-tool {
+  fill: var(--w01-ink);
+}
+.w01-ebar.is-rule {
+  fill: none;
+  stroke: var(--w01-butter);
+  stroke-width: 1.25;
+}
+.w01-ebar.is-dim {
+  opacity: 0.32;
+}
+.w01-ebar[data-selected] {
+  stroke: #ffffff;
+  stroke-width: 2.5;
+}
+.w01-skip {
+  fill: none;
+  stroke: var(--w01-stein);
+  stroke-width: 1.25;
+}
+
+/* Scene 3: bands, hits and the sorted row */
+.w01-bandtrail path {
+  stroke: rgb(243 240 233 / 0.3);
+  stroke-width: 2;
+}
+.w01-band {
+  fill: rgb(243 240 233 / 0.16);
+  stroke: var(--w01-ink);
+  stroke-width: 1.5;
+}
+.w01-hitmark.is-in {
+  fill: var(--w01-butter);
+}
+.w01-hitmark.is-out rect,
+.w01-hitmark.is-out path {
+  fill: none;
+  stroke: var(--w01-butter);
+  stroke-width: 1.25;
+}
+.w01-dot {
+  fill: var(--w01-ink);
+  transition: transform var(--glas-dur-quick, 486ms) var(--glas-ease-quick, ease-out);
+}
+.w01-dot.is-out {
+  fill: none;
+  stroke: var(--w01-stein);
+  stroke-width: 1.25;
+}
+.w01-cut {
+  stroke: var(--w01-butter);
+  stroke-width: 2;
+}
+
+/* Scene 4: jars, the order line and the cost curve */
+.w01-jar {
+  fill: var(--w01-butter);
+}
+.w01-jar.is-short {
+  fill: none;
+  stroke: var(--w01-butter);
+  stroke-width: 1.25;
+}
+.w01-curve {
+  fill: none;
+  stroke: var(--w01-ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  transition: d var(--glas-dur-smooth, 734ms) var(--glas-ease-smooth, ease-out);
+}
+.w01-lowest circle {
+  fill: var(--w01-butter);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: w01-pulse 640ms ease-out 1;
+}
+.w01-orderline {
+  stroke: var(--w01-ink);
+  stroke-width: 2;
+}
+.w01-float {
+  position: absolute;
+  top: 2px;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  border-radius: 12px;
+  background-color: rgb(26 23 20 / 0.9);
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.3);
+  color: var(--w01-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+}
+@keyframes w01-pulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Scene 5: lamps, the bracket and the 52 squares */
+.w01-lamps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.w01-lamp {
+  min-width: 0;
+  font-size: 0.8125rem;
+  line-height: 1.25;
+}
+.w01-lamp-button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 6px;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 4px 6px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.w01-lamp-button:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+.w01-lamp-button[aria-pressed="true"] {
+  background: rgb(255 255 255 / 0.16);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.28);
+}
+.w01-lamp-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+.w01-window {
+  stroke: var(--w01-ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.6;
+}
+.w01-lamp-disc {
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 9999px;
+}
+.w01-lamp[data-state="green"] .w01-lamp-disc {
+  background-color: currentColor;
+}
+.w01-lamp[data-state="none"] .w01-lamp-disc {
+  border-style: dashed;
+}
+.w01-lamp-name {
+  font-weight: 700;
+}
+.w01-lamp-value {
+  grid-column: 1 / -1;
+  color: var(--w01-stein);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+}
+.w01-bracket rect:first-child {
+  fill: rgb(243 240 233 / 0.06);
+  stroke: var(--w01-ink);
+  stroke-width: 1.5;
+}
+.w01-biasband {
+  fill: rgb(252 238 175 / 0.24);
+}
+.w01-mean {
+  stroke: var(--w01-butter);
+  stroke-width: 2.5;
+}
+.w01-mean.is-out {
+  stroke-dasharray: 4 3;
+}
+.w01-square.is-free {
+  fill: var(--w01-ink);
+}
+.w01-square.is-red {
+  fill: none;
+  stroke: var(--w01-ink);
+  stroke-width: 1.25;
+}
+.w01-square.is-empty {
+  fill: none;
+  stroke: rgb(243 240 233 / 0.25);
+}
+.w01-person circle,
+.w01-person path {
+  fill: var(--w01-ink);
+}
+
+/* Captions and the dock's fills */
+/* The caption grows to its words; the cap only guards a very short window. */
+.w01-cap {
+  max-height: 46svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.w01-cap p {
+  margin: 0;
+}
+.w01-cap p + p {
+  margin-top: 6px;
+}
+@media (min-width: 64rem) {
+  .w01-cap {
+    font-size: 1.0625rem;
+  }
+}
+.w01-decide {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.w01-guess,
+.w01-timeline {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.w01-toggle {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.w01-views {
+  flex: 1 1 100%;
+}
+
+/* Fields */
+.w01-field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.w01-field.is-dock {
+  flex: 1 1 220px;
+}
+.w01-field-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.w01-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid rgb(243 240 233 / 0.55);
+  border-radius: 12px;
+  background-color: rgb(18 18 18 / 0.35);
+  color: var(--w01-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+.w01-input::placeholder {
+  color: var(--w01-stein);
+}
+.w01-input:focus-visible {
+  outline: 2px solid var(--w01-butter);
+  outline-offset: 2px;
+}
+.w01-input.is-area {
+  min-height: 96px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.875rem;
+  resize: vertical;
+}
+
+/* Step 6: own data */
+.w01-own {
+  display: grid;
+  gap: 12px;
+}
+.w01-own-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.w01-own-fields {
+  display: grid;
+  gap: 10px;
+}
+@media (min-width: 40rem) {
+  .w01-own-fields {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.w01-report {
+  display: grid;
+  gap: 4px;
+  padding: 8px 12px;
+  border-left: 3px solid var(--w01-butter);
+}
+.w01-report p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+/* Step 7: take home */
+.w01-take {
+  display: grid;
+  gap: 12px;
+}
+.w01-take-line {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.w01-take-rows {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.w01-take-row {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgb(243 240 233 / 0.3);
+}
+@media (min-width: 40rem) {
+  .w01-take-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+.w01-take-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.w01-take-note {
+  margin: 2px 0 0;
+  color: var(--w01-stein);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.w01-take-files {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.8125rem;
+}
+.w01-take-files code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Sheets (light): text in the sheet's own ink */
+.w01-sheet {
+  display: grid;
+  gap: 10px;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.w01-sheet p {
+  margin: 0;
+}
+.w01-sheet .w01-take-note {
+  color: inherit;
+}
+.w01-sheet-head {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.w01-mono {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background-color: rgb(18 18 18 / 0.06);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.w01-mono-mark {
+  background-color: #fceeaf;
+  color: #121212;
+  font-weight: 700;
+}
+.w01-sheet-lamps {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.w01-sheet-lamps .w01-lamp {
+  align-items: start;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.w01-sheet-lamps .w01-lamp-disc {
+  margin-top: 4px;
+}
+.w01-ledger {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.w01-ledger li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.w01-ledger-bar {
+  grid-column: 1 / -1;
+  height: 10px;
+  border-radius: 5px;
+  background-color: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .w01-copy,
+  .w01-strip rect,
+  .w01-strip circle,
+  .w01-dot,
+  .w01-curve {
+    transition: none;
+  }
+  .w01-lowest circle {
+    animation: none;
+  }
+}
+
+/* A phone keeps the head to its shortest: the caption carries the long text. */
+@media (max-width: 39.99rem) {
+  .w01-head .w01-line {
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+}
+@media (max-width: 39.99rem) {
+  /* The guess is dragged on the ruler itself; the dock keeps only the decision. */
+  .w01-guess.is-ruler {
+    display: none;
+  }
+  /* A lamp's value moves into the line under the row when the lamp is tapped. */
+  .w01-lamp-value {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* The owner is asked again in the own step, where a phone has room for it. */
+  .w01-field.is-owner {
+    display: none;
+  }
+}
