@@ -14,10 +14,10 @@ import t_de_bio_with_5 from "./de-bio-with-5.json";
 import t_de_bio_with_6 from "./de-bio-with-6.json";
 import t_de_bio_without_5 from "./de-bio-without-5.json";
 import t_de_bio_without_6 from "./de-bio-without-6.json";
-import t_de_rechnung_with_1 from "./de-rechnung-with-1.json";
-import t_de_rechnung_with_2 from "./de-rechnung-with-2.json";
-import t_de_rechnung_without_1 from "./de-rechnung-without-1.json";
-import t_de_rechnung_without_2 from "./de-rechnung-without-2.json";
+import t_de_rechnung_with_3 from "./de-rechnung-with-3.json";
+import t_de_rechnung_with_4 from "./de-rechnung-with-4.json";
+import t_de_rechnung_without_3 from "./de-rechnung-without-3.json";
+import t_de_rechnung_without_4 from "./de-rechnung-without-4.json";
 import t_de_strom_with_6 from "./de-strom-with-6.json";
 import t_de_strom_with_7 from "./de-strom-with-7.json";
 import t_de_strom_without_5 from "./de-strom-without-5.json";
@@ -26,10 +26,10 @@ import t_en_bio_with_1 from "./en-bio-with-1.json";
 import t_en_bio_with_2 from "./en-bio-with-2.json";
 import t_en_bio_without_1 from "./en-bio-without-1.json";
 import t_en_bio_without_2 from "./en-bio-without-2.json";
-import t_en_rechnung_with_1 from "./en-rechnung-with-1.json";
-import t_en_rechnung_with_2 from "./en-rechnung-with-2.json";
-import t_en_rechnung_without_1 from "./en-rechnung-without-1.json";
-import t_en_rechnung_without_2 from "./en-rechnung-without-2.json";
+import t_en_rechnung_with_3 from "./en-rechnung-with-3.json";
+import t_en_rechnung_with_4 from "./en-rechnung-with-4.json";
+import t_en_rechnung_without_3 from "./en-rechnung-without-3.json";
+import t_en_rechnung_without_4 from "./en-rechnung-without-4.json";
 import t_en_strom_with_1 from "./en-strom-with-1.json";
 import t_en_strom_with_2 from "./en-strom-with-2.json";
 import t_en_strom_without_1 from "./en-strom-without-1.json";
@@ -49,7 +49,7 @@ const BIO_NOTES_EN = [
 const RECHNUNG_NOTES_DE = [
   "Mit und ohne Skill rechnet Claude die Rechnung nach, kommt auf 320,9 MWh und sieht, dass sich F2 und F3 ändern.",
   "Mit dem Skill nennt Claude für jedes Feld Datei, Zeile und den neuen Status.",
-  "Ohne den Skill nennt keine der zwei Aufnahmen eine Zeile oder einen Status.",
+  "Ohne den Skill nennt keine der zwei Aufnahmen eine Zeile oder einen der Status Belegt, Schwach oder Lücke.",
 ];
 const RECHNUNG_NOTES_EN = [
   "With and without the skill, Claude checks the invoice, arrives at 320.9 MWh and sees that F2 and F3 change.",
@@ -88,8 +88,8 @@ export const SCENE: ClaudeSceneData | null = {
       id: "rechnung",
       locale: "de",
       label: "Was ändert die Septemberrechnung?",
-      withSkill: ["de-rechnung-with-1", "de-rechnung-with-2"],
-      withoutSkill: ["de-rechnung-without-1", "de-rechnung-without-2"],
+      withSkill: ["de-rechnung-with-3", "de-rechnung-with-4"],
+      withoutSkill: ["de-rechnung-without-3", "de-rechnung-without-4"],
       notes: RECHNUNG_NOTES_DE,
     },
     {
@@ -116,8 +116,8 @@ export const SCENE: ClaudeSceneData | null = {
       id: "rechnung",
       locale: "en",
       label: "What does the September invoice change?",
-      withSkill: ["en-rechnung-with-1", "en-rechnung-with-2"],
-      withoutSkill: ["en-rechnung-without-1", "en-rechnung-without-2"],
+      withSkill: ["en-rechnung-with-3", "en-rechnung-with-4"],
+      withoutSkill: ["en-rechnung-without-3", "en-rechnung-without-4"],
       notes: RECHNUNG_NOTES_EN,
     },
   ],
@@ -126,10 +126,10 @@ export const SCENE: ClaudeSceneData | null = {
     t_de_bio_with_6 as unknown as ClaudeRecording,
     t_de_bio_without_5 as unknown as ClaudeRecording,
     t_de_bio_without_6 as unknown as ClaudeRecording,
-    t_de_rechnung_with_1 as unknown as ClaudeRecording,
-    t_de_rechnung_with_2 as unknown as ClaudeRecording,
-    t_de_rechnung_without_1 as unknown as ClaudeRecording,
-    t_de_rechnung_without_2 as unknown as ClaudeRecording,
+    t_de_rechnung_with_3 as unknown as ClaudeRecording,
+    t_de_rechnung_with_4 as unknown as ClaudeRecording,
+    t_de_rechnung_without_3 as unknown as ClaudeRecording,
+    t_de_rechnung_without_4 as unknown as ClaudeRecording,
     t_de_strom_with_6 as unknown as ClaudeRecording,
     t_de_strom_with_7 as unknown as ClaudeRecording,
     t_de_strom_without_5 as unknown as ClaudeRecording,
@@ -138,10 +138,10 @@ export const SCENE: ClaudeSceneData | null = {
     t_en_bio_with_2 as unknown as ClaudeRecording,
     t_en_bio_without_1 as unknown as ClaudeRecording,
     t_en_bio_without_2 as unknown as ClaudeRecording,
-    t_en_rechnung_with_1 as unknown as ClaudeRecording,
-    t_en_rechnung_with_2 as unknown as ClaudeRecording,
-    t_en_rechnung_without_1 as unknown as ClaudeRecording,
-    t_en_rechnung_without_2 as unknown as ClaudeRecording,
+    t_en_rechnung_with_3 as unknown as ClaudeRecording,
+    t_en_rechnung_with_4 as unknown as ClaudeRecording,
+    t_en_rechnung_without_3 as unknown as ClaudeRecording,
+    t_en_rechnung_without_4 as unknown as ClaudeRecording,
     t_en_strom_with_1 as unknown as ClaudeRecording,
     t_en_strom_with_2 as unknown as ClaudeRecording,
     t_en_strom_without_1 as unknown as ClaudeRecording,

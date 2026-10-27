@@ -1,0 +1,2218 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-rechnung-with-3",
+  "slug": "esg-berichte-mit-ki",
+  "locale": "de",
+  "prompt_id": "rechnung",
+  "take": 3,
+  "recorded_at": "2026-10-27T03:03:31Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.311",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Bash",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}"
+  ],
+  "prompt": "Im Anhang sind unsere Stromrechnungen 2025 (strom_2025.csv), das Formular der Bank (3-bankformular.md), das PV-Angebot (pv_angebot_2026.txt) und die Stromrechnung für September, die jetzt als Foto aufgetaucht ist (rechnung-EL-25-09.png). Was ändert sich damit im Bankformular? Heute ist der 16.10.2026.",
+  "kit_zip": "public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+  "kit_files": [
+    {
+      "name": "rechnung-EL-25-09.png",
+      "path": "crvena-zemja-nachweisprobe/nachreichung/rechnung-EL-25-09.png",
+      "bytes": 798935,
+      "sha256": "2347ea01e427195e0024324d7810bd1e5504a2bd94c79936d64a5b8662177859"
+    },
+    {
+      "name": "strom_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/strom_2025.csv",
+      "bytes": 1071,
+      "sha256": "aa9bb93a33262c32b2db033b361a4ebd6ffe268e94c71713f8ad790c8199a0eb"
+    },
+    {
+      "name": "3-bankformular.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/3-bankformular.md",
+      "bytes": 1075,
+      "sha256": "5bd74abe472ef2f2d9cd74c621378c0216642b9659005588d8ee4ba807f3d218"
+    },
+    {
+      "name": "pv_angebot_2026.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/pv_angebot_2026.txt",
+      "bytes": 454,
+      "sha256": "4417a8580557f6aa2a542951505b2c64a5f1f4b245d0facbfa77b68c8632caac"
+    }
+  ],
+  "skill": {
+    "name": "esg-nachweise",
+    "sha256": "a2716543a9c1fa9689d1f20a297e24290025d124a2f60e9be89fa7ed5456eeee"
+  },
+  "skill_name": "esg-nachweise",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "esg-nachweise",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 3643,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "esg-nachweise"
+      }
+    },
+    {
+      "t_ms": 3668,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 7173,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la; ls -la ..; for f in strom_2025.csv 3-bankformular.md pv_angebot_2026.txt; do echo \"=== $f\"; cat -n \"$f\"; done; ls CLAUDE.md ../CLAUDE.md .claude 2>/dev/null",
+        "description": "List files and show text attachments"
+      }
+    },
+    {
+      "t_ms": 8379,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 11533,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; find . -not -path './.claude/skills/*' | head -50",
+        "description": "Find all files including the photo"
+      }
+    },
+    {
+      "t_ms": 11661,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 13923,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "rechnung-EL-25-09.png"
+      }
+    },
+    {
+      "t_ms": 13952,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 21801,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd \"$TMPDIR\" && python3 -I - <<'EOF'\nimport csv\nrows=[r for r in csv.DictReader(l for l in open('strom_2025.csv') if not l.startswith('#'))]\nu={}\nfor r in rows: u.setdefault((r['monat'],r['rechnungsnr']),int(r['kwh']))\nmonths=sorted(m for m,_ in u); print(len(rows),\"Zeilen,\",len(u),\"eindeutige Monate\")\nprint(\"fehlt:\",[f\"2025-{i:02d}\" for i in range(1,13) if f\"2025-{i:02d}\" not in months])\ns11=sum(u.values()); print(\"11 Monate kWh\",s11)\nsep=1325550-1284350; print(\"Sep Zähler kWh\",sep,\"Betrag\",sep*9.5)\ntot=s11+sep; print(\"Jahr kWh\",tot,\"MWh\",tot/1000)\nprint(\"PV-Anteil 180 MWh /\",tot/1000,\"=\",180000/tot*100)\nprint(\"Amort Jahre\",8550000/(180000*9.5))\nEOF\ndate",
+        "description": "Compute annual consumption, PV share, payback"
+      }
+    },
+    {
+      "t_ms": 21941,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 46229,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 46230,
+      "kind": "text",
+      "chunk": "Ich habe al"
+    },
+    {
+      "t_ms": 46230,
+      "kind": "text",
+      "chunk": "le vier Dateien g"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "elesen und g"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "erechnet. Hier"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": " das"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": " Ergebnis."
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "\n\n**Pr"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "üfung der Sept"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "emberrechnung (r"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "echnung-EL-25"
+    },
+    {
+      "t_ms": 46231,
+      "kind": "text",
+      "chunk": "-09.png):** R"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": "echnung"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": " Nr. EL-25-"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": "09 des"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": " Versorgers, Z"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": "eitraum 01.09"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": ".–"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": "30.09.2025."
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": " Der neue Zählerst"
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": "and minus der alte "
+    },
+    {
+      "t_ms": 46232,
+      "kind": "text",
+      "chunk": "ergibt 1.325."
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "550 − 1.284."
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "350 = **41.200 "
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "kWh**. Das st"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "immt mit der ber"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "echneten Menge überein"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": ". "
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "41.200 k"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "Wh × 9,50 "
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "MKD/kWh ="
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": " 391.400,00 M"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "KD, das stimmt"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": " mit dem R"
+    },
+    {
+      "t_ms": 46233,
+      "kind": "text",
+      "chunk": "echnungsbetrag"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": " überein. Die Rech"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "nung ist in sich st"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "immig."
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": " Sie tr"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "ägt den Stempel „"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "КОПИЈА“"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": " (Kopie)"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": " und liegt nur als"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": " Foto vor.\n\n**"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "St"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "ichtag:** 16."
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "10.2026 la"
+    },
+    {
+      "t_ms": 46234,
+      "kind": "text",
+      "chunk": "ut de"
+    },
+    {
+      "t_ms": 46235,
+      "kind": "text",
+      "chunk": "iner Ang"
+    },
+    {
+      "t_ms": 46235,
+      "kind": "text",
+      "chunk": "abe. Die"
+    },
+    {
+      "t_ms": 46235,
+      "kind": "text",
+      "chunk": " Systemu"
+    },
+    {
+      "t_ms": 46235,
+      "kind": "text",
+      "chunk": "hr zeigt den"
+    },
+    {
+      "t_ms": 46235,
+      "kind": "text",
+      "chunk": " 27.10.2026;"
+    },
+    {
+      "t_ms": 46235,
+      "kind": "text",
+      "chunk": " ich habe mit"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": " deinem Datum ger"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "echnet.\n\n### Was"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": " s"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "ich ändert\n\n| W"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "o | Vorher ("
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "Wert, Status) |"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": " Jetzt (W"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "ert, Status) | War"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "um |\n|---|---|"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "---|---|\n| F1"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "Bußgelder | keine"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": " Ang"
+    },
+    {
+      "t_ms": 46236,
+      "kind": "text",
+      "chunk": "abe, LÜCK"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "E | keine Ang"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "abe, LÜCK"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "E | E"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "ine Stromrechnung"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": " sagt nichts über"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": " Bußgelder |\n|"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": " F2 Str"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "om 2025 | 279"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": ",7 MWh a"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "us 11 Monaten"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": ", September"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": " fehlt, LÜ"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "CKE | **"
+    },
+    {
+      "t_ms": 46237,
+      "kind": "text",
+      "chunk": "320,9 MWh**"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": ", BELEGT | "
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "279.700 kWh ("
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "11"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": " e"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "indeutige Monate)"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": " + 41.200 kW"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "h (September"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": ") = 320.900 k"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "Wh |\n| F3 "
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "PV-Ertrag"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": " und Anteil | 180"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": " MWh/"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "Jahr; Ante"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "il nicht berechenb"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "ar, we"
+    },
+    {
+      "t_ms": 46238,
+      "kind": "text",
+      "chunk": "il die J"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "ahressumme fehlte"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": ", LÜCKE |"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "180 MWh/J"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "ahr, **Anteil"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": " 56,1 %**,"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": " SCHWACH |"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": " Jetzt g"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "ibt es einen Nen"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "ner. Der Ertr"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "ag b"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "leibt eine Schät"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "zung aus einem n"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "icht unterschrieben"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": "en Angebot |\n|"
+    },
+    {
+      "t_ms": 46239,
+      "kind": "text",
+      "chunk": " F4 Amortisation"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": " | 5,0 J"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "ahre, SCHWAC"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "H | 5,0 "
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "Jahre, SCHW"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "ACH | Die Form"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "el n"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "utzt den"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": " PV-Ertrag"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": ", nicht den Ver"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "brauch. Der"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": " Sept"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "emb"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": "ertarif von"
+    },
+    {
+      "t_ms": 46240,
+      "kind": "text",
+      "chunk": " 9,50 MKD"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "/kWh bestätig"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "t nur den Preis |"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "\n| F5 Besch"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "äftigte, Unf"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "älle | keine Angab"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "e, LÜCKE"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": " | keine Angabe,"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": " LÜCKE |"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": " Keine Datei dazu"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": " |\n| F6 Z"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "ertifikate, Audits"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": " | keine Angabe,"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": " LÜCKE | ke"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "ine Angabe, L"
+    },
+    {
+      "t_ms": 46241,
+      "kind": "text",
+      "chunk": "ÜCKE | Keine"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " Datei dazu |"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "\n\n### Bankformular,"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " aktueller Stand"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "\n\n| Nr | Frage"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " | Antwort | Dat"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "ei und Zeile |"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " Status | Grund | F"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "ehlendes Dokument"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " | Maßnahme |"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "\n|---|---|---|"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "---|---|---|---|"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "---|\n| F1 |"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " Bußgelder"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": " Umwelt, Arb"
+    },
+    {
+      "t_ms": 46242,
+      "kind": "text",
+      "chunk": "eitsrecht,"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " Arbeitsschutz"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " 2023–2025 |"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " –"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " | – | LÜCK"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": "E | Keine Datei"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " sagt et"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": "was d"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": "azu | Erklärung"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " der Geschäftsführ"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": "ung z"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": "u Bußgeldern"
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": " 2023–2025 ("
+    },
+    {
+      "t_ms": 46243,
+      "kind": "text",
+      "chunk": "Umwelt, Ar"
+    },
+    {
+      "t_ms": 46274,
+      "kind": "text",
+      "chunk": "beitsrecht,"
+    },
+    {
+      "t_ms": 46319,
+      "kind": "text",
+      "chunk": " Arbeitsschut"
+    },
+    {
+      "t_ms": 46369,
+      "kind": "text",
+      "chunk": "z) mit allen B"
+    },
+    {
+      "t_ms": 46424,
+      "kind": "text",
+      "chunk": "escheiden |"
+    },
+    {
+      "t_ms": 46469,
+      "kind": "text",
+      "chunk": " An"
+    },
+    {
+      "t_ms": 46524,
+      "kind": "text",
+      "chunk": "fordern;"
+    },
+    {
+      "t_ms": 46570,
+      "kind": "text",
+      "chunk": " nicht „ke"
+    },
+    {
+      "t_ms": 46620,
+      "kind": "text",
+      "chunk": "ine“ eintragen "
+    },
+    {
+      "t_ms": 46675,
+      "kind": "text",
+      "chunk": "ohne Be"
+    },
+    {
+      "t_ms": 46724,
+      "kind": "text",
+      "chunk": "leg |\n| F2 "
+    },
+    {
+      "t_ms": 46769,
+      "kind": "text",
+      "chunk": "| Stromverbrau"
+    },
+    {
+      "t_ms": 46819,
+      "kind": "text",
+      "chunk": "ch 2025, ganz"
+    },
+    {
+      "t_ms": 46868,
+      "kind": "text",
+      "chunk": "es Jahr, M"
+    },
+    {
+      "t_ms": 46918,
+      "kind": "text",
+      "chunk": "Wh | **320,9 "
+    },
+    {
+      "t_ms": 46969,
+      "kind": "text",
+      "chunk": "MWh** | strom_"
+    },
+    {
+      "t_ms": 47024,
+      "kind": "text",
+      "chunk": "2025.csv Z."
+    },
+    {
+      "t_ms": 47069,
+      "kind": "text",
+      "chunk": " 3–11"
+    },
+    {
+      "t_ms": 47124,
+      "kind": "text",
+      "chunk": ", 13–14 ("
+    },
+    {
+      "t_ms": 47169,
+      "kind": "text",
+      "chunk": "Z. 12 "
+    },
+    {
+      "t_ms": 47219,
+      "kind": "text",
+      "chunk": "ist "
+    },
+    {
+      "t_ms": 47274,
+      "kind": "text",
+      "chunk": "ein Du"
+    },
+    {
+      "t_ms": 47319,
+      "kind": "text",
+      "chunk": "plikat); rechnung"
+    },
+    {
+      "t_ms": 47369,
+      "kind": "text",
+      "chunk": "-EL-25-09."
+    },
+    {
+      "t_ms": 47419,
+      "kind": "text",
+      "chunk": "png (Zählerstände"
+    },
+    {
+      "t_ms": 47481,
+      "kind": "text",
+      "chunk": ", Menge) | BEL"
+    },
+    {
+      "t_ms": 47520,
+      "kind": "text",
+      "chunk": "EGT | "
+    },
+    {
+      "t_ms": 47578,
+      "kind": "text",
+      "chunk": "12 eindeutige"
+    },
+    {
+      "t_ms": 47619,
+      "kind": "text",
+      "chunk": " Monate, g"
+    },
+    {
+      "t_ms": 47674,
+      "kind": "text",
+      "chunk": "emessene"
+    },
+    {
+      "t_ms": 47725,
+      "kind": "text",
+      "chunk": " Zählerstände,"
+    },
+    {
+      "t_ms": 47770,
+      "kind": "text",
+      "chunk": " Rechnung"
+    },
+    {
+      "t_ms": 47819,
+      "kind": "text",
+      "chunk": "en des Versorgers |"
+    },
+    {
+      "t_ms": 47869,
+      "kind": "text",
+      "chunk": " – | Original"
+    },
+    {
+      "t_ms": 47919,
+      "kind": "text",
+      "chunk": " oder E-Rechn"
+    },
+    {
+      "t_ms": 47969,
+      "kind": "text",
+      "chunk": "ung EL-25-09 "
+    },
+    {
+      "t_ms": 48019,
+      "kind": "text",
+      "chunk": "abl"
+    },
+    {
+      "t_ms": 48069,
+      "kind": "text",
+      "chunk": "egen ("
+    },
+    {
+      "t_ms": 48120,
+      "kind": "text",
+      "chunk": "b"
+    },
+    {
+      "t_ms": 48169,
+      "kind": "text",
+      "chunk": "isher nur F"
+    },
+    {
+      "t_ms": 48219,
+      "kind": "text",
+      "chunk": "otokopie)."
+    },
+    {
+      "t_ms": 48269,
+      "kind": "text",
+      "chunk": " Das Du"
+    },
+    {
+      "t_ms": 48324,
+      "kind": "text",
+      "chunk": "plikat E"
+    },
+    {
+      "t_ms": 48369,
+      "kind": "text",
+      "chunk": "L-25-10 ("
+    },
+    {
+      "t_ms": 48419,
+      "kind": "text",
+      "chunk": "Z. 11 E"
+    },
+    {
+      "t_ms": 48473,
+      "kind": "text",
+      "chunk": "-Rechnung und"
+    },
+    {
+      "t_ms": 48520,
+      "kind": "text",
+      "chunk": " Z. 12 Sc"
+    },
+    {
+      "t_ms": 48569,
+      "kind": "text",
+      "chunk": "an) z"
+    },
+    {
+      "t_ms": 48622,
+      "kind": "text",
+      "chunk": "ählt nur einmal;"
+    },
+    {
+      "t_ms": 48670,
+      "kind": "text",
+      "chunk": " in der Buchhalt"
+    },
+    {
+      "t_ms": 48720,
+      "kind": "text",
+      "chunk": "ung bereinigen |"
+    },
+    {
+      "t_ms": 48769,
+      "kind": "text",
+      "chunk": "\n| F3 |"
+    },
+    {
+      "t_ms": 48821,
+      "kind": "text",
+      "chunk": " Erwarteter PV-"
+    },
+    {
+      "t_ms": 48874,
+      "kind": "text",
+      "chunk": "Ertrag und An"
+    },
+    {
+      "t_ms": 48924,
+      "kind": "text",
+      "chunk": "teil am Verbrau"
+    },
+    {
+      "t_ms": 48969,
+      "kind": "text",
+      "chunk": "ch | rund 180 M"
+    },
+    {
+      "t_ms": 49019,
+      "kind": "text",
+      "chunk": "Wh/Jahr ("
+    },
+    {
+      "t_ms": 49069,
+      "kind": "text",
+      "chunk": "**"
+    },
+    {
+      "t_ms": 49119,
+      "kind": "text",
+      "chunk": "Schätzung des Install"
+    },
+    {
+      "t_ms": 49169,
+      "kind": "text",
+      "chunk": "ateurs**), das sind"
+    },
+    {
+      "t_ms": 49221,
+      "kind": "text",
+      "chunk": " 56,1 % von"
+    },
+    {
+      "t_ms": 49269,
+      "kind": "text",
+      "chunk": " 320,9 MWh"
+    },
+    {
+      "t_ms": 49321,
+      "kind": "text",
+      "chunk": " | pv_angebot_"
+    },
+    {
+      "t_ms": 49370,
+      "kind": "text",
+      "chunk": "2026.txt Z."
+    },
+    {
+      "t_ms": 49419,
+      "kind": "text",
+      "chunk": " 8,"
+    },
+    {
+      "t_ms": 49470,
+      "kind": "text",
+      "chunk": " Z. 3,"
+    },
+    {
+      "t_ms": 49525,
+      "kind": "text",
+      "chunk": " Z. 11;"
+    },
+    {
+      "t_ms": 49569,
+      "kind": "text",
+      "chunk": " Ver"
+    },
+    {
+      "t_ms": 49620,
+      "kind": "text",
+      "chunk": "brauch w"
+    },
+    {
+      "t_ms": 49669,
+      "kind": "text",
+      "chunk": "ie F2 | SCH"
+    },
+    {
+      "t_ms": 49720,
+      "kind": "text",
+      "chunk": "WACH | FREIG"
+    },
+    {
+      "t_ms": 49770,
+      "kind": "text",
+      "chunk": "ABE f"
+    },
+    {
+      "t_ms": 49824,
+      "kind": "text",
+      "chunk": "ehlt: Ang"
+    },
+    {
+      "t_ms": 49869,
+      "kind": "text",
+      "chunk": "ebot n"
+    },
+    {
+      "t_ms": 49921,
+      "kind": "text",
+      "chunk": "icht unterschrieben"
+    },
+    {
+      "t_ms": 49974,
+      "kind": "text",
+      "chunk": ", Ertrag ge"
+    },
+    {
+      "t_ms": 50019,
+      "kind": "text",
+      "chunk": "schätzt,"
+    },
+    {
+      "t_ms": 50074,
+      "kind": "text",
+      "chunk": " nicht gemessen |"
+    },
+    {
+      "t_ms": 50124,
+      "kind": "text",
+      "chunk": " –"
+    },
+    {
+      "t_ms": 50169,
+      "kind": "text",
+      "chunk": " | Im Formular als"
+    },
+    {
+      "t_ms": 50220,
+      "kind": "text",
+      "chunk": " Schätzung kennze"
+    },
+    {
+      "t_ms": 50270,
+      "kind": "text",
+      "chunk": "ichnen (die Bank"
+    },
+    {
+      "t_ms": 50320,
+      "kind": "text",
+      "chunk": " verlangt das, Z"
+    },
+    {
+      "t_ms": 50373,
+      "kind": "text",
+      "chunk": ". 9). Für"
+    },
+    {
+      "t_ms": 50419,
+      "kind": "text",
+      "chunk": " ein"
+    },
+    {
+      "t_ms": 50469,
+      "kind": "text",
+      "chunk": "en bel"
+    },
+    {
+      "t_ms": 50525,
+      "kind": "text",
+      "chunk": "astbaren W"
+    },
+    {
+      "t_ms": 50574,
+      "kind": "text",
+      "chunk": "ert e"
+    },
+    {
+      "t_ms": 50620,
+      "kind": "text",
+      "chunk": "ine Ertragsprogn"
+    },
+    {
+      "t_ms": 50670,
+      "kind": "text",
+      "chunk": "ose (z. B. PV"
+    },
+    {
+      "t_ms": 50720,
+      "kind": "text",
+      "chunk": "GIS o"
+    },
+    {
+      "t_ms": 50770,
+      "kind": "text",
+      "chunk": "der"
+    },
+    {
+      "t_ms": 50820,
+      "kind": "text",
+      "chunk": " Simulation) anfordern"
+    },
+    {
+      "t_ms": 50873,
+      "kind": "text",
+      "chunk": " |\n| F4 |"
+    },
+    {
+      "t_ms": 50920,
+      "kind": "text",
+      "chunk": " Einfache Amortisation"
+    },
+    {
+      "t_ms": 50974,
+      "kind": "text",
+      "chunk": " | 8"
+    },
+    {
+      "t_ms": 51023,
+      "kind": "text",
+      "chunk": ".550.000 MKD"
+    },
+    {
+      "t_ms": 51070,
+      "kind": "text",
+      "chunk": " / (180.000 kW"
+    },
+    {
+      "t_ms": 51120,
+      "kind": "text",
+      "chunk": "h × 9,50 M"
+    },
+    {
+      "t_ms": 51169,
+      "kind": "text",
+      "chunk": "KD/kWh) ="
+    },
+    {
+      "t_ms": 51219,
+      "kind": "text",
+      "chunk": " **5,0 Jah"
+    },
+    {
+      "t_ms": 51271,
+      "kind": "text",
+      "chunk": "re** ("
+    },
+    {
+      "t_ms": 51320,
+      "kind": "text",
+      "chunk": "Schätzung) | pv"
+    },
+    {
+      "t_ms": 51370,
+      "kind": "text",
+      "chunk": "_angebot_2026."
+    },
+    {
+      "t_ms": 51425,
+      "kind": "text",
+      "chunk": "txt Z. 8"
+    },
+    {
+      "t_ms": 51470,
+      "kind": "text",
+      "chunk": "–"
+    },
+    {
+      "t_ms": 51520,
+      "kind": "text",
+      "chunk": "9; strom_2025."
+    },
+    {
+      "t_ms": 51570,
+      "kind": "text",
+      "chunk": "csv Z. 3–"
+    },
+    {
+      "t_ms": 51619,
+      "kind": "text",
+      "chunk": "14,"
+    },
+    {
+      "t_ms": 51689,
+      "kind": "text",
+      "chunk": " Spalte"
+    },
+    {
+      "t_ms": 51722,
+      "kind": "text",
+      "chunk": " Tarif; rechnung"
+    },
+    {
+      "t_ms": 51778,
+      "kind": "text",
+      "chunk": "-EL-25-09."
+    },
+    {
+      "t_ms": 51820,
+      "kind": "text",
+      "chunk": "png | SCHWACH"
+    },
+    {
+      "t_ms": 51869,
+      "kind": "text",
+      "chunk": " | "
+    },
+    {
+      "t_ms": 51919,
+      "kind": "text",
+      "chunk": "Ertrag und Preis st"
+    },
+    {
+      "t_ms": 51970,
+      "kind": "text",
+      "chunk": "ammen aus ein"
+    },
+    {
+      "t_ms": 52019,
+      "kind": "text",
+      "chunk": "em nicht unterschri"
+    },
+    {
+      "t_ms": 52070,
+      "kind": "text",
+      "chunk": "ebenen Angebot."
+    },
+    {
+      "t_ms": 52119,
+      "kind": "text",
+      "chunk": " Der „"
+    },
+    {
+      "t_ms": 52177,
+      "kind": "text",
+      "chunk": "aktuelle Preis"
+    },
+    {
+      "t_ms": 52220,
+      "kind": "text",
+      "chunk": "“ ist m"
+    },
+    {
+      "t_ms": 52269,
+      "kind": "text",
+      "chunk": "it Rechnungen b"
+    },
+    {
+      "t_ms": 52320,
+      "kind": "text",
+      "chunk": "is Dezember 2025"
+    },
+    {
+      "t_ms": 52369,
+      "kind": "text",
+      "chunk": " belegt, aber n"
+    },
+    {
+      "t_ms": 52420,
+      "kind": "text",
+      "chunk": "icht für "
+    },
+    {
+      "t_ms": 52470,
+      "kind": "text",
+      "chunk": "2026 | Let"
+    },
+    {
+      "t_ms": 52520,
+      "kind": "text",
+      "chunk": "zte Stromrechn"
+    },
+    {
+      "t_ms": 52570,
+      "kind": "text",
+      "chunk": "ung 2026 des"
+    },
+    {
+      "t_ms": 52627,
+      "kind": "text",
+      "chunk": " Versorgers (Lu"
+    },
+    {
+      "t_ms": 52677,
+      "kind": "text",
+      "chunk": "minvolt) | Als"
+    },
+    {
+      "t_ms": 52719,
+      "kind": "text",
+      "chunk": " Schätzung kennz"
+    },
+    {
+      "t_ms": 52770,
+      "kind": "text",
+      "chunk": "eichnen. Das"
+    },
+    {
+      "t_ms": 52819,
+      "kind": "text",
+      "chunk": " Angebot ist "
+    },
+    {
+      "t_ms": 52872,
+      "kind": "text",
+      "chunk": "60 Tage "
+    },
+    {
+      "t_ms": 52919,
+      "kind": "text",
+      "chunk": "ab 02.09.2026"
+    },
+    {
+      "t_ms": 52969,
+      "kind": "text",
+      "chunk": " gültig,"
+    },
+    {
+      "t_ms": 53026,
+      "kind": "text",
+      "chunk": " also bis **"
+    },
+    {
+      "t_ms": 53070,
+      "kind": "text",
+      "chunk": "01.11.2026**;"
+    },
+    {
+      "t_ms": 53119,
+      "kind": "text",
+      "chunk": " r"
+    },
+    {
+      "t_ms": 53170,
+      "kind": "text",
+      "chunk": "echtzeitig verl"
+    },
+    {
+      "t_ms": 53220,
+      "kind": "text",
+      "chunk": "ängern oder unterschre"
+    },
+    {
+      "t_ms": 53271,
+      "kind": "text",
+      "chunk": "iben lassen |\n|"
+    },
+    {
+      "t_ms": 53321,
+      "kind": "text",
+      "chunk": " F5 | Beschä"
+    },
+    {
+      "t_ms": 53370,
+      "kind": "text",
+      "chunk": "ftigte im Jahres"
+    },
+    {
+      "t_ms": 53420,
+      "kind": "text",
+      "chunk": "durchschnitt,"
+    },
+    {
+      "t_ms": 53472,
+      "kind": "text",
+      "chunk": " Arbeitsunf"
+    },
+    {
+      "t_ms": 53522,
+      "kind": "text",
+      "chunk": "älle 2025 | –"
+    },
+    {
+      "t_ms": 53570,
+      "kind": "text",
+      "chunk": " | – | LÜCK"
+    },
+    {
+      "t_ms": 53622,
+      "kind": "text",
+      "chunk": "E | Keine Datei"
+    },
+    {
+      "t_ms": 53670,
+      "kind": "text",
+      "chunk": " dazu | Dur"
+    },
+    {
+      "t_ms": 53721,
+      "kind": "text",
+      "chunk": "chschnittliche Be"
+    },
+    {
+      "t_ms": 53770,
+      "kind": "text",
+      "chunk": "schäftigtenzah"
+    },
+    {
+      "t_ms": 53820,
+      "kind": "text",
+      "chunk": "l 2025 aus der"
+    },
+    {
+      "t_ms": 53870,
+      "kind": "text",
+      "chunk": " Lohnbuchh"
+    },
+    {
+      "t_ms": 53920,
+      "kind": "text",
+      "chunk": "altung; Unfall"
+    },
+    {
+      "t_ms": 53972,
+      "kind": "text",
+      "chunk": "buch "
+    },
+    {
+      "t_ms": 54020,
+      "kind": "text",
+      "chunk": "2025 bzw."
+    },
+    {
+      "t_ms": 54070,
+      "kind": "text",
+      "chunk": " Unfallmeldungen"
+    },
+    {
+      "t_ms": 54122,
+      "kind": "text",
+      "chunk": " 2025 an"
+    },
+    {
+      "t_ms": 54170,
+      "kind": "text",
+      "chunk": " die Arbeitsin"
+    },
+    {
+      "t_ms": 54220,
+      "kind": "text",
+      "chunk": "spektion | Anford"
+    },
+    {
+      "t_ms": 54270,
+      "kind": "text",
+      "chunk": "ern ("
+    },
+    {
+      "t_ms": 54320,
+      "kind": "text",
+      "chunk": "nur Summen, keine"
+    },
+    {
+      "t_ms": 54370,
+      "kind": "text",
+      "chunk": " Namen) |\n| F"
+    },
+    {
+      "t_ms": 54420,
+      "kind": "text",
+      "chunk": "6 | Gültige"
+    },
+    {
+      "t_ms": 54470,
+      "kind": "text",
+      "chunk": " Zertifikate und Aud"
+    },
+    {
+      "t_ms": 54521,
+      "kind": "text",
+      "chunk": "its | – | – | L"
+    },
+    {
+      "t_ms": 54570,
+      "kind": "text",
+      "chunk": "ÜCKE | Keine"
+    },
+    {
+      "t_ms": 54620,
+      "kind": "text",
+      "chunk": " Datei dazu |"
+    },
+    {
+      "t_ms": 54670,
+      "kind": "text",
+      "chunk": " Zertifikate mit"
+    },
+    {
+      "t_ms": 54720,
+      "kind": "text",
+      "chunk": " Gültigkeitsd"
+    },
+    {
+      "t_ms": 54771,
+      "kind": "text",
+      "chunk": "atum und let"
+    },
+    {
+      "t_ms": 54821,
+      "kind": "text",
+      "chunk": "zter Auditbericht"
+    },
+    {
+      "t_ms": 54872,
+      "kind": "text",
+      "chunk": " mit d"
+    },
+    {
+      "t_ms": 54920,
+      "kind": "text",
+      "chunk": "em Termin des nächs"
+    },
+    {
+      "t_ms": 54972,
+      "kind": "text",
+      "chunk": "ten Audits | Anf"
+    },
+    {
+      "t_ms": 55022,
+      "kind": "text",
+      "chunk": "ordern;"
+    },
+    {
+      "t_ms": 55071,
+      "kind": "text",
+      "chunk": " ein Audit n"
+    },
+    {
+      "t_ms": 55122,
+      "kind": "text",
+      "chunk": "icht als Zertifik"
+    },
+    {
+      "t_ms": 55171,
+      "kind": "text",
+      "chunk": "at eintragen |\n\n**"
+    },
+    {
+      "t_ms": 55221,
+      "kind": "text",
+      "chunk": "Zählung:** 1"
+    },
+    {
+      "t_ms": 55272,
+      "kind": "text",
+      "chunk": " BELEGT, "
+    },
+    {
+      "t_ms": 55322,
+      "kind": "text",
+      "chunk": "2 SCHWACH"
+    },
+    {
+      "t_ms": 55371,
+      "kind": "text",
+      "chunk": ", 3 LÜC"
+    },
+    {
+      "t_ms": 55421,
+      "kind": "text",
+      "chunk": "KE. Vorher wa"
+    },
+    {
+      "t_ms": 55470,
+      "kind": "text",
+      "chunk": "ren es 0 BELE"
+    },
+    {
+      "t_ms": 55520,
+      "kind": "text",
+      "chunk": "GT, 1 SC"
+    },
+    {
+      "t_ms": 55570,
+      "kind": "text",
+      "chunk": "HWACH, 5"
+    },
+    {
+      "t_ms": 55621,
+      "kind": "text",
+      "chunk": " LÜCKE."
+    },
+    {
+      "t_ms": 55670,
+      "kind": "text",
+      "chunk": "\n\n**Anfordern:"
+    },
+    {
+      "t_ms": 55721,
+      "kind": "text",
+      "chunk": "**\n1"
+    },
+    {
+      "t_ms": 55772,
+      "kind": "text",
+      "chunk": ". Erklärung z"
+    },
+    {
+      "t_ms": 55831,
+      "kind": "text",
+      "chunk": "u Bußgeldern"
+    },
+    {
+      "t_ms": 55884,
+      "kind": "text",
+      "chunk": " 2023–2025 m"
+    },
+    {
+      "t_ms": 55937,
+      "kind": "text",
+      "chunk": "it Bescheiden ("
+    },
+    {
+      "t_ms": 55976,
+      "kind": "text",
+      "chunk": "F1)\n2. Dur"
+    },
+    {
+      "t_ms": 56020,
+      "kind": "text",
+      "chunk": "chschnittliche Be"
+    },
+    {
+      "t_ms": 56070,
+      "kind": "text",
+      "chunk": "schäftigtenzah"
+    },
+    {
+      "t_ms": 56122,
+      "kind": "text",
+      "chunk": "l 2025 aus der"
+    },
+    {
+      "t_ms": 56171,
+      "kind": "text",
+      "chunk": " Lohnbuchh"
+    },
+    {
+      "t_ms": 56221,
+      "kind": "text",
+      "chunk": "altung (F5)"
+    },
+    {
+      "t_ms": 56271,
+      "kind": "text",
+      "chunk": "\n3. Unfallbu"
+    },
+    {
+      "t_ms": 56321,
+      "kind": "text",
+      "chunk": "ch bzw. Unf"
+    },
+    {
+      "t_ms": 56372,
+      "kind": "text",
+      "chunk": "allmeldungen 2"
+    },
+    {
+      "t_ms": 56422,
+      "kind": "text",
+      "chunk": "025 (F5)\n4"
+    },
+    {
+      "t_ms": 56473,
+      "kind": "text",
+      "chunk": ". Zertifikate und"
+    },
+    {
+      "t_ms": 56522,
+      "kind": "text",
+      "chunk": " letzter Auditberic"
+    },
+    {
+      "t_ms": 56571,
+      "kind": "text",
+      "chunk": "ht (F6)\n5."
+    },
+    {
+      "t_ms": 56626,
+      "kind": "text",
+      "chunk": " Letzte Stromr"
+    },
+    {
+      "t_ms": 56674,
+      "kind": "text",
+      "chunk": "echnung 2026 des"
+    },
+    {
+      "t_ms": 56721,
+      "kind": "text",
+      "chunk": " Versorgers (F4"
+    },
+    {
+      "t_ms": 56777,
+      "kind": "text",
+      "chunk": ")\n\n**Nebenb"
+    },
+    {
+      "t_ms": 56822,
+      "kind": "text",
+      "chunk": "ei"
+    },
+    {
+      "t_ms": 56873,
+      "kind": "text",
+      "chunk": ":** Hätte man den"
+    },
+    {
+      "t_ms": 56922,
+      "kind": "text",
+      "chunk": " fehlenden September"
+    },
+    {
+      "t_ms": 56992,
+      "kind": "text",
+      "chunk": " hochgerechnet ("
+    },
+    {
+      "t_ms": 57026,
+      "kind": "text",
+      "chunk": "279,7 ×"
+    },
+    {
+      "t_ms": 57084,
+      "kind": "text",
+      "chunk": " 12/11),"
+    },
+    {
+      "t_ms": 57122,
+      "kind": "text",
+      "chunk": " wären"
+    },
+    {
+      "t_ms": 57176,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 57222,
+      "kind": "text",
+      "chunk": "305,1 MWh her"
+    },
+    {
+      "t_ms": 57272,
+      "kind": "text",
+      "chunk": "ausgekommen. September"
+    },
+    {
+      "t_ms": 57321,
+      "kind": "text",
+      "chunk": " war a"
+    },
+    {
+      "t_ms": 57372,
+      "kind": "text",
+      "chunk": "ber mit 41.200 "
+    },
+    {
+      "t_ms": 57422,
+      "kind": "text",
+      "chunk": "kWh der zweitst"
+    },
+    {
+      "t_ms": 57473,
+      "kind": "text",
+      "chunk": "ärkste Monat."
+    },
+    {
+      "t_ms": 57522,
+      "kind": "text",
+      "chunk": " Hochgerechnet lä"
+    },
+    {
+      "t_ms": 57571,
+      "kind": "text",
+      "chunk": "ge der PV-Ante"
+    },
+    {
+      "t_ms": 57622,
+      "kind": "text",
+      "chunk": "il b"
+    },
+    {
+      "t_ms": 57673,
+      "kind": "text",
+      "chunk": "ei 59 "
+    },
+    {
+      "t_ms": 57721,
+      "kind": "text",
+      "chunk": "% statt 56,1 "
+    },
+    {
+      "t_ms": 57777,
+      "kind": "text",
+      "chunk": "%.\n\nDas"
+    },
+    {
+      "t_ms": 57823,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 57871,
+      "kind": "text",
+      "chunk": "ist eine Vorbere"
+    },
+    {
+      "t_ms": 57922,
+      "kind": "text",
+      "chunk": "itung. Pr"
+    },
+    {
+      "t_ms": 57972,
+      "kind": "text",
+      "chunk": "üfen und unterschre"
+    },
+    {
+      "t_ms": 58022,
+      "kind": "text",
+      "chunk": "iben muss das"
+    },
+    {
+      "t_ms": 58072,
+      "kind": "text",
+      "chunk": " Formular ein Mens"
+    },
+    {
+      "t_ms": 58120,
+      "kind": "text",
+      "chunk": "ch."
+    }
+  ],
+  "final_text": "Ich habe alle vier Dateien gelesen und gerechnet. Hier das Ergebnis.\n\n**Prüfung der Septemberrechnung (rechnung-EL-25-09.png):** Rechnung Nr. EL-25-09 des Versorgers, Zeitraum 01.09.–30.09.2025. Der neue Zählerstand minus der alte ergibt 1.325.550 − 1.284.350 = **41.200 kWh**. Das stimmt mit der berechneten Menge überein. 41.200 kWh × 9,50 MKD/kWh = 391.400,00 MKD, das stimmt mit dem Rechnungsbetrag überein. Die Rechnung ist in sich stimmig. Sie trägt den Stempel „КОПИЈА“ (Kopie) und liegt nur als Foto vor.\n\n**Stichtag:** 16.10.2026 laut deiner Angabe. Die Systemuhr zeigt den 27.10.2026; ich habe mit deinem Datum gerechnet.\n\n### Was sich ändert\n\n| Wo | Vorher (Wert, Status) | Jetzt (Wert, Status) | Warum |\n|---|---|---|---|\n| F1 Bußgelder | keine Angabe, LÜCKE | keine Angabe, LÜCKE | Eine Stromrechnung sagt nichts über Bußgelder |\n| F2 Strom 2025 | 279,7 MWh aus 11 Monaten, September fehlt, LÜCKE | **320,9 MWh**, BELEGT | 279.700 kWh (11 eindeutige Monate) + 41.200 kWh (September) = 320.900 kWh |\n| F3 PV-Ertrag und Anteil | 180 MWh/Jahr; Anteil nicht berechenbar, weil die Jahressumme fehlte, LÜCKE | 180 MWh/Jahr, **Anteil 56,1 %**, SCHWACH | Jetzt gibt es einen Nenner. Der Ertrag bleibt eine Schätzung aus einem nicht unterschriebenen Angebot |\n| F4 Amortisation | 5,0 Jahre, SCHWACH | 5,0 Jahre, SCHWACH | Die Formel nutzt den PV-Ertrag, nicht den Verbrauch. Der Septembertarif von 9,50 MKD/kWh bestätigt nur den Preis |\n| F5 Beschäftigte, Unfälle | keine Angabe, LÜCKE | keine Angabe, LÜCKE | Keine Datei dazu |\n| F6 Zertifikate, Audits | keine Angabe, LÜCKE | keine Angabe, LÜCKE | Keine Datei dazu |\n\n### Bankformular, aktueller Stand\n\n| Nr | Frage | Antwort | Datei und Zeile | Status | Grund | Fehlendes Dokument | Maßnahme |\n|---|---|---|---|---|---|---|---|\n| F1 | Bußgelder Umwelt, Arbeitsrecht, Arbeitsschutz 2023–2025 | – | – | LÜCKE | Keine Datei sagt etwas dazu | Erklärung der Geschäftsführung zu Bußgeldern 2023–2025 (Umwelt, Arbeitsrecht, Arbeitsschutz) mit allen Bescheiden | Anfordern; nicht „keine“ eintragen ohne Beleg |\n| F2 | Stromverbrauch 2025, ganzes Jahr, MWh | **320,9 MWh** | strom_2025.csv Z. 3–11, 13–14 (Z. 12 ist ein Duplikat); rechnung-EL-25-09.png (Zählerstände, Menge) | BELEGT | 12 eindeutige Monate, gemessene Zählerstände, Rechnungen des Versorgers | – | Original oder E-Rechnung EL-25-09 ablegen (bisher nur Fotokopie). Das Duplikat EL-25-10 (Z. 11 E-Rechnung und Z. 12 Scan) zählt nur einmal; in der Buchhaltung bereinigen |\n| F3 | Erwarteter PV-Ertrag und Anteil am Verbrauch | rund 180 MWh/Jahr (**Schätzung des Installateurs**), das sind 56,1 % von 320,9 MWh | pv_angebot_2026.txt Z. 8, Z. 3, Z. 11; Verbrauch wie F2 | SCHWACH | FREIGABE fehlt: Angebot nicht unterschrieben, Ertrag geschätzt, nicht gemessen | – | Im Formular als Schätzung kennzeichnen (die Bank verlangt das, Z. 9). Für einen belastbaren Wert eine Ertragsprognose (z. B. PVGIS oder Simulation) anfordern |\n| F4 | Einfache Amortisation | 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = **5,0 Jahre** (Schätzung) | pv_angebot_2026.txt Z. 8–9; strom_2025.csv Z. 3–14, Spalte Tarif; rechnung-EL-25-09.png | SCHWACH | Ertrag und Preis stammen aus einem nicht unterschriebenen Angebot. Der „aktuelle Preis“ ist mit Rechnungen bis Dezember 2025 belegt, aber nicht für 2026 | Letzte Stromrechnung 2026 des Versorgers (Luminvolt) | Als Schätzung kennzeichnen. Das Angebot ist 60 Tage ab 02.09.2026 gültig, also bis **01.11.2026**; rechtzeitig verlängern oder unterschreiben lassen |\n| F5 | Beschäftigte im Jahresdurchschnitt, Arbeitsunfälle 2025 | – | – | LÜCKE | Keine Datei dazu | Durchschnittliche Beschäftigtenzahl 2025 aus der Lohnbuchhaltung; Unfallbuch 2025 bzw. Unfallmeldungen 2025 an die Arbeitsinspektion | Anfordern (nur Summen, keine Namen) |\n| F6 | Gültige Zertifikate und Audits | – | – | LÜCKE | Keine Datei dazu | Zertifikate mit Gültigkeitsdatum und letzter Auditbericht mit dem Termin des nächsten Audits | Anfordern; ein Audit nicht als Zertifikat eintragen |\n\n**Zählung:** 1 BELEGT, 2 SCHWACH, 3 LÜCKE. Vorher waren es 0 BELEGT, 1 SCHWACH, 5 LÜCKE.\n\n**Anfordern:**\n1. Erklärung zu Bußgeldern 2023–2025 mit Bescheiden (F1)\n2. Durchschnittliche Beschäftigtenzahl 2025 aus der Lohnbuchhaltung (F5)\n3. Unfallbuch bzw. Unfallmeldungen 2025 (F5)\n4. Zertifikate und letzter Auditbericht (F6)\n5. Letzte Stromrechnung 2026 des Versorgers (F4)\n\n**Nebenbei:** Hätte man den fehlenden September hochgerechnet (279,7 × 12/11), wären 305,1 MWh herausgekommen. September war aber mit 41.200 kWh der zweitstärkste Monat. Hochgerechnet läge der PV-Anteil bei 59 % statt 56,1 %.\n\nDas ist eine Vorbereitung. Prüfen und unterschreiben muss das Formular ein Mensch.",
+  "stats": {
+    "duration_ms": 56694,
+    "duration_api_ms": 55153,
+    "ttft_ms": 1955,
+    "num_turns": 7,
+    "output_tokens": 5253
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}
