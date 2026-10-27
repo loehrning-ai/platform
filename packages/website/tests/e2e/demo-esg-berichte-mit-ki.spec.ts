@@ -231,7 +231,8 @@ test.describe(PATH, () => {
 test.describe(`${PATH} on a 390 x 664 phone`, () => {
   test.use({ viewport: { width: 390, height: 664 }, hasTouch: true });
 
-  test("S1: lines 3 to 11 sit above the dock while connecting, and a finger drag lands on line 4", async ({ page }) => {
+  test("S1: lines 3 to 11 sit above the dock while connecting, and a finger drag lands on line 4", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "touch is dispatched through the Chrome DevTools Protocol");
     await openBeat(page, "zitate");
     await expect(page.locator('[data-w4-scene="karte"]')).toHaveAttribute("data-step", "connect");
     for (let line = 3; line <= 11; line += 1) await expectOnStage(page, `[data-w4-line="${line}"]`, `line ${line}`);

@@ -140,7 +140,11 @@ export default function Demo({
     claude.setState({ question: questions[0]?.id ?? "", skill: "with" });
     bench.actions.reset("R7");
   });
-  useOnEscape(() => setSheet(null));
+  useOnEscape(() => {
+    if (sheet === null) return false;
+    setSheet(null);
+    return true;
+  });
   useEffect(() => {
     setSheet(null);
     setPanel(null);
@@ -292,7 +296,7 @@ export default function Demo({
             front={front}
             guess={guess}
             attention={attention}
-            lead={view === "ordner" && guess === null ? copy.folder.question : undefined}
+            lead={view === "ordner" && guess === null && clock.phase !== "intro" ? copy.folder.question : undefined}
             onRequest={(id) => show(view === "ordner" ? { kind: "request", id } : { kind: "step", id })}
             onFile={(file) => show({ kind: "file", file, line: null })}
             onTurn={(id) => setFront((current) => (current.has(id) ? new Set([...current].filter((entry) => entry !== id)) : new Set([...current, id])))}

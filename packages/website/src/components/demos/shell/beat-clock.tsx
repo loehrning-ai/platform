@@ -63,8 +63,11 @@ export interface BeatClock {
   readonly registerStage: (element: HTMLElement | null) => void;
   /** Called after every restart: reset bets, predictions and motion, never own data. */
   readonly onRestart: (listener: () => void) => () => void;
-  /** Called on Escape: close an open detail card. */
-  readonly onEscape: (listener: () => void) => () => void;
+  /**
+   * Called on Escape: close an open detail card and return true. When no
+   * listener returns true, Escape leaves free play (v4), the same in every demo.
+   */
+  readonly onEscape: (listener: EscapeListener) => () => void;
   /** Lets the current beat hold "Weiter" and ArrowRight, or take a press for an inner step (useBeatGate). */
   readonly setGate: (gate: BeatGate | null) => void;
   /** The shell version of this page. */
@@ -138,8 +141,14 @@ export function useBeatGate(ready: boolean | null, onNext?: () => boolean, onPre
   }, [ready, setGate]);
 }
 
-/** Subscribes a listener to Escape for the lifetime of the component. */
-export function useOnEscape(listener: () => void): void {
+/** An Escape listener returns true when it closed something. */
+export type EscapeListener = () => boolean | void;
+
+/**
+ * Subscribes a listener to Escape for the lifetime of the component. Return
+ * true when it closed something; otherwise Escape does the shell's own thing.
+ */
+export function useOnEscape(listener: EscapeListener): void {
   const { onEscape } = useBeatClock();
   const latest = useRef(listener);
   useEffect(() => {
@@ -172,7 +181,7 @@ function usePrefersReducedMotion(): boolean {
   return reduce;
 }
 
-type Listener = () => void;
+type Listener = () => boolean | void;
 
 function useListeners() {
   const set = useRef(new Set<Listener>());
@@ -182,8 +191,11 @@ function useListeners() {
       set.current.delete(listener);
     };
   }, []);
+  /** Calls every listener; true when one of them says it handled the event. */
   const fire = useCallback(() => {
-    for (const listener of [...set.current]) listener();
+    let handled = false;
+    for (const listener of [...set.current]) handled = listener() === true || handled;
+    return handled;
   }, []);
   return { add, fire, size: () => set.current.size };
 }
@@ -444,10 +456,7 @@ export function BeatClockProvider({
       const action = resolveDemoKey(event);
       if (!action) return;
       if (action === "escape") {
-        if (escapeListeners.size() > 0) {
-          escapeListeners.fire();
-          return;
-        }
+        if (escapeListeners.fire()) return;
         if (v4 && phaseRef.current === "free") setPhase("guided");
         return;
       }

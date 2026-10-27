@@ -71,7 +71,11 @@ test.describe(`/demos/${SLUG}`, () => {
 
       // The intro card and both buttons fit the first screen; the page has not scrolled.
       const card = await page.locator("[data-demo-intro]").boundingBox();
-      expect(card?.height ?? 999).toBeLessThanOrEqual(460);
+      const fold = await page.evaluate(() => {
+        const bar = document.querySelector("[data-mobile-tab-bar]");
+        return Math.min(bar ? bar.getBoundingClientRect().top : window.innerHeight, window.innerHeight);
+      });
+      expect((card?.y ?? 999) + (card?.height ?? 0), "intro card above the tab bar").toBeLessThanOrEqual(fold + 0.5);
       for (const selector of ["[data-demo-start]", "[data-demo-explore]"]) {
         const box = await page.locator(selector).boundingBox();
         expect((box?.y ?? 999) + (box?.height ?? 0), selector).toBeLessThanOrEqual(600);

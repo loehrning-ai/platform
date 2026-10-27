@@ -165,7 +165,11 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
       window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
     }
   });
-  useOnEscape(() => setHighlight(null));
+  useOnEscape(() => {
+    if (highlight === null) return false;
+    setHighlight(null);
+    return true;
+  });
 
   const move = view === "kipp" ? MOVES[state.move] : undefined;
   // Beat 2's "Weiter" walks through the five fields, the result and the method sheet first; its

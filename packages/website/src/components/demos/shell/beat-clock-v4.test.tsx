@@ -1,7 +1,8 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Beat } from "@/lib/demo-beats";
-import { BeatClockProvider, useBeatClock } from "./beat-clock";
+import { useState } from "react";
+import { BeatClockProvider, useBeatClock, useOnEscape } from "./beat-clock";
 
 const BEATS: readonly Beat[] = [
   { id: "schaetzen", kind: "commit", seconds: 0, label: { de: "Schätzen", en: "Estimate" } },
@@ -53,10 +54,26 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
+/** A demo's detail card: Escape closes it first and says so. */
+function Detail() {
+  const [open, setOpen] = useState(false);
+  useOnEscape(() => {
+    if (!open) return false;
+    setOpen(false);
+    return true;
+  });
+  return (
+    <button type="button" onClick={() => setOpen(true)}>
+      {open ? "Detail offen" : "Detail"}
+    </button>
+  );
+}
+
 function mount() {
   return render(
     <BeatClockProvider beats={BEATS} locale="de" shell="v4">
       <Probe />
+      <Detail />
     </BeatClockProvider>,
   );
 }
@@ -86,6 +103,17 @@ describe("the v4 clock: intro, guided path, free play", () => {
     expect(state()).toMatch(/^v4 guided/);
     fireEvent.click(screen.getByRole("button", { name: "Frei" }));
     fireEvent.click(screen.getByRole("button", { name: "Führung" }));
+    expect(state()).toMatch(/^v4 guided/);
+  });
+
+  it("Escape closes an open detail first, and leaves free play once nothing is open", () => {
+    mount();
+    fireEvent.click(screen.getByRole("button", { name: "Frei" }));
+    fireEvent.click(screen.getByRole("button", { name: "Detail" }));
+    key({ key: "Escape" });
+    expect(screen.getByRole("button", { name: "Detail" })).toBeInTheDocument();
+    expect(state()).toMatch(/^v4 free/);
+    key({ key: "Escape" });
     expect(state()).toMatch(/^v4 guided/);
   });
 

@@ -144,7 +144,11 @@ export default function Demo({
     setHold(null);
     setCardShown(false);
   });
-  useOnEscape(() => setSheet(null));
+  useOnEscape(() => {
+    if (sheet === null) return false;
+    setSheet(null);
+    return true;
+  });
 
   const send = useCallback(
     (to: Sent) => {
