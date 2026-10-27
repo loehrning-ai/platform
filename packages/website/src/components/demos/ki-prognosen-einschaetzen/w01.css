@@ -451,6 +451,11 @@
 }
 /* A short phone: the first sentence whole and a pill for the rest (fehlerliste.tsx Caption). */
 @media (max-width: 39.99rem) and (max-height: 760px) {
+  /* The caption scrolls when it must, so the pill's wider tap area lives in its padding, not past its edge. */
+  .w01-cap {
+    margin: 0 -6px -10px;
+    padding: 0 6px 10px;
+  }
   .w01-cap:not([data-open]) .w01-cap-rest {
     position: absolute;
     width: 1px;

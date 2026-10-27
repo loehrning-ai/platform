@@ -3,6 +3,7 @@
 import type { ReactNode, Ref } from "react";
 import type { KitLine } from "@/lib/demo-cases/esg-berichte-mit-ki/kit-text";
 import type { Status } from "@/lib/demo-cases/esg-berichte-mit-ki/rules";
+import { toSentences } from "@/lib/demo-sentences";
 import { StatusGlyph } from "./glyph";
 
 export interface LineMark {
@@ -64,7 +65,15 @@ export function DocCard({
         </svg>
         <span className="w4-doc-titles">
           <span className="w4-doc-name">{name}</span>
-          {subtitle ? <span className="w4-doc-sub">{subtitle}</span> : null}
+          {subtitle ? (
+            <span className="w4-doc-sub">
+              {toSentences([subtitle]).map((sentence, index) => (
+                <span key={sentence} className={index === 0 ? undefined : "w4-doc-sub-rest"}>
+                  {index === 0 ? sentence : ` ${sentence}`}
+                </span>
+              ))}
+            </span>
+          ) : null}
         </span>
         {compact || stripMarks ? (
           <span className="w4-doc-strip-marks" data-always={compact ? "" : undefined} aria-hidden="true">
