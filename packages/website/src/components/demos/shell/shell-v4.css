@@ -247,3 +247,103 @@
   border-radius: 24px;
   background-color: rgb(18 18 18 / 0.05);
 }
+
+/*
+ * The finale: on the last beat the stage grows to hold the depicted Claude
+ * window first and the demo's own take-home under it, so the page ends in
+ * the stage and never scrolls the visitor out of it.
+ */
+.demo4-stage[data-demo-finale] {
+  height: auto;
+  min-height: var(--demo4-stage-h);
+}
+.demo4-stage[data-demo-finale] .demo4-data {
+  display: grid;
+  align-content: start;
+  gap: 20px;
+}
+.demo4-finale-claude {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding-top: 40px;
+}
+.demo4-finale-head {
+  max-width: 62ch;
+  padding: 0 8px;
+}
+.demo4-finale-title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.demo4-finale-lead {
+  margin: 6px 0 0;
+  font-size: 1rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+@media (min-width: 64rem) {
+  .demo4-finale-claude {
+    padding-top: 8px;
+  }
+  .demo4-finale-title {
+    font-size: 1.625rem;
+  }
+}
+
+/* The way back into the workshop: a small field of the workshop's colours with three glass buttons. */
+.demo4-closing-wrap {
+  max-width: 75rem;
+  margin: 40px auto 0;
+  padding: 0 8px;
+}
+@media (min-width: 40rem) {
+  .demo4-closing-wrap {
+    padding: 0 16px;
+  }
+}
+.demo4-closing {
+  display: grid;
+  gap: 16px;
+  padding: 24px 20px;
+  border-radius: var(--glas-r-stage);
+  color: var(--glas-fg);
+}
+@media (min-width: 64rem) {
+  .demo4-closing {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 32px 36px;
+  }
+}
+.demo4-closing-kicker {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.demo4-closing-title {
+  margin: 4px 0 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.demo4-closing-lead {
+  margin: 6px 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+.demo4-closing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.demo4-stage {
+  scroll-margin-top: calc(var(--nav-h-compact, 56px) + 8px);
+}
+@media (min-width: 64rem) {
+  .demo4-stage {
+    scroll-margin-top: calc(var(--nav-h, 64px) + 8px);
+  }
+}

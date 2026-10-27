@@ -59,6 +59,8 @@ export function DemoGlasStage({
   const copy = DEMOS_PAGE_COPY[clock.locale].v4;
   const headingId = useId();
   const inIntro = clock.phase === "intro";
+  // The last beat ends with the Claude window the page hands in, above the demo's own take-home.
+  const finale = !inIntro && clock.beat.kind === "takehome" && page.claude ? page.claude : null;
   const [introMounted, setIntroMounted] = useState(inIntro);
 
   useEffect(() => {
@@ -85,8 +87,10 @@ export function DemoGlasStage({
       style={style}
       data-demo-stage=""
       data-demo-phase={clock.phase}
+      data-demo-finale={finale ? "" : undefined}
     >
       <div className="demo4-data" data-demo-data="" inert={inIntro || undefined}>
+        {finale}
         {children}
       </div>
       {!inIntro && caption ? (

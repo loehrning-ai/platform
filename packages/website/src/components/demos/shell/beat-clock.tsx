@@ -286,12 +286,13 @@ export function BeatClockProvider({
       if (cause === "user" && beats[clamped]?.kind === "takehome") {
         // Measure after the take-home beat has rendered: the beat before it may
         // be taller (an own-data panel), and a target measured now lands past it.
+        // On v4 the take-home ends in the stage, so its top comes into view; on v3 the block below it.
         window.requestAnimationFrame(() =>
-          window.requestAnimationFrame(() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), reducedMotion)),
+          window.requestAnimationFrame(() => revealIfOffscreen(v4 ? stageRef.current : document.getElementById(TAKEHOME_TARGET_ID), reducedMotion)),
         );
       }
     },
-    [beats, play, reducedMotion],
+    [beats, play, reducedMotion, v4],
   );
 
   const current = beats[state.index] as Beat;

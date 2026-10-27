@@ -3,7 +3,7 @@ import { DEMOS_PAGE_COPY } from "../../src/lib/demos-ui-copy";
 import { expectGlasBudget } from "./fixtures/glas-budget";
 
 /*
- * The Claude scene under the W01 demo: a replay of one recorded run. It must
+ * The Claude scene at the end of the W01 stage: a replay of one recorded run. It must
  * say what it is (a recording, its date and model), play only on a press,
  * reach the same answer the transcript holds, and stay inside the Glas budget.
  */
@@ -16,7 +16,7 @@ for (const viewport of [
   test(`the Claude scene replays the recorded run at ${viewport.width} px`, async ({ page }) => {
     await page.setViewportSize(viewport);
     await page.emulateMedia({ reducedMotion: "no-preference" });
-    await page.goto(PATH, { waitUntil: "domcontentloaded" });
+    await page.goto(`${PATH}?beat=mitnehmen`, { waitUntil: "domcontentloaded" });
     const section = page.locator("[data-claude-scene-section]");
     await section.scrollIntoViewIfNeeded();
     await expect(section.getByRole("heading", { level: 2 })).toHaveText(DEMOS_PAGE_COPY.de.claudeScene.heading);
@@ -42,7 +42,7 @@ for (const viewport of [
 
 test("the Claude scene shows the whole run at once under reduced motion", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto(PATH, { waitUntil: "domcontentloaded" });
+  await page.goto(`${PATH}?beat=mitnehmen`, { waitUntil: "domcontentloaded" });
   const section = page.locator("[data-claude-scene-section]");
   await section.scrollIntoViewIfNeeded();
   await expect(async () => {

@@ -9,6 +9,13 @@ export interface DemoV4Page {
   readonly intro: DemoIntroContent;
   /** The stage's glass tone, chosen statically from the workshop palette (glasToneFor). */
   readonly stageTone: GlasTone;
+  /**
+   * The finale of the last beat: the depicted Claude window with this demo's
+   * recorded runs, drawn by the stage under the demo's own take-home. Null
+   * when the demo draws its window itself (TAKEHOME_IN_STAGE) or has no
+   * recording yet.
+   */
+  readonly claude?: ReactNode;
 }
 
 const DemoV4Context = createContext<DemoV4Page | null>(null);

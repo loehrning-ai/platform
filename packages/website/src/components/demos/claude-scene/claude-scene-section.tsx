@@ -53,6 +53,21 @@ export function sceneKitFiles(scene: ClaudeSceneData, root = process.cwd()): Rea
 }
 
 /**
+ * The scene of one demo cut down to this language's questions (all of them
+ * when none is in this language), with the kit files its takes attached, for
+ * the window at the end of the stage. Null while the demo has no recording.
+ */
+export function localScene(slug: DemoSlug, locale: Locale): { readonly scene: ClaudeSceneData; readonly kitFiles: Readonly<Record<string, SceneKitFile>>; readonly skillName: string } | null {
+  const scene = CLAUDE_SCENES[slug];
+  if (!scene || scene.recordings.length === 0) return null;
+  const own = scene.prompts.filter((prompt) => prompt.locale === locale);
+  const prompts = own.length > 0 ? own : scene.prompts;
+  const ids = new Set(prompts.flatMap((prompt) => [...prompt.withSkill, ...prompt.withoutSkill]));
+  const local: ClaudeSceneData = { ...scene, prompts, recordings: scene.recordings.filter((recording) => ids.has(recording.id)) };
+  return { scene: local, kitFiles: sceneKitFiles(local), skillName: local.recordings[0]?.skill_name ?? "" };
+}
+
+/**
  * "So sieht es in deinem Claude aus": the heading, one sentence, and the
  * Claude scene on the workshop's field. Renders nothing while the demo has no
  * recording. `standalone` gives it its own GlasRoot (for the v3 page).

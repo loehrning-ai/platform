@@ -8,6 +8,9 @@ import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
  */
 export const SHELL: DemoShellVersion = "v4";
 
+/** Scene 5 draws the Claude window and scene 6 the take-home in the stage, so the page shows neither again. */
+export const TAKEHOME_IN_STAGE = true;
+
 export const INTRO: DemoIntroData = {
   de: {
     title: "Audit-Nachweise prüfen",

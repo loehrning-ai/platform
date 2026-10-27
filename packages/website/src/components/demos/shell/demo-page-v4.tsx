@@ -1,9 +1,9 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
-import { ClaudeSceneSection } from "@/components/demos/claude-scene/claude-scene-section";
+import { ClaudeDesktopScene } from "@/components/demos/claude-scene/claude-desktop-scene";
+import { localScene } from "@/components/demos/claude-scene/claude-scene-section";
 import { GlasRoot } from "@/components/demos/glas/glas-root";
 import { LessGlassRow } from "@/components/demos/glas/less-glass";
-import { ForYourClaude } from "@/components/demos/take-home/for-your-claude";
 import type { Beat } from "@/lib/demo-beats";
 import { introSentences } from "@/lib/demo-intro";
 import { DEMO_INTROS } from "@/lib/demo-intros";
@@ -16,7 +16,7 @@ import { DemoOpenTracker } from "../demo-open-tracker";
 import type { DemoComponentProps } from "../demo-page";
 import { DemoBackLink } from "./back-link";
 import { BeatClockProvider } from "./beat-clock";
-import { ClosingBand } from "./closing-band";
+import { ClosingGlass } from "./closing-glass";
 import { DemoV4Provider } from "./demo-v4-context";
 import "./shell-v4.css";
 
@@ -25,9 +25,11 @@ import "./shell-v4.css";
  * chip), then the stage owns the first screen at 390 x 664: the intro card
  * over the living field, with "Starten" in reach. After the start the dock
  * rises and the guided path runs; "Frei ausprobieren" opens every control.
- * Below the stage: the question in one sentence, the "Weniger Glas" row, the
- * closing band, "Für deinen Claude" and the Claude scene (unless the demo
- * draws both in its stage: TAKEHOME_IN_STAGE in its intro.ts).
+ * The last beat ends in the stage with the depicted Claude window replaying a
+ * recorded run (the stage draws it under the demo's take-home), unless the
+ * demo draws its own window (TAKEHOME_IN_STAGE in its intro.ts). Below the
+ * stage: the question in one sentence, the "Weniger Glas" row and the way
+ * back into the workshop, all in glass. Nothing below repeats the take-home.
  *
  * A demo opts in with SHELL = "v4" in src/lib/demo-cases/<slug>/intro.ts and
  * renders <DemoGlasStage> and <DemoDock> from @/components/demos/shell.
@@ -49,6 +51,16 @@ export function DemoPageV4({
   const workshopHref = localizeHref(`/workshops/${demo.workshopSlug}`, locale);
   const intro = DEMO_INTROS[demo.slug].INTRO[locale];
   const takeHomeInStage = DEMO_INTROS[demo.slug].TAKEHOME_IN_STAGE === true;
+  const scene = takeHomeInStage ? null : localScene(demo.slug, locale);
+  const claude = scene ? (
+    <div className="demo4-finale-claude" data-claude-scene-section="">
+      <div className="demo4-finale-head">
+        <h2 className="demo4-finale-title">{pageCopy.claudeScene.heading}</h2>
+        <p className="demo4-finale-lead">{scene.scene.prompts.some((prompt) => prompt.withoutSkill.length > 0) ? pageCopy.claudeScene.lead : pageCopy.claudeScene.leadSingle}</p>
+      </div>
+      <ClaudeDesktopScene scene={scene.scene} locale={locale} skillName={scene.skillName} kitFiles={scene.kitFiles} />
+    </div>
+  ) : null;
 
   return (
     <GlasRoot
@@ -86,6 +98,7 @@ export function DemoPageV4({
         <DemoV4Provider
           value={{
             stageTone: glasToneFor(demo.plakat),
+            claude,
             intro: {
               kicker: copy.kicker(demo.workshopNumber),
               title: intro.title,
@@ -115,9 +128,7 @@ export function DemoPageV4({
         </div>
       </div>
 
-      <ClosingBand demo={demo} workshop={workshop} locale={locale} />
-      {takeHomeInStage ? null : <ForYourClaude slug={demo.slug} locale={locale} />}
-      {takeHomeInStage ? null : <ClaudeSceneSection slug={demo.slug} locale={locale} />}
+      <ClosingGlass demo={demo} workshop={workshop} locale={locale} />
       <DemoOpenTracker slug={demo.slug} />
     </GlasRoot>
   );
