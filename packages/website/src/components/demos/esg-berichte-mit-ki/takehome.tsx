@@ -2,7 +2,7 @@
 
 import { GlasButton, GlasChip } from "@/components/demos/glas";
 import type { Pack } from "@/lib/demo-cases/esg-berichte-mit-ki/copy";
-import { CopyButton } from "./own-file";
+import { CopyButton } from "./copy-button";
 
 export type TakeHomeKey = "skill" | "card" | "instructions" | "register" | "mail" | "checklist" | "kit";
 
@@ -16,7 +16,7 @@ export interface TakeHomeFiles {
   readonly links: readonly TakeHomeLink[];
   /** The kit files the page quoted, by name. */
   readonly shown: readonly string[];
-  /** The three recorded prompts, as sent. */
+  /** The kit's five prompts, as sent for the recordings. */
   readonly prompts: readonly string[];
 }
 

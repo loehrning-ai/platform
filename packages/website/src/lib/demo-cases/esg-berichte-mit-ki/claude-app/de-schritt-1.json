@@ -1,0 +1,370 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-schritt-1",
+  "slug": "esg-berichte-mit-ki",
+  "locale": "de",
+  "prompt_id": "schritt-1",
+  "take": 3,
+  "recorded_at": "2026-10-26T19:09:46Z",
+  "surface": "claude-code-cli-headless",
+  "source": "measured-run",
+  "claude_code_version": "2.1.310",
+  "model": "claude-sonnet-5-5",
+  "models_used": [
+    "claude-sonnet-5-5"
+  ],
+  "flags": [
+    "--model",
+    "claude-sonnet-5-5",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--append-system-prompt-file",
+    "projektanweisungen.md",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Read",
+    "Glob",
+    "Grep",
+    "Write",
+    "Edit",
+    "Skill",
+    "TodoWrite",
+    "Bash(python3:*)",
+    "Bash(python:*)",
+    "Bash(ls:*)",
+    "Bash(wc:*)",
+    "Bash(cat:*)",
+    "Bash(head:*)",
+    "Bash(tail:*)",
+    "Bash(grep:*)",
+    "Bash(awk:*)",
+    "Bash(sort:*)",
+    "Bash(uniq:*)",
+    "Bash(cut:*)",
+    "Bash(file:*)",
+    "Bash(sed -n:*)",
+    "Bash(nl:*)",
+    "Bash(pip show:*)"
+  ],
+  "prompt": "Angehängt: anfragen/1-fragebogen-nordvik.md\n\nBeantworte den angehängten Fragebogen von Nordvik Vin AB.\nEine Tabelle, genau eine Zeile je Frage Q1 bis Q8: Nr | Frage | Antwort | Datei und Zeile | Status | Grund | Fehlendes Dokument.\nZähle vor jeder Jahressumme die eindeutigen Monate im Code.",
+  "kit_zip": "public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+  "kit_files": [
+    {
+      "name": "arbeitsschutz_2025.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/arbeitsschutz_2025.txt",
+      "bytes": 344,
+      "sha256": "141c6cd9f078613716dd86f675ba7085fa0b343f71f060394bd5911badcd147c"
+    },
+    {
+      "name": "bio_zertifikat_weinberg.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/bio_zertifikat_weinberg.txt",
+      "bytes": 426,
+      "sha256": "c5d896ecdde33f6819befbb22e9f0d8262616e4de104c9558c722ff8b75cb1f0"
+    },
+    {
+      "name": "firmenprofil.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/firmenprofil.md",
+      "bytes": 1896,
+      "sha256": "c1b390aee869b92760d3fc7aa43f1fd138765f10713ad1ef3e8fefadc391f7a9"
+    },
+    {
+      "name": "flaschen.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/flaschen.csv",
+      "bytes": 412,
+      "sha256": "d3a6856299221d7b50fe056dcdd3be5c5bd1b491e3a051c5d24c5a12ad24c6b9"
+    },
+    {
+      "name": "kompensation_2025.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/kompensation_2025.txt",
+      "bytes": 326,
+      "sha256": "338be4a1cf4b85afeb94794f8a0dfa3e693140221425cd5d8e98c2d12d52c86c"
+    },
+    {
+      "name": "personal_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/personal_2025.csv",
+      "bytes": 537,
+      "sha256": "9122d5397a0a6a140acced8c817611638e1c2f97c5f2085229d87825f844faea"
+    },
+    {
+      "name": "pv_angebot_2026.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/pv_angebot_2026.txt",
+      "bytes": 454,
+      "sha256": "4417a8580557f6aa2a542951505b2c64a5f1f4b245d0facbfa77b68c8632caac"
+    },
+    {
+      "name": "regeln_werbeaussagen.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/regeln_werbeaussagen.md",
+      "bytes": 2120,
+      "sha256": "a05f3cbb9da417690f80c0af5393ac8d24dacc4587d61e44417062159d10918f"
+    },
+    {
+      "name": "richtlinien_und_compliance.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/richtlinien_und_compliance.txt",
+      "bytes": 1181,
+      "sha256": "dd21aa6391ce44d01fd41915ba726e1426682be86515ce906f5691fb0d103b0b"
+    },
+    {
+      "name": "strom_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/strom_2025.csv",
+      "bytes": 1071,
+      "sha256": "aa9bb93a33262c32b2db033b361a4ebd6ffe268e94c71713f8ad790c8199a0eb"
+    },
+    {
+      "name": "strom_zusammenfassung_entwurf.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/strom_zusammenfassung_entwurf.txt",
+      "bytes": 243,
+      "sha256": "f279f3af1930970c830149e5b964c1f57cf98abbc41cec4414b49764fdc21459"
+    },
+    {
+      "name": "vsme_basismodul.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/vsme_basismodul.md",
+      "bytes": 4195,
+      "sha256": "31a554ae6d0b4a94aa205949bd3f40b4f819011e2ee174caaea5b55ddcd85f6e"
+    },
+    {
+      "name": "wasser_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/wasser_2025.csv",
+      "bytes": 706,
+      "sha256": "6e35eec7a54a2c2bc12e2f5c92d5112c284a78cddf2527eb02b6a75952356545"
+    },
+    {
+      "name": "1-fragebogen-nordvik.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/1-fragebogen-nordvik.md",
+      "bytes": 1495,
+      "sha256": "721dad31c9f04bbc8e8ce8ed376a31ad84544f14b699f996ea90082646bc2483"
+    },
+    {
+      "name": "2-werbeaussagen.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/2-werbeaussagen.md",
+      "bytes": 893,
+      "sha256": "dab088bf9261da7c2f72be7e45d015936227d017a6ac352fd77e0328c812fc4d"
+    },
+    {
+      "name": "3-bankformular.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/3-bankformular.md",
+      "bytes": 1075,
+      "sha256": "5bd74abe472ef2f2d9cd74c621378c0216642b9659005588d8ee4ba807f3d218"
+    },
+    {
+      "name": "rechnung-EL-25-09.png",
+      "path": "crvena-zemja-nachweisprobe/nachreichung/rechnung-EL-25-09.png",
+      "bytes": 798935,
+      "sha256": "2347ea01e427195e0024324d7810bd1e5504a2bd94c79936d64a5b8662177859"
+    },
+    {
+      "name": "projektanweisungen.md",
+      "path": "crvena-zemja-nachweisprobe/projektanweisungen.md",
+      "bytes": 1422,
+      "sha256": "00b4c5497584df7caa9041a4caf0334e661c55c9fee2130aa416f38353228cdd"
+    }
+  ],
+  "skill": {
+    "name": "esg-nachweise",
+    "sha256": "a2716543a9c1fa9689d1f20a297e24290025d124a2f60e9be89fa7ed5456eeee"
+  },
+  "skill_name": "esg-nachweise",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "esg-nachweise",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 3959,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "esg-nachweise"
+      }
+    },
+    {
+      "t_ms": 4066,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 4551,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "find . -type f | head -200"
+      }
+    },
+    {
+      "t_ms": 6889,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 10582,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "for f in anfragen/1-fragebogen-nordvik.md ordner/*; do echo \"=== $f\"; cat -n \"$f\"; done"
+      }
+    },
+    {
+      "t_ms": 10609,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 12538,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; cat -n anfragen/1-fragebogen-nordvik.md ordner/firmenprofil.md ordner/strom_2025.csv ordner/strom_zusammenfassung_entwurf.txt ordner/wasser_2025.csv"
+      }
+    },
+    {
+      "t_ms": 12653,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 14680,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 15386,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd ordner; cat -n personal_2025.csv | head -5; wc -l personal_2025.csv; cat -n arbeitsschutz_2025.txt richtlinien_und_compliance.txt flaschen.csv bio_zertifikat_weinberg.txt kompensation_2025.txt; grep -n \"B3\\|B6\\|B8\\|B9\\|B11\" vsme_basismodul.md"
+      }
+    },
+    {
+      "t_ms": 16004,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 23145,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 24646,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd ordner; cat -n personal_2025.csv | tail -4; python3 -I - <<'E'\nimport csv\nr=[x for x in csv.DictReader(l for l in open('strom_2025.csv') if not l.startswith('#'))]\nu={}\nfor x in r: u[(x['monat'],x['rechnungsnr'])]=int(x['kwh'])\nprint(len(u),sorted(u), sum(u.values())/1000)\nw=[x for x in csv.DictReader(l for l in open('wasser_2025.csv') if not l.startswith('#'))]\nprint(len({(x['monat'],x['rechnungsnr']) for x in w}), sum(int(x['m3']) for x in w))\nE"
+      }
+    },
+    {
+      "t_ms": 24663,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 27449,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 27449,
+      "kind": "text",
+      "chunk": "Ich lese den Rest der Personaldatei und rechne die Monatszählung für Strom und Wasser im Code. Der letzte Aufruf wurde vom Werkzeug abgelehnt, deshalb schreibe ich das Skript jetzt in eine Datei."
+    },
+    {
+      "t_ms": 29908,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "mkdir -p scripts; cat > scripts/calc.py <<'E'\nimport csv,sys\nd=sys.argv[1]\ndef rows(f):\n    return list(csv.DictReader(l for l in open(d+'/'+f) if not l.startswith('#')))\nu={}\nfor x in rows('strom_2025.csv'): u[(x['monat'],x['rechnungsnr'])]=int(x['kwh'])\nprint('Strom eindeutige Monate',len(u),'MWh',sum(u.values())/1000)\nprint('fehlend',sorted(set('2025-%02d'%m for m in range(1,13))-{k[0] for k in u}))\nw={(x['monat'],x['rechnungsnr']):int(x['m3']) for x in rows('wasser_2025.csv')}\nprint('Wasser Monate',len(w),'m3',sum(w.values()))\nE\ncd ordner; python3 -I ../../scripts/calc.py . ; cat -n personal_2025.csv | tail -4"
+      }
+    },
+    {
+      "t_ms": 29934,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 33498,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 34933,
+      "kind": "tool_use",
+      "tool": "Write",
+      "input": {
+        "file_path": "scripts/calc.py",
+        "content": "import csv\nimport sys\n\nd = sys.argv[1]\n\n\ndef rows(f):\n    return list(csv.DictReader(l for l in open(d + \"/\" + f) if not l.startswith(\"#\")))\n\n\nu = dict()\nfor x in rows(\"strom_2025.csv\"):\n    u[(x[\"monat\"], x[\"rechnungsnr\"])] = int(x[\"kwh\"])\nmonate = set(k[0] for k in u)\nprint(\"Strom eindeutige Monate\", len(u), \"MWh\", sum(u.values()) / 1000)\nalle = set(\"2025-%02d\" % m for m in range(1, 13))\nprint(\"fehlend\", sorted(alle - monate))\nw = dict()\nfor x in rows(\"wasser_2025.csv\"):\n    w[(x[\"monat\"], x[\"rechnungsnr\"])] = int(x[\"m3\"])\nprint(\"Wasser Monate\", len(w), \"m3\", sum(w.values()))\n"
+      }
+    },
+    {
+      "t_ms": 35025,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 35357,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd ordner; python3 -I ../../scripts/calc.py .; cat -n personal_2025.csv | tail -4"
+      }
+    },
+    {
+      "t_ms": 35545,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 53791,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 66913,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 66913,
+      "kind": "text",
+      "chunk": "| Nr | Frage | Antwort | Datei und Zeile | Status | Grund | Fehlendes Dokument |\n|---|---|---|---|---|---|---|\n| Q1 | Strom 2025 in MWh, Anteil erneuerbar | Keine Jahressumme möglich. Belegt sind 11 von 12 Monaten mit 279,7 MWh (Jan–Aug, Okt–Dez). Es fehlt September 2025. Abdeckung 11/12 = 91,7 %, gefordert sind 95 %. Anteil erneuerbar: keine Angabe in den Dateien. Die Oktoberrechnung EL-25-10 steht doppelt (E-Rechnung und Scan, je 38.700 kWh) und ist einmal gezählt. | ordner/strom_2025.csv Z. 3–10 (Jan–Aug), Z. 11 und 12 (Okt, doppelt), Z. 13–14 (Nov, Dez); Spalte „strommix“ überall „nicht angegeben“ (Z. 3–14); ordner/strom_zusammenfassung_entwurf.txt Z. 5; ordner/firmenprofil.md Z. 13 und 16 | LÜCKE | Ein Monat fehlt, die Abdeckung liegt unter 95 %. Der Entwurf „ganzes Jahr: 279,7 MWh“ ist ungeprüft und hat ebenfalls nur 11 Monate. Der Strommix ist „nicht angegeben“. Aus 11 Monaten wird nicht hochgerechnet. | Stromrechnung September 2025 von Lumivolt Snabduvanje DOOEL; Herkunftsnachweis oder Strommix-Erklärung des Versorgers für 2025 |\n| Q2 | Scope 1 und standortbasierter Scope 2 2025 in tCO2e | Beide nicht berechenbar. Scope 1: Dieselverbrauch unbekannt. Scope 2: Jahres-kWh unvollständig (September fehlt), Netz-Emissionsfaktor fehlt. Die 120 tCO2e Waldschutz-Zertifikate sind Kompensation und werden nicht abgezogen. | ordner/firmenprofil.md Z. 14 (Tankbelege liegen nicht im Ordner) und Z. 17 (keine Treibhausgasbilanz); ordner/strom_2025.csv Z. 3–14; ordner/kompensation_2025.txt Z. 5 | LÜCKE | Für Scope 1 gibt es keine Datei. Für Scope 2 fehlen ein Monat und der veröffentlichte Emissionsfaktor. | Diesel-Tankbelege 2025 (4 Traktoren, 1 Gabelstapler) vom Weinbergleiter; Stromrechnung September 2025; veröffentlichter Netz-Emissionsfaktor für Nordmazedonien (Jahr 2025) |\n| Q3 | Beschäftigte im Jahresdurchschnitt 2025 nach Vertragsart und Geschlecht | Unbefristet 36 (20 Männer, 16 Frauen). Befristet 6 (4 Männer, 2 Frauen). Gesamt 42 (24 Männer, 18 Frauen), alle in Nordmazedonien. Die 18 Saisonkräfte sind keine Beschäftigten und nicht enthalten. | ordner/personal_2025.csv Z. 3–5 (Saisonkräfte Z. 6); ordner/firmenprofil.md Z. 9 | BELEGT | Die Summen stimmen mit dem Firmenprofil überein (42). Die Datei enthält nur Summen. | – |\n| Q4 | Meldepflichtige Arbeitsunfälle und Todesfälle 2025 | 2 meldepflichtige Arbeitsunfälle bei Beschäftigten (beide zur Lese, Kellerpersonal). Todesfälle 0. Saisonkräfte zählen nicht (0). | ordner/arbeitsschutz_2025.txt Z. 4 (Unfälle), Z. 5 (Saisonkräfte), Z. 7 (Todesfälle) | BELEGT | Das Dokument ist ein Auszug aus dem Unfallregister für 2025. Ob ein Mensch den Auszug gegengezeichnet hat, ist aus der Datei nicht erkennbar; das prüft bitte die unterschreibende Person. | – |\n| Q5 | Verurteilungen oder Bußgelder wegen Korruption oder Bestechung 2025 | Keine Verurteilungen und keine Bußgelder (Erklärung der Geschäftsführung vom 15.01.2026, gilt für 2023–2025). | ordner/richtlinien_und_compliance.txt Z. 13–14 | BELEGT | Die Erklärung deckt 2025 und die ganze Firma ab und ist von der Geschäftsführung verantwortet. Es ist eine Selbstauskunft, kein Behördenauszug. | – |\n| Q6 | Glasgewicht jedes 0,75-l-Stillweins unter 250 NOK | Vranec Tikveš 2024: 395 g (199 NOK), erfüllt. Kratošija Tikveš 2024: 410 g (219 NOK), erfüllt. Reserve Vranec 2021: 560 g (239 NOK), erfüllt die Regel nicht (Grenze 420 g, 140 g darüber); Vinmonopolet würde ihn nicht annehmen. | ordner/flaschen.csv Z. 3, 4, 5; Regel: anfragen/1-fragebogen-nordvik.md Z. 21 (nur die Anfrage, kein Nachweis) | BELEGT | Das Gewicht jeder Flasche ist durch die Erklärung des Glaslieferanten (Feb. 2026) belegt, auch wenn das Ergebnis für Reserve Vranec schlecht ist. Maßnahme: Reserve Vranec 2021 nicht unter 250 NOK anbieten oder auf eine Flasche bis 420 g umstellen. Smederevka (firmenprofil.md Z. 6) steht nicht in flaschen.csv; ein Mensch bestätigt, dass dafür kein Preis unter 250 NOK geplant ist. | – |\n| Q7 | Gültige Zertifikate und Audits mit Ablaufdatum | **Bio-Zertifikat Weinberg:** gültig bis 31.08.2026, am Stichtag 16.10.2026 abgelaufen und auch am Abgabetag 23.10.2026. Es galt nur für 12 von 40 ha, Keller und Weinbereitung waren nicht zertifiziert. Die Erneuerungsprüfung ist für 22.10.2026 gebucht, ein Ergebnis liegt nicht vor. **amfori BSCI Sozialaudit:** 12.03.2026, Bewertung B, nächstes Vollaudit im März 2028. Das ist ein Audit, kein Zertifikat. Der BSCI Code of Conduct wurde am 03.02.2026 unterschrieben. | ordner/bio_zertifikat_weinberg.txt Z. 6–11; ordner/richtlinien_und_compliance.txt Z. 7–9 (Audit), Z. 6 (Code) | SCHWACH | Das Bio-Zertifikat ist abgelaufen. Der Prüfbericht zum BSCI-Audit liegt nicht vor, nur die Angabe von Datum und Bewertung. | Neues Bio-Zertifikat der Biosertifika Kontrola nach der Erneuerungsprüfung vom 22.10.2026; optional Auditbericht amfori BSCI vom 12.03.2026 |\n| Q8 | Wasserentnahme 2025 in m³ | 4.630 m³ (12 eindeutige Monate, alle aus der öffentlichen Wasserversorgung). Die Weinberge werden nicht bewässert. Das Spritzwasser wird am Kellerhahn gefüllt und steht auf denselben Rechnungen. Es gibt keinen Brunnen und keine andere Quelle. | ordner/wasser_2025.csv Z. 3–14; ordner/firmenprofil.md Z. 8 | BELEGT | Alle 12 Monate liegen vor, jede Rechnungsnummer kommt einmal vor. Die Spitzen im September (980 m³) und Oktober (870 m³) sind die Lese. | – |\n\n**Zählung:** 5 BELEGT (Q3, Q4, Q5, Q6, Q8), 1 SCHWACH (Q7), 2 LÜCKE (Q1, Q2).\n\n**Anfordern, nach Anzahl der Zeilen, die es nennen:**\n1. Stromrechnung September 2025 von Lumivolt Snabduvanje DOOEL (Q1, Q2).\n2. Herkunftsnachweis oder Strommix-Erklärung von Lumivolt für 2025 (Q1).\n3. Diesel-Tankbelege 2025 vom Weinbergleiter (Q2).\n4. Veröffentlichter Netz-Emissionsfaktor für Nordmazedonien, Jahr 2025 (Q2).\n5. Neues Bio-Zertifikat nach der Erneuerungsprüfung vom 22.10.2026 (Q7).\n6. Optional: Auditbericht amfori BSCI vom 12.03.2026 (Q7).\n\n**Hinweise:**\n- Die Oktoberrechnung EL-25-10 ist doppelt erfasst (strom_2025.csv Z. 11 und 12) und nur einmal gezählt.\n- Die Bewertungsregel „Energiedaten müssen das ganze Jahr abdecken (95 %)\" (Fragebogen Z. 12) wird bei Q1 und Q2 verfehlt.\n- Die Rückgabefrist (23.10.2026) liegt vor dem Ergebnis der Bio-Erneuerungsprüfung (22.10.2026 gebucht).\n- Das ist eine Vorbereitung. Ein Mensch prüft und unterschreibt, bevor etwas an Nordvik Vin AB geht."
+    }
+  ],
+  "final_text": "| Nr | Frage | Antwort | Datei und Zeile | Status | Grund | Fehlendes Dokument |\n|---|---|---|---|---|---|---|\n| Q1 | Strom 2025 in MWh, Anteil erneuerbar | Keine Jahressumme möglich. Belegt sind 11 von 12 Monaten mit 279,7 MWh (Jan–Aug, Okt–Dez). Es fehlt September 2025. Abdeckung 11/12 = 91,7 %, gefordert sind 95 %. Anteil erneuerbar: keine Angabe in den Dateien. Die Oktoberrechnung EL-25-10 steht doppelt (E-Rechnung und Scan, je 38.700 kWh) und ist einmal gezählt. | ordner/strom_2025.csv Z. 3–10 (Jan–Aug), Z. 11 und 12 (Okt, doppelt), Z. 13–14 (Nov, Dez); Spalte „strommix“ überall „nicht angegeben“ (Z. 3–14); ordner/strom_zusammenfassung_entwurf.txt Z. 5; ordner/firmenprofil.md Z. 13 und 16 | LÜCKE | Ein Monat fehlt, die Abdeckung liegt unter 95 %. Der Entwurf „ganzes Jahr: 279,7 MWh“ ist ungeprüft und hat ebenfalls nur 11 Monate. Der Strommix ist „nicht angegeben“. Aus 11 Monaten wird nicht hochgerechnet. | Stromrechnung September 2025 von Lumivolt Snabduvanje DOOEL; Herkunftsnachweis oder Strommix-Erklärung des Versorgers für 2025 |\n| Q2 | Scope 1 und standortbasierter Scope 2 2025 in tCO2e | Beide nicht berechenbar. Scope 1: Dieselverbrauch unbekannt. Scope 2: Jahres-kWh unvollständig (September fehlt), Netz-Emissionsfaktor fehlt. Die 120 tCO2e Waldschutz-Zertifikate sind Kompensation und werden nicht abgezogen. | ordner/firmenprofil.md Z. 14 (Tankbelege liegen nicht im Ordner) und Z. 17 (keine Treibhausgasbilanz); ordner/strom_2025.csv Z. 3–14; ordner/kompensation_2025.txt Z. 5 | LÜCKE | Für Scope 1 gibt es keine Datei. Für Scope 2 fehlen ein Monat und der veröffentlichte Emissionsfaktor. | Diesel-Tankbelege 2025 (4 Traktoren, 1 Gabelstapler) vom Weinbergleiter; Stromrechnung September 2025; veröffentlichter Netz-Emissionsfaktor für Nordmazedonien (Jahr 2025) |\n| Q3 | Beschäftigte im Jahresdurchschnitt 2025 nach Vertragsart und Geschlecht | Unbefristet 36 (20 Männer, 16 Frauen). Befristet 6 (4 Männer, 2 Frauen). Gesamt 42 (24 Männer, 18 Frauen), alle in Nordmazedonien. Die 18 Saisonkräfte sind keine Beschäftigten und nicht enthalten. | ordner/personal_2025.csv Z. 3–5 (Saisonkräfte Z. 6); ordner/firmenprofil.md Z. 9 | BELEGT | Die Summen stimmen mit dem Firmenprofil überein (42). Die Datei enthält nur Summen. | – |\n| Q4 | Meldepflichtige Arbeitsunfälle und Todesfälle 2025 | 2 meldepflichtige Arbeitsunfälle bei Beschäftigten (beide zur Lese, Kellerpersonal). Todesfälle 0. Saisonkräfte zählen nicht (0). | ordner/arbeitsschutz_2025.txt Z. 4 (Unfälle), Z. 5 (Saisonkräfte), Z. 7 (Todesfälle) | BELEGT | Das Dokument ist ein Auszug aus dem Unfallregister für 2025. Ob ein Mensch den Auszug gegengezeichnet hat, ist aus der Datei nicht erkennbar; das prüft bitte die unterschreibende Person. | – |\n| Q5 | Verurteilungen oder Bußgelder wegen Korruption oder Bestechung 2025 | Keine Verurteilungen und keine Bußgelder (Erklärung der Geschäftsführung vom 15.01.2026, gilt für 2023–2025). | ordner/richtlinien_und_compliance.txt Z. 13–14 | BELEGT | Die Erklärung deckt 2025 und die ganze Firma ab und ist von der Geschäftsführung verantwortet. Es ist eine Selbstauskunft, kein Behördenauszug. | – |\n| Q6 | Glasgewicht jedes 0,75-l-Stillweins unter 250 NOK | Vranec Tikveš 2024: 395 g (199 NOK), erfüllt. Kratošija Tikveš 2024: 410 g (219 NOK), erfüllt. Reserve Vranec 2021: 560 g (239 NOK), erfüllt die Regel nicht (Grenze 420 g, 140 g darüber); Vinmonopolet würde ihn nicht annehmen. | ordner/flaschen.csv Z. 3, 4, 5; Regel: anfragen/1-fragebogen-nordvik.md Z. 21 (nur die Anfrage, kein Nachweis) | BELEGT | Das Gewicht jeder Flasche ist durch die Erklärung des Glaslieferanten (Feb. 2026) belegt, auch wenn das Ergebnis für Reserve Vranec schlecht ist. Maßnahme: Reserve Vranec 2021 nicht unter 250 NOK anbieten oder auf eine Flasche bis 420 g umstellen. Smederevka (firmenprofil.md Z. 6) steht nicht in flaschen.csv; ein Mensch bestätigt, dass dafür kein Preis unter 250 NOK geplant ist. | – |\n| Q7 | Gültige Zertifikate und Audits mit Ablaufdatum | **Bio-Zertifikat Weinberg:** gültig bis 31.08.2026, am Stichtag 16.10.2026 abgelaufen und auch am Abgabetag 23.10.2026. Es galt nur für 12 von 40 ha, Keller und Weinbereitung waren nicht zertifiziert. Die Erneuerungsprüfung ist für 22.10.2026 gebucht, ein Ergebnis liegt nicht vor. **amfori BSCI Sozialaudit:** 12.03.2026, Bewertung B, nächstes Vollaudit im März 2028. Das ist ein Audit, kein Zertifikat. Der BSCI Code of Conduct wurde am 03.02.2026 unterschrieben. | ordner/bio_zertifikat_weinberg.txt Z. 6–11; ordner/richtlinien_und_compliance.txt Z. 7–9 (Audit), Z. 6 (Code) | SCHWACH | Das Bio-Zertifikat ist abgelaufen. Der Prüfbericht zum BSCI-Audit liegt nicht vor, nur die Angabe von Datum und Bewertung. | Neues Bio-Zertifikat der Biosertifika Kontrola nach der Erneuerungsprüfung vom 22.10.2026; optional Auditbericht amfori BSCI vom 12.03.2026 |\n| Q8 | Wasserentnahme 2025 in m³ | 4.630 m³ (12 eindeutige Monate, alle aus der öffentlichen Wasserversorgung). Die Weinberge werden nicht bewässert. Das Spritzwasser wird am Kellerhahn gefüllt und steht auf denselben Rechnungen. Es gibt keinen Brunnen und keine andere Quelle. | ordner/wasser_2025.csv Z. 3–14; ordner/firmenprofil.md Z. 8 | BELEGT | Alle 12 Monate liegen vor, jede Rechnungsnummer kommt einmal vor. Die Spitzen im September (980 m³) und Oktober (870 m³) sind die Lese. | – |\n\n**Zählung:** 5 BELEGT (Q3, Q4, Q5, Q6, Q8), 1 SCHWACH (Q7), 2 LÜCKE (Q1, Q2).\n\n**Anfordern, nach Anzahl der Zeilen, die es nennen:**\n1. Stromrechnung September 2025 von Lumivolt Snabduvanje DOOEL (Q1, Q2).\n2. Herkunftsnachweis oder Strommix-Erklärung von Lumivolt für 2025 (Q1).\n3. Diesel-Tankbelege 2025 vom Weinbergleiter (Q2).\n4. Veröffentlichter Netz-Emissionsfaktor für Nordmazedonien, Jahr 2025 (Q2).\n5. Neues Bio-Zertifikat nach der Erneuerungsprüfung vom 22.10.2026 (Q7).\n6. Optional: Auditbericht amfori BSCI vom 12.03.2026 (Q7).\n\n**Hinweise:**\n- Die Oktoberrechnung EL-25-10 ist doppelt erfasst (strom_2025.csv Z. 11 und 12) und nur einmal gezählt.\n- Die Bewertungsregel „Energiedaten müssen das ganze Jahr abdecken (95 %)\" (Fragebogen Z. 12) wird bei Q1 und Q2 verfehlt.\n- Die Rückgabefrist (23.10.2026) liegt vor dem Ergebnis der Bio-Erneuerungsprüfung (22.10.2026 gebucht).\n- Das ist eine Vorbereitung. Ein Mensch prüft und unterschreibt, bevor etwas an Nordvik Vin AB geht.",
+  "stats": {
+    "duration_ms": 65990,
+    "duration_api_ms": 62337,
+    "ttft_ms": 2830,
+    "num_turns": 11,
+    "output_tokens": 7871
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "wall_s": 67.6,
+  "denied_calls": 3,
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

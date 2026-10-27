@@ -1,0 +1,324 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-schritt-1",
+  "slug": "esg-berichte-mit-ki",
+  "locale": "en",
+  "prompt_id": "schritt-1",
+  "take": 2,
+  "recorded_at": "2026-10-26T19:00:44Z",
+  "surface": "claude-code-cli-headless",
+  "source": "measured-run",
+  "claude_code_version": "2.1.310",
+  "model": "claude-sonnet-5-5",
+  "models_used": [
+    "claude-sonnet-5-5"
+  ],
+  "flags": [
+    "--model",
+    "claude-sonnet-5-5",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--append-system-prompt-file",
+    "project-instructions.md",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Read",
+    "Glob",
+    "Grep",
+    "Write",
+    "Edit",
+    "Skill",
+    "TodoWrite",
+    "Bash(python3:*)",
+    "Bash(python:*)",
+    "Bash(ls:*)",
+    "Bash(wc:*)",
+    "Bash(cat:*)",
+    "Bash(head:*)",
+    "Bash(tail:*)",
+    "Bash(grep:*)",
+    "Bash(awk:*)",
+    "Bash(sort:*)",
+    "Bash(uniq:*)",
+    "Bash(cut:*)",
+    "Bash(file:*)",
+    "Bash(sed -n:*)",
+    "Bash(nl:*)",
+    "Bash(pip show:*)"
+  ],
+  "prompt": "Attached: requests/1-nordvik-questionnaire.md\n\nAnswer the attached questionnaire from Nordvik Vin AB.\nOne table, exactly one row per question Q1 to Q8: No | Question | Answer | File and line | Status | Reason | Missing document.\nBefore any annual total, count the distinct months in code.",
+  "kit_zip": "public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+  "kit_files": [
+    {
+      "name": "bottles.csv",
+      "path": "crvena-zemja-esg-kit/files/bottles.csv",
+      "bytes": 393,
+      "sha256": "91574eb643bf7e0f42e87e848796560ac28892dfc76b05815e7df5058359779f"
+    },
+    {
+      "name": "carbon_offsets_2025.txt",
+      "path": "crvena-zemja-esg-kit/files/carbon_offsets_2025.txt",
+      "bytes": 288,
+      "sha256": "8c9102b8f17b7091304c086febbaff210d3d4837a41975a90e6f10ecebd94d6f"
+    },
+    {
+      "name": "company_profile.md",
+      "path": "crvena-zemja-esg-kit/files/company_profile.md",
+      "bytes": 1769,
+      "sha256": "de9b334bb3ddc1469074df2685a40960ea8f015aa611e58b56e4ba2ee50a5dcd"
+    },
+    {
+      "name": "electricity_2025.csv",
+      "path": "crvena-zemja-esg-kit/files/electricity_2025.csv",
+      "bytes": 1032,
+      "sha256": "cbe9a0961ac650c79db750551d975fb8603e827003baf233ecbda6e60829e213"
+    },
+    {
+      "name": "electricity_summary_draft.txt",
+      "path": "crvena-zemja-esg-kit/files/electricity_summary_draft.txt",
+      "bytes": 240,
+      "sha256": "3ced9f69f9426d32684b82b06dc34f16839ecab6c3f01914f723f358daab7274"
+    },
+    {
+      "name": "green_claims_rules.md",
+      "path": "crvena-zemja-esg-kit/files/green_claims_rules.md",
+      "bytes": 1937,
+      "sha256": "ed883ac5ce09c402b4fca4faf2c2a85714040e80a224e09986a23c2fcdfe7390"
+    },
+    {
+      "name": "headcount_2025.csv",
+      "path": "crvena-zemja-esg-kit/files/headcount_2025.csv",
+      "bytes": 478,
+      "sha256": "ebfc44b198c9c0ef6bfd3e25e357602af8c04a1b42f462f80fcce00d1cffe46f"
+    },
+    {
+      "name": "health_safety_2025.txt",
+      "path": "crvena-zemja-esg-kit/files/health_safety_2025.txt",
+      "bytes": 319,
+      "sha256": "db622f16ca1b9217fdf5c515d25533f7222560a498a9d6cb5f2d984eaf966862"
+    },
+    {
+      "name": "organic_certificate_vineyard.txt",
+      "path": "crvena-zemja-esg-kit/files/organic_certificate_vineyard.txt",
+      "bytes": 392,
+      "sha256": "a5d7af086544a3061cb9e98099cd53b9ce6d9e9336dc5bd7c5822bb26280602d"
+    },
+    {
+      "name": "policies_and_compliance.txt",
+      "path": "crvena-zemja-esg-kit/files/policies_and_compliance.txt",
+      "bytes": 1013,
+      "sha256": "9a7d6701909b5d9eafa78be74cc010446b508c68439ee40995a4ddcdd06af435"
+    },
+    {
+      "name": "solar_offer_2026.txt",
+      "path": "crvena-zemja-esg-kit/files/solar_offer_2026.txt",
+      "bytes": 412,
+      "sha256": "6c90441bf2c8bec2be5491dcd935f02ffec44f6752b8d1eaed940b5dbdaabaff"
+    },
+    {
+      "name": "vsme_basic_module.md",
+      "path": "crvena-zemja-esg-kit/files/vsme_basic_module.md",
+      "bytes": 3746,
+      "sha256": "a256f265a871f42862081de40802a84f3b0aca66976d3a57a252d36c855eb11a"
+    },
+    {
+      "name": "water_2025.csv",
+      "path": "crvena-zemja-esg-kit/files/water_2025.csv",
+      "bytes": 618,
+      "sha256": "72860485ec42d0b93180982766581a020e91a2cb5979ab7886e9ea14c9b980ee"
+    },
+    {
+      "name": "1-nordvik-questionnaire.md",
+      "path": "crvena-zemja-esg-kit/requests/1-nordvik-questionnaire.md",
+      "bytes": 1377,
+      "sha256": "87e3585e82d1770a4e0a998995559a9a28b15f406539793577e64f9523b3e12d"
+    },
+    {
+      "name": "2-marketing-claims.md",
+      "path": "crvena-zemja-esg-kit/requests/2-marketing-claims.md",
+      "bytes": 800,
+      "sha256": "6c3f06b46f360eef102ed637cbce3eb79d28d1596b2d1998764b0222c7ccff43"
+    },
+    {
+      "name": "3-bank-form.md",
+      "path": "crvena-zemja-esg-kit/requests/3-bank-form.md",
+      "bytes": 959,
+      "sha256": "519c1d939a17b660ac32a3096e16d9ae54aed0337b16858455d73e684469943e"
+    },
+    {
+      "name": "invoice-EL-25-09.png",
+      "path": "crvena-zemja-esg-kit/late-document/invoice-EL-25-09.png",
+      "bytes": 866887,
+      "sha256": "b3b75b1bb309b79e30c172a8ce365eb6e7ad98c1be1fcfdd9e85237a33b8f842"
+    },
+    {
+      "name": "project-instructions.md",
+      "path": "crvena-zemja-esg-kit/project-instructions.md",
+      "bytes": 1291,
+      "sha256": "bf459bfe4c73147cd4d497b0dcc3d71efc94a1e0e3425b3ade20a7c4ccf157e5"
+    }
+  ],
+  "skill": {
+    "name": "esg-nachweise",
+    "sha256": "a2716543a9c1fa9689d1f20a297e24290025d124a2f60e9be89fa7ed5456eeee"
+  },
+  "skill_name": "esg-nachweise",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "esg-nachweise",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 8435,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "esg-nachweise"
+      }
+    },
+    {
+      "t_ms": 8827,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 8828,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "requests/1-nordvik-questionnaire.md"
+      }
+    },
+    {
+      "t_ms": 9160,
+      "kind": "tool_use",
+      "tool": "Glob",
+      "input": {
+        "pattern": "**/*"
+      }
+    },
+    {
+      "t_ms": 9676,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 9684,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 12105,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd files; for f in electricity_2025.csv headcount_2025.csv water_2025.csv bottles.csv health_safety_2025.txt policies_and_compliance.txt organic_certificate_vineyard.txt electricity_summary_draft.txt company_profile.md vsme_basic_module.md carbon_offsets_2025.txt solar_offer_2026.txt; do echo \"=== $f\"; cat -n $f; done"
+      }
+    },
+    {
+      "t_ms": 12148,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 13770,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd files && cat -n electricity_2025.csv headcount_2025.csv water_2025.csv bottles.csv"
+      }
+    },
+    {
+      "t_ms": 14332,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd files && cat -n health_safety_2025.txt policies_and_compliance.txt organic_certificate_vineyard.txt electricity_summary_draft.txt company_profile.md vsme_basic_module.md carbon_offsets_2025.txt"
+      }
+    },
+    {
+      "t_ms": 24494,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 24526,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 26285,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 27750,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I - <<'E'\nimport csv\nrows=[r for r in csv.reader(l for l in open('electricity_2025.csv') if not l.startswith('#'))][1:]\nd={}\nfor r in rows: d[(r[0],r[1])]=int(r[2])\nprint(len(rows),len(d),sorted(m for m,_ in d),sum(d.values())/1000,'kWh->MWh')\nw=[r for r in csv.reader(l for l in open('water_2025.csv') if not l.startswith('#'))][1:]\nprint(len({r[0] for r in w}),sum(int(r[2]) for r in w),'m3')\nE"
+      }
+    },
+    {
+      "t_ms": 28779,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 40602,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 51904,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 51904,
+      "kind": "text",
+      "chunk": "| No | Question | Answer | File and line | Status | Reason | Missing document |\n|---|---|---|---|---|---|---|\n| Q1 | Electricity 2025 (MWh) and renewable share (%) | MWh: no full-year total. Invoices cover only 11 of 12 distinct months (279.7 MWh); September 2025 is missing. The 12 lines hold 11 months because the October invoice EL-25-10 is entered twice, as e-invoice and as scan, with the same 38,700 kWh. Renewable share: not stated. | `files/electricity_2025.csv:3-14` (duplicate at 11 and 12, `supply_mix` \"not specified\"); `files/electricity_summary_draft.txt:5` (draft \"full year 279.7 MWh\", unchecked); `files/company_profile.md:13` (all grid, no PV) | GAP | The period is incomplete: 11/12 months is about 92 %, below the 95 % required, and the 279.7 MWh sum is an 11-month figure. The draft's \"full year\" claim is contradicted by the invoices. The supply mix is \"not specified\" on every invoice, so the renewable share has no file. I did not fill September with an estimate. | Electricity invoice for September 2025 from Lumivolt Snabduvanje DOOEL. Supplier statement of the 2025 supply mix or guarantees of origin. |\n| Q2 | Scope 1 and location-based Scope 2 2025 (tCO2e) | Not answerable. No Scope 1 or Scope 2 figure can be given. | `files/company_profile.md:14` (fuel receipts not in the files); `files/company_profile.md:17` (no GHG inventory); `files/electricity_2025.csv:3-14` (September missing); `files/carbon_offsets_2025.txt:5` (120 tCO2e credits, not a reduction) | GAP | Scope 1 has no fuel data for the diesel used by tractors and the forklift. Scope 2 needs the full-year kWh, and September is missing. No published grid emission factor is in the files. The offset credits are not own emissions and are not deducted. | 2025 diesel receipts or fuel ledger kept by the vineyard manager. September 2025 electricity invoice. Published grid emission factor for North Macedonia, with its source. |\n| Q3 | Average employees 2025 by contract type and gender | Total 42 (24 men, 18 women). Permanent 36 (20 men, 16 women). Fixed-term 6 (4 men, 2 women). The 18 seasonal day workers are not employees and are not counted. | `files/headcount_2025.csv:3-5`; `files/headcount_2025.csv:6`; `files/company_profile.md:9` | COVERED | All four checks hold. The figures are totals only, for 2025, for the whole company (all in North Macedonia), and agree with the company profile. The file has no signature, which the reviewer should confirm at sign-off. | None |\n| Q4 | Recordable work accidents and fatalities 2025 | 2 recordable accidents among employees (both at harvest, cellar staff). 0 fatalities. For information: 9 lost days; 0 accidents among seasonal day workers, who are not employees. | `files/health_safety_2025.txt:4`; `files/health_safety_2025.txt:7`; `files/health_safety_2025.txt:6`; `files/health_safety_2025.txt:5` | COVERED | The safety register summary covers 2025 and employees. The accident count is bad news but proven. Action: a safety review of harvest work in the cellar. | None |\n| Q5 | Convictions or fines for corruption or bribery 2025 | 0 convictions and 0 fines. | `files/policies_and_compliance.txt:13-14` (director's declaration of 15.01.2026, covering 2023 to 2025) | COVERED | The declaration covers 2025 and the whole company, and the director is responsible for it. | None |\n| Q6 | Glass weight of every 0.75 l still wine planned below 250 NOK (limit 420 g) | Vranec Tikveš 2024: 395 g at 199 NOK, passes. Kratošija Tikveš 2024: 410 g at 219 NOK, passes. Reserve Vranec 2021: 560 g at 239 NOK, fails (140 g over). Smederevka: no data. | `files/bottles.csv:3`; `files/bottles.csv:4`; `files/bottles.csv:5`; `files/company_profile.md:6` (Smederevka is a product) | GAP | The three listed SKUs are proven by the glass supplier declaration of Feb 2026. Reserve Vranec 2021 is a proven fail, which Vinmonopolet does not accept. Smederevka is a product line, but the files give no glass weight or planned price. If it is planned for Vinmonopolet, the \"every wine\" answer has a missing part. | Glass supplier declaration (weight in g) and planned NOK price for Smederevka. Confirmation from sales of which SKUs are planned for the tender. |\n| Q7 | Valid certificates and audits, with expiry or next audit date | Organic certificate (vineyard, 12 of 40 ha): valid until 31.08.2026, which is expired. A renewal inspection was booked for 22.10.2026, and no result is in the files. The cellar and winemaking are not certified. amfori BSCI social audit: 12.03.2026, rating B, next full audit due March 2028. This is an audit, not a certificate. | `files/organic_certificate_vineyard.txt:6-10`; `files/policies_and_compliance.txt:4-9` | WEAK | The organic certificate was valid at 31.12.2025 but is expired at the reference date 16.10.2026, and it covers only 12 ha. The audit has a file with a date and a rating. The BSCI name, logo and rating may be given to partners but must not appear on labels or as a seal. | New organic certificate or inspection result after 22.10.2026. |\n| Q8 | Water withdrawal 2025 (m³) | 4,630 m³ over 12 distinct months, all from the municipal supply. This includes the water for vineyard spraying, which is drawn at the cellar tap. | `files/water_2025.csv:3-14`; `files/company_profile.md:8` (no well, no other source, vineyards not irrigated) | COVERED | All 12 months have one invoice each. The scope is the whole company, and the profile confirms there is no other source. | None |\n\n**Count:** 4 COVERED (Q3, Q4, Q5, Q8), 1 WEAK (Q7), 3 GAP (Q1, Q2, Q6).\n\n**Request list** (each document once, by number of questions it affects):\n1. Electricity invoice for September 2025 from Lumivolt Snabduvanje DOOEL (Q1, Q2).\n2. Supplier statement of the 2025 supply mix or guarantees of origin (Q1).\n3. 2025 diesel receipts or fuel ledger from the vineyard manager (Q2).\n4. Published grid emission factor for North Macedonia, with its source (Q2).\n5. Glass supplier declaration and planned NOK price for Smederevka, plus the list of SKUs planned for the tender (Q6).\n6. New organic certificate or the result of the 22.10.2026 renewal inspection (Q7).\n\n**Actions and notes**\n- **Q6:** Reserve Vranec 2021 (560 g, 239 NOK) fails the 420 g rule. Do not offer it below 250 NOK, or use a lighter bottle.\n- **Q1:** The office manager's draft (\"full year 279.7 MWh, can go to the bank\") should not be used. It is an unchecked draft that omits September.\n- **Q5:** The director's declaration also states there were no environmental, labour or health-and-safety fines in 2023 to 2025. Nordvik did not ask about these, so I left them out of the table.\n- **Sign-off:** A person must check and sign these answers before they leave the company. Nordvik asks for the return by 23.10.2026. That date has passed against the reference date 16.10.2026 if it is read as the current date."
+    }
+  ],
+  "final_text": "| No | Question | Answer | File and line | Status | Reason | Missing document |\n|---|---|---|---|---|---|---|\n| Q1 | Electricity 2025 (MWh) and renewable share (%) | MWh: no full-year total. Invoices cover only 11 of 12 distinct months (279.7 MWh); September 2025 is missing. The 12 lines hold 11 months because the October invoice EL-25-10 is entered twice, as e-invoice and as scan, with the same 38,700 kWh. Renewable share: not stated. | `files/electricity_2025.csv:3-14` (duplicate at 11 and 12, `supply_mix` \"not specified\"); `files/electricity_summary_draft.txt:5` (draft \"full year 279.7 MWh\", unchecked); `files/company_profile.md:13` (all grid, no PV) | GAP | The period is incomplete: 11/12 months is about 92 %, below the 95 % required, and the 279.7 MWh sum is an 11-month figure. The draft's \"full year\" claim is contradicted by the invoices. The supply mix is \"not specified\" on every invoice, so the renewable share has no file. I did not fill September with an estimate. | Electricity invoice for September 2025 from Lumivolt Snabduvanje DOOEL. Supplier statement of the 2025 supply mix or guarantees of origin. |\n| Q2 | Scope 1 and location-based Scope 2 2025 (tCO2e) | Not answerable. No Scope 1 or Scope 2 figure can be given. | `files/company_profile.md:14` (fuel receipts not in the files); `files/company_profile.md:17` (no GHG inventory); `files/electricity_2025.csv:3-14` (September missing); `files/carbon_offsets_2025.txt:5` (120 tCO2e credits, not a reduction) | GAP | Scope 1 has no fuel data for the diesel used by tractors and the forklift. Scope 2 needs the full-year kWh, and September is missing. No published grid emission factor is in the files. The offset credits are not own emissions and are not deducted. | 2025 diesel receipts or fuel ledger kept by the vineyard manager. September 2025 electricity invoice. Published grid emission factor for North Macedonia, with its source. |\n| Q3 | Average employees 2025 by contract type and gender | Total 42 (24 men, 18 women). Permanent 36 (20 men, 16 women). Fixed-term 6 (4 men, 2 women). The 18 seasonal day workers are not employees and are not counted. | `files/headcount_2025.csv:3-5`; `files/headcount_2025.csv:6`; `files/company_profile.md:9` | COVERED | All four checks hold. The figures are totals only, for 2025, for the whole company (all in North Macedonia), and agree with the company profile. The file has no signature, which the reviewer should confirm at sign-off. | None |\n| Q4 | Recordable work accidents and fatalities 2025 | 2 recordable accidents among employees (both at harvest, cellar staff). 0 fatalities. For information: 9 lost days; 0 accidents among seasonal day workers, who are not employees. | `files/health_safety_2025.txt:4`; `files/health_safety_2025.txt:7`; `files/health_safety_2025.txt:6`; `files/health_safety_2025.txt:5` | COVERED | The safety register summary covers 2025 and employees. The accident count is bad news but proven. Action: a safety review of harvest work in the cellar. | None |\n| Q5 | Convictions or fines for corruption or bribery 2025 | 0 convictions and 0 fines. | `files/policies_and_compliance.txt:13-14` (director's declaration of 15.01.2026, covering 2023 to 2025) | COVERED | The declaration covers 2025 and the whole company, and the director is responsible for it. | None |\n| Q6 | Glass weight of every 0.75 l still wine planned below 250 NOK (limit 420 g) | Vranec Tikveš 2024: 395 g at 199 NOK, passes. Kratošija Tikveš 2024: 410 g at 219 NOK, passes. Reserve Vranec 2021: 560 g at 239 NOK, fails (140 g over). Smederevka: no data. | `files/bottles.csv:3`; `files/bottles.csv:4`; `files/bottles.csv:5`; `files/company_profile.md:6` (Smederevka is a product) | GAP | The three listed SKUs are proven by the glass supplier declaration of Feb 2026. Reserve Vranec 2021 is a proven fail, which Vinmonopolet does not accept. Smederevka is a product line, but the files give no glass weight or planned price. If it is planned for Vinmonopolet, the \"every wine\" answer has a missing part. | Glass supplier declaration (weight in g) and planned NOK price for Smederevka. Confirmation from sales of which SKUs are planned for the tender. |\n| Q7 | Valid certificates and audits, with expiry or next audit date | Organic certificate (vineyard, 12 of 40 ha): valid until 31.08.2026, which is expired. A renewal inspection was booked for 22.10.2026, and no result is in the files. The cellar and winemaking are not certified. amfori BSCI social audit: 12.03.2026, rating B, next full audit due March 2028. This is an audit, not a certificate. | `files/organic_certificate_vineyard.txt:6-10`; `files/policies_and_compliance.txt:4-9` | WEAK | The organic certificate was valid at 31.12.2025 but is expired at the reference date 16.10.2026, and it covers only 12 ha. The audit has a file with a date and a rating. The BSCI name, logo and rating may be given to partners but must not appear on labels or as a seal. | New organic certificate or inspection result after 22.10.2026. |\n| Q8 | Water withdrawal 2025 (m³) | 4,630 m³ over 12 distinct months, all from the municipal supply. This includes the water for vineyard spraying, which is drawn at the cellar tap. | `files/water_2025.csv:3-14`; `files/company_profile.md:8` (no well, no other source, vineyards not irrigated) | COVERED | All 12 months have one invoice each. The scope is the whole company, and the profile confirms there is no other source. | None |\n\n**Count:** 4 COVERED (Q3, Q4, Q5, Q8), 1 WEAK (Q7), 3 GAP (Q1, Q2, Q6).\n\n**Request list** (each document once, by number of questions it affects):\n1. Electricity invoice for September 2025 from Lumivolt Snabduvanje DOOEL (Q1, Q2).\n2. Supplier statement of the 2025 supply mix or guarantees of origin (Q1).\n3. 2025 diesel receipts or fuel ledger from the vineyard manager (Q2).\n4. Published grid emission factor for North Macedonia, with its source (Q2).\n5. Glass supplier declaration and planned NOK price for Smederevka, plus the list of SKUs planned for the tender (Q6).\n6. New organic certificate or the result of the 22.10.2026 renewal inspection (Q7).\n\n**Actions and notes**\n- **Q6:** Reserve Vranec 2021 (560 g, 239 NOK) fails the 420 g rule. Do not offer it below 250 NOK, or use a lighter bottle.\n- **Q1:** The office manager's draft (\"full year 279.7 MWh, can go to the bank\") should not be used. It is an unchecked draft that omits September.\n- **Q5:** The director's declaration also states there were no environmental, labour or health-and-safety fines in 2023 to 2025. Nordvik did not ask about these, so I left them out of the table.\n- **Sign-off:** A person must check and sign these answers before they leave the company. Nordvik asks for the return by 23.10.2026. That date has passed against the reference date 16.10.2026 if it is read as the current date.",
+  "stats": {
+    "duration_ms": 46786,
+    "duration_api_ms": 32723,
+    "ttft_ms": 2848,
+    "num_turns": 9,
+    "output_tokens": 4553
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "wall_s": 53.2,
+  "denied_calls": 1,
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

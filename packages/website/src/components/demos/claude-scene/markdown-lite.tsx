@@ -181,23 +181,27 @@ export function parseInline(text: string, edge = false): readonly Inline[] {
   return out;
 }
 
-function renderInline(text: string, edge = false): ReactNode {
+/** Turns plain text into nodes (a demo can make file citations tappable); the text itself never changes. */
+export type RenderText = (text: string) => ReactNode;
+
+function renderInline(text: string, edge = false, renderText?: RenderText): ReactNode {
+  const plain = (value: string) => (renderText ? renderText(value) : value);
   return parseInline(text, edge).map((part, index) => {
     if (part.kind === "break") return <br key={index} />;
-    if (part.kind === "strong") return <strong key={index}>{part.text}</strong>;
-    if (part.kind === "em") return <em key={index}>{part.text}</em>;
-    if (part.kind === "code") return <code key={index}>{part.text}</code>;
-    return <Fragment key={index}>{part.text}</Fragment>;
+    if (part.kind === "strong") return <strong key={index}>{plain(part.text)}</strong>;
+    if (part.kind === "em") return <em key={index}>{plain(part.text)}</em>;
+    if (part.kind === "code") return <code key={index}>{plain(part.text)}</code>;
+    return <Fragment key={index}>{plain(part.text)}</Fragment>;
   });
 }
 
-function ListView({ list, edge }: { readonly list: MdList; readonly edge: boolean }) {
+function ListView({ list, edge, renderText }: { readonly list: MdList; readonly edge: boolean; readonly renderText?: RenderText }) {
   const items = list.items.map((item, position) => {
     const last = edge && position === list.items.length - 1;
     return (
       <li key={position}>
-        {renderInline(item.text, last && !item.sub)}
-        {item.sub ? <ListView list={item.sub} edge={last} /> : null}
+        {renderInline(item.text, last && !item.sub, renderText)}
+        {item.sub ? <ListView list={item.sub} edge={last} renderText={renderText} /> : null}
       </li>
     );
   });
@@ -213,11 +217,14 @@ export function MarkdownLite({
   source,
   streaming = false,
   tableLabel,
+  renderText,
 }: {
   readonly source: string;
   readonly streaming?: boolean;
   /** When set, wide tables become a focusable, named scroll region (the transcript); else plain. */
   readonly tableLabel?: string;
+  /** Optional: draws plain text runs (paragraphs, list items, cells, inline code). */
+  readonly renderText?: RenderText;
 }) {
   const blocks = parseMarkdown(source);
   return (
@@ -228,12 +235,12 @@ export function MarkdownLite({
           case "heading": {
             const level = Math.min(6, Math.max(3, block.level + 2));
             const Tag = `h${level}` as "h3" | "h4" | "h5" | "h6";
-            return <Tag key={index}>{renderInline(block.text, edge)}</Tag>;
+            return <Tag key={index}>{renderInline(block.text, edge, renderText)}</Tag>;
           }
           case "paragraph":
-            return <p key={index}>{renderInline(block.text, edge)}</p>;
+            return <p key={index}>{renderInline(block.text, edge, renderText)}</p>;
           case "list":
-            return <ListView key={index} list={block} edge={edge} />;
+            return <ListView key={index} list={block} edge={edge} renderText={renderText} />;
           case "table":
             // One record over many columns is drawn as label and value per line, so no column hides off to the side.
             if (block.rows.length === 1 && block.head.length >= 5) {
@@ -244,8 +251,8 @@ export function MarkdownLite({
                     <tbody>
                       {block.head.map((cell, position) => (
                         <tr key={position}>
-                          <th scope="row">{renderInline(cell)}</th>
-                          <td>{renderInline(row[position] ?? "")}</td>
+                          <th scope="row">{renderInline(cell, false, renderText)}</th>
+                          <td>{renderInline(row[position] ?? "", false, renderText)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -260,7 +267,7 @@ export function MarkdownLite({
                     <tr>
                       {block.head.map((cell, position) => (
                         <th key={position} style={{ textAlign: block.align[position] ?? "left" }}>
-                          {renderInline(cell)}
+                          {renderInline(cell, false, renderText)}
                         </th>
                       ))}
                     </tr>
@@ -270,7 +277,7 @@ export function MarkdownLite({
                       <tr key={rowIndex}>
                         {block.head.map((_, position) => (
                           <td key={position} style={{ textAlign: block.align[position] ?? "left" }}>
-                            {renderInline(row[position] ?? "")}
+                            {renderInline(row[position] ?? "", false, renderText)}
                           </td>
                         ))}
                       </tr>
@@ -286,7 +293,7 @@ export function MarkdownLite({
               </pre>
             );
           case "quote":
-            return <blockquote key={index}>{renderInline(block.text, edge)}</blockquote>;
+            return <blockquote key={index}>{renderInline(block.text, edge, renderText)}</blockquote>;
           case "rule":
             return <hr key={index} />;
           default:

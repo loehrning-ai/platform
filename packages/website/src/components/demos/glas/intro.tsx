@@ -23,6 +23,8 @@ export interface DemoIntroContent {
   readonly explore: string;
   /** "Alles läuft in deinem Browser. Nichts wird gesendet." */
   readonly footnote: string;
+  /** Optional real news the case rests on, one short paragraph above the sentences. */
+  readonly news?: readonly string[];
 }
 
 /**
@@ -70,13 +72,21 @@ export function DemoIntro({
       aria-labelledby={headingId}
       data-demo-intro=""
     >
-      <p className="glas-intro-kicker">{content.kicker}</p>
-      <h2 id={headingId} className="glas-intro-title">
-        {content.title}
-      </h2>
-      <p className="glas-intro-body" data-demo-intro-body="">
-        {content.sentences.join(" ")}
-      </p>
+      {/* The text scrolls on a short screen; the two buttons and the footnote always stay in view. */}
+      <div className="glas-intro-text">
+        <p className="glas-intro-kicker">{content.kicker}</p>
+        <h2 id={headingId} className="glas-intro-title">
+          {content.title}
+        </h2>
+        {content.news && content.news.length > 0 ? (
+          <p className="glas-intro-news" data-demo-intro-news="">
+            {content.news.join(" ")}
+          </p>
+        ) : null}
+        <p className="glas-intro-body" data-demo-intro-body="">
+          {content.sentences.join(" ")}
+        </p>
+      </div>
       <div className="glas-intro-actions">
         <GlasButton buttonRef={start} variant="prominent" size="large" block onClick={onStart} data-demo-start="">
           {content.start}

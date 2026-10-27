@@ -147,6 +147,7 @@ export const RULES = [
 export const V4_ACRONYMS = new Set([
   "CSV", "ZIP", "PDF", "ESG", "VSME", "CSRD", "JSON", "HTML", "URL", "API", "ISO", "UTC", "KPI", "ERP", "CRM", "SQL",
   "DSGVO", "GDPR", "IBAN", "MWST", "USD", "EUR", "CHF", "PLN", "XLSX", "HGB", "IFRS", "WAPE", "MAPE", "NCR", "NCRS",
+  "EBRD", "EFRAG",
 ]);
 
 /**

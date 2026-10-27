@@ -157,7 +157,26 @@
     flex-wrap: nowrap;
   }
   .demo4-dock.is-compact .glas-weg-dots {
+    flex: 1 1 auto;
+    min-width: 0;
     padding: 0;
+  }
+  /* With "Von vorn" in the row the dots give up width first, never the buttons. */
+  .demo4-dock.is-compact .glas-weg-dots > li {
+    display: flex;
+    flex: 1 1 0;
+    max-width: 22px;
+    justify-content: center;
+    min-width: 12px;
+  }
+  .demo4-dock.is-compact .glas-weg-dots > li:has(> [data-state="current"]) {
+    flex: none;
+  }
+  .demo4-dock.is-compact .glas-weg-dot:not([data-state="current"]) {
+    width: 100%;
+  }
+  .demo4-dock.is-compact .glas-weg-dot[data-state="current"] {
+    width: 32px;
   }
   .demo4-dock.is-compact .glas-weg-next-short {
     display: inline;
@@ -216,11 +235,10 @@
 .demo4-intro-layer[data-leaving] {
   pointer-events: none;
 }
-/* A long intro scrolls inside the stage, so its last line (what runs where) is never cut off on a phone. */
+/* A long intro scrolls its text inside the card (glas.css), so the buttons and the footnote are never cut off on a phone. */
 .demo4-intro-layer > * {
   max-height: 100%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  overflow: hidden;
 }
 
 .demo4-below {

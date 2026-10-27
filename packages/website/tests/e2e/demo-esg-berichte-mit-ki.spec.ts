@@ -2,9 +2,11 @@ import { expect, test, type Page } from "@playwright/test";
 import { expectGlasBudget } from "./fixtures/glas-budget";
 
 /**
- * W04 "Nachweisprobe" on the v4 shell (Glas): the intro card, the five
- * scenes with their levers, the folder's counts and threads, and the keys.
- * The Claude scene under the stage has its own spec (claude-scene.spec.ts).
+ * W04 "Nachweisprobe" in the depicted Claude app (v4 shell, Glas): the intro
+ * on the news, the kit's five prompts sent in the project with Claude's
+ * recorded answers, the checks by hand beside the chat (a sheet on a phone),
+ * the measurement, the skill in the visitor's own Claude and the take-home.
+ * Runs on desktop and phone projects; the helpers handle both layouts.
  */
 const SLUG = "esg-berichte-mit-ki";
 const PATH = `/demos/${SLUG}`;
@@ -20,8 +22,9 @@ function collectErrors(page: Page): string[] {
 
 const clock = (page: Page) => page.locator("[data-demo-clock]");
 const caption = (page: Page) => page.locator("[data-w4-caption]");
+const appWindow = (page: Page) => page.locator("[data-w4a-window]");
 const overflow = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-const radio = (page: Page, name: string) => page.locator(`[data-w4-levers] [role="radio"]:has-text("${name}")`);
+const isPhone = (page: Page) => appWindow(page).evaluate((element) => element.hasAttribute("data-phone"));
 
 /** A press before hydration is lost (the buttons are server-rendered), so the first press repeats until it lands. */
 async function firstPress(page: Page, selector: string, landed: () => Promise<void>) {
@@ -31,46 +34,23 @@ async function firstPress(page: Page, selector: string, landed: () => Promise<vo
   }).toPass({ timeout: 15_000 });
 }
 
-async function openBeat(page: Page, beat: string) {
-  await page.goto(`${PATH}?beat=${beat}`, { waitUntil: "networkidle" });
+async function openBeat(page: Page, beat: string, prefix = "") {
+  await page.goto(`${prefix}${PATH}?beat=${beat}`, { waitUntil: "networkidle" });
   await expect(clock(page)).toHaveAttribute("data-beat", beat);
 }
 
-/** Where the visitor's view ends: the phone's tab bar, or the window's bottom when there is none. */
-async function tabBarTop(page: Page): Promise<number> {
-  return page.evaluate(() => {
-    const bar = document.querySelector("[data-mobile-tab-bar]");
-    const top = bar && getComputedStyle(bar).display !== "none" ? bar.getBoundingClientRect().top : window.innerHeight;
-    return Math.min(top, window.innerHeight);
-  });
-}
-const bottomOf = (page: Page, selector: string) => page.locator(selector).first().evaluate((element) => element.getBoundingClientRect().bottom);
-const dockTop = (page: Page) => page.locator(".w4-dock").evaluate((element) => element.getBoundingClientRect().top);
-
-/** The scene's key object sits on the stage, above the dock, without scrolling. */
-async function expectOnStage(page: Page, selector: string, what: string) {
-  const target = page.locator(selector).first();
-  await expect(target, what).toBeVisible();
-  const box = await target.evaluate((element) => element.getBoundingClientRect().toJSON() as DOMRect);
-  const stage = await page.locator("[data-demo-stage]").evaluate((element) => element.getBoundingClientRect().top);
-  expect(box.top, `${what}: below the stage top`).toBeGreaterThanOrEqual(stage - 1);
-  expect(box.bottom, `${what}: above the dock`).toBeLessThanOrEqual((await dockTop(page)) + 1);
+/** Sends the step's prompt with the composer's arrow, then shows the whole answer with "Weiter". */
+async function sendAndFinish(page: Page, step: string) {
+  const turn = page.locator(`[data-w4a-turn="${step}"]`);
+  await firstPress(page, "[data-w4a-send]", () => expect(turn).toBeVisible({ timeout: 1000 }));
+  await page.locator("[data-demo-next]").click();
+  await expect(turn).toHaveAttribute("data-phase", "done");
 }
 
-/** A real finger: touchStart on the part, twelve moves, touchEnd on the line (Chrome DevTools touch events). */
-async function touchDrag(page: Page, from: string, to: string) {
-  const cdp = await page.context().newCDPSession(page);
-  const a = await page.locator(from).boundingBox();
-  const b = await page.locator(to).boundingBox();
-  if (!a || !b) throw new Error(`touchDrag: ${from} or ${to} has no box`);
-  const p0 = { x: a.x + a.width / 2, y: a.y + a.height / 2 };
-  const p1 = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
-  await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [p0] });
-  for (let i = 1; i <= 12; i += 1) {
-    await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x: p0.x + ((p1.x - p0.x) * i) / 12, y: p0.y + ((p1.y - p0.y) * i) / 12 }] });
-  }
-  await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
-  await cdp.detach();
+/** The check beside the chat: open on a desktop by itself, a sheet on a phone that the caption line in the dock opens. */
+async function openCheck(page: Page) {
+  if (await isPhone(page)) await page.locator("[data-w4a-capline]").click();
+  await expect(page.locator("[data-w4a-step]").first()).toBeVisible();
 }
 
 /** Tap a part of the claim, then the certificate line that carries it. */
@@ -80,149 +60,168 @@ async function connect(page: Page, part: string, line: number) {
 }
 
 test.describe(PATH, () => {
-  test("intro: what it is, and the whole card with both buttons above the tab bar at 390 x 664", async ({ page }) => {
+  test("intro: the news first, then the question, the whole card above the tab bar at 390 x 664", async ({ page }) => {
     const errors = collectErrors(page);
     await page.setViewportSize({ width: 390, height: 664 });
     await page.goto(PATH, { waitUntil: "networkidle" });
-    await expect(page.locator("[data-demo-intro]")).toBeVisible();
+    const news = page.locator("[data-demo-intro-news]");
+    await expect(news).toContainText("27. September 2026");
+    await expect(news).toContainText("EBRD");
     await expect(page.locator("[data-demo-intro-body]")).toContainText("erfundenes Weingut");
-    const start = page.locator("[data-demo-start]");
-    await expect(start).toBeVisible();
-    const fold = await tabBarTop(page);
+    await expect(page.locator("[data-demo-intro]")).toContainText("Auf dieser Seite läuft keine KI.");
+    const fold = await page.evaluate(() => {
+      const bar = document.querySelector("[data-mobile-tab-bar]");
+      return bar && getComputedStyle(bar).display !== "none" ? bar.getBoundingClientRect().top : window.innerHeight;
+    });
     for (const selector of ["[data-demo-intro]", "[data-demo-start]", "[data-demo-explore]"]) {
-      await expect(page.locator(selector)).toBeVisible();
-      expect(await bottomOf(page, selector), `${selector} above the tab bar`).toBeLessThanOrEqual(fold);
+      const bottom = await page.locator(selector).evaluate((element) => element.getBoundingClientRect().bottom);
+      expect(bottom, `${selector} above the tab bar`).toBeLessThanOrEqual(fold);
     }
     expect(await overflow(page)).toBeLessThanOrEqual(0);
     await expectGlasBudget(page, "intro");
     expect(errors).toEqual([]);
   });
 
-  test("S1: the guess, then three quotes give the verdict Lücke", async ({ page }) => {
+  test("step 1: the kit's prompt in the project, Claude's recorded answer, and the cited file at its line", async ({ page }) => {
+    const errors = collectErrors(page);
     await page.goto(PATH, { waitUntil: "networkidle" });
     await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
-    await expect(clock(page)).toHaveAttribute("data-beat", "regalkarte");
-    await page.getByRole("button", { name: "Nicht so drucken" }).click();
-    await expect(clock(page)).toHaveAttribute("data-beat", "zitate");
-    await connect(page, "zertifiziert", 4);
-    await connect(page, "flaeche", 6);
-    await connect(page, "stichtag", 8);
-    await expect(page.locator("[data-w4-card-status]")).toHaveAttribute("data-w4-card-status", "luecke");
-    await expect(caption(page)).toContainText("Der schwächste Teil zählt");
-    await expectGlasBudget(page, "S1 verdict");
+    await expect(appWindow(page)).toContainText("Darstellung der Claude-App, Antworten aufgezeichnet am 26.10.2026");
+    // The prompt types itself into the composer with the questionnaire attached.
+    await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("1-fragebogen-nordvik.md");
+    await expect(page.locator("[data-w4a-composer]")).toContainText("Zähle vor jeder Jahressumme die eindeutigen Monate im Code.");
+    await expect(caption(page)).toContainText("Tippe auf den Pfeil");
+    // Start hands the keyboard to the send arrow, and the sidebar is a picture apart from Customize.
+    await expect(page.locator("[data-w4a-send]")).toBeFocused();
+    await expect(page.locator("[data-w4a-send]")).toHaveAccessibleName("Aufzeichnung abspielen");
+    await expect(appWindow(page).locator("[data-w4a-title]").first()).toContainText("New chat");
+
+    await sendAndFinish(page, "schritt-1");
+    const turn = page.locator('[data-w4a-turn="schritt-1"]');
+    await expect(turn.locator("[data-w4a-answer]")).toContainText("September 2025");
+    await expect(turn.locator(".w4a-meta")).toContainText("Claude Code 2.1.310");
+    await expect(caption(page)).toContainText("5 der 8 Antworten");
+    await expect(caption(page)).toContainText("nur 11 Monate");
+
+    // The activity folds when the answer stands, and opens on a press: the skill, the files, the code.
+    const toggle = turn.locator("[data-w4a-activity-toggle]");
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await toggle.click();
+    await expect(turn.locator('[data-w4a-act="skill"]')).toContainText("esg-nachweise");
+    await expect(turn.locator('[data-w4a-act="thinking"]').first()).toBeVisible();
+
+    // A citation opens the file at the cited lines, beside the chat or as a sheet.
+    await turn.locator('[data-w4a-cite="strom_2025.csv"]').first().click();
+    const file = page.locator('[data-w4a-fileview="ordner/strom_2025.csv"]');
+    await expect(file).toBeVisible();
+    await expect(file.locator("li[data-marked]").first()).toBeVisible();
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    await expectGlasBudget(page, "step 1 with the cited file");
+    expect(errors).toEqual([]);
   });
 
-  test("S1: Escape cancels a picked part and stays on the beat", async ({ page }) => {
-    await openBeat(page, "zitate");
-    const handle = page.locator('[data-w4-handle="zertifiziert"]');
-    await expect(async () => {
-      await handle.click();
-      await expect(handle).toHaveAttribute("aria-pressed", "true", { timeout: 1000 });
-    }).toPass({ timeout: 15_000 });
-    await page.keyboard.press("Escape");
-    await expect(handle).toHaveAttribute("aria-pressed", "false");
-    await expect(clock(page)).toHaveAttribute("data-beat", "zitate");
+  test("step 1 by hand: twelve rows are eleven months, and September is missing", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await sendAndFinish(page, "schritt-1");
+    await openCheck(page);
+    await page.locator("[data-w4a-month-all]").click();
+    await expect(page.locator("[data-w4a-month-count]")).toHaveAttribute("data-w4a-month-count", "11");
+    await expect(page.locator("[data-w4a-month-missing]")).toContainText("September 2025");
   });
 
-  test("S2: Website, 12 von 40 Hektar and 01.07.2026 are covered; all vineyards on that day are not", async ({ page }) => {
-    await openBeat(page, "umschreiben");
-    const scene = page.locator('[data-w4-scene="umschreiben"]');
-    await firstPress(page, '[data-w4-levers] [role="radio"]:has-text("12 von 40 Hektar")', () =>
-      expect(radio(page, "12 von 40 Hektar")).toHaveAttribute("aria-checked", "true", { timeout: 1000 }),
-    );
-    await radio(page, "Website").click();
-    const slider = scene.locator('[role="slider"]');
-    await slider.focus();
-    await page.keyboard.press("Home");
-    for (let i = 0; i < 10; i += 1) await page.keyboard.press("PageUp");
-    for (let i = 0; i < 3; i += 1) await page.keyboard.press("ArrowRight");
-    await expect(slider).toHaveAttribute("aria-valuetext", /1\. Juli 2026/);
-    await expect(scene).toHaveAttribute("data-status", "belegt");
-    await expect(scene.locator("[data-w4-may]")).toHaveAttribute("data-w4-may", "yes");
-
-    await radio(page, "Alle Weinberge").click();
-    await expect(scene).toHaveAttribute("data-status", "luecke");
-    await expect(caption(page)).toContainText("Ab dem 27. September 2026");
-  });
-
-  test("S3: the electricity file sorted by month shows eleven months and the September slot", async ({ page }) => {
-    await openBeat(page, "strom");
-    await firstPress(page, '[data-w4-handle="f2"]', async () => {
-      await page.locator('button[data-w4-line="5"]').click({ timeout: 1000 });
-      await expect(page.locator('[data-w4-scene="strom"]')).toHaveAttribute("data-linked", "", { timeout: 1000 });
-    });
-    await page.locator("[data-w4-grabber]").click();
-    await expect(page.locator("[data-w4-grabber]")).toHaveAttribute("aria-valuenow", "100");
-    await expect(page.locator('[data-w4-scene="strom"] .w4-months')).toHaveAttribute("data-end", "months");
-    await expect(page.locator('[data-w4-scene="strom"] [data-w4-slot]')).toContainText("EL-25-09");
-    await expect(page.locator("[data-w4-f2-status]")).toHaveAttribute("data-w4-f2-status", "luecke");
-  });
-
-  test("S4: the September invoice fills the gap, 320,9 MWh and F2 Belegt", async ({ page }) => {
-    await openBeat(page, "rechnung");
-    await firstPress(page, "[data-w4-invoice-toggle]", () =>
-      expect(page.locator("[data-w4-f2-status]")).toHaveAttribute("data-w4-f2-status", "belegt", { timeout: 1000 }),
-    );
-    await expect(page.locator("[data-w4-f2]")).toContainText("320,9");
-    await expect(page.locator("[data-w4-f2]")).toContainText("Belegt");
-  });
-
-  test("S5: the folder counts with and without the invoice, and the threads from strom_2025.csv", async ({ page }) => {
-    await openBeat(page, "ordner");
-    // Out: the counts before the invoice turned up.
-    await firstPress(page, "[data-w4-folder-invoice]", () =>
-      expect(caption(page)).toContainText("9 der 21 Antworten sind belegt und 3 schwach belegt", { timeout: 1000 }),
-    );
-    await expect(caption(page)).toContainText("9 sind Lücken: Für 5 davon fehlt ein Dokument, 3 stehen auf der Verbotsliste, und für eine gibt es heute keine Datei");
-    // In again: one more answer is covered and one more is weak.
-    await page.locator("[data-w4-folder-invoice]").click();
-    await expect(caption(page)).toContainText("10 der 21 Antworten sind belegt und 4 schwach belegt");
-    await expect(caption(page)).toContainText("7 sind Lücken: Für 3 davon fehlt ein Dokument, 3 stehen auf der Verbotsliste, und für eine gibt es heute keine Datei");
-
-    await page.locator('[data-w4-file="strom"]').click();
-    await expect(page.locator('[data-w4-link="quoted"]')).toHaveCount(4);
-    await expect(page.locator('[data-w4-link="depends"]')).toHaveCount(2);
-    await expectGlasBudget(page, "S5 with threads");
-  });
-
-  test("own file: the kit's example gives 11 of 12 months and names September, in the browser only", async ({ page }) => {
-    await openBeat(page, "deine-datei");
-    await expect(page.locator("[data-w4-privacy]")).toBeVisible();
-    await firstPress(page, "[data-w4-example]", () => expect(page.locator("[data-w4-own-result]").first()).toBeVisible({ timeout: 1000 }));
-    const readout = page.locator("[data-w4-own] [data-w4-readout]");
-    await expect(readout).toContainText("Deine Datei deckt 11 von 12 Monaten 2025.");
-    await expect(readout).toContainText("Es fehlt September.");
-  });
-
-  test("r starts over from the shelf card and clears the quotes, Escape leaves free play", async ({ page }) => {
-    await openBeat(page, "zitate");
+  test("step 2: three quotes on the certificate give the verdict Lücke beside Claude's answer", async ({ page }) => {
+    await openBeat(page, "schritt-2");
+    await sendAndFinish(page, "schritt-2");
+    await expect(caption(page)).toContainText("Zertifizierte Bio-Weinberge");
+    await openCheck(page);
     await expect(async () => {
       await connect(page, "zertifiziert", 4);
       await expect(page.locator('[data-w4-handle="zertifiziert"]')).toHaveAttribute("data-state", "linked", { timeout: 1000 });
     }).toPass({ timeout: 15_000 });
-    // The shell ignores keys while a control has the focus; give it back to the page.
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await page.keyboard.press("r");
-    await expect(clock(page)).toHaveAttribute("data-beat", "regalkarte");
-    // The rewind plays back first; a key during it is ignored, so press until the beat moves on.
-    await expect(async () => {
-      await page.keyboard.press("ArrowRight");
-      await expect(clock(page)).toHaveAttribute("data-beat", "zitate", { timeout: 1000 });
-    }).toPass({ timeout: 10_000 });
-    await expect(page.locator('[data-w4-handle][data-state="linked"]')).toHaveCount(0);
-
-    await page.goto(PATH, { waitUntil: "networkidle" });
-    await firstPress(page, "[data-demo-explore]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "free", { timeout: 1000 }));
-    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
-    await page.keyboard.press("Escape");
-    await expect(clock(page)).toHaveAttribute("data-demo-phase", "guided");
+    await connect(page, "flaeche", 6);
+    await connect(page, "stichtag", 8);
+    await expect(page.locator("[data-w4-card-status]")).toHaveAttribute("data-w4-card-status", "luecke");
   });
 
-  test("English: the intro and the take-home links", async ({ page }) => {
-    await page.goto(`/en${PATH}`, { waitUntil: "networkidle" });
-    await expect(page.locator("[data-demo-intro-body]")).toContainText("invented winery");
-    await page.goto(`/en${PATH}?beat=mitnehmen`, { waitUntil: "networkidle" });
+  test("steps 4 and 5: the register's counts, then the late invoice fills September", async ({ page }) => {
+    await openBeat(page, "schritt-4");
+    await sendAndFinish(page, "schritt-4");
+    await expect(caption(page)).toContainText("9 Antworten sind belegt, 3 schwach belegt und 9 haben eine Lücke");
+    await page.locator("[data-demo-next]").click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "schritt-5");
+    // Step 5 stays in the chat of step 4: its turn is still there.
+    await expect(page.locator('[data-w4a-turn="schritt-4"]')).toHaveCount(1);
+    await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("rechnung-EL-25-09.png");
+    await sendAndFinish(page, "schritt-5");
+    await expect(caption(page)).toContainText("10 Antworten belegt, 4 schwach belegt und 7 haben eine Lücke");
+    // The file Claude wrote sits under its answer as a plain file name.
+    await expect(page.locator('[data-w4a-turn="schritt-5"] [data-w4a-produced]')).toContainText("nachweisregister.xlsx");
+    await openCheck(page);
+    await page.locator("[data-w4-invoice-toggle]").click();
+    await expect(page.locator("[data-w4-f2-status]")).toHaveAttribute("data-w4-f2-status", "belegt");
+    await expect(page.locator("[data-w4-f2]")).toContainText("320,9");
+    await expect(page.locator("[data-w4a-register-sheet]")).toContainText("Status");
+  });
+
+  test("a prediction before Send is set beside Claude's answer and never scored", async ({ page }) => {
+    await openBeat(page, "schritt-3");
+    await expect(page.locator("[data-w4a-predict-value]")).toHaveText("offen");
+    await page.locator("[data-w4a-predict-more]").click();
+    await page.locator("[data-w4a-predict-less]").click();
+    await page.locator("[data-w4a-predict-less]").click();
+    await expect(page.locator("[data-w4a-predict-value]")).toHaveText("6,5 Jahre");
+    await sendAndFinish(page, "schritt-3");
+    await expect(caption(page)).toContainText("6,5 Jahre");
+    await expect(caption(page)).toContainText("5,0 Jahre");
+  });
+
+  test("measured: the median with Claude, and by hand honestly not measured", async ({ page }) => {
+    await openBeat(page, "gemessen");
+    await expect(page.locator("[data-w4a-measured-median]")).toHaveText("8 Min. 32 s");
+    await expect(page.locator("[data-w4a-measured]")).toContainText("nicht gemessen");
+    await expect(caption(page)).toContainText("in 3 Läufen am 26.10.2026");
+  });
+
+  test("your Claude: four install steps on Weiter, and the skill zip to download", async ({ page }) => {
+    await openBeat(page, "dein-claude");
+    await expect(page.locator("[data-w4a-install]")).toHaveAttribute("data-w4a-install", "0");
+    for (const step of ["1", "2", "3"]) {
+      await page.locator("[data-demo-next]").click();
+      await expect(page.locator("[data-w4a-install]")).toHaveAttribute("data-w4a-install", step);
+    }
+    await expect(page.locator("[data-w4a-skill-row]")).toContainText("esg-nachweise");
+    await expect(page.locator("a[data-w4a-skill-download]")).toHaveAttribute("href", "/skills/esg-nachweise.zip");
+    await page.locator("[data-demo-next]").click();
     await expect(clock(page)).toHaveAttribute("data-beat", "mitnehmen");
+    await expect(page.locator('[data-w4-take="prompts"] .w4-prompt')).toHaveCount(5);
+  });
+
+  test("r starts over: the chat is empty and the first prompt waits again", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await sendAndFinish(page, "schritt-1");
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await page.keyboard.press("r");
+    await expect(clock(page)).toHaveAttribute("data-beat", "schritt-1");
+    await expect(page.locator("[data-w4a-turn]")).toHaveCount(0);
+    await expect(page.locator("[data-w4a-composer]")).toContainText("Beantworte den angehängten Fragebogen");
+  });
+
+  test("reduced motion: the whole answer stands at once", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openBeat(page, "schritt-3");
+    await firstPress(page, "[data-w4a-send]", () => expect(page.locator('[data-w4a-turn="schritt-3"]')).toHaveAttribute("data-phase", "done", { timeout: 1000 }));
+    await expect(page.locator('[data-w4a-turn="schritt-3"] [data-w4a-answer]')).toContainText("279,7 MWh");
+  });
+
+  test("English: the run's one different status is named, and the take-home links", async ({ page }) => {
+    await page.goto(`/en${PATH}`, { waitUntil: "networkidle" });
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("invented North Macedonian winery");
+    await openBeat(page, "schritt-1", "/en");
+    await sendAndFinish(page, "schritt-1");
+    await expect(caption(page)).toContainText("For Q6, Claude wrote");
+    await openBeat(page, "mitnehmen", "/en");
     await expect(page.locator('[data-w4-take="skill"] a[download]')).toHaveAttribute("href", /esg-nachweise\.zip$/);
     expect(await overflow(page)).toBeLessThanOrEqual(0);
   });
@@ -231,62 +230,33 @@ test.describe(PATH, () => {
 test.describe(`${PATH} on a 390 x 664 phone`, () => {
   test.use({ viewport: { width: 390, height: 664 }, hasTouch: true });
 
-  test("S1: lines 3 to 11 sit above the dock while connecting, and a finger drag lands on line 4", async ({ page, browserName }) => {
-    test.skip(browserName !== "chromium", "touch is dispatched through the Chrome DevTools Protocol");
-    await openBeat(page, "zitate");
-    await expect(page.locator('[data-w4-scene="karte"]')).toHaveAttribute("data-step", "connect");
-    for (let line = 3; line <= 11; line += 1) await expectOnStage(page, `[data-w4-line="${line}"]`, `line ${line}`);
-    const handle = page.locator('[data-w4-handle="zertifiziert"]');
-    await expect(async () => {
-      await touchDrag(page, '[data-w4-handle="zertifiziert"]', '[data-w4-line="4"]');
-      await expect(handle).toHaveAttribute("data-state", "linked", { timeout: 1000 });
-    }).toPass({ timeout: 15_000 });
-  });
-
-  test("every scene shows its key object without scrolling", async ({ page }) => {
+  test("the Claude phone app: chat full screen, the composer above the dock, the check as a sheet", async ({ page }) => {
     await page.goto(PATH, { waitUntil: "networkidle" });
     await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
-    await expectOnStage(page, "[data-w4-card]", "S1 the shelf card");
-    expect(await bottomOf(page, ".w4-guess"), "S1 the two answers above the tab bar").toBeLessThanOrEqual(await tabBarTop(page));
-
-    await openBeat(page, "zitate");
-    await expect(async () => {
-      await connect(page, "zertifiziert", 4);
-      await expect(page.locator('[data-w4-handle="zertifiziert"]')).toHaveAttribute("data-state", "linked", { timeout: 1000 });
-    }).toPass({ timeout: 15_000 });
-    await connect(page, "flaeche", 6);
-    await connect(page, "stichtag", 8);
-    await expect(page.locator('[data-w4-scene="karte"]')).toHaveAttribute("data-step", "verdict");
-    await expectOnStage(page, "[data-w4-card-status]", "S1 the verdict on the card");
-    await expectOnStage(page, '.w4-s1-slots [data-w4-slot="restCertificate"]', "S1 the first missing document");
-    await expectOnStage(page, '.w4-s1-slots [data-w4-slot="renewedCertificate"]', "S1 the second missing document");
-
-    await openBeat(page, "umschreiben");
-    await expectOnStage(page, "[data-w4-levers]", "S2 the levers");
-    await expectOnStage(page, '[data-w4-scene="umschreiben"] [role="slider"]', "S2 the Stichtag");
-    await expectOnStage(page, "[data-w4-checks]", "S2 the four checks");
-
-    await openBeat(page, "strom");
-    await firstPress(page, '[data-w4-handle="f2"]', async () => {
-      await page.locator('button[data-w4-line="5"]').click({ timeout: 1000 });
-      await expect(page.locator('[data-w4-scene="strom"]')).toHaveAttribute("data-linked", "", { timeout: 1000 });
-    });
-    await page.locator("[data-w4-grabber]").click();
-    await expect(page.locator("[data-w4-grabber]")).toHaveAttribute("aria-valuenow", "100");
-    await expectOnStage(page, "[data-w4-f2]", "S3 the bank field");
-    await expectOnStage(page, '[data-w4-scene="strom"] .w4-months', "S3 the months");
-    await expectOnStage(page, '[data-w4-scene="strom"] [data-w4-slot]', "S3 the missing invoice");
-
-    await openBeat(page, "rechnung");
-    await expectOnStage(page, "[data-w4-photo]", "S4 the invoice photo");
-    await expectOnStage(page, ".w4-s4-chart", "S4 the chart it drops into");
-
-    await openBeat(page, "ordner");
-    await expectOnStage(page, '[data-w4-file="strom"]', "S5 the folder");
-    await expectOnStage(page, '[data-w4-tile="Q1"]', "S5 the first answer");
-
-    await openBeat(page, "deine-datei");
-    await expectOnStage(page, ".w4-drop", "S6 the drop zone");
-    await expectGlasBudget(page, "S6 on a phone");
+    await expect(appWindow(page)).toHaveAttribute("data-phone", "");
+    const send = await page.locator("[data-w4a-send]").boundingBox();
+    const dock = await page.locator(".w4-dock").boundingBox();
+    if (!send || !dock) throw new Error("no send button or dock");
+    expect(send.y + send.height, "the send arrow above the dock").toBeLessThanOrEqual(dock.y);
+    await sendAndFinish(page, "schritt-1");
+    // After the answer the chat gets the room: the window is far taller than the dock, and the answer starts in view.
+    const room = await page.evaluate(() => ({
+      window: document.querySelector("[data-w4a-window]")?.getBoundingClientRect().height ?? 0,
+      dock: document.querySelector(".w4-dock")?.getBoundingClientRect().height ?? 0,
+    }));
+    expect(room.window, "the chat window").toBeGreaterThanOrEqual(340);
+    expect(room.dock, "the dock").toBeLessThanOrEqual(130);
+    await expect(page.locator('[data-w4a-turn="schritt-1"] [data-w4a-activity]')).toBeInViewport();
+    // Von vorn sits in the dock row, inside the dock.
+    const restart = await page.locator(".w4-dock [data-demo-restart]").boundingBox();
+    const dockNow = await page.locator(".w4-dock").boundingBox();
+    if (!restart || !dockNow) throw new Error("no restart in the dock");
+    expect(restart.x + restart.width).toBeLessThanOrEqual(dockNow.x + dockNow.width);
+    // The check never opens by itself on a phone; the caption line in the dock opens it with the whole caption.
+    await expect(page.locator("[data-w4a-step]")).toHaveCount(0);
+    await page.locator("[data-w4a-capline]").click();
+    await expect(page.locator('[data-w4a-step="schritt-1"]')).toBeVisible();
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    await expectGlasBudget(page, "phone with the sheet open");
   });
 });

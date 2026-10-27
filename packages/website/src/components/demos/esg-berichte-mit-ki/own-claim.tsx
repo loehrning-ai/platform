@@ -6,7 +6,7 @@ import { missingDocMails, missingText, reasonText, safeWording, toMarkdownTable,
 import { addRow, cleanSentence, fromClaim, GATE_IDS, MAX_ROWS, MAX_SENTENCE, probeOwn, validate, type ClaimInput, type OwnRow } from "@/lib/demo-cases/esg-berichte-mit-ki/own";
 import type { Fmt } from "./fmt";
 import { StatusGlyph } from "./glyph";
-import { CopyButton } from "./own-file";
+import { CopyButton } from "./copy-button";
 
 /** Hands the visitor a file built in this tab (no server, no storage). */
 function saveText(text: string, name: string, type: string): void {

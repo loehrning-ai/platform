@@ -1,12 +1,11 @@
 /**
- * Every lever of the five scenes as one pure reducer: the card's quotes, the
- * workbench, the electricity file (its quote, the morph and the guess), the
- * September invoice and the folder. The visitor's own data is not in here: it
- * lives in the own-data step and survives a restart (contract section 7).
+ * Every lever of the checks by hand beside the chat as one pure reducer: the
+ * card's quotes (step 2), the electricity file (its quote and the morph, step
+ * 3), the folder (step 4) and the September invoice (step 5). The visitor's
+ * own sentences are not in here: they survive a restart (contract section 7).
  */
 import { CARD_START, cardReducer, type CardAction, type CardState } from "./card-state";
-import { offsetOf, type BenchPlace, type BenchScope } from "./bench";
-import { DRAFT_LINE, type FileId, STICHTAG } from "./kit";
+import { DRAFT_LINE, type FileId } from "./kit";
 import type { RowId } from "./ledger";
 
 /** The September guess runs from 0 to 50 MWh in steps of 0,5. */
@@ -31,7 +30,6 @@ export interface StromState {
 
 export interface DemoState {
   readonly card: CardState;
-  readonly bench: { readonly scope: BenchScope; readonly place: BenchPlace; readonly offset: number };
   readonly strom: StromState;
   /** The September invoice sits in the September slot (S4) and on the strom chip (S5). */
   readonly invoiceIn: boolean;
@@ -44,7 +42,6 @@ export const STROM_START: StromState = { linked: false, miss: null, t: 0, guess:
 
 export const DEMO_START: DemoState = {
   card: CARD_START,
-  bench: { scope: "alle", place: "regalkarte", offset: offsetOf(STICHTAG) },
   strom: STROM_START,
   invoiceIn: false,
   rechecked: false,
@@ -53,9 +50,6 @@ export const DEMO_START: DemoState = {
 
 export type DemoAction =
   | { readonly type: "card"; readonly action: CardAction }
-  | { readonly type: "scope"; readonly scope: BenchScope }
-  | { readonly type: "place"; readonly place: BenchPlace }
-  | { readonly type: "offset"; readonly offset: number }
   | { readonly type: "stromLand"; readonly line: number }
   | { readonly type: "morph"; readonly t: number }
   | { readonly type: "guess"; readonly value: number }
@@ -77,19 +71,13 @@ export function roundGuess(value: number): number {
   return Math.min(GUESS_MAX, Math.max(0, stepped));
 }
 
-/** Beat indices: 0 Regalkarte, 1 Zitate, 2 Umschreiben, 3 Strom, 4 Rechnung, 5 Ordner, 6 Deine Datei, 7 Mitnehmen. */
-export const BEAT_INDEX = { zitate: 1, umschreiben: 2, strom: 3, rechnung: 4, ordner: 5 } as const;
+/** Beat indices of the steps whose check lives in the panel: 1 Werbeaussagen (card), 2 Bankformular (strom), 4 Nachreichung (invoice). */
+export const BEAT_INDEX = { card: 1, strom: 2, invoice: 4 } as const;
 
 export function demoReducer(state: DemoState, action: DemoAction): DemoState {
   switch (action.type) {
     case "card":
       return { ...state, card: cardReducer(state.card, action.action) };
-    case "scope":
-      return { ...state, bench: { ...state.bench, scope: action.scope } };
-    case "place":
-      return { ...state, bench: { ...state.bench, place: action.place } };
-    case "offset":
-      return { ...state, bench: { ...state.bench, offset: Math.round(action.offset) } };
     case "stromLand":
       return action.line === DRAFT_LINE.figure
         ? { ...state, strom: { ...state.strom, linked: true, miss: null } }
@@ -110,9 +98,9 @@ export function demoReducer(state: DemoState, action: DemoAction): DemoState {
       return { ...state, folder: { ...state.folder, highlight: action.rows } };
     case "reach": {
       let next = state;
-      if (action.index > BEAT_INDEX.zitate && !Object.keys(state.card.links).length) next = { ...next, card: cardReducer(next.card, { type: "all" }) };
+      if (action.index > BEAT_INDEX.card && !Object.keys(state.card.links).length) next = { ...next, card: cardReducer(next.card, { type: "all" }) };
       if (action.index > BEAT_INDEX.strom) next = { ...next, strom: { ...next.strom, linked: true, t: 1, water: false } };
-      if (action.index === BEAT_INDEX.ordner && !state.rechecked) next = { ...next, invoiceIn: true };
+      if (action.index > BEAT_INDEX.invoice && !state.rechecked) next = { ...next, invoiceIn: true, rechecked: true };
       return next;
     }
     case "free":

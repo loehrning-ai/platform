@@ -24,6 +24,14 @@ export interface DemoIntroCopy {
   readonly sentences: readonly [string, string, string, string];
   /** The start button names the first action ("Mit der Schätzung starten"). */
   readonly start: string;
+  /**
+   * Optional: up to two sentences of real, dated news the invented case
+   * rests on, shown above the four sentences. They are context, not part of
+   * the B.8 formula, so they do not count towards its 50 to 75 words.
+   */
+  readonly news?: readonly string[];
+  /** Optional: replaces the shell's privacy footnote (a demo that shows recorded Claude answers says so). */
+  readonly footnote?: string;
 }
 
 export interface DemoIntroData {
@@ -54,6 +62,11 @@ export function validateIntro(intro: DemoIntroData): readonly string[] {
       if (/[\u2013\u2014\u2192\u00f7\u00d7\u03a3]/.test(sentence)) errors.push(`${locale}: "${sentence.slice(0, 30)}" has a dash or symbol`);
     }
     if (!copy.title || /[\u2013\u2014]/.test(copy.title)) errors.push(`${locale}: title`);
+    if (copy.news && copy.news.length > 2) errors.push(`${locale}: at most two news sentences`);
+    for (const sentence of [...(copy.news ?? []), ...(copy.footnote ? [copy.footnote] : [])]) {
+      if (!/[.!?]$/.test(sentence.trim())) errors.push(`${locale}: "${sentence.slice(0, 30)}" is not a full sentence`);
+      if (/[\u2013\u2014]/.test(sentence)) errors.push(`${locale}: "${sentence.slice(0, 30)}" has a dash`);
+    }
     if (!copy.start || copy.start.split(/\s+/).length > 6) errors.push(`${locale}: start button must name the first action in at most six words`);
   }
   return errors;

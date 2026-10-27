@@ -220,9 +220,9 @@ export const demos: readonly Demo[] = [
     title: "Nachweisprobe",
     oneLiner:
       "Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie belegt, und prüfst am Ende deine eigene Datei.",
-    question: "Welche Zeile belegt diese Antwort?",
+    question: "Welche Antworten belegen unsere Dateien, und welches Dokument fehlt?",
     syntheticDataLabel:
-      "Erfundenes Weingut, Dateien aus dem Workshop-Kit, Zeile für Zeile. Gerechnet in deinem Browser, ohne KI, nichts wird gesendet.",
+      "Erfundenes Weingut, Dateien aus dem Workshop-Kit. Auf dieser Seite läuft keine KI. Die Claude-Antworten sind Aufzeichnungen.",
     job: "Leg jede ESG-Antwort neben ihre Datei.",
     tile: {
       hook: "12 von 40 ha, abgelaufen am 31.08.2026. Das Zertifikat liegt bei.",
@@ -232,9 +232,9 @@ export const demos: readonly Demo[] = [
       title: "Evidence test",
       oneLiner:
         "One folder, three requests, one late invoice. You link each answer to the line that backs it, and at the end you check your own file.",
-      question: "Which line backs this answer?",
+      question: "Which answers do our files back, and which document is missing?",
       syntheticDataLabel:
-        "Invented winery, files from the workshop kit, line by line. Worked out in your browser, without AI, nothing is sent.",
+        "Invented winery, files from the workshop kit. No AI runs on this page. The Claude answers are recordings.",
       job: "Put every ESG answer next to its file.",
       tile: {
         hook: "12 of 40 ha, expired 31.08.2026. The certificate is attached.",
