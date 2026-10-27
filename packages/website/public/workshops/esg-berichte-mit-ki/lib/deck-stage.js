@@ -1,4 +1,5 @@
-/* deck-stage.js: the <deck-stage> element of the workshop decks. Workshop 04 runs Workshop 03's
+/* deck-stage.js: the <deck-stage> element of the workshop decks (source: scripts/workshops/deck-engine/,
+ * copied into each deck's lib/ by scripts/workshops/sync-deck-engine.mjs). Workshop 04 runs Workshop 03's
  * stage with four additions, each a no-op for a deck that does not use it, so both decks can share
  * one file again: (1) chrome copy in German or English from <html lang>, (2) the phone note's link
  * from <deck-stage data-rotate-href data-rotate-label>, (3) ?preview=1 renders without chrome and
@@ -31,6 +32,8 @@
   const ROTATE_TARGETS = Object.freeze({
     "/demos/esg-berichte-mit-ki": "/demos/esg-berichte-mit-ki",
     "/en/demos/esg-berichte-mit-ki": "/en/demos/esg-berichte-mit-ki",
+    "/demos/audit-vorbereitung-mit-ki": "/demos/audit-vorbereitung-mit-ki",
+    "/en/demos/audit-vorbereitung-mit-ki": "/en/demos/audit-vorbereitung-mit-ki",
   });
   const rotateTarget = (value) => (value && Object.hasOwn(ROTATE_TARGETS, value) ? ROTATE_TARGETS[value] : "./guide.html");
   const SWIPE_MIN_PX = 48;
@@ -93,12 +96,15 @@
   document.documentElement.dataset.story = "pending";
 
   // Back-to-workshop button styles and idle fade (the anchor itself is in slides.html).
-  const BACK_CSS = `/* deck-back: the same back-to-workshop button on every deck, console and lab page (W01 to W05). */
-.deck-back{position:fixed;top:16px;left:16px;z-index:2147483600;box-sizing:border-box;display:inline-flex;align-items:center;height:44px;padding:0 14px;
-  font:600 16px/1 var(--mono,"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace);letter-spacing:0;text-transform:none;white-space:nowrap;text-decoration:none;
-  color:#121212;background:#F3F0E9;border:2px solid #121212;border-radius:0;
-  transition:opacity 300ms ease,box-shadow 120ms ease,transform 120ms ease}
-.deck-back:hover,.deck-back:focus-visible{position:fixed;z-index:2147483600;color:#121212;background:#F3F0E9;box-shadow:4px 4px 0 #B73A15;transform:translate(-2px,-2px);outline:none}
+  const BACK_CSS = `/* deck-back: the same back-to-workshop pill on every engine deck: translucent warm white, hairline, soft shadow. */
+.deck-back{position:fixed;top:16px;left:16px;z-index:2147483600;box-sizing:border-box;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px 0 15px;
+  font:600 15px/1 var(--mono,"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace);letter-spacing:.01em;text-transform:none;white-space:nowrap;text-decoration:none;
+  color:#121212;background:rgba(255,253,248,.82);border:1px solid rgba(18,18,18,.08);border-radius:999px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 1px 2px rgba(18,18,18,.06),0 14px 30px -18px rgba(70,35,10,.35);
+  transition:opacity 300ms ease,color 160ms ease,transform 260ms cubic-bezier(.32,.72,0,1),box-shadow 260ms cubic-bezier(.32,.72,0,1)}
+.deck-back:hover,.deck-back:focus-visible{position:fixed;z-index:2147483600;color:#B73A15;background:rgba(255,253,248,.94);transform:translateY(-1px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 4px rgba(18,18,18,.06),0 20px 36px -18px rgba(70,35,10,.42);outline:none}
+.deck-back:focus-visible{outline:3px solid #B73A15;outline-offset:3px}
 .deck-back[data-idle]{opacity:0;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.deck-back{transition:none}}
 @media print{.deck-back{display:none!important}}
@@ -241,7 +247,13 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       bottom: 16px;
       z-index: 2147483000;
       display: flex;
-      align-items: stretch;
+      align-items: center;
+      gap: 2px;
+      padding: 5px;
+      border: 1px solid rgba(18, 18, 18, 0.08);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.95);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(18, 18, 18, 0.06), 0 24px 48px -24px rgba(70, 35, 10, 0.3);
       opacity: 0;
       pointer-events: none;
       transition: opacity 200ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -262,29 +274,27 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
     .control {
       position: relative;
       display: inline-flex;
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       align-items: center;
       justify-content: center;
-      margin: 0 0 0 -2px;
+      margin: 0;
       padding: 0;
-      border: 2px solid #121212;
+      border: 0;
+      border-radius: 999px;
       color: #121212;
-      background: #f3f0e9;
+      background: transparent;
       cursor: pointer;
       font: inherit;
       touch-action: manipulation;
-    }
-
-    .control:first-of-type {
-      margin-left: 0;
+      transition: background-color 160ms ease, color 160ms ease;
     }
 
     .control:hover,
     .control:active {
       z-index: 1;
-      color: #97300f;
-      border-color: #97300f;
+      color: #b73a15;
+      background: rgba(18, 18, 18, 0.05);
     }
 
     .control:focus-visible {
@@ -298,9 +308,9 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       height: 24px;
       fill: none;
       stroke: currentColor;
-      stroke-width: 9;
-      stroke-linecap: square;
-      stroke-linejoin: miter;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     /* Where the show is: scene of 18 (or appendix page of 8), press of the scene, and one segment
@@ -310,12 +320,10 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       flex-direction: column;
       justify-content: center;
       gap: 6px;
-      margin-right: 8px;
-      padding: 0 12px;
-      border: 2px solid #121212;
+      margin-right: 4px;
+      padding: 0 12px 0 14px;
       color: #121212;
-      background: #f3f0e9;
-      font: 600 16px/1 "JetBrains Mono", ui-monospace, monospace;
+      font: 600 14px/1 "JetBrains Mono", ui-monospace, monospace;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
@@ -328,7 +336,8 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
     .progress__segment {
       width: 6px;
       height: 4px;
-      background: #d4cec5;
+      border-radius: 2px;
+      background: rgba(18, 18, 18, 0.14);
     }
 
     .progress__segment[data-state="past"] {
@@ -346,11 +355,13 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       bottom: 88px;
       z-index: 2147483001;
       max-width: calc(100vw - 32px);
-      padding: 12px 16px;
-      border: 2px solid #f3f0e9;
-      color: #f3f0e9;
-      background: #121212;
-      font: 600 18px/1.3 "Typing", system-ui, sans-serif;
+      padding: 12px 18px;
+      border: 1px solid rgba(18, 18, 18, 0.08);
+      border-radius: 999px;
+      color: #121212;
+      background: rgba(255, 253, 248, 0.94);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(18, 18, 18, 0.06), 0 24px 48px -24px rgba(70, 35, 10, 0.3);
+      font: 600 17px/1.3 "Typing", system-ui, sans-serif;
       opacity: 0;
       pointer-events: none;
       transform: translate(-50%, 8px);
@@ -371,10 +382,12 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       display: none;
       align-items: center;
       gap: 12px;
-      padding: 12px 12px 12px 16px;
-      border: 2px solid #121212;
+      padding: 12px 12px 12px 18px;
+      border: 1px solid rgba(18, 18, 18, 0.08);
+      border-radius: 22px;
       color: #121212;
-      background: #f3f0e9;
+      background: rgba(255, 253, 248, 0.94);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(18, 18, 18, 0.06), 0 24px 48px -24px rgba(70, 35, 10, 0.3);
       font: 500 16px/1.4 "Typing", system-ui, sans-serif;
     }
 
@@ -398,9 +411,10 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       flex: 0 0 auto;
       min-width: 44px;
       min-height: 44px;
-      border: 2px solid #121212;
+      border: 1px solid rgba(18, 18, 18, 0.12);
+      border-radius: 999px;
       color: #121212;
-      background: #f3f0e9;
+      background: #fffdf8;
       font: 600 16px/1 "Typing", system-ui, sans-serif;
       cursor: pointer;
     }
@@ -437,6 +451,18 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
     @media (max-width: 560px) {
       .progress__rail {
         display: none;
+      }
+
+      /* A phone keeps the whole counter ("03 / 14 · 5 / 5") on screen next to the buttons. */
+      .progress {
+        margin-right: 0;
+        padding: 0 6px 0 10px;
+        font-size: 13px;
+      }
+
+      .control {
+        width: 48px;
+        height: 48px;
       }
 
       /* A phone gets a one-line toast above the toolbar, not a card over the slide. */
@@ -672,6 +698,10 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       this._live = live;
       this._progressText = controls.querySelector(".progress__text");
       this._progressRail = controls.querySelector(".progress__rail");
+      // The slide footer's counter hides while the toolbar shows over it (engine.css).
+      if (typeof MutationObserver === "function") {
+        new MutationObserver(() => this.toggleAttribute("data-controls-up", controls.hasAttribute("data-visible"))).observe(controls, { attributes: true, attributeFilter: ["data-visible"] });
+      }
 
       this._bindControl(".previous", () => this.fragment(-1));
       this._bindControl(".next", () => this.fragment(1));
@@ -1030,10 +1060,11 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
       return path.includes(this._controls) || path.includes(this._rotate);
     }
 
-    // A pointer shows the toolbar: moving inside the bottom band. Keyboard presses never show it, so
-    // the projector stays clean while presenting.
+    // A mouse never shows the toolbar, so the projector stays clean while presenting: it shows only for
+    // a coarse pointer moving inside the bottom band, a touch tap, or keyboard focus inside it.
     _onPointerMove(event) {
-      if (event.pointerType === "touch") return;
+      if (event.pointerType === "touch" || event.pointerType === "mouse") return;
+      if (!window.matchMedia?.("(pointer: coarse)").matches) return;
       if (event.clientY < window.innerHeight - TOOLBAR_ZONE_PX) return;
       this._showControls(TOOLBAR_HIDE_MS);
     }

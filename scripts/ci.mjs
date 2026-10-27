@@ -83,6 +83,7 @@ export const GROUPS = {
       root("marketing:check", "marketing:check"),
       root("copy:lint", "copy:lint"),
       root("deck-keys:check", "deck-keys:check"),
+      root("deck-engine:check", "deck-engine:check"),
       root("workshop05-deck:check", "workshop05-deck:check"),
       root("workshop06-kit:check", "workshop06-kit:check"),
       root("workshop06-deck:check", "workshop06-deck:check"),
