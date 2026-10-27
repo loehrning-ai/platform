@@ -15,7 +15,9 @@ export type TimelineItem =
   | { readonly t_ms: number; readonly kind: "text_start" }
   | { readonly t_ms: number; readonly kind: "text"; readonly chunk: string }
   | { readonly t_ms: number; readonly kind: "tool_use"; readonly tool: string; readonly input: unknown }
-  | { readonly t_ms: number; readonly kind: "tool_result"; readonly is_error: boolean };
+  | { readonly t_ms: number; readonly kind: "tool_result"; readonly is_error: boolean; readonly denied?: boolean }
+  /** A thinking block arrived (its text is not handed out by the CLI and never stored). */
+  | { readonly t_ms: number; readonly kind: "thinking" };
 
 export interface RecordingStats {
   readonly duration_ms: number;

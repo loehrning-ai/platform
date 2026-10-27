@@ -1,5 +1,7 @@
 /*
- * W04 "Nachweisprobe": the content layer only. The glass of the dock, the
+ * W04 "Nachweisprobe": the content layer only. The checks sit in the panel
+ * beside the chat (app/app.css), so they answer to its width (container
+ * w4scene), not the viewport's. The glass of the dock, the
  * readouts, the sheets and the controls lives in ../glas/glas.css; this file
  * never selects the shell or Glas classes and never blurs the backdrop
  * (demo-contract.test.ts). Kit files are Quick Look cards: ink on Bogen,
@@ -455,7 +457,7 @@ button.w4-doc-row {
  * it asks (Wer, Wofür, Wann) over its words, so the certificate keeps the
  * height its wrapped lines need. The restart button keeps its corner.
  */
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   .w4-card[data-layout="strip"] {
     margin-right: 48px;
     padding: 0;
@@ -877,7 +879,7 @@ button.w4-doc-row {
 .w4-doc-strip-marks:not([data-always]) {
   display: none;
 }
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   /* While connecting, slots live in the readout; after the verdict they stay on the stage. */
   .w4-s1[data-step="connect"] .w4-s1-slots {
     display: none;
@@ -927,7 +929,7 @@ button.w4-doc-row {
     display: none;
   }
 }
-@media (min-width: 64rem) {
+@container w4scene (min-width: 64rem) {
   .w4-s1 {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
     grid-template-rows: auto auto minmax(0, 1fr);
@@ -979,7 +981,7 @@ button.w4-doc-row {
   display: contents;
 }
 /* Phone order: the card and its levers first, then the date, the checks, the drawing and the file. */
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   .w4-s2-card {
     order: 1;
   }
@@ -1021,7 +1023,7 @@ button.w4-doc-row {
  * date and the four checks. The drawings, the file and the slots wait for a
  * wider screen; the checks name the same gaps.
  */
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   .w4-s2 {
     gap: 6px;
   }
@@ -1138,7 +1140,7 @@ button.w4-doc-row {
     display: none;
   }
 }
-@media (min-width: 64rem) {
+@container w4scene (min-width: 64rem) {
   .w4-s2 {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: auto auto auto minmax(0, 1fr);
@@ -1477,7 +1479,7 @@ button.w4-doc-row {
  * file names lose their second line, and the chart takes the height that is
  * left, so the months, the September gap and the missing invoice share one view.
  */
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   .w4-s3[data-linked] {
     height: 100%;
     min-height: 0;
@@ -1620,7 +1622,7 @@ button.w4-doc-row {
     white-space: nowrap;
   }
 }
-@media (min-width: 64rem) {
+@container w4scene (min-width: 64rem) {
   .w4-s3,
   .w4-s4 {
     display: grid;
@@ -1858,7 +1860,7 @@ button.w4-doc-row {
     opacity: 0;
   }
 }
-@media (min-width: 64rem) {
+@container w4scene (min-width: 64rem) {
   .w4-s5 {
     grid-template-columns: 15rem minmax(0, 1fr);
     column-gap: 56px;
@@ -1919,7 +1921,7 @@ button.w4-doc-row {
   resize: vertical;
 }
 /* A phone keeps the drop zone, the paste field and the kit's example in one view above the dock. */
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   .w4-privacy {
     font-size: 0.75rem;
     line-height: 1.3;
@@ -2220,7 +2222,7 @@ button.w4-doc-row {
 
 /* ---------- Motion ---------- */
 /* The own file's chart keeps a phone-like height on a wide stage, so its readout stays in view. */
-@media (min-width: 64rem) {
+@container w4scene (min-width: 64rem) {
   .w4-own-chart .w4-months {
     max-height: 15rem;
   }
@@ -2267,7 +2269,7 @@ button.w4-doc-row {
  * certificate's header says the data are invented), the card is its strip
  * and the certificate shows lines 3 to 11 whole, above the dock, so no line
  * has to scroll under a finger. */
-@media (max-width: 63.99rem) {
+@container w4scene (max-width: 63.99rem) {
   .w4-data[data-connecting] .w4-toolbar {
     display: none;
   }

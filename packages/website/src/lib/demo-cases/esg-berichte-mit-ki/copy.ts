@@ -632,8 +632,8 @@ const de = {
   },
   takehome: {
     caption: [
-      "Hier liegt alles, was du für deine eigenen Antworten brauchst.",
-      "Darüber siehst du außerdem, wie Claude mit und ohne den Skill auf dieselben Dateien antwortet.",
+      "Hier liegen der Skill, die Vorlagen und das Kit mit allen Dateien aus dem Fenster.",
+      "Mit dem Kit schickst du dieselben fünf Prompts an dein eigenes Claude.",
     ],
     heading: "Zum Mitnehmen",
     items: {
@@ -643,10 +643,10 @@ const de = {
       register: ["Registervorlage herunterladen (CSV)", "Eine Zeile je Antwort mit Datei, Zeilen, Status und fehlendem Dokument, dazu leere Spalten für Prüfer und Datum."],
       mail: ["Mail für ein fehlendes Dokument herunterladen", "Die Vorlage für die Anfrage, wenn ein Beleg fehlt."],
       checklist: ["Ordner-Checkliste herunterladen", "Welche Dokumente in einen ESG-Ordner gehören und was du an jedem prüfst."],
-      kit: ["Kit herunterladen (ZIP)", "Jede Zahl, die du oben gesehen hast, stammt aus diesen Dateien des Kits."],
+      kit: ["Kit herunterladen (ZIP)", "Jede Zahl, die du im Fenster gesehen hast, stammt aus diesen Dateien des Kits."],
     },
-    prompts: "Die drei Fragen an Claude",
-    promptsLead: "Diese Fragen haben wir Claude für die Aufzeichnung im Claude-Fenster oben gestellt, jeweils mit den Dateien aus dem Kit.",
+    prompts: "Die fünf Prompts aus dem Kit",
+    promptsLead: "Genau diese Prompts haben wir für die Aufzeichnung gesendet, jeweils mit den angehängten Dateien aus dem Kit.",
     copy: "Kopieren",
     copied: "Kopiert",
     own: "Deine Prüfung",
@@ -1270,8 +1270,8 @@ const en: DePack = {
   },
   takehome: {
     caption: [
-      "Here is everything you need for your own answers.",
-      "Above it you can also see how Claude answers about the same files with and without the skill.",
+      "Here are the skill, the templates and the kit with every file from the window.",
+      "With the kit you send the same five prompts to your own Claude.",
     ],
     heading: "To take home",
     items: {
@@ -1281,10 +1281,10 @@ const en: DePack = {
       register: ["Download the register template (CSV)", "One row per answer with file, lines, status and missing document, plus empty columns for the checker and the date."],
       mail: ["Download the email for a missing document", "The template for the request when a document is missing."],
       checklist: ["Download the folder checklist", "Which documents belong in an ESG folder and what to check on each one."],
-      kit: ["Download the kit (ZIP)", "Every figure you saw above comes from these files of the kit."],
+      kit: ["Download the kit (ZIP)", "Every figure you saw in the window comes from these files of the kit."],
     },
-    prompts: "The three questions for Claude",
-    promptsLead: "We asked Claude these questions for the recording in the Claude window above, each with the files from the kit.",
+    prompts: "The kit's five prompts",
+    promptsLead: "These are exactly the prompts we sent for the recording, each with the attached files from the kit.",
     copy: "Copy",
     copied: "Copied",
     own: "Your check",
