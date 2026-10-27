@@ -121,14 +121,28 @@ export function DemoGlasStage({
  * with "Zurück" and "Weiter", then this beat's controls as fills. In free
  * play the path collapses into "Zur Führung". It rises when the intro leaves.
  */
-export function DemoDock({ children, label, className }: { readonly children?: ReactNode; readonly label?: string; readonly className?: string }) {
+export function DemoDock({
+  children,
+  label,
+  className,
+  step,
+  nextLabel,
+}: {
+  readonly children?: ReactNode;
+  readonly label?: string;
+  readonly className?: string;
+  /** The sentence under the path for an inner step ("Feld 2 von 5: die Einheit."); default: the beat's step. */
+  readonly step?: ReactNode;
+  /** The next button's label while an inner step takes the press ("Weiter: die Einheit"); default: the next beat. */
+  readonly nextLabel?: string;
+}) {
   const clock = useBeatClock();
   const copy = DEMOS_PAGE_COPY[clock.locale].v4;
   const locale = clock.locale;
   const steps = clock.beats.map((beat) => ({ id: beat.id, label: beat.label[locale] }));
   const nextBeat = clock.beats[clock.index + 1];
-  const stepSentence = clock.beat.step?.[locale] ?? `${clock.beat.label[locale]}.`;
-  const nextLabel = nextBeat?.nextName ? copy.nextTo(nextBeat.nextName[locale]) : copy.next;
+  const stepSentence = step ?? clock.beat.step?.[locale] ?? `${clock.beat.label[locale]}.`;
+  const nextText = nextLabel ?? (nextBeat?.nextName ? copy.nextTo(nextBeat.nextName[locale]) : copy.next);
   return (
     <GlasGroup
       label={label ?? copy.wegNav}
@@ -152,10 +166,10 @@ export function DemoDock({ children, label, className }: { readonly children?: R
         onPrev={clock.prev}
         onNext={clock.next}
         nextReady={clock.beatDone}
-        canNext={clock.index < clock.beats.length - 1}
+        canNext={clock.index < clock.beats.length - 1 || nextLabel !== undefined}
         free={clock.phase === "free"}
         onToGuide={clock.toGuide}
-        copy={{ stepOf: copy.stepOf, prev: copy.prev, next: nextLabel, toGuide: copy.toGuide, nav: copy.wegNav }}
+        copy={{ stepOf: copy.stepOf, prev: copy.prev, next: nextText, toGuide: copy.toGuide, nav: copy.wegNav }}
       />
       {clock.skippedCommit && clock.phase === "guided" ? (
         <p className="demo4-skipped">

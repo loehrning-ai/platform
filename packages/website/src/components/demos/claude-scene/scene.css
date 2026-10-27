@@ -41,6 +41,8 @@
 .cds {
   container: cds / inline-size;
   display: grid;
+  /* One column no wider than the scene: a long attachment row scrolls inside, it never widens the page. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   width: 100%;
   max-width: 1080px;
@@ -706,6 +708,12 @@
   border-radius: 9px;
   background: var(--cd-line-strong);
   color: var(--cd-primary);
+}
+button.cds-send {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
 }
 .cds-send[data-ready] {
   background: var(--cd-accent);

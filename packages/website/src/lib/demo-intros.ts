@@ -13,7 +13,11 @@ import * as w04 from "@/lib/demo-cases/esg-berichte-mit-ki/intro";
 import * as w05 from "@/lib/demo-cases/audit-vorbereitung-mit-ki/intro";
 import * as w06 from "@/lib/demo-cases/angebote-mit-ki-vergleichen/intro";
 
-export const DEMO_INTROS: Readonly<Record<DemoSlug, { readonly SHELL: DemoShellVersion; readonly INTRO: DemoIntroData }>> = {
+/**
+ * TAKEHOME_IN_STAGE: the demo draws its take-home and its Claude scene inside the stage (last beat),
+ * so the page leaves out the shared "Für deinen Claude" block and the scene section below it.
+ */
+export const DEMO_INTROS: Readonly<Record<DemoSlug, { readonly SHELL: DemoShellVersion; readonly INTRO: DemoIntroData; readonly TAKEHOME_IN_STAGE?: boolean }>> = {
   "ki-prognosen-einschaetzen": w01,
   "geschaeftsberichte-mit-ki-lesen": w02,
   "datenbereitschaft-fuer-ki": w03,

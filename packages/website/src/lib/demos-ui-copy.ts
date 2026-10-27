@@ -54,7 +54,7 @@ export const DEMOS_PAGE_COPY = {
       closingWorkshop: "Zur Workshopseite",
     },
     v4: {
-      kicker: (number: string, minutes: number) => `Workshop ${number} · etwa ${minutes} Minuten`,
+      kicker: (number: string) => `Workshop ${number}`,
       explore: "Frei ausprobieren",
       footnote: "Alles läuft in deinem Browser. Nichts wird gesendet.",
       wegNav: "Ablauf der Demo",
@@ -251,7 +251,7 @@ export const DEMOS_PAGE_COPY = {
       closingWorkshop: "To the workshop page",
     },
     v4: {
-      kicker: (number: string, minutes: number) => `Workshop ${number} · about ${minutes} minutes`,
+      kicker: (number: string) => `Workshop ${number}`,
       explore: "Explore freely",
       footnote: "Everything runs in your browser. Nothing is sent.",
       wegNav: "Steps of the demo",

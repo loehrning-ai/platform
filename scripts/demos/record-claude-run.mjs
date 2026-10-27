@@ -40,8 +40,13 @@ import { pathToFileURL } from "node:url";
 
 export const SCHEMA = "claude-recording/v1";
 export const DEFAULT_MODEL = "claude-opus-5-5";
-/** The Bash rules of --allow-python (sandboxed in the temp workspace). */
-export const PYTHON_TOOLS = ["Bash(python3 *)", "Bash(mkdir *)", "Bash(cd *)", "Bash(sed *)", "Bash(cat *)", "Bash(ls *)", "Bash(find *)", "Bash(grep *)", "Bash(head *)", "Bash(wc *)"];
+/**
+ * --allow-python: Bash runs inside the CLI's OS sandbox, the way the desktop
+ * app's code sandbox runs it. Writes stay in the workspace and the network is
+ * closed, so every command may run without a prompt. A per-command allowlist
+ * denied ordinary loops and heredocs, and those takes had to be rejected.
+ */
+export const SANDBOX_SETTINGS = JSON.stringify({ sandbox: { enabled: true, autoAllowBashIfSandboxed: true, allowUnsandboxedCommands: false } });
 const ROOT = resolve(dirname(new URL(import.meta.url).pathname), "../..");
 const WEBSITE = join(ROOT, "packages/website");
 /** Anything that looks like a machine path or a session secret; must never be in a recording. */
@@ -83,9 +88,8 @@ export function runFlags({ model, withSkill, allowWrite, allowPython, persist })
     "--tools", tools,
   ];
   if (allowWrite) flags.push("--permission-mode", "acceptEdits");
-  // The skill's "rechnet per Code" step: python3, plus the shell basics Claude uses to save and run
-  // the script, the way the desktop app's code sandbox allows them. Nothing that reaches the network.
-  if (allowPython) flags.push("--allowedTools", ...PYTHON_TOOLS);
+  // The skill's "rechnet per Code" step: any shell command, inside the sandbox (SANDBOX_SETTINGS).
+  if (allowPython) flags.push("--allowedTools", "Bash", "--settings", SANDBOX_SETTINGS);
   if (!withSkill) flags.push("--disable-slash-commands");
   return flags;
 }
@@ -259,7 +263,8 @@ function parseArgs(argv) {
 
 function runClaude(prompt, flags, cwd, rawLines, extra = []) {
   const { env: parentEnv } = process;
-  const env = { ...parentEnv };
+  // No auto-memory: nothing from earlier runs is loaded, and nothing is written outside the workspace.
+  const env = { ...parentEnv, CLAUDE_CODE_DISABLE_AUTO_MEMORY: "1" };
   delete env.VERCEL_PLUGIN_BOOTSTRAP_HINTS;
   return new Promise((resolvePromise, reject) => {
     const started = process.hrtime.bigint();

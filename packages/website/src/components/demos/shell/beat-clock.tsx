@@ -94,6 +94,8 @@ export interface BeatClock {
 export interface BeatGate {
   readonly ready: boolean;
   readonly onNext?: () => boolean;
+  /** v4: "Zurück" and ArrowLeft go back one inner step first, when this returns true. */
+  readonly onPrev?: () => boolean;
 }
 
 const BeatClockContext = createContext<BeatClock | null>(null);
@@ -118,18 +120,20 @@ export function useOnRestart(listener: () => void): void {
  * Gates the current beat (see BeatGate). Pass null on beats without inner
  * steps. The latest onNext is always the one called.
  */
-export function useBeatGate(ready: boolean | null, onNext?: () => boolean): void {
+export function useBeatGate(ready: boolean | null, onNext?: () => boolean, onPrev?: () => boolean): void {
   const { setGate } = useBeatClock();
   const latest = useRef(onNext);
+  const latestPrev = useRef(onPrev);
   useEffect(() => {
     latest.current = onNext;
+    latestPrev.current = onPrev;
   });
   useEffect(() => {
     if (ready === null) {
       setGate(null);
       return;
     }
-    setGate({ ready, onNext: () => latest.current?.() ?? false });
+    setGate({ ready, onNext: () => latest.current?.() ?? false, onPrev: () => latestPrev.current?.() ?? false });
     return () => setGate(null);
   }, [ready, setGate]);
 }
@@ -314,7 +318,9 @@ export function BeatClockProvider({
     if (v4 && phaseRef.current === "intro") return;
     if (v4 && phaseRef.current === "free") setPhase("guided");
     const { index, rewinding } = stateRef.current;
-    if (rewinding || index === 0) return;
+    if (rewinding) return;
+    if (v4 && phaseRef.current === "guided" && gateRef.current?.onPrev?.()) return;
+    if (index === 0) return;
     stop();
     setState({ index: index - 1, progress: 1, rewinding: false });
   }, [stop, v4]);
