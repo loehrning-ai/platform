@@ -29,10 +29,12 @@ export function marksOf(decisions: readonly DecisionLine[]): readonly DocMark[] 
 /**
  * A kit file (or a visitor's text file) as HTML lines: text wraps to the
  * panel, a CSV becomes a small table that scrolls sideways inside itself.
- * The Prüflupe is a clear band over one line that magnifies a copy of that
- * line; it follows a drag, snaps to the deciding lines, moves to a marked
- * line on a tap, and steps with ArrowUp and ArrowDown when the document has
- * focus. The band never blurs (it costs no filter).
+ * The Prüflupe is an opaque band over one line that shows a larger copy of
+ * that line, wrapped, so the deciding words are never cut off; on a CSV row
+ * it shows each cell under its column name. It follows a drag, snaps to the
+ * deciding lines, moves to a marked line on a tap, and steps with ArrowUp
+ * and ArrowDown when the document has focus. The band never blurs (it costs
+ * no filter).
  */
 export function DocView({
   name,
@@ -158,6 +160,10 @@ export function DocView({
   };
 
   const bandText = band !== null ? (lines[band - 1] ?? "") : "";
+  const header = csv ? lines.findIndex((line) => line && !line.startsWith("#")) : -1;
+  const columns = header >= 0 ? csvCells(lines[header] ?? "") : [];
+  // A CSV data row: every cell under its column name, so an empty transfer_basis reads as such.
+  const bandCells = csv && band !== null && header >= 0 && band - 1 > header ? csvCells(bandText).map((cell, index) => ({ column: columns[index] ?? "", cell })) : null;
   const lineNode = (line: number, content: ReactNode, cells = false) => {
     const mark = marked.get(line);
     const props = {
@@ -182,7 +188,6 @@ export function DocView({
 
   let body: ReactNode;
   if (csv) {
-    const header = lines.findIndex((line) => line && !line.startsWith("#"));
     body = (
       <>
         <ol className="w05-doc-lines">{lines.slice(0, Math.max(0, header)).map((line, index) => lineNode(index + 1, <span>{line.replace(/^#\s*/, "")}</span>))}</ol>
@@ -222,7 +227,7 @@ export function DocView({
         {band !== null && top !== null ? (
           <div
             className="w05-band"
-            style={{ transform: `translateY(${top}px)`, height }}
+            style={{ transform: `translateY(${top}px)`, minHeight: height }}
             data-dragging={dragging ? "" : undefined}
             data-w05-band={band}
             role="slider"
@@ -237,7 +242,15 @@ export function DocView({
             onPointerCancel={onUp}
           >
             <span className="w05-band-lens" aria-hidden="true">
-              <span>{bandText}</span>
+              {bandCells ? (
+                bandCells.map(({ column, cell }, index) => (
+                  <span key={index} className="w05-band-cell">
+                    <span className="w05-band-column">{column}</span> {cell === "" ? "∅" : cell}
+                  </span>
+                ))
+              ) : (
+                <span>{bandText.replace(/^#\s*/, "")}</span>
+              )}
             </span>
             <span className="w05-band-grip" aria-hidden="true" />
           </div>

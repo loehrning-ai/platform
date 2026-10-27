@@ -2,9 +2,10 @@ import { expect, test, type Page } from "@playwright/test";
 
 /**
  * W05 "Die Lückenliste" on the v4 stage: the intro fits a small phone, the
- * board keeps R1 to R8 above the dock, the four checks leave two files that
- * hold, the bench shows why R7 is a gap, the probe checks a recorded Claude
- * answer against the files, and the take-home fills a gap request. Keys:
+ * board's rows are tap-sized and keep name and stamp, the four tests leave
+ * two files that hold, the bench shows why R7 is a gap, the Claude window
+ * replays a recorded take with the page's quote marks on its answer, and
+ * the take-home fills a gap request. Keys:
  * ArrowLeft and ArrowRight walk the path, Escape closes a sheet, r and
  * Shift+R restart but keep the visitor's own files.
  */
@@ -24,12 +25,22 @@ const overflow = (page: Page) => page.evaluate(() => document.documentElement.sc
 const beat = (page: Page) => page.locator("[data-demo-clock]");
 const next = (page: Page) => page.locator("[data-demo-next]").first();
 
-/** The lowest row of the board against the top of the dock, in viewport pixels. */
-const rowsAboveDock = (page: Page) =>
+/**
+ * The board's rows: each at least 44px tall with its name visible, and the
+ * last one reachable above the dock by scrolling the stage (never the page).
+ */
+const boardRows = (page: Page) =>
   page.evaluate(() => {
-    const rows = [...document.querySelectorAll(".w05-row")].map((row) => row.getBoundingClientRect().bottom);
+    const rows = [...document.querySelectorAll<HTMLElement>(".w05-request")];
+    const scroller = document.querySelector<HTMLElement>(".w05-data");
+    const scrollY = window.scrollY;
+    rows.at(-1)?.closest<HTMLElement>(".w05-row")?.scrollIntoView({ block: "nearest" });
+    const last = rows.at(-1)?.getBoundingClientRect().bottom ?? 999;
     const dock = document.querySelector(".demo4-dock")?.getBoundingClientRect().top ?? 0;
-    return { count: rows.length, lowest: Math.max(...rows), dock };
+    const named = rows.filter((row) => (row.querySelector(".w05-request-name")?.getBoundingClientRect().width ?? 0) > 20).length;
+    if (scroller) scroller.scrollTop = 0;
+    window.scrollTo(0, scrollY);
+    return { count: rows.length, smallest: Math.min(...rows.map((row) => row.getBoundingClientRect().height)), named, lastAboveDock: last <= dock + 1 };
   });
 
 /** File names on the board that do not fit their box. */
@@ -71,24 +82,25 @@ test.describe(`/demos/${SLUG}`, () => {
       await page.locator("[data-demo-start]").click();
       await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
       await expect(page.locator("[data-w05-row]")).toHaveCount(8);
-      const fit = await rowsAboveDock(page);
-      expect(fit.lowest).toBeLessThanOrEqual(fit.dock);
+      expect(await boardRows(page)).toEqual({ count: 8, smallest: expect.any(Number), named: 8, lastAboveDock: true });
+      expect((await boardRows(page)).smallest).toBeGreaterThanOrEqual(44);
       expect(await cutFileNames(page)).toEqual([]);
       await page.locator("[role=slider]").first().focus();
       await page.keyboard.press("ArrowRight");
       await page.locator('[data-w05-commit="keep"]').click();
       await expect(page.locator("[data-w05-lead]")).toHaveCount(0);
 
-      // Scene 2: the four checks leave two of eight, and the rows stay above the dock.
+      // Scene 2: the four tests leave two of eight; a stamped row keeps its name.
       await advanceTo(page, "pruefungen");
       for (const check of ["quote", "date", "scope", "approval"]) await page.locator(`[data-w05-switch="${check}"]`).click();
       await expect(page.locator("[data-w05-legend]")).toContainText(locale === "de" ? "2 von 8" : "2 of 8");
-      const checked = await rowsAboveDock(page);
-      expect(checked.lowest).toBeLessThanOrEqual(checked.dock);
-      // The first Next opens R1, the one request that holds and still is a problem.
-      await next(page).click();
+      expect((await boardRows(page)).named).toBe(8);
+      // The dock's own button names the next step and opens R1, the one request that holds and still is a problem.
+      await expect(page.locator("[data-w05-next-r1]")).toHaveText(locale === "de" ? "Weiter: R1 ansehen" : "Next: look at R1");
+      await page.locator("[data-w05-next-r1]").click();
       await expect(page.locator('[data-w05-evidence="R1"]')).toBeVisible();
       await closeSheet(page);
+      await expect(page.locator("[data-w05-next-r1]")).toHaveCount(0);
 
       // Scene 3: the backup report on the bench; reading its lines lights the ring, quote fails.
       await advanceTo(page, "r7");
@@ -99,20 +111,32 @@ test.describe(`/demos/${SLUG}`, () => {
       await page.keyboard.press("Enter");
       await expect(page.locator('[data-w05-ring="quote"]')).toHaveAttribute("data-state", "fail", { timeout: 5_000 });
       for (const check of ["date", "scope", "approval"]) await expect(page.locator(`[data-w05-ring="${check}"]`)).toHaveAttribute("data-state", "pass", { timeout: 5_000 });
-      // With the report read, Next first shows the four checks as rules.
-      await next(page).click();
+      // With the report read, the dock offers the four tests as rules first.
+      await page.locator("[data-w05-next-rules]").click();
       await expect(page.locator("[data-w05-rule-sheet]")).toBeVisible();
       await closeSheet(page);
 
-      // Scene 4, then scene 5: the recorded take is labelled with its date and model, and its quotes are found.
+      // Scene 4, then scene 5: the Claude window on the stage, labelled a depiction with the take's date and model.
       await advanceTo(page, "ordner-eigen");
       await expect(page.locator("[data-w05-drop]")).toBeVisible();
       await advanceTo(page, "claude");
-      const probe = page.locator("[data-w05-probe]");
-      await expect(probe).toHaveAttribute("data-w05-take", `${locale}-r7-with-1`);
-      await expect(probe).toContainText(locale === "de" ? "26.10.2026" : "26 October 2026");
-      await expect(probe).toContainText("Claude Opus 5.5");
-      expect(await page.locator('[data-w05-mark="found"]').count()).toBeGreaterThan(0);
+      const stage = page.locator('[data-demo-stage] [data-w05-probe="recorded"]');
+      await expect(stage).toHaveAttribute("data-w05-take", `${locale}-r7-with-1`);
+      const claudeWindow = stage.locator("[data-w05-window]");
+      await expect(claudeWindow).toContainText(locale === "de" ? "26.10.2026" : "26 October 2026");
+      await expect(claudeWindow).toContainText("Claude Opus 5.5");
+      await expect(claudeWindow).toContainText(locale === "de" ? "Darstellung" : "Depiction");
+      // The composer's one button sends the prompt, then stops the stream: the whole answer with the page's marks drawn on it.
+      await stage.locator("[data-w05-send]").click();
+      await expect(stage.locator("[data-w05-send]")).toHaveAttribute("data-state", "stop");
+      await stage.locator("[data-w05-send]").click();
+      await expect(stage).toHaveAttribute("data-w05-done", "");
+      await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights?: Map<string, unknown> }).highlights?.has("w05-found") ?? false)).toBe(true);
+      await page.locator("[data-w05-marks-open]").click();
+      await expect(page.locator('[data-w05-mark="found"]').first()).toBeVisible();
+      await page.locator("[data-w05-mark-open]").first().click();
+      await expect(page.locator("[data-w05-doc]")).toBeVisible();
+      await closeSheet(page);
 
       // Scene 6: one gap request per weak or missing item; a tap fills the mail.
       await advanceTo(page, "mitnehmen");
@@ -125,6 +149,8 @@ test.describe(`/demos/${SLUG}`, () => {
   }
 
   test("de: arrows walk the path, Escape closes a sheet, r and Shift+R restart but keep the own list", async ({ page }) => {
+    // A phone width: there a tapped request opens in a sheet (a wide screen shows it beside the board).
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`/demos/${SLUG}`, { waitUntil: "networkidle" });
     await page.locator("[data-demo-start]").click();
     await expect(beat(page)).toHaveAttribute("data-beat", "ordner");
@@ -171,6 +197,19 @@ test.describe(`/demos/${SLUG}`, () => {
     await page.locator("[data-w05-stichtag]").fill("2026-12-10");
     await expect(card).toContainText("2023");
     await expect(page.locator('[data-w05-own-card="Backup-Konzept.docx"] [data-state="fail"]')).not.toHaveCount(0);
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+  });
+
+  test("de: on a wide screen a tapped request opens beside the board, and a switch shows the row it broke", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/demos/${SLUG}?beat=pruefungen`, { waitUntil: "networkidle" });
+    const panel = page.locator("[data-w05-panel]");
+    await expect(panel).toBeVisible();
+    await page.locator('[data-w05-switch="approval"]').click();
+    await expect(panel).toHaveAttribute("data-w05-panel", "R8");
+    await page.locator('[data-w05-row="R3"] .w05-request').click();
+    await expect(panel).toHaveAttribute("data-w05-panel", "R3");
+    await expect(page.locator('[role="dialog"]')).toHaveCount(0);
     expect(await overflow(page)).toBeLessThanOrEqual(0);
   });
 

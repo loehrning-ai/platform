@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { breakingCheck, type CheckSet } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/breaks";
 import type { ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
 import { decisionFor } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/decision-lines";
@@ -52,8 +52,21 @@ export function Board({
   const { copy } = fmt;
   const holding = model.rows.filter((row) => breakingCheck(row, active) === null).length;
   const allOn = active.size === 4;
+  const root = useRef<HTMLDivElement | null>(null);
+  const first = attention[0];
+  // On a phone the board scrolls inside the stage: the first row the last switch broke scrolls into the stage's view (never the page).
+  useEffect(() => {
+    const row = first ? root.current?.querySelector<HTMLElement>(`[data-w05-row="${first}"]`) : null;
+    const scroller = row?.closest<HTMLElement>(".w05-data");
+    if (!row || !scroller) return;
+    const box = row.getBoundingClientRect();
+    const view = scroller.getBoundingClientRect();
+    if (box.top >= view.top && box.bottom <= view.bottom) return;
+    // The stage's own scroll box, as the document view moves its band: the page itself never moves.
+    scroller.scrollTop = Math.max(0, scroller.scrollTop + box.top - view.top - Math.max(0, (view.height - box.height) / 2));
+  }, [first, active]);
   return (
-    <div className="w05-board" data-w05-board="" data-checking={checking ? "" : undefined}>
+    <div ref={root} className="w05-board" data-w05-board="" data-checking={checking ? "" : undefined}>
       {lead ? (
         <p className="w05-board-lead" data-w05-lead="">
           {lead}

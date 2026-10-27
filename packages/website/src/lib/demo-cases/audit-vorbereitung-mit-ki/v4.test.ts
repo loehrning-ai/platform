@@ -1,13 +1,18 @@
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
+import type { ClaudeRecording } from "@/lib/claude-runs";
 import { allCheckSets, breaksFor, brokenBy, eachCheckDistinct, survivors } from "./breaks";
 import { auditDateOf, dueDateOf, ITEMS, itemById, vardarContext, windowMonthsOf, windowStartOf } from "./case";
 import { decisionFor, decisionLines, docLines, lineOf } from "./decision-lines";
 import { parseClaudeAnswer } from "./claude-answer";
 import { SCENE } from "./claude-runs";
+import { reviewOf, TAKE_REVIEW } from "./claude-runs/review";
+import { mainProduced, stepOf, windowQuestions, windowTake } from "./claude-takes";
 import { evaluate, tally, TEST_ORDER, type TestId } from "./evidence";
 import { FOLDER_FILES, kitText } from "./kit";
 import { buildModel } from "./model";
-import { attachedFiles, probeAnswer, probeSummary, quotedSpans } from "./probe";
+import { attachedFiles, probeAnswer, probeSummary, probeTake, quotedSpans } from "./probe";
 import { MAX_FILE } from "./quote";
 
 const model = buildModel();
@@ -198,5 +203,129 @@ describe("the recorded answers the probe counts", () => {
         expect(prompt.withoutSkill.length, `${locale} ${prompt.id}`).toBeGreaterThan(0);
       }
     }
+  });
+});
+
+describe("scene 5: the shown takes, their review and our notes", () => {
+  const recordings = SCENE?.recordings ?? [];
+  const byId = (id: string) => {
+    const recording = recordings.find((entry) => entry.id === id);
+    if (!recording) throw new Error(`no take ${id}`);
+    return recording;
+  };
+  /** The marks of a take as the probe reads them before any review. */
+  const unreviewed = (id: string) => probeTake({ ...windowTake(byId(id), "de"), reviews: {} }).marks.filter((mark) => mark.check.kind !== "found");
+  /** The takes kept but not shown: rejected/ (the recorder named a failure) and replaced/ (reasons.json says why). */
+  const setAsideIn = (folder: "rejected" | "replaced") => {
+    const dir = path.join(process.cwd(), "src/lib/demo-cases/audit-vorbereitung-mit-ki/claude-runs", folder);
+    return readdirSync(dir)
+      .filter((name) => name.endsWith(".json") && name !== "reasons.json")
+      .map((name) => JSON.parse(readFileSync(path.join(dir, name), "utf8")) as ClaudeRecording);
+  };
+  const rejected = setAsideIn("rejected");
+  const replaced = setAsideIn("replaced");
+
+  it("every quote not found word for word in a registered take has a review entry", () => {
+    const open = recordings.flatMap((recording) => unreviewed(recording.id).filter((mark) => !reviewOf(recording.id).marks?.[mark.quote]).map((mark) => `${recording.id}: ${mark.quote}`));
+    expect(open).toEqual([]);
+  });
+
+  it("the gate is real: without its review, a shown take has marks the page would call missing", () => {
+    expect(unreviewed("de-alle-without-5").length).toBeGreaterThan(0);
+    expect(unreviewed("de-alle-with-1").length).toBeGreaterThan(0);
+  });
+
+  it("every review entry still matches a mark of its take", () => {
+    for (const [id, review] of Object.entries(TAKE_REVIEW)) {
+      const quotes = unreviewed(id).map((mark) => mark.quote);
+      for (const quote of Object.keys(review.marks ?? {})) expect(quotes, `${id}: ${quote}`).toContain(quote);
+    }
+  });
+
+  it("selects exactly one registered take per question, language and side", () => {
+    for (const prompt of SCENE?.prompts ?? []) {
+      for (const side of [prompt.withSkill, prompt.withoutSkill]) {
+        expect(side.filter((id) => reviewOf(id).selected).length, `${prompt.locale} ${prompt.id}`).toBe(1);
+      }
+    }
+    for (const id of Object.keys(TAKE_REVIEW)) expect(recordings.some((recording) => recording.id === id), id).toBe(true);
+  });
+
+  it("the window shows the selected takes", () => {
+    for (const locale of ["de", "en"] as const) {
+      for (const question of windowQuestions(SCENE, locale)) {
+        expect(question.withSkill && reviewOf(question.withSkill.id).selected, `${locale} ${question.id}`).toBe(true);
+        expect(question.withoutSkill && reviewOf(question.withoutSkill.id).selected, `${locale} ${question.id}`).toBe(true);
+        expect(question.notes.length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("ignores short phrases, blockquotes and Claude's German names for the CSV columns", () => {
+    expect(quotedSpans('It says "does not exist" here.')).toEqual([]);
+    expect(quotedSpans('> Please send us "the signed restore test report from 2026"')).toEqual([]);
+    const probe = probeTake(windowTake(byId("de-alle-with-1"), "de"));
+    expect(probe.ownWords).toBe(1);
+    expect(probe.marks.filter((mark) => mark.check.kind !== "found")).toEqual([]);
+  });
+
+  it("keeps the one quote a reviewer confirmed as not verbatim (clause 7 in German)", () => {
+    const probe = probeTake(windowTake(byId("de-alle-without-5"), "de"));
+    const off = probe.marks.filter((mark) => mark.check.kind !== "found").map((mark) => mark.quote);
+    expect(off).toEqual(["nur nach schriftlicher Mitteilung"]);
+    expect(reviewOf("de-alle-without-5").marks?.["nur nach schriftlicher Mitteilung"]?.verdict).toBe("confirmed");
+  });
+
+  it("R7 note: with the skill the four tests stand in a table, without it they do not", () => {
+    const header = { de: /\|[^\n]*Zitat[^\n]*Zeitraum[^\n]*Umfang[^\n]*Freigabe/i, en: /\|[^\n]*Quote[^\n]*Period[^\n]*Scope[^\n]*Approval/i };
+    for (const prompt of (SCENE?.prompts ?? []).filter((entry) => entry.id === "r7")) {
+      const locale = prompt.locale as "de" | "en";
+      for (const id of prompt.withSkill) expect(header[locale].test(byId(id).final_text), id).toBe(true);
+      for (const id of prompt.withoutSkill) expect(header[locale].test(byId(id).final_text), id).toBe(false);
+    }
+  });
+
+  it("all note: with the skill every take writes an evidence file and every quote in it is found", () => {
+    for (const prompt of (SCENE?.prompts ?? []).filter((entry) => entry.id === "alle")) {
+      for (const id of prompt.withSkill) {
+        const take = windowTake(byId(id), prompt.locale as "de" | "en");
+        expect(take.produced, id).not.toBeNull();
+        const inFile = probeTake(take).marks.filter((mark) => mark.source !== null);
+        expect(inFile.length, id).toBeGreaterThan(0);
+        expect(inFile.filter((mark) => mark.check.kind !== "found"), id).toEqual([]);
+      }
+    }
+  });
+
+  it("all note: five of seven takes without the skill copy folder files, four of the seven are set aside", () => {
+    const copies = (recording: ClaudeRecording) => {
+      const kit = new Set(recording.kit_files.map((file) => file.name));
+      return recording.produced_files.some((file) => kit.has(file.name));
+    };
+    const registered = (SCENE?.prompts ?? []).filter((entry) => entry.id === "alle").flatMap((entry) => entry.withoutSkill.map(byId));
+    const all = [...registered, ...[...rejected, ...replaced].filter((recording) => /-alle-without-/.test(recording.id))];
+    expect({ takes: all.length, copying: all.filter(copies).length, rejected: rejected.length, replaced: replaced.length }).toEqual({ takes: 7, copying: 5, rejected: 3, replaced: 1 });
+    expect(SCENE?.prompts.reduce((sum, entry) => sum + (entry.rejected ?? 0), 0)).toBe(rejected.length);
+    // The shown German take is one of the two that copy nothing; the note says so by counting all seven.
+    expect(copies(byId("de-alle-without-5"))).toBe(false);
+  });
+
+  it("all note (en): the shown take without the skill gives no request a status", () => {
+    expect(parseClaudeAnswer(byId("en-alle-without-1").final_text).filter((row) => row.status !== null)).toEqual([]);
+  });
+
+  it("names the rejected takes with a reason when there are any", () => {
+    const de = SCENE?.prompts.find((entry) => entry.id === "alle" && entry.locale === "de");
+    expect(de?.rejected).toBe(3);
+    expect(de?.rejectedReason).toMatch(/Rekorder/);
+  });
+
+  it("classifies the recorded tool calls into steps a visitor understands", () => {
+    expect(stepOf("Skill", { skill: "audit-nachweise" })).toEqual({ kind: "skill", name: "audit-nachweise" });
+    expect(stepOf("Bash", { command: "python3 - <<'EOF'" })).toEqual({ kind: "python" });
+    expect(stepOf("Bash", { command: "cat > out/nachweise.md <<'EOF'" })).toEqual({ kind: "write", name: "nachweise.md" });
+    expect(stepOf("Bash", { command: "mkdir -p out && cp a b" })).toEqual({ kind: "copy" });
+    expect(stepOf("Read", { file_path: "/x/y.md" })).toEqual({ kind: "look" });
+    expect(mainProduced(byId("en-alle-without-1"))?.name).toBe("INTERNAL_evidence-review.md");
   });
 });

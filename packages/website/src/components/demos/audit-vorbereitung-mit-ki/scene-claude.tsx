@@ -1,45 +1,75 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { revealIfOffscreen } from "@/components/demos/shell";
-import { GlasButton, GlasChip, GlasSegmented } from "@/components/demos/glas";
+import { useEffect, useMemo, useState } from "react";
+import { GlasButton, GlasSegmented, GlasSheet } from "@/components/demos/glas";
+import { seedFrom } from "@/components/demos/claude-scene/replay-engine";
+import { SceneInstall } from "@/components/demos/claude-scene/scene-install";
+import { useReplay, type ReplayControl } from "@/components/demos/claude-scene/use-replay";
 import { MAX_ANSWER, parseClaudeAnswer } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-answer";
+import type { WindowQuestion, WindowTake } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-takes";
 import { tally, type Tally } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/evidence";
-import { probeAnswer, probeSummary, type ProbeMark } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/probe";
+import { probeAnswer, probeSummary, probeTake, type ProbeMark, type TakeProbe } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/probe";
+import { ClaudeWindow, type SceneCopy } from "./claude-window";
 import { CopyButton } from "./copy-button";
 import type { Fmt } from "./fmt";
 
-/** One recorded take as the probe needs it (built on the server from claude-runs). */
-export interface ProbeTake {
-  readonly id: string;
-  /** "26. Oktober 2026" / "26 October 2026", from the recording. */
-  readonly recordedOn: string;
-  /** "Claude Opus 5.5". */
-  readonly model: string;
-  readonly prompt: string;
-  readonly text: string;
-}
-
-export interface ProbeQuestion {
-  readonly id: string;
-  readonly label: string;
-  readonly withSkill: ProbeTake | null;
-  readonly withoutSkill: ProbeTake | null;
-}
-
-export type ProbeSource = "recorded" | "own";
-
-export interface ClaudeProbeState {
+export interface ClaudeState {
   readonly question: string;
   readonly skill: "with" | "without";
-  readonly source: ProbeSource;
 }
+
+const NO_PROBE: TakeProbe = { marks: [], ownWords: 0 };
 
 /** The count of statuses in an answer with one status for each of the eight requests, else null. */
 export function answerTally(text: string): Tally | null {
   const rows = parseClaudeAnswer(text).filter((row) => row.status !== null);
   if (rows.length !== 8) return null;
   return tally(rows.map((row) => ({ status: row.status as NonNullable<typeof row.status> })));
+}
+
+export interface ClaudeScene {
+  readonly state: ClaudeState;
+  readonly setState: (state: ClaudeState) => void;
+  readonly question: WindowQuestion | null;
+  readonly take: WindowTake | null;
+  readonly replay: ReplayControl;
+  readonly probe: TakeProbe;
+  /** The sheet scene 5 has open: every quote, the visitor's own answer, or the install steps. */
+  readonly sheet: ClaudeSheet;
+  readonly setSheet: (sheet: ClaudeSheet) => void;
+}
+
+export type ClaudeSheet = "marks" | "own" | "install" | null;
+
+/** Scene 5's state, shared by the window on the stage and the dock: the question, the skill and the replay. */
+export function useClaudeScene(questions: readonly WindowQuestion[], options: { readonly reducedMotion: boolean; readonly visible: boolean }): ClaudeScene {
+  const [state, setState] = useState<ClaudeState>({ question: questions[0]?.id ?? "", skill: "with" });
+  const question = questions.find((entry) => entry.id === state.question) ?? questions[0] ?? null;
+  const take = question ? (state.skill === "with" ? (question.withSkill ?? question.withoutSkill) : (question.withoutSkill ?? question.withSkill)) : null;
+  const turns = useMemo(() => (take ? [{ ...take.turn, prompt: take.prompt }] : []), [take]);
+  const replay = useReplay(turns, {
+    seed: seedFrom(take?.id ?? "w05"),
+    reducedMotion: options.reducedMotion,
+    visible: options.visible,
+    producedNames: take?.produced ? [take.produced.name] : [],
+    keepTime: false,
+  });
+  const probe = useMemo(() => (take ? probeTake(take) : NO_PROBE), [take]);
+  const [sheet, setSheet] = useState<ClaudeSheet>(null);
+  return { state, setState, question, take, replay, probe, sheet, setSheet };
+}
+
+/** A phone (below 40rem): the dock's two lookup buttons keep to their icons. */
+function useNarrow(): boolean {
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 39.99rem)");
+    const update = () => setNarrow(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return narrow;
 }
 
 function markSentence(fmt: Fmt, mark: ProbeMark): string {
@@ -49,105 +79,162 @@ function markSentence(fmt: Fmt, mark: ProbeMark): string {
   return copy.claude.missing;
 }
 
-/** The answer text with our marks: found quotes underlined, similar dashed, missing wavy. */
-function MarkedText({ text, marks }: { readonly text: string; readonly marks: readonly ProbeMark[] }) {
-  const parts: ReactNode[] = [];
-  let at = 0;
-  for (const [index, mark] of marks.entries()) {
-    if (mark.start < at) continue;
-    parts.push(text.slice(at, mark.start));
-    parts.push(
-      <mark key={index} className="w05-mark" data-kind={mark.check.kind}>
-        {text.slice(mark.start, mark.end)}
-      </mark>,
-    );
-    at = mark.end;
-  }
-  parts.push(text.slice(at));
-  return <>{parts}</>;
+/** "Die Seite hat 9 Zitate nachgeschlagen …": the sentence over a list of marks. */
+export function summarySentence(fmt: Fmt, marks: readonly ProbeMark[]): string {
+  const { copy } = fmt;
+  if (marks.length === 0) return copy.claude.noQuotes;
+  const summary = probeSummary(marks);
+  const off = summary.missing + summary.similar;
+  return off === 0 ? fmt.t(copy.claude.summaryAll, { n: marks.length }) : fmt.t(copy.claude.summary, { n: marks.length, m: off });
+}
+
+/** The count sentence for a take of the question about all eight requests, or null. */
+export function countSentence(fmt: Fmt, take: WindowTake | null, questionId: string | undefined, kitTally: Tally): string | null {
+  if (!take || questionId === "r7") return null;
+  const counted = answerTally(take.turn.final_text);
+  if (!counted) return fmt.copy.claude.noCount;
+  return fmt.t(fmt.copy.claude.count, { covered: counted.covered, weak: counted.weak, gap: counted.gap, kc: kitTally.covered, kw: kitTally.weak, kg: kitTally.gap });
+}
+
+function MarkList({ fmt, marks, onOpenQuote }: { readonly fmt: Fmt; readonly marks: readonly ProbeMark[]; readonly onOpenQuote: (file: string, line: number) => void }) {
+  return (
+    <ol className="w05-marks">
+      {marks.map((mark, index) => (
+        <li key={`${mark.start}-${index}`} data-kind={mark.check.kind} data-w05-mark={mark.check.kind}>
+          <span className="w05-mark-quote">{fmt.locale === "de" ? `„${mark.quote}“` : `“${mark.quote}”`}</span>
+          {mark.check.kind === "found" && mark.line !== null ? (
+            <button type="button" className="w05-link-button" onClick={() => onOpenQuote((mark.check as { file: string }).file, mark.line as number)} data-w05-mark-open="">
+              {markSentence(fmt, mark)}
+            </button>
+          ) : (
+            <span className="w05-mark-text">{markSentence(fmt, mark)}</span>
+          )}
+        </li>
+      ))}
+    </ol>
+  );
 }
 
 /**
- * Scene 5 on the stage, the Zitat-Probe: the recorded answer of Claude to
- * the same twelve files, with and without the skill, checked here with the
- * page's own tool. Every quote is looked up in the files; a found one opens
- * its file with the lens on the line. The window itself (the depiction of
- * the Claude app) sits below the stage; one button reveals it. "Deine
- * Antwort" runs the same check on an answer the visitor pastes.
+ * Scene 5 on the stage: the Claude window replaying the recorded take, with
+ * the page's quote marks drawn on the answer as it streams in, and under it
+ * two ways on: every quote with its file and line, and the same lookup for
+ * an answer the visitor pastes from their own Claude.
  */
-export function ClaudeProbe({
+export function ClaudeStage({
   fmt,
-  questions,
-  state,
-  ownText,
-  onOwnText,
+  scene,
+  claude,
   kitTally,
-  sceneId,
-  reducedMotion,
-  onOpenQuote,
-  onState,
   prompt,
   personal,
+  ownText,
+  onOwnText,
+  onOpenQuote,
+  onOpenProduced,
 }: {
   readonly fmt: Fmt;
-  readonly questions: readonly ProbeQuestion[];
-  readonly state: ClaudeProbeState;
-  readonly onState: (state: ClaudeProbeState) => void;
+  readonly scene: SceneCopy;
+  readonly claude: ClaudeScene;
+  readonly kitTally: Tally;
   /** The prompt to copy: the recorded one, or the visitor's own once a Stichtag is set. */
   readonly prompt: string;
   readonly personal: boolean;
   readonly ownText: string;
   readonly onOwnText: (text: string) => void;
-  readonly kitTally: Tally;
-  /** The id of the Claude window's section below the stage. */
-  readonly sceneId: string;
-  readonly reducedMotion: boolean;
   readonly onOpenQuote: (file: string, line: number) => void;
+  readonly onOpenProduced: (name: string, text: string) => void;
 }) {
   const { copy } = fmt;
-  const [whole, setWhole] = useState(false);
+  const { take, question, replay, probe, sheet: open, setSheet: setOpen } = claude;
+  const [copied, setCopied] = useState<string | null>(null);
   const [draft, setDraft] = useState(ownText);
-  const question = questions.find((entry) => entry.id === state.question) ?? questions[0] ?? null;
-  const take = question ? (state.skill === "with" ? question.withSkill : question.withoutSkill) : null;
-  const text = state.source === "own" ? ownText.slice(0, MAX_ANSWER) : (take?.text ?? "");
-  const marks = useMemo(() => probeAnswer(text), [text]);
-  const summary = probeSummary(marks);
-  const counted = state.source === "recorded" && question?.id !== "r7" ? answerTally(text) : null;
+  const ownMarks = useMemo(() => probeAnswer(ownText.slice(0, MAX_ANSWER)), [ownText]);
+  const sheetCommon = { onClose: () => setOpen(null), closeLabel: copy.close, resizeLabel: copy.resize, className: "w05 w05-sheet" };
+  const done = replay.started && replay.frame.done;
 
+  if (!take || !question) {
+    return (
+      <p className="w05-hint" data-w05-no-take="">
+        {copy.claude.noTake}
+      </p>
+    );
+  }
+  const answerMarks = probe.marks.filter((mark) => mark.source === null);
+  const fileMarks = probe.marks.filter((mark) => mark.source !== null);
+  const fileName = fileMarks[0]?.source ?? "";
+  const count = countSentence(fmt, take, question.id, kitTally);
+  const openQuote = (file: string, line: number) => {
+    setOpen(null);
+    onOpenQuote(file, line);
+  };
   return (
-    <div className="w05-probe" id="zitat-probe" data-w05-probe={state.source} data-w05-take={take?.id ?? ""}>
-      <div className="w05-probe-top">
-      <GlasSegmented
-        label={copy.claude.source}
-        options={[
-          { value: "recorded", label: copy.claude.sourceRecorded },
-          { value: "own", label: copy.claude.sourceOwn },
-        ]}
-        value={state.source}
-        onChange={(source) => onState({ ...state, source: source as ProbeSource })}
+    <div className="w05-claude" data-w05-probe="recorded" data-w05-take={take.id} data-w05-done={done ? "" : undefined}>
+      <ClaudeWindow
+        fmt={fmt}
+        scene={scene}
+        take={take}
+        marks={answerMarks}
+        replay={replay}
+        recent={question.label}
+        copyLabel={copied === prompt ? copy.claude.copied : personal ? copy.claude.copyOwnPrompt : copy.claude.copyPrompt}
+        copied={copied === prompt}
+        onCopy={() => {
+          navigator.clipboard?.writeText(prompt).then(
+            () => setCopied(prompt),
+            () => setCopied(null),
+          );
+        }}
+        onOpenQuote={onOpenQuote}
+        onOpenProduced={() => (take.produced ? onOpenProduced(take.produced.name, take.produced.text) : undefined)}
+        onInstall={() => setOpen("install")}
       />
-      </div>
-      {state.source === "recorded" && take ? (
-        <>
-          <div className="w05-chips">
-            <GlasChip kind="status">{fmt.t(copy.claude.recorded, { date: take.recordedOn, model: take.model })}</GlasChip>
-            <GlasChip kind="status">{copy.claude.invented}</GlasChip>
-          </div>
-          <p className="w05-label">{copy.claude.prompt}</p>
-          <p className="w05-prompt" data-w05-prompt="">
-            {take.prompt}
+      <GlasSheet {...sheetCommon} open={open === "marks"} title={copy.claude.probeHeading} detent="large">
+        <div className="w05-probe" data-w05-probe-sheet={take.id}>
+          <p className="w05-hint">
+            <span className="w05-ours">{copy.claude.ours}</span> {copy.claude.probeLead}
           </p>
-          <div className="w05-row-buttons">
-            <CopyButton text={prompt} label={personal ? copy.claude.copyOwnPrompt : copy.claude.copyPrompt} done={copy.claude.copied} />
-          </div>
-          {personal ? <p className="w05-hint w05-prompt-preview">{prompt}</p> : null}
-        </>
-      ) : state.source === "recorded" ? (
-        <p className="w05-hint" data-w05-no-take="">
-          {copy.claude.noTake}
-        </p>
-      ) : (
-        <div className="w05-own-answer">
+          <p className="w05-probe-summary" data-w05-probe-summary={`${probe.marks.length}-${probe.marks.filter((mark) => mark.check.kind !== "found").length}`}>
+            {summarySentence(fmt, probe.marks)}
+          </p>
+          {count ? (
+            <p className="w05-probe-count" data-w05-count="">
+              {count}
+            </p>
+          ) : null}
+          {probe.ownWords > 0 ? <p className="w05-hint">{fmt.t(probe.ownWords === 1 ? copy.claude.ownWordsOne : copy.claude.ownWords, { n: fmt.word(probe.ownWords) })}</p> : null}
+          {answerMarks.length > 0 ? (
+            <>
+              <p className="w05-label">{copy.claude.inAnswer}</p>
+              <MarkList fmt={fmt} marks={answerMarks} onOpenQuote={openQuote} />
+            </>
+          ) : null}
+          {fileMarks.length > 0 ? (
+            <>
+              <p className="w05-label">{fmt.t(copy.claude.inFile, { name: fileName })}</p>
+              <MarkList fmt={fmt} marks={fileMarks} onOpenQuote={openQuote} />
+            </>
+          ) : null}
+          {question.notes.length > 0 ? (
+            <div className="w05-notes" data-w05-notes="">
+              <p className="w05-label">{copy.claude.noteLabel}</p>
+              <ul>
+                {question.notes.map((note) => (
+                  <li key={note}>{note}</li>
+                ))}
+              </ul>
+              {question.rejected > 0 ? (
+                <p className="w05-hint" data-w05-rejected={question.rejected}>
+                  {question.rejectedReason ? fmt.t(copy.claude.rejectedWhy, { n: question.rejected, reason: question.rejectedReason }) : `${scene.rejected(question.rejected)}.`}
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      </GlasSheet>
+
+      <GlasSheet {...sheetCommon} open={open === "own"} title={copy.claude.sourceOwn} detent="large">
+        <div className="w05-own-answer" data-w05-probe="own">
           <p className="w05-hint">{copy.claude.ownLead}</p>
           <div className="w05-row-buttons">
             <CopyButton text={prompt} label={personal ? copy.claude.copyOwnPrompt : copy.claude.copyPrompt} done={copy.claude.copied} />
@@ -155,9 +242,9 @@ export function ClaudeProbe({
           <label className="w05-label" htmlFor="w05-own-answer">
             {copy.claude.ownLabel}
           </label>
-          <textarea id="w05-own-answer" className="w05-input w05-textarea" rows={4} value={draft} onChange={(event) => setDraft(event.target.value)} data-w05-own-answer="" />
+          <textarea id="w05-own-answer" className="w05-input w05-textarea" rows={5} value={draft} onChange={(event) => setDraft(event.target.value)} data-w05-own-answer="" />
           <div className="w05-row-buttons">
-            <GlasButton variant="fill" size="compact" disabled={draft.trim() === ""} onClick={() => onOwnText(draft)} data-w05-own-check="">
+            <GlasButton variant="prominent" size="compact" disabled={draft.trim() === ""} onClick={() => onOwnText(draft)} data-w05-own-check="">
               {copy.claude.ownCheck}
             </GlasButton>
             {draft ? (
@@ -173,89 +260,67 @@ export function ClaudeProbe({
               </GlasButton>
             ) : null}
           </div>
+          {ownText ? (
+            <>
+              <p className="w05-probe-summary" aria-live="polite" data-w05-probe-summary={`${ownMarks.length}-${ownMarks.filter((mark) => mark.check.kind !== "found").length}`}>
+                {summarySentence(fmt, ownMarks)}
+              </p>
+              <MarkList fmt={fmt} marks={ownMarks} onOpenQuote={openQuote} />
+            </>
+          ) : null}
         </div>
-      )}
+      </GlasSheet>
 
-      <p className="w05-label">
-        {copy.claude.probeHeading} <span className="w05-ours">{copy.claude.ours}</span>
-      </p>
-      <p className="w05-hint">{copy.claude.probeLead}</p>
-      <p className="w05-probe-summary" aria-live="polite" data-w05-probe-summary={`${marks.length}-${summary.missing}`}>
-        {text ? (marks.length > 0 ? fmt.t(copy.claude.summary, { n: marks.length, m: summary.missing }) : copy.claude.noQuotes) : ""}
-      </p>
-      {counted ? (
-        <p className="w05-probe-count" data-w05-count="">
-          {fmt.t(copy.claude.count, { covered: counted.covered, weak: counted.weak, gap: counted.gap, kc: kitTally.covered, kw: kitTally.weak, kg: kitTally.gap })}
-        </p>
-      ) : state.source === "recorded" && question?.id !== "r7" && text ? (
-        <p className="w05-probe-count">{copy.claude.noCount}</p>
-      ) : null}
-      <ol className="w05-marks">
-        {marks.map((mark, index) => (
-          <li key={`${mark.start}-${index}`} data-kind={mark.check.kind} data-w05-mark={mark.check.kind}>
-            <span className="w05-mark-quote" lang="en">
-              {fmt.locale === "de" ? `„${mark.quote}“` : `“${mark.quote}”`}
-            </span>
-            {mark.check.kind === "found" && mark.line !== null ? (
-              <button type="button" className="w05-link-button" onClick={() => onOpenQuote((mark.check as { file: string }).file, mark.line as number)} data-w05-mark-open="">
-                {markSentence(fmt, mark)}
-              </button>
-            ) : (
-              <span className="w05-mark-text">{markSentence(fmt, mark)}</span>
-            )}
-          </li>
-        ))}
-      </ol>
-      {text ? (
-        <div className="w05-answer" data-whole={whole ? "" : undefined}>
-          <p className="w05-label">{copy.claude.answer}</p>
-          <div className="w05-answer-text">
-            <MarkedText text={text} marks={marks} />
-          </div>
-          <GlasButton variant="plain" size="compact" onClick={() => setWhole(!whole)} data-w05-whole="">
-            {whole ? copy.claude.showLess : copy.claude.showAll}
-          </GlasButton>
-        </div>
-      ) : null}
-      <GlasButton
-        variant="fill"
-        size="compact"
-        icon="forward"
-        onClick={() => revealIfOffscreen(document.getElementById(sceneId), reducedMotion)}
-        data-w05-window=""
-      >
-        {copy.claude.window}
-      </GlasButton>
+      {open === "install" ? <SceneInstall copy={scene} skillName={take.skillName} onClose={() => setOpen(null)} /> : null}
     </div>
   );
 }
 
-/** Scene 5, the dock: which question and whether Claude had the skill (the source and the prompt sit in the stage). */
-export function ClaudeDock({
-  fmt,
-  questions,
-  state,
-  onState,
-}: {
-  readonly fmt: Fmt;
-  readonly questions: readonly ProbeQuestion[];
-  readonly state: ClaudeProbeState;
-  readonly onState: (state: ClaudeProbeState) => void;
-}) {
+/**
+ * Scene 5, the dock: which question and whether Claude had the skill. The
+ * one button in the window's composer sends the prompt, stops the stream
+ * (the whole answer at once) and plays it again.
+ */
+export function ClaudeDock({ fmt, scene, claude, questions }: { readonly fmt: Fmt; readonly scene: SceneCopy; readonly claude: ClaudeScene; readonly questions: readonly WindowQuestion[] }) {
   const { copy } = fmt;
-  if (state.source !== "recorded") return null;
+  const { state, setState, setSheet, replay, probe } = claude;
+  const narrow = useNarrow();
+  const done = replay.started && replay.frame.done;
+  const marksLabel = probe.marks.length > 0 ? fmt.t(copy.claude.marksOpen, { n: probe.marks.length }) : copy.claude.marksNone;
   return (
     <div className="w05-claude-dock">
-      <GlasSegmented label={copy.claude.question} wrap options={questions.map((entry) => ({ value: entry.id, label: entry.label }))} value={state.question} onChange={(question) => onState({ ...state, question })} />
+      <GlasSegmented
+        label={copy.claude.question}
+        options={questions.map((entry) => ({ value: entry.id, label: (copy.claude.questionShort as Readonly<Record<string, string>>)[entry.id] ?? entry.label }))}
+        value={state.question}
+        onChange={(id) => setState({ ...state, question: id })}
+      />
       <GlasSegmented
         label={copy.claude.skill}
         options={[
-          { value: "without", label: copy.claude.withoutSkill },
-          { value: "with", label: copy.claude.withSkill },
+          { value: "with", label: scene.withSkill },
+          { value: "without", label: scene.withoutSkill },
         ]}
         value={state.skill}
-        onChange={(skill) => onState({ ...state, skill: skill as "with" | "without" })}
+        onChange={(skill) => setState({ ...state, skill: skill as "with" | "without" })}
       />
+      <span className="w05-claude-dock-more">
+        {narrow ? (
+          <>
+            <GlasButton variant="icon" size="compact" icon="search" label={marksLabel} onClick={() => setSheet("marks")} data-w05-marks-open="" data-ready={done ? "" : undefined} />
+            <GlasButton variant="icon" size="compact" icon="doc" label={copy.claude.ownOpen} onClick={() => setSheet("own")} data-w05-own-open="" />
+          </>
+        ) : (
+          <>
+            <GlasButton variant={done ? "prominent" : "plain"} size="compact" icon="search" onClick={() => setSheet("marks")} data-w05-marks-open="">
+              {marksLabel}
+            </GlasButton>
+            <GlasButton variant="plain" size="compact" icon="doc" onClick={() => setSheet("own")} data-w05-own-open="">
+              {copy.claude.ownOpen}
+            </GlasButton>
+          </>
+        )}
+      </span>
     </div>
   );
 }

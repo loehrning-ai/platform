@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { DemoDock, DemoGlasStage, useBeatClock, useBeatGate, useOnEscape, useOnRestart } from "@/components/demos/shell";
-import { feldFor, GlasButton, GlasChip, GlasReadout, GlasSheet, GlasSlider, ESCAPE_PRIORITY, pushEscapeLayer } from "@/components/demos/glas";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { DemoDock, DemoGlasStage, revealIfOffscreen, useBeatClock, useBeatGate, useOnEscape, useOnRestart } from "@/components/demos/shell";
+import { feldFor, GlasButton, GlasChip, GlasSheet, GlasSlider, ESCAPE_PRIORITY, pushEscapeLayer } from "@/components/demos/glas";
 import { BEATS, type BeatId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/beats";
 import { breaksFor, eachCheckDistinct, survivors } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/breaks";
+import type { WindowQuestion } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/claude-takes";
 import { ITEMS, itemById, windowMonthsOf, type ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
 import type { W05Copy } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/copy";
 import { evaluate, TEST_ORDER, type Status, type TestId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/evidence";
@@ -13,6 +14,7 @@ import { buildModel } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
 import { moveCard, ownBoard, type Moves, type Place } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/own-board";
 import type { OwnFile } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/own-folder";
 import { attachedFiles } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/probe";
+import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { BenchHand, BenchStage, fullyRead, useBench } from "./bench";
 import { Board } from "./board";
 import { DockCaption } from "./dock-caption";
@@ -20,7 +22,7 @@ import { gapListMarkdown, indexCsv, instructionsText } from "./exports";
 import { EvidenceView, PlainFile } from "./file-sheet";
 import { formatter, type Fmt } from "./fmt";
 import { R5View } from "./r5-view";
-import { ClaudeDock, ClaudeProbe, type ClaudeProbeState, type ProbeQuestion } from "./scene-claude";
+import { ClaudeDock, ClaudeStage, countSentence, summarySentence, useClaudeScene } from "./scene-claude";
 import { OwnDock, OwnStage, readLines } from "./scene-own";
 import { TakeHomeScene, type TakeHomeFiles } from "./scene-takehome";
 import { useOwnFolder } from "./use-own-folder";
@@ -39,7 +41,8 @@ type Sheet =
   | { readonly kind: "step"; readonly id: ItemId }
   | { readonly kind: "checks" }
   | { readonly kind: "rule" }
-  | { readonly kind: "own"; readonly name: string };
+  | { readonly kind: "own"; readonly name: string }
+  | { readonly kind: "text"; readonly name: string; readonly text: string };
 
 type LastSwitch = { readonly test: TestId; readonly on: boolean; readonly first: boolean } | null;
 
@@ -56,11 +59,11 @@ function r7Key(file: FolderFile | null): "policy" | "notes" | "report" | null {
 function checksCaption(fmt: Fmt, active: ReadonlySet<TestId>, last: LastSwitch, guess: number | null, r1Seen: boolean): string[] {
   const { copy } = fmt;
   if (active.size === 4) {
-    // Three short sentences at most, so the dock never covers a row on a phone: the R1 hint first, then what R1 taught.
+    // The dock's own button names the next step (R1), so the caption keeps to what the four tests left.
     return [
       fmt.t(copy.checks.allOn, { covered: fmt.word(survivors(MODEL.rows, active)) }),
       ...(guess !== null ? [fmt.t(copy.checks.guessed, { guess: fmt.word(guess) })] : []),
-      ...(!r1Seen ? [copy.checks.toR1] : eachCheckDistinct(MODEL.rows) ? [copy.checks.distinct] : []),
+      ...(r1Seen && eachCheckDistinct(MODEL.rows) ? [copy.checks.distinct] : []),
     ];
   }
   if (!last) return [copy.checks.hint];
@@ -76,12 +79,10 @@ export default function Demo({
   copy,
   questions,
   files,
-  sceneId,
 }: {
   readonly copy: W05Copy;
-  readonly questions: readonly ProbeQuestion[];
+  readonly questions: readonly WindowQuestion[];
   readonly files: TakeHomeFiles;
-  readonly sceneId: string;
 }) {
   const clock = useBeatClock();
   const fmt = useMemo(() => formatter(copy), [copy]);
@@ -103,11 +104,17 @@ export default function Demo({
   const [r5Merged, setR5Merged] = useState(false);
   const [ruleSeen, setRuleSeen] = useState(false);
   const [sheet, setSheet] = useState<Sheet | null>(null);
+  // On a wide screen scenes 1 and 2 show what the visitor taps in a panel beside the board instead of a sheet.
+  const wide = useWide();
+  const [panel, setPanel] = useState<PanelSheet | null>(null);
   const [chosenGap, setChosenGap] = useState<ItemId | null>(null);
   const [moves, setMoves] = useState<Moves>({});
   const [moving, setMoving] = useState<OwnFile | null>(null);
-  const [probe, setProbe] = useState<ClaudeProbeState>({ question: questions[0]?.id ?? "r7", skill: "with", source: "recorded" });
   const [ownAnswer, setOwnAnswer] = useState("");
+  const scene = DEMOS_PAGE_COPY[fmt.locale].claudeScene;
+  const claude = useClaudeScene(questions, { reducedMotion: reduced, visible: view === "claude" });
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const shownView = useRef(view);
   const own = useOwnFolder();
   const bench = useBench(MODEL.context, reduced);
   const board = useMemo(() => (own.result ? ownBoard(own.result.files, moves) : null), [own.result, moves]);
@@ -127,13 +134,23 @@ export default function Demo({
     setR5Merged(false);
     setRuleSeen(false);
     setSheet(null);
+    setPanel(null);
     setChosenGap(null);
     setMoving(null);
-    setProbe({ question: questions[0]?.id ?? "r7", skill: "with", source: "recorded" });
+    claude.setState({ question: questions[0]?.id ?? "", skill: "with" });
     bench.actions.reset("R7");
   });
   useOnEscape(() => setSheet(null));
-  useEffect(() => setSheet(null), [view]);
+  useEffect(() => {
+    setSheet(null);
+    setPanel(null);
+  }, [view]);
+  // A new beat brings the stage back into view when the visitor had scrolled away (never on load).
+  useEffect(() => {
+    if (shownView.current === view) return;
+    shownView.current = view;
+    revealIfOffscreen(stageRef.current, reduced);
+  }, [reduced, view]);
   // The bench holds R7 in scene 3; free play keeps whatever request the visitor picks.
   useEffect(() => {
     if (view === "r7" && bench.state.item !== "R7") bench.actions.reset("R7");
@@ -148,7 +165,7 @@ export default function Demo({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // A status word is defined the first time its stamp appears, for four seconds or until the next touch.
+  // A status word is defined the first time its stamp appears, until the next switch.
   const stamps = useMemo(() => {
     const broken = breaksFor(MODEL.rows, active);
     const kinds = new Set<Status>(MODEL.rows.filter((row) => broken.has(row.item.id)).map((row) => row.naive.status));
@@ -160,8 +177,6 @@ export default function Demo({
     if (!fresh) return;
     setDefShown((current) => new Set([...current, fresh]));
     setDef(fresh);
-    const timer = setTimeout(() => setDef(null), 4000);
-    return () => clearTimeout(timer);
   }, [defShown, stamps]);
 
   const toggle = (test: TestId) => {
@@ -174,28 +189,28 @@ export default function Demo({
     if (on) setSeen(new Set([...seen, test]));
     setFront(new Set());
     setDef(null);
+    setPanel(null);
   };
 
+  /** A request, step or file: in the panel beside the board on a wide screen in scenes 1 and 2, else in a sheet. */
+  const show = (target: PanelSheet) => {
+    if (wide && (view === "ordner" || view === "pruefungen")) setPanel(target);
+    else setSheet(target);
+  };
   const openR1 = () => {
     setR1Seen(true);
-    setSheet({ kind: "step", id: "R1" });
+    show({ kind: "step", id: "R1" });
   };
 
-  // Scene 2 waits for all four checks; its first "Weiter" then opens R1. Scene 3 waits for the report; its first "Weiter" opens the rules.
+  // Scene 2 waits for all four tests and R1, scene 3 for the report and the rules. Until then "Weiter" stays hidden and
+  // the dock's own button names what comes next ("Weiter: R1 ansehen"), so no label promises the next scene too early.
   const reportRead = fullyRead(evaluate(itemById("R7"), R7_REPORT, MODEL.context), bench.state.visited[R7_REPORT] ?? []);
-  const gateReady = view === "pruefungen" ? active.size === 4 : view === "r7" ? reportRead : null;
-  useBeatGate(gateReady, () => {
-    if (view === "pruefungen" && !r1Seen) {
-      openR1();
-      return true;
-    }
-    if (view === "r7" && !ruleSeen) {
-      setRuleSeen(true);
-      setSheet({ kind: "rule" });
-      return true;
-    }
-    return false;
-  });
+  const gateReady = view === "pruefungen" ? active.size === 4 && r1Seen : view === "r7" ? reportRead && ruleSeen : null;
+  useBeatGate(gateReady);
+  const openRules = () => {
+    setRuleSeen(true);
+    setSheet({ kind: "rule" });
+  };
 
   const r7Name = (file: FolderFile) => {
     const key = r7Key(file);
@@ -209,7 +224,8 @@ export default function Demo({
         // Before the guess the question stands above the board, so the dock keeps to the slider.
         return guess !== null ? [fmt.t(copy.folder.kept, { guess: fmt.word(guess) })] : [];
       case "pruefungen":
-        return checksCaption(fmt, active, last, guess, r1Seen);
+        // A status word is defined in the caption the first time its stamp appears, so no readout covers a row.
+        return [...checksCaption(fmt, active, last, guess, r1Seen), ...(def ? [copy.statusDef[def]] : [])];
       case "r7": {
         const { placed, lifted, first } = bench.state;
         if (lifted) return [fmt.t(copy.r7.lifted, { card: r7Name(lifted), item: "R7" })];
@@ -226,8 +242,13 @@ export default function Demo({
       }
       case "ordner-eigen":
         return own.result ? [copy.own.afterDrop] : [copy.own.lead];
-      case "claude":
-        return [copy.claude.lead];
+      case "claude": {
+        const { replay, take, question, probe } = claude;
+        if (!replay.started) return [copy.claude.lead];
+        if (!replay.frame.done) return [copy.claude.streaming];
+        const count = countSentence(fmt, take, question?.id, MODEL.tally);
+        return [summarySentence(fmt, probe.marks), ...(count ? [count] : [])];
+      }
       case "mitnehmen":
         return [fmt.t(copy.takehome.lead, { open: fmt.Word(MODEL.tally.weak + MODEL.tally.gap) })];
       case "free": {
@@ -253,18 +274,15 @@ export default function Demo({
     gapList: gapListMarkdown(MODEL, copy, fmt.locale),
     index: indexCsv(MODEL, board, copy, fmt.locale),
   };
-  const currentTake = (() => {
-    const question = questions.find((entry) => entry.id === probe.question) ?? questions[0];
-    return (probe.skill === "with" ? question?.withSkill : question?.withoutSkill) ?? question?.withSkill ?? null;
-  })();
+  const currentTake = claude.take;
   const personal = own.audit !== "" && own.windowFrom !== null;
   const promptText = personal ? fmt.t(copy.claude.ownPrompt, { audit: fmt.date(own.audit), window: fmt.date(own.windowFrom ?? "") }) : (currentTake?.prompt ?? "");
 
   const data = (): ReactNode => {
     switch (view) {
       case "ordner":
-      case "pruefungen":
-        return (
+      case "pruefungen": {
+        const boardNode = (
           <Board
             model={MODEL}
             fmt={fmt}
@@ -275,11 +293,30 @@ export default function Demo({
             guess={guess}
             attention={attention}
             lead={view === "ordner" && guess === null ? copy.folder.question : undefined}
-            onRequest={(id) => setSheet(view === "ordner" ? { kind: "request", id } : { kind: "step", id })}
-            onFile={(file) => setSheet({ kind: "file", file, line: null })}
+            onRequest={(id) => show(view === "ordner" ? { kind: "request", id } : { kind: "step", id })}
+            onFile={(file) => show({ kind: "file", file, line: null })}
             onTurn={(id) => setFront((current) => (current.has(id) ? new Set([...current].filter((entry) => entry !== id)) : new Set([...current, id])))}
           />
         );
+        if (!wide) return boardNode;
+        // Without a tap the panel shows the first row the last switch broke, so the deciding line is always in view.
+        const shown: PanelSheet | null = panel ?? (view === "pruefungen" && attention[0] ? { kind: "step", id: attention[0] } : null);
+        return (
+          <div className="w05-split">
+            {boardNode}
+            <aside className="w05-panel" aria-label={copy.panelLabel} data-w05-panel={shown ? (shown.kind === "file" ? shown.file : shown.id) : ""}>
+              {shown ? (
+                <>
+                  <p className="w05-panel-title">{shown.kind === "file" ? shown.file : `${shown.id} ${copy.own.genericName[shown.id]}`}</p>
+                  <SheetBody fmt={fmt} sheet={shown} reduced={reduced} r5Merged={r5Merged} onMerge={() => setR5Merged(true)} />
+                </>
+              ) : (
+                <p className="w05-hint w05-panel-empty">{copy.folder.panelHint}</p>
+              )}
+            </aside>
+          </div>
+        );
+      }
       case "r7":
         return <BenchStage fmt={fmt} bench={bench} noticeHours={MODEL.context.noticeHours} reducedMotion={reduced} title={copy.r7.cardTitle} cardName={r7Name} />;
       case "free":
@@ -323,19 +360,17 @@ export default function Demo({
         );
       case "claude":
         return (
-          <ClaudeProbe
+          <ClaudeStage
             fmt={fmt}
-            questions={questions}
-            state={probe}
-            ownText={ownAnswer}
-            onOwnText={setOwnAnswer}
+            scene={scene}
+            claude={claude}
             kitTally={MODEL.tally}
-            sceneId={sceneId}
-            reducedMotion={reduced}
-            onOpenQuote={(file, line) => setSheet({ kind: "file", file, line })}
-            onState={setProbe}
             prompt={promptText}
             personal={personal}
+            ownText={ownAnswer}
+            onOwnText={setOwnAnswer}
+            onOpenQuote={(file, line) => setSheet({ kind: "file", file, line })}
+            onOpenProduced={(name, text) => setSheet({ kind: "text", name, text })}
           />
         );
       case "mitnehmen":
@@ -382,17 +417,31 @@ export default function Demo({
             <div className="w05-switches" role="group" aria-label={copy.checks.group}>
               {TEST_ORDER.map((test) => (
                 <button key={test} type="button" role="switch" aria-checked={active.has(test)} className="w05-switch" onClick={() => toggle(test)} data-w05-switch={test}>
-                  <span className="w05-switch-dot" aria-hidden="true" />
-                  {copy.check[test]}
+                  <span className="w05-switch-label">{copy.check[test]}</span>
+                  <span className="w05-switch-track" aria-hidden="true">
+                    <span className="w05-switch-knob" />
+                  </span>
                 </button>
               ))}
               <GlasButton variant="icon" size="compact" icon="info" label={copy.checks.group} onClick={() => setSheet({ kind: "checks" })} data-w05-checks-info="" />
             </div>
+            {active.size === 4 && !r1Seen ? (
+              <GlasButton variant="prominent" size="compact" trailingIcon="forward" onClick={openR1} data-w05-next-r1="">
+                {copy.checks.nextR1}
+              </GlasButton>
+            ) : null}
           </div>
         );
       case "r7":
         // The hand leaves the dock while a file lies on the bench, so a phone keeps room for the document;
         // "Zurücklegen" brings it back. After the report is read, Weiter opens the four rules first.
+        if (reportRead && !ruleSeen) {
+          return (
+            <GlasButton variant="prominent" size="compact" trailingIcon="forward" onClick={openRules} data-w05-next-rules="">
+              {copy.r7.nextRules}
+            </GlasButton>
+          );
+        }
         return bench.state.placed ? null : <BenchHand fmt={fmt} bench={bench} files={R7_FILES} label={copy.r7.hand} cardName={r7Name} />;
       case "free":
         return (
@@ -418,31 +467,26 @@ export default function Demo({
       case "ordner-eigen":
         return null;
       case "claude":
-        return <ClaudeDock fmt={fmt} questions={questions} state={probe} onState={setProbe} />;
+        return <ClaudeDock fmt={fmt} scene={scene} claude={claude} questions={questions} />;
       case "mitnehmen":
         return null;
     }
   };
 
   return (
-    <div className="w05" data-w05-view={view}>
+    <div className="w05" data-w05-view={view} ref={stageRef}>
       <DemoGlasStage
         label={copy.stageLabel}
         feld={feld}
         className="w05-stage"
         dock={
-          <DemoDock className="w05-dock">
-            {clock.phase === "intro" ? null : <DockCaption sentences={caption} more={copy.more} less={copy.less} />}
+          <DemoDock className="w05-dock" compact>
+            {clock.phase === "intro" ? null : <DockCaption sentences={caption} />}
             {clock.phase === "intro" ? null : controls()}
           </DemoDock>
         }
       >
         <div className="w05-data" data-view={view} data-w05-data={view}>
-          {def && view === "pruefungen" ? (
-            <GlasReadout lines={2} popKey={def} className="w05-def">
-              {copy.statusDef[def]}
-            </GlasReadout>
-          ) : null}
           <div className="w05-main">{data()}</div>
         </div>
       </DemoGlasStage>
@@ -471,47 +515,17 @@ function Sheets({
   const { copy } = fmt;
   const common = { onClose, closeLabel: copy.close, resizeLabel: copy.resize, className: "w05 w05-sheet" };
   const row = sheet && (sheet.kind === "step" || sheet.kind === "request") ? MODEL.rows.find((entry) => entry.item.id === sheet.id) : undefined;
-  const fileText = sheet?.kind === "file" ? attachedFiles().find((entry) => entry.name === sheet.file)?.text ?? "" : "";
   const ownFile = sheet?.kind === "own" ? ownFiles.find((file) => file.entry.name === sheet.name) : undefined;
   return (
     <>
       <GlasSheet {...common} open={sheet?.kind === "file"} title={sheet?.kind === "file" ? sheet.file : ""} detent={sheet?.kind === "file" && sheet.line !== null ? "large" : "medium"}>
-        {sheet?.kind === "file" ? (
-          <PlainFile key={`${sheet.file}-${sheet.line}`} fmt={fmt} name={sheet.file} text={fileText} line={sheet.line} reducedMotion={reduced} note={sheet.file === VENDOR ? copy.folder.vendorNote : null} />
-        ) : null}
+        {sheet?.kind === "file" ? <SheetBody fmt={fmt} sheet={sheet} reduced={reduced} r5Merged={r5Merged} onMerge={onMerge} /> : null}
       </GlasSheet>
       <GlasSheet {...common} open={sheet?.kind === "request"} title={row ? `${row.item.id} ${copy.own.genericName[row.item.id]}` : ""}>
-        {row ? (
-          <div className="w05-request-sheet" data-w05-request-sheet={row.item.id}>
-            <p className="w05-label">{fmt.t(copy.folder.requestOf, { id: row.item.id })}</p>
-            <p className="w05-request-text" lang="en">
-              {row.item.request}
-            </p>
-            {copy.explain[row.item.id] ? <p>{copy.explain[row.item.id]}</p> : null}
-            <p className="w05-hint">{fmt.t(copy.folder.caseLine, { sent: fmt.date(MODEL.exercise), audit: fmt.date(MODEL.context.audit) })}</p>
-          </div>
-        ) : null}
+        {sheet?.kind === "request" ? <SheetBody fmt={fmt} sheet={sheet} reduced={reduced} r5Merged={r5Merged} onMerge={onMerge} /> : null}
       </GlasSheet>
       <GlasSheet {...common} open={sheet?.kind === "step"} title={row ? `${row.item.id} ${copy.own.genericName[row.item.id]}` : ""} detent={row?.item.id === "R1" ? "large" : "medium"}>
-        {row && sheet?.kind === "step" ? (
-          row.item.id === "R5" ? (
-            <R5View fmt={fmt} evaluation={MODEL.r5} percent={Math.round(MODEL.context.trainingShare * 100)} merged={r5Merged} onMerge={onMerge} />
-          ) : (
-            <EvidenceView key={row.item.id} fmt={fmt} evaluation={row.best} noticeHours={MODEL.context.noticeHours} reducedMotion={reduced} focus={row.item.id === "R1" ? "quote" : undefined}>
-              {row.item.id === "R1" ? (
-                <div className="w05-r1" data-w05-r1-sheet="">
-                  <figure className="w05-clause">
-                    <blockquote lang="en">{clause7()}</blockquote>
-                    <figcaption>{copy.checks.clause7}</figcaption>
-                  </figure>
-                  {copy.checks.r1.map((sentence) => (
-                    <p key={sentence}>{sentence}</p>
-                  ))}
-                </div>
-              ) : null}
-            </EvidenceView>
-          )
-        ) : null}
+        {sheet?.kind === "step" ? <SheetBody fmt={fmt} sheet={sheet} reduced={reduced} r5Merged={r5Merged} onMerge={onMerge} /> : null}
       </GlasSheet>
       <GlasSheet {...common} open={sheet?.kind === "checks"} title={copy.checks.group}>
         <dl className="w05-defs">
@@ -536,6 +550,9 @@ function Sheets({
           <p className="w05-hint">{copy.r7.toolFile}</p>
         </div>
       </GlasSheet>
+      <GlasSheet {...common} open={sheet?.kind === "text"} title={sheet?.kind === "text" ? sheet.name : ""} detent="large">
+        {sheet?.kind === "text" ? <PlainFile key={sheet.name} fmt={fmt} name={sheet.name} text={sheet.text} line={null} reducedMotion={reduced} note={fmt.copy.claude.desk.produced} /> : null}
+      </GlasSheet>
       <GlasSheet {...common} open={sheet?.kind === "own"} title={ownFile?.entry.name ?? ""}>
         {ownFile && ownFile.entry.text ? (
           <OwnFileView fmt={fmt} file={ownFile} reduced={reduced} />
@@ -544,6 +561,72 @@ function Sheets({
         )}
       </GlasSheet>
     </>
+  );
+}
+
+type PanelSheet = Extract<Sheet, { readonly kind: "file" | "request" | "step" }>;
+
+/** Matches a wide screen (64rem and up): scenes 1 and 2 then get a document panel beside the board. */
+function useWide(): boolean {
+  const [wide, setWide] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 64rem)");
+    const update = () => setWide(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return wide;
+}
+
+/** What a request, a step or a file shows, in a sheet or in the panel beside the board. */
+function SheetBody({
+  fmt,
+  sheet,
+  reduced,
+  r5Merged,
+  onMerge,
+}: {
+  readonly fmt: Fmt;
+  readonly sheet: PanelSheet;
+  readonly reduced: boolean;
+  readonly r5Merged: boolean;
+  readonly onMerge: () => void;
+}) {
+  const { copy } = fmt;
+  if (sheet.kind === "file") {
+    const text = attachedFiles().find((entry) => entry.name === sheet.file)?.text ?? "";
+    return <PlainFile key={`${sheet.file}-${sheet.line}`} fmt={fmt} name={sheet.file} text={text} line={sheet.line} reducedMotion={reduced} note={sheet.file === VENDOR ? copy.folder.vendorNote : null} />;
+  }
+  const row = MODEL.rows.find((entry) => entry.item.id === sheet.id);
+  if (!row) return null;
+  if (sheet.kind === "request") {
+    return (
+      <div className="w05-request-sheet" data-w05-request-sheet={row.item.id}>
+        <p className="w05-label">{fmt.t(copy.folder.requestOf, { id: row.item.id })}</p>
+        <p className="w05-request-text" lang="en">
+          {row.item.request}
+        </p>
+        {copy.explain[row.item.id] ? <p>{copy.explain[row.item.id]}</p> : null}
+        <p className="w05-hint">{fmt.t(copy.folder.caseLine, { sent: fmt.date(MODEL.exercise), audit: fmt.date(MODEL.context.audit) })}</p>
+      </div>
+    );
+  }
+  if (row.item.id === "R5") return <R5View fmt={fmt} evaluation={MODEL.r5} percent={Math.round(MODEL.context.trainingShare * 100)} merged={r5Merged} onMerge={onMerge} />;
+  return (
+    <EvidenceView key={row.item.id} fmt={fmt} evaluation={row.best} noticeHours={MODEL.context.noticeHours} reducedMotion={reduced} focus={row.item.id === "R1" ? "quote" : undefined}>
+      {row.item.id === "R1" ? (
+        <div className="w05-r1" data-w05-r1-sheet="">
+          <figure className="w05-clause">
+            <blockquote lang="en">{clause7()}</blockquote>
+            <figcaption>{copy.checks.clause7}</figcaption>
+          </figure>
+          {copy.checks.r1.map((sentence) => (
+            <p key={sentence}>{sentence}</p>
+          ))}
+        </div>
+      ) : null}
+    </EvidenceView>
   );
 }
 
