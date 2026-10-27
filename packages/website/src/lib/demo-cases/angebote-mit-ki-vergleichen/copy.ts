@@ -41,7 +41,7 @@ const de = {
     outline: "Noch nichts zum Malnehmen",
     surcharge: "Papierzuschlag",
     capped: "durch den Deckel weggefallen",
-    axisFrom: "Balken ab {amount}",
+    axisFrom: "Die Balken beginnen bei {amount}, nicht bei 0 €, damit die kleinen Posten sichtbar bleiben. Die Abstände zwischen den Angeboten wirken deshalb größer, als sie sind.",
     other: "Sonstiges",
   },
   source: {
@@ -63,11 +63,11 @@ const de = {
   moves: {
     names: { menge: "Menge", einheit: "Einheit", lieferort: "Lieferort", einmalig: "Einmalig", zahlung: "Zahlung" },
     steps: {
-      menge: "Feld 1 von 5: die Menge im Jahr.",
-      einheit: "Feld 2 von 5: der Preis je Karton.",
-      lieferort: "Feld 3 von 5: wer die Fahrt zahlt.",
-      einmalig: "Feld 4 von 5: die Einmalkosten.",
-      zahlung: "Feld 5 von 5: das Skonto.",
+      menge: "Jetzt die Menge im Jahr.",
+      einheit: "Jetzt der Preis je Karton.",
+      lieferort: "Jetzt die Frage, wer die Fahrt zahlt.",
+      einmalig: "Jetzt die Einmalkosten.",
+      zahlung: "Zuletzt das Skonto.",
     },
     done: "Alle fünf Felder stehen.",
     nextResult: "Zum Ergebnis",
@@ -340,7 +340,7 @@ const en: DemoPack = {
     outline: "Nothing to multiply yet",
     surcharge: "Paper surcharge",
     capped: "removed by the cap",
-    axisFrom: "Bars start at {amount}",
+    axisFrom: "The bars start at {amount}, not at €0, so the small lines stay visible. The gaps between the offers therefore look bigger than they are.",
     other: "Other",
   },
   source: {
@@ -362,11 +362,11 @@ const en: DemoPack = {
   moves: {
     names: { menge: "Quantity", einheit: "Unit", lieferort: "Delivery point", einmalig: "One-off", zahlung: "Payment" },
     steps: {
-      menge: "Field 1 of 5: the yearly quantity.",
-      einheit: "Field 2 of 5: the price per box.",
-      lieferort: "Field 3 of 5: who pays the trip.",
-      einmalig: "Field 4 of 5: the one-off costs.",
-      zahlung: "Field 5 of 5: the payment discount.",
+      menge: "Now the yearly quantity.",
+      einheit: "Now the price per box.",
+      lieferort: "Now the question of who pays the trip.",
+      einmalig: "Now the one-off costs.",
+      zahlung: "Last, the payment discount.",
     },
     done: "All five fields are set.",
     nextResult: "To the result",

@@ -615,9 +615,11 @@
   font-size: 0.75rem;
   line-height: 1.3;
 }
+/* The cut baseline is said in full, on its own line, because it makes the gaps look bigger. */
 .av4-axis {
-  font-weight: 700;
-  white-space: nowrap;
+  flex-basis: 100%;
+  font-weight: 650;
+  text-wrap: pretty;
 }
 .av4-legend {
   display: inline-flex;
@@ -1358,11 +1360,16 @@
     width: min(100%, 56rem);
     justify-self: center;
   }
+  /* The Claude window gets the full width; the take-home rows follow under it in two columns. */
   .av4-data[data-av4-view="mitnehmen"] .av4-bench {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    gap: 16px;
+    gap: 20px;
+  }
+  .av4-data[data-av4-view="mitnehmen"] .av4-takehome-rows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
   }
 }
 

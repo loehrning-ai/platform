@@ -216,6 +216,12 @@
 .demo4-intro-layer[data-leaving] {
   pointer-events: none;
 }
+/* A long intro scrolls inside the stage, so its last line (what runs where) is never cut off on a phone. */
+.demo4-intro-layer > * {
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 
 .demo4-below {
   display: grid;

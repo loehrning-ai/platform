@@ -152,7 +152,7 @@ export function DemoDock({
    * a demo whose caption and chart already say all of it.
    */
   readonly compact?: boolean;
-  /** The sentence under the path for an inner step ("Feld 2 von 5: die Einheit."); default: the beat's step. */
+  /** The sentence under the path for an inner step ("Jetzt der Preis je Karton.", never a second count); default: the beat's step. */
   readonly step?: ReactNode;
   /** The next button's label while an inner step takes the press ("Weiter: die Einheit"); default: the next beat. */
   readonly nextLabel?: string;

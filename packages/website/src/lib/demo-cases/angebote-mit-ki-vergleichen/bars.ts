@@ -73,7 +73,7 @@ export function scaleFor(rows: readonly BarRow[], floor = 0): number {
 /**
  * Where the bars start: a round amount below 80 % of the smallest first line (the goods, in the kit),
  * so the lines on top of the goods are wide enough to see and to tap on a phone. The Rangliste names
- * this amount ("Balken ab 16.000 €"), because a bar that does not start at 0 must say so.
+ * this amount in a full sentence under the bars, because a bar that does not start at 0 must say so.
  */
 export function axisFloor(rows: readonly BarRow[]): number {
   const firsts = rows.flatMap((row) => {
