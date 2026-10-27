@@ -71,7 +71,7 @@ const de = {
     stichtag: "Stichtag {date}",
     parts: { zertifiziert: "Zertifizierte", flaeche: "Bio-Weinberge, alle Weine", stichtag: "Stichtag" },
     /** The strip on a phone: what each part asks, over the words it stands for. */
-    partKickers: { zertifiziert: "Siegel", flaeche: "Reichweite", stichtag: "Datum" },
+    partKickers: { zertifiziert: "Zitat", flaeche: "Umfang", stichtag: "Zeitraum" },
     partsShort: { zertifiziert: "Zertifizierte", flaeche: "Alle Weine" },
     connect: "Zitat verbinden: {part}",
     connected: "{part}: verbunden mit Zeile {n}, {status}",
@@ -709,7 +709,7 @@ const en: DePack = {
     kicker: "Shelf card",
     stichtag: "Reference date {date}",
     parts: { zertifiziert: "Certified", flaeche: "organic vineyards, all wines", stichtag: "Reference date" },
-    partKickers: { zertifiziert: "Seal", flaeche: "Scope", stichtag: "Date" },
+    partKickers: { zertifiziert: "Quote", flaeche: "Scope", stichtag: "Period" },
     partsShort: { zertifiziert: "Certified", flaeche: "All wines" },
     connect: "Connect a quote: {part}",
     connected: "{part}: linked to line {n}, {status}",

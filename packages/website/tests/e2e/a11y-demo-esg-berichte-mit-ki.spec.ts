@@ -6,7 +6,8 @@ import { expect, test, type Page } from "@playwright/test";
  * stage in each kind of state (a prompt waiting, an answer with the check
  * beside it, our card over the window, the install walkthrough), and the
  * keyboard path through one step without a pointer. The chrome of the app
- * that does nothing in the demo is hidden from assistive technology.
+ * that does nothing in the demo is hidden from assistive technology, and
+ * Start moves the keyboard to the send arrow.
  */
 const PATH = "/demos/esg-berichte-mit-ki";
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
@@ -57,6 +58,21 @@ test.describe(`${PATH} accessibility`, () => {
     await scanStage(page, "the take-home on the light card");
   });
 
+  test("Start hands the keyboard to the send arrow; Customize is the sidebar's one live control", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await expect(async () => {
+      await page.locator("[data-demo-start]").click();
+      await expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await expect(page.locator("[data-w4a-send]")).toBeFocused();
+    const customize = page.locator("[data-w4a-customize]");
+    if (await customize.isVisible()) {
+      await customize.focus();
+      await page.keyboard.press("Enter");
+      await expect(clock(page)).toHaveAttribute("data-beat", "dein-claude");
+    }
+  });
+
   test("one step by keyboard alone: send, show the whole answer, open a cited file", async ({ page }) => {
     await openBeat(page, "schritt-2");
     const send = page.locator("[data-w4a-send]");
@@ -71,7 +87,7 @@ test.describe(`${PATH} accessibility`, () => {
     await page.keyboard.press("Enter");
     await expect(page.locator("[data-w4a-fileview]")).toBeVisible();
     // The decorative chrome of the depicted app is not announced.
-    for (const selector of [".w4a-lights", ".w4a-side-nav", ".w4a-composer-row .w4a-tool"]) {
+    for (const selector of [".w4a-lights", ".w4a-side-nav span.w4a-nav", ".w4a-side-scroll", ".w4a-composer-row .w4a-tool"]) {
       // On the phone the sidebar is not drawn at all; every copy that is drawn is hidden.
       const hidden = await page.locator(selector).evaluateAll((elements) => elements.every((element) => element.closest("[aria-hidden='true']") !== null));
       expect(hidden, `${selector} is aria-hidden`).toBe(true);

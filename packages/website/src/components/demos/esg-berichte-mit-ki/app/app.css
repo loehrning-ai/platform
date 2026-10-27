@@ -147,6 +147,9 @@
 .w4a-window[data-panel="open"] .w4a-body {
   grid-template-columns: 236px minmax(0, 1fr) minmax(0, 0.95fr);
 }
+.w4a-window[data-panel-kind="check"] .w4a-body {
+  grid-template-columns: 236px minmax(0, 1fr) minmax(0, 1.05fr);
+}
 .w4a-window[data-panel="open"][data-rail] .w4a-body {
   grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1.05fr);
 }
@@ -181,6 +184,18 @@
   display: grid;
   gap: 1px;
   padding: 4px 8px 8px;
+}
+/* Customize is the one live entry of the depicted sidebar: it opens the skill setup. */
+.w4a-nav-live {
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+.w4a-nav-live:hover {
+  background: rgb(31 30 29 / 0.06);
 }
 .w4a-nav {
   display: flex;
@@ -374,9 +389,20 @@
   overscroll-behavior: contain;
   scrollbar-width: thin;
 }
+/* An empty chat holds only the greeting: it never scrolls, and on a short screen it gives way to the composer. */
 .w4a-scroll[data-empty] {
   display: flex;
   align-items: center;
+  overflow: hidden;
+}
+.w4a-window[data-phone] .w4a-scroll[data-empty] {
+  align-items: flex-end;
+  container-type: size;
+}
+@container (max-height: 96px) {
+  .w4a-greeting {
+    visibility: hidden;
+  }
 }
 .w4a-column {
   width: 100%;
@@ -736,50 +762,34 @@ button.w4a-chip:hover {
 .w4a-cite:hover {
   background: rgb(198 97 63 / 0.24);
 }
+/* The word before a citation and the punctuation after it stay on the citation's line. */
+.w4a-nowrap {
+  white-space: nowrap;
+}
+.w4a-nowrap .w4a-cite {
+  white-space: normal;
+}
+
+/* Our recording note under an answer: the line, and once how it was recorded. */
 .w4a-meta {
   margin: -4px 0 0;
   color: var(--w4a-text-3);
   font-size: 11.5px;
 }
+.w4a-meta-line {
+  margin: 0;
+}
+.w4a-meta > p {
+  margin: 6px 0 0;
+  color: var(--w4a-text-2);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
 
-/* The phone's card for the panel in the chat. */
-.w4a-artifact-card {
+/* The file Claude created, under its answer. */
+.w4a-produced {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  margin: 0 0 12px;
-  padding: 10px 12px;
-  border: 1px solid var(--w4a-line);
-  border-radius: 12px;
-  background: var(--w4a-white);
-  text-align: left;
-  cursor: pointer;
-}
-.w4a-artifact-icon {
-  display: inline-grid;
-  flex: none;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  background: var(--w4a-accent-soft);
-  color: var(--w4a-accent-ink);
-}
-.w4a-artifact-text {
-  display: grid;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.w4a-artifact-title {
-  font-weight: 600;
-}
-.w4a-artifact-meta {
-  overflow: hidden;
-  color: var(--w4a-text-3);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin: -4px 0 0;
 }
 
 /* ---------- The composer ---------- */
@@ -829,6 +839,16 @@ button.w4a-chip:hover {
   align-items: center;
   gap: 4px;
 }
+.w4a-mic {
+  border-color: transparent;
+}
+/* Nothing to send after an answer: the box folds to its line, so the chat keeps the room. */
+.w4a-composer[data-quiet] .w4a-composer-row {
+  display: none;
+}
+.w4a-composer[data-quiet] .w4a-input {
+  margin-bottom: 4px;
+}
 .w4a-tool {
   display: inline-grid;
   place-items: center;
@@ -849,6 +869,7 @@ button.w4a-chip:hover {
   white-space: nowrap;
 }
 .w4a-send {
+  position: relative;
   display: inline-grid;
   place-items: center;
   width: 32px;
@@ -862,6 +883,12 @@ button.w4a-chip:hover {
   transition:
     transform 160ms var(--w4a-ease),
     background-color 160ms ease;
+}
+/* Claude's arrow is 32px; the target around it is 44px (claude-desktop-spec 7). */
+.w4a-send::after {
+  position: absolute;
+  inset: -6px;
+  content: "";
 }
 .w4a-send:disabled {
   background: rgb(198 97 63 / 0.35);
@@ -919,6 +946,36 @@ button.w4a-chip:hover {
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.w4a-panel-title > .w4a-panel-kicker + span {
+  overflow: hidden;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The check by hand is our exercise, not a Claude artifact: a separate card in the brand's paper and Mennige, inset from the window. */
+.w4a-panel[data-kind="check"] {
+  margin: 8px 8px 8px 0;
+  border: 0;
+  border-top: 3px solid #b73a15;
+  border-radius: 14px;
+  background: #f3f0e9;
+  box-shadow: 0 18px 40px -16px rgb(30 12 6 / 0.55), 0 0 0 1px rgb(18 18 18 / 0.12);
+  color: #121212;
+  font-family: var(--w4-sans, var(--w4a-sans));
+}
+.w4a-panel[data-kind="check"] .w4a-panel-head {
+  border-bottom-color: rgb(18 18 18 / 0.1);
+}
+.w4a-panel-kicker {
+  color: #8f2c0f;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.w4a-panel-actions {
+  margin: 0 0 4px;
 }
 .w4a-panel-meta {
   overflow: hidden;
@@ -1096,11 +1153,22 @@ button.w4a-chip:hover {
   padding: 4px 14px 12px;
 }
 .w4a-window[data-phone] .w4a-composer-slot {
-  padding: 0 10px 10px;
+  padding: 0 8px 8px;
+}
+.w4a-window[data-phone] .w4a-phonebar {
+  min-height: 42px;
+}
+.w4a-window[data-phone] .w4a-phonebar-model {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .w4a-window[data-phone] .w4a-composer {
   padding: 10px 10px 6px;
   border-radius: 22px;
+}
+.w4a-window[data-phone] .w4a-composer[data-quiet] {
+  padding: 9px 14px 7px;
 }
 .w4a-window[data-phone] .w4a-input {
   max-height: 84px;
@@ -1583,4 +1651,111 @@ button.w4a-chip:hover {
 /* Step 4 is the register before the late invoice: the invoice is not in the folder yet. */
 .w4a-scene[data-w4a-step="schritt-4"] .w4-ablage {
   display: none;
+}
+
+/* ---------- The sheet on a phone: the whole caption over the check ---------- */
+.w4a-sheet-caption {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fff;
+  font-size: 15px;
+  line-height: 1.42;
+}
+.w4a-sheet-caption > p {
+  margin: 0;
+}
+.w4a-sheet-kicker {
+  display: grid;
+  gap: 2px;
+  margin: 4px 0 0;
+}
+.w4a-sheet-title {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+/* ---------- In the dock (outside the window): the prediction and the phone's caption line ---------- */
+.w4a-predict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 0 4px;
+}
+.w4a-predict-q {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.32;
+  text-wrap: pretty;
+}
+.w4a-predict-label {
+  font-weight: 500;
+  opacity: 0.86;
+}
+.w4a-predict-row {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+.w4a-predict-value {
+  min-width: 5.5ch;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.w4a-predict-hint {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+  opacity: 0.86;
+}
+.w4a-capline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 2px 4px 2px 8px;
+  border: 0;
+  border-radius: 14px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.w4a-capline-text {
+  display: -webkit-box;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.w4a-capline-pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 2px;
+  min-height: 32px;
+  padding: 0 8px 0 12px;
+  border-radius: 9999px;
+  background-color: color-mix(in srgb, currentColor 14%, transparent);
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+.w4a-capline:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }

@@ -68,7 +68,7 @@ export function InstallView({ copy, data, step }: { readonly copy: AppCopy; read
               </ul>
               <div className="w4a-drop">
                 <span className="w4a-drop-file">
-                  <FileIcon kind="md" />
+                  <FileIcon kind="zip" />
                   {data.skill.name}.zip
                 </span>
                 <span className="w4a-drop-text">{c.drop}</span>

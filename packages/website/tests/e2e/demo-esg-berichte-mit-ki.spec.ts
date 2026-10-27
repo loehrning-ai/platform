@@ -47,9 +47,9 @@ async function sendAndFinish(page: Page, step: string) {
   await expect(turn).toHaveAttribute("data-phase", "done");
 }
 
-/** The check beside the chat: open on a desktop by itself, a sheet on a phone that opens on request. */
+/** The check beside the chat: open on a desktop by itself, a sheet on a phone that the caption line in the dock opens. */
 async function openCheck(page: Page) {
-  if (await isPhone(page)) await page.locator("[data-w4a-open-sheet]").click();
+  if (await isPhone(page)) await page.locator("[data-w4a-capline]").click();
   await expect(page.locator("[data-w4a-step]").first()).toBeVisible();
 }
 
@@ -64,10 +64,11 @@ test.describe(PATH, () => {
     const errors = collectErrors(page);
     await page.setViewportSize({ width: 390, height: 664 });
     await page.goto(PATH, { waitUntil: "networkidle" });
-    const body = page.locator("[data-demo-intro-body]");
-    await expect(body).toContainText("27.09.2026");
-    await expect(body).toContainText("EBRD");
-    await expect(body).toContainText("erfundenes Weingut");
+    const news = page.locator("[data-demo-intro-news]");
+    await expect(news).toContainText("27. September 2026");
+    await expect(news).toContainText("EBRD");
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("erfundenes Weingut");
+    await expect(page.locator("[data-demo-intro]")).toContainText("Auf dieser Seite läuft keine KI.");
     const fold = await page.evaluate(() => {
       const bar = document.querySelector("[data-mobile-tab-bar]");
       return bar && getComputedStyle(bar).display !== "none" ? bar.getBoundingClientRect().top : window.innerHeight;
@@ -89,13 +90,17 @@ test.describe(PATH, () => {
     // The prompt types itself into the composer with the questionnaire attached.
     await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("1-fragebogen-nordvik.md");
     await expect(page.locator("[data-w4a-composer]")).toContainText("Zähle vor jeder Jahressumme die eindeutigen Monate im Code.");
-    await expect(caption(page)).toContainText("Schick den Prompt");
+    await expect(caption(page)).toContainText("Tippe auf den Pfeil");
+    // Start hands the keyboard to the send arrow, and the sidebar is a picture apart from Customize.
+    await expect(page.locator("[data-w4a-send]")).toBeFocused();
+    await expect(page.locator("[data-w4a-send]")).toHaveAccessibleName("Aufzeichnung abspielen");
+    await expect(appWindow(page).locator("[data-w4a-title]").first()).toContainText("New chat");
 
     await sendAndFinish(page, "schritt-1");
     const turn = page.locator('[data-w4a-turn="schritt-1"]');
     await expect(turn.locator("[data-w4a-answer]")).toContainText("September 2025");
     await expect(turn.locator(".w4a-meta")).toContainText("Claude Code 2.1.310");
-    await expect(caption(page)).toContainText("5 der 8 Fragen");
+    await expect(caption(page)).toContainText("5 der 8 Antworten");
     await expect(caption(page)).toContainText("nur 11 Monate");
 
     // The activity folds when the answer stands, and opens on a press: the skill, the files, the code.
@@ -150,11 +155,25 @@ test.describe(PATH, () => {
     await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("rechnung-EL-25-09.png");
     await sendAndFinish(page, "schritt-5");
     await expect(caption(page)).toContainText("10 Antworten belegt, 4 schwach belegt und 7 haben eine Lücke");
-    await page.locator("[data-w4-invoice-toggle]").click();
+    // The file Claude wrote sits under its answer as a plain file name.
+    await expect(page.locator('[data-w4a-turn="schritt-5"] [data-w4a-produced]')).toContainText("nachweisregister.xlsx");
     await openCheck(page);
+    await page.locator("[data-w4-invoice-toggle]").click();
     await expect(page.locator("[data-w4-f2-status]")).toHaveAttribute("data-w4-f2-status", "belegt");
     await expect(page.locator("[data-w4-f2]")).toContainText("320,9");
     await expect(page.locator("[data-w4a-register-sheet]")).toContainText("Status");
+  });
+
+  test("a prediction before Send is set beside Claude's answer and never scored", async ({ page }) => {
+    await openBeat(page, "schritt-3");
+    await expect(page.locator("[data-w4a-predict-value]")).toHaveText("offen");
+    await page.locator("[data-w4a-predict-more]").click();
+    await page.locator("[data-w4a-predict-less]").click();
+    await page.locator("[data-w4a-predict-less]").click();
+    await expect(page.locator("[data-w4a-predict-value]")).toHaveText("6,5 Jahre");
+    await sendAndFinish(page, "schritt-3");
+    await expect(caption(page)).toContainText("6,5 Jahre");
+    await expect(caption(page)).toContainText("5,0 Jahre");
   });
 
   test("measured: the median with Claude, and by hand honestly not measured", async ({ page }) => {
@@ -198,7 +217,7 @@ test.describe(PATH, () => {
 
   test("English: the run's one different status is named, and the take-home links", async ({ page }) => {
     await page.goto(`/en${PATH}`, { waitUntil: "networkidle" });
-    await expect(page.locator("[data-demo-intro-body]")).toContainText("invented winery");
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("invented North Macedonian winery");
     await openBeat(page, "schritt-1", "/en");
     await sendAndFinish(page, "schritt-1");
     await expect(caption(page)).toContainText("For Q6, Claude wrote");
@@ -220,9 +239,22 @@ test.describe(`${PATH} on a 390 x 664 phone`, () => {
     if (!send || !dock) throw new Error("no send button or dock");
     expect(send.y + send.height, "the send arrow above the dock").toBeLessThanOrEqual(dock.y);
     await sendAndFinish(page, "schritt-1");
-    // The check never opens by itself on a phone; the card in the chat and the dock open it.
+    // After the answer the chat gets the room: the window is far taller than the dock, and the answer starts in view.
+    const room = await page.evaluate(() => ({
+      window: document.querySelector("[data-w4a-window]")?.getBoundingClientRect().height ?? 0,
+      dock: document.querySelector(".w4-dock")?.getBoundingClientRect().height ?? 0,
+    }));
+    expect(room.window, "the chat window").toBeGreaterThanOrEqual(340);
+    expect(room.dock, "the dock").toBeLessThanOrEqual(130);
+    await expect(page.locator('[data-w4a-turn="schritt-1"] [data-w4a-activity]')).toBeInViewport();
+    // Von vorn sits in the dock row, inside the dock.
+    const restart = await page.locator(".w4-dock [data-demo-restart]").boundingBox();
+    const dockNow = await page.locator(".w4-dock").boundingBox();
+    if (!restart || !dockNow) throw new Error("no restart in the dock");
+    expect(restart.x + restart.width).toBeLessThanOrEqual(dockNow.x + dockNow.width);
+    // The check never opens by itself on a phone; the caption line in the dock opens it with the whole caption.
     await expect(page.locator("[data-w4a-step]")).toHaveCount(0);
-    await page.locator("[data-w4a-open-panel]").click();
+    await page.locator("[data-w4a-capline]").click();
     await expect(page.locator('[data-w4a-step="schritt-1"]')).toBeVisible();
     expect(await overflow(page)).toBeLessThanOrEqual(0);
     await expectGlasBudget(page, "phone with the sheet open");

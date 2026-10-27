@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { readZipEntry } from "@/lib/zip/read";
 import { APP_STEPS, typedPrompt } from "./app-steps";
-import { differencesBefore, registerCounts, stepCounts } from "./app-facts";
+import { claudePaybackYears, claudeStatusChanges, differencesBefore, registerCounts, stepCounts } from "./app-facts";
 import { APP_RECORDINGS, APP_REGISTER, stepTurn, type Edition } from "./app-recordings";
 import { fileKind, PROJECT_NAME, type AppData, type AppFile, type AppFileWhere } from "./app-data";
 import { kitZip } from "./kit-text";
@@ -50,6 +50,8 @@ export function appData(edition: Edition): AppData {
   const counts = registerCounts(edition);
   if (!counts.before || !counts.after) throw new Error("esg app: the register counts are not in the answers");
   const two = stepCounts(edition, "schritt-2");
+  const payback = claudePaybackYears(edition);
+  if (payback === null) throw new Error("esg app: no F4 payback in the answer of step 3");
   return {
     locale: edition,
     project: PROJECT_NAME[edition],
@@ -77,6 +79,8 @@ export function appData(edition: Edition): AppData {
       rest2: two.schwach + two.luecke,
       before: counts.before,
       after: counts.after,
+      payback,
+      changed: claudeStatusChanges(edition),
       differences: differencesBefore(edition),
     },
   };

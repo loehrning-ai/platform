@@ -18,6 +18,7 @@ export type GlasIconName =
   | "doc"
   | "upload"
   | "plus"
+  | "minus"
   | "mic"
   | "send"
   | "menu"
@@ -45,6 +46,7 @@ const PATHS: Record<GlasIconName, string> = {
   doc: "M5.5 2.5h6l3 3v12h-9zM11.5 2.5v3h3M8 10h5M8 13h5",
   upload: "M10 13.5v-9M6 8l4-4 4 4M4 16.5h12",
   plus: "M10 4v12M4 10h12",
+  minus: "M4 10h12",
   mic: "M10 3a2.5 2.5 0 0 1 2.5 2.5v4a2.5 2.5 0 0 1-5 0v-4A2.5 2.5 0 0 1 10 3zM5 9.5a5 5 0 0 0 10 0M10 14.5V17",
   send: "M10 15.5v-11M5.5 9L10 4.5 14.5 9",
   menu: "M3.5 6h13M3.5 10h13M3.5 14h13",

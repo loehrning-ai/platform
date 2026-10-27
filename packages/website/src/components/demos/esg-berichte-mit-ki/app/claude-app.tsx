@@ -77,11 +77,25 @@ function usePinnedScroll(ref: React.RefObject<HTMLElement | null>, contentRef: R
       observer.disconnect();
     };
   }, [ref, contentRef]);
+  return pinned;
+}
+
+/** When an answer has landed, the chat shows it from its start (the activity line above it), not from its end. */
+function useAnswerStart(ref: React.RefObject<HTMLElement | null>, pinned: React.RefObject<boolean>, answer: string | null) {
+  useLayoutEffect(() => {
+    const scroller = ref.current;
+    if (!scroller || !answer) return;
+    const turn = scroller.querySelector<HTMLElement>(`[data-w4a-turn="${answer}"]`);
+    const start = turn?.querySelector<HTMLElement>("[data-w4a-activity], [data-w4a-answer]");
+    if (!start) return;
+    pinned.current = false;
+    scroller.scrollTop += start.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 8;
+  }, [ref, pinned, answer]);
 }
 
 function NavItem({ icon, label, active }: { readonly icon: GlasIconName; readonly label: string; readonly active?: boolean }) {
   return (
-    <span className="w4a-nav" data-active={active ? "" : undefined}>
+    <span className="w4a-nav" data-active={active ? "" : undefined} aria-hidden="true">
       <Icon name={icon} size={16} />
       <span className="w4a-nav-label">{label}</span>
     </span>
@@ -96,6 +110,7 @@ function Sidebar({
   onChat,
   onFile,
   customize,
+  onCustomize,
 }: {
   readonly data: AppData;
   readonly copy: AppCopy;
@@ -104,17 +119,21 @@ function Sidebar({
   readonly onChat: (chat: number) => void;
   readonly onFile: (file: AppFile) => void;
   readonly customize: boolean;
+  /** Customize is the one live entry of the depicted sidebar (claude-desktop-spec 4.1): it opens the skill setup. */
+  readonly onCustomize?: () => void;
 }) {
   const knowledge = data.files.filter((file) => file.where === "knowledge");
   const instructions = data.files.find((file) => file.where === "instructions");
+  // The depicted entries answer a pointer but stay out of the tab order and the accessibility tree
+  // (claude-desktop-spec 7), so the keyboard reaches the message box before fifteen file names.
   return (
     <nav className="w4a-side" aria-label={data.project}>
       <div className="w4a-side-top" aria-hidden="true">
         <span className="w4a-brand">Claude</span>
         <Icon name="sidebar" size={16} />
       </div>
-      <div className="w4a-side-nav" aria-hidden="true">
-        <span className="w4a-nav w4a-new">
+      <div className="w4a-side-nav">
+        <span className="w4a-nav w4a-new" aria-hidden="true">
           <span className="w4a-new-dot">
             <Icon name="plus" size={14} />
           </span>
@@ -123,9 +142,16 @@ function Sidebar({
         <NavItem icon="search" label={copy.ui.chats} />
         <NavItem icon="folder" label={copy.ui.projects} active={!customize} />
         <NavItem icon="doc" label={copy.ui.artifacts} />
-        <NavItem icon="sliders" label={copy.ui.customize} active={customize} />
+        {onCustomize ? (
+          <button type="button" className="w4a-nav w4a-nav-live" data-active={customize ? "" : undefined} aria-label={copy.ui.customizeOpen} onClick={onCustomize} data-w4a-customize="">
+            <Icon name="sliders" size={16} />
+            <span className="w4a-nav-label">{copy.ui.customize}</span>
+          </button>
+        ) : (
+          <NavItem icon="sliders" label={copy.ui.customize} active={customize} />
+        )}
       </div>
-      <div className="w4a-side-scroll">
+      <div className="w4a-side-scroll" aria-hidden="true">
         <p className="w4a-side-project">
           <Icon name="folder" size={14} />
           <span>{data.project}</span>
@@ -134,7 +160,7 @@ function Sidebar({
           <ul className="w4a-side-chats">
             {chats.map((item) => (
               <li key={item.chat}>
-                <button type="button" className="w4a-side-chat" aria-current={item.chat === chat ? "page" : undefined} onClick={() => onChat(item.chat)} data-w4a-chat={item.chat}>
+                <button type="button" tabIndex={-1} className="w4a-side-chat" aria-current={item.chat === chat ? "page" : undefined} onClick={() => onChat(item.chat)} data-w4a-chat={item.chat}>
                   {item.title}
                 </button>
               </li>
@@ -143,7 +169,7 @@ function Sidebar({
         ) : null}
         <p className="w4a-side-head">{copy.ui.instructions}</p>
         {instructions ? (
-          <button type="button" className="w4a-side-file" onClick={() => onFile(instructions)} data-w4a-file={instructions.path}>
+          <button type="button" tabIndex={-1} className="w4a-side-file" onClick={() => onFile(instructions)} data-w4a-file={instructions.path}>
             <FileIcon kind={instructions.kind} />
             <span>{instructions.name}</span>
           </button>
@@ -155,7 +181,7 @@ function Sidebar({
         <ul className="w4a-side-files">
           {knowledge.map((file) => (
             <li key={file.path}>
-              <button type="button" className="w4a-side-file" onClick={() => onFile(file)} data-w4a-file={file.path}>
+              <button type="button" tabIndex={-1} className="w4a-side-file" onClick={() => onFile(file)} data-w4a-file={file.path}>
                 <FileIcon kind={file.kind} />
                 <span>{file.name}</span>
               </button>
@@ -165,7 +191,7 @@ function Sidebar({
         <p className="w4a-side-head">{copy.ui.skills}</p>
         <p className="w4a-side-skill" data-w4a-skill="">
           <span className="w4a-skill-name">{data.skill.name}</span>
-          <span className="w4a-switch" data-on="" aria-hidden="true" />
+          <span className="w4a-switch" data-on="" />
           <span className="sr-only">{copy.ui.on}</span>
         </p>
       </div>
@@ -179,10 +205,11 @@ function Sidebar({
 
 /**
  * The depicted Claude app (claude-desktop-spec 4): a desktop window with the
- * sidebar, the chat and the artifact panel; under 720px wide the Claude phone
- * app with the chat full screen, the sidebar as a drawer and the panel as a
- * sheet. Opaque like the real app; the only glass is the sheet. The chrome
- * that does nothing in the demo is aria-hidden.
+ * sidebar, the chat and the panel; under 720px wide the Claude phone app with
+ * the chat full screen, the sidebar as a drawer and the panel as a sheet.
+ * Opaque like the real app; the only glass is the sheet. The chrome that does
+ * nothing in the demo is aria-hidden. A file opens in Claude's own panel; the
+ * check by hand is our exercise, drawn as a separate card over the window.
  */
 export function ClaudeApp({
   data,
@@ -198,10 +225,14 @@ export function ClaudeApp({
   onPanelOpen,
   onChat,
   onFile,
+  onCustomize,
   overlay,
   overlayLabel,
   main,
+  mainTitle,
+  sheetLead,
   scrollKey,
+  answerKey,
   onLayout,
 }: {
   readonly data: AppData;
@@ -218,14 +249,22 @@ export function ClaudeApp({
   readonly onPanelOpen: (open: boolean) => void;
   readonly onChat: (chat: number) => void;
   readonly onFile: (file: AppFile) => void;
+  /** Customize in the sidebar opens the skill setup. */
+  readonly onCustomize?: () => void;
   /** Our own card over the dimmed window (the measurement, the take-home): not part of the app. */
   readonly overlay?: ReactNode;
   /** The name of the card over the window, for its scrollable region. */
   readonly overlayLabel?: string;
-  /** Replaces the chat (the Customize view of the install walkthrough). */
+  /** Replaces the chat (Settings and Customize in the install walkthrough). */
   readonly main?: ReactNode;
+  /** The title of the screen `main` shows ("Settings", "Customize"). */
+  readonly mainTitle?: string;
+  /** Phone: what the sheet shows above the check (the whole caption). */
+  readonly sheetLead?: ReactNode;
   /** Changes when a new turn starts, so the chat pins to its end again. */
   readonly scrollKey: string;
+  /** The step whose answer has just landed: the chat shows it from its start. */
+  readonly answerKey?: string | null;
   /** Tells the demo whether the window is drawn as the phone app (the panel opens only on request there). */
   readonly onLayout?: (phone: boolean) => void;
 }) {
@@ -235,12 +274,15 @@ export function ClaudeApp({
   const width = useWidth(windowRef);
   const phone = width < PHONE_MAX;
   const [drawer, setDrawer] = useState(false);
-  usePinnedScroll(scrollRef, contentRef, scrollKey);
+  const pinned = usePinnedScroll(scrollRef, contentRef, scrollKey);
+  useAnswerStart(scrollRef, pinned, answerKey ?? null);
   useEffect(() => {
     onLayout?.(phone);
   }, [onLayout, phone]);
   const date = recordedOn(data.recordedAt, data.locale);
   const showPanel = !phone && panel !== null && panelOpen && !main;
+  const screenTitle = main ? (mainTitle ?? copy.ui.customize) : empty ? copy.ui.newChat : title;
+  const sheetOpen = phone && panelOpen;
 
   const sidebar = (
     <Sidebar
@@ -248,7 +290,7 @@ export function ClaudeApp({
       copy={copy}
       chats={chats}
       chat={chat}
-      customize={Boolean(main)}
+      customize={Boolean(main) && mainTitle !== copy.ui.settings}
       onChat={(next) => {
         setDrawer(false);
         onChat(next);
@@ -257,6 +299,14 @@ export function ClaudeApp({
         setDrawer(false);
         onFile(file);
       }}
+      onCustomize={
+        onCustomize
+          ? () => {
+              setDrawer(false);
+              onCustomize();
+            }
+          : undefined
+      }
     />
   );
 
@@ -266,7 +316,8 @@ export function ClaudeApp({
       className="w4a-window"
       data-phone={phone ? "" : undefined}
       data-panel={showPanel ? "open" : undefined}
-      data-rail={showPanel && width < 1180 ? "" : undefined}
+      data-panel-kind={showPanel && panel ? panel.kind : undefined}
+      data-rail={showPanel && panel?.kind === "file" && width < 1180 ? "" : undefined}
       data-w4a-window=""
     >
       {phone ? (
@@ -275,7 +326,9 @@ export function ClaudeApp({
             <Icon name="menu" size={20} />
           </button>
           <p className="w4a-phonebar-title">
-            <span className="w4a-phonebar-chat">{main ? copy.ui.customize : title}</span>
+            <span className="w4a-phonebar-chat" data-w4a-title="">
+              {screenTitle}
+            </span>
             <span className="w4a-phonebar-model">{fill(copy.depiction, { date })}</span>
           </p>
         </header>
@@ -293,7 +346,7 @@ export function ClaudeApp({
       )}
       <div className="w4a-body">
         {phone ? null : sidebar}
-        <section className="w4a-main" aria-label={main ? copy.ui.customize : title}>
+        <section className="w4a-main" aria-label={screenTitle}>
           {main ?? (
             <>
               {phone ? null : (
@@ -302,7 +355,9 @@ export function ClaudeApp({
                   <span className="w4a-crumb-sep" aria-hidden="true">
                     /
                   </span>
-                  <span className="w4a-crumb-chat">{title}</span>
+                  <span className="w4a-crumb-chat" data-w4a-title="">
+                    {screenTitle}
+                  </span>
                 </div>
               )}
               <div ref={scrollRef} className="w4a-scroll" data-empty={empty ? "" : undefined}>
@@ -317,18 +372,6 @@ export function ClaudeApp({
                     </div>
                   ) : null}
                   {turns}
-                  {phone && panel && !empty ? (
-                    <button type="button" className="w4a-artifact-card" onClick={() => onPanelOpen(true)} data-w4a-open-panel="">
-                      <span className="w4a-artifact-icon">
-                        <Icon name={panel.kind === "file" ? "doc" : "check"} size={18} />
-                      </span>
-                      <span className="w4a-artifact-text">
-                        <span className="w4a-artifact-title">{panel.title}</span>
-                        <span className="w4a-artifact-meta">{panel.meta}</span>
-                      </span>
-                      <Icon name="forward" size={16} />
-                    </button>
-                  ) : null}
                 </div>
               </div>
               <div className="w4a-composer-slot" data-empty={empty ? "" : undefined}>
@@ -338,7 +381,7 @@ export function ClaudeApp({
           )}
         </section>
         {showPanel && panel ? (
-          <aside className="w4a-panel" aria-label={panel.title} data-w4a-panel={panel.key}>
+          <aside className="w4a-panel" data-kind={panel.kind} aria-label={panel.title} data-w4a-panel={panel.key}>
             <header className="w4a-panel-head">
               {panel.onBack ? (
                 <button type="button" className="w4a-icon-btn" aria-label={panel.backLabel} onClick={panel.onBack} data-w4a-panel-back="">
@@ -346,6 +389,7 @@ export function ClaudeApp({
                 </button>
               ) : null}
               <p className="w4a-panel-title">
+                {panel.kind === "check" ? <span className="w4a-panel-kicker">{copy.panel.exercise}</span> : null}
                 <span>{panel.title}</span>
                 <span className="w4a-panel-meta">{panel.meta}</span>
               </p>
@@ -370,17 +414,37 @@ export function ClaudeApp({
           </div>
         </div>
       ) : null}
-      {phone && panel ? (
-        <GlasSheet open={panelOpen && !main} onClose={() => onPanelOpen(false)} title={panel.title} closeLabel={copy.panel.close} resizeLabel={copy.panel.open} detent="large">
-          <div className="w4a-sheet" data-w4a-panel={panel.key}>
-            {panel.onBack ? (
+      {phone && ((panel && !main) || sheetLead) ? (
+        <GlasSheet
+          open={sheetOpen}
+          onClose={() => onPanelOpen(false)}
+          title={panel?.kind === "file" ? panel.title : copy.sheet.title}
+          closeLabel={copy.panel.close}
+          resizeLabel={copy.panel.open}
+          detent="large"
+        >
+          <div className="w4a-sheet" data-w4a-panel={panel?.key ?? "caption"}>
+            {panel?.onBack ? (
               <button type="button" className="w4a-sheet-back" onClick={panel.onBack} data-w4a-panel-back="">
                 <Icon name="back" size={16} />
                 {panel.backLabel}
               </button>
             ) : null}
-            <p className="w4a-panel-meta">{panel.meta}</p>
-            {panel.body}
+            {panel?.kind === "file" ? (
+              <p className="w4a-panel-meta">{panel.meta}</p>
+            ) : (
+              <>
+                {sheetLead ? <div className="w4a-sheet-lead">{sheetLead}</div> : null}
+                {panel ? (
+                  <p className="w4a-sheet-kicker">
+                    <span className="w4a-panel-kicker">{copy.panel.exercise}</span>
+                    <span className="w4a-sheet-title">{panel.title}</span>
+                    <span className="w4a-panel-meta">{panel.meta}</span>
+                  </p>
+                ) : null}
+              </>
+            )}
+            {panel?.body}
           </div>
         </GlasSheet>
       ) : null}

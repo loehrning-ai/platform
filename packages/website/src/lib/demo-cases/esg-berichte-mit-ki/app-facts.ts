@@ -8,7 +8,7 @@
 import { answerRows, countsIn, statusIn } from "./answer-table";
 import { APP_STEPS } from "./app-steps";
 import { APP_REGISTER, stepTurn, type Edition } from "./app-recordings";
-import { LEDGER, type RowGroup, type RowId } from "./ledger";
+import { cascadeFlips, LEDGER, type RowGroup, type RowId } from "./ledger";
 import { countStatuses, type Counts, type Status } from "./rules";
 
 const GROUP_OF_STEP: Readonly<Record<"schritt-1" | "schritt-2" | "schritt-3", RowGroup>> = { "schritt-1": "fragebogen", "schritt-2": "werbung", "schritt-3": "bank" };
@@ -76,4 +76,32 @@ export function stepCounts(edition: Edition, step: "schritt-1" | "schritt-2" | "
   const found = APP_STEPS.find((item) => item.id === step);
   const rows = found ? answerRows(stepTurn(edition, found).turn.final_text, GROUP_OF_STEP[step]) : [];
   return countStatuses(rows.map((row) => row.status));
+}
+
+/** The payback F4 Claude worked out in code in step 3, in years, read from its answer table ("**5,0 Jahre**", "**5.0 years"). */
+export function claudePaybackYears(edition: Edition): number | null {
+  const three = APP_STEPS.find((step) => step.id === "schritt-3");
+  if (!three) return null;
+  const row = stepTurn(edition, three)
+    .turn.final_text.split("\n")
+    .find((line) => /^\|\s*F4\b/.test(line));
+  const answer = row?.split("|")[2] ?? "";
+  const match = /(\d+(?:[.,]\d+)?)\s*(?:Jahre|years)/i.exec(answer);
+  return match?.[1] ? Number(match[1].replace(",", ".")) : null;
+}
+
+/**
+ * How many statuses in the register change with the late invoice: the rows
+ * whose status in the file Claude wrote after step 5 differs from the status
+ * the kit's solutions give them before it. The tests hold this against the
+ * kit (ledger.ts cascadeFlips) and against Claude's counts of steps 4 and 5.
+ */
+export function claudeStatusChanges(edition: Edition): number {
+  const after = claudeAfter(edition);
+  return LEDGER.filter((entry) => after[entry.id] !== undefined && after[entry.id] !== entry.before).length;
+}
+
+/** The kit's own number of status changes with the late invoice (LOESUNGEN.md, step 5). */
+export function kitStatusChanges(): number {
+  return cascadeFlips().length;
 }

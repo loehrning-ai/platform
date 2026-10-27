@@ -1004,9 +1004,33 @@ a.glas-chip::after {
 
 /* ── Intro card ──────────────────────────────────────────────────────────── */
 .glas-intro {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 560px;
+  min-height: 0;
   padding: 20px;
+}
+/* On a short screen only the text scrolls: the buttons and the footnote are never cut by the card's edge. */
+.glas-intro-text {
+  min-height: 0;
+  flex: 0 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.glas-intro-actions,
+.glas-intro-foot {
+  flex: none;
+}
+.glas-intro-news {
+  margin: 10px 0 0;
+  max-width: 64ch;
+  padding-left: 10px;
+  border-left: 2px solid currentColor;
+  color: var(--glas-fg-2);
+  font-size: 0.9375rem;
+  line-height: 1.42;
+  text-wrap: pretty;
 }
 @media (min-width: 64rem) {
   .glas-intro {

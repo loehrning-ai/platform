@@ -11,7 +11,7 @@ import type { StepId } from "./app-steps";
 import type { Counts, Status } from "./rules";
 import type { RowId } from "./ledger";
 
-export type AppFileKind = "csv" | "md" | "txt" | "png" | "xlsx";
+export type AppFileKind = "csv" | "md" | "txt" | "png" | "xlsx" | "zip";
 
 /** Where a file sits in the depicted app. */
 export type AppFileWhere = "knowledge" | "instructions" | "request" | "late" | "produced";
@@ -46,6 +46,10 @@ export interface AppFacts {
   readonly rest2: number;
   readonly before: Counts;
   readonly after: Counts;
+  /** F4 in years, as Claude worked it out in code in step 3. */
+  readonly payback: number;
+  /** Statuses in the register that the late invoice changes (step 5). */
+  readonly changed: number;
   readonly differences: readonly { readonly row: RowId; readonly claude: Status; readonly solution: Status }[];
 }
 

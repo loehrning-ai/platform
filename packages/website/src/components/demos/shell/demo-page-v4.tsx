@@ -105,7 +105,8 @@ export function DemoPageV4({
               sentences: introSentences(intro, demo.minutes),
               start: intro.start,
               explore: copy.explore,
-              footnote: copy.footnote,
+              footnote: intro.footnote ?? copy.footnote,
+              news: intro.news,
             },
           }}
         >

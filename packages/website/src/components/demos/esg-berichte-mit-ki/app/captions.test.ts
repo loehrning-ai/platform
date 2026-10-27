@@ -7,8 +7,9 @@ import { DEMO_START, demoReducer } from "@/lib/demo-cases/esg-berichte-mit-ki/de
 import { kitText } from "@/lib/demo-cases/esg-berichte-mit-ki/kit-text";
 import { ledgerCounts } from "@/lib/demo-cases/esg-berichte-mit-ki/ledger";
 import { formatter } from "../fmt";
-import { beatCaption, stepCaption, type StepState } from "./captions";
+import { beatCaption, claudeNumber, predictionText, stepCaption, type StepState } from "./captions";
 import { INSTALL_STEPS } from "./install-view";
+import { PREDICT_RANGE, stepPrediction } from "./prediction";
 
 const EDITIONS = ["de", "en"] as const;
 const STATES: readonly StepState[] = ["idle", "running", "done"];
@@ -63,5 +64,35 @@ describe("the dock captions of the depicted app", () => {
       for (const item of data.facts.differences) expect(text).toContain(item.row);
       if (data.facts.differences.length === 0) expect(text).not.toContain(APP_COPY[edition].steps.mismatch.slice(0, 12));
     }
+  });
+  it.each(EDITIONS)("%s: a prediction is set beside Claude's number after the answer, never before and never scored", (edition) => {
+    const copy = APP_COPY[edition];
+    const data = appData(edition);
+    const fmt = formatter(edition);
+    const input = { copy, pack: COPY[edition], fmt, kit: kitText(edition), data, scene: DEMO_START };
+    for (const step of data.steps) {
+      const n = claudeNumber(data, step.id);
+      const { min, max } = PREDICT_RANGE[step.id];
+      expect(n, step.id).toBeGreaterThanOrEqual(min);
+      expect(n, step.id).toBeLessThanOrEqual(max);
+      const guess = stepPrediction(step.id, null, 1);
+      const done = stepCaption({ ...input, step, state: "done", prediction: guess }).join(" ");
+      expect(done).toContain(predictionText(copy, fmt, step.id, guess));
+      expect(done).toContain(predictionText(copy, fmt, step.id, n));
+      expect(done).not.toMatch(/richtig|falsch|right|wrong|Punkt|point/i);
+      const idle = stepCaption({ ...input, step, state: "idle", prediction: guess }).join(" ");
+      expect(idle).not.toContain(copy.predict.steps[step.id].result.slice(0, 8));
+      const none = stepCaption({ ...input, step, state: "done", prediction: null }).join(" ");
+      expect(none).not.toContain(copy.predict.steps[step.id].result.slice(0, 8));
+    }
+    expect(claudeNumber(data, "schritt-3")).toBe(data.facts.payback);
+  });
+
+  it("steps a prediction inside its range, starting in the middle", () => {
+    expect(stepPrediction("schritt-1", null, 1)).toBe(4);
+    expect(stepPrediction("schritt-3", null, -1)).toBe(7.5);
+    expect(stepPrediction("schritt-3", 7.5, 1)).toBe(8);
+    expect(stepPrediction("schritt-2", 0, -1)).toBe(0);
+    expect(stepPrediction("schritt-4", 21, 1)).toBe(21);
   });
 });

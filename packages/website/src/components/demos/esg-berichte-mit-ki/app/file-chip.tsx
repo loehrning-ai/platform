@@ -6,7 +6,12 @@ export function Icon({ name, size = 16 }: { readonly name: GlasIconName; readonl
   return <GlasIcon name={name} width={size} height={size} />;
 }
 
-const KIND_LABEL: Readonly<Record<AppFileKind, string>> = { csv: "CSV", md: "MD", txt: "TXT", png: "PNG", xlsx: "XLSX" };
+const KIND_LABEL: Readonly<Record<AppFileKind, string>> = { csv: "CSV", md: "MD", txt: "TXT", png: "PNG", xlsx: "XLSX", zip: "ZIP" };
+
+/** "CSV, 1,9 KB": the type and size Claude prints under a file's name (no words in the visitor's language inside the app). */
+export function fileMeta(file: AppFile, locale: "de" | "en"): string {
+  return `${KIND_LABEL[file.kind]}, ${sizeLabel(file.bytes, locale)}`;
+}
 
 /** The small file badge Claude draws for a file type. */
 export function FileIcon({ kind }: { readonly kind: AppFileKind }) {
@@ -24,9 +29,7 @@ export function FileChip({ file, locale, onOpen, label }: { readonly file: AppFi
       <FileIcon kind={file.kind} />
       <span className="w4a-chip-text">
         <span className="w4a-chip-name">{file.name}</span>
-        <span className="w4a-chip-meta">
-          {KIND_LABEL[file.kind]}, {sizeLabel(file.bytes, locale)}
-        </span>
+        <span className="w4a-chip-meta">{fileMeta(file, locale)}</span>
       </span>
     </>
   );

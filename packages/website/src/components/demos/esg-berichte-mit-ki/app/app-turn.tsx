@@ -64,7 +64,7 @@ function rowText(copy: AppCopy, row: ActivityRow): string {
 
 const ROW_ICON = { thinking: "info", skill: "check", read: "doc", command: "code", write: "doc" } as const;
 
-function Row({ copy, row, first }: { readonly copy: AppCopy; readonly row: ActivityRow; readonly first: boolean }) {
+function Row({ copy, row }: { readonly copy: AppCopy; readonly row: ActivityRow }) {
   const [code, setCode] = useState(false);
   if (row.kind === "note") return <p className="w4a-act-note">{row.detail}</p>;
   return (
@@ -75,8 +75,6 @@ function Row({ copy, row, first }: { readonly copy: AppCopy; readonly row: Activ
       <span className="w4a-act-body">
         <span className="w4a-act-text">{rowText(copy, row)}</span>
         {row.kind === "command" && row.detail ? <code className="w4a-act-cmd">{row.detail}</code> : null}
-        {row.kind === "thinking" && first ? <span className="w4a-act-hint">{copy.activity.thinkingNote}</span> : null}
-        {row.denied ? <span className="w4a-act-hint">{copy.activity.denied}</span> : null}
         {row.failed ? <span className="w4a-act-hint">{copy.activity.failed}</span> : null}
         {row.code ? (
           <>
@@ -91,11 +89,14 @@ function Row({ copy, row, first }: { readonly copy: AppCopy; readonly row: Activ
   );
 }
 
+/** The rows the depiction shows: calls the measurement refused (its own allowlist, not Claude's app) are left out and counted in the note. */
+const shownRows = (rows: readonly ActivityRow[]) => rows.filter((row) => !row.denied);
+
 function Activity({ copy, frame, running }: { readonly copy: AppCopy; readonly frame: AppFrame; readonly running: boolean }) {
   const [open, setOpen] = useState(false);
-  const steps = frame.rows.filter((row) => TOOL_KINDS.has(row.kind)).length;
+  const rows = shownRows(frame.rows);
+  const steps = rows.filter((row) => TOOL_KINDS.has(row.kind)).length;
   const expanded = running || open;
-  const firstThinking = frame.rows.findIndex((row) => row.kind === "thinking");
   return (
     <div className="w4a-activity" data-running={running ? "" : undefined} data-w4a-activity="">
       <button type="button" className="w4a-act-head" aria-expanded={expanded} disabled={running} onClick={() => setOpen((value) => !value)} data-w4a-activity-toggle="">
@@ -105,13 +106,41 @@ function Activity({ copy, frame, running }: { readonly copy: AppCopy; readonly f
       </button>
       {expanded ? (
         <ul className="w4a-act-list">
-          {(running ? frame.rows.slice(-4) : frame.rows).map((row, index, list) => (
-            <Row key={`${row.realMs}-${index}`} copy={copy} row={row} first={!running && index === firstThinking && list === frame.rows} />
+          {(running ? rows.slice(-4) : rows).map((row, index) => (
+            <Row key={`${row.realMs}-${index}`} copy={copy} row={row} />
           ))}
         </ul>
       ) : null}
     </div>
   );
+}
+
+type Part = ReturnType<typeof citeParts>[number];
+
+/**
+ * Splits an answer into plain text and citations, with the word before each
+ * citation and the punctuation after it moved into the citation's segment, so
+ * the browser never breaks the line between them ("erfasst (" never ends a
+ * line alone before the link). Pure; the text is unchanged when joined.
+ */
+export function citeSegments(parts: readonly Part[]): readonly { readonly lead: string; readonly part: Part; readonly tail: string }[] {
+  const texts = parts.map((part) => part.text);
+  const leads = parts.map(() => "");
+  const tails = parts.map(() => "");
+  parts.forEach((part, index) => {
+    if (part.kind !== "cite") return;
+    if (parts[index - 1]?.kind === "text") {
+      const lead = /\S+\s*$/.exec(texts[index - 1] ?? "")?.[0] ?? "";
+      leads[index] = lead;
+      texts[index - 1] = (texts[index - 1] ?? "").slice(0, (texts[index - 1] ?? "").length - lead.length);
+    }
+    if (parts[index + 1]?.kind === "text") {
+      const tail = /^[^\s\w]+/.exec(texts[index + 1] ?? "")?.[0] ?? "";
+      tails[index] = tail;
+      texts[index + 1] = (texts[index + 1] ?? "").slice(tail.length);
+    }
+  });
+  return parts.map((part, index) => ({ lead: leads[index] ?? "", part: part.kind === "text" ? { ...part, text: texts[index] ?? "" } : part, tail: tails[index] ?? "" }));
 }
 
 /** Answer text with every citation of a project file as a link that opens the file at that line. */
@@ -120,15 +149,18 @@ function useCiteRenderer(files: readonly AppFile[], copy: AppCopy, onCite: (file
     const byName = new Map(files.filter((file) => file.text !== null).map((file) => [file.name, file]));
     const names = [...byName.keys()];
     return (text: string): ReactNode =>
-      citeParts(text, names).map((part, index) => {
-        if (part.kind === "text") return <Fragment key={index}>{part.text}</Fragment>;
-        const file = byName.get(part.cite.file);
-        if (!file) return <Fragment key={index}>{part.text}</Fragment>;
+      citeSegments(citeParts(text, names)).map(({ lead, part, tail }, index) => {
+        const file = part.kind === "cite" ? byName.get(part.cite.file) : undefined;
+        if (part.kind === "text" || !file) return <Fragment key={index}>{`${lead}${part.text}${tail}`}</Fragment>;
         const label = part.cite.from ? fill(copy.cite, { file: file.name, line: part.cite.from }) : fill(copy.citeFile, { file: file.name });
         return (
-          <button key={index} type="button" className="w4a-cite" aria-label={label} onClick={() => onCite(file, part.cite)} data-w4a-cite={file.name}>
-            {part.text}
-          </button>
+          <span key={index} className="w4a-nowrap">
+            {lead}
+            <button type="button" className="w4a-cite" aria-label={label} onClick={() => onCite(file, part.cite)} data-w4a-cite={file.name}>
+              {part.text}
+            </button>
+            {tail}
+          </span>
         );
       });
   }, [copy, files, onCite]);
@@ -148,9 +180,12 @@ export const AppTurn = memo(function AppTurn({
   reduced,
   rising,
   meta,
+  notes,
+  produced,
   onDone,
   onCite,
   onChip,
+  onProduced,
 }: {
   readonly step: AppStepData;
   readonly files: readonly AppFile[];
@@ -162,14 +197,21 @@ export const AppTurn = memo(function AppTurn({
   readonly rising: boolean;
   /** The recording line under a finished answer. */
   readonly meta: string;
+  /** How the recording was made, behind the recording line (the refused calls are counted here). */
+  readonly notes: readonly string[];
+  /** The file this turn created or updated, as Claude shows it under the answer. */
+  readonly produced?: AppFile;
   readonly onDone: () => void;
   readonly onCite: (file: AppFile, cite: Citation) => void;
   readonly onChip: (file: AppFile) => void;
+  readonly onProduced?: () => void;
 }) {
   const frame = useTurnFrame(step, mode, reduced, onDone);
   const renderText = useCiteRenderer(files, copy, onCite);
   const attached = step.attach.map((path) => files.find((file) => file.path === path)).filter((file): file is AppFile => Boolean(file));
   const running = frame.phase !== "done";
+  const refused = frame.rows.filter((row) => row.denied).length;
+  const retried = refused === 0 ? [] : [refused === 1 ? copy.retriedOne : fill(copy.retried, { n: refused })];
   return (
     <article className="w4a-turn" data-w4a-turn={step.id} data-phase={frame.phase}>
       <div className="w4a-user" data-rising={rising && !reduced ? "" : undefined}>
@@ -188,7 +230,19 @@ export const AppTurn = memo(function AppTurn({
           <MarkdownLite source={frame.answer} streaming={running} renderText={renderText} />
         </div>
       ) : null}
-      {running ? null : <p className="w4a-meta">{meta}</p>}
+      {!running && produced ? (
+        <div className="w4a-produced" data-w4a-produced="">
+          <FileChip file={produced} locale={locale} onOpen={onProduced} label={fill(copy.citeFile, { file: produced.name })} />
+        </div>
+      ) : null}
+      {running ? null : (
+        <div className="w4a-meta">
+          <p className="w4a-meta-line">{meta}</p>
+          {[...notes, ...retried].map((note) => (
+            <p key={note}>{note}</p>
+          ))}
+        </div>
+      )}
     </article>
   );
 });

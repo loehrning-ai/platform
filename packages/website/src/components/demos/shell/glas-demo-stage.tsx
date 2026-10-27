@@ -34,6 +34,7 @@ export function DemoGlasStage({
   className,
   style,
   readingTone,
+  restartInDock,
 }: {
   /** Accessible name of the stage (what the picture shows). */
   readonly label: string;
@@ -53,6 +54,8 @@ export function DemoGlasStage({
    * the dock keeps the stage tone.
    */
   readonly readingTone?: GlasTone;
+  /** The demo's dock carries "Von vorn" (<DemoDock restart>): nothing floats over the top right of the stage. */
+  readonly restartInDock?: boolean;
 }) {
   const clock = useBeatClock();
   const page = useDemoV4Page();
@@ -99,7 +102,7 @@ export function DemoGlasStage({
         </GlasPanel>
       ) : null}
       {dock ? <div className="demo4-dock-slot" inert={inIntro || undefined}>{dock}</div> : null}
-      {!inIntro ? (
+      {!inIntro && !restartInDock ? (
         <GlasPanel material="thin" shape="capsule" live={false} className="demo4-restart">
           <GlasButton
             variant="icon"
@@ -141,6 +144,9 @@ export function DemoDock({
   compact,
   step,
   nextLabel,
+  restart,
+  stepOf,
+  lead,
 }: {
   readonly children?: ReactNode;
   readonly label?: string;
@@ -156,9 +162,16 @@ export function DemoDock({
   readonly step?: ReactNode;
   /** The next button's label while an inner step takes the press ("Weiter: die Einheit"); default: the next beat. */
   readonly nextLabel?: string;
+  /** "Von vorn" at the end of the path row (with <DemoGlasStage restartInDock>). */
+  readonly restart?: boolean;
+  /** Names the dot count when a demo counts its own steps inside the beats ("Teil 6 von 8"). */
+  readonly stepOf?: (n: number, total: number) => string;
+  /** Content above the path row (a demo's caption line or its prediction). */
+  readonly lead?: ReactNode;
 }) {
   const clock = useBeatClock();
   const copy = DEMOS_PAGE_COPY[clock.locale].v4;
+  const countOf = stepOf ?? copy.stepOf;
   const locale = clock.locale;
   const steps = clock.beats.map((beat) => ({ id: beat.id, label: beat.label[locale] }));
   const nextBeat = clock.beats[clock.index + 1];
@@ -173,13 +186,14 @@ export function DemoDock({
       className={cx("demo4-dock", compact && "is-compact", className)}
       data-demo-lever=""
     >
+      {lead}
       <GlasWeg
         steps={steps}
         current={clock.index}
         doneUpTo={clock.index + (clock.beatDone ? 1 : 0)}
         sentence={
           <>
-            <span className="sr-only">{copy.stepOf(clock.index + 1, steps.length)}: </span>
+            <span className="sr-only">{countOf(clock.index + 1, steps.length)}: </span>
             {stepSentence}
           </>
         }
@@ -190,7 +204,22 @@ export function DemoDock({
         canNext={clock.index < clock.beats.length - 1 || nextLabel !== undefined}
         free={clock.phase === "free"}
         onToGuide={clock.toGuide}
-        copy={{ stepOf: copy.stepOf, prev: copy.prev, next: nextText, nextShort: compact ? copy.next : undefined, toGuide: copy.toGuide, nav: copy.wegNav }}
+        copy={{ stepOf: countOf, prev: copy.prev, next: nextText, nextShort: compact ? copy.next : undefined, toGuide: copy.toGuide, nav: copy.wegNav }}
+        trailing={
+          restart && clock.phase !== "intro" ? (
+            <GlasButton
+              variant="icon"
+              size="compact"
+              icon="replay"
+              label={copy.restart}
+              onClick={clock.restart}
+              disabled={clock.rewinding}
+              aria-keyshortcuts="R Shift+R"
+              className="demo4-dock-restart"
+              data-demo-restart=""
+            />
+          ) : undefined
+        }
       />
       {clock.skippedCommit && clock.phase === "guided" && clock.beats[clock.index - 1]?.kind === "commit" ? (
         <p className="demo4-skipped">

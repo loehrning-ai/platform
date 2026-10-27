@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type Ref } from "react";
 import type { AppCopy } from "@/lib/demo-cases/esg-berichte-mit-ki/app-copy";
 import type { AppFile } from "@/lib/demo-cases/esg-berichte-mit-ki/app-data";
 import { FileChip, Icon } from "./file-chip";
@@ -29,6 +29,8 @@ export function Composer({
   reduced,
   onSend,
   typeKey,
+  quiet,
+  sendRef,
 }: {
   readonly copy: AppCopy;
   readonly locale: "de" | "en";
@@ -40,6 +42,9 @@ export function Composer({
   readonly onSend: () => void;
   /** Typing starts again when this changes (a new step). */
   readonly typeKey: string;
+  /** Nothing to send after an answer: the box folds to its input line, so the chat keeps the room. */
+  readonly quiet?: boolean;
+  readonly sendRef?: Ref<HTMLButtonElement>;
 }) {
   const [shown, setShown] = useState(reduced || !text ? (text?.length ?? 0) : 0);
   useEffect(() => {
@@ -63,7 +68,7 @@ export function Composer({
   const typing = text !== null && shown < text.length;
   const ready = text !== null && !typing;
   return (
-    <div className="w4a-composer" data-ready={ready ? "" : undefined} data-w4a-composer="">
+    <div className="w4a-composer" data-ready={ready ? "" : undefined} data-quiet={quiet && text === null ? "" : undefined} data-w4a-composer="">
       {text && attach.length > 0 ? (
         <div className="w4a-chips" data-in-composer="">
           {attach.map((file) => (
@@ -92,7 +97,11 @@ export function Composer({
           {model}
           <Icon name="chevron-down" size={12} />
         </span>
+        <span className="w4a-tool w4a-mic" aria-hidden="true">
+          <Icon name="mic" size={16} />
+        </span>
         <button
+          ref={sendRef}
           type="button"
           className="w4a-send"
           aria-label={copy.ui.send}

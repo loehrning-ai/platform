@@ -2,14 +2,15 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { answerFromTimeline } from "@/lib/claude-runs";
+import { answerFromTimeline, recordedOn } from "@/lib/claude-runs";
 import { readZipEntry } from "@/lib/zip/read";
-import { claudeAfter, claudeBefore, differencesBefore, registerCounts, registerRowId, stepCounts } from "./app-facts";
+import { claudeAfter, claudeBefore, claudePaybackYears, claudeStatusChanges, differencesBefore, kitStatusChanges, registerCounts, registerRowId, stepCounts } from "./app-facts";
 import { APP_RECORDINGS, APP_REGISTER, kitPrompts, stepTurn, type Edition } from "./app-recordings";
 import { activityRows, appFrameAt, buildAppSchedule, wordChunks } from "./app-replay";
 import { APP_STEPS, typedPrompt } from "./app-steps";
 import { citationsIn, citeParts } from "./citations";
-import { FILE_NAMES } from "./kit";
+import { INTRO } from "./intro";
+import { FILE_NAMES, PV } from "./kit";
 import { LEDGER, ledgerCounts } from "./ledger";
 import { MEASURED, medianRun, minutesSeconds, roundHalfEven, summary } from "./measured";
 
@@ -124,6 +125,23 @@ describe("lockstep: Claude's answers and the kit's solutions", () => {
         }
       }
       expect(seen).toBeGreaterThan(10);
+    });
+  }
+
+  for (const edition of EDITIONS) {
+    it(`${edition}: Claude's payback F4 is the kit's, to one decimal`, () => {
+      const kit = Math.round((PV.investmentMkd / (PV.yieldMwh * 1000 * PV.tariff)) * 10) / 10;
+      expect(claudePaybackYears(edition)).toBe(kit);
+    });
+
+    it(`${edition}: the invoice changes as many statuses in Claude's register as in the kit`, () => {
+      expect(kitStatusChanges()).toBeGreaterThan(0);
+      expect(claudeStatusChanges(edition)).toBe(kitStatusChanges());
+    });
+
+    it(`${edition}: the intro's footnote names the day the answers were recorded`, () => {
+      const day = recordedOn(APP_RECORDINGS[edition]["schritt-1"].recorded_at, edition);
+      expect(INTRO[edition].footnote).toContain(day);
     });
   }
 

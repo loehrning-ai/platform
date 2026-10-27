@@ -1,5 +1,6 @@
 "use client";
 
+import { GlasButton } from "@/components/demos/glas";
 import type { AppCopy } from "@/lib/demo-cases/esg-berichte-mit-ki/app-copy";
 import type { AppData, AppFile } from "@/lib/demo-cases/esg-berichte-mit-ki/app-data";
 import type { StepId } from "@/lib/demo-cases/esg-berichte-mit-ki/app-steps";
@@ -15,6 +16,7 @@ import { FolderScene } from "../scene-folder";
 import { InvoiceScene } from "../scene-invoice";
 import { StromScene } from "../scene-strom";
 import type { AppPanel } from "./claude-app";
+import { fileMeta } from "./file-chip";
 import { FileView, MonthCheck, RegisterSheetView } from "./file-view";
 import { TileDetail } from "./tile-detail";
 
@@ -38,12 +40,6 @@ export interface PanelContext {
 }
 
 const STROM_PATH = /^(ordner\/strom_2025|files\/electricity_2025)\.csv$/;
-
-function whereLabel(copy: AppCopy, file: AppFile): string {
-  if (file.where === "produced") return copy.panel.produced;
-  if (file.where === "knowledge" || file.where === "instructions") return copy.panel.knowledge;
-  return copy.panel.attached;
-}
 
 function fileByPath(data: AppData, pattern: RegExp): AppFile | undefined {
   return data.files.find((file) => pattern.test(file.path));
@@ -83,8 +79,20 @@ function stepBody(step: StepId, ctx: PanelContext) {
       );
     case "schritt-5": {
       const invoice = data.files.find((file) => file.where === "late");
+      // The invoice goes in and out with a button too (keyboard, switch access), next to the drag.
       return (
         <>
+          <p className="w4a-panel-actions">
+            <GlasButton
+              variant="fill"
+              size="compact"
+              icon={scene.invoiceIn ? "back" : "doc"}
+              onClick={() => dispatch({ type: "invoice", in: !scene.invoiceIn, inFolder: true })}
+              data-w4-invoice-toggle=""
+            >
+              {scene.invoiceIn ? pack.invoice.takeOut : pack.invoice.put}
+            </GlasButton>
+          </p>
           <InvoiceScene
             pack={pack}
             fmt={fmt}
@@ -118,19 +126,20 @@ function stepBody(step: StepId, ctx: PanelContext) {
   }
 }
 
+/** The check's title and the files it works on. */
 function stepMeta(step: StepId, ctx: PanelContext): { title: string; meta: string } {
   const { copy, kit, data } = ctx;
   switch (step) {
     case "schritt-1":
-      return { title: copy.panel.check, meta: `${kit.fileNames.strom} · ${copy.panel.knowledge}` };
+      return { title: copy.panel.check, meta: kit.fileNames.strom };
     case "schritt-2":
-      return { title: copy.panel.check, meta: `${kit.certificate.name} · ${copy.panel.knowledge}` };
+      return { title: copy.panel.check, meta: kit.certificate.name };
     case "schritt-3":
       return { title: copy.panel.check, meta: `${kit.fileNames.entwurf}, ${kit.fileNames.strom}` };
     case "schritt-4":
-      return { title: data.register.name, meta: copy.panel.produced };
+      return { title: copy.panel.check, meta: data.register.name };
     case "schritt-5":
-      return { title: copy.panel.check, meta: `${kit.invoiceName} · ${copy.panel.attached}` };
+      return { title: copy.panel.check, meta: kit.invoiceName };
   }
 }
 
@@ -146,7 +155,7 @@ export function buildPanel(step: StepId | null, view: PanelView, ctx: PanelConte
     return {
       key: `file:${file.path}:${from ?? ""}`,
       title: file.name,
-      meta: whereLabel(ctx.copy, file),
+      meta: fileMeta(file, ctx.data.locale),
       kind: "file",
       body: <FileView file={file} from={from} to={to} copy={ctx.copy} invoiceAlt={ctx.pack.invoice.photoAlt} />,
       onBack: back,
