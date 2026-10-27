@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { checkTrigger, decide, decisionFacts, SCRAP_PRICE_EUR, scrapValue } from "./decide";
-import { BASES, COUNTERS } from "./definitions";
+import { checkTrigger, decide, decisionFacts, DEMO_START, freeDecision, KIT_TRIGGER, SCRAP_PRICE_EUR, scrapValue, startTrigger } from "./decide";
+import { COUNTERS, PERIODS } from "./definitions";
 
-describe("decide", () => {
+describe("decide (L22)", () => {
   const expected = {
     "scrapped month": "rework",
     "scrapped week": "rework",
@@ -12,29 +12,62 @@ describe("decide", () => {
     "records week": "holdDemand",
   } as const;
 
-  it.each(COUNTERS.flatMap((counter) => BASES.map((basis) => [counter, basis] as const)))("%s, %s", (counter, basis) => {
-    const decision = decide(counter, basis);
-    expect(decision.key).toBe(expected[`${counter} ${basis}`]);
-    // the counter-position is always the other pole
-    expect(decision.opposite).toEqual(
-      counter === "records" && basis === "month" ? { counter: "scrapped", basis: "week" } : { counter: "records", basis: "month" },
-    );
+  it.each(COUNTERS.flatMap((counter) => PERIODS.map((period) => [counter, period] as const)))("%s, %s", (counter, period) => {
+    expect(decide(counter, period).key).toBe(expected[`${counter} ${period}`]);
   });
 
-  it("fails check one only for records, met by merging alone", () => {
-    expect(checkTrigger("scrapped")).toMatchObject({ countsUnits: true, notMetToday: true, named: true, mergedToday: null });
-    expect(checkTrigger("affected")).toMatchObject({ countsUnits: true, notMetToday: true });
-    const records = checkTrigger("records");
+  it("gives four distinct decisions in six cells", () => {
+    const keys = COUNTERS.flatMap((counter) => PERIODS.map((period) => decide(counter, period).key));
+    expect(new Set(keys).size).toBe(4);
+  });
+
+  it("free play: decides by the numerator as a month total, and not at all without a denominator", () => {
+    expect(COUNTERS.map((counter) => freeDecision(counter, "per1000")?.key)).toEqual(["vp", "holdCause", "rework"]);
+    for (const counter of COUNTERS) expect(freeDecision(counter, "none")).toBeNull();
+  });
+});
+
+describe("the trigger (L23)", () => {
+  it("tags the kit's suggestion and the demo's own start values", () => {
+    expect(KIT_TRIGGER.scrapped).toEqual({ value: 80, source: "kit" });
+    expect(DEMO_START.affected).toEqual({ value: 250, source: "demo" });
+    expect(DEMO_START.records).toEqual({ value: 2.51, source: "demo" });
+    expect(COUNTERS.map((counter) => startTrigger(counter).source)).toEqual(["demo", "demo", "kit"]);
+  });
+
+  it("passes all three checks for the kit's 80 scrapped units", () => {
+    expect(checkTrigger("scrapped", 80)).toMatchObject({
+      countsUnits: true,
+      notMetToday: true,
+      named: true,
+      mergeGameable: false,
+    });
+    expect(checkTrigger("scrapped", 200).notMetToday).toBe(false);
+  });
+
+  it("flags a records trigger that merging alone would meet", () => {
+    const records = checkTrigger("records", 2.51);
     expect(records.countsUnits).toBe(false);
     expect(records.notMetToday).toBe(true);
-    expect(records.mergedToday?.toFixed(2)).toBe("1.86");
-    expect((records.mergedToday ?? 9) < records.threshold).toBe(true);
+    expect(records.mergedToday.toFixed(2)).toBe("1.86");
+    expect(records.mergeGameable).toBe(true);
+    expect(checkTrigger("records", 1.5).mergeGameable).toBe(false);
+    expect(checkTrigger("records", 2).mergeGameable).toBe(true);
   });
+});
 
+describe("scrap valuation (L24, L25)", () => {
   it("values scrap at the mean list price: 1.539 × 449 € = 691.011 €, 16,8 % of CRAFT revenue", () => {
     expect(SCRAP_PRICE_EUR).toBe(449);
     expect(scrapValue()).toMatchObject({ units: 1539, eur: 691011 });
     expect((scrapValue().shareOfRevenue * 100).toFixed(1)).toBe("16.8");
-    expect(decisionFacts().machines).toEqual(["M-019", "M-020", "M-021", "M-022", "M-023", "M-024"]);
+    const facts = decisionFacts();
+    expect(facts.machines).toEqual(["M-019", "M-020", "M-021", "M-022", "M-023", "M-024"]);
+    expect([facts.recordsSepCount, facts.mergedCount]).toEqual([23, 17]);
+    expect(facts.verdicts).toEqual({
+      records: "better",
+      affected: "same",
+      scrapped: "worse",
+    });
   });
 });

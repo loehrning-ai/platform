@@ -1,474 +1,542 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import {
-  DemoLever,
-  DemoStage,
-  setTakeHomeLine,
-  useBeatClock,
-  useOnRestart,
-} from "@/components/demos/shell";
-import { CopyButton } from "@/components/demos/take-home/copy-button";
+import { useEffect, useMemo, useReducer, useState, type ReactNode } from "react";
+import { DemoDock, DemoGlasStage, useBeatClock, useOnRestart } from "@/components/demos/shell";
+import { feldFor, GlasButton, GlasChip, GlasSegmented, GlasSheet, GlasSlider, GlasToggle, useGlas } from "@/components/demos/glas";
+import type { BeatId } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/beats";
 import type { DemoPack } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/copy";
-import { CRAFT_NCR_SEP, CRAFT_SEP_ROWS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
+import type { NcrRow } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/data";
+import { decide, freeDecision, startTrigger, TRIGGER_RANGE } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/decide";
 import {
-  BASES,
-  growth,
-  weekCount,
-  type Basis,
+  COUNTERS,
+  maxMerges,
+  PERIODS,
+  rate,
+  reading,
+  readingId,
   type Counter,
+  type Denom,
+  type Period,
+  type SeptemberEnds,
   type Verdict,
 } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/definitions";
-import { buildSkillZip, renderProjectInstructions, renderReferences, SKILL_NAME } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/skill-file";
-import {
-  canAddCard,
-  cardToMarkdown,
-  EMPTY_CARD,
-  FIELD_LIMITS,
-  lintCard,
-  MAX_CARDS,
-  type Finding,
-  type OwnCard,
-  type TextField,
-} from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/steckbrief";
-import { REVEAL, TRACE_MS } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/timelines";
-import { beatIndexFromParam } from "@/lib/demo-beats";
-import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
-import { ChipGroup } from "./chip-group";
-import { decisionText, kitWords } from "./decision-text";
-import { fill, formatter } from "./fmt";
-import { Notes } from "./notes";
-import { OwnForm } from "./own-form";
-import { StageClaim } from "./stage-claim";
-import { StageDecide } from "./stage-decide";
-import { StageOwn, StageTakeHome } from "./stage-own";
-import { RAIL_OF, ReportStrip, StageRails } from "./stage-rails";
-import { StageTrace } from "./stage-trace";
-import { StageWeeks } from "./stage-weeks";
-import { EMPTY_CHOICES, REFERENCE, type Choices } from "./types";
-import { useRunClock, useTransitionShare } from "./use-motion";
+import { cardChoice, demoReducer, freeKey, INITIAL_STATE, totalMerges, type DemoState } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/demo-state";
+import { EMPTY_CARD, MAX_CARDS, canAddCard, type OwnCard } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/steckbrief";
+import { scaleX, SCALE_VIEW, TRAY_VIEW } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/trays";
+import { captionFor, septemberEnd } from "./captions";
+import { ConditionCard } from "./condition-card";
+import { craftOwnCard } from "./craft-card";
+import { DockCaption } from "./dock-caption";
+import { FitBox } from "./fit-box";
+import { formatter, type Fmt } from "./fmt";
+import { OwnCardForm } from "./own";
+import { RecordSheet } from "./record-sheet";
+import { ReportCard } from "./report-card";
+import { ScaleView, type ScaleTick } from "./scale-view";
+import { DecisionRaster, TriggerChecks } from "./scene-decide";
+import { MERGE_VIEW, MergeGrid } from "./scene-merge";
+import { PeriodCalendar } from "./scene-period";
+import { TraceCarpet } from "./scene-trace";
+import { SceneMore, SceneTable } from "./sheets";
+import type { KitCardWords } from "@/lib/demo-cases/geschaeftsberichte-mit-ki-lesen/skill-file";
+import { EDITABLE, SteckbriefCard, SteckbriefChip } from "./steckbrief-card";
+import { TakeHome, type TakeHomeFiles } from "./takehome";
+import { TraysView } from "./trays-view";
 import "./demo.css";
 
-const SLUG = "geschaeftsberichte-mit-ki-lesen";
-const POLL: readonly Verdict[] = ["better", "same", "worse"];
-const MERGE_MS = 600;
-const PERIOD_MS = 700;
-/** How long a downloaded file's object URL stays valid. */
-const URL_LIFETIME_MS = 30_000;
+const GUESSES: readonly Verdict[] = ["worse", "same", "better"];
+const TRAY_RATIO = TRAY_VIEW.w / TRAY_VIEW.h;
+const MERGE_RATIO = MERGE_VIEW.w / MERGE_VIEW.h;
+const TABLE_BEATS = new Set<BeatId | "free">(["zaehlen", "zusammenfassen", "zeitraum", "nachrechnen", "free"]);
+const MORE_BEATS = new Set<BeatId | "free">(["zaehlen", "zeitraum", "nachrechnen", "entscheiden", "free"]);
+const SIDE_BEATS = new Set<BeatId | "free">(["schaetzen", "zaehlen", "zusammenfassen", "zeitraum", "nachrechnen", "free"]);
 
-/** Saves bytes as a file, in the browser only. */
-function saveBytes(bytes: Uint8Array, name: string): void {
-  const url = URL.createObjectURL(new Blob([bytes.slice().buffer], { type: "application/zip" }));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = name;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), URL_LIFETIME_MS);
+/** A reading id ("affected/none/month/oct6/0") back to its key. */
+function keyOf(id: string) {
+  const [counter, denom, period, septemberEnds, merges] = id.split("/");
+  return {
+    counter: counter as Counter,
+    denom: denom as Denom,
+    period: period as Period,
+    septemberEnds: septemberEnds as SeptemberEnds,
+    merges: Number(merges),
+  };
 }
 
-export interface DemoProps {
-  readonly pack: DemoPack;
-  /** content/skills/kennzahlen-steckbrief/SKILL.md, read on the server. */
-  readonly skillText: string;
-  /** project-instructions.md from this locale's kit zip, read on the server. */
-  readonly instructions: string;
+function scaleFor(pack: DemoPack, fmt: Fmt, state: DemoState, free: boolean) {
+  const base = free
+    ? freeKey(state.free)
+    : {
+        counter: state.counter,
+        denom: state.denom,
+        septemberEnds: "oct6" as const,
+        merges: 0,
+      };
+  const options = COUNTERS.map((counter) => reading({ ...base, counter }));
+  const current = COUNTERS.indexOf(base.counter);
+  const reportId = readingId({ counter: "records" });
+  const tick = (id: string, ghost = false): ScaleTick => {
+    const r = reading(keyOf(id));
+    return {
+      id,
+      change: r.change,
+      verdict: r.verdict,
+      ghost,
+      tag: id === reportId ? pack.scale.reportTag : ghost ? pack.scale.ghostTag : undefined,
+    };
+  };
+  const ticks = free
+    ? state.seen.map((id) => tick(id))
+    : [...state.visited.map((counter) => tick(readingId({ counter }))), ...(state.denom === "none" ? [tick(readingId({ counter: state.counter, denom: "none" }), true)] : [])];
+  const r = options[current] ?? options[0];
+  const valueText = r
+    ? fmt.t(pack.scale.lensValue, {
+        counter: pack.counters[base.counter].label,
+        denom: base.denom === "per1000" ? fmt.t(pack.per) : pack.absolute,
+        change: fmt.pct(r.change),
+        verdict: pack.verdicts[r.verdict],
+      })
+    : "";
+  return {
+    options: options.map((item) => item.change),
+    current,
+    ticks,
+    valueText,
+    change: r?.change ?? 0,
+  };
 }
 
-/**
- * "Eine Datei, drei Antworten": eight beats on the v3 shell clock. Every
- * object on the stage is a kit row or a number computed from one
- * (src/lib/demo-cases/geschaeftsberichte-mit-ki-lesen). Restart clears the
- * poll and the levers, never the visitor's own cards.
- */
-export default function Demo({ pack, skillText, instructions }: DemoProps) {
-  const { beats, beat, progress, index, reducedMotion, commit, canAdvance, next, locale } = useBeatClock();
-  const fmt = useMemo(() => formatter(pack), [pack]);
-  const suggestion = DEMOS_PAGE_COPY[locale].shell.suggestionTaken;
-  const [choices, setChoices] = useState<Choices>(EMPTY_CHOICES);
-  const [advance, setAdvance] = useState(false);
-  const [traceRun, setTraceRun] = useState<number | null>(null);
-  const [view, setView] = useState<"mine" | "report">("mine");
-  const [draft, setDraft] = useState<OwnCard>(EMPTY_CARD);
-  const [cards, setCards] = useState<readonly OwnCard[]>([]);
-
-  useOnRestart(() => {
-    setChoices(EMPTY_CHOICES);
-    setAdvance(false);
-    setTraceRun(null);
-    setView("mine");
-  });
-
-  // A deep link (?beat=) opens its beat at the final state: the shell plays the
-  // motion on entry, and next() during a motion only finishes it.
-  const deepLink = useRef<number | null | undefined>(undefined);
-  useEffect(() => {
-    if (deepLink.current === undefined) {
-      deepLink.current = beatIndexFromParam(beats, new URLSearchParams(window.location.search).get("beat"));
-    }
-    const target = deepLink.current;
-    if (target === null || target <= 0) return;
-    if (index !== target) {
-      if (index > target) deepLink.current = null;
-      return;
-    }
-    deepLink.current = null;
-    if (progress < 1) next();
-  }, [beats, index, next, progress]);
-
-  // The poll commits and moves on by itself once beat 1's motion has finished.
-  useEffect(() => {
-    if (!advance || index !== 0 || !canAdvance) return;
-    setAdvance(false);
-    next();
-  }, [advance, canAdvance, index, next]);
-
-  const merge = useTransitionShare(choices.merged ? 1 : 0, MERGE_MS, reducedMotion);
-  const mergeAmount = merge.from + (merge.to - merge.from) * merge.share;
-  const period = useTransitionShare<"weeks" | Basis>(choices.basis ?? "weeks", PERIOD_MS, reducedMotion);
-  const traceMs = useRunClock(traceRun, TRACE_MS, reducedMotion);
-
-  const counter: Counter = choices.counter ?? REFERENCE.counter;
-  const basis: Basis = choices.basis ?? REFERENCE.basis;
-  const skipped = choices.counter === null || choices.basis === null;
-  const shownCounter: Counter = view === "report" ? "records" : counter;
-  const shownBasis: Basis = view === "report" ? "month" : basis;
-  const decision = useMemo(() => decisionText(pack, fmt, shownCounter, shownBasis), [pack, fmt, shownCounter, shownBasis]);
-  const words = useMemo(() => kitWords(pack, fmt), [pack, fmt]);
-
-  const findings = useMemo(() => lintCard(draft), [draft]);
-  const cardsMarkdown = useMemo(() => cards.map((card) => cardToMarkdown(card, pack.own.card)).join("\n\n"), [cards, pack]);
-  useEffect(() => setTakeHomeLine(SLUG, cardsMarkdown), [cardsMarkdown]);
-
-  const choose = (patch: Partial<Choices>) => setChoices((previous) => ({ ...previous, ...patch }));
-  const onPoll = (value: Verdict) => {
-    if (choices.poll !== null) return;
-    choose({ poll: value });
-    commit();
-    next();
-    setAdvance(true);
-  };
-  const addCard = () => {
-    if (!canAddCard(draft) || cards.length >= MAX_CARDS) return;
-    setCards((previous) => [...previous, draft]);
-    setDraft(EMPTY_CARD);
-  };
-  const downloadSkill = () => {
-    const references = cards.length > 0 ? renderReferences(cards, pack.own.card, pack.own.referencesTitle) : null;
-    saveBytes(buildSkillZip(skillText, references), `${SKILL_NAME}.zip`);
-  };
-  const editDraft = (patch: Partial<OwnCard>) => setDraft((previous) => ({ ...previous, ...patch }));
-  const startTrace = () => setTraceRun((previous) => (previous ?? 0) + 1);
-
-  const id = beat.id;
-  const revealT = id === "drei-zaehlweisen" ? progress : 1;
-  const traceDone = traceRun !== null && traceMs >= TRACE_MS;
-
-  let stage: ReactNode;
-  let caption: string;
-  let lever: ReactNode;
-
-  if (id === "frage") {
-    stage = <StageClaim pack={pack} fmt={fmt} progress={progress} />;
-    caption = pack.claim.caption;
-    lever = (
-      <div className="nw-poll" role="group" aria-label={pack.claim.pollLabel}>
-        {POLL.map((value) => (
-          <button
-            key={value}
-            type="button"
-            className="nw-poll-button"
-            data-poll={value}
-            aria-pressed={choices.poll === value}
-            data-dim={choices.poll !== null && choices.poll !== value ? "" : undefined}
-            onClick={() => onPoll(value)}
-          >
-            {pack.claim.poll[value]}
-          </button>
-        ))}
-      </div>
-    );
-  } else if (id === "drei-zaehlweisen" || id === "zaehler-waehlen") {
-    const reveal = id === "drei-zaehlweisen";
-    const framed = reveal ? (choices.poll ? RAIL_OF[choices.poll] : null) : choices.counter;
-    stage = (
-      <StageRails
-        pack={pack}
-        fmt={fmt}
-        t={revealT}
-        framed={framed}
-        merge={reveal ? 0 : mergeAmount}
-        choice={
-          reveal
-            ? undefined
-            : { legend: pack.counter.legend, value: choices.counter, onChange: (value) => choose({ counter: value }) }
-        }
-        top={
-          reveal ? (
-            <ReportStrip pack={pack} fmt={fmt} />
-          ) : (
-            <button
-              type="button"
-              className="nw-toggle"
-              aria-pressed={choices.merged}
-              data-merge-toggle=""
-              onClick={() => choose({ merged: !choices.merged })}
-            >
-              <span className="nw-toggle-box" aria-hidden="true">
-                {choices.merged ? "✓" : ""}
-              </span>
-              <span>{pack.counter.merge}</span>
-            </button>
-          )
-        }
-      />
-    );
-    if (reveal) {
-      caption =
-        revealT >= REVEAL.verdict
-          ? pack.reveal.caption[choices.poll ?? "none"]
-          : fill(pack.reveal.counting, { n: CRAFT_NCR_SEP.length });
-      lever = revealT >= REVEAL.verdict ? <p className="nw-lever-note" data-reveal-note="">{pack.reveal.note}</p> : null;
-    } else {
-      caption = choices.counter
-        ? fill(pack.counter.captionChosen, { counter: pack.counters[choices.counter].long })
-        : choices.merged
-          ? pack.counter.captionMerged
-          : pack.counter.caption;
-      lever = <p className="nw-lever-note">{pack.counter.pick}</p>;
-    }
-  } else if (id === "zeitraum") {
-    stage = <StageWeeks pack={pack} fmt={fmt} grow={progress} from={period.from} to={period.to} share={period.share} />;
-    caption =
-      choices.basis === "month"
-        ? fill(pack.period.captionMonth, { g: fmt.pct(growth("month")), sep: weekCount("sep"), aug: weekCount("aug") })
-        : choices.basis === "week"
-          ? fill(pack.period.captionWeek, { g: fmt.share(Math.abs(growth("week"))) })
-          : pack.period.caption;
-    lever = (
-      <ChipGroup
-        legend={pack.period.legend}
-        name="nw-basis"
-        value={choices.basis}
-        options={BASES.map((value) => ({ value, label: pack.bases[value].short }))}
-        onChange={(value) => choose({ basis: value })}
-      />
-    );
-  } else if (id === "zahl-pruefen") {
-    stage = <StageTrace pack={pack} fmt={fmt} ms={traceMs} started={traceRun !== null} onTrace={startTrace} />;
-    caption = traceDone ? fill(pack.trace.captionDone, { rows: fmt.n(CRAFT_SEP_ROWS.length) }) : pack.trace.caption;
-    lever = (
-      <button type="button" className="nw-action" data-trace-button="" onClick={startTrace}>
-        {pack.trace.button}
-      </button>
-    );
-  } else if (id === "entscheiden") {
-    stage = (
-      <StageDecide
-        pack={pack}
-        fmt={fmt}
-        counter={shownCounter}
-        basis={shownBasis}
-        decision={decision}
-        progress={progress}
-        suggested={view === "mine" && skipped ? suggestion : null}
-      />
-    );
-    caption = view === "mine" ? pack.decide.caption : pack.decide.captionReport;
-    lever = (
-      <ChipGroup
-        legend={pack.decide.legend}
-        name="nw-view"
-        value={view}
-        options={[
-          { value: "mine", label: pack.decide.mine },
-          { value: "report", label: pack.decide.report },
-        ]}
-        onChange={setView}
-      />
-    );
-  } else if (id === "deine-kennzahl") {
-    stage = <StageOwn pack={pack} card={draft} findings={findings} added={cards.length} />;
-    caption = pack.own.caption;
-    lever = (
-      <label className="nw-lever-field">
-        <span className="sr-only">{pack.own.fields.name.label}</span>
-        <input
-          type="text"
-          className="nw-input"
-          data-own-lever=""
-          value={draft.name}
-          maxLength={FIELD_LIMITS.name}
-          placeholder={pack.own.fields.name.placeholder}
-          autoComplete="off"
-          spellCheck={false}
-          onChange={(event) => editDraft({ name: event.target.value })}
-        />
-      </label>
-    );
-  } else {
-    stage = <StageTakeHome pack={pack} cards={cards} />;
-    caption = cards.length > 0 ? pack.takehome.caption : pack.takehome.captionEmpty;
-    lever = (
-      <button type="button" className="nw-action" data-skill-zip="" onClick={downloadSkill}>
-        {cards.length > 0 ? pack.takehome.zip : pack.takehome.zipEmpty}
-      </button>
-    );
-  }
-
-  return (
-    <div className="nw-demo" data-nw-beat={id} data-nw-counter={choices.counter ?? ""}>
-      <h2 className="sr-only" data-nw-beat-heading="">
-        {beat.label[locale]}
-      </h2>
-      <DemoStage label={pack.stageLabel} caption={caption}>
-        {stage}
-      </DemoStage>
-      <DemoLever>{lever}</DemoLever>
-      <Notes
-        pack={pack}
-        fmt={fmt}
-        id={id}
-        progress={progress}
-        reducedMotion={reducedMotion}
-        choices={choices}
-        counter={counter}
-        basis={basis}
-        skipped={skipped}
-        suggestion={suggestion}
-        decision={decision}
-        words={words}
-        traceMs={traceMs}
-        traceStarted={traceRun !== null}
-      />
-      {id === "deine-kennzahl" ? (
-        <OwnSection
-          pack={pack}
-          draft={draft}
-          cards={cards}
-          findings={findings}
-          onText={(field, value) => editDraft({ [field]: value })}
-          onEdit={editDraft}
-          onAdd={addCard}
-          onRemove={(position) => setCards((previous) => previous.filter((_, at) => at !== position))}
-          onClear={() => {
-            setDraft(EMPTY_CARD);
-            setCards([]);
-          }}
-          onDownload={downloadSkill}
-        />
-      ) : null}
-      {id === "mitnehmen" ? (
-        <TakeHomeNotes pack={pack} text={renderProjectInstructions(instructions, cards, pack.own.card)} />
-      ) : null}
-    </div>
-  );
-}
-
-function OwnSection({
+export default function Demo({
   pack,
-  draft,
-  cards,
-  findings,
-  onText,
-  onEdit,
-  onAdd,
-  onRemove,
-  onClear,
-  onDownload,
+  files,
+  recordedOn,
+  kitCounters,
 }: {
   readonly pack: DemoPack;
-  readonly draft: OwnCard;
-  readonly cards: readonly OwnCard[];
-  readonly findings: readonly Finding[];
-  readonly onText: (field: TextField, value: string) => void;
-  readonly onEdit: (patch: Partial<OwnCard>) => void;
-  readonly onAdd: () => void;
-  readonly onRemove: (position: number) => void;
-  readonly onClear: () => void;
-  readonly onDownload: () => void;
+  readonly files: TakeHomeFiles;
+  readonly recordedOn: string;
+  /** The numerator options as the kit words them (read from metric-cards.md on the server). */
+  readonly kitCounters: KitCardWords["counters"];
 }) {
-  const own = pack.own;
-  const full = cards.length >= MAX_CARDS;
-  const hint = full ? fill(own.full, { max: MAX_CARDS }) : canAddCard(draft) ? null : own.needs;
-  return (
-    <section className="nw-section" aria-labelledby="nw-own-heading" data-own-section="">
-      <p className="nw-own-privacy" data-own-privacy="">
-        {own.privacy}
-      </p>
-      <h2 id="nw-own-heading" className="nw-h2">
-        {own.heading}
-      </h2>
-      <p className="nw-lead">{own.lead}</p>
-      <OwnForm
-        pack={pack}
-        card={draft}
-        findings={findings}
-        onText={onText}
-        onKind={(numeratorKind) => onEdit({ numeratorKind })}
-        onNoDenominator={(noDenominator) => onEdit({ noDenominator })}
-        onPeriod={(period) => onEdit({ period })}
-        onComparison={(comparison) => onEdit({ comparison })}
-      />
-      {hint ? <p className="nw-muted">{hint}</p> : null}
-      <h3 className="nw-h3">{own.added}</h3>
-      {cards.length === 0 ? (
-        <p className="nw-muted">{own.none}</p>
-      ) : (
-        <ol className="nw-card-list" data-own-cards="">
-          {cards.map((card, position) => (
-            <li key={position}>
-              <pre className="nw-card-preview">
-                <code>{cardToMarkdown(card, own.card)}</code>
-              </pre>
-              <button type="button" className="nw-small-button" onClick={() => onRemove(position)}>
-                {own.remove}
-              </button>
-            </li>
-          ))}
-        </ol>
-      )}
-      <p>
-        <button type="button" className="nw-small-button" data-own-clear="" onClick={onClear}>
-          {own.clear}
-        </button>
-      </p>
-      <div className="nw-dock" data-own-dock="">
-        <button type="button" className="nw-action" data-add-card="" disabled={!canAddCard(draft) || full} onClick={onAdd}>
-          {own.add}
-        </button>
-        <span className="nw-dock-count">{fill(own.count, { n: cards.length, max: MAX_CARDS })}</span>
-        <button type="button" className="nw-action nw-action-quiet" onClick={onDownload}>
-          {own.dockZip}
-        </button>
-      </div>
-    </section>
-  );
-}
+  const clock = useBeatClock();
+  const glas = useGlas();
+  const fmt = useMemo(() => formatter(pack), [pack]);
+  const [state, dispatch] = useReducer(demoReducer, INITIAL_STATE);
+  const [card, setCard] = useState<OwnCard>(EMPTY_CARD);
+  const [cards, setCards] = useState<readonly OwnCard[]>([]);
+  const [record, setRecord] = useState<NcrRow | null>(null);
+  const [sheet, setSheet] = useState<"table" | "more" | "levers" | "raster" | null>(null);
+  const flat = glas.mode === "solid";
+  const reduced = clock.reducedMotion;
+  const free = clock.phase === "free";
+  const beatId = clock.beat.id as BeatId;
+  const view: BeatId | "free" = free ? "free" : beatId;
 
-function TakeHomeNotes({ pack, text }: { readonly pack: DemoPack; readonly text: string }) {
-  const copy = pack.takehome;
+  useOnRestart(() => {
+    dispatch({ type: "restart" });
+    setRecord(null);
+    setSheet(null);
+  });
+  useEffect(() => {
+    if (clock.phase === "guided") dispatch({ type: "reach", index: clock.index });
+  }, [clock.index, clock.phase]);
+
+  const choice = cardChoice(state);
+  const trigger = state.trigger[choice.counter];
+  const scale = scaleFor(pack, fmt, state, free);
+  const caption = captionFor(pack, fmt, beatId, state, clock.phase, cards.length);
+  const reached = free ? Math.max(state.reached, 5) : state.reached;
+  const showScale = view === "zaehlen" || view === "free";
+  const feld = feldFor("idea", [undefined, undefined, showScale ? { x: scaleX(scale.change) / SCALE_VIEW.w, y: 0.5 } : undefined]);
+
+  const cardView = (editable: boolean, only?: typeof EDITABLE) => (
+    <SteckbriefCard
+      pack={pack}
+      fmt={fmt}
+      choice={choice}
+      trigger={trigger}
+      reached={reached}
+      editable={editable}
+      only={only}
+      heading={only ? pack.decide.cardLines : undefined}
+      onChange={(patch) => dispatch({ type: "cardLine", ...patch })}
+    />
+  );
+  const freeChoice = freeDecision(state.free.counter, state.free.denom);
+
+  const counterControl = (value: Counter, onChange: (counter: Counter) => void) => (
+    <GlasSegmented
+      label={pack.count.control}
+      wrap
+      options={COUNTERS.map((counter) => ({
+        value: counter,
+        label: pack.counters[counter].short,
+      }))}
+      value={value}
+      onChange={onChange}
+    />
+  );
+
+  const data = (): ReactNode => {
+    switch (view) {
+      case "schaetzen":
+        return (
+          <>
+            <ReportCard pack={pack} fmt={fmt} compact={state.guess !== null} />
+            <FitBox ratio={TRAY_RATIO} min={state.guess === null ? 0 : 96}>
+              <TraysView
+                pack={pack}
+                fmt={fmt}
+                counter="records"
+                denom="per1000"
+                reducedMotion={reduced}
+                flat={flat}
+                resting={state.guess === null}
+                onSelect={setRecord}
+                selected={record?.id}
+              />
+            </FitBox>
+          </>
+        );
+      case "zaehlen":
+      case "free":
+        return (
+          <>
+            {view === "zaehlen" ? <ReportCard pack={pack} fmt={fmt} compact /> : null}
+            <ScaleView
+              pack={pack}
+              fmt={fmt}
+              options={scale.options}
+              current={scale.current}
+              ticks={scale.ticks}
+              reducedMotion={reduced}
+              valueText={scale.valueText}
+              onPick={(index) => {
+                const counter = COUNTERS[index] as Counter;
+                if (free) dispatch({ type: "free", patch: { counter } });
+                else dispatch({ type: "counter", counter });
+              }}
+            />
+            <FitBox ratio={TRAY_RATIO} min={72}>
+              <TraysView
+                pack={pack}
+                fmt={fmt}
+                counter={free ? state.free.counter : state.counter}
+                denom={free ? state.free.denom : state.denom}
+                reducedMotion={reduced}
+                flat={flat}
+                onSelect={setRecord}
+                selected={record?.id}
+              />
+            </FitBox>
+            {free ? (
+              <p className="w02-free-decision" data-w02-free-decision="">
+                {freeChoice ? (
+                  <>
+                    <span className="w02-doc-kicker">{pack.free.decision}</span> {fmt.t(pack.decide.decisions[freeChoice.key])}
+                  </>
+                ) : (
+                  pack.free.noDecision
+                )}
+              </p>
+            ) : null}
+          </>
+        );
+      case "zusammenfassen": {
+        const merges = totalMerges(state);
+        const g = pack.merge.gauges;
+        return (
+          <>
+            <dl className="w02-gauges" data-w02-gauges="">
+              <div>
+                <dt>{fmt.t(g.records)}</dt>
+                <dd data-w02-gauge="records">{fmt.n(rate("records", "sep", merges), 2)}</dd>
+              </div>
+              <div>
+                <dt>{fmt.t(g.affected)}</dt>
+                <dd>
+                  {fmt.n(rate("affected", "sep"))} <span>{g.unchanged}</span>
+                </dd>
+              </div>
+              <div>
+                <dt>{fmt.t(g.scrapped)}</dt>
+                <dd>
+                  {fmt.n(rate("scrapped", "sep"))} <span>{g.unchanged}</span>
+                </dd>
+              </div>
+            </dl>
+            <FitBox ratio={MERGE_RATIO} min={96}>
+              <MergeGrid pack={pack} fmt={fmt} state={state} reducedMotion={reduced} flat={flat} onMerge={(cell) => dispatch({ type: "merge", cell })} />
+            </FitBox>
+            <ConditionCard pack={pack} fmt={fmt} recordedOn={recordedOn} />
+          </>
+        );
+      }
+      case "zeitraum":
+        return (
+          <PeriodCalendar
+            pack={pack}
+            fmt={fmt}
+            ends={state.septemberEnds}
+            period={state.period}
+            reducedMotion={reduced}
+            onEnds={(ends) => dispatch({ type: "septemberEnds", ends })}
+          />
+        );
+      case "nachrechnen":
+        return <TraceCarpet pack={pack} fmt={fmt} range={state.range} reducedMotion={reduced} onRange={(range) => dispatch({ type: "range", range })} />;
+      case "entscheiden":
+        return (
+          <div className="w02-decide">
+            <TriggerChecks pack={pack} fmt={fmt} counter={choice.counter} threshold={trigger} />
+            <div className="w02-outcome" data-w02-outcome="">
+              <p>
+                <span className="w02-doc-kicker">{pack.decide.outcome}</span> {fmt.t(pack.decide.decisions[decide(choice.counter, choice.period).key])}
+              </p>
+              <span className="w02-phone-only">
+                <GlasButton variant="plain" size="compact" trailingIcon="forward" onClick={() => setSheet("raster")} data-w02-raster-open="">
+                  {pack.decide.rasterOpen}
+                </GlasButton>
+              </span>
+            </div>
+            <div className="w02-decide-card">{cardView(true)}</div>
+            <div className="w02-decide-lines">{cardView(true, EDITABLE)}</div>
+            <div className="w02-decide-raster">
+              <DecisionRaster pack={pack} fmt={fmt} counter={choice.counter} period={choice.period} />
+            </div>
+            <p className="w02-objective" data-w02-objective="">
+              <span className="w02-doc-kicker">{pack.decide.rule}</span> {pack.decide.objective}
+            </p>
+          </div>
+        );
+      case "deine-kennzahl":
+        return (
+          <OwnCardForm
+            pack={pack}
+            fmt={fmt}
+            card={card}
+            cards={cards}
+            onCard={setCard}
+            onAdd={() => {
+              if (!canAddCard(card) || cards.length >= MAX_CARDS) return;
+              setCards([...cards, card]);
+              setCard(EMPTY_CARD);
+            }}
+            onRemove={(index) => setCards(cards.filter((_, at) => at !== index))}
+            onClear={() => {
+              setCards([]);
+              setCard(EMPTY_CARD);
+            }}
+          />
+        );
+      case "mitnehmen":
+        return <TakeHome pack={pack} fmt={fmt} files={files} cards={cards} craftCard={craftOwnCard(pack, fmt, choice, trigger)} />;
+    }
+  };
+
+  const controls = (): ReactNode => {
+    if (clock.phase === "intro") return null;
+    switch (view) {
+      case "free":
+        return (
+          <>
+            {counterControl(state.free.counter, (counter) => dispatch({ type: "free", patch: { counter } }))}
+            <GlasButton variant="fill" size="compact" icon="sliders" onClick={() => setSheet("levers")} aria-expanded={sheet === "levers"}>
+              {pack.free.levers}
+            </GlasButton>
+          </>
+        );
+      case "schaetzen":
+        // No extra skip button: "Weiter" in the path moves on without a guess.
+        return (
+          <div className="w02-guess" role="group" aria-label={pack.guess.label}>
+            {GUESSES.map((guess) => (
+              <GlasChip
+                key={guess}
+                kind="filter"
+                selected={state.guess === guess}
+                onClick={() => {
+                  dispatch({ type: "guess", guess });
+                  clock.commit();
+                }}
+              >
+                {pack.guess.options[guess]}
+              </GlasChip>
+            ))}
+          </div>
+        );
+      case "zaehlen":
+        return (
+          <>
+            {counterControl(state.counter, (counter) => dispatch({ type: "counter", counter }))}
+            {state.visited.length === COUNTERS.length ? (
+              <GlasToggle checked={state.denom === "per1000"} onChange={(on) => dispatch({ type: "denom", denom: on ? "per1000" : "none" })} label={fmt.t(pack.count.denomLabel)} />
+            ) : null}
+          </>
+        );
+      case "zusammenfassen": {
+        const merges = totalMerges(state);
+        return (
+          <>
+            {merges < maxMerges() ? (
+              <GlasButton variant="fill" size="compact" onClick={() => dispatch({ type: "mergeAll" })}>
+                {pack.merge.all_button}
+              </GlasButton>
+            ) : (
+              <p className="w02-dock-label">{pack.merge.choose}</p>
+            )}
+            {merges > 0 && merges < maxMerges() ? (
+              <GlasButton variant="plain" size="compact" icon="back" onClick={() => dispatch({ type: "undo" })} data-w02-undo="">
+                {pack.merge.undo}
+              </GlasButton>
+            ) : null}
+            {merges >= maxMerges() ? (
+              <GlasSegmented
+                label={pack.merge.choose}
+                wrap
+                options={COUNTERS.map((counter) => ({
+                  value: counter,
+                  label: pack.counters[counter].short,
+                }))}
+                value={choice.counter}
+                onChange={(counter) => dispatch({ type: "cardCounter", counter })}
+              />
+            ) : null}
+          </>
+        );
+      }
+      case "zeitraum":
+        return (
+          <GlasSegmented
+            label={pack.period.control}
+            options={PERIODS.map((period) => ({
+              value: period,
+              label: pack.period.options[period],
+            }))}
+            value={state.period}
+            onChange={(period) => dispatch({ type: "period", period })}
+          />
+        );
+      case "entscheiden": {
+        const range = TRIGGER_RANGE[choice.counter];
+        const start = startTrigger(choice.counter);
+        const unit = pack.counters[choice.counter].unit;
+        return (
+          <div className="w02-slider">
+            <GlasSlider
+              label={pack.decide.triggerLabel}
+              value={trigger}
+              min={range.min}
+              max={range.max}
+              step={range.step}
+              bigStep={range.step * 10}
+              onChange={(value) => dispatch({ type: "trigger", counter: choice.counter, value })}
+              format={(value) => fmt.t(pack.decide.triggerShort, { v: fmt.rate(choice.counter, value) })}
+              valueText={(value) =>
+                fmt.t(pack.decide.triggerValue, {
+                  v: fmt.rate(choice.counter, value),
+                  unit,
+                })
+              }
+              announce={(value) =>
+                fmt.t(pack.decide.triggerValue, {
+                  v: fmt.rate(choice.counter, value),
+                  unit,
+                })
+              }
+              ticks={[
+                {
+                  value: start.value,
+                  label: fmt.t(start.source === "kit" ? pack.decide.kitTag : pack.decide.demoTag, { v: fmt.rate(choice.counter, start.value) }),
+                },
+                { value: rate(choice.counter, "sep") },
+              ]}
+              hint={fmt.t(pack.decide.triggerToday, {
+                v: fmt.rate(choice.counter, rate(choice.counter, "sep")),
+              })}
+            />
+          </div>
+        );
+      }
+      default:
+        return null;
+    }
+  };
+
   return (
-    <section className="nw-section" aria-labelledby="nw-takehome-heading" data-takehome-notes="">
-      <h2 id="nw-takehome-heading" className="nw-h2">
-        {copy.instructionsHead}
-      </h2>
-      <p className="nw-lead">{copy.instructionsLead}</p>
-      <pre className="nw-instructions" data-own-instructions="" tabIndex={0}>
-        {text}
-      </pre>
-      <CopyButton text={text} label={copy.copy} doneLabel={copy.copied} />
-      <h3 className="nw-h3">{copy.promptsHead}</h3>
-      <ol className="nw-prompts">
-        {copy.prompts.map((prompt) => (
-          <li key={prompt}>
-            <p>{prompt}</p>
-            <CopyButton text={prompt} label={copy.copy} doneLabel={copy.copied} />
-          </li>
-        ))}
-      </ol>
-      <p className="nw-muted">{copy.below}</p>
-    </section>
+    <>
+      <DemoGlasStage
+        label={fmt.t(pack.stageLabel)}
+        feld={feld}
+        className="w02-stage"
+        dock={
+          <DemoDock className="w02-dock">
+            <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} />
+            {controls()}
+          </DemoDock>
+        }
+      >
+        <div className="w02-data" data-view={view} data-w02-view={view}>
+          <div className="w02-toolbar" hidden={clock.phase === "intro"}>
+            {view !== "deine-kennzahl" && view !== "mitnehmen" ? (
+              <SteckbriefChip pack={pack} fmt={fmt} reached={reached}>
+                {cardView(false)}
+              </SteckbriefChip>
+            ) : null}
+            {TABLE_BEATS.has(view) ? (
+              <GlasButton variant="plain" size="compact" onClick={() => setSheet("table")}>
+                {pack.table.open}
+              </GlasButton>
+            ) : null}
+            {MORE_BEATS.has(view) ? <GlasButton variant="icon" size="compact" icon="info" label={pack.more} onClick={() => setSheet("more")} /> : null}
+          </div>
+          <div className="w02-layout" data-side={SIDE_BEATS.has(view) ? "" : undefined}>
+            <div className="w02-main">{data()}</div>
+            {SIDE_BEATS.has(view) ? <aside className="w02-side">{cardView(false)}</aside> : null}
+          </div>
+        </div>
+      </DemoGlasStage>
+      <RecordSheet pack={pack} fmt={fmt} row={record} onSelect={setRecord} onClose={() => setRecord(null)} />
+      <GlasSheet open={sheet === "table"} onClose={() => setSheet(null)} title={pack.table.title} closeLabel={pack.close} resizeLabel={pack.resize}>
+        <SceneTable pack={pack} fmt={fmt} beat={view} ends={state.septemberEnds} range={state.range} />
+      </GlasSheet>
+      <GlasSheet open={sheet === "raster"} onClose={() => setSheet(null)} title={pack.decide.rasterTitle} closeLabel={pack.close} resizeLabel={pack.resize}>
+        <DecisionRaster pack={pack} fmt={fmt} counter={choice.counter} period={choice.period} />
+        <p className="w02-sheet-lead">{pack.decide.raster}</p>
+      </GlasSheet>
+      <GlasSheet open={sheet === "more"} onClose={() => setSheet(null)} title={pack.more} closeLabel={pack.close} resizeLabel={pack.resize}>
+        <div className="w02-more">
+          <SceneMore pack={pack} fmt={fmt} beat={view} choice={choice} trigger={trigger} kitCounters={kitCounters} />
+        </div>
+      </GlasSheet>
+      <GlasSheet open={sheet === "levers"} onClose={() => setSheet(null)} modal={false} title={pack.free.leversTitle} closeLabel={pack.close} resizeLabel={pack.resize}>
+        <div className="w02-levers">
+          {counterControl(state.free.counter, (counter) => dispatch({ type: "free", patch: { counter } }))}
+          <GlasToggle
+            checked={state.free.denom === "per1000"}
+            onChange={(on) =>
+              dispatch({
+                type: "free",
+                patch: { denom: on ? "per1000" : "none" },
+              })
+            }
+            label={fmt.t(pack.count.denomLabel)}
+          />
+          <GlasToggle checked={state.free.merged} onChange={(merged) => dispatch({ type: "free", patch: { merged } })} label={pack.free.merge} />
+          <GlasSegmented
+            label={pack.free.end}
+            options={(["oct6", "sep29"] as const).map((ends) => ({
+              value: ends,
+              label: fmt.t(pack.free.ends[ends], {
+                oct6: septemberEnd(fmt, "oct6"),
+                sep29: septemberEnd(fmt, "sep29"),
+              }),
+            }))}
+            value={state.free.septemberEnds}
+            onChange={(septemberEnds) => dispatch({ type: "free", patch: { septemberEnds } })}
+          />
+        </div>
+      </GlasSheet>
+    </>
   );
 }

@@ -5,7 +5,7 @@
  */
 
 export type NumeratorKind = "" | "events" | "quantity";
-export type PeriodKind = "" | "month" | "week" | "quarter" | "year" | "other";
+export type PeriodKind = "" | "month" | "week" | "workday" | "quarter" | "year" | "other";
 export type Comparison = "" | "previous" | "lastYear" | "plan";
 
 export interface OwnCard {
@@ -21,6 +21,8 @@ export interface OwnCard {
   readonly sourceColumn: string;
   readonly limit: string;
   readonly trigger: string;
+  /** The fork "Berichtet | Bereinigt": the card defines an adjusted figure. */
+  readonly adjusted: boolean;
 }
 
 export type TextField = "name" | "decision" | "numerator" | "denominator" | "sourceFile" | "sourceColumn" | "limit" | "trigger";
@@ -53,6 +55,7 @@ export const EMPTY_CARD: OwnCard = {
   sourceColumn: "",
   limit: "",
   trigger: "",
+  adjusted: false,
 };
 
 export type RuleId = "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8";
@@ -78,7 +81,7 @@ export function lintCard(card: OwnCard): readonly Finding[] {
   if (card.period === "month" && card.comparison === "previous") findings.push({ rule: "R3", field: "period" });
   if (started && filled(card.sourceFile) && !filled(card.sourceColumn)) findings.push({ rule: "R4", field: "sourceColumn" });
   if (started && !filled(card.limit)) findings.push({ rule: "R5", field: "limit" });
-  if (ADJUSTED.test(card.name) || ADJUSTED.test(card.numerator)) findings.push({ rule: "R6", field: "name" });
+  if (card.adjusted || ADJUSTED.test(card.name) || ADJUSTED.test(card.numerator)) findings.push({ rule: "R6", field: "name" });
   if (filled(card.trigger) && card.numeratorKind === "events") findings.push({ rule: "R7", field: "trigger" });
   if (started && !filled(card.decision)) findings.push({ rule: "R8", field: "decision" });
   return findings;
@@ -91,7 +94,10 @@ export function canAddCard(card: OwnCard): boolean {
 
 /** One line of card text: no line breaks, no leading heading or rule marks, within its limit. */
 export function cleanField(value: string, limit: number): string {
-  const flat = value.replace(/[\r\n\t]+/g, " ").replace(/\s{2,}/g, " ").trim();
+  const flat = value
+    .replace(/[\r\n\t]+/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
   const unmarked = flat.replace(/^(?:(?:-{3,}|#+|>+)\s*)+/, "").trim();
   return unmarked.slice(0, limit).trim();
 }
@@ -112,16 +118,16 @@ export interface CardWords {
   readonly kinds: Readonly<Record<Exclude<NumeratorKind, "">, string>>;
   readonly periods: Readonly<Record<Exclude<PeriodKind, "">, string>>;
   readonly comparisons: Readonly<Record<Exclude<Comparison, "">, string>>;
+  readonly adjusted: string;
 }
 
 /** The card as a Markdown block, the same format as claude/kennzahlen-steckbrief/SKILL.md. */
 export function cardToMarkdown(card: OwnCard, words: CardWords): string {
   const text = (field: TextField) => cleanField(card[field], FIELD_LIMITS[field]) || words.unset;
-  const kind = card.numeratorKind ? ` (${words.kinds[card.numeratorKind]})` : "";
+  const notes = [card.numeratorKind ? words.kinds[card.numeratorKind] : "", card.adjusted ? words.adjusted : ""].filter(Boolean);
+  const kind = notes.length > 0 ? ` (${notes.join(", ")})` : "";
   const denominator = card.noDenominator ? words.none : text("denominator");
-  const period = card.period
-    ? `${words.periods[card.period]}${card.comparison ? `, ${words.comparison} ${words.comparisons[card.comparison]}` : ""}`
-    : words.unset;
+  const period = card.period ? `${words.periods[card.period]}${card.comparison ? `, ${words.comparison} ${words.comparisons[card.comparison]}` : ""}` : words.unset;
   const column = cleanField(card.sourceColumn, FIELD_LIMITS.sourceColumn);
   const source = `${text("sourceFile")}${column ? `, ${words.column} ${column}` : ""}`;
   return [
@@ -161,6 +167,7 @@ export function withExample(card: OwnCard, example: OwnCard): { readonly card: O
     sourceColumn: sourceOwn ? card.sourceColumn : example.sourceColumn,
     limit: pick("limit"),
     trigger: pick("trigger"),
+    adjusted: card.adjusted || example.adjusted,
   };
   return {
     card: merged,

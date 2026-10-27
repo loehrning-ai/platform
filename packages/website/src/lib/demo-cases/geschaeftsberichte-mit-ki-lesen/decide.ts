@@ -1,36 +1,59 @@
 /**
- * The decision the visitor's cards produce, with no LLM: four outcomes from
- * (counter, basis), the opposite pole as the counter-position, and the three
- * checks of the release condition. decide.test.ts covers all six inputs.
+ * The decision a metric card produces, with no LLM: four outcomes from
+ * (counter, period), the release trigger and its three checks. Values we chose
+ * for the demo carry source "demo"; the kit's own suggestion carries "kit".
  */
-import { CRAFT_MODELS, CRAFT_NCR_SEP, REPORT } from "./data";
-import { count, growth, mergeRecords, rate, unitsShipped, verdict, type Basis, type Counter } from "./definitions";
+import { CRAFT_MODELS, REPORT } from "./data";
+import { growth, machines, maxMerges, numerator, rate, reading, recordsOf, unitsShipped, type Counter, type Denom, type Period } from "./definitions";
 
 export type DecisionKey = "rework" | "holdCause" | "vp" | "holdDemand";
 
 export interface Decision {
   readonly key: DecisionKey;
   readonly counter: Counter;
-  readonly basis: Basis;
-  /** The pole the counter-position argues from. */
-  readonly opposite: { readonly counter: Counter; readonly basis: Basis };
+  readonly period: Period;
 }
 
-export function decide(counter: Counter, basis: Basis): Decision {
-  const key: DecisionKey =
-    counter === "scrapped" ? "rework" : counter === "affected" ? "holdCause" : basis === "month" ? "vp" : "holdDemand";
-  const opposite =
-    counter === "records" && basis === "month"
-      ? ({ counter: "scrapped", basis: "week" } as const)
-      : ({ counter: "records", basis: "month" } as const);
-  return { key, counter, basis, opposite };
+/** The Entscheidungsraster: 3 Zähler by 2 Zeiträume, four distinct decisions in six cells. */
+export function decide(counter: Counter, period: Period): Decision {
+  const key: DecisionKey = counter === "scrapped" ? "rework" : counter === "affected" ? "holdCause" : period === "month" ? "vp" : "holdDemand";
+  return { key, counter, period };
 }
 
-/** The release threshold per counter, per 1.000 units shipped (a setting each card states). */
-export const TRIGGER_PER_1000: Readonly<Record<Counter, number>> = {
-  records: REPORT.vpDefectsSep,
-  affected: 250,
-  scrapped: 80,
+/**
+ * Free play: the grid's decision for a card that takes this numerator as a
+ * month total (free play has no period lever). Without a denominator the
+ * figure compares two months of different size, and the grid decides nothing.
+ */
+export function freeDecision(counter: Counter, denom: Denom): Decision | null {
+  return denom === "none" ? null : decide(counter, "month");
+}
+
+export interface Setting {
+  readonly value: number;
+  readonly source: "kit" | "demo";
+}
+
+/** The kit's suggested trigger (metric-cards.md, Lösungsvorschlag): 80 verschrottete Stück je 1.000. */
+export const KIT_TRIGGER: Readonly<{ scrapped: Setting }> = {
+  scrapped: { value: 80, source: "kit" },
+};
+
+/** Slider start values we chose for the two counters the kit gives no trigger for. */
+export const DEMO_START: Readonly<{ affected: Setting; records: Setting }> = {
+  affected: { value: 250, source: "demo" },
+  records: { value: REPORT.vpDefectsSep, source: "demo" },
+};
+
+export function startTrigger(counter: Counter): Setting {
+  return counter === "scrapped" ? KIT_TRIGGER.scrapped : DEMO_START[counter];
+}
+
+/** The slider's range per counter, per 1.000 units shipped. */
+export const TRIGGER_RANGE: Readonly<Record<Counter, { min: number; max: number; step: number }>> = {
+  records: { min: 0.5, max: 4, step: 0.01 },
+  affected: { min: 50, max: 450, step: 5 },
+  scrapped: { min: 20, max: 250, step: 5 },
 };
 
 export interface TriggerCheck {
@@ -38,44 +61,45 @@ export interface TriggerCheck {
   readonly threshold: number;
   /** September's value on this counter. */
   readonly today: number;
-  /** ① counts units, not documents. Fails for records: merging alone meets it. */
+  /** 1: counts units, not documents. */
   readonly countsUnits: boolean;
-  /** ② not met today: "below the threshold" is false for September. */
+  /** 2: not met today ("below the threshold" is false for September). */
   readonly notMetToday: boolean;
-  /** ③ period and source are named in the sentence. */
+  /** 3: period and source are named on the card. */
   readonly named: boolean;
-  /** For records: the September rate after merging (1,86). */
-  readonly mergedToday: number | null;
+  /** Records only: the merged September rate meets the trigger although the plain one does not. */
+  readonly mergeGameable: boolean;
+  readonly mergedToday: number;
 }
 
-export function checkTrigger(counter: Counter): TriggerCheck {
-  const threshold = TRIGGER_PER_1000[counter];
+export function checkTrigger(counter: Counter, threshold: number, named = true): TriggerCheck {
   const today = rate(counter, "sep");
-  const mergedToday = counter === "records" ? rate("records", "sep", true) : null;
+  const mergedToday = rate(counter, "sep", maxMerges());
+  const notMetToday = !(today < threshold);
   return {
     counter,
     threshold,
     today,
     countsUnits: counter !== "records",
-    notMetToday: !(today < threshold),
-    named: true,
+    notMetToday,
+    named,
+    mergeGameable: counter === "records" && notMetToday && mergedToday < threshold,
     mergedToday,
   };
 }
 
-/** Mean of CRAFT's list prices: the scrap valuation, because an NCR names no model. */
+/** Mean of CRAFT's list prices: the scrap valuation, because a record names no model. */
 export const SCRAP_PRICE_EUR = CRAFT_MODELS.reduce((sum, model) => sum + model.price, 0) / CRAFT_MODELS.length;
 
 /** Scrapped September units valued at the mean list price, and their share of CRAFT revenue. */
-export function scrapValue(): { readonly units: number; readonly eur: number; readonly shareOfRevenue: number } {
-  const units = count("scrapped", "sep");
+export function scrapValue(): {
+  readonly units: number;
+  readonly eur: number;
+  readonly shareOfRevenue: number;
+} {
+  const units = numerator("scrapped", "sep");
   const eur = units * SCRAP_PRICE_EUR;
   return { units, eur, shareOfRevenue: eur / REPORT.craftRevenueEur };
-}
-
-/** The machines September's CRAFT NCRs come from, sorted. */
-export function machines(): readonly string[] {
-  return [...new Set(CRAFT_NCR_SEP.map((row) => row.machine))].sort();
 }
 
 /** Numbers a decision sentence may quote, so copy never holds a literal. */
@@ -88,8 +112,9 @@ export function decisionFacts() {
     affectedSep: rate("affected", "sep"),
     recordsAug: rate("records", "aug"),
     recordsSep: rate("records", "sep"),
-    mergedSep: rate("records", "sep", true),
-    mergedCount: mergeRecords(CRAFT_NCR_SEP).length,
+    mergedSep: rate("records", "sep", maxMerges()),
+    recordsSepCount: recordsOf("sep").length,
+    mergedCount: recordsOf("sep").length - maxMerges(),
     growthMonth: growth("month"),
     growthWeek: growth("week"),
     scrapUnits: scrap.units,
@@ -98,6 +123,10 @@ export function decisionFacts() {
     scrapPrice: SCRAP_PRICE_EUR,
     machines: machines(),
     unitsSep: unitsShipped("sep"),
-    verdicts: { records: verdict("records"), affected: verdict("affected"), scrapped: verdict("scrapped") },
+    verdicts: {
+      records: reading({ counter: "records" }).verdict,
+      affected: reading({ counter: "affected" }).verdict,
+      scrapped: reading({ counter: "scrapped" }).verdict,
+    },
   };
 }
