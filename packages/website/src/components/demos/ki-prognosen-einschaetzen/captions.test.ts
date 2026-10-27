@@ -86,7 +86,7 @@ describe.each(["de", "en"] as const)("every caption slot is filled from the mode
     const t = on.check.rows.findIndex((row) => row.woche === "2025-04-21");
     const lamps = on.check.lamps(t)!;
     const words = biasWords(copy, lamps).replace(NBSP, " ");
-    expect(words).toBe(locale === "de" ? "5,4 % zu hoch" : "5.4% too high");
+    expect(words).toBe(locale === "de" ? "Die Prognose lag 5,4 % zu hoch." : "The forecast was 5.4% too high.");
     const sentence = biasSentence(copy, lamps, 0.05);
     expect(sentence).not.toMatch(/[−+-]\d/);
     for (const key of LAMP_KEYS) expect(lampValue(copy, on.check, t, key, lamps)).not.toMatch(/[−+]\d/);

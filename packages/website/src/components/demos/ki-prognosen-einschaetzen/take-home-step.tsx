@@ -69,26 +69,26 @@ export function TakeHomeStep({
     <div className="w01-take" data-w01-takehome="">
       {line ? <p className="w01-take-line">{line}</p> : null}
       <ol className="w01-take-rows">
-        <Row id="skill" title={t.skill} note={t.skillNote}>
+        <Row id="skill" title={t.skillTitle} note={t.skillNote}>
           <GlasButton variant="prominent" icon="download" href="/skills/prognose-pruefen.zip" download="prognose-pruefen.zip">
             {t.skill}
           </GlasButton>
         </Row>
-        <Row id="rule" title={t.rule} note={t.ruleNote}>
+        <Row id="rule" title={t.ruleTitle} note={t.ruleNote}>
           <GlasButton variant="glass" icon="download" onClick={onRule} data-w01-rule-download="">
             {t.rule}
           </GlasButton>
         </Row>
-        <Row id="prompt" title={t.prompt} note={t.promptNote}>
+        <Row id="prompt" title={t.promptTitle} note={t.promptNote}>
           <CopyRowButton text={prompt} label={t.prompt} copied={t.copied} testId="prompt" />
         </Row>
-        <Row id="kit" title={fill(t.kit, { size: kitSize })} note={t.kitNote}>
+        <Row id="kit" title={t.kitTitle} note={t.kitNote}>
           <GlasButton variant="glass" icon="download" href={kitHref} download={copy.files.kitZip}>
             {fill(t.kit, { size: kitSize })}
           </GlasButton>
         </Row>
       </ol>
-      <ul className="w01-take-files" aria-label={t.kitNote}>
+      <ul className="w01-take-files" aria-label={t.kitTitle}>
         {t.kitFiles.map((entry) => (
           <li key={entry.file}>
             <code>{entry.file}</code> <span className="w01-soft">{entry.beat}</span>
@@ -98,7 +98,6 @@ export function TakeHomeStep({
       <GlasButton variant="plain" size="compact" icon="folder" onClick={onMore} data-w01-more-files="">
         {t.more}
       </GlasButton>
-      <p className="w01-take-note">{t.caption}</p>
     </div>
   );
 }

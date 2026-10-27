@@ -446,6 +446,53 @@
 .w01-cap p + p {
   margin-top: 6px;
 }
+.w01-cap-more {
+  display: none;
+}
+/* A short phone: the first sentence whole and a pill for the rest (fehlerliste.tsx Caption). */
+@media (max-width: 39.99rem) and (max-height: 760px) {
+  .w01-cap:not([data-open]) .w01-cap-rest {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .w01-cap:not([data-open]) .w01-cap-text,
+  .w01-cap:not([data-open]) .w01-cap-text p {
+    display: inline;
+  }
+  .w01-cap-more {
+    position: relative;
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    margin-top: 4px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, currentColor 12%, transparent);
+    color: inherit;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .w01-cap:not([data-open]) .w01-cap-more {
+    margin: 0 0 0 6px;
+    vertical-align: 1px;
+  }
+  .w01-cap-more::after {
+    content: "";
+    position: absolute;
+    inset: -10px -6px;
+  }
+  .w01-cap-more:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
 @media (min-width: 64rem) {
   .w01-cap {
     font-size: 1.0625rem;

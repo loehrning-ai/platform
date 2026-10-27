@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { toSentences } from "@/lib/demo-sentences";
 import { feldFor, GlasButton, GlasChip, GlasSegmented, GlasSheet, GlasSlider, GlasToggle } from "@/components/demos/glas";
 import { DemoDock, DemoGlasStage, setTakeHomeLine, useBeatClock, useBeatGate, useOnRestart } from "@/components/demos/shell";
 import { BEATS, type BeatId } from "@/lib/demo-cases/ki-prognosen-einschaetzen/beats";
@@ -48,13 +49,36 @@ function clampTo(list: readonly number[], t: number): number {
   return Math.min(last, Math.max(first, t));
 }
 
-function Caption({ paragraphs, children }: { readonly paragraphs: Paragraphs; readonly children?: ReactNode }) {
+/**
+ * The step's caption. On a short phone it shows its first sentence whole and
+ * a pill for the rest, so the chart keeps its room and no word is cut; screen
+ * readers always get every sentence. A new caption folds again.
+ */
+function Caption({ paragraphs, more, less }: { readonly paragraphs: Paragraphs; readonly more: string; readonly less: string }) {
+  const [first = "", ...restOfFirst] = toSentences(paragraphs.slice(0, 1));
+  const rest = [restOfFirst.join(" "), ...paragraphs.slice(1)].filter(Boolean);
+  const key = paragraphs.join("\n");
+  const [open, setOpen] = useState(false);
+  const [shownKey, setShownKey] = useState(key);
+  if (shownKey !== key) {
+    setShownKey(key);
+    setOpen(false);
+  }
   return (
-    <div className="w01-cap" data-w01-caption="">
-      {paragraphs.map((text) => (
-        <p key={text}>{text}</p>
-      ))}
-      {children}
+    <div className="w01-cap" data-open={open ? "" : undefined} data-w01-caption="">
+      <div className="w01-cap-text">
+        <p>{first}</p>
+        {rest.map((text) => (
+          <p key={text} className="w01-cap-rest">
+            {text}
+          </p>
+        ))}
+      </div>
+      {rest.length > 0 ? (
+        <button type="button" className="w01-cap-more" aria-expanded={open} onClick={() => setOpen((value) => !value)} data-w01-caption-more="">
+          {open ? less : more}
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -636,7 +660,7 @@ export function Fehlerliste({ copy, kitHref, kitSize }: { readonly copy: DemoPac
       label={copy.stageLabel}
       feld={feld}
       readingTone="hell"
-      caption={<Caption paragraphs={caption} />}
+      caption={<Caption paragraphs={caption} more={copy.captionMore} less={copy.captionLess} />}
       dock={<DemoDock compact>{controls}</DemoDock>}
       className="w01-stage"
     >

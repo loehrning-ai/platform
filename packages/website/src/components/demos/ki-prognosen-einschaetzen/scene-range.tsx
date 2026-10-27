@@ -84,7 +84,7 @@ export function SceneRange({
   const head = (
     <Readline live className="w01-tabular">
       {fill(copy.s3.counter, { hits: tally.hits, seen: tally.seen })}
-      {win ? <span className="w01-soft"> · {fill(copy.s3.edges, { low: signed(win.low, locale), high: signed(win.high, locale) })}</span> : null}
+      {win ? <span className="w01-soft"> {fill(copy.s3.edges, { low: signed(win.low, locale), high: signed(win.high, locale) })}</span> : null}
     </Readline>
   );
 

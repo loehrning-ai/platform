@@ -51,7 +51,7 @@ export function lampSentence(copy: DemoPack, key: LampKey): string {
 function lampLine(copy: DemoPack, check: Checker, t: number, key: LampKey): string {
   const lamps = check.lamps(t);
   const value = lamps ? lampValue(copy, check, t, key, lamps) : "";
-  return `${copy.s5.lampNames[key]}${value ? ` (${value})` : ""}: ${lampSentence(copy, key)}`;
+  return `${copy.s5.lampNames[key]}: ${lampSentence(copy, key)}${value ? ` ${value}` : ""}`;
 }
 
 /** The four lamps of a week. Each is a button: a tap puts its question under the row. */
