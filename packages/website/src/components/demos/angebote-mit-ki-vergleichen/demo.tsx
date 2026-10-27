@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
 import { feldFor, GlasButton, GlasSegmented, GlasSheet, GlasToggle } from "@/components/demos/glas";
-import { DemoDock, DemoGlasStage, revealIfOffscreen, setTakeHomeLine, useBeatClock, useBeatGate, useOnEscape, useOnRestart } from "@/components/demos/shell";
+import { DemoDock, DemoGlasStage, revealIfOffscreen, useBeatClock, useBeatGate, useOnEscape, useOnRestart } from "@/components/demos/shell";
 import { assemble } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/basis";
-import { BEATS } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/beats";
 import { DEMO, HORIZON, KIT_BASIS, kitRows, STACK } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/config";
 import type { DemoPack } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
-import { demoReducer, FREE_START, INITIAL_STATE, MOVES, moveDone, type Unit } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/demo-state";
+import { demoReducer, FREE_START, INITIAL_STATE, MOVES, type Unit } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/demo-state";
 import { BASIS_TEMPLATE, SECOND_CASE_CSV } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/kit-data";
 import { keyOf, OFFER_KEYS, printedPrice, TERMS, unitCents, type OfferKey } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/konditionen";
 import { compute, parse, type CostRow, type StackModel } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/stack";
@@ -22,18 +21,20 @@ import { Letters } from "./letters";
 import { TermsSort } from "./lieferort";
 import { QtyStrip, RequestCard } from "./menge";
 import { draftToCsv, DRAFT_KEY, Keypad, NO_OWN, OwnEditor, readOwn, rowsToDraft, type OwnState } from "./own";
-import { PaperSlider } from "./paper";
-import { Rangliste, type CapHandle, type RankRow } from "./rangliste";
+import { PAPER_MAX, PaperSlider } from "./paper";
+import { Rangliste, type RankRow, type RankSize } from "./rangliste";
 import { MailBody, MethodBody, SourceBody, type SourcePick } from "./sheets";
-import { Composer, fileSetOf, TakeHomeRows, type FileKey, type TakeHomeData } from "./takehome";
+import { ClaudeStep, TakeHomeRows, type TakeHomeData } from "./takehome";
 import "./demo.css";
 
-const SLUG = "angebote-mit-ki-vergleichen";
 const FILLED_BASIS = "vergleichsbasis-mit-zahlen.md";
-/** How long the trucks of a sorted term drive before its pallets land (the caption follows). */
-const TERM_STEP_MS = 1600;
 /** Where the Mennige pool rests behind the offer in the lead (A, B, C from left to right). */
 const POOL_X: Readonly<Record<OfferKey, number>> = { A: 0.2, B: 0.5, C: 0.82 };
+
+/** How long a caption of a sorted delivery term stays before the next one: 250 ms a word, at least 2,4 s. */
+export function readingMs(text: string): number {
+  return Math.max(2400, text.split(/\s+/).filter(Boolean).length * 250 + 800);
+}
 
 export interface DemoData {
   /** The three offers as the kit writes them (fall/angebot-*.md). */
@@ -88,13 +89,14 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
   const [sheet, setSheet] = useState<Sheet | null>(null);
   const [termStage, setTermStage] = useState<TermStage>("trucks");
   const [paid, setPaid] = useState(false);
-  const [attached, setAttached] = useState<readonly FileKey[]>([]);
+  const [rates, setRates] = useState(false);
   const [highlight, setHighlight] = useState<string | null>(null);
   const [stripOver, setStripOver] = useState(false);
   const strip = useRef<HTMLElement | null>(null);
   const closeSheet = useCallback(() => setSheet(null), []);
 
   const free = clock.phase === "free";
+  const guided = clock.phase === "guided";
   const view: View = clock.phase === "intro" ? "tipp" : free ? "free" : (clock.beat.id as View);
   const paperAtZero = useMemo(() => paperNumbers(kit, 0, null), [kit]);
   const flip = paperAtZero.flip;
@@ -131,23 +133,6 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
     setSheet({ kind: "method" });
   }, [clock]);
 
-  // A sorted delivery term: the trucks arrive, then the pallets land, then (all sorted) the sum.
-  const lastTerm = state.lastTerm;
-  const lastKey = lastTerm?.key ?? null;
-  const allSorted = OFFER_KEYS.every((key) => state.terms[key] !== null);
-  useEffect(() => {
-    if (!lastTerm) return;
-    setTermStage("trucks");
-    const timer = window.setTimeout(() => setTermStage(lastTerm.key === "A" ? "done" : "pallets"), TERM_STEP_MS);
-    return () => window.clearTimeout(timer);
-  }, [lastTerm]);
-  useEffect(() => {
-    if (termStage !== "pallets" || !allSorted) return;
-    const timer = window.setTimeout(() => setTermStage("done"), TERM_STEP_MS);
-    return () => window.clearTimeout(timer);
-  }, [allSorted, termStage]);
-  const shownTermStage: TermStage = termStage === "done" && !allSorted ? "pallets" : termStage;
-
   // Free play always opens as printed with every field off, in the sheet "Die Basis".
   useEffect(() => {
     if (clock.phase !== "free") return;
@@ -171,7 +156,7 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
     dispatch({ type: "restart" });
     setSheet(null);
     setPaid(false);
-    setAttached([]);
+    setRates(false);
     setHighlight(null);
     setTermStage("trucks");
     const url = new URL(window.location.href);
@@ -182,33 +167,49 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
   });
   useOnEscape(() => setHighlight(null));
 
-  // Beat 2's "Weiter" walks through the five fields, the result and the method sheet first.
-  useBeatGate(view === "kipp" ? true : null, () => {
-    if (view !== "kipp") return false;
-    if (state.move < 4) {
-      dispatch({ type: "nextMove" });
-      return true;
-    }
-    if (state.move === 4) {
-      if (!paid && state.discount) {
-        setPaid(true);
+  const move = view === "kipp" ? MOVES[state.move] : undefined;
+  // Beat 2's "Weiter" walks through the five fields, the result and the method sheet first; its
+  // "Zurück" walks back through the fields before it leaves the beat.
+  useBeatGate(
+    view === "kipp" ? true : null,
+    () => {
+      if (view !== "kipp") return false;
+      if (state.move < 4) {
+        dispatch({ type: "nextMove" });
         return true;
       }
-      dispatch({ type: "nextMove" });
-      setSheet({ kind: "method" });
+      if (state.move === 4) {
+        if (!paid && state.discount) {
+          setPaid(true);
+          return true;
+        }
+        dispatch({ type: "nextMove" });
+        setSheet({ kind: "method" });
+        return true;
+      }
+      setSheet(null);
+      return false;
+    },
+    () => {
+      if (view !== "kipp" || state.move === 0) return false;
+      if (state.move === 4 && paid) {
+        setPaid(false);
+        return true;
+      }
+      setSheet(null);
+      dispatch({ type: "prevMove" });
       return true;
-    }
-    setSheet(null);
-    return false;
-  });
+    },
+  );
 
-  // The personal line of "Für deinen Claude": the result on the stage, the kit's or the visitor's.
+  // A sorted delivery term: its trucks drive while the caption says what they cost; after the time
+  // it takes to read that, its pallets land and the caption follows; once all three are sorted, the sum.
+  const lastTerm = state.lastTerm;
+  const allSorted = OFFER_KEYS.every((key) => state.terms[key] !== null);
   useEffect(() => {
-    setTakeHomeLine(
-      SLUG,
-      fmt.t(pack.takehome.line, { winner: shownModel.winner.name, gap: fmt.money(shownModel.gap), runner: shownModel.runner.name, decider: lineName(pack, shownModel.decider) }),
-    );
-  }, [fmt, pack, shownModel]);
+    if (lastTerm) setTermStage("trucks");
+  }, [lastTerm]);
+  const shownTermStage: TermStage = termStage === "done" && !allSorted ? "pallets" : termStage;
 
   const applyOwn = (rows: readonly CostRow[], isSecond: boolean) => setOwn((current) => ({ ...current, rows, draft: rowsToDraft(rows, lang), errors: [], second: isSecond }));
   const read = (text: string) => {
@@ -221,6 +222,11 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
   const downloadMail = (model: StackModel) => downloadText(`verhandlungsmail-an-${fileSlug(model.winner.name)}.md`, mailText(model));
   const downloadTable = () =>
     downloadText(FILLED_BASIS, fillTemplate(BASIS_TEMPLATE, shownModel, templateVars(shownModel, DEMO.question), shownModel === fullKit ? KIT_BASIS : null));
+  // The result in one sentence for the take-home: the kit's names the two open questions to Kartovka.
+  const resultLine =
+    shownModel === fullKit
+      ? fmt.t(pack.takehome.lineKit, { winner: shownModel.winner.name, gap: fmt.money(shownModel.gap), runner: shownModel.runner.name })
+      : fmt.t(pack.takehome.lineOwn, { winner: shownModel.winner.name, gap: fmt.money(shownModel.gap), runner: shownModel.runner.name, decider: lineName(pack, shownModel.decider) });
 
   // The Rangliste's rows, in a fixed DOM order; they move by rank.
   const rows: readonly RankRow[] = stage.own
@@ -248,62 +254,12 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
     setSheet(missing && stage.own ? { kind: "keypad", pick: { option, line } } : { kind: "source", pick: { option, line } });
   };
 
-  const paperState = free ? { v: state.free.v, cap: state.free.cap } : { v: state.v, cap: state.cap };
-  const capShown = (view === "papier" && state.crossed && state.v > 0) || (free && state.free.unit === "piece" && state.free.data === "kit" && state.free.v > 0);
-  const capText = fmt.t(pack.papier.capSlider, { cap: fmt.pct(paperState.cap ?? paperState.v, 1) });
-  const cap: CapHandle | null = capShown
-    ? {
-        option: TERMS.C.option,
-        cap: paperState.cap,
-        v: paperState.v,
-        perPoint: paperAtZero.perPoint,
-        label: capText,
-        valueText: capText,
-        onCap: (value) => (free ? dispatch({ type: "free", patch: { cap: value } }) : dispatch({ type: "cap", cap: value })),
-      }
-    : null;
-
-  const move = view === "kipp" ? MOVES[state.move] : undefined;
   const guessRow = (option: string) => {
     const key = keyOf(option);
     if (!key) return;
     dispatch({ type: "guess", key });
     clock.commit();
   };
-
-  // One line of progress at the top of the stage, beside the restart button (contract S2): the field
-  // during the basis beat, the step otherwise.
-  const beatIndex = BEATS.findIndex((beat) => beat.id === view);
-  const stepLine = move
-    ? fmt.t(pack.moves.of, { n: state.move + 1, name: pack.moves.names[move] })
-    : free
-      ? pack.free.title
-      : fmt.t(pack.moves.step, { n: Math.max(0, beatIndex) + 1, name: BEATS[Math.max(0, beatIndex)]?.label[fmt.lang] ?? "" });
-  const moveStrip = !move ? (
-    <div className="av4-moves" data-av4-moves="">
-      <p className="av4-move-of" data-av4-step={view}>
-        {stepLine}
-      </p>
-    </div>
-  ) : (
-    <div className="av4-moves" data-av4-moves="">
-      <p className="av4-move-of" data-av4-move={move}>
-        {stepLine}
-      </p>
-      <ol className="av4-move-chips" aria-label={pack.moves.fieldsLabel}>
-        {MOVES.map((name, index) => (
-          <li key={name} data-current={index === state.move ? "" : undefined} data-done={index < state.move || moveDone(state, name) ? "" : undefined}>
-            {pack.moves.names[name]}
-          </li>
-        ))}
-      </ol>
-      {state.move > 0 ? (
-        <GlasButton variant="plain" size="compact" icon="back" onClick={() => dispatch({ type: "prevMove" })} data-av4-prev-move="">
-          {pack.moves.names[MOVES[state.move - 1] ?? "menge"]}
-        </GlasButton>
-      ) : null}
-    </div>
-  );
 
   const bench = (): ReactNode => {
     switch (view) {
@@ -312,7 +268,7 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
           case "menge":
             return state.qty ? null : <RequestCard pack={pack} fmt={fmt} set={state.qty} strip={() => strip.current} onDrop={() => dispatch({ type: "qty" })} onOver={setStripOver} />;
           case "lieferort":
-            return <TermsSort pack={pack} fmt={fmt} terms={state.terms} lastKey={lastKey} onSort={(key, payer) => dispatch({ type: "term", key, payer })} />;
+            return <TermsSort pack={pack} fmt={fmt} terms={state.terms} lastKey={lastTerm?.key ?? null} stage={shownTermStage} onSort={(key, payer) => dispatch({ type: "term", key, payer })} />;
           case "einmalig":
             return state.finds.length < OFFER_KEYS.length ? <Letters pack={pack} fmt={fmt} letters={data.letters} finds={state.finds} onFind={(key) => dispatch({ type: "find", key })} /> : null;
           default:
@@ -320,9 +276,18 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
         }
       case "papier":
         return (
-          <div className="av4-paper-bench">
-            <PaperSlider pack={pack} fmt={fmt} kit={kit} v={state.v} cap={state.cap} flip={flip} onChange={(v) => dispatch({ type: "paper", v, flip })} />
-          </div>
+          <PaperSlider
+            pack={pack}
+            fmt={fmt}
+            kit={kit}
+            v={state.v}
+            cap={state.cap}
+            flip={flip}
+            showCap={state.crossed}
+            onChange={(v) => dispatch({ type: "paper", v, flip })}
+            onCap={(cap) => dispatch({ type: "cap", cap: cap >= PAPER_MAX ? null : cap })}
+            onMail={() => setSheet({ kind: "mail" })}
+          />
         );
       case "deins":
         return (
@@ -348,19 +313,18 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
       case "mitnehmen":
         return (
           <>
-            <Composer
+            <ClaudeStep
               pack={pack}
               fmt={fmt}
               data={data.takehome}
-              attached={attached}
-              onAttached={setAttached}
-              reducedMotion={clock.reducedMotion}
+              rates={rates}
+              onRates={setRates}
               onJump={(option) => {
                 setHighlight(option);
-                revealIfOffscreen(document.querySelector("[data-demo-stage]"), clock.reducedMotion);
+                revealIfOffscreen(document.querySelector("[data-av4-rank-glass]"), clock.reducedMotion);
               }}
             />
-            <TakeHomeRows pack={pack} fmt={fmt} data={data.takehome} own={shownModel !== fullKit} onTable={downloadTable} onMail={() => downloadMail(shownModel)} />
+            <TakeHomeRows pack={pack} fmt={fmt} data={data.takehome} own={shownModel !== fullKit} line={resultLine} onTable={downloadTable} onMail={() => downloadMail(shownModel)} />
           </>
         );
       default:
@@ -371,13 +335,19 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
   const freeAnswer = free ? freeSentence(pack, fmt, state, kit, own.rows) : "";
   const caption = ((): readonly string[] => {
     if (free) return [freeAnswer];
-    if (view === "mitnehmen") {
-      if (attached.length === 0) return [pack.claude.trayHint];
-      const set = fileSetOf(attached);
-      return [set === "mit-saetzen" ? pack.claude.mit : set === "ohne-saetze" ? pack.claude.ohne : pack.claude.none];
-    }
+    if (view === "mitnehmen") return [rates ? pack.claude.mit : pack.claude.ohne];
     return captionFor(pack, fmt, { view, state, kit, termStage: shownTermStage, paid, own: own.rows, second: own.second });
   })();
+  const captionText = caption.join(" ");
+
+  // The caption of a sorted term holds as long as it takes to read it, then the next part follows.
+  useEffect(() => {
+    if (move !== "lieferort" || !lastTerm || termStage === "done") return;
+    if (termStage === "pallets" && !allSorted) return;
+    const next: TermStage = termStage === "trucks" ? (lastTerm.key === "A" ? "done" : "pallets") : "done";
+    const timer = window.setTimeout(() => setTermStage(next), readingMs(captionText));
+    return () => window.clearTimeout(timer);
+  }, [allSorted, captionText, lastTerm, move, termStage]);
 
   const controls = (): ReactNode => {
     if (clock.phase === "intro") return null;
@@ -416,12 +386,6 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
           );
         }
         return null;
-      case "papier":
-        return state.crossed || state.cap !== null ? (
-          <GlasButton variant="fill" size="compact" icon="doc" onClick={() => setSheet({ kind: "mail" })} data-av4-mail-open="">
-            {pack.papier.mail}
-          </GlasButton>
-        ) : null;
       case "free":
         return (
           <GlasButton variant="fill" size="compact" icon="sliders" onClick={() => setSheet({ kind: "free" })} aria-expanded={sheet?.kind === "free"} data-av4-free-open="">
@@ -433,10 +397,32 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
     }
   };
 
+  // The dock names the field in view and where "Weiter" leads, so the beat has one progress line.
+  // The labels stay short enough that the path and its buttons share one row on a phone.
+  const dockStep = guided && view === "kipp" ? (move ? pack.moves.steps[move] : pack.moves.done) : undefined;
+  const dockNext = ((): string | undefined => {
+    if (!guided) return undefined;
+    switch (view) {
+      case "tipp":
+        return pack.moves.toBasis;
+      case "kipp":
+        if (move === "zahlung") return paid || !state.discount ? pack.moves.next.zahlung : pack.moves.nextResult;
+        return move ? pack.moves.next[move] : pack.moves.toPaper;
+      case "papier":
+      case "deins":
+        return fmt.t(pack.moves.toStep, { n: clock.index + 2 });
+      default:
+        return undefined;
+    }
+  })();
+
   const benchNode = bench();
-  const compact = view === "mitnehmen" || view === "deins" || move === "einmalig" || move === "lieferort";
+  // On a phone the Rangliste gives a workbench the room: the three totals in a row beside a
+  // workbench, one line per offer otherwise; two lines per offer only for the guess and the take-home.
+  const size: RankSize = view === "tipp" || view === "mitnehmen" ? "full" : benchNode ? "mini" : "compact";
   const sourceTitle = sheet?.kind === "source" ? fmt.t(pack.source.title, { line: lineName(pack, sheet.pick.line), option: offerName(pack, sheet.pick.option) }) : "";
   const keypadTitle = sheet?.kind === "keypad" ? fmt.t(pack.deins.keypadTitle, { line: lineName(pack, sheet.pick.line), option: sheet.pick.option }) : "";
+  const tall = view === "mitnehmen";
 
   return (
     <>
@@ -444,17 +430,20 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
         label={pack.stageLabel}
         feld={feld}
         className="av4-stage"
+        style={tall ? { height: "auto", minHeight: "var(--demo4-stage-h)" } : undefined}
         dock={
           <div className="av4-dock-wrap" hidden={sheet !== null || undefined} data-av4-dock="">
-            <DemoDock className="av4-dock">
-              <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} />
+            <DemoDock className="av4-dock" step={dockStep} nextLabel={dockNext}>
+              <DockCaption sentences={caption} />
               {controls()}
             </DemoDock>
           </div>
         }
       >
-        <div className="av4-data" data-av4-view={view} data-move={move} data-bench={benchNode ? "" : undefined}>
-          {moveStrip}
+        <div className="av4-data" data-av4-data="" data-av4-view={view} data-move={move} data-size={size} data-bench={benchNode ? "" : undefined}>
+          <p className="av4-head" data-av4-head="">
+            {stage.cheapest ? pack.rank.label : pack.rank.labelKit}
+          </p>
           {move === "einheit" ? (
             <div className="av4-unit">
               <GlasSegmented<Unit>
@@ -488,15 +477,15 @@ export default function Demo({ pack, data }: { readonly pack: DemoPack; readonly
                 order={stage.order}
                 mode={stage.mode}
                 scale={stage.scale}
+                floor={stage.floor}
                 guess={state.guess ? TERMS[state.guess].option : null}
                 cheapest={stage.cheapest}
-                cap={cap}
                 label={stage.cheapest ? pack.rank.label : pack.rank.labelKit}
                 onSegment={view === "tipp" ? undefined : onSegment}
-                onRow={view === "tipp" && clock.phase === "guided" ? guessRow : undefined}
+                onRow={view === "tipp" && guided ? guessRow : undefined}
                 rowAction={(row) => fmt.t(pack.tipp.pick, { option: row.name })}
                 highlight={highlight}
-                compact={compact}
+                size={size}
                 perBox={move === "einheit" && state.unit === "piece"}
               />
             </div>

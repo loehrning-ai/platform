@@ -6,10 +6,13 @@
  * Each set with and without the skill. Never edit a take; record a new one with
  * scripts/demos/record-claude-run.mjs.
  *
- * Takes set aside stay in rejected/ and are counted per prompt. Thirteen were refused by the
- * recorder because its first per-command allowlist denied an ordinary shell loop; the later takes
- * ran in the CLI sandbox. Two (de-ohne-saetze-without-2, en-mit-saetzen-without-1) were set aside
- * by hand, unedited: Claude listed an empty workspace in them and never saw the attached files.
+ * Takes set aside stay in rejected/ with their reason in "rejected" and are counted per prompt,
+ * with the reason shown beside the count. Thirteen were refused by the recorder because its first
+ * per-command allowlist denied an ordinary shell loop; the later takes ran in the CLI sandbox (the
+ * recorder's --allow-python since W01's change). Two (de-ohne-saetze-without-2,
+ * en-mit-saetzen-without-1) were set aside by hand, unedited apart from that reason: Claude listed
+ * an empty workspace in them and never saw the attached files. None was set aside for its answer.
+ * The notes are per question and say only what the listed takes say.
  */
 
 import type { ClaudeRecording, ClaudeSceneData } from "@/lib/claude-runs";
@@ -43,6 +46,11 @@ export const SCENE: ClaudeSceneData | null = {
       withSkill: ["de-ohne-saetze-with-4", "de-ohne-saetze-with-5", "de-ohne-saetze-with-6"],
       withoutSkill: ["de-ohne-saetze-without-4"],
       rejected: 6,
+      rejectedReason: "5, weil unser Aufnahmeskript einen Befehl blockierte, 1, weil Claude die Dateien nicht sah, keine wegen der Antwort",
+      notes: [
+        "Mit Skill nennt Claude in allen drei Aufnahmen keinen Gewinner. Es lässt Fracht und Lager bei B und C offen und fragt nach unseren Sätzen.",
+        "Ohne Skill schätzt Claude selbst, wie viel Fracht B und C vertragen, und rät am Ende zu B oder A. Dass C mit allen Kosten am günstigsten ist, steht in dieser Antwort nicht.",
+      ],
     },
     {
       id: "mit-saetzen",
@@ -51,6 +59,11 @@ export const SCENE: ClaudeSceneData | null = {
       withSkill: ["de-mit-saetzen-with-3"],
       withoutSkill: ["de-mit-saetzen-without-4", "de-mit-saetzen-without-5"],
       rejected: 5,
+      rejectedReason: "alle, weil unser Aufnahmeskript einen Befehl blockierte, keine wegen der Antwort",
+      notes: [
+        "Mit unseren Sätzen kommen alle drei Aufnahmen auf dieselben Summen wie du: C am günstigsten, dann A, dann B.",
+        "Mit Skill steht zu jeder Zahl die Stelle im Dokument. Ohne Skill endet die Antwort mit einer Empfehlung, die vom Papierpreis abhängt.",
+      ],
     },
     {
       id: "ohne-saetze",
@@ -59,6 +72,11 @@ export const SCENE: ClaudeSceneData | null = {
       withSkill: ["en-ohne-saetze-with-2"],
       withoutSkill: ["en-ohne-saetze-without-2"],
       rejected: 2,
+      rejectedReason: "both because our recording script blocked a command, none because of the answer",
+      notes: [
+        "With the skill, Claude names no winner. It leaves freight and storage open for B and C and asks for our rates.",
+        "Without the skill, Claude estimates the freight itself and says it wouldn't pick Kartovka, offer C. With our rates, C is the cheapest of the three.",
+      ],
     },
     {
       id: "mit-saetzen",
@@ -67,6 +85,11 @@ export const SCENE: ClaudeSceneData | null = {
       withSkill: ["en-mit-saetzen-with-2"],
       withoutSkill: ["en-mit-saetzen-without-2"],
       rejected: 2,
+      rejectedReason: "1 because our recording script blocked a command, 1 because Claude didn't see the files, none because of the answer",
+      notes: [
+        "With our rates, both answers reach the same totals as you: C cheapest, then A, then B.",
+        "With the skill, every number names its place in the documents. Without it, the answer ends with a recommendation that depends on the paper price.",
+      ],
     },
   ],
   recordings: [
@@ -82,16 +105,4 @@ export const SCENE: ClaudeSceneData | null = {
     take(enMitWith2),
     take(enMitWithout2),
   ],
-  notes: {
-    de: [
-      "Ohne unsere Sätze nennt Claude mit Skill in allen drei Aufnahmen keinen Gewinner. Es lässt Fracht und Lager bei B und C offen und fragt nach den Sätzen.",
-      "Ohne Skill nennt Claude B auf dem Papier am günstigsten und rechnet aus, wie viel Fracht der Vorteil verträgt. Nach unseren Sätzen fragt es nicht, es rät zu einem Frachtangebot.",
-      "Mit unseren Sätzen kommen alle drei Aufnahmen auf dieselben Summen wie du. Mit Skill steht zu jeder Zahl die Stelle im Dokument, ohne Skill endet die Antwort mit einer Empfehlung.",
-    ],
-    en: [
-      "Without our rates and with the skill, Claude names no winner. It leaves freight and storage open for B and C and asks for the rates.",
-      "Without the skill, Claude calls B cheapest on paper and works out how much freight that lead can carry. It doesn't ask for our rates and suggests getting a freight quote.",
-      "With our rates, both answers reach the same totals as you. With the skill every number names its place in the documents; without it, the answer ends with a recommendation.",
-    ],
-  },
 };

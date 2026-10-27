@@ -4,7 +4,7 @@ import { useRef } from "react";
 import type { DemoPack } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
 import { REQUEST } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/konditionen";
 import type { Fmt } from "./fmt";
-import { useDragTo } from "./use-drag";
+import { DragGhost, useDragTo } from "./use-drag";
 
 /** The strip above the Rangliste: "Menge im Jahr: noch offen" until the quantity lands in it. */
 export function QtyStrip({ pack, fmt, set, over, stripRef }: { readonly pack: DemoPack; readonly fmt: Fmt; readonly set: boolean; readonly over: boolean; readonly stripRef?: (element: HTMLElement | null) => void }) {
@@ -58,7 +58,6 @@ export function RequestCard({
                 type="button"
                 className="av4-qty-chip"
                 aria-label={fmt.t(pack.menge.chip, { qty: fmt.qty(REQUEST.qty) })}
-                style={drag.offset ? { transform: `translate(${drag.offset.x}px, ${drag.offset.y}px)` } : undefined}
                 data-dragging={drag.offset ? "" : undefined}
                 onClick={onDrop}
                 data-av4-qty=""
@@ -67,6 +66,9 @@ export function RequestCard({
                 {REQUEST.qtyChip.text}
               </button>
             )}
+            <DragGhost style={drag.ghost} className="av4-qty-chip">
+              {REQUEST.qtyChip.text}
+            </DragGhost>
             {rest}
           </dd>
         </div>

@@ -3,14 +3,16 @@
  * Workshop 06 "Die Vergleichsbasis" on the v4 shell (Glas). Server component: picks the locale
  * pack, reads the three offers, the negotiation email, the project instructions and the prompt
  * from the shipped kit zip, runs "Unsere Prüfung" over the recorded takes with Brandtwerk's rates,
- * and renders the client demo with them, so the browser bundle holds one language and no text can
+ * picks this language's recorded runs and the kit files they attached (for the Claude window of the
+ * last beat), and renders the client demo with them, so the browser bundle holds one language and no text can
  * drift from the kit. The hub miniature is tile.tsx (+ tile-motion.ts); the contract of this
  * folder is checked by src/components/demos/demo-contract.test.ts.
  */
 import { readFileSync } from "node:fs";
 import type { DemoComponentProps } from "../demo-page";
 import { formatBytes } from "@/components/demos/take-home/for-your-claude";
-import { SCENE, FILE_SET_LABELS } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/claude-runs";
+import { sceneKitFiles } from "@/components/demos/claude-scene/claude-scene-section";
+import { SCENE } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/claude-runs";
 import { HORIZON, kitRows, STACK } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/config";
 import { COPY } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
 import { FILES, OFFER_KEYS, type OfferKey } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/konditionen";
@@ -40,6 +42,10 @@ function dataFor(locale: "de" | "en"): DemoData {
   const model = assemble(kitRows(locale), ALL_LINES, STACK, HORIZON);
   const totals = model.ranked.map((option) => ({ option: option.name, cents: option.total }));
   const prompt = SCENE?.prompts.find((entry) => entry.locale === locale && entry.id === "mit-saetzen");
+  // The browser gets this language's takes only, and the kit files they attached, read from the zip.
+  const prompts = SCENE?.prompts.filter((entry) => entry.locale === locale) ?? [];
+  const ids = new Set(prompts.flatMap((entry) => [...entry.withSkill, ...entry.withoutSkill]));
+  const scene = SCENE && prompts.length > 0 ? { ...SCENE, prompts, recordings: SCENE.recordings.filter((recording) => ids.has(recording.id)) } : null;
   const checks: CheckTake[] = prompt
     ? [...prompt.withSkill.map((id) => ({ id, withSkill: true })), ...prompt.withoutSkill.map((id) => ({ id, withSkill: false }))].flatMap(({ id, withSkill }) => {
         const take = SCENE?.recordings.find((recording) => recording.id === id);
@@ -57,8 +63,10 @@ function dataFor(locale: "de" | "en"): DemoData {
       kitSize: formatBytes(zip.length, locale),
       skillHref: `/skills/${SKILL}.zip`,
       skillName: `${SKILL}.zip`,
-      setLabels: FILE_SET_LABELS[locale],
       checks,
+      scene,
+      kitFiles: scene ? sceneKitFiles(scene) : {},
+      sceneSkill: SKILL,
     },
   };
 }

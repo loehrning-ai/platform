@@ -1,31 +1,20 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { ClaudeDesktopScene } from "@/components/demos/claude-scene/claude-desktop-scene";
+import type { SceneKitFile } from "@/components/demos/claude-scene/scene-types";
 import { GlasButton, GlasChip } from "@/components/demos/glas";
-import { revealIfOffscreen } from "@/components/demos/shell";
+import type { ClaudeSceneData } from "@/lib/claude-runs";
 import type { DemoPack } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
 import type { CheckItem } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/our-check";
 import { keyOf } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/konditionen";
 import type { Fmt } from "./fmt";
-import { useDragTo } from "./use-drag";
-
-export type FileKey = "anfrage" | "A" | "B" | "C" | "intern";
-export const FILE_KEYS: readonly FileKey[] = ["anfrage", "A", "B", "C", "intern"];
-export const FILE_NAMES: Readonly<Record<FileKey, string>> = {
-  anfrage: "anfrage.md",
-  A: "angebot-a-nuernberg.md",
-  B: "angebot-b-poznan.md",
-  C: "angebot-c-brno.md",
-  intern: "kosten-intern.md",
-};
-export type FileSet = "ohne-saetze" | "mit-saetzen";
+import { DragGhost, useDragTo } from "./use-drag";
 
 /** The recorded file sets: the request and all three offers, with or without Brandtwerk's rates. */
-export function fileSetOf(attached: readonly FileKey[]): FileSet | null {
-  const has = (key: FileKey) => attached.includes(key);
-  if (!has("anfrage") || !has("A") || !has("B") || !has("C")) return null;
-  return has("intern") ? "mit-saetzen" : "ohne-saetze";
-}
+export type FileSet = "ohne-saetze" | "mit-saetzen";
+/** The one file that tells the two sets apart. */
+export const RATES_FILE = "kosten-intern.md";
 
 /** Our check of one recorded take with Brandtwerk's rates, computed on the server. */
 export interface CheckTake {
@@ -43,165 +32,115 @@ export interface TakeHomeData {
   readonly kitSize: string;
   readonly skillHref: string;
   readonly skillName: string;
-  /** The scene's prompt chip per file set, in this language. */
-  readonly setLabels: Readonly<Record<FileSet, string>>;
   readonly checks: readonly CheckTake[];
+  /** The recorded runs of this language (null while there are none), with the kit files they attached. */
+  readonly scene: ClaudeSceneData | null;
+  readonly kitFiles: Readonly<Record<string, SceneKitFile>>;
+  /** The skill's folder name, for the scene's download (/skills/<name>.zip). */
+  readonly sceneSkill: string;
 }
 
-function FileCard({
-  pack,
-  file,
-  attached,
-  composer,
-  onToggle,
-  onAttach,
-  onOver,
-}: {
-  readonly pack: DemoPack;
-  readonly file: FileKey;
-  readonly attached: boolean;
-  readonly composer: () => HTMLElement | null;
-  readonly onToggle: () => void;
-  readonly onAttach: () => void;
-  readonly onOver: (over: boolean) => void;
-}) {
-  const drag = useDragTo<"composer">(
-    () => ({ composer: composer() }),
-    () => onAttach(),
-    (target) => onOver(target === "composer"),
+/** The scene cut down to the question of one file set: its takes only, so the window has no picker. */
+export function sceneFor(scene: ClaudeSceneData, set: FileSet): ClaudeSceneData | null {
+  const prompt = scene.prompts.find((entry) => entry.id === set);
+  if (!prompt) return null;
+  const ids = new Set([...prompt.withSkill, ...prompt.withoutSkill]);
+  return { ...scene, prompts: [prompt], recordings: scene.recordings.filter((recording) => ids.has(recording.id)) };
+}
+
+/** Brandtwerk's own rates as a paper card: drag it into the Claude window, or tap it. */
+function RatesCard({ pack, attached, target, onAttach, onOver }: { readonly pack: DemoPack; readonly attached: boolean; readonly target: () => HTMLElement | null; readonly onAttach: (on: boolean) => void; readonly onOver: (over: boolean) => void }) {
+  const c = pack.claude;
+  const drag = useDragTo<"window">(
+    () => ({ window: target() }),
+    () => onAttach(true),
+    (over) => onOver(over === "window"),
+  );
+  const face = (
+    <>
+      <span className="av4-file-check" aria-hidden="true" />
+      <span className="av4-file-name">{c.ratesName}</span>
+      <span className="av4-file-meta">{RATES_FILE}</span>
+    </>
   );
   return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={attached}
-      className="av4-file-card"
-      style={drag.offset ? { transform: `translate(${drag.offset.x}px, ${drag.offset.y}px)` } : undefined}
-      data-dragging={drag.offset ? "" : undefined}
-      onClick={onToggle}
-      data-av4-file={file}
-      {...drag.bind}
-    >
-      <span className="av4-file-check" aria-hidden="true" />
-      <span className="av4-file-name">{pack.claude.files[file]}</span>
-      <span className="av4-file-meta">
-        {FILE_NAMES[file]} · {pack.claude.attach}
-      </span>
-    </button>
+    <>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={attached}
+        className="av4-file-card"
+        data-dragging={drag.offset ? "" : undefined}
+        onClick={() => onAttach(!attached)}
+        data-av4-rates=""
+        {...(attached ? {} : drag.bind)}
+      >
+        {face}
+      </button>
+      <DragGhost style={drag.ghost} className="av4-file-card">
+        {face}
+      </DragGhost>
+    </>
   );
-}
-
-/** Opens the recorded take of a file set in the shared Claude scene below the demo. */
-function showInScene(label: string, reducedMotion: boolean): boolean {
-  const scene = document.querySelector("[data-claude-scene]");
-  if (!scene) return false;
-  const chip = Array.from(scene.querySelectorAll<HTMLButtonElement>("button")).find((button) => button.textContent?.trim() === label);
-  chip?.click();
-  revealIfOffscreen(scene.closest("[data-claude-scene-section]") ?? scene, reducedMotion);
-  return Boolean(chip);
 }
 
 /**
- * Beat 5 on the stage: the case's five documents as paper cards to drag into a message to Claude
- * (or tick), the one recorded prompt, and "Unsere Prüfung" for the takes with Brandtwerk's rates.
- * The recordings themselves play in the shared scene under the demo; this only picks the file set.
+ * Beat 5 on the stage: the depicted Claude window with a real recorded run, and Brandtwerk's rates
+ * as the one file the visitor decides to attach (drag it into the window or tap it). The four case
+ * files are always in the message; with the rates the window replays the "mit-saetzen" takes, without
+ * them the "ohne-saetze" takes. The arrow in the window's composer plays the recording; the window's
+ * own dock switches the skill on and off and offers the downloads. "Unsere Prüfung" lists, for the
+ * takes with the rates, which of the totals built on this page the answer contains.
  */
-export function Composer({
-  pack,
-  fmt,
-  data,
-  attached,
-  onAttached,
-  reducedMotion,
-  onJump,
-}: {
-  readonly pack: DemoPack;
-  readonly fmt: Fmt;
-  readonly data: TakeHomeData;
-  readonly attached: readonly FileKey[];
-  readonly onAttached: (files: readonly FileKey[]) => void;
-  readonly reducedMotion: boolean;
-  readonly onJump: (option: string) => void;
-}) {
+export function ClaudeStep({ pack, fmt, data, rates, onRates, onJump }: { readonly pack: DemoPack; readonly fmt: Fmt; readonly data: TakeHomeData; readonly rates: boolean; readonly onRates: (on: boolean) => void; readonly onJump: (option: string) => void }) {
   const c = pack.claude;
-  const composer = useRef<HTMLDivElement | null>(null);
+  const windowRef = useRef<HTMLDivElement | null>(null);
   const [over, setOver] = useState(false);
-  const [missing, setMissing] = useState(false);
-  const set = fileSetOf(attached);
-  const toggle = (file: FileKey) => onAttached(attached.includes(file) ? attached.filter((key) => key !== file) : FILE_KEYS.filter((key) => key === file || attached.includes(key)));
-  const attach = (file: FileKey) => onAttached(FILE_KEYS.filter((key) => key === file || attached.includes(key)));
+  const set: FileSet = rates ? "mit-saetzen" : "ohne-saetze";
+  const scene = data.scene ? sceneFor(data.scene, set) : null;
   const offerName = (option: string) => {
     const key = keyOf(option);
     return key ? pack.offers[key].name : option;
   };
   return (
-    <div className="av4-claude" data-av4-claude="">
-      <div className="av4-tray" role="group" aria-label={c.tray}>
-        <p className="av4-kicker">{c.tray}</p>
-        <div className="av4-tray-cards">
-          {FILE_KEYS.map((file) => (
-            <FileCard
-              key={file}
-              pack={pack}
-              file={file}
-              attached={attached.includes(file)}
-              composer={() => composer.current}
-              onToggle={() => toggle(file)}
-              onAttach={() => attach(file)}
-              onOver={setOver}
-            />
-          ))}
-        </div>
+    <div className="av4-claude" data-av4-claude="" data-set={set}>
+      <div className="av4-claude-head">
+        <h3 className="av4-takehome-title">{c.title}</h3>
+        <p className="av4-note">{scene ? c.lead : c.noScene}</p>
       </div>
-      <div ref={composer} className="av4-composer" data-over={over ? "" : undefined} aria-label={c.composer} role="group" data-av4-composer="">
-        <div className="av4-composer-files">
-          {attached.length === 0 ? <span className="av4-composer-drop">{c.composerDrop}</span> : null}
-          {attached.map((file) => (
-            <GlasChip key={file} kind="file" onClick={() => toggle(file)} label={`${FILE_NAMES[file]}, ${c.attach}`}>
-              {FILE_NAMES[file]}
-            </GlasChip>
-          ))}
-        </div>
-        <p className="av4-composer-prompt" data-av4-prompt="">
-          {c.prompt}
-        </p>
-        <div className="av4-composer-send">
-          <GlasButton
-            variant="prominent"
-            size="compact"
-            icon="send"
-            disabled={set === null}
-            onClick={() => {
-              if (set) setMissing(!showInScene(data.setLabels[set], reducedMotion));
-            }}
-            data-av4-send=""
-          >
-            {c.send}
-          </GlasButton>
-        </div>
+      <div className="av4-rates" data-attached={rates ? "" : undefined}>
+        <RatesCard pack={pack} attached={rates} target={() => windowRef.current} onAttach={onRates} onOver={setOver} />
+        <p className="av4-note">{rates ? c.ratesOn : c.ratesOff}</p>
       </div>
-      {missing ? <p className="av4-note">{c.noScene}</p> : null}
+      {scene ? (
+        <div ref={windowRef} className="av4-claude-window" data-over={over ? "" : undefined} data-av4-window="">
+          <ClaudeDesktopScene key={set} scene={scene} locale={pack.locale === "en" ? "en" : "de"} skillName={data.sceneSkill} kitFiles={data.kitFiles} />
+        </div>
+      ) : null}
       {set === "mit-saetzen" && data.checks.length > 0 ? (
         <div className="av4-check" data-av4-check="">
           <p className="av4-kicker">{c.check}</p>
           <p className="av4-note">{c.checkNote}</p>
-          {data.checks.map((take, index) => (
-            <div key={take.id} className="av4-check-take" role="group" aria-label={fmt.t(c.takeOf, { i: index + 1 })}>
-              <span className="av4-check-label">{fmt.t(c.takeOf, { i: index + 1 })}</span>
-              {take.items.map((item) => (
-                <span key={item.option} className="av4-check-item" data-av4-check-item={item.found ? "found" : "missing"}>
-                  <GlasChip
-                    kind="status"
-                    icon={item.found ? "check" : undefined}
-                    onClick={() => onJump(item.option)}
-                    label={`${fmt.t(item.found ? c.found : c.missing, { amount: fmt.money(item.cents), option: offerName(item.option) })}. ${fmt.t(c.jump, { amount: fmt.money(item.cents), option: offerName(item.option) })}`}
-                  >
-                    {fmt.t(item.found ? c.found : c.missing, { amount: fmt.money(item.cents), option: offerName(item.option) })}
-                  </GlasChip>
-                </span>
-              ))}
-            </div>
-          ))}
+          {data.checks.map((take) => {
+            const label = take.withSkill ? c.takeWith : c.takeWithout;
+            const index = data.checks.filter((other) => other.withSkill === take.withSkill).indexOf(take) + 1;
+            const name = fmt.t(label, { i: index });
+            return (
+              <div key={take.id} className="av4-check-take" role="group" aria-label={name}>
+                <span className="av4-check-label">{name}</span>
+                {take.items.map((item) => {
+                  const text = fmt.t(item.found ? c.found : c.missing, { amount: fmt.money(item.cents), option: offerName(item.option) });
+                  return (
+                    <span key={item.option} className="av4-check-item" data-av4-check-item={item.found ? "found" : "missing"}>
+                      <GlasChip kind="status" icon={item.found ? "check" : undefined} onClick={() => onJump(item.option)} label={`${text}. ${fmt.t(c.jump, { option: offerName(item.option) })}`}>
+                        {text}
+                      </GlasChip>
+                    </span>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
       ) : null}
     </div>
@@ -227,12 +166,13 @@ function CopyButton({ text, label, done }: { readonly text: string; readonly lab
   );
 }
 
-/** The six take-home rows (contract section 9): two files filled here, the skill, two texts, the kit. */
+/** The take-home rows: two files filled here, the skill, two texts, the kit, and the result as one line to copy. */
 export function TakeHomeRows({
   pack,
-  fmt,
   data,
+  fmt,
   own,
+  line,
   onTable,
   onMail,
 }: {
@@ -240,6 +180,8 @@ export function TakeHomeRows({
   readonly fmt: Fmt;
   readonly data: TakeHomeData;
   readonly own: boolean;
+  /** The result in one sentence, the kit's or the visitor's. */
+  readonly line: string;
   readonly onTable: () => void;
   readonly onMail: () => void;
 }) {
@@ -304,6 +246,12 @@ export function TakeHomeRows({
             {fmt.t(h.rows.kit.button, { size: data.kitSize })}
           </GlasButton>
           <p className="av4-note">{h.rows.kit.line}</p>
+        </li>
+        <li>
+          <CopyButton text={line} label={h.rows.line.button} done={h.copied} />
+          <p className="av4-note" data-av4-line="">
+            {line}
+          </p>
         </li>
       </ol>
     </section>

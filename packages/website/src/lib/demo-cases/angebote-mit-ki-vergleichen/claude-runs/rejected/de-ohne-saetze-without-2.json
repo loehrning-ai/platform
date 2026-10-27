@@ -526,5 +526,8 @@
   "stop_reason": "end_turn",
   "follow_ups": [],
   "produced_files": [],
-  "edited": false
+  "edited": false,
+  "rejected": [
+    "set aside by hand: Claude listed an empty workspace and never saw the attached files"
+  ]
 }

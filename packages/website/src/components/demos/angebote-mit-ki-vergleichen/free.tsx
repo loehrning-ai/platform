@@ -57,16 +57,16 @@ export function FreeLevers({
       <GlasToggle checked={free.fields.includes("lieferort")} onChange={(on) => toggle("lieferort", on)} label={f.lieferort} disabled={locked} />
       <GlasToggle checked={free.fields.includes("einmalig")} onChange={(on) => toggle("einmalig", on)} label={f.einmalig} disabled={locked} />
       <GlasToggle checked={free.fields.includes("zahlung")} onChange={(on) => toggle("zahlung", on)} label={f.zahlung} disabled={locked} />
-      <PaperSlider pack={pack} fmt={fmt} kit={kit} v={free.v} cap={free.cap} flip={flip} onChange={(v) => onChange({ v })} disabled={locked} />
+      <PaperSlider pack={pack} fmt={fmt} kit={kit} v={free.v} cap={free.cap} flip={flip} showCap={false} onChange={(v) => onChange({ v })} disabled={locked} />
       <GlasSlider
-        label={fmt.t(pack.papier.capSlider, { cap: fmt.pct(free.cap ?? 10, 1) })}
+        label={pack.papier.capLabel}
         value={free.cap ?? 10}
         min={0}
         max={10}
         step={0.1}
         bigStep={1}
         onChange={(cap) => onChange({ cap: cap >= 10 ? null : cap })}
-        format={(cap) => fmt.t(pack.papier.short, { v: fmt.pct(cap, 1) })}
+        format={(cap) => fmt.t(pack.papier.capShort, { cap: fmt.pct(cap, 1) })}
         valueText={(cap) => fmt.t(pack.papier.capSlider, { cap: fmt.pct(cap, 1) })}
         disabled={locked}
       />

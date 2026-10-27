@@ -5,7 +5,7 @@
  * nothing else, so every bar width and every number in a caption comes from the engine.
  */
 import { assemble, effectiveRise, FIELDS, linesOf, paperScale, surcharge, type Paper } from "./basis";
-import { barRows, scaleFor, type BarRow, type Surcharge } from "./bars";
+import { axisFloor, barRows, scaleFor, type BarRow, type Surcharge } from "./bars";
 import { HORIZON, PAPER, paperFlip, STACK } from "./config";
 import { included, type DemoState } from "./demo-state";
 import { keyOf, OFFER_KEYS, TERMS } from "./konditionen";
@@ -28,6 +28,8 @@ export interface StageView {
   readonly order: readonly string[];
   readonly cheapest: string | null;
   readonly scale: number;
+  /** Where the bars start (axisFloor): one amount for every kit state, its own for own offers. */
+  readonly floor: number;
   readonly surcharge: Surcharge | null;
   /** The view shows the visitor's own rows, not the kit's. */
   readonly own: boolean;
@@ -62,47 +64,54 @@ export function kitScale(kit: readonly CostRow[]): number {
   return scaleFor([...full, ...top]);
 }
 
+/** The floor of every kit state: the full basis decides it, so the bars never jump between moves. */
+export function kitFloor(kit: readonly CostRow[]): number {
+  return axisFloor(barRows(assemble(kit, ALL_LINES, STACK, HORIZON)));
+}
+
 function ranked(model: StackModel): { readonly order: readonly string[]; readonly cheapest: string | null } {
   if (!model.complete) return { order: model.options.map((option) => option.name), cheapest: null };
   return { order: model.ranked.map((option) => option.name), cheapest: model.winner.name };
 }
 
-function withBars(model: StackModel, scale: number, own: boolean, sur: Surcharge | null = null): StageView {
-  return { mode: "bars", model, bars: barRows(model, sur), ...ranked(model), scale, surcharge: sur, own };
+function withBars(model: StackModel, scale: number, floor: number, own: boolean, sur: Surcharge | null = null): StageView {
+  return { mode: "bars", model, bars: barRows(model, sur), ...ranked(model), scale, floor, surcharge: sur, own };
 }
 
-function printed(mode: "printed" | "outline", scale: number): StageView {
-  return { mode, model: null, bars: null, order: KIT_ORDER, cheapest: null, scale, surcharge: null, own: false };
+function printed(mode: "printed" | "outline", scale: number, floor: number): StageView {
+  return { mode, model: null, bars: null, order: KIT_ORDER, cheapest: null, scale, floor, surcharge: null, own: false };
 }
 
 function ownView(rows: readonly CostRow[]): StageView {
   const model = compute(rows, HORIZON, null, STACK);
-  return withBars(model, scaleFor(barRows(model)), true);
+  const bars = barRows(model);
+  return withBars(model, scaleFor(bars), axisFloor(bars), true);
 }
 
 export function stageView({ view, state, kit, own }: StageInput): StageView {
   const scale = kitScale(kit);
-  const full = () => withBars(assemble(kit, ALL_LINES, STACK, HORIZON), scale, false);
+  const floor = kitFloor(kit);
+  const full = () => withBars(assemble(kit, ALL_LINES, STACK, HORIZON), scale, floor, false);
   switch (view) {
     case "tipp":
-      return printed("printed", scale);
+      return printed("printed", scale, floor);
     case "kipp": {
-      if (!state.qty) return printed("printed", scale);
-      if (state.unit === "printed") return printed(state.move === 0 ? "outline" : "printed", scale);
-      return withBars(assemble(kit, included(state, keyOf), STACK, HORIZON), scale, false);
+      if (!state.qty) return printed("printed", scale, floor);
+      if (state.unit === "printed") return printed(state.move === 0 ? "outline" : "printed", scale, floor);
+      return withBars(assemble(kit, included(state, keyOf), STACK, HORIZON), scale, floor, false);
     }
     case "papier":
-      return withBars(paperModel(kit, state.v, state.cap), scale, false, surchargeOf(kit, state.v));
+      return withBars(paperModel(kit, state.v, state.cap), scale, floor, false, surchargeOf(kit, state.v));
     case "deins":
       return own ? ownView(own) : full();
     case "mitnehmen":
       return full();
     case "free": {
       if (state.free.data === "own" && own) return ownView(own);
-      if (state.free.unit === "printed") return printed("printed", scale);
+      if (state.free.unit === "printed") return printed("printed", scale, floor);
       const { v, cap, fields } = state.free;
       const model = assemble(kit, linesOf(fields), STACK, HORIZON, paperScale(PAPER_CLAUSE, v, cap));
-      return withBars(model, scale, false, surchargeOf(kit, v));
+      return withBars(model, scale, floor, false, surchargeOf(kit, v));
     }
   }
 }

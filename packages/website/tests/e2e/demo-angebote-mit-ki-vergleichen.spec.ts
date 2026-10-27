@@ -21,15 +21,34 @@ function collectErrors(page: Page): string[] {
 
 const overflow = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
-/** The offers top to bottom as the Rangliste shows them, by their first letter. */
+/** The offers in reading order as the Rangliste shows them (top to bottom, or left to right in a row), by their first letter. */
 const order = (page: Page) =>
   page.locator("[data-av4-row]").evaluateAll((rows) =>
     rows
-      .map((row) => ({ name: (row.getAttribute("data-av4-row") ?? "").slice(0, 1), top: row.getBoundingClientRect().top }))
-      .sort((a, b) => a.top - b.top)
+      .map((row) => {
+        const box = row.getBoundingClientRect();
+        return { name: (row.getAttribute("data-av4-row") ?? "").slice(0, 1), top: Math.round(box.top), left: box.left };
+      })
+      .sort((a, b) => a.top - b.top || a.left - b.left)
       .map((row) => row.name)
       .join(""),
   );
+
+/** The dock's caption is never cut: it shows every line it has. */
+async function expectCaptionWhole(page: Page) {
+  const caption = page.locator("[data-av4-caption]");
+  const fits = await caption.evaluate((element) => element.scrollHeight <= element.clientHeight + 1);
+  expect(fits).toBe(true);
+}
+
+/** A key visual of the workbench sits fully above the dock, so the dock never covers it. */
+async function expectAboveDock(page: Page, selector: string) {
+  const target = await page.locator(selector).first().boundingBox();
+  const dock = await page.locator("[data-av4-dock]").boundingBox();
+  expect(target).not.toBeNull();
+  expect(dock).not.toBeNull();
+  expect((target?.y ?? 0) + (target?.height ?? 0)).toBeLessThanOrEqual((dock?.y ?? 0) + 1);
+}
 
 const total = (page: Page, option: string) => page.locator(`[data-av4-row="${option}"] [data-av4-total]`);
 const beat = (page: Page) => page.locator("[data-demo-clock]");
@@ -52,7 +71,7 @@ async function advanceTo(page: Page, id: string) {
 async function nextMove(page: Page, move: string) {
   await expect(async () => {
     await next(page);
-    await expect(page.locator(`[data-av4-move="${move}"]`)).toBeVisible({ timeout: 1500 });
+    await expect(page.locator(`[data-av4-data][data-move="${move}"]`)).toHaveCount(1, { timeout: 1500 });
   }).toPass({ timeout: 15_000 });
 }
 
@@ -63,11 +82,24 @@ async function start(page: Page) {
   }).toPass({ timeout: 15_000 });
 }
 
-/** One letter after another: on a phone only the letter in view has its button. */
-async function readLetter(page: Page, key: "A" | "B" | "C") {
+/**
+ * One letter after another: on a phone only the letter in view has its button. With `lens`, the
+ * letter is pushed up under the resting lens until its one-off line crosses the lens's centre.
+ */
+async function readLetter(page: Page, key: "A" | "B" | "C", lens = false) {
   const radio = page.locator("[data-av4-letters] [role=radio]").filter({ hasText: new RegExp(`^${key}`) });
   if (await radio.first().isVisible()) await radio.first().click();
-  await page.locator(`[data-av4-read="${key}"]`).click();
+  if (lens) {
+    await page.locator(`[data-av4-letter-text="${key}"]`).evaluate(async (text, letter) => {
+      for (let y = 0; y <= text.scrollHeight; y += 8) {
+        text.scrollTop = y;
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        if (!document.querySelector(`[data-av4-read="${letter}"]`)) return;
+      }
+    }, key);
+  } else {
+    await page.locator(`[data-av4-read="${key}"]`).click();
+  }
   // Found: the button gives way to the amount (after the third find the letters collapse).
   await expect(page.locator(`[data-av4-read="${key}"]`)).toHaveCount(0);
 }
@@ -92,7 +124,8 @@ test.describe(`/demos/${SLUG}`, () => {
     await advanceTo(page, "kipp");
 
     // 2a Menge: tap the quantity onto the strip.
-    await expect(page.locator('[data-av4-move="menge"]')).toBeVisible();
+    await expect(page.locator('[data-av4-data][data-move="menge"]')).toHaveCount(1);
+    await expectCaptionWhole(page);
     await page.locator("[data-av4-qty]").click();
     // 2b Einheit: per box, the bars show the goods price and B leads.
     await nextMove(page, "einheit");
@@ -103,11 +136,17 @@ test.describe(`/demos/${SLUG}`, () => {
     for (const [key, payer] of [["A", "supplier"], ["B", "buyer"], ["C", "buyer"]] as const) {
       await page.locator(`[data-av4-term="${key}"]`).click();
       await page.locator(`[data-av4-pocket="${payer}"]`).click();
+      if (key === "B") {
+        // B's trucks drive above the dock while the caption says what the trips cost.
+        await expectAboveDock(page, "[data-av4-routes]");
+        await expectCaptionWhole(page);
+      }
     }
     await expect(total(page, "B Poznań")).toHaveText("25.520 €", { timeout: 8000 });
     // 2d Einmalig: the rows reorder only after the third find.
     await nextMove(page, "einmalig");
-    await readLetter(page, "A");
+    await expectAboveDock(page, "[data-av4-lens]");
+    await readLetter(page, "A", true);
     await readLetter(page, "B");
     await expect.poll(() => order(page)).toBe("BCA");
     await readLetter(page, "C");
@@ -119,6 +158,7 @@ test.describe(`/demos/${SLUG}`, () => {
     await expect(total(page, "A Nürnberg")).toHaveText("25.872 €");
     await expect(total(page, "B Poznań")).toHaveText("26.554 €");
     await expect.poll(() => order(page)).toBe("CAB");
+    await expectCaptionWhole(page);
 
     // The method sheet takes the dock's place.
     await next(page);
@@ -129,13 +169,15 @@ test.describe(`/demos/${SLUG}`, () => {
     await expect(page.locator("[data-av4-dock]")).toBeVisible();
 
     // Paper price: past the turning point A leads; a cap of 5 % brings C back at 25.600 €.
+    await expectAboveDock(page, "[data-av4-flip]");
     await page.locator("[data-av4-flip]").click();
     await expect.poll(() => order(page)).toBe("ACB");
     await expect(page.locator("[data-av4-readout]")).toHaveAttribute("data-ahead", "A");
-    await page.locator("[data-av4-paper] [role=slider]").focus();
+    await page.locator("[data-av4-paper] [role=slider]").first().focus();
     await page.keyboard.press("End");
     await expect(page.locator("[data-av4-caption]")).toContainText("10 Prozent");
-    const cap = page.locator("[data-av4-cap]");
+    await expectCaptionWhole(page);
+    const cap = page.locator("[data-av4-cap] [role=slider]");
     await expect(cap).toHaveCount(1);
     await cap.focus();
     for (let step = 0; step < 5; step += 1) await page.keyboard.press("PageDown");
@@ -171,9 +213,20 @@ test.describe(`/demos/${SLUG}`, () => {
     await expect(page.locator("[data-av4-row]")).toHaveCount(3);
 
     await advanceTo(page, "mitnehmen");
-    await expect(page.locator("[data-av4-send]")).toBeDisabled();
-    for (const file of ["anfrage", "A", "B", "C", "intern"]) await page.locator(`[data-av4-file="${file}"]`).click();
-    await expect(page.locator("[data-av4-send]")).toBeEnabled();
+    // The Claude window sits in the stage; the old block below the stage is gone, and nothing scrolls by itself.
+    await expect(page.locator("[data-av4-window] [data-claude-scene]")).toHaveCount(1);
+    await expect(page.locator("[data-claude-scene]")).toHaveCount(1);
+    await expect(page.locator('[data-av4-check-item="found"]')).toHaveCount(0);
+    // Attach Brandtwerk's rates (a tap; dragging into the window does the same), then send.
+    const rates = page.locator("[data-av4-rates]");
+    await expect(rates).toHaveAttribute("aria-checked", "false");
+    await rates.click();
+    await expect(rates).toHaveAttribute("aria-checked", "true");
+    await page.locator("[data-av4-window] [data-scene-send]").click();
+    await expect(page.locator("[data-av4-window] [data-scene-pause]")).toBeVisible({ timeout: 3000 });
+    const scrolled = await page.evaluate(() => window.scrollY);
+    await page.waitForTimeout(1500);
+    expect(Math.abs((await page.evaluate(() => window.scrollY)) - scrolled)).toBeLessThan(2);
     // Our check: every recorded take with Brandtwerk's rates names the three sums.
     expect(await page.locator('[data-av4-check-item="found"]').count()).toBeGreaterThanOrEqual(3);
     await expect(page.locator('[data-av4-check-item="missing"]')).toHaveCount(0);

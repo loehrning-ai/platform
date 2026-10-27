@@ -4,10 +4,11 @@ import { useRef, useState, type CSSProperties } from "react";
 import type { DemoPack } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/copy";
 import { INTERNAL, OFFER_KEYS, pallets, TERMS, trips, type OfferKey, type Payer } from "@/lib/demo-cases/angebote-mit-ki-vergleichen/konditionen";
 import type { Fmt } from "./fmt";
-import { useDragTo } from "./use-drag";
+import type { TermStage } from "./captions";
+import { DragGhost, useDragTo } from "./use-drag";
 
 const PAYERS: readonly Payer[] = ["supplier", "buyer"];
-const ROUTE_Y: Readonly<Record<OfferKey, number>> = { A: 20, B: 54, C: 88 };
+const ROUTE_Y: Readonly<Record<OfferKey, number>> = { A: 22, B: 60, C: 98 };
 
 function TermChip({
   pack,
@@ -28,29 +29,34 @@ function TermChip({
 }) {
   const drag = useDragTo<Payer>(pockets, onDrop, onOver);
   return (
-    <button
-      type="button"
-      className="av4-term"
-      aria-pressed={selected}
-      style={drag.offset ? { transform: `translate(${drag.offset.x}px, ${drag.offset.y}px)` } : undefined}
-      data-dragging={drag.offset ? "" : undefined}
-      onClick={onSelect}
-      data-av4-term={term}
-      {...drag.bind}
-    >
-      {pack.lieferort.chips[term]}
-    </button>
+    <>
+      <button
+        type="button"
+        className="av4-term"
+        aria-pressed={selected}
+        data-dragging={drag.offset ? "" : undefined}
+        onClick={onSelect}
+        data-av4-term={term}
+        {...drag.bind}
+      >
+        {pack.lieferort.chips[term]}
+      </button>
+      <DragGhost style={drag.ghost} className="av4-term">
+        {pack.lieferort.chips[term]}
+      </DragGhost>
+    </>
   );
 }
 
 /** The route schematic and the warehouse: who drives, how often, and where the pallets stand. */
 function Routes({ pack, fmt, terms, show }: { readonly pack: DemoPack; readonly fmt: Fmt; readonly terms: Readonly<Record<OfferKey, Payer | null>>; readonly show: OfferKey | null }) {
   const count = show ? pallets(show) : 0;
+  const cellSize = 16;
   const inside = Math.min(count, INTERNAL.freePlaces);
   const outside = Math.max(0, count - INTERNAL.freePlaces);
-  const cell = (index: number, x0: number) => ({ x: x0 + (index % 5) * 15, y: 34 + Math.floor(index / 5) * 15 });
+  const cell = (index: number, x0: number) => ({ x: x0 + (index % 5) * cellSize, y: 40 + Math.floor(index / 5) * cellSize });
   return (
-    <svg viewBox="0 0 360 108" className="av4-routes" role="img" aria-label={pack.lieferort.routeLabel} data-av4-routes="">
+    <svg viewBox="0 0 360 120" className="av4-routes" role="img" aria-label={pack.lieferort.routeLabel} data-av4-routes="">
       {OFFER_KEYS.map((key) => {
         const payer = terms[key];
         const y = ROUTE_Y[key];
@@ -60,43 +66,43 @@ function Routes({ pack, fmt, terms, show }: { readonly pack: DemoPack; readonly 
             <text x="2" y={y + 4} className="av4-svg-label">
               {TERMS[key].delivery.place === "Brandtwerk" ? pack.offers.A.city : TERMS[key].delivery.place}
             </text>
-            <line x1="64" y1={y} x2="180" y2="54" className="av4-route-line" pathLength={1} />
+            <line x1="70" y1={y} x2="176" y2="60" className="av4-route-line" pathLength={1} />
             {payer === "buyer"
               ? Array.from({ length: n }, (_, index) => {
                   const share = (index + 1) / (n + 1);
-                  return <rect key={index} x={64 + 116 * share - 5} y={y + (54 - y) * share - 3} width="10" height="6" rx="1.5" className="av4-truck" style={{ "--av4-i": index } as CSSProperties} />;
+                  return <rect key={index} x={70 + 106 * share - 6} y={y + (60 - y) * share - 4} width="12" height="8" rx="2" className="av4-truck" style={{ "--av4-i": index } as CSSProperties} />;
                 })
               : null}
             {payer ? (
-              <text x="104" y={y - 4} className="av4-svg-note">
+              <text x="96" y={y - 6} className="av4-svg-note">
                 {payer === "supplier" ? pack.lieferort.included : fmt.t(n === 1 ? pack.lieferort.trip : pack.lieferort.trips, { n })}
               </text>
             ) : null}
           </g>
         );
       })}
-      <rect x="180" y="44" width="20" height="20" rx="4" className="av4-plant" />
-      <text x="204" y="20" className="av4-svg-label">
+      <rect x="176" y="50" width="20" height="20" rx="5" className="av4-plant" />
+      <text x="358" y="26" textAnchor="end" className="av4-svg-label">
         {fmt.t(pack.lieferort.store, { free: INTERNAL.freePlaces })}
       </text>
       {Array.from({ length: INTERNAL.freePlaces }, (_, index) => {
-        const { x, y } = cell(index, 206);
-        return <rect key={`place-${index}`} x={x} y={y} width="12" height="12" rx="2" className="av4-place" />;
+        const { x, y } = cell(index, 200);
+        return <rect key={`place-${index}`} x={x} y={y} width="13" height="13" rx="3" className="av4-place" />;
       })}
-      <rect x="284" y="30" width="76" height="34" rx="4" className="av4-external" />
-      <text x="288" y="78" className="av4-svg-note">
+      <rect x="284" y="36" width="76" height="36" rx="6" className="av4-external" />
+      <text x="288" y="88" className="av4-svg-note">
         {pack.lieferort.external}
       </text>
       {Array.from({ length: inside }, (_, index) => {
-        const { x, y } = cell(index, 206);
-        return <rect key={`in-${show}-${index}`} x={x + 1} y={y + 1} width="10" height="10" rx="1.5" className="av4-pallet" style={{ "--av4-i": index } as CSSProperties} />;
+        const { x, y } = cell(index, 200);
+        return <rect key={`in-${show}-${index}`} x={x + 1} y={y + 1} width="11" height="11" rx="2" className="av4-pallet" style={{ "--av4-i": index } as CSSProperties} />;
       })}
       {Array.from({ length: outside }, (_, index) => {
-        const { x, y } = cell(index, 287);
-        return <rect key={`out-${show}-${index}`} x={x + 1} y={y + 1} width="10" height="10" rx="1.5" className="av4-pallet" data-external="" style={{ "--av4-i": index + inside } as CSSProperties} />;
+        const { x, y } = cell(index, 284);
+        return <rect key={`out-${show}-${index}`} x={x + 1} y={y - 3} width="11" height="11" rx="2" className="av4-pallet" data-external="" style={{ "--av4-i": index + inside } as CSSProperties} />;
       })}
       {show ? (
-        <text x="204" y="100" className="av4-svg-note">
+        <text x="200" y="114" className="av4-svg-note">
           {fmt.t(pack.lieferort.pallets, { n: count })}
         </text>
       ) : null}
@@ -106,7 +112,7 @@ function Routes({ pack, fmt, terms, show }: { readonly pack: DemoPack; readonly 
 
 /**
  * Move 2c: sort each delivery term into the pocket that says who pays the trip, then watch the route
- * and the pallets. Drag a chip onto a pocket, or tap a chip and then a pocket (also by keyboard).
+ * and the pallets (the trucks first, the pallets once the caption has said what the trips cost). Drag a chip onto a pocket, or tap a chip and then a pocket (also by keyboard).
  * A wrong drop scores nothing: the chip lands in the right pocket, and the pocket quotes the field card.
  */
 export function TermsSort({
@@ -114,12 +120,15 @@ export function TermsSort({
   fmt,
   terms,
   lastKey,
+  stage,
   onSort,
 }: {
   readonly pack: DemoPack;
   readonly fmt: Fmt;
   readonly terms: Readonly<Record<OfferKey, Payer | null>>;
   readonly lastKey: OfferKey | null;
+  /** The trucks of the last sorted term drive first; its pallets land once the caption moves on. */
+  readonly stage: TermStage;
   readonly onSort: (key: OfferKey, payer: Payer) => void;
 }) {
   const [selected, setSelected] = useState<OfferKey | null>(null);
@@ -131,7 +140,8 @@ export function TermsSort({
     onSort(key, payer);
   };
   return (
-    <div className="av4-terms" data-av4-terms="">
+    // While a sorted term's trucks and pallets arrive, the route moves to the top of the card.
+    <div className="av4-terms" data-av4-terms="" data-moving={lastKey && stage !== "done" ? "" : undefined}>
       {unsorted.length > 0 ? (
         <div className="av4-term-tray" role="group" aria-label={pack.lieferort.instruction}>
           {unsorted.map((key) => (
@@ -184,7 +194,7 @@ export function TermsSort({
           );
         })}
       </div>
-      <Routes pack={pack} fmt={fmt} terms={terms} show={lastKey} />
+      <Routes pack={pack} fmt={fmt} terms={terms} show={stage === "trucks" && lastKey !== "A" ? null : lastKey} />
     </div>
   );
 }

@@ -31,7 +31,7 @@ describe("captions of the guided path, German", () => {
   it("counts B's trucks and pallets, then the gap to C", () => {
     const sorted = run({ type: "nextMove" }, { type: "nextMove" }, { type: "term", key: "A", payer: "supplier" }, { type: "term", key: "C", payer: "buyer" }, { type: "term", key: "B", payer: "supplier" });
     expect(caption("kipp", sorted, "trucks")).toBe(
-      "Nicht ganz: Diese Klausel gehört in das andere Feld. Brandtwerk holt in Poznań selbst ab, und jeder Auftrag umfasst 20.000 Stück. Das sind 2 Fahrten zu je 1.400 €, zusammen 2.800 € Fracht im Jahr.",
+      "Nicht ganz. Die Feldkarte sagt zu EXW Poznań: „Du holst ab und verlädst. Fracht und Verladung zahlst du.“ Brandtwerk holt in Poznań selbst ab, und jeder Auftrag umfasst 20.000 Stück. Das sind 2 Fahrten zu je 1.400 €, zusammen 2.800 € Fracht im Jahr.",
     );
     expect(caption("kipp", sorted, "pallets")).toContain("Die übrigen 10 Paletten stehen extern und kosten 1.920 € im Jahr.");
     expect(caption("kipp", sorted, "done")).toContain("B nur noch 80 € günstiger als C");
@@ -58,7 +58,7 @@ describe("captions of the paper price", () => {
     expect(paperCaption(de, fde, kit, { ...INITIAL_STATE, v: 3 }).join(" ")).toBe("Bei 3 Prozent Anstieg ist C noch 548 € günstiger als A.");
     expect(paperCaption(de, fde, kit, { ...INITIAL_STATE, v: 7 }).join(" ")).toContain("Ab 6,97 Prozent Anstieg ist A günstiger als C. Dann ist der Zuschlag größer als der Vorsprung von 962 €");
     expect(paperCaption(de, fde, kit, { ...INITIAL_STATE, v: 10 }).join(" ")).toContain("ist A im Jahr 418 € günstiger als C");
-    expect(paperReadout(en, fen, kit, 10, null)).toBe("A now €418 cheaper");
+    expect(paperReadout(en, fen, kit, 10, null)).toBe("A is now €418 cheaper than C.");
   });
 
   it("caps C at 25.600 € with a cap of 5 %", () => {

@@ -69,3 +69,27 @@ export function scaleFor(rows: readonly BarRow[], floor = 0): number {
   const widest = Math.max(floor, ...rows.map((row) => row.gross + row.segments.filter((segment) => segment.kind === "Ghost").reduce((sum, segment) => sum + segment.cents, 0)));
   return widest > 0 ? widest * 1.04 : 1;
 }
+
+/**
+ * Where the bars start: a round amount below 80 % of the smallest first line (the goods, in the kit),
+ * so the lines on top of the goods are wide enough to see and to tap on a phone. The Rangliste names
+ * this amount ("Balken ab 16.000 €"), because a bar that does not start at 0 must say so.
+ */
+export function axisFloor(rows: readonly BarRow[]): number {
+  const firsts = rows.flatMap((row) => {
+    const first = row.segments[0];
+    return first && first.kind !== "Open" && first.cents > 0 ? [first.cents] : [];
+  });
+  if (firsts.length === 0) return 0;
+  const raw = Math.min(...firsts) * 0.8;
+  const step = 10 ** Math.max(0, Math.floor(Math.log10(raw)) - 1);
+  return Math.floor(raw / step) * step;
+}
+
+/** One stretch of a bar on a scale that starts at `floor`: left and width as shares of the track. */
+export function span(start: number, cents: number, floor: number, scale: number): { readonly left: number; readonly width: number } {
+  const range = Math.max(1, scale - floor);
+  const from = Math.max(0, start - floor);
+  const to = Math.max(0, start + cents - floor);
+  return { left: from / range, width: (to - from) / range };
+}

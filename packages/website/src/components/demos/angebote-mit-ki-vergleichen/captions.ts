@@ -90,7 +90,10 @@ function basisCaption(pack: DemoPack, fmt: Fmt, input: CaptionInput): readonly s
         return [...fromKit, fmt.t(pack.lieferort.all, { gap_bc: fmt.money(total(partial, "C") - total(partial, "B")) })];
       }
       if (!state.lastTerm) return [...fromKit, pack.lieferort.instruction, pack.lieferort.define];
-      const wrong = state.lastTerm.wrong ? [pack.lieferort.wrong] : [];
+      const l = pack.lieferort;
+      const key = state.lastTerm.key;
+      const quote = fmt.t(l.quoted, { text: l.cardQuotes[TERMS[key].delivery.term] });
+      const wrong = state.lastTerm.wrong ? [fmt.t(l.wrong, { term: l.chips[key], quote })] : [];
       return [...wrong, termCaption(pack, fmt, state.lastTerm.key, input.termStage === "trucks" ? "trucks" : "pallets")];
     }
     case "einmalig": {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { assemble, linesOf, paperScale, surcharge } from "./basis";
-import { barRows, scaleFor } from "./bars";
+import { axisFloor, barRows, scaleFor, span } from "./bars";
 import { HORIZON, kitRows, PAPER, STACK } from "./config";
 import { compute, parse } from "./stack";
 
@@ -43,5 +43,20 @@ describe("barRows: the bars are the engine's lines", () => {
   it("keeps a fixed floor for the scale", () => {
     expect(scaleFor(barRows(assemble(rows, ["Ware"], STACK, HORIZON)), 2800000)).toBeCloseTo(2912000);
     expect(scaleFor([])).toBe(1);
+  });
+
+  it("starts the bars at a round amount below the cheapest goods, and says where", () => {
+    const bars = barRows(assemble(rows, all, STACK, HORIZON));
+    // B's goods are 20.800 €: 80 % is 16.640 €, rounded down to the thousand.
+    expect(axisFloor(bars)).toBe(1600000);
+    expect(axisFloor([])).toBe(0);
+    const second = compute(parse("angebot,zeile,betrag,je\nX,Ware,8000,jährlich\nY,Ware,9100,jährlich\n", "de", STACK).rows, HORIZON, null, STACK);
+    expect(axisFloor(barRows(second))).toBe(640000);
+  });
+
+  it("measures each stretch from the floor, and the goods lose only the part below it", () => {
+    expect(span(0, 2080000, 1600000, 2600000)).toEqual({ left: 0, width: 0.48 });
+    expect(span(2080000, 280000, 1600000, 2600000)).toEqual({ left: 0.48, width: 0.28 });
+    expect(span(0, 1000000, 1600000, 2600000)).toEqual({ left: 0, width: 0 });
   });
 });
