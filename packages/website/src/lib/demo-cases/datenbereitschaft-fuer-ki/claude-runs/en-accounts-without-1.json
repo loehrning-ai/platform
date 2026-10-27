@@ -1,0 +1,520 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-accounts-without-1",
+  "slug": "datenbereitschaft-fuer-ki",
+  "locale": "en",
+  "prompt_id": "accounts",
+  "take": 1,
+  "recorded_at": "2026-10-26T17:50:22Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Attached is the export file customer_master.csv. Today is 1 July 2026. How many active accounts did we have on 30 June?",
+  "kit_zip": "public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+  "kit_files": [
+    {
+      "name": "customer_master.csv",
+      "path": "data-readiness-kit/builder/claude-demo/A-export-tables/customer_master.csv",
+      "bytes": 5115,
+      "sha256": "36bb8872c675875b651cb217962336ff942530c42a3614a6fb55ce20c3bdcdc7"
+    }
+  ],
+  "skill": null,
+  "skill_name": "kennzahl-fragekarte",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 4069,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "customer_master.csv"
+      }
+    },
+    {
+      "t_ms": 4102,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 15271,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": "You"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": " had"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": " **"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": "108 acc"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": "ounts with status `A`**"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": " on 30 June. If"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": " `"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": "N` also"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": " counts as active, the fig"
+    },
+    {
+      "t_ms": 15277,
+      "kind": "text",
+      "chunk": "ure is **132**."
+    },
+    {
+      "t_ms": 15279,
+      "kind": "text",
+      "chunk": " The"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " export has no key"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " for the status codes, so I"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " can't tell which one you m"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": "ean.\n\n|"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " Status | Count |"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " Status"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " dates |\n|---|---"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": "|---|\n| `A`"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " | 108 | 2025"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": "-01-02 →"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": " 2026-03-20 "
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": "|\n| `C` | "
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": "12 | 2026-04"
+    },
+    {
+      "t_ms": 15280,
+      "kind": "text",
+      "chunk": "-05 → 2026-"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "06-24 |\n| `"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "N` | 24 | "
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "2026-04-03 →"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": " 2026-06-20 "
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "|\n| **Total** |"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": " **"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "144** | |\n\n**Why"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": " the answ"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "er depends on `N`:"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "** No"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": " `A` record has a date after"
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": " 20 March "
+    },
+    {
+      "t_ms": 15281,
+      "kind": "text",
+      "chunk": "2026, and every `N`"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " record starts on or after 3"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " April. That p"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": "attern suggests `N`"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " means \"New\":"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " accounts added since"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " April that are"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " prob"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": "ably live"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " but still have"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " a separ"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": "ate status. `"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": "C` looks like churned"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " or cancelled, so"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " I"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " left"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " those out either"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " way. If `N` act"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": "ually means something like"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " \"non-renewing\" or"
+    },
+    {
+      "t_ms": 15282,
+      "kind": "text",
+      "chunk": " \"in"
+    },
+    {
+      "t_ms": 15283,
+      "kind": "text",
+      "chunk": "active,\" the answ"
+    },
+    {
+      "t_ms": 15283,
+      "kind": "text",
+      "chunk": "er is 108. If"
+    },
+    {
+      "t_ms": 15283,
+      "kind": "text",
+      "chunk": " it means new"
+    },
+    {
+      "t_ms": 15283,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 15283,
+      "kind": "text",
+      "chunk": " live"
+    },
+    {
+      "t_ms": 15283,
+      "kind": "text",
+      "chunk": " customers, it's 132."
+    },
+    {
+      "t_ms": 15284,
+      "kind": "text",
+      "chunk": "\n\n**Is this snapsh"
+    },
+    {
+      "t_ms": 15284,
+      "kind": "text",
+      "chunk": "ot right"
+    },
+    {
+      "t_ms": 15284,
+      "kind": "text",
+      "chunk": " for 30 June?** The"
+    },
+    {
+      "t_ms": 15284,
+      "kind": "text",
+      "chunk": " file only st"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": "ores each"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": " account's current status, not its"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": " history. The latest status date is"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": " 24 June, so"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": " nothing changed between"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": " 30"
+    },
+    {
+      "t_ms": 15285,
+      "kind": "text",
+      "chunk": " June and when"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": " the file"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": " was exported. That means today"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "'s stat"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "uses are"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": " the same as the "
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "30 June stat"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "uses.\n\nWhat"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": " does `N` mean in"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": " your system? I'"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "ll conf"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "irm wh"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "ichever number f"
+    },
+    {
+      "t_ms": 15287,
+      "kind": "text",
+      "chunk": "its."
+    }
+  ],
+  "final_text": "You had **108 accounts with status `A`** on 30 June. If `N` also counts as active, the figure is **132**. The export has no key for the status codes, so I can't tell which one you mean.\n\n| Status | Count | Status dates |\n|---|---|---|\n| `A` | 108 | 2025-01-02 → 2026-03-20 |\n| `C` | 12 | 2026-04-05 → 2026-06-24 |\n| `N` | 24 | 2026-04-03 → 2026-06-20 |\n| **Total** | **144** | |\n\n**Why the answer depends on `N`:** No `A` record has a date after 20 March 2026, and every `N` record starts on or after 3 April. That pattern suggests `N` means \"New\": accounts added since April that are probably live but still have a separate status. `C` looks like churned or cancelled, so I left those out either way. If `N` actually means something like \"non-renewing\" or \"inactive,\" the answer is 108. If it means new, live customers, it's 132.\n\n**Is this snapshot right for 30 June?** The file only stores each account's current status, not its history. The latest status date is 24 June, so nothing changed between 30 June and when the file was exported. That means today's statuses are the same as the 30 June statuses.\n\nWhat does `N` mean in your system? I'll confirm whichever number fits.",
+  "stats": {
+    "duration_ms": 13624,
+    "duration_api_ms": 13306,
+    "ttft_ms": 2370,
+    "num_turns": 2,
+    "output_tokens": 1010
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

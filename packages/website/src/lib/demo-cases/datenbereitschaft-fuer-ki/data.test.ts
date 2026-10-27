@@ -6,14 +6,15 @@ import {
   ACTIVE_ACCOUNTS,
   CLAUDE_ANSWER,
   ENDING_MRR,
+  REHEARSAL_RUNS,
+  RUN2_ACTIVE,
+  SUMMARY,
+  T1_EXPECTED,
   EXPORT_ROWS,
   EXPORT_TABLES,
-  LOAD_UTC,
   NET_NEW_2026,
   OPENING_DEC_2025,
   STATUS,
-  TABLE_TRAPS,
-  WARN_AFTER_H,
 } from "./data";
 import { monthlyTotals } from "./logic";
 
@@ -58,20 +59,42 @@ describe("FOLDLINE against the kit", () => {
     expect(log).toContain("said 120 active at 30 June");
   });
 
-  it("names the seven export tables and the three traps as the kit does", () => {
+  it("names the seven export tables as the kit does", () => {
     const sql = read("builder/warehouse/sql/10_export_lane.sql");
     for (const table of EXPORT_TABLES) expect(sql).toContain(`CREATE TABLE public.${table} (`);
-    const patterns = read("builder/ANTI-PATTERNS.md");
-    for (const [table, id] of Object.entries(TABLE_TRAPS)) {
-      const line = patterns.split("\n").find((entry) => entry.startsWith(`| ${id} |`));
-      expect(line, id).toContain(table);
-    }
   });
 
-  it("takes the load time and the warning threshold from data_status_by_view.csv", () => {
-    const status = csv("builder/claude/project/data_status_by_view.csv").find((entry) => entry.view_name === "analytics.mrr_summary_monthly");
-    expect(status?.data_loaded_at_utc).toBe(LOAD_UTC);
-    expect(Number(status?.warn_after_hours)).toBe(WARN_AFTER_H);
-    expect(status?.hard_expiry_hours).toBe("");
+  it("holds the approved view row for row, and the tub starts empty in January 2025", () => {
+    expect(summary.map((entry) => ({ month: entry.month_start?.slice(0, 7), ending: Number(entry.ending_mrr_eur), netNew: Number(entry.net_new_mrr_eur), active: Number(entry.active_accounts) }))).toEqual(SUMMARY);
+    const first = SUMMARY[0];
+    expect(first?.ending).toBe(first?.netNew);
+    expect(SUMMARY.filter((entry) => entry.month.startsWith("2025")).reduce((sum, entry) => sum + entry.netNew, 0)).toBe(OPENING_DEC_2025);
+  });
+
+  it("shows both rehearsal runs as the log records them", () => {
+    const log = read("builder/claude-demo/AI-RUN-LOG.md");
+    const line = (run: number) => log.split("\n").find((entry) => entry.startsWith("| rehearsal | Claude chat") && entry.includes(`| A | G01 | ${run} |`)) ?? "";
+    for (const run of REHEARSAL_RUNS) {
+      expect(line(run.run)).toContain(run.values.map((value) => value.toLocaleString("en-US")).join(" / "));
+      expect(line(run.run)).toContain(`**${run.caveat}** the table`);
+      if (run.quote) expect(line(run.run)).toContain(`("${run.quote}")`);
+    }
+    expect(line(1)).toContain("Flagged that April falls while accounts grow.");
+    expect(line(2)).toContain(`said ${RUN2_ACTIVE} active at 30 June`);
+    expect(Number(row("2026-03")?.active_accounts)).toBe(RUN2_ACTIVE);
+    const refusal = log.split("\n").find((entry) => entry.includes("| B | R02 | 1 |")) ?? "";
+    expect(refusal).toContain("true then, false now");
+  });
+
+  it("takes test T1 from the finance close, the same values in all three kit files", () => {
+    const de = read("claude/PRUEFLISTE-VORLAGE.md").split("\n").find((entry) => entry.startsWith("| T1 |")) ?? "";
+    const en = read("claude/TEST-LIST-TEMPLATE.md").split("\n").find((entry) => entry.startsWith("| T1 |")) ?? "";
+    expect(de).toContain(T1_EXPECTED.map((value) => value.toLocaleString("de-DE")).join(" / "));
+    expect(de).toContain("| Monatsabschluss Finanzen |");
+    expect(en).toContain(T1_EXPECTED.map((value) => value.toLocaleString("en-US")).join(" / "));
+    expect(en).toContain("| Finance month-end close |");
+    const truth = read("builder/claude-demo/CHECK-YOUR-RESULT.md");
+    for (const value of T1_EXPECTED) expect(truth).toContain(`**${value.toLocaleString("en-US")}**`);
+    expect(T1_EXPECTED).toEqual([ENDING_MRR["2026-04"], ENDING_MRR["2026-05"], ENDING_MRR["2026-06"]]);
   });
 });

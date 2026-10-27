@@ -1,0 +1,549 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-view-without-1",
+  "slug": "datenbereitschaft-fuer-ki",
+  "locale": "en",
+  "prompt_id": "view",
+  "take": 1,
+  "recorded_at": "2026-10-26T19:56:47Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Attached are the approved view mrr_summary_monthly.csv and the metric definitions metric-definitions.md. Today is 1 July 2026. Show ending MRR by month for the last complete quarter.",
+  "kit_zip": "public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+  "kit_files": [
+    {
+      "name": "mrr_summary_monthly.csv",
+      "path": "data-readiness-kit/builder/claude/project/mrr_summary_monthly.csv",
+      "bytes": 1697,
+      "sha256": "dc4c79985aa6ea7685b18fd24300d025985fceb8ee1f61dd29c2c5cf39188594"
+    },
+    {
+      "name": "metric-definitions.md",
+      "path": "data-readiness-kit/builder/claude/project/metric-definitions.md",
+      "bytes": 4735,
+      "sha256": "61c613fe17247b835828cbe086a20f0d3c034b9b0d3ff7b91e0a69177242ca5b"
+    }
+  ],
+  "skill": null,
+  "skill_name": "kennzahl-fragekarte",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 8362,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "metric-definitions.md"
+      }
+    },
+    {
+      "t_ms": 8366,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "mrr_summary_monthly.csv"
+      }
+    },
+    {
+      "t_ms": 8398,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 8400,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 16682,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 16682,
+      "kind": "text",
+      "chunk": "Here"
+    },
+    {
+      "t_ms": 16682,
+      "kind": "text",
+      "chunk": " is"
+    },
+    {
+      "t_ms": 16682,
+      "kind": "text",
+      "chunk": " **ending_mrr "
+    },
+    {
+      "t_ms": 16683,
+      "kind": "text",
+      "chunk": "1.0.0** for"
+    },
+    {
+      "t_ms": 16683,
+      "kind": "text",
+      "chunk": " Q2 2026 "
+    },
+    {
+      "t_ms": 16683,
+      "kind": "text",
+      "chunk": "(April to"
+    },
+    {
+      "t_ms": 16683,
+      "kind": "text",
+      "chunk": " June), the last complete quar"
+    },
+    {
+      "t_ms": 16683,
+      "kind": "text",
+      "chunk": "ter as"
+    },
+    {
+      "t_ms": 16683,
+      "kind": "text",
+      "chunk": " of 1 July 2026"
+    },
+    {
+      "t_ms": 16684,
+      "kind": "text",
+      "chunk": ".\n\n| Month | "
+    },
+    {
+      "t_ms": 16684,
+      "kind": "text",
+      "chunk": "Ending MRR (EUR"
+    },
+    {
+      "t_ms": 16684,
+      "kind": "text",
+      "chunk": ") |\n|"
+    },
+    {
+      "t_ms": 16684,
+      "kind": "text",
+      "chunk": " --- | "
+    },
+    {
+      "t_ms": 16684,
+      "kind": "text",
+      "chunk": "---: |\n| April"
+    },
+    {
+      "t_ms": 16684,
+      "kind": "text",
+      "chunk": " 2026 | 334,"
+    },
+    {
+      "t_ms": 16685,
+      "kind": "text",
+      "chunk": "675 |\n| May 2"
+    },
+    {
+      "t_ms": 16685,
+      "kind": "text",
+      "chunk": "026 | 344,450 "
+    },
+    {
+      "t_ms": 16685,
+      "kind": "text",
+      "chunk": "|\n| June 2026 "
+    },
+    {
+      "t_ms": 16685,
+      "kind": "text",
+      "chunk": "| 387,015 |"
+    },
+    {
+      "t_ms": 16685,
+      "kind": "text",
+      "chunk": "\n\n-"
+    },
+    {
+      "t_ms": 16685,
+      "kind": "text",
+      "chunk": " **Each"
+    },
+    {
+      "t_ms": 16686,
+      "kind": "text",
+      "chunk": " row is the level on"
+    },
+    {
+      "t_ms": 16686,
+      "kind": "text",
+      "chunk": " the last day of that"
+    },
+    {
+      "t_ms": 16686,
+      "kind": "text",
+      "chunk": " month.** The C"
+    },
+    {
+      "t_ms": 16686,
+      "kind": "text",
+      "chunk": "SV labels rows by the"
+    },
+    {
+      "t_ms": 16686,
+      "kind": "text",
+      "chunk": " first day of the month,"
+    },
+    {
+      "t_ms": 16687,
+      "kind": "text",
+      "chunk": " so the `2026-06-"
+    },
+    {
+      "t_ms": 16687,
+      "kind": "text",
+      "chunk": "01` row is the end of June"
+    },
+    {
+      "t_ms": 16687,
+      "kind": "text",
+      "chunk": ".\n- **The three"
+    },
+    {
+      "t_ms": 16687,
+      "kind": "text",
+      "chunk": " values should not be added or avera"
+    },
+    {
+      "t_ms": 16687,
+      "kind": "text",
+      "chunk": "ged.** If you need one number"
+    },
+    {
+      "t_ms": 16687,
+      "kind": "text",
+      "chunk": " for the quarter, use the"
+    },
+    {
+      "t_ms": 16688,
+      "kind": "text",
+      "chunk": " last"
+    },
+    {
+      "t_ms": 16688,
+      "kind": "text",
+      "chunk": " month-end: **€"
+    },
+    {
+      "t_ms": 16688,
+      "kind": "text",
+      "chunk": "387,015 "
+    },
+    {
+      "t_ms": 16688,
+      "kind": "text",
+      "chunk": "at "
+    },
+    {
+      "t_ms": 16689,
+      "kind": "text",
+      "chunk": "30 June 2026**."
+    },
+    {
+      "t_ms": 16689,
+      "kind": "text",
+      "chunk": "\n- **The data"
+    },
+    {
+      "t_ms": 16689,
+      "kind": "text",
+      "chunk": " is complete and current.** `"
+    },
+    {
+      "t_ms": 16689,
+      "kind": "text",
+      "chunk": "complete_through_month` is"
+    },
+    {
+      "t_ms": 16690,
+      "kind": "text",
+      "chunk": " 2026-06-01,"
+    },
+    {
+      "t_ms": 16690,
+      "kind": "text",
+      "chunk": " quality status is `passing`"
+    },
+    {
+      "t_ms": 16690,
+      "kind": "text",
+      "chunk": ", and the data was loaded"
+    },
+    {
+      "t_ms": 16690,
+      "kind": "text",
+      "chunk": " at 2026-07-01"
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": "06:00 UTC."
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": "\n- **The"
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": " figures are"
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": " internally consistent.**"
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": " Adding up the qu"
+    },
+    {
+      "t_ms": 16691,
+      "kind": "text",
+      "chunk": "arter's net new MRR"
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": " (−"
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": "19"
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": ",960 + 9,775"
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": " + 42,565 ="
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": " 32,380) gives ex"
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": "actly the change from the"
+    },
+    {
+      "t_ms": 16692,
+      "kind": "text",
+      "chunk": " end of March (354,635)"
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": " to the end of June (387,"
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": "015).\n- **Note"
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": " the April drop.** MR"
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": "R fell by €19"
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": ",960 in April, m"
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": "ostly because of contraction ("
+    },
+    {
+      "t_ms": 16693,
+      "kind": "text",
+      "chunk": "€21,845) and churn"
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": " (€10,120).\n-"
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": " **What it"
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": " cov"
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": "ers."
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": "** This"
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": " is MRR in"
+    },
+    {
+      "t_ms": 16694,
+      "kind": "text",
+      "chunk": " EUR."
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": " It is not revenue, c"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": "ash, ARR or profit"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": ", and it excludes setup"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": " fees, usage charges and"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": " taxes.\n\nMy"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": " system cl"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": "ock re"
+    },
+    {
+      "t_ms": 16695,
+      "kind": "text",
+      "chunk": "ads 26"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " October 2026, which would"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " make Q3 the"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " last complete quarter. I"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " used the"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " date you gave,"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " which matches the evaluation"
+    },
+    {
+      "t_ms": 16696,
+      "kind": "text",
+      "chunk": " clock in the definitions file"
+    },
+    {
+      "t_ms": 16697,
+      "kind": "text",
+      "chunk": ". The file only has"
+    },
+    {
+      "t_ms": 16697,
+      "kind": "text",
+      "chunk": " data through June either"
+    },
+    {
+      "t_ms": 16697,
+      "kind": "text",
+      "chunk": " way."
+    }
+  ],
+  "final_text": "Here is **ending_mrr 1.0.0** for Q2 2026 (April to June), the last complete quarter as of 1 July 2026.\n\n| Month | Ending MRR (EUR) |\n| --- | ---: |\n| April 2026 | 334,675 |\n| May 2026 | 344,450 |\n| June 2026 | 387,015 |\n\n- **Each row is the level on the last day of that month.** The CSV labels rows by the first day of the month, so the `2026-06-01` row is the end of June.\n- **The three values should not be added or averaged.** If you need one number for the quarter, use the last month-end: **€387,015 at 30 June 2026**.\n- **The data is complete and current.** `complete_through_month` is 2026-06-01, quality status is `passing`, and the data was loaded at 2026-07-01 06:00 UTC.\n- **The figures are internally consistent.** Adding up the quarter's net new MRR (−19,960 + 9,775 + 42,565 = 32,380) gives exactly the change from the end of March (354,635) to the end of June (387,015).\n- **Note the April drop.** MRR fell by €19,960 in April, mostly because of contraction (€21,845) and churn (€10,120).\n- **What it covers.** This is MRR in EUR. It is not revenue, cash, ARR or profit, and it excludes setup fees, usage charges and taxes.\n\nMy system clock reads 26 October 2026, which would make Q3 the last complete quarter. I used the date you gave, which matches the evaluation clock in the definitions file. The file only has data through June either way.",
+  "stats": {
+    "duration_ms": 16112,
+    "duration_api_ms": 16033,
+    "ttft_ms": 6754,
+    "num_turns": 3,
+    "output_tokens": 1043
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

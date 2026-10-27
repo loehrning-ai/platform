@@ -1,10 +1,14 @@
 import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
+import { expectGlasBudget } from "./fixtures/glas-budget";
 
 /**
- * W03 "Die Fragekarte": the vote, the reveal, the five boxes, the own card
- * with a local download, and the reset that keeps the own card. German and
- * English, phone first, with console errors and off-page requests captured.
+ * W03 "Die Fragekarte" on the v4 shell: the intro, Claude's table sent on,
+ * the tub (water line, then the file edge), the question and the approved
+ * view, who counts, the Project sort and the test, the own card from a kit
+ * example with a local download, and the reset that keeps the own card.
+ * German and English, phone first, with console errors and off-page
+ * requests captured. One old kit link (?beat=test) and one new one.
  */
 const SLUG = "datenbereitschaft-fuer-ki";
 
@@ -26,6 +30,7 @@ function watch(page: Page) {
 }
 
 const beat = (page: Page) => page.locator("[data-demo-clock]");
+const caption = (page: Page) => page.locator("[data-w03-caption]").first();
 const next = (page: Page) => page.locator("[data-demo-next]").click();
 
 async function open(page: Page, path: string) {
@@ -33,108 +38,158 @@ async function open(page: Page, path: string) {
   await expect(page.locator("[data-demo-stage]")).toBeVisible();
 }
 
+/** The first press after hydration: retried until the shell takes it (a busy runner hydrates late). */
+async function start(page: Page) {
+  await expect(async () => {
+    await page.locator("[data-demo-start]").click({ timeout: 1000 });
+    await expect(page.locator("[data-demo-intro]")).toHaveCount(0, { timeout: 1000 });
+  }).toPass({ timeout: 10_000 });
+}
+
 test.describe(`/demos/${SLUG}`, () => {
   for (const [prefix, locale] of [["", "de"], ["/en", "en"]] as const) {
     const n = (value: string) => (locale === "de" ? value : value.replace(/\./g, ","));
+    const de = locale === "de";
 
-    test(`${locale}: vote, reveal, five boxes, own card, reset keeps it`, async ({ page }) => {
+    test(`${locale}: the guided path fills the five boxes, the own card stays after r`, async ({ page }) => {
+      // Nine moves on one page: a dev server compiles each scene on first use.
+      test.setTimeout(120_000);
       const seen = watch(page);
       await page.setViewportSize({ width: 390, height: 844 });
       await open(page, `${prefix}/demos/${SLUG}`);
 
-      // Beat 1: the question leads on a phone, then Claude's answer; a vote moves on to the reveal.
-      await expect(page.locator("[data-fk-ask]")).toBeVisible();
-      await expect(page.locator("[data-fk-answer]")).toContainText(n("75.890"));
-      await page.locator('[data-fk-vote="ask"]').click();
-      await expect(beat(page)).toHaveAttribute("data-beat", "lesarten");
-      await expect(page.locator("[data-fk-feedback]")).toContainText(locale === "de" ? "nachgefragt" : "asked");
+      // The intro names what the demo does, then the start.
+      await expect(page.locator("[data-demo-intro-body]")).toContainText(de ? "erfundenen Abo-Firma" : "invented subscription company");
+      await start(page);
+      await expectGlasBudget(page, "scene 1");
 
-      // The reveal ends on reading 4, the levels; the slider walks the other readings.
-      const slider = page.locator("[data-fk-slider]");
-      await expect(slider).toBeEnabled({ timeout: 6000 });
-      await expect(page.locator(".fk-chart")).toHaveAttribute("data-fk-reading", "3");
-      await expect(page.locator(".fk-chart-figures")).toContainText(n("334.675"));
-      // The opening level is printed inside the hollow block, and the caption says the table is right now.
-      await expect(page.locator(".fk-chart-open").first()).toHaveText(n("258.785"));
-      await expect(page.locator("[data-demo-caption]")).toContainText(locale === "de" ? "Monatsabschluss stimmt die Tabelle" : "month-end close, the table is right");
-      await slider.focus();
-      await page.keyboard.press("Home");
-      await expect(page.locator(".fk-chart")).toHaveAttribute("data-fk-reading", "0");
-      await page.keyboard.press("End");
-      await expect(page.locator(".fk-chart")).toHaveAttribute("data-fk-reading", "3");
+      // Scene 1: Claude's table, run 2 with the quoted caveat; it goes back to Claude.
+      await expect(page.locator("[data-w03-answer-card]")).toContainText(n("75.890"));
+      await expect(page.locator("[data-w03-answer-card] blockquote")).toContainText("MRR added since 1 Jan 2026, not total MRR");
+      await page.locator('[data-w03-send="ask"]').click();
+      await expect(page.locator('[data-w03-stamp="ask"]')).toBeVisible();
+      await next(page);
+      await expect(beat(page)).toHaveAttribute("data-beat", "wanne");
 
-      // Box 1: the vague question expects a question back; only the exact one fills square 1.
+      // Scene 2 move 1: the water line by keyboard; Claude's table is the empty tub.
+      const water = page.getByRole("slider", { name: de ? "Anfangsstand Ende Dezember 2025" : "Opening level at end of December 2025" });
+      await water.focus();
+      await water.press("PageUp");
+      await water.press("PageUp");
+      await expect(water).toHaveAttribute("aria-valuenow", "100000");
+      await expect(caption(page)).toContainText(n("100.000"));
+      await water.press("Home");
+      await expect(caption(page)).toContainText(n("75.890"));
+      await water.press("PageUp");
+      await next(page);
+      // Move 2: the file edge back to January 2025 gives the opening of the approved view.
+      const edge = page.getByRole("slider", { name: de ? "Anfang der Datei" : "Start of the file" });
+      await edge.focus();
+      await edge.press("End");
+      await expect(caption(page)).toContainText(n("258.785"));
       await next(page);
       await expect(beat(page)).toHaveAttribute("data-beat", "sicht");
-      await expect(page.locator("[data-fk-question]")).toHaveAttribute("data-fk-question", "vague");
-      await expect(page.locator("[data-fk-question]")).toContainText("C01");
-      await expect(page.locator(".fk-box-sq").first()).not.toHaveAttribute("data-done", "");
-      await page.locator('[data-fk-seg="fk-question"] input[value="exact"]').check({ force: true });
-      await expect(page.locator(".fk-box-sq").first()).toHaveAttribute("data-done", "");
 
-      // Box 2: seven export tables fold into the approved view.
-      await expect(page.locator("[data-fk-tiles] .fk-tile")).toHaveCount(7);
-      await page.locator('[data-fk-seg="fk-view"] input[value="view"]').check({ force: true });
-      await expect(page.locator("[data-fk-view]")).toContainText(n("334.675"));
-
-      // Box 3: who counts, on 144 accounts.
+      // Scene 3: the four right chips by tap, then the approved view into box 2.
+      for (const chip of ["kindRight", "periodRight", "unit", "dateRight"]) await page.locator(`[data-w03-chip="${chip}"]`).click();
+      await expect(page.locator(".w03-ring[data-fill='full']")).toHaveCount(4);
+      await next(page);
+      await page.locator('[data-w03-tile="billing_events"]').click();
+      await expect(page.locator('[data-w03-bounce="billing_events"]')).toBeVisible();
+      await page.locator('[data-w03-tile="view"]').click();
+      await expect(page.locator("[data-w03-view-card]")).toContainText(n("334.675"));
+      await expect(page.locator("[data-w03-answer]")).toContainText(n("334.675"));
       await next(page);
       await expect(beat(page)).toHaveAttribute("data-beat", "wer-zaehlt");
-      await page.locator('[data-fk-seg="fk-who"] input[value="active"]').check({ force: true });
-      await expect(page.locator("[data-fk-count]")).toHaveAttribute("data-fk-count", "0");
-      await page.locator('[data-fk-seg="fk-who"] input[value="AN"]').check({ force: true });
-      await expect(page.locator("[data-fk-count]")).toHaveText(locale === "de" ? "132 von 144" : "132 of 144");
 
-      // Box 4: only a grant locks.
+      // Scene 4: stacking levels overflows the tub, June alone is the quarter's level.
+      await page.locator('[data-w03-pour="levels"]').click();
+      await expect(caption(page)).toContainText(n("1.066.140"));
+      await page.locator('[data-w03-pour="june"]').click();
+      await expect(caption(page)).toContainText(n("387.015"));
       await next(page);
-      await expect(beat(page)).toHaveAttribute("data-beat", "grenze");
-      await expect(page.locator("[data-fk-outcome]")).toHaveAttribute("data-fk-outcome", "guidedOnly");
-      await page.locator('[data-fk-seg="fk-boundary"] input[value="grant"]').check({ force: true });
-      await expect(page.locator("[data-fk-outcome]")).toHaveAttribute("data-fk-outcome", "denied42501");
+      await page.locator("[data-w03-search]").click();
+      await expect(page.locator("[data-w03-counter]")).toContainText(de ? "0 von 144" : "0 of 144");
+      await page.locator('[data-w03-rule="A"]').click();
+      await page.locator('[data-w03-rule="N"]').click();
+      await expect(page.locator("[data-w03-counter]")).toHaveText(de ? "132 von 144 Konten" : "132 of 144 accounts");
+      await next(page);
+      await expect(beat(page)).toHaveAttribute("data-beat", "projekt");
 
-      // Box 5: the behaviour cases say they are rehearsal runs before any click; the test grades the four readings.
+      // Scene 5: sort by tap (file, then side); the contacts land in the Project first and glide out.
+      const place = async (file: string, side: "in" | "out") => {
+        await page.locator(`[data-w03-file="${file}"]`).click();
+        await page.locator(`[data-w03-place="${side}"]`).click();
+      };
+      await place("contacts", "in");
+      await expect(page.locator('[data-w03-zone="out"] [data-w03-file="contacts"]')).toBeVisible({ timeout: 4000 });
+      await place("view", "in");
+      await place("definitions", "in");
+      await place("instructions", "in");
+      await place("export", "out");
+      await place("testlist", "out");
       await next(page);
-      await expect(beat(page)).toHaveAttribute("data-beat", "test");
-      await expect(page.locator("[data-fk-rehearsed]")).toHaveCount(3);
-      await page.locator("[data-fk-run]").click();
-      await expect(page.locator('.fk-grades .fk-grade[data-pass="true"]')).toHaveCount(1, { timeout: 4000 });
-      await expect(page.locator('.fk-grades .fk-grade[data-pass="false"]')).toHaveCount(3);
-      await expect(page.locator("[data-fk-feedback]")).toContainText(locale === "de" ? "Nachfragen" : "Ask back");
-
-      // The own card: a preset fills it, the skill zip is made on the device.
+      await page.locator("[data-w03-test]").click();
+      await expect(page.locator("[data-w03-test-card]")).toContainText(n("334.675"));
+      // The test list grades the recorded answers: the take with the skill names no level, the view passes.
+      await expect(page.getByRole("dialog")).toHaveCount(0);
+      await page.locator('[data-w03-grade="with"]').click();
+      await expect(caption(page)).toContainText(de ? "keinen Stand" : "no month-end level");
+      await page.locator('[data-w03-grade="view"]').click();
+      await expect(caption(page)).toContainText(de ? "Der Test besteht" : "The test passes");
+      // The first "Weiter" after the test opens the whole card.
       await next(page);
+      await expect(page.getByRole("dialog")).toBeVisible();
+      await page.locator("[data-w03-sheet-next]").click();
       await expect(beat(page)).toHaveAttribute("data-beat", "deine-karte");
-      await expect(page.locator("[data-fk-download='skill']")).toBeDisabled();
-      await page.locator("[data-fk-preset]").selectOption("foldline");
-      await expect(page.locator("[data-fk-own-preview]")).toHaveAttribute("data-fk-own-preview", "ready");
-      const [download] = await Promise.all([page.waitForEvent("download"), page.locator("[data-fk-download='skill']").click()]);
-      expect(download.suggestedFilename()).toBe("kennzahl-fragekarte.zip");
-      const path = await download.path();
-      expect(readFileSync(path).subarray(0, 2).toString("latin1")).toBe("PK");
 
-      // The last screen states the objective the kit opens with.
+      // The own card: a kit example fills it, the skill zip is made on the device.
+      await expect(page.locator("[data-w03-privacy]")).toBeVisible();
+      await page.locator('[data-w03-example="foldline"]').click();
+      await expect(page.locator("[data-w03-own-read]")).toContainText("monthly_revenue.csv");
+      await expect(page.locator("[data-w03-own-tub]")).toBeVisible();
+      const [download] = await Promise.all([page.waitForEvent("download"), page.locator("[data-w03-download='skill']").click()]);
+      expect(download.suggestedFilename()).toBe("kennzahl-fragekarte.zip");
+      expect(readFileSync(await download.path()).subarray(0, 2).toString("latin1")).toBe("PK");
       await next(page);
       await expect(beat(page)).toHaveAttribute("data-beat", "mitnehmen");
-      await expect(page.locator("[data-fk-objective]")).toContainText(locale === "de" ? "fünf Kästchen" : "five boxes");
+      await expect(page.locator("[data-w03-objective]")).toContainText(de ? "fünf Kästchen" : "five boxes");
 
-      // r resets the bets and the clock, never the own card.
+      // r resets the moves and the clock, never the own card.
       await page.locator("body").press("r");
       await expect(beat(page)).toHaveAttribute("data-beat", "antwort", { timeout: 4000 });
-      await page.locator('[data-beat-rail]:visible [data-beat-mark="deine-karte"]').click();
-      await expect(page.locator("[data-fk-own-preview]")).toHaveAttribute("data-fk-own-preview", "ready");
-      await page.locator("[data-fk-clear]").click();
-      await expect(page.locator("[data-fk-own-preview]")).toHaveAttribute("data-fk-own-preview", "open");
+      await expect(page.locator("[data-w03-answer-card]")).toBeVisible();
+      await page.locator("[data-weg] .glas-weg-dot").nth(5).click();
+      await expect(page.locator("[data-w03-own-read]")).toContainText("monthly_revenue.csv");
+      await page.locator("[data-w03-clear]").click();
+      await expect(page.locator("[data-w03-own-read]")).toHaveCount(0);
 
       expect(seen.errors).toEqual([]);
       expect(seen.requests).toEqual([]);
     });
   }
 
+  test("the old link ?beat=test opens the test with the files sorted", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await open(page, `/demos/${SLUG}?beat=test`);
+    await expect(beat(page)).toHaveAttribute("data-beat", "projekt", { timeout: 6000 });
+    await expect(page.locator("[data-w03-test]")).toBeVisible();
+    await expect(page.locator("[data-w03-answer]")).toContainText("334.675");
+  });
+
+  test("a new link ?beat=wer-zaehlt opens who counts with the earlier boxes filled", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await open(page, `/en/demos/${SLUG}?beat=wer-zaehlt`);
+    await expect(beat(page)).toHaveAttribute("data-beat", "wer-zaehlt");
+    await expect(page.locator("[data-w03-side-panel]")).toBeVisible();
+    await expect(page.locator("[data-w03-answer]")).toContainText("334,675");
+    await expectGlasBudget(page, "desktop, scene 4");
+  });
+
   test("Shift+R resets, a key typed in the card does not", async ({ page }) => {
     await open(page, `/demos/${SLUG}?beat=deine-karte`);
     await expect(beat(page)).toHaveAttribute("data-beat", "deine-karte");
-    const metric = page.locator(".fk-own-form input[name='metric']");
-    // The card is a controlled input: type until the value holds (a busy runner can hydrate late).
+    const metric = page.locator("[data-w03-own-form] input[name='metric']");
     await expect(async () => {
       await metric.fill("Offene Tickets");
       await expect(metric).toHaveValue("Offene Tickets", { timeout: 500 });
@@ -145,14 +200,14 @@ test.describe(`/demos/${SLUG}`, () => {
     await metric.blur();
     await page.keyboard.press("Shift+R");
     await expect(beat(page)).toHaveAttribute("data-beat", "antwort", { timeout: 4000 });
-    await page.locator('[data-beat-rail]:visible [data-beat-mark="deine-karte"]').click();
-    await expect(page.locator(".fk-own-form input[name='metric']")).toHaveValue("Offene Ticketsr");
+    await page.locator("[data-weg] .glas-weg-dot").nth(5).click();
+    await expect(page.locator("[data-w03-own-form] input[name='metric']")).toHaveValue("Offene Ticketsr");
   });
 
-  test("the own card takes what people type first and writes it exactly", async ({ page }) => {
+  test("the own card writes what people type exactly", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await open(page, `/demos/${SLUG}?beat=deine-karte`);
-    const form = page.locator(".fk-own-form");
+    const form = page.locator("[data-w03-own-form]");
     const fill = async (name: string, value: string) => {
       const field = form.locator(`[name='${name}']`);
       await expect(async () => {
@@ -164,56 +219,100 @@ test.describe(`/demos/${SLUG}`, () => {
     await fill("question", "Offene Posten Debitoren je Monatsende, Juli bis September 2026, in EUR.");
     await fill("clock", "01.10.2026");
     await fill("view", "OP-Liste (Export).xlsx");
-    await fill("column", "Betrag#offen");
-    await form.locator("fieldset.fk-choice").first().locator("input[value='level']").check({ force: true });
+    await fill("column", "offen");
+    await form.locator("input[type='radio'][value='level']").check({ force: true });
     await fill("who", "Alle offenen Rechnungen am Monatsende, Gutschriften abgezogen.");
     await fill("never", "Kundennamen, Bankverbindungen");
-    await form.locator("fieldset.fk-choice").nth(1).locator("input[value='file']").check({ force: true });
+    await form.locator("input[type='radio'][value='file']").check({ force: true });
     await fill("expected", "1.234.567,89 / 1.198.000 / 1.305.442,10");
     await fill("unit", "EUR");
     await fill("source", "Saldenliste Buchhaltung");
-    // A bad optional column is a hint, never a block.
-    await expect(form.locator("[name='column'] ~ .fk-error")).toBeVisible();
-    await expect(page.locator("[data-fk-blocked]")).toHaveCount(0);
-    await expect(page.locator("[data-fk-own-preview]")).toHaveAttribute("data-fk-own-preview", "ready");
-    await expect(page.locator(".fk-downloads")).not.toContainText(" · nicht hoch");
-    const [download] = await Promise.all([page.waitForEvent("download"), page.locator("[data-fk-download='checklist']").click()]);
+    await expect(page.locator("[data-w03-blocked]")).toHaveCount(0);
+    const [download] = await Promise.all([page.waitForEvent("download"), page.locator("[data-w03-download='checklist']").click()]);
     expect(download.suggestedFilename()).toBe("pruefliste.md");
     const text = readFileSync(await download.path(), "utf8");
     expect(text).toContain("1.234.567,89 / 1.198.000 / 1.305.442,10 EUR");
     expect(text).toContain("Stichtag: 2026-10-01.");
-    expect(text).toContain("| T2 | Zeig mir Offene Posten Debitoren. |");
-    const [definitions] = await Promise.all([page.waitForEvent("download"), page.locator("[data-fk-download='definitions']").click()]);
-    expect(definitions.suggestedFilename()).toBe("kennzahlen.md");
-    expect(readFileSync(await definitions.path(), "utf8")).toContain("- Quelle: OP-Liste (Export).xlsx\n");
   });
 
-  test("a key reset brings a scrolled-away stage back into view", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 664 });
-    await open(page, `/demos/${SLUG}?beat=deine-karte`);
-    await page.locator("[data-fk-downloads]").scrollIntoViewIfNeeded();
-    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(400);
-    await page.locator("body").press("r");
-    await expect(beat(page)).toHaveAttribute("data-beat", "antwort", { timeout: 4000 });
-    await expect(page.locator("[data-demo-stage]")).toBeInViewport({ timeout: 4000 });
-  });
-
-  test("reduced motion shows the levels at once, and ?beat=test lands on box 5", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page, `/demos/${SLUG}`);
-    await page.locator('[data-fk-vote="take"]').click();
-    await expect(page.locator("[data-fk-slider]")).toBeEnabled();
-    await expect(page.locator(".fk-chart-figures")).toContainText("334.675");
-    await open(page, `/demos/${SLUG}?beat=test`);
-    await expect(beat(page)).toHaveAttribute("data-beat", "test");
-    await expect(page.locator("[data-fk-run]")).toBeVisible();
-  });
-
-  test("the first screen holds the stage and the vote at 390 x 664", async ({ page }) => {
+  test("at 390 x 664 the object to touch sits above the dock in every scene", async ({ page }) => {
+    test.setTimeout(120_000);
     await page.setViewportSize({ width: 390, height: 664 });
     await open(page, `/demos/${SLUG}`);
-    const votes = await page.locator(".fk-vote-row").boundingBox();
-    expect((votes?.y ?? 9999) + (votes?.height ?? 0)).toBeLessThanOrEqual(664);
+    await start(page);
+    const aboveDock = async (selector: string) => {
+      const target = page.locator(selector).first();
+      await expect(target).toBeInViewport();
+      const box = await target.boundingBox();
+      const dock = await page.locator("[data-demo-lever]").boundingBox();
+      expect(box && dock ? box.y + 12 : 9999, selector).toBeLessThan(dock?.y ?? 0);
+    };
+    await aboveDock("[data-w03-answer-card] table");
+    await page.locator('[data-w03-send="ask"]').click();
+    await next(page);
+    await aboveDock('[data-w03-grab="water"]');
+    await page.getByRole("slider", { name: "Anfangsstand Ende Dezember 2025" }).press("PageUp");
+    await next(page);
+    await aboveDock(".w03-edge-handle");
+    await next(page);
+    await aboveDock("[data-w03-chip]");
+    for (const chip of ["kindRight", "periodRight", "unit", "dateRight"]) await page.locator(`[data-w03-chip="${chip}"]`).click();
+    await next(page);
+    await aboveDock('[data-w03-tile="view"]');
+    await page.locator('[data-w03-tile="view"]').click();
+    await next(page);
+    await aboveDock(".w03-pour-col");
+    await page.locator('[data-w03-pour="levels"]').click();
+    await page.locator('[data-w03-pour="june"]').click();
+    await next(page);
+    await aboveDock(".w03-grid12");
+    await page.locator('[data-w03-rule="A"]').click();
+    await page.locator('[data-w03-rule="N"]').click();
+    await next(page);
+    await aboveDock('[data-w03-zone="out"]');
+  });
+
+  test("a touch drag on the water line moves the level and never scrolls the stage", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "touch is dispatched through the Chrome DevTools Protocol");
+    await page.setViewportSize({ width: 390, height: 664 });
+    await open(page, `/demos/${SLUG}`);
+    await start(page);
+    await page.locator('[data-w03-send="ask"]').click();
+    await next(page);
+    const grab = page.locator('[data-w03-grab="water"]');
+    await expect(grab).toBeInViewport();
+    const box = await grab.boundingBox();
+    if (!box) throw new Error("no water grab");
+    const main = page.locator(".w03-main");
+    const scrolled = await main.evaluate((element) => element.scrollTop);
+    const cdp = await page.context().newCDPSession(page);
+    const x = box.x + box.width / 2;
+    const y0 = box.y + box.height / 2;
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y: y0 }] });
+    for (let step = 1; step <= 12; step += 1) await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: [{ x, y: y0 - step * 10 }] });
+    await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    const water = page.getByRole("slider", { name: "Anfangsstand Ende Dezember 2025" });
+    await expect.poll(async () => Number(await water.getAttribute("aria-valuenow"))).toBeGreaterThanOrEqual(200_000);
+    expect(await main.evaluate((element) => element.scrollTop)).toBe(scrolled);
+  });
+
+  test("ArrowUp leaves zero: the snap to Claude's start is for pointer drags only", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await open(page, `/demos/${SLUG}`);
+    await start(page);
+    await page.locator('[data-w03-send="ask"]').click();
+    await next(page);
+    const water = page.getByRole("slider", { name: "Anfangsstand Ende Dezember 2025" });
+    await water.focus();
+    await water.press("ArrowUp");
+    await expect(water).not.toHaveAttribute("aria-valuenow", "0");
+  });
+
+  test("the first screen holds the intro and its start at 390 x 664", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 664 });
+    await open(page, `/demos/${SLUG}`);
+    const button = await page.locator("[data-demo-start]").boundingBox();
+    expect((button?.y ?? 9999) + (button?.height ?? 0)).toBeLessThanOrEqual(664);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
     expect(await page.evaluate(() => window.scrollY)).toBe(0);
   });

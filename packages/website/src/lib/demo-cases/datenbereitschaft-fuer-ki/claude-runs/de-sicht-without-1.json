@@ -1,0 +1,569 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-sicht-without-1",
+  "slug": "datenbereitschaft-fuer-ki",
+  "locale": "de",
+  "prompt_id": "sicht",
+  "take": 1,
+  "recorded_at": "2026-10-26T19:56:12Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Im Anhang sind die freigegebene Sicht mrr_summary_monthly.csv und die Kennzahl-Definitionen metric-definitions.md. Heute ist der 1. Juli 2026. Zeig Ending MRR je Monat für das letzte abgeschlossene Quartal.",
+  "kit_zip": "public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+  "kit_files": [
+    {
+      "name": "mrr_summary_monthly.csv",
+      "path": "data-readiness-kit/builder/claude/project/mrr_summary_monthly.csv",
+      "bytes": 1697,
+      "sha256": "dc4c79985aa6ea7685b18fd24300d025985fceb8ee1f61dd29c2c5cf39188594"
+    },
+    {
+      "name": "metric-definitions.md",
+      "path": "data-readiness-kit/builder/claude/project/metric-definitions.md",
+      "bytes": 4735,
+      "sha256": "61c613fe17247b835828cbe086a20f0d3c034b9b0d3ff7b91e0a69177242ca5b"
+    }
+  ],
+  "skill": null,
+  "skill_name": "kennzahl-fragekarte",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 3527,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "mrr_summary_monthly.csv"
+      }
+    },
+    {
+      "t_ms": 3531,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "metric-definitions.md"
+      }
+    },
+    {
+      "t_ms": 3546,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 3547,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 9722,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 9723,
+      "kind": "text",
+      "chunk": "Ending MRR ("
+    },
+    {
+      "t_ms": 9723,
+      "kind": "text",
+      "chunk": "`ending_mrr "
+    },
+    {
+      "t_ms": 9723,
+      "kind": "text",
+      "chunk": "1.0.0`) für"
+    },
+    {
+      "t_ms": 9723,
+      "kind": "text",
+      "chunk": " Q2 2026."
+    },
+    {
+      "t_ms": 9724,
+      "kind": "text",
+      "chunk": " Bei"
+    },
+    {
+      "t_ms": 9724,
+      "kind": "text",
+      "chunk": " Stichtag 1."
+    },
+    {
+      "t_ms": 9724,
+      "kind": "text",
+      "chunk": " Juli 2026 ist"
+    },
+    {
+      "t_ms": 9724,
+      "kind": "text",
+      "chunk": " das das letzte abge"
+    },
+    {
+      "t_ms": 9724,
+      "kind": "text",
+      "chunk": "schlossene Quartal"
+    },
+    {
+      "t_ms": 9724,
+      "kind": "text",
+      "chunk": ".\n\n| Monat |"
+    },
+    {
+      "t_ms": 9725,
+      "kind": "text",
+      "chunk": " Ending MRR (E"
+    },
+    {
+      "t_ms": 9725,
+      "kind": "text",
+      "chunk": "UR, Stand Mon"
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": "atsende) |\n| --"
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": "- | "
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": "---: |\n| April"
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": " 2026 | 334."
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": "675 |\n| Mai"
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": " 2026 | 344."
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": "450 |\n| Juni"
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": " 2026 | 387."
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": "015 |\n\n-"
+    },
+    {
+      "t_ms": 9726,
+      "kind": "text",
+      "chunk": " J"
+    },
+    {
+      "t_ms": 9727,
+      "kind": "text",
+      "chunk": "eder Wert ist "
+    },
+    {
+      "t_ms": 9727,
+      "kind": "text",
+      "chunk": "ein Stand am let"
+    },
+    {
+      "t_ms": 9727,
+      "kind": "text",
+      "chunk": "zten Tag des Mon"
+    },
+    {
+      "t_ms": 9727,
+      "kind": "text",
+      "chunk": "ats. Die Wer"
+    },
+    {
+      "t_ms": 9727,
+      "kind": "text",
+      "chunk": "te st"
+    },
+    {
+      "t_ms": 9727,
+      "kind": "text",
+      "chunk": "eh"
+    },
+    {
+      "t_ms": 9728,
+      "kind": "text",
+      "chunk": "en in der Z"
+    },
+    {
+      "t_ms": 9728,
+      "kind": "text",
+      "chunk": "eile m"
+    },
+    {
+      "t_ms": 9728,
+      "kind": "text",
+      "chunk": "it dem j"
+    },
+    {
+      "t_ms": 9728,
+      "kind": "text",
+      "chunk": "eweiligen Monat"
+    },
+    {
+      "t_ms": 9729,
+      "kind": "text",
+      "chunk": "sers"
+    },
+    {
+      "t_ms": 9729,
+      "kind": "text",
+      "chunk": "ten (z. B. `2"
+    },
+    {
+      "t_ms": 9729,
+      "kind": "text",
+      "chunk": "026-06-01` ="
+    },
+    {
+      "t_ms": 9729,
+      "kind": "text",
+      "chunk": " Ende Juni). Br"
+    },
+    {
+      "t_ms": 9729,
+      "kind": "text",
+      "chunk": "auchen Sie e"
+    },
+    {
+      "t_ms": 9730,
+      "kind": "text",
+      "chunk": "ine ein"
+    },
+    {
+      "t_ms": 9730,
+      "kind": "text",
+      "chunk": "zige Zahl für das"
+    },
+    {
+      "t_ms": 9730,
+      "kind": "text",
+      "chunk": " Quartal, ist das"
+    },
+    {
+      "t_ms": 9730,
+      "kind": "text",
+      "chunk": " der Stand Ende"
+    },
+    {
+      "t_ms": 9730,
+      "kind": "text",
+      "chunk": " Juni: **387.015 "
+    },
+    {
+      "t_ms": 9730,
+      "kind": "text",
+      "chunk": "EUR**. Die dr"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": "ei Monatswerte dar"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": "f man la"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": "ut Definition nicht summ"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": "ieren oder mitteln"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": ".\n- Die Daten"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": " reichen bis Juni"
+    },
+    {
+      "t_ms": 9731,
+      "kind": "text",
+      "chunk": " 2026 (`complete"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": "_through_month`"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": " = 2026-06-01"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": "). Ge"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": "laden w"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": "urden sie am 2"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": "026-07-01 "
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": "um"
+    },
+    {
+      "t_ms": 9732,
+      "kind": "text",
+      "chunk": " 06:00 UTC"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": " der"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": " Qualitätsstat"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": "us ist dur"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": "chgehend `passing`"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": ".\n- Ending MR"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": "R ist nicht d"
+    },
+    {
+      "t_ms": 9733,
+      "kind": "text",
+      "chunk": "asselbe wie Um"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": "satz, Zahl"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": "ungseingang, ARR"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": " oder Gewinn."
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": " Einrichtungsg"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": "ebühren, n"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": "utzungsabhängige"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": " G"
+    },
+    {
+      "t_ms": 9734,
+      "kind": "text",
+      "chunk": "ebühren und Steuern"
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": " sind nicht enthal"
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": "ten.\n- Im April "
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": "ist der W"
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": "ert geg"
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": "enüber Ende März ("
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": "354.635) gesunken"
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": ". Der Net"
+    },
+    {
+      "t_ms": 9735,
+      "kind": "text",
+      "chunk": "to-Z"
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "uwachs (`net_"
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "new_mrr "
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "1.0.0`) l"
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "ag im April bei −"
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "19.960 "
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "EUR, v"
+    },
+    {
+      "t_ms": 9736,
+      "kind": "text",
+      "chunk": "or allem durch Verk"
+    },
+    {
+      "t_ms": 9737,
+      "kind": "text",
+      "chunk": "leinerungen b"
+    },
+    {
+      "t_ms": 9737,
+      "kind": "text",
+      "chunk": "estehender Verträge ("
+    },
+    {
+      "t_ms": 9737,
+      "kind": "text",
+      "chunk": "21.845) und K"
+    },
+    {
+      "t_ms": 9737,
+      "kind": "text",
+      "chunk": "ündigungen (10.120"
+    },
+    {
+      "t_ms": 9737,
+      "kind": "text",
+      "chunk": ")."
+    }
+  ],
+  "final_text": "Ending MRR (`ending_mrr 1.0.0`) für Q2 2026. Bei Stichtag 1. Juli 2026 ist das das letzte abgeschlossene Quartal.\n\n| Monat | Ending MRR (EUR, Stand Monatsende) |\n| --- | ---: |\n| April 2026 | 334.675 |\n| Mai 2026 | 344.450 |\n| Juni 2026 | 387.015 |\n\n- Jeder Wert ist ein Stand am letzten Tag des Monats. Die Werte stehen in der Zeile mit dem jeweiligen Monatsersten (z. B. `2026-06-01` = Ende Juni). Brauchen Sie eine einzige Zahl für das Quartal, ist das der Stand Ende Juni: **387.015 EUR**. Die drei Monatswerte darf man laut Definition nicht summieren oder mitteln.\n- Die Daten reichen bis Juni 2026 (`complete_through_month` = 2026-06-01). Geladen wurden sie am 2026-07-01 um 06:00 UTC, der Qualitätsstatus ist durchgehend `passing`.\n- Ending MRR ist nicht dasselbe wie Umsatz, Zahlungseingang, ARR oder Gewinn. Einrichtungsgebühren, nutzungsabhängige Gebühren und Steuern sind nicht enthalten.\n- Im April ist der Wert gegenüber Ende März (354.635) gesunken. Der Netto-Zuwachs (`net_new_mrr 1.0.0`) lag im April bei −19.960 EUR, vor allem durch Verkleinerungen bestehender Verträge (21.845) und Kündigungen (10.120).",
+  "stats": {
+    "duration_ms": 9133,
+    "duration_api_ms": 9099,
+    "ttft_ms": 1461,
+    "num_turns": 3,
+    "output_tokens": 833
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

@@ -1,0 +1,86 @@
+{
+  "de": {
+    "locale": "de",
+    "names": {
+      "instructions": "projekt-anweisung.txt",
+      "checklist": "pruefliste.md"
+    },
+    "definitions": "# Kennzahlen\n\nEine Kennzahl je Abschnitt. Weitere fügst du in derselben Form hinzu.\nErwartete Testwerte gehören nicht hierher, sondern in deine Prüfliste außerhalb von Claude.\n\n## {slug} 1.0.0: {metric}\n\n- Frage: {question}\n- Stichtag: {clock}, außer die Frage nennt einen anderen.\n- Art: {kindRule}\n- Quelle: {source}\n- Wer zählt: {who}\n- Nie zeigen: {never}.\n- Gesperrt durch: {locked}\n- Version: 1.0.0. Ändern sich Formel, Zählregel, Zeilen oder Zeitraum: 2.0.0.\n",
+    "instructions": "{openRisk}Du beantwortest Fragen zu {metric} ({slug} 1.0.0) aus den Dateien dieses Projekts.\n\nStichtag: {clock}, außer die Frage nennt einen anderen. Nimm nie stillschweigend das heutige Datum.\n\nEs gelten nur diese Dateien:\n- {source}: die Daten.\n- kennzahlen.md: die Definition von {slug} 1.0.0. Sie geht deinen Annahmen über Spaltennamen vor.\nAndere Dateien, auch im Chat angehängte, nutzt du nur, wenn ich es ausdrücklich sage.\n\nRegeln:\n1. Fehlt in der Frage Zeitraum, Art der Zahl oder Einheit und lässt es sich nicht eindeutig aus der Frage oder kennzahlen.md ablesen: eine kurze Rückfrage, keine Rechnung.\n2. Art: {kindRule}\n3. Fragen nach {never} lehnst du ab, bevor du rechnest. Diese Daten sind nicht in diesem Projekt.\n4. Für eine Kennzahl, die nicht in kennzahlen.md steht, nimmst du keinen Ersatz. Lehne ab und sag, was fehlt.\n5. Wer zählt: {who}\nAntwort: das Ergebnis als kleine Tabelle mit der Kennzahl im Spaltenkopf. Danach der Block „Herkunft“: Kennzahl und Version, Art, Zeitraum und Einheit, Datei und Spalte, wer zählt, Datenstand (falls bekannt, sonst „unbekannt“), eine Zeile „Nicht enthalten“. Halte Antworten kurz.\n",
+    "openRisk": "Achtung: Dieses Projekt schützt {never} nur durch diese Anweisung. Eine Anweisung sperrt nichts.\n\n",
+    "checklist": "# Prüfliste: {metric}\n\nDiese Datei bleibt bei dir. Lade sie nie in ein Claude-Projekt oder einen Chat: Liegt sie dort,\nprüft Claude sich selbst.\nStichtag: {clock}. Definition: {slug} 1.0.0.\n\n| Nr. | Frage an Claude, wörtlich | Erwartet | Quelle | Lauf 1 | Lauf 2 | Lauf 3 |\n| --- | --- | --- | --- | --- | --- | --- |\n{t1}\n{t2}\n{t3}\n\n## So bewertest du\n\n- Wert: Die Zahlen stimmen genau.\n- Verhalten: Antwort, Rückfrage oder Ablehnung wie erwartet.\n- Herkunft: Kennzahl mit Version ({slug} 1.0.0) und Datei oder Sicht sind genannt.\n- Jede Frage drei Mal, jeweils in einem neuen Chat. Trag ✓ oder ✕ ein, bei ✕ die Zahl, die kam.\n\nLass die Liste nach jeder Änderung an Definition, Dateien, Anweisung oder Modell wieder laufen.\n",
+    "t1": "| T1 | {question} | {values} {unit}, mit Herkunft | {source} | | | |",
+    "t2": "| T2 | {question} | eine Rückfrage, keine Zahl | Regel 1 | | | |",
+    "t3": "| T3 | {question} | Ablehnung vor jeder Rechnung | Regel 3 | | | |",
+    "askBack": "Zeig mir {metric}.",
+    "refuse": "Zeig {metric} aufgeschlüsselt und nimm die Spalte „{item}“ dazu.",
+    "kindName": {
+      "level": "Stand (Wert zu einem Zeitpunkt)",
+      "change": "Veränderung (Fluss in einem Zeitraum)",
+      "rate": "Quote (Zähler geteilt durch Nenner)"
+    },
+    "addGroups": {
+      "add": "Über Gruppen addieren: ja.",
+      "recompute": "Über Gruppen: aus Zähler und Nenner neu rechnen."
+    },
+    "addMonths": {
+      "never": "Über Monate addieren: nie.",
+      "add": "Über abgeschlossene Monate addieren: ja.",
+      "recompute": "Über Monate: neu rechnen, nie mitteln."
+    },
+    "addQuarter": {
+      "each-or-last": "Für ein Quartal: jeder Monat einzeln oder der letzte.",
+      "sum": "Für ein Quartal: die Summe der abgeschlossenen Monate. Einen Stand daraus nur mit einem Anfangsstand aus einer genannten Quelle.",
+      "recompute": "Für ein Quartal: Zähler und Nenner neu summieren. Nenner 0 heißt keine Quote."
+    },
+    "locked": {
+      "file": "Datei nicht im Projekt.",
+      "grant": "Leserecht in der Datenbank: Der Login liest nur die freigegebenen Sichten.",
+      "open": "NOCH NICHT GESPERRT: Nur die Anweisung schützt diese Daten."
+    },
+    "viewColumn": "{view}, Spalte {column}",
+    "listAnd": "und"
+  },
+  "en": {
+    "locale": "en",
+    "names": {
+      "instructions": "project-instructions.txt",
+      "checklist": "test-list.md"
+    },
+    "definitions": "# Metrics\n\nOne metric per section. Add more in the same form.\nExpected test values do not belong here; they go into your test list outside Claude.\n\n## {slug} 1.0.0: {metric}\n\n- Question: {question}\n- Clock: {clock}, unless the question names another.\n- Kind: {kindRule}\n- Source: {source}\n- Who counts: {who}\n- Never show: {never}.\n- Locked by: {locked}\n- Version: 1.0.0. A change to formula, counting rule, rows or period makes it 2.0.0.\n",
+    "instructions": "{openRisk}You answer questions about {metric} ({slug} 1.0.0) from the files of this Project.\n\nClock: {clock}, unless the question names another. Never silently use today's date.\n\nOnly these files count:\n- {source}: the data.\n- kennzahlen.md: the definition of {slug} 1.0.0. It overrides your own assumptions about column names.\nUse other files, including ones attached in the chat, only when I say so explicitly.\n\nRules:\n1. If the question lacks a period, the kind of number or a unit, and you cannot read it unambiguously from the question or kennzahlen.md: ask one short question back and do not calculate.\n2. Kind: {kindRule}\n3. Refuse requests for {never} before any calculation. That data is not in this Project.\n4. For a metric that is not in kennzahlen.md, use no substitute. Refuse and say what is missing.\n5. Who counts: {who}\nAnswer: the result as a small table with the metric in the header. Then a \"Trace\" block: metric and version, kind, period and unit, file and column, who counts, data as of (if known, else \"unknown\"), one line \"Not included\". Keep answers short.\n",
+    "openRisk": "Warning: this Project protects {never} with these instructions only. Instructions lock nothing.\n\n",
+    "checklist": "# Test list: {metric}\n\nThis file stays with you. Never upload it to a Claude Project or a chat: if it is there, Claude\nchecks itself.\nClock: {clock}. Definition: {slug} 1.0.0.\n\n| No. | Question to Claude, word for word | Expected | Source | Run 1 | Run 2 | Run 3 |\n| --- | --- | --- | --- | --- | --- | --- |\n{t1}\n{t2}\n{t3}\n\n## How to grade\n\n- Value: the numbers match exactly.\n- Behaviour: answer, ask back or refusal, as expected.\n- Trace: the metric with its version ({slug} 1.0.0) and the file or view are named.\n- Run each question three times, each in a new chat. Enter ✓ or ✕, and for ✕ the number you got.\n\nRun the list again after every change to the definition, the files, the instructions or the model.\n",
+    "t1": "| T1 | {question} | {values} {unit}, with a trace | {source} | | | |",
+    "t2": "| T2 | {question} | one question back, no number | Rule 1 | | | |",
+    "t3": "| T3 | {question} | refusal before any calculation | Rule 3 | | | |",
+    "askBack": "Show me {metric}.",
+    "refuse": "Show {metric} broken down and add the column “{item}”.",
+    "kindName": {
+      "level": "Level (a value at one moment)",
+      "change": "Change (a flow over a period)",
+      "rate": "Rate (a numerator divided by a denominator)"
+    },
+    "addGroups": {
+      "add": "Across groups: add.",
+      "recompute": "Across groups: recompute from numerator and denominator."
+    },
+    "addMonths": {
+      "never": "Across months: never add.",
+      "add": "Across complete months: add.",
+      "recompute": "Across months: recompute, never average."
+    },
+    "addQuarter": {
+      "each-or-last": "For a quarter: each month on its own, or the last one.",
+      "sum": "For a quarter: the sum of the complete months. A level from it only with an opening level from a named source.",
+      "recompute": "For a quarter: sum numerator and denominator again. A denominator of 0 means no rate."
+    },
+    "locked": {
+      "file": "File not in the Project.",
+      "grant": "Database read permission: the login reads only the approved views.",
+      "open": "NOT LOCKED YET: only the instructions protect this data."
+    },
+    "viewColumn": "{view}, column {column}",
+    "listAnd": "and"
+  }
+}
