@@ -419,9 +419,15 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
                   <span className="cds-round" data-kind="mic">
                     <GlasIcon name="mic" />
                   </span>
-                  <span className="cds-send" data-ready={!replay.started ? "" : undefined}>
-                    <GlasIcon name="send" />
-                  </span>
+                  {replay.started ? (
+                    <span className="cds-send">
+                      <GlasIcon name="send" />
+                    </span>
+                  ) : (
+                    <button type="button" tabIndex={-1} className="cds-send" data-ready="" data-clickable="" onClick={replay.play} data-scene-send="">
+                      <GlasIcon name="send" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

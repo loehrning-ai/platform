@@ -26,7 +26,8 @@ import "./shell-v4.css";
  * over the living field, with "Starten" in reach. After the start the dock
  * rises and the guided path runs; "Frei ausprobieren" opens every control.
  * Below the stage: the question in one sentence, the "Weniger Glas" row, the
- * closing band, "Für deinen Claude" and the Claude scene.
+ * closing band, "Für deinen Claude" and the Claude scene (unless the demo
+ * draws both in its stage: TAKEHOME_IN_STAGE in its intro.ts).
  *
  * A demo opts in with SHELL = "v4" in src/lib/demo-cases/<slug>/intro.ts and
  * renders <DemoGlasStage> and <DemoDock> from @/components/demos/shell.
@@ -47,6 +48,7 @@ export function DemoPageV4({
   const workshop = getWorkshopBySlug(demo.workshopSlug, locale);
   const workshopHref = localizeHref(`/workshops/${demo.workshopSlug}`, locale);
   const intro = DEMO_INTROS[demo.slug].INTRO[locale];
+  const takeHomeInStage = DEMO_INTROS[demo.slug].TAKEHOME_IN_STAGE === true;
 
   return (
     <GlasRoot
@@ -85,7 +87,7 @@ export function DemoPageV4({
           value={{
             stageTone: glasToneFor(demo.plakat),
             intro: {
-              kicker: copy.kicker(demo.workshopNumber, demo.minutes),
+              kicker: copy.kicker(demo.workshopNumber),
               title: intro.title,
               sentences: introSentences(intro, demo.minutes),
               start: intro.start,
@@ -114,8 +116,8 @@ export function DemoPageV4({
       </div>
 
       <ClosingBand demo={demo} workshop={workshop} locale={locale} />
-      <ForYourClaude slug={demo.slug} locale={locale} />
-      <ClaudeSceneSection slug={demo.slug} locale={locale} />
+      {takeHomeInStage ? null : <ForYourClaude slug={demo.slug} locale={locale} />}
+      {takeHomeInStage ? null : <ClaudeSceneSection slug={demo.slug} locale={locale} />}
       <DemoOpenTracker slug={demo.slug} />
     </GlasRoot>
   );

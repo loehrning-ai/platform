@@ -85,7 +85,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Die Fragekarte | Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am End… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/esg-berichte-mit-ki | Nachweisprobe | Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie bel… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 | https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Die Lückenliste | Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Date… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/angebote-mit-ki-vergleichen | Die Vergleichsbasis | Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Tipp zuerst, d… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/angebote-mit-ki-vergleichen | Die Vergleichsbasis | Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Schätz zuerst,… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 

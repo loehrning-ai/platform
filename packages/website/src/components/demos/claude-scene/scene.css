@@ -740,6 +740,12 @@
   background: var(--cd-line-strong);
   color: var(--cd-primary);
 }
+button.cds-send {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
 .cds-send[data-ready] {
   background: var(--cd-accent);
   color: var(--cd-accent-ink);

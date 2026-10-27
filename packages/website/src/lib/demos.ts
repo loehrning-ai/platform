@@ -287,18 +287,18 @@ export const demos: readonly Demo[] = [
     workshopNumber: "06",
     plakat: "kraft",
     motif: "converge",
-    minutes: 4,
+    minutes: 8,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-26",
+    lastReviewed: "2026-10-27",
     title: "Die Vergleichsbasis",
     oneLiner:
-      "Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Tipp zuerst, dann siehst du, welche Zeile entscheidet.",
+      "Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Schätz zuerst, dann siehst du, welche Zeile entscheidet.",
     question: "Welches Angebot ist günstiger?",
     syntheticDataLabel:
-      "Erfundener Fall aus Workshop 06: Brandtwerk Gerätebau und die drei Lieferanten sind erfunden, jede Zahl steht im Kit. Gerechnet in deinem Browser, keine KI, nichts wird gesendet.",
+      "Firma, Lieferanten und Zahlen sind erfunden, und jede Zahl steht im Kit. Auf dieser Seite läuft keine KI; die Claude-Antwort ist eine Aufzeichnung.",
     job: "Bring drei Angebote auf eine Basis.",
     tile: {
       hook: "Der billigste Stückpreis ist das teuerste Angebot.",
@@ -310,7 +310,7 @@ export const demos: readonly Demo[] = [
         "Three offers, one basis: same quantity, per unit, delivered, with one-off costs and discount. Guess first, then see which line decides.",
       question: "Which offer costs less?",
       syntheticDataLabel:
-        "Invented case from Workshop 06: Brandtwerk Gerätebau and the three suppliers are invented, every number is in the kit. Worked out in your browser, no AI, nothing is sent.",
+        "The company, the suppliers and the numbers are invented, and every number is in the kit. No AI runs on this page; the Claude answer is a recording.",
       job: "Bring three offers onto one basis.",
       tile: {
         hook: "The lowest unit price is the most expensive offer.",
