@@ -16,7 +16,7 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "vardar-audit-kit-de.zi
  * the checks that tie every figure to them are in scripts/workshop05 (build-kit.mjs, verify-kit.mjs); the
  * demo at /demos/audit-vorbereitung-mit-ki runs the same folder. Vardar Works, Tannwald Haustechnik and
  * every file are invented; two lines quote Anthropic's public privacy page. The agenda follows the deck
- * plan's 12 main slides, one block per slide (the detail page does not show it; tests and machine
+ * plan's 14 main slides, one block per slide (the detail page does not show it; tests and machine
  * surfaces read it). Registered in WORKSHOPS_BY_LOCALE with the Sage poster palette.
  */
 
@@ -83,16 +83,18 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agenda: [
       { label: "Eine Anfrage, elf Dateien, vier Prüfungen", minutes: 1, activity: "listen" },
       { label: "Gastgeber", minutes: 1, activity: "listen" },
-      { label: "Die Anfrage: acht Anforderungen schätzen", minutes: 3, activity: "vote" },
-      { label: "Der Antwortentwurf: vier Sätze", minutes: 3, activity: "vote" },
-      { label: "Der Ordner und das Claude-Projekt", minutes: 8, activity: "do" },
-      { label: "Die vier Prüfungen", minutes: 6, activity: "listen" },
-      { label: "Schritt 1: die Nachweisliste", minutes: 15, activity: "do" },
+      { label: "Der Fall: 440.000 A$ für einen Bericht", minutes: 3, activity: "listen" },
+      { label: "Hamburg will Nachweise sehen: acht Anforderungen schätzen", minutes: 4, activity: "vote" },
+      { label: "Der Antwortentwurf: vier Sätze, vier Fragen", minutes: 3, activity: "vote" },
+      { label: "Elf Dateien, acht Treffer", minutes: 5, activity: "listen" },
+      { label: "Die vier Prüfungen pro Datei", minutes: 6, activity: "listen" },
+      { label: "Das Kit geht zu Claude", minutes: 5, activity: "do" },
+      { label: "Schritt 1: welche Dateien halten?", minutes: 15, activity: "do" },
       { label: "Schritt 2: erst das Zitat, dann der Status", minutes: 20, activity: "do" },
-      { label: "Wo Claude bei diesem Ordner danebenliegt", minutes: 5, activity: "listen" },
-      { label: "Schritt 3: jede Lücke mit zuständiger Person", minutes: 12, activity: "do" },
-      { label: "Die Antwort an Tannwald", minutes: 10, activity: "write" },
-      { label: "Deine Schätzung und das Ergebnis", minutes: 6, activity: "vote" },
+      { label: "Vier falsche Zeilen, vier Regeln", minutes: 5, activity: "listen" },
+      { label: "Schritt 3: jede Lücke wird eine Aufgabe", minutes: 10, activity: "do" },
+      { label: "Nur belegte Sätze gehen raus", minutes: 7, activity: "write" },
+      { label: "Das Ergebnis: der Ordner belegt 2 von 8", minutes: 5, activity: "vote" },
     ],
     agendaSource: "deck",
     minutesLive: 90,
@@ -211,16 +213,18 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     agenda: [
       { label: "One request, eleven files, four tests", minutes: 1, activity: "listen" },
       { label: "Your host", minutes: 1, activity: "listen" },
-      { label: "The request: estimate eight items", minutes: 3, activity: "vote" },
-      { label: "The draft reply: four sentences", minutes: 3, activity: "vote" },
-      { label: "The folder and the Claude Project", minutes: 8, activity: "do" },
-      { label: "Four tests", minutes: 6, activity: "listen" },
-      { label: "Step 1: the evidence index", minutes: 15, activity: "do" },
-      { label: "Step 2: quote first, then status", minutes: 20, activity: "do" },
-      { label: "Where Claude goes wrong on this folder", minutes: 5, activity: "listen" },
-      { label: "Step 3: every gap gets an owner", minutes: 12, activity: "do" },
-      { label: "The reply to Tannwald", minutes: 10, activity: "write" },
-      { label: "Your estimate, the folder's answer", minutes: 6, activity: "vote" },
+      { label: "The case: a report worth A$440,000", minutes: 3, activity: "listen" },
+      { label: "Hamburg wants evidence: estimate eight items", minutes: 4, activity: "vote" },
+      { label: "The draft reply: four sentences, four questions", minutes: 3, activity: "vote" },
+      { label: "Eleven files, eight matches", minutes: 5, activity: "listen" },
+      { label: "Four tests per file", minutes: 6, activity: "listen" },
+      { label: "The kit goes to Claude", minutes: 5, activity: "do" },
+      { label: "Step 1: which files hold?", minutes: 15, activity: "do" },
+      { label: "Step 2: quote first, then the status", minutes: 20, activity: "do" },
+      { label: "Four wrong lines, four rules", minutes: 5, activity: "listen" },
+      { label: "Step 3: every gap becomes a task", minutes: 10, activity: "do" },
+      { label: "Only proven sentences go out", minutes: 7, activity: "write" },
+      { label: "The result: the folder proves 2 of 8", minutes: 5, activity: "vote" },
     ],
     agendaSource: "deck",
     minutesLive: 90,

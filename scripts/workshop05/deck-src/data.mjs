@@ -16,10 +16,44 @@ const GAP_TEMPLATE_DE = path.join(HERE, "../../../packages/website/content/vorla
 export const kit = (file) => readFileSync(path.join(KIT_DIR, file), "utf8");
 const kitDe = (file) => readFileSync(path.join(KIT_DIR_DE, file), "utf8");
 
-/** Per edition: the start file, its step headings, the gap template and the key that holds the filled R7 email. */
+/**
+ * Per edition: the start file, its step headings, the gap template, the key that holds the filled R7 email,
+ * the project instructions, and the one sentence of four rules the mistakes slide shows (rule number, pattern).
+ */
 const EDITION_SOURCES = {
-  en: { start: () => kit("START-HERE.md"), step: "## Step", template: () => kit("templates/gap-request.md"), key: () => kit("ANSWERS.md"), email: "Example email (R7)" },
-  de: { start: () => kitDe("START-HIER.md"), step: "## Schritt", template: () => readFileSync(GAP_TEMPLATE_DE, "utf8"), key: () => kitDe("LOESUNGEN.md"), email: "Beispiel-Mail (R7)" },
+  en: {
+    start: () => kit("START-HERE.md"),
+    step: "## Step",
+    template: () => kit("templates/gap-request.md"),
+    key: () => kit("ANSWERS.md"),
+    email: "Example email (R7)",
+    instructions: () => kit("project-instructions.md"),
+    ruleLines: { 7: /DRAFT, "\(open\)", a blank field, or "FINAL" in a file name is no approval\./, 4: /A POLICY or STATEMENT shows intent;[^.]+\./, 11: /Remove duplicate rows[^.]+\./, 12: /Never invent a control number[^.]+\./ },
+  },
+  de: {
+    start: () => kitDe("START-HIER.md"),
+    step: "## Schritt",
+    template: () => readFileSync(GAP_TEMPLATE_DE, "utf8"),
+    key: () => kitDe("LOESUNGEN.md"),
+    email: "Beispiel-Mail (R7)",
+    instructions: () => kitDe("projektanweisungen.md"),
+    ruleLines: { 7: /DRAFT, "\(open\)", ein leeres Feld oder "FINAL" im Dateinamen ist keine Freigabe\./, 4: /Eine RICHTLINIE oder AUSSAGE zeigt Absicht;[^.]+\./, 11: /Entferne doppelte Zeilen[^.]+\./, 12: /Erfinde nie eine Kontrollnummer[^.]+\./ },
+  },
+};
+
+/**
+ * Per item, the line of its name-matched file that the reality run quotes (the file is NAIVE[id].file).
+ * The pattern must match the file's text, so the quote is always word for word.
+ */
+const ROW_QUOTES = {
+  R1: /United States \(see [^)]+\)/,
+  R2: /^Anthropic,Claude Team,United States,accepted online [\d-]+,,$/m,
+  R3: /Valid from \d{4}-\d{2}-\d{2}\./,
+  R4: /Review of administrator accounts in \w+/,
+  R5: /Staff on [^:]+: \d+\./,
+  R6: /INC-02,\d{4}-\d{2}-\d{2} \d{2}:\d{2},Tannwald/,
+  R7: /Restore test: [^.]+\./,
+  R8: /Approved by: \(open\)/,
 };
 
 const must = (value, what) => {
@@ -140,6 +174,7 @@ export function deckData(lang = "en") {
     status: statusWord[status],
     naive: NAIVE[id].file,
     failsAt: NAIVE[id].failsAt,
+    rowQuote: quoteIn(`folder/${NAIVE[id].file}`, ROW_QUOTES[id]),
   }));
   const tally = { covered: 0, weak: 0, gap: 0 };
   for (const row of mission2) tally[row.status] += 1;
@@ -163,8 +198,37 @@ export function deckData(lang = "en") {
   const [m2, m2follow] = promptBlocks(startHere, `${source.step} 2`);
   const [m3] = promptBlocks(startHere, `${source.step} 3`);
 
+  const instructions = source.instructions();
+  const ruleLines = Object.fromEntries(
+    Object.entries(source.ruleLines).map(([n, pattern]) => [n, must(pattern.exec(instructions)?.[0], `rule ${n} in the project instructions`)]),
+  );
+  const instructionsHead = must(/^Audit: .+$/m.exec(instructions)?.[0], "the first line of the project instructions");
+  // The lines the project slide types into "Project instructions": the role sentences, then rules 1, 2 and 10.
+  const role = must(/^[^.\n]+\.\s[^.\n]+\./.exec(instructions.split("\n\n")[1])?.[0], "the role sentences of the project instructions");
+  const instructionLines = [role, ...[1, 2, 10].map((n) => must(new RegExp(`^${n}\\. .+$`, "m").exec(instructions)?.[0], `rule ${n} in the project instructions`))];
+
+  // The R7 email as Claude writes it: the subject line, then "What we have" up to the failed test and its sentence.
+  const firstBreak = emailSegments.findIndex((seg) => seg.text !== undefined && seg.text.includes("\n"));
+  const haveAt = emailSegments.findIndex((seg) => seg.text !== undefined && /\n\n[^\n]+: $/.test(seg.text) && emailSegments.indexOf(seg) > firstBreak + 6);
+  const closeAt = emailSegments.findIndex((seg, i) => i > haveAt && seg.text !== undefined && seg.text.includes("\n\n"));
+  const emailExcerpt = [
+    ...emailSegments.slice(0, firstBreak),
+    { text: "\n" },
+    { text: emailSegments[haveAt].text.split("\n\n").pop() },
+    ...emailSegments.slice(haveAt + 1, closeAt),
+    { text: emailSegments[closeAt].text.split("\n\n")[0] },
+  ];
+
   return {
     customer: "Tannwald",
+    // The real case on slide 03 (Deloitte Australia, October 2025; sources in appendix A3): the fee and the refund.
+    fee: 440000,
+    refund: 97587,
+    ruleLines,
+    instructionsHead,
+    instructionLines,
+    emailExcerpt,
+    systemApproved: must(/Approved (\d{4}-\d{2}-\d{2})/.exec(kit("folder/system-list_2026-09.csv"))?.[1], "system list approval date"),
     sent: field("Sent"),
     audit: "2026-12-10",
     auditLine: field("Remote audit"),

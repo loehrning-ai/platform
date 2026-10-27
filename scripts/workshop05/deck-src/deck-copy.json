@@ -1,45 +1,17 @@
 {
   "de": {
     "lang": "de",
-    "htmlTitle": "Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden · Deck · loehrning.ai",
-    "description": "Das Deck zu Workshop 05: eine Dokumentanforderung, elf erfundene Dateien, vier Prüfungen und eine Lückenliste, die du vertreten kannst.",
-    "kicker": "Workshop 05 · Audit-Vorbereitung mit KI",
-    "route": [
-      "ANFRAGE",
-      "ORDNER",
-      "PRÜFEN",
-      "LÜCKEN",
-      "ANTWORT"
-    ],
-    "routeLabel": "Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort",
-    "foot": "Vardar Works und Tannwald sind erfunden · Stand der Übung: {exercise}",
+    "htmlTitle": "Audit-Vorbereitung mit KI · Workshop 05 · loehrning.ai",
+    "description": "Deck zu Workshop 05: ein echter Fall, ein erfundener Ordner, vier Prüfungen und Claude als Werkzeug. Am Ende steht eine Lückenliste, die du vertreten kannst.",
+    "mainLabel": "Workshop 05, Audit-Vorbereitung mit KI",
+    "skip": "Zum Deck springen",
     "back": "Workshop",
     "backLabel": "Zurück zur Workshop-Seite",
-    "ui": {
-      "prev": "Zurück",
-      "next": "Weiter",
-      "reset": "Neu starten",
-      "presenter": "Moderation",
-      "toolbar": "Steuerung",
-      "step": "Schritt {step} von {steps}",
-      "slide": "Folie {n} von {total}",
-      "undo": "Letzte Stimme zurücknehmen",
-      "votes": "Stimmen",
-      "noVotes": "noch keine Stimme",
-      "timerStart": "Start",
-      "timerPause": "Pause",
-      "timerReset": "Zurücksetzen",
-      "timerOf": "von {min} Min.",
-      "timerNext": "Nächste Phase",
-      "rotate": "Dreh das Handy quer für eine größere Ansicht, oder öffne die Demo.",
-      "rotateLink": "Zur Demo",
-      "close": "Hinweis schließen",
-      "appendix": "Anhang",
-      "appendixBack": "Zurück zu Folie {n}",
-      "promptFrom": "Prompt aus START-HIER.md, {mission}",
-      "copy": "Kopieren",
-      "copied": "Kopiert"
-    },
+    "foot": "Workshop 05 · loehrning.ai",
+    "footNote": "Vardar Works und Tannwald sind erfunden.",
+    "rotateLabel": "die Demo ansehen",
+    "appendix": "Anhang",
+    "now": "Jetzt ihr · {min} Min",
     "status": {
       "covered": "BELEGT",
       "weak": "SCHWACH",
@@ -71,16 +43,6 @@
       "Nov.",
       "Dez."
     ],
-    "items": {
-      "R1": "Systeme mit Speicherland",
-      "R2": "Unterauftragnehmer + Rechtsgrundlage",
-      "R3": "KI-Werkzeuge, letzte 12 Monate",
-      "R4": "Prüfung der Admin-Konten",
-      "R5": "Schulung, mindestens 95 %",
-      "R6": "Vorfälle 2026 + Meldung",
-      "R7": "Wiederherstellungstest",
-      "R8": "Sicherheitsrichtlinie"
-    },
     "short": {
       "R1": "Systeme",
       "R2": "Unterauftrag",
@@ -91,29 +53,18 @@
       "R7": "Restore-Test",
       "R8": "Richtlinie"
     },
-    "fileDates": {
-      "system-list_2026-09.csv": "freigegeben 2026-09-02",
-      "subprocessors_2026-09.csv": "aktualisiert 2026-09-05",
-      "ai-use-rule_v1.md": "freigegeben 2026-10-01",
-      "vendor-page_claude_2026-06-15.md": "Seite vom 2026-06-15",
-      "access-review_2026-08-14.csv": "durchgeführt 2026-08-14",
-      "training-records_2026.csv": "exportiert 2026-11-02",
-      "incident-log_2026.csv": "letzter Eintrag 2026-10-12",
-      "backup-report_2026-10.txt": "erzeugt 2026-11-01",
-      "it-notes_2026-10-06.md": "geschrieben 2026-10-06",
-      "infosec-policy_v3_FINAL.md": "freigegeben 2024-03-12",
-      "infosec-policy_v4_DRAFT.md": "bearbeitet 2026-09-18"
-    },
     "cover": {
-      "eyebrow": "Workshop 05",
-      "title": "Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden",
-      "lede": "Eine Anfrage, elf Dateien, vier Prüfungen.",
-      "meta": "90 Minuten · erfundener Fall · Stand der Übung {exercise}",
-      "drawing": "Acht Anforderungen links, elf Dateien rechts. Jede Linie verbindet eine Anforderung mit der Datei, deren Name passt."
+      "label": "Workshop 05",
+      "title": "Audit-Vorbereitung mit *KI*",
+      "sub": "Nachweise ordnen, Lücken finden",
+      "meta": "Tim Löhr · 90 Minuten",
+      "from": "Skopje",
+      "to": "Hamburg"
     },
     "host": {
       "kicker": "Gastgeber",
       "alt": "Porträt von Tim Löhr",
+      "role": "Data Engineer bei Meta, Warschau",
       "degree": "M.Sc. Informatik",
       "school": "FAU Erlangen-Nürnberg",
       "career": [
@@ -126,75 +77,88 @@
           "role": "Data Scientist"
         },
         {
-          "org": "loehrning.ai",
-          "role": "Gründer"
+          "org": "Meta",
+          "role": "Data Engineer"
         }
       ],
+      "careerLabel": "Werdegang",
       "now": "jetzt",
-      "line": "Jede Firma, jede Person und jede Datei in diesem Workshop ist erfunden."
+      "line": "Erfundener Fall. Keine Daten oder Systeme eines Arbeitgebers."
+    },
+    "case": {
+      "label": "Echter Fall · Oktober 2025",
+      "title": "440.000 A$ für einen Bericht",
+      "pin": "Canberra",
+      "client": "Für das Ministerium",
+      "author": "Deloitte Australia · 2025",
+      "refs": "Quellen",
+      "noSuchRef": "existiert nicht",
+      "quoteHead": "Zitat einer Bundesrichterin",
+      "invented": "erfunden",
+      "modelNote": "im Bericht offengelegt",
+      "refundPre": "",
+      "refundPost": "A$",
+      "moral": "Ein Satz ohne Nachweis ist eine *Behauptung*.",
+      "source": "Quellen: AP, 7.10.2025 · Senate Estimates, Oktober 2025",
+      "refunded": "zurückgezahlt",
+      "fee": "Honorar"
     },
     "request": {
-      "title": "Tannwalds Anfrage: acht Anforderungen",
-      "sub": "Remote-Audit am {audit}. Unterlagen bis {sendBy}. Gewertet werden Dokumente, nicht Antworten.",
-      "file": "request_tannwald.md",
-      "fromLabel": "Von",
-      "sentLabel": "Gesendet",
-      "auditLabel": "Remote-Audit",
-      "byLabel": "Unterlagen bis",
-      "fromValue": "Lena Keller, Tannwald Haustechnik GmbH, Hamburg",
-      "rulesHead": "So liest Tannwald eure Dokumente",
-      "ruleTags": [
-        "ab {window}",
-        "wer freigibt",
-        "Protokoll, keine Beschreibung",
-        "mindestens 95 %",
-        "höchstens 48 h"
-      ],
-      "itemsHead": "Die acht Anforderungen",
-      "section": "AVV {n}",
-      "estimate": "Wie viele der acht kann Vardar heute belegen?",
-      "estimateLabel": "Schätzung des Raums, 0 bis 8",
-      "legal": "Das Auditrecht steht im Auftragsverarbeitungsvertrag, nach Art. 28 Abs. 3 lit. h DSGVO."
+      "label": "Unser Fall · erfunden",
+      "title": "Hamburg will *Nachweise* sehen",
+      "tannwald": "Tannwald",
+      "tannwaldSub": "Hamburg · Kunde",
+      "vardar": "Vardar Works",
+      "vardarSub": "Skopje · 120 Leute",
+      "letterFrom": "Lena Keller, Tannwald",
+      "items": {
+        "R1": "Systeme",
+        "R2": "Unterauftrag",
+        "R3": "KI-Werkzeuge",
+        "R4": "Admin-Konten",
+        "R5": "Schulung",
+        "R6": "Vorfälle",
+        "R7": "Restore-Test",
+        "R8": "Richtlinie"
+      },
+      "poll": "Wie viele belegt der Ordner?",
+      "due": "Jede Zeile braucht einen Beleg · bis {sendBy}",
+      "vardarNote": "Kundenservice für Tannwald · 120 Leute",
+      "stake": "Der Vertrag mit Tannwald hängt dran",
+      "docs": "Unterlagen",
+      "auditName": "Remote-Audit"
     },
     "draft": {
-      "title": "Der Antwortentwurf: vier Sätze",
-      "sub": "Jeder Satz ist eine Behauptung. Ein Nachweis ist eine Datei, die sie belegt.",
-      "file": "draft-reply.md",
-      "tag": "Entwurf der Geschäftsführung. Nicht gesendet.",
-      "options": [
-        "stimmt",
-        "falsch",
-        "weiß nicht"
-      ],
-      "voteLabel": "Satz {n}: Stimmen des Raums",
-      "hint": "Pro Satz die Handzeichen zählen. Aufgelöst wird auf Folie 11."
+      "label": "Der Antwortentwurf · nicht gesendet",
+      "title": "Vier Sätze, *vier Fragen*",
+      "poll": "Wie viele stimmen?",
+      "pollKeys": [
+        "keiner",
+        "1",
+        "2",
+        "3",
+        "alle 4"
+      ]
     },
     "folder": {
-      "title": "Der Ordner: elf Dateien, acht Treffer",
-      "sub": "Zu jeder Anforderung passt ein Dateiname. Das belegt noch nichts.",
-      "counter": "{matched} von {total} Anforderungen haben eine Datei, deren Name passt.",
-      "unmatched": "Ohne Treffer: {n} Dateien",
-      "setupHead": "Einrichtung, 5 Minuten",
-      "setup": [
-        "In Claude ein Projekt „Vardar audit“ anlegen.",
-        "projektanweisungen.md komplett als Projektanweisung einfügen.",
-        "request_tannwald.md und die 11 Dateien aus ordner/ hochladen. Lädt eine .md- oder .csv-Datei nicht, in .txt umbenennen.",
-        "Jeden Schritt in einem neuen Chat im Projekt starten."
-      ],
-      "noProject": "Kein Projekt: ein Chat, die 12 Dateien anhängen, die Anweisungen über den ersten Prompt setzen.",
-      "qr": "Kit laden",
-      "kitUrl": "loehrning.ai/workshops/audit-vorbereitung-mit-ki/kit"
+      "label": "Der Ordner",
+      "title": "Elf Dateien, *acht Treffer*",
+      "dir": "ordner/",
+      "count": "11 Dateien",
+      "hits": "Treffer nach Dateiname",
+      "twist": "Ein Dateiname belegt *nichts*."
     },
     "four": {
-      "title": "Vier Prüfungen",
-      "sub": "Die vier Prüfungen aus Workshop 4, jetzt für einen ganzen Ordner.",
-      "example": "Beispiel, nicht im Kit",
-      "lines": {
-        "quote": "Ein Satz oder eine Zeile aus der Datei, die die Anforderung beantwortet.",
-        "date": "Im Prüfzeitraum ab {window}, und für den ganzen Zeitraum. Bei Richtlinien zählt die letzte Freigabe oder Überprüfung.",
-        "scope": "Die Systeme und Personen, nach denen gefragt ist.",
-        "approval": "Richtlinie, Vertrag: Name mit Datum im Dokument. Protokoll, Register: wer es führt."
+      "label": "Die eine Regel",
+      "title": "Vier Prüfungen *pro Datei*",
+      "hints": {
+        "quote": "Zitat zeigt: es ist passiert",
+        "date": "ab {window}",
+        "scope": "alle Systeme, alle Leute",
+        "approval": "wer, wann"
       },
+      "example": "Beispiel",
+      "fails": "fällt durch",
       "cards": [
         {
           "test": "quote",
@@ -208,14 +172,14 @@
           "name": "visitor-policy.md",
           "text": "Visitor policy. Approved 2023-05-02 by the Managing Director.",
           "mark": "Approved 2023-05-02",
-          "verdict": "Freigegeben vor dem Prüfzeitraum."
+          "verdict": "Freigabe vor dem Zeitraum."
         },
         {
           "test": "scope",
           "name": "firewall-review.txt",
           "text": "Firewall review, site Skopje. Done 2026-06-03 by the IT lead.",
           "mark": "site Skopje",
-          "verdict": "Gefragt sind alle Standorte, geprüft wurde einer."
+          "verdict": "Ein Standort statt alle."
         },
         {
           "test": "approval",
@@ -225,198 +189,197 @@
           "verdict": "Niemand hat freigegeben."
         }
       ],
-      "fails": "scheitert an {test}",
+      "objectiveLabel": "Lernziel",
       "objective": "Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.",
-      "toolHead": "Das Werkzeug",
+      "toolHead": "projektanweisungen.md · Regeln 4 bis 9",
       "tool": [
         "ZITAT · ZEITRAUM · UMFANG · FREIGABE",
         "BELEGT, SCHWACH oder LÜCKE. Datei veraltet oder nicht freigegeben: SCHWACH. Ein Teil ohne Nachweis, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE. Der schwächste Teil zählt.",
         "Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis."
       ],
-      "rulesRef": "Im Kit: projektanweisungen.md, Regeln 4 bis 9.",
-      "sources": "Zusammengefasst nach ISO 19011 und ISO/IEC 27001, Abschnitt 7.5.2 · Anthropic, „Reduce hallucinations“"
+      "source": "Zusammengefasst nach ISO 19011 und ISO/IEC 27001, Abschnitt 7.5.2 · Beispiele nicht im Kit",
+      "cues": {
+        "covered": "alle vier halten",
+        "weak": "alt oder offen",
+        "gap": "fehlt oder nicht erfüllt"
+      }
+    },
+    "project": {
+      "label": "Hands-on · Einrichten",
+      "title": "Das Kit geht *zu Claude*",
+      "kit": "vardar-audit-kit/",
+      "start": "START-HIER.md",
+      "instructions": "projektanweisungen.md",
+      "request": "request_tannwald.md",
+      "dir": "ordner/",
+      "dirCount": "11 Dateien",
+      "project": "Vardar Audit",
+      "projectSub": "Audit 10.12.2026",
+      "instructionsHead": "Project instructions",
+      "knowledgeHead": "Project knowledge",
+      "qr": "Kit laden",
+      "kitUrl": "loehrning.ai/workshops/audit-vorbereitung-mit-ki/kit",
+      "minutes": 5,
+      "from": "aus {file}"
     },
     "m1": {
-      "title": "Schritt 1: die Nachweisliste",
-      "ask": "Wie viele der elf Dateien bestehen ZEITRAUM und FREIGABE?",
-      "predictLabel": "Vorhersage des Raums, 0 bis 11",
-      "mission": "Schritt 1",
-      "minutes": 15,
+      "label": "Hands-on · Schritt 1",
+      "title": "Welche Dateien *halten?*",
+      "poll": "Wie viele der 11 bestehen ZEITRAUM und FREIGABE?",
+      "chat": "Nachweisliste",
+      "wrote": "nachweis-index.csv",
+      "answer": "8 von 11 Dateien bestehen ZEITRAUM und FREIGABE. Drei fallen durch:",
       "head": [
         "Datei",
         "Typ",
-        "Datum im Text",
         "ZEITRAUM",
         "FREIGABE"
       ],
-      "fails": {
-        "it-notes_2026-10-06.md": "„Not reviewed by anyone“",
-        "infosec-policy_v3_FINAL.md": "Prüfung fällig März 2025",
-        "infosec-policy_v4_DRAFT.md": "„Approved by: (open)“"
-      },
-      "result": "{passing} von {total} bestehen ZEITRAUM und FREIGABE.",
-      "resultSub": "Drei fallen durch. Warum, steht nur im Text der Datei."
+      "result": "bestehen beide",
+      "minutes": 15,
+      "kitDir": "vorlagen/"
     },
     "m2": {
-      "title": "Schritt 2: erst das Zitat, dann der Status",
-      "sub": "Pro Anforderung erst die Datei und das wörtliche Zitat, dann die vier Prüfungen, dann der Status.",
-      "mission": "Schritt 2",
-      "minutes": 20,
-      "then": "Danach im selben Chat:",
-      "r7Head": "R7: drei Dateien sagen etwas über Backups",
-      "r7Reasons": {
-        "policy": "zuletzt freigegeben 2024-03-12 · Absicht, kein Protokoll",
-        "notes": "Absicht, kein Protokoll · „Not reviewed by anyone.“",
-        "report": "Protokoll, datiert, mit Besitzer. Es sagt: nicht erfüllt."
-      },
-      "moral": "Die Richtlinie sagt, was passieren soll. Das Protokoll sagt, was passiert ist.",
-      "r5Head": "R5: zählen im Code, {rows} Zeilen sind nicht {rows} Personen",
-      "r5Rows": "{rows} Zeilen",
-      "r5Merged": "{id} steht zweimal: {unique} Personen",
-      "r5Share": "{unique} von {staff} = {share} %",
-      "r5Tick": "Ziel {target} %",
-      "r5Needed": "Nötig: {needed} von {staff}. Es fehlen {missing}.",
-      "runHead": "Alle acht, Prüfung für Prüfung",
-      "running": "Prüfung {n} von 4: {test}",
-      "unlinked": "ohne Treffer:",
-      "defects": {
-        "R2": "letzte Prüfung, Rechtsgrundlage: leer",
+      "label": "Hands-on · Schritt 2",
+      "title": "Erst das Zitat, *dann der Status*",
+      "chat": "Abgleich",
+      "why": {
+        "R1": "freigegeben {approved}",
+        "R2": "2 Felder leer",
         "R3": "{days} Tage ohne Regel",
         "R4": "1 von 4 Systemen",
-        "R5": "{unique} von {staff} geschult",
-        "R7": "„Restore test: not done in 2026.“",
-        "R8": "„Approved by: (open)“",
-        "R1": "freigegeben 2026-09-02",
-        "R6": "gemeldet nach {hours} h"
+        "R6": "gemeldet nach {hours} h",
+        "R7": "nicht erfüllt",
+        "R8": "nicht freigegeben",
+        "R5": "{share} % geschult"
       },
-      "r1Head": "R1 ist BELEGT und trotzdem eine schlechte Nachricht.",
-      "r1File": "system-list_2026-09.csv",
-      "r1Clause": "Klausel 7 des Servicevertrags",
-      "r1Line": "BELEGT heißt belegt, nicht gut.",
-      "probeQr": "Zitat-Probe: Claudes Tabelle gegen die Dateien prüfen",
-      "probeUrl": "loehrning.ai/demos/audit-vorbereitung-mit-ki#zitat-probe"
+      "r7Head": "R7: drei Dateien über Backups",
+      "r7Reasons": {
+        "policy": "Absicht, kein Protokoll",
+        "notes": "von niemandem freigegeben",
+        "report": "Protokoll: nicht erfüllt"
+      },
+      "moral": "Die Richtlinie sagt, was passieren soll. Das Protokoll sagt, was *passiert ist*.",
+      "minutes": 20,
+      "cols": [
+        "Datei",
+        "Zitat",
+        "Prüfungen",
+        "Status"
+      ],
+      "need": "{needed} nötig · {missing} fehlen"
     },
     "mistakes": {
-      "title": "Wo Claude bei diesem Ordner danebenliegt",
-      "sub": "Jeder Fehler hat eine Regel in projektanweisungen.md, die ihn stoppt.",
-      "label": "Typische falsche Zeile",
+      "label": "Wo Claude danebenliegt",
+      "title": "Vier falsche Zeilen, *vier Regeln*",
+      "claude": "Claude",
+      "rule": "Regel {n}",
+      "file": "projektanweisungen.md",
       "cards": [
         {
-          "wrong": "R8 · infosec-policy_v4_DRAFT.md · BELEGT",
-          "rule": "Regel 7",
-          "fix": "DRAFT, „(open)“ oder ein leeres Feld ist keine Freigabe. Die neueste Datei ist nicht die gültige."
+          "item": "R8",
+          "wrong": "infosec-policy_v4_DRAFT.md",
+          "chip": "covered",
+          "rule": 7
         },
         {
-          "wrong": "R7 · „Backups are restore-tested twice a year.“ · BELEGT",
-          "rule": "Regel 4",
-          "fix": "Eine Richtlinie zeigt Absicht. Fragt die Anforderung nach Praxis, zählt nur ein Protokoll."
+          "item": "R7",
+          "quote": "Backups are restore-tested twice a year.",
+          "chip": "covered",
+          "rule": 4
         },
         {
-          "wrong": "R5 · 26 Beschäftigte geschult",
-          "rule": "Regel 11",
-          "fix": "Im Code zählen. Doppelte Zeilen vorher entfernen und sagen, wie viele es waren."
+          "item": "R5",
+          "wrong": "26 Beschäftigte geschult",
+          "rule": 11,
+          "tag": "26"
         },
         {
-          "wrong": "R4 · nach ISO 27001 A.12.3.1",
-          "rule": "Regel 12",
-          "fix": "Keine Nummer einer Norm oder Kontrolle, die in keiner Datei steht."
+          "item": "R4",
+          "wrong": "nach ISO 27001 A.12.3.1",
+          "rule": 12,
+          "chip": "covered",
+          "tag": "A.12.3.1"
         }
       ],
-      "case": "Oktober 2025: Deloitte Australia zahlt einen Teil der 440.000 AU$ für einen Bericht an die australische Regierung zurück. Er enthielt Verweise auf Studien, die es nicht gibt, und ein erfundenes Gerichtszitat.",
-      "caseSource": "AP, 7. Oktober 2025",
-      "account": "Echte Nachweise gehen nur in das Firmenkonto, das deine Firma freigegeben hat. Namen in Zugangs- und Schulungslisten vorher durch IDs ersetzen. Mehr im Anhang A1."
+      "which": "Welche Regel?"
     },
     "gaps": {
-      "title": "Schritt 3: jede Lücke bekommt eine Person",
-      "sub": "Eine Lücke ist eine Aufgabe mit Person und Termin.",
-      "head": [
-        "Punkt",
-        "Was fehlt",
-        "Was die Lücke schließt",
-        "Zuständig, bis"
-      ],
-      "missing": {
-        "R2": "letzte Prüfung und Rechtsgrundlage für Anthropic leer",
-        "R3": "{days} Tage ohne Regel, davor ein Gratis-Chatbot",
-        "R4": "1 von 4 Systemen geprüft",
-        "R5": "{unique} von {staff} geschult",
-        "R7": "„Restore test: not done in 2026.“",
-        "R8": "Fassung 3 überfällig, Fassung 4 nicht freigegeben"
-      },
-      "closes": {
-        "R2": "Übermittlungsgrundlage aus den Datenschutzbedingungen des Anbieters im Register, dazu eine datierte Prüfung",
-        "R3": "Aufstellung der KI-Nutzung vom 10.12.2025 bis 30.09.2026 (Werkzeug, Daten, Speicherland), unterschrieben",
-        "R4": "Prüfung der Admin-Konten der drei anderen Systeme, datiert und freigegeben",
-        "R5": "Schulungsnachweis über mindestens 114 von 120 oder ein datierter Plan",
-        "R7": "Protokoll eines Wiederherstellungstests: Datum, wiederhergestellte Daten, Ergebnis, wer",
-        "R8": "Fassung 4, von der Geschäftsführung freigegeben und datiert"
-      },
+      "label": "Hands-on · Schritt 3",
+      "title": "Jede Lücke wird *eine Aufgabe*",
+      "pile": "6 offene Aufgaben",
       "owners": {
         "it": "IT-Leitung",
         "hr": "HR-Leitung",
         "md": "Geschäftsführung"
       },
-      "emailHead": "Die Anfrage für R7, gefüllt aus vorlagen/luecken-anfrage.md",
-      "emailNote": "„Gibt es nicht“ ist auch eine Antwort: Dann meldet ihr den Punkt als offen und nennt Tannwald einen Termin.",
-      "mission": "Schritt 3",
-      "minutes": 12
+      "due": "bis {due}",
+      "closes": {
+        "R2": "Übermittlungsgrundlage und Prüfung",
+        "R3": "Aufstellung der KI-Nutzung",
+        "R4": "Prüfung der drei anderen Systeme",
+        "R5": "Schulungsnachweis, 114 von 120",
+        "R7": "Protokoll eines Restore-Tests",
+        "R8": "Fassung 4 freigeben"
+      },
+      "days": "Tage ohne Regel",
+      "from": "10.12.2025",
+      "to": "01.10.2026",
+      "mailTo": "An: IT-Leitung",
+      "chat": "Lückenliste",
+      "minutes": 10,
+      "fails": "Es scheitert an: Protokoll fehlt"
     },
     "reply": {
-      "title": "Die Antwort an Tannwald: nur belegte Sätze",
-      "sub": "Aus vier Behauptungen werden vier Streichungen und eine ehrliche Antwort.",
+      "label": "Die Antwort",
+      "title": "Nur belegte Sätze *gehen raus*",
       "verdict": "STREICHEN",
       "evidence": [
-        "training-records: {unique} von {staff} geschult",
-        "access-review: eine Prüfung, nur Servicepult, {done}",
-        "backup-report: „{restore}“",
-        "vendor-page: „{stored}“"
+        "{unique} von {staff} geschult",
+        "1 von 4 Systemen geprüft",
+        "„{restore}“",
+        "„{stored}“"
       ],
-      "phases": [
-        "Schreiben",
-        "Tauschen",
-        "Vorlesen"
+      "mailTo": "An: Lena Keller",
+      "mailNote": "Muster aus LOESUNGEN.md",
+      "sign": "Einen Satz änderst du selbst. Du unterschreibst.",
+      "chat": "Antwort",
+      "answerHead": "Antwort an Lena Keller",
+      "lines": [
+        "*R1 und R6* senden wir heute.",
+        "*R2, R3, R4, R8:* unvollständig, Termine bis {due}",
+        "*R5 und R7* können wir nicht senden.",
+        "*Klausel 7:* Hinweis zu Claude Team (USA) liegt bei."
       ],
-      "phaseMinutes": [
-        6,
-        3,
-        1
-      ],
-      "phaseHint": "Claude schreibt den Entwurf. Einen Satz änderst du von Hand: Unterschreiben tust du, nicht Claude.",
-      "sampleHead": "Musterantwort aus LOESUNGEN.md. Deine Formulierung wird anders sein.",
-      "clause": "Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung."
+      "full": "Volltext"
     },
     "result": {
-      "titleVotes": "Ihr habt {estimate} geschätzt. Der Ordner belegt {covered}.",
-      "titleNone": "Der Ordner belegt {covered} von 8.",
-      "estimateHead": "Eure Schätzung, Folie 3",
-      "resultHead": "Nach vier Prüfungen",
-      "draftHead": "Der Entwurf, Folie 4",
-      "draftLine": "Satz {n}: {votes} · gestrichen",
-      "draftNone": "Satz {n}: gestrichen",
-      "next": "Nächste Anfrage: erst die vier Prüfungen, dann die Antwort.",
+      "title": "Der Ordner belegt *{covered}* von 8.",
+      "estimate": "Eure Schätzung",
+      "truth": "belegt",
       "qr": [
         {
-          "label": "Dein eigener Ordner",
-          "sub": "Demo „Die Lückenliste“, im Browser",
-          "url": "loehrning.ai/demos/audit-vorbereitung-mit-ki#dein-ordner"
+          "label": "Das Kit",
+          "url": "loehrning.ai/workshops/audit-vorbereitung-mit-ki/kit"
+        },
+        {
+          "label": "Zitat-Probe",
+          "url": "loehrning.ai/demos/audit-vorbereitung-mit-ki#zitat-probe"
         },
         {
           "label": "Skill audit-nachweise",
-          "sub": "mit Anleitung zum Installieren",
           "url": "loehrning.ai/demos/audit-vorbereitung-mit-ki#mitnehmen"
-        },
-        {
-          "label": "Das Kit",
-          "sub": "alle Dateien und Lösungen",
-          "url": "loehrning.ai/workshops/audit-vorbereitung-mit-ki/kit"
         }
       ],
       "appendixLinks": [
         "A1 Konto",
         "A2 Team und Enterprise",
         "A3 Quellen"
-      ]
+      ],
+      "marker": "wahr: {covered}",
+      "ghost": "Schätzung aus Folie 4"
     },
+    "appendixBack": "Zurück · Esc",
     "a1": {
       "title": "Welches Konto darf Nachweise sehen",
       "rows": [
@@ -458,71 +421,46 @@
           "head": "Für den Workshop",
           "text": "Jedes Konto reicht: Das Kit ist erfunden. Echte Unterlagen erst nach Freigabe deiner Firma."
         }
-      ]
+      ],
+      "source": "Claude Help Center 12512180 und 9517075, gelesen am 25.10.2026"
     },
     "a3": {
       "title": "Quellen",
       "checked": "Alle Links geprüft am 25.10.2026."
     },
     "notes": [
-      "01 · Titel\nTime: 1 min\nSay: \"Heute bekommt eine Firma eine Dokumentanforderung für ein Audit. Wir ordnen den Ordner und finden die Lücken. Jede Firma, jede Person und jede Datei ist erfunden.\"\nStudents: Ankommen. Laptop mit Claude öffnen, Handy bereit.\nCue: Die acht Linien ziehen sich von den Anforderungen zu den Dateien. Pfeil rechts startet. R setzt das Deck auf diese Folie zurück, P öffnet diese Ansicht.\nRemember: Den Lernsatz einmal sagen: Eine Datei ist erst ein Nachweis, wenn Datum, Freigabe, Umfang und Zitat stimmen.",
-      "02 · Gastgeber\nTime: 1 min\nSay: \"Ich bin Tim Löhr. Ich war Data Scientist bei Apple und Red Bull und baue mit loehrning.ai Workshops wie diesen. Alles, was ihr heute seht, ist erfunden.\"\nStudents: Zuhören.\nCue: Die Linie läuft von allein von Apple bis loehrning.ai. Pfeil rechts geht zur Anfrage.\nRemember: Unter einer Minute bleiben, dann direkt zur Anfrage.",
-      "03 · Die Anfrage\nTime: 3 min\nSay: \"Tannwald, der Kunde, nutzt sein Auditrecht. Lest den ersten Satz laut: We assess documents, not answers. Gewertet werden Dokumente.\"\nStudents: Die fünf Regeln mitlesen. Dann per Handzeichen schätzen: wie viele der acht Anforderungen kann Vardar heute belegen?\nCue: Die Anfrage tippt sich ein. Pfeil rechts: die acht Anforderungen. Pfeil rechts: die fünf Regeln werden markiert. Pfeil rechts: Schätzung, Handzeichen auf die Zahlen klicken. Falscher Klick: Letzte Stimme zurücknehmen.\nRemember: Art. 28 Abs. 3 lit. h DSGVO einmal nennen: Der Auftragsverarbeiter ermöglicht Überprüfungen und trägt dazu bei. Nichts auflösen, die Schätzung kommt auf Folie 12 zurück.",
-      "04 · Der Entwurf\nTime: 3 min\nSay: \"Der Geschäftsführer hat schon geantwortet, nicht gesendet. Vier Sätze. Stimmt jeder?\"\nStudents: Pro Satz abstimmen: stimmt, falsch, weiß nicht.\nCue: Pfeil rechts markiert Satz für Satz. Die Stimmen pro Satz auf die Knöpfe klicken.\nRemember: Neutral bleiben. Satz 4 (Daten bleiben in der EU) wird verteidigt, lass es zu. Aufgelöst wird auf Folie 11.",
-      "05 · Der Ordner\nTime: 8 min\nSay: \"Zu jeder Anforderung liegt eine Datei, deren Name passt. Acht von acht. Das sieht fertig aus, und genau das prüfen wir jetzt.\"\nStudents: QR scannen oder die Adresse tippen, das Kit laden, das Projekt einrichten. Paare sind gut.\nCue: Die Karten legen sich in das Raster. Pfeil rechts: die Namenstreffer. Pfeil rechts: Einrichtung und QR-Code.\nRemember: Codeausführung prüfen: Settings, Capabilities, Code execution and file creation. Lädt eine .md-Datei nicht, als .txt umbenennen. Ohne Projekte: ein Chat mit 12 Anhängen.",
-      "06 · Vier Prüfungen\nTime: 6 min\nSay: \"Vier Prüfungen, an vier erfundenen Dateien, die nicht im Kit sind. Die Dateien im Kit findet ihr selbst.\"\nStudents: Bei jeder Karte zuerst raten, an welcher Prüfung sie scheitert.\nCue: Pfeil rechts viermal: ZITAT, ZEITRAUM, UMFANG, FREIGABE. Der fünfte Druck zeigt den Lernsatz und das Werkzeug.\nRemember: ISO 19011 und 27001 sind kostenpflichtig, sag \"zusammengefasst\". Die dritte Zeile zweimal sagen: Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.",
-      "07 · Schritt 1\nTime: 15 min\nSay: \"Erst auf Papier: Wie viele der elf Dateien bestehen ZEITRAUM und FREIGABE? Dann baut Claude die Nachweisliste.\"\nStudents: Vorhersage per Handzeichen, dann den Prompt im Projekt senden und die Liste mit LOESUNGEN.md vergleichen.\nCue: Pfeil rechts: Vorhersage. Pfeil rechts: Prompt und Arbeitszeit, Start drücken. Pfeil rechts: die Liste baut sich auf, drei Dateien fallen durch.\nRemember: Laut fragen: Was hat Claude bei den zwei Richtlinien als Freigabe eingetragen? Achten auf: eine Freigabe für v4, FINAL als aktuell gelesen, ein Datum aus dem Dateinamen, die Herstellerseite als nicht freigegeben markiert.",
-      "08 · Schritt 2\nTime: 20 min\nSay: \"Pro Anforderung zuerst das Zitat, dann der Status. Gezählt wird im Code.\"\nStudents: Prompt senden, dann die Nachfrage zu R7. Im Code-Fenster zwei Zahlen prüfen: Geschulte und Stunden bis zur Meldung. Handys: Claudes Tabelle in die Zitat-Probe einfügen.\nCue: Pfeil rechts: Prompt und Arbeitszeit. Dann R7 mit drei Dateien, R5 im Code, alle acht mit den vier Prüfungen, zuletzt R1 und der QR-Code zur Zitat-Probe.\nRemember: Claudes echte Antwort auf die R7-Frage zeigen, nie eine vorbereitete. BELEGT heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.",
-      "09 · Wo Claude danebenliegt\nTime: 5 min\nSay: \"Vier Fehler, die bei diesem Ordner oft passieren. Jeder hat eine Regel, die ihn stoppt.\"\nStudents: In der eigenen Tabelle nach diesen vier Zeilen suchen.\nCue: Pfeil rechts viermal: Die falsche Zeile wird gestrichen, die Regelnummer erscheint. Der fünfte Druck: der Fall Deloitte und die Kontoregel.\nRemember: Sachlich bleiben, niemand ist schuld. Die Regelnummern zeigen in projektanweisungen.md. Fragen zum Konto: Anhang A1 über die Moderationsansicht.",
-      "10 · Schritt 3: Lücken\nTime: 12 min\nSay: \"Jede Lücke ist eine Aufgabe: eine Person, ein Dokument, ein Termin.\"\nStudents: Den Prompt aus Schritt 3 senden, Vorlage und Entwurf anhängen, die Lückenliste prüfen.\nCue: Pfeil rechts: die sechs Lücken. Pfeil rechts: die Anfrage für R7 füllt sich. Pfeil rechts: Prompt und Arbeitszeit.\nRemember: Den Satz mit \"gibt es nicht\" laut lesen: Auch diese Antwort hilft. Zuständig: IT-Leitung für R2, R3, R4, R7, HR-Leitung für R5, Geschäftsführung für R8.",
-      "11 · Die Antwort\nTime: 10 min\nSay: \"Alle vier Sätze des Entwurfs fallen. Was bleibt, ist eine Antwort, die nur belegte Sätze enthält.\"\nStudents: Antwort mit Claude schreiben, einen Satz von Hand ändern, mit dem Nachbarn tauschen, eine Antwort vorlesen.\nCue: Pfeil rechts viermal: Satz für Satz gestrichen, darunter der Nachweis. Dann die Arbeitszeit (6, 3, 1 Minuten), dann die Musterantwort.\nRemember: Du unterschreibst, nicht Claude. Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung.",
-      "12 · Schätzung und Ergebnis\nTime: 6 min\nSay: \"Eure Schätzung von vorhin, und was der Ordner belegt. Bei der nächsten Anfrage: erst die vier Prüfungen, dann die Antwort.\"\nStudents: QR-Codes scannen: eigener Ordner in der Demo, der Skill, das Kit. Fragen.\nCue: Pfeil rechts: Die Schätzung wird zum Ergebnis 2, 4, 2. Pfeil rechts: QR-Codes. Anhang über die Links unten oder die Moderationsansicht.\nRemember: Skill installieren: Customize, Skills, +, Create skill, Upload a skill, dann einschalten.",
-      "A1 · Konto\nTime: 0 min\nSay: \"Welche Konten echte Unterlagen sehen dürfen, entscheidet deine Firma. Das sagen die Seiten des Anbieters.\"\nStudents: Nur bei Fragen.\nCue: Escape oder Pfeil links führt zurück zur Folie, von der du gekommen bist.\nRemember: Die Zeilen vor jedem Workshop auf den Quellseiten neu prüfen.",
-      "A2 · Team und Enterprise\nTime: 0 min\nSay: \"Auf Firmenkonten entscheidet der Admin über Codeausführung und eigene Skills.\"\nStudents: Nur bei Fragen.\nCue: Escape führt zurück.\nRemember: Keine Aussage über Vertragsinhalte machen, die nicht auf den Quellseiten steht.",
-      "A3 · Quellen\nTime: 0 min\nSay: \"Jede Zahl von außen hat hier ihre Quelle und das Prüfdatum.\"\nStudents: Nur bei Fragen.\nCue: Escape führt zurück.\nRemember: Alles andere im Deck kommt aus dem Kit."
+      "01 · Titel\nTime: 1 min\nSay: \"Heute bekommt eine Firma in Skopje Post aus Hamburg: eine Dokumentanforderung für ein Audit. Wir ordnen ihren Ordner mit Claude und finden die Lücken.\"\nStudents: Ankommen. Laptop mit Claude öffnen, Handy bereit.\nCue: Der Globus dreht nach Skopje und zieht den Bogen nach Hamburg. Pfeil rechts geht weiter. r setzt das Deck an den Anfang, P öffnet diese Ansicht.\nRemember: Den Lernsatz einmal sagen: Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen.",
+      "02 · Gastgeber\nTime: 1 min\nSay: \"Ich bin Tim Löhr, Data Engineer bei Meta in Warschau. Davor war ich Data Scientist bei Apple und Red Bull. Der Fall heute ist erfunden: keine Daten oder Systeme eines Arbeitgebers.\"\nStudents: Zuhören.\nCue: Die Linie läuft von allein von Apple über Red Bull zu Meta. Pfeil rechts führt zum echten Fall.\nRemember: Unter einer Minute bleiben.",
+      "03 · Der echte Fall\nTime: 3 min\nSay: \"Oktober 2025, Canberra. Deloitte liefert dem Arbeitsministerium einen Bericht für rund 440.000 australische Dollar. Ein Forscher findet Quellen, die es nicht gibt, und ein erfundenes Zitat einer Bundesrichterin. In der korrigierten Fassung steht: Ein Teil wurde mit Azure OpenAI GPT-4o erstellt. Deloitte zahlt einen Teil zurück, laut Senate Estimates 97.587 Dollar.\"\nStudents: Zuhören. Eine Frage an den Raum: Wer hätte die Quellen geprüft?\nCue: Schritt 1: drei Quellen bekommen „existiert nicht“. Schritt 2: das Zitat. Schritt 3: das Modell. Schritt 4: das Geld fließt zurück. Schritt 5: der Satz, um den es heute geht.\nRemember: Nicht über Deloitte spotten. Der Punkt ist: Niemand hat jeden Satz gegen seine Quelle geprüft. Genau das üben wir.",
+      "04 · Unser Fall\nTime: 4 min\nSay: \"Unser Fall ist erfunden. Vardar Works in Skopje macht den Kundenservice für Tannwald in Hamburg. Tannwald kündigt ein Audit an und schickt eine Anfrage: acht Anforderungen. Tannwald zählt Dokumente, nicht Antworten.\"\nStudents: Am Ende auf dem Handy oder per Handzeichen schätzen: Wie viele der acht belegt der Ordner?\nCue: Schritt 1: der Brief fliegt von Hamburg nach Skopje, dazu „Der Vertrag mit Tannwald hängt dran“. Schritt 2: er öffnet sich, Lena Kellers Satz. Schritt 3: die acht Anforderungen. Schritt 4: die Termine. Schritt 5: die Schätzung des Raums, ein Klick pro Stimme.\nRemember: Die Schätzung kommt auf der letzten Folie zurück. Nicht auflösen.",
+      "05 · Der Antwortentwurf\nTime: 3 min\nSay: \"Der Geschäftsführer hat schon eine Antwort entworfen. Vier Sätze. Jeder klingt vernünftig. Jeder ist eine Behauptung.\"\nStudents: Handzeichen: Wie viele der vier Sätze stimmen?\nCue: Schritt 1: hinter jedem Satz ein Fragezeichen. Schritt 2: die Abstimmung, ein Klick pro Hand.\nRemember: Nicht auflösen. Die Sätze werden auf Folie 13 gestrichen.",
+      "06 · Der Ordner\nTime: 5 min\nSay: \"Elf Dateien. Zu jeder Anforderung passt ein Dateiname. Acht Treffer, das sieht fertig aus.\"\nStudents: Zuschauen. Wer mag, öffnet den Ordner im Kit.\nCue: Schritt 1: die Linien ziehen sich von den Anforderungen zu den Dateien. Schritt 2: die Linien werden gestrichelt. Ein Dateiname belegt nichts.\nRemember: Das ist der Moment, in dem Claude ohne Regeln fertig wäre. Hier fängt die Arbeit an.",
+      "07 · Vier Prüfungen\nTime: 6 min\nSay: \"Eine Datei ist erst ein Nachweis, wenn vier Dinge stimmen: das Zitat, der Zeitraum, der Umfang, die Freigabe. Die Beispiele sind nicht im Kit.\"\nStudents: Zu jedem Beispiel laut sagen, an welcher Prüfung es scheitert, bevor es aufgeht.\nCue: Schritte 1 bis 4: je ein Beispiel fällt durch. Schritt 5: das Lernziel. Schritt 6: die drei Status und die Zitatregel aus projektanweisungen.md.\nRemember: Dieselben vier Prüfungen wie in Workshop 04, jetzt für einen ganzen Ordner.",
+      "08 · Einrichten\nTime: 5 min\nSay: \"Jetzt ihr. Projekt anlegen, Anweisungen einfügen, Dateien hochladen, Codeausführung an.\"\nStudents: Kit per QR laden. Projekt „Vardar Audit“ anlegen, projektanweisungen.md als Projektanweisung einfügen, request_tannwald.md und die 11 Dateien hochladen, Codeausführung einschalten. Ohne Projekte: ein Chat mit 12 Dateien.\nCue: Schritt 1: die Anweisungen fliegen ins Projekt. Schritt 2: zwölf Dateien ins Projektwissen. Schritt 3: der Schalter. Schritt 4: QR und die fünf Minuten.\nRemember: Lädt eine .md- oder .csv-Datei nicht, in .txt umbenennen. Auf Team und Enterprise muss der Admin die Codeausführung eventuell erlauben.",
+      "09 · Schritt 1\nTime: 15 min\nSay: \"Erst raten, dann Claude. Wie viele der elf Dateien bestehen Zeitraum und Freigabe?\"\nStudents: Vorhersage per Klick. Dann den Prompt aus START-HIER.md in einem neuen Chat im Projekt senden und mit LOESUNGEN.md vergleichen.\nCue: Schritt 1: der Prompt. Schritt 2: Claude arbeitet. Schritt 3: die Tabelle, drei Zeilen fallen durch. Schritt 4: 8 von 11.\nRemember: Fragen: Wen hat Claude bei den zwei Richtlinien als Freigebende eingetragen? Wer FINAL im Namen für aktuell hält, hat aus dem Dateinamen gelesen.",
+      "10 · Schritt 2\nTime: 20 min\nSay: \"Pro Anforderung zuerst das Zitat, dann die vier Prüfungen, dann der Status. Gezählt wird im Code.\"\nStudents: Prompt senden, dann die Nachfrage zu R7. Im Code-Fenster zwei Zahlen prüfen: Geschulte und Stunden bis zur Meldung. Handys: Claudes Tabelle in die Zitat-Probe einfügen.\nCue: Schritt 1: R1 bis R4, Zeile für Zeile, die Bilanz rechts zählt mit. Schritt 2: R5 bis R8, R5 mit der Rechnung im Code (25 von 120, 20,8 %). Schritt 3: die Bilanz, 2 BELEGT, 1 SCHWACH, 5 LÜCKE. Schritt 4: R7 mit drei Dateien.\nRemember: Claudes echte Antwort auf die R7-Frage zeigen, nie eine vorbereitete. BELEGT heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.",
+      "11 · Wo Claude danebenliegt\nTime: 5 min\nSay: \"Vier Zeilen, die Claude bei diesem Ordner gern schreibt. Jede hat eine Regel in projektanweisungen.md, die sie stoppt.\"\nStudents: Zu jeder Karte raten, welche Regel greift, bevor sie sich dreht.\nCue: Schritte 1 bis 4: je eine Karte dreht sich und zeigt die Regel.\nRemember: Wer eine dieser Zeilen in der eigenen Antwort hat: Regelnummer suchen, Claude darauf hinweisen, neu prüfen lassen.",
+      "12 · Schritt 3\nTime: 10 min\nSay: \"Eine Lücke ist eine Aufgabe mit Rolle und Termin. Fehlt ein Dokument, schreibt die zuständige Person das auch: gibt es nicht.\"\nStudents: Vorlage luecken-anfrage.md und draft-reply.md anhängen, Prompt 3 senden.\nCue: Schritt 1: sechs Aufgaben gehen an drei Rollen. Schritt 2: R3, 295 Tage ohne Regel. Schritt 3: die Mail für R7 füllt sich. Schritt 4: der Prompt.\nRemember: Rollen statt Namen, wie Regel 13 es verlangt. Termin 2. Dezember, das Audit ist am 10.",
+      "13 · Die Antwort\nTime: 7 min\nSay: \"Alle vier Sätze des Entwurfs fallen. Übrig bleibt eine kurze, ehrliche Antwort: was belegt ist, was fehlt, bis wann.\"\nStudents: Claudes Antwort lesen, einen Satz selbst ändern, dann zu zweit vorlesen.\nCue: Schritt 1: die Streichungen mit dem Beleg. Schritt 2: die Musterantwort an Lena Keller. Schritt 3: du unterschreibst.\nRemember: Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung, nicht Claude.",
+      "14 · Ergebnis\nTime: 5 min\nSay: \"Ihr habt geschätzt. Der Ordner belegt zwei von acht. Nächste Anfrage: erst die vier Prüfungen, dann die Antwort.\"\nStudents: QR-Codes scannen: Kit, Zitat-Probe, Skill.\nCue: Schritt 1: acht Kacheln drehen sich. Schritt 2: QR-Codes und der Anhang. Der Anhang öffnet über die Links, Esc kommt zurück.\nRemember: Ein Mensch prüft jedes Zitat und unterschreibt jede Antwort.",
+      "A1 · Konto\nTime: 0 min\nSay: \"Nur auf Nachfrage: welches Konto echte Nachweise sehen darf.\"\nStudents: Nur bei Fragen.\nCue: Esc führt zurück zur Folie, von der du kamst.\nRemember: Seiten vor jedem Workshop neu lesen.",
+      "A2 · Team und Enterprise\nTime: 0 min\nSay: \"Nur auf Nachfrage: Codeausführung, Skills und Projekte auf Firmenkonten.\"\nStudents: Nur bei Fragen.\nCue: Esc führt zurück.\nRemember: Für den Workshop reicht jedes Konto.",
+      "A3 · Quellen\nTime: 0 min\nSay: \"Jede Tatsache von außen hat hier ihre Quelle und ihr Prüfdatum.\"\nStudents: Nur bei Fragen.\nCue: Esc führt zurück.\nRemember: Alles andere im Deck kommt aus dem Kit."
     ]
   },
   "en": {
     "lang": "en",
-    "htmlTitle": "Audit Preparation with AI: Organize Evidence and Find Gaps · Deck · loehrning.ai",
-    "description": "The deck of Workshop 05: one document request, eleven invented files, four tests and a gap list you can defend.",
-    "kicker": "Workshop 05 · Audit preparation with AI",
-    "route": [
-      "REQUEST",
-      "FOLDER",
-      "TEST",
-      "GAPS",
-      "REPLY"
-    ],
-    "routeLabel": "Route: request, folder, test, gaps, reply",
-    "foot": "Vardar Works and Tannwald are invented · exercise date: {exercise}",
+    "htmlTitle": "Audit preparation with AI · Workshop 05 · loehrning.ai",
+    "description": "Deck for Workshop 05: one real case, one invented folder, four tests and Claude as the tool. You leave with a gap list you can stand behind.",
+    "mainLabel": "Workshop 05, Audit preparation with AI",
+    "skip": "Skip to the deck",
     "back": "Workshop",
     "backLabel": "Back to the workshop page",
-    "ui": {
-      "prev": "Back",
-      "next": "Next",
-      "reset": "Start over",
-      "presenter": "Presenter",
-      "toolbar": "Controls",
-      "step": "Step {step} of {steps}",
-      "slide": "Slide {n} of {total}",
-      "undo": "Undo last vote",
-      "votes": "votes",
-      "noVotes": "no votes yet",
-      "timerStart": "Start",
-      "timerPause": "Pause",
-      "timerReset": "Reset",
-      "timerOf": "of {min} min",
-      "timerNext": "Next phase",
-      "rotate": "Turn your phone sideways for a larger view, or open the demo.",
-      "rotateLink": "Open the demo",
-      "close": "Close this note",
-      "appendix": "Appendix",
-      "appendixBack": "Back to slide {n}",
-      "promptFrom": "Prompt from START-HERE.md, {mission}",
-      "copy": "Copy",
-      "copied": "Copied"
-    },
+    "foot": "Workshop 05 · loehrning.ai",
+    "footNote": "Vardar Works and Tannwald are invented.",
+    "rotateLabel": "open the demo",
+    "appendix": "Appendix",
+    "now": "Your turn · {min} min",
     "status": {
       "covered": "COVERED",
       "weak": "WEAK",
@@ -554,16 +492,6 @@
       "Nov",
       "Dec"
     ],
-    "items": {
-      "R1": "Systems with storage country",
-      "R2": "Sub-processors + legal basis",
-      "R3": "AI tools, last 12 months",
-      "R4": "Admin account review",
-      "R5": "Training, at least 95%",
-      "R6": "Incidents 2026 + notice",
-      "R7": "Restore test",
-      "R8": "Security policy"
-    },
     "short": {
       "R1": "Systems",
       "R2": "Sub-processors",
@@ -574,31 +502,20 @@
       "R7": "Restore test",
       "R8": "Policy"
     },
-    "fileDates": {
-      "system-list_2026-09.csv": "approved 2026-09-02",
-      "subprocessors_2026-09.csv": "updated 2026-09-05",
-      "ai-use-rule_v1.md": "approved 2026-10-01",
-      "vendor-page_claude_2026-06-15.md": "page of 2026-06-15",
-      "access-review_2026-08-14.csv": "done 2026-08-14",
-      "training-records_2026.csv": "exported 2026-11-02",
-      "incident-log_2026.csv": "last entry 2026-10-12",
-      "backup-report_2026-10.txt": "generated 2026-11-01",
-      "it-notes_2026-10-06.md": "written 2026-10-06",
-      "infosec-policy_v3_FINAL.md": "approved 2024-03-12",
-      "infosec-policy_v4_DRAFT.md": "edited 2026-09-18"
-    },
     "cover": {
-      "eyebrow": "Workshop 05",
-      "title": "Audit Preparation with AI: Organize Evidence and Find Gaps",
-      "lede": "One request, eleven files, four tests.",
-      "meta": "90 minutes · invented case · exercise date {exercise}",
-      "drawing": "Eight request items on the left, eleven files on the right. Each line joins an item to the file whose name fits."
+      "label": "Workshop 05",
+      "title": "Audit preparation with *AI*",
+      "sub": "Sort the evidence, find the gaps",
+      "meta": "Tim Löhr · 90 minutes",
+      "from": "Skopje",
+      "to": "Hamburg"
     },
     "host": {
       "kicker": "Your host",
       "alt": "Portrait of Tim Löhr",
+      "role": "Data Engineer at Meta, Warsaw",
       "degree": "M.Sc. Computer Science",
-      "school": "FAU Erlangen-Nürnberg",
+      "school": "FAU Erlangen-Nuremberg",
       "career": [
         {
           "org": "Apple",
@@ -609,75 +526,88 @@
           "role": "Data Scientist"
         },
         {
-          "org": "loehrning.ai",
-          "role": "Founder"
+          "org": "Meta",
+          "role": "Data Engineer"
         }
       ],
+      "careerLabel": "Career",
       "now": "now",
-      "line": "Every company, person and file in this workshop is invented."
+      "line": "Synthetic teaching case. No employer data or systems."
+    },
+    "case": {
+      "label": "A real case · October 2025",
+      "title": "A report worth A$440,000",
+      "pin": "Canberra",
+      "client": "For the ministry",
+      "author": "Deloitte Australia · 2025",
+      "refs": "References",
+      "noSuchRef": "does not exist",
+      "quoteHead": "Quote from a federal judge",
+      "invented": "made up",
+      "modelNote": "disclosed in the report",
+      "refundPre": "A$",
+      "refundPost": "",
+      "moral": "A sentence without evidence is a *claim*.",
+      "source": "Sources: AP, 7 Oct 2025 · Senate Estimates, October 2025",
+      "refunded": "refunded",
+      "fee": "Fee"
     },
     "request": {
-      "title": "Tannwald's request: eight items",
-      "sub": "Remote audit on {audit}. Documents by {sendBy}. They assess documents, not answers.",
-      "file": "request_tannwald.md",
-      "fromLabel": "From",
-      "sentLabel": "Sent",
-      "auditLabel": "Remote audit",
-      "byLabel": "Documents by",
-      "fromValue": "Lena Keller, Tannwald Haustechnik GmbH, Hamburg",
-      "rulesHead": "How Tannwald reads your documents",
-      "ruleTags": [
-        "from {window}",
-        "who approved",
-        "record, not description",
-        "at least 95%",
-        "within 48 h"
-      ],
-      "itemsHead": "The eight items",
-      "section": "DPA {n}",
-      "estimate": "How many of the eight can Vardar prove today?",
-      "estimateLabel": "The room's estimate, 0 to 8",
-      "legal": "The audit right sits in the data processing agreement, per GDPR Art. 28(3)(h)."
+      "label": "Our case · invented",
+      "title": "Hamburg wants *evidence*",
+      "tannwald": "Tannwald",
+      "tannwaldSub": "Hamburg · customer",
+      "vardar": "Vardar Works",
+      "vardarSub": "Skopje · 120 staff",
+      "letterFrom": "Lena Keller, Tannwald",
+      "items": {
+        "R1": "Systems",
+        "R2": "Sub-processors",
+        "R3": "AI tools",
+        "R4": "Admin accounts",
+        "R5": "Training",
+        "R6": "Incidents",
+        "R7": "Restore test",
+        "R8": "Policy"
+      },
+      "poll": "How many does the folder prove?",
+      "due": "Every line needs evidence · by {sendBy}",
+      "vardarNote": "Customer service for Tannwald · 120 staff",
+      "stake": "The Tannwald contract is at stake",
+      "docs": "Documents",
+      "auditName": "Remote audit"
     },
     "draft": {
-      "title": "The draft reply: four sentences",
-      "sub": "Each sentence is a claim. Evidence is a file that proves it.",
-      "file": "draft-reply.md",
-      "tag": "Drafted by the managing director. Not sent.",
-      "options": [
-        "true",
-        "false",
-        "not sure"
-      ],
-      "voteLabel": "Sentence {n}: the room's votes",
-      "hint": "Count the hands for each sentence. Slide 11 resolves them."
+      "label": "The draft reply · not sent",
+      "title": "Four sentences, *four questions*",
+      "poll": "How many are true?",
+      "pollKeys": [
+        "none",
+        "1",
+        "2",
+        "3",
+        "all 4"
+      ]
     },
     "folder": {
-      "title": "The folder: eleven files, eight matches",
-      "sub": "Every item has a file whose name fits. That proves nothing yet.",
-      "counter": "{matched} of {total} items have a file whose name fits.",
-      "unmatched": "No match: {n} files",
-      "setupHead": "Setup, 5 minutes",
-      "setup": [
-        "In Claude, create a Project called “Vardar audit”.",
-        "Paste all of project-instructions.md into the Project instructions.",
-        "Upload request_tannwald.md and the 11 files in folder/. If a .md or .csv file will not upload, rename it to .txt.",
-        "Start every step in a new chat inside the Project."
-      ],
-      "noProject": "No Projects: one chat, attach the 12 files, paste the instructions above your first prompt.",
-      "qr": "Get the kit",
-      "kitUrl": "loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit"
+      "label": "The folder",
+      "title": "Eleven files, *eight matches*",
+      "dir": "folder/",
+      "count": "11 files",
+      "hits": "matches by file name",
+      "twist": "A file name proves *nothing*."
     },
     "four": {
-      "title": "Four tests",
-      "sub": "The four tests from workshop 4, now for a whole folder.",
-      "example": "Example, not in the kit",
-      "lines": {
-        "quote": "A sentence or a line from the file that answers the request.",
-        "date": "Inside the audit window from {window}, and for all of it. For a policy, its last approval or review counts.",
-        "scope": "The systems and people the request names.",
-        "approval": "Policy, contract: a name with a date inside the file. Record, register: who keeps it."
+      "label": "The one rule",
+      "title": "Four tests *per file*",
+      "hints": {
+        "quote": "quote shows it happened",
+        "date": "from {window}",
+        "scope": "every system, every person",
+        "approval": "who, when"
       },
+      "example": "Example",
+      "fails": "fails",
       "cards": [
         {
           "test": "quote",
@@ -691,14 +621,14 @@
           "name": "visitor-policy.md",
           "text": "Visitor policy. Approved 2023-05-02 by the Managing Director.",
           "mark": "Approved 2023-05-02",
-          "verdict": "Approved before the audit window."
+          "verdict": "Approved before the window."
         },
         {
           "test": "scope",
           "name": "firewall-review.txt",
           "text": "Firewall review, site Skopje. Done 2026-06-03 by the IT lead.",
           "mark": "site Skopje",
-          "verdict": "The request asks for every site; one was reviewed."
+          "verdict": "One site instead of all."
         },
         {
           "test": "approval",
@@ -708,198 +638,197 @@
           "verdict": "Nobody approved it."
         }
       ],
-      "fails": "fails {test}",
+      "objectiveLabel": "Learning objective",
       "objective": "A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote.",
-      "toolHead": "The tool",
+      "toolHead": "project-instructions.md · rules 4 to 9",
       "tool": [
         "QUOTE · PERIOD · SCOPE · APPROVAL",
         "COVERED, WEAK or GAP. A file out of date or unapproved: WEAK. A part without evidence, or the record shows “not met”: GAP. The weakest part counts.",
         "No quote, no COVERED. A policy shows intent; only a record shows practice."
       ],
-      "rulesRef": "In the kit: project-instructions.md, rules 4 to 9.",
-      "sources": "Summarised from ISO 19011 and ISO/IEC 27001, clause 7.5.2 · Anthropic, “Reduce hallucinations”"
+      "source": "Summarised from ISO 19011 and ISO/IEC 27001, clause 7.5.2 · examples not in the kit",
+      "cues": {
+        "covered": "all four hold",
+        "weak": "old or unapproved",
+        "gap": "missing or not met"
+      }
+    },
+    "project": {
+      "label": "Hands-on · Setup",
+      "title": "The kit goes *to Claude*",
+      "kit": "vardar-audit-kit/",
+      "start": "START-HERE.md",
+      "instructions": "project-instructions.md",
+      "request": "request_tannwald.md",
+      "dir": "folder/",
+      "dirCount": "11 files",
+      "project": "Vardar audit",
+      "projectSub": "Audit 10 Dec 2026",
+      "instructionsHead": "Project instructions",
+      "knowledgeHead": "Project knowledge",
+      "qr": "Get the kit",
+      "kitUrl": "loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit",
+      "minutes": 5,
+      "from": "from {file}"
     },
     "m1": {
-      "title": "Step 1: the evidence index",
-      "ask": "How many of the eleven files pass PERIOD and APPROVAL?",
-      "predictLabel": "The room's prediction, 0 to 11",
-      "mission": "Step 1",
-      "minutes": 15,
+      "label": "Hands-on · Step 1",
+      "title": "Which files *hold?*",
+      "poll": "How many of the 11 pass PERIOD and APPROVAL?",
+      "chat": "Evidence index",
+      "wrote": "evidence-index.csv",
+      "answer": "8 of 11 files pass PERIOD and APPROVAL. Three fail:",
       "head": [
         "File",
         "Type",
-        "Date in the text",
         "PERIOD",
         "APPROVAL"
       ],
-      "fails": {
-        "it-notes_2026-10-06.md": "“Not reviewed by anyone”",
-        "infosec-policy_v3_FINAL.md": "review due March 2025",
-        "infosec-policy_v4_DRAFT.md": "“Approved by: (open)”"
-      },
-      "result": "{passing} of {total} pass PERIOD and APPROVAL.",
-      "resultSub": "Three fail. Why, only the text inside the file says."
+      "result": "pass both",
+      "minutes": 15,
+      "kitDir": "templates/"
     },
     "m2": {
-      "title": "Step 2: quote first, then status",
-      "sub": "For each requirement: the file and the exact quote first, then the four tests, then the status.",
-      "mission": "Step 2",
-      "minutes": 20,
-      "then": "Then, in the same chat:",
-      "r7Head": "R7: three files say something about backups",
-      "r7Reasons": {
-        "policy": "last approved 2024-03-12 · intent, not a record",
-        "notes": "intent, not a record · “Not reviewed by anyone.”",
-        "report": "A record, dated, with an owner. It says: not met."
-      },
-      "moral": "The policy says what should happen. The record says what did happen.",
-      "r5Head": "R5: count in code, {rows} rows are not {rows} people",
-      "r5Rows": "{rows} rows",
-      "r5Merged": "{id} appears twice: {unique} people",
-      "r5Share": "{unique} of {staff} = {share}%",
-      "r5Tick": "target {target}%",
-      "r5Needed": "Needed: {needed} of {staff}. Missing: {missing}.",
-      "runHead": "All eight, test by test",
-      "running": "Test {n} of 4: {test}",
-      "unlinked": "no match:",
-      "defects": {
-        "R2": "last review, transfer basis: empty",
+      "label": "Hands-on · Step 2",
+      "title": "Quote first, *then the status*",
+      "chat": "Mapping",
+      "why": {
+        "R1": "approved {approved}",
+        "R2": "2 fields empty",
         "R3": "{days} days without a rule",
         "R4": "1 of 4 systems",
-        "R5": "{unique} of {staff} trained",
-        "R7": "“Restore test: not done in 2026.”",
-        "R8": "“Approved by: (open)”",
-        "R1": "approved 2026-09-02",
-        "R6": "told after {hours} h"
+        "R6": "told after {hours} h",
+        "R7": "not met",
+        "R8": "not approved",
+        "R5": "{share} % trained"
       },
-      "r1Head": "R1 is COVERED, and it is still bad news.",
-      "r1File": "system-list_2026-09.csv",
-      "r1Clause": "Clause 7 of the service contract",
-      "r1Line": "COVERED means proven, not good.",
-      "probeQr": "Quote check: Claude's table against the files",
-      "probeUrl": "loehrning.ai/en/demos/audit-vorbereitung-mit-ki#zitat-probe"
+      "r7Head": "R7: three files about backups",
+      "r7Reasons": {
+        "policy": "intent, not a record",
+        "notes": "approved by nobody",
+        "report": "record: not met"
+      },
+      "moral": "The policy says what should happen. The record says what *did happen*.",
+      "minutes": 20,
+      "cols": [
+        "File",
+        "Quote",
+        "Tests",
+        "Status"
+      ],
+      "need": "{needed} needed · {missing} missing"
     },
     "mistakes": {
-      "title": "Where Claude goes wrong on this folder",
-      "sub": "Each mistake has a rule in project-instructions.md that stops it.",
-      "label": "A typical wrong line",
+      "label": "Where Claude goes wrong",
+      "title": "Four wrong lines, *four rules*",
+      "claude": "Claude",
+      "rule": "Rule {n}",
+      "file": "project-instructions.md",
       "cards": [
         {
-          "wrong": "R8 · infosec-policy_v4_DRAFT.md · COVERED",
-          "rule": "Rule 7",
-          "fix": "DRAFT, “(open)” or a blank field is no approval. The newest file is not the valid one."
+          "item": "R8",
+          "wrong": "infosec-policy_v4_DRAFT.md",
+          "chip": "covered",
+          "rule": 7
         },
         {
-          "wrong": "R7 · “Backups are restore-tested twice a year.” · COVERED",
-          "rule": "Rule 4",
-          "fix": "A policy shows intent. When the item asks about practice, only a record counts."
+          "item": "R7",
+          "quote": "Backups are restore-tested twice a year.",
+          "chip": "covered",
+          "rule": 4
         },
         {
-          "wrong": "R5 · 26 staff trained",
-          "rule": "Rule 11",
-          "fix": "Count in code. Remove duplicate rows first and say how many there were."
+          "item": "R5",
+          "wrong": "26 staff trained",
+          "rule": 11,
+          "tag": "26"
         },
         {
-          "wrong": "R4 · per ISO 27001 A.12.3.1",
-          "rule": "Rule 12",
-          "fix": "No standard or control number that is in no file."
+          "item": "R4",
+          "wrong": "per ISO 27001 A.12.3.1",
+          "rule": 12,
+          "chip": "covered",
+          "tag": "A.12.3.1"
         }
       ],
-      "case": "October 2025: Deloitte Australia refunds part of the AU$440,000 it was paid for a report to the Australian government. The report cited research that does not exist and a made-up court quote.",
-      "caseSource": "AP, 7 October 2025",
-      "account": "Real evidence goes only into the company account your firm approved. Replace names in access and training lists with IDs first. More in appendix A1."
+      "which": "Which rule?"
     },
     "gaps": {
-      "title": "Step 3: every gap gets an owner",
-      "sub": "A gap is a task with an owner and a date.",
-      "head": [
-        "Item",
-        "What is missing",
-        "What closes it",
-        "Owner, by"
-      ],
-      "missing": {
-        "R2": "last review and transfer basis for Anthropic empty",
-        "R3": "{days} days without a rule, a free chatbot before it",
-        "R4": "1 of 4 systems reviewed",
-        "R5": "{unique} of {staff} trained",
-        "R7": "“Restore test: not done in 2026.”",
-        "R8": "version 3 overdue, version 4 not approved"
-      },
-      "closes": {
-        "R2": "the transfer mechanism from the vendor's data processing terms entered in the register, with a dated review",
-        "R3": "a record of AI use from 10 December 2025 to 30 September 2026 (tool, data, storage country), signed",
-        "R4": "an admin account review of the three other systems, dated and approved",
-        "R5": "a training record reaching at least 114 of 120 staff, or a dated plan",
-        "R7": "a restore test record (date, data restored, result, who)",
-        "R8": "version 4, approved and dated by the Managing Director"
-      },
+      "label": "Hands-on · Step 3",
+      "title": "Every gap becomes *a task*",
+      "pile": "6 open tasks",
       "owners": {
         "it": "IT lead",
         "hr": "HR lead",
         "md": "Managing Director"
       },
-      "emailHead": "The request for R7, filled from templates/gap-request.md",
-      "emailNote": "“Does not exist” is an answer too: you report the item as open and give Tannwald a date.",
-      "mission": "Step 3",
-      "minutes": 12
+      "due": "by {due}",
+      "closes": {
+        "R2": "transfer basis and a review",
+        "R3": "record of AI use",
+        "R4": "review of the other three systems",
+        "R5": "training record, 114 of 120",
+        "R7": "restore test record",
+        "R8": "approve version 4"
+      },
+      "days": "days without a rule",
+      "from": "10 Dec 2025",
+      "to": "1 Oct 2026",
+      "mailTo": "To: IT lead",
+      "chat": "Gap list",
+      "minutes": 10,
+      "fails": "It fails on: no record"
     },
     "reply": {
-      "title": "The reply to Tannwald: only proven sentences",
-      "sub": "Four claims become four deletions and an honest reply.",
+      "label": "The reply",
+      "title": "Only proven sentences *go out*",
       "verdict": "DELETE",
       "evidence": [
-        "training-records: {unique} of {staff} trained",
-        "access-review: one review, Servicepult only, {done}",
-        "backup-report: “{restore}”",
-        "vendor-page: “{stored}”"
+        "{unique} of {staff} trained",
+        "1 of 4 systems reviewed",
+        "“{restore}”",
+        "“{stored}”"
       ],
-      "phases": [
-        "Write",
-        "Swap",
-        "Read"
+      "mailTo": "To: Lena Keller",
+      "mailNote": "sample from ANSWERS.md",
+      "sign": "Change one sentence yourself. You sign it.",
+      "chat": "Reply",
+      "answerHead": "Reply to Lena Keller",
+      "lines": [
+        "We send *R1 and R6* today.",
+        "*R2, R3, R4, R8:* incomplete, dates by {due}.",
+        "We cannot send *R5 and R7*.",
+        "*Clause 7:* notice on Claude Team (USA) attached."
       ],
-      "phaseMinutes": [
-        6,
-        3,
-        1
-      ],
-      "phaseHint": "Claude drafts the reply. Edit one sentence by hand: you sign it, not Claude.",
-      "sampleHead": "Sample reply from ANSWERS.md. Your wording will differ.",
-      "clause": "Anything that admits a contract point (clause 7) is the managing director's decision."
+      "full": "Full text"
     },
     "result": {
-      "titleVotes": "You estimated {estimate}. The folder proves {covered}.",
-      "titleNone": "The folder proves {covered} of 8.",
-      "estimateHead": "Your estimate, slide 3",
-      "resultHead": "After four tests",
-      "draftHead": "The draft, slide 4",
-      "draftLine": "Sentence {n}: {votes} · deleted",
-      "draftNone": "Sentence {n}: deleted",
-      "next": "Next request: run the four tests before you answer.",
+      "title": "The folder proves *{covered}* of 8.",
+      "estimate": "Your estimate",
+      "truth": "proven",
       "qr": [
         {
-          "label": "Your own folder",
-          "sub": "demo “The gap list”, in the browser",
-          "url": "loehrning.ai/en/demos/audit-vorbereitung-mit-ki#dein-ordner"
+          "label": "The kit",
+          "url": "loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit"
+        },
+        {
+          "label": "Quote check",
+          "url": "loehrning.ai/en/demos/audit-vorbereitung-mit-ki#zitat-probe"
         },
         {
           "label": "Skill audit-nachweise",
-          "sub": "with install steps",
           "url": "loehrning.ai/en/demos/audit-vorbereitung-mit-ki#mitnehmen"
-        },
-        {
-          "label": "The kit",
-          "sub": "every file and the answers",
-          "url": "loehrning.ai/en/workshops/audit-vorbereitung-mit-ki/kit"
         }
       ],
       "appendixLinks": [
         "A1 Account",
         "A2 Team and Enterprise",
         "A3 Sources"
-      ]
+      ],
+      "marker": "actual: {covered}",
+      "ghost": "Estimate from slide 4"
     },
+    "appendixBack": "Back · Esc",
     "a1": {
       "title": "Which account may see evidence",
       "rows": [
@@ -941,28 +870,31 @@
           "head": "For the workshop",
           "text": "Any account works: the kit is invented. Real documents only after your firm approves."
         }
-      ]
+      ],
+      "source": "Claude Help Center 12512180 and 9517075, read on 25 Oct 2026"
     },
     "a3": {
       "title": "Sources",
       "checked": "Every link checked on 25 Oct 2026."
     },
     "notes": [
-      "01 · Cover\nTime: 1 min\nSay: \"Today a firm gets a document request for an audit. We sort its folder and find the gaps. Every company, person and file is invented.\"\nStudents: Settle in. Open Claude on the laptop, keep the phone ready.\nCue: The eight lines draw from the items to the files. Right arrow starts. R resets the deck to this slide, P opens this view.\nRemember: Say the objective once: a file is evidence only when its date, approval, scope and quote hold.",
-      "02 · Your host\nTime: 1 min\nSay: \"I am Tim Löhr. I worked as a data scientist at Apple and Red Bull, and with loehrning.ai I build workshops like this one. Everything you see today is invented.\"\nStudents: Listen.\nCue: The line runs by itself from Apple to loehrning.ai. Right arrow goes to the request.\nRemember: Stay under one minute, then go straight to the request.",
-      "03 · The request\nTime: 3 min\nSay: \"Tannwald, the customer, uses its audit right. Read the first line aloud: We assess documents, not answers.\"\nStudents: Read the five rules along. Then estimate by show of hands: how many of the eight items can Vardar prove today?\nCue: The request types itself in. Right arrow: the eight items. Right arrow: the five rules get marked. Right arrow: the estimate; click the hands onto the numbers. Wrong click: Undo last vote.\nRemember: Name GDPR Art. 28(3)(h) once: the processor allows for and contributes to audits. Reveal nothing; the estimate returns on slide 12.",
-      "04 · The draft\nTime: 3 min\nSay: \"The managing director has already answered, not sent. Four sentences. Is each one true?\"\nStudents: Vote per sentence: true, false, not sure.\nCue: Right arrow marks one sentence at a time. Click the votes for each sentence onto its buttons.\nRemember: Stay neutral. Sentence 4 (data stays in the EU) is the one people defend: let them. Slide 11 resolves it.",
-      "05 · The folder\nTime: 8 min\nSay: \"Every item has a file whose name fits. Eight of eight. It looks done, and that is what we test now.\"\nStudents: Scan the QR or type the address, get the kit, set up the Project. Pairs are fine.\nCue: The cards settle into the grid. Right arrow: the name matches. Right arrow: setup and QR code.\nRemember: Check code execution: Settings, Capabilities, Code execution and file creation. If an .md file will not upload, rename it .txt. Without Projects: one chat with 12 attachments.",
-      "06 · Four tests\nTime: 6 min\nSay: \"Four tests on four invented files that are not in the kit. The kit's files you test yourselves.\"\nStudents: For each card, guess first which test it fails.\nCue: Right arrow four times: QUOTE, PERIOD, SCOPE, APPROVAL. The fifth press shows the objective and the tool.\nRemember: ISO 19011 and 27001 are paywalled; say \"summarised\". Say the third line twice: a policy shows intent, only a record shows practice.",
-      "07 · Step 1\nTime: 15 min\nSay: \"On paper first: how many of the eleven files pass PERIOD and APPROVAL? Then Claude builds the evidence index.\"\nStudents: Predict by show of hands, then send the prompt in the Project and compare the index with ANSWERS.md.\nCue: Right arrow: prediction. Right arrow: prompt and work time; press Start. Right arrow: the index builds; three files fail.\nRemember: Ask aloud: what did Claude write as approver for the two policy files? Watch for an approver given to v4, FINAL read as current, a date taken from a file name, and the vendor page marked unapproved.",
-      "08 · Step 2\nTime: 20 min\nSay: \"For each item, first the quote, then the status. Counting happens in code.\"\nStudents: Send the prompt, then the R7 follow-up. In the code box check two numbers: staff trained, and hours until Tannwald was told. Phones: paste Claude's table into the quote check.\nCue: Right arrow: prompt and work time. Then R7 with three files, R5 in code, all eight with the four tests, and last R1 with the QR code to the quote check.\nRemember: Show Claude's real answer to the R7 question, never a prepared one. COVERED means proven, not good: R1 proves that data sits in the US.",
-      "09 · Where Claude goes wrong\nTime: 5 min\nSay: \"Four mistakes that often happen on this folder. Each has a rule that stops it.\"\nStudents: Look for these four lines in your own table.\nCue: Right arrow four times: the wrong line is struck and the rule number lands. The fifth press: the Deloitte case and the account rule.\nRemember: Keep it factual; no blame. The rule numbers point into project-instructions.md. Account questions: appendix A1 from the presenter view.",
-      "10 · Step 3: gaps\nTime: 12 min\nSay: \"Every gap is a task: a person, a document, a date.\"\nStudents: Send the step 3 prompt with the template and the draft attached; check the gap list.\nCue: Right arrow: the six gaps. Right arrow: the R7 request fills in. Right arrow: prompt and work time.\nRemember: Read the \"does not exist\" line aloud: that answer helps too. Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8.",
-      "11 · The reply\nTime: 10 min\nSay: \"All four sentences of the draft go. What remains is a reply with only proven sentences.\"\nStudents: Write the reply with Claude, edit one sentence by hand, swap with your neighbour, read one aloud.\nCue: Right arrow four times: each sentence struck, the evidence under it. Then the work time (6, 3, 1 minutes), then the sample reply.\nRemember: You sign it, not Claude. Anything that admits a contract point (clause 7) is the managing director's decision.",
-      "12 · Estimate and result\nTime: 6 min\nSay: \"Your estimate from earlier, and what the folder proves. Next request: run the four tests before you answer.\"\nStudents: Scan the QR codes: your own folder in the demo, the skill, the kit. Questions.\nCue: Right arrow: the estimate turns into the result 2, 4, 2. Right arrow: the QR codes. The appendix sits behind the links at the bottom or in the presenter view.\nRemember: Installing the skill: Customize, Skills, +, Create skill, Upload a skill, then switch it on.",
-      "A1 · Account\nTime: 0 min\nSay: \"Your firm decides which accounts may see real documents. This is what the vendor's pages say.\"\nStudents: Only if asked.\nCue: Escape or the left arrow returns to the slide you came from.\nRemember: Check the lines against the source pages before every workshop.",
-      "A2 · Team and Enterprise\nTime: 0 min\nSay: \"On company accounts the admin decides about code execution and custom skills.\"\nStudents: Only if asked.\nCue: Escape returns.\nRemember: Make no claim about contract terms that the source pages do not state.",
-      "A3 · Sources\nTime: 0 min\nSay: \"Every outside fact has its source and check date here.\"\nStudents: Only if asked.\nCue: Escape returns.\nRemember: Everything else on the deck comes from the kit."
+      "01 · Title\nTime: 1 min\nSay: \"Today a firm in Skopje gets mail from Hamburg: a document request for an audit. We sort its folder with Claude and find the gaps.\"\nStudents: Settle in. Open Claude on the laptop, phone ready.\nCue: The globe turns to Skopje and draws the arc to Hamburg. Right arrow moves on. r resets the deck to the start, P opens this view.\nRemember: Say the learning sentence once: a file is evidence only when its quote, period, scope and approval hold.",
+      "02 · Your host\nTime: 1 min\nSay: \"I am Tim Löhr, a data engineer at Meta in Warsaw. Before that I was a data scientist at Apple and Red Bull. Today's case is synthetic: no employer data or systems.\"\nStudents: Listen.\nCue: The line runs by itself from Apple through Red Bull to Meta. Right arrow goes to the real case.\nRemember: Stay under one minute.",
+      "03 · The real case\nTime: 3 min\nSay: \"October 2025, Canberra. Deloitte delivers a report to the employment ministry, worth about 440,000 Australian dollars. A researcher finds references that do not exist and a made-up quote from a federal judge. The revised version says part of it was made with Azure OpenAI GPT-4o. Deloitte refunds part of the fee, 97,587 dollars according to Senate estimates.\"\nStudents: Listen. One question to the room: who would have checked the references?\nCue: Step 1: three references get \"does not exist\". Step 2: the quote. Step 3: the model. Step 4: the money flows back. Step 5: the sentence this session is about.\nRemember: Do not mock Deloitte. The point: nobody checked each sentence against its source. That is what we practise.",
+      "04 · Our case\nTime: 4 min\nSay: \"Our case is invented. Vardar Works in Skopje runs customer service for Tannwald in Hamburg. Tannwald announces an audit and sends a request: eight items. Tannwald counts documents, not answers.\"\nStudents: At the end, estimate by phone or by hand: how many of the eight does the folder prove?\nCue: Step 1: the letter flies from Hamburg to Skopje, with “The Tannwald contract is at stake”. Step 2: it opens on Lena Keller's line. Step 3: the eight items. Step 4: the dates. Step 5: the room's estimate, one click per vote.\nRemember: The estimate comes back on the last slide. Do not resolve it.",
+      "05 · The draft reply\nTime: 3 min\nSay: \"The managing director has already drafted a reply. Four sentences. Each sounds reasonable. Each is a claim.\"\nStudents: Show of hands: how many of the four sentences are true?\nCue: Step 1: a question mark behind each sentence. Step 2: the vote, one click per hand.\nRemember: Do not resolve it. The sentences are deleted on slide 13.",
+      "06 · The folder\nTime: 5 min\nSay: \"Eleven files. Every item has a file whose name fits. Eight matches, it looks done.\"\nStudents: Watch. If you like, open the folder in the kit.\nCue: Step 1: lines run from the items to the files. Step 2: the lines turn dashed. A file name proves nothing.\nRemember: This is where Claude without rules would stop. This is where the work starts.",
+      "07 · Four tests\nTime: 6 min\nSay: \"A file is evidence only when four things hold: the quote, the period, the scope, the approval. The examples are not in the kit.\"\nStudents: For each example, call out the failing test before it opens.\nCue: Steps 1 to 4: one example fails each. Step 5: the learning objective. Step 6: the three statuses and the quote rule from project-instructions.md.\nRemember: The same four tests as in Workshop 04, now for a whole folder.",
+      "08 · Setup\nTime: 5 min\nSay: \"Your turn. Create the Project, paste the instructions, upload the files, switch on code execution.\"\nStudents: Get the kit by QR. Create the Project \"Vardar audit\", paste project-instructions.md into the Project instructions, upload request_tannwald.md and the 11 files, switch on code execution. Without Projects: one chat with 12 files.\nCue: Step 1: the instructions fly into the Project. Step 2: twelve files into the Project knowledge. Step 3: the switch. Step 4: the QR and the five minutes.\nRemember: If a .md or .csv file will not upload, rename it to .txt. On Team and Enterprise an admin may need to allow code execution.",
+      "09 · Step 1\nTime: 15 min\nSay: \"Guess first, then Claude. How many of the eleven files pass PERIOD and APPROVAL?\"\nStudents: Predict with one click. Then send the prompt from START-HERE.md in a new chat inside the Project and compare with ANSWERS.md.\nCue: Step 1: the prompt. Step 2: Claude works. Step 3: the table, three rows fail. Step 4: 8 of 11.\nRemember: Ask: whom did Claude enter as approver for the two policies? Anyone who reads FINAL in a name as current read the file name.",
+      "10 · Step 2\nTime: 20 min\nSay: \"For each item: the quote first, then the four tests, then the status. Counting happens in code.\"\nStudents: Send the prompt, then the R7 follow-up. In the code window check two numbers: staff trained and hours until the notice. Phones: paste Claude's table into the quote check.\nCue: Step 1: R1 to R4, row by row, the tally on the right counts along. Step 2: R5 to R8, R5 with the sum in code (25 of 120, 20.8 %). Step 3: the count, 2 COVERED, 1 WEAK, 5 GAP. Step 4: R7 with three files.\nRemember: Show Claude's real answer to the R7 question, never a prepared one. COVERED means proven, not good: R1 proves the data sits in the US.",
+      "11 · Where Claude goes wrong\nTime: 5 min\nSay: \"Four lines Claude likes to write on this folder. Each has a rule in project-instructions.md that stops it.\"\nStudents: For each card, guess the rule before it turns.\nCue: Steps 1 to 4: one card turns and shows its rule.\nRemember: If one of these lines is in your own answer: find the rule number, point Claude to it, have it check again.",
+      "12 · Step 3\nTime: 10 min\nSay: \"A gap is a task with a role and a date. If a document does not exist, the owner says so too.\"\nStudents: Attach templates/gap-request.md and draft-reply.md, send prompt 3.\nCue: Step 1: six tasks go to three roles. Step 2: R3, 295 days without a rule. Step 3: the R7 email fills. Step 4: the prompt.\nRemember: Roles, not names, as rule 13 asks. Due 2 December; the audit is on the 10th.",
+      "13 · The reply\nTime: 7 min\nSay: \"All four draft sentences fall. What remains is a short, honest reply: what is proven, what is missing, by when.\"\nStudents: Read Claude's reply, change one sentence yourself, then read it to your neighbour.\nCue: Step 1: the deletions with their evidence. Step 2: the sample reply to Lena Keller. Step 3: you sign.\nRemember: Anything that admits a contract point (clause 7) is the managing director's decision, not Claude's.",
+      "14 · Result\nTime: 5 min\nSay: \"You estimated. The folder proves two of eight. Next request: the four tests first, then the reply.\"\nStudents: Scan the QR codes: the kit, the quote check, the skill.\nCue: Step 1: eight tiles turn. Step 2: QR codes and the appendix. The appendix opens from the links, Esc comes back.\nRemember: A person checks every quote and signs every reply.",
+      "A1 · Account\nTime: 0 min\nSay: \"Only if asked: which account may see real evidence.\"\nStudents: Only if asked.\nCue: Esc returns to the slide you came from.\nRemember: Read the pages again before every workshop.",
+      "A2 · Team and Enterprise\nTime: 0 min\nSay: \"Only if asked: code execution, skills and Projects on company accounts.\"\nStudents: Only if asked.\nCue: Esc returns.\nRemember: Any account works for the workshop.",
+      "A3 · Sources\nTime: 0 min\nSay: \"Every outside fact has its source and check date here.\"\nStudents: Only if asked.\nCue: Esc returns.\nRemember: Everything else on the deck comes from the kit."
     ]
   }
 }

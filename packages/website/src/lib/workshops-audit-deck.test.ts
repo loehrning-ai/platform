@@ -31,10 +31,10 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   const sections = Array.from(doc.querySelectorAll("deck-stage > section"));
   const main = sections.filter((section) => section.getAttribute("data-kind") === "main");
 
-  it("has twelve main slides for 90 minutes and three appendix slides outside the arrow path", () => {
+  it("has fourteen main slides for 90 minutes and three appendix slides outside the arrow path", () => {
     expect(doc.documentElement.lang).toBe(edition.lang);
     expect(doc.documentElement.dataset.deckId).toBe(edition.deckId);
-    expect(main).toHaveLength(12);
+    expect(main).toHaveLength(14);
     expect(main.reduce((sum, section) => sum + Number(section.getAttribute("data-seconds")), 0)).toBe(5400);
     expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3"]);
     const notes = JSON.parse(doc.getElementById("speaker-notes")?.textContent ?? "[]") as string[];
@@ -42,10 +42,10 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     for (const note of notes) for (const line of ["Time:", "Say:", "Students:", "Cue:", "Remember:"]) expect(note).toContain(line);
   });
 
-  it("loads the shared key contract before its runtime", () => {
+  it("loads the shared key contract, then the engine runtime, scenes and globe", () => {
     const scripts = Array.from(doc.querySelectorAll("script[src]")).map((script) => script.getAttribute("src"));
     const up = edition.lang === "de" ? "./" : "../";
-    expect(scripts).toEqual([`${up}lib/deck-keys.js`, `${up}lib/scenes.js`, `${up}lib/deck-stage.js`]);
+    expect(scripts).toEqual([`${up}lib/deck-keys.js`, `${up}lib/deck-stage.js`, `${up}lib/scenes.js`, `${up}lib/geo.js`, `${up}lib/globe.js`]);
   });
 
   it("quotes only lines that are in the kit, word for word", () => {

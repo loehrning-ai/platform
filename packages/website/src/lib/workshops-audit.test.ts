@@ -103,8 +103,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     }
   });
 
-  it("has the deck plan's twelve agenda blocks in both locales, adding up to 90", () => {
-    const minutes = [1, 1, 3, 3, 8, 6, 15, 20, 5, 12, 10, 6];
+  it("has the deck plan's fourteen agenda blocks in both locales, adding up to 90", () => {
+    const minutes = [1, 1, 3, 4, 3, 5, 6, 5, 15, 20, 5, 10, 7, 5];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
