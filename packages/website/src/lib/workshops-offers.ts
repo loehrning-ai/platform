@@ -25,7 +25,7 @@ const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "34 KB", en: "34 
  * Places changed by hand: 9 in the rotfaden run (scripts/workshop06/source/BUILD-LOG.md) and 10 for this
  * site (scripts/workshop06/PORT-LOG.md). workshops-offers.test.ts counts both lists.
  */
-export const OFFERS_HAND_EDITS = 19;
+export const OFFERS_HAND_EDITS = 20;
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 

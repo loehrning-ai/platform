@@ -10,7 +10,7 @@ byte as `source/deck.html`; `build-deck.mjs` applies items 6 to 9 to it and writ
 two agree, and `scripts/workshops/sync-deck-keys.mjs` pins the result by sha256). Items 6, 8 and 9 belong in the
 rotfaden example too; item 7 is this site's frame.
 
-## Changes for the site: 10 places
+## Changes for the site: 11 places
 
 1. **The demo is a React port.** `/demos/angebote-mit-ki-vergleichen` runs on the site's v3 demo shell instead of
    rotfaden's `demo.html`. It imports `demo.json` with one caption shortened (item 5)
@@ -65,5 +65,10 @@ rotfaden example too; item 7 is this site's frame.
    once aloud.
 10. **The kit's CHANGELOG says where `tools/fall.py` is.** It named the script as if it were in the kit; it is in the
     rotfaden example, and the line now says so.
+
+11. **Two lookups take only their own command names.** The toolbar's `data-act` and the presenter window's `cmd`
+    picked a handler from a plain object, so a name like `constructor` reached an inherited method. Both now check
+    `Object.hasOwn` first (CodeQL js/unvalidated-dynamic-method-call). The fix is made in `source/deck.html` itself,
+    so the copy differs from rotfaden b31ba1c by these two lines until rotfaden takes the same fix.
 
 The kit zip is rebuilt by `build-kit.mjs` with the site's one zip writer (`src/lib/zip/store.ts`).

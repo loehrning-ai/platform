@@ -294,7 +294,7 @@ shadowCss = `/* cv-engine ${CV_LIVE_ENGINE.revision}, rewritten for a shadow roo
 const interFaces = faces.filter((face) => face.family === "Inter");
 const usedCharacters = new Set<string>();
 for (const inner of bodies.values()) {
-  const text = inner.replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  const text = inner.replace(/<[^>]+>/g, " ").replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
   for (const character of text) usedCharacters.add(character);
 }
 // Generated content in the stylesheet (the bullet) and the full printable

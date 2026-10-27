@@ -421,7 +421,8 @@ async function main() {
     const clean = scrub(recording, prefixes);
     const text = JSON.stringify(clean, null, 2);
     if (FORBIDDEN.test(text)) errors.push("a machine path or session secret survived the scrub");
-    const rawDir = options.rawDir ?? join(tmpdir(), "claude-runs-raw");
+    // A private folder per run unless the caller names one.
+    const rawDir = options.rawDir ?? mkdtempSync(join(tmpdir(), "claude-runs-raw-"));
     mkdirSync(rawDir, { recursive: true });
     writeFileSync(join(rawDir, `${options.id}.raw.jsonl`), `${raw.join("\n")}\n`);
     const target = join(errors.length > 0 ? join(outDir, "rejected") : outDir, `${options.id}.json`);

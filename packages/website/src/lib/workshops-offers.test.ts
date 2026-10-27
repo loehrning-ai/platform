@@ -43,7 +43,7 @@ describe("Workshop 06 data", () => {
     const build = numberedItems("source/BUILD-LOG.md", /^## Handarbeit außerhalb des Ablaufs: (\d+) Stellen$/m);
     const port = numberedItems("PORT-LOG.md", /^## Changes for the site: (\d+) places$/m);
     expect(build).toBe(9);
-    expect(port).toBe(10);
+    expect(port).toBe(11);
     expect(OFFERS_HAND_EDITS).toBe(build + port);
     expect(OFFERS_WORKSHOP.de.provenance.note).toContain(`an ${build + port} Stellen geändert`);
     expect(OFFERS_WORKSHOP.en.provenance.note).toContain(`changed in ${build + port} places`);
@@ -108,7 +108,8 @@ describe("Workshop 06 data", () => {
     const deck = readFileSync(resolve(process.cwd(), "public/workshops", slug, "slides.html"), "utf8");
     expect(deck).toContain(DEMO_COPY.de.objective);
     expect(deck).toContain(workshopObjective(slug, "de")?.objective ?? "missing");
-    expect(deck).not.toMatch(/github\.com\/loehrning-ai\/rotfaden|loehrning-ai\.github\.io/);
+    expect(deck).not.toContain("github.com/loehrning-ai/rotfaden");
+    expect(deck).not.toContain("loehrning-ai.github.io");
     expect(deck).toContain(`href="/workshops/${slug}"`);
     expect(deck).toContain(`Kit und Demo: loehrning.ai/demos/${slug}`);
     expect(deck).toContain(`Das Kit: loehrning.ai/workshops/${slug}/kit`);

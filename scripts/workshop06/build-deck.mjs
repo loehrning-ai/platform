@@ -4,7 +4,7 @@
  * packages/website/public/workshops/angebote-mit-ki-vergleichen/slides.html.
  *
  * source/deck.html is rotfaden's single-file deck (example angebote-mit-ki-vergleichen, rotfaden commit b31ba1c),
- * byte for byte. This script applies the site's edits to it, nothing else; PORT-LOG.md lists them as items 6 to 9:
+ * byte for byte apart from one security fix not yet upstream (PORT-LOG item 11). This script applies the site's edits to it, nothing else; PORT-LOG.md lists them as items 6 to 9:
  *
  *   6  links to this site: the closing slide names the demo page and carries a QR code to it, the kit slide a
  *      QR code to the kit page, the footer drops the repository that is not public yet
@@ -23,7 +23,7 @@
  *   node scripts/workshop06/build-deck.mjs           writes slides.html
  *   node scripts/workshop06/build-deck.mjs --check   writes nothing and exits 1 when slides.html differs
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -268,10 +268,20 @@ export async function buildDeck(source = readFileSync(SOURCE, "utf8")) {
   return out;
 }
 
+/** The file's text, or null when it does not exist yet (read once, no separate exists check). */
+function readIfPresent(file) {
+  try {
+    return readFileSync(file, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 async function main() {
   const check = process.argv.includes("--check");
   const text = await buildDeck();
-  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : null;
+  const current = readIfPresent(OUT);
   const rel = path.relative(REPO_ROOT, OUT);
   if (current === text) {
     console.log(`${rel} is up to date`);

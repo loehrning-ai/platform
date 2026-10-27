@@ -18,7 +18,7 @@
  *   node scripts/workshop06/build-kit.mjs           writes the zip
  *   node scripts/workshop06/build-kit.mjs --check   writes nothing and exits 1 when the zip differs
  */
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectZipArchive } from "../../packages/website/scripts/open-source/zip-inspection.mjs";
@@ -109,10 +109,20 @@ export function buildKit() {
   return Buffer.from(bytes);
 }
 
+/** The file's bytes, or null when it does not exist yet (read once, no separate exists check). */
+function readIfPresent(file) {
+  try {
+    return readFileSync(file);
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 function main() {
   const check = process.argv.includes("--check");
   const bytes = buildKit();
-  const current = existsSync(ZIP_PATH) ? readFileSync(ZIP_PATH) : null;
+  const current = readIfPresent(ZIP_PATH);
   if (current?.equals(bytes)) {
     console.log(`${path.relative(REPO_ROOT, ZIP_PATH)} is up to date (${bytes.length} bytes)`);
     return;
