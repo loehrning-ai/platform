@@ -9,7 +9,7 @@ import { expectGlasBudget } from "./fixtures/glas-budget";
  * with the dock above the tab bar, the page never scrolls itself, the live
  * Glas budget holds, and the keys behave the same in every demo (ArrowRight
  * starts from the intro, r and Shift+R go back to the first step, Escape
- * leaves free play).
+ * closes an open layer first and then leaves free play).
  */
 const V4 = demos.filter((demo) => demoShell(demo.slug) === "v4");
 
@@ -71,7 +71,13 @@ for (const demo of V4) {
         await page.locator("[data-demo-explore]").click();
         await expect(clock).toHaveAttribute("data-demo-phase", "free", { timeout: 1000 });
       }).toPass();
-      await page.locator("body").press("Escape");
+      // Escape closes an open layer first (W06 opens free play in its sheet
+      // "Die Basis"); once nothing is open, the next Escape leaves free play.
+      for (let press = 0; press < 3; press += 1) {
+        await page.locator("body").press("Escape");
+        await page.waitForTimeout(150);
+        if ((await clock.getAttribute("data-demo-phase")) === "guided") break;
+      }
       await expect(clock).toHaveAttribute("data-demo-phase", "guided");
     });
   });
