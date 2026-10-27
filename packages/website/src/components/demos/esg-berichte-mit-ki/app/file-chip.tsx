@@ -34,8 +34,9 @@ export function FileChip({ file, locale, onOpen, label }: { readonly file: AppFi
     </>
   );
   return onOpen ? (
-    <button type="button" className="w4a-chip" onClick={onOpen} aria-label={label} data-w4a-chip={file.path}>
+    <button type="button" className="w4a-chip" onClick={onOpen} data-w4a-chip={file.path}>
       {inner}
+      {label ? <span className="sr-only">, {label}</span> : null}
     </button>
   ) : (
     <span className="w4a-chip" data-w4a-chip={file.path}>

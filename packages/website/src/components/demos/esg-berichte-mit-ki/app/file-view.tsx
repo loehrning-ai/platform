@@ -109,7 +109,6 @@ export function MonthCheck({ file, copy }: { readonly file: AppFile; readonly co
                 type="button"
                 className="w4a-line-pick"
                 aria-pressed={on}
-                aria-label={fill(copy.monthCheck.row, { n, month: monthName(row.month), invoice: row.invoice })}
                 onClick={() => toggle(n)}
                 data-twin={twin ? "" : undefined}
                 data-w4a-month-line={n}
@@ -118,6 +117,7 @@ export function MonthCheck({ file, copy }: { readonly file: AppFile; readonly co
                   {n}
                 </span>
                 <span className="w4a-lt">{text}</span>
+                <span className="sr-only">, {fill(copy.monthCheck.row, { n, month: monthName(row.month), invoice: row.invoice })}</span>
               </button>
             </li>
           );

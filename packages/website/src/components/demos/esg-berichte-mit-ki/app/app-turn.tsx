@@ -156,8 +156,9 @@ function useCiteRenderer(files: readonly AppFile[], copy: AppCopy, onCite: (file
         return (
           <span key={index} className="w4a-nowrap">
             {lead}
-            <button type="button" className="w4a-cite" aria-label={label} onClick={() => onCite(file, part.cite)} data-w4a-cite={file.name}>
+            <button type="button" className="w4a-cite" onClick={() => onCite(file, part.cite)} data-w4a-cite={file.name}>
               {part.text}
+              <span className="sr-only">, {label}</span>
             </button>
             {tail}
           </span>
