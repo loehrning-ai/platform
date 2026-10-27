@@ -8,10 +8,23 @@
 
 import { Fragment, type ReactNode } from "react";
 
+/** One list item; an indented list under it is its sub-list. */
+export interface MdListItem {
+  readonly text: string;
+  readonly sub?: MdList;
+}
+
+export interface MdList {
+  readonly type: "list";
+  readonly ordered: boolean;
+  readonly start: number;
+  readonly items: readonly MdListItem[];
+}
+
 export type MdBlock =
   | { readonly type: "heading"; readonly level: number; readonly text: string }
   | { readonly type: "paragraph"; readonly text: string }
-  | { readonly type: "list"; readonly ordered: boolean; readonly start: number; readonly items: readonly string[] }
+  | MdList
   | { readonly type: "table"; readonly head: readonly string[]; readonly align: readonly ("left" | "right" | "center")[]; readonly rows: readonly (readonly string[])[] }
   | { readonly type: "code"; readonly text: string }
   | { readonly type: "quote"; readonly text: string }
@@ -22,6 +35,49 @@ const TABLE_SEPARATOR = /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/;
 function cells(line: string): string[] {
   const trimmed = line.trim().replace(/^\|/, "").replace(/\|$/, "");
   return trimmed.split(/(?<!\\)\|/).map((cell) => cell.trim().replace(/\\\|/g, "|"));
+}
+
+const LIST_ITEM = /^(\s*)(?:([-*+])|(\d+)[.)])\s+(.*)$/;
+
+const indentOf = (line: string) => (/^\s*/.exec(line)?.[0] ?? "").replace(/\t/g, "    ").length;
+
+/**
+ * A list from `start`, with its nested lists: an item indented deeper than
+ * the list opens a sub-list under the item before it, a deeper plain line
+ * continues that item, and a blank line between two items keeps the list.
+ */
+function parseList(lines: readonly string[], start: number): { readonly list: MdList; readonly next: number } {
+  const first = LIST_ITEM.exec(lines[start] as string) as RegExpExecArray;
+  const indent = indentOf(lines[start] as string);
+  const ordered = Boolean(first[3]);
+  const items: { text: string; sub?: MdList }[] = [];
+  let index = start;
+  while (index < lines.length) {
+    const line = lines[index] as string;
+    const match = LIST_ITEM.exec(line);
+    const depth = indentOf(line);
+    if (match && depth === indent && Boolean(match[3]) === ordered) {
+      items.push({ text: match[4] as string });
+      index += 1;
+    } else if (match && depth > indent && items.length > 0) {
+      const nested = parseList(lines, index);
+      const last = items[items.length - 1] as { text: string; sub?: MdList };
+      last.sub = last.sub ? { ...last.sub, items: [...last.sub.items, ...nested.list.items] } : nested.list;
+      index = nested.next;
+    } else if (!match && line.trim() && depth > indent && items.length > 0) {
+      const last = items[items.length - 1] as { text: string; sub?: MdList };
+      last.text += ` ${line.trim()}`;
+      index += 1;
+    } else if (!line.trim()) {
+      let ahead = index + 1;
+      while (ahead < lines.length && !(lines[ahead] as string).trim()) ahead += 1;
+      const following = ahead < lines.length ? LIST_ITEM.exec(lines[ahead] as string) : null;
+      const followingDepth = ahead < lines.length ? indentOf(lines[ahead] as string) : -1;
+      if (following && (followingDepth > indent || (followingDepth === indent && Boolean(following[3]) === ordered))) index = ahead;
+      else break;
+    } else break;
+  }
+  return { list: { type: "list", ordered, start: ordered ? Number(first[3]) : 1, items }, next: index };
 }
 
 /** Parses Markdown into blocks. Pure. */
@@ -70,23 +126,10 @@ export function parseMarkdown(source: string): readonly MdBlock[] {
       blocks.push({ type: "table", head, align, rows });
       continue;
     }
-    const listItem = /^\s*(?:([-*+])|(\d+)[.)])\s+(.*)$/.exec(line);
-    if (listItem) {
-      const ordered = Boolean(listItem[2]);
-      const start = ordered ? Number(listItem[2]) : 1;
-      const items: string[] = [];
-      while (index < lines.length) {
-        const current = lines[index] as string;
-        const match = /^\s*(?:([-*+])|(\d+)[.)])\s+(.*)$/.exec(current);
-        if (match && Boolean(match[2]) === ordered) {
-          items.push(match[3] as string);
-          index += 1;
-        } else if (current.trim() && /^\s{2,}\S/.test(current) && items.length > 0) {
-          items[items.length - 1] += ` ${current.trim()}`;
-          index += 1;
-        } else break;
-      }
-      blocks.push({ type: "list", ordered, start, items });
+    if (LIST_ITEM.test(line)) {
+      const { list, next } = parseList(lines, index);
+      blocks.push(list);
+      index = next;
       continue;
     }
     if (/^\s*>/.test(line)) {
@@ -148,6 +191,19 @@ function renderInline(text: string, edge = false): ReactNode {
   });
 }
 
+function ListView({ list, edge }: { readonly list: MdList; readonly edge: boolean }) {
+  const items = list.items.map((item, position) => {
+    const last = edge && position === list.items.length - 1;
+    return (
+      <li key={position}>
+        {renderInline(item.text, last && !item.sub)}
+        {item.sub ? <ListView list={item.sub} edge={last} /> : null}
+      </li>
+    );
+  });
+  return list.ordered ? <ol start={list.start}>{items}</ol> : <ul>{items}</ul>;
+}
+
 /**
  * Renders Markdown as React. `streaming` marks the last block as the stream
  * edge: an unfinished table header shows as plain text, an open marker is
@@ -176,17 +232,27 @@ export function MarkdownLite({
           }
           case "paragraph":
             return <p key={index}>{renderInline(block.text, edge)}</p>;
-          case "list": {
-            const items = block.items.map((item, position) => <li key={position}>{renderInline(item, edge && position === block.items.length - 1)}</li>);
-            return block.ordered ? (
-              <ol key={index} start={block.start}>
-                {items}
-              </ol>
-            ) : (
-              <ul key={index}>{items}</ul>
-            );
-          }
+          case "list":
+            return <ListView key={index} list={block} edge={edge} />;
           case "table":
+            // One record over many columns is drawn as label and value per line, so no column hides off to the side.
+            if (block.rows.length === 1 && block.head.length >= 5) {
+              const row = block.rows[0] as readonly string[];
+              return (
+                <div key={index} className="cds-table" data-record="" role={tableLabel ? "region" : undefined} aria-label={tableLabel} tabIndex={tableLabel ? 0 : undefined}>
+                  <table>
+                    <tbody>
+                      {block.head.map((cell, position) => (
+                        <tr key={position}>
+                          <th scope="row">{renderInline(cell)}</th>
+                          <td>{renderInline(row[position] ?? "")}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            }
             return (
               <div key={index} className="cds-table" role={tableLabel ? "region" : undefined} aria-label={tableLabel} tabIndex={tableLabel ? 0 : undefined}>
                 <table>

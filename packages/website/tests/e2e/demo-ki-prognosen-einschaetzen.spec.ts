@@ -125,7 +125,7 @@ test.describe("Die Fehlerliste", () => {
 
   test("the Claude scene plays a recorded run, switches to the run without the skill, and plays the follow-up", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto(PATH, { waitUntil: "domcontentloaded" });
+    await page.goto(`${PATH}?beat=mitnehmen`, { waitUntil: "domcontentloaded" });
     const section = page.locator("[data-claude-scene-section]");
     await section.scrollIntoViewIfNeeded();
     await expect(section.getByRole("heading", { level: 2 })).toHaveText(SCENE.heading);
@@ -148,12 +148,12 @@ test.describe("Die Fehlerliste", () => {
     await section.getByRole("radio", { name: SCENE.withSkill }).click();
     await section.locator("[data-scene-play]").click();
     await expect(answers.first()).toBeVisible();
-    // On a wide window the rule file Claude wrote opens beside the chat.
+    await section.locator("[data-scene-follow-up]").click();
+    await expect(section.locator(".cds-chat")).toContainText("Kantine");
+    // The follow-up changes the rule file, so on a wide window it opens beside the chat only after the follow-up.
     if ((page.viewportSize()?.width ?? 0) >= 900) {
       await expect(section.getByRole("complementary", { name: `${SCENE.file}: pruefregel-linsensuppe.md` })).toBeVisible();
     }
-    await section.locator("[data-scene-follow-up]").click();
-    await expect(section.locator(".cds-chat")).toContainText("Kantine");
     await expectGlasBudget(page, `${PATH} Claude scene`);
   });
 });

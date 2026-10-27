@@ -26,6 +26,8 @@ interface OpenFile {
   readonly bytes: number;
   /** Where the bytes come from, for the download. */
   readonly kind: "kit" | "produced";
+  /** Shown instead of the text while a later turn still changes the file. */
+  readonly note?: string;
 }
 
 function downloadText(name: string, text: string) {
@@ -47,6 +49,43 @@ async function copyText(text: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/** A shell command that may change a file it names: a redirect, sed -i, tee or a write from a script. */
+const SHELL_WRITE = /sed -i|>|\btee\b|\.write|open\(/;
+
+/**
+ * The produced files each turn wrote or changed (turn 0 is the question, then
+ * each follow-up), from the recorded tool calls: Write and Edit by path, and
+ * a shell command that names the file and looks like a write.
+ */
+export function writtenByTurn(recording: ClaudeRecording): readonly ReadonlySet<string>[] {
+  const produced = recording.produced_files.map((entry) => entry.name);
+  return [recording, ...recording.follow_ups].map((turn) => {
+    const names = new Set<string>();
+    for (const item of turn.timeline) {
+      if (item.kind !== "tool_use") continue;
+      const input = (item.input ?? {}) as Record<string, unknown>;
+      if ((item.tool === "Write" || item.tool === "Edit") && typeof input.file_path === "string") names.add(input.file_path.split("/").pop() ?? "");
+      if (item.tool === "Bash" && typeof input.command === "string" && SHELL_WRITE.test(input.command)) {
+        for (const name of produced) if (input.command.includes(name)) names.add(name);
+      }
+    }
+    return names;
+  });
+}
+
+/**
+ * A produced file is stored once, as it stood at the end of the run. It is
+ * ready to open only once the replay reached the last turn that wrote it, so
+ * the panel never shows what a follow-up changed before that follow-up plays.
+ */
+export function fileReady(name: string, written: readonly ReadonlySet<string>[], reachedTurns: number): boolean {
+  let last = -1;
+  written.forEach((names, index) => {
+    if (names.has(name)) last = index;
+  });
+  return last < reachedTurns;
 }
 
 function stepText(step: ReplayStep & { readonly count: number }, copy: SceneCopy): string {
@@ -144,6 +183,8 @@ function Turn({
   produced,
   onOpenFile,
   attach,
+  ready,
+  laterNote,
 }: {
   readonly frame: TurnFrame;
   readonly recording: ClaudeRecording;
@@ -154,6 +195,9 @@ function Turn({
   readonly produced: readonly { name: string; bytes: number }[];
   readonly onOpenFile: (file: OpenFile) => void;
   readonly attach: boolean;
+  /** Whether a produced file shows its final text yet (see fileReady). */
+  readonly ready: (name: string) => boolean;
+  readonly laterNote: string;
 }) {
   if (frame.phase === "idle") return null;
   return (
@@ -191,7 +235,7 @@ function Turn({
                 name={name}
                 bytes={file?.bytes ?? 0}
                 locale={locale}
-                onOpen={() => onOpenFile({ name, bytes: stored?.bytes ?? 0, text: stored?.text ?? null, kind: "produced" })}
+                onOpen={() => onOpenFile({ name, bytes: stored?.bytes ?? 0, text: ready(name) ? stored?.text ?? null : null, note: ready(name) ? undefined : laterNote, kind: "produced" })}
               />
             );
           })}
@@ -215,6 +259,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
   const captionId = useId();
   const root = useRef<HTMLElement | null>(null);
   const chat = useRef<HTMLDivElement | null>(null);
+  const windowRef = useRef<HTMLDivElement | null>(null);
   const pinned = useRef(true);
   const { prompts, foreign } = promptsFor(scene, locale);
   const [promptId, setPromptId] = useState(initialPromptId && prompts.some((prompt) => prompt.id === initialPromptId) ? initialPromptId : prompts[0]?.id ?? "");
@@ -278,14 +323,21 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
 
   // On a wide window the rule file Claude wrote opens beside the chat once the run ends, like an artifact panel.
   const autoOpened = useRef<string | null>(null);
-  const artifact = recording?.produced_files.find((entry) => entry.name.endsWith(".md") && frame.turns.some((turnFrame) => turnFrame.files.includes(entry.name)));
+  const written = useMemo(() => (recording ? writtenByTurn(recording) : []), [recording]);
+  const reachedTurns = frame.turns.filter((turnFrame) => turnFrame.phase === "done").length;
+  const ready = (name: string) => fileReady(name, written, reachedTurns);
+  const artifact = recording?.produced_files.find(
+    (entry) => entry.name.endsWith(".md") && frame.turns.some((turnFrame) => turnFrame.files.includes(entry.name)) && fileReady(entry.name, written, reachedTurns),
+  );
   useEffect(() => {
-    if (!frame.done || !replay.started || !recording || !artifact || autoOpened.current === recording.id) return;
-    autoOpened.current = recording.id;
+    if (!frame.done || !replay.started || !recording || !artifact) return;
+    const key = `${recording.id}:${reachedTurns}`;
+    if (autoOpened.current === key) return;
+    autoOpened.current = key;
     if (typeof window.matchMedia === "function" && window.matchMedia("(min-width: 900px)").matches) {
       setFile({ name: artifact.name, bytes: artifact.bytes, text: artifact.text ?? null, kind: "produced" });
     }
-  }, [artifact, frame.done, recording, replay.started]);
+  }, [artifact, frame.done, reachedTurns, recording, replay.started]);
 
   if (!prompt || !recording) return null;
 
@@ -299,6 +351,19 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
   const rejected = prompt.rejected ?? 0;
   const kitList = recording.kit_files.map((entry) => kitFiles[entry.name]).filter((entry): entry is SceneKitFile => Boolean(entry));
 
+  // The controls sit under the window: a press there brings the window into view when it is off screen (the phone).
+  const showWindow = () => {
+    const element = windowRef.current;
+    if (!element) return;
+    const box = element.getBoundingClientRect();
+    const height = window.innerHeight || document.documentElement.clientHeight;
+    if (box.top >= 56 && box.bottom <= height) return;
+    element.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+  };
+  const play = () => {
+    showWindow();
+    replay.play();
+  };
   const onCopy = async (key: string, text: string) => {
     if (await copyText(text)) {
       setCopied(key);
@@ -311,7 +376,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
       <h3 id={headingId} className="sr-only">
         {copy.sceneLabel}
       </h3>
-      <div className="cds-window" data-theme={theme} data-panel={file ? "open" : undefined}>
+      <div ref={windowRef} className="cds-window" data-theme={theme} data-panel={file ? "open" : undefined}>
         <div className="cds-chrome" aria-hidden="true">
           <div className="cds-titlebar">
             <span className="cds-dots">
@@ -381,6 +446,8 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
                       produced={produced}
                       onOpenFile={setFile}
                       attach={index === 0}
+                      ready={ready}
+                      laterNote={copy.fileLater}
                     />
                   ))}
                 </div>
@@ -439,11 +506,17 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
               <span className="cds-panel-name">{file.name}</span>
               {file.text !== null ? (
                 <>
-                  <button type="button" className="cds-panel-btn" onClick={() => onCopy(`file:${file.name}`, file.text ?? "")}>
-                    {copied === `file:${file.name}` ? copy.copied : copy.copyFile}
+                  <button
+                    type="button"
+                    className="cds-panel-btn"
+                    aria-label={copied === `file:${file.name}` ? copy.copied : copy.copyFile}
+                    title={copy.copyFile}
+                    onClick={() => onCopy(`file:${file.name}`, file.text ?? "")}
+                  >
+                    <GlasIcon name={copied === `file:${file.name}` ? "check" : "copy"} />
                   </button>
-                  <button type="button" className="cds-panel-btn" onClick={() => downloadText(file.name, file.text ?? "")}>
-                    {copy.download}
+                  <button type="button" className="cds-panel-btn" aria-label={copy.download} title={copy.download} onClick={() => downloadText(file.name, file.text ?? "")}>
+                    <GlasIcon name="download" />
                   </button>
                 </>
               ) : null}
@@ -452,7 +525,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
               </button>
             </header>
             <div className="cds-panel-body">
-              {file.text === null ? null : file.name.endsWith(".md") ? (
+              {file.text === null ? (file.note ? <p className="cds-panel-note">{file.note}</p> : null) : file.name.endsWith(".md") ? (
                 <div className="cds-answer">
                   <MarkdownLite source={file.text} />
                 </div>
@@ -466,25 +539,13 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
       </div>
 
       <p id={captionId} className="cds-caption">
-        {copy.caption(date, model)}
+        {copy.caption(date, modelName(recording.model))}
+        {foreign ? ` ${copy.foreign}` : ""}
       </p>
       <p className="cds-chips">
         <GlasChip kind="status" glass>
-          {copy.depiction}
+          {takes.length > 1 ? copy.takeOf(takeIndex + 1, takes.length) : copy.depiction}
         </GlasChip>
-        <GlasChip kind="status" glass>
-          {copy.recordedOn(date)}
-        </GlasChip>
-        {takes.length > 1 ? (
-          <GlasChip kind="status" glass>
-            {copy.takeOf(takeIndex + 1, takes.length)}
-          </GlasChip>
-        ) : null}
-        {rejected > 0 ? (
-          <GlasChip kind="status" glass>
-            {prompt.rejectedReason ? `${copy.rejected(rejected)}: ${prompt.rejectedReason}` : copy.rejected(rejected)}
-          </GlasChip>
-        ) : null}
       </p>
 
       <GlasGroup label={copy.pickPrompt} material="regular" live={GLAS_PRIORITY.dock} className="cds-dock">
@@ -515,15 +576,23 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
               {copy.pause}
             </GlasButton>
           ) : replay.started && !frame.done ? (
-            <GlasButton variant="prominent" icon="play" onClick={replay.play} data-scene-play="">
+            <GlasButton variant="prominent" icon="play" onClick={play} data-scene-play="">
               {copy.resume}
             </GlasButton>
           ) : replay.started ? (
-            <GlasButton variant="fill" icon="replay" onClick={replay.replay} data-scene-replay="">
+            <GlasButton
+              variant="fill"
+              icon="replay"
+              onClick={() => {
+                showWindow();
+                replay.replay();
+              }}
+              data-scene-replay=""
+            >
               {reducedMotion ? copy.reload : copy.replay}
             </GlasButton>
           ) : (
-            <GlasButton variant="prominent" icon="play" onClick={replay.play} data-scene-play="">
+            <GlasButton variant="prominent" icon="play" onClick={play} data-scene-play="">
               {copy.play}
             </GlasButton>
           )}
@@ -537,6 +606,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
               variant="fill"
               icon="forward"
               onClick={() => {
+                showWindow();
                 setKeepTime(true);
                 setFollowUps((count) => count + 1);
               }}
@@ -593,7 +663,9 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
                 <GlasChip
                   key={entry.stored_as}
                   kind="file"
-                  onClick={() => setFile({ name: entry.name, bytes: entry.bytes, text: entry.text ?? null, kind: "produced" })}
+                  onClick={() =>
+                    setFile({ name: entry.name, bytes: entry.bytes, text: ready(entry.name) ? entry.text ?? null : null, note: ready(entry.name) ? undefined : copy.fileLater, kind: "produced" })
+                  }
                   label={`${copy.openFile}: ${entry.name}`}
                 >
                   {entry.name}
@@ -617,16 +689,16 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
         </aside>
       ) : null}
 
-      <p className="cds-fine">
-        {copy.surface} {replay.schedule.pacing.some((pace) => pace === "approximated") ? copy.pacing : ""}{" "}
-        {replay.schedule.clamped.some(Boolean) ? copy.shortened : ""} {foreign ? copy.foreign : ""} {copy.noAi}
-      </p>
-
       <details className="cds-transcript">
         <summary>{copy.transcript}</summary>
         <div className="cds-transcript-body">
           <p>{copy.transcriptCase}</p>
           <p className="cds-fine">{copy.caption(date, model)}</p>
+          <p className="cds-fine" data-scene-how="">
+            <strong>{copy.howRecorded}:</strong> {copy.surface} {replay.schedule.pacing.some((pace) => pace === "approximated") ? copy.pacing : ""}{" "}
+            {replay.schedule.clamped.some(Boolean) ? copy.shortened : ""} {copy.noAi}{" "}
+            {rejected > 0 ? (prompt.rejectedReason ? `${copy.rejected(rejected)}: ${prompt.rejectedReason}.` : `${copy.rejected(rejected)}.`) : ""}
+          </p>
           {[{ prompt: recording.prompt, turn: recording }, ...recording.follow_ups.map((turn) => ({ prompt: turn.prompt, turn }))].map(({ prompt: text, turn }, index) => {
             const steps = groupSteps(
               turn.timeline

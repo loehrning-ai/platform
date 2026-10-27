@@ -6,7 +6,7 @@ import { CLAUDE_SCENES } from "@/lib/claude-scenes";
 import { promptsFor, type ClaudeRecording, type TimelineItem } from "@/lib/claude-runs";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { sceneKitFiles } from "./claude-scene-section";
-import { ClaudeDesktopScene } from "./claude-desktop-scene";
+import { ClaudeDesktopScene, fileReady, writtenByTurn } from "./claude-desktop-scene";
 import { fileKind, fileSize } from "./file-kind";
 import { MarkdownLite, parseMarkdown } from "./markdown-lite";
 import { buildSchedule, clockLabel, frameAt, groupSteps, paceAnswer, REPLAY, seedFrom, wordChunks, type ReplayTurn } from "./replay-engine";
@@ -91,6 +91,18 @@ describe("replay engine (claude-desktop-spec 5)", () => {
   });
 });
 
+describe("produced files", () => {
+  it("opens a file only once the replay reached the last turn that changed it", () => {
+    const take = SCENE.recordings.find((recording) => recording.id === "de-trauen-with-2") as ClaudeRecording;
+    const written = writtenByTurn(take);
+    // The question writes the rule file; the follow-up changes it with sed -i (the canteen stops).
+    expect(written[0]?.has("pruefregel-linsensuppe.md")).toBe(true);
+    expect(written[1]?.has("pruefregel-linsensuppe.md")).toBe(true);
+    expect(fileReady("pruefregel-linsensuppe.md", written, 1)).toBe(false);
+    expect(fileReady("pruefregel-linsensuppe.md", written, 2)).toBe(true);
+  });
+});
+
 describe("MarkdownLite", () => {
   it("parses the recorded answer's tables, lists and bold into React, never HTML strings", () => {
     const blocks = parseMarkdown(TAKE.final_text);
@@ -99,6 +111,17 @@ describe("MarkdownLite", () => {
     const html = renderToStaticMarkup(<MarkdownLite source={"**Fett** und `code`\n\n<script>alert(1)</script>"} />);
     expect(html).toContain("<strong>Fett</strong>");
     expect(html).not.toContain("<script>");
+  });
+
+  it("nests an indented list under its item instead of running it into the item's text", () => {
+    const html = renderToStaticMarkup(<MarkdownLite source={"1. Anfordern:\n   - 03.02.2025: Zertifikat\n   - Zuordnung\n2. Prüfen\n\n3. Ablegen"} />);
+    expect(html).toBe("<ol start=\"1\"><li>Anfordern:<ul><li>03.02.2025: Zertifikat</li><li>Zuordnung</li></ul></li><li>Prüfen</li><li>Ablegen</li></ol>");
+  });
+
+  it("draws one record over many columns as label and value per line", () => {
+    const html = renderToStaticMarkup(<MarkdownLite source={"| Nr | Frage | Antwort | Status | Grund |\n|---|---|---|---|---|\n| 1 | Strom | 279,7 MWh | LÜCKE | September fehlt |"} />);
+    expect(html).toContain('<th scope="row">Grund</th><td>September fehlt</td>');
+    expect(html).not.toContain("<thead>");
   });
 
   it("draws an unfinished construct at the stream edge as plain text", () => {
@@ -155,10 +178,15 @@ describe("ClaudeDesktopScene", () => {
         </GlasRoot>,
       );
       const date = locale === "de" ? "26.10.2026" : "26 October 2026";
-      expect(container.querySelector(".cds-caption")).toHaveTextContent(copy.caption(date, "Claude Opus 5.5 (claude-opus-5-5)"));
-      expect(screen.getByText(copy.depiction)).toBeInTheDocument();
-      expect(screen.getByText(copy.recordedOn(date))).toBeInTheDocument();
-      expect(screen.getByText(copy.rejected(prompt?.rejected ?? 0))).toBeInTheDocument();
+      // One line says what it is (a depiction, a real answer, its date and model); one chip, the take.
+      expect(container.querySelector(".cds-caption")).toHaveTextContent(copy.caption(date, "Claude Opus 5.5"));
+      expect(container.querySelector(".cds-caption")?.textContent).toMatch(locale === "de" ? /Darstellung.*aufgezeichnet am/ : /depiction.*recorded on/);
+      expect(container.querySelectorAll(".cds-chips > *")).toHaveLength(1);
+      // How it was recorded, the exact model id and the takes set aside stay in the plain-text version.
+      const how = container.querySelector("[data-scene-how]") as HTMLElement;
+      expect(how.textContent).toContain(copy.noAi);
+      if ((prompt?.rejected ?? 0) > 0) expect(how.textContent).toContain(copy.rejected(prompt?.rejected ?? 0));
+      expect(container.querySelector(".cds-transcript")?.textContent).toContain("claude-opus-5-5");
       expect(container.querySelector("img, [data-logo]")).toBeNull();
       // The drawn window is decoration; every control lives in the dock.
       expect(container.querySelector(".cds-chrome")).toHaveAttribute("aria-hidden", "true");

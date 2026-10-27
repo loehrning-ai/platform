@@ -1198,3 +1198,30 @@ button.cds-send {
     display: grid !important;
   }
 }
+
+/* A press on the controls under the window scrolls it to just below the site bar. */
+.cds-window {
+  scroll-margin-top: calc(var(--nav-h-compact, 56px) + 8px);
+}
+.cds-panel-note {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--cd-text-2);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.cds-answer li > ul,
+.cds-answer li > ol {
+  margin-top: 0.35em;
+}
+.cds-answer li > ul {
+  list-style: circle;
+}
+.cds-table[data-record] th {
+  width: 9rem;
+  white-space: normal;
+}
+.cds-table[data-record] td {
+  min-width: 0;
+  max-width: none;
+}
