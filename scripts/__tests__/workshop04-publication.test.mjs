@@ -24,6 +24,7 @@ import {
 } from "../workshop04/export-esg-passport.mjs";
 import { buildKitArchive, readKitArchive } from "../workshop04/kit-archive.mjs";
 import { KITS, kitFiles, PLATFORM_FILES, zipName } from "../workshop04/kit-v3.mjs";
+import { EDITIONS as DECK_SOURCES, render } from "../workshop04/deck-src/build.mjs";
 
 const read = (name) => readFileSync(path.join(WORKSHOP_DIR, name));
 const text = (name) => read(name).toString("utf8");
@@ -133,6 +134,12 @@ test("the client-name guard finds a hashed word alone, inside a word and in any 
   assert.ok(FORBIDDEN.length >= 4);
 });
 
+test("both deck editions are exactly what the deck source builds", async () => {
+  for (const [locale, file] of Object.entries(DECK_SOURCES)) {
+    assert.ok(text(file) === (await render(locale)), `${file} differs; run node scripts/workshop04/deck-src/build.mjs`);
+  }
+});
+
 test("each deck edition carries the kit's five prompts byte for byte", () => {
   for (const [locale, file] of Object.entries(EDITIONS)) {
     const deck = deckPrompts(text(file));
@@ -163,7 +170,7 @@ test("both editions have the same slides, steps and bound figures, and every fig
   const [de, en] = [text(EDITIONS.de), text(EDITIONS.en)];
   const shape = slideShape(de);
   assert.deepEqual(slideShape(en), shape);
-  assert.equal(shape.filter((row) => row.includes(":main:")).length, 19);
+  assert.equal(shape.filter((row) => row.includes(":main:")).length, 16);
   assert.equal(shape.filter((row) => row.includes(":appendix:")).length, 3);
   const lastMain = shape.findLastIndex((row) => row.includes(":main:"));
   assert.ok(shape.findIndex((row) => row.includes(":appendix:")) > lastMain, "appendix after the last main slide");
