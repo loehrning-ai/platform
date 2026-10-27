@@ -61,12 +61,7 @@ export function SteckbriefCard({
       {heading ? (
         <p className="w02-doc-kicker">{heading}</p>
       ) : (
-        <>
-          <p className="w02-doc-kicker">
-            {c.label} <span className="w02-card-count">{fmt.t(c.count, { n: linesWritten(reached), max: CARD_LINES.length })}</span>
-          </p>
-          <p className="w02-card-title">{fmt.t(c.title)}</p>
-        </>
+        <p className="w02-card-title">{fmt.t(c.title)}</p>
       )}
       <dl className="w02-card-lines">
         {(only ?? CARD_LINES).map((line) => {
@@ -136,18 +131,14 @@ export function SteckbriefCard({
   );
 }
 
-/** Phone: the card as a chip ("3 von 7 Zeilen") that opens it in a sheet. */
+/** Phone: the card as a chip ("Dein Steckbrief") that opens it in a sheet; the dock's dots are the only progress count. */
 export function SteckbriefChip({ pack, fmt, children, reached }: { readonly pack: DemoPack; readonly fmt: Fmt; readonly reached: number; readonly children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const c = pack.chip;
   return (
     <div className="w02-chip-wrap">
       <GlasChip kind="status" icon="doc" onClick={() => setOpen(true)} label={`${c.label}, ${fmt.t(c.count, { n: linesWritten(reached), max: CARD_LINES.length })}`}>
-        {c.label}{" "}
-        {fmt.t(c.countShort, {
-          n: linesWritten(reached),
-          max: CARD_LINES.length,
-        })}
+        {c.label}
       </GlasChip>
       <GlasSheet open={open} onClose={() => setOpen(false)} title={fmt.t(c.title)} closeLabel={pack.close} resizeLabel={pack.resize}>
         {children}

@@ -47,6 +47,7 @@ export const DE = {
   close: "Schließen",
   resize: "Größe ändern",
   captionMore: "Weiterlesen",
+  captionTitle: "Was dieser Schritt zeigt",
   captionLess: "Weniger",
   invented: "Erfundene Firma, echte Dateien aus dem Kit",
   inKit: "Im Kit:",

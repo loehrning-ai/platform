@@ -70,16 +70,13 @@ function termCaption(pack: DemoPack, fmt: Fmt, key: OfferKey, stage: "trucks" | 
 function basisCaption(pack: DemoPack, fmt: Fmt, input: CaptionInput): readonly string[] {
   const { state, kit } = input;
   const move = MOVES[state.move];
-  const previous = MOVES[state.move - 1];
-  const fromKit = previous && state.taken.includes(previous) ? [pack.fromKit] : [];
   const full = assemble(kit, ALL_LINES, STACK, HORIZON);
   switch (move) {
     case "menge":
       return state.qty ? [fmt.t(pack.menge.after, { qty: fmt.qty(REQUEST.qty) })] : [pack.menge.instruction];
     case "einheit":
-      if (state.unit === "printed") return [...fromKit, pack.einheit.instruction];
+      if (state.unit === "printed") return [pack.einheit.instruction];
       return [
-        ...fromKit,
         fmt.t(pack.einheit.after, { a_unit: fmt.unit(unitCents("A")), b_unit: fmt.unit(unitCents("B")), c_unit: fmt.unit(unitCents("C")), qty: fmt.qty(REQUEST.qty) }),
         pack.einheit.afterRank,
       ];
@@ -87,9 +84,9 @@ function basisCaption(pack: DemoPack, fmt: Fmt, input: CaptionInput): readonly s
       const sorted = OFFER_KEYS.filter((key) => state.terms[key] !== null);
       if (sorted.length === OFFER_KEYS.length && (!state.lastTerm || input.termStage === "done")) {
         const partial = assemble(kit, ["Ware", "Fracht", "Lager"], STACK, HORIZON);
-        return [...fromKit, fmt.t(pack.lieferort.all, { gap_bc: fmt.money(total(partial, "C") - total(partial, "B")) })];
+        return [fmt.t(pack.lieferort.all, { gap_bc: fmt.money(total(partial, "C") - total(partial, "B")) })];
       }
-      if (!state.lastTerm) return [...fromKit, pack.lieferort.instruction, pack.lieferort.define];
+      if (!state.lastTerm) return [pack.lieferort.instruction, pack.lieferort.define];
       const l = pack.lieferort;
       const key = state.lastTerm.key;
       const quote = fmt.t(l.quoted, { text: l.cardQuotes[TERMS[key].delivery.term] });
@@ -99,7 +96,7 @@ function basisCaption(pack: DemoPack, fmt: Fmt, input: CaptionInput): readonly s
     case "einmalig": {
       if (state.finds.length === OFFER_KEYS.length) return [pack.einmalig.after];
       const last = state.finds[state.finds.length - 1];
-      if (!last) return [...fromKit, pack.einmalig.instruction];
+      if (!last) return [pack.einmalig.instruction];
       return [fmt.t(pack.einmalig.finds[last], { oneoff: fmt.money(TERMS.B.oneOff.cents) })];
     }
     case "zahlung":
@@ -108,7 +105,7 @@ function basisCaption(pack: DemoPack, fmt: Fmt, input: CaptionInput): readonly s
         const gross = assemble(kit, ALL_LINES.filter((name) => name !== "Skonto"), STACK, HORIZON);
         return [fmt.t(pack.zahlung.off, { a_nodisc: fmt.money(total(gross, "A")), b_nodisc: fmt.money(total(gross, "B")), c_nodisc: fmt.money(total(gross, "C")) })];
       }
-      if (move === "zahlung" && !input.paid) return [...fromKit, pack.zahlung.arrival];
+      if (move === "zahlung" && !input.paid) return [pack.zahlung.arrival];
       const guess = state.guess ? [fmt.t(pack.zahlung.guess, { bet: pack.offers[state.guess].name })] : [];
       return [fmt.t(pack.zahlung.result, { c_total: fmt.money(total(full, "C")), gap: fmt.money(full.gap), b_total: fmt.money(total(full, "B")) }), ...guess];
     }

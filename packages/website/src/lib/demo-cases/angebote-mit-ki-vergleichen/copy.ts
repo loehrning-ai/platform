@@ -18,7 +18,6 @@ const de = {
   less: "Weniger",
   captionMore: "Mehr",
   captionLess: "Weniger",
-  fromKit: "Wert aus dem Kit übernommen.",
   lineNames: { Ware: "Ware", Fracht: "Fracht", Einmalig: "Einmalig", Lager: "Lager", Skonto: "Skonto", Papier: "Papierzuschlag" },
   offers: {
     A: { name: "A Nürnberg", city: "Nürnberg", supplier: "Rednitz Kartonagen" },
@@ -318,7 +317,6 @@ const en: DemoPack = {
   less: "Less",
   captionMore: "More",
   captionLess: "Less",
-  fromKit: "Value taken from the kit.",
   lineNames: { Ware: "Goods", Fracht: "Freight", Einmalig: "One-off", Lager: "Storage", Skonto: "Discount", Papier: "Paper surcharge" },
   offers: {
     A: { name: "A Nürnberg", city: "Nürnberg", supplier: "Rednitz Kartonagen" },

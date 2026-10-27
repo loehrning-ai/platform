@@ -398,7 +398,7 @@ export default function Demo({
       >
         <CardSheetBody pack={pack} fmt={fmt} fills={fills} expected={T1_EXPECTED} halfWho={halfWho} />
       </GlasSheet>
-      <GlasSheet open={sheet === "caption" && !desktop} onClose={() => setSheet(null)} title={clock.beat.label[pack.locale]} closeLabel={pack.close} resizeLabel={pack.resize} detent="medium">
+      <GlasSheet open={sheet === "caption" && !desktop} onClose={() => setSheet(null)} title={pack.captionTitle} closeLabel={pack.close} resizeLabel={pack.resize} detent="medium">
         <CaptionSheetBody sentences={caption} terms={terms} extra={captionExtra} />
       </GlasSheet>
       <GlasSheet open={sheet === "more" && more !== null} onClose={() => setSheet(null)} title={beat === "wanne" ? pack.wanne.moreTitle : pack.more} closeLabel={pack.close} resizeLabel={pack.resize} detent="medium">

@@ -39,6 +39,7 @@ export const EN: Pack = {
   close: "Close",
   resize: "Resize",
   captionMore: "Read on",
+  captionTitle: "What this step shows",
   captionLess: "Less",
   invented: "Invented company, real files from the kit",
   inKit: "In the kit:",

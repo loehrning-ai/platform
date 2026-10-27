@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { toSentences } from "@/lib/demo-sentences";
 import { WithTerms } from "./term";
 
 interface GlossaryTerm {
@@ -21,9 +22,10 @@ function usedTerms(sentences: readonly string[], terms: readonly GlossaryTerm[])
  * underlined where it first appears, with its definition on hover or tap.
  *
  * "peek" (the phone dock) keeps the dock to one small band so the picture
- * keeps its room: the first two lines, which always start with what to do
- * next, as one button that opens the whole caption in a sheet. Screen readers
- * hear the whole caption through the live region either way.
+ * keeps its room: the first sentence whole (it always says what to do next),
+ * and "Weiterlesen" opens the whole caption in a sheet when there is more.
+ * No word is ever cut. Screen readers hear the whole caption through the live
+ * region either way.
  */
 export function DockCaption({
   sentences,
@@ -44,20 +46,24 @@ export function DockCaption({
 }) {
   const text = sentences.join(" ");
   if (mode === "peek") {
+    const parts = toSentences(sentences);
+    const more = parts.length > 1 || terms.some((entry) => text.includes(entry.term));
     return (
       <div className="w03-caption" data-peek="" data-w03-caption="">
         <p className="sr-only" aria-live="polite">
           {text}
         </p>
-        <button type="button" className="w03-peek" onClick={onPeek} aria-haspopup="dialog" data-w03-caption-more="">
-          <span className="w03-peek-text" aria-hidden="true">
-            {text}
-          </span>
-          <span className="sr-only">{peekLabel}</span>
-          <svg viewBox="0 0 16 16" className="w03-peek-chevron" aria-hidden="true">
-            <path d="M6 3.5L10.5 8L6 12.5" />
-          </svg>
-        </button>
+        <p className="w03-peek-text" aria-hidden="true">
+          {parts[0]}
+        </p>
+        {more ? (
+          <button type="button" className="w03-peek" onClick={onPeek} aria-haspopup="dialog" data-w03-caption-more="">
+            <span>{peekLabel}</span>
+            <svg viewBox="0 0 16 16" className="w03-peek-chevron" aria-hidden="true">
+              <path d="M6 3.5L10.5 8L6 12.5" />
+            </svg>
+          </button>
+        ) : null}
       </div>
     );
   }

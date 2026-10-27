@@ -192,7 +192,7 @@ export function DemoDock({
         onToGuide={clock.toGuide}
         copy={{ stepOf: copy.stepOf, prev: copy.prev, next: nextText, nextShort: compact ? copy.next : undefined, toGuide: copy.toGuide, nav: copy.wegNav }}
       />
-      {clock.skippedCommit && clock.phase === "guided" ? (
+      {clock.skippedCommit && clock.phase === "guided" && clock.beats[clock.index - 1]?.kind === "commit" ? (
         <p className="demo4-skipped">
           <GlasChip kind="status">{copy.suggestionTaken}</GlasChip>
         </p>

@@ -24,8 +24,8 @@ describe("captions of the guided path, German", () => {
     expect(caption("kipp", run({ type: "qty" }, { type: "nextMove" }, { type: "unit", unit: "piece" }))).toContain("kostet B 0,520\u00a0€, C 0,575\u00a0€ und A 0,660\u00a0€");
   });
 
-  it("says a skipped move took the kit's value", () => {
-    expect(caption("kipp", toMove(1))).toMatch(/^Wert aus dem Kit übernommen\./);
+  it("starts the next field with what to do, not with a note about the skipped one", () => {
+    expect(caption("kipp", toMove(1))).not.toContain("übernommen");
   });
 
   it("counts B's trucks and pallets, then the gap to C", () => {

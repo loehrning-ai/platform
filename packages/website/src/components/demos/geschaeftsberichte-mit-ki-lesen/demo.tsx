@@ -444,11 +444,11 @@ export default function Demo({
                   unit,
                 })
               }
+              // The start mark is named only when it is not September's own value, which the hint already names.
               ticks={[
-                {
-                  value: start.value,
-                  label: fmt.t(start.source === "kit" ? pack.decide.kitTag : pack.decide.demoTag, { v: fmt.rate(choice.counter, start.value) }),
-                },
+                Math.abs(start.value - rate(choice.counter, "sep")) < range.step / 2
+                  ? { value: start.value }
+                  : { value: start.value, label: fmt.t(start.source === "kit" ? pack.decide.kitTag : pack.decide.demoTag, { v: fmt.rate(choice.counter, start.value) }) },
                 { value: rate(choice.counter, "sep") },
               ]}
               hint={fmt.t(pack.decide.triggerToday, {
@@ -470,7 +470,7 @@ export default function Demo({
         feld={feld}
         className="w02-stage"
         dock={
-          <DemoDock className="w02-dock">
+          <DemoDock className="w02-dock" compact>
             <DockCaption sentences={caption} more={pack.captionMore} less={pack.captionLess} />
             {controls()}
           </DemoDock>
