@@ -100,7 +100,7 @@ export function DemoPageV4({
             stageTone: glasToneFor(demo.plakat),
             claude,
             intro: {
-              kicker: copy.kicker(demo.workshopNumber),
+              kicker: `${demo.title} · ${copy.kicker(demo.workshopNumber)}`,
               title: intro.title,
               sentences: introSentences(intro, demo.minutes),
               start: intro.start,

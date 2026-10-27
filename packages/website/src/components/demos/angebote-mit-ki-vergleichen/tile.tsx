@@ -10,8 +10,8 @@ import { TileSvg, type TileProps } from "../hub/tile-kit";
  * End frame: C on top, B at the bottom with the longest bar. Motion: tile-motion.ts.
  */
 const COPY = {
-  de: { before: "nach dem Stückpreis", after: "geliefert und bezahlt" },
-  en: { before: "by unit price", after: "delivered and paid" },
+  de: { before: "nach dem Stückpreis", after: "geliefert und bezahlt", goods: "Ware", added: "Fracht, Lager, Einmalkosten" },
+  en: { before: "by unit price", after: "delivered and paid", goods: "goods", added: "freight, storage, one-off costs" },
 } as const;
 
 const MODEL = modelAt(kitRows("de"), 0);
@@ -44,6 +44,16 @@ export default function Tile({ locale, reducedMotion }: TileProps) {
       <g data-t="after">
         <text className="dt-fig dt-fill-ink" x="24" y="40" fontSize="17">
           {words.after}
+        </text>
+      </g>
+      <g data-t="legend">
+        <rect className="dt-fill-ink" x="24" y="281" width="14" height="10" />
+        <text className="dt-fig dt-fill-ink" x="44" y="291" fontSize="13">
+          {words.goods}
+        </text>
+        <rect className="dt-fill-mid" x="104" y="281" width="14" height="10" />
+        <text className="dt-fig dt-fill-ink" x="124" y="291" fontSize="13">
+          {words.added}
         </text>
       </g>
       {TILE_ROWS.map(({ option, to, goods, added }) => {

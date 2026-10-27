@@ -28,10 +28,16 @@ const BARS = WEEKS.map((t, i) => `M${x(i)} ${BASE}V${y(check.rows[t]?.ist ?? FLO
 const TICKS = WEEKS.map((t, i) => `M${x(i) - 2} ${y(check.forecast(t) ?? FLOOR)}h${BAR + 4}`).join("");
 const RULE = WEEKS.map((t, i) => `${i === 0 ? "M" : "L"}${x(i) - 2} ${y(check.rule(t) ?? FLOOR)}h${BAR + 4}`).join("");
 const TOOL = 1 - (result.tabelle.Prognose?.wape ?? 0);
+/** What each number is, under its mark: the tool's own claim and the simplest rule. */
+const LABELS = {
+  de: { tool: "sagt das Tool", plain: "wie letzte Woche" },
+  en: { tool: "the tool claims", plain: "same as last week" },
+} as const;
 const PLAIN = 1 - (result.tabelle["wie letzte Woche"]?.wape ?? 0);
 
 export default function Tile({ locale, reducedMotion }: TileProps) {
   const percent = (share: number) => `${tileNumber(share * 100, locale, { digits: 1 })}\u00a0%`;
+  const words = LABELS[locale];
   return (
     <TileSvg reducedMotion={reducedMotion}>
       <path data-t="bars" className="dt-fill-ink" d={BARS} />
@@ -43,12 +49,18 @@ export default function Tile({ locale, reducedMotion }: TileProps) {
           {percent(TOOL)}
         </text>
         <path className="dt-stroke-mark" d={`M${LEFT} 88h52`} strokeWidth="5" />
+        <text className="dt-fig dt-fill-mark" x={LEFT + 60} y="93" fontSize="15">
+          {words.tool}
+        </text>
       </g>
       <g data-t="plain">
         <text className="dt-fig dt-fill-ink" x={RIGHT} y="70" fontSize="50" textAnchor="end">
           {percent(PLAIN)}
         </text>
         <path className="dt-stroke-ink" d={`M${RIGHT - 52} 88h52`} strokeWidth="3" strokeDasharray="6 4" />
+        <text className="dt-fig dt-fill-ink" x={RIGHT - 60} y="93" fontSize="15" textAnchor="end">
+          {words.plain}
+        </text>
       </g>
     </TileSvg>
   );
