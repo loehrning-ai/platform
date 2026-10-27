@@ -105,6 +105,16 @@ describe("MarkdownLite", () => {
     const html = renderToStaticMarkup(<MarkdownLite source={"Das ist **halb"} streaming />);
     expect(html).not.toContain("<strong>");
   });
+
+  it("keeps an underscore inside a word as a letter, also at the stream edge", () => {
+    const html = renderToStaticMarkup(<MarkdownLite source={"Die Datei strom_2025.csv und strom_zusammenfassung_entwurf.txt, dazu _betont_ und __fett__."} />);
+    expect(html).toContain("strom_2025.csv");
+    expect(html).toContain("strom_zusammenfassung_entwurf.txt");
+    expect(html).toContain("<em>betont</em>");
+    expect(html).toContain("<strong>fett</strong>");
+    const edge = renderToStaticMarkup(<MarkdownLite source={"Laut strom_2025"} streaming />);
+    expect(edge).toContain("strom_2025");
+  });
 });
 
 describe("file chips", () => {

@@ -65,11 +65,34 @@ describe("recorded Claude runs (claude-desktop-spec 12: real runs only)", () => 
     });
   }
 
+  it("counts only failed takes as set aside: each names its failure, a replaced take names why it was replaced", () => {
+    for (const slug of DEMO_SLUGS) {
+      const rejected = join(runsDir(slug), "rejected");
+      if (existsSync(rejected)) {
+        for (const name of readdirSync(rejected).filter((entry) => entry.endsWith(".json"))) {
+          const take = JSON.parse(readFileSync(join(rejected, name), "utf8")) as { rejected?: readonly string[] | null };
+          expect(take.rejected?.length ?? 0, `${slug}/rejected/${name} names its failure`).toBeGreaterThan(0);
+        }
+      }
+      const replaced = join(runsDir(slug), "replaced");
+      if (existsSync(replaced)) {
+        const reasons = JSON.parse(readFileSync(join(replaced, "reasons.json"), "utf8")) as Record<string, string>;
+        const takes = readdirSync(replaced).filter((entry) => entry.endsWith(".json") && entry !== "reasons.json");
+        expect(Object.keys(reasons).sort()).toEqual(takes.map((entry) => entry.replace(/\.json$/, "")).sort());
+        for (const name of takes) {
+          const take = JSON.parse(readFileSync(join(replaced, name), "utf8")) as { rejected?: readonly string[] | null };
+          expect(take.rejected ?? [], `${slug}/replaced/${name} did not fail`).toEqual([]);
+          expect(reasons[name.replace(/\.json$/, "")]?.length ?? 0).toBeGreaterThan(20);
+        }
+      }
+    }
+  });
+
   it("keeps machine paths and session secrets out of every take, rejected ones included", () => {
     for (const slug of DEMO_SLUGS) {
-      for (const folder of [runsDir(slug), join(runsDir(slug), "rejected")]) {
+      for (const folder of [runsDir(slug), join(runsDir(slug), "rejected"), join(runsDir(slug), "replaced")]) {
         if (!existsSync(folder)) continue;
-        for (const name of readdirSync(folder).filter((entry) => !entry.endsWith(".ts") && entry !== "rejected")) {
+        for (const name of readdirSync(folder).filter((entry) => !entry.endsWith(".ts") && entry !== "rejected" && entry !== "replaced")) {
           expect(RECORDING_FORBIDDEN.test(readFileSync(join(folder, name), "utf8")), `${slug}/${name}`).toBe(false);
         }
       }

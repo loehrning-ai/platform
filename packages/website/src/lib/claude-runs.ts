@@ -106,6 +106,10 @@ export interface ScenePrompt {
   readonly followUpLabel?: string;
   /** Takes of this question that failed the honesty rules and are kept in claude-runs/rejected/ (shown as "aussortiert"). */
   readonly rejected?: number;
+  /** Why those takes failed, in a few words of the prompt's language ("eine Freigaberegel blockierte einen Befehl"). */
+  readonly rejectedReason?: string;
+  /** "Unsere Notiz" for this question; when absent, the scene's notes for the locale. */
+  readonly notes?: readonly string[];
 }
 
 /** What a demo exports as SCENE from claude-runs/index.ts. */

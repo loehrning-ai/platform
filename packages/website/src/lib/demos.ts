@@ -211,7 +211,7 @@ export const demos: readonly Demo[] = [
     workshopNumber: "04",
     plakat: "autumn",
     motif: "leaves",
-    minutes: 6,
+    minutes: 10,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
@@ -219,8 +219,8 @@ export const demos: readonly Demo[] = [
     lastReviewed: "2026-10-25",
     title: "Nachweisprobe",
     oneLiner:
-      "Vier Sätze, vier Dateien, vier Prüfungen. Dann derselbe Ordner für drei Anfragen, eine nachgereichte Rechnung und deine eigenen Sätze.",
-    question: "Deckt die Datei den Satz?",
+      "Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie belegt, und prüfst am Ende deine eigene Datei.",
+    question: "Welche Zeile belegt diese Antwort?",
     syntheticDataLabel:
       "Erfundenes Weingut, Dateien aus dem Workshop-Kit, Zeile für Zeile. Gerechnet in deinem Browser, ohne KI, nichts wird gesendet.",
     job: "Leg jede ESG-Antwort neben ihre Datei.",
@@ -231,8 +231,8 @@ export const demos: readonly Demo[] = [
     en: {
       title: "Evidence test",
       oneLiner:
-        "Four sentences, four files, four checks. Then the same folder for three requests, one late invoice and your own sentences.",
-      question: "Does the file cover the sentence?",
+        "One folder, three requests, one late invoice. You link each answer to the line that backs it, and at the end you check your own file.",
+      question: "Which line backs this answer?",
       syntheticDataLabel:
         "Invented winery, files from the workshop kit, line by line. Worked out in your browser, without AI, nothing is sent.",
       job: "Put every ESG answer next to its file.",

@@ -42,6 +42,8 @@
 .cds {
   container: cds / inline-size;
   display: grid;
+  /* minmax(0, 1fr): a long file chip or table never widens the window past the phone. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   width: 100%;
   max-width: 1080px;
@@ -645,7 +647,16 @@
   padding: 7px 10px;
   border-bottom: 0.5px solid var(--cd-line);
   text-align: left;
+  vertical-align: top;
+}
+/* Short cells (numbers, ids, statuses) stay on one line; a long reason wraps in a readable column, and the table scrolls sideways in its own box. */
+.cds-table th {
   white-space: nowrap;
+}
+.cds-table td {
+  min-width: 8rem;
+  max-width: 22rem;
+  overflow-wrap: break-word;
 }
 .cds-table th {
   font-weight: 600;

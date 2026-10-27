@@ -1,32 +1,32 @@
 import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
 
 /**
- * The intro of this demo (language-standard B.8) and its shell. Owned by this
- * demo's builder: switch SHELL to "v4" when the demo runs on the Glas shell.
- * The sentences are drafts from the language standard; check every claim
- * against the kit before shipping v4.
+ * The intro of this demo (language-standard B.8, W04 contract section 2) and
+ * its shell. Every claim checked against the kit: the winery is invented, the
+ * bank asks for the electricity use, the shelf card is claim 3 of
+ * anfragen/2-werbeaussagen.md, and the own file never leaves the browser.
  */
-export const SHELL: DemoShellVersion = "v3";
+export const SHELL: DemoShellVersion = "v4";
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "Vier Sätze an ihren Belegen prüfen",
+    title: "ESG-Antworten belegen",
     sentences: [
-      "Ein erfundenes Weingut soll vier Sätze über seine Nachhaltigkeit verschicken.",
-      "Du legst jeden Satz neben die Datei, die ihn belegen soll, und prüfst vier Dinge: Zitat, Zeitraum, Umfang und Freigabe.",
-      "Danach prüfst du eigene Sätze und nimmst die Prüfkarte, einen Skill und ein Nachweisregister mit.",
-      "Das dauert etwa {minutes} Minuten, und alles bleibt in deinem Browser.",
+      "Ein erfundenes Weingut will „Zertifizierte Bio-Weinberge“ auf seine Regalkarten drucken und einer Bank seinen Stromverbrauch nennen.",
+      "Du verbindest jede Antwort mit der Zeile, die sie belegt, und findest das fehlende Dokument.",
+      "Am Ende prüfst du deine eigene Stromdatei und nimmst einen Skill für Claude mit.",
+      "Das dauert etwa {minutes} Minuten, und nichts verlässt deinen Browser.",
     ],
-    start: "Mit dem ersten Satz starten",
+    start: "Mit der Regalkarte starten",
   },
   en: {
-    title: "Check four sentences against their evidence",
+    title: "Back your ESG answers",
     sentences: [
-      "An invented winery wants to send out four sentences about its sustainability.",
-      "You put each sentence next to the file that should prove it and check four things: the quote, the period, the scope and the sign-off.",
-      "Then you check sentences of your own and take the check card, a skill and an evidence register with you.",
-      "It takes about {minutes} minutes, and everything stays in your browser.",
+      "An invented winery wants “Certified organic vineyards” on its shelf cards and must report its electricity use to a bank.",
+      "You link each answer to the line that backs it and find the missing document.",
+      "At the end you check your own electricity file and take home a skill for Claude.",
+      "It takes about {minutes} minutes, and nothing leaves your browser.",
     ],
-    start: "Start with the first sentence",
+    start: "Start with the shelf card",
   },
 };

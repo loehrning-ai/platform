@@ -124,6 +124,24 @@ export function daysBetween(a: CalendarDate, b: CalendarDate): number {
   return Math.round((utc(b) - utc(a)) / 86_400_000);
 }
 
+/** The day a number of days after a date (negative goes back). */
+export function addDays(date: CalendarDate, days: number): CalendarDate {
+  const at = new Date(Date.UTC(date.year, date.month - 1, date.day + days));
+  return { year: at.getUTCFullYear(), month: at.getUTCMonth() + 1, day: at.getUTCDate() };
+}
+
+/** -1, 0 or 1: a before, same day, or after b. */
+export function compareDates(a: CalendarDate, b: CalendarDate): number {
+  return Math.sign(daysBetween(b, a));
+}
+
+/**
+ * The EU ban list in force (Richtlinie (EU) 2024/825, Anhang I, as
+ * nachweisprobe.md line 20 dates it): from this day a claim on it is
+ * banned with or without evidence.
+ */
+export const BAN_DATE: CalendarDate = { year: 2026, month: 9, day: 27 };
+
 /** Expired on the reference date: valid until a day before it. */
 export function isExpired(validUntil: CalendarDate, referenceDate: CalendarDate): boolean {
   return daysBetween(validUntil, referenceDate) > 0;
