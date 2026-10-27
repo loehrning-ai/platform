@@ -27,6 +27,7 @@ import {
   SECRET_VALUE_RULES,
   hasBase64SecretShape,
   isPrivateExportPath,
+  isReadableRelativeFilePath,
   matchedPrivateRules,
 } from "./export-denylist.mjs";
 import {
@@ -1265,6 +1266,7 @@ function isPublicBase64Token(line, basename, match, rel) {
     }
   }
   if (before.endsWith(";base64,")) return true;
+  if (isReadableRelativeFilePath(token, line.slice(end))) return true;
   if (
     /^sha(?:256|384|512)-[A-Za-z0-9+/_-]{20,}={0,2}$/i.test(token)
   ) {
