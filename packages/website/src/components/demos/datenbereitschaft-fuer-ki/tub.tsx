@@ -279,6 +279,9 @@ export function Tub({
     wideShare > 0.5 || phone,
   );
   const notchShown = Boolean(onOpening) && !computed && !asLevel && shown < 4_000 && drag === null;
+  // The notch label sits over December and January; where January shows its pill, it rises above it.
+  const janTop = labelMonths.includes("2026-01") ? pillTops.get("2026-01") : undefined;
+  const notchY = janTop == null ? openingY - 15 : Math.min(openingY - 15, janTop - 4);
   const toSvg = (clientX: number, clientY: number) => svgPoint(svg.current, clientX, clientY);
   const geometry: TubGeometry = { cols, col, levels, toSvg, box, phone };
   const chipMonth = chip ? MONTHS_2026.indexOf(chip) : -1;
@@ -540,7 +543,7 @@ export function Tub({
       ) : null}
       {scale > 0 && overlay ? overlay(geometry) : null}
       {scale > 0 && notchShown ? (
-        <span className="w03-notch" style={{ right: Math.max(0, size.w - (offsetX + (PLOT.r + 44) * scale)), bottom: size.h - (offsetY + (openingY - 15) * scale) }}>
+        <span className="w03-notch" style={{ left: offsetX + (PLOT.l + 4) * scale, bottom: size.h - (offsetY + notchY * scale) }}>
           {pack.wanne.notch}
         </span>
       ) : null}

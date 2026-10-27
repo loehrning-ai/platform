@@ -1993,8 +1993,17 @@ textarea.w03-input {
 .w03-root:not([data-desktop]) .w03-zone {
   position: relative;
   align-content: start;
-  min-height: 96px;
+  min-height: 56px;
   padding: 8px;
+}
+/* The pile needs no visible heading on a phone (its group label says it), so every file fits above the dock. */
+.w03-root:not([data-desktop]) .w03-pile > .w03-zone-name {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .w03-root:not([data-desktop]) .w03-zone-chips {
   min-height: 0;

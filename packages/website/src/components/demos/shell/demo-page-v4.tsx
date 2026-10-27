@@ -4,7 +4,7 @@ import { ClaudeDesktopScene } from "@/components/demos/claude-scene/claude-deskt
 import { localScene } from "@/components/demos/claude-scene/claude-scene-section";
 import { GlasRoot } from "@/components/demos/glas/glas-root";
 import { LessGlassRow } from "@/components/demos/glas/less-glass";
-import type { Beat } from "@/lib/demo-beats";
+import { TAKEHOME_TARGET_ID, type Beat } from "@/lib/demo-beats";
 import { introSentences } from "@/lib/demo-intro";
 import { DEMO_INTROS } from "@/lib/demo-intros";
 import { demoLede, type LocalizedDemo } from "@/lib/demos";
@@ -53,7 +53,7 @@ export function DemoPageV4({
   const takeHomeInStage = DEMO_INTROS[demo.slug].TAKEHOME_IN_STAGE === true;
   const scene = takeHomeInStage ? null : localScene(demo.slug, locale);
   const claude = scene ? (
-    <div className="demo4-finale-claude" data-claude-scene-section="">
+    <div className="demo4-finale-claude" id={TAKEHOME_TARGET_ID} data-claude-scene-section="">
       <div className="demo4-finale-head">
         <h2 className="demo4-finale-title">{pageCopy.claudeScene.heading}</h2>
         <p className="demo4-finale-lead">{scene.scene.prompts.some((prompt) => prompt.withoutSkill.length > 0) ? pageCopy.claudeScene.lead : pageCopy.claudeScene.leadSingle}</p>
