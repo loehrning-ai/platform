@@ -143,11 +143,12 @@ test("each deck edition carries the kit's five prompts byte for byte", () => {
 });
 
 test("the objective is word for word the same in deck, kit and demo, in both languages", () => {
-  const demo = readFileSync(path.join(REPO_ROOT, "packages/website/src/lib/demo-cases/esg-berichte-mit-ki/copy.ts"), "utf8");
-  const marks = { de: /"(Jede Antwort, die die Firma verlässt[^"]+)"/, en: /"(Every answer that leaves the company[^"]+)"/ };
+  // The demo types no objective of its own: card-words.ts reads it from the
+  // kit's start file, so deck and kit agreeing is the whole check.
+  const words = readFileSync(path.join(REPO_ROOT, "packages/website/src/lib/demo-cases/esg-berichte-mit-ki/card-words.ts"), "utf8");
+  assert.match(words, /OBJECTIVE = \{ de: objectiveFrom\(startFile\("de"\)\), en: objectiveFrom\(startFile\("en"\)\) \}/, "demo reads the objective from the kit");
   const labels = { de: "**Lernziel:**", en: "**Learning objective:**" };
   for (const [locale, file] of Object.entries(EDITIONS)) {
-    const fromDemo = marks[locale].exec(demo)?.[1];
     const guide = startGuide(locale);
     const at = guide.indexOf(labels[locale]);
     assert.ok(at >= 0, `${locale}: kit names the objective`);
@@ -155,7 +156,6 @@ test("the objective is word for word the same in deck, kit and demo, in both lan
     const blocks = [...text(file).matchAll(/<blockquote class="objective"[^>]*>([\s\S]*?)<\/blockquote>/g)].map(([, body]) => visible(body));
     assert.ok(blocks.length >= 1, `${locale}: deck shows the objective`);
     for (const fromDeck of blocks) assert.equal(fromDeck, fromKit, `${locale}: deck`);
-    assert.equal(fromDemo, fromKit, `${locale}: demo`);
   }
 });
 
