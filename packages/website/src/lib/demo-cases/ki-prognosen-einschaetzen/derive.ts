@@ -5,7 +5,7 @@
  * so the kit's numbers and a visitor's file go through the same lines
  * (derive.test.ts pins the kit's values).
  */
-import { binomialAtMost, LAMP_KEYS, PRUEF, TREFFER_MIN, type Checker, type CheckResult, type LampKey } from "./check";
+import { BIAS_MAX, binomialAtMost, LAMP_KEYS, PRUEF, TREFFER_MIN, type Checker, type CheckResult, type LampKey } from "./check";
 
 export interface Pin {
   readonly t: number;
@@ -153,4 +153,92 @@ export function planErrors(check: Checker, result: CheckResult): { readonly erro
   const next = result.naechste;
   const buffer = next?.planzahl !== undefined ? next.planzahl - next.prognose : null;
   return { errors, buffer };
+}
+
+/** Scene 2: weeks where the tool was strictly closer, where the rule was, and ties. They add up to the scored weeks. */
+export function closerCounts(check: Checker): { readonly tool: number; readonly rule: number; readonly ties: number } {
+  let tool = 0;
+  let rule = 0;
+  for (const t of check.wochen) {
+    const ist = check.rows[t]!.ist as number;
+    const f = Math.abs((check.forecast(t) as number) - ist);
+    const r = Math.abs((check.rule(t) as number) - ist);
+    if (f < r) tool += 1;
+    else if (r < f) rule += 1;
+  }
+  return { tool, rule, ties: check.wochen.length - tool - rule };
+}
+
+/**
+ * Scene 4: what a buffer of b jars on top of the forecast would have cost
+ * over these errors (actual minus forecast), the ledger formula of check.ts:
+ * cu for every jar short, co for every jar left over.
+ */
+export function bufferCost(errors: readonly number[], cu: number, co: number, b: number): number {
+  let cost = 0;
+  for (const e of errors) cost += cu * Math.max(0, e - b) + co * Math.max(0, b - e);
+  return cost;
+}
+
+/** The whole-jar buffer with the lowest cost (the leftmost on a tie), searched over the errors' span. */
+export function bufferArgmin(errors: readonly number[], cu: number, co: number): { readonly buffer: number; readonly cost: number } {
+  if (errors.length === 0) return { buffer: 0, cost: 0 };
+  const lo = Math.floor(Math.min(...errors));
+  const hi = Math.ceil(Math.max(...errors));
+  let best = { buffer: lo, cost: bufferCost(errors, cu, co, lo) };
+  for (let b = lo + 1; b <= hi; b += 1) {
+    const cost = bufferCost(errors, cu, co, b);
+    if (cost < best.cost - 1e-9) best = { buffer: b, cost };
+  }
+  return best;
+}
+
+export interface LampRun {
+  readonly from: number;
+  readonly to: number;
+  readonly weeks: number;
+}
+
+/** Scene 5: the longest run of consecutive strip weeks in which each lamp was red (null when it never was). */
+export function lampRuns(check: Checker): Readonly<Record<LampKey, LampRun | null>> {
+  const out: Record<LampKey, LampRun | null> = { daten: null, messlatte: null, bias: null, spanne: null };
+  for (const key of LAMP_KEYS) {
+    let current: { from: number; to: number } | null = null;
+    for (const t of check.streifen) {
+      const red = check.lamps(t)?.[key] === false;
+      if (red) current = current && current.to === t - 1 ? { from: current.from, to: t } : { from: t, to: t };
+      else current = null;
+      if (current) {
+        const weeks = current.to - current.from + 1;
+        const best = out[key];
+        if (!best || weeks > best.weeks) out[key] = { from: current.from, to: current.to, weeks };
+      }
+    }
+  }
+  return out;
+}
+
+/** The lamps red in every week of a run (the "two lights stayed red" sentence), in lamp order. */
+export function lampsSpanning(check: Checker, run: { readonly from: number; readonly to: number }): readonly LampKey[] {
+  const weeks = check.streifen.filter((t) => t >= run.from && t <= run.to);
+  return LAMP_KEYS.filter((key) => weeks.length > 0 && weeks.every((t) => check.lamps(t)?.[key] === false));
+}
+
+/**
+ * Scene 5, the bias lamp drawn: the 13 errors (actual minus forecast) before
+ * week t, their mean, and the band of ±5 % of the mean sales. The mean bar is
+ * −bias × mean sales, so it leaves the band exactly when the lamp is red.
+ */
+export function biasWindow(check: Checker, t: number): { readonly weeks: readonly number[]; readonly mean: number; readonly band: number } | null {
+  const { weeks, errors } = check.errorsBefore(t, PRUEF);
+  if (weeks.length < PRUEF) return null;
+  const sales = weeks.reduce((a, k) => a + (check.rows[k]!.ist as number), 0) / weeks.length;
+  const mean = errors.reduce((a, e) => a + e, 0) / errors.length;
+  return { weeks, mean, band: BIAS_MAX * sales };
+}
+
+/** The accuracy line of the kit's tool-export.txt ("Prognosegenauigkeit 2025: 94,2 %"), as a share. */
+export function exportAccuracy(text: string): number | null {
+  const match = /(?:Prognosegenauigkeit|Forecast accuracy) \d{4}: (\d+)[,.](\d) %/.exec(text);
+  return match ? Number(`${match[1]}.${match[2]}`) / 100 : null;
 }

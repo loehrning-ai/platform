@@ -24,7 +24,7 @@ For each week, take the errors (actual − forecast) of the 26 valid weeks befor
 Their 10 % and 90 % values, added to the forecast, give the week's 80 % range.
 
 a) Guess first: in how many of the 50 weeks did the actual land inside the range?
-b) One week by hand, the week from 07.04.2025. Take the errors of the 26 valid weeks
+b) One week by hand, the week of 07.04.2025. Take the errors of the 26 valid weeks
    before it (16.09.2024 to 31.03.2025, without 04.11., 03.02. and 10.03.).
    =PERCENTILE.INC(errors,0.1) and =PERCENTILE.INC(errors,0.9), both added to the
    forecast 607. Did the actual 484 land inside the range?
@@ -32,7 +32,7 @@ c) Count all 50 weeks (demo, skill or pruefen.py). Then separately before and fr
    07.04.2025.
 d) What does the note say on 07.04.2025, and how does it explain c)?
 
-## 3. Planning number (5 minutes)
+## 3. Order quantity (5 minutes)
 
 a) Read costs.md. Which share of weeks do you want to cover?
    shortage ÷ (shortage + leftover).
@@ -44,10 +44,10 @@ c) The canteen stops collecting. What changes?
 
 Read release-rule.md and test it against 2025.
 
-a) One lamp by hand: the bias for the week from 21.04.2025, over the 13 valid weeks
+a) One check light by hand: the bias for the week of 21.04.2025, over the 13 valid weeks
    before it (06.01. to 14.04.2025, without 03.02. and 10.03.).
    =(SUM(forecast) − SUM(actual)) ÷ SUM(actual). Green or red?
-b) In which weeks would the rule have stopped the forecast, and which lamp was red?
+b) In which weeks would the rule have stopped the forecast, and which check light was red?
 c) How many weeks after the delisting does it react?
 d) Who would have decided in those weeks, and with which number and which reason?
 

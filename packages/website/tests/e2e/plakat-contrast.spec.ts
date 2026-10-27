@@ -60,14 +60,19 @@ const NUMERAL_SHARE = 0.25;
  * the home hero is the line globe on paper, the workshop hub header is on
  * paper, /kurse keeps its H1 on paper per SPEC §3.4, §4). Their posters, where
  * they have any, are still scenes.
+ *
+ * The /demos hub is Glas (demos v4): its H1 sits on the living field under
+ * glass plates, not on a poster band. Glas text contrast (4.5:1 with no credit
+ * for blur) is held by src/lib/glas.test.ts; band or poster text added to the
+ * hub later is still measured here.
  */
-const PAPER_HERO_ROUTES = new Set<string>(["/", "/workshops", "/kurse"]);
+const PAPER_HERO_ROUTES = new Set<string>(["/", "/workshops", "/kurse", "/demos"]);
 /**
  * Routes with no scene text to measure: home shows no band or poster at all,
  * and the /kurse posters are text-free art. The check still runs there, so a
  * band or a poster text added later is measured.
  */
-const NO_SCENE_TEXT_ROUTES = new Set<string>(["/", "/kurse"]);
+const NO_SCENE_TEXT_ROUTES = new Set<string>(["/", "/kurse", "/demos"]);
 
 test.describe("poster scenes keep text contrast over bands and posters", () => {
   test.skip(

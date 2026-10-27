@@ -1,0 +1,6 @@
+# Fictional training material. Systems that hold Tannwald data. Owner: Goran Petrovski, IT lead. Approved 2026-09-02 by Dragan Ilievski, Managing Director.
+system,purpose,tannwald_data,stored_in,admin_owner
+Servicepult,ticket system for service requests,"names, addresses, phone numbers, appliance serial numbers",Germany (Frankfurt),IT lead
+Sprechband,call recording,voice recordings of service calls,Germany (Frankfurt),team lead Tannwald desk
+Nordlager file share,files and nightly backups,"Servicepult exports, contracts",Germany (Frankfurt),IT lead
+Claude Team (browser and desktop app; 25 seats since 2026-09-01),drafting replies to service requests,request text pasted by agents,United States (see vendor-page_claude_2026-06-15.md),IT lead

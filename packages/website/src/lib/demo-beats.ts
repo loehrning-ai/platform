@@ -23,6 +23,16 @@ export interface Beat {
   readonly label: { readonly de: string; readonly en: string };
   /** A path inside the workshop's kit zip this beat quotes or acts on. */
   readonly kitFile?: string;
+  /**
+   * v4: the step as a full sentence in the guided path ("Du setzt die
+   * Gewichte."), shown after "Schritt 2 von 5:". Without it the label is used.
+   */
+  readonly step?: { readonly de: string; readonly en: string };
+  /**
+   * v4: the name of this step for the "Weiter" before it ("die Spanne", so the
+   * button reads "Weiter: die Spanne"). Without it the button says "Weiter".
+   */
+  readonly nextName?: { readonly de: string; readonly en: string };
 }
 
 export const MAX_BEATS = 8;
@@ -51,6 +61,41 @@ export function validateBeats(beats: readonly Beat[]): readonly string[] {
     }
     if (beat.kitFile !== undefined && (beat.kitFile.startsWith("/") || beat.kitFile.includes(".."))) {
       errors.push(`beat "${beat.id}": kitFile must be a path inside the kit zip`);
+    }
+  }
+  return errors;
+}
+
+/**
+ * The v4 contract (Glas shell): the path may be shaped freely around the
+ * kit, but it starts with a commit (the visitor's own estimate), contains
+ * exactly one own beat (the visitor's data) and ends with the takehome beat;
+ * at most three apply beats and eight beats in all. Ids, seconds, labels and
+ * kit files follow the v3 rules; step sentences and next names, when given,
+ * exist in both languages and carry no dashes.
+ */
+export function validateBeatsV4(beats: readonly Beat[]): readonly string[] {
+  const errors: string[] = [];
+  const kinds = beats.map((beat) => beat.kind);
+  if (kinds[0] !== "commit") errors.push(`the first beat must be a commit, got "${kinds[0] ?? "none"}"`);
+  if (kinds[kinds.length - 1] !== "takehome") errors.push(`the last beat must be the takehome, got "${kinds[kinds.length - 1] ?? "none"}"`);
+  if (kinds.filter((kind) => kind === "own").length !== 1) errors.push("exactly one own beat");
+  if (kinds.filter((kind) => kind === "takehome").length !== 1) errors.push("exactly one takehome beat");
+  if (kinds.filter((kind) => kind === "apply").length > MAX_APPLY_BEATS) errors.push(`at most ${MAX_APPLY_BEATS} apply beats`);
+  if (beats.length > MAX_BEATS) errors.push(`${beats.length} beats, at most ${MAX_BEATS}`);
+  // Everything except the order rule is shared with v3.
+  const shared = validateBeats(beats).filter((error) => !error.startsWith("kinds must read"));
+  errors.push(...shared.filter((error) => !error.includes(" beats, at most ")));
+  for (const beat of beats) {
+    for (const field of ["step", "nextName"] as const) {
+      const value = beat[field];
+      if (!value) continue;
+      for (const locale of ["de", "en"] as const) {
+        const text = value[locale];
+        if (!text) errors.push(`beat "${beat.id}": ${field} needs ${locale}`);
+        else if (/[\u2013\u2014]/.test(text)) errors.push(`beat "${beat.id}": ${field} ${locale} has a dash`);
+        else if (field === "step" && !/[.!?]$/.test(text.trim())) errors.push(`beat "${beat.id}": step ${locale} must be a full sentence`);
+      }
     }
   }
   return errors;

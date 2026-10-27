@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { STACK } from "./config";
-import { compute, fill, fmtEur, parse, parseCents, scaled, splitRow } from "./stack";
+import { compute, fill, fmtEur, fmtNumber, parse, parseCents, scaled, splitRow } from "./stack";
 
 describe("Workshop 06 demo: the stack engine", () => {
   it("reads German and English amounts the way the original does", () => {
@@ -57,5 +57,14 @@ describe("Workshop 06 demo: the stack engine", () => {
     expect(fmtEur(2655400, "en")).toBe("€26,554");
     expect(fmtEur(-52800, "de")).toBe("−528 €");
     expect(fill("{a} und {b}", { a: 1 })).toBe("1 und {b}");
+  });
+
+  it("drops trailing zeros only after a decimal point", () => {
+    expect(fmtNumber(10, 0, "de")).toBe("10");
+    expect(fmtNumber(0, 0, "de")).toBe("0");
+    expect(fmtNumber(100, 2, "en")).toBe("100");
+    expect(fmtNumber(6.5, 2, "de")).toBe("6,5");
+    expect(fmtNumber(6.966, 2, "en")).toBe("6.97");
+    expect(fmtNumber(10, 1, "de")).toBe("10");
   });
 });

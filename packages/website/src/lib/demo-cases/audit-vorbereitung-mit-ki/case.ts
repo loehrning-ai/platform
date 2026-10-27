@@ -8,6 +8,7 @@
  */
 
 import type { ItemId } from "./classify";
+import { firstDate } from "./dates";
 import { kitText, type FolderFile } from "./kit";
 
 export type { ItemId } from "./classify";
@@ -25,6 +26,8 @@ export interface AuditContext {
   readonly systems: readonly string[];
   /** The deadline the gap owners get. */
   readonly due: string;
+  /** The date the customer wants the documents by. */
+  readonly sendBy: string;
 }
 
 export type Check = "storage" | "transfer" | "share" | "notice";
@@ -109,7 +112,7 @@ export const ITEMS: readonly Item[] = [
   },
   {
     id: "R2",
-    label: { de: "Unterauftragnehmer + Rechtsgrundlage", en: "Sub-processors + legal basis" },
+    label: { de: "Unterauftragnehmer und Rechtsgrundlage", en: "Sub-processors and legal basis" },
     short: { de: "Unterauftrag", en: "Sub-processors" },
     request: req("R2").text,
     section: req("R2").section,
@@ -197,7 +200,7 @@ export const ITEMS: readonly Item[] = [
   },
   {
     id: "R6",
-    label: { de: "Vorfälle 2026 + Meldung", en: "Incidents 2026 + notice" },
+    label: { de: "Vorfälle 2026 und Meldung", en: "Incidents 2026 and notice" },
     short: { de: "Vorfälle", en: "Incidents" },
     request: req("R6").text,
     section: req("R6").section,
@@ -265,6 +268,43 @@ export function itemById(id: ItemId): Item {
   return item;
 }
 
+/** An ISO date from the first date in a line of kit text that `re` finds; throws when the kit lost the line. */
+function kitDate(text: string, re: RegExp, what: string): string {
+  const line = re.exec(text)?.[0];
+  const iso = line ? firstDate(line)?.iso : null;
+  if (!iso) throw new Error(`kit: no ${what} date`);
+  return iso;
+}
+
+/** The audit date, from "Remote audit: Thursday 10 December 2026" in the request. */
+export function auditDateOf(text = kitText("request_tannwald.md")): string {
+  return kitDate(text, /^Remote audit:.*$/m, "audit");
+}
+
+/** The window start, from "dated on or after 10 December 2025" in the request. */
+export function windowStartOf(text = kitText("request_tannwald.md")): string {
+  return kitDate(text, /dated on or after [^.]+/, "window");
+}
+
+/** The date the documents are due at the customer, from "Please send the documents for R1 to R8 by Wednesday 25 November 2026." */
+export function sendByOf(text = kitText("request_tannwald.md")): string {
+  return kitDate(text, /send the documents[^.]+/, "send");
+}
+
+/** The deadline of the gap list: "Needed by 2 December 2026" in ANSWERS.md, „Bis 2. Dezember 2026" in LOESUNGEN.md. */
+export function dueDateOf(locale: "de" | "en" = "en"): string {
+  return locale === "de"
+    ? kitDate(kitText("de/LOESUNGEN.md"), /^Lückenliste:.*Bis [^.]+\. [^.]+\./m, "due")
+    : kitDate(kitText("ANSWERS.md"), /Needed by [^.]+/, "due");
+}
+
+/** Whole months between the window start and the audit (12 for the kit). */
+export function windowMonthsOf(windowStart: string, audit: string): number {
+  const [y1, m1] = windowStart.split("-").map(Number) as [number, number];
+  const [y2, m2] = audit.split("-").map(Number) as [number, number];
+  return (y2 - y1) * 12 + (m2 - m1);
+}
+
 /** The request's own numbers: the audit date, the window and the two thresholds. */
 export function vardarContext(text = kitText("request_tannwald.md")): AuditContext {
   const share = /at least (\d+)%/.exec(text);
@@ -276,12 +316,13 @@ export function vardarContext(text = kitText("request_tannwald.md")): AuditConte
     .map((line) => (line.split(",")[0] ?? "").replace(/ \(.*$/, "").replace(/ file share$/, ""));
   return {
     customer: "Tannwald",
-    audit: "2026-12-10",
-    windowStart: "2025-12-10",
+    audit: auditDateOf(text),
+    windowStart: windowStartOf(text),
     trainingShare: Number(share?.[1] ?? 0) / 100,
     noticeHours: Number(hours?.[1] ?? 0),
     systems,
-    due: "2026-12-02",
+    due: dueDateOf("en"),
+    sendBy: sendByOf(text),
   };
 }
 

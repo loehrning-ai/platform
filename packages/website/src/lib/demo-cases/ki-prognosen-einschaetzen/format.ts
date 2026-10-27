@@ -35,11 +35,11 @@ export function plural(count: number, forms: { readonly one: string; readonly ma
 /** One decimal, always shown: 33,3 / 33.3. */
 export const formatOne = (value: number, locale: DemoLocale) => formatNumber(value, locale, 1, 1);
 
-/** A share as percent: 92,6 % / 92.6 %, with a sign when asked (+3,0 %). */
+/** A share as percent: 92,6 % in German (a narrow gap), 92.6% in English (none), with a sign when asked (+3,0 %). */
 export function formatPercent(share: number, locale: DemoLocale, { decimals = 1, sign = false } = {}): string {
   const text = formatNumber(share * 100, locale, decimals, decimals);
   const signed = sign && share > 0 ? `+${text}` : text;
-  return `${signed}${NBSP}%`;
+  return locale === "de" ? `${signed}${NBSP}%` : `${signed}%`;
 }
 
 /** Euro, rounded half up to whole euros unless decimals are asked for: 2.052 € / €2,052. */

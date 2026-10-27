@@ -21,7 +21,8 @@ describe("the demo's constants are the kit's", () => {
     const { result } = kitCheck(null, null);
     const accuracy = 1 - (result.tabelle.Prognose?.wape ?? 1);
     expect(kitFile("de/daten/tool-export.txt")).toContain(formatPercent(accuracy, "de").replace(" ", " "));
-    expect(kitFile("en/data/tool-export.txt")).toContain(formatPercent(accuracy, "en").replace(" ", " "));
+    // The English export prints "94.2 %" the way the tool writes it; the demo writes 94.2%.
+    expect(kitFile("en/data/tool-export.txt").replace(/\s%/g, "%")).toContain(formatPercent(accuracy, "en"));
   });
 
   it("reads 104 weeks of actuals and one plan week", () => {

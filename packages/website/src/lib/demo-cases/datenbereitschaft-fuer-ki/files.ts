@@ -10,6 +10,7 @@
  * FOLDLINE edition of each, made by these same functions (kit-lockstep.test.ts).
  * The expected values appear only in the test list.
  */
+import KIT_NAMES from "./kit-names.json";
 import { zipStore } from "@/lib/zip/store";
 import { cell, clean, isoDate, metricSlug, neverItems, parseExpected, usableColumn, valueTokens, type Lock, type OwnCard } from "./card";
 import { canAdd, type AddRule, type Kind } from "./logic";
@@ -145,7 +146,7 @@ export function checklistMd(card: OwnCard, text: FileText): string {
 /** The visitor's skill zip: the unchanged SKILL.md plus their references file. */
 export function skillZip(card: OwnCard, text: FileText): Uint8Array {
   return zipStore([
-    { path: `${SKILL_NAME}/SKILL.md`, data: SKILL_MD },
+    { path: `${SKILL_NAME}/${KIT_NAMES.skill}`, data: SKILL_MD },
     { path: `${SKILL_NAME}/references/kennzahlen.md`, data: definitionsMd(card, text) },
   ]);
 }

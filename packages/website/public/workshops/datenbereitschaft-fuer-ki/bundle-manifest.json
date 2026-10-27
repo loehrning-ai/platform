@@ -157,7 +157,7 @@
     {
       "path": "data-readiness-kit.zip",
       "sizeBytes": 1140159,
-      "sha256": "04f1cc295c3e820deda5a68eb34cb20c3d944763b408fca617b8728e68942bf9"
+      "sha256": "8baf77375c3bc7ae71307301495268cf8bdcfe8c47b8f444e62e437550635757"
     },
     {
       "path": "data-readiness-kit/ASSET-RIGHTS.md",
@@ -582,7 +582,7 @@
     {
       "path": "data-readiness-kit/claude/README.md",
       "sizeBytes": 4006,
-      "sha256": "4c62768727a17b7ef4810974efbbb4703b60ceb79ff2aceb55dea457b885cd4e"
+      "sha256": "9d9dbde1b2a4ae867ae74095f6f3868423d3a451b29ca26a8c077528af6c4af7"
     },
     {
       "path": "data-readiness-kit/claude/TEST-LIST-TEMPLATE.md",

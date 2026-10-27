@@ -155,6 +155,7 @@
   ]
  ],
  "anteil": 0.7894736842105263,
+ "kosten_wochen": 50,
  "kosten": {
   "Messlatte": 2051.5,
   "Prognose": 1105.2,

@@ -100,15 +100,21 @@ describe("hub tile scenes", () => {
 });
 
 describe("hub styles", () => {
-  it("keeps hard edges, explicit transitions and anti-colour states", () => {
-    expect(HAND_RULES).not.toMatch(/border-radius|box-shadow|gradient|transition:\s*all|filter:/);
-    expect(HAND_CSS).toContain("var(--color-scene-anti-a)");
-    expect(HAND_CSS).toContain("var(--color-scene-anti-b)");
+  it("draws Glas tiles without any filter, with explicit transitions and fine-pointer hover", () => {
+    // Frost: six tiles cost zero live filters, so no backdrop-filter, filter or gradient here.
+    expect(HAND_RULES).not.toMatch(/backdrop-filter|filter:|gradient|transition:\s*all/);
+    expect(HAND_CSS).toMatch(/\.dt-card \{[^}]*border-radius: 28px/);
+    expect(HAND_CSS).toMatch(/\.dt-cap \{[^}]*border-radius: 20px/);
     expect(HAND_CSS).toMatch(/@media \(hover: hover\) and \(pointer: fine\)/);
     expect(HAND_CSS).toMatch(/\.dt-item:has\(\.dt-link:focus-visible\)/);
+    expect(HAND_CSS).toMatch(/prefers-reduced-transparency: reduce/);
     const transitions = [...HAND_CSS.matchAll(/transition:[^;]+;/g)].map((match) => match[0]);
     expect(transitions.length).toBeGreaterThan(0);
-    for (const transition of transitions) expect(transition).toMatch(/transform/);
+    // Only transform and opacity move; a shadow never animates.
+    for (const transition of transitions) {
+      expect(transition).toMatch(/transform/);
+      expect(transition).not.toMatch(/box-shadow/);
+    }
     // Transitions only without a reduced-motion request.
     const motionBlock = HAND_CSS.slice(HAND_CSS.indexOf("@media (prefers-reduced-motion: no-preference)"));
     expect(motionBlock).toContain("transition:");
@@ -119,7 +125,8 @@ describe("hub styles", () => {
 
   it("never lets the hub import a demo component or its css", () => {
     const page = readFileSync(join(WEBSITE, "src/app/demos/page.tsx"), "utf8");
-    expect(page).not.toMatch(/components\/demos\/(?!hub\/)[a-z-]+\//);
+    // The shared Glas design system is allowed; no demo's own folder is.
+    expect(page).not.toMatch(/components\/demos\/(?!hub\/|glas\/)[a-z-]+\//);
   });
 });
 

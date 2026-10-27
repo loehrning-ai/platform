@@ -1,13 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { demoShell } from "../../src/lib/demo-intros";
 import { demos } from "../../src/lib/demos";
 import { expectGlassBudget } from "./fixtures/glass";
 
 /**
- * The v3 shell contract all six demos share:
- * the stage and the lever own the first screen at 390 x 664 without the page
- * scrolling itself, a restart is visible, and at most two glass surfaces show.
+ * The v3 shell contract, for every demo still on the v3 shell (none since
+ * demos v4; demo-v4-shell.spec.ts holds the Glas demos): the stage and the
+ * lever own the first screen at 390 x 664 without the page scrolling itself,
+ * a restart is visible, and at most two glass surfaces show.
  */
-const V3 = demos;
+const V3 = demos.filter((demo) => demoShell(demo.slug) === "v3");
 
 for (const demo of V3) {
   test.describe(`${demo.slug} on the v3 shell`, () => {

@@ -475,7 +475,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         language: "de",
         role: "kit",
         phase: "during",
-        sizeLabel: "42 KB",
+        sizeLabel: "43 KB",
         description:
           "Daten, Tool-Export, Kosten, vier Aufgaben, Lösungen, die Prüfregel, pruefen.py und der Claude-Skill. Nur Textdateien.",
         short: "Die Linsensuppe, vier Aufgaben, Lösungen und die Prüfregel.",
@@ -884,7 +884,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         language: "en",
         role: "kit",
         phase: "during",
-        sizeLabel: "42 KB",
+        sizeLabel: "43 KB",
         description:
           "Data, tool export, costs, four tasks, solutions, the release rule, pruefen.py and the Claude skill. Text files only.",
         short: "The lentil soup, four tasks, solutions and the release rule.",

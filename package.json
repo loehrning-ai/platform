@@ -59,6 +59,7 @@
     "test:ci": "node --test scripts/__tests__/ci.test.mjs",
     "copy:lint": "node scripts/copy-lint.mjs",
     "test:copy-lint": "node --test scripts/__tests__/copy-lint.test.mjs",
+    "test:claude-recorder": "node --test scripts/__tests__/record-claude-run.test.mjs",
     "deck-keys:check": "node scripts/workshops/sync-deck-keys.mjs --check",
     "workshop05-deck:check": "node scripts/workshop05/deck-src/build.mjs --check",
     "workshop06-kit:check": "node scripts/workshop06/build-kit.mjs --check",

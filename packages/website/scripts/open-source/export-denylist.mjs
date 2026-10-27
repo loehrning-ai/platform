@@ -564,6 +564,28 @@ export function hasBase64SecretShape(token) {
 }
 
 /**
+ * A kit file path such as "vardar-audit-kit/folder/infosec-policy_v3_FINAL.md"
+ * is 40+ characters of mixed case and digits, so the base64 heuristic would
+ * flag it. It is exempt only when it has a folder separator, is followed at
+ * once by a file extension, and every piece between "/", "-" and "_" is a
+ * plain word, a number, or a word with trailing digits, at most 16 characters.
+ * A random base64 secret switches character class inside almost every piece,
+ * so it does not pass; explicit credential patterns are still checked.
+ */
+export function isReadableRelativeFilePath(token, after) {
+  if (!token.includes("/") || token.startsWith("/") || token.endsWith("/")) return false;
+  if (!/^\.[a-z0-9]{1,5}(?![A-Za-z0-9+/_-])/.test(after)) return false;
+  return token
+    .split(/[/_-]/)
+    .every(
+      (piece) =>
+        piece.length > 0 &&
+        piece.length <= 16 &&
+        /^(?:[a-z]+[0-9]*|[A-Z]+[0-9]*|[A-Z][a-z]+[0-9]*|[0-9]+)$/.test(piece),
+    );
+}
+
+/**
  * Lockfile basenames (lower case) whose integrity hashes are base64 by design.
  * The generic base64 heuristic is skipped for these so hashes do not
  * false-positive; the prefixed secret rules still apply.

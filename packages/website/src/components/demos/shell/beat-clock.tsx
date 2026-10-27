@@ -22,6 +22,17 @@ export const INTRO_THRESHOLD = 0.6;
 
 export type BeatCause = "load" | "user";
 
+/** Which shell the page runs: v3 (beat rail, Weiter after each beat) or v4 (Glas: intro card, guided path, free play). */
+export type DemoShellVersion = "v3" | "v4";
+
+/**
+ * v4 only. intro: the intro card covers the stage, nothing moves yet.
+ * guided: the beats in order (the Weg). free: every control open, the Weg
+ * collapsed into "Zur Führung", which restores the beat the visitor left.
+ * A v3 page is always "guided".
+ */
+export type DemoPhase = "intro" | "guided" | "free";
+
 export interface BeatClock {
   readonly beats: readonly Beat[];
   readonly locale: Locale;
@@ -52,10 +63,29 @@ export interface BeatClock {
   readonly registerStage: (element: HTMLElement | null) => void;
   /** Called after every restart: reset bets, predictions and motion, never own data. */
   readonly onRestart: (listener: () => void) => () => void;
-  /** Called on Escape: close an open detail card. */
-  readonly onEscape: (listener: () => void) => () => void;
+  /**
+   * Called on Escape: close an open detail card and return true. When no
+   * listener returns true, Escape leaves free play (v4), the same in every demo.
+   */
+  readonly onEscape: (listener: EscapeListener) => () => void;
   /** Lets the current beat hold "Weiter" and ArrowRight, or take a press for an inner step (useBeatGate). */
   readonly setGate: (gate: BeatGate | null) => void;
+  /** The shell version of this page. */
+  readonly shell: DemoShellVersion;
+  /** v4: intro, guided or free (always "guided" on v3). */
+  readonly phase: DemoPhase;
+  /**
+   * The current beat is done: its motion finished, its gate is ready and, for
+   * a commit beat, the visitor committed. v4 shows "Weiter" prominent then;
+   * v3's canAdvance is this plus "not the last beat".
+   */
+  readonly beatDone: boolean;
+  /** v4: leave the intro and play beat 1 ("Starten"). */
+  readonly start: () => void;
+  /** v4: leave the intro or the guide for free play ("Frei ausprobieren"). */
+  readonly explore: () => void;
+  /** v4: back from free play to the beat the visitor left ("Zur Führung"). */
+  readonly toGuide: () => void;
 }
 
 /**
@@ -67,6 +97,8 @@ export interface BeatClock {
 export interface BeatGate {
   readonly ready: boolean;
   readonly onNext?: () => boolean;
+  /** v4: "Zurück" and ArrowLeft go back one inner step first, when this returns true. */
+  readonly onPrev?: () => boolean;
 }
 
 const BeatClockContext = createContext<BeatClock | null>(null);
@@ -91,24 +123,32 @@ export function useOnRestart(listener: () => void): void {
  * Gates the current beat (see BeatGate). Pass null on beats without inner
  * steps. The latest onNext is always the one called.
  */
-export function useBeatGate(ready: boolean | null, onNext?: () => boolean): void {
+export function useBeatGate(ready: boolean | null, onNext?: () => boolean, onPrev?: () => boolean): void {
   const { setGate } = useBeatClock();
   const latest = useRef(onNext);
+  const latestPrev = useRef(onPrev);
   useEffect(() => {
     latest.current = onNext;
+    latestPrev.current = onPrev;
   });
   useEffect(() => {
     if (ready === null) {
       setGate(null);
       return;
     }
-    setGate({ ready, onNext: () => latest.current?.() ?? false });
+    setGate({ ready, onNext: () => latest.current?.() ?? false, onPrev: () => latestPrev.current?.() ?? false });
     return () => setGate(null);
   }, [ready, setGate]);
 }
 
-/** Subscribes a listener to Escape for the lifetime of the component. */
-export function useOnEscape(listener: () => void): void {
+/** An Escape listener returns true when it closed something. */
+export type EscapeListener = () => boolean | void;
+
+/**
+ * Subscribes a listener to Escape for the lifetime of the component. Return
+ * true when it closed something; otherwise Escape does the shell's own thing.
+ */
+export function useOnEscape(listener: EscapeListener): void {
   const { onEscape } = useBeatClock();
   const latest = useRef(listener);
   useEffect(() => {
@@ -141,7 +181,7 @@ function usePrefersReducedMotion(): boolean {
   return reduce;
 }
 
-type Listener = () => void;
+type Listener = () => boolean | void;
 
 function useListeners() {
   const set = useRef(new Set<Listener>());
@@ -151,8 +191,11 @@ function useListeners() {
       set.current.delete(listener);
     };
   }, []);
+  /** Calls every listener; true when one of them says it handled the event. */
   const fire = useCallback(() => {
-    for (const listener of [...set.current]) listener();
+    let handled = false;
+    for (const listener of [...set.current]) handled = listener() === true || handled;
+    return handled;
   }, []);
   return { add, fire, size: () => set.current.size };
 }
@@ -175,13 +218,22 @@ export function BeatClockProvider({
   beats,
   locale,
   children,
+  shell = "v3",
 }: {
   readonly beats: readonly Beat[];
   readonly locale: Locale;
   readonly children: ReactNode;
+  /** "v4": the Glas shell with an intro card, a guided path and free play. */
+  readonly shell?: DemoShellVersion;
 }) {
+  const v4 = shell === "v4";
   const reducedMotion = usePrefersReducedMotion();
   const [state, setState] = useState<ClockState>({ index: 0, progress: 0, rewinding: false });
+  const [phase, setPhase] = useState<DemoPhase>(v4 ? "intro" : "guided");
+  const phaseRef = useRef(phase);
+  useLayoutEffect(() => {
+    phaseRef.current = phase;
+  });
   const [committed, setCommitted] = useState<ReadonlySet<number>>(() => new Set());
   const [room, setRoom] = useState(false);
   const [stageSeen, setStageSeen] = useState(false);
@@ -234,23 +286,25 @@ export function BeatClockProvider({
       if (cause === "user" && beats[clamped]?.kind === "takehome") {
         // Measure after the take-home beat has rendered: the beat before it may
         // be taller (an own-data panel), and a target measured now lands past it.
+        // On v4 the take-home ends in the stage, so its top comes into view; on v3 the block below it.
         window.requestAnimationFrame(() =>
-          window.requestAnimationFrame(() => revealIfOffscreen(document.getElementById(TAKEHOME_TARGET_ID), reducedMotion)),
+          window.requestAnimationFrame(() => revealIfOffscreen(v4 ? stageRef.current : document.getElementById(TAKEHOME_TARGET_ID), reducedMotion)),
         );
       }
     },
-    [beats, play, reducedMotion],
+    [beats, play, reducedMotion, v4],
   );
 
   const current = beats[state.index] as Beat;
-  const canAdvance =
-    !state.rewinding &&
-    gateReady &&
-    state.progress >= 1 &&
-    state.index < beats.length - 1 &&
-    (current.kind !== "commit" || committed.has(state.index));
+  const beatDone =
+    !state.rewinding && gateReady && state.progress >= 1 && (current.kind !== "commit" || committed.has(state.index));
+  const canAdvance = v4
+    ? !state.rewinding && phase !== "intro" && state.index < beats.length - 1
+    : beatDone && state.index < beats.length - 1;
 
   const next = useCallback(() => {
+    if (v4 && phaseRef.current === "intro") return;
+    if (v4 && phaseRef.current === "free") setPhase("guided");
     const { index, progress, rewinding } = stateRef.current;
     if (rewinding || index >= beats.length - 1) return;
     const beat = beats[index] as Beat;
@@ -260,29 +314,43 @@ export function BeatClockProvider({
       setState({ index, progress: 1, rewinding: false });
       return;
     }
-    if (beat.kind === "commit" && !committed.has(index)) return;
     const gate = gateRef.current;
+    if (v4) {
+      // v4 never locks the path: an open estimate is skipped ("Vorschlag übernommen"),
+      // a ready gate may still take the press for its inner step.
+      if (gate && gate.ready && gate.onNext?.()) return;
+      enter(index + 1, "user");
+      return;
+    }
+    if (beat.kind === "commit" && !committed.has(index)) return;
     if (gate && (!gate.ready || gate.onNext?.())) return;
     enter(index + 1, "user");
-  }, [beats, committed, enter, stop]);
+  }, [beats, committed, enter, stop, v4]);
 
   const prev = useCallback(() => {
+    if (v4 && phaseRef.current === "intro") return;
+    if (v4 && phaseRef.current === "free") setPhase("guided");
     const { index, rewinding } = stateRef.current;
-    if (rewinding || index === 0) return;
+    if (rewinding) return;
+    if (v4 && phaseRef.current === "guided" && gateRef.current?.onPrev?.()) return;
+    if (index === 0) return;
     stop();
     setState({ index: index - 1, progress: 1, rewinding: false });
-  }, [stop]);
+  }, [stop, v4]);
 
   const seek = useCallback(
     (index: number, cause: BeatCause = "user") => {
       if (stateRef.current.rewinding) return;
+      if (v4 && phaseRef.current !== "guided") setPhase("guided");
       enter(index, cause);
     },
-    [enter],
+    [enter, v4],
   );
 
   const restart = useCallback(() => {
+    if (v4 && phaseRef.current === "intro") return;
     stop();
+    if (v4) setPhase("guided");
     setCommitted(new Set());
     const from = clockT(stateRef.current.index, stateRef.current.progress);
     const finish = () => {
@@ -306,7 +374,27 @@ export function BeatClockProvider({
       }
     };
     frame.current = window.requestAnimationFrame(tick);
-  }, [beats.length, play, reducedMotion, restartListeners, stop]);
+  }, [beats.length, play, reducedMotion, restartListeners, stop, v4]);
+
+  const start = useCallback(() => {
+    if (!v4 || phaseRef.current !== "intro") return;
+    setPhase("guided");
+    setStageSeen(true);
+    play(0);
+  }, [play, v4]);
+
+  const explore = useCallback(() => {
+    if (!v4) return;
+    stop();
+    setStageSeen(true);
+    setPhase("free");
+    setState((previous) => ({ ...previous, progress: 1, rewinding: false }));
+  }, [stop, v4]);
+
+  const toGuide = useCallback(() => {
+    if (!v4 || phaseRef.current !== "free") return;
+    setPhase("guided");
+  }, [v4]);
 
   const commit = useCallback(() => {
     const { index } = stateRef.current;
@@ -321,8 +409,9 @@ export function BeatClockProvider({
     const params = new URLSearchParams(window.location.search);
     if (params.get("room") === "1") setRoom(true);
     const index = beatIndexFromParam(beats, params.get("beat"));
-    if (index !== null && index > 0) {
+    if (index !== null && (index > 0 || v4)) {
       setStageSeen(true);
+      if (v4) setPhase("guided");
       enter(index, "load");
     }
     // A cleanup while the deep link's motion still runs (React's development double effect,
@@ -331,11 +420,11 @@ export function BeatClockProvider({
     return () => {
       if (frame.current !== 0) loaded.current = false;
     };
-  }, [beats, enter]);
+  }, [beats, enter, v4]);
 
-  // The first beat's intro plays once, when the stage is 60 % in view.
+  // The first beat's intro plays once, when the stage is 60 % in view (v3; v4 waits for "Starten").
   useEffect(() => {
-    if (stageSeen) return;
+    if (stageSeen || v4) return;
     const element = stageRef.current;
     if (reducedMotion || !element || typeof IntersectionObserver === "undefined") {
       setStageSeen(true);
@@ -353,7 +442,7 @@ export function BeatClockProvider({
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, [play, reducedMotion, stageSeen]);
+  }, [play, reducedMotion, stageSeen, v4]);
 
   // Reduced motion switched on mid-beat: jump to the end frame.
   useEffect(() => {
@@ -368,8 +457,16 @@ export function BeatClockProvider({
       const action = resolveDemoKey(event);
       if (!action) return;
       if (action === "escape") {
-        if (escapeListeners.size() === 0) return;
-        escapeListeners.fire();
+        if (escapeListeners.fire()) return;
+        if (v4 && phaseRef.current === "free") setPhase("guided");
+        return;
+      }
+      if (v4 && phaseRef.current === "intro") {
+        // In the intro only ArrowRight does something: it starts, like "Starten".
+        if (action === "next") {
+          event.preventDefault();
+          start();
+        }
         return;
       }
       event.preventDefault();
@@ -379,7 +476,7 @@ export function BeatClockProvider({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [escapeListeners, next, prev, restart]);
+  }, [escapeListeners, next, prev, restart, start, v4]);
 
   // Projector mode follows the deck: { type: "demo-beat", beat } from the same origin.
   useEffect(() => {
@@ -427,13 +524,25 @@ export function BeatClockProvider({
       onRestart: restartListeners.add,
       onEscape: escapeListeners.add,
       setGate,
+      shell,
+      phase,
+      beatDone,
+      start,
+      explore,
+      toGuide,
     }),
-    [beats, canAdvance, commit, escapeListeners.add, locale, next, prev, reducedMotion, registerStage, restart, restartListeners.add, room, seek, setGate, skippedCommit, state],
+    [beatDone, beats, canAdvance, commit, escapeListeners.add, explore, locale, next, phase, prev, reducedMotion, registerStage, restart, restartListeners.add, room, seek, setGate, shell, skippedCommit, start, state, toGuide],
   );
 
   return (
     <BeatClockContext.Provider value={value}>
-      <div data-demo-clock="" data-beat={value.beat.id} data-beat-kind={value.beat.kind} data-room={room ? "" : undefined}>
+      <div
+        data-demo-clock=""
+        data-beat={value.beat.id}
+        data-beat-kind={value.beat.kind}
+        data-room={room ? "" : undefined}
+        data-demo-phase={v4 ? phase : undefined}
+      >
         {children}
       </div>
     </BeatClockContext.Provider>

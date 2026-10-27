@@ -1,0 +1,2091 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-qualitaet-with-1",
+  "slug": "geschaeftsberichte-mit-ki-lesen",
+  "locale": "de",
+  "prompt_id": "qualitaet",
+  "take": 1,
+  "recorded_at": "2026-10-26T14:49:52Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": ["claude-opus-5-5"],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Bash",
+    "--allowedTools",
+    "Bash(python3 *)",
+    "Bash(mkdir *)",
+    "Bash(cd *)",
+    "Bash(sed *)",
+    "Bash(cat *)",
+    "Bash(ls *)",
+    "Bash(find *)",
+    "Bash(grep *)",
+    "Bash(head *)",
+    "Bash(wc *)"
+  ],
+  "prompt": "Im Ordner liegen der Monatsbericht 2023-09-monthly-report.md und die Dateien ncr_records.csv, demand_actuals.csv und product_lines.csv. Ist die Qualität von CRAFT im September besser geworden?",
+  "kit_zip": "public/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip",
+  "kit_files": [
+    {
+      "name": "2023-09-monthly-report.md",
+      "path": "northwind-analyst-kit/reports/2023-09-monthly-report.md",
+      "bytes": 5008,
+      "sha256": "a24e735c944aa664b1fd0fb2d9e9a21f949d08858fd24ef0e08a29bed89b5787"
+    },
+    {
+      "name": "ncr_records.csv",
+      "path": "northwind-analyst-kit/data/ncr_records.csv",
+      "bytes": 7337,
+      "sha256": "3cac951080c9a46fb0baa27971af4a073b2914ef4666d7cc004e29fb259fcd1c"
+    },
+    {
+      "name": "demand_actuals.csv",
+      "path": "northwind-analyst-kit/data/demand_actuals.csv",
+      "bytes": 105328,
+      "sha256": "c7f55eaa89769762262182a050e27312684d61f7ada437762fecd9028d9b649f"
+    },
+    {
+      "name": "product_lines.csv",
+      "path": "northwind-analyst-kit/data/product_lines.csv",
+      "bytes": 1071,
+      "sha256": "82870ab19c65a971c44bf38550696b44cefd6378630c7c4fb2e01876758d9394"
+    }
+  ],
+  "skill": {
+    "name": "kennzahlen-steckbrief",
+    "sha256": "a3fead432df8f43bccf074694862b36e48a64ee452181fb4b05dad2871f28f2e"
+  },
+  "skill_name": "kennzahlen-steckbrief",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "kennzahlen-steckbrief",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": ["auto"],
+  "timeline": [
+    {
+      "t_ms": 3696,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "kennzahlen-steckbrief"
+      }
+    },
+    {
+      "t_ms": 3725,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 4607,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "ls -la && cat 2023-09-monthly-report.md && head -5 *.csv && wc -l *.csv",
+        "description": "List files and preview report and CSVs"
+      }
+    },
+    {
+      "t_ms": 6375,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 11198,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "ls .claude/skills/kennzahlen-steckbrief/references/ 2>&1; cat .claude/skills/kennzahlen-steckbrief/references/steckbriefe.md 2>&1; cd . && cat product_lines.csv; cut -d, -f2 ncr_records.csv | cut -c1-7 | sort | uniq -c; cut -d, -f1,2 demand_actuals.csv | sort -u | head -30",
+        "description": "Read team metric cards and inspect data ranges"
+      }
+    },
+    {
+      "t_ms": 11283,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 20663,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I - <<'EOF'\nimport csv,collections as C\nu=C.defaultdict(int); uw=C.defaultdict(int)\nfor r in csv.DictReader(open('demand_actuals.csv')):\n    line=r['sku'].split('-')[1]; m=r['week_start'][:7]\n    u[(line,m)]+=int(r['units_actual']); uw[(line,r['week_start'])]+=int(r['units_actual'])\nn=C.defaultdict(int); q=C.defaultdict(int); dates=C.Counter(); typ=C.Counter(); sr=C.defaultdict(int)\nfor r in csv.DictReader(open('ncr_records.csv')):\n    k=(r['line'],r['ncr_date'][:7]); n[k]+=1; q[k]+=int(r['qty_affected'])\n    if r['line']=='CRAFT': dates[r['ncr_date']]+=1; typ[(r['ncr_date'][:7],r['ncr_type'])]+=1; sr[(r['ncr_date'][:7],r['scrap_or_rework'])]+=int(r['qty_affected'])\nlines=sorted({k[0] for k in list(u)+list(n)})\nprint(\"line month units ncr qty ncr/1000 qty%\")\nfor l in lines:\n  for m in ['2023-08','2023-09']:\n    U=u[(l,m)]; print(l,m,U,n[(l,m)],q[(l,m)], round(n[(l,m)]/U*1000,2) if U else '-', round(q[(l,m)]/U*100,1) if U else '-')\nprint(sorted(dates.items()))\nprint(sorted(typ.items())); print(sorted(sr.items()))\nprint({k:v for k,v in sorted(uw.items()) if k[0]=='CRAFT'})\nprint(sum(v for (l,m),v in u.items() if m=='2023-09'), sum(v for (l,m),v in u.items() if m=='2023-08'))\nEOF",
+        "description": "Compute NCR counts, affected qty and units per line and month"
+      }
+    },
+    {
+      "t_ms": 20681,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 30092,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "mkdir -p scripts && cat > scripts/ncr.py <<'EOF'\nimport csv, sys, collections as C\nd = sys.argv[1]\nu = C.defaultdict(int); uw = C.defaultdict(int)\nfor r in csv.DictReader(open(d + '/demand_actuals.csv')):\n    line = r['sku'].split('-')[1]; m = r['week_start'][:7]\n    u[(line, m)] += int(r['units_actual']); uw[(line, r['week_start'])] += int(r['units_actual'])\nn = C.defaultdict(int); q = C.defaultdict(int); dates = C.Counter(); typ = C.Counter(); sr = C.defaultdict(int); qd = C.defaultdict(int)\nfor r in csv.DictReader(open(d + '/ncr_records.csv')):\n    k = (r['line'], r['ncr_date'][:7]); n[k] += 1; q[k] += int(r['qty_affected'])\n    if r['line'] == 'CRAFT':\n        dates[r['ncr_date']] += 1; qd[r['ncr_date']] += int(r['qty_affected'])\n        typ[(r['ncr_date'][:7], r['ncr_type'])] += 1\n        sr[(r['ncr_date'][:7], r['scrap_or_rework'])] += int(r['qty_affected'])\nlines = sorted(set(k[0] for k in list(u) + list(n)))\nprint(\"line month units ncr qty ncr/1000 qty%\")\nfor l in lines:\n    for m in ['2023-08', '2023-09']:\n        U = u[(l, m)]\n        print(l, m, U, n[(l, m)], q[(l, m)], round(n[(l, m)] / U * 1000, 2) if U else '-', round(q[(l, m)] / U * 100, 1) if U else '-')\nprint(sorted(dates.items())); print(sorted(qd.items()))\nprint(sorted(typ.items())); print(sorted(sr.items()))\nprint(sorted((k, v) for k, v in uw.items() if k[0] == 'CRAFT'))\nprint(sum(v for (l, m), v in u.items() if m == '2023-09'), sum(v for (l, m), v in u.items() if m == '2023-08'))\nEOF\npython3 -I scripts/ncr.py .",
+        "description": "Compute NCR counts, affected qty and units per line and month"
+      }
+    },
+    {
+      "t_ms": 30100,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 34092,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "mkdir -p scripts",
+        "description": "Create scripts directory"
+      }
+    },
+    {
+      "t_ms": 34143,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 39271,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cat > scripts/ncr.py <<'EOF'\nimport csv, sys, collections as C\nd = sys.argv[1]\nu = C.defaultdict(int)\nuw = C.defaultdict(int)\nfor r in csv.DictReader(open(d + '/demand_actuals.csv')):\n    line = r['sku'].split('-')[1]\n    u[(line, r['week_start'][:7])] += int(r['units_actual'])\n    uw[(line, r['week_start'])] += int(r['units_actual'])\nn = C.defaultdict(int)\nq = C.defaultdict(int)\ndates = C.Counter()\nqd = C.Counter()\ntyp = C.Counter()\nsr = C.Counter()\nfor r in csv.DictReader(open(d + '/ncr_records.csv')):\n    k = (r['line'], r['ncr_date'][:7])\n    n[k] += 1\n    q[k] += int(r['qty_affected'])\n    if r['line'] == 'CRAFT':\n        dates[r['ncr_date']] += 1\n        qd[r['ncr_date']] += int(r['qty_affected'])\n        typ[(k[1], r['ncr_type'])] += 1\n        sr[(k[1], r['scrap_or_rework'])] += int(r['qty_affected'])\nlines = sorted(set(k[0] for k in list(u) + list(n)))\nfor l in lines:\n    for m in ['2023-08', '2023-09']:\n        U = u[(l, m)]\n        print(l, m, U, n[(l, m)], q[(l, m)], round(n[(l, m)] / U * 1000, 2) if U else '-', round(q[(l, m)] / U * 100, 1) if U else '-')\nprint(sorted(dates.items()))\nprint(sorted(qd.items()))\nprint(sorted(typ.items()))\nprint(sorted(sr.items()))\nprint(sorted((k, v) for k, v in uw.items() if k[0] == 'CRAFT'))\nEOF",
+        "description": "Write analysis script"
+      }
+    },
+    {
+      "t_ms": 39285,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": "Ich rechne g"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": "erade die C"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": "RAFT-M"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": "ängelqu"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": "oten aus den"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": " Rohdaten nach"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": " (Me"
+    },
+    {
+      "t_ms": 43395,
+      "kind": "text",
+      "chunk": "ldungen und"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": " betroffene Stück je"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": " Mon"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": "at und"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": " Woche)."
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": " Das Skript l"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": "äss"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": "t sich nicht als"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": " Datei "
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": "ablegen, deshalb"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": " läuft es j"
+    },
+    {
+      "t_ms": 43396,
+      "kind": "text",
+      "chunk": "etzt inline."
+    },
+    {
+      "t_ms": 47981,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd . && python3 -I -c \"\nimport csv, collections as C\nd='work'\nu=C.Counter(); uw=C.Counter(); n=C.Counter(); q=C.Counter(); qd=C.Counter(); nd=C.Counter(); sr=C.Counter()\nfor r in csv.DictReader(open(d+'/demand_actuals.csv')):\n    l=r['sku'].split('-')[1]; u[(l,r['week_start'][:7])]+=int(r['units_actual']); uw[(l,r['week_start'])]+=int(r['units_actual'])\nfor r in csv.DictReader(open(d+'/ncr_records.csv')):\n    k=(r['line'],r['ncr_date'][:7]); n[k]+=1; q[k]+=int(r['qty_affected'])\n    if r['line']=='CRAFT':\n        nd[r['ncr_date']]+=1; qd[r['ncr_date']]+=int(r['qty_affected']); sr[(k[1],r['scrap_or_rework'])]+=int(r['qty_affected'])\nfor l in sorted(set(k[0] for k in list(u)+list(n))):\n    for m in ['2023-08','2023-09']:\n        U=u[(l,m)]; print(l,m,U,n[(l,m)],q[(l,m)], round(n[(l,m)]/U*1000,2) if U else '-', round(q[(l,m)]/U*100,1) if U else '-')\nprint(sorted(nd.items())); print(sorted(qd.items())); print(sorted(sr.items()))\nprint(sorted((k,v) for k,v in uw.items() if k[0]=='CRAFT'))\n\"",
+        "description": "Compute NCR counts, affected qty and units per line and month"
+      }
+    },
+    {
+      "t_ms": 48031,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": "**Antwort:"
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": " Nein,"
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": " das lässt sich nic"
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": "ht bel"
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": "egen."
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": "** Die Quote von "
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": "3,21 auf 2"
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": ",51 "
+    },
+    {
+      "t_ms": 69252,
+      "kind": "text",
+      "chunk": "Meldungen je 1."
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "000 Stück st"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "immt r"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "echnerisch."
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": " Sie zählt a"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "ber Meldungen, n"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "icht def"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "ekte Stück. G"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "em"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "essen an den betroffen"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "en Stück ist die"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": " Qualität g"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "leich geblieben,"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": " der"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "Ausschuss "
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "ist s"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "ogar deutlich g"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": "estiegen. Ein"
+    },
+    {
+      "t_ms": 69253,
+      "kind": "text",
+      "chunk": " Steckbrief des"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " Teams ("
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "`references/steckbrief"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "e.md`) exist"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "iert nicht. Die"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " folgenden Defin"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "itionen k"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "ommen de"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "shalb aus dem"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " Bericht und den"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " Rohdaten."
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "\n\n## Steckbrief:"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " „Def"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "ekte je 1.000 "
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "Stück“ (B"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "ericht §3"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " und §5,"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " Zitat VP S"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "ales)\n- **"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "Zähler:** An"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "zahl NCR-"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": "Meldungen,"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " also Vorgänge und"
+    },
+    {
+      "t_ms": 69254,
+      "kind": "text",
+      "chunk": " nicht Stück (`"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "ncr_records.csv"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "`,"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": " Zeilen m"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "it `line`"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "=CRAFT)"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "\n- **Nenner:**"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": " ver"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "kaufte Stück ("
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "`demand_actuals."
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "csv`, `units_act"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "ual`,"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": " SKU"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": " `NW-CRAF"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "T-*`)\n- **"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "Zeitraum:**"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": " K"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "alendermonat n"
+    },
+    {
+      "t_ms": 69255,
+      "kind": "text",
+      "chunk": "ach `week_start`"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": " bzw. `ncr"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "_date`. September h"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "at 5 Wochen"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": ", August 4."
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "\n- **Quelle:"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "** Bericht §3,"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": " Tabelle „"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "Qualität“, Z"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "eile CRAFT,"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": " plus der Text un"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "ter der"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": " Tabelle für"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": " August"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "\n- **Grenze:"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "** Die"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": " K"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "ennzahl sagt n"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "ichts dar"
+    },
+    {
+      "t_ms": 69256,
+      "kind": "text",
+      "chunk": "über, wie viele"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": " Stück betroffen s"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "ind. Eine Meld"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "ung k"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "ann 75 o"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "der 231 Stück um"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "fassen. Außerd"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "em kommt der"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": " Z"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "ähler a"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "us der Produktion und der"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": " Nenner aus d"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "em Absatz (§6"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": ").\n\n## Gegenpr"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "obe: Die"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": " Definition ent"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "scheidet über die Rich"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "tung"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "\n| C"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "RAFT |"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": " Aug ("
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": "4 Wo"
+    },
+    {
+      "t_ms": 69257,
+      "kind": "text",
+      "chunk": ".) | Sep (5"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " Wo.) |"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " Richtung |\n|---|"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "---:|---:|---|"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "\n| Meldungen je"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " 1.000 Stück"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " (Bericht) | "
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "3,21 | 2,"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "51 | bes"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "ser |\n| Betroff"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "ene Stück / verka"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "ufte Stück | 31"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": ",0 % | 30,"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "9 % | gleich |"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "\n| Bet"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "roffene Stück abs"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "olut | 2.324 "
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "| 2.832 | +"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "22 % |\n| dav"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "on Ausschuss ("
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": "scrap),"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " Stück | 924 |"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " 1.539 | +67"
+    },
+    {
+      "t_ms": 69258,
+      "kind": "text",
+      "chunk": " % |\n| Aus"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "schuss /"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " verkaufte Stück"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " | 12,3 % |"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " 16,8 % | sch"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "lechter |\n| Me"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "ldungen je Woche |"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " 6,0 | 4"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": ",6 | besser |"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "\n|"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " Betroffene Stück je"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " Woche | 581 |"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": " 566 | gleich |"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "\n\nE"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "ine z"
+    },
+    {
+      "t_ms": 69259,
+      "kind": "text",
+      "chunk": "weite Gabel bet"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "rifft den Zeit"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "raum. Die Woche"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " ab 30"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": ".09."
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " ist in den Daten als"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " **"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "FY24-Q3-"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "W01** mark"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "iert. Der Beric"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "ht tr"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "ägt den"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " Titel „GJ24"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " Q2“, zähl"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "t di"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "ese Woche aber z"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "um September."
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " Nimmt man sie"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " he"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "raus ("
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": "4"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": " Wochen, 7"
+    },
+    {
+      "t_ms": 69260,
+      "kind": "text",
+      "chunk": ".127 Stück,"
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": " 22 Meldungen"
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": ", 2.757 bet"
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": "roffene Stück), "
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": "ergibt sich für den"
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": " September:\n- "
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": "3,09 Meldung"
+    },
+    {
+      "t_ms": 69261,
+      "kind": "text",
+      "chunk": "en je 1.000 "
+    },
+    {
+      "t_ms": 69307,
+      "kind": "text",
+      "chunk": "Stück: k"
+    },
+    {
+      "t_ms": 69339,
+      "kind": "text",
+      "chunk": "aum bes"
+    },
+    {
+      "t_ms": 69378,
+      "kind": "text",
+      "chunk": "ser als im"
+    },
+    {
+      "t_ms": 69428,
+      "kind": "text",
+      "chunk": " August\n- **"
+    },
+    {
+      "t_ms": 69487,
+      "kind": "text",
+      "chunk": "38,7 % betroff"
+    },
+    {
+      "t_ms": 69536,
+      "kind": "text",
+      "chunk": "ene Stück**: de"
+    },
+    {
+      "t_ms": 69583,
+      "kind": "text",
+      "chunk": "utlich schlechter als"
+    },
+    {
+      "t_ms": 69630,
+      "kind": "text",
+      "chunk": " im August\n\nDas "
+    },
+    {
+      "t_ms": 69680,
+      "kind": "text",
+      "chunk": "Ergebnis hängt also"
+    },
+    {
+      "t_ms": 69737,
+      "kind": "text",
+      "chunk": " stark dav"
+    },
+    {
+      "t_ms": 69784,
+      "kind": "text",
+      "chunk": "on ab, welche W"
+    },
+    {
+      "t_ms": 69836,
+      "kind": "text",
+      "chunk": "ochen z"
+    },
+    {
+      "t_ms": 69884,
+      "kind": "text",
+      "chunk": "um September zählen.\n\n##"
+    },
+    {
+      "t_ms": 69937,
+      "kind": "text",
+      "chunk": " Nachgerechnet"
+    },
+    {
+      "t_ms": 69987,
+      "kind": "text",
+      "chunk": "\n2,51 = `"
+    },
+    {
+      "t_ms": 70029,
+      "kind": "text",
+      "chunk": "ncr_records.csv"
+    },
+    {
+      "t_ms": 70090,
+      "kind": "text",
+      "chunk": "`,"
+    },
+    {
+      "t_ms": 70140,
+      "kind": "text",
+      "chunk": " `"
+    },
+    {
+      "t_ms": 70197,
+      "kind": "text",
+      "chunk": "line`=CRAFT"
+    },
+    {
+      "t_ms": 70255,
+      "kind": "text",
+      "chunk": ", `ncr_date`"
+    },
+    {
+      "t_ms": 70283,
+      "kind": "text",
+      "chunk": " im S"
+    },
+    {
+      "t_ms": 70340,
+      "kind": "text",
+      "chunk": "ept."
+    },
+    {
+      "t_ms": 70386,
+      "kind": "text",
+      "chunk": " 2023: 23 "
+    },
+    {
+      "t_ms": 70436,
+      "kind": "text",
+      "chunk": "Zeilen. Ge"
+    },
+    {
+      "t_ms": 70480,
+      "kind": "text",
+      "chunk": "teilt durch `demand"
+    },
+    {
+      "t_ms": 70534,
+      "kind": "text",
+      "chunk": "_actuals.csv`"
+    },
+    {
+      "t_ms": 70581,
+      "kind": "text",
+      "chunk": ", SKU"
+    },
+    {
+      "t_ms": 70633,
+      "kind": "text",
+      "chunk": " C"
+    },
+    {
+      "t_ms": 70680,
+      "kind": "text",
+      "chunk": "RAFT, `week_"
+    },
+    {
+      "t_ms": 70734,
+      "kind": "text",
+      "chunk": "start` im"
+    },
+    {
+      "t_ms": 70786,
+      "kind": "text",
+      "chunk": " Sept. 2023:"
+    },
+    {
+      "t_ms": 70835,
+      "kind": "text",
+      "chunk": " 9.162 Stück"
+    },
+    {
+      "t_ms": 70887,
+      "kind": "text",
+      "chunk": " (5 Wochen)."
+    },
+    {
+      "t_ms": 70930,
+      "kind": "text",
+      "chunk": " Auch die 2.832"
+    },
+    {
+      "t_ms": 70980,
+      "kind": "text",
+      "chunk": " betroffenen St"
+    },
+    {
+      "t_ms": 71029,
+      "kind": "text",
+      "chunk": "ück st"
+    },
+    {
+      "t_ms": 71080,
+      "kind": "text",
+      "chunk": "immen mit dem"
+    },
+    {
+      "t_ms": 71132,
+      "kind": "text",
+      "chunk": " Bericht überein. Die"
+    },
+    {
+      "t_ms": 71181,
+      "kind": "text",
+      "chunk": " Zahlen sind also"
+    },
+    {
+      "t_ms": 71230,
+      "kind": "text",
+      "chunk": " rich"
+    },
+    {
+      "t_ms": 71285,
+      "kind": "text",
+      "chunk": "tig g"
+    },
+    {
+      "t_ms": 71330,
+      "kind": "text",
+      "chunk": "erechnet, nur die"
+    },
+    {
+      "t_ms": 71380,
+      "kind": "text",
+      "chunk": " Kennzahl misst"
+    },
+    {
+      "t_ms": 71433,
+      "kind": "text",
+      "chunk": " etwas anderes als „"
+    },
+    {
+      "t_ms": 71482,
+      "kind": "text",
+      "chunk": "Qualität“."
+    },
+    {
+      "t_ms": 71529,
+      "kind": "text",
+      "chunk": "\n\nNebenbei "
+    },
+    {
+      "t_ms": 71579,
+      "kind": "text",
+      "chunk": "ist auch die Aussage"
+    },
+    {
+      "t_ms": 71636,
+      "kind": "text",
+      "chunk": " „ke"
+    },
+    {
+      "t_ms": 71689,
+      "kind": "text",
+      "chunk": "ine andere Linie hat"
+    },
+    {
+      "t_ms": 71729,
+      "kind": "text",
+      "chunk": " sich verbessert“"
+    },
+    {
+      "t_ms": 71786,
+      "kind": "text",
+      "chunk": " definitionsabhängig"
+    },
+    {
+      "t_ms": 71832,
+      "kind": "text",
+      "chunk": ". Bei NEST s"
+    },
+    {
+      "t_ms": 71887,
+      "kind": "text",
+      "chunk": "ank der Anteil betro"
+    },
+    {
+      "t_ms": 71931,
+      "kind": "text",
+      "chunk": "ffener Stück von 11"
+    },
+    {
+      "t_ms": 71981,
+      "kind": "text",
+      "chunk": ",8 % auf 10"
+    },
+    {
+      "t_ms": 72043,
+      "kind": "text",
+      "chunk": ",5 %, die"
+    },
+    {
+      "t_ms": 72087,
+      "kind": "text",
+      "chunk": " Meldungen je 1"
+    },
+    {
+      "t_ms": 72132,
+      "kind": "text",
+      "chunk": ".000 Stück sti"
+    },
+    {
+      "t_ms": 72189,
+      "kind": "text",
+      "chunk": "egen d"
+    },
+    {
+      "t_ms": 72242,
+      "kind": "text",
+      "chunk": "agegen von 0,89"
+    },
+    {
+      "t_ms": 72298,
+      "kind": "text",
+      "chunk": " auf 1,13."
+    },
+    {
+      "t_ms": 72344,
+      "kind": "text",
+      "chunk": "\n\n## Für"
+    },
+    {
+      "t_ms": 72382,
+      "kind": "text",
+      "chunk": " die Entscheidung im"
+    },
+    {
+      "t_ms": 72432,
+      "kind": "text",
+      "chunk": " Bericht ("
+    },
+    {
+      "t_ms": 72485,
+      "kind": "text",
+      "chunk": "§5)\n- **Ent"
+    },
+    {
+      "t_ms": 72535,
+      "kind": "text",
+      "chunk": "scheidung:** Das"
+    },
+    {
+      "t_ms": 72591,
+      "kind": "text",
+      "chunk": " Argument „"
+    },
+    {
+      "t_ms": 72632,
+      "kind": "text",
+      "chunk": "die"
+    },
+    {
+      "t_ms": 72681,
+      "kind": "text",
+      "chunk": " Qualität dreht b"
+    },
+    {
+      "t_ms": 72737,
+      "kind": "text",
+      "chunk": "ereits“ trägt n"
+    },
+    {
+      "t_ms": 72786,
+      "kind": "text",
+      "chunk": "icht. Er"
+    },
+    {
+      "t_ms": 72834,
+      "kind": "text",
+      "chunk": "st nac"
+    },
+    {
+      "t_ms": 72887,
+      "kind": "text",
+      "chunk": "harbeiten, dann"
+    },
+    {
+      "t_ms": 72935,
+      "kind": "text",
+      "chunk": " Marketing.\n- **"
+    },
+    {
+      "t_ms": 72984,
+      "kind": "text",
+      "chunk": "Weil:** Im"
+    },
+    {
+      "t_ms": 73037,
+      "kind": "text",
+      "chunk": " Zähler st"
+    },
+    {
+      "t_ms": 73085,
+      "kind": "text",
+      "chunk": "ehen Meldungen,"
+    },
+    {
+      "t_ms": 73139,
+      "kind": "text",
+      "chunk": " nicht Stück."
+    },
+    {
+      "t_ms": 73188,
+      "kind": "text",
+      "chunk": " Die"
+    },
+    {
+      "t_ms": 73241,
+      "kind": "text",
+      "chunk": " betroffene"
+    },
+    {
+      "t_ms": 73288,
+      "kind": "text",
+      "chunk": " Menge je"
+    },
+    {
+      "t_ms": 73342,
+      "kind": "text",
+      "chunk": " ver"
+    },
+    {
+      "t_ms": 73398,
+      "kind": "text",
+      "chunk": "kauftem Stück li"
+    },
+    {
+      "t_ms": 73447,
+      "kind": "text",
+      "chunk": "egt un"
+    },
+    {
+      "t_ms": 73498,
+      "kind": "text",
+      "chunk": "verändert bei rund "
+    },
+    {
+      "t_ms": 73556,
+      "kind": "text",
+      "chunk": "31 %,"
+    },
+    {
+      "t_ms": 73581,
+      "kind": "text",
+      "chunk": " und der Ausschuss"
+    },
+    {
+      "t_ms": 73630,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 73680,
+      "kind": "text",
+      "chunk": "ist gestiegen."
+    },
+    {
+      "t_ms": 73730,
+      "kind": "text",
+      "chunk": "\n- **Zahl:**"
+    },
+    {
+      "t_ms": 73782,
+      "kind": "text",
+      "chunk": " 30"
+    },
+    {
+      "t_ms": 73829,
+      "kind": "text",
+      "chunk": ",9 % bet"
+    },
+    {
+      "t_ms": 73883,
+      "kind": "text",
+      "chunk": "roffene Stück im September"
+    },
+    {
+      "t_ms": 73929,
+      "kind": "text",
+      "chunk": " g"
+    },
+    {
+      "t_ms": 73981,
+      "kind": "text",
+      "chunk": "egenüber 31,0"
+    },
+    {
+      "t_ms": 74034,
+      "kind": "text",
+      "chunk": " % im August. Aus"
+    },
+    {
+      "t_ms": 74084,
+      "kind": "text",
+      "chunk": "schuss "
+    },
+    {
+      "t_ms": 74132,
+      "kind": "text",
+      "chunk": "1"
+    },
+    {
+      "t_ms": 74184,
+      "kind": "text",
+      "chunk": ".539 Stück geg"
+    },
+    {
+      "t_ms": 74231,
+      "kind": "text",
+      "chunk": "enüber 924.\n-"
+    },
+    {
+      "t_ms": 74284,
+      "kind": "text",
+      "chunk": " **Risiko in beide"
+    },
+    {
+      "t_ms": 74332,
+      "kind": "text",
+      "chunk": " Richtungen:**"
+    },
+    {
+      "t_ms": 74382,
+      "kind": "text",
+      "chunk": " Zu"
+    },
+    {
+      "t_ms": 74429,
+      "kind": "text",
+      "chunk": " fr"
+    },
+    {
+      "t_ms": 74485,
+      "kind": "text",
+      "chunk": "ühes Marketing er"
+    },
+    {
+      "t_ms": 74532,
+      "kind": "text",
+      "chunk": "höht die Produktion"
+    },
+    {
+      "t_ms": 74582,
+      "kind": "text",
+      "chunk": " bei et"
+    },
+    {
+      "t_ms": 74636,
+      "kind": "text",
+      "chunk": "wa 31"
+    },
+    {
+      "t_ms": 74684,
+      "kind": "text",
+      "chunk": " % betroffenen"
+    },
+    {
+      "t_ms": 74736,
+      "kind": "text",
+      "chunk": " Stück. Zu spät"
+    },
+    {
+      "t_ms": 74799,
+      "kind": "text",
+      "chunk": "es Marketing kost"
+    },
+    {
+      "t_ms": 74831,
+      "kind": "text",
+      "chunk": "et Umsatz bei"
+    },
+    {
+      "t_ms": 74881,
+      "kind": "text",
+      "chunk": " der Lin"
+    },
+    {
+      "t_ms": 74932,
+      "kind": "text",
+      "chunk": "ie mit d"
+    },
+    {
+      "t_ms": 74989,
+      "kind": "text",
+      "chunk": "em hö"
+    },
+    {
+      "t_ms": 75044,
+      "kind": "text",
+      "chunk": "chsten Durchschn"
+    },
+    {
+      "t_ms": 75088,
+      "kind": "text",
+      "chunk": "ittspreis, w"
+    },
+    {
+      "t_ms": 75136,
+      "kind": "text",
+      "chunk": "obei die Marge un"
+    },
+    {
+      "t_ms": 75189,
+      "kind": "text",
+      "chunk": "bekannt ist (§"
+    },
+    {
+      "t_ms": 75238,
+      "kind": "text",
+      "chunk": "6).\n- **Geg"
+    },
+    {
+      "t_ms": 75280,
+      "kind": "text",
+      "chunk": "enposition:** Nach"
+    },
+    {
+      "t_ms": 75332,
+      "kind": "text",
+      "chunk": " Meldungen je 1"
+    },
+    {
+      "t_ms": 75387,
+      "kind": "text",
+      "chunk": ".000 Stück ("
+    },
+    {
+      "t_ms": 75432,
+      "kind": "text",
+      "chunk": "2,51 "
+    },
+    {
+      "t_ms": 75488,
+      "kind": "text",
+      "chunk": "stat"
+    },
+    {
+      "t_ms": 75534,
+      "kind": "text",
+      "chunk": "t 3,21) oder"
+    },
+    {
+      "t_ms": 75632,
+      "kind": "text",
+      "chunk": " Meldungen je Woche"
+    },
+    {
+      "t_ms": 75687,
+      "kind": "text",
+      "chunk": " (4,6 statt "
+    },
+    {
+      "t_ms": 75735,
+      "kind": "text",
+      "chunk": "6,0) sieht es"
+    },
+    {
+      "t_ms": 75783,
+      "kind": "text",
+      "chunk": " n"
+    },
+    {
+      "t_ms": 75832,
+      "kind": "text",
+      "chunk": "ach einer Verbesser"
+    },
+    {
+      "t_ms": 75887,
+      "kind": "text",
+      "chunk": "ung aus.\n- **"
+    },
+    {
+      "t_ms": 75936,
+      "kind": "text",
+      "chunk": "Auslöser:** W"
+    },
+    {
+      "t_ms": 75990,
+      "kind": "text",
+      "chunk": "en"
+    },
+    {
+      "t_ms": 76039,
+      "kind": "text",
+      "chunk": "n der Anteil bet"
+    },
+    {
+      "t_ms": 76083,
+      "kind": "text",
+      "chunk": "roffener Stück je"
+    },
+    {
+      "t_ms": 76130,
+      "kind": "text",
+      "chunk": " ver"
+    },
+    {
+      "t_ms": 76180,
+      "kind": "text",
+      "chunk": "kauft"
+    },
+    {
+      "t_ms": 76231,
+      "kind": "text",
+      "chunk": "em Stück in"
+    },
+    {
+      "t_ms": 76284,
+      "kind": "text",
+      "chunk": " mindestens zwei a"
+    },
+    {
+      "t_ms": 76336,
+      "kind": "text",
+      "chunk": "ufeinanderfolg"
+    },
+    {
+      "t_ms": 76385,
+      "kind": "text",
+      "chunk": "enden Mon"
+    },
+    {
+      "t_ms": 76437,
+      "kind": "text",
+      "chunk": "aten m"
+    },
+    {
+      "t_ms": 76487,
+      "kind": "text",
+      "chunk": "it gleich vielen"
+    },
+    {
+      "t_ms": 76531,
+      "kind": "text",
+      "chunk": " Wochen deutlich un"
+    },
+    {
+      "t_ms": 76580,
+      "kind": "text",
+      "chunk": "ter 31 % fällt"
+    },
+    {
+      "t_ms": 76636,
+      "kind": "text",
+      "chunk": " und der Ausschuss"
+    },
+    {
+      "t_ms": 76690,
+      "kind": "text",
+      "chunk": " nicht steigt."
+    },
+    {
+      "t_ms": 76731,
+      "kind": "text",
+      "chunk": " Ich formuliere das"
+    },
+    {
+      "t_ms": 76780,
+      "kind": "text",
+      "chunk": " b"
+    },
+    {
+      "t_ms": 76831,
+      "kind": "text",
+      "chunk": "ewusst in Stück und"
+    },
+    {
+      "t_ms": 76880,
+      "kind": "text",
+      "chunk": " nicht in Meldung"
+    },
+    {
+      "t_ms": 76929,
+      "kind": "text",
+      "chunk": "en,"
+    },
+    {
+      "t_ms": 76982,
+      "kind": "text",
+      "chunk": " weil die Meldungs"
+    },
+    {
+      "t_ms": 77042,
+      "kind": "text",
+      "chunk": "quote sch"
+    },
+    {
+      "t_ms": 77081,
+      "kind": "text",
+      "chunk": "on s"
+    },
+    {
+      "t_ms": 77130,
+      "kind": "text",
+      "chunk": "inkt, wenn man"
+    },
+    {
+      "t_ms": 77186,
+      "kind": "text",
+      "chunk": " Vorgänge zus"
+    },
+    {
+      "t_ms": 77247,
+      "kind": "text",
+      "chunk": "ammenfasst.\n\n**"
+    },
+    {
+      "t_ms": 77305,
+      "kind": "text",
+      "chunk": "Zu"
+    },
+    {
+      "t_ms": 77344,
+      "kind": "text",
+      "chunk": " klären:** Welche"
+    },
+    {
+      "t_ms": 77386,
+      "kind": "text",
+      "chunk": " Wochen gehören zum"
+    },
+    {
+      "t_ms": 77479,
+      "kind": "text",
+      "chunk": " Geschäftsm"
+    },
+    {
+      "t_ms": 77530,
+      "kind": "text",
+      "chunk": "onat September? Und so"
+    },
+    {
+      "t_ms": 77581,
+      "kind": "text",
+      "chunk": "ll die Qualität"
+    },
+    {
+      "t_ms": 77647,
+      "kind": "text",
+      "chunk": " in Me"
+    },
+    {
+      "t_ms": 77683,
+      "kind": "text",
+      "chunk": "ldungen oder in bet"
+    },
+    {
+      "t_ms": 77740,
+      "kind": "text",
+      "chunk": "roffenen Stück g"
+    },
+    {
+      "t_ms": 77781,
+      "kind": "text",
+      "chunk": "emessen werden? "
+    },
+    {
+      "t_ms": 77830,
+      "kind": "text",
+      "chunk": "Ohne di"
+    },
+    {
+      "t_ms": 77883,
+      "kind": "text",
+      "chunk": "ese Festlegung"
+    },
+    {
+      "t_ms": 77932,
+      "kind": "text",
+      "chunk": " bleibt „"
+    },
+    {
+      "t_ms": 77984,
+      "kind": "text",
+      "chunk": "besser ge"
+    },
+    {
+      "t_ms": 78036,
+      "kind": "text",
+      "chunk": "worden“ e"
+    },
+    {
+      "t_ms": 78086,
+      "kind": "text",
+      "chunk": "ine Fr"
+    },
+    {
+      "t_ms": 78167,
+      "kind": "text",
+      "chunk": "age der Definition."
+    }
+  ],
+  "final_text": "**Antwort: Nein, das lässt sich nicht belegen.** Die Quote von 3,21 auf 2,51 Meldungen je 1.000 Stück stimmt rechnerisch. Sie zählt aber Meldungen, nicht defekte Stück. Gemessen an den betroffenen Stück ist die Qualität gleich geblieben, der Ausschuss ist sogar deutlich gestiegen. Ein Steckbrief des Teams (`references/steckbriefe.md`) existiert nicht. Die folgenden Definitionen kommen deshalb aus dem Bericht und den Rohdaten.\n\n## Steckbrief: „Defekte je 1.000 Stück“ (Bericht §3 und §5, Zitat VP Sales)\n- **Zähler:** Anzahl NCR-Meldungen, also Vorgänge und nicht Stück (`ncr_records.csv`, Zeilen mit `line`=CRAFT)\n- **Nenner:** verkaufte Stück (`demand_actuals.csv`, `units_actual`, SKU `NW-CRAFT-*`)\n- **Zeitraum:** Kalendermonat nach `week_start` bzw. `ncr_date`. September hat 5 Wochen, August 4.\n- **Quelle:** Bericht §3, Tabelle „Qualität“, Zeile CRAFT, plus der Text unter der Tabelle für August\n- **Grenze:** Die Kennzahl sagt nichts darüber, wie viele Stück betroffen sind. Eine Meldung kann 75 oder 231 Stück umfassen. Außerdem kommt der Zähler aus der Produktion und der Nenner aus dem Absatz (§6).\n\n## Gegenprobe: Die Definition entscheidet über die Richtung\n| CRAFT | Aug (4 Wo.) | Sep (5 Wo.) | Richtung |\n|---|---:|---:|---|\n| Meldungen je 1.000 Stück (Bericht) | 3,21 | 2,51 | besser |\n| Betroffene Stück / verkaufte Stück | 31,0 % | 30,9 % | gleich |\n| Betroffene Stück absolut | 2.324 | 2.832 | +22 % |\n| davon Ausschuss (scrap), Stück | 924 | 1.539 | +67 % |\n| Ausschuss / verkaufte Stück | 12,3 % | 16,8 % | schlechter |\n| Meldungen je Woche | 6,0 | 4,6 | besser |\n| Betroffene Stück je Woche | 581 | 566 | gleich |\n\nEine zweite Gabel betrifft den Zeitraum. Die Woche ab 30.09. ist in den Daten als **FY24-Q3-W01** markiert. Der Bericht trägt den Titel „GJ24 Q2“, zählt diese Woche aber zum September. Nimmt man sie heraus (4 Wochen, 7.127 Stück, 22 Meldungen, 2.757 betroffene Stück), ergibt sich für den September:\n- 3,09 Meldungen je 1.000 Stück: kaum besser als im August\n- **38,7 % betroffene Stück**: deutlich schlechter als im August\n\nDas Ergebnis hängt also stark davon ab, welche Wochen zum September zählen.\n\n## Nachgerechnet\n2,51 = `ncr_records.csv`, `line`=CRAFT, `ncr_date` im Sept. 2023: 23 Zeilen. Geteilt durch `demand_actuals.csv`, SKU CRAFT, `week_start` im Sept. 2023: 9.162 Stück (5 Wochen). Auch die 2.832 betroffenen Stück stimmen mit dem Bericht überein. Die Zahlen sind also richtig gerechnet, nur die Kennzahl misst etwas anderes als „Qualität“.\n\nNebenbei ist auch die Aussage „keine andere Linie hat sich verbessert“ definitionsabhängig. Bei NEST sank der Anteil betroffener Stück von 11,8 % auf 10,5 %, die Meldungen je 1.000 Stück stiegen dagegen von 0,89 auf 1,13.\n\n## Für die Entscheidung im Bericht (§5)\n- **Entscheidung:** Das Argument „die Qualität dreht bereits“ trägt nicht. Erst nacharbeiten, dann Marketing.\n- **Weil:** Im Zähler stehen Meldungen, nicht Stück. Die betroffene Menge je verkauftem Stück liegt unverändert bei rund 31 %, und der Ausschuss ist gestiegen.\n- **Zahl:** 30,9 % betroffene Stück im September gegenüber 31,0 % im August. Ausschuss 1.539 Stück gegenüber 924.\n- **Risiko in beide Richtungen:** Zu frühes Marketing erhöht die Produktion bei etwa 31 % betroffenen Stück. Zu spätes Marketing kostet Umsatz bei der Linie mit dem höchsten Durchschnittspreis, wobei die Marge unbekannt ist (§6).\n- **Gegenposition:** Nach Meldungen je 1.000 Stück (2,51 statt 3,21) oder Meldungen je Woche (4,6 statt 6,0) sieht es nach einer Verbesserung aus.\n- **Auslöser:** Wenn der Anteil betroffener Stück je verkauftem Stück in mindestens zwei aufeinanderfolgenden Monaten mit gleich vielen Wochen deutlich unter 31 % fällt und der Ausschuss nicht steigt. Ich formuliere das bewusst in Stück und nicht in Meldungen, weil die Meldungsquote schon sinkt, wenn man Vorgänge zusammenfasst.\n\n**Zu klären:** Welche Wochen gehören zum Geschäftsmonat September? Und soll die Qualität in Meldungen oder in betroffenen Stück gemessen werden? Ohne diese Festlegung bleibt „besser geworden“ eine Frage der Definition.",
+  "stats": {
+    "duration_ms": 77561,
+    "duration_api_ms": 75642,
+    "ttft_ms": 2339,
+    "num_turns": 10,
+    "output_tokens": 7611
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false,
+  "rejected": ["3 tool calls were denied"]
+}

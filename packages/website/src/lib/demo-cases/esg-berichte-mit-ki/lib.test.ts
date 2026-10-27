@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BEATS } from "./beats";
-import { validateBeats } from "@/lib/demo-beats";
+import { validateBeatsV4 } from "@/lib/demo-beats";
 import {
   BOM,
   csvCell,
@@ -14,7 +14,7 @@ import {
 } from "./export";
 import { BIO, PV, SEPTEMBER_INVOICE, STICHTAG, STROM, WASSER } from "./kit";
 import { affectedBy, cascadeFlips, citeCounts, ledgerCounts, LEDGER, missingDocuments, tileStatus, VSME, vsmeCounts } from "./ledger";
-import { cascadeAt, EXPIRED_DAYS, probeAt, sweepAt, verdictAt } from "./motion";
+import { EXPIRED_DAYS } from "./figures";
 import {
   addRow,
   cleanSentence,
@@ -44,27 +44,7 @@ import {
 import { COPY } from "./copy";
 
 const mwh = (kwh: number) => roundTo(kwh / 1000, 1);
-const words = (locale: "de" | "en"): ExportWords => {
-  const own = COPY[locale].own;
-  return {
-    statuses: COPY[locale].statuses,
-    destinations: own.destinations,
-    evidenceAfterLaut: own.evidenceAfterLaut,
-    evidence: own.evidenceOptions,
-    months: own.monthNames,
-    and: own.and,
-    to: own.to,
-    monthsCount: own.monthsCount,
-    wholeYear: own.wholeYear,
-    decisions: own.decisions,
-    reasons: own.reasons,
-    missing: own.missing,
-    safe: own.safe,
-    table: own.table,
-    csv: own.csv,
-    mail: own.mail,
-  };
-};
+const words = (locale: "de" | "en"): ExportWords => COPY[locale].own.words;
 
 describe("energy: months, not rows", () => {
   const count = distinctMonths(STROM, 2025);
@@ -158,31 +138,6 @@ describe("the register", () => {
     expect(byId("F2").before).toBe("luecke");
     expect([byId("C1").before, byId("C1").gate]).toEqual(["luecke", "4c"]);
     expect(byId("C7").before).toBe("belegt");
-    expect(COPY.de.three.sentences.map((sentence) => sentence.status)).toEqual(["luecke", "luecke", "belegt"]);
-  });
-});
-
-describe("motion is a pure function of t", () => {
-  const frames = [-1, 0, 0.13, 0.5, 0.87, 1, 2, Number.NaN];
-  it("clamps, never returns NaN and keeps counters whole", () => {
-    for (const t of frames) {
-      const probe = probeAt(t);
-      for (const value of Object.values(probe)) expect(Number.isFinite(value)).toBe(true);
-      expect(Number.isInteger(probe.days) && Number.isInteger(probe.cells)).toBe(true);
-      const sweep = sweepAt(t);
-      expect(Number.isInteger(sweep.set)).toBe(true);
-      const cascade = cascadeAt(t);
-      expect(Number.isInteger(cascade.rows)).toBe(true);
-      expect(roundTo(cascade.totalMwh, 1)).toBe(cascade.totalMwh);
-      for (const value of [...verdictAt(t).checks, verdictAt(t).verdict]) expect(Number.isFinite(value)).toBe(true);
-    }
-  });
-  it("ends on the reduced-motion frame", () => {
-    expect(probeAt(1)).toEqual(probeAt(5));
-    expect(probeAt(1)).toMatchObject({ days: 46, cells: 12, verdict: 1 });
-    expect(sweepAt(1)).toEqual({ set: 21, tally: 1 });
-    expect(cascadeAt(1)).toMatchObject({ months: 12, totalMwh: 320.9, rows: 6, summary: 1 });
-    expect(cascadeAt(0)).toMatchObject({ months: 11, totalMwh: 279.7, rows: 0 });
   });
 });
 
@@ -295,7 +250,7 @@ describe("exports", () => {
     // A backslash before a pipe would otherwise turn the escape back into a column break.
     const slashed = toMarkdownTable([rowFor({ sentence: "C:\\ | x \\| y", evidence: "nothing" })], words("de"));
     expect(slashed).toContain("C:\\\\ \\| x \\\\\\| y");
-    expect(table.split("\n")[0]).toBe("| Satz | Wohin | Nachweis | Status | Fehlt |");
+    expect(table.split("\n")[0]).toBe("| Antwort | Wohin | Nachweis | Status | Fehlt |");
   });
   it("writes month runs as ranges, with the count", () => {
     const months = Array.from({ length: 12 }, (_, index) => index !== 8);
@@ -326,15 +281,15 @@ describe("exports", () => {
 
 describe("beats and copy", () => {
   it("meets the beat contract", () => {
-    expect(validateBeats(BEATS)).toEqual([]);
+    expect(validateBeatsV4(BEATS)).toEqual([]);
   });
-  it("has the same status words as the kit: BELEGT · SCHWACH · LÜCKE and COVERED · WEAK · GAP", () => {
-    expect(Object.values(COPY.de.statuses)).toEqual(["BELEGT", "SCHWACH", "LÜCKE"]);
-    expect(Object.values(COPY.en.statuses)).toEqual(["COVERED", "WEAK", "GAP"]);
+  it("takes the card's capitals from the skill: ZITAT · ZEITRAUM · UMFANG · FREIGABE and QUOTE · PERIOD · SCOPE · APPROVAL", () => {
     expect(Object.values(COPY.de.checks)).toEqual(["ZITAT", "ZEITRAUM", "UMFANG", "FREIGABE"]);
     expect(Object.values(COPY.en.checks)).toEqual(["QUOTE", "PERIOD", "SCOPE", "APPROVAL"]);
+    expect(Object.values(COPY.de.statuses)).toEqual(["Belegt", "Schwach belegt", "Lücke"]);
+    expect(Object.values(COPY.en.statuses)).toEqual(["Covered", "Weak", "Gap"]);
     const english = JSON.stringify(COPY.en);
-    for (const word of ["BELEGT", "SCHWACH", "LÜCKE", "PRÜFEN", "FEHLT"]) expect(english).not.toContain(word);
+    for (const word of ["BELEGT", "SCHWACH", "LÜCKE", "Lücke", "Zeile"]) expect(english).not.toContain(word);
   });
   it("counts statuses", () => {
     expect(countStatuses(["belegt", "luecke"])).toEqual({ belegt: 1, schwach: 0, luecke: 1 });

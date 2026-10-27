@@ -93,7 +93,7 @@ export const demos: readonly Demo[] = [
     workshopNumber: "01",
     plakat: "lemons",
     motif: "fan",
-    minutes: 4,
+    minutes: 10,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
@@ -101,28 +101,28 @@ export const demos: readonly Demo[] = [
     lastReviewed: "2026-10-25",
     title: "Die Fehlerliste",
     oneLiner:
-      "Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel.",
+      "Du prüfst die Prognose deines Tools an ihren eigenen alten Fehlern und legst fest, wann sie ohne Freigabe in die Planung darf.",
     question:
       "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
     syntheticDataLabel:
-      "Erfundene Firma, erfundene Zahlen. Gerechnet in deinem Browser, ohne KI. Nichts wird gesendet.",
+      "Firma und Zahlen sind erfunden. Die Demo rechnet in deinem Browser und sendet nichts. Die Antworten von Claude am Ende der Demo sind aufgezeichnete Läufe.",
     job: "Prüf die Prognose deines Tools an ihren alten Fehlern.",
     tile: {
-      hook: "Linsensuppe 2025: Die Prognose liegt 21 % näher als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
-      take: "Prüfregel + Claude-Skill",
+      hook: "Linsensuppe 2025: Die Prognose macht 21 % kleinere Fehler als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
+      take: "Eine Prüfregel und ein Skill für deinen Claude",
     },
     en: {
       title: "The Error List",
       oneLiner:
-        "Check your tool's forecast against its own past errors: baseline, range, planning number, rule.",
+        "You check your tool's forecast against its own past errors and decide when it may go into planning without sign-off.",
       question:
         "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
       syntheticDataLabel:
-        "Invented company, invented numbers. Worked out in your browser, no AI. Nothing is sent.",
+        "The company and its numbers are invented. The demo runs in your browser and sends nothing. The Claude answers at the end of the demo are recorded runs.",
       job: "Check your tool's forecast against its past errors.",
       tile: {
-        hook: "Lentil soup 2025: the forecast misses 21 % less than \"same as last week\". The release rule still stops it for 15 weeks.",
-        take: "Release rule + Claude skill",
+        hook: "Lentil soup 2025: the forecast's errors are 21% smaller than with \"same as last week\". The release rule still stops it for 15 weeks.",
+        take: "A release rule and a skill for your Claude",
       },
     },
   },
@@ -211,7 +211,7 @@ export const demos: readonly Demo[] = [
     workshopNumber: "04",
     plakat: "autumn",
     motif: "leaves",
-    minutes: 6,
+    minutes: 10,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
@@ -219,8 +219,8 @@ export const demos: readonly Demo[] = [
     lastReviewed: "2026-10-25",
     title: "Nachweisprobe",
     oneLiner:
-      "Vier Sätze, vier Dateien, vier Prüfungen. Dann derselbe Ordner für drei Anfragen, eine nachgereichte Rechnung und deine eigenen Sätze.",
-    question: "Deckt die Datei den Satz?",
+      "Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie belegt, und prüfst am Ende deine eigene Datei.",
+    question: "Welche Zeile belegt diese Antwort?",
     syntheticDataLabel:
       "Erfundenes Weingut, Dateien aus dem Workshop-Kit, Zeile für Zeile. Gerechnet in deinem Browser, ohne KI, nichts wird gesendet.",
     job: "Leg jede ESG-Antwort neben ihre Datei.",
@@ -231,8 +231,8 @@ export const demos: readonly Demo[] = [
     en: {
       title: "Evidence test",
       oneLiner:
-        "Four sentences, four files, four checks. Then the same folder for three requests, one late invoice and your own sentences.",
-      question: "Does the file cover the sentence?",
+        "One folder, three requests, one late invoice. You link each answer to the line that backs it, and at the end you check your own file.",
+      question: "Which line backs this answer?",
       syntheticDataLabel:
         "Invented winery, files from the workshop kit, line by line. Worked out in your browser, without AI, nothing is sent.",
       job: "Put every ESG answer next to its file.",
@@ -249,7 +249,7 @@ export const demos: readonly Demo[] = [
     workshopNumber: "05",
     plakat: "sage",
     motif: "ledger",
-    minutes: 4,
+    minutes: 8,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
@@ -260,10 +260,10 @@ export const demos: readonly Demo[] = [
       "Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Dateien und nimm einen Skill für deine eigenen Audits mit. Alles läuft in diesem Tab.",
     question: "Welche Dateien im Ordner sind ein Nachweis?",
     syntheticDataLabel:
-      "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden; zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Gerechnet in deinem Browser, keine KI, nichts wird gesendet.",
+      "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden, zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Auf dieser Seite läuft keine KI. Die Claude-Antwort ist eine Aufzeichnung. Was du prüfst, bleibt in deinem Browser.",
     job: "Prüf, welche Datei im Ordner wirklich etwas belegt.",
     tile: {
-      hook: "11 Dateien, 8 Anforderungen, 2 belegt.",
+      hook: "Zu jeder der acht Anforderungen liegt eine passend benannte Datei im Ordner. Nur zwei davon belegen, was verlangt ist.",
       take: "eine Nachweisliste und ein Skill, der ohne Zitat nichts zählt",
     },
     en: {
@@ -272,10 +272,10 @@ export const demos: readonly Demo[] = [
         "Eight requests, eleven files. Test which file actually proves something, check Claude's quotes against the files, and take a skill home for your own audits. Everything runs in this tab.",
       question: "Which files in the folder are evidence?",
       syntheticDataLabel:
-        "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented; two lines come from Anthropic's public privacy page. Worked out in your browser, no AI, nothing is sent.",
+        "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented, and two lines come from Anthropic's public privacy page. No AI runs on this page. The Claude answer is a recording. What you check stays in your browser.",
       job: "Test which file in the folder actually proves something.",
       tile: {
-        hook: "11 files, 8 requests, 2 covered.",
+        hook: "Each of the eight requests has a file with a matching name. Only two of them prove what is asked.",
         take: "an evidence index and a skill that counts nothing without a quote",
       },
     },
@@ -287,18 +287,18 @@ export const demos: readonly Demo[] = [
     workshopNumber: "06",
     plakat: "kraft",
     motif: "converge",
-    minutes: 4,
+    minutes: 8,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-26",
+    lastReviewed: "2026-10-27",
     title: "Die Vergleichsbasis",
     oneLiner:
-      "Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Tipp zuerst, dann siehst du, welche Zeile entscheidet.",
+      "Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Schätz zuerst, dann siehst du, welche Zeile entscheidet.",
     question: "Welches Angebot ist günstiger?",
     syntheticDataLabel:
-      "Erfundener Fall aus Workshop 06: Brandtwerk Gerätebau und die drei Lieferanten sind erfunden, jede Zahl steht im Kit. Gerechnet in deinem Browser, keine KI, nichts wird gesendet.",
+      "Firma, Lieferanten und Zahlen sind erfunden, und jede Zahl steht im Kit. Auf dieser Seite läuft keine KI; die Claude-Antwort ist eine Aufzeichnung.",
     job: "Bring drei Angebote auf eine Basis.",
     tile: {
       hook: "Der billigste Stückpreis ist das teuerste Angebot.",
@@ -310,7 +310,7 @@ export const demos: readonly Demo[] = [
         "Three offers, one basis: same quantity, per unit, delivered, with one-off costs and discount. Guess first, then see which line decides.",
       question: "Which offer costs less?",
       syntheticDataLabel:
-        "Invented case from Workshop 06: Brandtwerk Gerätebau and the three suppliers are invented, every number is in the kit. Worked out in your browser, no AI, nothing is sent.",
+        "The company, the suppliers and the numbers are invented, and every number is in the kit. No AI runs on this page; the Claude answer is a recording.",
       job: "Bring three offers onto one basis.",
       tile: {
         hook: "The lowest unit price is the most expensive offer.",

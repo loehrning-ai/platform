@@ -18,6 +18,8 @@ export interface Row {
   readonly hinweis: string;
   /** Sold out (a note or bestand_ende = 0): the actual is smaller than the demand. */
   readonly zensiert: boolean;
+  /** The row's line in the source file (1 is the header); null for a week the file leaves out. */
+  readonly line: number | null;
 }
 
 export type ParseError =
@@ -176,7 +178,7 @@ const COLUMN_LABEL: Readonly<Record<Column, string>> = {
   woche: "woche", ist: "ist", prognose: "prognose", hinweis: "hinweis", bestand: "bestand_ende",
 };
 
-function sameRow(a: Omit<Row, "woche">, b: Omit<Row, "woche">): boolean {
+function sameRow(a: Omit<Row, "woche" | "line">, b: Omit<Row, "woche" | "line">): boolean {
   return a.ist === b.ist && a.f === b.f && a.hinweis === b.hinweis && a.zensiert === b.zensiert;
 }
 
@@ -194,7 +196,7 @@ export function parseTable(text: string): ParseResult {
   if (!header.includes("woche") || !header.includes("ist")) return { ok: false, error: { key: "header" } };
   const ignored = headerCells.filter((cell, index) => header[index] === null && cell.trim() !== "").map((cell) => cell.trim());
 
-  const byDay = new Map<number, { row: Omit<Row, "woche">; line: number }>();
+  const byDay = new Map<number, { row: Omit<Row, "woche" | "line">; line: number }>();
   const notices: ParseNotice[] = [];
   for (let index = 1; index < lines.length; index += 1) {
     const line = index + 1;
@@ -244,9 +246,10 @@ export function parseTable(text: string): ParseResult {
     while (rows.length > 0 && day - dayFromIso((rows[rows.length - 1] as Row).woche) > 7) {
       const empty = isoFromDay(dayFromIso((rows[rows.length - 1] as Row).woche) + 7);
       notices.push({ key: "gap", date: empty });
-      rows.push({ woche: empty, ist: null, f: null, hinweis: "", zensiert: false });
+      rows.push({ woche: empty, ist: null, f: null, hinweis: "", zensiert: false, line: null });
     }
-    rows.push({ woche: isoFromDay(day), ...(byDay.get(day) as { row: Omit<Row, "woche"> }).row });
+    const entry = byDay.get(day) as { row: Omit<Row, "woche" | "line">; line: number };
+    rows.push({ woche: isoFromDay(day), ...entry.row, line: entry.line });
   }
   return { ok: true, rows, notices, ignored, hasForecast: rows.some((row) => row.f !== null) };
 }

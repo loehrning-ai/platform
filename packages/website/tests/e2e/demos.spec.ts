@@ -51,20 +51,23 @@ test.describe("/demos hub", () => {
     });
   }
 
-  test("tile 1 sits whole in the first screen at 390 x 664, under a hero of at most 160px", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 664 });
-    await page.goto("/demos", { waitUntil: "domcontentloaded" });
-    expect(await page.evaluate(() => window.scrollY)).toBe(0);
-    const hero = await page.locator("[data-demo-hub-hero]").boundingBox();
-    expect(hero?.height ?? 999).toBeLessThanOrEqual(160);
-    const tile = await page.locator(".dt-card").first().boundingBox();
-    const fold = await page.evaluate(() => {
-      const bar = document.querySelector("[data-mobile-tab-bar]");
-      const top = bar ? bar.getBoundingClientRect().top : window.innerHeight;
-      return Math.min(top, window.innerHeight);
-    });
-    expect((tile?.y ?? 999) + (tile?.height ?? 999)).toBeLessThanOrEqual(fold);
-    await expectGlassBudget(page, "/demos at 390 x 664");
+  test("the first screen at 390 x 664 holds the whole introduction, and tile 1 shows below it", async ({ page }) => {
+    for (const path of ["/demos", "/en/demos"]) {
+      await page.setViewportSize({ width: 390, height: 664 });
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+      expect(await page.evaluate(() => window.scrollY)).toBe(0);
+      const fold = await page.evaluate(() => {
+        const bar = document.querySelector("[data-mobile-tab-bar]");
+        const top = bar ? bar.getBoundingClientRect().top : window.innerHeight;
+        return Math.min(top, window.innerHeight);
+      });
+      const lede = await page.locator(".hub4-lede").boundingBox();
+      expect((lede?.y ?? 999) + (lede?.height ?? 999), `${path}: the introduction ends above the fold`).toBeLessThanOrEqual(fold);
+      const tile = await page.locator(".dt-card").first().boundingBox();
+      // At least the top third of tile 1 (its moving scene) is visible, so the page reads as a list of demos.
+      expect(fold - (tile?.y ?? 999), `${path}: tile 1 shows below the introduction`).toBeGreaterThanOrEqual(120);
+      await expectGlassBudget(page, `${path} at 390 x 664`);
+    }
   });
 
   test("a tile plays once when seen, then holds the end frame", async ({ page }) => {

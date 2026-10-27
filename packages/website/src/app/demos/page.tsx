@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowGlyph } from "@/components/werk";
-import { CapsLine, PlakatBand } from "@/components/plakat";
+import { GlasStage } from "@/components/demos/glas/feld";
+import { hubFeld } from "@/components/demos/glas/feld-math";
+import { GlasRoot } from "@/components/demos/glas/glas-root";
 import "@/components/demos/hub/demo-tile.css";
 import "@/components/demos/hub/tile-scenes.css";
+import "@/components/demos/hub/hub-glas.css";
 import { DemoTile } from "@/components/demos/hub/demo-tile";
 import { DemoTileStage } from "@/components/demos/hub/demo-tile-stage";
 import { getDemosForLocale } from "@/lib/demos";
@@ -12,7 +14,6 @@ import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
-import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { ROUTE_PLAKAT } from "@/lib/plakat/palettes";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
@@ -46,14 +47,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
 
-/** The hub's poster title stays 2.75rem on a phone (3.5rem at most), so the hero stays under 160px. */
-const HUB_TITLE_SIZE = { "--text-poster": "clamp(2.75rem, 2rem + 2.4vw, 3.5rem)" } as CSSProperties;
-
 const TEXT_LINK =
   "inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-mennige hover:decoration-2 active:decoration-mennige active:decoration-2";
 
 /**
- * The hub: six live trailers, not six posters. A compact IDEA band, then
+ * The hub (Glas, frost mode): six live trailers, not six posters. A soft
+ * field hero with the intro (language-standard B.8), then
  * a grid of tiles (one column on a phone, two from md, three from lg), each
  * a 16:9 miniature of the demo's own object that plays its story once when
  * first seen and replays on hover or focus (demo-tile-stage.tsx), with the
@@ -92,30 +91,28 @@ export default async function DemosPage() {
   };
 
   return (
-    <div className="overflow-x-clip pb-10 sm:pb-20" data-plakat-page={ROUTE_PLAKAT.demos}>
+    <GlasRoot
+      tone="hell"
+      initialMode="frost"
+      className="hub4 overflow-x-clip pb-10 sm:pb-20"
+      data-plakat-page={ROUTE_PLAKAT.demos}
+      data-demos-hub-glas=""
+    >
       <JsonLd data={jsonLd} id="demos-jsonld" />
 
-      {/* A compact IDEA band (at most 160px on a phone): the caps line, the
-          H1 and one line. The tiles below are the picture, and the first one
-          sits whole in the first screen at 390 x 664. */}
+      {/* The hero: the hub's own soft field (Kalkweiß with three pools), the
+          caps line, the H1 and the four-sentence intro. Frost mode: no live
+          filter anywhere on the hub. */}
       <header data-demo-hub-hero="">
-        <PlakatBand
-          plakat={ROUTE_PLAKAT.demos}
-          labelledBy="demos-title"
-          contentClassName="pt-3 pb-0 sm:pb-2 lg:py-10"
-        >
-          <CapsLine arrow>{copy.catalog.kicker}</CapsLine>
-          <h1
-            id="demos-title"
-            className="poster-title mt-2 text-scene-mid sm:mt-3"
-            style={{ ...posterTitleFallbackStyle(copy.catalog.heading), ...HUB_TITLE_SIZE }}
-          >
-            {copy.catalog.heading}
-          </h1>
-          <p className="mt-2 max-w-[46ch] text-[1rem] leading-snug text-scene-ink text-pretty sm:mt-3 sm:text-[1.0625rem]">
-            {copy.hub.lede}
-          </p>
-        </PlakatBand>
+        <GlasStage feld={hubFeld([{ x: 0.06, y: 0.12 }, { x: 0.94, y: 0.3 }, { x: 0.55, y: 1.1 }])} className="hub4-hero">
+          <div className={CONTAINER}>
+            <p className="hub4-kicker">{copy.catalog.kicker}</p>
+            <h1 id="demos-title" className="hub4-title">
+              {copy.catalog.heading}
+            </h1>
+            <p className="hub4-lede">{copy.hub.lede}</p>
+          </div>
+        </GlasStage>
       </header>
 
       <section aria-labelledby="demo-list-heading" className="pt-4 sm:pt-8">
@@ -128,10 +125,7 @@ export default async function DemosPage() {
               <DemoTile key={demo.slug} demo={demo} locale={locale} />
             ))}
             <li className="dt-promise" data-demo-promise-cell="">
-              <h3 className="dt-promise-title">
-                <span className="dt-zero plakat-idea">{copy.catalog.promiseZero}</span>
-                {copy.catalog.promiseTitle}
-              </h3>
+              <h3 className="dt-promise-title">{copy.catalog.promiseTitle}</h3>
               <p className="dt-promise-body">{copy.catalog.promiseBody}</p>
               <p data-demo-provenance="" className="dt-promise-note">
                 {copy.catalog.provenance}
@@ -146,6 +140,6 @@ export default async function DemosPage() {
           </p>
         </div>
       </section>
-    </div>
+    </GlasRoot>
   );
 }

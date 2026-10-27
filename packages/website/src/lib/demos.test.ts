@@ -92,10 +92,10 @@ describe("demo registry", () => {
       expect(getDemoForLocale(slug, "en")?.title).toBe(en);
     }
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "de")?.oneLiner).toBe(
-      "Prüf die Prognose deines Tools an ihren alten Fehlern: Messlatte, Spanne, Planzahl, Regel.",
+      "Du prüfst die Prognose deines Tools an ihren eigenen alten Fehlern und legst fest, wann sie ohne Freigabe in die Planung darf.",
     );
     expect(getDemoForLocale("ki-prognosen-einschaetzen", "en")?.oneLiner).toBe(
-      "Check your tool's forecast against its own past errors: baseline, range, planning number, rule.",
+      "You check your tool's forecast against its own past errors and decide when it may go into planning without sign-off.",
     );
   });
 

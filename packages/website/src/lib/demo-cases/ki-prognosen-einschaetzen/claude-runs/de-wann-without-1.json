@@ -1,0 +1,1840 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-wann-without-1",
+  "slug": "ki-prognosen-einschaetzen",
+  "locale": "de",
+  "prompt_id": "wann",
+  "take": 1,
+  "recorded_at": "2026-10-26T16:45:35Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Im Anhang sind unser Wochenabsatz mit der Prognose aus der Warenwirtschaft (linsensuppe-woechentlich.csv) und der Export des Tools (tool-export.txt). In welchen Wochen 2025 hätten wir der Prognose nicht einfach folgen dürfen, und warum? Heute ist Sonntag, der 28.12.2025.",
+  "kit_zip": "public/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+  "kit_files": [
+    {
+      "name": "linsensuppe-woechentlich.csv",
+      "path": "prognose-pruefen-kit/daten/linsensuppe-woechentlich.csv",
+      "bytes": 2402,
+      "sha256": "693cbcf1c842d11ed7d0db37a206b4bb42e8cd370262dcc92377a8b1d1183924"
+    },
+    {
+      "name": "tool-export.txt",
+      "path": "prognose-pruefen-kit/daten/tool-export.txt",
+      "bytes": 569,
+      "sha256": "e175fb5ba3779d922e114485dc8dd9e7cb7a429615ecfcc742980c2e82c786df"
+    }
+  ],
+  "skill": null,
+  "skill_name": "prognose-pruefen",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 3310,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la; wc -l *; cat linsensuppe-woechentlich.csv; cat tool-export.txt",
+        "description": "List and show both input files"
+      }
+    },
+    {
+      "t_ms": 4361,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 20738,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'E'\nimport csv\nrows=list(csv.reader(open('linsensuppe-woechentlich.csv'),delimiter=';'))[1:]\nseen=set();R=[]\nfor r in rows:\n    if r[0] in seen: print(\"DUP\",r);continue\n    seen.add(r[0]);R.append(r)\nfor w,i,p,h in R:\n    if w>='2024-12-30':\n        e=(int(p)-int(i)) if i and p else None\n        print(w,i,p,e,h)\ndef acc(sel):\n    a=sum(abs(int(p)-int(i)) for w,i,p,h in sel); s=sum(int(i) for w,i,p,h in sel)\n    return 1-a/s, len(sel)\nbase=[r for r in R if '2024-12-30'<=r[0]<='2025-12-22' and r[1] and r[2] and 'ausverkauft' not in r[3]]\nprint(acc(base))\nprint(acc([r for r in R if '2025-01-01'<=r[0]<='2025-12-22' and r[1] and r[2]]))\n# bias by period\nimport statistics as st\ndef bias(a,b): x=[int(p)-int(i) for w,i,p,h in R if a<=w<=b and i and p and not h]; return round(st.mean(x),1),len(x)\nfor a,b in [('2024-01-01','2025-03-31'),('2025-04-14','2025-05-05'),('2025-05-19','2025-06-09'),('2025-06-16','2025-12-22'),('2024-01-01','2024-12-30')]:\n    print(a,b,bias(a,b))\nE",
+        "description": "Compute forecast errors, accuracy and bias"
+      }
+    },
+    {
+      "t_ms": 20882,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": "K"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": "urz gesagt:"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": " V"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": "or allem **"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": "ab der"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": " Woche v"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": "om 07.04.2025"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": " bis etwa"
+    },
+    {
+      "t_ms": 52339,
+      "kind": "text",
+      "chunk": " Anfang Juni**"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": " hätten"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": " Sie die"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": " Prognose nicht üb"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ernehmen dürfen"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": ". D"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "azu kommen "
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ein paar Sonderw"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ochen, die Sie an"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ders h"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ät"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ten behandeln müssen"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": ".\n\n## 1. Au"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "slistung dur"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ch die Bio-Mark"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "t-Kette: 07"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": ".04. bis "
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "ca. 09.06.2"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "025 "
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "(der"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": " e"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "igentliche Fall)"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "\n\nAb dem 07.04."
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": " fall"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "en rund 70 G"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "läser pro Woche d"
+    },
+    {
+      "t_ms": 52340,
+      "kind": "text",
+      "chunk": "auerhaft weg."
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " Die Prognose hat"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " das nicht gewusst"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " und"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " den"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " R"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "ückgang er"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "st n"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "ach und nach aus den"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "Ist"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "-Z"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "ahlen gelernt:"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "\n\n| Woche | Pr"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "ognose | Ist | z"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "u hoch um"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " |\n|---|---|---"
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "|---|\n| 07."
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "04."
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " | 607 | 484 "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "| 123 |\n| "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "14.04. | 571 "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "| 493 | 78 "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "|\n| 21.04."
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": " | 563 | 482 "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "| 81 |\n| "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "28.04. | 550 "
+    },
+    {
+      "t_ms": 52341,
+      "kind": "text",
+      "chunk": "| 537 | 13 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "|\n| 05.05."
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " | 509 | 470 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "| 39 |\n| "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "19.05. | 531 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "| 449 | 82 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "|\n| 26.05."
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " | 521 | 439 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "| 82 |\n| "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "02.06. | 475 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "| 429 | 46 "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "|\n| 09.06."
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " | 473 | 450"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " | 23 |"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "\n\nZ"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "um"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " Vergleich: S"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "onst liegt die Pr"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "ognose im"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " Schnitt n"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "ur etwa **"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "+10 Gläser**"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " zu hoch (2024"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " bis März"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " 2025: +11, "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "ab Mitte Juni"
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": "2025: +0,4)."
+    },
+    {
+      "t_ms": 52342,
+      "kind": "text",
+      "chunk": " In diesen"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " Wochen wa"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "ren es im"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " Schnitt **+55"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "bis +60"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " Gläser**."
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " Das sind über"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " die"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " ne"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "un Wochen gr"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "ob "
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "450 b"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "is 500 Gläser"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " zu viel ge"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "plant, b"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "ei einem"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " Frischprodukt also"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " wah"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "rscheinlich Ab"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "sch"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "rift. Rich"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "tig wäre g"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "ewesen,"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " die Prognose "
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "ab der Auslistung von"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " Hand um et"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "wa 70 zu sen"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": "ken, bis das Modell"
+    },
+    {
+      "t_ms": 52343,
+      "kind": "text",
+      "chunk": " nachgez"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ogen hat. Fal"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ls die Auslistung v"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "orher angekündigt war"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": ", schon ab d"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "em 07.04.,"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " sonst sp"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ätestens ab dem "
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "14.04.\n\n**"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "N"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ach der Aktion bei"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " der Reformhaus-"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "Kette (19"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": ".05."
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " und 26.05.):**"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " In"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " den be"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "iden Wochen dan"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ach lag die Prognose"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " w"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ieder 82 zu h"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "och. Vorher war"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " der"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " Abst"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "and sch"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "on auf 13"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": " bz"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "w. 39 ge"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "schrumpft. V"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ermutlich "
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ist die Aktionswo"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "che te"
+    },
+    {
+      "t_ms": 52344,
+      "kind": "text",
+      "chunk": "ilweise in das Gr"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "undniveau eingefl"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "ossen. "
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "2024 zeigt"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " sich das in"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " k"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "leinerem Um"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "fang auch (Woche"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " danach: +27). Die"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " Aktionswoche sel"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "bst (671"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "Prognose, 637 "
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "Ist) war in"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " Ordnung,"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " der Aktionskalender"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " wirkt also."
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " K"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "ritisch s"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "ind die"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": " Wochen danach."
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "\n\n## 2. Sonder"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "wochen "
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "ohne br"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "auchbare Prognose"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "\n\n- **03.02.2"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "025:** W"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "egen des Upd"
+    },
+    {
+      "t_ms": 52345,
+      "kind": "text",
+      "chunk": "ates der Warenwirt"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "schaft w"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "urde keine Prognose"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": " gespeichert. H"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "ier gab es n"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "ichts zu üb"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "ernehmen,"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": " die Planung musste von"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": " Hand erfolgen."
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "\n- **10.03.2"
+    },
+    {
+      "t_ms": 52346,
+      "kind": "text",
+      "chunk": "025 (ab"
+    },
+    {
+      "t_ms": 52384,
+      "kind": "text",
+      "chunk": " Donnerstag aus"
+    },
+    {
+      "t_ms": 52429,
+      "kind": "text",
+      "chunk": "verkauft):** Die"
+    },
+    {
+      "t_ms": 52479,
+      "kind": "text",
+      "chunk": " 501 Gläser z"
+    },
+    {
+      "t_ms": 52530,
+      "kind": "text",
+      "chunk": "eigen nur den"
+    },
+    {
+      "t_ms": 52578,
+      "kind": "text",
+      "chunk": " B"
+    },
+    {
+      "t_ms": 52630,
+      "kind": "text",
+      "chunk": "estand, nicht die t"
+    },
+    {
+      "t_ms": 52679,
+      "kind": "text",
+      "chunk": "atsächliche Nach"
+    },
+    {
+      "t_ms": 52730,
+      "kind": "text",
+      "chunk": "frage. Die Pr"
+    },
+    {
+      "t_ms": 52784,
+      "kind": "text",
+      "chunk": "ognose (604) war h"
+    },
+    {
+      "t_ms": 52834,
+      "kind": "text",
+      "chunk": "ier vermutlich nic"
+    },
+    {
+      "t_ms": 52881,
+      "kind": "text",
+      "chunk": "ht das Problem,"
+    },
+    {
+      "t_ms": 52931,
+      "kind": "text",
+      "chunk": " sondern die"
+    },
+    {
+      "t_ms": 52979,
+      "kind": "text",
+      "chunk": " ver"
+    },
+    {
+      "t_ms": 53029,
+      "kind": "text",
+      "chunk": "fügbare "
+    },
+    {
+      "t_ms": 53080,
+      "kind": "text",
+      "chunk": "Ware. Diese Woche"
+    },
+    {
+      "t_ms": 53129,
+      "kind": "text",
+      "chunk": " l"
+    },
+    {
+      "t_ms": 53180,
+      "kind": "text",
+      "chunk": "ässt sich n"
+    },
+    {
+      "t_ms": 53239,
+      "kind": "text",
+      "chunk": "icht bewerten."
+    },
+    {
+      "t_ms": 53298,
+      "kind": "text",
+      "chunk": " Das Tool n"
+    },
+    {
+      "t_ms": 53336,
+      "kind": "text",
+      "chunk": "immt sie z"
+    },
+    {
+      "t_ms": 53381,
+      "kind": "text",
+      "chunk": "u Recht aus der"
+    },
+    {
+      "t_ms": 53430,
+      "kind": "text",
+      "chunk": " K"
+    },
+    {
+      "t_ms": 53488,
+      "kind": "text",
+      "chunk": "ennzahl heraus."
+    },
+    {
+      "t_ms": 53530,
+      "kind": "text",
+      "chunk": "\n\n## 3. Aus"
+    },
+    {
+      "t_ms": 53581,
+      "kind": "text",
+      "chunk": "reißer,"
+    },
+    {
+      "t_ms": 53630,
+      "kind": "text",
+      "chunk": " bei denen es ke"
+    },
+    {
+      "t_ms": 53680,
+      "kind": "text",
+      "chunk": "inen Grund z"
+    },
+    {
+      "t_ms": 53729,
+      "kind": "text",
+      "chunk": "um"
+    },
+    {
+      "t_ms": 53780,
+      "kind": "text",
+      "chunk": " Abweichen gab"
+    },
+    {
+      "t_ms": 53830,
+      "kind": "text",
+      "chunk": "\n\nAm"
+    },
+    {
+      "t_ms": 53885,
+      "kind": "text",
+      "chunk": " 13.01. (+84"
+    },
+    {
+      "t_ms": 53930,
+      "kind": "text",
+      "chunk": "), 24.02. (+"
+    },
+    {
+      "t_ms": 53989,
+      "kind": "text",
+      "chunk": "73), 07.07."
+    },
+    {
+      "t_ms": 54035,
+      "kind": "text",
+      "chunk": " (−62) und 27."
+    },
+    {
+      "t_ms": 54081,
+      "kind": "text",
+      "chunk": "10. (+65) lag"
+    },
+    {
+      "t_ms": 54138,
+      "kind": "text",
+      "chunk": " die Prognose eb"
+    },
+    {
+      "t_ms": 54183,
+      "kind": "text",
+      "chunk": "enfalls deutlich"
+    },
+    {
+      "t_ms": 54231,
+      "kind": "text",
+      "chunk": " da"
+    },
+    {
+      "t_ms": 54281,
+      "kind": "text",
+      "chunk": "neben. D"
+    },
+    {
+      "t_ms": 54330,
+      "kind": "text",
+      "chunk": "az"
+    },
+    {
+      "t_ms": 54380,
+      "kind": "text",
+      "chunk": "u gibt es a"
+    },
+    {
+      "t_ms": 54430,
+      "kind": "text",
+      "chunk": "ber keinen Hinwe"
+    },
+    {
+      "t_ms": 54491,
+      "kind": "text",
+      "chunk": "is, also"
+    },
+    {
+      "t_ms": 54530,
+      "kind": "text",
+      "chunk": " hätten Sie das"
+    },
+    {
+      "t_ms": 54590,
+      "kind": "text",
+      "chunk": " vorher nicht wiss"
+    },
+    {
+      "t_ms": 54650,
+      "kind": "text",
+      "chunk": "en können. Das ist norm"
+    },
+    {
+      "t_ms": 54681,
+      "kind": "text",
+      "chunk": "ales Rauschen und"
+    },
+    {
+      "t_ms": 54730,
+      "kind": "text",
+      "chunk": " kein Grund,"
+    },
+    {
+      "t_ms": 54781,
+      "kind": "text",
+      "chunk": " von der Prognose abz"
+    },
+    {
+      "t_ms": 54838,
+      "kind": "text",
+      "chunk": "uweichen.\n\n##"
+    },
+    {
+      "t_ms": 54881,
+      "kind": "text",
+      "chunk": " Zur Kennzahl"
+    },
+    {
+      "t_ms": 54931,
+      "kind": "text",
+      "chunk": " aus dem Tool"
+    },
+    {
+      "t_ms": 54981,
+      "kind": "text",
+      "chunk": "\n\nDie 94,2 %"
+    },
+    {
+      "t_ms": 55030,
+      "kind": "text",
+      "chunk": " kon"
+    },
+    {
+      "t_ms": 55080,
+      "kind": "text",
+      "chunk": "nte ich nach"
+    },
+    {
+      "t_ms": 55140,
+      "kind": "text",
+      "chunk": "rechnen. Es"
+    },
+    {
+      "t_ms": 55181,
+      "kind": "text",
+      "chunk": " sind 50 Woch"
+    },
+    {
+      "t_ms": 55234,
+      "kind": "text",
+      "chunk": "en vom 30.12."
+    },
+    {
+      "t_ms": 55282,
+      "kind": "text",
+      "chunk": "2024 bis 22."
+    },
+    {
+      "t_ms": 55332,
+      "kind": "text",
+      "chunk": "12.2025,"
+    },
+    {
+      "t_ms": 55381,
+      "kind": "text",
+      "chunk": " ohne die Woche "
+    },
+    {
+      "t_ms": 55431,
+      "kind": "text",
+      "chunk": "ohne Prognose und "
+    },
+    {
+      "t_ms": 55481,
+      "kind": "text",
+      "chunk": "ohne die "
+    },
+    {
+      "t_ms": 55535,
+      "kind": "text",
+      "chunk": "ausverka"
+    },
+    {
+      "t_ms": 55580,
+      "kind": "text",
+      "chunk": "ufte Woche. Die"
+    },
+    {
+      "t_ms": 55632,
+      "kind": "text",
+      "chunk": " Z"
+    },
+    {
+      "t_ms": 55681,
+      "kind": "text",
+      "chunk": "ahl st"
+    },
+    {
+      "t_ms": 55731,
+      "kind": "text",
+      "chunk": "immt also"
+    },
+    {
+      "t_ms": 55781,
+      "kind": "text",
+      "chunk": ", ver"
+    },
+    {
+      "t_ms": 55839,
+      "kind": "text",
+      "chunk": "d"
+    },
+    {
+      "t_ms": 55881,
+      "kind": "text",
+      "chunk": "eckt aber das"
+    },
+    {
+      "t_ms": 55936,
+      "kind": "text",
+      "chunk": " Problem: "
+    },
+    {
+      "t_ms": 55982,
+      "kind": "text",
+      "chunk": "Ein Jahresd"
+    },
+    {
+      "t_ms": 56031,
+      "kind": "text",
+      "chunk": "urchschnitt z"
+    },
+    {
+      "t_ms": 56081,
+      "kind": "text",
+      "chunk": "eigt nicht, d"
+    },
+    {
+      "t_ms": 56131,
+      "kind": "text",
+      "chunk": "ass die Prognose z"
+    },
+    {
+      "t_ms": 56181,
+      "kind": "text",
+      "chunk": "w"
+    },
+    {
+      "t_ms": 56237,
+      "kind": "text",
+      "chunk": "ei Monate l"
+    },
+    {
+      "t_ms": 56281,
+      "kind": "text",
+      "chunk": "ang systematisch r"
+    },
+    {
+      "t_ms": 56332,
+      "kind": "text",
+      "chunk": "und 60"
+    },
+    {
+      "t_ms": 56381,
+      "kind": "text",
+      "chunk": " Gläser zu h"
+    },
+    {
+      "t_ms": 56430,
+      "kind": "text",
+      "chunk": "och l"
+    },
+    {
+      "t_ms": 56483,
+      "kind": "text",
+      "chunk": "ag. Für sol"
+    },
+    {
+      "t_ms": 56532,
+      "kind": "text",
+      "chunk": "che Fälle "
+    },
+    {
+      "t_ms": 56586,
+      "kind": "text",
+      "chunk": "ist die m"
+    },
+    {
+      "t_ms": 56630,
+      "kind": "text",
+      "chunk": "ittlere Ab"
+    },
+    {
+      "t_ms": 56681,
+      "kind": "text",
+      "chunk": "weichung p"
+    },
+    {
+      "t_ms": 56732,
+      "kind": "text",
+      "chunk": "ro Woche (Progn"
+    },
+    {
+      "t_ms": 56783,
+      "kind": "text",
+      "chunk": "ose min"
+    },
+    {
+      "t_ms": 56837,
+      "kind": "text",
+      "chunk": "us Ist) über"
+    },
+    {
+      "t_ms": 56888,
+      "kind": "text",
+      "chunk": " einen g"
+    },
+    {
+      "t_ms": 56938,
+      "kind": "text",
+      "chunk": "leitenden Zeit"
+    },
+    {
+      "t_ms": 56983,
+      "kind": "text",
+      "chunk": "raum a"
+    },
+    {
+      "t_ms": 57033,
+      "kind": "text",
+      "chunk": "ussagekräftiger."
+    },
+    {
+      "t_ms": 57082,
+      "kind": "text",
+      "chunk": "\n\n##"
+    },
+    {
+      "t_ms": 57131,
+      "kind": "text",
+      "chunk": " Für die la"
+    },
+    {
+      "t_ms": 57182,
+      "kind": "text",
+      "chunk": "ufende Woche ("
+    },
+    {
+      "t_ms": 57237,
+      "kind": "text",
+      "chunk": "ab 29.12.2025"
+    },
+    {
+      "t_ms": 57282,
+      "kind": "text",
+      "chunk": ","
+    },
+    {
+      "t_ms": 57332,
+      "kind": "text",
+      "chunk": " g"
+    },
+    {
+      "t_ms": 57388,
+      "kind": "text",
+      "chunk": "ehört auch no"
+    },
+    {
+      "t_ms": 57431,
+      "kind": "text",
+      "chunk": "ch zu 2025)"
+    },
+    {
+      "t_ms": 57482,
+      "kind": "text",
+      "chunk": "\n\nDie Prognose lieg"
+    },
+    {
+      "t_ms": 57530,
+      "kind": "text",
+      "chunk": "t bei **729**."
+    },
+    {
+      "t_ms": 57584,
+      "kind": "text",
+      "chunk": " Letztes Jahr f"
+    },
+    {
+      "t_ms": 57637,
+      "kind": "text",
+      "chunk": "iel der"
+    },
+    {
+      "t_ms": 57681,
+      "kind": "text",
+      "chunk": " Absatz von der We"
+    },
+    {
+      "t_ms": 57730,
+      "kind": "text",
+      "chunk": "ihnachtswoche z"
+    },
+    {
+      "t_ms": 57784,
+      "kind": "text",
+      "chunk": "ur Neujahrswo"
+    },
+    {
+      "t_ms": 57840,
+      "kind": "text",
+      "chunk": "che um"
+    },
+    {
+      "t_ms": 57880,
+      "kind": "text",
+      "chunk": " et"
+    },
+    {
+      "t_ms": 57937,
+      "kind": "text",
+      "chunk": "wa 9 % (746"
+    },
+    {
+      "t_ms": 57981,
+      "kind": "text",
+      "chunk": " au"
+    },
+    {
+      "t_ms": 58032,
+      "kind": "text",
+      "chunk": "f 678), und die Pr"
+    },
+    {
+      "t_ms": 58081,
+      "kind": "text",
+      "chunk": "ognose lag damals "
+    },
+    {
+      "t_ms": 58139,
+      "kind": "text",
+      "chunk": "25 zu hoch."
+    },
+    {
+      "t_ms": 58183,
+      "kind": "text",
+      "chunk": " D"
+    },
+    {
+      "t_ms": 58232,
+      "kind": "text",
+      "chunk": "iesel"
+    },
+    {
+      "t_ms": 58281,
+      "kind": "text",
+      "chunk": "be R"
+    },
+    {
+      "t_ms": 58335,
+      "kind": "text",
+      "chunk": "ech"
+    },
+    {
+      "t_ms": 58382,
+      "kind": "text",
+      "chunk": "nung auf 733 ang"
+    },
+    {
+      "t_ms": 58435,
+      "kind": "text",
+      "chunk": "ewendet "
+    },
+    {
+      "t_ms": 58508,
+      "kind": "text",
+      "chunk": "ergibt et"
+    },
+    {
+      "t_ms": 58539,
+      "kind": "text",
+      "chunk": "wa 670. Auß"
+    },
+    {
+      "t_ms": 58602,
+      "kind": "text",
+      "chunk": "erdem l"
+    },
+    {
+      "t_ms": 58632,
+      "kind": "text",
+      "chunk": "ag die Prognose let"
+    },
+    {
+      "t_ms": 58687,
+      "kind": "text",
+      "chunk": "zte Woche 43 "
+    },
+    {
+      "t_ms": 58737,
+      "kind": "text",
+      "chunk": "zu hoch. Das"
+    },
+    {
+      "t_ms": 58782,
+      "kind": "text",
+      "chunk": " ist n"
+    },
+    {
+      "t_ms": 58837,
+      "kind": "text",
+      "chunk": "ur ein Vorjah"
+    },
+    {
+      "t_ms": 58885,
+      "kind": "text",
+      "chunk": "r"
+    },
+    {
+      "t_ms": 58932,
+      "kind": "text",
+      "chunk": " als Vergleich, also"
+    },
+    {
+      "t_ms": 58987,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 59030,
+      "kind": "text",
+      "chunk": "ein schwaches Sign"
+    },
+    {
+      "t_ms": 59082,
+      "kind": "text",
+      "chunk": "al. Ich würde die"
+    },
+    {
+      "t_ms": 59130,
+      "kind": "text",
+      "chunk": " 729 tr"
+    },
+    {
+      "t_ms": 59183,
+      "kind": "text",
+      "chunk": "otzdem n"
+    },
+    {
+      "t_ms": 59231,
+      "kind": "text",
+      "chunk": "icht "
+    },
+    {
+      "t_ms": 59281,
+      "kind": "text",
+      "chunk": "ung"
+    },
+    {
+      "t_ms": 59332,
+      "kind": "text",
+      "chunk": "eprüft übernehm"
+    },
+    {
+      "t_ms": 59381,
+      "kind": "text",
+      "chunk": "en,"
+    },
+    {
+      "t_ms": 59433,
+      "kind": "text",
+      "chunk": " sondern eher etwas"
+    },
+    {
+      "t_ms": 59481,
+      "kind": "text",
+      "chunk": " ni"
+    },
+    {
+      "t_ms": 59539,
+      "kind": "text",
+      "chunk": "edriger planen,"
+    },
+    {
+      "t_ms": 59580,
+      "kind": "text",
+      "chunk": " et"
+    },
+    {
+      "t_ms": 59630,
+      "kind": "text",
+      "chunk": "wa 690 bis "
+    },
+    {
+      "t_ms": 59682,
+      "kind": "text",
+      "chunk": "700.\n\nNo"
+    },
+    {
+      "t_ms": 59734,
+      "kind": "text",
+      "chunk": "ch ein Hinweis"
+    },
+    {
+      "t_ms": 59783,
+      "kind": "text",
+      "chunk": " zu den Daten: In"
+    },
+    {
+      "t_ms": 59831,
+      "kind": "text",
+      "chunk": " der CSV steht die"
+    },
+    {
+      "t_ms": 59883,
+      "kind": "text",
+      "chunk": " Woche 16"
+    },
+    {
+      "t_ms": 59933,
+      "kind": "text",
+      "chunk": ".09.2024 do"
+    },
+    {
+      "t_ms": 59981,
+      "kind": "text",
+      "chunk": "ppelt. Für "
+    },
+    {
+      "t_ms": 60032,
+      "kind": "text",
+      "chunk": "2025 spielt das ke"
+    },
+    {
+      "t_ms": 60083,
+      "kind": "text",
+      "chunk": "ine Rolle, "
+    },
+    {
+      "t_ms": 60131,
+      "kind": "text",
+      "chunk": "ich habe sie tr"
+    },
+    {
+      "t_ms": 60181,
+      "kind": "text",
+      "chunk": "otzdem nur einm"
+    },
+    {
+      "t_ms": 60273,
+      "kind": "text",
+      "chunk": "al gezählt."
+    }
+  ],
+  "final_text": "Kurz gesagt: Vor allem **ab der Woche vom 07.04.2025 bis etwa Anfang Juni** hätten Sie die Prognose nicht übernehmen dürfen. Dazu kommen ein paar Sonderwochen, die Sie anders hätten behandeln müssen.\n\n## 1. Auslistung durch die Bio-Markt-Kette: 07.04. bis ca. 09.06.2025 (der eigentliche Fall)\n\nAb dem 07.04. fallen rund 70 Gläser pro Woche dauerhaft weg. Die Prognose hat das nicht gewusst und den Rückgang erst nach und nach aus den Ist-Zahlen gelernt:\n\n| Woche | Prognose | Ist | zu hoch um |\n|---|---|---|---|\n| 07.04. | 607 | 484 | 123 |\n| 14.04. | 571 | 493 | 78 |\n| 21.04. | 563 | 482 | 81 |\n| 28.04. | 550 | 537 | 13 |\n| 05.05. | 509 | 470 | 39 |\n| 19.05. | 531 | 449 | 82 |\n| 26.05. | 521 | 439 | 82 |\n| 02.06. | 475 | 429 | 46 |\n| 09.06. | 473 | 450 | 23 |\n\nZum Vergleich: Sonst liegt die Prognose im Schnitt nur etwa **+10 Gläser** zu hoch (2024 bis März 2025: +11, ab Mitte Juni 2025: +0,4). In diesen Wochen waren es im Schnitt **+55 bis +60 Gläser**. Das sind über die neun Wochen grob 450 bis 500 Gläser zu viel geplant, bei einem Frischprodukt also wahrscheinlich Abschrift. Richtig wäre gewesen, die Prognose ab der Auslistung von Hand um etwa 70 zu senken, bis das Modell nachgezogen hat. Falls die Auslistung vorher angekündigt war, schon ab dem 07.04., sonst spätestens ab dem 14.04.\n\n**Nach der Aktion bei der Reformhaus-Kette (19.05. und 26.05.):** In den beiden Wochen danach lag die Prognose wieder 82 zu hoch. Vorher war der Abstand schon auf 13 bzw. 39 geschrumpft. Vermutlich ist die Aktionswoche teilweise in das Grundniveau eingeflossen. 2024 zeigt sich das in kleinerem Umfang auch (Woche danach: +27). Die Aktionswoche selbst (671 Prognose, 637 Ist) war in Ordnung, der Aktionskalender wirkt also. Kritisch sind die Wochen danach.\n\n## 2. Sonderwochen ohne brauchbare Prognose\n\n- **03.02.2025:** Wegen des Updates der Warenwirtschaft wurde keine Prognose gespeichert. Hier gab es nichts zu übernehmen, die Planung musste von Hand erfolgen.\n- **10.03.2025 (ab Donnerstag ausverkauft):** Die 501 Gläser zeigen nur den Bestand, nicht die tatsächliche Nachfrage. Die Prognose (604) war hier vermutlich nicht das Problem, sondern die verfügbare Ware. Diese Woche lässt sich nicht bewerten. Das Tool nimmt sie zu Recht aus der Kennzahl heraus.\n\n## 3. Ausreißer, bei denen es keinen Grund zum Abweichen gab\n\nAm 13.01. (+84), 24.02. (+73), 07.07. (−62) und 27.10. (+65) lag die Prognose ebenfalls deutlich daneben. Dazu gibt es aber keinen Hinweis, also hätten Sie das vorher nicht wissen können. Das ist normales Rauschen und kein Grund, von der Prognose abzuweichen.\n\n## Zur Kennzahl aus dem Tool\n\nDie 94,2 % konnte ich nachrechnen. Es sind 50 Wochen vom 30.12.2024 bis 22.12.2025, ohne die Woche ohne Prognose und ohne die ausverkaufte Woche. Die Zahl stimmt also, verdeckt aber das Problem: Ein Jahresdurchschnitt zeigt nicht, dass die Prognose zwei Monate lang systematisch rund 60 Gläser zu hoch lag. Für solche Fälle ist die mittlere Abweichung pro Woche (Prognose minus Ist) über einen gleitenden Zeitraum aussagekräftiger.\n\n## Für die laufende Woche (ab 29.12.2025, gehört auch noch zu 2025)\n\nDie Prognose liegt bei **729**. Letztes Jahr fiel der Absatz von der Weihnachtswoche zur Neujahrswoche um etwa 9 % (746 auf 678), und die Prognose lag damals 25 zu hoch. Dieselbe Rechnung auf 733 angewendet ergibt etwa 670. Außerdem lag die Prognose letzte Woche 43 zu hoch. Das ist nur ein Vorjahr als Vergleich, also ein schwaches Signal. Ich würde die 729 trotzdem nicht ungeprüft übernehmen, sondern eher etwas niedriger planen, etwa 690 bis 700.\n\nNoch ein Hinweis zu den Daten: In der CSV steht die Woche 16.09.2024 doppelt. Für 2025 spielt das keine Rolle, ich habe sie trotzdem nur einmal gezählt.",
+  "stats": {
+    "duration_ms": 59551,
+    "duration_api_ms": 58346,
+    "ttft_ms": 2555,
+    "num_turns": 3,
+    "output_tokens": 5688
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

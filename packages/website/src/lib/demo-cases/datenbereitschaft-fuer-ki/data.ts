@@ -9,6 +9,8 @@
  * - DERIVED: arithmetic on the values above, never called a recorded value.
  */
 
+import CUSTOMER_STATUS from "./customer-status.json";
+
 export type Month = "2026-04" | "2026-05" | "2026-06";
 export const QUARTER: readonly Month[] = ["2026-04", "2026-05", "2026-06"];
 
@@ -65,8 +67,7 @@ export const EXPORT_ROWS: readonly ExportRow[] = [
  * The column `status` of customer_master.csv, one code per account in file
  * order (KIT): A active, C cancelled, N new. 108 A, 12 C, 24 N.
  */
-export const STATUS =
-  "AAAAAAAACAAAAAAAAAAACAAACCAAAAAAAAAAAAAACAAAAAAAAACAAACCAAAAAAAAAAAAAAACCCAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAANNNNNNNNNNNNNNNNNNNNNNNN";
+export const STATUS: string = CUSTOMER_STATUS.status;
 
 /** Claude's recorded answer, chat with two export files (RECORDED, 2 of 2 kept rehearsal runs). */
 export const CLAUDE_ANSWER: readonly number[] = [75_890, 85_665, 128_230];
@@ -83,16 +84,68 @@ export const EXPORT_TABLES = [
 ] as const;
 export type ExportTable = (typeof EXPORT_TABLES)[number];
 
-/** The three traps the demo pins to a row of builder/ANTI-PATTERNS.md. */
-export const TABLE_TRAPS: Readonly<Partial<Record<ExportTable, "AP-N01" | "AP-S03" | "AP-S04">>> = {
-  monthly_revenue: "AP-N01",
-  subscription_export: "AP-S03",
-  billing_events: "AP-S04",
-};
+/**
+ * One month of the approved view mrr_summary_monthly.csv (KIT,
+ * builder/claude/project/, 18 rows, January 2025 to June 2026). The company's
+ * first subscriptions start in January 2025, so the tub is empty before it:
+ * ending of 2025-01 equals its net new MRR (data.test.ts).
+ */
+export interface SummaryRow {
+  /** "YYYY-MM" of month_start. */
+  readonly month: string;
+  /** ending_mrr_eur: the level at month end. */
+  readonly ending: number;
+  /** net_new_mrr_eur: the change during the month. */
+  readonly netNew: number;
+  /** active_accounts at month end. */
+  readonly active: number;
+}
 
-/** Load time of the approved files and the warning threshold (KIT, data_status_by_view.csv). */
-export const LOAD_UTC = "2026-07-01T06:00:00Z";
-export const WARN_AFTER_H = 36;
-/** The two clocks of the course: the evaluation clock and the what-if clock of case F01. */
-export const CLOCK_UTC = "2026-07-01T09:00:00Z";
-export const F01_CLOCK_UTC = "2026-07-03T18:00:00Z";
+export const SUMMARY: readonly SummaryRow[] = [
+  { month: "2025-01", ending: 23545, netNew: 23545, active: 9 },
+  { month: "2025-02", ending: 40590, netNew: 17045, active: 17 },
+  { month: "2025-03", ending: 61480, netNew: 20890, active: 25 },
+  { month: "2025-04", ending: 84225, netNew: 22745, active: 34 },
+  { month: "2025-05", ending: 106630, netNew: 22405, active: 42 },
+  { month: "2025-06", ending: 123015, netNew: 16385, active: 50 },
+  { month: "2025-07", ending: 145390, netNew: 22375, active: 59 },
+  { month: "2025-08", ending: 167965, netNew: 22575, active: 67 },
+  { month: "2025-09", ending: 190110, netNew: 22145, active: 75 },
+  { month: "2025-10", ending: 213720, netNew: 23610, active: 84 },
+  { month: "2025-11", ending: 234605, netNew: 20885, active: 92 },
+  { month: "2025-12", ending: 258785, netNew: 24180, active: 100 },
+  { month: "2026-01", ending: 272995, netNew: 14210, active: 104 },
+  { month: "2026-02", ending: 294475, netNew: 21480, active: 108 },
+  { month: "2026-03", ending: 354635, netNew: 60160, active: 120 },
+  { month: "2026-04", ending: 334675, netNew: -19960, active: 123 },
+  { month: "2026-05", ending: 344450, netNew: 9775, active: 123 },
+  { month: "2026-06", ending: 387015, netNew: 42565, active: 132 },
+];
+
+/** The month ends the tub can show: December 2024 (empty) to June 2026, 19 in all. */
+export const FIRST_MONTH = "2025-01";
+export const EXPORT_FIRST_MONTH = "2026-01";
+
+/**
+ * The two kept rehearsal runs of case G01 (RECORDED, builder/claude-demo/
+ * AI-RUN-LOG.md rows A, G01, 1 and 2). Both gave the same three values; the
+ * log quotes the caveat of run 2 only and says where each caveat stood.
+ */
+export interface RehearsalRun {
+  readonly run: 1 | 2;
+  readonly values: readonly number[];
+  readonly caveat: "before" | "after";
+  /** The caveat as the log quotes it, or null when the log only describes it. */
+  readonly quote: string | null;
+}
+
+export const REHEARSAL_RUNS: readonly RehearsalRun[] = [
+  { run: 1, values: CLAUDE_ANSWER, caveat: "before", quote: null },
+  { run: 2, values: CLAUDE_ANSWER, caveat: "after", quote: "MRR added since 1 Jan 2026, not total MRR" },
+];
+
+/** Active accounts at 30 June that run 2 named (RECORDED, AI-RUN-LOG.md row A, G01, 2: "said 120 active at 30 June"). */
+export const RUN2_ACTIVE = 120;
+
+/** The expected values of test T1 (KIT, claude/PRUEFLISTE-VORLAGE.md and CHECK-YOUR-RESULT.md "The truth"). */
+export const T1_EXPECTED: readonly number[] = [ENDING_MRR["2026-04"], ENDING_MRR["2026-05"], ENDING_MRR["2026-06"]];

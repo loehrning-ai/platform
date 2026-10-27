@@ -3,7 +3,7 @@
  * out of one of these, applied to the kit values in data.ts. No clock, no
  * randomness, no I/O: tests pin each against the kit.
  */
-import { EXPORT_ROWS, type ExportRow } from "./data";
+import { EXPORT_ROWS, SUMMARY, type ExportRow, type SummaryRow } from "./data";
 
 /** Sum of the export rows per month, in file order: "YYYY-MM-DD" to the month total. */
 export function monthlyTotals(rows: readonly ExportRow[] = EXPORT_ROWS): ReadonlyMap<string, number> {
@@ -81,20 +81,6 @@ export function counts(filter: WhoFilter, code: string): boolean {
   return WHO_CODES[filter].includes(code);
 }
 
-export type Boundary = "instruction" | "notUploaded" | "grant";
-export type BoundaryOutcome = "guidedOnly" | "nothingToRead" | "denied42501";
-
-/** What stops a request for contact data, per setup (box 4). Only the last two lock anything. */
-export function boundaryOutcome(boundary: Boundary): BoundaryOutcome {
-  if (boundary === "instruction") return "guidedOnly";
-  if (boundary === "notUploaded") return "nothingToRead";
-  return "denied42501";
-}
-
-export function boundaryLocks(boundary: Boundary): boolean {
-  return boundaryOutcome(boundary) !== "guidedOnly";
-}
-
 export type Grade =
   | { readonly pass: true }
   | { readonly pass: false; readonly reason: "length"; readonly got: number; readonly want: number }
@@ -111,13 +97,62 @@ export function gradeValue(actual: readonly number[], expected: readonly number[
   return { pass: true };
 }
 
-/** Age of the data at a clock, and the state the instructions ask for. There is no blocking state. */
-export function freshness(
-  loadedAtUtc: string,
-  clockUtc: string,
-  warnAfterH?: number,
-): { readonly ageH: number; readonly state: "fresh" | "warn" | null } {
-  const ageH = (Date.parse(clockUtc) - Date.parse(loadedAtUtc)) / 3_600_000;
-  if (warnAfterH === undefined) return { ageH, state: null };
-  return { ageH, state: ageH > warnAfterH ? "warn" : "fresh" };
+/** Status codes a set of rules counts, and how many of the accounts match (scene 4, three sentences). */
+export function countCodes(codes: ReadonlySet<string>, statuses: string): number {
+  let matched = 0;
+  for (const code of statuses) if (codes.has(code)) matched += 1;
+  return matched;
+}
+
+/** The water at each month end for an opening level: opening plus the changes so far. */
+export function tubLevels(changes: readonly number[], opening: number): readonly number[] {
+  const levels: number[] = [];
+  let level = opening;
+  for (const change of changes) {
+    level += change;
+    levels.push(level);
+  }
+  return levels;
+}
+
+/** "2025-03" to "2025-02". */
+export function previousMonth(month: string): string {
+  const [year, mon] = month.split("-").map(Number) as [number, number];
+  return mon === 1 ? `${year - 1}-12` : `${year}-${String(mon - 1).padStart(2, "0")}`;
+}
+
+/**
+ * The level at the end of December 2025 when the file starts in `start`
+ * ("2025-01" to "2026-01"): the sum of the approved view's changes from
+ * `start` through December 2025. A start in January 2026 knows none of them.
+ */
+export function openingFromStart(start: string, summary: readonly SummaryRow[] = SUMMARY): number {
+  return summary.filter((row) => row.month >= start && row.month <= "2025-12").reduce((sum, row) => sum + row.netNew, 0);
+}
+
+/** The thirteen positions of the file's left edge, January 2026 back to January 2025. */
+export const EDGE_STARTS: readonly string[] = [
+  "2026-01",
+  "2025-12",
+  "2025-11",
+  "2025-10",
+  "2025-09",
+  "2025-08",
+  "2025-07",
+  "2025-06",
+  "2025-05",
+  "2025-04",
+  "2025-03",
+  "2025-02",
+  "2025-01",
+];
+
+/** The 2025 months a start uncovers, oldest first, with their change. */
+export function uncovered(start: string, summary: readonly SummaryRow[] = SUMMARY): readonly SummaryRow[] {
+  return summary.filter((row) => row.month >= start && row.month <= "2025-12");
+}
+
+/** The sum of the values at some positions (scene 4: columns or arrows poured together). */
+export function sumAt(values: readonly number[], indices: readonly number[]): number {
+  return indices.reduce((sum, index) => sum + (values[index] ?? 0), 0);
 }

@@ -1,26 +1,75 @@
 /**
- * The W05 beats (the red line of deck, kit and demo): estimate, the four
- * tests run over the name links, the tool, R7, R5, all eight, the own
- * folder, the take-home. Plain data, both languages, importable from client code.
- * The kit ships in two editions (vardar-audit-kit, vardar-audit-kit-de) with
- * different paths, so the beats name no single kitFile; the stage names the
- * files in the page's language (DEMO_TAKEHOME).
+ * The W05 beats, the red line of deck, kit and demo: a folder that looks
+ * complete, four tests that take it apart, one file read closely (the
+ * restore test), the visitor's own folder, Claude doing the same four tests,
+ * and the files to do it tomorrow. Plain data, both languages, importable
+ * from client code. The kit ships in two editions with different paths, so
+ * the beats name no single kitFile.
  */
 
 import type { Beat } from "@/lib/demo-beats";
 
-/** The reality run: four passes over eight links, then the tally. */
-export const RUN_SECONDS = 6.4;
-export const R7_SECONDS = 2.4;
-export const R5_SECONDS = 5;
+export type BeatId = "ordner" | "pruefungen" | "r7" | "ordner-eigen" | "claude" | "mitnehmen";
+
+/** How long the link lines take to draw when the folder opens. */
+export const DRAW_SECONDS = 0.9;
 
 export const BEATS: readonly Beat[] = [
-  { id: "schaetzen", kind: "commit", seconds: 1.2, label: { de: "Schätzen", en: "Estimate" } },
-  { id: "pruefen", kind: "reveal", seconds: RUN_SECONDS, label: { de: "Prüfen", en: "Test" } },
-  { id: "regeln", kind: "tool", seconds: 0.8, label: { de: "Vier Prüfungen", en: "Four tests" } },
-  { id: "r7", kind: "apply", seconds: R7_SECONDS, label: { de: "R7 selbst", en: "R7 yourself" } },
-  { id: "r5", kind: "apply", seconds: R5_SECONDS, label: { de: "Zählen", en: "Count" } },
-  { id: "alle-acht", kind: "apply", seconds: 0.6, label: { de: "Alle acht", en: "All eight" } },
-  { id: "ordner", kind: "own", seconds: 0, label: { de: "Dein Ordner", en: "Your folder" } },
-  { id: "mitnehmen", kind: "takehome", seconds: 0, label: { de: "Mitnehmen", en: "Take home" } },
+  {
+    id: "ordner",
+    kind: "commit",
+    seconds: DRAW_SECONDS,
+    label: { de: "Ordner", en: "Folder" },
+    step: { de: "Du siehst dir den Ordner an und schätzt.", en: "You look at the folder and make a guess." },
+  },
+  {
+    id: "pruefungen",
+    kind: "reveal",
+    seconds: 0,
+    label: { de: "Vier Prüfungen", en: "Four tests" },
+    step: { de: "Du schaltest die vier Prüfungen ein.", en: "You switch on the four tests." },
+    nextName: { de: "die vier Prüfungen", en: "the four tests" },
+  },
+  {
+    id: "r7",
+    kind: "tool",
+    seconds: 0,
+    label: { de: "Restore-Test", en: "Restore test" },
+    step: { de: "Du prüfst drei Dateien für R7.", en: "You check three files for R7." },
+    nextName: { de: "der Wiederherstellungstest", en: "the restore test" },
+  },
+  {
+    id: "ordner-eigen",
+    kind: "own",
+    seconds: 0,
+    label: { de: "Dein Ordner", en: "Your folder" },
+    step: { de: "Du prüfst deinen eigenen Ordner.", en: "You check your own folder." },
+    nextName: { de: "dein Ordner", en: "your folder" },
+  },
+  {
+    id: "claude",
+    kind: "apply",
+    seconds: 0,
+    label: { de: "In deinem Claude", en: "In your Claude" },
+    step: { de: "Du prüfst Claudes Zitate.", en: "You check Claude's quotes." },
+    nextName: { de: "dein Claude", en: "your Claude" },
+  },
+  {
+    id: "mitnehmen",
+    kind: "takehome",
+    seconds: 0,
+    label: { de: "Mitnehmen", en: "Take home" },
+    step: { de: "Du nimmst die Lücken und Vorlagen mit.", en: "You take the gaps and the templates with you." },
+    nextName: { de: "Mitnehmen", en: "take home" },
+  },
 ];
+
+/** Minutes per scene; their sum is the demo's minutes in demos.ts (kit.test.ts). */
+export const SCENE_MINUTES: Readonly<Record<BeatId, number>> = {
+  ordner: 1,
+  pruefungen: 2,
+  r7: 2,
+  "ordner-eigen": 1,
+  claude: 1.5,
+  mitnehmen: 0.5,
+};

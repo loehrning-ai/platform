@@ -1,9 +1,10 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
-import { validateBeats } from "@/lib/demo-beats";
+import { validateBeatsV4 } from "@/lib/demo-beats";
+import { demos } from "@/lib/demos";
 import { keyIndex, keyItems } from "./answer-key";
-import { BEATS } from "./beats";
+import { BEATS, SCENE_MINUTES } from "./beats";
 import { ITEMS, sampleReply, vardarContext } from "./case";
 import { EVIDENCE_COLUMNS, templateHeader } from "./csv";
 import { indexRows, itemStatus, kitDoc, tally } from "./evidence";
@@ -78,8 +79,14 @@ describe("W05 kit lockstep", () => {
     expect(sampleReply()).toMatch(/not run a restore test in 2026/);
   });
 
-  it("beats meet the v3 contract", () => {
-    expect(validateBeats(BEATS)).toEqual([]);
+  it("beats meet the v4 contract", () => {
+    expect(validateBeatsV4(BEATS)).toEqual([]);
+  });
+
+  it("the scene minutes add up to the minutes the hub tile names", () => {
+    const total = Object.values(SCENE_MINUTES).reduce((sum, minutes) => sum + minutes, 0);
+    const demo = demos.find((entry) => entry.slug === "audit-vorbereitung-mit-ki");
+    expect(total).toBe(demo?.minutes);
   });
 });
 

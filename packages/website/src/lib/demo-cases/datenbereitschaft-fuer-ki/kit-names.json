@@ -1,0 +1,14 @@
+{
+  "notes": "PRESENTER-NOTES.md",
+  "access": "builder/warehouse/ACCESS.md",
+  "exercise": "UEBUNG.md",
+  "check": "CHECK-YOUR-RESULT.md",
+  "runLog": "AI-RUN-LOG.md",
+  "instructions": "PROJECT-INSTRUCTIONS.txt",
+  "testlistDe": "PRUEFLISTE-VORLAGE.md",
+  "testlistEn": "TEST-LIST-TEMPLATE.md",
+  "cardDe": "FRAGEKARTE.md",
+  "cardEn": "QUESTION-CARD.md",
+  "readme": "README.md",
+  "skill": "SKILL.md"
+}

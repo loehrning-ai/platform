@@ -222,7 +222,12 @@ describe("public learning content claim hygiene", () => {
     ].join("\n");
     // Inline SVG path data is machine geometry, not learner-visible prose.
     // Strip it before looking for telephone-shaped digit sequences.
-    const proseCorpus = corpus.replace(/\bpath:\s*"M[^"]*"/gsu, "");
+    // A recorded Claude run stores its stream as chunks that split a date
+    // mid-number ("2" then "026-10-01"); the same answer is stored joined in
+    // final_text, which stays in the corpus and is checked whole.
+    const proseCorpus = corpus
+      .replace(/\bpath:\s*"M[^"]*"/gsu, "")
+      .replace(/"chunk":\s*"(?:[^"\\]|\\.)*"/gu, "");
     // DOI link targets can contain telephone-shaped numeric suffixes. They are
     // publication identifiers, not learner-visible example identities.
     // The one documented example IBAN (the standard specimen, used by the

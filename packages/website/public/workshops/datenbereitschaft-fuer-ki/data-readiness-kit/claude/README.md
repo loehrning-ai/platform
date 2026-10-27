@@ -29,7 +29,7 @@ Für alle Projekte: `unzip kennzahl-fragekarte.zip -d ~/.claude/skills/`
 
 Nur für dieses Repository: `unzip kennzahl-fragekarte.zip -d .claude/skills/`
 
-Danach liegt SKILL.md in skills/kennzahl-fragekarte/ (global oder im Repository). Tipp /kennzahl-fragekarte oder frag einfach.
+Danach liegt SKILL.md in skills/kennzahl-fragekarte/, global oder im Repository. Tippe /kennzahl-fragekarte oder frag einfach.
 
 Mit demselben claude.ai-Login lädt Claude Code (ab v2.1.273) deine in claude.ai eingeschalteten Skills selbst; dort nicht ein zweites Mal entpacken. Mit API-Key oder Bedrock: per unzip.
 
