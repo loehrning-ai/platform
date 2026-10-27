@@ -18,6 +18,7 @@ import UnknownDemoPage, {
 import { DEMO_SLUGS } from "@/lib/demos";
 import { demoLede, demos, getDemoForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import { demoShell } from "@/lib/demo-intros";
 import { getWorkshopBySlug } from "@/lib/workshops";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 
@@ -62,23 +63,20 @@ describe("/demos static route contract", () => {
 describe("/demos/[slug] page shell", () => {
   for (const locale of ["de", "en"] as const) {
     for (const base of demos) {
-      it(`${locale}: ${base.slug} renders the v3 page in the workshop palette and mounts the demo`, async () => {
+      it(`${locale}: ${base.slug} renders the page its shell selects, in the workshop palette, and mounts the demo`, async () => {
         localeRef.value = locale;
         const demo = getDemoForLocale(base.slug, locale);
         if (!demo) throw new Error("missing demo");
-        // The route page itself: a v3 demo hands its beats to the shell there.
+        // The route page itself: the demo hands its beats to the shell there.
         const { default: RoutePage } = await import(`../${base.slug}/page.tsx`);
         const { container } = render(await RoutePage());
+        const shell = demoShell(base.slug);
 
         const h1 = screen.getByRole("heading", { level: 1 });
         expect(h1).toHaveTextContent(demo.title);
-        expect(container.querySelector("[data-demo-v3]")).toHaveAttribute("data-plakat-page", demo.plakat);
-        // The page has a bar and an aside instead of a cover band.
+        expect(container.querySelector(`[data-demo-${shell}]`)).toHaveAttribute("data-plakat-page", demo.plakat);
+        // The page has a bar instead of a cover band.
         expect(h1.closest("[data-demo-bar]")).not.toBeNull();
-        // The aside carries the caps line.
-        expect(container.querySelector(".demo-aside-caps")).toHaveTextContent(
-          DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber),
-        );
         expect(container.querySelector("[data-demo-question]")).toHaveTextContent(demoLede(demo));
 
         const workshop = getWorkshopBySlug(demo.workshopSlug, locale);
@@ -87,9 +85,22 @@ describe("/demos/[slug] page shell", () => {
           "href",
           `${locale === "en" ? "/en" : ""}/workshops/${demo.workshopSlug}`,
         );
-        expect(back).toHaveTextContent(workshop?.title ?? "");
+        if (shell === "v4") {
+          // The v4 bar carries a short workshop chip; its name says which workshop.
+          expect(back).toHaveTextContent(`Workshop ${demo.workshopNumber}`);
+          expect(back).toHaveAttribute(
+            "aria-label",
+            DEMOS_PAGE_COPY[locale].detail.toWorkshop(demo.workshopNumber, workshop?.title ?? ""),
+          );
+        } else {
+          expect(back).toHaveTextContent(workshop?.title ?? "");
+          // The v3 aside carries the caps line and the promise.
+          expect(container.querySelector(".demo-aside-caps")).toHaveTextContent(
+            DEMOS_PAGE_COPY[locale].detail.caps(demo.workshopNumber),
+          );
+          expect(container.querySelector("[data-demo-promise]")).toHaveTextContent(demo.oneLiner.replace(/\u00a0/g, " "));
+        }
 
-        expect(container.querySelector("[data-demo-promise]")).toHaveTextContent(demo.oneLiner.replace(/\u00a0/g, " "));
         expect(container.querySelector("[data-demo-synthetic]")).toHaveTextContent(
           demo.syntheticDataLabel,
         );

@@ -1224,8 +1224,8 @@
 .w03-search[aria-pressed="true"],
 .w03-rule-toggle[aria-pressed="true"],
 .w03-col-chip[aria-pressed="true"] {
-  border-color: #121212;
-  background: #121212;
+  border-color: var(--w03-ink);
+  background: var(--w03-ink);
   color: #fffaf2;
 }
 .w03-pour-button[data-quiet] {
@@ -1724,8 +1724,8 @@ textarea.w03-input {
   cursor: pointer;
 }
 .w03-radio:has(input:checked) {
-  border-color: #121212;
-  background: #121212;
+  border-color: var(--w03-ink);
+  background: var(--w03-ink);
   color: #fffaf2;
 }
 .w03-radio input {
