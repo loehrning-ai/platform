@@ -91,6 +91,14 @@ export function TakeHomeScene({
           </li>
         ))}
       </ol>
+      <p className="w05-hint" data-w05-deadlines="">
+        {fmt.t(h.deadlines, {
+          customer: model.context.customer,
+          send: formatShort(model.context.sendBy, locale),
+          due: formatShort(model.context.due, locale),
+          audit: formatShort(model.context.audit, locale),
+        })}
+      </p>
       <p className="w05-hint">{row ? fmt.t(h.mailFor, { id: row.item.id }) : h.mailHint}</p>
       {row ? (
         <div className="w05-mail" data-w05-mail={row.item.id} data-reduced={reducedMotion ? "" : undefined} key={row.item.id}>

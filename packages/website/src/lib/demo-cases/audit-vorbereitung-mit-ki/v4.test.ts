@@ -26,6 +26,7 @@ describe("kit dates are parsed from the kit text", () => {
     expect(windowMonthsOf(windowStartOf(), auditDateOf())).toBe(12);
     const context = vardarContext();
     expect([context.audit, context.windowStart, context.due]).toEqual([auditDateOf(), windowStartOf(), dueDateOf("en")]);
+    expect(context.sendBy).toBe("2026-11-25");
   });
 
   it("follows the request text when its dates change", () => {

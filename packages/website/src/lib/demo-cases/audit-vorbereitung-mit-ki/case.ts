@@ -26,6 +26,8 @@ export interface AuditContext {
   readonly systems: readonly string[];
   /** The deadline the gap owners get. */
   readonly due: string;
+  /** The date the customer wants the documents by. */
+  readonly sendBy: string;
 }
 
 export type Check = "storage" | "transfer" | "share" | "notice";
@@ -284,6 +286,11 @@ export function windowStartOf(text = kitText("request_tannwald.md")): string {
   return kitDate(text, /dated on or after [^.]+/, "window");
 }
 
+/** The date the documents are due at the customer, from "Please send the documents for R1 to R8 by Wednesday 25 November 2026." */
+export function sendByOf(text = kitText("request_tannwald.md")): string {
+  return kitDate(text, /send the documents[^.]+/, "send");
+}
+
 /** The deadline of the gap list: "Needed by 2 December 2026" in ANSWERS.md, „Bis 2. Dezember 2026" in LOESUNGEN.md. */
 export function dueDateOf(locale: "de" | "en" = "en"): string {
   return locale === "de"
@@ -315,6 +322,7 @@ export function vardarContext(text = kitText("request_tannwald.md")): AuditConte
     noticeHours: Number(hours?.[1] ?? 0),
     systems,
     due: dueDateOf("en"),
+    sendBy: sendByOf(text),
   };
 }
 

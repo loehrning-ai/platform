@@ -131,6 +131,7 @@ export function BenchStage({
   title,
   showVerdictSlot,
   cardName,
+  hand,
 }: {
   readonly fmt: Fmt;
   readonly bench: Bench;
@@ -139,6 +140,8 @@ export function BenchStage({
   readonly title: string;
   readonly showVerdictSlot?: ReactNode;
   readonly cardName: (file: FolderFile) => string;
+  /** The file cards, laid out in the stage while nothing lies on the bench. */
+  readonly hand?: ReactNode;
 }) {
   const { copy } = fmt;
   const { state, evaluation, actions } = bench;
@@ -205,6 +208,11 @@ export function BenchStage({
           </button>
           {showVerdictSlot}
         </div>
+      ) : hand ? (
+        <div className="w05-bench-hand">
+          {state.lifted ? <p className="w05-bench-lifted">{fmt.t(copy.r7.lifted, { card: cardName(state.lifted), item: state.item })}</p> : null}
+          {hand}
+        </div>
       ) : (
         <p className="w05-bench-empty">{state.lifted ? fmt.t(copy.r7.lifted, { card: cardName(state.lifted), item: state.item }) : copy.free.pick}</p>
       )}
@@ -213,9 +221,33 @@ export function BenchStage({
   );
 }
 
-/** The dock part: the hand of file cards. Tap lifts a card, a second tap on the request places it; on desktop a card can be dragged. */
+/** A finger drag in progress: which card, where it started and how far it moved. */
+interface TouchDrag {
+  readonly file: FolderFile;
+  readonly x0: number;
+  readonly y0: number;
+  readonly dx: number;
+  readonly dy: number;
+  readonly moved: boolean;
+}
+
+/** Past this many pixels a press on a card is a drag, not a tap. */
+const DRAG_SLOP = 8;
+
+/** True when the point lies on the request card of the bench. */
+function overTarget(x: number, y: number): boolean {
+  return document.elementsFromPoint(x, y).some((element) => element.closest("[data-w05-target]") !== null);
+}
+
+/**
+ * The file cards, in the stage. A card can be dragged onto the request with
+ * a mouse (native drag) or a finger (pointer events, the card follows), or
+ * tapped and then the request tapped: three ways to the same place.
+ */
 export function BenchHand({ fmt, bench, files, label, cardName }: { readonly fmt: Fmt; readonly bench: Bench; readonly files: readonly FolderFile[]; readonly label: string; readonly cardName: (file: FolderFile) => string }) {
   const { state, actions } = bench;
+  const [drag, setDrag] = useState<TouchDrag | null>(null);
+  const dragged = useRef(false);
   return (
     <ul className="w05-hand" aria-label={label} data-w05-hand="">
       {files.map((file) => (
@@ -228,9 +260,38 @@ export function BenchHand({ fmt, bench, files, label, cardName }: { readonly fmt
               event.dataTransfer.setData("text/plain", file);
               event.dataTransfer.effectAllowed = "move";
             }}
-            onClick={() => actions.lift(file)}
+            onPointerDown={(event) => {
+              if (event.pointerType === "mouse") return;
+              event.currentTarget.setPointerCapture(event.pointerId);
+              dragged.current = false;
+              setDrag({ file, x0: event.clientX, y0: event.clientY, dx: 0, dy: 0, moved: false });
+            }}
+            onPointerMove={(event) => {
+              if (drag?.file !== file) return;
+              const dx = event.clientX - drag.x0;
+              const dy = event.clientY - drag.y0;
+              setDrag({ ...drag, dx, dy, moved: drag.moved || Math.hypot(dx, dy) > DRAG_SLOP });
+            }}
+            onPointerUp={(event) => {
+              if (drag?.file !== file) return;
+              if (drag.moved) {
+                dragged.current = true;
+                if (overTarget(event.clientX, event.clientY)) actions.place(file);
+              }
+              setDrag(null);
+            }}
+            onPointerCancel={() => setDrag(null)}
+            onClick={() => {
+              if (dragged.current) {
+                dragged.current = false;
+                return;
+              }
+              actions.lift(file);
+            }}
+            style={drag?.file === file && drag.moved ? { transform: `translate(${drag.dx}px, ${drag.dy}px)` } : undefined}
             aria-pressed={state.lifted === file}
             data-lifted={state.lifted === file ? "" : undefined}
+            data-dragging={drag?.file === file && drag.moved ? "" : undefined}
             data-placed={state.placed === file ? "" : undefined}
             data-w05-card={file}
           >

@@ -34,7 +34,7 @@ export interface WindowTake {
   readonly turn: RecordingTurn;
   /** "26.10.2026" / "26 October 2026". */
   readonly recordedOn: string;
-  /** "Claude Opus 5.5 (claude-opus-5-5)". */
+  /** "Claude Opus 5.5". */
   readonly model: string;
   /** "Opus 5.5". */
   readonly modelShort: string;
@@ -99,7 +99,7 @@ export function windowTake(recording: ClaudeRecording, locale: Locale): WindowTa
       stop_reason: recording.stop_reason,
     },
     recordedOn: recordedOn(recording.recorded_at, locale),
-    model: `${modelName(recording.model)} (${recording.model})`,
+    model: modelName(recording.model),
     modelShort: modelShortName(recording.model),
     kitFiles: recording.kit_files.map((file) => ({ name: file.name, bytes: file.bytes })),
     produced: mainProduced(recording),

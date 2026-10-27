@@ -322,7 +322,17 @@ export default function Demo({
         );
       }
       case "r7":
-        return <BenchStage fmt={fmt} bench={bench} noticeHours={MODEL.context.noticeHours} reducedMotion={reduced} title={copy.r7.cardTitle} cardName={r7Name} />;
+        return (
+          <BenchStage
+            fmt={fmt}
+            bench={bench}
+            noticeHours={MODEL.context.noticeHours}
+            reducedMotion={reduced}
+            title={copy.r7.cardTitle}
+            cardName={r7Name}
+            hand={<BenchHand fmt={fmt} bench={bench} files={R7_FILES} label={copy.r7.hand} cardName={r7Name} />}
+          />
+        );
       case "free":
         return (
           <BenchStage
@@ -332,6 +342,7 @@ export default function Demo({
             reducedMotion={reduced}
             title={`${bench.state.item} ${copy.shortName[bench.state.item].replace(/­/g, "")}`}
             cardName={(file) => file}
+            hand={<BenchHand fmt={fmt} bench={bench} files={FOLDER_FILES} label={copy.free.hand} cardName={(file) => file} />}
           />
         );
       case "ordner-eigen":
@@ -446,7 +457,8 @@ export default function Demo({
             </GlasButton>
           );
         }
-        return bench.state.placed ? null : <BenchHand fmt={fmt} bench={bench} files={R7_FILES} label={copy.r7.hand} cardName={r7Name} />;
+        // The cards lie in the stage (BenchStage hand), so the dock keeps only the step.
+        return null;
       case "free":
         return (
           <>
@@ -465,7 +477,6 @@ export default function Demo({
                 </button>
               ))}
             </div>
-            {bench.state.placed ? null : <BenchHand fmt={fmt} bench={bench} files={FOLDER_FILES} label={copy.free.hand} cardName={(file) => file} />}
           </>
         );
       case "ordner-eigen":

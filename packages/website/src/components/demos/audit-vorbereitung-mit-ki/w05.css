@@ -866,41 +866,56 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* The file cards lie in the stage under the request: big enough to grab, and each can be dragged up onto it. */
 .w05 .w05-hand {
-  display: flex;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 8px;
   margin: 0;
-  padding: 6px 2px 2px;
-  overflow-x: auto;
+  padding: 10px 0 2px;
   list-style: none;
-  scroll-snap-type: x proximity;
-  touch-action: pan-x;
 }
 .w05 .w05-hand li {
-  flex: none;
-  scroll-snap-align: start;
+  min-width: 0;
 }
 .w05 .w05-hand-card {
+  position: relative;
   display: grid;
-  min-width: 96px;
-  max-width: 180px;
-  min-height: 48px;
+  width: 100%;
+  min-height: 64px;
   align-content: center;
-  gap: 1px;
-  padding: 5px 10px;
+  gap: 3px;
+  padding: 10px 14px;
   border: 1px solid var(--w05-line);
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--w05-bogen);
+  box-shadow: 0 2px 6px rgb(18 18 18 / 0.08);
   color: var(--w05-ink);
   font: inherit;
   text-align: left;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   transition:
     transform var(--glas-dur-quick) var(--glas-ease-bouncy),
     box-shadow var(--glas-dur-quick) var(--glas-ease-quick);
 }
+.w05 .w05-hand-card[data-dragging] {
+  z-index: 5;
+  box-shadow: 0 14px 30px rgb(18 18 18 / 0.25);
+  cursor: grabbing;
+  transition: none;
+}
+.w05 .w05-bench-hand {
+  min-width: 0;
+}
+.w05 .w05-bench-lifted {
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
 .w05 .w05-hand-name {
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -1932,13 +1947,19 @@
     grid-row: 1;
   }
   .w05 .w05-bench .w05-bench-doc,
-  .w05 .w05-bench .w05-bench-empty {
+  .w05 .w05-bench .w05-bench-empty,
+  .w05 .w05-bench .w05-bench-hand {
     grid-column: 2;
     grid-row: 1 / span 2;
   }
   .w05 .w05-bench .w05-checklist {
     grid-column: 1;
     grid-row: 2;
+  }
+  /* Beside the request the cards stack, one file per row, where the document will open. */
+  .w05 .w05-bench .w05-hand {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 0;
   }
 }
 
@@ -1996,5 +2017,12 @@
   }
   .w05 .w05-band {
     border: 2px solid CanvasText;
+  }
+}
+
+/* A phone: the window starts under the stage's restart button, so the button never sits on its title bar. */
+@media (max-width: 39.99rem) {
+  .w05 .w05-cw {
+    margin-top: 40px;
   }
 }
