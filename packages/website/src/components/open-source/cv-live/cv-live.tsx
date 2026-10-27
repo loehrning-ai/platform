@@ -642,15 +642,18 @@ export function CvLive({
             onClick={() => setZoomed(true)}
             className="group relative block cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-orange"
           >
-            <SheetFrame
-              body={shown.body}
-              choice={shown.choice}
-              scale={scale}
-              spillPx={spill}
-              animate
-              onMeasured={setMeasure}
-            />
-            <span className="absolute right-1.5 top-1.5 inline-flex items-center gap-1 border border-foreground bg-background px-1.5 py-0.5 font-mono text-xs font-bold text-foreground transition-colors duration-100 group-hover:bg-foreground group-hover:text-background">
+            {/* The page is a picture of the PDF; the label names it, the dialog shows it. */}
+            <span aria-hidden="true" className="block">
+              <SheetFrame
+                body={shown.body}
+                choice={shown.choice}
+                scale={scale}
+                spillPx={spill}
+                animate
+                onMeasured={setMeasure}
+              />
+            </span>
+            <span aria-hidden="true" className="absolute right-1.5 top-1.5 inline-flex items-center gap-1 border border-foreground bg-background px-1.5 py-0.5 font-mono text-xs font-bold text-foreground transition-colors duration-100 group-hover:bg-foreground group-hover:text-background">
               <Maximize2 size={12} aria-hidden="true" />
               {copy.zoomChip}
             </span>

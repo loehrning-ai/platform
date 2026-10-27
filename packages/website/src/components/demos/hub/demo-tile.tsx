@@ -64,7 +64,7 @@ export function DemoTile({
               href={localizeHref(`/workshops/${demo.workshopSlug}`, locale)}
               className="dt-kicker-link"
               data-demo-workshop-kicker=""
-              aria-label={`${copy.catalog.workshopNumber(demo.workshopNumber)}: ${workshop?.title ?? kicker}`}
+              aria-label={workshop ? `${kicker}, ${workshop.title}` : undefined}
             >
               {kicker}
             </Link>
