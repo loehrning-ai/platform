@@ -634,30 +634,31 @@ export function CvLive({
         </div>
 
         <div ref={cellRef} className="min-w-0 [grid-area:sheet]">
-          <button
-            type="button"
-            data-cv-zoom-open=""
-            aria-haspopup="dialog"
-            aria-label={`${copy.zoom}. ${copy.sheetLabel(shown.choice.template, shown.choice.density)}`}
-            onClick={() => setZoomed(true)}
-            className="group relative block cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-orange"
-          >
-            {/* The page is a picture of the PDF; the label names it, the dialog shows it. */}
-            <span aria-hidden="true" className="block">
-              <SheetFrame
-                body={shown.body}
-                choice={shown.choice}
-                scale={scale}
-                spillPx={spill}
-                animate
-                onMeasured={setMeasure}
-              />
-            </span>
-            <span aria-hidden="true" className="absolute right-1.5 top-1.5 inline-flex items-center gap-1 border border-foreground bg-background px-1.5 py-0.5 font-mono text-xs font-bold text-foreground transition-colors duration-100 group-hover:bg-foreground group-hover:text-background">
-              <Maximize2 size={12} aria-hidden="true" />
-              {copy.zoomChip}
-            </span>
-          </button>
+          {/* The page is a picture of the PDF, outside the button so its text
+              never becomes the button's name; the button lies over it. */}
+          <div className="group relative">
+            <SheetFrame
+              body={shown.body}
+              choice={shown.choice}
+              scale={scale}
+              spillPx={spill}
+              animate
+              onMeasured={setMeasure}
+            />
+            <button
+              type="button"
+              data-cv-zoom-open=""
+              aria-haspopup="dialog"
+              aria-label={`${copy.zoomChip} ${copy.zoom}. ${copy.sheetLabel(shown.choice.template, shown.choice.density)}`}
+              onClick={() => setZoomed(true)}
+              className="absolute inset-0 block cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-orange"
+            >
+              <span className="absolute right-1.5 top-1.5 inline-flex items-center gap-1 border border-foreground bg-background px-1.5 py-0.5 font-mono text-xs font-bold text-foreground transition-colors duration-100 group-hover:bg-foreground group-hover:text-background">
+                <Maximize2 size={12} aria-hidden="true" />
+                {copy.zoomChip}
+              </span>
+            </button>
+          </div>
           <div
             aria-hidden="true"
             className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs uppercase tracking-[0.12em]"
