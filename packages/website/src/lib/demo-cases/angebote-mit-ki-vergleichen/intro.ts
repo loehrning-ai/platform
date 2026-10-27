@@ -17,8 +17,8 @@ export const INTRO: DemoIntroData = {
     title: "Drei Angebote fair vergleichen",
     sentences: [
       "Die erfundene Firma Brandtwerk hat drei Angebote für Versandkartons bekommen.",
-      "Du schätzt zuerst, welches am günstigsten ist. Dann rechnest du alle drei auf eine gemeinsame Basis um: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto.",
-      "Zum Schluss siehst du in einer echten Aufzeichnung, wie Claude dieselben Angebote vergleicht. Tabelle, Verhandlungsmail und Skill nimmst du mit.",
+      "Du schätzt zuerst, welches am günstigsten ist. Dann rechnest du alle drei auf eine gemeinsame Basis um.",
+      "Zum Schluss siehst du in einer echten Aufzeichnung, wie Claude dieselben Angebote vergleicht, und du nimmst Tabelle, Verhandlungsmail und Skill mit.",
       "Das dauert etwa {minutes} Minuten.",
     ],
     start: "Mit der Schätzung starten",
@@ -27,8 +27,8 @@ export const INTRO: DemoIntroData = {
     title: "Compare three offers fairly",
     sentences: [
       "The invented company Brandtwerk has received three offers for shipping boxes.",
-      "First you guess which one is cheapest. Then you convert all three to one shared basis: same quantity, per unit, delivered to the plant, with one-off costs and early-payment discount.",
-      "At the end, a real recording shows Claude comparing the same offers. You take home the table, the negotiation email and the skill.",
+      "First you guess which one is cheapest. Then you convert all three to one shared basis.",
+      "At the end, a real recording shows Claude comparing the same offers, and you take home the table, the negotiation email and the skill.",
       "It takes about {minutes} minutes.",
     ],
     start: "Start with your guess",

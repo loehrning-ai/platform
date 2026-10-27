@@ -388,6 +388,7 @@ export default function Demo({ pack, kit, files }: { readonly pack: Pack; readon
       <DemoGlasStage
         label={pack.stageLabel}
         feld={feld}
+        readingTone="hell"
         className="w4-stage"
         dock={
           <DemoDock className="w4-dock" compact>

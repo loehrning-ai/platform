@@ -20,7 +20,7 @@ export const INTRO: DemoIntroData = {
     start: "Ordner ansehen und schätzen",
   },
   en: {
-    title: "Checking audit evidence",
+    title: "Check audit evidence",
     sentences: [
       "Before an audit, a customer wants eight pieces of evidence from an invented company.",
       "You use four questions to check which file in the folder really proves what is asked.",
