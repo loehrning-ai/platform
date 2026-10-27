@@ -228,6 +228,8 @@
 
     function frame(t) {
       const active = !slide || slide.hasAttribute('data-deck-active');
+      // The deck scales its 1920 x 1080 canvas; follow the layout size if it changed since the last frame.
+      if (canvas.width !== Math.max(1, canvas.clientWidth * 2) || canvas.height !== Math.max(1, canvas.clientHeight * 2)) size();
       const dt = Math.min(50, t - (last || t));
       if (active && !wasActive) {
         boostT0 = t;

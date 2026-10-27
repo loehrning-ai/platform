@@ -8,7 +8,7 @@ vi.mock("@/lib/analytics/events", () => ({ trackMaterialOpened: vi.fn() }));
 
 const trackMock = vi.mocked(trackMaterialOpened);
 /** The two workshops with a kit page: five steps (ESG) and three steps (Workshop 05). */
-const SLUGS = ["esg-berichte-mit-ki", "ki-im-unternehmen-sicher-nutzen"] as const;
+const SLUGS = ["esg-berichte-mit-ki", "audit-vorbereitung-mit-ki"] as const;
 
 afterEach(() => {
   cleanup();
@@ -17,7 +17,7 @@ afterEach(() => {
 
 describe("<KitPage>", () => {
   it("renders nothing for a workshop without a kit block", () => {
-    const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
     const { container } = render(<KitPage workshop={workshop} locale="de" />);
     expect(container).toBeEmptyDOMElement();
   });
@@ -148,17 +148,17 @@ describe("<KitPage>", () => {
     }
   }
 
-  it("shows Workshop 05 as three steps over five missions with the three rules of the Project", () => {
+  it("shows Workshop 05 as three steps with the four tests of the Project", () => {
     for (const locale of ["de", "en"] as const) {
-      const workshop = getWorkshopBySlug("ki-im-unternehmen-sicher-nutzen", locale)!;
+      const workshop = getWorkshopBySlug("audit-vorbereitung-mit-ki", locale)!;
       const { unmount } = render(<KitPage workshop={workshop} locale={locale} />);
       expect(screen.getAllByRole("tab")).toHaveLength(3);
       expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual(
         workshop.kit!.steps.map((step, index) => `${index + 1}${step.title}`),
       );
       expect(screen.getByRole("heading", { name: workshop.kit!.stepsHeading })).toBeInTheDocument();
-      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["7", "3", "3"]);
-      expect(document.querySelectorAll("[data-kit-rules] ol > li")).toHaveLength(3);
+      expect(workshop.kit!.stats.map((stat) => stat.value)).toEqual(["19", "3", "13"]);
+      expect(document.querySelectorAll("[data-kit-rules] ol > li")).toHaveLength(4);
       unmount();
     }
   });

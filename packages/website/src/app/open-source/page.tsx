@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
@@ -11,14 +10,11 @@ import {
 } from "@/lib/open-source/display-copy";
 import { JsonLd, SITE_URL, WEBSITE_ID } from "@/lib/seo/json-ld";
 import { absoluteUrl, GITHUB_ORG } from "@/lib/seo/entity";
-import { ArtifactLedger } from "./artifact-ledger";
+import { defaultSocialImage } from "@/lib/seo/page-metadata";
+import { ContentsTable } from "@/components/open-source/contents-table";
+import { ToolWall, plateEntries } from "@/components/open-source/tool-plate";
 
 const PLATFORM_REPOSITORY_URL = `${GITHUB_ORG.url}/platform`;
-const HERO_FRAME_CLASSES = [
-  "left-[12%] top-[15%] z-30 w-[76%] -rotate-[2deg]",
-  "left-[3%] top-[7%] z-10 w-[62%] -rotate-[9deg]",
-  "right-[2%] top-[5%] z-20 w-[60%] rotate-[8deg]",
-] as const;
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -42,6 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: absoluteUrl(localizedPath),
       locale: locale === "de" ? "de_DE" : "en_GB",
       type: "website",
+      images: [defaultSocialImage(locale)],
     },
   };
 }
@@ -126,133 +123,69 @@ export default async function OpenSourcePage() {
   const locale = await getRequestLocale();
   const copy = OPEN_SOURCE_PAGE_COPY[locale];
   const graph = openSourceGraph(locale);
-  const leadRegistryArtifact = OPEN_SOURCE_ARTIFACTS.find(
+  const software = OPEN_SOURCE_ARTIFACTS.filter(
     (artifact) => artifact.kind !== "video",
   );
-  const leadArtifact = leadRegistryArtifact
-    ? localizeOpenSourceArtifact(leadRegistryArtifact, locale)
-    : null;
-  const heroFrames = leadArtifact
-    ? [leadArtifact.guide.screenshot, ...(leadArtifact.guide.demo ?? [])].slice(
-        0,
-        3,
-      )
-    : [];
+  const entries = plateEntries(software);
+  const linkClass =
+    "inline-flex min-h-11 items-center font-semibold text-foreground underline decoration-1 underline-offset-4 hover:decoration-2 focus-visible:decoration-2";
 
   return (
     <>
       <JsonLd data={graph} id="open-source-jsonld" />
-      {/* Phone-first geometry: base values are the compact companion values
-          (a tighter cover and a shorter image fan), and the `sm:`/`md:`
-          variants restore the reviewed desktop layout unchanged. */}
-      <section className="py-4 sm:py-8">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <header
-            className="relative grid overflow-hidden border border-foreground md:grid-cols-[minmax(0,0.88fr)_minmax(20rem,1.12fr)]"
-            data-open-source-risograph-hero
-            style={{ background: "var(--color-paper, #f8f3e8)" }}
-          >
-            <div className="relative z-10 flex min-w-0 flex-col justify-between p-4 sm:p-7 md:min-h-[25rem] md:p-8">
-              <div>
-                <div className="h-[3px] w-16 bg-brand-orange" />
-                <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
-                  {copy.eyebrow}
-                </p>
-                <h1 className="mt-3 max-w-3xl text-balance text-[2.25rem] font-bold leading-[0.9] tracking-[-0.055em] text-foreground sm:text-[clamp(2.65rem,6vw,5.3rem)]">
-                  {copy.title}
-                </h1>
-              </div>
-              <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
-                {copy.introduction}
+      <section className="pb-12 pt-3 sm:pb-20 sm:pt-12 lg:pt-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Compact on purpose: on a phone and at 1440 x 900 the first
+              stage and its ruler sit above the fold. */}
+          <header className="grid gap-x-10 gap-y-2 sm:gap-y-3 lg:grid-cols-12 lg:items-end">
+            <div className="min-w-0 lg:col-span-8">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+                {copy.eyebrow}
               </p>
+              <h1 className="mt-1.5 text-balance text-[2.25rem] font-bold leading-none tracking-[-0.045em] text-foreground min-[380px]:text-[2.5rem] min-[380px]:leading-[1.02] sm:mt-3 sm:text-[clamp(3rem,5.5vw,4.5rem)] sm:leading-[0.95] lg:text-[clamp(3rem,4.3vw,4rem)]">
+                {copy.title}
+              </h1>
             </div>
-
-            {leadArtifact && heroFrames.length > 0 ? (
-              <figure
-                role="img"
-                aria-label={`${copy.showcase.previewGroup}: ${leadArtifact.title}`}
-                className="relative min-h-[17rem] overflow-hidden border-t border-foreground sm:min-h-[22rem] md:min-h-[25rem] md:border-l md:border-t-0"
-                data-open-source-image-fan
-                style={{
-                  background: "var(--color-brand-peach, #ffc19e)",
-                }}
-              >
-                <span
-                  aria-hidden="true"
-                  className="absolute -bottom-12 left-0 h-40 w-40 rotate-12 border border-foreground"
-                  style={{
-                    background: "var(--color-brand-acid, #dfff69)",
-                  }}
-                />
-                <span className="absolute left-4 top-4 z-40 border border-foreground bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground sm:left-6 sm:top-6">
-                  {copy.showcase.entryCount(OPEN_SOURCE_ARTIFACTS.length)}
-                </span>
-                <div className="absolute inset-6 sm:inset-10">
-                  {heroFrames.map((frame, index) => (
-                    <span
-                      key={frame.src}
-                      aria-hidden={index === 0 ? undefined : "true"}
-                      className={`absolute block aspect-[16/10] overflow-hidden border border-foreground bg-background shadow-[8px_8px_0_var(--color-brand-acid,#dfff69)] transition-[transform] duration-300 ease-out motion-reduce:transition-none ${HERO_FRAME_CLASSES[index] ?? HERO_FRAME_CLASSES[0]}`}
-                    >
-                      <Image
-                        src={frame.src}
-                        alt={index === 0 ? frame.alt : ""}
-                        width={frame.width}
-                        height={frame.height}
-                        sizes="(min-width: 768px) 520px, calc(100vw - 96px)"
-                        className="h-full w-full object-contain"
-                        priority={index === 0}
-                      />
-                    </span>
-                  ))}
-                </div>
-                <figcaption className="absolute bottom-4 right-4 z-40 max-w-[75%] border border-foreground bg-background px-3 py-2 text-right font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground sm:bottom-6 sm:right-6">
-                  {leadArtifact.title}
-                </figcaption>
-              </figure>
+            <p className="min-w-0 max-w-xl text-pretty text-[0.9375rem] leading-normal text-muted-foreground sm:text-lg sm:leading-relaxed lg:col-span-4 lg:pb-1 lg:text-base">
+              {copy.introduction}
+            </p>
+            {/* With one or two tools the plates sit right below; a contents
+                table would only repeat them. */}
+            {entries.length >= 3 ? (
+              <div className="mt-5 min-w-0 lg:col-span-12">
+                <ContentsTable entries={entries} locale={locale} />
+              </div>
             ) : null}
           </header>
 
-          <ArtifactLedger locale={locale} />
+          <div className="mt-4 sm:mt-10 lg:mt-8">
+            <ToolWall artifacts={software} locale={locale} />
+          </div>
 
-          <section
+          <p
             id="lizenzmodell"
-            className="mt-6 grid gap-4 border border-foreground p-4 sm:p-5 md:grid-cols-[minmax(14rem,0.5fr)_minmax(0,1.5fr)] md:items-start md:p-6"
-            style={{ background: "var(--color-brand-sky, #bfe3ff)" }}
-            data-open-source-license-sheet
+            className="mt-10 flex flex-wrap gap-x-5 border-t border-foreground pt-4 text-sm leading-relaxed text-muted-foreground"
           >
-            <h2 className="text-balance text-xl font-bold tracking-[-0.03em] text-foreground sm:text-2xl">
-              {copy.footnoteTitle}
-            </h2>
-            <div className="max-w-3xl">
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {copy.footnote}
-              </p>
-              <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                <a
-                  href={PLATFORM_REPOSITORY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:decoration-brand-orange"
-                >
-                  {copy.platformCode}
-                  <span className="sr-only">{copy.externalTab}</span>
-                </a>
-                <Link
-                  href={localizeHref("/open-source/lizenzrichtlinie", locale)}
-                  className="font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:decoration-brand-orange"
-                >
-                  {copy.licensePolicy}
-                </Link>
-                <Link
-                  href={localizeHref("/kurse", locale)}
-                  className="font-semibold text-foreground underline decoration-brand-orange/50 underline-offset-4 hover:decoration-brand-orange focus-visible:decoration-brand-orange"
-                >
-                  {copy.courses}
-                </Link>
-              </div>
-            </div>
-          </section>
+            <span className="w-full">{copy.rights}</span>
+            <a
+              href={PLATFORM_REPOSITORY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={linkClass}
+            >
+              {copy.platformCode}
+              <span className="sr-only">{copy.externalTab}</span>
+            </a>
+            <Link
+              href={localizeHref("/open-source/lizenzrichtlinie", locale)}
+              className={linkClass}
+            >
+              {copy.licensePolicy}
+            </Link>
+            <Link href={localizeHref("/kurse", locale)} className={linkClass}>
+              {copy.courses}
+            </Link>
+          </p>
         </div>
       </section>
     </>

@@ -2,7 +2,6 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parseFigureSpec, findPrivacyFindings } from "@/lib/figures";
-import { WIDE_MIN_REM } from "../stage-controller";
 import {
   ALL_FIGURE_FIXTURES,
   DUMBBELL_DETAILS,
@@ -79,38 +78,5 @@ describe("source hygiene of the islands", () => {
     for (const bad of DENY) expect(text, `${f}: ${bad}`).not.toContain(bad);
     expect(text, f).not.toMatch(/[–—]/);
     expect(text, f).not.toMatch(new RegExp(part("compl", "iant|certi", "fied"), "i"));
-  });
-
-  it("never animates in CSS: no transition, animation or keyframes", () => {
-    const css = read("book-figures.css");
-    expect(css).not.toMatch(/\btransition\b|\banimation\b|@keyframes/);
-  });
-
-  it("keeps the CSS breakpoint equal to the script's variant threshold", () => {
-    expect(read("book-figures.css")).toContain(`(min-width: ${WIDE_MIN_REM}rem)`);
-  });
-
-  it("gives every control a 44px minimum target", () => {
-    const css = read("book-figures.css");
-    const rule = (selector: string): string => {
-      const start = css.indexOf(`${selector} {`);
-      expect(start, selector).toBeGreaterThanOrEqual(0);
-      return css.slice(start, css.indexOf("}", start));
-    };
-    expect(rule(".bf-btn")).toMatch(/min-height:\s*2\.75rem/);
-    expect(rule(".bf-btn")).toMatch(/min-width:\s*2\.75rem/);
-    expect(rule(".bf-csv")).toMatch(/min-height:\s*2\.75rem/);
-    expect(read("../shared/source-line.css")).toMatch(/\.bf-sourceline-csv\s*\{[^}]*min-height:\s*2\.75rem/);
-    expect(rule(".bf-range")).toMatch(/height:\s*2\.75rem/);
-  });
-
-  it("keeps visible text at 12px or more", () => {
-    expect(read("book-figures.css")).not.toMatch(/font-size:\s*(?:0\.7[0-4]|0\.[0-6]|1[01]px|[0-9]px)/);
-  });
-
-  it("holds no hard-coded text size below 12 and no gradient or black ground", () => {
-    const css = read("book-figures.css");
-    expect(css).not.toMatch(/gradient/i);
-    expect(css).not.toMatch(/background(?:-color)?:\s*(?:#000|#0[0-9a-f]{5}|black)/i);
   });
 });

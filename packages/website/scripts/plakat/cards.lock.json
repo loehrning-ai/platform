@@ -1,6 +1,18 @@
 {
   "version": 1,
   "cards": {
+    "angebote-mit-ki-vergleichen": {
+      "input": "2fee647653d0b0c650197b7e2183348af7e9dac68d26319aea43000ace1dd038",
+      "output": "0c267d527be278d7908ed8ee09a826dd70b887c7c7ea867a02b871f9a3ce717c",
+      "width": 1200,
+      "height": 630
+    },
+    "audit-vorbereitung-mit-ki": {
+      "input": "b7f5a57bae395b24026c94173b9958222f1e73758a790e72584af5db864b7db5",
+      "output": "74bd341fe0721037b017cbc049de4a837a3475e62641d81ece49ba3ac364759d",
+      "width": 1200,
+      "height": 630
+    },
     "datenbereitschaft-fuer-ki": {
       "input": "7cbc2f6cdeebbf2957916d88809bb7cedae745c8cf3130944cf0c50e467fad58",
       "output": "3a6842dbd665f1f82de92174f16a48ea9658acd0e714dbd9f57c35903e962a5e",
@@ -19,15 +31,9 @@
       "width": 1200,
       "height": 630
     },
-    "ki-im-unternehmen-sicher-nutzen": {
-      "input": "016472118552c59abc860106045e27f942bd5f4d5fab87bc68311a10c7496b13",
-      "output": "d0d704cbc6ba15b75e4854f1b6382afea523f64724c178c847d69fa1d7cc0586",
-      "width": 1200,
-      "height": 630
-    },
     "ki-prognosen-einschaetzen": {
-      "input": "9603701c3d61e7a1ce5ee67fff787dbb08f09365b9c60897fdf551d4f4e4eac0",
-      "output": "f4b65e886df2ed1c32116c3b1f1af8f80f926a9ed9ec1bcfbdac400f51fb56e4",
+      "input": "62a2f19d2b65ece22834e33c3bd2abe8dcac75fc122c66f4cceb4395a1fa81ec",
+      "output": "54b6ae8051bb8d50fe3661478c65972eb1a9d122f6217e9fff0742c44637caf2",
       "width": 1200,
       "height": 630
     }

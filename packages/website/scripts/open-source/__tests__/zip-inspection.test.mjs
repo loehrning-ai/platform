@@ -499,20 +499,23 @@ test("platform profile rejects opaque archive formats after manifest verificatio
   }
 });
 
-test("the published NORTHWIND kit is structurally valid and fully inspectable", async () => {
-  const archive = await readFile(actualKitPath);
-  const entries = inspectZipArchive(archive, { label: "northwind-analyst-kit.zip" });
-  // 30 entries (21 files + 9 directories) after the NORTHWIND rename.
+test("the published NORTHWIND kits are structurally valid and fully inspectable", async () => {
+  // Both editions: 24 entries (15 files + 9 directories, the skill under claude/), the same paths in each.
   // Re-derive these two numbers whenever the kit gains or loses a file.
-  assert.equal(entries.length, 30);
-  assert.equal(entries.filter((entry) => entry.kind === "file").length, 21);
-  assert.ok(
-    entries.some(
-      (entry) =>
-        entry.path === "northwind-analyst-kit/dashboard/index.html" &&
-        entry.text?.includes("NORTHWIND"),
-    ),
-  );
+  for (const kitPath of [actualKitPath, actualKitPath.replace(/\.zip$/, "-de.zip")]) {
+    const archive = await readFile(kitPath);
+    const entries = inspectZipArchive(archive, { label: kitPath.split("/").pop() });
+    assert.equal(entries.length, 24, kitPath);
+    assert.equal(entries.filter((entry) => entry.kind === "file").length, 15, kitPath);
+    assert.ok(
+      entries.some(
+        (entry) =>
+          entry.path === "northwind-analyst-kit/dashboard/index.html" &&
+          entry.text?.includes("NORTHWIND"),
+      ),
+      kitPath,
+    );
+  }
 });
 
 /** A minimal valid PNG: IHDR, one IDAT and IEND, plus optional extra chunks before IEND. */
@@ -570,16 +573,12 @@ test("PNG entries pass only when the caller opts in and every chunk validates", 
   );
 });
 
-test("Workshop 04 permits only the reviewed timestamp and Unix-id ZIP metadata", async () => {
+test("Workshop 04's kit passes with its reviewed PNG and no ZIP extra fields", async () => {
   const archive = await readFile(workshopKitPath);
-  assert.throws(
-    () => inspectZipArchive(archive, { label: "workshop04.zip", allowPngEntries: true }),
-    /extra fields are forbidden/,
-  );
-  const entries = inspectZipArchive(archive, {
-    label: "workshop04.zip",
-    allowPngEntries: true,
-    allowSafeUnixMetadata: true,
-  });
-  assert.ok(entries.some((entry) => entry.path === "crvena-zemja-esg-kit/ANSWERS.md"));
+  // The deterministic builder (scripts/workshop04/kit-archive.mjs) writes no
+  // extra fields, so the kit passes without the Unix-metadata allowance.
+  const entries = inspectZipArchive(archive, { label: "workshop04.zip", allowPngEntries: true });
+  assert.ok(entries.some((entry) => entry.path === "crvena-zemja-esg-kit/answers/ANSWERS.md"));
+  assert.ok(entries.some((entry) => entry.path.endsWith(".png")));
+  assert.throws(() => inspectZipArchive(archive, { label: "workshop04.zip" }), /not a recognized text file/);
 });

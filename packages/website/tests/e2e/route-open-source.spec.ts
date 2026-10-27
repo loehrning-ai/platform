@@ -1,9 +1,4 @@
-import {
-  test,
-  expect,
-  type APIRequestContext,
-  type Page,
-} from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import {
   collectBrowserErrors,
   formatBrowserErrors,
@@ -12,778 +7,181 @@ import {
 import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
   OPEN_SOURCE_TOOL_ARTIFACTS,
-  OPEN_SOURCE_VIDEO_ARTIFACTS,
-  type ProjectArtifact,
-  type ToolArtifact,
-  type VideoArtifact,
+  plateNumber,
 } from "../../src/lib/open-source/artifacts";
 import {
-  localizeOpenSourceArtifact,
+  CV_ENGINE_SPECIMEN_COPY,
   OPEN_SOURCE_DETAIL_COPY,
   OPEN_SOURCE_PAGE_COPY,
-  OPEN_SOURCE_SHARED_COPY,
   SOFTWARE_GUIDE_COPY,
+  SPECIMEN_COPY,
 } from "../../src/lib/open-source/display-copy";
 
 /**
- * /open-source smoke and interaction coverage. Assertions target roles and
- * stable structure so copy changes do not hide real regressions.
+ * /open-source, driven by the registry: the hub wall at three widths and
+ * every published tool's detail page. Adding a tool adds coverage here
+ * without editing this file.
  */
 
-const ROUTE = "/open-source";
-
-const SITE_ORIGIN = "https://loehrning.ai";
-
-const DETAIL_ARTIFACTS = [
-  ...OPEN_SOURCE_TOOL_ARTIFACTS,
-  ...OPEN_SOURCE_PROJECT_ARTIFACTS,
-  ...OPEN_SOURCE_VIDEO_ARTIFACTS,
-] as const;
-
-const ENGLISH_DETAIL_REPRESENTATIVES = DETAIL_ARTIFACTS.filter(
-  (artifact, index, artifacts) =>
-    artifacts.findIndex((candidate) => candidate.kind === artifact.kind) ===
-    index,
+const SOFTWARE = [...OPEN_SOURCE_TOOL_ARTIFACTS, ...OPEN_SOURCE_PROJECT_ARTIFACTS];
+const NEWEST_FIRST = SOFTWARE.map((artifact) => plateNumber(artifact.id)).sort(
+  (a, b) => b.localeCompare(a),
 );
 
-// The compact ledger derives its count from the same registry and localized
-// formatter used by the page. This keeps the browser contract coupled to
-// publication, not to removed explanatory chrome.
-const PUBLISHED_ARTIFACTS_COUNT = OPEN_SOURCE_PAGE_COPY.de.showcase.entryCount(
-  DETAIL_ARTIFACTS.length,
-);
-
-const STATUS_LABELS = {
-  experimental: "Experimentell",
-  stable: "Stabil",
-  maintenance: "Wartungsmodus",
-  archived: "Archiviert",
-} as const;
-
-async function expectStoredAsset(
-  request: APIRequestContext,
-  href: string,
-  expectedMimeType?: string,
-) {
-  const response = await request.get(href);
-  expect(response.status(), `stored asset ${href}`).toBe(200);
-  if (expectedMimeType) {
-    expect(
-      response.headers()["content-type"],
-      `content type for ${href}`,
-    ).toContain(expectedMimeType);
-  }
-  return response;
+async function expectNoHorizontalOverflow(page: Page, label: string) {
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow, `horizontal overflow at ${label}`).toBeLessThanOrEqual(0);
 }
 
-async function expectResolvableInternalHref(
-  request: APIRequestContext,
-  href: string | undefined,
-  label: string,
-) {
-  if (!href?.startsWith("/")) return;
-  const response = await request.get(href);
-  expect(response.status(), `${label} ${href}`).toBeGreaterThanOrEqual(200);
-  expect(response.status(), `${label} ${href}`).toBeLessThan(400);
+function collectForeignRequests(page: Page): string[] {
+  const foreign: string[] = [];
+  page.on("request", (request) => {
+    const url = new URL(request.url());
+    if (url.protocol === "data:" || url.protocol === "blob:") return;
+    if (!["localhost", "127.0.0.1"].includes(url.hostname)) foreign.push(url.href);
+  });
+  return foreign;
 }
 
-async function expectSharedDetailContract(
-  page: Page,
-  request: APIRequestContext,
-  artifact: ToolArtifact | ProjectArtifact | VideoArtifact,
-) {
-  if (artifact.kind === "video") {
-    // A failed media request must not remove the independently readable
-    // transcript fallback from the server-rendered page.
-    await page.route(`**${artifact.watchHref}`, (route) =>
-      route.abort("failed"),
-    );
-  }
-
-  const response = await page.goto(artifact.href, {
-    waitUntil: "domcontentloaded",
-  });
-  expect(response?.status(), `status for ${artifact.href}`).toBe(200);
-  await expect(
-    page.getByRole("heading", { level: 1, name: artifact.title }),
-  ).toBeVisible();
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
-    "content",
-    artifact.description,
-  );
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-    "href",
-    `${SITE_ORIGIN}${artifact.href}`,
-  );
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    /index.*follow/i,
-  );
-  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
-    "content",
-    `${SITE_ORIGIN}${artifact.href}`,
-  );
-
-  // The page emits one @graph holding the breadcrumb trail plus exactly one
-  // artifact node (see [kind]/[slug]/page.tsx and its unit spec, which pin
-  // the same shape). The publication contract lives on that artifact node.
-  const jsonLd = JSON.parse(
-    (await page
-      .locator(`#open-source-${artifact.kind}-${artifact.slug}-jsonld`)
-      .textContent()) ?? "{}",
-  ) as { "@graph"?: readonly Record<string, unknown>[] };
-  const artifactNodes = (jsonLd["@graph"] ?? []).filter(
-    (node) => node["@id"] === `${SITE_ORIGIN}${artifact.href}#artifact`,
-  );
-  expect(artifactNodes, "exactly one JSON-LD artifact node").toHaveLength(1);
-  const [artifactNode] = artifactNodes;
-  expect(artifactNode.name).toBe(artifact.title);
-  expect(artifactNode.codeRepository).toBe(artifact.source.href);
-  expect(artifactNode.version).toBe(artifact.source.revision);
-  expect(artifactNode.license).toBe(`${SITE_ORIGIN}${artifact.license.href}`);
-
-  await expect(
-    page.getByText(artifact.source.revision.slice(0, 12), { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Quellstand" })).toHaveAttribute(
-    "href",
-    artifact.source.revisionHref,
-  );
-  await expect(page.getByRole("link", { name: "Lizenztext" })).toHaveAttribute(
-    "href",
-    artifact.license.href,
-  );
-  const license = await expectStoredAsset(request, artifact.license.href);
-  expect(
-    (await license.body()).byteLength,
-    `license size for ${artifact.id}`,
-  ).toBe(artifact.license.sizeBytes);
-
-  const expectedLaunchHref =
-    artifact.kind === "video" ? artifact.watchHref : artifact.launchHref;
-  const launch = page.getByRole("link", { name: /^Öffnen/ });
-  if (expectedLaunchHref) {
-    await expect(launch).toHaveAttribute("href", expectedLaunchHref);
-    if (expectedLaunchHref.startsWith("https://")) {
-      // A hosted or external launch target leaves this origin. It opens in a
-      // new tab and must never hand the target an opener reference, so the
-      // detail page stays the reader's anchor. The request context is
-      // deliberately not sent to that host: the browser gate never depends on
-      // a third machine being reachable.
-      await expect(launch).toHaveAttribute("target", "_blank");
-      await expect(launch).toHaveAttribute("rel", "noopener noreferrer");
-    }
-    await expectResolvableInternalHref(
-      request,
-      expectedLaunchHref,
-      "internal launch target",
-    );
-  } else {
-    await expect(launch).toHaveCount(0);
-  }
-
-  if (artifact.kind !== "video") {
-    // The guide's data-flow statement is the honesty surface for a hosted
-    // instance: it must be readable on the page, not only in the registry.
-    // It renders one fact per list item, so its words must all appear there,
-    // in order; only the list's clause breaks and final stops may differ.
-    const words = (text: string) =>
-      text
-        .toLocaleLowerCase()
-        .replace(/[.;]/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-    const dataFlow = page.locator('section[aria-labelledby$="-data-flow"] ul');
-    await expect(dataFlow).toBeVisible();
-    expect(words(await dataFlow.innerText())).toBe(
-      words(artifact.guide.dataFlow),
-    );
-  }
-}
-
-async function expectSoftwareGuide(
-  page: Page,
-  request: APIRequestContext,
-  artifact: ToolArtifact | ProjectArtifact,
-) {
-  const { guide } = artifact;
-  await expect(
-    page.getByText(STATUS_LABELS[guide.status], { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText(guide.statusNote, { exact: true })).toBeVisible();
-  // The guide gives the <img> an empty alt and carries the prose once, as
-  // the visible <figcaption> that also labels the <figure> — so a screen
-  // reader hears it exactly once. The unit spec pins the same contract
-  // (software-artifact-guide.test.tsx); assert the figure's accessible
-  // name, not an img role the empty alt intentionally removes.
-  await expect(
-    page.getByRole("figure", { name: guide.screenshot.alt }),
-  ).toBeVisible();
-  await expect(
-    page.getByText(guide.screenshot.alt, { exact: true }),
-  ).toBeVisible();
-  await expectStoredAsset(request, guide.screenshot.src);
-
-  for (const heading of [
-    "Voraussetzungen",
-    "Installation",
-    "Verwendung",
-    "Integration",
-    "Dokumentation und Vertiefung",
-  ]) {
-    // Exact level-2 match: the guide renders every section as an <h2>, and a
-    // record's own step titles may legitimately contain a section word (the
-    // cv-engine step "Installation gegen die Testsuite prüfen" is an <h3>),
-    // which a substring locator would collide with under strict mode.
-    await expect(
-      page.getByRole("heading", { level: 2, name: heading, exact: true }),
-    ).toBeVisible();
-  }
-  for (const prerequisite of guide.prerequisites) {
-    if (prerequisite.href?.startsWith("https://")) {
-      // An external prerequisite renders its label as a link whose
-      // accessible name deliberately appends the screen-reader-only
-      // ", öffnet in neuem Tab" suffix, so the element's text is never
-      // exactly the label. Assert the announced contract instead. The name
-      // computation joins the label node and the suffix span with a space,
-      // so match the boundary with flexible whitespace.
-      const escapedLabel = prerequisite.label.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        "\\$&",
-      );
-      await expect(
-        page.getByRole("link", {
-          name: new RegExp(`^${escapedLabel}\\s*, öffnet in neuem Tab$`),
-        }),
-      ).toBeVisible();
-    } else if (prerequisite.href) {
-      await expect(
-        page.getByRole("link", { name: prerequisite.label, exact: true }),
-      ).toBeVisible();
-    } else {
-      await expect(
-        page.getByText(prerequisite.label, { exact: true }).first(),
-      ).toBeVisible();
-    }
-    await expect(
-      page.getByText(prerequisite.detail, { exact: true }).first(),
-    ).toBeVisible();
-    await expectResolvableInternalHref(
-      request,
-      prerequisite.href,
-      "internal prerequisite target",
-    );
-  }
-  for (const procedure of [
-    guide.installation,
-    guide.usage,
-    guide.integration,
-  ]) {
-    await expect(
-      page.getByText(procedure.summary, { exact: true }).first(),
-    ).toBeVisible();
-    for (const step of procedure.steps) {
-      // Step titles are level-3 headings. Integration prefixes them with a
-      // visible ordinal ("1. …") while installation/usage render a styled
-      // counter outside the heading text, so match the title as a suffix of
-      // the heading's accessible name rather than as exact page text.
-      const escapedTitle = step.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      await expect(
-        page
-          .getByRole("heading", {
-            level: 3,
-            name: new RegExp(`^(?:\\d+\\.\\s*)?${escapedTitle}$`),
-          })
-          .first(),
-      ).toBeVisible();
-      await expect(
-        page.getByText(step.detail, { exact: true }).first(),
-      ).toBeVisible();
-      if (step.command) {
-        await expect(
-          page.getByText(step.command, { exact: true }).first(),
-        ).toBeVisible();
-        await expect(
-          page.getByRole("button", {
-            name: `${SOFTWARE_GUIDE_COPY.de.copyCommand(step.title)}: ${SOFTWARE_GUIDE_COPY.de.copy}`,
-          }),
-        ).toBeVisible();
-      }
-    }
-  }
-  for (const target of guide.integration.targets) {
-    await expect(page.getByText(target, { exact: true }).first()).toBeVisible();
-  }
-  await expect(
-    page.getByRole("link", { name: guide.documentation.label }),
-  ).toHaveAttribute("href", guide.documentation.href);
-  await expectResolvableInternalHref(
-    request,
-    guide.documentation.href,
-    "internal documentation target",
-  );
-  for (const related of guide.relatedLearning) {
-    // Scoped to the main landmark: the global footer legitimately links the
-    // same learning routes, which a page-wide locator collides with under
-    // strict mode.
-    await expect(
-      page.getByRole("main").getByRole("link", { name: related.title }),
-    ).toHaveAttribute("href", related.href);
-    await expect(
-      page.getByRole("main").getByText(related.description, { exact: true }),
-    ).toBeVisible();
-    await expectResolvableInternalHref(
-      request,
-      related.href,
-      "internal related-learning target",
-    );
-  }
-}
-
-test.describe("/open-source hub", () => {
-  test("loads, shows the h1, renders to the bottom, and logs no console error", async ({
-    page,
-  }) => {
-    const errors = collectBrowserErrors(page);
-    const response = await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    expect(response?.status(), `status for ${ROUTE}`).toBe(200);
-    await expect(page).not.toHaveURL(/\/login/);
-
-    const h1 = page.getByRole("heading", { level: 1 });
-    await expect(h1).toBeVisible();
-    await expect(h1).toHaveText(OPEN_SOURCE_PAGE_COPY.de.title);
-    // The hub premise names both ways of running a listed tool. A hosted
-    // instance may be added to the registry, but it may never quietly replace
-    // "you can run this yourself" as the promise on the page.
-    await expect(
-      page.getByText(OPEN_SOURCE_PAGE_COPY.de.eyebrow, { exact: true }),
-    ).toBeVisible();
-
-    // The hub leads with product proof and keeps provenance available on demand.
-    await expect(
-      page.getByRole("heading", {
-        level: 2,
-        name: OPEN_SOURCE_PAGE_COPY.de.showcase.heading,
-      }),
-    ).toBeVisible();
-    await expect(page.getByText("Werkzeug", { exact: true })).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: "Werkzeuge", exact: true }),
-    ).toHaveCount(0);
-    const firstArtifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
-    const firstArtifactRow = page.getByRole("listitem").filter({
-      has: page.getByRole("heading", {
-        name: firstArtifact.title,
-        exact: true,
-      }),
-    });
-    await expect(
-      firstArtifactRow.getByRole("region", {
-        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.previewGroup}: ${firstArtifact.title}`,
-      }),
-    ).toBeVisible();
-    await expect(
-      firstArtifactRow.getByRole("link", {
-        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.detail}: ${firstArtifact.title}`,
-      }),
-    ).toHaveAttribute("href", firstArtifact.href);
-    await expect(
-      firstArtifactRow.getByRole("link", {
-        name: new RegExp(
-          `^${OPEN_SOURCE_PAGE_COPY.de.showcase.source}: ${firstArtifact.title}`,
-        ),
-      }),
-    ).toHaveAttribute("href", firstArtifact.source.revisionHref);
-    // Registry-driven: whoever runs the instance, and where, is a published
-    // fact on the card, not something the reader has to open a detail page for.
-    await expect(
-      firstArtifactRow.getByText(
-        OPEN_SOURCE_PAGE_COPY.de.showcase.delivery[firstArtifact.delivery],
-        { exact: true },
-      ),
-    ).toBeVisible();
-    await firstArtifactRow
-      .getByText(OPEN_SOURCE_PAGE_COPY.de.showcase.evidenceSummary, {
-        exact: true,
-      })
-      .click();
-    await expect(
-      firstArtifactRow.getByRole("link", {
-        name: /Gepinnter Quellstand/,
-      }),
-    ).toHaveAttribute("href", firstArtifact.source.revisionHref);
-
-    // Structural heading at the foot of the page proves it rendered fully.
-    await expect(
-      page.getByRole("heading", {
-        name: OPEN_SOURCE_PAGE_COPY.de.footnoteTitle,
-      }),
-    ).toBeVisible();
-
-    const noise = meaningfulBrowserErrors(errors);
-    expect(
-      noise,
-      `console errors on ${ROUTE}\n${formatBrowserErrors(noise)}`,
-    ).toEqual([]);
-  });
-
-  test("keeps the lead preview and primary actions inside the reviewed desktop viewport", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    await expect(
-      page.getByText(PUBLISHED_ARTIFACTS_COUNT).first(),
-    ).toBeVisible();
-    const artifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
-    const artifactRow = page.getByRole("listitem").filter({
-      has: page.getByRole("heading", { name: artifact.title, exact: true }),
-    });
-    const firstViewportTargets = [
-      artifactRow.getByRole("region", {
-        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.previewGroup}: ${artifact.title}`,
-      }),
-      artifactRow.getByRole("link", {
-        name: `${OPEN_SOURCE_PAGE_COPY.de.showcase.detail}: ${artifact.title}`,
-      }),
-      artifactRow.getByRole("link", {
-        name: new RegExp(
-          `^${OPEN_SOURCE_PAGE_COPY.de.showcase.source}: ${artifact.title}`,
-        ),
-      }),
-    ];
-    for (const target of firstViewportTargets) {
-      await expect(target).toBeVisible();
-      const box = await target.boundingBox();
-      expect(box, "first-viewport target has layout").not.toBeNull();
-      expect(
-        box!.y,
-        "first-viewport target begins above the fold",
-      ).toBeLessThan(900);
-    }
-  });
-
-  test("does not list imported courses and cross-links the visual-learning courses to /kurse", async ({
-    page,
-  }) => {
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    // Imported courses stay under /kurse; the hub must not render lab cards.
-    await expect(
-      page.getByRole("heading", { name: "Data Engineering Fundamentals" }),
-    ).toHaveCount(0);
-    await expect(page.locator('a[href^="/kurse/open-source/"]')).toHaveCount(0);
-
-    await expect(
-      page.getByRole("link", { name: OPEN_SOURCE_PAGE_COPY.de.courses }),
-    ).toHaveAttribute("href", "/kurse");
-  });
-
-  test("distinguishes the code license from editorial-content rights", async ({
-    page,
-  }) => {
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-    const firstArtifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
-    const firstArtifactRow = page.getByRole("listitem").filter({
-      has: page.getByRole("heading", {
-        name: firstArtifact.title,
-        exact: true,
-      }),
-    });
-    await firstArtifactRow
-      .getByText(OPEN_SOURCE_PAGE_COPY.de.showcase.evidenceSummary, {
-        exact: true,
-      })
-      .click();
-    await expect(
-      firstArtifactRow.getByText(
-        OPEN_SOURCE_PAGE_COPY.de.showcase.publicationStandard,
-        { exact: true },
-      ),
-    ).toBeVisible();
-    const policyLink = page
-      .locator("#lizenzmodell")
-      .getByRole("link", { name: "Lizenzrichtlinie" });
-    await expect(policyLink).toHaveAttribute(
-      "href",
-      "/open-source/lizenzrichtlinie",
-    );
-    await policyLink.click();
-    await expect(page).toHaveURL(/\/open-source\/lizenzrichtlinie$/);
-    await expect(
-      page.getByRole("heading", { level: 1, name: "Lizenzrichtlinie" }),
-    ).toBeVisible();
-    await expect(page.getByText(/# License Policy/)).toBeVisible();
-    await expect(
-      page.getByText(/Editorial content: source-visible/),
-    ).toBeVisible();
-  });
-});
-
-test("English open-source hub and one detail per published kind use localized public contracts", async ({
+test("hub: numbered plates, newest first, rest frames, a working ruler", async ({
   page,
 }) => {
-  test.setTimeout(90_000);
+  test.setTimeout(120_000);
   const errors = collectBrowserErrors(page);
-  const hubResponse = await page.goto("/en/open-source", {
-    waitUntil: "domcontentloaded",
-  });
+  const foreign = collectForeignRequests(page);
 
-  expect(hubResponse?.status()).toBe(200);
-  await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(
-    page.getByRole("heading", {
-      level: 1,
-      name: OPEN_SOURCE_PAGE_COPY.en.title,
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", {
-      level: 2,
-      name: OPEN_SOURCE_PAGE_COPY.en.showcase.heading,
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByText(OPEN_SOURCE_PAGE_COPY.en.eyebrow, { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page
-      .getByText(
-        OPEN_SOURCE_PAGE_COPY.en.showcase.delivery[
-          OPEN_SOURCE_TOOL_ARTIFACTS[0].delivery
-        ],
-        { exact: true },
-      )
-      .first(),
-  ).toBeVisible();
-
-  for (const registryArtifact of ENGLISH_DETAIL_REPRESENTATIVES) {
-    const artifact = localizeOpenSourceArtifact(registryArtifact, "en");
-    const response = await page.goto(`/en${artifact.href}`, {
-      waitUntil: "domcontentloaded",
-    });
-
-    expect(response?.status(), artifact.id).toBe(200);
-    await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(
-      page.getByRole("heading", {
-        level: 1,
-        name: artifact.title,
-        exact: true,
-      }),
-    ).toBeVisible();
-    await expect(
-      page.getByText(artifact.description, { exact: true }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("main").getByRole("link", {
-        name: OPEN_SOURCE_DETAIL_COPY.en.back,
-        exact: true,
-      }),
-    ).toHaveAttribute("href", "/en/open-source");
-    await expect(
-      page.getByRole("link", {
-        name: new RegExp(`^${OPEN_SOURCE_DETAIL_COPY.en.sourceRevision}`),
-      }),
-    ).toBeVisible();
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-      "href",
-      `${SITE_ORIGIN}/en${artifact.href}`,
+  for (const [width, height] of [
+    [360, 740],
+    [390, 844],
+    [1440, 900],
+  ] as const) {
+    await page.setViewportSize({ width, height });
+    const response = await page.goto("/open-source");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      OPEN_SOURCE_PAGE_COPY.de.title,
     );
+    const wall = page.getByRole("list", { name: OPEN_SOURCE_PAGE_COPY.de.wall });
+    await expect(wall).toHaveAttribute("data-entry-count", String(SOFTWARE.length));
+    const ids = await wall
+      .locator(":scope > li")
+      .evaluateAll((items) => items.map((item) => item.id));
+    expect(ids).toEqual(NEWEST_FIRST.map((number) => `nr-${number}`));
+    await expectNoHorizontalOverflow(page, `${width}x${height}`);
   }
 
-  expect(meaningfulBrowserErrors(errors)).toEqual([]);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/open-source");
+  for (const video of await page.locator("[id^='nr-'] video").all()) {
+    expect(await video.getAttribute("poster")).toMatch(/\.jpg$/);
+    expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+  }
+  if (SOFTWARE.some((artifact) => artifact.guide.specimen?.kind === "drawn")) {
+    for (const text of [CV_ENGINE_SPECIMEN_COPY.de.onePageBadge, "exit 0"]) {
+      const node = page.getByText(text).first();
+      await expect(node).toBeAttached();
+      expect(
+        await node.evaluate((element) => getComputedStyle(element).opacity),
+      ).toBe("1");
+    }
+  }
+
+  const ruler = page.getByRole("slider").first();
+  await ruler.focus();
+  const atRest = await ruler.getAttribute("aria-valuetext");
+  await page.keyboard.press("Home");
+  await expect(ruler).not.toHaveAttribute("aria-valuetext", atRest ?? "");
+  const atStart = await ruler.getAttribute("aria-valuetext");
+  await page.keyboard.press("ArrowRight");
+  await expect(ruler).not.toHaveAttribute("aria-valuetext", atStart ?? "");
+  // End reaches the rest frame even when the beat does not divide the
+  // take, and the visitor is offered the take again.
+  await page.keyboard.press("End");
+  await expect(ruler).toHaveValue((await ruler.getAttribute("max")) ?? "");
+  await expect(ruler).toHaveAttribute("aria-valuetext", atRest ?? "");
+  await expect(
+    page.locator("[id^='nr-']").first().getByRole("button", {
+      name: new RegExp(`^${SPECIMEN_COPY.de.again}`),
+    }),
+  ).toBeVisible();
+
+  await page.goto("/en/open-source");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    OPEN_SOURCE_PAGE_COPY.en.title,
+  );
+
+  const meaningful = meaningfulBrowserErrors(errors);
+  expect(meaningful, formatBrowserErrors(meaningful)).toEqual([]);
+  expect(foreign).toEqual([]);
 });
 
-test.describe("/open-source mobile", () => {
-  test("has no horizontal overflow at 390px and keeps content visible", async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(
-      page.getByRole("heading", {
-        name: OPEN_SOURCE_PAGE_COPY.de.showcase.heading,
-      }),
-    ).toBeVisible();
-    await expect(
-      page.getByText(PUBLISHED_ARTIFACTS_COUNT).first(),
-    ).toBeVisible();
-    const firstArtifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
-    const firstArtifactRow = page.getByRole("listitem").filter({
-      has: page.getByRole("heading", {
-        name: firstArtifact.title,
-        exact: true,
-      }),
-    });
-    await expect(
-      firstArtifactRow.getByRole("button", {
-        name: OPEN_SOURCE_PAGE_COPY.de.showcase.previewSelect("Editor"),
-      }),
-    ).toBeVisible();
-
-    const { scrollWidth, innerWidth } = await page.evaluate(() => ({
-      scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
-      innerWidth: window.innerWidth,
-    }));
-    expect(
-      scrollWidth,
-      `horizontal overflow at 390px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
-    ).toBeLessThanOrEqual(innerWidth + 1);
-  });
-});
-
-test("keeps the artifact card fixed while product views change", async ({
+test("detail: the one command copies, nothing overflows, every stored file serves", async ({
   page,
+  context,
+  browserName,
 }) => {
-  for (const viewport of [
-    { width: 390, height: 844 },
-    { width: 768, height: 1024 },
-    { width: 1440, height: 900 },
-  ]) {
-    await page.setViewportSize(viewport);
-    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+  test.setTimeout(120_000);
+  if (browserName === "chromium") {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  }
 
-    const artifact = OPEN_SOURCE_TOOL_ARTIFACTS[0];
-    const artifactRow = page.getByRole("listitem").filter({
-      has: page.getByRole("heading", {
-        name: artifact.title,
-        exact: true,
-      }),
-    });
-    const card = artifactRow.locator("[data-open-source-artifact-sheet]");
-    const preview = artifactRow.locator("[data-artifact-preview-stack]");
-    const buttons = OPEN_SOURCE_PAGE_COPY.de.showcase.previewLabels.map(
-      (label) =>
-        preview.getByRole("button", {
-          name: OPEN_SOURCE_PAGE_COPY.de.showcase.previewSelect(label),
-        }),
-    );
+  for (const artifact of SOFTWARE) {
+    for (const [width, height] of [
+      [390, 844],
+      [1440, 900],
+    ] as const) {
+      await page.setViewportSize({ width, height });
+      await page.goto(artifact.href);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(artifact.title);
+      const quickstart = artifact.guide.quickstart;
+      if (quickstart) {
+        await expect(page.locator("code[data-quickstart]")).toHaveText(quickstart.command);
+        if (browserName === "chromium" && width === 1440) {
+          const copy = page
+            .getByRole("region", { name: OPEN_SOURCE_DETAIL_COPY.de.oneCommand })
+            .getByRole("button");
+          await copy.click();
+          await expect(copy).toHaveText(SOFTWARE_GUIDE_COPY.de.copied);
+          expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+            quickstart.command,
+          );
+        }
+      }
+      // Every still decodes (lazy images load once scrolled to).
+      for (const still of await page.locator("#real-output ~ ul img").all()) {
+        await still.scrollIntoViewIfNeeded();
+        await expect
+          .poll(() => still.evaluate((img: HTMLImageElement) => img.naturalWidth), {
+            message: `${artifact.slug} still decodes at ${width}`,
+            timeout: 15_000,
+          })
+          .toBeGreaterThan(0);
+      }
+      await expectNoHorizontalOverflow(page, `${artifact.slug} ${width}x${height}`);
+    }
 
-    await expect(card).toBeVisible();
-    const initialCardBox = await card.boundingBox();
-    const initialPreviewBox = await preview.boundingBox();
-    expect(initialCardBox).not.toBeNull();
-    expect(initialPreviewBox).not.toBeNull();
-
-    for (const [index, button] of buttons.entries()) {
-      await button.click();
-      await expect(button).toHaveAttribute("aria-pressed", "true");
-      await expect(
-        preview.locator(`[data-preview-frame="${index}"]`),
-      ).toBeVisible();
-
-      const cardBox = await card.boundingBox();
-      const previewBox = await preview.boundingBox();
-      expect(cardBox).not.toBeNull();
-      expect(previewBox).not.toBeNull();
-      expect(
-        Math.abs(cardBox!.height - initialCardBox!.height),
-        `artifact card height changed at ${viewport.width}px on view ${index + 1}`,
-      ).toBeLessThan(0.5);
-      expect(
-        Math.abs(previewBox!.height - initialPreviewBox!.height),
-        `preview height changed at ${viewport.width}px on view ${index + 1}`,
-      ).toBeLessThan(0.5);
+    const { guide } = artifact;
+    const films = [
+      ...(guide.specimen?.kind === "film" ? [guide.specimen.film] : []),
+      ...(guide.outputFilms ?? []),
+    ];
+    const files = [
+      artifact.license.href,
+      guide.screenshot.src,
+      ...(guide.demo ?? []).map((frame) => frame.src),
+      ...films.flatMap((film) => [film.src, film.poster.src]),
+    ];
+    for (const file of files) {
+      const response = await page.request.get(file);
+      expect(response.status(), file).toBe(200);
+    }
+    for (const film of films) {
+      const response = await page.request.get(film.src, {
+        headers: { Range: "bytes=0-1" },
+      });
+      expect(response.status(), `range request for ${film.src}`).toBe(206);
     }
   }
 });
-
-// Registry-driven admission coverage. These loops intentionally register no
-// current cases while the tool, project, and video arrays are empty. The same
-// change that publishes the first entry automatically adds its real detail
-// route to the public desktop and mobile browser gate.
-for (const artifact of DETAIL_ARTIFACTS) {
-  test.describe(`${artifact.kind}:${artifact.slug} public detail`, () => {
-    test("renders its complete publication contract", async ({
-      page,
-      request,
-    }) => {
-      await expectSharedDetailContract(page, request, artifact);
-
-      if (artifact.kind === "tool" || artifact.kind === "project") {
-        await expectSoftwareGuide(page, request, artifact);
-        return;
-      }
-
-      const player = page.locator("video");
-      await expect(player).toHaveAttribute("poster", artifact.posterSrc);
-      await expect(player.locator("source")).toHaveAttribute(
-        "src",
-        artifact.watchHref,
-      );
-      await expect(player.locator("source")).toHaveAttribute(
-        "type",
-        artifact.mediaFiles.video.mimeType,
-      );
-      await expect(player.locator('track[kind="captions"]')).toHaveAttribute(
-        "src",
-        artifact.captionsHref,
-      );
-      await expect(player.locator('track[kind="captions"]')).toHaveAttribute(
-        "srclang",
-        artifact.publication.captionLanguage,
-      );
-      await expect(player.locator('track[kind="captions"]')).toHaveAttribute(
-        "default",
-        "",
-      );
-
-      const videoResponse = await request.head(artifact.watchHref);
-      expect(videoResponse.status(), `stored video ${artifact.watchHref}`).toBe(
-        200,
-      );
-      expect(
-        videoResponse.headers()["content-type"],
-        `content type for ${artifact.watchHref}`,
-      ).toContain(artifact.mediaFiles.video.mimeType);
-
-      const transcriptLink = page.getByRole("link", {
-        name: "Transkript lesen",
-      });
-      await expect(transcriptLink).toBeVisible();
-      await expect(transcriptLink).toHaveAttribute(
-        "href",
-        artifact.transcriptHref,
-      );
-      await expectStoredAsset(
-        request,
-        artifact.captionsHref,
-        artifact.mediaFiles.captions.mimeType,
-      );
-      await expectStoredAsset(
-        request,
-        artifact.transcriptHref,
-        artifact.mediaFiles.transcript.mimeType,
-      );
-      await expectStoredAsset(
-        request,
-        artifact.posterSrc,
-        artifact.mediaFiles.poster.mimeType,
-      );
-    });
-
-    test("has no horizontal overflow at the mobile audit viewport", async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(artifact.href, { waitUntil: "domcontentloaded" });
-      await expect(
-        page.getByRole("heading", { level: 1, name: artifact.title }),
-      ).toBeVisible();
-
-      const { scrollWidth, innerWidth } = await page.evaluate(() => ({
-        scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
-        innerWidth: window.innerWidth,
-      }));
-      expect(
-        scrollWidth,
-        `${artifact.id}: horizontal overflow at 390px (${scrollWidth} > ${innerWidth})`,
-      ).toBeLessThanOrEqual(innerWidth + 1);
-    });
-  });
-}

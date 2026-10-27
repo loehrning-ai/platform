@@ -1,0 +1,16 @@
+angebot,zeile,betrag,je,stelle
+A Nürnberg,Ware,26400,jährlich,"„0,66 €“ je Stück, Pos. 1, „40.000 Stück / Jahr“ · angebot-a-nuernberg.md"
+A Nürnberg,Fracht,0,jährlich,„frei Werk Brandtwerk (DAP Incoterms® 2020)“ · angebot-a-nuernberg.md
+A Nürnberg,Einmalig,0,einmalig,"„Stanzform und Klischee: vorhanden aus Ihrem Muster, ohne Berechnung.“ · angebot-a-nuernberg.md"
+A Nürnberg,Lager,0,jährlich,"„Abrufe ab 3.000 Stück“: 3 Paletten, im eigenen Lager sind 10 frei · kosten-intern.md"
+A Nürnberg,Skonto,-528,jährlich,„innerhalb 14 Tagen mit 2 % Skonto“ · angebot-a-nuernberg.md
+B Poznań,Ware,20800,jährlich,"„520,00 EUR / 1000 szt. (Stück)“ · angebot-b-poznan.md"
+B Poznań,Fracht,2800,jährlich,"„EXW Poznań“, also 2 Fahrten zu „1.400 €“, Poznań ins Werk · kosten-intern.md"
+B Poznań,Einmalig,1450,einmalig,"„¹ Für die Stanzform berechnen wir einmalig 1.450,00 EUR netto“ · angebot-b-poznan.md"
+B Poznań,Lager,1920,jährlich,"„20.000 Stück je Auftrag“: 20 Paletten, 10 extern zu „16 € je Palettenplatz und Monat“ · kosten-intern.md"
+B Poznań,Skonto,-416,jährlich,„2 % Skonto bei Zahlung in 10 Tagen“ · angebot-b-poznan.md
+C Brno,Ware,23000,jährlich,"„57,50 EUR“ je VE, „Verpackungseinheit = 100 Stück“ · angebot-c-brno.md"
+C Brno,Fracht,2600,jährlich,"„FCA Brno“, also 4 Fahrten zu „650 €“, Brno ins Werk · kosten-intern.md"
+C Brno,Einmalig,0,einmalig,"„Stanzform und Klischee übernehmen wir, ohne Berechnung.“ · angebot-c-brno.md"
+C Brno,Lager,0,jährlich,„10.000 Stück je Lieferung (10 Paletten)“: passt in die 10 freien Plätze · kosten-intern.md
+C Brno,Skonto,-690,jährlich,„3 % Skonto innerhalb 10 Tagen“ · angebot-c-brno.md

@@ -1,0 +1,4 @@
+Anfrage;Nr;Frage oder Aussage;Antwort;Datei;Zeilen;Status;Grund;Fehlendes Dokument;Maßnahme;Geprüft von;Datum
+Fragebogen Kunde;Q1;Strom 2025 in MWh und Anteil erneuerbar;279,7 MWh für 11 Monate;strom_2025.csv;3 bis 14;LÜCKE;September fehlt, EL-25-10 doppelt, Strommix nicht angegeben;"Stromrechnung September 2025; Strommix-Nachweis 2025";;;
+Fragebogen Kunde;Q6;Glasgewicht je 0,75-l-Flasche unter 250 NOK;395 g, 410 g, 560 g;flaschen.csv;3 bis 5;BELEGT;Erklärung des Glaslieferanten, Feb. 2026;;Reserve: Flasche bis 420 g, Preis ab 250 NOK oder nicht anbieten;;
+Bank;F4;Einfache Amortisation;5,0 Jahre;pv_angebot_2026.txt;8, 9;SCHWACH;Ertrag ist Schätzung des Installateurs, Angebot nicht unterschrieben;;;;

@@ -14,8 +14,8 @@ guessed "ending MRR" and answered −€19,960 for April; the true ending MRR wa
 
 1. Pick one table or view that you plan to show an AI.
 2. Copy its column names (no data) into the blank table at the bottom.
-3. Fill in the boxes for each column, using the rules in `NAMING-RULES.md` (R1–R7).
-4. Count the rows where the stranger's guess is wrong or impossible, and write the score line.
+3. Fill in the boxes for each column, using the rules in `NAMING-RULES.md` (R1 to R7).
+4. Count the rows where the stranger's guess is wrong or impossible, and write the result line.
 5. Ask a second person to fill in column 2 without looking at yours, then compare.
 6. Run `lint_names.sql` on the same schema: the lint catches patterns, you catch meaning.
 
@@ -47,7 +47,7 @@ database.
 
 | Current name | What would a stranger guess? | What it really holds | Rule broken | Proposed name | Description sentence (COMMENT) | Forces a guess? |
 | --- | --- | --- | --- | --- | --- | --- |
-| (table) | All subscriptions | One month, June 2026 | R4 | not served; use `analytics.account_mrr_monthly` with `complete_through_month` | — | yes |
+| (table) | All subscriptions | One month, June 2026 | R4 | not served; use `analytics.account_mrr_monthly` with `complete_through_month` | none | yes |
 | `customer_id` | A customer number, maybe a CRM id | The same account number as `customer_master.id` | R6 | `account_key` | Pseudonymous analytics key. Not anonymous. | yes |
 | `date` | Subscription start? Invoice day? | First day of the month (`2026-06-01`) | R3, banned | `month_start` | First day of the calendar month (UTC). | yes |
 | `amount` | Price? Invoice? | June month-end MRR level, EUR | R1, R2, banned | `ending_mrr_eur` | Level: the account's recurring value at month end, EUR. Never sum across months. | yes |
@@ -62,13 +62,13 @@ database.
 | `type` | Event type | `N` / `E` / `D` / `C` (C = cancel here, churned elsewhere) | R5, banned | `movement_type` = `new` / `expansion` / `contraction` / `churn` | Kind of MRR movement, in words. | yes |
 | `status` | Event status | `posted` / `pending` | banned (bare) | `billing_status` | posted or pending; pending invoices are not yet final. | no |
 | `amount` | Invoice total | Signed change of monthly recurring value, EUR | R1, R2, banned | `mrr_change_eur` | Change: signed EUR change of MRR. Never a balance. | yes |
-| `retry_batch` | A batch number | Set only on a repeated copy | R1 | drop in core (deduplicate) | — | yes |
+| `retry_batch` | A batch number | Set only on a repeated copy | R1 | drop in core (deduplicate) | none | yes |
 
 ### `public.monthly_revenue` (one row per month and segment, 18 rows)
 
 | Current name | What would a stranger guess? | What it really holds | Rule broken | Proposed name | Description sentence (COMMENT) | Forces a guess? |
 | --- | --- | --- | --- | --- | --- | --- |
-| (table) | Monthly revenue totals | Monthly MRR changes, Jan–Jun 2026 | R4 | not served; `analytics.mrr_summary_monthly.net_new_mrr_eur` | — | yes |
+| (table) | Monthly revenue totals | Monthly MRR changes, Jan to Jun 2026 | R4 | not served; `analytics.mrr_summary_monthly.net_new_mrr_eur` | none | yes |
 | `dt` | Some date | First day of the month | R3, banned | `month_start` | First day of the calendar month (UTC). | yes |
 | `segment` | Segment | Segment name | minor | `customer_segment` | Customer segment. | no |
 | `amount` | Revenue for the month | new + expansion − contraction − churn, EUR | R1, R2, banned | `net_new_mrr_eur` | Change: net new MRR in the month, EUR. Adds across months; never read it as a level. | yes |
@@ -83,7 +83,7 @@ database.
 | `change` | Something to add to the balance | The month's change, already inside `balance` | R1, R2, banned | `net_new_mrr_eur` | Change within the month, EUR. Never add it to ending_mrr_eur. | yes |
 | `state` | Some state | `A` / `C` / `N` | R5, banned | `account_status` | Account state in words. | yes |
 
-### `public.usage_log` (one row per account per month, Apr–Jun 2026)
+### `public.usage_log` (one row per account per month, Apr to Jun 2026)
 
 | Current name | What would a stranger guess? | What it really holds | Rule broken | Proposed name | Description sentence (COMMENT) | Forces a guess? |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -100,15 +100,15 @@ database.
 | `opened` | A yes/no flag? | Day the ticket was opened | R3 | `opened_on` | Day the ticket was opened. | yes |
 | `closed` | A yes/no flag? | Day the ticket was closed | R3 | `closed_on` | Day the ticket was closed; NULL while open. | yes |
 | `status` | Open or closed | `O` / `P` / `C` / `R`, never documented | R5, banned | `ticket_status` (ask the owner for the decode) | Ticket state in words. | yes |
-| `prio` | Priority | 1–n, direction unknown | R2, banned | `priority_rank` (1 = highest) | Priority rank; 1 is the most urgent. | yes |
+| `prio` | Priority | 1 to n, direction unknown | R2, banned | `priority_rank` (1 = highest) | Priority rank; 1 is the most urgent. | yes |
 
-### Score
+### Result
 
 > **Names that force a guess: 24 of 33.**
 > The five approved views have 43 columns and 0 lint rows. The target for a served view is
 > **0 of m**.
 
-The score is a judgement. When two reviewers disagree on a row, write down the reason and settle
+The result is a judgement. When two reviewers disagree on a row, write down the reason and settle
 it with the owner.
 
 ---

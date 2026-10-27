@@ -1,8 +1,11 @@
 import type { ComponentType } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DemoPage } from "@/components/demos/demo-page";
 import type { DemoComponentProps } from "@/components/demos/demo-page";
+import { DemoPageV3 } from "@/components/demos/shell/demo-page-v3";
+import { DemoPageV4 } from "@/components/demos/shell/demo-page-v4";
+import type { Beat } from "@/lib/demo-beats";
+import { demoShell } from "@/lib/demo-intros";
 import { getDemoForLocale, type DemoSlug } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
@@ -46,9 +49,15 @@ export async function demoMetadata(slug: string): Promise<Metadata> {
 /**
  * One demo route: the shell around the demo component the route file passes
  * in. Each route file imports only its own component (and so its own CSS),
- * so a demo page ships one demo, not all five.
+ * so a demo page ships one demo, not all six. A demo runs on the v3 shell
+ * until its intro.ts says SHELL = "v4" (the Glas shell); either way it
+ * passes its beats (src/lib/demo-cases/<slug>/beats.ts).
  */
-export async function renderDemoRoute(slug: DemoSlug, Demo: ComponentType<DemoComponentProps>) {
+export async function renderDemoRoute(
+  slug: DemoSlug,
+  Demo: ComponentType<DemoComponentProps>,
+  beats: readonly Beat[],
+) {
   const locale = await getRequestLocale();
   const demo = getDemoForLocale(slug, locale);
   if (!demo) notFound();
@@ -91,7 +100,7 @@ export async function renderDemoRoute(slug: DemoSlug, Demo: ComponentType<DemoCo
         inLanguage,
         publisher: { "@id": ORG_ID },
         isAccessibleForFree: true,
-        learningResourceType: "Interactive practice exercise",
+        learningResourceType: "Interactive demo",
         educationalUse: "self-study",
         timeRequired: `PT${demo.minutes}M`,
         dateModified: demo.lastReviewed,
@@ -106,7 +115,11 @@ export async function renderDemoRoute(slug: DemoSlug, Demo: ComponentType<DemoCo
   return (
     <>
       <JsonLd data={jsonLd} id={`demo-${demo.slug}-jsonld`} />
-      <DemoPage demo={demo} locale={locale} Demo={Demo} />
+      {demoShell(demo.slug) === "v4" ? (
+        <DemoPageV4 demo={demo} locale={locale} beats={beats} Demo={Demo} />
+      ) : (
+        <DemoPageV3 demo={demo} locale={locale} beats={beats} Demo={Demo} />
+      )}
     </>
   );
 }

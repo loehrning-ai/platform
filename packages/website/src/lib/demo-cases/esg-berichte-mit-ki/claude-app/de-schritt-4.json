@@ -1,0 +1,774 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-schritt-4",
+  "slug": "esg-berichte-mit-ki",
+  "locale": "de",
+  "prompt_id": "schritt-4",
+  "take": 3,
+  "recorded_at": "2026-10-26T19:12:34Z",
+  "surface": "claude-code-cli-headless",
+  "source": "measured-run",
+  "claude_code_version": "2.1.310",
+  "model": "claude-sonnet-5-5",
+  "models_used": [
+    "claude-sonnet-5-5"
+  ],
+  "flags": [
+    "--model",
+    "claude-sonnet-5-5",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--append-system-prompt-file",
+    "projektanweisungen.md",
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Read",
+    "Glob",
+    "Grep",
+    "Write",
+    "Edit",
+    "Skill",
+    "TodoWrite",
+    "Bash(python3:*)",
+    "Bash(python:*)",
+    "Bash(ls:*)",
+    "Bash(wc:*)",
+    "Bash(cat:*)",
+    "Bash(head:*)",
+    "Bash(tail:*)",
+    "Bash(grep:*)",
+    "Bash(awk:*)",
+    "Bash(sort:*)",
+    "Bash(uniq:*)",
+    "Bash(cut:*)",
+    "Bash(file:*)",
+    "Bash(sed -n:*)",
+    "Bash(nl:*)",
+    "Bash(pip show:*)"
+  ],
+  "prompt": "Angehängt: anfragen/1-fragebogen-nordvik.md, anfragen/2-werbeaussagen.md, anfragen/3-bankformular.md\n\nDie drei angehängten Dateien sind unsere offenen Anfragen. Erstelle nachweisregister.xlsx mit drei Blättern:\n1. Register: eine Zeile je Frage, Aussage und Feld. Spalten: Anfrage | Nr | Antwort | Datei und Zeile | Status | Grund | Fehlendes Dokument | Maßnahme | Geprüft von | Datum. Die letzten zwei bleiben leer.\n2. VSME: B1 bis B11 aus vsme_basismodul.md, je Angabe die Datenpunkte mit Status, belegt x von y, Status der Angabe nach dem schwächsten Datenpunkt.\n3. Anfordern: jedes fehlende Dokument einmal, mit allen Zeilen, die es nennen, sortiert nach Anzahl.",
+  "kit_zip": "public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+  "kit_files": [
+    {
+      "name": "arbeitsschutz_2025.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/arbeitsschutz_2025.txt",
+      "bytes": 344,
+      "sha256": "141c6cd9f078613716dd86f675ba7085fa0b343f71f060394bd5911badcd147c"
+    },
+    {
+      "name": "bio_zertifikat_weinberg.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/bio_zertifikat_weinberg.txt",
+      "bytes": 426,
+      "sha256": "c5d896ecdde33f6819befbb22e9f0d8262616e4de104c9558c722ff8b75cb1f0"
+    },
+    {
+      "name": "firmenprofil.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/firmenprofil.md",
+      "bytes": 1896,
+      "sha256": "c1b390aee869b92760d3fc7aa43f1fd138765f10713ad1ef3e8fefadc391f7a9"
+    },
+    {
+      "name": "flaschen.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/flaschen.csv",
+      "bytes": 412,
+      "sha256": "d3a6856299221d7b50fe056dcdd3be5c5bd1b491e3a051c5d24c5a12ad24c6b9"
+    },
+    {
+      "name": "kompensation_2025.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/kompensation_2025.txt",
+      "bytes": 326,
+      "sha256": "338be4a1cf4b85afeb94794f8a0dfa3e693140221425cd5d8e98c2d12d52c86c"
+    },
+    {
+      "name": "personal_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/personal_2025.csv",
+      "bytes": 537,
+      "sha256": "9122d5397a0a6a140acced8c817611638e1c2f97c5f2085229d87825f844faea"
+    },
+    {
+      "name": "pv_angebot_2026.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/pv_angebot_2026.txt",
+      "bytes": 454,
+      "sha256": "4417a8580557f6aa2a542951505b2c64a5f1f4b245d0facbfa77b68c8632caac"
+    },
+    {
+      "name": "regeln_werbeaussagen.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/regeln_werbeaussagen.md",
+      "bytes": 2120,
+      "sha256": "a05f3cbb9da417690f80c0af5393ac8d24dacc4587d61e44417062159d10918f"
+    },
+    {
+      "name": "richtlinien_und_compliance.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/richtlinien_und_compliance.txt",
+      "bytes": 1181,
+      "sha256": "dd21aa6391ce44d01fd41915ba726e1426682be86515ce906f5691fb0d103b0b"
+    },
+    {
+      "name": "strom_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/strom_2025.csv",
+      "bytes": 1071,
+      "sha256": "aa9bb93a33262c32b2db033b361a4ebd6ffe268e94c71713f8ad790c8199a0eb"
+    },
+    {
+      "name": "strom_zusammenfassung_entwurf.txt",
+      "path": "crvena-zemja-nachweisprobe/ordner/strom_zusammenfassung_entwurf.txt",
+      "bytes": 243,
+      "sha256": "f279f3af1930970c830149e5b964c1f57cf98abbc41cec4414b49764fdc21459"
+    },
+    {
+      "name": "vsme_basismodul.md",
+      "path": "crvena-zemja-nachweisprobe/ordner/vsme_basismodul.md",
+      "bytes": 4195,
+      "sha256": "31a554ae6d0b4a94aa205949bd3f40b4f819011e2ee174caaea5b55ddcd85f6e"
+    },
+    {
+      "name": "wasser_2025.csv",
+      "path": "crvena-zemja-nachweisprobe/ordner/wasser_2025.csv",
+      "bytes": 706,
+      "sha256": "6e35eec7a54a2c2bc12e2f5c92d5112c284a78cddf2527eb02b6a75952356545"
+    },
+    {
+      "name": "1-fragebogen-nordvik.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/1-fragebogen-nordvik.md",
+      "bytes": 1495,
+      "sha256": "721dad31c9f04bbc8e8ce8ed376a31ad84544f14b699f996ea90082646bc2483"
+    },
+    {
+      "name": "2-werbeaussagen.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/2-werbeaussagen.md",
+      "bytes": 893,
+      "sha256": "dab088bf9261da7c2f72be7e45d015936227d017a6ac352fd77e0328c812fc4d"
+    },
+    {
+      "name": "3-bankformular.md",
+      "path": "crvena-zemja-nachweisprobe/anfragen/3-bankformular.md",
+      "bytes": 1075,
+      "sha256": "5bd74abe472ef2f2d9cd74c621378c0216642b9659005588d8ee4ba807f3d218"
+    },
+    {
+      "name": "rechnung-EL-25-09.png",
+      "path": "crvena-zemja-nachweisprobe/nachreichung/rechnung-EL-25-09.png",
+      "bytes": 798935,
+      "sha256": "2347ea01e427195e0024324d7810bd1e5504a2bd94c79936d64a5b8662177859"
+    },
+    {
+      "name": "projektanweisungen.md",
+      "path": "crvena-zemja-nachweisprobe/projektanweisungen.md",
+      "bytes": 1422,
+      "sha256": "00b4c5497584df7caa9041a4caf0334e661c55c9fee2130aa416f38353228cdd"
+    }
+  ],
+  "skill": {
+    "name": "esg-nachweise",
+    "sha256": "a2716543a9c1fa9689d1f20a297e24290025d124a2f60e9be89fa7ed5456eeee"
+  },
+  "skill_name": "esg-nachweise",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "esg-nachweise",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 3783,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "esg-nachweise"
+      }
+    },
+    {
+      "t_ms": 3958,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 4144,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "find . -type f | head -200"
+      }
+    },
+    {
+      "t_ms": 6868,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 12483,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "for f in anfragen/*.md ordner/vsme_basismodul.md ordner/firmenprofil.md ordner/regeln_werbeaussagen.md; do echo \"=== $f\"; cat -n $f; done"
+      }
+    },
+    {
+      "t_ms": 12498,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 15805,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cat -n anfragen/1-fragebogen-nordvik.md anfragen/2-werbeaussagen.md anfragen/3-bankformular.md"
+      }
+    },
+    {
+      "t_ms": 15851,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 15988,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd ordner && cat -n vsme_basismodul.md firmenprofil.md regeln_werbeaussagen.md"
+      }
+    },
+    {
+      "t_ms": 16032,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 20370,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "for f in strom_2025.csv wasser_2025.csv flaschen.csv bio_zertifikat_weinberg.txt strom_zusammenfassung_entwurf.txt arbeitsschutz_2025.txt pv_angebot_2026.txt richtlinien_und_compliance.txt kompensation_2025.txt; do echo \"=== $f\"; cat -n $f; done; echo ===; wc -l personal_2025.csv; head -3 personal_2025.csv | cut -c1-200"
+      }
+    },
+    {
+      "t_ms": 20375,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 25646,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 26638,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cat -n strom_2025.csv wasser_2025.csv flaschen.csv bio_zertifikat_weinberg.txt strom_zusammenfassung_entwurf.txt"
+      }
+    },
+    {
+      "t_ms": 26683,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 26825,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cat -n arbeitsschutz_2025.txt pv_angebot_2026.txt richtlinien_und_compliance.txt kompensation_2025.txt; wc -l personal_2025.csv"
+      }
+    },
+    {
+      "t_ms": 26873,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 28964,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 28965,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 28965,
+      "kind": "text",
+      "chunk": "Ich habe alle Dateien gelesen. Als Nächstes lese ich die Personaldatei und rechne dann Strom und Wasser im Code."
+    },
+    {
+      "t_ms": 29133,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cat -n personal_2025.csv | cut -c1-300"
+      }
+    },
+    {
+      "t_ms": 29161,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 164510,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 164672,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I -c \"import openpyxl;print(openpyxl.__version__)\"; cd ordner && grep -n \"\" richtlinien_und_compliance.txt | sed -n 3,14p | cut -c1-70"
+      }
+    },
+    {
+      "t_ms": 165128,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 176006,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 246769,
+      "kind": "tool_use",
+      "tool": "Write",
+      "input": {
+        "file_path": "build_register.py",
+        "content": "import csv, sys\nfrom collections import OrderedDict\nfrom openpyxl import Workbook\nfrom openpyxl.styles import Font, PatternFill, Alignment, Border, Side\n\nORD = sys.argv[1]\nOUT = sys.argv[2]\n\n# ---------- Rechnen aus den Dateien ----------\ndef read(name):\n    with open(f\"{ORD}/{name}\", encoding=\"utf-8\") as f:\n        rows = [r for r in csv.reader(f) if r and not r[0].startswith(\"#\")]\n    return rows[0], rows[1:]\n\n_, strom = read(\"strom_2025.csv\")\nseen = {}\nfor m, nr, kwh, *_ in strom:\n    key = (m, nr)\n    if key in seen:\n        assert seen[key] == int(kwh)  # gleiche Rechnung, gleicher Wert\n    seen[key] = int(kwh)\nstrom_monate = sorted({m for m, _ in seen})\nstrom_kwh = sum(seen.values())\nassert len(strom_monate) == 11 and \"2025-09\" not in strom_monate\nstrom_mwh = strom_kwh / 1000\nabd = len(strom_monate) / 12 * 100\n\n_, wasser = read(\"wasser_2025.csv\")\nw_monate = {r[0] for r in wasser}\nw_m3 = sum(int(r[2]) for r in wasser)\nassert len(w_monate) == 12 and len({r[1] for r in wasser}) == 12\n\n_, flaschen = read(\"flaschen.csv\")\nfl = {r[0]: (int(r[2]), int(r[3]), int(r[4])) for r in flaschen}\nreserve_ueber = fl[\"Reserve Vranec 2021\"][0] - 420\n\ninvest = 8_550_000\nertrag_kwh = 180_000\ntarif = 9.50\namort = invest / (ertrag_kwh * tarif)\n\nde = lambda x, n=1: f\"{x:,.{n}f}\".replace(\",\", \"X\").replace(\".\", \",\").replace(\"X\", \".\")\n\n# ---------- Fehlende Dokumente (einheitliche Namen) ----------\nD_SEP = \"Stromrechnung September 2025 (EL-25-09) von Lumivolt Snabduvanje DOOEL\"\nD_MIX = \"Stromkennzeichnung / Herkunftsnachweis (Strommix) 2025 von Lumivolt Snabduvanje DOOEL\"\nD_DIESEL = \"Tankbelege Diesel 2025 (Traktoren, Gabelstapler) vom Weinbergleiter\"\nD_FAKTOR = \"Veröffentlichte Emissionsfaktoren für Netzstrom Nordmazedoniens und Diesel (Quelle und Jahr)\"\nD_2024 = \"Stromrechnungen Januar bis Dezember 2024 (12 Monate) von Lumivolt Snabduvanje DOOEL\"\nD_BIO = \"Erneuertes Bio-Zertifikat von Biosertifika Kontrola, gültig ab 01.09.2026\"\nD_ANGEBOT = \"Unterschriebenes PV-Angebot von Sonce na Pokriv DOO mit Ertragsprognose\"\nD_PLAN = \"Detaillierter PV-Umsetzungsplan mit messbaren, befristeten Zielen, regelmäßig von unabhängigen Sachverständigen geprüft\"\nD_MODUL = \"Beschluss der Geschäftsführung zu Modul (Basis) und Berichtsumfang (Einzelbericht)\"\nD_GENEHM = \"Umweltgenehmigung des Kellers in Kavadarci (zeigt, ob Meldepflicht für Schadstoffemissionen gilt)\"\nD_SCHUTZ = \"Amtliche Schutzgebietsabfrage für beide Standorte (Keller 41,44 N 22,02 O; Weinberge 41,42 N 22,05 O)\"\nD_KREIS = \"Schriftliche Beschreibung der Kreislaufpraktiken (Verpackung, Abfall)\"\nD_ABFALL = \"Abfallnachweise / Entsorgerabrechnungen 2025 (gesamt, gefährlich, nicht gefährlich, Verwertung)\"\nD_GLAS = \"Jahresliefermenge Glasflaschen 2025 des Glaslieferanten (Lieferscheine oder Rechnungen, in t)\"\nD_STUNDEN = \"Summe der geleisteten Arbeitsstunden der Beschäftigten 2025 (Zeiterfassung)\"\nD_LOHN = \"Lohnübersicht 2025 als Summen je Lohngruppe mit gesetzlichem Mindestlohn\"\nD_TARIF = \"Tarifvertrag oder Bestätigung, wie viele Beschäftigte unter einen Tarifvertrag fallen (Summe)\"\nD_LOHNLUECKE = \"Prüfvermerk, ob ein Gesetz in Nordmazedonien die Lohnlücke schon zu melden verlangt\"\n\n# ---------- Blatt 1: Register ----------\nA1, A2, A3 = \"1 Fragebogen Nordvik\", \"2 Werbeaussagen\", \"3 Bankformular\"\nSD = \"Stichtag 16.10.2026\"\nR = []  # (Anfrage, Nr, Antwort, Quelle, Status, Grund, [Dokumente], Maßnahme)\n\nR += [\n (A1, \"Q1\",\n  f\"Strom 2025: nicht als Jahressumme ausweisbar. Teilsumme {de(strom_mwh)} MWh aus {len(strom_monate)} von 12 Monaten (September fehlt), Abdeckung {de(abd)} % und damit unter den geforderten 95 %. Anteil erneuerbar: nicht angegeben.\",\n  \"strom_2025.csv:3-14 (Oktober doppelt: 11 und 12, Rechnung EL-25-10 einmal gezählt; Strommix „nicht angegeben“ in jeder Zeile); strom_zusammenfassung_entwurf.txt:5\",\n  \"LÜCKE\",\n  \"September 2025 hat keine Datei; der Strommix steht nirgends. Der Entwurf nennt „ganzes Jahr: 279,7 MWh“, das ist aber nur die 11-Monats-Summe und ein ungeprüfter Entwurf.\",\n  [D_SEP, D_MIX],\n  \"Keine Jahreszahl und keinen Hochrechnungswert angeben. Beide Dokumente anfordern. Doppelerfassung Oktober (Scan 2025-12-02) in der Buchhaltung bereinigen.\"),\n (A1, \"Q2\",\n  \"Scope 1 und Scope 2 standortbasiert 2025: nicht ausweisbar.\",\n  \"firmenprofil.md:14 (Tankbelege liegen nicht im Ordner), :17 (keine Treibhausgasbilanz); strom_2025.csv:3-14 (September fehlt); kompensation_2025.txt:5\",\n  \"LÜCKE\",\n  \"Scope 1 (Diesel): keine Mengen. Scope 2: Jahres-kWh unvollständig und kein veröffentlichter Netz-Emissionsfaktor in den Dateien. Die 120 tCO2e Waldschutz-Zertifikate sind Kompensation, keine Minderung, und werden nicht abgezogen.\",\n  [D_DIESEL, D_SEP, D_FAKTOR],\n  \"Dokumente anfordern, dann im Code rechnen (Liter × Faktor; kWh × Netzfaktor). Kompensation nicht verrechnen.\"),\n (A1, \"Q3\",\n  \"42 Beschäftigte im Jahresdurchschnitt 2025: unbefristet 36 (20 Männer, 16 Frauen), befristet 6 (4 Männer, 2 Frauen); alle in Nordmazedonien. Die 18 Saisonkräfte sind keine Beschäftigten und nicht eingerechnet.\",\n  \"personal_2025.csv:3-6; firmenprofil.md:9\",\n  \"BELEGT\", \"Zitat, Zeitraum (Jahresdurchschnitt 2025), Umfang (ganze Firma, ein Land) und Freigabe halten; nur Summen.\",\n  [], \"Keine. Köpfe (nicht Vollzeitäquivalente) in der Antwort kenntlich machen.\"),\n (A1, \"Q4\",\n  \"2 meldepflichtige Arbeitsunfälle bei Beschäftigten, 0 Todesfälle 2025. Saisonkräfte: 0 Unfälle. 9 Ausfalltage.\",\n  \"arbeitsschutz_2025.txt:4-7\",\n  \"BELEGT\", \"Auszug aus dem Unfallregister 2025 deckt Jahr und ganze Firma.\",\n  [], \"Unfallursachen und Vorbeugung vor der Lese 2026 prüfen. Die Quote nach B9 braucht noch die Arbeitsstunden (siehe Blatt VSME).\"),\n (A1, \"Q5\",\n  \"0 Verurteilungen und 0 Bußgelder wegen Korruption oder Bestechung 2025.\",\n  \"richtlinien_und_compliance.txt:13-14\",\n  \"BELEGT\", \"Erklärung der Geschäftsführung vom 15.01.2026 nennt 2023 bis 2025 ausdrücklich.\",\n  [], \"Keine. Als Erklärung der Geschäftsführung kennzeichnen.\"),\n (A1, \"Q6\",\n  f\"Vranec Tikveš 2024: 395 g (199 NOK). Kratošija Tikveš 2024: 410 g (219 NOK). Reserve Vranec 2021: 560 g (239 NOK), {reserve_ueber} g über dem Höchstwert von 420 g, erfüllt die Regel nicht. Smederevka steht nicht in der Datei.\",\n  \"flaschen.csv:3-5; firmenprofil.md:6\",\n  \"BELEGT\",\n  \"Gewichte und Preise sind belegt (Erklärung des Glaslieferanten, Feb. 2026); das Ergebnis ist schlecht für Reserve Vranec 2021.\",\n  [], \"Reserve Vranec 2021 nicht unter 250 NOK anbieten oder in Flasche ≤ 420 g füllen. Für Smederevka das Glasgewicht nachreichen, falls eine Listung unter 250 NOK geplant ist. Mensch klärt das.\"),\n (A1, \"Q7\",\n  \"Bio-Zertifikat Weinberg (12 von 40 ha), gültig bis 31.08.2026: am Stichtag abgelaufen; Erneuerungsprüfung für 22.10.2026 gebucht, Ergebnis offen. amfori-BSCI-Sozialaudit 12.03.2026, Bewertung B, nächstes Vollaudit März 2028 (Audit, kein Zertifikat; Name und Bewertung dürfen Importeuren genannt werden).\",\n  \"bio_zertifikat_weinberg.txt:6-11; richtlinien_und_compliance.txt:8-11\",\n  \"SCHWACH\",\n  \"Das Bio-Zertifikat ist am Stichtag abgelaufen, Nordvik verlangt Gültigkeit am Abgabetag (23.10.2026), und es deckt nur 12 ha; das BSCI-Audit selbst ist belegt.\",\n  [D_BIO],\n  \"Ergebnis der Prüfung vom 22.10.2026 und neues Zertifikat abwarten. Das Audit als „Audit“ nennen, nie als Zertifikat.\"),\n (A1, \"Q8\",\n  f\"Wasserentnahme 2025: {de(w_m3, 0)} m³ aus 12 von 12 Monaten (W-25-01 bis W-25-12), alles öffentliche Wasserversorgung.\",\n  \"wasser_2025.csv:3-14; firmenprofil.md:8\",\n  \"BELEGT\", \"12 eindeutige Monate. Weinberge werden nicht bewässert; das Spritzwasser steht auf denselben Rechnungen, kein Brunnen.\",\n  [], \"Keine.\"),\n]\n\nR += [\n (A2, \"1\", \"„Klimaneutraler Wein“ (Rückenetikett, alle Weine): streichen.\",\n  \"regeln_werbeaussagen.md:15; kompensation_2025.txt:5-7; firmenprofil.md:17\",\n  \"LÜCKE\",\n  \"Verboten nach Nr. 4c, mit oder ohne Nachweis. Einzige Grundlage ist eine Kompensation (120 tCO2e Waldschutz, handschriftlich „für Klimaneutral-Label“); eine Treibhausgasbilanz fehlt.\",\n  [], \"Streichen. Keine sichere Fassung aus den Dateien.\"),\n (A2, \"2\", \"„Umweltfreundliches Weingut“ (Website, Startseite): streichen.\",\n  \"regeln_werbeaussagen.md:12-13; richtlinien_und_compliance.txt:4-5\",\n  \"LÜCKE\",\n  \"Verboten nach Nr. 4a: allgemeine Umweltaussage ohne anerkannte hervorragende Umweltleistung (kein EU-Umweltzeichen in den Dateien); die Umweltrichtlinie ist intern und ohne Ziele.\",\n  [], \"Streichen. Keine sichere Fassung aus den Dateien.\"),\n (A2, \"3\", \"„Zertifizierte Bio-Weinberge“ (Regalkarte, alle Weine): streichen.\",\n  \"bio_zertifikat_weinberg.txt:6,8,10,11; regeln_werbeaussagen.md:14\",\n  \"LÜCKE\",\n  \"Zertifikat deckt nur 12 von 40 ha (Nr. 4b), ist seit 31.08.2026 abgelaufen, und die Datei sagt selbst: 28 ha und der Keller nicht zertifiziert.\",\n  [D_BIO],\n  \"Streichen. Erst nach erneuertem Zertifikat eine Fassung nur für die 12 ha, ohne „alle Weine“, neu prüfen.\"),\n (A2, \"4\", \"„Solarbetriebenes Weingut“ (Website, Über uns): streichen.\",\n  \"firmenprofil.md:13; pv_angebot_2026.txt:3,8,10,11; regeln_werbeaussagen.md:18-21\",\n  \"LÜCKE\",\n  \"Widerspruch: Strom komplett aus dem Netz, noch keine PV. Das Angebot ist unterschrieben von keiner Seite, Montage erst Q1 2027 „wenn finanziert“. Als Zukunftsaussage fehlt ein geprüfter Umsetzungsplan.\",\n  [D_PLAN], \"Streichen.\"),\n (A2, \"5\", \"„2025 haben wir 12 % weniger Strom verbraucht“ (Website, Neuigkeiten): streichen.\",\n  \"strom_2025.csv:3-14; ordner enthält keine Stromdatei 2024\",\n  \"LÜCKE\",\n  \"2025 hat nur 11 von 12 Monaten (September fehlt) und es gibt keine Daten für 2024; ein Vergleich ist nicht rechenbar.\",\n  [D_SEP, D_2024], \"Streichen, bis beide Jahre mit 12 Monaten belegt sind.\"),\n (A2, \"6\", \"„Diese Flasche wiegt nur 395 g und besteht zu 60 % aus Recyclingglas“ (Rückenetikett, nur Vranec Tikveš 2024): kann raus, wie formuliert.\",\n  \"flaschen.csv:3\",\n  \"BELEGT\",\n  \"Gewicht und Recyclinganteil stehen genau für diese Flasche in der Erklärung des Glaslieferanten (Feb. 2026); kein Punkt der Verbotsliste trifft.\",\n  [], \"Menschliche Freigabe. Quelle und Datum der Erklärung bereithalten. Nur auf diesen Wein drucken.\"),\n (A2, \"7\", f\"„2025 hat das ganze Weingut 4.630 m³ Wasser entnommen, gemessen auf 12 Monatsrechnungen“: kann raus, wie formuliert (Summe im Code: {de(w_m3, 0)} m³).\",\n  \"wasser_2025.csv:3-14; firmenprofil.md:8\",\n  \"BELEGT\",\n  \"12 eindeutige Monate und Rechnungsnummern; Keller, Abfüllung und Spritzen sind eingeschlossen, keine andere Quelle.\",\n  [], \"Menschliche Freigabe.\"),\n]\n\nR += [\n (A3, \"F1\", \"Bußgelder wegen Umwelt, Arbeitsrecht und Arbeitsschutz 2023 bis 2025: keine.\",\n  \"richtlinien_und_compliance.txt:13-14\",\n  \"BELEGT\", \"Erklärung der Geschäftsführung vom 15.01.2026 nennt alle drei Bereiche und die Jahre 2023 bis 2025.\",\n  [], \"Als Erklärung der Geschäftsführung kennzeichnen.\"),\n (A3, \"F2\",\n  f\"Stromverbrauch 2025, ganzes Jahr: nicht ausweisbar. Teilsumme {de(strom_mwh)} MWh aus 11 von 12 Monaten (September fehlt).\",\n  \"strom_2025.csv:3-14; strom_zusammenfassung_entwurf.txt:3,5\",\n  \"LÜCKE\",\n  \"September 2025 hat keine Datei. Der Entwurf („kann an die Bank“) ist ungeprüft und nennt eine 11-Monats-Summe als ganzes Jahr.\",\n  [D_SEP], \"Entwurf nicht an die Bank geben. Rechnung anfordern, dann neu rechnen.\"),\n (A3, \"F3\",\n  \"Erwarteter PV-Ertrag: rund 180 MWh pro Jahr, SCHÄTZUNG des Installateurs, nicht gemessen. Anteil am Verbrauch: nicht rechenbar, weil der Jahresverbrauch fehlt.\",\n  \"pv_angebot_2026.txt:3,8,11; strom_2025.csv:3-14\",\n  \"LÜCKE\",\n  \"Der Ertrag ist eine Schätzung in einem von keiner Seite unterschriebenen Angebot; der Nenner (Jahresverbrauch 2025) hat nur 11 Monate.\",\n  [D_SEP, D_ANGEBOT], \"Ertrag in der Bank als Schätzung kennzeichnen. Anteil erst nach vollständigem Jahresverbrauch angeben.\"),\n (A3, \"F4\",\n  f\"Einfache Amortisation: {de(invest, 0)} MKD / ({de(ertrag_kwh, 0)} kWh × {de(tarif, 2)} MKD/kWh) = {de(amort)} Jahre. SCHÄTZUNG, weil der Ertrag geschätzt ist.\",\n  \"pv_angebot_2026.txt:8,9,11; strom_2025.csv:3 (Tarif 9,50 MKD/kWh); firmenprofil.md:15,18; 3-bankformular.md:14-16\",\n  \"SCHWACH\",\n  \"Jeder Teil hat eine Datei, aber Ertrag ist geschätzt und Preis stammt aus einem nicht unterschriebenen Angebot; Tarif ist der Wert der Rechnungen 2025.\",\n  [D_ANGEBOT], \"Als Schätzung kennzeichnen; neu rechnen, sobald Angebot unterschrieben ist.\"),\n (A3, \"F5\",\n  \"42 Beschäftigte im Jahresdurchschnitt 2025 (Saisonkräfte nicht eingerechnet); 2 meldepflichtige Arbeitsunfälle, 0 Todesfälle.\",\n  \"personal_2025.csv:5,6; arbeitsschutz_2025.txt:4-7\",\n  \"BELEGT\", \"Beide Teile haben freigegebene Dateien für 2025 und die ganze Firma.\",\n  [], \"Keine.\"),\n (A3, \"F6\",\n  \"Bio-Zertifikat (12 von 40 ha) gültig bis 31.08.2026: abgelaufen, Erneuerungsprüfung 22.10.2026 gebucht. amfori-BSCI-Sozialaudit 12.03.2026, Bewertung B, nächstes Vollaudit März 2028 (Audit, kein Zertifikat; Banken darf Datum und Bewertung genannt werden).\",\n  \"bio_zertifikat_weinberg.txt:6-11; richtlinien_und_compliance.txt:8-11\",\n  \"SCHWACH\", \"Das Bio-Zertifikat ist am Stichtag abgelaufen und deckt nur 12 ha; das Audit ist belegt.\",\n  [D_BIO], \"Ergebnis der Prüfung vom 22.10.2026 nachreichen. Das Audit nicht als Zertifikat bezeichnen.\"),\n]\n\n# ---------- Blatt 2: VSME ----------\nV = []  # (Angabe, Datenpunkt, Antwort/Wert, Quelle, Status, Dokument)\ndef v(b, dp, wert, src, st, doc=\"\"):\n    V.append((b, dp, wert, src, st, doc))\n\nB = {\n \"B1\": \"Grundlagen der Erstellung\", \"B2\": \"Praktiken, Richtlinien, künftige Initiativen\",\n \"B3\": \"Energie und Treibhausgasemissionen\", \"B4\": \"Verschmutzung von Luft, Wasser, Boden\",\n \"B5\": \"Biodiversität\", \"B6\": \"Wasser\", \"B7\": \"Ressourcen, Kreislaufwirtschaft, Abfall\",\n \"B8\": \"Belegschaft, allgemeine Merkmale\", \"B9\": \"Belegschaft, Gesundheit und Sicherheit\",\n \"B10\": \"Belegschaft, Vergütung, Tarif, Schulung\", \"B11\": \"Verurteilungen und Bußgelder (Korruption)\",\n}\nv(\"B1\", \"Gewähltes Modul, Einzel- oder Konzernbericht\", \"Keine Datei hält die Wahl fest.\", \"–\", \"LÜCKE\", D_MODUL)\nv(\"B1\", \"Rechtsform\", \"DOO\", \"firmenprofil.md:1\", \"BELEGT\")\nv(\"B1\", \"NACE\", \"11.02 Herstellung von Traubenwein\", \"firmenprofil.md:5\", \"BELEGT\")\nv(\"B1\", \"Bilanzsumme\", \"162,0 Mio. MKD (31.12.2025)\", \"firmenprofil.md:11\", \"BELEGT\")\nv(\"B1\", \"Umsatz\", \"95,0 Mio. MKD (2025)\", \"firmenprofil.md:10\", \"BELEGT\")\nv(\"B1\", \"Beschäftigte\", \"42 im Jahresdurchschnitt 2025\", \"firmenprofil.md:9; personal_2025.csv:5\", \"BELEGT\")\nv(\"B1\", \"Land\", \"Nordmazedonien\", \"firmenprofil.md:4\", \"BELEGT\")\nv(\"B1\", \"Lage und Geodaten der Standorte\", \"Keller 41,44 N 22,02 O; Weinberge (40 ha, ein Block) 41,42 N 22,05 O, gerundet\", \"firmenprofil.md:5\", \"BELEGT\")\nv(\"B1\", \"Zertifikat: Bio (Biosertifika Kontrola)\", \"Gültig 01.09.2025 bis 31.08.2026, 12 von 40 ha; am Stichtag abgelaufen\", \"bio_zertifikat_weinberg.txt:6-9\", \"SCHWACH\", D_BIO)\nv(\"B1\", \"Audit: amfori BSCI (kein Zertifikat)\", \"12.03.2026, Bewertung B, nächstes Vollaudit März 2028\", \"richtlinien_und_compliance.txt:8-9\", \"BELEGT\")\n\nv(\"B2\", \"Richtlinie Umwelt\", \"Beschlossen März 2024 (Energie, Wasser, Abfall, Verpackung)\", \"richtlinien_und_compliance.txt:4\", \"BELEGT\")\nv(\"B2\", \"Richtlinie Antikorruption\", \"Beschlossen Januar 2025\", \"richtlinien_und_compliance.txt:6\", \"BELEGT\")\nv(\"B2\", \"Richtlinien veröffentlicht?\", \"Nein, beide nur intern\", \"richtlinien_und_compliance.txt:5,6\", \"BELEGT\")\nv(\"B2\", \"Ziele\", \"Nein, noch keine Ziele\", \"richtlinien_und_compliance.txt:5\", \"BELEGT\")\nv(\"B2\", \"Künftige Initiative: PV 150 kWp\", \"Geplant, Kredit beantragt; Angebot von keiner Seite unterschrieben, kein Beschluss in den Dateien\", \"firmenprofil.md:18; pv_angebot_2026.txt:3,11\", \"SCHWACH\", D_ANGEBOT)\n\nv(\"B3\", \"Strom in MWh\", f\"Teilsumme {de(strom_mwh)} MWh aus 11 von 12 Monaten; September fehlt\", \"strom_2025.csv:3-14\", \"LÜCKE\", D_SEP)\nv(\"B3\", \"Strom erneuerbar / nicht erneuerbar\", \"Strommix „nicht angegeben“\", \"strom_2025.csv:3-14\", \"LÜCKE\", D_MIX)\nv(\"B3\", \"Brennstoffe (Diesel) in MWh\", \"Tankbelege nicht im Ordner\", \"firmenprofil.md:14\", \"LÜCKE\", D_DIESEL)\nv(\"B3\", \"Gesamtenergie in MWh\", \"Nicht rechenbar ohne Strom September und Diesel\", \"–\", \"LÜCKE\", D_SEP)\nv(\"B3\", \"Scope 1 in tCO2e\", \"Keine Treibhausgasbilanz, keine Dieselmengen\", \"firmenprofil.md:14,17\", \"LÜCKE\", D_DIESEL)\nv(\"B3\", \"Scope 2 standortbasiert in tCO2e\", \"Jahres-kWh unvollständig, kein Netzfaktor; Kompensation (kompensation_2025.txt:5) wird nicht abgezogen\", \"strom_2025.csv:3-14\", \"LÜCKE\", D_FAKTOR)\n\nv(\"B4\", \"Gilt B4? (Meldepflicht für Schadstoffemissionen)\", \"Nicht entscheidbar: keine Umweltgenehmigung in den Dateien. Als „offen“ schreiben, nicht leer lassen\", \"–\", \"LÜCKE\", D_GENEHM)\n\nv(\"B5\", \"Standort Keller in/nahe sensiblem Gebiet\", \"Koordinaten bekannt, keine Schutzgebietsabfrage\", \"firmenprofil.md:5\", \"LÜCKE\", D_SCHUTZ)\nv(\"B5\", \"Standort Weinberge in/nahe sensiblem Gebiet\", \"Koordinaten bekannt, keine Schutzgebietsabfrage\", \"firmenprofil.md:5\", \"LÜCKE\", D_SCHUTZ)\n\nv(\"B6\", \"Gesamte Wasserentnahme\", f\"{de(w_m3, 0)} m³, 12 von 12 Monaten, öffentliche Wasserversorgung\", \"wasser_2025.csv:3-14; firmenprofil.md:8\", \"BELEGT\")\n\nv(\"B7\", \"Kreislaufpraktiken\", \"Umweltrichtlinie nennt Abfall und Verpackung als Themen, beschreibt aber keine Praktik\", \"richtlinien_und_compliance.txt:4\", \"LÜCKE\", D_KREIS)\nv(\"B7\", \"Abfall gesamt\", \"Keine Datei\", \"–\", \"LÜCKE\", D_ABFALL)\nv(\"B7\", \"Abfall gefährlich / nicht gefährlich\", \"Keine Datei\", \"–\", \"LÜCKE\", D_ABFALL)\nv(\"B7\", \"Anteil Recycling / Wiederverwendung\", \"Keine Datei\", \"–\", \"LÜCKE\", D_ABFALL)\nv(\"B7\", \"Masse wichtiger Materialien (Glas)\", \"Nur Gewicht je Flasche für 3 Sorten, keine Liefermenge\", \"flaschen.csv:3-5\", \"LÜCKE\", D_GLAS)\n\nv(\"B8\", \"Beschäftigte nach Vertragsart und Geschlecht\", \"Unbefristet 36 (20 M, 16 F); befristet 6 (4 M, 2 F); gesamt 42\", \"personal_2025.csv:3-5\", \"BELEGT\")\nv(\"B8\", \"Beschäftigte nach Land\", \"Alle in Nordmazedonien\", \"personal_2025.csv:5\", \"BELEGT\")\n\nv(\"B9\", \"Meldepflichtige Arbeitsunfälle\", \"2 (Beschäftigte)\", \"arbeitsschutz_2025.txt:4\", \"BELEGT\")\nv(\"B9\", \"Todesfälle\", \"0\", \"arbeitsschutz_2025.txt:7\", \"BELEGT\")\nv(\"B9\", \"Quote (Unfälle / Stunden × 200.000)\", \"Geleistete Stunden fehlen\", \"–\", \"LÜCKE\", D_STUNDEN)\n\nv(\"B10\", \"Lohn auf oder über Mindestlohn\", \"Keine Datei\", \"–\", \"LÜCKE\", D_LOHN)\nv(\"B10\", \"Anteil mit Tarifvertrag\", \"Keine Datei\", \"–\", \"LÜCKE\", D_TARIF)\nv(\"B10\", \"Schulungsstunden je Beschäftigtem\", \"7,4 h (310 h / 42)\", \"personal_2025.csv:7-8\", \"BELEGT\")\nv(\"B10\", \"Lohnlücke (nur falls Gesetz sie verlangt)\", \"Ob ein Gesetz sie verlangt, ist nicht belegt\", \"–\", \"LÜCKE\", D_LOHNLUECKE)\n\nv(\"B11\", \"Zahl der Verurteilungen\", \"0\", \"richtlinien_und_compliance.txt:13-14\", \"BELEGT\")\nv(\"B11\", \"Summe der Bußgelder\", \"0 MKD\", \"richtlinien_und_compliance.txt:13-14\", \"BELEGT\")\n\n# Plausibilitätsprüfung: Schulungsstunden\nassert round(310 / 42, 1) == 7.4\n\nRANK = {\"BELEGT\": 0, \"SCHWACH\": 1, \"LÜCKE\": 2}\ndef worst(sts):\n    return max(sts, key=lambda s: RANK[s])\n\n# ---------- Blatt 3: Anfordern ----------\nreq = OrderedDict()\nfor a, nr, _, _, st, _, docs, _ in R:\n    for d in docs:\n        req.setdefault(d, {\"reg\": [], \"vsme\": []})[\"reg\"].append(f\"{a[2:]} {nr}\" if a[0] != \"1\" else f\"Nordvik {nr}\")\nfor b, dp, _, _, st, doc in V:\n    if doc:\n        e = req.setdefault(doc, {\"reg\": [], \"vsme\": []})\n        if b not in e[\"vsme\"]:\n            e[\"vsme\"].append(b)\n# lesbare Anfrage-Namen\ndef regname(a, nr):\n    return {A1: \"Nordvik\", A2: \"Werbung\", A3: \"Bank\"}[a] + \" \" + nr\nreq = OrderedDict()\nfor a, nr, _, _, st, _, docs, _ in R:\n    for d in docs:\n        req.setdefault(d, {\"reg\": [], \"vsme\": []})[\"reg\"].append(regname(a, nr))\nfor b, dp, _, _, st, doc in V:\n    if doc:\n        e = req.setdefault(doc, {\"reg\": [], \"vsme\": []})\n        if b not in e[\"vsme\"]:\n            e[\"vsme\"].append(b)\nreq_sorted = sorted(req.items(), key=lambda kv: (-(len(kv[1][\"reg\"]) + len(kv[1][\"vsme\"])), kv[0]))\n\n# ---------- Schreiben ----------\nwb = Workbook()\nthin = Side(style=\"thin\", color=\"BFBFBF\")\nborder = Border(left=thin, right=thin, top=thin, bottom=thin)\nhdr_fill = PatternFill(\"solid\", fgColor=\"2F3E46\")\nfills = {\"BELEGT\": PatternFill(\"solid\", fgColor=\"D9EAD3\"),\n         \"SCHWACH\": PatternFill(\"solid\", fgColor=\"FFF2CC\"),\n         \"LÜCKE\": PatternFill(\"solid\", fgColor=\"F4CCCC\")}\nwrap = Alignment(wrap_text=True, vertical=\"top\")\n\ndef sheet(ws, headers, rows, widths, status_col=None):\n    ws.append(headers)\n    for c in ws[1]:\n        c.font = Font(bold=True, color=\"FFFFFF\"); c.fill = hdr_fill\n        c.alignment = Alignment(wrap_text=True, vertical=\"center\"); c.border = border\n    for r in rows:\n        ws.append(list(r))\n    for row in ws.iter_rows(min_row=2):\n        for c in row:\n            c.alignment = wrap; c.border = border\n        if status_col is not None:\n            s = row[status_col].value\n            if s in fills:\n                row[status_col].fill = fills[s]; row[status_col].font = Font(bold=True)\n    for i, w in enumerate(widths, 1):\n        ws.column_dimensions[ws.cell(1, i).column_letter].width = w\n    ws.freeze_panes = \"A2\"\n    ws.auto_filter.ref = ws.dimensions\n\nws = wb.active; ws.title = \"Register\"\nrows = [(a, nr, ant, src, st, grund, \"; \".join(docs), mass, None, None)\n        for a, nr, ant, src, st, grund, docs, mass in R]\nsheet(ws, [\"Anfrage\", \"Nr\", \"Antwort\", \"Datei und Zeile\", \"Status\", \"Grund\",\n           \"Fehlendes Dokument\", \"Maßnahme\", \"Geprüft von\", \"Datum\"],\n      rows, [18, 6, 60, 42, 11, 55, 48, 48, 14, 12], status_col=4)\nn = {s: sum(1 for r in R if r[4] == s) for s in RANK}\nws.append([])\nws.append([f\"Zählung: {n['BELEGT']} BELEGT, {n['SCHWACH']} SCHWACH, {n['LÜCKE']} LÜCKE ({len(R)} Zeilen). {SD}, Berichtsjahr 2025. Vorbereitung: Ein Mensch prüft und unterschreibt vor Versand.\"])\nws.cell(ws.max_row, 1).font = Font(italic=True)\n\nws2 = wb.create_sheet(\"VSME\")\nrows2 = []\nfor b in B:\n    dps = [x for x in V if x[0] == b]\n    ok = sum(1 for x in dps if x[4] == \"BELEGT\")\n    st = worst([x[4] for x in dps])\n    rows2.append((b, B[b], f\"belegt {ok} von {len(dps)}\", st, \"\", \"\", \"\", \"\"))\n    for x in dps:\n        rows2.append((\"\", \"\", \"\", \"\", x[1], x[2], x[3], x[4]))\nws2.append([\"Angabe\", \"Titel\", \"Belegt x von y\", \"Status der Angabe\", \"Datenpunkt\", \"Wert oder Stand\", \"Datei und Zeile\", \"Status Datenpunkt\"])\nfor c in ws2[1]:\n    c.font = Font(bold=True, color=\"FFFFFF\"); c.fill = hdr_fill\n    c.alignment = Alignment(wrap_text=True, vertical=\"center\"); c.border = border\nfor r in rows2:\n    ws2.append(list(r))\nfor row in ws2.iter_rows(min_row=2):\n    for c in row:\n        c.alignment = wrap; c.border = border\n    for idx in (3, 7):\n        s = row[idx].value\n        if s in fills:\n            row[idx].fill = fills[s]; row[idx].font = Font(bold=True)\n    if row[0].value:\n        for c in row[:3]:\n            c.font = Font(bold=True)\nfor i, w in enumerate([9, 34, 16, 14, 40, 60, 40, 14], 1):\n    ws2.column_dimensions[ws2.cell(1, i).column_letter].width = w\nws2.freeze_panes = \"A2\"\nvs = {b: worst([x[4] for x in V if x[0] == b]) for b in B}\ntot = {s: sum(1 for b in B if vs[b] == s) for s in RANK}\nws2.append([])\nws2.append([f\"Angaben: {tot['BELEGT']} BELEGT, {tot['SCHWACH']} SCHWACH, {tot['LÜCKE']} LÜCKE. Status der Angabe = schwächster Datenpunkt. {SD}.\"])\nws2.cell(ws2.max_row, 1).font = Font(italic=True)\n\nws3 = wb.create_sheet(\"Anfordern\")\nrows3 = []\nfor d, e in req_sorted:\n    rows3.append((d, len(e[\"reg\"]) + len(e[\"vsme\"]), \", \".join(e[\"reg\"]), \", \".join(e[\"vsme\"])))\nsheet(ws3, [\"Fehlendes Dokument\", \"Anzahl\", \"Register-Zeilen\", \"VSME-Angaben\"], rows3, [80, 9, 50, 22])\n\nwb.save(OUT)\nprint(n, tot, len(req_sorted))\nfor b in B:\n    dps = [x for x in V if x[0] == b]\n    print(b, sum(1 for x in dps if x[4] == \"BELEGT\"), len(dps), vs[b])\nfor d, e in req_sorted:\n    print(len(e[\"reg\"]) + len(e[\"vsme\"]), d[:60], e[\"reg\"], e[\"vsme\"])\nprint(de(strom_mwh), de(abd), w_m3, de(amort), reserve_ueber)\n"
+      }
+    },
+    {
+      "t_ms": 246793,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 250933,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd . && python3 -I build_register.py work/ordner work/nachweisregister.xlsx"
+      }
+    },
+    {
+      "t_ms": 250939,
+      "kind": "tool_result",
+      "is_error": true,
+      "denied": true
+    },
+    {
+      "t_ms": 252714,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I build_register.py ordner nachweisregister.xlsx"
+      }
+    },
+    {
+      "t_ms": 253231,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 262347,
+      "kind": "thinking"
+    },
+    {
+      "t_ms": 265998,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 265998,
+      "kind": "text",
+      "chunk": "Ich habe `work/nachweisregister.xlsx` mit den drei Blättern erstellt. Die Zeilen sind im Code aus den Dateien berechnet. „Geprüft von“ und „Datum“ sind leer. Ein Mensch muss jede Antwort prüfen und unterschreiben, bevor sie die Firma verlässt.\n\n**Register (21 Zeilen):** 9 BELEGT, 3 SCHWACH, 9 LÜCKE.\n- **Strom:** Es gibt 11 von 12 Monaten, die Rechnung für September 2025 fehlt (Abdeckung 91,7 %, verlangt sind 95 %). Die 279,7 MWh sind nur eine Teilsumme. Der Entwurf `strom_zusammenfassung_entwurf.txt:5` nennt sie „ganzes Jahr“ und „kann an die Bank“. Das stimmt nicht, und er ist ungeprüft.\n- **Oktober-Rechnung:** Sie steht doppelt in der Datei (`strom_2025.csv:11` und `:12`, Rechnung EL-25-10). Ich habe sie einmal gezählt.\n- **Strom und Scope-Fragen:** Weder Stromanteil erneuerbar noch Scope 1 und 2 sind ausweisbar. Es fehlen Strommix, Dieselbelege und ein Netz-Emissionsfaktor. Die 120 tCO2e Kompensation habe ich nicht abgezogen.\n- **Wasser:** 4.630 m³ sind aus 12 Monaten belegt. Damit ist Aussage 7 BELEGT.\n- **Werbeaussagen:** Die Aussagen 1 bis 5 stehen alle auf LÜCKE, die Maßnahme ist Streichen. Aussage 1 ist nach Nr. 4c verboten, 2 nach Nr. 4a. Bei 3 deckt das Zertifikat nur 12 von 40 ha, und es ist abgelaufen. Bei 4 gibt es noch keine PV. Bei 5 fehlt das Vergleichsjahr 2024.\n- **Aussagen 6 und 7:** Beide dürfen raus, wie formuliert.\n- **Flaschen (Q6):** Reserve Vranec 2021 wiegt 560 g bei 239 NOK, das sind 140 g über dem Höchstwert von 420 g. Das ist BELEGT, weil der Fakt bewiesen ist. Die Maßnahme ist, ihn nicht unter 250 NOK anzubieten. Smederevka steht nicht in `flaschen.csv`, das Glasgewicht fehlt dort.\n- **Bio-Zertifikat und Audit:** Das Bio-Zertifikat ist seit 31.08.2026 abgelaufen. Die Erneuerungsprüfung am 22.10.2026 hat noch kein Ergebnis. Q7 und F6 sind deshalb SCHWACH. Das BSCI-Audit ist belegt und wird als Audit geführt, nicht als Zertifikat.\n- **Amortisation (F4):** 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre. Das ist SCHWACH, weil der Ertrag geschätzt und das Angebot nicht unterschrieben ist.\n\n**VSME:** B6, B8 und B11 sind BELEGT, B2 ist SCHWACH. B1, B3, B4, B5, B7, B9 und B10 sind LÜCKE, B3, B4, B5 und B7 ohne jeden belegten Datenpunkt.\n- **Wegen einzelner Datenpunkte LÜCKE:** B1 (8 von 10 belegt) wegen der fehlenden Modul-Entscheidung. B9 (2 von 3) wegen der fehlenden Arbeitsstunden für die Quote. B10 (1 von 4) wegen Mindestlohn, Tarifvertrag und Lohnlücke.\n- **Eigene Wertung:** Die Modul-Entscheidung in B1 und die Lohnlücke in B10 habe ich als LÜCKE geführt, weil keine Datei sie festhält. Ändern Sie das, wenn Sie das anders sehen.\n\n**Anfordern:** 18 Dokumente, sortiert nach Anzahl, gezählt über Register-Zeilen und VSME-Angaben.\n- Die Stromrechnung September 2025 steht oben (6 Nennungen).\n- Dann folgen das erneuerte Bio-Zertifikat (4) und das unterschriebene PV-Angebot (3).\n\nWegen der Verbote (Nr. 4c und 4a) habe ich zu Aussage 1 und 2 kein Dokument angefordert.\n\nDie Zeilenangaben habe ich aus den ausgegebenen Dateien übernommen. Prüfen Sie sie beim Unterschreiben stichprobenartig.\n\nDas Skript liegt außerhalb des Arbeitsordners: `build_register.py`."
+    }
+  ],
+  "final_text": "Ich habe `work/nachweisregister.xlsx` mit den drei Blättern erstellt. Die Zeilen sind im Code aus den Dateien berechnet. „Geprüft von“ und „Datum“ sind leer. Ein Mensch muss jede Antwort prüfen und unterschreiben, bevor sie die Firma verlässt.\n\n**Register (21 Zeilen):** 9 BELEGT, 3 SCHWACH, 9 LÜCKE.\n- **Strom:** Es gibt 11 von 12 Monaten, die Rechnung für September 2025 fehlt (Abdeckung 91,7 %, verlangt sind 95 %). Die 279,7 MWh sind nur eine Teilsumme. Der Entwurf `strom_zusammenfassung_entwurf.txt:5` nennt sie „ganzes Jahr“ und „kann an die Bank“. Das stimmt nicht, und er ist ungeprüft.\n- **Oktober-Rechnung:** Sie steht doppelt in der Datei (`strom_2025.csv:11` und `:12`, Rechnung EL-25-10). Ich habe sie einmal gezählt.\n- **Strom und Scope-Fragen:** Weder Stromanteil erneuerbar noch Scope 1 und 2 sind ausweisbar. Es fehlen Strommix, Dieselbelege und ein Netz-Emissionsfaktor. Die 120 tCO2e Kompensation habe ich nicht abgezogen.\n- **Wasser:** 4.630 m³ sind aus 12 Monaten belegt. Damit ist Aussage 7 BELEGT.\n- **Werbeaussagen:** Die Aussagen 1 bis 5 stehen alle auf LÜCKE, die Maßnahme ist Streichen. Aussage 1 ist nach Nr. 4c verboten, 2 nach Nr. 4a. Bei 3 deckt das Zertifikat nur 12 von 40 ha, und es ist abgelaufen. Bei 4 gibt es noch keine PV. Bei 5 fehlt das Vergleichsjahr 2024.\n- **Aussagen 6 und 7:** Beide dürfen raus, wie formuliert.\n- **Flaschen (Q6):** Reserve Vranec 2021 wiegt 560 g bei 239 NOK, das sind 140 g über dem Höchstwert von 420 g. Das ist BELEGT, weil der Fakt bewiesen ist. Die Maßnahme ist, ihn nicht unter 250 NOK anzubieten. Smederevka steht nicht in `flaschen.csv`, das Glasgewicht fehlt dort.\n- **Bio-Zertifikat und Audit:** Das Bio-Zertifikat ist seit 31.08.2026 abgelaufen. Die Erneuerungsprüfung am 22.10.2026 hat noch kein Ergebnis. Q7 und F6 sind deshalb SCHWACH. Das BSCI-Audit ist belegt und wird als Audit geführt, nicht als Zertifikat.\n- **Amortisation (F4):** 8.550.000 MKD / (180.000 kWh × 9,50 MKD/kWh) = 5,0 Jahre. Das ist SCHWACH, weil der Ertrag geschätzt und das Angebot nicht unterschrieben ist.\n\n**VSME:** B6, B8 und B11 sind BELEGT, B2 ist SCHWACH. B1, B3, B4, B5, B7, B9 und B10 sind LÜCKE, B3, B4, B5 und B7 ohne jeden belegten Datenpunkt.\n- **Wegen einzelner Datenpunkte LÜCKE:** B1 (8 von 10 belegt) wegen der fehlenden Modul-Entscheidung. B9 (2 von 3) wegen der fehlenden Arbeitsstunden für die Quote. B10 (1 von 4) wegen Mindestlohn, Tarifvertrag und Lohnlücke.\n- **Eigene Wertung:** Die Modul-Entscheidung in B1 und die Lohnlücke in B10 habe ich als LÜCKE geführt, weil keine Datei sie festhält. Ändern Sie das, wenn Sie das anders sehen.\n\n**Anfordern:** 18 Dokumente, sortiert nach Anzahl, gezählt über Register-Zeilen und VSME-Angaben.\n- Die Stromrechnung September 2025 steht oben (6 Nennungen).\n- Dann folgen das erneuerte Bio-Zertifikat (4) und das unterschriebene PV-Angebot (3).\n\nWegen der Verbote (Nr. 4c und 4a) habe ich zu Aussage 1 und 2 kein Dokument angefordert.\n\nDie Zeilenangaben habe ich aus den ausgegebenen Dateien übernommen. Prüfen Sie sie beim Unterschreiben stichprobenartig.\n\nDas Skript liegt außerhalb des Arbeitsordners: `build_register.py`.",
+  "stats": {
+    "duration_ms": 265438,
+    "duration_api_ms": 261599,
+    "ttft_ms": 3181,
+    "num_turns": 15,
+    "output_tokens": 36081
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "wall_s": 266.4,
+  "denied_calls": 3,
+  "follow_ups": [
+    {
+      "prompt": "Angehängt: nachreichung/rechnung-EL-25-09.png\n\nAngehängt ist die Stromrechnung September 2025. Lies sie zuerst und prüfe die kWh mit den beiden Zählerständen.\nPrüfe dann jede Zeile im Register neu, die strom_2025.csv zitiert. Eine Tabelle: Wo | Vorher (Wert, Status) | Jetzt (Wert, Status) | Warum. Auch für Zeilen, die gleich bleiben.\nSag, was die Rechnung für strom_zusammenfassung_entwurf.txt bedeutet und wie weit 11 Monate × 12/11 vom ganzen Jahr entfernt liegen.\nAktualisiere nachweisregister.xlsx.",
+      "timeline": [
+        {
+          "t_ms": 5513,
+          "kind": "tool_use",
+          "tool": "Read",
+          "input": {
+            "file_path": "nachreichung/rechnung-EL-25-09.png"
+          }
+        },
+        {
+          "t_ms": 5559,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 27599,
+          "kind": "thinking"
+        },
+        {
+          "t_ms": 27603,
+          "kind": "thinking"
+        },
+        {
+          "t_ms": 28784,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "assert len(strom_monate) == 11 and \"2025-09\" not in strom_monate\nstrom_mwh = strom_kwh / 1000\nabd = len(strom_monate) / 12 * 100",
+            "new_string": "assert len(strom_monate) == 11 and \"2025-09\" not in strom_monate\nteil_mwh = strom_kwh / 1000\nhochrechnung_mwh = teil_mwh * 12 / 11\n# Nachgereicht: nachreichung/rechnung-EL-25-09.png (Bild, abgelesen)\nz_alt, z_neu, menge_kwh, rech_tarif, rech_betrag = 1_284_350, 1_325_550, 41_200, 9.50, 391_400\nassert z_neu - z_alt == menge_kwh and round(menge_kwh * rech_tarif) == rech_betrag\nstrom_kwh_jahr = strom_kwh + menge_kwh\nstrom_mwh = strom_kwh_jahr / 1000\nabd = 12 / 12 * 100\ndiff_hoch = strom_mwh - hochrechnung_mwh\npv_anteil = 180 / strom_mwh * 100\nENTWURF_MWH = 279.7\nassert abs(teil_mwh - ENTWURF_MWH) < 1e-9"
+          }
+        },
+        {
+          "t_ms": 28807,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 29322,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "cd . && grep -n \"D_SEP\\|strom_mwh\\|abd\\b\" build_register.py"
+          }
+        },
+        {
+          "t_ms": 29331,
+          "kind": "tool_result",
+          "is_error": true,
+          "denied": true
+        },
+        {
+          "t_ms": 31375,
+          "kind": "tool_use",
+          "tool": "Grep",
+          "input": {
+            "pattern": "D_SEP|strom_mwh|\\babd\\b|11 von 12|11 Monat",
+            "path": "build_register.py",
+            "output_mode": "content"
+          }
+        },
+        {
+          "t_ms": 31400,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 33016,
+          "kind": "tool_use",
+          "tool": "Read",
+          "input": {
+            "file_path": "build_register.py",
+            "offset": 78,
+            "limit": 20
+          }
+        },
+        {
+          "t_ms": 33027,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 33595,
+          "kind": "tool_use",
+          "tool": "Read",
+          "input": {
+            "file_path": "build_register.py",
+            "offset": 170,
+            "limit": 28
+          }
+        },
+        {
+          "t_ms": 33615,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 34797,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 34797,
+          "kind": "text",
+          "chunk": "Jetzt die betroffenen Zeilen im Skript ändern."
+        },
+        {
+          "t_ms": 39805,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "  f\"Strom 2025: nicht als Jahressumme ausweisbar. Teilsumme {de(strom_mwh)} MWh aus {len(strom_monate)} von 12 Monaten (September fehlt), Abdeckung {de(abd)} % und damit unter den geforderten 95 %. Anteil erneuerbar: nicht angegeben.\",\n  \"strom_2025.csv:3-14 (Oktober doppelt: 11 und 12, Rechnung EL-25-10 einmal gezählt; Strommix „nicht angegeben“ in jeder Zeile); strom_zusammenfassung_entwurf.txt:5\",\n  \"LÜCKE\",\n  \"September 2025 hat keine Datei; der Strommix steht nirgends. Der Entwurf nennt „ganzes Jahr: 279,7 MWh“, das ist aber nur die 11-Monats-Summe und ein ungeprüfter Entwurf.\",\n  [D_SEP, D_MIX],\n  \"Keine Jahreszahl und keinen Hochrechnungswert angeben. Beide Dokumente anfordern. Doppelerfassung Oktober (Scan 2025-12-02) in der Buchhaltung bereinigen.\"),",
+            "new_string": "  f\"Stromverbrauch 2025: {de(strom_mwh)} MWh aus 12 von 12 Monaten (Abdeckung {de(abd, 0)} %, Forderung 95 %). Anteil erneuerbar: nicht angegeben, nicht ausweisbar.\",\n  \"strom_2025.csv:3-10,11,13,14 (Oktober doppelt: 11 und 12, Rechnung EL-25-10 einmal gezählt) + nachreichung/rechnung-EL-25-09.png (Posten 41.200 kWh; Zähler 1.325.550 − 1.284.350); Strommix „nicht angegeben“ in strom_2025.csv:3-14 und auf der Rechnung EL-25-09\",\n  \"LÜCKE\",\n  \"Die Menge ist jetzt belegt (September nachgereicht, 12 eindeutige Monate), aber der Anteil erneuerbar hat keine Datei: Der Strommix ist überall „nicht angegeben“. Der schwächste Teil entscheidet.\",\n  [D_MIX],\n  \"Strommix beim Versorger anfordern. Zahl 320,9 MWh statt 279,7 MWh aus dem Entwurf nehmen. Zeile EL-25-09 in strom_2025.csv nachtragen und Doppelerfassung Oktober (Scan 2025-12-02) bereinigen.\"),"
+          }
+        },
+        {
+          "t_ms": 39834,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 42453,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "strom_2025.csv:3-14 (September fehlt); kompensation_2025.txt:5\",\n  \"LÜCKE\",\n  \"Scope 1 (Diesel): keine Mengen. Scope 2: Jahres-kWh unvollständig und kein veröffentlichter Netz-Emissionsfaktor in den Dateien. Die 120 tCO2e Waldschutz-Zertifikate sind Kompensation, keine Minderung, und werden nicht abgezogen.\",\n  [D_DIESEL, D_SEP, D_FAKTOR],",
+            "new_string": "strom_2025.csv:3-14 + nachreichung/rechnung-EL-25-09.png (kWh ganzes Jahr {STROM_KWH_TXT}); kompensation_2025.txt:5\",\n  \"LÜCKE\",\n  \"Scope 1 (Diesel): keine Mengen. Scope 2: Die kWh des ganzen Jahres sind jetzt belegt, aber es gibt keinen veröffentlichten Netz-Emissionsfaktor in den Dateien. Die 120 tCO2e Waldschutz-Zertifikate sind Kompensation, keine Minderung, und werden nicht abgezogen.\",\n  [D_DIESEL, D_FAKTOR],"
+          }
+        },
+        {
+          "t_ms": 42498,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 44490,
+          "kind": "thinking"
+        },
+        {
+          "t_ms": 45339,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "(kWh ganzes Jahr {STROM_KWH_TXT})",
+            "new_string": "(kWh ganzes Jahr: 320.900)"
+          }
+        },
+        {
+          "t_ms": 45350,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 46848,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "  \"2025 hat nur 11 von 12 Monaten (September fehlt) und es gibt keine Daten für 2024; ein Vergleich ist nicht rechenbar.\",\n  [D_SEP, D_2024],",
+            "new_string": "  f\"2025 ist jetzt vollständig ({de(strom_mwh)} MWh, 12 Monate), aber es gibt keine Daten für 2024; ein Vergleich ist nicht rechenbar.\",\n  [D_2024],"
+          }
+        },
+        {
+          "t_ms": 46862,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 47968,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "  \"strom_2025.csv:3-14; ordner enthält keine Stromdatei 2024\",",
+            "new_string": "  \"strom_2025.csv:3-14 + nachreichung/rechnung-EL-25-09.png; ordner enthält keine Stromdatei 2024\","
+          }
+        },
+        {
+          "t_ms": 47980,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 51810,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "  f\"Stromverbrauch 2025, ganzes Jahr: nicht ausweisbar. Teilsumme {de(strom_mwh)} MWh aus 11 von 12 Monaten (September fehlt).\",\n  \"strom_2025.csv:3-14; strom_zusammenfassung_entwurf.txt:3,5\",\n  \"LÜCKE\",\n  \"September 2025 hat keine Datei. Der Entwurf („kann an die Bank“) ist ungeprüft und nennt eine 11-Monats-Summe als ganzes Jahr.\",\n  [D_SEP], \"Entwurf nicht an die Bank geben. Rechnung anfordern, dann neu rechnen.\"),",
+            "new_string": "  f\"Stromverbrauch 2025, ganzes Jahr: {de(strom_mwh)} MWh aus 12 von 12 Monaten.\",\n  \"strom_2025.csv:3-10,11,13,14 (Oktober einmal gezählt) + nachreichung/rechnung-EL-25-09.png (41.200 kWh, Zähler 1.325.550 − 1.284.350); strom_zusammenfassung_entwurf.txt:3,5 (Entwurf, überholt)\",\n  \"BELEGT\",\n  \"12 eindeutige Monate, jede mit Rechnung; die September-Rechnung rechnet in sich (Zähler neu − alt = 41.200 kWh). Der Entwurf mit 279,7 MWh ist falsch und ersetzt.\",\n  [], \"Entwurf nicht an die Bank geben; 320,9 MWh melden. Zeile EL-25-09 in strom_2025.csv nachtragen. Der Entwurf-Satz „Kann an die Bank“ gilt nicht.\"),"
+          }
+        },
+        {
+          "t_ms": 51824,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 55421,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "  \"Erwarteter PV-Ertrag: rund 180 MWh pro Jahr, SCHÄTZUNG des Installateurs, nicht gemessen. Anteil am Verbrauch: nicht rechenbar, weil der Jahresverbrauch fehlt.\",\n  \"pv_angebot_2026.txt:3,8,11; strom_2025.csv:3-14\",\n  \"LÜCKE\",\n  \"Der Ertrag ist eine Schätzung in einem von keiner Seite unterschriebenen Angebot; der Nenner (Jahresverbrauch 2025) hat nur 11 Monate.\",\n  [D_SEP, D_ANGEBOT], \"Ertrag in der Bank als Schätzung kennzeichnen. Anteil erst nach vollständigem Jahresverbrauch angeben.\"),",
+            "new_string": "  f\"Erwarteter PV-Ertrag: rund 180 MWh pro Jahr, SCHÄTZUNG des Installateurs, nicht gemessen. Anteil am Verbrauch 2025 ({de(strom_mwh)} MWh): 180 / {de(strom_mwh)} = {de(pv_anteil)} % (Schätzung).\",\n  \"pv_angebot_2026.txt:3,8,11; strom_2025.csv:3-14 + nachreichung/rechnung-EL-25-09.png\",\n  \"SCHWACH\",\n  \"Der Verbrauch ist belegt, aber der Ertrag ist eine Schätzung in einem von keiner Seite unterschriebenen Angebot; der Anteil erbt das.\",\n  [D_ANGEBOT], \"Ertrag und Anteil in der Bank als Schätzung kennzeichnen; neu prüfen, sobald das Angebot unterschrieben ist.\"),"
+          }
+        },
+        {
+          "t_ms": 55447,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 56629,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "strom_2025.csv:3 (Tarif 9,50 MKD/kWh); firmenprofil.md:15,18;",
+            "new_string": "strom_2025.csv:3 und nachreichung/rechnung-EL-25-09.png (Tarif 9,50 MKD/kWh); firmenprofil.md:15,18;"
+          }
+        },
+        {
+          "t_ms": 56639,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 58179,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "v(\"B3\", \"Strom in MWh\", f\"Teilsumme {de(strom_mwh)} MWh aus 11 von 12 Monaten; September fehlt\", \"strom_2025.csv:3-14\", \"LÜCKE\", D_SEP)",
+            "new_string": "v(\"B3\", \"Strom in MWh\", f\"{de(strom_mwh)} MWh, 12 von 12 Monaten\", \"strom_2025.csv:3-14; nachreichung/rechnung-EL-25-09.png\", \"BELEGT\")"
+          }
+        },
+        {
+          "t_ms": 58228,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 59399,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "\"Nicht rechenbar ohne Strom September und Diesel\", \"–\", \"LÜCKE\", D_SEP)",
+            "new_string": "\"Nicht rechenbar ohne Diesel (Strom allein: \" + de(strom_mwh) + \" MWh)\", \"–\", \"LÜCKE\", D_DIESEL)"
+          }
+        },
+        {
+          "t_ms": 59430,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 60421,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "\"Jahres-kWh unvollständig, kein Netzfaktor;",
+            "new_string": "\"Jahres-kWh belegt (320.900), aber kein Netzfaktor;"
+          }
+        },
+        {
+          "t_ms": 60442,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 62228,
+          "kind": "tool_use",
+          "tool": "Edit",
+          "input": {
+            "replace_all": false,
+            "file_path": "build_register.py",
+            "old_string": "print(de(strom_mwh), de(abd), w_m3, de(amort), reserve_ueber)",
+            "new_string": "print(de(strom_mwh), de(abd), w_m3, de(amort), reserve_ueber)\nprint(\"Hochrechnung\", de(hochrechnung_mwh, 3), \"Differenz\", de(diff_hoch, 3), de(diff_hoch / strom_mwh * 100, 2), \"% ; Entwurf fehlt\", de(strom_mwh - ENTWURF_MWH), \"PV-Anteil\", de(pv_anteil, 2))"
+          }
+        },
+        {
+          "t_ms": 62241,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 64035,
+          "kind": "tool_use",
+          "tool": "Bash",
+          "input": {
+            "command": "python3 -I build_register.py ordner nachweisregister.xlsx"
+          }
+        },
+        {
+          "t_ms": 66745,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 77648,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 77648,
+          "kind": "text",
+          "chunk": "Die Rechnung rechnet in sich, und `nachweisregister.xlsx` ist aktualisiert (neue Zählung: 10 BELEGT, 4 SCHWACH, 7 LÜCKE).\n\n**Rechnung EL-25-09, geprüft:**\n- **Zähler:** 1.325.550 − 1.284.350 = 41.200 kWh. Das stimmt mit dem Posten überein.\n- **Zahlenformat:** „41.200“ ist deutsches Format, also einundvierzigtausendzweihundert kWh.\n- **Betrag:** 41.200 kWh × 9,50 MKD/kWh = 391.400 MKD, das passt zum Betrag.\n- **Zeitraum:** 01.–30.09.2025.\n- **Strommix:** steht auf der Rechnung als „nicht angegeben“.\n\nDas Bild trägt den Stempel „Kopie“. Eine Zeile für EL-25-09 steht noch nicht in `strom_2025.csv`. Ich habe die Datei nicht angefasst und die Rechnung als eigene Quelle zitiert.\n\n| Wo | Vorher | Jetzt | Warum |\n|---|---|---|---|\n| Nordvik Q1, Strom | Teilsumme 279,7 MWh (11 Monate), LÜCKE | 320,9 MWh (12 von 12 Monaten), belegt | Die September-Rechnung schließt die Lücke. Abdeckung 100 %. |\n| Nordvik Q1, Anteil erneuerbar | nicht angegeben, LÜCKE | nicht angegeben, **LÜCKE** (Zeile bleibt LÜCKE) | Der Strommix steht in `strom_2025.csv:3-14` und auf der neuen Rechnung als „nicht angegeben“. |\n| Nordvik Q2, Scope 1 und 2 | LÜCKE | **LÜCKE** | Die kWh des Jahres sind jetzt belegt. Es fehlen weiter der Netz-Emissionsfaktor und die Dieselmengen. Die Kompensation wird nicht abgezogen. |\n| Werbung 5, „12 % weniger Strom“ | LÜCKE | **LÜCKE** | 2025 ist vollständig, aber es gibt keine Daten für 2024. |\n| Bank F2, Strom 2025 | nicht ausweisbar, LÜCKE | 320,9 MWh, **BELEGT** | 12 eindeutige Monate. Der Oktober ist nur einmal gezählt. |\n| Bank F3, PV-Anteil | Anteil nicht rechenbar, LÜCKE | 180 / 320,9 = 56,1 %, **SCHWACH** | Der Verbrauch ist belegt. Der Ertrag bleibt eine Schätzung in einem von keiner Seite unterschriebenen Angebot, der Anteil erbt das. |\n| Bank F4, Amortisation | 5,0 Jahre, SCHWACH | 5,0 Jahre, SCHWACH | Der Tarif 9,50 MKD/kWh steht jetzt auch auf der September-Rechnung. Der Ertrag bleibt geschätzt, die Formel nutzt den Verbrauch nicht. |\n| VSME B3, Strom in MWh | LÜCKE | 320,9 MWh, BELEGT | Wie Q1. |\n| VSME B3, Angabe | LÜCKE, 0 von 6 | LÜCKE, 1 von 6 | Erneuerbaranteil, Brennstoffe, Gesamtenergie, Scope 1 und 2 fehlen weiter. |\n\n**Entwurf `strom_zusammenfassung_entwurf.txt:5`:** Er nennt „ganzes Jahr: 279,7 MWh“, aber das war die Summe von nur 11 Monaten. Das ganze Jahr hat 320,9 MWh, der Entwurf lag also um 41,2 MWh zu niedrig. Der Satz „Kann an die Bank“ stimmt nicht. Er sollte nicht verwendet und durch 320,9 MWh ersetzt werden. Der Entwurf bleibt ungeprüft und unfreigegeben.\n\n**Hochrechnung:** 279,7 MWh × 12/11 = 305,1 MWh. Das liegt 15,8 MWh unter dem wahren Jahr, also 4,9 % zu niedrig. Der September ist der Spitzenmonat (41,2 MWh), deshalb schätzt der Durchschnitt zu niedrig. Eine Lücke habe ich nicht mit einer Schätzung gefüllt.\n\nIm Blatt „Anfordern“ ist die Septemberrechnung gestrichen (17 Dokumente statt 18). Offen bleiben unter anderem der Strommix, die Dieselbelege, der Emissionsfaktor und die Stromrechnungen 2024."
+        }
+      ],
+      "final_text": "Die Rechnung rechnet in sich, und `nachweisregister.xlsx` ist aktualisiert (neue Zählung: 10 BELEGT, 4 SCHWACH, 7 LÜCKE).\n\n**Rechnung EL-25-09, geprüft:**\n- **Zähler:** 1.325.550 − 1.284.350 = 41.200 kWh. Das stimmt mit dem Posten überein.\n- **Zahlenformat:** „41.200“ ist deutsches Format, also einundvierzigtausendzweihundert kWh.\n- **Betrag:** 41.200 kWh × 9,50 MKD/kWh = 391.400 MKD, das passt zum Betrag.\n- **Zeitraum:** 01.–30.09.2025.\n- **Strommix:** steht auf der Rechnung als „nicht angegeben“.\n\nDas Bild trägt den Stempel „Kopie“. Eine Zeile für EL-25-09 steht noch nicht in `strom_2025.csv`. Ich habe die Datei nicht angefasst und die Rechnung als eigene Quelle zitiert.\n\n| Wo | Vorher | Jetzt | Warum |\n|---|---|---|---|\n| Nordvik Q1, Strom | Teilsumme 279,7 MWh (11 Monate), LÜCKE | 320,9 MWh (12 von 12 Monaten), belegt | Die September-Rechnung schließt die Lücke. Abdeckung 100 %. |\n| Nordvik Q1, Anteil erneuerbar | nicht angegeben, LÜCKE | nicht angegeben, **LÜCKE** (Zeile bleibt LÜCKE) | Der Strommix steht in `strom_2025.csv:3-14` und auf der neuen Rechnung als „nicht angegeben“. |\n| Nordvik Q2, Scope 1 und 2 | LÜCKE | **LÜCKE** | Die kWh des Jahres sind jetzt belegt. Es fehlen weiter der Netz-Emissionsfaktor und die Dieselmengen. Die Kompensation wird nicht abgezogen. |\n| Werbung 5, „12 % weniger Strom“ | LÜCKE | **LÜCKE** | 2025 ist vollständig, aber es gibt keine Daten für 2024. |\n| Bank F2, Strom 2025 | nicht ausweisbar, LÜCKE | 320,9 MWh, **BELEGT** | 12 eindeutige Monate. Der Oktober ist nur einmal gezählt. |\n| Bank F3, PV-Anteil | Anteil nicht rechenbar, LÜCKE | 180 / 320,9 = 56,1 %, **SCHWACH** | Der Verbrauch ist belegt. Der Ertrag bleibt eine Schätzung in einem von keiner Seite unterschriebenen Angebot, der Anteil erbt das. |\n| Bank F4, Amortisation | 5,0 Jahre, SCHWACH | 5,0 Jahre, SCHWACH | Der Tarif 9,50 MKD/kWh steht jetzt auch auf der September-Rechnung. Der Ertrag bleibt geschätzt, die Formel nutzt den Verbrauch nicht. |\n| VSME B3, Strom in MWh | LÜCKE | 320,9 MWh, BELEGT | Wie Q1. |\n| VSME B3, Angabe | LÜCKE, 0 von 6 | LÜCKE, 1 von 6 | Erneuerbaranteil, Brennstoffe, Gesamtenergie, Scope 1 und 2 fehlen weiter. |\n\n**Entwurf `strom_zusammenfassung_entwurf.txt:5`:** Er nennt „ganzes Jahr: 279,7 MWh“, aber das war die Summe von nur 11 Monaten. Das ganze Jahr hat 320,9 MWh, der Entwurf lag also um 41,2 MWh zu niedrig. Der Satz „Kann an die Bank“ stimmt nicht. Er sollte nicht verwendet und durch 320,9 MWh ersetzt werden. Der Entwurf bleibt ungeprüft und unfreigegeben.\n\n**Hochrechnung:** 279,7 MWh × 12/11 = 305,1 MWh. Das liegt 15,8 MWh unter dem wahren Jahr, also 4,9 % zu niedrig. Der September ist der Spitzenmonat (41,2 MWh), deshalb schätzt der Durchschnitt zu niedrig. Eine Lücke habe ich nicht mit einer Schätzung gefüllt.\n\nIm Blatt „Anfordern“ ist die Septemberrechnung gestrichen (17 Dokumente statt 18). Offen bleiben unter anderem der Strommix, die Dieselbelege, der Emissionsfaktor und die Stromrechnungen 2024.",
+      "stats": {
+        "duration_ms": 76481,
+        "duration_api_ms": 335054,
+        "ttft_ms": 4321,
+        "num_turns": 20,
+        "output_tokens": 10592
+      },
+      "is_error": false,
+      "stop_reason": "end_turn",
+      "wall_s": 78.1,
+      "denied_calls": 1
+    }
+  ],
+  "produced_files": [
+    {
+      "name": "nachweisregister.xlsx",
+      "bytes": 16884,
+      "sha256": "c5653113dedd60fb5f629a00154edca07028c7cbd383bd3f25d2a19277be2e13",
+      "state": "after-follow-up"
+    }
+  ],
+  "edited": false
+}

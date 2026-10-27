@@ -4,7 +4,7 @@ Print on A4 in two columns. FOLDLINE numbers are synthetic and match the worksho
 
 ---
 
-### 1. Bathtub: level or change?
+### 1. Bathtub: level or change
 
 - **Level** = the water at one moment. Ending MRR on 30 Jun 2026: **€387,015**.
 - **Change** = what flowed in or out during the month. June net new: **+€42,565**.
@@ -13,7 +13,7 @@ Print on A4 in two columns. FOLDLINE numbers are synthetic and match the worksho
 - **Do:** "Ending MRR, end of June: €387,015."
 - **Don't:** "Ending MRR, April: −€19,960." That is April's change; a level cannot be negative here.
 
-### 2. Can I add it?
+### 2. Adding up: when it is allowed
 
 | | Across segments | Across months | One quarter figure |
 | --- | --- | --- | --- |
@@ -29,7 +29,7 @@ Print on A4 in two columns. FOLDLINE numbers are synthetic and match the worksho
 ### 3. Names
 
 1. Say the shape: `ending_mrr_eur` (level), `net_new_mrr_eur` (change).
-2. Say the unit: `_eur`, `_pct` (0–100), `_units`.
+2. Say the unit: `_eur`, `_pct` (0 to 100), `_units`.
 3. Say the time: `month_start`, `period_start` + `period_end_exclusive`, `_at_utc`.
 4. Put the grain in the view name: `_monthly`, `_by_segment_quarter`.
 5. Use words, not codes: `active` / `churned` / `new`.
@@ -69,7 +69,7 @@ Five behaviours: **answer / ask back / refuse / deny / stale.**
 
 - **Do:** Write the right answer before asking the AI. Grade value and behaviour.
 - **Do:** Keep two planes: database checks (deck: 9 of 9; this kit: 22 of 22) and AI runs (FOLDLINE: one each, an observation; yours: at least 3 per case).
-- **Don't:** grade SQL text. **Don't:** test one happy path only. **Don't:** say "9 of 9, so the AI scores 9 of 9."
+- **Don't:** grade SQL text. **Don't:** test one happy path only. **Don't:** say "9 of 9, so the AI passes 9 of 9."
 
 ### 8. Finish with one sentence
 

@@ -49,7 +49,7 @@ projection. Engine lessons get no auto-injected glossary flashcards.
 | Lab widgets | `src/components/widgets/lab/*.tsx` (primitives in `_lab.tsx`) |
 | Widget kinds and registry | `src/lib/widgets/types.ts` (`LAB_KINDS`), `src/components/widgets/registry.tsx` |
 | Design tokens | `src/app/globals.css` (`--shadow-lab*`, `--color-lab-*`, `.lab-wash-*`, `.lab-grid-paper`) |
-| Design contract | `src/components/lesson-engine/lesson-engine-design-contract.test.ts` |
+| Live-region and completion contract | `src/components/lesson-engine/lesson-engine-design-contract.test.ts` |
 | Pilot content | `content/ki-fuehrerschein/block-{1..4}-*-lessons.json` and `en/` |
 
 ## Content file format
@@ -622,11 +622,11 @@ Build new widgets from `_lab.tsx` (`LabSurface`, `LabButton`, `LabLive`,
 
 1. Add the kind to `LAB_KINDS` and `REGISTRY`.
 2. Add prop validation to `validate-exercise.ts`.
-3. Add the file to `motion-provider-contract.test.ts`.
-4. Add a unit test next to `lab-widgets.test.tsx`.
+3. Add a unit test next to `lab-widgets.test.tsx`.
 
-`lesson-engine-design-contract.test.ts` picks up every file in
-`components/lesson-engine` and `components/widgets/lab` automatically.
+`lesson-engine-design-contract.test.ts` picks up every widget in
+`components/widgets/lab` automatically and checks that it announces results
+through a live region and reports completion.
 
 ## Course app
 
@@ -645,7 +645,6 @@ boxes, no poster numerals and no scene-coloured headings.
 | Three-step indicator (Verstehen, Ausprobieren, Prüfen) | `step-flow.tsx` |
 | Finite completion burst | `celebration-burst.tsx` |
 | Reduced motion and Save-Data switch | `use-calm-motion.ts` |
-| Contract | `course-app-design-contract.test.ts` |
 
 - `LessonShell` takes `look="app"` and a `header` slot. `LessonLayout` turns it
   on when `BlockPageShell` passes `courseApp` (engine courses), and

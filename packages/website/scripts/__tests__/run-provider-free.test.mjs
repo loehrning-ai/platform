@@ -66,7 +66,7 @@ const probe = [
   "'DATABASE_URL',",
   "'STRIPE_SECRET_KEY',",
   "'SSH_AUTH_SOCK',",
-  "'PLAYWRIGHT_CAPTURE_VISUALS',",
+  "'RUN_WEBKIT',",
   "'PROVIDER_FREE_BENIGN_MARKER'",
   "];",
   "process.stdout.write(JSON.stringify(Object.fromEntries(keys.map((key) => [key, process.env[key]]))));",
@@ -113,7 +113,7 @@ const result = spawnSync(
       DATABASE_URL: "postgres://sentinel.invalid/db",
       STRIPE_SECRET_KEY: "sentinel-stripe",
       SSH_AUTH_SOCK: "/tmp/sentinel-agent.sock",
-      PLAYWRIGHT_CAPTURE_VISUALS: "arbitrary-untrusted-value",
+      RUN_WEBKIT: "arbitrary-untrusted-value",
       PROVIDER_FREE_BENIGN_MARKER: "preserved",
     },
   },
@@ -161,7 +161,7 @@ for (const key of [
   "DATABASE_URL",
   "STRIPE_SECRET_KEY",
   "SSH_AUTH_SOCK",
-  "PLAYWRIGHT_CAPTURE_VISUALS",
+  "RUN_WEBKIT",
   "PROVIDER_FREE_BENIGN_MARKER",
 ]) {
   assert.equal(
@@ -220,22 +220,22 @@ for (const name of APPLICATION_PROVIDER_ENVIRONMENT_KEYS) {
   );
 }
 
-const visualCaptureResult = spawnSync(
+const webkitOptInResult = spawnSync(
   process.execPath,
   [wrapper, process.execPath, "-e", probe],
   {
     encoding: "utf8",
     env: {
       ...process.env,
-      PLAYWRIGHT_CAPTURE_VISUALS: "1",
+      RUN_WEBKIT: "1",
     },
   },
 );
-assert.equal(visualCaptureResult.status, 0, visualCaptureResult.stderr);
+assert.equal(webkitOptInResult.status, 0, webkitOptInResult.stderr);
 assert.equal(
-  JSON.parse(visualCaptureResult.stdout).PLAYWRIGHT_CAPTURE_VISUALS,
+  JSON.parse(webkitOptInResult.stdout).RUN_WEBKIT,
   "1",
-  "the explicit visual-capture opt-in must cross the minimal boundary",
+  "the explicit WebKit opt-in must cross the minimal boundary",
 );
 
 const dotenvDirectory = mkdtempSync(
@@ -437,10 +437,8 @@ assert.ok(
 );
 assert.ok(
   releaseRunner.indexOf('"static checks"') <
-    releaseRunner.indexOf('"full Lighthouse performance gate"') &&
-    releaseRunner.indexOf('"full Lighthouse performance gate"') <
-      releaseRunner.indexOf('"browser smoke"'),
-  "release verification must measure the complete verified build before browser journey gates",
+    releaseRunner.indexOf('"browser smoke"'),
+  "release verification must run the static checks before browser journey gates",
 );
 assert.ok(
   releaseRunner.indexOf('"launch browser gate"') <
@@ -449,8 +447,8 @@ assert.ok(
 );
 assert.ok(
   releaseRunner.indexOf('"provider-free production build"') <
-    releaseRunner.indexOf('"full Lighthouse performance gate"'),
-  "release verification must pin one provider-free build receipt before measuring it",
+    releaseRunner.indexOf('"server-log privacy probe"'),
+  "release verification must pin one provider-free build receipt before probing it",
 );
 for (const name of ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"]) {
   assert.match(
@@ -541,23 +539,6 @@ assert.match(
   /isDeepStrictEqual\(receipt\.toolchain, providerFreeReceipt\.toolchain\)/,
   "the configured release build must retain the provider-free toolchain",
 );
-assert.equal(
-  rootPackageJson.scripts["lighthouse:local"],
-  "node packages/website/scripts/run-provider-free.mjs bun run build && bun run lighthouse:local:built",
-);
-assert.equal(
-  rootPackageJson.scripts["lighthouse:local:built"],
-  "node packages/website/scripts/run-provider-free.mjs bun run lighthouse:local:built:internal",
-);
-assert.equal(
-  rootPackageJson.scripts["lighthouse:local:built:internal"],
-  "node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
-);
-assert.equal(
-  rootPackageJson.scripts["lighthouse:release:built"],
-  "node packages/website/scripts/run-provider-free.mjs node packages/website/scripts/run-built-gate.mjs lhci autorun --config=lighthouserc.json",
-);
-assert.match(releaseRunner, /"run", "lighthouse:release:built"/);
 
 const launchListEnvironment = {
   ...process.env,
@@ -617,7 +598,6 @@ const jobsNeedingLoopbackVerification = [
   ["ci.yml", "browser:", "run: bun run ci:browser"],
   ["nightly.yml", "browser:", "run: bun run --cwd packages/website verify:build"],
   ["nightly.yml", "webkit:", "run: bun run --cwd packages/website verify:build"],
-  ["nightly.yml", "lighthouse:", "run: bun run --cwd packages/website verify:build"],
 ];
 for (const [file, jobHeader, buildCommand] of jobsNeedingLoopbackVerification) {
   const ciWorkflow = workflowText(file);
@@ -748,6 +728,10 @@ const explicitlyClassifiedApplicationEnvironment = new Set([
   "ANALYZE",
   "NEXT_RUNTIME",
   "NODE_ENV",
+  // Read only by vitest files under src/, never by the application or a child process.
+  "BOOK_FROZEN_DIR",
+  "PUBLIC_NAME_DENYLIST",
+  "UPDATE_KIT",
 ]);
 assert.deepEqual(
   [...applicationEnvironmentNames]

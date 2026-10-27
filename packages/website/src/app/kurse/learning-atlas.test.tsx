@@ -602,7 +602,7 @@ describe("LearningAtlas", () => {
   it("links a course to its demo only where a demo actually exists", () => {
     const { container } = render(<LearningAtlas locale="de" access={getCourseAccess(true)} />);
 
-    // The five workshop demos practise for three of the eight courses. The
+    // The six workshop demos practise for three of the eight courses. The
     // other rows must omit the teaser rather than borrow a demo from an
     // unrelated course.
     const withTeaser = Array.from(
@@ -618,12 +618,12 @@ describe("LearningAtlas", () => {
     const aiNative = container.querySelector<HTMLElement>(
       '[data-course-slug="ai-native"]',
     );
-    // Three demos on this course, so the label carries the real count.
-    expect(aiNative).toHaveTextContent("3 Übungen ansehen");
+    // Four demos on this course, so the label carries the real count.
+    expect(aiNative).toHaveTextContent("4 Demos ansehen");
     const single = container.querySelector<HTMLElement>(
       '[data-course-slug="data-science"]',
     );
-    expect(single).toHaveTextContent("Übung ansehen");
+    expect(single).toHaveTextContent("Demo ansehen");
     expect(single?.querySelector('a[href^="/demos/"]')).toHaveAttribute(
       "href",
       "/demos/ki-prognosen-einschaetzen?source=gallery",
@@ -631,7 +631,7 @@ describe("LearningAtlas", () => {
     // A phone prints the noun only, so the link fits beside the action; the
     // verb stays in the accessible name, which starts with the visible label.
     const demo = within(aiNative as HTMLElement).getByRole("link", {
-      name: "3 Übungen ansehen",
+      name: "4 Demos ansehen",
     });
     expect(demo.querySelector(".max-sm\\:sr-only")).toHaveTextContent(
       /^ansehen$/,

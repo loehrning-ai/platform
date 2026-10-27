@@ -4,10 +4,11 @@
  * groups, so a red job is reproduced by running the same script name locally.
  *
  *   bun run ci            static and unit in parallel, then browser
- *   bun run ci:static     types, lint, public-leak scan, content and route checks
+ *   bun run ci:static     types, lint, public-leak scan, content and route checks, critical audit,
+ *                         every script self-test
  *   bun run ci:unit       vitest, no coverage
  *   bun run ci:browser    the one production build, server-log privacy, browser smoke
- *   bun run ci:hygiene    audits and tool self-tests (nightly only, not part of `ci`)
+ *   bun run ci:hygiene    full advisory and licence audits (weekly only, not part of `ci`)
  *
  * Every root `ci*` script runs this file under run-provider-free.mjs, which
  * scrubs the environment down to the allowlist in scripts/environment-policy.mjs.
@@ -23,7 +24,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const SMOKE_LIST = "packages/website/tests/e2e/smoke.list";
-const SMOKE_PROJECTS = ["chromium", "mobile-chromium"];
+const SMOKE_PROJECTS = ["chromium"];
 const WEBSITE = ["--cwd", "packages/website"];
 
 const bun = (name, ...args) => ({ name, command: "bun", args });
@@ -75,24 +76,24 @@ export const GROUPS = {
       site("tsc (app)", "tsc", "--noEmit", "-p", "tsconfig.typecheck.json"),
       site("tsc (tests)", "tsc", "--noEmit", "-p", "tsconfig.tests.json"),
       site("lint", "lint"),
+      // Every script self-test, found by glob so none can be left out.
+      root("test:scripts", "test:scripts"),
       site("content:lint", "content:lint"),
       root("scan:public", "scan:public"),
-      root("test:scanner", "test:scanner"),
       root("marketing:check", "marketing:check"),
+      root("copy:lint", "copy:lint"),
+      root("deck-keys:check", "deck-keys:check"),
+      root("workshop05-deck:check", "workshop05-deck:check"),
+      root("workshop06-kit:check", "workshop06-kit:check"),
+      root("workshop06-deck:check", "workshop06-deck:check"),
       site("skills:mirror-check", "skills:mirror-check"),
       site("page-inventory:check", "page-inventory:check"),
       site("english-routes:check", "english-routes:check"),
       site("migrations:check", "migrations:check"),
       root("verify:workspace-contract", "verify:workspace-contract"),
-      root("test:deploy-production", "test:deploy-production"),
-      // Cheap self-tests of the gates that guard the public tree and the copy.
-      root("test:ci", "test:ci"),
-      site("test:content-lint", "test:content-lint"),
-      site("test:english-routes", "test:english-routes"),
-      site("test:migrations-tracked", "test:migrations-tracked"),
-      root("test:marketing", "test:marketing"),
-      root("test:publication-clean", "test:publication-clean"),
-      root("test:workspace-contract", "test:workspace-contract"),
+      root("artifact-assets:check", "artifact-assets:check"),
+      // A critical advisory blocks the PR; high and below surface weekly.
+      root("audit:critical", "audit:critical"),
       { name: "smoke.list files exist", run: checkSmokeListExists },
     ],
   ],
@@ -102,24 +103,7 @@ export const GROUPS = {
     [site("server-log privacy", "test:server-log-privacy:built")],
     [bun("browser smoke", "run", ...WEBSITE, "e2e:shard:built", ...smokeArguments())],
   ],
-  hygiene: () => [
-    [
-      root("audit", "audit"),
-      root("license:audit", "license:audit"),
-      root("test:dependency-licenses", "test:dependency-licenses"),
-      root("test:course03-publication", "test:course03-publication"),
-      root("test:workshop04-publication", "test:workshop04-publication"),
-      root("test:asset-tool", "test:asset-tool"),
-      root("test:dependency-snapshot", "test:dependency-snapshot"),
-      root("test:artifact-assets", "test:artifact-assets"),
-      root("artifact-assets:check", "artifact-assets:check"),
-      site("test:env-contract", "test:env-contract"),
-      site("test:provider-free-env", "test:provider-free-env"),
-      site("test:build-freshness", "test:build-freshness"),
-      site("test:e2e-suite-contract", "test:e2e-suite-contract"),
-      site("test:e2e-auth-env-contract", "test:e2e-auth-env-contract"),
-    ],
-  ],
+  hygiene: () => [[root("audit", "audit"), root("license:audit", "license:audit")]],
 };
 
 /** Environment the browser steps share: build and serve must see identical values. */

@@ -1,0 +1,1328 @@
+/*
+ * Glas: the design language of the demos only (src/lib/glas.ts has the
+ * numbers and the contrast proof; glas.test.ts reads every alpha below back
+ * and fails when one drifts). Everything here is scoped under [data-glas],
+ * which only the demo routes and src/components/demos/** render, so nothing
+ * leaks into the rest of the site (contract test in glas.test.ts).
+ *
+ * Layers: the field (ground and pools, no filter) and the data are content;
+ * glass is the control layer that floats over them. Never glass on glass:
+ * children of a glass surface use fills. backdrop-filter is never animated
+ * or transitioned; a surface appears by its own opacity and transform.
+ *
+ * Modes on the root (data-glas-mode): live (real backdrop-filter), frost (a
+ * static copy of the field painted inside each surface, no filter), solid
+ * (opaque tint and a hairline). The media fallbacks at the end force solid
+ * for reduced transparency, more contrast, forced colours and print.
+ */
+
+/* ── Tokens ──────────────────────────────────────────────────────────────── */
+[data-glas] {
+  --glas-tint-hell: 255 252 245;
+  --glas-tint-dunkel: 26 23 20;
+
+  /* Alphas: rim zone and reading plate (composite), per tone (glas.ts GLAS_MATERIALS). */
+  --glas-a-hell-clear: 0.1;
+  --glas-a-hell-rim: 0.56;
+  --glas-a-hell-thin: 0.56;
+  --glas-a-hell-regular: 0.8;
+  --glas-a-hell-thick: 0.9;
+  --glas-a-dunkel-clear: 0.08;
+  --glas-a-dunkel-rim: 0.66;
+  --glas-a-dunkel-thin: 0.66;
+  --glas-a-dunkel-regular: 0.84;
+  --glas-a-dunkel-thick: 0.9;
+  --glas-a-sheet-full: 0.96;
+  --glas-a-accent: 0.92;
+
+  --glas-filter-hell-thin: blur(12px) saturate(2) brightness(1.08);
+  --glas-filter-hell-regular: blur(18px) saturate(2) brightness(1.08);
+  --glas-filter-hell-thick: blur(28px) saturate(1.8) brightness(1.08);
+  --glas-filter-dunkel-thin: blur(12px) saturate(1.6) brightness(0.92);
+  --glas-filter-dunkel-regular: blur(18px) saturate(1.6) brightness(0.92);
+  --glas-filter-dunkel-thick: blur(28px) saturate(1.5) brightness(0.92);
+
+  --glas-accent: #b73a15;
+  --glas-accent-pressed: #97300f;
+  --glas-accent-label: #fffcf5;
+  --glas-druckschwarz: #121212;
+  --glas-bogen: #fffcf5;
+
+  --glas-r-stage: 36px;
+  --glas-r-sheet: 36px;
+  --glas-r-card: 28px;
+  --glas-r-fixed: 16px;
+
+  --glas-e1: 0 1px 2px rgb(18 18 18 / 0.08), 0 8px 24px -10px rgb(18 18 18 / 0.22);
+  --glas-e2: 0 1px 2px rgb(18 18 18 / 0.08), 0 12px 32px -12px rgb(18 18 18 / 0.28);
+  --glas-e3: 0 2px 6px rgb(18 18 18 / 0.1), 0 24px 64px -16px rgb(18 18 18 / 0.32);
+  --glas-e1-dark: 0 1px 2px rgb(0 0 0 / 0.18), 0 8px 24px -10px rgb(0 0 0 / 0.48);
+  --glas-e2-dark: 0 1px 2px rgb(0 0 0 / 0.2), 0 12px 32px -12px rgb(0 0 0 / 0.5);
+  --glas-e3-dark: 0 2px 6px rgb(0 0 0 / 0.24), 0 24px 64px -16px rgb(0 0 0 / 0.55);
+
+  --glas-dur-quick: 486ms;
+  --glas-dur-smooth: 734ms;
+  --glas-dur-bouncy: 818ms;
+  --glas-ease-smooth: linear(0, 0.057, 0.18, 0.32, 0.455, 0.572, 0.671, 0.75, 0.812, 0.86, 0.896, 0.924, 0.944, 0.959, 0.971, 0.979, 0.985, 0.989, 0.992, 0.994, 0.996, 0.997, 0.998, 0.999, 1);
+  --glas-ease-quick: linear(0, 0.054, 0.175, 0.321, 0.466, 0.596, 0.705, 0.793, 0.861, 0.911, 0.946, 0.971, 0.987, 0.997, 1.002, 1.005, 1.006, 1.006, 1.006, 1.005, 1.004, 1.003, 1.002, 1.002, 1);
+  --glas-ease-bouncy: linear(0, 0.075, 0.241, 0.436, 0.62, 0.772, 0.887, 0.965, 1.013, 1.037, 1.046, 1.044, 1.037, 1.028, 1.02, 1.012, 1.006, 1.002, 1, 0.999, 0.998, 0.998, 0.998, 0.999, 1);
+
+  color: var(--glas-fg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Tone: every element under data-tone reads its colours from here. */
+[data-glas][data-tone="hell"],
+[data-glas] [data-tone="hell"] {
+  --glas-t: var(--glas-tint-hell);
+  --glas-a-thin: var(--glas-a-hell-thin);
+  --glas-a-regular: var(--glas-a-hell-regular);
+  --glas-a-thick: var(--glas-a-hell-thick);
+  --glas-a-rim: var(--glas-a-hell-rim);
+  --glas-a-clear: var(--glas-a-hell-clear);
+  /* Plate alphas: rim plus plate composite to the text alpha (glas.ts plateAlpha). */
+  --glas-plate-regular: 0.545;
+  --glas-plate-thick: 0.773;
+  --glas-filter-thin: var(--glas-filter-hell-thin);
+  --glas-filter-regular: var(--glas-filter-hell-regular);
+  --glas-filter-thick: var(--glas-filter-hell-thick);
+  --glas-fg: #121212;
+  --glas-fg-2: #4f4640;
+  --glas-link: #97300f;
+  --glas-mark: #b73a15;
+  --glas-fill: rgb(18 18 18 / 0.07);
+  --glas-fill-strong: rgb(18 18 18 / 0.12);
+  --glas-hairline: rgb(18 18 18 / 0.16);
+  --glas-pill: rgb(255 252 245 / 0.95);
+  --glas-pill-shadow: 0 1px 3px rgb(18 18 18 / 0.18), inset 0 0 0 0.5px rgb(18 18 18 / 0.06);
+  --glas-spec-hi: 0.9;
+  --glas-spec-lo: 0.35;
+  --glas-press-glow: rgb(255 255 255 / 0.35);
+  --glas-edge: inset 0 0 0 0.5px rgb(255 255 255 / 0.7), inset 0 0 18px rgb(255 255 255 / 0.35), 0 0 0 0.5px rgb(18 18 18 / 0.16);
+  --glas-elev-1: var(--glas-e1);
+  --glas-elev-2: var(--glas-e2);
+  --glas-elev-3: var(--glas-e3);
+  --glas-solid: #fffcf5;
+  --glas-solid-border: #121212;
+}
+[data-glas][data-tone="dunkel"],
+[data-glas] [data-tone="dunkel"] {
+  --glas-t: var(--glas-tint-dunkel);
+  --glas-a-thin: var(--glas-a-dunkel-thin);
+  --glas-a-regular: var(--glas-a-dunkel-regular);
+  --glas-a-thick: var(--glas-a-dunkel-thick);
+  --glas-a-rim: var(--glas-a-dunkel-rim);
+  --glas-a-clear: var(--glas-a-dunkel-clear);
+  --glas-plate-regular: 0.529;
+  --glas-plate-thick: 0.706;
+  --glas-filter-thin: var(--glas-filter-dunkel-thin);
+  --glas-filter-regular: var(--glas-filter-dunkel-regular);
+  --glas-filter-thick: var(--glas-filter-dunkel-thick);
+  --glas-fg: #f7f1e7;
+  --glas-fg-2: #c9c0b5;
+  --glas-link: #f7f1e7;
+  --glas-mark: #e07050;
+  --glas-fill: rgb(255 255 255 / 0.1);
+  --glas-fill-strong: rgb(255 255 255 / 0.18);
+  --glas-hairline: rgb(0 0 0 / 0.5);
+  --glas-pill: rgb(255 255 255 / 0.22);
+  --glas-pill-shadow: inset 0 0.5px 0 rgb(255 255 255 / 0.4), 0 1px 3px rgb(0 0 0 / 0.3);
+  --glas-spec-hi: 0.55;
+  --glas-spec-lo: 0.18;
+  --glas-press-glow: rgb(255 255 255 / 0.18);
+  --glas-edge: inset 0 0 0 0.5px rgb(255 255 255 / 0.18), 0 0 0 0.5px rgb(0 0 0 / 0.5);
+  --glas-elev-1: var(--glas-e1-dark);
+  --glas-elev-2: var(--glas-e2-dark);
+  --glas-elev-3: var(--glas-e3-dark);
+  --glas-solid: #1a1714;
+  --glas-solid-border: #f7f1e7;
+}
+
+/* One light source, top left; it turns as a surface materializes (registered so it can transition). */
+@property --glas-light {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 150deg;
+}
+
+/* ── Material ────────────────────────────────────────────────────────────── */
+.glas {
+  --glas-a: var(--glas-a-regular);
+  --glas-filter: var(--glas-filter-regular);
+  --glas-shadow: var(--glas-edge), var(--glas-elev-2);
+  --r: var(--glas-r-card);
+  --glas-plate: var(--glas-plate-regular, 0.545);
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--r);
+  color: var(--glas-fg);
+  /* The rim zone: thinner than the plate, so the field bleeds in at the edge. */
+  background-color: rgb(var(--glas-t) / var(--glas-a-rim));
+  box-shadow: var(--glas-shadow);
+}
+.glas[data-material="thin"] {
+  --glas-a: var(--glas-a-thin);
+  --glas-filter: var(--glas-filter-thin);
+  --glas-shadow: var(--glas-edge), var(--glas-elev-1);
+  background-color: rgb(var(--glas-t) / var(--glas-a-thin));
+}
+.glas[data-material="thick"] {
+  --glas-a: var(--glas-a-thick);
+  --glas-filter: var(--glas-filter-thick);
+}
+.glas[data-material="clear"] {
+  --glas-a: var(--glas-a-clear);
+  background-color: rgb(255 255 255 / var(--glas-a-clear));
+  box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.7), inset 0 2px 8px rgb(255 255 255 / 0.5), inset 0 -6px 12px rgb(255 255 255 / 0.15), var(--glas-elev-3);
+}
+.glas[data-elevation="3"] {
+  --glas-shadow: var(--glas-edge), var(--glas-elev-3);
+}
+/* Capsules and the fixed radius carry one line: one zone at the text alpha, no plate. */
+.glas[data-shape="capsule"] {
+  --r: 9999px;
+  background-color: rgb(var(--glas-t) / var(--glas-a));
+}
+.glas[data-shape="fixed"] {
+  --r: var(--glas-r-fixed);
+  background-color: rgb(var(--glas-t) / var(--glas-a));
+}
+
+/* Never glass on glass: a panel inside a panel is a fill. */
+.glas[data-nested] {
+  background-color: var(--glas-fill);
+  background-image: none;
+  box-shadow: none;
+}
+.glas[data-nested]::before,
+.glas[data-nested]::after {
+  display: none;
+}
+
+/* Specular rim: a 1px ring, bright where the light hits, faint opposite. */
+.glas::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    var(--glas-light),
+    rgb(255 255 255 / var(--glas-spec-hi)) 0%,
+    rgb(255 255 255 / 0) 38%,
+    rgb(255 255 255 / 0) 62%,
+    rgb(255 255 255 / var(--glas-spec-lo)) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+/* The reading plate of a card: inset 12px, feathered 8px, so rim plus plate composite to the proven alpha. */
+.glas:not([data-shape="capsule"], [data-shape="fixed"], [data-material="thin"], [data-material="clear"])::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  z-index: -1;
+  border-radius: max(10px, calc(var(--r) - 12px));
+  background-color: rgb(var(--glas-t) / var(--glas-plate, 0.545));
+  box-shadow: 0 0 8px 4px rgb(var(--glas-t) / var(--glas-plate, 0.545));
+  pointer-events: none;
+}
+.glas[data-material="regular"] {
+  --glas-plate: var(--glas-plate-regular);
+}
+.glas[data-material="thick"] {
+  --glas-plate: var(--glas-plate-thick);
+}
+/* A sheet at its large detent: more opaque, its own filter switched off. */
+.glas[data-detent="large"] {
+  background-color: rgb(var(--glas-t) / var(--glas-a-sheet-full));
+  --glas-plate: 0;
+}
+
+@supports (corner-shape: squircle) {
+  .glas:not([data-shape="capsule"]) {
+    corner-shape: superellipse(1.5);
+    border-radius: calc(var(--r) * 1.25);
+  }
+}
+
+/* Live: the real filter, only where the budget gave the surface a slot (data-live="on"). */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  [data-glas-mode="live"] .glas[data-live="on"]:not([data-material="clear"], [data-detent="large"], [data-nested]) {
+    -webkit-backdrop-filter: var(--glas-filter);
+    backdrop-filter: var(--glas-filter);
+  }
+}
+
+/* Frost (and every surface the budget turned off): the field copy, painted inside, no filter. */
+[data-glas-mode="frost"] .glas:not([data-material="clear"], [data-nested]),
+.glas[data-live="off"]:not([data-material="clear"], [data-nested]) {
+  background-image: linear-gradient(rgb(var(--glas-t) / var(--glas-a)), rgb(var(--glas-t) / var(--glas-a))), var(--glas-feld-image, none);
+  background-size: auto, var(--glas-feld-w, 100%) var(--glas-feld-h, 100%);
+  background-position: 0 0, calc(-1 * var(--glas-ox, 0px)) calc(-1 * var(--glas-oy, 0px));
+  background-repeat: no-repeat;
+}
+
+/* Solid: opaque tint, a hairline, no speculars. */
+[data-glas-mode="solid"] .glas:not([data-material="clear"]) {
+  background-color: var(--glas-solid);
+  background-image: none;
+  box-shadow: 0 0 0 1px var(--glas-solid-border), var(--glas-elev-1);
+}
+[data-glas-mode="solid"] .glas::before,
+[data-glas-mode="solid"] .glas::after {
+  display: none;
+}
+
+/* Materialize: opacity, scale and a turning specular; never a filter change. */
+@media (prefers-reduced-motion: no-preference) {
+  .glas[data-appear] {
+    transition:
+      opacity 180ms linear,
+      transform var(--glas-dur-smooth) var(--glas-ease-smooth),
+      --glas-light var(--glas-dur-smooth) var(--glas-ease-smooth);
+  }
+}
+.glas[data-appear="out"] {
+  opacity: 0;
+  transform: translateY(8px) scale(0.96);
+  --glas-light: 120deg;
+  pointer-events: none;
+}
+
+/* ── Stage and field ─────────────────────────────────────────────────────── */
+/* The stage is the backdrop root: no opacity, filter, mask, clip-path or blend on the way to its glass. */
+.glas-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--glas-content-ink, inherit);
+}
+.glas-feld {
+  position: absolute;
+  inset: 0;
+  /* Below all stage content: the stage is isolated, so -1 stays inside it. */
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--glas-feld-ground);
+  pointer-events: none;
+}
+/* A pool track spans the stage, so translate in percent moves the pool in stage units (transform only). */
+.glas-pool-track {
+  position: absolute;
+  inset: 0;
+}
+.glas-pool-track[data-moving] {
+  will-change: translate;
+}
+.glas-pool {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--pool-size) * 100%);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--pool-colour), transparent);
+  opacity: var(--pool-alpha);
+  transform: translate(-50%, -50%);
+}
+
+
+/* ── Focus: a double ring outside the shape, 2px Bogen then 2px Druckschwarz ─ */
+.glas-focus:focus-visible,
+[data-glas] .glas-btn:focus-visible,
+[data-glas] .glas-seg-option:focus-visible,
+[data-glas] .glas-slider-thumb:focus-visible,
+[data-glas] .glas-toggle:focus-visible,
+[data-glas] .glas-chip:focus-visible,
+[data-glas] .glas-weg-dot:focus-visible,
+[data-glas] .glas-handle:focus-visible {
+  outline: 2px solid var(--glas-druckschwarz);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--glas-bogen), var(--glas-shadow, 0 0 #0000);
+}
+
+/* ── Button ──────────────────────────────────────────────────────────────── */
+.glas-btn {
+  --glas-shadow: none;
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--glas-fg);
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+.glas-btn[data-size="large"] {
+  min-height: 52px;
+  padding: 0 24px;
+}
+.glas-btn[data-size="compact"] {
+  min-height: 36px;
+  padding: 0 14px;
+  font-size: 0.9375rem;
+}
+.glas-btn[data-size="compact"]::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+.glas-btn[data-block] {
+  display: flex;
+  width: 100%;
+}
+.glas-btn[data-variant="prominent"] {
+  --glas-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), inset 0 -1px 0 rgb(0 0 0 / 0.15), 0 8px 20px -8px rgb(183 58 21 / 0.6);
+  background-color: rgb(183 58 21 / var(--glas-a-accent));
+  color: var(--glas-accent-label);
+  box-shadow: var(--glas-shadow);
+}
+.glas-btn[data-variant="prominent"]:active,
+.glas-btn[data-variant="prominent"][data-pressed] {
+  background-color: var(--glas-accent-pressed);
+}
+.glas-btn[data-variant="fill"] {
+  background-color: var(--glas-fill);
+}
+.glas-btn[data-variant="icon"] {
+  width: 44px;
+  min-width: 44px;
+  padding: 0;
+  background-color: var(--glas-fill);
+}
+.glas-btn[data-variant="icon"][data-size="compact"] {
+  width: 36px;
+  min-width: 36px;
+}
+.glas-btn[data-variant="plain"]:hover {
+  background-color: var(--glas-fill);
+}
+.glas-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+/* Press: lights from the touch point outward, scales a little. */
+.glas-btn > .glas-btn-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--px, 50%) var(--py, 50%), var(--glas-press-glow), transparent 60%);
+  opacity: 0;
+  pointer-events: none;
+}
+.glas-btn[data-pressed] > .glas-btn-glow {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-btn {
+    transition: transform var(--glas-dur-quick) var(--glas-ease-quick), background-color 160ms linear;
+  }
+  .glas-btn > .glas-btn-glow {
+    transition: opacity 300ms linear;
+  }
+  .glas-btn[data-pressed] > .glas-btn-glow {
+    transition-duration: 80ms;
+  }
+  .glas-btn[data-pressed] {
+    transform: scale(0.96);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .glas-btn.glas:hover {
+    --glas-spec-hi: 1;
+  }
+  .glas-btn[data-variant="prominent"]:hover {
+    background-color: rgb(183 58 21 / 1);
+  }
+  .glas-btn[data-variant="icon"]:hover,
+  .glas-btn[data-variant="fill"]:hover {
+    background-color: var(--glas-fill-strong);
+  }
+}
+.glas-btn[disabled],
+.glas-btn[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* ── Segmented control ───────────────────────────────────────────────────── */
+.glas-seg {
+  position: relative;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  min-height: 40px;
+  padding: 2px;
+  border-radius: 9999px;
+  background-color: var(--glas-fill);
+  touch-action: pan-y;
+  user-select: none;
+}
+.glas-seg.glas {
+  background-color: rgb(var(--glas-t) / var(--glas-a-thin));
+}
+.glas-seg-pill {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  z-index: 0;
+  border-radius: 9999px;
+  background-color: var(--glas-pill);
+  box-shadow: var(--glas-pill-shadow);
+  transform-origin: center;
+  pointer-events: none;
+}
+.glas-seg-pill[data-dragging] {
+  box-shadow: var(--glas-pill-shadow), inset 0 0 0 1px rgb(255 255 255 / 0.8);
+}
+.glas-seg-option {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-width: 0;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--glas-fg);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  cursor: pointer;
+}
+.glas-seg-option > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.glas-seg[data-wrap] .glas-seg-option > span {
+  white-space: normal;
+}
+
+/* ── Slider with lens thumb ──────────────────────────────────────────────── */
+.glas-slider {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.glas-slider-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.33;
+}
+.glas-slider-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.glas-slider-hit {
+  position: relative;
+  height: 44px;
+  touch-action: pan-y;
+  cursor: pointer;
+}
+.glas-slider-track {
+  position: absolute;
+  left: 19px;
+  right: 19px;
+  top: 19px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: var(--glas-fill-strong);
+}
+[data-tone="dunkel"] .glas-slider-track {
+  background-color: rgb(255 255 255 / 0.18);
+}
+.glas-slider-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 9999px;
+  background-color: var(--glas-mark);
+}
+.glas-slider-tick {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 10px;
+  border-radius: 1px;
+  background-color: var(--glas-fg-2);
+  transform: translate(-50%, -50%);
+}
+.glas-slider-ticklabels {
+  position: relative;
+  height: 18px;
+  margin: 0 19px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--glas-fg-2);
+  font-variant-numeric: tabular-nums;
+}
+.glas-slider-ticklabels > span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.glas-slider-ticklabels > span[data-edge="start"] {
+  transform: none;
+}
+.glas-slider-ticklabels > span[data-edge="end"] {
+  transform: translateX(-100%);
+}
+/* The thumb at rest: a Bogen capsule with an ink ring at 70 %, visible on any field. */
+.glas-slider-thumb {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  z-index: 2;
+  width: 38px;
+  height: 24px;
+  margin-left: -19px;
+  border-radius: 9999px;
+  background-color: #fffcf5;
+  box-shadow: 0 0 0 1.5px #595856, var(--glas-e2);
+  --glas-shadow: 0 0 0 1.5px #595856, var(--glas-e2);
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+}
+.glas-slider-thumb[data-active] {
+  opacity: 0;
+  cursor: grabbing;
+}
+/* While dragged the thumb becomes the lens: clear glass, 64 x 44, the track magnified 1.25x under it. */
+.glas-slider-lens {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: 64px;
+  height: 44px;
+  margin-left: -32px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: rgb(255 255 255 / 0.1);
+  box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.85), inset 0 2px 8px rgb(255 255 255 / 0.5), inset 0 -6px 12px rgb(255 255 255 / 0.15), var(--glas-e3);
+  opacity: 0;
+  transform: scale(0.594, 0.545);
+  pointer-events: none;
+}
+.glas-slider-lens::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.glas-slider-lens[data-active] {
+  opacity: 1;
+  transform: none;
+}
+.glas-slider-lens-content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 44px;
+  transform-origin: 0 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-slider-lens {
+    transition: transform var(--glas-dur-bouncy) var(--glas-ease-bouncy), opacity 120ms linear;
+  }
+  .glas-slider-lens:not([data-active]) {
+    transition: transform var(--glas-dur-quick) var(--glas-ease-quick), opacity 160ms linear;
+  }
+}
+.glas-slider-hint {
+  margin: 4px 0 0;
+  color: var(--glas-fg-2);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.glas-slider-readout {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: 3;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── Data handle (an SVG group: the datum itself is draggable) ───────────── */
+.glas-handle {
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+}
+.glas-handle[data-active] {
+  cursor: grabbing;
+}
+.glas-handle-hit {
+  fill: transparent;
+}
+.glas-handle-dot {
+  stroke: var(--glas-handle-ring, #fffcf5);
+  stroke-width: 2;
+}
+@media (hover: hover) and (pointer: fine) {
+  .glas-handle:hover .glas-handle-dot {
+    stroke: var(--glas-accent);
+  }
+}
+.glas-handle:focus-visible .glas-handle-dot {
+  stroke: var(--glas-druckschwarz);
+  stroke-width: 3;
+}
+.glas-lens-rim {
+  fill: rgb(255 255 255 / 0.1);
+  stroke: rgb(255 255 255 / 0.85);
+  stroke-width: 1;
+}
+.glas-lens-shade {
+  fill: none;
+  stroke: rgb(18 18 18 / 0.28);
+  stroke-width: 6;
+  filter: blur(4px);
+}
+
+/* ── Toggle ──────────────────────────────────────────────────────────────── */
+.glas-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+.glas-toggle {
+  position: relative;
+  flex: none;
+  width: 52px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background-color: var(--glas-fill-strong);
+  box-shadow: inset 0 0 0 1px rgb(18 18 18 / 0.55);
+  cursor: pointer;
+}
+[data-tone="dunkel"] .glas-toggle {
+  box-shadow: inset 0 0 0 1px rgb(247 241 231 / 0.55);
+}
+.glas-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -6px -2px;
+}
+.glas-toggle[aria-checked="true"] {
+  background-color: var(--glas-accent);
+  box-shadow: none;
+}
+.glas-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background-color: #fffcf5;
+  box-shadow: 0 2px 6px rgb(18 18 18 / 0.25), 0 0 0 0.5px rgb(18 18 18 / 0.12);
+  pointer-events: none;
+}
+.glas-toggle[aria-checked="true"] .glas-toggle-knob {
+  transform: translateX(20px);
+}
+.glas-toggle[data-pressed] .glas-toggle-knob {
+  width: 36px;
+  background-color: rgb(255 255 255 / 0.35);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.9), 0 2px 8px rgb(18 18 18 / 0.3);
+}
+.glas-toggle[aria-checked="true"][data-pressed] .glas-toggle-knob {
+  transform: translateX(12px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-toggle-knob {
+    transition: transform var(--glas-dur-quick) var(--glas-ease-quick), width var(--glas-dur-quick) var(--glas-ease-quick), background-color 120ms linear;
+  }
+  .glas-toggle {
+    transition: background-color 200ms linear;
+  }
+}
+
+.glas-toggle-desc {
+  display: block;
+  margin-top: 2px;
+  color: var(--glas-fg-2);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+
+/* ── Chip ────────────────────────────────────────────────────────────────── */
+.glas-chip {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  min-height: 32px;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9999px;
+  background-color: var(--glas-fill);
+  color: var(--glas-fg);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.glas-chip.glas {
+  background-color: rgb(var(--glas-t) / var(--glas-a-thin));
+}
+button.glas-chip,
+a.glas-chip {
+  cursor: pointer;
+  text-decoration: none;
+}
+button.glas-chip::after,
+a.glas-chip::after {
+  content: "";
+  position: absolute;
+  inset: -6px 0;
+}
+.glas-chip > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.glas-chip[data-kind="file"] > span {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+.glas-chip[data-selected] {
+  background-color: #121212;
+  color: #f7f1e7;
+}
+[data-tone="dunkel"] .glas-chip[data-selected] {
+  background-color: #f7f1e7;
+  color: #121212;
+}
+.glas-chip svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  button.glas-chip:not([data-selected]):hover,
+  a.glas-chip:hover {
+    background-color: var(--glas-fill-strong);
+  }
+}
+
+/* ── Readout and tooltip ─────────────────────────────────────────────────── */
+.glas-readout {
+  display: inline-block;
+  padding: 8px 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.33;
+  font-variant-numeric: tabular-nums;
+  transform-origin: var(--origin-x, 50%) var(--origin-y, 100%);
+}
+.glas-readout[data-lines="2"] {
+  white-space: normal;
+  max-width: 18rem;
+}
+.glas-readout-pop {
+  animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-readout[data-pop] {
+    animation: glas-pop var(--glas-dur-quick) var(--glas-ease-quick) both;
+  }
+}
+@keyframes glas-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.glas-tooltip-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.glas-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 20;
+  width: max-content;
+  max-width: min(18rem, 80vw);
+  translate: -50% 0;
+}
+.glas-tooltip[data-side="below"] {
+  top: calc(100% + 8px);
+  bottom: auto;
+}
+
+/* ── Progress ────────────────────────────────────────────────────────────── */
+.glas-progress {
+  position: relative;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: var(--glas-fill-strong);
+}
+.glas-progress-bar {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: var(--glas-mark);
+  transform-origin: 0 50%;
+}
+
+/* ── Weg: the guided path ────────────────────────────────────────────────── */
+/* Phone: dots and buttons share the first row, the step sentence takes the
+   whole second row. From 768px the sentence sits between them. */
+.glas-weg {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  min-width: 0;
+}
+.glas-weg-dots {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0 6px;
+  list-style: none;
+}
+.glas-weg-dot {
+  position: relative;
+  display: grid;
+  width: 22px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  cursor: pointer;
+}
+.glas-weg-dot > span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  box-shadow: inset 0 0 0 1.5px var(--glas-fg);
+}
+.glas-weg-dot[data-state="done"] > span {
+  background-color: var(--glas-fg);
+}
+.glas-weg-dot[data-state="current"] {
+  width: 36px;
+}
+.glas-weg-dot[data-state="current"] > span {
+  width: 24px;
+  background-color: var(--glas-mark);
+  box-shadow: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-weg-dot,
+  .glas-weg-dot > span {
+    transition: width var(--glas-dur-quick) var(--glas-ease-quick), background-color 160ms linear;
+  }
+}
+.glas-weg-buttons {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.glas-weg-step {
+  order: 3;
+  flex: 1 1 100%;
+  min-width: 0;
+  margin: 0;
+  padding-inline: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.33;
+}
+
+@media (min-width: 768px) {
+  .glas-weg {
+    flex-wrap: nowrap;
+  }
+  .glas-weg-step {
+    order: 0;
+    flex: 1 1 auto;
+    padding-inline: 0;
+  }
+}
+
+/* ── Intro card ──────────────────────────────────────────────────────────── */
+.glas-intro {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  min-height: 0;
+  padding: 20px;
+}
+/* On a short screen only the text scrolls: the buttons and the footnote are never cut by the card's edge. */
+.glas-intro-text {
+  min-height: 0;
+  flex: 0 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.glas-intro-actions,
+.glas-intro-foot {
+  flex: none;
+}
+.glas-intro-news {
+  margin: 10px 0 0;
+  max-width: 64ch;
+  padding-left: 10px;
+  border-left: 2px solid currentColor;
+  color: var(--glas-fg-2);
+  font-size: 0.9375rem;
+  line-height: 1.42;
+  text-wrap: pretty;
+}
+@media (min-width: 64rem) {
+  .glas-intro {
+    padding: 24px;
+  }
+}
+.glas-intro-kicker {
+  margin: 0;
+  color: var(--glas-fg-2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.38;
+  font-variant-numeric: tabular-nums;
+}
+.glas-intro-title {
+  margin: 6px 0 0;
+  font-size: 1.625rem;
+  font-weight: 700;
+  line-height: 1.19;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+@media (min-width: 64rem) {
+  .glas-intro-title {
+    font-size: 2.125rem;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+}
+.glas-intro-body {
+  margin: 10px 0 0;
+  max-width: 64ch;
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.47;
+  text-wrap: pretty;
+}
+.glas-intro-actions {
+  display: grid;
+  gap: 4px;
+  margin-top: 16px;
+}
+@media (min-width: 40rem) {
+  .glas-intro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .glas-intro-actions .glas-btn[data-block] {
+    width: auto;
+  }
+}
+.glas-intro-foot {
+  margin: 10px 0 0;
+  color: var(--glas-fg-2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.38;
+}
+
+/* ── Sheet ───────────────────────────────────────────────────────────────── */
+.glas-sheet-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background-color: rgb(18 18 18 / 0.2);
+}
+.glas-sheet-scrim[data-state="closed"] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-sheet-scrim {
+    transition: opacity 200ms linear;
+  }
+}
+.glas-sheet {
+  position: fixed;
+  z-index: 81;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100svh - var(--nav-h-compact, 48px) - 24px);
+  color: var(--glas-fg);
+  outline: none;
+  --r: var(--glas-r-sheet);
+}
+.glas-sheet[data-place="bottom"] {
+  left: 8px;
+  right: 8px;
+  bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+}
+.glas-sheet[data-place="bottom"][data-detent="large"] {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.glas-sheet[data-place="side"] {
+  top: calc(var(--nav-h, 64px) + 12px);
+  right: 12px;
+  bottom: 12px;
+  width: min(400px, calc(100vw - 24px));
+  --r: var(--glas-r-card);
+}
+.glas-sheet-grabber {
+  position: relative;
+  display: flex;
+  flex: none;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  cursor: grab;
+}
+.glas-sheet-grabber > span {
+  width: 36px;
+  height: 5px;
+  border-radius: 9999px;
+  background-color: var(--glas-fg);
+  opacity: 0.3;
+}
+.glas-sheet-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 16px 8px 20px;
+}
+.glas-sheet[data-place="side"] .glas-sheet-head {
+  padding-top: 16px;
+}
+.glas-sheet-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.glas-sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 20px 20px;
+  overscroll-behavior: contain;
+  -webkit-mask-image: linear-gradient(transparent, #000 16px);
+  mask-image: linear-gradient(transparent, #000 16px);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+.glas-sheet-foot {
+  flex: none;
+  padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-sheet {
+    transition: transform var(--glas-dur-smooth) var(--glas-ease-smooth), opacity 180ms linear;
+  }
+  .glas-sheet[data-dragging] {
+    transition: none;
+  }
+}
+.glas-sheet[data-state="closed"] {
+  opacity: 0;
+  transform: translateY(24px) scale(0.96);
+  pointer-events: none;
+}
+.glas-sheet[data-place="side"][data-state="closed"] {
+  transform: translateX(24px) scale(0.98);
+}
+
+/* ── Drop zone ───────────────────────────────────────────────────────────── */
+.glas-drop {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  padding: 20px;
+}
+.glas-drop[data-over] {
+  transform: scale(1.02);
+  --glas-shadow: var(--glas-edge), var(--glas-elev-3), inset 0 0 0 2px var(--glas-accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glas-drop {
+    transition: transform var(--glas-dur-quick) var(--glas-ease-quick);
+  }
+}
+.glas-drop-text {
+  margin: 0;
+  max-width: 48ch;
+  font-size: 1.0625rem;
+  line-height: 1.47;
+}
+.glas-drop-error {
+  margin: 0;
+  max-width: 48ch;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.glas-drop svg.glas-drop-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--glas-fg);
+}
+
+/* ── Footer row: "Weniger Glas" ──────────────────────────────────────────── */
+.glas-footnote {
+  margin: 0;
+  color: var(--glas-fg-2);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.38;
+}
+
+/* ── Fallbacks ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-transparency: reduce) {
+  [data-glas] .glas:not([data-material="clear"]) {
+    background-color: var(--glas-solid);
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 0 0 1px var(--glas-solid-border), var(--glas-elev-1);
+  }
+  [data-glas] .glas::before,
+  [data-glas] .glas::after {
+    display: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  [data-glas] .glas:not([data-material="clear"]) {
+    background-color: var(--glas-solid);
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 0 0 2px var(--glas-solid-border);
+  }
+  [data-glas] .glas::before,
+  [data-glas] .glas::after {
+    display: none;
+  }
+  [data-glas] .glas-seg,
+  [data-glas] .glas-chip,
+  [data-glas] .glas-btn[data-variant="icon"],
+  [data-glas] .glas-btn[data-variant="fill"] {
+    box-shadow: inset 0 0 0 2px var(--glas-solid-border);
+  }
+  [data-glas] :focus-visible {
+    outline-width: 3px;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-glas] .glas,
+  [data-glas] .glas-seg,
+  [data-glas] .glas-chip,
+  [data-glas] .glas-btn,
+  [data-glas] .glas-toggle {
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  [data-glas] .glas::before,
+  [data-glas] .glas::after {
+    display: none;
+  }
+  [data-glas] .glas-seg-pill,
+  [data-glas] .glas-slider-fill,
+  [data-glas] .glas-toggle[aria-checked="true"],
+  [data-glas] .glas-chip[data-selected] {
+    background: Highlight;
+    color: HighlightText;
+  }
+  [data-glas] .glas-feld {
+    display: none;
+  }
+}
+
+@media print {
+  [data-glas] .glas {
+    background: #fffcf5;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: 0 0 0 1px #121212;
+    color: #121212;
+  }
+  [data-glas] .glas::before,
+  [data-glas] .glas::after {
+    display: none;
+  }
+}

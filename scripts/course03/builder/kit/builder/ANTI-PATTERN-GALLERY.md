@@ -30,7 +30,7 @@ observation, not a benchmark.
 - **Symptom:** a column called `amount`, `value`, `dt` or `seg`. Every query runs; nobody can say
   what the number is without asking.
 - **Cause:** the exporting system named it for its own purpose, and nobody renamed it for readers.
-- **Fix:** rename in core so the name says shape, unit and time (`naming/NAMING-RULES.md`, R1–R3).
+- **Fix:** rename in core so the name says shape, unit and time (`naming/NAMING-RULES.md`, R1 to R3).
 
   ```sql
   -- bad:  SELECT dt, sum(amount) FROM public.monthly_revenue GROUP BY dt
@@ -273,7 +273,7 @@ observation, not a benchmark.
          data loaded 2026-07-01 06:00 UTC, 3 h old at 2026-07-01 09:00 UTC.
   ```
 - **FOLDLINE moment:** the approved-lane runs matched 3 of 3 and cited the definition 0 of 3.
-- **Caught by:** the AI-plane cases G01–G03 (`required_trace`); `claude-demo/AI-RUN-LOG.md`.
+- **Caught by:** the AI-plane cases G01 to G03 (`required_trace`); `claude-demo/AI-RUN-LOG.md`.
 
 ### AP-C04 · The export uploaded "for context"
 
@@ -363,9 +363,9 @@ observation, not a benchmark.
 - **FOLDLINE moment:** "The recording names the AI route, not the model version."
 - **Caught by:** review.
 
-### AP-E03 · Database checks read as an AI score
+### AP-E03 · Database checks read as an AI grade
 
-- **Symptom:** "9 of 9 tests pass, so the AI scores 9 of 9."
+- **Symptom:** "9 of 9 tests pass, so the AI passes 9 of 9."
 - **Cause:** two kinds of evidence merged into one number.
 - **Fix:** two planes, two reports. Database checks test the setup and the course rules; AI runs
   are logged separately, three or more per case, graded on value, behaviour, relation and

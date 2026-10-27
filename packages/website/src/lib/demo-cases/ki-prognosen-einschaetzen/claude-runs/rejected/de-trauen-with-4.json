@@ -1,0 +1,2305 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-trauen-with-4",
+  "slug": "ki-prognosen-einschaetzen",
+  "locale": "de",
+  "prompt_id": "trauen",
+  "take": 4,
+  "recorded_at": "2026-10-26T15:02:26Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash(python3 *)",
+    "Bash(mkdir *)",
+    "Bash(cd *)",
+    "Bash(sed *)",
+    "Bash(cat *)",
+    "Bash(ls *)",
+    "Bash(find *)",
+    "Bash(grep *)",
+    "Bash(head *)",
+    "Bash(wc *)"
+  ],
+  "prompt": "Im Anhang sind unser Wochenabsatz mit der Prognose aus der Warenwirtschaft (linsensuppe-woechentlich.csv), der Export des Tools (tool-export.txt) und unsere Kosten je Glas (kosten.md). Das Tool sagt 94,2 % Prognosegenauigkeit. Können wir der Prognose trauen, und wie viele Gläser kochen wir für die Woche ab 29.12.2025? Heute ist Sonntag, der 28.12.2025.",
+  "kit_zip": "public/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+  "kit_files": [
+    {
+      "name": "linsensuppe-woechentlich.csv",
+      "path": "prognose-pruefen-kit/daten/linsensuppe-woechentlich.csv",
+      "bytes": 2402,
+      "sha256": "693cbcf1c842d11ed7d0db37a206b4bb42e8cd370262dcc92377a8b1d1183924"
+    },
+    {
+      "name": "tool-export.txt",
+      "path": "prognose-pruefen-kit/daten/tool-export.txt",
+      "bytes": 569,
+      "sha256": "e175fb5ba3779d922e114485dc8dd9e7cb7a429615ecfcc742980c2e82c786df"
+    },
+    {
+      "name": "kosten.md",
+      "path": "prognose-pruefen-kit/daten/kosten.md",
+      "bytes": 668,
+      "sha256": "d4cb28239dcd297c6b4adb03d63744237b07610f2e6c5a7ec977cd43a6d7151a"
+    }
+  ],
+  "skill": {
+    "name": "prognose-pruefen",
+    "sha256": "e90021fa580a2c756ca1a08095295770ca89bf44ad40fd033e14da9aea1303c2"
+  },
+  "skill_name": "prognose-pruefen",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "prognose-pruefen",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [
+    "auto"
+  ],
+  "timeline": [
+    {
+      "t_ms": 4623,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "prognose-pruefen"
+      }
+    },
+    {
+      "t_ms": 4635,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 9325,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la . work; for f in work/*; do echo \"== $f\"; cat \"$f\"; done",
+        "description": "List and show attached files"
+      }
+    },
+    {
+      "t_ms": 9341,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 14725,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "ls -la . .",
+        "description": "List attached files"
+      }
+    },
+    {
+      "t_ms": 16761,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 20057,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "linsensuppe-woechentlich.csv"
+      }
+    },
+    {
+      "t_ms": 20183,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 20668,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "tool-export.txt"
+      }
+    },
+    {
+      "t_ms": 20708,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 21228,
+      "kind": "tool_use",
+      "tool": "Read",
+      "input": {
+        "file_path": "kosten.md"
+      }
+    },
+    {
+      "t_ms": 21242,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 72185,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "mkdir -p skript && cat > skript/pruefen.py <<'EOF'\n\"\"\"Prüft eine Wochenprognose an ihren alten Fehlern. Nur Python-Standardbibliothek, kein Netz.\nAufruf: python3 pruefen.py DATEI.csv [--fehlmenge 1,50] [--rest 0,40] [--messlatte \"wie letzte Woche\"]   Ausgabe: JSON\nEnglish: --shortage and --leftover are the same as --fehlmenge and --rest.\nSpalten (Kopfzeile): woche, ist; optional prognose, hinweis, bestand_ende. Trenner ; , oder Tab.\nGleiche Regeln wie loehrning.ai/demos/ki-prognosen-einschaetzen.\"\"\"\nimport argparse, csv, datetime as dt, io, json, math, re, sys\n\nLERNEN, MIN_LERNEN, PRUEF, FENSTER = 26, 20, 13, 52   # Wochen\nBIAS_MAX, TREFFER_MIN = 0.05, 9                      # Prüfregel: |Bias| <= 5 %, >= 9 von 13 in der Spanne\nALIAS = {\"woche\": \"woche\", \"week\": \"woche\", \"datum\": \"woche\", \"date\": \"woche\", \"kw\": \"woche\",\n         \"ist\": \"ist\", \"verkauft\": \"ist\", \"absatz\": \"ist\", \"sales\": \"ist\", \"actual\": \"ist\",\n         \"prognose\": \"prognose\", \"forecast\": \"prognose\", \"tool_prognose\": \"prognose\",\n         \"hinweis\": \"hinweis\", \"note\": \"hinweis\", \"kommentar\": \"hinweis\",\n         \"bestand_ende\": \"bestand\", \"bestand\": \"bestand\", \"stock_end\": \"bestand\"}\nAUSVERKAUFT = (\"ausverkauft\", \"sold out\", \"stockout\", \"fehlbestand\")\n\ndef zahl(s, zeile):\n    t = (s or \"\").strip().replace(\" \", \"\").replace(\" \", \"\").replace(\" \", \"\")\n    if not t: return None\n    if re.fullmatch(r\"\\d{1,3}(\\.\\d{3})+(,\\d+)?\", t): t = t.replace(\".\", \"\").replace(\",\", \".\")\n    elif re.fullmatch(r\"\\d{1,3}(,\\d{3})+(\\.\\d+)?\", t): t = t.replace(\",\", \"\")\n    elif re.fullmatch(r\"\\d+,\\d+\", t): t = t.replace(\",\", \".\")\n    if not re.fullmatch(r\"\\d+(\\.\\d+)?\", t): sys.exit(f\"Zeile {zeile}: '{s}' ist keine Zahl (negativ oder Text).\")\n    return float(t)\n\ndef datum(s, zeile):\n    s = s.strip()\n    for f in (\"%Y-%m-%d\", \"%d.%m.%Y\", \"%d.%m.%y\", \"%d/%m/%Y\"):\n        try: return dt.datetime.strptime(s, f).date()\n        except ValueError: pass\n    m = re.fullmatch(r\"(?:KW|W)\\s?(\\d{1,2})[/ -](\\d{4})\", s, re.I) or re.fullmatch(r\"(\\d{4})-W(\\d{2})\", s)\n    if m:\n        w, j = (int(m[1]), int(m[2])) if s[0] in \"KkWw\" else (int(m[2]), int(m[1]))\n        return dt.date.fromisocalendar(j, w, 1)\n    sys.exit(f\"Zeile {zeile}: '{s}' ist kein Datum. Erlaubt: 2025-10-27, 27.10.2025, KW 44/2025.\")\n\ndef lesen(text):\n    r = list(csv.reader(io.StringIO(text), csv.Sniffer().sniff(text.splitlines()[0], delimiters=\";,\\t\")))\n    kopf = [ALIAS.get(h.strip().lower()) for h in r[0]]\n    if \"woche\" not in kopf or \"ist\" not in kopf: sys.exit(\"Kopfzeile braucht mindestens: woche;ist\")\n    tage, hinweise = {}, []\n    for nr, z in enumerate(r[1:], start=2):\n        if not any(c.strip() for c in z): continue\n        d = {k: (z[i] if i < len(z) else \"\") for i, k in enumerate(kopf) if k}\n        w = datum(d[\"woche\"], nr)\n        zeile = dict(ist=zahl(d.get(\"ist\"), nr), f=zahl(d.get(\"prognose\"), nr), hinweis=d.get(\"hinweis\", \"\").strip(),\n                     zensiert=zahl(d.get(\"bestand\"), nr) == 0 or any(a in d.get(\"hinweis\", \"\").lower() for a in AUSVERKAUFT))\n        if w in tage:\n            if tage[w] == zeile: hinweise.append(f\"{w}: doppelte Zeile, einmal gezählt\"); continue\n            sys.exit(f\"Zeile {nr}: {w} steht zweimal mit verschiedenen Werten. Eine Zeile löschen.\")\n        tage[w] = zeile\n    ws = sorted(tage)\n    if len(ws) > 1 and min(b - a for a, b in zip(ws, ws[1:])).days == 1:\n        sys.exit(\"Tageswerte: bitte vorher zu Wochen (Montag bis Sonntag) summieren.\")\n    rows = [dict(woche=ws[0], **tage[ws[0]])]\n    for w in ws[1:]:\n        while (w - rows[-1][\"woche\"]).days > 7:\n            leer = rows[-1][\"woche\"] + dt.timedelta(7)\n            hinweise.append(f\"{leer}: Woche fehlt in der Datei, zählt nicht\")\n            rows.append(dict(woche=leer, ist=None, f=None, hinweis=\"\", zensiert=False))\n        rows.append(dict(woche=w, **tage[w]))\n    return rows, hinweise\n\ndef q(xs, p):  # Quantil wie Excel QUANTIL.INKL (Typ 7)\n    s = sorted(xs); h = (len(s) - 1) * p; i = math.floor(h)\n    return s[i] + (h - i) * (s[min(i + 1, len(s) - 1)] - s[i])\n\ndef pruefen(rows, hinweise, fehlmenge, rest, messlatte):\n    ist = [r[\"ist\"] for r in rows]\n    regeln = {\"wie letzte Woche\": lambda t: ist[t - 1] if t >= 1 else None,\n              \"wie Vorjahreswoche\": lambda t: ist[t - 52] if t >= 52 else None,\n              \"Schnitt 4 Wochen\": lambda t: sum(ist[t - 4:t]) / 4 if t >= 4 and None not in ist[t - 4:t] else None}\n    hat_prognose = any(r[\"f\"] is not None for r in rows)\n    if messlatte not in regeln: sys.exit(f\"Messlatte unbekannt. Erlaubt: {', '.join(regeln)}\")\n    letzte = max(t for t, r in enumerate(rows) if r[\"ist\"] is not None)\n    naechste = letzte + 1 if letzte + 1 < len(rows) else None\n    gueltig = lambda t: ist[t] is not None and not rows[t][\"zensiert\"]\n    F = (lambda t: rows[t][\"f\"]) if hat_prognose else regeln[messlatte]  # ohne Prognose: die Messlatte selbst\n    wochen = [t for t in range(max(0, letzte - FENSTER + 1), letzte + 1)\n              if gueltig(t) and F(t) is not None and regeln[messlatte](t) is not None]\n    if len(wochen) < PRUEF: sys.exit(f\"Zu wenig vergleichbare Wochen: {len(wochen)}. Nötig: {PRUEF}, besser 52.\")\n    A = sum(ist[t] for t in wochen)\n    def kennzahlen(g):\n        if any(g(t) is None for t in wochen): return None\n        e = [g(t) - ist[t] for t in wochen]\n        return dict(mae=sum(map(abs, e)) / len(e), bias=sum(e) / A, wape=sum(map(abs, e)) / A)\n    tabelle = {\"Prognose\": kennzahlen(F)} if hat_prognose else {}\n    tabelle.update({k: kennzahlen(g) for k, g in regeln.items()})\n    def fehler(t, n):\n        ws = [k for k in range(t) if gueltig(k) and F(k) is not None and regeln[messlatte](k) is not None][-n:]\n        return [ist[k] - F(k) for k in ws], ws\n    def spanne(t):\n        e, _ = fehler(t, LERNEN); return (q(e, .1), q(e, .9)) if len(e) >= MIN_LERNEN else None\n    def treffer(t):\n        s = spanne(t); return None if s is None else s[0] <= ist[t] - F(t) <= s[1]\n    def lampen(t):\n        _, ws = fehler(t, PRUEF)\n        if len(ws) < PRUEF: return None\n        m = sum(abs(F(k) - ist[k]) for k in ws); mr = sum(abs(regeln[messlatte](k) - ist[k]) for k in ws)\n        b = sum(F(k) - ist[k] for k in ws) / sum(ist[k] for k in ws); h = sum(1 for k in ws if treffer(k))\n        l = dict(daten=ist[t - 1] is not None and F(t) is not None, messlatte=(m < mr) if hat_prognose else None,\n                 bias=abs(b) <= BIAS_MAX, spanne=h >= TREFFER_MIN)\n        return dict(l, frei=all(v for v in l.values() if v is not None), verhaeltnis=m / mr, bias_wert=b, treffer=h)\n    gezaehlt = [t for t in wochen if treffer(t) is not None]\n    out = dict(hinweise=hinweise, geprueft=\"Prognose\" if hat_prognose else messlatte, messlatte=messlatte,\n               von=str(rows[wochen[0]][\"woche\"]), bis=str(rows[wochen[-1]][\"woche\"]), wochen=len(wochen),\n               nicht_bewertet=[(str(rows[t][\"woche\"]), \"Ist fehlt\" if ist[t] is None else \"ausverkauft: Ist ist kleiner als die Nachfrage\"\n                                if rows[t][\"zensiert\"] else \"keine Prognose gespeichert\" if F(t) is None else \"Vorwoche fehlt\")\n                               for t in range(wochen[0], letzte + 1) if t not in wochen],\n               tabelle=tabelle, naeher=sum(abs(F(t) - ist[t]) < abs(regeln[messlatte](t) - ist[t]) for t in wochen),\n               zu_hoch=sum(F(t) > ist[t] for t in wochen),\n               spanne_treffer=sum(treffer(t) for t in gezaehlt), spanne_wochen=len(gezaehlt))\n    out[\"beste_regel\"] = min((k for k in regeln if tabelle[k]), key=lambda k: tabelle[k][\"mae\"])\n    if hat_prognose: out[\"vorsprung\"] = 1 - tabelle[\"Prognose\"][\"mae\"] / tabelle[messlatte][\"mae\"]\n    streifen = [t for t in range(max(1, (naechste or letzte) - FENSTER + 1), (naechste or letzte) + 1)]\n    sperre = [(str(rows[t][\"woche\"]), [k for k in (\"daten\", \"messlatte\", \"bias\", \"spanne\") if l[k] is False])\n              for t in streifen if (l := lampen(t)) and not l[\"frei\"]]\n    out.update(regel_wochen=len(streifen), regel_frei=len(streifen) - len(sperre), regel_rot=sperre)\n    if fehlmenge and rest:\n        tau = fehlmenge / (fehlmenge + rest)\n        kosten = lambda Q, D: fehlmenge * max(0, D - Q) + rest * max(0, Q - D)\n        mit = [t for t in wochen if fehler(t, LERNEN)[0]]  # ohne Fehler davor keine Planzahl: Woche fällt heraus\n        out[\"anteil\"] = tau\n        out[\"kosten_wochen\"] = len(mit)\n        out[\"kosten\"] = {\"Messlatte\": sum(kosten(regeln[messlatte](t), ist[t]) for t in mit),\n                         \"Prognose\": sum(kosten(F(t), ist[t]) for t in mit),\n                         \"Planzahl\": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in mit)}\n    if naechste is not None and F(naechste) is not None:\n        e, _ = fehler(naechste, LERNEN); n = dict(woche=str(rows[naechste][\"woche\"]), prognose=F(naechste), lampen=lampen(naechste))\n        if len(e) >= MIN_LERNEN:\n            n.update(p10=F(naechste) + q(e, .1), p50=F(naechste) + q(e, .5), p90=F(naechste) + q(e, .9))\n            if fehlmenge and rest:\n                z = math.floor(F(naechste) + q(e, out[\"anteil\"]) + 0.5)  # kaufmännisch runden, wie die Demo\n                n.update(planzahl=z, zu_wenig=sum(F(naechste) + x > z for x in e), uebrig=sum(F(naechste) + x < z for x in e), von=len(e))\n        out[\"naechste\"] = n\n    return out\n\nif __name__ == \"__main__\":\n    a = argparse.ArgumentParser(); a.add_argument(\"datei\")\n    a.add_argument(\"--fehlmenge\", \"--shortage\"); a.add_argument(\"--rest\", \"--leftover\")  # Kosten je Stück\n    a.add_argument(\"--messlatte\", default=\"wie letzte Woche\"); a = a.parse_args()\n    rows, hinweise = lesen(open(a.datei, encoding=\"utf-8-sig\").read())\n    e = pruefen(rows, hinweise, a.fehlmenge and zahl(a.fehlmenge, \"--fehlmenge\"), a.rest and zahl(a.rest, \"--rest\"), a.messlatte)\n    print(json.dumps(e, ensure_ascii=False, indent=1, default=str))\nEOF\ncd skript && python3 -I pruefen.py ../work/linsensuppe-woechentlich.csv --fehlmenge 1,50 --rest 0,40 --messlatte \"wie letzte Woche\"",
+        "description": "Save check script and run it on the data"
+      }
+    },
+    {
+      "t_ms": 72201,
+      "kind": "tool_result",
+      "is_error": true
+    },
+    {
+      "t_ms": 76396,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 76401,
+      "kind": "text",
+      "chunk": "Ich lege"
+    },
+    {
+      "t_ms": 76401,
+      "kind": "text",
+      "chunk": " das Prüfskript als"
+    },
+    {
+      "t_ms": 76401,
+      "kind": "text",
+      "chunk": " Datei an und l"
+    },
+    {
+      "t_ms": 76401,
+      "kind": "text",
+      "chunk": "asse es auf eu"
+    },
+    {
+      "t_ms": 76401,
+      "kind": "text",
+      "chunk": "ren Daten laufen."
+    },
+    {
+      "t_ms": 108065,
+      "kind": "tool_use",
+      "tool": "Write",
+      "input": {
+        "file_path": "skript/pruefen.py",
+        "content": "\"\"\"Prüft eine Wochenprognose an ihren alten Fehlern. Nur Python-Standardbibliothek, kein Netz.\nAufruf: python3 pruefen.py DATEI.csv [--fehlmenge 1,50] [--rest 0,40] [--messlatte \"wie letzte Woche\"]   Ausgabe: JSON\nEnglish: --shortage and --leftover are the same as --fehlmenge and --rest.\nSpalten (Kopfzeile): woche, ist; optional prognose, hinweis, bestand_ende. Trenner ; , oder Tab.\nGleiche Regeln wie loehrning.ai/demos/ki-prognosen-einschaetzen.\"\"\"\nimport argparse, csv, datetime as dt, io, json, math, re, sys\n\nLERNEN, MIN_LERNEN, PRUEF, FENSTER = 26, 20, 13, 52   # Wochen\nBIAS_MAX, TREFFER_MIN = 0.05, 9                      # Prüfregel: |Bias| <= 5 %, >= 9 von 13 in der Spanne\nALIAS = {\"woche\": \"woche\", \"week\": \"woche\", \"datum\": \"woche\", \"date\": \"woche\", \"kw\": \"woche\",\n         \"ist\": \"ist\", \"verkauft\": \"ist\", \"absatz\": \"ist\", \"sales\": \"ist\", \"actual\": \"ist\",\n         \"prognose\": \"prognose\", \"forecast\": \"prognose\", \"tool_prognose\": \"prognose\",\n         \"hinweis\": \"hinweis\", \"note\": \"hinweis\", \"kommentar\": \"hinweis\",\n         \"bestand_ende\": \"bestand\", \"bestand\": \"bestand\", \"stock_end\": \"bestand\"}\nAUSVERKAUFT = (\"ausverkauft\", \"sold out\", \"stockout\", \"fehlbestand\")\n\ndef zahl(s, zeile):\n    t = (s or \"\").strip().replace(\" \", \"\").replace(\" \", \"\").replace(\" \", \"\")\n    if not t: return None\n    if re.fullmatch(r\"\\d{1,3}(\\.\\d{3})+(,\\d+)?\", t): t = t.replace(\".\", \"\").replace(\",\", \".\")\n    elif re.fullmatch(r\"\\d{1,3}(,\\d{3})+(\\.\\d+)?\", t): t = t.replace(\",\", \"\")\n    elif re.fullmatch(r\"\\d+,\\d+\", t): t = t.replace(\",\", \".\")\n    if not re.fullmatch(r\"\\d+(\\.\\d+)?\", t): sys.exit(f\"Zeile {zeile}: '{s}' ist keine Zahl (negativ oder Text).\")\n    return float(t)\n\ndef datum(s, zeile):\n    s = s.strip()\n    for f in (\"%Y-%m-%d\", \"%d.%m.%Y\", \"%d.%m.%y\", \"%d/%m/%Y\"):\n        try: return dt.datetime.strptime(s, f).date()\n        except ValueError: pass\n    m = re.fullmatch(r\"(?:KW|W)\\s?(\\d{1,2})[/ -](\\d{4})\", s, re.I) or re.fullmatch(r\"(\\d{4})-W(\\d{2})\", s)\n    if m:\n        w, j = (int(m[1]), int(m[2])) if s[0] in \"KkWw\" else (int(m[2]), int(m[1]))\n        return dt.date.fromisocalendar(j, w, 1)\n    sys.exit(f\"Zeile {zeile}: '{s}' ist kein Datum. Erlaubt: 2025-10-27, 27.10.2025, KW 44/2025.\")\n\ndef lesen(text):\n    r = list(csv.reader(io.StringIO(text), csv.Sniffer().sniff(text.splitlines()[0], delimiters=\";,\\t\")))\n    kopf = [ALIAS.get(h.strip().lower()) for h in r[0]]\n    if \"woche\" not in kopf or \"ist\" not in kopf: sys.exit(\"Kopfzeile braucht mindestens: woche;ist\")\n    tage, hinweise = {}, []\n    for nr, z in enumerate(r[1:], start=2):\n        if not any(c.strip() for c in z): continue\n        d = {k: (z[i] if i < len(z) else \"\") for i, k in enumerate(kopf) if k}\n        w = datum(d[\"woche\"], nr)\n        zeile = dict(ist=zahl(d.get(\"ist\"), nr), f=zahl(d.get(\"prognose\"), nr), hinweis=d.get(\"hinweis\", \"\").strip(),\n                     zensiert=zahl(d.get(\"bestand\"), nr) == 0 or any(a in d.get(\"hinweis\", \"\").lower() for a in AUSVERKAUFT))\n        if w in tage:\n            if tage[w] == zeile: hinweise.append(f\"{w}: doppelte Zeile, einmal gezählt\"); continue\n            sys.exit(f\"Zeile {nr}: {w} steht zweimal mit verschiedenen Werten. Eine Zeile löschen.\")\n        tage[w] = zeile\n    ws = sorted(tage)\n    if len(ws) > 1 and min(b - a for a, b in zip(ws, ws[1:])).days == 1:\n        sys.exit(\"Tageswerte: bitte vorher zu Wochen (Montag bis Sonntag) summieren.\")\n    rows = [dict(woche=ws[0], **tage[ws[0]])]\n    for w in ws[1:]:\n        while (w - rows[-1][\"woche\"]).days > 7:\n            leer = rows[-1][\"woche\"] + dt.timedelta(7)\n            hinweise.append(f\"{leer}: Woche fehlt in der Datei, zählt nicht\")\n            rows.append(dict(woche=leer, ist=None, f=None, hinweis=\"\", zensiert=False))\n        rows.append(dict(woche=w, **tage[w]))\n    return rows, hinweise\n\ndef q(xs, p):  # Quantil wie Excel QUANTIL.INKL (Typ 7)\n    s = sorted(xs); h = (len(s) - 1) * p; i = math.floor(h)\n    return s[i] + (h - i) * (s[min(i + 1, len(s) - 1)] - s[i])\n\ndef pruefen(rows, hinweise, fehlmenge, rest, messlatte):\n    ist = [r[\"ist\"] for r in rows]\n    regeln = {\"wie letzte Woche\": lambda t: ist[t - 1] if t >= 1 else None,\n              \"wie Vorjahreswoche\": lambda t: ist[t - 52] if t >= 52 else None,\n              \"Schnitt 4 Wochen\": lambda t: sum(ist[t - 4:t]) / 4 if t >= 4 and None not in ist[t - 4:t] else None}\n    hat_prognose = any(r[\"f\"] is not None for r in rows)\n    if messlatte not in regeln: sys.exit(f\"Messlatte unbekannt. Erlaubt: {', '.join(regeln)}\")\n    letzte = max(t for t, r in enumerate(rows) if r[\"ist\"] is not None)\n    naechste = letzte + 1 if letzte + 1 < len(rows) else None\n    gueltig = lambda t: ist[t] is not None and not rows[t][\"zensiert\"]\n    F = (lambda t: rows[t][\"f\"]) if hat_prognose else regeln[messlatte]  # ohne Prognose: die Messlatte selbst\n    wochen = [t for t in range(max(0, letzte - FENSTER + 1), letzte + 1)\n              if gueltig(t) and F(t) is not None and regeln[messlatte](t) is not None]\n    if len(wochen) < PRUEF: sys.exit(f\"Zu wenig vergleichbare Wochen: {len(wochen)}. Nötig: {PRUEF}, besser 52.\")\n    A = sum(ist[t] for t in wochen)\n    def kennzahlen(g):\n        if any(g(t) is None for t in wochen): return None\n        e = [g(t) - ist[t] for t in wochen]\n        return dict(mae=sum(map(abs, e)) / len(e), bias=sum(e) / A, wape=sum(map(abs, e)) / A)\n    tabelle = {\"Prognose\": kennzahlen(F)} if hat_prognose else {}\n    tabelle.update({k: kennzahlen(g) for k, g in regeln.items()})\n    def fehler(t, n):\n        ws = [k for k in range(t) if gueltig(k) and F(k) is not None and regeln[messlatte](k) is not None][-n:]\n        return [ist[k] - F(k) for k in ws], ws\n    def spanne(t):\n        e, _ = fehler(t, LERNEN); return (q(e, .1), q(e, .9)) if len(e) >= MIN_LERNEN else None\n    def treffer(t):\n        s = spanne(t); return None if s is None else s[0] <= ist[t] - F(t) <= s[1]\n    def lampen(t):\n        _, ws = fehler(t, PRUEF)\n        if len(ws) < PRUEF: return None\n        m = sum(abs(F(k) - ist[k]) for k in ws); mr = sum(abs(regeln[messlatte](k) - ist[k]) for k in ws)\n        b = sum(F(k) - ist[k] for k in ws) / sum(ist[k] for k in ws); h = sum(1 for k in ws if treffer(k))\n        l = dict(daten=ist[t - 1] is not None and F(t) is not None, messlatte=(m < mr) if hat_prognose else None,\n                 bias=abs(b) <= BIAS_MAX, spanne=h >= TREFFER_MIN)\n        return dict(l, frei=all(v for v in l.values() if v is not None), verhaeltnis=m / mr, bias_wert=b, treffer=h)\n    gezaehlt = [t for t in wochen if treffer(t) is not None]\n    out = dict(hinweise=hinweise, geprueft=\"Prognose\" if hat_prognose else messlatte, messlatte=messlatte,\n               von=str(rows[wochen[0]][\"woche\"]), bis=str(rows[wochen[-1]][\"woche\"]), wochen=len(wochen),\n               nicht_bewertet=[(str(rows[t][\"woche\"]), \"Ist fehlt\" if ist[t] is None else \"ausverkauft: Ist ist kleiner als die Nachfrage\"\n                                if rows[t][\"zensiert\"] else \"keine Prognose gespeichert\" if F(t) is None else \"Vorwoche fehlt\")\n                               for t in range(wochen[0], letzte + 1) if t not in wochen],\n               tabelle=tabelle, naeher=sum(abs(F(t) - ist[t]) < abs(regeln[messlatte](t) - ist[t]) for t in wochen),\n               zu_hoch=sum(F(t) > ist[t] for t in wochen),\n               spanne_treffer=sum(treffer(t) for t in gezaehlt), spanne_wochen=len(gezaehlt))\n    out[\"beste_regel\"] = min((k for k in regeln if tabelle[k]), key=lambda k: tabelle[k][\"mae\"])\n    if hat_prognose: out[\"vorsprung\"] = 1 - tabelle[\"Prognose\"][\"mae\"] / tabelle[messlatte][\"mae\"]\n    streifen = [t for t in range(max(1, (naechste or letzte) - FENSTER + 1), (naechste or letzte) + 1)]\n    sperre = [(str(rows[t][\"woche\"]), [k for k in (\"daten\", \"messlatte\", \"bias\", \"spanne\") if l[k] is False])\n              for t in streifen if (l := lampen(t)) and not l[\"frei\"]]\n    out.update(regel_wochen=len(streifen), regel_frei=len(streifen) - len(sperre), regel_rot=sperre)\n    if fehlmenge and rest:\n        tau = fehlmenge / (fehlmenge + rest)\n        kosten = lambda Q, D: fehlmenge * max(0, D - Q) + rest * max(0, Q - D)\n        mit = [t for t in wochen if fehler(t, LERNEN)[0]]  # ohne Fehler davor keine Planzahl: Woche fällt heraus\n        out[\"anteil\"] = tau\n        out[\"kosten_wochen\"] = len(mit)\n        out[\"kosten\"] = {\"Messlatte\": sum(kosten(regeln[messlatte](t), ist[t]) for t in mit),\n                         \"Prognose\": sum(kosten(F(t), ist[t]) for t in mit),\n                         \"Planzahl\": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in mit)}\n    if naechste is not None and F(naechste) is not None:\n        e, _ = fehler(naechste, LERNEN); n = dict(woche=str(rows[naechste][\"woche\"]), prognose=F(naechste), lampen=lampen(naechste))\n        if len(e) >= MIN_LERNEN:\n            n.update(p10=F(naechste) + q(e, .1), p50=F(naechste) + q(e, .5), p90=F(naechste) + q(e, .9))\n            if fehlmenge and rest:\n                z = math.floor(F(naechste) + q(e, out[\"anteil\"]) + 0.5)  # kaufmännisch runden, wie die Demo\n                n.update(planzahl=z, zu_wenig=sum(F(naechste) + x > z for x in e), uebrig=sum(F(naechste) + x < z for x in e), von=len(e))\n        out[\"naechste\"] = n\n    return out\n\nif __name__ == \"__main__\":\n    a = argparse.ArgumentParser(); a.add_argument(\"datei\")\n    a.add_argument(\"--fehlmenge\", \"--shortage\"); a.add_argument(\"--rest\", \"--leftover\")  # Kosten je Stück\n    a.add_argument(\"--messlatte\", default=\"wie letzte Woche\"); a = a.parse_args()\n    rows, hinweise = lesen(open(a.datei, encoding=\"utf-8-sig\").read())\n    e = pruefen(rows, hinweise, a.fehlmenge and zahl(a.fehlmenge, \"--fehlmenge\"), a.rest and zahl(a.rest, \"--rest\"), a.messlatte)\n    print(json.dumps(e, ensure_ascii=False, indent=1, default=str))\n"
+      }
+    },
+    {
+      "t_ms": 108091,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 113275,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I skript/pruefen.py linsensuppe-woechentlich.csv --fehlmenge 1,50 --rest 0,40 --messlatte \"wie letzte Woche\"",
+        "description": "Run forecast check on the soup data"
+      }
+    },
+    {
+      "t_ms": 113369,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 122946,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "python3 -I skript/pruefen.py linsensuppe-woechentlich.csv --fehlmenge 1,50 --rest 1,60 | python3 -I -c \"import json,sys; d=json.load(sys.stdin); print(d['anteil'], d['naechste'])\"",
+        "description": "Recompute order quantity without canteen buyback"
+      }
+    },
+    {
+      "t_ms": 123029,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 130128,
+      "kind": "tool_use",
+      "tool": "Write",
+      "input": {
+        "file_path": "pruefregel-linsensuppe.md",
+        "content": "# Prüfregel Linsensuppe 500 ml (Artikel 2210)\n\nMesslatte: „wie letzte Woche“. Kosten: Fehlmenge 1,50 € je Glas, Rest 0,40 € je Glas\n(mit Kantine; ohne Kantine 1,60 €).\n\nGeprüft wird jede Woche an den letzten 13 gültigen Wochen. Frei, wenn alle vier grün:\n1. Daten: Ist der Vorwoche und Prognose dieser Woche liegen vor.\n2. Messlatte: mittlerer Fehler der Prognose kleiner als der der Messlatte.\n3. Bias: Summe (Prognose − Ist) höchstens 5 % der Summe Ist, nach oben oder unten.\n4. Spanne: Ist mindestens 9-mal in der 80-%-Spanne. Auch eine ehrliche Spanne fällt in\n   9,9 % der 13-Wochen-Fenster zufällig darunter.\n\nSonst entscheidet [Person eintragen], schreibt Zahl und Grund ins Protokoll.\nImmer eine Person: neues Produkt, Kunde kommt dazu oder fällt weg (z. B. Auslistung\nBio-Markt-Kette April 2025), Preisänderung über 10 %, Lieferengpass, Kantine nimmt\nRestware nicht ab.\n\nWochen mit Hinweis „ausverkauft“ zählen nicht. Jede Prognose mit Datum ablegen.\n"
+      }
+    },
+    {
+      "t_ms": 130218,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text",
+      "chunk": "Ja, der Progn"
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text",
+      "chunk": "ose kön"
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text",
+      "chunk": "nt ihr trauen"
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text",
+      "chunk": ": Sie schlägt"
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text",
+      "chunk": " „wie letzte Wo"
+    },
+    {
+      "t_ms": 144744,
+      "kind": "text",
+      "chunk": "che“ de"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "utlich, und für"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": " die Woche ab 29"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": ".12."
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": " sind alle vier Pr"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "üfung"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "en b"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "estanden. **"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "W"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "enn die Kantine die"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": " Re"
+    },
+    {
+      "t_ms": 144745,
+      "kind": "text",
+      "chunk": "ste nim"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": "mt, koc"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": "ht ihr 748 "
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": "Gläser."
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": " W"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": "enn sie z"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": "wischen den Jahren"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": " zu h"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": "at, kocht ihr"
+    },
+    {
+      "t_ms": 144746,
+      "kind": "text",
+      "chunk": " 729.**\n\nDie "
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "94,2 % des"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": " Tools stimmen."
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": " Es ist d"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "ie"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "selbe Zahl w"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "ie un"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "ser"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": " WAPE von 5,"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "8 %, n"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "ur and"
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "ersherum "
+    },
+    {
+      "t_ms": 144747,
+      "kind": "text",
+      "chunk": "ausgedrückt."
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": " Sie sagt aber n"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "icht, ob das"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": " Tool bes"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "ser ist als eine einf"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "ache Regel. Das z"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "eigt er"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "st der Vergleich un"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "ten.\n\n**Geprü"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "ft:**"
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": " Linsensuppe "
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "500 ml, 30."
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "12.2024 bis "
+    },
+    {
+      "t_ms": 144748,
+      "kind": "text",
+      "chunk": "22.12.2025, "
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "50 Wochen."
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": " Nicht bewertet s"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "ind z"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "wei Wochen: "
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "03.02.2025 ("
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "keine Prognose gesp"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "eichert) und 10."
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "03.2025 (aus"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "verkauft,"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": " das"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": " Ist li"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "egt also"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": " unter der Nachfr"
+    },
+    {
+      "t_ms": 144749,
+      "kind": "text",
+      "chunk": "age). Die Wo"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "che 16.09.2024"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " st"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "and doppelt in der"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " Datei und z"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "ählt einmal.\n\n|"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " | Mittlerer"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " Fehler (Gläser"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": ") | Bias | WA"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "PE |\n|---|---"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "|---|---|\n|"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " Prognose | 33,3"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " | 3,0 %"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " zu hoch | 5"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": ",8 % |\n| w"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "ie letzte Woche |"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " 42,2 | 0"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": ",3 % zu tief"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": " | 7,4 % |"
+    },
+    {
+      "t_ms": 144750,
+      "kind": "text",
+      "chunk": "\n| wie Vorj"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "ahreswoche | 38"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": ",8 | 1,5"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": " % zu tief | "
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "6,8 % |\n|"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": " Schnitt 4 "
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "Wochen | 42,"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "2 | 0,5 "
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "% zu tief | 7"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": ",4 % |\n\n1."
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": " **Vergleich m"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "it „"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "wie letzte Woche"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "“:** Der"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": " Fehler der Progn"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "ose ist 21,"
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": "3 % kleiner."
+    },
+    {
+      "t_ms": 144751,
+      "kind": "text",
+      "chunk": " Sie lag in"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": " 30 von 50 "
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "Wochen näher am "
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "Ist. Von den einfach"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "en Regeln ist „"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "wie Vorjahre"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "swoche“ die beste"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": ", aber auch s"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "ie sch"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "lägt die Prognose"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": " nicht.\n2. **"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "Spanne:"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "** Das Ist lag"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": " in 36 von 50 "
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "Wochen in der 80"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "-%-Spanne."
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": " Die Fehltreff"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "er kam"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "en g"
+    },
+    {
+      "t_ms": 144752,
+      "kind": "text",
+      "chunk": "ehäuft nach dem"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": " 07.04.2025."
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": " La"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "ut Dat"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "ei h"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "at "
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "ab da"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": " die Bio-Markt"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "-Kette die"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": " Suppe ausgel"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "istet (rund 70 "
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "Gläser pro Wo"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "che). Danach lag die"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": " Prognose w"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "ochenlang zu ho"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "ch.\n3. **K"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "ochmenge für 29."
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "12.2025:**\n   "
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "- Die"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": " Prognose s"
+    },
+    {
+      "t_ms": 144753,
+      "kind": "text",
+      "chunk": "agt 729 "
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "Gläser, die"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " Spanne re"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "icht von 694"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " bis 756.\n   "
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "- Mit"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " Kantine k"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "ostet ein f"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "ehlendes Glas "
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "1,50 €"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " und ein übri"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "ges 0,40 €."
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " Deshalb l"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "ohnt es sich, so"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " vi"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "el zu kochen, d"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "ass es"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " in 79 % der W"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "ochen reicht. Das"
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": " ergibt 748 "
+    },
+    {
+      "t_ms": 144754,
+      "kind": "text",
+      "chunk": "Gläser. In "
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "5 der letzten 26"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": " Wochen hätten"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": " 748 "
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "Gläser nicht gere"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "icht.\n   - "
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "Ohne Kantine kost"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "et ein übriges Gl"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "as die vollen 1,"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "60 €. Dann re"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "ich"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "en 48"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": " %, also 729"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": " Gläser, und es"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": " w"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "äre in"
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": " 13 von 26 "
+    },
+    {
+      "t_ms": 144755,
+      "kind": "text",
+      "chunk": "Wochen kn"
+    },
+    {
+      "t_ms": 144788,
+      "kind": "text",
+      "chunk": "app ge"
+    },
+    {
+      "t_ms": 144833,
+      "kind": "text",
+      "chunk": "worden.\n   - H"
+    },
+    {
+      "t_ms": 144896,
+      "kind": "text",
+      "chunk": "ätt"
+    },
+    {
+      "t_ms": 144943,
+      "kind": "text",
+      "chunk": "et ihr im"
+    },
+    {
+      "t_ms": 144987,
+      "kind": "text",
+      "chunk": " let"
+    },
+    {
+      "t_ms": 145038,
+      "kind": "text",
+      "chunk": "zten Jahr immer"
+    },
+    {
+      "t_ms": 145084,
+      "kind": "text",
+      "chunk": " so"
+    },
+    {
+      "t_ms": 145133,
+      "kind": "text",
+      "chunk": " gekocht, hätten"
+    },
+    {
+      "t_ms": 145184,
+      "kind": "text",
+      "chunk": " Fehl"
+    },
+    {
+      "t_ms": 145239,
+      "kind": "text",
+      "chunk": "m"
+    },
+    {
+      "t_ms": 145285,
+      "kind": "text",
+      "chunk": "engen und Reste z"
+    },
+    {
+      "t_ms": 145333,
+      "kind": "text",
+      "chunk": "usammen 1.023 "
+    },
+    {
+      "t_ms": 145391,
+      "kind": "text",
+      "chunk": "€ gekostet."
+    },
+    {
+      "t_ms": 145436,
+      "kind": "text",
+      "chunk": " Bei „"
+    },
+    {
+      "t_ms": 145484,
+      "kind": "text",
+      "chunk": "Pr"
+    },
+    {
+      "t_ms": 145532,
+      "kind": "text",
+      "chunk": "ognose k"
+    },
+    {
+      "t_ms": 145582,
+      "kind": "text",
+      "chunk": "ochen“ w"
+    },
+    {
+      "t_ms": 145641,
+      "kind": "text",
+      "chunk": "ären es 1.105 €"
+    },
+    {
+      "t_ms": 145682,
+      "kind": "text",
+      "chunk": " gewesen, bei „"
+    },
+    {
+      "t_ms": 145737,
+      "kind": "text",
+      "chunk": "wie letzte Woche"
+    },
+    {
+      "t_ms": 145784,
+      "kind": "text",
+      "chunk": "“ 2.052"
+    },
+    {
+      "t_ms": 145832,
+      "kind": "text",
+      "chunk": " €.\n4. **"
+    },
+    {
+      "t_ms": 145883,
+      "kind": "text",
+      "chunk": "Fre"
+    },
+    {
+      "t_ms": 145933,
+      "kind": "text",
+      "chunk": "igabe:** Alle"
+    },
+    {
+      "t_ms": 145981,
+      "kind": "text",
+      "chunk": " vier Prüfungen"
+    },
+    {
+      "t_ms": 146034,
+      "kind": "text",
+      "chunk": " sind grün,"
+    },
+    {
+      "t_ms": 146081,
+      "kind": "text",
+      "chunk": " die K"
+    },
+    {
+      "t_ms": 146139,
+      "kind": "text",
+      "chunk": "ochmenge geht also "
+    },
+    {
+      "t_ms": 146182,
+      "kind": "text",
+      "chunk": "ohne Freigabe in"
+    },
+    {
+      "t_ms": 146231,
+      "kind": "text",
+      "chunk": " die Planung. Rot"
+    },
+    {
+      "t_ms": 146281,
+      "kind": "text",
+      "chunk": " war es"
+    },
+    {
+      "t_ms": 146334,
+      "kind": "text",
+      "chunk": " im"
+    },
+    {
+      "t_ms": 146388,
+      "kind": "text",
+      "chunk": " letzten Jahr in"
+    },
+    {
+      "t_ms": 146436,
+      "kind": "text",
+      "chunk": " 15 von 52 "
+    },
+    {
+      "t_ms": 146483,
+      "kind": "text",
+      "chunk": "Wochen: am 03."
+    },
+    {
+      "t_ms": 146533,
+      "kind": "text",
+      "chunk": "02.2025 ("
+    },
+    {
+      "t_ms": 146583,
+      "kind": "text",
+      "chunk": "Daten fehlten)"
+    },
+    {
+      "t_ms": 146639,
+      "kind": "text",
+      "chunk": " und vom 21.04."
+    },
+    {
+      "t_ms": 146682,
+      "kind": "text",
+      "chunk": " bis 21.07.2"
+    },
+    {
+      "t_ms": 146731,
+      "kind": "text",
+      "chunk": "025 "
+    },
+    {
+      "t_ms": 146784,
+      "kind": "text",
+      "chunk": "(Bias und Sp"
+    },
+    {
+      "t_ms": 146848,
+      "kind": "text",
+      "chunk": "anne nach der Ausl"
+    },
+    {
+      "t_ms": 146895,
+      "kind": "text",
+      "chunk": "istung, am"
+    },
+    {
+      "t_ms": 146931,
+      "kind": "text",
+      "chunk": " 28.04. au"
+    },
+    {
+      "t_ms": 146981,
+      "kind": "text",
+      "chunk": "ch der"
+    },
+    {
+      "t_ms": 147032,
+      "kind": "text",
+      "chunk": " Vergleich mit „"
+    },
+    {
+      "t_ms": 147081,
+      "kind": "text",
+      "chunk": "wie letzte Woche"
+    },
+    {
+      "t_ms": 147130,
+      "kind": "text",
+      "chunk": "“).\n\nF"
+    },
+    {
+      "t_ms": 147183,
+      "kind": "text",
+      "chunk": "ragt v"
+    },
+    {
+      "t_ms": 147236,
+      "kind": "text",
+      "chunk": "or Mont"
+    },
+    {
+      "t_ms": 147283,
+      "kind": "text",
+      "chunk": "ag b"
+    },
+    {
+      "t_ms": 147334,
+      "kind": "text",
+      "chunk": "ei der Kantine nach"
+    },
+    {
+      "t_ms": 147381,
+      "kind": "text",
+      "chunk": ", ob sie zwisch"
+    },
+    {
+      "t_ms": 147431,
+      "kind": "text",
+      "chunk": "en den Jahren ge"
+    },
+    {
+      "t_ms": 147485,
+      "kind": "text",
+      "chunk": "öffnet h"
+    },
+    {
+      "t_ms": 147533,
+      "kind": "text",
+      "chunk": "at. Davon hängt"
+    },
+    {
+      "t_ms": 147598,
+      "kind": "text",
+      "chunk": " ab, ob "
+    },
+    {
+      "t_ms": 147645,
+      "kind": "text",
+      "chunk": "ihr 748 oder "
+    },
+    {
+      "t_ms": 147698,
+      "kind": "text",
+      "chunk": "729 Gläser koc"
+    },
+    {
+      "t_ms": 147732,
+      "kind": "text",
+      "chunk": "ht. Die Prognose"
+    },
+    {
+      "t_ms": 147783,
+      "kind": "text",
+      "chunk": " liegt im"
+    },
+    {
+      "t_ms": 147833,
+      "kind": "text",
+      "chunk": " Sch"
+    },
+    {
+      "t_ms": 147885,
+      "kind": "text",
+      "chunk": "nitt 3,"
+    },
+    {
+      "t_ms": 147931,
+      "kind": "text",
+      "chunk": "0 % zu hoch"
+    },
+    {
+      "t_ms": 147983,
+      "kind": "text",
+      "chunk": ". Das b"
+    },
+    {
+      "t_ms": 148032,
+      "kind": "text",
+      "chunk": "leibt unter der "
+    },
+    {
+      "t_ms": 148083,
+      "kind": "text",
+      "chunk": "5-%"
+    },
+    {
+      "t_ms": 148138,
+      "kind": "text",
+      "chunk": "-Grenze, aber"
+    },
+    {
+      "t_ms": 148186,
+      "kind": "text",
+      "chunk": " es l"
+    },
+    {
+      "t_ms": 148233,
+      "kind": "text",
+      "chunk": "ohnt sich, das"
+    },
+    {
+      "t_ms": 148300,
+      "kind": "text",
+      "chunk": " we"
+    },
+    {
+      "t_ms": 148352,
+      "kind": "text",
+      "chunk": "iter zu beobachten"
+    },
+    {
+      "t_ms": 148383,
+      "kind": "text",
+      "chunk": ".\n\nIch habe die"
+    },
+    {
+      "t_ms": 148433,
+      "kind": "text",
+      "chunk": " Reg"
+    },
+    {
+      "t_ms": 148484,
+      "kind": "text",
+      "chunk": "el für"
+    },
+    {
+      "t_ms": 148536,
+      "kind": "text",
+      "chunk": " die w"
+    },
+    {
+      "t_ms": 148582,
+      "kind": "text",
+      "chunk": "öchentliche Pr"
+    },
+    {
+      "t_ms": 148638,
+      "kind": "text",
+      "chunk": "üfung als `pruef"
+    },
+    {
+      "t_ms": 148684,
+      "kind": "text",
+      "chunk": "regel-linsensupp"
+    },
+    {
+      "t_ms": 148732,
+      "kind": "text",
+      "chunk": "e.md` im Arb"
+    },
+    {
+      "t_ms": 148786,
+      "kind": "text",
+      "chunk": "eitsordner abgel"
+    },
+    {
+      "t_ms": 148835,
+      "kind": "text",
+      "chunk": "egt. Dar"
+    },
+    {
+      "t_ms": 148881,
+      "kind": "text",
+      "chunk": "in f"
+    },
+    {
+      "t_ms": 148931,
+      "kind": "text",
+      "chunk": "ehlt noch, wer"
+    },
+    {
+      "t_ms": 148989,
+      "kind": "text",
+      "chunk": " entscheidet, wen"
+    },
+    {
+      "t_ms": 149033,
+      "kind": "text",
+      "chunk": "n eine Prüfung"
+    },
+    {
+      "t_ms": 149088,
+      "kind": "text",
+      "chunk": " rot ist. Wer"
+    },
+    {
+      "t_ms": 149131,
+      "kind": "text",
+      "chunk": " soll das b"
+    },
+    {
+      "t_ms": 149174,
+      "kind": "text",
+      "chunk": "ei euch sein?"
+    }
+  ],
+  "final_text": "Ja, der Prognose könnt ihr trauen: Sie schlägt „wie letzte Woche“ deutlich, und für die Woche ab 29.12. sind alle vier Prüfungen bestanden. **Wenn die Kantine die Reste nimmt, kocht ihr 748 Gläser. Wenn sie zwischen den Jahren zu hat, kocht ihr 729.**\n\nDie 94,2 % des Tools stimmen. Es ist dieselbe Zahl wie unser WAPE von 5,8 %, nur andersherum ausgedrückt. Sie sagt aber nicht, ob das Tool besser ist als eine einfache Regel. Das zeigt erst der Vergleich unten.\n\n**Geprüft:** Linsensuppe 500 ml, 30.12.2024 bis 22.12.2025, 50 Wochen. Nicht bewertet sind zwei Wochen: 03.02.2025 (keine Prognose gespeichert) und 10.03.2025 (ausverkauft, das Ist liegt also unter der Nachfrage). Die Woche 16.09.2024 stand doppelt in der Datei und zählt einmal.\n\n| | Mittlerer Fehler (Gläser) | Bias | WAPE |\n|---|---|---|---|\n| Prognose | 33,3 | 3,0 % zu hoch | 5,8 % |\n| wie letzte Woche | 42,2 | 0,3 % zu tief | 7,4 % |\n| wie Vorjahreswoche | 38,8 | 1,5 % zu tief | 6,8 % |\n| Schnitt 4 Wochen | 42,2 | 0,5 % zu tief | 7,4 % |\n\n1. **Vergleich mit „wie letzte Woche“:** Der Fehler der Prognose ist 21,3 % kleiner. Sie lag in 30 von 50 Wochen näher am Ist. Von den einfachen Regeln ist „wie Vorjahreswoche“ die beste, aber auch sie schlägt die Prognose nicht.\n2. **Spanne:** Das Ist lag in 36 von 50 Wochen in der 80-%-Spanne. Die Fehltreffer kamen gehäuft nach dem 07.04.2025. Laut Datei hat ab da die Bio-Markt-Kette die Suppe ausgelistet (rund 70 Gläser pro Woche). Danach lag die Prognose wochenlang zu hoch.\n3. **Kochmenge für 29.12.2025:**\n   - Die Prognose sagt 729 Gläser, die Spanne reicht von 694 bis 756.\n   - Mit Kantine kostet ein fehlendes Glas 1,50 € und ein übriges 0,40 €. Deshalb lohnt es sich, so viel zu kochen, dass es in 79 % der Wochen reicht. Das ergibt 748 Gläser. In 5 der letzten 26 Wochen hätten 748 Gläser nicht gereicht.\n   - Ohne Kantine kostet ein übriges Glas die vollen 1,60 €. Dann reichen 48 %, also 729 Gläser, und es wäre in 13 von 26 Wochen knapp geworden.\n   - Hättet ihr im letzten Jahr immer so gekocht, hätten Fehlmengen und Reste zusammen 1.023 € gekostet. Bei „Prognose kochen“ wären es 1.105 € gewesen, bei „wie letzte Woche“ 2.052 €.\n4. **Freigabe:** Alle vier Prüfungen sind grün, die Kochmenge geht also ohne Freigabe in die Planung. Rot war es im letzten Jahr in 15 von 52 Wochen: am 03.02.2025 (Daten fehlten) und vom 21.04. bis 21.07.2025 (Bias und Spanne nach der Auslistung, am 28.04. auch der Vergleich mit „wie letzte Woche“).\n\nFragt vor Montag bei der Kantine nach, ob sie zwischen den Jahren geöffnet hat. Davon hängt ab, ob ihr 748 oder 729 Gläser kocht. Die Prognose liegt im Schnitt 3,0 % zu hoch. Das bleibt unter der 5-%-Grenze, aber es lohnt sich, das weiter zu beobachten.\n\nIch habe die Regel für die wöchentliche Prüfung als `pruefregel-linsensuppe.md` im Arbeitsordner abgelegt. Darin fehlt noch, wer entscheidet, wenn eine Prüfung rot ist. Wer soll das bei euch sein?",
+  "stats": {
+    "duration_ms": 147980,
+    "duration_api_ms": 145406,
+    "ttft_ms": 3145,
+    "num_turns": 13,
+    "output_tokens": 14445
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [
+    {
+      "prompt": "Die Kantine holt ab sofort keine übrigen Gläser mehr ab. Wie viele Gläser kochen wir dann für die Woche ab 29.12.2025?",
+      "timeline": [
+        {
+          "t_ms": 8387,
+          "kind": "tool_use",
+          "tool": "Write",
+          "input": {
+            "file_path": "pruefregel-linsensuppe.md",
+            "content": "# Prüfregel Linsensuppe 500 ml (Artikel 2210)\n\nMesslatte: „wie letzte Woche“. Kosten: Fehlmenge 1,50 € je Glas, Rest 1,60 € je Glas\n(seit 28.12.2025 ohne Kantine; vorher 0,40 €).\n\nGeprüft wird jede Woche an den letzten 13 gültigen Wochen. Frei, wenn alle vier grün:\n1. Daten: Ist der Vorwoche und Prognose dieser Woche liegen vor.\n2. Messlatte: mittlerer Fehler der Prognose kleiner als der der Messlatte.\n3. Bias: Summe (Prognose − Ist) höchstens 5 % der Summe Ist, nach oben oder unten.\n4. Spanne: Ist mindestens 9-mal in der 80-%-Spanne. Auch eine ehrliche Spanne fällt in\n   9,9 % der 13-Wochen-Fenster zufällig darunter.\n\nSonst entscheidet [Person eintragen], schreibt Zahl und Grund ins Protokoll.\nImmer eine Person: neues Produkt, Kunde kommt dazu oder fällt weg (z. B. Auslistung\nBio-Markt-Kette April 2025), Preisänderung über 10 %, Lieferengpass, neuer Abnehmer\nfür Restware.\n\nWochen mit Hinweis „ausverkauft“ zählen nicht. Jede Prognose mit Datum ablegen.\n"
+          }
+        },
+        {
+          "t_ms": 8400,
+          "kind": "tool_result",
+          "is_error": false
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text_start"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": "**Kocht 729 "
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": "Gläser.** Die"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": " Z"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": "ahl k"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": "ommt aus der"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": " zweiten R"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": "echnung von"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": " v"
+        },
+        {
+          "t_ms": 17276,
+          "kind": "text",
+          "chunk": "orhin, die"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": " ich sch"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "on mit 1,60 "
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "€ je übr"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "igem Glas gemac"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "ht h"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "atte.\n\nDer Gr"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "und:\n- **"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "K"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "osten:** Oh"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "ne Kantine kost"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "et ein übriges Gl"
+        },
+        {
+          "t_ms": 17277,
+          "kind": "text",
+          "chunk": "as die"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " vollen"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " Herstellkosten von"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " 1,60 €."
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " Ein fehlendes"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " Glas kostet we"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": "iter 1,50 €"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " ent"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": "gangenen Deckung"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": "sbeitrag."
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " Ein"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": " R"
+        },
+        {
+          "t_ms": 17278,
+          "kind": "text",
+          "chunk": "est ist jetzt also"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": " etwas teurer als e"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "ine Fehlmenge"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": ".\n- **Anteil"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": ":**"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": " Deshalb lohnt"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": " es sich nur no"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "ch, so viel zu k"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "ochen, dass es in "
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "48 % der Wochen"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": " reicht,"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": " statt w"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "ie bisher in 79 "
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "%.\n- **Plan"
+        },
+        {
+          "t_ms": 17279,
+          "kind": "text",
+          "chunk": "zahl:**"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": " Das ergibt 729 "
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "Gläser,"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": " genau die Prognose."
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": " Die Spanne b"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "leibt 694 bis"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": " 756."
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "\n- **Risiko:"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "** In"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": " "
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "13 der"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": " letzten 26 W"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "ochen hätten 729 "
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "Gläser nicht g"
+        },
+        {
+          "t_ms": 17280,
+          "kind": "text",
+          "chunk": "ereicht,"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " in den"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " anderen 13 w"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "ä"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "re etwas übrig ge"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "blieben. Das ist"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " bei"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " diesen Kosten"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " Abs"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "icht: M"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "ehr Gläser wür"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "den eu"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": "ch im"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " Schnitt mehr"
+        },
+        {
+          "t_ms": 17281,
+          "kind": "text",
+          "chunk": " an Res"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "ten kosten,"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": " als sie an"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": " Fehlmengen s"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "paren.\n- **Fre"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "igabe:** Alle"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": " vier Prüfungen"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": " sind we"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "iter"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "hin grün."
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": " Die 729 Glä"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "ser gehen ohne"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": " Freigabe in die Plan"
+        },
+        {
+          "t_ms": 17282,
+          "kind": "text",
+          "chunk": "ung.\n\nIch habe"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": " die"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": " Prüfregel in `"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "pruefregel-lins"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "ensuppe.md` au"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "f 1,60 € je"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": " übrigem Glas um"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "gestellt. Ne"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "u ste"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "ht d"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "ort: Findet "
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "ihr einen neuen"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": " Abnehmer für Re"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "ste, entscheidet e"
+        },
+        {
+          "t_ms": 17283,
+          "kind": "text",
+          "chunk": "ine Person, denn d"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "ann ändert sich die"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": " Kochmenge. W"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "er das"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": " ist, f"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "ehlt in"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": " der Datei noch."
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "\n\nE"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "ine "
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "Ausnahme b"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "leibt: R"
+        },
+        {
+          "t_ms": 17284,
+          "kind": "text",
+          "chunk": "echnet ihr le"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "ere Regale und"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": " Ärger in den Lä"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "den in Euro ein,"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": " sind"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": " die Fehlmengen"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "kosten höher als"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": " 1,50 €."
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": " Dann lohnt s"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "ich w"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "ieder e"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "ine"
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": " Menge über "
+        },
+        {
+          "t_ms": 17285,
+          "kind": "text",
+          "chunk": "729."
+        }
+      ],
+      "final_text": "**Kocht 729 Gläser.** Die Zahl kommt aus der zweiten Rechnung von vorhin, die ich schon mit 1,60 € je übrigem Glas gemacht hatte.\n\nDer Grund:\n- **Kosten:** Ohne Kantine kostet ein übriges Glas die vollen Herstellkosten von 1,60 €. Ein fehlendes Glas kostet weiter 1,50 € entgangenen Deckungsbeitrag. Ein Rest ist jetzt also etwas teurer als eine Fehlmenge.\n- **Anteil:** Deshalb lohnt es sich nur noch, so viel zu kochen, dass es in 48 % der Wochen reicht, statt wie bisher in 79 %.\n- **Planzahl:** Das ergibt 729 Gläser, genau die Prognose. Die Spanne bleibt 694 bis 756.\n- **Risiko:** In 13 der letzten 26 Wochen hätten 729 Gläser nicht gereicht, in den anderen 13 wäre etwas übrig geblieben. Das ist bei diesen Kosten Absicht: Mehr Gläser würden euch im Schnitt mehr an Resten kosten, als sie an Fehlmengen sparen.\n- **Freigabe:** Alle vier Prüfungen sind weiterhin grün. Die 729 Gläser gehen ohne Freigabe in die Planung.\n\nIch habe die Prüfregel in `pruefregel-linsensuppe.md` auf 1,60 € je übrigem Glas umgestellt. Neu steht dort: Findet ihr einen neuen Abnehmer für Reste, entscheidet eine Person, denn dann ändert sich die Kochmenge. Wer das ist, fehlt in der Datei noch.\n\nEine Ausnahme bleibt: Rechnet ihr leere Regale und Ärger in den Läden in Euro ein, sind die Fehlmengenkosten höher als 1,50 €. Dann lohnt sich wieder eine Menge über 729.",
+      "stats": {
+        "duration_ms": 16718,
+        "duration_api_ms": 162059,
+        "ttft_ms": 3851,
+        "num_turns": 2,
+        "output_tokens": 1450
+      },
+      "is_error": false,
+      "stop_reason": "end_turn"
+    }
+  ],
+  "produced_files": [
+    {
+      "name": "pruefen.py",
+      "bytes": 9793,
+      "sha256": "6105b7488f62d432215a0feb857d109294d6cd249729b840af6605eb939647eb",
+      "stored_as": "de-trauen-with-4.pruefen.py",
+      "text": "\"\"\"Prüft eine Wochenprognose an ihren alten Fehlern. Nur Python-Standardbibliothek, kein Netz.\nAufruf: python3 pruefen.py DATEI.csv [--fehlmenge 1,50] [--rest 0,40] [--messlatte \"wie letzte Woche\"]   Ausgabe: JSON\nEnglish: --shortage and --leftover are the same as --fehlmenge and --rest.\nSpalten (Kopfzeile): woche, ist; optional prognose, hinweis, bestand_ende. Trenner ; , oder Tab.\nGleiche Regeln wie loehrning.ai/demos/ki-prognosen-einschaetzen.\"\"\"\nimport argparse, csv, datetime as dt, io, json, math, re, sys\n\nLERNEN, MIN_LERNEN, PRUEF, FENSTER = 26, 20, 13, 52   # Wochen\nBIAS_MAX, TREFFER_MIN = 0.05, 9                      # Prüfregel: |Bias| <= 5 %, >= 9 von 13 in der Spanne\nALIAS = {\"woche\": \"woche\", \"week\": \"woche\", \"datum\": \"woche\", \"date\": \"woche\", \"kw\": \"woche\",\n         \"ist\": \"ist\", \"verkauft\": \"ist\", \"absatz\": \"ist\", \"sales\": \"ist\", \"actual\": \"ist\",\n         \"prognose\": \"prognose\", \"forecast\": \"prognose\", \"tool_prognose\": \"prognose\",\n         \"hinweis\": \"hinweis\", \"note\": \"hinweis\", \"kommentar\": \"hinweis\",\n         \"bestand_ende\": \"bestand\", \"bestand\": \"bestand\", \"stock_end\": \"bestand\"}\nAUSVERKAUFT = (\"ausverkauft\", \"sold out\", \"stockout\", \"fehlbestand\")\n\ndef zahl(s, zeile):\n    t = (s or \"\").strip().replace(\" \", \"\").replace(\" \", \"\").replace(\" \", \"\")\n    if not t: return None\n    if re.fullmatch(r\"\\d{1,3}(\\.\\d{3})+(,\\d+)?\", t): t = t.replace(\".\", \"\").replace(\",\", \".\")\n    elif re.fullmatch(r\"\\d{1,3}(,\\d{3})+(\\.\\d+)?\", t): t = t.replace(\",\", \"\")\n    elif re.fullmatch(r\"\\d+,\\d+\", t): t = t.replace(\",\", \".\")\n    if not re.fullmatch(r\"\\d+(\\.\\d+)?\", t): sys.exit(f\"Zeile {zeile}: '{s}' ist keine Zahl (negativ oder Text).\")\n    return float(t)\n\ndef datum(s, zeile):\n    s = s.strip()\n    for f in (\"%Y-%m-%d\", \"%d.%m.%Y\", \"%d.%m.%y\", \"%d/%m/%Y\"):\n        try: return dt.datetime.strptime(s, f).date()\n        except ValueError: pass\n    m = re.fullmatch(r\"(?:KW|W)\\s?(\\d{1,2})[/ -](\\d{4})\", s, re.I) or re.fullmatch(r\"(\\d{4})-W(\\d{2})\", s)\n    if m:\n        w, j = (int(m[1]), int(m[2])) if s[0] in \"KkWw\" else (int(m[2]), int(m[1]))\n        return dt.date.fromisocalendar(j, w, 1)\n    sys.exit(f\"Zeile {zeile}: '{s}' ist kein Datum. Erlaubt: 2025-10-27, 27.10.2025, KW 44/2025.\")\n\ndef lesen(text):\n    r = list(csv.reader(io.StringIO(text), csv.Sniffer().sniff(text.splitlines()[0], delimiters=\";,\\t\")))\n    kopf = [ALIAS.get(h.strip().lower()) for h in r[0]]\n    if \"woche\" not in kopf or \"ist\" not in kopf: sys.exit(\"Kopfzeile braucht mindestens: woche;ist\")\n    tage, hinweise = {}, []\n    for nr, z in enumerate(r[1:], start=2):\n        if not any(c.strip() for c in z): continue\n        d = {k: (z[i] if i < len(z) else \"\") for i, k in enumerate(kopf) if k}\n        w = datum(d[\"woche\"], nr)\n        zeile = dict(ist=zahl(d.get(\"ist\"), nr), f=zahl(d.get(\"prognose\"), nr), hinweis=d.get(\"hinweis\", \"\").strip(),\n                     zensiert=zahl(d.get(\"bestand\"), nr) == 0 or any(a in d.get(\"hinweis\", \"\").lower() for a in AUSVERKAUFT))\n        if w in tage:\n            if tage[w] == zeile: hinweise.append(f\"{w}: doppelte Zeile, einmal gezählt\"); continue\n            sys.exit(f\"Zeile {nr}: {w} steht zweimal mit verschiedenen Werten. Eine Zeile löschen.\")\n        tage[w] = zeile\n    ws = sorted(tage)\n    if len(ws) > 1 and min(b - a for a, b in zip(ws, ws[1:])).days == 1:\n        sys.exit(\"Tageswerte: bitte vorher zu Wochen (Montag bis Sonntag) summieren.\")\n    rows = [dict(woche=ws[0], **tage[ws[0]])]\n    for w in ws[1:]:\n        while (w - rows[-1][\"woche\"]).days > 7:\n            leer = rows[-1][\"woche\"] + dt.timedelta(7)\n            hinweise.append(f\"{leer}: Woche fehlt in der Datei, zählt nicht\")\n            rows.append(dict(woche=leer, ist=None, f=None, hinweis=\"\", zensiert=False))\n        rows.append(dict(woche=w, **tage[w]))\n    return rows, hinweise\n\ndef q(xs, p):  # Quantil wie Excel QUANTIL.INKL (Typ 7)\n    s = sorted(xs); h = (len(s) - 1) * p; i = math.floor(h)\n    return s[i] + (h - i) * (s[min(i + 1, len(s) - 1)] - s[i])\n\ndef pruefen(rows, hinweise, fehlmenge, rest, messlatte):\n    ist = [r[\"ist\"] for r in rows]\n    regeln = {\"wie letzte Woche\": lambda t: ist[t - 1] if t >= 1 else None,\n              \"wie Vorjahreswoche\": lambda t: ist[t - 52] if t >= 52 else None,\n              \"Schnitt 4 Wochen\": lambda t: sum(ist[t - 4:t]) / 4 if t >= 4 and None not in ist[t - 4:t] else None}\n    hat_prognose = any(r[\"f\"] is not None for r in rows)\n    if messlatte not in regeln: sys.exit(f\"Messlatte unbekannt. Erlaubt: {', '.join(regeln)}\")\n    letzte = max(t for t, r in enumerate(rows) if r[\"ist\"] is not None)\n    naechste = letzte + 1 if letzte + 1 < len(rows) else None\n    gueltig = lambda t: ist[t] is not None and not rows[t][\"zensiert\"]\n    F = (lambda t: rows[t][\"f\"]) if hat_prognose else regeln[messlatte]  # ohne Prognose: die Messlatte selbst\n    wochen = [t for t in range(max(0, letzte - FENSTER + 1), letzte + 1)\n              if gueltig(t) and F(t) is not None and regeln[messlatte](t) is not None]\n    if len(wochen) < PRUEF: sys.exit(f\"Zu wenig vergleichbare Wochen: {len(wochen)}. Nötig: {PRUEF}, besser 52.\")\n    A = sum(ist[t] for t in wochen)\n    def kennzahlen(g):\n        if any(g(t) is None for t in wochen): return None\n        e = [g(t) - ist[t] for t in wochen]\n        return dict(mae=sum(map(abs, e)) / len(e), bias=sum(e) / A, wape=sum(map(abs, e)) / A)\n    tabelle = {\"Prognose\": kennzahlen(F)} if hat_prognose else {}\n    tabelle.update({k: kennzahlen(g) for k, g in regeln.items()})\n    def fehler(t, n):\n        ws = [k for k in range(t) if gueltig(k) and F(k) is not None and regeln[messlatte](k) is not None][-n:]\n        return [ist[k] - F(k) for k in ws], ws\n    def spanne(t):\n        e, _ = fehler(t, LERNEN); return (q(e, .1), q(e, .9)) if len(e) >= MIN_LERNEN else None\n    def treffer(t):\n        s = spanne(t); return None if s is None else s[0] <= ist[t] - F(t) <= s[1]\n    def lampen(t):\n        _, ws = fehler(t, PRUEF)\n        if len(ws) < PRUEF: return None\n        m = sum(abs(F(k) - ist[k]) for k in ws); mr = sum(abs(regeln[messlatte](k) - ist[k]) for k in ws)\n        b = sum(F(k) - ist[k] for k in ws) / sum(ist[k] for k in ws); h = sum(1 for k in ws if treffer(k))\n        l = dict(daten=ist[t - 1] is not None and F(t) is not None, messlatte=(m < mr) if hat_prognose else None,\n                 bias=abs(b) <= BIAS_MAX, spanne=h >= TREFFER_MIN)\n        return dict(l, frei=all(v for v in l.values() if v is not None), verhaeltnis=m / mr, bias_wert=b, treffer=h)\n    gezaehlt = [t for t in wochen if treffer(t) is not None]\n    out = dict(hinweise=hinweise, geprueft=\"Prognose\" if hat_prognose else messlatte, messlatte=messlatte,\n               von=str(rows[wochen[0]][\"woche\"]), bis=str(rows[wochen[-1]][\"woche\"]), wochen=len(wochen),\n               nicht_bewertet=[(str(rows[t][\"woche\"]), \"Ist fehlt\" if ist[t] is None else \"ausverkauft: Ist ist kleiner als die Nachfrage\"\n                                if rows[t][\"zensiert\"] else \"keine Prognose gespeichert\" if F(t) is None else \"Vorwoche fehlt\")\n                               for t in range(wochen[0], letzte + 1) if t not in wochen],\n               tabelle=tabelle, naeher=sum(abs(F(t) - ist[t]) < abs(regeln[messlatte](t) - ist[t]) for t in wochen),\n               zu_hoch=sum(F(t) > ist[t] for t in wochen),\n               spanne_treffer=sum(treffer(t) for t in gezaehlt), spanne_wochen=len(gezaehlt))\n    out[\"beste_regel\"] = min((k for k in regeln if tabelle[k]), key=lambda k: tabelle[k][\"mae\"])\n    if hat_prognose: out[\"vorsprung\"] = 1 - tabelle[\"Prognose\"][\"mae\"] / tabelle[messlatte][\"mae\"]\n    streifen = [t for t in range(max(1, (naechste or letzte) - FENSTER + 1), (naechste or letzte) + 1)]\n    sperre = [(str(rows[t][\"woche\"]), [k for k in (\"daten\", \"messlatte\", \"bias\", \"spanne\") if l[k] is False])\n              for t in streifen if (l := lampen(t)) and not l[\"frei\"]]\n    out.update(regel_wochen=len(streifen), regel_frei=len(streifen) - len(sperre), regel_rot=sperre)\n    if fehlmenge and rest:\n        tau = fehlmenge / (fehlmenge + rest)\n        kosten = lambda Q, D: fehlmenge * max(0, D - Q) + rest * max(0, Q - D)\n        mit = [t for t in wochen if fehler(t, LERNEN)[0]]  # ohne Fehler davor keine Planzahl: Woche fällt heraus\n        out[\"anteil\"] = tau\n        out[\"kosten_wochen\"] = len(mit)\n        out[\"kosten\"] = {\"Messlatte\": sum(kosten(regeln[messlatte](t), ist[t]) for t in mit),\n                         \"Prognose\": sum(kosten(F(t), ist[t]) for t in mit),\n                         \"Planzahl\": sum(kosten(F(t) + q(fehler(t, LERNEN)[0], tau), ist[t]) for t in mit)}\n    if naechste is not None and F(naechste) is not None:\n        e, _ = fehler(naechste, LERNEN); n = dict(woche=str(rows[naechste][\"woche\"]), prognose=F(naechste), lampen=lampen(naechste))\n        if len(e) >= MIN_LERNEN:\n            n.update(p10=F(naechste) + q(e, .1), p50=F(naechste) + q(e, .5), p90=F(naechste) + q(e, .9))\n            if fehlmenge and rest:\n                z = math.floor(F(naechste) + q(e, out[\"anteil\"]) + 0.5)  # kaufmännisch runden, wie die Demo\n                n.update(planzahl=z, zu_wenig=sum(F(naechste) + x > z for x in e), uebrig=sum(F(naechste) + x < z for x in e), von=len(e))\n        out[\"naechste\"] = n\n    return out\n\nif __name__ == \"__main__\":\n    a = argparse.ArgumentParser(); a.add_argument(\"datei\")\n    a.add_argument(\"--fehlmenge\", \"--shortage\"); a.add_argument(\"--rest\", \"--leftover\")  # Kosten je Stück\n    a.add_argument(\"--messlatte\", default=\"wie letzte Woche\"); a = a.parse_args()\n    rows, hinweise = lesen(open(a.datei, encoding=\"utf-8-sig\").read())\n    e = pruefen(rows, hinweise, a.fehlmenge and zahl(a.fehlmenge, \"--fehlmenge\"), a.rest and zahl(a.rest, \"--rest\"), a.messlatte)\n    print(json.dumps(e, ensure_ascii=False, indent=1, default=str))\n"
+    },
+    {
+      "name": "pruefregel-linsensuppe.md",
+      "bytes": 995,
+      "sha256": "c6e72ffd5e4701cb7d43639867196448c75b9942c336a628a17140aebabe0dfb",
+      "stored_as": "de-trauen-with-4.pruefregel-linsensuppe.md",
+      "text": "# Prüfregel Linsensuppe 500 ml (Artikel 2210)\n\nMesslatte: „wie letzte Woche“. Kosten: Fehlmenge 1,50 € je Glas, Rest 1,60 € je Glas\n(seit 28.12.2025 ohne Kantine; vorher 0,40 €).\n\nGeprüft wird jede Woche an den letzten 13 gültigen Wochen. Frei, wenn alle vier grün:\n1. Daten: Ist der Vorwoche und Prognose dieser Woche liegen vor.\n2. Messlatte: mittlerer Fehler der Prognose kleiner als der der Messlatte.\n3. Bias: Summe (Prognose − Ist) höchstens 5 % der Summe Ist, nach oben oder unten.\n4. Spanne: Ist mindestens 9-mal in der 80-%-Spanne. Auch eine ehrliche Spanne fällt in\n   9,9 % der 13-Wochen-Fenster zufällig darunter.\n\nSonst entscheidet [Person eintragen], schreibt Zahl und Grund ins Protokoll.\nImmer eine Person: neues Produkt, Kunde kommt dazu oder fällt weg (z. B. Auslistung\nBio-Markt-Kette April 2025), Preisänderung über 10 %, Lieferengpass, neuer Abnehmer\nfür Restware.\n\nWochen mit Hinweis „ausverkauft“ zählen nicht. Jede Prognose mit Datum ablegen.\n"
+    }
+  ],
+  "edited": false,
+  "rejected": [
+    "2 tool calls were denied"
+  ]
+}

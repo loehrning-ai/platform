@@ -1,9 +1,13 @@
 (() => {
-  const CHANNEL_NAME = "foldline-deck:v1";
-  const STATE_KEY = "foldline-deck:presenter-state:v1";
-  const COMMAND_KEY = "foldline-deck:presenter-command:v1";
-  const DECK_STARTED_KEY = "foldline-deck:deck-started:v1";
-  const TIMER_KEY = "foldline-deck:timer:v1";
+  // One deck id names every channel, window and storage key (lib/deck-keys.js), so two decks in one
+  // browser never share them.
+  const DECK_ID = document.documentElement.getAttribute("data-deck-id") || "datenbereitschaft-fuer-ki";
+  const PRESENTER_WINDOW = `deck-presenter:${DECK_ID}`;
+  const CHANNEL_NAME = PRESENTER_WINDOW;
+  const STATE_KEY = `deck:${DECK_ID}:presenter-state:v1`;
+  const COMMAND_KEY = `deck:${DECK_ID}:presenter-command:v1`;
+  const DECK_STARTED_KEY = `deck:${DECK_ID}:deck-started:v1`;
+  const TIMER_KEY = `deck:${DECK_ID}:timer:v1`;
   const WINDOW_PROTOCOL = "foldline-deck:window:v1";
   const SHARED_PROTOCOL = "foldline-deck:shared-auth:v1";
   const WINDOW_CHANNEL_PATTERN = /^[A-Za-z0-9._~-]{16,160}$/;
@@ -100,7 +104,7 @@
   let connectionStatus = "";
   let timerState = readTimer();
   let selectDirty = false;
-  const NOTE_OPEN_KEY = "foldline-deck:presenter-note-open:v1";
+  const NOTE_OPEN_KEY = `deck:${DECK_ID}:presenter-note-open:v1`;
 
   function byId(id) { return document.getElementById(id); }
 
@@ -460,7 +464,7 @@
     root.replaceChildren();
     const entries = noteEntries(richNote, total);
     if (!entries.length) {
-      root.textContent = state.note || "—";
+      root.textContent = state.note || "·";
       return;
     }
     const rank = (entry) => (entry.kind === "must" && !entry.steps.length ? 0 : entry.kind === "detail" || entry.kind === "block" ? 2 : 1);
@@ -500,7 +504,7 @@
       const vote = !nodes.voteCard.hidden;
       const ask = !nodes.stepAskRow.hidden;
       empty.textContent = !richNote
-        ? state?.note || "—"
+        ? state?.note || "·"
         : vote
           ? "Run the vote: take hands for each option, then say the split aloud."
           : ask
@@ -691,7 +695,7 @@
     renderAppendixBanner();
     const endOfMain = state.kind === "main" && state.mainIndex === state.mainTotal - 1;
     setText(nodes.nextLabel, endOfMain ? "None · Q&A uses the appendix routes" : state.next?.label || "End of deck");
-    setText(nodes.nextId, endOfMain ? "—" : state.next?.sceneId || "—");
+    setText(nodes.nextId, endOfMain ? "·" : state.next?.sceneId || "·");
     setText(nodes.nextKind, endOfMain ? "end" : state.next?.kind || "end");
     document.documentElement.dataset.deckKind = state.kind || "main";
     populateSceneSelect(state.scenes);
@@ -748,12 +752,12 @@
   // "On screen now" is what the current press shows; "Next press" is what the next arrow press will show.
   function renderStepLines(richNote, step, total) {
     const order = richNote?.revealOrder || [];
-    setText(nodes.stepNow, order[step] || "—");
+    setText(nodes.stepNow, order[step] || "·");
     const aloud = (richNote?.ask || []).filter((item) => item.aloud && item.at === step).map((item) => item.text);
     nodes.stepAskRow.hidden = !aloud.length;
-    setText(nodes.stepAsk, aloud.join(" · ") || "—");
+    setText(nodes.stepAsk, aloud.join(" · ") || "·");
     let next;
-    if (step < total) next = order[step + 1] || "—";
+    if (step < total) next = order[step + 1] || "·";
     else if (state.kind === "main" && state.mainIndex === state.mainTotal - 1) next = "Nothing · the main path ends here. Open Q&A.";
     else if (state.kind === "appendix") next = state.next?.kind === "appendix" ? `Next appendix page · ${state.next.label}` : "Nothing · last appendix page";
     else next = state.next ? `Next scene · ${state.next.label}` : "End of deck";
@@ -783,7 +787,7 @@
   function renderLines(root, lines) {
     root.replaceChildren();
     if (!lines.length) {
-      root.textContent = "—";
+      root.textContent = "·";
       return;
     }
     lines.forEach((line) => {
@@ -996,7 +1000,7 @@
   // A standalone console (opened by hand) becomes the named presenter window, then opens the deck.
   // The deck's P reuses this window by name and re-runs the normal pairing handshake.
   function openDeckFromConsole() {
-    try { window.name = "foldline-presenter"; } catch (_error) { /* the deck's P opens its own console */ }
+    try { window.name = PRESENTER_WINDOW; } catch (_error) { /* the deck's P opens its own console */ }
     const deck = window.open("./slides.html", "_blank");
     setText(nodes.pairingLead, deck
       ? "The deck opened in a new tab. Press P there; this console reloads once and connects."
@@ -1126,7 +1130,7 @@
     window.setInterval(() => {
       renderClock();
       renderConnectionHealth();
-      setText(nodes.stateAge, state?.timestamp ? `${Math.max(0, Math.round((Date.now() - state.timestamp) / 1000))}s old` : "—");
+      setText(nodes.stateAge, state?.timestamp ? `${Math.max(0, Math.round((Date.now() - state.timestamp) / 1000))}s old` : "·");
     }, HEARTBEAT_INTERVAL_MS);
   }
 

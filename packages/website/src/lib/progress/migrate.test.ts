@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 // ─── Forward-migrator unit tests ──
 //
 // `store.test.ts` covers golden-file migrations through the full store.

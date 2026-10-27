@@ -52,7 +52,7 @@ One person may hold several roles, but the tester should not have built the lane
 | Input | Step 0 |
 | Output | A first `semantic/metric.yml` block (`type`, `result_grain`, `period_rule`, `relation`) and the list of cases in `semantic/verified-questions.yml` (behaviours only, no rows yet) |
 | Done when | Each blank has exactly one answer. Each case has one behaviour: answer, clarify, refuse, deny or stale |
-| FOLDLINE | Level · one row per month · Apr–Jun, never add months · `analytics.mrr_summary_monthly`. Cases: G01 answer, C01 ask back, R01 and R02 refuse, D01 deny, F01 answer with a warning |
+| FOLDLINE | Level · one row per month · Apr to Jun, never add months · `analytics.mrr_summary_monthly`. Cases: G01 answer, C01 ask back, R01 and R02 refuse, D01 deny, F01 answer with a warning |
 | Prevents | AP-M01 change read as a level, AP-M02 levels summed, AP-T01 one happy path |
 
 ### Step 2. Write the truth
@@ -108,7 +108,7 @@ One person may hold several roles, but the tester should not have built the lane
 | Output | `semantic/model.yml`, `semantic/metric.yml` (complete) |
 | Done when | Every column of every view appears in `model.yml` with a unit; every metric's `relation` exists; the four blanks can be read off each metric; the owner has approved version 1.0.0 |
 | FOLDLINE | Five approved metrics; `ending_mrr` is `snapshot`, `across_time: none` |
-| Prevents | AP-M05 averaged rates, AP-M06 wrong base, AP-M07 0/0 as 0 %, AP-N05 `_pct` stored as 0–1 |
+| Prevents | AP-M05 averaged rates, AP-M06 wrong base, AP-M07 0/0 as 0 %, AP-N05 `_pct` stored as 0 to 1 |
 
 ### Step 7. Lock access
 
@@ -140,8 +140,8 @@ One person may hold several roles, but the tester should not have built the lane
 | Input | Steps 2, 5 and 7 |
 | Output | The printed output of `warehouse/sql/70_checks.sql`, saved as a receipt with date, dataset ID and definition version |
 | Done when | `DB CHECKS n of n PASS`. The receipt says: "These test the database and course rules, not the AI." |
-| FOLDLINE | The deck's nine (G01–G05, C01, R01, R02, D01) plus B-, Q-, T- and F- cases; `70_checks.sql` runs 22. In the deck, C01, R01 and R02 were course rules checked outside the AI tool, before any SQL. The kit has no policy engine, so Claude's instructions carry them and step 11 grades them. A pass there is guidance evidence only and does not reproduce the deck's C01/R01/R02 result. R02 stays backed by D01 (42501) |
-| Prevents | AP-E03 database checks read as an AI score |
+| FOLDLINE | The deck's nine (G01 to G05, C01, R01, R02, D01) plus B-, Q-, T- and F- cases; `70_checks.sql` runs 22. In the deck, C01, R01 and R02 were course rules checked outside the AI tool, before any SQL. The kit has no policy engine, so Claude's instructions carry them and step 11 grades them. A pass there is guidance evidence only and does not reproduce the deck's C01/R01/R02 result. R02 stays backed by D01 (42501) |
+| Prevents | AP-E03 database checks read as an AI grade |
 
 ### Step 10. Compile to Claude and connect
 
@@ -173,12 +173,12 @@ For a question of FOLDLINE's size, built by someone who has done it once:
 
 | Steps | Typical time | Note |
 | --- | --- | --- |
-| 0–2 | One meeting, about an hour | Most delays come from step 2, when two people disagree about the truth; that disagreement is a finding |
-| 3–6 | Half a day to two days | Depends on how messy the sources are |
-| 7–9 | About two hours | Most of it is reading the check output |
-| 10–11 | About two hours plus the runs | Three runs per case, per AI route |
+| 0 to 2 | One meeting, about an hour | Most delays come from step 2, when two people disagree about the truth; that disagreement is a finding |
+| 3 to 6 | Half a day to two days | Depends on how messy the sources are |
+| 7 to 9 | About two hours | Most of it is reading the check output |
+| 10 to 11 | About two hours plus the runs | Three runs per case, per AI route |
 
-The FOLDLINE kit runs steps 4–9 in about a minute (`warehouse/README.md`); reading the output takes about 15 minutes.
+The FOLDLINE kit runs steps 4 to 9 in about a minute (`warehouse/README.md`); reading the output takes about 15 minutes.
 
 ---
 
@@ -189,9 +189,9 @@ again.
 
 | Change | Re-run | Why |
 | --- | --- | --- |
-| Schema change (a column, a view, a type) | Steps 5–11 | A renamed column can make a correct query return nothing, or something else |
-| Metric version change | Steps 6, 9–11; for a major bump, every case | The truth itself may have changed |
-| Policy change | Steps 7–11 | A new grant can open a door a test proved closed |
+| Schema change (a column, a view, a type) | Steps 5 to 11 | A renamed column can make a correct query return nothing, or something else |
+| Metric version change | Steps 6, 9 to 11; for a major bump, every case | The truth itself may have changed |
+| Policy change | Steps 7 to 11 | A new grant can open a door a test proved closed |
 | Data load | Step 9 (Q- and F- cases); step 11 spot checks | Freshness and reconciliations are per load |
 | AI route or model change | Step 11 | "Same AI route" is part of every AI receipt |
 | A change to instructions, the Skill or CLAUDE.md | Step 11 | A clearer prompt can move a failure elsewhere |

@@ -87,7 +87,8 @@ function Card({
  * The two big actions of a workshop page, right under the band: card A opens
  * the slides (or the lab for a workshop without a deck), card B downloads the
  * kit (or opens the case). Each is one real link with a stretched hit area;
- * card A carries one small secondary link to the workshop's practice demo,
+ * card A carries one small secondary link to the workshop's practice demo
+ * ("Demo öffnen"; the demo is never card A),
  * and a workshop with a kit page gets one on card B (each a 44px target
  * named with the workshop's topic). Server component, zero script: the pictures move in CSS only
  * (action-cards.css), and the stage's pause control stops them

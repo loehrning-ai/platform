@@ -1,0 +1,54 @@
+/*
+ * The /demos hub hero in Glas (glass-spec 3, hub): the hub's own soft field
+ * (hubFeld: Kalkweiß with three pale pools), the caps line, the H1 and the
+ * intro. Frost mode, no backdrop filter. The tiles are in demo-tile.css.
+ */
+
+.hub4 {
+  background-color: var(--color-paper);
+}
+
+.hub4-hero {
+  padding: 28px 0 32px;
+}
+
+@media (min-width: 64rem) {
+  .hub4-hero {
+    padding: 72px 0 64px;
+  }
+}
+
+.hub4-kicker {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--glas-content-ink, var(--color-lab-ink));
+}
+
+.hub4-title {
+  margin: 8px 0 0;
+  max-width: 18ch;
+  font-size: clamp(2.125rem, 1.5rem + 3vw, 3.75rem);
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--glas-content-ink, var(--color-lab-ink));
+  text-wrap: balance;
+}
+
+.hub4-lede {
+  margin: 14px 0 0;
+  max-width: 60ch;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--glas-content-ink, var(--color-lab-ink));
+  text-wrap: pretty;
+}
+
+@media (min-width: 64rem) {
+  .hub4-lede {
+    font-size: 1.1875rem;
+  }
+}

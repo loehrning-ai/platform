@@ -33,14 +33,12 @@ function nodeById(id: string) {
 }
 
 describe("demo node derivation", () => {
-  it("strips a trailing period from the demo title", () => {
-    // Guard: the source title genuinely ends with a period, so the strip is
-    // not a no-op.
+  it("takes the demo title from the registry, without a trailing period", () => {
     const demo = demos.find((d) => d.slug === "datenbereitschaft-fuer-ki");
-    expect(demo?.title).toBe("Mach die Zahl richtig.");
+    expect(demo?.title).toBe("Die Fragekarte");
 
     const node = nodeById("demo:datenbereitschaft-fuer-ki");
-    expect(node?.title).toBe("Mach die Zahl richtig");
+    expect(node?.title).toBe(demo?.title.replace(/\.$/, ""));
   });
 
   it("leaves no demo node title ending in a period", () => {

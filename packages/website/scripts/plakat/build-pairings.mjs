@@ -3,7 +3,7 @@
  * build-pairings.mjs
  *
  * Writes docs/plakat-pairings.md, the pairing registry of the poster layer:
- * every colour pairing the five Plakat scenes allow, and the ones they
+ * every colour pairing the six Plakat scenes allow, and the ones they
  * forbid, each with its WCAG 2.x contrast ratio. Values are read from
  * src/app/globals.css (the scopes and tokens the browser gets) and
  * src/lib/plakat/palettes.ts (the TypeScript twin used by SVG, OG and static
@@ -207,7 +207,7 @@ const NAMES = new Map([
   ...RAW_TOKENS.map(([token, name]) => [themeHex(token), name]),
 ]);
 
-const SCENE_NAMES = { lemons: "Lemons", idea: "IDEA", bloom: "Bloom", autumn: "Autumn", sage: "Sage" };
+const SCENE_NAMES = { lemons: "Lemons", idea: "IDEA", bloom: "Bloom", autumn: "Autumn", sage: "Sage", kraft: "Kraft" };
 
 const failures = [];
 

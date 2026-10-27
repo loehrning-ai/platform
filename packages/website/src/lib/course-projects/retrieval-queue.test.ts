@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CourseSlug } from "@/lib/course/types";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";

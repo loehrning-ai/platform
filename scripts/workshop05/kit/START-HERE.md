@@ -1,49 +1,79 @@
-# START HERE: where does your data go?
+# Audit preparation with Claude: the Vardar Works folder
 
-All data here is invented. Use no company data. Labels in Claude change a little; "not found" is a fine answer.
-You need Claude (claude.ai or the Desktop app, any plan, Free is enough) and about 75 minutes.
+Fictional training material. Every company, person and document is invented, except the two lines quoted from Anthropic's public privacy page.
 
-## Mission 1: send one prompt, check three things (10 min)
-Open a new chat and paste:
-```
-Write a short, polite reply in English, under 80 words. The customer, Mara Beispiel (invented), wrote: "My order TH-1042 arrived two days late and the box was damaged. Can I get a refund?"
-```
-1. Click your name or initials (lower left). Write your plan: Free, Pro, Max, Team or Enterprise.
-2. Open Settings, then Privacy. On Free, Pro or Max find "Help Improve our AI models" and write ON or OFF. Look, do not change. On Team or Enterprise write what you see.
-3. Open the same chat on your phone. Is it there?
-4. Delete the chat: hover it, click the three dots, Delete.
+Exercise date: Monday 9 November 2026. Read every date in the folder as of that day.
 
-Expected: a card with your plan, your switch and "chat on phone: yes".
+Vardar Works DOOEL in Skopje (120 staff) runs customer service for Tannwald Haustechnik GmbH in Hamburg. That makes Vardar Tannwald's processor. On 9 November 2026 Tannwald sent a document request for a remote supplier audit on 10 December 2026. You hold the folder: 11 files, and every request item has a file whose name fits.
 
-## Mission 2: clean it by hand, then ask (6 min)
-Copy "Scene 1 text" from scenes.md into a notes app. Type over the name with [CUSTOMER], the order number with [ORDER], the address with [ADDRESS], the email with [EMAIL]. In a new chat paste this, then the email:
-```
-You are a support agent at an outsourcing firm. Write a calm reply of at most 90 words to the email below. Keep the placeholders exactly as they are. Do not invent order details, dates or refund amounts. End with one question I should check before I send it.
-```
-Expected: placeholders kept, no invented refund, one check question. Put real details back in your own mail tool, never in the chat.
+What you practise, in one sentence: "A file is evidence only when its quote, period, scope and approval hold. I give Claude those four tests as rules, and nothing counts without a verbatim quote." The result is a gap list you can defend.
 
-## Set up the Project (4 min, for missions 3 to 5)
-Projects, New project, "Vardar Works". Paste project-instructions.md as the instructions and upload customer-email.md, company-notes.md, scenes.md and facts.md. No Projects? Paste the rules into one chat and attach the four files.
+| Test | Holds when |
+|---|---|
+| QUOTE | Words copied exactly from the file answer the request. A policy or a note says what should happen; only a record shows it happened. |
+| PERIOD | A record is dated on or after 10 December 2025. A policy was approved or reviewed on or after that date. The file holds for the whole window. |
+| SCOPE | It covers the systems and people the request names. |
+| APPROVAL | A policy names who approved it, with a date, inside the file. A register, log or export names its owner. A vendor page names the vendor and the page date. DRAFT, "(open)" or "FINAL" in a file name is no approval. |
 
-## Mission 3: rate eight pastes (10 min)
-On paper, give each of the 8 scenes in scenes.md a light first: GREEN, AMBER or RED. Then paste:
-```
-Rate the 8 scenes in scenes.md. One table: number, light, one reason in 12 words or fewer, the file with the rule you used. Then list the AMBER scenes and who must check what.
-```
-Expected: you and Claude agree on most. Where you differ, read the reason and decide. Claude is a second opinion.
+The same four tests as in Workshop 04, now for a whole folder. COVERED, WEAK or GAP. A file out of date or unapproved: WEAK. A part without evidence, or the record shows “not met”: GAP. The weakest part counts. No quote, no COVERED. A policy shows intent; only a record shows practice.
 
-## Mission 4: five AI uses, four boxes (8 min)
-Guess on paper, then paste:
-```
-Put each use in one box: BANNED, TELL PEOPLE, HIGH-RISK or EVERYDAY. Use only facts.md. Give the date that applies and one reason. Uses: 1 meeting summary for the team. 2 support chatbot talking to German customers. 3 AI video of our CEO on the website. 4 ranking 40 CVs with AI. 5 mood score of call-centre agents from audio.
-```
+## What you need
+- Claude (claude.ai or the desktop app), any plan, with code execution on: Settings > Capabilities > "Code execution and file creation". On Team or Enterprise your owner may need to allow it.
+- About 60 minutes. ANSWERS.md is the key. Open it after each step, not before.
+- Optional: the demo at loehrning.ai/demos/audit-vorbereitung-mit-ki walks through this folder in three minutes.
 
-## Mission 5: write your one page (12 min)
-Paste:
-```
-Answer the three questions in customer-email.md in one sentence each, for the customer to read. After each, give a light and the source file. Where company-notes.md or the draft reply disagrees with facts.md, say so and do not use GREEN. Then write three team rules: Allowed, Ask first, Never. Max 150 words in all. End with one thing a person must check before we send it.
-```
-Expected: the EU claim is not GREEN, because the notes say Europe and the facts say stored in the US. Claim 1 is not GREEN either. Then edit one sentence by hand so it is true for your own company.
+## Setup (5 minutes)
+1. In Claude open Projects and create "Vardar audit".
+2. Paste all of project-instructions.md into the Project instructions.
+3. Upload request_tannwald.md and the 11 files in folder/. If a .md or .csv file will not upload, rename it to .txt.
+4. No Projects? Start one chat, attach the 12 files and paste project-instructions.md above your first prompt.
 
-## After
-Open ANSWERS.md after each mission, not before. Then ask your vendor the three questions from the workshop in writing, after you re-read its pages: facts.md is dated 18 October 2026.
+Start every step in a new chat inside the Project.
+
+## Step 1: the evidence index (15 minutes)
+On paper first: how many of the 11 files pass PERIOD and APPROVAL?
+
+    Build the evidence index of the folder: one row per file, 11 rows.
+    Columns: File | Type (POLICY, REGISTER, RECORD, STATEMENT) | Date and its kind (approved, reviewed, done, generated, exported, printed, edited) | Approved or owned by | Covers (systems, people, period) | PERIOD | APPROVAL.
+    Copy dates and roles from the file text. If the text does not say it, write NOT IN FILE.
+
+Check against ANSWERS.md, Step 1. Look at the two policy files: what did Claude write as approver?
+
+## Step 2: the eight requests (20 minutes)
+On paper first: give R1 to R8 a status.
+
+    Map R1 to R8 from request_tannwald.md to our files.
+    One row per request: Item | File | Quote (exact words, in quotation marks) | QUOTE | PERIOD | SCOPE | APPROVAL | Status | What is missing.
+    Compute the training share and the incident hours in code.
+    Then find every quote in its file again. Delete any status whose quote you cannot find word for word, and say so.
+
+Then send:
+
+    Does "Backups are restore-tested twice a year" make R7 COVERED?
+
+Open the code box and check two numbers: staff trained, and hours until Tannwald was told. Then check ANSWERS.md, Step 2.
+
+Optional: paste Claude's table into the Zitat-Probe (quote check) on the demo page. It checks every quote against the files, in your browser.
+
+## Step 3: gap list and reply (20 minutes)
+Attach templates/gap-request.md and draft-reply.md, then send:
+
+    1. Gap list for every WEAK and GAP item: Item | What is missing | Document that closes it | Owner | Needed by 2 December 2026.
+    2. For each gap, a request email to the owner from the attached template.
+    3. Check each sentence of the draft reply: KEEP (quote the COVERED evidence), REWRITE (a sentence our files prove today) or DELETE (quote the file that says otherwise).
+    4. A reply to Lena Keller, at most 150 words, with only sentences our files prove. For each item we cannot cover, say what follows and by when. Mention clause 7.
+
+Edit one sentence of the reply by hand. You sign it, not Claude.
+
+Check against ANSWERS.md, Step 3.
+
+## Your own audit
+- Install the skill audit-nachweise. It is in this kit at claude/audit-nachweise/SKILL.md; to upload it to claude.ai, download audit-nachweise.zip from loehrning.ai/skills/audit-nachweise.zip or from the demo page. The steps follow below.
+- Or copy project-instructions.md into a new Project and change the customer, the dates and the thresholds.
+- Every GAP is a task with an owner. A person checks every quote and signs every answer. Claude prepares; it certifies nothing.
+- Upload company documents only into the company account your firm approved. Replace staff names in access and training lists with IDs first. Contracts under NDA and penetration test reports stay out unless the contract allows it.
+
+## Install the skill
+
+<!-- claude-ui:en -->
+

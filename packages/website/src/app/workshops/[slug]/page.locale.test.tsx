@@ -21,8 +21,8 @@ describe("workshop detail locale metadata", () => {
   });
 
   it.each([
-    ["de", "/workshops/ki-prognosen-einschaetzen", "Kann KI die Zukunft vorhersagen?"],
-    ["en", "/en/workshops/ki-prognosen-einschaetzen", "Can AI predict the future?"],
+    ["de", "/workshops/ki-prognosen-einschaetzen", "KI-Prognosen prüfen, bevor danach geplant wird"],
+    ["en", "/en/workshops/ki-prognosen-einschaetzen", "Checking AI forecasts before you plan with them"],
   ] as const)(
     "uses reviewed %s copy and the current locale canonical",
     async (locale, canonical, title) => {

@@ -19,7 +19,7 @@ describe("MobileRails", () => {
   it("names each rail's subject as a heading", () => {
     render(<MobileRails />);
     expect(
-      screen.getByRole("heading", { level: 2, name: "Üben am Fall" }),
+      screen.getByRole("heading", { level: 2, name: "Zum Anfassen" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", { level: 2, name: "Lernbücher" }) !== null,
@@ -29,7 +29,7 @@ describe("MobileRails", () => {
   it("gives each rail a distinct accessible name", () => {
     render(<MobileRails />);
     expect(
-      screen.getByRole("list", { name: "Übungen aus den Workshops" }),
+      screen.getByRole("list", { name: "Demos aus den Workshops" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: "Lernbücher der Plattform" }) !== null,
@@ -42,12 +42,12 @@ describe("MobileRails", () => {
     expect(BOOK_RAIL_SHOWN).toBe(books.length > 1);
   });
 
-  it("shows the five workshop demos", () => {
+  it("shows the six workshop demos", () => {
     const { container } = render(<MobileRails />);
     const demoTiles = container.querySelectorAll(
       '[data-home-rail-tile="demo"]',
     );
-    expect(demoTiles).toHaveLength(5);
+    expect(demoTiles).toHaveLength(6);
 
     const expected = getDemosForLocale("de");
     for (const [index, demo] of expected.entries()) {
@@ -136,7 +136,7 @@ describe("MobileRails", () => {
     const { container } = render(<MobileRails locale="en" />);
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Practice on the case" }),
+      screen.getByRole("heading", { level: 2, name: "Hands on" }),
     ).toBeInTheDocument();
     if (BOOK_RAIL_SHOWN) {
       expect(

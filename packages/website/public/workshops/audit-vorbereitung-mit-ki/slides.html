@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="de" data-deck-id="audit-vorbereitung-mit-ki" data-edition="slides.html">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#F3F0E9" />
+<title>Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden · Deck · loehrning.ai</title>
+<meta name="description" content="Das Deck zu Workshop 05: eine Dokumentanforderung, elf erfundene Dateien, vier Prüfungen und eine Lückenliste, die du vertreten kannst." />
+<link rel="icon" href="./assets/favicon.svg" />
+<link rel="alternate" hreflang="en" href="./en/slides.html" />
+<link rel="stylesheet" href="./lib/deck.css" />
+<script src="./lib/deck-keys.js"></script>
+<script src="./lib/scenes.js" defer></script>
+<script src="./lib/deck-stage.js" defer></script>
+</head>
+<body>
+<script type="application/json" id="deck-ui">{"lang":"de","edition":"slides.html","other":"en/slides.html","presenter":"./presenter.html","ui":{"prev":"Zurück","next":"Weiter","reset":"Neu starten","presenter":"Moderation","toolbar":"Steuerung","step":"Schritt {step} von {steps}","slide":"Folie {n} von {total}","undo":"Letzte Stimme zurücknehmen","votes":"Stimmen","noVotes":"noch keine Stimme","timerStart":"Start","timerPause":"Pause","timerReset":"Zurücksetzen","timerOf":"von {min} Min.","timerNext":"Nächste Phase","rotate":"Dreh das Handy quer für eine größere Ansicht, oder öffne die Demo.","rotateLink":"Zur Demo","close":"Hinweis schließen","appendix":"Anhang","appendixBack":"Zurück zu Folie {n}","promptFrom":"Prompt aus START-HIER.md, {mission}","copy":"Kopieren","copied":"Kopiert"},"status":{"covered":"BELEGT","weak":"SCHWACH","gap":"LÜCKE"}}</script>
+<script type="application/json" id="speaker-notes">["01 · Titel\nTime: 1 min\nSay: \"Heute bekommt eine Firma eine Dokumentanforderung für ein Audit. Wir ordnen den Ordner und finden die Lücken. Jede Firma, jede Person und jede Datei ist erfunden.\"\nStudents: Ankommen. Laptop mit Claude öffnen, Handy bereit.\nCue: Die acht Linien ziehen sich von den Anforderungen zu den Dateien. Pfeil rechts startet. R setzt das Deck auf diese Folie zurück, P öffnet diese Ansicht.\nRemember: Den Lernsatz einmal sagen: Eine Datei ist erst ein Nachweis, wenn Datum, Freigabe, Umfang und Zitat stimmen.","02 · Gastgeber\nTime: 1 min\nSay: \"Ich bin Tim Löhr. Ich war Data Scientist bei Apple und Red Bull und baue mit loehrning.ai Workshops wie diesen. Alles, was ihr heute seht, ist erfunden.\"\nStudents: Zuhören.\nCue: Die Linie läuft von allein von Apple bis loehrning.ai. Pfeil rechts geht zur Anfrage.\nRemember: Unter einer Minute bleiben, dann direkt zur Anfrage.","03 · Die Anfrage\nTime: 3 min\nSay: \"Tannwald, der Kunde, nutzt sein Auditrecht. Lest den ersten Satz laut: We assess documents, not answers. Gewertet werden Dokumente.\"\nStudents: Die fünf Regeln mitlesen. Dann per Handzeichen schätzen: wie viele der acht Anforderungen kann Vardar heute belegen?\nCue: Die Anfrage tippt sich ein. Pfeil rechts: die acht Anforderungen. Pfeil rechts: die fünf Regeln werden markiert. Pfeil rechts: Schätzung, Handzeichen auf die Zahlen klicken. Falscher Klick: Letzte Stimme zurücknehmen.\nRemember: Art. 28 Abs. 3 lit. h DSGVO einmal nennen: Der Auftragsverarbeiter ermöglicht Überprüfungen und trägt dazu bei. Nichts auflösen, die Schätzung kommt auf Folie 12 zurück.","04 · Der Entwurf\nTime: 3 min\nSay: \"Der Geschäftsführer hat schon geantwortet, nicht gesendet. Vier Sätze. Stimmt jeder?\"\nStudents: Pro Satz abstimmen: stimmt, falsch, weiß nicht.\nCue: Pfeil rechts markiert Satz für Satz. Die Stimmen pro Satz auf die Knöpfe klicken.\nRemember: Neutral bleiben. Satz 4 (Daten bleiben in der EU) wird verteidigt, lass es zu. Aufgelöst wird auf Folie 11.","05 · Der Ordner\nTime: 8 min\nSay: \"Zu jeder Anforderung liegt eine Datei, deren Name passt. Acht von acht. Das sieht fertig aus, und genau das prüfen wir jetzt.\"\nStudents: QR scannen oder die Adresse tippen, das Kit laden, das Projekt einrichten. Paare sind gut.\nCue: Die Karten legen sich in das Raster. Pfeil rechts: die Namenstreffer. Pfeil rechts: Einrichtung und QR-Code.\nRemember: Codeausführung prüfen: Settings, Capabilities, Code execution and file creation. Lädt eine .md-Datei nicht, als .txt umbenennen. Ohne Projekte: ein Chat mit 12 Anhängen.","06 · Vier Prüfungen\nTime: 6 min\nSay: \"Vier Prüfungen, an vier erfundenen Dateien, die nicht im Kit sind. Die Dateien im Kit findet ihr selbst.\"\nStudents: Bei jeder Karte zuerst raten, an welcher Prüfung sie scheitert.\nCue: Pfeil rechts viermal: ZITAT, ZEITRAUM, UMFANG, FREIGABE. Der fünfte Druck zeigt den Lernsatz und das Werkzeug.\nRemember: ISO 19011 und 27001 sind kostenpflichtig, sag \"zusammengefasst\". Die dritte Zeile zweimal sagen: Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.","07 · Schritt 1\nTime: 15 min\nSay: \"Erst auf Papier: Wie viele der elf Dateien bestehen ZEITRAUM und FREIGABE? Dann baut Claude die Nachweisliste.\"\nStudents: Vorhersage per Handzeichen, dann den Prompt im Projekt senden und die Liste mit LOESUNGEN.md vergleichen.\nCue: Pfeil rechts: Vorhersage. Pfeil rechts: Prompt und Arbeitszeit, Start drücken. Pfeil rechts: die Liste baut sich auf, drei Dateien fallen durch.\nRemember: Laut fragen: Was hat Claude bei den zwei Richtlinien als Freigabe eingetragen? Achten auf: eine Freigabe für v4, FINAL als aktuell gelesen, ein Datum aus dem Dateinamen, die Herstellerseite als nicht freigegeben markiert.","08 · Schritt 2\nTime: 20 min\nSay: \"Pro Anforderung zuerst das Zitat, dann der Status. Gezählt wird im Code.\"\nStudents: Prompt senden, dann die Nachfrage zu R7. Im Code-Fenster zwei Zahlen prüfen: Geschulte und Stunden bis zur Meldung. Handys: Claudes Tabelle in die Zitat-Probe einfügen.\nCue: Pfeil rechts: Prompt und Arbeitszeit. Dann R7 mit drei Dateien, R5 im Code, alle acht mit den vier Prüfungen, zuletzt R1 und der QR-Code zur Zitat-Probe.\nRemember: Claudes echte Antwort auf die R7-Frage zeigen, nie eine vorbereitete. BELEGT heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.","09 · Wo Claude danebenliegt\nTime: 5 min\nSay: \"Vier Fehler, die bei diesem Ordner oft passieren. Jeder hat eine Regel, die ihn stoppt.\"\nStudents: In der eigenen Tabelle nach diesen vier Zeilen suchen.\nCue: Pfeil rechts viermal: Die falsche Zeile wird gestrichen, die Regelnummer erscheint. Der fünfte Druck: der Fall Deloitte und die Kontoregel.\nRemember: Sachlich bleiben, niemand ist schuld. Die Regelnummern zeigen in projektanweisungen.md. Fragen zum Konto: Anhang A1 über die Moderationsansicht.","10 · Schritt 3: Lücken\nTime: 12 min\nSay: \"Jede Lücke ist eine Aufgabe: eine Person, ein Dokument, ein Termin.\"\nStudents: Den Prompt aus Schritt 3 senden, Vorlage und Entwurf anhängen, die Lückenliste prüfen.\nCue: Pfeil rechts: die sechs Lücken. Pfeil rechts: die Anfrage für R7 füllt sich. Pfeil rechts: Prompt und Arbeitszeit.\nRemember: Den Satz mit \"gibt es nicht\" laut lesen: Auch diese Antwort hilft. Zuständig: IT-Leitung für R2, R3, R4, R7, HR-Leitung für R5, Geschäftsführung für R8.","11 · Die Antwort\nTime: 10 min\nSay: \"Alle vier Sätze des Entwurfs fallen. Was bleibt, ist eine Antwort, die nur belegte Sätze enthält.\"\nStudents: Antwort mit Claude schreiben, einen Satz von Hand ändern, mit dem Nachbarn tauschen, eine Antwort vorlesen.\nCue: Pfeil rechts viermal: Satz für Satz gestrichen, darunter der Nachweis. Dann die Arbeitszeit (6, 3, 1 Minuten), dann die Musterantwort.\nRemember: Du unterschreibst, nicht Claude. Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung.","12 · Schätzung und Ergebnis\nTime: 6 min\nSay: \"Eure Schätzung von vorhin, und was der Ordner belegt. Bei der nächsten Anfrage: erst die vier Prüfungen, dann die Antwort.\"\nStudents: QR-Codes scannen: eigener Ordner in der Demo, der Skill, das Kit. Fragen.\nCue: Pfeil rechts: Die Schätzung wird zum Ergebnis 2, 4, 2. Pfeil rechts: QR-Codes. Anhang über die Links unten oder die Moderationsansicht.\nRemember: Skill installieren: Customize, Skills, +, Create skill, Upload a skill, dann einschalten.","A1 · Konto\nTime: 0 min\nSay: \"Welche Konten echte Unterlagen sehen dürfen, entscheidet deine Firma. Das sagen die Seiten des Anbieters.\"\nStudents: Nur bei Fragen.\nCue: Escape oder Pfeil links führt zurück zur Folie, von der du gekommen bist.\nRemember: Die Zeilen vor jedem Workshop auf den Quellseiten neu prüfen.","A2 · Team und Enterprise\nTime: 0 min\nSay: \"Auf Firmenkonten entscheidet der Admin über Codeausführung und eigene Skills.\"\nStudents: Nur bei Fragen.\nCue: Escape führt zurück.\nRemember: Keine Aussage über Vertragsinhalte machen, die nicht auf den Quellseiten steht.","A3 · Quellen\nTime: 0 min\nSay: \"Jede Zahl von außen hat hier ihre Quelle und das Prüfdatum.\"\nStudents: Nur bei Fragen.\nCue: Escape führt zurück.\nRemember: Alles andere im Deck kommt aus dem Kit."]</script>
+<a class="deck-back" href="/workshops/audit-vorbereitung-mit-ki" aria-label="Zurück zur Workshop-Seite"><span aria-hidden="true">←</span> Workshop</a>
+<div class="toolbar" role="toolbar" aria-label="Steuerung">
+  <button type="button" class="tb" data-action="prev" aria-label="Zurück"><span aria-hidden="true">←</span></button>
+  <span class="tb-pos" data-pos aria-live="polite"></span>
+  <button type="button" class="tb" data-action="next" aria-label="Weiter"><span aria-hidden="true">→</span></button>
+  <button type="button" class="tb tb-text" data-action="reset">Neu starten <kbd>R</kbd></button>
+  <button type="button" class="tb tb-text tb-presenter" data-action="presenter">Moderation <kbd>P</kbd></button>
+</div>
+<aside class="rotate" data-rotate hidden>
+  <p>Dreh das Handy quer für eine größere Ansicht, oder öffne die Demo.</p>
+  <a href="/demos/audit-vorbereitung-mit-ki">Zur Demo</a>
+  <button type="button" class="tb" data-rotate-close aria-label="Hinweis schließen"><span aria-hidden="true">×</span></button>
+</aside>
+<deck-stage>
+<section id="cover" class="slide slide-cover" data-id="cover" data-n="01" data-kind="main" data-steps="0" data-seconds="60" data-label="Titel" data-section="" aria-roledescription="slide" aria-label="01 Titel">
+
+<div class="body">
+<div class="cover-copy">
+  <p class="eyebrow">Workshop 05</p>
+  <h1 class="cover-title">Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden</h1>
+  <p class="cover-lede">Eine Anfrage, elf Dateien, vier Prüfungen.</p>
+  <p class="cover-meta">90 Minuten · erfundener Fall · Stand der Übung 9.11.2026</p>
+  <img class="cover-lockup" src="./assets/lockup-horizontal.svg" width="354" height="72" alt="loehrning.ai" />
+</div>
+<div class="cover-art" role="img" aria-label="Acht Anforderungen links, elf Dateien rechts. Jede Linie verbindet eine Anforderung mit der Datei, deren Name passt.">
+  <span class="cover-num" aria-hidden="true">05</span>
+  <div class="links links-cover" data-links="cover">
+  <ol class="lk-rows"><li class="lk-row" data-item="R1" data-status="covered" data-fails-at="" data-i="0">
+    <span class="lk-req"><b>R1</b> <span>Systeme</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="system-list_2026-09.csv"><span class="fname-a">system-list</span><span class="fname-b">_2026-09.csv</span></span></span>
+  </li>
+<li class="lk-row" data-item="R2" data-status="gap" data-fails-at="quote" data-i="1">
+    <span class="lk-req"><b>R2</b> <span>Unterauftrag</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="subprocessors_2026-09.csv"><span class="fname-a">subprocessors</span><span class="fname-b">_2026-09.csv</span></span></span>
+  </li>
+<li class="lk-row" data-item="R3" data-status="gap" data-fails-at="date" data-i="2">
+    <span class="lk-req"><b>R3</b> <span>KI-Werkzeuge</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="ai-use-rule_v1.md"><span class="fname-a">ai-use-rule</span><span class="fname-b">_v1.md</span></span></span>
+  </li>
+<li class="lk-row" data-item="R4" data-status="gap" data-fails-at="scope" data-i="3">
+    <span class="lk-req"><b>R4</b> <span>Admin-Konten</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="access-review_2026-08-14.csv"><span class="fname-a">access-review</span><span class="fname-b">_2026-08-14.csv</span></span></span>
+  </li>
+<li class="lk-row" data-item="R5" data-status="gap" data-fails-at="quote" data-i="4">
+    <span class="lk-req"><b>R5</b> <span>Schulung</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="training-records_2026.csv"><span class="fname-a">training-records</span><span class="fname-b">_2026.csv</span></span></span>
+  </li>
+<li class="lk-row" data-item="R6" data-status="covered" data-fails-at="" data-i="5">
+    <span class="lk-req"><b>R6</b> <span>Vorfälle</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="incident-log_2026.csv"><span class="fname-a">incident-log</span><span class="fname-b">_2026.csv</span></span></span>
+  </li>
+<li class="lk-row" data-item="R7" data-status="gap" data-fails-at="quote" data-i="6">
+    <span class="lk-req"><b>R7</b> <span>Restore-Test</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="backup-report_2026-10.txt"><span class="fname-a">backup-report</span><span class="fname-b">_2026-10.txt</span></span></span>
+  </li>
+<li class="lk-row" data-item="R8" data-status="weak" data-fails-at="approval" data-i="7">
+    <span class="lk-req"><b>R8</b> <span>Richtlinie</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg></span>
+    <span class="lk-file"><span class="fname" title="infosec-policy_v4_DRAFT.md"><span class="fname-a">infosec-policy_v4</span><span class="fname-b">_DRAFT.md</span></span></span>
+  </li></ol>
+  <p class="lk-unlinked"><span>ohne Treffer:</span><span class="fname lk-chip" title="vendor-page_claude_2026-06-15.md"><span class="fname-a">vendor-page_claude</span><span class="fname-b">_2026-06-15.md</span></span><span class="fname lk-chip" title="it-notes_2026-10-06.md"><span class="fname-a">it-notes</span><span class="fname-b">_2026-10-06.md</span></span><span class="fname lk-chip" title="infosec-policy_v3_FINAL.md"><span class="fname-a">infosec-policy_v3</span><span class="fname-b">_FINAL.md</span></span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="host" class="slide slide-host" data-id="host" data-n="02" data-kind="main" data-steps="0" data-seconds="60" data-label="Gastgeber" data-section="" aria-roledescription="slide" aria-label="02 Gastgeber">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p></header>
+
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>02</b> / 12</span></footer>
+<div class="body">
+<figure class="host-photo"><img src="./assets/tim-loehr.jpg" width="1100" height="1100" alt="Porträt von Tim Löhr" /></figure>
+<div class="host-copy">
+  <p class="host-kicker" data-from="0" data-span="0.4">Gastgeber</p>
+  <h2 class="host-name" data-from="0" data-delay="0.06" data-span="0.45">Tim Löhr</h2>
+  <p class="host-msc" data-from="0" data-delay="0.18" data-span="0.4"><b>M.Sc. Informatik</b><span>FAU Erlangen-Nürnberg</span></p>
+  <div class="host-career">
+    <i class="host-track" aria-hidden="true"></i><i class="host-fill" aria-hidden="true" data-from="0" data-delay="0.3" data-span="0.7"></i>
+    <ol class="host-stops"><li class="host-stop" data-from="0" data-delay="0.28" data-span="0.25"><i class="host-dot" aria-hidden="true"></i><b>Apple</b><span>Data Scientist</span></li><li class="host-stop" data-from="0" data-delay="0.42" data-span="0.25"><i class="host-dot" aria-hidden="true"></i><b>Red Bull</b><span>Data Scientist</span></li><li class="host-stop host-own" data-from="0" data-delay="0.72" data-span="0.25"><i class="host-dot" aria-hidden="true"></i><b>loehrning.ai</b><span>Gründer</span></li></ol>
+    <p class="host-now" data-from="0" data-delay="0.8" data-span="0.2"><span>jetzt</span></p>
+  </div>
+  <p class="host-line" data-from="0" data-delay="0.5" data-span="0.4">Jede Firma, jede Person und jede Datei in diesem Workshop ist erfunden.</p>
+</div>
+</div>
+</section>
+<section id="request" class="slide slide-request" data-id="request" data-n="03" data-kind="main" data-steps="3" data-seconds="180" data-label="Die Anfrage" data-section="ANFRAGE" aria-roledescription="slide" aria-label="03 Die Anfrage">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li aria-current="step">ANFRAGE</li><li>ORDNER</li><li>PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Tannwalds Anfrage: acht Anforderungen</h2><p class="sub">Remote-Audit am 10.12.2026. Unterlagen bis 25.11.2026. Gewertet werden Dokumente, nicht Antworten.</p>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>03</b> / 12</span></footer>
+<div class="body">
+<div class="cols cols-request">
+  <article class="sheet letter" data-from="0" data-span="0.01" data-until="2">
+    <p class="sheet-name"><span class="fname" title="request_tannwald.md"><span class="fname-a">request</span><span class="fname-b">_tannwald.md</span></span></p>
+    <p class="letter-from"><span>Von</span> Lena Keller, Tannwald Haustechnik GmbH, Hamburg · 9.11.2026</p>
+    <p class="headline"><span class="q typed" data-file="request_tannwald.md" data-full="We assess documents, not answers." data-type-step="0">We assess documents, not answers.</span></p>
+    <p class="rules-head">So liest Tannwald eure Dokumente</p>
+    <ol class="rules"><li class="rule"><span class="rule-mark" aria-hidden="true" data-from="2" data-delay="0" data-span="0.5"></span><span class="rule-text q" data-file="request_tannwald.md">A document is current if it is dated on or after 10 December 2025. For a policy, its last approval or review counts.</span><span class="rule-tag" data-from="2" data-delay="0.2" data-span="0.4">ab 10.12.2025</span></li><li class="rule"><span class="rule-mark" aria-hidden="true" data-from="2" data-delay="0.12" data-span="0.5"></span><span class="rule-text q" data-file="request_tannwald.md">Each document names who approved it, or who owns it if it is a register, log or record.</span><span class="rule-tag" data-from="2" data-delay="0.32" data-span="0.4">wer freigibt</span></li><li class="rule"><span class="rule-mark" aria-hidden="true" data-from="2" data-delay="0.24" data-span="0.5"></span><span class="rule-text q" data-file="request_tannwald.md">A description of what you do is not enough. Send the record that shows it was done.</span><span class="rule-tag" data-from="2" data-delay="0.44" data-span="0.4">Protokoll, keine Beschreibung</span></li><li class="rule"><span class="rule-mark" aria-hidden="true" data-from="2" data-delay="0.36" data-span="0.5"></span><span class="rule-text q" data-file="request_tannwald.md">Training must reach at least 95% of your staff.</span><span class="rule-tag" data-from="2" data-delay="0.56" data-span="0.4">mindestens 95 %</span></li><li class="rule"><span class="rule-mark" aria-hidden="true" data-from="2" data-delay="0.48" data-span="0.5"></span><span class="rule-text q" data-file="request_tannwald.md">Incidents with our data must reach us within 48 hours of detection (section 6.2).</span><span class="rule-tag" data-from="2" data-delay="0.68" data-span="0.4">höchstens 48 h</span></li></ol>
+  </article>
+  <div class="request-side">
+    <p class="side-head" data-from="1" data-span="0.3">Die acht Anforderungen</p>
+    <ol class="items"><li class="item" data-from="1" data-delay="0" data-span="0.4"><b>R1</b><span class="item-label">Systeme mit Speicherland</span><span class="item-sec">AVV 4.1</span></li><li class="item" data-from="1" data-delay="0.07" data-span="0.4"><b>R2</b><span class="item-label">Unterauftragnehmer + Rechtsgrundlage</span><span class="item-sec">AVV 4.3</span></li><li class="item" data-from="1" data-delay="0.14" data-span="0.4"><b>R3</b><span class="item-label">KI-Werkzeuge, letzte 12 Monate</span><span class="item-sec">AVV 4.4</span></li><li class="item" data-from="1" data-delay="0.21" data-span="0.4"><b>R4</b><span class="item-label">Prüfung der Admin-Konten</span><span class="item-sec">AVV 5.2</span></li><li class="item" data-from="1" data-delay="0.28" data-span="0.4"><b>R5</b><span class="item-label">Schulung, mindestens 95 %</span><span class="item-sec">AVV 5.4</span></li><li class="item" data-from="1" data-delay="0.35" data-span="0.4"><b>R6</b><span class="item-label">Vorfälle 2026 + Meldung</span><span class="item-sec">AVV 6.2</span></li><li class="item" data-from="1" data-delay="0.42" data-span="0.4"><b>R7</b><span class="item-label">Wiederherstellungstest</span><span class="item-sec">AVV 5.6</span></li><li class="item" data-from="1" data-delay="0.49" data-span="0.4"><b>R8</b><span class="item-label">Sicherheitsrichtlinie</span><span class="item-sec">AVV 5.1</span></li></ol>
+  </div>
+  <div class="estimate" data-from="3" data-span="0.6">
+    <p class="ask">Wie viele der acht kann Vardar heute belegen?</p>
+    <div class="vote" data-vote="estimate" role="group" aria-label="Schätzung des Raums, 0 bis 8">
+  <div class="vote-bars"><button type="button" class="vote-btn" data-value="0"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">0</span></button><button type="button" class="vote-btn" data-value="1"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">1</span></button><button type="button" class="vote-btn" data-value="2"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">2</span></button><button type="button" class="vote-btn" data-value="3"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">3</span></button><button type="button" class="vote-btn" data-value="4"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">4</span></button><button type="button" class="vote-btn" data-value="5"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">5</span></button><button type="button" class="vote-btn" data-value="6"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">6</span></button><button type="button" class="vote-btn" data-value="7"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">7</span></button><button type="button" class="vote-btn" data-value="8"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">8</span></button></div>
+  <div class="vote-foot"><span class="vote-total" data-vote-total data-unit="Stimmen" data-none="noch keine Stimme">noch keine Stimme</span><button type="button" class="btn btn-quiet" data-undo="estimate">Letzte Stimme zurücknehmen</button></div>
+</div>
+  </div>
+</div>
+<p class="source">Das Auditrecht steht im Auftragsverarbeitungsvertrag, nach Art. 28 Abs. 3 lit. h DSGVO.</p>
+</div>
+</section>
+<section id="draft" class="slide slide-draft" data-id="draft" data-n="04" data-kind="main" data-steps="4" data-seconds="180" data-label="Der Entwurf" data-section="ANFRAGE" aria-roledescription="slide" aria-label="04 Der Entwurf">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li aria-current="step">ANFRAGE</li><li>ORDNER</li><li>PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Der Antwortentwurf: vier Sätze</h2><p class="sub">Jeder Satz ist eine Behauptung. Ein Nachweis ist eine Datei, die sie belegt.</p>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>04</b> / 12</span></footer>
+<div class="body">
+<article class="sheet draft-sheet">
+  <p class="sheet-name"><span class="fname" title="draft-reply.md"><span class="fname-a"></span><span class="fname-b">draft-reply.md</span></span><span class="sheet-tag">Entwurf der Geschäftsführung. Nicht gesendet.</span></p>
+  <p class="draft-open">Dear Ms Keller, thank you for your request. A short answer before the documents:</p>
+  <ol class="claims"><li class="claim" data-claim="1" data-from="1" data-span="0.6">
+    <span class="claim-n">1</span><span class="claim-text"><span class="q hl" data-file="draft-reply.md">All our staff are trained in data protection and AI.</span></span>
+    <div class="vote vote-row" data-vote="draft-1" role="group" aria-label="Satz 1: Stimmen des Raums">
+  <div class="vote-bars"><button type="button" class="vote-btn" data-value="true"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">stimmt</span></button><button type="button" class="vote-btn" data-value="false"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">falsch</span></button><button type="button" class="vote-btn" data-value="unsure"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">weiß nicht</span></button></div>
+  <div class="vote-foot"><span class="vote-total" data-vote-total data-unit="Stimmen" data-none="noch keine Stimme">noch keine Stimme</span><button type="button" class="btn btn-quiet" data-undo="draft-1">Letzte Stimme zurücknehmen</button></div>
+</div>
+  </li><li class="claim" data-claim="2" data-from="2" data-span="0.6">
+    <span class="claim-n">2</span><span class="claim-text"><span class="q hl" data-file="draft-reply.md">We review administrator access every quarter.</span></span>
+    <div class="vote vote-row" data-vote="draft-2" role="group" aria-label="Satz 2: Stimmen des Raums">
+  <div class="vote-bars"><button type="button" class="vote-btn" data-value="true"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">stimmt</span></button><button type="button" class="vote-btn" data-value="false"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">falsch</span></button><button type="button" class="vote-btn" data-value="unsure"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">weiß nicht</span></button></div>
+  <div class="vote-foot"><span class="vote-total" data-vote-total data-unit="Stimmen" data-none="noch keine Stimme">noch keine Stimme</span><button type="button" class="btn btn-quiet" data-undo="draft-2">Letzte Stimme zurücknehmen</button></div>
+</div>
+  </li><li class="claim" data-claim="3" data-from="3" data-span="0.6">
+    <span class="claim-n">3</span><span class="claim-text"><span class="q hl" data-file="draft-reply.md">Our backups are tested regularly.</span></span>
+    <div class="vote vote-row" data-vote="draft-3" role="group" aria-label="Satz 3: Stimmen des Raums">
+  <div class="vote-bars"><button type="button" class="vote-btn" data-value="true"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">stimmt</span></button><button type="button" class="vote-btn" data-value="false"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">falsch</span></button><button type="button" class="vote-btn" data-value="unsure"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">weiß nicht</span></button></div>
+  <div class="vote-foot"><span class="vote-total" data-vote-total data-unit="Stimmen" data-none="noch keine Stimme">noch keine Stimme</span><button type="button" class="btn btn-quiet" data-undo="draft-3">Letzte Stimme zurücknehmen</button></div>
+</div>
+  </li><li class="claim" data-claim="4" data-from="4" data-span="0.6">
+    <span class="claim-n">4</span><span class="claim-text"><span class="q hl" data-file="draft-reply.md">Your data stays in the EU.</span></span>
+    <div class="vote vote-row" data-vote="draft-4" role="group" aria-label="Satz 4: Stimmen des Raums">
+  <div class="vote-bars"><button type="button" class="vote-btn" data-value="true"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">stimmt</span></button><button type="button" class="vote-btn" data-value="false"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">falsch</span></button><button type="button" class="vote-btn" data-value="unsure"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">weiß nicht</span></button></div>
+  <div class="vote-foot"><span class="vote-total" data-vote-total data-unit="Stimmen" data-none="noch keine Stimme">noch keine Stimme</span><button type="button" class="btn btn-quiet" data-undo="draft-4">Letzte Stimme zurücknehmen</button></div>
+</div>
+  </li></ol>
+  <p class="draft-close">Best regards, Dragan Ilievski</p>
+</article>
+<p class="source">Pro Satz die Handzeichen zählen. Aufgelöst wird auf Folie 11.</p>
+</div>
+</section>
+<section id="folder" class="slide slide-folder" data-id="folder" data-n="05" data-kind="main" data-steps="2" data-seconds="480" data-label="Der Ordner" data-section="ORDNER" aria-roledescription="slide" aria-label="05 Der Ordner">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li aria-current="step">ORDNER</li><li>PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Der Ordner: elf Dateien, acht Treffer</h2><p class="sub">Zu jeder Anforderung passt ein Dateiname. Das belegt noch nichts.</p>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>05</b> / 12</span></footer>
+<div class="body">
+<div class="cols-folder" data-from="0" data-span="0.01" data-until="1">
+  <ol class="cards"><li class="card" style="--dx:-40px;--dy:200px;--rot:-4deg" data-from="0" data-delay="0" data-span="0.5" data-match="R1">
+      <span class="fname" title="system-list_2026-09.csv"><span class="fname-a">system-list</span><span class="fname-b">_2026-09.csv</span></span>
+      <span class="card-meta"><span class="card-date">freigegeben 2026-09-02</span><span class="card-type">REGISTER</span></span>
+      <span class="card-badge" data-from="1" data-delay="0" data-span="0.4">R1</span>
+    </li><li class="card" style="--dx:-624px;--dy:196px;--rot:3deg" data-from="0" data-delay="0.045" data-span="0.5" data-match="R2">
+      <span class="fname" title="subprocessors_2026-09.csv"><span class="fname-a">subprocessors</span><span class="fname-b">_2026-09.csv</span></span>
+      <span class="card-meta"><span class="card-date">aktualisiert 2026-09-05</span><span class="card-type">REGISTER</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.05" data-span="0.4">R2</span>
+    </li><li class="card" style="--dx:-1208px;--dy:192px;--rot:1deg" data-from="0" data-delay="0.09" data-span="0.5" data-match="R3">
+      <span class="fname" title="ai-use-rule_v1.md"><span class="fname-a">ai-use-rule</span><span class="fname-b">_v1.md</span></span>
+      <span class="card-meta"><span class="card-date">freigegeben 2026-10-01</span><span class="card-type">RICHTLINIE</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.1" data-span="0.4">R3</span>
+    </li><li class="card" style="--dx:-40px;--dy:46px;--rot:-1deg" data-from="0" data-delay="0.135" data-span="0.5" data-match="">
+      <span class="fname" title="vendor-page_claude_2026-06-15.md"><span class="fname-a">vendor-page_claude</span><span class="fname-b">_2026-06-15.md</span></span>
+      <span class="card-meta"><span class="card-date">Seite vom 2026-06-15</span><span class="card-type">AUSSAGE</span></span>
+      
+    </li><li class="card" style="--dx:-624px;--dy:42px;--rot:-3deg" data-from="0" data-delay="0.18" data-span="0.5" data-match="R4">
+      <span class="fname" title="access-review_2026-08-14.csv"><span class="fname-a">access-review</span><span class="fname-b">_2026-08-14.csv</span></span>
+      <span class="card-meta"><span class="card-date">durchgeführt 2026-08-14</span><span class="card-type">PROTOKOLL</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.2" data-span="0.4">R4</span>
+    </li><li class="card" style="--dx:-1208px;--dy:38px;--rot:4deg" data-from="0" data-delay="0.225" data-span="0.5" data-match="R5">
+      <span class="fname" title="training-records_2026.csv"><span class="fname-a">training-records</span><span class="fname-b">_2026.csv</span></span>
+      <span class="card-meta"><span class="card-date">exportiert 2026-11-02</span><span class="card-type">PROTOKOLL</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.25" data-span="0.4">R5</span>
+    </li><li class="card" style="--dx:-40px;--dy:-108px;--rot:2deg" data-from="0" data-delay="0.27" data-span="0.5" data-match="R6">
+      <span class="fname" title="incident-log_2026.csv"><span class="fname-a">incident-log</span><span class="fname-b">_2026.csv</span></span>
+      <span class="card-meta"><span class="card-date">letzter Eintrag 2026-10-12</span><span class="card-type">PROTOKOLL</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.3" data-span="0.4">R6</span>
+    </li><li class="card" style="--dx:-624px;--dy:-112px;--rot:0deg" data-from="0" data-delay="0.315" data-span="0.5" data-match="R7">
+      <span class="fname" title="backup-report_2026-10.txt"><span class="fname-a">backup-report</span><span class="fname-b">_2026-10.txt</span></span>
+      <span class="card-meta"><span class="card-date">erzeugt 2026-11-01</span><span class="card-type">PROTOKOLL</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.35" data-span="0.4">R7</span>
+    </li><li class="card" style="--dx:-1208px;--dy:-116px;--rot:-2deg" data-from="0" data-delay="0.36" data-span="0.5" data-match="">
+      <span class="fname" title="it-notes_2026-10-06.md"><span class="fname-a">it-notes</span><span class="fname-b">_2026-10-06.md</span></span>
+      <span class="card-meta"><span class="card-date">geschrieben 2026-10-06</span><span class="card-type">AUSSAGE</span></span>
+      
+    </li><li class="card" style="--dx:-40px;--dy:-262px;--rot:-4deg" data-from="0" data-delay="0.405" data-span="0.5" data-match="">
+      <span class="fname" title="infosec-policy_v3_FINAL.md"><span class="fname-a">infosec-policy_v3</span><span class="fname-b">_FINAL.md</span></span>
+      <span class="card-meta"><span class="card-date">freigegeben 2024-03-12</span><span class="card-type">RICHTLINIE</span></span>
+      
+    </li><li class="card" style="--dx:-624px;--dy:-266px;--rot:3deg" data-from="0" data-delay="0.45" data-span="0.5" data-match="R8">
+      <span class="fname" title="infosec-policy_v4_DRAFT.md"><span class="fname-a">infosec-policy_v4</span><span class="fname-b">_DRAFT.md</span></span>
+      <span class="card-meta"><span class="card-date">bearbeitet 2026-09-18</span><span class="card-type">RICHTLINIE</span></span>
+      <span class="card-badge" data-from="1" data-delay="0.5" data-span="0.4">R8</span>
+    </li><li class="counter" data-from="1" data-span="0.6">
+    <p class="big-n"><b>8</b><span>/ 8</span></p>
+    <div><p class="counter-text">8 von 8 Anforderungen haben eine Datei, deren Name passt.</p>
+    <p class="counter-sub">Ohne Treffer: 3 Dateien</p></div>
+  </li></ol>
+</div>
+<div class="cols cols-setup" data-from="2" data-span="0.7">
+  <div class="setup">
+    <p class="side-head">Einrichtung, 5 Minuten</p>
+    <ol class="setup-steps"><li>In Claude ein Projekt „Vardar audit“ anlegen.</li><li>projektanweisungen.md komplett als Projektanweisung einfügen.</li><li>request_tannwald.md und die 11 Dateien aus ordner/ hochladen. Lädt eine .md- oder .csv-Datei nicht, in .txt umbenennen.</li><li>Jeden Schritt in einem neuen Chat im Projekt starten.</li><li>Unter „Settings“, „Capabilities“ den Schalter „Code execution and file creation“ einschalten (im neuen Layout „Create and edit files“).</li></ol>
+    <p class="setup-note">Kein Projekt: ein Chat, die 12 Dateien anhängen, die Anweisungen über den ersten Prompt setzen.</p>
+  </div>
+  <figure class="qr"><img src="./assets/qr-kit.svg" width="300" height="300" alt="" /><figcaption><b>Kit laden</b><code>loehrning.ai/<wbr>workshops/<wbr>audit-vorbereitung-mit-ki/<wbr>kit</code></figcaption></figure>
+</div>
+</div>
+</section>
+<section id="tests" class="slide slide-tests" data-id="tests" data-n="06" data-kind="main" data-steps="5" data-seconds="360" data-label="Vier Prüfungen" data-section="PRÜFEN" aria-roledescription="slide" aria-label="06 Vier Prüfungen">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li aria-current="step">PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Vier Prüfungen</h2><p class="sub">Die vier Prüfungen aus Workshop 4, jetzt für einen ganzen Ordner.</p>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>06</b> / 12</span></footer>
+<div class="body">
+<ol class="minis" data-from="0" data-span="0.5" data-until="4"><li class="mini" data-test="quote">
+      <p class="mini-tag">Beispiel, nicht im Kit</p>
+      <span class="fname" title="fire-drill.md"><span class="fname-a"></span><span class="fname-b">fire-drill.md</span></span>
+      <p class="mini-text">Fire drill: <mark class="mini-mark" data-step="1" data-from="1" data-delay="0.25" data-span="0.45">planned for spring<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><rect x="1" y="1" width="98" height="38" pathLength="100"/></svg></mark>.</p>
+      <div class="mini-test" data-from="1" data-span="0.35">
+        <p class="mini-name">ZITAT</p>
+        <p class="mini-line">Ein Satz oder eine Zeile aus der Datei, die die Anforderung beantwortet.</p>
+      </div>
+      <p class="mini-verdict" data-from="1" data-delay="0.55" data-span="0.4"><b>scheitert an ZITAT</b> Geplant ist kein Protokoll.</p>
+    </li><li class="mini" data-test="date">
+      <p class="mini-tag">Beispiel, nicht im Kit</p>
+      <span class="fname" title="visitor-policy.md"><span class="fname-a">vis</span><span class="fname-b">itor-policy.md</span></span>
+      <p class="mini-text">Visitor policy. <mark class="mini-mark" data-step="2" data-from="2" data-delay="0.25" data-span="0.45">Approved 2023-05-02<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><rect x="1" y="1" width="98" height="38" pathLength="100"/></svg></mark> by the Managing Director.</p>
+      <div class="mini-test" data-from="2" data-span="0.35">
+        <p class="mini-name">ZEITRAUM</p>
+        <p class="mini-line">Im Prüfzeitraum ab 10.12.2025, und für den ganzen Zeitraum. Bei Richtlinien zählt die letzte Freigabe oder Überprüfung.</p>
+      </div>
+      <p class="mini-verdict" data-from="2" data-delay="0.55" data-span="0.4"><b>scheitert an ZEITRAUM</b> Freigegeben vor dem Prüfzeitraum.</p>
+    </li><li class="mini" data-test="scope">
+      <p class="mini-tag">Beispiel, nicht im Kit</p>
+      <span class="fname" title="firewall-review.txt"><span class="fname-a">firew</span><span class="fname-b">all-review.txt</span></span>
+      <p class="mini-text">Firewall review, <mark class="mini-mark" data-step="3" data-from="3" data-delay="0.25" data-span="0.45">site Skopje<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><rect x="1" y="1" width="98" height="38" pathLength="100"/></svg></mark>. Done 2026-06-03 by the IT lead.</p>
+      <div class="mini-test" data-from="3" data-span="0.35">
+        <p class="mini-name">UMFANG</p>
+        <p class="mini-line">Die Systeme und Personen, nach denen gefragt ist.</p>
+      </div>
+      <p class="mini-verdict" data-from="3" data-delay="0.55" data-span="0.4"><b>scheitert an UMFANG</b> Gefragt sind alle Standorte, geprüft wurde einer.</p>
+    </li><li class="mini" data-test="approval">
+      <p class="mini-tag">Beispiel, nicht im Kit</p>
+      <span class="fname" title="supplier-list.csv"><span class="fname-a">sup</span><span class="fname-b">plier-list.csv</span></span>
+      <p class="mini-text">Supplier list. Owner: Purchasing. <mark class="mini-mark" data-step="4" data-from="4" data-delay="0.25" data-span="0.45">Approved by: ____<svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><rect x="1" y="1" width="98" height="38" pathLength="100"/></svg></mark></p>
+      <div class="mini-test" data-from="4" data-span="0.35">
+        <p class="mini-name">FREIGABE</p>
+        <p class="mini-line">Richtlinie, Vertrag: Name mit Datum im Dokument. Protokoll, Register: wer es führt.</p>
+      </div>
+      <p class="mini-verdict" data-from="4" data-delay="0.55" data-span="0.4"><b>scheitert an FREIGABE</b> Niemand hat freigegeben.</p>
+    </li></ol>
+<div class="tool" data-from="5" data-delay="0.2" data-span="0.7">
+  <p class="objective">Eine Datei ist erst ein Nachweis, wenn Zitat, Zeitraum, Umfang und Freigabe stimmen. Diese vier Prüfungen gebe ich Claude als Regeln, und ohne wörtliches Zitat zählt nichts.</p>
+  <div class="tool-card">
+    <p class="tool-head">Das Werkzeug</p>
+    <ol class="tool-lines"><li>ZITAT · ZEITRAUM · UMFANG · FREIGABE</li><li>BELEGT, SCHWACH oder LÜCKE. Datei veraltet oder nicht freigegeben: SCHWACH. Ein Teil ohne Nachweis, oder der Nachweis zeigt „nicht erfüllt“: LÜCKE. Der schwächste Teil zählt.</li><li>Ohne Zitat kein BELEGT. Eine Richtlinie zeigt Absicht, nur ein Protokoll zeigt Praxis.</li></ol>
+    <p class="tool-ref">Im Kit: projektanweisungen.md, Regeln 4 bis 9.</p>
+  </div>
+</div>
+<p class="source">Zusammengefasst nach ISO 19011 und ISO/IEC 27001, Abschnitt 7.5.2 · Anthropic, „Reduce hallucinations“</p>
+</div>
+</section>
+<section id="mission-1" class="slide slide-mission-1" data-id="mission-1" data-n="07" data-kind="main" data-steps="3" data-seconds="900" data-label="Schritt 1" data-section="PRÜFEN" aria-roledescription="slide" aria-label="07 Schritt 1">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li aria-current="step">PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Schritt 1: die Nachweisliste</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>07</b> / 12</span></footer>
+<div class="body">
+<p class="sub ask" data-from="0" data-until="2">Wie viele der elf Dateien bestehen ZEITRAUM und FREIGABE?</p>
+<div class="cols cols-mission" data-from="1" data-until="2">
+  <div class="predict">
+    <p class="side-head">Vorhersage des Raums, 0 bis 11</p>
+    <div class="vote vote-wide" data-vote="m1" role="group" aria-label="Vorhersage des Raums, 0 bis 11">
+  <div class="vote-bars"><button type="button" class="vote-btn" data-value="0"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">0</span></button><button type="button" class="vote-btn" data-value="1"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">1</span></button><button type="button" class="vote-btn" data-value="2"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">2</span></button><button type="button" class="vote-btn" data-value="3"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">3</span></button><button type="button" class="vote-btn" data-value="4"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">4</span></button><button type="button" class="vote-btn" data-value="5"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">5</span></button><button type="button" class="vote-btn" data-value="6"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">6</span></button><button type="button" class="vote-btn" data-value="7"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">7</span></button><button type="button" class="vote-btn" data-value="8"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">8</span></button><button type="button" class="vote-btn" data-value="9"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">9</span></button><button type="button" class="vote-btn" data-value="10"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">10</span></button><button type="button" class="vote-btn" data-value="11"><span class="vote-bar" aria-hidden="true"><i></i></span><span class="vote-n" data-count>0</span><span class="vote-v">11</span></button></div>
+  <div class="vote-foot"><span class="vote-total" data-vote-total data-unit="Stimmen" data-none="noch keine Stimme">noch keine Stimme</span><button type="button" class="btn btn-quiet" data-undo="m1">Letzte Stimme zurücknehmen</button></div>
+</div>
+    <div class="m1-timer" data-from="2" data-span="0.6"><div class="timer" data-timer="m1" data-minutes="15">
+  <div class="timer-row"><span class="timer-clock" data-timer-clock>0:00</span><span class="timer-of">von 15 Min.</span>
+  <button type="button" class="btn" data-timer-toggle data-start="Start" data-pause="Pause">Start</button>
+  <button type="button" class="btn btn-quiet" data-timer-reset>Zurücksetzen</button></div>
+  <div class="timer-bar" aria-hidden="true"><i data-timer-fill></i></div>
+  
+</div></div>
+  </div>
+  <div class="work" data-from="2" data-span="0.6">
+    <figure class="prompt">
+  <figcaption class="prompt-head"><span>Prompt aus START-HIER.md, Schritt 1</span><button type="button" class="copy" data-copy>Kopieren</button></figcaption>
+  <pre class="prompt-body">Bau die Nachweisliste des Ordners: eine Zeile pro Datei, 11 Zeilen.
+Spalten: Datei | Typ (RICHTLINIE, REGISTER, PROTOKOLL, AUSSAGE) | Datum und Art des Datums (freigegeben, überprüft, erledigt, erzeugt, exportiert, gedruckt, bearbeitet) | Freigegeben oder geführt von | Deckt ab (Systeme, Personen, Zeitraum) | ZEITRAUM | FREIGABE.
+Übernimm Daten und Rollen aus dem Text der Datei. Steht es dort nicht, schreib NICHT IN DER DATEI.</pre>
+</figure>
+  </div>
+</div>
+<div class="index" data-from="3" data-span="0.12">
+  <table class="tbl">
+    <thead><tr><th>Datei</th><th>Typ</th><th>Datum im Text</th><th>ZEITRAUM</th><th>FREIGABE</th></tr></thead>
+    <tbody><tr data-from="3" data-delay="0" data-span="0.16" class=""><td><span class="fname" title="system-list_2026-09.csv"><span class="fname-a">system-list</span><span class="fname-b">_2026-09.csv</span></span></td><td class="t-type">REGISTER</td><td class="t-date">freigegeben 2026-09-02</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.071" data-span="0.16" class=""><td><span class="fname" title="subprocessors_2026-09.csv"><span class="fname-a">subprocessors</span><span class="fname-b">_2026-09.csv</span></span></td><td class="t-type">REGISTER</td><td class="t-date">aktualisiert 2026-09-05</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.142" data-span="0.16" class=""><td><span class="fname" title="ai-use-rule_v1.md"><span class="fname-a">ai-use-rule</span><span class="fname-b">_v1.md</span></span></td><td class="t-type">RICHTLINIE</td><td class="t-date">freigegeben 2026-10-01</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.213" data-span="0.16" class=""><td><span class="fname" title="vendor-page_claude_2026-06-15.md"><span class="fname-a">vendor-page_claude</span><span class="fname-b">_2026-06-15.md</span></span></td><td class="t-type">AUSSAGE</td><td class="t-date">Seite vom 2026-06-15</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.284" data-span="0.16" class=""><td><span class="fname" title="access-review_2026-08-14.csv"><span class="fname-a">access-review</span><span class="fname-b">_2026-08-14.csv</span></span></td><td class="t-type">PROTOKOLL</td><td class="t-date">durchgeführt 2026-08-14</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.355" data-span="0.16" class=""><td><span class="fname" title="training-records_2026.csv"><span class="fname-a">training-records</span><span class="fname-b">_2026.csv</span></span></td><td class="t-type">PROTOKOLL</td><td class="t-date">exportiert 2026-11-02</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.425" data-span="0.16" class=""><td><span class="fname" title="incident-log_2026.csv"><span class="fname-a">incident-log</span><span class="fname-b">_2026.csv</span></span></td><td class="t-type">PROTOKOLL</td><td class="t-date">letzter Eintrag 2026-10-12</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.496" data-span="0.16" class=""><td><span class="fname" title="backup-report_2026-10.txt"><span class="fname-a">backup-report</span><span class="fname-b">_2026-10.txt</span></span></td><td class="t-type">PROTOKOLL</td><td class="t-date">erzeugt 2026-11-01</td><td class="pass">✓</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.567" data-span="0.16" class="is-fail"><td><span class="fname" title="it-notes_2026-10-06.md"><span class="fname-a">it-notes</span><span class="fname-b">_2026-10-06.md</span></span></td><td class="t-type">AUSSAGE</td><td class="t-date">„Not reviewed by anyone“</td><td class="pass">✓</td><td class="fail">✗</td></tr><tr data-from="3" data-delay="0.638" data-span="0.16" class="is-fail"><td><span class="fname" title="infosec-policy_v3_FINAL.md"><span class="fname-a">infosec-policy_v3</span><span class="fname-b">_FINAL.md</span></span></td><td class="t-type">RICHTLINIE</td><td class="t-date">Prüfung fällig März 2025</td><td class="fail">✗</td><td class="pass">✓</td></tr><tr data-from="3" data-delay="0.709" data-span="0.16" class="is-fail"><td><span class="fname" title="infosec-policy_v4_DRAFT.md"><span class="fname-a">infosec-policy_v4</span><span class="fname-b">_DRAFT.md</span></span></td><td class="t-type">RICHTLINIE</td><td class="t-date">„Approved by: (open)“</td><td class="pass">✓</td><td class="fail">✗</td></tr></tbody>
+  </table>
+  <div class="index-result" data-from="3" data-delay="0.85" data-span="0.15">
+    <p class="big-n"><b>8</b><span>/ 11</span></p>
+    <p class="counter-text">8 von 11 bestehen ZEITRAUM und FREIGABE.</p>
+    <p class="counter-sub">Drei fallen durch. Warum, steht nur im Text der Datei.</p>
+  </div>
+</div>
+</div>
+</section>
+<section id="mission-2" class="slide slide-mission-2" data-id="mission-2" data-n="08" data-kind="main" data-steps="5" data-seconds="1200" data-label="Schritt 2" data-section="PRÜFEN" aria-roledescription="slide" aria-label="08 Schritt 2">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li aria-current="step">PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Schritt 2: erst das Zitat, dann der Status</h2><p class="sub">Pro Anforderung erst die Datei und das wörtliche Zitat, dann die vier Prüfungen, dann der Status.</p>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>08</b> / 12</span></footer>
+<div class="body">
+<div class="m2-work" data-from="1" data-span="0.5" data-until="1">
+  <div class="cols cols-mission">
+    <figure class="prompt">
+  <figcaption class="prompt-head"><span>Prompt aus START-HIER.md, Schritt 2</span><button type="button" class="copy" data-copy>Kopieren</button></figcaption>
+  <pre class="prompt-body">Ordne R1 bis R8 aus request_tannwald.md unseren Dateien zu.
+Eine Zeile pro Anforderung: Anforderung | Datei | Zitat (wörtlich, in Anführungszeichen) | ZITAT | ZEITRAUM | UMFANG | FREIGABE | Status | Was fehlt.
+Rechne den Schulungsanteil und die Stunden bis zur Meldung des Vorfalls im Code.
+Such dann jedes Zitat noch einmal in seiner Datei. Streich jeden Status, dessen Zitat du nicht wörtlich findest, und sag es.</pre>
+</figure>
+    <div class="m2-side">
+      <div class="timer" data-timer="m2" data-minutes="20">
+  <div class="timer-row"><span class="timer-clock" data-timer-clock>0:00</span><span class="timer-of">von 20 Min.</span>
+  <button type="button" class="btn" data-timer-toggle data-start="Start" data-pause="Pause">Start</button>
+  <button type="button" class="btn btn-quiet" data-timer-reset>Zurücksetzen</button></div>
+  <div class="timer-bar" aria-hidden="true"><i data-timer-fill></i></div>
+  
+</div>
+      <p class="side-head">Danach im selben Chat:</p>
+      <pre class="prompt-body prompt-small">Macht &quot;Backups are restore-tested twice a year&quot; R7 zu BELEGT?</pre>
+    </div>
+  </div>
+</div>
+<div class="r7" data-from="2" data-span="0.2" data-until="2">
+  <p class="panel-head">R7: drei Dateien sagen etwas über Backups</p>
+  <ol class="cands"><li class="cand cand-date" data-file="infosec-policy_v3_FINAL.md" data-failed="quote date" data-from="2" data-delay="0" data-span="0.3">
+      <span class="fname" title="infosec-policy_v3_FINAL.md"><span class="fname-a">infosec-policy_v3</span><span class="fname-b">_FINAL.md</span></span>
+      <p class="cand-q q" data-file="folder/infosec-policy_v3_FINAL.md">Backups are restore-tested twice a year.</p>
+      <p class="cand-tests"><span class="tchip tchip-fail">ZITAT</span><span class="tchip tchip-fail">ZEITRAUM</span><span class="tchip tchip-pass">UMFANG</span><span class="tchip tchip-pass">FREIGABE</span></p>
+      <p class="cand-why">zuletzt freigegeben 2024-03-12 · Absicht, kein Protokoll</p>
+      
+    </li><li class="cand cand-approval" data-file="it-notes_2026-10-06.md" data-failed="quote approval" data-from="2" data-delay="0.28" data-span="0.3">
+      <span class="fname" title="it-notes_2026-10-06.md"><span class="fname-a">it-notes</span><span class="fname-b">_2026-10-06.md</span></span>
+      <p class="cand-q q" data-file="folder/it-notes_2026-10-06.md">Backups are tested, the jobs run every night.</p>
+      <p class="cand-tests"><span class="tchip tchip-fail">ZITAT</span><span class="tchip tchip-pass">ZEITRAUM</span><span class="tchip tchip-pass">UMFANG</span><span class="tchip tchip-fail">FREIGABE</span></p>
+      <p class="cand-why">Absicht, kein Protokoll · „Not reviewed by anyone.“</p>
+      
+    </li><li class="cand cand-notmet" data-file="backup-report_2026-10.txt" data-failed="quote" data-from="2" data-delay="0.56" data-span="0.3">
+      <span class="fname" title="backup-report_2026-10.txt"><span class="fname-a">backup-report</span><span class="fname-b">_2026-10.txt</span></span>
+      <p class="cand-q q" data-file="folder/backup-report_2026-10.txt">Restore test: not done in 2026.</p>
+      <p class="cand-tests"><span class="tchip tchip-fail">ZITAT</span><span class="tchip tchip-pass">ZEITRAUM</span><span class="tchip tchip-pass">UMFANG</span><span class="tchip tchip-pass">FREIGABE</span></p>
+      <p class="cand-why">Protokoll, datiert, mit Besitzer. Es sagt: nicht erfüllt.</p>
+      <span class="chip chip-gap cand-status">LÜCKE</span>
+    </li></ol>
+  <p class="moral" data-from="2" data-delay="0.86" data-span="0.14">Die Richtlinie sagt, was passieren soll. Das Protokoll sagt, was passiert ist.</p>
+</div>
+<div class="r5" data-from="3" data-span="0.1" data-until="3" data-r5 data-rows="26" data-unique="25" data-staff="120" data-share="20.8" data-target="0.95" data-dup="5">
+  <p class="panel-head">R5: zählen im Code, 26 Zeilen sind nicht 26 Personen</p>
+  <div class="r5-grid">
+    <div class="r5-chips" aria-hidden="true"><i data-i="0"></i><i data-i="1"></i><i data-i="2"></i><i data-i="3"></i><i data-i="4"></i><i data-i="5"></i><i data-i="6"></i><i data-i="7"></i><i data-i="8"></i><i data-i="9"></i><i data-i="10"></i><i data-i="11"></i><i data-i="12"></i><i data-i="13"></i><i data-i="14"></i><i data-i="15"></i><i data-i="16"></i><i data-i="17"></i><i data-i="18"></i><i data-i="19"></i><i data-i="20"></i><i data-i="21"></i><i data-i="22"></i><i data-i="23"></i><i data-i="24"></i><i data-i="25"></i></div>
+    <div class="r5-count"><p class="big-n"><b data-r5-n>0</b></p><p class="r5-label" data-r5-label data-rows="26 Zeilen" data-merged="E014 steht zweimal: 25 Personen">26 Zeilen</p></div>
+  </div>
+  <div class="r5-bar"><i data-r5-fill></i><b class="r5-tick" style="left:95%"><span>Ziel 95 %</span></b></div>
+  <p class="r5-share" data-r5-share>25 von 120 = 20,8 %</p>
+  <p class="r5-needed" data-from="3" data-delay="0.9" data-span="0.1">Nötig: 114 von 120. Es fehlen 89.</p>
+</div>
+<div class="run" data-from="4" data-span="0.08" data-until="4">
+  <p class="panel-head"><span>Alle acht, Prüfung für Prüfung</span><span class="run-pass" data-run-pass data-label="Prüfung {n} von 4: {test}" data-tests="ZITAT|ZEITRAUM|UMFANG|FREIGABE"></span><span class="tally tally-head" data-tally><span class="tally-covered"><span class="chip chip-covered">BELEGT</span><b>2</b></span><span class="tally-weak"><span class="chip chip-weak">SCHWACH</span><b>1</b></span><span class="tally-gap"><span class="chip chip-gap">LÜCKE</span><b>5</b></span></span></p>
+  <div class="links links-run" data-links="run">
+  <ol class="lk-rows"><li class="lk-row" data-item="R1" data-status="covered" data-fails-at="" data-i="0">
+    <span class="lk-req"><b>R1</b> <span>Systeme</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-covered lk-verdict">BELEGT</span></span>
+    <span class="lk-file"><span class="fname" title="system-list_2026-09.csv"><span class="fname-a">system-list</span><span class="fname-b">_2026-09.csv</span></span><span class="lk-sub"><span class="lk-date">freigegeben 2026-09-02</span><span class="lk-defect">freigegeben 2026-09-02</span></span></span>
+  </li>
+<li class="lk-row" data-item="R2" data-status="gap" data-fails-at="quote" data-i="1">
+    <span class="lk-req"><b>R2</b> <span>Unterauftrag</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-gap lk-verdict">LÜCKE</span></span>
+    <span class="lk-file"><span class="fname" title="subprocessors_2026-09.csv"><span class="fname-a">subprocessors</span><span class="fname-b">_2026-09.csv</span></span><span class="lk-sub"><span class="lk-date">aktualisiert 2026-09-05</span><span class="lk-defect">letzte Prüfung, Rechtsgrundlage: leer</span></span></span>
+  </li>
+<li class="lk-row" data-item="R3" data-status="gap" data-fails-at="date" data-i="2">
+    <span class="lk-req"><b>R3</b> <span>KI-Werkzeuge</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-gap lk-verdict">LÜCKE</span></span>
+    <span class="lk-file"><span class="fname" title="ai-use-rule_v1.md"><span class="fname-a">ai-use-rule</span><span class="fname-b">_v1.md</span></span><span class="lk-sub"><span class="lk-date">freigegeben 2026-10-01</span><span class="lk-defect">295 Tage ohne Regel</span></span></span>
+  </li>
+<li class="lk-row" data-item="R4" data-status="gap" data-fails-at="scope" data-i="3">
+    <span class="lk-req"><b>R4</b> <span>Admin-Konten</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-gap lk-verdict">LÜCKE</span></span>
+    <span class="lk-file"><span class="fname" title="access-review_2026-08-14.csv"><span class="fname-a">access-review</span><span class="fname-b">_2026-08-14.csv</span></span><span class="lk-sub"><span class="lk-date">durchgeführt 2026-08-14</span><span class="lk-defect">1 von 4 Systemen</span></span></span>
+  </li>
+<li class="lk-row" data-item="R5" data-status="gap" data-fails-at="quote" data-i="4">
+    <span class="lk-req"><b>R5</b> <span>Schulung</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-gap lk-verdict">LÜCKE</span></span>
+    <span class="lk-file"><span class="fname" title="training-records_2026.csv"><span class="fname-a">training-records</span><span class="fname-b">_2026.csv</span></span><span class="lk-sub"><span class="lk-date">exportiert 2026-11-02</span><span class="lk-defect">25 von 120 geschult</span></span></span>
+  </li>
+<li class="lk-row" data-item="R6" data-status="covered" data-fails-at="" data-i="5">
+    <span class="lk-req"><b>R6</b> <span>Vorfälle</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-covered lk-verdict">BELEGT</span></span>
+    <span class="lk-file"><span class="fname" title="incident-log_2026.csv"><span class="fname-a">incident-log</span><span class="fname-b">_2026.csv</span></span><span class="lk-sub"><span class="lk-date">letzter Eintrag 2026-10-12</span><span class="lk-defect">gemeldet nach 30,5 h</span></span></span>
+  </li>
+<li class="lk-row" data-item="R7" data-status="gap" data-fails-at="quote" data-i="6">
+    <span class="lk-req"><b>R7</b> <span>Restore-Test</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-gap lk-verdict">LÜCKE</span></span>
+    <span class="lk-file"><span class="fname" title="backup-report_2026-10.txt"><span class="fname-a">backup-report</span><span class="fname-b">_2026-10.txt</span></span><span class="lk-sub"><span class="lk-date">erzeugt 2026-11-01</span><span class="lk-defect">„Restore test: not done in 2026.“</span></span></span>
+  </li>
+<li class="lk-row" data-item="R8" data-status="weak" data-fails-at="approval" data-i="7">
+    <span class="lk-req"><b>R8</b> <span>Richtlinie</span></span>
+    <span class="lk-link"><svg viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><line class="lk-line" x1="0" y1="5" x2="100" y2="5" pathLength="100"/><line class="lk-half lk-a" x1="0" y1="5" x2="50" y2="5"/><line class="lk-half lk-b" x1="50" y1="5" x2="100" y2="5"/><rect class="lk-tick" data-k="0" x="30" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="1" x="41" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="2" x="52" y="7.4" width="7" height="2.6"/><rect class="lk-tick" data-k="3" x="63" y="7.4" width="7" height="2.6"/></svg><span class="chip chip-weak lk-verdict">SCHWACH</span></span>
+    <span class="lk-file"><span class="fname" title="infosec-policy_v4_DRAFT.md"><span class="fname-a">infosec-policy_v4</span><span class="fname-b">_DRAFT.md</span></span><span class="lk-sub"><span class="lk-date">bearbeitet 2026-09-18</span><span class="lk-defect">„Approved by: (open)“</span></span></span>
+  </li></ol>
+  <p class="lk-unlinked"><span>ohne Treffer:</span><span class="fname lk-chip" title="vendor-page_claude_2026-06-15.md"><span class="fname-a">vendor-page_claude</span><span class="fname-b">_2026-06-15.md</span></span><span class="fname lk-chip" title="it-notes_2026-10-06.md"><span class="fname-a">it-notes</span><span class="fname-b">_2026-10-06.md</span></span><span class="fname lk-chip" title="infosec-policy_v3_FINAL.md"><span class="fname-a">infosec-policy_v3</span><span class="fname-b">_FINAL.md</span></span></p>
+</div>
+</div>
+<div class="r1" data-from="5" data-span="0.6">
+  <p class="panel-head">R1 ist BELEGT und trotzdem eine schlechte Nachricht.</p>
+  <div class="cols cols-r1">
+    <div class="r1-proof">
+      <p class="r1-file"><span class="fname" title="system-list_2026-09.csv"><span class="fname-a">system-list</span><span class="fname-b">_2026-09.csv</span></span><span class="chip chip-covered">BELEGT</span></p>
+      <p class="r1-q"><span class="q" data-file="folder/system-list_2026-09.csv">Claude Team (browser and desktop app; 25 seats since 2026-09-01)</span> · <mark class="q" data-file="folder/system-list_2026-09.csv">United States (see vendor-page_claude_2026-06-15.md)</mark></p>
+      <p class="r1-file">Klausel 7 des Servicevertrags</p>
+      <p class="r1-q"><span class="q" data-file="request_tannwald.md">AI tools are used with Customer Data only after written notice to the Customer. Customer Data is stored in the EU or EEA unless the Customer agrees in writing.</span></p>
+      <p class="r1-line">BELEGT heißt belegt, nicht gut.</p>
+    </div>
+    <figure class="qr"><img src="./assets/qr-probe.svg" width="300" height="300" alt="" /><figcaption><b>Zitat-Probe: Claudes Tabelle gegen die Dateien prüfen</b><code>loehrning.ai/<wbr>demos/<wbr>audit-vorbereitung-mit-ki<wbr>#zitat-probe</code></figcaption></figure>
+  </div>
+</div>
+</div>
+</section>
+<section id="mistakes" class="slide slide-mistakes" data-id="mistakes" data-n="09" data-kind="main" data-steps="5" data-seconds="300" data-label="Wo Claude danebenliegt" data-section="PRÜFEN" aria-roledescription="slide" aria-label="09 Wo Claude danebenliegt">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li aria-current="step">PRÜFEN</li><li>LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Wo Claude bei diesem Ordner danebenliegt</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>09</b> / 12</span></footer>
+<div class="body">
+<p class="sub">Jeder Fehler hat eine Regel in projektanweisungen.md, die ihn stoppt.</p>
+<p class="side-head wrongs-head">Typische falsche Zeile</p>
+<ol class="wrongs"><li class="wrong">
+    <p class="wrong-line"><s class="struck" data-from="1" data-span="0.45">R8 · infosec-policy_v4_DRAFT.md · BELEGT</s></p>
+    <p class="wrong-fix" data-from="1" data-delay="0.4" data-span="0.5"><b>Regel 7</b> DRAFT, „(open)“ oder ein leeres Feld ist keine Freigabe. Die neueste Datei ist nicht die gültige.</p>
+  </li><li class="wrong">
+    <p class="wrong-line"><s class="struck" data-from="2" data-span="0.45">R7 · „Backups are restore-tested twice a year.“ · BELEGT</s></p>
+    <p class="wrong-fix" data-from="2" data-delay="0.4" data-span="0.5"><b>Regel 4</b> Eine Richtlinie zeigt Absicht. Fragt die Anforderung nach Praxis, zählt nur ein Protokoll.</p>
+  </li><li class="wrong">
+    <p class="wrong-line"><s class="struck" data-from="3" data-span="0.45">R5 · 26 Beschäftigte geschult</s></p>
+    <p class="wrong-fix" data-from="3" data-delay="0.4" data-span="0.5"><b>Regel 11</b> Im Code zählen. Doppelte Zeilen vorher entfernen und sagen, wie viele es waren.</p>
+  </li><li class="wrong">
+    <p class="wrong-line"><s class="struck" data-from="4" data-span="0.45">R4 · nach ISO 27001 A.12.3.1</s></p>
+    <p class="wrong-fix" data-from="4" data-delay="0.4" data-span="0.5"><b>Regel 12</b> Keine Nummer einer Norm oder Kontrolle, die in keiner Datei steht.</p>
+  </li></ol>
+<div class="cols cols-case" data-from="5" data-span="0.6">
+  <p class="case"><b>AP, 7. Oktober 2025</b> Oktober 2025: Deloitte Australia zahlt einen Teil der 440.000 AU$ für einen Bericht an die australische Regierung zurück. Er enthielt Verweise auf Studien, die es nicht gibt, und ein erfundenes Gerichtszitat.</p>
+  <p class="case case-account">Echte Nachweise gehen nur in das Firmenkonto, das deine Firma freigegeben hat. Namen in Zugangs- und Schulungslisten vorher durch IDs ersetzen. Mehr im Anhang A1.</p>
+</div>
+</div>
+</section>
+<section id="gaps" class="slide slide-gaps" data-id="gaps" data-n="10" data-kind="main" data-steps="3" data-seconds="720" data-label="Schritt 3: Lücken" data-section="LÜCKEN" aria-roledescription="slide" aria-label="10 Schritt 3: Lücken">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li class="done">PRÜFEN</li><li aria-current="step">LÜCKEN</li><li>ANTWORT</li></ol></nav></header>
+<h2 class="title">Schritt 3: jede Lücke bekommt eine Person</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>10</b> / 12</span></footer>
+<div class="body">
+<p class="sub" data-from="0" data-until="1">Eine Lücke ist eine Aufgabe mit Person und Termin.</p>
+<div class="gaplist" data-from="1" data-span="0.1" data-until="1">
+  <table class="tbl tbl-gaps"><thead><tr><th>Punkt</th><th>Was fehlt</th><th>Was die Lücke schließt</th><th>Zuständig, bis</th></tr></thead><tbody><tr data-from="1" data-delay="0" data-span="0.4"><td><b>R2</b> <span class="chip chip-gap">LÜCKE</span></td><td>letzte Prüfung und Rechtsgrundlage für Anthropic leer</td><td>Übermittlungsgrundlage aus den Datenschutzbedingungen des Anbieters im Register, dazu eine datierte Prüfung</td><td class="t-owner">IT-Leitung<span class="t-date">2.12.2026</span></td></tr><tr data-from="1" data-delay="0.1" data-span="0.4"><td><b>R3</b> <span class="chip chip-gap">LÜCKE</span></td><td>295 Tage ohne Regel, davor ein Gratis-Chatbot</td><td>Aufstellung der KI-Nutzung vom 10.12.2025 bis 30.09.2026 (Werkzeug, Daten, Speicherland), unterschrieben</td><td class="t-owner">IT-Leitung<span class="t-date">2.12.2026</span></td></tr><tr data-from="1" data-delay="0.2" data-span="0.4"><td><b>R4</b> <span class="chip chip-gap">LÜCKE</span></td><td>1 von 4 Systemen geprüft</td><td>Prüfung der Admin-Konten der drei anderen Systeme, datiert und freigegeben</td><td class="t-owner">IT-Leitung<span class="t-date">2.12.2026</span></td></tr><tr data-from="1" data-delay="0.3" data-span="0.4"><td><b>R5</b> <span class="chip chip-gap">LÜCKE</span></td><td>25 von 120 geschult</td><td>Schulungsnachweis über mindestens 114 von 120 oder ein datierter Plan</td><td class="t-owner">HR-Leitung<span class="t-date">2.12.2026</span></td></tr><tr data-from="1" data-delay="0.4" data-span="0.4"><td><b>R7</b> <span class="chip chip-gap">LÜCKE</span></td><td>„Restore test: not done in 2026.“</td><td>Protokoll eines Wiederherstellungstests: Datum, wiederhergestellte Daten, Ergebnis, wer</td><td class="t-owner">IT-Leitung<span class="t-date">2.12.2026</span></td></tr><tr data-from="1" data-delay="0.5" data-span="0.4"><td><b>R8</b> <span class="chip chip-weak">SCHWACH</span></td><td>Fassung 3 überfällig, Fassung 4 nicht freigegeben</td><td>Fassung 4, von der Geschäftsführung freigegeben und datiert</td><td class="t-owner">Geschäftsführung<span class="t-date">2.12.2026</span></td></tr></tbody></table>
+</div>
+<div class="cols cols-email" data-from="2" data-span="0.2" data-until="2">
+  <p class="email-note" data-from="2" data-delay="0.85" data-span="0.15">„Gibt es nicht“ ist auch eine Antwort: Dann meldet ihr den Punkt als offen und nennt Tannwald einen Termin.</p>
+  <article class="sheet email" data-email>
+    <p class="sheet-name">Die Anfrage für R7, gefüllt aus vorlagen/luecken-anfrage.md</p>
+    <pre class="email-body">Betreff: Audit <span class="slot" data-k="0" data-n="22"><span class="slot-ph">[Kunde]</span><span class="slot-v">Tannwald</span></span> am <span class="slot" data-k="1" data-n="22"><span class="slot-ph">[Audit-Datum]</span><span class="slot-v">10. Dezember 2026</span></span>, <span class="slot" data-k="2" data-n="22"><span class="slot-ph">[Anforderung]</span><span class="slot-v">R7</span></span>: <span class="slot" data-k="3" data-n="22"><span class="slot-ph">[Nachweis kurz]</span><span class="slot-v">Protokoll eines Wiederherstellungstests</span></span> bis <span class="slot" data-k="4" data-n="22"><span class="slot-ph">[Frist]</span><span class="slot-v">2. Dezember 2026</span></span>
+Hallo <span class="slot" data-k="5" data-n="22"><span class="slot-ph">[Vorname]</span><span class="slot-v">Goran</span></span>,
+für das Audit von <span class="slot" data-k="6" data-n="22"><span class="slot-ph">[Kunde]</span><span class="slot-v">Tannwald</span></span> am <span class="slot" data-k="7" data-n="22"><span class="slot-ph">[Audit-Datum]</span><span class="slot-v">10. Dezember 2026</span></span> verlangt Anforderung <span class="slot" data-k="8" data-n="22"><span class="slot-ph">[Anforderung]</span><span class="slot-v">R7</span></span>:
+&quot;<span class="slot" data-k="9" data-n="22"><span class="slot-ph">[Anforderungstext, wörtlich]</span><span class="slot-v">A restore test of your backups from the last 12 months, with its result</span></span>&quot;
+Was wir haben: <span class="slot" data-k="10" data-n="22"><span class="slot-ph">[Datei]</span><span class="slot-v">backup-report_2026-10.txt</span></span>, datiert <span class="slot" data-k="11" data-n="22"><span class="slot-ph">[Datum der Datei]</span><span class="slot-v">1. November 2026</span></span>.
+Es scheitert an <span class="slot" data-k="12" data-n="22"><span class="slot-ph">[ZITAT / ZEITRAUM / UMFANG / FREIGABE]</span><span class="slot-v">ZITAT</span></span>: <span class="slot" data-k="13" data-n="22"><span class="slot-ph">[ein Satz mit dem Zitat oder dem leeren Feld]</span><span class="slot-v">Das Protokoll sagt &quot;Restore test: not done in 2026.&quot; und keine andere Datei zeigt einen Test</span></span>.
+Was die Lücke schließt: <span class="slot" data-k="14" data-n="22"><span class="slot-ph">[Nachweis]</span><span class="slot-v">ein Protokoll eines Wiederherstellungstests (Datum, wiederhergestellte Daten, Ergebnis, wer)</span></span>, datiert ab <span class="slot" data-k="15" data-n="22"><span class="slot-ph">[Beginn des Prüfzeitraums]</span><span class="slot-v">10. Dezember 2025</span></span>, <span class="slot" data-k="16" data-n="22"><span class="slot-ph">[freigegeben / erstellt]</span><span class="slot-v">erstellt</span></span> von <span class="slot" data-k="17" data-n="22"><span class="slot-ph">[Rolle]</span><span class="slot-v">der IT-Leitung</span></span>, für <span class="slot" data-k="18" data-n="22"><span class="slot-ph">[Systeme, Personen, Zeitraum]</span><span class="slot-v">den Servicepult-Export und die Dateiablage</span></span>.
+Bitte schick es bis <span class="slot" data-k="19" data-n="22"><span class="slot-ph">[Frist]</span><span class="slot-v">2. Dezember 2026</span></span>. Gibt es das nicht, schreib &quot;gibt es nicht&quot;. Auch diese Antwort hilft: Dann melden wir die Anforderung als offen, planen sie und nennen <span class="slot" data-k="20" data-n="22"><span class="slot-ph">[Kunde]</span><span class="slot-v">Tannwald</span></span> einen Termin.
+Danke
+<span class="slot" data-k="21" data-n="22"><span class="slot-ph">[Name]</span><span class="slot-v">[Name]</span></span></pre>
+  </article>
+</div>
+<div class="cols cols-mission" data-from="3" data-span="0.5">
+  <figure class="prompt">
+  <figcaption class="prompt-head"><span>Prompt aus START-HIER.md, Schritt 3</span><button type="button" class="copy" data-copy>Kopieren</button></figcaption>
+  <pre class="prompt-body">1. Lückenliste für jede Anforderung mit SCHWACH oder LÜCKE: Anforderung | Was fehlt | Dokument, das es schließt | Zuständig | Bis 2. Dezember 2026.
+2. Für jede Lücke eine Anfrage-Mail an die zuständige Person nach der angehängten Vorlage.
+3. Prüf jeden Satz des Antwortentwurfs: BEHALTEN (zitiere den Nachweis), UMSCHREIBEN (ein Satz, den unsere Dateien heute belegen) oder STREICHEN (zitiere die Datei, die widerspricht).
+4. Eine Antwort an Lena Keller auf Englisch, höchstens 150 Wörter, nur mit Sätzen, die unsere Dateien belegen. Sag für jede Anforderung, die wir nicht belegen können, was folgt und bis wann. Erwähne Klausel 7.</pre>
+</figure>
+  <div class="m2-side"><div class="timer" data-timer="m3" data-minutes="12">
+  <div class="timer-row"><span class="timer-clock" data-timer-clock>0:00</span><span class="timer-of">von 12 Min.</span>
+  <button type="button" class="btn" data-timer-toggle data-start="Start" data-pause="Pause">Start</button>
+  <button type="button" class="btn btn-quiet" data-timer-reset>Zurücksetzen</button></div>
+  <div class="timer-bar" aria-hidden="true"><i data-timer-fill></i></div>
+  
+</div></div>
+</div>
+</div>
+</section>
+<section id="reply" class="slide slide-reply" data-id="reply" data-n="11" data-kind="main" data-steps="6" data-seconds="600" data-label="Die Antwort" data-section="ANTWORT" aria-roledescription="slide" aria-label="11 Die Antwort">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li class="done">PRÜFEN</li><li class="done">LÜCKEN</li><li aria-current="step">ANTWORT</li></ol></nav></header>
+<h2 class="title">Die Antwort an Tannwald: nur belegte Sätze</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>11</b> / 12</span></footer>
+<div class="body">
+<p class="sub">Aus vier Behauptungen werden vier Streichungen und eine ehrliche Antwort.</p>
+<ol class="claims claims-reply" data-from="0" data-span="0.01" data-until="4"><li class="claim" data-claim="1">
+    <p class="claim-line"><span class="claim-n">1</span><span class="claim-text q" data-file="draft-reply.md"><s class="struck" data-from="1" data-span="0.4">All our staff are trained in data protection and AI.</s></span><span class="verdict" data-from="1" data-delay="0.3" data-span="0.3">STREICHEN</span></p>
+    <p class="evidence" data-from="1" data-delay="0.35" data-span="0.65"><span class="typed" data-full="training-records: 25 von 120 geschult">training-records: 25 von 120 geschult</span></p>
+  </li><li class="claim" data-claim="2">
+    <p class="claim-line"><span class="claim-n">2</span><span class="claim-text q" data-file="draft-reply.md"><s class="struck" data-from="2" data-span="0.4">We review administrator access every quarter.</s></span><span class="verdict" data-from="2" data-delay="0.3" data-span="0.3">STREICHEN</span></p>
+    <p class="evidence" data-from="2" data-delay="0.35" data-span="0.65"><span class="typed" data-full="access-review: eine Prüfung, nur Servicepult, 14.8.2026">access-review: eine Prüfung, nur Servicepult, 14.8.2026</span></p>
+  </li><li class="claim" data-claim="3">
+    <p class="claim-line"><span class="claim-n">3</span><span class="claim-text q" data-file="draft-reply.md"><s class="struck" data-from="3" data-span="0.4">Our backups are tested regularly.</s></span><span class="verdict" data-from="3" data-delay="0.3" data-span="0.3">STREICHEN</span></p>
+    <p class="evidence" data-from="3" data-delay="0.35" data-span="0.65"><span class="typed" data-full="backup-report: „Restore test: not done in 2026.“">backup-report: „Restore test: not done in 2026.“</span></p>
+  </li><li class="claim" data-claim="4">
+    <p class="claim-line"><span class="claim-n">4</span><span class="claim-text q" data-file="draft-reply.md"><s class="struck" data-from="4" data-span="0.4">Your data stays in the EU.</s></span><span class="verdict" data-from="4" data-delay="0.3" data-span="0.3">STREICHEN</span></p>
+    <p class="evidence" data-from="4" data-delay="0.35" data-span="0.65"><span class="typed" data-full="vendor-page: „Note that data is stored in the US.“">vendor-page: „Note that data is stored in the US.“</span></p>
+  </li></ol>
+<div class="cols phase-box" data-from="5" data-span="0.5" data-until="5">
+  <div class="timer" data-timer="reply" data-minutes="10" data-phases="6,3,1">
+  <div class="timer-row"><span class="timer-clock" data-timer-clock>0:00</span><span class="timer-of">von 10 Min.</span>
+  <button type="button" class="btn" data-timer-toggle data-start="Start" data-pause="Pause">Start</button>
+  <button type="button" class="btn btn-quiet" data-timer-reset>Zurücksetzen</button></div>
+  <div class="timer-bar" aria-hidden="true"><i data-timer-fill></i><b style="left:60%"></b><b style="left:90%"></b></div>
+  <ol class="timer-phases"><li data-phase="0"><b>Schreiben</b><span>6 min</span></li><li data-phase="1"><b>Tauschen</b><span>3 min</span></li><li data-phase="2"><b>Vorlesen</b><span>1 min</span></li></ol>
+</div>
+  <p class="phase-hint">Claude schreibt den Entwurf. Einen Satz änderst du von Hand: Unterschreiben tust du, nicht Claude.</p>
+</div>
+<article class="sheet sample" data-from="6" data-span="0.6">
+  <p class="sheet-name">Musterantwort aus LOESUNGEN.md. Deine Formulierung wird anders sein.</p>
+  <pre class="sample-body q" data-file="ANSWERS.md">Dear Ms Keller,
+today we send R1, our system list approved on 2 September 2026, and R6, our incident log for 2026. It shows one incident with your data (INC-02); we told you 30.5 hours after we detected it.
+Four documents are incomplete. R2: the transfer basis for Anthropic (USA) is missing from our register. R3: our AI rule applies from 1 October 2026; we add a record of AI use before that date. R4: we are reviewing the administrator accounts of the three other systems. R8: version 4 of our security policy awaits approval.
+Two we cannot send. R5: 25 of 120 staff are trained. R7: we have not run a restore test in 2026. You receive dates for both by 2 December.
+Under clause 7 we owe you written notice of our use of Claude Team, which stores data in the USA. It is attached.
+Dragan Ilievski</pre>
+  <p class="sheet-tag">Was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung.</p>
+</article>
+</div>
+</section>
+<section id="result" class="slide slide-result" data-id="result" data-n="12" data-kind="main" data-steps="2" data-seconds="360" data-label="Schätzung und Ergebnis" data-section="ANTWORT" aria-roledescription="slide" aria-label="12 Schätzung und Ergebnis">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p><nav class="route" aria-label="Ablauf: Anfrage, Ordner, Prüfen, Lücken, Antwort"><ol><li class="done">ANFRAGE</li><li class="done">ORDNER</li><li class="done">PRÜFEN</li><li class="done">LÜCKEN</li><li aria-current="step">ANTWORT</li></ol></nav></header>
+
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>12</b> / 12</span></footer>
+<div class="body">
+<h2 class="title title-result" data-result-title data-votes="Ihr habt {estimate} geschätzt. Der Ordner belegt {covered}." data-none="Der Ordner belegt {covered} von 8." data-covered="2">Der Ordner belegt 2 von 8.</h2>
+<div class="result-stage">
+<div class="cols cols-result" data-from="0" data-until="1">
+  <div class="hist">
+    <p class="side-head" data-hist-head data-est="Eure Schätzung, Folie 3" data-res="Nach vier Prüfungen">Eure Schätzung, Folie 3</p>
+    <div class="h-stage"><div class="h-bars"><span class="h-bar" data-v="0"><i></i><b>0</b></span><span class="h-bar" data-v="1"><i></i><b>1</b></span><span class="h-bar" data-v="2"><i></i><b>2</b></span><span class="h-bar" data-v="3"><i></i><b>3</b></span><span class="h-bar" data-v="4"><i></i><b>4</b></span><span class="h-bar" data-v="5"><i></i><b>5</b></span><span class="h-bar" data-v="6"><i></i><b>6</b></span><span class="h-bar" data-v="7"><i></i><b>7</b></span><span class="h-bar" data-v="8"><i></i><b>8</b></span></div><div class="r-bars"><span class="r-bar r-covered" data-n="2"><i></i><span class="chip chip-covered">BELEGT</span><b>2</b></span><span class="r-bar r-weak" data-n="1"><i></i><span class="chip chip-weak">SCHWACH</span><b>1</b></span><span class="r-bar r-gap" data-n="5"><i></i><span class="chip chip-gap">LÜCKE</span><b>5</b></span></div></div>
+  </div>
+  <div class="draft-votes">
+    <p class="side-head">Der Entwurf, Folie 4</p>
+    <ol><li data-claim="1" data-line="Satz {n}: {votes} · gestrichen" data-none="Satz {n}: gestrichen" data-opts="stimmt|falsch|weiß nicht">Satz 1: gestrichen</li><li data-claim="2" data-line="Satz {n}: {votes} · gestrichen" data-none="Satz {n}: gestrichen" data-opts="stimmt|falsch|weiß nicht">Satz 2: gestrichen</li><li data-claim="3" data-line="Satz {n}: {votes} · gestrichen" data-none="Satz {n}: gestrichen" data-opts="stimmt|falsch|weiß nicht">Satz 3: gestrichen</li><li data-claim="4" data-line="Satz {n}: {votes} · gestrichen" data-none="Satz {n}: gestrichen" data-opts="stimmt|falsch|weiß nicht">Satz 4: gestrichen</li></ol>
+  </div>
+</div>
+<div class="closing" data-from="2" data-span="0.6">
+  <p class="next-line">Nächste Anfrage: erst die vier Prüfungen, dann die Antwort.</p>
+  <div class="qrs"><figure class="qr"><img src="./assets/qr-own.svg" width="300" height="300" alt="" /><figcaption><b>Dein eigener Ordner</b><span>Demo „Die Lückenliste“, im Browser</span><code>loehrning.ai/<wbr>demos/<wbr>audit-vorbereitung-mit-ki<wbr>#dein-ordner</code></figcaption></figure><figure class="qr"><img src="./assets/qr-skill.svg" width="300" height="300" alt="" /><figcaption><b>Skill audit-nachweise</b><span>mit Anleitung zum Installieren</span><code>loehrning.ai/<wbr>demos/<wbr>audit-vorbereitung-mit-ki<wbr>#mitnehmen</code></figcaption></figure><figure class="qr"><img src="./assets/qr-kit.svg" width="300" height="300" alt="" /><figcaption><b>Das Kit</b><span>alle Dateien und Lösungen</span><code>loehrning.ai/<wbr>workshops/<wbr>audit-vorbereitung-mit-ki/<wbr>kit</code></figcaption></figure></div>
+</div>
+</div>
+<nav class="appendix-links" aria-label="Anhang"><span>Anhang:</span><button type="button" class="link" data-goto="a1">A1 Konto</button><button type="button" class="link" data-goto="a2">A2 Team und Enterprise</button><button type="button" class="link" data-goto="a3">A3 Quellen</button></nav>
+</div>
+</section>
+<section id="a1" class="slide slide-a1" data-id="a1" data-n="A1" data-kind="appendix" data-steps="0" data-seconds="0" data-label="Konto" data-section="Anhang" aria-roledescription="slide" aria-label="A1 Konto">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p></header>
+<h2 class="title">Welches Konto darf Nachweise sehen</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>A1</b> / Anhang</span></footer>
+<div class="body">
+<button type="button" class="btn appendix-back" data-action="leave-appendix" data-label="Zurück zu Folie {n}">Zurück zu Folie 01</button>
+<ol class="facts"><li><p class="fact-head">Privatkonten: Free, Pro, Max</p><p class="fact-text">Du entscheidest, ob deine Chats Modelle trainieren. Mit Training speichert Anthropic sie fünf Jahre, ohne 30 Tage.</p><p class="fact-src">Anthropic, „Updates to our consumer terms“, 28.08.2025</p></li><li><p class="fact-head">Firmenkonten: Team, Enterprise, API</p><p class="fact-text">Fallen nicht unter diese Regel. Was gilt, steht im Vertrag deiner Firma.</p><p class="fact-src">ebenda</p></li><li><p class="fact-head">Wo die Daten liegen</p><p class="fact-text">„Note that data is stored in the US.“</p><p class="fact-src">Anthropic Privacy Center 7996890, Seite vom 15.06.2026</p></li></ol>
+<p class="rule-box">Echte Nachweise gehen nur in das Firmenkonto, das deine Firma freigegeben hat. Namen in Zugangs- und Schulungslisten vorher durch IDs ersetzen. Verträge unter NDA und Pentest-Berichte bleiben draußen, außer der Vertrag erlaubt es.</p>
+<p class="source">Geprüft am 25.10.2026. Lies die Seiten vor jedem Workshop erneut.</p>
+</div>
+</section>
+<section id="a2" class="slide slide-a2" data-id="a2" data-n="A2" data-kind="appendix" data-steps="0" data-seconds="0" data-label="Team und Enterprise" data-section="Anhang" aria-roledescription="slide" aria-label="A2 Team und Enterprise">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p></header>
+<h2 class="title">Team und Enterprise</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>A2</b> / Anhang</span></footer>
+<div class="body">
+<button type="button" class="btn appendix-back" data-action="leave-appendix" data-label="Zurück zu Folie {n}">Zurück zu Folie 01</button>
+<ol class="facts facts-2"><li><p class="fact-head">Codeausführung</p><p class="fact-text">Schritt 2 rechnet im Code. Auf Team und Enterprise muss der Owner sie eventuell erst erlauben.</p></li><li><p class="fact-head">Eigene Skills</p><p class="fact-text">Auf Team und Enterprise kann dein Admin eigene Skills abschalten.</p></li><li><p class="fact-head">Projekte</p><p class="fact-text">Projekte gibt es auf jedem Plan, auf Free bis zu fünf.</p></li><li><p class="fact-head">Für den Workshop</p><p class="fact-text">Jedes Konto reicht: Das Kit ist erfunden. Echte Unterlagen erst nach Freigabe deiner Firma.</p></li></ol>
+<p class="source">Claude Help Center 12512180 und 9517075, gelesen am 25.10.2026</p>
+</div>
+</section>
+<section id="a3" class="slide slide-a3" data-id="a3" data-n="A3" data-kind="appendix" data-steps="0" data-seconds="0" data-label="Quellen" data-section="Anhang" aria-roledescription="slide" aria-label="A3 Quellen">
+<header class="top"><p class="kicker">Workshop 05 · Audit-Vorbereitung mit KI</p></header>
+<h2 class="title">Quellen</h2>
+<footer class="foot"><span>Vardar Works und Tannwald sind erfunden · Stand der Übung: 9.11.2026</span><span class="pg"><b>A3</b> / Anhang</span></footer>
+<div class="body">
+<button type="button" class="btn appendix-back" data-action="leave-appendix" data-label="Zurück zu Folie {n}">Zurück zu Folie 01</button>
+<ol class="sources"><li><b>GDPR Art. 28(3)(h)</b><code>https://eur-lex.europa.eu/eli/reg/2016/679/oj</code></li><li><b>ISO 19011:2018, audit evidence (summary)</b><code>https://www.iso.org/standard/70017.html</code></li><li><b>ISO/IEC 27001:2022, clause 7.5.2 (summary)</b><code>https://www.iso.org/standard/27001</code></li><li><b>Anthropic, Reduce hallucinations</b><code>https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations</code></li><li><b>Anthropic Privacy Center 7996890</b><code>https://privacy.claude.com/en/articles/7996890</code></li><li><b>Anthropic, Updates to our consumer terms</b><code>https://www.anthropic.com/news/updates-to-our-consumer-terms</code></li><li><b>Claude Help Center 12512180, custom skills</b><code>https://support.claude.com/en/articles/12512180</code></li><li><b>Claude Help Center 9517075, Projects</b><code>https://support.claude.com/en/articles/9517075</code></li><li><b>AP, Deloitte to partially refund Australian government for report with apparent AI-generated errors, 7 Oct 2025</b><code>https://www.news4jax.com/business/2025/10/07/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/</code></li></ol>
+<p class="source">Alle Links geprüft am 25.10.2026.</p>
+</div>
+</section>
+</deck-stage>
+</body>
+</html>

@@ -13,8 +13,10 @@ import {
  * "The stage"): card A opens the first material (the slides, or the lab for
  * a workshop without a deck), card B hands over the second one (the kit zip,
  * or the case for a workshop without a kit). Card A also carries the
- * workshop's practice demo as its small secondary link. All of it is derived
- * from the registry, so a new workshop needs no page code.
+ * workshop's practice demo as its small secondary link: a workshop is its
+ * slides and its kit, and the demo (the kit, performed) is one link away,
+ * never card A. All of it is derived from the registry, so a new workshop
+ * needs no page code.
  */
 export type WorkshopStageKindA = "slides" | "lab";
 export type WorkshopStageKindB = "kit" | "case";
@@ -50,6 +52,12 @@ export interface WorkshopStage {
 }
 
 /** "HTML · EN", "ZIP · 1,1 MB", "CSV · 1,6 KB": format and size as data. */
+/** Said on a deck card when the deck is in the other language than the page (W02, W03 and W06 have one edition). */
+const OTHER_LANGUAGE: Readonly<Record<Locale, Readonly<Record<Locale, string>>>> = {
+  de: { de: "auf Deutsch", en: "auf Englisch" },
+  en: { de: "in German", en: "in English" },
+};
+
 export function materialMeta(material: WorkshopMaterial): string {
   return [material.kind.toUpperCase(), material.sizeLabel ?? material.language.toUpperCase()].join(" · ");
 }
@@ -71,9 +79,14 @@ export function workshopStage(workshop: Workshop, locale: Locale): WorkshopStage
   const timeOrLanguage = (material: WorkshopMaterial): string =>
     minutesOf(material) ?? material.language.toUpperCase();
   // The title already names a lab or a case, so its meta line is the time alone.
+  // A deck in the other language says so, so nobody opens English slides from a German page unwarned.
   const metaOf = (material: WorkshopMaterial): string =>
     material.role === "deck"
-      ? [copy.roleLabels[material.role], timeOrLanguage(material)].join(" · ")
+      ? [
+          copy.roleLabels[material.role],
+          timeOrLanguage(material),
+          ...(material.language === locale ? [] : [OTHER_LANGUAGE[locale][material.language]]),
+        ].join(" · ")
       : timeOrLanguage(material);
 
   // The demo material's href is already in the page's language.

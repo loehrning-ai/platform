@@ -41,14 +41,36 @@ describe("GET /vorlagen/[file]", () => {
     await expect(generateStaticParams()).resolves.toEqual([
       { file: "ki-in-der-ausbildung-fragen.md" },
       { file: "ki-in-der-ausbildung-fragen.en.md" },
+      { file: "pruefregel.md" },
+      { file: "release-rule.en.md" },
+      { file: "kennzahlen-steckbrief-vorlage.md" },
+      { file: "metric-card-template.en.md" },
+      { file: "fragekarte.md" },
+      { file: "fragekarte.en.md" },
+      { file: "esg-nachweisprobe.md" },
+      { file: "esg-nachweisprobe.en.md" },
+      { file: "esg-projektanweisungen.md" },
+      { file: "esg-projektanweisungen.en.md" },
+      { file: "esg-ordner-checkliste.md" },
+      { file: "esg-ordner-checkliste.en.md" },
+      { file: "esg-mail-fehlendes-dokument.md" },
+      { file: "esg-mail-fehlendes-dokument.en.md" },
+      { file: "esg-nachweisregister.csv" },
+      { file: "esg-nachweisregister.en.csv" },
+      { file: "luecken-anfrage.md" },
+      { file: "luecken-anfrage.en.md" },
+      { file: "vergleichsbasis.md" },
+      { file: "vergleichsbasis.en.md" },
+      { file: "verhandlungsmail.md" },
+      { file: "verhandlungsmail.en.md" },
     ]);
   });
 
-  it.each(CASES)("serves $name as an unmodified Markdown download", async ({ locale, name, file, hostPath }) => {
+  it.each(CASES)("serves $name as an unmodified download", async ({ locale, name, file, hostPath }) => {
     const response = await GET(requestFor(name), paramsFor(name));
 
     expect(response.status).toBe(200);
-    expect(response.headers.get("Content-Type")).toBe("text/markdown; charset=utf-8");
+    expect(response.headers.get("Content-Type")).toBe(name.endsWith(".csv") ? "text/csv; charset=utf-8" : "text/markdown; charset=utf-8");
     expect(response.headers.get("Content-Disposition")).toBe(`attachment; filename="${name}"`);
     expect(response.headers.get("Content-Language")).toBe(locale);
     expect(response.headers.get("Cache-Control")).toBe("public, max-age=3600, s-maxage=3600");
@@ -67,6 +89,8 @@ describe("GET /vorlagen/[file]", () => {
     "en/ki-in-der-ausbildung-fragen.md",
     "ki-in-der-ausbildung-fragen",
     "ki-in-der-ausbildung-fragen.de.md",
+    "esg-nachweisregister.de.csv",
+    "esg-nachweisregister.xlsx",
     "",
   ])("answers 404 as plain text for %j", async (name) => {
     const response = await GET(requestFor(name), paramsFor(name));

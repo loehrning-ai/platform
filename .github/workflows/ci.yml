@@ -2,8 +2,8 @@ name: Verify
 
 # The one blocking gate. Three jobs start together and `verify` aggregates them.
 # Each job calls the same script a contributor runs locally (`bun run ci:<job>`,
-# or `bun run ci` for all three); the breadth that left this path runs in
-# nightly.yml. Contract: packages/website/docs/ci-contract.md.
+# or `bun run ci` for all three); the breadth that left this path runs weekly
+# in nightly.yml. Contract: packages/website/docs/ci-contract.md.
 on:
   pull_request:
   push:

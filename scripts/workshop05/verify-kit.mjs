@@ -1,23 +1,26 @@
 #!/usr/bin/env node
 /**
- * Checks the Workshop 05 kit ("Where Your Data Goes: Using Claude at Work") against itself:
- * the seven files and nothing else, the word budgets, that every file START-HERE names exists,
- * that every prompt is a copy-paste block, that ANSWERS.md matches the invented data (counts,
- * weekdays, scene lights) and the dated lines in facts.md, that "compliant" and "certified" only
- * appear negated, and that nothing from the excluded list (fines, prices, seat numbers, other
- * vendors, article numbers) slipped in. Exit code 1 when one of them drifts.
+ * Checks the Workshop 05 kit ("Audit Preparation with AI: Organize Evidence and Find Gaps") against
+ * itself: exactly the files build-kit.mjs lists, every file labelled as fictional training material,
+ * every figure ANSWERS.md states recomputed from the folder (8 of 11 in the index, 2 COVERED, 1 WEAK,
+ * 5 GAP, 25 of 120 trained, 114 needed, 30.5 hours, 295 days without a rule, 638 days since v3), the
+ * weekdays of the letter, every quote ANSWERS.md gives found word for word in its file, the R7 email
+ * equal to the template filled in, and no dash, path or banned word. The German edition (kit-de/) is
+ * held to the same statuses and the same labels. Exit code 1 when one of them drifts.
  *
  * Usage (from the repository root): node scripts/workshop05/verify-kit.mjs
  */
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { KIT_FILES, KIT_FILES_DE, buildKit, buildKitDe } from "./build-kit.mjs";
 
 const KIT = path.join(path.dirname(fileURLToPath(import.meta.url)), "kit");
-const FILES = ["START-HERE.md", "ANSWERS.md", "project-instructions.md", "customer-email.md", "company-notes.md", "scenes.md", "facts.md"];
 const read = (file) => readFileSync(path.join(KIT, file), "utf8");
-const lines = (file) => read(file).split("\n");
-const words = (file) => read(file).split(/\s+/).filter(Boolean).length;
+const KIT_DE = path.join(path.dirname(fileURLToPath(import.meta.url)), "kit-de");
+const readDe = (file) => readFileSync(path.join(KIT_DE, file), "utf8");
+const DAY = 86_400_000;
+const days = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / DAY);
 const weekday = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" });
 
 const failures = [];
@@ -26,191 +29,116 @@ function expect(name, actual, expected) {
   facts[name] = actual;
   if (JSON.stringify(actual) !== JSON.stringify(expected)) failures.push(`${name}: got ${JSON.stringify(actual)}, expected ${JSON.stringify(expected)}`);
 }
-function has(file, pattern) {
-  if (!pattern.test(read(file))) failures.push(`${file} does not match ${pattern}`);
-}
 
-// 1. Exactly the seven files, flat, text only.
-const present = readdirSync(KIT, { recursive: true }).map(String).sort();
-expect("files", present, [...FILES].sort());
+// 1. Exactly the kit files, under 44 KB zipped (the skill rides along).
+const walk = (dir, base = "") =>
+  readdirSync(dir).flatMap((entry) => (statSync(path.join(dir, entry)).isDirectory() ? walk(path.join(dir, entry), `${base}${entry}/`) : [`${base}${entry}`]));
+expect("files", walk(KIT).sort(), [...KIT_FILES].sort());
+const zipBytes = buildKit().length;
+expect("zipUnder44KB", zipBytes < 44 * 1024, true);
+facts.zipBytes = zipBytes;
+expect("filesDe", walk(KIT_DE).sort(), [...KIT_FILES_DE].sort());
+facts.zipBytesDe = buildKitDe().length;
 
-// 2. Word budgets (as wc -w counts them, code fences included) and style.
-for (const [file, max] of [["START-HERE.md", 700], ["ANSWERS.md", 600], ["project-instructions.md", 120], ["facts.md", 600]]) {
-  expect(`words ${file}`, words(file) <= max, true);
-  facts[`words ${file}`] = words(file);
-}
-for (const file of FILES) {
+// 2. Labels and style.
+for (const file of KIT_FILES) {
   const text = read(file);
-  if (/[–—]/.test(text)) failures.push(`${file} has an en or em dash`);
-  if (/\blines? \d|\bLn \d/i.test(text)) failures.push(`${file} cites a line number`);
-  if (/\/Users\/|mavengence|https?:\/\//i.test(text)) failures.push(`${file} holds a path or a URL`);
-  if (/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(text)) failures.push(`${file} is not plain text`);
-  if (!/^(#|Invented|Rule 1|Checked)/.test(lines(file)[0]) && file !== "project-instructions.md") failures.push(`${file}: first line is not a title or the word Invented`);
+  const head = text.split("\n").slice(0, 3).join("\n");
+  if (!file.startsWith("templates/") && !/Fictional training material/.test(head)) failures.push(`${file}: the first lines must say Fictional training material`);
+  if (/[‒–—―]/.test(text)) failures.push(`${file} has an en or em dash`);
+  if (/\/Users\/|\/private\/|mavengence|facilitator\//i.test(text)) failures.push(`${file} holds an internal path`);
+  const urls = text.match(/https?:\/\/\S+/g) ?? [];
+  for (const url of urls) if (url !== "https://privacy.claude.com/en/articles/7996890") failures.push(`${file} links ${url}`);
+  if (/by friday|your boss|urgent|countdown|game changer|seamless|\bscores?\b/i.test(text)) failures.push(`${file} uses a banned word`);
+  if (/^#{1,6}\s.*\?\s*$/m.test(text)) failures.push(`${file} has a heading that asks`);
 }
-for (const file of ["customer-email.md", "company-notes.md", "scenes.md"]) {
-  if (!/^Invented\./.test(lines(file)[0])) failures.push(`${file}: line one must say Invented.`);
+
+// 3. The letter: weekdays and the window.
+const request = read("request_tannwald.md");
+expect("sentWeekday", weekday("2026-11-09"), "Monday");
+expect("auditWeekday", weekday("2026-12-10"), "Thursday");
+expect("dueWeekday", weekday("2026-11-25"), "Wednesday");
+for (const line of ["Sent: Monday 9 November 2026", "Remote audit: Thursday 10 December 2026", "by Wednesday 25 November 2026", "dated on or after 10 December 2025", "at least 95%", "within 48 hours"]) {
+  if (!request.includes(line)) failures.push(`request_tannwald.md lacks "${line}"`);
 }
-if (!/^All data here is invented/m.test(read("START-HERE.md"))) failures.push("START-HERE.md must say the data is invented");
+if (!read("START-HERE.md").includes("Exercise date: Monday 9 November 2026.")) failures.push("START-HERE.md must state the exercise date");
 
-// 3. Every file START-HERE names exists; no stray file names; the Project step lists the four project files.
-const named = [...new Set(read("START-HERE.md").match(/[A-Za-z][\w-]*\.(?:md|csv|txt|png|pdf|zip)\b/g) ?? [])];
-expect("startHereNamesExist", named.filter((file) => !existsSync(path.join(KIT, file))), []);
-expect("startHereNames", named.sort(), ["ANSWERS.md", "company-notes.md", "customer-email.md", "facts.md", "project-instructions.md", "scenes.md"].sort());
+// 4. Figures recomputed from the folder.
+const rows = (file) => read(`folder/${file}`).split("\n").filter((line) => line && !line.startsWith("#")).slice(1);
+const training = rows("training-records_2026.csv").map((line) => line.split(",")[0]);
+const unique = new Set(training).size;
+const staff = Number(read("folder/training-records_2026.csv").match(/Staff on \S+ (\d+)\./)[1]);
+expect("trainingRows", training.length, 26);
+expect("trainingUnique", unique, 25);
+expect("staff", staff, 120);
+expect("sharePercent", Math.round((unique / staff) * 1000) / 10, 20.8);
+expect("needed", Math.ceil(0.95 * staff), 114);
+expect("missing", Math.ceil(0.95 * staff) - unique, 89);
+const inc02 = read("folder/incident-log_2026.csv").split("\n").find((line) => line.startsWith("INC-02"));
+const [detected, told] = inc02.match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/g);
+expect("incidentHours", (Date.parse(`${told.replace(" ", "T")}:00Z`) - Date.parse(`${detected.replace(" ", "T")}:00Z`)) / 3_600_000, 30.5);
+expect("ruleGapDays", days("2025-12-10", "2026-10-01"), 295);
+expect("v3DaysShort", days("2024-03-12", "2025-12-10"), 638);
 
-// 4. Prompts: five fenced blocks, each one ready to paste (no blanks, no angle-bracket or underscore holes).
-const fences = [...read("START-HERE.md").matchAll(/```\n([\s\S]*?)\n```/g)].map((match) => match[1]);
-expect("promptCount", fences.length, 5);
-fences.forEach((prompt, index) => {
-  if (/_{2,}|<[^>]+>|\[\.\.\.\]|TODO|XXX/.test(prompt)) failures.push(`prompt ${index + 1} has a hole to fill`);
-  if (prompt.split(/\s+/).length < 20) failures.push(`prompt ${index + 1} is too short to be a prompt`);
-});
-expect("promptStarts", fences.map((prompt) => prompt.split(" ").slice(0, 3).join(" ")), [
-  "Write a short,",
-  "You are a",
-  "Rate the 8",
-  "Put each use",
-  "Answer the three",
-]);
-has("START-HERE.md", /Mara Beispiel \(invented\), wrote: "My order TH-1042 arrived two days late and the box was damaged\. Can I get a refund\?"/);
-has("START-HERE.md", /Use only facts\.md/);
-
-// 5. The three rules: exactly three, the light vocabulary, the two banned words only as an instruction.
-const rules = lines("project-instructions.md").filter(Boolean);
-expect("ruleCount", rules.length, 3);
-rules.forEach((rule, index) => {
-  if (!rule.startsWith(`Rule ${index + 1}. `)) failures.push(`rule ${index + 1} is not numbered`);
-});
-has("project-instructions.md", /NOT IN FILES/);
-has("project-instructions.md", /GREEN: public, fine on any tool\. AMBER: only on the company tool, names and numbers removed, a named person must check\. RED: not without a written okay\./);
-has("project-instructions.md", /Never write "compliant" or "certified"\./);
-
-// 6. The invented company (120 staff, 25 seats, 9 laptops) and the survey arithmetic.
-const notes = read("company-notes.md");
-expect("claudeTeamSeats", Number(notes.match(/Claude Team since 1 September\. (\d+) seats/)?.[1]), 25);
-expect("desktopLaptops", Number(notes.match(/installed on (\d+) laptops/)?.[1]), 9);
-expect("staff", Number(notes.match(/\((\d+) staff\)/)?.[1]), 120);
-const survey = notes.match(/(\d+) of (\d+) answered: (\d+) use AI weekly\. (\d+) of those sometimes use a personal account\. (\d+) pasted customer text/);
-expect("survey", survey?.slice(1).map(Number), [94, 120, 61, 38, 22]);
-if (survey) {
-  const [answered, staff, weekly, personal, pasted] = survey.slice(1).map(Number);
-  expect("surveyOrder", answered <= staff && personal <= weekly && pasted <= answered, true);
-  expect("answeredPercent", Math.round((answered / staff) * 100), 78);
-}
-has("company-notes.md", /A vendor rep told the CEO "data stays in Europe"\. There is nothing in writing\./);
-has("company-notes.md", /In August HR tried a chatbot to rank 12 CVs\./);
-has("company-notes.md", /written 6 Oct 2026/);
-
-// 7. The customer: three questions, clause 7, the boss's draft with its three untrue-or-unsure sentences.
-const email = read("customer-email.md");
-expect("customerQuestions", lines("customer-email.md").filter((line) => /^[123]\. (Which|Where|Is) /.test(line)).length, 3);
-has("customer-email.md", /Contract clause 7 \(invented\): AI tools only after written notice to the customer\. Customer data stays in the EU or EEA unless the customer agrees in writing\./);
-has("customer-email.md", /1\. We use only the company Claude plan\./);
-has("customer-email.md", /2\. All your data stays in the EU\./);
-has("customer-email.md", /3\. Claude is never trained on our chats\./);
-expect("emailDate", [weekday("2026-11-30"), weekday("2026-12-04")], ["Monday", "Friday"]);
-has("customer-email.md", /Monday 30 November 2026/);
-has("ANSWERS.md", /answer by 4 December/);
-
-// 8. Scenes: eight, in the order ANSWERS.md keys, each at most 25 words, none with a light or an answer in it.
-const sceneBlocks = [...read("scenes.md").matchAll(/^Scene (\d)\n(.+)$/gm)].map((match) => ({ n: Number(match[1]), text: match[2] }));
-expect("sceneNumbers", sceneBlocks.map((scene) => scene.n), [1, 2, 3, 4, 5, 6, 7, 8]);
-expect("sceneNames", sceneBlocks.map((scene) => scene.text.split(",")[0]), ["Ana", "Stefan", "Elena", "Marko", "Jovana", "Mila", "Petar", "Dario"]);
-sceneBlocks.forEach((scene) => {
-  if (scene.text.split(/\s+/).length > 25) failures.push(`scene ${scene.n} is over 25 words`);
-  if (/\b(GREEN|AMBER|RED)\b/.test(scene.text)) failures.push(`scene ${scene.n} gives its light away`);
-});
-const sceneHints = [/complaint email/, /public text/, /Claude Team\. Pastes a customer call/, /API key/, /three CVs/, /IBANs/, /whole Documents folder/, /20 real rows/];
-sceneHints.forEach((hint, index) => {
-  if (!hint.test(sceneBlocks[index]?.text ?? "")) failures.push(`scene ${index + 1} does not match the key in ANSWERS.md`);
-});
-has("scenes.md", /Scene 1 text \(for mission 2, invented\):\n\nHello, my order TH-1042 never arrived\. My name is Mara Beispiel, I live at Beispielweg 7, 99999 Musterstadt\. Please write to mara\.beispiel@example\.com\. This is the second time\./);
-
-// 9. ANSWERS.md mission 3 key: eight lights in the order of the scenes, 3 RED, 4 AMBER... counted from the key itself.
+// 5. ANSWERS.md states the same figures and every quote it gives is in its file.
 const answers = read("ANSWERS.md");
-const key3 = answers.split("## Mission 3 key")[1].split("## Mission 4 key")[0];
-const lights = [...key3.matchAll(/^(\d)\. (GREEN|AMBER|RED)\b/gm)].map((match) => [Number(match[1]), match[2]]);
-expect("mission3Lights", lights, [[1, "RED"], [2, "GREEN"], [3, "AMBER"], [4, "RED"], [5, "AMBER"], [6, "AMBER"], [7, "RED"], [8, "RED"]]);
-expect("mission3Counts", ["RED", "AMBER", "GREEN"].map((light) => lights.filter(([, value]) => value === light).length), [4, 3, 1]);
-expect("sixOfEight", Math.ceil((6 / 8) * 100), 75);
-has("ANSWERS.md", /Six of eight matching is good\. Enterprise does not turn red into green\./);
-has("ANSWERS.md", /5\. AMBER\. Names out, ask HR\. Ranking people is high-risk from 2 Dec 2027\./);
-
-// 10. Mission 4 key and the dated boxes: the same dates in START-HERE, ANSWERS.md and facts.md.
-const key4 = answers.split("## Mission 4 key")[1].split("## Mission 5")[0];
-const boxes = [...key4.matchAll(/^(\d)\. (EVERYDAY|TELL PEOPLE|HIGH-RISK|BANNED)/gm)].map((match) => [Number(match[1]), match[2]]);
-expect("mission4Boxes", boxes, [[1, "EVERYDAY"], [2, "TELL PEOPLE"], [3, "TELL PEOPLE"], [4, "HIGH-RISK"], [5, "BANNED"]]);
-has("ANSWERS.md", /2\. TELL PEOPLE since 2 Aug 2026\. Check your role\./);
-has("ANSWERS.md", /4\. HIGH-RISK from 2 Dec 2027\./);
-has("ANSWERS.md", /5\. BANNED since 2 Feb 2025\./);
-expect("lawDatesInOrder", ["2025-02-02", "2026-08-02", "2027-12-02"].every((date, i, all) => i === 0 || date > all[i - 1]), true);
-has("facts.md", /AI literacy duty since 2 Feb 2025\. Since 27 Jul 2026: take measures/);
-has("facts.md", /Banned since 2 Feb 2025: reading staff emotions/);
-has("facts.md", /Since 2 Aug 2026: tell people when they deal with AI/);
-has("facts.md", /From 2 Dec 2027: high-risk uses such as ranking applicants or rating staff \(moved from 2 Aug 2026\)/);
-
-// 11. Mission 5: the sample page agrees with facts.md and the notes, and the traps are set.
-const mission5 = answers.split("## Mission 5")[1].split("## The three vendor questions")[0];
-has("ANSWERS.md", /Anthropic's page of 15 June 2026 says data is stored in the US/);
-has("facts.md", /Chat data is stored in the US\..*\| Anthropic privacy 7996890 \| 2026-06-15/);
-has("ANSWERS.md", /Team chats are not used for training by default \(Anthropic, 18 August 2026\)/);
-has("facts.md", /Team and Enterprise chats are not used for training by default\..*\| Anthropic privacy 7996868 \| 2026-08-18/);
-expect("trapNotesVsFacts", [/data stays in Europe/.test(notes), /stored in the US/.test(read("facts.md")), /stays in the EU/.test(email)], [true, true, true]);
-expect("sampleOwners", [...mission5.matchAll(/Owner: ([A-Za-z ]+)\./g)].map((match) => match[1]), ["IT lead", "CEO"]);
-expect("sampleWordsUnder150", mission5.split("Sample page:")[1].split("Rules:")[0].split(/\s+/).filter(Boolean).length <= 150, true);
-
-// 12. The three vendor questions equal the ones in the deck, and the limits line is word for word.
-has("ANSWERS.md", /1\. Where is our chat data stored and processed\?/);
-has("ANSWERS.md", /2\. Which contract applies to our plan\? Does it include a data processing agreement\?/);
-has("ANSWERS.md", /3\. How long are our chats kept, and who can delete them\?/);
-has("ANSWERS.md", /Not in the pages we read on 18 Oct 2026: Team retention period, EU storage for chat apps, what Desktop sends exactly\./);
-has("ANSWERS.md", /Claude's wording varies\. Check its answer against the lines below, never against exact words\./);
-
-// 13. facts.md: fifteen dated lines, each "statement | source | date", and the closing block.
-const factLines = lines("facts.md").filter((line) => /^\d+\. /.test(line));
-expect("factLines", factLines.length, 15);
-factLines.forEach((line, index) => {
-  const parts = line.replace(/^\d+\. /, "").split(" | ");
-  if (parts.length !== 3 || parts.some((part) => !part.trim())) failures.push(`facts.md line ${index + 1} is not statement | source | date`);
-  if (!/\d{4}-\d{2}-\d{2}|undated/.test(parts[2] ?? "")) failures.push(`facts.md line ${index + 1} has no date`);
-});
-has("facts.md", /^Checked 18 Oct 2026\. Vendor pages change: re-read before you rely on this\./m);
-has("facts.md", /Not in the files: default of the training switch for new personal accounts, Team retention period, EU storage for the chat apps, whether Team gets a data processing agreement automatically, what Desktop sends exactly\. Write NOT IN FILES and ask the vendor in writing\./);
-
-// 14. "compliant" and "certified" only as an instruction not to write them, or negated.
-for (const file of FILES) {
-  lines(file).forEach((line, index) => {
-    if (/\b(compliant|certified)\b/i.test(line) && !/never|no certificate|must not|remove that word/i.test(line)) {
-      failures.push(`${file}:${index + 1} uses compliant or certified without a negation`);
-    }
-  });
+for (const line of ["8 of 11 files pass PERIOD and APPROVAL.", "Count: 2 COVERED, 1 WEAK, 5 GAP.", "25 of 120 = 20.8%; 95% needs 114", "told after 30.5 hours", "(295 days)"]) {
+  if (!answers.includes(line)) failures.push(`ANSWERS.md lacks "${line}"`);
 }
-// A line that says the EU claim is fine must not exist.
-if (/(stays|stay) in the EU[^.]*\bGREEN\b/i.test(answers)) failures.push("ANSWERS.md calls the EU claim GREEN");
-
-// 15. Excluded on purpose: fines, prices, seat prices, other vendors, article numbers, switch default, retention number.
-for (const file of FILES) {
-  const text = read(file);
-  const banned = [
-    [/[€$£]|\bEUR\b|\bUSD\b|\bper seat\b|\bper month\b/i, "a price"],
-    [/\bfines? (?:of|up to)\b|\bpenalt|\bmillion\b|% of (?:worldwide )?(?:annual )?turnover/i, "a fine"],
-    [/\bSamsung\b|\bOpenAI\b|\bChatGPT\b|\bGartner\b|\bTELUS\b|\bLayerX\b|\bCyberhaven\b|\bIBM\b|\bEurostat\b/, "an excluded source"],
-    [/\bArticle \d|\bArt\.? \d|\bAnnex\b/, "an article number"],
-    [/2 Dec(?:ember)? 2026|2 Aug(?:ust)? 2028|2030/, "an excluded date"],
-    [/\bsub-?processors?\b|\bzero data retention\b/i, "an excluded topic"],
-  ];
-  for (const [pattern, label] of banned) if (pattern.test(text)) failures.push(`${file} holds ${label}`);
-  if (/\b(default is|on by default|off by default)\b/i.test(text) && !/Team|Enterprise|not confirmed|not state/.test(text)) failures.push(`${file} states a switch default`);
+const mission2 = answers.slice(answers.indexOf("## Step 2"), answers.indexOf("Count:"));
+const statuses = [...mission2.matchAll(/^\| R\d \|.*\| (COVERED|WEAK|GAP) \|$/gm)].map((match) => match[1]);
+expect("statusCount", ["COVERED", "WEAK", "GAP"].map((status) => statuses.filter((value) => value === status).length), [2, 1, 5]);
+const fileOf = { R1: "system-list_2026-09.csv", R2: "subprocessors_2026-09.csv", R3: "ai-use-rule_v1.md", R4: "access-review_2026-08-14.csv", R5: "training-records_2026.csv", R6: "incident-log_2026.csv", R7: "backup-report_2026-10.txt" };
+for (const [item, file] of Object.entries(fileOf)) {
+  const row = mission2.split("\n").find((line) => line.startsWith(`| ${item} |`));
+  for (const [, quote] of row.matchAll(/"([^"]+)"/g)) if (!read(`folder/${file}`).includes(quote)) failures.push(`${item}: "${quote}" is not in ${file}`);
 }
-has("ANSWERS.md", /The default is not confirmed, so look at yours\./);
-has("facts.md", /The page does not state the default: look at yours\./);
-has("facts.md", /Team: saved chats have no fixed period stated\. Deleted chats go within 30 days\./);
-has("facts.md", /The page offers no EU-only option\./);
-has("facts.md", /Admins can switch Cowork off and limit it\. This is our reading: check the vendor page\./);
-has("scenes.md", /Desktop app with Cowork\. Connects his whole Documents folder/);
+const mission1 = answers.slice(answers.indexOf("## Step 1"), answers.indexOf("## Step 2"));
+expect("indexPass", [...mission1.matchAll(/\| pass \| pass \|$/gm)].length, 8);
+
+// 6. The R7 email in ANSWERS.md is the template, filled in.
+const filled = read("templates/gap-request.md")
+  .replace("[Customer] audit on [audit date], [item]: [document] needed by [date]", "Tannwald audit on 10 December 2026, R7: restore test record needed by 2 December 2026")
+  .replace("[owner]", "Goran")
+  .replace("[customer] audit on [audit date], item [item]", "Tannwald audit on 10 December 2026, item R7")
+  .replace("[request text, word for word]", "A restore test of your backups from the last 12 months, with its result")
+  .replace("[file], dated [date]", "backup-report_2026-10.txt, dated 1 November 2026")
+  .replace("[QUOTE / PERIOD / SCOPE / APPROVAL]: [one sentence with the quote or the empty field]", 'QUOTE: the record says "Restore test: not done in 2026." and no other file shows one')
+  .replace(
+    "[document], dated on or after [window start], [approved / made] by [role], covering [systems, people, period]",
+    "a restore test record (date, data restored, result, who), dated on or after 10 December 2025, made by the IT lead, covering the Servicepult export and the file share",
+  )
+  .replace("by [date]", "by 2 December 2026")
+  .replace("give [customer] a date", "give Tannwald a date");
+const emailBlock = answers.match(/Example email \(R7\)[^\n]*\n\n```\n([\s\S]*?)```/)?.[1];
+expect("r7EmailIsTemplate", emailBlock === filled, true);
+if (emailBlock !== filled) console.error(JSON.stringify({ emailBlock, filled }, null, 1));
+
+// 7. The German edition: the same statuses per item, the same index, labelled, no dash.
+const loesungen = readDe("LOESUNGEN.md");
+for (const line of ["8 von 11 Dateien bestehen ZEITRAUM und FREIGABE.", "Zählung: 2 BELEGT, 1 SCHWACH, 5 LÜCKE.", "(295 Tage)", "nach 30,5 Stunden"]) {
+  if (!loesungen.includes(line)) failures.push(`LOESUNGEN.md lacks "${line}"`);
+}
+const statusRows = (text, words) => Object.fromEntries([...text.matchAll(new RegExp(`^\\| (R\\d) \\|.*\\| (${words.join("|")}) \\|$`, "gm"))].map((match) => [match[1], words.indexOf(match[2])]));
+expect("statusesDeEqualEn", statusRows(loesungen, ["BELEGT", "SCHWACH", "LÜCKE"]), statusRows(answers, ["COVERED", "WEAK", "GAP"]));
+const step1De = loesungen.slice(loesungen.indexOf("## Schritt 1"), loesungen.indexOf("## Schritt 2"));
+expect("indexPassDe", [...step1De.matchAll(/\| hält \| hält \|$/gm)].length, 8);
+for (const file of KIT_FILES_DE) {
+  const text = readDe(file);
+  if (!file.startsWith("vorlagen/") && !/Erfundenes Übungsmaterial/.test(text.split("\n").slice(0, 3).join("\n"))) failures.push(`kit-de/${file}: the first lines must say Erfundenes Übungsmaterial`);
+  if (/[‒–—―]/.test(text)) failures.push(`kit-de/${file} has an en or em dash`);
+  if (/\/Users\/|\/private\/|mavengence|facilitator\//i.test(text)) failures.push(`kit-de/${file} holds an internal path`);
+}
+
+// 8. The vendor lines, verbatim.
+const vendor = read("folder/vendor-page_claude_2026-06-15.md");
+for (const line of ['"By default, we may route customer traffic to select countries in the US, Europe, Asia and Australia"', '"Note that data is stored in the US."', "Page date: 15 June 2026."]) {
+  if (!vendor.includes(line)) failures.push(`vendor page lacks ${line}`);
+}
 
 console.log(JSON.stringify(facts, null, 2));
-if (failures.length) {
-  console.error(`\n${failures.length} problem(s):\n- ${failures.join("\n- ")}`);
+if (failures.length > 0) {
+  console.error(`\n${failures.length} check(s) failed:\n- ${failures.join("\n- ")}`);
   process.exit(1);
 }
-console.log("\nKit facts verified.");
+console.log("\nWorkshop 05 kit: every check passed.");

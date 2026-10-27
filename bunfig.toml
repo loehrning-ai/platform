@@ -3,3 +3,7 @@
 # Required native tools resolve through pinned optional packages in bun.lock,
 # so installs stay functional without running package scripts.
 ignoreScripts = true
+# Refuse versions published less than 3 days ago (matches the Dependabot
+# cooldown), so a hijacked release is usually pulled before it can land here.
+# Add an urgent fix younger than that to minimumReleaseAgeExcludes.
+minimumReleaseAge = 259200

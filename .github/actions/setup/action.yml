@@ -22,7 +22,7 @@ runs:
   steps:
     - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
       with:
-        node-version: 24.17.0
+        node-version: 24.22.1
 
     - name: Install checksum-verified Bun
       shell: bash
@@ -32,16 +32,8 @@ runs:
       shell: bash
       run: bun install --frozen-lockfile --ignore-scripts
 
-    # bun.lock pins @playwright/test, so the browser build changes exactly when
-    # the lockfile does. Only the download is cacheable; `--with-deps` still runs
-    # apt every time, which is why the install step below is not skipped outright.
-    - name: Restore Playwright browsers
-      if: inputs.playwright-browsers != ''
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: ~/.cache/ms-playwright
-        key: playwright-${{ runner.os }}-${{ hashFiles('bun.lock') }}
-
+    # Not cached: Playwright advises against caching browsers, and
+    # `--with-deps` runs apt every time anyway.
     - name: Install Playwright browsers
       if: inputs.playwright-browsers != ''
       shell: bash

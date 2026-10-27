@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 // ─── Certificate verification-URL encoding tests (performance hardening) ──
 //
 // The verification URL is embedded in the certificate's QR code and decoded

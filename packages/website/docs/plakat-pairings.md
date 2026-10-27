@@ -200,6 +200,39 @@ Ground Salbei `#dce6d4`, ink Tanne `#1f4a38`, mid Bernstein `#d9a441`. Numeral w
 | poster numeral | Tanne `#1f4a38` | Numeral at 700, display size only | 3 | 7.79 | pass |
 | ink over mid | Tanne `#1f4a38` on Bernstein `#d9a441` | Numeral or type crossing a mid shape | 3 | 4.46 | pass (display) |
 
+### Kraft (`.plakat-kraft`)
+
+Ground `#d2b48a`, ink Druckschwarz `#121212`, mid Mennige `#b73a15`. Numeral weight 700.
+
+| Pairing | Colour | Use | Floor | Ratio | Result |
+| --- | --- | --- | --- | --- | --- |
+| `--color-foreground` | Druckschwarz `#121212` | Text, caps line, links | 4.5 | 9.49 | pass |
+| `--color-muted-foreground` | Druckschwarz `#121212` | Secondary text (no muted tier: the ink) | 4.5 | 9.49 | pass |
+| `--color-muted` | Druckschwarz `#121212` | Captions (no muted tier: the ink) | 4.5 | 9.49 | pass |
+| `--color-border` | Druckschwarz `#121212` | Control edge | 3 | 9.49 | pass |
+| `--color-brand-orange` | Druckschwarz `#121212` | Focus ring and accent text | 4.5 | 9.49 | pass |
+| `--color-kupfer` | Druckschwarz `#121212` | Accent text | 4.5 | 9.49 | pass |
+| `--color-kupfer-dark` | Druckschwarz `#121212` | Accent text, pressed | 4.5 | 9.49 | pass |
+| button label on the fill | Bogen `#fffcf5` | Primary button label (never an ink fill when the ink is dark) | 4.5 | 9.13 | pass |
+| `--color-scene-button` | `#82270b` | Filled button against the ground | 3 | 4.74 | pass |
+| ink on `--color-card-hover` | Druckschwarz `#121212` on `#c9ac80` | Hover tint | 4.5 | 8.65 | pass |
+| ink on `--color-inset` | Druckschwarz `#121212` on `#cdb085` | Recessed well | 4.5 | 9.05 | pass |
+| `--color-hairline` | `#a98f68` | Hairline between rows | below 2 | 1.56 | pass (decor) |
+| `--color-track` | `#a98f68` | Passive track | below 2 | 1.56 | pass (decor) |
+| `--color-pass` | `#174536` | Pass state text | 4.5 | 5.48 | pass |
+| `--color-destructive` | `#7f1414` | Destructive text | 4.5 | 5.28 | pass |
+| `--color-risk-red` | `#7f1414` | Risk red text | 4.5 | 5.28 | pass |
+| `--color-risk-yellow` | `#66380f` | Risk yellow text | 4.5 | 4.98 | pass |
+| `--color-risk-green` | `#14532d` (paper value) | Risk green text | 4.5 | 4.61 | pass |
+| `--color-brand-sand` | `#4f3d2b` | Brand sand text | 4.5 | 5.23 | pass |
+| `--color-brand-amber` | `#78350f` (paper value) | Brand amber text | 4.5 | 4.59 | pass |
+| `--color-scene-mid` | Mennige `#b73a15` | Decorative shapes, never text | none | 2.93 | decor |
+| `--color-scene-mark` | Druckschwarz `#121212` | A shape that carries meaning | 3 | 9.49 | pass |
+| `--color-scene-accent-text` | `#82270b` | Text in the mid hue | 4.5 | 4.74 | pass |
+| `--color-scene-line` | Druckschwarz `#121212` | Kopflinie inside the band | 4.5 | 9.49 | pass |
+| poster numeral | Druckschwarz `#121212` | Numeral at 700, display size only | 3 | 9.49 | pass |
+| ink over mid | Druckschwarz `#121212` on Mennige `#b73a15` | Numeral or type crossing a mid shape | 3 | 3.24 | pass (display) |
+
 Autumn carries the Rost rules: text 17px or larger at weight 400 or more, no muted tier, no reduced opacity, no hover tint, and no question card, status chip, badge, form field, progress bar, `text-caption`, `text-label` or `text-xs` inside the scope.
 
 ## Paper below a band: the page scene line
@@ -214,6 +247,7 @@ Autumn carries the Rost rules: text 17px or larger at weight 400 or more, no mut
 | `bloom` | Aubergine `#3b1f45` | 12.73 | 13.96 | 11.42 | pass |
 | `autumn` | Rost `#944d44` | 5.49 | 6.02 | 4.93 | pass |
 | `sage` | Tanne `#1f4a38` | 8.92 | 9.78 | 8.00 | pass |
+| `kraft` | Druckschwarz `#121212` | 16.67 | 18.28 | 14.96 | pass |
 
 ## Light grounds (no graphit)
 
@@ -256,6 +290,7 @@ A result chart sits on Kalkweiß, never Beton. Series 1 is the scene line, serie
 | Bloom | Aubergine `#3b1f45` 12.73 | Terrakotta tief `#964305` 6.03 | 24.2 / 2.11 | 21.0 / 1.81 | 25.1 / 2.30 | 22.8 / 2.06 | direct labels |
 | Autumn | Rost `#944d44` 5.49 | Ocker tief `#9b5e07` 4.68 | 7.9 / 1.17 | 8.0 / 1.19 | 6.9 / 1.17 | 3.6 / 1.16 | hatch plus direct labels |
 | Sage | Tanne `#1f4a38` 8.92 | Mennige tief `#97300f` 6.81 | 20.4 / 1.31 | 5.3 / 1.00 | 13.1 / 1.54 | 25.6 / 1.31 | hatch plus direct labels |
+| Kraft | Druckschwarz `#121212` 16.67 | Mennige `#b73a15` 5.15 | 38.3 / 3.24 | 27.5 / 2.46 | 37.6 / 3.76 | 40.9 / 3.22 | direct labels |
 
 ## Rejected pairings
 

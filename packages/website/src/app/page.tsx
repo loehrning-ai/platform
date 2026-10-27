@@ -26,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
     path: localizedPath,
     locale,
     documentTitle: { absolute: `${copy.title} | loehrning.ai` },
+    hasRouteCard: true,
   });
   const localeAlternates = buildLocaleAlternates(
     "/",

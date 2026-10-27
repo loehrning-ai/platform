@@ -30,7 +30,7 @@ describe("translated-content parity registry", () => {
       "/demos/datenbereitschaft-fuer-ki",
       "/demos/esg-berichte-mit-ki",
       "/demos/geschaeftsberichte-mit-ki-lesen",
-      "/demos/ki-im-unternehmen-sicher-nutzen",
+      "/demos/audit-vorbereitung-mit-ki",
       "/demos/ki-prognosen-einschaetzen",
       "/einstieg",
       "/eu-ai-act-kurs",

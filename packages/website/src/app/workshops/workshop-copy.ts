@@ -190,7 +190,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
         "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Plan mit Dateierstellung",
-        "ki-im-unternehmen-sicher-nutzen": "Zum Nachmachen ein Claude-Konto, jeder Plan",
+        "audit-vorbereitung-mit-ki": "Zum Nachmachen ein Claude-Konto, jeder Plan",
+        "angebote-mit-ki-vergleichen": "Zum Nachmachen ein Claude-Konto mit Codeausführung, jeder Plan",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
       minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
@@ -265,7 +266,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       openAction: "Öffnen",
       downloadAction: "Download",
       kitPageAction: "Kit ansehen",
-      demoAction: "Übung öffnen",
+      demoAction: "Demo öffnen",
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
@@ -336,7 +337,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude desktop app and a Claude plan that includes Claude Code",
         "esg-berichte-mit-ki": "To replay it, a Claude plan with file creation",
-        "ki-im-unternehmen-sicher-nutzen": "To replay it, a Claude account on any plan",
+        "audit-vorbereitung-mit-ki": "To replay it, a Claude account on any plan",
+        "angebote-mit-ki-vergleichen": "To replay it, a Claude account with code execution, any plan",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Self-paced about ${minutes} min`,
@@ -408,7 +410,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       openAction: "Open",
       downloadAction: "Download",
       kitPageAction: "View the kit",
-      demoAction: "Open the exercise",
+      demoAction: "Open the demo",
       language: "Language",
       selfHostHeading: "Run it yourself",
       selfHostBody:

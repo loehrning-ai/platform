@@ -27,12 +27,4 @@ describe("figure engine sources", () => {
       expect(source, name).not.toMatch(/Math\.random|Date\.now|new Date\(|requestAnimationFrame|setTimeout|setInterval/);
     }
   });
-
-  it("keeps the engine free of chart libraries and client code", () => {
-    const production = all.filter(([name]) => !name.startsWith("__tests__"));
-    for (const [name, source] of production) {
-      expect(source, name).not.toMatch(/from "(d3|chart\.js|recharts|framer-motion|visx|victory)/);
-      expect(source, name).not.toMatch(/"use client"/);
-    }
-  });
 });

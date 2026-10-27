@@ -1,14 +1,16 @@
 /**
- * Demos catalog: one practice demo per workshop, the single source of truth
+ * Demos catalog: one hands-on demo per workshop, the single source of truth
  * for /demos, /demos/<slug>, the share card, the sitemap and the machine
  * surfaces.
  *
  * A demo's slug is exactly its workshop's slug. The demo page renders the
- * band (title, question, synthetic-data line) from this registry and mounts
- * the demo component from src/components/demos/<slug>/index.tsx; each demo has
- * its own route folder src/app/demos/<slug>/ that imports only that component.
- * Logic, data and
- * tests of a demo live in src/lib/demo-cases/<slug>/.
+ * band (name, question), the promise and the synthetic-data line from this
+ * registry and mounts the demo component from
+ * src/components/demos/<slug>/index.tsx; each demo has its own route folder
+ * src/app/demos/<slug>/ that imports only that component. Pure logic, data
+ * and the two-language copy pack of a demo live in src/lib/demo-cases/<slug>/;
+ * its hub miniature is src/components/demos/<slug>/tile.tsx (the folder
+ * contract is checked by src/components/demos/demo-contract.test.ts).
  *
  * German copy sits on the entry itself; `en` carries the English overlay.
  * Read localized entries through `getDemosForLocale` / `getDemoForLocale`.
@@ -24,7 +26,8 @@ export const DEMO_SLUGS = [
   "geschaeftsberichte-mit-ki-lesen",
   "datenbereitschaft-fuer-ki",
   "esg-berichte-mit-ki",
-  "ki-im-unternehmen-sicher-nutzen",
+  "audit-vorbereitung-mit-ki",
+  "angebote-mit-ki-vergleichen",
 ] as const;
 
 export type DemoSlug = (typeof DEMO_SLUGS)[number];
@@ -34,14 +37,26 @@ export type DemoExternalActionMode = "none" | "simulated" | "review_gated" | "re
 
 /** The words a demo shows in one locale. */
 export interface DemoCopy {
-  /** The poster title, as the spec names the demo. */
+  /** The demo's name. */
   readonly title: string;
-  /** One or two short sentences for the hub, the meta description and the share card. */
+  /** The promise, one or two sentences: the meta description and the share card. */
   readonly oneLiner: string;
   /** The one question the demo answers, printed at the top. */
   readonly question: string;
   /** The one honest line about the data, shown once under the band. */
   readonly syntheticDataLabel: string;
+  /**
+   * The hub's job line, the biggest text on the tile: verb first, about the
+   * visitor, at most 56 characters ("Prüf, ob dein Jahreswert zwölf Monate hat.").
+   */
+  readonly job: string;
+  /** The hub tile: the surprise in one sentence, and what the visitor leaves with. */
+  readonly tile: {
+    readonly hook: string;
+    readonly take: string;
+    /** Replaces the hub's label before the take line; "" drops the label. */
+    readonly takeLabel?: string;
+  };
 }
 
 export interface Demo extends DemoCopy {
@@ -54,7 +69,7 @@ export interface Demo extends DemoCopy {
   /** The workshop's poster palette and motif (workshopPlakat(slug)). */
   readonly plakat: PlakatKey;
   readonly motif: MotifId;
-  /** About how long one run takes, in minutes. */
+  /** About how long one run takes, in minutes (the detail page, not the hub). */
   readonly minutes: number;
   /** Every demo runs on invented data. */
   readonly illustrative: true;
@@ -83,18 +98,32 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "data-science",
-    lastReviewed: "2026-10-20",
-    title: "1.050 Stück, sieben Morgen",
+    lastReviewed: "2026-10-25",
+    title: "Die Fehlerliste",
     oneLiner:
-      "Angemeldet 1.370, geschätzt 1.180, geliefert 1.050. Du legst die Regel fest und führst eine Woche lang die Freigabe.",
-    question: "Wann darf der Plan allein raus?",
-    syntheticDataLabel: "Übungsfall aus Workshop 01, alle Zahlen erfunden.",
+      "Du prüfst die Prognose deines Tools an ihren eigenen alten Fehlern und legst fest, wann sie ohne Freigabe in die Planung darf.",
+    question:
+      "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
+    syntheticDataLabel:
+      "Firma und Zahlen sind erfunden. Die Demo rechnet in deinem Browser und sendet nichts. Die Antworten von Claude am Ende der Demo sind aufgezeichnete Läufe.",
+    job: "Prüf die Prognose deines Tools an ihren alten Fehlern.",
+    tile: {
+      hook: "Linsensuppe 2025: Die Prognose macht 21 % kleinere Fehler als „wie letzte Woche“. Die Prüfregel hält sie trotzdem 15 Wochen an.",
+      take: "Eine Prüfregel und ein Skill für deinen Claude",
+    },
     en: {
-      title: "1,050 units, seven mornings",
+      title: "The Error List",
       oneLiner:
-        "Asked 1,370, estimated 1,180, delivered 1,050. You set the rule and run the release for a week.",
-      question: "When may the plan ship on its own?",
-      syntheticDataLabel: "Practice case from Workshop 01, all figures invented.",
+        "You check your tool's forecast against its own past errors and decide when it may go into planning without sign-off.",
+      question:
+        "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
+      syntheticDataLabel:
+        "The company and its numbers are invented. The demo runs in your browser and sends nothing. The Claude answers at the end of the demo are recorded runs.",
+      job: "Check your tool's forecast against its past errors.",
+      tile: {
+        hook: "Lentil soup 2025: the forecast's errors are 21% smaller than with \"same as last week\". The release rule still stops it for 15 weeks.",
+        take: "A release rule and a skill for your Claude",
+      },
     },
   },
   {
@@ -104,25 +133,35 @@ export const demos: readonly Demo[] = [
     workshopNumber: "02",
     plakat: "idea",
     motif: "pie",
-    minutes: 10,
+    minutes: 4,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-20",
-    title: "Die Zahl, die trägt",
-    oneLiner: "Entscheide über CRAFT, so wie ein Bericht gelesen werden sollte.",
-    question:
-      "Soll NORTHWIND die Produktlinie CRAFT nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
+    lastReviewed: "2026-10-25",
+    title: "Eine Datei, drei Antworten",
+    oneLiner:
+      "Eine Datei aus dem Workshop-Kit, eine Frage, drei richtig gerechnete Antworten. Danach legst du eine eigene Kennzahl fest und nimmst einen Skill für Claude mit. Alles im Browser.",
+    question: "Ist die Qualität von CRAFT im September besser geworden?",
     syntheticDataLabel:
-      "NORTHWIND ist erfunden. Alle Zahlen stammen aus dem Workshop-Kit und werden im Browser nachgerechnet. Keine KI, nichts wird gesendet.",
+      "NORTHWIND ist erfunden, die Zahlen stammen aus dem Workshop-Kit und werden in deinem Browser gerechnet. Keine KI, nichts wird gesendet.",
+    job: "Leg fest, was deine Kennzahl zählt.",
+    tile: {
+      hook: "Dieselbe CSV sagt besser, gleich und schlechter. Je nachdem, was man zählt.",
+      take: "Kennzahlen-Steckbrief als Skill",
+    },
     en: {
-      title: "The number that holds",
-      oneLiner: "Decide on CRAFT the way a report should be read.",
-      question:
-        "Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?",
+      title: "One file, three answers",
+      oneLiner:
+        "One file from the workshop kit, one question, three correctly computed answers. Then you pin down one of your own metrics and take a Claude skill home. All in your browser.",
+      question: "Did CRAFT's quality get better in September?",
       syntheticDataLabel:
-        "NORTHWIND is invented. Every figure comes from the workshop kit and is recalculated in your browser. No AI, nothing is sent.",
+        "NORTHWIND is invented, the figures come from the workshop kit and are worked out in your browser. No AI, nothing is sent.",
+      job: "Pin down what your metric counts.",
+      tile: {
+        hook: "The same CSV says better, same and worse. It depends on what you count.",
+        take: "metric cards as a skill",
+      },
     },
   },
   {
@@ -132,25 +171,37 @@ export const demos: readonly Demo[] = [
     workshopNumber: "03",
     plakat: "bloom",
     motif: "dome",
-    minutes: 15,
+    minutes: 4,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "data-engineering-fundamentals",
-    lastReviewed: "2026-10-20",
-    title: "Mach die Zahl richtig.",
+    lastReviewed: "2026-10-25",
+    title: "Die Fragekarte",
     oneLiner:
-      "Fünf Anfragen, wie sie an eine KI gestellt werden. Du legst fest, was die Zahl bedeutet, und siehst sofort, welche Zahl daraus wird.",
-    question: "Was genau soll die Zahl bedeuten?",
+      "Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am Ende füllst du deine eigene Karte.",
+    question: "Zeig Ending MRR je Monat für das letzte abgeschlossene Quartal. Stichtag: 1. Juli 2026.",
     syntheticDataLabel:
-      "Erfundene Firmen, erfundene Daten. Hier rechnet keine KI: Die Seite wendet deine Festlegungen auf die Daten des Workshop-Kits an.",
+      "FOLDLINE ist erfunden, die Zahlen stammen aus dem Workshop-Kit und werden in deinem Browser gerechnet. Claudes Antwort ist aus einem Probelauf beim Bau des Kurses aufgezeichnet. Keine KI läuft hier, nichts wird gesendet.",
+    job: "Füll fünf Kästchen, bevor eine KI-Zahl weitergeht.",
+    tile: {
+      hook: "Die Datei stimmt, Claudes Tabelle nicht: 75.890 statt 334.675.",
+      take: "Fünf Kästchen und die Dateien für deinen Claude.",
+      takeLabel: "",
+    },
     en: {
-      title: "Make the number right.",
+      title: "The question card",
       oneLiner:
-        "Five requests, the way people put them to an AI. You decide what the number means and see at once which number it gives.",
-      question: "What exactly should the number mean?",
+        "One correct file, one wrong table: five boxes catch the mistake before the number goes out. At the end you fill in your own card.",
+      question: "Show ending MRR by month for the last complete quarter. Clock: 1 July 2026.",
       syntheticDataLabel:
-        "Invented companies, invented data. No AI runs here: the page applies your choices to the workshop kit's data.",
+        "FOLDLINE is invented, the numbers come from the workshop kit and are worked out in your browser. Claude's answer was recorded in a rehearsal while building the course. No AI runs here, nothing is sent.",
+      job: "Fill five boxes before an AI number goes out.",
+      tile: {
+        hook: "The file is right, Claude's table is not: 75,890, not 334,675.",
+        take: "Five boxes and three files for your Claude.",
+        takeLabel: "",
+      },
     },
   },
   {
@@ -165,48 +216,106 @@ export const demos: readonly Demo[] = [
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-20",
-    title: "Zehn Fakten, 14 Antworten",
+    lastReviewed: "2026-10-25",
+    title: "Nachweisprobe",
     oneLiner:
-      "Du prüfst die Akte einer erfundenen Kellerei: zehn Fakten, die 14 Antworten an Importeur und Bank tragen.",
-    question: "Welche Antworten an Importeur und Bank belegen deine Dateien wirklich?",
+      "Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie belegt, und prüfst am Ende deine eigene Datei.",
+    question: "Welche Antworten belegen unsere Dateien, und welches Dokument fehlt?",
     syntheticDataLabel:
-      "Erfundene Kellerei, Dateien aus dem Workshop-Kit. Keine KI läuft hier: Feste Regeln prüfen deine Antworten.",
+      "Erfundenes Weingut, Dateien aus dem Workshop-Kit. Auf dieser Seite läuft keine KI. Die Claude-Antworten sind Aufzeichnungen.",
+    job: "Leg jede ESG-Antwort neben ihre Datei.",
+    tile: {
+      hook: "12 von 40 ha, abgelaufen am 31.08.2026. Das Zertifikat liegt bei.",
+      take: "Nachweisprobe, Claude-Skill und Nachweisregister für deinen Ordner",
+    },
     en: {
-      title: "Ten facts, 14 answers",
+      title: "Evidence test",
       oneLiner:
-        "You check the file of an invented winery: ten facts that carry 14 answers to the importer and the bank.",
-      question: "Which answers to the importer and the bank do your files actually prove?",
+        "One folder, three requests, one late invoice. You link each answer to the line that backs it, and at the end you check your own file.",
+      question: "Which answers do our files back, and which document is missing?",
       syntheticDataLabel:
-        "Invented winery, files from the workshop kit. No AI runs here: fixed rules check your answers.",
+        "Invented winery, files from the workshop kit. No AI runs on this page. The Claude answers are recordings.",
+      job: "Put every ESG answer next to its file.",
+      tile: {
+        hook: "12 of 40 ha, expired 31.08.2026. The certificate is attached.",
+        take: "evidence check, Claude skill and evidence register for your folder",
+      },
     },
   },
   {
-    id: "ki-im-unternehmen-sicher-nutzen",
-    slug: "ki-im-unternehmen-sicher-nutzen",
-    workshopSlug: "ki-im-unternehmen-sicher-nutzen",
+    id: "audit-vorbereitung-mit-ki",
+    slug: "audit-vorbereitung-mit-ki",
+    workshopSlug: "audit-vorbereitung-mit-ki",
     workshopNumber: "05",
     plakat: "sage",
     motif: "ledger",
-    minutes: 12,
+    minutes: 8,
     illustrative: true,
     evidenceMode: "rule_based",
     externalActionMode: "none",
     courseSlug: "ai-native",
-    lastReviewed: "2026-10-20",
-    title: "Darf das in diesen Chat?",
+    lastReviewed: "2026-10-25",
+    title: "Die Lückenliste",
     oneLiner:
-      "Acht Einfügungen bei Vardar Works, einer erfundenen Firma. Du gibst jeder eine Ampel und siehst, wohin sie geht.",
-    question: "Darf das in diesen Chat?",
+      "Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Dateien und nimm einen Skill für deine eigenen Audits mit. Alles läuft in diesem Tab.",
+    question: "Welche Dateien im Ordner sind ein Nachweis?",
     syntheticDataLabel:
-      "Vardar Works und alle Personen und Einfügungen sind erfunden. Die Ampel ist die Regel aus dem Workshop, kein Gesetz. Keine Rechtsberatung.",
+      "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden, zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Auf dieser Seite läuft keine KI. Die Claude-Antwort ist eine Aufzeichnung. Was du prüfst, bleibt in deinem Browser.",
+    job: "Prüf, welche Datei im Ordner wirklich etwas belegt.",
+    tile: {
+      hook: "Zu jeder der acht Anforderungen liegt eine passend benannte Datei im Ordner. Nur zwei davon belegen, was verlangt ist.",
+      take: "eine Nachweisliste und ein Skill, der ohne Zitat nichts zählt",
+    },
     en: {
-      title: "Can this go into the chat?",
+      title: "The gap list",
       oneLiner:
-        "Eight pastes at Vardar Works, an invented firm. You give each a light and see where it goes.",
-      question: "Can this go into the chat?",
+        "Eight requests, eleven files. Test which file actually proves something, check Claude's quotes against the files, and take a skill home for your own audits. Everything runs in this tab.",
+      question: "Which files in the folder are evidence?",
       syntheticDataLabel:
-        "Vardar Works and every person and paste are invented. The light is the workshop's rule, not a law. Not legal advice.",
+        "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented, and two lines come from Anthropic's public privacy page. No AI runs on this page. The Claude answer is a recording. What you check stays in your browser.",
+      job: "Test which file in the folder actually proves something.",
+      tile: {
+        hook: "Each of the eight requests has a file with a matching name. Only two of them prove what is asked.",
+        take: "an evidence index and a skill that counts nothing without a quote",
+      },
+    },
+  },
+  {
+    id: "angebote-mit-ki-vergleichen",
+    slug: "angebote-mit-ki-vergleichen",
+    workshopSlug: "angebote-mit-ki-vergleichen",
+    workshopNumber: "06",
+    plakat: "kraft",
+    motif: "converge",
+    minutes: 8,
+    illustrative: true,
+    evidenceMode: "rule_based",
+    externalActionMode: "none",
+    courseSlug: "ai-native",
+    lastReviewed: "2026-10-27",
+    title: "Die Vergleichsbasis",
+    oneLiner:
+      "Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Schätz zuerst, dann siehst du, welche Zeile entscheidet.",
+    question: "Welches Angebot ist günstiger?",
+    syntheticDataLabel:
+      "Firma, Lieferanten und Zahlen sind erfunden, und jede Zahl steht im Kit. Auf dieser Seite läuft keine KI; die Claude-Antwort ist eine Aufzeichnung.",
+    job: "Bring drei Angebote auf eine Basis.",
+    tile: {
+      hook: "Der billigste Stückpreis ist das teuerste Angebot.",
+      take: "eine Vergleichsbasis und ein Skill, der keine fehlende Zeile als 0 zählt",
+    },
+    en: {
+      title: "The comparison basis",
+      oneLiner:
+        "Three offers, one basis: same quantity, per unit, delivered, with one-off costs and discount. Guess first, then see which line decides.",
+      question: "Which offer costs less?",
+      syntheticDataLabel:
+        "The company, the suppliers and the numbers are invented, and every number is in the kit. No AI runs on this page; the Claude answer is a recording.",
+      job: "Bring three offers onto one basis.",
+      tile: {
+        hook: "The lowest unit price is the most expensive offer.",
+        take: "a comparison basis and a skill that never counts a missing line as 0",
+      },
     },
   },
 ];

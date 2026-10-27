@@ -3,12 +3,13 @@
  * Refresh the repository-derived files of the published Data Readiness workshop
  * without the external course source.
  *
- * Writes the learner guide, the builder page and builder kit, the kit README,
+ * Writes the learner guide, the kit's learner layer, the builder page and
+ * builder kit, the kit README,
  * rights and publication notes, then regenerates data-readiness-kit.zip,
  * bundle-manifest.json and this workshop's ASSET_MANIFEST.json rows (including
  * card-preview.webp) from the published files.
  *
- * Edited an exported file (deck, console, lab, worksheets)? Record it first:
+ * Edited an exported file (deck, console)? Record it first:
  *   node scripts/course03/overrides.mjs capture
  *
  * Usage (from the repository root):
@@ -18,7 +19,7 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildKitArchive, kitArchiveFiles } from "./kit-archive.mjs";
+import { buildKitArchive, kitArchiveFiles, KIT_LEARNER_SOURCES } from "./kit-archive.mjs";
 import { check as checkOverrides, isRepositoryAuthored, loadOverrides } from "./overrides.mjs";
 import { KIT_ASSET_RIGHTS, KIT_README, PUBLICATION } from "./published-text.mjs";
 import {
@@ -39,9 +40,11 @@ export function planRefresh(root) {
     ["guide.html", readFileSync(path.join(root, GUIDE_SOURCE))],
     ["builder.html", readFileSync(path.join(root, BUILDER_PAGE_SOURCE))],
     ["demo.html", readFileSync(path.join(root, DEMO_PAGE_SOURCE))],
+    ["lib/deck-keys.js", readFileSync(path.join(root, "scripts/workshops/deck-keys.js"))],
     // The site's own Typing woff2 builds, used by the three pages above before the course TTF statics.
     ...["Regular", "Medium", "Bold"].map((weight) => [`assets/fonts/Typing-${weight}.woff2`, readFileSync(path.join(root, TYPING_WOFF2_SOURCE, `Typing-${weight}.woff2`))]),
   ]);
+  for (const [name, source] of Object.entries(KIT_LEARNER_SOURCES)) authored.set(`data-readiness-kit/${name}`, readFileSync(path.join(root, source)));
   const builderFiles = listFiles(path.join(root, BUILDER_KIT_SOURCE));
   for (const name of builderFiles) authored.set(`data-readiness-kit/builder/${name}`, readFileSync(path.join(root, BUILDER_KIT_SOURCE, name)));
 

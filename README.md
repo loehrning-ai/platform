@@ -9,7 +9,7 @@ The application includes four native account-backed German learning paths, four 
 ## Requirements
 
 - Bun 1.3.10, matching the version pinned in `packageManager` and CI
-- Node.js 24.17.0 LTS for Node-based repository scripts (`.nvmrc` and
+- Node.js 24.22.1 LTS for Node-based repository scripts (`.nvmrc` and
   `.node-version`); Node.js 22 LTS remains accepted by the package manifest
 
 Current non-LTS Node.js 26 is outside the supported runtime contract. Its
@@ -33,7 +33,7 @@ A clean production build uses only repository-local and system fonts. It does no
 bun run ci
 ```
 
-`bun run ci` (also `bun run verify`) is the same gate pull requests and `main` must pass, in the same order: `static` (types, lint, the public-tree scanner, content and route checks) and `unit` (the Vitest suite) in parallel, then `browser` (one production build, the server-log privacy probe, and a curated browser smoke on desktop and phone Chromium). Run one part with `bun run ci:static`, `bun run ci:unit` or `bun run ci:browser`; the browser part needs `bunx playwright install chromium` once. A red GitHub job is reproduced by running the script of the same name. The broader checks (full browser suites, Safari, Lighthouse, coverage, dependency and licence audits) run in the `Nightly` workflow and locally with `bun run ci:hygiene`; see [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
+`bun run ci` (also `bun run verify`) is the same gate pull requests and `main` must pass, in the same order: `static` (types, lint, the public-tree scanner, content and route checks, a critical-advisory audit) and `unit` (the Vitest suite) in parallel, then `browser` (one production build, the server-log privacy probe, and a curated browser smoke on desktop Chromium). Run one part with `bun run ci:static`, `bun run ci:unit` or `bun run ci:browser`; the browser part needs `bunx playwright install chromium` once. A red GitHub job is reproduced by running the script of the same name. The broader checks (the full browser suite, Safari, the full dependency and licence audits) run in the weekly `Extended` workflow and locally with `bun run ci:hygiene`; see [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
 
 `bun run test:e2e` builds, then runs every desktop and phone Chromium spec. Direct
 production-browser commands build first, preventing stale `.next` output from
@@ -50,7 +50,7 @@ server-validated session, not the magic-link, Turnstile, and PKCE login journey.
 
 `bun run verify:release` first validates the supplied provider environment in
 strict release mode, before any provider-free wrapper can clear it. It then runs
-static and unit verification, the full 35-route/three-run Lighthouse gate, and
+static and unit verification, and
 the browser smoke, server-log privacy and launch gates against one provider-free build receipt. It finally compiles
 the supplied runtime provider configuration in strict mode with
 Sentry's complete source-map upload group explicitly removed. This final local
@@ -73,8 +73,6 @@ bun run verify:release
 bun run publication:check
 ```
 
-`verify:release` must complete every URL in `lighthouserc.json`; all error-level
-assertions must pass and every warning must be reviewed.
 `publication:check` is the final pre-initialization packaging gate. It rejects
 Git metadata, generated output, caches, reports, credentials, authenticated
 storage state, local-only E2E files, and symbolic links. It intentionally
@@ -93,8 +91,8 @@ bun run deploy:production -- --wait --yes  # wait for green CI, then deploy
 ```
 
 It deploys only the head of `main`, and only when the `verify` check-run on that
-exact commit is green; every other check (CodeQL, dependency graph, the nightly
-run) is shown as "Not blocking" and cannot stop a release. Before a risky
+exact commit is green; every other check (CodeQL, dependency graph, the weekly
+extended run) is shown as "Not blocking" and cannot stop a release. Before a risky
 release (CSP, fonts, layout primitives, a workshop launch), run the full matrix
 on the commit with `gh workflow run nightly.yml --ref main` and add
 `--require-nightly` to the deploy command. It refuses a commit
@@ -136,7 +134,7 @@ packages/
     tests/e2e/     Playwright browser tests
 scripts/           Root verification, release, and packaging gates
 LICENSES/          License texts referenced by LICENSE_POLICY.md
-.github/           CI workflows (Verify, Nightly) and issue templates
+.github/           CI workflows (Verify, Extended) and issue templates
 ```
 
 The repository is deliberately a one-workspace monorepo. Future standalone learning modules or tools can be added under `packages/` after they pass the licensing, secret-scan, build, and browser-proof gates documented in [ARCHITECTURE.md](ARCHITECTURE.md). The exact registry, commit-pinning, asset, discovery, and browser admission sequence is [ARTIFACT_PUBLICATION.md](ARTIFACT_PUBLICATION.md).

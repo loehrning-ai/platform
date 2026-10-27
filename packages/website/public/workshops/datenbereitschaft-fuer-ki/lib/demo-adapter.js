@@ -97,7 +97,7 @@
       summary: "Expansion MRR ranked by synthetic billing country for Q2 2026.",
     };
     if (caseId === "G05") return {
-      value: `${rows[0]?.account_key || "—"} · ${eur(rows[0]?.ending_mrr_eur)}`,
+      value: `${rows[0]?.account_key || "·"} · ${eur(rows[0]?.ending_mrr_eur)}`,
       summary: "Highest June ending MRR using the approved pseudonymous analytics key.",
     };
     if (caseId === "R01" || caseId === "R02") return { value: "REFUSED", summary: evidence.message };

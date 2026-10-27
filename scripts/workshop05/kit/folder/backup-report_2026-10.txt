@@ -1,0 +1,5 @@
+Fictional training material.
+Nordlager backup report, October 2026. Generated 2026-11-01 06:00 by the backup system. Owner: Goran Petrovski, IT lead.
+Jobs: Servicepult export, file share. Schedule: daily at 02:00. Kept for 35 days.
+2026-10-01 to 2026-10-31: 31 of 31 jobs completed. Largest: 2026-10-30, 48.2 GB.
+Restore test: not done in 2026. Planned for Q4 2026 (owner: IT lead).

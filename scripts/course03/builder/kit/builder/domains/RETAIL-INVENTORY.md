@@ -37,7 +37,7 @@ Harbour 110 + Market 40 = 150 helmets on 30 June.
 | --- | --- |
 | 1. Question | Show helmets on hand at month end for each month of Q2 2026 at the Harbour store. |
 | 2. Approved view | `analytics.inventory_by_store_category_monthly` |
-| 3. Four blanks | Kind: month-end level (units). Rows: one per store, category and month. Months: Apr–Jun 2026, complete only. Table: the inventory view above. |
+| 3. Four blanks | Kind: month-end level (units). Rows: one per store, category and month. Months: Apr to Jun 2026, complete only. Table: the inventory view above. |
 | 4. Boundary | The AI's login may SELECT this one view, so cost prices and supplier terms in core stay out and "margin by category" is refused. Database grants enforce this. |
 | 5. Test | April = 110, May = 95, June = 110. "Q2 stock = 315" fails the test. |
 

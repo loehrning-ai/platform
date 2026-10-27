@@ -1,0 +1,4 @@
+Request,No,Question or claim,Answer,File,Lines,Status,Reason,Missing document,Action,Checked by,Date
+Customer questionnaire,Q1,Electricity 2025 in MWh and renewable share,279.7 MWh for 11 months,electricity_2025.csv,3 to 14,GAP,"September missing, EL-25-10 twice, supply mix not specified","Electricity invoice September 2025; supply mix statement 2025",,,
+Customer questionnaire,Q6,Glass weight per 0.75 l bottle below 250 NOK,"395 g, 410 g, 560 g",bottles.csv,3 to 5,COVERED,"Glass supplier declaration, Feb 2026",,"Reserve: bottle up to 420 g, price from 250 NOK or do not offer",,
+Bank,F4,Simple payback,5.0 years,solar_offer_2026.txt,"8, 9",WEAK,"Yield is the installer's estimate, offer not signed",,,,

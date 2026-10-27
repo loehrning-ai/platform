@@ -1,6 +1,6 @@
 ---
 name: cv-engine
-description: Hilf jemandem, mit CV Engine einen einseitigen Lebenslauf aus YAML zu bauen: Inhalte schärfen, Überlauf beheben, Datenwege verstehen. Das Werkzeug läuft lokal, du führst nichts unbeaufsichtigt aus, und den API-Schlüssel trägt immer die Person selbst ein. Help someone build a one-page CV from YAML with the local CV Engine tool.
+description: Einseitigen Lebenslauf mit CV Engine aus YAML bauen: Inhalte schärfen, Überlauf beheben, lokal arbeiten; den API-Schlüssel trägt die Person selbst ein. Build a one-page CV from YAML.
 ---
 
 # Mit CV Engine arbeiten

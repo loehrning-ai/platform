@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { renderFigureMarkup } from "../export.ts";
 import { labelLines, textWidth } from "../svg.ts";

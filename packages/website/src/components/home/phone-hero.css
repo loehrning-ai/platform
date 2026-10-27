@@ -185,6 +185,12 @@
   color: var(--color-brand-cobalt);
 }
 
+.globe-toggle[aria-pressed="true"] {
+  border-color: var(--color-brand-cobalt);
+  background: color-mix(in srgb, var(--color-brand-cobalt) 12%, var(--color-paper));
+  color: var(--color-brand-cobalt);
+}
+
 .globe-toggle:focus-visible {
   outline: 3px solid var(--color-brand-orange);
   outline-offset: 2px;

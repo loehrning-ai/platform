@@ -1,16 +1,17 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="light" data-deck-id="geschaeftsberichte-mit-ki-lesen">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reading business reports with AI · Walkthrough · loehrning.ai</title>
-<meta name="description" content="A workshop on using AI to read a monthly business report: writing down what each number means as a reusable Skill, running it on NORTHWIND's September report, and making one decision from the result." />
+<meta name="description" content="A workshop on reading the metrics of a monthly report with AI: pin down numerator, denominator and period on a metric card, trace one figure to its rows, then decide on NORTHWIND's CRAFT line." />
 <link rel="icon" href="./assets/favicon.svg" />
 <meta name="theme-color" content="#f3f0e9" />
 <link rel="stylesheet" href="./lib/tokens.css" />
 <link rel="stylesheet" href="./lib/deck.css" />
 <link rel="stylesheet" href="./lib/deck-viz.css" />
 <link rel="stylesheet" href="./lib/cover-globe.css" />
+<script src="./lib/deck-keys.js"></script>
 <script src="./lib/deck-stage.js"></script>
 <script src="./lib/deck-viz.js"></script>
 <style>
@@ -41,18 +42,6 @@
 #cover>.cover-q{top:520px;width:880px;box-sizing:border-box;padding:24px 0 0;border-top:3px solid currentColor;font-size:32px;font-weight:400;line-height:1.3}
 #cover>.cover-brand{position:absolute;z-index:1;left:0;bottom:0;box-sizing:border-box;display:flex;align-items:center;width:1056px;height:136px;margin:0;padding:0 96px;background:#f3f0e9;border-top:2px solid var(--cover-ink,#121212)}
 #cover>.cover-brand img{display:block;width:auto;height:40px}
-/* ── bio- · the host slide ───────────────────────────────────────────── */
-.bio-grid{display:grid;grid-template-columns:460px 1fr;gap:72px;flex:1;align-items:center}
-.bio-shot{width:100%;aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line);background:var(--card)}
-.bio-shot img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;display:block;filter:saturate(.92)}
-.bio-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-.bio-chip{font-family:var(--sans);font-size:18px;font-weight:500;letter-spacing:0;border:1.5px solid var(--line);padding:6px 12px;color:var(--muted);white-space:nowrap}
-.bio-cols{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-top:34px}
-.bio-col h3{margin:0 0 6px;font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:.02em;color:var(--muted)}
-.bio-item{padding:11px 0;border-top:1px solid var(--line)}
-.bio-item b{display:block;font-size:22px;font-weight:600;letter-spacing:0;line-height:1.25}
-.bio-item .org{font-size:19px;color:var(--muted);line-height:1.35}
-.bio-item .meta{font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--muted);margin-top:2px}
 /* ── cr- · what CRAFT actually is ────────────────────────────────────── */
 .cr-card{border:1px solid var(--line);background:#f9f7f2;padding:22px 26px 20px;margin-top:22px}
 .cr-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
@@ -145,12 +134,122 @@
 .pc-why{margin:10px 0 0;font-family:var(--sans);font-size:18px;line-height:1.4;color:var(--muted);letter-spacing:0}
 .pc-lead{font-size:20px;line-height:1.4;color:var(--muted);margin:0 0 10px}
 .pc-lead b{color:var(--ink);font-weight:600}
-/* ── clickable report cover ──────────────────────────────────────────── */
-a.report-link{text-decoration:none;position:relative;z-index:2;display:block;flex:0 0 auto;color:inherit}
-a.report-link:focus-visible{outline:4px solid var(--kupfer-full);outline-offset:6px}
-.report-open{position:absolute;right:12px;bottom:12px;z-index:3;background:var(--ink);color:#f2f1ee;font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:0;padding:8px 14px}
-a.report-link:hover .report-open,a.report-link:focus-visible .report-open{background:#2b2a28}
-a.report-link .report-shot{transition:border-color .16s var(--ease)}
+/* ── v3 · the argument, the vote, the three rails, weeks, card, checks ── */
+.q-quote{margin:0;padding:22px 30px 24px;border-left:6px solid var(--mennige);background:#f9f7f2;font-size:30px;line-height:1.4;font-weight:500;color:var(--ink);max-width:1180px}
+.q-src{display:block;margin-top:12px;font-family:var(--mono);font-size:18px;font-weight:400;color:var(--muted)}
+.q-line{margin:0;padding:14px 0;border-top:1px solid var(--line);font-size:24px;line-height:1.45;color:var(--muted)}
+.q-line b{color:var(--ink);font-weight:700}
+.vote{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:36px}
+.vote-opt{border:3px solid var(--ink);background:#f9f7f2;padding:26px 30px 24px;display:flex;flex-direction:column;gap:8px}
+.vote-w{font-size:72px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.vote-h{font-size:22px;line-height:1.4;color:var(--muted)}
+.rails{display:flex;flex-direction:column;margin-top:26px;border-top:2px solid var(--ink)}
+.rail{display:grid;grid-template-columns:400px 1fr 300px;gap:36px;align-items:center;padding:22px 0;border-bottom:1px solid var(--line)}
+.rail-name{font-size:30px;font-weight:700;letter-spacing:-.01em;line-height:1.15}
+.rail-sub{display:block;margin-top:6px;font-family:var(--mono);font-size:18px;font-weight:400;color:var(--muted);letter-spacing:0}
+.rail-track{display:flex;flex-direction:column;gap:10px;border-left:2px solid var(--ink)}
+.rail-row{display:flex;align-items:center;gap:14px;font-family:var(--mono);font-size:19px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rail-bar{display:block;height:30px;flex:0 0 auto;box-sizing:border-box}
+.rail-bar.aug{border:2px dashed var(--muted);border-left:0;background:transparent}
+.rail-bar.sep{background:var(--ink)}
+.rail.worse .rail-bar.sep{background:var(--mennige)}
+.rail-val{font-family:var(--mono);font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
+.rail-verdict{display:block;margin-top:10px;font-size:24px;font-weight:700;color:var(--ink)}
+.rail.worse .rail-verdict{color:var(--mennige)}
+.rail-pct{font-weight:400;color:var(--muted)}
+.mg-rows{display:flex;flex-direction:column;gap:30px;margin-top:30px}
+.mg-row{display:grid;grid-template-columns:330px 1fr;gap:32px;align-items:center}
+.mg-label{font-size:24px;font-weight:700;line-height:1.25}
+.mg-label span{display:block;font-family:var(--mono);font-size:18px;font-weight:400;color:var(--muted);margin-top:4px}
+.mg-weeks{display:flex;gap:34px;align-items:flex-start}
+.mg-week{display:flex;flex-direction:column;gap:8px}
+.mg-blocks{display:flex;gap:8px}
+.mg-b{font-style:normal;display:flex;align-items:center;justify-content:center;width:40px;height:40px;box-sizing:border-box;border:2px solid var(--ink);background:transparent;font-family:var(--mono);font-size:17px;font-weight:700;color:var(--ink)}
+.mg-b.scrap{background:var(--ink);color:#f2f1ee}
+.mg-b.w2{width:88px}.mg-b.w3{width:136px}
+.mg-b.merged{border-width:3px;border-color:var(--mennige);color:var(--mennige)}
+.mg-b.merged.scrap{background:var(--mennige);color:#f2f1ee}
+.mg-date{font-family:var(--mono);font-size:16px;color:var(--muted)}
+.mg-key{display:flex;gap:28px;margin-top:14px;font-family:var(--mono);font-size:17px;color:var(--muted)}
+.mg-key i{display:inline-block;width:18px;height:18px;border:2px solid var(--ink);vertical-align:-3px;margin-right:8px}
+.mg-key i.f{background:var(--ink)}
+.res{display:grid;grid-template-columns:repeat(3,1fr);margin-top:34px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.res>div{padding:18px 24px 18px 0}
+.res>div+div{padding-left:24px;border-left:1px solid var(--line)}
+.res-k{font-size:20px;font-weight:600;color:var(--muted)}
+.res-v{margin-top:8px;font-family:var(--mono);font-size:38px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.res-v.moves{color:var(--mennige)}
+.res-n{margin-top:8px;font-size:19px;color:var(--muted)}
+.wk{display:flex;flex-direction:column;gap:22px;margin-top:30px}
+.wk-row{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:center}
+.wk-m{font-size:28px;font-weight:700}
+.wk-m span{display:block;font-family:var(--mono);font-size:17px;font-weight:400;color:var(--muted);margin-top:2px}
+.wk-bar{display:flex;gap:6px}
+.wk-seg{box-sizing:border-box;height:84px;border:2px solid var(--ink);background:#f9f7f2;padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.wk-seg.extra{border-color:var(--mennige);border-width:3px}
+.wk-seg b{font-size:22px;color:var(--ink)}
+.wk-seg span{font-size:16px;color:var(--muted)}
+.wk-seg.extra span{color:var(--mennige);font-weight:600}
+.wk-out{display:grid;grid-template-columns:repeat(4,1fr);margin-top:30px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+.wk-out>div{padding:16px 22px 16px 0}
+.wk-out>div+div{padding-left:22px;border-left:1px solid var(--line)}
+.wk-out .res-v{font-size:40px}
+.card{border:2px solid var(--ink);background:#f9f7f2;font-family:var(--sans)}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;padding:14px 24px;border-bottom:2px solid var(--ink);background:var(--paper)}
+.card-head b{font-size:26px;font-weight:700}
+.card-head span{font-family:var(--mono);font-size:17px;color:var(--muted)}
+.card-line{display:grid;grid-template-columns:220px 1fr;gap:20px;padding:11px 24px;border-bottom:1px solid var(--line);font-size:20px;line-height:1.4;color:var(--ink)}
+.card-line:last-child{border-bottom:0}
+.card-line .k{font-weight:700}
+.card-line.ctx .k{color:var(--muted)}
+.card-line .open{color:var(--mennige);font-weight:700}
+.card-line .m{font-family:var(--mono);font-size:18px}
+.objective{margin:0;padding:18px 0 18px 26px;border-left:6px solid var(--ink);font-size:30px;line-height:1.38;font-weight:600;color:var(--ink);max-width:760px}
+.tr-rows{border-top:2px solid var(--ink)}
+.tr-row{display:grid;grid-template-columns:150px 120px 1fr 230px;gap:18px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tr-row .m{font-weight:700}
+.tr-row .n{color:var(--muted)}
+.tr-row .s{text-align:right;font-weight:700}
+.tr-sum{display:grid;grid-template-columns:270px 1fr 230px;gap:18px;align-items:baseline;padding:16px 0;border-bottom:2px solid var(--ink);font-family:var(--mono);font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
+.tr-sum .s{text-align:right;color:var(--mennige);font-size:32px}
+.tr-meant{margin-top:22px;padding:16px 22px;border:2px solid var(--ink);background:#f9f7f2;font-size:22px;line-height:1.45;color:var(--muted)}
+.tr-meant b{color:var(--ink)}
+.dash{border:2px solid var(--ink);background:#f9f7f2}
+.dash-cap{padding:10px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:17px;color:var(--muted)}
+.dash-tiles{display:grid;grid-template-columns:repeat(3,1fr)}
+.dash-tile{padding:20px 20px 22px;display:flex;flex-direction:column;gap:8px}
+.dash-tile+.dash-tile{border-left:1px solid var(--line)}
+.dash-k{font-size:19px;font-weight:600;color:var(--muted)}
+.dash-v{font-family:var(--mono);font-size:40px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
+.dash-c{margin-top:6px;padding-top:10px;border-top:1px solid var(--line);font-size:18px;line-height:1.4;color:var(--muted)}
+.dash-c b{display:block;color:var(--ink);font-weight:700}
+.dec{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:28px}
+.dec-col{border:2px solid var(--ink);background:#f9f7f2;display:flex;flex-direction:column}
+.dec-col.alt{border-color:var(--line)}
+.dec-by{padding:14px 24px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:18px;color:var(--muted)}
+.dec-by b{color:var(--ink)}
+.dec-h{padding:20px 24px 6px;font-size:34px;font-weight:700;line-height:1.15;letter-spacing:-.01em}
+.dec-col:not(.alt) .dec-h{color:var(--mennige)}
+.dec-f{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:10px 24px;font-size:20px;line-height:1.45;color:var(--muted)}
+.dec-f .k{font-weight:700;color:var(--ink)}
+.dec-close{margin-top:40px;padding-top:22px;font-size:30px;font-weight:700;line-height:1.3}
+.chk{width:100%;border-collapse:collapse;margin-top:28px;font-size:21px;line-height:1.4}
+.chk th{text-align:left;font-size:19px;font-weight:600;color:var(--muted);padding:0 18px 10px 0;border-bottom:2px solid var(--ink);vertical-align:bottom}
+.chk td{padding:16px 18px 16px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+.chk td.t{width:700px;font-weight:600}
+.chk th:nth-child(n+2){width:260px}
+.chk .ok,.chk .no{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;margin-right:10px;font-family:var(--mono);font-size:20px;font-weight:700;vertical-align:-6px}
+.chk .ok{border:2px solid var(--ink)}
+.chk .no{background:var(--mennige);color:#f2f1ee}
+.chk .why{display:block;margin-top:6px;font-size:18px;color:var(--mennige);font-weight:600}
+.qr{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px}
+.qr img{display:block;width:240px;height:240px;border:4px solid var(--ink)}
+.qr figcaption{font-family:var(--mono);font-size:18px;font-weight:600;text-align:center;line-height:1.35;max-width:280px}
+.slide.kupfer .qr img{border-color:#f2f1ee}
+.slide.kupfer .qr figcaption{color:#f2f1ee}
+.close-grid{display:grid;grid-template-columns:1fr 300px 300px;gap:48px;align-items:center;margin-top:30px}
+.close-next{margin-top:30px;padding-top:18px;border-top:1.5px solid rgba(242,241,238,.5);font-size:24px;line-height:1.45;color:#d4cec5;max-width:1500px}
+.close-next b{color:#f2f1ee}
 a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 </style>
 </head>
@@ -192,28 +291,21 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
      P opens the presenter view (presenter.html), which reads them: Time, Say, Students, Cue, Remember (shown as Do not forget). -->
 <script type="application/json" id="speaker-notes">
 [
-"01 · Cover\nTime: 1 min\nSay: “Today you work at NORTHWIND, an invented company. You will write down what its numbers mean, run that on a real monthly report, and make one decision: rework the CRAFT line, or put more Q3 marketing behind it?”\nStudents: Unzip the kit and open the folder in Claude Code now, so prompt 1 is ready when we get there.\nCue: Nothing builds on the cover. Shift+R brings you back here from any slide (R alone does nothing).\nRemember: Say the decision question out loud; everything after this slide answers it.",
-"02 · Your host\nTime: 1 min\nSay: “I'm Tim. I build the data pipelines behind reports like today's, and this is how I work with Claude when a report lands on my desk.”\nStudents: Nothing: the room listens.\nCue: One → to arrive; nothing builds.\nRemember: Keep it under a minute; NORTHWIND is the story, not the host.",
-"03 · The company\nTime: 1 min\nSay: “NORTHWIND is a family-owned electronics maker in Berlin: about 850 people, about €180M revenue, eight product lines. It is invented, so every number is safe to share. CRAFT is the coffee line: the newest and most expensive, few units, and the factory is still fixing quality problems.”\nStudents: Quick poll: which product line would you worry about first, and why?\nCue: One →; point at CRAFT in the product list as you say its name.\nRemember: Say that NORTHWIND is invented, so nobody wonders whether the numbers are real.",
-"04 · The plan\nTime: 1 min\nSay: “Five prompts. Each one leaves a file behind: nothing yet, then a Skill, then metrics.json, then a dashboard, then a decision. Next month you repeat it with a new report and the same rules.”\nStudents: Follow the five steps on the slide; no typing yet.\nCue: One →; trace the five prompts left to right with your hand.\nRemember: Prompt 2, where you say what the numbers mean, is the part they take home.",
-"05 · The kit\nTime: 1 min on the slide, 5 min for the setup block\nSay: “Unzip the kit anywhere and open the folder in Claude. START-HERE.md walks you through setup. worksheet.md holds the questions Claude asks you in prompt 2.”\nStudents: Download the 60 KB zip, unzip it, open the folder in the Claude desktop app (the Claude Code panel). Hands up when the folder is open.\nCue: One →; stay on this slide until every folder is open in Claude.\nRemember: Open the folder, not the zip, and wait until everyone has it open before you move on. If it goes wrong: No Claude desktop app? They follow on screen and run the prompts later; the kit works the same.",
-"06 · Prompt 1\nTime: 6 min\nSay: “Claude Code opens a folder and reads every file in it. Paste the box: in two sentences, who is NORTHWIND, and what decision is this month's report building toward? Nothing is written yet.”\nStudents: Click Copy, paste into Claude Code, read the two sentences. They should end at the CRAFT question.\nCue: Click Copy on the prompt box, switch to the Claude desktop app, paste, send, come back. Then →.\nRemember: This prompt writes no file. If Claude's answer never mentions CRAFT, have them run it again.",
-"07 · The report\nTime: 2 min\nSay: “This is the report: NORTHWIND's September close, €21.69M across seven lines. Eight pages: summary, revenue per line, defects, marketing spend, escalations and one open decision.”\nStudents: Open “Full size” and skim the summary and the page with the open decision.\nCue: One →; open “Full size” in a new tab if the room cannot read the page, then close it.\nRemember: The same report sits in the kit as reports/2023-09-monthly-report.md; that is the file Claude reads.",
-"08 · The data\nTime: 2 min\nSay: “Every figure in the report is a sum of spreadsheet rows. Five CSV files, one row per sale, defect and campaign. Units times list price over the 95 CRAFT rows in September adds up to €4,124,238: exactly the figure the report prints.”\nStudents: Nothing: watch the arithmetic.\nCue: One →; point at the three CSV tables, then at the €4,124,238 line.\nRemember: This is why prompt 3 can check a number against a CSV: the report is never the only source.",
-"09 · What to measure\nTime: 4 min\nSay: “The first analyst decision: pick the few numbers that decide the month. Revenue, units, defects, marketing spend, open escalations, and one flag: which line to examine before spending more on it.”\nStudents: Pairs: which of the five would you trust least, and why? One minute, then two answers from the room.\nCue: One →; touch the five numbers and the flag in order.\nRemember: Units are kept apart from price on purpose; the E# chips on the report page name each figure's source.",
-"10 · Define\nTime: 5 min\nSay: “The same word means different things at different companies. Revenue here is units times list price, not profit: the data has no cost per product. Defects are problems caught in production, not returns. Marketing is spend per channel, which cannot be split per line.”\nStudents: Say aloud what “revenue” means in your own monthly report. Write one definition on paper.\nCue: One →; read one definition card aloud, let the room read the rest.\nRemember: Read the warning line: read CRAFT's €450 average price as profit and you would spend more on it. Writing definitions down is the skill they take home.",
-"11 · The question\nTime: 3 min\nSay: “Side by side, CRAFT is second in revenue at €4.12M, sixth in units, and has the most defects two months running: 24 in August, 23 in September.”\nStudents: Decide first: rework CRAFT, or fund more marketing? Write the guess down; they compare it with the answer at the end.\nCue: One →; leave the table up while the room writes down its guess.\nRemember: “Not logged” in the table means no defect report that month; it is not a zero.",
-"12 · Prompt 2\nTime: 8 min\nSay: “A Skill is a plain text file of instructions Claude reads before every task. Yours is half written. Claude asks you six blanks one at a time and writes your answers into it. No code.”\nStudents: Open worksheet.md, click Copy, paste into Claude Code, answer each blank in plain English, then read the finished SKILL.md.\nCue: Click Copy on prompt 2, switch to Claude Code, paste, send, answer the six blanks. Then →.\nRemember: The answers must be in their own words, and the finished Skill must list their rules before anyone moves on. If it goes wrong: Someone is stuck on a blank? Read the matching worked example (Revenue, Units) from the Skill file aloud.",
-"13 · Prompt 3\nTime: 15 min\nSay: “First, without your Skill: one line, eyeball the report, how did NORTHWIND do? Then with your Skill: extract the numbers into metrics.json and check one number against the source CSV.”\nStudents: Run the 60-second no-Skill prompt, then prompt 3. Check one figure against data/demand_actuals.csv, naming the file and the column.\nCue: Copy the 60-second no-Skill prompt first, then prompt 3 in the same chat. Then →.\nRemember: The check against the source is the habit; a number nobody traced to a file is not yet a number. If it goes wrong: Claude cannot find the Skill? Check that SKILL.md sits in .claude/skills/northwind-metrics/.",
-"14 · Prompt 4\nTime: 10 min\nSay: “The dashboard shows what the report cannot say: growth per shipping week, defects priced in euros, the machines behind the flag, the countries the volume sits in. The recommendation sits at the top.”\nStudents: Paste prompt 4, wait for dashboard/index.html to open, find the flagged line.\nCue: Click Copy on prompt 4, paste, send, open dashboard/index.html. Then →.\nRemember: The dashboard reads metrics/metrics.json from prompt 3; a blank page means prompt 3 did not write the file.",
-"15 · Prompt 5\nTime: 11 min\nSay: “The VP of Sales wants more Q3 marketing behind CRAFT. Decide first, then send the prompt. Give the number that backs the call, the cost of being wrong, and what the data cannot tell you. Then make Claude argue the opposite as hard as it can.”\nStudents: Write the call in one line before sending the prompt, then compare it with Claude's. Defects, August then September: CRAFT 24 and 23, NEST 12 and 19.\nCue: Click Copy on prompt 5 only after the room has written its call. Then →.\nRemember: Decide BEFORE you paste; P1 to P4 in the escalation list is complaint severity, and P1 is the worst.",
-"16 · The answer\nTime: 4 min\nSay: “The report said +26% and a strong close. Your Skill said +0.8% per shipping week and don't fund it yet: €691k of CRAFT product, 16.8% of its revenue, is destroyed before it ships. Rework first, hold the extra Q3 money for one month, and release it if October is below 2.51 defects per 1,000 and scrap is under 8%.”\nStudents: Compare with your own call: where did it differ, and which number would have changed your mind?\nCue: One →; read the three numbers (+0.8%, €691k, 2.51 per 1,000) and the call, then the limits.\nRemember: Give the VP's side: CRAFT's defect intensity improved 22% in a month, the only line that got better. That is why the hold lasts one month.",
-"17 · Go further\nTime: 30 s on the slide; these three are for after the session\nSay: “Three harder things once your Skill works: audit the whole report against the raw rows, break the +26% headline, and ask Claude to build a what-if tool with two sliders.”\nStudents: Pick one for tomorrow; copy the prompt into a note.\nCue: One →; do not copy these prompts now, they are for after the session.\nRemember: Each is optional and needs no code from them; do not start one now, the clock is for the next slides.",
-"18 · Check the answer\nTime: 1 min\nSay: “Two prompts that work on any answer Claude gives you: where did that come from, and argue the other side. Use them whenever an answer sounds right but is unchecked.”\nStudents: Run the first one now, on the answer they just got to prompt 5.\nCue: One →; click Copy on the first prompt if the room wants to run it now.\nRemember: The second prompt (argue against yourself) works on any report, not only NORTHWIND.",
-"19 · Case 2 · Meta\nTime: 7 min\nSay: “Same recipe on a real company. Meta's Q2 2026 earnings release is public, so Claude fetches it live. As with CRAFT, a strong headline has a question underneath: $31B of capex in one quarter, an investment or a leak?”\nStudents: Paste prompt M1, read Claude's three sentences, and say what tension it found.\nCue: Click Copy on M1, paste into Claude Code, send. Then →.\nRemember: Say that you work at Meta and that this case uses only the public release. If it goes wrong: The fetch comes back blocked? TASK.md has the SEC fallback URL and the User-Agent rule the SEC requires.",
-"20 · Case 2 · prompts\nTime: 8 min\nSay: “M2 defines and extracts the quarter, which is prompts 2 and 3 in one step. M3 lets Claude design the page with no template. A template gives the same page every month; a generated page differs each time. Use templates for a monthly routine and generation for a one-off.”\nStudents: Run M2, check that the two segments sum to total revenue, then run M3 and open the page.\nCue: Click Copy on M2, then M3, one after the other. Then →.\nRemember: The page must lead with the one question the quarter puts on the table and carry a “what this data can't tell you” note.",
-"21 · More prompts\nTime: 30 s on the slide; all of these are for later\nSay: “Four more prompts for next month and for your own data: repeat the Skill on a new report, the Google Drive connector (needs your own Drive), a scorecard for the CFO's outlook, and stripping out the one-offs.”\nStudents: Note the one they will try first.\nCue: One →; this is a take-home slide, do not copy anything.\nRemember: They are all in PROMPTS.md and meta-quarterly/TASK.md; nobody has to copy them from the slide.",
-"22 · What you keep\nTime: 2 min\nSay: “Next month you put the new report in reports/ and run the same Skill. Claude rebuilds the dashboard and says what changed and whether the CRAFT decision still holds. The kit keeps both cases, your Skill, the dashboards and every prompt.”\nStudents: Name the first real report they will run the method on; write it on the kit's worksheet.\nCue: Stay on this slide; Shift+R returns to the cover for the next group.\nRemember: Point to your-company-skill/ for their own numbers, and to the download link on the workshop page. End on time."
+"01 · Cover\nTime: 1 min\nSay: “Today you work at NORTHWIND, an invented company. Its September report asks for more marketing money behind CRAFT. You will pin down what three of its numbers mean, trace one of them to its rows, and only then decide.”\nStudents: Download the kit from the workshop page and unzip it; it is needed from slide 8 on.\nCue: Nothing builds on the cover. R or Shift+R brings you back here from any slide.\nRemember: Read the objective sentence aloud once. Every slide after this one is that sentence applied.",
+"02 · NORTHWIND and the question\nTime: 2 min\nSay: “NORTHWIND makes consumer electronics in Berlin, about 850 people. CRAFT is its premium espresso line: three models, 199 to 699 euros. The report leads with plus 26 percent and a strong close. The open question is CRAFT: rework the line first, or put more Q3 marketing behind it.”\nStudents: Nothing yet; they listen.\nCue: One →; point at the three CRAFT prices, then at the question.\nRemember: Say that NORTHWIND and all its data are synthetic, so nobody wonders whether the numbers are real.",
+"03 · The argument and the vote\nTime: 3 min\nSay: “The VP of Sales backs the request with two numbers: units up 22.4 percent, defects down from 3.21 to 2.51 per 1,000. Both are computed correctly. Neither says how it was counted. Before we look at a single row: did CRAFT's quality get better, stay the same or get worse in September?”\nStudents: Vote by hand: better, same, worse. Count the hands and say the split aloud.\nCue: One →; read the quote, then call the three options one at a time.\nRemember: Write the split on the whiteboard. Slide 4 resolves it, and the room should see that each camp was right about one count.",
+"04 · One file, three answers\nTime: 4 min\nSay: “Same file, same 23 September rows. Count records and CRAFT got better: 3.21 to 2.51. Count affected units and it stayed the same: 310 to 309. Count scrapped units and it got worse: 123 to 168. All three are correct. The report does not say which one it means.”\nStudents: Find the rail that matches their vote. Who voted better counted records, whether they knew it or not.\nCue: One →; for a live version open the demo at /en/demos/geschaeftsberichte-mit-ki-lesen?beat=drei-zaehlweisen.\nRemember: Affected and scrapped share one scale; records have their own. All three are per 1,000 units shipped.",
+"05 · The merge test\nTime: 3 min\nSay: “Suppose Quality merges September's CRAFT records from the same machine in the same week. 23 records become 17, and the record rate falls to 1.86, below the VP's own 2.51. Affected and scrapped units do not move. Not one part changed.”\nStudents: Say which count they would trust for a decision about producing more units, and why.\nCue: One →; point at the four merged blocks, then at the three results.\nRemember: This is the test on card 2 in the kit. A count that moves when paperwork moves is not a quality measure.",
+"06 · Five weeks against four\nTime: 3 min\nSay: “September holds five week_start values, August four. As month totals CRAFT units grew 22.4 percent. Per shipping week they fell 2.1 percent. For the whole company the report's plus 26 percent is plus 0.8 percent per week, and the report says so itself in section 6.”\nStudents: Find the extra week in the September bar.\nCue: One →; point at the fifth block, then at the four numbers below.\nRemember: Section 1 prints +26 %, section 6 prints +0.8 % per week. The same report holds both; the headline uses the month total.",
+"07 · The metric card\nTime: 4 min\nSay: “This is the tool you take home. Five lines: numerator, denominator, period, source, limit. Two context lines: the decision the metric serves, and the trigger that reverses it. The numerator is open. You choose it, with one sentence why.”\nStudents: Decide on card 2 and card 3 for themselves before the hands-on part. They paste the choice prompt in kit step 2.\nCue: One →; read the objective sentence on the left aloud, then the open line in the card.\nRemember: The decision line decides the numerator. Do not hand them the reference answer; it sits at the end of metric-cards.md for afterwards.",
+"08 · The kit\nTime: 1 min on the slide, 5 min for setup\nSay: “The kit is one folder. Open it in the Claude desktop app, in Code. metric-cards.md is your worksheet. The Skill sits in a hidden folder; leave it where it is.”\nStudents: Scan the QR or download the zip from the workshop page, unzip it, open the folder in Claude Code. Hands up when the folder is open.\nCue: Stay on this slide until every folder is open.\nRemember: Open the folder that has START-HERE.md at its top level, not a folder of the same name around it. Without Claude Code, START-HERE describes the Projects route at the end.",
+"09 · Prompts 1 and 2\nTime: 20 min\nSay: “Prompt 1 lists the VP's numbers and where each comes from. Prompt 2 computes every option on the open cards for August and September. Claude does not choose for you.”\nStudents: Run prompt 1, then prompt 2. Compare their table with the expected values on the slide; they match to the digit.\nCue: Click Copy on each card in turn, paste into Claude Code.\nRemember: If values differ, ask Claude which rows it included and to show the filter. The usual cause is a week assigned to the wrong month.",
+"10 · Prompt 3: trace one figure\nTime: 10 min\nSay: “The Skill runs on the report, then traces CRAFT revenue 4,124,238 euros to its rows: 95 rows, three models, units times list price. The trace also tells you what revenue means here: list price, no discounts, no cost.”\nStudents: Run prompt 3. Check the row count and the three products against the slide.\nCue: Click Copy, paste, send. Then →.\nRemember: A number nobody traced to its rows is not yet a number. The definition falls out of the trace.",
+"11 · Prompt 4: the dashboard\nTime: 8 min\nSay: “Every tile shows its value and a Counted as line taken from your cards. Someone reading the dashboard next month sees how each number was counted without asking you.”\nStudents: Run prompt 4, open the dashboard, read the three Counted as lines.\nCue: Click Copy, paste, send, open dashboard/index.html.\nRemember: An empty dashboard means dashboard/data.js was not written; ask again.",
+"12 · Two decisions\nTime: 5 min\nSay: “Counted by scrapped units and per shipping week, the call is rework first. Counted by records and month totals, the same data supports the VP. Both are on the slide. The card says which one holds, and why.”\nStudents: Compare their decision with the two on the slide and name the card it rests on.\nCue: One →; read the left headline, then the right one.\nRemember: The VP's case is the counter-position field, with its values. It is not wrong arithmetic; it is a different card.",
+"13 · The release condition\nTime: 4 min\nSay: “The trigger says when the money is released. Three checks. Does it count units, not records? Is it unmet today? Does it name period and source? A trigger on records fails the first check: merging alone meets it in September already.”\nStudents: Check their own release condition against the three columns and rewrite it if it fails one.\nCue: One →; point at the failing check in the records row.\nRemember: 80 per 1,000 is a setting, a little under half of September's 168. The card says so.",
+"14 · Check every answer\nTime: 2 min\nSay: “Two prompts that work on any answer Claude gives you. The first separates computed numbers from copied ones. The second asks for the other definition and its value, side by side.”\nStudents: Run the first one on the answer they got to prompt 3.\nCue: One →; click Copy on the first card if the room wants to run it now.\nRemember: The second prompt asks for a computation, not an opinion. That is why it replaced argue the other side.",
+"15 · Your own metric\nTime: 10 min\nSay: “Kit step 5: one metric from your own monthly report. Claude asks you one field at a time and writes the card into the kennzahlen-steckbrief Skill. You describe the metric; you do not paste company data.”\nStudents: Run step 5. The left QR opens the demo's own-metric step, the right one downloads the Skill zip for their own Claude.\nCue: Stay on this slide; R returns to the cover for the next group.\nRemember: Next month: the October report goes into reports/, steps 3 and 4 run again. The cards stay; the numbers change. End on time."
 ]
 </script>
 
@@ -224,896 +316,486 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide dark" id="cover" data-label="Cover" data-section="Workshop 02 · the question" data-chrome="none">
   <img class="cover-poster" src="./assets/plakat-cover.svg" width="864" height="1080" alt="" aria-hidden="true" decoding="async" />
   <div class="cover-brand"><img src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" decoding="async" /></div>
-  <p class="cover-date" data-rise style="--d:0ms">Workshop 02 · Self-study kit</p>
+  <p class="cover-date" data-rise style="--d:0ms">Workshop 02 · with Tim Löhr, data engineer</p>
   <h1 class="cover-title" data-rise style="--d:80ms">Reading business<br>reports with AI.</h1>
-  <p class="cover-sub" data-rise style="--d:160ms">Teach Claude what your numbers mean, then decide from them.</p>
-  <p class="cover-q" data-rise style="--d:240ms">Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?</p>
+  <p class="cover-sub" data-rise style="--d:160ms">A metric means only what its card says. Pin down numerator, denominator and period, trace one figure to its rows, then decide.</p>
+  <p class="cover-q" data-rise style="--d:240ms;top:600px">Should NORTHWIND put more Q3 marketing behind CRAFT, or rework the line first?</p>
 </section>
 
-<!-- 02 · YOUR HOST -->
-<section class="slide" data-label="Your host" data-section="Your host">
+<!-- 02 · NORTHWIND AND THE QUESTION -->
+<section class="slide" data-label="NORTHWIND" data-section="The company you work for today">
   <div class="body">
-    <div class="bio-grid">
-      <div data-rise style="--d:200ms">
-        <div class="bio-shot"><img src="./assets/tim-loehr.jpg" alt="Tim Löhr" decoding="async" /></div>
-        <div class="bio-links">
-          <span class="bio-chip">timloehr.me</span>
-          <span class="bio-chip">GitHub @Mavengence</span>
-          <span class="bio-chip">LinkedIn Tim Löhr</span>
-        </div>
-      </div>
+    <div style="display:grid;grid-template-columns:1fr 820px;gap:80px;flex:1;align-items:center">
       <div>
-        <p class="overline" data-rise style="--d:0ms">Your host</p>
-        <h2 class="h2" data-rise style="--d:100ms;font-size:64px;line-height:1;margin:22px 0 10px">Tim Löhr</h2>
-        <p data-rise style="--d:160ms;display:flex;align-items:center;gap:14px;font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--kupfer-full);margin:0 0 20px">Data Engineer at Meta, Warsaw<img src="./assets/meta-platforms-logo.svg" alt="Meta" decoding="async" style="height:19px;width:auto;display:block;opacity:.62;position:relative;top:1px" /></p>
-        <p class="body-lg" data-rise style="--d:240ms;max-width:760px">I build the data pipelines behind reports like today's. This session is how I work with Claude when a report lands on my desk.</p>
-        <div class="bio-cols" data-rise style="--d:360ms">
-          <div class="bio-col">
-            <h3>Experience</h3>
-            <div class="bio-item"><b>Data Engineer</b><div class="org">Meta</div><div class="meta">Warsaw</div></div>
-            <div class="bio-item"><b>Data Scientist</b><div class="org">Red Bull</div></div>
-            <div class="bio-item"><b>Data Scientist</b><div class="org">Apple</div></div>
-            <div class="bio-item"><b>Working student, data</b><div class="org">Amazon</div></div>
-          </div>
-          <div class="bio-col">
-            <h3>Education</h3>
-            <div class="bio-item"><b>M.Sc. Computer Science</b><div class="org">University of Erlangen-Nuremberg</div><div class="meta">with distinction · Deutschlandstipendium</div></div>
-            <div class="bio-item"><b>Exchange semester</b><div class="org">City University of Hong Kong</div><div class="meta">Machine Learning</div></div>
-            <div class="bio-item"><b>B.Sc. Computer Science</b><div class="org">TH Nuremberg</div><div class="meta">Computer Science and Business</div></div>
-          </div>
-        </div>
+        <p class="overline" data-rise style="--d:0ms">The company you work for today</p>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:24px 0 26px">NORTHWIND's September report asks for more money behind CRAFT.</h2>
+        <p class="body-md" data-rise style="--d:240ms;max-width:820px">A family-owned consumer electronics maker in Berlin, about 850 people, eight product lines. NORTHWIND and all its data are synthetic.</p>
+        <p class="q-line" data-rise style="--d:340ms;margin-top:26px;max-width:820px"><b>The decision on the table:</b> rework CRAFT first, or put more Q3 marketing behind it now.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- 03 · THE COMPANY -->
-<section class="slide" data-label="The company" data-section="The company you work for today">
-  <div class="body">
-    <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:80px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">The next 90 minutes</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 30px">You work at<br>NORTHWIND.</h2>
-        <p class="body-lg" data-rise style="--d:260ms;max-width:680px">A family-owned electronics maker in Berlin. The September numbers are in, and leadership wants an answer about one product line. You are the analyst they ask.</p>
-        <p class="label-mono" data-rise style="--d:420ms;margin-top:32px">NORTHWIND is invented, so every number is safe to share.</p>
-      </div>
-      <div data-rise style="--d:360ms">
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">HQ</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">Berlin, Germany</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Ownership</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">family-owned</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">People</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">~850</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Revenue</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">~€180M <span style="color:var(--muted);font-weight:400">(FY24)</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Product lines</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">AURA · ECHO · NEST · BEAM · PULSE · <span class="kupfer-text">CRAFT</span> · BREW · FLOW</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:190px">Channel</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">~150 resellers <span style="color:var(--muted);font-weight:400">plus direct</span></span></div>
-        <div class="cr-card">
-          <div class="cr-head"><span class="cr-name">CRAFT</span><span class="cr-kind">the coffee line in question</span></div>
-          <p class="cr-body">NORTHWIND's <b>newest and most expensive line</b>, launched to move upmarket. It sells <b>few units at high prices</b>, and the factory is still fixing its quality problems.</p>
+      <div data-rise style="--d:300ms">
+        <div class="cr-card" style="margin-top:0">
+          <div class="cr-head"><span class="cr-name">CRAFT</span><span class="cr-kind">premium espresso line, the newest</span></div>
+          <p class="cr-body">Second-largest revenue line on one of the lowest volumes, and <b>the most quality defects of any line</b>, two months running.</p>
           <div class="cr-models">
-            <div class="cr-m"><span class="n">CRAFT Grinder</span><span class="p">€199</span></div>
-            <div class="cr-m"><span class="n">CRAFT Espresso</span><span class="p">€449</span></div>
-            <div class="cr-m"><span class="n">CRAFT Espresso Pro</span><span class="p">€699</span></div>
+            <div class="cr-m"><span class="n">E1 Espresso</span><span class="p">€449</span></div>
+            <div class="cr-m"><span class="n">E2 Espresso Pro</span><span class="p">€699</span></div>
+            <div class="cr-m"><span class="n">G1 Grinder</span><span class="p">€199</span></div>
           </div>
         </div>
+        <blockquote class="q-quote" style="margin-top:26px;font-size:26px">September delivered €21.69M of list-price revenue on 139,056 units, up ~26&nbsp;% on August. A strong close to FY24 Q2.<span class="q-src">reports/2023-09-monthly-report.md · §1 Headline</span></blockquote>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 04 · WHAT WE DO TODAY -->
-<section class="slide" data-label="The plan" data-section="What we do today">
+<!-- 03 · THE ARGUMENT AND THE VOTE -->
+<section class="slide" data-label="Vote" data-section="Vote before you look at the data">
   <div class="body">
-    <p class="overline" data-rise style="--d:0ms">What we do today</p>
-    <h2 class="h2" data-rise style="--d:120ms;margin:24px 0 10px;max-width:1440px;font-size:54px">Each of the five prompts leaves a file behind.</h2>
-    <div class="rl-hero">
-      <div class="rl-rail">
-        <i class="rl-thread" data-rise style="--d:260ms"></i>
-        <div class="rl-cell" data-rise style="--d:340ms">
-          <div class="rl-over">What you start with</div>
-          <div class="rl-srcbox">
-            <div class="rl-srcrow"><span class="rl-n"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>monthly report</span><span class="rl-s">8 pages</span></div>
-            <div class="rl-srcrow"><span class="rl-n"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-database"/></svg>raw data</span><span class="rl-s">5 CSVs</span></div>
+    <p class="overline" data-rise style="--d:0ms">The VP of Sales, §5 of the report</p>
+    <blockquote class="q-quote" data-rise style="--d:120ms;margin-top:22px;max-width:1500px">“CRAFT is our premium line: €4.12M on one of our thinnest volumes, and units up 22.4&nbsp;% on August. And quality is already turning: CRAFT's defects fell from 3.21 to 2.51 per 1,000 units. No other line improved. Let's move more of Q3's marketing budget behind it now.”<span class="q-src">reports/2023-09-monthly-report.md · §5 The decision on the table</span></blockquote>
+    <p class="body-lg" data-rise style="--d:260ms;margin-top:28px;color:var(--ink)">Both numbers are computed correctly. Neither says how it was counted.</p>
+    <h2 class="h2" data-rise style="--d:360ms;font-size:44px;line-height:1.1;margin:30px 0 0">Vote first: in September, CRAFT's quality got better, stayed the same or got worse.</h2>
+    <div class="vote" data-rise style="--d:480ms">
+      <div class="vote-opt"><span class="vote-w">Better</span></div>
+      <div class="vote-opt"><span class="vote-w">Same</span></div>
+      <div class="vote-opt"><span class="vote-w">Worse</span></div>
+    </div>
+    <p class="label-mono" data-rise style="--d:560ms;margin-top:20px">Hands up for one. The split goes on the board until slide 4.</p>
+  </div>
+</section>
+
+<!-- 04 · ONE FILE, THREE ANSWERS -->
+<section class="slide" data-label="Three counts" data-section="One file, three answers">
+  <div class="body">
+    <p class="overline" data-rise style="--d:0ms">data/ncr_records.csv · the same 23 September rows</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:22px 0 10px">One file, three answers.</h2>
+    <p class="body-md" data-rise style="--d:220ms;max-width:1500px">Each count per 1,000 CRAFT units shipped, August against September. All three are computed correctly. The report does not say which one it means.</p>
+    <div class="rails" data-rise style="--d:340ms">
+      <div class="rail">
+        <div class="rail-name">A · NCR records<span class="rail-sub">rows in the file</span></div>
+        <div class="rail-track">
+          <div class="rail-row"><i class="rail-bar aug" style="width:691px"></i>Aug 3.21</div>
+          <div class="rail-row"><i class="rail-bar sep" style="width:540px"></i>Sep 2.51</div>
+        </div>
+        <div><span class="rail-val">3.21 → 2.51</span><span class="rail-verdict">better <span class="rail-pct">−21.7&nbsp;%</span></span></div>
+      </div>
+      <div class="rail">
+        <div class="rail-name">B · Affected units<span class="rail-sub">qty_affected, rework and scrap</span></div>
+        <div class="rail-track">
+          <div class="rail-row"><i class="rail-bar aug" style="width:691px"></i>Aug 310</div>
+          <div class="rail-row"><i class="rail-bar sep" style="width:689px"></i>Sep 309</div>
+        </div>
+        <div><span class="rail-val">310 → 309</span><span class="rail-verdict">same <span class="rail-pct">−0.4&nbsp;%</span></span></div>
+      </div>
+      <div class="rail worse">
+        <div class="rail-name">C · Scrapped units<span class="rail-sub">qty_affected where scrap</span></div>
+        <div class="rail-track">
+          <div class="rail-row"><i class="rail-bar aug" style="width:274px"></i>Aug 123</div>
+          <div class="rail-row"><i class="rail-bar sep" style="width:374px"></i>Sep 168</div>
+        </div>
+        <div><span class="rail-val">123 → 168</span><span class="rail-verdict">worse <span class="rail-pct">+36.1&nbsp;%</span></span></div>
+      </div>
+    </div>
+    <p class="label-mono" data-rise style="--d:460ms;margin-top:16px">Dashed: August. B and C share one scale, A has its own. A change under 2&nbsp;% counts as the same.</p>
+  </div>
+</section>
+
+<!-- 05 · THE MERGE TEST -->
+<section class="slide" data-label="Merge test" data-section="Metric card 2 · the test before you choose">
+  <div class="body">
+    <p class="overline" data-rise style="--d:0ms">The test on metric card 2</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:22px 0 10px">Merge the paperwork, and quality “improves”.</h2>
+    <p class="body-md" data-rise style="--d:220ms;max-width:1500px">Quality merges September's CRAFT records from the same machine in the same week. 23 records become 17. Not one part changed.</p>
+    <div class="mg-rows" data-rise style="--d:340ms">
+      <div class="mg-row">
+        <div class="mg-label">As filed<span>23 records · 6 machines</span></div>
+        <div class="mg-weeks"><div class="mg-week"><div class="mg-blocks"><i class="mg-b" title="M-019"></i><i class="mg-b" title="M-019"></i><i class="mg-b scrap" title="M-020"></i><i class="mg-b scrap" title="M-021"></i><i class="mg-b scrap" title="M-022"></i></div><span class="mg-date">2 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b" title="M-019"></i><i class="mg-b" title="M-021"></i><i class="mg-b" title="M-023"></i><i class="mg-b scrap" title="M-024"></i></div><span class="mg-date">9 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b scrap" title="M-020"></i><i class="mg-b" title="M-022"></i><i class="mg-b scrap" title="M-023"></i><i class="mg-b scrap" title="M-024"></i><i class="mg-b" title="M-024"></i></div><span class="mg-date">16 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b scrap" title="M-019"></i><i class="mg-b scrap" title="M-022"></i><i class="mg-b" title="M-023"></i><i class="mg-b scrap" title="M-023"></i><i class="mg-b" title="M-023"></i><i class="mg-b scrap" title="M-024"></i><i class="mg-b" title="M-024"></i><i class="mg-b scrap" title="M-024"></i></div><span class="mg-date">23 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b scrap" title="M-019"></i></div><span class="mg-date">30 Sep</span></div></div>
+      </div>
+      <div class="mg-row">
+        <div class="mg-label">Merged<span>per machine and week · 17 records</span></div>
+        <div class="mg-weeks"><div class="mg-week"><div class="mg-blocks"><i class="mg-b merged w2" title="M-019">2</i><i class="mg-b scrap" title="M-020"></i><i class="mg-b scrap" title="M-021"></i><i class="mg-b scrap" title="M-022"></i></div><span class="mg-date">2 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b" title="M-019"></i><i class="mg-b" title="M-021"></i><i class="mg-b" title="M-023"></i><i class="mg-b scrap" title="M-024"></i></div><span class="mg-date">9 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b scrap" title="M-020"></i><i class="mg-b" title="M-022"></i><i class="mg-b scrap" title="M-023"></i><i class="mg-b merged w2" title="M-024">2</i></div><span class="mg-date">16 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b scrap" title="M-019"></i><i class="mg-b scrap" title="M-022"></i><i class="mg-b merged w3" title="M-023">3</i><i class="mg-b merged w3" title="M-024">3</i></div><span class="mg-date">23 Sep</span></div><div class="mg-week"><div class="mg-blocks"><i class="mg-b scrap" title="M-019"></i></div><span class="mg-date">30 Sep</span></div></div>
+      </div>
+    </div>
+    <div class="mg-key" data-rise style="--d:400ms;margin-left:362px"><span><i class="f"></i>scrap</span><span><i></i>rework</span><span><i style="border-color:var(--mennige);border-width:3px"></i>merged records</span></div>
+    <div class="res" data-rise style="--d:480ms">
+      <div><div class="res-k">A · records per 1,000</div><div class="res-v moves">2.51 → 1.86</div><div class="res-n">below the VP's own number</div></div>
+      <div><div class="res-k">B · affected units per 1,000</div><div class="res-v">309 → 309</div><div class="res-n">does not move</div></div>
+      <div><div class="res-k">C · scrapped units per 1,000</div><div class="res-v">168 → 168</div><div class="res-n">does not move</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · FIVE WEEKS AGAINST FOUR -->
+<section class="slide" data-label="Five weeks" data-section="Metric card 3 · the period">
+  <div class="body">
+    <p class="overline" data-rise style="--d:0ms">data/demand_actuals.csv · CRAFT units shipped per week_start</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:22px 0 10px">Five weeks against four.</h2>
+    <p class="body-md" data-rise style="--d:220ms;max-width:1500px">September holds five week_start values, August four. The month total grows; the week does not.</p>
+    <div class="wk" data-rise style="--d:340ms">
+      <div class="wk-row">
+        <div class="wk-m">August<span>4 weeks · 7,488</span></div>
+        <div class="wk-bar" style="width:81.7%">
+          <div class="wk-seg" style="flex:1747 1 0"><b>1,747</b><span>5 Aug</span></div>
+          <div class="wk-seg" style="flex:2056 1 0"><b>2,056</b><span>12 Aug</span></div>
+          <div class="wk-seg" style="flex:1867 1 0"><b>1,867</b><span>19 Aug</span></div>
+          <div class="wk-seg" style="flex:1818 1 0"><b>1,818</b><span>26 Aug</span></div>
+        </div>
+      </div>
+      <div class="wk-row">
+        <div class="wk-m">September<span>5 weeks · 9,162</span></div>
+        <div class="wk-bar" style="width:100%">
+          <div class="wk-seg" style="flex:1874 1 0"><b>1,874</b><span>2 Sep</span></div>
+          <div class="wk-seg" style="flex:1624 1 0"><b>1,624</b><span>9 Sep</span></div>
+          <div class="wk-seg" style="flex:1877 1 0"><b>1,877</b><span>16 Sep</span></div>
+          <div class="wk-seg" style="flex:1752 1 0"><b>1,752</b><span>23 Sep</span></div>
+          <div class="wk-seg extra" style="flex:2035 1 0"><b>2,035</b><span>30 Sep · the fifth week</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="wk-out" data-rise style="--d:480ms">
+      <div><div class="res-k">CRAFT, month total</div><div class="res-v">+22.4&nbsp;%</div><div class="res-n">7,488 → 9,162</div></div>
+      <div><div class="res-k">CRAFT, per shipping week</div><div class="res-v moves">−2.1&nbsp;%</div><div class="res-n">1,872 → 1,832</div></div>
+      <div><div class="res-k">Company, month total</div><div class="res-v">+26.0&nbsp;%</div><div class="res-n">§1 of the report</div></div>
+      <div><div class="res-k">Company, per shipping week</div><div class="res-v moves">+0.8&nbsp;%</div><div class="res-n">§6 of the same report</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 · THE METRIC CARD -->
+<section class="slide" data-label="Metric card" data-section="The tool you take home">
+  <div class="body">
+    <div style="display:grid;grid-template-columns:760px 1fr;gap:80px;flex:1;align-items:center">
+      <div>
+        <p class="overline" data-rise style="--d:0ms">The tool you take home</p>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.06;margin:22px 0 28px">The metric card: five lines, plus decision and trigger.</h2>
+        <p class="objective" data-rise style="--d:240ms">A metric means only what its card says. Pin down numerator, denominator and period, trace one figure to its rows, then decide.</p>
+        <div class="prompt-card compact" data-rise style="--d:380ms;margin-top:28px">
+          <div class="pc-head">
+            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
+            <span class="pc-tag">Kit step 2 · after the options are computed</span>
+            <button class="pc-copy" type="button">Copy</button>
           </div>
-          <div class="rl-lab rl-dim">reports/ and data/</div>
+          <p class="pc-body">My choices: Defects = &lt;option&gt;, because &lt;one sentence&gt;. Demand = &lt;option&gt;, because &lt;one sentence&gt;. Release condition = &lt;condition&gt;. Write the three into the northwind-metrics Skill under "Metric cards", word for word, and show me only that section.</p>
         </div>
-        <div class="rl-cell" data-rise style="--d:420ms">
-          <div class="rl-over">Prompt 01</div>
-          <div class="rl-sq">1</div>
-          <div class="rl-lab">Ground</div>
-          <div class="rl-act">Claude reads your folder</div>
-          <div class="rl-art">nothing written yet</div>
-        </div>
-        <div class="rl-cell" data-rise style="--d:500ms">
-          <div class="rl-over">Prompt 02</div>
-          <div class="rl-sq">2</div>
-          <div class="rl-lab">Teach</div>
-          <div class="rl-act">you say what the numbers mean</div>
-          <div class="rl-art"><b>SKILL.md</b> your rules</div>
-        </div>
-        <div class="rl-cell" data-rise style="--d:580ms">
-          <div class="rl-over">Prompt 03</div>
-          <div class="rl-sq">3</div>
-          <div class="rl-lab">Run</div>
-          <div class="rl-act">your rules read the report</div>
-          <div class="rl-art"><b>metrics.json</b> checked vs the CSV</div>
-        </div>
-        <div class="rl-cell" data-rise style="--d:660ms">
-          <div class="rl-over">Prompt 04</div>
-          <div class="rl-sq">4</div>
-          <div class="rl-lab">See</div>
-          <div class="rl-act">the numbers fill a page</div>
-          <div class="rl-art"><b>the dashboard</b></div>
-        </div>
-        <div class="rl-cell" data-rise style="--d:740ms">
-          <div class="rl-over">Prompt 05</div>
-          <div class="rl-sq">5</div>
-          <div class="rl-lab">Decide</div>
-          <div class="rl-act">you make the call</div>
-          <div class="rl-art"><b>one decision</b> and its number</div>
-        </div>
-        <div class="rl-cell" data-rise style="--d:820ms">
-          <div class="rl-over">Next month</div>
-          <div class="rl-loopbox"><svg viewBox="0 0 100 100" style="width:34px;height:34px" aria-hidden="true"><use href="#i-repeat"/></svg></div>
-          <div class="rl-lab">Repeat</div>
-          <div class="rl-act">new report, same rules</div>
-        </div>
+      </div>
+      <div class="card" data-rise style="--d:300ms">
+        <div class="card-head"><b>Card 2 · CRAFT defects</b><span>metric-cards.md</span></div>
+        <div class="card-line ctx"><span class="k">Decision it serves</span><span>more Q3 marketing behind CRAFT, yes or no</span></div>
+        <div class="card-line"><span class="k">Numerator</span><span><span class="open">A, B or C: yours to choose</span>, with one sentence why</span></div>
+        <div class="card-line"><span class="k">Denominator</span><span>units shipped in the same weeks, per 1,000</span></div>
+        <div class="card-line"><span class="k">Period</span><span>an NCR belongs to the month of its ncr_date</span></div>
+        <div class="card-line"><span class="k">Source</span><span class="m">data/ncr_records.csv · qty_affected, scrap_or_rework</span></div>
+        <div class="card-line"><span class="k">Limit</span><span>production quantity over shipped quantity: it approximates, it is not a yield</span></div>
+        <div class="card-line ctx"><span class="k">Trigger</span><span><span class="open">your release condition</span>, in the unit of the numerator</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 05 · THE ZIP -->
-<section class="slide" data-label="The kit" data-section="The zip folder on your laptop">
+<!-- 08 · THE KIT -->
+<section class="slide" data-label="The kit" data-section="The folder on your laptop">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">What you download</p>
     <h2 class="h2" data-rise style="--d:100ms;font-size:44px;line-height:1.08;margin:18px 0 20px">Unzip the kit. That folder is your workspace.</h2>
-    <div class="kit-head" data-rise style="--d:200ms">
-      <svg class="kit-zip" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-zip"/></svg>
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:44px;flex:1;align-items:start">
       <div>
-        <a class="kit-zipname" href="./northwind-analyst-kit.zip" download>northwind-analyst-kit.zip</a>
-        <p class="kit-zipsub">Unzip it anywhere (Desktop is fine) and open the folder in Claude.</p>
+        <div class="kit-head" data-rise style="--d:200ms">
+          <svg class="kit-zip" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-zip"/></svg>
+          <div>
+            <a class="kit-zipname" href="./northwind-analyst-kit.zip" download>northwind-analyst-kit.zip</a>
+            <p class="kit-zipsub">Open the unzipped folder in the Claude desktop app, in Code. START-HERE.md has every step.</p>
+          </div>
+          <div class="kit-arrow">36 KB</div>
+        </div>
+        <div class="kit-grid" data-rise style="--d:320ms">
+          <div class="kit-tile">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
+            <span class="kit-name">START-HERE.md</span>
+            <span class="kit-desc">Setup, five steps, the expected values.</span>
+          </div>
+          <div class="kit-tile">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
+            <span class="kit-name">reports/</span>
+            <span class="kit-desc">September's report under review, and August.</span>
+          </div>
+          <div class="kit-tile">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-database"/></svg>
+            <span class="kit-name">data/</span>
+            <span class="kit-desc">127 NCRs, 2,115 weekly shipment rows, 23 models with list price.</span>
+          </div>
+          <div class="kit-tile fill">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
+            <span class="kit-name">metric-cards.md</span>
+            <span class="kit-desc">One card filled in, two open, one release condition.</span>
+            <span class="kit-flag">You fill this</span>
+          </div>
+          <div class="kit-tile">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-skill"/></svg>
+            <span class="kit-name">.claude/skills/northwind-metrics/</span>
+            <span class="kit-desc">The Skill Claude runs. Hidden folder; leave it where it is.</span>
+          </div>
+          <div class="kit-tile fill">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-dashboard"/></svg>
+            <span class="kit-name">dashboard/</span>
+            <span class="kit-desc">Empty until step 4.</span>
+            <span class="kit-flag">Claude fills this</span>
+          </div>
+          <div class="kit-tile fill">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-skill"/></svg>
+            <span class="kit-name">kennzahlen-steckbrief/</span>
+            <span class="kit-desc">The same method without NORTHWIND, for your own reports.</span>
+            <span class="kit-flag">Step 5</span>
+          </div>
+          <div class="kit-tile">
+            <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
+            <span class="kit-name">project-instructions.md</span>
+            <span class="kit-desc">The method for claude.ai Projects, every plan.</span>
+          </div>
+        </div>
       </div>
-      <div class="kit-arrow">60 KB</div>
-    </div>
-    <div class="kit-grid" data-rise style="--d:320ms">
-      <div class="kit-tile">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span class="kit-name">START-HERE.md</span>
-        <span class="kit-desc">Open first: setup and all five prompts.</span>
-      </div>
-      <div class="kit-tile">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span class="kit-name">reports/</span>
-        <span class="kit-desc">September's 8-page report as text, plus August and the template.</span>
-      </div>
-      <div class="kit-tile">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-database"/></svg>
-        <span class="kit-name">data/</span>
-        <span class="kit-desc">5 spreadsheets. 2,115 sales rows, 127 defects, 23 models and prices.</span>
-      </div>
-      <div class="kit-tile">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span class="kit-name">data/company-backstory.md</span>
-        <span class="kit-desc">Who NORTHWIND is, for Claude to read.</span>
-      </div>
-      <div class="kit-tile">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span class="kit-name">worksheet.md</span>
-        <span class="kit-desc">The questions Claude asks you in prompt 2.</span>
-      </div>
-      <div class="kit-tile fill">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-skill"/></svg>
-        <span class="kit-name">SKILL.md</span>
-        <span class="kit-desc">Your rulebook, in the hidden .claude folder. Half written; prompt 2 finishes it.</span>
-        <span class="kit-flag">You fill this</span>
-      </div>
-      <div class="kit-tile fill">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-csv"/></svg>
-        <span class="kit-name">metrics/</span>
-        <span class="kit-desc">Prompt 3 writes metrics.json here.</span>
-        <span class="kit-flag">You fill this</span>
-      </div>
-      <div class="kit-tile fill">
-        <svg class="kit-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-dashboard"/></svg>
-        <span class="kit-name">dashboard/</span>
-        <span class="kit-desc">Prompt 4 fills this blank page.</span>
-        <span class="kit-flag">You fill this</span>
-      </div>
+      <figure class="qr" data-rise style="--d:420ms;margin-top:6px">
+        <img src="./assets/kit-qr.svg" width="240" height="240" alt="QR code: loehrning.ai/en/workshops/geschaeftsberichte-mit-ki-lesen" />
+        <figcaption>Scan: the workshop page with the kit</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
-<!-- 06 · PROMPT 1 -->
-<section class="slide" data-label="Prompt 1" data-section="Prompt 1 of 5 · let Claude read the folder">
+<!-- 09 · PROMPTS 1 AND 2 -->
+<section class="slide" data-label="Prompts 1 and 2" data-section="Kit steps 1 and 2 · read, pin down">
   <div class="body">
-    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 1 of 5">
-      <span class="rl-c rl-on"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
+    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:22px" aria-label="Kit steps 1 and 2 of 5">
+      <span class="rl-c rl-on"><i class="rl-c-n">1</i><span class="rl-c-l">Read</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">2</i><span class="rl-c-l">Pin down</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
+      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Trace</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
+      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">Decide</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Your own</span></span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
+    <h2 class="h2" data-rise style="--d:100ms;font-size:44px;line-height:1.08;margin:0 0 24px">List the VP's numbers, then compute every option. Claude does not choose for you.</h2>
+    <div class="pc-stack" data-rise style="--d:220ms;max-width:none">
       <div>
-        <p class="overline" data-rise style="--d:0ms">Prompt 1 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Let Claude read your folder.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">Claude Code, a panel in the Claude desktop app, opens a folder on your computer and reads every file in it. Point it at the unzipped kit; START-HERE.md walks you through setup.</p>
-        <div class="open-app" data-rise style="--d:320ms">
-          <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-          <span>Switch to the Claude desktop app and paste the box into Claude Code.</span>
-        </div>
-        <div class="prompt-card" data-rise style="--d:400ms">
+        <div class="prompt-card">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt 1 · paste into Claude Code</span>
+            <span class="pc-tag">Prompt 1 · read the argument</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">Read data/company-backstory.md and reports/2023-09-monthly-report.md. In two sentences: who is NORTHWIND, and what decision is this month's report building toward?</p>
+          <p class="pc-body">Read data/company-backstory.md and reports/2023-09-monthly-report.md. List every number the VP uses in §5 to argue for more CRAFT marketing, with the section it comes from and whether the report says how it was counted. Do not judge them yet.</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
-          <div class="ph-row"><span class="ph-k">Reads</span><span><b>company-backstory.md</b> and <b>2023-09-monthly-report.md</b></span></div>
-          <div class="ph-row"><span class="ph-k">Writes</span><span>nothing yet</span></div>
-          <div class="ph-row"><span class="ph-k">You see</span><span>two sentences ending at the <b>CRAFT</b> question</span></div>
+        <div class="ph-rows" style="margin-top:16px">
+          <div class="ph-row"><span class="ph-k">Expected</span><span><b>€4.12M</b> revenue (§2), units <b>+22.4&nbsp;%</b> on August (§2), defects <b>3.21 → 2.51</b> per 1,000 units (§3).</span></div>
+          <div class="ph-row"><span class="ph-k">Note</span><span>The report says how none of the three was counted.</span></div>
         </div>
-      </div>
-      <div class="mock" data-rise style="--d:500ms">
-        <p class="mock__cap">Claude · northwind-analyst-kit</p>
-        <div class="mock__body">
-          <div class="msg user on"><span class="who">You</span><span class="text">Who is NORTHWIND, and what decision is the report building toward?</span></div>
-          <div class="msg claude on" style="flex-direction:column;gap:14px">
-            <div class="reveal"><span class="who">Claude</span><div class="label-mono">Read company-backstory.md ✓ · read 2023-09-monthly-report.md ✓</div></div>
-            <div class="reveal" style="font-size:20px;line-height:1.55;max-width:640px">NORTHWIND is a family-owned consumer electronics maker in Berlin, with eight product lines and about €180M a year, selling through around 150 resellers. September closed strong: €21.69M on 139,056 units.</div>
-            <div class="reveal verdict"><div class="h">The decision coming up</div><div class="t">CRAFT: high revenue on low volume, and the most defects two months in a row. Fix the line, or spend more Q3 marketing on it?</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 07 · THE REPORT -->
-<section class="slide cream" data-label="The report" data-section="The report you work from">
-  <div class="body">
-    <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:80px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">The material</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 32px">This is the report<br>you work from.</h2>
-        <p class="body-lg" data-rise style="--d:260ms;max-width:660px">NORTHWIND's September close: €21.69M across seven lines. Eight pages: summary, revenue per line, defects, marketing spend, escalations and one open decision.</p>
-        <p class="label-mono" data-rise style="--d:380ms;margin-top:26px">In the kit: reports/2023-09-monthly-report.md</p>
-      </div>
-      <div class="report-stack" data-rise style="--d:360ms" data-viz="report-cover">
-        <a class="report-link" href="./assets/report/northwind-p01.webp" target="_blank" rel="noopener" aria-label="NORTHWIND September report, cover page, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p01.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND September report, cover page" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
-        <img class="report-shot back" src="./assets/report/northwind-p02.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="" aria-hidden="true" />
-        </div>
-    </div>
-  </div>
-</section>
-
-<!-- 08 · WHERE THE NUMBERS COME FROM -->
-<section class="slide" data-label="The data" data-section="Where the report's numbers come from">
-  <div class="body">
-    <div style="display:grid;grid-template-columns:860px 1fr;gap:72px;flex:1;align-items:center">
-      <div class="grd-col">
-        <p class="grd-kicker" data-rise style="--d:0ms"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-database"/></svg>data/ · real rows from the kit</p>
-        <div class="grd-pane" data-rise style="--d:120ms">
-          <div class="grd-tab"><span class="grd-dot"></span>product_lines.csv</div>
-          <div class="grd-sheet">
-            <table class="grd-table">
-              <tr><th>line</th><th>model_code</th><th>model_name</th><th class="r">base_price_eur</th></tr>
-              <tr><td class="grd-craft">CRAFT</td><td>E1</td><td>CRAFT Espresso</td><td class="r">449</td></tr>
-              <tr><td class="grd-craft">CRAFT</td><td>E2</td><td>CRAFT Espresso Pro</td><td class="r">699</td></tr>
-              <tr><td class="grd-craft">CRAFT</td><td>G1</td><td>CRAFT Grinder</td><td class="r">199</td></tr>
-            </table>
-          </div>
-          <p class="grd-note">plus 20 more rows. CRAFT's whole price list is these <b>3 models</b></p>
-        </div>
-        <div class="grd-pane" data-rise style="--d:240ms">
-          <div class="grd-tab"><span class="grd-dot"></span>demand_actuals.csv</div>
-          <div class="grd-sheet">
-            <table class="grd-table">
-              <tr><th>week_start</th><th>sku</th><th class="r">units_actual</th></tr>
-              <tr><td>2023-09-02</td><td>NW-<b class="grd-craft">CRAFT</b>-E2-BLK-CH</td><td class="r">164</td></tr>
-              <tr><td>2023-09-16</td><td>NW-<b class="grd-craft">CRAFT</b>-E1-SLV-GB</td><td class="r">314</td></tr>
-              <tr><td>2023-09-30</td><td>NW-<b class="grd-craft">CRAFT</b>-G1-SLV-BE</td><td class="r">368</td></tr>
-            </table>
-          </div>
-          <p class="grd-note">plus 2,112 more rows. <b>95</b> of them are CRAFT in September: <b>9,162 units</b></p>
-        </div>
-        <div class="grd-pane" data-rise style="--d:360ms">
-          <div class="grd-tab"><span class="grd-dot"></span>ncr_records.csv</div>
-          <div class="grd-sheet">
-            <table class="grd-table">
-              <tr><th>ncr_id</th><th>ncr_date</th><th>line</th><th class="r">qty_affected</th></tr>
-              <tr><td>NCR-000936</td><td>2023-09-02</td><td class="grd-craft">CRAFT</td><td class="r">160</td></tr>
-              <tr><td>NCR-000035</td><td>2023-09-23</td><td class="grd-craft">CRAFT</td><td class="r">231</td></tr>
-            </table>
-          </div>
-          <p class="grd-note">plus 125 more rows. <b>23</b> are CRAFT in September, more than any other line</p>
-        </div>
-        <div class="grd-sum" data-rise style="--d:480ms">Units × list price over those 95 rows adds up to <b>€4,124,238</b>. That is the exact CRAFT figure printed in the report.</div>
       </div>
       <div>
-        <p class="overline" data-rise style="--d:120ms">The material</p>
-        <h2 class="h2" data-rise style="--d:240ms;font-size:44px;line-height:1.12;margin:22px 0 22px;max-width:700px">Every figure in the report is a sum of spreadsheet rows.</h2>
-        <p class="body-md" data-rise style="--d:360ms;max-width:680px">Five CSV files in your kit hold one row per sale, defect and campaign, so the report can be checked. In prompt 3, Claude does that check live.</p>
-        <p class="label-mono" data-rise style="--d:520ms;margin-top:30px">data/*.csv &nbsp;·&nbsp; open any of them in Excel</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 09 · WHAT TO MEASURE -->
-<section class="slide" data-label="What to measure" data-section="Choosing what to measure">
-  <div class="body">
-    <div style="display:grid;grid-template-columns:1.02fr .98fr;gap:76px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">The first analyst decision</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 22px;max-width:820px">Pick the few numbers that decide the month.</h2>
-        <p class="body-md" data-rise style="--d:240ms;max-width:800px;margin-bottom:24px">They answer two questions: was this a good month, and what do we do next? For NORTHWIND: five numbers and one flag.</p>
-        <div data-rise style="--d:360ms">
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Revenue</span><span style="font-size:20px;color:var(--muted)">how big the month was</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Units</span><span style="font-size:20px;color:var(--muted)">how much shipped, separate from price</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Defects (NCRs)</span><span style="font-size:20px;color:var(--muted)">production problems logged, per line</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Marketing spend</span><span style="font-size:20px;color:var(--muted)">campaign cost per channel</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Open escalations</span><span style="font-size:20px;color:var(--muted)">customer complaints still unresolved</span></div>
-          <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:2px solid var(--kupfer-full)"><span class="kupfer-text" style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">The flag</span><span style="font-size:20px;color:var(--muted)">the line to examine before spending more on it</span></div>
-        </div>
-        <p class="label-mono" data-rise style="--d:480ms;margin-top:18px;font-size:17px">The E# chips on the report page name each figure's source.</p>
-      </div>
-      <div class="report-stack" data-rise style="--d:420ms">
-        <a class="report-link" href="./assets/report/northwind-p03.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report page 3, the summary numbers, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p03.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report page 3, the summary numbers" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 10 · DEFINE EACH NUMBER -->
-<section class="slide" data-label="Define" data-section="What each number means here">
-  <div class="body">
-    <div style="display:grid;grid-template-columns:1.02fr .98fr;gap:76px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">The part that takes judgment</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 24px;max-width:820px">The same word means different things at different companies.</h2>
-        <div data-rise style="--d:280ms">
-          <div style="padding:20px 0;border-top:1px solid var(--line)">
-            <div class="label-mono" style="margin-bottom:8px">Revenue</div>
-            <div style="font-size:22px;line-height:1.45"><span style="color:var(--muted)">Sounds like profit.</span> <b>Here: units × list price. No margin, because the data has no cost per product.</b></div>
-          </div>
-          <div style="padding:20px 0;border-top:1px solid var(--line)">
-            <div class="label-mono" style="margin-bottom:8px">Defects (NCRs)</div>
-            <div style="font-size:22px;line-height:1.45"><span style="color:var(--muted)">Sounds like returns.</span> <b>Here: problems caught in production, before shipping.</b></div>
-          </div>
-          <div style="padding:20px 0;border-top:1px solid var(--line)">
-            <div class="label-mono" style="margin-bottom:8px">Marketing</div>
-            <div style="font-size:22px;line-height:1.45"><span style="color:var(--muted)">Sounds like spend on CRAFT.</span> <b>Here: spend per channel, which cannot be split cleanly per line.</b></div>
-          </div>
-        </div>
-        <p class="body-md" data-rise style="--d:420ms;margin-top:22px;max-width:800px">Read CRAFT's €450 average price as profit and you would spend more on it. Writing these definitions down is the skill you take home.</p>
-      </div>
-      <div class="report-stack" data-rise style="--d:420ms">
-        <a class="report-link" href="./assets/report/northwind-p04.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report page 4, revenue defined as list price contribution, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p04.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report page 4, revenue defined as list price contribution" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 11 · THE QUESTION -->
-<section class="slide" data-label="The question" data-section="The question in the numbers">
-  <div class="body">
-    <p class="overline" data-rise style="--d:0ms">The question in the numbers</p>
-    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:24px 0 18px;max-width:1500px">Side by side, CRAFT has high revenue, few units and the most defects.</h2>
-    <p class="body-md" data-rise style="--d:220ms;max-width:1360px;margin-bottom:8px">CRAFT is second in revenue at €4.12M, sixth in units, and has the most defects two months running (24 in August, 23 in September). "Not logged" means no defect report that month.</p>
-    <div class="viz-slot" data-rise style="--d:340ms;flex:1" id="viz-tension" data-viz="tension">
-      <!-- animated revenue-by-line + defect flag mounts here -->
-    </div>
-  </div>
-</section>
-
-<!-- 12 · PROMPT 2 -->
-<section class="slide" data-label="Prompt 2" data-section="Prompt 2 of 5 · write your rules down">
-  <div class="body">
-    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 2 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">Prompt 2 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Write your rules into a Skill file.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:760px">A Skill is a plain text file of instructions that Claude reads before every task. Yours is half written: Claude asks you six blanks one at a time and writes your answers into it. No code.</p>
-        <div class="open-app" data-rise style="--d:320ms">
-          <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-          <span>Back in Claude Code. Open worksheet.md first, then paste this.</span>
-        </div>
-        <div class="prompt-card" data-rise style="--d:400ms">
+        <div class="prompt-card">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt 2 · paste into Claude Code</span>
+            <span class="pc-tag">Prompt 2 · pin the definitions down</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">Open worksheet.md. Ask me the blanks one at a time, I'll answer in plain English. Then complete the northwind-metrics Skill (.claude/skills/northwind-metrics/SKILL.md) from my answers: fill in the blank metric definitions and reading rules, matching the worked examples (Revenue, Units), plus the CRAFT flag. Show me the finished Skill.</p>
+          <p class="pc-body">Open metric-cards.md. For each card marked OPEN, compute every option listed there for August and September from the files in data/. One line per option: August, September, files and columns used. Do not choose for me.</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
-          <div class="ph-row"><span class="ph-k">Reads</span><span><b>worksheet.md</b> and your answers</span></div>
-          <div class="ph-row"><span class="ph-k">Writes</span><span><b>.claude/skills/northwind-metrics/SKILL.md</b></span></div>
-          <div class="ph-row"><span class="ph-k">You see</span><span>the finished file in your words</span></div>
-        </div>
-      </div>
-      <div class="mock" data-rise style="--d:500ms">
-        <p class="mock__cap">Claude · northwind-analyst-kit</p>
-        <div class="mock__body">
-          <div class="msg user on"><span class="who">You</span><span class="text">Complete the Skill from my answers.</span></div>
-          <div class="msg claude on" style="flex-direction:column;gap:12px">
-            <div class="reveal"><span class="who">Claude</span><div class="label-mono">.claude/skills/northwind-metrics/SKILL.md written</div></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">defects</span><span>NCR count per line. Chronic means high 2 months running.</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">marketing</span><span>spend per channel, not split per line</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">escalations</span><span>open P1/P2, with the team that owns each</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">rule · compare</span><span>each line vs its own prior month, normalized</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">rule · flag</span><span>highest price band + highest defects per 1,000</span></div>
-            <div class="reveal skill-line"><span class="ok">✓</span><span class="k">rule · limits</span><span>name the limit in the same sentence as the number</span></div>
-          </div>
-        </div>
+        <table class="grd-table" style="margin-top:16px">
+          <tr><th>Card</th><th>Option</th><th class="r">Aug</th><th class="r">Sep</th></tr>
+          <tr><td>Defects</td><td>A. NCR records per 1,000</td><td class="r">3.21</td><td class="r">2.51</td></tr>
+          <tr><td>Defects</td><td>B. Affected units per 1,000</td><td class="r">310</td><td class="r">309</td></tr>
+          <tr><td>Defects</td><td>C. Scrapped units per 1,000</td><td class="r">123</td><td class="r">168</td></tr>
+          <tr><td>Demand</td><td>A. Month total, units</td><td class="r">7,488</td><td class="r">9,162</td></tr>
+          <tr><td>Demand</td><td>B. Per shipping week, units</td><td class="r">1,872</td><td class="r">1,832</td></tr>
+        </table>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 13 · PROMPT 3 -->
-<section class="slide" data-label="Prompt 3" data-section="Prompt 3 of 5 · run your rules on the report">
+<!-- 10 · PROMPT 3 · TRACE -->
+<section class="slide" data-label="Prompt 3" data-section="Kit step 3 · trace one figure">
   <div class="body">
-    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 3 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
+    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:22px" aria-label="Kit step 3 of 5">
+      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Read</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
+      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Pin down</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">3</i><span class="rl-c-l">Trace</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
+      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">Decide</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Your own</span></span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
+    <div style="display:grid;grid-template-columns:660px 1fr;gap:72px;flex:1;align-items:center">
       <div>
-        <p class="overline" data-rise style="--d:0ms">Prompt 3 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:40px;line-height:1.08;margin:10px 0 10px;max-width:800px">Run your rules on the report, and check one number against the raw data.</h2>
-        <div class="prompt-card compact" data-rise style="--d:280ms;margin-bottom:16px">
+        <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:0 0 24px">Trace one figure to its rows. The definition falls out of the trace.</h2>
+        <div class="prompt-card compact" data-rise style="--d:220ms">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">First, try it without your Skill · 60 seconds</span>
+            <span class="pc-tag">Prompt 3 · run the Skill, trace</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">Don't use any Skill for this one. With your own eyes, eyeball the report: how did NORTHWIND do this month?</p>
+          <p class="pc-body">Use my northwind-metrics Skill on reports/2023-09-monthly-report.md. Then trace CRAFT revenue €4,124,238 to its rows: file, columns, filter, number of rows, sum.</p>
         </div>
-        <div class="prompt-card" data-rise style="--d:380ms">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt 3 · now with your Skill</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Use my northwind-metrics Skill on reports/2023-09-monthly-report.md: extract this month's numbers into metrics/metrics.json following my reading rules, and verify one number against the source CSV in data/. Show me total revenue and units, revenue and defects by line, and the one line to interrogate.</p>
-        </div>
-        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
-          <div class="ph-row"><span class="ph-k">Reads</span><span>the report, with <b>your rules</b> loaded first</span></div>
-          <div class="ph-row"><span class="ph-k">Writes</span><span><b>metrics/metrics.json</b>, the month as clean numbers</span></div>
-          <div class="ph-row"><span class="ph-k">Checks</span><span>one figure against <b>data/demand_actuals.csv</b></span></div>
+        <div class="ph-rows" data-rise style="--d:320ms;margin-top:16px">
+          <div class="ph-row"><span class="ph-k">File</span><span><b>data/demand_actuals.csv</b> joined to <b>data/product_lines.csv</b></span></div>
+          <div class="ph-row"><span class="ph-k">Filter</span><span>sku starts with NW-CRAFT-, week_start 2023-09-02 to 2023-09-30</span></div>
         </div>
       </div>
-      <div class="mock" data-rise style="--d:500ms">
-        <p class="mock__cap">Claude · northwind-analyst-kit</p>
-        <div class="mock__body">
-          <div class="msg user on"><span class="who">You</span><span class="text">Run my Skill on the September report.</span></div>
-          <div class="msg claude on" style="flex-direction:column;gap:14px">
-            <div class="reveal"><span class="who">Claude</span><div class="label-mono">metrics/metrics.json written · your reading rules applied</div></div>
-            <div class="reveal">
-              <table class="mtable">
-                <tr><th>Line</th><th class="r">Revenue</th><th class="r">Units</th><th class="r">NCRs</th></tr>
-                <tr><td>AURA</td><td class="r">€7,962,953</td><td class="r">42,197</td><td class="r">18</td></tr>
-                <tr class="flag"><td>CRAFT</td><td class="r">€4,124,238</td><td class="r">9,162</td><td class="r">23</td></tr>
-                <tr><td>ECHO</td><td class="r">€3,162,514</td><td class="r">19,256</td><td class="r">&ndash;</td></tr>
-              </table>
-            </div>
-            <div class="reveal label-mono">Checked 9,162 CRAFT units against data/demand_actuals.csv ✓</div>
-            <div class="reveal verdict"><div class="h">Your flag fired</div><div class="t">Look at CRAFT: €4.12M on 9,162 units, and more defects than any other line.</div></div>
-          </div>
+      <div data-rise style="--d:300ms">
+        <div class="tr-rows">
+          <div class="tr-row"><span class="m">E1 €449</span><span class="n">30 rows</span><span>3,258 units × €449</span><span class="s">€1,462,842</span></div>
+          <div class="tr-row"><span class="m">E2 €699</span><span class="n">20 rows</span><span>2,973 units × €699</span><span class="s">€2,078,127</span></div>
+          <div class="tr-row"><span class="m">G1 €199</span><span class="n">45 rows</span><span>2,931 units × €199</span><span class="s">€583,269</span></div>
         </div>
+        <div class="tr-sum"><span>Σ 95 rows</span><span>9,162 units</span><span class="s">€4,124,238</span></div>
+        <p class="tr-meant"><b>What “revenue” means here:</b> units × list price. No discounts, no cost. A high price is not a high margin.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 14 · PROMPT 4 -->
-<section class="slide" data-label="Prompt 4" data-section="Prompt 4 of 5 · build the dashboard">
+<!-- 11 · PROMPT 4 · DASHBOARD -->
+<section class="slide" data-label="Prompt 4" data-section="Kit step 4 · dashboard and decision">
   <div class="body">
-    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 4 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
+    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:22px" aria-label="Kit step 4 of 5">
+      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Read</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
+      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Pin down</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
+      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Trace</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
+      <span class="rl-c rl-on"><i class="rl-c-n">4</i><span class="rl-c-l">Decide</span></span>
       <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
+      <span class="rl-c"><i class="rl-c-n">5</i><span class="rl-c-l">Your own</span></span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
+    <div style="display:grid;grid-template-columns:660px 1fr;gap:72px;flex:1;align-items:center">
       <div>
-        <p class="overline" data-rise style="--d:0ms">Prompt 4 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:44px;line-height:1.1;margin:22px 0 20px;max-width:760px">Build the dashboard from the numbers your Skill pulled.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">The dashboard shows what the report <b>cannot say</b>: growth per shipping week, defects priced in euros, the machines behind the flag and the countries the volume sits in. The recommendation sits at the top.</p>
-        <div class="open-app" data-rise style="--d:320ms">
-          <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-          <span>Back in Claude Code.</span>
-        </div>
-        <div class="prompt-card" data-rise style="--d:400ms">
+        <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:0 0 24px">Every tile says how it was counted.</h2>
+        <div class="prompt-card compact" data-rise style="--d:220ms">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt 4 · paste into Claude Code</span>
+            <span class="pc-tag">Prompt 4 · dashboard and decision</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">Build the dashboard from this month's metrics and open it. Include the insights and the decision.</p>
+          <p class="pc-body">Write the dashboard data and tell me to open it. Then make the call on CRAFT in the Skill's six decision fields. In "counter", give the values the definitions I did not choose would produce.</p>
         </div>
-        <div class="ph-rows" data-rise style="--d:520ms;margin-top:12px;gap:2px">
-          <div class="ph-row"><span class="ph-k">Reads</span><span><b>metrics/metrics.json</b>, the file prompt 3 wrote</span></div>
-          <div class="ph-row"><span class="ph-k">Writes</span><span><b>dashboard/data.js</b>, the template's data file</span></div>
-          <div class="ph-row"><span class="ph-k">Opens</span><span><b>dashboard/index.html</b>, filled in, CRAFT flagged</span></div>
+        <div class="ph-rows" data-rise style="--d:320ms;margin-top:16px">
+          <div class="ph-row"><span class="ph-k">Writes</span><span><b>dashboard/data.js</b>, then you open <b>dashboard/index.html</b></span></div>
+          <div class="ph-row"><span class="ph-k">Fields</span><span>decision, because, number, risk, counter, trigger</span></div>
         </div>
       </div>
-      <div class="mock" data-rise style="--d:500ms">
-        <p class="mock__cap">dashboard/index.html · filled by Claude</p>
-        <div class="mock__body">
-          <div class="msg user on"><span class="who">You</span><span class="text">Build the dashboard from this month's metrics and open it.</span></div>
-          <div class="msg claude on" style="flex-direction:column;gap:14px">
-            <div class="reveal"><span class="who">Claude</span><div class="label-mono">dashboard/index.html opened · revenue by line, September</div></div>
-            <div class="reveal bars">
-              <div class="bar-row"><span class="n">AURA</span><span class="bar"><i data-w="100%" style="--w:100%"></i></span><span class="v">€7.96M</span></div>
-              <div class="bar-row hot"><span class="n">CRAFT</span><span class="bar"><i data-w="52%" style="--w:52%"></i></span><span class="v">€4.12M</span></div>
-              <div class="bar-row"><span class="n">ECHO</span><span class="bar"><i data-w="40%" style="--w:40%"></i></span><span class="v">€3.16M</span></div>
-              <div class="bar-row"><span class="n">NEST</span><span class="bar"><i data-w="28%" style="--w:28%"></i></span><span class="v">€2.21M</span></div>
-              <div class="bar-row"><span class="n">BREW</span><span class="bar"><i data-w="26%" style="--w:26%"></i></span><span class="v">€2.07M</span></div>
-            </div>
-            <div class="reveal label-mono"><span style="color:var(--kupfer-full)">■</span> Flagged line. All seven lines are on the page.</div>
-          </div>
+      <div class="dash" data-rise style="--d:300ms">
+        <div class="dash-cap">dashboard/index.html · counted by scrapped units, per shipping week</div>
+        <div class="dash-tiles">
+          <div class="dash-tile"><span class="dash-k">Revenue CRAFT</span><span class="dash-v">€4,124,238</span><span class="dash-c"><b>Counted as</b>units × list price, no contribution margin</span></div>
+          <div class="dash-tile"><span class="dash-k">Demand CRAFT</span><span class="dash-v">−2.1&nbsp;%</span><span class="dash-c"><b>Counted as</b>units per shipping week, 1,872 → 1,832</span></div>
+          <div class="dash-tile"><span class="dash-k">Defects CRAFT</span><span class="dash-v" style="color:var(--mennige)">168</span><span class="dash-c"><b>Counted as</b>scrapped units per 1,000 units shipped, 123 in August</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 15 · PROMPT 5 -->
-<section class="slide" data-label="Prompt 5" data-section="Prompt 5 of 5 · make the decision">
+<!-- 12 · TWO DECISIONS -->
+<section class="slide" data-label="Two decisions" data-section="The decision depends on the cards">
   <div class="body">
-    <div class="rl-strip" data-rise style="--d:0ms;margin-bottom:10px" aria-label="Prompt 5 of 5">
-      <span class="rl-c"><i class="rl-c-n">1</i><span class="rl-c-l">Ground</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">2</i><span class="rl-c-l">Teach</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">3</i><span class="rl-c-l">Run</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c"><i class="rl-c-n">4</i><span class="rl-c-l">See</span></span>
-      <i class="rl-c-x"></i>
-      <span class="rl-c rl-on"><i class="rl-c-n">5</i><span class="rl-c-l">Decide</span></span>
-    </div>
-    <div style="display:grid;grid-template-columns:.98fr 1.02fr;gap:72px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">Prompt 5 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:38px;line-height:1.1;margin:12px 0 12px;max-width:760px">Make the decision and name the number behind it, the cost of being wrong and what you cannot see.</h2>
-        <p class="body-md" data-rise style="--d:220ms;max-width:760px;margin-bottom:14px">The VP of Sales wants more Q3 marketing money behind CRAFT. <b>Decide first, then send the prompt.</b></p>
-        <div class="prompt-card" data-rise style="--d:340ms">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt 5 · paste into Claude Code</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">The VP of Sales wants more Q3 marketing budget behind CRAFT. Using my Skill's reading rules and this month's numbers, make the call: rework CRAFT first, or put more Q3 marketing behind it? Give the number that backs it, the cost of being wrong, and what this data can't tell us. Then argue the opposite as hard as you can.</p>
-        </div>
-        <div style="display:flex;align-items:flex-end;gap:36px;margin-top:16px">
-          <div class="viz-slot dark" data-rise style="--d:480ms;min-height:0;width:auto;flex:0 0 auto" id="viz-ncr" data-viz="ncr">
-            <!-- two-months-running NCR motif mounts here -->
-          </div>
-          <p class="label-mono" data-rise style="--d:560ms;margin:0 0 4px;max-width:470px">Defects in August, then September: CRAFT 24 and 23, NEST (the next worst line) 12 and 19. P1 to P4 in the report's escalation list is complaint severity; P1 is the worst.</p>
-        </div>
+    <p class="overline" data-rise style="--d:0ms">The same data, counted two ways</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.06;margin:22px 0 0">The decision depends on the cards.</h2>
+    <div class="dec" data-rise style="--d:260ms">
+      <div class="dec-col">
+        <div class="dec-by">Counted by <b>scrapped units</b> and <b>per shipping week</b></div>
+        <div class="dec-h">Rework CRAFT first. Hold the extra Q3 marketing for one month.</div>
+        <div class="dec-f"><span class="k">Because</span><span>Scrapped units: 168 per 1,000 units shipped, 123 in August. Demand per shipping week fell by 2.1&nbsp;%.</span></div>
+        <div class="dec-f"><span class="k">Number</span><span>1,539 scrapped units, €691,011 at the mean list price of €449, 16.8&nbsp;% of CRAFT revenue. Valued at list price, not at cost.</span></div>
+        <div class="dec-f"><span class="k">Risk</span><span>Hold wrongly: a month of possible extra sales lost. Push wrongly: scrap grows with every extra unit sold, over six machines.</span></div>
       </div>
-      <div class="report-stack" data-rise style="--d:400ms">
-        <a class="report-link" href="./assets/report/northwind-p08.webp" target="_blank" rel="noopener" aria-label="NORTHWIND report, the open question: fund CRAFT or fix it first, full size in a new tab"><img class="report-shot lead" src="./assets/report/northwind-p08.webp" width="1076" height="1522" decoding="async" loading="lazy" alt="NORTHWIND report, the open question: fund CRAFT or fix it first" /><span class="report-open" aria-hidden="true">Full size &#8599;</span></a>
+      <div class="dec-col alt">
+        <div class="dec-by">Counted by <b>records</b> and <b>month total</b>, as the report</div>
+        <div class="dec-h">More Q3 marketing for CRAFT.</div>
+        <div class="dec-f"><span class="k">Because</span><span>Defects 3.21 to 2.51 per 1,000, units +22.4&nbsp;%. The VP's request.</span></div>
+        <div class="dec-f"><span class="k">Where it goes</span><span>Into the <b style="color:var(--ink)">counter</b> field of the decision above, with its values. It is not wrong arithmetic. It is a different card.</span></div>
       </div>
     </div>
+    <p class="dec-close" data-rise style="--d:400ms">Same data, two decisions. The metric card says which one holds, and why.</p>
   </div>
 </section>
 
-<!-- 16 · THE ANSWER — what the five prompts actually bought you -->
-<section class="slide" data-label="The answer" data-section="The answer you take to the VP">
+<!-- 13 · THE RELEASE CONDITION -->
+<section class="slide" data-label="Release condition" data-section="The trigger, checked three ways">
   <div class="body">
-    <p class="overline" data-rise style="--d:0ms">The answer you take to the VP</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:34px;line-height:1.1;margin:12px 0 14px;max-width:1560px">The report said <span class="tnum">+26%</span> and “strong close”. Your Skill said <span class="tnum">+0.8%</span> and “don’t fund it yet.”</h2>
-
-    <div data-rise style="--d:220ms;display:grid;grid-template-columns:repeat(4,1fr);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);margin-bottom:18px">
-      <div style="padding:12px 20px 12px 0">
-        <div class="label-mono" style="letter-spacing:.01em">Per shipping week</div>
-        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">+0.8%</div>
-        <div class="body-sm" style="margin-top:5px">against +26% in the report; three lines shrank</div>
-      </div>
-      <div style="padding:12px 20px;border-left:1px solid var(--line)">
-        <div class="label-mono" style="letter-spacing:.01em">Scrapped before shipping</div>
-        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">€691k</div>
-        <div class="body-sm" style="margin-top:5px">CRAFT · 16.8% of its own revenue</div>
-      </div>
-      <div style="padding:12px 20px;border-left:1px solid var(--line)">
-        <div class="label-mono" style="letter-spacing:.01em">Defect intensity</div>
-        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">2.51</div>
-        <div class="body-sm" style="margin-top:5px">per 1,000 · 2.2× the next-worst</div>
-      </div>
-      <div style="padding:12px 0 12px 20px;border-left:1px solid var(--line)">
-        <div class="label-mono" style="letter-spacing:.01em">Machines involved</div>
-        <div class="tnum" style="font-family:var(--mono);font-size:30px;line-height:1;margin-top:7px">6</div>
-        <div class="body-sm" style="margin-top:5px">spread across the whole line</div>
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1.25fr 1fr;gap:48px;flex:0 0 auto">
-      <div>
-        <div class="verdict" data-rise style="--d:300ms">
-          <div class="h">The call you hand the VP</div>
-          <div class="t">Rework CRAFT first. Hold the extra Q3 marketing for one month.</div>
-          <div class="s">One euro of product in six is destroyed before it ships, and most of the +26% growth comes from September having a fifth shipping week.<br><b style="color:var(--ink)">Trigger, agreed now:</b> October below 2.51 per 1,000 and scrap under 8% of revenue releases the money.</div>
-        </div>
-        <div class="verdict" data-rise style="--d:380ms;margin-top:12px;border-color:var(--line)">
-          <div class="h" style="color:var(--ink)">Where the VP is right</div>
-          <div class="t" style="font-size:20px">CRAFT’s defect intensity improved <b>22%</b> in a month, 3.21 → 2.51, the only line that got better. That is why the hold lasts one month.</div>
-        </div>
-      </div>
-      <div data-rise style="--d:340ms">
-        <p class="label-mono" style="margin-bottom:10px">And what it still cannot tell you</p>
-        <div style="border-top:1px solid var(--line)">
-          <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
-            <span class="label-mono">01</span>
-            <div class="body-sm"><b style="color:var(--ink)">No per-SKU cost.</b> €691k is scrapped value; the lost margin is unknown, so “CRAFT is profitable” stays unproven.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
-            <span class="label-mono">02</span>
-            <div class="body-sm"><b style="color:var(--ink)">No returns per line.</b> NCRs are caught in the plant. What reached customers is not in the data.</div>
-          </div>
-          <div style="display:grid;grid-template-columns:26px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)">
-            <span class="label-mono">03</span>
-            <div class="body-sm"><b style="color:var(--ink)">Marketing is booked per campaign.</b> If you fund it, this data cannot show whether it moved CRAFT.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div data-rise style="--d:560ms;margin-top:auto;padding-top:14px;border-top:1.5px solid var(--ink)">
-      <p class="label-mono" style="margin-bottom:12px">Each result comes from one of the three rules you wrote in prompt 2</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:44px;font-size:20px">
-        <div class="body-sm" style="font-size:20px"><b style="color:var(--ink)">Rule: compare</b><br>Normalise before comparing: +26% became <b style="color:var(--ink)">+0.8% per shipping week</b>.</div>
-        <div class="body-sm" style="font-size:20px"><b style="color:var(--ink)">Rule: flag</b><br>Count defects per 1,000 units: a 21% lead on raw count became a <b style="color:var(--ink)">2.2× lead on intensity</b>.</div>
-        <div class="body-sm" style="font-size:20px"><b style="color:var(--ink)">Rule: limits</b><br>Name the limit next to the number, so the call says what would <b style="color:var(--ink)">reverse it</b>.</div>
-      </div>
-    </div>
+    <p class="overline" data-rise style="--d:0ms">metric-cards.md · release condition</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.06;margin:22px 0 10px">A trigger must not be met by paperwork alone.</h2>
+    <p class="body-md" data-rise style="--d:220ms;max-width:1500px">The condition under which the extra marketing is released next month. Three checks before you write it into the card.</p>
+    <table class="chk" data-rise style="--d:340ms">
+      <tr><th>Trigger, by numerator</th><th>counts units, not records</th><th>not met today</th><th>period and source named</th></tr>
+      <tr><td class="t">Release when scrapped CRAFT units in October are below 80 per 1,000 units shipped.</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span>168 today</td><td><span class="ok">✓</span></td></tr>
+      <tr><td class="t">Release when affected CRAFT units in October are below 250 per 1,000 units shipped.</td><td><span class="ok">✓</span></td><td><span class="ok">✓</span>309 today</td><td><span class="ok">✓</span></td></tr>
+      <tr><td class="t">Release when CRAFT is below 2.51 records per 1,000 units shipped in October.</td><td><span class="no">✗</span><span class="why">Met in September already by merging: 17 records give 1.86.</span></td><td><span class="ok">✓</span>2.51 today</td><td><span class="ok">✓</span></td></tr>
+    </table>
+    <p class="label-mono" data-rise style="--d:460ms;margin-top:20px">80 is a little under half of September's 168. The threshold is a setting and the metric card says so.</p>
   </div>
 </section>
 
-<!-- 17 · THREE HARDER THINGS -->
-<section class="slide" data-label="Go further" data-section="Three harder things to try">
-  <div class="body">
-    <p class="overline" data-rise style="--d:0ms">Optional · once your Skill works</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:18px 0 16px;max-width:1520px">Three harder things to try.</h2>
-    <p class="body-md" data-rise style="--d:180ms;max-width:1520px;margin-bottom:22px">Same folder, same Skill, no code from you.</p>
-    <div class="pc-stack three grow" data-rise style="--d:280ms">
-      <div>
-        <p class="pc-lead"><b>1. Audit the report.</b> Recompute the whole thing from the raw rows.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Paste into Claude Code</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Take nothing in reports/2023-09-monthly-report.md on trust. Recompute every figure in it from the CSVs in data/, then show me a table with four columns: the report's number, your number, the file and rows you used, and whether they match. Flag anything that does not.</p>
-        </div>
-        <p class="pc-why">Every line gets its file and rows.</p>
-      </div>
-      <div>
-        <p class="pc-lead"><b>2. Break the headline.</b> The one you would have repeated in the meeting.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Paste into Claude Code</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">The report leads with +26% revenue month over month. Before I repeat that number to a board, check whether August and September are even comparable. Recompute the comparison the fairest way you can from data/demand_actuals.csv, show your working, and tell me how much of the +26% survives.</p>
-        </div>
-        <p class="pc-why">The data holds a trap that is hard to spot by eye.</p>
-      </div>
-      <div>
-        <p class="pc-lead"><b>3. Ask Claude to build a tool.</b> One sentence gets you a working page.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Paste into Claude Code</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Build me dashboard/whatif.html: a one-page tool with two sliders, CRAFT price change and CRAFT defect rate, that recomputes CRAFT revenue and re-runs my Skill's flag rule live as I drag them. Read the starting numbers from metrics/metrics.json. Plain HTML, CSS and JavaScript in one file, no libraries, and open it when it is done.</p>
-        </div>
-        <p class="pc-why">You get a program you can rerun next month.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 17 · TWO PROMPTS TO CHECK ANY ANSWER -->
-<section class="slide" data-label="Check the answer" data-section="Two prompts that work anywhere">
+<!-- 14 · CHECK EVERY ANSWER -->
+<section class="slide" data-label="Check the answer" data-section="Two prompts that work on any answer">
   <div class="body center">
-    <p class="overline" data-rise style="--d:0ms">For any report</p>
-    <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.08;margin:24px 0 28px;max-width:1520px">Two prompts to check any answer Claude gives you.</h2>
-    <p class="body-lg" data-rise style="--d:240ms;max-width:1060px;margin-bottom:40px">Use them whenever an answer sounds right but is unchecked.</p>
+    <p class="overline" data-rise style="--d:0ms">For any report, any answer</p>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.08;margin:24px 0 28px;max-width:1520px">Two prompts to check every answer Claude gives you.</h2>
+    <p class="body-lg" data-rise style="--d:240ms;max-width:1200px;margin-bottom:40px">The first separates computed numbers from copied ones. The second asks for a computation, not an opinion.</p>
     <div class="pc-stack" data-rise style="--d:380ms">
       <div>
-        <p class="pc-lead"><b>1. Where did that come from?</b> Run this one now, on the answer you just got.</p>
+        <p class="pc-lead"><b>1. Where each number comes from.</b> Run it now, on your answer to prompt 3.</p>
         <div class="prompt-card">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
             <span class="pc-tag">Check the sources</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">For every number in your last answer, show me exactly which file and column it came from. Which did you infer rather than read?</p>
+          <p class="pc-body">For every number in your answer, name the file and column. Which did you compute from the data, and which did you take from the report?</p>
         </div>
       </div>
       <div>
-        <p class="pc-lead"><b>2. Argue the other side.</b> Use it on any report.</p>
+        <p class="pc-lead"><b>2. The other definition.</b> Use it on any metric.</p>
         <div class="prompt-card">
           <div class="pc-head">
             <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Argue against yourself</span>
+            <span class="pc-tag">Compute the alternative</span>
             <button class="pc-copy" type="button">Copy</button>
           </div>
-          <p class="pc-body">Argue the opposite recommendation as convincingly as you can. What would have to be true for it to win?</p>
+          <p class="pc-body">Which other definition of this metric is plausible? Compute it and put both values side by side.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 18 · CASE 2 · META -->
-<section class="slide" data-label="Case 2 · Meta" data-section="Case 2 · a real company">
-  <div class="body">
-    <div style="display:grid;grid-template-columns:.88fr 1.12fr;gap:56px;flex:1;align-items:center">
-      <div>
-        <p class="overline" data-rise style="--d:0ms">Case 2 · a real company</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:780px">Same recipe, on Meta's real quarter.</h2>
-        <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:780px">Meta's Q2 2026 earnings release is public, so Claude fetches it live. As with CRAFT, a strong headline has a question underneath. The full task is in <b>meta-quarterly/TASK.md</b>.</p>
-        <div class="open-app" data-rise style="--d:320ms">
-          <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-          <span>Back in Claude Code.</span>
-        </div>
-        <div class="prompt-card" data-rise style="--d:400ms">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt M1 · fetch the release</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Fetch Meta's Q2 2026 earnings press release from https://www.prnewswire.com/news-releases/meta-reports-second-quarter-2026-results-302838214.html and tell me, in three sentences: how did the quarter look on the surface, and what tension sits underneath?</p>
-        </div>
-        <p class="label-mono" data-rise style="--d:520ms;margin-top:18px;font-size:17px">Source: Meta's Q2 2026 earnings release, 2026-07-29 · <a href="https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm" target="_blank" rel="noopener" style="color:inherit">also filed with the SEC as 8-K exhibit 99.1</a></p>
-      </div>
-      <div data-rise style="--d:360ms">
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Revenue</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$60.80B <span style="color:var(--muted);font-weight:400">▲ +28% vs last year</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Operating income</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$18.78B <span style="color:var(--kupfer-full);font-weight:600">▼ -8%</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Operating margin</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">31% <span style="color:var(--muted);font-weight:400">was 43% a year ago</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Capex, one quarter</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$31.08B</span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Free cash flow</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">$784M <span style="color:var(--muted);font-weight:400">out of $31.9B operating cash</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:1px solid var(--line)"><span class="label-mono" style="min-width:250px">Daily active people</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em">3.60B <span style="color:var(--muted);font-weight:400">+3% vs last year</span></span></div>
-        <div style="display:flex;gap:18px;align-items:baseline;padding:13px 0;border-top:2px solid var(--kupfer-full)"><span class="label-mono" style="min-width:250px;color:var(--kupfer-full)">The question</span><span style="font-size:22px;font-weight:600;letter-spacing:-.01em;color:var(--kupfer-full)">$31B a quarter: an investment, or a leak?</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 19 · CASE 2 · THE OTHER TWO PROMPTS -->
-<section class="slide" data-label="Case 2 · prompts" data-section="Case 2 · define, extract, build">
-  <div class="body">
-    <p class="overline" data-rise style="--d:0ms">Case 2</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:20px 0 18px;max-width:1500px">Define and extract the quarter, then let Claude design the page.</h2>
-    <p class="body-md" data-rise style="--d:180ms;max-width:1500px;margin-bottom:26px">NORTHWIND had a dashboard template; here Claude designs the page. A template gives the same page every month, a generated page differs each time. Use templates for a monthly routine, generation for a one-off.</p>
-    <div class="pc-stack grow" data-rise style="--d:300ms">
-      <div>
-        <p class="pc-lead"><b>M2. Define and extract.</b> Prompts 2 and 3 in one step.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt M2 · paste into Claude Code</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Define with me, in plain English, six metrics for reading a Meta quarter: total revenue, revenue by segment (Family of Apps / Reality Labs), operating income and margin, capital expenditures, free cash flow, and daily active people. For each, note one thing it can NOT tell us (watch the one-off charges, and remember this is a quarter, not a month). Then extract this quarter's values with year-over-year change into meta-quarterly/meta-metrics.json, and verify one figure against the release's own financial tables (for example: the two segments must sum to total revenue).</p>
-        </div>
-      </div>
-      <div>
-        <p class="pc-lead"><b>M3. Build the page.</b> This time Claude designs it without a template.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt M3 · paste into Claude Code</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Design and build a one-page dashboard for these figures at meta-quarterly/meta-dashboard.html, flat and print-like, in the same visual spirit as the NORTHWIND one (cream paper, one accent color, ledger tables, no external libraries), and open it. Lead with the one question this quarter puts on the table, and include a "what this data can't tell you" note: no capex split by segment, one-off charges distort the year-over-year, and a quarter has no monthly resolution.</p>
-        </div>
-      </div>
-    </div>
-    <p class="label-mono" data-rise style="--d:460ms;margin-top:24px;font-size:17px">If the fetch comes back blocked, TASK.md has the SEC fallback URL and the User-Agent rule the SEC requires</p>
-  </div>
-</section>
-
-<!-- 20 · THE REST OF THE PROMPTS -->
-<section class="slide" data-label="More prompts" data-section="The rest of the prompts">
-  <div class="body">
-    <p class="overline" data-rise style="--d:0ms">Take-home · all of these are in PROMPTS.md and meta-quarterly/TASK.md</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:20px 0 24px;max-width:1500px">Four more prompts.</h2>
-    <div class="pc-stack grow" data-rise style="--d:240ms;gap:22px 26px">
-      <div>
-        <p class="pc-lead"><b>Next month.</b> Drop the new report into reports/ first.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Repeat it next month</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Here's next month's report in reports/. Re-run my northwind-metrics Skill and rebuild the dashboard, then tell me what changed vs. this month and whether the CRAFT decision still holds.</p>
-        </div>
-      </div>
-      <div>
-        <p class="pc-lead"><b>Live data.</b> Needs your own Google Drive.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Connectors demo</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">Connect to my Google Drive, find the latest NORTHWIND monthly report, bring it in, and run my northwind-metrics Skill on it.</p>
-        </div>
-      </div>
-      <div>
-        <p class="pc-lead"><b>Score the forecast.</b> Turn a company's own guidance into a test you can re-run.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt M4 · advanced</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">From the CFO outlook in this release, extract every forward-looking commitment as a checkable claim: the Q3 revenue range, the full-year expense range, the full-year capex range, the tax-rate range, and the statement about full-year operating income versus last year. For each, write (a) the number or range, (b) what result next quarter would confirm it, and (c) what result would falsify it. Save it as meta-quarterly/forward-test.md, a scorecard I can re-run against the next release.</p>
-        </div>
-      </div>
-      <div>
-        <p class="pc-lead"><b>Strip the one-offs.</b> Legal charges and severance out.</p>
-        <div class="prompt-card compact">
-          <div class="pc-head">
-            <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
-            <span class="pc-tag">Prompt M5 · advanced</span>
-            <button class="pc-copy" type="button">Copy</button>
-          </div>
-          <p class="pc-body">This quarter's costs include $2.40B of legal charges and $1.18B of severance. Recompute operating income and margin excluding both, and compare that adjusted figure year-over-year. Then tell me which reading is more honest for judging the business, the reported -8% or the adjusted number, and why. Argue the case you did NOT pick as convincingly as you can.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 21 · IT REPEATS -->
-<section class="slide kupfer" data-label="Next month" data-section="Next month">
+<!-- 15 · YOUR OWN METRIC -->
+<section class="slide kupfer" data-label="Your own metric" data-section="Kit step 5 · one metric of your own">
   <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" decoding="async" loading="lazy" /></div>
-  <div class="body center">
-    <p class="overline" data-rise style="--d:0ms">What you keep</p>
-    <h2 class="h1" data-rise style="--d:120ms;font-size:88px;line-height:1.04;margin:32px 0 36px;max-width:1300px">Next month you run the same Skill on a new report</h2>
-    <p class="body-lg" data-rise style="--d:260ms;max-width:1080px">Put next month's file in reports/ and run the Skill: Claude rebuilds the dashboard and says what changed and whether the CRAFT decision holds. The kit keeps both cases, your Skill, the dashboards and every prompt. Use meta-quarterly/TASK.md on any listed company and your-company-skill/ on your own numbers.</p>
-    <div class="chips" data-rise style="--d:440ms;margin-top:52px">
-      <a class="chip" style="color:#f2f1ee;text-decoration:none;pointer-events:auto" href="./northwind-analyst-kit.zip" download><span class="dot"></span>Download the kit (.zip)</a>
-      <a class="chip" style="color:#f2f1ee;text-decoration:none;pointer-events:auto" href="/en/workshops/geschaeftsberichte-mit-ki-lesen"><span class="dot"></span>loehrning.ai/workshops/geschaeftsberichte-mit-ki-lesen</a>
+  <div class="body">
+    <p class="overline" data-rise style="--d:0ms">Kit step 5 · what you keep</p>
+    <h2 class="h1" data-rise style="--d:120ms;font-size:76px;line-height:1.02;margin:24px 0 0;max-width:1400px">One metric of your own, on one card.</h2>
+    <div class="close-grid" data-rise style="--d:260ms">
+      <div class="prompt-card compact">
+        <div class="pc-head">
+          <svg class="pc-mark" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
+          <span class="pc-tag">Prompt 5 · your own metric</span>
+          <button class="pc-copy" type="button">Copy</button>
+        </div>
+        <p class="pc-body">Open kennzahlen-steckbrief/SKILL.md. Ask me about one metric from my own monthly report, one field at a time: decision, numerator, denominator, period, source, limit, trigger. Write the card into kennzahlen-steckbrief/references/steckbriefe.md. I describe the metric. I do not paste company data.</p>
+      </div>
+      <figure class="qr">
+        <img src="./assets/takehome-qr.svg" width="240" height="240" alt="QR code: loehrning.ai/en/demos/geschaeftsberichte-mit-ki-lesen?beat=deine-kennzahl" />
+        <figcaption>The demo: your metric, in the browser</figcaption>
+      </figure>
+      <figure class="qr">
+        <img src="./assets/skill-qr.svg" width="240" height="240" alt="QR code: loehrning.ai/skills/kennzahlen-steckbrief.zip" />
+        <figcaption>The Skill for your own Claude</figcaption>
+      </figure>
     </div>
+    <p class="close-next" data-rise style="--d:400ms"><b>Next month:</b> put the October report into reports/ and repeat steps 3 and 4. The cards stay; the numbers change.</p>
   </div>
 </section>
 
@@ -1269,18 +951,27 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
   }
 
   // ── wire navigation ───────────────────────────────────────────────────
+  // A slide's address name: its id, else its label in lower case with dashes ("Prompt 3" -> "prompt-3").
+  function slideId(s){
+    return (s && s.id) || ((s && s.getAttribute('data-label')) || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
   var gotEvent = false;
   stage.addEventListener('slidechange', function(e){
     gotEvent = true;
     resetSlide(e.detail.previousSlide);
     playSlide(e.detail.slide);
-    try { history.replaceState(null, '', '#' + (e.detail.index + 1)); } catch (err) {}
+    // #<slide id>/<step>, the address pattern of every workshop deck.
+    var stepOf = function(slide){ return parseInt((slide && slide.getAttribute('data-step')) || '0', 10) || 0; };
+    try { history.replaceState(null, '', '#' + slideId(e.detail.slide) + '/' + stepOf(e.detail.slide)); } catch (err) {}
   });
 
   window.addEventListener('DOMContentLoaded', function(){
     setTimeout(function(){
-      var m = (location.hash || '').match(/^#(\d+)$/);
-      var target = m ? Math.min(total, Math.max(1, +m[1])) - 1 : (stage.index || 0);
+      // #<slide id>/<step>; the older #<number> still opens its slide.
+      var byId = (location.hash || '').match(/^#([\w-]+)\/(\d+)$/);
+      var byNumber = (location.hash || '').match(/^#(\d+)$/);
+      var idIndex = byId ? slides.findIndex(function(s){ return slideId(s) === byId[1]; }) : -1;
+      var target = idIndex >= 0 ? idIndex : byNumber ? Math.min(total, Math.max(1, +byNumber[1])) - 1 : (stage.index || 0);
       stage.goTo(target);
       // goTo() is a no-op when target already equals the restored index — which is exactly
       // what a reload lands in, because the hash was written on the way out and the index is

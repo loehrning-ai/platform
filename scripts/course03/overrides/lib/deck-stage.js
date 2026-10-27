@@ -1,12 +1,16 @@
 (() => {
   const DESIGN_W = 1920;
   const DESIGN_H = 1080;
-  const STORAGE_KEY = "foldline-deck:last-scene:v1";
-  const POSITION_KEY = "foldline-deck:last-position:v1";
-  const SESSION_POSITION_KEY = "foldline-deck:session-position:v1";
-  const APPENDIX_RETURN_KEY = "foldline-deck:appendix-return:v1";
-  const TOUCH_HINT_KEY = "foldline-deck:touch-hint-seen:v1";
-  const ROTATE_DISMISSED_KEY = "foldline-deck:rotate-dismissed:v1";
+  // One deck id names every channel, window and storage key (lib/deck-keys.js), so two decks in one
+  // browser never share them.
+  const DECK_ID = document.documentElement.getAttribute("data-deck-id") || "datenbereitschaft-fuer-ki";
+  const PRESENTER_WINDOW = `deck-presenter:${DECK_ID}`;
+  const STORAGE_KEY = `deck:${DECK_ID}:last-scene:v1`;
+  const POSITION_KEY = `deck:${DECK_ID}:last-position:v1`;
+  const SESSION_POSITION_KEY = `deck:${DECK_ID}:session-position:v1`;
+  const APPENDIX_RETURN_KEY = `deck:${DECK_ID}:appendix-return:v1`;
+  const TOUCH_HINT_KEY = `deck:${DECK_ID}:touch-hint-seen:v1`;
+  const ROTATE_DISMISSED_KEY = `deck:${DECK_ID}:rotate-dismissed:v1`;
   const TOOLBAR_ZONE_PX = 140;
   const TOOLBAR_HIDE_MS = 2000;
   const TOOLBAR_TOUCH_MS = 4000;
@@ -1053,30 +1057,22 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
     }
 
     _onKey(event) {
-      if (event.metaKey || event.ctrlKey || event.altKey || this._isTypingTarget(event.target)) return;
-      const key = event.key;
-      // Shift+R resets to the cover, the same on every workshop deck; a bare R does nothing, so a stray key
-      // never sends the room back.
-      const isReset = (key === "r" || key === "R") && event.shiftKey;
-      const bareReset = (key === "r" || key === "R") && !event.shiftKey;
-      if (bareReset) return;
-      const inAppendix = this.currentSlide?.dataset.kind === "appendix";
-      const bound = key === "ArrowRight" || key === "ArrowLeft" || isReset || key === "p" || key === "P"
-        || (key === "Escape" && inAppendix);
-      if (!bound) return;
-      event.preventDefault();
-      // A held key auto-repeats; only the first keydown is a press, so a long press never skips a vote.
-      if (event.repeat) return;
-      // Five keys (README contract): ArrowRight is the next press, ArrowLeft the previous press
-      // (a scene is left only once its steps are used up, and entered at its final step), Shift+R
-      // resets the whole deck, P opens the presenter console and Escape leaves an appendix.
-      // Space, Enter, Home, End, F, PageUp and PageDown are deliberately unbound (spec E12).
-      if (key === "ArrowRight") this.fragment(1);
-      else if (key === "ArrowLeft") this.fragment(-1);
-      else if (isReset) this.fullReset();
-      else if (key === "p" || key === "P") this.openPresenter();
-      else if (key === "Escape" && inAppendix) this.returnFromAppendix();
-      if (key === "ArrowRight" || key === "ArrowLeft") this._armBackGuard();
+      // The key contract is shared by every workshop deck (lib/deck-keys.js): ArrowRight is the next
+      // press, ArrowLeft the previous press (a scene is left only once its steps are used up, and
+      // entered at its final step), r or Shift+R resets the whole deck to the cover, P opens the
+      // presenter console and Escape leaves an appendix. Space, Enter, Home, End, F, PageUp, PageDown
+      // and the digits stay unbound (spec E12). A held key fires once, so a long press never skips a vote.
+      const keys = window.DeckKeys;
+      if (!keys) return;
+      const handled = keys.handle(event, {
+        next: () => this.fragment(1),
+        prev: () => this.fragment(-1),
+        reset: () => this.fullReset(),
+        presenter: () => this.openPresenter(),
+        "leave-appendix": () => this.returnFromAppendix(),
+      }, { inAppendix: this.currentSlide?.dataset.kind === "appendix" });
+      if (!handled || event.repeat) return;
+      if (event.key === "ArrowRight" || event.key === "ArrowLeft") this._armBackGuard();
       this._releaseToolbarFocus();
     }
 
@@ -1228,7 +1224,7 @@ html:not([data-deck-back-idle]):not([data-deck-export]) .story-chrome .story-chr
     }
 
     openPresenter() {
-      window.open("./presenter.html", "foldline-presenter", "width=1180,height=820");
+      window.open("./presenter.html", PRESENTER_WINDOW, "width=1180,height=820");
     }
 
     goTo(index, reason = "api") {

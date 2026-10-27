@@ -3,8 +3,7 @@
  * The owner asked for this login background explicitly: a near-black page
  * (#050505) with a static 14px dot grid, a vignette and a canvas of drifting
  * dot-matrix shapes, with a rounded dark card rising in over it. Every other
- * surface keeps the paper rule (docs/experience-system.md, "No black grounds";
- * src/lib/dark-surface-contract.test.ts keeps this scope confined to /login).
+ * surface keeps the paper rule (docs/experience-system.md, "No black grounds").
  *
  * Like the poster scenes in globals.css, the scene redefines the theme tokens
  * for everything inside it, so the form, the Turnstile status and the links

@@ -48,6 +48,8 @@ test.describe("book chapter reader navigation", () => {
 
   test("prev / next carry the correct neighbour hrefs and the next link navigates", async ({ page }) => {
     await page.goto(chapterPath(MID.slug), { waitUntil: "domcontentloaded" });
+    // A click that lands while React hydrates the link can be dropped; click once the page is live.
+    await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
     const nav = page.getByRole("navigation", { name: "Kapitelnavigation" });
 
     await expect(nav.getByRole("link", { name: /Vorheriges Kapitel/ })).toHaveAttribute("href", chapterPath(MID_PREV.slug));
@@ -55,7 +57,7 @@ test.describe("book chapter reader navigation", () => {
     await expect(next).toHaveAttribute("href", chapterPath(MID_NEXT.slug));
 
     await next.click();
-    await expect(page).toHaveURL(chapterUrl(MID_NEXT.slug));
+    await expect(page).toHaveURL(chapterUrl(MID_NEXT.slug), { timeout: 15_000 });
     await expect(page.getByRole("article", { name: MID_NEXT.title })).toBeVisible();
   });
 

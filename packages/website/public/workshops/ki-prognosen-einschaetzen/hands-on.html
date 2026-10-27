@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-deck-id="ki-prognosen-einschaetzen">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -45,8 +45,7 @@
     align-items:center;
     padding:10px clamp(18px,3vw,42px);
     border-bottom:1px solid var(--line);
-    background:color-mix(in srgb,var(--paper) 93%,transparent);
-    backdrop-filter:blur(10px);
+    background:var(--paper);
   }
   .brand{display:flex;align-items:center;gap:12px;min-width:0}
   .brand b{display:block;font-size:17px;line-height:1}
@@ -119,7 +118,7 @@
   @keyframes stageIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
   .hint{
     display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;
-    padding:8px 16px;border-top:1px solid var(--line);background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);
+    padding:8px 16px;border-top:1px solid var(--line);background:var(--paper);
     color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
   }
   body>.wf-strip{width:100%;flex:0 0 auto}
@@ -322,6 +321,7 @@
 </script>
 <script src="./lib/forecast-lab.js"></script>
 <script src="./lib/hands-on-acts.js"></script>
+<script src="./lib/deck-keys.js"></script>
 <script>
 (function(){
   var acts = Array.from(document.querySelectorAll(".act"));
@@ -361,18 +361,11 @@
     var b = e.target && e.target.closest ? e.target.closest("button") : null;
     if(b) b.blur();
   });
+  // The shared key contract (lib/deck-keys.js): arrows step, r or Shift+R
+  // goes back to the first act; Space, Enter and the digits stay unbound.
   document.addEventListener("keydown", function(e){
-    if(e.target && (/^(INPUT|TEXTAREA|SELECT|BUTTON)$/.test(e.target.tagName) || e.target.isContentEditable)) return;
-    if(e.target && e.target.closest('a[href], button, input, select, textarea, summary, label, video[controls], audio[controls], [role="button"], [onclick], [tabindex]:not([tabindex^="-"]), [contenteditable]:not([contenteditable="false"])')) return;
-    if(e.key === " " || e.key === "Enter" || e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "PageDown"){
-      e.preventDefault(); advance(); return;
-    }
-    if(e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp"){
-      e.preventDefault(); previous(); return;
-    }
-    if(e.key >= "1" && Number(e.key) <= acts.length && !e.metaKey && !e.ctrlKey && !e.altKey){
-      e.preventDefault(); go(Number(e.key) - 1);
-    }
+    if(!window.DeckKeys) return;
+    window.DeckKeys.handle(e, { next: advance, prev: previous, reset: function(){ go(0); } });
   });
   var prevBtn = document.getElementById("prev-act");
   var nextBtn = document.getElementById("next-act");

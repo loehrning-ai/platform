@@ -11,44 +11,42 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Offene Werkzeuge mit öffentlichem Quellstand, die du selbst betreibst.",
     },
     eyebrow: "Open Source · selbst betreibbar",
-    title: "Open-Source-Werkzeuge",
+    title: "Werkzeuge zum Anfassen.",
     introduction:
-      "Prüfe an echten Ansichten und am Quellstand, was ein Werkzeug leistet, bevor du es auf deinem Rechner betreibst.",
+      "Du klonst sie und betreibst sie selbst. Jedes zeigt, was reingeht und was rauskommt.",
     externalTab: ", öffnet in neuem Tab",
-    showcase: {
-      heading: "Jetzt veröffentlicht",
-      entryCount: (count: number) =>
-        count === 1 ? "1 offenes Werkzeug" : `${count} offene Werkzeuge`,
-      detail: "Details ansehen",
+    contents: {
+      label: "Inhalt",
+      number: "Nr",
+      tool: "Werkzeug",
+      formula: "Formel",
+      license: "Lizenz",
+      revision: "Stand",
+    },
+    wall: "Werkzeuge",
+    plate: {
+      number: "Nr.",
+      input: "Eingabe",
+      output: "Ausgabe",
+      view: "Ansehen",
       source: "Quellcode",
-      previewGroup: "Produktansichten auswählen",
-      previewCounter: (current: number, total: number) =>
-        `Ansicht ${current}/${total}`,
-      previewSelect: (label: string) => `${label} anzeigen`,
-      previewLabels: ["Editor", "Formular", "YAML", "Darstellung", "PDF"],
-      facts: {
-        delivery: "Betrieb",
-        license: "Lizenz",
-        status: "Status",
-      },
+      status: "Status",
+      license: "Lizenz",
+      language: "Sprache",
+      revision: "Stand",
+      runs: "Läuft",
       delivery: {
-        "source-only": "Lokal",
-        "internal-route": "Im Browser",
+        "source-only": "Lokal, ohne Cloud",
+        "internal-route": "Lokal · Beispiel im Browser",
         "external-service": "Externer Dienst",
         "hosted-service": "Gehostet von loehrning.ai · Hetzner EU",
       },
-      evidenceSummary: "Quellstand und Veröffentlichung",
-      pinnedSource: "Gepinnter Quellstand",
-      publicationStandard:
-        "Gelistet erst mit öffentlichem Repository, unveränderlichem Commit, eindeutiger Lizenz und vollständiger Betriebsanleitung.",
-      licensePolicy: "Lizenzrichtlinie",
     },
-    footnoteTitle: "Rechte und Lizenzen",
-    footnote:
-      "Code, Lerntexte und Medien haben getrennte Lizenzen. Welche gilt, steht jeweils am Projekt.",
+    rights:
+      "Rechte und Lizenzen: Code unter der Lizenz im Repository, Texte und Bilder siehe Lizenzrichtlinie.",
     platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
-    courses: "Zu den Kursen zum visuellen Lernen",
+    courses: "Zu den Kursen",
   },
   en: {
     metadata: {
@@ -59,46 +57,106 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Open tools with a public source revision that you run yourself.",
     },
     eyebrow: "Open source · self-hosted",
-    title: "Open source tools",
+    title: "Tools you can touch.",
     introduction:
-      "Check real views and the source revision to see what a tool does before you run it on your machine.",
+      "You clone them and run them yourself. Each one shows what goes in and what comes out.",
     externalTab: ", opens in a new tab",
-    showcase: {
-      heading: "Published now",
-      entryCount: (count: number) =>
-        count === 1 ? "1 open tool" : `${count} open tools`,
-      detail: "View details",
+    contents: {
+      label: "Contents",
+      number: "No.",
+      tool: "Tool",
+      formula: "Formula",
+      license: "License",
+      revision: "Revision",
+    },
+    wall: "Tools",
+    plate: {
+      number: "No.",
+      input: "Input",
+      output: "Output",
+      view: "View",
       source: "Source",
-      previewGroup: "Choose a product view",
-      previewCounter: (current: number, total: number) =>
-        `View ${current}/${total}`,
-      previewSelect: (label: string) => `Show ${label}`,
-      previewLabels: ["Editor", "Form", "YAML", "Display", "PDF"],
-      facts: {
-        delivery: "Run",
-        license: "License",
-        status: "Status",
-      },
+      status: "Status",
+      license: "License",
+      language: "Language",
+      revision: "Revision",
+      runs: "Runs",
       delivery: {
-        "source-only": "Local",
-        "internal-route": "In browser",
+        "source-only": "Locally, no cloud",
+        "internal-route": "Locally · example in browser",
         "external-service": "External service",
         "hosted-service": "Hosted by loehrning.ai · Hetzner EU",
       },
-      evidenceSummary: "Source and publication",
-      pinnedSource: "Pinned source revision",
-      publicationStandard:
-        "Listed only with a public repository, immutable commit, unambiguous license, and complete operating guide.",
-      licensePolicy: "License policy",
     },
-    footnoteTitle: "Rights and licenses",
-    footnote:
-      "Code, learning text and media carry separate licenses. Each project states which one applies.",
+    rights:
+      "Rights and licenses: code under the license in its repository, texts and images see the license policy.",
     platformCode: "Platform source",
     licensePolicy: "License policy",
-    courses: "Browse visual-learning courses",
+    courses: "Browse the courses",
   },
 } as const;
+
+/** Copy of the specimen stage, ruler and play controls. */
+export const SPECIMEN_COPY = {
+  de: {
+    ruler: (title: string) => `Zeitleiste ${title}`,
+    hint: "Ziehen oder tippen zum Spulen",
+    play: "Abspielen",
+    pause: "Anhalten",
+    again: "Nochmal",
+    chapters: (title: string) => `Kapitel von ${title}`,
+  },
+  en: {
+    ruler: (title: string) => `Timeline ${title}`,
+    hint: "Drag or tap to scrub",
+    play: "Play",
+    pause: "Pause",
+    again: "Again",
+    chapters: (title: string) => `Chapters of ${title}`,
+  },
+} as const;
+
+/** The drawn CV Engine specimen: chapters, toy button, live region, caption. */
+export const CV_ENGINE_SPECIMEN_COPY = {
+  de: {
+    chapters: [
+      "Daten rein",
+      "Seite füllt sich",
+      "Zweite Seite, Build bricht ab",
+      "Layout statt Kürzen",
+    ],
+    toy: "Noch eine Station",
+    toyBack: "Zurück auf eine Seite",
+    twoPages: "Zwei Seiten. Der Build bricht ab.",
+    onePage: "Eine Seite. Exit 0.",
+    onePageBadge: "1 Seite",
+    twoPagesBadge: "2 Seiten",
+    caption: "Nachgestellt. So verhält sich engine/build.py.",
+  },
+  en: {
+    chapters: [
+      "Data in",
+      "Page fills up",
+      "Second page, build stops",
+      "Layout, not cuts",
+    ],
+    toy: "One more job",
+    toyBack: "Back to one page",
+    twoPages: "Two pages. The build stops.",
+    onePage: "One page. Exit 0.",
+    onePageBadge: "1 page",
+    twoPagesBadge: "2 pages",
+    caption: "Reconstructed. This is how engine/build.py behaves.",
+  },
+} as const;
+
+/** An extra line under a tool's stage, keyed by artifact id. */
+export const STAGE_NOTES: Record<string, Record<Locale, string>> = {
+  "tool:reelcode": {
+    de: "Jedes Bild entsteht aus einer Webseite zu einem Zeitpunkt. An der Zeitleiste hältst du denselben Zeitpunkt.",
+    en: "Every frame comes from a web page at one moment in time. On the timeline you hold that same moment.",
+  },
+};
 
 export const OPEN_SOURCE_SHARED_COPY = {
   de: {
@@ -161,7 +219,7 @@ export const OPEN_SOURCE_SHARED_COPY = {
 export const OPEN_SOURCE_DETAIL_COPY = {
   de: {
     breadcrumbHome: "Start",
-    back: "Open Source",
+    back: "Alle Werkzeuge",
     transcript: "Transkript lesen",
     videoLabel: "Video",
     language: "Sprache",
@@ -169,12 +227,18 @@ export const OPEN_SOURCE_DETAIL_COPY = {
     license: "Lizenz",
     licenseText: "Lizenztext",
     open: "Öffnen",
+    openInternal: "Live-Beispiel",
     sourceRevision: "Quellstand",
     externalTab: ", öffnet in neuem Tab",
+    oneCommand: "Ein Befehl. Dann läuft es bei dir.",
+    whatItDoes: "Was es macht",
+    formulaColumns: ["Rein", "Dazwischen", "Raus"],
+    realOutput: (count: number) =>
+      `Echtes Ergebnis · ${count} ${count === 1 ? "Aufnahme" : "Aufnahmen"}`,
   },
   en: {
     breadcrumbHome: "Home",
-    back: "Open source",
+    back: "All tools",
     transcript: "Read transcript",
     videoLabel: "Video",
     language: "Language",
@@ -182,8 +246,14 @@ export const OPEN_SOURCE_DETAIL_COPY = {
     license: "License",
     licenseText: "License text",
     open: "Open",
+    openInternal: "Live example",
     sourceRevision: "Source revision",
     externalTab: ", opens in a new tab",
+    oneCommand: "One command. Then it runs on your machine.",
+    whatItDoes: "What it does",
+    formulaColumns: ["In", "In between", "Out"],
+    realOutput: (count: number) =>
+      `Real output · ${count} ${count === 1 ? "capture" : "captures"}`,
   },
 } as const;
 
@@ -192,11 +262,7 @@ export const SOFTWARE_GUIDE_COPY = {
     copy: "Kopieren",
     copied: "Kopiert",
     copyCommand: (title: string) => `Befehl für ${title}`,
-    publicationStatus: "Veröffentlichungsstatus",
     dataFlow: "Datenfluss",
-    shortDemo: "Kurzdemo",
-    demoIntroduction:
-      "Vier Aufnahmen aus dem gepinnten Quellstand, in der Reihenfolge der Nutzung.",
     prerequisites: "Voraussetzungen",
     installation: "Installation",
     usage: "Verwendung",
@@ -209,11 +275,7 @@ export const SOFTWARE_GUIDE_COPY = {
     copy: "Copy",
     copied: "Copied",
     copyCommand: (title: string) => `Command for ${title}`,
-    publicationStatus: "Publication status",
     dataFlow: "Data flow",
-    shortDemo: "Short walkthrough",
-    demoIntroduction:
-      "Four captures from the pinned source revision, in the order you use the tool.",
     prerequisites: "Requirements",
     installation: "Installation",
     usage: "Use",
@@ -224,16 +286,61 @@ export const SOFTWARE_GUIDE_COPY = {
   },
 } as const;
 
-const CV_ENGINE_ENGLISH_COPY = {
+interface EnglishProcedure {
+  readonly summary: string;
+  readonly steps: readonly { readonly title: string; readonly detail: string }[];
+}
+
+/**
+ * English display copy of one artifact. Lists are index-aligned with the
+ * registry record. Commands, paths, hashes, chapter tokens and every other
+ * publication fact always come from the registry.
+ */
+export interface ArtifactEnglishCopy {
+  readonly eyebrow: string;
+  readonly description: string;
+  readonly language: string;
+  readonly guide: {
+    readonly statusNote: string;
+    readonly dataFlow: string;
+    readonly prerequisites: readonly {
+      readonly label: string;
+      readonly detail: string;
+    }[];
+    readonly installation: EnglishProcedure;
+    readonly usage: EnglishProcedure;
+    readonly integration: EnglishProcedure & {
+      readonly targets?: readonly string[];
+    };
+    readonly documentation: { readonly label: string };
+    readonly screenshot: { readonly alt: string };
+    readonly demo?: readonly { readonly alt: string; readonly caption: string }[];
+    readonly relatedLearning: readonly {
+      readonly title: string;
+      readonly description: string;
+    }[];
+    readonly formula?: { readonly process: string; readonly output: string };
+    readonly quickstartNote?: string;
+    readonly specimenAlt?: string;
+    readonly outputFilmAlts?: readonly string[];
+    readonly liveExample?: {
+      readonly title: string;
+      readonly summary: string;
+      readonly links: readonly { readonly label: string; readonly detail: string }[];
+    };
+  };
+}
+
+const CV_ENGINE_ENGLISH_COPY: ArtifactEnglishCopy = {
   eyebrow: "Tool · CV rendering",
   description:
     "Local YAML-to-PDF build for one-page CVs, with a browser editor, A4 preview and optional AI. The build rejects a second page.",
   language: "English",
   guide: {
     statusNote:
-      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local.",
+      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. The live example shows pages built in advance for an invented person. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local.",
     dataFlow:
-      "The core runs entirely locally: cv.yaml, fonts and CSS stay in the checkout; the PDF build opens no socket, needs no API key. Unconfigured, the editor talks only to 127.0.0.1 and keeps documents in memory; only the self-hosted Supabase variant (DEPLOY.md) saves them. Optional AI import and text generation call out with your key, or stay local with Ollama.",
+      "The core runs entirely locally: cv.yaml, fonts and CSS stay in the checkout; the PDF build opens no socket, needs no API key. Unconfigured, the editor talks only to 127.0.0.1 and keeps documents in memory; only the self-hosted Supabase variant (DEPLOY.md) saves them. Optional AI import and text generation call out with your key, or stay local with Ollama. The live example here in the browser only loads finished pages of an invented person; your own CV stays on your machine.",
     prerequisites: [
       {
         label: "Python 3.13",
@@ -362,8 +469,141 @@ const CV_ENGINE_ENGLISH_COPY = {
           "Practise reviewing AI output, such as the import from your old PDF.",
       },
     ],
+    formula: {
+      process: "WeasyPrint sets the A4 page and counts the pages",
+      output: "cv.pdf, exactly one page",
+    },
+    quickstartNote:
+      "First: brew install pango. On Debian or Ubuntu: step 1 of the installation below. Needs Python 3.13, runs locally, no key needed.",
   },
-} as const;
+};
+
+const REELCODE_ENGLISH_COPY: ArtifactEnglishCopy = {
+  eyebrow: "Tool · Motion design",
+  description:
+    "Claude Code plugin and engine: one project.json becomes a film with music, in four formats at once. Runs locally.",
+  language: "English",
+  guide: {
+    statusNote:
+      "Version 0.1. Tested on macOS, on Linux only in CI, not on Windows. The project.json format may still change and issue responses are not guaranteed. You run the tool yourself.",
+    dataFlow:
+      "Everything renders locally: a server on 127.0.0.1, Chromium without network, capture refuses outside addresses. Network is only needed for the one-time setup (about 1.2 GB for Chromium and Python packages) and the optional ElevenLabs voice-over with your own key.",
+    prerequisites: [
+      { label: "Node.js 20 or newer", detail: "For the CLI and the engine." },
+      { label: "ffmpeg", detail: "Cuts and encodes the formats." },
+      { label: "Python 3.12 or uv", detail: "For music and mixing on the beat." },
+      {
+        label: "Claude Code, optional",
+        detail: "For the plugin that drives draft, review and fixes.",
+      },
+    ],
+    installation: {
+      summary: "Clone, switch to the reviewed revision, set up once.",
+      steps: [
+        {
+          title: "Check out the reviewed source revision",
+          detail:
+            "This guide, its films and checksums belong to exactly this revision.",
+        },
+        {
+          title: "Install dependencies",
+          detail: "npx then runs the copy in your checkout.",
+        },
+        {
+          title: "Set up once",
+          detail:
+            "Downloads Chromium for Playwright (about 570 MB) and the Python packages (about 290 MB).",
+        },
+        {
+          title: "Check the installation",
+          detail: "doctor tells you what is still missing.",
+        },
+      ],
+    },
+    usage: {
+      summary:
+        "You describe the film in project.json, reelcode renders every format.",
+      steps: [
+        {
+          title: "Render the example film",
+          detail: "A draft takes about a minute on Apple Silicon.",
+        },
+        {
+          title: "Your own project from a template",
+          detail:
+            "Eight templates, such as data-story, product-launch or logo-sting.",
+        },
+        {
+          title: "Render the final",
+          detail: "60 frames per second with motion blur.",
+        },
+      ],
+    },
+    integration: {
+      summary:
+        "Strongest with a coding agent: it writes project.json, scores its draft on a contact sheet and fixes it.",
+      targets: ["Claude Code", "other coding agents", "project.json", "MP4"],
+      steps: [
+        {
+          title: "Add the marketplace in Claude Code",
+          detail: "Once per machine.",
+        },
+        {
+          title: "Install the plugin",
+          detail: "Then you describe the film in plain words.",
+        },
+        {
+          title: "Other agents",
+          detail: "Have the agent read docs/AGENTS_GUIDE.md first.",
+        },
+      ],
+    },
+    documentation: { label: "README in the repository" },
+    screenshot: {
+      alt: "reelcode: the same line WE MAKE TYPE MOVE in 9:16, 1:1, 4:5 and 16:9.",
+    },
+    demo: [
+      {
+        alt: "Contact sheet with 32 frames from the example film, in six rows.",
+        caption:
+          "How the agent checks its draft: look at the contact sheet, score it, fix it.",
+      },
+    ],
+    relatedLearning: [
+      {
+        title: "AI-native work course",
+        description: "Practise reviewing and fixing an agent's drafts.",
+      },
+    ],
+    formula: {
+      process:
+        "Chromium renders every frame as seek(t), ffmpeg encodes, Python puts music on the beat",
+      output: "a film in four formats",
+    },
+    quickstartNote:
+      "Needs Node.js 20, ffmpeg and Python 3.12 or uv. Setup downloads about 1.2 GB once. Then in Claude Code: /plugin marketplace add loehrning-ai/reelcode",
+    specimenAlt:
+      "The example film: type on the beat, from ON THE BEAT to REELCODE.",
+    outputFilmAlts: [
+      "The same film in 9:16, 1:1 and 4:5, with 16:9 below, frame for frame in sync.",
+    ],
+  },
+};
+
+/** Every published tool or project needs an entry here. */
+export const ENGLISH_ARTIFACT_COPY: Readonly<
+  Record<string, ArtifactEnglishCopy>
+> = {
+  "tool:cv-engine": CV_ENGINE_ENGLISH_COPY,
+  "tool:reelcode": REELCODE_ENGLISH_COPY,
+};
+
+function overlaySteps<Step extends object>(
+  steps: readonly Step[],
+  english: EnglishProcedure["steps"],
+): Step[] {
+  return steps.map((step, index) => ({ ...step, ...english[index] }));
+}
 
 /**
  * Returns display copy only. Publication identifiers, URLs, commits, commands,
@@ -374,16 +614,14 @@ export function localizeOpenSourceArtifact<Artifact extends OpenSourceArtifact>(
   artifact: Artifact,
   locale: Locale,
 ): Artifact {
-  if (
-    locale === "de" ||
-    artifact.id !== "tool:cv-engine" ||
-    artifact.kind !== "tool"
-  ) {
+  const copy = ENGLISH_ARTIFACT_COPY[artifact.id];
+  if (locale === "de" || !copy || artifact.kind === "video") {
     return artifact;
   }
 
-  const copy = CV_ENGINE_ENGLISH_COPY;
   const guide = artifact.guide;
+  const english = copy.guide;
+  const specimen = guide.specimen;
   return {
     ...artifact,
     eyebrow: copy.eyebrow,
@@ -391,52 +629,62 @@ export function localizeOpenSourceArtifact<Artifact extends OpenSourceArtifact>(
     language: copy.language,
     guide: {
       ...guide,
-      statusNote: copy.guide.statusNote,
-      dataFlow: copy.guide.dataFlow,
+      statusNote: english.statusNote,
+      dataFlow: english.dataFlow,
       prerequisites: guide.prerequisites.map((item, index) => ({
         ...item,
-        ...copy.guide.prerequisites[index],
+        ...english.prerequisites[index],
       })),
       installation: {
-        ...guide.installation,
-        summary: copy.guide.installation.summary,
-        steps: guide.installation.steps.map((step, index) => ({
-          ...step,
-          ...copy.guide.installation.steps[index],
-        })),
+        summary: english.installation.summary,
+        steps: overlaySteps(guide.installation.steps, english.installation.steps),
       },
       usage: {
-        ...guide.usage,
-        summary: copy.guide.usage.summary,
-        steps: guide.usage.steps.map((step, index) => ({
-          ...step,
-          ...copy.guide.usage.steps[index],
-        })),
+        summary: english.usage.summary,
+        steps: overlaySteps(guide.usage.steps, english.usage.steps),
       },
       integration: {
-        ...guide.integration,
-        summary: copy.guide.integration.summary,
-        steps: guide.integration.steps.map((step, index) => ({
-          ...step,
-          ...copy.guide.integration.steps[index],
-        })),
+        summary: english.integration.summary,
+        targets: english.integration.targets ?? guide.integration.targets,
+        steps: overlaySteps(guide.integration.steps, english.integration.steps),
       },
-      documentation: {
-        ...guide.documentation,
-        ...copy.guide.documentation,
-      },
-      screenshot: {
-        ...guide.screenshot,
-        ...copy.guide.screenshot,
-      },
+      documentation: { ...guide.documentation, ...english.documentation },
+      screenshot: { ...guide.screenshot, ...english.screenshot },
       demo: guide.demo?.map((step, index) => ({
         ...step,
-        ...copy.guide.demo[index],
+        ...english.demo?.[index],
       })),
       relatedLearning: guide.relatedLearning.map((item, index) => ({
         ...item,
-        ...copy.guide.relatedLearning[index],
+        ...english.relatedLearning[index],
       })),
+      formula:
+        guide.formula && english.formula
+          ? { ...guide.formula, ...english.formula }
+          : guide.formula,
+      quickstart:
+        guide.quickstart && english.quickstartNote
+          ? { ...guide.quickstart, note: english.quickstartNote }
+          : guide.quickstart,
+      specimen:
+        specimen?.kind === "film" && english.specimenAlt
+          ? { ...specimen, film: { ...specimen.film, alt: english.specimenAlt } }
+          : specimen,
+      outputFilms: guide.outputFilms?.map((film, index) => ({
+        ...film,
+        alt: english.outputFilmAlts?.[index] ?? film.alt,
+      })),
+      liveExample:
+        guide.liveExample && english.liveExample
+          ? {
+              title: english.liveExample.title,
+              summary: english.liveExample.summary,
+              links: guide.liveExample.links.map((link, index) => ({
+                ...link,
+                ...english.liveExample?.links[index],
+              })),
+            }
+          : guide.liveExample,
     },
   } as Artifact;
 }

@@ -1,217 +1,159 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { FORECAST_COPY } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/copy";
-import { MORNINGS } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/data";
-import { rightOption } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/logic";
-import { buildTakeaways } from "../../src/lib/demo-cases/ki-prognosen-einschaetzen/takeaways";
+import { DEMOS_PAGE_COPY } from "../../src/lib/demos-ui-copy";
+import { expectGlasBudget } from "./fixtures/glas-budget";
 
+/**
+ * "Die Fehlerliste" (workshop 01) on the v4 shell: the intro fits a small
+ * phone, the visitor builds the baseline by dragging the sales line one week
+ * and lands on the kit's 92,6 %, the canteen switch moves the order quantity
+ * to the kit's numbers, R starts over, and the Claude scene replays the
+ * recorded runs with and without the skill, follow-up included. Reduced
+ * motion shows each end frame at once, so no assertion waits for an animation.
+ */
 const PATH = "/demos/ki-prognosen-einschaetzen";
-const ROOT = '[data-demo="ki-prognosen-einschaetzen"]';
+const SCENE = DEMOS_PAGE_COPY.de.claudeScene;
 
-async function open(page: Page, prefix = "", hash = "") {
-  const response = await page.goto(`${prefix}${PATH}${hash}`, { waitUntil: "domcontentloaded" });
-  expect(response?.status()).toBe(200);
-  // Hydrated once the run has read this browser's saved state.
-  await expect(page.locator(".fr[data-ready]")).toBeAttached({ timeout: 30_000 });
+async function open(page: Page, query = "") {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto(`${PATH}${query}`, { waitUntil: "networkidle" });
+  await expect(page.locator("[data-demo-stage]")).toBeVisible();
 }
 
-async function split(page: Page, values: readonly [number, number, number]) {
-  for (const [i, value] of values.entries()) await page.locator(`#fr-units-${i}`).fill(String(value));
+const clock = (page: Page) => page.locator("[data-demo-clock]");
+const caption = (page: Page) => page.locator("[data-demo-caption]");
+
+/** A press before hydration is lost (the button is server-rendered), so press until the guided phase runs. */
+async function start(page: Page) {
+  await expect(async () => {
+    await page.locator("[data-demo-start]").click({ timeout: 1000 });
+    await expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 });
+  }).toPass({ timeout: 15_000 });
 }
 
-async function playWeek(page: Page, locale: "de" | "en") {
-  const copy = FORECAST_COPY[locale];
-  await split(page, [500, 370, 180]);
-  await page.getByRole("button", { name: copy.split.check, exact: true }).click();
-  await expect(page.getByText(copy.split.headlineAll)).toBeVisible();
-  await page.getByRole("button", { name: copy.split.continueOwn }).click();
-  await expect(page.locator("#fr-h-mornings")).toBeFocused();
-
-  await page.getByRole("button", { name: copy.mornings.ownerOptions.analytics }).click();
-  await expect(page.getByRole("button", { name: copy.mornings.start })).toHaveCount(0);
-  await page.getByRole("button", { name: copy.mornings.ownerOptions.plannerOnDuty }).click();
-  await page.getByRole("button", { name: copy.mornings.start }).click();
-
-  for (const [day, morning] of MORNINGS.entries()) {
-    const options = page.locator(".fr-options button");
-    await expect(options).toHaveCount(3);
-    await options.nth(morning.options.indexOf(rightOption(morning))).click();
-    await expect(options).toHaveCount(0);
-    await expect(page.locator(".fr-stamp-line")).toBeFocused();
-    await page.getByRole("button", { name: day === 6 ? copy.mornings.toResult : copy.mornings.next }).click();
-  }
-  await expect(page.locator(".fr-score")).toHaveText(copy.result.score(7));
-  await expect(page.locator(".fr-week [data-slot]")).toHaveCount(7);
-}
-
-test.describe("Workshop 01 demo: 1.050 Stück, sieben Morgen", () => {
-  // Any uncaught error or console.error (hydration warnings included) fails the test.
-  // The one exception: WebKit reports a request that a reload cancels (an RSC
-  // prefetch, the dev overlay's stack frames) as an access-control error, and
-  // Next then logs its fallback to a browser navigation. Neither is the page.
-  const CANCELLED_REQUEST = /(_rsc=|__nextjs_original-stack-frames).* due to access control checks|^console\.error: Failed to fetch RSC payload .* Falling back to browser navigation/;
-  let problems: string[] = [];
-  test.beforeEach(({ page }) => {
-    problems = [];
-    const report = (text: string) => {
-      if (!CANCELLED_REQUEST.test(text)) problems.push(text);
-    };
-    page.on("pageerror", (error) => report(`pageerror: ${error.message}`));
-    page.on("console", (message) => {
-      if (message.type() === "error") report(`console.error: ${message.text()}`);
-    });
-  });
-  test.afterEach(() => {
-    expect(problems).toEqual([]);
-  });
-
-  test("the final material is on the page before any play", async ({ page }) => {
+test.describe("Die Fehlerliste", () => {
+  test("the intro and its start button fit a 390 × 664 phone without scrolling", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 664 });
     await open(page);
-    const de = FORECAST_COPY.de;
-    for (const id of ["verteilen", "morgen", "ergebnis", "mitnehmen", "quellen"]) {
-      await expect(page.locator(`${ROOT} #${id}`)).toBeAttached();
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+    const intro = page.locator("[data-demo-intro]");
+    await expect(intro).toBeVisible();
+    await expect(intro).toContainText("Ein erfundener Suppenhersteller");
+    const box = await page.locator("[data-demo-start]").boundingBox();
+    expect(box, "start button").not.toBeNull();
+    expect((box?.y ?? 0) + (box?.height ?? 0)).toBeLessThanOrEqual(656);
+    await expectGlasBudget(page, `${PATH} intro`);
+  });
+
+  test("on a 390 × 664 phone every caption shows all its words, without scrolling inside", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 664 });
+    for (const beat of ["", "?beat=fehlerliste", "?beat=spanne", "?beat=planzahl", "?beat=pruefregel"]) {
+      await open(page, beat);
+      if (!beat) await start(page);
+      const text = caption(page).locator("[data-w01-caption]");
+      await expect(text).toBeVisible();
+      const fit = await text.evaluate((element) => {
+        const box = element.getBoundingClientRect();
+        return { inside: element.scrollHeight <= element.clientHeight + 1, top: box.top, bottom: box.bottom, words: element.textContent?.length ?? 0 };
+      });
+      expect(fit.words, `${beat || "messlatte"}: caption has words`).toBeGreaterThan(40);
+      expect(fit.inside, `${beat || "messlatte"}: caption scrolls inside`).toBe(true);
+      expect(fit.top, `${beat || "messlatte"}: caption top`).toBeGreaterThanOrEqual(0);
+      expect(fit.bottom, `${beat || "messlatte"}: caption bottom`).toBeLessThanOrEqual(664);
     }
-    await expect(page.getByText(de.takeaways.rule)).toBeVisible();
-    await expect(page.getByTestId("fr-check-text")).toHaveText(
-      buildTakeaways({ owner: null, blanks: [], copy: FORECAST_COPY.de }).check,
-    );
   });
 
-  test("plays the core loop in German: split, owner, seven mornings, result, copy, resume", async ({ page, context, browserName }) => {
-    // Only Chromium lets a test read the clipboard back; elsewhere the visible confirmation is checked.
-    const readsClipboard = browserName === "chromium";
-    if (readsClipboard) await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.emulateMedia({ reducedMotion: "reduce" });
+  test("a tap on a lamp puts its question under the lamp row", async ({ page }) => {
+    await open(page, "?beat=pruefregel");
+    await expect(clock(page)).toHaveAttribute("data-beat", "pruefregel");
+    const lamp = page.locator('[data-w01-lamp="bias"]');
+    await expect(async () => {
+      await lamp.click({ timeout: 1000 });
+      await expect(lamp).toHaveAttribute("aria-pressed", "true", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await expect(page.locator("[data-w01-lamp-line]")).toContainText("Die Prognose lag in den letzten 13 Wochen");
+    await lamp.click();
+    await expect(lamp).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("dragging the sales line one week builds the rule and snaps to 92,6 %", async ({ page }) => {
     await open(page);
-    const de = FORECAST_COPY.de;
+    await start(page);
+    await expect(clock(page)).toHaveAttribute("data-beat", "messlatte");
+    await expect(page.locator("[data-demo-data]")).toContainText("Erfundener Fall");
+    await page.locator("[data-w01-lock]").click();
 
-    // Too many first: the check stays off until exactly 1.050.
-    await split(page, [700, 300, 100]);
-    await expect(page.getByRole("button", { name: de.split.check, exact: true })).toBeDisabled();
-    await playWeek(page, "de");
+    const grip = page.getByRole("slider", { name: "Kopie der Absatzlinie, nach rechts verschieben" });
+    await expect(grip).toBeVisible();
+    // The plot grows once the dock gives up the guess controls, which moves the grip: drag again until it lands.
+    await expect(async () => {
+      const box = await grip.boundingBox();
+      expect(box, "grip").not.toBeNull();
+      const x = (box?.x ?? 0) + (box?.width ?? 0) / 2;
+      const y = (box?.y ?? 0) + (box?.height ?? 0) / 2;
+      await page.mouse.move(x, y);
+      await page.mouse.down();
+      await page.mouse.move(x + 30, y, { steps: 4 });
+      await page.mouse.move(x + 120, y, { steps: 4 });
+      await page.mouse.up();
+      await expect(page.locator("[data-demo-data]")).toContainText("Die Regel ‚wie letzte Woche‘ erreicht 92,6 %", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await expect(caption(page)).toContainText("92,6 %");
+    await expectGlasBudget(page, `${PATH} baseline done`);
 
-    await page.getByRole("link", { name: de.result.toTakeaways }).click();
-    await expect(page.locator("#fr-blank-7")).toHaveValue(/Planer/);
-    const checkArticle = page.getByRole("article", { name: de.takeaways.titles[1] });
-    await checkArticle.getByRole("button").click();
-    await expect(checkArticle.getByRole("button")).toHaveText(de.takeaways.copied);
-    if (readsClipboard) {
-      const clip = await page.evaluate(() => navigator.clipboard.readText());
-      expect(clip).toBe(await page.getByTestId("fr-check-text").textContent());
+    // ArrowRight on the page goes to the next scene; R starts over at the guess.
+    await page.locator("body").press("ArrowRight");
+    await expect(clock(page)).toHaveAttribute("data-beat", "fehlerliste");
+    await page.locator("body").press("r");
+    await expect(clock(page)).toHaveAttribute("data-beat", "messlatte");
+    await expect(page.locator("[data-w01-lock]")).toBeVisible();
+  });
+
+  test("the canteen switch moves the order quantity to the kit's 729", async ({ page }) => {
+    await open(page, "?beat=planzahl");
+    await expect(clock(page)).toHaveAttribute("data-beat", "planzahl");
+    const toggle = page.getByRole("switch", { name: "Die Kantine holt übrige Gläser ab" });
+    await expect(async () => {
+      await toggle.click({ timeout: 1000 });
+      await expect(toggle).toHaveAttribute("aria-checked", "false", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await expect(caption(page)).toContainText("728 Gläsern");
+    await expect(caption(page)).toContainText("729");
+    await toggle.click();
+    await expect(caption(page)).toContainText("748 Gläsern");
+    await expectGlasBudget(page, `${PATH} order quantity`);
+  });
+
+  test("the Claude scene plays a recorded run, switches to the run without the skill, and plays the follow-up", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`${PATH}?beat=mitnehmen`, { waitUntil: "domcontentloaded" });
+    const section = page.locator("[data-claude-scene-section]");
+    await section.scrollIntoViewIfNeeded();
+    await expect(section.getByRole("heading", { level: 2 })).toHaveText(SCENE.heading);
+    await expect(section).toContainText("Darstellung");
+    const answers = section.locator(".cds-chat .cds-answer");
+    await expect(answers).toHaveCount(0);
+
+    await expect(async () => {
+      await section.locator("[data-scene-play]").click({ timeout: 1000 });
+      await expect(answers.first()).toBeVisible({ timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    const withSkill = (await answers.first().textContent()) ?? "";
+
+    await section.getByRole("radio", { name: SCENE.withoutSkill }).click();
+    await expect(answers).toHaveCount(0);
+    await section.locator("[data-scene-play]").click();
+    await expect(answers.first()).toBeVisible();
+    expect((await answers.first().textContent()) ?? "").not.toBe(withSkill);
+
+    await section.getByRole("radio", { name: SCENE.withSkill }).click();
+    await section.locator("[data-scene-play]").click();
+    await expect(answers.first()).toBeVisible();
+    await section.locator("[data-scene-follow-up]").click();
+    await expect(section.locator(".cds-chat")).toContainText("Kantine");
+    // The follow-up changes the rule file, so on a wide window it opens beside the chat only after the follow-up.
+    if ((page.viewportSize()?.width ?? 0) >= 900) {
+      await expect(section.getByRole("complementary", { name: `${SCENE.file}: pruefregel-linsensuppe.md` })).toBeVisible();
     }
-
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "result");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toContainText(de.thread.resumed);
-    await page.getByRole("button", { name: de.result.restart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-    await expect(page.locator("#fr-units-0")).toHaveValue("0");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
+    await expectGlasBudget(page, `${PATH} Claude scene`);
   });
-
-  test("a week left mid-way says so on return and starts over from either restart", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page, "", "#morgen");
-    const de = FORECAST_COPY.de;
-    await expect(page.getByRole("button", { name: de.result.restart, exact: true })).toBeVisible();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.plannerOnDuty }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await page.locator(".fr-options button").first().click();
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-
-    await page.goto(PATH, { waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "mornings");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toBeVisible();
-    await page.getByRole("button", { name: de.thread.resumedRestart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-    await expect(page.locator("#fr-h-split")).toBeFocused();
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-
-    // Back into the mornings: the in-step restart works the same way.
-    await page.getByRole("button", { name: de.mornings.directEntry }).click();
-    await page.getByRole("button", { name: de.result.restart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "split");
-    await expect(page.locator(".fr-resumed:not(.fr-undo)")).toHaveCount(0);
-  });
-
-  test("after a restart with an own role, sentence 5 and the Morgen-Check name the same owner", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await open(page);
-    const de = FORECAST_COPY.de;
-    const role = "die Teamleitung Disposition";
-    const toMornings = async () => {
-      await split(page, [500, 370, 180]);
-      await page.getByRole("button", { name: de.split.check, exact: true }).click();
-      await page.getByRole("button", { name: de.split.continueOwn }).click();
-    };
-
-    await toMornings();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.plannerOnDuty }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await expect(page.locator("#fr-blank-7")).toHaveValue(de.takeaways.ownerDefault);
-    await page.getByRole("button", { name: de.result.restart, exact: true }).click();
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "split");
-
-    await toMornings();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.custom }).click();
-    await page.locator("#fr-custom-role").fill(role);
-    await page.getByRole("button", { name: de.mornings.customUse }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await expect(page.getByTestId("fr-check-text")).toContainText(`Ein Nein: ${role} entscheidet`);
-    await expect(page.locator("#fr-blank-7")).toHaveValue(role);
-    await expect(page.locator(".fr-sentence-text").nth(4)).toHaveText(`Bei einem Nein entscheidet ${role}, bevor etwas rausgeht.`);
-
-    // Survives a reload: the stored marker still tells an untouched prefill from an edit.
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await expect(page.locator(".fr[data-ready]")).toHaveAttribute("data-step", "mornings");
-    await expect(page.locator("#fr-blank-7")).toHaveValue(role);
-  });
-
-  test("the English page plays the same week", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await open(page, "/en");
-    await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await playWeek(page, "en");
-  });
-
-  test("#morgen opens the seven mornings directly with the median plan", async ({ page }) => {
-    await open(page, "", "#morgen");
-    const de = FORECAST_COPY.de;
-    await expect(page.locator(".fr")).toHaveAttribute("data-step", "mornings");
-    await expect(page.getByText(de.mornings.fallback, { exact: true })).toBeVisible();
-    await page.getByRole("button", { name: de.mornings.ownerOptions.plannerOnDuty }).click();
-    await page.getByRole("button", { name: de.mornings.start }).click();
-    await page.locator(".fr-options button").first().click();
-    await expect(page.locator(".fr-stamp-line")).toContainText(de.mornings.stamps.rightRelease);
-  });
-
-  for (const [locale, prefix] of [
-    ["de", ""],
-    ["en", "/en"],
-  ] as const) {
-    test(`fits a 390px phone and passes axe (${locale})`, async ({ page }) => {
-      await page.setViewportSize({ width: 390, height: 844 });
-      await open(page, prefix);
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
-      expect(overflow).toBeLessThanOrEqual(0);
-      const axe = await new AxeBuilder({ page }).include(ROOT).analyze();
-      expect(axe.violations.map((violation) => violation.id)).toEqual([]);
-
-      // And once more on a morning, where the board and the options are.
-      await page.getByRole("button", { name: FORECAST_COPY[locale].mornings.directEntry }).click();
-      await page.getByRole("button", { name: FORECAST_COPY[locale].mornings.ownerOptions.plannerOnDuty }).click();
-      await page.getByRole("button", { name: FORECAST_COPY[locale].mornings.start }).click();
-      await page.locator(".fr-options button").first().click();
-      const later = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
-      expect(later).toBeLessThanOrEqual(0);
-      const axeMorning = await new AxeBuilder({ page }).include(ROOT).analyze();
-      expect(axeMorning.violations.map((violation) => violation.id)).toEqual([]);
-    });
-  }
 });

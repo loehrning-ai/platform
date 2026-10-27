@@ -66,7 +66,7 @@ and stop them drifting. Field-by-field notes: `FIELD-REFERENCE.md`.
 | # | Step | You write | Done when | FOLDLINE value |
 | --- | --- | --- | --- | --- |
 | 1 | Pick one question and its owner | One sentence plus a team name | A second person has no question about period, shape or unit | "Show ending MRR by month for the last complete quarter." Owner: revenue_analytics |
-| 2 | Fill the four blanks | Four short answers | Each blank has one answer, not "it depends" | Level · one row per month · Apr–Jun, never add · MRR summary by month |
+| 2 | Fill the four blanks | Four short answers | Each blank has one answer, not "it depends" | Level · one row per month · Apr to Jun, never add · MRR summary by month |
 | 3 | Write the truth rows | Expected rows, computed by two people independently | Both get the same numbers without the AI | 334,675 / 344,450 / 387,015 |
 | 4 | Write `model.yml` | Grain, key, columns with units, freshness, lineage, tests | The file and the view list the same columns | `analytics.mrr_summary_monthly`, key `month_start` |
 | 5 | Write `metric.yml` | Type, relation, period rule, additivity, owner, version, limitations | The four blanks can be read off the file | `ending_mrr`, `snapshot`, version 1.0.0 |

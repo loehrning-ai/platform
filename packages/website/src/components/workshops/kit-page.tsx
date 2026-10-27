@@ -62,11 +62,11 @@ export function KitPage({ workshop, locale }: Props) {
   const sizeLabel = material.sizeLabel ?? "";
 
   const labels: KitStepperLabels = {
-    stepperLabel: copy.stepperLabel,
+    stepperLabel: kit.labels?.stepper ?? copy.stepperLabel,
     inLabel: copy.inLabel,
-    claudeLabel: copy.claudeLabel,
+    claudeLabel: kit.labels?.action ?? copy.claudeLabel,
     outLabel: copy.outLabel,
-    resultLabel: copy.resultLabel,
+    resultLabel: kit.labels?.result ?? copy.resultLabel,
     fileLabel: copy.fileLabel,
     restart: copy.restart,
     next: kit.steps.map((_, index) =>

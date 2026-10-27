@@ -46,6 +46,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
  *
  * @typedef {{ status: number, headers: { get(name: string): string | null }, text(): Promise<string> }} SkillFetchResponse
  * @typedef {(url: string) => Promise<SkillFetchResponse>} SkillFetch
+ * @typedef {{ status: number, headers: { get(name: string): string | null }, arrayBuffer(): Promise<ArrayBuffer> }} ZipFetchResponse
+ * @typedef {(url: string) => Promise<ZipFetchResponse>} ZipFetch
  */
 
 /** The one document a skill directory is allowed to hold. */
@@ -61,6 +63,19 @@ export const MAX_SKILL_DOCUMENT_BYTES = 64 * 1024;
 
 /** Frontmatter fields every skill document must carry with a non-empty value. */
 export const REQUIRED_FRONTMATTER_FIELDS = ["name", "description"];
+
+/**
+ * claude.ai rejects a custom skill whose description is longer than 200
+ * characters (Help Center, "How to create custom skills"); the API and Claude
+ * Code allow more, so the strictest surface wins.
+ */
+export const MAX_DESCRIPTION_CHARACTERS = 200;
+
+/** Words a skill name may not contain on claude.ai. */
+export const RESERVED_NAME_WORDS = ["anthropic", "claude"];
+
+/** Keep a skill short enough to read whole. */
+export const MAX_SKILL_DOCUMENT_LINES = 500;
 
 /**
  * Content that would make a skill executable rather than instructive. The pipe
@@ -177,6 +192,76 @@ function checkExecutableContent(name, text) {
 }
 
 /**
+ * What claude.ai checks on upload: description length, no XML tags, and no
+ * reserved word in the name.
+ *
+ * @param {string} name
+ * @param {Map<string, string>} fields
+ * @returns {string[]}
+ */
+export function checkUploadLimits(name, fields) {
+  /** @type {string[]} */
+  const errors = [];
+  const description = fields.get("description") ?? "";
+  const characters = [...description].length;
+  if (characters > MAX_DESCRIPTION_CHARACTERS) {
+    errors.push(
+      `${name}/${SKILL_DOCUMENT_FILENAME}: description has ${characters} characters, claude.ai accepts at most ${MAX_DESCRIPTION_CHARACTERS}`,
+    );
+  }
+  for (const field of ["name", "description"]) {
+    if (/<[^>]+>/.test(fields.get(field) ?? "")) {
+      errors.push(`${name}/${SKILL_DOCUMENT_FILENAME}: frontmatter ${field} contains an XML tag`);
+    }
+  }
+  for (const word of RESERVED_NAME_WORDS) {
+    if (name.includes(word)) {
+      errors.push(`${name}: a skill name may not contain "${word}"`);
+    }
+  }
+  return errors;
+}
+
+/**
+ * The text of one STORE entry of a zip (the /skills/<name>.zip route writes
+ * STORE only), or null when the entry is missing or compressed.
+ *
+ * @param {Uint8Array} bytes
+ * @param {string} entryPath
+ * @returns {string | null}
+ */
+export function storedZipText(bytes, entryPath) {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let end = -1;
+  for (let at = bytes.length - 22; at >= 0; at -= 1) {
+    if (view.getUint32(at, true) === 0x06054b50) {
+      end = at;
+      break;
+    }
+  }
+  if (end < 0) return null;
+  const count = view.getUint16(end + 10, true);
+  let at = view.getUint32(end + 16, true);
+  const decoder = new TextDecoder();
+  for (let index = 0; index < count; index += 1) {
+    if (view.getUint32(at, true) !== 0x02014b50) return null;
+    const method = view.getUint16(at + 10, true);
+    const size = view.getUint32(at + 20, true);
+    const nameLength = view.getUint16(at + 28, true);
+    const skip = nameLength + view.getUint16(at + 30, true) + view.getUint16(at + 32, true);
+    const entryName = decoder.decode(bytes.subarray(at + 46, at + 46 + nameLength));
+    if (entryName === entryPath) {
+      if (method !== 0) return null;
+      const local = view.getUint32(at + 42, true);
+      const start = local + 30 + view.getUint16(local + 26, true) + view.getUint16(local + 28, true);
+      return decoder.decode(bytes.subarray(start, start + size));
+    }
+    at += 46 + skip;
+  }
+  return null;
+}
+
+/**
  * @param {string} name
  * @param {string} text
  */
@@ -212,6 +297,13 @@ function checkDocument(name, text) {
         `${name}/${SKILL_DOCUMENT_FILENAME}: frontmatter name "${declared}" does not match the directory name "${name}"`,
       );
     }
+    errors.push(...checkUploadLimits(name, fields));
+  }
+  const lines = text.split("\n").length;
+  if (lines > MAX_SKILL_DOCUMENT_LINES) {
+    errors.push(
+      `${name}/${SKILL_DOCUMENT_FILENAME}: ${lines} lines exceeds ${MAX_SKILL_DOCUMENT_LINES}`,
+    );
   }
 
   errors.push(...checkExecutableContent(name, text));
@@ -355,6 +447,47 @@ export async function fetchServedSkills(baseUrl, names, fetchImpl = fetch) {
 }
 
 /**
+ * Fetches /skills/<name>.zip and returns the SKILL.md inside each. A served
+ * zip holds exactly `<name>/SKILL.md`; the comparison is SKILL.md alone.
+ *
+ * @param {string} baseUrl
+ * @param {readonly string[]} names
+ * @param {ZipFetch} [fetchImpl]
+ * @returns {Promise<{ documents: Map<string, string>, errors: string[] }>}
+ */
+export async function fetchServedZips(baseUrl, names, fetchImpl = fetch) {
+  /** @type {Map<string, string>} */
+  const documents = new Map();
+  /** @type {string[]} */
+  const errors = [];
+  for (const name of names) {
+    const url = new URL(`/skills/${name}.zip`, baseUrl);
+    let response;
+    try {
+      response = await fetchImpl(url.toString());
+    } catch (cause) {
+      errors.push(`served zip: ${url} could not be fetched: ${cause.message}`);
+      continue;
+    }
+    if (response.status !== 200) {
+      errors.push(`served zip: ${url} answered ${response.status}, expected 200`);
+      continue;
+    }
+    const contentType = response.headers.get("content-type") ?? "";
+    if (!contentType.toLowerCase().startsWith("application/zip")) {
+      errors.push(`served zip: ${url} answered with content-type "${contentType}", expected application/zip`);
+    }
+    const text = storedZipText(new Uint8Array(await response.arrayBuffer()), `${name}/${SKILL_DOCUMENT_FILENAME}`);
+    if (text === null) {
+      errors.push(`served zip: ${url} holds no stored ${name}/${SKILL_DOCUMENT_FILENAME}`);
+      continue;
+    }
+    documents.set(name, text);
+  }
+  return { documents, errors };
+}
+
+/**
  * Reads a local clone of the public mirror repository.
  *
  * @param {string} mirrorDir
@@ -397,7 +530,7 @@ export function defaultContentDir() {
 }
 
 /**
- * @param {{ contentDir?: string, baseUrl?: string | null, mirrorDir?: string | null, fetchImpl?: SkillFetch }} [options]
+ * @param {{ contentDir?: string, baseUrl?: string | null, mirrorDir?: string | null, fetchImpl?: SkillFetch, zipFetchImpl?: ZipFetch | null }} [options]
  * @returns {Promise<{ errors: string[], names: string[] }>}
  */
 export async function runSkillsMirrorCheck({
@@ -405,6 +538,7 @@ export async function runSkillsMirrorCheck({
   baseUrl = null,
   mirrorDir = null,
   fetchImpl = fetch,
+  zipFetchImpl = fetchImpl === fetch ? fetch : null,
 } = {}) {
   const { documents, errors } = await collectSkillSources(contentDir);
   const allErrors = [...errors];
@@ -414,6 +548,11 @@ export async function runSkillsMirrorCheck({
     const served = await fetchServedSkills(baseUrl, names, fetchImpl);
     allErrors.push(...served.errors);
     allErrors.push(...compareCopies(documents, served.documents, "served copy"));
+    if (zipFetchImpl !== null) {
+      const zips = await fetchServedZips(baseUrl, names, zipFetchImpl);
+      allErrors.push(...zips.errors);
+      allErrors.push(...compareCopies(documents, zips.documents, "served zip"));
+    }
   }
 
   if (mirrorDir !== null) {

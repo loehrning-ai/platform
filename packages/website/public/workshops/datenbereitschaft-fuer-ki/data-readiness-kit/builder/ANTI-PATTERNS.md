@@ -34,7 +34,7 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | AP-N02 | Status codes | `acct_history.state` and `customer_master.status` = A, C, N | The AI searched 'active' and found 0 of 0 | Decode in core: `active`, `churned`, `new` | LINT-06 | Names |
 | AP-N03 | Table named after where it came from, or after what it sounds like | `subscription_export` (June only); `monthly_revenue` (holds changes) | The name promises a total and a full history | Name the content and grain: `mrr_summary_monthly` | LINT-07; review | Names |
 | AP-N04 | A trusted-looking alias on the wrong number | The recorded run's output column `ending_mrr` on a sum of changes | A label is not evidence; the checklist counted it as a trust signal | Serve `ending_mrr_eur`; grade values against the truth, not labels | G01 | Names |
-| AP-N05 | Percent stored as 0–1 in a `_pct` column | (Trap; FOLDLINE stores 10.0) | 0.100 read as percent shows 0.1 % churn | `_pct` means 0–100; `_ratio` means 0–1 | Review; a range check such as `max(logo_churn_rate_pct) > 1` | Names |
+| AP-N05 | Percent stored as 0 to 1 in a `_pct` column | (Trap; FOLDLINE stores 10.0) | 0.100 read as percent shows 0.1 % churn | `_pct` means 0 to 100; `_ratio` means 0 to 1 | Review; a range check such as `max(logo_churn_rate_pct) > 1` | Names |
 
 ## AP-L Layers
 
@@ -87,7 +87,7 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | ID | Symptom | FOLDLINE instance | Why it fails | Fix | Caught by | Module |
 | --- | --- | --- | --- | --- | --- | --- |
 | AP-C01 | The prompt used as the lock | "Please do not read contact emails" | An instruction guides; in the lab a prompt warning did not stop the email request | Refuse early (instructions) and enforce anyway (grants) | R02 and D01 | Claude |
-| AP-C02 | The definition loaded but not used | Runs used an approved example 3 of 3, cited the definition 0 of 3 | Loaded is not the same as used | Require metric name and version in the trace; grade it | ai_run G01–G03 `metric_citation` | Semantic layer |
+| AP-C02 | The definition loaded but not used | Runs used an approved example 3 of 3, cited the definition 0 of 3 | Loaded is not the same as used | Require metric name and version in the trace; grade it | ai_run G01 to G03 `metric_citation` | Semantic layer |
 | AP-C03 | A vague Skill description | `description: analytics helper` | Claude loads a Skill when the description matches; a vague one never triggers, or triggers everywhere | Name the trigger words: ending MRR, net new MRR, logo churn, expansion, top accounts | Review; ai_run trace | Claude |
 | AP-C04 | The export uploaded "for context" | Adding `monthly_revenue.csv` to the Project B knowledge | Claude may pick it; the look-alike returns | Upload only approved files | Review; G01 (ai_run) | Claude |
 | AP-C05 | Unqualified names relying on `search_path` | Recorded ready run: unqualified SQL resolved via `analytics,public` | Another connection finds nothing, or something else | Always `analytics.<view>`; role `search_path = ''` | B-S01 | Claude |
@@ -115,7 +115,7 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | --- | --- | --- | --- | --- | --- | --- |
 | AP-E01 | "Same model" | The recording names the AI route, not the model version | The underlying model version was not established | Say "same AI route" | Review | Tests |
 | AP-E02 | One run used as a benchmark | One recorded run per question per lane | Another run can differ, as the rehearsal runs did | "One run is an observation, not a benchmark"; 3 or more runs per case | Review of the run log | Tests |
-| AP-E03 | Database checks read as an AI score | "9 of 9 tests pass, so the AI scores 9 of 9" | They test the database and course rules, not the AI | Two planes, two reports | Review | Tests |
+| AP-E03 | Database checks read as an AI grade | "9 of 9 tests pass, so the AI passes 9 of 9" | They test the database and course rules, not the AI | Two planes, two reports | Review | Tests |
 | AP-E04 | An average across controls | "Eight of ten checks proven: 80 % ready" | A weak check hides behind the average | The weakest check decides: not ready, pilot only, bounded ready | Review of READY-CANVAS | Build |
 
 ---
@@ -126,4 +126,4 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 2. **AP-A01** (read-only as the lock): the lock is missing privileges; test with B-W01.
 3. **AP-C02** (loaded, not used): require and grade the metric citation.
 4. **AP-T04** (truth from the AI): two people compute it first.
-5. **AP-E03** (database checks as an AI score): keep the two planes apart.
+5. **AP-E03** (database checks as an AI grade): keep the two planes apart.

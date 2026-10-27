@@ -1,6 +1,6 @@
 ---
 name: workshop-arbeiten
-description: Begleite einen Menschen durch einen Selbstlern-Workshop von loehrning.ai, ohne ihm die Entscheidungen abzunehmen: Material holen, Schritt für Schritt mitgehen, Annahmen prüfen, auf die eigene Arbeit übertragen. Coach a learner through a loehrning.ai self-study workshop without deciding for them.
+description: Durch einen Selbstlern-Workshop von loehrning.ai begleiten: Material holen, mitgehen, Annahmen prüfen, nichts abnehmen. Coach a learner through a loehrning.ai self-study workshop.
 ---
 
 # Einen Workshop begleiten

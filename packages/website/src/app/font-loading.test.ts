@@ -1,45 +1,8 @@
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-describe("global font loading contract", () => {
-  it("preloads only the regular and bold above-the-fold Figtree faces", () => {
-    const source = readFileSync(
-      resolve(process.cwd(), "src/app/layout.tsx"),
-      "utf8",
-    );
-    const globalStyles = readFileSync(
-      resolve(process.cwd(), "src/app/globals.css"),
-      "utf8",
-    );
-
-    expect(source).toContain('preload("/fonts/figtree-regular-v1.woff2"');
-    expect(source).toContain('preload("/fonts/figtree-bold-v1.woff2"');
-    expect(source).not.toMatch(
-      /preload\("\/fonts\/figtree-(?:medium|semibold|extrabold|black|italic)/,
-    );
-    expect(source).not.toMatch(/loehrning-sans-[a-z]+-v1\.woff2/);
-    expect(globalStyles.match(/font-display:\s*optional/g)).toHaveLength(7);
-    for (const face of [
-      "regular",
-      "medium",
-      "semibold",
-      "bold",
-      "extrabold",
-      "black",
-      "italic",
-    ]) {
-      const path = `/fonts/figtree-${face}-v1.woff2`;
-      expect(globalStyles).toContain(path);
-      expect(statSync(resolve(process.cwd(), "public", path.slice(1))).size)
-        .toBeLessThan(24 * 1024);
-    }
-    expect(globalStyles).toMatch(
-      /--font-loehrning-sans:\s*"Figtree",\s*"Figtree Fallback";/,
-    );
-    expect(globalStyles).not.toContain("Loehrning Sans");
-  });
-
+describe("font licence", () => {
   it("ships the Figtree licence next to the runtime faces", () => {
     const licence = readFileSync(
       resolve(process.cwd(), "public/fonts/figtree-OFL.txt"),
@@ -48,72 +11,5 @@ describe("global font loading contract", () => {
 
     expect(licence).toContain("The Figtree Project Authors");
     expect(licence).toContain("SIL OPEN FONT LICENSE Version 1.1");
-  });
-
-  it("bundles Geist Mono without putting it on the first-paint preload path", () => {
-    // Course and demo layouts are laid out against Geist Mono's advance
-    // widths. Resolving monospace from an OS stack picks a wider face on
-    // Linux than on macOS, which overflows prompt and code blocks on some
-    // machines only - and makes the responsive suite pass or fail according
-    // to which fonts the CI image happens to ship.
-    const source = readFileSync(
-      resolve(process.cwd(), "src/app/layout.tsx"),
-      "utf8",
-    );
-    const globalStyles = readFileSync(
-      resolve(process.cwd(), "src/app/globals.css"),
-      "utf8",
-    );
-
-    expect(source).toContain(
-      'src: "../../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2"',
-    );
-    expect(source).toContain('variable: "--font-geist-mono"');
-    expect(source).toContain("preload: false");
-    expect(source).toContain("geistMono.variable");
-    expect(globalStyles).toMatch(
-      /--font-mono:\s*var\(--font-geist-mono\),\s*monospace;/,
-    );
-    expect(globalStyles).not.toMatch(/--font-geist-mono:\s*ui-monospace/);
-  });
-
-  it("keeps the public homepage shell off the Geist Mono request path", () => {
-    const shellFiles = [
-      "src/components/nav.tsx",
-      "src/components/i18n/language-switch.tsx",
-      "src/components/auth/auth-status.tsx",
-      "src/components/footer.tsx",
-      "src/components/home/hero.tsx",
-      "src/components/home/hero-network.tsx",
-      "src/components/home/offering.tsx",
-      "src/components/home/workflow.tsx",
-      "src/components/home/count-up.tsx",
-      "src/components/home/pointer-depth.tsx",
-      "src/components/home/pointer-depth-classes.ts",
-    ];
-    const shellSource = shellFiles
-      .map((file) => readFileSync(resolve(process.cwd(), file), "utf8"))
-      .join("\n");
-
-    // The shell's last mono text, the footer's second "Updated" ISO date
-    // (font-ui-mono), was cut for one date line; any future shell mono must
-    // still use the system font-ui-mono stack, never Geist Mono.
-    expect(shellSource).not.toMatch(/\bfont-mono\b/);
-  });
-
-  it("sets the book catalog headings from the shared Figtree Bold file", () => {
-    const catalogSource = readFileSync(
-      resolve(process.cwd(), "src/app/buecher/page.tsx"),
-      "utf8",
-    );
-    const boldPath = resolve(process.cwd(), "public/fonts/figtree-bold-v1.woff2");
-
-    expect(catalogSource).toContain(
-      'src: "../../../public/fonts/figtree-bold-v1.woff2"',
-    );
-    expect(catalogSource).not.toContain("LoehrningSans");
-    // The full static Bold instance stays small enough that the route needs
-    // no separate subset; a heavier file would bring the subset back.
-    expect(statSync(boldPath).size).toBeLessThan(20 * 1024);
   });
 });

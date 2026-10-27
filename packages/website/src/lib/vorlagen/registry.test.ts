@@ -5,12 +5,14 @@
  */
 
 import { existsSync, readFileSync } from "node:fs";
+import { readZipEntry } from "@/lib/zip/read";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   DOWNLOAD_NAME_PATTERN,
   VORLAGEN,
   downloadPathFor,
+  vorlagenOfKind,
   findByDownloadName,
   loadQuestionSheet,
   readVorlageSource,
@@ -20,8 +22,36 @@ import {
 const LOCALES = ["de", "en"] as const;
 
 describe("VORLAGEN", () => {
-  it("publishes exactly the question sheet on AI in apprenticeship training", () => {
-    expect(VORLAGEN.map((entry) => entry.slug)).toEqual(["ki-in-der-ausbildung-fragen"]);
+  it("publishes exactly one question sheet, the one on AI in apprenticeship training", () => {
+    expect(vorlagenOfKind("question-sheet").map((entry) => entry.slug)).toEqual([
+      "ki-in-der-ausbildung-fragen",
+    ]);
+  });
+
+  it("gives every entry a kind, and every template a demo page as host", () => {
+    for (const entry of VORLAGEN) {
+      expect(["question-sheet", "template"]).toContain(entry.kind);
+      if (entry.kind !== "template") {
+        expect(entry.inKit, entry.slug).toBeUndefined();
+        continue;
+      }
+      expect(entry.hostPaths.de, entry.slug).toMatch(/^\/demos\/[a-z0-9-]+$/);
+    }
+  });
+
+  it("keeps a template that also ships in a kit byte-identical to the kit copy", () => {
+    for (const entry of vorlagenOfKind("template")) {
+      if (!entry.inKit) continue;
+      const zip = new Uint8Array(readFileSync(path.join(process.cwd(), "public", entry.inKit.zip)));
+      for (const locale of LOCALES) {
+        const kitPath = entry.inKit.paths[locale];
+        if (!kitPath) continue;
+        const inKit = readZipEntry(zip, kitPath);
+        expect(inKit, `${entry.inKit.zip}: ${kitPath}`).not.toBeNull();
+        const authored = readFileSync(path.join(vorlagenContentRoot(), entry.files[locale]));
+        expect(Buffer.from(inKit as Uint8Array).equals(authored), `${entry.slug} (${locale})`).toBe(true);
+      }
+    }
   });
 
   it("uses unique download names that match the public pattern", () => {
@@ -29,8 +59,8 @@ describe("VORLAGEN", () => {
     expect(new Set(names).size).toBe(names.length);
     for (const name of names) expect(name).toMatch(DOWNLOAD_NAME_PATTERN);
     for (const entry of VORLAGEN) {
-      expect(entry.downloadNames.de.endsWith(".en.md")).toBe(false);
-      expect(entry.downloadNames.en.endsWith(".en.md")).toBe(true);
+      expect(entry.downloadNames.de).not.toMatch(/\.en\.(?:md|csv)$/);
+      expect(entry.downloadNames.en).toMatch(/\.en\.(?:md|csv)$/);
     }
   });
 
@@ -111,7 +141,7 @@ describe("reading and parsing", () => {
   });
 
   it("parses each sheet for the page that hosts it", async () => {
-    for (const entry of VORLAGEN) {
+    for (const entry of vorlagenOfKind("question-sheet")) {
       for (const locale of LOCALES) {
         const sheet = await loadQuestionSheet(entry.slug, locale);
         expect(sheet.meta.locale).toBe(locale);

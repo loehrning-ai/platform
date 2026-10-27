@@ -19,11 +19,14 @@ import { demoForWorkshop } from "./demos";
 import type { Locale } from "./i18n/locale";
 import type { WorkshopKit } from "./workshop-kit";
 import { DATA_READINESS_WORKSHOP } from "./workshops-data-readiness";
-import { AI_AT_WORK_WORKSHOP } from "./workshops-ai-at-work";
+import { FORECASTING_KIT } from "./workshops-forecasting-kit";
+import { AUDIT_WORKSHOP } from "./workshops-audit";
+import { OFFERS_WORKSHOP } from "./workshops-offers";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
+import { DECK_KEYS } from "./deck-keys-copy";
 
-/** Two-digit catalogue number. "05" is the audit workshop (Sage palette). */
-export type WorkshopNumber = "01" | "02" | "03" | "04" | "05";
+/** Two-digit catalogue number. "06" is the offer comparison workshop (Kraft palette). */
+export type WorkshopNumber = "01" | "02" | "03" | "04" | "05" | "06";
 
 /** When a learner uses a material: before, during or after the session. */
 export type WorkshopPhase = "before" | "during" | "after";
@@ -211,6 +214,11 @@ export interface Workshop {
   readonly eyebrow: string;
   /** One or two sentences for the listing card and meta description. Keep at or under 160 characters. */
   readonly summary: string;
+  /**
+   * The band lede on the workshop page when it should say what you do rather
+   * than repeat the teaser; the summary stays the hub row and meta text.
+   */
+  readonly lede?: string;
   /** The longer intro: the case, the wrong answer and the fix, in a few sentences. */
   readonly description: string;
   readonly format: string;
@@ -274,170 +282,180 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     slug: "ki-prognosen-einschaetzen",
     number: "01",
     topic: "Prognosen",
-    title: "Kann KI die Zukunft vorhersagen?",
+    title: "KI-Prognosen prüfen, bevor danach geplant wird",
     eyebrow: "Workshop 01 · Prognosen",
     summary:
-      "Du rechnest aus, was eine falsche Prognose kostet und wann ein Mensch freigeben muss.",
+      "Du prüfst eine Wochenprognose an ihren alten Fehlern und legst fest, welche Menge du planst und wann eine Person entscheidet.",
     description:
-      "Du prüfst, ob ein Modell den Wert vom selben Wochentag der Vorwoche schlägt, und legst aus den Kosten von zu viel und zu wenig Kapazität den Puffer fest. Dann bestimmst du, woran du eine danebenliegende Prognose erkennst und wer freigibt. Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
+      "Das Tool meldet 94,2 % Prognosegenauigkeit. Die einfache Regel „wie letzte Woche“ kommt mit derselben Formel auf 92,6 %. Du schreibst für jede vergangene Woche Ist minus Prognose auf und liest diese eine Spalte viermal: als Messlatte, als Spanne, als Planzahl aus euren Kosten und als Prüfregel mit vier Lampen. Der Fall ist erfunden: ein Jahr Linsensuppe bei Suppenwerk Feldmark.",
     format: "Selbstlern-Kit",
-    duration: "~90 Minuten",
+    duration: "~55 Minuten",
     accessNote:
-      "Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
-    outcome: "Go/No-Go-Regel",
+      "Frei im Browser, ohne Konto. Die Demo und pruefen.py rechnen auf deinem Gerät, mit dem Claude-Skill können die Dateien an Anthropic übertragen werden.",
+    outcome: "Prüfregel",
     stageExplainer: {
-      heading: "Was ist das Labor?",
+      heading: "Was ist das Kit?",
       body:
-        "Im Browser rechnest du drei kleine Simulationen durch: Kapazität, Puffer und ein Nachfrageschock. Danach verteilst du im Launch‑Fall 1.050 Stück. Kein Konto nötig.",
-      facts: ["3 Simulationen", "1 Fall", "ca. 90 Min. allein"],
+        "Eine Datei mit 104 Wochen Absatz und der damals gespeicherten Prognose, dazu Kosten, vier Aufgaben, Lösungen und eine Prüfregel zum Ausfüllen. Im Browser, mit Python oder mit dem Claude-Skill kommst du auf dieselben Zahlen.",
+      facts: ["50 bewertete Wochen", "4 Lampen", "ca. 55 Min. allein"],
     },
     audience: [
-      "Disponentinnen und Planer, die nach Prognosen Mengen festlegen",
-      "Führungskräfte, die eine Prognose verantworten, aber nicht rechnen",
-      "Analytics-Teams, die belegen müssen, dass ein Modell besser ist",
+      "Disponentinnen und Planer, die nach einer Prognose Mengen festlegen",
+      "Führungskräfte, die eine Prognose freigeben, aber nicht selbst rechnen",
+      "Analytics-Teams, die zeigen müssen, dass ein Tool besser ist als eine einfache Regel",
     ],
     notForYou:
-      "Nicht für dich, wenn du ein Prognosemodell programmieren willst; hier nutzt du fertige Simulationen.",
+      "Nicht für dich, wenn du ein Prognosemodell bauen willst; hier prüfst du eines, das es schon gibt.",
     question:
-      "Nach welcher Regel verteilst du 1.050 Stück auf drei Standorte, und wann muss eine Person freigeben?",
+      "Darf die Prognose deines Tools ohne Freigabe in die Planung, und welche Menge planst du?",
     outcomes: [
-      "Du rechnest in Dollar aus, ob eine Prognose die heutige Faustregel schlägt.",
-      "Du leitest aus den Fehlerkosten ein Servicelevel und den Puffer ab.",
-      "Du legst fest, wann die Prognose allein läuft und wann eine benannte Person entscheidet.",
-      "Du nennst vier Arten von Ereignissen, die kein Modell vorhersagt.",
+      "Du vergleichst die Fehler einer Prognose mit „wie letzte Woche“ auf denselben Wochen.",
+      "Du zählst, wie oft das Ist in der 80-%-Spanne lag, und findest das Datum, ab dem sie nicht mehr hält.",
+      "Du rechnest aus Fehlmenge- und Restkosten die Planzahl für die nächste Woche.",
+      "Du schreibst eine Prüfregel mit vier Lampen und der Person, die in roten Wochen entscheidet.",
     ],
     agenda: [
       {
-        label: "Die erste Entscheidung",
+        label: "Schätzen und zusehen",
         minutes: 5,
         mode: "self",
         activity: "vote",
         description:
-          "Du verteilst 1.050 Stück auf drei Standorte und wählst den stärksten Beleg.",
+          "In der Demo schätzt du, wie genau „wie letzte Woche“ ist, und siehst die Fehlerliste entstehen.",
       },
       {
-        label: "Kapazität festlegen",
-        minutes: 15,
+        label: "Die Daten ansehen",
+        minutes: 5,
         mode: "self",
         activity: "do",
         description:
-          "Du vergleichst drei Modellstufen in Dollar mit dem Wert der Vorwoche.",
+          "Du findest die doppelte Zeile, die Woche ohne Prognose und die zwei ausverkauften Wochen.",
       },
       {
-        label: "Puffer in der Lieferkette",
-        minutes: 15,
+        label: "Prüfung 1: Messlatte",
+        minutes: 10,
         mode: "self",
         activity: "do",
         description:
-          "Du schickst dieselbe Nachfrage zweimal durch die Lieferkette und vergleichst die Schwankung.",
+          "Du rechnest den mittleren Fehler der Prognose und von „wie letzte Woche“ auf denselben 50 Wochen.",
       },
       {
-        label: "Freigabe nach einem Nachfrageschock",
-        minutes: 15,
+        label: "Prüfung 2: Spanne",
+        minutes: 10,
         mode: "self",
         activity: "do",
         description:
-          "Du löst Schocks aus und siehst, wann eine benannte Person übernimmt.",
+          "Du bildest die Spanne aus den 26 Fehlern davor und zählst die Treffer.",
       },
       {
-        label: "Der Launch-Fall",
-        minutes: 30,
+        label: "Prüfung 3 und 4: Planzahl und Regel",
+        minutes: 10,
         mode: "self",
         activity: "do",
         description:
-          "In elf Stationen verteilst du 1.050 Stück und legst vier tägliche Prüfungen fest.",
+          "Du rechnest die Planzahl aus den Kosten und die vier Lampen für jede Woche.",
       },
       {
-        label: "Dein Fall",
+        label: "Mit den Lösungen vergleichen",
+        minutes: 5,
+        mode: "self",
+        activity: "do",
+        description:
+          "Du vergleichst deine Zahlen mit den Lösungen.",
+      },
+      {
+        label: "Deine Reihe",
         minutes: 10,
         mode: "self",
         activity: "write",
         description:
-          "Du schreibst in fünf Sätzen die Regel für eine eigene Prognose.",
+          "Du trägst eine eigene Reihe in die Vorlage ein und füllst die Prüfregel aus.",
       },
     ],
     agendaSource: "plan",
-    minutesSelfStudy: 90,
+    minutesSelfStudy: 55,
     needs: [
-      "Ein Browser, für die Labore am besten am Desktop",
+      "Ein Browser; für den eigenen Fall eine Tabelle mit Woche, Ist und der damals gespeicherten Prognose",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Ein KI-Konto",
-      "Eigene Firmendaten",
+      "Eine Prognose-Software",
     ],
     notCovered: [
-      "Die Auswahl von Prognose-Software",
+      "Wie man ein Prognosemodell baut oder auswählt",
+      "Tageswerte, Filialen und mehrere Artikel auf einmal",
       "Die Herleitung der Formeln",
-      "Die Planung für dein eigenes Sortiment",
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
+      reviewedAt: "2026-10-25",
       data: "synthetic",
-      note: "Alle Firmen und Zahlen sind erfunden. Der Workshop zeigt keine KI-Antworten.",
+      note: "Firma und Zahlen sind erfunden. Die Demo, pruefen.py und der Skill rechnen mit demselben Code und zeigen keine KI-Antworten.",
     },
     steps: [
       {
         n: "01",
-        title: "Das heutige Verfahren in Dollar schlagen",
+        title: "Messlatte: kleinere Fehler als „wie letzte Woche“",
         description:
-          "Im Schattenbetrieb gegen den Vorwochenwert kostet fehlende Kapazität mehr als überschüssige; einen nicht eingetragenen Aktionstag bekommt eine Person.",
-        tool: "Labor 1",
+          "33,3 statt 42,2 Gläser auf denselben 50 Wochen: 21 % kleinere Fehler, näher dran in 30 von 50 Wochen.",
+        tool: "Prüfung 1",
       },
       {
         n: "02",
-        title: "Gestapelte Puffer mit einer gemeinsamen Prognose vergleichen",
+        title: "Spanne: hält sie, was sie verspricht",
         description:
-          "Du vergleichst einen Puffer je Stufe mit einer gemeinsamen Prognose nach Bestellschwankung, Lieferfähigkeit und Lagerwert.",
-        tool: "Labor 2",
+          "36 von 50 Wochen in der 80-%-Spanne statt 40. 11 der 14 Fehltreffer liegen ab der Auslistung am 07.04.",
+        tool: "Prüfung 2",
       },
       {
         n: "03",
-        title: "Die Freigabe nach einem Nachfrageschock prüfen",
+        title: "Planzahl aus den Kosten",
         description:
-          "Nach einem Schock fährt der blinde Betrieb weiter, der überwachte stoppt, übergibt an eine benannte Person und startet nach dem Nachtrainieren neu.",
-        tool: "Labor 3",
+          "Ein fehlendes Glas kostet 1,50 €, ein übriges 0,40 €: Anteil 0,79, Planzahl 748 statt 729.",
+        tool: "Prüfung 3",
       },
       {
         n: "04",
-        title: "Den Launch-Fall mit 1.050 Stück durchrechnen",
+        title: "Prüfregel mit vier Lampen",
         description:
-          "Du verteilst von Hand, wählst nach Fehlerkosten ein Modell (12 % statt 21 % Abweichung), suchst Datenfehler, testest rückwirkend und legst vier tägliche Prüfungen fest.",
-        tool: "Launch-Fall",
+          "37 Wochen frei, 15 entscheidet eine Person. Du trägst ein, wer das ist.",
+        tool: "Prüfung 4",
       },
       {
         n: "05",
-        title: "Auf eine Prognose aus deiner Arbeit übertragen",
+        title: "Deine eigene Reihe",
         description:
-          "Du schreibst in fünf Sätzen die Regel für einen eigenen Fall.",
-        tool: "Dein Fall",
+          "Dieselben vier Prüfungen mit deiner Datei, in der Demo, mit pruefen.py oder mit dem Claude-Skill.",
+        tool: "Deine Daten",
       },
     ],
     caseStudy: {
-      companyName: "Produktlaunch mit knapper Menge",
+      companyName: "Suppenwerk Feldmark",
       isFictional: true,
       location: "Erfundenes Übungsszenario",
-      sector: "Unterhaltungselektronik · Absatz- und Bedarfsplanung",
-      period: "Startwoche eines neuen Geräts",
+      sector: "Lebensmittel · Wochenplanung",
+      period: "Januar 2024 bis Dezember 2025, 104 Wochen",
       narrative:
-        "Die Nachfrage nach dem neuen Gerät übersteigt die zugesagte Menge, und drei Abteilungen lesen daraus drei verschiedene Zahlen.",
+        "Suppenwerk Feldmark kocht montags Linsensuppe für Bio-Läden. Die Warenwirtschaft meldet 94,2 % Prognosegenauigkeit, und die Planung will die Prognose ohne Freigabe übernehmen.",
       metrics: [
-        { label: "Anmeldung der Standorte", value: "1.370" },
-        { label: "Geschätzte Nachfrage (Median)", value: "1.180" },
-        { label: "Liefergrenze", value: "1.050" },
-        { label: "Abweichung Modell / Baseline", value: "12 % / 21 %" },
+        { label: "Prognosegenauigkeit laut Tool", value: "94,2 %" },
+        { label: "„wie letzte Woche“, gleiche Formel", value: "92,6 %" },
+        { label: "Wochen in der 80-%-Spanne", value: "36 von 50" },
+        { label: "Planzahl Woche ab 29.12.2025", value: "748" },
       ],
       decisionQuestion:
-        "Wer bekommt die 1.050 Stück, wenn 320 angemeldete fehlen, und ab welchem Prognosefehler gibt eine Person frei?",
+        "Darf die Prognose ohne Freigabe in die Planung, und welche Menge wird für die Woche ab 29. Dezember gekocht?",
       dataLimitations: [
-        "Verkäufe zeigen keine Fehlmengen; was im Regal fehlte, musst du rekonstruieren.",
-        "Ins Modell dürfen nur Merkmale, die zum Prognosezeitpunkt bekannt waren, sonst sieht der Rücktest die Zukunft.",
-        "Ein einzelner Genauigkeitswert verbirgt ein Modell, das im Mittel gut aussieht und dauerhaft zu hoch liegt.",
-        "Wettbewerber und Wetter bleiben Risiken; das Modell nutzt sie bewusst nicht.",
+        "Verkäufe zeigen keine Fehlmengen; ausverkaufte Wochen zählen deshalb nicht.",
+        "Nur Prognosen, die damals gespeichert wurden, zählen; eine heute nachgerechnete kennt das Ergebnis schon.",
+        "50 Wochen sind wenig; ein einzelnes Rot ist ein Anlass nachzusehen, kein Beweis.",
+        "Ärger im Laden über ein leeres Regal steht nicht in den Kosten.",
       ],
     },
     materials: [
+      // Workshop 01 has no slide deck: its labs play that part on card A, and
+      // the demo (the kit, performed) is card A's secondary link.
       {
         label: "Labore · 3 Simulationen",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
@@ -448,20 +466,22 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         minutes: 45,
         primary: true,
         description:
-          "Drei Simulationen zu Kapazität, Puffern und einem Nachfrageschock.",
+          "Vertiefung: drei Simulationen zu Kapazität, Puffern und einem Nachfrageschock.",
       },
       {
-        label: "Launch-Fall",
-        href: `${FORECAST_BASE_PATH}/case-study/index.html`,
-        kind: "html",
-        language: "en",
-        role: "case",
+        label: "Kit · .zip",
+        href: `${FORECAST_BASE_PATH}/prognose-pruefen-kit.zip`,
+        kind: "zip",
+        language: "de",
+        role: "kit",
         phase: "during",
-        minutes: 30,
+        sizeLabel: "43 KB",
         description:
-          "Du verteilst 1.050 Stück und legst die täglichen Prüfungen fest.",
+          "Daten, Tool-Export, Kosten, vier Aufgaben, Lösungen, die Prüfregel, pruefen.py und der Claude-Skill. Nur Textdateien.",
+        short: "Die Linsensuppe, vier Aufgaben, Lösungen und die Prüfregel.",
       },
     ],
+    kit: FORECASTING_KIT.de,
   },
   {
     slug: "geschaeftsberichte-mit-ki-lesen",
@@ -470,19 +490,19 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Geschäftsberichte mit KI lesen",
     eyebrow: "Workshop 02 · Geschäftsberichte",
     summary:
-      "Du legst fest, was die Kennzahlen eines Monatsberichts bedeuten, und lässt Claude danach ein Dashboard füllen.",
+      "Du legst fest, was die Kennzahlen eines Monatsberichts bedeuten, prüfst eine Zahl bis zur Datenzeile und entscheidest erst dann.",
     description:
-      "In der Claude-App schreibst du in fünf Prompts auf, was Umsatz, Mängel und Marketing im Monatsbericht der erfundenen Firma NORTHWIND bedeuten. Daraus wird ein Skill für jeden weiteren Monatsbericht. Im zweiten Fall nutzt du dieselbe Methode für Metas öffentliche Quartalszahlen.",
+      "Der Septemberbericht der erfundenen Firma NORTHWIND begründet mehr Marketing für die Linie CRAFT mit zwei richtig gerechneten Zahlen. Keine sagt, wie sie gezählt wurde. Du legst in Claude Code Zähler, Nenner und Zeitraum fest, verfolgst eine Zahl bis zu ihren Zeilen zurück und entscheidest erst dann. Die Festlegungen landen in einem Skill für jeden weiteren Monatsbericht.",
     format: "Selbstlern-Kit",
-    duration: "~90 Minuten",
+    duration: "~60 Minuten",
     accessNote:
-      "Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
-    outcome: "Kennzahlen-Skill + Dashboard",
+      "Die Schritte 1 bis 5 brauchen Claude Code (in Pro und Max), Demo, Skill und Projektanweisungen gehen ohne Bezahlplan. Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
+    outcome: "Kennzahlen-Steckbrief + Skill",
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Eine Zip mit Rohdaten und Monatsberichten der erfundenen Firma NORTHWIND, einem halb fertigen Skill und einer Dashboard-Vorlage. Du öffnest sie in der Claude-Desktop-App und machst die fünf Prompts nach.",
-      facts: ["Nur Textdateien", "5 Prompts", "ca. 90 Min. allein"],
+        "Eine Zip mit Rohdaten und zwei Monatsberichten der erfundenen Firma NORTHWIND, Steckbriefen zum Ausfüllen und einem Skill. Du öffnest sie in Claude Code, legst fest, was gezählt wird, und prüfst eine Zahl bis zur Zeile.",
+      facts: ["Nur Textdateien", "5 Schritte", "ca. 60 Min. allein"],
     },
     audience: [
       "Controllerinnen und Controller mit Monats- oder Quartalsberichten",
@@ -490,14 +510,14 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       "Alle, die Claude ohne Programmieren für Zahlen testen wollen",
     ],
     notForYou:
-      "Ohne Claude-Desktop-App nimm Workshop 01, 03 oder 04; sie laufen ohne KI-Konto.",
+      "Ohne Claude-Konto: Die Demo geht ohne Konto, für das Kit brauchst du Claude.",
     question:
       "Soll NORTHWIND die Produktlinie CRAFT nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
     outcomes: [
-      "Du schreibst auf, was fünf Kennzahlen bedeuten, und speicherst das als Skill.",
-      "Du prüfst eine von Claude ausgelesene Zahl gegen Datei und Spalte.",
-      "Du begründest eine Entscheidung mit der Zahl, die sie trägt, und nennst, was ein Irrtum kostet und was die Daten offenlassen.",
-      "Du wendest den Skill auf den nächsten Monatsbericht an.",
+      "Für drei Kennzahlen eines Monatsberichts Zähler, Nenner, Zeitraum, Quelle und Grenze festlegen und als Skill ablegen.",
+      "An einer Datei zeigen, dass dieselbe Kennzahl je nach Zählweise besser, gleich oder schlechter ausfällt, und eine Zählweise begründet wählen.",
+      "Eine Zahl, die Claude ausgibt, bis zu Datei, Spalte, Filter und Zeilen zurückverfolgen.",
+      "Eine Entscheidung mit einem Auslöser schreiben, der sich nicht durch Umbuchen erfüllen lässt, und den Skill im nächsten Monat wieder anwenden.",
     ],
     agenda: [
       {
@@ -509,66 +529,57 @@ const WORKSHOPS_DE: readonly Workshop[] = [
           "Du entpackst das Kit und öffnest den Ordner in Claude Code.",
       },
       {
-        label: "Claude liest die Firma",
-        minutes: 10,
+        label: "Das Argument lesen",
+        minutes: 5,
         mode: "self",
         activity: "do",
         description:
-          "Claude liest Steckbrief und Monatsbericht und nennt die Entscheidung des Monats.",
+          "Claude listet die Zahlen des VP Sales mit Abschnitt. Vorher schreibst du auf: besser, gleich oder schlechter?",
       },
       {
-        label: "Den Kennzahlen-Skill schreiben",
-        minutes: 20,
-        mode: "self",
-        activity: "write",
-        description:
-          "Claude fragt nach Umsatz, Mängeln und Marketing und schreibt deine Antworten in den Skill.",
-      },
-      {
-        label: "Auslesen und an der Quelle prüfen",
-        minutes: 15,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude liest den Monat nach deinen Regeln aus, du prüfst eine Zahl gegen die CSV.",
-      },
-      {
-        label: "Das Dashboard füllen",
-        minutes: 10,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude trägt die Kennzahlen in die Dashboard-Vorlage ein.",
-      },
-      {
-        label: "Entscheiden",
+        label: "Die Definitionen festlegen",
         minutes: 15,
         mode: "self",
         activity: "write",
         description:
-          "Du entscheidest über CRAFT und nennst die Zahl, die trägt, was ein Irrtum kostet und das stärkste Gegenargument.",
+          "Claude rechnet jede Zählweise für August und September aus, du wählst Zähler, Zeitraum und Freigabebedingung.",
       },
       {
-        label: "Fall 2: Metas Quartal",
-        minutes: 15,
+        label: "Eine Zahl zurückverfolgen",
+        minutes: 10,
         mode: "self",
         activity: "do",
-        optional: true,
         description:
-          "Du wendest die Methode auf Metas Quartalsmitteilung Q2 2026 an.",
+          "Claude wendet den Skill an und führt den CRAFT-Umsatz auf seine Zeilen zurück.",
+      },
+      {
+        label: "Dashboard und Entscheidung",
+        minutes: 15,
+        mode: "self",
+        activity: "write",
+        description:
+          "Jede Kachel sagt, wie sie gezählt ist. Du entscheidest über CRAFT und nennst den Steckbrief, der die Entscheidung trägt.",
+      },
+      {
+        label: "Eine eigene Kennzahl",
+        minutes: 10,
+        mode: "self",
+        activity: "write",
+        description:
+          "Claude fragt dich Feld für Feld nach einer Kennzahl aus deinem Bericht und schreibt den Steckbrief.",
       },
     ],
     agendaSource: "plan",
-    minutesSelfStudy: 90,
+    minutesSelfStudy: 60,
     needs: [
-      "Die Claude-Desktop-App in einem Plan mit Claude Code",
+      "Die Claude-Desktop-App mit Claude Code (in Pro und Max)",
       "Windows oder macOS",
       "Ein Zip-Archiv entpacken; START-HERE.md führt durch die Einrichtung",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Einen API-Schlüssel",
-      "Eigene Firmendaten",
+      "Eigene Firmendaten: deine Kennzahl beschreibst du nur",
     ],
     notCovered: [
       "API, Datenbank oder Automatisierung",
@@ -577,58 +588,51 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
-      data: "synthetic-and-public",
-      note: "Fall 2 nutzt nur Metas öffentliche Quartalsmitteilung; der Autor arbeitet als Data Engineer bei Meta.",
+      reviewedAt: "2026-10-25",
+      data: "synthetic",
+      note: "NORTHWIND und alle Daten sind erfunden. Die erwarteten Werte in START-HERE.md sind aus den CSV-Dateien des Kits gerechnet.",
     },
     steps: [
       {
         n: "01",
-        title: "Claude liest die Firma",
+        title: "Das Argument lesen",
         description:
-          "Claude liest Steckbrief und Monatsbericht; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
-        tool: "Dateien",
+          "Claude listet jede Zahl des VP Sales mit Abschnitt; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
+        tool: "Bericht",
       },
       {
         n: "02",
-        title: "Den Kennzahlen-Skill schreiben",
+        title: "Die Definitionen festlegen",
         description:
-          "Claude fragt, was Umsatz, Mängel und Marketing bedeuten, und ergänzt damit den halb fertigen Skill. Prüf in jeder Antwort, ob Claude deine Regeln nennt.",
-        tool: "Skill",
+          "Dieselbe Datei ergibt je nach Zähler besser, gleich oder schlechter. Du wählst Zähler und Zeitraum mit einem Satz Begründung, und Claude schreibt beides in den Skill.",
+        tool: "Steckbriefe",
       },
       {
         n: "03",
-        title: "Auslesen und an der Quelle prüfen",
+        title: "Eine Zahl zurückverfolgen",
         description:
-          "Du prüfst eine ausgelesene Kennzahl mit Datei und Spalte gegen die CSV und vergleichst mit einer Antwort ohne Skill.",
-        tool: "Claude Code",
+          "Claude führt den CRAFT-Umsatz auf Datei, Spalten, Filter, Zeilen und Summe zurück. So zeigt sich auch, was Umsatz hier heißt.",
+        tool: "Skill",
       },
       {
         n: "04",
-        title: "Das Dashboard füllen",
+        title: "Dashboard und Entscheidung",
         description:
-          "Mit einem Prompt füllt Claude die Dashboard-Vorlage, die das Meeting statt des 8-Seiten-Berichts bekommt.",
+          "Jede Kachel zeigt ihren Wert und wie er gezählt ist. Du entscheidest in sechs Feldern; das Gegenargument nennt, was die anderen Zählweisen ergeben.",
         tool: "Dashboard",
       },
       {
         n: "05",
-        title: "Gegen den Vertriebsleiter argumentieren",
+        title: "Eine eigene Kennzahl",
         description:
-          "Du entscheidest über CRAFT und nennst die Zahl, die trägt, was ein Irrtum kostet, welche Daten fehlen und das stärkste Gegenargument.",
-        tool: "Entscheidung",
+          "Claude fragt Entscheidung, Zähler, Nenner, Zeitraum, Quelle, Grenze und Auslöser ab. Du beschreibst die Kennzahl, ohne Firmendaten einzufügen.",
+        tool: "Steckbrief",
       },
       {
         n: "06",
-        title: "Fall 2 mit Metas Quartal",
+        title: "Im nächsten Monat wiederholen",
         description:
-          "Claude lädt Metas Quartalsmitteilung Q2 2026 aus dem Netz, und du beurteilst 31 Mrd. $ Investitionen in einem Quartal.",
-        tool: "SEC-Mitteilung · live",
-      },
-      {
-        n: "07",
-        title: "Mit deinen eigenen Berichten wiederholen",
-        description:
-          "Im nächsten Monat wendest du den Skill auf den neuen Bericht an.",
+          "Du legst den neuen Bericht dazu und wiederholst Schritt 3 und 4. Die Steckbriefe bleiben, die Zahlen ändern sich.",
         tool: "Wiederholung",
       },
     ],
@@ -647,36 +651,16 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         { label: "CRAFT-Einheiten", value: "9.162" },
       ],
       decisionQuestion:
-        "Welche Zahl trägt die Entscheidung, und welche Daten fehlen dafür?",
+        "Welche Zählweise trägt die Entscheidung, und was zeigen die anderen?",
       dataLimitations: [
         "Keine Bruttomarge je Linie, weil Stückkosten fehlen.",
-        "Keine Retouren je Linie, weil Bestellungen nicht mit Linien verknüpft sind.",
-        "Kein Marketingbudget je Linie, weil Kampagnen nicht sauber zurechenbar sind.",
+        "Keine Retouren: Meldungen sind Befunde aus der Fertigung.",
+        "Kein Modell je Meldung, deshalb bewertet das Kit Ausschuss zum mittleren Listenpreis.",
       ],
-    },
-    realWorldCase: {
-      companyName: "Meta Platforms, Inc.",
-      source: "Meta Q2 2026 Results · SEC Exhibit 99.1",
-      sourceHref:
-        "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
-      sourcePublishedAt: "2026-07-29",
-      sourceReviewedAt: "2026-08-26",
-      sourceLimitation:
-        "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Freier Cashflow ist eine Non-GAAP-Kennzahl. Die Quelle belegt Werte, nicht die Investitionsentscheidung.",
-      narrative:
-        "Fast der gesamte operative Cashflow floss in Infrastruktur. Du definierst sechs Kennzahlen, liest das Quartal aus und lässt Claude ein Dashboard ohne Vorlage entwerfen.",
-      metrics: [
-        { label: "Umsatz", value: "+28 %" },
-        { label: "Operatives Ergebnis", value: "−8 %" },
-        { label: "Investitionen, ein Quartal", value: "31,1 Mrd. $" },
-        { label: "Freier Cashflow", value: "784 Mio. $" },
-      ],
-      decisionQuestion:
-        "Lassen sich 31,1 Mrd. $ Investitionen in einem Quartal mit künftigen Erträgen begründen? Und welche Zahl beschreibt das Quartal besser, das gemeldete Minus oder der Wert ohne Sondereffekte?",
     },
     materials: [
       {
-        label: "Deck · 22 Folien",
+        label: "Deck · 15 Folien",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
@@ -684,20 +668,20 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "Die Folien zeigen Firma, Kit, die fünf Prompts mit Ergebnissen, drei Zusatz-Prompts und Fall 2. Jeder Prompt hat einen Kopierknopf.",
-        short: "Die Folien führen durch Firma, Kit, Prompts und Fall 2 mit Meta.",
+          `Die Folien zeigen Firma, Kit und die Prompts mit Ergebnissen. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
+        short: "Die Folien führen durch Firma, Kit und Prompts.",
       },
       {
         label: "Analyst-Kit · .zip",
-        href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit.zip`,
+        href: `${WORKSHOP_BASE_PATH}/northwind-analyst-kit-de.zip`,
         kind: "zip",
-        language: "en",
+        language: "de",
         role: "kit",
         phase: "before",
-        sizeLabel: "60 KB",
+        sizeLabel: "37 KB",
         description:
-          "Das Kit enthält START-HERE.md, Rohdaten, beide Monatsberichte, den halb fertigen Skill, Dashboard-Vorlage, Arbeitsblatt, Meta-Aufgabe und eine Vorlage für die eigene Firma. Nur Textdateien.",
-        short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Skill und Vorlagen.",
+          "Das Kit enthält START-HERE.md, Rohdaten, beide Monatsberichte, die Steckbriefe zum Ausfüllen, den NORTHWIND-Skill, eine Dashboard-Vorlage, den Skill kennzahlen-steckbrief und Projektanweisungen. Nur Textdateien.",
+        short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Steckbriefen und Skill.",
       },
     ],
   },
@@ -708,170 +692,179 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     slug: "ki-prognosen-einschaetzen",
     number: "01",
     topic: "Forecasts",
-    title: "Can AI predict the future?",
+    title: "Checking AI forecasts before you plan with them",
     eyebrow: "Workshop 01 · Forecasts",
     summary:
-      "You work out what a wrong forecast costs and when a person must approve.",
+      "You check a weekly forecast against its own past errors and set the quantity you plan and when a person decides.",
     description:
-      "You check whether a model beats the value from the same weekday a week earlier, and set the buffer from the cost of too much and too little capacity. Then you decide how you spot a forecast going wrong and who approves. The labs price in US dollars; the launch case counts units.",
+      "The tool reports 94.2 % forecast accuracy. The simple rule \"same as last week\" reaches 92.6 % with the same formula. You write down actual minus forecast for every past week and read that one column four ways: as a baseline, as a range, as a planning number from your costs, and as a release rule with four lamps. The case is invented: one year of lentil soup at Suppenwerk Feldmark.",
     format: "Self-study kit",
-    duration: "~90 minutes",
+    duration: "~55 minutes",
     accessNote:
-      "The labs price in US dollars; the launch case counts units.",
-    outcome: "Go/no-go rule",
+      "Free in the browser, no account. The demo and pruefen.py compute on your device; with the Claude skill the files may be transferred to Anthropic.",
+    outcome: "Release rule",
     stageExplainer: {
-      heading: "What is the lab?",
+      heading: "What is the kit?",
       body:
-        "In your browser you run three small simulations: capacity, buffers and a demand shock. Then you hand out 1,050 units in the launch case. No account needed.",
-      facts: ["3 simulations", "1 case", "about 90 min alone"],
+        "104 weeks of sales with the forecast stored at the time, plus costs, four tasks, solutions and a release rule to fill in. Browser, Python or the Claude skill give the same numbers.",
+      facts: ["50 scored weeks", "4 lamps", "about 55 min alone"],
     },
     audience: [
-      "Planners who set quantities from forecasts",
-      "Managers who own a forecast but do not calculate it",
-      "Analytics teams who must prove a model does better",
+      "Planners who set quantities from a forecast",
+      "Managers who sign off a forecast without computing it themselves",
+      "Analytics teams who must show that a tool beats a simple rule",
     ],
     notForYou:
-      "Not for you if you want to program a forecasting model; here you use ready-made simulations.",
+      "Not for you if you want to build a forecasting model; here you check one that already exists.",
     question:
-      "Which rule allocates 1,050 units among three sites, and when must a person approve?",
+      "May your tool's forecast go into planning without sign-off, and what quantity do you plan?",
     outcomes: [
-      "Work out in dollars whether a forecast beats today's rule of thumb.",
-      "Derive a service level and the buffer from the error costs.",
-      "Set when the forecast runs alone and when a named person decides.",
-      "Name four kinds of events that no model predicts.",
+      "You compare a forecast's errors with \"same as last week\" on the same weeks.",
+      "You count how often the actual landed inside the 80 % range and find the date it stops holding.",
+      "You compute next week's planning number from the cost of a missing and a leftover unit.",
+      "You write a release rule with four lamps and the person who decides in red weeks.",
     ],
     agenda: [
       {
-        label: "The first decision",
+        label: "Guess and watch",
         minutes: 5,
         mode: "self",
         activity: "vote",
         description:
-          "You allocate 1,050 units among three sites and pick the strongest evidence.",
+          "In the demo you guess how accurate \"same as last week\" is and watch the error list build up.",
       },
       {
-        label: "Set capacity",
-        minutes: 15,
+        label: "Look at the data",
+        minutes: 5,
         mode: "self",
         activity: "do",
         description:
-          "You compare three model stages in dollars with last week's value.",
+          "You find the duplicate row, the week without a forecast and the two sold-out weeks.",
       },
       {
-        label: "Buffers in the supply chain",
-        minutes: 15,
+        label: "Check 1: baseline",
+        minutes: 10,
         mode: "self",
         activity: "do",
         description:
-          "You send the same demand through the supply chain twice and compare the swings.",
+          "You compute the mean error of the forecast and of \"same as last week\" on the same 50 weeks.",
       },
       {
-        label: "Release after a demand shock",
-        minutes: 15,
+        label: "Check 2: range",
+        minutes: 10,
         mode: "self",
         activity: "do",
         description:
-          "You trigger shocks and see when a named person takes over.",
+          "You build the range from the 26 errors before each week and count the hits.",
       },
       {
-        label: "The launch case",
-        minutes: 30,
+        label: "Checks 3 and 4: planning number and rule",
+        minutes: 10,
         mode: "self",
         activity: "do",
         description:
-          "Over eleven stations you allocate 1,050 units and set four daily checks.",
+          "You compute the planning number from the costs and the four lamps for every week.",
       },
       {
-        label: "Your case",
+        label: "Compare with the solutions",
+        minutes: 5,
+        mode: "self",
+        activity: "do",
+        description:
+          "You compare your numbers with the solutions.",
+      },
+      {
+        label: "Your series",
         minutes: 10,
         mode: "self",
         activity: "write",
         description:
-          "You write the rule for a forecast of your own in five sentences.",
+          "You put a series of your own into the template and fill in the release rule.",
       },
     ],
     agendaSource: "plan",
-    minutesSelfStudy: 90,
+    minutesSelfStudy: 55,
     needs: [
-      "A browser, ideally on a desktop for the labs",
+      "A browser; for your own case a table with week, actual and the forecast stored at the time",
     ],
     notNeeded: [
       "Programming skills",
       "An AI account",
-      "Your own company data",
+      "Forecasting software",
     ],
     notCovered: [
-      "Choosing forecasting software",
+      "How to build or choose a forecasting model",
+      "Daily values, branches and several items at once",
       "Deriving the formulas",
-      "Planning for your own product range",
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
+      reviewedAt: "2026-10-25",
       data: "synthetic",
-      note: "All companies and figures are invented. The workshop shows no AI answers.",
+      note: "The company and the numbers are invented. The demo, pruefen.py and the skill run the same code and show no AI answers.",
     },
     steps: [
       {
         n: "01",
-        title: "Beat the current process in dollars",
+        title: "Baseline: smaller errors than \"same as last week\"",
         description:
-          "In a shadow test against last week's value, missing capacity costs more than spare; a promotion nobody entered goes to a person.",
-        tool: "Lab 1",
+          "33.3 instead of 42.2 jars on the same 50 weeks: 21 % smaller errors, closer in 30 of 50 weeks.",
+        tool: "Check 1",
       },
       {
         n: "02",
-        title: "Compare stacked buffers with a shared forecast",
+        title: "Range: does it hold what it promises",
         description:
-          "You compare a buffer per stage with a shared forecast on order swings, delivery rate and stock value.",
-        tool: "Lab 2",
+          "36 of 50 weeks inside the 80 % range instead of 40. 11 of the 14 misses fall from the delisting on 7 April.",
+        tool: "Check 2",
       },
       {
         n: "03",
-        title: "Test the release after a demand shock",
+        title: "Planning number from the costs",
         description:
-          "After a shock the blind mode keeps running; the monitored one stops, hands over to a named person and restarts after retraining.",
-        tool: "Lab 3",
+          "A missing jar costs €1.50, a leftover one €0.40: share 0.79, planning number 748 instead of 729.",
+        tool: "Check 3",
       },
       {
         n: "04",
-        title: "Work through the launch case with 1,050 units",
+        title: "Release rule with four lamps",
         description:
-          "You allocate by hand, pick a model by error cost (12% rather than 21% deviation), look for data errors, backtest and set four daily checks.",
-        tool: "Launch case",
+          "37 weeks free, in 15 a person decides. You write down who that is.",
+        tool: "Check 4",
       },
       {
         n: "05",
-        title: "Apply it to a forecast from your work",
+        title: "Your own series",
         description:
-          "You write the rule for a case of your own in five sentences.",
-        tool: "Your case",
+          "The same four checks on your file, in the demo, with pruefen.py or with the Claude skill.",
+        tool: "Your data",
       },
     ],
     caseStudy: {
-      companyName: "Product launch with constrained supply",
+      companyName: "Suppenwerk Feldmark",
       isFictional: true,
       location: "Invented practice scenario",
-      sector: "Consumer electronics · Supply and demand planning",
-      period: "Launch week for a new device",
+      sector: "Food · weekly planning",
+      period: "January 2024 to December 2025, 104 weeks",
       narrative:
-        "Demand for the new device exceeds the confirmed quantity, and three departments read three different numbers from it.",
+        "Suppenwerk Feldmark cooks lentil soup for organic shops every Monday. The ERP reports 94.2 % forecast accuracy, and planning wants to take the forecast without sign-off.",
       metrics: [
-        { label: "Site requests", value: "1,370" },
-        { label: "Estimated demand (median)", value: "1,180" },
-        { label: "Supply limit", value: "1,050" },
-        { label: "Model / baseline deviation", value: "12% / 21%" },
+        { label: "Forecast accuracy, says the tool", value: "94.2 %" },
+        { label: "\"Same as last week\", same formula", value: "92.6 %" },
+        { label: "Weeks inside the 80 % range", value: "36 of 50" },
+        { label: "Planning number, week of 29 Dec 2025", value: "748" },
       ],
       decisionQuestion:
-        "Who gets the 1,050 units when 320 requested units are missing, and at what forecast error does a person approve?",
+        "May the forecast go into planning without sign-off, and how much is cooked for the week of 29 December?",
       dataLimitations: [
-        "Sales miss stockouts; what was missing from the shelf has to be reconstructed.",
-        "Only features known at forecast time may enter the model, or the backtest sees the future.",
-        "One accuracy figure hides a model that looks fine on average and runs high every week.",
-        "Competitors and weather remain risks; the model deliberately leaves them out.",
+        "Sales do not show shortages, so sold-out weeks do not count.",
+        "Only forecasts stored at the time count; one recomputed today already knows the result.",
+        "50 weeks are few; a single red is a reason to look, not a proof.",
+        "Annoyance in the shop about an empty shelf is not in the costs.",
       ],
     },
     materials: [
+      // No slide deck: the labs play that part on card A, the demo is its secondary link.
       {
         label: "Labs · 3 simulations",
         href: `${FORECAST_BASE_PATH}/hands-on.html`,
@@ -882,20 +875,22 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         minutes: 45,
         primary: true,
         description:
-          "Three simulations on capacity, buffers and a demand shock.",
+          "Going further: three simulations on capacity, buffers and a demand shock.",
       },
       {
-        label: "Launch case",
-        href: `${FORECAST_BASE_PATH}/case-study/index.html`,
-        kind: "html",
+        label: "Kit · .zip",
+        href: `${FORECAST_BASE_PATH}/forecast-check.zip`,
+        kind: "zip",
         language: "en",
-        role: "case",
+        role: "kit",
         phase: "during",
-        minutes: 30,
+        sizeLabel: "43 KB",
         description:
-          "You allocate 1,050 units and set the daily checks.",
+          "Data, tool export, costs, four tasks, solutions, the release rule, pruefen.py and the Claude skill. Text files only.",
+        short: "The lentil soup, four tasks, solutions and the release rule.",
       },
     ],
+    kit: FORECASTING_KIT.en,
   },
   {
     slug: "geschaeftsberichte-mit-ki-lesen",
@@ -904,19 +899,19 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Read business reports with AI",
     eyebrow: "Workshop 02 · Business reports",
     summary:
-      "You define what a monthly report's metrics mean, then have Claude fill a dashboard by those rules.",
+      "You pin down what a monthly report's metrics mean, trace one figure to its data rows and only then decide.",
     description:
-      "In the Claude app you write down in five prompts what revenue, defects and marketing mean in the monthly report of the invented company NORTHWIND. That becomes a skill for every later monthly report. In the second case you apply the same method to Meta's public quarterly figures.",
+      "The September report of the invented company NORTHWIND argues for more marketing behind its CRAFT line with two correctly computed numbers. Neither says how it was counted. In Claude Code you pin down numerator, denominator and period, trace one figure to its rows and only then decide. The definitions go into a skill for every later monthly report.",
     format: "Self-study kit",
-    duration: "~90 minutes",
+    duration: "~60 minutes",
     accessNote:
-      "Use only the invented kit: Claude may transfer files to Anthropic.",
-    outcome: "Metrics skill + dashboard",
+      "Steps 1 to 5 need Claude Code (in Pro and Max), while the demo, the skill and the project instructions need no paid plan. Use only the invented kit: Claude may transfer files to Anthropic.",
+    outcome: "Metric card + skill",
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A zip with raw data and monthly reports of the invented company NORTHWIND, a half-finished skill and a dashboard template. You open it in the Claude desktop app and follow the five prompts.",
-      facts: ["Text files only", "5 prompts", "about 90 min alone"],
+        "A zip with raw data and two monthly reports of the invented company NORTHWIND, metric cards to fill in and a skill. You open it in Claude Code, pin down what is counted and trace one figure to its row.",
+      facts: ["Text files only", "5 steps", "about 60 min alone"],
     },
     audience: [
       "Controllers who work with monthly or quarterly reports",
@@ -924,14 +919,14 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       "Anyone who wants to test Claude on figures without code",
     ],
     notForYou:
-      "Without the Claude desktop app, pick Workshop 01, 03 or 04; they need no AI account.",
+      "Without a Claude account: the demo needs no account, the kit needs Claude.",
     question:
       "Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?",
     outcomes: [
-      "Write down what five metrics mean and save it as a skill.",
-      "Check a figure Claude extracted against its file and column.",
-      "Back a decision with its key figure, the cost of error and data gaps.",
-      "Apply the skill to the next monthly report.",
+      "Pin down numerator, denominator, period, source and limit for three metrics of a monthly report and save them as a skill.",
+      "Show on one file that the same metric reads better, the same or worse depending on the count, and choose one with a reason.",
+      "Trace a figure Claude gives you back to its file, column, filter and rows.",
+      "Write a decision with a trigger that no rebooking can meet, and apply the skill again next month.",
     ],
     agenda: [
       {
@@ -943,66 +938,57 @@ const WORKSHOPS_EN: readonly Workshop[] = [
           "You unzip the kit and open the folder in Claude Code.",
       },
       {
-        label: "Claude reads the company",
-        minutes: 10,
+        label: "Read the argument",
+        minutes: 5,
         mode: "self",
         activity: "do",
         description:
-          "Claude reads the profile and the monthly report and names the month's decision.",
+          "Claude lists the sales director's numbers by section. First you write down: better, same or worse?",
       },
       {
-        label: "Write the metrics skill",
-        minutes: 20,
-        mode: "self",
-        activity: "write",
-        description:
-          "Claude asks about revenue, defects and marketing and writes your answers into the skill.",
-      },
-      {
-        label: "Extract and check the source",
-        minutes: 15,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude extracts the month by your rules; you check one figure against the CSV.",
-      },
-      {
-        label: "Fill the dashboard",
-        minutes: 10,
-        mode: "self",
-        activity: "do",
-        description:
-          "Claude writes the metrics into the dashboard template.",
-      },
-      {
-        label: "Decide",
+        label: "Pin the definitions down",
         minutes: 15,
         mode: "self",
         activity: "write",
         description:
-          "You decide on CRAFT, with key figure, cost of error and the strongest counter-argument.",
+          "Claude computes every count for August and September; you choose numerator, period and release condition.",
       },
       {
-        label: "Case 2: Meta's quarter",
-        minutes: 15,
+        label: "Trace one figure",
+        minutes: 10,
         mode: "self",
         activity: "do",
-        optional: true,
         description:
-          "You apply the method to Meta's Q2 2026 quarterly release.",
+          "Claude runs the skill and traces CRAFT revenue to its rows.",
+      },
+      {
+        label: "Dashboard and decision",
+        minutes: 15,
+        mode: "self",
+        activity: "write",
+        description:
+          "Every tile says how it is counted. You decide on CRAFT and name the card the decision rests on.",
+      },
+      {
+        label: "One metric of your own",
+        minutes: 10,
+        mode: "self",
+        activity: "write",
+        description:
+          "Claude asks you field by field about one metric from your own report and writes the card.",
       },
     ],
     agendaSource: "plan",
-    minutesSelfStudy: 90,
+    minutesSelfStudy: 60,
     needs: [
-      "The Claude desktop app on a plan with Claude Code",
+      "The Claude desktop app with Claude Code (in Pro and Max)",
       "Windows or macOS",
       "Unzipping an archive; START-HERE.md walks you through setup",
     ],
     notNeeded: [
       "Programming skills",
       "An API key",
-      "Your own company data",
+      "Your own company data: you only describe your metric",
     ],
     notCovered: [
       "APIs, databases or automation",
@@ -1011,58 +997,51 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-09-26",
-      data: "synthetic-and-public",
-      note: "Case 2 uses only Meta's public quarterly release; the author works as a data engineer at Meta.",
+      reviewedAt: "2026-10-25",
+      data: "synthetic",
+      note: "NORTHWIND and all its data are invented. The expected values in START-HERE.md are computed from the kit's CSV files.",
     },
     steps: [
       {
         n: "01",
-        title: "Claude reads the company",
+        title: "Read the argument",
         description:
-          "Claude reads the profile and the monthly report; the files may be transferred to the service, so check product, contract and retention settings before you use real data.",
-        tool: "Files",
+          "Claude lists every number the sales director uses, with its section; the files may be transferred to the service, so check product, contract and retention settings before you use real data.",
+        tool: "Report",
       },
       {
         n: "02",
-        title: "Write the metrics skill",
+        title: "Pin the definitions down",
         description:
-          "Claude asks what revenue, defects and marketing mean and completes the half-finished skill with your answers. Check that each answer names your rules.",
-        tool: "Skill",
+          "The same file comes out better, the same or worse depending on the numerator. You choose numerator and period with one sentence why, and Claude writes both into the skill.",
+        tool: "Metric cards",
       },
       {
         n: "03",
-        title: "Extract the figures and check the source",
+        title: "Trace one figure",
         description:
-          "You check one extracted metric against the CSV by file and column and compare with an answer without the skill.",
-        tool: "Claude Code",
+          "Claude traces CRAFT revenue to file, columns, filter, rows and sum. That also shows what revenue means here.",
+        tool: "Skill",
       },
       {
         n: "04",
-        title: "Fill the dashboard",
+        title: "Dashboard and decision",
         description:
-          "With one prompt Claude fills the dashboard template the meeting gets instead of the eight-page report.",
+          "Every tile shows its value and how it is counted. You decide in six fields; the counter-argument gives what the other counts produce.",
         tool: "Dashboard",
       },
       {
         n: "05",
-        title: "Argue against the sales director",
+        title: "One metric of your own",
         description:
-          "You decide on CRAFT with key figure, cost of error, data gaps and the strongest counter-argument.",
-        tool: "Decision",
+          "Claude asks for decision, numerator, denominator, period, source, limit and trigger. You describe the metric without pasting company data.",
+        tool: "Metric card",
       },
       {
         n: "06",
-        title: "Case 2 with Meta's quarter",
+        title: "Repeat next month",
         description:
-          "Claude fetches Meta's Q2 2026 release from the web, and you judge $31 billion of capital expenditure in one quarter.",
-        tool: "SEC filing · live",
-      },
-      {
-        n: "07",
-        title: "Repeat it on your own reports",
-        description:
-          "Next month you apply the skill to the new report.",
+          "You add the new report and repeat steps 3 and 4. The cards stay; the numbers change.",
         tool: "Repeat",
       },
     ],
@@ -1081,36 +1060,16 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         { label: "CRAFT units", value: "9,162" },
       ],
       decisionQuestion:
-        "Which figure carries the decision, and which data are missing?",
+        "Which count carries the decision, and what do the others show?",
       dataLimitations: [
         "No gross margin per line, because unit costs are missing.",
-        "No returns per line, because orders are not linked to lines.",
-        "No marketing spend per line, because campaigns are not cleanly allocated.",
+        "No returns: NCRs are production findings.",
+        "No model per NCR, so the kit values scrap at the mean list price.",
       ],
-    },
-    realWorldCase: {
-      companyName: "Meta Platforms, Inc.",
-      source: "Meta Q2 2026 Results · SEC Exhibit 99.1",
-      sourceHref:
-        "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
-      sourcePublishedAt: "2026-07-29",
-      sourceReviewedAt: "2026-08-26",
-      sourceLimitation:
-        "Company release with unaudited quarterly figures. Free cash flow is a non-GAAP measure. The source supports the figures, not the investment decision.",
-      narrative:
-        "Almost all operating cash flow went into infrastructure. You define six metrics, extract the quarter and have Claude design a dashboard without a template.",
-      metrics: [
-        { label: "Revenue", value: "+28%" },
-        { label: "Operating income", value: "−8%" },
-        { label: "Capital expenditure, one quarter", value: "$31.1bn" },
-        { label: "Free cash flow", value: "$784m" },
-      ],
-      decisionQuestion:
-        "Can $31.1 billion of capital expenditure in one quarter be justified by future returns? And which figure describes the quarter better, the reported decline or the result excluding special items?",
     },
     materials: [
       {
-        label: "Deck · 22 slides",
+        label: "Deck · 15 slides",
         href: `${WORKSHOP_BASE_PATH}/slides.html`,
         kind: "html",
         language: "en",
@@ -1118,8 +1077,8 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "The slides show the company, the kit, the five prompts with results, three extra prompts and case 2. Every prompt has a copy button.",
-        short: "The slides walk through the company, the kit, the prompts and Meta.",
+          `The slides show the company, the kit and the prompts with results. Every prompt has a copy button. ${DECK_KEYS.en}`,
+        short: "The slides walk through the company, the kit and the prompts.",
       },
       {
         label: "Analyst kit · .zip",
@@ -1128,10 +1087,10 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         language: "en",
         role: "kit",
         phase: "before",
-        sizeLabel: "60 KB",
+        sizeLabel: "36 KB",
         description:
-          "The kit holds START-HERE.md, raw data, both monthly reports, the half-finished skill, dashboard template, worksheet, Meta exercise and a template for your own company. Text files only.",
-        short: "The NORTHWIND kit with raw data, reports, the skill and templates.",
+          "The kit holds START-HERE.md, raw data, both monthly reports, the metric cards to fill in, the NORTHWIND skill, a dashboard template, the kennzahlen-steckbrief skill and project instructions. Text files only.",
+        short: "The NORTHWIND kit with raw data, reports, metric cards and the skill.",
       },
     ],
   },
@@ -1140,7 +1099,8 @@ const WORKSHOPS_EN: readonly Workshop[] = [
 /**
  * The workshop's practice demo (src/lib/demos.ts) as one more material, in
  * the page's own language: role "demo", during the session, optional, never
- * the place to start. It is a page on this site (/demos/<slug>, or
+ * the place to start: a workshop is its slides and its kit, the demo is one
+ * link away. It is a page on this site (/demos/<slug>, or
  * /en/demos/<slug>), not a file under public/workshops/.
  */
 export function workshopDemoMaterial(
@@ -1151,8 +1111,9 @@ export function workshopDemoMaterial(
   if (!demo) return undefined;
   const copy = locale === "en" ? demo.en : demo;
   return {
-    label: `${locale === "en" ? "Exercise" : "Übung"} · ${copy.title.replace(/\.$/, "")}`,
-    href: `${locale === "en" ? "/en" : ""}/demos/${demo.slug}`,
+    label: `Demo · ${copy.title.replace(/\.$/, "")}`,
+    // ?source=workshop: the demo's back control then returns to this workshop.
+    href: `${locale === "en" ? "/en" : ""}/demos/${demo.slug}?source=workshop`,
     kind: "html",
     language: locale,
     description: copy.oneLiner,
@@ -1188,13 +1149,15 @@ export const WORKSHOPS_BY_LOCALE: Readonly<
     ...WORKSHOPS_DE,
     DATA_READINESS_WORKSHOP.de,
     ESG_REPORTING_WORKSHOP.de,
-    AI_AT_WORK_WORKSHOP.de,
+    AUDIT_WORKSHOP.de,
+    OFFERS_WORKSHOP.de,
   ].map((workshop) => withDemoMaterial(workshop, "de")),
   en: [
     ...WORKSHOPS_EN,
     DATA_READINESS_WORKSHOP.en,
     ESG_REPORTING_WORKSHOP.en,
-    AI_AT_WORK_WORKSHOP.en,
+    AUDIT_WORKSHOP.en,
+    OFFERS_WORKSHOP.en,
   ].map((workshop) => withDemoMaterial(workshop, "en")),
 };
 

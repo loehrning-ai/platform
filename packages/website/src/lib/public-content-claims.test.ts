@@ -222,13 +222,20 @@ describe("public learning content claim hygiene", () => {
     ].join("\n");
     // Inline SVG path data is machine geometry, not learner-visible prose.
     // Strip it before looking for telephone-shaped digit sequences.
-    const proseCorpus = corpus.replace(/\bpath:\s*"M[^"]*"/gsu, "");
+    // A recorded Claude run stores its stream as chunks that split a date
+    // mid-number ("2" then "026-10-01"); the same answer is stored joined in
+    // final_text, which stays in the corpus and is checked whole.
+    const proseCorpus = corpus
+      .replace(/\bpath:\s*"M[^"]*"/gsu, "")
+      .replace(/"chunk":\s*"(?:[^"\\]|\\.)*"/gu, "");
     // DOI link targets can contain telephone-shaped numeric suffixes. They are
     // publication identifiers, not learner-visible example identities.
-    const proseWithoutDoiLinks = proseCorpus.replace(
-      /\bhttps:\/\/doi[.]org\/10[.]\d{4,9}\/[-._;()/:a-z0-9]+/giu,
-      "",
-    );
+    // The one documented example IBAN (the standard specimen, used by the
+    // redaction demo) ends in digit groups that look like a phone number.
+    // Only that exact specimen is exempt; any other IBAN-shaped digits are checked.
+    const proseWithoutDoiLinks = proseCorpus
+      .replace(/\bhttps:\/\/doi[.]org\/10[.]\d{4,9}\/[-._;()/:a-z0-9]+/giu, "")
+      .replace(/\bDE89 ?3704 ?0044 ?0532 ?0130 ?00\b/gu, "");
     const emails =
       proseCorpus.match(
         /(?<!\\)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/gu,

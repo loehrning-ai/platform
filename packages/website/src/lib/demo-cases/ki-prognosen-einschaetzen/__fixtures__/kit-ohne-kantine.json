@@ -1,0 +1,185 @@
+{
+ "hinweise": [
+  "2024-09-16: doppelte Zeile, einmal gezählt"
+ ],
+ "geprueft": "Prognose",
+ "messlatte": "wie letzte Woche",
+ "von": "2024-12-30",
+ "bis": "2025-12-22",
+ "wochen": 50,
+ "nicht_bewertet": [
+  [
+   "2025-02-03",
+   "keine Prognose gespeichert"
+  ],
+  [
+   "2025-03-10",
+   "ausverkauft: Ist ist kleiner als die Nachfrage"
+  ]
+ ],
+ "tabelle": {
+  "Prognose": {
+   "mae": 33.26,
+   "bias": 0.03010430111277776,
+   "wape": 0.05801095336100743
+  },
+  "wie letzte Woche": {
+   "mae": 42.24,
+   "bias": -0.002860431855443541,
+   "wape": 0.07367356193532633
+  },
+  "wie Vorjahreswoche": {
+   "mae": 38.84,
+   "bias": -0.01534865873652632,
+   "wape": 0.06774339833257753
+  },
+  "Schnitt 4 Wochen": {
+   "mae": 42.175,
+   "bias": -0.005084243206474343,
+   "wape": 0.0735601911605679
+  }
+ },
+ "naeher": 30,
+ "zu_hoch": 33,
+ "spanne_treffer": 36,
+ "spanne_wochen": 50,
+ "beste_regel": "wie Vorjahreswoche",
+ "vorsprung": 0.21259469696969702,
+ "regel_wochen": 52,
+ "regel_frei": 37,
+ "regel_rot": [
+  [
+   "2025-02-03",
+   [
+    "daten"
+   ]
+  ],
+  [
+   "2025-04-21",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-04-28",
+   [
+    "messlatte",
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-05-05",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-05-12",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-05-19",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-05-26",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-02",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-09",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-16",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-23",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-06-30",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-07-07",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-07-14",
+   [
+    "bias",
+    "spanne"
+   ]
+  ],
+  [
+   "2025-07-21",
+   [
+    "bias",
+    "spanne"
+   ]
+  ]
+ ],
+ "anteil": 0.48387096774193544,
+ "kosten_wochen": 50,
+ "kosten": {
+  "Messlatte": 3269.5,
+  "Prognose": 2620.8,
+  "Planzahl": 2497.0193548387097
+ },
+ "naechste": {
+  "woche": "2025-12-29",
+  "prognose": 729.0,
+  "lampen": {
+   "daten": true,
+   "messlatte": true,
+   "bias": true,
+   "spanne": true,
+   "frei": true,
+   "verhaeltnis": 0.7871853546910755,
+   "bias_wert": 0.018318840579710144,
+   "treffer": 10
+  },
+  "p10": 693.5,
+  "p50": 731.0,
+  "p90": 756.0,
+  "planzahl": 729,
+  "zu_wenig": 13,
+  "uebrig": 13,
+  "von": 26
+ }
+}

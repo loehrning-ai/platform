@@ -24,10 +24,11 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/buecher/ki-landschaft/09_quellen",
   "/datenschutz",
   "/demos",
+  "/demos/angebote-mit-ki-vergleichen",
   "/demos/datenbereitschaft-fuer-ki",
   "/demos/esg-berichte-mit-ki",
   "/demos/geschaeftsberichte-mit-ki-lesen",
-  "/demos/ki-im-unternehmen-sicher-nutzen",
+  "/demos/audit-vorbereitung-mit-ki",
   "/demos/ki-prognosen-einschaetzen",
   "/einstieg",
   "/eu-ai-act-kurs",
@@ -45,17 +46,23 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/open-source",
   "/open-source/lizenzrichtlinie",
   "/open-source/tools/cv-engine",
+  "/open-source/tools/cv-engine/live",
   "/ueber-mich",
   "/workshops",
-  "/workshops/ki-im-unternehmen-sicher-nutzen",
+  "/workshops/angebote-mit-ki-vergleichen",
   // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
-  "/workshops/ki-im-unternehmen-sicher-nutzen/kit",
+  "/workshops/angebote-mit-ki-vergleichen/kit",
+  "/workshops/audit-vorbereitung-mit-ki",
+  // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
+  "/workshops/audit-vorbereitung-mit-ki/kit",
   "/workshops/datenbereitschaft-fuer-ki",
   "/workshops/esg-berichte-mit-ki",
   // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
   "/workshops/esg-berichte-mit-ki/kit",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
   "/workshops/ki-prognosen-einschaetzen",
+  // A workshop with a kit block adds its kit page here (workshops-kit.test.ts keeps this list in step).
+  "/workshops/ki-prognosen-einschaetzen/kit",
 ]);
 
 export function contentLocalesForPath(pathname: string): readonly Locale[] {

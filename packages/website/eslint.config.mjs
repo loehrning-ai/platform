@@ -128,6 +128,38 @@ export default tseslint.config(
     },
   },
   {
+    // The demos promise that what a visitor pastes never leaves the device: no
+    // network primitive in a demo, its pure logic or its hub tiles. (The page
+    // shell's open counter in demo-open-tracker.tsx goes through the analytics
+    // wrapper and carries no input.)
+    files: [
+      "src/components/demos/**/*.{ts,tsx}",
+      "src/lib/demo-cases/**/*.{ts,tsx}",
+      "src/lib/demo-tiles/**/*.{ts,tsx}",
+    ],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        ...vercelRuntimeGlobalSelectors.map((selector) => ({
+          selector,
+          message: VERCEL_RUNTIME_GLOBAL_MESSAGE,
+        })),
+        {
+          selector: "CallExpression[callee.name='fetch']",
+          message: "Demos run offline: no fetch.",
+        },
+        {
+          selector: "NewExpression[callee.name=/^(XMLHttpRequest|WebSocket|EventSource)$/]",
+          message: "Demos run offline: no network primitive.",
+        },
+        {
+          selector: "MemberExpression[property.name='sendBeacon']",
+          message: "Demos run offline: no beacon.",
+        },
+      ],
+    },
+  },
+  {
     files: [ANALYTICS_DISPATCH_FILE],
     rules: {
       "no-restricted-imports": [

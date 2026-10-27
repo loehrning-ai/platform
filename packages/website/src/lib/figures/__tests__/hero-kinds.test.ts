@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { figureCsv, figureTable } from "../data.ts";
 import { renderFigureMarkup, renderStandaloneSvg } from "../export.ts";

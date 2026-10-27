@@ -54,7 +54,10 @@ export async function exposeAllAuditedContent(page: Page): Promise<void> {
                 !element.textContent?.trim() ||
                 element.closest("svg") ||
                 element.closest('[aria-hidden="true"]') ||
-                element.closest("[hidden]")
+                element.closest("[hidden]") ||
+                // inert content is out of the accessibility tree and the focus
+                // order (a demo's dock while its intro shows), like aria-hidden.
+                element.closest("[inert]")
               ) {
                 return false;
               }

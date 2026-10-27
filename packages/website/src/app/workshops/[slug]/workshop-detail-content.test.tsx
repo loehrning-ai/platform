@@ -1,8 +1,9 @@
 import { readFileSync } from "node:fs";
+import { workshopObjective } from "@/lib/workshop-objectives";
 import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { getWorkshopBySlug, getWorkshops, workshopFileMaterials } from "@/lib/workshops";
+import { getWorkshopBySlug, getWorkshops, workshopFileMaterials, type Workshop } from "@/lib/workshops";
 import { workshopStage } from "@/lib/workshop-stage";
 import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT, type PlakatKey } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
@@ -38,6 +39,25 @@ function follows(first: Element, second: Element): boolean {
   );
 }
 
+
+/** A public second case as the page renders one; no catalogue entry carries one at the moment. */
+function withRealWorldCase(workshop: Workshop): Workshop {
+  return {
+    ...workshop,
+    provenance: { ...workshop.provenance, data: "synthetic-and-public" },
+    realWorldCase: {
+      companyName: "Example Corp",
+      source: "Example Corp Q2 Results",
+      sourceHref: "https://example.com/q2-results.htm",
+      sourcePublishedAt: "2026-07-29",
+      sourceReviewedAt: "2026-08-26",
+      sourceLimitation: "Company release with unaudited figures.",
+      narrative: "The same method on a public quarterly release.",
+      metrics: [{ label: "Revenue", value: "+28%" }],
+      decisionQuestion: "Which figure describes the quarter?",
+    },
+  };
+}
 describe("<WorkshopDetailContent>", () => {
   it("puts the band, the stage, the kit explainer and the provenance line in that order, with nothing collapsible, no outcomes, no case section and no agenda", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
@@ -87,20 +107,22 @@ describe("<WorkshopDetailContent>", () => {
     const footer = container.querySelector('footer[aria-label="Stand und Herkunft"]') as HTMLElement;
     expect(follows(explainer, footer)).toBe(true);
     expect(footer).toHaveTextContent("Tim Löhr");
-    expect(footer).toHaveTextContent("geprüft 26. September 2026");
+    expect(footer).toHaveTextContent("geprüft 25. Oktober 2026");
     expect(footer).toHaveTextContent(workshop.provenance.note);
-    expect(footer).toHaveTextContent("Material auf Englisch");
+    // Workshop 01's kit has a German edition, so the page claims no English-only material.
+    expect(footer).not.toHaveTextContent("Material auf Englisch");
     expect(screen.queryByText("Referenz")).toBeNull();
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
   });
 
   it("sets a title's subtitle on its own line and keeps the full title as the heading name", () => {
     for (const locale of ["de", "en"] as const) {
-      const workshop = getWorkshopBySlug("esg-berichte-mit-ki", locale)!;
+      const workshop = getWorkshopBySlug("audit-vorbereitung-mit-ki", locale)!;
       const { unmount } = render(
         <WorkshopDetailContent workshop={workshop} locale={locale} />,
       );
       const [head, subtitle] = workshop.title.split(": ");
+      expect(subtitle).toBeTruthy();
       const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
       // The text reads as the full title, colon included; only the subtitle
       // moves to its own line.
@@ -110,7 +132,8 @@ describe("<WorkshopDetailContent>", () => {
       const lead = h1.firstElementChild;
       const mark = h1.querySelector("span.title-mark");
       expect(lead).toHaveClass("relative");
-      expect(`${lead?.textContent} ${mark?.textContent}`).toBe(head);
+      // The colon sits inside the band, never alone after it.
+      expect(`${lead?.textContent} ${mark?.textContent}`).toBe(`${head}:`);
       expect(h1.querySelector("[data-title-subtitle]")?.textContent).toBe(subtitle);
       unmount();
     }
@@ -169,21 +192,20 @@ describe("<WorkshopDetailContent>", () => {
     });
   });
 
-  it("lands the Workshop 05 band on the word Data, in both locales, and keeps the full title as the heading", () => {
-    for (const [locale, mark, lead, tail] of [
-      ["en", "data", "Where does your", " go?"],
-      ["de", "Daten?", "Wohin gehen deine", ""],
+  it("lands the Workshop 05 band on the head's last pair, in both locales, and keeps the full title as the heading", () => {
+    for (const [locale, mark, lead] of [
+      ["en", "with AI", "Audit Preparation"],
+      ["de", "mit KI", "Audit-Vorbereitung"],
     ] as const) {
-      const workshop = getWorkshopBySlug("ki-im-unternehmen-sicher-nutzen", locale)!;
+      const workshop = getWorkshopBySlug("audit-vorbereitung-mit-ki", locale)!;
       const { unmount } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
       const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
       expect(h1.textContent).toBe(workshop.title);
       expect(h1.firstElementChild).toHaveClass("relative");
-      expect(h1.firstElementChild).toHaveTextContent(lead);
+      expect(h1.textContent?.slice(0, h1.textContent.indexOf(mark)).trim()).toBe(lead);
       const marks = h1.querySelectorAll("span.title-mark");
       expect(marks).toHaveLength(1);
-      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark.replace("?", "\\?")}$`));
-      expect(marks[0].nextSibling?.textContent ?? "").toBe(tail);
+      expect(marks[0]).toHaveTextContent(new RegExp(`^${mark}:?$`));
       // The words are never animated: no motion class or inline animation on the heading.
       expect(h1.outerHTML).not.toMatch(/animate-|animation|motion-/);
       unmount();
@@ -216,6 +238,10 @@ describe("<WorkshopDetailContent>", () => {
       const text = rgb(hexOf(key, band.textColorVar ?? "--color-scene-ink"));
       // Display type (40px and up): the words on the band keep 4.4:1 or more.
       expect(contrast(text, painted), `${key} words on their band`).toBeGreaterThanOrEqual(4.4);
+      // A line's box is taller than its band (0.84em), so the same words also
+      // sit on the bare ground: display floor 3 there too (Bogen on Kraft, 1.93,
+      // passed the line above and failed the pixel check).
+      expect(contrast(text, rgb(ground)), `${key} words on the ground`).toBeGreaterThanOrEqual(3);
       // The band is a visible mark on its ground: 1.6:1 or more (a wash that
       // matched the ground marked nothing; idea 35% and autumn 30% were 1.54 and 1.40).
       expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.6);
@@ -229,10 +255,16 @@ describe("<WorkshopDetailContent>", () => {
       .getByRole("heading", { level: 1 })
       .closest("[data-cover-band]") as HTMLElement;
     const lab = w01.materials.find((material) => material.primary)!;
-    const caseStudy = w01.materials.find((material) => material.role === "case")!;
+    const demo = w01.materials.find((material) => material.role === "demo")!;
+    const w01Kit = w01.materials.find((material) => material.role === "kit")!;
     const stage = container.querySelector("[data-workshop-stage]") as HTMLElement;
+    // W01 has no slide deck: the labs are card A, the demo (the kit, performed)
+    // is card A's secondary link, the German kit zip is card B.
+    expect(lab.role).toBe("lab");
     expect(within(stage).getByRole("link", { name: /^Labor öffnen/ })).toHaveAttribute("href", lab.href);
-    expect(within(stage).getByRole("link", { name: /^Fall ansehen/ })).toHaveAttribute("href", caseStudy.href);
+    expect(within(stage).getByRole("link", { name: /^Demo öffnen/ })).toHaveAttribute("href", demo.href);
+    expect(within(stage).getByRole("link", { name: /^Kit herunterladen/ })).toHaveAttribute("href", w01Kit.href);
+    expect(w01Kit.href).toMatch(/\/prognose-pruefen-kit\.zip$/);
     // The band holds the poster and the words only: the back link is its one link.
     expect(
       within(cover).queryAllByRole("link").filter((link) => !link.hasAttribute("data-cover-back")),
@@ -333,11 +365,20 @@ describe("<WorkshopDetailContent>", () => {
         expect(container.querySelectorAll("details, summary, [aria-expanded]")).toHaveLength(0);
         expect(container.textContent).not.toMatch(/Mehr Details|More details/);
         expect(screen.queryByRole("heading", { name: locale === "de" ? "Nach dem Workshop" : "After this you can" })).toBeNull();
-        // No h2 other than the stage heading and the explainer heading.
+        // No h2 other than the stage heading, the explainer heading and the Lernziel.
+        const objective = workshopObjective(workshop.slug, locale);
         expect([...container.querySelectorAll("h2")].map((heading) => heading.id)).toEqual([
           "workshop-stage-heading",
           "workshop-explainer-heading",
+          ...(objective ? ["workshop-objective-heading"] : []),
         ]);
+        if (objective) {
+          const block = container.querySelector("[data-workshop-objective]") as HTMLElement;
+          expect(follows(container.querySelector("[data-stage-explainer]")!, block)).toBe(true);
+          expect(follows(block, container.querySelector("footer")!)).toBe(true);
+          expect(block).toHaveTextContent(objective.objective);
+          expect(block.querySelectorAll("[data-objective-card] > li")).toHaveLength(3);
+        }
         // Order: band, stage, explainer, provenance footer.
         const band = container.querySelector("[data-cover-band]")!;
         const stage = container.querySelector("[data-workshop-stage]")!;
@@ -445,8 +486,8 @@ describe("<WorkshopDetailContent>", () => {
         const files = workshopFileMaterials(workshop);
         expect(files.length, workshop.slug).toBeLessThanOrEqual(2);
         expect(files.filter((material) => material.optional), workshop.slug).toEqual([]);
-        // Workshop 01 has no slide deck: its labs and its case play that part.
-        const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "case"] : ["deck", "kit"];
+        // Workshop 01 has no slide deck: its labs play that part, next to its kit.
+        const allowed = workshop.slug === "ki-prognosen-einschaetzen" ? ["lab", "kit"] : ["deck", "kit"];
         for (const material of files) expect(allowed, material.href).toContain(material.role);
         // The one non-file material is the demo page: optional, never primary.
         const demos = workshop.materials.filter((material) => material.role === "demo");
@@ -465,8 +506,8 @@ describe("<WorkshopDetailContent>", () => {
       it(`${locale}/${workshop.slug}: lists no materials, because the two cards reach both files and the demo`, () => {
         const { container } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
         const stage = workshopStage(workshop, locale);
-        const reached = new Set([stage.a?.material, stage.b?.material]);
-        expect(workshopFileMaterials(workshop).every((material) => reached.has(material))).toBe(true);
+        const reached = new Set([stage.a?.href, stage.b?.href]);
+        expect(workshopFileMaterials(workshop).every((material) => reached.has(material.href))).toBe(true);
         // Card A's secondary link reaches the demo page.
         const demo = workshop.materials.find((material) => material.role === "demo");
         expect(stage.a?.demoHref).toBe(demo?.href);
@@ -479,11 +520,11 @@ describe("<WorkshopDetailContent>", () => {
   }
 
   it("keeps the German material note and back link", () => {
-    const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
+    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
     render(<WorkshopDetailContent workshop={workshop} locale="de" />);
 
-    // The language is said once, in the provenance line.
-    expect(document.querySelector("footer")).toHaveTextContent("Material auf Englisch");
+    // The kit has a German edition, so the provenance line says no "auf Englisch".
+    expect(document.querySelector("footer")).not.toHaveTextContent("Material auf Englisch");
     expect(screen.queryByText(/Alle Materialien auf Englisch/)).toBeNull();
     for (const material of workshop.materials) {
       expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
@@ -509,7 +550,7 @@ describe("<WorkshopDetailContent>", () => {
   });
 
   it("renders the English page with the real-world case source, dates and no German interface copy", () => {
-    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")!;
+    const workshop = withRealWorldCase(getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")!);
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="en" />,
     );
@@ -522,12 +563,9 @@ describe("<WorkshopDetailContent>", () => {
     expect(screen.queryByRole("heading", { name: "The case" })).toBeNull();
     expect(screen.queryByRole("heading", { name: "After this you can" })).toBeNull();
     // The real source stays on the page, in the provenance line, with publisher and date.
-    const source = screen.getByRole("link", { name: /Meta Q2 2026 Results/ });
+    const source = screen.getByRole("link", { name: /Example Corp Q2 Results/ });
     expect(source.closest("footer")).not.toBeNull();
-    expect(source).toHaveAttribute(
-      "href",
-      "https://www.sec.gov/Archives/edgar/data/1326801/000162828026050596/meta-06302026xexhibit991.htm",
-    );
+    expect(source).toHaveAttribute("href", "https://example.com/q2-results.htm");
     expect(source).toHaveAttribute("target", "_blank");
     expect(container.querySelector('time[datetime="2026-07-29"]')).not.toBeNull();
 
@@ -610,11 +648,11 @@ describe("the compact band and the facts", () => {
   });
 
   it("names the origin of the data once, in the provenance line", () => {
-    const workshop = getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!;
+    const workshop = withRealWorldCase(getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")!);
     const { container } = render(<WorkshopDetailContent workshop={workshop} locale="de" />);
     const footer = container.querySelector('footer[aria-label="Stand und Herkunft"]') as HTMLElement;
     expect(footer).toHaveTextContent(workshop.provenance.note);
-    expect(footer).toHaveTextContent("Quelle: Meta Q2 2026 Results");
+    expect(footer).toHaveTextContent("Quelle: Example Corp Q2 Results");
     expect(container.querySelector("[data-stage-explainer]")).not.toHaveTextContent(/öffentliche Zahlen/);
   });
 });

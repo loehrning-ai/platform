@@ -164,11 +164,8 @@ test.describe("edge: provider-free /feedback fallback", () => {
     await page.goto(FEEDBACK, { waitUntil: "load" });
 
     await expect(
-      page.getByText(/Das Formular ist hier nicht freigeschaltet/),
+      page.getByRole("heading", { level: 1, name: "Kontakt" }),
     ).toBeVisible();
-    await expect(page.getByRole("status")).toContainText(
-      "Hier wird nichts gespeichert.",
-    );
     await expect(page.getByRole("textbox", { name: /Nachricht/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Rückmeldung senden/i })).toHaveCount(0);
     await expect(page.getByRole("link", { name: /tim@loehrning\.ai/i })).toHaveAttribute(
@@ -204,13 +201,12 @@ test.describe("edge: provider-free /feedback fallback", () => {
 // ---------------------------------------------------------------------------
 
 test.describe("edge: /feedback disabled-state structure", () => {
-  test("the disabled state contains one status message and no form controls", async ({
+  test("the disabled state has no form and no status box", async ({
     page,
   }) => {
     await page.goto(FEEDBACK, { waitUntil: "domcontentloaded" });
     await expect(page.locator("form")).toHaveCount(0);
-    await expect(page.getByRole("status")).toHaveCount(1);
-    await expect(page.getByRole("status")).toBeVisible();
+    await expect(page.getByRole("status")).toHaveCount(0);
   });
 
   test("the mailto fallback is keyboard-focusable and has a real address", async ({

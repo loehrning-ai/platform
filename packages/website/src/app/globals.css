@@ -197,8 +197,7 @@
   /* Lesson engine ("Lab"): the lesson reader and its exercise widgets are a
      calm, elevated learning surface, deliberately unlike the flat poster and
      landing layer. Soft layered depth on paper, never a dark ground. Only
-     the lesson-engine and lab-widget files use these tokens
-     (lesson-engine-design-contract.test.ts). */
+     the lesson-engine and lab-widget files use these tokens. */
   --shadow-lab-sm: 0 1px 2px rgba(18, 18, 18, 0.05), 0 2px 6px rgba(18, 18, 18, 0.04);
   --shadow-lab:
     0 1px 2px rgba(18, 18, 18, 0.05), 0 8px 24px -10px rgba(18, 18, 18, 0.16);
@@ -299,7 +298,8 @@
 /* Poster layer ("Plakat"): five scenes of three colours each, four sampled from
    the reference posters and Sage from the Workshop 05 deck. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
    Kobalt, Himbeere), Bloom (Sand, Aubergine, Terrakotta), Autumn (Rost,
-   Creme, Ocker), Sage (Salbei, Tanne, Bernstein). Mennige stays the one red: the lemons mid is Mennige.
+   Creme, Ocker), Sage (Salbei, Tanne, Bernstein), Kraft (Kraft, Druckschwarz, Mennige) for Workshop 06.
+   Mennige stays the one red: the lemons and kraft mid is Mennige.
    `static` keeps every value in the compiled :root even before a utility
    uses it, because CSS files outside this entry (phone-hero.css,
    blog-index.css) and inline SVG styles read them through var(), which
@@ -326,6 +326,8 @@
   --color-salbei: #dce6d4; /* Sage ground (Workshop 05), the soft green of the audit deck */
   --color-tanne: #1f4a38; /* Sage ink, 7.79 on Salbei, 8.92 on Kalkweiß */
   --color-bernstein: #d9a441; /* Sage mid, decoration only: 1.75 on Salbei */
+  --color-kraft: #d2b48a; /* Kraft ground (Workshop 06), the brown of a supplier's envelope */
+  --color-mennige-dunkel: #82270b; /* Mennige at text size on Kraft: 4.74 */
 
   /* Scene roles with their paper defaults. A .plakat-* scope redefines them,
      so one component reads correctly on paper and in every scene. Never use
@@ -366,7 +368,7 @@
   /* Anti colours: what a state change (hover, press, focus offset) brings in
      on top of a stage card. Per plakat, one for card A (the outlined card on
      the scene ground) and one for card B (the filled card on the scene ink).
-     Rule (anti-colors.test.ts): never the card's own colour; a palette
+     Rule: never the card's own colour; a palette
      accent (--color-scene-mid) or a brand colour (Mennige #b73a15,
      Druckschwarz #121212); at least 3:1 luminance contrast against the card
      or at least 60 degrees of hue apart. Contrast against the card (page
@@ -381,6 +383,8 @@
        autumn B Creme      -> Mennige 4.50 (5.08)
        sage   A Salbei     -> Mennige 4.49, red vs green 80 deg (5.08)
        sage   B Tanne      -> Bernstein 4.46 (1.98)
+       kraft  A Kraft      -> Druckschwarz 9.49 (16.46)
+       kraft  B Druckschwarz -> Mennige 3.24 (5.08)
      Defined twice, like --color-scene-line: on the page root (so a list item
      outside the .plakat scope sees it) and in the .plakat scope. */
   :root:has([data-plakat-page="lemons"]) {
@@ -407,6 +411,11 @@
     --color-scene-line: #1f4a38;
     --color-scene-anti-a: #b73a15;
     --color-scene-anti-b: #d9a441;
+  }
+  :root:has([data-plakat-page="kraft"]) {
+    --color-scene-line: #121212;
+    --color-scene-anti-a: #121212;
+    --color-scene-anti-b: #b73a15;
   }
 
   html {
@@ -782,6 +791,45 @@
     --color-scene-button-text: #fffcf5;
     --color-scene-anti-a: #b73a15; /* see the anti-colour table above */
     --color-scene-anti-b: #d9a441;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Kraft (Workshop 06): Druckschwarz on Kraft, 9.49. Mennige is the mid
+     (2.93, shapes only); the button is Mennige dunkel (4.74 on Kraft, Bogen
+     label 9.13), so it never reads as a black block; a meaningful mark takes
+     the ink. Kraft is the darkest light ground: four status tones take a
+     deeper shade of the same hue to stay at 4.5 or more. */
+  .plakat-kraft,
+  [data-plakat-page="kraft"] [data-plakat-band] {
+    --color-background: #d2b48a;
+    --color-foreground: #121212; /* 9.49 */
+    --color-muted-foreground: #121212;
+    --color-muted: #121212;
+    --color-border: #121212;
+    --color-track: #a98f68; /* 1.56, decor */
+    --color-hairline: #a98f68;
+    --color-card: #d2b48a;
+    --color-card-hover: #c9ac80; /* 8.65 */
+    --color-inset: #cdb085; /* 9.05 */
+    --color-brand-orange: #121212;
+    --color-kupfer: #121212;
+    --color-kupfer-dark: #121212;
+    --color-pass: #174536; /* 5.48 */
+    --color-destructive: #7f1414; /* 5.28 */
+    --color-risk-red: #7f1414;
+    --color-risk-yellow: #66380f; /* 4.98 */
+    --color-brand-sand: #4f3d2b; /* 5.23 */
+    --color-scene-ground: #d2b48a;
+    --color-scene-ink: #121212;
+    --color-scene-mid: #b73a15; /* 2.93, shapes only */
+    --color-scene-mark: #121212;
+    --color-scene-accent-text: #82270b; /* Mennige dunkel, 4.74 */
+    --color-scene-line: #121212;
+    --color-scene-button: #82270b; /* Mennige dunkel fill, Bogen label 9.13 */
+    --color-scene-button-text: #fffcf5;
+    --color-scene-anti-a: #121212; /* see the anti-colour table above */
+    --color-scene-anti-b: #b73a15;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -1169,16 +1217,16 @@
   border-top: 1px solid var(--color-lab-line);
 }
 
-/* Frosted sticky chrome (course header, bottom action bar). Solid Bogen
-   fallback where backdrop-filter is unsupported. */
+/* Sticky course chrome (lesson header, quiz bar, reader bar). Solid Bogen:
+   lesson text scrolls under it, and text behind text is never glass. */
 .course-app-frost {
-  background-color: rgba(255, 252, 245, 0.97);
+  background-color: #fffcf5;
 }
 
 /* The lesson header sticks right below the top bar. While it is stuck
    (data-stuck, set by course-lesson-header.tsx) its cap paints the band
    behind that bar too, so lesson text never scrolls visibly through the
-   gaps around the floating, translucent desktop nav. (The compact phone
+   gaps around the floating desktop nav. (The compact phone
    bar is opaque, so there the cap is a second layer of the same paper.)
    Unstuck, the cap would cover what sits above the header (the guest
    banner on a phone), so it is not drawn. The fixed quiz bar is always
@@ -1201,10 +1249,71 @@
   }
 }
 
-@supports (backdrop-filter: blur(1px)) {
-  .course-app-frost {
-    background-color: rgba(255, 252, 245, 0.96);
-    backdrop-filter: saturate(1.4) blur(16px);
+/* ── .glass: Werkglas, the one floating-chrome material (amendment 27) ───
+   For chrome that floats over moving content: the desktop nav over the
+   posters and demo stages. At most two visible at once on a desktop and one
+   on a phone, never nested, never on a card, a stage or body copy, never a
+   fixed bar below 1024px. Kalkweiß at 0.80 over a blur (src/lib/glass.ts
+   proves Druckschwarz and Schiefer text stay at 4.5:1 over a black frame
+   behind it, with no credit for the blur; Mennige is for marks only), a hard
+   1px hairline and a 1px light edge on top, square corners, no gradient, no
+   glow. The filter is never transitioned or animated: a surface fades by its
+   own opacity. Opaque paper wherever backdrop-filter is missing, and for
+   reduced transparency, more contrast, forced colours and print. */
+.glass {
+  background-color: var(--color-background);
+  border: 1px solid rgb(18 18 18 / 0.14);
+  border-radius: 0;
+  color: var(--color-foreground);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background-color: rgb(247 241 231 / 0.8);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.55);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background-color: var(--color-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+/* More contrast: solid paper and a full ink edge, drawn as border plus an
+   inset line so the surface reads as 2px without moving its content. */
+@media (prefers-contrast: more) {
+  .glass {
+    background-color: var(--color-background);
+    border-color: var(--color-foreground);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 0 0 1px var(--color-foreground);
+  }
+}
+
+@media (forced-colors: active) {
+  .glass {
+    background-color: Canvas;
+    border-color: CanvasText;
+    color: CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+@media print {
+  .glass {
+    background-color: var(--color-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 }
 

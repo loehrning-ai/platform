@@ -29,7 +29,7 @@ test.describe("landing globe motion", () => {
     const network = page.locator("#home-hero-network");
     await expect(network).toBeVisible();
     await expect(network).toHaveAttribute("data-hero-globe-motion", "running");
-    const toggle = page.getByRole("button", { name: "Pause the globe" });
+    const toggle = page.getByRole("button", { name: "Pause animation" });
     await expect(toggle).toHaveCount(1);
     await expect(toggle).toBeVisible();
     await expect(toggle).toHaveAttribute("data-hero-globe-toggle", "");

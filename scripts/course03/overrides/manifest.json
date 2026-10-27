@@ -14,16 +14,6 @@
     "assets/lockup-horizontal.svg": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
     "assets/mark-black.svg": "ca6b5b231a7d577fcfddea82d63300f9652e4da0c4e39fa1c596bc58ad8d1384",
     "assets/tim-loehr.jpg": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4",
-    "data-readiness-kit/FOLDLINE-SCENARIOS.md": "7ae913626a5910cffe3c41f7be10ba03ea28f12684cd96cadf0a22a3fed7e65e",
-    "data-readiness-kit/QUESTION-CARD.md": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
-    "data-readiness-kit/READY-CANVAS.md": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4",
-    "data-readiness-kit/START-HERE.md": "f0da28bb4af0c9fef81ec27edbbaa900436a0c4ca2dd69b7c92f9798281a2cea",
-    "data-readiness-kit/agent/CLAUDE.example.md": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14",
-    "data-readiness-kit/readiness-lab.html": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-    "data-readiness-kit/semantic-template/metric.yml": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
-    "data-readiness-kit/semantic-template/model.yml": "dfc94d00ae7b94c13c88ee0ced415428356d22a8bf97d085c82bf0db4990d515",
-    "data-readiness-kit/semantic-template/policy.yml": "cb209aaeca81c16a857ee3beaa8846b9a483e479987e49bf3c8c78a2a87c296a",
-    "data-readiness-kit/semantic-template/verified-questions.yml": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
     "lib/deck-runtime.js": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
     "lib/deck-stage.js": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
     "lib/demo-adapter.js": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e",
@@ -66,57 +56,21 @@
     "slides.html": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783"
   },
   "files": {
-    "data-readiness-kit/FOLDLINE-SCENARIOS.md": {
-      "original": "7ae913626a5910cffe3c41f7be10ba03ea28f12684cd96cadf0a22a3fed7e65e",
-      "override": "13b340acea8ec8e8d8d3d5e1c34904ddc44807d52216b0e2d62f6590ca48cc03"
-    },
-    "data-readiness-kit/QUESTION-CARD.md": {
-      "original": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
-      "override": "4cd2c7ccf2bf75907126a0792b2beda54a056f6d44f81ee65157afde30ee38db"
-    },
-    "data-readiness-kit/READY-CANVAS.md": {
-      "original": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4",
-      "override": "34884a445d0e0c5b1193f7f69835e216c168f2ea2d5d0289fe8ff5450e7b808c"
-    },
-    "data-readiness-kit/START-HERE.md": {
-      "original": "f0da28bb4af0c9fef81ec27edbbaa900436a0c4ca2dd69b7c92f9798281a2cea",
-      "override": "e75b18bc9e4eb37af113b542ce33ff747eb74dbd8b88f7257c862ee5f4090fea"
-    },
-    "data-readiness-kit/agent/CLAUDE.example.md": {
-      "original": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14",
-      "override": "d3c2183fa1e0ca352c562af070a6115e48413838e0fd7382ae3a2cd9d5b34d43"
-    },
-    "data-readiness-kit/readiness-lab.html": {
-      "original": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-      "override": "3c795c333ceae0b9b78a04a54dc901f613cb8c80a9b95046f803fbf5dd38e43a"
-    },
-    "data-readiness-kit/semantic-template/metric.yml": {
-      "original": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
-      "override": "f712fbb57ffb980e7799fe4a288cf924d79ac38e572ba874ccfe16a39fe5df77"
-    },
-    "data-readiness-kit/semantic-template/model.yml": {
-      "original": "dfc94d00ae7b94c13c88ee0ced415428356d22a8bf97d085c82bf0db4990d515",
-      "override": "de7b314eb04ed3caafeff386e7e8f1cc926ef126760063238f9961e599a6d812"
-    },
-    "data-readiness-kit/semantic-template/policy.yml": {
-      "original": "cb209aaeca81c16a857ee3beaa8846b9a483e479987e49bf3c8c78a2a87c296a",
-      "override": "f8fa2ba959e1abbe89fa3f9b2cab1655511e9d29ca54a6ef93d950e370e4275f"
-    },
-    "data-readiness-kit/semantic-template/verified-questions.yml": {
-      "original": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
-      "override": "8b3a3a60cef09884f53b0c56eb9a8e6f9b82d5f410c0aec2b351e4c6e8c400de"
-    },
     "lib/deck-runtime.js": {
       "original": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
-      "override": "c5e5fd894634e8eb6c04de7b8e597da7cab8ece3325452517728c6cfce06b6e0"
+      "override": "8c4b00c2d3144f45580409f774a5e775b82cc5296c3030773c98ca259eab7613"
     },
     "lib/deck-stage.js": {
       "original": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
-      "override": "367408a8aebe57c0f89032c13c98e79a0118043ee47c099e66377df6891c6f86"
+      "override": "2303b7794c73d338d3f6d0c61f3bfd447f9a4aab451df5d210119037cfa1591f"
+    },
+    "lib/demo-adapter.js": {
+      "original": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e",
+      "override": "aedc32f31c9de1b64450d9d5b6069aeeca9dd26d5d5c9188deb5d1111afcdb6e"
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
-      "override": "c85eb7ed52ea0c0b7481d116ed3d981d3b2da39118258168946bc47c1e2db0be"
+      "override": "a6702adc1b11f13c1ad41dcb26f4df5530bcc717f54e0be6ed61d3838ff6b2a4"
     },
     "lib/presenter.css": {
       "original": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
@@ -124,7 +78,7 @@
     },
     "lib/presenter.js": {
       "original": "5d8775fdb646d1da9b23d730571d6cb312bad024be631f1dd200cd41c11ce55d",
-      "override": "2ffe8581099c257a1f0852f8ef96845493a5157e8172d8f5ab785582fddf9e6b"
+      "override": "ecd4666d3e894a12d97deb8e45c7518f195a4622a56e1afe0221d115a8bc52d0"
     },
     "lib/scenes/appendix-access-controls.css": {
       "original": "fc99d6418a6757fae8c2c078d912650bde00c72ad2b6a50e6d6b0fd90344c7d6",
@@ -240,11 +194,11 @@
     },
     "presenter.html": {
       "original": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db",
-      "override": "92c9f36e05a54fa9bb76f66799e3ad7cebd9913ff417b0aef6a345d8fdc65ec1"
+      "override": "211270179c067ce4102ea356fa4e3dcf83fa979a946e6816c617d9067d14cbdb"
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "6eeacf8f318353bed109127802bcc9b4be5a715399357045a876f8fd49861b3a"
+      "override": "6202f6be10ef39a4f3c10a48e0275d40ea94cd0ca35f36ba801fa75b2ef177e5"
     }
   }
 }

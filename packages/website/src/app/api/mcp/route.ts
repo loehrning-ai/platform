@@ -1,3 +1,4 @@
+import type { McpServerOptions } from "@modelcontextprotocol/server";
 import { createMcpHandler } from "mcp-handler";
 import { recordAgentAccessEvent } from "@/lib/agent-access/record";
 import { readAgentProgressSnapshot } from "@/lib/agent-access/progress-snapshot";
@@ -15,6 +16,7 @@ import {
 } from "@/lib/mcp/auth";
 import {
   MCP_MAX_REQUEST_BYTES,
+  MCP_MAX_TOOL_INPUT_ELEMENTS,
   MCP_RATE_LIMIT_MAX,
   MCP_RATE_LIMIT_NAMESPACE,
   MCP_RATE_LIMIT_WINDOW_SECONDS,
@@ -61,6 +63,13 @@ export const dynamic = "force-dynamic";
 
 const ROUTE = "/api/mcp";
 
+// mcp-handler passes these through to `new McpServer`, but its option type
+// omits `maxToolInputElements`, so they are typed against the SDK here.
+const SERVER_OPTIONS: McpServerOptions = {
+  instructions: MCP_SERVER_INSTRUCTIONS,
+  maxToolInputElements: MCP_MAX_TOOL_INPUT_ELEMENTS,
+};
+
 function createHandler(
   authenticated: AuthenticatedToolContext | null,
 ): (request: Request) => Promise<Response> {
@@ -76,8 +85,8 @@ function createHandler(
       }
     },
     {
+      ...SERVER_OPTIONS,
       serverInfo: { name: MCP_SERVER_NAME, version: MCP_SERVER_VERSION },
-      instructions: MCP_SERVER_INSTRUCTIONS,
       // The transport is stateless per request, so an open subscription stream
       // would outlive the function that created it.
       maxSubscriptions: 0,

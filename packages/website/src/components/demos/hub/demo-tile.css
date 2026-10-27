@@ -1,0 +1,413 @@
+/*
+ * The /demos hub tiles (demo-tile.tsx, demo-tile-stage.tsx) in Glas
+ * (glass-spec 3, hub). Prefix `dt-`.
+ *
+ * Contract, checked by hub.test.tsx and the page test:
+ * - A tile is a continuous 28px card: the miniature fills it on the
+ *   workshop's own ground, and the caption is a frosted plate inside it,
+ *   inset 8px, painted without any filter (frost: a near-opaque tint of the
+ *   ground over Kalkweiß, a specular rim and a soft shadow). Six tiles cost
+ *   zero live backdrop filters, so the hub needs no budget.
+ * - Hover (fine pointer only) and keyboard focus lift the card 4px and grow
+ *   its shadow (an opacity change on a pseudo element, never an animated
+ *   box-shadow); a press scales it to 0.98. Focus adds one 2px Druckschwarz
+ *   ring 4px out. Hover rules sit in (hover: hover) and (pointer: fine), so a
+ *   tap never sticks.
+ * - Motion lives in tile-scenes.css (generated from each tile-motion.ts) and
+ *   only runs when the island armed the tile. Here only transform and opacity
+ *   transitions, listed explicitly, and only without a reduced-motion request.
+ * - No collapsible UI. Colour is never the only carrier of meaning in a scene.
+ */
+
+.dt-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 48rem) {
+  .dt-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .dt-grid > .dt-promise {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .dt-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The plakat class sets a ground and an ink on the <li>: back to the page. */
+.dt-grid > .dt-item {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  background-color: transparent;
+  color: var(--color-lab-ink);
+}
+
+/* The resting and the lifted shadow; the lifted one fades in (opacity only). */
+.dt-item::before,
+.dt-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  pointer-events: none;
+}
+
+.dt-item::before {
+  box-shadow: 0 1px 2px rgb(18 18 18 / 0.06), 0 10px 24px -12px rgb(18 18 18 / 0.28);
+}
+
+.dt-item::after {
+  box-shadow: 0 2px 4px rgb(18 18 18 / 0.06), 0 24px 44px -16px rgb(18 18 18 / 0.38);
+  opacity: 0;
+}
+
+.dt-card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 28px;
+  background-color: var(--color-scene-ground);
+  box-shadow: inset 0 0 0 0.5px rgb(18 18 18 / 0.14);
+}
+
+/* ─── Scene ─────────────────────────────────────────────────────────────── */
+
+.dt-scene {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background-color: var(--color-scene-ground);
+  color: var(--color-scene-ink);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 12.5rem;
+}
+
+.dt-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.dt-fill-ink { fill: var(--color-scene-ink); }
+.dt-fill-mid { fill: var(--color-scene-mid); }
+.dt-fill-mark { fill: var(--color-scene-mark); }
+.dt-fill-ground { fill: var(--color-scene-ground); }
+.dt-fill-ghost { fill: var(--color-scene-ink); fill-opacity: 0.22; }
+.dt-stroke-ink { stroke: var(--color-scene-ink); }
+.dt-stroke-mid { stroke: var(--color-scene-mid); }
+.dt-stroke-mark { stroke: var(--color-scene-mark); }
+.dt-stroke-ground { stroke: var(--color-scene-ground); }
+.dt-stroke-ghost { stroke: var(--color-scene-ink); stroke-opacity: 0.45; }
+
+.dt-fig {
+  font-family: inherit;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* A stroked line is never filled; a stroked rect keeps the fill it declares. */
+path[class*="dt-stroke-"] { fill: none; }
+
+.dt-svg[data-reduced] [data-t] {
+  animation: none !important;
+}
+
+/* ─── Caption: the frosted plate ────────────────────────────────────────── */
+
+.dt-cap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0 0.5rem 0.5rem;
+  padding: 0.875rem 1rem 0.875rem;
+  border-radius: 20px;
+  background-color: color-mix(in srgb, var(--color-scene-ground) 14%, rgb(251 250 246 / 0.94));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.85),
+    inset 0 0 0 0.5px rgb(18 18 18 / 0.1),
+    0 6px 16px -10px rgb(18 18 18 / 0.35);
+  color: var(--color-lab-ink);
+}
+
+/* "04 · ESG": its own link to the workshop, above the stretched title link,
+   with a 44px hit area that does not push the caption down. */
+.dt-kicker {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dt-kicker-link {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  margin: -0.75rem 0 -0.75rem;
+  color: inherit;
+  text-decoration: none;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dt-kicker-link:focus-visible {
+  outline: 3px solid var(--color-lab-ink);
+  outline-offset: 2px;
+}
+
+.dt-kicker-link:active {
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-scene-anti-b);
+}
+
+/* The job line: the biggest text on the tile, what the demo does for you. */
+.dt-job {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+.dt-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  font-weight: 600;
+  text-wrap: pretty;
+}
+
+.dt-go {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.0625rem;
+  stroke-width: 2.6;
+}
+
+.dt-link {
+  color: inherit;
+  text-decoration: none;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* The whole tile is the hit area (at least 44px by construction). */
+.dt-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.dt-link:focus-visible {
+  outline: none;
+}
+
+.dt-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.375rem 0.75rem;
+  margin-top: auto;
+  padding-top: 0.25rem;
+}
+
+.dt-artifacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dt-artifact {
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background-color: rgb(18 18 18 / 0.07);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.dt-meta {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: color-mix(in srgb, var(--color-lab-ink) 82%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── States: lift, shadow, press ───────────────────────────────────────── */
+
+.dt-item:has(.dt-link:focus-visible) {
+  outline: 2px solid var(--color-lab-ink);
+  outline-offset: 4px;
+  border-radius: 30px;
+}
+
+.dt-item:has(.dt-link:focus-visible)::before,
+.dt-item:has(.dt-link:focus-visible)::after,
+.dt-item:has(.dt-link:focus-visible) .dt-card {
+  transform: translateY(-4px);
+}
+
+.dt-item:has(.dt-link:focus-visible)::after {
+  opacity: 1;
+}
+
+.dt-item:has(.dt-link:focus-visible) .dt-link {
+  text-decoration-line: underline;
+}
+
+.dt-item:has(.dt-link:focus-visible) .dt-go {
+  transform: translateX(4px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dt-kicker-link:hover {
+    text-decoration-line: underline;
+  }
+
+  .dt-item:hover::before,
+  .dt-item:hover::after,
+  .dt-item:hover .dt-card {
+    transform: translateY(-4px);
+  }
+
+  .dt-item:hover::after {
+    opacity: 1;
+  }
+
+  .dt-item:hover .dt-link {
+    text-decoration-line: underline;
+  }
+
+  .dt-item:hover .dt-go {
+    transform: translateX(4px);
+  }
+}
+
+.dt-item:active::before,
+.dt-item:active::after,
+.dt-item:active .dt-card {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dt-item::before,
+  .dt-card,
+  .dt-go {
+    transition: transform 486ms linear(0, 0.054, 0.175, 0.321, 0.466, 0.596, 0.705, 0.793, 0.861, 0.911, 0.946, 0.971, 0.987, 0.997, 1.002, 1.005, 1.006, 1.006, 1.006, 1.005, 1.004, 1.003, 1.002, 1.002, 1);
+  }
+
+  .dt-item::after {
+    transition:
+      transform 486ms linear(0, 0.054, 0.175, 0.321, 0.466, 0.596, 0.705, 0.793, 0.861, 0.911, 0.946, 0.971, 0.987, 0.997, 1.002, 1.005, 1.006, 1.006, 1.006, 1.005, 1.004, 1.003, 1.002, 1.002, 1),
+      opacity 240ms linear;
+  }
+}
+
+/* ─── Hover and focus swap the scene's two colours ───────────────────────
+ * A tile may mark shapes `dt-swap-ink` (ink becomes mark) and `dt-swap-mark`
+ * (mark becomes ink): the scene turns to its anti colours, never a tint. Same
+ * triggers as the lift above (fine-pointer hover, keyboard focus); a tap never sticks.
+ */
+
+.dt-item:has(.dt-link:focus-visible) .dt-swap-ink {
+  fill: var(--color-scene-mark);
+}
+
+.dt-item:has(.dt-link:focus-visible) .dt-swap-mark {
+  fill: var(--color-scene-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .dt-item:hover .dt-swap-ink {
+    fill: var(--color-scene-mark);
+  }
+
+  .dt-item:hover .dt-swap-mark {
+    fill: var(--color-scene-ink);
+  }
+}
+
+/* ─── The last cell: the one promise all six share, a full row ──────────── */
+
+.dt-grid > .dt-promise {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 1.5rem 1.25rem;
+  border-radius: 28px;
+  background-color: rgb(255 255 255 / 0.6);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 0 0 0.5px rgb(18 18 18 / 0.12);
+  color: var(--color-lab-ink);
+}
+
+.dt-promise-title {
+  margin: 0;
+  max-width: 40ch;
+  font-size: 1.375rem;
+  line-height: 1.2;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.dt-promise-body,
+.dt-promise-note {
+  margin: 0;
+  max-width: 64ch;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.dt-promise-note {
+  color: color-mix(in srgb, var(--color-lab-ink) 82%, transparent);
+}
+
+@media (prefers-contrast: more), (prefers-reduced-transparency: reduce) {
+  .dt-cap {
+    background-color: var(--color-paper);
+    box-shadow: inset 0 0 0 1px var(--color-lab-ink);
+  }
+}
+
+@media (forced-colors: active) {
+  .dt-card,
+  .dt-grid > .dt-promise {
+    border: 1px solid CanvasText;
+  }
+}

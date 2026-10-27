@@ -1,144 +1,100 @@
 import { describe, expect, it } from "vitest";
-import {
-  CLAIMS,
-  CRAFT_LIST_PRICES,
-  CRAFT_MEAN_LIST_PRICE,
-  DEMAND_ROWS,
-  LINE_IDS,
-  LINES,
-  MARKETING_TOTAL_EUR,
-  MONTHS,
-  NCR_ROWS_TOTAL,
-  OCTOBER_2023_WEEK_STARTS,
-  REPORT,
-  type MonthId,
-} from "./data";
+import { COMPANY, CRAFT_MODELS, CRAFT_NCR, CRAFT_SKUS, DEMAND_ROWS, REPORT, WEEK_STARTS } from "./data";
+import { csvRows, kitText, type KitLocale } from "@/test/northwind-kit";
 
-const sum = (values: readonly number[]) => values.reduce((total, value) => total + value, 0);
+/**
+ * Every constant in data.ts re-derived from the published kit zips, both
+ * editions: the demo cannot drift from the files the visitor downloads.
+ */
+const month = (date: string) => (date < "2023-09-01" ? "aug" : "sep");
+const SATURDAY = 6;
 
-function lineUnits(month: MonthId): number {
-  return sum(LINE_IDS.map((line) => MONTHS[month].lines[line].units));
-}
+describe.each(["en", "de"] as KitLocale[])("data.ts against the %s kit", (locale) => {
+  const demand = csvRows(kitText(locale, "data/demand_actuals.csv"));
+  const ncr = csvRows(kitText(locale, "data/ncr_records.csv"));
+  const products = csvRows(kitText(locale, "data/product_lines.csv"));
+  const price = new Map(products.map((row) => [`${row.line}-${row.model_code}`, Number(row.base_price_eur)]));
+  const parts = (sku: string) => sku.split("-");
 
-describe("NORTHWIND data, recomputed from the kit", () => {
-  it("line units sum to the month totals", () => {
-    expect(lineUnits("2023-08")).toBe(110_373);
-    expect(lineUnits("2023-09")).toBe(139_056);
-  });
-
-  it("weekly units sum to the month", () => {
-    expect(sum(MONTHS["2023-08"].weeklyUnits)).toBe(110_373);
-    expect(sum(MONTHS["2023-09"].weeklyUnits)).toBe(139_056);
-    for (const month of Object.values(MONTHS)) {
-      expect(month.weeklyUnits).toHaveLength(month.weekStarts.length);
+  it("has the CSVs byte for byte in both editions", () => {
+    for (const file of ["data/demand_actuals.csv", "data/ncr_records.csv", "data/product_lines.csv"]) {
+      expect(kitText(locale, file)).toBe(kitText("en", file));
     }
   });
 
-  it("the report's printed revenue per line sums to 21.687.544", () => {
-    expect(sum(LINES.map((line) => line.revenueSepEur))).toBe(REPORT.revenueSepEur);
-    expect(REPORT.revenueSepEur).toBe(21_687_544);
+  it("has nine week_start values, every one a Saturday", () => {
+    expect(demand).toHaveLength(DEMAND_ROWS);
+    const weeks = [...new Set(demand.map((row) => row.week_start ?? ""))].sort();
+    expect(weeks).toEqual([...WEEK_STARTS]);
+    for (const week of weeks) expect(new Date(`${week}T00:00:00Z`).getUTCDay()).toBe(SATURDAY);
   });
 
-  it("keeps the report's revenue order", () => {
-    expect(LINES.map((line) => line.id)).toEqual([...LINE_IDS]);
-    const revenues = LINES.map((line) => line.revenueSepEur);
-    expect([...revenues].sort((a, b) => b - a)).toEqual(revenues);
-  });
-
-  it("NCR counts equal the report", () => {
-    const aug = MONTHS["2023-08"].lines;
-    const sep = MONTHS["2023-09"].lines;
-    expect([aug.CRAFT.ncr, aug.NEST.ncr, aug.AURA.ncr, aug.PULSE.ncr]).toEqual([24, 12, 11, 9]);
-    expect([sep.CRAFT.ncr, sep.NEST.ncr, sep.AURA.ncr, sep.PULSE.ncr]).toEqual([23, 19, 18, 11]);
-    const all = Object.values(MONTHS).flatMap((month) =>
-      LINE_IDS.map((line) => month.lines[line].ncr ?? 0),
+  it("re-derives the 19 CRAFT SKUs and their units per week, in file order", () => {
+    const craft = demand.filter((row) => parts(row.sku ?? "")[1] === "CRAFT");
+    expect(craft).toHaveLength(171);
+    const bySku = new Map<string, number[]>();
+    for (const row of craft) {
+      const units = bySku.get(row.sku ?? "") ?? Array.from({ length: WEEK_STARTS.length }, () => 0);
+      units[WEEK_STARTS.indexOf(row.week_start as (typeof WEEK_STARTS)[number])] = Number(row.units_actual);
+      bySku.set(row.sku ?? "", units);
+    }
+    expect(
+      [...bySku.entries()].map(([sku, units]) => ({
+        sku,
+        model: parts(sku)[2],
+        units,
+      })),
+    ).toEqual(
+      CRAFT_SKUS.map((row) => ({
+        sku: row.sku,
+        model: row.model,
+        units: [...row.units],
+      })),
     );
-    expect(sum(all)).toBe(NCR_ROWS_TOTAL);
+    for (const model of CRAFT_MODELS) expect(price.get(`CRAFT-${model.code}`)).toBe(model.price);
   });
 
-  it("lines without NCRs carry null, never 0", () => {
-    for (const month of Object.values(MONTHS)) {
-      for (const line of ["ECHO", "BREW", "BEAM"] as const) {
-        expect(month.lines[line].ncr).toBeNull();
-        expect(month.lines[line].scrapUnits).toBeNull();
-      }
+  it("re-derives the company totals per month", () => {
+    const units = { aug: 0, sep: 0 };
+    const revenue = { aug: 0, sep: 0 };
+    for (const row of demand) {
+      const [, line, code] = parts(row.sku ?? "");
+      const m = month(row.week_start ?? "");
+      units[m] += Number(row.units_actual);
+      revenue[m] += Number(row.units_actual) * (price.get(`${line}-${code}`) ?? Number.NaN);
     }
+    expect(units).toEqual(COMPANY.units);
+    expect(revenue).toEqual(COMPANY.revenueEur);
   });
 
-  it("CRAFT scrap units are 924 and 1.539", () => {
-    expect(MONTHS["2023-08"].lines.CRAFT.scrapUnits).toBe(924);
-    expect(MONTHS["2023-09"].lines.CRAFT.scrapUnits).toBe(1_539);
+  it("re-derives all 47 CRAFT records, each dated on a week_start", () => {
+    const craft = ncr
+      .filter((row) => row.line === "CRAFT")
+      .sort((a, b) => (a.ncr_date ?? "").localeCompare(b.ncr_date ?? "") || (a.ncr_id ?? "").localeCompare(b.ncr_id ?? ""))
+      .map((row) => ({
+        id: row.ncr_id,
+        date: row.ncr_date,
+        machine: row.machine_id,
+        type: row.ncr_type,
+        qty: Number(row.qty_affected),
+        scrap: row.scrap_or_rework === "scrap",
+      }));
+    expect(craft).toEqual(CRAFT_NCR);
+    for (const row of CRAFT_NCR) expect(WEEK_STARTS).toContain(row.date);
   });
 
-  it("CRAFT_MEAN_LIST_PRICE is the plain mean of CRAFT's three list prices, not the report's average", () => {
-    expect(sum(CRAFT_LIST_PRICES) / CRAFT_LIST_PRICES.length).toBe(CRAFT_MEAN_LIST_PRICE);
-    expect(CRAFT_MEAN_LIST_PRICE).not.toBe(REPORT.craftAvgPriceEur);
-    const craft = LINES.find((line) => line.id === "CRAFT")!;
-    expect(craft.priceBand).toEqual([Math.min(...CRAFT_LIST_PRICES), Math.max(...CRAFT_LIST_PRICES)]);
-  });
-
-  it("the marketing total is 2.032.716 €", () => {
-    expect(MARKETING_TOTAL_EUR).toBe(2_032_716);
-    expect(Math.round(MARKETING_TOTAL_EUR / 7)).toBe(290_388);
-  });
-
-  it("every week start is a Saturday; the 30.09 bucket is in September and October has four", () => {
-    const saturday = (iso: string) => new Date(`${iso}T12:00:00Z`).getUTCDay() === 6;
-    for (const month of Object.values(MONTHS)) {
-      for (const start of month.weekStarts) expect(saturday(start), start).toBe(true);
-    }
-    expect(MONTHS["2023-09"].weekStarts.at(-1)).toBe("2023-09-30");
-    expect(OCTOBER_2023_WEEK_STARTS).toHaveLength(4);
-    for (const start of OCTOBER_2023_WEEK_STARTS) expect(saturday(start), start).toBe(true);
-    // Every Saturday of October 2023 is in the list.
-    const saturdays = Array.from({ length: 31 }, (_, day) => `2023-10-${String(day + 1).padStart(2, "0")}`).filter(
-      saturday,
-    );
-    expect(saturdays).toEqual([...OCTOBER_2023_WEEK_STARTS]);
-  });
-
-  it("the report's printed MoM units match the recomputed totals", () => {
-    for (const line of LINES) {
-      const aug = MONTHS["2023-08"].lines[line.id].units;
-      const sep = MONTHS["2023-09"].lines[line.id].units;
-      expect(Math.round((sep / aug - 1) * 1000) / 10, line.id).toBe(line.reportMomUnitsPct);
-    }
-  });
-
-  it("demand rows: 2.115 in the extract, 95 CRAFT rows in September", () => {
-    expect(DEMAND_ROWS.aug + DEMAND_ROWS.sep).toBe(2_115);
-    expect(DEMAND_ROWS.craftSep).toBe(95);
-  });
-
-  it("orders the claims so the two matching cards are not adjacent", () => {
-    const truths = CLAIMS.map((claim) => claim.truth);
-    expect(truths).toEqual(["match", "differs", "match", "nowhere"]);
-  });
-
-  it("claim sample rows are consistent", () => {
-    const units = CLAIMS.find((claim) => claim.id === "craft-units")!;
-    expect(units.rows.length + units.more).toBe(DEMAND_ROWS.craftSep);
-    expect(units.sourceValue).toBe(MONTHS["2023-09"].lines.CRAFT.units);
-
-    const nest = CLAIMS.find((claim) => claim.id === "nest-ncr")!;
-    expect(nest.rows.length + nest.more).toBe(MONTHS["2023-09"].lines.NEST.ncr);
-    expect(nest.value).toBe(MONTHS["2023-08"].lines.NEST.ncr);
-    for (const row of nest.rows) {
-      expect(row[1]).toMatchObject({ t: "text" });
-      expect((row[1] as { v: string }).v.startsWith("2023-09")).toBe(true);
-    }
-
-    const revenue = CLAIMS.find((claim) => claim.id === "craft-revenue")!;
-    expect(revenue.sourceValue).toBe(LINES.find((line) => line.id === "CRAFT")!.revenueSepEur);
-    for (const row of revenue.rows) {
-      const [qty, , price, , total] = row as readonly { v: number }[];
-      expect(qty.v * price.v).toBe(total.v);
-    }
-
-    const marketing = CLAIMS.find((claim) => claim.id === "craft-marketing")!;
-    expect(marketing.sourceValue).toBeNull();
-    expect(marketing.rows).toHaveLength(0);
-    expect(marketing.header).not.toContain("line");
-    expect(marketing.header).not.toContain("name_value");
+  it("quotes the report's figures as the report prints them", () => {
+    const report = kitText(locale, "reports/2023-09-monthly-report.md");
+    const n = (value: number, digits = 0) =>
+      new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      }).format(value);
+    expect(report).toContain(n(REPORT.craftRevenueEur));
+    expect(report).toContain(n(REPORT.avgPriceCents / 100, 2));
+    expect(report).toContain(n(REPORT.vpDefectsAug, 2));
+    expect(report).toContain(n(REPORT.vpDefectsSep, 2));
+    expect(report).toContain(n(REPORT.unitsGrowthPermille / 10, 1));
+    expect(report).toContain(`+${n(REPORT.companyWeekGrowthPermille / 10, 1)}`);
   });
 });

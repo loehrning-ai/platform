@@ -29,8 +29,14 @@ import {
  * skill is a deliberate act that updates this list, never a side effect.
  */
 const PUBLISHED_SKILLS = [
+  "angebote-vergleichen",
+  "audit-nachweise",
   "cv-engine",
+  "esg-nachweise",
+  "kennzahl-fragekarte",
+  "kennzahlen-steckbrief",
   "loehrning-plattform",
+  "prognose-pruefen",
   "workshop-arbeiten",
 ] as const;
 

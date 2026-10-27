@@ -674,7 +674,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Box 3 holds the four blanks in the same order as before.",
       "70:30–72:30 is recovery or a two-pair debrief, never new teaching. Never borrow from resolution.",
       "Clean copy: QUESTION-CARD.md in the kit on the workshop page.",
-      "[Sources]\nOriginal participant-kit exercise: data-readiness-kit/QUESTION-CARD.md and data-readiness-kit/readiness-lab.html. [/Sources]"
+      "[Sources]\nOriginal participant-kit exercise: data-readiness-kit/QUESTION-CARD.md and the demo at loehrning.ai/en/demos/datenbereitschaft-fuer-ki. [/Sources]"
     ],
     "sayAt": {"0": [0], "1": [0, 1, 2, 3, 4], "4": [2], "5": [5]},
     "ask": [

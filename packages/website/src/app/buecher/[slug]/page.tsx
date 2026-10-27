@@ -24,6 +24,7 @@ import {
 } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { JsonLd, ORG_ID, PERSON_ID, SITE_URL } from "@/lib/seo/json-ld";
+import { defaultSocialImage } from "@/lib/seo/page-metadata";
 import { BOOK_PAGE_COPY, getBookDisplay } from "../book-copy";
 
 interface Params {
@@ -89,11 +90,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       locale: locale === "de" ? "de_DE" : "en_GB",
       alternateLocale: [locale === "de" ? "en_GB" : "de_DE"],
       type: "book",
+      images: [defaultSocialImage(locale)],
     },
     twitter: {
       card: "summary_large_image",
       title: display.title,
       description,
+      images: [defaultSocialImage(locale)],
     },
   };
 }

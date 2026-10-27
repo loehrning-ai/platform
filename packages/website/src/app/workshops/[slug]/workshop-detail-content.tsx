@@ -6,6 +6,7 @@ import { ArrowGlyph, cx } from "@/components/werk";
 import { CapsLine, PlakatBand, PosterArt } from "@/components/plakat";
 import { StageExplainer } from "@/components/workshops/stage-explainer";
 import { WorkshopStage } from "@/components/workshops/workshop-stage";
+import { WorkshopObjective } from "@/components/workshops/workshop-objective";
 import { HighlightedText } from "@/components/ui/highlighted-text";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import {
@@ -47,6 +48,10 @@ const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
  *   room for a lighter wash behind Creme, so the band turns the pair round.
  * - sage: Bernstein at 100% over Salbei (1.75 against the ground, a visible
  *   band), Tanne on it 4.46.
+ * - kraft: Mennige at 60% over Kraft (1.94 against the ground, as Bloom's
+ *   band), Druckschwarz (the scene ink) on it 4.89 and 9.49 where a line's box
+ *   runs past the band onto Kraft. Never light words: Bogen on Kraft is 1.93,
+ *   and full Mennige leaves the ink at 3.24.
  */
 export const TITLE_HIGHLIGHT: Readonly<
   Record<
@@ -64,21 +69,19 @@ export const TITLE_HIGHLIGHT: Readonly<
   bloom: { colorVar: "--color-scene-mid", opacity: 80 },
   autumn: { colorVar: "--color-scene-mid", opacity: 100, textColorVar: "--color-lab-ink" },
   sage: { colorVar: "--color-scene-mid", opacity: 100 },
+  kraft: { colorVar: "--color-scene-mid", opacity: 60 },
 };
 
 /** Longest two-word tail that still reads as a short marked phrase. */
 const HIGHLIGHT_PAIR_MAX = 12;
 
 /**
- * A workshop whose H1 marks one chosen word instead of its tail, per locale.
- * Workshop 05 marks "Data" in "Where Your Data Goes", the word the whole
- * workshop is about; the words after it follow the band unmarked.
+ * A workshop whose H1 marks one chosen word instead of its tail, per locale;
+ * the words after it follow the band unmarked. No workshop needs one today.
  */
 const HEADLINE_MARK: Readonly<
   Record<string, Readonly<Partial<Record<Locale, string>>>>
-> = {
-  "ki-im-unternehmen-sicher-nutzen": { de: "Daten?", en: "data" },
-};
+> = {};
 
 /**
  * The H1 split for its highlight: a short last pair goes on the band ("mit
@@ -308,16 +311,20 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 className="title-mark box-decoration-slice px-[0.12em]"
               >
                 {heading.highlight}
+                {/* The colon belongs to the marked words, so it never sits
+                    alone on paper after the band. */}
+                {title.subtitle && !heading.tail ? ":" : null}
               </HighlightedText>
               {heading.tail ? ` ${heading.tail}` : null}
             </>
           ) : null}
           {title.subtitle ? (
             <>
-              {/* The colon stays visible, so the text, the accessible name
-                  and the search snippet all read as the full title. The
-                  subtitle drops to the band's body size. */}
-              :{" "}
+              {/* The colon stays visible (inside the band when the band
+                  ends the head), so the text, the accessible name and the
+                  search snippet all read as the full title. The subtitle
+                  drops to the band's body size. */}
+              {heading.highlight && !heading.tail ? " " : ": "}
               <span
                 data-title-subtitle=""
                 className="mt-3 block text-[1.0625rem] font-semibold leading-snug tracking-normal max-[359px]:mt-2"
@@ -328,13 +335,16 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           ) : null}
         </h1>
         <p className="mt-2.5 max-w-[40ch] text-body text-scene-ink text-balance max-sm:leading-[1.4] sm:mt-4 lg:mt-5 lg:max-w-[52ch] lg:text-[1.1875rem]">
-          {keepAmountsTogether(bandLede(workshop.summary))}
+          {keepAmountsTogether(bandLede(workshop.lede ?? workshop.summary))}
         </p>
       </PlakatBand>
 
       <WorkshopStage workshop={workshop} locale={locale} plakat={scene.plakat} />
 
       <StageExplainer workshop={workshop} />
+
+      {/* Lernziel: the sentence the workshop teaches and its three-line card. */}
+      <WorkshopObjective slug={workshop.slug} locale={locale} />
 
       {/* The slim provenance line: who, when, what kind of data, and the one
           real source where there is one. Pad for the phone tab bar. */}

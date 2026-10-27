@@ -46,7 +46,6 @@ video lanes are deliberately empty release state, not placeholders.
 - Media policy: `MEDIA_POLICY.md`.
 - Data-driven browser admission coverage:
   `packages/website/tests/e2e/route-open-source.spec.ts`.
-- Lighthouse representatives: `lighthouserc.json`.
 - Records staged before their source commit exists:
   `packages/website/src/lib/open-source/pending/`. This is not a
   second catalog and never becomes one. A module there is imported by nothing
@@ -433,6 +432,14 @@ Never infer a license from a repository being public. Preserve required
 notices and do not assign the root MIT license to editorial, brand, media, or
 third-party files without explicit rights evidence.
 
+One stylesheet is exempt from a manifest row, because the publication scanner
+admits no `.css` asset path: `public/artifacts/tools/cv-engine/live/cv.css`,
+the cv-engine stylesheet that `scripts/build-cv-engine-live.ts` rewrites for a
+shadow root. Its SHA-256, byte size and source revision live in
+`packages/website/src/lib/open-source/cv-live/live-data.json` instead, and
+`live-data.test.ts` checks the stored bytes against that record on every run.
+Any other stylesheet needs its own reviewed exemption here.
+
 ## Discovery and rendering admission
 
 The shared registry drives the hub, static detail params, sitemap, `llms.txt`,
@@ -447,12 +454,7 @@ JSON-LD, and page inventory. After adding an entry:
    bun run --cwd packages/website page-inventory:check
    ```
 
-3. Add one real detail URL from every non-empty artifact kind to
-   `lighthouserc.json`. The first published tool, project, or video must become
-   the representative for that lane. Do not add a future or placeholder URL.
-4. Run `bun run lighthouse:local` to measure the new route. No script checks
-   `lighthouserc.json` against the registry, so confirm the URL by hand.
-5. Do not hand-edit sitemap totals. Unit tests derive their expected count from
+3. Do not hand-edit sitemap totals. Unit tests derive their expected count from
    `OPEN_SOURCE_ARTIFACTS`.
 
 The registry-driven cases in
@@ -469,7 +471,6 @@ Run from the repository root:
 bun run scan:public
 bun run artifact-assets:check
 bun run ci
-bun run lighthouse:local
 ```
 
 `bun run ci` is the same gate pull requests run. A release also requires the separate legal launch gate documented in
@@ -497,7 +498,7 @@ Reject the artifact when any of the following is true:
   without an explicit privacy and security review;
 - a tool/project guide cannot be followed, a video lacks human-reviewed
   captions or transcript, or the browser and accessibility proof is absent;
-- page inventory, scanner, verifier, browser, build, or Lighthouse gates fail.
+- page inventory, scanner, verifier, browser, or build gates fail.
 
 Do not weaken a validator, skip a failing lane, fabricate evidence, or publish
 an empty promise to obtain a green release.

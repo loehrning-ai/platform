@@ -1,0 +1,1419 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "en-when-without-1",
+  "slug": "ki-prognosen-einschaetzen",
+  "locale": "en",
+  "prompt_id": "when",
+  "take": 1,
+  "recorded_at": "2026-10-26T16:47:51Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Write,Bash",
+    "--permission-mode",
+    "acceptEdits",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}",
+    "--disable-slash-commands"
+  ],
+  "prompt": "Attached are our weekly sales with the forecast from our ERP system (lentil-soup-weekly.csv) and the tool's export (tool-export.txt). In which weeks of 2025 should we not simply have followed the forecast, and why? Today is Sunday, 28 December 2025.",
+  "kit_zip": "public/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+  "kit_files": [
+    {
+      "name": "lentil-soup-weekly.csv",
+      "path": "forecast-check/data/lentil-soup-weekly.csv",
+      "bytes": 2391,
+      "sha256": "aab5e3788a206920227c868b0a8bf6666ad884f147a25b8f5c143ee479319ec1"
+    },
+    {
+      "name": "tool-export.txt",
+      "path": "forecast-check/data/tool-export.txt",
+      "bytes": 535,
+      "sha256": "bb594b76e7506179c1099f1bf5600dce43518ce909204d0c1516317a8ddb0869"
+    }
+  ],
+  "skill": null,
+  "skill_name": "prognose-pruefen",
+  "with_skill": false,
+  "skill_invoked": false,
+  "skills_offered": [],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 3568,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -la; cat tool-export.txt; echo ----; cat lentil-soup-weekly.csv",
+        "description": "List and show both files"
+      }
+    },
+    {
+      "t_ms": 4577,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 19905,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'EOF'\nimport csv\nrows=list(csv.DictReader(open('lentil-soup-weekly.csv'),delimiter=';'))\nprint(len(rows))\nfrom collections import Counter\nprint([k for k,v in Counter(r['week'] for r in rows).items() if v>1])\ndef acc(sel):\n    a=sum(int(r['actual']) for r in sel); e=sum(abs(int(r['forecast'])-int(r['actual'])) for r in sel)\n    return 1-e/a, sum(int(r['forecast'])-int(r['actual']) for r in sel)/len(sel), len(sel)\nw=[r for r in rows if '2024-12-30'<=r['week']<='2025-12-22' and r['forecast'] and r['actual']]\nprint('all',acc(w))\nprint('excl soldout',acc([r for r in w if 'sold out' not in r['note']]))\n# by month bias\nprev=None\nfor r in rows:\n    if r['week']<'2024-12-01': prev=r;continue\n    f=r['forecast'];a=r['actual']\n    d=int(f)-int(a) if f and a else None\n    pa=prev['actual'] if prev else ''\n    print(r['week'],a,f,d, 'prevact',pa, r['note'][:40]); prev=r\nEOF",
+        "description": "Compute accuracy, bias, and per-week errors"
+      }
+    },
+    {
+      "t_ms": 20049,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 40729,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'EOF'\nimport csv\nrows=[r for r in csv.DictReader(open('lentil-soup-weekly.csv'),delimiter=';') if r['actual'] and r['forecast'] and 'sold out' not in r['note']]\ndef seg(a,b):\n    s=[int(r['forecast'])-int(r['actual']) for r in rows if a<=r['week']<=b]\n    print(a,b,len(s),'bias',round(sum(s)/len(s),1),'sum',sum(s))\nseg('2024-01-01','2024-12-23'); seg('2024-12-30','2025-12-22')\nseg('2024-12-30','2025-04-06'); seg('2025-04-07','2025-06-09'); seg('2025-06-16','2025-12-22')\nseg('2025-04-07','2025-04-21')\nEOF",
+        "description": "Compute forecast bias by period"
+      }
+    },
+    {
+      "t_ms": 40846,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 50590,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 50590,
+      "kind": "text",
+      "chunk": "The two weeks"
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": " that matter most are **"
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": "7 April**"
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": " and **19 May**."
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": " In both,"
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": " you"
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": " kn"
+    },
+    {
+      "t_ms": 50591,
+      "kind": "text",
+      "chunk": "ew in advance something"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " the forecast hadn't"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " taken into account."
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " Most"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " of the other"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " big misses can"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " only"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " be explained after"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " the fact, and"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " that's not a reason to override"
+    },
+    {
+      "t_ms": 50592,
+      "kind": "text",
+      "chunk": " a forecast.\n\nI rec"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": "omputed the t"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": "ool's figure from"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": " the CSV and got the"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": " same result"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": ": **94.2 %**"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": ". That's"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": " 50 weeks from"
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": " 30.12.2024 "
+    },
+    {
+      "t_ms": 50593,
+      "kind": "text",
+      "chunk": "to 22.12.2025"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": ", le"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": "aving out the"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": " s"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": "old-out week and the week with"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": " no forecast. But"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": " the figure hides a dire"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": "ction: in"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": " 2025 the forecast"
+    },
+    {
+      "t_ms": 50594,
+      "kind": "text",
+      "chunk": " was **about 17 jars"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": " a"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": " week too high on average** (2"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": "024: about 7), which ad"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": "ds up to about 860 j"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": "ars over"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": " the year. For a fresh"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": " product that prob"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": "ably means wa"
+    },
+    {
+      "t_ms": 50595,
+      "kind": "text",
+      "chunk": "ste. Almost all of it"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": " fal"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": "ls in the we"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": "eks below"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": ".\n\n## Weeks where"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": " you should have overridden the for"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": "ecast\n\n**"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": "1. 7 April to about"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": " 9 June:"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": " the organ"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": "ic market chain delisting"
+    },
+    {
+      "t_ms": 50596,
+      "kind": "text",
+      "chunk": "**"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": "\n- From the week of 7"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": " April, the "
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": "9 "
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": "stores no"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": " longer order,"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": " about 70 jars a week"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": ". The forecast kept plan"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": "ning as if nothing had chang"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": "ed:"
+    },
+    {
+      "t_ms": 50597,
+      "kind": "text",
+      "chunk": " 607 against"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": " 484 s"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": "old (+123), then"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": " +78 and +81."
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": "\n- From"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": " 7 April to 9 "
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": "June the forecast was on average"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": " **60"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": " jars a"
+    },
+    {
+      "t_ms": 50598,
+      "kind": "text",
+      "chunk": " week too high**, close"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": " to the "
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "70 jars lost. The"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": " model only adj"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "usted g"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "radually, because it can"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": " only lear"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "n about"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": " the loss from s"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "ales that have already d"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "ropped.\n- **"
+    },
+    {
+      "t_ms": 50599,
+      "kind": "text",
+      "chunk": "What to"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " do:** you"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " knew about"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " the delisting ahead of"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " time, so you should have ta"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": "ken about"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " 70 off"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " the forecast from the week of"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " 7 April until it"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " caught up. From m"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": "id-June the"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " bias is g"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": "one (+"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": "0.4 a"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " week through"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": " to December"
+    },
+    {
+      "t_ms": 50600,
+      "kind": "text",
+      "chunk": ").\n\n**2. 19 "
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "and 26 May: the two"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " weeks after the promotion"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "**\n- The promotion week"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " (12 May) itself was"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " fine: 671 forec"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "ast against 637 "
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "sold."
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " Since"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " the promotion cal"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "endar is connected, the u"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "plift was planned.\n-"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " After that, the forecast was"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " 531 and 521 against"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " 449 and 439 s"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "old,"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " **"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "+"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": "82 each week**. The"
+    },
+    {
+      "t_ms": 50601,
+      "kind": "text",
+      "chunk": " forecast for the week after the"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " promotion was even higher than"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " the week before it"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " (509). That su"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": "ggests the promotion spike"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " f"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": "ed into the norm"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": "al ba"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": "seline, on top of the del"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": "isting.\n- **What to"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " do:** after a promotion"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": ", plan from"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " the level"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": " before it"
+    },
+    {
+      "t_ms": 50602,
+      "kind": "text",
+      "chunk": ", not from the for"
+    },
+    {
+      "t_ms": 50638,
+      "kind": "text",
+      "chunk": "ecast. That was visible on"
+    },
+    {
+      "t_ms": 50681,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 50743,
+      "kind": "text",
+      "chunk": " Sunday it"
+    },
+    {
+      "t_ms": 50782,
+      "kind": "text",
+      "chunk": " was made."
+    },
+    {
+      "t_ms": 50830,
+      "kind": "text",
+      "chunk": " After"
+    },
+    {
+      "t_ms": 50880,
+      "kind": "text",
+      "chunk": " the 2024 promotion"
+    },
+    {
+      "t_ms": 50931,
+      "kind": "text",
+      "chunk": " the forecast was also too high"
+    },
+    {
+      "t_ms": 50979,
+      "kind": "text",
+      "chunk": ", though"
+    },
+    {
+      "t_ms": 51031,
+      "kind": "text",
+      "chunk": " only by 27.\n\n##"
+    },
+    {
+      "t_ms": 51086,
+      "kind": "text",
+      "chunk": " Weeks where"
+    },
+    {
+      "t_ms": 51131,
+      "kind": "text",
+      "chunk": " there"
+    },
+    {
+      "t_ms": 51181,
+      "kind": "text",
+      "chunk": " was n"
+    },
+    {
+      "t_ms": 51236,
+      "kind": "text",
+      "chunk": "othing to follow,"
+    },
+    {
+      "t_ms": 51279,
+      "kind": "text",
+      "chunk": " or the"
+    },
+    {
+      "t_ms": 51329,
+      "kind": "text",
+      "chunk": " data"
+    },
+    {
+      "t_ms": 51383,
+      "kind": "text",
+      "chunk": " is"
+    },
+    {
+      "t_ms": 51436,
+      "kind": "text",
+      "chunk": " dist"
+    },
+    {
+      "t_ms": 51490,
+      "kind": "text",
+      "chunk": "orted\n\n**3. 3"
+    },
+    {
+      "t_ms": 51529,
+      "kind": "text",
+      "chunk": " February: no forecast st"
+    },
+    {
+      "t_ms": 51585,
+      "kind": "text",
+      "chunk": "ored ("
+    },
+    {
+      "t_ms": 51632,
+      "kind": "text",
+      "chunk": "ERP update)."
+    },
+    {
+      "t_ms": 51679,
+      "kind": "text",
+      "chunk": "** Someone had to plan"
+    },
+    {
+      "t_ms": 51732,
+      "kind": "text",
+      "chunk": " this"
+    },
+    {
+      "t_ms": 51782,
+      "kind": "text",
+      "chunk": " week by hand anyway."
+    },
+    {
+      "t_ms": 51829,
+      "kind": "text",
+      "chunk": " It"
+    },
+    {
+      "t_ms": 51880,
+      "kind": "text",
+      "chunk": " is"
+    },
+    {
+      "t_ms": 51928,
+      "kind": "text",
+      "chunk": "n't included"
+    },
+    {
+      "t_ms": 51979,
+      "kind": "text",
+      "chunk": " in the 94.2 %"
+    },
+    {
+      "t_ms": 52033,
+      "kind": "text",
+      "chunk": ".\n\n**4. 10 "
+    },
+    {
+      "t_ms": 52079,
+      "kind": "text",
+      "chunk": "March: sold out from Th"
+    },
+    {
+      "t_ms": 52128,
+      "kind": "text",
+      "chunk": "ursday.**"
+    },
+    {
+      "t_ms": 52179,
+      "kind": "text",
+      "chunk": "\n- The 501 j"
+    },
+    {
+      "t_ms": 52228,
+      "kind": "text",
+      "chunk": "ars a"
+    },
+    {
+      "t_ms": 52281,
+      "kind": "text",
+      "chunk": "ren't the"
+    },
+    {
+      "t_ms": 52328,
+      "kind": "text",
+      "chunk": " real demand,"
+    },
+    {
+      "t_ms": 52378,
+      "kind": "text",
+      "chunk": " just what"
+    },
+    {
+      "t_ms": 52428,
+      "kind": "text",
+      "chunk": " was in stock."
+    },
+    {
+      "t_ms": 52478,
+      "kind": "text",
+      "chunk": " The data"
+    },
+    {
+      "t_ms": 52527,
+      "kind": "text",
+      "chunk": " do"
+    },
+    {
+      "t_ms": 52579,
+      "kind": "text",
+      "chunk": "esn't show whether production was"
+    },
+    {
+      "t_ms": 52628,
+      "kind": "text",
+      "chunk": " below the forecast of"
+    },
+    {
+      "t_ms": 52678,
+      "kind": "text",
+      "chunk": " 604 or the"
+    },
+    {
+      "t_ms": 52727,
+      "kind": "text",
+      "chunk": " forecast was too low."
+    },
+    {
+      "t_ms": 52781,
+      "kind": "text",
+      "chunk": "\n-"
+    },
+    {
+      "t_ms": 52828,
+      "kind": "text",
+      "chunk": " Either way, the week is"
+    },
+    {
+      "t_ms": 52876,
+      "kind": "text",
+      "chunk": " miss"
+    },
+    {
+      "t_ms": 52928,
+      "kind": "text",
+      "chunk": "ing from the 94.2 "
+    },
+    {
+      "t_ms": 52983,
+      "kind": "text",
+      "chunk": "%,"
+    },
+    {
+      "t_ms": 53027,
+      "kind": "text",
+      "chunk": " so l"
+    },
+    {
+      "t_ms": 53082,
+      "kind": "text",
+      "chunk": "ost sales never"
+    },
+    {
+      "t_ms": 53129,
+      "kind": "text",
+      "chunk": " show up in the figure."
+    },
+    {
+      "t_ms": 53178,
+      "kind": "text",
+      "chunk": "\n- For the following week, don"
+    },
+    {
+      "t_ms": 53228,
+      "kind": "text",
+      "chunk": "'t let the model learn from the"
+    },
+    {
+      "t_ms": 53277,
+      "kind": "text",
+      "chunk": " 501. Pl"
+    },
+    {
+      "t_ms": 53327,
+      "kind": "text",
+      "chunk": "an from the level"
+    },
+    {
+      "t_ms": 53380,
+      "kind": "text",
+      "chunk": " before the sell"
+    },
+    {
+      "t_ms": 53428,
+      "kind": "text",
+      "chunk": "-out.\n\n##"
+    },
+    {
+      "t_ms": 53477,
+      "kind": "text",
+      "chunk": " Big misses you"
+    },
+    {
+      "t_ms": 53527,
+      "kind": "text",
+      "chunk": " couldn't have"
+    },
+    {
+      "t_ms": 53578,
+      "kind": "text",
+      "chunk": " seen coming\n\nSeveral"
+    },
+    {
+      "t_ms": 53628,
+      "kind": "text",
+      "chunk": " weeks are far"
+    },
+    {
+      "t_ms": 53677,
+      "kind": "text",
+      "chunk": " off with no note"
+    },
+    {
+      "t_ms": 53728,
+      "kind": "text",
+      "chunk": " in the data"
+    },
+    {
+      "t_ms": 53777,
+      "kind": "text",
+      "chunk": ": 13 January (+84"
+    },
+    {
+      "t_ms": 53829,
+      "kind": "text",
+      "chunk": "), 24 February (+73"
+    },
+    {
+      "t_ms": 53879,
+      "kind": "text",
+      "chunk": "), 7"
+    },
+    {
+      "t_ms": 53930,
+      "kind": "text",
+      "chunk": " July (−62), 27"
+    },
+    {
+      "t_ms": 53979,
+      "kind": "text",
+      "chunk": " October (+65) and "
+    },
+    {
+      "t_ms": 54035,
+      "kind": "text",
+      "chunk": "8 December (−49). They"
+    },
+    {
+      "t_ms": 54081,
+      "kind": "text",
+      "chunk": " go both ways and"
+    },
+    {
+      "t_ms": 54129,
+      "kind": "text",
+      "chunk": " have no known cause. Over"
+    },
+    {
+      "t_ms": 54182,
+      "kind": "text",
+      "chunk": "riding the"
+    },
+    {
+      "t_ms": 54228,
+      "kind": "text",
+      "chunk": " forecast for we"
+    },
+    {
+      "t_ms": 54280,
+      "kind": "text",
+      "chunk": "eks like these only loo"
+    },
+    {
+      "t_ms": 54335,
+      "kind": "text",
+      "chunk": "ks sm"
+    },
+    {
+      "t_ms": 54378,
+      "kind": "text",
+      "chunk": "art in hindsight."
+    },
+    {
+      "t_ms": 54428,
+      "kind": "text",
+      "chunk": " Only"
+    },
+    {
+      "t_ms": 54477,
+      "kind": "text",
+      "chunk": " if you find"
+    },
+    {
+      "t_ms": 54530,
+      "kind": "text",
+      "chunk": " a cause (a"
+    },
+    {
+      "t_ms": 54578,
+      "kind": "text",
+      "chunk": " holiday, a custom"
+    },
+    {
+      "t_ms": 54630,
+      "kind": "text",
+      "chunk": "er's own"
+    },
+    {
+      "t_ms": 54678,
+      "kind": "text",
+      "chunk": " camp"
+    },
+    {
+      "t_ms": 54728,
+      "kind": "text",
+      "chunk": "aign, an"
+    },
+    {
+      "t_ms": 54778,
+      "kind": "text",
+      "chunk": " out"
+    },
+    {
+      "t_ms": 54832,
+      "kind": "text",
+      "chunk": "age) would they count as re"
+    },
+    {
+      "t_ms": 54879,
+      "kind": "text",
+      "chunk": "asons to override.\n\n##"
+    },
+    {
+      "t_ms": 54928,
+      "kind": "text",
+      "chunk": " Co"
+    },
+    {
+      "t_ms": 54978,
+      "kind": "text",
+      "chunk": "ming week ("
+    },
+    {
+      "t_ms": 55029,
+      "kind": "text",
+      "chunk": "29 December)\n\nThe forec"
+    },
+    {
+      "t_ms": 55084,
+      "kind": "text",
+      "chunk": "ast is **"
+    },
+    {
+      "t_ms": 55128,
+      "kind": "text",
+      "chunk": "729**. Over"
+    },
+    {
+      "t_ms": 55235,
+      "kind": "text",
+      "chunk": " Christmas and"
+    },
+    {
+      "t_ms": 55279,
+      "kind": "text",
+      "chunk": " New Year it has"
+    },
+    {
+      "t_ms": 55331,
+      "kind": "text",
+      "chunk": " been too high in both years (22"
+    },
+    {
+      "t_ms": 55386,
+      "kind": "text",
+      "chunk": ".12.2025: +43"
+    },
+    {
+      "t_ms": 55428,
+      "kind": "text",
+      "chunk": "; 23"
+    },
+    {
+      "t_ms": 55478,
+      "kind": "text",
+      "chunk": ".12.2024: +29"
+    },
+    {
+      "t_ms": 55528,
+      "kind": "text",
+      "chunk": "; 30.12.2024"
+    },
+    {
+      "t_ms": 55579,
+      "kind": "text",
+      "chunk": ": +25). Last year s"
+    },
+    {
+      "t_ms": 55629,
+      "kind": "text",
+      "chunk": "ales fell from"
+    },
+    {
+      "t_ms": 55685,
+      "kind": "text",
+      "chunk": " 746 to 678 in"
+    },
+    {
+      "t_ms": 55734,
+      "kind": "text",
+      "chunk": " the New"
+    },
+    {
+      "t_ms": 55790,
+      "kind": "text",
+      "chunk": " Year week,"
+    },
+    {
+      "t_ms": 55828,
+      "kind": "text",
+      "chunk": " about 9 % down. If"
+    },
+    {
+      "t_ms": 55879,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 55928,
+      "kind": "text",
+      "chunk": " pattern repeats, about"
+    },
+    {
+      "t_ms": 55977,
+      "kind": "text",
+      "chunk": " 670"
+    },
+    {
+      "t_ms": 56028,
+      "kind": "text",
+      "chunk": " would be the"
+    },
+    {
+      "t_ms": 56078,
+      "kind": "text",
+      "chunk": " more"
+    },
+    {
+      "t_ms": 56128,
+      "kind": "text",
+      "chunk": " realistic pl"
+    },
+    {
+      "t_ms": 56178,
+      "kind": "text",
+      "chunk": "an. I'd l"
+    },
+    {
+      "t_ms": 56227,
+      "kind": "text",
+      "chunk": "ower it mo"
+    },
+    {
+      "t_ms": 56283,
+      "kind": "text",
+      "chunk": "derately r"
+    },
+    {
+      "t_ms": 56329,
+      "kind": "text",
+      "chunk": "ather than take"
+    },
+    {
+      "t_ms": 56378,
+      "kind": "text",
+      "chunk": " the"
+    },
+    {
+      "t_ms": 56429,
+      "kind": "text",
+      "chunk": " 729 as it is"
+    },
+    {
+      "t_ms": 56480,
+      "kind": "text",
+      "chunk": ".\n\n**Side"
+    },
+    {
+      "t_ms": 56533,
+      "kind": "text",
+      "chunk": " note:** the CSV has"
+    },
+    {
+      "t_ms": 56582,
+      "kind": "text",
+      "chunk": " the week of"
+    },
+    {
+      "t_ms": 56628,
+      "kind": "text",
+      "chunk": " 16."
+    },
+    {
+      "t_ms": 56678,
+      "kind": "text",
+      "chunk": "09.2024 twice."
+    },
+    {
+      "t_ms": 56728,
+      "kind": "text",
+      "chunk": " It doesn't affect the"
+    },
+    {
+      "t_ms": 56778,
+      "kind": "text",
+      "chunk": " 2025 figures, but"
+    },
+    {
+      "t_ms": 56828,
+      "kind": "text",
+      "chunk": " it's worth f"
+    },
+    {
+      "t_ms": 56848,
+      "kind": "text",
+      "chunk": "ixing in the export."
+    }
+  ],
+  "final_text": "The two weeks that matter most are **7 April** and **19 May**. In both, you knew in advance something the forecast hadn't taken into account. Most of the other big misses can only be explained after the fact, and that's not a reason to override a forecast.\n\nI recomputed the tool's figure from the CSV and got the same result: **94.2 %**. That's 50 weeks from 30.12.2024 to 22.12.2025, leaving out the sold-out week and the week with no forecast. But the figure hides a direction: in 2025 the forecast was **about 17 jars a week too high on average** (2024: about 7), which adds up to about 860 jars over the year. For a fresh product that probably means waste. Almost all of it falls in the weeks below.\n\n## Weeks where you should have overridden the forecast\n\n**1. 7 April to about 9 June: the organic market chain delisting**\n- From the week of 7 April, the 9 stores no longer order, about 70 jars a week. The forecast kept planning as if nothing had changed: 607 against 484 sold (+123), then +78 and +81.\n- From 7 April to 9 June the forecast was on average **60 jars a week too high**, close to the 70 jars lost. The model only adjusted gradually, because it can only learn about the loss from sales that have already dropped.\n- **What to do:** you knew about the delisting ahead of time, so you should have taken about 70 off the forecast from the week of 7 April until it caught up. From mid-June the bias is gone (+0.4 a week through to December).\n\n**2. 19 and 26 May: the two weeks after the promotion**\n- The promotion week (12 May) itself was fine: 671 forecast against 637 sold. Since the promotion calendar is connected, the uplift was planned.\n- After that, the forecast was 531 and 521 against 449 and 439 sold, **+82 each week**. The forecast for the week after the promotion was even higher than the week before it (509). That suggests the promotion spike fed into the normal baseline, on top of the delisting.\n- **What to do:** after a promotion, plan from the level before it, not from the forecast. That was visible on the Sunday it was made. After the 2024 promotion the forecast was also too high, though only by 27.\n\n## Weeks where there was nothing to follow, or the data is distorted\n\n**3. 3 February: no forecast stored (ERP update).** Someone had to plan this week by hand anyway. It isn't included in the 94.2 %.\n\n**4. 10 March: sold out from Thursday.**\n- The 501 jars aren't the real demand, just what was in stock. The data doesn't show whether production was below the forecast of 604 or the forecast was too low.\n- Either way, the week is missing from the 94.2 %, so lost sales never show up in the figure.\n- For the following week, don't let the model learn from the 501. Plan from the level before the sell-out.\n\n## Big misses you couldn't have seen coming\n\nSeveral weeks are far off with no note in the data: 13 January (+84), 24 February (+73), 7 July (−62), 27 October (+65) and 8 December (−49). They go both ways and have no known cause. Overriding the forecast for weeks like these only looks smart in hindsight. Only if you find a cause (a holiday, a customer's own campaign, an outage) would they count as reasons to override.\n\n## Coming week (29 December)\n\nThe forecast is **729**. Over Christmas and New Year it has been too high in both years (22.12.2025: +43; 23.12.2024: +29; 30.12.2024: +25). Last year sales fell from 746 to 678 in the New Year week, about 9 % down. If the pattern repeats, about 670 would be the more realistic plan. I'd lower it moderately rather than take the 729 as it is.\n\n**Side note:** the CSV has the week of 16.09.2024 twice. It doesn't affect the 2025 figures, but it's worth fixing in the export.",
+  "stats": {
+    "duration_ms": 56149,
+    "duration_api_ms": 54883,
+    "ttft_ms": 2846,
+    "num_turns": 4,
+    "output_tokens": 5000
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [],
+  "edited": false
+}

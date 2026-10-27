@@ -130,21 +130,20 @@ describe("crawl contract", () => {
     );
   });
 
-  // Workshop 05 changed its slug before release; the preview link and the first QR must not 404,
-  // and the released slug stays an ordinary public workshop page.
+  // Workshop 05 moved to audit-vorbereitung-mit-ki; its previous pages, kit zip, deck and demo must not 404.
   it.each([
-    "/workshops/audit-vorbereitung-mit-ki",
-    "/workshops/audit-vorbereitung-mit-ki/kit",
-    "/workshops/audit-vorbereitung-mit-ki/slides.html",
-  ])("redirects the first Workshop 05 slug %s to the released page", (from) => {
+    ["/workshops/ki-im-unternehmen-sicher-nutzen", "/workshops/audit-vorbereitung-mit-ki"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/kit", "/workshops/audit-vorbereitung-mit-ki/kit"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip", "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/slides.html", "/workshops/audit-vorbereitung-mit-ki/slides.html"],
+    ["/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html", "/workshops/audit-vorbereitung-mit-ki/presenter.html"],
+    ["/demos/ki-im-unternehmen-sicher-nutzen", "/demos/audit-vorbereitung-mit-ki"],
+  ])("redirects the previous Workshop 05 path %s to %s", (from, to) => {
     const entry = getCrawlRoute(from);
     expect(entry.routeClass).toBe("retired");
-    expect(entry.redirectTo).toBe("/workshops/ki-im-unternehmen-sicher-nutzen");
+    expect(entry.redirectTo).toBe(to);
     expect(entry.status).toBe(301);
-    for (const live of [
-      "/workshops/ki-im-unternehmen-sicher-nutzen",
-      "/workshops/ki-im-unternehmen-sicher-nutzen/kit",
-    ]) {
+    for (const live of ["/workshops/audit-vorbereitung-mit-ki", "/workshops/audit-vorbereitung-mit-ki/kit", "/demos/audit-vorbereitung-mit-ki"]) {
       expect(getCrawlRoute(live).routeClass).not.toBe("retired");
     }
   });
@@ -365,7 +364,7 @@ describe("crawl contract", () => {
     }
   });
 
-  it("classifies exactly the skill documents as public machine surfaces", () => {
+  it("classifies exactly the skill documents and zips as public machine surfaces", () => {
     const served = getCrawlRoute("/skills/loehrning-plattform/SKILL.md");
     expect(served.pattern).toBe("/skills/:name/SKILL.md");
     expect(served.routeClass).toBe("public-machine");
@@ -374,11 +373,17 @@ describe("crawl contract", () => {
     expect(served.includeInSitemap).toBe(false);
     expect(served.xRobotsTag).toBeUndefined();
 
+    // The upload zip is the one single-segment route under /skills
+    // (dynamicParams is off, so any other name there is a 404).
+    const zip = getCrawlRoute("/skills/loehrning-plattform.zip");
+    expect(zip.pattern).toBe("/skills/:name");
+    expect(zip.routeClass).toBe("public-machine");
+    expect(zip.includeInSitemap).toBe(false);
+
     // A sibling path is not a skill document and must not inherit the class:
     // it reaches the fail-closed default, whose pattern echoes the path.
     for (const path of [
       "/skills",
-      "/skills/loehrning-plattform",
       "/skills/loehrning-plattform/README.md",
     ]) {
       const entry = getCrawlRoute(path);

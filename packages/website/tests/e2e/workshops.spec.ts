@@ -45,8 +45,13 @@ test.describe("workshop self-study journey", () => {
       "href",
       "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
     );
+    // The demo is one clear link away: card A's secondary link.
+    await expect(stage.getByRole("link", { name: /^Demo öffnen/ })).toHaveAttribute(
+      "href",
+      "/demos/geschaeftsberichte-mit-ki-lesen?source=workshop",
+    );
     const kit = stage.getByRole("link", { name: /^Kit herunterladen/ });
-    await expect(kit).toHaveAttribute("href", /northwind-analyst-kit\.zip$/);
+    await expect(kit).toHaveAttribute("href", /northwind-analyst-kit-de\.zip$/);
     await expect(kit).toHaveAttribute("download", "");
     await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
     await expect(page.getByRole("list", { name: "Ablauf" })).toHaveCount(0);
@@ -113,28 +118,18 @@ test.describe("workshop self-study journey", () => {
     expect(errors).toEqual([]);
   });
 
-  test("repairs the third workshop lab and invalidates results after a changed choice", async ({ page, request }) => {
+  test("sends the third workshop's retired lab to the demo's test beat and serves the kit", async ({ page, request }) => {
     const base = "/workshops/datenbereitschaft-fuer-ki";
+    const lab = await request.get(`${base}/data-readiness-kit/readiness-lab.html`, { maxRedirects: 0 });
+    expect(lab.status()).toBe(308);
+    expect(lab.headers().location).toBe("/demos/datenbereitschaft-fuer-ki?beat=test");
     await page.goto(`${base}/data-readiness-kit/readiness-lab.html`);
-    await page.getByRole("button", { name: "Test my choices" }).click();
-    await expect(page.locator("#simulation-grade")).not.toHaveText("6 / 6 cases · 10 / 10 controls");
-    for (const [id, value] of Object.entries({
-      "sim-surface": "governed",
-      "sim-metric": "ending_snapshot",
-      "sim-boundary": "least_privilege",
-      "sim-freshness": "governed",
-      "sim-yardstick": "corpus",
-    })) {
-      await page.locator(`#${id}`).selectOption(value);
-    }
-    await page.getByRole("button", { name: "Test my choices" }).click();
-    await expect(page.locator("#simulation-grade")).toHaveText("6 / 6 cases · 9 / 10 controls");
-    await expect(page.locator("#status")).toHaveText("PILOT ONLY");
-    await page.locator("#sim-metric").selectOption("movement");
-    await expect(page.locator("#simulation-grade")).toHaveText("0 / 6 cases · 0 / 10 controls");
+    await expect(page).toHaveURL(/\/demos\/datenbereitschaft-fuer-ki\?beat=test$/);
     const response = await request.get(`${base}/data-readiness-kit.zip`);
     expect(response.status()).toBe(200);
     expect((await response.body()).subarray(0, 2).toString("ascii")).toBe("PK");
+    const card = await request.get(`${base}/data-readiness-kit/FRAGEKARTE.md`);
+    expect(card.status()).toBe(200);
   });
 
   test("lists the workshops as compact rows on a phone, each one tap target", async ({
@@ -143,7 +138,7 @@ test.describe("workshop self-study journey", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openHub(page);
     const rows = page.getByTestId("workshop-row");
-    await expect(rows).toHaveCount(5);
+    await expect(rows).toHaveCount(6);
 
     // A phone row is a list line, not a card: the poster tile (104px wide, 4:5,
     // so 130px tall), duration, title and one "you leave with" sentence. The
@@ -175,7 +170,7 @@ test.describe("workshop self-study journey", () => {
     const first = await rows.first().boundingBox();
     expect(first!.y).toBeLessThan(664);
     // Tapping the row body (not the arrow) opens the workshop.
-    const outcome = rows.nth(3).locator("[data-workshop-output]");
+    const outcome = rows.nth(4).locator("[data-workshop-output]");
     await outcome.scrollIntoViewIfNeeded();
     const spot = await outcome.boundingBox();
     await page.mouse.click(spot!.x + 20, spot!.y + spot!.height / 2);
@@ -192,7 +187,8 @@ test.describe("workshop self-study journey", () => {
       "/workshops",
       "/workshops/esg-berichte-mit-ki",
       "/workshops/datenbereitschaft-fuer-ki",
-      "/workshops/ki-im-unternehmen-sicher-nutzen",
+      "/workshops/audit-vorbereitung-mit-ki",
+      "/workshops/angebote-mit-ki-vergleichen",
     ];
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
@@ -256,10 +252,10 @@ test.describe("workshop self-study journey", () => {
     }
   });
 
-  test("sets the five workshops as five posters in five palettes", async ({ page }) => {
+  test("sets the six workshops as six posters in six palettes", async ({ page }) => {
     await openHub(page);
     // The hub opens on a paper header (highlighted title, pastel geometry,
-    // catalogue card); the five posters are the rows.
+    // catalogue card); the six posters are the rows.
     await expect(page.locator("[data-cover-band]")).toHaveCount(0);
     const hero = page.locator("[data-workshop-hero]");
     await expect(hero).toBeVisible();
@@ -267,13 +263,13 @@ test.describe("workshop self-study journey", () => {
     await expect(hero.locator("[data-workshop-geometry]")).toHaveCount(2);
     await expect(page.getByRole("complementary", { name: "Im Katalog" })).toBeVisible();
     const rows = page.getByTestId("workshop-row");
-    await expect(rows).toHaveCount(5);
-    // Each row shows its own poster; the five palettes are distinct and in
+    await expect(rows).toHaveCount(6);
+    // Each row shows its own poster; the six palettes are distinct and in
     // the newest-first order of the list.
     const palettes = await rows.evaluateAll((elements) =>
       elements.map((row) => row.querySelector("svg[data-poster]")?.getAttribute("data-poster")),
     );
-    expect(palettes).toEqual(["sage", "autumn", "bloom", "idea", "lemons"]);
+    expect(palettes).toEqual(["kraft", "sage", "autumn", "bloom", "idea", "lemons"]);
     // The poster grounds really differ on screen: one computed fill per row.
     const grounds = await rows.evaluateAll((elements) =>
       elements.map((row) => {
@@ -281,7 +277,7 @@ test.describe("workshop self-study journey", () => {
         return ground ? getComputedStyle(ground).fill : null;
       }),
     );
-    expect(new Set(grounds).size).toBe(5);
+    expect(new Set(grounds).size).toBe(6);
     expect(grounds).not.toContain(null);
 
     // Each workshop page opens with the band in its own scene.
@@ -290,7 +286,8 @@ test.describe("workshop self-study journey", () => {
       "geschaeftsberichte-mit-ki-lesen": "idea",
       "datenbereitschaft-fuer-ki": "bloom",
       "esg-berichte-mit-ki": "autumn",
-      "ki-im-unternehmen-sicher-nutzen": "sage",
+      "audit-vorbereitung-mit-ki": "sage",
+      "angebote-mit-ki-vergleichen": "kraft",
     } as const;
     const bandGrounds = new Set<string>();
     for (const [slug, plakat] of Object.entries(expected)) {
@@ -307,6 +304,6 @@ test.describe("workshop self-study journey", () => {
       await expect(page.getByRole("heading", { name: "Ablauf" })).toHaveCount(0);
       await expect(page.locator("[data-case-question]")).toHaveCount(0);
     }
-    expect(bandGrounds.size).toBe(5);
+    expect(bandGrounds.size).toBe(6);
   });
 });

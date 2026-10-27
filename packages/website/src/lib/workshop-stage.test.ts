@@ -2,13 +2,18 @@ import { describe, expect, it } from "vitest";
 import { getWorkshops } from "@/lib/workshops";
 import { materialMeta, workshopStage } from "./workshop-stage";
 
-/** The expected cards per workshop: slides or lab, kit or case. */
+/**
+ * The expected cards per workshop: slides (or the lab where there is no deck)
+ * and kit. The demo is never card A, only card A's secondary link.
+ */
 const EXPECTED: Readonly<Record<string, { a: "slides" | "lab"; b: "kit" | "case"; kitPage: boolean }>> = {
-  "ki-prognosen-einschaetzen": { a: "lab", b: "case", kitPage: false },
+  // Workshop 01 has no slide deck: its labs play that part.
+  "ki-prognosen-einschaetzen": { a: "lab", b: "kit", kitPage: true },
   "geschaeftsberichte-mit-ki-lesen": { a: "slides", b: "kit", kitPage: false },
   "datenbereitschaft-fuer-ki": { a: "slides", b: "kit", kitPage: false },
   "esg-berichte-mit-ki": { a: "slides", b: "kit", kitPage: true },
-  "ki-im-unternehmen-sicher-nutzen": { a: "slides", b: "kit", kitPage: true },
+  "audit-vorbereitung-mit-ki": { a: "slides", b: "kit", kitPage: true },
+  "angebote-mit-ki-vergleichen": { a: "slides", b: "kit", kitPage: true },
 };
 
 describe("workshopStage", () => {
@@ -22,6 +27,8 @@ describe("workshopStage", () => {
         expect(stage.a?.kind).toBe(expected.a);
         expect(stage.a?.href).toBe(primary.href);
         expect(stage.a?.material).toBe(primary);
+        expect(stage.a?.material.role).not.toBe("demo");
+        expect(stage.a?.demoHref).toBe(workshop.materials.find((material) => material.role === "demo")?.href);
         expect(stage.b?.kind).toBe(expected.b);
         expect(stage.b?.material).not.toBe(primary);
         expect(stage.b?.href).toBe(stage.b?.material.href);
@@ -61,7 +68,9 @@ describe("workshopStage", () => {
         const stage = workshopStage(workshop, locale);
         const unit = locale === "de" ? "Min." : "min";
         if (stage.a?.kind === "slides") {
-          expect(stage.a.meta, `${locale}/${workshop.slug}`).toMatch(new RegExp(`^Deck · (?:ca\\. |about )?\\d+ ${unit.replace(".", "\\.")}$`));
+          const other = locale === "de" ? "auf Englisch" : "in German";
+          const note = stage.a.material.language === locale ? "" : ` · ${other}`;
+          expect(stage.a.meta, `${locale}/${workshop.slug}`).toMatch(new RegExp(`^Deck · (?:ca\\. |about )?\\d+ ${unit.replace(".", "\\.")}${note}$`));
         } else if (stage.a) {
           // The title already says "lab": the meta is the time alone.
           expect(stage.a.meta).toMatch(new RegExp(`^\\d+ ${unit.replace(".", "\\.")}$`));
@@ -73,10 +82,23 @@ describe("workshopStage", () => {
     }
   });
 
+  it("names the deck's language on its card only when it differs from the page", () => {
+    const deckLanguages = (locale: "de" | "en") =>
+      getWorkshops(locale).flatMap((workshop) => {
+        const a = workshopStage(workshop, locale).a;
+        return a?.kind === "slides" ? [[a.material.language, a.meta] as const] : [];
+      });
+    const de = deckLanguages("de");
+    expect(de.some(([language]) => language === "en"), "a German page links an English-only deck").toBe(true);
+    for (const [language, meta] of de) expect(meta.endsWith(" · auf Englisch")).toBe(language === "en");
+    for (const [language, meta] of deckLanguages("en")) expect(meta.endsWith(" · in German")).toBe(language === "de");
+  });
+
   it("formats a material as format and size, falling back to the language for a page", () => {
-    const [w05] = getWorkshops("de").filter((workshop) => workshop.slug === "ki-im-unternehmen-sicher-nutzen");
-    expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 14 KB");
-    expect(materialMeta(w05.materials.find((material) => material.kind === "html")!)).toBe("HTML · EN");
+    const [w05] = getWorkshops("de").filter((workshop) => workshop.slug === "audit-vorbereitung-mit-ki");
+    expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 43 KB");
+    // The German page links the German edition of the deck.
+    expect(materialMeta(w05.materials.find((material) => material.kind === "html")!)).toBe("HTML · DE");
   });
 
   it("returns no card for a workshop without materials, so the stage never breaks", () => {

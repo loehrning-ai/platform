@@ -10,7 +10,6 @@ import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
-import { getDemosForLocale } from "@/lib/demos";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { getWorkshops } from "@/lib/workshops";
 import {
@@ -119,27 +118,11 @@ const SURFACES: readonly Surface[] = ([
       })),
     ),
   },
+  // The demos hub is Glas (glass-spec): its H1 is no poster title either.
   // The workshops hub and the home hero are no poster titles any more: the
   // owner asked for the old highlighted hub heading and the old paper hero
   // with the line globe back.
-  {
-    name: "demos hub band",
-    layout: "band",
-    files: ["src/app/demos/page.tsx"],
-    titles: LOCALES.map((locale) => ({ id: `demos ${locale}`, text: DEMOS_PAGE_COPY[locale].catalog.heading })),
-  },
-  {
-    name: "demo detail bands",
-    layout: "band-art",
-    files: ["src/components/demos/demo-page.tsx"],
-    titles: LOCALES.flatMap((locale) =>
-      getDemosForLocale(locale).map((demo) => ({
-        id: `${demo.slug} ${locale}`,
-        text: demo.title,
-        fit: fallbackFitEm(demo.title),
-      })),
-    ),
-  },
+
   // The blog index is the old bold index again (the giant "Blog."), not a
   // poster band.
   {
@@ -294,8 +277,6 @@ describe("the poster title registry", () => {
   it("covers every surface the spec sets in the poster size", () => {
     expect(SURFACES.map((surface) => surface.name)).toEqual([
       "workshop detail bands",
-      "demos hub band",
-      "demo detail bands",
       "/kurse headline on paper",
       "paper page headlines",
       "course landing bands",

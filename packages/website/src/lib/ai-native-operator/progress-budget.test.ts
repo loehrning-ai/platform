@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 // ─── Progress-budget audit ──────────────────────
 //
 // Two DB rows can grow from a learner working through this course

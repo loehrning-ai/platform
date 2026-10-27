@@ -20,7 +20,7 @@ Content registries are the source of truth:
 - `src/lib/open-source/artifacts.ts` for future tools, projects, and videos published under the `loehrning-ai` GitHub organization (imported labs stay in `src/lib/courses/catalog.ts`);
 - `src/lib/crawl/contract.ts` for public indexing behavior.
 
-New routes must be registered consistently in navigation, crawl policy, sitemap, machine-readable discovery, tests, and Lighthouse coverage.
+New routes must be registered consistently in navigation, crawl policy, sitemap, machine-readable discovery, and tests.
 The committed page inventory is generated from the same crawl and artifact
 registries. `bun run --cwd packages/website page-inventory:check`
 blocks drift; regenerate it only with the package's `page-inventory:generate`
@@ -28,7 +28,7 @@ command.
 
 Deployment and runtime operations are documented in
 [packages/website/docs/deployment.md](packages/website/docs/deployment.md).
-The repeatable local Lighthouse budgets for the public routes are defined in
+The performance targets for a manual Lighthouse run are defined in
 [packages/website/perf-budgets.md](packages/website/perf-budgets.md).
 
 ## Asset and media admission boundary
@@ -59,6 +59,6 @@ A future course, code example, or tool belongs in a new workspace only when it h
 
 Python and other non-JavaScript modules use a minimal `package.json` only as the root verification adapter. Its `scripts.verify` command invokes the module's native locked checks; application code and dependencies remain managed by that language's own tooling. This keeps one explicit admission path without pretending every future tool is a JavaScript package.
 
-The root `bun run ci` command (alias `bun run verify`) runs the repository-wide scanner and content gates, types, lint, unit tests, one production build and a browser smoke; the nightly workflow adds the dependency audit and the broad suites. `bun run verify:workspace-contract` is part of its static group, so a new workspace cannot silently bypass the allowlist or enter CI through a wildcard match.
+The root `bun run ci` command (alias `bun run verify`) runs the repository-wide scanner and content gates, types, lint, unit tests, one production build and a browser smoke; the weekly extended workflow adds the full dependency audit and the broad suites. `bun run verify:workspace-contract` is part of its static group, so a new workspace cannot silently bypass the allowlist or enter CI through a wildcard match.
 
 Do not embed an unrelated application directly into the learning app, weaken global security headers for one module, or rely on development authentication in a public runtime.

@@ -1,10 +1,16 @@
 /**
- * Question-sheet templates (CC BY 4.0) under content/vorlagen/.
+ * Templates (CC BY 4.0) under content/vorlagen/, of two kinds:
  *
- * One entry per sheet, one Markdown file per locale. The files are the single
- * source: the download route at /vorlagen/<file>.md serves their bytes
- * unchanged, and the page named in `hostPaths` renders the structure that
- * `parseQuestionSheet` returns from the same bytes.
+ * - "question-sheet": a sheet the page named in `hostPaths` renders from the
+ *   structure `parseQuestionSheet` returns.
+ * - "template": a plain Markdown file a workshop demo hands out in its
+ *   "Für deinen Claude" block; `hostPaths` are /demos/<slug> and
+ *   /en/demos/<slug>. Templates are never parsed.
+ *
+ * One entry per file pair, one Markdown file per locale. The files are the
+ * single source: the download route at /vorlagen/<file>.md serves their bytes
+ * unchanged. A template that also ships inside a workshop kit names that copy
+ * in `inKit`; a test asserts both are byte-identical.
  *
  * Server only: reads the content directory with Node.js fs. The parser in
  * ./question-sheet stays pure so tests and scripts can call it directly.
@@ -19,19 +25,32 @@ import {
   type SheetLocale,
 } from "./question-sheet";
 
+export type VorlageKind = "question-sheet" | "template";
+
 export interface VorlageEntry {
   readonly slug: string;
+  readonly kind: VorlageKind;
   /** Paths relative to content/vorlagen. */
   readonly files: Readonly<Record<SheetLocale, string>>;
   /** Public file names under /vorlagen/. Also the route segment. */
   readonly downloadNames: Readonly<Record<SheetLocale, string>>;
-  /** The page that publishes the sheet; equals frontmatter hostPath. */
+  /** The page that publishes the file (a question sheet's frontmatter hostPath; a demo page for a template). */
   readonly hostPaths: Readonly<Record<SheetLocale, string>>;
+  /**
+   * Templates only: the same file inside a workshop kit zip. `zip` is the
+   * public path of the archive (/workshops/<slug>/<kit>.zip), `paths` the
+   * entry per locale. A test asserts the bytes are identical.
+   */
+  readonly inKit?: {
+    readonly zip: string;
+    readonly paths: Readonly<Partial<Record<SheetLocale, string>>>;
+  };
 }
 
 export const VORLAGEN: readonly VorlageEntry[] = [
   {
     slug: "ki-in-der-ausbildung-fragen",
+    kind: "question-sheet",
     files: {
       de: "ki-in-der-ausbildung-fragen.md",
       en: "en/ki-in-der-ausbildung-fragen.md",
@@ -45,14 +64,172 @@ export const VORLAGEN: readonly VorlageEntry[] = [
       en: "/en/blog/ki-in-der-ausbildung",
     },
   },
+  {
+    // Workshop 01: the release rule the demo "Die Fehlerliste" fills in (beat "Regel").
+    slug: "pruefregel",
+    kind: "template",
+    files: {
+      de: "pruefregel.md",
+      en: "en/release-rule.md",
+    },
+    downloadNames: {
+      de: "pruefregel.md",
+      en: "release-rule.en.md",
+    },
+    hostPaths: {
+      de: "/demos/ki-prognosen-einschaetzen",
+      en: "/en/demos/ki-prognosen-einschaetzen",
+    },
+    inKit: {
+      zip: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+      paths: { de: "prognose-pruefen-kit/pruefregel.md" },
+    },
+  },
+  {
+    slug: "kennzahlen-steckbrief-vorlage",
+    kind: "template",
+    files: {
+      de: "kennzahlen-steckbrief-vorlage.md",
+      en: "en/metric-card-template.md",
+    },
+    downloadNames: {
+      de: "kennzahlen-steckbrief-vorlage.md",
+      en: "metric-card-template.en.md",
+    },
+    hostPaths: {
+      de: "/demos/geschaeftsberichte-mit-ki-lesen",
+      en: "/en/demos/geschaeftsberichte-mit-ki-lesen",
+    },
+  },
+  {
+    slug: "fragekarte",
+    kind: "template",
+    files: { de: "fragekarte.md", en: "en/fragekarte.md" },
+    downloadNames: { de: "fragekarte.md", en: "fragekarte.en.md" },
+    hostPaths: { de: "/demos/datenbereitschaft-fuer-ki", en: "/en/demos/datenbereitschaft-fuer-ki" },
+    inKit: {
+      zip: "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
+      paths: { de: "data-readiness-kit/FRAGEKARTE.md", en: "data-readiness-kit/QUESTION-CARD.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as evidence-check.md.
+  {
+    slug: "esg-nachweisprobe",
+    kind: "template",
+    files: { de: "esg-nachweisprobe.md", en: "en/esg-nachweisprobe.md" },
+    downloadNames: { de: "esg-nachweisprobe.md", en: "esg-nachweisprobe.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/nachweisprobe.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as take-home/project-instructions-template.md.
+  {
+    slug: "esg-projektanweisungen",
+    kind: "template",
+    files: { de: "esg-projektanweisungen.md", en: "en/esg-projektanweisungen.md" },
+    downloadNames: { de: "esg-projektanweisungen.md", en: "esg-projektanweisungen.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/projektanweisungen-vorlage.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as take-home/folder-checklist.md.
+  {
+    slug: "esg-ordner-checkliste",
+    kind: "template",
+    files: { de: "esg-ordner-checkliste.md", en: "en/esg-ordner-checkliste.md" },
+    downloadNames: { de: "esg-ordner-checkliste.md", en: "esg-ordner-checkliste.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/ordner-checkliste.md" },
+    },
+  },
+  // Workshop 04 take-home (demo "Nachweisprobe"); the English copy ships in crvena-zemja-esg-kit.zip as take-home/email-missing-document.md.
+  {
+    slug: "esg-mail-fehlendes-dokument",
+    kind: "template",
+    files: { de: "esg-mail-fehlendes-dokument.md", en: "en/esg-mail-fehlendes-dokument.md" },
+    downloadNames: { de: "esg-mail-fehlendes-dokument.md", en: "esg-mail-fehlendes-dokument.en.md" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/mail-fehlendes-dokument.md" },
+    },
+  },
+  // Workshop 04 take-home: the Nachweisregister as a table (German: semicolons for German Excel; English: commas).
+  // The English copy ships in crvena-zemja-esg-kit.zip as take-home/evidence-register-template.csv.
+  {
+    slug: "esg-nachweisregister",
+    kind: "template",
+    files: { de: "esg-nachweisregister.csv", en: "en/esg-nachweisregister.csv" },
+    downloadNames: { de: "esg-nachweisregister.csv", en: "esg-nachweisregister.en.csv" },
+    hostPaths: { de: "/demos/esg-berichte-mit-ki", en: "/en/demos/esg-berichte-mit-ki" },
+    inKit: {
+      zip: "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
+      paths: { de: "crvena-zemja-nachweisprobe/mitnehmen/nachweisregister-vorlage.csv" },
+    },
+  },
+  {
+    slug: "luecken-anfrage",
+    kind: "template",
+    files: {
+      de: "luecken-anfrage.md",
+      en: "en/luecken-anfrage.md",
+    },
+    downloadNames: {
+      de: "luecken-anfrage.md",
+      en: "luecken-anfrage.en.md",
+    },
+    hostPaths: {
+      de: "/demos/audit-vorbereitung-mit-ki",
+      en: "/en/demos/audit-vorbereitung-mit-ki",
+    },
+    inKit: {
+      zip: "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+      paths: { en: "vardar-audit-kit/templates/gap-request.md" },
+    },
+  },
+  // Workshop 06 take-home: the comparison basis and the negotiation email, the German files byte-identical
+  // to the copies in angebote-vergleichen-kit.zip (vorlagen/). The {{fields}} are filled by the skill or by hand.
+  {
+    slug: "vergleichsbasis",
+    kind: "template",
+    files: { de: "vergleichsbasis.md", en: "en/vergleichsbasis.md" },
+    downloadNames: { de: "vergleichsbasis.md", en: "vergleichsbasis.en.md" },
+    hostPaths: { de: "/demos/angebote-mit-ki-vergleichen", en: "/en/demos/angebote-mit-ki-vergleichen" },
+    inKit: {
+      zip: "/workshops/angebote-mit-ki-vergleichen/angebote-vergleichen-kit.zip",
+      paths: { de: "angebote-vergleichen-kit/vorlagen/vergleichsbasis.md" },
+    },
+  },
+  {
+    slug: "verhandlungsmail",
+    kind: "template",
+    files: { de: "verhandlungsmail.md", en: "en/verhandlungsmail.md" },
+    downloadNames: { de: "verhandlungsmail.md", en: "verhandlungsmail.en.md" },
+    hostPaths: { de: "/demos/angebote-mit-ki-vergleichen", en: "/en/demos/angebote-mit-ki-vergleichen" },
+    inKit: {
+      zip: "/workshops/angebote-mit-ki-vergleichen/angebote-vergleichen-kit.zip",
+      paths: { de: "angebote-vergleichen-kit/vorlagen/verhandlungsmail.md" },
+    },
+  },
 ];
 
 /**
  * A download name is also the URL segment. Lower-case ASCII words joined by
- * single hyphens, an optional ".en" and the ".md" extension: nothing that
- * could traverse out of the content directory passes.
+ * single hyphens, an optional ".en" and the ".md" or ".csv" extension:
+ * nothing that could traverse out of the content directory passes.
  */
-export const DOWNLOAD_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\.en)?\.md$/;
+export const DOWNLOAD_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\.en)?\.(?:md|csv)$/;
+
+/** The download's media type, from its extension. */
+export function contentTypeFor(name: string): string {
+  return name.endsWith(".csv") ? "text/csv; charset=utf-8" : "text/markdown; charset=utf-8";
+}
 
 /**
  * Works in development and during the production build, where the working
@@ -98,12 +275,24 @@ export async function readVorlageSource(
 
 const cache = new Map<string, Promise<QuestionSheet>>();
 
+/** The entries of one kind, in registry order. */
+export function vorlagenOfKind(kind: VorlageKind): readonly VorlageEntry[] {
+  return VORLAGEN.filter((entry) => entry.kind === kind);
+}
+
 /** The parsed sheet. A parse or read failure is not cached, so it surfaces again. */
 export function loadQuestionSheet(
   slug: string,
   locale: SheetLocale,
 ): Promise<QuestionSheet> {
   const key = `${slug}:${locale}`;
+  try {
+    if (entryFor(slug).kind !== "question-sheet") {
+      return Promise.reject(new Error(`not a question sheet: ${slug}`));
+    }
+  } catch (error) {
+    return Promise.reject(error);
+  }
   const cached = cache.get(key);
   if (cached) return cached;
   const pending = readVorlageSource(slug, locale).then((raw) =>

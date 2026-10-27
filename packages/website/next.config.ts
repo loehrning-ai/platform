@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeSupabaseOrigin } from "./src/lib/supabase/config.ts";
 import { buildResourcePolicyHeaderRules } from "./src/lib/security/resource-policy.ts";
-import { buildSecurityHeaders } from "./security-headers.ts";
+import { buildDeckFrameHeaderRules, buildSecurityHeaders } from "./security-headers.ts";
 import { BOOK_ID, legacyChapterRedirects } from "./src/lib/book-chapter-redirects.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +31,31 @@ function bookChapterSlugs(locale: "de" | "en"): string[] {
     return [];
   }
 }
+
+/** Workshop 03 kit v3: published paths that moved or became part of the demo. */
+const DATA_READINESS_KIT = "/workshops/datenbereitschaft-fuer-ki/data-readiness-kit";
+const DATA_READINESS_KIT_MOVES = [
+  { source: `${DATA_READINESS_KIT}/readiness-lab.html`, destination: "/demos/datenbereitschaft-fuer-ki?beat=test", permanent: true },
+  { source: `${DATA_READINESS_KIT}/FOLDLINE-SCENARIOS.md`, destination: `${DATA_READINESS_KIT}/QUESTION-CARD.md`, permanent: true },
+  { source: `${DATA_READINESS_KIT}/READY-CANVAS.md`, destination: `${DATA_READINESS_KIT}/builder/READY-CANVAS.md`, permanent: true },
+  { source: `${DATA_READINESS_KIT}/semantic-template/:file`, destination: `${DATA_READINESS_KIT}/builder/semantic-template/:file`, permanent: true },
+  { source: `${DATA_READINESS_KIT}/agent/CLAUDE.example.md`, destination: `${DATA_READINESS_KIT}/builder/claude/CLAUDE.short.example.md`, permanent: true },
+];
+
+/** Workshop files that moved to one naming pattern (English decks under en/, German kit names). */
+const WORKSHOP_FILE_MOVES = [
+  // Workshop 01: the German kit got its own name, so it never reads like the skill prognose-pruefen.zip.
+  {
+    source: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen.zip",
+    destination: "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip",
+    permanent: true,
+  },
+  {
+    source: "/workshops/audit-vorbereitung-mit-ki/slides.en.html",
+    destination: "/workshops/audit-vorbereitung-mit-ki/en/slides.html",
+    permanent: true,
+  },
+];
 
 const nextConfig: NextConfig = {
   // No `output: "standalone"` — the website deploys to Vercel, which uses its own
@@ -86,6 +111,10 @@ const nextConfig: NextConfig = {
   // Drop the X-Powered-By: Next.js banner so we don't hand attackers a
   // free fingerprint of our stack version.
   poweredByHeader: false,
+  // The build type-checks app code only. Test files are checked by
+  // `tsc -p tsconfig.tests.json` in CI, so a test-only type error never
+  // breaks a preview or production build.
+  typescript: { tsconfigPath: "tsconfig.typecheck.json" },
   // Keep browser source maps unavailable as public Next.js assets. When the
   // optional Sentry upload group is configured, the wrapper below generates,
   // uploads, and then deletes its private upload artifacts.
@@ -131,6 +160,11 @@ const nextConfig: NextConfig = {
       destination: "/site.en.webmanifest",
       permanent: true,
     },
+    // Workshop 03 kit v3: the browser lab became the demo's test beat, the
+    // optional worksheets moved into the builder kit.
+    ...DATA_READINESS_KIT_MOVES,
+    // English decks live under en/slides.html; old file names keep working.
+    ...WORKSHOP_FILE_MOVES,
     // Old chapter links of the data book keep working (see src/lib/book-chapter-redirects.ts).
     ...legacyChapterRedirects(bookChapterSlugs("de"), ""),
     ...legacyChapterRedirects(bookChapterSlugs("en"), "/en"),
@@ -140,6 +174,10 @@ const nextConfig: NextConfig = {
       source: "/:path*",
       headers: SECURITY_HEADERS,
     },
+    // Workshop decks: the presenter view frames its own deck for the
+    // next-slide preview. Overrides only frame-src / frame-ancestors on the
+    // deck files (security-headers.ts, buildDeckFrameHeaderRules).
+    ...buildDeckFrameHeaderRules(process.env, SUPABASE_ORIGIN),
     // Cross-Origin-Resource-Policy: same-origin on the per-session surfaces
     // (/api, the account and the OAuth consent trees). Not site-wide: social
     // preview images, covers and fonts must stay loadable by other origins.

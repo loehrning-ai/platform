@@ -1,0 +1,1515 @@
+{
+  "schema": "claude-recording/v1",
+  "id": "de-alle-with-1",
+  "slug": "audit-vorbereitung-mit-ki",
+  "locale": "de",
+  "prompt_id": "alle",
+  "take": 1,
+  "recorded_at": "2026-10-26T21:17:49Z",
+  "surface": "claude-code-cli-headless",
+  "claude_code_version": "2.1.310",
+  "model": "claude-opus-5-5",
+  "models_used": [
+    "claude-opus-5-5"
+  ],
+  "flags": [
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--include-partial-messages",
+    "--setting-sources",
+    "project",
+    "--strict-mcp-config",
+    "--no-session-persistence",
+    "--model",
+    "claude-opus-5-5",
+    "--tools",
+    "Read,Skill,Bash",
+    "--allowedTools",
+    "Bash",
+    "--settings",
+    "{\"sandbox\":{\"enabled\":true,\"autoAllowBashIfSandboxed\":true,\"allowUnsandboxedCommands\":false}}"
+  ],
+  "prompt": "Im Anhang sind die Dokumentanforderung unseres Kunden (request_tannwald.md) und die elf Dateien aus unserem Ordner. Heute ist der 9. November 2026. Bereite die Nachweise für R1 bis R8 aus request_tannwald.md vor.",
+  "kit_zip": "public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip",
+  "kit_files": [
+    {
+      "name": "request_tannwald.md",
+      "path": "vardar-audit-kit-de/request_tannwald.md",
+      "bytes": 2123,
+      "sha256": "7e3e1efa09ad9a373fa09407bb7e7052b82325e57382e97bfecef358795f4d35"
+    },
+    {
+      "name": "system-list_2026-09.csv",
+      "path": "vardar-audit-kit-de/ordner/system-list_2026-09.csv",
+      "bytes": 747,
+      "sha256": "7fa67f893dba1cfd075c57dfca25af56bdedd7c0ccf39c07ddbb6848861ceec2"
+    },
+    {
+      "name": "subprocessors_2026-09.csv",
+      "path": "vardar-audit-kit-de/ordner/subprocessors_2026-09.csv",
+      "bytes": 492,
+      "sha256": "711a64cadd583ca70f8a17eb51d4bfa908a56b80367b06b63f039d2d277ee116"
+    },
+    {
+      "name": "ai-use-rule_v1.md",
+      "path": "vardar-audit-kit-de/ordner/ai-use-rule_v1.md",
+      "bytes": 717,
+      "sha256": "64b6e0e87c4f7cd04199020ddc971eeddd7024bd56f62d04203d87f9af687246"
+    },
+    {
+      "name": "vendor-page_claude_2026-06-15.md",
+      "path": "vardar-audit-kit-de/ordner/vendor-page_claude_2026-06-15.md",
+      "bytes": 578,
+      "sha256": "e0de4e0a7638b93aff8d3330c094cc44873ac05eb3a1029d6f7cc471c98df0a8"
+    },
+    {
+      "name": "access-review_2026-08-14.csv",
+      "path": "vardar-audit-kit-de/ordner/access-review_2026-08-14.csv",
+      "bytes": 475,
+      "sha256": "03c35a4e8203064d38120c1a405914c6e99e287671458f078beb40ae54deec95"
+    },
+    {
+      "name": "training-records_2026.csv",
+      "path": "vardar-audit-kit-de/ordner/training-records_2026.csv",
+      "bytes": 1697,
+      "sha256": "e369e70d810a0f1080ca2efebc7804a08e08c151b7879828fb7ee1117f6278ae"
+    },
+    {
+      "name": "incident-log_2026.csv",
+      "path": "vardar-audit-kit-de/ordner/incident-log_2026.csv",
+      "bytes": 676,
+      "sha256": "36df7c9764a5f1e753885d1ab02b9bf8195d53221c9c409d6e7ff1bfa23d52e2"
+    },
+    {
+      "name": "backup-report_2026-10.txt",
+      "path": "vardar-audit-kit-de/ordner/backup-report_2026-10.txt",
+      "bytes": 383,
+      "sha256": "c8840163069e880581230c6bb51c528dc90acbed1734fcb2d6ddb558239542ca"
+    },
+    {
+      "name": "it-notes_2026-10-06.md",
+      "path": "vardar-audit-kit-de/ordner/it-notes_2026-10-06.md",
+      "bytes": 495,
+      "sha256": "6267a2fe4b831050467530379e90a261b3387ed7ac6d03bcd653eb525e33ed7f"
+    },
+    {
+      "name": "infosec-policy_v3_FINAL.md",
+      "path": "vardar-audit-kit-de/ordner/infosec-policy_v3_FINAL.md",
+      "bytes": 474,
+      "sha256": "7c09fc9e4bf088d258707305a274026b1b9bddbd3e14559494e4ad4aa663c09b"
+    },
+    {
+      "name": "infosec-policy_v4_DRAFT.md",
+      "path": "vardar-audit-kit-de/ordner/infosec-policy_v4_DRAFT.md",
+      "bytes": 232,
+      "sha256": "a4f548d6d82acaf78024d02621c408ce99110faf3e398de10ed660d5ce9ab3af"
+    }
+  ],
+  "skill": {
+    "name": "audit-nachweise",
+    "sha256": "b43923487b8eeb7f05707756062a7b9ebccc00b5802081d5bf7eb91286ff7137"
+  },
+  "skill_name": "audit-nachweise",
+  "with_skill": true,
+  "skill_invoked": true,
+  "skills_offered": [
+    "audit-nachweise",
+    "deep-research",
+    "design",
+    "design-sync",
+    "dataviz",
+    "update-config",
+    "verify",
+    "debug",
+    "code-review",
+    "simplify",
+    "batch",
+    "fewer-permission-prompts",
+    "doctor",
+    "loop",
+    "schedule",
+    "claude-api",
+    "workflow-authoring",
+    "run",
+    "run-skill-generator",
+    "plugin-authoring"
+  ],
+  "memory_sources": [],
+  "timeline": [
+    {
+      "t_ms": 2998,
+      "kind": "tool_use",
+      "tool": "Skill",
+      "input": {
+        "skill": "audit-nachweise",
+        "args": "request_tannwald.md R1-R8, Stichtag 9. November 2026"
+      }
+    },
+    {
+      "t_ms": 3021,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 5344,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; ls -laR work | head -50; ls",
+        "description": "List files in working folders"
+      }
+    },
+    {
+      "t_ms": 6346,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 8494,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; for f in *; do echo \"=== $f\"; cat -A \"$f\" 2>/dev/null || cat \"$f\"; echo; done",
+        "description": "Print all files"
+      }
+    },
+    {
+      "t_ms": 8661,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 43280,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'EOF'\nimport csv,io\nfrom datetime import date,datetime\naudit=date(2026,12,10); cur=date(2025,12,10); sent=date(2026,11,9)\nprint(\"window start\",cur,\"audit\",audit)\n# training\nrows=[r for r in csv.DictReader(l for l in open(\"training-records_2026.csv\") if not l.startswith(\"#\"))]\nids=[r[\"staff_id\"] for r in rows]\nprint(\"rows\",len(rows),\"unique\",len(set(ids)),\"dupes\",len(rows)-len(set(ids)),[i for i in set(ids) if ids.count(i)>1])\nprint(\"courses\",{r[\"course\"] for r in rows})\nprint(\"share\",len(set(ids))/120*100, \"needed for 95%\",-(-95*120//100))\n# incident\nd=datetime(2026,5,7,9,40); t=datetime(2026,5,8,16,10); print(\"INC-02 hours\",(t-d).total_seconds()/3600)\nfor n,x in [(\"access review\",date(2026,8,14)),(\"system list\",date(2026,9,2)),(\"subproc\",date(2026,9,5)),(\"policy v3\",date(2024,3,12)),(\"v3 next review\",date(2025,3,1)),(\"ai rule\",date(2026,10,1)),(\"vendor page\",date(2026,6,15)),(\"backup\",date(2026,11,1)),(\"training export\",date(2026,11,2)),(\"sp review\",date(2026,1,20)),(\"sb review\",date(2026,5,12)),(\"nl review\",date(2026,2,3))]:\n    print(n,x,\"in window\" if x>=cur else \"OUT\", \"days before audit\",(audit-x).days)\nprint(\"leaver adm-03 removal delay\",(date(2026,8,14)-date(2026,7,31)).days)\nprint(\"Claude use without approved rule\",(date(2026,10,1)-date(2026,9,1)).days,\"days\")\nEOF",
+        "description": "Compute dates, counts and shares"
+      }
+    },
+    {
+      "t_ms": 43452,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 54491,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; python3 -I - <<'EOF'\nq=[(\"system-list_2026-09.csv\",\"Approved 2026-09-02 by Dragan Ilievski, Managing Director\"),\n(\"system-list_2026-09.csv\",\"Claude Team (browser and desktop app; 25 seats since 2026-09-01),drafting replies to service requests,request text pasted by agents,United States\"),\n(\"system-list_2026-09.csv\",\"Servicepult,ticket system for service requests\"),\n(\"subprocessors_2026-09.csv\",\"Anthropic,Claude Team,United States,accepted online 2026-09-01,,\"),\n(\"subprocessors_2026-09.csv\",\"Last updated 2026-09-05\"),\n(\"ai-use-rule_v1.md\",\"Valid from 2026-10-01\"),\n(\"ai-use-rule_v1.md\",\"Approved 2026-10-01 by Dragan Ilievski, Managing Director\"),\n(\"vendor-page_claude_2026-06-15.md\",\"Note that data is stored in the US.\"),\n(\"vendor-page_claude_2026-06-15.md\",\"By default, we may route customer traffic to select countries in the US, Europe, Asia and Australia\"),\n(\"it-notes_2026-10-06.md\",\"Until September some agents on the Tannwald desk used a free chatbot on their phones to word replies. Stopped with the AI rule on 1 October.\"),\n(\"it-notes_2026-10-06.md\",\"Not reviewed by anyone.\"),\n(\"it-notes_2026-10-06.md\",\"A vendor rep told Dragan \\\"data stays in Europe\\\". Nothing in writing.\"),\n(\"it-notes_2026-10-06.md\",\"Did we ever tell Tannwald in writing that we use Claude (clause 7)? I found nothing.\"),\n(\"it-notes_2026-10-06.md\",\"Backups are tested, the jobs run every night.\"),\n(\"access-review_2026-08-14.csv\",\"Review of administrator accounts in Servicepult (ticket system)\"),\n(\"access-review_2026-08-14.csv\",\"adm-03,employee\" ),\n(\"access-review_2026-08-14.csv\",\"adm-03,left 2026-07-31,team lead,yes,removed 2026-08-14\"),\n(\"access-review_2026-08-14.csv\",\"adm-04,employee,reporting,no,MFA switched on 2026-08-14\"),\n(\"training-records_2026.csv\",\"Staff on 2026-11-01: 120.\"),\n(\"incident-log_2026.csv\",\"INC-02,2026-05-07 09:40,Tannwald\"),\n(\"incident-log_2026.csv\",\"2026-05-08 16:10,mail auto-complete chose the wrong address\"),\n(\"incident-log_2026.csv\",\"Owner: Goran Petrovski, IT lead. Last entry 2026-10-12.\"),\n(\"backup-report_2026-10.txt\",\"Restore test: not done in 2026. Planned for Q4 2026 (owner: IT lead).\"),\n(\"infosec-policy_v3_FINAL.md\",\"Approved 2024-03-12 by Dragan Ilievski, Managing Director. Next review: March 2025.\"),\n(\"infosec-policy_v4_DRAFT.md\",\"Approved by: (open)\"),\n(\"infosec-policy_v3_FINAL.md\",\"3. Backups are restore-tested twice a year.\"),\n(\"infosec-policy_v3_FINAL.md\",\"4. All staff complete data protection training every year.\"),\n(\"infosec-policy_v3_FINAL.md\",\"2. Administrator access is reviewed every quarter and the review is recorded.\"),\n]\nfor f,s in q: print(\"OK \" if s in open(f).read() else \"MISSING\",f,s[:60])\nEOF",
+        "description": "Check candidate quotes verbatim in files"
+      }
+    },
+    {
+      "t_ms": 54630,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 110317,
+      "kind": "tool_use",
+      "tool": "Bash",
+      "input": {
+        "command": "cd .; cat > nachweise_tannwald_R1-R8.md <<'EOF'\n# Lieferantenaudit Tannwald 2026: Nachweise R1–R8 (interner Arbeitsstand)\n\nStand: 9. November 2026. Remote-Audit: 10. Dezember 2026. Abgabe der Unterlagen: 25. November 2026.\nZeitfenster laut Anforderung: Ein Dokument ist aktuell, wenn es am oder nach dem **10. Dezember 2025** datiert ist (bei Richtlinien zählt die letzte Freigabe oder Überprüfung). \"Letzte 12 Monate\" (R3, R5, R7) = 10.12.2025 bis 10.12.2026.\nSchwellen, wörtlich: \"Training must reach at least 95% of your staff.\" / \"Incidents with our data must reach us within 48 hours of detection (section 6.2).\"\n\nPersonen sind mit ihrer Rolle genannt, Beschäftigte und Konten nur mit IDs.\n\n## Schritt 1: Nachweisliste\n\n| Datei | Typ | Datum (Art) | Freigabe / geführt von | Umfang | Andere Fassungen |\n|---|---|---|---|---|---|\n| system-list_2026-09.csv | REGISTER | 2026-09-02 (Freigabe) | geführt: IT-Leitung; freigegeben: Geschäftsführung | 4 Systeme mit Tannwald-Daten | – |\n| subprocessors_2026-09.csv | REGISTER | 2026-09-05 (letzte Aktualisierung) | geführt: IT-Leitung | 4 Unterauftragsverarbeiter | – |\n| ai-use-rule_v1.md | RICHTLINIE | 2026-10-01 (Freigabe, gültig ab) | freigegeben: Geschäftsführung; Owner: IT-Leitung | alle Beschäftigten | – |\n| vendor-page_claude_2026-06-15.md | AUSSAGE (Herstellerseite) | 2026-06-15 (Seitendatum), gedruckt 2026-10-06 | Herausgeber: Anthropic (Privacy Center) | Speicherort Claude | – |\n| access-review_2026-08-14.csv | PROTOKOLL | 2026-08-14 (durchgeführt), 2026-08-17 (Freigabe) | durchgeführt: IT-Leitung; freigegeben: Geschäftsführung | nur Servicepult, 5 Admin-Konten | – |\n| training-records_2026.csv | PROTOKOLL (HR-Export) | 2026-11-02 (Export) | HR-Leitung | 1 Kurs, 26 Zeilen | – |\n| incident-log_2026.csv | REGISTER/PROTOKOLL | letzter Eintrag 2026-10-12 | geführt: IT-Leitung | 3 Vorfälle 2026 | – |\n| backup-report_2026-10.txt | PROTOKOLL | 2026-11-01 (erzeugt) | Owner: IT-Leitung | Servicepult-Export, Fileshare; Oktober 2026 | – |\n| infosec-policy_v3_FINAL.md | RICHTLINIE | 2024-03-12 (Freigabe), nächste Prüfung März 2025 | Geschäftsführung | Regeln 1–5 | v4 |\n| infosec-policy_v4_DRAFT.md | RICHTLINIE (ENTWURF) | 2026-09-18 (zuletzt bearbeitet) | Freigabe: \"(open)\" | Regeln 1–6 | v3 |\n| it-notes_2026-10-06.md | AUSSAGE | 2026-10-06 (geschrieben) | \"Not reviewed by anyone.\" | private Notizen der IT-Leitung | – |\n\n\"FINAL\" im Dateinamen von v3 belegt nichts; die Freigabe steht im Dokument selbst und ist von 2024.\n\n## Schritt 2 und 3: Prüfung je Anforderung\n\n| Anf. | Datei | Zitat | ZITAT | ZEITRAUM | UMFANG | FREIGABE | Status | Was schließt die Lücke | Zuständig |\n|---|---|---|---|---|---|---|---|---|---|\n| R1 | system-list_2026-09.csv | \"Claude Team (browser and desktop app; 25 seats since 2026-09-01),drafting replies to service requests,request text pasted by agents,United States\" | ja | ja (2026-09-02) | ja für den heutigen Stand: 4 Systeme, je mit Land. Siehe Hinweis zu den privaten Chatbots | ja: \"Approved 2026-09-02\" (Geschäftsführung) | **BELEGT** | – (Hinweis unten beachten) | IT-Leitung |\n| R2 | subprocessors_2026-09.csv | \"Anthropic,Claude Team,United States,accepted online 2026-09-01,,\" | ja | ja (2026-09-05); Prüfungen Servicepult 2026-01-20, Sprechband 2026-05-12, Nordlager 2026-02-03 liegen im Fenster | Anthropic: **letzte Prüfung leer, Rechtsgrundlage für die Übermittlung in die USA leer**. Anbieter der privaten Chatbots fehlen ganz | Register mit Verantwortlichem (IT-Leitung) | **LÜCKE** | Rechtsgrundlage für die Übermittlung in die USA (Vertragsunterlagen mit Anthropic), dokumentierte Prüfung von Anthropic | IT-Leitung + Geschäftsführung |\n| R3 | ai-use-rule_v1.md, system-list_2026-09.csv, vendor-page_claude_2026-06-15.md, it-notes_2026-10-06.md | \"Valid from 2026-10-01\" / \"Note that data is stored in the US.\" / \"Until September some agents on the Tannwald desk used a free chatbot on their phones to word replies. Stopped with the AI rule on 1 October.\" | Claude: Tool, Daten, Land und Regel liegen vor. Private Chatbots: nur eine ungeprüfte Notiz, kein Tool, keine Daten, kein Land | Regel gilt erst ab 01.10.2026. Claude läuft seit 01.09.2026 → **30 Tage ohne freigegebene Regel**; der Chatbot-Zeitraum vor Oktober ist ganz ohne Regel | Chatbot-Nutzung: welche Tools, welche Daten, welches Land: NICHT IN DEN DATEIEN | Regel: Geschäftsführung 2026-10-01. Herstellerseite: Anthropic, 15.06.2026 | **LÜCKE** | Aufstellung der privaten Chatbot-Nutzung (wer per ID, welches Tool, welche Daten, Zeitraum), Entscheidung, ob sie als Vorfall gilt | IT-Leitung + Teamleitung Tannwald-Desk |\n| R4 | access-review_2026-08-14.csv | \"Review of administrator accounts in Servicepult (ticket system)\" / \"adm-03,left 2026-07-31,team lead,yes,removed 2026-08-14\" / \"adm-04,employee,reporting,no,MFA switched on 2026-08-14\" | ja für Servicepult | ja (2026-08-14) | **nur 1 von 4 Systemen aus R1.** Sprechband, Nordlager-Fileshare, Claude Team: kein Review | ja (Geschäftsführung 2026-08-17) | **LÜCKE** | Admin-Reviews für Sprechband, Nordlager, Claude Team (Abgänge entfernt, MFA an), mit Freigabe | IT-Leitung; Sprechband: Teamleitung Tannwald-Desk |\n| R5 | training-records_2026.csv | \"Staff on 2026-11-01: 120.\" / einziger Kurs: \"Claude Team intro: data rules\" | nur KI-Schulung; **Datenschutzschulung: NICHT IN DEN DATEIEN** | ja (Sept. 2026) | 26 Zeilen, 1 Dublette (E014) → 25 Personen von 120 = **20,8 %**; nötig wären 114 | Export der HR-Leitung | **LÜCKE** | Datenschutz-Schulungsnachweise der letzten 12 Monate; KI-Schulung für die übrigen Beschäftigten | HR-Leitung |\n| R6 | incident-log_2026.csv | \"INC-02,2026-05-07 09:40,Tannwald\" … \"2026-05-08 16:10,mail auto-complete chose the wrong address\" | ja: erkannt, gemeldet, Ursache, Behebung | ja (letzter Eintrag 2026-10-12) | INC-02: Meldung nach **30,5 h** (< 48 h). Offen: private Chatbot-Nutzung mit Tannwald-Daten steht nicht im Log | Register mit Verantwortlichem (IT-Leitung) | **BELEGT** für die erfassten Vorfälle (siehe Hinweis) | Entscheidung: Ist die Chatbot-Nutzung ein Vorfall? Wenn ja, wird R6 zur LÜCKE (nicht erfasst, nicht gemeldet) | Geschäftsführung |\n| R7 | backup-report_2026-10.txt | \"Restore test: not done in 2026. Planned for Q4 2026 (owner: IT lead).\" | **Der Nachweis zeigt, dass kein Test stattfand.** Die IT-Notiz \"Backups are tested\" ist ungeprüft und widerspricht dem Bericht | – | – | Owner: IT-Leitung | **LÜCKE** | Restore-Test durchführen und protokollieren (Datum, Umfang, Ergebnis, wer) | IT-Leitung |\n| R8 | infosec-policy_v3_FINAL.md, infosec-policy_v4_DRAFT.md | v3: \"Approved 2024-03-12 by […], Managing Director. Next review: March 2025.\" / v4: \"Approved by: (open)\" | ja | v3: **außerhalb des Fensters** (Freigabe 1003 Tage vor dem Audit, Prüftermin März 2025 verpasst) | Regeln 1–5 (v4: + KI) | v4: **ENTWURF, keine Freigabe** | **SCHWACH** (ZEITRAUM v3, FREIGABE v4) | v4 durch die Geschäftsführung freigeben, mit Datum | Geschäftsführung |\n\nGegenprobe: Alle Zitate habe ich am Ende per Code wörtlich in ihren Dateien gesucht und gefunden. Bei v3 ist der Name durch […] ersetzt.\n\n### Zählung (im Code gerechnet)\n- BELEGT: 2 (R1, R6)\n- SCHWACH: 1 (R8)\n- LÜCKE: 5 (R2, R3, R4, R5, R7)\n- Schulung: 26 Zeilen, 1 Dublette entfernt (E014, 03.09. und 10.09.), 25 Personen / 120 = 20,8 %. Für 95 % fehlen 89 Personen.\n- INC-02: erkannt 2026-05-07 09:40, gemeldet 2026-05-08 16:10 → 30,5 Stunden.\n- Abgang adm-03: ausgeschieden 2026-07-31, Konto entfernt 2026-08-14 → 14 Tage.\n\n## Hinweise, die ein Mensch entscheiden muss\n\n1. **Vertragsklausel 7.** Der Kunde zitiert: \"AI tools are used with Customer Data only after written notice to the Customer. Customer Data is stored in the EU or EEA unless the Customer agrees in writing.\" In den Dateien:\n   - Claude Team speichert in den USA (\"Note that data is stored in the US.\", Herstellerseite; ebenso Systemliste und KI-Regel).\n   - Eine schriftliche Mitteilung an Tannwald oder eine Zustimmung von Tannwald: NICHT IN DEN DATEIEN. Die IT-Notiz sagt: \"Did we ever tell Tannwald in writing that we use Claude (clause 7)? I found nothing.\"\n   - Private Chatbots auf Handys wurden bis September mit Tannwald-Anfragen genutzt (nur IT-Notiz, ungeprüft).\n   Mit R1, R3 und den Unterlagen zu R2 sieht Tannwald das selbst. Das gehört vor der Abgabe auf den Tisch der Geschäftsführung, eventuell mit rechtlicher Beratung.\n2. **\"Data stays in Europe\"**: Laut IT-Notiz sagte das ein Vertreter des Anbieters mündlich, \"Nothing in writing.\". Die Herstellerseite sagt das Gegenteil. Diese Aussage darf nicht in die Antwort.\n3. **Die eigene Richtlinie v3 wird nicht eingehalten:** \"Administrator access is reviewed every quarter\" (es gibt ein Review, nur Servicepult); \"Backups are restore-tested twice a year\" (2026 keiner); \"All staff complete data protection training every year\" (kein Datenschutznachweis). Wer v3 oder v4 einreicht, legt das offen.\n4. **Herstellerseite**: Die Datei selbst sagt \"Vendor pages change. Read the page again before you rely on this.\" Vor der Abgabe neu abrufen und mit Datum ausdrucken.\n\n## Schritt 4: Anfragen zum Schließen der Lücken\nInterner Termin für alle: **Freitag, 20. November 2026** (fünf Tage Puffer vor der Abgabe am 25.11.).\n\n**An die IT-Leitung: R2, R4, R7**\n> Tannwald verlangt (R2) \"contract date, last review, and the legal basis for any transfer outside the EU/EEA\", (R4) die letzte Admin-Prüfung \"on every system in R1: leavers removed, multi-factor login on\", (R7) \"A restore test of your backups from the last 12 months, with its result\".\n> Vorhanden: Im Register der Unterauftragsverarbeiter sind bei Anthropic \"last_review\" und \"transfer_basis\" leer. Das Admin-Review vom 14.08. deckt nur Servicepult ab. Laut Backup-Bericht gab es 2026 keinen Restore-Test.\n> Gebraucht: die Rechtsgrundlage für die Übermittlung in die USA und eine dokumentierte Prüfung von Anthropic; Admin-Reviews für Sprechband, Nordlager und Claude Team; ein Restore-Test-Protokoll mit Ergebnis.\n> Wenn es etwas davon nicht gibt, ist \"gibt es nicht\" eine gute Antwort. Dann tragen wir es so ein.\n\n**An die IT-Leitung und die Teamleitung Tannwald-Desk: R3**\n> Tannwald verlangt \"The AI tools your staff used with our data in the last 12 months: tool, data, storage country, and your approved rule\".\n> Vorhanden ist nur eine ungeprüfte Notiz: Bis September nutzten einige Beschäftigte private Chatbots auf dem Handy. Tool, Daten, Personen und Zeitraum stehen nirgends.\n> Gebraucht: eine Aufstellung (Beschäftigte per ID, Tool, Art der Daten, von/bis). \"Wissen wir nicht\" ist eine gute Antwort.\n\n**An die HR-Leitung: R5**\n> Tannwald verlangt \"Training records for data protection and AI use, last 12 months, with the share of staff trained\" und mindestens 95 %.\n> Vorhanden: Export vom 02.11. mit einem Kurs (\"Claude Team intro: data rules\"), 25 von 120 Personen = 20,8 %. Eine Datenschutzschulung kommt im Export nicht vor.\n> Gebraucht: Datenschutz-Schulungsnachweise seit dem 10.12.2025, falls es sie gibt. \"Gibt es nicht\" ist eine gute Antwort.\n\n**An die Geschäftsführung: R8, R6, Klausel 7**\n> Tannwald verlangt \"Your information security policy, approved or reviewed in the last 12 months\".\n> Vorhanden: v3 freigegeben am 12.03.2024 (Prüftermin März 2025 verpasst), v4 ist ein Entwurf mit \"Approved by: (open)\".\n> Gebraucht: die Freigabe von v4 mit Datum. Dazu zwei Entscheidungen: Gilt die private Chatbot-Nutzung als Vorfall, der Tannwald zu melden ist (R6)? Und wie gehen wir mit Klausel 7 um (US-Speicherung, keine schriftliche Mitteilung gefunden)?\n\n## Abgabepaket (Stand heute)\nKönnen eingereicht werden: system-list_2026-09.csv (R1), incident-log_2026.csv (R6), access-review_2026-08-14.csv (R4, Teilnachweis), subprocessors_2026-09.csv (R2, mit offenen Feldern), ai-use-rule_v1.md und die neu abgerufene Herstellerseite (R3, Teilnachweis), training-records_2026.csv (R5, zeigt 20,8 %).\nNicht einreichen: it-notes_2026-10-06.md (private, ungeprüfte Notiz). Den Inhalt aber klären, siehe oben.\nEOF\necho done",
+        "description": "Write evidence report file"
+      }
+    },
+    {
+      "t_ms": 110438,
+      "kind": "tool_result",
+      "is_error": false
+    },
+    {
+      "t_ms": 120319,
+      "kind": "text_start"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "Ich habe die"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " Nachweise für R1 "
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "bis R8 geprü"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ft. Das Ergeb"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "nis: **2 bel"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "egt, 1 schw"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ach, 5 "
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "Lücken.** Den"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " vollständigen St"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "and m"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "it Tabelle,"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " Zit"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "aten, Lückenli"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ste und f"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ertigen Anfragen"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " hab"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "e ich in `nachwe"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ise_tannwald_R"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "1-R8.md` g"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "espeichert.\n\nDen"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " Pr"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "üfz"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "eitraum habe ich"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " a"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "us der Anforderung üb"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ernommen: D"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "okumente g"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "elten, wenn sie"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "ab dem 10."
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": "12.2025 datiert"
+    },
+    {
+      "t_ms": 120320,
+      "kind": "text",
+      "chunk": " sind. Da"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ten, Quoten und"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Stund"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "enab"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "stände habe ich im"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Code nachgerechnet"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " und"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " jedes Zitat w"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "örtlich in seiner"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Datei w"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "i"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "edergefunden.\n\n|"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Anf"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": ". | Status | K"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ern |\n|---|---|"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "---|\n| R1 "
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "Systeme +"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Land | **BELEG"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "T** | Die System"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "liste ist freigege"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ben ("
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "02"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": ".09.2026) und n"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ennt 4 Syste"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "me. Claude Team spe"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ichert in den USA."
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " |\n| R2 Un"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "terauftragsverarb"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "eiter | **LÜ"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "CKE** | Bei"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Anthropic s"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ind „"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "let"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "zte Prüfung“"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " und „Rechts"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "grundlage für die"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " Übermittlung“"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " leer. |\n| R"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "3 KI-T"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "ools | **LÜCK"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "E** | Die KI-"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": "Regel gilt erst"
+    },
+    {
+      "t_ms": 120321,
+      "kind": "text",
+      "chunk": " ab 01.10.2"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "026,"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " Claude wird"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " a"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ber se"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "it 01.09."
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " genutzt ("
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "30 Tage ohne"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " Regel). Private"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " Chatbots auf"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " Handys sind nur in ein"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "er ungeprüften"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " Notiz erwähnt"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "; Tool, Daten"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " und Land fehlen."
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " |\n| R4 Adm"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "in-Review | **L"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ÜCKE** | Es"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " gibt nur ein"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " Review, für Servicepult"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": ", also"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " 1 von 4 "
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "Systemen. |\n| R"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "5 Schulung | **"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "LÜCKE** |"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " "
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "26 Zeilen,"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " n"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ach Entfernen ein"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "er do"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ppelten Zeile ("
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "E014) 25 von"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": " 120 Be"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "schäftigten = **"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "20,8 %** (g"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "efordert s"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ind 95 %). E"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ine Datenschutzsch"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ulung k"
+    },
+    {
+      "t_ms": 120322,
+      "kind": "text",
+      "chunk": "ommt im"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Export gar nicht v"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "or. |\n| R6 "
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "Vorfälle | **"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "BELEGT** | IN"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "C-02 wurde"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Tannwald nach "
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "30,5 h"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " gemeldet,"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " also inn"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "erhalb der 48 "
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "h. |"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "\n| R7 Rest"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ore-Test | **L"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ÜCKE** | La"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ut Backup-Beric"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ht: „Restore test:"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " not done in 2026.“"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " |\n| R8 "
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "Richtlinie | **S"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "CHWACH** | v"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "3 wurde 2024"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " freigegeben und "
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ist dam"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "it veraltet. v4"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " ist ein Entw"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "urf ohne Freig"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "abe. |\n\n**B"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "itte vor der Abg"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "abe mit der Gesch"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "äftsführung kl"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ären:**\n\n1. **"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "Klausel 7 im"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Vertrag m"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "it Tannwald.**"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Laut Kl"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ausel dürfen KI"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "-Tools nur nach"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " schriftlicher M"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "itteilung an"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Tannwald genutzt"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " werden, und die"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Daten mü"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ssen in E"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "U/EWR blei"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ben. Claude spe"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ichert in den USA."
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Eine schriftliche"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Mitteilung an"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": " Tannwald o"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "der de"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "ren Zustimmung fin"
+    },
+    {
+      "t_ms": 120323,
+      "kind": "text",
+      "chunk": "de ich in den Date"
+    },
+    {
+      "t_ms": 120324,
+      "kind": "text",
+      "chunk": "ien nicht. Das s"
+    },
+    {
+      "t_ms": 120363,
+      "kind": "text",
+      "chunk": "ieht Tannwald sel"
+    },
+    {
+      "t_ms": 120413,
+      "kind": "text",
+      "chunk": "bst,"
+    },
+    {
+      "t_ms": 120458,
+      "kind": "text",
+      "chunk": " sobald R"
+    },
+    {
+      "t_ms": 120512,
+      "kind": "text",
+      "chunk": "1 und R3 eing"
+    },
+    {
+      "t_ms": 120557,
+      "kind": "text",
+      "chunk": "ereicht sind.\n2"
+    },
+    {
+      "t_ms": 120608,
+      "kind": "text",
+      "chunk": ". **Private Chatb"
+    },
+    {
+      "t_ms": 120664,
+      "kind": "text",
+      "chunk": "ots.** Bis September w"
+    },
+    {
+      "t_ms": 120708,
+      "kind": "text",
+      "chunk": "urden la"
+    },
+    {
+      "t_ms": 120761,
+      "kind": "text",
+      "chunk": "ut IT-Notiz"
+    },
+    {
+      "t_ms": 120864,
+      "kind": "text",
+      "chunk": " Anfragen von"
+    },
+    {
+      "t_ms": 120909,
+      "kind": "text",
+      "chunk": " Tannwald in"
+    },
+    {
+      "t_ms": 120959,
+      "kind": "text",
+      "chunk": " private Chatbots au"
+    },
+    {
+      "t_ms": 121010,
+      "kind": "text",
+      "chunk": "f Handys eingege"
+    },
+    {
+      "t_ms": 121059,
+      "kind": "text",
+      "chunk": "ben. Ob das ein"
+    },
+    {
+      "t_ms": 121109,
+      "kind": "text",
+      "chunk": " me"
+    },
+    {
+      "t_ms": 121157,
+      "kind": "text",
+      "chunk": "ldepflichtiger"
+    },
+    {
+      "t_ms": 121207,
+      "kind": "text",
+      "chunk": " Vorfall ist, mu"
+    },
+    {
+      "t_ms": 121270,
+      "kind": "text",
+      "chunk": "ss ein Mensch ent"
+    },
+    {
+      "t_ms": 121312,
+      "kind": "text",
+      "chunk": "scheiden. Wen"
+    },
+    {
+      "t_ms": 121364,
+      "kind": "text",
+      "chunk": "n ja, wird au"
+    },
+    {
+      "t_ms": 121409,
+      "kind": "text",
+      "chunk": "ch R6 zur"
+    },
+    {
+      "t_ms": 121460,
+      "kind": "text",
+      "chunk": " Lücke."
+    },
+    {
+      "t_ms": 121512,
+      "kind": "text",
+      "chunk": "\n3. **„Data st"
+    },
+    {
+      "t_ms": 121559,
+      "kind": "text",
+      "chunk": "ays in Europe“.**"
+    },
+    {
+      "t_ms": 121608,
+      "kind": "text",
+      "chunk": " Das h"
+    },
+    {
+      "t_ms": 121659,
+      "kind": "text",
+      "chunk": "at ein Vertreter"
+    },
+    {
+      "t_ms": 121714,
+      "kind": "text",
+      "chunk": " des Anbieters la"
+    },
+    {
+      "t_ms": 121759,
+      "kind": "text",
+      "chunk": "ut IT-Notiz"
+    },
+    {
+      "t_ms": 121809,
+      "kind": "text",
+      "chunk": " nur mündlich ges"
+    },
+    {
+      "t_ms": 121859,
+      "kind": "text",
+      "chunk": "agt. Die Herst"
+    },
+    {
+      "t_ms": 121917,
+      "kind": "text",
+      "chunk": "ellerseite s"
+    },
+    {
+      "t_ms": 121959,
+      "kind": "text",
+      "chunk": "agt das Gegente"
+    },
+    {
+      "t_ms": 122010,
+      "kind": "text",
+      "chunk": "il. Der"
+    },
+    {
+      "t_ms": 122059,
+      "kind": "text",
+      "chunk": " Satz darf n"
+    },
+    {
+      "t_ms": 122109,
+      "kind": "text",
+      "chunk": "icht in die Antwort"
+    },
+    {
+      "t_ms": 122160,
+      "kind": "text",
+      "chunk": " an Tannwald."
+    },
+    {
+      "t_ms": 122216,
+      "kind": "text",
+      "chunk": "\n4. **Eigene"
+    },
+    {
+      "t_ms": 122259,
+      "kind": "text",
+      "chunk": " Richtlinie wird n"
+    },
+    {
+      "t_ms": 122309,
+      "kind": "text",
+      "chunk": "icht eingehalten."
+    },
+    {
+      "t_ms": 122371,
+      "kind": "text",
+      "chunk": "** Die Richtlin"
+    },
+    {
+      "t_ms": 122418,
+      "kind": "text",
+      "chunk": "ie (v3) verlang"
+    },
+    {
+      "t_ms": 122464,
+      "kind": "text",
+      "chunk": "t"
+    },
+    {
+      "t_ms": 122509,
+      "kind": "text",
+      "chunk": " Admin-Reviews j"
+    },
+    {
+      "t_ms": 122559,
+      "kind": "text",
+      "chunk": "ed"
+    },
+    {
+      "t_ms": 122614,
+      "kind": "text",
+      "chunk": "es Quartal, z"
+    },
+    {
+      "t_ms": 122660,
+      "kind": "text",
+      "chunk": "wei Restore-T"
+    },
+    {
+      "t_ms": 122709,
+      "kind": "text",
+      "chunk": "ests im Jahr und e"
+    },
+    {
+      "t_ms": 122759,
+      "kind": "text",
+      "chunk": "ine jährliche Sch"
+    },
+    {
+      "t_ms": 122816,
+      "kind": "text",
+      "chunk": "ulung für alle. W"
+    },
+    {
+      "t_ms": 122859,
+      "kind": "text",
+      "chunk": "er v"
+    },
+    {
+      "t_ms": 122909,
+      "kind": "text",
+      "chunk": "3 oder v4 ein"
+    },
+    {
+      "t_ms": 122958,
+      "kind": "text",
+      "chunk": "reicht, mac"
+    },
+    {
+      "t_ms": 123014,
+      "kind": "text",
+      "chunk": "ht s"
+    },
+    {
+      "t_ms": 123059,
+      "kind": "text",
+      "chunk": "ichtbar, dass das"
+    },
+    {
+      "t_ms": 123110,
+      "kind": "text",
+      "chunk": " nicht pass"
+    },
+    {
+      "t_ms": 123159,
+      "kind": "text",
+      "chunk": "iert "
+    },
+    {
+      "t_ms": 123209,
+      "kind": "text",
+      "chunk": "ist.\n\nIn der Datei"
+    },
+    {
+      "t_ms": 123260,
+      "kind": "text",
+      "chunk": " stehen f"
+    },
+    {
+      "t_ms": 123309,
+      "kind": "text",
+      "chunk": "ertige Anfragen an"
+    },
+    {
+      "t_ms": 123362,
+      "kind": "text",
+      "chunk": " I"
+    },
+    {
+      "t_ms": 123423,
+      "kind": "text",
+      "chunk": "T-Leitung, H"
+    },
+    {
+      "t_ms": 123459,
+      "kind": "text",
+      "chunk": "R-Leitung,"
+    },
+    {
+      "t_ms": 123513,
+      "kind": "text",
+      "chunk": " Teamleitung und"
+    },
+    {
+      "t_ms": 123558,
+      "kind": "text",
+      "chunk": " Geschäftsführung"
+    },
+    {
+      "t_ms": 123610,
+      "kind": "text",
+      "chunk": ". Als"
+    },
+    {
+      "t_ms": 123659,
+      "kind": "text",
+      "chunk": " intern"
+    },
+    {
+      "t_ms": 123730,
+      "kind": "text",
+      "chunk": "en Termin habe ich"
+    },
+    {
+      "t_ms": 123761,
+      "kind": "text",
+      "chunk": " den 20.11.2026"
+    },
+    {
+      "t_ms": 123809,
+      "kind": "text",
+      "chunk": " vorgeschlag"
+    },
+    {
+      "t_ms": 123864,
+      "kind": "text",
+      "chunk": "en, f"
+    },
+    {
+      "t_ms": 123909,
+      "kind": "text",
+      "chunk": "ünf Tage v"
+    },
+    {
+      "t_ms": 123958,
+      "kind": "text",
+      "chunk": "or der Abgabe am"
+    },
+    {
+      "t_ms": 124008,
+      "kind": "text",
+      "chunk": " 25.11. Die I"
+    },
+    {
+      "t_ms": 124062,
+      "kind": "text",
+      "chunk": "T-Notiz"
+    },
+    {
+      "t_ms": 124112,
+      "kind": "text",
+      "chunk": "en selbst wür"
+    },
+    {
+      "t_ms": 124157,
+      "kind": "text",
+      "chunk": "de ich nicht einre"
+    },
+    {
+      "t_ms": 124209,
+      "kind": "text",
+      "chunk": "ichen, "
+    },
+    {
+      "t_ms": 124263,
+      "kind": "text",
+      "chunk": "ihren Inhalt a"
+    },
+    {
+      "t_ms": 124309,
+      "kind": "text",
+      "chunk": "ber klären."
+    },
+    {
+      "t_ms": 124357,
+      "kind": "text",
+      "chunk": "\n\nOb und"
+    },
+    {
+      "t_ms": 124409,
+      "kind": "text",
+      "chunk": " wie das"
+    },
+    {
+      "t_ms": 124457,
+      "kind": "text",
+      "chunk": " g"
+    },
+    {
+      "t_ms": 124508,
+      "kind": "text",
+      "chunk": "egenüber Tannw"
+    },
+    {
+      "t_ms": 124558,
+      "kind": "text",
+      "chunk": "ald kommuniziert w"
+    },
+    {
+      "t_ms": 124614,
+      "kind": "text",
+      "chunk": "ird, entscheidet die"
+    },
+    {
+      "t_ms": 124658,
+      "kind": "text",
+      "chunk": " Geschäftsführung"
+    },
+    {
+      "t_ms": 124719,
+      "kind": "text",
+      "chunk": "."
+    }
+  ],
+  "final_text": "Ich habe die Nachweise für R1 bis R8 geprüft. Das Ergebnis: **2 belegt, 1 schwach, 5 Lücken.** Den vollständigen Stand mit Tabelle, Zitaten, Lückenliste und fertigen Anfragen habe ich in `nachweise_tannwald_R1-R8.md` gespeichert.\n\nDen Prüfzeitraum habe ich aus der Anforderung übernommen: Dokumente gelten, wenn sie ab dem 10.12.2025 datiert sind. Daten, Quoten und Stundenabstände habe ich im Code nachgerechnet und jedes Zitat wörtlich in seiner Datei wiedergefunden.\n\n| Anf. | Status | Kern |\n|---|---|---|\n| R1 Systeme + Land | **BELEGT** | Die Systemliste ist freigegeben (02.09.2026) und nennt 4 Systeme. Claude Team speichert in den USA. |\n| R2 Unterauftragsverarbeiter | **LÜCKE** | Bei Anthropic sind „letzte Prüfung“ und „Rechtsgrundlage für die Übermittlung“ leer. |\n| R3 KI-Tools | **LÜCKE** | Die KI-Regel gilt erst ab 01.10.2026, Claude wird aber seit 01.09. genutzt (30 Tage ohne Regel). Private Chatbots auf Handys sind nur in einer ungeprüften Notiz erwähnt; Tool, Daten und Land fehlen. |\n| R4 Admin-Review | **LÜCKE** | Es gibt nur ein Review, für Servicepult, also 1 von 4 Systemen. |\n| R5 Schulung | **LÜCKE** | 26 Zeilen, nach Entfernen einer doppelten Zeile (E014) 25 von 120 Beschäftigten = **20,8 %** (gefordert sind 95 %). Eine Datenschutzschulung kommt im Export gar nicht vor. |\n| R6 Vorfälle | **BELEGT** | INC-02 wurde Tannwald nach 30,5 h gemeldet, also innerhalb der 48 h. |\n| R7 Restore-Test | **LÜCKE** | Laut Backup-Bericht: „Restore test: not done in 2026.“ |\n| R8 Richtlinie | **SCHWACH** | v3 wurde 2024 freigegeben und ist damit veraltet. v4 ist ein Entwurf ohne Freigabe. |\n\n**Bitte vor der Abgabe mit der Geschäftsführung klären:**\n\n1. **Klausel 7 im Vertrag mit Tannwald.** Laut Klausel dürfen KI-Tools nur nach schriftlicher Mitteilung an Tannwald genutzt werden, und die Daten müssen in EU/EWR bleiben. Claude speichert in den USA. Eine schriftliche Mitteilung an Tannwald oder deren Zustimmung finde ich in den Dateien nicht. Das sieht Tannwald selbst, sobald R1 und R3 eingereicht sind.\n2. **Private Chatbots.** Bis September wurden laut IT-Notiz Anfragen von Tannwald in private Chatbots auf Handys eingegeben. Ob das ein meldepflichtiger Vorfall ist, muss ein Mensch entscheiden. Wenn ja, wird auch R6 zur Lücke.\n3. **„Data stays in Europe“.** Das hat ein Vertreter des Anbieters laut IT-Notiz nur mündlich gesagt. Die Herstellerseite sagt das Gegenteil. Der Satz darf nicht in die Antwort an Tannwald.\n4. **Eigene Richtlinie wird nicht eingehalten.** Die Richtlinie (v3) verlangt Admin-Reviews jedes Quartal, zwei Restore-Tests im Jahr und eine jährliche Schulung für alle. Wer v3 oder v4 einreicht, macht sichtbar, dass das nicht passiert ist.\n\nIn der Datei stehen fertige Anfragen an IT-Leitung, HR-Leitung, Teamleitung und Geschäftsführung. Als internen Termin habe ich den 20.11.2026 vorgeschlagen, fünf Tage vor der Abgabe am 25.11. Die IT-Notizen selbst würde ich nicht einreichen, ihren Inhalt aber klären.\n\nOb und wie das gegenüber Tannwald kommuniziert wird, entscheidet die Geschäftsführung.",
+  "stats": {
+    "duration_ms": 124001,
+    "duration_api_ms": 122413,
+    "ttft_ms": 1642,
+    "num_turns": 8,
+    "output_tokens": 13545
+  },
+  "is_error": false,
+  "stop_reason": "end_turn",
+  "follow_ups": [],
+  "produced_files": [
+    {
+      "name": "nachweise_tannwald_R1-R8.md",
+      "bytes": 12069,
+      "sha256": "ffa1ad50f1ea2069cde9d3d4844bc99c1db51e04c7fd41dcae515e190ce85481",
+      "stored_as": "de-alle-with-1.nachweise_tannwald_R1-R8.md",
+      "text": "# Lieferantenaudit Tannwald 2026: Nachweise R1–R8 (interner Arbeitsstand)\n\nStand: 9. November 2026. Remote-Audit: 10. Dezember 2026. Abgabe der Unterlagen: 25. November 2026.\nZeitfenster laut Anforderung: Ein Dokument ist aktuell, wenn es am oder nach dem **10. Dezember 2025** datiert ist (bei Richtlinien zählt die letzte Freigabe oder Überprüfung). \"Letzte 12 Monate\" (R3, R5, R7) = 10.12.2025 bis 10.12.2026.\nSchwellen, wörtlich: \"Training must reach at least 95% of your staff.\" / \"Incidents with our data must reach us within 48 hours of detection (section 6.2).\"\n\nPersonen sind mit ihrer Rolle genannt, Beschäftigte und Konten nur mit IDs.\n\n## Schritt 1: Nachweisliste\n\n| Datei | Typ | Datum (Art) | Freigabe / geführt von | Umfang | Andere Fassungen |\n|---|---|---|---|---|---|\n| system-list_2026-09.csv | REGISTER | 2026-09-02 (Freigabe) | geführt: IT-Leitung; freigegeben: Geschäftsführung | 4 Systeme mit Tannwald-Daten | – |\n| subprocessors_2026-09.csv | REGISTER | 2026-09-05 (letzte Aktualisierung) | geführt: IT-Leitung | 4 Unterauftragsverarbeiter | – |\n| ai-use-rule_v1.md | RICHTLINIE | 2026-10-01 (Freigabe, gültig ab) | freigegeben: Geschäftsführung; Owner: IT-Leitung | alle Beschäftigten | – |\n| vendor-page_claude_2026-06-15.md | AUSSAGE (Herstellerseite) | 2026-06-15 (Seitendatum), gedruckt 2026-10-06 | Herausgeber: Anthropic (Privacy Center) | Speicherort Claude | – |\n| access-review_2026-08-14.csv | PROTOKOLL | 2026-08-14 (durchgeführt), 2026-08-17 (Freigabe) | durchgeführt: IT-Leitung; freigegeben: Geschäftsführung | nur Servicepult, 5 Admin-Konten | – |\n| training-records_2026.csv | PROTOKOLL (HR-Export) | 2026-11-02 (Export) | HR-Leitung | 1 Kurs, 26 Zeilen | – |\n| incident-log_2026.csv | REGISTER/PROTOKOLL | letzter Eintrag 2026-10-12 | geführt: IT-Leitung | 3 Vorfälle 2026 | – |\n| backup-report_2026-10.txt | PROTOKOLL | 2026-11-01 (erzeugt) | Owner: IT-Leitung | Servicepult-Export, Fileshare; Oktober 2026 | – |\n| infosec-policy_v3_FINAL.md | RICHTLINIE | 2024-03-12 (Freigabe), nächste Prüfung März 2025 | Geschäftsführung | Regeln 1–5 | v4 |\n| infosec-policy_v4_DRAFT.md | RICHTLINIE (ENTWURF) | 2026-09-18 (zuletzt bearbeitet) | Freigabe: \"(open)\" | Regeln 1–6 | v3 |\n| it-notes_2026-10-06.md | AUSSAGE | 2026-10-06 (geschrieben) | \"Not reviewed by anyone.\" | private Notizen der IT-Leitung | – |\n\n\"FINAL\" im Dateinamen von v3 belegt nichts; die Freigabe steht im Dokument selbst und ist von 2024.\n\n## Schritt 2 und 3: Prüfung je Anforderung\n\n| Anf. | Datei | Zitat | ZITAT | ZEITRAUM | UMFANG | FREIGABE | Status | Was schließt die Lücke | Zuständig |\n|---|---|---|---|---|---|---|---|---|---|\n| R1 | system-list_2026-09.csv | \"Claude Team (browser and desktop app; 25 seats since 2026-09-01),drafting replies to service requests,request text pasted by agents,United States\" | ja | ja (2026-09-02) | ja für den heutigen Stand: 4 Systeme, je mit Land. Siehe Hinweis zu den privaten Chatbots | ja: \"Approved 2026-09-02\" (Geschäftsführung) | **BELEGT** | – (Hinweis unten beachten) | IT-Leitung |\n| R2 | subprocessors_2026-09.csv | \"Anthropic,Claude Team,United States,accepted online 2026-09-01,,\" | ja | ja (2026-09-05); Prüfungen Servicepult 2026-01-20, Sprechband 2026-05-12, Nordlager 2026-02-03 liegen im Fenster | Anthropic: **letzte Prüfung leer, Rechtsgrundlage für die Übermittlung in die USA leer**. Anbieter der privaten Chatbots fehlen ganz | Register mit Verantwortlichem (IT-Leitung) | **LÜCKE** | Rechtsgrundlage für die Übermittlung in die USA (Vertragsunterlagen mit Anthropic), dokumentierte Prüfung von Anthropic | IT-Leitung + Geschäftsführung |\n| R3 | ai-use-rule_v1.md, system-list_2026-09.csv, vendor-page_claude_2026-06-15.md, it-notes_2026-10-06.md | \"Valid from 2026-10-01\" / \"Note that data is stored in the US.\" / \"Until September some agents on the Tannwald desk used a free chatbot on their phones to word replies. Stopped with the AI rule on 1 October.\" | Claude: Tool, Daten, Land und Regel liegen vor. Private Chatbots: nur eine ungeprüfte Notiz, kein Tool, keine Daten, kein Land | Regel gilt erst ab 01.10.2026. Claude läuft seit 01.09.2026 → **30 Tage ohne freigegebene Regel**; der Chatbot-Zeitraum vor Oktober ist ganz ohne Regel | Chatbot-Nutzung: welche Tools, welche Daten, welches Land: NICHT IN DEN DATEIEN | Regel: Geschäftsführung 2026-10-01. Herstellerseite: Anthropic, 15.06.2026 | **LÜCKE** | Aufstellung der privaten Chatbot-Nutzung (wer per ID, welches Tool, welche Daten, Zeitraum), Entscheidung, ob sie als Vorfall gilt | IT-Leitung + Teamleitung Tannwald-Desk |\n| R4 | access-review_2026-08-14.csv | \"Review of administrator accounts in Servicepult (ticket system)\" / \"adm-03,left 2026-07-31,team lead,yes,removed 2026-08-14\" / \"adm-04,employee,reporting,no,MFA switched on 2026-08-14\" | ja für Servicepult | ja (2026-08-14) | **nur 1 von 4 Systemen aus R1.** Sprechband, Nordlager-Fileshare, Claude Team: kein Review | ja (Geschäftsführung 2026-08-17) | **LÜCKE** | Admin-Reviews für Sprechband, Nordlager, Claude Team (Abgänge entfernt, MFA an), mit Freigabe | IT-Leitung; Sprechband: Teamleitung Tannwald-Desk |\n| R5 | training-records_2026.csv | \"Staff on 2026-11-01: 120.\" / einziger Kurs: \"Claude Team intro: data rules\" | nur KI-Schulung; **Datenschutzschulung: NICHT IN DEN DATEIEN** | ja (Sept. 2026) | 26 Zeilen, 1 Dublette (E014) → 25 Personen von 120 = **20,8 %**; nötig wären 114 | Export der HR-Leitung | **LÜCKE** | Datenschutz-Schulungsnachweise der letzten 12 Monate; KI-Schulung für die übrigen Beschäftigten | HR-Leitung |\n| R6 | incident-log_2026.csv | \"INC-02,2026-05-07 09:40,Tannwald\" … \"2026-05-08 16:10,mail auto-complete chose the wrong address\" | ja: erkannt, gemeldet, Ursache, Behebung | ja (letzter Eintrag 2026-10-12) | INC-02: Meldung nach **30,5 h** (< 48 h). Offen: private Chatbot-Nutzung mit Tannwald-Daten steht nicht im Log | Register mit Verantwortlichem (IT-Leitung) | **BELEGT** für die erfassten Vorfälle (siehe Hinweis) | Entscheidung: Ist die Chatbot-Nutzung ein Vorfall? Wenn ja, wird R6 zur LÜCKE (nicht erfasst, nicht gemeldet) | Geschäftsführung |\n| R7 | backup-report_2026-10.txt | \"Restore test: not done in 2026. Planned for Q4 2026 (owner: IT lead).\" | **Der Nachweis zeigt, dass kein Test stattfand.** Die IT-Notiz \"Backups are tested\" ist ungeprüft und widerspricht dem Bericht | – | – | Owner: IT-Leitung | **LÜCKE** | Restore-Test durchführen und protokollieren (Datum, Umfang, Ergebnis, wer) | IT-Leitung |\n| R8 | infosec-policy_v3_FINAL.md, infosec-policy_v4_DRAFT.md | v3: \"Approved 2024-03-12 by […], Managing Director. Next review: March 2025.\" / v4: \"Approved by: (open)\" | ja | v3: **außerhalb des Fensters** (Freigabe 1003 Tage vor dem Audit, Prüftermin März 2025 verpasst) | Regeln 1–5 (v4: + KI) | v4: **ENTWURF, keine Freigabe** | **SCHWACH** (ZEITRAUM v3, FREIGABE v4) | v4 durch die Geschäftsführung freigeben, mit Datum | Geschäftsführung |\n\nGegenprobe: Alle Zitate habe ich am Ende per Code wörtlich in ihren Dateien gesucht und gefunden. Bei v3 ist der Name durch […] ersetzt.\n\n### Zählung (im Code gerechnet)\n- BELEGT: 2 (R1, R6)\n- SCHWACH: 1 (R8)\n- LÜCKE: 5 (R2, R3, R4, R5, R7)\n- Schulung: 26 Zeilen, 1 Dublette entfernt (E014, 03.09. und 10.09.), 25 Personen / 120 = 20,8 %. Für 95 % fehlen 89 Personen.\n- INC-02: erkannt 2026-05-07 09:40, gemeldet 2026-05-08 16:10 → 30,5 Stunden.\n- Abgang adm-03: ausgeschieden 2026-07-31, Konto entfernt 2026-08-14 → 14 Tage.\n\n## Hinweise, die ein Mensch entscheiden muss\n\n1. **Vertragsklausel 7.** Der Kunde zitiert: \"AI tools are used with Customer Data only after written notice to the Customer. Customer Data is stored in the EU or EEA unless the Customer agrees in writing.\" In den Dateien:\n   - Claude Team speichert in den USA (\"Note that data is stored in the US.\", Herstellerseite; ebenso Systemliste und KI-Regel).\n   - Eine schriftliche Mitteilung an Tannwald oder eine Zustimmung von Tannwald: NICHT IN DEN DATEIEN. Die IT-Notiz sagt: \"Did we ever tell Tannwald in writing that we use Claude (clause 7)? I found nothing.\"\n   - Private Chatbots auf Handys wurden bis September mit Tannwald-Anfragen genutzt (nur IT-Notiz, ungeprüft).\n   Mit R1, R3 und den Unterlagen zu R2 sieht Tannwald das selbst. Das gehört vor der Abgabe auf den Tisch der Geschäftsführung, eventuell mit rechtlicher Beratung.\n2. **\"Data stays in Europe\"**: Laut IT-Notiz sagte das ein Vertreter des Anbieters mündlich, \"Nothing in writing.\". Die Herstellerseite sagt das Gegenteil. Diese Aussage darf nicht in die Antwort.\n3. **Die eigene Richtlinie v3 wird nicht eingehalten:** \"Administrator access is reviewed every quarter\" (es gibt ein Review, nur Servicepult); \"Backups are restore-tested twice a year\" (2026 keiner); \"All staff complete data protection training every year\" (kein Datenschutznachweis). Wer v3 oder v4 einreicht, legt das offen.\n4. **Herstellerseite**: Die Datei selbst sagt \"Vendor pages change. Read the page again before you rely on this.\" Vor der Abgabe neu abrufen und mit Datum ausdrucken.\n\n## Schritt 4: Anfragen zum Schließen der Lücken\nInterner Termin für alle: **Freitag, 20. November 2026** (fünf Tage Puffer vor der Abgabe am 25.11.).\n\n**An die IT-Leitung: R2, R4, R7**\n> Tannwald verlangt (R2) \"contract date, last review, and the legal basis for any transfer outside the EU/EEA\", (R4) die letzte Admin-Prüfung \"on every system in R1: leavers removed, multi-factor login on\", (R7) \"A restore test of your backups from the last 12 months, with its result\".\n> Vorhanden: Im Register der Unterauftragsverarbeiter sind bei Anthropic \"last_review\" und \"transfer_basis\" leer. Das Admin-Review vom 14.08. deckt nur Servicepult ab. Laut Backup-Bericht gab es 2026 keinen Restore-Test.\n> Gebraucht: die Rechtsgrundlage für die Übermittlung in die USA und eine dokumentierte Prüfung von Anthropic; Admin-Reviews für Sprechband, Nordlager und Claude Team; ein Restore-Test-Protokoll mit Ergebnis.\n> Wenn es etwas davon nicht gibt, ist \"gibt es nicht\" eine gute Antwort. Dann tragen wir es so ein.\n\n**An die IT-Leitung und die Teamleitung Tannwald-Desk: R3**\n> Tannwald verlangt \"The AI tools your staff used with our data in the last 12 months: tool, data, storage country, and your approved rule\".\n> Vorhanden ist nur eine ungeprüfte Notiz: Bis September nutzten einige Beschäftigte private Chatbots auf dem Handy. Tool, Daten, Personen und Zeitraum stehen nirgends.\n> Gebraucht: eine Aufstellung (Beschäftigte per ID, Tool, Art der Daten, von/bis). \"Wissen wir nicht\" ist eine gute Antwort.\n\n**An die HR-Leitung: R5**\n> Tannwald verlangt \"Training records for data protection and AI use, last 12 months, with the share of staff trained\" und mindestens 95 %.\n> Vorhanden: Export vom 02.11. mit einem Kurs (\"Claude Team intro: data rules\"), 25 von 120 Personen = 20,8 %. Eine Datenschutzschulung kommt im Export nicht vor.\n> Gebraucht: Datenschutz-Schulungsnachweise seit dem 10.12.2025, falls es sie gibt. \"Gibt es nicht\" ist eine gute Antwort.\n\n**An die Geschäftsführung: R8, R6, Klausel 7**\n> Tannwald verlangt \"Your information security policy, approved or reviewed in the last 12 months\".\n> Vorhanden: v3 freigegeben am 12.03.2024 (Prüftermin März 2025 verpasst), v4 ist ein Entwurf mit \"Approved by: (open)\".\n> Gebraucht: die Freigabe von v4 mit Datum. Dazu zwei Entscheidungen: Gilt die private Chatbot-Nutzung als Vorfall, der Tannwald zu melden ist (R6)? Und wie gehen wir mit Klausel 7 um (US-Speicherung, keine schriftliche Mitteilung gefunden)?\n\n## Abgabepaket (Stand heute)\nKönnen eingereicht werden: system-list_2026-09.csv (R1), incident-log_2026.csv (R6), access-review_2026-08-14.csv (R4, Teilnachweis), subprocessors_2026-09.csv (R2, mit offenen Feldern), ai-use-rule_v1.md und die neu abgerufene Herstellerseite (R3, Teilnachweis), training-records_2026.csv (R5, zeigt 20,8 %).\nNicht einreichen: it-notes_2026-10-06.md (private, ungeprüfte Notiz). Den Inhalt aber klären, siehe oben.\n"
+    }
+  ],
+  "edited": false
+}

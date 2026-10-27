@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (25)
+### Static pages (26)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -41,6 +41,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/open-source/tools/cv-engine/live | src/app/open-source/tools/cv-engine/live/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
@@ -76,26 +77,28 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/buecher/ki-landschaft/08_dein_zug | Dein Zug | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/08_dein_zug.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 | https://loehrning.ai/buecher/ki-landschaft/09_quellen | Quellen, Stand, Grenzen | Befunde aus Firmenwebsites, Stellenanzeigen und Pressemeldungen: warum bei fast jedem zweiten KI-Treffer das… | content/books/ki-landschaft/09_quellen.md | catalog lastReviewed 2026-10-19 | Tim Löhr |
 
-### Demo-Detailseiten (5)
+### Demo-Detailseiten (6)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/ki-prognosen-einschaetzen | 1.050 Stück, sieben Morgen | Angemeldet 1.370, geschätzt 1.180, geliefert 1.050. Du legst die Regel fest und führst eine Woche lang die Fr… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Die Zahl, die trägt | Entscheide über CRAFT, so wie ein Bericht gelesen werden sollte. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Mach die Zahl richtig. | Fünf Anfragen, wie sie an eine KI gestellt werden. Du legst fest, was die Zahl bedeutet, und siehst sofort, w… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/esg-berichte-mit-ki | Zehn Fakten, 14 Antworten | Du prüfst die Akte einer erfundenen Kellerei: zehn Fakten, die 14 Antworten an Importeur und Bank tragen. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
-| https://loehrning.ai/demos/ki-im-unternehmen-sicher-nutzen | Darf das in diesen Chat? | Acht Einfügungen bei Vardar Works, einer erfundenen Firma. Du gibst jeder eine Ampel und siehst, wohin sie ge… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/ki-prognosen-einschaetzen | Die Fehlerliste | Du prüfst die Prognose deines Tools an ihren eigenen alten Fehlern und legst fest, wann sie ohne Freigabe in… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/geschaeftsberichte-mit-ki-lesen | Eine Datei, drei Antworten | Eine Datei aus dem Workshop-Kit, eine Frage, drei richtig gerechnete Antworten. Danach legst du eine eigene K… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/datenbereitschaft-fuer-ki | Die Fragekarte | Eine richtige Datei, eine falsche Tabelle: Fünf Kästchen fangen den Fehler, bevor die Zahl weitergeht. Am End… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/esg-berichte-mit-ki | Nachweisprobe | Ein Ordner, drei Anfragen, eine nachgereichte Rechnung. Du verbindest jede Antwort mit der Zeile, die sie bel… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/audit-vorbereitung-mit-ki | Die Lückenliste | Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Date… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/angebote-mit-ki-vergleichen | Die Vergleichsbasis | Drei Angebote, eine Basis: gleiche Menge, je Stück, bis ins Werk, mit Einmalkosten und Skonto. Schätz zuerst,… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 
-### Open-Source-Artefakte (1)
+### Open-Source-Artefakte (2)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 | https://loehrning.ai/open-source/tools/cv-engine | CV Engine | Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Eine… | src/lib/open-source/artifacts.ts | source revision f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e | Tim Löhr |
+| https://loehrning.ai/open-source/tools/reelcode | reelcode | Claude-Code-Plugin und Engine: Aus einer project.json wird ein Film mit Musik, in vier Formaten zugleich. Läu… | src/lib/open-source/artifacts.ts | source revision b9a1990f2c8ad6f480ae0a49365350f12477ff04 | Tim Löhr |
 
 ### Indexable patterns deliberately excluded from the sitemap
 
@@ -154,6 +157,7 @@ _None._
 | `/.well-known/oauth-protected-resource` | Public machine-readable surface. |
 | `/.well-known/oauth-protected-resource/api/mcp` | Public machine-readable surface. |
 | `/skills/:name/SKILL.md` | Public machine-readable surface. |
+| `/skills/:name` | Public machine-readable surface. |
 | `/vorlagen/:file` | Public machine-readable surface. |
 
 ## Asset patterns (public-assets)
@@ -214,8 +218,12 @@ _None._
 
 | Pattern | Explanation |
 | --- | --- |
-| `/workshops/audit-vorbereitung-mit-ki` | The first slug of Workshop 05 resolves to the released workshop page. |
-| `/workshops/audit-vorbereitung-mit-ki/:path*` | Files and pages under the first slug of Workshop 05 resolve to the released workshop page. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen` | The previous slug of Workshop 05 resolves to the audit preparation workshop. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/kit` | The previous kit page of Workshop 05 resolves to the new kit page. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/ai-at-work-kit.zip` | The previous kit zip of Workshop 05 resolves to the new kit zip. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/slides.html` | The previous deck of Workshop 05 resolves to the rebuilt deck. |
+| `/workshops/ki-im-unternehmen-sicher-nutzen/presenter.html` | The previous presenter view of Workshop 05 resolves to the rebuilt presenter view. |
+| `/demos/ki-im-unternehmen-sicher-nutzen` | The previous demo of Workshop 05 resolves to its evidence check demo. |
 | `/ai-native/fluency-test` | The retired self-assessment resolves to the course landing. |
 | `/ai-native/capstone-gallery` | The retired capstone rules page resolves to the course landing. |
 | `/ai-native/demos` | The course simulation gallery merged into the demo gallery. |

@@ -1,217 +1,262 @@
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { ESG_COPY } from "../../src/lib/demo-cases/esg-berichte-mit-ki/copy";
-import { TAKEAWAYS } from "../../src/lib/demo-cases/esg-berichte-mit-ki/takeaways";
-
-/*
- * W04 demo "Zehn Fakten, 14 Antworten": the core loop end to end, the
- * Monday, the takeaways, deep links, the fit-aware sticky sheet, phone
- * overflow and axe.
- */
-
-const PATH = "/demos/esg-berichte-mit-ki";
-const DE = ESG_COPY.de;
-
-type Plan = readonly [id: string, status: string, detail: string, action?: "yes" | "no"];
-
-const RUN: readonly Plan[] = [
-  ["bussgeld", "ok", "z13-14", "no"],
-  ["wasser", "check", "conflict"],
-  ["kopf", "ok", "z3-5", "no"],
-  ["unfall", "ok", "z4-7", "no"],
-  ["ghg", "notFound", "diesel"],
-  ["mix", "notFound", "supplier"],
-  ["zert", "check", "expired"],
-  ["pv", "check", "estimate"],
-  ["glas", "ok", "z3-5", "yes"],
-  ["strom", "notFound", "sept"],
-];
-
-async function stamp(page: Page, [id, status, detail, action]: Plan, check = DE.card.check) {
-  const card = page.locator(`section[data-slot="${id}"]`);
-  await card.locator(`fieldset[data-decision="status"] input[value="${status}"]`).check();
-  await card.locator(`fieldset[data-decision="detail"] input[value="${detail}"]`).check();
-  if (action) await card.locator(`fieldset[data-decision="action"] input[value="${action}"]`).check();
-  await card.getByRole("button", { name: check }).click();
-  await expect(card.locator(".eb-fb")).toBeVisible();
-}
-
-async function open(page: Page, path: string) {
-  await page.goto(path, { waitUntil: "domcontentloaded" });
-  await expect(page.locator(".eb[data-ready]")).toBeAttached();
-}
+import { expectGlasBudget } from "./fixtures/glas-budget";
 
 /**
- * Page errors and console errors, hydration warnings included (React reports
- * a hydration mismatch through console.error, not as a page error).
+ * W04 "Nachweisprobe" in the depicted Claude app (v4 shell, Glas): the intro
+ * on the news, the kit's five prompts sent in the project with Claude's
+ * recorded answers, the checks by hand beside the chat (a sheet on a phone),
+ * the measurement, the skill in the visitor's own Claude and the take-home.
+ * Runs on desktop and phone projects; the helpers handle both layouts.
  */
-function watchErrors(page: Page): string[] {
+const SLUG = "esg-berichte-mit-ki";
+const PATH = `/demos/${SLUG}`;
+
+function collectErrors(page: Page): string[] {
   const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(`pageerror: ${String(error)}`));
   page.on("console", (message) => {
-    if (message.type() === "error") errors.push(`console.error: ${message.text()}`);
+    if (message.type() === "error") errors.push(message.text());
   });
+  page.on("pageerror", (error) => errors.push(error.message));
   return errors;
 }
 
-async function noHorizontalOverflow(page: Page) {
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow).toBeLessThanOrEqual(0);
+const clock = (page: Page) => page.locator("[data-demo-clock]");
+const caption = (page: Page) => page.locator("[data-w4-caption]");
+const appWindow = (page: Page) => page.locator("[data-w4a-window]");
+const overflow = (page: Page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+const isPhone = (page: Page) => appWindow(page).evaluate((element) => element.hasAttribute("data-phone"));
+
+/** A press before hydration is lost (the buttons are server-rendered), so the first press repeats until it lands. */
+async function firstPress(page: Page, selector: string, landed: () => Promise<void>) {
+  await expect(async () => {
+    await page.locator(selector).first().click();
+    await landed();
+  }).toPass({ timeout: 15_000 });
 }
 
-test.describe("W04 demo: Zehn Fakten, 14 Antworten", () => {
-  test("plays ten facts, the following Monday and the takeaways on a phone", async ({ page, context }) => {
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => undefined);
-    await page.setViewportSize({ width: 390, height: 844 });
-    const errors = watchErrors(page);
-    await open(page, PATH);
+async function openBeat(page: Page, beat: string, prefix = "") {
+  await page.goto(`${prefix}${PATH}?beat=${beat}`, { waitUntil: "networkidle" });
+  await expect(clock(page)).toHaveAttribute("data-beat", beat);
+}
 
-    // On load: card 1, all 14 rows open, the Monday locked, the takeaways there.
-    await expect(page.getByRole("heading", { level: 2, name: /Fakt 1 von 10/ })).toBeVisible();
-    await expect(page.locator("tbody tr")).toHaveCount(14);
-    await expect(page.getByText(DE.monday.locked)).toBeVisible();
-    await expect(page.locator("#mitnehmen .eb-take-card")).toHaveCount(3);
-    await noHorizontalOverflow(page);
+/** Sends the step's prompt with the composer's arrow, then shows the whole answer with "Weiter". */
+async function sendAndFinish(page: Page, step: string) {
+  const turn = page.locator(`[data-w4a-turn="${step}"]`);
+  await firstPress(page, "[data-w4a-send]", () => expect(turn).toBeVisible({ timeout: 1000 }));
+  await page.locator("[data-demo-next]").click();
+  await expect(turn).toHaveAttribute("data-phase", "done");
+}
 
-    // The first card by keyboard: the feedback takes focus.
-    await stamp(page, RUN[0] as Plan);
-    await expect(page.getByRole("heading", { level: 3, name: DE.feedback.grades.right })).toBeFocused();
-    await expect(page.locator('tr[data-row="Q5"] .eb-cell-status')).toHaveText("OK");
-    await page.getByRole("button", { name: DE.feedback.next(2) }).click();
-    await expect(page.getByRole("heading", { level: 2, name: /Fakt 2 von 10/ })).toBeFocused();
+/** The check beside the chat: open on a desktop by itself, a sheet on a phone that the caption line in the dock opens. */
+async function openCheck(page: Page) {
+  if (await isPhone(page)) await page.locator("[data-w4a-capline]").click();
+  await expect(page.locator("[data-w4a-step]").first()).toBeVisible();
+}
 
-    for (const plan of RUN.slice(1)) {
-      await page.locator(".eb-index-btn").nth(RUN.indexOf(plan)).click();
-      await stamp(page, plan);
-      if (plan[0] === "glas") {
-        // The longest line (questionnaire 21) wraps inside its figure at 390.
-        const wide = await page
-          .locator('section[data-slot="glas"] figure')
-          .evaluateAll((figures) => figures.filter((figure) => figure.scrollWidth > figure.clientWidth).length);
-        expect(wide).toBe(0);
-      }
-    }
+/** Tap a part of the claim, then the certificate line that carries it. */
+async function connect(page: Page, part: string, line: number) {
+  await page.locator(`[data-w4-handle="${part}"]`).click();
+  await page.locator(`button[data-w4-line="${line}"]`).click();
+}
 
-    const summary = page.getByTestId("eb-summary");
-    await expect(summary).toContainText(DE.sheet.differ(1));
-    await expect(summary.getByRole("link", { name: "Q8" })).toHaveAttribute("href", "#eb-row-Q8");
-    await expect(page.locator('tr[data-row="Q8"] .eb-yours')).toHaveText("deins: NEEDS CHECK");
-
-    // The following Monday.
-    await page.getByRole("button", { name: DE.monday.start }).click();
-    await expect(page.getByTestId("eb-date")).toHaveText(DE.date.monday);
-    await page.locator("#montag .eb-pick").filter({ hasText: "F2" }).click();
-    await page.locator("#montag .eb-pick").filter({ hasText: "Q1" }).click();
-    await page.getByRole("button", { name: DE.monday.openInvoice }).click();
-    await page.locator('input[name="eb-invoice"][value="41200"]').check();
-    await page.locator("#montag").getByRole("button", { name: DE.card.check }).click();
-    await expect(page.getByText(DE.monday.invoiceMath)).toBeVisible();
-    await stamp(page, ["monday", "ok", "b3-13+inv", "no"]);
-    await expect(page.getByTestId("eb-reveal")).toBeVisible();
-    // Motion plays only in view: below the fold the strip holds its first frame.
-    const strip = page.locator('[data-testid="eb-reveal"] .eb-strip');
-    const box = await strip.boundingBox();
-    const viewport = page.viewportSize();
-    if (box && viewport && box.y > viewport.height) {
-      await page.waitForTimeout(1000);
-      await expect(strip).toHaveAttribute("data-t", "start");
-    }
-    await strip.scrollIntoViewIfNeeded();
-    await expect(strip).toHaveAttribute("data-t", "end");
-    await expect(page.getByTestId("eb-score")).toHaveText(
-      "Du hast 1 von 2 Änderungen getroffen. Zu viel markiert: Q1. Übersehen: F3.",
-    );
-    await expect(page.locator('#antworten table[data-request="bank"] caption')).toContainText(
-      DE.sheet.tally(3, 3, 0),
-    );
-
-    // Takeaways: today's misses are marked on screen; the copied text is exact.
-    await expect(page.locator(".eb-check-list li[data-marked]")).toHaveCount(2);
-    const copyButton = page.locator(".eb-copy").nth(2);
-    await copyButton.click();
-    await expect(copyButton).toHaveText(DE.takeaways.copied);
-    const clip = await page.evaluate(() => navigator.clipboard.readText()).catch(() => null);
-    if (clip !== null) expect(clip).toBe(TAKEAWAYS.de[2].text);
-
-    await noHorizontalOverflow(page);
-    expect(await page.locator(".eb details, .eb summary, .eb [aria-expanded]").count()).toBe(0);
-    expect(errors).toEqual([]);
-  });
-
-  test("the #zert deep link opens card 7", async ({ page }) => {
-    const errors = watchErrors(page);
-    await open(page, `${PATH}#zert`);
-    await expect(page.getByRole("heading", { level: 2, name: /Fakt 7 von 10/ })).toBeVisible();
-    await expect(page.locator('.eb-index-btn[aria-current="step"]')).toContainText("07");
-    expect(errors).toEqual([]);
-  });
-
-  test("a malformed hash is no deep link and no crash, on load and on hashchange", async ({ page }) => {
-    const errors = watchErrors(page);
-    await open(page, `${PATH}#%E0%A4%A`);
-    await expect(page.getByRole("heading", { level: 2, name: /Fakt 1 von 10/ })).toBeVisible();
-    await page.evaluate(() => {
-      window.location.hash = "%";
+test.describe(PATH, () => {
+  test("intro: the news first, then the question, the whole card above the tab bar at 390 x 664", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.setViewportSize({ width: 390, height: 664 });
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    const news = page.locator("[data-demo-intro-news]");
+    await expect(news).toContainText("27. September 2026");
+    await expect(news).toContainText("EBRD");
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("erfundenes Weingut");
+    await expect(page.locator("[data-demo-intro]")).toContainText("Auf dieser Seite läuft keine KI.");
+    const fold = await page.evaluate(() => {
+      const bar = document.querySelector("[data-mobile-tab-bar]");
+      return bar && getComputedStyle(bar).display !== "none" ? bar.getBoundingClientRect().top : window.innerHeight;
     });
-    await expect(page.getByRole("heading", { level: 2, name: /Fakt 1 von 10/ })).toBeVisible();
-    await page.evaluate(() => {
-      window.location.hash = "pv";
-    });
-    await expect(page.getByRole("heading", { level: 2, name: /Fakt 8 von 10/ })).toBeVisible();
-    expect(errors).toEqual([]);
-  });
-
-  test("the English page runs in English", async ({ page }) => {
-    const errors = watchErrors(page);
-    await open(page, `/en${PATH}`);
-    await expect(page.getByText(ESG_COPY.en.date.friday)).toBeVisible();
-    await expect(page.getByRole("heading", { level: 2, name: /Fact 1 of 10/ })).toBeVisible();
-    await expect(page.getByRole("heading", { level: 2, name: "Answer sheet" })).toBeVisible();
-    await stamp(page, ["bussgeld", "ok", "z13-14", "no"], ESG_COPY.en.card.check);
-    await expect(page.getByRole("heading", { level: 3, name: ESG_COPY.en.feedback.grades.right })).toBeFocused();
-    expect(errors).toEqual([]);
-  });
-
-  test("the sheet sticks only when it fits", async ({ page }) => {
-    const errors = watchErrors(page);
-    for (const height of [900, 700]) {
-      await page.setViewportSize({ width: 1440, height });
-      await open(page, PATH);
-      const sheet = page.locator("#antworten");
-      await expect(sheet).toBeVisible();
-      await page.waitForTimeout(150);
-      const [fits, position] = await sheet.evaluate((element) => [
-        element.getAttribute("data-fits"),
-        getComputedStyle(element).position,
-      ]);
-      if (height === 700) expect(position).toBe("static");
-      if (position === "sticky") {
-        expect(fits).toBe("true");
-        // Scroll so the sheet's top has passed the nav, then wait for it to pin.
-        const top = await sheet.evaluate((element) => element.getBoundingClientRect().top + window.scrollY);
-        await page.evaluate((y) => window.scrollTo({ top: y, behavior: "instant" }), top);
-        await expect
-          .poll(async () => {
-            const box = await sheet.boundingBox();
-            return box ? box.y + box.height <= height && box.y >= 0 : false;
-          })
-          .toBe(true);
-      }
+    for (const selector of ["[data-demo-intro]", "[data-demo-start]", "[data-demo-explore]"]) {
+      const bottom = await page.locator(selector).evaluate((element) => element.getBoundingClientRect().bottom);
+      expect(bottom, `${selector} above the tab bar`).toBeLessThanOrEqual(fold);
     }
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    await expectGlasBudget(page, "intro");
     expect(errors).toEqual([]);
   });
 
-  test("passes axe on load and with feedback open", async ({ page }) => {
-    const errors = watchErrors(page);
-    await open(page, PATH);
-    await expect(page.locator(".eb")).toBeVisible();
-    const scan = () =>
-      new AxeBuilder({ page }).include("[data-demo-mount]").withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
-    expect((await scan()).violations).toEqual([]);
-    await stamp(page, ["bussgeld", "notFound", "decl"]);
-    expect((await scan()).violations).toEqual([]);
+  test("step 1: the kit's prompt in the project, Claude's recorded answer, and the cited file at its line", async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await expect(appWindow(page)).toContainText("Darstellung der Claude-App, Antworten aufgezeichnet am 26.10.2026");
+    // The prompt types itself into the composer with the questionnaire attached.
+    await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("1-fragebogen-nordvik.md");
+    await expect(page.locator("[data-w4a-composer]")).toContainText("Zähle vor jeder Jahressumme die eindeutigen Monate im Code.");
+    await expect(caption(page)).toContainText("Tippe auf den Pfeil");
+    // Start hands the keyboard to the send arrow, and the sidebar is a picture apart from Customize.
+    await expect(page.locator("[data-w4a-send]")).toBeFocused();
+    await expect(page.locator("[data-w4a-send]")).toHaveAccessibleName("Aufzeichnung abspielen");
+    await expect(appWindow(page).locator("[data-w4a-title]").first()).toContainText("New chat");
+
+    await sendAndFinish(page, "schritt-1");
+    const turn = page.locator('[data-w4a-turn="schritt-1"]');
+    await expect(turn.locator("[data-w4a-answer]")).toContainText("September 2025");
+    await expect(turn.locator(".w4a-meta")).toContainText("Claude Code 2.1.310");
+    await expect(caption(page)).toContainText("5 der 8 Antworten");
+    await expect(caption(page)).toContainText("nur 11 Monate");
+
+    // The activity folds when the answer stands, and opens on a press: the skill, the files, the code.
+    const toggle = turn.locator("[data-w4a-activity-toggle]");
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await toggle.click();
+    await expect(turn.locator('[data-w4a-act="skill"]')).toContainText("esg-nachweise");
+    await expect(turn.locator('[data-w4a-act="thinking"]').first()).toBeVisible();
+
+    // A citation opens the file at the cited lines, beside the chat or as a sheet.
+    await turn.locator('[data-w4a-cite="strom_2025.csv"]').first().click();
+    const file = page.locator('[data-w4a-fileview="ordner/strom_2025.csv"]');
+    await expect(file).toBeVisible();
+    await expect(file.locator("li[data-marked]").first()).toBeVisible();
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    await expectGlasBudget(page, "step 1 with the cited file");
     expect(errors).toEqual([]);
+  });
+
+  test("step 1 by hand: twelve rows are eleven months, and September is missing", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await sendAndFinish(page, "schritt-1");
+    await openCheck(page);
+    await page.locator("[data-w4a-month-all]").click();
+    await expect(page.locator("[data-w4a-month-count]")).toHaveAttribute("data-w4a-month-count", "11");
+    await expect(page.locator("[data-w4a-month-missing]")).toContainText("September 2025");
+  });
+
+  test("step 2: three quotes on the certificate give the verdict Lücke beside Claude's answer", async ({ page }) => {
+    await openBeat(page, "schritt-2");
+    await sendAndFinish(page, "schritt-2");
+    await expect(caption(page)).toContainText("Zertifizierte Bio-Weinberge");
+    await openCheck(page);
+    await expect(async () => {
+      await connect(page, "zertifiziert", 4);
+      await expect(page.locator('[data-w4-handle="zertifiziert"]')).toHaveAttribute("data-state", "linked", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await connect(page, "flaeche", 6);
+    await connect(page, "stichtag", 8);
+    await expect(page.locator("[data-w4-card-status]")).toHaveAttribute("data-w4-card-status", "luecke");
+  });
+
+  test("steps 4 and 5: the register's counts, then the late invoice fills September", async ({ page }) => {
+    await openBeat(page, "schritt-4");
+    await sendAndFinish(page, "schritt-4");
+    await expect(caption(page)).toContainText("9 Antworten sind belegt, 3 schwach belegt und 9 haben eine Lücke");
+    await page.locator("[data-demo-next]").click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "schritt-5");
+    // Step 5 stays in the chat of step 4: its turn is still there.
+    await expect(page.locator('[data-w4a-turn="schritt-4"]')).toHaveCount(1);
+    await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("rechnung-EL-25-09.png");
+    await sendAndFinish(page, "schritt-5");
+    await expect(caption(page)).toContainText("10 Antworten belegt, 4 schwach belegt und 7 haben eine Lücke");
+    // The file Claude wrote sits under its answer as a plain file name.
+    await expect(page.locator('[data-w4a-turn="schritt-5"] [data-w4a-produced]')).toContainText("nachweisregister.xlsx");
+    await openCheck(page);
+    await page.locator("[data-w4-invoice-toggle]").click();
+    await expect(page.locator("[data-w4-f2-status]")).toHaveAttribute("data-w4-f2-status", "belegt");
+    await expect(page.locator("[data-w4-f2]")).toContainText("320,9");
+    await expect(page.locator("[data-w4a-register-sheet]")).toContainText("Status");
+  });
+
+  test("a prediction before Send is set beside Claude's answer and never scored", async ({ page }) => {
+    await openBeat(page, "schritt-3");
+    await expect(page.locator("[data-w4a-predict-value]")).toHaveText("offen");
+    await page.locator("[data-w4a-predict-more]").click();
+    await page.locator("[data-w4a-predict-less]").click();
+    await page.locator("[data-w4a-predict-less]").click();
+    await expect(page.locator("[data-w4a-predict-value]")).toHaveText("6,5 Jahre");
+    await sendAndFinish(page, "schritt-3");
+    await expect(caption(page)).toContainText("6,5 Jahre");
+    await expect(caption(page)).toContainText("5,0 Jahre");
+  });
+
+  test("measured: the median with Claude, and by hand honestly not measured", async ({ page }) => {
+    await openBeat(page, "gemessen");
+    await expect(page.locator("[data-w4a-measured-median]")).toHaveText("8 Min. 32 s");
+    await expect(page.locator("[data-w4a-measured]")).toContainText("nicht gemessen");
+    await expect(caption(page)).toContainText("in 3 Läufen am 26.10.2026");
+  });
+
+  test("your Claude: four install steps on Weiter, and the skill zip to download", async ({ page }) => {
+    await openBeat(page, "dein-claude");
+    await expect(page.locator("[data-w4a-install]")).toHaveAttribute("data-w4a-install", "0");
+    for (const step of ["1", "2", "3"]) {
+      await page.locator("[data-demo-next]").click();
+      await expect(page.locator("[data-w4a-install]")).toHaveAttribute("data-w4a-install", step);
+    }
+    await expect(page.locator("[data-w4a-skill-row]")).toContainText("esg-nachweise");
+    await expect(page.locator("a[data-w4a-skill-download]")).toHaveAttribute("href", "/skills/esg-nachweise.zip");
+    await page.locator("[data-demo-next]").click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "mitnehmen");
+    await expect(page.locator('[data-w4-take="prompts"] .w4-prompt')).toHaveCount(5);
+  });
+
+  test("r starts over: the chat is empty and the first prompt waits again", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await sendAndFinish(page, "schritt-1");
+    await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await page.keyboard.press("r");
+    await expect(clock(page)).toHaveAttribute("data-beat", "schritt-1");
+    await expect(page.locator("[data-w4a-turn]")).toHaveCount(0);
+    await expect(page.locator("[data-w4a-composer]")).toContainText("Beantworte den angehängten Fragebogen");
+  });
+
+  test("reduced motion: the whole answer stands at once", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await openBeat(page, "schritt-3");
+    await firstPress(page, "[data-w4a-send]", () => expect(page.locator('[data-w4a-turn="schritt-3"]')).toHaveAttribute("data-phase", "done", { timeout: 1000 }));
+    await expect(page.locator('[data-w4a-turn="schritt-3"] [data-w4a-answer]')).toContainText("279,7 MWh");
+  });
+
+  test("English: the run's one different status is named, and the take-home links", async ({ page }) => {
+    await page.goto(`/en${PATH}`, { waitUntil: "networkidle" });
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("invented North Macedonian winery");
+    await openBeat(page, "schritt-1", "/en");
+    await sendAndFinish(page, "schritt-1");
+    await expect(caption(page)).toContainText("For Q6, Claude wrote");
+    await openBeat(page, "mitnehmen", "/en");
+    await expect(page.locator('[data-w4-take="skill"] a[download]')).toHaveAttribute("href", /esg-nachweise\.zip$/);
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+  });
+});
+
+test.describe(`${PATH} on a 390 x 664 phone`, () => {
+  test.use({ viewport: { width: 390, height: 664 }, hasTouch: true });
+
+  test("the Claude phone app: chat full screen, the composer above the dock, the check as a sheet", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await expect(appWindow(page)).toHaveAttribute("data-phone", "");
+    const send = await page.locator("[data-w4a-send]").boundingBox();
+    const dock = await page.locator(".w4-dock").boundingBox();
+    if (!send || !dock) throw new Error("no send button or dock");
+    expect(send.y + send.height, "the send arrow above the dock").toBeLessThanOrEqual(dock.y);
+    await sendAndFinish(page, "schritt-1");
+    // After the answer the chat gets the room: the window is far taller than the dock, and the answer starts in view.
+    const room = await page.evaluate(() => ({
+      window: document.querySelector("[data-w4a-window]")?.getBoundingClientRect().height ?? 0,
+      dock: document.querySelector(".w4-dock")?.getBoundingClientRect().height ?? 0,
+    }));
+    expect(room.window, "the chat window").toBeGreaterThanOrEqual(340);
+    expect(room.dock, "the dock").toBeLessThanOrEqual(130);
+    await expect(page.locator('[data-w4a-turn="schritt-1"] [data-w4a-activity]')).toBeInViewport();
+    // Von vorn sits in the dock row, inside the dock.
+    const restart = await page.locator(".w4-dock [data-demo-restart]").boundingBox();
+    const dockNow = await page.locator(".w4-dock").boundingBox();
+    if (!restart || !dockNow) throw new Error("no restart in the dock");
+    expect(restart.x + restart.width).toBeLessThanOrEqual(dockNow.x + dockNow.width);
+    // The check never opens by itself on a phone; the caption line in the dock opens it with the whole caption.
+    await expect(page.locator("[data-w4a-step]")).toHaveCount(0);
+    await page.locator("[data-w4a-capline]").click();
+    await expect(page.locator('[data-w4a-step="schritt-1"]')).toBeVisible();
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+    await expectGlasBudget(page, "phone with the sheet open");
   });
 });

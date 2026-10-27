@@ -63,9 +63,10 @@ function centralHeader(name, content, crc, offset, { time, date }) {
 
 /**
  * Build the stored ZIP from [pathInsideKit, Buffer] pairs, sorted by path. Every entry is
- * stored under crvena-zemja-esg-kit/ and the archive is inspected before it is returned.
+ * stored under `prefix` (crvena-zemja-esg-kit/ unless given) and the archive is inspected
+ * before it is returned.
  */
-export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
+export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE, prefix = KIT_PREFIX } = {}) {
   const stamp = dosDateTime(isoDate);
   const sorted = [...entries].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
   const locals = [];
@@ -78,7 +79,7 @@ export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
     if (!/^[A-Za-z0-9._\-/]+$/.test(file) || file.split("/").includes("..")) throw new Error(`Kit entry name is not a plain relative path: ${file}`);
     if (seen.has(file)) throw new Error(`Duplicate kit entry: ${file}`);
     seen.add(file);
-    const name = Buffer.from(`${KIT_PREFIX}${file}`, "utf8");
+    const name = Buffer.from(`${prefix}${file}`, "utf8");
     const crc = crc32(content);
     const local = localHeader(name, content, crc, stamp);
     locals.push(local, name, content);
@@ -93,16 +94,16 @@ export function buildKitArchive(entries, { isoDate = KIT_RELEASE_DATE } = {}) {
   end.writeUInt32LE(directory.length, 12);
   end.writeUInt32LE(offset, 16);
   const archive = Buffer.concat([...locals, directory, end]);
-  inspectZipArchive(archive, INSPECTION);
+  inspectZipArchive(archive, { ...INSPECTION, label: `${prefix.slice(0, -1)}.zip` });
   return archive;
 }
 
 /** The archive's files as [pathInsideKit, Buffer] pairs, after the repository's ZIP inspection. */
-export function readKitArchive(archive) {
-  return inspectZipArchive(archive, INSPECTION)
+export function readKitArchive(archive, { prefix = KIT_PREFIX } = {}) {
+  return inspectZipArchive(archive, { ...INSPECTION, label: `${prefix.slice(0, -1)}.zip` })
     .filter((entry) => entry.kind === "file")
     .map((entry) => {
-      if (!entry.path.startsWith(KIT_PREFIX)) throw new Error(`Kit entry outside ${KIT_PREFIX}: ${entry.path}`);
-      return [entry.path.slice(KIT_PREFIX.length), entry.bytes];
+      if (!entry.path.startsWith(prefix)) throw new Error(`Kit entry outside ${prefix}: ${entry.path}`);
+      return [entry.path.slice(prefix.length), entry.bytes];
     });
 }

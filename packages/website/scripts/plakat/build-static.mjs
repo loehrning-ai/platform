@@ -16,8 +16,6 @@
  *                                                        scripts/workshop04/export-esg-passport.mjs)
  *     scripts/course03/guide.html, builder/page/builder.html, demo/demo.html
  *                                                        (then course03/refresh-published.mjs)
- *     public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html
- *                                                        (then course03/overrides.mjs capture)
  *
  * The palette mapping is WORKSHOP_PLAKAT and nothing else: switching a
  * workshop's scene is one edit in palettes.ts plus a run of this script and
@@ -53,7 +51,6 @@ const SCENE_BLOCK_TARGETS = {
     { file: join(REPO, "scripts/course03/guide.html"), kind: "html" },
     { file: join(REPO, "scripts/course03/builder/page/builder.html"), kind: "html" },
     { file: join(REPO, "scripts/course03/demo/demo.html"), kind: "html" },
-    { file: join(PUBLIC_WORKSHOPS, "datenbereitschaft-fuer-ki/data-readiness-kit/readiness-lab.html"), kind: "html" },
   ],
 };
 

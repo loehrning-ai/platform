@@ -32,7 +32,7 @@
 #   AI"). F00 and F01 add the freshness clock. B- cases check the builder's access setup.
 #   Q- cases check reconciliations (Q07: declared lineage). T- cases are teaching examples
 #   for the extra metric shapes; 70_checks.sql runs them too.
-#   template_id names the same case in the kit's semantic-template/verified-questions.yml,
+#   template_id names the same case in ../semantic-template/verified-questions.yml,
 #   which uses the same ids (G01, C01, R01, R02, D01, F01).
 #   C01, R01 and R02 belong to the AI/policy plane: the builder has no policy engine.
 #   In the deck they were course rules checked outside the AI tool, before any SQL. Here

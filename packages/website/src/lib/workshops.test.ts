@@ -12,6 +12,32 @@ import {
   type WorkshopMaterial,
 } from "./workshops";
 
+
+/** Kits published in German as well: German edition -> the English one it mirrors. */
+const GERMAN_KIT_EDITIONS: Readonly<Record<string, string>> = {
+  "/workshops/ki-prognosen-einschaetzen/prognose-pruefen-kit.zip": "/workshops/ki-prognosen-einschaetzen/forecast-check.zip",
+  "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit-de.zip":
+    "/workshops/geschaeftsberichte-mit-ki-lesen/northwind-analyst-kit.zip",
+  "/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip": "/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
+  "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip": "/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
+};
+
+/** Kits that carry both languages in one zip: the material is labelled in the page's language. */
+const BILINGUAL_KITS: ReadonlySet<string> = new Set(["/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip"]);
+
+/**
+ * A deck published in two editions: the German page links slides.html (German),
+ * the English page en/slides.html (English), built from one copy source.
+ */
+const DECK_EDITIONS: ReadonlySet<string> = new Set(["audit-vorbereitung-mit-ki"]);
+const isDeckEdition = (slug: string, material: WorkshopMaterial) => material.role === "deck" && DECK_EDITIONS.has(slug);
+
+/**
+ * Workshops whose deck and kit exist in German only (Workshop 06: German paperwork, a German case). The
+ * English page describes them in English and labels them German, so nobody expects an English file.
+ */
+const GERMAN_ONLY: ReadonlySet<string> = new Set(["angebote-mit-ki-vergleichen"]);
+
 describe("workshops catalog", () => {
   it("is non-empty", () => {
     expect(WORKSHOPS.length).toBeGreaterThan(0);
@@ -72,12 +98,12 @@ describe("workshops catalog", () => {
 
   it("numbers workshops from data and follows one naming pattern in both locales", () => {
     const formats = {
-      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Live-Workshop mit Deck", "Live-Workshop mit Deck", "Live-Workshop mit Deck"],
-      en: ["Self-study kit", "Self-study kit", "Live workshop with deck", "Live workshop with deck", "Live workshop with deck"],
+      de: ["Selbstlern-Kit", "Selbstlern-Kit", "Live-Workshop mit Deck", "Live-Workshop mit Deck", "Live-Workshop mit Deck", "Live-Workshop mit Deck"],
+      en: ["Self-study kit", "Self-study kit", "Live workshop with deck", "Live workshop with deck", "Live workshop with deck", "Live workshop with deck"],
     } as const;
     for (const locale of ["de", "en"] as const) {
       const workshops = getWorkshops(locale);
-      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03", "04", "05"]);
+      expect(workshops.map(({ number }) => number)).toEqual(["01", "02", "03", "04", "05", "06"]);
       for (const [index, workshop] of workshops.entries()) {
         expect(workshop.eyebrow).toBe(
           `Workshop ${workshop.number} · ${workshop.topic}`,
@@ -103,10 +129,10 @@ describe("workshops catalog", () => {
     );
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "de")?.materials[0]?.label,
-    ).toBe("Deck · 22 Folien");
+    ).toBe("Deck · 15 Folien");
     expect(
       getWorkshopBySlug("geschaeftsberichte-mit-ki-lesen", "en")?.materials[0]?.label,
-    ).toBe("Deck · 22 slides");
+    ).toBe("Deck · 15 slides");
   });
 
   it("gives every real-world second case a source and a decision", () => {
@@ -199,13 +225,10 @@ describe("workshops catalog", () => {
       for (const material of workshop.materials) {
         // The practice demo is a page of this site, not a published file.
         if (material.role === "demo") {
-          expect(material.href).toBe(`/demos/${workshop.slug}`);
+          expect(material.href).toBe(`/demos/${workshop.slug}?source=workshop`);
           continue;
         }
-        expect(
-          material.href.startsWith(`/workshops/${workshop.slug}/`),
-          material.href,
-        ).toBe(true);
+        expect(material.href.startsWith(`/workshops/${workshop.slug}/`), material.href).toBe(true);
         // An in-page fragment (#section) addresses part of an existing file.
         const relativePath = material.href.replace(/^\//, "").split("#")[0];
         const filePath = resolve(process.cwd(), "public", relativePath);
@@ -232,26 +255,37 @@ describe("workshops catalog", () => {
         germanWorkshop.steps.map(({ n }) => n),
       );
       // The demo material is the same page in each locale: /en/demos/<slug>
-      // in English, in the page's own language.
-      const materialShape = ({
-        href,
-        kind,
-        language,
-        role,
-        phase,
-        minutes,
-        optional,
-        primary,
-      }: WorkshopMaterial) => ({
-        href: role === "demo" ? href.replace(/^\/en\//, "/") : href,
-        kind,
-        language: role === "demo" ? "page" : language,
-        role,
-        phase,
-        minutes,
-        optional,
-        primary,
-      });
+      // in English, in the page's own language. A kit with a German edition
+      // is the same material as its English one. A deck published in both
+      // languages is the same deck in the page's language: its English
+      // edition lives under en/slides.html.
+      const materialShape = (material: WorkshopMaterial) => {
+        const { href, kind, language, role, phase, minutes, optional, primary } = material;
+        const edition = isDeckEdition(germanWorkshop.slug, material);
+        return {
+          href:
+            role === "demo"
+              ? href.replace(/^\/en\//, "/")
+              : edition
+                ? href.replace(/\/en\/slides\.html$/, "/slides.html")
+                : (GERMAN_KIT_EDITIONS[href] ?? href.replace(/\/en\/slides\.html$/, "/slides.html")),
+          kind,
+          language:
+            role === "demo" ||
+            edition ||
+            BILINGUAL_KITS.has(href) ||
+            (role === "deck" && (language !== "en" || href.endsWith("/en/slides.html")))
+              ? "page"
+              : href in GERMAN_KIT_EDITIONS
+                ? "en"
+                : language,
+          role,
+          phase,
+          minutes,
+          optional,
+          primary,
+        };
+      };
       expect(englishWorkshop?.materials.map(materialShape)).toEqual(
         germanWorkshop.materials.map(materialShape),
       );
@@ -294,15 +328,33 @@ describe("workshops catalog", () => {
     }
   });
 
-  it("states that every currently published material is English", () => {
+  it("states that every currently published material is English, apart from the German-only workshop", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         for (const material of workshop.materials) {
-          // The practice demo is a page in the reader's language.
-          if (material.role === "demo") {
+          // The practice demo is a page in the reader's language, and so is a deck with editions.
+          if (material.role === "demo" || isDeckEdition(workshop.slug, material)) {
             expect(material.language).toBe(locale);
             continue;
           }
+          // A kit with both languages in one zip is labelled in the page's language.
+          if (BILINGUAL_KITS.has(material.href)) {
+            expect(material.language, material.href).toBe(locale);
+            continue;
+          }
+          // A kit with a German edition offers it on the German page only.
+          if (material.href in GERMAN_KIT_EDITIONS) {
+            expect(locale).toBe("de");
+            expect(material.language).toBe("de");
+            continue;
+          }
+          // A workshop published in German only says so on both pages.
+          if (GERMAN_ONLY.has(workshop.slug)) {
+            expect(material.language, `${locale}/${workshop.slug}/${material.href}`).toBe("de");
+            continue;
+          }
+          // A deck with a German edition links it on the German page.
+          if (material.role === "deck" && material.language === locale) continue;
           expect(
             material.language,
             `${locale}/${workshop.slug}/${material.href}`,
@@ -473,11 +525,14 @@ describe("workshop demo material", () => {
         const demos = workshop.materials.filter((material) => material.role === "demo");
         expect(demos, `${locale}/${workshop.slug}`).toHaveLength(1);
         const [demo] = demos;
-        expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}`);
+        // ?source=workshop makes the demo's back control return to this workshop.
+        expect(demo?.href).toBe(`${locale === "en" ? "/en" : ""}/demos/${workshop.slug}?source=workshop`);
         expect(demo?.language).toBe(locale);
+        // A workshop is its slides (or labs) and its kit; the demo is one link away.
         expect(demo?.primary).toBeUndefined();
         expect(demo?.optional).toBe(true);
         expect(demo?.phase).toBe("during");
+        expect(workshop.materials.filter((material) => material.primary)).toHaveLength(1);
       }
     }
   });

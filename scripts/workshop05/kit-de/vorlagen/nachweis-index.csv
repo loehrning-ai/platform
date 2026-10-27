@@ -1,0 +1,2 @@
+item;request;file;doc_type;date;date_kind;approved_or_owned_by;scope;quote;quote_test;period_test;scope_test;approval_test;status;closing_document;owner;due
+R7;A restore test of your backups from the last 12 months;backup-report_2026-10.txt;PROTOKOLL;2026-11-01;erzeugt;IT-Leitung;Servicepult-Export, Dateiablage;Restore test: not done in 2026.;nicht erfüllt;hält;hält;hält;LÜCKE;Protokoll eines Wiederherstellungstests: Datum, wiederhergestellte Daten, Ergebnis, wer;IT-Leitung;02.12.2026

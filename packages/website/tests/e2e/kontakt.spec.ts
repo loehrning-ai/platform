@@ -9,9 +9,11 @@ test.describe("/kontakt retired route", () => {
     expect(res.headers()["cache-control"]).toContain("public");
   });
 
-  test("following the route lands on /feedback", async ({ page }) => {
+  test("following the route lands on the contact page", async ({ page }) => {
     await page.goto("/kontakt", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/feedback$/);
-    await expect(page.getByRole("heading", { name: "Rückmeldung" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Kontakt" }),
+    ).toBeVisible();
   });
 });

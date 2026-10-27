@@ -4,14 +4,14 @@ The repository root defines the authoritative command contract. Continuous integ
 
 ## Pipeline
 
-One workflow blocks, one runs overnight, two inform. The scripts a job calls are
+One workflow blocks, one runs weekly, two inform. The scripts a job calls are
 the scripts a contributor runs: `scripts/ci.mjs` owns the step lists, and the
 root `ci*` commands run it inside the provider-free environment scrubber.
 
 | Workflow file                | Name                      | Runs on                                   | Role                                                                  |
 | ---------------------------- | ------------------------- | ----------------------------------------- | --------------------------------------------------------------------- |
 | `ci.yml`                     | Verify                    | pull requests, push to `main`             | The only blocking gate. Its `verify` check is the release signal.     |
-| `nightly.yml`                | Nightly                   | 02:30 UTC, manual dispatch                | Everything that left the pull-request path. Never blocks a merge.     |
+| `nightly.yml`                | Extended                  | Mondays 04:17 UTC, manual dispatch        | Everything that left the pull-request path. Never blocks a merge.     |
 | `dependency-review.yml`      | Dependency Review         | pull requests                             | GitHub's dependency-graph diff. Informational for deploys.            |
 | `dependency-submission.yml`  | Bun Dependency Submission | `bun.lock` or `package.json` change on `main`, weekly | Feeds the dependency graph. Ignored by deploys. |
 
@@ -29,24 +29,30 @@ is the composite action at `.github/actions/setup`.
 
 | Job       | Check name       | Command            | What it proves                                                                                                                                                                                                                              |
 | --------- | ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, and that `git diff --exit-code` finds no regenerated file. |
-| `unit`    | `unit tests`     | `bun run ci:unit`    | The complete Vitest suite. Coverage floors run nightly.                                                                                                                                                                                      |
-| `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium and the iPhone 13 Chromium viewport.                                                                                           |
+| `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, `bun audit --audit-level=critical` (a critical advisory blocks the PR), and that `git diff --exit-code` finds no regenerated file. |
+| `unit`    | `unit tests`     | `bun run ci:unit`    | The complete Vitest suite.                                                                                                                                                                                                                   |
+| `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium.                                                                                           |
 | `verify`  | `verify`         | inline shell       | Aggregation only. Red unless each of the three results is exactly `success`; failure, cancelled and skipped are all red.                                                                                                                    |
+
+A critical advisory turns `static` red on every pull request, and with it
+`verify` and the deploy gate; that is intended. The fix is a bump or an
+override. When no fixed version exists yet, add `--ignore=GHSA-...` to the
+`audit:critical` script and a dated line here naming the advisory and the
+reason, and remove both once a fix ships. Never drop the step. An outage of
+the npm advisory API also turns `static` red; re-run the job.
 
 `verify` declares `if: always()`. That is load-bearing: a job that is skipped
 when a dependency fails would not be a red check. It is the only job called
 `verify` in any workflow.
 
 The smoke list is `packages/website/tests/e2e/smoke.list`, one spec per line.
-It is curated from the specs that caught real regressions (route matrix, axe and
-target size, SEO, legal, edge states, phone shell, workshop and home locales, the
-plakat contrast, the courses hub). Adding a spec is a one-line diff. A spec
-whose title carries `@quarantine` is skipped by the nightly run and is deleted
+It holds five specs: the route matrix, axe, SEO metadata, edge states and the
+legal pages. Phone layout, locale copy and WebKit run in the weekly extended
+run instead. Adding a spec is a one-line diff. A spec
+whose title carries `@quarantine` is skipped by the weekly run and is deleted
 if still tagged after 14 days; no known-flaky spec belongs in the list. Retries
 are set to one on this path, and a test that passes on its retry does not fail
-the run (`E2E_FAIL_ON_FLAKY` stays unset); the nightly desktop run sets it to
-`1` so those tests are counted there.
+the run.
 
 If the `browser` job's 90th-percentile duration stays above about 10 minutes,
 split it into two shards in `ci.yml`; do not re-add whole browser projects.
@@ -61,7 +67,7 @@ merging.
 
 `scripts/deploy-production.mjs` reads exactly one check: the `verify` check-run
 created by GitHub Actions on the head of `main`, completed and successful. Every
-other check-run (CodeQL, dependency graph, nightly, anything added later) is
+other check-run (CodeQL, dependency graph, the weekly run, anything added later) is
 printed as "Not blocking" and cannot refuse a release. There is no override
 flag. After a re-run the newest `verify` decides.
 
@@ -76,31 +82,26 @@ gh workflow run nightly.yml --ref main
 bun run deploy:production -- --require-nightly --wait --yes
 ```
 
-`--require-nightly` refuses unless the newest completed `Nightly` run is green
-on that commit. Without the flag the script prints the last nightly result as an
+`--require-nightly` refuses unless the newest completed run of `nightly.yml` is
+green on that commit. Without the flag the script prints its last result as an
 information line.
 
-## Nightly (`nightly.yml`)
+## Weekly extended run (`nightly.yml`)
 
-Runs at 02:30 UTC and on `workflow_dispatch` (input `suite`: `all`, `webkit` or
-`lighthouse`). It never blocks a merge. Jobs: the full desktop Chromium, phone
-Chromium and AI-native operator browser suites (sharded, one build each), a
-mobile WebKit run of the smoke list, the mocked-session `/konto` DOM suite,
-advisory Lighthouse (scores in the job summary), coverage with the Vitest
-floors, and `bun run ci:hygiene` (live `bun audit`, licence audit, and the
-self-tests of publication and tooling scripts). The `report` job opens one issue
-labelled `nightly-red` when any job fails, comments on it while it stays red,
-and closes it when a full run is green again. An unread issue means the demoted
-coverage is effectively off, so read it.
+Runs Mondays at 04:17 UTC and on `workflow_dispatch`. It never blocks a merge.
+Four jobs: the full desktop Chromium suite (two shards, one build each), a
+mobile WebKit run of the smoke list, the mocked-session `/konto` DOM suite, and
+`bun run ci:hygiene` (`bun audit` at every level and the licence audit). A red
+test there is fixed or deleted within 7 days; if the run is red two weeks in a
+row, the failing job is cut.
 
 ## Token permissions
 
 Every workflow in `.github/workflows/` sets its default token to
-`contents: read`. Two jobs hold more, each granted at the job level only:
+`contents: read`. One job holds more, granted at the job level only:
 
 | Workflow                    | Job      | Token permissions                        | Why                                                                                                                                                                                                           |
 | --------------------------- | -------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `nightly.yml`               | `report` | `issues: write`                          | Opens, comments on and closes the single `nightly-red` issue with the preinstalled `gh`. It has no checkout and runs no repository code; it runs only on `main`.                                              |
 | `dependency-submission.yml` | `submit` | `contents: write`, `actions: read`       | Submits the Bun dependency snapshot to the dependency graph. It runs only on `main`, downloads the snapshot that the read-only `generate` job built, and neither checks out the tree nor runs repository code. |
 
 Every other job runs with `contents: read` alone. Only GitHub-owned actions
@@ -115,7 +116,7 @@ instead of adding a third-party action.
 | `bun run ci:static` | The `static` job. Afterwards `git status --short` shows any drift CI would reject. |
 | `bun run ci:unit`   | The `unit` job.                                                      |
 | `bun run ci:browser`| The `browser` job. Needs `bunx playwright install chromium` once; honours `E2E_PORT` when 3000 is taken. |
-| `bun run ci:hygiene`| The nightly audits and tool self-tests.                              |
+| `bun run ci:hygiene`| The weekly full advisory and licence audits.                         |
 
 The root workflow and Vercel install with
 `bun install --frozen-lockfile --ignore-scripts`. Root `bunfig.toml` enforces
@@ -146,7 +147,7 @@ layout, and route contracts remain runnable without provider credentials.
 | ------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Live session integration | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project, a public Turnstile test site key, and makes a live password-grant request. | Server-validated session handling, protected account pages, and authenticated client round-trips. It bypasses the magic-link/Turnstile/PKCE login journey. |
 
-The live tier is fail-closed and is not part of credential-free CI; the nightly
+The live tier is fail-closed and is not part of credential-free CI; the weekly
 `konto-dom-mocked` project is DOM coverage, never authentication proof. The live tier requires all nine variables below:
 
 ```text
@@ -188,37 +189,12 @@ link, or exchange a same-browser PKCE code. Those steps require a separate
 isolated hosted login-journey test; a green session-integration run must not be
 reported as proof of the production login flow.
 
-## Release gate: Lighthouse measurements
-
-`lighthouserc.json` is the route inventory and has no separate checker: keep its
-entries canonical, indexable and unique by hand. The measurement runs inside
-`bun run verify:release`, not in pull-request CI.
-
-The complete release command runs the actual Lighthouse measurement from the
-repository root:
-
-```bash
-bun run verify:release
-```
-
-The command creates a fresh provider-free production build and a
-content-and-environment-bound receipt before measuring. Its internal
-`:built` variant rejects a missing or stale receipt. The release gate
-passes only when the command completes for every URL in `lighthouserc.json`,
-the perfect-score accessibility assertion passes, and every warning-level
-budget or score regression is reviewed. Reports are written only to
-`.lighthouseci/reports`; they are local release evidence and remain excluded
-from the public tree. The complete 35-route, three-run measurement stays out of
-CI because performance scores vary with runner load and Chromium conditions.
-The nightly run measures five routes three times each and reports the scores in
-its job summary without failing the run.
-
 ## Release validation
 
 `bun run verify:release` first runs an unwrapped strict preflight against the
 supplied provider environment. This prevents the provider-free verification
 wrapper from hiding partial or unattested production configuration. It then
-runs `ci:static` and `ci:unit`, then the full Lighthouse gate, the server-log
+runs `ci:static` and `ci:unit`, then the server-log
 privacy probe, the browser smoke list and the launch gate against one
 provider-free build receipt, then finishes
 by compiling the supplied provider configuration with

@@ -5,7 +5,7 @@
  * deck over a BroadcastChannel and sends the same keys the deck listens to, so build steps, arrows and Shift+R
  * behave exactly as on the projector. Timers live in this window only; nothing is stored.
  *
- * Messages (channel "deck-presenter:<folder path>"):
+ * Messages (channel "deck-presenter:<deck id>", the id from <html data-deck-id>):
  *   deck -> view   { from: "deck", type: "state", index, total, label, section, step, steps }
  *   view -> deck   { from: "presenter", type: "hello" | "key" (key, shiftKey) | "goto" (index) }
  */
@@ -13,7 +13,7 @@
   'use strict';
   const body = document.body;
   const SLUG = body.dataset.slug || '';
-  const CHANNEL = 'deck-presenter:' + location.pathname.replace(/[^/]*$/, '');
+  const CHANNEL = 'deck-presenter:' + (document.documentElement.getAttribute('data-deck-id') || SLUG);
   const BLOCKS = [['Say', 'What to say', 'say'], ['Students', 'What students do', 'students'], ['Cue', 'Cue and clicks', 'cue'], ['Remember', 'Do not forget', 'remember']];
   const $ = (id) => document.getElementById(id);
   const pad = (n) => String(n).padStart(2, '0');
@@ -127,8 +127,9 @@
     const t = e.target;
     if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
     if ((e.key === ' ' || e.key === 'Enter') && t && /^(BUTTON|A)$/.test(t.tagName)) return;
-    if (/^(ArrowRight|ArrowLeft|PageDown|PageUp| |Home|End)$/.test(e.key)) { e.preventDefault(); sendKey(e.key, false); }
-    else if ((e.key === 'r' || e.key === 'R') && e.shiftKey) { e.preventDefault(); sendKey('R', true); }
+    if (e.repeat) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); sendKey(e.key, false); }
+    else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); sendKey('R', true); }
     else if (e.key === 'Escape') window.close();
   });
   $('pv-prev').addEventListener('click', () => sendKey('ArrowLeft'));

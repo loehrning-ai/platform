@@ -1,0 +1,128 @@
+/*
+ * Hero scene "the links" (Workshop 05, hero-links-scene.tsx). Base styles =
+ * the finished still frame (all eight links drawn; R1 and R6 solid, four
+ * dashed, two broken, every failing file framed). Every animation sits under
+ * no-preference; only transform, opacity and stroke-dashoffset move. 9 s
+ * loop: the links draw in (0 to 1.4 s), the band sweeps the rows (1.6 to
+ * 5.5 s) and each failing row turns as the band passes it, rest, then all of
+ * it fades and the links draw again. Keyframe percentages are seconds / 9.
+ */
+.hk-root {
+  overflow: visible;
+  --hk-ink: var(--color-scene-ink);
+  --hk-mid: var(--color-scene-mid);
+  --hk-ground: var(--color-scene-ground);
+  --hk-paper: var(--color-paper);
+}
+.hk-dust { fill: var(--hk-ink); opacity: 0.35; }
+.hk-request { fill: var(--hk-paper); stroke: var(--hk-ink); stroke-width: 2.5; }
+.hk-id { fill: var(--hk-ink); }
+.hk-file { fill: var(--hk-paper); stroke: var(--hk-ink); stroke-width: 2.5; }
+.hk-bar { fill: none; stroke: var(--hk-ink); stroke-width: 6; stroke-linecap: butt; opacity: 0.32; }
+.hk-bar-mono { stroke-width: 7; opacity: 0.5; stroke-dasharray: 7 3; }
+.hk-tick { fill: var(--hk-ink); }
+.hk-links { fill: none; stroke: var(--hk-ink); stroke-width: 3; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.hk-erase { fill: none; stroke: var(--hk-ground); stroke-width: 8; }
+.hk-weak { fill: none; stroke: var(--hk-mid); stroke-width: 3; stroke-dasharray: 9 7; }
+.hk-gap { fill: none; stroke: var(--hk-mid); stroke-width: 3; }
+.hk-gap-cut { fill: none; stroke: var(--hk-mid); stroke-width: 3; }
+.hk-tick-fail { fill: var(--hk-mid); }
+.hk-tick-open { fill: var(--hk-paper); stroke: var(--hk-ink); stroke-width: 1.5; }
+.hk-file-flag { fill: none; stroke: var(--hk-mid); stroke-width: 4; }
+.hk-scan { fill: var(--hk-ink); fill-opacity: 0.08; }
+/* The still frame has no sweep. */
+.hk-scan { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .hk-far, .hk-cards, .hk-scan, .hk-fail-2, .hk-fail-3, .hk-fail-4, .hk-fail-5, .hk-fail-7, .hk-fail-8 {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .hk-cards { animation: hk-rise 0.9s cubic-bezier(0.22, 0.9, 0.3, 1) both; }
+  .hk-far { animation: hk-drift 9s ease-in-out infinite; }
+  .hk-links { animation: hk-draw 9s linear infinite; }
+  .hk-scan { animation: hk-scan 9s linear infinite; }
+  .hk-fail-2 { animation: hk-fail-2 9s linear infinite; }
+  .hk-fail-3 { animation: hk-fail-3 9s linear infinite; }
+  .hk-fail-4 { animation: hk-fail-4 9s linear infinite; }
+  .hk-fail-5 { animation: hk-fail-5 9s linear infinite; }
+  .hk-fail-7 { animation: hk-fail-7 9s linear infinite; }
+  .hk-fail-8 { animation: hk-fail-8 9s linear infinite; }
+  @keyframes hk-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes hk-drift {
+    0%, 50%, 100% { transform: translate(0, 0) }
+    25%, 75% { transform: translate(-6px, 4px) }
+  }
+  @keyframes hk-draw {
+    0% { opacity: 1; stroke-dashoffset: 1; animation-timing-function: cubic-bezier(0.4, 0, 0.3, 1) }
+    15.556% { opacity: 1; stroke-dashoffset: 0 }
+    93.333% { opacity: 1; stroke-dashoffset: 0; animation-timing-function: ease-in }
+    97.778% { opacity: 0; stroke-dashoffset: 0 }
+    99.9% { opacity: 0; stroke-dashoffset: 1 }
+    100% { opacity: 1; stroke-dashoffset: 1 }
+  }
+  @keyframes hk-scan {
+    0% { opacity: 0; transform: translateY(0) }
+    17.778% { opacity: 0; transform: translateY(0) }
+    19.444% { opacity: 1; transform: translateY(0); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1) }
+    57.778% { opacity: 1; transform: translateY(294px) }
+    61.111% { opacity: 0; transform: translateY(294px) }
+    100% { opacity: 0; transform: translateY(294px) }
+  }
+  @keyframes hk-fail-2 {
+    0% { opacity: 0; transform: scale(0.96) }
+    25.159% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    28.492% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.778% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+  @keyframes hk-fail-3 {
+    0% { opacity: 0; transform: scale(0.96) }
+    30.873% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    34.206% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.778% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+  @keyframes hk-fail-4 {
+    0% { opacity: 0; transform: scale(0.96) }
+    36.587% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    39.921% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.778% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+  @keyframes hk-fail-5 {
+    0% { opacity: 0; transform: scale(0.96) }
+    42.302% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    45.635% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.778% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+  @keyframes hk-fail-7 {
+    0% { opacity: 0; transform: scale(0.96) }
+    53.73% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    57.063% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.778% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+  @keyframes hk-fail-8 {
+    0% { opacity: 0; transform: scale(0.96) }
+    59.444% { opacity: 0; transform: scale(0.96); animation-timing-function: cubic-bezier(0.2, 0.9, 0.25, 1.2) }
+    62.778% { opacity: 1; transform: scale(1) }
+    93.333% { opacity: 1; transform: scale(1); animation-timing-function: ease-in }
+    97.778% { opacity: 0; transform: scale(1) }
+    100% { opacity: 0; transform: scale(0.96) }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hk-root, .hk-root * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
