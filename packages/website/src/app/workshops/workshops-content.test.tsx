@@ -233,7 +233,7 @@ describe("<WorkshopsContent>", () => {
     expect(within(rows[3]).queryByText("Neu")).toBeNull();
     expect(within(rows[3]).getByText(/Fünf Kästchen fangen den Fehler/).tagName).toBe("P");
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
-    expect(within(rows[2]).getByText(/Drei ESG-Anfragen an ein Weingut/).tagName).toBe("P");
+    expect(within(rows[2]).getByText(/Ein Weingut in Nordmazedonien prüft mit Claude/).tagName).toBe("P");
     expect(rows[2].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(within(rows[1]).getByText(/Unterlagen für ein Audit zu ordnen/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();

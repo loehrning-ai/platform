@@ -117,6 +117,10 @@ test("angebote-mit-ki-vergleichen deck links back to its workshop and shows its 
   await expect(reset).toHaveText("Neu startenR");
   await expect(presenter).toHaveText("ModerationP");
   expect(await page.locator("#controls").evaluate((element) => getComputedStyle(element).opacity)).toBe("1");
+  // Like decks 01 to 05, the back link fades while the mouse rests (so it leaves the mark free) and returns on movement.
+  await expect(back).toHaveAttribute("data-idle", "", { timeout: 6000 });
+  await page.mouse.move(400, 300);
+  await expect(back).not.toHaveAttribute("data-idle", "");
   await page.evaluate(() => {
     location.hash = "#exit/1";
   });

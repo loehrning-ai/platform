@@ -163,7 +163,7 @@ test("both editions have the same slides, steps and bound figures, and every fig
   const [de, en] = [text(EDITIONS.de), text(EDITIONS.en)];
   const shape = slideShape(de);
   assert.deepEqual(slideShape(en), shape);
-  assert.equal(shape.filter((row) => row.includes(":main:")).length, 15);
+  assert.equal(shape.filter((row) => row.includes(":main:")).length, 19);
   assert.equal(shape.filter((row) => row.includes(":appendix:")).length, 3);
   const lastMain = shape.findLastIndex((row) => row.includes(":main:"));
   assert.ok(shape.findIndex((row) => row.includes(":appendix:")) > lastMain, "appendix after the last main slide");
