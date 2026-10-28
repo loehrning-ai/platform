@@ -1,10 +1,10 @@
 /**
- * Workshop 04 deck, slides 9 to 16 and the appendix: the Claude project, the five hands-on steps
- * in the Claude window, the measured run and the take-home. Each function returns one <section>.
+ * Workshop 04 deck, slides 10 to 17 and the appendix: the Claude project, the five steps Tim runs live
+ * in Claude Desktop, the measured run and the take-home. Each function returns one <section>.
  * Kit files travel into the window as stage-level copies (fly() in parts.mjs, geometry.mjs).
  */
 import { geo } from "./geometry.mjs";
-import { activity, cw, cwFile, cwSide, esc, FILES, file, fly, foot, head, now, prompt, REQUESTS, s, section, stagger } from "./parts.mjs";
+import { activity, cw, cwFile, cwSide, esc, FILES, file, fly, foot, head, job, liveHead, pollMini, pollOptions, prompt, REQUESTS, s, section, stagger } from "./parts.mjs";
 
 const act = (c, k, win, icon, html, done = true) => `<p class="cw-act"${done ? " data-done" : ""}${s(k, { fx: "pop", win })} style="--origin:left center">${c.ico(icon)}${html}</p>`;
 
@@ -40,14 +40,19 @@ export function project(c) {
 <div class="pjv__card pjv__card--files"><p class="pjv__h">${c.ico("book")}Project knowledge<em><b${s(2, { fx: "none", win: ".1,1", count: "0,13,0" })}>13</b> files</em></p><div class="pjv__files">${slots}</div></div></div></div>`;
   return section(
     { id: "projekt", label: c.t("Projekt anlegen", "Create the project"), steps: 3, durations: "1700,1700,3200,1300" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Einrichten · einmal", "Set up · once")}</p><h2 class="headline headline--m">${c.t("Das Kit wird ein <em>Claude-Projekt</em>", "The kit becomes a <em>Claude project</em>")}</h2></div>${now(c, c.t("Jetzt ihr · 10 Min", "Your turn · 10 min"), s(3, { fx: "pop", win: ".5,1" }))}</header>
+    `${liveHead(c, c.t("Einrichten", "Set up"), [
+      [c.t("Neues Projekt", "New project"), 0, "0,.4", 1, "0,.3"],
+      [c.t("Anweisungen einfügen", "Paste instructions"), 1, ".05,.4", 2, "0,.3"],
+      [c.t("13 Dateien laden", "Upload 13 files"), 2, ".05,.4", 3, "0,.3"],
+      [c.t("Codeausführung an", "Code execution on"), 3, ".1,.5"],
+    ], c.t("Das Kit wird ein <em>Claude-Projekt</em>", "The kit becomes a <em>Claude project</em>"))}
 <div class="stage pj">
-<div class="kit-folder pjk"><p class="kit-folder__head">${c.ico("folder")}${c.t("ordner/", "files/")}<span class="file__meta" style="margin-left:auto">13</span></p><ol class="pjk__list">${list}</ol><div class="pjk__instr"${s(1, { fx: "dim", win: "0,.4" })}>${file("md", instrName, "")}</div></div>
+<div class="kit-folder pjk"><p class="kit-folder__head">${c.ico("folder")}${c.t("ordner/", "files/")}<span class="file__meta" style="margin-left:auto">13</span></p><ol class="pjk__list">${list}</ol><div class="pjk__instr"${s(1, { fx: "dim", win: "0,.4" })}>${file("md", instrName, "")}</div>${job(c, c.t("Ihr erklärt:", "You explain:"), c.t("Warum kommen die Anfragen nicht ins Projekt?", "why do the requests stay out of the project?"), s(2, { fx: "pop", win: ".55,1" }) + ' style="--origin:left center"', "pjk__job")}</div>
 ${cw(c, { crumbs: ["Projects", c.kit.project], side, cls: "pj__cw", attrs: s(0, { fx: "fly", win: "0,.6" }), style: "--dy:50px;--s:.97" }, main)}
 ${fly(`<i>md</i>${instrName}`, g.instr, { k: 1, win: "0,.42", cls: "pjv__f", lift: 120 })}
 ${flyers}
 </div>
-${foot(c, 9)}`,
+${foot(c, 10)}`,
   );
 }
 
@@ -58,18 +63,19 @@ function chats(c, n) {
 }
 
 /** A room prediction with the engine poll, 0 to max, over the empty chat. */
-function predict(c, name, question, max) {
-  const poll = Array.from({ length: max + 1 }, (_, n) => `<button class="poll__opt" type="button" data-poll="${name}" data-value="${n}"><span class="poll__key">${n}</span><b data-poll-n>0</b></button>`).join("");
-  return `<div class="predict surface surface--strong"${s(0, { fx: "pop", win: ".1,.6", out: 1, outWin: "0,.3" })}><p class="label">${c.t("Eure Vorhersage", "Your prediction")}</p><p class="predict__q">${question}</p><div class="poll poll--row" data-poll-show="${name}" style="--n:${max + 1}">${poll}</div></div>`;
+function predict(c, name, question, options, o = {}) {
+  const opts = pollOptions(options);
+  const poll = opts.map(([value, label]) => `<button class="poll__opt" type="button" data-poll="${name}" data-value="${value}"><span class="poll__key">${label}</span><b data-poll-n>0</b></button>`).join("");
+  return `<div class="predict surface surface--strong${o.cls ? ` ${o.cls}` : ""}"${s(0, { fx: "pop", win: ".1,.6", out: o.out ?? 1, outWin: "0,.3" })}><p class="predict__q"><span class="lead">${c.t("Ihr schätzt:", "You predict:")}</span> ${question}</p><div class="poll poll--row${typeof options === "number" ? "" : " poll--range"}" data-poll-show="${name}" style="--n:${opts.length}">${poll}</div></div>`;
 }
 
 /** Left column of a hands-on slide: the kit's request folder with the one in use lit. */
-function requestFolder(c, active) {
+function requestFolder(c, active, attrs = "") {
   const rows = REQUESTS[c.lang].map((name, i) => file("md", name, "", { cls: i === active ? "file--accent" : "" })).join("");
-  return `<div class="kit-folder hs__kit"><p class="kit-folder__head">${c.ico("folder")}${c.t("anfragen/", "requests/")}</p>${rows}</div>`;
+  return `<div class="kit-folder hs__kit"${attrs}><p class="kit-folder__head">${c.ico("folder")}${c.t("anfragen/", "requests/")}</p>${rows}</div>`;
 }
 
-/** The attachment as it sits in the composer before the participant sends it. */
+/** The attachment as it sits in the composer before it is sent. */
 const att = (html, attrs = "") => `<span class="cw-att"${attrs}>${html}</span>`;
 
 export function step1(c) {
@@ -83,16 +89,17 @@ export function step1(c) {
     .map(([id, what, answer, tone], i) => `<tr${id === "Q1" ? " data-mark" : ""}${s(3, { fx: "pop", win: stagger(i, 8, 0.25, 0.15, 0.8) })} style="--origin:left center"><td>${id}</td><td>${what}</td><td>${answer}</td><td>${c.chip(tone, "chip--s")}</td></tr>`)
     .join("");
   const [hx, hy] = g.hop || [0, 0];
-  const share = c.de ? `<span class="nw">(${c.dv("coverage")} %)</span>` : `<span class="nw">(${c.dv("coverage")}%)</span>`;
+  const share = c.de ? `<span class="nw">(${c.dv("coverage")} %)</span>` : `<span class="nw">(${c.dv("coverage")}%)</span>`;
+  // Step 1 attaches the questionnaire, step 2 sends prompt 1 and Claude runs its code, step 3 answers.
   const thread = `<div class="cw-thread">
-<div class="cw-files"${s(1, { fx: "fly", win: ".46,.74" })} style="--dx:${hx}px;--dy:${hy}px;--s:1">${cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions"))}</div>
-${prompt(c, 1, s(1, { fx: "pop", win: ".62,.95" }) + ' style="--origin:right top"')}
+<div class="cw-files"${s(2, { fx: "fly", win: "0,.3" })} style="--dx:${hx}px;--dy:${hy}px;--s:1">${cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions"))}</div>
+${prompt(c, 1, s(2, { fx: "pop", win: ".15,.45" }) + ' style="--origin:right top"')}
 ${activity(c, c.t("4 Schritte", "4 steps"), [
-    act(c, 2, ".05,.3", "check", `Read ${code(strom)}`),
-    act(c, 2, ".25,.5", "check", `Ran code ${code("len(set(months))")} → ${c.dv("rows")} ${c.t("Zeilen", "rows")}, ${c.dv("months")} ${c.t("Monate", "months")}`),
-    act(c, 2, ".45,.7", "check", `${c.t("alle Zeilen", "all rows")} ${c.dv("mwhNaive")} MWh · ${c.t("eindeutige Monate", "distinct months")} ${c.dv("mwh11")} MWh`),
-    act(c, 2, ".65,.9", "check", `Read ${code(c.de ? "personal_2025.csv" : "headcount_2025.csv")}, ${code(c.de ? "flaschen.csv" : "bottles.csv")}`),
-  ], s(2, { fx: "pop", win: "0,.2", out: 3, outWin: "0,.2" }) + ' style="--origin:left top"')}
+    act(c, 2, ".45,.6", "check", `Read ${code(strom)}`),
+    act(c, 2, ".55,.72", "check", `Ran code ${code("len(set(months))")} → ${c.dv("rows")} ${c.t("Zeilen", "rows")}, ${c.dv("months")} ${c.t("Monate", "months")}`),
+    act(c, 2, ".65,.82", "check", `${c.t("alle Zeilen", "all rows")} ${c.dv("mwhNaive")} MWh · ${c.t("eindeutige Monate", "distinct months")} ${c.dv("mwh11")} MWh`),
+    act(c, 2, ".75,.92", "check", `Read ${code(c.de ? "personal_2025.csv" : "headcount_2025.csv")}, ${code(c.de ? "flaschen.csv" : "bottles.csv")}`),
+  ], s(2, { fx: "pop", win: ".38,.5", out: 3, outWin: "0,.2" }) + ' style="--origin:left top"')}
 <div class="cw-answer"${s(3, { fx: "blur", win: ".1,.4" })}><p>${c.t("Q1 kann ich nicht belegen:", "I cannot cover Q1:")} <span class="cw-cite"${s(3, { fx: "glow", win: ".5,.9" })}>${strom} · ${c.t("Z. 3 bis 14", "l. 3 to 14")}</span> ${c.t("deckt", "covers")} <b>${c.t("11 von 12 Monaten", "11 of 12 months")}</b> ${share}.</p>
 <table class="cw-table"><thead><tr><th>#</th><th>${c.t("Frage", "Question")}</th><th>${c.t("Antwort", "Answer")}</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>
 </div>`;
@@ -100,18 +107,24 @@ ${activity(c, c.t("4 Schritte", "4 steps"), [
     .map((tone, i) => `<li${s(4, { fx: "pop", win: stagger(i, 3, 0.4, 0.3, 1) })} style="--origin:left center">${c.chip(tone)}<b${s(4, { fx: "none", win: stagger(i, 3, 0.4, 0.3, 1), count: `0,${[5, 1, 2][i]},0` })}>${[5, 1, 2][i]}</b></li>`)
     .join("");
   const ghost = att(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), ' data-ghost aria-hidden="true"');
+  const mini = pollMini(c, "s1", pollOptions(8), "5", { k: 1, win: ".25,.6", ring: [4, ".5,.9"], cls: "hs__mini" });
   return section(
-    { id: "schritt-1", label: c.t("Schritt 1: Fragebogen des Importeurs", "Step 1: The importer's questionnaire"), steps: 4, durations: "1300,2400,2000,3000,2200" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Hands-on · Schritt 1 · neuer Chat", "Hands-on · Step 1 · new chat")}</p><h2 class="headline headline--m">${c.t("Der Fragebogen des Importeurs", "The importer's questionnaire")}</h2></div>${now(c, c.t("Jetzt ihr · 8 Min", "Your turn · 8 min"), s(1, { fx: "pop", win: ".6,1" }))}</header>
+    { id: "schritt-1", label: c.t("Schritt 1: Fragebogen des Importeurs", "Step 1: The importer's questionnaire"), steps: 4, durations: "1300,2200,2800,3000,2200" },
+    `${liveHead(c, c.t("Schritt 1 von 5", "Step 1 of 5"), [
+      [c.t("Neuer Chat", "New chat"), 0, "0,.4", 1, "0,.2"],
+      [c.t("Fragebogen anhängen", "Attach questionnaire"), 1, ".25,.6", 2, "0,.15"],
+      [c.t("Prompt 1 senden", "Send prompt 1"), 2, ".15,.45", 3, "0,.2"],
+      [c.t("Stromdatei öffnen", "Open electricity CSV"), 3, ".5,.85"],
+    ], c.t("Der Importeur zählt nur belegte Antworten", "The importer counts only answers with evidence"))}
 <div class="stage hs">
-<div class="hs__left">${requestFolder(c, 0)}<div class="kit-folder hs__know"${s(4, { fx: "pop", win: "0,.35" })} style="--origin:left center"><p class="kit-folder__head">${c.ico("book")}Project knowledge</p>${file("csv", strom, c.t("Z. 3 bis 14", "l. 3 to 14"), { cls: "file--accent", attrs: s(4, { fx: "glow", win: ".35,.8" }) })}</div><ol class="tally">${tally}</ol></div>
+<div class="hs__left">${requestFolder(c, 0, s(0, { fx: "fade", win: "0,.2", out: 4, outWin: "0,.25" }))}${mini}${job(c, c.t("Ihr prüft:", "You check:"), c.t("Decken Z. 3 bis 14 alle 12 Monate?", "do l. 3 to 14 cover all 12 months?"), s(2, { fx: "pop", win: ".7,1", out: 4, outWin: "0,.25" }) + ' style="--origin:left center"', "hs__job")}<div class="kit-folder hs__know"${s(4, { fx: "pop", win: ".2,.5" })} style="--origin:left center"><p class="kit-folder__head">${c.ico("book")}Project knowledge</p>${file("csv", strom, c.t("Z. 3 bis 14", "l. 3 to 14"), { cls: "file--accent", attrs: s(4, { fx: "glow", win: ".5,.9" }) })}</div><ol class="tally">${tally}</ol></div>
 <div class="hs__right">
-${predict(c, "s1", c.t(`Wie viele der 8 Fragen sind <em>${st.belegt}</em>?`, `How many of the 8 questions are <em>${st.belegt}</em>?`), 8)}
+${predict(c, "s1", c.t(`Wie viele der 8 Fragen sind <em>${st.belegt}</em>?`, `how many of the 8 questions are <em>${st.belegt}</em>?`), 8)}
 <div class="hs__lens"><div class="hs__cam">${cw(c, { crumbs: [c.kit.project, c.t("Fragebogen Nordvik", "Nordvik questionnaire")], side: cwSide(c, { chats: chats(c, 1) }), cls: "hs__cw", attrs: s(1, { fx: "fly", win: "0,.3" }), style: "--dy:60px;--s:.97", att: ghost }, thread)}</div></div>
 </div>
-${fly(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), g.compose, { k: 1, win: ".08,.44", out: 1, outWin: ".46,.52", cls: "fly--cw", lift: 140 })}
+${fly(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), g.compose, { k: 1, win: ".3,.7", out: 2, outWin: "0,.08", cls: "fly--cw", lift: 140 })}
 </div>
-${foot(c, 10)}`,
+${foot(c, 11)}`,
   );
 }
 
@@ -150,13 +163,19 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
   const waiting = att(cwFile("MD", REQUESTS[c.lang][1], c.t("7 Aussagen", "7 claims")), s(0, { fx: "pop", win: ".35,.8", out: 1, outWin: "0,.14" }) + ' style="--origin:left center"');
   return section(
     { id: "schritt-2", label: c.t("Schritt 2: Werbeaussagen", "Step 2: Marketing claims"), steps: 4, durations: "1500,1700,2200,2200,1500" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Hands-on · Schritt 2 · neuer Chat", "Hands-on · Step 2 · new chat")}</p><h2 class="headline headline--m">${c.t("Welche Aussage darf aufs Etikett?", "Which claim may go on the label?")}</h2></div>${now(c, c.t("Jetzt ihr · 7 Min", "Your turn · 7 min"), s(1, { fx: "pop", win: ".6,1" }))}</header>
+    `${liveHead(c, c.t("Schritt 2 von 5", "Step 2 of 5"), [
+      [c.t("Neuer Chat", "New chat"), 0, "0,.35", 0, ".4,.45"],
+      [c.t("Aussagen anhängen", "Attach claims"), 0, ".4,.8", 1, "0,.3"],
+      [c.t("Prompt 2 senden", "Send prompt 2"), 1, ".3,.7", 2, "0,.3"],
+      [c.t("Verbotsliste öffnen", "Open ban list"), 2, ".05,.4"],
+    ], c.t("Welche der 7 Aussagen darf raus?", "Which of the 7 claims may go out?"))}
 <div class="stage hs2">
 <div class="hs2__left">${cw(c, { crumbs: [c.kit.project, c.t("Werbeaussagen", "Marketing claims")], side: cwSide(c, { chats: chats(c, 2) }), cls: "hs2__cw", attrs: s(0, { fx: "fade", win: "0,.4" }), att: waiting }, thread)}
-${predict(c, "s2", c.t("Wie viele dürfen <em>raus</em>?", "How many may go <em>out</em>?"), 7)}</div>
-<div class="stickers">${stickers}<p class="stickers__end"${s(4, { fx: "pop", win: ".2,.8" })}><b${s(4, { fx: "none", win: ".2,.8", count: "0,2,0" })}>2</b>${c.t("dürfen raus.", "may go out.")}</p></div>
+${predict(c, "s2", c.t("Wie viele der 7 dürfen <em>raus</em>?", "how many of the 7 may go <em>out</em>?"), 7)}
+${pollMini(c, "s2", pollOptions(7), "2", { k: 1, win: ".05,.4", ring: [4, ".3,.7"], cls: "hs2__mini" })}</div>
+<div class="stickers">${stickers}<div class="stickers__cell"><p class="stickers__end"${s(4, { fx: "pop", win: ".2,.8" })}><b${s(4, { fx: "none", win: ".2,.8", count: "0,2,0" })}>2</b>${c.t("dürfen raus.", "may go out.")}</p>${job(c, c.t("Ihr prüft C6:", "You check C6:"), c.t("Welches Wort muss weg?", "which word must go?"), s(3, { fx: "pop", win: ".55,1", out: 4, outWin: "0,.3" }) + ' style="--origin:left center"', "stickers__job")}</div></div>
 </div>
-${foot(c, 11)}`,
+${foot(c, 12)}`,
   );
 }
 
@@ -175,7 +194,7 @@ export function step3(c) {
       return `<li class="ff"><b class="ff__id">${id}</b><span class="ff__l">${label}</span><span class="ff__v"><span${s(2, { fx: "type", ease: "linear", win })}>${value}</span></span><span${s(2, { fx: "pop", win: stagger(n - 1, 5, 0.3, 0.1, 1) })}>${c.chip(tone)}</span></li>`;
     })
     .join("");
-  const src = (key, unit, from, i) => `<span class="fx__src"${s(3, { fx: "pop", win: stagger(i, 3, 0.3, 0, 0.5) })}><b>${c.dv(key)}</b> ${unit}<small>${from}</small></span>`;
+  const src = (key, unit, from, i) => `<span class="fx__src"${s(0, { fx: "pop", win: stagger(i, 3, 0.3, 0.4, 0.9) })}><b>${c.dv(key)}</b> ${unit}<small>${from}</small></span>`;
   const slot = (key, i) => `<span class="fx__slot"${s(3, { fx: "move", win: stagger(i, 3, 0.3, 0.3, 0.8) })} style="--dy:-92px;--dx:${[-40, 40, 160][i]}px">${c.v[key]}</span>`;
   const [hx, hy] = g.hop || [0, 0];
   const thread = `<div class="cw-thread">
@@ -191,15 +210,21 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
   const waiting = att(cwFile("MD", REQUESTS[c.lang][2], c.t("6 Felder", "6 fields")), s(0, { fx: "pop", win: ".35,.8", out: 1, outWin: "0,.14" }) + ' style="--origin:left center"');
   return section(
     { id: "schritt-3", label: c.t("Schritt 3: Formular der Bank", "Step 3: The bank's form"), steps: 3, durations: "1300,1700,2400,2800" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Hands-on · Schritt 3 · neuer Chat", "Hands-on · Step 3 · new chat")}</p><h2 class="headline headline--m">${c.t("Das Kreditformular der Bank", "The bank's loan form")}</h2></div>${now(c, c.t("Jetzt ihr · 5 Min", "Your turn · 5 min"), s(1, { fx: "pop", win: ".6,1" }))}</header>
+    `${liveHead(c, c.t("Schritt 3 von 5", "Step 3 of 5"), [
+      [c.t("Neuer Chat", "New chat"), 0, "0,.3", 0, ".35,.4"],
+      [c.t("Formular anhängen", "Attach form"), 0, ".35,.7", 1, "0,.3"],
+      [c.t("Prompt 3 senden", "Send prompt 3"), 1, ".3,.7", 3, "0,.3"],
+      [c.t("Angebot öffnen", "Open the offer"), 3, ".5,.9"],
+    ], c.t("Die Bank will jede Schätzung gekennzeichnet", "The bank wants every estimate marked"))}
 <div class="stage hs3">
 ${cw(c, { crumbs: [c.kit.project, c.t("Bankformular", "Bank form")], side: cwSide(c, { chats: chats(c, 3) }), cls: "hs3__cw", attrs: s(0, { fx: "fade", win: "0,.4" }), att: waiting }, thread)}
 <div class="form surface surface--strong"${s(0, { fx: "pop", win: "0,.6" })}><div class="form__head"><span class="ico-tile">${c.ico("bank")}</span><div><b>Banka Povardarie AD Skopje</b><span>${c.t("Kredit", "Loan")} ${c.dv("pvPrice")} MKD · PV 150 kWp</span></div></div><ol class="form__rows">${rows}</ol>
-<div class="fx"><p class="fx__predict"${s(0, { fx: "pop", win: ".5,1", out: 3, outWin: "0,.3" })}>${c.ico("hand")}${c.t("Vorhersage: F4 zuerst selbst rechnen.", "Prediction: work out F4 yourself first.")}</p>
+<div class="fx">${job(c, c.t("Ihr rechnet:", "You calculate:"), `${c.v.pvPrice} ÷ (${c.v.pvYieldKwh} × ${c.v.tariff})`, s(0, { fx: "pop", win: ".5,1", out: 3, outWin: "0,.3" }) + ' style="--origin:left center"', "fx__job")}
 <div class="fx__srcs">${src("pvPrice", "MKD", c.t("Angebot Z. 9", "offer l. 9"), 0)}${src("pvYieldKwh", "kWh", c.t("Angebot Z. 8, geschätzt", "offer l. 8, estimate"), 1)}${src("tariff", "MKD/kWh", c.de ? "strom_2025.csv" : "electricity_2025.csv", 2)}</div>
-<p class="fx__eq"${s(3, { fx: "fade", win: ".25,.4" })}>F4 = ${slot("pvPrice", 0)} ÷ ( ${slot("pvYieldKwh", 1)} × ${slot("tariff", 2)} ) = <b${s(3, { fx: "pop", win: ".75,1" })}>${c.v.payback}</b></p></div></div>
+<p class="fx__eq"${s(3, { fx: "fade", win: ".25,.4" })}>F4 = ${slot("pvPrice", 0)} ÷ ( ${slot("pvYieldKwh", 1)} × ${slot("tariff", 2)} ) = <b${s(3, { fx: "pop", win: ".75,1" })}>${c.v.payback}</b></p>
+${job(c, c.t("Ihr prüft:", "You check:"), c.t("Wer hat das Angebot unterschrieben?", "who signed the offer?"), s(3, { fx: "pop", win: ".8,1" }) + ' style="--origin:left center"', "fx__job")}</div></div>
 </div>
-${foot(c, 12)}`,
+${foot(c, 13)}`,
   );
 }
 
@@ -211,36 +236,47 @@ const LEDGER = {
 const VSME = [["B1", "8/8", "belegt"], ["B2", "4/4", "belegt"], ["B3", "0/4", "luecke"], ["B4", "0/1", "luecke"], ["B5", "0/1", "luecke"], ["B6", "1/1", "belegt"], ["B7", "1/4", "luecke"], ["B8", "2/2", "belegt"], ["B9", "2/3", "luecke"], ["B10", "1/3", "luecke"], ["B11", "1/1", "belegt"]];
 
 export function register(c) {
+  // Step 0 attaches the three requests, step 1 sends prompt 4, step 2 shows the register (9 BELEGT),
+  // step 3 the VSME sheet and the room's tip, step 4 Claude's list of what to request first.
   let i = 0;
   const rows = Object.entries(LEDGER)
-    .map(([letter, tones]) => `<div class="reg__row"><span class="reg__l">${letter}</span><div class="tiles reg__tiles" style="--cols:8">${tones.map((tone, n) => `<div class="tile"${s(1, { fx: "flip", win: stagger(i++, 21, 0.3) })}><span class="face">${letter}${n + 1}</span><span class="face face--back" data-tone="${tone}">${letter}${n + 1}</span></div>`).join("")}</div></div>`)
+    .map(([letter, tones]) => `<div class="reg__row"${s(1, { fx: "fade", win: ".3,.6" })}><span class="reg__l">${letter}</span><div class="tiles reg__tiles" style="--cols:8">${tones.map((tone, n) => `<div class="tile"${s(2, { fx: "flip", win: stagger(i++, 21, 0.3) })}><span class="face">${letter}${n + 1}</span><span class="face face--back" data-tone="${tone}">${letter}${n + 1}</span></div>`).join("")}</div></div>`)
     .join("");
-  const vsme = VSME.map(([id, part, tone], n) => `<div class="tile"${s(2, { fx: "flip", win: stagger(n, 11, 0.35) })}><span class="face">${id}</span><span class="face face--back" data-tone="${tone}">${id}<small>${part}</small></span></div>`).join("");
+  const vsme = VSME.map(([id, part, tone], n) => `<div class="tile"${s(3, { fx: "flip", win: stagger(n, 11, 0.35, 0.15, 0.8) })}><span class="face">${id}</span><span class="face face--back" data-tone="${tone}">${id}<small>${part}</small></span></div>`).join("");
   const asks = c.de
-    ? [["Stromrechnung September 2025 (EL-25-09)", "6"], ["Netz-Emissionsfaktor, veröffentlicht", "2"], ["Dieselbelege 2025", "2"]]
-    : [["Electricity invoice September 2025 (EL-25-09)", "6"], ["Grid emission factor, published", "2"], ["Diesel receipts 2025", "2"]];
-  const answer = `<div class="cw-answer reg__ans"${s(3, { fx: "fade", win: "0,.2" })}><p>${c.t("Zuerst anfordern, nach Zahl der wartenden Antworten:", "Request first, by the number of answers waiting:")}</p><ol class="reg__asks">${asks.map(([what, count], n) => `<li${n === 0 ? ' class="reg__top"' : ""}${s(3, { fx: "pop", win: `${(0.15 + n * 0.08).toFixed(2)},${(0.5 + n * 0.08).toFixed(2)}` })} style="--origin:left center"><b>${n + 1}</b><span>${what}</span><em>${count} ${c.t("warten", "waiting")}</em></li>`).join("")}</ol></div>`;
+    ? [["Stromrechnung September 2025", "EL-25-09", "6"], ["Netz-Emissionsfaktor, veröffentlicht", "", "2"], ["Dieselbelege 2025", "", "2"]]
+    : [["Electricity invoice September 2025", "EL-25-09", "6"], ["Grid emission factor, published", "", "2"], ["Diesel receipts 2025", "", "2"]];
+  const answer = `<div class="cw-answer reg__ans"${s(4, { fx: "fade", win: "0,.2" })}><p>${c.t("Zuerst anfordern, nach Zahl der wartenden Antworten:", "Request first, by the number of answers waiting:")}</p><ol class="reg__asks">${asks.map(([what, ref, count], n) => `<li${n === 0 ? ' class="reg__top"' : ""}${s(4, { fx: "pop", win: `${(0.15 + n * 0.08).toFixed(2)},${(0.5 + n * 0.08).toFixed(2)}` })} style="--origin:left center"><b>${n + 1}</b><span>${what}${ref ? ` <span class="nw">(${ref})</span>` : ""}</span><em>${count} ${c.t("warten", "waiting")}</em></li>`).join("")}</ol></div>`;
   const thread = `<div class="cw-thread">
 <div class="cw-files"${s(0, { fx: "fly", win: ".2,.7" })} style="--dx:0px;--dy:-80px;--s:.9">${REQUESTS[c.lang].map((name) => cwFile("MD", name, c.t("Anfrage", "request"))).join("")}</div>
-${prompt(c, 4, s(0, { fx: "pop", win: ".45,.9" }) + ' style="--origin:right top"')}
+${prompt(c, 4, s(1, { fx: "pop", win: "0,.3" }) + ' style="--origin:right top"')}
 ${activity(c, c.t("21 Zeilen", "21 rows"), [
-    act(c, 1, ".05,.3", "check", `${c.t("Nachweisprobe", "Evidence check")} · Q1 … F6`),
-    act(c, 1, ".6,.9", "file", `Wrote ${code(c.de ? "nachweisregister.xlsx" : "evidence_register.xlsx")}`),
-  ], s(1, { fx: "pop", win: "0,.15" }) + ' style="--origin:left top"')}
+    act(c, 1, ".35,.6", "check", `${c.t("Nachweisprobe", "Evidence check")} · Q1 … F6`),
+    act(c, 2, ".05,.3", "file", `Wrote ${code(c.de ? "nachweisregister.xlsx" : "evidence_register.xlsx")}`),
+  ], s(1, { fx: "pop", win: ".25,.35" }) + ' style="--origin:left top"')}
 ${answer}
 </div>`;
+  const ranges = c.de ? ["0 bis 5", "6 bis 10", "11 bis 15", "16 bis 21"] : ["0 to 5", "6 to 10", "11 to 15", "16 to 21"];
   return section(
-    { id: "register", label: c.t("Schritt 4: Nachweisregister", "Step 4: Evidence register"), steps: 3, durations: "1500,2800,2200,1700" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Schritt 4 · Demo · alle drei Anfragen", "Step 4 · demo · all three requests")}</p><h2 class="headline headline--m">${c.t("21 Antworten, ein Register", "21 answers, one register")}</h2></div></header>
+    { id: "register", label: c.t("Schritt 4: Nachweisregister", "Step 4: Evidence register"), steps: 4, durations: "1500,1800,2800,2200,1700" },
+    `${liveHead(c, c.t("Schritt 4 von 5", "Step 4 of 5"), [
+      [c.t("Neuer Chat", "New chat"), 0, "0,.3", 0, ".3,.35"],
+      [c.t("Anfragen anhängen", "Attach requests"), 0, ".35,.7", 1, "0,.1"],
+      [c.t("Prompt 4 senden", "Send prompt 4"), 1, ".05,.35", 2, "0,.1"],
+      [c.t("Excel öffnen", "Open Excel file"), 2, ".05,.4"],
+    ], c.t("21 Antworten, ein Register", "21 answers, one register"))}
 <div class="stage reg">
 <div class="reg__left">${cw(c, { crumbs: [c.kit.project, c.t("Nachweisregister", "Evidence register")], side: cwSide(c, { chats: chats(c, 4) }), cls: "reg__cw", attrs: s(0, { fx: "fly", win: "0,.5" }), style: "--dy:60px;--s:.97" }, thread)}</div>
 <div class="reg__right">
-<div class="reg__count"><b class="stat__n"${s(1, { fx: "none", win: ".1,.95", count: "0,9,0" })}>${c.dv("belegtBefore")}</b><span class="reg__of">/ 21 ${c.chip("belegt")}</span><span class="reg__legend"${s(1, { fx: "fade", win: ".7,1" })}>${c.chip("schwach")} 3 ${c.chip("luecke", "chip--quiet")} 9</span></div>
+${predict(c, "reg", c.t(`Wie viele der 21 sind <em>${c.status.belegt}</em>?`, `how many of the 21 are <em>${c.status.belegt}</em>?`), ranges, { cls: "reg__poll" })}
+<div class="reg__count"${s(1, { fx: "fade", win: ".3,.6" })}><b class="stat__n"${s(2, { fx: "none", win: ".1,.95", count: "0,9,0" })}>${c.dv("belegtBefore")}</b><span class="reg__of">/ 21 ${c.chip("belegt")}</span><span class="reg__legend"${s(2, { fx: "fade", win: ".7,1" })}>${c.chip("schwach")} 3 ${c.chip("luecke", "chip--quiet")} 9</span></div>
 ${rows}
-<div class="reg__row reg__row--vsme"><span class="reg__l">VSME</span><div class="tiles reg__vsme" style="--cols:11">${vsme}</div></div>
+<div class="reg__row reg__row--vsme"${s(3, { fx: "fade", win: "0,.2" })}><p class="reg__vcap">${c.t("VSME · EU-Standard für KMU", "VSME · EU standard for SMEs")}</p><span class="reg__l"></span><div class="tiles reg__vsme" style="--cols:11">${vsme}</div></div>
+${pollMini(c, "reg", pollOptions(ranges), "b", { k: 1, win: ".4,.8", out: 3, outWin: "0,.25", ring: [2, ".8,1"], cls: "reg__mini" })}
+${job(c, c.t("Ihr tippt:", "Your guess:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
 </div>
 </div>
-${foot(c, 13)}`,
+${foot(c, 14)}`,
   );
 }
 
@@ -272,11 +308,16 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
 </div>`;
   return section(
     { id: "nachreichung", label: c.t("Schritt 5: Die nachgereichte Rechnung", "Step 5: The late invoice"), steps: 4, durations: "1400,2000,2600,2400,2800" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Schritt 5 · Demo · im Chat von Schritt 4", "Step 5 · demo · in the chat of step 4")}</p><h2 class="headline headline--m">${c.t("Die Rechnung kommt <em>nach</em>", "The invoice arrives <em>late</em>")}</h2></div></header>
+    `${liveHead(c, c.t("Schritt 5 von 5", "Step 5 of 5"), [
+      [c.t("Chat von Schritt 4", "Chat of step 4"), 0, "0,.4", 1, "0,.15"],
+      [c.t("Foto anhängen", "Attach photo"), 1, ".3,.7", 2, ".55,.65"],
+      [c.t("Prompt 5 senden", "Send prompt 5"), 2, ".65,.95", 4, "0,.3"],
+      [c.t("Excel öffnen", "Open Excel file"), 4, ".05,.4"],
+    ], c.t("Die Rechnung kommt <em>nach</em>", "The invoice arrives <em>late</em>"))}
 <div class="stage late">
 <div class="late__left">
-<p class="late__q"${s(0, { fx: "pop", win: "0,.4", out: 2, outWin: "0,.3" })}>${c.ico("hand")}${c.t("Vorhersage: Wie viele der 21 Status ändern sich?", "Prediction: how many of the 21 statuses change?")}</p>
-<div class="late__mail"${s(0, { fx: "fade", win: "0,.3", out: 2, outWin: ".05,.3" })}><div class="envelope" data-keep${s(1, { fx: "none", win: "0,.9" })}><div class="envelope__back"></div><div class="envelope__letter">${paper()}</div><div class="envelope__front"></div><div class="envelope__flap"></div></div></div>
+${predict(c, "late", c.t("Wie viele der 21 Status ändern sich?", "how many of the 21 statuses change?"), 6, { out: 1, cls: "late__poll" })}
+<div class="late__mail"${s(0, { fx: "fade", win: "0,.3", out: 2, outWin: ".05,.3" })}><div class="envelope" data-keep${s(1, { fx: "none", win: ".25,1" })}><div class="envelope__back"></div><div class="envelope__letter">${paper()}</div><div class="envelope__front"></div><div class="envelope__flap"></div></div></div>
 ${cw(c, { crumbs: [c.kit.project, c.t("Nachweisregister", "Evidence register")], side: cwSide(c, { chats: chats(c, 4) }), cls: "late__cw", attrs: s(2, { fx: "fly", win: "0,.4" }), style: "--dy:60px;--s:.97" }, thread)}
 ${fly(paper(), photo.slice(0, 5), { k: 2, win: ".1,.75", cls: "late__photo", s: photo[5], lift: 160, h: photo[6] })}
 </div>
@@ -284,11 +325,12 @@ ${fly(paper(), photo.slice(0, 5), { k: 2, win: ".1,.75", cls: "late__photo", s: 
 <p class="label">${c.t("Strom 2025 · MWh je Monat", "Electricity 2025 · MWh per month")}</p>
 <ol class="bars">${bars}</ol>
 <div class="late__mwh"><b class="stat__n" data-keep${s(3, { fx: "none", win: ".1,.6", count: "279.7,320.9,1" })}>${c.dv("mwh12")}</b><span class="stat__l">MWh · <b data-keep${s(3, { fx: "none", win: ".1,.5", count: "11,12,0" })}>12</b> ${c.t("von 12 Monaten", "of 12 months")}</span></div>
-<div class="late__tiles">${tile("F2", "belegt", c.t("Strom, ganzes Jahr", "electricity, full year"))}${tile("F3", "schwach", `${c.t("PV-Anteil", "PV share")} <span class="late__share"><i${s(0, { fx: "fade", win: "0,.2", out: 4, outWin: ".2,.35" })}>?</i><b data-step="4" data-win=".35,.75" data-fx="none" data-count="0,56.1,1" data-count-unit=" %" data-v="share12">${c.v.share12}</b></span>`)}<div class="late__reg"><b class="stat__n" data-keep${s(4, { fx: "none", win: ".4,.8", count: "9,10,0" })}>10</b><span class="stat__l">/ 21 ${c.status.belegt}</span></div></div>
+<div class="late__tiles">${pollMini(c, "late", pollOptions(6), "2", { k: 1, win: ".05,.35", ring: [4, ".6,1"], cls: "late__mini" })}${tile("F2", "belegt", c.t("Strom, ganzes Jahr", "electricity, full year"))}${tile("F3", "schwach", `${c.t("PV-Anteil", "PV share")} <span class="late__share"><i${s(0, { fx: "fade", win: "0,.2", out: 4, outWin: ".2,.35" })}>?</i><b data-step="4" data-win=".35,.75" data-fx="none" data-count="0,56.1,1" data-count-unit=" %" data-v="share12">${c.v.share12}</b></span>`)}<div class="late__reg"><b class="stat__n" data-keep${s(4, { fx: "none", win: ".4,.8", count: "9,10,0" })}>10</b><span class="stat__l">/ 21 ${c.status.belegt}</span></div></div>
+${job(c, c.t("Ihr rechnet:", "You calculate:"), `${c.dv("meterNew")} minus ${c.dv("meterOld")}`, s(2, { fx: "pop", win: ".75,1", out: 4, outWin: "0,.3" }) + ' style="--origin:left center"', "late__job")}
 <p class="late__end"${s(4, { fx: "pop", win: ".7,1" })}>${c.t("Register", "Register")}: ${c.dv("afterBelegt")} ${c.status.belegt} · ${c.dv("afterSchwach")} ${c.status.schwach} · ${c.dv("afterLuecke")} ${c.status.luecke}</p>
 </div>
 </div>
-${foot(c, 14)}`,
+${foot(c, 15)}`,
   );
 }
 
@@ -301,10 +343,10 @@ export function measured(c) {
 <div class="stage ms">
 <div class="ms__runs"><div class="ms__run"><svg class="ms__ring" viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="184" class="ms__track"/><circle${s(0, { fx: "draw", win: ".05,.95" })} pathLength="1" cx="200" cy="200" r="184" class="ms__arc"/></svg><p class="ms__n"><b${s(0, { fx: "none", win: ".05,.95", count: `0,${secs},0` })} data-count-as="mss">${text}</b></p><p class="ms__who">Claude</p><p class="ms__l">${c.t("Median aus 3 Läufen", "median of 3 runs")}</p></div>
 <div class="ms__run ms__ghost"${s(1, { fx: "pop", win: "0,.7" })}><svg class="ms__ring" viewBox="0 0 400 400" aria-hidden="true"><circle cx="200" cy="200" r="184" class="ms__dash"/></svg><p class="ms__n ms__n--q">?</p><p class="ms__who">${c.t("Von Hand", "By hand")}</p><p class="ms__l">${c.t("nicht gemessen", "not measured")}</p></div></div>
-<ul class="ms__chips">${chip("0,.5", "check", c.t("<b>21/21</b> · 3 von 3 Läufen", "<b>21/21</b> · 2 of 3 runs"))}${chip(".2,.7", "search", c.t("September-Lücke · <b>67 s</b>", "September gap · <b>52 s</b>"))}</ul>
+<ul class="ms__chips">${chip("0,.5", "check", c.t("<b>21 von 21</b> Status richtig · 3 von 3 Läufen", "<b>21 of 21</b> statuses right · 2 of 3 runs"))}${chip(".2,.7", "search", c.t("September-Lücke gefunden nach <b>67 s</b>", "September gap found after <b>52 s</b>"))}</ul>
 <p class="ms__tag"${s(2, { win: ".5,1" })}>${c.ico("code")}${c.t("im Terminal gemessen, gleiche Prompts", "measured in the terminal, same prompts")}</p>
 </div>
-${foot(c, 15)}`,
+${foot(c, 16)}`,
   );
 }
 
@@ -312,14 +354,16 @@ export function takeHome(c, qr) {
   const mini = `<span class="th__mini" aria-hidden="true"><i class="th__bar"><b></b><b></b><b></b></i><i class="th__side"></i><i class="th__bub"></i><i class="th__bub th__bub--a"></i><i class="th__bub th__bub--b"></i></span>`;
   const tile = (i, visual, title, line) => `<div class="th__tile surface surface--strong"${s(0, { fx: "arc", ease: "spring", win: stagger(i, 3, 0.5, 0, 0.8) })} style="--dx:${(1 - i) * 120}px;--dy:260px;--s:.6;--lift:120px">${visual}<b>${title}</b><span>${line}</span></div>`;
   return section(
-    { id: "mitnehmen", label: c.t("Mitnehmen", "Take home"), steps: 1, durations: "1900,1400" },
+    { id: "mitnehmen", label: c.t("Mitnehmen", "Take home"), steps: 1, durations: "2100,1400" },
     `${head(c.t("Mitnehmen", "Take home"), c.t("Jede Antwort trägt ihren <em>Nachweis</em>.", "Every answer carries its <em>evidence</em>."), { size: "m" })}
 <div class="stage th">
+<p class="th__case"${s(0, { fx: "fade", win: "0,.35" })}>${c.ico("envelope")}<span>${c.t("Am 23.10. geht an Nordvik: jede Antwort mit Datei und Zeile, jede Lücke mit dem Dokument, das fehlt.", "On 23.10. Nordvik gets every answer with file and line, every gap with the missing document named.")}</span></p>
+<p class="subline th__sub"${s(0, { fx: "fade", win: ".6,1" })}>${c.t("Zu Hause: dieselben fünf Prompts mit eurem Claude.", "At home: the same five prompts with your Claude.")}</p>
 <div class="th__tiles">${tile(0, `<span class="th__v th__v--kit">${c.ico("zip")}</span>`, "Kit", c.kit.zip)}${tile(1, `<span class="th__v">${c.ico("spark")}</span>`, "Skill", "esg-nachweise")}${tile(2, mini, "Demo", c.t("im Browser, ohne KI", "in the browser, no AI"))}</div>
 <figure class="qr th__qr"${s(0, { fx: "pop", win: ".55,1" })}>${qr}<figcaption><span>loehrning.ai${c.site}/demos/</span><span>esg-berichte-mit-ki</span></figcaption></figure>
 <p class="th__human"${s(1, { fx: "pop", win: "0,.6" })}>${c.ico("shield")}${c.t("Ein Mensch prüft und unterschreibt jede Antwort.", "A person checks and signs every answer.")}</p>
 </div>
-${foot(c, 16)}`,
+${foot(c, 17)}`,
   );
 }
 

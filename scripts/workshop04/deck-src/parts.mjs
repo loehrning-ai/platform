@@ -42,7 +42,7 @@ export const VALUES = {
   },
 };
 
-export const MAIN_TOTAL = 16;
+export const MAIN_TOTAL = 17;
 
 /** The edition context every slide function receives. */
 export function context(lang, kit) {
@@ -91,8 +91,57 @@ export function file(ext, name, meta = "", o = {}) {
   return `<div class="${cls}"${o.attrs || ""}${o.style ? ` style="${o.style}"` : ""}><span class="file__ext">${ext}</span><span class="file__body"><span class="file__name">${esc(name)}</span>${meta ? `<span class="file__meta">${meta}</span>` : ""}</span>${o.after || ""}</div>`;
 }
 
-/** The hands-on cue. Never a clock. */
-export const now = (c, text, attrs = "") => `<p class="now"${attrs}>${c.ico("hand")}${text}</p>`;
+/** The room's task on paper: ink, never the accent (the accent means Tim works in Claude). Never a clock. */
+export const roomPill = (c, text, attrs = "") => `<p class="pill room-pill"${attrs}>${c.ico("hand")}${text}</p>`;
+
+/** The pill on every slide where Tim works live in Claude Desktop. */
+export const live = (c, attrs = "") => `<p class="now now--live hd__now"${attrs}>${c.ico("spark")}Live · Claude Desktop</p>`;
+
+/**
+ * Tim's clicks in Claude Desktop as a numbered strip. items: [label, k, win, out, outWin]. The lit copy
+ * (.tsteps__on) fades in at step k and out at `out`; there the check (.tsteps__done) pops. The last item
+ * has no `out` and stays lit. The strip replays the clicks Tim made in Claude Desktop: he reads it out
+ * before he switches, and the arrows tick it off when he is back. o: { col } stacks the items.
+ */
+export function tsteps(c, items, o = {}) {
+  const li = items
+    .map(([label, k, win, out, outWin], i) => {
+      const base = `<b class="tsteps__n">${i + 1}</b><span>${esc(label)}</span>`;
+      const on = `<i class="tsteps__on" aria-hidden="true"${s(k, { fx: "fade", win, out, outWin })}>${base}</i>`;
+      const done = out === undefined ? "" : `<i class="tsteps__done" aria-hidden="true"${s(out, { fx: "pop", win: outWin })}>${c.ico("check", "ico--bold")}</i>`;
+      return `<li>${base}${on}${done}</li>`;
+    })
+    .join("");
+  return `<ol class="tsteps${o.col ? " tsteps--col" : ""}" aria-label="${c.t("Tims Schritte in Claude Desktop", "Tim's steps in Claude Desktop")}">${li}</ol>`;
+}
+
+/** Header of a Claude slide: kicker and Tim's strip in the label row, the live pill right, the headline below. */
+export function liveHead(c, kick, items, headline) {
+  return `<header class="hd hd--live"><div class="label tsteps-row"><span class="tsteps__kick">${kick}</span>${tsteps(c, items)}</div>${live(c, s(0, { fx: "pop", win: "0,.4" }))}<h2 class="headline headline--m">${headline}</h2></header>`;
+}
+
+/** The room's job on a slide: "Ihr schätzt: …" before a run, "Ihr prüft: …" after it. */
+export const job = (c, lead, text, attrs = "", cls = "") => `<p class="job${cls ? ` ${cls}` : ""}"${attrs}>${c.ico("hand")}<span><b>${lead}</b> ${text}</span></p>`;
+
+/** A poll's options as [value, label]: 0 to n, or labelled ranges with the values a, b, c, d. */
+export const pollOptions = (options) =>
+  typeof options === "number" ? Array.from({ length: options + 1 }, (_, n) => [String(n), String(n)]) : options.map((label, n) => ["abcd"[n], label]);
+
+/**
+ * The room's estimate, kept on screen after the big poll leaves: the same votes (lib/scenes.js mirrors
+ * every [data-value] under [data-poll-show]) as small bars, and a ring on the right option at the
+ * result step. opts: [value, label]. o: { k, win, out, outWin, ring: [step, win], cls }
+ */
+export function pollMini(c, name, opts, correct, o) {
+  const cells = opts
+    .map(([value, label]) => {
+      const ring = value === correct ? `<i class="pmini__ring"${s(o.ring[0], { fx: "pop", win: o.ring[1] })}></i>` : "";
+      return `<li data-value="${value}"><b data-poll-n>0</b><i></i><span>${label}</span>${ring}</li>`;
+    })
+    .join("");
+  const attrs = s(o.k, { fx: "pop", win: o.win, out: o.out, outWin: o.outWin });
+  return `<div class="pmini surface surface--strong${o.cls ? ` ${o.cls}` : ""}" data-poll-show="${name}"${attrs}><p class="pmini__h">${c.ico("hand")}${c.t("Eure Schätzung", "Your prediction")}</p><ol class="pmini__bars" style="--n:${opts.length}">${cells}</ol></div>`;
+}
 
 /* ── Claude desktop replica ─────────────────────────────────────────── */
 

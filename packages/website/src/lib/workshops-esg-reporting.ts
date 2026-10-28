@@ -10,9 +10,9 @@ const base = "/workshops/esg-berichte-mit-ki";
  * written by scripts/workshop04/export-esg-passport.mjs, the two kit editions (v3, "Nachweisprobe")
  * by scripts/workshop04/kit-v3.mjs (repository root). Every number in this copy is printed in the
  * deck or the kit, and the company, its files and its certificates are invented. The deck has a German
- * edition (slides.html) and an English one (en/slides.html), 19 slides each plus an appendix; the
- * agenda follows the planned time in its speaker notes. Tim demos Claude while the room plays; the
- * kit is the take-home assignment.
+ * edition (slides.html) and an English one (en/slides.html), 20 slides each (17 main slides plus an appendix of 3); the
+ * agenda follows the planned time in its speaker notes. Tim drives Claude Desktop on the projector while the room
+ * predicts and checks; the kit is the take-home assignment.
  */
 
 /**
@@ -88,23 +88,23 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Du erkennst, welche Antworten sich mit einem nachgereichten Dokument ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
-      { label: "Warum dieser Fall", minutes: 4, activity: "listen", description: "Was in Deutschland und Skopje wirklich passiert ist und welche Frage daraus für ein Weingut folgt." },
-      { label: "Ein Satz, eine Datei", minutes: 5, activity: "vote", description: "Würdest du diese Regalkarte so drucken? Erst abstimmen, dann die Datei daneben legen." },
-      { label: "Die Nachweisprobe", minutes: 3, activity: "listen", description: "Vier Prüfungen für jede Antwort: Zitat, Zeitraum, Umfang, Freigabe." },
-      { label: "Anfragen, Kit und Projekt", minutes: 6, activity: "do", description: "Wer fragt, was im Kit liegt und wie das Claude-Projekt angelegt wird." },
-      { label: "Durchsicht ohne Claude", minutes: 8, activity: "do", description: "Zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
-      { label: "Schritt 1: der Fragebogen", minutes: 6, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
-      { label: "Schritt 2: die Werbeaussagen", minutes: 7, activity: "vote", description: "Für jede Aussage entscheiden: darf raus oder nicht." },
-      { label: "Schritt 3: das Bankformular", minutes: 5, activity: "do", description: "Eine Zeile selbst mit dem Taschenrechner nachrechnen, dann Claude." },
-      { label: "Register und Nachreichung", minutes: 10, activity: "do", description: "Alle Antworten an einer Stelle, dann ändert ein neues Dokument einige davon. Zum Schluss: was wir mit Claude gemessen haben, und was nicht." },
-      { label: "Drei Sätze und Mitnehmen", minutes: 6, activity: "write", description: "Drei neue Sätze auf Papier einordnen, dann Skill und Vorlagen für die eigene Firma." },
+      { label: "Der Fall", minutes: 7, activity: "listen", description: "Was in Deutschland, Skopje und Norwegen gilt, wer das Weingut ist und wer was fragt." },
+      { label: "Heute und die Regel", minutes: 6, activity: "vote", description: "Die Frage der Stunde, dann ein Satz gegen seine Datei: erst abstimmen, dann prüfen." },
+      { label: "Kit und Durchsicht auf Papier", minutes: 12, activity: "do", description: "Was im Kit liegt, dann zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
+      { label: "Das Claude-Projekt, live", minutes: 4, activity: "listen", description: "Tim legt das Projekt in Claude Desktop an: Anweisungen, 13 Dateien, Codeausführung." },
+      { label: "Schritt 1: der Fragebogen", minutes: 7, activity: "vote", description: "Erst schätzen, wie viele Antworten belegt sind, dann die zitierte Zeile prüfen." },
+      { label: "Schritt 2: die Werbeaussagen", minutes: 6, activity: "vote", description: "Schätzen, wie viele Aussagen raus dürfen, dann die Verbotsliste." },
+      { label: "Schritt 3: das Bankformular", minutes: 5, activity: "do", description: "Eine Zeile selbst mit dem Handy nachrechnen, dann rechnet Claude." },
+      { label: "Schritt 4: das Register", minutes: 4, activity: "vote", description: "Alle 21 Antworten in einer Excel-Datei, und welches Dokument zuerst fehlt." },
+      { label: "Schritt 5: die Nachreichung", minutes: 5, activity: "vote", description: "Ein neues Dokument kommt, einige Status ändern sich. Wie viele?" },
+      { label: "Gemessen und Mitnehmen", minutes: 4, activity: "listen", description: "Was wir mit Claude gemessen haben, dann Kit, Skill und Demo für zu Hause." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 90,
     selfStudyDurationLabel: "Allein ca. 90 Min.",
     needs: [
-      "Live: nichts zu installieren, ein Stift oder dein Handy für die Abstimmungen",
+      "Live: nichts zu installieren, ein Stift und ein Handy zum Rechnen; abgestimmt wird per Handzeichen",
       "Zu Hause: Claude (App oder claude.ai, jeder Plan) mit Codeausführung und Dateierstellung („Settings“, „Capabilities“, standardmäßig an)",
     ],
     notNeeded: [
@@ -193,7 +193,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("de", [
       [
-        "Deck · 16 Folien",
+        "Deck · 17 Folien",
         `Für den Beamer. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
       ],
       [
@@ -242,23 +242,23 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
-      { label: "Why this case", minutes: 4, activity: "listen", description: "What actually happened in Germany and Skopje, and the question it leaves a winery with." },
-      { label: "One sentence, one file", minutes: 5, activity: "vote", description: "Would you print this shelf card? Vote first, then put the file next to it." },
-      { label: "The evidence check", minutes: 3, activity: "listen", description: "Four checks for every answer: quote, period, scope, approval." },
-      { label: "Requests, kit and project", minutes: 6, activity: "do", description: "Who asks, what is in the kit and how to set up the Claude Project." },
-      { label: "Review without Claude", minutes: 8, activity: "do", description: "In pairs on paper: file, line and which check fails." },
-      { label: "Step 1: the questionnaire", minutes: 6, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },
-      { label: "Step 2: the marketing claims", minutes: 7, activity: "vote", description: "Decide for each claim: send or not." },
-      { label: "Step 3: the bank form", minutes: 5, activity: "do", description: "Work out one line with a calculator yourself, then Claude." },
-      { label: "Register and late document", minutes: 10, activity: "do", description: "Every answer in one place, then a new document changes some of them. Last: what we measured with Claude, and what we did not." },
-      { label: "Three sentences and take-home", minutes: 6, activity: "write", description: "Place three new sentences on paper, then the skill and templates for your own company." },
+      { label: "The case", minutes: 7, activity: "listen", description: "What applies in Germany, Skopje and Norway, who the winery is and who asks what." },
+      { label: "Today and the rule", minutes: 6, activity: "vote", description: "The question of the hour, then one sentence against its file: vote first, then check." },
+      { label: "Kit and review on paper", minutes: 12, activity: "do", description: "What is in the kit, then in pairs on paper: file, line and which check fails." },
+      { label: "The Claude project, live", minutes: 4, activity: "listen", description: "Tim sets up the project in Claude Desktop: instructions, 13 files, code execution." },
+      { label: "Step 1: the questionnaire", minutes: 7, activity: "vote", description: "Predict how many answers are covered, then check the cited line." },
+      { label: "Step 2: the marketing claims", minutes: 6, activity: "vote", description: "Predict how many claims may go out, then the ban list." },
+      { label: "Step 3: the bank form", minutes: 5, activity: "do", description: "Work out one line on your phone yourself, then Claude calculates." },
+      { label: "Step 4: the register", minutes: 4, activity: "vote", description: "All 21 answers in one Excel file, and which document is missing first." },
+      { label: "Step 5: the late document", minutes: 5, activity: "vote", description: "A new document arrives and some statuses change. How many?" },
+      { label: "Measured and take home", minutes: 4, activity: "listen", description: "What we measured with Claude, then kit, skill and demo for home." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 90,
     selfStudyDurationLabel: "solo about 90 min",
     needs: [
-      "Live: nothing to install, a pen or your phone for the votes",
+      "Live: nothing to install, a pen and a phone for one calculation; votes are by show of hands",
       "At home: Claude (app or claude.ai, any plan) with code execution and file creation on (“Settings”, “Capabilities”, on by default)",
     ],
     notNeeded: [
@@ -347,7 +347,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("en", [
       [
-        "Deck · 16 slides",
+        "Deck · 17 slides",
         `For the projector. Every prompt has a copy button. ${DECK_KEYS.en}`,
       ],
       [

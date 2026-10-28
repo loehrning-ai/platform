@@ -22,7 +22,7 @@ import { readKitArchive } from "../kit-archive.mjs";
 import { KITS, zipPath } from "../kit-v3.mjs";
 import { NOTES } from "./notes.mjs";
 import { context } from "./parts.mjs";
-import { cover, host, kitSlide, news, objective, review, rule, winery } from "./slides-a.mjs";
+import { cover, host, kitSlide, news, requests, review, rule, today, winery } from "./slides-a.mjs";
 import { capAppendix, caseAppendix, late, measured, project, register, sources, step1, step2, step3, takeHome } from "./slides-b.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -84,7 +84,7 @@ const HEAD = {
   },
 };
 
-const SLIDES = [cover, host, news, winery, objective, rule, kitSlide, review, project, step1, step2, step3, register, late, measured, takeHome, sources, capAppendix, caseAppendix];
+const SLIDES = [cover, host, news, winery, requests, today, rule, kitSlide, review, project, step1, step2, step3, register, late, measured, takeHome, sources, capAppendix, caseAppendix];
 
 /** "1 min 30 s" → 90 */
 function seconds(time) {
