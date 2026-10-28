@@ -40,6 +40,8 @@ R1 fragt, welche Systeme die Daten jetzt speichern oder verarbeiten. Der kostenl
 
 R1 ist BELEGT und trotzdem eine schlechte Nachricht: Die Systemliste belegt, dass Claude Team Anfragetexte von Tannwald in den USA speichert, und Klausel 7 verlangt eine schriftliche Mitteilung und Speicherung in der EU oder im EWR, außer Tannwald stimmt schriftlich zu. BELEGT heißt belegt, nicht gut. R1 fragt nach einem Fakt, wo die Daten liegen, also ist der Beweis einer schlechten Nachricht BELEGT. R5 und R7 verlangen, dass etwas erfüllt ist; ihre Protokolle zeigen, dass es nicht erfüllt ist, also LÜCKE.
 
+R6 ist BELEGT für die Vorfälle im Log. it-notes nennen einen kostenlosen Chatbot, den Beschäftigte bis September für Antworten nutzten. Ob dabei Tannwald-Daten eingegeben wurden und ob das ein Vorfall ist, den Tannwald nach Abschnitt 6.2 erfahren muss, entscheidet die Geschäftsführung, nicht Claude. Wenn ja, wird R6 zur LÜCKE.
+
 Die Frage zu R7: nein. Eine Richtlinie sagt, was passieren soll. Nur ein Protokoll zeigt, dass es passiert ist, und dieses Protokoll sagt, dass es nicht passiert ist. Dasselbe gilt für R4 und "Administrator access is reviewed every quarter".
 
 Wo Claude bei diesem Ordner danebenliegt, und die Regel, die es stoppt:
@@ -54,6 +56,7 @@ Wo dein Status abweicht, such in projektanweisungen.md die Regel, die ihn entsch
 
 ## Schritt 3: Lücken und Antwort
 Lückenliste: R8 (SCHWACH); R2, R3, R4, R5, R7 (LÜCKE). Zuständig: IT-Leitung für R2, R3, R4, R7; HR-Leitung für R5; Geschäftsführung für R8. Bis 2. Dezember 2026.
+Bis 25.11. geht die Antwort mit R1, R6 und der Lückenliste samt Terminen raus; die fehlenden Dokumente folgen bis 2.12., acht Tage vor dem Audit.
 
 Beispiel-Mail (R7), gefüllt aus vorlagen/luecken-anfrage.md:
 
@@ -87,10 +90,10 @@ Prüfung des Antwortentwurfs:
 Beispielantwort an den Kunden, auf Englisch (deine Formulierung wird anders sein):
 ```
 Dear Ms Keller,
-today we send R1, our system list approved on 2 September 2026, and R6, our incident log for 2026. It shows one incident with your data (INC-02); we told you 30.5 hours after we detected it.
-Four documents are incomplete. R2: the transfer basis for Anthropic (USA) is missing from our register. R3: our AI rule applies from 1 October 2026; we add a record of AI use before that date. R4: we are reviewing the administrator accounts of the three other systems. R8: version 4 of our security policy awaits approval.
+today we send R1, our system list approved on 2 September 2026, and R6, our incident log for 2026. It shows one incident with your data (INC-02); we told you 30.5 hours after detection.
+Four documents are incomplete. R2: the transfer basis for Anthropic (USA) is missing from our register. R3: our AI rule applies from 1 October 2026; we add a record of AI use before that date. R4: we are reviewing administrator accounts on the other three systems. R8: version 4 of our security policy awaits approval.
 Two we cannot send. R5: 25 of 120 staff are trained. R7: we have not run a restore test in 2026. You receive dates for both by 2 December.
-Under clause 7 we owe you written notice of our use of Claude Team, which stores data in the USA. It is attached.
+Under clause 7 we owe you written notice of Claude Team, which stores data in the USA; it is attached, and we ask your written consent.
 Dragan Ilievski
 ```
 Die Antwort darf nicht "all staff", "every quarter", "tested regularly", "stays in the EU" oder "compliant" sagen. Alles, was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung, wenn möglich mit rechtlichem Rat.

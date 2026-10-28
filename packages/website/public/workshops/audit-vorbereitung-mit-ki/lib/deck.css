@@ -11,12 +11,12 @@ deck-stage{--cover-ground:#F3F0E9}
 b,strong{font-weight:700}
 
 /* ── slide frame ────────────────────────────────────────────────────── */
-.slide{display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:72px 112px 0;background:var(--paper);color:var(--ink);font-size:28px;line-height:1.35;overflow:hidden}
+.slide{display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:88px 112px 0;background:var(--paper);color:var(--ink);font-size:28px;line-height:1.35;overflow:hidden}
 :where(.slide) :where(p,ol,figure,blockquote,h1,h2){margin:0}
 :where(.slide) ol{padding:0;list-style:none}
 .hd{position:relative;display:grid;gap:14px;align-content:start;padding-right:380px}
 .hd__now{position:absolute;right:0;top:4px;margin:0}
-.stage{position:relative;min-height:0;margin-top:34px}
+.stage{position:relative;min-height:0;margin-top:18px}
 .slide .q{font:inherit}
 .moral{font:700 52px/1.1 var(--sans);letter-spacing:-.025em;text-wrap:balance}
 .moral em{font-style:normal;color:var(--accent)}
@@ -52,7 +52,7 @@ b,strong{font-weight:700}
 .hd:has(.tsteps-row){padding-right:330px;gap:8px}
 .hd:has(.tsteps-row) .tsteps-row{margin-top:14px}
 .hd:has(.tsteps-row) .hd__now{top:29px;translate:0 -50%}
-.slide:has(.hd .tsteps-row) .stage{margin-top:26px}
+.slide:has(.hd .tsteps-row) .stage{margin-top:10px}
 .hd .now--live{font-size:22px}
 /* the room's job on a slide: one line, ink, never the accent */
 .job{display:flex;align-items:flex-start;gap:14px;padding:16px 22px;border-radius:22px;background:var(--e-glass-strong);border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift-sm);font:400 27px/1.25 var(--sans);color:var(--ink)}
@@ -329,11 +329,11 @@ html[lang="en"] .letter__quote::after,html[lang="en"] .lk-q::after,html[lang="en
 .tcard__text mark{position:relative;white-space:nowrap;background:var(--e-accent-soft);color:var(--ink);border-radius:6px;padding:0 4px}
 .tcard__why{display:flex;align-items:center;gap:10px;font:700 25px/1.2 var(--sans);color:var(--accent)}
 .tcard__why svg.ico{width:24px;height:24px}
-.four__status{display:flex;gap:56px;margin-top:34px}
+.four__status{display:flex;gap:56px;margin-top:26px}
 .four__st{display:flex;align-items:center;gap:16px;--origin:left center}
 .four__st > span:last-child{font:500 26px/1.2 var(--sans);color:var(--muted)}
 /* the rule as its file: the first line shows, the rest opens on hover or focus */
-.four__file{position:relative;z-index:4;justify-self:start;width:1240px;margin-top:28px;padding:16px 24px 18px;border-radius:22px;background:#FFFEFB;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift);outline:none;cursor:default}
+.four__file{position:relative;z-index:4;justify-self:start;width:1240px;margin-top:22px;padding:16px 24px 18px;border-radius:22px;background:#FFFEFB;border:1px solid var(--e-hair);box-shadow:var(--e-hi),var(--e-lift);outline:none;cursor:default}
 .four__fhead{display:flex;align-items:center;gap:10px;font:600 17px/1.2 var(--mono);color:var(--muted)}
 .four__fhead b{color:var(--ink)}
 .four__fhead svg.ico{width:20px;height:20px}
@@ -654,7 +654,12 @@ html[lang="en"] .letter__quote::after,html[lang="en"] .lk-q::after,html[lang="en
 .fact__text{font:400 23px/1.4 var(--sans)}
 .appx__rule{display:flex;gap:16px;align-items:flex-start;padding:22px 28px;font:400 24px/1.4 var(--sans)}
 .appx__rule svg.ico{width:32px;height:32px;color:var(--accent);flex:none}
-.sources{display:grid;gap:12px}
+.sources{display:grid;gap:8px}
 .sources li{display:grid;gap:2px}
 .sources b{font:700 22px/1.3 var(--sans)}
 .sources code{font:500 16px/1.3 var(--mono);color:var(--muted);overflow-wrap:anywhere}
+/* the project's knowledge counts up as the files land; the result headline asks before it answers */
+.pj__count{margin-left:auto;font-style:normal;font-weight:500;text-transform:none;letter-spacing:0;color:var(--cw-t2)}
+.pj__count b{font-variant-numeric:tabular-nums;color:var(--cw-t1)}
+.swap{display:inline-grid}
+.swap>span{grid-area:1/1}

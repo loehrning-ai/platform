@@ -106,6 +106,8 @@
   box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 2px 4px rgba(18,18,18,.06),0 20px 36px -18px rgba(70,35,10,.42);outline:none}
 .deck-back:focus-visible{outline:3px solid #B73A15;outline-offset:3px}
 .deck-back[data-idle]{opacity:0;pointer-events:none}
+/* Landscape phone: the slide fills the height, so the pill shrinks to a 44px arrow that fits the side gutter. */
+@media (orientation:landscape) and (max-height:500px){.deck-back{width:44px;height:44px;padding:0;gap:0;justify-content:center;font-size:0}.deck-back::before{content:"\\2190";font-size:18px}}
 @media (prefers-reduced-motion:reduce){.deck-back{transition:none}}
 @media print{.deck-back{display:none!important}}
 html[data-deck-preview] .deck-back{display:none!important}

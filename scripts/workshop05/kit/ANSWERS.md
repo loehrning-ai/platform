@@ -40,6 +40,8 @@ R1 asks which systems store or process your data now. The free chatbot that it-n
 
 R1 is COVERED and still bad news: the system list proves that Claude Team stores Tannwald request text in the US, and clause 7 requires written notice and EU/EEA storage unless Tannwald agrees in writing. COVERED means proven, not good. R1 asks for a fact, where the data is, so proof of bad news is COVERED. R5 and R7 ask that something is met; their records show it is not, so they are GAP.
 
+R6 is COVERED for the incidents in the log. it-notes mention a free chatbot that agents used until September to word replies. Whether Tannwald data went into it, and whether that is an incident Tannwald must hear about under section 6.2, is the Managing Director's decision, not Claude's. If it is, R6 becomes GAP.
+
 The R7 question: no. A policy says what should happen. Only a record shows that it happened, and this record says it did not. The same holds for R4 and "Administrator access is reviewed every quarter".
 
 Where Claude goes wrong on this folder, and the rule that stops it:
@@ -54,6 +56,7 @@ Where your status differs, find the rule number in project-instructions.md that 
 
 ## Step 3: gaps and reply
 Gap list: R8 (WEAK); R2, R3, R4, R5, R7 (GAP). Owners: IT lead for R2, R3, R4, R7; HR lead for R5; Managing Director for R8. Needed by 2 December 2026.
+By 25 November the reply goes out with R1, R6 and the gap list with dates; the missing documents follow by 2 December, eight days before the audit.
 
 Example email (R7), filled from templates/gap-request.md:
 
@@ -87,10 +90,10 @@ Draft reply check:
 Sample reply (your wording will differ):
 ```
 Dear Ms Keller,
-today we send R1, our system list approved on 2 September 2026, and R6, our incident log for 2026. It shows one incident with your data (INC-02); we told you 30.5 hours after we detected it.
-Four documents are incomplete. R2: the transfer basis for Anthropic (USA) is missing from our register. R3: our AI rule applies from 1 October 2026; we add a record of AI use before that date. R4: we are reviewing the administrator accounts of the three other systems. R8: version 4 of our security policy awaits approval.
+today we send R1, our system list approved on 2 September 2026, and R6, our incident log for 2026. It shows one incident with your data (INC-02); we told you 30.5 hours after detection.
+Four documents are incomplete. R2: the transfer basis for Anthropic (USA) is missing from our register. R3: our AI rule applies from 1 October 2026; we add a record of AI use before that date. R4: we are reviewing administrator accounts on the other three systems. R8: version 4 of our security policy awaits approval.
 Two we cannot send. R5: 25 of 120 staff are trained. R7: we have not run a restore test in 2026. You receive dates for both by 2 December.
-Under clause 7 we owe you written notice of our use of Claude Team, which stores data in the USA. It is attached.
+Under clause 7 we owe you written notice of Claude Team, which stores data in the USA; it is attached, and we ask your written consent.
 Dragan Ilievski
 ```
 The reply must not say "all staff", "every quarter", "tested regularly", "stays in the EU" or "compliant". Anything that admits a contract point (clause 7) is the managing director's decision, with legal advice if you have it.

@@ -84,7 +84,7 @@ export function step1(c) {
   const strom = c.de ? "strom_2025.csv" : "electricity_2025.csv";
   const q = c.de
     ? [["Q1", "Strom 2025", `${c.dv("mwh11")} MWh, 11 von 12 Monaten`, "luecke"], ["Q2", "Scope 1 und 2", "keine Bilanz, kein Faktor", "luecke"], ["Q3", "Beschäftigte", "42, davon 6 befristet", "belegt"], ["Q4", "Arbeitsunfälle", "2 meldepflichtig, 0 tödlich", "belegt"], ["Q5", "Korruption", "keine, Erklärung 15.01.2026", "belegt"], ["Q6", "Glasgewicht", "Reserve 560 g, über 420 g", "belegt"], ["Q7", "Zertifikate", "Bio abgelaufen, Termin 22.10.", "schwach"], ["Q8", "Wasser", `${c.dv("waterM3")} m³, 12 von 12`, "belegt"]]
-    : [["Q1", "Electricity 2025", `${c.dv("mwh11")} MWh, 11 of 12 months`, "luecke"], ["Q2", "Scope 1 and 2", "no inventory, no factor", "luecke"], ["Q3", "Employees", "42, of them 6 fixed-term", "belegt"], ["Q4", "Work accidents", "2 recordable, 0 fatal", "belegt"], ["Q5", "Corruption", "none, statement 15.01.2026", "belegt"], ["Q6", "Glass weight", "Reserve 560 g, over 420 g", "belegt"], ["Q7", "Certificates", "organic expired, audit 22.10.", "schwach"], ["Q8", "Water", `${c.dv("waterM3")} m³, 12 of 12`, "belegt"]];
+    : [["Q1", "Electricity 2025", `${c.dv("mwh11")} MWh, 11 of 12 months`, "luecke"], ["Q2", "Scope 1 and 2", "no inventory, no factor", "luecke"], ["Q3", "Employees", "42, 6 of them fixed-term", "belegt"], ["Q4", "Work accidents", "2 recordable, 0 fatal", "belegt"], ["Q5", "Corruption", "none, statement 15.01.2026", "belegt"], ["Q6", "Glass weight", "Reserve 560 g, over 420 g", "belegt"], ["Q7", "Certificates", "organic expired, renewal 22.10.", "schwach"], ["Q8", "Water", `${c.dv("waterM3")} m³, 12 of 12`, "belegt"]];
   const rows = q
     .map(([id, what, answer, tone], i) => `<tr${id === "Q1" ? " data-mark" : ""}${s(3, { fx: "pop", win: stagger(i, 8, 0.25, 0.15, 0.8) })} style="--origin:left center"><td>${id}</td><td>${what}</td><td>${answer}</td><td>${c.chip(tone, "chip--s")}</td></tr>`)
     .join("");
@@ -131,9 +131,10 @@ ${foot(c, 11)}`,
 export function step2(c) {
   const g = geo(c, "s2", {});
   const where = { Rückenetikett: "bottle", Website: "globe", Regalkarte: "label", "back label": "bottle", website: "globe", "shelf card": "label" };
+  const only = (word) => `<span class="nw">${word}<i${s(4, { fx: "strike", win: ".3,.6" })}></i></span>`;
   const claims = c.de
-    ? [["C1", "„Klimaneutraler Wein“", "Rückenetikett", "4c"], ["C2", "„Umweltfreundliches Weingut“", "Website", "4a"], ["C3", "„Zertifizierte Bio-Weinberge“", "Regalkarte", "4b"], ["C4", "„Solarbetriebenes Weingut“", "Website", "x"], ["C5", "„2025 haben wir 12 % weniger Strom verbraucht“", "Website", "x"], ["C6", "„Diese Flasche wiegt nur 395 g und besteht zu 60 % aus Recyclingglas“", "Rückenetikett", ""], ["C7", `„2025 hat das ganze Weingut ${c.v.waterM3} m³ Wasser entnommen, gemessen auf 12 Monatsrechnungen“`, "Website", ""]]
-    : [["C1", "“Climate neutral wine”", "back label", "4c"], ["C2", "“Eco-friendly winery”", "website", "4a"], ["C3", "“Certified organic vineyards”", "shelf card", "4b"], ["C4", "“Solar powered winery”", "website", "x"], ["C5", "“In 2025 we used 12 % less electricity”", "website", "x"], ["C6", "“This bottle weighs only 395 g and is 60 % recycled glass”", "back label", ""], ["C7", `“In 2025 the whole winery withdrew ${c.v.waterM3} m³ of water, measured on 12 monthly bills”`, "website", ""]];
+    ? [["C1", "„Klimaneutraler Wein“", "Rückenetikett", "4c"], ["C2", "„Umweltfreundliches Weingut“", "Website", "4a"], ["C3", "„Zertifizierte Bio-Weinberge“", "Regalkarte", "4b"], ["C4", "„Solarbetriebenes Weingut“", "Website", "x"], ["C5", "„2025 haben wir 12 % weniger Strom verbraucht“", "Website", "x"], ["C6", `„Diese Flasche wiegt ${only("nur")} 395 g und besteht zu 60 % aus Recyclingglas“`, "Rückenetikett", ""], ["C7", `„2025 hat das ganze Weingut ${c.v.waterM3} m³ Wasser entnommen, gemessen auf 12 Monatsrechnungen“`, "Website", ""]]
+    : [["C1", "“Climate neutral wine”", "back label", "4c"], ["C2", "“Eco-friendly winery”", "website", "4a"], ["C3", "“Certified organic vineyards”", "shelf card", "4b"], ["C4", "“Solar powered winery”", "website", "x"], ["C5", "“In 2025 we used 12 % less electricity”", "website", "x"], ["C6", `“This bottle weighs ${only("only")} 395 g and is 60 % recycled glass”`, "back label", ""], ["C7", `“In 2025 the whole winery withdrew ${c.v.waterM3} m³ of water, measured on 12 monthly bills”`, "website", ""]];
   let struck = 0;
   const stickers = claims
     .map(([id, claim, place, ban], i) => {
@@ -168,7 +169,7 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
       [c.t("Aussagen anhängen", "Attach claims"), 0, ".4,.8", 1, "0,.3"],
       [c.t("Prompt 2 senden", "Send prompt 2"), 1, ".3,.7", 2, "0,.3"],
       [c.t("Verbotsliste öffnen", "Open ban list"), 2, ".05,.4"],
-    ], c.t("Welche der 7 Aussagen darf raus?", "Which of the 7 claims may go out?"))}
+    ], c.t("Welche der 7 Aussagen dürfen raus?", "Which of the 7 claims may go out?"))}
 <div class="stage hs2">
 <div class="hs2__left">${cw(c, { crumbs: [c.kit.project, c.t("Werbeaussagen", "Marketing claims")], side: cwSide(c, { chats: chats(c, 2) }), cls: "hs2__cw", attrs: s(0, { fx: "fade", win: "0,.4" }), att: waiting }, thread)}
 ${predict(c, "s2", c.t("Wie viele der 7 dürfen <em>raus</em>?", "how many of the 7 may go <em>out</em>?"), 7)}
@@ -205,7 +206,7 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
     act(c, 2, ".3,.6", "check", `Read ${code(c.de ? "strom_2025.csv" : "electricity_2025.csv")}`),
     act(c, 3, ".1,.4", "code", `Ran code ${code("8550000 / (180000 * 9.50)")} → 5.0`),
   ], s(2, { fx: "pop", win: "0,.2" }) + ' style="--origin:left top"')}
-<div class="cw-answer"${s(3, { fx: "blur", win: ".5,.9" })}><p>${c.t("Die Rechnung stimmt. Belegt ist sie nicht: Das Angebot ist nicht unterschrieben.", "The arithmetic is right. Covered it is not: the offer is unsigned.")}</p></div>
+<div class="cw-answer"${s(3, { fx: "blur", win: ".5,.9" })}><p>${c.t("Die Rechnung stimmt. Belegt ist sie nicht: Das Angebot ist nicht unterschrieben.", "Right sum, but not covered: the offer is unsigned.")}</p></div>
 </div>`;
   const waiting = att(cwFile("MD", REQUESTS[c.lang][2], c.t("6 Felder", "6 fields")), s(0, { fx: "pop", win: ".35,.8", out: 1, outWin: "0,.14" }) + ' style="--origin:left center"');
   return section(
@@ -233,7 +234,7 @@ const LEDGER = {
   C: ["luecke", "luecke", "luecke", "luecke", "luecke", "belegt", "belegt"],
   F: ["belegt", "luecke", "luecke", "schwach", "belegt", "schwach"],
 };
-const VSME = [["B1", "8/8", "belegt"], ["B2", "4/4", "belegt"], ["B3", "0/4", "luecke"], ["B4", "0/1", "luecke"], ["B5", "0/1", "luecke"], ["B6", "1/1", "belegt"], ["B7", "1/4", "luecke"], ["B8", "2/2", "belegt"], ["B9", "2/3", "luecke"], ["B10", "1/3", "luecke"], ["B11", "1/1", "belegt"]];
+const VSME = [["B1", "8/10", "luecke"], ["B2", "4/4", "belegt"], ["B3", "0/4", "luecke"], ["B4", "0/1", "luecke"], ["B5", "0/1", "luecke"], ["B6", "1/1", "belegt"], ["B7", "1/4", "luecke"], ["B8", "2/2", "belegt"], ["B9", "2/3", "luecke"], ["B10", "1/3", "luecke"], ["B11", "1/1", "belegt"]];
 
 export function register(c) {
   // Step 0 attaches the three requests, step 1 sends prompt 4, step 2 shows the register (9 BELEGT),
@@ -244,8 +245,8 @@ export function register(c) {
     .join("");
   const vsme = VSME.map(([id, part, tone], n) => `<div class="tile"${s(3, { fx: "flip", win: stagger(n, 11, 0.35, 0.15, 0.8) })}><span class="face">${id}</span><span class="face face--back" data-tone="${tone}">${id}<small>${part}</small></span></div>`).join("");
   const asks = c.de
-    ? [["Stromrechnung September 2025", "EL-25-09", "6"], ["Netz-Emissionsfaktor, veröffentlicht", "", "2"], ["Dieselbelege 2025", "", "2"]]
-    : [["Electricity invoice September 2025", "EL-25-09", "6"], ["Grid emission factor, published", "", "2"], ["Diesel receipts 2025", "", "2"]];
+    ? [["Stromrechnung September 2025", "EL-25-09", "6"], ["Bio-Zertifikat, erneuert", "", "4"], ["PV-Angebot, unterschrieben", "", "3"]]
+    : [["Electricity invoice September 2025", "EL-25-09", "8"], ["Diesel receipts 2025", "", "4"], ["Organic certificate, renewed", "", "4"]];
   const answer = `<div class="cw-answer reg__ans"${s(4, { fx: "fade", win: "0,.2" })}><p>${c.t("Zuerst anfordern, nach Zahl der wartenden Antworten:", "Request first, by the number of answers waiting:")}</p><ol class="reg__asks">${asks.map(([what, ref, count], n) => `<li${n === 0 ? ' class="reg__top"' : ""}${s(4, { fx: "pop", win: `${(0.15 + n * 0.08).toFixed(2)},${(0.5 + n * 0.08).toFixed(2)}` })} style="--origin:left center"><b>${n + 1}</b><span>${what}${ref ? ` <span class="nw">(${ref})</span>` : ""}</span><em>${count} ${c.t("warten", "waiting")}</em></li>`).join("")}</ol></div>`;
   const thread = `<div class="cw-thread">
 <div class="cw-files"${s(0, { fx: "fly", win: ".2,.7" })} style="--dx:0px;--dy:-80px;--s:.9">${REQUESTS[c.lang].map((name) => cwFile("MD", name, c.t("Anfrage", "request"))).join("")}</div>
@@ -271,9 +272,9 @@ ${answer}
 ${predict(c, "reg", c.t(`Wie viele der 21 sind <em>${c.status.belegt}</em>?`, `how many of the 21 are <em>${c.status.belegt}</em>?`), ranges, { cls: "reg__poll" })}
 <div class="reg__count"${s(1, { fx: "fade", win: ".3,.6" })}><b class="stat__n"${s(2, { fx: "none", win: ".1,.95", count: "0,9,0" })}>${c.dv("belegtBefore")}</b><span class="reg__of">/ 21 ${c.chip("belegt")}</span><span class="reg__legend"${s(2, { fx: "fade", win: ".7,1" })}>${c.chip("schwach")} 3 ${c.chip("luecke", "chip--quiet")} 9</span></div>
 ${rows}
-<div class="reg__row reg__row--vsme"${s(3, { fx: "fade", win: "0,.2" })}><p class="reg__vcap">${c.t("VSME · EU-Standard für KMU", "VSME · EU standard for SMEs")}</p><span class="reg__l"></span><div class="tiles reg__vsme" style="--cols:11">${vsme}</div></div>
+<div class="reg__row reg__row--vsme"${s(3, { fx: "fade", win: "0,.2" })}><p class="reg__vcap">${c.t("VSME · freiwilliger EU-Standard", "VSME · voluntary EU standard")}</p><span class="reg__l"></span><div class="tiles reg__vsme" style="--cols:11">${vsme}</div></div>
 ${pollMini(c, "reg", pollOptions(ranges), "b", { k: 1, win: ".4,.8", out: 3, outWin: "0,.25", ring: [2, ".8,1"], cls: "reg__mini" })}
-${job(c, c.t("Ihr tippt:", "Your guess:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
+${job(c, c.t("Ihr ratet:", "Your guess:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
 </div>
 </div>
 ${foot(c, 14)}`,
@@ -371,12 +372,12 @@ ${foot(c, 17)}`,
 
 export function sources(c) {
   const items = c.de
-    ? [["Richtlinie (EU) 2024/825", "Anhang I Nr. 2a, 4a, 4b, 4c, 10a: immer verboten. Anwendung seit 27.09.2026, in Deutschland über das UWG."], ["BGH, Urteil vom 27.06.2024, I ZR 98/23", "Wer mit „klimaneutral“ wirbt, erklärt in der Werbung selbst, ob Minderung oder Kompensation gemeint ist."], ["IHK zum Dritten Gesetz zur Änderung des UWG vom 12.02.2026", "Gilt seit 27.09.2026. Neu verboten: eine Umweltaussage, die auf Kompensation von Treibhausgasen beruht."], ["EBRD, Pressemitteilung vom 18.12.2025", "Bis zu 8 Mio. Euro an die Sparkasse Bank Skopje, weitergegeben an KMU für erneuerbare Energie und Energieeffizienz (Green Finance Facility)."], ["Vinmonopolet, Gewichtsvorgabe für Glasflaschen", "Seit 01.01.2026: Stillwein unter 250 NOK in Flaschen von höchstens 420 g je 0,75 l. Eine Pflicht für Lieferanten."], ["Delegierte Verordnung (EU) 2026/1560", "VSME, der freiwillige Standard der EU für KMU, seit 24.09.2026. Basismodul B1 bis B11."], ["Richtlinie (EU) 2026/470", "Begrenzung in der Wertschöpfungskette, Geschäftsjahre ab 1.1.2027 (Anhang 2)."]]
-    : [["Directive (EU) 2024/825", "Annex I points 2a, 4a, 4b, 4c, 10a: always banned. Applies since 27.09.2026, in Germany through the UWG."], ["BGH, judgment of 27.06.2024, I ZR 98/23", "Whoever advertises with “climate neutral” explains in the advertisement itself whether reduction or offsetting is meant."], ["IHK on the third act amending the UWG of 12.02.2026", "Applies since 27.09.2026. Newly banned: an environmental claim that rests on offsetting greenhouse gases."], ["EBRD, press release of 18.12.2025", "Up to EUR 8 million to Sparkasse Bank Skopje, lent on to SMEs for renewable energy and energy efficiency (Green Finance Facility)."], ["Vinmonopolet, weight requirement for glass bottles", "Since 01.01.2026: still wine under NOK 250 in bottles of at most 420 g per 0.75 l. A requirement for suppliers."], ["Delegated Regulation (EU) 2026/1560", "VSME, the EU's voluntary standard for SMEs, since 24.09.2026. Basic Module B1 to B11."], ["Directive (EU) 2026/470", "Value-chain cap, financial years from 1.1.2027 (appendix 2)."]];
+    ? [["Richtlinie 2005/29/EG, Anhang I", "Nr. 2a, 4a, 4b, 4c, 10a (eingefügt durch 2024/825): immer verboten. Seit 27.09.2026, in Deutschland über das UWG."], ["BGH, Urteil vom 27.06.2024, I ZR 98/23", "Wer mit „klimaneutral“ wirbt, muss in der Werbung selbst erklären, ob Minderung oder Kompensation gemeint ist."], ["IHK zum Dritten Gesetz zur Änderung des UWG vom 12.02.2026", "Gilt seit 27.09.2026. Neu verboten: „klimaneutral“, „klimareduziert“ oder „klimapositiv“ auf Basis von Kompensation."], ["EBRD, Pressemitteilung vom 18.12.2025", "Bis zu 8 Mio. Euro an die Sparkasse Bank Skopje, weitergegeben an KMU für erneuerbare Energie und Energieeffizienz (Green Finance Facility)."], ["Vinmonopolet, Gewichtsvorgabe für Glasflaschen", "Seit 01.01.2026: Stillwein unter 250 NOK in Flaschen von höchstens 420 g je 0,75 l. Eine Pflicht für Lieferanten."], ["Delegierte Verordnung (EU) 2026/1560", "Freiwilliger Standard (VS, bisher VSME), in Kraft seit 24.09.2026, für Geschäftsjahre ab 2027. Basismodul B1 bis B11."], ["Richtlinie (EU) 2026/470", "Begrenzung in der Wertschöpfungskette, Geschäftsjahre ab 1.1.2027 (Anhang 2)."]]
+    : [["Directive 2005/29/EC, Annex I", "Points 2a, 4a, 4b, 4c, 10a (inserted by 2024/825): always banned. Since 27.09.2026, in Germany through the UWG."], ["BGH, judgment of 27.06.2024, I ZR 98/23", "Whoever advertises with “climate neutral” must explain in the advertisement itself whether reduction or offsetting is meant."], ["IHK on the third act amending the UWG of 12.02.2026", "Applies since 27.09.2026. Newly banned: “climate neutral”, “reduced” or “positive” based on offsetting."], ["EBRD, press release of 18.12.2025", "Up to EUR 8 million to Sparkasse Bank Skopje, lent on to SMEs for renewable energy and energy efficiency (Green Finance Facility)."], ["Vinmonopolet, weight requirement for glass bottles", "Since 01.01.2026: still wine under NOK 250 in bottles of at most 420 g per 0.75 l. A requirement for suppliers."], ["Delegated Regulation (EU) 2026/1560", "Voluntary Standard (VS, formerly VSME), in force since 24.09.2026, for financial years from 2027. Basic Module B1 to B11."], ["Directive (EU) 2026/470", "Value-chain cap, financial years from 1.1.2027 (appendix 2)."]];
   return section(
     { id: "anhang-quellen", label: c.t("Anhang: Quellen", "Appendix: Sources"), steps: 0, durations: "900", kind: "appendix" },
     `${head(c.t("Anhang 1 · Quellen", "Appendix 1 · Sources"), c.t("Quellen", "Sources"), { size: "m" })}
-<div class="stage ax"><ul class="ax__list surface surface--strong">${items.map(([title, body]) => `<li><b>${esc(title)}</b><span>${esc(body)}</span></li>`).join("")}</ul><p class="src">${c.t("Zusammengefasst in ordner/regeln_werbeaussagen.md und ordner/vsme_basismodul.md. Lernhilfe, keine Rechtsberatung.", "Summarised in files/green_claims_rules.md and files/vsme_basic_module.md. A learning aid, not legal advice.")}</p></div>
+<div class="stage ax"><ul class="ax__list surface surface--strong">${items.map(([title, body]) => `<li><b>${esc(title)}</b><span>${esc(body)}</span></li>`).join("")}</ul><p class="src">${c.t("Zusammengefasst im Ordner. Lernhilfe, keine Rechtsberatung.", "Summarised in the folder. A learning aid, not legal advice.")}</p></div>
 ${foot(c, 1, true)}`,
   );
 }
@@ -388,7 +389,7 @@ export function capAppendix(c) {
   return section(
     { id: "anhang-begrenzung", label: c.t("Anhang: Begrenzung in der Wertschöpfungskette", "Appendix: Value-chain cap"), steps: 0, durations: "900", kind: "appendix" },
     `${head(c.t("Anhang 2 · vsme_basismodul.md, Z. 35 bis 39", "Appendix 2 · vsme_basic_module.md, l. 35 to 39"), c.t("Was Kunden ab 2027 verlangen dürfen", "What customers may ask for from 2027"), { size: "m" })}
-<div class="stage ax"><div class="doc ax__doc"><div class="doc__head">${c.ico("file")}${c.t("vsme_basismodul.md", "vsme_basic_module.md")}</div><ol class="doc__lines">${lines.map(([n, line]) => `<li${n === 39 ? " data-mark" : ""}><i>${n}</i><span>${esc(line)}</span></li>`).join("")}</ol></div><p class="ax__point">${c.t("Für den Fragebogen dieser Übung gilt die Begrenzung noch nicht: Berichtsjahr 2025 (Z. 39).", "For the questionnaire in this exercise the cap does not apply yet: reporting year 2025 (l. 39).")}</p></div>
+<div class="stage ax"><div class="doc ax__doc"><div class="doc__head">${c.ico("file")}${c.t("vsme_basismodul.md", "vsme_basic_module.md")}</div><ol class="doc__lines">${lines.map(([n, line]) => `<li${n === 39 ? " data-mark" : ""}><i>${n}</i><span>${esc(line)}</span></li>`).join("")}</ol></div><p class="ax__point">${c.t("Hier gilt sie nicht: Nordvik fragt für eine Ausschreibung (Fragebogen Z. 5), nicht für einen eigenen Bericht (Z. 36), und für 2025 (Z. 39).", "It does not apply here: Nordvik asks for a tender (questionnaire l. 5), not for its own report (l. 36), and for 2025 (l. 39).")}</p></div>
 ${foot(c, 2, true)}`,
   );
 }

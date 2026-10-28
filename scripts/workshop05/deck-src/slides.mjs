@@ -160,11 +160,16 @@ const hl = (text, vars) => esc(fill(text, vars)).replace(/\*([^*]+)\*/g, '<mark 
 /** A test result as a small tile: pass (check), fail (cross, struck), skip (empty). */
 const tdot = (state, label, motion = "") => `<i class="tdot tdot--${state}" title="${esc(label)}"${motion}>${state === "skip" ? "" : ico(state === "pass" ? "check" : "cross", "ico--bold")}</i>`;
 
-/** The Claude sidebar with the project; o.motion animates it (project slide), otherwise it is set up already. */
+/**
+ * The Claude sidebar, as in W04: New chat, Chats, Projects, the project and, in a chat, the chat under Recents.
+ * Instructions and project knowledge live on the project's main page (slide 10), not in the sidebar.
+ * o.motion animates it (project slide), otherwise it is set up already.
+ */
 function cwSide(c, o = {}) {
   const k = c.project;
   const m = o.motion ?? {};
-  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${ico("plus")}New chat</p><p class="cw-nav">${ico("chat")}Chats</p><p class="cw-nav" data-on>${ico("folder")}Projects</p><p class="cw-sec">Project</p><div class="cw-proj"${m.proj ?? ""}><b>${esc(k.project)}</b><span>${esc(k.projectSub)}</span>${m.projGlow ? `<i class="cw-proj__glow"${m.projGlow}></i>` : ""}</div><p class="cw-row">${ico("policy")}Instructions<em${m.instr ?? ""}>set</em></p><p class="cw-row"${o.knowOn ? " data-on" : ""}>${ico("book")}Project knowledge<em${m.know ?? ""}>12 files</em></p><p class="cw-toggle" data-on data-keep${m.code ?? ""}><span>Code execution</span><i></i></p></aside>`;
+  const recent = o.chat ? `<p class="cw-sec">Recents</p><p class="cw-row" data-on>${ico("chat")}${esc(o.chat)}</p>` : "";
+  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${ico("plus")}New chat</p><p class="cw-nav">${ico("chat")}Chats</p><p class="cw-nav" data-on>${ico("folder")}Projects</p><p class="cw-sec">Project</p><div class="cw-proj"${m.proj ?? ""}><b>${esc(k.project)}</b><span>${esc(k.projectSub)}</span>${m.projGlow ? `<i class="cw-proj__glow"${m.projGlow}></i>` : ""}</div>${recent}<p class="cw-toggle" data-on data-keep${m.code ?? ""}><span>Code execution</span><i></i></p></aside>`;
 }
 
 /** Slide 03: the real case. A report page with references that do not exist, a quote nobody said and the
@@ -286,7 +291,7 @@ function request(d, c) {
     .join("");
   const opts = Array.from({ length: 9 }, (_, n) => `<button class="poll__opt" type="button" data-poll="estimate" data-value="${n}"><span class="poll__key">${n}</span><b data-poll-n>0</b></button>`).join("");
   const flap = `<g class="env__flap"${s(2, { fx: "none", win: ".42,.62", keep: true })}><path d="M6 8 L110 92 L214 8 Z"/><circle cx="110" cy="66" r="13"/></g>`;
-  const envelope = `<div class="req__env" style="left:${D[0] - 110}px;top:${D[1] - 75}px;--dx:${hx - sx}px;--dy:${hy - sy}px;--lift:40px;--s:.45"${s(1, { fx: "arc", win: ".1,1" })}><div class="req__env-move" style="--dx:${P[0] - D[0]}px;--dy:${P[1] - D[1]}px"${s(2, { fx: "move", win: "0,.42", keep: true })}><div class="req__env-fade"${s(0, { fx: "fade", win: "0,.01", out: 3, outWin: ".2,.55" })}><svg viewBox="0 0 220 150" aria-hidden="true"><rect class="env__body" x="3" y="3" width="214" height="144" rx="16"/><path class="env__fold" d="M8 142 L110 72 L212 142"/>${flap}</svg></div></div></div>`;
+  const envelope = `<div class="req__env" style="left:${D[0] - 110}px;top:${D[1] - 75}px;--dx:${hx - sx}px;--dy:${hy - sy}px;--lift:40px;--s:.45"${s(1, { fx: "arc", win: ".1,1" })}><div class="req__env-move" style="--dx:${P[0] - D[0]}px;--dy:${P[1] - D[1]}px"${s(2, { fx: "move", win: "0,.42", keep: true })}><div class="req__env-fade"${s(0, { fx: "fade", win: "0,.01", out: 2, outWin: ".85,1" })}><svg viewBox="0 0 220 150" aria-hidden="true"><rect class="env__body" x="3" y="3" width="214" height="144" rx="16"/><path class="env__fold" d="M8 142 L110 72 L212 142"/>${flap}</svg></div></div></div>`;
   const short = (iso) => (c.lang === "de" ? `${Number(iso.slice(8))}.${Number(iso.slice(5, 7))}.` : fmtDate(iso, c).replace(/ \d{4}$/, ""));
   return `${head(k.label, em(k.title))}
 <div class="stage req">
@@ -353,7 +358,7 @@ function today(d, c) {
   const where = `<p class="today__where"${s(0, { fx: "fade", win: ".45,.9" })}>${ico("pin")}<span>${esc(k.where)}</span></p>`;
   return `${head(k.label, em(k.title), { attrs: s(0, { fx: "blur", win: "0,.6" }), after: where })}
 <div class="stage today">
-<div class="road"><i class="road__track" aria-hidden="true"></i><i class="road__fill" aria-hidden="true"${s(1, { fx: "line", win: "0,.8" })}></i><ol class="road__stops">${stops}</ol></div>
+<div class="road"><i class="road__track" aria-hidden="true"${s(1, { fx: "fade", win: "0,.2" })}></i><i class="road__fill" aria-hidden="true"${s(1, { fx: "line", win: "0,.8" })}></i><ol class="road__stops">${stops}</ol></div>
 <p class="label today__how"${s(2, { fx: "fade", win: "0,.25" })}>${esc(k.how)}</p>
 <div class="roles">
 <section class="role surface surface--strong"${s(2, { fx: "fly", win: "0,.4" })} style="--dx:120px;--s:.95"><p class="now now--live role__pill"${s(2, { fx: "pop", win: ".25,.45" })}>${ico("spark")}${esc(c.live)}</p><h3 class="role__t">${esc(k.tim)}</h3><ol class="tsteps tsteps--col" aria-label="${esc(c.stepsLabel)}">${strip}</ol><p class="role__note"${s(2, { fx: "fade", win: ".85,1" })}>${esc(k.timNote)}</p></section>
@@ -444,7 +449,7 @@ const PJ = {
 function project(d, c) {
   const k = c.project;
   const [dirN, ...dirRest] = k.dirCount.split(" ");
-  const dirMeta = `<b class="kit-count"${s(2, { fx: "none", win: ".05,.95", count: `${dirN},0,0`, keep: true })}>${dirN}</b> ${esc(dirRest.join(" "))}`;
+  const dirMeta = `<b class="kit-count">${dirN}</b> ${esc(dirRest.join(" "))}`;
   const kitRows = [
     file(k.start, ""),
     file(k.instructions, "", { cls: "file--accent" }),
@@ -463,11 +468,11 @@ function project(d, c) {
   const [ix, iy] = PJ.row(1);
   const source = `<span class="pj-fly pj-fly--src" style="left:${PJ.src[0]}px;top:${PJ.src[1]}px;--dx:${ix - PJ.src[0]}px;--dy:${iy - PJ.src[1]}px;--lift:90px;--s:1.25"${s(1, { fx: "arc", win: "0,.4" })}>${ico("file")}${esc(fill(k.from, { file: k.instructions }))}</span>`;
   const rules = d.instructionLines.map((line, i) => `<p${s(1, { fx: "type", ease: "linear", win: stagger(i, d.instructionLines.length, 0.28, 0.42, 1) })}>${esc(line)}</p>`).join("");
-  const side = cwSide(c, { motion: { proj: s(0, { fx: "pop", win: ".35,.8" }), projGlow: s(0, { fx: "glow", win: ".6,1", out: 1, outWin: "0,.3" }), instr: s(1, { fx: "pop", win: ".35,.6" }), know: s(2, { fx: "pop", win: ".9,1" }), code: s(3, { fx: "none", win: ".1,.4" }) } });
+  const side = cwSide(c, { motion: { proj: s(0, { fx: "pop", win: ".35,.8" }), projGlow: s(0, { fx: "glow", win: ".6,1", out: 1, outWin: "0,.3" }), code: s(3, { fx: "none", win: ".1,.4" }) } });
   const main = `<div class="cw-main"><div class="cw-thread pj">
 <p class="pj__head">${ico("folder")}<b>${esc(k.project)}</b></p>
 <div class="pj__box"><p class="pj__label">${esc(k.instructionsHead)}</p><div class="pj__text">${rules}</div></div>
-<div class="pj__box"><p class="pj__label">${esc(k.knowledgeHead)}</p><div class="pj__files">${slots}</div></div>
+<div class="pj__box"><p class="pj__label">${esc(k.knowledgeHead)}<em class="pj__count"><b${s(2, { fx: "none", win: ".1,.95", count: `0,${names.length},0` })}>${names.length}</b> ${c.lang === "de" ? "Dateien" : "files"}</em></p><div class="pj__files">${slots}</div></div>
 </div>${cwComposer()}</div>`;
   const strip = tsteps(c, k.label, [
     [k.steps[0], [0, "0,.3"], [1, "0,.3"]],
@@ -504,9 +509,8 @@ function mission1(d, c) {
 ${prompt(c, 1, d.prompts.m1, s(1, { fx: "fly", win: "0,.5" }), 3)}
 ${activity([
     act("check", `Read <code>12 files</code>`, 2, ".1,.4"),
-    act("check", `Ran code <code>index.py</code>`, 2, ".35,.65"),
-    act("file", `Wrote <code>${esc(k.wrote)}</code>`, 2, ".6,.9"),
-  ], "3 steps", s(2, { fx: "fade", win: "0,.2", out: 3, outWin: "0,.25" }))}
+    act("check", `Ran code <code>index.py</code>`, 2, ".4,.8"),
+  ], "2 steps", s(2, { fx: "fade", win: "0,.2", out: 3, outWin: "0,.25" }))}
 <div class="cw-answer"${s(3, { fx: "blur", win: "0,.4" })}><p>${esc(k.answer)}</p>
 <table class="cw-table m1__table"><thead><tr>${k.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
 </div>`;
@@ -523,7 +527,7 @@ ${activity([
 ${job(k.job, `${s(3, { fx: "pop", win: ".6,1" })} style="--origin:left center"`)}
 <div class="stat stat--accent m1__stat"${s(4, { fx: "pop", win: "0,.4" })} style="--origin:left center"><p class="stat__n"><b class="m1__eight"${s(4, { fx: "arc", win: ".1,.7" })}${arcStyle(860, -440, 120, 0.3)}>${d.passing}</b><small>/ ${d.index.length}</small></p><span class="stat__l">${esc(k.result)}</span></div>
 </div>
-<div class="cw m1__cw"${s(0, { fx: "fly", win: ".1,.6" })} style="--dx:100px;--s:.97">${cwBar([c.project.project, k.chat])}<div class="cw-body">${cwSide(c, { knowOn: true })}<div class="cw-main">${thread}${cwComposer()}</div></div></div>
+<div class="cw m1__cw"${s(0, { fx: "fly", win: ".1,.6" })} style="--dx:100px;--s:.97">${cwBar([c.project.project, k.chat])}<div class="cw-body">${cwSide(c, { chat: k.chat })}<div class="cw-main">${thread}${cwComposer()}</div></div></div>
 </div>
 ${foot(c, 11)}`;
 }
@@ -603,7 +607,7 @@ ${activity([
 </div>`;
   const r7opts = k.r7keys.map((label, i) => `<button class="poll__opt" type="button" data-poll="r7" data-value="${i ? "no" : "yes"}"><span class="poll__key">${String.fromCharCode(65 + i)}</span><span>${esc(label)}</span><b data-poll-n>0</b></button>`).join("");
   const r7 = `<div class="m2__r7"${s(4, { fx: "fly", win: "0,.4" })} style="--dy:120px;--s:.96">
-<div class="cw m2__r7cw">${cwBar([c.project.project, k.chat, "R7"])}<div class="cw-body cw-body--nosidebar"><div class="cw-main"><div class="cw-thread m2__r7thread">
+<div class="cw m2__r7cw">${cwBar([c.project.project, k.chat])}<div class="cw-body cw-body--nosidebar"><div class="cw-main"><div class="cw-thread m2__r7thread">
 ${prompt(c, "2b", d.prompts.m2follow, " data-short", 2)}
 <div class="poll m2__r7poll"${s(4, { fx: "pop", win: ".35,.75", out: 5, outWin: "0,.2" })} style="--origin:left top"><p class="poll__q">${ico("hand")}${esc(k.r7poll)}</p><div class="m2__r7opts">${r7opts}</div></div>
 <div class="cw-answer m2__r7ans"${s(5, { fx: "fade", win: ".22,.4" })}><p class="m2__r7head"><span class="ico-tile ico-tile--accent">${ico("backup")}</span><b>${esc(k.r7Head)}</b></p><ol class="cands">${candHtml}</ol></div>
@@ -782,7 +786,8 @@ function result(d, c) {
     .map((q, i) => `<figure class="qr"${s(2, { fx: "pop", win: stagger(i, 3, 0.5) })}><img src="./assets/${[c.qr.kit, c.qr.probe, c.qr.skill][i]}" width="180" height="180" alt="" /><figcaption><b>${esc(q.label)}</b></figcaption></figure>`)
     .join("");
   const links = k.appendixLinks.map((label, i) => `<a class="pill pill--quiet" href="#a${i + 1}">${ico("book")}${esc(label)}</a>`).join("");
-  return `${head(c.lang === "de" ? "Ergebnis" : "Result", em(k.title, { covered }), { size: "xl", attrs: ` data-result-title data-covered="${covered}"` })}
+  const title = `<span class="swap"><span class="swap__a"${s(0, { fx: "fade", win: "0,.3", out: 1, outWin: "0,.25" })}>${esc(k.ask)}</span><span class="swap__b"${s(1, { fx: "fade", win: ".2,.5" })}>${em(k.title, { covered })}</span></span>`;
+  return `${head(c.lang === "de" ? "Ergebnis" : "Result", title, { size: "xl", attrs: ` data-result-title data-covered="${covered}"` })}
 <div class="stage res">
 <div class="res__est surface"${s(0, { fx: "fade", win: "0,.3" })}><p class="label res__label">${ico("hand")}${esc(k.estimate)}</p><div class="ebars" data-poll-show="estimate" style="--truth:${covered}">${bars}<p class="res__ghost">${ico("hand")}${esc(k.ghost)}</p><p class="res__marker"${s(1, { fx: "arc", win: ".2,.75" })}${arcStyle(0, -220, 40, 1)}><span>${esc(fill(k.marker, { covered }))}</span><i></i></p></div></div>
 <div class="tiles res__tiles" style="--cols:4">${tiles}</div>
@@ -810,22 +815,30 @@ function a2(d, c) {
 ${foot(c, "A2")}`;
 }
 
-export const SOURCES = [
-  ["GDPR Art. 28(3)(h)", "https://eur-lex.europa.eu/eli/reg/2016/679/oj"],
-  ["ISO 19011:2018, audit evidence (summary)", "https://www.iso.org/standard/70017.html"],
-  ["ISO/IEC 27001:2022, clause 7.5.2 (summary)", "https://www.iso.org/standard/27001"],
+/** Titles that differ per edition; the rest of SOURCES names English pages by their own titles. */
+const SOURCE_TITLES = {
+  de: ["Art. 28 Abs. 3 lit. h DSGVO", "ISO 19011:2026, Auditnachweis (Zusammenfassung)", "ISO/IEC 27001:2022, Abschnitt 7.5.2 (Zusammenfassung)"],
+  en: ["GDPR Art. 28(3)(h)", "ISO 19011:2026, audit evidence (summary)", "ISO/IEC 27001:2022, clause 7.5.2 (summary)"],
+};
+
+export const sources = (lang) => [
+  [SOURCE_TITLES[lang][0], "https://eur-lex.europa.eu/eli/reg/2016/679/oj"],
+  [SOURCE_TITLES[lang][1], "https://www.iso.org/standard/88984.html"],
+  [SOURCE_TITLES[lang][2], "https://www.iso.org/standard/27001"],
   ["Anthropic, Reduce hallucinations", "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"],
   ["Anthropic Privacy Center 7996890", "https://privacy.claude.com/en/articles/7996890"],
-  ["Anthropic, Updates to our consumer terms", "https://www.anthropic.com/news/updates-to-our-consumer-terms"],
+  ["Anthropic, Updates to Consumer Terms and Privacy Policy, 28 Aug 2025", "https://www.anthropic.com/news/updates-to-our-consumer-terms"],
+  ["Claude Help Center 12111783, code execution and file creation", "https://support.claude.com/en/articles/12111783"],
   ["Claude Help Center 12512180, custom skills", "https://support.claude.com/en/articles/12512180"],
   ["Claude Help Center 9517075, Projects", "https://support.claude.com/en/articles/9517075"],
-  ["AP, Deloitte to partially refund Australian government for report with apparent AI-generated errors, 7 Oct 2025", "https://www.news4jax.com/business/2025/10/07/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/"],
+  ["AP (via News4JAX), Deloitte to partially refund Australian government for report with apparent AI-generated errors, 7 Oct 2025", "https://www.news4jax.com/business/2025/10/07/deloitte-to-partially-refund-australian-government-for-report-with-apparent-ai-generated-errors/"],
+  ["The Register, Deloitte refunds Aussie gov after AI fabrications slip into $440K welfare report (GPT-4o disclosure, Justice Davies quote), 6 Oct 2025", "https://www.theregister.com/2025/10/06/deloitte_ai_report_australia/"],
   ["Australian Greens, media release on the Deloitte refund, A$97,587 per Senate estimates, Oct 2025", "https://greens.org.au/news/media-release/greens-slam-deloittes-unethical-behaviour-and-measly-refund-over-ai-report"],
 ];
 
 function a3(d, c) {
   return `${head(`${c.appendix} A3`, esc(c.a3.title), { after: back(c) })}
-<div class="stage appx"><ol class="sources">${SOURCES.map(([label, url]) => `<li><b>${esc(label)}</b><code>${esc(url)}</code></li>`).join("")}</ol>
+<div class="stage appx"><ol class="sources">${sources(c.lang).map(([label, url]) => `<li><b>${esc(label)}</b><code>${esc(url)}</code></li>`).join("")}</ol>
 <p class="src">${esc(c.a3.checked)}</p></div>
 ${foot(c, "A3")}`;
 }

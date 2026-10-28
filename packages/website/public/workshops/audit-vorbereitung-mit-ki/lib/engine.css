@@ -54,6 +54,9 @@ html[data-story="pending"] [data-step]:not([data-keep]){visibility:hidden}
 /* flip faces: .face front, .face.face--back behind (rotated). Give the flipping element a size. */
 [data-fx="flip"] > .face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 [data-fx="flip"] > .face--back{transform:rotateY(180deg)}
+/* WebKit ignores backface-visibility on these faces: swap them by opacity at the half turn as well (--p inherits). */
+[data-fx="flip"] > .face:not(.face--back){opacity:clamp(0,(.5 - var(--p,1)) * 1000,1)}
+[data-fx="flip"] > .face--back{opacity:clamp(0,(var(--p,1) - .5) * 1000,1)}
 @media (prefers-reduced-motion:reduce){[data-step]{transition:none!important}}
 
 /* ── type ────────────────────────────────────────────────────────────── */

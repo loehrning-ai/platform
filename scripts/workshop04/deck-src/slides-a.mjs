@@ -170,7 +170,7 @@ ${nums}${plus}
 <div class="winery__sum rq__sum"${s(4, { fx: "pop", win: ".52,.8" })}><span class="ico-tile ico-tile--accent">${c.ico("folder")}</span><b class="winery__n"${s(4, { fx: "none", win: ".55,.9", count: "0,21,0" })}>21</b><span class="winery__w">${c.t("Antworten · 1 Ordner", "answers · 1 folder")}</span></div>
 <p class="rq__end"${s(4, { fx: "fly", win: ".66,.92" })} style="--dy:40px;--s:.96">${c.t(`Am Ordner hängen <b>53 %</b> des Umsatzes und ein <em>Kredit</em>.`, `<b>53 %</b> of sales and a <em>loan</em> depend on the folder.`)}</p>
 <div class="tl"><p class="tl__month"${s(0, { fx: "fade", win: ".1,.5" })}>${c.t("Oktober 2026", "October 2026")}</p><i class="tl__bar"${s(0, { fx: "line", win: ".1,.6" })}></i>
-${tick(1, 23, c.t("23.10. Rückgabe Nordvik", "23.10. due to Nordvik"))}${tick(2, 14, c.t("14.10. Entwurf vom Marketing", "14.10. marketing draft in"))}
+${tick(1, 23, c.t("23.10. Rückgabe Nordvik", "23.10. due to Nordvik"))}${tick(2, 14, c.t("14.10. Entwurf vom Marketing", "14.10. draft from marketing"))}
 <span class="tl__pin" style="left:${dayX(16)}px"${s(0, { fx: "pop", ease: "spring", win: ".55,.9" })}><span class="pill pill--accent"${s(4, { fx: "glow", win: ".6,1" })}>${c.ico("calendar")}${c.t("16.10. Heute im Fall", "16.10. Today in the case")}</span><i></i></span></div>
 </div>
 ${foot(c, 5)}`,
@@ -217,7 +217,7 @@ export function today(c) {
 <div class="road"><i class="road__track"${s(2, { fx: "fade", win: "0,.1" })}></i><i class="road__fill"${s(2, { fx: "line", win: ".05,.8" })}></i><ol class="road__stops">${stops}</ol></div>
 <p class="label today__how"${s(3, { fx: "fade", win: "0,.25" })}>${c.t("So arbeiten wir", "How we work today")}</p>
 <div class="roles">
-<div class="role surface surface--strong"${s(3, { fx: "fly", win: "0,.35" })} style="--dx:120px;--s:.95"><p class="now now--live role__now">${c.ico("spark")}Live · Claude Desktop</p><b class="role__t">${c.t("Ich klicke in Claude.", "I click in Claude.")}</b>${tsteps(c, clicks, { col: true })}<span class="role__cap">${c.t("Die Leiste zeigt meine vier Klicks in Claude.", "The strip lists my four clicks in Claude.")}</span></div>
+<div class="role surface surface--strong"${s(3, { fx: "fly", win: "0,.35" })} style="--dx:120px;--s:.95"><p class="now now--live role__now">${c.ico("spark")}Live · Claude Desktop</p><b class="role__t">${c.t("Ich klicke in Claude.", "I click in Claude.")}</b>${tsteps(c, clicks, { col: true })}<span class="role__cap">${c.t("Die Leiste zeigt, wo ich gerade bin.", "The strip shows where I am.")}</span></div>
 <div class="role surface surface--strong"${s(4, { fx: "fly", win: "0,.4" })} style="--dy:60px;--s:.95"><span class="ico-tile">${c.ico("hand")}</span><b class="role__t">${c.t("Ihr schätzt, dann prüft ihr.", "You predict, then you check.")}</b><div class="loop"><ol class="loop__nodes">${loop}</ol>${loopArt}</div></div>
 <div class="role surface surface--strong"${s(4, { fx: "pop", win: ".3,.7" })}><span class="ico-tile">${c.ico("download")}</span><b class="role__t">${c.t("Ihr nehmt das Kit mit.", "You take the kit home.")}</b><div class="kit-folder role__kit"><p class="kit-folder__head">${c.ico("folder")}${esc(c.kit.zip.replace(/\.zip$/, "/"))}</p>${kitFiles}</div></div>
 </div>
@@ -268,7 +268,7 @@ ${check(5, "shield", c.t("Freigabe", "Approval"), c.t("Z. 4", "l. 4"), true)}
 </ol>
 <div class="rule__verdict"${s(5, { fx: "pop", ease: "spring", win: ".6,1" })} style="--origin:left center">${c.chip("luecke", "chip--lg")}<b>${c.t("Darf so nicht raus.", "Must not go out.")}</b></div></div>
 <svg class="wires" viewBox="0 0 1696 774" preserveAspectRatio="none" aria-hidden="true"><path${s(1, { fx: "draw", win: "0,.5", out: 6, outWin: "0,.3" })} pathLength="1" d="M246 520 C 300 520, 266 98, 330 98"/><circle${s(1, { fx: "pop", win: ".45,.6", out: 6, outWin: "0,.3" })} cx="330" cy="98" r="8"/></svg>
-<div class="stiles">${tile("belegt", c.t("Alle vier Prüfungen halten", "All four checks hold"))}${tile("schwach", c.t("Abgelaufen, geschätzt oder Entwurf", "Expired, estimated or draft"))}${tile("luecke", c.t("Fehlendes Dokument benannt", "Missing document named"))}<p class="stiles__end"${s(6, { fx: "pop", win: ".5,1" })}>${c.t("Der <em>schwächste</em> Teil zählt.", "The <em>weakest</em> part counts.")}</p></div>
+<div class="stiles">${tile("belegt", c.t("Alle vier Prüfungen halten", "All four checks hold"))}${tile("schwach", c.t("Abgelaufen, geschätzt oder Entwurf", "Expired, estimated or draft"))}${tile("luecke", c.t("Ein Teil hat keine Datei", "A part has no file"))}<p class="stiles__end"${s(6, { fx: "pop", win: ".5,1" })}>${c.t("Der <em>schwächste</em> Teil zählt.", "The <em>weakest</em> part counts.")}</p></div>
 </div>
 ${foot(c, 7)}`,
   );
@@ -333,7 +333,7 @@ export function review(c) {
     .join("");
   return section(
     { id: "durchsicht", label: c.t("Durchsicht auf Papier", "Review on paper"), steps: 2, durations: "1300,3400,1500" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Schritt 0 · auf Papier", "Step 0 · on paper")}</p><h2 class="headline headline--m ds__h"><span class="ds__q"${s(0, { fx: "fade", win: "0,.4", out: 2, outWin: "0,.35" })}>${c.t("Was stimmt nicht?", "What is wrong?")}</span><span class="ds__a"${s(2, { fx: "pop", win: ".3,.8" })} style="--origin:left center">${c.t("8 Mängel, 1 saubere Datei", "8 defects, 1 clean file")}</span></h2></div>${roomPill(c, c.t("Ihr · auf Papier · 10 Min", "You · on paper · 10 min"), s(0, { fx: "pop", win: ".4,.9" }))}</header>
+    `<header class="hd hd--row"><div><p class="label">${c.t("Schritt 0 · auf Papier", "Step 0 · on paper")}</p><h2 class="headline headline--m ds__h"><span class="ds__q"${s(0, { fx: "fade", win: "0,.4", out: 2, outWin: "0,.35" })}>${c.t("Was stimmt nicht?", "What is wrong?")}</span><span class="ds__a"${s(2, { fx: "pop", win: ".3,.8" })} style="--origin:left center">${c.t("8 Mängel, 1 falscher Alarm", "8 defects, 1 false alarm")}</span></h2></div>${roomPill(c, c.t("Ihr · auf Papier · 10 Min", "You · on paper · 10 min"), s(0, { fx: "pop", win: ".4,.9" }))}</header>
 <div class="stage ds"><div class="ds__grid"${s(0, { fx: "fade", win: "0,.4" })}>${cards}<p class="ds__count"${s(1, { fx: "pop", win: "0,.15" })}><b${s(1, { fx: "none", win: "0,1", count: "0,8,0" })}>8</b><span>${c.t("Mängel gefunden", "defects found")}</span></p></div></div>
 ${foot(c, 9)}`,
   );
