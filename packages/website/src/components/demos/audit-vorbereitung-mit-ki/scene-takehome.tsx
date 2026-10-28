@@ -1,12 +1,14 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useMemo, type CSSProperties } from "react";
 import { GlasButton, GlasChip } from "@/components/demos/glas";
-import { OWNERS, type ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
+import { draftClaims, OWNERS, type ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
 import { formatShort } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/dates";
 import { mailSegments } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/mail-slots";
 import type { Model } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/model";
+import { kitText } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/kit";
 import { renderGapRequest } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/render";
+import { draftChecks, sampleReplyOf } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/reply-check";
 import { CopyButton } from "./copy-button";
 import { downloadText } from "./download";
 import type { Fmt } from "./fmt";
@@ -30,21 +32,118 @@ export interface BuiltFiles {
   readonly index: string;
 }
 
+/** The four sentences of the managing director's draft (draft-reply.md), the same in both kits. */
+export const DRAFT = draftClaims();
+
+/** The draft's greeting line, as the kit writes it. */
+const SALUTE = kitText("draft-reply.md").split("\n").find((line) => line.startsWith("Dear ")) ?? "";
+
 /** The gap rows: every request that is not covered, from the kit's best file. */
 export function gapRows(model: Model) {
   return model.rows.filter((row) => row.best.status !== "covered");
 }
 
 /**
- * Scene 6: the list of gaps, each with its owner, the document that closes
- * it and the date. A tap on a row fills the request mail from the template,
- * slot by slot; then the files to take home.
+ * Scene 6, first: the managing director's draft reply. A tap on a sentence
+ * strikes it and shows what the answer key found in the files; once all four
+ * are checked, the sample reply that names only what a file proves writes
+ * itself in, line by line. Every word comes from the kit.
+ */
+function DraftCheck({
+  fmt,
+  struck,
+  onStrike,
+  reducedMotion,
+}: {
+  readonly fmt: Fmt;
+  readonly struck: ReadonlySet<number>;
+  readonly onStrike: (numbers: readonly number[]) => void;
+  readonly reducedMotion: boolean;
+}) {
+  const d = fmt.copy.takehome.draft;
+  const checks = useMemo(() => draftChecks(fmt.locale), [fmt.locale]);
+  const reply = useMemo(() => sampleReplyOf(fmt.locale), [fmt.locale]);
+  const all = checks.every((check) => struck.has(check.n));
+  const checked = checks.filter((check) => struck.has(check.n)).length;
+  // A sentence holds when the answer key keeps it; in this kit it strikes all four.
+  const held = checks.filter((check) => !/^(STREICHEN|DELETE)$/.test(check.verdict)).length;
+  return (
+    <section className="w05-draft" aria-labelledby="w05-draft-label" data-w05-draft={checked} data-reduced={reducedMotion ? "" : undefined}>
+      <div className="w05-draft-head">
+        <p className="w05-label" id="w05-draft-label">
+          {d.label}
+        </p>
+        <span className="w05-draft-count" aria-live="polite" data-w05-draft-count={all ? `held-${held}` : checked}>
+          {all ? fmt.t(d.holds, { held, total: checks.length }) : fmt.t(d.progress, { n: checked, total: checks.length })}
+        </span>
+      </div>
+      <p className="w05-hint">{d.hint}</p>
+      <div className="w05-draft-sheet">
+        <GlasChip kind="file">draft-reply.md</GlasChip>
+        <p className="w05-draft-salute" lang="en">
+          {SALUTE}
+        </p>
+        <ol className="w05-draft-claims">
+          {checks.map((check) => {
+            const done = struck.has(check.n);
+            return (
+              <li key={check.n} data-struck={done ? "" : undefined}>
+                <button type="button" className="w05-claim" aria-pressed={done} onClick={() => onStrike([check.n])} data-w05-claim={check.n}>
+                  <span className="w05-claim-n">{check.n}.</span>
+                  <span className="w05-claim-text" lang="en">
+                    {check.claim}
+                  </span>
+                </button>
+                {done ? (
+                  <p className="w05-claim-evidence" data-w05-claim-evidence={check.n}>
+                    <span className="w05-stamp" data-status="gap">
+                      {check.verdict}
+                    </span>
+                    <span className="w05-claim-proof">{check.evidence}</span>
+                  </p>
+                ) : null}
+              </li>
+            );
+          })}
+        </ol>
+        {all ? null : (
+          <GlasButton variant="plain" size="compact" onClick={() => onStrike(checks.map((check) => check.n))} data-w05-draft-all="">
+            {d.checkAll}
+          </GlasButton>
+        )}
+      </div>
+      {all ? (
+        <div className="w05-reply" data-w05-reply="">
+          <p className="w05-label">{d.replyLabel}</p>
+          <p className="w05-hint">{d.replyHint}</p>
+          <div className="w05-reply-text" lang="en">
+            {reply.split("\n").map((line, index) => (
+              <span key={index} className="w05-reply-line" style={{ "--k": index } as CSSProperties}>
+                {line}
+              </span>
+            ))}
+          </div>
+          <CopyButton text={reply} label={d.copyReply} done={fmt.copy.takehome.copied} variant="prominent" />
+          <p className="w05-reply-signs">{d.signs}</p>
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
+/**
+ * Scene 6: the draft reply checked first, then the list of gaps, each with
+ * its owner, the document that closes it and the date. A tap on a row fills
+ * the request mail from the template, slot by slot; then the files to take
+ * home.
  */
 export function TakeHomeScene({
   fmt,
   model,
   chosen,
   onChoose,
+  struck,
+  onStrike,
   files,
   built,
   reducedMotion,
@@ -53,6 +152,8 @@ export function TakeHomeScene({
   readonly model: Model;
   readonly chosen: ItemId | null;
   readonly onChoose: (id: ItemId) => void;
+  readonly struck: ReadonlySet<number>;
+  readonly onStrike: (numbers: readonly number[]) => void;
   readonly files: TakeHomeFiles;
   readonly built: BuiltFiles;
   readonly reducedMotion: boolean;
@@ -66,6 +167,7 @@ export function TakeHomeScene({
   let slot = 0;
   return (
     <div className="w05-takehome" id="mitnehmen" data-w05-takehome="">
+      <DraftCheck fmt={fmt} struck={struck} onStrike={onStrike} reducedMotion={reducedMotion} />
       <p className="w05-label">{h.rows}</p>
       <ol className="w05-gaps">
         {rows.map((entry) => (

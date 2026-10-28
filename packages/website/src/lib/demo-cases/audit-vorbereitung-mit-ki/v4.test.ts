@@ -315,6 +315,14 @@ describe("scene 5: the shown takes, their review and our notes", () => {
     expect(parseClaudeAnswer(byId("en-alle-without-1").final_text).filter((row) => row.status !== null)).toEqual([]);
   });
 
+  it("all note: with the skill, R3 counts the days since Claude Team, and the chatbot is left open for R6", () => {
+    expect(byId("de-alle-with-1").final_text).toContain("30 Tage ohne Regel");
+    expect(byId("de-alle-with-1").final_text).toMatch(/Chatbots[^\n]*Vorfall[^\n]*R6 zur Lücke/);
+    expect(byId("en-alle-with-1").final_text).toContain("so September had no rule");
+    expect(byId("en-alle-with-1").final_text).toMatch(/free chatbot use[^\n]*R6 is no longer ready/);
+    expect(kitText("ANSWERS.md")).toContain("(295 days)");
+  });
+
   it("names the rejected takes with a reason when there are any", () => {
     const de = SCENE?.prompts.find((entry) => entry.id === "alle" && entry.locale === "de");
     expect(de?.rejected).toBe(3);

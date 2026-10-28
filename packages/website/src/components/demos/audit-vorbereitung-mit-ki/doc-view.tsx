@@ -119,6 +119,8 @@ export function DocView({
 
   const onDown = (event: PointerEvent<HTMLDivElement>) => {
     if (top === null) return;
+    // No text selection while the lens moves: a drag would otherwise select the caption, the dock and the heading below.
+    event.preventDefault();
     event.currentTarget.setPointerCapture?.(event.pointerId);
     const root = box.current;
     const rootTop = (root?.getBoundingClientRect().top ?? 0) - (root?.scrollTop ?? 0);
@@ -221,7 +223,7 @@ export function DocView({
   }
 
   return (
-    <div className="w05-doc" data-w05-doc={name} data-reduced={reducedMotion ? "" : undefined}>
+    <div className="w05-doc" data-w05-doc={name} data-reduced={reducedMotion ? "" : undefined} data-dragging={dragging ? "" : undefined}>
       <div ref={box} className="w05-doc-scroll" tabIndex={0} role="document" aria-label={name} onKeyDown={onKey}>
         {body}
         {band !== null && top !== null ? (

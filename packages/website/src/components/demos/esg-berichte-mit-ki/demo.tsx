@@ -86,6 +86,9 @@ export default function Demo({
   const [predictions, setPredictions] = useState<Predictions>(NO_PREDICTIONS);
   /** The step whose answer has just landed: the chat shows it from its start. */
   const [landed, setLanded] = useState<StepId | null>(null);
+  /** Phone: the steps whose check by hand the visitor has opened. Until then "Weiter" opens the check first. */
+  const [checked, setChecked] = useState<ReadonlySet<StepId>>(() => new Set());
+  const checkWaitsRef = useRef(false);
   const sendRef = useRef<HTMLButtonElement>(null);
   const phaseWas = useRef(clock.phase);
   const reduced = clock.reducedMotion;
@@ -113,6 +116,7 @@ export default function Demo({
     setOwnOpen(false);
     setPredictions(NO_PREDICTIONS);
     setLanded(null);
+    setChecked(new Set());
   });
 
   // "Mit dem Fragebogen starten" hands the focus to the message box's arrow, never to the page (WCAG 2.4.3).
@@ -170,6 +174,11 @@ export default function Demo({
         finish(current.id);
         return true;
       }
+      // On a phone the check by hand sits in a sheet: the first "Prüfen" opens it, the next press moves on.
+      if (checkWaitsRef.current) {
+        openCheck();
+        return true;
+      }
       if (installing && installStep < INSTALL_STEPS - 1) {
         setInstallStep((value) => value + 1);
         return true;
@@ -198,11 +207,13 @@ export default function Demo({
   }, []);
   const onCite = useCallback((file: AppFile, cite: Citation) => openView({ kind: "file", file, from: cite.from, to: cite.to }), [openView]);
   const onChip = useCallback((file: AppFile) => openView({ kind: "file", file, from: null, to: null }), [openView]);
+  const currentId = current?.id ?? null;
   const openCheck = useCallback(() => {
     setView(null);
     setClosedKey(null);
     setSheetOpen(true);
-  }, []);
+    if (currentId) setChecked((value) => (value.has(currentId) ? value : new Set([...value, currentId])));
+  }, [currentId]);
 
   const panel = buildPanel(panelStep, view, { copy, pack, fmt, kit, data, scene, dispatch, cardDispatch, reduced, onView: openView });
   const panelOpen = panel !== null && (phone ? sheetOpen : closedKey !== panel.key);
@@ -277,17 +288,22 @@ export default function Demo({
         ? stepCaption({ copy, pack, fmt, kit, data, step: current, state: currentState, scene, prediction: predictions[current.id] })
         : beatCaption(copy, beatId, data.locale, installStep);
 
+
+  const shownPanel = overlay || installing ? null : panel;
+  const checkClosed = shownPanel !== null && !panelOpen;
+  const checkWaits = phone && !free && current !== null && currentState === "done" && shownPanel?.kind === "check" && !checked.has(current.id);
+  checkWaitsRef.current = checkWaits;
+
   const nextLabel =
     current && currentState === "idle"
       ? copy.next.send
       : current && currentState === "running"
         ? copy.next.finish
-        : installing && installStep < INSTALL_STEPS - 1
+        : checkWaits
+          ? copy.sheet.check
+          : installing && installStep < INSTALL_STEPS - 1
           ? fill(copy.install.next, { n: installStep + 2, total: INSTALL_STEPS })
           : undefined;
-
-  const shownPanel = overlay || installing ? null : panel;
-  const checkClosed = shownPanel !== null && !panelOpen;
 
   // Before each send: the kit's prediction for this step, as a tap (never scored).
   const prediction =
@@ -311,7 +327,8 @@ export default function Demo({
           sentences={caption}
           action={shownPanel ? copy.sheet.check : copy.sheet.more}
           label={copy.sheet.open}
-          onOpen={() => setSheetOpen(true)}
+          attention={checkWaits && !reduced}
+          onOpen={shownPanel?.kind === "check" ? openCheck : () => setSheetOpen(true)}
         />
       </>
     ) : (
@@ -350,14 +367,18 @@ export default function Demo({
     { x: 0.72, y: 0.34 },
   ]);
 
-  const sheetLead =
-    caption.length > 0 ? (
-      <div className="w4a-sheet-caption">
-        {caption.map((sentence) => (
-          <p key={sentence}>{sentence}</p>
-        ))}
-      </div>
-    ) : null;
+  // In the sheet the check comes first: with a check, its first sentence leads and the rest of the caption follows the check, nothing folded.
+  const [leadFirst, ...leadRest] = caption;
+  const splitLead = shownPanel?.kind === "check" && leadRest.length > 0;
+  const sentences = (list: readonly string[], tail = false) => (
+    <div className="w4a-sheet-caption" data-w4a-sheet-tail={tail ? "" : undefined}>
+      {list.map((sentence) => (
+        <p key={sentence}>{sentence}</p>
+      ))}
+    </div>
+  );
+  const sheetLead = caption.length === 0 ? null : splitLead && leadFirst ? sentences([leadFirst]) : sentences(caption);
+  const sheetTail = splitLead ? sentences(leadRest, true) : null;
 
   return (
     <>
@@ -399,6 +420,7 @@ export default function Demo({
             main={installing ? <InstallView copy={copy} data={data} step={installStep} /> : undefined}
             mainTitle={installing ? (installStep === 0 ? copy.ui.settings : copy.ui.customize) : undefined}
             sheetLead={sheetLead}
+            sheetTail={sheetTail}
             scrollKey={`${chat}:${shownSteps.length}`}
             answerKey={landed}
             onLayout={setPhone}

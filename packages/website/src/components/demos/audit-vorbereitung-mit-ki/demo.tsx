@@ -20,11 +20,11 @@ import { Board } from "./board";
 import { DockCaption } from "./dock-caption";
 import { gapListMarkdown, indexCsv, instructionsText } from "./exports";
 import { EvidenceView, PlainFile } from "./file-sheet";
-import { formatter, type Fmt } from "./fmt";
+import { formatter, testSentence, type Fmt } from "./fmt";
 import { R5View } from "./r5-view";
-import { ClaudeDock, ClaudeStage, countSentence, summarySentence, useClaudeScene } from "./scene-claude";
+import { ClaudeDock, ClaudeStage, countSentence, defaultClaudeState, summarySentence, useClaudeScene } from "./scene-claude";
 import { OwnDock, OwnStage, readLines } from "./scene-own";
-import { TakeHomeScene, type TakeHomeFiles } from "./scene-takehome";
+import { DRAFT, TakeHomeScene, type TakeHomeFiles } from "./scene-takehome";
 import { useOwnFolder } from "./use-own-folder";
 import "./w05.css";
 
@@ -62,7 +62,7 @@ function checksCaption(fmt: Fmt, active: ReadonlySet<TestId>, last: LastSwitch, 
     // The dock's own button names the next step (R1), so the caption keeps to what the four tests left.
     return [
       fmt.t(copy.checks.allOn, { covered: fmt.word(survivors(MODEL.rows, active)) }),
-      ...(guess !== null ? [fmt.t(copy.checks.guessed, { guess: fmt.word(guess) })] : []),
+      ...(guess !== null ? [fmt.t(copy.checks.guessed, { guess })] : []),
       ...(r1Seen && eachCheckDistinct(MODEL.rows) ? [copy.checks.distinct] : []),
     ];
   }
@@ -92,6 +92,7 @@ export default function Demo({
   const view: BeatId | "free" = free ? "free" : beatId;
 
   const [draft, setDraft] = useState(4);
+  // The slider was touched, focused or moved: its value, the first one too, is then a guess to keep.
   const [moved, setMoved] = useState(false);
   const [guess, setGuess] = useState<number | null>(null);
   const [active, setActive] = useState<ReadonlySet<TestId>>(NO_CHECKS);
@@ -108,6 +109,8 @@ export default function Demo({
   const wide = useWide();
   const [panel, setPanel] = useState<PanelSheet | null>(null);
   const [chosenGap, setChosenGap] = useState<ItemId | null>(null);
+  // Scene 6: the sentences of the managing director's draft the visitor has checked.
+  const [struck, setStruck] = useState<ReadonlySet<number>>(new Set());
   const [moves, setMoves] = useState<Moves>({});
   const [moving, setMoving] = useState<OwnFile | null>(null);
   const [ownAnswer, setOwnAnswer] = useState("");
@@ -136,8 +139,9 @@ export default function Demo({
     setSheet(null);
     setPanel(null);
     setChosenGap(null);
+    setStruck(new Set());
     setMoving(null);
-    claude.setState({ question: questions[0]?.id ?? "", skill: "with" });
+    claude.setState(defaultClaudeState(questions));
     bench.actions.reset("R7");
   });
   useOnEscape(() => {
@@ -226,7 +230,7 @@ export default function Demo({
     switch (view) {
       case "ordner":
         // Before the guess the question stands above the board, so the dock keeps to the slider.
-        return guess !== null ? [fmt.t(copy.folder.kept, { guess: fmt.word(guess) })] : [];
+        return guess !== null ? [fmt.t(copy.folder.kept, { guess })] : [];
       case "pruefungen":
         // A status word is defined in the caption the first time its stamp appears, so no readout covers a row.
         return [...checksCaption(fmt, active, last, guess, r1Seen), ...(def ? [copy.statusDef[def]] : [])];
@@ -251,10 +255,12 @@ export default function Demo({
         if (!replay.started) return [copy.claude.lead];
         if (!replay.frame.done) return [copy.claude.streaming];
         const count = countSentence(fmt, take, question?.id, MODEL.tally);
-        return [summarySentence(fmt, probe.marks), ...(count ? [count] : [])];
+        return [summarySentence(fmt, probe.marks), ...(count ? [count] : []), ...(claude.state.skill === "without" ? [copy.claude.compare] : []), copy.claude.huntCue];
       }
       case "mitnehmen":
-        return [fmt.t(copy.takehome.lead, { open: fmt.Word(MODEL.tally.weak + MODEL.tally.gap) })];
+        // First the draft: every sentence checked against the files; then the six open requests and their owners.
+        if (struck.size < DRAFT.length) return [copy.takehome.draft.caption];
+        return [fmt.t(copy.takehome.lead, { open: fmt.Word(MODEL.tally.weak + MODEL.tally.gap), gaps: fmt.word(MODEL.tally.gap), weak: fmt.word(MODEL.tally.weak) })];
       case "free": {
         const { evaluation } = bench;
         if (!evaluation) return [copy.free.instruction];
@@ -293,6 +299,7 @@ export default function Demo({
             active={view === "ordner" ? NO_CHECKS : active}
             checking={view === "pruefungen"}
             drawn={reduced || clock.progress >= 1 || view !== "ordner"}
+            matches={view === "ordner" ? { n: reduced ? MODEL.rows.length : Math.min(MODEL.rows.length, Math.round(clock.progress * MODEL.rows.length)), struck: guess !== null } : undefined}
             front={front}
             guess={guess}
             attention={attention}
@@ -389,28 +396,42 @@ export default function Demo({
           />
         );
       case "mitnehmen":
-        return <TakeHomeScene fmt={fmt} model={MODEL} chosen={chosenGap} onChoose={setChosenGap} files={files} built={built} reducedMotion={reduced} />;
+        return (
+          <TakeHomeScene
+            fmt={fmt}
+            model={MODEL}
+            chosen={chosenGap}
+            onChoose={setChosenGap}
+            struck={struck}
+            onStrike={(numbers) => setStruck((current) => new Set([...current, ...numbers]))}
+            files={files}
+            built={built}
+            reducedMotion={reduced}
+          />
+        );
     }
   };
 
   const controls = (): ReactNode => {
     switch (view) {
       case "ordner":
-        if (guess !== null) return <GlasChip kind="status">{fmt.t(copy.checks.guessMark, { guess: fmt.word(guess) })}</GlasChip>;
+        if (guess !== null) return <GlasChip kind="status">{fmt.t(copy.checks.guessMark, { guess })}</GlasChip>;
         return (
           <div className="w05-guess">
-            <GlasSlider
-              label={copy.folder.slider}
-              value={draft}
-              min={0}
-              max={8}
-              onChange={(value) => {
-                setDraft(value);
-                setMoved(true);
-              }}
-              format={(value) => fmt.t(copy.folder.sliderValue, { n: value })}
-              valueText={(value) => fmt.t(copy.folder.sliderText, { n: value })}
-            />
+            <span className="w05-guess-slider" onFocusCapture={() => setMoved(true)} onPointerDownCapture={() => setMoved(true)}>
+              <GlasSlider
+                label={copy.folder.slider}
+                value={draft}
+                min={0}
+                max={8}
+                onChange={(value) => {
+                  setDraft(value);
+                  setMoved(true);
+                }}
+                format={(value) => fmt.t(copy.folder.sliderValue, { n: value })}
+                valueText={(value) => fmt.t(copy.folder.sliderText, { n: value })}
+              />
+            </span>
             <GlasButton
               variant={moved ? "prominent" : "plain"}
               size="compact"
@@ -489,14 +510,16 @@ export default function Demo({
   };
 
   return (
+    // "Von vorn" sits in the dock, so nothing floats over the top right of the folder or the Claude window.
     <div className="w05" data-w05-view={view} ref={stageRef}>
       <DemoGlasStage
         label={copy.stageLabel}
         feld={feld}
         className="w05-stage"
+        restartInDock
         dock={
-          <DemoDock className="w05-dock" compact>
-            {clock.phase === "intro" ? null : <DockCaption sentences={caption} />}
+          <DemoDock className="w05-dock" compact restart>
+            {clock.phase === "intro" ? null : <DockCaption sentences={caption} more={copy.captionMore} less={copy.captionLess} />}
             {clock.phase === "intro" ? null : controls()}
           </DemoDock>
         }
@@ -628,6 +651,7 @@ function SheetBody({
     );
   }
   if (row.item.id === "R5") return <R5View fmt={fmt} evaluation={MODEL.r5} percent={Math.round(MODEL.context.trainingShare * 100)} merged={r5Merged} onMerge={onMerge} />;
+  if (row.naive.doc.file !== row.best.doc.file) return <LinkedStep key={row.item.id} fmt={fmt} row={row} reduced={reduced} />;
   return (
     <EvidenceView key={row.item.id} fmt={fmt} evaluation={row.best} noticeHours={MODEL.context.noticeHours} reducedMotion={reduced} focus={row.item.id === "R1" ? "quote" : undefined}>
       {row.item.id === "R1" ? (
@@ -641,6 +665,31 @@ function SheetBody({
           ))}
         </div>
       ) : null}
+    </EvidenceView>
+  );
+}
+
+/**
+ * A step whose linked file is not the folder's best one (R8: the board links
+ * the v4 draft, the best file is v3): the row's own file first, the file the
+ * visitor tapped, then one line on the best file and a tap to read it.
+ */
+function LinkedStep({ fmt, row, reduced }: { readonly fmt: Fmt; readonly row: (typeof MODEL.rows)[number]; readonly reduced: boolean }) {
+  const { copy } = fmt;
+  const [best, setBest] = useState(false);
+  const noticeHours = MODEL.context.noticeHours;
+  if (best) return <EvidenceView fmt={fmt} evaluation={row.best} noticeHours={noticeHours} reducedMotion={reduced} />;
+  const fails = row.best.failed[0];
+  return (
+    <EvidenceView fmt={fmt} evaluation={row.naive} noticeHours={noticeHours} reducedMotion={reduced} lead={fmt.t(copy.sheet.linked, { id: row.item.id, file: row.naive.doc.file })}>
+      <div className="w05-best-note" data-w05-best-note={row.best.doc.file}>
+        <p>
+          {fmt.t(copy.sheet.best, { id: row.item.id, file: row.best.doc.file })} {fails ? testSentence(fmt, row.best, fails, noticeHours) : null}
+        </p>
+        <GlasButton variant="plain" size="compact" icon="doc" className="w05-wrap-label" onClick={() => setBest(true)} data-w05-show-best="">
+          {fmt.t(copy.folder.openFile, { file: row.best.doc.file })}
+        </GlasButton>
+      </div>
     </EvidenceView>
   );
 }

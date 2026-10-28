@@ -75,7 +75,8 @@ export function rowTextFor(kit: KitText, water: boolean) {
   return (row: BillRow) => {
     if (!water) {
       const line = kit.strom.lines.find((entry) => entry.n === row.line);
-      if (line) return `${row.line}  ${line.text}`;
+      // The file's own text, cut after month, invoice and kWh: whole lines would shrink to 8 px on a phone.
+      if (line) return `${row.line}  ${line.text.split(",").slice(0, 3).join(",")},…`;
     }
     return `${row.line}  ${row.month};${row.invoice};${row.amount}`;
   };
@@ -162,7 +163,7 @@ export function StromScene({
           hot={drag?.line ?? null}
           picking={picking}
           compact={linked}
-          pickLabel={(line) => `${fmt.t(pack.connect.pickLine, { n: line.n })}: ${line.text}`}
+          pickLabel={(line) => fmt.t(pack.connect.pickLine, { n: line.n })}
           onPick={(n) => dispatch({ type: "stromLand", line: n })}
           lineRef={(n) => register(`line:${n}`)}
           className="w4-s3-draft"

@@ -117,9 +117,12 @@ describe("the register", () => {
     expect(LEDGER.find((row) => row.id === "F3")?.after).toBe("schwach");
     expect(citeCounts().strom).toBe(6);
   });
-  it("orders VSME into 5 BELEGT and 6 LÜCKE, B3 from 0 of 4 to 1 of 4", () => {
-    expect(vsmeCounts("before")).toEqual({ belegt: 5, schwach: 0, luecke: 6 });
-    expect(vsmeCounts("after")).toEqual({ belegt: 5, schwach: 0, luecke: 6 });
+  it("orders VSME into 4 BELEGT and 7 LÜCKE, B1 8 of 10, B3 from 0 of 4 to 1 of 4", () => {
+    expect(vsmeCounts("before")).toEqual({ belegt: 4, schwach: 0, luecke: 7 });
+    expect(vsmeCounts("after")).toEqual({ belegt: 4, schwach: 0, luecke: 7 });
+    // vsme_basismodul.md line 10 asks ten datapoints for B1; no file records the module or the report type.
+    const b1 = VSME.find((tile) => tile.id === "B1")!;
+    expect([b1.done, b1.total, b1.missing]).toEqual([8, 10, ["moduleChoice"]]);
     const b3 = VSME.find((tile) => tile.id === "B3")!;
     expect([b3.done, b3.doneAfter, b3.total]).toEqual([0, 1, 4]);
     expect(tileStatus(1, 4)).toBe("luecke");
@@ -128,9 +131,12 @@ describe("the register", () => {
     const list = missingDocuments();
     expect(list[0]).toEqual({ doc: "septemberInvoice", dependents: ["Q1", "Q2", "C5", "F2", "F3", "B3"] });
     expect(new Set(list.map((entry) => entry.doc))).toEqual(
-      new Set(["septemberInvoice", "gridFactor", "diesel", "bioRenewed", "supplyMix", "bills2024", "permit", "siteMap", "waste", "hoursWorked", "minimumWage"]),
+      new Set(["septemberInvoice", "gridFactor", "diesel", "bioRenewed", "pvSigned", "moduleChoice", "supplyMix", "bills2024", "permit", "siteMap", "waste", "hoursWorked", "minimumWage"]),
     );
     expect(missingDocuments("after").some((entry) => entry.doc === "septemberInvoice")).toBe(false);
+    // As in the recorded runs: the renewed organic certificate comes second (Q7, C3, F6), the signed PV offer waits for F3 and F4.
+    expect(list[1]).toEqual({ doc: "bioRenewed", dependents: ["Q7", "C3", "F6"] });
+    expect(list.find((entry) => entry.doc === "pvSigned")?.dependents).toEqual(["F3", "F4"]);
   });
   it("matches the statuses of the four sentences: LÜCKE, LÜCKE, LÜCKE (4c), BELEGT", () => {
     const byId = (id: string) => LEDGER.find((row) => row.id === id)!;
@@ -286,7 +292,7 @@ describe("beats and copy", () => {
   it("takes the card's capitals from the skill: ZITAT · ZEITRAUM · UMFANG · FREIGABE and QUOTE · PERIOD · SCOPE · APPROVAL", () => {
     expect(Object.values(COPY.de.checks)).toEqual(["ZITAT", "ZEITRAUM", "UMFANG", "FREIGABE"]);
     expect(Object.values(COPY.en.checks)).toEqual(["QUOTE", "PERIOD", "SCOPE", "APPROVAL"]);
-    expect(Object.values(COPY.de.statuses)).toEqual(["Belegt", "Schwach belegt", "Lücke"]);
+    expect(Object.values(COPY.de.statuses)).toEqual(["Belegt", "Schwach", "Lücke"]);
     expect(Object.values(COPY.en.statuses)).toEqual(["Covered", "Weak", "Gap"]);
     const english = JSON.stringify(COPY.en);
     for (const word of ["BELEGT", "SCHWACH", "LÜCKE", "Lücke", "Zeile"]) expect(english).not.toContain(word);

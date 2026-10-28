@@ -44,6 +44,7 @@ export function DocCard({
   /** The line under the finger or the keyboard focus while picking. */
   readonly hot?: number | null;
   readonly picking?: boolean;
+  /** While picking: what a line's button adds for a screen reader after its visible text ("Zeile 4 wählen"). */
   readonly pickLabel?: (line: KitLine) => string;
   readonly onPick?: (n: number) => void;
   /** Registers each line's element, so connections can be drawn to it. */
@@ -121,10 +122,11 @@ export function DocCard({
                     className="w4-doc-row"
                     ref={lineRef?.(line.n) as Ref<HTMLButtonElement> | undefined}
                     data-w4-line={line.n}
-                    aria-label={pickLabel ? pickLabel(line) : undefined}
                     onClick={() => onPick(line.n)}
                   >
                     {content}
+                    {/* The name is the visible line plus the action, so speech input can say what it sees. */}
+                    {pickLabel ? <span className="sr-only">, {pickLabel(line)}</span> : null}
                   </button>
                 ) : (
                   <span className="w4-doc-row" ref={lineRef?.(line.n) as Ref<HTMLSpanElement> | undefined} data-w4-line={line.text ? line.n : undefined}>

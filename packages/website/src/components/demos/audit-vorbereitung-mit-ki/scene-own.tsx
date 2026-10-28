@@ -155,8 +155,9 @@ export function OwnStage({
 
   return (
     <div className="w05-own" data-w05-own="" data-moving={moving ? "" : undefined}>
+      {/* The dock caption carries copy.own.afterDrop; the stage keeps only the hint while a card is lifted. */}
       <p className="w05-hint" aria-live="polite">
-        {moving ? fmt.t(copy.own.moving, { file: moving.entry.name }) : copy.own.afterDrop}
+        {moving ? fmt.t(copy.own.moving, { file: moving.entry.name }) : null}
       </p>
       {own.unread.length > 0 ? <p className="w05-hint">{own.unread.map((line) => fmt.t(copy.own.unread, { line })).join(" ")}</p> : null}
       {result.ignored > 0 ? <p className="w05-hint">{fmt.t(copy.own.ignored, { n: result.ignored })}</p> : null}

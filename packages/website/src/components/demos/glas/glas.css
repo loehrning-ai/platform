@@ -411,6 +411,15 @@
   width: 36px;
   min-width: 36px;
 }
+/* A compact icon looks 36 px but takes a 44 x 44 tap; a segment takes 44 px of height. */
+.glas-btn[data-variant="icon"][data-size="compact"]::before {
+  inset: -4px;
+}
+.glas-seg-option::after {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
 .glas-btn[data-variant="plain"]:hover {
   background-color: var(--glas-fill);
 }
@@ -1018,6 +1027,10 @@ a.glas-chip::after {
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+.glas-intro-text[data-more] {
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 32px), transparent);
+  mask-image: linear-gradient(#000 calc(100% - 32px), transparent);
+}
 .glas-intro-actions,
 .glas-intro-foot {
   flex: none;
@@ -1082,6 +1095,27 @@ a.glas-chip::after {
   }
   .glas-intro-actions .glas-btn[data-block] {
     width: auto;
+  }
+}
+/* Phones: tighter type, so the scenario fits the first screen with less scrolling. */
+@media (max-width: 39.99rem) {
+  .glas-intro {
+    padding: 16px 18px;
+  }
+  .glas-intro-title {
+    font-size: 1.4375rem;
+  }
+  .glas-intro-body {
+    margin-top: 8px;
+    font-size: 1rem;
+    line-height: 1.42;
+  }
+  .glas-intro-news {
+    font-size: 0.875rem;
+    line-height: 1.38;
+  }
+  .glas-intro-actions {
+    margin-top: 12px;
   }
 }
 .glas-intro-foot {

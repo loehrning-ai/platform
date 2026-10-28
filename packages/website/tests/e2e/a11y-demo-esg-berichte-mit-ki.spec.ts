@@ -94,3 +94,31 @@ test.describe(`${PATH} accessibility`, () => {
     }
   });
 });
+
+test.describe(`${PATH} accessibility on a 390 x 664 phone`, () => {
+  test.use({ viewport: { width: 390, height: 664 }, hasTouch: true });
+
+  test("the answer as row cards, then the check sheet with a part being connected, pass axe", async ({ page }) => {
+    await openBeat(page, "schritt-1");
+    await expect(async () => {
+      await page.locator("[data-w4a-send]").click();
+      await expect(page.locator('[data-w4a-turn="schritt-1"]')).toHaveAttribute("data-phase", "done", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await expect(page.locator('[data-w4a-turn="schritt-1"] [data-w4a-table][data-layout="cards"]').first()).toBeVisible();
+    await scanStage(page, "phone: step 1 answer as cards");
+    await openBeat(page, "schritt-2");
+    await expect(async () => {
+      await page.locator("[data-w4a-send]").click();
+      await expect(page.locator('[data-w4a-turn="schritt-2"]')).toHaveAttribute("data-phase", "done", { timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    await page.locator("[data-w4a-capline]").click();
+    await page.locator('[data-w4-handle="zertifiziert"]').click();
+    await page.waitForTimeout(700);
+    // The sheet lives in the Glas portal, outside the stage.
+    const result = await new AxeBuilder({ page }).include("[data-glas-portal]").withTags(TAGS).analyze();
+    expect(
+      result.violations.map((violation) => `${violation.id}: ${violation.nodes.map((node) => node.target.join(" ")).join(", ")}`),
+      "phone: the step 2 sheet while picking a line",
+    ).toEqual([]);
+  });
+});

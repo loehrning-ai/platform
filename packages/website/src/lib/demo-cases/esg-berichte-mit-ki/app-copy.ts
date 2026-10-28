@@ -67,7 +67,7 @@ const de = {
     exercise: "Übung, nicht Teil von Claude",
     lines: "Zeilen {from} bis {to}",
     line: "Zeile {n}",
-    registerBefore: "Status nach Schritt 4. Tippe auf eine Antwort, um ihre Datei und Zeilen zu sehen.",
+    registerBefore: "Status nach Schritt 4. Wähle eine Antwort, um ihre Datei und Zeilen zu sehen.",
     registerAfter: "Status nach Schritt 5, so wie Claude sie in die Datei geschrieben hat.",
   },
   /** The caption line in the phone dock opens the whole caption and the check as a sheet. */
@@ -78,7 +78,7 @@ const de = {
     open: "Ganze Erklärung und die Prüfung von Hand öffnen",
   },
   monthCheck: {
-    lead: "Zähl selbst nach, so wie Claude es im Code getan hat. Tippe jede Zeile mit einer Rechnung an.",
+    lead: "Zähl selbst nach, so wie Claude es im Code getan hat: Markiere jede Zeile mit einer Rechnung.",
     count: "Du hast {rows} Zeilen markiert, das sind {months} verschiedene Monate.",
     duplicate: "Zeile {a} und Zeile {b} sind dieselbe Rechnung {invoice}. Sie zählt einmal.",
     missing: "Für {missing} gibt es keine Rechnung. Das ist das Dokument, das Claude anfordert.",
@@ -122,7 +122,7 @@ const de = {
     /** Before step 1: the learning objective, the four checks of glossary C.4. */
     probe:
       "Jede Antwort prüfst du vierfach. Welche Zeile sagt es (Zitat)? Gilt sie für die ganze Zeit (Zeitraum) und für alles, wovon die Antwort spricht (Umfang)? Ist sie gemessen und unterschrieben (Freigabe)?",
-    tap: "Tippe auf den Pfeil. Du siehst dann Claudes aufgezeichnete Antwort auf genau diesen Prompt.",
+    tap: "Schick den Prompt mit dem Pfeil ab. Du siehst dann Claudes aufgezeichnete Antwort auf genau diesen Prompt.",
     ready: {
       "schritt-1": [
         "Im Projekt liegen die {knowledge} Dateien des Weinguts und die Projektanweisung, und der Skill esg-nachweise ist eingeschaltet.",
@@ -143,16 +143,17 @@ const de = {
     done: {
       "schritt-1": [
         "Laut Claude sind {belegt} der 8 Antworten belegt. Bei Q1, der Stromfrage, nennt Claude das fehlende Dokument: die Stromrechnung für September 2025.",
-        "Tippe in der Antwort auf „{strom}“. Die Datei öffnet sich, und du siehst selbst {rows} Zeilen, aber nur {months} Monate.",
+        "Öffne in der Antwort „{strom}“. Du siehst selbst {rows} Zeilen, aber nur {months} Monate.",
       ],
       "schritt-2": ["Claude lässt {belegt} der 7 Aussagen raus und streicht die anderen {rest}, darunter „{claim}“ für die Regalkarte."],
       "schritt-3": [
         "Bei F2 fragt die Bank nach dem Strom des ganzen Jahres. Claude gibt {mwh11} MWh nur als Summe von {months} Monaten an, also kommt die Lücke aus Schritt 1 zurück.",
-        "Zieh von der Zahl zu der Dateizeile, aus der sie stammt, oder tippe erst die Zahl und dann die Zeile an.",
+        "Zieh von der Zahl zu der Dateizeile, aus der sie stammt, oder wähle erst die Zahl und dann die Zeile.",
       ],
       "schritt-4": [
         "Claude hat {register} erstellt: {belegt} Antworten sind belegt, {schwach} schwach belegt und {luecke} haben eine Lücke.",
-        "Unter „Von Hand prüfen“ liegen die 21 Antworten. Tippe auf eine, dann siehst du ihre Datei und ihre Zeilen.",
+        "Unter „Von Hand prüfen“ liegen die 21 Antworten. Wähle eine, dann siehst du ihre Datei und ihre Zeilen.",
+        "Achtung bei C6: Hier schreibt Claude, die Aussage dürfe wie formuliert raus. In Schritt 2 hat Claude selbst „nur“ gestrichen, und so steht es auch in den Lösungen. Genau das fängt der Mensch, der jede Antwort prüft.",
       ],
       "schritt-5": [
         "Claude rechnet die Zählerstände nach und aktualisiert das Register: jetzt sind {belegt} Antworten belegt, {schwach} schwach belegt und {luecke} haben eine Lücke.",
@@ -202,8 +203,8 @@ const de = {
     steps: [
       "Öffne die Einstellungen und dann „Capabilities“. Schalte „Code execution and file creation“ ein. Im neuen Layout heißt der Schalter „Create and edit files“. Skills brauchen ihn, weil Claude ihre Dateien in einer eigenen Arbeitsumgebung öffnet.",
       "Öffne in der Seitenleiste „Customize“ und dann „Skills“, oder gehe direkt auf claude.ai/customize/skills.",
-      "Tippe auf „+“, dann auf „Create skill“ und „Upload a skill“. Wähle die Datei esg-nachweise.zip, die du hier herunterlädst.",
-      "Schalte den Skill ein. Stell deine Frage wie gewohnt, oder tippe „/“ und wähle esg-nachweise aus.",
+      "Wähle „+“, dann „Create skill“ und „Upload a skill“. Wähle die Datei esg-nachweise.zip, die du hier herunterlädst.",
+      "Schalte den Skill ein. Stell deine Frage wie gewohnt, oder gib „/“ ein und wähle esg-nachweise aus.",
     ],
     download: "Skill herunterladen (ZIP)",
     capability: "Code execution and file creation",
@@ -286,7 +287,7 @@ const en: AppCopy = {
     exercise: "Exercise, not part of Claude",
     lines: "Lines {from} to {to}",
     line: "Line {n}",
-    registerBefore: "Statuses after step 4. Tap an answer to see its file and lines.",
+    registerBefore: "Statuses after step 4. Choose an answer to see its file and lines.",
     registerAfter: "Statuses after step 5, as Claude wrote them into the file.",
   },
   sheet: {
@@ -296,7 +297,7 @@ const en: AppCopy = {
     open: "Open the whole explanation and the check by hand",
   },
   monthCheck: {
-    lead: "Count it yourself, the way Claude did in code. Tap every row with a bill.",
+    lead: "Count it yourself, the way Claude did in code: mark every row with a bill.",
     count: "You have marked {rows} rows, which are {months} different months.",
     duplicate: "Line {a} and line {b} are the same bill {invoice}. It counts once.",
     missing: "There is no bill for {missing}. That is the document Claude asks for.",
@@ -338,7 +339,7 @@ const en: AppCopy = {
   steps: {
     probe:
       "You check every answer four ways. Which line says it (quote)? Does it cover the whole time (period) and everything the answer is about (scope)? Is it measured and signed (approval)?",
-    tap: "Tap the arrow. You then see Claude's recorded answer to exactly this prompt.",
+    tap: "Send the prompt with the arrow. You then see Claude's recorded answer to exactly this prompt.",
     ready: {
       "schritt-1": [
         "The project holds the winery's {knowledge} files and the project instructions, and the skill esg-nachweise is switched on.",
@@ -359,16 +360,16 @@ const en: AppCopy = {
     done: {
       "schritt-1": [
         "According to Claude, {belegt} of the 8 answers are covered. For Q1, the electricity question, Claude names the missing document: the September 2025 electricity bill.",
-        "Tap “{strom}” in the answer. The file opens, and you can see {rows} rows but only {months} months.",
+        "Open “{strom}” in the answer. You can see {rows} rows but only {months} months.",
       ],
       "schritt-2": ["Claude lets {belegt} of the 7 claims go out and strikes the other {rest}, among them “{claim}” for the shelf card."],
       "schritt-3": [
         "For F2 the bank asks for the electricity of the whole year. Claude gives {mwh11} MWh only as the total of {months} months, so the gap from step 1 comes back.",
-        "Drag from the figure to the file row it comes from, or tap the figure first and then the row.",
+        "Drag from the figure to the file row it comes from, or choose the figure first and then the row.",
       ],
       "schritt-4": [
         "Claude has created {register}: {belegt} answers are covered, {schwach} are weak and {luecke} have a gap.",
-        "Under “Check by hand” you find the 21 answers. Tap one to see its file and its lines.",
+        "Under “Check by hand” you find the 21 answers. Choose one to see its file and its lines.",
       ],
       "schritt-5": ["Claude checks the meter readings and updates the register: now {belegt} answers are covered, {schwach} are weak and {luecke} have a gap."],
     },
@@ -406,7 +407,7 @@ const en: AppCopy = {
     steps: [
       "Open Settings, then “Capabilities”. Switch on “Code execution and file creation”. In the new layout the switch is called “Create and edit files”. Skills need it, because Claude opens their files in its own workspace.",
       "Open “Customize” in the sidebar, then “Skills”, or go straight to claude.ai/customize/skills.",
-      "Tap “+”, then “Create skill” and “Upload a skill”. Choose the file esg-nachweise.zip that you download here.",
+      "Choose “+”, then “Create skill” and “Upload a skill”. Choose the file esg-nachweise.zip that you download here.",
       "Switch the skill on. Ask your question as usual, or type “/” and pick esg-nachweise.",
     ],
     download: "Download the skill (ZIP)",

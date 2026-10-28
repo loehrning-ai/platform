@@ -17,8 +17,10 @@ export const REPLAY = {
   /** The gap before each tool step, clamped. */
   stepMinMs: 250,
   stepMaxMs: 1500,
-  /** The answer streams at most this fast (glass-spec 4.13). */
+  /** The answer streams at most this fast (glass-spec 4.13), unless that would make the replay outlast the real run. */
   maxCps: 40,
+  /** A long answer may speed up to fit the real run, but never streams in less than this. */
+  answerFloorMs: 10_000,
   /** Recorded deltas count as real streaming when they span this share of chars / 60 cps. */
   recordedShare: 0.4,
   /** Approximated pacing: word chunks with this much seeded jitter. */
@@ -238,7 +240,12 @@ export function buildSchedule(turns: readonly ReplayTurn[], options: { readonly 
     flushNote();
     if (!first) clock += REPLAY.stepMinMs;
 
-    const paced = paceAnswer(turn.timeline, turn.final_text, (options.seed ?? 1) + index, options.cps);
+    // The replay never takes longer than the real run: a long answer streams faster when 40 characters a
+    // second would outlast the recording (a 3,353 character answer Claude wrote in 30 s took 92 s here).
+    const baseCps = options.cps ?? REPLAY.maxCps;
+    const budgetMs = Math.max(REPLAY.answerFloorMs, turn.stats.duration_ms - (clock - (starts[index] ?? 0)));
+    const turnCps = Math.max(baseCps, (turn.final_text.length * 1000) / budgetMs);
+    const paced = paceAnswer(turn.timeline, turn.final_text, (options.seed ?? 1) + index, turnCps);
     pacing.push(paced.pacing);
     const answerStart = clock;
     for (const chunk of paced.chunks) events.push({ at: answerStart + chunk.at, turn: index, type: "answer", end: chunk.end });

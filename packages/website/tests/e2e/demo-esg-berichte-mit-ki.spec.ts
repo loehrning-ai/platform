@@ -53,6 +53,16 @@ async function openCheck(page: Page) {
   await expect(page.locator("[data-w4a-step]").first()).toBeVisible();
 }
 
+/** "Weiter" after an answer: on a phone the first press opens the check sheet (the caption pill says "Prüfen"), the next moves on. */
+async function nextBeat(page: Page) {
+  if (await isPhone(page)) {
+    await page.locator("[data-demo-next]").click();
+    await expect(page.locator("[data-w4a-step]").first()).toBeVisible();
+    await page.locator("[data-sheet-close]").click();
+  }
+  await page.locator("[data-demo-next]").click();
+}
+
 /** Tap a part of the claim, then the certificate line that carries it. */
 async function connect(page: Page, part: string, line: number) {
   await page.locator(`[data-w4-handle="${part}"]`).click();
@@ -60,12 +70,12 @@ async function connect(page: Page, part: string, line: number) {
 }
 
 test.describe(PATH, () => {
-  test("intro: the news first, then the question, the whole card above the tab bar at 390 x 664", async ({ page }) => {
+  test("intro: the case, the news and the question, the whole card above the tab bar at 390 x 664", async ({ page }) => {
     const errors = collectErrors(page);
     await page.setViewportSize({ width: 390, height: 664 });
     await page.goto(PATH, { waitUntil: "networkidle" });
     const news = page.locator("[data-demo-intro-news]");
-    await expect(news).toContainText("27. September 2026");
+    await expect(news).toContainText("27.09.2026");
     await expect(news).toContainText("EBRD");
     await expect(page.locator("[data-demo-intro-body]")).toContainText("erfundenes Weingut");
     await expect(page.locator("[data-demo-intro]")).toContainText("Auf dieser Seite läuft keine KI.");
@@ -90,7 +100,7 @@ test.describe(PATH, () => {
     // The prompt types itself into the composer with the questionnaire attached.
     await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("1-fragebogen-nordvik.md");
     await expect(page.locator("[data-w4a-composer]")).toContainText("Zähle vor jeder Jahressumme die eindeutigen Monate im Code.");
-    await expect(caption(page)).toContainText("Tippe auf den Pfeil");
+    await expect(caption(page)).toContainText("Schick den Prompt mit dem Pfeil ab");
     // Start hands the keyboard to the send arrow, and the sidebar is a picture apart from Customize.
     await expect(page.locator("[data-w4a-send]")).toBeFocused();
     await expect(page.locator("[data-w4a-send]")).toHaveAccessibleName("Aufzeichnung abspielen");
@@ -148,7 +158,7 @@ test.describe(PATH, () => {
     await openBeat(page, "schritt-4");
     await sendAndFinish(page, "schritt-4");
     await expect(caption(page)).toContainText("9 Antworten sind belegt, 3 schwach belegt und 9 haben eine Lücke");
-    await page.locator("[data-demo-next]").click();
+    await nextBeat(page);
     await expect(clock(page)).toHaveAttribute("data-beat", "schritt-5");
     // Step 5 stays in the chat of step 4: its turn is still there.
     await expect(page.locator('[data-w4a-turn="schritt-4"]')).toHaveCount(1);
@@ -258,5 +268,44 @@ test.describe(`${PATH} on a 390 x 664 phone`, () => {
     await expect(page.locator('[data-w4a-step="schritt-1"]')).toBeVisible();
     expect(await overflow(page)).toBeLessThanOrEqual(0);
     await expectGlasBudget(page, "phone with the sheet open");
+  });
+
+  test("Weiter on a phone opens the check before it moves on, and wide answer tables become cards", async ({ page }) => {
+    await page.goto(PATH, { waitUntil: "networkidle" });
+    await firstPress(page, "[data-demo-start]", () => expect(clock(page)).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 }));
+    await sendAndFinish(page, "schritt-1");
+    // A table with four or more columns reads as one card per row, never a sideways scroll.
+    const table = page.locator('[data-w4a-turn="schritt-1"] [data-w4a-table]').first();
+    await expect(table).toHaveAttribute("data-layout", "cards");
+    const wide = await table.evaluate((element) => element.scrollWidth - element.clientWidth);
+    expect(wide, "the answer table fits the phone").toBeLessThanOrEqual(1);
+    // The caption pill asks to check first; Weiter opens the sheet, the next Weiter moves on.
+    await expect(page.locator("[data-w4a-capline] [data-attention]")).toHaveCount(1);
+    await page.locator("[data-demo-next]").click();
+    await expect(page.locator('[data-w4a-step="schritt-1"]')).toBeVisible();
+    await expect(clock(page)).toHaveAttribute("data-beat", "schritt-1");
+    // Once checked, the pill rests, and Weiter after closing the sheet moves on.
+    await page.locator("[data-sheet-close]").click();
+    await expect(page.locator("[data-w4a-capline] [data-attention]")).toHaveCount(0);
+    await page.locator("[data-demo-next]").click();
+    await expect(clock(page)).toHaveAttribute("data-beat", "schritt-2");
+    expect(await overflow(page)).toBeLessThanOrEqual(0);
+  });
+
+  test("the strip readout on the step 2 card sits on a dark plate the figures can be read on", async ({ page }) => {
+    await openBeat(page, "schritt-2");
+    await sendAndFinish(page, "schritt-2");
+    await openCheck(page);
+    const plate = page.locator("[data-w4-readout]").first();
+    await expect(async () => {
+      await connect(page, "zertifiziert", 4);
+      await expect(plate).toBeVisible({ timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+    const alpha = await plate.evaluate((element) => {
+      const match = getComputedStyle(element).backgroundColor.match(/rgba?\(([^)]+)\)/);
+      const parts = match ? match[1]!.split(/[ ,/]+/).filter(Boolean) : [];
+      return parts.length > 3 ? Number(parts[3]) : 1;
+    });
+    expect(alpha, "the readout plate is nearly opaque").toBeGreaterThan(0.8);
   });
 });

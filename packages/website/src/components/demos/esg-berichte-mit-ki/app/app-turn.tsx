@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, memo, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { MarkdownLite } from "@/components/demos/claude-scene/markdown-lite";
+import { MarkdownLite, parseMarkdown, type RenderText } from "@/components/demos/claude-scene/markdown-lite";
 import { clockLabel } from "@/components/demos/claude-scene/replay-engine";
 import type { AppCopy } from "@/lib/demo-cases/esg-berichte-mit-ki/app-copy";
 import { fill } from "@/lib/demo-cases/esg-berichte-mit-ki/app-data";
@@ -42,7 +42,7 @@ function useTurnFrame(step: AppStepData, mode: TurnMode, reduced: boolean, onDon
   return appFrameAt(schedule, live ? t : Number.POSITIVE_INFINITY);
 }
 
-const TOOL_KINDS = new Set(["skill", "read", "command", "write"]);
+const TOOL_KINDS = new Set(["skill", "read", "search", "command", "write"]);
 
 function rowText(copy: AppCopy, row: ActivityRow): string {
   const a = copy.activity;
@@ -52,7 +52,9 @@ function rowText(copy: AppCopy, row: ActivityRow): string {
     case "skill":
       return fill(a.skill, { name: row.detail });
     case "read":
-      return /[*?]/.test(row.detail) ? fill(a.search, { name: row.detail }) : fill(a.read, { name: row.detail });
+      return fill(a.read, { name: row.detail });
+    case "search":
+      return fill(a.search, { name: row.detail });
     case "write":
       return fill(a.write, { name: row.detail });
     case "command":
@@ -62,7 +64,7 @@ function rowText(copy: AppCopy, row: ActivityRow): string {
   }
 }
 
-const ROW_ICON = { thinking: "info", skill: "check", read: "doc", command: "code", write: "doc" } as const;
+const ROW_ICON = { thinking: "info", skill: "check", read: "doc", search: "search", command: "code", write: "doc" } as const;
 
 function Row({ copy, row }: { readonly copy: AppCopy; readonly row: ActivityRow }) {
   const [code, setCode] = useState(false);
@@ -141,6 +143,98 @@ export function citeSegments(parts: readonly Part[]): readonly { readonly lead: 
     }
   });
   return parts.map((part, index) => ({ lead: leads[index] ?? "", part: part.kind === "text" ? { ...part, text: texts[index] ?? "" } : part, tail: tails[index] ?? "" }));
+}
+
+const TABLE_RULE = /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/;
+
+export interface AnswerSegment {
+  readonly kind: "md" | "table";
+  readonly text: string;
+}
+
+/**
+ * Splits an answer into Markdown runs and GFM tables (a line with "|" over a
+ * separator row, then every following line with "|"), the way MarkdownLite
+ * finds them, so a table can be drawn as cards. Pure; joined with newlines
+ * the segments give the answer back.
+ */
+export function answerSegments(source: string): readonly AnswerSegment[] {
+  const lines = source.replace(/\r\n?/g, "\n").split("\n");
+  const out: { kind: "md" | "table"; lines: string[] }[] = [];
+  const push = (kind: "md" | "table", line: string) => {
+    const last = out[out.length - 1];
+    if (last && last.kind === kind) last.lines.push(line);
+    else out.push({ kind, lines: [line] });
+  };
+  let fenced = false;
+  let inTable = false;
+  lines.forEach((line, index) => {
+    if (/^\s*```/.test(line)) fenced = !fenced;
+    if (!fenced && !inTable && line.includes("|") && TABLE_RULE.test(lines[index + 1] ?? "")) inTable = true;
+    else if (inTable && !(line.includes("|") && line.trim())) inTable = false;
+    push(inTable ? "table" : "md", line);
+  });
+  return out.map((segment) => ({ kind: segment.kind, text: segment.lines.join("\n") }));
+}
+
+/** A header cell as a plain label: Markdown markers dropped. */
+const plainLabel = (text: string) => text.replace(/[*_`]/g, "").trim();
+
+/**
+ * Claude's answer tables. Recorded answers carry six or seven columns with
+ * whole sentences in them, which no chat column holds: from four columns, and
+ * in any narrow chat, each row becomes a card (the first cell as its heading,
+ * every other cell under its column name), so nothing hides off to the side.
+ * Fewer columns in a wide chat stay a table. The words are the recording's.
+ */
+function AnswerTable({ text, streaming, renderText }: { readonly text: string; readonly streaming: boolean; readonly renderText: RenderText }) {
+  const block = parseMarkdown(text).find((item) => item.type === "table");
+  if (!block || block.type !== "table") return <MarkdownLite source={text} streaming={streaming} renderText={renderText} />;
+  const cell = (value: string) => <MarkdownLite source={value} renderText={renderText} />;
+  return (
+    <div className="w4a-table" data-layout={block.head.length >= 4 ? "cards" : "table"} data-w4a-table="">
+      <table>
+        <thead>
+          <tr>
+            {block.head.map((head, position) => (
+              <th key={position} scope="col">
+                {cell(head)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {block.rows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {block.head.map((head, position) => (
+                <td key={position}>
+                  {position === 0 ? null : <span className="w4a-td-label">{plainLabel(head)}</span>}
+                  <div className="w4a-td-value">{cell(row[position] ?? "")}</div>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/** The answer: Markdown through MarkdownLite, every table through AnswerTable. */
+function AnswerMarkdown({ source, streaming, renderText }: { readonly source: string; readonly streaming: boolean; readonly renderText: RenderText }) {
+  const segments = answerSegments(source);
+  return (
+    <>
+      {segments.map((segment, index) => {
+        const edge = streaming && index === segments.length - 1;
+        return segment.kind === "table" ? (
+          <AnswerTable key={index} text={segment.text} streaming={edge} renderText={renderText} />
+        ) : (
+          <MarkdownLite key={index} source={segment.text} streaming={edge} renderText={renderText} />
+        );
+      })}
+    </>
+  );
 }
 
 /** Answer text with every citation of a project file as a link that opens the file at that line. */
@@ -228,7 +322,7 @@ export const AppTurn = memo(function AppTurn({
       {frame.phase === "sending" ? null : <Activity copy={copy} frame={frame} running={running && frame.phase !== "streaming"} />}
       {frame.answer ? (
         <div className="w4a-answer" data-w4a-answer="">
-          <MarkdownLite source={frame.answer} streaming={running} renderText={renderText} />
+          <AnswerMarkdown source={frame.answer} streaming={running} renderText={renderText} />
         </div>
       ) : null}
       {!running && produced ? (

@@ -124,9 +124,12 @@ export function MonthCheck({ file, copy }: { readonly file: AppFile; readonly co
         })}
       </ol>
       <div className="w4a-months-foot" aria-live="polite">
-        <p className="w4a-months-count" data-w4a-month-count={count.months.length}>
-          {fill(copy.monthCheck.count, { rows: rows.length, months: count.months.length })}
-        </p>
+        {/* Before the first mark the lead says what to do; a count of 0 would read like an error. */}
+        {rows.length > 0 ? (
+          <p className="w4a-months-count" data-w4a-month-count={count.months.length}>
+            {fill(copy.monthCheck.count, { rows: rows.length, months: count.months.length })}
+          </p>
+        ) : null}
         {count.duplicates.map((item) => (
           <p key={item.invoice} className="w4a-months-note">
             {fill(copy.monthCheck.duplicate, { a: item.lines[0] ?? "", b: item.lines[1] ?? "", invoice: item.invoice })}

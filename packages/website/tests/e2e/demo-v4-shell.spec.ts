@@ -48,6 +48,20 @@ for (const demo of V4) {
       await expectGlasBudget(page, `${demo.slug} guided`);
     });
 
+    test("Enter on the start keeps the keyboard inside the demo: focus lands in the stage, the next Tab stays in it", async ({ page, browserName }) => {
+      await page.goto(`/demos/${demo.slug}`, { waitUntil: "networkidle" });
+      const clock = page.locator("[data-demo-clock]");
+      await expect(async () => {
+        await page.locator("[data-demo-start]").focus();
+        await page.keyboard.press("Enter");
+        await expect(clock).toHaveAttribute("data-demo-phase", "guided", { timeout: 1000 });
+      }).toPass();
+      await expect.poll(() => page.evaluate(() => Boolean(document.activeElement?.closest("[data-demo-stage]")))).toBe(true);
+      // Safari's plain Tab skips buttons unless "Press Tab to highlight each item" is on; Option+Tab walks every control.
+      await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
+      expect(await page.evaluate(() => Boolean(document.activeElement?.closest("[data-demo-stage]")))).toBe(true);
+    });
+
     test("ArrowRight starts, r and Shift+R go back to the first step, Escape leaves free play", async ({ page }) => {
       await page.goto(`/demos/${demo.slug}`, { waitUntil: "networkidle" });
       const clock = page.locator("[data-demo-clock]");

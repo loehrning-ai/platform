@@ -89,6 +89,10 @@
 }
 
 /* The stage: the field, the data, the caption and the dock in one rounded plate. */
+/* The stage takes focus when the intro leaves (tabindex -1): it is a landing point, not a control. */
+.demo4-stage:focus {
+  outline: none;
+}
 .demo4-stage {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto auto;
