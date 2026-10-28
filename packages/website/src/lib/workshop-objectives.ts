@@ -21,7 +21,24 @@ export interface WorkshopObjective {
   readonly card: readonly [string, string, string];
   /** Where the card lives in the kit or the demo. */
   readonly cardSource: string;
+  /** A sister workshop that teaches the same card on another case (unlocalized path). */
+  readonly related?: { readonly href: string; readonly label: string };
 }
+
+/**
+ * Workshops 04 and 05 use the same four checks (Zitat, Zeitraum, Umfang, Freigabe; the W04 kit's
+ * nachweisprobe.md says so in its first lines): each page points to the other.
+ */
+const SAME_CHECKS: Record<"esg" | "audit", Record<Locale, { readonly href: string; readonly label: string }>> = {
+  esg: {
+    de: { href: "/workshops/audit-vorbereitung-mit-ki", label: "Dieselben vier Prüfungen an einem Audit: Workshop 05" },
+    en: { href: "/workshops/audit-vorbereitung-mit-ki", label: "The same four checks in an audit: Workshop 05" },
+  },
+  audit: {
+    de: { href: "/workshops/esg-berichte-mit-ki", label: "Dieselben vier Prüfungen an ESG-Antworten: Workshop 04" },
+    en: { href: "/workshops/esg-berichte-mit-ki", label: "The same four checks on ESG answers: Workshop 04" },
+  },
+};
 
 const LABEL: Record<Locale, string> = { de: "Lernziel", en: "Objective" };
 
@@ -32,17 +49,22 @@ function audit(locale: Locale): WorkshopObjective {
     objective: copy.objective,
     card: [TEST_ORDER.map((test) => copy.test[test]).join(" · "), copy.tool.status, copy.tool.rule],
     cardSource: copy.toolSource,
+    related: SAME_CHECKS.audit[locale],
   };
 }
 
 function esg(locale: Locale): WorkshopObjective {
   const copy = ESG[locale];
-  const statuses = copy.regel.statuses.map(([key, text]) => `${copy.statuses[key as keyof typeof copy.statuses]}: ${text}`).join(". ");
+  // Status names in capitals, as on the kit's card (nachweisprobe.md: BELEGT, SCHWACH, LÜCKE), the deck and Workshop 05's card.
+  const statuses = copy.regel.statuses
+    .map(([key, text]) => `${copy.statuses[key as keyof typeof copy.statuses].toLocaleUpperCase(locale)}: ${text.replace(/\.$/, "")}`)
+    .join(". ");
   return {
     label: LABEL[locale],
     objective: copy.regel.objective,
     card: [copy.regel.checks.map(([word]) => word).join(" · "), `${statuses}.`, copy.regel.weakest],
     cardSource: copy.regel.caption,
+    related: SAME_CHECKS.esg[locale],
   };
 }
 

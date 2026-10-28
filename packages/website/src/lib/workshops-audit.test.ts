@@ -84,17 +84,21 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
   it("carries the title, teaser and question of the audit workshop", () => {
     expect(en.title).toBe("Audit Preparation with AI: Organize Evidence and Find Gaps");
     expect(de.title).toBe("Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden");
-    expect(en.summary).toBe("Explore how AI can support audit preparation by organizing documentation.");
-    expect(de.summary).toBe("Wie KI hilft, Unterlagen für ein Audit zu ordnen.");
-    expect(de.lede).toBe("Du siehst live, wie elf Dateien gegen acht Anforderungen geprüft werden, und nimmst das Kit mit.");
-    expect(en.lede).toBe("You watch eleven files checked live against eight items and take the kit home.");
-    expect(en.question).toBe("Which files in the folder are evidence?");
-    expect(de.question).toBe("Welche Dateien im Ordner sind ein Nachweis?");
+    // The teaser opens with the deck's real case (A$97,587 refunded, rounded up to "about A$98,000").
+    expect(en.summary).toBe("Deloitte refunded about A$98,000 after a report cited sources that did not exist. An invented firm checks with Claude which file holds up in an audit.");
+    expect(de.summary).toBe("Deloitte zahlte knapp 98.000 A$ zurück, weil ein Bericht Quellen zitierte, die es nicht gab. Eine erfundene Firma prüft mit Claude, welche Datei im Audit hält.");
+    for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
+    // The lede says who works in Claude (Tim) and what the room does (it predicts).
+    expect(de.lede).toBe("Tim prüft live in Claude, welche von elf Dateien die acht Anforderungen eines Kundenaudits wirklich belegen, und du sagst es vorher.");
+    expect(en.lede).toBe("Tim checks live in Claude which of eleven files really prove a customer's eight audit requests, and you call it first.");
+    // The question is the deck's "Heute" question, word for word.
+    expect(en.question).toBe("Which item is proven, which document is missing?");
+    expect(de.question).toBe("Welche Anforderung ist belegt, welches Dokument fehlt?");
     for (const workshop of both) {
       expect(workshop.slug).toBe(slug);
       expect(workshop.number).toBe("05");
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-25");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-28");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.caseStudy.decisionQuestion).toBe(workshop.question);
       expect(workshop.outcomes).toHaveLength(3);
@@ -165,7 +169,10 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
     expect(kit.stats.map((stat) => stat.value)).toEqual(["19", "3", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
     expect(kit.contents.map((item) => item.name)).toEqual(edition.top);
-    expect(kit.steps.map((step) => step.segments?.map((segment) => segment.value))).toEqual([[8, 3], [2, 1, 5], undefined]);
+    // Predict, then check: the page shows no result bars, the steps ask for a prediction and name the key.
+    expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined]);
+    expect(kit.steps[0]?.note).toMatch(locale === "de" ? /voraus, dann prüf es in LOESUNGEN\.md/ : /Predict first, then check ANSWERS\.md/);
+    expect(kit.steps[1]?.note).toMatch(locale === "de" ? /Sag es zuerst voraus/ : /Predict first/);
     const count = (text: string) => text.split(/\s+/).filter(Boolean).length;
     for (const step of kit.steps) {
       for (const line of [step.input, step.action, step.output]) expect(count(line), line).toBeLessThanOrEqual(10);

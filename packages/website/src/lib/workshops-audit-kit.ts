@@ -41,11 +41,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Die elf Dateien in ordner/.",
         action: "Claude liest Zeitraum und Freigabe aus dem Text.",
         output: "Eine Nachweisliste mit elf Zeilen.",
-        segments: [
-          { tone: "ok", label: "hält", value: 8 },
-          { tone: "missing", label: "SCHEITERT", value: 3 },
-        ],
-        note: "Drei Dateien fallen durch, und ihr Name verrät nicht, welche.",
+        note: "Wie viele der elf Dateien fallen durch? Sag es zuerst voraus, dann prüf es in LOESUNGEN.md. Der Dateiname verrät es nicht: Bei einer Datei führt FINAL im Namen in die Irre.",
       },
       {
         tag: "Schritt 2",
@@ -53,12 +49,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "request_tannwald.md und die Liste aus Schritt 1.",
         action: "Claude sucht wörtliche Zitate und rechnet im Code.",
         output: "Eine Tabelle mit Zitat und Status.",
-        segments: [
-          { tone: "ok", label: "BELEGT", value: 2 },
-          { tone: "partial", label: "SCHWACH", value: 1 },
-          { tone: "missing", label: "LÜCKE", value: 5 },
-        ],
-        note: "Belegt heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.",
+        note: "Wie viele der acht Anforderungen sind BELEGT? Sag es zuerst voraus. Achtung: BELEGT heißt nur belegt, nicht gut. Die Systemliste belegt für Anforderung R1, dass Kundendaten in den USA liegen.",
       },
       {
         tag: "Schritt 3",
@@ -114,11 +105,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "The eleven files in folder/.",
         action: "Claude reads period and approval from the text.",
         output: "An index with eleven rows.",
-        segments: [
-          { tone: "ok", label: "pass", value: 8 },
-          { tone: "missing", label: "FAIL", value: 3 },
-        ],
-        note: "Three files fail, and their names do not tell you which.",
+        note: "How many of the eleven files fail? Predict first, then check ANSWERS.md. The file names will not tell you: for one file, FINAL in its name misleads.",
       },
       {
         tag: "Step 2",
@@ -126,12 +113,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "request_tannwald.md and the index from step 1.",
         action: "Claude finds exact quotes and computes in code.",
         output: "A table with quote and status.",
-        segments: [
-          { tone: "ok", label: "COVERED", value: 2 },
-          { tone: "partial", label: "WEAK", value: 1 },
-          { tone: "missing", label: "GAP", value: 5 },
-        ],
-        note: "COVERED means proven, not good: R1 proves the data sits in the US.",
+        note: "How many of the eight requests are COVERED? Predict first. Note: COVERED means proven, not good. For request R1 the system list proves that customer data sits in the US.",
       },
       {
         tag: "Step 3",

@@ -243,9 +243,10 @@ export function KitPage({ workshop, locale }: Props) {
                   <Pictogram name="download" strokeWidth={2} className="size-8 shrink-0 text-foreground max-sm:hidden" />
                   <span
                     data-kit-filename=""
-                    className="min-w-0 break-all font-mono text-[0.8125rem] font-bold text-foreground min-[400px]:text-[0.9375rem] sm:text-[1.375rem]"
+                    className="min-w-0 font-mono text-[0.8125rem] font-bold text-foreground [overflow-wrap:anywhere] min-[400px]:text-[0.9375rem] sm:text-[1.375rem]"
                   >
-                    {kit.fileName}
+                    {/* Breaks after a hyphen ("crvena-zemja-" / "nachweisprobe.zip"), inside a word only as a last resort. */}
+                    {kit.fileName.split("-").flatMap((part, index, parts) => (index < parts.length - 1 ? [`${part}-`, <wbr key={index} />] : [part]))}
                   </span>
                 </p>
                 {/* The size is the one new fact here; "free" is said once, on its own line. */}

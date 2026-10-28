@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { workshopObjective } from "./workshop-objectives";
 import { ESG_REPORTING_WORKSHOP } from "./workshops-esg-reporting";
 import { readZipText } from "./zip/read";
 
@@ -141,5 +142,17 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.materials[1]?.description).toContain("project-instructions.md");
     expect(en.materials[1]?.description).toContain("ANSWERS.md");
     expect(en.provenance.note).not.toMatch(/prompts were run/i);
+  });
+});
+
+describe("Workshop 04 objective card", () => {
+  it.each(["de", "en"] as const)("reads the three statuses as clean sentences (%s)", (locale) => {
+    const card = workshopObjective(slug, locale)?.card ?? [];
+    expect(card).toHaveLength(3);
+    for (const line of card) {
+      expect(line, line).not.toMatch(/\.\.|\. \./);
+      expect(line, line).not.toMatch(/[–—]/);
+    }
+    expect(card[1]).toMatch(locale === "de" ? /^BELEGT: .+\. SCHWACH: .+\. LÜCKE: .+\.$/ : /^COVERED: .+\. WEAK: .+\. GAP: .+\.$/);
   });
 });

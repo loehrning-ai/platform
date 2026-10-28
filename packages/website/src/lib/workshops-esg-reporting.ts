@@ -58,8 +58,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     eyebrow: "Workshop 04 · ESG",
     summary:
       "Seit dem 27.09.2026 ist in Deutschland „klimaneutral“ wegen gekaufter Zertifikate verboten. Ein Weingut in Nordmazedonien prüft mit Claude, was es belegen kann.",
+    lede: "Seit dem 27.09.2026 ist „klimaneutral“ durch Ausgleich verboten: Tim prüft live in Claude, was ein Weingut belegen kann, und du schätzt jedes Ergebnis vorher.",
     description:
-      "Seit dem 27.09.2026 darf in Deutschland keine Umweltaussage mehr auf gekauften CO₂-Zertifikaten beruhen, und Banken in Nordmazedonien vergeben grüne Kredite der EBRD. Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
+      "Seit dem 27.09.2026 darf in Deutschland kein Produkt mehr wegen gekaufter CO₂-Zertifikate als klimaneutral oder emissionsärmer beworben werden, und Banken in Nordmazedonien vergeben grüne Kredite der EBRD. Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
@@ -69,7 +70,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     stageExplainer: {
       heading: "Was ist das Kit?",
       body:
-        "Eine Zip mit 13 erfundenen Firmendateien, drei Anfragen, fünf Prompts und der Nachweisprobe auf einer Seite. Du legst sie in ein Claude-Projekt und prüfst jede Antwort gegen die Dateien. Beim ersten Mal etwa 90 Minuten.",
+        "Eine Zip mit 13 erfundenen Firmendateien, drei Anfragen, fünf Prompts und der Nachweisprobe auf einer Seite. Zu Hause legst du sie in ein Claude-Projekt und prüfst jede Antwort gegen die Dateien. Beim ersten Mal etwa 90 Minuten.",
       facts: ["13 Dateien", "5 Prompts", "ca. 90 Min. allein"],
     },
     audience: [
@@ -88,7 +89,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Du erkennst, welche Antworten sich mit einem nachgereichten Dokument ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
-      { label: "Der Fall", minutes: 7, activity: "listen", description: "Was in Deutschland, Skopje und Norwegen gilt, wer das Weingut ist und wer was fragt." },
+      { label: "Der Fall", minutes: 7, activity: "listen", description: "Was sich in Deutschland, Skopje und Norwegen geändert hat, wer das Weingut ist und wer was fragt." },
       { label: "Heute und die Regel", minutes: 6, activity: "vote", description: "Die Frage der Stunde, dann ein Satz gegen seine Datei: erst abstimmen, dann prüfen." },
       { label: "Kit und Durchsicht auf Papier", minutes: 12, activity: "do", description: "Was im Kit liegt, dann zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
       { label: "Das Claude-Projekt, live", minutes: 4, activity: "listen", description: "Tim legt das Projekt in Claude Desktop an: Anweisungen, 13 Dateien, Codeausführung." },
@@ -123,7 +124,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       reviewedAt: "2026-10-25",
       aiOutputsRecordedAt: "2026-10-26",
       data: "synthetic",
-      note: "Auch Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt. Keine Rechtsberatung.",
+      note: "Das Weingut, seine Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -131,7 +132,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         title: "Das Projekt anlegen",
         description:
           "Ein Claude-Projekt bekommt 13 Firmendateien und drei Regeln: nur unsere Dateien, Datei und Zeile nennen, LÜCKE oder SCHWACH statt Schätzung.",
-        tool: "Schritt 0 · Claude-Projekt",
+        tool: "Einrichtung · Claude-Projekt",
       },
       {
         n: "02",
@@ -211,9 +212,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG reports with AI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Since 27.09.2026, wine in Germany may not be called climate neutral because of bought credits. A North Macedonian winery checks with Claude what it can prove.",
+      "Since 27.09.2026, no product in Germany may be called climate neutral because of bought credits. A North Macedonian winery checks what it can prove.",
+    lede: "Since 27.09.2026 Germany bans “climate neutral” based on offsets: Tim checks live in Claude what a winery can prove, and you predict each result first.",
     description:
-      "Since 27.09.2026 no environmental claim in Germany may rest on bought carbon credits, and banks in North Macedonia lend green money from the EBRD. Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, has three ESG requests open: a questionnaire from its Swedish importer, seven environmental claims from its own marketing team for German shelves and the website, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room works along on paper or phones: the group finds defects in the files, predicts each result before Claude shows it, and decides on the marketing claims.",
+      "Since 27.09.2026 no product in Germany may be advertised as climate neutral or lower-emission because of bought carbon credits, and banks in North Macedonia lend green money from the EBRD. Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, has three ESG requests open: a questionnaire from its Swedish importer, seven environmental claims from its own marketing team for German shelves and the website, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room works along on paper or phones: the group finds defects in the files, predicts each result before Claude shows it, and decides on the marketing claims.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
@@ -223,7 +225,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     stageExplainer: {
       heading: "What is the kit?",
       body:
-        "A zip with 13 invented company files, three requests, five prompts and the evidence check on one page. You put them into a Claude Project and check every answer against the files. About 90 minutes the first time.",
+        "A zip with 13 invented company files, three requests, five prompts and the evidence check on one page. At home you put them into a Claude Project and check every answer against the files. About 90 minutes the first time.",
       facts: ["13 files", "5 prompts", "about 90 min alone"],
     },
     audience: [
@@ -242,7 +244,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
-      { label: "The case", minutes: 7, activity: "listen", description: "What applies in Germany, Skopje and Norway, who the winery is and who asks what." },
+      { label: "The case", minutes: 7, activity: "listen", description: "What changed in Germany, Skopje and Norway, who the winery is and who asks what." },
       { label: "Today and the rule", minutes: 6, activity: "vote", description: "The question of the hour, then one sentence against its file: vote first, then check." },
       { label: "Kit and review on paper", minutes: 12, activity: "do", description: "What is in the kit, then in pairs on paper: file, line and which check fails." },
       { label: "The Claude project, live", minutes: 4, activity: "listen", description: "Tim sets up the project in Claude Desktop: instructions, 13 files, code execution." },
@@ -277,7 +279,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       reviewedAt: "2026-10-25",
       aiOutputsRecordedAt: "2026-10-26",
       data: "synthetic",
-      note: "Certificates and documents are invented too; the laws and rules cited are real. Not legal advice.",
+      note: "The winery, its certificates and its documents are invented; the laws and rules cited are real. Not legal advice.",
     },
     steps: [
       {
@@ -285,7 +287,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         title: "Set up the Project",
         description:
           "A Claude Project gets 13 company files and three rules: only our files, name file and line, GAP or WEAK instead of a guess.",
-        tool: "Step 0 · Claude Project",
+        tool: "Setup · Claude Project",
       },
       {
         n: "02",
