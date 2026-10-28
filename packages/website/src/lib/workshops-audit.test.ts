@@ -86,8 +86,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(de.title).toBe("Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden");
     expect(en.summary).toBe("Explore how AI can support audit preparation by organizing documentation.");
     expect(de.summary).toBe("Wie KI hilft, Unterlagen für ein Audit zu ordnen.");
-    expect(de.lede).toBe("Du prüfst elf Dateien gegen acht Anforderungen und schreibst die Lückenliste mit zuständiger Person.");
-    expect(en.lede).toBe("You test eleven files against eight request items and write the gap list with an owner for each gap.");
+    expect(de.lede).toBe("Du siehst live, wie elf Dateien gegen acht Anforderungen geprüft werden, und nimmst das Kit mit.");
+    expect(en.lede).toBe("You watch eleven files checked live against eight items and take the kit home.");
     expect(en.question).toBe("Which files in the folder are evidence?");
     expect(de.question).toBe("Welche Dateien im Ordner sind ein Nachweis?");
     for (const workshop of both) {
@@ -103,8 +103,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     }
   });
 
-  it("has the deck plan's fourteen agenda blocks in both locales, adding up to 90", () => {
-    const minutes = [1, 1, 3, 4, 3, 5, 6, 5, 15, 20, 5, 10, 7, 5];
+  it("has the deck plan's sixteen agenda blocks in both locales, adding up to 90", () => {
+    const minutes = [1, 1, 3, 3, 4, 3, 3, 4, 6, 3, 13, 20, 5, 10, 6, 5];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);

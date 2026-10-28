@@ -52,7 +52,7 @@ for (const edition of EDITIONS) {
       await open(page, edition.deck);
       expect(await page.evaluate(() => typeof (window as unknown as { DeckKeys?: unknown }).DeckKeys)).toBe("object");
       const positions = await mainPositions(page);
-      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(14);
+      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(16);
       await expectAt(page, positions[0], "starts on the cover");
 
       for (const position of positions.slice(1)) {
@@ -145,10 +145,10 @@ for (const edition of EDITIONS) {
       expect(new URL(popup.url()).pathname).toBe(edition.presenter);
       await expect(popup.locator("#pv-conn")).toHaveAttribute("data-state", "live");
       const label = edition.lang === "de" ? "Folie" : "Slide";
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 14`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 16`);
       await page.bringToFront();
       await page.keyboard.press("ArrowRight");
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 14`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 16`);
       await popup.close();
     });
 

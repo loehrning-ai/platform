@@ -35,7 +35,7 @@ const PRESENTERS = { de: "presenter.html", en: "en/presenter.html" };
 const ROOT = { de: "./", en: "../" };
 export const DECK_IDS = { de: SLUG, en: `${SLUG}:en` };
 export const MAIN_SECONDS = 5400;
-export const MAIN_SLIDES = 14;
+export const MAIN_SLIDES = 16;
 
 /** Words a deck must never show (the shared copy lint covers the rest; this is the deck's own floor). */
 const BANNED = [

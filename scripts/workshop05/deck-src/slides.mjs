@@ -51,17 +51,39 @@ const TESTS = ["quote", "date", "scope", "approval"];
 const TEST_ICON = { quote: "quote", date: "calendar", scope: "people", approval: "pen" };
 const ITEM_ICON = { R1: "server", R2: "link", R3: "spark", R4: "key", R5: "cap", R6: "alert", R7: "backup", R8: "policy" };
 const OWNER_OF = { R2: "it", R3: "it", R4: "it", R7: "it", R5: "hr", R8: "md" };
-const MAIN_TOTAL = 14;
+const MAIN_TOTAL = 16;
 
 const extOf = (name) => (name.endsWith("/") ? "dir" : name.split(".").pop());
 function file(name, meta = "", o = {}) {
   return `<div class="file${o.cls ? ` ${o.cls}` : ""}"${o.attrs || ""}${o.style ? ` style="${o.style}"` : ""}><span class="file__ext">${esc(extOf(name))}</span><span class="file__body"><span class="file__name">${esc(name)}</span>${meta ? `<span class="file__meta">${meta}</span>` : ""}</span>${o.after || ""}</div>`;
 }
 
-const now = (c, minutes, attrs = "") => `<p class="now hd__now"${attrs}>${ico("hand")}${esc(fill(c.now, { min: minutes }))}</p>`;
+/** The pill on every slide where Tim works in Claude Desktop on the projector (the same in W04). */
+const live = (c, attrs = s(0, { fx: "pop", win: "0,.4" })) => `<p class="now now--live hd__now"${attrs}>${ico("spark")}${esc(c.live)}</p>`;
+
+/**
+ * Tim's clicks in Claude Desktop for one slide, in the label row: numbered, the current one lit, done ones
+ * checked. items: [label, on, off?] with on/off = [press, window]; `end` checks the last item.
+ */
+function tsteps(c, kick, items, end) {
+  const lis = items
+    .map(([label, on, off], i) => {
+      const body = `<b class="tsteps__n">${i + 1}</b><span>${esc(label)}</span>`;
+      const offAt = off ?? (i === items.length - 1 ? end : undefined);
+      const lit = `<i class="tsteps__on" aria-hidden="true"${s(on[0], { fx: "fade", win: on[1], ...(offAt ? { out: offAt[0], outWin: offAt[1] } : {}) })}>${body}</i>`;
+      const done = offAt ? `<i class="tsteps__done" aria-hidden="true"${s(offAt[0], { fx: "pop", win: offAt[1] })}>${ico("check", "ico--bold")}</i>` : "";
+      return `<li>${body}${lit}${done}</li>`;
+    })
+    .join("");
+  return `<div class="label tsteps-row">${kick ? `<span class="tsteps__kick">${esc(kick)}</span>` : ""}<ol class="tsteps" aria-label="${esc(c.stepsLabel)}">${lis}</ol></div>`;
+}
+
+/** The room's job on a slide: "Ihr schätzt: ..." before a run, "Ihr prüft: ..." after it. */
+const job = ([lead, text], attrs = "") => `<p class="job"${attrs}>${ico("hand")}<span><b>${esc(lead)}</b> ${esc(text)}</span></p>`;
 
 function head(label, headline, o = {}) {
-  return `<header class="hd"><p class="label${o.accent ? " label--accent" : ""}">${esc(label)}</p><h2 class="headline headline--${o.size || "m"}"${o.attrs || ""}>${headline}</h2>${o.after || ""}</header>`;
+  const top = o.steps ?? `<p class="label${o.accent ? " label--accent" : ""}">${esc(label)}</p>`;
+  return `<header class="hd"${o.hdAttrs || ""}>${top}<h2 class="headline headline--${o.size || "m"}"${o.attrs || ""}>${headline}</h2>${o.after || ""}</header>`;
 }
 
 function foot(c, n, note) {
@@ -114,14 +136,14 @@ ${foot(c, 1)}`;
 
 function host(d, c) {
   const h = c.host;
-  const wins = ["0.4,0.62", "0.56,0.78", "0.74,0.98"];
+  const wins = ["0.36,0.56", "0.48,0.68", "0.6,0.8", "0.72,0.94"];
   const stops = h.career
     .map((stop, i) => `<li class="host__stop${i === h.career.length - 1 ? " host__own" : ""}"${s(0, { win: wins[i], fx: "pop" })}><i class="host__dot" aria-hidden="true"></i><b>${esc(stop.org)}</b><span>${esc(stop.role)}</span></li>`)
     .join("");
   return `<figure class="host__photo"${s(0, { win: "0,0.4", fx: "fade" })}><img src="./assets/tim-loehr.jpg" alt="${esc(h.alt)}" width="1100" height="1100" /></figure>
 <div class="host__body"><div class="host__main"><p class="host__kicker"${s(0, { win: "0,0.35" })}>${esc(h.kicker)}</p><h2 class="host__name"${s(0, { win: "0.06,0.45" })}>Tim Löhr</h2>
 <p class="host__role"${s(0, { win: "0.14,0.5" })}>${esc(h.role)}</p>
-<div class="host__career" role="group" aria-label="${esc(h.careerLabel)}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true"${s(0, { win: "0.35,0.95", fx: "line" })}></i><ol class="host__stops">${stops}</ol><p class="host__now"${s(0, { win: "0.84,1", fx: "pop" })}><span>${esc(h.now)}</span></p></div>
+<div class="host__career" role="group" aria-label="${esc(h.careerLabel)}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true"${s(0, { win: "0.35,0.9", fx: "line" })}></i><ol class="host__stops">${stops}</ol></div>
 <p class="host__msc"${s(0, { win: "0.5,0.85" })}>${ico("cap")}<b>${esc(h.degree)}</b><span>${esc(h.school)}</span></p>
 <p class="host__line"${s(0, { win: "0.6,0.95" })}>${ico("shield")}<span>${esc(h.line)}</span></p></div>
 ${foot(c, 2)}</div>`;
@@ -142,7 +164,7 @@ const tdot = (state, label, motion = "") => `<i class="tdot tdot--${state}" titl
 function cwSide(c, o = {}) {
   const k = c.project;
   const m = o.motion ?? {};
-  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${ico("plus")}New chat</p><p class="cw-nav">${ico("chat")}Chats</p><p class="cw-nav" data-on>${ico("folder")}Projects</p><p class="cw-sec">Project</p><div class="cw-proj"${m.proj ?? ""}><b>${esc(k.project)}</b><span>${esc(k.projectSub)}</span></div><p class="cw-row">${ico("policy")}Instructions<em${m.instr ?? ""}>set</em></p><p class="cw-row"${o.knowOn ? " data-on" : ""}>${ico("book")}Project knowledge<em${m.know ?? ""}>12 files</em></p><p class="cw-toggle" data-on data-keep${m.code ?? ""}><span>Code execution</span><i></i></p></aside>`;
+  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${ico("plus")}New chat</p><p class="cw-nav">${ico("chat")}Chats</p><p class="cw-nav" data-on>${ico("folder")}Projects</p><p class="cw-sec">Project</p><div class="cw-proj"${m.proj ?? ""}><b>${esc(k.project)}</b><span>${esc(k.projectSub)}</span>${m.projGlow ? `<i class="cw-proj__glow"${m.projGlow}></i>` : ""}</div><p class="cw-row">${ico("policy")}Instructions<em${m.instr ?? ""}>set</em></p><p class="cw-row"${o.knowOn ? " data-on" : ""}>${ico("book")}Project knowledge<em${m.know ?? ""}>12 files</em></p><p class="cw-toggle" data-on data-keep${m.code ?? ""}><span>Code execution</span><i></i></p></aside>`;
 }
 
 /** Slide 03: the real case. A report page with references that do not exist, a quote nobody said and the
@@ -197,13 +219,63 @@ ${coins}
 ${foot(c, 3, k.source)}`;
 }
 
-/** Slide 04: our case. Hamburg sends a letter to Skopje; it flies on into the card, opens and deals out eight items. */
+/* Company slide geometry, in stage pixels: the Tannwald card (top right), the wire into Vardar's card, the
+   three flows that land on the wire's lane, the contract chip and the short explanation of an audit. */
+const CO = { card: [0, 0, 700], cust: [1180, 0, 516, 136], flow: (i) => [756, 212 + i * 66], flowW: 300, contract: [1180, 168] };
+
+/** Slide 04: who Vardar is. An office in Skopje lights up, 120 people fill in, Tannwald's calls, emails and customer data flow in; then what an audit is. */
+function company(d, c) {
+  const k = c.company;
+  // the office: 8 × 3 windows, a door, the sign; a hill line behind it
+  const wins = Array.from({ length: 24 }, (_, i) => {
+    const col = i % 8, row = Math.floor(i / 8);
+    return `<rect class="co__win" data-cell x="${184 + col * 50}" y="${126 + row * 46}" width="34" height="30" rx="4"/>`;
+  }).join("");
+  const office = `<svg class="co__office" viewBox="0 0 760 300" aria-hidden="true"><path class="co__hill" d="M0 214 C 120 150, 250 118, 380 136 S 640 196, 760 158 L760 300 L0 300 Z"/>
+<rect class="co__house" x="160" y="104" width="440" height="186" rx="6"/><rect class="co__plate" x="262" y="66" width="236" height="40" rx="6"/><text class="co__sign" x="380" y="93" text-anchor="middle">${esc(k.sign)}</text>
+<g${s(1, { fx: "none", win: "0,.45", keep: true })} data-fill="24">${wins}</g><rect class="co__door" x="362" y="248" width="36" height="42" rx="3"/><path class="co__ground" d="M40 290 H720"/></svg>`;
+  const people = Array.from({ length: d.training.staff }, (_, i) => "<i data-cell></i>").join("");
+  const [cx, cy, cw, ch] = CO.cust;
+  const FLOW_ICON = ["chat", "envelope", "file"];
+  const WIRE = `M${cx - 4} ${cy + ch / 2} C ${cx - 200} ${cy + ch / 2}, 900 190, 704 190`;
+  // Each packet runs the wire from Tannwald into the building; its label settles on the lane as it lands.
+  const ride = (i) => stagger(i, 3, 0.3, 0.5, 0.92);
+  const packets = k.flows
+    .map((_, i) => `<i class="co__pk" style="offset-path:path('${WIRE}')"${s(2, { fx: "none", ease: "linear", win: ride(i) })}>${ico(FLOW_ICON[i])}</i>`)
+    .join("");
+  const flows = k.flows
+    .map((label, i) => {
+      const [x, y] = CO.flow(i);
+      const landed = Number(ride(i).split(",")[1]);
+      return `<p class="pill pill--quiet co__flow" style="left:${x}px;top:${y}px;--dx:${Math.round(704 - (x + CO.flowW / 2))}px;--dy:${Math.round(190 - (y + 26))}px;--lift:20px;--s:.5"${s(2, { fx: "arc", win: `${r3(landed - 0.1)},${r3(Math.min(1, landed + 0.08))}` })}>${ico(FLOW_ICON[i])}${esc(label)}</p>`;
+    })
+    .join("");
+  return `${head(k.label, em(k.title))}
+<div class="stage co">
+<article class="co__card surface surface--strong"${s(0, { fx: "fly", win: "0,.5" })} style="--dx:-80px;--s:.96">
+${office}
+<p class="pill co__place"${s(0, { fx: "pop", win: ".5,.9" })} style="--origin:left center">${ico("pin")}${esc(k.place)}</p>
+<p class="co__stat"${s(1, { fx: "fade", win: ".1,.3" })}><b${s(1, { fx: "none", win: ".2,1", count: `0,${d.training.staff},0` })}>${d.training.staff}</b><span>${esc(k.staff)}</span></p>
+<div class="co__people"${s(1, { fx: "none", win: ".2,1", keep: true })} data-fill="${d.training.staff}">${people}</div>
+</article>
+<svg class="wires co__wires" viewBox="0 0 1696 790" preserveAspectRatio="none" aria-hidden="true"><path${s(2, { fx: "draw", win: ".2,.5" })} pathLength="1" d="${WIRE}"/><circle${s(2, { fx: "pop", win: ".45,.55" })} cx="704" cy="190" r="7"/></svg>
+<div class="co__pks" aria-hidden="true">${packets}</div>
+<div class="co__cust surface surface--strong" style="left:${cx}px;top:${cy}px;width:${cw}px;height:${ch}px;--dx:160px;--s:.94"${s(2, { fx: "fly", win: "0,.4" })}><span class="ico-tile">${ico("people")}</span><p><b>${esc(k.customer)}</b><span>${esc(k.customerSub)}</span></p></div>
+<p class="co__since"${s(2, { fx: "fade", win: ".55,.8" })}>${ico("calendar")}${esc(k.since)}</p>
+${flows}
+<p class="pill co__contract" style="left:${CO.contract[0]}px;top:${CO.contract[1]}px"${s(3, { fx: "pop", win: "0,.4" })}>${ico("file")}${esc(k.contract)}<i class="co__glow"${s(3, { fx: "glow", win: ".3,.7" })}></i></p>
+<div class="co__audit surface surface--accent"${s(3, { fx: "pop", win: ".15,.6" })} style="--origin:left top"><p class="co__kick">${ico("search")}${esc(k.kicker)}</p><p class="co__line">${esc(k.line)}</p><p class="src co__src"${s(3, { fx: "fade", win: ".5,.9" })}>${esc(k.source)}</p></div>
+</div>
+${foot(c, 4)}`;
+}
+
+/** Slide 05: our case. Hamburg sends a letter to Skopje; it flies on into the card, opens and deals out eight items. */
 function request(d, c) {
   const k = c.request;
   const MAP = { center: "germany", zoom: 4.4, w: 760, h: 790, cx: 0.4, cy: 0.36 };
   const [hx, hy] = at("hamburg", MAP);
   const [sx, sy] = at("skopje", MAP);
-  const P = [sx + 120, sy - 150]; // where the envelope lands after the arc, above the Skopje pin
+  const P = [sx + 130, sy - 100]; // where the envelope lands after the arc, above the Skopje pin; the arc stays under the headline
   const CX = 808 + 37, CY = 146, CW = 196, CH = 112, G = 14;
   const D = [CX + (4 * CW + 3 * G) / 2, CY + CH + G / 2]; // the middle of the item grid: the letter opens here
   const items = d.items
@@ -214,31 +286,31 @@ function request(d, c) {
     .join("");
   const opts = Array.from({ length: 9 }, (_, n) => `<button class="poll__opt" type="button" data-poll="estimate" data-value="${n}"><span class="poll__key">${n}</span><b data-poll-n>0</b></button>`).join("");
   const flap = `<g class="env__flap"${s(2, { fx: "none", win: ".42,.62", keep: true })}><path d="M6 8 L110 92 L214 8 Z"/><circle cx="110" cy="66" r="13"/></g>`;
-  const envelope = `<div class="req__env" style="left:${D[0] - 110}px;top:${D[1] - 75}px;--dx:${hx - sx}px;--dy:${hy - sy}px;--lift:140px;--s:.45"${s(1, { fx: "arc", win: ".1,1" })}><div class="req__env-move" style="--dx:${P[0] - D[0]}px;--dy:${P[1] - D[1]}px"${s(2, { fx: "move", win: "0,.42", keep: true })}><div class="req__env-fade"${s(0, { fx: "fade", win: "0,.01", out: 3, outWin: ".2,.55" })}><svg viewBox="0 0 220 150" aria-hidden="true"><rect class="env__body" x="3" y="3" width="214" height="144" rx="16"/><path class="env__fold" d="M8 142 L110 72 L212 142"/>${flap}</svg></div></div></div>`;
+  const envelope = `<div class="req__env" style="left:${D[0] - 110}px;top:${D[1] - 75}px;--dx:${hx - sx}px;--dy:${hy - sy}px;--lift:40px;--s:.45"${s(1, { fx: "arc", win: ".1,1" })}><div class="req__env-move" style="--dx:${P[0] - D[0]}px;--dy:${P[1] - D[1]}px"${s(2, { fx: "move", win: "0,.42", keep: true })}><div class="req__env-fade"${s(0, { fx: "fade", win: "0,.01", out: 3, outWin: ".2,.55" })}><svg viewBox="0 0 220 150" aria-hidden="true"><rect class="env__body" x="3" y="3" width="214" height="144" rx="16"/><path class="env__fold" d="M8 142 L110 72 L212 142"/>${flap}</svg></div></div></div>`;
   const short = (iso) => (c.lang === "de" ? `${Number(iso.slice(8))}.${Number(iso.slice(5, 7))}.` : fmtDate(iso, c).replace(/ \d{4}$/, ""));
   return `${head(k.label, em(k.title))}
 <div class="stage req">
 <figure class="map req__map surface"${s(0, { fx: "fade", win: "0,.35" })}><canvas data-globe data-lat="48" data-speed="6" data-home="40" data-r="0.47" data-cx="0.4" data-cy="0.36" data-arc-width="4" data-arc-land data-globe-steps="0:germany@4.4;1:arc:hamburg>skopje" aria-hidden="true"></canvas>
 <span class="pin pin--hh" style="left:${hx}px;top:${hy}px"${s(0, { fx: "pop", win: ".7,.95" })}>${ico("pin")}<b>${esc(k.tannwald)}</b><small>Hamburg</small></span>
 <span class="pin pin--sk" style="left:${sx}px;top:${sy}px"${s(0, { fx: "pop", win: ".78,1" })}>${ico("pin")}<b>${esc(k.vardar)}</b><small>Skopje</small></span>
-<span class="pin-note" style="left:${sx}px;top:${sy + 46}px"${s(0, { fx: "pop", win: ".85,1" })}>${ico("people")}${esc(k.vardarNote)}</span>
-<p class="stake"${s(1, { fx: "pop", win: ".7,1" })} style="--origin:left center">${ico("pen")}<span>${esc(k.stake)}</span></p>
 </figure>
 <article class="letter surface surface--strong"${s(2, { fx: "arc", win: ".5,1" })}${arcStyle(D[0] - 1252, D[1] - 260, 50, 0.2)}>
-<p class="letter__from">${ico("envelope")}<span>${esc(k.letterFrom)}</span></p>
-<p class="letter__quote"><span class="q" data-file="request_tannwald.md">${esc(d.headline)}</span></p>
+<p class="letter__from">${ico("envelope")}<span>${esc(k.letterFrom)}</span>${k.lang ? `<span class="letter__lang">${esc(k.lang)}</span>` : ""}</p>
+<div class="letter__said"><p class="letter__quote"><span class="q" data-file="request_tannwald.md">${esc(d.headline)}</span></p>${k.gloss ? `<p class="letter__gloss">${esc(k.gloss)}</p>` : ""}</div>
 <ol class="ritems">${items}</ol>
-<div class="tl"${s(4, { fx: "fade", win: "0,.2" })}><i class="tl__line"${s(4, { fx: "line", win: ".1,.7" })}></i>
-<p class="tl__pt"${s(4, { fx: "pop", win: ".05,.35" })}>${ico("upload")}<b>${short(d.sendBy)}</b><span>${esc(k.docs)}</span></p>
-<p class="tl__pt tl__pt--end"${s(4, { fx: "pop", win: ".55,.9" })}>${ico("calendar")}<b>${short(d.audit)}</b><span>${esc(k.auditName)}</span></p></div>
+<div class="tl"${s(4, { fx: "fade", win: "0,.15" })}><i class="tl__line"${s(4, { fx: "line", win: ".05,.75" })}></i>
+<p class="tl__pt"${s(4, { fx: "pop", win: ".05,.3" })}>${ico("envelope")}<b>${short(d.exercise)}</b><span>${esc(k.sent)}</span></p>
+<p class="tl__pt"${s(4, { fx: "pop", win: ".3,.55" })}>${ico("upload")}<b>${short(d.sendBy)}</b><span>${esc(k.docs)}</span></p>
+<p class="tl__pt tl__pt--end"${s(4, { fx: "pop", win: ".55,.8" })}>${ico("calendar")}<b>${short(d.audit)}</b><span>${esc(k.auditName)}</span></p></div>
+<p class="stake req__stake"${s(4, { fx: "pop", win: ".78,1" })} style="--origin:right center">${ico("alert")}<span>${esc(k.stake)}</span></p>
 </article>
 ${envelope}
 <div class="poll poll--row req__poll"${s(5, { fx: "fly", win: "0,.7" })} style="--dy:60px;--s:.96"><p class="poll__q">${ico("hand")}${esc(k.poll)}</p><div class="poll__opts">${opts}</div></div>
 </div>
-${foot(c, 4)}`;
+${foot(c, 5)}`;
 }
 
-/** Slide 05: the draft reply on the left from the first frame; the room's vote arrives beside it. */
+/** Slide 06: the draft reply on the left from the first frame; the room's vote arrives beside it. */
 function draft(d, c) {
   const k = c.draft;
   const lines = d.draft
@@ -254,10 +326,45 @@ function draft(d, c) {
 </article>
 <div class="poll draft__poll"${s(2, { fx: "fly", win: ".1,.8" })} style="--dx:160px;--s:.96"><p class="poll__q">${ico("hand")}<span>${question}</span></p>${opts}</div>
 </div>
-${foot(c, 5)}`;
+${foot(c, 6)}`;
 }
 
-/** Slide 06: the folder opens and deals eleven files; eight wires by file name, then the wires turn dashed. */
+/** Slide 07: today. The question of the hour, the route in four stops, and who does what: Tim clicks in Claude, the room predicts and checks, the kit goes home. */
+function today(d, c) {
+  const k = c.today;
+  const STOP_ICON = ["folder", "policy", "spark", "envelope"];
+  const stops = k.stops
+    .map((stop, i) => `<li class="road__stop"${s(1, { fx: "pop", win: stagger(i, 4, 0.3, 0.05, 1) })} style="--origin:17px 17px"><b class="road__n">${i + 1}</b><p class="road__name"><span class="ico-tile${i === 2 ? " ico-tile--accent" : ""}">${ico(STOP_ICON[i])}</span><b>${esc(stop.name)}</b></p><p class="road__sub">${esc(stop.sub)}</p></li>`)
+    .join("");
+  // Card 1 teaches the strip every Claude slide carries: the four clicks light one by one.
+  const at = (i) => `${r3(0.42 + i * 0.14)},${r3(0.52 + i * 0.14)}`;
+  const strip = k.timSteps
+    .map((label, i) => {
+      const body = `<b class="tsteps__n">${i + 1}</b><span>${esc(label)}</span>`;
+      const off = i < k.timSteps.length - 1 ? { out: 2, outWin: at(i + 1) } : {};
+      return `<li>${body}<i class="tsteps__on" aria-hidden="true"${s(2, { fx: "fade", win: at(i), ...off })}>${body}</i>${i < k.timSteps.length - 1 ? `<i class="tsteps__done" aria-hidden="true"${s(2, { fx: "pop", win: at(i + 1) })}>${ico("check", "ico--bold")}</i>` : ""}</li>`;
+    })
+    .join("");
+  const loop = k.loop.map((node, i) => `<li class="loop__node${i === 1 ? " loop__node--claude" : ""}">${ico(["hand", "spark", "search"][i])}${esc(node)}</li>`).join("");
+  const loopArt = `<svg class="loop__art" viewBox="0 0 360 240" aria-hidden="true"><path${s(3, { fx: "draw", win: ".3,.5" })} pathLength="1" d="M120 58 V 86 M112 78 L120 86 L128 78"/><path${s(3, { fx: "draw", win: ".45,.65" })} pathLength="1" d="M120 150 V 178 M112 170 L120 178 L128 170"/><path${s(3, { fx: "draw", win: ".6,.85" })} pathLength="1" d="M262 212 C 350 212, 350 28, 262 28 M274 20 L262 28 L274 36"/></svg>`;
+  const kitFiles = k.kitFiles
+    .map((name, i) => `<div class="role__file" style="--dx:-40px;--dy:30px;--s:.9"${s(3, { fx: "fly", win: stagger(i, 3, 0.35, 0.55, 1) })}>${file(name, name.endsWith("/") ? esc(k.kitCount) : "", i === 1 ? { cls: "file--accent" } : {})}</div>`)
+    .join("");
+  const where = `<p class="today__where"${s(0, { fx: "fade", win: ".45,.9" })}>${ico("pin")}<span>${esc(k.where)}</span></p>`;
+  return `${head(k.label, em(k.title), { attrs: s(0, { fx: "blur", win: "0,.6" }), after: where })}
+<div class="stage today">
+<div class="road"><i class="road__track" aria-hidden="true"></i><i class="road__fill" aria-hidden="true"${s(1, { fx: "line", win: "0,.8" })}></i><ol class="road__stops">${stops}</ol></div>
+<p class="label today__how"${s(2, { fx: "fade", win: "0,.25" })}>${esc(k.how)}</p>
+<div class="roles">
+<section class="role surface surface--strong"${s(2, { fx: "fly", win: "0,.4" })} style="--dx:120px;--s:.95"><p class="now now--live role__pill"${s(2, { fx: "pop", win: ".25,.45" })}>${ico("spark")}${esc(c.live)}</p><h3 class="role__t">${esc(k.tim)}</h3><ol class="tsteps tsteps--col" aria-label="${esc(c.stepsLabel)}">${strip}</ol><p class="role__note"${s(2, { fx: "fade", win: ".85,1" })}>${esc(k.timNote)}</p></section>
+<section class="role surface surface--strong"${s(3, { fx: "fly", win: "0,.4" })} style="--dy:60px;--s:.95"><span class="ico-tile role__tile">${ico("hand")}</span><h3 class="role__t">${esc(k.room)}</h3><div class="loop"><ol class="loop__nodes">${loop}</ol>${loopArt}</div></section>
+<section class="role surface surface--strong"${s(3, { fx: "pop", win: ".35,.75" })}><span class="ico-tile role__tile">${ico("download")}</span><h3 class="role__t">${esc(k.kit)}</h3><div class="kit-folder role__kit"><p class="kit-folder__head">${ico("folder")}${esc(c.project.kit)}</p>${kitFiles}</div></section>
+</div>
+</div>
+${foot(c, 7)}`;
+}
+
+/** Slide 08: the folder opens and deals eleven files; eight wires by file name, then the wires turn dashed. */
 function folder(d, c) {
   const k = c.folder;
   const RY = (i) => i * 78;
@@ -288,10 +395,10 @@ ${reqs}
 ${files}
 <p class="fold__twist surface surface--strong surface--lift"${s(2, { fx: "fly", win: ".3,.9" })} style="--dy:60px;--s:.9">${em(k.twist)}</p>
 </div>
-${foot(c, 6)}`;
+${foot(c, 8)}`;
 }
 
-/** Slide 07: four gates. One invented file per press fails one gate; then the rule as one file card. */
+/** Slide 09: four gates. One invented file per press fails one gate; then the rule as one file card. */
 function tests(d, c) {
   const k = c.four;
   const GW = (STAGE_W - 3 * 32) / 4;
@@ -320,7 +427,7 @@ function tests(d, c) {
 <div class="four__status">${status}</div>
 ${rule}
 </div>
-${foot(c, 7, k.source)}`;
+${foot(c, 9, k.source)}`;
 }
 
 /* Project slide geometry, in stage pixels: the kit rows (centres) on the left, the knowledge slots and the
@@ -333,7 +440,7 @@ const PJ = {
   src: [1640, 126],
 };
 
-/** Slide 08: set up the Project. The rules fly from the kit into Instructions, twelve files leave the folder for knowledge, code execution on. */
+/** Slide 10: set up the Project. The rules fly from the kit into Instructions, twelve files leave the folder for knowledge, code execution on. */
 function project(d, c) {
   const k = c.project;
   const [dirN, ...dirRest] = k.dirCount.split(" ");
@@ -356,25 +463,32 @@ function project(d, c) {
   const [ix, iy] = PJ.row(1);
   const source = `<span class="pj-fly pj-fly--src" style="left:${PJ.src[0]}px;top:${PJ.src[1]}px;--dx:${ix - PJ.src[0]}px;--dy:${iy - PJ.src[1]}px;--lift:90px;--s:1.25"${s(1, { fx: "arc", win: "0,.4" })}>${ico("file")}${esc(fill(k.from, { file: k.instructions }))}</span>`;
   const rules = d.instructionLines.map((line, i) => `<p${s(1, { fx: "type", ease: "linear", win: stagger(i, d.instructionLines.length, 0.28, 0.42, 1) })}>${esc(line)}</p>`).join("");
-  const side = cwSide(c, { motion: { proj: s(0, { fx: "pop", win: ".35,.8" }), instr: s(1, { fx: "pop", win: ".35,.6" }), know: s(2, { fx: "pop", win: ".9,1" }), code: s(3, { fx: "none", win: ".1,.4" }) } });
+  const side = cwSide(c, { motion: { proj: s(0, { fx: "pop", win: ".35,.8" }), projGlow: s(0, { fx: "glow", win: ".6,1", out: 1, outWin: "0,.3" }), instr: s(1, { fx: "pop", win: ".35,.6" }), know: s(2, { fx: "pop", win: ".9,1" }), code: s(3, { fx: "none", win: ".1,.4" }) } });
   const main = `<div class="cw-main"><div class="cw-thread pj">
 <p class="pj__head">${ico("folder")}<b>${esc(k.project)}</b></p>
 <div class="pj__box"><p class="pj__label">${esc(k.instructionsHead)}</p><div class="pj__text">${rules}</div></div>
 <div class="pj__box"><p class="pj__label">${esc(k.knowledgeHead)}</p><div class="pj__files">${slots}</div></div>
 </div>${cwComposer()}</div>`;
-  return `${head(k.label, em(k.title), { after: now(c, k.minutes, s(4, { fx: "pop", win: ".3,.8" })) })}
+  const strip = tsteps(c, k.label, [
+    [k.steps[0], [0, "0,.3"], [1, "0,.3"]],
+    [k.steps[1], [1, "0,.3"], [2, "0,.3"]],
+    [k.steps[2], [2, "0,.3"], [3, "0,.3"]],
+    [k.steps[3], [3, "0,.3"]],
+  ], [4, "0,.3"]);
+  return `${head(k.label, em(k.title), { steps: strip, after: live(c) })}
 <div class="stage proj">
 <div class="proj__left">
 <div class="kit-folder"${s(0, { fx: "fly", win: "0,.5" })} style="--dx:-80px;--s:.9"><p class="kit-folder__head">${ico("folder")}${esc(k.kit)}</p>${kitRows}</div>
+${job(k.job, `${s(2, { fx: "pop", win: ".85,1", out: 4, outWin: "0,.3" })} style="--origin:left center"`)}
 <figure class="qr proj__qr"${s(4, { fx: "pop", win: "0,.6" })}><img src="./assets/${c.qr.kit}" width="200" height="200" alt="" /><figcaption>${esc(k.qr)}</figcaption></figure>
 </div>
 <div class="cw proj__cw"${s(0, { fx: "fly", win: ".1,.6" })} style="--dx:120px;--s:.96">${cwBar([k.project])}<div class="cw-body">${side}${main}</div></div>
 <div class="pj-layer" aria-hidden="true">${source}${flyers}</div>
 </div>
-${foot(c, 8)}`;
+${foot(c, 10)}`;
 }
 
-/** Slide 09: Step 1. Predict, attach the template from the kit, Claude builds the index: 8 of 11 hold. */
+/** Slide 11: Step 1. The room predicts, Tim sends prompt 1, Claude builds the index: 8 of 11 hold. */
 function mission1(d, c) {
   const k = c.m1;
   const values = ["11", "10", "9", "8", "7"];
@@ -386,11 +500,8 @@ function mission1(d, c) {
       return `<tr${fail ? " data-mark" : ""}${s(3, { fx: "fade", win: stagger(i, 11, 0.3, 0.05, 0.9) })}><td class="fn">${esc(row.file)}</td><td>${esc(c.types[row.type])}</td>${mark(row.dateOk)}${mark(row.approvalOk)}</tr>`;
     })
     .join("");
-  // The template flies from the small kit folder (left column, y ≈ 560) into the message (window, top right).
-  const attach = `<div class="cw-files"${s(1, { fx: "arc", win: "0,.55" })}${arcStyle(-1180, 470, 120, 0.9)}>${cwFile("csv", k.wrote, k.kitDir.replace(/\/$/, ""))}</div>`;
   const thread = `<div class="cw-thread">
-${attach}
-${prompt(c, 1, d.prompts.m1, s(1, { fx: "fly", win: ".3,.8" }), 3)}
+${prompt(c, 1, d.prompts.m1, s(1, { fx: "fly", win: "0,.5" }), 3)}
 ${activity([
     act("check", `Read <code>12 files</code>`, 2, ".1,.4"),
     act("check", `Ran code <code>index.py</code>`, 2, ".35,.65"),
@@ -399,16 +510,22 @@ ${activity([
 <div class="cw-answer"${s(3, { fx: "blur", win: "0,.4" })}><p>${esc(k.answer)}</p>
 <table class="cw-table m1__table"><thead><tr>${k.head.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
 </div>`;
-  return `${head(k.label, em(k.title), { after: now(c, k.minutes, s(1, { fx: "pop", win: ".5,1" })) })}
+  const strip = tsteps(c, k.label, [
+    [k.steps[0], [0, "0,.3"], [1, "0,.3"]],
+    [k.steps[1], [1, "0,.3"], [2, "0,.3"]],
+    [k.steps[2], [2, "0,.3"], [3, "0,.3"]],
+    [k.steps[3], [3, "0,.3"]],
+  ], [4, "0,.3"]);
+  return `${head(k.label, em(k.title), { steps: strip, after: live(c) })}
 <div class="stage m1">
 <div class="m1__left">
 <div class="poll"${s(0, { fx: "fly", win: "0,.6" })} style="--dy:60px;--s:.96"><p class="poll__q">${ico("hand")}${esc(k.poll)}</p>${opts}</div>
-<div class="kit-folder m1__kit"${s(1, { fx: "fly", win: "0,.3", out: 4, outWin: "0,.3" })} style="--dy:40px;--s:.9"><p class="kit-folder__head">${ico("folder")}${esc(k.kitDir)}</p>${file(k.wrote, "", { cls: "file--accent" })}</div>
+${job(k.job, `${s(3, { fx: "pop", win: ".6,1" })} style="--origin:left center"`)}
 <div class="stat stat--accent m1__stat"${s(4, { fx: "pop", win: "0,.4" })} style="--origin:left center"><p class="stat__n"><b class="m1__eight"${s(4, { fx: "arc", win: ".1,.7" })}${arcStyle(860, -440, 120, 0.3)}>${d.passing}</b><small>/ ${d.index.length}</small></p><span class="stat__l">${esc(k.result)}</span></div>
 </div>
 <div class="cw m1__cw"${s(0, { fx: "fly", win: ".1,.6" })} style="--dx:100px;--s:.97">${cwBar([c.project.project, k.chat])}<div class="cw-body">${cwSide(c, { knowOn: true })}<div class="cw-main">${thread}${cwComposer()}</div></div></div>
 </div>
-${foot(c, 9)}`;
+${foot(c, 11)}`;
 }
 
 /* Step 2 geometry, in stage pixels: the status chip of row i and the counter of each status in the tally.
@@ -418,7 +535,7 @@ const M2 = {
   count: { covered: [1628, 387], weak: [1628, 465], gap: [1628, 543] },
 };
 
-/** Slide 10: Step 2. The reality run inside Claude: per item a line runs from the file to its quoted line, through the four tests, to the status; the tally counts along. */
+/** Slide 12: Step 2. The reality run inside Claude: per item a line runs from the file to its quoted line, through the four tests, to the status; the tally counts along. */
 function mission2(d, c) {
   const k = c.m2;
   const t = d.training;
@@ -452,10 +569,10 @@ function mission2(d, c) {
   ];
   let struck = 0;
   const candHtml = cands
-    .map((cand, i) => `<li class="cand${cand.key === "report" ? " cand--record" : ""}" data-file="${cand.file}" data-failed="${cand.failed.join(" ")}"${s(4, { fx: "fly", win: stagger(i, 3, 0.3, 0.2, 0.6) })} style="--dy:50px;--s:.94">
+    .map((cand, i) => `<li class="cand${cand.key === "report" ? " cand--record" : ""}" data-file="${cand.file}" data-failed="${cand.failed.join(" ")}"${s(5, { fx: "fly", win: stagger(i, 3, 0.3, 0.3, 0.7) })} style="--dy:50px;--s:.94">
 <p class="cand__file">${cwFile(extOf(cand.file), cand.file, "")}</p>
 <p class="cand__q"><span class="q" data-file="folder/${cand.file}">${esc(cand.quote)}</span></p>
-<p class="cand__tests">${TESTS.map((test) => (cand.failed.includes(test) ? `<span class="tchip tchip--fail">${ico("cross", "ico--bold")}${esc(c.tests[test])}<i${s(4, { fx: "strike", win: `${r3(0.6 + struck * 0.05)},${r3(0.66 + struck++ * 0.05)}` })}></i></span>` : `<span class="tchip">${ico("check", "ico--bold")}${esc(c.tests[test])}</span>`)).join("")}</p>
+<p class="cand__tests">${TESTS.map((test) => (cand.failed.includes(test) ? `<span class="tchip tchip--fail">${ico("cross", "ico--bold")}${esc(c.tests[test])}<i${s(5, { fx: "strike", win: `${r3(0.68 + struck * 0.05)},${r3(0.74 + struck++ * 0.05)}` })}></i></span>` : `<span class="tchip">${ico("check", "ico--bold")}${esc(c.tests[test])}</span>`)).join("")}</p>
 <p class="cand__why">${ico("cross", "ico--bold")}${esc(k.r7Reasons[cand.key])}</p>
 </li>`)
     .join("");
@@ -478,35 +595,51 @@ function mission2(d, c) {
   const thread = `<div class="cw-thread m2__thread">
 ${prompt(c, 2, d.prompts.m2, s(0, { fx: "fly", win: "0,.4" }), 1)}
 ${activity([
-    act("check", `Read <code>12 files</code>`, 0, ".35,.55"),
-    act("check", `Ran code <code>training.py</code>`, 0, ".5,.75"),
-    act("check", `Ran code <code>quotes.py</code>`, 0, ".7,.95"),
+    act("check", `Read <code>12 files</code>`, 1, "0,.12"),
+    act("check", `Ran code <code>quotes.py</code>`, 1, ".06,.2"),
+    act("check", `Ran code <code>training.py</code>`, 2, "0,.2"),
   ], "3 steps", s(0, { fx: "fade", win: ".3,.45" }))}
 <div class="cw-answer m2__run" data-links="run"><p class="m2__cols"${s(0, { fx: "fade", win: ".45,.6" })}><span></span>${k.cols.map((h) => `<span>${esc(h)}</span>`).join("")}</p><ol class="lk-rows">${rows}</ol></div>
 </div>`;
+  const r7opts = k.r7keys.map((label, i) => `<button class="poll__opt" type="button" data-poll="r7" data-value="${i ? "no" : "yes"}"><span class="poll__key">${String.fromCharCode(65 + i)}</span><span>${esc(label)}</span><b data-poll-n>0</b></button>`).join("");
   const r7 = `<div class="m2__r7"${s(4, { fx: "fly", win: "0,.4" })} style="--dy:120px;--s:.96">
 <div class="cw m2__r7cw">${cwBar([c.project.project, k.chat, "R7"])}<div class="cw-body cw-body--nosidebar"><div class="cw-main"><div class="cw-thread m2__r7thread">
 ${prompt(c, "2b", d.prompts.m2follow, " data-short", 2)}
-<div class="cw-answer m2__r7ans"${s(4, { fx: "fade", win: ".12,.3" })}><p class="m2__r7head"><span class="ico-tile ico-tile--accent">${ico("backup")}</span><b>${esc(k.r7Head)}</b></p><ol class="cands">${candHtml}</ol></div>
+<div class="poll m2__r7poll"${s(4, { fx: "pop", win: ".35,.75", out: 5, outWin: "0,.2" })} style="--origin:left top"><p class="poll__q">${ico("hand")}${esc(k.r7poll)}</p><div class="m2__r7opts">${r7opts}</div></div>
+<div class="cw-answer m2__r7ans"${s(5, { fx: "fade", win: ".22,.4" })}><p class="m2__r7head"><span class="ico-tile ico-tile--accent">${ico("backup")}</span><b>${esc(k.r7Head)}</b></p><ol class="cands">${candHtml}</ol></div>
 </div>${cwComposer()}</div></div></div>
-<p class="moral m2__moral"${s(4, { fx: "fade", win: ".8,1" })}>${em(k.moral)}</p>
+<p class="moral m2__moral"${s(5, { fx: "fade", win: ".8,1" })}>${em(k.moral)}</p>
 </div>`;
-  return `${head(k.label, em(k.title), { after: now(c, k.minutes, s(0, { fx: "pop", win: ".5,1" })) })}
+  const strip = tsteps(c, k.label, [
+    [k.steps[0], [0, "0,.25"], [0, ".3,.45"]],
+    [k.steps[1], [0, ".3,.45"], [2, "0,.3"]],
+    [k.steps[2], [2, "0,.3"], [4, "0,.3"]],
+    [k.steps[3], [4, "0,.3"]],
+  ], [5, "0,.3"]);
+  return `${head(k.label, em(k.title), { steps: strip, after: live(c) })}
 <div class="stage m2">
-<div class="cw m2__cw"${s(0, { fx: "fly", win: "0,.4" })} style="--dx:100px;--s:.97">${cwBar([c.project.project, k.chat])}<div class="cw-body cw-body--nosidebar"><div class="cw-main">${thread}</div></div></div>
+<div class="cw m2__cw"${s(0, { fx: "fly", win: "0,.4", out: 4, outWin: "0,.35" })} style="--dx:100px;--s:.97">${cwBar([c.project.project, k.chat])}<div class="cw-body cw-body--nosidebar"><div class="cw-main">${thread}</div></div></div>
 <div class="m2__side">
 <div class="m2__code"${s(2, { fx: "pop", win: ".3,.6" })} style="--origin:left center"><p class="m2__codehead">${ico("code")}<b>Ran code</b><code>training.py</code></p>
 <p class="m2__frac"><b>${t.unique}</b><span>/ ${t.staff}</span></p>
 <p class="m2__share"><b${s(2, { fx: "none", win: ".4,.9", count: `0,${t.share},1` })}>${num(t.share, c)}</b><span>%</span></p>
 <p class="m2__need"><span class="m2__lt">&lt; ${Math.round(t.target * 100)} %</span><span>${esc(fill(k.need, vars))}</span></p></div>
 <p class="tally" data-tally${s(0, { fx: "fade", win: ".6,1" })}>${tally}<i class="tally__glow"${s(3, { fx: "glow", win: "0,.5" })}></i></p>
+${job(k.job, `${s(1, { fx: "pop", win: ".7,1" })} style="--origin:left center"`)}
 </div>
 ${r7}
 </div>
-${foot(c, 10)}`;
+${foot(c, 12)}`;
 }
 
-/** Slide 11: four lines Claude likes to write here, each with the status it wrongly claims. Each gets struck; its lower half turns over to the rule that stops it. */
+/** A rule line as the card shows it: `tail` keeps the clause after the semicolon (word for word); quotes in the edition's marks. */
+function ruleText(line, card, c) {
+  const part = card.tail ? line.slice(line.indexOf("; ") + 2) : line;
+  const text = part[0].toUpperCase() + part.slice(1);
+  return text.replace(/"([^"]+)"/g, c.lang === "de" ? "„$1“" : "“$1”");
+}
+
+/** Slide 13: four lines Claude likes to write here, each with the status it wrongly claims. Each gets struck; its lower half turns over to the rule that stops it. */
 function mistakes(d, c) {
   const k = c.mistakes;
   const cards = k.cards
@@ -520,23 +653,23 @@ function mistakes(d, c) {
 <div class="mc__top"><p class="mc__who">${ico("chat")}${esc(k.claude)}<span class="mc__item"><span class="ico-tile">${ico(ITEM_ICON[card.item])}</span><b>${card.item}</b></span></p>
 <div class="mc__wrong"><div class="mc__dim"${s(i + 1, { fx: "dim", win: ".3,.6" })}>${line}<p class="mc__claim">${claim}</p></div>
 <span class="mc__bad"${s(i + 1, { fx: "pop", win: ".3,.55" })}>${ico("cross", "ico--bold")}</span></div></div>
-<div class="mc__flip"${s(i + 1, { fx: "flip", win: ".35,.95" })}><div class="face mc__front"><span class="ico-tile">${ico("policy")}</span><b>${esc(k.which)}</b></div><div class="face face--back mc__back"><p class="mc__rule">${esc(fill(k.rule, { n: card.rule }))}</p><p class="mc__text">${esc(d.ruleLines[card.rule])}</p><p class="mc__src">${ico("policy")}${esc(k.file)}</p></div></div>
+<div class="mc__flip"${s(i + 1, { fx: "flip", win: ".35,.95" })}><div class="face mc__front"><span class="ico-tile">${ico("policy")}</span><b>${esc(k.which)}</b></div><div class="face face--back mc__back"><p class="mc__rule">${esc(fill(k.rule, { n: card.rule }))}</p><p class="mc__text">${esc(ruleText(d.ruleLines[card.rule], card, c))}</p><p class="mc__src">${ico("policy")}${esc(k.file)}</p></div></div>
 </li>`;
     })
     .join("");
   return `${head(k.label, em(k.title))}
 <div class="stage mist"><ol class="mcards">${cards}</ol></div>
-${foot(c, 11)}`;
+${foot(c, 13)}`;
 }
 
-/** Slide 12: Step 3. Six cards leave the pile for three roles, R3's 295 days, Claude writes the R7 email. */
+/** Slide 14: Step 3. The room picks R5's owner; prompt 3 goes out; six cards leave the pile for three roles; R3's 295 days; the R7 email. */
 function gaps(d, c) {
   const k = c.gaps;
   const due = esc(fill(k.due, { due: dot(d.due) }));
   const open = d.mission2.filter((row) => row.status !== "covered");
   const cols = ["it", "hr", "md"];
   const COL_W = (STAGE_W - 568 - 48) / 3;
-  const PILE = [260, 420];
+  const PILE = [260, 300];
   const perCol = { it: 0, hr: 0, md: 0 };
   const cards = {};
   open.forEach((row, n) => {
@@ -545,7 +678,7 @@ function gaps(d, c) {
     const x = 568 + cols.indexOf(owner) * (COL_W + 24) + 18 + 160, y = 118 + r * 128 + 50;
     const off = Math.min(n, 2); // the pile shows three edges at most
     const top = n === open.length - 1;
-    cards[owner] = (cards[owner] ?? "") + `<li class="task${row.id === "R3" ? " task--r3" : ""}${top ? " task--top" : ""}"${s(1, { fx: "travel", win: stagger(n, open.length, 0.4) })}${arcStyle(PILE[0] - x + off * 8, PILE[1] - y - off * 12, 110, 0.82)}><p class="task__id"><span class="ico-tile">${ico(ITEM_ICON[row.id])}</span><b>${row.id}</b>${chip(row.status, c)}</p><p class="task__t">${esc(k.closes[row.id])}</p>${row.id === "R3" ? `<i class="task__glow"${s(2, { fx: "glow", win: "0,.4" })}></i>` : ""}</li>`;
+    cards[owner] = (cards[owner] ?? "") + `<li class="task${row.id === "R3" ? " task--r3" : ""}${top ? " task--top" : ""}"${s(1, { fx: "travel", win: stagger(n, open.length, 0.36, 0.42, 1) })}${arcStyle(PILE[0] - x + off * 8, PILE[1] - y - off * 12, 110, 0.82)}><p class="task__id"><span class="ico-tile">${ico(ITEM_ICON[row.id])}</span><b>${row.id}</b>${chip(row.status, c)}</p><p class="task__t">${esc(k.closes[row.id])}</p>${row.id === "R3" ? `<i class="task__glow"${s(2, { fx: "glow", win: "0,.4", out: 3, outWin: "0,.3" })}></i>` : ""}${row.id === "R7" ? `<i class="task__glow"${s(3, { fx: "glow", win: ".15,.5" })}></i>` : ""}${row.id === "R5" ? `<i class="task__glow"${s(1, { fx: "glow", win: ".88,1", out: 2, outWin: "0,.3" })}></i>` : ""}</li>`;
   });
   const columns = cols
     .map((owner, i) => `<section class="col surface"${s(0, { fx: "fade", win: stagger(i, 3, 0.5) })}><p class="col__head">${ico(owner === "md" ? "bank" : "user")}<b>${esc(k.owners[owner])}</b></p><p class="pill pill--quiet col__due">${ico("calendar")}${due}</p><ol class="col__tasks">${cards[owner] ?? ""}</ol></section>`)
@@ -566,23 +699,31 @@ function gaps(d, c) {
     })
     .join("");
   const thread = `<div class="cw-thread">
-<div class="cw-files"${s(3, { fx: "fade", win: "0,.2" })}>${cwFile("md", c.lang === "de" ? "luecken-anfrage.md" : "gap-request.md", "")}${cwFile("md", "draft-reply.md", "")}</div>
-${prompt(c, 3, d.prompts.m3, s(3, { fx: "fly", win: ".05,.35" }), 1)}
+<div class="cw-files"${s(1, { fx: "fly", win: ".05,.3" })} style="--dx:-40px;--dy:40px;--s:.9">${cwFile("md", c.lang === "de" ? "luecken-anfrage.md" : "gap-request.md", "")}${cwFile("md", "draft-reply.md", "")}</div>
+${prompt(c, 3, d.prompts.m3, s(1, { fx: "fly", win: ".3,.5" }), 1)}
 <div class="cw-answer gaps__mail"${s(3, { fx: "fade", win: ".35,.5" })}><p class="gaps__to">${ico("envelope")}<b>${esc(k.mailTo)}</b><span>R7</span></p><p class="gaps__body">${mail}</p><p class="gaps__fail"${s(3, { fx: "pop", win: ".85,1" })} style="--origin:left center">${ico("cross", "ico--bold")}${esc(k.fails)}</p></div>
 </div>`;
-  return `${head(k.label, em(k.title), { after: now(c, k.minutes, s(4, { fx: "pop", win: ".2,.8" })) })}
+  const owners = cols.map((owner, i) => `<button class="poll__opt" type="button" data-poll="owner" data-value="${owner}"><span class="poll__key">${String.fromCharCode(65 + i)}</span><span>${esc(k.owners[owner])}</span><b data-poll-n>0</b></button>`).join("");
+  const strip = tsteps(c, k.label, [
+    [k.steps[0], [0, "0,.3"], [1, "0,.2"]],
+    [k.steps[1], [1, "0,.2"], [1, ".3,.45"]],
+    [k.steps[2], [1, ".3,.45"], [3, "0,.3"]],
+    [k.steps[3], [3, "0,.3"]],
+  ]);
+  return `${head(k.label, em(k.title), { steps: strip, after: live(c) })}
 <div class="stage gaps">
 <div class="gaps__left">
-<p class="pile"${s(0, { fx: "pop", win: "0,.4", out: 1, outWin: "0,.3" })}><b class="pile__n">${open.length}</b><span>${esc(k.pile.replace(/^\d+\s*/, ""))}</span></p>
+<p class="pile"${s(0, { fx: "pop", win: "0,.4", out: 1, outWin: "0,.25" })}><b class="pile__n">${open.length}</b><span>${esc(k.pile.replace(/^\d+\s*/, ""))}</span></p>
 <div class="days surface surface--strong"${s(2, { fx: "fly", win: ".1,.6" })} style="--dx:420px;--s:.8"><p class="days__head"><span class="ico-tile ico-tile--accent">${ico("spark")}</span><b>R3</b><span>${esc(k.days)}</span></p><p class="days__n"><b${s(2, { fx: "none", win: ".3,1", count: `0,${d.r3Days},0` })}>${d.r3Days}</b></p><p class="days__bar"><i${s(2, { fx: "line", win: ".3,1" })}></i></p><p class="days__ends"><span>${esc(k.from)}</span><span>${esc(k.to)}</span></p></div>
-<div class="cw gaps__cw"${s(3, { fx: "fly", win: "0,.3" })} style="--dy:80px;--s:.95">${cwBar([c.project.project, k.chat])}<div class="cw-body cw-body--nosidebar"><div class="cw-main">${thread}</div></div></div>
+<div class="poll gaps__poll"${s(0, { fx: "fly", win: ".3,.8", out: 1, outWin: "0,.2" })} style="--dy:60px;--s:.96"><p class="poll__q">${ico("hand")}${esc(k.poll)}</p>${owners}</div>
+<div class="cw gaps__cw"${s(1, { fx: "fly", win: ".05,.35" })} style="--dy:80px;--s:.95">${cwBar([c.project.project, k.chat])}<div class="cw-body cw-body--nosidebar"><div class="cw-main">${thread}</div></div></div>
 </div>
 <div class="board">${columns}</div>
 </div>
-${foot(c, 12)}`;
+${foot(c, 14)}`;
 }
 
-/** Slide 13: the reply. The draft's four sentences are struck with their evidence; Claude's honest reply types in line by line, each wired back to the claim it replaces. */
+/** Slide 15: the reply. The draft's four sentences are struck with their evidence; Claude's honest reply types in line by line, each wired back to the claim it replaces. */
 function reply(d, c) {
   const k = c.reply;
   const vars = { unique: d.training.unique, staff: d.training.staff, restore: d.quotes.reportRestore, stored: d.quotes.storedUs };
@@ -604,8 +745,17 @@ function reply(d, c) {
     const win = `${r3(Math.min(0.9, end + i * 0.015))},${r3(Math.min(1, end + 0.12 + i * 0.015))}`;
     return `<path${s(2, { fx: "draw", win })} pathLength="1" d="M${W + 6} ${CLAIM_Y(i)} C ${W + 70} ${CLAIM_Y(i)}, ${760} ${LINE_Y(j)}, ${816} ${LINE_Y(j)}"/><circle${s(2, { fx: "pop", win })} cx="${816}" cy="${LINE_Y(j)}" r="7"/>`;
   }).join("");
-  return `${head(k.label, em(k.title), { after: now(c, 7, s(3, { fx: "pop", win: ".3,.8" })) })}
+  const strip = tsteps(c, k.label, [
+    [k.steps[0], [0, "0,.3"], [2, "0,.3"]],
+    [k.steps[1], [2, "0,.3"], [3, "0,.3"]],
+    [k.steps[2], [3, "0,.3"]],
+  ]);
+  // The room's vote from the draft slide comes back here: none of the four sentences holds.
+  const est = c.draft.pollKeys.map((label, n) => `<span class="rp-est__cell${n === 0 ? " rp-est__cell--truth" : ""}" data-value="${n}"><i>${esc(label)}</i><b class="rp-est__n" data-poll-n>0</b></span>`).join("");
+  return `${head(k.label, em(k.title), { steps: strip, after: live(c) })}
 <div class="stage reply">
+<p class="pill pill--accent reply__held"${s(1, { fx: "pop", win: ".75,1" })} style="--origin:left center">${ico("cross", "ico--bold")}${esc(k.held)}</p>
+<div class="rp-est" data-poll-show="draft"${s(1, { fx: "fade", win: ".6,.9" })}><span class="rp-est__label">${ico("hand")}${esc(k.drafted)}</span>${est}</div>
 <div class="reply__draft">
 <article class="mail mail--draft surface surface--strong"${s(0, { fx: "fly", win: "0,.4" })} style="--dy:60px;--s:.96"><p class="mail__head">${ico("file")}<b>draft-reply.md</b></p><ol class="claims">${lines}</ol></article>
 </div>
@@ -613,12 +763,13 @@ function reply(d, c) {
 <div class="cw-answer rp"><h4>${esc(k.answerHead)}</h4><ol class="rp-lines">${said}</ol>
 <p class="rp-full__head">${ico("envelope")}${esc(k.full)} · ${esc(k.mailNote)}</p><div class="rp-full">${sample}</div></div>
 </div><div class="cw-composer reply__composer">${ico("plus")}<span class="reply__sign"${s(3, { fx: "type", ease: "linear", win: ".2,.8" })}>${esc(k.sign)}</span><i class="cw-send">${ico("arrow-up")}</i></div></div></div></div>
+<p class="reply__signer"${s(3, { fx: "fade", win: ".6,1" })}>${ico("pen")}<span>${esc(k.signer)}</span></p>
 <svg class="wires reply__wires" viewBox="0 0 1696 790" aria-hidden="true">${wires}</svg>
 </div>
-${foot(c, 13)}`;
+${foot(c, 15)}`;
 }
 
-/** Slide 14: the result. The room's estimate (or a hint where it would be); the true 2 drops onto its bar; eight tiles; QR codes; appendix. */
+/** Slide 16: the result. The room's estimate (or a hint where it would be); the true 2 drops onto its bar; eight tiles; QR codes; appendix. */
 function result(d, c) {
   const k = c.result;
   const covered = d.tally.covered;
@@ -635,9 +786,9 @@ function result(d, c) {
 <div class="stage res">
 <div class="res__est surface"${s(0, { fx: "fade", win: "0,.3" })}><p class="label res__label">${ico("hand")}${esc(k.estimate)}</p><div class="ebars" data-poll-show="estimate" style="--truth:${covered}">${bars}<p class="res__ghost">${ico("hand")}${esc(k.ghost)}</p><p class="res__marker"${s(1, { fx: "arc", win: ".2,.75" })}${arcStyle(0, -220, 40, 1)}><span>${esc(fill(k.marker, { covered }))}</span><i></i></p></div></div>
 <div class="tiles res__tiles" style="--cols:4">${tiles}</div>
-<div class="res__out"${s(2, { fx: "fade", win: "0,.3" })}>${qrs}<nav class="res__appx" aria-label="${esc(c.appendix)}"><p class="label">${esc(c.appendix)}</p>${links}</nav></div>
+<div class="res__out"${s(2, { fx: "fade", win: "0,.3" })}><div class="res__home"><p class="label">${ico("download")}${esc(k.home)}</p><div class="res__qrs">${qrs}</div></div><nav class="res__appx" aria-label="${esc(c.appendix)}"><p class="label">${esc(c.appendix)}</p>${links}</nav></div>
 </div>
-${foot(c, 14)}`;
+${foot(c, 16)}`;
 }
 
 /* ── appendix ───────────────────────────────────────────────────────── */
@@ -682,18 +833,20 @@ ${foot(c, "A3")}`;
 /** The slides in deck order: id, presses after the first, milliseconds per press, minutes, body. */
 export const SLIDES = [
   { id: "cover", steps: 0, ms: [2600], minutes: 1, body: cover },
-  { id: "host", steps: 0, ms: [1800], minutes: 1, body: host },
+  { id: "host", steps: 0, ms: [2200], minutes: 1, body: host },
   { id: "case", steps: 5, ms: [1900, 1500, 1400, 1100, 2400, 1300], minutes: 3, body: realCase },
-  { id: "request", steps: 5, ms: [2000, 1900, 2300, 2200, 1400, 1000], minutes: 4, body: request },
+  { id: "company", steps: 3, ms: [1600, 2000, 2200, 1600], minutes: 3, body: company },
+  { id: "request", steps: 5, ms: [2000, 1900, 2300, 2200, 1800, 1000], minutes: 4, body: request },
   { id: "draft", steps: 2, ms: [2400, 1200, 1500], minutes: 3, body: draft },
-  { id: "folder", steps: 2, ms: [2400, 2000, 1700], minutes: 5, body: folder },
+  { id: "today", steps: 3, ms: [1600, 2200, 2400, 2200], minutes: 3, body: today },
+  { id: "folder", steps: 2, ms: [2400, 2000, 1700], minutes: 4, body: folder },
   { id: "tests", steps: 5, ms: [1500, 1800, 1800, 1800, 1800, 1500], minutes: 6, body: tests },
-  { id: "project", steps: 4, ms: [1500, 2600, 2200, 800, 1000], minutes: 5, body: project },
-  { id: "mission-1", steps: 4, ms: [1200, 1700, 1500, 2000, 1500], minutes: 15, body: mission1 },
-  { id: "mission-2", steps: 4, ms: [2400, 3200, 3200, 1400, 1800], minutes: 20, body: mission2 },
+  { id: "project", steps: 4, ms: [1500, 2600, 2200, 800, 1200], minutes: 3, body: project },
+  { id: "mission-1", steps: 4, ms: [1200, 1600, 2200, 2000, 1500], minutes: 13, body: mission1 },
+  { id: "mission-2", steps: 5, ms: [2400, 3200, 3200, 1400, 1400, 2200], minutes: 20, body: mission2 },
   { id: "mistakes", steps: 4, ms: [1200, 1500, 1500, 1500, 1500], minutes: 5, body: mistakes },
-  { id: "gaps", steps: 4, ms: [1200, 2200, 1600, 2600, 1000], minutes: 10, body: gaps },
-  { id: "reply", steps: 3, ms: [1000, 1800, 3400, 1800], minutes: 7, body: reply },
+  { id: "gaps", steps: 3, ms: [1400, 2800, 1600, 2400], minutes: 10, body: gaps },
+  { id: "reply", steps: 3, ms: [1000, 1800, 3400, 1800], minutes: 6, body: reply },
   { id: "result", steps: 2, ms: [1800, 1800, 1100], minutes: 5, body: result },
   { id: "a1", steps: 0, ms: [600], minutes: 0, body: a1, kind: "appendix" },
   { id: "a2", steps: 0, ms: [600], minutes: 0, body: a2, kind: "appendix" },

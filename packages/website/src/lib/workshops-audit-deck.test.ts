@@ -31,10 +31,10 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
   const sections = Array.from(doc.querySelectorAll("deck-stage > section"));
   const main = sections.filter((section) => section.getAttribute("data-kind") === "main");
 
-  it("has fourteen main slides for 90 minutes and three appendix slides outside the arrow path", () => {
+  it("has sixteen main slides for 90 minutes and three appendix slides outside the arrow path", () => {
     expect(doc.documentElement.lang).toBe(edition.lang);
     expect(doc.documentElement.dataset.deckId).toBe(edition.deckId);
-    expect(main).toHaveLength(14);
+    expect(main).toHaveLength(16);
     expect(main.reduce((sum, section) => sum + Number(section.getAttribute("data-seconds")), 0)).toBe(5400);
     expect(sections.filter((section) => section.getAttribute("data-kind") === "appendix").map((section) => section.id)).toEqual(["a1", "a2", "a3"]);
     const notes = JSON.parse(doc.getElementById("speaker-notes")?.textContent ?? "[]") as string[];
