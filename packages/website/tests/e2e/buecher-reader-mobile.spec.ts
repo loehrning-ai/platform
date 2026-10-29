@@ -152,9 +152,9 @@ for (const ch of CHAPTERS) {
       }
 
       // The first chapter has no previous chapter (its left link goes to the cover); the last has no next.
-      const prev = page.getByRole("link", { name: /Vorheriges Kapitel/ }).first();
-      // The article footer and the reader bar both offer the next chapter: the first is the article's.
-      const next = page.getByRole("link", { name: /Nächstes Kapitel/ }).first();
+      const nav = page.getByRole("navigation", { name: "Kapitelnavigation" });
+      const prev = nav.getByRole("link", { name: /Vorheriges Kapitel/ });
+      const next = nav.getByRole("link", { name: /^Weiter:/ });
       if (ch.prev) {
         await expect(prev).toBeVisible();
         await expect(prev).toHaveAttribute("href", chapterPath(ch.prev));
