@@ -2099,8 +2099,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-nachweisprobe.zip",
-      "sizeBytes": 856169,
-      "sha256": "0a45f8e81f768d5ff5a02c85ba6845447b0e1d4ea0fe76b686d6090b7b2e0ada",
+      "sizeBytes": 858509,
+      "sha256": "cc86853caad15e384d21c8d3657101ec2fc3fc39fcc8a594778b530758a411d5",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, German edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -2108,8 +2108,8 @@
     },
     {
       "path": "packages/website/public/workshops/esg-berichte-mit-ki/crvena-zemja-esg-kit.zip",
-      "sizeBytes": 920543,
-      "sha256": "e1a77c5e2fc567e5eb5753e190f949b6bd339006e056120965154e6cfc75fb27",
+      "sizeBytes": 922702,
+      "sha256": "35643e01b7d0926ffd9a3b19de6f34ae46a4c398ee8a229bebebf979f4c5704d",
       "owner": "Tim L\u00f6hr",
       "source": "Original Workshop 04 participant kit, English edition (invented company data), built by scripts/workshop04/kit-v3.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -2182,8 +2182,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
-      "sizeBytes": 41458,
-      "sha256": "67874bf86f3ae001d2fdd73d429cf763452cb2068ba5977d74e6784b9d088dee",
+      "sizeBytes": 43156,
+      "sha256": "4648e6e80596ac1612b159ce6332d938fb4bc4da855a4b833bca5ab4207f3a77",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip",
-      "sizeBytes": 44166,
-      "sha256": "cc698d8aee9ba4e343746486a08199e079b7455c22f27cb108f0cec695af1e47",
+      "sizeBytes": 46023,
+      "sha256": "7ee2a8f2ab28e4a026c7e33bad66251016b4ae17032708e82b6e25d42b848814",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

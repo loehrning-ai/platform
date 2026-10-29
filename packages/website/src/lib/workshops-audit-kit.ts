@@ -14,7 +14,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "vardar-audit-kit-de.zip",
     title: "Das Audit-Kit von Vardar Works",
-    lead: "Elf Dateien, acht Anforderungen, drei Schritte in deinem eigenen Claude-Konto.",
+    lead: "Vardar betreibt Tannwalds Kundenservice. Der Kunde will acht Nachweise. Mit elf Dateien prüfst du, welche Anforderungen belegt sind.",
     stats: [
       { value: "19", label: "Dateien" },
       { value: "3", label: "Schritte" },
@@ -61,7 +61,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Du brauchst claude.ai oder die Claude-Desktop-App, jeder Plan, mit Codeausführung, und etwa 60 Minuten.",
+      "Im Kurs bedient Tim Claude; du schätzt und prüfst Zitate. Zu Hause wiederholst du die drei Schritte mit Claude, Codex oder Claude Code. START-HIER.md führt durch die Einrichtung. Plane etwa 60 Minuten ein.",
     fictionalNote:
       "Alles im Kit ist erfunden, bis auf zwei Zeilen von Anthropics öffentlicher Datenschutzseite. Keine Rechtsberatung.",
     contents: [
@@ -78,7 +78,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "vardar-audit-kit.zip",
     title: "The Vardar audit kit",
-    lead: "Eleven files, eight requests, three steps in your own Claude account.",
+    lead: "Vardar runs Tannwald's customer service. The customer wants eight documents. Use eleven files to check which requirements are proven.",
     stats: [
       { value: "19", label: "files" },
       { value: "3", label: "steps" },
@@ -125,7 +125,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "You need claude.ai or the Claude desktop app, any plan, with code execution on, and about 60 minutes.",
+      "Tim operates Claude in the workshop; you predict and check quotes. At home repeat the three steps with Claude, Codex or Claude Code. START-HERE.md covers setup. Allow about 60 minutes.",
     fictionalNote:
       "Everything in the kit is invented, except two lines from Anthropic's public privacy page. Not legal advice.",
     contents: [

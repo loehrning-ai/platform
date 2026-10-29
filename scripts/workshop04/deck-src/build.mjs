@@ -84,7 +84,7 @@ const HEAD = {
   },
 };
 
-const SLIDES = [cover, host, news, winery, requests, today, rule, kitSlide, review, project, step1, step2, step3, register, late, measured, takeHome, sources, capAppendix, caseAppendix];
+const SLIDES = [cover, winery, requests, host, news, today, rule, kitSlide, review, project, step1, step2, step3, register, late, measured, takeHome, sources, capAppendix, caseAppendix];
 
 /** "1 min 30 s" → 90 */
 function seconds(time) {

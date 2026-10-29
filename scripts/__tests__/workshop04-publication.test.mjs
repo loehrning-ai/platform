@@ -23,7 +23,8 @@ import {
   WORKSHOP_RELATIVE,
 } from "../workshop04/export-esg-passport.mjs";
 import { buildKitArchive, readKitArchive } from "../workshop04/kit-archive.mjs";
-import { KITS, kitFiles, PLATFORM_FILES, zipName } from "../workshop04/kit-v3.mjs";
+import { KITS, kitFiles, PLATFORM_FILES, refreshPublishedKits, zipName } from "../workshop04/kit-v3.mjs";
+import { prepareStartGuide } from "../workshop04/kit-guide.mjs";
 import { EDITIONS as DECK_SOURCES, render } from "../workshop04/deck-src/build.mjs";
 
 const read = (name) => readFileSync(path.join(WORKSHOP_DIR, name));
@@ -147,6 +148,24 @@ test("each deck edition carries the kit's five prompts byte for byte", () => {
     assert.deepEqual([...deck.keys()].sort(), [1, 2, 3, 4, 5], locale);
     for (const [n, prompt] of deck) assert.equal(prompt, guide.get(n), `${locale} prompt ${n}`);
   }
+});
+
+test("the kit distinguishes presenter-led work from home practice and isolates answer keys for local agents", () => {
+  for (const locale of ["de", "en"]) {
+    const guide = startGuide(locale);
+    assert.equal(prepareStartGuide(locale, guide), guide, `${locale}: guide is idempotent`);
+    assert.match(guide, locale === "de" ? /Im Workshop bedient Tim seinen Claude live/ : /In the workshop Tim operates his Claude live/);
+    assert.match(guide, locale === "de" ? /loesungen\/.*nachreichung\/.*außerhalb/ : /answers\/.*late-document\/.*outside/);
+    assert.match(guide, locale === "de" ? /ein Codex-Lauf wurde nicht gemessen/ : /a Codex run was not measured/);
+    assert.match(guide, locale === "de" ? /bis zu 8 Mio/ : /up to EUR 8 million/);
+    assert.match(guide, locale === "de" ? /Für Schritt 5 zählt zusätzlich rechnung-EL-25-09.png als erlaubter Nachweis/ : /For step 5, invoice-EL-25-09.png is now also allowed as evidence/);
+    assert.match(guide, locale === "de" ? /ursprünglichen Claude-Code-Läufe vom 26.10.2026/ : /original Claude Code runs from 26.10.2026/);
+  }
+});
+
+test("repo-owned kit copy can be rebuilt from the published archives without the private course source", () => {
+  const refreshed = refreshPublishedKits();
+  for (const locale of ["de", "en"]) assert.deepEqual(refreshed[locale], read(zipName(locale)), locale);
 });
 
 test("the objective is word for word the same in deck, kit and demo, in both languages", () => {

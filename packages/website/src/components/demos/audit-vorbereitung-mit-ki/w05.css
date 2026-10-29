@@ -1340,6 +1340,24 @@
   display: inline-flex;
   gap: 4px;
 }
+.w05 .w05-claude-skill-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.w05 .w05-claude-control-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.w05 .w05-claude-dock[data-narrow] {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 4px;
+}
+.w05 .w05-claude-dock[data-narrow] [role="radio"] {
+  padding-inline: 7px;
+  font-size: 0.8125rem;
+}
 .w05 .w05-notes {
   display: grid;
   gap: 6px;

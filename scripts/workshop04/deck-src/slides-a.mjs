@@ -10,7 +10,7 @@ export function cover(c) {
     `<div class="cover__globe" aria-hidden="true"><canvas data-globe data-lat="36" data-speed="8" data-boost="140" data-home="92" data-arc="germany" data-cx="0.81" data-cy="0.5" data-r="0.44" data-arc-width="4" data-arc-land></canvas></div>
 <div class="cover__main"><p class="label"${s(0, { win: "0,.35" })}>Workshop 04 · ESG</p>
 <h1 class="cover__title"${s(0, { win: ".05,.5", fx: "blur" })}>${c.t("ESG-Berichte", "ESG reports")}<br>${c.t("mit", "with")} <em>${c.t("KI", "AI")}</em></h1>
-<p class="cover__sub"${s(0, { win: ".25,.65" })}>${c.t("Jede Antwort mit", "Every answer with")} <span class="cover__word">${c.t("Nachweis", "evidence")}<i class="cover__thread"${s(0, { win: ".6,.95", fx: "line" })}></i></span></p>
+<p class="cover__sub"${s(0, { win: ".25,.65" })}>${c.t("Ein Weingut. Drei Anfragen.<br>Welche Antwort hat einen", "One winery. Three requests.<br>Which answer has")} <span class="cover__word">${c.t("Nachweis?", "evidence?")}<i class="cover__thread"${s(0, { win: ".6,.95", fx: "line" })}></i></span></p>
 <p class="cover__meta"${s(0, { win: ".45,.9" })}><span class="pill">${c.ico("user")}Tim Löhr</span><span class="pill pill--quiet">${c.t("60 Minuten", "60 minutes")}</span><span class="pill pill--quiet">${c.ico("pin")}Kavadarci → ${c.t("Deutschland", "Germany")}</span></p></div>
 ${foot(c, 1)}`,
   );
@@ -33,7 +33,7 @@ export function host(c) {
 <div class="host__career" role="group" aria-label="${c.t("Werdegang", "Career")}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true" data-step="0" data-win="0.35,0.9" data-fx="line"></i><ol class="host__stops">${stops}</ol></div>
 <p class="host__msc" data-step="0" data-win="0.5,0.85">${c.ico("cap")}<b>${c.t("M.Sc. Informatik", "M.Sc. Computer Science")}</b><span>${c.t("FAU Erlangen-Nürnberg", "FAU Erlangen-Nuremberg")}</span></p>
 <p class="host__line" data-step="0" data-win="0.6,0.95">${c.ico("shield")}<span>${c.t("Erfundener Fall. Keine Daten oder Systeme eines Arbeitgebers.", "Invented case. No employer data or systems.")}</span></p></div>
-${foot(c, 2)}</div>`,
+${foot(c, 4)}</div>`,
   );
 }
 
@@ -74,7 +74,7 @@ ${beat(3, -584, "18.12.2025", globe, c.t("Grüne Kredite für KMU in Nordmazedon
 <p class="src beats__src"${s(1, { win: ".5,1", out: 4, outWin: "0,.3" })}>${c.t("Quellen im Anhang 1", "Sources in appendix 1")}</p>
 <p class="beats__end"${s(4, { fx: "fly", win: ".42,.8" })} style="--dy:60px;--s:.94">${c.t("Jede Aussage braucht jetzt einen", "Every claim now needs")} <em class="beats__word"${s(4, { fx: "pop", ease: "spring", win: ".62,1" })}>${c.t("Beleg", "evidence")}</em>.</p>
 </div>
-${foot(c, 3)}`,
+${foot(c, 5)}`,
   );
 }
 
@@ -113,7 +113,7 @@ export function winery(c) {
   const big = (key, w, name, n, win) => `<span class="co__lab co__lab--${key}" style="--w:${w}"${s(2, { fx: "glow", win: ".8,1" })}>${name} <b data-keep${s(2, { fx: "none", win, count: `0,${n},0` })} data-count-unit=" %">${n} %</b></span>`;
   return section(
     { id: "weingut", label: c.t("Das Weingut", "The winery"), steps: 2, durations: "1800,1700,2000" },
-    `${head(c.t("Der Fall · erfunden", "The case · invented"), c.t("Crvena Zemja: ein Weingut in Nordmazedonien", "Crvena Zemja: a winery in North Macedonia"), { size: "m" })}
+    `${head(c.t("16.10.2026 · Der Fall · erfunden", "16.10.2026 · The case · invented"), c.t("Crvena Zemja: ein Weingut in Nordmazedonien", "Crvena Zemja: a winery in North Macedonia"), { size: "m" })}
 <div class="stage winery">
 <figure class="winery__card surface surface--strong"${s(0, { fx: "fade", win: "0,.4" })}>${wineryArt()}<figcaption class="winery__cap"><span class="pill">${c.ico("pin")}Kavadarci, Tikveš</span><span class="winery__fam">${c.t("Familienweingut", "family winery")}</span></figcaption></figure>
 <div class="co">
@@ -123,7 +123,7 @@ export function winery(c) {
 <p class="src co__cite"${s(2, { fx: "fade", win: ".7,1" })}>${c.t("firmenprofil.md · Z. 12", "company_profile.md · l. 12")}</p></div>
 </div>
 </div>
-${foot(c, 4)}`,
+${foot(c, 2)}`,
   );
 }
 
@@ -173,7 +173,7 @@ ${nums}${plus}
 ${tick(1, 23, c.t("23.10. Rückgabe Nordvik", "23.10. due to Nordvik"))}${tick(2, 14, c.t("14.10. Entwurf vom Marketing", "14.10. draft from marketing"))}
 <span class="tl__pin" style="left:${dayX(16)}px"${s(0, { fx: "pop", ease: "spring", win: ".55,.9" })}><span class="pill pill--accent"${s(4, { fx: "glow", win: ".6,1" })}>${c.ico("calendar")}${c.t("16.10. Heute im Fall", "16.10. Today in the case")}</span><i></i></span></div>
 </div>
-${foot(c, 5)}`,
+${foot(c, 3)}`,
   );
 }
 

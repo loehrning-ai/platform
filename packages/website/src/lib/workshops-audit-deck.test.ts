@@ -48,6 +48,23 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
     expect(scripts).toEqual([`${up}lib/deck-keys.js`, `${up}lib/deck-stage.js`, `${up}lib/scenes.js`, `${up}lib/geo.js`, `${up}lib/globe.js`]);
   });
 
+  it("establishes the invented company before the host and distinguishes Tim's live run from the slide sample", () => {
+    expect(main.slice(0, 4).map((section) => section.id)).toEqual(["cover", "company", "host", "case"]);
+    const opening = flat(doc.getElementById("cover")?.textContent ?? "");
+    expect(opening).toContain("Vardar");
+    expect(opening).toContain("Tannwald");
+    expect(opening).toContain(edition.lang === "de" ? "acht Nachweise" : "eight documents");
+    expect(doc.querySelector("#project .now--live")?.textContent).toContain(edition.lang === "de" ? "Folie: Muster" : "Slide: sample");
+  });
+
+  it("locates capabilities in Settings and keeps them out of the replicated sidebar", () => {
+    expect(doc.querySelectorAll(".cw-side .cw-toggle")).toHaveLength(0);
+    const settings = doc.querySelector("#project .proj__capability")?.textContent ?? "";
+    expect(settings).toContain("Settings > Capabilities");
+    expect(settings).toContain("Create and edit files");
+    expect(flat(doc.querySelector("#project .file__meta")?.textContent ?? "")).toBe("11 " + (edition.lang === "de" ? "Dateien" : "files"));
+  });
+
   it("quotes only lines that are in the kit, word for word", () => {
     const quotes = Array.from(doc.querySelectorAll(".q"));
     expect(quotes.length).toBeGreaterThan(10);

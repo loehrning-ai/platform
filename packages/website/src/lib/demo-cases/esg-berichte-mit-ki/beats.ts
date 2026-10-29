@@ -15,14 +15,14 @@ export const BEATS: readonly Beat[] = [
     kind: "commit",
     seconds: 0,
     label: { de: "Fragebogen", en: "Questionnaire" },
-    step: { de: "Du schickst den Fragebogen des Importeurs an Claude.", en: "You send the importer's questionnaire to Claude." },
+    step: { de: "Claude prüft den Fragebogen. Ihr schätzt vorher und prüft nachher.", en: "Claude checks the questionnaire. You predict first and check afterwards." },
   },
   {
     id: "schritt-2",
     kind: "reveal",
     seconds: 0,
     label: { de: "Werbeaussagen", en: "Claims" },
-    step: { de: "Du lässt Claude die sieben Werbeaussagen prüfen.", en: "You have Claude check the seven marketing claims." },
+    step: { de: "Claude prüft sieben Werbeaussagen. Welche dürfen raus?", en: "Claude checks seven marketing claims. Which may go out?" },
     nextName: { de: "die Werbeaussagen", en: "the claims" },
   },
   {
@@ -30,7 +30,7 @@ export const BEATS: readonly Beat[] = [
     kind: "tool",
     seconds: 0,
     label: { de: "Bankformular", en: "Bank form" },
-    step: { de: "Du lässt Claude das Formular der Bank ausfüllen.", en: "You have Claude fill in the bank's form." },
+    step: { de: "Claude füllt das Bankformular aus. Ihr rechnet nach.", en: "Claude fills in the bank form. You check the maths." },
     nextName: { de: "das Bankformular", en: "the bank form" },
   },
   {
@@ -38,7 +38,7 @@ export const BEATS: readonly Beat[] = [
     kind: "apply",
     seconds: 0,
     label: { de: "Register", en: "Register" },
-    step: { de: "Du lässt Claude alle Antworten in ein Register schreiben.", en: "You have Claude put every answer into one register." },
+    step: { de: "Claude bündelt alle Antworten im Register. Ihr prüft ihre Belege.", en: "Claude puts every answer into one register. You check the evidence." },
     nextName: { de: "das Register", en: "the register" },
   },
   {
@@ -46,7 +46,7 @@ export const BEATS: readonly Beat[] = [
     kind: "apply",
     seconds: 0,
     label: { de: "Nachreichung", en: "Late invoice" },
-    step: { de: "Du gibst Claude die Stromrechnung, die gefehlt hat.", en: "You give Claude the electricity bill that was missing." },
+    step: { de: "Die fehlende Stromrechnung kommt dazu. Welche Antworten ändern sich?", en: "The missing electricity bill arrives. Which answers change?" },
     nextName: { de: "die Nachreichung", en: "the late invoice" },
   },
   {
@@ -61,9 +61,9 @@ export const BEATS: readonly Beat[] = [
     id: "dein-claude",
     kind: "own",
     seconds: 0,
-    label: { de: "Dein Claude", en: "Your Claude" },
-    step: { de: "Du richtest den Skill in deinem eigenen Claude ein.", en: "You set up the skill in your own Claude." },
-    nextName: { de: "dein Claude", en: "your Claude" },
+    label: { de: "Für zu Hause", en: "At home" },
+    step: { de: "Für nach dem Workshop: den Skill im eigenen Claude einrichten.", en: "After the workshop: set up the skill in your own Claude." },
+    nextName: { de: "die Anleitung für zu Hause", en: "the setup for home" },
   },
   {
     id: "mitnehmen",

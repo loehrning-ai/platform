@@ -78,6 +78,9 @@ test.describe(PATH, () => {
     await expect(news).toContainText("27.09.2026");
     await expect(news).toContainText("EBRD");
     await expect(page.locator("[data-demo-intro-body]")).toContainText("erfundenes Weingut");
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("Crvena Zemja");
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("Im Workshop bediene ich Claude live");
+    await expect(page.locator("[data-demo-intro-body]")).toContainText("für zu Hause");
     await expect(page.locator("[data-demo-intro]")).toContainText("Auf dieser Seite läuft keine KI.");
     const fold = await page.evaluate(() => {
       const bar = document.querySelector("[data-mobile-tab-bar]");
@@ -100,7 +103,8 @@ test.describe(PATH, () => {
     // The prompt types itself into the composer with the questionnaire attached.
     await expect(page.locator("[data-w4a-composer] [data-w4a-chip]")).toContainText("1-fragebogen-nordvik.md");
     await expect(page.locator("[data-w4a-composer]")).toContainText("Zähle vor jeder Jahressumme die eindeutigen Monate im Code.");
-    await expect(caption(page)).toContainText("Schick den Prompt mit dem Pfeil ab");
+    await expect(caption(page)).toContainText("Der Importeur braucht acht belegte Antworten vom Weingut");
+    await expect(caption(page)).toContainText("Der Pfeil spielt die Aufzeichnung ab");
     // Start hands the keyboard to the send arrow, and the sidebar is a picture apart from Customize.
     await expect(page.locator("[data-w4a-send]")).toBeFocused();
     await expect(page.locator("[data-w4a-send]")).toHaveAccessibleName("Aufzeichnung abspielen");

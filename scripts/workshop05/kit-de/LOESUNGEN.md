@@ -90,10 +90,10 @@ Prüfung des Antwortentwurfs:
 Beispielantwort an den Kunden, auf Englisch (deine Formulierung wird anders sein):
 ```
 Dear Ms Keller,
-today we send R1, our system list approved on 2 September 2026, and R6, our incident log for 2026. It shows one incident with your data (INC-02); we told you 30.5 hours after detection.
-Four documents are incomplete. R2: the transfer basis for Anthropic (USA) is missing from our register. R3: our AI rule applies from 1 October 2026; we add a record of AI use before that date. R4: we are reviewing administrator accounts on the other three systems. R8: version 4 of our security policy awaits approval.
-Two we cannot send. R5: 25 of 120 staff are trained. R7: we have not run a restore test in 2026. You receive dates for both by 2 December.
-Under clause 7 we owe you written notice of Claude Team, which stores data in the USA; it is attached, and we ask your written consent.
+We submit R1, the system list approved on 2 September 2026, and R6, the incident log. It records notice of INC-02 after 30.5 hours.
+R2 lacks Anthropic's last review and transfer basis. R3 lacks an approved rule before 1 October 2026. R4 lacks administrator reviews for three systems. R5: 25 of 120 staff are trained. R7: we have not run a restore test in 2026. R8 lacks a current approved policy.
+By 2 December we will provide missing evidence or, where it does not exist, an owner and completion date. These are commitments, not completed controls.
+Claude Team stores data in the USA. Clause 7 requires prior written notice and written consent to storage outside the EU/EEA. Our folder contains neither. We request your instructions before further use.
 Dragan Ilievski
 ```
 Die Antwort darf nicht "all staff", "every quarter", "tested regularly", "stays in the EU" oder "compliant" sagen. Alles, was einen Vertragspunkt einräumt (Klausel 7), entscheidet die Geschäftsführung, wenn möglich mit rechtlichem Rat.

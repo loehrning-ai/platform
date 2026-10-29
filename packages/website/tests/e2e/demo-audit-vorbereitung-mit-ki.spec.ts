@@ -68,6 +68,10 @@ test.describe(`/demos/${SLUG}`, () => {
       const errors = collectErrors(page);
       await page.setViewportSize(PHONE);
       await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
+      const intro = page.locator("[data-demo-intro-body]");
+      await expect(intro).toContainText("Vardar Works");
+      await expect(intro).toContainText("Tannwald");
+      await expect(intro).toContainText(locale === "de" ? "Im Workshop bediene ich Claude live" : "In the workshop I run Claude live");
 
       // The intro card and both buttons fit the first screen; the page has not scrolled.
       const card = await page.locator("[data-demo-intro]").boundingBox();
@@ -131,6 +135,10 @@ test.describe(`/demos/${SLUG}`, () => {
       await expect(claudeWindow).toContainText(locale === "de" ? "26.10.2026" : "26 October 2026");
       await expect(claudeWindow).toContainText("Claude Opus 5.5");
       await expect(claudeWindow).toContainText(locale === "de" ? "Darstellung" : "Depiction");
+      // At phone width both choices and the lookup buttons share one row, leaving the answer more room.
+      const controlTops = await page.locator(".w05-claude-dock > *").evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().top));
+      expect(Math.max(...controlTops) - Math.min(...controlTops)).toBeLessThan(8);
+      await expect(stage.locator("[data-w05-send]")).toHaveAccessibleName(locale === "de" ? "Aufzeichnung abspielen" : "Play the recording");
       // The composer's one button sends the prompt, then stops the stream: the whole answer with the page's marks drawn on it.
       await stage.locator("[data-w05-send]").click();
       await expect(stage.locator("[data-w05-send]")).toHaveAttribute("data-state", "stop");

@@ -96,7 +96,7 @@ describe("workshopStage", () => {
 
   it("formats a material as format and size, falling back to the language for a page", () => {
     const [w05] = getWorkshops("de").filter((workshop) => workshop.slug === "audit-vorbereitung-mit-ki");
-    expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 43 KB");
+    expect(materialMeta(w05.materials.find((material) => material.kind === "zip")!)).toBe("ZIP · 45 KB");
     // The German page links the German edition of the deck.
     expect(materialMeta(w05.materials.find((material) => material.kind === "html")!)).toBe("HTML · DE");
   });

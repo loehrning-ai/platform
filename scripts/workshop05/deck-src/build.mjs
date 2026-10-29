@@ -55,6 +55,10 @@ function copyFor(lang) {
   const suffix = lang === "en" ? "-en" : "";
   return {
     ...c,
+    // Establish the invented company before the host and the outside case.
+    notes: [c.notes[0], c.notes[3], c.notes[1], c.notes[2], ...c.notes.slice(4)].map((note, index) =>
+      index < MAIN_SLIDES ? note.replace(/^\d+/, String(index + 1).padStart(2, "0")) : note,
+    ),
     ui2: { adminNote: ui.app.adminNote, plans: ui.project.plans },
     qr: { kit: `qr-kit${suffix}.svg`, probe: `qr-probe${suffix}.svg`, skill: `qr-skill${suffix}.svg` },
   };

@@ -46,6 +46,19 @@ const mainPositions = (page: Page) =>
 
 for (const edition of EDITIONS) {
   test.describe(`${SLUG} deck (${edition.lang})`, () => {
+    test("the live/sample label leaves every presenter step readable", async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      for (const id of ["projekt", "schritt-1", "schritt-2", "schritt-3", "register", "nachreichung"]) {
+        await open(page, `${edition.deck}#${id}/0`);
+        await page.evaluate(() => document.fonts.ready);
+        await expect.poll(() => page.locator(`#${id} .hd--live`).evaluate((header) => {
+          const step = header.querySelector(".tsteps > li:last-child")!.getBoundingClientRect();
+          const label = header.querySelector(".hd__now")!.getBoundingClientRect();
+          return label.left - step.right;
+        }), `${id}: space between the steps and the live/sample label`).toBeGreaterThanOrEqual(12);
+      }
+    });
+
     test("arrow keys walk every step of the main slides and never reach the appendix", async ({ page }) => {
       test.setTimeout(120_000);
       await open(page, edition.deck);

@@ -94,8 +94,8 @@ export function file(ext, name, meta = "", o = {}) {
 /** The room's task on paper: ink, never the accent (the accent means Tim works in Claude). Never a clock. */
 export const roomPill = (c, text, attrs = "") => `<p class="pill room-pill"${attrs}>${c.ico("hand")}${text}</p>`;
 
-/** The pill on every slide where Tim works live in Claude Desktop. */
-export const live = (c, attrs = "") => `<p class="now now--live hd__now"${attrs}>${c.ico("spark")}Live · Claude Desktop</p>`;
+/** Tim switches to his real Claude; the drawn answer is a prepared teaching sample. */
+export const live = (c, attrs = "") => `<p class="now now--live hd__now"${attrs}>${c.ico("spark")}${c.t("Tim: live · Folie: Muster", "Tim: live · Slide: sample")}</p>`;
 
 /**
  * Tim's clicks in Claude Desktop as a numbered strip. items: [label, k, win, out, outWin]. The lit copy
@@ -152,7 +152,7 @@ export function cwBar(crumbs) {
 /** The sidebar: Claude's own chrome stays in English, as the app shows it. */
 export function cwSide(c, o = {}) {
   const chats = (o.chats || []).map(([name, on]) => `<p class="cw-row"${on ? " data-on" : ""}>${c.ico("chat")}<span>${esc(name)}</span></p>`).join("");
-  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${c.ico("plus")}New chat</p><p class="cw-nav">${c.ico("chat")}Chats</p><p class="cw-nav" data-on>${c.ico("folder")}Projects</p>${o.project === false ? "" : `<p class="cw-sec">Project</p><div class="cw-proj"${o.projAttrs || ""}><b>${esc(c.kit.project)}</b><span>${c.t("Stichtag", "Reference date")} 16.10.2026</span></div>`}${chats}${o.extra || ""}${o.toggle || `<p class="cw-toggle" data-on><span>Code execution</span><i></i></p>`}</aside>`;
+  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${c.ico("plus")}New chat</p><p class="cw-nav">${c.ico("chat")}Chats</p><p class="cw-nav" data-on>${c.ico("folder")}Projects</p>${o.project === false ? "" : `<p class="cw-sec">Project</p><div class="cw-proj"${o.projAttrs || ""}><b>${esc(c.kit.project)}</b><span>${c.t("Stichtag", "Reference date")} 16.10.2026</span></div>`}${chats}${o.extra || ""}</aside>`;
 }
 
 /** The composer. `att`: an attachment row above the input (a file waiting to be sent). */

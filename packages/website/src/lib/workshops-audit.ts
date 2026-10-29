@@ -20,8 +20,8 @@ const KIT_FILE: Readonly<Record<Locale, string>> = { de: "vardar-audit-kit-de.zi
  * surfaces read it). Registered in WORKSHOPS_BY_LOCALE with the Sage poster palette.
  */
 
-/** Sizes of the two kit zips (41,458 and 44,166 bytes), rounded to the nearest KB (1024 bytes). */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "43 KB", en: "40 KB" };
+/** Sizes of the two kit zips, rounded to the nearest KB (1024 bytes). */
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "45 KB", en: "42 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -54,19 +54,19 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden",
     eyebrow: "Workshop 05 · Audit-Vorbereitung",
     summary:
-      "Deloitte zahlte knapp 98.000 A$ zurück, weil ein Bericht Quellen zitierte, die es nicht gab. Eine erfundene Firma prüft mit Claude, welche Datei im Audit hält.",
-    lede: "Tim prüft live in Claude, welche von elf Dateien die acht Anforderungen eines Kundenaudits wirklich belegen, und du sagst es vorher.",
+      "Vardar Works hat elf Dateien für acht Anforderungen eines Kundenaudits. Welche halten einer Prüfung stand, welches Dokument fehlt?",
+    lede: "Ein Kunde fordert acht Audit-Nachweise: Tim prüft elf Dateien live in Claude, der Raum schätzt und prüft mit.",
     description:
-      "Vardar Works, eine erfundene Support-Firma in Skopje, bekommt von ihrem Kunden Tannwald Haustechnik eine Dokumentenanfrage mit acht Anforderungen für ein Lieferantenaudit. Im Ordner liegen elf Dateien, und zu jeder Anforderung passt ein Dateiname. Du lernst, jede Datei auf Zitat, Zeitraum, Umfang und Freigabe zu prüfen, und siehst live, wie Claude mit diesen vier Prüfungen als Regeln eine Lückenliste baut, die du vertreten kannst. Zu Hause spielt das Kit alles in drei Schritten mit deinem eigenen Claude nach.",
+      "Vardar Works, eine erfundene Support-Firma in Skopje, bekommt von ihrem Kunden Tannwald Haustechnik eine Dokumentenanfrage mit acht Anforderungen für ein Lieferantenaudit. Im Ordner liegen elf Dateien, und zu jeder Anforderung passt ein Dateiname. Tim bedient Claude live, der Raum sagt das Ergebnis voraus und prüft die Zitate gegen die Dateien. Du lernst, Zitat, Zeitraum, Umfang und Freigabe zu prüfen und aus jeder Lücke eine konkrete Anfrage zu machen. Zu Hause wiederholst du die drei Schritte mit dem Kit in Claude oder Codex.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
       "In Claude gehen nur die erfundenen Dateien des Kits. Firmenunterlagen lädst du nur in das Firmenkonto, das deine Firma freigegeben hat.",
     outcome: "Eine Lückenliste mit zuständiger Person pro Lücke und eine Antwort, die nur belegte Sätze enthält",
     stageExplainer: {
-      heading: "Was ist das Kit?",
+      heading: "Was prüfen wir?",
       body:
-        "Eine Zip mit 19 Textdateien: die Anfrage des Kunden, elf erfundene Dateien, Regeln für Claude, den Skill, zwei Vorlagen und die Lösungen. Zu Hause gehst du damit drei Schritte in deinem eigenen Claude-Konto.",
+        "Ein Kundenaudit prüft, ob zugesagte Kontrollen belegt sind. Elf erfundene Dateien sollen acht Anforderungen erfüllen. Das Kit enthält die Anfrage, Regeln, Vorlagen und Lösungen. Zu Hause prüfst du sie in Claude oder Codex.",
       facts: ["19 Textdateien", "3 Schritte", "ca. 60 Min. allein"],
     },
     audience: [
@@ -83,9 +83,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agenda: [
       { label: "Eine Anfrage, elf Dateien, vier Prüfungen", minutes: 1, activity: "listen" },
+      { label: "Vardar Works und sein Kunde Tannwald", minutes: 3, activity: "listen" },
       { label: "Gastgeber", minutes: 1, activity: "listen" },
       { label: "Der Fall: 440.000 A$ für einen Bericht", minutes: 3, activity: "listen" },
-      { label: "Vardar Works und sein Kunde Tannwald", minutes: 3, activity: "listen" },
       { label: "Tannwald will acht Nachweise: schätzen", minutes: 4, activity: "vote" },
       { label: "Der Entwurf behauptet vier Dinge", minutes: 3, activity: "vote" },
       { label: "Heute: die Frage, der Weg, die Rollen", minutes: 3, activity: "listen" },
@@ -104,7 +104,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesSelfStudy: 60,
     needs: [
       "Live: nichts. Abgestimmt wird per Handzeichen; am Ende ein Handy für die QR-Codes",
-      "Zu Hause: claude.ai oder die Claude-Desktop-App, jeder Plan, mit Codeausführung, und das Kit",
+      "Zu Hause: Claude (App oder claude.ai, jeder Plan) mit Codeausführung, oder Codex mit dem entpackten Kit-Ordner; Anleitung in START-HIER.md",
     ],
     notNeeded: ["Programmierkenntnisse", "Einen API-Schlüssel", "Vorwissen zu ISO 27001", "Firmenunterlagen"],
     notCovered: [
@@ -114,9 +114,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-28",
+      reviewedAt: "2026-10-29",
       data: "synthetic",
-      note: "Alle Firmen, Personen und Dateien sind erfunden. Zwei Zeilen zitieren Anthropics öffentliche Datenschutzseite. Die vier Prüfungen fassen ISO 19011 und ISO/IEC 27001 7.5.2 zusammen. Keine Rechtsberatung.",
+      note: "Alle Firmen, Personen und Dateien sind erfunden. Zwei Zeilen zitieren Anthropics öffentliche Datenschutzseite. Die vier Prüfungen sind Arbeitsregeln dieses Falls; Zeiträume und Schwellenwerte kommen aus der Kundenanfrage. ISO 19011 und ISO/IEC 27001 liefern den fachlichen Hintergrund. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -188,19 +188,19 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Audit Preparation with AI: Organize Evidence and Find Gaps",
     eyebrow: "Workshop 05 · Audit preparation",
     summary:
-      "Deloitte refunded about A$98,000 after a report cited sources that did not exist. An invented firm checks with Claude which file holds up in an audit.",
-    lede: "Tim checks live in Claude which of eleven files really prove a customer's eight audit requests, and you call it first.",
+      "Vardar Works has eleven files for eight customer audit requirements. Which stand up to scrutiny, and which document is missing?",
+    lede: "A customer wants eight audit items proven: Tim checks eleven files live in Claude while the room predicts and checks the evidence.",
     description:
-      "Vardar Works, an invented support firm in Skopje, gets a document request with eight items from its customer Tannwald Haustechnik for a supplier audit. The folder holds eleven files, and every item has a file whose name fits. You learn to test each file for quote, period, scope and approval, and watch live how Claude, given those four tests as rules, builds a gap list you can defend. At home, the kit replays all of it in three steps with your own Claude.",
+      "Vardar Works, an invented support firm in Skopje, gets a document request with eight items from its customer Tannwald Haustechnik for a supplier audit. The folder holds eleven files, and every item has a file whose name fits. Tim runs Claude live; the room predicts the result and checks the quotes against the files. You learn to test quote, period, scope and approval and turn each gap into a specific request. At home, repeat the three steps with the kit in Claude or Codex.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
       "Only the kit's invented files go into Claude. Company documents go only into the company account your firm approved.",
     outcome: "A gap list with an owner for every gap and a reply that holds only proven sentences",
     stageExplainer: {
-      heading: "What is the kit?",
+      heading: "What do we check?",
       body:
-        "A zip with 19 text files: the customer's request, eleven invented files, rules for Claude, the skill, two templates and the answers. At home you take three steps with it in your own Claude account.",
+        "A customer audit checks whether promised controls have evidence. Eleven invented files must support eight requirements. The kit contains the request, rules, templates and answers. At home, check them in Claude or Codex.",
       facts: ["19 text files", "3 steps", "about 60 min alone"],
     },
     audience: [
@@ -217,9 +217,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agenda: [
       { label: "One request, eleven files, four tests", minutes: 1, activity: "listen" },
+      { label: "Vardar Works and its customer Tannwald", minutes: 3, activity: "listen" },
       { label: "Your host", minutes: 1, activity: "listen" },
       { label: "The case: a report worth A$440,000", minutes: 3, activity: "listen" },
-      { label: "Vardar Works and its customer Tannwald", minutes: 3, activity: "listen" },
       { label: "Tannwald wants eight documents: estimate", minutes: 4, activity: "vote" },
       { label: "The draft makes four claims", minutes: 3, activity: "vote" },
       { label: "Today: the question, the route, the roles", minutes: 3, activity: "listen" },
@@ -238,7 +238,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesSelfStudy: 60,
     needs: [
       "Live: nothing. You vote by show of hands; a phone for the QR codes at the end",
-      "At home: claude.ai or the Claude desktop app, any plan, with code execution on, plus the kit",
+      "At home: Claude (app or claude.ai, any plan) with code execution, or Codex with the unzipped kit folder; setup in START-HERE.md",
     ],
     notNeeded: ["Coding skills", "An API key", "Knowledge of ISO 27001", "Company documents"],
     notCovered: [
@@ -248,9 +248,9 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-28",
+      reviewedAt: "2026-10-29",
       data: "synthetic",
-      note: "Every company, person and file is invented. Two lines quote Anthropic's public privacy page. The four tests summarise ISO 19011 and ISO/IEC 27001 7.5.2. Not legal advice.",
+      note: "Every company, person and file is invented. Two lines quote Anthropic's public privacy page. The four tests are working rules for this case; the customer request sets the periods and thresholds. ISO 19011 and ISO/IEC 27001 provide background. Not legal advice.",
     },
     steps: [
       {

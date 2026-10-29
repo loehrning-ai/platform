@@ -301,22 +301,25 @@ export function ClaudeDock({ fmt, scene, claude, questions }: { readonly fmt: Fm
   const done = replay.started && replay.frame.done;
   const marksLabel = probe.marks.length === 1 ? copy.claude.marksOpenOne : probe.marks.length > 0 ? fmt.t(copy.claude.marksOpen, { n: probe.marks.length }) : copy.claude.marksNone;
   return (
-    <div className="w05-claude-dock">
+    <div className="w05-claude-dock" data-narrow={narrow ? "" : undefined}>
       <GlasSegmented
         label={copy.claude.question}
-        options={questions.map((entry) => ({ value: entry.id, label: (copy.claude.questionShort as Readonly<Record<string, string>>)[entry.id] ?? entry.label }))}
+        options={questions.map((entry) => ({ value: entry.id, label: ((narrow ? copy.claude.questionPhone : copy.claude.questionShort) as Readonly<Record<string, string>>)[entry.id] ?? entry.label }))}
         value={state.question}
         onChange={(id) => setState({ ...state, question: id })}
       />
-      <GlasSegmented
-        label={copy.claude.skill}
-        options={[
-          { value: "with", label: scene.withSkill },
-          { value: "without", label: scene.withoutSkill },
-        ]}
-        value={state.skill}
-        onChange={(skill) => setState({ ...state, skill: skill as "with" | "without" })}
-      />
+      <div className="w05-claude-skill-choice">
+        {narrow ? <span className="w05-claude-control-label" aria-hidden="true">{copy.claude.skill}</span> : null}
+        <GlasSegmented
+          label={copy.claude.skill}
+          options={[
+            { value: "with", label: narrow ? copy.claude.skillPhone.with : scene.withSkill },
+            { value: "without", label: narrow ? copy.claude.skillPhone.without : scene.withoutSkill },
+          ]}
+          value={state.skill}
+          onChange={(skill) => setState({ ...state, skill: skill as "with" | "without" })}
+        />
+      </div>
       <span className="w05-claude-dock-more">
         {narrow ? (
           <>

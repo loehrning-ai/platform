@@ -230,7 +230,7 @@ export default function Demo({
     switch (view) {
       case "ordner":
         // Before the guess the question stands above the board, so the dock keeps to the slider.
-        return guess !== null ? [fmt.t(copy.folder.kept, { guess })] : [];
+        return guess !== null ? [fmt.t(copy.folder.kept, { guess })] : [copy.folder.briefing];
       case "pruefungen":
         // A status word is defined in the caption the first time its stamp appears, so no readout covers a row.
         return [...checksCaption(fmt, active, last, guess, r1Seen), ...(def ? [copy.statusDef[def]] : [])];

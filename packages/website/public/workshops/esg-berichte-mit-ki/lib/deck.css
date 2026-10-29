@@ -24,11 +24,11 @@ em{font-style:normal}
 /* ── shared with W05: Tim drives Claude, the room predicts and checks ── */
 /* the live pill sits at the right end of the label row; the headline keeps the full width */
 .hd--live{position:relative}
-.hd--live .tsteps-row{padding-right:360px}
-.hd--live .tsteps{gap:24px;font-size:20px;letter-spacing:.04em}
+.hd--live .tsteps-row{padding-right:460px}
+.hd--live .tsteps{gap:18px;font-size:18px;letter-spacing:.02em}
 .hd--live .tsteps__n,.hd--live .tsteps__done{width:32px;height:32px;font-size:16px}
 .hd--live .tsteps__done{margin-top:-16px}
-.hd--live .tsteps > li + li::before{left:-15px}
+.hd--live .tsteps > li + li::before{left:-12px}
 .hd__now{position:absolute;right:0;top:-8px;margin:0}
 .hd .now--live{margin-top:0;font-size:22px}
 /* Tim's clicks in Claude Desktop, in the label row: number disks, the current one lit, done ones checked */
@@ -418,10 +418,8 @@ em{font-style:normal}
 .pjv__f{display:flex;align-items:center;gap:7px;box-sizing:border-box;height:44px;min-width:0;padding:0 9px 0 6px;border-radius:9px;background:var(--cw-white);border:1px solid var(--cw-line);font:500 13px/1 var(--cw-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--cw-t2)}
 .pjv__f i{display:grid;place-items:center;flex:none;width:28px;height:30px;border-radius:6px;background:#5E5D59;color:#fff;font:800 9px/1 var(--cw-sans);font-style:normal;text-transform:uppercase}
 .pjv__slot{visibility:hidden}
-.pjv__toggle{border-radius:10px}
-.cw-toggle .pjv__switch{overflow:hidden}
-.cw-toggle .pjv__switch::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--cw-accent);opacity:var(--p,1)}
-.cw-toggle .pjv__switch::after{z-index:1;transition:none;transform:translateX(calc(var(--p,1) * .9em))}
+.pjv__capability{margin:0;padding:14px 18px;border:1px solid var(--cw-line);border-radius:12px;background:var(--cw-white);font:400 19px/1.45 var(--cw-sans);color:var(--cw-t2)}
+.pjv__capability b{font-weight:600;color:var(--cw-t1)}
 
 /* kit files that travel into the Claude window (fly() in the generator): stage copies, the window clips */
 .fly{position:absolute;z-index:6;display:block;pointer-events:none;

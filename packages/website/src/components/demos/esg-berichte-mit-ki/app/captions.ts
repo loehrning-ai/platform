@@ -114,7 +114,7 @@ export function stepCaption(input: CaptionInput): readonly string[] {
     const knowledge = data.files.filter((file) => file.where === "knowledge").length;
     const ready = copy.steps.ready[step.id].map((text) => fill(text, { knowledge }));
     // Before step 1 the four checks of the Nachweisprobe, the one thing to learn here.
-    return step.id === "schritt-1" ? [copy.steps.probe, ...ready, copy.steps.tap] : [...ready, copy.steps.tap];
+    return step.id === "schritt-1" ? [copy.steps.briefing, copy.steps.probe, ...ready, copy.steps.tap] : [...ready, copy.steps.tap];
   }
   if (state === "running") return copy.steps.running.map((text) => fill(text, { s: Math.round(step.wallS) }));
   return [...predictionCaption(input), ...(sceneCaption(input) ?? doneCaption(input))];

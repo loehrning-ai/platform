@@ -19,31 +19,31 @@ export const TAKEHOME_IN_STAGE = true;
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "ESG-Antworten mit Claude belegen",
+    title: "Drei Anfragen an ein Weingut",
     news: [
       "Seit dem 1. Januar 2026 verlangt Norwegens Vinmonopolet für Stillwein unter 250 NOK Flaschen bis 420 g, seit dem 27.09.2026 verbietet Deutschland „klimaneutral“ durch CO₂-Ausgleich.",
       "Im Dezember 2025 lieh die Osteuropabank EBRD einer Bank in Skopje bis zu 8 Millionen Euro für grüne Kredite an kleine und mittlere Firmen.",
     ],
     sentences: [
-      "Im Oktober 2026 muss ein erfundenes Weingut in Nordmazedonien 21 Antworten belegen, und daran hängen 53 % des Umsatzes und ein Kredit.",
-      "Du siehst fünf aufgezeichnete Läufe von Claude aus dem Workshop und prüfst jede Antwort selbst: Welche Antwort ist belegt, welches Dokument fehlt?",
-      "Am Ende nimmst du den Skill mit, der deinem Claude dieselbe Prüfung beibringt.",
-      "Das dauert etwa {minutes} Minuten.",
+      "Oktober 2026: Crvena Zemja, ein erfundenes Weingut in Nordmazedonien, bekommt drei Anfragen zu Umwelt, Sozialem und Unternehmensführung (ESG).",
+      "Importeur, Marketing und Bank wollen 21 Antworten mit Belegen; 53 % des Umsatzes und ein Solarkredit stehen auf dem Spiel.",
+      "Im Workshop bediene ich Claude live, ihr schätzt vorher und prüft nachher; hier laufen aufgezeichnete Antworten.",
+      "In {minutes} Minuten klärst du, welche Antwort belegt ist und welches Dokument fehlt; das Kit nimmst du für zu Hause mit.",
     ],
     start: "Mit dem Fragebogen starten",
     footnote: "Auf dieser Seite läuft keine KI. Claudes Antworten sind Aufzeichnungen vom 26.10.2026.",
   },
   en: {
-    title: "Prove ESG answers with Claude",
+    title: "Three requests reach a winery",
     news: [
       "Since 1 January 2026 Norway's Vinmonopolet caps bottles of still wine under NOK 250 at 420 g; since 27.09.2026 Germany bans “climate neutral” via offsets.",
       "In December 2025 the development bank EBRD lent a bank in Skopje up to 8 million euros for green loans to small and medium-sized firms.",
     ],
     sentences: [
-      "In October 2026 an invented North Macedonian winery must back 21 answers, and 53 % of its sales and a loan depend on them.",
-      "You watch five recorded Claude runs and check each answer yourself: which one is covered, which document is missing?",
-      "At the end you take the skill that teaches your Claude the same check.",
-      "It takes about {minutes} minutes.",
+      "In October 2026 Crvena Zemja, an invented North Macedonian winery, receives three ESG requests about environment, people and governance.",
+      "An importer, marketing and a bank need evidence for 21 answers; 53 % of sales and a solar loan are at stake.",
+      "In the workshop I run Claude live; you predict first and check afterwards.",
+      "Here you check recordings for {minutes} minutes: which answers hold, which documents are missing? Take the kit home.",
     ],
     start: "Start with the questionnaire",
     footnote: "No AI runs on this page. Claude's answers are recordings from 26 October 2026.",

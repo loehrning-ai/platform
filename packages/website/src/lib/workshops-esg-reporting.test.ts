@@ -23,13 +23,22 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       expect(workshop.eyebrow).toBe("Workshop 04 · ESG");
       expect(workshop.summary.length).toBeLessThanOrEqual(160);
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-25");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-29");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.provenance.liveRunAt).toBeUndefined();
       expect(workshop.provenance.aiOutputsRecordedAt).toBe("2026-10-26");
     }
     expect(de.title).toBe("ESG-Berichte mit KI");
     expect(en.title).toBe("ESG reports with AI");
+    expect(de.summary).toContain("Crvena Zemja");
+    expect(en.summary).toContain("Crvena Zemja");
+    expect(de.lede).toMatch(/Tim.+live in Claude.+Raum/);
+    expect(en.lede).toMatch(/Tim.+live in Claude.+room/);
+    for (const workshop of both) {
+      expect(workshop.stageExplainer.body).toContain("ESG");
+      expect(workshop.stageExplainer.body).toContain("Claude");
+      expect(workshop.stageExplainer.body).toContain("Codex");
+    }
   });
 
   it("has the same ten agenda blocks in both locales and follows the run sheet clock", () => {
@@ -104,7 +113,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.kit?.steps[2].input).toBe("Banka Povardarie's screening form for the solar loan.");
     expect(en.kit?.steps[3].note).toBe("Gaps are named, not filled.");
     expect(en.kit?.steps[4].title).toBe("The late invoice");
-    expect(en.kit?.howTo).toContain("About 90 minutes the first time");
+    expect(en.kit?.howTo).toContain("About 90 minutes");
     expect(de.kit?.contents.map((item) => item.name)).toContain("loesungen/LOESUNGEN.md");
     expect(de.kit?.howTo).toContain("crvena-zemja-esg-kit.zip");
   });
@@ -130,7 +139,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     }
     expect(en.description).toContain("Tim demos Claude live on a projector");
     expect(en.accessNote).toContain("a phone or paper is enough");
-    expect(en.kit?.howTo).toContain("About 90 minutes the first time");
+    expect(en.kit?.howTo).toContain("About 90 minutes");
     expect(en.caseStudy.metrics).toEqual([
       { label: "Employees", value: "42" },
       { label: "Requests", value: "3" },

@@ -84,13 +84,17 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
   it("carries the title, teaser and question of the audit workshop", () => {
     expect(en.title).toBe("Audit Preparation with AI: Organize Evidence and Find Gaps");
     expect(de.title).toBe("Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden");
-    // The teaser opens with the deck's real case (A$97,587 refunded, rounded up to "about A$98,000").
-    expect(en.summary).toBe("Deloitte refunded about A$98,000 after a report cited sources that did not exist. An invented firm checks with Claude which file holds up in an audit.");
-    expect(de.summary).toBe("Deloitte zahlte knapp 98.000 A$ zurück, weil ein Bericht Quellen zitierte, die es nicht gab. Eine erfundene Firma prüft mit Claude, welche Datei im Audit hält.");
+    // The teaser starts with the practice company and its audit request.
+    expect(en.summary).toMatch(/^Vardar Works.+eleven files.+eight customer audit requirements/);
+    expect(de.summary).toMatch(/^Vardar Works.+elf Dateien.+acht Anforderungen/);
     for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
     // The lede says who works in Claude (Tim) and what the room does (it predicts).
-    expect(de.lede).toBe("Tim prüft live in Claude, welche von elf Dateien die acht Anforderungen eines Kundenaudits wirklich belegen, und du sagst es vorher.");
-    expect(en.lede).toBe("Tim checks live in Claude which of eleven files really prove a customer's eight audit requests, and you call it first.");
+    expect(de.lede).toMatch(/Tim.+live in Claude.+Raum/);
+    expect(en.lede).toMatch(/Tim.+live in Claude.+room/);
+    for (const workshop of both) {
+      expect(workshop.stageExplainer.body).toContain("Claude");
+      expect(workshop.stageExplainer.body).toContain("Codex");
+    }
     // The question is the deck's "Heute" question, word for word.
     expect(en.question).toBe("Which item is proven, which document is missing?");
     expect(de.question).toBe("Welche Anforderung ist belegt, welches Dokument fehlt?");
@@ -98,7 +102,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
       expect(workshop.slug).toBe(slug);
       expect(workshop.number).toBe("05");
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-28");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-29");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.caseStudy.decisionQuestion).toBe(workshop.question);
       expect(workshop.outcomes).toHaveLength(3);
@@ -108,7 +112,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
   });
 
   it("has the deck plan's sixteen agenda blocks in both locales, adding up to 90", () => {
-    const minutes = [1, 1, 3, 3, 4, 3, 3, 4, 6, 3, 13, 20, 5, 10, 6, 5];
+    const minutes = [1, 3, 1, 3, 4, 3, 3, 4, 6, 3, 13, 20, 5, 10, 6, 5];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);

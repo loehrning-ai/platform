@@ -33,18 +33,17 @@ export function project(c) {
   const side = cwSide(c, {
     project: true,
     projAttrs: s(0, { fx: "pop", win: ".75,1" }),
-    toggle: `<p class="cw-toggle pjv__toggle"${s(3, { fx: "glow", win: "0,.5" })}><span>Code execution</span><i class="pjv__switch"${s(3, { fx: "none", win: ".2,.7", ease: "spring" })}></i></p>`,
   });
   const main = `<div class="pjv"><p class="pjv__crumb">Projects · ${c.t("neu", "new")}</p><h3 class="pjv__title"><span${s(0, { fx: "type", win: ".15,.75", ease: "linear" })}>${esc(c.kit.project)}</span></h3>
 <div class="pjv__grid"><div class="pjv__card"><p class="pjv__h">${c.ico("policy")}Instructions</p><p class="pjv__src"><span class="pjv__f pjv__slot"><i>md</i>${instrName}</span></p>${rules.map((rule, i) => `<p class="pjv__rule${i === 0 ? " pjv__rule--date" : ""}"${s(1, { fx: "pop", win: stagger(i, rules.length, 0.3, 0.45, 1) })} style="--origin:left center">${esc(rule)}</p>`).join("")}</div>
-<div class="pjv__card pjv__card--files"><p class="pjv__h">${c.ico("book")}Project knowledge<em><b${s(2, { fx: "none", win: ".1,1", count: "0,13,0" })}>13</b> files</em></p><div class="pjv__files">${slots}</div></div></div></div>`;
+<div class="pjv__card pjv__card--files"><p class="pjv__h">${c.ico("book")}Project knowledge<em><b${s(2, { fx: "none", win: ".1,1", count: "0,13,0" })}>13</b> files</em></p><div class="pjv__files">${slots}</div></div></div><p class="pjv__capability"${s(3, { fx: "pop", win: "0,.6" })}>Settings → Capabilities<br><b>Code execution and file creation</b> · ${c.t("eingeschaltet", "on")}</p></div>`;
   return section(
     { id: "projekt", label: c.t("Projekt anlegen", "Create the project"), steps: 3, durations: "1700,1700,3200,1300" },
     `${liveHead(c, c.t("Einrichten", "Set up"), [
       [c.t("Neues Projekt", "New project"), 0, "0,.4", 1, "0,.3"],
       [c.t("Anweisungen einfügen", "Paste instructions"), 1, ".05,.4", 2, "0,.3"],
       [c.t("13 Dateien laden", "Upload 13 files"), 2, ".05,.4", 3, "0,.3"],
-      [c.t("Codeausführung an", "Code execution on"), 3, ".1,.5"],
+      ["Settings → Capabilities", 3, ".1,.5"],
     ], c.t("Das Kit wird ein <em>Claude-Projekt</em>", "The kit becomes a <em>Claude project</em>"))}
 <div class="stage pj">
 <div class="kit-folder pjk"><p class="kit-folder__head">${c.ico("folder")}${c.t("ordner/", "files/")}<span class="file__meta" style="margin-left:auto">13</span></p><ol class="pjk__list">${list}</ol><div class="pjk__instr"${s(1, { fx: "dim", win: "0,.4" })}>${file("md", instrName, "")}</div>${job(c, c.t("Ihr erklärt:", "You explain:"), c.t("Warum kommen die Anfragen nicht ins Projekt?", "why do the requests stay out of the project?"), s(2, { fx: "pop", win: ".55,1" }) + ' style="--origin:left center"', "pjk__job")}</div>

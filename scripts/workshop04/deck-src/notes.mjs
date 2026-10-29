@@ -8,48 +8,48 @@
  */
 const note = (title, lines) => [title, ...Object.entries(lines).map(([key, value]) => `${key}: ${value}`)].join("\n");
 
-export const NOTES = {
+const SOURCE_NOTES = {
   de: [
     note("ESG-Berichte mit KI", {
       Time: "30 s",
-      Say: "Willkommen. Heute geht es um einen Satz auf einem Etikett und die Datei, die ihn belegt.",
+      Say: "Ein Weingut bekommt drei Anfragen: vom Importeur, vom Marketing und von der Bank. Alle wollen Antworten aus demselben Ordner. Wir entscheiden, was die Firma davon belegen kann. Ich arbeite in meinem Claude, ihr schätzt und prüft die Quellen.",
       Students: "Ankommen. Abgestimmt wird per Handzeichen, ich klicke die Stimmen ein. Kein Laptop nötig.",
-      Cue: "Vorher: Claude Desktop offen, Skill esg-nachweise unter Customize, Skills eingeschaltet, Kit entpackt auf dem Schreibtisch, START-HIER.md im Texteditor. Ankunft: Der Globus dreht nach Nordmazedonien, ein Bogen läuft nach Deutschland. Dann Pfeil rechts.",
+      Cue: "Vorher: Claude Desktop offen, Kit entpackt, START-HIER.md im Texteditor. Projekt und Codeausführung als Reserve prüfen. Pfeil rechts startet den Fall.",
       Remember: "Kein Wort über Werkzeuge. Erst der Fall.",
     }),
     note("Gastgeber", {
       Time: "1 min",
-      Say: "Ich bin Tim Löhr. Ich war Data Scientist bei Apple und Red Bull. Heute bin ich Data Engineer bei Meta in Warschau und habe loehrning.ai gegründet; von dort kommen Workshop und Kit. Der Fall heute ist erfunden: keine Daten oder Systeme eines Arbeitgebers.",
+      Say: "Ich bin Tim Löhr, früher Data Scientist bei Apple und Red Bull, heute Data Engineer bei Meta in Warschau und Gründer von loehrning.ai. Workshop und Kit kommen von loehrning.ai. Der Fall ist erfunden, ohne Arbeitgeberdaten.",
       Students: "Zuhören.",
       Cue: "Die Linie läuft von allein: Apple, Red Bull, Meta, loehrning.ai.",
       Remember: "Unter einer Minute bleiben.",
     }),
     note("Warum jetzt", {
       Time: "2 min",
-      Say: "ESG heißt Umwelt, Soziales und Unternehmensführung. Kunden und Banken fragen Firmen danach: Strom, Wasser, Beschäftigte, Unfälle, Korruption. Drei echte Meldungen zeigen, warum die Antworten jetzt belegt sein müssen. Seit dem 01.01.2026 verlangt Vinmonopolet in Norwegen von Lieferanten: Stillwein unter 250 NOK nur in Flaschen bis 420 g je 0,75 l. Seit dem 27.09.2026 darf in Deutschland kein Produkt mehr „klimaneutral“ heißen, wenn das auf Ausgleich beruht. Am 18.12.2025 hat die EBRD der Sparkasse Bank Skopje einen Kredit über bis zu 8 Mio. € gegeben, den sie an KMU weiterverleiht, für erneuerbare Energie und Energieeffizienz. Alle drei landen gleich auf dem Tisch eines kleinen Weinguts.",
+      Say: "ESG heißt Umwelt, Soziales und Unternehmensführung. Dazu gehören Strom, Wasser, Beschäftigte, Unfälle und Korruption. Drei echte Meldungen erklären den Druck auf unser Weingut. Seit dem 01.01.2026 verlangt Vinmonopolet von Lieferanten: Stillwein unter 250 NOK in Flaschen bis 420 g je 0,75 l. Seit dem 27.09.2026 ist eine produktbezogene Aussage wie „klimaneutral“ auf Basis von Ausgleich in Deutschland verboten. Die EBRD gab der Sparkasse Bank Skopje im Dezember 2025 einen Kredit über bis zu 8 Mio. € für grüne KMU-Kredite, für erneuerbare Energie und Energieeffizienz.",
       Students: "Handzeichen: Wer verkauft nach Deutschland, wer hat einen grünen Kredit?",
-      Cue: "Ankunft: E, S und G mit Beispielen. Pfeil 1: die Waage bei 420 g. Pfeil 2: das Etikett, „Klimaneutral“ wird gestrichen. Pfeil 3: Bogen London nach Skopje, bis 8 Mio. €. Pfeil 4: die Karten fliegen weg, die Überschrift fragt, was die drei gemeinsam haben, der Satz bleibt.",
+      Cue: "Ankunft: E, S und G erklären. Pfeile 1 bis 3: Waage, Etikett, Kredit. Pfeil 4: Was haben alle drei gemeinsam? Jede Aussage braucht einen Beleg.",
       Remember: "Flaschenregel, Gesetz und Kreditlinie sind echt, Quellen im Anhang 1. Der BGH hat schon 2024 verlangt, dass die Werbung selbst sagt, was „klimaneutral“ meint (I ZR 98/23). Weingut, Importeur und Bank sind erfunden.",
     }),
     note("Das Weingut", {
       Time: "1 min 30 s",
       Say: "Vinarija Crvena Zemja, ein Familienweingut in Kavadarci, im Weinbaugebiet Tikveš. 42 Beschäftigte, 40 Hektar Weinberge, rund 550.000 Flaschen Stillwein im Jahr. 74 % des Umsatzes kommen aus dem Export: 31 % aus Deutschland, 22 % von einem Importeur in Schweden.",
       Students: "Zuhören.",
-      Cue: "Ankunft: das Weingut, die Rebzeilen zeichnen sich. Pfeil 1: drei Zahlen zählen hoch. Pfeil 2: der Umsatzbalken, Deutschland und Schweden zuerst.",
+      Cue: "Weingut vorstellen. Pfeil 1: Beschäftigte, Hektar, Flaschen. Pfeil 2: Umsatz nach Ländern.",
       Remember: "Unter dem Balken steht firmenprofil.md, Z. 12. Selbst die Fakten des Falls haben Datei und Zeile. Das ist die Methode dieser Stunde.",
     }),
     note("Drei Anfragen", {
       Time: "2 min",
       Say: "Heute ist im Fall der 16.10.2026. Wir sitzen im Büro des Weinguts, sieben Tage vor der Rückgabe an Nordvik. Auf dem Tisch liegen drei Anfragen. Der Importeur in Göteborg schickt 8 Fragen, Rückgabe am 23.10.; Antworten ohne Nachweis zählt er nicht. Nordvik bietet die Weine bei Vinmonopolet in Norwegen an; dort gilt die 420-g-Regel. Was die Regel nicht erfüllt, kann Nordvik dort nicht anbieten. Das Marketing des Weinguts will 7 Aussagen auf neue Etiketten für Deutschland drucken, nach dem 27.09. Die Bank in Skopje braucht 6 Felder für den Solarkredit über 8.550.000 Denar, jede Schätzung gekennzeichnet.",
       Students: "Per Zuruf: Welche Anfrage beantwortet ihr zuerst?",
-      Cue: "Ankunft: die Zeitleiste Oktober, 16.10. ist markiert. Pfeil 1: Umschlag aus Schweden mit der 420-g-Regel. Pfeil 2: Umschlag vom Marketing mit dem UWG. Pfeil 3: Umschlag der Bank mit der EBRD. Pfeil 4: 8, 7 und 6 werden 21 Antworten in einem Ordner, 53 % des Umsatzes und ein Kredit.",
+      Cue: "Stichtag zeigen: 16.10. Pfeile 1 bis 3: Importeur, Marketing, Bank. Pfeil 4: 21 Antworten aus einem Ordner, 53 % des Umsatzes und ein Kredit.",
       Remember: "Antwort: Nordvik zuerst, Frist 23.10. Aber alle drei fragen nach denselben Fakten, Strom steht in allen drei. Deshalb ein Ordner, und in Schritt 4 ein Register.",
     }),
     note("Heute", {
       Time: "2 min",
       Say: "Die Frage dieser Stunde: Welche Antwort ist belegt, und welches Dokument fehlt? Darunter das Lernziel. Vier Stationen: erst die Regel an einem Satz, dann sucht ihr auf Papier, dann zeige ich Claude live an den drei Anfragen, zum Schluss Register und Nachreichung. Ihr seid heute das Büro des Weinguts. Claude bediene ich, in Claude Desktop am Beamer. Die Leiste oben auf jeder Claude-Folie zeigt, wo ich in Claude gerade bin; ich lese sie vor, bevor ich wechsle. Ihr schätzt vor jedem Lauf das Ergebnis und prüft danach die zitierte Zeile. Zu Hause macht ihr dasselbe mit dem Kit.",
       Students: "Mitlesen. Stift und Papier reichen.",
-      Cue: "Ankunft: die Frage und eure Rolle, das Büro des Weinguts. Pfeil 1: das Lernziel, fünf Teile werden unterstrichen. Pfeil 2: Lernziel geht, vier Stationen. Pfeil 3: So arbeiten wir, meine vier Klicks. Pfeil 4: eure Schleife, das Kit.",
+      Cue: "Frage vorlesen. Pfeil 1: Lernziel. Pfeil 2: vier Stationen. Pfeil 3: meine Claude-Schritte, vor jedem Wechsel laut lesen. Pfeil 4: schätzen, prüfen, Kit für zu Hause.",
       Remember: "Klar sagen: Heute braucht ihr keinen Laptop. Wer mittippt, verpasst die Prüfung der Zeile.",
     }),
     note("Die Regel: ein Satz gegen seine Datei", {
@@ -78,7 +78,7 @@ export const NOTES = {
       Say: "Jetzt geht der Ordner zu Claude. Ich lege das Projekt live an: Anweisungen, 13 Dateien, Codeausführung. Die Anfragen kommen nicht ins Projekt.",
       Students: "Per Zuruf: Warum kommen die Anfragen nicht ins Projekt?",
       Cue: "Vor dem Wechsel: Leiste 1 bis 4 laut vorlesen. Cmd+Tab zu Claude Desktop: 1 Projects, „New Project“, Name „Crvena Zemja Nachweise“. 2 „Set project instructions“: den ganzen Text aus projektanweisungen.md einfügen, „Save instructions“. 3 Bei Project knowledge auf „+“, die 13 Dateien aus ordner/ wählen. 4 Settings, Capabilities: „Code execution and file creation“ ist an. Zurück am Deck: Pfeil 1 Anweisungen, Pfeil 2 Dateien und die Ihr-erklärt-Zeile, Pfeil 3 Schalter.",
-      Remember: "Die Anfragen fragen, sie belegen nichts; sie kommen in jedem Schritt an die Nachricht. Ein fertiges Projekt als Reserve anlegen, falls der Upload hängt. Lädt eine .md-Datei nicht, in .txt umbenennen. Vor echten Firmendaten: Datenschutz in den Einstellungen prüfen.",
+      Remember: "Die Anfragen fragen, sie belegen nichts; sie kommen in jedem Schritt an die Nachricht. Ein fertiges Projekt als Reserve anlegen, falls der Upload hängt. Lädt eine .md-Datei nicht, in .txt umbenennen. Vor echten Firmendaten: Datenschutz in den Einstellungen prüfen. Bei Zugangssperre, Limit oder Ausfall: /demos/esg-berichte-mit-ki öffnen, passenden Schritt wählen, als Aufzeichnung benennen. Danach zurück zum Deck, Quellen prüfen.",
     }),
     note("Schritt 1: Fragebogen des Importeurs", {
       Time: "7 min",
@@ -127,7 +127,7 @@ export const NOTES = {
       Say: "Am 23.10. geht an Nordvik: jede Antwort mit Datei und Zeile, jede Lücke mit dem Dokument, das fehlt. Kit, Skill und Demo gehen mit nach Hause. Zu Hause macht ihr die fünf Schritte selbst, mit eurem Claude und denselben Prompts. Den Skill über claude.ai/customize/skills hochladen: „+“, „Create skill“, „Upload a skill“. Nie echte Dateien mit den Übungsdateien mischen.",
       Students: "QR-Code scannen. Zu Hause: Kit entpacken, Projekt anlegen, Prompts 1 bis 5.",
       Cue: "Ankunft: der Satz zu Nordvik, dann Kit, Skill und Demo, der QR-Code, die Zeile „Zu Hause“. Pfeil 1: Ein Mensch prüft und unterschreibt jede Antwort.",
-      Remember: "Stichtag bei jeder Arbeitssitzung ändern. Die Demo läuft im Browser, ohne KI.",
+      Remember: "Übungsdatum bleibt 16.10.2026. Für eigene Fälle den Stichtag ändern. Die Demo läuft im Browser, ohne KI.",
     }),
     note("Anhang: Quellen", { Say: "Nur auf Nachfrage. Escape führt zurück zur Folie, von der du kamst." }),
     note("Anhang: Begrenzung in der Wertschöpfungskette", { Say: "Nur auf Nachfrage: Was ein Kunde ab 2027 verlangen darf, und was davon unberührt bleibt." }),
@@ -136,7 +136,7 @@ export const NOTES = {
   en: [
     note("ESG reports with AI", {
       Time: "30 s",
-      Say: "Welcome. Today is about one sentence on a label and the file that proves it.",
+      Say: "One winery gets three requests: from its importer, its marketing team and its bank. All need answers from the same folder. We decide which answers the company can prove. I work in my Claude; you predict and check the sources.",
       Students: "Settle in. You vote by show of hands; I click the votes in. No laptop needed.",
       Cue: "Before: Claude Desktop open, skill esg-nachweise switched on under Customize, Skills, the kit unzipped on the desktop, START-HERE.md open in a text editor. On arrival the globe turns to North Macedonia and an arc runs to Germany. Then arrow right.",
       Remember: "No word about tools yet. The case first.",
@@ -202,7 +202,7 @@ export const NOTES = {
       Say: "Now the folder goes to Claude. I create the project live: instructions, 13 files, code execution. The requests do not go into the project.",
       Students: "Call it out: why do the requests stay out of the project?",
       Cue: "Before switching: read strip items 1 to 4 out loud. Cmd+Tab to Claude Desktop: 1 Projects, “New Project”, name “Crvena Zemja Evidence”. 2 “Set project instructions”: paste the whole of project-instructions.md, “Save instructions”. 3 Project knowledge “+”: pick the 13 files from files/. 4 Settings, Capabilities: “Code execution and file creation” is on. Back on the deck: Arrow 1 instructions, arrow 2 files and the you-explain line, arrow 3 switch.",
-      Remember: "The requests ask, they prove nothing; they go into the message in every step. Keep a finished project as a backup in case the upload stalls. If a .md file does not upload, rename it to .txt. Before real company data: check the privacy settings.",
+      Remember: "The requests ask, they prove nothing; they go into the message in every step. Keep a finished project as a backup in case the upload stalls. If a .md file does not upload, rename it to .txt. Before real company data: check the privacy settings. If access, usage limits or an outage block Claude: open /en/demos/esg-berichte-mit-ki, select the matching step and identify it as a recording. Return to the deck to check sources.",
     }),
     note("Step 1: The importer's questionnaire", {
       Time: "7 min",
@@ -230,7 +230,7 @@ export const NOTES = {
       Say: "The three requests ask for the same facts. A register keeps all 21 answers in one place, as an Excel file with three sheets.",
       Students: "Hands up: how many of the 21 answers are COVERED? Before Claude's list, call it out: which missing document blocks the most answers?",
       Cue: "Before switching: read strip items 1 to 4 out loud; 1 to 3 already ran at the end of step 3 (new chat, the three files from requests/, prompt 4). On the deck: vote in four ranges, one click per hand. Cmd+Tab to Claude Desktop: open the chat of prompt 4. 4 When evidence_register.xlsx appears, open it and show the sheets Register, VSME and Request. Back on the deck: Arrow 1 prompt sent, your prediction stays on the right. Arrow 2 21 tiles, 9 COVERED, the ring on 6 to 10. Arrow 3 VSME B1 to B11, the your-guess line appears. Arrow 4 what to request first.",
-      Remember: "VSME is the EU's voluntary standard, B1 to B11 its basic module; B1 is a GAP because no file records the module and report type. The September invoice is on top: eight answers wait for it. Check whether C6 still says “only” in the register. If the file is not there after 5 minutes, continue on the slide and send step 5 in this chat once it is. If the preview does not open, download the file.",
+      Remember: "VSME is the EU's voluntary standard, B1 to B11 its basic module; B1 is a GAP because no file records the module and report type. The September invoice is on top: six answers wait for it. Check whether C6 still says “only” in the register. If the file is not there after 5 minutes, continue on the slide and send step 5 in this chat once it is. If the preview does not open, download the file.",
     }),
     note("Step 5: The late invoice", {
       Time: "5 min",
@@ -251,10 +251,14 @@ export const NOTES = {
       Say: "On 23.10. Nordvik gets every answer with file and line, every gap with the missing document named. Kit, skill and demo go home with you. At home you do the five steps yourselves, with your own Claude and the same prompts. Upload the skill at claude.ai/customize/skills: “+”, “Create skill”, “Upload a skill”. Never mix real files with the training files.",
       Students: "Scan the QR code. At home: unzip the kit, create the project, prompts 1 to 5.",
       Cue: "On arrival: the Nordvik sentence, then kit, skill and demo, the QR code, the “At home” line. Arrow 1: a person checks and signs every answer.",
-      Remember: "Change the reference date in every working session. The demo runs in the browser, without AI.",
+      Remember: "The exercise date stays 16.10.2026. Change it for your own cases. The demo runs in the browser, without AI.",
     }),
     note("Appendix: Sources", { Say: "Only on a question. Escape returns to the slide you came from." }),
     note("Appendix: Value-chain cap", { Say: "Only on a question: what a customer may ask for from 2027, and what stays untouched." }),
     note("Appendix: The case", { Say: "Only on a question: the facts of the case with their lines." }),
   ],
 };
+
+// Establish company and decision before the host biography and the ESG primer.
+const ORDER = [0, 3, 4, 1, 2, ...Array.from({ length: 15 }, (_, i) => i + 5)];
+export const NOTES = Object.fromEntries(Object.entries(SOURCE_NOTES).map(([lang, notes]) => [lang, ORDER.map((i) => notes[i])]));

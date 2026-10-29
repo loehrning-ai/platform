@@ -11,7 +11,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "crvena-zemja-nachweisprobe.zip",
     title: "Das Nachweisprobe-Kit",
-    lead: "Dieselben drei ESG-Anfragen und 13 Firmendateien wie im Workshop, fünf Prompts und ein Skill für deinen eigenen Claude.",
+    lead: "Ein Weingut muss Importeur, Marketing und Bank antworten. Mit 13 Dateien prüfst du zu Hause, welche Aussage einen Nachweis hat.",
     stats: [
       { value: "13", label: "Dateien" },
       { value: "5", label: "Prompts" },
@@ -73,11 +73,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Du brauchst Claude mit Codeausführung und Dateierstellung, jeder Plan. Beim ersten Mal etwa 90 Minuten. Dasselbe Kit auf Englisch: crvena-zemja-esg-kit.zip, auf der englischen Seite und in der englischen Demo.",
+      "Im Workshop führt Tim seinen Claude vor; du schätzt und prüfst die Quellen. Zu Hause: Kit entpacken, START-HIER.md lesen und die fünf Prompts in Claude ausführen. Eine Anleitung für Codex oder Claude Code steht ebenfalls dort. Etwa 90 Minuten. Englische Ausgabe: crvena-zemja-esg-kit.zip.",
     fictionalNote:
       "Alles im Kit ist erfunden, nur die zitierten Gesetze, Standards und Regeln sind echt.",
     contents: [
-      { name: "START-HIER.md", description: "Durchsicht, Einrichtung und fünf Prompts zum Kopieren." },
+      { name: "START-HIER.md", description: "Einrichtung in Claude oder Codex, Durchsicht und fünf Prompts." },
       { name: "nachweisprobe.md", description: "Die vier Prüfungen und drei Status auf einer Seite." },
       { name: "projektanweisungen.md", description: "Der Stichtag und die drei Regeln für Claude." },
       { name: "ordner/", description: "13 Firmendateien, so unordentlich wie eine echte Ablage." },
@@ -90,7 +90,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "crvena-zemja-esg-kit.zip",
     title: "The evidence check kit",
-    lead: "The same three ESG requests and 13 company files as in the workshop, five prompts and a skill for your own Claude.",
+    lead: "A winery must answer its importer, marketing team and bank. With 13 files you check at home which claim has evidence.",
     stats: [
       { value: "13", label: "files" },
       { value: "5", label: "prompts" },
@@ -152,11 +152,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "You need Claude with code execution and file creation, any plan. About 90 minutes the first time. The same kit in German: crvena-zemja-nachweisprobe.zip, on the German page and in the German demo.",
+      "In the workshop Tim runs his Claude; you predict and check the sources. At home: unzip the kit, read START-HERE.md and run the five prompts in Claude. It also includes a route for Codex or Claude Code. About 90 minutes. German edition: crvena-zemja-nachweisprobe.zip.",
     fictionalNote:
       "Everything in the kit is invented; only the laws, standards and rules quoted are real.",
     contents: [
-      { name: "START-HERE.md", description: "Review, setup and five prompts to copy." },
+      { name: "START-HERE.md", description: "Setup in Claude or Codex, review and five prompts." },
       { name: "evidence-check.md", description: "The four checks and three statuses on one page." },
       { name: "project-instructions.md", description: "The reference date and the three rules for Claude." },
       { name: "files/", description: "13 company files, as messy as a real filing system." },

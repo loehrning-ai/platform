@@ -23,7 +23,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { claudeUiMarkdown } from "../../packages/website/src/lib/claude-ui.ts";
 import { assertClean, assertPlainPng, listFiles } from "./export-esg-passport.mjs";
-import { buildKitArchive } from "./kit-archive.mjs";
+import { buildKitArchive, readKitArchive } from "./kit-archive.mjs";
+import { prepareCaseGuide, prepareStartGuide } from "./kit-guide.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
@@ -148,8 +149,9 @@ export function kitEntries(locale, sourceRoot) {
     if (name === KITS[locale].start) {
       const text = bytes.toString("utf8");
       if (text.split(CLAUDE_UI_PLACEHOLDER).length !== 2) throw new Error(`${name} must hold ${CLAUDE_UI_PLACEHOLDER} exactly once`);
-      bytes = Buffer.from(text.replace(CLAUDE_UI_PLACEHOLDER, claudeUiMarkdown(locale, SKILL_NAME).trimEnd()));
+      bytes = Buffer.from(prepareStartGuide(locale, text.replace(CLAUDE_UI_PLACEHOLDER, claudeUiMarkdown(locale, SKILL_NAME).trimEnd())));
     }
+    if (name.endsWith(".md")) bytes = Buffer.from(prepareCaseGuide(locale, name, bytes.toString("utf8")));
     if (name.endsWith(".png")) assertPlainPng(name, bytes);
     return [name, bytes];
   });
@@ -178,6 +180,24 @@ export function buildKits(sourceRoot) {
     de: buildKitArchive(de, { isoDate: KIT_V3_RELEASE_DATE, prefix: `${KITS.de.name}/` }),
     en: buildKitArchive(en, { isoDate: KIT_V3_RELEASE_DATE, prefix: `${KITS.en.name}/` }),
   };
+}
+
+/** Refresh repo-owned copy without requiring the private authoring checkout. */
+export function refreshPublishedKits() {
+  return Object.fromEntries(["de", "en"].map((locale) => {
+    const entries = readKitArchive(readFileSync(zipPath(locale)), { prefix: `${KITS[locale].name}/` });
+    const refreshed = entries.map(([name, bytes]) => {
+      if (name === KITS[locale].start) {
+        const currentUi = bytes.toString("utf8").replace(/(## (?:Claude einrichten|Set up Claude)\n)[\s\S]*?(?=\n## (?:Mit Codex|With Codex)|$)/, (_, heading) => `${heading}\n${claudeUiMarkdown(locale, SKILL_NAME).trimEnd()}\n`);
+        bytes = Buffer.from(prepareStartGuide(locale, currentUi));
+      }
+      if (PLATFORM_FILES[locale][name]) bytes = readPlainFile(WEBSITE, PLATFORM_FILES[locale][name]);
+      if (name.endsWith(".md")) bytes = Buffer.from(prepareCaseGuide(locale, name, bytes.toString("utf8")));
+      assertClean(`${zipName(locale)}/${name}`, bytes);
+      return [name, bytes];
+    });
+    return [locale, buildKitArchive(refreshed, { isoDate: KIT_V3_RELEASE_DATE, prefix: `${KITS[locale].name}/` })];
+  }));
 }
 
 const ROW_SOURCE = {
@@ -215,11 +235,12 @@ export function manifestWithKits(manifestText, zips) {
 function main() {
   const args = process.argv.slice(2);
   const check = args.includes("--check");
+  const refresh = args.includes("--refresh-published");
   const source = args.find((arg) => !arg.startsWith("--"));
-  if (!source || !existsSync(path.join(source, KITS.de.name))) {
-    throw new Error("Usage: node scripts/workshop04/kit-v3.mjs <course-kit-v3-folder> [--check]");
+  if (!refresh && (!source || !existsSync(path.join(source, KITS.de.name)))) {
+    throw new Error("Usage: node scripts/workshop04/kit-v3.mjs <course-kit-v3-folder> [--check], or --refresh-published [--check]");
   }
-  const zips = buildKits(path.resolve(source));
+  const zips = refresh ? refreshPublishedKits() : buildKits(path.resolve(source));
   const manifestPath = path.join(REPO_ROOT, "ASSET_MANIFEST.json");
   const manifestBefore = readFileSync(manifestPath, "utf8");
   const manifestAfter = manifestWithKits(manifestBefore, zips);

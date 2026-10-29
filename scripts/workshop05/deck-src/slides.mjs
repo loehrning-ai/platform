@@ -146,7 +146,7 @@ function host(d, c) {
 <div class="host__career" role="group" aria-label="${esc(h.careerLabel)}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true"${s(0, { win: "0.35,0.9", fx: "line" })}></i><ol class="host__stops">${stops}</ol></div>
 <p class="host__msc"${s(0, { win: "0.5,0.85" })}>${ico("cap")}<b>${esc(h.degree)}</b><span>${esc(h.school)}</span></p>
 <p class="host__line"${s(0, { win: "0.6,0.95" })}>${ico("shield")}<span>${esc(h.line)}</span></p></div>
-${foot(c, 2)}</div>`;
+${foot(c, 3)}</div>`;
 }
 
 /* The stage is 1696 × 790 on the 1920 × 1080 canvas; slides that draw lines or fly things between
@@ -169,10 +169,10 @@ function cwSide(c, o = {}) {
   const k = c.project;
   const m = o.motion ?? {};
   const recent = o.chat ? `<p class="cw-sec">Recents</p><p class="cw-row" data-on>${ico("chat")}${esc(o.chat)}</p>` : "";
-  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${ico("plus")}New chat</p><p class="cw-nav">${ico("chat")}Chats</p><p class="cw-nav" data-on>${ico("folder")}Projects</p><p class="cw-sec">Project</p><div class="cw-proj"${m.proj ?? ""}><b>${esc(k.project)}</b><span>${esc(k.projectSub)}</span>${m.projGlow ? `<i class="cw-proj__glow"${m.projGlow}></i>` : ""}</div>${recent}<p class="cw-toggle" data-on data-keep${m.code ?? ""}><span>Code execution</span><i></i></p></aside>`;
+  return `<aside class="cw-side"><p class="cw-brand">Claude</p><p class="cw-nav cw-nav--new">${ico("plus")}New chat</p><p class="cw-nav">${ico("chat")}Chats</p><p class="cw-nav" data-on>${ico("folder")}Projects</p><p class="cw-sec">Project</p><div class="cw-proj"${m.proj ?? ""}><b>${esc(k.project)}</b><span>${esc(k.projectSub)}</span>${m.projGlow ? `<i class="cw-proj__glow"${m.projGlow}></i>` : ""}</div>${recent}</aside>`;
 }
 
-/** Slide 03: the real case. A report page with references that do not exist, a quote nobody said and the
+/** Slide 04: the real case. A report page with references that do not exist, a quote nobody said and the
     model it names; then the refund drains out of the fee bar into the counter. */
 function realCase(d, c) {
   const k = c.case;
@@ -221,14 +221,14 @@ ${drain}
 ${coins}
 <p class="moral case__moral"${s(5, { fx: "blur", win: "0,.8" })}>${em(k.moral)}</p>
 </div>
-${foot(c, 3, k.source)}`;
+${foot(c, 4, k.source)}`;
 }
 
 /* Company slide geometry, in stage pixels: the Tannwald card (top right), the wire into Vardar's card, the
    three flows that land on the wire's lane, the contract chip and the short explanation of an audit. */
 const CO = { card: [0, 0, 700], cust: [1180, 0, 516, 136], flow: (i) => [756, 212 + i * 66], flowW: 300, contract: [1180, 168] };
 
-/** Slide 04: who Vardar is. An office in Skopje lights up, 120 people fill in, Tannwald's calls, emails and customer data flow in; then what an audit is. */
+/** Slide 02: who Vardar is. An office in Skopje lights up, 120 people fill in, Tannwald's calls, emails and customer data flow in; then what an audit is. */
 function company(d, c) {
   const k = c.company;
   // the office: 8 × 3 windows, a door, the sign; a hill line behind it
@@ -271,7 +271,7 @@ ${flows}
 <p class="pill co__contract" style="left:${CO.contract[0]}px;top:${CO.contract[1]}px"${s(3, { fx: "pop", win: "0,.4" })}>${ico("file")}${esc(k.contract)}<i class="co__glow"${s(3, { fx: "glow", win: ".3,.7" })}></i></p>
 <div class="co__audit surface surface--accent"${s(3, { fx: "pop", win: ".15,.6" })} style="--origin:left top"><p class="co__kick">${ico("search")}${esc(k.kicker)}</p><p class="co__line">${esc(k.line)}</p><p class="src co__src"${s(3, { fx: "fade", win: ".5,.9" })}>${esc(k.source)}</p></div>
 </div>
-${foot(c, 4)}`;
+${foot(c, 2)}`;
 }
 
 /** Slide 05: our case. Hamburg sends a letter to Skopje; it flies on into the card, opens and deals out eight items. */
@@ -468,7 +468,7 @@ function project(d, c) {
   const [ix, iy] = PJ.row(1);
   const source = `<span class="pj-fly pj-fly--src" style="left:${PJ.src[0]}px;top:${PJ.src[1]}px;--dx:${ix - PJ.src[0]}px;--dy:${iy - PJ.src[1]}px;--lift:90px;--s:1.25"${s(1, { fx: "arc", win: "0,.4" })}>${ico("file")}${esc(fill(k.from, { file: k.instructions }))}</span>`;
   const rules = d.instructionLines.map((line, i) => `<p${s(1, { fx: "type", ease: "linear", win: stagger(i, d.instructionLines.length, 0.28, 0.42, 1) })}>${esc(line)}</p>`).join("");
-  const side = cwSide(c, { motion: { proj: s(0, { fx: "pop", win: ".35,.8" }), projGlow: s(0, { fx: "glow", win: ".6,1", out: 1, outWin: "0,.3" }), code: s(3, { fx: "none", win: ".1,.4" }) } });
+  const side = cwSide(c, { motion: { proj: s(0, { fx: "pop", win: ".35,.8" }), projGlow: s(0, { fx: "glow", win: ".6,1", out: 1, outWin: "0,.3" }) } });
   const main = `<div class="cw-main"><div class="cw-thread pj">
 <p class="pj__head">${ico("folder")}<b>${esc(k.project)}</b></p>
 <div class="pj__box"><p class="pj__label">${esc(k.instructionsHead)}</p><div class="pj__text">${rules}</div></div>
@@ -484,7 +484,8 @@ function project(d, c) {
 <div class="stage proj">
 <div class="proj__left">
 <div class="kit-folder"${s(0, { fx: "fly", win: "0,.5" })} style="--dx:-80px;--s:.9"><p class="kit-folder__head">${ico("folder")}${esc(k.kit)}</p>${kitRows}</div>
-${job(k.job, `${s(2, { fx: "pop", win: ".85,1", out: 4, outWin: "0,.3" })} style="--origin:left center"`)}
+${job(k.job, `${s(2, { fx: "pop", win: ".85,1", out: 3, outWin: "0,.3" })} style="--origin:left center"`)}
+<p class="proj__capability"${s(3, { fx: "pop", win: "0,.6", out: 4, outWin: "0,.3" })}>${ico("check")}<span>${esc(k.capability)}</span></p>
 <figure class="qr proj__qr"${s(4, { fx: "pop", win: "0,.6" })}><img src="./assets/${c.qr.kit}" width="200" height="200" alt="" /><figcaption>${esc(k.qr)}</figcaption></figure>
 </div>
 <div class="cw proj__cw"${s(0, { fx: "fly", win: ".1,.6" })} style="--dx:120px;--s:.96">${cwBar([k.project])}<div class="cw-body">${side}${main}</div></div>
@@ -823,7 +824,7 @@ const SOURCE_TITLES = {
 
 export const sources = (lang) => [
   [SOURCE_TITLES[lang][0], "https://eur-lex.europa.eu/eli/reg/2016/679/oj"],
-  [SOURCE_TITLES[lang][1], "https://www.iso.org/standard/88984.html"],
+  [SOURCE_TITLES[lang][1], "https://www.iso.org/standard/19011"],
   [SOURCE_TITLES[lang][2], "https://www.iso.org/standard/27001"],
   ["Anthropic, Reduce hallucinations", "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"],
   ["Anthropic Privacy Center 7996890", "https://privacy.claude.com/en/articles/7996890"],
@@ -846,9 +847,9 @@ ${foot(c, "A3")}`;
 /** The slides in deck order: id, presses after the first, milliseconds per press, minutes, body. */
 export const SLIDES = [
   { id: "cover", steps: 0, ms: [2600], minutes: 1, body: cover },
+  { id: "company", steps: 3, ms: [1600, 2000, 2200, 1600], minutes: 3, body: company },
   { id: "host", steps: 0, ms: [2200], minutes: 1, body: host },
   { id: "case", steps: 5, ms: [1900, 1500, 1400, 1100, 2400, 1300], minutes: 3, body: realCase },
-  { id: "company", steps: 3, ms: [1600, 2000, 2200, 1600], minutes: 3, body: company },
   { id: "request", steps: 5, ms: [2000, 1900, 2300, 2200, 1800, 1000], minutes: 4, body: request },
   { id: "draft", steps: 2, ms: [2400, 1200, 1500], minutes: 3, body: draft },
   { id: "today", steps: 3, ms: [1600, 2200, 2400, 2200], minutes: 3, body: today },

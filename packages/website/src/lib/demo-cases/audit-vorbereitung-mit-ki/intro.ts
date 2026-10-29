@@ -16,27 +16,29 @@ export const TAKEHOME_IN_STAGE = true;
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "Welche Anforderung ist belegt?",
+    title: "Acht Nachweise vor dem Audit",
     news: [
       "Im Oktober 2025 zahlte Deloitte dem australischen Arbeitsministerium 97.587 A$ von rund 440.000 A$ zurück, weil ein Bericht Quellen zitierte, die es nicht gab.",
     ],
     sentences: [
-      "Die erfundene Firma Vardar Works in Skopje soll ihrem Kunden Tannwald bis 25. November acht Nachweise schicken, das Audit ist am 10. Dezember.",
-      "Du prüfst mit vier Fragen, welche Datei im Ordner wirklich belegt, was verlangt ist, und welcher Satz im Antwortentwurf des Geschäftsführers hält.",
-      "Du nimmst die Lückenliste, fertige Anfragen und einen Skill für Claude mit.",
-      "Das dauert etwa {minutes} Minuten, und deine Dateien bleiben in deinem Browser.",
+      "Vardar Works, eine erfundene Firma in Skopje, verarbeitet Kundendaten für Tannwald und soll bis 25. November acht Nachweise zur Datensicherheit liefern.",
+      "Das Audit ist am 10. Dezember: Reichen die Dateien im Ordner für die Zusagen des Geschäftsführers?",
+      "Im Workshop bediene ich Claude live, ihr schätzt und prüft; hier vergleichst du Aufzeichnungen mit den Originaldateien.",
+      "In {minutes} Minuten prüfst du Zitat, Zeitraum, Umfang und Freigabe und nimmst das Kit für zu Hause mit.",
     ],
     start: "Ordner ansehen und schätzen",
+    footnote: "Auf dieser Seite läuft keine KI. Claudes Antworten sind Aufzeichnungen; eigene Dateien bleiben im Browser.",
   },
   en: {
-    title: "Which request is covered?",
+    title: "Eight pieces of evidence before the audit",
     news: ["In October 2025 Deloitte refunded A$97,587 of about A$440,000 to the Australian employment department, because a report cited sources that did not exist."],
     sentences: [
-      "The invented firm Vardar Works in Skopje owes its customer Tannwald eight pieces of evidence by 25 November, before the audit on 10 December.",
-      "You check with four questions which file really proves what is asked, and which sentence of the managing director's draft holds.",
-      "You take home the gap list, ready-made requests and a skill for Claude.",
-      "It takes about {minutes} minutes, and your files stay in your browser.",
+      "Vardar Works, an invented firm in Skopje, processes data for Tannwald and must provide eight security documents by 25 November.",
+      "The audit is on 10 December: do those files support the managing director's promises?",
+      "In the workshop I run Claude live; you predict and check, while this page shows recordings beside the source files.",
+      "In {minutes} minutes you check quote, period, scope and approval and take the kit home.",
     ],
     start: "Look at the folder and guess",
+    footnote: "No AI runs on this page. Claude's answers are recordings; your files stay in your browser.",
   },
 };
