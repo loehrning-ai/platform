@@ -184,7 +184,7 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     for (const item of kit.contents) expect(count(item.description), item.description).toBeLessThanOrEqual(6);
     expect(count(kit.fictionalNote)).toBeLessThanOrEqual(25);
     // The key prints the same tallies the strips show.
-    expect(edition.key).toMatch(locale === "de" ? /\b8 von 11\b/ : /\b8 of 11\b/);
+    expect(edition.key).toMatch(locale === "de" ? /\b7 von 11\b/ : /\b7 of 11\b/);
     expect(edition.key).toMatch(locale === "de" ? /2 BELEGT, 1 SCHWACH, 5 LÜCKE/ : /2 COVERED, 1 WEAK, 5 GAP/);
   });
 

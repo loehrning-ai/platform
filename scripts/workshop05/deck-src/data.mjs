@@ -115,7 +115,7 @@ export const NAIVE = {
   R5: { file: "training-records_2026.csv", failsAt: "quote" },
   R6: { file: "incident-log_2026.csv", failsAt: null },
   R7: { file: "backup-report_2026-10.txt", failsAt: "quote" },
-  R8: { file: "infosec-policy_v4_DRAFT.md", failsAt: "approval" },
+  R8: { file: "infosec-policy_v4_DRAFT.md", failsAt: "date" },
 };
 
 export function deckData(lang = "en") {

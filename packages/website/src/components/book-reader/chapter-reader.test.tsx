@@ -196,6 +196,27 @@ const NEXT_CHAPTER: BookChapterMeta = {
 };
 
 describe("ChapterReader focus mode and compact reader bar", () => {
+  it.each([
+    { locale: "de" as const, navigation: "Kapitelnavigation", label: "Weiter" },
+    { locale: "en" as const, navigation: "Chapter navigation", label: "Next" },
+  ])("includes the visible $locale compact next label in its accessible name", ({ locale, navigation, label }) => {
+    render(
+      <ChapterReader
+        book={BOOK}
+        chapter={CHAPTER}
+        neighbours={{ prev: null, next: NEXT_CHAPTER }}
+        allChapters={[CHAPTER.meta, NEXT_CHAPTER]}
+        locale={locale}
+        bookTitle="AI in German SMEs"
+        relatedResourceLabel="EU AI Act"
+      />,
+    );
+    const next = within(screen.getByRole("navigation", { name: navigation }))
+      .getByRole("link", { name: /Method/ });
+    expect(next).toHaveTextContent(label);
+    expect(next).toHaveAccessibleName(new RegExp(`^${label}\\b`));
+  });
+
   it("marks the route wrapper as reader focus mode in the server markup", () => {
     render(
       <ChapterReader
@@ -286,9 +307,10 @@ describe("ChapterReader focus mode and compact reader bar", () => {
       within(bar!).queryByRole("link", { name: "Kapitelübersicht" }),
     ).toBeNull();
 
-    // The chapter navigation keeps its own, richer next link untouched.
+    // The chapter navigation names its visible compact action and target.
     expect(
-      screen.getByRole("link", { name: "Nächstes Kapitel: Method" }),
+      within(screen.getByRole("navigation", { name: "Kapitelnavigation" }))
+        .getByRole("link", { name: "Weiter: Method" }),
     ).toHaveAttribute("href", "/buecher/ki-arbeitsalltag/02_methodik");
   });
 });

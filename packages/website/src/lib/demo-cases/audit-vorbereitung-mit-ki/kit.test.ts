@@ -111,7 +111,7 @@ describe("W05 engine against the answer key", () => {
     expect(tally(results)).toEqual({ covered: 2, weak: 1, gap: 5 });
   });
 
-  it.each(["en", "de"] as const)("%s key, step 1: 8 of 11 files pass, exactly the files of the key", (locale) => {
+  it.each(["en", "de"] as const)("%s key, step 1: 7 of 11 files pass, exactly the files of the key", (locale) => {
     const rows = indexRows(FOLDER_FILES.map(kitDoc), context.windowStart);
     const key = keyIndex(locale);
     expect(key).toHaveLength(11);
@@ -121,7 +121,7 @@ describe("W05 engine against the answer key", () => {
       expect(found?.approval.pass, `${row.file} APPROVAL`).toBe(row.approval);
       if (locale === "en") expect(found?.doc.type, `${row.file} type`).toBe(row.type);
     }
-    expect(rows.filter((row) => row.passes)).toHaveLength(8);
+    expect(rows.filter((row) => row.passes)).toHaveLength(7);
   });
 
   it("computes 295 days, 1 of 4 systems, 25 of 120, 30.5 hours, 638 days", () => {
@@ -137,8 +137,11 @@ describe("W05 engine against the answer key", () => {
     expect(at("R8").tests.date.daysShort).toBe(638);
   });
 
-  it("the naive name links fail where the key says: R8 v4 on APPROVAL", () => {
+  it("the R8 draft has neither a qualifying policy date nor approval", () => {
     const r8 = ITEMS.find((item) => item.id === "R8")!;
     expect(r8.naive).toBe("infosec-policy_v4_DRAFT.md");
+    const indexed = indexRows([kitDoc(r8.naive)], context.windowStart)[0];
+    expect(indexed?.date.pass).toBe(false);
+    expect(indexed?.approval.pass).toBe(false);
   });
 });

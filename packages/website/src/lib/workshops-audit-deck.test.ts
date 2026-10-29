@@ -105,8 +105,8 @@ describe.each(EDITIONS)("W05 deck, $lang edition", (edition) => {
 
   it("carries the kit's numbers", () => {
     const text = flat(doc.body.textContent ?? "");
-    // "8/ 11" is the evidence index result on Step 1 (8 of 11 files pass); "8 / 11" used to match only the footer of slide 08.
-    for (const needle of ["8/ 11", "25", "120", edition.share, "114", "89", "295"]) expect(text, needle).toContain(needle);
+    // The index uses the full PERIOD rule, including the AI rule's 295 uncovered days.
+    for (const needle of ["7/ 11", "25", "120", edition.share, "114", "89", "295"]) expect(text, needle).toContain(needle);
   });
 
   it("speaks one language for the statuses and none of the banned words", () => {

@@ -130,7 +130,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "Die Nachweisliste",
         description:
-          "Claude liest Typ, Datum und Freigabe jeder Datei aus dem Text, nie aus dem Dateinamen. Drei von elf Dateien fallen durch.",
+          "Claude liest Typ, Datum und Freigabe jeder Datei aus dem Text, nie aus dem Dateinamen. Vier von elf Dateien fallen durch.",
         tool: "Schritt 1 · Claude-Projekt",
       },
       {
@@ -264,7 +264,7 @@ export const AUDIT_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "The evidence index",
         description:
-          "Claude reads each file's type, date and approval from its text, never from its name. Three of eleven files fail.",
+          "Claude reads each file's type, date and approval from its text, never from its name. Four of eleven files fail.",
         tool: "Step 1 · Claude Project",
       },
       {

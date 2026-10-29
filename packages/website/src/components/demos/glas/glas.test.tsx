@@ -211,6 +211,32 @@ describe("components", () => {
     expect(introWordCount(sentences)).toBe(12);
   });
 
+  it("keeps overflowing intro text keyboard reachable even at the end of its scroll", () => {
+    const { container } = inGlas(
+      <DemoIntro
+        content={{ kicker: "Workshop 05", title: "Nachweise", sentences: ["Eins.", "Zwei.", "Drei.", "Vier."], start: "Starten", explore: "Ansehen", footnote: "Alles bleibt im Browser." }}
+        onStart={vi.fn()}
+      />,
+    );
+    const text = container.querySelector<HTMLDivElement>(".glas-intro-text")!;
+    Object.defineProperties(text, {
+      clientHeight: { configurable: true, value: 100 },
+      scrollHeight: { configurable: true, value: 300 },
+    });
+    fireEvent.scroll(text);
+    expect(text.tabIndex).toBe(0);
+    expect(text).toHaveAttribute("data-more");
+
+    text.scrollTop = 200;
+    fireEvent.scroll(text);
+    expect(text.tabIndex).toBe(0);
+    expect(text).not.toHaveAttribute("data-more");
+
+    Object.defineProperty(text, "clientHeight", { value: 400 });
+    fireEvent.scroll(text);
+    expect(text.tabIndex).toBe(-1);
+  });
+
   it("GlasWeg names every dot and the current step as a sentence", () => {
     const onJump = vi.fn();
     inGlas(

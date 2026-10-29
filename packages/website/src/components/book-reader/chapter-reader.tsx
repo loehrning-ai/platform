@@ -277,7 +277,7 @@ export function ChapterReader({
         <Link
           href={nextChapterHref}
           className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end border border-border/50 bg-card/20 px-3 py-2 text-right text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
-          aria-label={copy.nextChapter(neighbours.next.title)}
+          aria-label={`${copy.nextShort}: ${neighbours.next.title}`}
         >
           <span className="hidden min-w-0 break-words md:block">{neighbours.next.title}</span>
           <span className="md:hidden">{copy.nextShort}</span>
