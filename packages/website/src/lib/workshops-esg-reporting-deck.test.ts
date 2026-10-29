@@ -26,6 +26,21 @@ describe.each(Object.entries(EDITIONS))("deck figures (%s)", (locale, file) => {
   const deck = bound(html);
   const demo = figures(locale as "de" | "en");
 
+  it("sets up the winery and its decision before the ESG primer", () => {
+    const ids = [...html.matchAll(/<section class="slide[^>]* id="([^"]+)"/g)].map(([, id]) => id);
+    expect(ids.slice(0, 6)).toEqual(["cover", "weingut", "anfragen", "gastgeber", "nachricht", "heute"]);
+    const cover = html.slice(html.indexOf('id="cover"'), html.indexOf('id="weingut"'));
+    expect(cover).toContain(locale === "de" ? "Ein Weingut. Drei Anfragen." : "One winery. Three requests.");
+  });
+
+  it("separates Tim's live Claude from the sample and places capabilities outside the sidebar", () => {
+    const sidebars = [...html.matchAll(/<aside class="cw-side">([\s\S]*?)<\/aside>/g)];
+    expect(sidebars.length).toBeGreaterThan(0);
+    for (const [, sidebar] of sidebars) expect(sidebar).not.toContain("Code execution");
+    expect(html).toContain("Settings → Capabilities");
+    expect(html).toContain(locale === "de" ? "Tim: live · Folie: Muster" : "Tim: live · Slide: sample");
+  });
+
   it("binds every figure the demo also computes to the demo's value", () => {
     const shared = [...deck.keys()].filter((key) => key in demo);
     expect(shared.length).toBeGreaterThanOrEqual(10);

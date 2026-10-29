@@ -20,7 +20,7 @@ function turnOf(recording: ClaudeRecording): ReplayTurn {
 }
 
 describe("replay engine (claude-desktop-spec 5)", () => {
-  it("streams the recorded final text byte for byte, at most 40 characters a second", () => {
+  it("streams the recorded final text byte for byte, at most 40 characters a second unless the real run was faster", () => {
     const schedule = buildSchedule([turnOf(TAKE), ...TAKE.follow_ups], { seed: seedFrom(TAKE.id) });
     const finished = frameAt(schedule, Number.POSITIVE_INFINITY);
     expect(finished.done).toBe(true);
@@ -32,8 +32,11 @@ describe("replay engine (claude-desktop-spec 5)", () => {
       const last = answers[answers.length - 1];
       if (!first || !last || first.type !== "answer" || last.type !== "answer") continue;
       expect(last.end).toBe(turn.final_text.length);
-      // Never faster than maxCps over the whole answer (jitter only slows single chunks).
-      expect((last.at - first.at + 1000 / REPLAY.maxCps * first.end) / 1000).toBeGreaterThanOrEqual((turn.final_text.length / REPLAY.maxCps) * (1 - REPLAY.jitter) - 0.01);
+      // Never faster than maxCps over the whole answer (jitter only slows single chunks), unless 40
+      // characters a second would outlast the real run: then it fits the run, never under the floor.
+      const budget = Math.max(REPLAY.answerFloorMs, turn.stats.duration_ms - (first.at - (schedule.starts[index] ?? 0))) / 1000;
+      const seconds = Math.min(turn.final_text.length / REPLAY.maxCps, budget);
+      expect((last.at - first.at + 1000 / REPLAY.maxCps * first.end) / 1000).toBeGreaterThanOrEqual(seconds * (1 - REPLAY.jitter) - 0.5);
     }
   });
 
@@ -66,6 +69,27 @@ describe("replay engine (claude-desktop-spec 5)", () => {
     expect(steps.map((step) => step.kind)).toEqual(["skill", "read", "other"]);
     expect(steps[2]?.isError).toBe(true);
     expect(frameAt(schedule, Number.POSITIVE_INFINITY).turns[0]?.realMs).toBe(61_000);
+  });
+
+  it("never outlasts the real run: a long answer written in 30 s replays in about 30 s, not 90", () => {
+    const text = "Wort ".repeat(670).trim();
+    const timeline: TimelineItem[] = [
+      { t_ms: 2_000, kind: "tool_use", tool: "Read", input: { file_path: "work/a.csv" } },
+      { t_ms: 2_100, kind: "tool_result", is_error: false },
+      { t_ms: 4_000, kind: "text_start" },
+      { t_ms: 29_000, kind: "text", chunk: text },
+    ];
+    const turn: ReplayTurn = { prompt: "Frage?", timeline, final_text: text, stats: { duration_ms: 30_000, duration_api_ms: 1, ttft_ms: 1, num_turns: 2, output_tokens: 3 }, is_error: false, stop_reason: "end_turn" };
+    const schedule = buildSchedule([turn], { seed: 3 });
+    expect(text.length / REPLAY.maxCps).toBeGreaterThan(80);
+    expect(schedule.duration).toBeLessThanOrEqual(30_000 * (1 + REPLAY.jitter));
+    expect(schedule.duration).toBeGreaterThanOrEqual(REPLAY.answerFloorMs);
+    expect(frameAt(schedule, Number.POSITIVE_INFINITY).turns[0]?.answer).toBe(text);
+    // A short answer keeps the reading pace of 40 characters a second.
+    const short = { ...turn, final_text: "Kurz und belegt.", timeline: [{ t_ms: 0, kind: "text_start" as const }, { t_ms: 1, kind: "text" as const, chunk: "Kurz und belegt." }] };
+    const shortSchedule = buildSchedule([short], { seed: 3 });
+    const answers = shortSchedule.events.filter((event) => event.type === "answer");
+    expect((answers[answers.length - 1]?.at ?? 0) - (answers[0]?.at ?? 0)).toBeGreaterThan(("Kurz und belegt.".length / REPLAY.maxCps) * 1000 * (1 - REPLAY.jitter) - 1000 / REPLAY.maxCps * 5);
   });
 
   it("replays recorded deltas when they really streamed", () => {

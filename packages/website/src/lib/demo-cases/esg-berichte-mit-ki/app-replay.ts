@@ -20,7 +20,7 @@ export const APP_REPLAY = {
   cps: 900,
 } as const;
 
-export type ActivityKind = "thinking" | "skill" | "command" | "read" | "write" | "note";
+export type ActivityKind = "thinking" | "skill" | "command" | "read" | "search" | "write" | "note";
 
 export interface ActivityRow {
   readonly kind: ActivityKind;
@@ -47,7 +47,7 @@ function rowFor(item: Extract<TimelineItem, { kind: "tool_use" }>): ActivityRow 
       return { kind: "read", detail: fileName(input.file_path), realMs: item.t_ms };
     case "Glob":
     case "Grep":
-      return { kind: "read", detail: typeof input.pattern === "string" ? input.pattern : "", realMs: item.t_ms };
+      return { kind: "search", detail: typeof input.pattern === "string" ? input.pattern : "", realMs: item.t_ms };
     case "Write":
     case "Edit":
       return { kind: "write", detail: fileName(input.file_path), realMs: item.t_ms };

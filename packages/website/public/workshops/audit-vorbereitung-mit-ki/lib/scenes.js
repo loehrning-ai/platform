@@ -1,216 +1,341 @@
-/* scenes.js: the drawings of the Workshop 05 deck that CSS alone cannot do. Each scene is
- * render(slide, step, t, api), a pure function of the build step and t in [0, 1]: same input, same frame.
- * lib/deck-stage.js calls it after it has set --p on every element with data-from.
- *
- * The reality run (slide 7, step 4) is the demo's frame(t) from
- * src/lib/demo-cases/audit-vorbereitung-mit-ki/motion.ts, same constants, so deck and demo move alike.
- */
-(function () {
+/* scenes.js: step engine of the workshop decks (source scripts/workshops/deck-engine/, synced by
+ * sync-deck-engine.mjs). A frame is a pure function of (step, t); every [data-step] gets --p, drawn by
+ * engine.css. Attributes: data-step data-win data-out data-out-win data-fx data-ease data-count
+ * data-count-as data-count-unit data-count-at data-fill; polls: data-poll data-value data-poll-show data-poll-n. Back, jumps, reduced motion and
+ * renderers that never tick render t = 1. Keys belong to the stage (deck-keys.js, deck-stage.js). */
+(() => {
   'use strict';
+  const root = document.documentElement;
+  const LANG = String(root.lang || 'en').toLowerCase().startsWith('de') ? 'de' : 'en';
+  const params = new URLSearchParams(window.location.search);
+  const PREVIEW = params.has('preview');
+  const EXPORT = params.get('export') === 'final';
+  const stage = document.querySelector('deck-stage');
+  if (!stage) return;
+  const keys = window.DeckKeys;
+  const deckId = (keys && keys.deckId()) || root.getAttribute('data-deck-id') || '';
 
-  var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
-  var ease = function (v) { v = clamp(v); return 1 - Math.pow(1 - v, 3); };
-  var TESTS = ['quote', 'date', 'scope', 'approval'];
+  const COPY = {
+    de: { notice: 'Zurück am Anfang. Vorher: Folie {n}, Schritt {s}.', appendix: 'Anhang {n}', copied: 'Kopiert', failed: 'Bitte markieren und kopieren' },
+    en: { notice: 'Back at the start. Before: slide {n}, step {s}.', appendix: 'appendix {n}', copied: 'Copied', failed: 'Select and copy, please' },
+  }[LANG];
 
-  /* The demo's reality run, ported 1:1 (motion.ts). */
-  var PASS_START = 0.08, PASS_LENGTH = 0.2, LINK_STAGGER = 0.014, LABELS_FROM = 0.88, TEST_SPAN = 0.06;
-  function testTime(pass, index) { return PASS_START + pass * PASS_LENGTH + index * LINK_STAGGER; }
-  function runFrame(t, links) {
-    var time = clamp(t);
-    var out = links.map(function (link, index) {
-      var passReached = -1;
-      for (var pass = 0; pass < TESTS.length; pass += 1) if (time >= testTime(pass, index)) passReached = pass;
-      var failPass = link.failsAt ? TESTS.indexOf(link.failsAt) : -1;
-      var at = failPass >= 0 ? testTime(failPass, index) : Infinity;
-      var failed = time >= at;
-      var breaks = link.status === 'gap';
-      var progress = failed ? clamp((time - at) / TEST_SPAN) : 0;
-      return {
-        passReached: failed ? Math.min(passReached, failPass) : passReached,
-        dashed: failed && !breaks,
-        broken: failed && breaks,
-        breakT: breaks ? ease(progress) : 0,
-        defectT: ease(progress),
-        labelOpacity: clamp((time - LABELS_FROM - index * 0.008) / 0.06),
-      };
+  /* pure frame */
+  const clamp01 = (x) => (Number.isFinite(x) ? Math.min(1, Math.max(0, x)) : 0);
+  const EASE = {
+    out: (x) => 1 - Math.pow(1 - x, 3),
+    linear: (x) => x,
+    spring: (x) => 1 + 2.7 * Math.pow(x - 1, 3) + 1.7 * Math.pow(x - 1, 2),
+  };
+  const SPRING_FX = /^(?:pop|fly|flip)$/;
+  const seg = (t, a, b, e) => e(clamp01((clamp01(t) - a) / (b - a || 1)));
+  const formats = {};
+  const fmt = (value, digits) => (formats[digits] ??= new Intl.NumberFormat(LANG === 'de' ? 'de-DE' : 'en-GB', {
+    minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: true,
+  })).format(value);
+  const pair = (text, fallback) => {
+    const [a, b] = String(text || '').split(',').map(Number);
+    return Number.isFinite(a) && Number.isFinite(b) && b > a ? [a, b] : fallback;
+  };
+
+  const partsCache = new WeakMap();
+  function parts(slide) {
+    let list = partsCache.get(slide);
+    if (list) return list;
+    list = [...slide.querySelectorAll('[data-step]')].map((el) => {
+      const d = el.dataset;
+      const [a, b] = pair(d.win, [0, 1]);
+      const out = d.out === undefined ? null : Number(d.out);
+      const [oa, ob] = pair(d.outWin, [0, 0.5]);
+      const count = d.count ? d.count.split(',').map(Number) : null;
+      const at = d.countAt ? d.countAt.split(',').map((x) => x.split(':').map(Number)) : null;
+      const fill = d.fill ? { n: Number(d.fill), cells: [...el.querySelectorAll('[data-cell]:not([data-miss])')] } : null;
+      const e = EASE[d.ease] || (SPRING_FX.test(d.fx || '') ? EASE.spring : EASE.out);
+      return { el, k: Number(d.step), a, b, out, oa, ob, count, at, mss: d.countAs === 'mss', unit: d.countUnit || '', fill, e };
     });
-    var pass = time < PASS_START ? -1 : time >= PASS_START + TESTS.length * PASS_LENGTH ? 4 : Math.floor((time - PASS_START) / PASS_LENGTH);
-    return { links: out, pass: pass, tallyOpacity: clamp((time - LABELS_FROM) / 0.08) };
+    partsCache.set(slide, list);
+    return list;
   }
-  /* The demo's first-screen draw-in (motion.ts drawIn). */
-  function drawIn(t, index) { return ease((clamp(t) - index * 0.04) / 0.68); }
 
-  function setLine(row, opts) {
-    var line = row.querySelector('.lk-line');
-    var a = row.querySelector('.lk-a');
-    var b = row.querySelector('.lk-b');
-    var gap = 14 * (opts.breakT || 0);
-    row.setAttribute('data-state', opts.state);
-    line.style.strokeDashoffset = String(opts.dashOffset || 0);
-    a.setAttribute('x2', String(Math.max(0, 50 - gap)));
-    b.setAttribute('x1', String(Math.min(100, 50 + gap)));
-    var ticks = row.querySelectorAll('.lk-tick');
-    for (var k = 0; k < ticks.length; k += 1) {
-      var cls = 'lk-tick';
-      if (opts.failPass === k && (opts.state === 'weak' || opts.state === 'gap')) cls += ' is-fail';
-      else if (opts.passReached >= k) cls += ' is-pass';
-      ticks[k].setAttribute('class', cls);
+  function progress(item, step, t) {
+    const pin = step > item.k ? 1 : step < item.k ? 0 : seg(t, item.a, item.b, item.e);
+    if (item.out === null) return pin;
+    const pout = step > item.out ? 1 : step < item.out ? 0 : seg(t, item.oa, item.ob, EASE.out);
+    return pin * (1 - pout);
+  }
+
+  function render(slide, step, t) {
+    for (const item of parts(slide)) {
+      const p = progress(item, step, t);
+      const q = clamp01(p);
+      item.el.style.setProperty('--p', p.toFixed(4));
+      item.el.toggleAttribute('data-off', p <= 0);
+      if (item.count) {
+        const [from, to, digits = 0] = item.count;
+        const factor = Math.pow(10, digits);
+        // data-count-at="1:3,2:5": a value per press
+        const at = (n) => item.at.reduce((v, [k, x]) => (k <= n ? x : v), from);
+        const raw = item.at ? at(step - 1) + (at(step) - at(step - 1)) * seg(t, item.a, item.b, item.e) : from + (to - from) * q;
+        const v = Math.round(raw * factor) / factor;
+        // data-count-as="mss": seconds shown as m:ss (a measured duration, counting up)
+        item.el.textContent = item.mss ? Math.floor(v / 60) + ':' + String(Math.round(v) % 60).padStart(2, '0') : fmt(v, digits) + item.unit;
+      }
+      if (item.fill) {
+        const on = Math.round(item.fill.n * q);
+        item.fill.cells.forEach((cell, index) => cell.toggleAttribute('data-on', index < on));
+      }
     }
+    slide.setAttribute('data-view', String(step));
   }
 
-  function drawLinks(root, t, mode, ui) {
-    var rows = Array.prototype.slice.call(root.querySelectorAll('.lk-row'));
-    if (mode === 'cover') {
-      rows.forEach(function (row, i) {
-        setLine(row, { state: 'open', dashOffset: 100 * (1 - drawIn(t, i)), passReached: -1, failPass: -1 });
-      });
+  /* playback */
+  const reduced = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  let frame = 0;
+  let guard = 0;
+  let playing = null;
+  const durations = (slide) => String(slide.dataset.durations || '').split(',').map(Number);
+  const total = (slide) => Number.parseInt(slide.dataset.stepTotal || '0', 10) || 0;
+  const current = (slide) => Math.min(total(slide), Math.max(0, Number.parseInt(slide.dataset.stepCurrent || '0', 10) || 0));
+
+  function stop() {
+    if (frame) window.cancelAnimationFrame(frame);
+    window.clearTimeout(guard);
+    frame = 0;
+    playing = null;
+  }
+
+  function finish() {
+    const p = playing;
+    stop();
+    if (p) render(p.slide, p.step, 1);
+  }
+
+  function play(slide, step) {
+    stop();
+    const ms = durations(slide)[step];
+    const duration = Number.isFinite(ms) ? ms : 900;
+    if (reduced.matches || PREVIEW || EXPORT || duration <= 0 || document.visibilityState !== 'visible') {
+      render(slide, step, 1);
       return;
     }
-    var run = runFrame(t, rows.map(function (row) { return { failsAt: row.getAttribute('data-fails-at') || null, status: row.getAttribute('data-status') }; }));
-    rows.forEach(function (row, i) {
-      var link = run.links[i];
-      var failsAt = row.getAttribute('data-fails-at');
-      var state = link.broken ? 'gap' : link.dashed ? 'weak' : run.tallyOpacity >= 1 ? row.getAttribute('data-status') : 'open';
-      setLine(row, { state: state, dashOffset: 0, breakT: link.breakT, passReached: link.passReached, failPass: failsAt ? TESTS.indexOf(failsAt) : -1 });
-      row.style.setProperty('--defect', link.defectT.toFixed(3));
-      row.style.setProperty('--label', link.labelOpacity.toFixed(3));
-      row.toggleAttribute('data-failed', link.dashed || link.broken);
+    const start = performance.now();
+    let ticked = false;
+    playing = { slide, step };
+    render(slide, step, 0);
+    const tick = (now) => {
+      ticked = true;
+      const t = Math.min(1, (now - start) / duration);
+      render(slide, step, t);
+      if (t < 1) frame = window.requestAnimationFrame(tick);
+      else stop();
+    };
+    frame = window.requestAnimationFrame(tick);
+    // A hidden or occluded renderer never ticks: show the step's final frame instead of a blank slide.
+    guard = window.setTimeout(() => { if (!ticked) finish(); }, 120);
+  }
+
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') finish(); });
+
+  function settle(slide, step) {
+    stop();
+    slide.dataset.stepCurrent = String(step);
+    render(slide, step, 1);
+  }
+
+  /* room poll */
+  const POLL = `deck:${deckId}:poll:`;
+  const store = (fn) => { try { return fn(window.sessionStorage); } catch (_e) { return null; } };
+  const votes = (name, value) => Number(store((s) => s.getItem(POLL + name + ':' + value))) || 0;
+
+  function pollRender() {
+    const groups = {};
+    document.querySelectorAll('[data-poll][data-value], [data-poll-show] [data-value]').forEach((el) => {
+      const name = el.dataset.poll || el.closest('[data-poll-show]').dataset.pollShow;
+      (groups[name] ??= []).push(el);
     });
-    var head = root.closest('.slide').querySelector('[data-run-pass]');
-    if (head) {
-      var names = head.getAttribute('data-tests').split('|');
-      head.textContent = run.pass >= 0 && run.pass < 4 ? head.getAttribute('data-label').replace('{n}', String(run.pass + 1)).replace('{test}', names[run.pass]) : '';
-    }
-    var tally = root.closest('.slide').querySelector('[data-tally]');
-    if (tally) tally.style.setProperty('--p', run.tallyOpacity.toFixed(3));
-  }
-
-  /* Slide 7, step 3: 26 rows drop in, the duplicate slides onto its twin, the share bar fills. */
-  function drawCount(box, t) {
-    var rows = parseInt(box.getAttribute('data-rows'), 10);
-    var unique = parseInt(box.getAttribute('data-unique'), 10);
-    var staff = parseInt(box.getAttribute('data-staff'), 10);
-    var target = parseFloat(box.getAttribute('data-target'));
-    var dup = parseInt(box.getAttribute('data-dup'), 10);
-    var chips = box.querySelectorAll('.r5-chips i');
-    var dropped = 0;
-    for (var i = 0; i < chips.length; i += 1) {
-      var p = ease((t - i * 0.014) / 0.08);
-      if (p > 0.5) dropped += 1;
-      chips[i].style.setProperty('--p', p.toFixed(3));
-    }
-    var merge = ease((t - 0.48) / 0.14);
-    var twin = chips[dup - 1];
-    if (chips[dup]) {
-      chips[dup].style.setProperty('--merge', merge.toFixed(3));
-      chips[dup].classList.toggle('is-dup', t >= 0.44);
-      if (twin) twin.classList.toggle('is-dup', t >= 0.44);
-    }
-    var n = merge >= 1 ? unique : dropped;
-    box.querySelector('[data-r5-n]').textContent = String(n);
-    var label = box.querySelector('[data-r5-label]');
-    label.textContent = t >= 0.62 ? label.getAttribute('data-merged') : label.getAttribute('data-rows');
-    var fillP = ease((t - 0.64) / 0.24);
-    box.querySelector('[data-r5-fill]').style.transform = 'scaleX(' + ((unique / staff) * fillP).toFixed(4) + ')';
-    box.querySelector('[data-r5-share]').style.setProperty('--p', fillP.toFixed(3));
-    box.style.setProperty('--target', String(target));
-  }
-
-  /* Slide 9, step 2: each placeholder of the template gives way to its value, in reading order. */
-  function drawEmail(slide, step, t) {
-    var slots = slide.querySelectorAll('.slot');
-    var n = slots.length;
-    for (var k = 0; k < n; k += 1) {
-      var on = step > 2 || (step === 2 && t >= 0.12 + (k / n) * 0.7);
-      slots[k].classList.toggle('is-filled', on);
+    for (const [name, list] of Object.entries(groups)) {
+      const n = list.map((el) => votes(name, el.dataset.value));
+      const max = Math.max(0, ...n);
+      list.forEach((el, i) => {
+        el.style.setProperty('--share', max ? (n[i] / max).toFixed(3) : '0');
+        el.dataset.n = String(n[i]);
+        el.toggleAttribute('data-lead', max > 0 && n[i] === max);
+        el.querySelectorAll('[data-poll-n]').forEach((c) => { c.textContent = String(n[i]); });
+      });
     }
   }
 
-  /* Slide 11: the room's estimate becomes the folder's answer. */
-  function median(list) {
-    var nums = list.map(Number).sort(function (a, b) { return a - b; });
-    return nums.length ? nums[Math.floor((nums.length - 1) / 2)] : null;
-  }
-  function drawResult(slide, step, t, api) {
-    var tallies = api.tallies();
-    var est = tallies.estimate || [];
-    var title = slide.querySelector('[data-result-title]');
-    var covered = title.getAttribute('data-covered');
-    var m = median(est);
-    title.textContent = (m === null ? title.getAttribute('data-none') : title.getAttribute('data-votes')).replace('{estimate}', String(m)).replace('{covered}', covered);
-    var counts = [];
-    for (var v = 0; v <= 8; v += 1) counts[v] = 0;
-    est.forEach(function (x) { counts[Number(x)] += 1; });
-    var max = Math.max.apply(null, counts.concat([1]));
-    var morph = step >= 1 ? (step === 1 ? ease(t) : 1) : 0;
-    var bars = slide.querySelectorAll('.h-bar');
-    for (var b = 0; b < bars.length; b += 1) {
-      var share = counts[b] / max;
-      var away = ease((morph - b * 0.04) / 0.5);
-      bars[b].style.setProperty('--h', (share * (1 - away)).toFixed(4));
-      bars[b].style.setProperty('--o', String(1 - away));
-      bars[b].classList.toggle('is-median', m !== null && b === m);
-    }
-    var rbars = slide.querySelectorAll('.r-bar');
-    for (var r = 0; r < rbars.length; r += 1) {
-      var grow = ease((morph - 0.4 - r * 0.08) / 0.45);
-      rbars[r].style.setProperty('--h', ((parseInt(rbars[r].getAttribute('data-n'), 10) / 8) * grow).toFixed(4));
-      rbars[r].style.setProperty('--o', grow.toFixed(3));
-    }
-    var head = slide.querySelector('[data-hist-head]');
-    head.textContent = morph >= 0.5 ? head.getAttribute('data-res') : head.getAttribute('data-est');
-    var rows = slide.querySelectorAll('.draft-votes li');
-    for (var i = 0; i < rows.length; i += 1) {
-      var n = rows[i].getAttribute('data-claim');
-      var list = tallies['draft-' + n] || [];
-      var opts = rows[i].getAttribute('data-opts').split('|');
-      var c = { 'true': 0, 'false': 0, 'unsure': 0 };
-      list.forEach(function (x) { c[x] += 1; });
-      var text = list.length
-        ? rows[i].getAttribute('data-line').replace('{n}', n).replace('{votes}', opts[0] + ' ' + c['true'] + ', ' + opts[1] + ' ' + c['false'] + ', ' + opts[2] + ' ' + c.unsure)
-        : rows[i].getAttribute('data-none').replace('{n}', n);
-      if (rows[i].textContent !== text) rows[i].textContent = text;
-    }
+  function pollAdd(name, value) {
+    if (PREVIEW || !name || value == null) return;
+    store((s) => s.setItem(POLL + name + ':' + value, String(votes(name, value) + 1)));
+    pollRender();
   }
 
-  window.DECK_SCENES = {
-    cover: {
-      ms: function () { return 1500; },
-      render: function (slide, step, t) { drawLinks(slide.querySelector('[data-links]'), t, 'cover'); },
-    },
-    request: {
-      ms: function (step) { return step === 0 ? 1600 : 900; },
-    },
-    folder: {
-      ms: function (step) { return step === 0 ? 1400 : 900; },
-    },
-    tests: {
-      ms: function (step) { return step === 5 ? 1100 : 1300; },
-    },
-    'mission-1': {
-      ms: function (step) { return step === 3 ? 2600 : 800; },
-    },
-    'mission-2': {
-      ms: function (step) { return step === 4 ? 6400 : step === 3 ? 5000 : step === 2 ? 2600 : 900; },
-      render: function (slide, step, t) {
-        drawCount(slide.querySelector('[data-r5]'), step > 3 ? 1 : step === 3 ? t : 0);
-        drawLinks(slide.querySelector('[data-links]'), step > 4 ? 1 : step === 4 ? t : 0, 'run');
-      },
-    },
-    mistakes: {
-      ms: function () { return 1100; },
-    },
-    gaps: {
-      ms: function (step) { return step === 2 ? 2400 : 1000; },
-      render: drawEmail,
-    },
-    reply: {
-      ms: function (step) { return step >= 1 && step <= 4 ? 1600 : 900; },
-    },
-    result: {
-      ms: function (step) { return step === 1 ? 1800 : 900; },
-      onVotes: true,
-      render: drawResult,
-    },
-  };
+  function pollClear() {
+    store((s) => Object.keys(s).filter((k) => k.startsWith(POLL)).forEach((k) => s.removeItem(k)));
+    pollRender();
+  }
+
+  document.querySelectorAll('[data-poll-show]').forEach((el) => el.setAttribute('aria-live', 'polite'));
+  pollRender();
+
+  /* stage events */
+  let resetFrom = null;
+
+  stage.addEventListener('slidechange', (event) => {
+    const { slide, entry, reason } = event.detail;
+    if (!slide) return;
+    if (PREVIEW || EXPORT) {
+      settle(slide, total(slide));
+    } else {
+      const step = current(slide);
+      slide.dataset.stepCurrent = String(step);
+      if (entry === 'forward' || reason === 'full-reset' || (reason === 'init' && step === 0)) play(slide, step);
+      else settle(slide, step);
+    }
+    root.dataset.story = 'ready';
+    if (reason !== 'full-reset' && reason !== 'presenter') resetFrom = null;
+    postState();
+  });
+
+  stage.addEventListener('fragmentrequest', (event) => {
+    const detail = event.detail;
+    const slide = detail?.slide;
+    if (!slide || detail.handled) return;
+    const step = current(slide);
+    if (detail.direction > 0 && step < total(slide)) {
+      slide.dataset.stepCurrent = String(step + 1);
+      play(slide, step + 1);
+      detail.handled = true;
+    } else if (detail.direction < 0 && step > 0) {
+      settle(slide, step - 1);
+      detail.handled = true;
+    }
+    if (detail.handled) {
+      stage.syncHash();
+      resetFrom = null;
+      postState();
+    }
+  });
+
+  stage.addEventListener('fragmentreset', (event) => {
+    const slide = event.detail?.slide;
+    if (!slide) return;
+    settle(slide, 0);
+    stage.syncHash();
+    postState();
+  });
+
+  // r or Shift+R: all slides to step 0, polls cleared, the old place named once.
+  stage.addEventListener('deckreset', () => {
+    const slide = stage.currentSlide;
+    const from = slide ? { index: stage.index, step: current(slide) } : null;
+    resetFrom = from && (from.index !== 0 || from.step !== 0) ? from : null;
+    document.querySelectorAll('deck-stage > section.slide').forEach((section) => { section.dataset.stepCurrent = '0'; });
+    pollClear();
+    if (resetFrom) notice(resetFrom);
+    if (stage.index === 0 && stage.currentSlide) {
+      play(stage.currentSlide, 0);
+      stage.syncHash();
+      postState();
+    }
+  });
+
+  /* reset notice */
+  const box = document.createElement('div');
+  box.className = 'deck-notice';
+  box.setAttribute('role', 'status');
+  box.setAttribute('aria-live', 'polite');
+  document.body.appendChild(box);
+  let noticeTimer = 0;
+
+  function slideName(index) {
+    const all = [...document.querySelectorAll('deck-stage > section.slide')];
+    const slide = all[index];
+    if (!slide) return String(index + 1);
+    const kind = slide.dataset.kind === 'appendix' ? 'appendix' : 'main';
+    const n = all.filter((s) => (s.dataset.kind === 'appendix' ? 'appendix' : 'main') === kind).indexOf(slide) + 1;
+    return kind === 'appendix' ? COPY.appendix.replace('{n}', String(n)) : String(n);
+  }
+
+  function notice(from) {
+    box.textContent = COPY.notice.replace('{n}', slideName(from.index)).replace('{s}', String(from.step));
+    box.setAttribute('data-visible', '');
+    window.clearTimeout(noticeTimer);
+    noticeTimer = window.setTimeout(() => box.removeAttribute('data-visible'), 4000);
+  }
+
+  /* presenter view (lib/presenter.js) */
+  const channel = !PREVIEW && typeof BroadcastChannel !== 'undefined' && keys ? new BroadcastChannel(keys.presenterChannel(deckId)) : null;
+
+  function postState() {
+    if (!channel) return;
+    const slide = stage.currentSlide;
+    if (!slide) return;
+    channel.postMessage({
+      from: 'deck', type: 'state', index: stage.index, total: stage.length,
+      label: slide.dataset.label || slide.id, step: current(slide), steps: total(slide),
+      kind: slide.dataset.kind === 'appendix' ? 'appendix' : 'main', resetFrom,
+    });
+  }
+
+  if (channel) {
+    channel.onmessage = (event) => {
+      const m = event.data || {};
+      if (m.from !== 'presenter') return;
+      if (m.type === 'hello') postState();
+      else if (m.type === 'poll') pollAdd(String(m.name || ''), m.value == null ? null : String(m.value));
+      else if (m.type === 'key') {
+        if (m.key === 'ArrowRight') stage.fragment(1);
+        else if (m.key === 'ArrowLeft') stage.fragment(-1);
+        else if (m.key === 'R' || m.key === 'r') stage.fullReset();
+        else if (m.key === 'Escape') stage.returnFromAppendix();
+      } else if (m.type === 'goto' && Number.isInteger(m.index)) {
+        stage.goTo(m.index, 'presenter');
+        const slide = stage.currentSlide;
+        if (slide && Number.isInteger(m.step)) {
+          settle(slide, Math.min(total(slide), Math.max(0, m.step)));
+          stage.syncHash();
+        }
+        resetFrom = null;
+        postState();
+      }
+    };
+  }
+
+  // The presenter's next-slide frame: { deckPreview: true, index }, same origin.
+  if (PREVIEW) {
+    window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin) return;
+      const m = event.data || {};
+      if (!m.deckPreview || !Number.isInteger(m.index)) return;
+      stage.goTo(m.index, 'presenter');
+      if (stage.currentSlide) settle(stage.currentSlide, total(stage.currentSlide));
+    });
+  }
+
+  /* copy buttons and poll buttons */
+  document.addEventListener('click', (event) => {
+    const vote = event.target?.closest?.('button[data-poll][data-value]');
+    if (vote) {
+      if (event.detail > 0) vote.blur();
+      pollAdd(vote.dataset.poll, vote.dataset.value);
+      return;
+    }
+    const button = event.target?.closest?.('button[data-copy]');
+    if (!button) return;
+    const source = document.getElementById(button.dataset.copy);
+    if (!source) return;
+    const label = button.querySelector('.copy__label') || button;
+    const idle = button.dataset.idle || label.textContent;
+    button.dataset.idle = idle;
+    const done = (text) => {
+      label.textContent = text;
+      window.setTimeout(() => { label.textContent = idle; }, 1600);
+    };
+    if (event.detail > 0) button.blur();
+    const text = source.textContent.replace(/\r/g, '');
+    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(() => done(COPY.copied), () => done(COPY.failed));
+    else done(COPY.failed);
+  });
 })();

@@ -233,9 +233,9 @@ describe("<WorkshopsContent>", () => {
     expect(within(rows[3]).queryByText("Neu")).toBeNull();
     expect(within(rows[3]).getByText(/Fünf Kästchen fangen den Fehler/).tagName).toBe("P");
     // Hyphenated words such as "ESG-Anfragen" and "Claude-Konto" are not amounts.
-    expect(within(rows[2]).getByText(/Ein Weingut in Nordmazedonien prüft mit Claude/).tagName).toBe("P");
+    expect(within(rows[2]).getByText(/Das erfundene Weingut Crvena Zemja muss Importeur, Marketing und Bank antworten/).tagName).toBe("P");
     expect(rows[2].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
-    expect(within(rows[1]).getByText(/Unterlagen für ein Audit zu ordnen/).tagName).toBe("P");
+    expect(within(rows[1]).getByText(/Vardar Works hat elf Dateien für acht Anforderungen/).tagName).toBe("P");
     expect(rows[1].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(within(rows[0]).getByText(/Angebote auf einer Basis/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
@@ -243,10 +243,9 @@ describe("<WorkshopsContent>", () => {
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),
     ).toHaveAttribute("href", "/workshops/datenbereitschaft-fuer-ki");
     expect(screen.queryByRole("link", { name: /Workshop 0[456] beginnen/ })).toBeNull();
-    // No workshop lists a presenter view as a material, so the team note
-    // points to the workshop page.
+    // Every HTML deck (02 to 06) opens a presenter view on P, so the team note names them.
     expect(
-      screen.getByText(/^Was du für eine Gruppe brauchst, steht auf der Workshop-Seite\./),
+      screen.getByText(/^Workshops 02, 03, 04, 05 und 06 haben eine Moderationsansicht mit Notizen und Abstimmungsfragen\./),
     ).toBeInTheDocument();
   });
 
@@ -361,7 +360,7 @@ describe("<WorkshopsContent>", () => {
     expect(h1).not.toHaveClass("poster-title");
   });
 
-  it("keeps the team note small and points to the workshop page", () => {
+  it("keeps the team note small and names the decks with a presenter view", () => {
     const { container } = render(
       <WorkshopsContent workshops={getWorkshops("de")} locale="de" />,
     );
@@ -372,10 +371,10 @@ describe("<WorkshopsContent>", () => {
     expect(note.tagName).toBe("P");
     expect(note).not.toHaveClass("border-t");
     expect(note).toHaveTextContent(
-      /^Mit deinem Team\. Was du für eine Gruppe brauchst, steht auf der Workshop-Seite\.$/,
+      /^Mit deinem Team\. Workshops 02, 03, 04, 05 und 06 haben eine Moderationsansicht mit Notizen und Abstimmungsfragen\. Öffne das Deck und drück P\.$/,
     );
-    // No presenter view is listed, so there is no keyboard hint either.
-    expect(note.querySelector("[data-workshop-key-hint]")).toBeNull();
+    // The key hint is for a keyboard: shown from lg only.
+    expect(note.querySelector("[data-workshop-key-hint]")).toHaveClass("max-lg:hidden");
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
     expect(screen.getByText("Workshops · 6 Fälle")).toBeInTheDocument();
     expect(

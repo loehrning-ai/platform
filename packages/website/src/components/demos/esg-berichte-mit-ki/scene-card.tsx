@@ -89,16 +89,17 @@ export function ShelfCard({
                 data-w4-handle={part}
                 data-state={picking === part ? "picking" : status ? "linked" : undefined}
                 aria-pressed={picking === part}
-                aria-label={status ? undefined : pack.card.connect.replace("{part}", part === "stichtag" ? face.stichtag : pack.card.parts[part])}
                 {...(handleProps?.(part) ?? {})}
               >
+                {/* The name comes from what is drawn (the full words, or the kicker and short words in the strip), led by the action. */}
+                {status ? null : <span className="sr-only">{pack.card.connect.replace("{part}", "").trim()} </span>}
                 {status ? <StatusGlyph status={status} label={pack.statuses[status]} size={16} className="w4-handle-glyph" /> : <span className="w4-handle-dot" aria-hidden="true" />}
                 <span className="w4-handle-words">
-                  <span className="w4-handle-kicker" aria-hidden="true">
+                  <span className="w4-handle-kicker">
                     {pack.card.partKickers[part]}
                   </span>
                   <span className="w4-handle-text">{part === "stichtag" ? face.stichtag : pack.card.parts[part]}</span>
-                  <span className="w4-handle-short" aria-hidden="true">
+                  <span className="w4-handle-short">
                     {part === "stichtag" ? face.stichtagShort : pack.card.partsShort[part]}
                   </span>
                 </span>
@@ -332,7 +333,7 @@ export function CardScene({
           glow={glowPart ? THREADS[glowPart].target : null}
           hot={drag?.line ?? null}
           picking={picking}
-          pickLabel={(line) => `${fmt.t(pack.connect.pickLine, { n: line.n })}: ${line.text}`}
+          pickLabel={(line) => fmt.t(pack.connect.pickLine, { n: line.n })}
           onPick={(n) => {
             if (state.picking) dispatch({ type: "land", part: state.picking, line: n });
           }}

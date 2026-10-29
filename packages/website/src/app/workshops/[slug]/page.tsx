@@ -107,7 +107,8 @@ export default async function WorkshopDetailPage({ params }: Props) {
         inLanguage: locale === "de" ? "de-DE" : "en-GB",
         isAccessibleForFree: true,
         learningResourceType: "Workshop",
-        educationalUse: "self-study",
+        // A live session is group work; a workshop without one is self-study.
+        educationalUse: workshop.minutesLive ? "group work" : "self-study",
         timeRequired: `PT${workshop.minutesLive ?? workshop.minutesSelfStudy}M`,
         teaches: workshop.outcomes,
         competencyRequired: workshop.needs,

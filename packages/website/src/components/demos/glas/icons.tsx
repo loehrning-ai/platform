@@ -29,6 +29,7 @@ export type GlasIconName =
   | "info"
   | "search"
   | "home"
+  | "chat"
   | "code"
   | "sliders"
   | "folder";
@@ -57,6 +58,7 @@ const PATHS: Record<GlasIconName, string> = {
   info: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM10 9v4.5M10 6.5v.5",
   search: "M8.5 14a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM12.5 12.5L16.5 16.5",
   home: "M3.5 9.5L10 4l6.5 5.5V16h-13z",
+  chat: "M3.5 4.5h13v9h-7l-3.5 3v-3h-2.5z",
   code: "M7 6l-4 4 4 4M13 6l4 4-4 4",
   sliders: "M4 6h7M15 6h1M4 14h1M9 14h7M11 4v4M7 12v4",
   folder: "M2.5 5.5h5l1.5 2h8.5v8.5h-15z",

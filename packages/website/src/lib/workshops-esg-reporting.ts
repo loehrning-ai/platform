@@ -10,9 +10,9 @@ const base = "/workshops/esg-berichte-mit-ki";
  * written by scripts/workshop04/export-esg-passport.mjs, the two kit editions (v3, "Nachweisprobe")
  * by scripts/workshop04/kit-v3.mjs (repository root). Every number in this copy is printed in the
  * deck or the kit, and the company, its files and its certificates are invented. The deck has a German
- * edition (slides.html) and an English one (en/slides.html), 19 slides each plus an appendix; the
- * agenda follows the planned time in its speaker notes. Tim demos Claude while the room plays; the
- * kit is the take-home assignment.
+ * edition (slides.html) and an English one (en/slides.html), 20 slides each (17 main slides plus an appendix of 3); the
+ * agenda follows the planned time in its speaker notes. Tim drives Claude Desktop on the projector while the room
+ * predicts and checks; the kit is the take-home assignment.
  */
 
 /**
@@ -20,7 +20,7 @@ const base = "/workshops/esg-berichte-mit-ki";
  * against the files. Each locale links its own edition: crvena-zemja-nachweisprobe.zip (German) on the
  * German page, crvena-zemja-esg-kit.zip (English) on the English one, the same kit the demo hands out.
  */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "836 KB", en: "898 KB" };
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "838 KB", en: "901 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -57,9 +57,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG-Berichte mit KI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Seit dem 27.09.2026 ist in Deutschland „klimaneutral“ wegen gekaufter Zertifikate verboten. Ein Weingut in Nordmazedonien prüft mit Claude, was es belegen kann.",
+      "Das erfundene Weingut Crvena Zemja muss Importeur, Marketing und Bank antworten. Welche der 21 Aussagen tragen die 13 Dateien?",
+    lede: "Ein Weingut muss drei ESG-Anfragen beantworten: Tim prüft 13 Dateien live in Claude, der Raum schätzt und prüft mit.",
     description:
-      "Seit dem 27.09.2026 darf in Deutschland keine Umweltaussage mehr auf gekauften CO₂-Zertifikaten beruhen, und Banken in Nordmazedonien vergeben grüne Kredite der EBRD. Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
+      "Seit dem 27.09.2026 darf in Deutschland kein Produkt mehr wegen gekaufter CO₂-Zertifikate als klimaneutral oder emissionsärmer beworben werden, und Banken in Nordmazedonien vergeben grüne Kredite der EBRD. Vinarija Crvena Zemja, ein erfundenes Familienweingut in der Gemeinde Kavadarci in Nordmazedonien, hat drei ESG-Anfragen offen: den Fragebogen seines schwedischen Importeurs, sieben Umweltaussagen des eigenen Marketings für deutsche Regale und die Website und das Prüfformular der Bank für einen Solarkredit. Tim zeigt Claude live auf dem Beamer, der Raum arbeitet auf Papier oder dem Handy mit: Die Gruppe sucht Mängel in den Dateien, sagt vor jeder Antwort das Ergebnis voraus und entscheidet über die Werbeaussagen.",
     format: "Live-Workshop mit Deck",
     duration: "~60 Minuten",
     accessNote:
@@ -67,9 +68,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     outcome:
       "Ein Nachweisregister: jede Antwort mit Datei und Zeile oder dem fehlenden Dokument. Dazu ein Claude-Skill, der die Nachweisprobe bei jeder neuen Anfrage anwendet.",
     stageExplainer: {
-      heading: "Was ist das Kit?",
+      heading: "Was prüfen wir?",
       body:
-        "Eine Zip mit 13 erfundenen Firmendateien, drei Anfragen, fünf Prompts und der Nachweisprobe auf einer Seite. Du legst sie in ein Claude-Projekt und prüfst jede Antwort gegen die Dateien. Beim ersten Mal etwa 90 Minuten.",
+        "ESG steht für Umwelt, Soziales und Unternehmensführung. Importeur, Marketing und Bank wollen Belege. Das Kit enthält 13 erfundene Dateien, drei Anfragen und fünf Prompts zum Nacharbeiten in Claude oder Codex.",
       facts: ["13 Dateien", "5 Prompts", "ca. 90 Min. allein"],
     },
     audience: [
@@ -88,24 +89,24 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Du erkennst, welche Antworten sich mit einem nachgereichten Dokument ändern, und lässt Claude sie nachziehen.",
     ],
     agenda: [
-      { label: "Warum dieser Fall", minutes: 4, activity: "listen", description: "Was in Deutschland und Skopje wirklich passiert ist und welche Frage daraus für ein Weingut folgt." },
-      { label: "Ein Satz, eine Datei", minutes: 5, activity: "vote", description: "Würdest du diese Regalkarte so drucken? Erst abstimmen, dann die Datei daneben legen." },
-      { label: "Die Nachweisprobe", minutes: 3, activity: "listen", description: "Vier Prüfungen für jede Antwort: Zitat, Zeitraum, Umfang, Freigabe." },
-      { label: "Anfragen, Kit und Projekt", minutes: 6, activity: "do", description: "Wer fragt, was im Kit liegt und wie das Claude-Projekt angelegt wird." },
-      { label: "Durchsicht ohne Claude", minutes: 8, activity: "do", description: "Zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
-      { label: "Schritt 1: der Fragebogen", minutes: 6, activity: "vote", description: "Erst vorhersagen, wie viele Antworten belegt sind, dann Claude prüfen." },
-      { label: "Schritt 2: die Werbeaussagen", minutes: 7, activity: "vote", description: "Für jede Aussage entscheiden: darf raus oder nicht." },
-      { label: "Schritt 3: das Bankformular", minutes: 5, activity: "do", description: "Eine Zeile selbst mit dem Taschenrechner nachrechnen, dann Claude." },
-      { label: "Register und Nachreichung", minutes: 10, activity: "do", description: "Alle Antworten an einer Stelle, dann ändert ein neues Dokument einige davon. Zum Schluss: was wir mit Claude gemessen haben, und was nicht." },
-      { label: "Drei Sätze und Mitnehmen", minutes: 6, activity: "write", description: "Drei neue Sätze auf Papier einordnen, dann Skill und Vorlagen für die eigene Firma." },
+      { label: "Der Fall", minutes: 7, activity: "listen", description: "Das Weingut, drei Anfragen und die Entscheidung; danach die Regeln für deutsche Werbung, grüne Kredite und norwegische Verpackungen." },
+      { label: "Heute und die Regel", minutes: 6, activity: "vote", description: "Die Frage der Stunde, dann ein Satz gegen seine Datei: erst abstimmen, dann prüfen." },
+      { label: "Kit und Durchsicht auf Papier", minutes: 12, activity: "do", description: "Was im Kit liegt, dann zu zweit auf Papier: Datei, Zeile und welche Prüfung scheitert." },
+      { label: "Das Claude-Projekt, live", minutes: 4, activity: "listen", description: "Tim legt das Projekt in Claude Desktop an: Anweisungen, 13 Dateien, Codeausführung." },
+      { label: "Schritt 1: der Fragebogen", minutes: 7, activity: "vote", description: "Erst schätzen, wie viele Antworten belegt sind, dann die zitierte Zeile prüfen." },
+      { label: "Schritt 2: die Werbeaussagen", minutes: 6, activity: "vote", description: "Schätzen, wie viele Aussagen raus dürfen, dann die Verbotsliste." },
+      { label: "Schritt 3: das Bankformular", minutes: 5, activity: "do", description: "Eine Zeile selbst mit dem Handy nachrechnen, dann rechnet Claude." },
+      { label: "Schritt 4: das Register", minutes: 4, activity: "vote", description: "Alle 21 Antworten in einer Excel-Datei, und welches Dokument zuerst fehlt." },
+      { label: "Schritt 5: die Nachreichung", minutes: 5, activity: "vote", description: "Ein neues Dokument kommt, einige Status ändern sich. Wie viele?" },
+      { label: "Gemessen und Mitnehmen", minutes: 4, activity: "listen", description: "Was wir mit Claude gemessen haben, dann Kit, Skill und Demo für zu Hause." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 90,
     selfStudyDurationLabel: "Allein ca. 90 Min.",
     needs: [
-      "Live: nichts zu installieren, ein Stift oder dein Handy für die Abstimmungen",
-      "Zu Hause: Claude (App oder claude.ai, jeder Plan) mit Codeausführung und Dateierstellung („Settings“, „Capabilities“, standardmäßig an)",
+      "Live: nichts zu installieren, ein Stift und ein Handy zum Rechnen; abgestimmt wird per Handzeichen",
+      "Zu Hause: Claude (App oder claude.ai, jeder Plan) mit Codeausführung und Dateierstellung, oder Codex mit dem entpackten Kit-Ordner; Anleitung in START-HIER.md",
     ],
     notNeeded: [
       "Programmierkenntnisse",
@@ -120,10 +121,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-25",
+      reviewedAt: "2026-10-29",
       aiOutputsRecordedAt: "2026-10-26",
       data: "synthetic",
-      note: "Auch Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt. Keine Rechtsberatung.",
+      note: "Das Weingut, seine Zertifikate und Dokumente sind erfunden; zitierte Gesetze und Regeln sind echt. Keine Rechtsberatung.",
     },
     steps: [
       {
@@ -131,7 +132,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         title: "Das Projekt anlegen",
         description:
           "Ein Claude-Projekt bekommt 13 Firmendateien und drei Regeln: nur unsere Dateien, Datei und Zeile nennen, LÜCKE oder SCHWACH statt Schätzung.",
-        tool: "Schritt 0 · Claude-Projekt",
+        tool: "Einrichtung · Claude-Projekt",
       },
       {
         n: "02",
@@ -193,7 +194,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("de", [
       [
-        "Deck · 15 Folien",
+        "Deck · 17 Folien",
         `Für den Beamer. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
       ],
       [
@@ -211,9 +212,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG reports with AI",
     eyebrow: "Workshop 04 · ESG",
     summary:
-      "Since 27.09.2026, wine in Germany may not be called climate neutral because of bought credits. A North Macedonian winery checks with Claude what it can prove.",
+      "The invented winery Crvena Zemja must answer an importer, marketing and a bank. Which of its 21 answers do the 13 files support?",
+    lede: "A winery must answer three ESG requests: Tim checks 13 files live in Claude while the room predicts and checks the evidence.",
     description:
-      "Since 27.09.2026 no environmental claim in Germany may rest on bought carbon credits, and banks in North Macedonia lend green money from the EBRD. Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, has three ESG requests open: a questionnaire from its Swedish importer, seven environmental claims from its own marketing team for German shelves and the website, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room works along on paper or phones: the group finds defects in the files, predicts each result before Claude shows it, and decides on the marketing claims.",
+      "Since 27.09.2026 no product in Germany may be advertised as climate neutral or lower-emission because of bought carbon credits, and banks in North Macedonia lend green money from the EBRD. Vinarija Crvena Zemja, an invented family winery in Kavadarci municipality, North Macedonia, has three ESG requests open: a questionnaire from its Swedish importer, seven environmental claims from its own marketing team for German shelves and the website, and its bank's screening form for a solar loan. Tim demos Claude live on a projector while the room works along on paper or phones: the group finds defects in the files, predicts each result before Claude shows it, and decides on the marketing claims.",
     format: "Live workshop with deck",
     duration: "~60 minutes",
     accessNote:
@@ -221,9 +223,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     outcome:
       "An evidence register: every answer with a file and line, or with the missing document. Plus a Claude skill that applies the evidence check to every new request.",
     stageExplainer: {
-      heading: "What is the kit?",
+      heading: "What do we check?",
       body:
-        "A zip with 13 invented company files, three requests, five prompts and the evidence check on one page. You put them into a Claude Project and check every answer against the files. About 90 minutes the first time.",
+        "ESG means environment, social matters and governance. An importer, marketing and a bank need evidence. The kit has 13 invented files, three requests and five prompts to work through at home in Claude or Codex.",
       facts: ["13 files", "5 prompts", "about 90 min alone"],
     },
     audience: [
@@ -242,24 +244,24 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Spot which answers change when a late document arrives, and have Claude update them.",
     ],
     agenda: [
-      { label: "Why this case", minutes: 4, activity: "listen", description: "What actually happened in Germany and Skopje, and the question it leaves a winery with." },
-      { label: "One sentence, one file", minutes: 5, activity: "vote", description: "Would you print this shelf card? Vote first, then put the file next to it." },
-      { label: "The evidence check", minutes: 3, activity: "listen", description: "Four checks for every answer: quote, period, scope, approval." },
-      { label: "Requests, kit and project", minutes: 6, activity: "do", description: "Who asks, what is in the kit and how to set up the Claude Project." },
-      { label: "Review without Claude", minutes: 8, activity: "do", description: "In pairs on paper: file, line and which check fails." },
-      { label: "Step 1: the questionnaire", minutes: 6, activity: "vote", description: "Predict how many answers are covered, then check Claude's work." },
-      { label: "Step 2: the marketing claims", minutes: 7, activity: "vote", description: "Decide for each claim: send or not." },
-      { label: "Step 3: the bank form", minutes: 5, activity: "do", description: "Work out one line with a calculator yourself, then Claude." },
-      { label: "Register and late document", minutes: 10, activity: "do", description: "Every answer in one place, then a new document changes some of them. Last: what we measured with Claude, and what we did not." },
-      { label: "Three sentences and take-home", minutes: 6, activity: "write", description: "Place three new sentences on paper, then the skill and templates for your own company." },
+      { label: "The case", minutes: 7, activity: "listen", description: "The winery, three requests and the decision; then the rules for German marketing, green loans and Norwegian packaging." },
+      { label: "Today and the rule", minutes: 6, activity: "vote", description: "The question of the hour, then one sentence against its file: vote first, then check." },
+      { label: "Kit and review on paper", minutes: 12, activity: "do", description: "What is in the kit, then in pairs on paper: file, line and which check fails." },
+      { label: "The Claude project, live", minutes: 4, activity: "listen", description: "Tim sets up the project in Claude Desktop: instructions, 13 files, code execution." },
+      { label: "Step 1: the questionnaire", minutes: 7, activity: "vote", description: "Predict how many answers are covered, then check the cited line." },
+      { label: "Step 2: the marketing claims", minutes: 6, activity: "vote", description: "Predict how many claims may go out, then the ban list." },
+      { label: "Step 3: the bank form", minutes: 5, activity: "do", description: "Work out one line on your phone yourself, then Claude calculates." },
+      { label: "Step 4: the register", minutes: 4, activity: "vote", description: "All 21 answers in one Excel file, and which document is missing first." },
+      { label: "Step 5: the late document", minutes: 5, activity: "vote", description: "A new document arrives and some statuses change. How many?" },
+      { label: "Measured and take home", minutes: 4, activity: "listen", description: "What we measured with Claude, then kit, skill and demo for home." },
     ],
     agendaSource: "deck",
     minutesLive: 60,
     minutesSelfStudy: 90,
     selfStudyDurationLabel: "solo about 90 min",
     needs: [
-      "Live: nothing to install, a pen or your phone for the votes",
-      "At home: Claude (app or claude.ai, any plan) with code execution and file creation on (“Settings”, “Capabilities”, on by default)",
+      "Live: nothing to install, a pen and a phone for one calculation; votes are by show of hands",
+      "At home: Claude (app or claude.ai, any plan) with code execution and file creation, or Codex with the unzipped kit folder; setup in START-HERE.md",
     ],
     notNeeded: [
       "Programming skills",
@@ -274,10 +276,10 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     provenance: {
       author: "Tim Löhr",
-      reviewedAt: "2026-10-25",
+      reviewedAt: "2026-10-29",
       aiOutputsRecordedAt: "2026-10-26",
       data: "synthetic",
-      note: "Certificates and documents are invented too; the laws and rules cited are real. Not legal advice.",
+      note: "The winery, its certificates and its documents are invented; the laws and rules cited are real. Not legal advice.",
     },
     steps: [
       {
@@ -285,7 +287,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         title: "Set up the Project",
         description:
           "A Claude Project gets 13 company files and three rules: only our files, name file and line, GAP or WEAK instead of a guess.",
-        tool: "Step 0 · Claude Project",
+        tool: "Setup · Claude Project",
       },
       {
         n: "02",
@@ -347,7 +349,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("en", [
       [
-        "Deck · 15 slides",
+        "Deck · 17 slides",
         `For the projector. Every prompt has a copy button. ${DECK_KEYS.en}`,
       ],
       [

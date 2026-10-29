@@ -23,7 +23,7 @@ export interface DemoIntroContent {
   readonly explore: string;
   /** "Alles läuft in deinem Browser. Nichts wird gesendet." */
   readonly footnote: string;
-  /** Optional real news the case rests on, one short paragraph above the sentences. */
+  /** Optional real news the case rests on, one short paragraph under the sentences. */
   readonly news?: readonly string[];
 }
 
@@ -57,9 +57,29 @@ export function DemoIntro({
   readonly tone?: GlasTone;
 }) {
   const start = useRef<HTMLButtonElement | null>(null);
+  const text = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (autoFocus) start.current?.focus({ preventScroll: true });
   }, [autoFocus]);
+  // On a short screen the text scrolls: while more of it waits below the cut, the cut fades out, so
+  // nobody mistakes the half line behind the buttons for the end of the card.
+  useEffect(() => {
+    const box = text.current;
+    if (!box) return;
+    const mark = () => {
+      const more = box.scrollHeight - box.clientHeight - box.scrollTop > 4;
+      if (more) box.setAttribute("data-more", "");
+      else box.removeAttribute("data-more");
+    };
+    mark();
+    box.addEventListener("scroll", mark, { passive: true });
+    const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(mark);
+    observer?.observe(box);
+    return () => {
+      box.removeEventListener("scroll", mark);
+      observer?.disconnect();
+    };
+  }, []);
   return (
     <GlasPanel
       as="section"
@@ -73,19 +93,20 @@ export function DemoIntro({
       data-demo-intro=""
     >
       {/* The text scrolls on a short screen; the two buttons and the footnote always stay in view. */}
-      <div className="glas-intro-text">
+      <div ref={text} className="glas-intro-text">
         <p className="glas-intro-kicker">{content.kicker}</p>
         <h2 id={headingId} className="glas-intro-title">
           {content.title}
         </h2>
+        {/* The case first (what this is, what you do), then the real news it rests on. */}
+        <p className="glas-intro-body" data-demo-intro-body="">
+          {content.sentences.join(" ")}
+        </p>
         {content.news && content.news.length > 0 ? (
           <p className="glas-intro-news" data-demo-intro-news="">
             {content.news.join(" ")}
           </p>
         ) : null}
-        <p className="glas-intro-body" data-demo-intro-body="">
-          {content.sentences.join(" ")}
-        </p>
       </div>
       <div className="glas-intro-actions">
         <GlasButton buttonRef={start} variant="prominent" size="large" block onClick={onStart} data-demo-start="">

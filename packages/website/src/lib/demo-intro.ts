@@ -26,7 +26,7 @@ export interface DemoIntroCopy {
   readonly start: string;
   /**
    * Optional: up to two sentences of real, dated news the invented case
-   * rests on, shown above the four sentences. They are context, not part of
+   * rests on, shown after the four sentences. They are context, not part of
    * the B.8 formula, so they do not count towards its 50 to 75 words.
    */
   readonly news?: readonly string[];

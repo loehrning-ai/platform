@@ -14,7 +14,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "vardar-audit-kit-de.zip",
     title: "Das Audit-Kit von Vardar Works",
-    lead: "Elf Dateien, acht Anforderungen, drei Schritte in deinem eigenen Claude-Konto.",
+    lead: "Vardar betreibt Tannwalds Kundenservice. Der Kunde will acht Nachweise. Mit elf Dateien prüfst du, welche Anforderungen belegt sind.",
     stats: [
       { value: "19", label: "Dateien" },
       { value: "3", label: "Schritte" },
@@ -41,11 +41,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Die elf Dateien in ordner/.",
         action: "Claude liest Zeitraum und Freigabe aus dem Text.",
         output: "Eine Nachweisliste mit elf Zeilen.",
-        segments: [
-          { tone: "ok", label: "hält", value: 8 },
-          { tone: "missing", label: "SCHEITERT", value: 3 },
-        ],
-        note: "Drei Dateien fallen durch, und ihr Name verrät nicht, welche.",
+        note: "Wie viele der elf Dateien fallen durch? Sag es zuerst voraus, dann prüf es in LOESUNGEN.md. Der Dateiname verrät es nicht: Bei einer Datei führt FINAL im Namen in die Irre.",
       },
       {
         tag: "Schritt 2",
@@ -53,12 +49,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "request_tannwald.md und die Liste aus Schritt 1.",
         action: "Claude sucht wörtliche Zitate und rechnet im Code.",
         output: "Eine Tabelle mit Zitat und Status.",
-        segments: [
-          { tone: "ok", label: "BELEGT", value: 2 },
-          { tone: "partial", label: "SCHWACH", value: 1 },
-          { tone: "missing", label: "LÜCKE", value: 5 },
-        ],
-        note: "Belegt heißt belegt, nicht gut: R1 belegt, dass Daten in den USA liegen.",
+        note: "Wie viele der acht Anforderungen sind BELEGT? Sag es zuerst voraus. Achtung: BELEGT heißt nur belegt, nicht gut. Die Systemliste belegt für Anforderung R1, dass Kundendaten in den USA liegen.",
       },
       {
         tag: "Schritt 3",
@@ -70,7 +61,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "Du brauchst claude.ai oder die Claude-Desktop-App, jeder Plan, mit Codeausführung, und etwa 60 Minuten.",
+      "Im Kurs bedient Tim Claude; du schätzt und prüfst Zitate. Zu Hause wiederholst du die drei Schritte mit Claude, Codex oder Claude Code. START-HIER.md führt durch die Einrichtung. Plane etwa 60 Minuten ein.",
     fictionalNote:
       "Alles im Kit ist erfunden, bis auf zwei Zeilen von Anthropics öffentlicher Datenschutzseite. Keine Rechtsberatung.",
     contents: [
@@ -87,7 +78,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "vardar-audit-kit.zip",
     title: "The Vardar audit kit",
-    lead: "Eleven files, eight requests, three steps in your own Claude account.",
+    lead: "Vardar runs Tannwald's customer service. The customer wants eight documents. Use eleven files to check which requirements are proven.",
     stats: [
       { value: "19", label: "files" },
       { value: "3", label: "steps" },
@@ -114,11 +105,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "The eleven files in folder/.",
         action: "Claude reads period and approval from the text.",
         output: "An index with eleven rows.",
-        segments: [
-          { tone: "ok", label: "pass", value: 8 },
-          { tone: "missing", label: "FAIL", value: 3 },
-        ],
-        note: "Three files fail, and their names do not tell you which.",
+        note: "How many of the eleven files fail? Predict first, then check ANSWERS.md. The file names will not tell you: for one file, FINAL in its name misleads.",
       },
       {
         tag: "Step 2",
@@ -126,12 +113,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "request_tannwald.md and the index from step 1.",
         action: "Claude finds exact quotes and computes in code.",
         output: "A table with quote and status.",
-        segments: [
-          { tone: "ok", label: "COVERED", value: 2 },
-          { tone: "partial", label: "WEAK", value: 1 },
-          { tone: "missing", label: "GAP", value: 5 },
-        ],
-        note: "COVERED means proven, not good: R1 proves the data sits in the US.",
+        note: "How many of the eight requests are COVERED? Predict first. Note: COVERED means proven, not good. For request R1 the system list proves that customer data sits in the US.",
       },
       {
         tag: "Step 3",
@@ -143,7 +125,7 @@ export const AUDIT_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "You need claude.ai or the Claude desktop app, any plan, with code execution on, and about 60 minutes.",
+      "Tim operates Claude in the workshop; you predict and check quotes. At home repeat the three steps with Claude, Codex or Claude Code. START-HERE.md covers setup. Allow about 60 minutes.",
     fictionalNote:
       "Everything in the kit is invented, except two lines from Anthropic's public privacy page. Not legal advice.",
     contents: [

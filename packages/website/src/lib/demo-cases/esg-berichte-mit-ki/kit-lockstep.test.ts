@@ -10,7 +10,7 @@ import { figures } from "./figures";
 import { ACCIDENTS, BIO, BOTTLE, CERT_LINE, CLAIM_SAVING, DECLARATION, DRAFT_LINE, FILE_IDS, FILE_NAMES, HEADCOUNT, KIT_ROOT, PROFILE_TANK_LINE, SEPTEMBER_INVOICE, STROM, WASSER, type FileId } from "./kit";
 import { longDate } from "./figures";
 import { INVOICE_PATHS, kitText } from "./kit-text";
-import { formatLines, LEDGER } from "./ledger";
+import { formatLines, LEDGER, tileStatus, VSME, vsmeCounts } from "./ledger";
 import { THREADS } from "./threads";
 
 /*
@@ -119,6 +119,18 @@ describe.each(["de", "en"] as const)("kit lockstep (%s)", (locale) => {
         expect(line, `${row.id}: ${file}`).toContain(`${SHORT[locale][file]} ${formatLines(refs, pack.own.words.to)}`);
       }
     }
+  });
+
+  it("holds every VSME tile and its tally to the published answer key", () => {
+    const answers = lines(locale, locale === "de" ? "loesungen/LOESUNGEN.md" : "answers/ANSWERS.md").join("\n");
+    const status = locale === "de" ? { belegt: "BELEGT", luecke: "LÜCKE" } : { belegt: "COVERED", luecke: "GAP" };
+    for (const entry of VSME) {
+      expect(answers, entry.id).toContain(`| ${entry.id} | ${status[tileStatus(entry.done, entry.total) as keyof typeof status]} | ${entry.done} ${locale === "de" ? "von" : "of"} ${entry.total} |`);
+    }
+    const counts = vsmeCounts("before");
+    expect(answers).toContain(locale === "de" ? `Summe: ${counts.belegt} BELEGT, ${counts.luecke} LÜCKE.` : `Total: ${counts.belegt} COVERED, ${counts.luecke} GAP.`);
+    const vsme = lines(locale, `${folder(locale)}${FILE_NAMES.vsme[locale]}`).join("\n");
+    expect(vsme).toMatch(locale === "de" ? /gewähltes Modul, Einzel- oder Konzernbericht/ : /module chosen, individual or consolidated report/);
   });
 
   it("states the objective word for word as the skill does", () => {

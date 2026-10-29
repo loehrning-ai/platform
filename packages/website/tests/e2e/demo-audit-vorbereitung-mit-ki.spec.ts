@@ -68,6 +68,10 @@ test.describe(`/demos/${SLUG}`, () => {
       const errors = collectErrors(page);
       await page.setViewportSize(PHONE);
       await page.goto(`${prefix}/demos/${SLUG}`, { waitUntil: "networkidle" });
+      const intro = page.locator("[data-demo-intro-body]");
+      await expect(intro).toContainText("Vardar Works");
+      await expect(intro).toContainText("Tannwald");
+      await expect(intro).toContainText(locale === "de" ? "Im Workshop bediene ich Claude live" : "In the workshop I run Claude live");
 
       // The intro card and both buttons fit the first screen; the page has not scrolled.
       const card = await page.locator("[data-demo-intro]").boundingBox();
@@ -125,25 +129,48 @@ test.describe(`/demos/${SLUG}`, () => {
       await expect(page.locator("[data-w05-drop]")).toBeVisible();
       await advanceTo(page, "claude");
       const stage = page.locator('[data-demo-stage] [data-w05-probe="recorded"]');
-      await expect(stage).toHaveAttribute("data-w05-take", `${locale}-r7-with-1`);
+      // The default take is the whole folder without the skill: the harder case, with the skill one switch away.
+      await expect(stage).toHaveAttribute("data-w05-take", locale === "de" ? "de-alle-without-5" : "en-alle-without-1");
       const claudeWindow = stage.locator("[data-w05-window]");
       await expect(claudeWindow).toContainText(locale === "de" ? "26.10.2026" : "26 October 2026");
       await expect(claudeWindow).toContainText("Claude Opus 5.5");
       await expect(claudeWindow).toContainText(locale === "de" ? "Darstellung" : "Depiction");
+      // At phone width both choices and the lookup buttons share one row, leaving the answer more room.
+      const controlTops = await page.locator(".w05-claude-dock > *").evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().top));
+      expect(Math.max(...controlTops) - Math.min(...controlTops)).toBeLessThan(8);
+      await expect(stage.locator("[data-w05-send]")).toHaveAccessibleName(locale === "de" ? "Aufzeichnung abspielen" : "Play the recording");
       // The composer's one button sends the prompt, then stops the stream: the whole answer with the page's marks drawn on it.
       await stage.locator("[data-w05-send]").click();
       await expect(stage.locator("[data-w05-send]")).toHaveAttribute("data-state", "stop");
       await stage.locator("[data-w05-send]").click();
       await expect(stage).toHaveAttribute("data-w05-done", "");
-      await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights?: Map<string, unknown> }).highlights?.has("w05-found") ?? false)).toBe(true);
+      // The English take quotes the files in the answer itself, so its found quotes are drawn there; the German take quotes them in its produced file.
+      if (locale === "en") await expect.poll(() => page.evaluate(() => (CSS as unknown as { highlights?: Map<string, unknown> }).highlights?.has("w05-found") ?? false)).toBe(true);
       await page.locator("[data-w05-marks-open]").click();
       await expect(page.locator('[data-w05-mark="found"]').first()).toBeVisible();
       await page.locator("[data-w05-mark-open]").first().click();
       await expect(page.locator("[data-w05-doc]")).toBeVisible();
       await closeSheet(page);
+      // Under the window, the mistake hunt: a wrong rule says so, the right one solves the card.
+      const hunt = page.locator("[data-w05-hunt]");
+      await expect(hunt).toHaveAttribute("data-w05-hunt", "0");
+      await hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="4"]').click();
+      await expect(hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="4"]')).toHaveAttribute("data-verdict", "wrong");
+      await hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="7"]').click();
+      await expect(hunt.locator('[data-w05-hunt-card="7"] [data-w05-hunt-rule="7"]')).toHaveAttribute("data-verdict", "right");
+      await expect(hunt).toHaveAttribute("data-w05-hunt", "1");
 
-      // Scene 6: one gap request per weak or missing item; a tap fills the mail.
+      // Scene 6: the managing director's draft first. Each of its four sentences is struck with the kit's evidence, then the honest reply appears.
       await advanceTo(page, "mitnehmen");
+      await expect(page.locator("[data-w05-claim]")).toHaveCount(4);
+      await expect(page.locator("[data-w05-reply]")).toHaveCount(0);
+      await page.locator('[data-w05-claim="1"]').click();
+      await expect(page.locator('[data-w05-claim="1"]')).toHaveAttribute("aria-pressed", "true");
+      await expect(page.locator("[data-w05-claim-evidence]").first()).toContainText("training-records");
+      await page.locator("[data-w05-draft-all]").click();
+      await expect(page.locator("[data-w05-reply]")).toBeVisible();
+      await expect(page.locator("[data-w05-reply]")).toContainText("Dear");
+      // Then one gap request per weak or missing item; a tap fills the mail.
       await expect(page.locator("[data-w05-gap]")).toHaveCount(6);
       await page.locator('[data-w05-gap="R7"]').click();
       await expect(page.locator('[data-w05-mail="R7"]')).toContainText("R7");

@@ -11,7 +11,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "crvena-zemja-nachweisprobe.zip",
     title: "Das Nachweisprobe-Kit",
-    lead: "Dieselben drei ESG-Anfragen, derselbe Ordner, dein eigenes Claude.",
+    lead: "Ein Weingut muss Importeur, Marketing und Bank antworten. Mit 13 Dateien prüfst du zu Hause, welche Aussage einen Nachweis hat.",
     stats: [
       { value: "13", label: "Dateien" },
       { value: "5", label: "Prompts" },
@@ -36,7 +36,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Der Nachhaltigkeitsfragebogen von Nordvik Vin AB mit acht Fragen.",
         action: "Zählt die Strommonate im Code und beantwortet jede Frage mit Datei, Zeile und Status.",
         output: "Eine Tabelle mit genau einer Zeile je Frage und dem fehlenden Dokument, wo eines fehlt.",
-        note: "Wie viele der 8 Fragen werden BELEGT? Sag es zuerst voraus, dann prüf es in LOESUNGEN.md.",
+        note: "Wie viele der 8 Fragen sind belegt? Sag es zuerst voraus, dann prüf es in LOESUNGEN.md.",
       },
       {
         tag: "Prompt 2",
@@ -60,7 +60,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Die drei Anfragen noch einmal, dazu die elf Angaben des VSME-Basismoduls.",
         action: "Legt alle 21 Antworten in ein Register, ordnet sie den VSME-Angaben zu und listet jedes fehlende Dokument einmal.",
         output: "Eine Excel-Datei mit den Blättern Register, VSME und Anfordern.",
-        file: "evidence_register.xlsx",
+        file: "nachweisregister.xlsx",
         note: "Lücken werden benannt, nicht gefüllt.",
       },
       {
@@ -69,15 +69,15 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "Ein Dokument, das die Buchhaltung nachreicht, als Foto.",
         action: "Liest das Dokument, prüft es in sich, prüft jede davon betroffene Antwort neu und aktualisiert das Register.",
         output: "Eine Tabelle mit Wo, vorher, jetzt und warum.",
-        note: "Deine Vorhersage: Welche Status ändern sich, und welche bleiben gleich?",
+        note: "Deine Schätzung: Welche Status ändern sich, und welche bleiben gleich?",
       },
     ],
     howTo:
-      "Du brauchst Claude mit Codeausführung und Dateierstellung, jeder Plan. Beim ersten Mal etwa 90 Minuten. Dasselbe Kit auf Englisch, so wie der Workshop lief: crvena-zemja-esg-kit.zip, auf der englischen Seite und in der Demo.",
+      "Im Workshop führt Tim seinen Claude vor; du schätzt und prüfst die Quellen. Zu Hause: Kit entpacken, START-HIER.md lesen und die fünf Prompts in Claude ausführen. Eine Anleitung für Codex oder Claude Code steht ebenfalls dort. Etwa 90 Minuten. Englische Ausgabe: crvena-zemja-esg-kit.zip.",
     fictionalNote:
       "Alles im Kit ist erfunden, nur die zitierten Gesetze, Standards und Regeln sind echt.",
     contents: [
-      { name: "START-HIER.md", description: "Durchsicht, Einrichtung und fünf Prompts zum Kopieren." },
+      { name: "START-HIER.md", description: "Einrichtung in Claude oder Codex, Durchsicht und fünf Prompts." },
       { name: "nachweisprobe.md", description: "Die vier Prüfungen und drei Status auf einer Seite." },
       { name: "projektanweisungen.md", description: "Der Stichtag und die drei Regeln für Claude." },
       { name: "ordner/", description: "13 Firmendateien, so unordentlich wie eine echte Ablage." },
@@ -90,7 +90,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "crvena-zemja-esg-kit.zip",
     title: "The evidence check kit",
-    lead: "The same three ESG requests, the same folder, your own Claude.",
+    lead: "A winery must answer its importer, marketing team and bank. With 13 files you check at home which claim has evidence.",
     stats: [
       { value: "13", label: "files" },
       { value: "5", label: "prompts" },
@@ -115,7 +115,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
         input: "The sustainability questionnaire from Nordvik Vin AB, with eight questions.",
         action: "Counts the electricity months in code and answers every question with file, line and status.",
         output: "A table with exactly one row per question, and the missing document where one is missing.",
-        note: "How many of the 8 questions will be COVERED? Predict first, then check ANSWERS.md.",
+        note: "How many of the 8 questions are covered? Predict first, then check ANSWERS.md.",
       },
       {
         tag: "Prompt 2",
@@ -152,11 +152,11 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       },
     ],
     howTo:
-      "You need Claude with code execution and file creation, any plan. About 90 minutes the first time. The same kit in German: crvena-zemja-nachweisprobe.zip, in the workshop's demo.",
+      "In the workshop Tim runs his Claude; you predict and check the sources. At home: unzip the kit, read START-HERE.md and run the five prompts in Claude. It also includes a route for Codex or Claude Code. About 90 minutes. German edition: crvena-zemja-nachweisprobe.zip.",
     fictionalNote:
       "Everything in the kit is invented; only the laws, standards and rules quoted are real.",
     contents: [
-      { name: "START-HERE.md", description: "Review, setup and five prompts to copy." },
+      { name: "START-HERE.md", description: "Setup in Claude or Codex, review and five prompts." },
       { name: "evidence-check.md", description: "The four checks and three statuses on one page." },
       { name: "project-instructions.md", description: "The reference date and the three rules for Claude." },
       { name: "files/", description: "13 company files, as messy as a real filing system." },

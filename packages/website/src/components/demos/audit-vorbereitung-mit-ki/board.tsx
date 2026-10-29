@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 import { breakingCheck, type CheckSet } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/breaks";
 import type { ItemId } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/case";
 import { decisionFor } from "@/lib/demo-cases/audit-vorbereitung-mit-ki/decision-lines";
@@ -30,6 +30,7 @@ export function Board({
   onFile,
   onTurn,
   lead,
+  matches,
 }: {
   readonly model: Model;
   readonly fmt: Fmt;
@@ -48,6 +49,8 @@ export function Board({
   readonly onTurn: (id: ItemId) => void;
   /** A question above the board (scene 1 before the guess). */
   readonly lead?: string;
+  /** Scene 1: the matches by file name, counted up while the lines draw, struck once the guess is kept. */
+  readonly matches?: { readonly n: number; readonly struck: boolean };
 }) {
   const { copy } = fmt;
   const holding = model.rows.filter((row) => breakingCheck(row, active) === null).length;
@@ -91,7 +94,16 @@ export function Board({
         ) : (
           <>
             <span className="w05-label">{copy.folder.headRequests}</span>
-            <span className="w05-label">{copy.folder.headFiles}</span>
+            <span className="w05-label w05-head-files">
+              {copy.folder.headFiles}
+              {matches ? " " : null}
+              {matches ? (
+                <span className="w05-matches" data-w05-matches={matches.n} data-struck={matches.struck ? "" : undefined}>
+                  <span className="w05-matches-long">{fmt.t(copy.folder.matches, { n: matches.n })}</span>
+                  <span className="w05-matches-short">{fmt.t(copy.folder.matchesShort, { n: matches.n })}</span>
+                </span>
+              ) : null}
+            </span>
           </>
         )}
       </div>
@@ -167,7 +179,7 @@ function CardBack({ fmt, row, test }: { readonly fmt: Fmt; readonly row: StageRo
       <span className="w05-back-line">
         {quote.missingParts.map((part) => (
           <span key={part} className="w05-back-part">
-            {part} <em>{copy.checks.empty}</em>
+            <Breakable name={part} /> <em>{copy.checks.empty}</em>
           </span>
         ))}
       </span>
@@ -179,6 +191,26 @@ function CardBack({ fmt, row, test }: { readonly fmt: Fmt; readonly row: StageRo
     <span className="w05-back-line">
       <span className="w05-back-text">{decision.span}</span>
       <span className="w05-back-no">{fmt.t(copy.line, { n: decision.line })}</span>
+    </span>
+  );
+}
+
+/** A file name that may wrap after each underscore and nowhere else, so WebKit never breaks "2026-09" at its hyphen. */
+function Breakable({ name }: { readonly name: string }) {
+  const parts = name.split("_");
+  // One inline box: the card front is a flex container, and loose parts would each become a flex item that never wraps.
+  return (
+    <span className="w05-breakable">
+      {parts.map((part, index) => (
+        <Fragment key={index}>
+          <span className="w05-nobreak">{part}</span>
+          {index < parts.length - 1 ? (
+            <>
+              _<wbr />
+            </>
+          ) : null}
+        </Fragment>
+      ))}
     </span>
   );
 }
@@ -209,7 +241,9 @@ function FileCard({
       aria-pressed={test ? turned : undefined}
     >
       <span className="w05-card-inner">
-        <span className="w05-card-front w05-file">{file}</span>
+        <span className="w05-card-front w05-file">
+          <Breakable name={file} />
+        </span>
         <span className="w05-card-back" aria-hidden={turned ? undefined : "true"}>
           {test ? <CardBack fmt={fmt} row={row} test={test} /> : null}
         </span>

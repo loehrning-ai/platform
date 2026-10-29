@@ -70,7 +70,7 @@ export default async function WorkshopsPage() {
           inLanguage: locale === "de" ? "de-DE" : "en-GB",
           isAccessibleForFree: true,
           learningResourceType: "Workshop",
-          educationalUse: "self-study",
+          educationalUse: workshop.minutesLive ? "group work" : "self-study",
           timeRequired: `PT${workshop.minutesLive ?? workshop.minutesSelfStudy}M`,
           teaches: workshop.outcomes,
         })),

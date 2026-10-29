@@ -396,8 +396,12 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
                 <span className="cds-label">{copy.newChat}</span>
               </span>
               <span className="cds-nav-item">
-                <GlasIcon name="home" />
+                <GlasIcon name="chat" />
                 <span className="cds-label">{copy.sidebar.home}</span>
+              </span>
+              <span className="cds-nav-item">
+                <GlasIcon name="folder" />
+                <span className="cds-label">{copy.sidebar.projects}</span>
               </span>
               <span className="cds-nav-item">
                 <GlasIcon name="code" />
@@ -407,10 +411,6 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
                 <GlasIcon name="sliders" />
                 <span className="cds-label">{copy.sidebar.customize}</span>
               </button>
-              <span className="cds-nav-item">
-                <GlasIcon name="folder" />
-                <span className="cds-label">{copy.sidebar.projects}</span>
-              </span>
               <span className="cds-recents cds-label">{copy.sidebar.recents}</span>
               <span className="cds-recent cds-label" data-current="">
                 {prompt.label}
@@ -431,7 +431,7 @@ export function ClaudeDesktopScene({ scene, locale, skillName, kitFiles, initial
                 <div className="cds-column" data-fade={replay.started ? undefined : ""}>
                   {replay.started ? null : (
                     <div className="cds-empty">
-                      <p className="cds-greeting">{locale === "de" ? "Wobei kann ich helfen?" : "How can I help?"}</p>
+                      <p className="cds-greeting">How can I help you today?</p>
                     </div>
                   )}
                   {frame.turns.map((turnFrame, index) => (

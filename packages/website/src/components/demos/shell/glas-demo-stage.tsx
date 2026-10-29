@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { cx } from "@/components/werk/cx";
 import { GLAS_PRIORITY } from "@/components/demos/glas/budget";
 import { GlasButton } from "@/components/demos/glas/button";
@@ -17,6 +17,16 @@ import { useDemoV4Page } from "./demo-v4-context";
 
 /** How long the intro card takes to materialize out before it unmounts. */
 const INTRO_LEAVE_MS = 320;
+
+/**
+ * Where keyboard focus goes when the intro leaves: the stage itself (tabindex -1, out of the tab
+ * order). The next Tab reaches the picture's first control, then the dock, never the page below;
+ * the arrow keys keep driving the clock, because no slider or button owns them yet.
+ */
+export function focusStage(stage: HTMLElement): void {
+  if (!stage.hasAttribute("tabindex")) stage.setAttribute("tabindex", "-1");
+  stage.focus({ preventScroll: true });
+}
 
 /**
  * The v4 stage (Glas): the field, the demo's data, the caption on glass, the
@@ -65,6 +75,23 @@ export function DemoGlasStage({
   // The last beat ends with the Claude window the page hands in, above the demo's own take-home.
   const finale = !inIntro && clock.beat.kind === "takehome" && page.claude ? page.claude : null;
   const [introMounted, setIntroMounted] = useState(inIntro);
+  const dataRef = useRef<HTMLDivElement | null>(null);
+  const wasIntro = useRef(inIntro);
+
+  // Leaving the intro unmounts the focused "Starten": hand focus to the demo, not to <body>.
+  useEffect(() => {
+    const left = wasIntro.current && !inIntro;
+    wasIntro.current = inIntro;
+    if (!left) return;
+    const frame = requestAnimationFrame(() => {
+      const stage = dataRef.current?.closest<HTMLElement>("[data-demo-stage]");
+      if (!stage) return;
+      const active = document.activeElement;
+      if (active && active !== document.body && !active.closest(".demo4-intro-layer")) return;
+      focusStage(stage);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [inIntro]);
 
   useEffect(() => {
     if (inIntro) {
@@ -92,7 +119,7 @@ export function DemoGlasStage({
       data-demo-phase={clock.phase}
       data-demo-finale={finale ? "" : undefined}
     >
-      <div className="demo4-data" data-demo-data="" inert={inIntro || undefined}>
+      <div ref={dataRef} className="demo4-data" data-demo-data="" inert={inIntro || undefined}>
         {finale}
         {children}
       </div>

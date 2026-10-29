@@ -59,11 +59,15 @@ const ALL_NOTES = {
     "Mit dem Skill schreibt Claude in allen vier Aufnahmen eine Datei mit den Nachweisen. Die Seite findet jedes Zitat darin wörtlich in den Ordnerdateien.",
     "Ohne den Skill legt Claude in fünf von sieben Aufnahmen Kopien der Ordnerdateien an. Vier dieser sieben zeigt die Seite nicht. Drei hat unser Rekorder nicht vollständig festgehalten, in einer stehen zwei verschiedene Dateien mit demselben Namen.",
     "In der gezeigten Aufnahme ohne Skill steht Klausel 7 auf Deutsch in Anführungszeichen. Der Vertrag sagt es auf Englisch, also ist das kein wörtliches Zitat.",
+    "Mit dem Skill zählt Claude bei R3 30 Tage ohne Regel: Claude Team läuft seit 1.9., die Regel gilt ab 1.10. Das Kit zählt nach Regel 5 den ganzen Prüfzeitraum ab 10.12.2025, also 295 Tage. Beides ist richtig gerechnet, nur über verschiedene Zeiträume.",
+    "Mit dem Skill nennt Claude den kostenlosen Chatbot aus der IT-Notiz als möglichen Vorfall für R6 und überlässt die Entscheidung der Geschäftsführung. So steht es auch im Kit.",
   ],
   en: [
     "With the skill, Claude writes a file with the evidence in all four recordings. The page finds every quote in it, word for word, in the folder files.",
     "Without the skill, Claude makes copies of the folder files in five of seven recordings. The page does not show four of these seven. Our recorder did not capture three of them completely, and one holds two different files with the same name.",
     "In the recording without the skill shown here, Claude gives none of the eight requests one of the statuses covered, weak or gap.",
+    "With the skill, Claude counts only September for R3: Claude Team has run since 1 September, the rule applies from 1 October. The kit counts the whole audit window from 10 December 2025 under rule 5, so 295 days. Both are counted correctly, over different spans.",
+    "With the skill, Claude names the free chatbot from the IT notes as a possible R6 incident and leaves the decision to the managing director. The kit says the same.",
   ],
 } as const;
 

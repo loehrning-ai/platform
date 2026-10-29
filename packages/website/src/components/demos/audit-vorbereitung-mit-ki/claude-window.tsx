@@ -229,7 +229,7 @@ export function ClaudeWindow({
             <span className="w05-cw-rail-label">{scene.newChat}</span>
           </span>
           <span className="w05-cw-rail-item" aria-hidden="true">
-            <GlasIcon name="home" />
+            <GlasIcon name="chat" />
             <span className="w05-cw-rail-label">{scene.sidebar.home}</span>
           </span>
           <span className="w05-cw-rail-item" aria-hidden="true">
@@ -258,7 +258,7 @@ export function ClaudeWindow({
             }}
           >
             <p className="w05-cw-note">
-              {scene.caption(take.recordedOn, take.model)} {fmt.copy.claude.invented}.
+              {fmt.t(words.caption, { date: take.recordedOn, model: take.model })} {fmt.copy.claude.invented}.
             </p>
             {!replay.started || !frame ? (
               <p className="w05-cw-greeting">{words.greeting}</p>
@@ -310,10 +310,10 @@ export function ClaudeWindow({
                 {answer ? (
                   // The page's marks are drawn over this text; a tap on a found quote opens its file.
                   <div ref={setAnswerBox} className="w05-cw-answer cds-answer" onClick={onAnswerClick} data-w05-answer="">
-                    <MarkdownLite source={answer} streaming={!frame.answerComplete} />
+                    <MarkdownLite source={answer} streaming={!frame.answerComplete} tableLabel={words.tableLabel} />
                   </div>
                 ) : null}
-                {done && marks.some((mark) => mark.check.kind === "found") ? <p className="w05-cw-tap">{fmt.copy.claude.tapHint}</p> : null}
+                {done && marks.some((mark) => mark.source === null && mark.check.kind === "found") ? <p className="w05-cw-tap">{fmt.copy.claude.tapHint}</p> : null}
                 {done && take.produced ? (
                   <button type="button" className="w05-cw-produced" onClick={onOpenProduced} data-w05-produced="">
                     <span className="w05-cw-badge" aria-hidden="true">
@@ -333,6 +333,11 @@ export function ClaudeWindow({
             <div className="w05-cw-composer-row">
               <button type="button" className="w05-cw-round" onClick={onCopy} aria-label={copyLabel} data-w05-copy-prompt="">
                 <GlasIcon name={copied ? "check" : "copy"} />
+              </button>
+              {/* The skill switch of this run; a tap shows how to install the skill (on a phone the sidebar is hidden). */}
+              <button type="button" className="w05-cw-skill" data-on={take.withSkill ? "" : undefined} onClick={onInstall} data-w05-skill-chip="">
+                {fmt.t(take.withSkill ? words.skillOn : words.skillOff, { name: take.skillName })}
+                <span className="sr-only">{words.customizeHint}</span>
               </button>
               <span className="w05-cw-spacer" />
               <span className="w05-cw-model" aria-hidden="true">

@@ -45,6 +45,7 @@
     "ci:hygiene": "node packages/website/scripts/run-provider-free.mjs node scripts/ci.mjs hygiene",
     "copy:lint": "node scripts/copy-lint.mjs",
     "deck-keys:check": "node scripts/workshops/sync-deck-keys.mjs --check",
+    "deck-engine:check": "node scripts/workshops/sync-deck-engine.mjs --check",
     "workshop05-deck:check": "node scripts/workshop05/deck-src/build.mjs --check",
     "workshop06-kit:check": "node scripts/workshop06/build-kit.mjs --check",
     "workshop06-deck:check": "node scripts/workshop06/build-deck.mjs --check",

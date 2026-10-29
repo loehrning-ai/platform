@@ -77,6 +77,10 @@ describe("W05 kit lockstep", () => {
   it("the sample reply is the honest reply of ANSWERS.md", () => {
     expect(sampleReply()).toMatch(/25 of 120 staff are trained/);
     expect(sampleReply()).toMatch(/not run a restore test in 2026/);
+    expect(sampleReply().trim().split(/\s+/).length).toBeLessThanOrEqual(150);
+    expect(sampleReply()).not.toMatch(/we are reviewing|it is attached/);
+    expect(sampleReply()).toContain("Our folder contains neither");
+    expect(sampleReply()).toContain("These are commitments, not completed controls");
   });
 
   it("beats meet the v4 contract", () => {

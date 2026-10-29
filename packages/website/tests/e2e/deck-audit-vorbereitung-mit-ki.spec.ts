@@ -1,224 +1,185 @@
 import { expect, type Page, test } from "@playwright/test";
-import { countVisibleGlass, expectGlassBudget } from "./fixtures/glass";
 
 /**
- * Workshop 05 deck, both editions: every press from the cover to the last
- * build step, the key contract (r and Shift+R back to the cover, P opens the
- * presenter, Escape and ArrowLeft leave an appendix, repeats and unbound keys
- * do nothing), the presenter channel, the preview frame that binds no keys,
- * reduced motion and the solid chrome (no slide is full-bleed, so no glass).
+ * Workshop 05 deck, both editions, on the shared deck engine: every ArrowRight press walks the main
+ * slides step by step and never enters the appendix, ArrowLeft walks back, r and Shift+R return to
+ * #cover/0 and clear the room's votes, unbound keys do nothing, modified r stays the browser's, P
+ * opens the presenter, Escape leaves an appendix page for the slide it came from, a reload keeps the
+ * position the hash names, the phone note links only to a page on this site, and a phone never
+ * scrolls sideways.
  */
 
 const SLUG = "audit-vorbereitung-mit-ki";
 const EDITIONS = [
-  { lang: "de", file: "slides.html" },
-  { lang: "en", file: "en/slides.html" },
+  { lang: "de", deck: `/workshops/${SLUG}/slides.html`, presenter: `/workshops/${SLUG}/presenter.html`, demo: `/demos/${SLUG}` },
+  { lang: "en", deck: `/workshops/${SLUG}/en/slides.html`, presenter: `/workshops/${SLUG}/en/presenter.html`, demo: `/en/demos/${SLUG}` },
 ] as const;
 
-type DeckState = { index: number; id: string; step: number; steps: number; tallies: Record<string, string[]>; timers: number };
-type DeckWindow = { DECK: { state: () => DeckState; goto: (index: number) => void; slides: Element[] } };
+test.use({ contextOptions: { reducedMotion: "reduce" } });
 
-const state = (page: Page) => page.evaluate(() => (window as unknown as DeckWindow).DECK.state());
-const plan = (page: Page) =>
-  page.evaluate(() =>
-    Array.from(document.querySelectorAll("deck-stage > section")).map((slide) => ({
-      id: slide.id,
-      steps: Number(slide.getAttribute("data-steps")),
-      main: slide.getAttribute("data-kind") === "main",
-    })),
-  );
-
-/** The chrome's computed material: opaque paper, no filter, square. */
-const chromeMaterial = (page: Page, selector: string) =>
-  page.locator(selector).evaluate((element) => {
-    const style = getComputedStyle(element);
-    return {
-      background: style.backgroundColor,
-      filter: style.backdropFilter || style.getPropertyValue("-webkit-backdrop-filter") || "none",
-      radius: style.borderTopLeftRadius,
-    };
+const hash = (page: Page) => page.evaluate(() => decodeURIComponent(location.hash));
+const expectAt = (page: Page, where: string, why: string) => expect.poll(() => hash(page), why).toBe(where);
+/** The position the stage shows. WebKit refuses history writes after about 100 quick presses, so a
+ * long walk reads the slide and step from the DOM; the stage rewrites the hash once it is allowed. */
+const shown = (page: Page) =>
+  page.evaluate(() => {
+    const slide = document.querySelector<HTMLElement>("deck-stage > section[data-deck-active]");
+    return slide ? `#${slide.id}/${slide.dataset.stepCurrent}` : "";
   });
+const expectShown = (page: Page, where: string, why: string) => expect.poll(() => shown(page), why).toBe(where);
 
-async function open(page: Page, file: string) {
-  await page.goto(`/workshops/${SLUG}/${file}`);
-  await expect(page.locator("#cover")).toHaveAttribute("data-deck-active", "");
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
+/** Opens a deck URL; each edition keeps its own deck id, so the two never share storage or channels. */
+async function open(page: Page, url: string) {
+  await page.goto(url);
+  const target = new URL(url, "http://deck").hash.slice(1).split("/")[0] || "cover";
+  await expect(page.locator(`#${target}`)).toHaveAttribute("data-deck-active", "");
+  const deckId = url.includes("/en/") ? `${SLUG}:en` : SLUG;
+  await expect(page.locator("html")).toHaveAttribute("data-deck-id", deckId);
 }
+
+/** Every main position in order: #slide/0 .. #slide/last for each main slide. */
+const mainPositions = (page: Page) =>
+  page.evaluate(() =>
+    Array.from(document.querySelectorAll<HTMLElement>('deck-stage > section.slide[data-kind="main"]')).flatMap((slide) =>
+      Array.from({ length: Number(slide.dataset.stepTotal) + 1 }, (_, step) => `#${slide.id}/${step}`),
+    ),
+  );
 
 for (const edition of EDITIONS) {
-  test.describe(`W05 deck ${edition.lang}`, () => {
-    test("every press walks the main slides in order, then stops", async ({ page }) => {
-      await open(page, edition.file);
-      const slides = (await plan(page)).filter((slide) => slide.main);
-      expect(slides).toHaveLength(12);
-      const expected: Array<[string, number]> = [];
-      slides.forEach((slide, i) => {
-        for (let step = i === 0 ? 1 : 0; step <= slide.steps; step += 1) expected.push([slide.id, step]);
-      });
-      for (const [id, step] of expected) {
+  test.describe(`${SLUG} deck (${edition.lang})`, () => {
+    test("arrow keys walk every step of the main slides and never reach the appendix", async ({ page }) => {
+      test.setTimeout(120_000);
+      await open(page, edition.deck);
+      expect(await page.evaluate(() => typeof (window as unknown as { DeckKeys?: unknown }).DeckKeys)).toBe("object");
+      const positions = await mainPositions(page);
+      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(16);
+      await expectAt(page, positions[0], "starts on the cover");
+
+      for (const position of positions.slice(1)) {
         await page.keyboard.press("ArrowRight");
-        const now = await state(page);
-        expect([now.id, now.step], `press to ${id}/${step}`).toEqual([id, step]);
-        await expect(page).toHaveURL(new RegExp(`#${id}/${step}$`));
+        await expectShown(page, position, `forward to ${position}`);
       }
       await page.keyboard.press("ArrowRight");
-      expect((await state(page)).id, "ArrowRight never enters the appendix").toBe("result");
+      await expectShown(page, positions.at(-1)!, "the last main step is the end");
+
+      for (const position of [...positions].reverse().slice(1)) {
+        await page.keyboard.press("ArrowLeft");
+        await expectShown(page, position, `back to ${position}`);
+      }
     });
 
-    test("ArrowLeft enters the previous slide at its last step", async ({ page }) => {
-      await open(page, edition.file);
-      await page.keyboard.press("ArrowRight");
-      expect(await state(page)).toMatchObject({ id: "host", step: 0 });
-      await page.keyboard.press("ArrowRight");
-      for (let press = 0; press < 3; press += 1) await page.keyboard.press("ArrowRight");
-      await page.keyboard.press("ArrowRight");
-      expect(await state(page)).toMatchObject({ id: "draft", step: 0 });
-      await page.keyboard.press("ArrowLeft");
-      expect(await state(page)).toMatchObject({ id: "request", step: 3 });
-    });
+    test("r and Shift+R return to the cover; other keys and modified r do nothing", async ({ page }) => {
+      await open(page, `${edition.deck}#request/2`);
+      await expectAt(page, "#request/2", "deep link");
+      await expect(page.locator("#request")).toHaveAttribute("data-deck-active", "");
 
-    for (const key of ["r", "Shift+R"]) {
-      test(`${key} goes back to the cover and clears votes and timers`, async ({ page }) => {
-        await open(page, edition.file);
-        for (let press = 0; press < 5; press += 1) await page.keyboard.press("ArrowRight");
-        expect(await state(page)).toMatchObject({ id: "request", step: 3 });
-        await page.locator('#request [data-vote="estimate"] [data-value="3"]').click();
-        await page.locator('#request [data-vote="estimate"] [data-value="5"]').click();
-        await page.evaluate(() => (window as unknown as DeckWindow).DECK.goto(6));
-        await page.keyboard.press("ArrowRight");
-        await page.keyboard.press("ArrowRight");
-        await page.locator("#mission-1 [data-timer-toggle]").click();
-        const before = await state(page);
-        expect(before.tallies.estimate).toEqual(["3", "5"]);
-        expect(before.timers).toBeGreaterThan(0);
-        await page.locator("body").focus();
+      for (const key of ["Space", "PageDown", "End", "Home", "5", "0", "Enter"]) {
         await page.keyboard.press(key);
-        const after = await state(page);
-        expect(after).toMatchObject({ id: "cover", step: 0, tallies: {}, timers: 0 });
-        await expect(page.locator("#request .vote-total")).toHaveText(await page.locator("#request .vote-total").getAttribute("data-none") ?? "");
+        await expectAt(page, "#request/2", `${key} is unbound`);
+      }
+      const prevented = await page.evaluate(() =>
+        [{ ctrlKey: true }, { metaKey: true }, { altKey: true }].map((mods) => {
+          const event = new KeyboardEvent("keydown", { key: "r", code: "KeyR", bubbles: true, cancelable: true, ...mods });
+          document.dispatchEvent(event);
+          return event.defaultPrevented;
+        }),
+      );
+      expect(prevented).toEqual([false, false, false]);
+      await expectAt(page, "#request/2", "modified r is the browser's");
+
+      await page.evaluate(() => {
+        const input = document.createElement("input");
+        input.id = "probe";
+        document.body.append(input);
       });
-    }
+      await page.locator("#probe").focus();
+      await page.keyboard.press("r");
+      await expectAt(page, "#request/2", "r inside a form control types");
+      await page.locator("#probe").evaluate((input) => input.remove());
 
-    test("unbound keys, modifier combos and repeats do nothing", async ({ page }) => {
-      await open(page, edition.file);
+      await page.keyboard.press("r");
+      await expectAt(page, "#cover/0", "bare r resets");
       await page.keyboard.press("ArrowRight");
-      const at = await state(page);
-      for (const key of ["Space", "PageDown", "End", "Home", "5", "0", "Enter", "Control+ArrowRight", "Meta+r", "Alt+p", "Escape"]) {
-        await page.keyboard.press(key);
-        expect(await state(page), key).toMatchObject({ id: at.id, step: at.step });
-      }
-      await page.evaluate(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", repeat: true, bubbles: true })));
-      expect(await state(page), "auto-repeat").toMatchObject({ id: at.id, step: at.step });
-    });
-
-    test("P opens the presenter for this edition on every slide", async ({ page, context }) => {
-      await open(page, edition.file);
-      const slides = await plan(page);
-      for (let index = 0; index < slides.length; index += 1) {
-        await page.evaluate((i) => (window as unknown as DeckWindow).DECK.goto(i), index);
-        const [popup] = await Promise.all([context.waitForEvent("page"), page.keyboard.press("p")]);
-        await popup.waitForLoadState();
-        expect(popup.url(), slides[index].id).toContain(`presenter.html?deck=${encodeURIComponent(edition.file)}`);
-        await popup.close();
-      }
-    });
-
-    test("an appendix opens from slide 12 and Escape or ArrowLeft returns there", async ({ page }) => {
-      await open(page, edition.file);
-      const slides = await plan(page);
-      const result = slides.findIndex((slide) => slide.id === "result");
-      await page.evaluate((i) => (window as unknown as DeckWindow).DECK.goto(i), result);
-      await page.locator('#result [data-goto="a2"]').click();
-      expect((await state(page)).id).toBe("a2");
       await page.keyboard.press("ArrowRight");
-      expect((await state(page)).id, "ArrowRight inside the appendix").toBe("a3");
-      await page.keyboard.press("ArrowLeft");
-      expect((await state(page)).id, "ArrowLeft inside the appendix").toBe("a2");
+      await expect.poll(() => hash(page)).not.toBe("#cover/0");
+      await page.keyboard.press("Shift+R");
+      await expectAt(page, "#cover/0", "Shift+R resets");
+    });
+
+    test("Escape leaves an appendix page for the slide and step it came from; reload keeps the place", async ({ page }) => {
+      await open(page, `${edition.deck}#mission-1/1`);
+      await expectAt(page, "#mission-1/1", "deep link");
+      await page.evaluate(() => {
+        location.hash = "#a1/0";
+      });
+      await expect(page.locator("#a1")).toHaveAttribute("data-deck-active", "");
+      await page.keyboard.press("ArrowRight");
       await page.keyboard.press("Escape");
-      expect((await state(page)).id, "Escape").toBe("result");
-      await page.locator('#result [data-goto="a1"]').click();
-      await page.keyboard.press("ArrowLeft");
-      expect((await state(page)).id, "ArrowLeft from the first appendix slide").toBe("result");
-      await page.locator('#result [data-goto="a1"]').click();
-      await page.locator('#a1 [data-action="leave-appendix"]').click();
-      expect((await state(page)).id).toBe("result");
+      await expectAt(page, "#mission-1/1", "Escape returns");
+      await expect(page.locator("#mission-1")).toHaveAttribute("data-deck-active", "");
+
+      await page.keyboard.press("ArrowRight");
+      await expectAt(page, "#mission-1/2", "one step on");
+      await page.reload();
+      await expect(page.locator("#mission-1")).toHaveAttribute("data-deck-active", "");
+      await expectAt(page, "#mission-1/2", "reload keeps the position");
     });
 
-    test("a typed appendix hash returns to the slide and step it was typed on", async ({ page }) => {
-      await open(page, edition.file);
-      for (let press = 0; press < 4; press += 1) await page.keyboard.press("ArrowRight");
-      expect(await state(page)).toMatchObject({ id: "request", step: 2 });
-      await page.evaluate(() => { location.hash = "#a1/0"; });
-      await expect.poll(async () => (await state(page)).id, "the hash opens the appendix").toBe("a1");
-      await page.keyboard.press("Escape");
-      expect(await state(page), "Escape").toMatchObject({ id: "request", step: 2 });
+    test("r clears the room's votes along with the position", async ({ page }) => {
+      await open(page, `${edition.deck}#request/5`);
+      const votes = page.locator('#request [data-poll="estimate"] [data-poll-n]');
+      await page.locator('#request [data-poll="estimate"][data-value="3"]').click();
+      await page.locator('#request [data-poll="estimate"][data-value="3"]').click();
+      await expect(page.locator('#request [data-poll="estimate"][data-value="3"] [data-poll-n]')).toHaveText("2");
+      await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+      await page.keyboard.press("r");
+      await expectAt(page, "#cover/0", "r resets");
+      await expect.poll(() => votes.allTextContents()).toEqual(Array.from({ length: 9 }, () => "0"));
+      expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.includes(":poll:")))).toEqual([]);
     });
 
-    test("the presenter drives the deck; its preview frame binds no keys", async ({ page, context }) => {
-      await open(page, edition.file);
-      const presenter = await context.newPage();
-      await presenter.goto(`/workshops/${SLUG}/presenter.html?deck=${encodeURIComponent(edition.file)}`);
-      await expect(presenter.locator("html")).toHaveAttribute("lang", edition.lang);
-      await expect(presenter.locator("#pv-pos")).toHaveText(/01 \/ 12/);
-      await presenter.locator("#pv-forward").click();
-      await expect.poll(() => state(page).then((s) => s.id)).toBe("host");
-      await presenter.keyboard.press("ArrowRight");
-      await expect.poll(() => state(page).then((s) => s.id)).toBe("request");
-      await presenter.keyboard.press("ArrowRight");
-      await expect.poll(() => state(page).then((s) => s.step)).toBe(1);
-      await expect(presenter.locator("#pv-note")).not.toBeEmpty();
-
-      const frame = presenter.frameLocator("#pv-next-frame");
-      await expect(frame.locator("html")).toHaveAttribute("data-deck-preview", "");
-      const preview = presenter.frames().find((f) => f.url().includes("preview=1"));
-      expect(preview, "preview frame").toBeTruthy();
-      const previewBefore = await preview!.evaluate(() => (window as unknown as DeckWindow).DECK.state());
-      await preview!.evaluate(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "r", bubbles: true })));
-      await preview!.evaluate(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true })));
-      expect(await preview!.evaluate(() => (window as unknown as DeckWindow).DECK.state())).toMatchObject({ index: previewBefore.index, step: previewBefore.step });
-      expect(await state(page)).toMatchObject({ id: "request", step: 1 });
-      await presenter.close();
+    test("P opens this edition's presenter view, which follows the deck", async ({ page }) => {
+      await open(page, edition.deck);
+      const [popup] = await Promise.all([page.waitForEvent("popup"), page.keyboard.press("p")]);
+      await popup.waitForLoadState("domcontentloaded");
+      expect(new URL(popup.url()).pathname).toBe(edition.presenter);
+      await expect(popup.locator("#pv-conn")).toHaveAttribute("data-state", "live");
+      const label = edition.lang === "de" ? "Folie" : "Slide";
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 16`);
+      await page.bringToFront();
+      await page.keyboard.press("ArrowRight");
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 16`);
+      await popup.close();
     });
 
-    test("the toolbar is solid paper, never glass", async ({ page }) => {
-      await open(page, edition.file);
-      expect(await page.locator(".glass").count()).toBe(0);
-      await expectGlassBudget(page, `W05 deck ${edition.lang}`);
-      expect(await chromeMaterial(page, ".toolbar")).toEqual({ background: "rgb(243, 240, 233)", filter: "none", radius: "0px" });
+    test("the phone note links to this edition's demo and never to a script or another host", async ({ page }) => {
+      await open(page, edition.deck);
+      const link = page.locator("deck-stage .rotate a");
+      const resolved = () => link.evaluate((a) => (a as HTMLAnchorElement).href);
+      await expect.poll(resolved).toBe(new URL(edition.demo, page.url()).href);
+
+      for (const hostile of ["javascript:alert(1)", "data:text/html,x", "//example.com/x", "https://example.com/x"]) {
+        await page.route(`**${edition.deck}`, async (route) => {
+          const response = await route.fetch();
+          const body = (await response.text()).replace(/data-rotate-href="[^"]*"/, `data-rotate-href="${hostile}"`);
+          await route.fulfill({ response, body });
+        });
+        await open(page, edition.deck);
+        await expect.poll(resolved, { message: hostile }).toBe(new URL("./guide.html", page.url()).href);
+        await page.unrouteAll();
+      }
+    });
+
+    test("a phone in portrait never scrolls sideways and keeps the toolbar on screen", async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true, reducedMotion: "reduce" });
+      const page = await context.newPage();
+      await open(page, edition.deck);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+      const toolbar = await page.locator("deck-stage .controls").boundingBox();
+      expect(toolbar, "toolbar").not.toBeNull();
+      expect(toolbar!.x).toBeGreaterThanOrEqual(0);
+      expect(toolbar!.x + toolbar!.width).toBeLessThanOrEqual(390);
+      await context.close();
     });
   });
 }
-
-test("reduced motion lands every press on its final frame", async ({ browser }) => {
-  const context = await browser.newContext({ reducedMotion: "reduce" });
-  const page = await context.newPage();
-  await open(page, "slides.html");
-  for (let press = 0; press < 4; press += 1) await page.keyboard.press("ArrowRight");
-  const progress = await page.evaluate(() =>
-    Array.from(document.querySelectorAll('#request [data-from="1"]')).map((el) => getComputedStyle(el).getPropertyValue("--p").trim()).map(Number),
-  );
-  expect(progress.length).toBeGreaterThan(0);
-  expect(new Set(progress)).toEqual(new Set([1]));
-  await context.close();
-});
-
-test("phone portrait: the rotate note offers the demo and the page never scrolls sideways", async ({ browser }) => {
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-  const page = await context.newPage();
-  await open(page, "slides.html");
-  await expect(page.locator("[data-rotate]")).toBeVisible();
-  await expect(page.locator("[data-rotate] a")).toHaveAttribute("href", `/demos/${SLUG}`);
-  // Toolbar and note are both fixed on a phone: solid paper, so no fixed glass below 1024px.
-  expect((await countVisibleGlass(page)).visible).toBe(0);
-  await expectGlassBudget(page, "W05 deck at 390px");
-  for (const selector of [".toolbar", "[data-rotate]"]) {
-    expect(await chromeMaterial(page, selector), selector).toEqual({ background: "rgb(243, 240, 233)", filter: "none", radius: "0px" });
-  }
-  expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
-  await page.locator("[data-rotate-close]").click();
-  await expect(page.locator("[data-rotate]")).toBeHidden();
-  await context.close();
-});

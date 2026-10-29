@@ -56,6 +56,7 @@ export function EvidenceView({
   noticeHours,
   reducedMotion,
   focus,
+  lead,
   children,
 }: {
   readonly fmt: Fmt;
@@ -63,6 +64,8 @@ export function EvidenceView({
   readonly noticeHours: number;
   readonly reducedMotion: boolean;
   readonly focus?: TestId;
+  /** The sentence above the file, when it is not the folder's best one (the row's own file, R8). */
+  readonly lead?: string;
   readonly children?: ReactNode;
 }) {
   const decisions = decisionLines(evaluation);
@@ -72,7 +75,7 @@ export function EvidenceView({
   const covered = evaluation.tests.quote.quote !== null;
   return (
     <div className="w05-evidence" data-w05-evidence={evaluation.item.id}>
-      <p className="w05-sheet-lead">{covered ? fmt.t(copy.sheet.best, { id: evaluation.item.id, file: evaluation.doc.file }) : fmt.t(copy.sheet.none, { id: evaluation.item.id })}</p>
+      <p className="w05-sheet-lead">{lead ?? (covered ? fmt.t(copy.sheet.best, { id: evaluation.item.id, file: evaluation.doc.file }) : fmt.t(copy.sheet.none, { id: evaluation.item.id }))}</p>
       <p className="w05-request-text" lang="en">
         {evaluation.item.request}
       </p>

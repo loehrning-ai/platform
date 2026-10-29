@@ -60,9 +60,10 @@ export function MeasuredCard({ copy, edition }: { readonly copy: AppCopy; readon
           </p>
           <p>{m.handLead}</p>
           <p className="w4a-measured-small">{m.efrag}</p>
+          {/* What the time leaves out is a person's work: it sits in this column, so the card fits a 900 px window. */}
+          <p className="w4a-measured-small">{m.notCounted}</p>
         </div>
       </div>
-      <p className="w4a-measured-small">{m.notCounted}</p>
     </section>
   );
 }

@@ -2,6 +2,8 @@
 
 Fictional training material. Every company, person and document is invented, except the two lines quoted from Anthropic's public privacy page.
 
+In the workshop Tim operates Claude. You predict and check quotes. These setup steps are for repeating the case at home.
+
 Exercise date: Monday 9 November 2026. Read every date in the folder as of that day.
 
 Vardar Works DOOEL in Skopje (120 staff) runs customer service for Tannwald Haustechnik GmbH in Hamburg. That makes Vardar Tannwald's processor. On 9 November 2026 Tannwald sent a document request for a remote supplier audit on 10 December 2026. You hold the folder: 11 files, and every request item has a file whose name fits.
@@ -18,17 +20,24 @@ What you practise, in one sentence: "A file is evidence only when its quote, per
 The same four tests as in Workshop 04, now for a whole folder. COVERED, WEAK or GAP. A file out of date or unapproved: WEAK. A part without evidence, or the record shows “not met”: GAP. The weakest part counts. No quote, no COVERED. A policy shows intent; only a record shows practice.
 
 ## What you need
-- Claude (claude.ai or the desktop app), any plan, with code execution on: Settings > Capabilities > "Code execution and file creation". On Team or Enterprise your owner may need to allow it.
+- Claude (claude.ai or the desktop app), any plan, with code execution on: Settings > Capabilities > "Code execution and file creation" ("Create and edit files" in the updated layout). On Team or Enterprise your owner may need to allow it. Codex or Claude Code can also read the extracted folder; see below.
 - About 60 minutes. ANSWERS.md is the key. Open it after each step, not before.
 - Optional: the demo at loehrning.ai/demos/audit-vorbereitung-mit-ki walks through this folder in three minutes.
 
 ## Setup (5 minutes)
 1. In Claude open Projects and create "Vardar audit".
-2. Paste all of project-instructions.md into the Project instructions.
-3. Upload request_tannwald.md and the 11 files in folder/. If a .md or .csv file will not upload, rename it to .txt.
+2. Open "Set project instructions", paste all of project-instructions.md, then choose "Save instructions".
+3. In Project knowledge choose "+" and upload request_tannwald.md and the 11 files in folder/. If a .md or .csv file will not upload, rename it to .txt.
 4. No Projects? Start one chat, attach the 12 files and paste project-instructions.md above your first prompt.
 
-Start every step in a new chat inside the Project.
+Start every step in a new chat inside the Project. Earlier chat answers are not shared: download the index after Step 1 and attach it in Step 2; save the R1-to-R8 table after Step 2 and attach it in Step 3. Use "+", then "Add files or photos". Without a Project, stay in the same chat for all three steps.
+
+## With Codex or Claude Code
+Open the extracted vardar-audit-kit folder in Codex, or start Claude Code from that folder. Give it this instruction, then the same three prompts below, one at a time:
+
+    Read project-instructions.md and follow its rules for this exercise. Use only request_tannwald.md and the eleven files in folder/ as evidence. Do not read ANSWERS.md. Do not change the source files. Work as of 9 November 2026. Compute the figures in code and show the calculation.
+
+Keep the same conversation for all three steps. For Step 3 also read templates/gap-request.md and draft-reply.md. Open ANSWERS.md yourself after each step. No skill installation is needed for this case.
 
 ## Step 1: the evidence index (15 minutes)
 On paper first: how many of the 11 files pass PERIOD and APPROVAL?
@@ -40,6 +49,7 @@ On paper first: how many of the 11 files pass PERIOD and APPROVAL?
 Check against ANSWERS.md, Step 1. Look at the two policy files: what did Claude write as approver?
 
 ## Step 2: the eight requests (20 minutes)
+In the new Project chat attach your index from Step 1.
 On paper first: give R1 to R8 a status.
 
     Map R1 to R8 from request_tannwald.md to our files.
@@ -56,7 +66,7 @@ Open the code box and check two numbers: staff trained, and hours until Tannwald
 Optional: paste Claude's table into the Zitat-Probe (quote check) on the demo page. It checks every quote against the files, in your browser.
 
 ## Step 3: gap list and reply (20 minutes)
-Attach templates/gap-request.md and draft-reply.md, then send:
+Attach your R1-to-R8 table from Step 2, templates/gap-request.md and draft-reply.md, then send:
 
     1. Gap list for every WEAK and GAP item: Item | What is missing | Document that closes it | Owner | Needed by 2 December 2026.
     2. For each gap, a request email to the owner from the attached template.
@@ -66,6 +76,8 @@ Attach templates/gap-request.md and draft-reply.md, then send:
 Edit one sentence of the reply by hand. You sign it, not Claude.
 
 Check against ANSWERS.md, Step 3.
+
+If the answer differs, open the named file and check its exact quote. Claude may find extra gaps or refuse a claim more cautiously. The key is a worked interpretation of this folder; do not ask Claude to imitate its wording or force its tally. Missing files: attach them again. Usage limit or service outage: continue with ANSWERS.md and the demo, labelled as the prepared example.
 
 ## Your own audit
 - Install the skill audit-nachweise. It is in this kit at claude/audit-nachweise/SKILL.md; to upload it to claude.ai, download audit-nachweise.zip from loehrning.ai/skills/audit-nachweise.zip or from the demo page. The steps follow below.

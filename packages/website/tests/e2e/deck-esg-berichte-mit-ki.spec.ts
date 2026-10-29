@@ -46,12 +46,25 @@ const mainPositions = (page: Page) =>
 
 for (const edition of EDITIONS) {
   test.describe(`${SLUG} deck (${edition.lang})`, () => {
+    test("the live/sample label leaves every presenter step readable", async ({ page }) => {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      for (const id of ["projekt", "schritt-1", "schritt-2", "schritt-3", "register", "nachreichung"]) {
+        await open(page, `${edition.deck}#${id}/0`);
+        await page.evaluate(() => document.fonts.ready);
+        await expect.poll(() => page.locator(`#${id} .hd--live`).evaluate((header) => {
+          const step = header.querySelector(".tsteps > li:last-child")!.getBoundingClientRect();
+          const label = header.querySelector(".hd__now")!.getBoundingClientRect();
+          return label.left - step.right;
+        }), `${id}: space between the steps and the live/sample label`).toBeGreaterThanOrEqual(12);
+      }
+    });
+
     test("arrow keys walk every step of the main slides and never reach the appendix", async ({ page }) => {
       test.setTimeout(120_000);
       await open(page, edition.deck);
       expect(await page.evaluate(() => typeof (window as unknown as { DeckKeys?: unknown }).DeckKeys)).toBe("object");
       const positions = await mainPositions(page);
-      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(19);
+      expect(positions.filter((position) => position.endsWith("/0"))).toHaveLength(17);
       await expectAt(page, positions[0], "starts on the cover");
 
       for (const position of positions.slice(1)) {
@@ -131,10 +144,10 @@ for (const edition of EDITIONS) {
       expect(new URL(popup.url()).pathname).toBe(edition.presenter);
       await expect(popup.locator("#pv-conn")).toHaveAttribute("data-state", "live");
       const label = edition.lang === "de" ? "Folie" : "Slide";
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 19`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 01 / 17`);
       await page.bringToFront();
       await page.keyboard.press("ArrowRight");
-      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 19`);
+      await expect(popup.locator("#pv-pos")).toContainText(`${label} 02 / 17`);
       await popup.close();
     });
 

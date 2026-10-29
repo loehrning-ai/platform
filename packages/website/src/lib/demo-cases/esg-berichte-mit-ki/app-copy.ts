@@ -39,7 +39,7 @@ const de = {
     copy: "Copy",
     files: "{n} files",
     /** Customize in the depicted sidebar is the one live entry: it opens the skill setup. */
-    customizeOpen: "Customize: den Skill in deinem eigenen Claude einrichten",
+    customizeOpen: "Customize: Anleitung für den eigenen Claude nach dem Workshop",
   },
   account: "Du",
   chatTitles: ["Fragebogen Nordvik", "Werbeaussagen", "Bankformular", "Nachweisregister"],
@@ -67,7 +67,7 @@ const de = {
     exercise: "Übung, nicht Teil von Claude",
     lines: "Zeilen {from} bis {to}",
     line: "Zeile {n}",
-    registerBefore: "Status nach Schritt 4. Tippe auf eine Antwort, um ihre Datei und Zeilen zu sehen.",
+    registerBefore: "Status nach Schritt 4. Wähle eine Antwort, um ihre Datei und Zeilen zu sehen.",
     registerAfter: "Status nach Schritt 5, so wie Claude sie in die Datei geschrieben hat.",
   },
   /** The caption line in the phone dock opens the whole caption and the check as a sheet. */
@@ -78,7 +78,7 @@ const de = {
     open: "Ganze Erklärung und die Prüfung von Hand öffnen",
   },
   monthCheck: {
-    lead: "Zähl selbst nach, so wie Claude es im Code getan hat. Tippe jede Zeile mit einer Rechnung an.",
+    lead: "Zähl selbst nach, so wie Claude es im Code getan hat: Markiere jede Zeile mit einer Rechnung.",
     count: "Du hast {rows} Zeilen markiert, das sind {months} verschiedene Monate.",
     duplicate: "Zeile {a} und Zeile {b} sind dieselbe Rechnung {invoice}. Sie zählt einmal.",
     missing: "Für {missing} gibt es keine Rechnung. Das ist das Dokument, das Claude anfordert.",
@@ -119,10 +119,11 @@ const de = {
     f4Hint: "Die Formel steht im Bankformular, die Zahlen stehen in {pv} und {strom}.",
   },
   steps: {
+    briefing: "Der Importeur braucht acht belegte Antworten vom Weingut. Ich bediene Claude live; ihr sagt vorher, was hält, und prüft danach die Dateien.",
     /** Before step 1: the learning objective, the four checks of glossary C.4. */
     probe:
-      "Jede Antwort prüfst du vierfach. Welche Zeile sagt es (Zitat)? Gilt sie für die ganze Zeit (Zeitraum) und für alles, wovon die Antwort spricht (Umfang)? Ist sie gemessen und unterschrieben (Freigabe)?",
-    tap: "Tippe auf den Pfeil. Du siehst dann Claudes aufgezeichnete Antwort auf genau diesen Prompt.",
+      "Jede Antwort prüfst du vierfach. Welche Zeile sagt es (Zitat)? Gilt sie für die ganze Zeit (Zeitraum) und für alles, wovon die Antwort spricht (Umfang)? Ist die Quelle freigegeben (Freigabe)?",
+    tap: "Der Pfeil spielt die Aufzeichnung ab. Er sendet keine Anfrage an Claude.",
     ready: {
       "schritt-1": [
         "Im Projekt liegen die {knowledge} Dateien des Weinguts und die Projektanweisung, und der Skill esg-nachweise ist eingeschaltet.",
@@ -130,7 +131,7 @@ const de = {
       ],
       "schritt-2": ["Schritt 2 beginnt einen neuen Chat im selben Projekt.", "Claude prüft die sieben Werbeaussagen des Marketings, zuerst gegen die Verbotsliste."],
       "schritt-3": ["Auch Schritt 3 beginnt einen neuen Chat.", "Claude füllt die sechs Felder der Bank aus und rechnet die Amortisation im Code."],
-      "schritt-4": ["In Schritt 4 hängst du alle drei Anfragen an einen neuen Chat.", "Claude schreibt dann alle 21 Antworten in eine Excel-Datei, das Nachweisregister."],
+      "schritt-4": ["In Schritt 4 kommen alle drei Anfragen in einen neuen Chat.", "Claude schreibt dann alle 21 Antworten in eine Excel-Datei, das Nachweisregister."],
       "schritt-5": [
         "Die Buchhaltung hat die fehlende Stromrechnung gefunden, als Foto. Schritt 5 bleibt im Chat von Schritt 4, denn dort liegt das Register.",
         "Claude prüft dann die Rechnung und jede Zeile des Registers, die die Stromdatei zitiert.",
@@ -143,16 +144,17 @@ const de = {
     done: {
       "schritt-1": [
         "Laut Claude sind {belegt} der 8 Antworten belegt. Bei Q1, der Stromfrage, nennt Claude das fehlende Dokument: die Stromrechnung für September 2025.",
-        "Tippe in der Antwort auf „{strom}“. Die Datei öffnet sich, und du siehst selbst {rows} Zeilen, aber nur {months} Monate.",
+        "Öffne in der Antwort „{strom}“. Du siehst selbst {rows} Zeilen, aber nur {months} Monate.",
       ],
       "schritt-2": ["Claude lässt {belegt} der 7 Aussagen raus und streicht die anderen {rest}, darunter „{claim}“ für die Regalkarte."],
       "schritt-3": [
         "Bei F2 fragt die Bank nach dem Strom des ganzen Jahres. Claude gibt {mwh11} MWh nur als Summe von {months} Monaten an, also kommt die Lücke aus Schritt 1 zurück.",
-        "Zieh von der Zahl zu der Dateizeile, aus der sie stammt, oder tippe erst die Zahl und dann die Zeile an.",
+        "Zieh von der Zahl zu der Dateizeile, aus der sie stammt, oder wähle erst die Zahl und dann die Zeile.",
       ],
       "schritt-4": [
         "Claude hat {register} erstellt: {belegt} Antworten sind belegt, {schwach} schwach belegt und {luecke} haben eine Lücke.",
-        "Unter „Von Hand prüfen“ liegen die 21 Antworten. Tippe auf eine, dann siehst du ihre Datei und ihre Zeilen.",
+        "Unter „Von Hand prüfen“ liegen die 21 Antworten. Wähle eine, dann siehst du ihre Datei und ihre Zeilen.",
+        "Achtung bei C6: Hier schreibt Claude, die Aussage dürfe wie formuliert raus. In Schritt 2 hat Claude selbst „nur“ gestrichen, und so steht es auch in den Lösungen. Genau das fängt der Mensch, der jede Antwort prüft.",
       ],
       "schritt-5": [
         "Claude rechnet die Zählerstände nach und aktualisiert das Register: jetzt sind {belegt} Antworten belegt, {schwach} schwach belegt und {luecke} haben eine Lücke.",
@@ -194,7 +196,7 @@ const de = {
   },
   install: {
     caption: [
-      "So richtest du den Skill in deinem eigenen Claude ein. Er ist dort derselbe wie in diesem Fenster.",
+      "Für zu Hause: So richtest du den Skill im eigenen Claude ein. Im Workshop zeige ich die Einrichtung in meinem Account.",
       "Die Beschriftungen stammen aus der Hilfe von Anthropic, Stand 26.10.2026, und können sich ändern.",
     ],
     stepOf: "Einrichtung, Schritt {n} von {total}",
@@ -202,8 +204,8 @@ const de = {
     steps: [
       "Öffne die Einstellungen und dann „Capabilities“. Schalte „Code execution and file creation“ ein. Im neuen Layout heißt der Schalter „Create and edit files“. Skills brauchen ihn, weil Claude ihre Dateien in einer eigenen Arbeitsumgebung öffnet.",
       "Öffne in der Seitenleiste „Customize“ und dann „Skills“, oder gehe direkt auf claude.ai/customize/skills.",
-      "Tippe auf „+“, dann auf „Create skill“ und „Upload a skill“. Wähle die Datei esg-nachweise.zip, die du hier herunterlädst.",
-      "Schalte den Skill ein. Stell deine Frage wie gewohnt, oder tippe „/“ und wähle esg-nachweise aus.",
+      "Wähle „+“, dann „Create skill“ und „Upload a skill“. Wähle die Datei esg-nachweise.zip, die du hier herunterlädst.",
+      "Schalte den Skill ein. Stell deine Frage wie gewohnt, oder gib „/“ ein und wähle esg-nachweise aus.",
     ],
     download: "Skill herunterladen (ZIP)",
     capability: "Code execution and file creation",
@@ -220,7 +222,7 @@ const de = {
   takehome: {
     caption: [
       "Hier liegen der Skill, die Vorlagen und das Kit mit allen Dateien aus diesem Fenster.",
-      "Lade das Kit herunter und schick dieselben fünf Prompts an deinen eigenen Claude.",
+      "Nach dem Workshop kannst du das Kit mit denselben fünf Prompts im eigenen Claude durchgehen.",
     ],
     prompts: "Die fünf Prompts aus dem Kit",
     promptsLead: "Genau diese Prompts haben wir für die Aufzeichnung gesendet, jeweils mit den angehängten Dateien aus dem Kit.",
@@ -260,7 +262,7 @@ const en: AppCopy = {
     download: "Download",
     copy: "Copy",
     files: "{n} files",
-    customizeOpen: "Customize: set up the skill in your own Claude",
+    customizeOpen: "Customize: setup for your own Claude after the workshop",
   },
   account: "You",
   chatTitles: ["Nordvik questionnaire", "Marketing claims", "Bank form", "Evidence register"],
@@ -286,7 +288,7 @@ const en: AppCopy = {
     exercise: "Exercise, not part of Claude",
     lines: "Lines {from} to {to}",
     line: "Line {n}",
-    registerBefore: "Statuses after step 4. Tap an answer to see its file and lines.",
+    registerBefore: "Statuses after step 4. Choose an answer to see its file and lines.",
     registerAfter: "Statuses after step 5, as Claude wrote them into the file.",
   },
   sheet: {
@@ -296,7 +298,7 @@ const en: AppCopy = {
     open: "Open the whole explanation and the check by hand",
   },
   monthCheck: {
-    lead: "Count it yourself, the way Claude did in code. Tap every row with a bill.",
+    lead: "Count it yourself, the way Claude did in code: mark every row with a bill.",
     count: "You have marked {rows} rows, which are {months} different months.",
     duplicate: "Line {a} and line {b} are the same bill {invoice}. It counts once.",
     missing: "There is no bill for {missing}. That is the document Claude asks for.",
@@ -336,9 +338,10 @@ const en: AppCopy = {
     f4Hint: "The formula is in the bank form, the figures are in {pv} and {strom}.",
   },
   steps: {
+    briefing: "The importer needs eight answers backed by the winery's files. I run Claude live; you predict what holds and check the files afterwards.",
     probe:
-      "You check every answer four ways. Which line says it (quote)? Does it cover the whole time (period) and everything the answer is about (scope)? Is it measured and signed (approval)?",
-    tap: "Tap the arrow. You then see Claude's recorded answer to exactly this prompt.",
+      "You check every answer four ways. Which line says it (quote)? Does it cover the whole time (period) and everything the answer is about (scope)? Is the source approved (approval)?",
+    tap: "The arrow plays the recording. It sends no request to Claude.",
     ready: {
       "schritt-1": [
         "The project holds the winery's {knowledge} files and the project instructions, and the skill esg-nachweise is switched on.",
@@ -346,7 +349,7 @@ const en: AppCopy = {
       ],
       "schritt-2": ["Step 2 starts a new chat in the same project.", "Claude checks marketing's seven claims, first against the ban list."],
       "schritt-3": ["Step 3 starts a new chat too.", "Claude fills in the bank's six fields and works out the payback in code."],
-      "schritt-4": ["In step 4 you attach all three requests to a new chat.", "Claude then writes all 21 answers into one Excel file, the evidence register."],
+      "schritt-4": ["In step 4 all three requests go into a new chat.", "Claude then writes all 21 answers into one Excel file, the evidence register."],
       "schritt-5": [
         "Accounts has found the missing electricity bill, as a photo. Step 5 stays in the chat of step 4, because the register lives there.",
         "Claude then checks the bill and every register row that quotes the electricity file.",
@@ -359,16 +362,16 @@ const en: AppCopy = {
     done: {
       "schritt-1": [
         "According to Claude, {belegt} of the 8 answers are covered. For Q1, the electricity question, Claude names the missing document: the September 2025 electricity bill.",
-        "Tap “{strom}” in the answer. The file opens, and you can see {rows} rows but only {months} months.",
+        "Open “{strom}” in the answer. You can see {rows} rows but only {months} months.",
       ],
       "schritt-2": ["Claude lets {belegt} of the 7 claims go out and strikes the other {rest}, among them “{claim}” for the shelf card."],
       "schritt-3": [
         "For F2 the bank asks for the electricity of the whole year. Claude gives {mwh11} MWh only as the total of {months} months, so the gap from step 1 comes back.",
-        "Drag from the figure to the file row it comes from, or tap the figure first and then the row.",
+        "Drag from the figure to the file row it comes from, or choose the figure first and then the row.",
       ],
       "schritt-4": [
         "Claude has created {register}: {belegt} answers are covered, {schwach} are weak and {luecke} have a gap.",
-        "Under “Check by hand” you find the 21 answers. Tap one to see its file and its lines.",
+        "Under “Check by hand” you find the 21 answers. Choose one to see its file and its lines.",
       ],
       "schritt-5": ["Claude checks the meter readings and updates the register: now {belegt} answers are covered, {schwach} are weak and {luecke} have a gap."],
     },
@@ -400,13 +403,13 @@ const en: AppCopy = {
     minSec: "{min} min {s} s",
   },
   install: {
-    caption: ["This is how you set up the skill in your own Claude. It is the same skill as in this window.", "The labels come from Anthropic's help pages as of 26 October 2026 and may change."],
+    caption: ["For home: this is how to set up the skill in your own Claude. In the workshop I show the setup in my account.", "The labels come from Anthropic's help pages as of 26 October 2026 and may change."],
     stepOf: "Setup, step {n} of {total}",
     next: "Next: setup, step {n} of {total}",
     steps: [
       "Open Settings, then “Capabilities”. Switch on “Code execution and file creation”. In the new layout the switch is called “Create and edit files”. Skills need it, because Claude opens their files in its own workspace.",
       "Open “Customize” in the sidebar, then “Skills”, or go straight to claude.ai/customize/skills.",
-      "Tap “+”, then “Create skill” and “Upload a skill”. Choose the file esg-nachweise.zip that you download here.",
+      "Choose “+”, then “Create skill” and “Upload a skill”. Choose the file esg-nachweise.zip that you download here.",
       "Switch the skill on. Ask your question as usual, or type “/” and pick esg-nachweise.",
     ],
     download: "Download the skill (ZIP)",
@@ -422,7 +425,7 @@ const en: AppCopy = {
     drop: "Drag and drop or click to upload",
   },
   takehome: {
-    caption: ["Here are the skill, the templates and the kit with every file from this window.", "Download the kit and send the same five prompts to your own Claude."],
+    caption: ["Here are the skill, the templates and the kit with every file from this window.", "After the workshop you can work through the kit's five prompts in your own Claude."],
     prompts: "The kit's five prompts",
     promptsLead: "These are exactly the prompts we sent for the recording, each with the attached files from the kit.",
     own: "Check a claim of your own",

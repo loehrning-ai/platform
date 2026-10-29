@@ -189,8 +189,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       requirementShort: {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
-        "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Plan mit Dateierstellung",
-        "audit-vorbereitung-mit-ki": "Zum Nachmachen ein Claude-Konto, jeder Plan",
+        "esg-berichte-mit-ki": "Zum Nachmachen ein Claude-Konto mit Codeausführung und Dateierstellung, jeder Plan",
+        "audit-vorbereitung-mit-ki": "Zum Nachmachen ein Claude-Konto mit Codeausführung, jeder Plan",
         "angebote-mit-ki-vergleichen": "Zum Nachmachen ein Claude-Konto mit Codeausführung, jeder Plan",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
@@ -206,7 +206,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       teamsHeading: "Mit deinem Team",
       teamsBody: (numbers) => {
         if (numbers.length === 0)
-          return "Was du für eine Gruppe brauchst, steht auf der Workshop-Seite.";
+          return "Jedes Deck hat eine Moderationsansicht: Deck öffnen und P drücken.";
         const list =
           numbers.length === 1
             ? `Workshop ${numbers[0]} hat`
@@ -336,8 +336,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       requirementShort: {
         "geschaeftsberichte-mit-ki-lesen":
           "Claude desktop app and a Claude plan that includes Claude Code",
-        "esg-berichte-mit-ki": "To replay it, a Claude plan with file creation",
-        "audit-vorbereitung-mit-ki": "To replay it, a Claude account on any plan",
+        "esg-berichte-mit-ki": "To replay it, a Claude account with code execution and file creation, any plan",
+        "audit-vorbereitung-mit-ki": "To replay it, a Claude account with code execution, any plan",
         "angebote-mit-ki-vergleichen": "To replay it, a Claude account with code execution, any plan",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
@@ -350,7 +350,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       viewWorkshop: "View workshop",
       teamsHeading: "With your team",
       teamsBody: (numbers) => {
-        if (numbers.length === 0) return "What you need for a group is on the workshop page.";
+        if (numbers.length === 0) return "Every deck has a presenter view: open the deck and press P.";
         const list =
           numbers.length === 1
             ? `Workshop ${numbers[0]} has`

@@ -12,6 +12,7 @@ import { probeAnswer, probeSummary, probeTake, type ProbeMark, type TakeProbe } 
 import { ClaudeWindow, type SceneCopy } from "./claude-window";
 import { CopyButton } from "./copy-button";
 import type { Fmt } from "./fmt";
+import { MistakeHunt } from "./mistake-hunt";
 
 export interface ClaudeState {
   readonly question: string;
@@ -41,9 +42,18 @@ export interface ClaudeScene {
 
 export type ClaudeSheet = "marks" | "own" | "install" | null;
 
+/**
+ * Scene 5 opens on the run that shows what goes wrong: all eight requests,
+ * without the skill (a quote that is not verbatim in German, no statuses in
+ * English). One tap on the skill switch shows the same question with it.
+ */
+export function defaultClaudeState(questions: readonly WindowQuestion[]): ClaudeState {
+  return { question: (questions.find((entry) => entry.id === "alle") ?? questions[0])?.id ?? "", skill: "without" };
+}
+
 /** Scene 5's state, shared by the window on the stage and the dock: the question, the skill and the replay. */
 export function useClaudeScene(questions: readonly WindowQuestion[], options: { readonly reducedMotion: boolean; readonly visible: boolean }): ClaudeScene {
-  const [state, setState] = useState<ClaudeState>({ question: questions[0]?.id ?? "", skill: "with" });
+  const [state, setState] = useState<ClaudeState>(() => defaultClaudeState(questions));
   const question = questions.find((entry) => entry.id === state.question) ?? questions[0] ?? null;
   const take = question ? (state.skill === "with" ? (question.withSkill ?? question.withoutSkill) : (question.withoutSkill ?? question.withSkill)) : null;
   const turns = useMemo(() => (take ? [{ ...take.turn, prompt: take.prompt }] : []), [take]);
@@ -85,7 +95,9 @@ export function summarySentence(fmt: Fmt, marks: readonly ProbeMark[]): string {
   if (marks.length === 0) return copy.claude.noQuotes;
   const summary = probeSummary(marks);
   const off = summary.missing + summary.similar;
-  return off === 0 ? fmt.t(copy.claude.summaryAll, { n: marks.length }) : fmt.t(copy.claude.summary, { n: marks.length, m: off });
+  if (marks.length === 1) return off === 0 ? copy.claude.summaryOne : copy.claude.summaryOneOff;
+  if (off === 0) return fmt.t(copy.claude.summaryAll, { n: marks.length });
+  return fmt.t(off === 1 ? copy.claude.summaryOff : copy.claude.summary, { n: marks.length, m: off });
 }
 
 /** The count sentence for a take of the question about all eight requests, or null. */
@@ -189,6 +201,7 @@ export function ClaudeStage({
         onOpenProduced={() => (take.produced ? onOpenProduced(take.produced.name, take.produced.text) : undefined)}
         onInstall={() => setOpen("install")}
       />
+      {done ? <MistakeHunt fmt={fmt} /> : null}
       <GlasSheet {...sheetCommon} open={open === "marks"} title={copy.claude.probeHeading} detent="large">
         <div className="w05-probe" data-w05-probe-sheet={take.id}>
           <p className="w05-hint">
@@ -286,24 +299,27 @@ export function ClaudeDock({ fmt, scene, claude, questions }: { readonly fmt: Fm
   const { state, setState, setSheet, replay, probe } = claude;
   const narrow = useNarrow();
   const done = replay.started && replay.frame.done;
-  const marksLabel = probe.marks.length > 0 ? fmt.t(copy.claude.marksOpen, { n: probe.marks.length }) : copy.claude.marksNone;
+  const marksLabel = probe.marks.length === 1 ? copy.claude.marksOpenOne : probe.marks.length > 0 ? fmt.t(copy.claude.marksOpen, { n: probe.marks.length }) : copy.claude.marksNone;
   return (
-    <div className="w05-claude-dock">
+    <div className="w05-claude-dock" data-narrow={narrow ? "" : undefined}>
       <GlasSegmented
         label={copy.claude.question}
-        options={questions.map((entry) => ({ value: entry.id, label: (copy.claude.questionShort as Readonly<Record<string, string>>)[entry.id] ?? entry.label }))}
+        options={questions.map((entry) => ({ value: entry.id, label: ((narrow ? copy.claude.questionPhone : copy.claude.questionShort) as Readonly<Record<string, string>>)[entry.id] ?? entry.label }))}
         value={state.question}
         onChange={(id) => setState({ ...state, question: id })}
       />
-      <GlasSegmented
-        label={copy.claude.skill}
-        options={[
-          { value: "with", label: scene.withSkill },
-          { value: "without", label: scene.withoutSkill },
-        ]}
-        value={state.skill}
-        onChange={(skill) => setState({ ...state, skill: skill as "with" | "without" })}
-      />
+      <div className="w05-claude-skill-choice">
+        {narrow ? <span className="w05-claude-control-label" aria-hidden="true">{copy.claude.skill}</span> : null}
+        <GlasSegmented
+          label={copy.claude.skill}
+          options={[
+            { value: "with", label: narrow ? copy.claude.skillPhone.with : scene.withSkill },
+            { value: "without", label: narrow ? copy.claude.skillPhone.without : scene.withoutSkill },
+          ]}
+          value={state.skill}
+          onChange={(skill) => setState({ ...state, skill: skill as "with" | "without" })}
+        />
+      </div>
       <span className="w05-claude-dock-more">
         {narrow ? (
           <>

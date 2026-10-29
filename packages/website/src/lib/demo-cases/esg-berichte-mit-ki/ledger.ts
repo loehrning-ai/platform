@@ -21,6 +21,8 @@ export type DocId =
   | "gridFactor"
   | "diesel"
   | "bioRenewed"
+  | "pvSigned"
+  | "moduleChoice"
   | "supplyMix"
   | "bills2024"
   | "permit"
@@ -103,15 +105,15 @@ const ROWS: readonly Omit<LedgerRow, "lines">[] = [
   row("Q8", "fragebogen", ["wasser", "firmenprofil"], "belegt"),
   row("C1", "werbung", ["kompensation", "firmenprofil"], "luecke", [], { gate: "4c" }),
   row("C2", "werbung", ["regeln"], "luecke", [], { gate: "4a" }),
-  row("C3", "werbung", ["bio"], "luecke", [], { gate: "4b" }),
+  row("C3", "werbung", ["bio"], "luecke", ["bioRenewed"], { gate: "4b" }),
   row("C4", "werbung", ["firmenprofil", "pv"], "luecke"),
   row("C5", "werbung", ["strom"], "luecke", ["septemberInvoice", "bills2024"]),
   row("C6", "werbung", ["flaschen"], "belegt"),
   row("C7", "werbung", ["wasser", "firmenprofil"], "belegt"),
   row("F1", "bank", ["richtlinien"], "belegt"),
   row("F2", "bank", ["strom", "entwurf"], "luecke", ["septemberInvoice"], { after: "belegt" }),
-  row("F3", "bank", ["pv", "strom"], "luecke", ["septemberInvoice"], { after: "schwach" }),
-  row("F4", "bank", ["pv", "strom"], "schwach"),
+  row("F3", "bank", ["pv", "strom"], "luecke", ["septemberInvoice", "pvSigned"], { after: "schwach" }),
+  row("F4", "bank", ["pv", "strom"], "schwach", ["pvSigned"]),
   row("F5", "bank", ["personal", "arbeitsschutz"], "belegt"),
   row("F6", "bank", ["bio", "richtlinien"], "schwach", ["bioRenewed"]),
 ];
@@ -136,7 +138,7 @@ const tile = (id: TileId, done: number, total: number, missing: readonly DocId[]
 
 /** The eleven disclosures of the VSME Basic Module (vsme_basismodul.md), as in Schritt 4. */
 export const VSME: readonly VsmeTile[] = [
-  tile("B1", 8, 8),
+  tile("B1", 8, 10, ["moduleChoice"]),
   tile("B2", 4, 4),
   tile("B3", 0, 4, ["septemberInvoice", "gridFactor", "diesel"], 1, true),
   tile("B4", 0, 1, ["permit"]),

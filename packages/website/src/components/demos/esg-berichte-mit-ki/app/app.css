@@ -748,6 +748,89 @@ button.w4a-chip:hover {
   border-bottom-color: var(--w4a-line);
   font-weight: 650;
 }
+
+/*
+ * Claude's answer tables (AnswerTable in app-turn.tsx). From four columns
+ * each row is a card: the first cell is its heading, every other cell sits
+ * under its column name. Nothing runs off to the side and no column overlaps
+ * the next, in a 360 px phone chat as in the desktop chat beside the check.
+ */
+.w4a-table {
+  margin: 4px 0 14px;
+  font-family: var(--w4a-sans);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.w4a-answer .w4a-table table {
+  display: table;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow: visible;
+  font-size: inherit;
+}
+.w4a-answer .w4a-table p {
+  margin: 0;
+}
+.w4a-answer .w4a-table p + p {
+  margin-top: 6px;
+}
+.w4a-answer .w4a-table th:first-child,
+.w4a-answer .w4a-table td:first-child {
+  max-width: 14rem;
+  white-space: normal;
+}
+.w4a-table[data-layout="table"] .w4a-td-label {
+  display: none;
+}
+.w4a-answer .w4a-table[data-layout="cards"] table,
+.w4a-answer .w4a-table[data-layout="cards"] tbody,
+.w4a-answer .w4a-table[data-layout="cards"] tr,
+.w4a-answer .w4a-table[data-layout="cards"] td {
+  display: block;
+  min-width: 0;
+  max-width: none;
+}
+.w4a-answer .w4a-table[data-layout="cards"] thead {
+  display: none;
+}
+.w4a-answer .w4a-table[data-layout="cards"] tr {
+  margin: 0 0 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--w4a-line-soft);
+  border-radius: 12px;
+  background: var(--w4a-white);
+  box-shadow: 0 1px 2px rgb(20 20 19 / 0.04);
+}
+.w4a-answer .w4a-table[data-layout="cards"] td {
+  padding: 0;
+  border: 0;
+}
+.w4a-answer .w4a-table[data-layout="cards"] td + td {
+  margin-top: 8px;
+}
+.w4a-answer .w4a-table[data-layout="cards"] td:first-child {
+  color: var(--w4a-text);
+  font-size: 14.5px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+/* A card is narrow: a long file path and its citation wrap inside it, never past its edge. */
+.w4a-answer .w4a-table[data-layout="cards"] td {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.w4a-answer .w4a-table[data-layout="cards"] .w4a-nowrap {
+  white-space: normal;
+}
+.w4a-td-label {
+  display: block;
+  margin-bottom: 1px;
+  color: var(--w4a-text-3);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
 .w4a-cite {
   display: inline;
   padding: 0 2px;
@@ -761,6 +844,10 @@ button.w4a-chip:hover {
 }
 .w4a-cite:hover {
   background: rgb(198 97 63 / 0.24);
+}
+/* Inside inline code the chip sits on the code fill: a darker ink keeps it at 4.5:1. */
+.w4a-answer code .w4a-cite {
+  color: #8f2c0f;
 }
 /* The word before a citation and the punctuation after it stay on the citation's line. */
 .w4a-nowrap {
@@ -1005,6 +1092,8 @@ button.w4a-chip:hover {
 .w4a-scene {
   container: w4scene / inline-size;
   display: grid;
+  /* One track that may shrink: an auto track grew to the check's widest line and pushed it past a 360 px sheet. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: 12px;
   border-radius: 12px;
@@ -1292,7 +1381,7 @@ button.w4a-chip:hover {
 .w4a-measured-col {
   display: grid;
   align-content: start;
-  gap: 8px;
+  gap: 6px;
   padding: 14px;
   border: 1px solid var(--w4a-line);
   border-radius: 12px;
@@ -1319,16 +1408,23 @@ button.w4a-chip:hover {
   color: var(--w4a-text-3);
   font-size: 12px;
 }
+/* Label and bar share a row (one label column for all five, so the bars start in line): the card stays short. */
 .w4a-bars {
   display: grid;
-  gap: 6px;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .w4a-bars > li {
   display: grid;
-  gap: 3px;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+}
+.w4a-bar-label {
+  white-space: nowrap;
 }
 .w4a-bar-label {
   color: var(--w4a-text-2);
@@ -1666,6 +1762,10 @@ button.w4a-chip:hover {
 .w4a-sheet-caption > p {
   margin: 0;
 }
+.w4a-sheet-caption[data-w4a-sheet-tail] {
+  background: rgb(255 255 255 / 0.7);
+  font-size: 14.5px;
+}
 .w4a-sheet-kicker {
   display: grid;
   gap: 2px;
@@ -1754,6 +1854,26 @@ button.w4a-chip:hover {
   background-color: color-mix(in srgb, currentColor 14%, transparent);
   font-size: 0.8125rem;
   font-weight: 650;
+}
+/* The check waits: the pill turns Mennige and breathes twice, then stays filled. */
+.w4a-capline-pill[data-attention] {
+  background-color: #b73a15;
+  color: #fff;
+  animation: w4a-pill-breathe 1.4s cubic-bezier(0.32, 0.72, 0, 1) 0.6s 2;
+}
+@keyframes w4a-pill-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgb(183 58 21 / 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgb(183 58 21 / 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .w4a-capline-pill[data-attention] {
+    animation: none;
+  }
 }
 .w4a-capline:focus-visible {
   outline: 2px solid currentColor;

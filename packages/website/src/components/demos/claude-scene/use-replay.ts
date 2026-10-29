@@ -23,11 +23,11 @@ export interface ReplayControl {
  * question, the skill switched, a follow-up added) keeps the time of the
  * turns that stay, so a follow-up continues under the first answer.
  */
-export function useReplay(turns: readonly ReplayTurn[], options: { readonly seed: number; readonly reducedMotion: boolean; readonly visible: boolean; readonly producedNames: readonly string[]; readonly keepTime: boolean }): ReplayControl {
+export function useReplay(turns: readonly ReplayTurn[], options: { readonly seed: number; readonly reducedMotion: boolean; readonly visible: boolean; readonly producedNames: readonly string[]; readonly keepTime: boolean; readonly cps?: number }): ReplayControl {
   const producedKey = options.producedNames.join("|");
   const schedule = useMemo(
-    () => buildSchedule(turns, { seed: options.seed, producedNames: producedKey ? producedKey.split("|") : [] }),
-    [turns, options.seed, producedKey],
+    () => buildSchedule(turns, { seed: options.seed, cps: options.cps, producedNames: producedKey ? producedKey.split("|") : [] }),
+    [turns, options.seed, options.cps, producedKey],
   );
   const [t, setT] = useState(0);
   const [playing, setPlaying] = useState(false);

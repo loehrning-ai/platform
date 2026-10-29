@@ -8,7 +8,8 @@
  *   {{claude-ui:<path>}}  one string from src/lib/claude-ui.ts (CLAUDE_UI_DE or CLAUDE_UI_EN by edition)
  *   {{qr:<url>}}          an inline SVG QR code for a loehrning.ai URL
  * and adds lib/deck-keys.js from scripts/workshops/deck-keys.js, the cover block of lib/tokens.css
- * and the poster (packages/website/scripts/plakat). The fonts, the poster card and the two kit zips
+ * the shared deck engine from scripts/workshops/deck-engine/ (deck-stage.js, scenes.js, globe.js, geo.js,
+ * presenter.*, engine.css, icons.svg) and the poster (packages/website/scripts/plakat). The fonts, the poster card and the two kit zips
  * (scripts/workshop04/kit-v3.mjs) are kept byte for byte. A file the folder holds for a decision
  * outside this export (HELD_PATH_SHA256) is neither written nor removed, and its manifest row stays.
  * The export fails before writing anything if a client name, a local path or an open placeholder
@@ -26,6 +27,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { CLAUDE_UI_DE, CLAUDE_UI_EN } from "../../packages/website/src/lib/claude-ui.ts";
 import { KIT_NAME, readKitArchive, ZIP_NAME } from "./kit-archive.mjs";
+import { ENGINE_FILES, engineSourcePath } from "../workshops/sync-deck-engine.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const REPO_ROOT = path.resolve(HERE, "../..");
@@ -40,16 +42,13 @@ export const DECK_FILES = [
   "presenter.html",
   "en/presenter.html",
   "sheet.html",
-  "lib/deck-stage.js",
-  "lib/scenes.js",
   "lib/deck.css",
   "lib/tokens.css",
-  "lib/presenter.js",
-  "lib/presenter.css",
-  "lib/globe.js",
-  "lib/geo.js",
   "assets/favicon.svg",
 ];
+
+/** The shared deck engine, copied from the repository (scripts/workshops/sync-deck-engine.mjs checks it). */
+export const ENGINE = ENGINE_FILES.map((name) => `lib/${name}`);
 
 /** The shared key contract, copied from the repository (scripts/workshops/sync-deck-keys.mjs checks it). */
 export const DECK_KEYS = "lib/deck-keys.js";
@@ -90,7 +89,7 @@ export const KIT_V3_ZIPS = { "crvena-zemja-nachweisprobe.zip": "crvena-zemja-nac
 export const HELD_PATH_SHA256 = new Set(["8c626bef58fd20e9c340b56e9b85052618d59e3467cef8433e314dfb5f0e0c50"]);
 
 /** Every file the export writes, and nothing else. */
-export const PUBLISHED_FILES = [...DECK_FILES, DECK_KEYS, ...REUSED_FONTS, HOST_PHOTO, ...KEPT_FILES, POSTER, ...Object.keys(KIT_V3_ZIPS)].sort();
+export const PUBLISHED_FILES = [...DECK_FILES, ...ENGINE, DECK_KEYS, ...REUSED_FONTS, HOST_PHOTO, ...KEPT_FILES, POSTER, ...Object.keys(KIT_V3_ZIPS)].sort();
 
 /** Size budget per edition (deck spec §7), in bytes. */
 export const BUDGET = { "slides.html": 160_000, "en/slides.html": 160_000, "lib/scenes.js": 14_000, "lib/presenter.js": 15_000 };
@@ -226,6 +225,7 @@ export async function exportWorkshop(source) {
     written.set(name, Buffer.from(name.endsWith(".html") ? await fillPlaceholders(name, text) : text));
   }
   written.set(DECK_KEYS, readFileSync(DECK_KEYS_SOURCE));
+  for (const name of ENGINE_FILES) written.set(`lib/${name}`, readFileSync(engineSourcePath(name)));
 
   const { coverPosterSvg, withCoverBlock, workshopScenes } = await import(
     pathToFileURL(path.join(REPO_ROOT, "packages/website/scripts/plakat/static-lib.mjs")).href

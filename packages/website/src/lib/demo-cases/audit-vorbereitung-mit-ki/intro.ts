@@ -1,10 +1,13 @@
 import type { DemoIntroData, DemoShellVersion } from "@/lib/demo-intro";
 
 /**
- * The intro of this demo (language-standard B.8) and its shell. Every claim
- * is checked against the kit: the case is invented, the request lists eight
- * items, the skill runs the same four checks; the shell's footnote says
- * that everything stays in the browser.
+ * The intro of this demo (language-standard B.8) and its shell. The news is
+ * the deck's real case (slide 03 and its sources in appendix A3: AP,
+ * 7 Oct 2025, and Senate Estimates for the refund). Every other claim is
+ * checked against the kit: the case is invented, the request lists eight
+ * items with its dates, the draft reply has four sentences, the skill runs
+ * the same four checks; the last sentence says everything stays in the
+ * browser.
  */
 export const SHELL: DemoShellVersion = "v4";
 
@@ -13,23 +16,29 @@ export const TAKEHOME_IN_STAGE = true;
 
 export const INTRO: DemoIntroData = {
   de: {
-    title: "Audit-Nachweise prüfen",
+    title: "Acht Nachweise vor dem Audit",
+    news: [
+      "Im Oktober 2025 zahlte Deloitte dem australischen Arbeitsministerium 97.587 A$ von rund 440.000 A$ zurück, weil ein Bericht Quellen zitierte, die es nicht gab.",
+    ],
     sentences: [
-      "Ein Kunde will vor einem Audit acht Nachweise von einer erfundenen Firma sehen.",
-      "Du prüfst mit vier Fragen, welche Datei im Ordner wirklich belegt, was verlangt ist.",
-      "Du nimmst die Lücken, fertige Anfragen und einen Skill für Claude mit.",
-      "Das dauert etwa {minutes} Minuten, und deine Dateien bleiben in deinem Browser.",
+      "Vardar Works, eine erfundene Firma in Skopje, verarbeitet Kundendaten für Tannwald und soll bis 25. November acht Nachweise zur Datensicherheit liefern.",
+      "Das Audit ist am 10. Dezember: Reichen die Dateien im Ordner für die Zusagen des Geschäftsführers?",
+      "Im Workshop bediene ich Claude live, ihr schätzt und prüft; hier vergleichst du Aufzeichnungen mit den Originaldateien.",
+      "In {minutes} Minuten prüfst du Zitat, Zeitraum, Umfang und Freigabe und nimmst das Kit für zu Hause mit.",
     ],
     start: "Ordner ansehen und schätzen",
+    footnote: "Auf dieser Seite läuft keine KI. Claudes Antworten sind Aufzeichnungen; eigene Dateien bleiben im Browser.",
   },
   en: {
-    title: "Check audit evidence",
+    title: "Eight pieces of evidence before the audit",
+    news: ["In October 2025 Deloitte refunded A$97,587 of about A$440,000 to the Australian employment department, because a report cited sources that did not exist."],
     sentences: [
-      "Before an audit, a customer wants eight pieces of evidence from an invented company.",
-      "You use four questions to check which file in the folder really proves what is asked.",
-      "You take home the gaps, ready-made requests and a skill for Claude.",
-      "It takes about {minutes} minutes, and your files stay in your browser.",
+      "Vardar Works, an invented firm in Skopje, processes data for Tannwald and must provide eight security documents by 25 November.",
+      "The audit is on 10 December: do those files support the managing director's promises?",
+      "In the workshop I run Claude live; you predict and check, while this page shows recordings beside the source files.",
+      "In {minutes} minutes you check quote, period, scope and approval and take the kit home.",
     ],
     start: "Look at the folder and guess",
+    footnote: "No AI runs on this page. Claude's answers are recordings; your files stay in your browser.",
   },
 };

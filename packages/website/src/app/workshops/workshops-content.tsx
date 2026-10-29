@@ -149,7 +149,12 @@ export function WorkshopsContent({ workshops, locale }: Props) {
     ordered[0];
   const withPresenter = index
     .filter((workshop) =>
-      workshop.materials.some((material) => material.role === "presenter"),
+      // Every HTML deck opens its presenter view on P (02 to 06 ship presenter.html).
+      workshop.materials.some(
+        (material) =>
+          material.role === "presenter" ||
+          (material.role === "deck" && material.kind === "html"),
+      ),
     )
     .map((workshop) => workshop.number);
 

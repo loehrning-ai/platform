@@ -13,6 +13,7 @@ export function CaptionLine({
   sentences,
   action,
   label,
+  attention = false,
   onOpen,
 }: {
   readonly sentences: readonly string[];
@@ -20,17 +21,19 @@ export function CaptionLine({
   readonly action: string;
   /** The accessible name of the line. */
   readonly label: string;
+  /** The check waits and has not been opened yet: the pill pulses once (never with reduced motion). */
+  readonly attention?: boolean;
   readonly onOpen: () => void;
 }) {
   const parts = toSentences(sentences);
   if (parts.length === 0) return null;
   return (
     <div className="w4a-capline-wrap">
-      <button type="button" className="w4a-capline" aria-haspopup="dialog" aria-label={`${parts[0]} ${label}`} onClick={onOpen} data-w4a-capline="">
+      <button type="button" className="w4a-capline" aria-haspopup="dialog" aria-label={`${parts[0]} ${action}: ${label}`} onClick={onOpen} data-w4a-capline="">
         <span className="w4a-capline-text" aria-hidden="true">
           {parts[0]}
         </span>
-        <span className="w4a-capline-pill" aria-hidden="true">
+        <span className="w4a-capline-pill" aria-hidden="true" data-attention={attention ? "" : undefined}>
           {action}
           <Icon name="forward" size={14} />
         </span>

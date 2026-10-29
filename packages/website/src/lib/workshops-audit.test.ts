@@ -84,17 +84,25 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
   it("carries the title, teaser and question of the audit workshop", () => {
     expect(en.title).toBe("Audit Preparation with AI: Organize Evidence and Find Gaps");
     expect(de.title).toBe("Audit-Vorbereitung mit KI: Nachweise ordnen, Lücken finden");
-    expect(en.summary).toBe("Explore how AI can support audit preparation by organizing documentation.");
-    expect(de.summary).toBe("Wie KI hilft, Unterlagen für ein Audit zu ordnen.");
-    expect(de.lede).toBe("Du prüfst elf Dateien gegen acht Anforderungen und schreibst die Lückenliste mit zuständiger Person.");
-    expect(en.lede).toBe("You test eleven files against eight request items and write the gap list with an owner for each gap.");
-    expect(en.question).toBe("Which files in the folder are evidence?");
-    expect(de.question).toBe("Welche Dateien im Ordner sind ein Nachweis?");
+    // The teaser starts with the practice company and its audit request.
+    expect(en.summary).toMatch(/^Vardar Works.+eleven files.+eight customer audit requirements/);
+    expect(de.summary).toMatch(/^Vardar Works.+elf Dateien.+acht Anforderungen/);
+    for (const workshop of both) expect(workshop.summary.length).toBeLessThanOrEqual(160);
+    // The lede says who works in Claude (Tim) and what the room does (it predicts).
+    expect(de.lede).toMatch(/Tim.+live in Claude.+Raum/);
+    expect(en.lede).toMatch(/Tim.+live in Claude.+room/);
+    for (const workshop of both) {
+      expect(workshop.stageExplainer.body).toContain("Claude");
+      expect(workshop.stageExplainer.body).toContain("Codex");
+    }
+    // The question is the deck's "Heute" question, word for word.
+    expect(en.question).toBe("Which item is proven, which document is missing?");
+    expect(de.question).toBe("Welche Anforderung ist belegt, welches Dokument fehlt?");
     for (const workshop of both) {
       expect(workshop.slug).toBe(slug);
       expect(workshop.number).toBe("05");
       expect(workshop.provenance.data).toBe("synthetic");
-      expect(workshop.provenance.reviewedAt).toBe("2026-10-25");
+      expect(workshop.provenance.reviewedAt).toBe("2026-10-29");
       expect(workshop.caseStudy.isFictional).toBe(true);
       expect(workshop.caseStudy.decisionQuestion).toBe(workshop.question);
       expect(workshop.outcomes).toHaveLength(3);
@@ -103,8 +111,8 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     }
   });
 
-  it("has the deck plan's twelve agenda blocks in both locales, adding up to 90", () => {
-    const minutes = [1, 1, 3, 3, 8, 6, 15, 20, 5, 12, 10, 6];
+  it("has the deck plan's sixteen agenda blocks in both locales, adding up to 90", () => {
+    const minutes = [1, 3, 1, 3, 4, 3, 3, 4, 6, 3, 13, 20, 5, 10, 6, 5];
     for (const workshop of both) {
       expect(workshop.agendaSource).toBe("deck");
       expect(workshop.agenda.map((item) => item.minutes)).toEqual(minutes);
@@ -165,7 +173,10 @@ describe("Workshop 05 registry copy (Audit preparation with AI)", () => {
     expect(workshop.materials[1]?.href.endsWith(`/${kit.fileName}`)).toBe(true);
     expect(kit.stats.map((stat) => stat.value)).toEqual(["19", "3", String(edition.instructions.split("\n").filter((line) => /^\d+\. /.test(line)).length)]);
     expect(kit.contents.map((item) => item.name)).toEqual(edition.top);
-    expect(kit.steps.map((step) => step.segments?.map((segment) => segment.value))).toEqual([[8, 3], [2, 1, 5], undefined]);
+    // Predict, then check: the page shows no result bars, the steps ask for a prediction and name the key.
+    expect(kit.steps.map((step) => step.segments)).toEqual([undefined, undefined, undefined]);
+    expect(kit.steps[0]?.note).toMatch(locale === "de" ? /voraus, dann prüf es in LOESUNGEN\.md/ : /Predict first, then check ANSWERS\.md/);
+    expect(kit.steps[1]?.note).toMatch(locale === "de" ? /Sag es zuerst voraus/ : /Predict first/);
     const count = (text: string) => text.split(/\s+/).filter(Boolean).length;
     for (const step of kit.steps) {
       for (const line of [step.input, step.action, step.output]) expect(count(line), line).toBeLessThanOrEqual(10);

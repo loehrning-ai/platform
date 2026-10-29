@@ -19,8 +19,8 @@ const WORKSHOPS = [
 ] as const;
 
 const LOCALES = [
-  { prefix: "", index: 0, outcomes: "Nach dem Workshop", caseName: "Der Fall", more: "Mehr Details", explainer: /^Was ist das (Kit|Labor)\?$/ },
-  { prefix: "/en", index: 1, outcomes: "After this you can", caseName: "The case", more: "More details", explainer: /^What is the (kit|lab)\?$/ },
+  { prefix: "", index: 0, outcomes: "Nach dem Workshop", caseName: "Der Fall", more: "Mehr Details", explainer: /^(Was ist das (Kit|Labor)|Was prüfen wir)\?$/ },
+  { prefix: "/en", index: 1, outcomes: "After this you can", caseName: "The case", more: "More details", explainer: /^(What is the (kit|lab)|What do we check)\?$/ },
 ] as const;
 
 async function open(page: Page, route: string): Promise<void> {

@@ -231,6 +231,7 @@ export function ClaudeApp({
   main,
   mainTitle,
   sheetLead,
+  sheetTail,
   scrollKey,
   answerKey,
   onLayout,
@@ -261,6 +262,8 @@ export function ClaudeApp({
   readonly mainTitle?: string;
   /** Phone: what the sheet shows above the check (the whole caption). */
   readonly sheetLead?: ReactNode;
+  /** Phone: the rest of the caption, under the check. */
+  readonly sheetTail?: ReactNode;
   /** Changes when a new turn starts, so the chat pins to its end again. */
   readonly scrollKey: string;
   /** The step whose answer has just landed: the chat shows it from its start. */
@@ -445,6 +448,7 @@ export function ClaudeApp({
               </>
             )}
             {panel?.body}
+            {panel?.kind === "check" && sheetTail ? <div className="w4a-sheet-lead">{sheetTail}</div> : null}
           </div>
         </GlasSheet>
       ) : null}

@@ -19,7 +19,8 @@
   --w4-creme-2: rgb(243 240 233 / 0.78);
   --w4-mark: #b73a15;
   --w4-mark-soft: rgb(183 58 21 / 0.12);
-  --w4-ok: #1f4d36;
+  /* BELEGT is ink, never green (brand: one accent, status checks in ink). */
+  --w4-ok: #121212;
   --w4-shadow: 0 1px 1px rgb(18 18 18 / 0.08), 0 10px 28px -10px rgb(30 12 6 / 0.45);
   --w4-lift: 0 2px 2px rgb(18 18 18 / 0.1), 0 24px 44px -12px rgb(30 12 6 / 0.6);
   --w4-radius: 16px;
@@ -527,8 +528,11 @@ button.w4-doc-row {
     font-size: 0.78125rem;
     letter-spacing: -0.005em;
     font-weight: 650;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    /* A long word („Zertifizierte“ on a 360 px phone) breaks with a hyphen instead of losing its end. */
+    hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
   }
   .w4-card[data-layout="strip"] .w4-card-status {
     position: absolute;
@@ -652,6 +656,16 @@ button.w4-doc-row {
   z-index: 4;
   color: inherit;
 }
+/*
+ * Inside the phone sheet the shell turns a nested panel into a 7 % fill
+ * (never glass on glass). The readout keeps its Kalkweiß text and its
+ * drawings for a dark ground, so it gets an opaque ink plate there: the
+ * same look as on the desktop, legible over the white file card.
+ */
+.w4-readout.w4-readout[data-nested] {
+  background-color: rgb(18 18 18 / 0.92);
+  color: var(--w4-creme);
+}
 .w4-readout-body {
   padding: 10px 14px;
   font-size: 0.875rem;
@@ -730,7 +744,7 @@ button.w4-doc-row {
   height: auto;
 }
 .w4-field-on {
-  fill: #6d8f4e;
+  fill: var(--w4-creme);
 }
 .w4-field-off {
   fill: rgb(243 240 233 / 0.28);
@@ -770,7 +784,8 @@ button.w4-doc-row {
   stroke-width: 2;
 }
 .w4-ruler-valid {
-  fill: #6d8f4e;
+  fill: var(--w4-creme);
+  fill-opacity: 0.85;
 }
 .w4-ruler-tick {
   stroke: currentColor;
@@ -1294,7 +1309,7 @@ button.w4-doc-row {
 .w4-months-rowtext {
   fill: var(--w4-fg);
   font-family: var(--w4-mono);
-  font-size: 8.5px;
+  font-size: 11px;
 }
 .w4-months-slot {
   fill: rgb(253 251 246 / 0.16);

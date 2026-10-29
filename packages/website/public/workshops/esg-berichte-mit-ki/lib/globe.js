@@ -14,14 +14,20 @@
  *   data-boost   extra spin in degrees per second when the slide becomes active, decaying (0)
  *   data-arc     "germany" or "eu": draw that arc from North Macedonia by itself on first activation
  *   data-home    start view in degrees east of North Macedonia (70); a larger value keeps North Macedonia in view longer
+ *   data-arc-width  arc stroke in CSS px (3)      data-arc-land  two pulse rings where an arc lands
+ *   data-globe-steps  what each press of the slide does, "k:action" joined by ";" (several per k allowed):
+ *                     "0:macedonia;1:arc:london>skopje;2:germany@1.6". A place turns the globe to it
+ *                     (@zoom optional), "arc:a>b" draws an arc from a to b. A forward press plays the
+ *                     new step's actions; any other move shows the step's final state at once.
  *
  * Script control (used by slide scripts): const g = ESGGlobe.get(canvas);
  *   g.settle({lon, lat, zoom, cx, cy, ms, short})  ease to a stop facing lon/lat (short: shortest way); zoom scales the radius,
  *                                    cx/cy move the centre (shares of the canvas)
- *   g.arc(to, {ms, delay, lift, labels: [[place, text], ...]})  draw an arc from North Macedonia
+ *   g.arc(to, {from, ms, delay, lift, labels: [[place, text], ...]})  draw an arc (from North Macedonia unless `from`)
  *   g.still({lon, lat, zoom, cx, cy})  jump to a still view (no motion)
  *   g.reset()                       spin again from the start, no arcs
- * Places: 'macedonia', 'skopje', 'germany', 'eu' (Brussels), 'sweden' (Gothenburg) or [lon, lat].
+ * Places: 'macedonia', 'skopje', 'kavadarci', 'germany', 'hamburg', 'eu' (Brussels), 'london' (EBRD),
+ * 'sweden' (Gothenburg), 'oslo', 'canberra' or [lon, lat]. Colours: --mennige or --accent, --card or a warm grey.
  */
 (() => {
   const GEO = window.ESG_GEO;
@@ -30,6 +36,8 @@
   const PLACES = {
     macedonia: [21.75, 41.6], skopje: [21.43, 42.0], germany: [10.4, 51.2],
     eu: [4.35, 50.85], brussels: [4.35, 50.85], sweden: [11.97, 57.71],
+    kavadarci: [22.01, 41.43], hamburg: [9.99, 53.55], london: [-0.13, 51.51], oslo: [10.75, 59.91],
+    canberra: [149.13, -35.28],
   };
   const MACEDONIA = PLACES.macedonia;
   const place = (p) => (Array.isArray(p) ? p : PLACES[p]);
@@ -105,9 +113,11 @@
     const autoArc = ds.arc === 'germany' || ds.arc === 'eu' ? ds.arc : null;
     const highlightGermany = ds.arc === 'germany';
     const ink = css('--ink', '#121212');
-    const accent = css('--mennige', '#B73A15');
-    const card = css('--card', '#E5E4E2');
+    const accent = css('--mennige', '') || css('--accent', '#B73A15');
+    const card = css('--card', '') || '#E5E4E2';
     const paper = css('--paper', '#F3F0E9');
+    const arcW = 2 * (parseFloat(ds.arcWidth || '3') || 3); // data-arc-width: the arc stroke in CSS px (3)
+    const landRing = ds.arcLand !== undefined;               // data-arc-land: two pulse rings where an arc lands
 
     const homeOff = parseFloat(ds.home || '70'); // start this many degrees east of North Macedonia (spins towards it)
     const home = () => ({ lon: MACEDONIA[0] + homeOff, lat: lat00, zoom: 1, cx: fcx0, cy: fcy0 });
@@ -131,8 +141,9 @@
       const padX = 14, padY = 10, h = fs + padY * 2;
       const bx = align === 'left' ? x - w - padX * 2 - 26 : x + 26;
       const by = y - h / 2;
-      ctx.fillStyle = paper; ctx.fillRect(bx, by, w + padX * 2, h);
-      ctx.lineWidth = 3; ctx.strokeStyle = ink; ctx.strokeRect(bx, by, w + padX * 2, h);
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, w + padX * 2, h, h / 2) : ctx.rect(bx, by, w + padX * 2, h);
+      ctx.fillStyle = 'rgba(255,253,248,0.92)'; ctx.fill();
+      ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(18,18,18,0.14)'; ctx.stroke();
       ctx.fillStyle = ink; ctx.textBaseline = 'middle';
       ctx.fillText(text, bx + padX + 0.06 * fs, y + 2);
       if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
@@ -191,14 +202,20 @@
           if (pen) ctx.lineTo(q[0], q[1]); else { ctx.moveTo(q[0], q[1]); pen = true; }
           tip = q;
         }
-        ctx.strokeStyle = accent; ctx.lineWidth = 6; ctx.lineCap = 'butt';
+        ctx.strokeStyle = accent; ctx.lineWidth = arcW; ctx.lineCap = 'round';
         if (p >= 1) { ctx.setLineDash([18, 12]); ctx.lineDashOffset = t / 28; }
         ctx.stroke(); ctx.setLineDash([]);
-        if (tip && p < 1) { ctx.fillStyle = accent; ctx.fillRect(tip[0] - 9, tip[1] - 9, 18, 18); }
+        if (tip && p < 1) { ctx.fillStyle = accent; ctx.beginPath(); ctx.arc(tip[0], tip[1], 4 + arcW, 0, Math.PI * 2); ctx.fill(); }
         if (p >= 1) {
           const end = a.path[a.path.length - 1];
           const e = project([end[0], end[1]]);
-          if (e[2] > 0) { ctx.fillStyle = accent; ctx.fillRect(e[0] - 10, e[1] - 10, 20, 20); }
+          if (e[2] > 0) { ctx.fillStyle = accent; ctx.beginPath(); ctx.arc(e[0], e[1], 11, 0, Math.PI * 2); ctx.fill(); }
+          const since = t - a.t0 - a.ms;
+          if (landRing && !reduce && e[2] > 0 && since < 2400) {
+            const ph = (since % 1200) / 1200;
+            ctx.beginPath(); ctx.arc(e[0], e[1], 12 + ph * 52, 0, Math.PI * 2);
+            ctx.strokeStyle = accent; ctx.lineWidth = 4; ctx.globalAlpha = 1 - ph; ctx.stroke(); ctx.globalAlpha = 1;
+          }
           const fade = reduce || a.ms <= 0 ? 1 : clamp01((t - a.t0 - a.ms) / 250);
           ctx.globalAlpha = fade;
           for (const [where, text, align] of a.labels) {
@@ -260,8 +277,8 @@
         move = null; mode = 'still';
         Object.assign(view, { lon, lat, zoom, cx, cy });
       },
-      arc(to, { ms = 1300, delay = 0, lift = 0.12, labels = [] } = {}) {
-        arcs.push({ path: greatCircle(MACEDONIA, place(to), 64), t0: performance.now() + delay, ms: reduce ? 0 : ms, lift, labels });
+      arc(to, { from = MACEDONIA, ms = 1300, delay = 0, lift = 0.12, labels = [] } = {}) {
+        arcs.push({ path: greatCircle(place(from), place(to), 64), t0: performance.now() + delay, ms: reduce ? 0 : ms, lift, labels });
       },
       clearArcs() { arcs = []; },
       reset() {
@@ -272,6 +289,44 @@
       },
     };
     controllers.set(canvas, api);
+
+    // data-globe-steps: the slide's step engine writes data-view; each new view runs its actions.
+    const plan = String(ds.globeSteps || '').split(';').map((entry) => {
+      const m = /^\s*(\d+)\s*:\s*(arc:)?([^>@\s]+)(?:>([^@\s]+))?(?:@([\d.]+))?\s*$/.exec(entry);
+      if (!m) return null;
+      const [, k, arc, a, b, z] = m;
+      if (arc ? !(place(a) && place(b)) : !place(a)) return null;
+      return { k: Number(k), arc: Boolean(arc), a, b, zoom: z ? parseFloat(z) : 1 };
+    }).filter(Boolean);
+    let shown = -1;
+    const turnTo = (s, animate) => {
+      const [lon, lat] = place(s.a);
+      const view = { lon, lat: Math.max(-60, Math.min(60, lat)), zoom: s.zoom, short: true, ms: 1500 };
+      if (animate) api.settle(view); else api.still(view);
+    };
+    function showStep(view, animate) {
+      if (!plan.length) return;
+      if (animate && view === shown + 1) {
+        for (const s of plan) if (s.k === view) (s.arc ? api.arc(s.b, { from: s.a, ms: 1500 }) : turnTo(s, true));
+      } else {
+        arcs = [];
+        let turn = null;
+        for (const s of plan) {
+          if (s.k > view) continue;
+          if (s.arc) api.arc(s.b, { from: s.a, ms: 0 }); else turn = s;
+        }
+        if (turn) turnTo(turn, false);
+      }
+      shown = view;
+    }
+    if (plan.length && slide) {
+      const viewOf = () => Number.parseInt(slide.getAttribute('data-view') || '0', 10) || 0;
+      new MutationObserver(() => {
+        if (!slide.hasAttribute('data-deck-active')) { shown = -1; return; }
+        const v = viewOf();
+        if (v !== shown) showStep(v, v === shown + 1);
+      }).observe(slide, { attributes: true, attributeFilter: ['data-view', 'data-deck-active'] });
+    }
 
     size();
     window.addEventListener('resize', size);

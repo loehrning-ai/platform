@@ -1,20 +1,8 @@
-/* scenes.js: the step engine of the Workshop 04 deck.
- *
- * Every frame is a pure function of (step, t), t in [0, 1] the progress into `step`. The markup
- * declares what moves; this file only computes numbers:
- *   data-step="k"          the element arrives with step k (opacity and a 10 px rise, see deck.css)
- *   data-win="a,b"         ...inside the window [a, b] of that step (stagger), eased, no overshoot
- *   data-out="k"           ...and leaves with step k (window data-out-win="a,b")
- *   data-fx="draw|line|move|fade|none"   how --p is drawn (deck.css)
- *   data-count="from,to,d" the text counts from `from` to `to` with d decimals as --p runs
- *   data-fill="n"          the first round(n * --p) children [data-cell] get data-on
- * --p is written on the element, data-off while --p is 0 (hidden from screen readers too).
- * A forward press plays t from 0 to 1 over the slide's data-durations; a backward press, a hash,
- * a reload, a presenter jump and reduced motion render t = 1 at once.
- *
- * The keys are the stage's (lib/deck-keys.js through lib/deck-stage.js); this file only answers
- * fragmentrequest, fragmentreset, deckreset and slidechange, and talks to the presenter view.
- */
+/* scenes.js: step engine of the workshop decks (source scripts/workshops/deck-engine/, synced by
+ * sync-deck-engine.mjs). A frame is a pure function of (step, t); every [data-step] gets --p, drawn by
+ * engine.css. Attributes: data-step data-win data-out data-out-win data-fx data-ease data-count
+ * data-count-as data-count-unit data-count-at data-fill; polls: data-poll data-value data-poll-show data-poll-n. Back, jumps, reduced motion and
+ * renderers that never tick render t = 1. Keys belong to the stage (deck-keys.js, deck-stage.js). */
 (() => {
   'use strict';
   const root = document.documentElement;
@@ -24,16 +12,23 @@
   const EXPORT = params.get('export') === 'final';
   const stage = document.querySelector('deck-stage');
   if (!stage) return;
+  const keys = window.DeckKeys;
+  const deckId = (keys && keys.deckId()) || root.getAttribute('data-deck-id') || '';
 
   const COPY = {
     de: { notice: 'Zurück am Anfang. Vorher: Folie {n}, Schritt {s}.', appendix: 'Anhang {n}', copied: 'Kopiert', failed: 'Bitte markieren und kopieren' },
     en: { notice: 'Back at the start. Before: slide {n}, step {s}.', appendix: 'appendix {n}', copied: 'Copied', failed: 'Select and copy, please' },
   }[LANG];
 
-  /* ── pure frame ─────────────────────────────────────────────────────── */
+  /* pure frame */
   const clamp01 = (x) => (Number.isFinite(x) ? Math.min(1, Math.max(0, x)) : 0);
-  const ease = (x) => 1 - Math.pow(1 - clamp01(x), 3);
-  const seg = (t, a, b) => ease((clamp01(t) - a) / (b - a || 1));
+  const EASE = {
+    out: (x) => 1 - Math.pow(1 - x, 3),
+    linear: (x) => x,
+    spring: (x) => 1 + 2.7 * Math.pow(x - 1, 3) + 1.7 * Math.pow(x - 1, 2),
+  };
+  const SPRING_FX = /^(?:pop|fly|flip)$/;
+  const seg = (t, a, b, e) => e(clamp01((clamp01(t) - a) / (b - a || 1)));
   const formats = {};
   const fmt = (value, digits) => (formats[digits] ??= new Intl.NumberFormat(LANG === 'de' ? 'de-DE' : 'en-GB', {
     minimumFractionDigits: digits, maximumFractionDigits: digits, useGrouping: true,
@@ -48,72 +43,98 @@
     let list = partsCache.get(slide);
     if (list) return list;
     list = [...slide.querySelectorAll('[data-step]')].map((el) => {
-      const [a, b] = pair(el.dataset.win, [0, 1]);
-      const out = el.dataset.out === undefined ? null : Number(el.dataset.out);
-      const [oa, ob] = pair(el.dataset.outWin, [0, 0.5]);
-      const count = el.dataset.count ? el.dataset.count.split(',').map(Number) : null;
-      const fill = el.dataset.fill ? { n: Number(el.dataset.fill), cells: [...el.querySelectorAll('[data-cell]')] } : null;
-      return { el, k: Number(el.dataset.step), a, b, out, oa, ob, count, fill };
+      const d = el.dataset;
+      const [a, b] = pair(d.win, [0, 1]);
+      const out = d.out === undefined ? null : Number(d.out);
+      const [oa, ob] = pair(d.outWin, [0, 0.5]);
+      const count = d.count ? d.count.split(',').map(Number) : null;
+      const at = d.countAt ? d.countAt.split(',').map((x) => x.split(':').map(Number)) : null;
+      const fill = d.fill ? { n: Number(d.fill), cells: [...el.querySelectorAll('[data-cell]:not([data-miss])')] } : null;
+      const e = EASE[d.ease] || (SPRING_FX.test(d.fx || '') ? EASE.spring : EASE.out);
+      return { el, k: Number(d.step), a, b, out, oa, ob, count, at, mss: d.countAs === 'mss', unit: d.countUnit || '', fill, e };
     });
     partsCache.set(slide, list);
     return list;
   }
 
-  /** --p of one element at (step, t): in by its step, out by its data-out step. */
   function progress(item, step, t) {
-    const pin = step > item.k ? 1 : step < item.k ? 0 : seg(t, item.a, item.b);
+    const pin = step > item.k ? 1 : step < item.k ? 0 : seg(t, item.a, item.b, item.e);
     if (item.out === null) return pin;
-    const pout = step > item.out ? 1 : step < item.out ? 0 : seg(t, item.oa, item.ob);
+    const pout = step > item.out ? 1 : step < item.out ? 0 : seg(t, item.oa, item.ob, EASE.out);
     return pin * (1 - pout);
   }
 
   function render(slide, step, t) {
     for (const item of parts(slide)) {
       const p = progress(item, step, t);
+      const q = clamp01(p);
       item.el.style.setProperty('--p', p.toFixed(4));
       item.el.toggleAttribute('data-off', p <= 0);
       if (item.count) {
         const [from, to, digits = 0] = item.count;
         const factor = Math.pow(10, digits);
-        item.el.textContent = fmt(Math.round((from + (to - from) * p) * factor) / factor, digits);
+        // data-count-at="1:3,2:5": a value per press
+        const at = (n) => item.at.reduce((v, [k, x]) => (k <= n ? x : v), from);
+        const raw = item.at ? at(step - 1) + (at(step) - at(step - 1)) * seg(t, item.a, item.b, item.e) : from + (to - from) * q;
+        const v = Math.round(raw * factor) / factor;
+        // data-count-as="mss": seconds shown as m:ss (a measured duration, counting up)
+        item.el.textContent = item.mss ? Math.floor(v / 60) + ':' + String(Math.round(v) % 60).padStart(2, '0') : fmt(v, digits) + item.unit;
       }
       if (item.fill) {
-        const on = Math.round(item.fill.n * p);
+        const on = Math.round(item.fill.n * q);
         item.fill.cells.forEach((cell, index) => cell.toggleAttribute('data-on', index < on));
       }
     }
     slide.setAttribute('data-view', String(step));
   }
 
-  /* ── playback ───────────────────────────────────────────────────────── */
+  /* playback */
   const reduced = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
   let frame = 0;
+  let guard = 0;
+  let playing = null;
   const durations = (slide) => String(slide.dataset.durations || '').split(',').map(Number);
   const total = (slide) => Number.parseInt(slide.dataset.stepTotal || '0', 10) || 0;
   const current = (slide) => Math.min(total(slide), Math.max(0, Number.parseInt(slide.dataset.stepCurrent || '0', 10) || 0));
 
   function stop() {
     if (frame) window.cancelAnimationFrame(frame);
+    window.clearTimeout(guard);
     frame = 0;
+    playing = null;
+  }
+
+  function finish() {
+    const p = playing;
+    stop();
+    if (p) render(p.slide, p.step, 1);
   }
 
   function play(slide, step) {
     stop();
     const ms = durations(slide)[step];
     const duration = Number.isFinite(ms) ? ms : 900;
-    if (reduced.matches || PREVIEW || EXPORT || duration <= 0) {
+    if (reduced.matches || PREVIEW || EXPORT || duration <= 0 || document.visibilityState !== 'visible') {
       render(slide, step, 1);
       return;
     }
     const start = performance.now();
+    let ticked = false;
+    playing = { slide, step };
     render(slide, step, 0);
     const tick = (now) => {
+      ticked = true;
       const t = Math.min(1, (now - start) / duration);
       render(slide, step, t);
-      frame = t < 1 ? window.requestAnimationFrame(tick) : 0;
+      if (t < 1) frame = window.requestAnimationFrame(tick);
+      else stop();
     };
     frame = window.requestAnimationFrame(tick);
+    // A hidden or occluded renderer never ticks: show the step's final frame instead of a blank slide.
+    guard = window.setTimeout(() => { if (!ticked) finish(); }, 120);
   }
+
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') finish(); });
 
   function settle(slide, step) {
     stop();
@@ -121,7 +142,44 @@
     render(slide, step, 1);
   }
 
-  /* ── stage events ───────────────────────────────────────────────────── */
+  /* room poll */
+  const POLL = `deck:${deckId}:poll:`;
+  const store = (fn) => { try { return fn(window.sessionStorage); } catch (_e) { return null; } };
+  const votes = (name, value) => Number(store((s) => s.getItem(POLL + name + ':' + value))) || 0;
+
+  function pollRender() {
+    const groups = {};
+    document.querySelectorAll('[data-poll][data-value], [data-poll-show] [data-value]').forEach((el) => {
+      const name = el.dataset.poll || el.closest('[data-poll-show]').dataset.pollShow;
+      (groups[name] ??= []).push(el);
+    });
+    for (const [name, list] of Object.entries(groups)) {
+      const n = list.map((el) => votes(name, el.dataset.value));
+      const max = Math.max(0, ...n);
+      list.forEach((el, i) => {
+        el.style.setProperty('--share', max ? (n[i] / max).toFixed(3) : '0');
+        el.dataset.n = String(n[i]);
+        el.toggleAttribute('data-lead', max > 0 && n[i] === max);
+        el.querySelectorAll('[data-poll-n]').forEach((c) => { c.textContent = String(n[i]); });
+      });
+    }
+  }
+
+  function pollAdd(name, value) {
+    if (PREVIEW || !name || value == null) return;
+    store((s) => s.setItem(POLL + name + ':' + value, String(votes(name, value) + 1)));
+    pollRender();
+  }
+
+  function pollClear() {
+    store((s) => Object.keys(s).filter((k) => k.startsWith(POLL)).forEach((k) => s.removeItem(k)));
+    pollRender();
+  }
+
+  document.querySelectorAll('[data-poll-show]').forEach((el) => el.setAttribute('aria-live', 'polite'));
+  pollRender();
+
+  /* stage events */
   let resetFrom = null;
 
   stage.addEventListener('slidechange', (event) => {
@@ -168,13 +226,13 @@
     postState();
   });
 
-  // r or Shift+R: every slide back to step 0, the cover plays its opening again. The old place is
-  // named once, visibly and for screen readers, and the presenter view offers the way back.
+  // r or Shift+R: all slides to step 0, polls cleared, the old place named once.
   stage.addEventListener('deckreset', () => {
     const slide = stage.currentSlide;
     const from = slide ? { index: stage.index, step: current(slide) } : null;
     resetFrom = from && (from.index !== 0 || from.step !== 0) ? from : null;
     document.querySelectorAll('deck-stage > section.slide').forEach((section) => { section.dataset.stepCurrent = '0'; });
+    pollClear();
     if (resetFrom) notice(resetFrom);
     if (stage.index === 0 && stage.currentSlide) {
       play(stage.currentSlide, 0);
@@ -183,7 +241,7 @@
     }
   });
 
-  /* ── reset notice ───────────────────────────────────────────────────── */
+  /* reset notice */
   const box = document.createElement('div');
   box.className = 'deck-notice';
   box.setAttribute('role', 'status');
@@ -207,9 +265,7 @@
     noticeTimer = window.setTimeout(() => box.removeAttribute('data-visible'), 4000);
   }
 
-  /* ── presenter view (lib/presenter.js) ──────────────────────────────── */
-  const keys = window.DeckKeys;
-  const deckId = (keys && keys.deckId()) || root.getAttribute('data-deck-id') || '';
+  /* presenter view (lib/presenter.js) */
   const channel = !PREVIEW && typeof BroadcastChannel !== 'undefined' && keys ? new BroadcastChannel(keys.presenterChannel(deckId)) : null;
 
   function postState() {
@@ -228,6 +284,7 @@
       const m = event.data || {};
       if (m.from !== 'presenter') return;
       if (m.type === 'hello') postState();
+      else if (m.type === 'poll') pollAdd(String(m.name || ''), m.value == null ? null : String(m.value));
       else if (m.type === 'key') {
         if (m.key === 'ArrowRight') stage.fragment(1);
         else if (m.key === 'ArrowLeft') stage.fragment(-1);
@@ -246,7 +303,7 @@
     };
   }
 
-  // The presenter view's next-slide frame: { deckPreview: true, index } from the same origin.
+  // The presenter's next-slide frame: { deckPreview: true, index }, same origin.
   if (PREVIEW) {
     window.addEventListener('message', (event) => {
       if (event.origin !== window.location.origin) return;
@@ -257,8 +314,14 @@
     });
   }
 
-  /* ── copy buttons on the prompt slides ──────────────────────────────── */
+  /* copy buttons and poll buttons */
   document.addEventListener('click', (event) => {
+    const vote = event.target?.closest?.('button[data-poll][data-value]');
+    if (vote) {
+      if (event.detail > 0) vote.blur();
+      pollAdd(vote.dataset.poll, vote.dataset.value);
+      return;
+    }
     const button = event.target?.closest?.('button[data-copy]');
     if (!button) return;
     const source = document.getElementById(button.dataset.copy);

@@ -67,4 +67,23 @@ describe("workshop objectives (the Lernziel block)", () => {
     expect(skill("kennzahlen-steckbrief")).toContain("Eine Kennzahl bedeutet nur, was ihr Steckbrief sagt.");
     expect(workshopObjective("geschaeftsberichte-mit-ki-lesen", "de")?.objective.startsWith("Eine Kennzahl bedeutet nur, was ihr Steckbrief sagt.")).toBe(true);
   });
+
+  it("Workshops 04 and 05 point to each other: the same four checks, and no double period on the card", () => {
+    for (const locale of ["de", "en"] as const) {
+      const esg = workshopObjective("esg-berichte-mit-ki", locale);
+      const audit = workshopObjective("audit-vorbereitung-mit-ki", locale);
+      expect(esg?.related?.href).toBe("/workshops/audit-vorbereitung-mit-ki");
+      expect(audit?.related?.href).toBe("/workshops/esg-berichte-mit-ki");
+      expect(esg?.related?.label).toMatch(/Workshop 05$/);
+      expect(audit?.related?.label).toMatch(/Workshop 04$/);
+      for (const line of esg?.card ?? []) expect(line).not.toMatch(/\.\./);
+    }
+    // Status names in capitals on both cards, as in the kits.
+    expect(workshopObjective("esg-berichte-mit-ki", "de")?.card[1]).toMatch(/^BELEGT: .*\. SCHWACH: .*\. LÜCKE: .*\.$/);
+    expect(workshopObjective("esg-berichte-mit-ki", "en")?.card[1]).toMatch(/^COVERED: .*\. WEAK: .*\. GAP: .*\.$/);
+    expect(workshopObjective("audit-vorbereitung-mit-ki", "de")?.card[1]).toMatch(/^BELEGT, SCHWACH oder LÜCKE\./);
+    for (const slug of ["ki-prognosen-einschaetzen", "geschaeftsberichte-mit-ki-lesen", "datenbereitschaft-fuer-ki", "angebote-mit-ki-vergleichen"]) {
+      expect(workshopObjective(slug, "de")?.related).toBeUndefined();
+    }
+  });
 });

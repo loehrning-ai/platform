@@ -258,7 +258,7 @@ export const demos: readonly Demo[] = [
     title: "Die Lückenliste",
     oneLiner:
       "Acht Anforderungen, elf Dateien. Prüf, welche Datei wirklich etwas belegt, prüf Claudes Zitate gegen die Dateien und nimm einen Skill für deine eigenen Audits mit. Alles läuft in diesem Tab.",
-    question: "Welche Dateien im Ordner sind ein Nachweis?",
+    question: "Welche Anforderung ist belegt, welches Dokument fehlt?",
     syntheticDataLabel:
       "Erfundener Fall aus Workshop 05: Vardar Works, Tannwald Haustechnik und alle Personen sind erfunden, zwei Zeilen stammen von Anthropics öffentlicher Datenschutzseite. Auf dieser Seite läuft keine KI. Die Claude-Antwort ist eine Aufzeichnung. Was du prüfst, bleibt in deinem Browser.",
     job: "Prüf, welche Datei im Ordner wirklich etwas belegt.",
@@ -270,7 +270,7 @@ export const demos: readonly Demo[] = [
       title: "The gap list",
       oneLiner:
         "Eight requests, eleven files. Test which file actually proves something, check Claude's quotes against the files, and take a skill home for your own audits. Everything runs in this tab.",
-      question: "Which files in the folder are evidence?",
+      question: "Which request is covered, and which document is missing?",
       syntheticDataLabel:
         "Invented case from Workshop 05: Vardar Works, Tannwald Haustechnik and every person are invented, and two lines come from Anthropic's public privacy page. No AI runs on this page. The Claude answer is a recording. What you check stays in your browser.",
       job: "Test which file in the folder actually proves something.",
