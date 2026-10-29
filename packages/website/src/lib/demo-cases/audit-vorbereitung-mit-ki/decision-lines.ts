@@ -90,7 +90,11 @@ export function dateDecision(doc: Doc, date: DateResult, validFrom: string | nul
     const hit = findPattern(lines, /\b(valid from|gültig ab|in kraft ab)\b/i) ?? findDate(lines, validFrom);
     return hit ? { test: "date", line: hit.line, span: spanOf(lines, hit), pass: false } : null;
   }
-  if (!date.used) return null;
+  if (!date.used) {
+    // The edit is visible evidence of the date's kind, never a policy approval.
+    const edit = doc.type === "POLICY" ? findPattern(lines, /\b(edited|bearbeitet|geändert)\b/i) : null;
+    return edit ? { test: "date", line: edit.line, span: spanOf(lines, edit), pass: false } : null;
+  }
   const hit = findDate(lines, date.used.iso);
   if (!hit) return null;
   const review = date.reviewDue ? findDate(lines, date.reviewDue.iso) : null;

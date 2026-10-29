@@ -152,9 +152,9 @@ for (const ch of CHAPTERS) {
       }
 
       // The first chapter has no previous chapter (its left link goes to the cover); the last has no next.
-      const prev = page.getByRole("link", { name: /Vorheriges Kapitel/ }).first();
-      // The article footer and the reader bar both offer the next chapter: the first is the article's.
-      const next = page.getByRole("link", { name: /Nächstes Kapitel/ }).first();
+      const nav = page.getByRole("navigation", { name: "Kapitelnavigation" });
+      const prev = nav.getByRole("link", { name: /^Zurück:/ });
+      const next = nav.getByRole("link", { name: /^Weiter:/ });
       if (ch.prev) {
         await expect(prev).toBeVisible();
         await expect(prev).toHaveAttribute("href", chapterPath(ch.prev));
@@ -190,6 +190,11 @@ test.describe("reader mobile · shared chrome", () => {
   test("has no heading sidebar, offers a 44px Weiter in the reader bar and follows 'next' to the next chapter", async ({ page }) => {
     const first = CHAPTERS[0] as (typeof CHAPTERS)[0] & { next: string };
     await page.goto(chapterPath(first.slug), { waitUntil: "domcontentloaded" });
+    await page
+      .locator(`[data-book-reader-ready="${BOOK}:${first.slug}"]`)
+      .waitFor({ state: "attached" });
+    // Register user scrolling before a late learning-owner resolution can restore the reading position.
+    await page.keyboard.press("End");
 
     // The insight reader has no sidebar of headings; the desktop one of the plain reader is hidden below lg.
     await expect(page.getByRole("complementary", { name: "Kapitelinhalt" })).toBeHidden();
@@ -206,6 +211,7 @@ test.describe("reader mobile · shared chrome", () => {
       await expect(bar.getByRole("link")).toBeVisible({ timeout: 1_000 });
     }).toPass({ timeout: 15_000 });
     const action = bar.locator("[data-reader-focus-action]");
+    await expect(action).toBeVisible();
     const box = await action.boundingBox();
     expect(box, "reader bar action box").not.toBeNull();
     expect(Math.min(box?.width ?? 0, box?.height ?? 0)).toBeGreaterThanOrEqual(44);

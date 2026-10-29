@@ -153,7 +153,7 @@ describe("ChapterReader, insight layout", () => {
 
   it("keeps the previous and next chapter links and the reader runtime after all server markup", () => {
     const { container } = insight(MARKDOWN);
-    expect(screen.getByRole("link", { name: "Vorheriges Kapitel: Zweimal gemessen" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Zurück: Zweimal gemessen" })).toBeVisible();
     expect(screen.getAllByRole("link", { name: "Nächstes Kapitel: Im Schaufenster" })[0]).toBeVisible();
     const marker = screen.getByTestId("reader-ready-marker");
     const article = container.querySelector("article")!;

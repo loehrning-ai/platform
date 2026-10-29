@@ -254,11 +254,13 @@ export function GlossaryView({
                       id={`term-${encodeURIComponent(entry.term.toLowerCase())}`}
                       className="scroll-mt-24 border-b border-border py-4"
                     >
-                      <p className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                        § {group.num} · {group.label}
-                      </p>
-                      <dt className="mt-1 font-mono text-base font-bold text-brand-orange">
-                        {entry.term}
+                      <dt>
+                        <span className="block font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                          § {group.num} · {group.label}
+                        </span>
+                        <span className="mt-1 block font-mono text-base font-bold text-brand-orange">
+                          {entry.term}
+                        </span>
                       </dt>
                       <dd className="mt-1.5 max-w-[68ch] text-[15px] leading-relaxed text-foreground">
                         {entry.definition}
@@ -290,20 +292,21 @@ export function GlossaryView({
                     <div
                       key={entry.term}
                       id={`term-${encodeURIComponent(entry.term.toLowerCase())}`}
-                      className="grid scroll-mt-24 grid-cols-[2.25rem_minmax(0,1fr)] gap-3 border-b border-border py-4"
+                      className="relative min-w-0 scroll-mt-24 border-b border-border py-4 pl-12"
                     >
-                      <span className="font-mono text-xs text-muted-foreground">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <div className="min-w-0">
-                        <dt className="break-words font-mono text-base font-bold text-brand-orange">
-                          {entry.term}
-                        </dt>
-                        <dd className="mt-1.5 max-w-[68ch] text-[15px] leading-relaxed text-foreground">
-                          {entry.definition}
-                        </dd>
-                        {renderRelatedTerms(entry)}
-                      </div>
+                      <dt className="break-words font-mono text-base font-bold text-brand-orange">
+                        <span
+                          aria-hidden="true"
+                          className="absolute left-0 top-4 font-mono text-xs font-normal text-muted-foreground"
+                        >
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        {entry.term}
+                      </dt>
+                      <dd className="mt-1.5 max-w-[68ch] text-[15px] leading-relaxed text-foreground">
+                        {entry.definition}
+                      </dd>
+                      {renderRelatedTerms(entry)}
                     </div>
                   ))}
                 </dl>

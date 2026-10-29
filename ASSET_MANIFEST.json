@@ -2182,8 +2182,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit.zip",
-      "sizeBytes": 43156,
-      "sha256": "4648e6e80596ac1612b159ce6332d938fb4bc4da855a4b833bca5ab4207f3a77",
+      "sizeBytes": 43377,
+      "sha256": "e37bffa463789ff4570a8272153e5c3afe073e4aa5a31b6774b7bd35741a0aac",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",
@@ -2191,8 +2191,8 @@
     },
     {
       "path": "packages/website/public/workshops/audit-vorbereitung-mit-ki/vardar-audit-kit-de.zip",
-      "sizeBytes": 46023,
-      "sha256": "7ee2a8f2ab28e4a026c7e33bad66251016b4ae17032708e82b6e25d42b848814",
+      "sizeBytes": 46263,
+      "sha256": "9323815702dd633cf6fa85944fe3896f24c400b273f363452be95568506b5b6a",
       "owner": "Tim L\u00f6hr",
       "source": "Original Audit Preparation with AI workshop material (Workshop 05 participant material, invented company data), built by scripts/workshop05/build-kit.mjs, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

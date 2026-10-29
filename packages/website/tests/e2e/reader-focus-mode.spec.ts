@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { chapterPath, chapters } from "./fixtures/book";
+import { BOOK, chapterPath, chapters } from "./fixtures/book";
 import { settleFontsAndFrame } from "./fixtures/settle";
 
 /**
@@ -166,6 +166,10 @@ test.describe("reader focus mode: chapter reader below lg", () => {
     page,
   }) => {
     await openAt(page, CHAPTER_URL, 390);
+    // The reader restores its position on mount; scroll only after that effect is ready.
+    await page
+      .locator(`[data-book-reader-ready="${BOOK}:${chapters()[0]!.slug}"]`)
+      .waitFor({ state: "attached" });
     await toChapterBar(page);
     const next = page
       .locator(READER_BAR)
@@ -272,6 +276,9 @@ test.describe("reader focus mode: lesson shell below lg", () => {
     await expect(action).toHaveText("Aufgabe öffnen");
     const navigation = bar.locator("[data-reader-focus-navigation]");
     await expectTargetSize(navigation, "lesson navigation remains available");
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
     await navigation.click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await page.keyboard.press("Escape");

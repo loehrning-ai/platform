@@ -61,7 +61,6 @@ const READER_COPY = {
     readingTime: (minutes: number) =>
       `Lesezeit: ca. ${minutes} ${minutes === 1 ? "Minute" : "Minuten"}`,
     chapterNavigationAria: "Kapitelnavigation",
-    previousChapter: (title: string) => `Vorheriges Kapitel: ${title}`,
     previousShort: "Zurück",
     contents: "Inhaltsverzeichnis",
     keyboardHint: "Pfeiltasten links/rechts",
@@ -90,7 +89,6 @@ const READER_COPY = {
     readingTime: (minutes: number) =>
       `Reading time: approx. ${minutes} ${minutes === 1 ? "minute" : "minutes"}`,
     chapterNavigationAria: "Chapter navigation",
-    previousChapter: (title: string) => `Previous chapter: ${title}`,
     previousShort: "Previous",
     contents: "Contents",
     keyboardHint: "Left/right arrow keys",
@@ -253,7 +251,7 @@ export function ChapterReader({
         <Link
           href={localizeHref(`/buecher/${book.id}/${neighbours.prev.slug}`, locale)}
           className="flex min-h-11 min-w-0 max-w-full items-center justify-self-start border border-border/50 bg-card/20 px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
-          aria-label={copy.previousChapter(neighbours.prev.title)}
+          aria-label={`${copy.previousShort}: ${neighbours.prev.title}`}
         >
           <ArrowLeft size={14} aria-hidden="true" />
           <span className="hidden min-w-0 break-words md:block">{neighbours.prev.title}</span>
@@ -277,7 +275,7 @@ export function ChapterReader({
         <Link
           href={nextChapterHref}
           className="flex min-h-11 min-w-0 max-w-full items-center justify-self-end border border-border/50 bg-card/20 px-3 py-2 text-right text-sm font-semibold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange sm:px-4"
-          aria-label={copy.nextChapter(neighbours.next.title)}
+          aria-label={`${copy.nextShort}: ${neighbours.next.title}`}
         >
           <span className="hidden min-w-0 break-words md:block">{neighbours.next.title}</span>
           <span className="md:hidden">{copy.nextShort}</span>

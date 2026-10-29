@@ -10,6 +10,30 @@ import { parseList } from "./parse-list";
 import { verifyQuote } from "./quote";
 import { stemOf, versionChains } from "./versions";
 import { formatPercent } from "./counts";
+import { dateTest, indexRows, kitDoc, readDoc } from "./evidence";
+import { FOLDER_FILES } from "./kit";
+
+describe("the published PERIOD rule", () => {
+  it("rejects a recently approved policy that leaves the start of the audit window uncovered", () => {
+    const policy = readDoc("ai-rule.md", "# AI use policy\nApproved 2026-10-01 by the Managing Director. Valid from 2026-10-01.");
+    expect(dateTest(policy, "2025-12-10")).toMatchObject({ pass: false, uncoveredDays: 295 });
+    expect(dateTest(policy, "2026-10-01")).toMatchObject({ pass: true, uncoveredDays: 0 });
+  });
+
+  it("never treats a policy's editing date as its approval or review", () => {
+    const draft = readDoc("policy.md", "# Information security policy DRAFT\nLast edited 2026-09-18. Approved by: (open)");
+    expect(dateTest(draft, "2025-12-10")).toMatchObject({ pass: false, used: null });
+    const reviewed = readDoc("policy.md", "# Information security policy\nReviewed 2026-09-20 by the IT lead.");
+    expect(dateTest(reviewed, "2025-12-10")).toMatchObject({ pass: true, used: { kind: "reviewed", iso: "2026-09-20" } });
+  });
+
+  it("applies the same whole-period check to the kit's eleven-file index", () => {
+    const rows = indexRows(FOLDER_FILES.map(kitDoc), "2025-12-10");
+    expect(rows.filter((row) => row.passes)).toHaveLength(7);
+    expect(rows.find((row) => row.doc.file === "ai-use-rule_v1.md")?.date).toMatchObject({ pass: false, uncoveredDays: 295 });
+    expect(rows.find((row) => row.doc.file === "infosec-policy_v4_DRAFT.md")?.date).toMatchObject({ pass: false, used: null });
+  });
+});
 
 describe("dates", () => {
   it("clamps the window start on a leap day", () => {
@@ -233,7 +257,7 @@ describe("model", () => {
       R5: "quote",
       R6: null,
       R7: "quote",
-      R8: "approval",
+      R8: "date",
     });
     expect(model.unlinked).toEqual(["vendor-page_claude_2026-06-15.md", "it-notes_2026-10-06.md", "infosec-policy_v3_FINAL.md"]);
     expect(model.r7.map((result) => result.status)).toEqual(["gap", "gap", "gap"]);

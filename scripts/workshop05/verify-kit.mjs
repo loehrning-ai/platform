@@ -2,7 +2,7 @@
 /**
  * Checks the Workshop 05 kit ("Audit Preparation with AI: Organize Evidence and Find Gaps") against
  * itself: exactly the files build-kit.mjs lists, every file labelled as fictional training material,
- * every figure ANSWERS.md states recomputed from the folder (8 of 11 in the index, 2 COVERED, 1 WEAK,
+ * every figure ANSWERS.md states recomputed from the folder (7 of 11 in the index, 2 COVERED, 1 WEAK,
  * 5 GAP, 25 of 120 trained, 114 needed, 30.5 hours, 295 days without a rule, 638 days since v3), the
  * weekdays of the letter, every quote ANSWERS.md gives found word for word in its file, the R7 email
  * equal to the template filled in, and no dash, path or banned word. The German edition (kit-de/) is
@@ -82,7 +82,7 @@ expect("v3DaysShort", days("2024-03-12", "2025-12-10"), 638);
 
 // 5. ANSWERS.md states the same figures and every quote it gives is in its file.
 const answers = read("ANSWERS.md");
-for (const line of ["8 of 11 files pass PERIOD and APPROVAL.", "Count: 2 COVERED, 1 WEAK, 5 GAP.", "25 of 120 = 20.8%; 95% needs 114", "told after 30.5 hours", "(295 days)"]) {
+for (const line of ["7 of 11 files pass PERIOD and APPROVAL.", "Count: 2 COVERED, 1 WEAK, 5 GAP.", "25 of 120 = 20.8%; 95% needs 114", "told after 30.5 hours", "(295 days)"]) {
   if (!answers.includes(line)) failures.push(`ANSWERS.md lacks "${line}"`);
 }
 const mission2 = answers.slice(answers.indexOf("## Step 2"), answers.indexOf("Count:"));
@@ -94,7 +94,7 @@ for (const [item, file] of Object.entries(fileOf)) {
   for (const [, quote] of row.matchAll(/"([^"]+)"/g)) if (!read(`folder/${file}`).includes(quote)) failures.push(`${item}: "${quote}" is not in ${file}`);
 }
 const mission1 = answers.slice(answers.indexOf("## Step 1"), answers.indexOf("## Step 2"));
-expect("indexPass", [...mission1.matchAll(/\| pass \| pass \|$/gm)].length, 8);
+expect("indexPass", [...mission1.matchAll(/\| pass \| pass \|$/gm)].length, 7);
 
 // 6. The R7 email in ANSWERS.md is the template, filled in.
 const filled = read("templates/gap-request.md")
@@ -116,13 +116,13 @@ if (emailBlock !== filled) console.error(JSON.stringify({ emailBlock, filled }, 
 
 // 7. The German edition: the same statuses per item, the same index, labelled, no dash.
 const loesungen = readDe("LOESUNGEN.md");
-for (const line of ["8 von 11 Dateien bestehen ZEITRAUM und FREIGABE.", "Zählung: 2 BELEGT, 1 SCHWACH, 5 LÜCKE.", "(295 Tage)", "nach 30,5 Stunden"]) {
+for (const line of ["7 von 11 Dateien bestehen ZEITRAUM und FREIGABE.", "Zählung: 2 BELEGT, 1 SCHWACH, 5 LÜCKE.", "(295 Tage)", "nach 30,5 Stunden"]) {
   if (!loesungen.includes(line)) failures.push(`LOESUNGEN.md lacks "${line}"`);
 }
 const statusRows = (text, words) => Object.fromEntries([...text.matchAll(new RegExp(`^\\| (R\\d) \\|.*\\| (${words.join("|")}) \\|$`, "gm"))].map((match) => [match[1], words.indexOf(match[2])]));
 expect("statusesDeEqualEn", statusRows(loesungen, ["BELEGT", "SCHWACH", "LÜCKE"]), statusRows(answers, ["COVERED", "WEAK", "GAP"]));
 const step1De = loesungen.slice(loesungen.indexOf("## Schritt 1"), loesungen.indexOf("## Schritt 2"));
-expect("indexPassDe", [...step1De.matchAll(/\| hält \| hält \|$/gm)].length, 8);
+expect("indexPassDe", [...step1De.matchAll(/\| hält \| hält \|$/gm)].length, 7);
 for (const file of KIT_FILES_DE) {
   const text = readDe(file);
   if (!file.startsWith("vorlagen/") && !/Erfundenes Übungsmaterial/.test(text.split("\n").slice(0, 3).join("\n"))) failures.push(`kit-de/${file}: the first lines must say Erfundenes Übungsmaterial`);

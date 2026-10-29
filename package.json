@@ -29,7 +29,7 @@
     "test:dependency-snapshot": "bun test scripts/__tests__/submit-bun-dependency-snapshot.test.ts",
     "asset:record": "node scripts/scaffold-asset.mjs",
     "artifact-assets:check": "bun scripts/verify-artifact-assets.ts",
-    "audit": "bun audit --ignore=GHSA-rj75-hqrm-r3gf",
+    "audit": "bun audit",
     "audit:critical": "bun audit --audit-level=critical",
     "license:audit": "node scripts/audit-dependency-licenses.mjs",
     "content:lint": "bun run --cwd packages/website content:lint",
@@ -55,6 +55,7 @@
   },
   "overrides": {
     "postcss": "^8.5.26",
+    "postcss-selector-parser": "^6.1.5",
     "fast-uri": "^4.2.3",
     "esbuild": "^0.28.1",
     "undici": "^7.30.1",

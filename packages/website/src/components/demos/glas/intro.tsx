@@ -67,6 +67,7 @@ export function DemoIntro({
     const box = text.current;
     if (!box) return;
     const mark = () => {
+      box.tabIndex = box.scrollHeight - box.clientHeight > 4 ? 0 : -1;
       const more = box.scrollHeight - box.clientHeight - box.scrollTop > 4;
       if (more) box.setAttribute("data-more", "");
       else box.removeAttribute("data-more");
@@ -93,7 +94,7 @@ export function DemoIntro({
       data-demo-intro=""
     >
       {/* The text scrolls on a short screen; the two buttons and the footnote always stay in view. */}
-      <div ref={text} className="glas-intro-text">
+      <div ref={text} className="glas-intro-text glas-focus" tabIndex={-1}>
         <p className="glas-intro-kicker">{content.kicker}</p>
         <h2 id={headingId} className="glas-intro-title">
           {content.title}

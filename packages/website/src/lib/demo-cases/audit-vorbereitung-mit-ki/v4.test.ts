@@ -40,7 +40,7 @@ describe("breaksFor over the 16 check sets", () => {
   it("name links fail where the engine says", () => {
     const failing = (test: TestId) => [...brokenBy(model.rows, test)].sort();
     expect(failing("quote")).toEqual(["R2", "R5", "R7"]);
-    expect(failing("date")).toEqual(["R3"]);
+    expect(failing("date")).toEqual(["R3", "R8"]);
     expect(failing("scope")).toEqual(["R4"]);
     expect(failing("approval")).toEqual(["R8"]);
   });
@@ -57,15 +57,17 @@ describe("breaksFor over the 16 check sets", () => {
     const count = (tests: readonly TestId[]) => survivors(model.rows, new Set(tests));
     expect(count([])).toBe(8);
     expect(count(["quote"])).toBe(5);
-    expect(count(["date"])).toBe(7);
+    expect(count(["date"])).toBe(6);
     expect(count(["quote", "date", "scope", "approval"])).toBe(2);
     expect(count(["date", "scope", "approval"])).toBe(5);
     expect(allCheckSets()).toHaveLength(16);
   });
 
-  it("each check rules out different files, so that sentence may be shown", () => {
-    expect(eachCheckDistinct(model.rows)).toBe(true);
-    const rows = model.rows.map((row) => (row.item.id === "R3" ? { ...row, naive: { ...row.naive, failed: ["date", "quote"] as readonly TestId[] } } : row));
+  it("does not claim the checks rule out distinct files when R8 fails both date and approval", () => {
+    expect(eachCheckDistinct(model.rows)).toBe(false);
+    const distinct = model.rows.map((row) => row.item.id === "R8" ? { ...row, naive: { ...row.naive, failed: ["approval"] as readonly TestId[] } } : row);
+    expect(eachCheckDistinct(distinct)).toBe(true);
+    const rows = distinct.map((row) => (row.item.id === "R3" ? { ...row, naive: { ...row.naive, failed: ["date", "quote"] as readonly TestId[] } } : row));
     expect(eachCheckDistinct(rows)).toBe(false);
   });
 
@@ -93,6 +95,7 @@ describe("decision lines are verbatim kit text", () => {
     expect(decisionFor(row("R3").naive, "date")?.span).toBe("Valid from 2026-10-01.");
     expect(decisionFor(row("R4").naive, "scope")?.span).toBe("Review of administrator accounts in Servicepult");
     expect(decisionFor(row("R8").naive, "approval")?.span).toBe("Approved by: (open)");
+    expect(decisionFor(row("R8").naive, "date")?.span).toBe("Last edited 2026-09-18 by Goran Petrovski, IT lead.");
     expect(row("R2").naive.tests.quote.missingParts).toEqual(["last_review", "transfer_basis"]);
   });
 

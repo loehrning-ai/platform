@@ -94,6 +94,46 @@ function renderView() {
 }
 
 describe("<GlossaryView> search", () => {
+  it.each(["de", "en"] as const)(
+    "keeps each term and its definitions directly grouped inside the %s description lists",
+    (locale) => {
+      const { container } = render(
+        <GlossaryView
+          groups={groups}
+          totalTerms={3}
+          version="1.4"
+          lastUpdated="2026-07-14"
+          locale={locale}
+        />,
+      );
+      const expectValidDescriptionLists = () => {
+        for (const list of container.querySelectorAll("dl")) {
+          for (const group of list.children) {
+            expect(group.tagName).toBe("DIV");
+            expect(group.firstElementChild?.tagName).toBe("DT");
+            expect(group.querySelector(":scope > dd")).not.toBeNull();
+            expect(
+              Array.from(group.children).every((child) =>
+                ["DT", "DD"].includes(child.tagName),
+              ),
+            ).toBe(true);
+          }
+        }
+      };
+
+      expect(screen.getAllByRole("term")).toHaveLength(3);
+      expectValidDescriptionLists();
+      fireEvent.change(
+        screen.getByLabelText(
+          locale === "en" ? "Search glossary" : "Glossar durchsuchen",
+        ),
+        { target: { value: "kontext" } },
+      );
+      expect(screen.getAllByRole("term")).toHaveLength(1);
+      expectValidDescriptionLists();
+    },
+  );
+
   it("keeps search, category navigation, and disclosure controls at 44px or larger", () => {
     const { container } = renderView();
     const search = screen.getByLabelText("Glossar durchsuchen");

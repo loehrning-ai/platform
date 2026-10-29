@@ -137,7 +137,7 @@ export const COPY = {
       breakNone: "Die Prüfung {check} bricht keine weitere Verbindung.",
       def: {
         quote: "In diesen Dateien steht kein wörtlicher Satz, der belegt, was der Kunde verlangt.",
-        date: "Eine Datei muss die {months} Monate vor dem Audit am {audit} abdecken.",
+        date: "Eine Datei muss die {months} Monate vor dem Audit am {audit} abdecken. Bei Richtlinien zählt der Freigabe- oder Prüftermin, kein Bearbeitungsdatum.",
         scope: "Die Datei deckt nur einen Teil dessen ab, wonach die Anforderung fragt.",
         approval: "Der Entwurf der neuen Sicherheitsrichtlinie ist nicht freigegeben, also ist R8 nur schwach belegt.",
       },
@@ -521,7 +521,7 @@ export const COPY = {
       breakNone: "The {check} test breaks no further link.",
       def: {
         quote: "None of these files contains a verbatim sentence that proves what the customer asks for.",
-        date: "A file has to cover the {months} months before the audit on {audit}.",
+        date: "A file has to cover the {months} months before the audit on {audit}. For policies, use approval or review, never the last edit.",
         scope: "The file covers only part of what the request asks about.",
         approval: "The draft of the new security policy has not been approved, so R8 is only weak.",
       },

@@ -494,7 +494,7 @@ ${job(k.job, `${s(2, { fx: "pop", win: ".85,1", out: 3, outWin: "0,.3" })} style
 ${foot(c, 10)}`;
 }
 
-/** Slide 11: Step 1. The room predicts, Tim sends prompt 1, Claude builds the index: 8 of 11 hold. */
+/** Slide 11: Step 1. The room predicts, Tim sends prompt 1, seven files pass the full period and approval checks. */
 function mission1(d, c) {
   const k = c.m1;
   const values = ["11", "10", "9", "8", "7"];

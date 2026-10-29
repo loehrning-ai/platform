@@ -53,23 +53,27 @@ export interface DateResult {
   readonly uncoveredDays: number;
 }
 
-/** ZEITRAUM, the date half: a record or register dated in the window; a policy approved or reviewed in it. */
+/** ZEITRAUM: qualifying date in the window, and no stated validity gap at its start. */
 export function dateTest(doc: Doc, windowStart: IsoDate): DateResult {
   const { meta } = doc;
   let used: DatedFact | null = doc.date;
   let reviewDue: DatedFact | null = null;
+  let uncoveredDays = 0;
   if (doc.type === "POLICY" || doc.type === "CONTRACT") {
     const approval = [dateOfKind(meta, "approved"), dateOfKind(meta, "reviewed")]
       .filter((fact): fact is DatedFact => fact !== null)
       .sort((a, b) => (a.iso < b.iso ? 1 : -1))[0];
-    used = approval ?? doc.date;
+    // Editing a policy does not establish when it was approved or reviewed.
+    used = approval ?? (doc.type === "POLICY" ? null : doc.date);
     const next = dateOfKind(meta, "nextReview");
     if (next && next.iso < windowStart) reviewDue = next;
+    const validFrom = dateOfKind(meta, "validFrom");
+    if (validFrom && validFrom.iso > windowStart) uncoveredDays = daysBetween(windowStart, validFrom.iso);
   }
-  if (!used) return { pass: false, used: null, daysShort: null, reviewDue, uncoveredDays: 0 };
+  if (!used) return { pass: false, used: null, daysShort: null, reviewDue, uncoveredDays };
   if (doc.type === "STATEMENT") return { pass: true, used, daysShort: null, reviewDue: null, uncoveredDays: 0 };
-  const inWindow = used.iso >= windowStart && !reviewDue;
-  return { pass: inWindow, used, daysShort: used.iso < windowStart ? daysBetween(used.iso, windowStart) : null, reviewDue, uncoveredDays: 0 };
+  const inWindow = used.iso >= windowStart && !reviewDue && uncoveredDays === 0;
+  return { pass: inWindow, used, daysShort: used.iso < windowStart ? daysBetween(used.iso, windowStart) : null, reviewDue, uncoveredDays };
 }
 
 export type ApprovalFail = "open" | "draft" | "none" | "notReviewed";
@@ -296,7 +300,7 @@ export interface IndexRow {
   readonly passes: boolean;
 }
 
-/** Step 1: ZEITRAUM (dated in the window) and FREIGABE for every file of a folder. */
+/** Step 1: the full ZEITRAUM and FREIGABE rules for every file of a folder. */
 export function indexRows(docs: readonly Doc[], windowStart: IsoDate): readonly IndexRow[] {
   return docs.map((doc) => {
     const date = dateTest(doc, windowStart);

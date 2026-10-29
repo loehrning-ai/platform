@@ -2,13 +2,13 @@
 Fictional training material. Compare facts and statuses, not wording. Where you and Claude differ, the file decides.
 
 ## Step 1: the index
-8 of 11 files pass PERIOD and APPROVAL.
+7 of 11 files pass PERIOD and APPROVAL.
 
 | File | Type | Date (kind) | Approved or owned by | PERIOD | APPROVAL |
 |---|---|---|---|---|---|
 | system-list_2026-09.csv | REGISTER | 2026-09-02 approved | Managing Director; owner IT lead | pass | pass |
 | subprocessors_2026-09.csv | REGISTER | 2026-09-05 updated | IT lead | pass | pass |
-| ai-use-rule_v1.md | POLICY | 2026-10-01 approved | Managing Director | pass | pass |
+| ai-use-rule_v1.md | POLICY | 2026-10-01 approved | Managing Director | FAIL | pass |
 | vendor-page_claude_2026-06-15.md | STATEMENT | page 2026-06-15, printed 2026-10-06 | Anthropic (issuer) | pass | pass |
 | access-review_2026-08-14.csv | RECORD | 2026-08-14 done, 2026-08-17 approved | IT lead; approved by Managing Director | pass | pass |
 | training-records_2026.csv | RECORD | 2026-11-02 exported | HR lead | pass | pass |
@@ -16,7 +16,9 @@ Fictional training material. Compare facts and statuses, not wording. Where you 
 | backup-report_2026-10.txt | RECORD | 2026-11-01 generated | backup system; owner IT lead | pass | pass |
 | it-notes_2026-10-06.md | STATEMENT | 2026-10-06 written | "Not reviewed by anyone" | pass | FAIL |
 | infosec-policy_v3_FINAL.md | POLICY | 2024-03-12 approved, review due March 2025 | Managing Director | FAIL | pass |
-| infosec-policy_v4_DRAFT.md | POLICY | 2026-09-18 edited | "Approved by: (open)" | pass | FAIL |
+| infosec-policy_v4_DRAFT.md | POLICY | 2026-09-18 edited | "Approved by: (open)" | FAIL | FAIL |
+
+A recent date alone does not pass PERIOD. The AI rule is valid only from 1 October 2026, leaving 295 days without a rule. Version 4 has an editing date, but no approval or review date.
 
 Watch for: an approver given to v4; "FINAL" read as current; a date taken from a file name; the vendor page marked unapproved (vendor plus page date count); a person's name where rule 13 asks for a role.
 
@@ -30,7 +32,7 @@ Watch for: an approver given to v4; "FINAL" read as current; a date taken from a
 | R5 | training-records | "Staff on 2026-11-01: 120." | not met: 26 rows, E014 twice, 25 of 120 = 20.8%; 95% needs 114 | GAP |
 | R6 | incident-log | "INC-02,2026-05-07 09:40,Tannwald" and "2026-05-08 16:10" | none: told after 30.5 hours | COVERED |
 | R7 | backup-report | "Restore test: not done in 2026." | not met | GAP |
-| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | PERIOD (v3), APPROVAL (v4) | WEAK |
+| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | PERIOD (v3 old; v4 no approval or review date), APPROVAL (v4) | WEAK |
 
 Count: 2 COVERED, 1 WEAK, 5 GAP.
 

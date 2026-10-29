@@ -2,13 +2,13 @@
 Erfundenes Übungsmaterial. Vergleiche Fakten und Status, nicht die Formulierung. Wo du und Claude auseinanderliegen, entscheidet die Datei.
 
 ## Schritt 1: die Nachweisliste
-8 von 11 Dateien bestehen ZEITRAUM und FREIGABE.
+7 von 11 Dateien bestehen ZEITRAUM und FREIGABE.
 
 | Datei | Typ | Datum (Art) | Freigegeben oder geführt von | ZEITRAUM | FREIGABE |
 |---|---|---|---|---|---|
 | system-list_2026-09.csv | REGISTER | 2026-09-02 freigegeben | Geschäftsführung; geführt von IT-Leitung | hält | hält |
 | subprocessors_2026-09.csv | REGISTER | 2026-09-05 aktualisiert | IT-Leitung | hält | hält |
-| ai-use-rule_v1.md | RICHTLINIE | 2026-10-01 freigegeben | Geschäftsführung | hält | hält |
+| ai-use-rule_v1.md | RICHTLINIE | 2026-10-01 freigegeben | Geschäftsführung | SCHEITERT | hält |
 | vendor-page_claude_2026-06-15.md | AUSSAGE | Seite 2026-06-15, gedruckt 2026-10-06 | Anthropic (Herausgeber) | hält | hält |
 | access-review_2026-08-14.csv | PROTOKOLL | 2026-08-14 erledigt, 2026-08-17 freigegeben | IT-Leitung; freigegeben von Geschäftsführung | hält | hält |
 | training-records_2026.csv | PROTOKOLL | 2026-11-02 exportiert | HR-Leitung | hält | hält |
@@ -16,7 +16,9 @@ Erfundenes Übungsmaterial. Vergleiche Fakten und Status, nicht die Formulierung
 | backup-report_2026-10.txt | PROTOKOLL | 2026-11-01 erzeugt | Backup-System; geführt von IT-Leitung | hält | hält |
 | it-notes_2026-10-06.md | AUSSAGE | 2026-10-06 geschrieben | "Not reviewed by anyone" | hält | SCHEITERT |
 | infosec-policy_v3_FINAL.md | RICHTLINIE | 2024-03-12 freigegeben, Überprüfung fällig März 2025 | Geschäftsführung | SCHEITERT | hält |
-| infosec-policy_v4_DRAFT.md | RICHTLINIE | 2026-09-18 bearbeitet | "Approved by: (open)" | hält | SCHEITERT |
+| infosec-policy_v4_DRAFT.md | RICHTLINIE | 2026-09-18 bearbeitet | "Approved by: (open)" | SCHEITERT | SCHEITERT |
+
+Ein junges Datum allein besteht ZEITRAUM nicht. Die KI-Regel gilt erst ab 1. Oktober 2026, davor fehlen 295 Tage. Version 4 hat ein Bearbeitungsdatum, aber keinen Freigabe- oder Prüftermin.
 
 Achte auf: eine Freigabe, die Claude v4 zuschreibt; "FINAL" als aktuell gelesen; ein Datum aus dem Dateinamen; die Anbieterseite als nicht freigegeben markiert (Anbieter und Datum der Seite zählen); ein Personenname, wo Regel 13 eine Rolle verlangt.
 
@@ -30,7 +32,7 @@ Achte auf: eine Freigabe, die Claude v4 zuschreibt; "FINAL" als aktuell gelesen;
 | R5 | training-records | "Staff on 2026-11-01: 120." | nicht erfüllt: 26 Zeilen, E014 doppelt, 25 von 120 = 20,8 %; 95 % brauchen 114 | LÜCKE |
 | R6 | incident-log | "INC-02,2026-05-07 09:40,Tannwald" und "2026-05-08 16:10" | keine: nach 30,5 Stunden informiert | BELEGT |
 | R7 | backup-report | "Restore test: not done in 2026." | nicht erfüllt | LÜCKE |
-| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | ZEITRAUM (v3), FREIGABE (v4) | SCHWACH |
+| R8 | infosec-policy_v3_FINAL | "Approved 2024-03-12"; v4: "Approved by: (open)" | ZEITRAUM (v3 alt; v4 ohne Freigabe- oder Prüftermin), FREIGABE (v4) | SCHWACH |
 
 Zählung: 2 BELEGT, 1 SCHWACH, 5 LÜCKE.
 
