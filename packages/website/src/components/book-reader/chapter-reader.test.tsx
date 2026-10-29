@@ -195,7 +195,34 @@ const NEXT_CHAPTER: BookChapterMeta = {
   sourceFile: "02_methodik.md",
 };
 
+const PREVIOUS_CHAPTER: BookChapterMeta = {
+  slug: "00_einstieg",
+  title: "Introduction",
+  sourceFile: "00_einstieg.md",
+};
+
 describe("ChapterReader focus mode and compact reader bar", () => {
+  it.each([
+    { locale: "de" as const, navigation: "Kapitelnavigation", label: "Zurück" },
+    { locale: "en" as const, navigation: "Chapter navigation", label: "Previous" },
+  ])("includes the visible $locale compact previous label in its accessible name", ({ locale, navigation, label }) => {
+    render(
+      <ChapterReader
+        book={BOOK}
+        chapter={CHAPTER}
+        neighbours={{ prev: PREVIOUS_CHAPTER, next: null }}
+        allChapters={[PREVIOUS_CHAPTER, CHAPTER.meta]}
+        locale={locale}
+        bookTitle="AI in German SMEs"
+        relatedResourceLabel="EU AI Act"
+      />,
+    );
+    const previous = within(screen.getByRole("navigation", { name: navigation }))
+      .getByRole("link", { name: /Introduction/ });
+    expect(previous).toHaveTextContent(label);
+    expect(previous).toHaveAccessibleName(new RegExp(`^${label}\\b`));
+  });
+
   it.each([
     { locale: "de" as const, navigation: "Kapitelnavigation", label: "Weiter" },
     { locale: "en" as const, navigation: "Chapter navigation", label: "Next" },

@@ -9,8 +9,8 @@ import { BOOK_PATH, chapterPath, chapters } from "./fixtures/book";
 /**
  * Book chapter reader navigation (regression coverage). Drives the real
  * ChapterReader (src/components/book-reader/chapter-reader.tsx): prev/next
- * neighbour links, boundary fallbacks (the first chapter has no "Vorheriges
- * Kapitel", the last no "Weiter:"), the position in the band ("Kapitel
+ * neighbour links, boundary fallbacks (the first chapter has no "Zurück:",
+ * the last no "Weiter:"), the position in the band ("Kapitel
  * X von Y"), the visible chapter list, and the ArrowLeft/ArrowRight window key
  * bindings. Locators use ARIA roles and labels plus the chapter slugs and titles
  * of content/books/ki-landschaft/manifest.json, read from disk, so a prose or
@@ -52,7 +52,7 @@ test.describe("book chapter reader navigation", () => {
     await page.locator('[data-app-hydration-marker="true"][data-hydrated="true"]').waitFor({ state: "attached" });
     const nav = page.getByRole("navigation", { name: "Kapitelnavigation" });
 
-    await expect(nav.getByRole("link", { name: /Vorheriges Kapitel/ })).toHaveAttribute("href", chapterPath(MID_PREV.slug));
+    await expect(nav.getByRole("link", { name: /^Zurück:/ })).toHaveAttribute("href", chapterPath(MID_PREV.slug));
     const next = nav.getByRole("link", { name: /^Weiter:/ });
     await expect(next).toHaveAttribute("href", chapterPath(MID_NEXT.slug));
 
@@ -65,7 +65,7 @@ test.describe("book chapter reader navigation", () => {
     await page.goto(chapterPath(FIRST.slug), { waitUntil: "domcontentloaded" });
     const nav = page.getByRole("navigation", { name: "Kapitelnavigation" });
 
-    await expect(nav.getByRole("link", { name: /Vorheriges Kapitel/ })).toHaveCount(0);
+    await expect(nav.getByRole("link", { name: /^Zurück:/ })).toHaveCount(0);
     await expect(nav.getByRole("link", { name: "Inhaltsverzeichnis" })).toHaveAttribute("href", BOOK_PATH);
     await expect(nav.getByRole("link", { name: /^Weiter:/ })).toBeVisible();
     await expect(page.locator("[data-cover-band]")).toContainText(new RegExp(`Kapitel\\s+1\\s+von\\s+${TOTAL}`));
@@ -77,7 +77,7 @@ test.describe("book chapter reader navigation", () => {
 
     await expect(nav.getByRole("link", { name: /^Weiter:/ })).toHaveCount(0);
     await expect(nav.getByRole("link", { name: "Kapitelübersicht" })).toHaveAttribute("href", BOOK_PATH);
-    await expect(nav.getByRole("link", { name: /Vorheriges Kapitel/ })).toHaveAttribute("href", chapterPath(LAST_PREV.slug));
+    await expect(nav.getByRole("link", { name: /^Zurück:/ })).toHaveAttribute("href", chapterPath(LAST_PREV.slug));
   });
 
   test("the visible chapter list names every chapter, marks the current one and links to the others", async ({ page }) => {

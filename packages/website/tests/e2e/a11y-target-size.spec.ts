@@ -101,7 +101,7 @@ test.describe("a11y: 44px product target floor at 390x844", () => {
     await expect(page).not.toHaveURL(firstChapterUrl);
     const prevLink = page
       .getByRole("navigation", { name: "Kapitelnavigation" })
-      .getByRole("link", { name: /Vorheriges Kapitel/i });
+      .getByRole("link", { name: /^Zurück:/i });
     await expect(prevLink).toBeVisible();
     await expectMinTargetSize(prevLink, "reader prev-chapter link");
   });
