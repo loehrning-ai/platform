@@ -193,6 +193,8 @@ test.describe("reader mobile · shared chrome", () => {
     await page
       .locator(`[data-book-reader-ready="${BOOK}:${first.slug}"]`)
       .waitFor({ state: "attached" });
+    // Register user scrolling before a late learning-owner resolution can restore the reading position.
+    await page.keyboard.press("End");
 
     // The insight reader has no sidebar of headings; the desktop one of the plain reader is hidden below lg.
     await expect(page.getByRole("complementary", { name: "Kapitelinhalt" })).toBeHidden();
