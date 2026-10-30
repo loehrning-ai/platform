@@ -138,8 +138,27 @@ export function validateDeployment(value, { project, repository, sha, ref, targe
   return value;
 }
 
-function isCurrentProduction(deployment) {
-  return deployment.target === "production" && PRODUCTION_ORIGINS.every((origin) => (deployment.alias ?? []).includes(new URL(origin).hostname));
+const CANONICAL_DOMAINS = PRODUCTION_ORIGINS.map((origin) => new URL(origin).hostname);
+
+// V4 records omit team ownership: the scoped adapter and validated project /
+// deployment metadata establish that context. Never log the complete record.
+export function validateCanonicalAlias(value, domain, project) {
+  const id = value?.deployment?.id;
+  if (!CANONICAL_DOMAINS.includes(domain) || value?.alias !== domain || value.projectId !== project.projectId ||
+    !DEPLOYMENT_ID_PATTERN.test(id ?? "") ||
+    (value.deploymentId !== undefined && value.deploymentId !== id) ||
+    (value.teamId !== undefined && value.teamId !== project.orgId) ||
+    (value.ownerId !== undefined && value.ownerId !== project.orgId)) {
+    throw new Error(`Canonical alias ${domain} has missing or conflicting domain/project/deployment ownership`);
+  }
+  return id;
+}
+
+async function canonicalOwnership(io, project, deployment) {
+  const records = await Promise.all(CANONICAL_DOMAINS.map(async (domain) =>
+    validateCanonicalAlias(await io.getAlias(project, domain), domain, project)));
+  const owned = records.filter((id) => id === deployment.id).length;
+  return { any: owned > 0, all: owned === CANONICAL_DOMAINS.length };
 }
 
 /** Every external operation is injectable; tests never contact GitHub or Vercel. */
@@ -215,11 +234,14 @@ export async function executeRelease(options, io) {
   }
   validateDeployment(deployment, context, { ready: true });
   await assertHead();
-  if (createdHere && target === "production" && PRODUCTION_ORIGINS.some((origin) => (deployment.alias ?? []).includes(new URL(origin).hostname))) throw new Error("A newly created build unexpectedly owns a production domain; inspect Vercel staging configuration before another action");
+  const ownership = target === "production" ? await canonicalOwnership(io, project, deployment) : null;
+  if (createdHere && ownership?.any) throw new Error("A newly created build unexpectedly owns a production domain; inspect Vercel staging configuration before another action");
+  if (ownership?.any && !ownership.all) throw new Error("Only one canonical domain points to this deployment; inspect partial production ownership before another action");
   const canonicalSmoke = async () => {
     for (const origin of PRODUCTION_ORIGINS) await io.smoke(origin, contract, { project, deployment, authenticated: false });
+    if (!(await canonicalOwnership(io, project, deployment)).all) throw new Error("Canonical domain ownership changed during production smoke; inspect before another action");
   };
-  if (target === "production" && isCurrentProduction(deployment)) {
+  if (ownership?.all) {
     await canonicalSmoke();
     io.log(`Production is already current and verified: ${sha}`);
     return { status: "current", sha, target, deploymentId: deployment.id, url: deployment.url };
@@ -229,12 +251,14 @@ export async function executeRelease(options, io) {
   if (!options.yes) { io.log("Staged build verified; add --yes to promote this same deployment."); return { status: "staged", sha, target, deploymentId: deployment.id }; }
   deployment = validateDeployment(await io.getDeployment(project, deployment.id), context, { ready: true });
   validateProjectMetadata(await io.getProject(project), project, repository);
+  const beforePromotion = await canonicalOwnership(io, project, deployment);
+  if (beforePromotion.any) throw new Error("A staged deployment acquired a canonical domain before promotion; inspect before another action");
   await assertHead();
   await io.promoteDeployment(project, deployment.id);
   const promotionDeadline = io.now() + options.deployTimeoutMin * 60_000;
   for (;;) {
     deployment = validateDeployment(await io.getDeployment(project, deployment.id), context, { ready: true });
-    if (isCurrentProduction(deployment)) break;
+    if ((await canonicalOwnership(io, project, deployment)).all) break;
     if (io.now() >= promotionDeadline) throw new Error("Promotion has not assigned the canonical domains; inspect it before taking another action");
     await io.sleep(5_000);
   }
@@ -289,6 +313,10 @@ export function createDefaultAdapters(root = ROOT, { exec = execFileSync, execAs
     getCheckRuns: (r, sha) => JSON.parse(gh(`repos/${r.full_name}/commits/${sha}/check-runs?per_page=100`)).check_runs,
     getExtendedRun: async (ref) => JSON.parse(run("gh", ["run", "list", "--workflow=nightly.yml", `--branch=${ref}`, "--limit=1", "--json=status,conclusion,headSha,createdAt,url"]))[0] ?? null,
     getDeployment: (p, id) => api(p, `/v13/deployments/${id}`),
+    getAlias: (p, domain) => {
+      if (!CANONICAL_DOMAINS.includes(domain)) throw new Error("Unexpected canonical alias lookup");
+      return api(p, `/v4/aliases/${encodeURIComponent(domain)}`);
+    },
     listDeployments: async (p, target) => {
       const deployments = []; let until;
       for (let page = 0; page < 10; page++) {

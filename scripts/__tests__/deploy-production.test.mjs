@@ -14,6 +14,7 @@ import {
   readLinkedProject,
   validateDeployment,
   validateProjectMetadata,
+  validateCanonicalAlias,
 } from "../deploy-production.mjs";
 
 const SHA = "a".repeat(40);
@@ -235,10 +236,12 @@ const readyDeployment = (extra = {}) => ({
 });
 const CONTEXT = { project: PROJECT, repository: REPOSITORY, sha: SHA, ref: "main", target: "production" };
 const CANONICAL = ["loehrning.ai", "www.loehrning.ai"];
+const aliasRecord = (domain, id = "dpl_test", extra = {}) => ({ alias: domain, projectId: PROJECT.projectId, deploymentId: id, deployment: { id }, ...extra });
 
-function fixture({ existing = null, current = false, deployment = readyDeployment(), head, checks, smoke, create, promote } = {}) {
+function fixture({ existing = null, current = false, deployment = readyDeployment(), head, checks, smoke, create, promote, aliases } = {}) {
   let clock = 0, branchReads = 0, checkReads = 0, deploymentReads = 0;
   let value = structuredClone(deployment);
+  let promoted = false;
   const events = [];
   const io = {
     log: () => {}, now: () => clock, sleep: async (ms) => { clock += ms; events.push(["sleep", ms]); },
@@ -250,9 +253,13 @@ function fixture({ existing = null, current = false, deployment = readyDeploymen
     readSmokeContract: async (repo, sha) => { events.push(["contract", repo.full_name, sha]); return [{ route: "/", kind: "html" }]; },
     listDeployments: async (_project, target) => { events.push(["list", target]); return existing ? [existing] : []; },
     getDeployment: async (_project, id) => { deploymentReads++; events.push(["get", id]); return structuredClone(value); },
+    getAlias: async (_project, domain) => {
+      events.push(["alias", domain]);
+      return aliases ? aliases(domain, { promoted }) : aliasRecord(domain, promoted || value.alias?.includes(domain) ? value.id : "dpl_previous");
+    },
     createDeployment: async (_project, body) => { events.push(["create", body]); if (create) await create(body); return { id: value.id }; },
     cancelDeployment: async (_project, id) => { events.push(["cancel", id]); },
-    promoteDeployment: async (_project, id) => { events.push(["promote", id]); if (promote) await promote(id); value.alias = CANONICAL; },
+    promoteDeployment: async (_project, id) => { events.push(["promote", id]); if (promote) await promote(id); promoted = true; },
     smoke: async (url, _contract, mode) => { events.push(["smoke", url, mode.authenticated]); if (smoke) await smoke(url, mode); },
   };
   return { io, events, get deploymentReads() { return deploymentReads; }, setDeployment: (next) => { value = next; } };
@@ -286,6 +293,94 @@ test("an already-current READY production repeat succeeds with canonical smoke a
   assert.deepEqual(mutations(f), []);
   assert.equal(f.events.filter(([name]) => name === "smoke").length, 4);
   assert.equal(f.events.some(([name]) => name === "list"), false);
+});
+
+test("current repeats use both authoritative records when deployment aliases are absent or incomplete", async () => {
+  for (const alias of [undefined, [], ["platform-loehrning.vercel.app"]]) {
+    const f = fixture({ current: true, deployment: readyDeployment({ alias }), aliases: (domain) => aliasRecord(domain) });
+    for (let repeat = 0; repeat < 2; repeat++) assert.equal((await executeRelease(options(["--yes"]), f.io)).status, "current");
+    assert.deepEqual(mutations(f), []);
+    assert.equal(f.events.some(([name]) => name === "list"), false);
+    assert.deepEqual(f.events.filter(([name]) => name === "smoke").map((event) => event[1]), [
+      "https://loehrning.ai", "https://www.loehrning.ai", "https://loehrning.ai", "https://www.loehrning.ai"]);
+    for (const domain of CANONICAL) assert.equal(f.events.filter(([name, value]) => name === "alias" && value === domain).length, 4);
+  }
+});
+
+test("canonical alias validation rejects ambiguous or foreign ownership", () => {
+  const domain = CANONICAL[0];
+  assert.equal(validateCanonicalAlias(aliasRecord(domain), domain, PROJECT), "dpl_test");
+  assert.equal(validateCanonicalAlias(aliasRecord(domain, "dpl_test", { deploymentId: undefined }), domain, PROJECT), "dpl_test");
+  for (const record of [null, {}, aliasRecord(CANONICAL[1]), aliasRecord(domain, "dpl_test", { projectId: "prj_foreign" }),
+    aliasRecord(domain, "dpl_test", { deployment: null }), aliasRecord(domain, "dpl_test", { deploymentId: "dpl_foreign" }),
+    aliasRecord(domain, "dpl_test", { deploymentId: null }), aliasRecord(domain, "dpl_test", { ownerId: "team_foreign" }),
+    aliasRecord(domain, "dpl_test", { teamId: "team_foreign" }), aliasRecord(domain, "not-a-deployment")]) {
+    assert.throws(() => validateCanonicalAlias(record, domain, PROJECT), /missing or conflicting/);
+  }
+});
+
+test("missing, foreign and partial canonical records cannot report current or mutate", async () => {
+  for (const badDomain of CANONICAL) for (const bad of [null, aliasRecord(badDomain, "dpl_test", { projectId: "prj_foreign" }), aliasRecord(badDomain, "dpl_other")]) {
+    const f = fixture({ current: true, deployment: readyDeployment({ alias: CANONICAL }), aliases: (domain) => domain === badDomain ? bad : aliasRecord(domain) });
+    await assert.rejects(executeRelease(options(["--yes"]), f.io), /missing or conflicting|Only one canonical domain/);
+    assert.deepEqual(mutations(f), []);
+    assert.equal(f.events.some(([name]) => name === "smoke"), false);
+    assert.ok(f.events.some(([name, domain]) => name === "alias" && domain === badDomain));
+  }
+});
+
+test("alias lookup failure never falls back to deployment alias metadata", async () => {
+  const f = fixture({ current: true, deployment: readyDeployment({ alias: CANONICAL }) });
+  f.io.getAlias = async () => { throw new Error("alias lookup failed"); };
+  await assert.rejects(executeRelease(options(["--yes"]), f.io), /alias lookup failed/);
+  assert.deepEqual(mutations(f), []);
+});
+
+test("promotion waits for both alias records and never retries when another deployment remains canonical", async () => {
+  const f = fixture({ existing: readyDeployment(), aliases: (domain) => aliasRecord(domain, "dpl_other") });
+  await assert.rejects(executeRelease(options(["--yes", "--deploy-timeout-min", "0.001"]), f.io), /has not assigned the canonical domains/);
+  assert.deepEqual(mutations(f), [["promote", "dpl_test"]]);
+  assert.equal(f.events.filter(([name, , authenticated]) => name === "smoke" && authenticated === false).length, 0);
+});
+
+test("partial promotion remains pending until both domains point to the same intended deployment", async () => {
+  let settled = false;
+  const f = fixture({ existing: readyDeployment(), aliases: (domain, { promoted }) => aliasRecord(domain,
+    promoted && (settled || domain === CANONICAL[0]) ? "dpl_test" : "dpl_previous") });
+  const sleep = f.io.sleep;
+  f.io.sleep = async (ms) => { await sleep(ms); settled = true; };
+  assert.equal((await executeRelease(options(["--yes"]), f.io)).status, "promoted");
+  assert.deepEqual(mutations(f), [["promote", "dpl_test"]]);
+  const wait = f.events.findIndex(([name]) => name === "sleep");
+  assert.ok(wait > f.events.findIndex(([name]) => name === "promote"));
+  assert.ok(f.events.findIndex(([name, , authenticated]) => name === "smoke" && authenticated === false) > wait);
+});
+
+test("canonical ownership changing during smoke fails after checking both domains", async () => {
+  let changed = false;
+  const f = fixture({ current: true, aliases: (domain) => aliasRecord(domain, changed && domain === CANONICAL[1] ? "dpl_other" : "dpl_test"),
+    smoke: async (url) => { if (url === "https://www.loehrning.ai") changed = true; } });
+  await assert.rejects(executeRelease(options(["--yes"]), f.io), /ownership changed/);
+  assert.deepEqual(mutations(f), []);
+  assert.equal(f.events.filter(([name]) => name === "smoke").length, 2);
+});
+
+test("ownership acquired during staged smoke prevents another promotion", async () => {
+  let acquired = false;
+  const f = fixture({ aliases: (domain) => aliasRecord(domain, acquired && domain === CANONICAL[0] ? "dpl_test" : "dpl_previous"),
+    smoke: async (_url, mode) => { if (mode.authenticated) acquired = true; } });
+  await assert.rejects(executeRelease(options(["--yes"]), f.io), /acquired a canonical domain before promotion/);
+  assert.deepEqual(mutations(f).map(([name]) => name), ["create"]);
+});
+
+test("missing alias after promotion stops without another mutation or canonical smoke", async () => {
+  for (const missing of CANONICAL) {
+    const f = fixture({ existing: readyDeployment(), aliases: (domain, { promoted }) =>
+      promoted && domain === missing ? null : aliasRecord(domain, promoted ? "dpl_test" : "dpl_previous") });
+    await assert.rejects(executeRelease(options(["--yes"]), f.io), /missing or conflicting/);
+    assert.deepEqual(mutations(f), [["promote", "dpl_test"]]);
+    assert.equal(f.events.filter(([name, , authenticated]) => name === "smoke" && authenticated === false).length, 0);
+  }
 });
 
 test("a staged READY build is reused rather than recreated", async () => {
@@ -422,6 +517,30 @@ for (const alias of [[CANONICAL[0]], [CANONICAL[1]], CANONICAL]) {
     assert.equal(f.events.some(([name]) => name === "smoke"), false);
   });
 }
+
+test("premature canonical assignment is rejected even when v13 omits aliases", async () => {
+  for (const owned of [[CANONICAL[0]], [CANONICAL[1]], CANONICAL]) {
+    const f = fixture({ deployment: readyDeployment({ alias: undefined }), aliases: (domain) => aliasRecord(domain, owned.includes(domain) ? "dpl_test" : "dpl_previous") });
+    await assert.rejects(executeRelease(options(["--yes"]), f.io), /unexpectedly owns/);
+    assert.deepEqual(mutations(f).map(([name]) => name), ["create"]);
+    assert.equal(f.events.some(([name]) => name === "smoke"), false);
+  }
+});
+
+test("incomplete deployment alias summaries do not override authoritative staging records", async () => {
+  const f = fixture({ deployment: readyDeployment({ alias: CANONICAL }), aliases: (domain, { promoted }) => aliasRecord(domain, promoted ? "dpl_test" : "dpl_previous") });
+  assert.equal((await executeRelease(options(["--yes"]), f.io)).status, "promoted");
+  assert.deepEqual(mutations(f).map(([name]) => name), ["create", "promote"]);
+});
+
+test("alias adapter reads only the two canonical records under the linked team scope", async () => {
+  const calls = [];
+  const io = createDefaultAdapters("/repo", { exec: (command, args) => { calls.push([command, args]); return JSON.stringify(aliasRecord(args[1].split("/").at(-1))); } });
+  for (const domain of CANONICAL) await io.getAlias(PROJECT, domain);
+  assert.deepEqual(calls, CANONICAL.map((domain) => ["vercel", ["api", `/v4/aliases/${domain}`, "--scope", PROJECT.orgId]]));
+  assert.throws(() => io.getAlias(PROJECT, "foreign.test"), /Unexpected canonical alias/);
+  assert.equal(calls.length, 2);
+});
 
 test("failed or missing exact-commit verify and Extended cannot mutate", async () => {
   for (const checks of [[], [run("verify", "completed", "failure")], [run("verify", "completed", "success", OTHER_SHA)], [run("verify", "completed", "success", SHA, { app: undefined })]]) {
