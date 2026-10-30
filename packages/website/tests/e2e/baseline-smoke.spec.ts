@@ -6,6 +6,7 @@ import { expect } from "@playwright/test";
 import { chapters } from "./fixtures/book";
 import { exposeAllAuditedContent } from "./fixtures/a11y-visibility";
 import { expectContained, HYDRATED, inNewPage, openApp, test } from "./fixtures/smoke";
+import { trackScriptRequests } from "./fixtures/script-readiness";
 
 /** Twenty capability cases, not a sample of whatever specs happen to be quick. */
 test.use({ contextOptions: { reducedMotion: "reduce" } });
@@ -23,18 +24,35 @@ for (const locale of ["de", "en"] as const) {
   const tag = (capability: string) => `@smoke-${capability}-${locale}`;
 
   test(`${locale}: navigation and locale preserve URL state`, { tag: tag("navigation") }, async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
-    await openApp(page, `${prefix}/kurse?source=smoke#main-content`);
-    await expect(page.locator("html")).toHaveAttribute("lang", locale);
-    const other = locale === "de" ? "en" : "de";
-    const destination = `${other === "en" ? "/en" : ""}/kurse?source=smoke#main-content`;
-    const switcher = page.locator('[data-language-switch]:visible').first().locator(`a[hreflang="${other}"]`);
-    await expect(switcher).toHaveAttribute("href", destination);
-    await switcher.click();
-    await page.locator(HYDRATED).waitFor({ state: "attached" });
-    await expect(page).toHaveURL(new RegExp(`${destination.replace("?", "\\?")}$`));
-    await expect(page.locator("html")).toHaveAttribute("lang", other);
-    await expectContained(page);
+    const scripts = trackScriptRequests(page);
+    try {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await openApp(page, `${prefix}/kurse?source=smoke#main-content`);
+      await expect(page.locator("html")).toHaveAttribute("lang", locale);
+      // The root marker can precede the catalogue island. Exercise its real
+      // URL-state handler before replacing the document through the locale link.
+      const goal = page.locator('[data-learning-goal="judge"]');
+      await goal.click();
+      await expect(goal).toHaveAttribute("aria-pressed", "true");
+      await expect(page).toHaveURL(new RegExp(`${prefix}/kurse\\?source=smoke&goal=judge#main-content$`));
+      const other = locale === "de" ? "en" : "de";
+      const destination = `${other === "en" ? "/en" : ""}/kurse?source=smoke&goal=judge#main-content`;
+      const destinationUrl = new RegExp(`${destination.replace("?", "\\?")}$`);
+      const switcher = page.locator('[data-language-switch]:visible').first().locator(`a[hreflang="${other}"]`);
+      await expect(switcher).toHaveAttribute("href", destination);
+      await scripts.waitForReady();
+      await Promise.all([
+        page.waitForURL(destinationUrl, { waitUntil: "load" }),
+        switcher.click(),
+      ]);
+      await page.locator(HYDRATED).waitFor({ state: "attached" });
+      await expect(page).toHaveURL(destinationUrl);
+      await expect(page.locator("html")).toHaveAttribute("lang", other);
+      await expect(page.locator('[data-learning-goal="judge"]')).toHaveAttribute("aria-pressed", "true");
+      await expectContained(page);
+    } finally {
+      scripts.dispose();
+    }
   });
 
   test(`${locale}: a public learning interaction records local progress`, { tag: tag("learning") }, async ({ page }) => {

@@ -31,6 +31,8 @@ Production creates a build with automatic domain assignment disabled. The comman
 
 An already-current healthy production deployment succeeds without rebuilding. In-flight and staged deployments are reused. Creation and promotion are never retried automatically. A timed-out new build can be cancelled only by the invocation that created it; existing or observed builds remain untouched. `--observe` validates and checks a deployment without promotion.
 
+Production ownership comes from both canonical `/v4/aliases` records under the linked team scope, with matching domain, project and deployment IDs. The deployment's `alias` summary can omit promoted custom domains and is not readiness evidence. Missing, conflicting or partial ownership cannot report a successful release; promotion observation only polls reads within its existing deadline.
+
 For dependency, workflow, shared-layout, security or other broad changes:
 
 ```bash
