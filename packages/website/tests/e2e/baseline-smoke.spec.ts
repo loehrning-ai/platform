@@ -88,8 +88,8 @@ for (const locale of ["de", "en"] as const) {
         await expect(page.locator("main")).toContainText("Codex");
         if (course.capability === "workshop-w04") {
           await expect(page.locator("[data-kit-setup-step]")).toHaveCount(4);
-          await expect(page.locator("[data-kit-setup]")).toContainText("Set project instructions");
-          await expect(page.locator("[data-kit-setup]")).toContainText("Add files or photos");
+          await expect(page.locator("[data-kit-setup]")).toContainText("Instructions → Edit");
+          await expect(page.locator("[data-kit-setup]")).toContainText("Upload from computer");
         } else {
         const tabs = page.locator("[data-kit-tab]");
         await expect(tabs).not.toHaveCount(0);
