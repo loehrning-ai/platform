@@ -1,8 +1,8 @@
 name: Verify
 
-# The one blocking gate. Three jobs start together and `verify` aggregates them.
+# The application gate. Three jobs start together and `verify` aggregates them.
 # Each job calls the same script a contributor runs locally (`bun run ci:<job>`,
-# or `bun run ci` for all three); the breadth that left this path runs weekly
+# or `bun run ci` for all three); the breadth that left this path runs daily
 # in nightly.yml. Contract: packages/website/docs/ci-contract.md.
 on:
   pull_request:
@@ -58,14 +58,14 @@ jobs:
       E2E_SERVER_MODE: production
       E2E_PORT: "3000"
       # Below the job timeout, so a hang is a Playwright report, not a killed job.
-      E2E_GLOBAL_TIMEOUT: 900000
+      E2E_GLOBAL_TIMEOUT: 180000
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup
         with:
-          playwright-browsers: chromium
+          playwright-browsers: chromium webkit
           next-build-cache: "true"
       - run: bun run ci:browser
       - name: Upload failure artifacts

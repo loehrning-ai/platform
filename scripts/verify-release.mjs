@@ -8,7 +8,7 @@ import {
   configuredApplicationEnvironment,
   providerFreeVerificationEnvironment,
 } from "./environment-policy.mjs";
-import { smokeArguments } from "./ci.mjs";
+import { smokeSteps } from "./ci.mjs";
 import { verifyBuildReceipt } from "../packages/website/scripts/build-freshness.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -64,12 +64,16 @@ const steps = [
     browserEnvironment: true,
     verifyProviderFreeReceipt: true,
   },
-  {
-    label: "browser smoke",
-    args: ["run", "--cwd", "packages/website", "e2e:shard:built", ...smokeArguments()],
+  ...smokeSteps().map((step) => ({
+    label: step.name,
+    args: step.args,
+    env: {
+      E2E_GLOBAL_TIMEOUT: process.env.E2E_GLOBAL_TIMEOUT ?? "180000",
+      ...step.env,
+    },
     browserEnvironment: true,
     verifyProviderFreeReceipt: true,
-  },
+  })),
   {
     label: "launch browser gate",
     args: ["run", "test:e2e:release:built"],
@@ -98,6 +102,7 @@ for (const step of steps) {
       : step.browserEnvironment
         ? browserVerificationEnvironment
         : strictVerificationEnvironment),
+    ...step.env,
   };
   for (const name of step.removeEnvironment ?? []) {
     delete environment[name];

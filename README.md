@@ -9,8 +9,7 @@ The application includes four native account-backed German learning paths, four 
 ## Requirements
 
 - Bun 1.3.10, matching the version pinned in `packageManager` and CI
-- Node.js 24.22.1 LTS for Node-based repository scripts (`.nvmrc` and
-  `.node-version`); Node.js 22 LTS remains accepted by the package manifest
+- Node.js 24.22.1 LTS, pinned in `.nvmrc`, `.node-version` and CI
 
 Current non-LTS Node.js 26 is outside the supported runtime contract. Its
 experimental Web Storage global produces warnings in transitive server
@@ -19,11 +18,15 @@ dependencies that do not occur on the declared LTS runtime.
 ## Run locally
 
 ```bash
-bun install --frozen-lockfile --ignore-scripts
-bun run dev
+nvm install
+nvm use
+node scripts/development.mjs setup
+node scripts/development.mjs dev
 ```
 
-Open `http://localhost:3000`. No credentials are required for the production build or the public books, demos, templates, technical labs, and course landing pages. Supabase credentials are required to exercise the four native core curricula locally. Copy `packages/website/.env.example` to an ignored local environment file only when testing those account-backed paths or other optional integrations.
+The runner prints its loopback URL, starting at `http://127.0.0.1:3430` and choosing a bounded alternative when that port is occupied. It preserves existing listeners. Setup checks the pinned tools, installs the frozen dependency graph without lifecycle scripts, and installs both browser engines used by CI.
+
+Development starts with the same provider-free environment and dotenv denial as CI. Public books, demos, templates, technical labs and course landing pages need no credentials. Optional providers remain disabled. Account DOM coverage uses the mocked test tier; live provider tests require the separate disposable-project contract in the CI documentation. See [the development setup](packages/website/docs/development.md) for tool checks, ports and process ownership.
 
 A clean production build uses only repository-local and system fonts. It does not download fonts from Google or require provider credentials.
 
@@ -33,7 +36,9 @@ A clean production build uses only repository-local and system fonts. It does no
 bun run ci
 ```
 
-`bun run ci` (also `bun run verify`) is the same gate pull requests and `main` must pass, in the same order: `static` (types, lint, the public-tree scanner, content and route checks, a critical-advisory audit) and `unit` (the Vitest suite) in parallel, then `browser` (one production build, the server-log privacy probe, and a curated browser smoke on desktop Chromium). Run one part with `bun run ci:static`, `bun run ci:unit` or `bun run ci:browser`; the browser part needs `bunx playwright install chromium` once. A red GitHub job is reproduced by running the script of the same name. The broader checks (the full browser suite, Safari, the full dependency and licence audits) run in the weekly `Extended` workflow and locally with `bun run ci:hygiene`; see [`packages/website/docs/ci-contract.md`](packages/website/docs/ci-contract.md).
+`bun run ci` (also `bun run verify`) is the same gate pull requests and `main` must pass: static checks and the full unit suite, then one production build, the server-log privacy probe and twenty capability cases in both languages on Chromium and WebKit. The forty browser executions include learning progress, navigation, reader/glossary controls, accessibility and W04/W05 kit/deck/demo handoffs. The baseline rejects missing, skipped, retried and flaky cases. WebKit runs in small fresh batches against the same build.
+
+Run one part with `bun run ci:static`, `bun run ci:unit` or `bun run ci:browser`. The full public browser suite, mocked account DOM and full advisory/licence audits remain in the daily and manually dispatched `Extended` workflow. See [the CI contract](packages/website/docs/ci-contract.md) and [the change workflow](CONTRIBUTING.md).
 
 `bun run test:e2e` builds, then runs every desktop and phone Chromium spec. Direct
 production-browser commands build first, preventing stale `.next` output from
@@ -80,25 +85,17 @@ rejects a root `.git` entry, so it is not a post-`git init` CI command.
 
 ## Releasing to production (Vercel)
 
-Merging to `main` does not deploy: `packages/website/vercel.json` disables
-Git-triggered production builds, so production changes only through one
-deliberate step. After the merge, run it from the repository root with the
-`vercel` and `gh` CLIs signed in and the project linked (`vercel link`):
+Automatic Git deployments are disabled. Preview and production builds start only through the repository commands after the exact commit passes `verify`. Run them from the repository root with the `vercel` and `gh` CLIs signed in and the intended project already linked. These commands do not create or relink projects.
 
 ```bash
-bun run deploy:production                  # dry run: checks every guard
-bun run deploy:production -- --wait --yes  # wait for green CI, then deploy
+bun run deploy:preview -- --wait --yes     # checked current branch, isolated preview
+bun run deploy:production                  # dry run for the current head of main
+bun run deploy:production -- --wait --yes  # checked main, staged build, smoke, promotion
 ```
 
-It deploys only the head of `main`, and only when the `verify` check-run on that
-exact commit is green; every other check (CodeQL, dependency graph, the weekly
-extended run) is shown as "Not blocking" and cannot stop a release. Before a risky
-release (CSP, fonts, layout primitives, a workshop launch), run the full matrix
-on the commit with `gh workflow run nightly.yml --ref main` and add
-`--require-nightly` to the deploy command. It refuses a commit
-that already has a production deployment, watches the build to READY with a
-12-minute cancel guard, smoke-tests the production routes, and prints the
-rollback command. It never retries a build on its own.
+The release command checks the linked team/project, exact branch head, successful GitHub Actions `verify` and deployment source. It rechecks the branch after waiting and before publication. Production builds are staged without the live domains, checked through authenticated deployment access, and promoted as the same tested production build. The live domains are checked afterward. An already-current healthy release succeeds without rebuilding; in-flight or staged builds are reused. A failed staged check leaves the existing production deployment in place.
+
+Before dependency, workflow, shared-layout or other broad changes, run `gh workflow run nightly.yml --ref main` on the intended merge commit and add `--require-extended` to the production command. The command refuses a mismatched or failing extended run. Main's existing ruleset separately requires `verify`, dependency review and CodeQL before normal merges. No build is retried automatically. [The CI contract](packages/website/docs/ci-contract.md) describes the release and authentication proof boundaries.
 
 ## Optional provider activation
 

@@ -1,24 +1,30 @@
 # CI Contract
 
-The repository root defines the authoritative command contract. Continuous integration must execute the same commands a contributor can run locally and must never deploy or require production credentials.
+The repository root defines the authoritative command contract. Verification
+executes the same commands a contributor runs locally and requires no production
+credentials. Deployment is a separate exact-SHA release operation.
 
 ## Pipeline
 
-One workflow blocks, one runs weekly, two inform. The scripts a job calls are
+One workflow verifies the application, one runs the daily extended matrix, and
+dependency/security workflows enforce their separate merge contracts. The scripts a job calls are
 the scripts a contributor runs: `scripts/ci.mjs` owns the step lists, and the
 root `ci*` commands run it inside the provider-free environment scrubber.
 
 | Workflow file                | Name                      | Runs on                                   | Role                                                                  |
 | ---------------------------- | ------------------------- | ----------------------------------------- | --------------------------------------------------------------------- |
-| `ci.yml`                     | Verify                    | pull requests, push to `main`             | The only blocking gate. Its `verify` check is the release signal.     |
-| `nightly.yml`                | Extended                  | Mondays 04:17 UTC, manual dispatch        | Everything that left the pull-request path. Never blocks a merge.     |
+| `ci.yml`                     | Verify                    | pull requests, push to `main`             | The application gate. Its `verify` check is the release signal.     |
+| `nightly.yml`                | Extended                  | Daily 04:17 UTC, manual dispatch          | Full public regression coverage, mobile baseline, account DOM and hygiene. |
 | `dependency-review.yml`      | Dependency Review         | pull requests                             | GitHub's dependency-graph diff. Informational for deploys.            |
 | `dependency-submission.yml`  | Bun Dependency Submission | `bun.lock` or `package.json` change on `main`, weekly | Feeds the dependency graph. Ignored by deploys. |
 
-CodeQL runs as GitHub's default setup (a repository setting, no workflow file)
-and is informational. No workflow deploys: merging to `main` ships nothing, and
-production changes only through `bun run deploy:production`. Vercel builds pull
-request previews itself.
+CodeQL runs as GitHub's default setup (a repository setting, no workflow file).
+CodeQL and dependency review are required by merge rules; the release command
+consumes the separate application `verify` signal. Validation workflows do not
+deploy: merging to `main` ships nothing, and
+production changes only through the exact-SHA release command. Preview builds
+also use the dedicated release command after verification; automatic Git builds
+are disabled so an unverified push does not build or publish a deployment.
 
 ## The blocking gate (`ci.yml`)
 
@@ -31,7 +37,7 @@ is the composite action at `.github/actions/setup`.
 | --------- | ---------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `static`  | `static checks`  | `bun run ci:static`  | Types (app and tests), lint, the public-leak scan and its tests, content and marketing rules, route and generated-file drift, workspace and migration contracts, the deploy script, `bun audit --audit-level=critical` (a critical advisory blocks the PR), and that `git diff --exit-code` finds no regenerated file. |
 | `unit`    | `unit tests`     | `bun run ci:unit`    | The complete Vitest suite.                                                                                                                                                                                                                   |
-| `browser` | `browser smoke`  | `bun run ci:browser` | One production build, the server-log privacy probe, then the curated browser smoke list on desktop Chromium.                                                                                           |
+| `browser` | `browser smoke`  | `bun run ci:browser` | One production build and privacy probe, then twenty capability cases in desktop Chromium and the same twenty in five fresh-process WebKit batches. |
 | `verify`  | `verify`         | inline shell       | Aggregation only. Red unless each of the three results is exactly `success`; failure, cancelled and skipped are all red.                                                                                                                    |
 
 A critical advisory turns `static` red on every pull request, and with it
@@ -45,14 +51,34 @@ the npm advisory API also turns `static` red; re-run the job.
 when a dependency fails would not be a red check. It is the only job called
 `verify` in any workflow.
 
-The smoke list is `packages/website/tests/e2e/smoke.list`, one spec per line.
-It holds five specs: the route matrix, axe, SEO metadata, edge states and the
-legal pages. Phone layout, locale copy and WebKit run in the weekly extended
-run instead. Adding a spec is a one-line diff. A spec
-whose title carries `@quarantine` is skipped by the weekly run and is deleted
-if still tagged after 14 days; no known-flaky spec belongs in the list. Retries
-are set to one on this path, and a test that passes on its retry does not fail
-the run.
+The smoke list is `packages/website/tests/e2e/smoke.list`. It selects the dedicated
+`baseline-smoke.spec.ts`: ten capabilities in DE and EN, twenty logical cases.
+Both browser engines run that same contract. The cases cover navigation and
+locale URL state; a real public lesson checkpoint; W04/W05 entry, kit download
+hashes, deck/presenter and recorded demo handoffs; book navigation; glossary
+search/reset; three representative phone axe/reflow checks; and public/protected
+HTTP boundaries. The exhaustive route, axe, SEO, legal and workshop specs remain
+in the full Extended suite.
+
+The baseline has zero automatic retries and fails on flaky tests. Its coverage
+reporter rejects missing, duplicate or unknown capability tags, skips, expected
+failures and retry results. A partial green-looking run cannot satisfy it.
+WebKit runs five consecutive batches of four cases; each invocation starts a
+new server/browser process against the same unchanged build receipt. Each batch
+has its own artifact directory. No engine instance accumulates an entire site's
+navigation history. Helpers wait for actual hydration before actions, use real
+user scrolling and keep each course handoff in a fresh page. Network idle is
+not an application-readiness contract.
+
+`verify:release` consumes the same shared cross-engine step list after its
+provider-free build and privacy probe. It pins that receipt through all six
+baseline invocations and the unchanged launch gate, then validates the final
+configured-provider build against the same source set and toolchain.
+
+Changing baseline scope requires updating its capability contract and preserving
+the displaced behavior coverage in Extended. A failing test is a defect to
+investigate, with its failed trace retained. Do not hide it with quarantine,
+larger timeouts, repeated forced clicks or removal of the owning test/job.
 
 If the `browser` job's 90th-percentile duration stays above about 10 minutes,
 split it into two shards in `ci.yml`; do not re-add whole browser projects.
@@ -65,35 +91,40 @@ merging.
 
 ### Release signal
 
-`scripts/deploy-production.mjs` reads exactly one check: the `verify` check-run
-created by GitHub Actions on the head of `main`, completed and successful. Every
-other check-run (CodeQL, dependency graph, the weekly run, anything added later) is
-printed as "Not blocking" and cannot refuse a release. There is no override
-flag. After a re-run the newest `verify` decides.
+`scripts/deploy-production.mjs` consumes the `verify` check-run created by GitHub Actions on the exact selected branch-head commit, completed and successful. Production always selects `main`; `deploy:preview` selects the current branch or an explicit `--ref`. Other workflow results do not substitute for this application gate. The separate optional `--require-extended` flag requires a successful extended run on the same commit. After a re-run the newest `verify` decides.
 
-`main` has no branch protection today, so no check name is configured in
-repository settings. If protection is added, require `verify` and nothing else.
+The release runner checks the branch again after waiting and immediately before creation or promotion, validates deployment provenance, and reuses healthy/in-flight builds. Production is staged and checked through authenticated unique-deployment access before promotion, then checked on both canonical domains. Smoke checks use source and asset metadata from the exact GitHub commit. A healthy already-current release succeeds without another build. [Deployment](deployment.md) defines the operator commands and failure behavior.
+
+The release script's `verify` signal is distinct from merge protection. The
+active `Protect main` ruleset also requires `dependency-review`, CodeQL and its
+configured code-scanning policy. It enforces squash pull requests, linear
+history, resolved conversations and no force-push/deletion. These controls must
+remain intact; a release-script change does not authorize weakening merge rules.
 
 For a risky release (CSP, fonts, layout primitives, a workshop launch), run the
 full matrix on the exact commit first:
 
 ```bash
 gh workflow run nightly.yml --ref main
-bun run deploy:production -- --require-nightly --wait --yes
+bun run deploy:production -- --require-extended --wait --yes
 ```
 
-`--require-nightly` refuses unless the newest completed run of `nightly.yml` is
-green on that commit. Without the flag the script prints its last result as an
-information line.
+`--require-extended` refuses unless the latest run of `nightly.yml` is
+green on that commit. A pending or failing latest run is rejected. Without the
+flag, Extended is not required. `--require-nightly` remains a compatibility alias.
 
-## Weekly extended run (`nightly.yml`)
+## Daily extended run (`nightly.yml`)
 
-Runs Mondays at 04:17 UTC and on `workflow_dispatch`. It never blocks a merge.
-Four jobs: the full desktop Chromium suite (two shards, one build each), a
-mobile WebKit run of the smoke list, the mocked-session `/konto` DOM suite, and
-`bun run ci:hygiene` (`bun audit` at every level and the licence audit). A red
-test there is fixed or deleted within 7 days; if the run is red two weeks in a
-row, the failing job is cut.
+Runs daily at 04:17 UTC and on `workflow_dispatch`. It runs the full desktop
+Chromium suite (two shards, one build each), five small mobile WebKit baseline
+batches against one build, the mocked-session `/konto` DOM suite, and
+`bun run ci:hygiene` (`bun audit` at every level and the licence audit). Every
+existing public spec remains included; there is no quarantine exclusion.
+Automatic retries are disabled and flaky results fail. The address-dependent
+`@launch-gate` remains a separate explicit release tier. Failures retain their
+artifacts and require a cause-specific fix; the test/job is not deleted to make
+the dashboard green. Run this workflow on the final exact commit after changing
+shared browser helpers, dependencies, layout or release infrastructure.
 
 ## Token permissions
 
@@ -115,8 +146,8 @@ instead of adding a third-party action.
 | `bun run ci`        | `static` and `unit` in parallel, then `browser`. `bun run verify` is the same command. |
 | `bun run ci:static` | The `static` job. Afterwards `git status --short` shows any drift CI would reject. |
 | `bun run ci:unit`   | The `unit` job.                                                      |
-| `bun run ci:browser`| The `browser` job. Needs `bunx playwright install chromium` once; honours `E2E_PORT` when 3000 is taken. |
-| `bun run ci:hygiene`| The weekly full advisory and licence audits.                         |
+| `bun run ci:browser`| The `browser` job. Needs the locked Chromium and WebKit builds; honours `E2E_PORT` when 3000 is taken. |
+| `bun run ci:hygiene`| The scheduled full advisory and licence audits.                      |
 
 The root workflow and Vercel install with
 `bun install --frozen-lockfile --ignore-scripts`. Root `bunfig.toml` enforces
@@ -147,7 +178,7 @@ layout, and route contracts remain runnable without provider credentials.
 | ------------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Live session integration | `bun run test:e2e:authenticated-live` | Requires an intentionally configured, dedicated disposable Supabase test project, a public Turnstile test site key, and makes a live password-grant request. | Server-validated session handling, protected account pages, and authenticated client round-trips. It bypasses the magic-link/Turnstile/PKCE login journey. |
 
-The live tier is fail-closed and is not part of credential-free CI; the weekly
+The live tier is fail-closed and is not part of credential-free CI; the scheduled
 `konto-dom-mocked` project is DOM coverage, never authentication proof. The live tier requires all nine variables below:
 
 ```text

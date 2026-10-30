@@ -1,5 +1,2 @@
-route-matrix.spec.ts
-a11y.spec.ts
-seo-meta.spec.ts
-edge-states.spec.ts
-legal.spec.ts
+# Twenty DE/EN capability cases. Broad route/axe/SEO/legal matrices remain in Extended.
+baseline-smoke.spec.ts

@@ -1,15 +1,15 @@
 name: Extended
 
-# The weekly extended run: everything that left the pull-request path. The
-# full desktop Chromium suite, the smoke list on iPhone WebKit, the mocked
+# The daily extended run: everything that left the pull-request path. The
+# full desktop Chromium suite, the capability baseline on iPhone WebKit, the mocked
 # /konto DOM suite and the full advisory and licence audits. It never blocks a
-# merge. A red test here is fixed or deleted within 7 days.
+# merge. A red test remains a visible defect until its cause is repaired.
 #
 # Run it on demand before a risky release:  gh workflow run nightly.yml --ref main
 # No job here may be called `verify`: that name is the release signal in ci.yml.
 on:
   schedule:
-    - cron: "17 4 * * 1"
+    - cron: "17 4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -50,8 +50,8 @@ jobs:
           --project=chromium
           --shard=${{ matrix.shard }}
           --workers=2
-          --retries=1
-          --grep-invert "@quarantine|@launch-gate"
+          --retries=0
+          --fail-on-flaky-tests
       - name: Upload failure artifacts
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -61,8 +61,8 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-  # WebKit runs the smoke list only: engine bugs show at page level, and the
-  # full iPhone/WebKit suite was the main source of timeouts.
+  # All capability cases run in five small native-process batches. This keeps
+  # transport/teardown state from accumulating across unrelated pages.
   webkit:
     name: browser mobile-webkit smoke
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
     env:
       E2E_SERVER_MODE: production
       E2E_PORT: "3000"
-      E2E_GLOBAL_TIMEOUT: 2100000
+      E2E_GLOBAL_TIMEOUT: 180000
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -80,13 +80,8 @@ jobs:
           playwright-browsers: webkit
           next-build-cache: "true"
       - run: bun run --cwd packages/website verify:build
-      - name: WebKit smoke
-        run: >-
-          bun run --cwd packages/website e2e:shard:built test
-          --project=mobile-webkit
-          --workers=1
-          --retries=2
-          $(node scripts/ci.mjs smoke-files)
+      - name: WebKit capability batches
+        run: node packages/website/scripts/run-provider-free.mjs node scripts/ci.mjs mobile-smoke
       - name: Upload failure artifacts
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

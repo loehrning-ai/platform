@@ -302,6 +302,8 @@ const configProbeSource = [
   `localOrigin: env.LOEHRNING_LOCAL_VERIFICATION_ORIGIN,`,
   `forbidOnly: config.forbidOnly,`,
   `failOnFlakyTests: config.failOnFlakyTests,`,
+  `retries: config.retries,`,
+  `trace: config.use?.trace,`,
   `globalTimeout: config.globalTimeout`,
   `}));`,
 ].join("");
@@ -334,9 +336,11 @@ assert.equal(
 );
 assert.equal(
   serverEnvironmentProbe.failOnFlakyTests,
-  false,
-  "the pull-request and main gate tolerates a test that passes on its retry",
+  true,
+  "every browser tier must reject a test that passes only on retry",
 );
+assert.equal(serverEnvironmentProbe.retries, 0, "browser tiers must default to zero retries");
+assert.equal(serverEnvironmentProbe.trace, "retain-on-failure", "zero-retry failures must retain their first-attempt trace");
 
 const ciConfigProbeResult = spawnSync("bun", ["--eval", configProbeSource], {
   cwd: websiteRoot,
@@ -353,8 +357,10 @@ assert.equal(ciConfigProbeResult.status, 0, ciConfigProbeResult.stderr);
 assert.equal(
   JSON.parse(ciConfigProbeResult.stdout).failOnFlakyTests,
   true,
-  "the nightly desktop run (E2E_FAIL_ON_FLAKY=1) must reject tests that pass only on retry",
+  "CI browser runs must reject tests that pass only on retry",
 );
+assert.equal(JSON.parse(ciConfigProbeResult.stdout).retries, 0);
+assert.equal(JSON.parse(ciConfigProbeResult.stdout).trace, "retain-on-failure");
 assert.equal(
   JSON.parse(ciConfigProbeResult.stdout).globalTimeout,
   60_000,
@@ -437,8 +443,18 @@ assert.ok(
 );
 assert.ok(
   releaseRunner.indexOf('"static checks"') <
-    releaseRunner.indexOf('"browser smoke"'),
+    releaseRunner.indexOf("...smokeSteps().map"),
   "release verification must run the static checks before browser journey gates",
+);
+assert.match(
+  releaseRunner,
+  /import \{ smokeSteps \} from "\.\/ci\.mjs"/,
+  "release verification must use the shared complete Chromium and WebKit baseline",
+);
+assert.match(
+  releaseRunner,
+  /\.\.\.smokeSteps\(\)\.map\([\s\S]*?args: step\.args,[\s\S]*?\.\.\.step\.env,[\s\S]*?verifyProviderFreeReceipt: true/,
+  "every release baseline batch must retain its arguments, artifacts and pinned build receipt",
 );
 assert.ok(
   releaseRunner.indexOf('"launch browser gate"') <

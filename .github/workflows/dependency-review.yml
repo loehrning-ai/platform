@@ -12,8 +12,8 @@ permissions:
 # workflow unprivileged. It reviews the dependency-graph diff GitHub can
 # recognise and nothing else. The live `bun audit` blocks pull requests on
 # critical advisories (the `static` job in ci.yml) and runs at every level
-# weekly (nightly.yml, `bun run ci:hygiene`). Informational for deploys: only
-# `verify` gates.
+# daily (nightly.yml, `bun run ci:hygiene`). Main's ruleset requires this review
+# before merge; the deployment command additionally checks exact-commit `verify`.
 concurrency:
   group: dependency-review-${{ github.ref }}
   cancel-in-progress: true

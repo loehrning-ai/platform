@@ -56,7 +56,6 @@ export const BUILD_INPUT_SCOPES = Object.freeze([
   "packages/website/postcss.config.mjs",
   "packages/website/sentry.edge.config.ts",
   "packages/website/sentry.server.config.ts",
-  "packages/website/tailwind.config.ts",
   "packages/website/tsconfig.json",
   "packages/website/tsconfig.typecheck.json",
   "packages/website/vercel.json",

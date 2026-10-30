@@ -9,15 +9,15 @@ updates:
     open-pull-requests-limit: 5
     # A version is proposed only once it is 3 days old. A hijacked or broken
     # release is usually caught and pulled within that window, before its code
-    # reaches a pull request or a preview build. Cooldown applies to version
-    # updates only; security updates still arrive immediately.
+    # reaches a pull request or a preview build. Security updates bypass the
+    # cooldown; ignored major upgrades still need a reviewed migration.
     cooldown:
       default-days: 3
     # Minor and patch updates arrive in two pull requests: the framework
     # (next, react) on its own, so a Next or React bump is reviewed and rolled
-    # back without tooling noise, and everything else together. Majors stay one
-    # pull request each, so every migration is reviewed on its own. Groups are
-    # matched in order, so the framework group claims its packages first.
+    # back without tooling noise, and everything else together. Major upgrades
+    # use dedicated migration pull requests. Groups are matched in order, so
+    # the framework group claims its packages first.
     groups:
       bun-framework-minor-and-patch:
         applies-to: version-updates
@@ -28,25 +28,11 @@ updates:
         patterns: ["*"]
         update-types: [minor, patch]
     ignore:
-      # Major updates are migrations, not routine bumps: they arrive when the maintainers start one, not as a
-      # weekly pull request that fails the build (#130 framer-motion 14, #131 @types/node 26).
+      # Major upgrades need a migration: Vite/plugin-react, Sentry, Vitest,
+      # Framer Motion and Node typings have incompatible major releases.
+      # This single rule covers every dependency. It can also hold back a
+      # security fix requiring a major; the unsuppressed audit still reports it.
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
-      # @vitejs/plugin-react 6 requires vite 8, and the workspace pins vite 7
-      # through the root package.json overrides. The major update (PR #69)
-      # breaks Vitest. Remove this rule together with the vite 8 migration.
-      # The rule also holds back a security update that would need the major;
-      # `bun audit` in CI would still report such an advisory.
-      - dependency-name: "@vitejs/plugin-react"
-        update-types: ["version-update:semver-major"]
-      # Sentry 11 removes or renames options this app uses (PR #107 fails the
-      # build). Vitest 5 breaks the unit tests (PR #105).
-      # Each needs a dedicated migration pull request; remove these rules with
-      # it. Like the rule above, they also hold back a security update that
-      # would need the major; `bun audit` in CI would still report it.
-      - dependency-name: "@sentry/nextjs"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vitest"
         update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions

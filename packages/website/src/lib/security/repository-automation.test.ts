@@ -6,7 +6,7 @@ import matter from "gray-matter";
 import { describe, expect, it } from "vitest";
 
 // Contracts for the repository's GitHub automation: Dependabot's release
-// cooldown and grouping, the shape of the Verify and Nightly workflows, and the
+// cooldown and grouping, the shape of the Verify and Extended workflows, and the
 // CI contract document that describes the release signal and token permissions.
 
 const repoRoot = fileURLToPath(new URL("../../../../../", import.meta.url));
@@ -28,6 +28,7 @@ type Step = {
   readonly name?: string;
   readonly if?: string;
   readonly uses?: string;
+  readonly run?: string;
   readonly with?: Readonly<Record<string, string>>;
 };
 type Job = {
@@ -37,8 +38,19 @@ type Job = {
   readonly "continue-on-error"?: unknown;
   readonly permissions?: Permissions;
   readonly steps?: readonly Step[];
+  readonly strategy?: {
+    readonly "fail-fast"?: boolean;
+    readonly matrix?: Readonly<Record<string, readonly string[]>>;
+  };
 };
-type Workflow = { readonly permissions?: Permissions; readonly jobs: Readonly<Record<string, Job>> };
+type Workflow = {
+  readonly permissions?: Permissions;
+  readonly on?: {
+    readonly schedule?: readonly { readonly cron: string }[];
+    readonly workflow_dispatch?: unknown;
+  };
+  readonly jobs: Readonly<Record<string, Job>>;
+};
 
 function workflow(file: string): Workflow {
   return parseYaml(repositoryFile(`.github/workflows/${file}`)) as Workflow;
@@ -117,28 +129,15 @@ describe("Dependabot configuration", () => {
     }
   });
 
-  it("holds @vitejs/plugin-react on its major until the vite 8 migration", () => {
-    const rootManifest = JSON.parse(repositoryFile("package.json")) as {
-      readonly overrides?: Readonly<Record<string, string>>;
-    };
-    const viteRange = rootManifest.overrides?.vite;
-    expect(viteRange).toBeDefined();
-    const viteMajor = Number(/\d+/.exec(viteRange as string)?.[0]);
-    const pluginReact = (ecosystem("bun").ignore ?? []).filter(
-      (rule) => rule["dependency-name"] === "@vitejs/plugin-react",
-    );
-    // plugin-react 6 requires vite 8. Once vite 8 is in, this rule must go, so
-    // the next plugin-react major is proposed again.
-    if (viteMajor < 8) {
-      expect(pluginReact).toEqual([
-        {
-          "dependency-name": "@vitejs/plugin-react",
-          "update-types": ["version-update:semver-major"],
-        },
-      ]);
-    } else {
-      expect(pluginReact).toEqual([]);
-    }
+  it("holds every Bun major for a reviewed migration while allowing minor and patch proposals", () => {
+    // The wildcard also covers the Vite/plugin-react compatibility boundary;
+    // no package-specific ignore is needed while all majors require migration.
+    expect(ecosystem("bun").ignore).toEqual([
+      {
+        "dependency-name": "*",
+        "update-types": ["version-update:semver-major"],
+      },
+    ]);
     // Nothing else is ignored wholesale: an ignore rule always names the
     // update types or versions it holds back.
     for (const update of config.updates) {
@@ -177,6 +176,30 @@ describe("workflow shape", () => {
     }
   });
 
+  it("runs complete Extended coverage daily without retry or quarantine suppression", () => {
+    const extended = workflow("nightly.yml");
+    expect(extended.on?.schedule).toEqual([{ cron: "17 4 * * *" }]);
+    expect(Object.hasOwn(extended.on ?? {}, "workflow_dispatch")).toBe(true);
+    expect(Object.keys(extended.jobs).sort()).toEqual(["browser", "hygiene", "konto-dom", "webkit"]);
+    expect(extended.jobs.browser.strategy?.["fail-fast"]).toBe(false);
+    expect(extended.jobs.browser.strategy?.matrix?.shard).toEqual(["1/2", "2/2"]);
+    const commands = (job: Job) => (job.steps ?? []).map((step) => step.run ?? "").join("\n");
+    const desktop = commands(extended.jobs.browser);
+    expect(desktop).toContain("e2e:shard:built test");
+    expect(desktop).toContain("--project=chromium");
+    expect(desktop).toContain("--shard=${{ matrix.shard }}");
+    expect(desktop).toContain("--retries=0");
+    expect(desktop).toContain("--fail-on-flaky-tests");
+    expect(desktop).not.toMatch(/--grep(?:-invert)?|@quarantine/);
+    expect(commands(extended.jobs.webkit)).toContain("run-provider-free.mjs node scripts/ci.mjs mobile-smoke");
+    expect(commands(extended.jobs["konto-dom"])).toContain("test:e2e:konto-dom-mocked");
+    expect(commands(extended.jobs.hygiene)).toContain("bun run ci:hygiene");
+    for (const [id, job] of Object.entries(extended.jobs)) {
+      expect(job["continue-on-error"], id).toBeUndefined();
+      expect(commands(job), id).not.toMatch(/--retries=[1-9]/);
+    }
+  });
+
   it("uses only GitHub-owned actions pinned to a full commit SHA", () => {
     const files = [
       ...workflowFiles.map((file) => `.github/workflows/${file}`),
@@ -198,12 +221,25 @@ describe("workflow shape", () => {
 describe("docs/ci-contract.md", () => {
   const doc = repositoryFile("packages/website/docs/ci-contract.md");
 
-  it("documents the release signal and does not claim a ruleset the repository lacks", () => {
+  it("distinguishes the release signal from the required main merge rules", () => {
     expect(doc).toMatch(/`verify` check-run/);
-    expect(doc).toMatch(/no branch protection/i);
+    expect(doc).toMatch(/`verify` signal is distinct from merge protection/);
+    expect(doc).toMatch(/active `Protect main` ruleset also requires `dependency-review`, CodeQL/);
+    expect(doc).toMatch(/configured code-scanning policy/);
+    expect(doc).toMatch(/squash pull requests, linear\s+history, resolved conversations and no force-push\/deletion/);
+    expect(doc).not.toMatch(/no branch protection/i);
     expect(workflow("ci.yml").jobs.verify.name).toBe("verify");
     // CodeQL runs as GitHub's default setup, not from a workflow here.
     expect(workflowFiles.filter((file) => /codeql/i.test(file))).toEqual([]);
+  });
+
+  it("documents daily coverage, first-attempt failures and the optional latest-run release gate", () => {
+    expect(doc).toMatch(/Daily 04:17 UTC, manual dispatch/);
+    expect(doc).toMatch(/zero automatic retries and fails on flaky tests/);
+    expect(doc).toMatch(/failed trace retained/);
+    expect(doc).toMatch(/there is no quarantine exclusion/);
+    expect(doc).toMatch(/`--require-extended` refuses unless the latest run of `nightly\.yml` is\s+green on that commit/);
+    expect(doc).toMatch(/Without the\s+flag, Extended is not required/);
   });
 
   it("lists every Verify job and every workflow file", () => {
