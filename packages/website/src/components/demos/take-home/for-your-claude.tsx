@@ -47,7 +47,7 @@ export function ForYourClaude({ slug, locale }: { readonly slug: DemoSlug; reado
   const copy = DEMOS_PAGE_COPY[locale].takeHome;
   const ui = CLAUDE_UI[locale];
   const kit = resolveKit(entry.kit[locale]);
-  const skill = entry.skill.name;
+  const skill = entry.skill.locales?.[locale] ?? entry.skill.name;
   const templates = entry.templates.map(({ vorlage }) => {
     const found = VORLAGEN.find((item) => item.slug === vorlage && item.kind === "template");
     if (!found) throw new Error(`demo ${slug}: ${vorlage} is not a template in VORLAGEN`);

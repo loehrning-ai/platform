@@ -236,7 +236,7 @@ test.describe(PATH, () => {
     await sendAndFinish(page, "schritt-1");
     await expect(caption(page)).toContainText("For Q6, Claude wrote");
     await openBeat(page, "mitnehmen", "/en");
-    await expect(page.locator('[data-w4-take="skill"] a[download]')).toHaveAttribute("href", /esg-nachweise\.zip$/);
+    await expect(page.locator('[data-w4-take="skill"] a[download]')).toHaveAttribute("href", /esg-evidence\.zip$/);
     expect(await overflow(page)).toBeLessThanOrEqual(0);
   });
 });

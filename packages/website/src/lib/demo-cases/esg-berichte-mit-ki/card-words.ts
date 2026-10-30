@@ -7,13 +7,8 @@ import { takeHomeFor } from "@/lib/demo-takehome";
 import { publicFile } from "@/lib/demo-takehome.server";
 import { readZipText } from "@/lib/zip/read";
 
-/*
- * Words the page takes from the kit instead of typing them: the card's
- * capitals for the four checks and the three statuses, as the skill writes
- * them in both languages ("Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und
- * BELEGT, SCHWACH, LÜCKE. Englisch: ..."), and the learning objective, the
- * bold first paragraph of each kit's start file. The kit, the skill and W05
- * use these words; the demo's own sentences use normal case.
+/* Card labels come from each language's authored skill; the learning objective comes from
+ * the first bold paragraph of its kit start guide. Recorded run files remain unchanged.
  */
 
 export interface CardWords {
@@ -22,11 +17,11 @@ export interface CardWords {
 }
 
 const SLUG = "esg-berichte-mit-ki";
-const SKILL = path.join(process.cwd(), "content", "skills", "esg-nachweise", SKILL_DOCUMENT_FILENAME);
+const skillPath = (name: string) => path.join(process.cwd(), "content", "skills", name, SKILL_DOCUMENT_FILENAME);
 
 export function cardWordsFrom(text: string, label: "Deutsch" | "Englisch"): CardWords {
   const flat = text.replace(/\s+/g, " ");
-  const match = new RegExp(`${label}: ([^.]+?) und ([^.]+)\\.`).exec(flat);
+  const match = new RegExp(`${label === "Englisch" ? "(?:Englisch|English)" : label}: ([^.]+?) (?:und|and) ([^.]+)\\.`).exec(flat);
   const checks = match?.[1]?.split(", ") ?? [];
   const statuses = match?.[2]?.split(", ") ?? [];
   if (checks.length !== 4 || statuses.length !== 3) throw new Error(`esg-nachweise skill: no ${label} card words`);
@@ -49,8 +44,9 @@ function startFile(locale: "de" | "en"): string {
   return text;
 }
 
-const source = readFileSync(SKILL, "utf8");
+const source = readFileSync(skillPath("esg-nachweise"), "utf8");
+const englishSource = readFileSync(skillPath("esg-evidence"), "utf8");
 
-export const CARD_WORDS = { de: cardWordsFrom(source, "Deutsch"), en: cardWordsFrom(source, "Englisch") } as const;
+export const CARD_WORDS = { de: cardWordsFrom(source, "Deutsch"), en: cardWordsFrom(englishSource, "Englisch") } as const;
 
 export const OBJECTIVE = { de: objectiveFrom(startFile("de")), en: objectiveFrom(startFile("en")) } as const;

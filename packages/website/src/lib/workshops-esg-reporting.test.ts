@@ -63,8 +63,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
 
   it("links each locale to its own deck and kit edition, and labels the zip with its real size", () => {
     const mainSlides = (html: string) => html.match(/<section class="slide[^"]*" id="[^"]+" data-kind="main"/g) ?? [];
-    expect(mainSlides(slides)).toHaveLength(17);
-    expect(mainSlides(slidesEn)).toHaveLength(17);
+    expect(mainSlides(slides)).toHaveLength(18);
+    expect(mainSlides(slidesEn)).toHaveLength(18);
     const files = (workshop: typeof de) => workshop.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length));
     expect(files(de)).toEqual(["slides.html", "crvena-zemja-nachweisprobe.zip"]);
     expect(files(en)).toEqual(["en/slides.html", "crvena-zemja-esg-kit.zip"]);
@@ -72,7 +72,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.materials[0]?.language).toBe("en");
     expect(existsSync(resolve(root, "sheet.html"))).toBe(true);
     for (const workshop of both) {
-      expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 17 Folien" : "Deck · 17 slides");
+      expect(workshop.materials[0]?.label).toBe(workshop === de ? "Deck · 18 Folien" : "Deck · 18 slides");
       expect(existsSync(resolve(publicRoot, workshop.materials[0]!.href.slice(1)))).toBe(true);
       for (const material of workshop.materials.slice(1)) {
         const bytes = statSync(resolve(publicRoot, material.href.slice(1))).size;
@@ -154,7 +154,7 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
       { label: "Defects in the files", value: "8" },
     ]);
     expect(en.caseStudy.limitationsHeading).toBe("Before you start");
-    expect(en.materials[0]?.label).toBe("Deck · 17 slides");
+    expect(en.materials[0]?.label).toBe("Deck · 18 slides");
     expect(en.materials[1]?.description).toContain("project-instructions.md");
     expect(en.materials[1]?.description).toContain("ANSWERS.md");
     expect(en.provenance.note).not.toMatch(/prompts were run/i);

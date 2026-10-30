@@ -36,8 +36,9 @@ describe("W04 and W05 evidence language", () => {
 
   it.each(["esg-nachweise", "audit-nachweise"])("%s names the four tests in that order in both languages", (name) => {
     const text = flat(skill(name));
+    const english = name === "esg-nachweise" ? flat(skill("esg-evidence")) : text;
     expect(text).toContain(`Deutsch: ${WORDS.de.join(", ")} und BELEGT, SCHWACH, LÜCKE.`);
-    expect(text).toContain(`Englisch: ${WORDS.en.join(", ")} und COVERED, WEAK, GAP.`);
+    expect(english).toContain(name === "esg-nachweise" ? `English: ${WORDS.en.join(", ")} and COVERED, WEAK, GAP.` : `Englisch: ${WORDS.en.join(", ")} und COVERED, WEAK, GAP.`);
   });
 
   it("each skill points at the other", () => {
@@ -49,9 +50,9 @@ describe("W04 and W05 evidence language", () => {
     for (const name of ["esg-nachweise", "audit-nachweise"]) {
       const text = flat(skill(name));
       expect(text, name).toMatch(/schwächste/);
-      expect(text, name).toMatch(/weakest part/);
+      expect(name === "esg-nachweise" ? flat(skill("esg-evidence")) : text, name).toMatch(/weakest (?:part|status)/);
       expect(text, name).toMatch(/Fakt/);
-      expect(text, name).toMatch(/\bfact\b/);
+      expect(name === "esg-nachweise" ? flat(skill("esg-evidence")) : text, name).toMatch(/\bfact\b/);
     }
   });
 

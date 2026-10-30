@@ -20,7 +20,7 @@ const base = "/workshops/esg-berichte-mit-ki";
  * against the files. Each locale links its own edition: crvena-zemja-nachweisprobe.zip (German) on the
  * German page, crvena-zemja-esg-kit.zip (English) on the English one, the same kit the demo hands out.
  */
-const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "838 KB", en: "901 KB" };
+const KIT_SIZE_LABEL: Readonly<Record<Locale, string>> = { de: "839 KB", en: "901 KB" };
 
 type MaterialFrame = Omit<WorkshopMaterial, "label" | "description" | "sizeLabel">;
 
@@ -194,7 +194,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("de", [
       [
-        "Deck · 17 Folien",
+        "Deck · 18 Folien",
         `Für den Beamer. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
       ],
       [
@@ -349,12 +349,12 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("en", [
       [
-        "Deck · 17 slides",
+        "Deck · 18 slides",
         `For the projector. Every prompt has a copy button. ${DECK_KEYS.en}`,
       ],
       [
         "Evidence check kit · .zip",
-        "START-HERE.md (review, setup, five prompts), evidence-check.md (the evidence check on one page), project-instructions.md (the three rules), 13 company files, three requests, a late invoice for step 5, ANSWERS.md and the skill esg-nachweise with templates.",
+        "START-HERE.md (review, setup, five prompts), evidence-check.md (the evidence check on one page), project-instructions.md (the three rules), 13 company files, three requests, a late invoice for step 5, ANSWERS.md and the English skill esg-evidence with templates.",
         "Five prompts, answers, 13 files, three requests, skill.",
       ],
     ]),

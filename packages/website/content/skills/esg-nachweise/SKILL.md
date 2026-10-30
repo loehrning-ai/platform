@@ -1,6 +1,6 @@
 ---
 name: esg-nachweise
-description: Nachhaltigkeits- oder ESG-Fragebogen, VSME, Bankformular, Umweltaussage (Etikett, klimaneutral) aus Firmendateien beantworten. Datei und Zeile oder fehlendes Dokument. Sustainability questionnaire.
+description: Nachhaltigkeits- oder ESG-Fragebogen, VSME, Bankformular, Umweltaussage (Etikett, klimaneutral) aus Firmendateien beantworten. Datei und Zeile oder fehlendes Dokument.
 ---
 
 # ESG-Antworten mit Nachweis
@@ -9,8 +9,11 @@ Jede Antwort, die die Firma verlässt, trägt ihren Nachweis: eine freigegebene 
 Zeitraum und Umfang der Antwort deckt, oder den Namen des Dokuments, das fehlt. Du bereitest vor. Ein
 Mensch prüft und unterschreibt.
 
-Antworte in der Sprache der Person. Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und BELEGT, SCHWACH,
-LÜCKE. Englisch: QUOTE, PERIOD, SCOPE, APPROVAL und COVERED, WEAK, GAP.
+Antworte auf Deutsch, sofern die Person keine andere Sprache verlangt.
+Deutsch: ZITAT, ZEITRAUM, UMFANG, FREIGABE und BELEGT, SCHWACH, LÜCKE.
+
+Der Skill liefert die Prüfmethode. Die Firmendateien liefern das Firmenwissen, Projektanweisungen
+den Kontext und Anfragen den Auftrag. Der Skill aktualisiert Gesetze und Standards nicht selbst.
 
 Wofür: Nachhaltigkeitsfragebögen von Kunden, ESG- und Umweltfelder in Bankformularen, eine
 VSME-Übersicht (B1 bis B11), Umweltaussagen für Etikett, Verpackung, Regal, Website oder Werbung,
@@ -20,7 +23,7 @@ audit-nachweise.
 
 ## Vor der ersten Antwort
 1. Stichtag und Berichtsjahr stehen in den Projektanweisungen oder in der Anfrage. Fehlt einer davon,
-   frag. Prüf jedes Ablaufdatum gegen den Stichtag, nie gegen dein eigenes Wissen über das heutige Datum.
+   frag. Prüf Ablaufdaten und Fristen gegen den Stichtag, auch im Übungsfall; ersetze ihn nicht durch das heutige Datum.
 2. Nachweise sind nur die Dateien der Firma im Projekt oder im Chat. Eine Anfrage (Fragebogen, Formular,
    Entwurf von Werbeaussagen) fragt und belegt nichts. Wissen aus dem Gedächtnis oder dem Netz ist
    kein Nachweis für Fakten der Firma.
@@ -52,6 +55,13 @@ audit-nachweise:
   eine Anforderung, dass etwas erfüllt ist (eine Quote, ein Test im Jahr), und der Nachweis zeigt, dass
   es nicht erfüllt ist, ist es LÜCKE. So zählt auch audit-nachweise.
 
+## Projektdateien lesen
+CSV-Projektwissen kann zunächst nur Spaltennamen und Zeilenanzahl zeigen. Lies dann die Originaldatei
+über den verfügbaren Projektdateizugriff. Gibt dieser für einen Blob einen `local_file`-Pfad zurück,
+öffne genau diesen Pfad. Ein Dateiname im Projekt bedeutet nicht, dass die Datei unter dem Upload-Pfad
+des aktuellen Chats liegt. Fehlgeschlagener Zugriff ist kein fehlender Nachweis: erst den Projektzugriff
+versuchen, sonst die technische Grenze nennen und die betroffenen Antworten offenlassen.
+
 ## Rechnen und Zählen
 - Jede Rechnung im Code, mit Einheiten. Zeig die Eingaben mit Datei und Zeile.
 - Monatsreihen (Strom, Gas, Wasser): Zähl eindeutige Monate (Monat und Rechnungsnummer), nicht Zeilen.
@@ -61,8 +71,8 @@ audit-nachweise:
 - Nennt die Anfrage eine Abdeckung (etwa 95 %), rechne sie aus und vergleiche.
 - Galt ein Nachweis am 31.12. des Berichtsjahres, belegt er das Berichtsjahr. Für eine Aussage am
   Stichtag ist er trotzdem abgelaufen.
-- Zahlenformate prüfen: „41.200 kWh“ auf einer Rechnung mit deutschem Zahlenformat sind
-  einundvierzigtausendzweihundert. Bei einer Rechnung als Foto: kWh gegen die Zählerstände rechnen.
+- Zahlenformate prüfen: „1.000 kWh“ auf einer Rechnung mit deutschem Zahlenformat sind
+  eintausend. Bei einer Rechnung als Foto: kWh gegen die Zählerstände rechnen.
 - Kompensationen sind keine eigenen Emissionen und keine Minderung. Scope 2 standortbasiert =
   kWh des ganzen Jahres × veröffentlichter Netz-Emissionsfaktor; fehlt der Faktor: LÜCKE.
 
@@ -105,31 +115,19 @@ Darunter:
 Als Datei auf Wunsch .xlsx, oder .csv mit Semikolon für deutsches Excel, mit den leeren Spalten
 „Geprüft von“ und „Datum“.
 
+Bei einer Excel-Datei: Fehlende Dokumente über alle angeforderten Blätter zusammenführen,
+auch VSME, mit allen betroffenen Zeilen. Statussummen und Anforderungszahlen nach dem Speichern
+und Neuberechnen aus der fertigen Datei lesen; keine Teilantwort doppelt zählen.
+
 ## Personen
 Nur Summen. Keine Namen, keine Einzeldatensätze, auch wenn eine Datei sie enthält.
 
 ## Nie
 - eine Zahl ohne Datei und Zeile nennen
-- eine Lücke mit Durchschnitt, Vorjahr oder Schätzung füllen. Im Übungsfall ergaben 11 Monate × 12/11
-  305,1 MWh; das ganze Jahr waren 320,9 MWh, weil der fehlende Monat der Spitzenmonat war
+- eine Lücke mit Durchschnitt, Vorjahr oder Schätzung füllen. Ein fehlender Monat kann saisonal
+  deutlich vom Durchschnitt abweichen; eine Hochrechnung belegt keine Jahressumme
 - eine Schätzung, einen Entwurf oder ein Angebot als BELEGT führen
 - Kompensationen von Emissionen abziehen
 - ein Audit als Zertifikat führen
 - eine Antwort ohne Status ausgeben oder „versandfertig“ nennen; das entscheidet ein Mensch
 - Zugangsdaten, Schlüssel oder Token aus Dateien übernehmen oder ausgeben; sie bleiben bei der Person
-
-## English
-Answer in English when the person writes English. The method is the same; the words are:
-- The four checks, the same as in audit-nachweise: QUOTE (file and line), PERIOD (whole period, valid
-  on the reference date), SCOPE (everything the answer talks about), APPROVAL (measured, signed,
-  approved; not a draft, offer or estimate).
-- Statuses: COVERED (all four hold for every part; a proven fact counts even when it is bad news, then
-  an action), WEAK (every part has a file, but it is expired, estimated, a draft, unapproved or
-  contradicted), GAP (no file says it, or a part has no file; name the document to request; a
-  requirement the evidence shows as not met is GAP too). A question takes the status of its weakest
-  part: GAP before WEAK before COVERED.
-- Claims to consumers: ban list first (2a, 4a, 4b, 4c, 10a of Annex I, Directive 2005/29/EC as amended by
-  Directive (EU) 2024/825), then the evidence check. Otherwise: "Drop."
-- Output: one table, one row per question or claim: No | Question or claim | Answer | File and line |
-  Status | Reason | Missing document | Action. Below it the count and the request list.
-- Never fill a gap with an average, never count offsets as reductions, never call an answer ready to send.

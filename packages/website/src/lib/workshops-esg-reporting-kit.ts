@@ -163,7 +163,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
       { name: "requests/", description: "Questionnaire, marketing claims and bank form." },
       { name: "answers/ANSWERS.md", description: "The answers with file and line. Open only after each step." },
       { name: "take-home/", description: "Templates and a checklist for your company." },
-      { name: "claude/", description: "The skill esg-nachweise." },
+      { name: "claude/", description: "The English skill esg-evidence." },
     ],
   },
 };

@@ -32,7 +32,9 @@ const TEMPLATES: readonly (readonly [TakeHomeKey, string])[] = [
 ];
 
 function filesFor(locale: "de" | "en"): TakeHomeFiles {
-  const kit = takeHomeFor(SLUG)?.kit[locale];
+  const takeHome = takeHomeFor(SLUG);
+  const kit = takeHome?.kit[locale];
+  const skill = takeHome?.skill.locales?.[locale] ?? SKILL;
   if (!kit) throw new Error(`${SLUG}: no take-home kit for ${locale}`);
   const templates = TEMPLATES.map(([key, slug]) => {
     const entry = VORLAGEN.find((item) => item.slug === slug);
@@ -43,7 +45,7 @@ function filesFor(locale: "de" | "en"): TakeHomeFiles {
   // The kit's five prompts, exactly as they were sent for the recordings in the window.
   const prompts = kitPrompts(locale).map((prompt) => prompt.text);
   return {
-    links: [{ key: "skill", href: `/skills/${SKILL}.zip`, download: `${SKILL}.zip` }, ...templates, { key: "kit", href: kit.href, download: kitName }],
+    links: [{ key: "skill", href: `/skills/${skill}.zip`, download: `${skill}.zip` }, ...templates, { key: "kit", href: kit.href, download: kitName }],
     shown: kit.shown.map((path) => path.split("/").pop() ?? path),
     prompts,
   };

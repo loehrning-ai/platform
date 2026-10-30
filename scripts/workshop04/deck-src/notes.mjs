@@ -14,7 +14,7 @@ const SOURCE_NOTES = {
       Time: "30 s",
       Say: "Ein Weingut bekommt drei Anfragen: vom Importeur, vom Marketing und von der Bank. Alle wollen Antworten aus demselben Ordner. Wir entscheiden, was die Firma davon belegen kann. Ich arbeite in meinem Claude, ihr schätzt und prüft die Quellen.",
       Students: "Ankommen. Ich bediene Claude; ihr prüft die Quellen. Kein Laptop nötig.",
-      Cue: "Vorher: Claude Desktop offen, Kit entpackt, START-HIER.md im Texteditor. Projekt und Codeausführung als Reserve prüfen. Pfeil rechts startet den Fall.",
+      Cue: "Vorher: Claude Desktop offen, Kit entpackt, START-HIER.md im Texteditor. Vorher den deutschen Skill esg-nachweise hochladen und einschalten, Run code in the cloud prüfen, Haiku wählen. Fertiges Projekt als Reserve. Pfeil rechts startet den Fall.",
       Remember: "Kein Wort über Werkzeuge. Erst der Fall.",
     }),
     note("Gastgeber", {
@@ -39,10 +39,10 @@ const SOURCE_NOTES = {
       Remember: "Unter dem Balken steht firmenprofil.md, Z. 12. Selbst die Fakten des Falls haben Datei und Zeile. Das ist die Methode dieser Stunde.",
     }),
     note("Drei Anfragen", {
-      Time: "2 min",
+      Time: "1 min",
       Say: "Der Fallstichtag ist der 16.10.2026. Das ist nicht das heutige Workshop-Datum. Wir sitzen im Büro des Weinguts, sieben Tage vor der Rückgabe an Nordvik. Auf dem Tisch liegen drei Anfragen. Der Importeur in Göteborg schickt 8 Fragen, Rückgabe am 23.10.; Antworten ohne Nachweis zählt er nicht. Nordvik bietet die Weine bei Vinmonopolet in Norwegen an; dort gilt die 420-g-Regel. Was die Regel nicht erfüllt, kann Nordvik dort nicht anbieten. Das Marketing des Weinguts will 7 Aussagen auf neue Etiketten für Deutschland drucken, nach dem 27.09. Die Bank in Skopje braucht 6 Felder für den Solarkredit über 8.550.000 Denar, jede Schätzung gekennzeichnet.",
       Students: "Per Zuruf: Welche Anfrage beantwortet ihr zuerst?",
-      Cue: "Stichtag zeigen: 16.10. Pfeile 1 bis 3: Importeur, Marketing, Bank. Pfeil 4: 21 ESG-Antworten: Nachweise für Kundenanforderungen, Umweltaussagen und den Solarkredit. Die 53 % sind die betroffenen Umsatzanteile, kein nachgewiesener Umsatzverlust.",
+      Cue: "Stichtag zeigen: 16.10. Pfeile 1 bis 3: Importeur, Marketing, Bank. Pfeil 4: 21 Prüfpunkte: 8 Kundenfragen, 7 Werbeentwürfe, 6 Kreditfelder. Nachweise für Kundenanforderungen, Umweltaussagen und den Solarkredit. Die 53 % sind die betroffenen Umsatzanteile, kein nachgewiesener Umsatzverlust.",
       Remember: "Antwort: Nordvik zuerst, Frist 23.10. Aber alle drei fragen nach denselben Fakten, Strom steht in allen drei. Deshalb ein Ordner, und in Schritt 4 ein Register.",
     }),
     note("Heute", {
@@ -54,10 +54,10 @@ const SOURCE_NOTES = {
     }),
     note("Die Regel: ein Satz gegen seine Datei", {
       Time: "4 min",
-      Say: "Ein Satz aus dem Marketing, für die Regalkarte: „Zertifizierte Bio-Weinberge“. Das Zertifikat liegt im Ordner. Hält die Aussage? Belegt ist eine Antwort erst, wenn vier Prüfungen halten: Zitat, Zeitraum, Umfang, Freigabe. Der Stichtag ist der 16.10.2026, der Tag im Fall.",
+      Say: "Unser Marketing bittet uns, einen Werbeentwurf vor Veröffentlichung zu prüfen. Die geplante Regalkarte für alle Weine sagt: „Zertifizierte Bio-Weinberge“. Wir halten eine Kopie des Zertifikats der Kontrollstelle. Es ist keine eigene Werbeaussage der Kontrollstelle. 12 von 40 bedeutet Hektar Weinbergsfläche, nicht Flaschen. Trägt das Zertifikat unseren Werbeentwurf? Belegt ist eine Antwort erst, wenn vier Prüfungen halten: Zitat, Zeitraum, Umfang, Freigabe. Der Stichtag ist der 16.10.2026, der Tag im Fall.",
       Students: "Das Zertifikat mit der Aussage vergleichen: Zitat, Zeitraum, Umfang und Freigabe.",
       Cue: "Ankunft: Flasche und Prüffrage. Die vier Prüfungen nennen. Pfeil 1: der Draht vom Satz zur Datei. Pfeil 2: Zitat hält. Pfeil 3: Zeitraum hält nicht, 46 Tage abgelaufen. Pfeil 4: Umfang hält nicht, 12 von 40 ha. Pfeil 5: Freigabe hält, LÜCKE, darf so nicht raus. Pfeil 6: die drei Status.",
-      Remember: "Das Zertifikat lag bei und belegt den Satz trotzdem nicht. Der schwächste Teil zählt. Entscheidend ist die zitierte Zeile.",
+      Remember: "Das Zertifikat liegt vor, deckt aber nur 12 ha und ist abgelaufen. Verlängern behebt das Datum, erweitert aber nicht den Umfang. Für die übrigen 28 ha fehlt ein Zertifikat. Der schwächste Teil zählt. Entscheidend ist die zitierte Zeile.",
     }),
     note("Das Kit", {
       Time: "2 min",
@@ -68,23 +68,23 @@ const SOURCE_NOTES = {
     }),
     note("Durchsicht auf Papier", {
       Time: "10 min",
-      Say: "Zehn Minuten, zu zweit, auf Papier, ohne Claude. In den 13 Dateien stecken 8 Mängel. Eine Datei sieht auffällig aus und ist sauber.",
-      Students: "Zu zweit mit dem Ausdruck der 13 Dateien. Für jeden Mangel aufschreiben: Datei, Zeile, welche Prüfung scheitert.",
-      Cue: "Ankunft: Die Überschrift fragt nur: Was stimmt nicht? Erst aufdecken, wenn die Paare verglichen haben. Pfeil 1: acht Fähnchen, der Zähler läuft bis 8. Pfeil 2: die saubere Datei bekommt einen Ring.",
-      Remember: "Je Paar einen Ausdruck der 13 Dateien aus ordner/ mitbringen. Ohne Ausdruck: Die Demo loehrning.ai/demos/esg-berichte-mit-ki zeigt dieselben 13 Dateien im Browser; vorher prüfen, dass die Dateiansicht keine Lösung zeigt. Die saubere Datei ist wasser_2025.csv: 12 von 12 Monaten, der hohe September ist die Lese. Mangel 2 laut nennen: 12 Zeilen sind 11 Monate.",
+      Say: "Zehn Minuten, zu zweit, auf Papier, ohne Claude. Wir prüfen die vorhandenen Belege für unsere drei Aufträge: Datenfehler, Beleglücken und Geschäftsprobleme. Es gibt acht Prüfpunkte; nicht acht falsche Dateien. Die 560-g-Angabe ist korrekt, die Flasche verfehlt die Kundenvorgabe. Wasser ist vollständig. Danach bekommt Claude dieselben unveränderten Dateien.",
+      Students: "Zu zweit mit dem Ausdruck der 13 Dateien. Für jeden Prüfpunkt aufschreiben: Datei, Zeile, welche Antwort betroffen ist und warum.",
+      Cue: "Ankunft: Die Überschrift fragt nur: Was stimmt nicht? Erst aufdecken, wenn die Paare verglichen haben. Pfeil 1: acht Fähnchen, der Zähler läuft bis 8. Pfeil 2: die vollständige Datei bekommt einen Ring.",
+      Remember: "Je Paar einen Ausdruck der 13 Dateien aus ordner/ mitbringen. Ohne Ausdruck: Die Demo loehrning.ai/demos/esg-berichte-mit-ki zeigt dieselben 13 Dateien im Browser; vorher prüfen, dass die Dateiansicht keine Lösung zeigt. Die vollständige Datei ist wasser_2025.csv: 12 von 12 Monaten, der hohe September ist die Lese. Doppelerfassung laut nennen: 12 Zeilen sind 11 Monate.",
     }),
     note("Projekt anlegen", {
       Time: "4 min",
       Say: "Jetzt geht der Ordner zu Claude. Ich lege das Projekt live an: Anweisungen, 13 Dateien, Codeausführung. Die Anfragen kommen nicht ins Projekt.",
       Students: "Per Zuruf: Warum kommen die Anfragen nicht ins Projekt?",
-      Cue: "Vor dem Wechsel: Leiste 1 bis 4 laut vorlesen. Cmd+Tab zu Claude Desktop: 1 Projects, „New Project“, Name „Crvena Zemja Nachweise“. 2 „Set project instructions“: den ganzen Text aus projektanweisungen.md einfügen, „Save instructions“. 3 Bei Project knowledge auf „+“, die 13 Dateien aus ordner/ wählen. 4 Settings, Capabilities: „Code execution and file creation“ ist an. Zurück am Deck: Pfeil 1 Anweisungen, Pfeil 2 Dateien und die Ihr-erklärt-Zeile, Pfeil 3 Schalter.",
-      Remember: "Die Anfragen fragen, sie belegen nichts; sie kommen in jedem Schritt an die Nachricht. Ein fertiges Projekt als Reserve anlegen, falls der Upload hängt. Lädt eine .md-Datei nicht, in .txt umbenennen. Vor echten Firmendaten: Datenschutz in den Einstellungen prüfen. Bei Zugangssperre, Limit oder Ausfall: /demos/esg-berichte-mit-ki öffnen, passenden Schritt wählen, als Aufzeichnung benennen. Danach zurück zum Deck, Quellen prüfen.",
+      Cue: "Vor dem Wechsel: Leiste 1 bis 4 laut vorlesen. Cmd+Tab zu Claude Desktop: 1 Projects, „New Project“, Name „Crvena Zemja Nachweise“. 2 „Instructions“, „Edit“: den ganzen Text aus projektanweisungen.md einfügen, „Save instructions“. 3 Bei Project knowledge auf „+“, die 13 Dateien aus ordner/ wählen. 4 Settings, Capabilities: „Run code in the cloud“ ist an. Zurück am Deck: Pfeil 1 Anweisungen, Pfeil 2 Dateien und die Ihr-erklärt-Zeile, Pfeil 3 Schalter.",
+      Remember: "Dateien sind Firmenwissen, der Skill ist die Prüfmethode. Projektanweisungen setzen Stichtag und Kontext. Die Anfragen fragen, sie belegen nichts; sie kommen in jedem Schritt an die Nachricht. Ein fertiges Projekt als Reserve anlegen, falls der Upload hängt. Lädt eine .md-Datei nicht, in .txt umbenennen. Vor echten Firmendaten: Datenschutz in den Einstellungen prüfen. Bei Zugangssperre, Limit oder Ausfall: /demos/esg-berichte-mit-ki öffnen, passenden Schritt wählen, als Aufzeichnung benennen. Danach zurück zum Deck, Quellen prüfen.",
     }),
     note("Schritt 1: Fragebogen des Importeurs", {
       Time: "7 min",
       Say: "Erst die Stromdaten auf das ganze Jahr prüfen, dann starte ich Claude. Ein neuer Chat im Projekt, der Fragebogen kommt dazu, dann der Prompt aus START-HIER.md, Schritt 1.",
       Students: "Sobald der Code 12 Zeilen und 11 Monate zeigt, vor Claudes Antwort prüfen: Decken Z. 3 bis 14 der Stromdatei alle 12 Monate?",
-      Cue: "Vor dem Wechsel: Leiste 1 bis 4 laut vorlesen. Auf dem Deck: Prüffrage zum ganzen Jahr. Cmd+Tab zu Claude Desktop: 1 im Projekt „New chat“. 2 „+“, „Add files or photos“: anfragen/1-fragebogen-nordvik.md. 3 Prompt 1 aus START-HIER.md senden (oder „Kopieren“ am Deck). Während Claude rechnet, den Code-Kasten aufklappen: 12 Zeilen, 11 Monate; jetzt fragen, ob Z. 3 bis 14 alle 12 Monate decken. 4 strom_2025.csv im Projektwissen öffnen. Zurück am Deck: Pfeil 1 Fragebogen angehängt. Pfeil 2 Prompt und Code, die Ihr-prüft-Zeile erscheint. Pfeil 3 Antwort und Tabelle. Pfeil 4 Ergebnis 5, 1, 2.",
+      Cue: "Vor dem Wechsel: Leiste 1 bis 4 laut vorlesen. Auf dem Deck: Prüffrage zum ganzen Jahr. Cmd+Tab zu Claude Desktop: 1 im Projekt „New chat“. 2 „+“, „Upload or add files“, „Upload from computer“: anfragen/1-fragebogen-nordvik.md. 3 Prompt 1 aus START-HIER.md senden (oder „Kopieren“ am Deck). Während Claude rechnet, den Code-Kasten aufklappen: 12 Zeilen, 11 Monate; jetzt fragen, ob Z. 3 bis 14 alle 12 Monate decken. 4 strom_2025.csv im Projektwissen öffnen. Zurück am Deck: Pfeil 1 Fragebogen angehängt. Pfeil 2 Prompt und Code, die Ihr-prüft-Zeile erscheint. Pfeil 3 Antwort und Tabelle. Pfeil 4 Ergebnis 5, 1, 2.",
       Remember: "Q6 ist BELEGT und trotzdem schlecht: Die Reserve-Flasche wiegt 560 g. Belegt heißt bewiesen, nicht gut. Q1 als SCHWACH mit September genannt ist auch vertretbar. Weicht der Live-Lauf von der Folie ab, ist genau das der Gesprächsstoff. Läuft Claude länger als 3 Minuten: auf der Folie weiter.",
     }),
     note("Schritt 2: Werbeaussagen", {
@@ -124,7 +124,7 @@ const SOURCE_NOTES = {
     }),
     note("Mitnehmen", {
       Time: "3 min",
-      Say: "Am 23.10. geht an Nordvik: jede Antwort mit Datei und Zeile, jede Lücke mit dem Dokument, das fehlt. Kit, Skill und Demo gehen mit nach Hause. Zu Hause macht ihr die fünf Schritte selbst, mit eurem Claude und denselben Prompts. Den Skill über claude.ai/customize/skills hochladen: „+“, „Create skill“, „Upload a skill“. Nie echte Dateien mit den Übungsdateien mischen.",
+      Say: "Im Übungsfall ist die Antwort an Nordvik am 23.10.2026 fällig: jede Antwort mit Datei und Zeile, jede Lücke mit dem Dokument, das fehlt. Kit, Skill und Demo gehen mit nach Hause. Zu Hause macht ihr die fünf Schritte selbst, mit eurem Claude und denselben Prompts. Den Skill über claude.ai/customize/skills hochladen: „Add skill“, „Upload skill“. Nie echte Dateien mit den Übungsdateien mischen.",
       Students: "QR-Code scannen. Zu Hause: Kit entpacken, Projekt anlegen, Prompts 1 bis 5.",
       Cue: "Ankunft: der Satz zu Nordvik, dann Kit, Skill und Demo, der QR-Code, die Zeile „Zu Hause“. Pfeil 1: Ein Mensch prüft und unterschreibt jede Antwort.",
       Remember: "Übungsdatum bleibt 16.10.2026. Für eigene Fälle den Stichtag ändern. Die Demo läuft im Browser, ohne KI.",
@@ -138,7 +138,7 @@ const SOURCE_NOTES = {
       Time: "30 s",
       Say: "One winery gets three requests: from its importer, its marketing team and its bank. All need answers from the same folder. We decide which answers the company can prove. I work in my Claude; you predict and check the sources.",
       Students: "Settle in. I operate Claude; you check the sources. No laptop needed.",
-      Cue: "Before: Claude Desktop open, skill esg-nachweise switched on under Customize, Skills, the kit unzipped on the desktop, START-HERE.md open in a text editor. On arrival the globe turns to North Macedonia and an arc runs to Germany. Then arrow right.",
+      Cue: "Before: Claude Desktop open, English skill esg-evidence uploaded and enabled under Customize, Skills; Haiku selected and Run code in the cloud enabled; the kit unzipped on the desktop, START-HERE.md open in a text editor. On arrival the globe turns to North Macedonia and an arc runs to Germany. Then arrow right.",
       Remember: "No word about tools yet. The case first.",
     }),
     note("Host", {
@@ -163,10 +163,10 @@ const SOURCE_NOTES = {
       Remember: "Under the bar it says company_profile.md, l. 12. Even the facts of the case carry file and line. That is the method of this hour.",
     }),
     note("Three requests", {
-      Time: "2 min",
+      Time: "1 min",
       Say: "The case reference date is 16.10.2026. This is not today’s workshop date. We sit in the winery's office, seven days before the return to Nordvik. Three requests are on the desk. The importer in Gothenburg sends 8 questions, due on 23.10.; it does not count answers without evidence. Nordvik offers the wines to Vinmonopolet in Norway; the 420 g rule applies there. What fails the rule, Nordvik cannot offer there. The winery's in-house marketing wants to print 7 claims on new labels for Germany, after 27.09. The bank in Skopje needs 6 fields for the solar loan of 8,550,000 denar, every estimate marked.",
       Students: "Call it out: which request do you answer first?",
-      Cue: "On arrival: the October timeline, 16.10. is marked. Arrow 1: envelope from Sweden with the 420 g rule. Arrow 2: envelope from marketing with the UWG. Arrow 3: envelope from the bank with the EBRD. Arrow 4: 8, 7 and 6 become 21 ESG answers: evidence for customer requirements, environmental claims and the solar loan. The 53 % is the combined sales share concerned, not a measured loss.",
+      Cue: "On arrival: the October timeline, 16.10. is marked. Arrow 1: envelope from Sweden with the 420 g rule. Arrow 2: envelope from marketing with the UWG. Arrow 3: envelope from the bank with the EBRD. Arrow 4: 8, 7 and 6 become 21 items to check: 8 customer questions, 7 draft marketing claims, 6 loan fields. evidence for customer requirements, environmental claims and the solar loan. The 53 % is the combined sales share concerned, not a measured loss.",
       Remember: "Answer: Nordvik first, due 23.10. But all three ask for the same facts; electricity is in all three. Hence one folder, and one register in step 4.",
     }),
     note("Today", {
@@ -178,10 +178,10 @@ const SOURCE_NOTES = {
     }),
     note("The rule: one sentence against its file", {
       Time: "4 min",
-      Say: "A sentence from marketing, for the shelf card: “Certified organic vineyards”. The certificate is in the folder. Does the claim hold? An answer is covered only when four checks hold: quote, period, scope, approval. The reference date is 16.10.2026, the day in the case.",
+      Say: "Our marketing team asks us to check its draft for a shelf card used with all wines: “Certified organic vineyards”. We hold a copy of the control body's certificate. Twelve of forty means hectares of vineyard land, not bottles. Does that certificate support our marketing draft? An answer is covered only when four checks hold: quote, period, scope, approval. The reference date is 16.10.2026, the day in the case.",
       Students: "Compare the certificate with the claim: quote, period, scope and approval.",
-      Cue: "On arrival: bottle and source-check question. Name the four checks. Arrow 1: the wire from the sentence to the file. Arrow 2: quote holds. Arrow 3: period fails, 46 days expired. Arrow 4: scope fails, 12 of 40 ha. Arrow 5: approval holds, GAP, must not go out. Arrow 6: the three statuses.",
-      Remember: "The certificate was there and still does not cover the sentence. The weakest part counts. The cited line decides.",
+      Cue: "On arrival: our marketing draft and the source-check question. Name the four checks. Arrow 1: the wire from the sentence to the file. Arrow 2: quote holds. Arrow 3: period fails, 46 days expired. Arrow 4: scope fails, 12 of 40 ha. Arrow 5: approval holds, GAP, must not go out. Arrow 6: the three statuses.",
+      Remember: "The certificate was issued by the control body; the proposed claim comes from our marketing team. It has expired and covers 12 hectares, not 12 bottles. Renewal does not extend it to the other 28 hectares or to winemaking. GAP means evidence is missing for part of the claim.",
     }),
     note("The kit", {
       Time: "2 min",
@@ -192,23 +192,23 @@ const SOURCE_NOTES = {
     }),
     note("Review on paper", {
       Time: "10 min",
-      Say: "Ten minutes, in pairs, on paper, without Claude. Eight defects hide in the 13 files. One file looks odd and is clean.",
-      Students: "In pairs with the printout of the 13 files. For each defect write: file, line, which check fails.",
-      Cue: "On arrival the headline only asks: what is wrong? Reveal only after the pairs have compared. Arrow 1: eight flags, the counter runs to 8. Arrow 2: the clean file gets a ring.",
-      Remember: "Bring one printout of the 13 files from files/ per pair. No printout: the demo loehrning.ai/en/demos/esg-berichte-mit-ki shows the same 13 files in the browser; check beforehand that its file view shows no solution. The clean file is water_2025.csv: 12 of 12 months, the high September is the harvest. Name defect 2 out loud: 12 rows are 11 months.",
+      Say: "Ten minutes, in pairs, on paper, without Claude. Check the evidence for our three requests: data errors, evidence gaps and business problems. There are eight issues to check, not eight incorrect files. The 560 g record is correct; the bottle fails the customer requirement. Water is complete. Claude will then use the same unchanged files.",
+      Students: "In pairs with the printout of the 13 files. For each issue write: file, line, which requested answer is affected and why.",
+      Cue: "On arrival the headline only asks: what is wrong? Reveal only after the pairs have compared. Arrow 1: eight flags, the counter runs to 8. Arrow 2: the complete file gets a ring.",
+      Remember: "Bring one printout of the 13 files from files/ per pair. No printout: the demo loehrning.ai/en/demos/esg-berichte-mit-ki shows the same 13 files in the browser; check beforehand that its file view shows no solution. The complete file is water_2025.csv: 12 of 12 months, the high September is the harvest. Name the duplicate explicitly: 12 rows are 11 months.",
     }),
     note("Create the project", {
       Time: "4 min",
       Say: "Now the folder goes to Claude. I create the project live: instructions, 13 files, code execution. The requests do not go into the project.",
       Students: "Call it out: why do the requests stay out of the project?",
-      Cue: "Before switching: read strip items 1 to 4 out loud. Cmd+Tab to Claude Desktop: 1 Projects, “New Project”, name “Crvena Zemja Evidence”. 2 “Set project instructions”: paste the whole of project-instructions.md, “Save instructions”. 3 Project knowledge “+”: pick the 13 files from files/. 4 Settings, Capabilities: “Code execution and file creation” is on. Back on the deck: Arrow 1 instructions, arrow 2 files and the you-explain line, arrow 3 switch.",
-      Remember: "The requests ask, they prove nothing; they go into the message in every step. Keep a finished project as a backup in case the upload stalls. If a .md file does not upload, rename it to .txt. Before real company data: check the privacy settings. If access, usage limits or an outage block Claude: open /en/demos/esg-berichte-mit-ki, select the matching step and identify it as a recording. Return to the deck to check sources.",
+      Cue: "Before switching: read strip items 1 to 4 out loud. Cmd+Tab to Claude Desktop: 1 Projects, “New Project”, name “Crvena Zemja Evidence”. 2 “Instructions”, “Edit”: paste the whole of project-instructions.md, “Save instructions”. 3 Project knowledge “+”: pick the 13 files from files/. 4 Settings, Capabilities: “Run code in the cloud” is on. Back on the deck: Arrow 1 instructions, arrow 2 files and the you-explain line, arrow 3 switch.",
+      Remember: "Files supply company knowledge; the skill supplies the checking method; project instructions set context and date. Requests ask, they prove nothing; they go into the message in every step. Keep a finished project as a backup in case the upload stalls. If a .md file does not upload, rename it to .txt. Before real company data: check the privacy settings. If access, usage limits or an outage block Claude: open /en/demos/esg-berichte-mit-ki, select the matching step and identify it as a recording. Return to the deck to check sources.",
     }),
     note("Step 1: The importer's questionnaire", {
       Time: "7 min",
       Say: "First check whether the electricity records cover the full year. Then I run Claude. A new chat in the project, the questionnaire attached, then the prompt from START-HERE.md, Step 1.",
       Students: "As soon as the code shows 12 rows and 11 months, before Claude answers, check: do lines 3 to 14 of the electricity file cover all 12 months?",
-      Cue: "Before switching: read strip items 1 to 4 out loud. On the deck: the full-year source check. Cmd+Tab to Claude Desktop: 1 in the project “New chat”. 2 “+”, “Add files or photos”: requests/1-nordvik-questionnaire.md. 3 send prompt 1 from START-HERE.md (or “Copy” on the deck). While Claude works, open the code box: 12 rows, 11 months; now ask whether lines 3 to 14 cover all 12 months. 4 open electricity_2025.csv in project knowledge. Back on the deck: Arrow 1 questionnaire attached. Arrow 2 prompt and code, the you-check line appears. Arrow 3 answer and table. Arrow 4 result 5, 1, 2.",
+      Cue: "Before switching: read strip items 1 to 4 out loud. On the deck: the full-year source check. Cmd+Tab to Claude Desktop: 1 in the project “New chat”. 2 “+”, “Upload or add files”, “Upload from computer”: requests/1-nordvik-questionnaire.md. 3 send prompt 1 from START-HERE.md (or “Copy” on the deck). While Claude works, open the code box: 12 rows, 11 months; now ask whether lines 3 to 14 cover all 12 months. 4 open electricity_2025.csv in project knowledge. Back on the deck: Arrow 1 questionnaire attached. Arrow 2 prompt and code, the you-check line appears. Arrow 3 answer and table. Arrow 4 result 5, 1, 2.",
       Remember: "Q6 is COVERED and still bad news: the reserve bottle weighs 560 g. Covered means proven, not good. Q1 as WEAK with September named is also acceptable. If the live run differs from the slide, that difference is the discussion. If Claude runs longer than 3 minutes, continue on the slide.",
     }),
     note("Step 2: Marketing claims", {
@@ -248,7 +248,7 @@ const SOURCE_NOTES = {
     }),
     note("Take home", {
       Time: "3 min",
-      Say: "On 23.10. Nordvik gets every answer with file and line, every gap with the missing document named. Kit, skill and demo go home with you. At home you do the five steps yourselves, with your own Claude and the same prompts. Upload the skill at claude.ai/customize/skills: “+”, “Create skill”, “Upload a skill”. Never mix real files with the training files.",
+      Say: "In the fictional case, Nordvik is due a response on 23.10.2026: every answer with file and line, every gap with the missing document named. Kit, skill and demo go home with you. At home you do the five steps yourselves, with your own Claude and the same prompts. Upload esg-evidence (English) at claude.ai/customize/skills: “Add skill”, “Upload skill”. Never mix real files with the training files.",
       Students: "Scan the QR code. At home: unzip the kit, create the project, prompts 1 to 5.",
       Cue: "On arrival: the Nordvik sentence, then kit, skill and demo, the QR code, the “At home” line. Arrow 1: a person checks and signs every answer.",
       Remember: "The exercise date stays 16.10.2026. Change it for your own cases. The demo runs in the browser, without AI.",
@@ -261,4 +261,12 @@ const SOURCE_NOTES = {
 
 // Establish company and decision before the host biography and the ESG primer.
 const ORDER = [0, 3, 4, 1, 2, ...Array.from({ length: 15 }, (_, i) => i + 5)];
-export const NOTES = Object.fromEntries(Object.entries(SOURCE_NOTES).map(([lang, notes]) => [lang, ORDER.map((i) => notes[i])]));
+const QUESTION_EXAMPLES = {
+  de: note("Was sollen wir beantworten?", { Time: "1 min", Say: "Das sind Auszüge aus den drei Anfragedateien. Der Importeur fragt nach Strom, Beschäftigten und Korruptionsfällen: Umwelt, Soziales und Unternehmensführung. Unser Marketing schlägt Aussagen vor und bittet uns um Prüfung vor Veröffentlichung. Die Bank will Stromdaten und eine ausdrücklich als Schätzung gekennzeichnete Amortisation. Noch keine Antworten zeigen. Derselbe Strombeleg wird später für Kunde und Bank gebraucht.", Students: "Die drei Aufträge unterscheiden: Fakten beantworten, Werbeentwurf prüfen, Kreditformular ausfüllen.", Cue: "Die sieben Beispiele vorlesen. Sie kommen direkt aus den Kit-Dateien, mit denselben Kennungen Q1, Q3, Q5, C1, C3, F2 und F4. Jetzt ist klar, wofür wir unsere Dateien prüfen.", Remember: "Sieben Beispiele von 21 Prüfpunkten; die Marketingaussagen sind ungeprüfte Entwürfe." }),
+  en: note("What are we being asked?", { Time: "1 min", Say: "These are excerpts from the three request files. The importer asks about electricity, employees and corruption: environmental, social and governance topics. Our marketing team proposes claims and asks us to check them before publication. The bank needs electricity data and an explicitly estimated payback. Show no answers yet. The same electricity evidence will later support both customer and bank responses.", Students: "Distinguish the three tasks: answer factual questions, check draft claims, complete a loan form.", Cue: "Read the seven examples. They are taken directly from the kit files, with the same identifiers Q1, Q3, Q5, C1, C3, F2 and F4. The room now knows why we need to check our files.", Remember: "Seven examples of 21 items; the marketing statements are unapproved drafts." }),
+};
+export const NOTES = Object.fromEntries(Object.entries(SOURCE_NOTES).map(([lang, notes]) => {
+  const ordered = ORDER.map((i) => notes[i]);
+  ordered.splice(3, 0, QUESTION_EXAMPLES[lang]);
+  return [lang, ordered];
+}));

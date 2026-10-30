@@ -48,6 +48,28 @@ export function prepareStartGuide(locale, source) {
   text = text.replace(/^- (?:Etwa 90 Minuten|About 90 minutes)[^\n]*/m, g.time);
   text = text.replace("| `mitnehmen/` | Skill, Vorlagen und Checkliste für deine eigene Firma |", "| `mitnehmen/` | Vorlagen und Checkliste für deine eigene Firma |");
   text = text.replace("| `take-home/` | skill, templates and checklist for your own company |", "| `take-home/` | templates and checklist for your own company |");
+  text = text.replace(/(?:The files contain 8 defects\. One file looks odd and is fine\.|Die Dateien enthalten 8 Mängel\. Eine Datei sieht auffällig aus und ist sauber\.)/,
+    locale === "de" ? "Prüfe 8 Punkte: Datenfehler, Beleglücken und Geschäftsprobleme. Eine auffällige Datei ist vollständig." : "Check 8 issues: data errors, evidence gaps and business problems. One unusual file is complete.");
+  if (locale === "en") text = text.replaceAll("esg-nachweise", "esg-evidence").replace("one skill for German and English", "the fully English skill for this kit");
+  else text = text.replace("ein Skill für Deutsch und Englisch", "der deutschsprachige Skill für dieses Kit");
+  text = text.replace("Prüfe 8 Punkte:", "Prüfe 8 Prüfpunkte:");
+  const role = locale === "de"
+    ? "Rolle: Wir sind das Büro des Weinguts. Der Importeur schickt 8 Fragen, unser Marketing bittet um Prüfung von 7 Werbeentwürfen, die Bank braucht 6 Kreditfelder. Das sind 21 Prüfpunkte. Unsere Dateien liefern die Fakten, der Skill liefert die Prüfmethode. Wir prüfen die vorhandenen Dateien zuerst selbst und dann mit Claude; eine belegte schlechte Nachricht ist kein Datenfehler."
+    : "Role: we are the winery's office. The importer sends 8 questions, our marketing team asks us to check 7 draft claims, and the bank needs 6 loan fields. That is 21 items to check. Our files supply the facts; the skill supplies the checking method. We review the existing files ourselves, then with Claude; a proven bad result is not a data error.";
+  text = text.replace(/\nRole: we are the winery's office\.[^\n]*\n|\nRolle: Wir sind das Büro des Weinguts\.[^\n]*\n/g, "\n");
+  text = text.replace(/(## (?:Der Fall|The case))\n+/, `$1\n${role}\n\n`);
+  text = text.replace("The files contain 8 defects. One file looks odd and is fine.", "Find 8 issues affecting our answers: data errors, evidence gaps and business problems. One unusual file is complete.");
+  text = text.replace("In den Dateien stecken 8 Mängel. Eine Datei sieht auffällig aus und ist in Ordnung.", "Prüfe 8 Punkte: Datenfehler, Beleglücken und Geschäftsprobleme. Eine auffällige Datei ist vollständig.");
+  text = text.replace("Schreib zu jedem Mangel: Datei, Zeile, was nicht stimmt, und welche Prüfung scheitert", "Schreib zu jedem Prüfpunkt: Datei, Zeile, welche Antwort betroffen ist, und welche Prüfung scheitert");
+  text = text.replace("For each defect, write: file, line, what is wrong, and which check fails", "For each issue, write: file, line, which answer is affected, and which check fails");
+  text = text.replace("Schreib die saubere Datei dazu.", "Schreib die vollständige Datei dazu.").replace("Write down the clean file too.", "Write down the complete file too.");
+  // Keep the shared legacy-layout instructions; name the Desktop labels verified on 30 Oct.
+  const desktop = locale === "de"
+    ? "Desktop-Layout, geprüft am 30.10.2026: Settings → Capabilities → Run code in the cloud muss eingeschaltet sein. Customize → Skills → Add skill → Upload skill, ZIP wählen, Upload; der Skill muss eingeschaltet sein. Im Projekt: Instructions → Edit, den Inhalt der Projektanweisungen einfügen und Save instructions. Context → Add → Upload from device → Files lädt nur die 13 Nachweisdateien. Anfragen im Chat über + → Upload or add files → Upload from computer anhängen. Haiku wählen. Falls CSV-Dateien als nicht lesbar gemeldet werden: stoppen; keine Werte aus Entwürfen übernehmen. Dieser Desktop-Test zeigte CSV-Zugriffsfehler; der Ablauf ist noch nicht zuverlässig bestätigt."
+    : "Desktop layout, checked on 30.10.2026: Settings → Capabilities → Run code in the cloud must be on. Customize → Skills → Add skill → Upload skill, choose the ZIP, then Upload; the skill must be on. In the project: Instructions → Edit, paste the contents of the project instructions, then Save instructions. Context → Add → Upload from device → Files adds only the 13 evidence files. Attach requests in the chat through + → Upload or add files → Upload from computer. Select Haiku. If CSV files are reported unreadable, stop; do not substitute draft figures. This Desktop test exposed CSV access failures; reliable completion is not yet established.";
+  const heading = locale === "de" ? "## Claude einrichten" : "## Set up Claude";
+  text = text.replace(/\n+(?:Desktop-Layout, geprüft am|Desktop layout, checked on) 30\.10\.2026:[^\n]*\n+/g, "\n\n");
+  text = text.replace(heading, `${heading}\n\n${desktop}`);
   return `${text}\n\n${g.extra}`;
 }
 

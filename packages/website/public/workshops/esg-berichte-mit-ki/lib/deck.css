@@ -656,3 +656,25 @@ em{font-style:normal}
 .rule__q em{color:var(--accent)}
 .rule__hint{margin:0;font:500 30px/1.3 var(--sans);color:var(--muted)}
 .focus__label{margin:0;font:600 20px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+
+/* W04: name the actors and keep the draft claim visible through the status reveal. */
+.rule__owner{position:absolute;top:85px;left:12px;right:12px;margin:0;font:700 25px/1.25 var(--sans)}
+.rule__card{top:215px;padding:28px 10px;min-height:190px}
+.rule__card .bottle-label__year{font-size:14px;white-space:normal;text-align:center}
+.rule__source{position:absolute;top:460px;left:18px;right:12px;margin:0;font:500 19px/1.45 var(--sans);color:var(--muted)}
+.stile p{font-size:29px;line-height:1.25}
+.stiles__end{font-size:46px;line-height:1.15}
+.ds__purpose{position:absolute;bottom:4px;left:0;right:0;margin:0;font:500 24px/1.35 var(--sans);color:var(--muted)}
+.kitx__role{font-size:25px;line-height:1.3}
+.rq__end{font-size:34px}
+
+/* Concrete request excerpts before learners inspect the evidence. */
+.request-examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.request-example{display:grid;align-content:start;gap:22px;min-height:620px;padding:28px;border:1px solid var(--e-hair);border-radius:24px}
+.request-example__task{margin:0;font:700 28px/1.2 var(--sans)}
+.request-example__rows{display:grid;gap:24px}
+.request-example__rows > div{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;padding-top:18px;border-top:1px solid var(--e-hair)}
+.request-example__rows b{font:700 23px/1.3 var(--mono);color:var(--accent)}
+.request-example__rows p{margin:0;font:500 27px/1.35 var(--sans)}
+.request-example__source{margin:0;font:500 17px/1.3 var(--mono);overflow-wrap:anywhere;color:var(--muted)}
+.request-examples__point{grid-column:1/-1;margin:6px 0 0;font:600 28px/1.25 var(--sans)}

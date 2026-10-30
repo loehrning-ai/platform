@@ -42,7 +42,7 @@ export const VALUES = {
   },
 };
 
-export const MAIN_TOTAL = 17;
+export const MAIN_TOTAL = 18;
 
 /** The edition context every slide function receives. */
 export function context(lang, kit) {

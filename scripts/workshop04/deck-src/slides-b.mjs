@@ -36,7 +36,7 @@ export function project(c) {
   });
   const main = `<div class="pjv"><p class="pjv__crumb">Projects · ${c.t("neu", "new")}</p><h3 class="pjv__title"><span${s(0, { fx: "type", win: ".15,.75", ease: "linear" })}>${esc(c.kit.project)}</span></h3>
 <div class="pjv__grid"><div class="pjv__card"><p class="pjv__h">${c.ico("policy")}Instructions</p><p class="pjv__src"><span class="pjv__f pjv__slot"><i>md</i>${instrName}</span></p>${rules.map((rule, i) => `<p class="pjv__rule${i === 0 ? " pjv__rule--date" : ""}"${s(1, { fx: "pop", win: stagger(i, rules.length, 0.3, 0.45, 1) })} style="--origin:left center">${esc(rule)}</p>`).join("")}</div>
-<div class="pjv__card pjv__card--files"><p class="pjv__h">${c.ico("book")}Project knowledge<em><b${s(2, { fx: "none", win: ".1,1", count: "0,13,0" })}>13</b> files</em></p><div class="pjv__files">${slots}</div></div></div><p class="pjv__capability"${s(3, { fx: "pop", win: "0,.6" })}>Settings → Capabilities<br><b>Code execution and file creation</b> · ${c.t("eingeschaltet", "on")}</p></div>`;
+<div class="pjv__card pjv__card--files"><p class="pjv__h">${c.ico("book")}Project knowledge<em><b${s(2, { fx: "none", win: ".1,1", count: "0,13,0" })}>13</b> files</em></p><div class="pjv__files">${slots}</div></div></div><p class="pjv__capability"${s(3, { fx: "pop", win: "0,.6" })}>Settings → Capabilities<br><b>Run code in the cloud</b> · ${c.t("eingeschaltet", "on")}</p></div>`;
   return section(
     { id: "projekt", label: c.t("Projekt anlegen", "Create the project"), steps: 3, durations: "1700,1700,3200,1300" },
     `${liveHead(c, c.t("Einrichten", "Set up"), [
@@ -44,14 +44,14 @@ export function project(c) {
       [c.t("Anweisungen einfügen", "Paste instructions"), 1, ".05,.4", 2, "0,.3"],
       [c.t("13 Dateien laden", "Upload 13 files"), 2, ".05,.4", 3, "0,.3"],
       ["Settings → Capabilities", 3, ".1,.5"],
-    ], c.t("Das Kit wird ein <em>Claude-Projekt</em>", "The kit becomes a <em>Claude project</em>"))}
+    ], c.t("Unsere Belege ins <em>Claude-Projekt</em>", "Our evidence goes into a <em>Claude project</em>"))}
 <div class="stage pj">
 <div class="kit-folder pjk"><p class="kit-folder__head">${c.ico("folder")}${c.t("ordner/", "files/")}<span class="file__meta" style="margin-left:auto">13</span></p><ol class="pjk__list">${list}</ol><div class="pjk__instr"${s(1, { fx: "dim", win: "0,.4" })}>${file("md", instrName, "")}</div>${job(c, c.t("Ihr erklärt:", "You explain:"), c.t("Warum kommen die Anfragen nicht ins Projekt?", "why do the requests stay out of the project?"), s(2, { fx: "pop", win: ".55,1" }) + ' style="--origin:left center"', "pjk__job")}</div>
 ${cw(c, { crumbs: ["Projects", c.kit.project], side, cls: "pj__cw", attrs: s(0, { fx: "fly", win: "0,.6" }), style: "--dy:50px;--s:.97" }, main)}
 ${fly(`<i>md</i>${instrName}`, g.instr, { k: 1, win: "0,.42", cls: "pjv__f", lift: 120 })}
 ${flyers}
 </div>
-${foot(c, 10)}`,
+${foot(c, 11)}`,
   );
 }
 
@@ -119,7 +119,7 @@ ${focus(c, c.t("Reichen die Stromdaten für das <em>ganze Jahr</em>?", "Do the e
 </div>
 ${fly(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), g.compose, { k: 1, win: ".3,.7", out: 2, outWin: "0,.08", cls: "fly--cw", lift: 140 })}
 </div>
-${foot(c, 11)}`,
+${foot(c, 12)}`,
   );
 }
 
@@ -171,7 +171,7 @@ ${focus(c, c.t("Erst die Verbotsliste. Dann den <em>Beleg</em> prüfen.", "Check
 </div>
 <div class="stickers">${stickers}<div class="stickers__cell"><p class="stickers__end"${s(4, { fx: "pop", win: ".2,.8" })}><b${s(4, { fx: "none", win: ".2,.8", count: "0,2,0" })}>2</b>${c.t("dürfen raus.", "may go out.")}</p>${job(c, c.t("Ihr prüft C6:", "You check C6:"), c.t("Welches Wort muss weg?", "which word must go?"), s(3, { fx: "pop", win: ".55,1", out: 4, outWin: "0,.3" }) + ' style="--origin:left center"', "stickers__job")}</div></div>
 </div>
-${foot(c, 12)}`,
+${foot(c, 13)}`,
   );
 }
 
@@ -220,7 +220,7 @@ ${cw(c, { crumbs: [c.kit.project, c.t("Bankformular", "Bank form")], side: cwSid
 <p class="fx__eq"${s(3, { fx: "fade", win: ".25,.4" })}>F4 = ${slot("pvPrice", 0)} ÷ ( ${slot("pvYieldKwh", 1)} × ${slot("tariff", 2)} ) = <b${s(3, { fx: "pop", win: ".75,1" })}>${c.v.payback}</b></p>
 ${job(c, c.t("Ihr prüft:", "You check:"), c.t("Wer hat das Angebot unterschrieben?", "who signed the offer?"), s(3, { fx: "pop", win: ".8,1" }) + ' style="--origin:left center"', "fx__job")}</div></div>
 </div>
-${foot(c, 13)}`,
+${foot(c, 14)}`,
   );
 }
 
@@ -259,7 +259,7 @@ ${answer}
       [c.t("Anfragen anhängen", "Attach requests"), 0, ".35,.7", 1, "0,.1"],
       [c.t("Prompt 4 senden", "Send prompt 4"), 1, ".05,.35", 2, "0,.1"],
       [c.t("Excel öffnen", "Open Excel file"), 2, ".05,.4"],
-    ], c.t("21 Antworten, ein Register", "21 answers, one register"))}
+    ], c.t("21 Prüfpunkte, ein Register", "21 checked items, one register"))}
 <div class="stage reg">
 <div class="reg__left">${cw(c, { crumbs: [c.kit.project, c.t("Nachweisregister", "Evidence register")], side: cwSide(c, { chats: chats(c, 4) }), cls: "reg__cw", attrs: s(0, { fx: "fly", win: "0,.5" }), style: "--dy:60px;--s:.97" }, thread)}</div>
 <div class="reg__right">
@@ -270,7 +270,7 @@ ${rows}
 ${job(c, c.t("Ihr prüft:", "You check:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
 </div>
 </div>
-${foot(c, 14)}`,
+${foot(c, 15)}`,
   );
 }
 
@@ -324,7 +324,7 @@ ${job(c, c.t("Ihr rechnet:", "You calculate:"), `${c.dv("meterNew")} minus ${c.d
 <p class="late__end"${s(4, { fx: "pop", win: ".7,1" })}>${c.t("Register", "Register")}: ${c.dv("afterBelegt")} ${c.status.belegt} · ${c.dv("afterSchwach")} ${c.status.schwach} · ${c.dv("afterLuecke")} ${c.status.luecke}</p>
 </div>
 </div>
-${foot(c, 15)}`,
+${foot(c, 16)}`,
   );
 }
 
@@ -340,7 +340,7 @@ export function measured(c) {
 <ul class="ms__chips">${chip("0,.5", "check", c.t("<b>21 von 21</b> Status richtig · 3 von 3 Läufen", "<b>21 of 21</b> statuses right · 2 of 3 runs"))}${chip(".2,.7", "search", c.t("September-Lücke gefunden nach <b>67 s</b>", "September gap found after <b>52 s</b>"))}</ul>
 <p class="ms__tag"${s(2, { win: ".5,1" })}>${c.ico("code")}${c.t("im Terminal gemessen, gleiche Prompts", "measured in the terminal, same prompts")}</p>
 </div>
-${foot(c, 16)}`,
+${foot(c, 17)}`,
   );
 }
 
@@ -353,11 +353,11 @@ export function takeHome(c, qr) {
 <div class="stage th">
 <p class="th__case"${s(0, { fx: "fade", win: "0,.35" })}>${c.ico("envelope")}<span>${c.t("Am 23.10. geht an Nordvik: jede Antwort mit Datei und Zeile, jede Lücke mit dem Dokument, das fehlt.", "On 23.10. Nordvik gets every answer with file and line, every gap with the missing document named.")}</span></p>
 <p class="subline th__sub"${s(0, { fx: "fade", win: ".6,1" })}>${c.t("Zu Hause: dieselben fünf Prompts mit eurem Claude.", "At home: the same five prompts with your Claude.")}</p>
-<div class="th__tiles">${tile(0, `<span class="th__v th__v--kit">${c.ico("zip")}</span>`, "Kit", c.kit.zip)}${tile(1, `<span class="th__v">${c.ico("spark")}</span>`, "Skill", "esg-nachweise")}${tile(2, mini, "Demo", c.t("im Browser, ohne KI", "in the browser, no AI"))}</div>
+<div class="th__tiles">${tile(0, `<span class="th__v th__v--kit">${c.ico("zip")}</span>`, "Kit", c.kit.zip)}${tile(1, `<span class="th__v">${c.ico("spark")}</span>`, "Skill", c.de ? "esg-nachweise · Deutsch" : "esg-evidence · English")}${tile(2, mini, "Demo", c.t("im Browser, ohne KI", "in the browser, no AI"))}</div>
 <figure class="qr th__qr"${s(0, { fx: "pop", win: ".55,1" })}>${qr}<figcaption><span>loehrning.ai${c.site}/demos/</span><span>esg-berichte-mit-ki</span></figcaption></figure>
 <p class="th__human"${s(1, { fx: "pop", win: "0,.6" })}>${c.ico("shield")}${c.t("Ein Mensch prüft und unterschreibt jede Antwort.", "A person checks and signs every answer.")}</p>
 </div>
-${foot(c, 17)}`,
+${foot(c, 18)}`,
   );
 }
 

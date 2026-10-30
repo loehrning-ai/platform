@@ -32,6 +32,7 @@ const WEBSITE = path.join(REPO_ROOT, "packages/website");
 export const WORKSHOP_RELATIVE = "packages/website/public/workshops/esg-berichte-mit-ki";
 export const KIT_V3_RELEASE_DATE = "2026-10-25";
 export const SKILL_NAME = "esg-nachweise";
+export const SKILL_NAMES = { de: SKILL_NAME, en: "esg-evidence" };
 const CLAUDE_UI_PLACEHOLDER = "{{CLAUDE_UI}}";
 
 /** Case files per edition: the same 22 files, line for line, in two languages. */
@@ -95,7 +96,7 @@ export const PLATFORM_FILES = {
   },
   en: {
     "evidence-check.md": "content/vorlagen/en/esg-nachweisprobe.md",
-    "claude/esg-nachweise/SKILL.md": `content/skills/${SKILL_NAME}/SKILL.md`,
+    "claude/esg-evidence/SKILL.md": "content/skills/esg-evidence/SKILL.md",
     "take-home/project-instructions-template.md": "content/vorlagen/en/esg-projektanweisungen.md",
     "take-home/folder-checklist.md": "content/vorlagen/en/esg-ordner-checkliste.md",
     "take-home/email-missing-document.md": "content/vorlagen/en/esg-mail-fehlendes-dokument.md",
@@ -149,7 +150,7 @@ export function kitEntries(locale, sourceRoot) {
     if (name === KITS[locale].start) {
       const text = bytes.toString("utf8");
       if (text.split(CLAUDE_UI_PLACEHOLDER).length !== 2) throw new Error(`${name} must hold ${CLAUDE_UI_PLACEHOLDER} exactly once`);
-      bytes = Buffer.from(prepareStartGuide(locale, text.replace(CLAUDE_UI_PLACEHOLDER, claudeUiMarkdown(locale, SKILL_NAME).trimEnd())));
+      bytes = Buffer.from(prepareStartGuide(locale, text.replace(CLAUDE_UI_PLACEHOLDER, claudeUiMarkdown(locale, SKILL_NAMES[locale]).trimEnd())));
     }
     if (name.endsWith(".md")) bytes = Buffer.from(prepareCaseGuide(locale, name, bytes.toString("utf8")));
     if (name.endsWith(".png")) assertPlainPng(name, bytes);
@@ -186,9 +187,9 @@ export function buildKits(sourceRoot) {
 export function refreshPublishedKits() {
   return Object.fromEntries(["de", "en"].map((locale) => {
     const entries = readKitArchive(readFileSync(zipPath(locale)), { prefix: `${KITS[locale].name}/` });
-    const refreshed = entries.map(([name, bytes]) => {
+    const refreshed = entries.filter(([name]) => !name.startsWith("claude/")).map(([name, bytes]) => {
       if (name === KITS[locale].start) {
-        const currentUi = bytes.toString("utf8").replace(/(## (?:Claude einrichten|Set up Claude)\n)[\s\S]*?(?=\n## (?:Mit Codex|With Codex)|$)/, (_, heading) => `${heading}\n${claudeUiMarkdown(locale, SKILL_NAME).trimEnd()}\n`);
+        const currentUi = bytes.toString("utf8").replace(/(## (?:Claude einrichten|Set up Claude)\n)[\s\S]*?(?=\n## (?:Mit Codex|With Codex)|$)/, (_, heading) => `${heading}\n${claudeUiMarkdown(locale, SKILL_NAMES[locale]).trimEnd()}\n`);
         bytes = Buffer.from(prepareStartGuide(locale, currentUi));
       }
       if (PLATFORM_FILES[locale][name]) bytes = readPlainFile(WEBSITE, PLATFORM_FILES[locale][name]);
@@ -196,6 +197,9 @@ export function refreshPublishedKits() {
       assertClean(`${zipName(locale)}/${name}`, bytes);
       return [name, bytes];
     });
+    for (const [name, source] of Object.entries(PLATFORM_FILES[locale])) {
+      if (!refreshed.some(([entry]) => entry === name)) refreshed.push([name, readPlainFile(WEBSITE, source)]);
+    }
     return [locale, buildKitArchive(refreshed, { isoDate: KIT_V3_RELEASE_DATE, prefix: `${KITS[locale].name}/` })];
   }));
 }

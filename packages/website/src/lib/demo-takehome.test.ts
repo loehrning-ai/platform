@@ -59,7 +59,7 @@ describe("DEMO_TAKEHOME", () => {
         expect(readZipText(zip, kit.instructions), `${kit.href}: ${kit.instructions}`).not.toBeNull();
         const install = readZipText(zip, kit.installDoc) ?? "";
         expect(install, `${kit.href}: ${kit.installDoc} embeds claudeUiMarkdown(${locale})`).toContain(
-          claudeUiMarkdown(locale, entry.skill.name),
+          claudeUiMarkdown(locale, entry.skill.locales?.[locale] ?? entry.skill.name),
         );
         for (const file of kit.shown) expect(readZipText(zip, file), `${kit.href}: ${file}`).not.toBeNull();
       }

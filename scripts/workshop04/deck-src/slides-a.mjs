@@ -33,7 +33,7 @@ export function host(c) {
 <div class="host__career" role="group" aria-label="${c.t("Werdegang", "Career")}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true" data-step="0" data-win="0.35,0.9" data-fx="line"></i><ol class="host__stops">${stops}</ol></div>
 <p class="host__msc" data-step="0" data-win="0.5,0.85">${c.ico("cap")}<b>${c.t("M.Sc. Informatik", "M.Sc. Computer Science")}</b><span>${c.t("FAU Erlangen-Nürnberg", "FAU Erlangen-Nuremberg")}</span></p>
 <p class="host__line" data-step="0" data-win="0.6,0.95">${c.ico("shield")}<span>${c.t("Erfundener Fall. Keine Daten oder Systeme eines Arbeitgebers.", "Invented case. No employer data or systems.")}</span></p></div>
-${foot(c, 4)}</div>`,
+${foot(c, 5)}</div>`,
   );
 }
 
@@ -74,7 +74,7 @@ ${beat(3, -584, "18.12.2025", globe, c.t("Grüne Kredite für KMU in Nordmazedon
 <p class="src beats__src"${s(1, { win: ".5,1", out: 4, outWin: "0,.3" })}>${c.t("Quellen im Anhang 1", "Sources in appendix 1")}</p>
 <p class="beats__end"${s(4, { fx: "fly", win: ".42,.8" })} style="--dy:60px;--s:.94">${c.t("Jede Aussage braucht jetzt einen", "Every claim now needs")} <em class="beats__word"${s(4, { fx: "pop", ease: "spring", win: ".62,1" })}>${c.t("Beleg", "evidence")}</em>.</p>
 </div>
-${foot(c, 5)}`,
+${foot(c, 6)}`,
   );
 }
 
@@ -113,7 +113,7 @@ export function winery(c) {
   const big = (key, w, name, n, win) => `<span class="co__lab co__lab--${key}" style="--w:${w}"${s(2, { fx: "glow", win: ".8,1" })}>${name} <b data-keep${s(2, { fx: "none", win, count: `0,${n},0` })} data-count-unit=" %">${n} %</b></span>`;
   return section(
     { id: "weingut", label: c.t("Das Weingut", "The winery"), steps: 2, durations: "1800,1700,2000" },
-    `${head(c.t("16.10.2026 · Der Fall · erfunden", "16.10.2026 · The case · invented"), c.t("Crvena Zemja: ein Weingut in Nordmazedonien", "Crvena Zemja: a winery in North Macedonia"), { size: "m" })}
+    `${head(c.t("Erfundener Fall · Ihr seid das Büro des Weinguts · 16.10.2026", "Fictional case · You are the winery's office · 16.10.2026"), c.t("Crvena Zemja: ein Weingut in Nordmazedonien", "Crvena Zemja: a winery in North Macedonia"), { size: "m" })}
 <div class="stage winery">
 <figure class="winery__card surface surface--strong"${s(0, { fx: "fade", win: "0,.4" })}>${wineryArt()}<figcaption class="winery__cap"><span class="pill">${c.ico("pin")}Kavadarci, Tikveš</span><span class="winery__fam">${c.t("Familienweingut", "family winery")}</span></figcaption></figure>
 <div class="co">
@@ -135,14 +135,14 @@ export function requests(c) {
   const from = [[520, -460], [-620, -120], [0, 560]];
   const rows = c.de
     ? [
-        ["8", "Fragen", "Nordvik Vin AB", "Importeur, Göteborg · Ausschreibung Vinmonopolet", "22 %", "des Umsatzes", "ban", "Ohne Nachweis: nicht gewertet", "scale", "420 g · 01.01.2026"],
-        ["7", "Aussagen", "Marketing des Weinguts", "Etiketten für Deutschland", "31 %", "des Umsatzes", "label", "Druck nach 27.09.2026: Verbotsliste gilt", "label", "UWG · 27.09.2026"],
-        ["6", "Felder", "Banka Povardarie", "Bank in Skopje", "8.550.000", "MKD Solarkredit", "pen", "Solarkredit: jede Schätzung gekennzeichnet", "bank", "EBRD · 18.12.2025"],
+        ["8", "Fragen", "Nordvik Vin AB", "Kunde · Lieferantenfragebogen", "22 %", "des Umsatzes", "ban", "Wir liefern Antworten mit Nachweis", "scale", "420 g · 01.01.2026"],
+        ["7", "Werbeentwürfe", "Unser Marketing", "Bittet uns um Prüfung vor Veröffentlichung", "31 %", "des Umsatzes", "label", "Wir prüfen, welche Aussage belegbar ist", "label", "UWG · 27.09.2026"],
+        ["6", "Formularfelder", "Banka Povardarie", "Kreditgeber · Antrag für unsere Solaranlage", "8.550.000", "MKD Solarkredit", "pen", "Wir liefern Daten und markierte Schätzungen", "bank", "EBRD · 18.12.2025"],
       ]
     : [
-        ["8", "questions", "Nordvik Vin AB", "importer, Gothenburg · Vinmonopolet tender", "22 %", "of sales", "ban", "No evidence: not counted", "scale", "420 g · 01.01.2026"],
-        ["7", "claims", "In-house marketing", "labels for Germany", "31 %", "of sales", "label", "Printed after 27.09.2026: ban list applies", "label", "UWG · 27.09.2026"],
-        ["6", "fields", "Banka Povardarie", "bank in Skopje", "8,550,000", "MKD solar loan", "pen", "Solar loan: every estimate marked", "bank", "EBRD · 18.12.2025"],
+        ["8", "questions", "Nordvik Vin AB", "customer · supplier questionnaire", "22 %", "of sales", "ban", "We supply answers with evidence", "scale", "420 g · 01.01.2026"],
+        ["7", "draft claims", "Our marketing team", "asks us to check before publication", "31 %", "of sales", "label", "We check which claims have evidence", "label", "UWG · 27.09.2026"],
+        ["6", "form fields", "Banka Povardarie", "lender · application for our solar loan", "8,550,000", "MKD solar loan", "pen", "We supply data and labelled estimates", "bank", "EBRD · 18.12.2025"],
       ];
   const env = (i, [n, word, who, role, num, unit, ruleIcon, rule, tagIcon, tag]) => {
     const k = i + 1;
@@ -163,17 +163,34 @@ export function requests(c) {
   const tick = (k, d, text) => `<span class="tl__tick" style="left:${dayX(d)}px"${s(k, { fx: "pop", win: ".7,1" })}><i></i><span>${text}</span></span>`;
   return section(
     { id: "anfragen", label: c.t("Drei Anfragen", "Three requests"), steps: 4, durations: "1600,1700,1700,1700,2600" },
-    `${head(c.t("Der Auslöser · Oktober 2026", "The trigger · October 2026"), c.t("Drei Anfragen brauchen ESG-Nachweise", "Three requests need ESG evidence"), { size: "m" })}
+    `${head(c.t("Der Auslöser · Drei Aufträge an unser Büro", "The trigger · Three tasks for our office"), c.t("Kunde, Marketing und Bank warten auf uns", "Customer, marketing and bank need our answers"), { size: "m" })}
 <div class="stage rqs">
 ${rows.map((row, i) => env(i, row)).join("\n")}
 ${nums}${plus}
-<div class="winery__sum rq__sum"${s(4, { fx: "pop", win: ".52,.8" })}><span class="ico-tile ico-tile--accent">${c.ico("folder")}</span><b class="winery__n"${s(4, { fx: "none", win: ".55,.9", count: "0,21,0" })}>21</b><span class="winery__w">${c.t("Antworten · 1 Ordner", "answers · 1 folder")}</span></div>
-<p class="rq__end"${s(4, { fx: "fly", win: ".66,.92" })} style="--dy:40px;--s:.96">${c.t(`ESG-Nachweise für <b>53 %</b> des Umsatzes und den <em>Solarkredit</em>.`, `ESG evidence for <b>53 %</b> of sales and the <em>solar loan</em>.`)}</p>
+<div class="winery__sum rq__sum"${s(4, { fx: "pop", win: ".52,.8" })}><span class="ico-tile ico-tile--accent">${c.ico("folder")}</span><b class="winery__n"${s(4, { fx: "none", win: ".55,.9", count: "0,21,0" })}>21</b><span class="winery__w">${c.t("Prüfpunkte · unsere Dateien", "items to check · our files")}</span></div>
+<p class="rq__end"${s(4, { fx: "fly", win: ".66,.92" })} style="--dy:40px;--s:.96">${c.t("8 Kundenfragen + 7 Werbeentwürfe + 6 Kreditfelder", "8 customer questions + 7 draft claims + 6 loan fields")}</p>
 <div class="tl"><p class="tl__month"${s(0, { fx: "fade", win: ".1,.5" })}>${c.t("Oktober 2026", "October 2026")}</p><i class="tl__bar"${s(0, { fx: "line", win: ".1,.6" })}></i>
 ${tick(1, 23, c.t("23.10. Rückgabe Nordvik", "23.10. due to Nordvik"))}${tick(2, 14, c.t("14.10. Entwurf vom Marketing", "14.10. draft from marketing"))}
 <span class="tl__pin" style="left:${dayX(16)}px"${s(0, { fx: "pop", ease: "spring", win: ".55,.9" })}><span class="pill pill--accent"${s(4, { fx: "glow", win: ".6,1" })}>${c.ico("calendar")}${c.t("16.10. Fallstichtag", "16.10. Case reference date")}</span><i></i></span></div>
 </div>
 ${foot(c, 3)}`,
+  );
+}
+
+/** Actual excerpts, read from the matching kit's three request files at build time. */
+export function requestExamples(c) {
+  const titles = c.de ? ["Der Importeur fragt", "Unser Marketing fragt", "Die Bank fragt"] : ["The importer asks", "Our marketing team asks", "The bank asks"];
+  const tasks = c.de
+    ? ["Daten für den Lieferantenfragebogen", "Dürfen wir diese Entwürfe veröffentlichen?", "Daten für unseren Solarkredit; Schätzungen markieren"]
+    : ["Data for the supplier questionnaire", "May we publish these draft claims?", "Data for our solar loan; mark estimates"];
+  return section(
+    { id: "beispielfragen", label: c.t("Was sollen wir beantworten?", "What are we being asked?"), steps: 0, durations: "1800" },
+    `${head(c.t("Aus den drei Anfragedateien · 7 von 21 Prüfpunkten", "From the three request files · 7 of 21 items"), c.t("Was wollen sie konkret von uns?", "What are they asking us?"), { size: "m" })}
+<div class="stage request-examples">
+${c.kit.examples.map((example, index) => `<article class="request-example surface surface--strong"><p class="label">${titles[index]}</p><p class="request-example__task">${tasks[index]}</p><div class="request-example__rows">${example.rows.map(([id, text]) => `<div><b>${id}</b><p>${esc(text)}</p></div>`).join("")}</div><p class="request-example__source">${esc(example.file)}</p></article>`).join("")}
+<p class="request-examples__point">${c.t("Jetzt die Belege prüfen. Danach helfen dieselben Dateien bei allen drei Aufträgen.", "Next, check the evidence. The same company files then support all three tasks.")}</p>
+</div>
+${foot(c, 4)}`,
   );
 }
 
@@ -191,8 +208,8 @@ export function today(c) {
     from = at + span.length;
   });
   const stops = (c.de
-    ? [["scale", "Regel", "1 Satz, 4 Prüfungen"], ["pen", "Papier", "13 Dateien, zu zweit"], ["spark", "Claude", "3 Anfragen, live"], ["table", "Register", "21 Antworten, 1 Rechnung"]]
-    : [["scale", "Rule", "1 sentence, 4 checks"], ["pen", "Paper", "13 files, in pairs"], ["spark", "Claude", "3 requests, live"], ["table", "Register", "21 answers, 1 invoice"]]
+    ? [["scale", "Regel", "1 Werbeentwurf, 4 Prüfungen"], ["pen", "Papier", "Belege selbst prüfen"], ["spark", "Claude", "3 Aufträge bearbeiten"], ["table", "Register", "21 Prüfpunkte aktualisieren"]]
+    : [["scale", "Rule", "1 draft claim, 4 checks"], ["pen", "Paper", "Check evidence ourselves"], ["spark", "Claude", "Work through 3 requests"], ["table", "Register", "Update 21 checked items"]]
   )
     .map(([icon, name, cap], i) => `<li class="road__stop${i === 2 ? " road__stop--ai" : ""}"${s(2, { fx: "pop", ease: "spring", win: stagger(i, 4, 0.3, 0.1, 1) })}><b class="road__n">${i + 1}</b><span class="road__name"><span class="ico-tile${i === 2 ? " ico-tile--accent" : ""}">${c.ico(icon)}</span>${name}</span><span class="road__cap">${cap}</span></li>`)
     .join("");
@@ -222,7 +239,7 @@ export function today(c) {
 <div class="role surface surface--strong"${s(4, { fx: "pop", win: ".3,.7" })}><span class="ico-tile">${c.ico("download")}</span><b class="role__t">${c.t("Ihr nehmt das Kit mit.", "You take the kit home.")}</b><div class="kit-folder role__kit"><p class="kit-folder__head">${c.ico("folder")}${esc(c.kit.zip.replace(/\.zip$/, "/"))}</p>${kitFiles}</div></div>
 </div>
 </div>
-${foot(c, 6)}`,
+${foot(c, 7)}`,
   );
 }
 
@@ -252,12 +269,12 @@ export function rule(c) {
   const scope = `<div class="ha"${s(4, { fx: "fade", win: ".1,.5" })}><div class="ha__cells"${s(4, { fx: "none", win: ".3,.9", fill: 12 })}>${cells}</div><span class="ha__lab"><b>${c.dv("haCertified")}</b> ${c.t("von", "of")} ${c.dv("haTotal")} ha ${c.t("zertifiziert", "certified")}</span></div>`;
   const tile = (tone, words) => `<div class="stile stile--${tone}"${s(6, { fx: "pop", ease: "spring", win: stagger(["belegt", "schwach", "luecke"].indexOf(tone), 3, 0.45) })}><svg class="stile__glyph" viewBox="0 0 24 24" aria-hidden="true">${GLYPH[tone]}</svg>${c.chip(tone, "chip--lg")}<p>${words}</p></div>`;
   return section(
-    { id: "satz", label: c.t("Die Regel: ein Satz gegen seine Datei", "The rule: one sentence against its file"), steps: 6, durations: "1200,1600,1100,1900,1900,1500,1700" },
-    `${head(c.t("Die eine Regel", "The one rule"), c.t("Ein Satz, geprüft an seiner Datei", "One sentence, checked against its file"), { size: "m" })}
+    { id: "satz", label: c.t("Unser Werbeentwurf gegen das Zertifikat", "Our draft claim against the certificate"), steps: 6, durations: "1200,1600,1100,1900,1900,1500,1700" },
+    `${head(c.t("Marketing fragt: Dürfen wir das veröffentlichen?", "Marketing asks: may we publish this?"), c.t("Trägt das Zertifikat unseren Werbeentwurf?", "Does our certificate support this claim?"), { size: "m" })}
 <div class="stage rule">
-<div class="rule__bottle"${s(0, { fx: "fly", win: "0,.6" })} style="--dy:60px;--s:.94"><svg viewBox="0 0 220 640" aria-hidden="true"><use href="${c.lib}/icons.svg#x-bottle"/></svg>
-<div class="bottle-label rule__card"${s(0, { fx: "pop", win: ".3,.8" })}><span class="bottle-label__brand">Crvena Zemja</span><span class="bottle-label__claim"><span>${c.t("Zertifizierte", "Certified")}<i${s(5, { fx: "strike", win: ".45,.75" })}></i></span><span>${c.t("Bio-Weinberge", "organic vineyards")}<i${s(5, { fx: "strike", win: ".55,.85" })}></i></span></span><span class="bottle-label__year">${c.t("alle Weine", "all wines")}</span></div></div>
-<div class="rule__focus"${s(0, { win: ".5,1", out: 1, outWin: "0,.3" })}><p class="rule__q">${c.t("Das Zertifikat liegt bei. <em>Was belegt es?</em>", "The certificate is there. <em>What does it prove?</em>")}</p><p class="rule__hint">${c.t("Zitat · Zeitraum · Umfang · Freigabe", "Quote · Period · Scope · Approval")}</p></div>
+<div class="rule__bottle"${s(0, { fx: "fly", win: "0,.6" })} style="--dy:60px;--s:.94"><p class="rule__owner">${c.t("Entwurf unseres Marketings", "Our marketing team's draft")}</p>
+<div class="bottle-label rule__card"${s(0, { fx: "pop", win: ".3,.8" })}><span class="bottle-label__brand">Crvena Zemja</span><span class="bottle-label__claim"><span>${c.t("Zertifizierte", "Certified")}<i${s(5, { fx: "strike", win: ".45,.75" })}></i></span><span>${c.t("Bio-Weinberge", "organic vineyards")}<i${s(5, { fx: "strike", win: ".55,.85" })}></i></span></span><span class="bottle-label__year">${c.t("Regalkarte für alle Weine", "Shelf card for all wines")}</span></div><p class="rule__source">${c.t("Anfrage 2 · Aussage C3", "Request 2 · claim C3")}<br>${c.t("Unser Zertifikat kommt von der Kontrollstelle.", "Our certificate comes from the control body.")}</p></div>
+<div class="rule__focus"${s(0, { win: ".5,1", out: 1, outWin: "0,.3" })}><p class="rule__q">${c.t("Marketing macht die Aussage.<br><em>Wir prüfen ihren Nachweis.</em>", "Marketing proposes the claim.<br><em>We check its evidence.</em>")}</p><p class="rule__hint">${c.t("Zitat · Zeitraum · Umfang · Freigabe", "Quote · Period · Scope · Approval")}</p></div>
 <div class="doc rule__doc"${s(1, { fx: "pop", win: ".35,.85", out: 6, outWin: "0,.4" })} style="--origin:left top"><div class="doc__head">${c.ico("file")}${c.t("bio_zertifikat_weinberg.txt", "organic_certificate_vineyard.txt")}<span class="file__meta">${c.t("11 Zeilen", "11 lines")}</span></div><ol class="doc__lines">${lines}</ol></div>
 <div class="rule__right"${s(2, { fx: "fade", win: "0,.1", out: 6, outWin: "0,.4" })}><ol class="checks">
 ${check(2, "quote", c.t("Zitat", "Quote"), c.t("Z. 3 bis 5", "l. 3 to 5"), true)}
@@ -267,9 +284,9 @@ ${check(5, "shield", c.t("Freigabe", "Approval"), c.t("Z. 4", "l. 4"), true)}
 </ol>
 <div class="rule__verdict"${s(5, { fx: "pop", ease: "spring", win: ".6,1" })} style="--origin:left center">${c.chip("luecke", "chip--lg")}<b>${c.t("Darf so nicht raus.", "Must not go out.")}</b></div></div>
 <svg class="wires" viewBox="0 0 1696 774" preserveAspectRatio="none" aria-hidden="true"><path${s(1, { fx: "draw", win: "0,.5", out: 6, outWin: "0,.3" })} pathLength="1" d="M246 520 C 300 520, 266 98, 330 98"/><circle${s(1, { fx: "pop", win: ".45,.6", out: 6, outWin: "0,.3" })} cx="330" cy="98" r="8"/></svg>
-<div class="stiles">${tile("belegt", c.t("Alle vier Prüfungen halten", "All four checks hold"))}${tile("schwach", c.t("Abgelaufen, geschätzt oder Entwurf", "Expired, estimated or draft"))}${tile("luecke", c.t("Ein Teil hat keine Datei", "A part has no file"))}<p class="stiles__end"${s(6, { fx: "pop", win: ".5,1" })}>${c.t("Der <em>schwächste</em> Teil zählt.", "The <em>weakest</em> part counts.")}</p></div>
+<div class="stiles">${tile("belegt", c.t("Die gesamte Antwort ist belegt. Auch schlechte Fakten können stimmen.", "Evidence supports the whole answer. Bad news can be proven too."))}${tile("schwach", c.t("Belege vorhanden, aber abgelaufen, geschätzt oder nicht freigegeben.", "Evidence exists, but is expired, estimated or unapproved."))}${tile("luecke", c.t("Für einen Teil der Antwort fehlt ein Nachweis.", "Part of the answer has no supporting evidence."))}<p class="stiles__end"${s(6, { fx: "pop", win: ".5,1" })}>${c.t("Hier: <em>LÜCKE</em>. Für 28 ha fehlt das Zertifikat.", "Here: <em>GAP</em>. No certificate covers the other 28 ha.")}</p></div>
 </div>
-${foot(c, 7)}`,
+${foot(c, 8)}`,
   );
 }
 
@@ -302,9 +319,9 @@ export function kitSlide(c, qr) {
 <div class="kitx__start">${start.map((name, i) => file("md", name, "", { cls: i === 0 ? "file--accent" : "", attrs: s(2, { fx: "pop", win: stagger(i, 3, 0.4, 0.4, 1) }) })).join("")}</div>
 <figure class="qr kitx__qr"${s(3, { fx: "pop", win: "0,.6" })}>${qr}<figcaption><span>loehrning.ai${c.site}/workshops/</span><span>esg-berichte-mit-ki</span></figcaption></figure>
 <div class="kitx__stats"${s(3, { win: ".2,.6" })}>${stat(3, c.t("Anfragen", "requests"), ".3,.85")}${stat(5, "Prompts", ".45,.95")}</div>
-<p class="kitx__role"${s(3, { fx: "fade", win: ".6,1" })}>${c.t("Heute arbeite ich damit. Ihr nehmt es mit.", "Today I work with it. You take it home.")}</p>
+<p class="kitx__role"${s(3, { fx: "fade", win: ".6,1" })}>${c.t("Dateien: Firmenwissen. Skill: Prüfmethode. Heute zeigt Tim den Ablauf. Zu Hause nutzt ihr das Kit selbst.", "Files: company knowledge. Skill: checking method. Tim demonstrates today. You use the kit at home.")}</p>
 </div>
-${foot(c, 8)}`,
+${foot(c, 9)}`,
   );
 }
 
@@ -332,8 +349,8 @@ export function review(c) {
     .join("");
   return section(
     { id: "durchsicht", label: c.t("Durchsicht auf Papier", "Review on paper"), steps: 2, durations: "1300,3400,1500" },
-    `<header class="hd hd--row"><div><p class="label">${c.t("Schritt 0 · auf Papier", "Step 0 · on paper")}</p><h2 class="headline headline--m ds__h"><span class="ds__q"${s(0, { fx: "fade", win: "0,.4", out: 2, outWin: "0,.35" })}>${c.t("Was stimmt nicht?", "What is wrong?")}</span><span class="ds__a"${s(2, { fx: "pop", win: ".3,.8" })} style="--origin:left center">${c.t("8 Mängel, 1 falscher Alarm", "8 defects, 1 false alarm")}</span></h2></div>${roomPill(c, c.t("Ihr · auf Papier · 10 Min", "You · on paper · 10 min"), s(0, { fx: "pop", win: ".4,.9" }))}</header>
-<div class="stage ds"><div class="ds__grid"${s(0, { fx: "fade", win: "0,.4" })}>${cards}<p class="ds__count"${s(1, { fx: "pop", win: "0,.15" })}><b${s(1, { fx: "none", win: "0,1", count: "0,8,0" })}>8</b><span>${c.t("Mängel gefunden", "defects found")}</span></p></div></div>
-${foot(c, 9)}`,
+    `<header class="hd hd--row"><div><p class="label">${c.t("Vor Claude · Belege für unsere drei Aufträge prüfen", "Before Claude · Check evidence for our three requests")}</p><h2 class="headline headline--m ds__h"><span class="ds__q"${s(0, { fx: "fade", win: "0,.4", out: 2, outWin: "0,.35" })}>${c.t("Was müssen wir prüfen?", "What needs care before we answer?")}</span><span class="ds__a"${s(2, { fx: "pop", win: ".3,.8" })} style="--origin:left center">${c.t("8 Prüfpunkte · Wasser vollständig", "8 issues to check · water is complete")}</span></h2></div>${roomPill(c, c.t("Ihr · auf Papier · 10 Min", "You · on paper · 10 min"), s(0, { fx: "pop", win: ".4,.9" }))}</header>
+<div class="stage ds"><div class="ds__grid"${s(0, { fx: "fade", win: "0,.4" })}>${cards}<p class="ds__count"${s(1, { fx: "pop", win: "0,.15" })}><b${s(1, { fx: "none", win: "0,1", count: "0,8,0" })}>8</b><span>${c.t("Prüfpunkte gefunden", "issues identified")}</span></p></div><p class="ds__purpose">${c.t("Datenfehler, Beleglücken und Geschäftsprobleme unterscheiden. Danach prüft Claude dieselben Dateien.", "Distinguish data errors, evidence gaps and business problems. Claude then checks the same files.")}</p></div>
+${foot(c, 10)}`,
   );
 }

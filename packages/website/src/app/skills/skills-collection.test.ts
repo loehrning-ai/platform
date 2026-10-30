@@ -32,6 +32,7 @@ const PUBLISHED_SKILLS = [
   "angebote-vergleichen",
   "audit-nachweise",
   "cv-engine",
+  "esg-evidence",
   "esg-nachweise",
   "kennzahl-fragekarte",
   "kennzahlen-steckbrief",
@@ -95,8 +96,18 @@ describe("the authored collection", () => {
     },
   );
 
-  it.each(PUBLISHED_SKILLS)("%s carries a German body and an English section", async (name) => {
+  it.each(PUBLISHED_SKILLS)("%s carries its declared language edition", async (name) => {
     const document = await readAuthored(name);
+    if (name === "esg-evidence") {
+      expect(document).toContain("\n## Four evidence checks\n");
+      expect(document).not.toContain("Nachweisprobe");
+      return;
+    }
+    if (name === "esg-nachweise") {
+      expect(document).toContain("\n## Die Nachweisprobe\n");
+      expect(document).not.toContain("\n## English\n");
+      return;
+    }
     expect(document).toContain("\n## English\n");
     // German is the platform's first language; the English section mirrors it.
     expect(document).toMatch(/\b(?:du|dir|dich|deine[nmrs]?)\b/i);
@@ -125,7 +136,7 @@ describe("the authored collection", () => {
     for (const name of PUBLISHED_SKILLS) {
       const document = await readAuthored(name);
       expect(
-        /Schlüssel|Token/.test(document),
+        /Schlüssel|Token|keys|tokens/i.test(document),
         `${name} says nothing about keys or tokens`,
       ).toBe(true);
     }

@@ -344,7 +344,7 @@ const en: AppCopy = {
     tap: "The arrow plays the recording. It sends no request to Claude.",
     ready: {
       "schritt-1": [
-        "The project holds the winery's {knowledge} files and the project instructions, and the skill esg-nachweise is switched on.",
+        "The recorded project holds the winery's {knowledge} files, the project instructions and the original bilingual skill. For home practice, download esg-evidence in English.",
         "Claude gets the importer's questionnaire with the prompt from the kit.",
       ],
       "schritt-2": ["Step 2 starts a new chat in the same project.", "Claude checks marketing's seven claims, first against the ban list."],
@@ -409,8 +409,8 @@ const en: AppCopy = {
     steps: [
       "Open Settings, then “Capabilities”. Switch on “Code execution and file creation”. In the new layout the switch is called “Create and edit files”. Skills need it, because Claude opens their files in its own workspace.",
       "Open “Customize” in the sidebar, then “Skills”, or go straight to claude.ai/customize/skills.",
-      "Choose “+”, then “Create skill” and “Upload a skill”. Choose the file esg-nachweise.zip that you download here.",
-      "Switch the skill on. Ask your question as usual, or type “/” and pick esg-nachweise.",
+      "Choose “+”, then “Create skill” and “Upload a skill”. Choose the file esg-evidence.zip that you download here.",
+      "Switch the skill on. Ask your question as usual, or type “/” and pick esg-evidence.",
     ],
     download: "Download the skill (ZIP)",
     capability: "Code execution and file creation",
