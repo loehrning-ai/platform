@@ -12,8 +12,34 @@ from the code in this tree (`scripts/validate-env.mjs`, `next.config.ts`,
 | Include source files outside of Root Directory | ON (default)            | `next.config.ts` sets `outputFileTracingRoot` to the repo root; `bun.lock` lives at the repo root; `/open-source/lizenzrichtlinie` reads `LICENSE_POLICY.md` from the repo root at build time.                                                                                                                                                                                                                                                                                                                   |
 | Framework Preset                               | Next.js                 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | Install / Build command                        | pinned in `vercel.json` | `packages/website/vercel.json` sets `framework: nextjs`, `buildCommand: bun run build` (triggers `prebuild`: `validate-env`; `registry:check` and `english-routes:check` run in the CI `static` job), and `installCommand: cd ../.. && bun install --frozen-lockfile --ignore-scripts` — install must run from the repo root because `bun.lock` and the fail-closed `bunfig.toml` live there. Regenerate a reviewed legal-date change explicitly with `bun run registry:export` before commit. Keep the dashboard overrides empty so `vercel.json` wins. |
-| Node.js version                                | 22.x or 24.x            | `engines: ^22.18.0 \|\| ^24.0.0`, `.nvmrc` 24.x. The registry check/export imports a `.ts` module through plain `node` and relies on type stripping (Node >= 22.18).                                                                                                                                                                                                                                                                                                                                             |
+| Node.js version                                | 24.x                    | Development and CI pin 24.22.1 in `.nvmrc` and `.node-version`; the root engine range is `^24.22.1`.                                                                                                                                                                                                                                                                                                                                               |
 | Fluid Compute                                  | ON (default)            | `src/proxy.ts` uses Next.js 16's Node.js proxy runtime.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+
+## Checked preview and production pipeline
+
+Automatic Git deployments are disabled in `vercel.json`. A branch push runs GitHub validation; creating a hosted build is a deliberate action after the exact commit passes. The commands use the operator's authenticated `gh` and `vercel` CLIs and an existing matching project link. They do not load a deployment token file or automatically create/relink a project.
+
+```bash
+bun run deploy:preview -- --wait --yes
+# After the required pull-request checks and squash merge:
+bun run deploy:production -- --wait --yes
+```
+
+Preview defaults to the current branch; `--ref` chooses another branch. `--sha` requires that exact current branch head. Production always uses current `main`. Both paths validate the team, project, repository, source SHA and successful GitHub Actions `verify`, and recheck the branch after waiting and before mutation.
+
+Production creates a build with automatic domain assignment disabled. The command waits for READY, verifies its unique protected URL through `vercel curl`, and only then promotes that same production deployment. Checks cover application documents, both course languages, kit bytes and deck runtime assets pinned to the requested GitHub commit. The canonical domains are checked afterward. A preview is never promoted as a production build.
+
+An already-current healthy production deployment succeeds without rebuilding. In-flight and staged deployments are reused. Creation and promotion are never retried automatically. A timed-out new build can be cancelled only by the invocation that created it; existing or observed builds remain untouched. `--observe` validates and checks a deployment without promotion.
+
+For dependency, workflow, shared-layout, security or other broad changes:
+
+```bash
+gh workflow run nightly.yml --ref main
+# Wait for Extended to pass on that exact merge commit:
+bun run deploy:production -- --require-extended --wait --yes
+```
+
+No staging or smoke failure authorizes promotion. The command reports the deployment id and the error; inspect that build before taking another action. Main's existing ruleset separately enforces Verify, dependency review, CodeQL, squash pull requests and resolved review conversations. [Contributing](../../../CONTRIBUTING.md) is the complete change-to-release workflow; [CI contract](ci-contract.md) defines the test tiers and proof limits.
 
 ## Environment variables
 

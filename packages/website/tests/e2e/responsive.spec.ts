@@ -57,8 +57,8 @@ const LERNEN_TRIGGER = 'button[aria-controls="lernen-nav-menu"]';
 const HAMBURGER_NAME = /Menü öffnen/i;
 const NAV_ROW = "[data-nav-header-row]";
 
-// Tailwind's stock `lg`, in CSS pixels. globals.css overrides no breakpoint and
-// tailwind.config.ts is dead code, so 64rem at the 16px root size is 1024.
+// Tailwind's stock `lg`, in CSS pixels. The CSS theme overrides no breakpoint,
+// so 64rem at the 16px root size is 1024.
 const LG_BREAKPOINT = 1024;
 
 /**

@@ -7,8 +7,8 @@
  *   bun run ci:static     types, lint, public-leak scan, content and route checks, critical audit,
  *                         every script self-test
  *   bun run ci:unit       vitest, no coverage
- *   bun run ci:browser    the one production build, server-log privacy, browser smoke
- *   bun run ci:hygiene    full advisory and licence audits (weekly only, not part of `ci`)
+ *   bun run ci:browser    one production build, privacy, twenty DE/EN cases in Chromium and WebKit
+ *   bun run ci:hygiene    full advisory and licence audits (scheduled, not part of `ci`)
  *
  * Every root `ci*` script runs this file under run-provider-free.mjs, which
  * scrubs the environment down to the allowlist in scripts/environment-policy.mjs.
@@ -21,10 +21,10 @@ import { existsSync, readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { MOBILE_SMOKE_BATCHES } from "./smoke-contract.mjs";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 export const SMOKE_LIST = "packages/website/tests/e2e/smoke.list";
-const SMOKE_PROJECTS = ["chromium"];
 const WEBSITE = ["--cwd", "packages/website"];
 
 const bun = (name, ...args) => ({ name, command: "bun", args });
@@ -33,11 +33,14 @@ const root = (name, script) => bun(name, "run", script);
 
 /** Smoke specs, as paths Playwright matches unambiguously (`responsive` is not `*-responsive`). */
 export function parseSmokeList(text) {
-  return text
+  const names = text
     .split("\n")
     .map((line) => line.trim())
-    .filter((line) => line !== "" && !line.startsWith("#"))
-    .map((name) => `tests/e2e/${name}`);
+    .filter((line) => line !== "" && !line.startsWith("#"));
+  if (!names.length || new Set(names).size !== names.length || names.some((name) => !/^[a-z][a-z0-9-]*\.spec\.ts$/.test(name))) {
+    throw new Error("smoke.list must name unique, bare .spec.ts files");
+  }
+  return names.map((name) => `tests/e2e/${name}`);
 }
 
 export function readSmokeFiles(read = (file) => readFileSync(path.join(ROOT, file), "utf8")) {
@@ -53,14 +56,34 @@ function checkSmokeListExists() {
   }
 }
 
-export function smokeArguments(files = readSmokeFiles()) {
+export function smokeArguments(files = readSmokeFiles(), { project = "chromium", shard, ci = Boolean(process.env.CI) } = {}) {
+  if (!["chromium", "mobile-webkit"].includes(project)) throw new Error(`Unsupported smoke project: ${project}`);
   return [
     "test",
-    ...SMOKE_PROJECTS.map((project) => `--project=${project}`),
-    "--workers=2",
-    "--retries=1",
+    `--project=${project}`,
+    "--workers=1",
+    "--retries=0",
+    "--fail-on-flaky-tests",
+    `--reporter=${ci ? "github,blob" : "line"},./tests/e2e/reporters/smoke-contract.mjs`,
+    ...(shard ? [`--shard=${shard}`] : []),
     ...files,
   ];
+}
+
+/** Both verification entry points consume these exact browser commands. */
+export function smokeSteps({ ci = Boolean(process.env.CI) } = {}) {
+  return [bun("browser smoke", "run", ...WEBSITE, "e2e:shard:built", ...smokeArguments(undefined, { ci })), ...Array.from({ length: MOBILE_SMOKE_BATCHES }, (_, index) => {
+    const batch = index + 1;
+    return {
+      ...bun(`mobile smoke ${batch}/${MOBILE_SMOKE_BATCHES}`, "run", ...WEBSITE, "e2e:shard:built", ...smokeArguments(undefined, {
+        project: "mobile-webkit", shard: `${batch}/${MOBILE_SMOKE_BATCHES}`, ci,
+      })),
+      env: {
+        PLAYWRIGHT_OUTPUT_DIR: `test-results/smoke-webkit-${batch}`,
+        PLAYWRIGHT_BLOB_OUTPUT_DIR: `blob-report/smoke-webkit-${batch}`,
+      },
+    };
+  })];
 }
 
 /**
@@ -93,7 +116,7 @@ export const GROUPS = {
       site("migrations:check", "migrations:check"),
       root("verify:workspace-contract", "verify:workspace-contract"),
       root("artifact-assets:check", "artifact-assets:check"),
-      // A critical advisory blocks the PR; high and below surface weekly.
+      // A critical advisory blocks the PR; the full advisory audit also runs daily.
       root("audit:critical", "audit:critical"),
       { name: "smoke.list files exist", run: checkSmokeListExists },
     ],
@@ -102,8 +125,11 @@ export const GROUPS = {
   browser: () => [
     [site("build", "verify:build")],
     [site("server-log privacy", "test:server-log-privacy:built")],
-    [bun("browser smoke", "run", ...WEBSITE, "e2e:shard:built", ...smokeArguments())],
+    // Each invocation owns a new server/browser process; only the unchanged build is reused.
+    ...smokeSteps().map((step) => [step]),
   ],
+  // Internal reuse tier for Extended, after its receipt-bound production build.
+  "mobile-smoke": () => smokeSteps().slice(1).map((step) => [step]),
   hygiene: () => [[root("audit", "audit"), root("license:audit", "license:audit")]],
 };
 
@@ -112,7 +138,7 @@ export function browserEnvironment(env) {
   return {
     E2E_SERVER_MODE: "production",
     E2E_PORT: env.E2E_PORT ?? "3000",
-    E2E_GLOBAL_TIMEOUT: env.E2E_GLOBAL_TIMEOUT ?? "900000",
+    E2E_GLOBAL_TIMEOUT: env.E2E_GLOBAL_TIMEOUT ?? "180000",
   };
 }
 
@@ -124,7 +150,7 @@ function runCommand(step, { capture, env }) {
     let output = "";
     const child = spawn(step.command, step.args, {
       cwd: ROOT,
-      env: { ...process.env, ...env },
+      env: { ...process.env, ...env, ...step.env },
       stdio: capture ? ["ignore", "pipe", "pipe"] : "inherit",
     });
     if (capture) {
@@ -212,7 +238,7 @@ async function main(argv) {
   } else {
     failed = await runGroup(command, {
       capture: command === "static" || command === "hygiene",
-      env: command === "browser" ? browserEnv : {},
+      env: ["browser", "mobile-smoke"].includes(command) ? browserEnv : {},
     });
   }
   log(`\n${command}: ${failed.length === 0 ? "passed" : `FAILED (${failed.map((r) => r.name).join(", ")})`} in ${seconds(Date.now() - started)}`);

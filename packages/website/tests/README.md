@@ -13,21 +13,26 @@ build output changed while the gate was running.
 
 ## Tiers
 
-- **Smoke (the pull-request and `main` gate):** the specs named in
-  `tests/e2e/smoke.list`, run on desktop Chromium with one retry. Run with `bun run ci:browser` from the repository
-  root (builds once, then runs the privacy probe and the smoke). Add a spec by
-  adding a line; keep known-flaky specs out. A test titled `@quarantine` is
-  skipped by the weekly run and deleted if still tagged after 14 days.
-- **Public (full suite, weekly):** every spec on desktop Chromium (`chromium`
-  project), plus the smoke list on the iPhone 13 WebKit viewport
-  (`mobile-webkit`). Phone specs that must run weekly set their own phone
+- **Smoke (the pull-request and `main` gate):** twenty capability cases in
+  `baseline-smoke.spec.ts`, selected by `tests/e2e/smoke.list`, run in Chromium
+  and mobile WebKit. `bun run ci:browser` builds once, runs the privacy probe,
+  then Chromium and five fresh-process WebKit batches of four cases. Both
+  engines have zero retries. The capability reporter rejects omitted,
+  duplicated, skipped, expected-failure or flaky cases. Update the explicit
+  capability contract when deliberately changing scope; retain exhaustive
+  coverage in Extended. Both locked browsers must be installed.
+- **Public (full suite, daily):** every spec on desktop Chromium (`chromium`
+  project), plus the capability baseline on the iPhone 13 WebKit viewport
+  (`mobile-webkit`). Phone specs in the full Chromium tier set their own phone
   context (`test.use` with a phone viewport, `isMobile` and `hasTouch`);
   specs that branch on the project's `isMobile` (for example
   `plakat-contrast`) only exercise their desktop branch there. Run locally with
   `bun run test:e2e` (desktop Chromium, builds first); narrow it with `bun run --cwd packages/website e2e:shard:built test <spec>` after a build.
   `bun run test:e2e:dev` runs against the dev server instead of a production
-  build. Set `E2E_FAIL_ON_FLAKY=1` to count a pass-on-retry as a failure.
-- **Konto DOM, mocked session (runs weekly):** the `konto-dom-mocked` project
+  build. The scheduled workflow disables retries and fails on flaky verdicts.
+  Failed traces are retained. Do not remove a failing test/job or add a
+  quarantine exclusion to hide a regression.
+- **Konto DOM, mocked session (runs daily):** the `konto-dom-mocked` project
   builds with three fictional-but-well-formed public Supabase variables and
   serves the endpoints the server calls during SSR from an in-process preload
   (`tests/e2e/fixtures/mock-auth-backend.cjs`), so the signed-in `/konto` DOM

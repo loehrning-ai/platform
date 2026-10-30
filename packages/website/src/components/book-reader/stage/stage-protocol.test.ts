@@ -104,6 +104,32 @@ describe("states", () => {
 });
 
 describe("the DOM protocol", () => {
+  it("keeps the server's finished multi-step snapshot stable before the controller starts", () => {
+    const root = document.createElement("section");
+    root.setAttribute("data-chapter-stage", "inline");
+    root.setAttribute("data-steps", "3");
+    root.setAttribute("data-step", "2");
+    const initial = getStageState(root);
+    expect(initial).toEqual(finishedState(3));
+    expect(getStageState(root)).toBe(initial);
+    const listener = vi.fn();
+    const stop = subscribeStage(root, listener);
+    expect(listener).toHaveBeenCalledExactlyOnceWith(initial);
+    const live = computeScrubState(100, BOXES);
+    publishStageState(root, live);
+    expect(getStageState(root)).toBe(live);
+    stop();
+  });
+
+  it("retains the single finished fallback for absent or inconsistent server metadata", () => {
+    for (const [steps, step] of [["", ""], ["3", "0"], ["99", "98"], ["bad", "2"]]) {
+      const root = document.createElement("section");
+      root.setAttribute("data-steps", steps);
+      root.setAttribute("data-step", step);
+      expect(getStageState(root)).toBe(FINISHED_STATE);
+    }
+  });
+
   it("publishes to subscribers, replays the current state on subscribe and unsubscribes", () => {
     const root = document.createElement("section");
     root.setAttribute("data-chapter-stage", "x");

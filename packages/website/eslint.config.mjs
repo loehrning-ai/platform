@@ -70,7 +70,6 @@ export default tseslint.config(
       "postcss.config.mjs",
       "sentry.edge.config.ts",
       "sentry.server.config.ts",
-      "tailwind.config.ts",
       "vitest.config.ts",
       "**/*.test.{ts,tsx}",
       "**/*.spec.{ts,tsx}",

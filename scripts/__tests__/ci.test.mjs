@@ -9,6 +9,7 @@ import {
   parseSmokeList,
   readSmokeFiles,
   smokeArguments,
+  smokeSteps,
 } from "../ci.mjs";
 
 const manifest = (directory) =>
@@ -25,25 +26,40 @@ test("parseSmokeList keeps one spec per line and prefixes the e2e directory", ()
   ]);
 });
 
-test("every smoke spec exists, once, and the known-brittle workshops spec stays out", () => {
+test("the baseline selects its capability spec and retains broad coverage outside the fast path", () => {
   const files = readSmokeFiles();
-  assert.ok(files.length > 0);
+  assert.deepEqual(files, ["tests/e2e/baseline-smoke.spec.ts"]);
   assert.equal(new Set(files).size, files.length);
   for (const file of files) {
     assert.ok(existsSync(path.join(ROOT, "packages/website", file)), file);
   }
-  assert.ok(!files.some((file) => file.includes("workshops.spec.ts")), "workshops.spec.ts");
+  for (const name of ["route-matrix", "a11y", "seo-meta", "edge-states", "legal", "workshops"]) {
+    assert.ok(existsSync(path.join(ROOT, "packages/website/tests/e2e", `${name}.spec.ts`)), name);
+  }
 });
 
-test("the smoke run is desktop Chromium with one retry", () => {
-  const args = smokeArguments(["tests/e2e/x.spec.ts"]);
+test("the baseline is serialized, has zero retries and enforces capability coverage", () => {
+  const args = smokeArguments(["tests/e2e/x.spec.ts"], { ci: false });
   assert.deepEqual(args, [
     "test",
     "--project=chromium",
-    "--workers=2",
-    "--retries=1",
+    "--workers=1",
+    "--retries=0",
+    "--fail-on-flaky-tests",
+    "--reporter=line,./tests/e2e/reporters/smoke-contract.mjs",
     "tests/e2e/x.spec.ts",
   ]);
+});
+
+test("CI keeps annotations and blobs; mobile batches stay bounded and strict", () => {
+  const args = smokeArguments(["tests/e2e/x.spec.ts"], { ci: true, project: "mobile-webkit", shard: "2/5" });
+  assert.ok(args.includes("--project=mobile-webkit"));
+  assert.ok(args.includes("--shard=2/5"));
+  assert.ok(args.includes("--reporter=github,blob,./tests/e2e/reporters/smoke-contract.mjs"));
+  assert.throws(() => smokeArguments([], { project: "firefox" }), /Unsupported/);
+  for (const text of ["", "../../outside.spec.ts", "x.spec.ts\nx.spec.ts", "x.spec.ts --grep-invert smoke"]) {
+    assert.throws(() => parseSmokeList(text), /unique, bare/);
+  }
 });
 
 test("every package script a CI step runs exists", () => {
@@ -82,7 +98,7 @@ test("the browser steps share one build and serve environment", () => {
   assert.deepEqual(browserEnvironment({}), {
     E2E_SERVER_MODE: "production",
     E2E_PORT: "3000",
-    E2E_GLOBAL_TIMEOUT: "900000",
+    E2E_GLOBAL_TIMEOUT: "180000",
   });
   assert.equal(browserEnvironment({ E2E_PORT: "3311" }).E2E_PORT, "3311");
 });
@@ -92,4 +108,24 @@ test("the browser group builds exactly once", () => {
   const builds = steps.filter((step) => step.args.includes("verify:build"));
   assert.equal(builds.length, 1);
   assert.equal(steps[0], builds[0]);
+  const mobile = steps.filter((step) => step.args.includes("--project=mobile-webkit"));
+  assert.equal(mobile.length, 5);
+  assert.equal(new Set(mobile.map((step) => step.env.PLAYWRIGHT_OUTPUT_DIR)).size, 5);
+  assert.ok(mobile.every((step) => step.args.includes("--retries=0")));
+  assert.deepEqual(steps.slice(2), smokeSteps());
+  assert.deepEqual(GROUPS["mobile-smoke"]().flat(), smokeSteps().slice(1));
+  const baseline = smokeSteps({ ci: false });
+  assert.equal(baseline.length, 6);
+  assert.ok(baseline[0].args.includes("--project=chromium"));
+  assert.ok(baseline.every((step) => step.args.includes("--reporter=line,./tests/e2e/reporters/smoke-contract.mjs")));
+});
+
+test("daily Extended keeps the full public suite and reuses the complete strict WebKit baseline", () => {
+  const workflow = readFileSync(path.join(ROOT, ".github/workflows/nightly.yml"), "utf8");
+  assert.match(workflow, /cron: "17 4 \* \* \*"/);
+  assert.match(workflow, /--project=chromium[\s\S]*--shard=\$\{\{ matrix\.shard \}\}[\s\S]*--retries=0[\s\S]*--fail-on-flaky-tests/);
+  assert.doesNotMatch(workflow, /--grep-invert|@quarantine|--retries=[1-9]/);
+  assert.match(workflow, /run-provider-free\.mjs node scripts\/ci\.mjs mobile-smoke/);
+  assert.match(workflow, /test:e2e:konto-dom-mocked/);
+  assert.match(workflow, /bun run ci:hygiene/);
 });

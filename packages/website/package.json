@@ -6,8 +6,7 @@
   "private": true,
   "license": "SEE LICENSE IN ../../LICENSE_POLICY.md",
   "scripts": {
-    "predev": "bun run english-routes:check",
-    "dev": "next dev --experimental-next-config-strip-types",
+    "dev": "node ../../scripts/development.mjs dev",
     "prebuild": "bun run validate-env",
     "build": "node scripts/build-freshness.mjs build",
     "analyze": "bun run prebuild && ANALYZE=true node scripts/build-freshness.mjs build",

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type RefObject } from "react";
 import { useChapterStage } from "@/components/book-reader/stage/use-chapter-stage";
-import { closestStage } from "@/components/book-reader/stage/stage-protocol";
+import { closestStage, type StageMode } from "@/components/book-reader/stage/stage-protocol";
 import type { Variant } from "../basic/stage-controller";
 import { useStage } from "../basic/use-stage";
 import { usePrefersReducedMotion } from "../story/use-motion";
@@ -14,6 +14,8 @@ export interface HeroProgress {
   readonly step: number;
   readonly steps: number;
   readonly inStage: boolean;
+  /** Only scrub mode has a fixed figure box; static and inline stages keep their natural size. */
+  readonly mode: StageMode;
   /** Which SVG layout fits the container (phone or wide); null before measuring. */
   readonly layout: Variant | null;
   readonly reduced: boolean;
@@ -64,10 +66,11 @@ export function useHeroProgress(ref: RefObject<HTMLElement | null>): HeroProgres
       step: stage.step,
       steps: stage.steps,
       inStage: true,
+      mode: stage.mode,
       layout: reveal.variant,
       reduced,
       ready: reveal.ready,
     };
   }
-  return { progress: reduced ? 1 : reveal.progress, step: 0, steps: 1, inStage: false, layout: reveal.variant, reduced, ready: reveal.ready };
+  return { progress: reduced ? 1 : reveal.progress, step: 0, steps: 1, inStage: false, mode: "static", layout: reveal.variant, reduced, ready: reveal.ready };
 }

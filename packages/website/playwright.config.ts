@@ -218,11 +218,10 @@ export default defineConfig({
   globalTimeout: GLOBAL_TIMEOUT,
   fullyParallel: true,
   forbidOnly: true,
-  // Retries retain a trace and separate infrastructure noise from a stable
-  // defect. Every scripted run retries once and tolerates a test that passes
-  // on its retry; set E2E_FAIL_ON_FLAKY=1 to count those as failures.
-  retries: process.env.CI ? 2 : 1,
-  failOnFlakyTests: process.env.E2E_FAIL_ON_FLAKY === "1",
+  // A green run means the first attempt passed. Retain first-failure evidence
+  // instead of depending on an automatic retry to start tracing.
+  retries: 0,
+  failOnFlakyTests: true,
   // CI: 1 worker (GitHub runner). Local: cap at 2 — the suite runs against a
   // single `next start` process on a machine that usually runs other dev
   // servers; unbounded workers (~10 here) starve the server + image
@@ -258,7 +257,7 @@ export default defineConfig({
   grepInvert: process.env.RUN_LAUNCH_GATE === "1" ? undefined : /@launch-gate/,
   use: {
     baseURL: `http://localhost:${PORT}`,
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
     // Failure artifacts retain a trace plus screenshot and video by default.
     // The serialized WebKit tier narrows video separately to avoid native
     // engine/encoder contention; it still retains the trace and screenshot.
@@ -266,8 +265,8 @@ export default defineConfig({
     video: "retain-on-failure",
   },
   projects: [
-    // Desktop Chromium carries the pull-request smoke and the weekly full
-    // suite. The iPhone 13 WebKit project runs the weekly WebKit smoke; keeping
+    // Desktop Chromium carries the pull-request smoke and the daily full
+    // suite. The iPhone 13 WebKit project runs the same blocking baseline; keeping
     // viewport and engine explicit prevents a native WebKit crash from being
     // misreported as a responsive-layout bug.
     {
@@ -290,18 +289,30 @@ export default defineConfig({
     // Live authentication is opt-in and fail-closed. The command validates all
     // nine dedicated test variables before Playwright starts; auth.setup.ts
     // validates them again before making the password-grant request. These
-    // projects do not exist in provider-free or ordinary CI runs.
+    // projects do not exist in provider-free or ordinary CI runs. Their real
+    // test credentials and session cookies must never enter browser media.
     ...(RUN_LIVE_AUTH
       ? [
           {
             name: "auth-live-setup",
             testMatch: /auth\.setup\.ts$/,
-            use: { ...devices["Desktop Chrome"] },
+            use: {
+              ...devices["Desktop Chrome"],
+              trace: "off" as const,
+              video: "off" as const,
+              screenshot: "off" as const,
+            },
           },
           {
             name: "authenticated-live",
             testMatch: /\.authed\.spec\.ts$/,
-            use: { ...devices["Desktop Chrome"], storageState: STORAGE_STATE },
+            use: {
+              ...devices["Desktop Chrome"],
+              storageState: STORAGE_STATE,
+              trace: "off" as const,
+              video: "off" as const,
+              screenshot: "off" as const,
+            },
             dependencies: ["auth-live-setup"],
           },
         ]

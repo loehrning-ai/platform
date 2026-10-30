@@ -65,10 +65,15 @@ async function openAt(page: Page, url: string, width: number): Promise<void> {
  * ("Kapitel 1 von 9" and the next chapter). Scroll to the end of the chapter and wait for that state.
  */
 async function toChapterBar(page: Page): Promise<void> {
+  await page
+    .locator(`[data-book-reader-ready="${BOOK}:${chapters()[0]!.slug}"]`)
+    .waitFor({ state: "attached" });
   // The stage script starts when the browser is idle; the bar answers to it, so scroll only after it has taken over.
   await expect(page.locator("[data-chapter-stage]").first()).toHaveAttribute("data-mode", "scrub", { timeout: 15_000 });
+  // A late learning-owner restore may still run after reader-ready. End is
+  // real user intent; window.scrollTo alone does not prevent that restore.
+  await page.keyboard.press("End");
   await expect(async () => {
-    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
     await expect(page.locator(READER_BAR)).toHaveAttribute("data-bar-mode", "chapter", { timeout: 1_000 });
     await expect(page.locator(READER_BAR).getByRole("link")).toBeVisible({ timeout: 1_000 });
   }).toPass({ timeout: 15_000 });
@@ -166,10 +171,6 @@ test.describe("reader focus mode: chapter reader below lg", () => {
     page,
   }) => {
     await openAt(page, CHAPTER_URL, 390);
-    // The reader restores its position on mount; scroll only after that effect is ready.
-    await page
-      .locator(`[data-book-reader-ready="${BOOK}:${chapters()[0]!.slug}"]`)
-      .waitFor({ state: "attached" });
     await toChapterBar(page);
     const next = page
       .locator(READER_BAR)

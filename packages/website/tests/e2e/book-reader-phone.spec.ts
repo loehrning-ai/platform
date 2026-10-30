@@ -80,13 +80,34 @@ test("sources: rows stack as cards, nothing clips sideways", async ({ page }) =>
   await expect(page.locator(".md-stack td[data-label='Umfang und Zeitraum']").first()).toContainText(/März bis April 2026/);
 });
 
-/** Layout-shift total after the stage script has taken over (it starts after idle, about 3 s) and a scroll through the chapter. */
-async function measureCls(page: Page, path: string): Promise<number> {
+interface ShiftDiagnostic {
+  value: number;
+  hadRecentInput: boolean;
+  sources: { tag: string; id: string; className: string; previousRect: ShiftRect; currentRect: ShiftRect }[];
+}
+interface ShiftRect { x: number; y: number; width: number; height: number }
+interface ShiftMeasurement { total: number; shifts: ShiftDiagnostic[] }
+
+/** Collect from navigation through stage hydration and scrolling; retain bounded cause evidence if the budget fails. */
+async function measureCls(page: Page, path: string): Promise<ShiftMeasurement> {
   await page.addInitScript(() => {
-    (window as unknown as { __cls: number }).__cls = 0;
+    const metrics = window as unknown as { __cls: number; __clsEntries: ShiftDiagnostic[] };
+    metrics.__cls = 0;
+    metrics.__clsEntries = [];
     new PerformanceObserver((list) => {
-      for (const entry of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
-        if (!entry.hadRecentInput) (window as unknown as { __cls: number }).__cls += entry.value;
+      for (const entry of list.getEntries() as unknown as { value: number; hadRecentInput: boolean; sources: { node: Node | null; previousRect: DOMRectReadOnly; currentRect: DOMRectReadOnly }[] }[]) {
+        if (!entry.hadRecentInput) metrics.__cls += entry.value;
+        if (metrics.__clsEntries.length < 32) {
+          const rect = (box: DOMRectReadOnly): ShiftRect => ({ x: box.x, y: box.y, width: box.width, height: box.height });
+          metrics.__clsEntries.push({
+            value: entry.value,
+            hadRecentInput: entry.hadRecentInput,
+            sources: (entry.sources ?? []).map((source) => {
+              const node = source.node instanceof Element ? source.node : source.node?.parentElement;
+              return { tag: node?.tagName ?? "", id: node?.id ?? "", className: node?.getAttribute("class") ?? "", previousRect: rect(source.previousRect), currentRect: rect(source.currentRect) };
+            }),
+          });
+        }
       }
     }).observe({ type: "layout-shift", buffered: true });
   });
@@ -97,7 +118,10 @@ async function measureCls(page: Page, path: string): Promise<number> {
     await page.waitForTimeout(120);
   }
   await page.waitForTimeout(600);
-  return page.evaluate(() => (window as unknown as { __cls: number }).__cls);
+  return page.evaluate(() => {
+    const metrics = window as unknown as { __cls: number; __clsEntries: ShiftDiagnostic[] };
+    return { total: metrics.__cls, shifts: metrics.__clsEntries };
+  });
 }
 
 const CLS_PATHS = [
@@ -107,7 +131,8 @@ const CLS_PATHS = [
 
 for (const path of CLS_PATHS) {
   test(`no layout shift on ${path} (stage heads reserve the tallest step)`, async ({ page }) => {
-    expect(await measureCls(page, path)).toBeLessThanOrEqual(0.02);
+    const measurement = await measureCls(page, path);
+    expect(measurement.total, `Layout-shift sources: ${JSON.stringify(measurement.shifts)}`).toBeLessThanOrEqual(0.02);
   });
 }
 

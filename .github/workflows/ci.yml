@@ -1,8 +1,8 @@
 name: Verify
 
-# The one blocking gate. Three jobs start together and `verify` aggregates them.
+# The application gate. Three jobs start together and `verify` aggregates them.
 # Each job calls the same script a contributor runs locally (`bun run ci:<job>`,
-# or `bun run ci` for all three); the breadth that left this path runs weekly
+# or `bun run ci` for all three); the breadth that left this path runs daily
 # in nightly.yml. Contract: packages/website/docs/ci-contract.md.
 on:
   pull_request:
@@ -25,7 +25,7 @@ env:
 jobs:
   static:
     name: static checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -38,7 +38,7 @@ jobs:
 
   unit:
     name: unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -49,7 +49,7 @@ jobs:
 
   browser:
     name: browser smoke
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     # Set at the job level so the build and every step that serves it see one
     # identical environment (the build receipt hashes it, and the CSP drops
@@ -58,14 +58,14 @@ jobs:
       E2E_SERVER_MODE: production
       E2E_PORT: "3000"
       # Below the job timeout, so a hang is a Playwright report, not a killed job.
-      E2E_GLOBAL_TIMEOUT: 900000
+      E2E_GLOBAL_TIMEOUT: 180000
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup
         with:
-          playwright-browsers: chromium
+          playwright-browsers: chromium webkit
           next-build-cache: "true"
       - run: bun run ci:browser
       - name: Upload failure artifacts
@@ -84,7 +84,7 @@ jobs:
   # called `verify`, in this file and in every other workflow.
   verify:
     name: verify
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 2
     if: ${{ always() }}
     needs: [static, unit, browser]

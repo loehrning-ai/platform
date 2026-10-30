@@ -1,8 +1,8 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Beat } from "@/lib/demo-beats";
-import { useState } from "react";
-import { BeatClockProvider, useBeatClock, useOnEscape } from "./beat-clock";
+import { useEffect, useState } from "react";
+import { BeatClockProvider, revealIfOffscreen, useBeatClock, useBeatGate, useOnEscape } from "./beat-clock";
 
 const BEATS: readonly Beat[] = [
   { id: "schaetzen", kind: "commit", seconds: 0, label: { de: "Schätzen", en: "Estimate" } },
@@ -41,18 +41,27 @@ const key = (init: KeyboardEventInit) =>
     fireEvent.keyDown(window, init);
   });
 
-beforeEach(() => {
-  window.history.replaceState(null, "", "/demos/x");
+function setMotion(reduce: boolean) {
   window.matchMedia = ((query: string) => ({
-    matches: query.includes("reduce"),
+    matches: reduce && query.includes("reduce"),
     media: query,
     addEventListener: () => {},
     removeEventListener: () => {},
     addListener: () => {},
     removeListener: () => {},
   })) as unknown as typeof window.matchMedia;
+}
+
+const ORIGINAL_WIDTH = window.innerWidth;
+beforeEach(() => {
+  window.history.replaceState(null, "", "/demos/x");
+  setMotion(true);
 });
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+  Object.defineProperty(window, "innerWidth", { configurable: true, value: ORIGINAL_WIDTH });
+});
 
 /** A demo's detail card: Escape closes it first and says so. */
 function Detail() {
@@ -131,4 +140,128 @@ describe("the v4 clock: intro, guided path, free play", () => {
     mount();
     expect(state()).toMatch(/^v4 guided deins/);
   });
+});
+
+function captureFrames() {
+  const frames = new Map<number, FrameRequestCallback>();
+  let next = 1;
+  vi.spyOn(window, "requestAnimationFrame").mockImplementation((callback) => {
+    const id = next++;
+    frames.set(id, callback);
+    return id;
+  });
+  vi.spyOn(window, "cancelAnimationFrame").mockImplementation((id) => { frames.delete(id); });
+  return (time = performance.now()) => act(() => {
+    const pending = [...frames.values()];
+    frames.clear();
+    for (const callback of pending) callback(time);
+  });
+}
+
+function GateStage({ automaticDone = false, gated = true, onStage }: { automaticDone?: boolean; gated?: boolean; onStage: (element: HTMLElement | null) => void }) {
+  const clock = useBeatClock();
+  const [done, setDone] = useState(false);
+  useEffect(() => { if (automaticDone) setDone(true); }, [automaticDone]);
+  useBeatGate(gated ? true : null, () => { setDone(true); return true; });
+  return <section ref={(element) => { clock.registerStage(element); onStage(element); }} data-testid="stage" data-answer={done ? "done" : "waiting"} data-progress={clock.progress} />;
+}
+
+function mockStage(reveal: HTMLElement["scrollIntoView"]) {
+  return (element: HTMLElement | null) => {
+    if (!element) return;
+    element.getBoundingClientRect = () => ({ top: -200 } as DOMRect);
+    element.scrollIntoView = reveal;
+  };
+}
+
+describe("v4 Next reveals an offscreen stage only for the visitor's action", () => {
+  it("reveals a consumed gate after its answer rendered and two frames, without advancing beats", () => {
+    const advanceFrame = captureFrames();
+    const reveal = vi.fn(() => expect(screen.getByTestId("stage")).toHaveAttribute("data-answer", "done"));
+    const onStage = mockStage(reveal);
+    render(<BeatClockProvider beats={BEATS} locale="de" shell="v4"><Probe /><GateStage onStage={onStage} /></BeatClockProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Starten" }));
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    expect(state()).toMatch(/^v4 guided schaetzen/);
+    expect(screen.getByTestId("stage")).toHaveAttribute("data-answer", "done");
+    expect(reveal).not.toHaveBeenCalled();
+    advanceFrame();
+    expect(reveal).not.toHaveBeenCalled();
+    advanceFrame();
+    expect(reveal).toHaveBeenCalledExactlyOnceWith({ behavior: "instant", block: "start" });
+  });
+
+  it("does not reveal on load, automatic answer completion or restart", () => {
+    const advanceFrame = captureFrames();
+    const reveal = vi.fn();
+    const onStage = mockStage(reveal);
+    const fixture = (done: boolean) => <BeatClockProvider beats={BEATS} locale="de" shell="v4"><Probe /><GateStage automaticDone={done} onStage={onStage} /></BeatClockProvider>;
+    const view = render(fixture(false));
+    advanceFrame(); advanceFrame();
+    expect(reveal).not.toHaveBeenCalled();
+    view.rerender(fixture(true));
+    expect(screen.getByTestId("stage")).toHaveAttribute("data-answer", "done");
+    advanceFrame(); advanceFrame();
+    expect(reveal).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Starten" }));
+    fireEvent.click(screen.getByRole("button", { name: "Neu" }));
+    advanceFrame(); advanceFrame();
+    expect(reveal).not.toHaveBeenCalled();
+  });
+
+  it("reveals after a Next press finishes beat motion, without waiting for another beat", () => {
+    setMotion(false);
+    const advanceFrame = captureFrames();
+    const reveal = vi.fn();
+    const beats = BEATS.map((beat, index) => index === 0 ? { ...beat, seconds: 1 } : beat);
+    render(<BeatClockProvider beats={beats} locale="de" shell="v4"><Probe /><GateStage onStage={mockStage(reveal)} /></BeatClockProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Starten" }));
+    expect(screen.getByTestId("stage")).toHaveAttribute("data-progress", "0");
+    fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    expect(screen.getByTestId("stage")).toHaveAttribute("data-progress", "1");
+    expect(state()).toMatch(/^v4 guided schaetzen/);
+    advanceFrame(); advanceFrame();
+    expect(reveal).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not reveal when beat motion reaches its end automatically", () => {
+    setMotion(false);
+    const advanceFrame = captureFrames();
+    const reveal = vi.fn();
+    const beats = BEATS.map((beat, index) => index === 0 ? { ...beat, seconds: 1 } : beat);
+    render(<BeatClockProvider beats={beats} locale="de" shell="v4"><Probe /><GateStage onStage={mockStage(reveal)} /></BeatClockProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Starten" }));
+    advanceFrame(0); advanceFrame(1100);
+    expect(screen.getByTestId("stage")).toHaveAttribute("data-progress", "1");
+    advanceFrame(1200); advanceFrame(1300);
+    expect(reveal).not.toHaveBeenCalled();
+  });
+
+  it("keeps the existing take-home reveal to one event when Next advances normally", () => {
+    const advanceFrame = captureFrames();
+    const reveal = vi.fn();
+    render(<BeatClockProvider beats={BEATS} locale="de" shell="v4"><Probe /><GateStage gated={false} onStage={mockStage(reveal)} /></BeatClockProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Starten" }));
+    for (let index = 0; index < 3; index++) fireEvent.click(screen.getByRole("button", { name: "Weiter" }));
+    expect(state()).toMatch(/mitnehmen next=false/);
+    advanceFrame(); advanceFrame();
+    expect(reveal).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("stage reveal motion", () => {
+  for (const [width, reduced, behavior] of [[390, false, "instant"], [1023, false, "instant"], [1200, true, "instant"], [1200, false, "smooth"]] as const) {
+    it(`uses ${behavior} at ${width}px with reduced motion ${reduced}`, () => {
+      Object.defineProperty(window, "innerWidth", { configurable: true, value: width });
+      const element = document.createElement("section");
+      const reveal = vi.fn();
+      element.getBoundingClientRect = () => ({ top: -200 } as DOMRect);
+      element.scrollIntoView = reveal;
+      revealIfOffscreen(element, reduced);
+      expect(reveal).toHaveBeenCalledExactlyOnceWith({ behavior, block: "start" });
+      element.getBoundingClientRect = () => ({ top: 100 } as DOMRect);
+      revealIfOffscreen(element, reduced);
+      expect(reveal).toHaveBeenCalledTimes(1);
+    });
+  }
 });

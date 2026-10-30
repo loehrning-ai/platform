@@ -105,9 +105,17 @@ export function sameState(a: StageState, b: StageState): boolean {
 
 const states = new WeakMap<Element, StageState>();
 
-/** The last state written for a stage element (FINISHED_STATE before the shell has run). */
+/** The last published state, or the stable finished step already declared by server markup. */
 export function getStageState(root: Element | null): StageState {
-  return (root && states.get(root)) || FINISHED_STATE;
+  if (!root) return FINISHED_STATE;
+  const published = states.get(root);
+  if (published) return published;
+  const count = Number(root.getAttribute("data-steps"));
+  const step = Number(root.getAttribute("data-step"));
+  const initial = Number.isSafeInteger(count) && count >= 1 && count <= MAX_STEPS && step === count - 1
+    ? finishedState(count) : FINISHED_STATE;
+  states.set(root, initial);
+  return initial;
 }
 
 /** The shell calls this on every change; figures never do. */
