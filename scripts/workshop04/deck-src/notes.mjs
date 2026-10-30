@@ -39,7 +39,7 @@ const SOURCE_NOTES = {
       Remember: "Unter dem Balken steht firmenprofil.md, Z. 12. Selbst die Fakten des Falls haben Datei und Zeile. Das ist die Methode dieser Stunde.",
     }),
     note("Drei Anfragen", {
-      Time: "2 min",
+      Time: "1 min",
       Say: "Der Fallstichtag ist der 16.10.2026. Das ist nicht das heutige Workshop-Datum. Wir sitzen im Büro des Weinguts, sieben Tage vor der Rückgabe an Nordvik. Auf dem Tisch liegen drei Anfragen. Der Importeur in Göteborg schickt 8 Fragen, Rückgabe am 23.10.; Antworten ohne Nachweis zählt er nicht. Nordvik bietet die Weine bei Vinmonopolet in Norwegen an; dort gilt die 420-g-Regel. Was die Regel nicht erfüllt, kann Nordvik dort nicht anbieten. Das Marketing des Weinguts will 7 Aussagen auf neue Etiketten für Deutschland drucken, nach dem 27.09. Die Bank in Skopje braucht 6 Felder für den Solarkredit über 8.550.000 Denar, jede Schätzung gekennzeichnet.",
       Students: "Per Zuruf: Welche Anfrage beantwortet ihr zuerst?",
       Cue: "Stichtag zeigen: 16.10. Pfeile 1 bis 3: Importeur, Marketing, Bank. Pfeil 4: 21 Prüfpunkte: 8 Kundenfragen, 7 Werbeentwürfe, 6 Kreditfelder. Nachweise für Kundenanforderungen, Umweltaussagen und den Solarkredit. Die 53 % sind die betroffenen Umsatzanteile, kein nachgewiesener Umsatzverlust.",
@@ -163,7 +163,7 @@ const SOURCE_NOTES = {
       Remember: "Under the bar it says company_profile.md, l. 12. Even the facts of the case carry file and line. That is the method of this hour.",
     }),
     note("Three requests", {
-      Time: "2 min",
+      Time: "1 min",
       Say: "The case reference date is 16.10.2026. This is not today’s workshop date. We sit in the winery's office, seven days before the return to Nordvik. Three requests are on the desk. The importer in Gothenburg sends 8 questions, due on 23.10.; it does not count answers without evidence. Nordvik offers the wines to Vinmonopolet in Norway; the 420 g rule applies there. What fails the rule, Nordvik cannot offer there. The winery's in-house marketing wants to print 7 claims on new labels for Germany, after 27.09. The bank in Skopje needs 6 fields for the solar loan of 8,550,000 denar, every estimate marked.",
       Students: "Call it out: which request do you answer first?",
       Cue: "On arrival: the October timeline, 16.10. is marked. Arrow 1: envelope from Sweden with the 420 g rule. Arrow 2: envelope from marketing with the UWG. Arrow 3: envelope from the bank with the EBRD. Arrow 4: 8, 7 and 6 become 21 items to check: 8 customer questions, 7 draft marketing claims, 6 loan fields. evidence for customer requirements, environmental claims and the solar loan. The 53 % is the combined sales share concerned, not a measured loss.",
@@ -261,4 +261,12 @@ const SOURCE_NOTES = {
 
 // Establish company and decision before the host biography and the ESG primer.
 const ORDER = [0, 3, 4, 1, 2, ...Array.from({ length: 15 }, (_, i) => i + 5)];
-export const NOTES = Object.fromEntries(Object.entries(SOURCE_NOTES).map(([lang, notes]) => [lang, ORDER.map((i) => notes[i])]));
+const QUESTION_EXAMPLES = {
+  de: note("Was sollen wir beantworten?", { Time: "1 min", Say: "Das sind Auszüge aus den drei Anfragedateien. Der Importeur fragt nach Strom, Beschäftigten und Korruptionsfällen: Umwelt, Soziales und Unternehmensführung. Unser Marketing schlägt Aussagen vor und bittet uns um Prüfung vor Veröffentlichung. Die Bank will Stromdaten und eine ausdrücklich als Schätzung gekennzeichnete Amortisation. Noch keine Antworten zeigen. Derselbe Strombeleg wird später für Kunde und Bank gebraucht.", Students: "Die drei Aufträge unterscheiden: Fakten beantworten, Werbeentwurf prüfen, Kreditformular ausfüllen.", Cue: "Die sieben Beispiele vorlesen. Sie kommen direkt aus den Kit-Dateien, mit denselben Kennungen Q1, Q3, Q5, C1, C3, F2 und F4. Jetzt ist klar, wofür wir unsere Dateien prüfen.", Remember: "Sieben Beispiele von 21 Prüfpunkten; die Marketingaussagen sind ungeprüfte Entwürfe." }),
+  en: note("What are we being asked?", { Time: "1 min", Say: "These are excerpts from the three request files. The importer asks about electricity, employees and corruption: environmental, social and governance topics. Our marketing team proposes claims and asks us to check them before publication. The bank needs electricity data and an explicitly estimated payback. Show no answers yet. The same electricity evidence will later support both customer and bank responses.", Students: "Distinguish the three tasks: answer factual questions, check draft claims, complete a loan form.", Cue: "Read the seven examples. They are taken directly from the kit files, with the same identifiers Q1, Q3, Q5, C1, C3, F2 and F4. The room now knows why we need to check our files.", Remember: "Seven examples of 21 items; the marketing statements are unapproved drafts." }),
+};
+export const NOTES = Object.fromEntries(Object.entries(SOURCE_NOTES).map(([lang, notes]) => {
+  const ordered = ORDER.map((i) => notes[i]);
+  ordered.splice(3, 0, QUESTION_EXAMPLES[lang]);
+  return [lang, ordered];
+}));

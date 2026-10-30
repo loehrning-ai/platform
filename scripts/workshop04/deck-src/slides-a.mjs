@@ -33,7 +33,7 @@ export function host(c) {
 <div class="host__career" role="group" aria-label="${c.t("Werdegang", "Career")}"><i class="host__track" aria-hidden="true"></i><i class="host__fill" aria-hidden="true" data-step="0" data-win="0.35,0.9" data-fx="line"></i><ol class="host__stops">${stops}</ol></div>
 <p class="host__msc" data-step="0" data-win="0.5,0.85">${c.ico("cap")}<b>${c.t("M.Sc. Informatik", "M.Sc. Computer Science")}</b><span>${c.t("FAU Erlangen-Nürnberg", "FAU Erlangen-Nuremberg")}</span></p>
 <p class="host__line" data-step="0" data-win="0.6,0.95">${c.ico("shield")}<span>${c.t("Erfundener Fall. Keine Daten oder Systeme eines Arbeitgebers.", "Invented case. No employer data or systems.")}</span></p></div>
-${foot(c, 4)}</div>`,
+${foot(c, 5)}</div>`,
   );
 }
 
@@ -74,7 +74,7 @@ ${beat(3, -584, "18.12.2025", globe, c.t("Grüne Kredite für KMU in Nordmazedon
 <p class="src beats__src"${s(1, { win: ".5,1", out: 4, outWin: "0,.3" })}>${c.t("Quellen im Anhang 1", "Sources in appendix 1")}</p>
 <p class="beats__end"${s(4, { fx: "fly", win: ".42,.8" })} style="--dy:60px;--s:.94">${c.t("Jede Aussage braucht jetzt einen", "Every claim now needs")} <em class="beats__word"${s(4, { fx: "pop", ease: "spring", win: ".62,1" })}>${c.t("Beleg", "evidence")}</em>.</p>
 </div>
-${foot(c, 5)}`,
+${foot(c, 6)}`,
   );
 }
 
@@ -177,6 +177,23 @@ ${foot(c, 3)}`,
   );
 }
 
+/** Actual excerpts, read from the matching kit's three request files at build time. */
+export function requestExamples(c) {
+  const titles = c.de ? ["Der Importeur fragt", "Unser Marketing fragt", "Die Bank fragt"] : ["The importer asks", "Our marketing team asks", "The bank asks"];
+  const tasks = c.de
+    ? ["Daten für den Lieferantenfragebogen", "Dürfen wir diese Entwürfe veröffentlichen?", "Daten für unseren Solarkredit; Schätzungen markieren"]
+    : ["Data for the supplier questionnaire", "May we publish these draft claims?", "Data for our solar loan; mark estimates"];
+  return section(
+    { id: "beispielfragen", label: c.t("Was sollen wir beantworten?", "What are we being asked?"), steps: 0, durations: "1800" },
+    `${head(c.t("Aus den drei Anfragedateien · 7 von 21 Prüfpunkten", "From the three request files · 7 of 21 items"), c.t("Was wollen sie konkret von uns?", "What are they asking us?"), { size: "m" })}
+<div class="stage request-examples">
+${c.kit.examples.map((example, index) => `<article class="request-example surface surface--strong"><p class="label">${titles[index]}</p><p class="request-example__task">${tasks[index]}</p><div class="request-example__rows">${example.rows.map(([id, text]) => `<div><b>${id}</b><p>${esc(text)}</p></div>`).join("")}</div><p class="request-example__source">${esc(example.file)}</p></article>`).join("")}
+<p class="request-examples__point">${c.t("Jetzt die Belege prüfen. Danach helfen dieselben Dateien bei allen drei Aufträgen.", "Next, check the evidence. The same company files then support all three tasks.")}</p>
+</div>
+${foot(c, 4)}`,
+  );
+}
+
 export function today(c) {
   const words = c.de
     ? ["freigegebene", "Datei mit Zeile", "Zeitraum", "Umfang", "den Namen des Dokuments, das fehlt"]
@@ -222,7 +239,7 @@ export function today(c) {
 <div class="role surface surface--strong"${s(4, { fx: "pop", win: ".3,.7" })}><span class="ico-tile">${c.ico("download")}</span><b class="role__t">${c.t("Ihr nehmt das Kit mit.", "You take the kit home.")}</b><div class="kit-folder role__kit"><p class="kit-folder__head">${c.ico("folder")}${esc(c.kit.zip.replace(/\.zip$/, "/"))}</p>${kitFiles}</div></div>
 </div>
 </div>
-${foot(c, 6)}`,
+${foot(c, 7)}`,
   );
 }
 
@@ -269,7 +286,7 @@ ${check(5, "shield", c.t("Freigabe", "Approval"), c.t("Z. 4", "l. 4"), true)}
 <svg class="wires" viewBox="0 0 1696 774" preserveAspectRatio="none" aria-hidden="true"><path${s(1, { fx: "draw", win: "0,.5", out: 6, outWin: "0,.3" })} pathLength="1" d="M246 520 C 300 520, 266 98, 330 98"/><circle${s(1, { fx: "pop", win: ".45,.6", out: 6, outWin: "0,.3" })} cx="330" cy="98" r="8"/></svg>
 <div class="stiles">${tile("belegt", c.t("Die gesamte Antwort ist belegt. Auch schlechte Fakten können stimmen.", "Evidence supports the whole answer. Bad news can be proven too."))}${tile("schwach", c.t("Belege vorhanden, aber abgelaufen, geschätzt oder nicht freigegeben.", "Evidence exists, but is expired, estimated or unapproved."))}${tile("luecke", c.t("Für einen Teil der Antwort fehlt ein Nachweis.", "Part of the answer has no supporting evidence."))}<p class="stiles__end"${s(6, { fx: "pop", win: ".5,1" })}>${c.t("Hier: <em>LÜCKE</em>. Für 28 ha fehlt das Zertifikat.", "Here: <em>GAP</em>. No certificate covers the other 28 ha.")}</p></div>
 </div>
-${foot(c, 7)}`,
+${foot(c, 8)}`,
   );
 }
 
@@ -304,7 +321,7 @@ export function kitSlide(c, qr) {
 <div class="kitx__stats"${s(3, { win: ".2,.6" })}>${stat(3, c.t("Anfragen", "requests"), ".3,.85")}${stat(5, "Prompts", ".45,.95")}</div>
 <p class="kitx__role"${s(3, { fx: "fade", win: ".6,1" })}>${c.t("Dateien: Firmenwissen. Skill: Prüfmethode. Heute zeigt Tim den Ablauf. Zu Hause nutzt ihr das Kit selbst.", "Files: company knowledge. Skill: checking method. Tim demonstrates today. You use the kit at home.")}</p>
 </div>
-${foot(c, 8)}`,
+${foot(c, 9)}`,
   );
 }
 
@@ -334,6 +351,6 @@ export function review(c) {
     { id: "durchsicht", label: c.t("Durchsicht auf Papier", "Review on paper"), steps: 2, durations: "1300,3400,1500" },
     `<header class="hd hd--row"><div><p class="label">${c.t("Vor Claude · Belege für unsere drei Aufträge prüfen", "Before Claude · Check evidence for our three requests")}</p><h2 class="headline headline--m ds__h"><span class="ds__q"${s(0, { fx: "fade", win: "0,.4", out: 2, outWin: "0,.35" })}>${c.t("Was müssen wir prüfen?", "What needs care before we answer?")}</span><span class="ds__a"${s(2, { fx: "pop", win: ".3,.8" })} style="--origin:left center">${c.t("8 Prüfpunkte · Wasser vollständig", "8 issues to check · water is complete")}</span></h2></div>${roomPill(c, c.t("Ihr · auf Papier · 10 Min", "You · on paper · 10 min"), s(0, { fx: "pop", win: ".4,.9" }))}</header>
 <div class="stage ds"><div class="ds__grid"${s(0, { fx: "fade", win: "0,.4" })}>${cards}<p class="ds__count"${s(1, { fx: "pop", win: "0,.15" })}><b${s(1, { fx: "none", win: "0,1", count: "0,8,0" })}>8</b><span>${c.t("Prüfpunkte gefunden", "issues identified")}</span></p></div><p class="ds__purpose">${c.t("Datenfehler, Beleglücken und Geschäftsprobleme unterscheiden. Danach prüft Claude dieselben Dateien.", "Distinguish data errors, evidence gaps and business problems. Claude then checks the same files.")}</p></div>
-${foot(c, 9)}`,
+${foot(c, 10)}`,
   );
 }

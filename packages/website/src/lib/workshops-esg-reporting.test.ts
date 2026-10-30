@@ -63,8 +63,8 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
 
   it("links each locale to its own deck and kit edition, and labels the zip with its real size", () => {
     const mainSlides = (html: string) => html.match(/<section class="slide[^"]*" id="[^"]+" data-kind="main"/g) ?? [];
-    expect(mainSlides(slides)).toHaveLength(17);
-    expect(mainSlides(slidesEn)).toHaveLength(17);
+    expect(mainSlides(slides)).toHaveLength(18);
+    expect(mainSlides(slidesEn)).toHaveLength(18);
     const files = (workshop: typeof de) => workshop.materials.map((material) => material.href.slice(`/workshops/${slug}/`.length));
     expect(files(de)).toEqual(["slides.html", "crvena-zemja-nachweisprobe.zip"]);
     expect(files(en)).toEqual(["en/slides.html", "crvena-zemja-esg-kit.zip"]);

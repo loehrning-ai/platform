@@ -28,7 +28,7 @@ describe.each(Object.entries(EDITIONS))("deck figures (%s)", (locale, file) => {
 
   it("sets up the winery and its decision before the ESG primer", () => {
     const ids = [...html.matchAll(/<section class="slide[^>]* id="([^"]+)"/g)].map(([, id]) => id);
-    expect(ids.slice(0, 6)).toEqual(["cover", "weingut", "anfragen", "gastgeber", "nachricht", "heute"]);
+    expect(ids.slice(0, 7)).toEqual(["cover", "weingut", "anfragen", "beispielfragen", "gastgeber", "nachricht", "heute"]);
     const cover = html.slice(html.indexOf('id="cover"'), html.indexOf('id="weingut"'));
     expect(cover).toContain(locale === "de" ? "Ein Weingut. Drei Anfragen." : "One winery. Three requests.");
   });

@@ -22,7 +22,7 @@ import { readKitArchive } from "../kit-archive.mjs";
 import { KITS, zipPath } from "../kit-v3.mjs";
 import { NOTES } from "./notes.mjs";
 import { context } from "./parts.mjs";
-import { cover, host, kitSlide, news, requests, review, rule, today, winery } from "./slides-a.mjs";
+import { cover, host, kitSlide, news, requestExamples, requests, review, rule, today, winery } from "./slides-a.mjs";
 import { capAppendix, caseAppendix, late, measured, project, register, sources, step1, step2, step3, takeHome } from "./slides-b.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -58,7 +58,27 @@ export function readKit(lang) {
   const objectiveText = start.slice(at + meta.objectiveLabel.length).split(/\n\s*\n/)[0].replace(/\s+/g, " ").trim();
   const invoicePath = [...entries.keys()].find((name) => name.endsWith(meta.invoice));
   if (!invoicePath) throw new Error(`${lang}: kit lacks ${meta.invoice}`);
-  return { prompts, objective: objectiveText, project: meta.project, zip: `${KITS[lang].name}.zip`, invoice: meta.invoice };
+  const folder = lang === "de" ? "anfragen/" : "requests/";
+  const requestFiles = [1, 2, 3].map((n) => [...entries.keys()].find((name) => name.startsWith(`${folder}${n}-`)));
+  const requestText = requestFiles.map((name) => entries.get(name)?.toString("utf8") ?? "");
+  const row = (index, id, column) => {
+    const line = requestText[index].split("\n").find((line) => line.split("|")[1]?.trim() === id);
+    const value = line?.split("|")[column]?.trim();
+    if (!value) throw new Error(`${lang}: missing request example ${id}`);
+    return value;
+  };
+  const field = (id) => {
+    const lines = requestText[2].split("\n");
+    const index = lines.findIndex((line) => line.startsWith(`${id}.`));
+    if (index < 0) throw new Error(`${lang}: missing bank example ${id}`);
+    return lines[index].replace(/^F\d\.\s*/, "") + (id === "F4" ? ` ${lines[index + 1].trim()}` : "");
+  };
+  const examples = [
+    { file: requestFiles[0], rows: ["Q1", "Q3", "Q5"].map((id) => [id, row(0, id, 3)]) },
+    { file: requestFiles[1], rows: ["1", "3"].map((id) => [`C${id}`, row(1, id, 2)]) },
+    { file: requestFiles[2], rows: ["F2", "F4"].map((id) => [id, field(id)]) },
+  ];
+  return { prompts, examples, objective: objectiveText, project: meta.project, zip: `${KITS[lang].name}.zip`, invoice: meta.invoice };
 }
 
 const HEAD = {
@@ -84,7 +104,7 @@ const HEAD = {
   },
 };
 
-const SLIDES = [cover, winery, requests, host, news, today, rule, kitSlide, review, project, step1, step2, step3, register, late, measured, takeHome, sources, capAppendix, caseAppendix];
+const SLIDES = [cover, winery, requests, requestExamples, host, news, today, rule, kitSlide, review, project, step1, step2, step3, register, late, measured, takeHome, sources, capAppendix, caseAppendix];
 
 /** "1 min 30 s" → 90 */
 function seconds(time) {

@@ -51,7 +51,7 @@ ${cw(c, { crumbs: ["Projects", c.kit.project], side, cls: "pj__cw", attrs: s(0, 
 ${fly(`<i>md</i>${instrName}`, g.instr, { k: 1, win: "0,.42", cls: "pjv__f", lift: 120 })}
 ${flyers}
 </div>
-${foot(c, 10)}`,
+${foot(c, 11)}`,
   );
 }
 
@@ -119,7 +119,7 @@ ${focus(c, c.t("Reichen die Stromdaten für das <em>ganze Jahr</em>?", "Do the e
 </div>
 ${fly(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), g.compose, { k: 1, win: ".3,.7", out: 2, outWin: "0,.08", cls: "fly--cw", lift: 140 })}
 </div>
-${foot(c, 11)}`,
+${foot(c, 12)}`,
   );
 }
 
@@ -171,7 +171,7 @@ ${focus(c, c.t("Erst die Verbotsliste. Dann den <em>Beleg</em> prüfen.", "Check
 </div>
 <div class="stickers">${stickers}<div class="stickers__cell"><p class="stickers__end"${s(4, { fx: "pop", win: ".2,.8" })}><b${s(4, { fx: "none", win: ".2,.8", count: "0,2,0" })}>2</b>${c.t("dürfen raus.", "may go out.")}</p>${job(c, c.t("Ihr prüft C6:", "You check C6:"), c.t("Welches Wort muss weg?", "which word must go?"), s(3, { fx: "pop", win: ".55,1", out: 4, outWin: "0,.3" }) + ' style="--origin:left center"', "stickers__job")}</div></div>
 </div>
-${foot(c, 12)}`,
+${foot(c, 13)}`,
   );
 }
 
@@ -220,7 +220,7 @@ ${cw(c, { crumbs: [c.kit.project, c.t("Bankformular", "Bank form")], side: cwSid
 <p class="fx__eq"${s(3, { fx: "fade", win: ".25,.4" })}>F4 = ${slot("pvPrice", 0)} ÷ ( ${slot("pvYieldKwh", 1)} × ${slot("tariff", 2)} ) = <b${s(3, { fx: "pop", win: ".75,1" })}>${c.v.payback}</b></p>
 ${job(c, c.t("Ihr prüft:", "You check:"), c.t("Wer hat das Angebot unterschrieben?", "who signed the offer?"), s(3, { fx: "pop", win: ".8,1" }) + ' style="--origin:left center"', "fx__job")}</div></div>
 </div>
-${foot(c, 13)}`,
+${foot(c, 14)}`,
   );
 }
 
@@ -270,7 +270,7 @@ ${rows}
 ${job(c, c.t("Ihr prüft:", "You check:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
 </div>
 </div>
-${foot(c, 14)}`,
+${foot(c, 15)}`,
   );
 }
 
@@ -324,7 +324,7 @@ ${job(c, c.t("Ihr rechnet:", "You calculate:"), `${c.dv("meterNew")} minus ${c.d
 <p class="late__end"${s(4, { fx: "pop", win: ".7,1" })}>${c.t("Register", "Register")}: ${c.dv("afterBelegt")} ${c.status.belegt} · ${c.dv("afterSchwach")} ${c.status.schwach} · ${c.dv("afterLuecke")} ${c.status.luecke}</p>
 </div>
 </div>
-${foot(c, 15)}`,
+${foot(c, 16)}`,
   );
 }
 
@@ -340,7 +340,7 @@ export function measured(c) {
 <ul class="ms__chips">${chip("0,.5", "check", c.t("<b>21 von 21</b> Status richtig · 3 von 3 Läufen", "<b>21 of 21</b> statuses right · 2 of 3 runs"))}${chip(".2,.7", "search", c.t("September-Lücke gefunden nach <b>67 s</b>", "September gap found after <b>52 s</b>"))}</ul>
 <p class="ms__tag"${s(2, { win: ".5,1" })}>${c.ico("code")}${c.t("im Terminal gemessen, gleiche Prompts", "measured in the terminal, same prompts")}</p>
 </div>
-${foot(c, 16)}`,
+${foot(c, 17)}`,
   );
 }
 
@@ -357,7 +357,7 @@ export function takeHome(c, qr) {
 <figure class="qr th__qr"${s(0, { fx: "pop", win: ".55,1" })}>${qr}<figcaption><span>loehrning.ai${c.site}/demos/</span><span>esg-berichte-mit-ki</span></figcaption></figure>
 <p class="th__human"${s(1, { fx: "pop", win: "0,.6" })}>${c.ico("shield")}${c.t("Ein Mensch prüft und unterschreibt jede Antwort.", "A person checks and signs every answer.")}</p>
 </div>
-${foot(c, 17)}`,
+${foot(c, 18)}`,
   );
 }
 

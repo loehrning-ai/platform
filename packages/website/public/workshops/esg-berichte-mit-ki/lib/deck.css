@@ -667,3 +667,14 @@ em{font-style:normal}
 .ds__purpose{position:absolute;bottom:4px;left:0;right:0;margin:0;font:500 24px/1.35 var(--sans);color:var(--muted)}
 .kitx__role{font-size:25px;line-height:1.3}
 .rq__end{font-size:34px}
+
+/* Concrete request excerpts before learners inspect the evidence. */
+.request-examples{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+.request-example{display:grid;align-content:start;gap:22px;min-height:620px;padding:28px;border:1px solid var(--e-hair);border-radius:24px}
+.request-example__task{margin:0;font:700 28px/1.2 var(--sans)}
+.request-example__rows{display:grid;gap:24px}
+.request-example__rows > div{display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;padding-top:18px;border-top:1px solid var(--e-hair)}
+.request-example__rows b{font:700 23px/1.3 var(--mono);color:var(--accent)}
+.request-example__rows p{margin:0;font:500 27px/1.35 var(--sans)}
+.request-example__source{margin:0;font:500 17px/1.3 var(--mono);overflow-wrap:anywhere;color:var(--muted)}
+.request-examples__point{grid-column:1/-1;margin:6px 0 0;font:600 28px/1.25 var(--sans)}
