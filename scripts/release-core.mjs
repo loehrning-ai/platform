@@ -214,7 +214,7 @@ export async function executeRelease(options, io) {
   }
   validateDeployment(deployment, context, { ready: true });
   await assertHead();
-  if (createdHere && target === "production" && isCurrentProduction(deployment)) throw new Error("A newly created build unexpectedly owns the production domains; inspect Vercel staging configuration before another action");
+  if (createdHere && target === "production" && PRODUCTION_ORIGINS.some((origin) => (deployment.alias ?? []).includes(new URL(origin).hostname))) throw new Error("A newly created build unexpectedly owns a production domain; inspect Vercel staging configuration before another action");
   const canonicalSmoke = async () => {
     for (const origin of PRODUCTION_ORIGINS) await io.smoke(origin, contract, { project, deployment, authenticated: false });
   };

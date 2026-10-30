@@ -413,12 +413,14 @@ test("wrong deployment target or source SHA cannot be smoked or promoted", async
   }
 });
 
-test("newly created build must not acquire production domains before staged smoke", async () => {
-  const f = fixture({ deployment: readyDeployment({ alias: CANONICAL }) });
-  await assert.rejects(executeRelease(options(["--yes"]), f.io), /unexpectedly owns/);
-  assert.equal(mutations(f).some(([name]) => name === "promote"), false);
-  assert.equal(f.events.some(([name]) => name === "smoke"), false);
-});
+for (const alias of [[CANONICAL[0]], [CANONICAL[1]], CANONICAL]) {
+  test(`newly created build must not acquire ${alias.join(" or ")} before staged smoke`, async () => {
+    const f = fixture({ deployment: readyDeployment({ alias }) });
+    await assert.rejects(executeRelease(options(["--yes"]), f.io), /unexpectedly owns/);
+    assert.equal(mutations(f).some(([name]) => name === "promote"), false);
+    assert.equal(f.events.some(([name]) => name === "smoke"), false);
+  });
+}
 
 test("failed or missing exact-commit verify and Extended cannot mutate", async () => {
   for (const checks of [[], [run("verify", "completed", "failure")], [run("verify", "completed", "success", OTHER_SHA)], [run("verify", "completed", "success", SHA, { app: undefined })]]) {
