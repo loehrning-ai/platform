@@ -194,7 +194,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("de", [
       [
-        "Deck · 17 Folien",
+        "Deck · 18 Folien",
         `Für den Beamer. Jeder Prompt hat einen Kopierknopf. ${DECK_KEYS.de}`,
       ],
       [
@@ -349,7 +349,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     },
     materials: materials("en", [
       [
-        "Deck · 17 slides",
+        "Deck · 18 slides",
         `For the projector. Every prompt has a copy button. ${DECK_KEYS.en}`,
       ],
       [
