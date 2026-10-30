@@ -1279,7 +1279,7 @@ const en: DePack = {
     ],
     heading: "To take home",
     items: {
-      skill: ["Download the skill: esg-nachweise (ZIP)", "Claude uses it by itself when you ask about ESG answers, bank forms or marketing claims. You can also call it with a slash."],
+      skill: ["Download the skill: esg-evidence (English ZIP)", "Claude uses it by itself when you ask about ESG answers, bank forms or marketing claims. You can also call it with a slash."],
       card: ["Download the check card", "The four checks, the three statuses and the ban list on one page, to print."],
       instructions: ["Download the project instructions", "Reference date, reporting year and the three rules for a Claude project. They work without the skill too."],
       register: ["Download the register template (CSV)", "One row per answer with file, lines, status and missing document, plus empty columns for the checker and the date."],

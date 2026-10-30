@@ -19,8 +19,8 @@ const WHERE: ReadonlyArray<readonly [RegExp, AppFileWhere]> = [
 ];
 
 /** The skill's description, from the frontmatter of the SKILL.md visitors download. */
-function skillDescription(): string {
-  const source = readFileSync(join(process.cwd(), "content/skills", SKILL, "SKILL.md"), "utf8");
+function skillDescription(name: string): string {
+  const source = readFileSync(join(process.cwd(), "content/skills", name, "SKILL.md"), "utf8");
   const match = /^description:\s*(.+)$/m.exec(source);
   return match?.[1]?.trim() ?? "";
 }
@@ -60,7 +60,7 @@ export function appData(edition: Edition): AppData {
     recordedAt: first.recorded_at,
     files,
     instructions: instructions.name,
-    skill: { name: SKILL, description: skillDescription(), href: `/skills/${SKILL}.zip` },
+    skill: { name: edition === "en" ? "esg-evidence" : SKILL, description: skillDescription(edition === "en" ? "esg-evidence" : SKILL), href: `/skills/${edition === "en" ? "esg-evidence" : SKILL}.zip` },
     steps: APP_STEPS.map((step) => {
       const { turn, sent, wallS } = stepTurn(edition, step);
       return {

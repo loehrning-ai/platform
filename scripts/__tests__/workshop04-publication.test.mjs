@@ -23,7 +23,7 @@ import {
   WORKSHOP_RELATIVE,
 } from "../workshop04/export-esg-passport.mjs";
 import { buildKitArchive, readKitArchive } from "../workshop04/kit-archive.mjs";
-import { KITS, kitFiles, PLATFORM_FILES, refreshPublishedKits, zipName } from "../workshop04/kit-v3.mjs";
+import { KITS, kitFiles, PLATFORM_FILES, refreshPublishedKits, zipName, zipPath } from "../workshop04/kit-v3.mjs";
 import { prepareStartGuide } from "../workshop04/kit-guide.mjs";
 import { EDITIONS as DECK_SOURCES, render } from "../workshop04/deck-src/build.mjs";
 
@@ -166,6 +166,25 @@ test("the kit distinguishes presenter-led work from home practice and isolates a
 test("repo-owned kit copy can be rebuilt from the published archives without the private course source", () => {
   const refreshed = refreshPublishedKits();
   for (const locale of ["de", "en"]) assert.deepEqual(refreshed[locale], read(zipName(locale)), locale);
+});
+
+test("each kit ships its own language skill and links to the matching upload archive", () => {
+  for (const [locale, skill] of [["de", "esg-nachweise"], ["en", "esg-evidence"]]) {
+    const entries = readKitArchive(readFileSync(zipPath(locale)), { prefix: `${KITS[locale].name}/` });
+    const paths = entries.map(([name]) => name).filter((name) => name.startsWith("claude/"));
+    assert.deepEqual(paths, [`claude/${skill}/SKILL.md`]);
+    const document = new Map(entries).get(paths[0]).toString("utf8");
+    assert.match(document, new RegExp(`^name: ${skill}$`, "m"));
+    assert.ok(startGuide(locale).includes(`loehrning.ai/skills/${skill}.zip`));
+    assert.doesNotMatch(document, /320[.,]9|305[.,]1|41[.,]200/);
+    if (locale === "en") {
+      assert.match(document, /^# ESG answers with evidence/m);
+      assert.doesNotMatch(document, /Nachhaltigkeits|Nachweisprobe|## Vor der/);
+    } else {
+      assert.match(document, /^# ESG-Antworten mit Nachweis/m);
+      assert.doesNotMatch(document, /^## English/m);
+    }
+  }
 });
 
 test("the objective is word for word the same in deck, kit and demo, in both languages", () => {

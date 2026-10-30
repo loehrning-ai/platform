@@ -87,11 +87,11 @@ describe("<KitPage>", () => {
           if (slug === "esg-berichte-mit-ki") {
             const guide = document.querySelector("[data-kit-setup]")!;
             expect(guide).toHaveTextContent("Haiku");
-            expect(guide).toHaveTextContent("Set project instructions");
-            expect(guide).toHaveTextContent("Add files or photos");
+            expect(guide).toHaveTextContent("Instructions → Edit");
+            expect(guide).toHaveTextContent("Upload from computer");
             expect(guide).toHaveTextContent(locale === "en" ? "START-HERE.md" : "START-HIER.md");
             expect(guide).toHaveTextContent(locale === "en" ? "answers/" : "loesungen/");
-            expect(within(guide as HTMLElement).getByRole("link")).toHaveAttribute("href", "/skills/esg-nachweise.zip");
+            expect(within(guide as HTMLElement).getByRole("link")).toHaveAttribute("href", locale === "en" ? "/skills/esg-evidence.zip" : "/skills/esg-nachweise.zip");
             return;
           }
           const panel = () => screen.getByRole("tabpanel");

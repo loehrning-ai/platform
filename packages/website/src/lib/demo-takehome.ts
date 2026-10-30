@@ -1,6 +1,6 @@
 /**
  * What each v3 demo hands the visitor in its "Für deinen Claude" block: the
- * kit zip, the one bilingual skill, the project instructions and the
+ * kit zip, the matching language skill, the project instructions and the
  * templates. Keyed by demo slug; a builder adds or changes only the entry of
  * their own workshop. A demo without an entry renders no block.
  *
@@ -26,8 +26,8 @@ export interface TakeHomeKit {
 export interface TakeHome {
   /** The kit per locale; both may point at the same edition. */
   readonly kit: Readonly<Record<"de" | "en", TakeHomeKit>>;
-  /** content/skills/<name>/SKILL.md, served as /skills/<name>.zip. One bilingual skill per workshop. */
-  readonly skill: { readonly name: string };
+  /** content/skills/<name>/SKILL.md, served as /skills/<name>.zip. A workshop can override the default skill per locale. */
+  readonly skill: { readonly name: string; readonly locales?: Partial<Record<"de" | "en", string>> };
   /** Slugs in the VORLAGEN registry with kind "template". */
   readonly templates: readonly { readonly vorlage: string }[];
 }
@@ -202,7 +202,7 @@ export const DEMO_TAKEHOME: Readonly<Partial<Record<DemoSlug, TakeHome>>> = {
         installDoc: "crvena-zemja-esg-kit/START-HERE.md",
       },
     },
-    skill: { name: "esg-nachweise" },
+    skill: { name: "esg-nachweise", locales: { en: "esg-evidence" } },
     templates: [
       { vorlage: "esg-nachweisprobe" },
       { vorlage: "esg-projektanweisungen" },
