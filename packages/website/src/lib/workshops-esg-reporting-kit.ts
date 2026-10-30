@@ -11,7 +11,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   de: {
     fileName: "crvena-zemja-nachweisprobe.zip",
     title: "Das Nachweisprobe-Kit",
-    lead: "Ein Weingut muss Importeur, Marketing und Bank antworten. Mit 13 Dateien prüfst du zu Hause, welche Aussage einen Nachweis hat.",
+    lead: "Prüfe ESG-Antworten an den Quelldateien und erstelle ein Excel-Nachweisregister. Du übst denselben Weingut-Fall, den Tim in Claude Desktop zeigt.",
     stats: [
       { value: "13", label: "Dateien" },
       { value: "5", label: "Prompts" },
@@ -90,7 +90,7 @@ export const ESG_REPORTING_KIT: Readonly<Record<Locale, WorkshopKit>> = {
   en: {
     fileName: "crvena-zemja-esg-kit.zip",
     title: "The evidence check kit",
-    lead: "A winery must answer its importer, marketing team and bank. With 13 files you check at home which claim has evidence.",
+    lead: "Check ESG answers against source files and build an Excel evidence register. Practise the same winery case Tim demonstrates in Claude Desktop.",
     stats: [
       { value: "13", label: "files" },
       { value: "5", label: "prompts" },

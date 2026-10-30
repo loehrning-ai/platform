@@ -9,6 +9,7 @@ import type { Workshop } from "@/lib/workshops";
 import { workshopKitMaterial } from "@/lib/workshops";
 import { ActionPicture } from "./action-pictures";
 import { KIT_PAGE_COPY } from "./kit-copy";
+import { ClaudeKitSetup } from "./claude-kit-setup";
 import { KitStepper, type KitStepperLabels } from "./kit-stepper";
 import "./action-cards.css";
 import "./kit-motion.css";
@@ -176,6 +177,7 @@ export function KitPage({ workshop, locale }: Props) {
         </div>
       </section>
 
+      {workshop.slug === "esg-berichte-mit-ki" ? <ClaudeKitSetup locale={locale} /> : (
       <section aria-labelledby="kit-steps-heading" className={cx(SECTION, "scroll-mt-20")}>
         <div className={CONTAINER}>
           <SectionHead id="kit-steps-heading" title={kit.stepsHeading} size="compact" />
@@ -184,6 +186,8 @@ export function KitPage({ workshop, locale }: Props) {
           </div>
         </div>
       </section>
+
+      )}
 
       <section aria-labelledby="kit-rules-heading" className={SECTION}>
         <div className={CONTAINER}>

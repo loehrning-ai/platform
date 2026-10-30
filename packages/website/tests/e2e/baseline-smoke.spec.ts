@@ -86,11 +86,17 @@ for (const locale of ["de", "en"] as const) {
       await inNewPage(context, async (page) => {
         await openApp(page, `${prefix}/workshops/${course.slug}/kit`);
         await expect(page.locator("main")).toContainText("Codex");
+        if (course.capability === "workshop-w04") {
+          await expect(page.locator("[data-kit-setup-step]")).toHaveCount(4);
+          await expect(page.locator("[data-kit-setup]")).toContainText("Set project instructions");
+          await expect(page.locator("[data-kit-setup]")).toContainText("Add files or photos");
+        } else {
         const tabs = page.locator("[data-kit-tab]");
         await expect(tabs).not.toHaveCount(0);
         for (let index = 0; index < await tabs.count(); index++) {
           await tabs.nth(index).click();
           await expect(page.locator(`[data-kit-panel="${index + 1}"]`)).toBeVisible();
+        }
         }
         const link = page.locator('[data-kit-download] a[href$=".zip"]');
         const href = (await link.getAttribute("href"))!;
