@@ -2,7 +2,7 @@
  * Workshop 04 deck, slides 1 to 10: cover, host, why now, the winery, the three requests, today,
  * the one rule, the kit and the review on paper. Each function returns one <section> for edition `c`.
  */
-import { esc, FILES, file, foot, head, pollMini, REQUESTS, roomPill, s, section, stagger, tsteps } from "./parts.mjs";
+import { esc, FILES, file, foot, head, REQUESTS, roomPill, s, section, stagger, tsteps } from "./parts.mjs";
 
 export function cover(c) {
   return section(
@@ -257,8 +257,7 @@ export function rule(c) {
 <div class="stage rule">
 <div class="rule__bottle"${s(0, { fx: "fly", win: "0,.6" })} style="--dy:60px;--s:.94"><svg viewBox="0 0 220 640" aria-hidden="true"><use href="${c.lib}/icons.svg#x-bottle"/></svg>
 <div class="bottle-label rule__card"${s(0, { fx: "pop", win: ".3,.8" })}><span class="bottle-label__brand">Crvena Zemja</span><span class="bottle-label__claim"><span>${c.t("Zertifizierte", "Certified")}<i${s(5, { fx: "strike", win: ".45,.75" })}></i></span><span>${c.t("Bio-Weinberge", "organic vineyards")}<i${s(5, { fx: "strike", win: ".55,.85" })}></i></span></span><span class="bottle-label__year">${c.t("alle Weine", "all wines")}</span></div></div>
-<div class="rule__poll"${s(0, { win: ".5,1", out: 1, outWin: "0,.3" })}><p class="rule__q">${c.t('<span class="lead">Ihr schätzt:</span> Hält die Aussage?', '<span class="lead">You predict:</span> does the claim hold?')}</p><div class="poll poll--two" data-poll-show="satz"><button class="poll__opt" type="button" data-poll="satz" data-value="ja"><span class="poll__key">A</span><span>${c.t("Ja, das Zertifikat liegt bei", "Yes, the certificate is there")}</span><b data-poll-n>0</b></button><button class="poll__opt" type="button" data-poll="satz" data-value="nein"><span class="poll__key">B</span><span>${c.t("Nein", "No")}</span><b data-poll-n>0</b></button></div></div>
-${pollMini(c, "satz", [["ja", c.t("A · Ja", "A · Yes")], ["nein", c.t("B · Nein", "B · No")]], "nein", { k: 1, win: ".55,.95", out: 6, outWin: "0,.4", ring: [5, ".7,1"], cls: "rule__mini" })}
+<div class="rule__focus"${s(0, { win: ".5,1", out: 1, outWin: "0,.3" })}><p class="rule__q">${c.t("Das Zertifikat liegt bei. <em>Was belegt es?</em>", "The certificate is there. <em>What does it prove?</em>")}</p><p class="rule__hint">${c.t("Zitat · Zeitraum · Umfang · Freigabe", "Quote · Period · Scope · Approval")}</p></div>
 <div class="doc rule__doc"${s(1, { fx: "pop", win: ".35,.85", out: 6, outWin: "0,.4" })} style="--origin:left top"><div class="doc__head">${c.ico("file")}${c.t("bio_zertifikat_weinberg.txt", "organic_certificate_vineyard.txt")}<span class="file__meta">${c.t("11 Zeilen", "11 lines")}</span></div><ol class="doc__lines">${lines}</ol></div>
 <div class="rule__right"${s(2, { fx: "fade", win: "0,.1", out: 6, outWin: "0,.4" })}><ol class="checks">
 ${check(2, "quote", c.t("Zitat", "Quote"), c.t("Z. 3 bis 5", "l. 3 to 5"), true)}

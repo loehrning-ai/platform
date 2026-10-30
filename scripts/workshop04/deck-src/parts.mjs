@@ -123,26 +123,6 @@ export function liveHead(c, kick, items, headline) {
 /** The room's job on a slide: "Ihr schätzt: …" before a run, "Ihr prüft: …" after it. */
 export const job = (c, lead, text, attrs = "", cls = "") => `<p class="job${cls ? ` ${cls}` : ""}"${attrs}>${c.ico("hand")}<span><b>${lead}</b> ${text}</span></p>`;
 
-/** A poll's options as [value, label]: 0 to n, or labelled ranges with the values a, b, c, d. */
-export const pollOptions = (options) =>
-  typeof options === "number" ? Array.from({ length: options + 1 }, (_, n) => [String(n), String(n)]) : options.map((label, n) => ["abcd"[n], label]);
-
-/**
- * The room's estimate, kept on screen after the big poll leaves: the same votes (lib/scenes.js mirrors
- * every [data-value] under [data-poll-show]) as small bars, and a ring on the right option at the
- * result step. opts: [value, label]. o: { k, win, out, outWin, ring: [step, win], cls }
- */
-export function pollMini(c, name, opts, correct, o) {
-  const cells = opts
-    .map(([value, label]) => {
-      const ring = value === correct ? `<i class="pmini__ring"${s(o.ring[0], { fx: "pop", win: o.ring[1] })}></i>` : "";
-      return `<li data-value="${value}"><b data-poll-n>0</b><i></i><span>${label}</span>${ring}</li>`;
-    })
-    .join("");
-  const attrs = s(o.k, { fx: "pop", win: o.win, out: o.out, outWin: o.outWin });
-  return `<div class="pmini surface surface--strong${o.cls ? ` ${o.cls}` : ""}" data-poll-show="${name}"${attrs}><p class="pmini__h">${c.ico("hand")}${c.t("Eure Schätzung", "Your prediction")}</p><ol class="pmini__bars" style="--n:${opts.length}">${cells}</ol></div>`;
-}
-
 /* ── Claude desktop replica ─────────────────────────────────────────── */
 
 export function cwBar(crumbs) {

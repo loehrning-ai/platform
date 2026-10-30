@@ -4,7 +4,7 @@
  * Kit files travel into the window as stage-level copies (fly() in parts.mjs, geometry.mjs).
  */
 import { geo } from "./geometry.mjs";
-import { activity, cw, cwFile, cwSide, esc, FILES, file, fly, foot, head, job, liveHead, pollMini, pollOptions, prompt, REQUESTS, s, section, stagger } from "./parts.mjs";
+import { activity, cw, cwFile, cwSide, esc, FILES, file, fly, foot, head, job, liveHead, prompt, REQUESTS, s, section, stagger } from "./parts.mjs";
 
 const act = (c, k, win, icon, html, done = true) => `<p class="cw-act"${done ? " data-done" : ""}${s(k, { fx: "pop", win })} style="--origin:left center">${c.ico(icon)}${html}</p>`;
 
@@ -61,11 +61,9 @@ function chats(c, n) {
   return names.slice(0, n).reverse().map((name, i) => [name, i === 0]);
 }
 
-/** A room prediction with the engine poll, 0 to max, over the empty chat. */
-function predict(c, name, question, options, o = {}) {
-  const opts = pollOptions(options);
-  const poll = opts.map(([value, label]) => `<button class="poll__opt" type="button" data-poll="${name}" data-value="${value}"><span class="poll__key">${label}</span><b data-poll-n>0</b></button>`).join("");
-  return `<div class="predict surface surface--strong${o.cls ? ` ${o.cls}` : ""}"${s(0, { fx: "pop", win: ".1,.6", out: o.out ?? 1, outWin: "0,.3" })}><p class="predict__q"><span class="lead">${c.t("Ihr schätzt:", "You predict:")}</span> ${question}</p><div class="poll poll--row${typeof options === "number" ? "" : " poll--range"}" data-poll-show="${name}" style="--n:${opts.length}">${poll}</div></div>`;
+/** A source check before Tim runs Claude. No vote collection or result counters. */
+function focus(c, question, o = {}) {
+  return `<div class="focus surface surface--strong${o.cls ? ` ${o.cls}` : ""}"${s(0, { fx: "pop", win: ".1,.6", out: o.out ?? 1, outWin: "0,.3" })}><p class="focus__label">${c.t("Vor Claude prüfen", "Check before Claude")}</p><p class="focus__q">${question}</p></div>`;
 }
 
 /** Left column of a hands-on slide: the kit's request folder with the one in use lit. */
@@ -78,7 +76,6 @@ function requestFolder(c, active, attrs = "") {
 const att = (html, attrs = "") => `<span class="cw-att"${attrs}>${html}</span>`;
 
 export function step1(c) {
-  const st = c.status;
   const g = geo(c, "s1", {});
   const strom = c.de ? "strom_2025.csv" : "electricity_2025.csv";
   const q = c.de
@@ -106,7 +103,6 @@ ${activity(c, c.t("4 Schritte", "4 steps"), [
     .map((tone, i) => `<li${s(4, { fx: "pop", win: stagger(i, 3, 0.4, 0.3, 1) })} style="--origin:left center">${c.chip(tone)}<b${s(4, { fx: "none", win: stagger(i, 3, 0.4, 0.3, 1), count: `0,${[5, 1, 2][i]},0` })}>${[5, 1, 2][i]}</b></li>`)
     .join("");
   const ghost = att(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), ' data-ghost aria-hidden="true"');
-  const mini = pollMini(c, "s1", pollOptions(8), "5", { k: 1, win: ".25,.6", ring: [4, ".5,.9"], cls: "hs__mini" });
   return section(
     { id: "schritt-1", label: c.t("Schritt 1: Fragebogen des Importeurs", "Step 1: The importer's questionnaire"), steps: 4, durations: "1300,2200,2800,3000,2200" },
     `${liveHead(c, c.t("Schritt 1 von 5", "Step 1 of 5"), [
@@ -116,9 +112,9 @@ ${activity(c, c.t("4 Schritte", "4 steps"), [
       [c.t("Stromdatei öffnen", "Open electricity CSV"), 3, ".5,.85"],
     ], c.t("Der Importeur zählt nur belegte Antworten", "The importer counts only answers with evidence"))}
 <div class="stage hs">
-<div class="hs__left">${requestFolder(c, 0, s(0, { fx: "fade", win: "0,.2", out: 4, outWin: "0,.25" }))}${mini}${job(c, c.t("Ihr prüft:", "You check:"), c.t("Decken Z. 3 bis 14 alle 12 Monate?", "do l. 3 to 14 cover all 12 months?"), s(2, { fx: "pop", win: ".7,1", out: 4, outWin: "0,.25" }) + ' style="--origin:left center"', "hs__job")}<div class="kit-folder hs__know"${s(4, { fx: "pop", win: ".2,.5" })} style="--origin:left center"><p class="kit-folder__head">${c.ico("book")}Project knowledge</p>${file("csv", strom, c.t("Z. 3 bis 14", "l. 3 to 14"), { cls: "file--accent", attrs: s(4, { fx: "glow", win: ".5,.9" }) })}</div><ol class="tally">${tally}</ol></div>
+<div class="hs__left">${requestFolder(c, 0, s(0, { fx: "fade", win: "0,.2", out: 4, outWin: "0,.25" }))}${job(c, c.t("Ihr prüft:", "You check:"), c.t("Decken Z. 3 bis 14 alle 12 Monate?", "do l. 3 to 14 cover all 12 months?"), s(2, { fx: "pop", win: ".7,1", out: 4, outWin: "0,.25" }) + ' style="--origin:left center"', "hs__job")}<div class="kit-folder hs__know"${s(4, { fx: "pop", win: ".2,.5" })} style="--origin:left center"><p class="kit-folder__head">${c.ico("book")}Project knowledge</p>${file("csv", strom, c.t("Z. 3 bis 14", "l. 3 to 14"), { cls: "file--accent", attrs: s(4, { fx: "glow", win: ".5,.9" }) })}</div><ol class="tally">${tally}</ol></div>
 <div class="hs__right">
-${predict(c, "s1", c.t(`Wie viele der 8 Fragen sind <em>${st.belegt}</em>?`, `how many of the 8 questions are <em>${st.belegt}</em>?`), 8)}
+${focus(c, c.t("Reichen die Stromdaten für das <em>ganze Jahr</em>?", "Do the electricity records cover the <em>full year</em>?"))}
 <div class="hs__lens"><div class="hs__cam">${cw(c, { crumbs: [c.kit.project, c.t("Fragebogen Nordvik", "Nordvik questionnaire")], side: cwSide(c, { chats: chats(c, 1) }), cls: "hs__cw", attrs: s(1, { fx: "fly", win: "0,.3" }), style: "--dy:60px;--s:.97", att: ghost }, thread)}</div></div>
 </div>
 ${fly(cwFile("MD", REQUESTS[c.lang][0], c.t("8 Fragen", "8 questions")), g.compose, { k: 1, win: ".3,.7", out: 2, outWin: "0,.08", cls: "fly--cw", lift: 140 })}
@@ -171,8 +167,8 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
     ], c.t("Welche der 7 Aussagen dürfen raus?", "Which of the 7 claims may go out?"))}
 <div class="stage hs2">
 <div class="hs2__left">${cw(c, { crumbs: [c.kit.project, c.t("Werbeaussagen", "Marketing claims")], side: cwSide(c, { chats: chats(c, 2) }), cls: "hs2__cw", attrs: s(0, { fx: "fade", win: "0,.4" }), att: waiting }, thread)}
-${predict(c, "s2", c.t("Wie viele der 7 dürfen <em>raus</em>?", "how many of the 7 may go <em>out</em>?"), 7)}
-${pollMini(c, "s2", pollOptions(7), "2", { k: 1, win: ".05,.4", ring: [4, ".3,.7"], cls: "hs2__mini" })}</div>
+${focus(c, c.t("Erst die Verbotsliste. Dann den <em>Beleg</em> prüfen.", "Check the ban list first. Then check the <em>evidence</em>."))}
+</div>
 <div class="stickers">${stickers}<div class="stickers__cell"><p class="stickers__end"${s(4, { fx: "pop", win: ".2,.8" })}><b${s(4, { fx: "none", win: ".2,.8", count: "0,2,0" })}>2</b>${c.t("dürfen raus.", "may go out.")}</p>${job(c, c.t("Ihr prüft C6:", "You check C6:"), c.t("Welches Wort muss weg?", "which word must go?"), s(3, { fx: "pop", win: ".55,1", out: 4, outWin: "0,.3" }) + ' style="--origin:left center"', "stickers__job")}</div></div>
 </div>
 ${foot(c, 12)}`,
@@ -256,7 +252,6 @@ ${activity(c, c.t("21 Zeilen", "21 rows"), [
   ], s(1, { fx: "pop", win: ".25,.35" }) + ' style="--origin:left top"')}
 ${answer}
 </div>`;
-  const ranges = c.de ? ["0 bis 5", "6 bis 10", "11 bis 15", "16 bis 21"] : ["0 to 5", "6 to 10", "11 to 15", "16 to 21"];
   return section(
     { id: "register", label: c.t("Schritt 4: Nachweisregister", "Step 4: Evidence register"), steps: 4, durations: "1500,1800,2800,2200,1700" },
     `${liveHead(c, c.t("Schritt 4 von 5", "Step 4 of 5"), [
@@ -268,12 +263,11 @@ ${answer}
 <div class="stage reg">
 <div class="reg__left">${cw(c, { crumbs: [c.kit.project, c.t("Nachweisregister", "Evidence register")], side: cwSide(c, { chats: chats(c, 4) }), cls: "reg__cw", attrs: s(0, { fx: "fly", win: "0,.5" }), style: "--dy:60px;--s:.97" }, thread)}</div>
 <div class="reg__right">
-${predict(c, "reg", c.t(`Wie viele der 21 sind <em>${c.status.belegt}</em>?`, `how many of the 21 are <em>${c.status.belegt}</em>?`), ranges, { cls: "reg__poll" })}
+${focus(c, c.t("Jede Antwort braucht <em>Datei, Zeile und Status</em>.", "Every answer needs a <em>file, line and status</em>."), { cls: "reg__focus" })}
 <div class="reg__count"${s(1, { fx: "fade", win: ".3,.6" })}><b class="stat__n"${s(2, { fx: "none", win: ".1,.95", count: "0,9,0" })}>${c.dv("belegtBefore")}</b><span class="reg__of">/ 21 ${c.chip("belegt")}</span><span class="reg__legend"${s(2, { fx: "fade", win: ".7,1" })}>${c.chip("schwach")} 3 ${c.chip("luecke", "chip--quiet")} 9</span></div>
 ${rows}
 <div class="reg__row reg__row--vsme"${s(3, { fx: "fade", win: "0,.2" })}><p class="reg__vcap">${c.t("VSME · freiwilliger EU-Standard", "VSME · voluntary EU standard")}</p><span class="reg__l"></span><div class="tiles reg__vsme" style="--cols:11">${vsme}</div></div>
-${pollMini(c, "reg", pollOptions(ranges), "b", { k: 1, win: ".4,.8", out: 3, outWin: "0,.25", ring: [2, ".8,1"], cls: "reg__mini" })}
-${job(c, c.t("Ihr ratet:", "Your guess:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
+${job(c, c.t("Ihr prüft:", "You check:"), c.t("Welches fehlende Dokument blockiert die meisten Antworten?", "which missing document blocks the most answers?"), s(3, { fx: "pop", win: ".5,.9" }) + ' style="--origin:left center"', "reg__job")}
 </div>
 </div>
 ${foot(c, 14)}`,
@@ -316,7 +310,7 @@ ${activity(c, c.t("3 Schritte", "3 steps"), [
     ], c.t("Die Rechnung kommt <em>nach</em>", "The invoice arrives <em>late</em>"))}
 <div class="stage late">
 <div class="late__left">
-${predict(c, "late", c.t("Wie viele der 21 Status ändern sich?", "how many of the 21 statuses change?"), 6, { out: 1, cls: "late__poll" })}
+${focus(c, c.t("September fehlt. Jetzt kommt der <em>Beleg</em>.", "September is missing. Now the <em>evidence</em> arrives."), { out: 1 })}
 <div class="late__mail"${s(0, { fx: "fade", win: "0,.3", out: 2, outWin: ".05,.3" })}><div class="envelope" data-keep${s(1, { fx: "none", win: ".25,1" })}><div class="envelope__back"></div><div class="envelope__letter">${paper()}</div><div class="envelope__front"></div><div class="envelope__flap"></div></div></div>
 ${cw(c, { crumbs: [c.kit.project, c.t("Nachweisregister", "Evidence register")], side: cwSide(c, { chats: chats(c, 4) }), cls: "late__cw", attrs: s(2, { fx: "fly", win: "0,.4" }), style: "--dy:60px;--s:.97" }, thread)}
 ${fly(paper(), photo.slice(0, 5), { k: 2, win: ".1,.75", cls: "late__photo", s: photo[5], lift: 160, h: photo[6] })}
@@ -325,7 +319,7 @@ ${fly(paper(), photo.slice(0, 5), { k: 2, win: ".1,.75", cls: "late__photo", s: 
 <p class="label">${c.t("Strom 2025 · MWh je Monat", "Electricity 2025 · MWh per month")}</p>
 <ol class="bars">${bars}</ol>
 <div class="late__mwh"><b class="stat__n" data-keep${s(3, { fx: "none", win: ".1,.6", count: "279.7,320.9,1" })}>${c.dv("mwh12")}</b><span class="stat__l">MWh · <b data-keep${s(3, { fx: "none", win: ".1,.5", count: "11,12,0" })}>12</b> ${c.t("von 12 Monaten", "of 12 months")}</span></div>
-<div class="late__tiles">${pollMini(c, "late", pollOptions(6), "2", { k: 1, win: ".05,.35", ring: [4, ".6,1"], cls: "late__mini" })}${tile("F2", "belegt", c.t("Strom, ganzes Jahr", "electricity, full year"))}${tile("F3", "schwach", `${c.t("PV-Anteil", "PV share")} <span class="late__share"><i${s(0, { fx: "fade", win: "0,.2", out: 4, outWin: ".2,.35" })}>?</i><b data-step="4" data-win=".35,.75" data-fx="none" data-count="0,56.1,1" data-count-unit=" %" data-v="share12">${c.v.share12}</b></span>`)}<div class="late__reg"><b class="stat__n" data-keep${s(4, { fx: "none", win: ".4,.8", count: "9,10,0" })}>10</b><span class="stat__l">/ 21 ${c.status.belegt}</span></div></div>
+<div class="late__tiles">${tile("F2", "belegt", c.t("Strom, ganzes Jahr", "electricity, full year"))}${tile("F3", "schwach", `${c.t("PV-Anteil", "PV share")} <span class="late__share"><i${s(0, { fx: "fade", win: "0,.2", out: 4, outWin: ".2,.35" })}>?</i><b data-step="4" data-win=".35,.75" data-fx="none" data-count="0,56.1,1" data-count-unit=" %" data-v="share12">${c.v.share12}</b></span>`)}<div class="late__reg"><b class="stat__n" data-keep${s(4, { fx: "none", win: ".4,.8", count: "9,10,0" })}>10</b><span class="stat__l">/ 21 ${c.status.belegt}</span></div></div>
 ${job(c, c.t("Ihr rechnet:", "You calculate:"), `${c.dv("meterNew")} minus ${c.dv("meterOld")}`, s(2, { fx: "pop", win: ".75,1", out: 4, outWin: "0,.3" }) + ' style="--origin:left center"', "late__job")}
 <p class="late__end"${s(4, { fx: "pop", win: ".7,1" })}>${c.t("Register", "Register")}: ${c.dv("afterBelegt")} ${c.status.belegt} · ${c.dv("afterSchwach")} ${c.status.schwach} · ${c.dv("afterLuecke")} ${c.status.luecke}</p>
 </div>

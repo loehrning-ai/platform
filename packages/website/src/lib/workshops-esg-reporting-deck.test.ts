@@ -41,6 +41,12 @@ describe.each(Object.entries(EDITIONS))("deck figures (%s)", (locale, file) => {
     expect(html).toContain(locale === "de" ? "Tim: live · Folie: Muster" : "Tim: live · Slide: sample");
   });
 
+  it("uses source checks without live voting controls or voting instructions", () => {
+    expect(html).not.toMatch(/data-poll(?:=|-)|class="poll\b/);
+    expect(html).not.toMatch(/Handzeichen|Abstimmung|show of hands|hands up|\bvotes?\b/i);
+    expect(html).toContain(locale === "de" ? "Vor Claude prüfen" : "Check before Claude");
+  });
+
   it("binds every figure the demo also computes to the demo's value", () => {
     const shared = [...deck.keys()].filter((key) => key in demo);
     expect(shared.length).toBeGreaterThanOrEqual(10);

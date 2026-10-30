@@ -43,6 +43,11 @@ describe("<KitPage>", () => {
           expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
           expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(kit.title);
           for (const stat of kit.stats) expect(screen.getAllByText(stat.value).length).toBeGreaterThan(0);
+          if (slug === "esg-berichte-mit-ki") {
+            expect(document.querySelectorAll("[data-kit-setup-step]")).toHaveLength(4);
+            expect(screen.queryByRole("tab")).not.toBeInTheDocument();
+            return;
+          }
           const tabs = screen.getAllByRole("tab");
           expect(tabs).toHaveLength(kit.steps.length);
           expect(tabs.map((tab) => tab.getAttribute("aria-selected"))).toEqual(
@@ -67,7 +72,7 @@ describe("<KitPage>", () => {
           for (const item of kit.contents) expect(contents).toHaveTextContent(item.name);
           // The stats come before the explainer, the explainer before the download.
           const stats = container.querySelector("[data-kit-stat]") as HTMLElement;
-          const stepper = container.querySelector("[data-kit-stepper]") as HTMLElement;
+          const stepper = container.querySelector("[data-kit-stepper], [data-kit-setup]") as HTMLElement;
           const download = container.querySelector("[data-kit-download]") as HTMLElement;
           const follows = (a: Element, b: Element) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
           expect(follows(stats, stepper)).toBe(true);
@@ -79,6 +84,16 @@ describe("<KitPage>", () => {
 
         it("shows the selected step's input and action, optional result, and keyboard navigation", () => {
           render(<KitPage workshop={workshop} locale={locale} />);
+          if (slug === "esg-berichte-mit-ki") {
+            const guide = document.querySelector("[data-kit-setup]")!;
+            expect(guide).toHaveTextContent("Haiku");
+            expect(guide).toHaveTextContent("Set project instructions");
+            expect(guide).toHaveTextContent("Add files or photos");
+            expect(guide).toHaveTextContent(locale === "en" ? "START-HERE.md" : "START-HIER.md");
+            expect(guide).toHaveTextContent(locale === "en" ? "answers/" : "loesungen/");
+            expect(within(guide as HTMLElement).getByRole("link")).toHaveAttribute("href", "/skills/esg-nachweise.zip");
+            return;
+          }
           const panel = () => screen.getByRole("tabpanel");
           expect(panel()).toHaveTextContent(kit.steps[0].input);
 
@@ -110,7 +125,7 @@ describe("<KitPage>", () => {
           render(<KitPage workshop={workshop} locale={locale} />);
           const downloads = screen
             .getAllByRole("link")
-            .filter((link) => link.getAttribute("href")?.endsWith(".zip"));
+            .filter((link) => link.getAttribute("href") === `/workshops/${slug}/${kit.fileName}`);
           expect(downloads).toHaveLength(1);
           const link = downloads[0];
           expect(link).toHaveAttribute("href", `/workshops/${slug}/${kit.fileName}`);
@@ -127,7 +142,7 @@ describe("<KitPage>", () => {
 
         it("lists what is inside, states the file name, and asks for no email", () => {
           const { container } = render(<KitPage workshop={workshop} locale={locale} />);
-          for (const item of kit.contents) expect(screen.getByText(item.name)).toBeInTheDocument();
+          for (const item of kit.contents) expect(document.querySelector("[data-kit-contents]")).toHaveTextContent(item.name);
           expect(container.querySelector("[data-kit-filename]")).toHaveTextContent(kit.fileName);
           expect(container.querySelector("input, form")).toBeNull();
         });

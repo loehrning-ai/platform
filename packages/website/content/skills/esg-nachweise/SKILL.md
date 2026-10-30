@@ -1,6 +1,6 @@
 ---
 name: esg-nachweise
-description: Nachhaltigkeits- oder ESG-Fragebogen, VSME, Bankformular, Umweltaussage (Etikett, klimaneutral) aus Firmendateien beantworten: Datei und Zeile oder fehlendes Dokument. Sustainability questionnaire.
+description: Nachhaltigkeits- oder ESG-Fragebogen, VSME, Bankformular, Umweltaussage (Etikett, klimaneutral) aus Firmendateien beantworten. Datei und Zeile oder fehlendes Dokument. Sustainability questionnaire.
 ---
 
 # ESG-Antworten mit Nachweis

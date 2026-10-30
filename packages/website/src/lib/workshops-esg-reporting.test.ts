@@ -54,6 +54,13 @@ describe("Workshop 04 registry copy (ESG Reporting with AI)", () => {
     expect(en.selfStudyDurationLabel).toBe("solo about 90 min");
   });
 
+  it("describes source checks without requiring live votes", () => {
+    for (const workshop of both) {
+      expect(workshop.agenda.some((item) => item.activity === "vote")).toBe(false);
+      expect(JSON.stringify([workshop.agenda, workshop.needs])).not.toMatch(/abstimm|Handzeichen|\bvotes?\b|show of hands/i);
+    }
+  });
+
   it("links each locale to its own deck and kit edition, and labels the zip with its real size", () => {
     const mainSlides = (html: string) => html.match(/<section class="slide[^"]*" id="[^"]+" data-kind="main"/g) ?? [];
     expect(mainSlides(slides)).toHaveLength(17);
